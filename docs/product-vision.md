@@ -5,8 +5,8 @@ NLX Product Vision
 
 ## Index
 * [Introduction](#Introduction)
-* [Core Requirements](#Core Requirements)
-* [NLX functionality in more detail](#NLX functionality in more detail)
+* [Core Requirements](#Core-Requirements)
+* [NLX functionality in more detail](#NLX-functionality-in-more-detail)
 * [Context](#Context)
 
 
