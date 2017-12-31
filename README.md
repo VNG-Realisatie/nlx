@@ -1,2 +1,3 @@
-# nlx
-Generic system for authentication and logging within and between organisations, according to Common Ground vision
+NLX
+===
+**NLX** is an open source inter-organisational system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API landscape.
