@@ -60,21 +60,27 @@ When using a service from an external organisation, NLX should automatically set
 NLX should protocol (formally log) all requests that flow through it. The logs serve several purposes:
 
 * *GDPR Purpose limitation principle*
+
   By adding a mandatory *purpose limitation claim* to every API request that involves personal data, NLX logs data usage compliant with GDPR. These logs can be used for publication and auditing (next two bullets).
 
 * *Publication of meta data to data subject*
+
   Meta data from the request logs, be it about usage or manipulation of data, can be made available for data subjects. This might be a portal providing access to logs detailing every time a person's personal data is used or modified by an organisation, including the reason (based on the purpose limitation claim).
 
 * *Auditing*
+
   The NLX system is based on both trust and control. Trust when receiving the first API request, which is handled according to authorisation tables. Every organisation is assumed to only request services that are necessary, including lawful purpose limitation and privacy by design. Control, by auditing everything. The framework of audits allows for trust in organisations without an established relation.   
 
 * *Automated inter-organisational charging*
+
   Although not a popular concept, the Common Ground vision will require a new distribution of costs. Main reason is the fact that those organisations responsible for very popular data will have to maintain services and infrastructure for a much larger audience than in the current situation, which comes with higher costs. If implemented right, cost distribution can be done fairly simple. Every request should be logged with its calculated cost. Eventually a clearing house construction might help to distribute costs with minimal administrative overhead.
 
 * *Quality improvement*
+
   Analysis of logs allows for quality improvement, spotting weak links that slow down operation, repeated errors, and so on.
 
 * *Monitoring*
+
   By monitoring the NLX logs all kinds of alerting is possible. Security alerts triggering incident response, quality improvement PDCA cycles, triggering specific compliancy audits and so on. This can be enhanced with machine learning for behavioural analysis (of organisations, not data subjects).
 
 
