@@ -51,13 +51,13 @@ Although the NLX system will be fairly complex and will require extensively deta
 *For more details, read the [NLX Functional Design](./functional-design.md).*
 
 
-#### Facilitate federated authentication and authorisation
+### Facilitate federated authentication and authorisation
 organisations offering a service should be able to authorise other organisations to use the service. How that other organisation deals internally with identification, authentication and authorisation should be irrelevant. NLX should provide in a way to identify and authenticate other organisations, and perform al necessary actions to convert internal identity into an external one when a request leaves the own organisation.
 
-#### Automate secure data connection setup
+### Automate secure data connection setup
 When using a service from an external organisation, NLX should automatically set up a secure connection to that other organisation. This is meant to be the API equivalent of what connections that meet the [Digikoppeling](https://www.logius.nl/diensten/digikoppeling/) standard do for the current Dutch eBMS- and SOAP-based connections. Instead of system administrators in every organisation being responsible for building connections to every other organisation (like with Digikoppeling), NLX will create certificate based secure peer-to-peer connections on demand.
 
-#### Protocol API requests
+### Protocol API requests
 
 NLX should protocol (formally log) all requests that flow through it. The logs serve several purposes:
 
@@ -92,28 +92,28 @@ Looking at the required functionality alone, it might appear as if enough softwa
 
 *For more details, read the [NLX Solution Architecture](./solution-architecture.md).*
 
-#### Blazingly fast
+### Blazingly fast
 When using resources that are spread out over several other organisations instead of SQL Queries to a local database, performance is of utmost importance. NLX will be optimised for speed.
 
-#### Developer-friendly
+### Developer-friendly
 This means: state of the art, fun to use, well-known modern techniques. Short 'Time To First Successful Call' for every service. Excellent documentation. No ambiguity in use cases whatsoever. Reference implementations and examples for many code languages.
 
-#### Secure
+### Secure
 It's obvious that a system providing federated authentication, secure connecting and protocolling in a large-scale, dynamic API landscape has to be very secure. Especially when it serves in governmental environments with sensitive, personal data. It should at least be fully compliant with all mandatory and recommended frames of reference. Security by design should be a priority from the very beginning.
 
-#### Open
+### Open
 Software functioning in the core of government should be as transparent as possible. Hence, Open Source. Also, the NLX system should not be restricted to governmental organisations alone. The architecture should be open and technically allow for other organisations to join when demand exists.
 
-#### Distributed
+### Distributed
 Instead of introducing some kind of star topology (e.g. an unwanted bottle neck) NLX should function fully peer-to-peer and decentralised. NLX should function on the edge of every organisation's network. Requests from organisation A to organisation B go through NLX in both organisations, via an on demand secure peer-to-peer connection. Another reason for this is the fact that every organisation will offer API's - if not providing central resources, at least there will be services designed to transfer case ownership and other process related services. Distributed design, where possible following federation concepts, is essential for scalability.
 
-#### Scalable
+### Scalable
 When NLX fulfils it's intended role the system will, distributed, process trillions of requests per year. Extreme scalability is essential.
 
-#### Reliable
+### Reliable
 As NLX provides access to much of the data used in government processes, reliability is obviously a core requirement. As a whole, the services provided by NLX should be available 100%. Think redundancy, automatic rerouting, and so on.
 
-#### Resilient
+### Resilient
 If NLX somehow enters a state of emergency, the system should be resilient. It should easily bounce back from disruptions, preferably prevent them. If NLX is completely destroyed, it should be possible to rebuild the whole NLX system in a very short time.
 
 
