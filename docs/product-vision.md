@@ -11,9 +11,9 @@ NLX Product Vision
 
 
 ## Introduction
-The need for the creation of NLX arises from the [Common Ground vision](https://github.com/VNG-Realisatie/common-ground), which aims to convert the replace the current monolithic information systems of Dutch municipalities (and wider government) with a state of the art, API-first software landscape, fulfilling societal demand for automation, transparency and privacy.
+The need for the creation of NLX arises from the [Common Ground vision](https://github.com/VNG-Realisatie/common-ground), which aims to convert or replace the current monolithic information systems of Dutch municipalities (and wider government) with a state of the art, API-first software landscape, fulfilling societal demand for automation, transparency and privacy.
 
-In this vision, everyone should be able to use API's in other organisations as easy as their own, while core data objects should only be manipulated by the one administratively responsible and used by all others. To make this technically feasible in a controllable manner, NLX comes in play.
+In this vision, everyone should be able to use API's in other organisations as easy as their own, while core data objects should only be manipulated by the one administratively responsible and used by all others. An additional advantage is that public data can easily be made available to everyone. To make this technically feasible in a controllable manner, NLX comes in play.
 
 In essence, NLX provides a developer friendly way to use standardised resources on the scale of a whole country.
 
@@ -28,7 +28,7 @@ Functional:
 - [ ] Protocol API requests, for:
     - [ ] GDPR Purpose limitation principle
     - [ ] Publication of data use to data subject
-    - [ ] Automated inter-organisational charging
+    - [ ] Automated inter-organisational billing
     - [ ] Quality improvement
     - [ ] Auditing
     - [ ] Monitoring
@@ -52,10 +52,10 @@ Although the NLX system will be fairly complex and will require extensively deta
 
 
 #### Facilitate federated authentication and authorisation
-Organisations offering a service should be able to authorise other organisations to use the service. How that other organisation deals internally with identification, authentication and authorisation should be irrelevant. NLX should provide in a way to identify and authenticate other organisations, and perform al necessary actions to convert internal identity into an external one when a request leaves the own organisation.
+organisations offering a service should be able to authorise other organisations to use the service. How that other organisation deals internally with identification, authentication and authorisation should be irrelevant. NLX should provide in a way to identify and authenticate other organisations, and perform al necessary actions to convert internal identity into an external one when a request leaves the own organisation.
 
 #### Automate secure data connection setup
-When using a service from an external organisation, NLX should automatically set up a secure connection to that other organisation. This is meant to be the API equivalent of what [Digikoppeling](https://www.logius.nl/diensten/digikoppeling/) does for the current Dutch SOAP-based connections. Instead of system administrators in every organisation being responsible for building connections to every other organisation (like with Digikoppeling), NLX will create certificate based secure peer-to-peer connections on demand.
+When using a service from an external organisation, NLX should automatically set up a secure connection to that other organisation. This is meant to be the API equivalent of what connections that meet the [Digikoppeling](https://www.logius.nl/diensten/digikoppeling/) standard do for the current Dutch eBMS- and SOAP-based connections. Instead of system administrators in every organisation being responsible for building connections to every other organisation (like with Digikoppeling), NLX will create certificate based secure peer-to-peer connections on demand.
 
 #### Protocol API requests
 
@@ -73,7 +73,7 @@ NLX should protocol (formally log) all requests that flow through it. The logs s
 
   The NLX system is based on both trust and control. Trust when receiving the first API request, which is handled according to authorisation tables. Every organisation is assumed to only request services that are necessary, including lawful purpose limitation and privacy by design. Control, by auditing everything. The framework of audits allows for trust in organisations without an established relation.   
 
-* *Automated inter-organisational charging*
+* *Automated inter-organisational billing*
 
   Although not a popular concept, the Common Ground vision will require a new distribution of costs. Main reason is the fact that those organisations responsible for very popular data will have to maintain services and infrastructure for a much larger audience than in the current situation, which comes with higher costs. If implemented right, cost distribution can be done fairly simple. Every request should be logged with its calculated cost. Eventually a clearing house construction might help to distribute costs with minimal administrative overhead.
 
@@ -104,11 +104,11 @@ It's obvious that a system providing federated authentication, secure connecting
 #### Open
 Software functioning in the core of government should be as transparent as possible. Hence, Open Source. Also, the NLX system should not be restricted to governmental organisations alone. The architecture should be open and technically allow for other organisations to join when demand exists.
 
-#### Federated
-Instead of introducing some kind of star topology (e.g. an unwanted bottle neck) NLX should function fully peer-to-peer and decentralised. NLX should function on the edge of every organisation's network. Requests from organisation A to organisation B go through NLX in both organisations, via an on demand secure peer-to-peer connection. Another reason for this is the fact that every organisation will offer API's - if not providing central resources, at least there will be services designed to transfer case ownership and other proces related services. Decentral design, where possible following federation concepts, is essential for scalability.
+#### Distributed
+Instead of introducing some kind of star topology (e.g. an unwanted bottle neck) NLX should function fully peer-to-peer and decentralised. NLX should function on the edge of every organisation's network. Requests from organisation A to organisation B go through NLX in both organisations, via an on demand secure peer-to-peer connection. Another reason for this is the fact that every organisation will offer API's - if not providing central resources, at least there will be services designed to transfer case ownership and other process related services. Distributed design, where possible following federation concepts, is essential for scalability.
 
 #### Scalable
-When NLX fulfils it's intended role the system will, decentrally, process trillions of requests per year. Extreme scalability is essential.
+When NLX fulfils it's intended role the system will, distributed, process trillions of requests per year. Extreme scalability is essential.
 
 #### Reliable
 As NLX provides access to much of the data used in government processes, reliability is obviously a core requirement. As a whole, the services provided by NLX should be available 100%. Think redundancy, automatic rerouting, and so on.
