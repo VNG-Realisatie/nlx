@@ -4,6 +4,10 @@ NLX
 
 **NLX** is an open source inter-organisational system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API landscape.
 
+## Goal
+
+The current goal of this project is to deliver a Proof of Concept for the [NLX Product Vision](./product-vision.md).
+
 ## Licence
 
 Copyright © VNG Realisatie 2017  
