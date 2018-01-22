@@ -18,7 +18,7 @@ type ServiceEndpoint interface {
 	sendRequest(w http.ResponseWriter, r *http.Request)
 }
 
-// HTTPServiceEndpoint implements an ServiceEndpoint for plain HTTP requests.
+// HTTPServiceEndpoint implements a ServiceEndpoint for plain HTTP requests.
 type HTTPServiceEndpoint struct {
 	serviceName string
 	logger      *zap.Logger
@@ -26,9 +26,9 @@ type HTTPServiceEndpoint struct {
 	proxy *httputil.ReverseProxy
 }
 
-var _ ServiceEndpoint = &HTTPServiceEndpoint{} // copmile-time interface validation
+var _ ServiceEndpoint = &HTTPServiceEndpoint{} // compile-time interface validation
 
-// NewHTTPServiceEndpoint creates a new ServiceEndpoint using a simple http reverse proxy backend.
+// NewHTTPServiceEndpoint creates a new ServiceEndpoint using a simple HTTP reverse proxy backend.
 func NewHTTPServiceEndpoint(logger *zap.Logger, serviceName, endpoint string) (*HTTPServiceEndpoint, error) {
 	h := &HTTPServiceEndpoint{
 		serviceName: serviceName,
