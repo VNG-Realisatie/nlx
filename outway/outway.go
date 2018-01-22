@@ -1,6 +1,5 @@
-// Copyright 2018 VNG Realisatie. All rights reserved.
-// Use of this source code is governed by the EUPL
-// license that can be found in the LICENSE.md file.
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
 
 package outway
 
