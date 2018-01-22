@@ -1,5 +1,8 @@
 # Contributing
 
+We – [VNG realisatie](https://www.vngrealisatie.nl/) and the maintainers of this project – know we can only build NLX together with you. Thus we appreciate your input, enjoy feedback and welcome improvements to this project and are very open to collaboration.
+
+We love issues and pull requests from everyone.
 
 ## Problems, suggestions and questions in Issues
 
