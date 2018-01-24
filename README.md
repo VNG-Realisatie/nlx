@@ -6,7 +6,7 @@ NLX
 
 ## Goal
 
-The current goal of this project is to deliver a Proof of Concept for the [NLX Product Vision](./docs/product-vision.md).
+The current goal of this project is to deliver a Proof of Concept for the [NLX Product Vision](./docs/content/functional/product-vision.md).
 
 ## Questions and contributions
 
@@ -14,21 +14,23 @@ Read more on how to ask questions, file bugs and contribute code and documentati
 
 ## Build and run
 
-Make sure you have [installed Go](https://golang.org/doc/install) and [configured a `GOPATH`](https://github.com/golang/go/wiki/SettingGOPATH) with `${GOPATH}/bin` added to your `PATH`.
+Make sure you have installed the following tools:
 
-To build and run all [components](./docs/repository-structure.md), execute the following in a shell.
+- [docker](https://docs.docker.com/)
+- [docker-compose](https://docs.docker.com/compose/)
+- [go](https://golang.org/doc/install)
+
+Also you will need to have [configured a `GOPATH`](https://github.com/golang/go/wiki/SettingGOPATH) with `${GOPATH}/bin` added to your `PATH`.
+
+Open a new shell so the `GOPATH` you have configured earlier is correctly loaded in the environment variables. Then run the following:
 
 ```bash
-go get github.com/cortesi/modd/cmd/modd
+mkdir -p $GOPATH/src/github.com/VNG-Realisatie
 cd $GOPATH/src/github.com/VNG-Realisatie
 git clone git@github.com:VNG-Realisatie/nlx.git
 cd nlx
-modd
+docker-compose up
 ```
-
-[`modd`](https://github.com/cortesi/modd) will watch for changes in the source code and builds/runs the components. For details see [`modd.conf`](./modd.conf).
-
-Alternatively to `modd`, you could use the [`go` tool](https://golang.org/cmd/go/) to build components and run manually.
 
 ## Licence
 

@@ -1,0 +1,31 @@
+version: '3.5'
+
+services:
+  docs:
+    build:
+      context: .
+      dockerfile: docs/Dockerfile
+      target: build
+    volumes:
+      - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
+    ports:
+      - '1313:1313'
+    command: hugo server --bind 0.0.0.0
+  
+  inway:
+    build:
+      context: .
+      dockerfile: inway/Dockerfile
+      target: build
+    volumes:
+      - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
+    command: modd
+    
+  outway:
+    build:
+      context: .
+      dockerfile: outway/Dockerfile
+      target: build
+    volumes:
+      - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
+    command: modd
