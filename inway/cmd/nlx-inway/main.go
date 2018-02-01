@@ -4,17 +4,22 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"os"
 
 	flags "github.com/jessevdk/go-flags"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
+	"github.com/VNG-Realisatie/nlx/common/nlxtls"
 	"github.com/VNG-Realisatie/nlx/inway"
 )
 
 var options struct {
 	ListenAddress string `long:"listen-address" env:"LISTEN_ADDRESS" default:"localhost:2018" description:"Adress for the inway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+
+	nlxtls.TLSOptions
 }
 
 func main() {
@@ -42,9 +47,24 @@ func main() {
 	defer func() {
 		syncErr := logger.Sync()
 		if syncErr != nil {
-			log.Fatalf("failed to sync zap logger: %v", syncErr)
+			// notify the user that proper logging has failed
+			fmt.Fprintf(os.Stderr, "failed to sync zap logger: %v\n", syncErr)
+			// don't exit when we're in a panic
+			if p := recover(); p != nil {
+				panic(p)
+			}
+			os.Exit(1)
 		}
 	}()
+
+	// Load certs
+	roots, cert, err := nlxtls.Load(options.TLSOptions)
+	if err != nil {
+		fmt.Println(err)
+		logger.Fatal("failed to load tls certs", zap.Error(err))
+	}
+	_ = roots
+	logger.Info(fmt.Sprintf("According to my organization certificate, I am %s\n", cert.DNSNames[0]))
 
 	// Create new inway and provide it with a hardcoded service.
 	iw := inway.NewInway(logger, "DemoProviderOrganization")

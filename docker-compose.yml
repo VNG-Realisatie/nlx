@@ -1,0 +1,82 @@
+version: '3.5'
+
+volumes:
+  inway_cert: {}
+  outway_cert: {}
+
+services:
+  docs:
+    build:
+      context: .
+      dockerfile: docs/Dockerfile
+      target: build
+    volumes:
+      - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
+    ports:
+      - '1313:1313'
+    command: hugo server --bind 0.0.0.0
+
+  ca:
+    build:
+      context: .
+      dockerfile: unsafe-ca/Dockerfile
+    ports:
+      - '8888:8888'
+    working_dir: /ca
+    command: ./start-ca.sh nlx.local
+
+  inway_cert:
+    build:
+      context: .
+      dockerfile: unsafe-ca/Dockerfile
+    depends_on:
+      - ca
+    volumes:
+      - inway_cert:/inway_cert
+    command: /bin/ash -c "cd /inway_cert && /ca/generate-cert.sh inway.nlx.local ca"
+
+  inway:
+    build:
+      context: .
+      dockerfile: inway/Dockerfile
+      target: build
+    depends_on:
+      - inway_cert
+    networks:
+      default:
+        aliases:
+          - inway.nlx.local
+    environment:
+      - TLS_NLX_ROOT_CERT=/inway_cert/nlx_root.pem
+      - TLS_ORG_CERT=/inway_cert/inway_nlx_local.pem
+      - TLS_ORG_KEY=/inway_cert/inway_nlx_local-key.pem
+    volumes:
+      - inway_cert:/inway_cert
+      - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
+    command: modd
+
+  outway_cert:
+    build:
+      context: .
+      dockerfile: unsafe-ca/Dockerfile
+    depends_on:
+      - ca
+    volumes:
+      - outway_cert:/outway_cert
+    command: /bin/ash -c "cd /outway_cert && /ca/generate-cert.sh outway.nlx.local ca"
+
+  outway:
+    build:
+      context: .
+      dockerfile: outway/Dockerfile
+      target: build
+    depends_on:
+      - outway_cert
+    networks:
+      default:
+        aliases:
+          - outway.nlx.local
+    volumes:
+      - outway_cert:/outway_cert
+      - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
+    command: modd

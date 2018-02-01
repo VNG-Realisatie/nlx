@@ -1,3 +1,3 @@
-# NLX Outway
+# outway
 
-Test by sending an HTTP GET request to: `http://localhost:12018/DemoProviderOrganization/PostmanEcho/get?foo=1`
+[More info.](https://docs.tip.nlx.io/development/components/outway/)
