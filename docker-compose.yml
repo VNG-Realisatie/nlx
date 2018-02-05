@@ -118,3 +118,19 @@ services:
         done
         modd
       "
+    command: modd
+
+  certportal:
+    build:
+      context: .
+      dockerfile: certportal/Dockerfile
+      target: build
+    depends_on:
+      - ca
+    environment:
+      - CA_HOST=ca
+    volumes:
+      - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
+    ports:
+      - '12020:12020'
+    command: modd
