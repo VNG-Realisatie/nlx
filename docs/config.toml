@@ -2,15 +2,14 @@ baseURL = "/"
 
 languageCode = "en-us"
 DefaultContentLanguage = "en"
-title = "NLX Documentation"
-theme = "docdock"
+title = "NLX Docs"
+theme = "nlx"
 pygmentsCodeFences = true
 pygmentsStyle = "monokailight"
 
 defaultContentLanguage = "en"
 defaultContentLanguageInSubdir= false
 enableMissingTranslationPlaceholders = false
-
 
 # [Languages]
 # [Languages.en]
@@ -27,7 +26,7 @@ enableMissingTranslationPlaceholders = false
 [params]
 editURL = "https://github.com/VNG-Realisatie/nlx/edit/master/docs/content/"
 showVisitedLinks = true # default is false
-themeStyle = "flex" # "original" or "flex" # default "flex"
+themeStyle = "original" # "original" or "flex" # default "flex"
 themeVariant = "" # choose theme variant "green", "gold" , "gray", "blue" (default)
 ordersectionsby = "weight" # ordersectionsby = "title"
 disableHomeIcon = false # default is false

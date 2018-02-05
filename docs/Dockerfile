@@ -11,7 +11,6 @@ COPY . /go/src/github.com/VNG-Realisatie/nlx
 WORKDIR /go/src/github.com/VNG-Realisatie/nlx/docs
 RUN make
 
-
 # Copy static docs to alpine-based nginx container.
 FROM nginx:alpine
 COPY --from=build /go/src/github.com/VNG-Realisatie/nlx/docs/public /usr/share/nginx/html
