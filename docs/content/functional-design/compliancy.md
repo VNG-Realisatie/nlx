@@ -1,7 +1,10 @@
 ---
 title: "Compliancy with EU regulations"
 description: ""
-weight: 115
+weight: 140
+menu:
+  docs:
+    parent: "functional"
 ---
 
 # NLX architecture compliancy with EU regulations and architecture frameworks

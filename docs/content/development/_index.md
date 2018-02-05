@@ -1,7 +1,6 @@
 ---
-title: "Development documentation"
+title: "Developing on NLX"
 description: ""
-weight: 20
 ---
 
 Want to get started developing on NLX? This is the place to be.
