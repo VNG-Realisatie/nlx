@@ -26,6 +26,7 @@ Next to a technological challenge the implementation of NLX will require changes
 ## Core requirements
 
 Functional:
+
 - [ ] Facilitate federated authentication and authorisation
 - [ ] Automate secure data connection setup
 - [ ] Protocol API requests, for:
@@ -37,6 +38,7 @@ Functional:
     - [ ] Monitoring
 
 Non-functional:
+
 - [ ] Blazingly fast
 - [ ] Developer-friendly
 - [ ] Secure
