@@ -4,6 +4,7 @@
 package outway
 
 import (
+	"crypto/x509"
 	"sync"
 
 	"github.com/pkg/errors"
@@ -21,14 +22,18 @@ type Outway struct {
 }
 
 // NewOutway creates a new Outway and sets it up to handle requests.
-func NewOutway(l *zap.Logger, organizationName string) *Outway {
+func NewOutway(l *zap.Logger, roots *x509.CertPool, orgCert *x509.Certificate) (*Outway, error) {
+	if len(orgCert.Subject.Organization) != 1 {
+		return nil, errors.New("cannot obtain organization name from self cert")
+	}
+	organizationName := orgCert.Subject.Organization[0]
 	i := &Outway{
 		logger:           l.With(zap.String("outway-organization-name", organizationName)),
 		organizationName: organizationName,
 
 		services: make(map[string]*Service),
 	}
-	return i
+	return i, nil
 }
 
 // AddService adds a service and its inway to the outway's internal registry.

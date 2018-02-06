@@ -12,14 +12,15 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
-	"github.com/VNG-Realisatie/nlx/common/nlxtls"
+	"github.com/VNG-Realisatie/nlx/common/orgtls"
+	"github.com/VNG-Realisatie/nlx/common/process"
 	"github.com/VNG-Realisatie/nlx/inway"
 )
 
 var options struct {
-	ListenAddress string `long:"listen-address" env:"LISTEN_ADDRESS" default:"localhost:2018" description:"Adress for the inway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	ListenAddress string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:2018" description:"Adress for the inway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 
-	nlxtls.TLSOptions
+	orgtls.TLSOptions
 }
 
 func main() {
@@ -44,7 +45,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
-	defer func() {
+	defer func() { // TODO(GeertJohan): make this a common/process exitFunc?
 		syncErr := logger.Sync()
 		if syncErr != nil {
 			// notify the user that proper logging has failed
@@ -57,17 +58,20 @@ func main() {
 		}
 	}()
 
+	process.Setup(logger)
+
 	// Load certs
-	roots, cert, err := nlxtls.Load(options.TLSOptions)
+	roots, orgCert, err := orgtls.Load(options.TLSOptions)
 	if err != nil {
 		fmt.Println(err)
 		logger.Fatal("failed to load tls certs", zap.Error(err))
 	}
-	_ = roots
-	logger.Info(fmt.Sprintf("According to my organization certificate, I am %s\n", cert.DNSNames[0]))
 
 	// Create new inway and provide it with a hardcoded service.
-	iw := inway.NewInway(logger, "DemoProviderOrganization")
+	iw, err := inway.NewInway(logger, roots, orgCert)
+	if err != nil {
+		logger.Fatal("cannot setup inway", zap.Error(err))
+	}
 	// NOTE: hardcoded service endpoint because we don't have any other means to register endpoints yet
 	echoServiceEndpoint, err := inway.NewHTTPServiceEndpoint(logger, "PostmanEcho", "https://postman-echo.com/")
 	if err != nil {
@@ -75,7 +79,7 @@ func main() {
 	}
 	iw.AddServiceEndpoint(echoServiceEndpoint)
 	// Listen on the address provided in the options
-	err = iw.ListenAndServe(options.ListenAddress)
+	err = iw.ListenAndServeTLS(options.ListenAddress, roots, options.TLSOptions.OrgCertFile, options.TLSOptions.OrgKeyFile)
 	if err != nil {
 		logger.Fatal("failed to listen and serve", zap.Error(err))
 	}
