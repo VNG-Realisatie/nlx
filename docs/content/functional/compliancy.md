@@ -25,7 +25,7 @@ The EIF describes a set of 47 recommendations, as actionable items to be impleme
 | **Source** | European Interoperability Framework (EIF) |
 | **Category** | Underlying principle: Subsidiarity and proportionality  |
 | **Type** | Recommendation |
-| **NLX is compliant** | Yes |
+| **NLX compliance** | Yes |
 | **Description** | Ensure that national interoperability frameworks and interoperability strategies are aligned with the EIF and, if needed, tailor and extend them to address the national context and needs.  |
 | **Implications** | <li>The NLX will be aligned with the goals described in the EIF.</li> <li> Extensions in the NLX have been added with regards to authentication and logging in the federated infrastructure.</li> |
 
@@ -34,7 +34,7 @@ The EIF describes a set of 47 recommendations, as actionable items to be impleme
 | **Source** | European Interoperability Framework (EIF) |
 | **Category** | Underlying principle: Openness  |
 | **Type** | Recommendation |
-| **NLX is compliant** | N/A |
+| **NLX compliance** | N/A |
 | **Description** | Publish the data you own as open data unless certain restrictions apply.  |
 | **Implications** |<li>NLX can be used as the infrastructure to publish any data, including open data.</li><li>Making data available as open data is the responsibility of the data owner.</li> |
 
@@ -43,7 +43,7 @@ The EIF describes a set of 47 recommendations, as actionable items to be impleme
 | **Source** | European Interoperability Framework (EIF) |
 | **Category** | Underlying principle: Openness  |
 | **Type** | Recommendation |
-| **NLX is compliant** | Yes |
+| **NLX compliance** | Yes |
 | **Description** | Ensure a level playing field for open source software and demonstrate active and fair consideration of using open source software, taking into account the total cost of ownership of the solution. |
 | **Implications** |<li>NLX is being developed as Open Source using Open Source components.</li><li>Development is done using the European Union Public License, version 1.2 (EUPL-1.2) license.</li> |
 
@@ -55,7 +55,6 @@ The EIF describes a set of 47 recommendations, as actionable items to be impleme
 | **NLX compliance** | Yes |
 | **Description** | Give preference to open specifications, taking due account of the coverage of functional needs, maturity and market support and innovation. |
 | **Implications** |<li>The NLX development exclusively uses both international and national open specifications.<li></li>Examples of local open specifications are the Dutch DSO API/URI specification and Dutch government OAuth 2.0 profiles.</li> |
-
 
 | **Requirement** | NLX0005 |
 | --- | --- |
@@ -73,8 +72,7 @@ The EIF describes a set of 47 recommendations, as actionable items to be impleme
 | **Type** | Recommendation |
 | **NLX compliance** | Yes |
 | **Description** | Reuse and share solutions, and cooperate in the development of joint solutions when implementing European public services.  |
-| **Implications** |<li>NLX is being developed as Open Source using Open Source components.<li></li>Development is done using the European Union Public License, version 1.2 (EUPL-1.2) license.</li>
- |
+| **Implications** |<li>NLX is being developed as Open Source using Open Source components.<li></li>Development is done using the European Union Public License, version 1.2 (EUPL-1.2) license.</li> |
 
 | **Requirement** | NLX0007 |
 | --- | --- |
@@ -281,8 +279,7 @@ The EIF describes a set of 47 recommendations, as actionable items to be impleme
 | **Type** | Recommendation |
 | **NLX compliance** | N/A |
 | **Description** | Clarify and formalise your organisational relationships for establishing and operating European public services. |
-| **Implications** |<li>This is the responsibility of the public administration.</li>
- |
+| **Implications** |<li>This is the responsibility of the public administration.</li> |
 
 | **Requirement** | NLX0030 |
 | --- | --- |
@@ -465,8 +462,7 @@ This eIDAS Regulation applies to electronic identification schemes that have bee
 | **Category** | article 8: Assurance levels of electronic identification schemes |
 | **Type** | Mandatory |
 | **NLX compliance** | Yes |
-| **Description** | An electronic identification scheme notified pursuant to Article 9(1) shall specify assurance levels low, substantial and/or high for electronic identification means issued under that scheme. The assurance levels low, substantial and high shall meet respectively the following criteria:<li>assurance level low shall refer to an electronic identification means in the context of an electronic identification scheme, which provides a limited degree of confidence in the claimed or asserted identity of a person, and is characterised with reference to technical specifications, standards and procedures related thereto, including technical controls, the purpose of which is to decrease the risk of misuse or alteration of the identity;</li><li>assurance level substantial shall refer to an electronic identification means in the context of an electronic identification scheme, which provides a substantial degree of confidence in the claimed or asserted identity of a person, and is characterised with reference to technical specifications, standards and procedures related thereto, including technical controls, the purpose of which is to decrease substantially the risk of misuse or alteration of the identity;</li><li>assurance level high shall refer to an electronic identification means in the context of an electronic identification scheme, which provides a higher degree of confidence in the claimed or asserted identity of a person than electronic identification means with the assurance level substantial, and is characterised with reference to technical specifications, standards and procedures related thereto, including technical controls, the purpose of which is to prevent misuse or alteration of the identity.
- |
+| **Description** | An electronic identification scheme notified pursuant to Article 9(1) shall specify assurance levels low, substantial and/or high for electronic identification means issued under that scheme. The assurance levels low, substantial and high shall meet respectively the following criteria:<li>assurance level low shall refer to an electronic identification means in the context of an electronic identification scheme, which provides a limited degree of confidence in the claimed or asserted identity of a person, and is characterised with reference to technical specifications, standards and procedures related thereto, including technical controls, the purpose of which is to decrease the risk of misuse or alteration of the identity;</li><li>assurance level substantial shall refer to an electronic identification means in the context of an electronic identification scheme, which provides a substantial degree of confidence in the claimed or asserted identity of a person, and is characterised with reference to technical specifications, standards and procedures related thereto, including technical controls, the purpose of which is to decrease substantially the risk of misuse or alteration of the identity;</li><li>assurance level high shall refer to an electronic identification means in the context of an electronic identification scheme, which provides a higher degree of confidence in the claimed or asserted identity of a person than electronic identification means with the assurance level substantial, and is characterised with reference to technical specifications, standards and procedures related thereto, including technical controls, the purpose of which is to prevent misuse or alteration of the identity. |
 | **Implications** |<li>NLX will have to support configurations which enables using different assurance levels for APIs.</li> |
 
 | **Number** | NLX0049 |
@@ -477,6 +473,7 @@ This eIDAS Regulation applies to electronic identification schemes that have bee
 | **NLX compliance** | Yes |
 | **Description** | Where feasible, trust services provided and end-user products used in the provision of those services shall be made accessible for persons with disabilities. |
 | **Implications** |<li>The API Discovery user interface which publishes the NLX API&#39;s must comply with &quot;WCAG 2.0 Success Criterion 1.1.1 Non-text content&quot; as specified in the EN 301 549 v1.1.2 standard.</li> |
+
 
 # Standard - EN 301 549 v1.1.2: &quot;Accessibility requirements suitable for public procurement of ICT products and services in Europe&quot;
 
@@ -489,8 +486,8 @@ Requirements intended to be used as the basis for an accessible ICT procurement 
 | **Type** | Recommendation (Mandatory after implementation in 2018 of Dutch legislation: &#39;Wet Digitale Overheid&#39; and &#39;AMvB: Besluit digitale toegankelijkheid&#39;) |
 | **NLX compliance** | Yes |
 | **Description** | Functional accessibility requirements applicable to ICT products and services, together with a description of the test procedures and evaluation methodology for each accessibility requirement in a form that is suitable for use in public procurement within Europe, in support of Mandate 376.  Incorporates WCAG2 for web pages. |
-| **Implications** |<li>The API Discovery user interface which publishes the NLX API&#39;s must comply with &quot;WCAG 2.0 Success Criterion 1.1.1 Non-text content&quot; as specified in the EN 301 549 v1.1.2 standard.</li>
- |
+| **Implications** |<li>The API Discovery user interface which publishes the NLX API&#39;s must comply with &quot;WCAG 2.0 Success Criterion 1.1.1 Non-text content&quot; as specified in the EN 301 549 v1.1.2 standard.</li> |
+
 
 # The EU General Data Protection Regulation (GDPR)
 

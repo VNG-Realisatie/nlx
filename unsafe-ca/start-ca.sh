@@ -11,7 +11,7 @@ if [ -z "${cadomain}" ]; then
 	exit 1;
 fi;
 
-echo '{"hosts": ["'${cadomain}'"], "key": {"algo": "rsa", "size": 4096}, "names": [{"C": "NL", "ST": "Noord-Holland", "L": "Amsterdam", "O": "Common Ground", "OU": "NLX"}]}' | 
+echo '{"hosts": ["'${cadomain}'"], "key": {"algo": "rsa", "size": 4096}, "names": [{"O": "Common Ground NLX CA", "OU": "NLX"}]}' | 
 	cfssl genkey -initca /dev/stdin | 
 	cfssljson -bare ca
 

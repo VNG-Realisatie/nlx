@@ -1,4 +1,4 @@
-package nlxtls
+package orgtls
 
 import (
 	"crypto/x509"
@@ -15,7 +15,7 @@ func Load(options TLSOptions) (*x509.CertPool, *x509.Certificate, error) {
 	if err != nil {
 		return nil, nil, errors.Wrapf(err, "failed to read NLX CA root PEM file `%s`", options.NLXRootCert)
 	}
-	ok := roots.AppendCertsFromPEM([]byte(rootPEM))
+	ok := roots.AppendCertsFromPEM(rootPEM)
 	if !ok {
 		return nil, nil, errors.Errorf("failed to parse NLX CA root PEM from file `%s`", options.NLXRootCert)
 	}
@@ -24,7 +24,7 @@ func Load(options TLSOptions) (*x509.CertPool, *x509.Certificate, error) {
 	if err != nil {
 		return nil, nil, errors.Wrapf(err, "failed to read certificate PEM file `%s`", options.OrgCertFile)
 	}
-	block, _ := pem.Decode([]byte(certPEM))
+	block, _ := pem.Decode(certPEM)
 	if block == nil {
 		return nil, nil, errors.New("failed to parse certificate PEM")
 	}

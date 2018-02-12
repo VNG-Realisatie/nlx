@@ -1,8 +1,16 @@
 version: '3.5'
 
 volumes:
-  inway_cert: {}
-  outway_cert: {}
+  inway_cert:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+  outway_cert:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
 
 services:
   docs:
@@ -33,7 +41,12 @@ services:
       - ca
     volumes:
       - inway_cert:/inway_cert
-    command: /bin/ash -c "cd /inway_cert && /ca/generate-cert.sh inway.nlx.local ca"
+    command: >
+      /bin/ash -c "
+        cd /inway_cert &&
+        /ca/generate-cert.sh inway.nlx.local DemoProviderOrganization ca &&
+        touch /inway_cert/.done
+      "
 
   inway:
     build:
@@ -53,7 +66,15 @@ services:
     volumes:
       - inway_cert:/inway_cert
       - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
-    command: modd
+    ports:
+      - '2018:2018'
+    command: >
+      /bin/ash -c "
+        while [ ! -f /inway_cert/.done ]; do
+          sleep .2
+        done
+        modd
+      "
 
   outway_cert:
     build:
@@ -63,7 +84,12 @@ services:
       - ca
     volumes:
       - outway_cert:/outway_cert
-    command: /bin/ash -c "cd /outway_cert && /ca/generate-cert.sh outway.nlx.local ca"
+    command: >
+      /bin/ash -c "
+        cd /outway_cert &&
+        /ca/generate-cert.sh outway.nlx.local DemoRequesterOrganization ca &&
+        touch /outway_cert/.done
+      "
 
   outway:
     build:
@@ -76,7 +102,19 @@ services:
       default:
         aliases:
           - outway.nlx.local
+    environment:
+      - TLS_NLX_ROOT_CERT=/outway_cert/nlx_root.pem
+      - TLS_ORG_CERT=/outway_cert/outway_nlx_local.pem
+      - TLS_ORG_KEY=/outway_cert/outway_nlx_local-key.pem
     volumes:
       - outway_cert:/outway_cert
       - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
-    command: modd
+    ports:
+      - '12018:12018'
+    command: >
+      /bin/ash -c "
+        while [ ! -f /outway_cert/.done ]; do
+          sleep .2
+        done
+        modd
+      "

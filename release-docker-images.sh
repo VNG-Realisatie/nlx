@@ -3,7 +3,7 @@
 set -e # exit on error
 set -x # echo commands
 
-RELEASE_TAG='latest' # TODO: when we have CI/CD, use it to set this value to the version tag (v0.1.0) or when not on a tag: the commit hash.
+RELEASE_TAG=${RELEASE_TAG:-latest}
 
 docker build \
 	-t nlxio/docs:${RELEASE_TAG} \
