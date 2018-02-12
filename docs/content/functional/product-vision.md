@@ -100,7 +100,7 @@ Looking at the required functionality alone, it might appear as if enough softwa
 When using resources that are spread out over several other organisations instead of SQL Queries to a local database, performance is of utmost importance. NLX will be optimised for speed.
 
 ### Developer-friendly
-This means: state of the art, fun to use, well-known modern techniques. Short 'Time To First Successful Call' for every service. Excellent documentation. No ambiguity in use cases whatsoever. Reference implementations and examples for many code languages. It also means that organisation should have to spend low effort in administration, and the tool chain should be flexible enough to fit in all the different ways organisations want to work.
+This means: state of the art, fun to use, well-known modern techniques. Short 'Time To First Successful Call' for every service. Excellent documentation. No ambiguity in use cases whatsoever. Reference implementations and examples for many code languages. Organisation should have to spend minimal effort in administration. The tool chain should be flexible enough to accommodate different organisational structures.
 
 ### Secure
 It's obvious that a system providing federated authentication, secure connecting and protocolling in a large-scale, dynamic API landscape has to be very secure. Especially when it serves in governmental environments with sensitive, personal data. It should at least be fully compliant with all mandatory and recommended frames of reference. Security by design should be a priority from the very beginning.
