@@ -4,17 +4,22 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	flags "github.com/jessevdk/go-flags"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
+	"github.com/VNG-Realisatie/nlx/common/orgtls"
+	"github.com/VNG-Realisatie/nlx/common/process"
 	"github.com/VNG-Realisatie/nlx/outway"
 )
 
 var options struct {
-	ListenAddress string `long:"listen-address" env:"LISTEN_ADDRESS" default:"localhost:12018" description:"Adress for the outway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	ListenAddress string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:12018" description:"Adress for the outway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+
+	orgtls.TLSOptions
 }
 
 func main() {
@@ -46,10 +51,22 @@ func main() {
 		}
 	}()
 
+	process.Setup(logger)
+
+	// Load certs
+	roots, orgCert, err := orgtls.Load(options.TLSOptions)
+	if err != nil {
+		fmt.Println(err)
+		logger.Fatal("failed to load tls certs", zap.Error(err))
+	}
+
 	// Create new outway and provide it with a hardcoded service.
-	ow := outway.NewOutway(logger, "DemoRequesterOrganization")
-	// hardcoded service+inway because we don't have directory up yet
-	echoService, err := outway.NewService(logger, "DemoProviderOrganization", "PostmanEcho", "http://localhost:2018")
+	ow, err := outway.NewOutway(logger, roots, orgCert)
+	if err != nil {
+		logger.Fatal("failed to setup outway", zap.Error(err))
+	}
+	// Create service+inway hardcoded because we don't have directory up yet
+	echoService, err := outway.NewService(logger, roots, options.TLSOptions.OrgCertFile, options.TLSOptions.OrgKeyFile, "DemoProviderOrganization", "PostmanEcho", "https://inway.nlx.local:2018")
 	if err != nil {
 		logger.Fatal("failed to create new PostmanEcho service", zap.Error(err))
 	}

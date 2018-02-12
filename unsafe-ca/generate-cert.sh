@@ -10,10 +10,12 @@ set -e # exit on error
 certDomain=$1
 certName=`echo ${certDomain} | tr "." "_"`
 
-csrFilename="${certName}-csr.json"
-echo '{"hosts": ["'${certDomain}'"], "key": {"algo": "rsa", "size": 4096}, "names": [{"C": "NL", "ST": "Noord-Holland", "L": "Amsterdam", "O": "Common Ground", "OU": "NLX"}]}' > "${csrFilename}"
+certOrganization=$2
 
-remoteCA=$2
+csrFilename="${certName}-csr.json"
+echo '{"hosts": ["'${certDomain}'"], "key": {"algo": "rsa", "size": 4096}, "CN": "'${certDomain}'", "names": [{"O": "'${certOrganization}'", "OU": "NLX"}]}' > "${csrFilename}"
+
+remoteCA=$3
 ## Wait for remote CA (cfssl server) to be online
 while ! nc -z "${remoteCA}" 8888 </dev/null; do echo "waiting for ca" && sleep 1; done
 ## Fetch root cert from remote CA (cfssl server)

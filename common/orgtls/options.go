@@ -1,4 +1,4 @@
-package nlxtls
+package orgtls
 
 // TLSOptions defines the TLS options for a common NLX component.
 type TLSOptions struct {

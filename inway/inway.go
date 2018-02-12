@@ -4,6 +4,7 @@
 package inway
 
 import (
+	"crypto/x509"
 	"sync"
 
 	"github.com/pkg/errors"
@@ -21,14 +22,18 @@ type Inway struct {
 }
 
 // NewInway creates and prepares a new Inway.
-func NewInway(l *zap.Logger, organizationName string) *Inway {
+func NewInway(l *zap.Logger, roots *x509.CertPool, orgCert *x509.Certificate) (*Inway, error) {
+	if len(orgCert.Subject.Organization) != 1 {
+		return nil, errors.New("cannot obtain organization name from self cert")
+	}
+	organizationName := orgCert.Subject.Organization[0]
 	i := &Inway{
 		logger:           l.With(zap.String("inway-organization-name", organizationName)),
 		organizationName: organizationName,
 
 		serviceEndpoints: make(map[string]ServiceEndpoint),
 	}
-	return i
+	return i, nil
 }
 
 // AddServiceEndpoint adds an ServiceEndpoint to the inway's internal registry.

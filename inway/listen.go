@@ -4,6 +4,8 @@
 package inway
 
 import (
+	"crypto/tls"
+	"crypto/x509"
 	"net/http"
 	"strings"
 
@@ -11,9 +13,18 @@ import (
 	"go.uber.org/zap"
 )
 
-// ListenAndServe is a blocking function that listens on provided tcp address to handle requests.
-func (i *Inway) ListenAndServe(address string) error {
-	err := http.ListenAndServe(address, i)
+// ListenAndServeTLS is a blocking function that listens on provided tcp address to handle requests.
+func (i *Inway) ListenAndServeTLS(address string, roots *x509.CertPool, certFile, keyFile string) error {
+	server := &http.Server{
+		Addr: address,
+		TLSConfig: &tls.Config{
+			// only allow clients that present a cert signed by our root CA
+			ClientCAs:  roots,
+			ClientAuth: tls.RequireAndVerifyClientCert,
+		},
+		Handler: i,
+	}
+	err := server.ListenAndServeTLS(certFile, keyFile)
 	if err != nil {
 		return errors.Wrap(err, "failed to run http server")
 	}
@@ -26,6 +37,9 @@ func (i *Inway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		zap.String("request-path", r.URL.Path),
 		zap.String("request-remote-address", r.RemoteAddr),
 	)
+	subject := r.TLS.PeerCertificates[0].Subject.Organization[0]
+	issuer := r.TLS.PeerCertificates[0].Issuer.Organization[0]
+	logger = logger.With(zap.String("issuer", issuer), zap.String("subject", subject))
 	logger.Debug("received request")
 	urlparts := strings.SplitN(strings.TrimPrefix(r.URL.Path, "/"), "/", 2)
 	if len(urlparts) != 2 {
