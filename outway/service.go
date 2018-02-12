@@ -4,6 +4,8 @@
 package outway
 
 import (
+	"crypto/tls"
+	"crypto/x509"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -19,6 +21,7 @@ type Service struct {
 	serviceName      string
 
 	logger *zap.Logger
+	roots  *x509.CertPool
 
 	proxy *httputil.ReverseProxy
 }
@@ -26,10 +29,11 @@ type Service struct {
 // NewService creates a new Service instance with a single inway to forward requests to.
 // This is a PoC shortcut, the real outway will fetch services and their inways* from the directory
 // 		(* note the plural; a service can have multiple inways published by directory so that an outway can balance load to multiple inways)
-func NewService(logger *zap.Logger, organizationName, serviceName string, inwayAddress string) (*Service, error) {
+func NewService(logger *zap.Logger, roots *x509.CertPool, certFile string, keyFile string, organizationName, serviceName string, inwayAddress string) (*Service, error) {
 	s := &Service{
 		organizationName: organizationName,
 		serviceName:      serviceName,
+		roots:            roots,
 	}
 	s.logger = logger.With(zap.String("outway-service-full-name", s.fullName()))
 	endpointURL, err := url.Parse(inwayAddress)
@@ -38,6 +42,23 @@ func NewService(logger *zap.Logger, organizationName, serviceName string, inwayA
 	}
 	endpointURL.Path = "/" + serviceName
 	s.proxy = httputil.NewSingleHostReverseProxy(endpointURL)
+	transport, ok := http.DefaultTransport.(*http.Transport)
+	if !ok {
+		// This can happen when the internals of net/http change.
+		// Afaik an interface implementation isn't under the Go1 compatibility promise.
+		// TODO: consider setting up a custom http.Transport to use as the proxies RoundTripper.
+		panic("http.DefaultTransport must be of type *http.Transport")
+	}
+	// load client certificate
+	cert, err := tls.LoadX509KeyPair(certFile, keyFile)
+	if err != nil {
+		return nil, errors.Wrap(err, "invalid certificate provided")
+	}
+	transport.TLSClientConfig = &tls.Config{
+		RootCAs:      roots,
+		Certificates: []tls.Certificate{cert},
+	}
+	s.proxy.Transport = transport
 	return s, nil
 }
 
