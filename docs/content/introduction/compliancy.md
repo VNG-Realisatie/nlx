@@ -4,7 +4,7 @@ description: ""
 weight: 140
 menu:
   docs:
-    parent: "functional"
+    parent: "introduction"
 ---
 
 # NLX architecture compliancy with EU regulations and architecture frameworks

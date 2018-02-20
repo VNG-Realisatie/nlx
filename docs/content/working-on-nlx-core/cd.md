@@ -4,7 +4,7 @@ description: ""
 weight: 40
 menu:
   docs:
-    parent: "development"
+    parent: "working-on-nlx-core"
 ---
 
 Information about our CD setup; environments (tip, test, acc, prod).

@@ -8,13 +8,19 @@ DefaultContentLanguage = "en"
 home = [ "HTML", "RSS", "JSON"]
 
 [[menu.docs]]
-  name = "Functional design"
+  name = "Introduction"
   weight = 1
-  identifier = "functional"
-  url = "/functional-design/"
+  identifier = "introduction"
+  url = "/"
 
 [[menu.docs]]
   name = "Developing on NLX"
-  weight = 5
-  identifier = "development"
-  url = "/development/"
+  weight = 2
+  identifier = "developing-on-nlx"
+  url = "/developing-on-nlx/"
+
+[[menu.docs]]
+  name = "Working on NLX core"
+  weight = 3
+  identifier = "working-on-nlx-core"
+  url = "/working-on-nlx-core/"

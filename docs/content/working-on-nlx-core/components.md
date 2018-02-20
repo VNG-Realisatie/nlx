@@ -4,7 +4,7 @@ description: ""
 weight: 20
 menu:
   docs:
-    parent: "development"
+    parent: "working-on-nlx-core"
 ---
 
 Each component generally contains a number of files:

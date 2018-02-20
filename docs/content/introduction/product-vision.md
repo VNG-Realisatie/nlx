@@ -4,7 +4,7 @@ description: ""
 weight: 130
 menu:
   docs:
-    parent: "functional"
+    parent: "introduction"
 ---
 
 **NLX** is an open source inter-organisational system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API landscape.
