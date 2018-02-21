@@ -20,7 +20,7 @@ home = [ "HTML", "RSS", "JSON"]
   url = "/developing-on-nlx/"
 
 [[menu.docs]]
-  name = "Working on NLX core"
+  name = "Contributing to NLX"
   weight = 3
-  identifier = "working-on-nlx-core"
-  url = "/working-on-nlx-core/"
+  identifier = "contributing-to-nlx"
+  url = "/contributing-to-nlx/"
