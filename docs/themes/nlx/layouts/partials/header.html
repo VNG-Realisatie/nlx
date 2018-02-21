@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{ "css/docsearch.min.css" | relURL }}" />
+        <link rel="stylesheet" href="{{ "css/highlight.css" | relURL }}" />
+        <link rel="stylesheet" href="{{ "css/main.css" | relURL }}">
+
+        <title>{{ .Title }} {{ if ne .Title .Site.Title }} &middot; {{ .Site.Title }}{{ end }}</title>
+    </head>
+    <body>
+        <a id="skippy" class="sr-only sr-only-focusable" href="#content">
+            <div class="container">
+                <span class="skiplink-text">Skip to main content</span>
+            </div>
+        </a>
+        <header class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar bg-dark">
+            <a class="navbar-brand" href="{{ "/" | absLangURL }}">{{ .Site.Title }}</a>
+        </header>
+
+        <div class="container-fluid">
+            <div class="row flex-xl-nowrap">
+                <div class="col-12 col-md-3 col-xl-2 bd-sidebar">
+                    <form class="bd-search d-flex align-items-center">
+                        <span class="algolia-autocomplete" style="position: relative; display: inline-block; direction: ltr;"><input type="search" class="form-control ds-input" id="search-input" placeholder="Search..." autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-owns="algolia-autocomplete-listbox-0" dir="auto" style="position: relative; vertical-align: top;"><pre aria-hidden="true" style="position: absolute; visibility: hidden; white-space: pre; font-family: -apple-system, system-ui, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px; font-style: normal; font-variant: normal; font-weight: 400; word-spacing: 0px; letter-spacing: normal; text-indent: 0px; text-rendering: auto; text-transform: none;"></pre><span class="ds-dropdown-menu" role="listbox" id="algolia-autocomplete-listbox-0" style="position: absolute; top: 100%; z-index: 100; display: none; left: 0px; right: auto;"><div class="ds-dataset-1"></div></span></span>
+                        <button class="btn btn-link bd-search-docs-toggle d-md-none p-0 ml-3" type="button" data-toggle="collapse" data-target="#bd-docs-nav" aria-controls="bd-docs-nav" aria-expanded="false" aria-label="Toggle docs navigation">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+                        </button>
+                    </form>
+
+                    {{ $currentPage := . }}
+                    <nav class="collapse bd-links" id="bd-docs-nav">
+                        {{ range .Site.Menus.docs }}
+                            <div class="bd-toc-item {{ if or ($currentPage.HasMenuCurrent "docs" .) ($currentPage.IsMenuCurrent "docs" .) }}active{{ end }}">
+                                <a class="bd-toc-link" href="{{ .URL }}">{{ .Name }}</a>
+                                {{ if .HasChildren }}
+                                    {{ range .Children }}
+                                        <ul class="nav bd-sidenav">
+                                            <li class="{{ if $currentPage.IsMenuCurrent "docs" . }}active bd-sidenav-active{{ end }}">
+                                                <a href="{{ .URL }}">{{ .Name }}</a>
+                                            </li>
+                                        </ul>
+                                    {{ end }}
+                                {{ end }}
+                            </div>
+                        {{end}}
+                    </nav>
+                </div>
