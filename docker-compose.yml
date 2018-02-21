@@ -11,6 +11,11 @@ volumes:
     driver_opts:
       type: tmpfs
       device: tmpfs
+  directory_cert:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
 
 services:
   docs:
@@ -63,6 +68,8 @@ services:
       - TLS_NLX_ROOT_CERT=/inway_cert/nlx_root.pem
       - TLS_ORG_CERT=/inway_cert/inway_nlx_local.pem
       - TLS_ORG_KEY=/inway_cert/inway_nlx_local-key.pem
+      - SELF_ADDRESS=inway.nlx.local:2018
+      - DIRECTORY_ADDRESS=directory.nlx.local:1984
     volumes:
       - inway_cert:/inway_cert
       - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
@@ -118,7 +125,6 @@ services:
         done
         modd
       "
-    command: modd
 
   certportal:
     build:
@@ -134,3 +140,46 @@ services:
     ports:
       - '12020:12020'
     command: modd
+
+  directory_cert:
+    build:
+      context: .
+      dockerfile: unsafe-ca/Dockerfile
+    depends_on:
+      - ca
+    volumes:
+      - directory_cert:/directory_cert
+    command: >
+      /bin/ash -c "
+        cd /directory_cert &&
+        /ca/generate-cert.sh directory.nlx.local NLX ca &&
+        touch /directory_cert/.done
+      "
+
+  directory:
+    build:
+      context: .
+      dockerfile: directory/Dockerfile
+      target: build
+    depends_on:
+      - directory_cert
+    networks:
+      default:
+        aliases:
+          - directory.nlx.local
+    environment:
+      - TLS_NLX_ROOT_CERT=/directory_cert/nlx_root.pem
+      - TLS_DIRECTORY_CERT=/directory_cert/directory_nlx_local.pem
+      - TLS_DIRECTORY_KEY=/directory_cert/directory_nlx_local-key.pem
+    volumes:
+      - directory_cert:/directory_cert
+      - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
+    ports:
+      - '1984:1984'
+    command: >
+      /bin/ash -c "
+        while [ ! -f /directory_cert/.done ]; do
+          sleep .2
+        done
+        modd
+      "

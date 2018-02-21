@@ -1,0 +1,35 @@
+package directoryservice
+
+import (
+	"github.com/pkg/errors"
+	"go.uber.org/zap"
+
+	"github.com/VNG-Realisatie/nlx/directory/directoryapi"
+)
+
+// compile-time interface implementation verification
+var _ directoryapi.DirectoryServer = &DirectoryService{}
+
+// DirectoryService handles all requests for a directory api
+type DirectoryService struct {
+	*registerInwayHandler
+	*getServicesHandler
+}
+
+// New sets up a new DirectoryService and returns an error when something failed during set.
+func New(logger *zap.Logger) (*DirectoryService, error) {
+	s := &DirectoryService{}
+
+	var err error
+
+	s.registerInwayHandler, err = newRegisterInwayHandler(logger)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to setup RegisterInway handler")
+	}
+	s.getServicesHandler, err = newGetServicesHandler(logger)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to setup GetServices handler")
+	}
+
+	return s, nil
+}
