@@ -1,5 +1,4 @@
 /*/dist
-/**/
 /**/*.swagger.go
 /**/*.swagger.json
 /**/*.pb.go
