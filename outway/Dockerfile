@@ -16,3 +16,6 @@ RUN make
 # Release binary on latest alpine image.
 FROM alpine:latest
 COPY --from=build /go/src/github.com/VNG-Realisatie/nlx/outway/dist/bin/nlx-outway /usr/local/bin/nlx-outway
+
+EXPOSE 12018
+CMD ["/usr/local/bin/nlx-outway"]

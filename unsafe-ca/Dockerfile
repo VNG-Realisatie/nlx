@@ -10,3 +10,7 @@ FROM alpine:latest
 COPY --from=build-cfssl /go/bin/* /usr/local/bin/
 # Add script to start ca server.
 COPY unsafe-ca/*.sh /ca/
+
+WORKDIR /ca
+EXPOSE 8888
+CMD ["./start-ca.sh", "nlx.local"]
