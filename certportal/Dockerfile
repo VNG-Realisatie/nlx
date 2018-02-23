@@ -15,4 +15,10 @@ RUN make
 
 # Release binary on latest alpine image.
 FROM alpine:latest
+
 COPY --from=build /go/src/github.com/VNG-Realisatie/nlx/certportal/dist/bin/nlx-certportal /usr/local/bin/nlx-certportal
+COPY --from=build /go/src/github.com/VNG-Realisatie/nlx/certportal/files /home/nlx-certportal/files
+
+WORKDIR /home/nlx-certportal
+EXPOSE 12020
+CMD ["/usr/local/bin/nlx-certportal"]
