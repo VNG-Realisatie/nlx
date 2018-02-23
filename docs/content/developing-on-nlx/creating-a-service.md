@@ -13,7 +13,7 @@ To provide a service to the NLX network you first need to deploy an NLX inway. F
 Now download the certificate of the NLX development CA:
 
 ```bash
-wget https://dev.nlx.io/root.crt
+wget https://certportal.nlx.io/root.crt
 ```
 
 And store it next to your private key and certificate. Now start a new inway:
@@ -28,7 +28,7 @@ docker run -d \
 -e TLS_ORG_CERT=/certs/inway.crt \
 -e TLS_ORG_KEY=/certs/inway.key \
 -p 2018:2018 \
-nlxio/inway:stable
+nlxio/inway:latest
 ```
 
 The inway now connects itself to the NLX network. Please **make sure** connections on port ```2018``` at your public IP address are routed to the machine running the NLX inway otherwise connections to your inway and services will fail.

@@ -13,7 +13,7 @@ To build an application that uses services of the NLX network you first need to 
 Now download the certificate of the NLX development CA:
 
 ```bash
-wget https://dev.nlx.io/root.crt
+wget https://certportal.nlx.io/root.crt
 ```
 
 And store it next to your private key and certificate. Now start a new outway:
@@ -27,7 +27,7 @@ docker run -d \
 -e TLS_ORG_CERT=/certs/outway.crt \
 -e TLS_ORG_KEY=/certs/outway.key \
 -p 12018:12018 \
-nlxio/outway:stable
+nlxio/outway:latest
 ```
 
 The outway is now running on http://localhost:12018.
