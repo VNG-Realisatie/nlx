@@ -52,7 +52,6 @@ func runServer(log *zap.Logger, address string, caCertPool *x509.CertPool, certK
 
 	// prepare grpc server options
 	opts := []grpc.ServerOption{
-		grpc.Creds(credentials.NewClientTLSFromCert(caCertPool, "")),
 		grpc_middleware.WithStreamServerChain(
 			grpc_ctxtags.StreamServerInterceptor(),
 			grpc_zap.StreamServerInterceptor(log),
@@ -73,9 +72,9 @@ func runServer(log *zap.Logger, address string, caCertPool *x509.CertPool, certK
 	gatewayDialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(
 			credentials.NewTLS(&tls.Config{
-				ServerName:         address,
+				Certificates:       []tls.Certificate{certKeyPair}, // using the grpc server's own cert to connect to it, perhaps find a way for the http/json gatewy to bypass tls locally
 				RootCAs:            caCertPool,
-				InsecureSkipVerify: true, // TODO: remove when setting up deployment to live environment
+				InsecureSkipVerify: true, // This is a local connection; hostname won't match
 			}),
 		),
 	}
@@ -95,22 +94,29 @@ func runServer(log *zap.Logger, address string, caCertPool *x509.CertPool, certK
 	}
 	httpRouter.Handle("/", gatewayMux)
 
-	// setup connection and http server
-	conn, err := net.Listen("tcp", address)
+	// start a simple tcp listener
+	tcpListener, err := net.Listen("tcp", address)
 	if err != nil {
 		log.With(zap.Error(err)).Fatal(fmt.Sprintf("could not listen on %s", address))
 	}
 
+	// wrap the tcp listener with tls
+	tlsConfig := &tls.Config{
+		Certificates: []tls.Certificate{certKeyPair},
+		NextProtos:   []string{"h2"},
+		ClientCAs:    caCertPool,
+		ClientAuth:   tls.VerifyClientCertIfGiven,
+		// TODO: ClientAUth must actually be tls.RequireAndVerifyClientCert, but we can only do that when the registration endpoint (client-tls mandatory)
+		// has been seperated from the inspection endpoint (client-tls optional). And perhaps the gateway should run seperately all together.
+	}
+	tlsListener := tls.NewListener(tcpListener, tlsConfig)
+
+	// let server handle connections on the tls Listener
 	srv := &http.Server{
 		Addr:    address,
 		Handler: newGRPCSplitterHandlerFunc(grpcServer, httpRouter),
-		TLSConfig: &tls.Config{
-			Certificates: []tls.Certificate{certKeyPair},
-			NextProtos:   []string{"h2"},
-		},
 	}
-
-	err = srv.Serve(tls.NewListener(conn, srv.TLSConfig))
+	err = srv.Serve(tlsListener)
 	if err != nil {
 		log.With(zap.Error(err)).Fatal("ListenAndServe failed")
 	}

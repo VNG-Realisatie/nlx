@@ -80,9 +80,14 @@ func main() {
 		logger.Fatal("failed to load tls certs", zap.Error(err))
 	}
 
-	{
+	{ // TODO: move this into revised Inway structure
+		clientCert, err := tls.LoadX509KeyPair(options.OrgCertFile, options.OrgKeyFile)
+		if err != nil {
+			logger.Fatal("failed to load tls cert file", zap.Error(err))
+		}
 		directoryDialCredentials := credentials.NewTLS(&tls.Config{
-			RootCAs: roots,
+			Certificates: []tls.Certificate{clientCert},
+			RootCAs:      roots,
 		})
 		directoryDialOptions := []grpc.DialOption{
 			grpc.WithTransportCredentials(directoryDialCredentials),
