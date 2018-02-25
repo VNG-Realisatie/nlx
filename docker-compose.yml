@@ -113,6 +113,7 @@ services:
       - TLS_NLX_ROOT_CERT=/outway_cert/nlx_root.pem
       - TLS_ORG_CERT=/outway_cert/outway_nlx_local.pem
       - TLS_ORG_KEY=/outway_cert/outway_nlx_local-key.pem
+      - DIRECTORY_ADDRESS=directory.nlx.local:1984
     volumes:
       - outway_cert:/outway_cert
       - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx

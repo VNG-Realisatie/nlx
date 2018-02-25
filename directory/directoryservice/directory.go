@@ -13,7 +13,7 @@ var _ directoryapi.DirectoryServer = &DirectoryService{}
 // DirectoryService handles all requests for a directory api
 type DirectoryService struct {
 	*registerInwayHandler
-	*getServicesHandler
+	*listServicesHandler
 }
 
 // New sets up a new DirectoryService and returns an error when something failed during set.
@@ -26,9 +26,9 @@ func New(logger *zap.Logger) (*DirectoryService, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to setup RegisterInway handler")
 	}
-	s.getServicesHandler, err = newGetServicesHandler(logger)
+	s.listServicesHandler, err = newListServicesHandler(logger)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to setup GetServices handler")
+		return nil, errors.Wrap(err, "failed to setup ListServices handler")
 	}
 
 	return s, nil

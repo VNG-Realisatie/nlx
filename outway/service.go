@@ -29,14 +29,19 @@ type Service struct {
 // NewService creates a new Service instance with a single inway to forward requests to.
 // This is a PoC shortcut, the real outway will fetch services and their inways* from the directory
 // 		(* note the plural; a service can have multiple inways published by directory so that an outway can balance load to multiple inways)
-func NewService(logger *zap.Logger, roots *x509.CertPool, certFile string, keyFile string, organizationName, serviceName string, inwayAddress string) (*Service, error) {
+func NewService(logger *zap.Logger, roots *x509.CertPool, certFile string, keyFile string, organizationName, serviceName string, inwayAddresses []string) (*Service, error) {
+	if len(inwayAddresses) == 0 {
+		return nil, errors.New("expecting at least one inway address")
+	}
+	inwayAddress := inwayAddresses[0] // no loadbalancing etc. yet in poc, just using the first inway available
+
 	s := &Service{
 		organizationName: organizationName,
 		serviceName:      serviceName,
 		roots:            roots,
 	}
 	s.logger = logger.With(zap.String("outway-service-full-name", s.fullName()))
-	endpointURL, err := url.Parse(inwayAddress)
+	endpointURL, err := url.Parse("https://" + inwayAddress)
 	if err != nil {
 		return nil, errors.Wrap(err, "invalid endpoint provided")
 	}

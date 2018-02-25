@@ -1,5 +1,7 @@
-
+.PHONY: all
 all: generate
+
+.PHONY: generate
 generate: clean
 
 	@# Generate go, gateway, validators
@@ -30,8 +32,10 @@ plugins=grpc:. \
 	cat directory.swagger.json      >> directory.swagger.go
 	echo '`)'                       >> directory.swagger.go
 
-
+.PHONY: clean
 clean:
 	@# Remove old generated files
 	rm -f *.pb.go
 	rm -f *.pb.gw.go
+	rm -f *.swagger.json
+	rm -f *.swagger.go

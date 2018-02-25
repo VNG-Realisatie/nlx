@@ -9,15 +9,15 @@ import (
 	"github.com/VNG-Realisatie/nlx/directory/directoryapi"
 )
 
-type getServicesHandler struct{}
+type listServicesHandler struct{}
 
-func newGetServicesHandler(logger *zap.Logger) (*getServicesHandler, error) {
-	return &getServicesHandler{}, nil
+func newListServicesHandler(logger *zap.Logger) (*listServicesHandler, error) {
+	return &listServicesHandler{}, nil
 }
 
-func (p *getServicesHandler) GetServices(ctx context.Context, req *directoryapi.GetServicesRequest) (*directoryapi.GetServicesResponse, error) {
-	fmt.Println("rpc request GetServices()")
-	repl := &directoryapi.GetServicesResponse{}
+func (p *listServicesHandler) ListServices(ctx context.Context, req *directoryapi.ListServicesRequest) (*directoryapi.ListServicesResponse, error) {
+	fmt.Println("rpc request ListServices()")
+	repl := &directoryapi.ListServicesResponse{}
 
 	store.ServicesLock.RLock()
 	defer store.ServicesLock.RUnlock()

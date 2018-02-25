@@ -10,7 +10,9 @@ RUN go get github.com/cortesi/modd/cmd/modd
 # Add code and build.
 COPY . /go/src/github.com/VNG-Realisatie/nlx
 WORKDIR /go/src/github.com/VNG-Realisatie/nlx/outway
-RUN make
+
+# Ignore failing make to allow this stage to complete even when there are errors in the sourcecode.
+RUN make || true 
 
 
 # Release binary on latest alpine image.

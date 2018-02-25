@@ -4,45 +4,103 @@
 package outway
 
 import (
+	"context"
+	"crypto/tls"
 	"crypto/x509"
+	"fmt"
 	"sync"
+	"time"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
+
+	"github.com/VNG-Realisatie/nlx/common/orgtls"
+	"github.com/VNG-Realisatie/nlx/directory/directoryapi"
 )
 
 // Outway handles requests from inside the organization
 type Outway struct {
 	organizationName string // the organization running this outway
 
+	tlsOptions orgtls.TLSOptions
+	tlsRoots   *x509.CertPool
+
 	logger *zap.Logger
+
+	directoryClient directoryapi.DirectoryClient
 
 	servicesLock sync.RWMutex
 	services     map[string]*Service // services mapped by <organizationName>.<serviceName>, PoC shortcut in the absence of directory
 }
 
 // NewOutway creates a new Outway and sets it up to handle requests.
-func NewOutway(l *zap.Logger, roots *x509.CertPool, orgCert *x509.Certificate) (*Outway, error) {
+func NewOutway(logger *zap.Logger, tlsOptions orgtls.TLSOptions, directoryAddress string) (*Outway, error) {
+	// load certs and get organization name from cert
+	roots, orgCert, err := orgtls.Load(tlsOptions)
+	if err != nil {
+		fmt.Println(err)
+		logger.Fatal("failed to load tls certs", zap.Error(err))
+	}
 	if len(orgCert.Subject.Organization) != 1 {
 		return nil, errors.New("cannot obtain organization name from self cert")
 	}
 	organizationName := orgCert.Subject.Organization[0]
-	i := &Outway{
-		logger:           l.With(zap.String("outway-organization-name", organizationName)),
+
+	o := &Outway{
+		logger:           logger.With(zap.String("outway-organization-name", organizationName)),
 		organizationName: organizationName,
 
-		services: make(map[string]*Service),
+		tlsOptions: tlsOptions,
+		tlsRoots:   roots,
 	}
-	return i, nil
+
+	directoryDialCredentials := credentials.NewTLS(&tls.Config{
+		RootCAs: roots,
+	})
+	directoryDialOptions := []grpc.DialOption{
+		grpc.WithTransportCredentials(directoryDialCredentials),
+	}
+	directoryConnCtx, _ := context.WithTimeout(context.Background(), 1*time.Minute)
+	directoryConn, err := grpc.DialContext(directoryConnCtx, directoryAddress, directoryDialOptions...)
+	if err != nil {
+		logger.Fatal("failed to setup connection to directory service", zap.Error(err))
+	}
+	o.directoryClient = directoryapi.NewDirectoryClient(directoryConn)
+	err = o.updateServiceList()
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to update internal service directory")
+	}
+	go func() {
+		for {
+			time.Sleep(5 * time.Second)
+			err := o.updateServiceList()
+			if err != nil {
+				o.logger.Warn("failed to update the service list", zap.Error(err))
+			}
+		}
+	}()
+
+	return o, nil
 }
 
-// AddService adds a service and its inway to the outway's internal registry.
-func (i *Outway) AddService(s *Service) error {
-	i.servicesLock.Lock()
-	defer i.servicesLock.Unlock()
-	if _, exists := i.services[s.fullName()]; exists {
-		return errors.New("service with same name has already been registered")
+func (o *Outway) updateServiceList() error {
+	services := make(map[string]*Service)
+	resp, err := o.directoryClient.ListServices(context.Background(), &directoryapi.ListServicesRequest{})
+	if err != nil {
+		return errors.Wrap(err, "failed to fetch services from directory")
 	}
-	i.services[s.fullName()] = s
+	for _, service := range resp.Services {
+		// create the service
+		s, err := NewService(o.logger, o.tlsRoots, o.tlsOptions.OrgCertFile, o.tlsOptions.OrgKeyFile, service.OrganizationName, service.Name, service.InwayAddresses)
+		if err != nil {
+			o.logger.Fatal("failed to create new service", zap.String("service-organization-name", service.OrganizationName), zap.String("service-name", service.Name), zap.Error(err))
+		}
+		services[s.fullName()] = s
+	}
+	o.servicesLock.Lock()
+	defer o.servicesLock.Unlock()
+	o.services = services
 	return nil
 }

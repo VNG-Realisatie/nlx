@@ -18,7 +18,7 @@ func newRegisterInwayHandler(logger *zap.Logger) (*registerInwayHandler, error) 
 }
 
 func (p *registerInwayHandler) RegisterInway(ctx context.Context, req *directoryapi.RegisterInwayRequest) (*directoryapi.RegisterInwayResponse, error) {
-	fmt.Printf("rpc request RegisterInway(%s, %s)\n", req.OrganizationName, req.InwayAddress)
+	fmt.Printf("rpc request RegisterInway(%s)\n", req.InwayAddress)
 	repl := &directoryapi.RegisterInwayResponse{}
 
 	peer, ok := peer.FromContext(ctx)

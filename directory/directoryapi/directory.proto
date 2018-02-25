@@ -15,9 +15,9 @@ option (gogoproto.goproto_getters_all) = false;
 service Directory {
 	// RegisterInway registers an inway for a given service
 	rpc RegisterInway (RegisterInwayRequest) returns (RegisterInwayResponse) {}
-	// GetServices lists all services and their gateways.
-	rpc GetServices (GetServicesRequest) returns (GetServicesResponse) {
-		option (google.api.http).get = "/directory/services";
+	// ListServices lists all services and their gateways.
+	rpc ListServices (ListServicesRequest) returns (ListServicesResponse) {
+		option (google.api.http).get = "/directory/list-services";
 	}
 }
 
@@ -30,9 +30,9 @@ message RegisterInwayResponse {
 	string error = 1;
 }
 
-message GetServicesRequest {}
+message ListServicesRequest {}
 
-message GetServicesResponse {
+message ListServicesResponse {
 	string error = 1;
 	repeated Service services = 2;
 }
