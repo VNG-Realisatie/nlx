@@ -1,6 +1,10 @@
 
 .PHONY: all
-all: vendor build
+all: clean vendor build
+
+.PHONY: clean
+clean:
+	rm -rf dist
 
 .PHONY: vendor
 vendor:
