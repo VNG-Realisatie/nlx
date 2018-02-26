@@ -17,16 +17,16 @@ type DirectoryService struct {
 }
 
 // New sets up a new DirectoryService and returns an error when something failed during set.
-func New(logger *zap.Logger) (*DirectoryService, error) {
+func New(store *Store, logger *zap.Logger) (*DirectoryService, error) {
 	s := &DirectoryService{}
 
 	var err error
 
-	s.registerInwayHandler, err = newRegisterInwayHandler(logger)
+	s.registerInwayHandler, err = newRegisterInwayHandler(store, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to setup RegisterInway handler")
 	}
-	s.listServicesHandler, err = newListServicesHandler(logger)
+	s.listServicesHandler, err = newListServicesHandler(store, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to setup ListServices handler")
 	}

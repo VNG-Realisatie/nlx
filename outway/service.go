@@ -14,6 +14,8 @@ import (
 	"go.uber.org/zap"
 )
 
+var errNoInwaysAvailable = errors.New("no inways available")
+
 // Service handles the proxying of a request to the inway
 // TODO: if we like this model in the PoC, Service should become an interface with multiple implementations (http/json, grpc, ??) like inway
 type Service struct {
@@ -31,7 +33,7 @@ type Service struct {
 // 		(* note the plural; a service can have multiple inways published by directory so that an outway can balance load to multiple inways)
 func NewService(logger *zap.Logger, roots *x509.CertPool, certFile string, keyFile string, organizationName, serviceName string, inwayAddresses []string) (*Service, error) {
 	if len(inwayAddresses) == 0 {
-		return nil, errors.New("expecting at least one inway address")
+		return nil, errNoInwaysAvailable
 	}
 	inwayAddress := inwayAddresses[0] // no loadbalancing etc. yet in poc, just using the first inway available
 

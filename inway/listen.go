@@ -6,6 +6,7 @@ package inway
 import (
 	"crypto/tls"
 	"crypto/x509"
+	"io"
 	"net/http"
 	"strings"
 
@@ -41,6 +42,13 @@ func (i *Inway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	issuer := r.TLS.PeerCertificates[0].Issuer.Organization[0]
 	logger = logger.With(zap.String("issuer", issuer), zap.String("subject", subject))
 	logger.Debug("received request")
+
+	// simple health check
+	if r.URL.Path == "/health" {
+		io.WriteString(w, "ok")
+		return
+	}
+
 	urlparts := strings.SplitN(strings.TrimPrefix(r.URL.Path, "/"), "/", 2)
 	if len(urlparts) != 2 {
 		http.Error(w, "nlx inway error: invalid path in url", http.StatusBadRequest)
