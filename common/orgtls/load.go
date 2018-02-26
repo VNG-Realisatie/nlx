@@ -10,14 +10,9 @@ import (
 
 // Load loads the root certs and own cert/key
 func Load(options TLSOptions) (*x509.CertPool, *x509.Certificate, error) {
-	roots := x509.NewCertPool()
-	rootPEM, err := ioutil.ReadFile(options.NLXRootCert)
+	roots, err := LoadRootCert(options.NLXRootCert)
 	if err != nil {
-		return nil, nil, errors.Wrapf(err, "failed to read NLX CA root PEM file `%s`", options.NLXRootCert)
-	}
-	ok := roots.AppendCertsFromPEM(rootPEM)
-	if !ok {
-		return nil, nil, errors.Errorf("failed to parse NLX CA root PEM from file `%s`", options.NLXRootCert)
+		return nil, nil, err
 	}
 
 	certPEM, err := ioutil.ReadFile(options.OrgCertFile)
@@ -42,4 +37,18 @@ func Load(options TLSOptions) (*x509.CertPool, *x509.Certificate, error) {
 	}
 
 	return roots, cert, nil
+}
+
+// LoadRootCert loads the certificate from file and adds it to a new x509.CertPool which is returned.
+func LoadRootCert(rootCertFile string) (*x509.CertPool, error) {
+	roots := x509.NewCertPool()
+	rootPEM, err := ioutil.ReadFile(rootCertFile)
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed to read NLX CA root PEM file `%s`", rootCertFile)
+	}
+	ok := roots.AppendCertsFromPEM(rootPEM)
+	if !ok {
+		return nil, errors.Errorf("failed to parse NLX CA root PEM from file `%s`", rootCertFile)
+	}
+	return roots, nil
 }

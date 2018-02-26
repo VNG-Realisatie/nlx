@@ -12,4 +12,4 @@ vendor:
 
 .PHONY: build
 build:
-	go build -o dist/bin/nlx-outway ./cmd/nlx-outway
+	go build -o dist/bin/nlx-directory ./cmd/nlx-directory

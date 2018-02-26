@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+// Package directoryapi defines the directory api.
+package directoryapi;
+
+import "google/api/annotations.proto";
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.sizer_all) = true;
+option (gogoproto.unmarshaler_all) = true;
+option (gogoproto.goproto_getters_all) = false;
+
+// The Directory service definition.
+service Directory {
+	// RegisterInway registers an inway for a given service
+	rpc RegisterInway (RegisterInwayRequest) returns (RegisterInwayResponse) {}
+	// ListServices lists all services and their gateways.
+	rpc ListServices (ListServicesRequest) returns (ListServicesResponse) {
+		option (google.api.http).get = "/directory/list-services";
+	}
+}
+
+message RegisterInwayRequest {
+	string inway_address = 1;
+	repeated string service_names = 2;
+}
+
+message RegisterInwayResponse {
+	string error = 1;
+}
+
+message ListServicesRequest {}
+
+message ListServicesResponse {
+	string error = 1;
+	repeated Service services = 2;
+}
+
+message Service {
+	string name = 1;
+	string organization_name = 2;
+	repeated string inwayAddresses = 3;
+}

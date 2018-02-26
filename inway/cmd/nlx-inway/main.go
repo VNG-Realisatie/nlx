@@ -4,21 +4,34 @@
 package main
 
 import (
+	"context"
+	"crypto/tls"
 	"fmt"
 	"log"
 	"os"
+	"time"
+
+	"google.golang.org/grpc/codes"
 
 	flags "github.com/jessevdk/go-flags"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/status"
 
 	"github.com/VNG-Realisatie/nlx/common/orgtls"
 	"github.com/VNG-Realisatie/nlx/common/process"
+	"github.com/VNG-Realisatie/nlx/directory/directoryapi"
 	"github.com/VNG-Realisatie/nlx/inway"
 )
 
 var options struct {
 	ListenAddress string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:2018" description:"Adress for the inway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+
+	DirectoryAddress string `long:"directory-address" env:"DIRECTORY_ADDRESS" description:"Address for the directory where this inway can register it's services" required:"true"`
+
+	SelfAddress string `long:"self-address" env:"SELF_ADDRESS" description:"The address that outways can use to reach me" required:"true"`
 
 	orgtls.TLSOptions
 }
@@ -65,6 +78,45 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 		logger.Fatal("failed to load tls certs", zap.Error(err))
+	}
+
+	{ // TODO: move this into revised Inway structure
+		clientCert, err := tls.LoadX509KeyPair(options.OrgCertFile, options.OrgKeyFile)
+		if err != nil {
+			logger.Fatal("failed to load tls cert file", zap.Error(err))
+		}
+		directoryDialCredentials := credentials.NewTLS(&tls.Config{
+			Certificates: []tls.Certificate{clientCert},
+			RootCAs:      roots,
+		})
+		directoryDialOptions := []grpc.DialOption{
+			grpc.WithTransportCredentials(directoryDialCredentials),
+		}
+		directoryConnCtx, _ := context.WithTimeout(context.Background(), 1*time.Minute)
+		directoryConn, err := grpc.DialContext(directoryConnCtx, options.DirectoryAddress, directoryDialOptions...)
+		if err != nil {
+			logger.Fatal("failed to setup connection to directory service", zap.Error(err))
+		}
+		directoryClient := directoryapi.NewDirectoryClient(directoryConn)
+		for {
+			resp, err := directoryClient.RegisterInway(context.Background(), &directoryapi.RegisterInwayRequest{
+				InwayAddress: options.SelfAddress,
+				ServiceNames: []string{"PostmanEcho"},
+			})
+			if err != nil {
+
+				if errStatus, ok := status.FromError(err); ok && errStatus.Code() == codes.Unavailable {
+					logger.Info("waiting for director...")
+					time.Sleep(100 * time.Millisecond)
+					continue
+				}
+				logger.Error("failed to register to directory", zap.Error(err))
+			}
+			if resp != nil && resp.Error != "" {
+				logger.Error(fmt.Sprintf("failed to register to directory: %s", resp.Error))
+			}
+			break
+		}
 	}
 
 	// Create new inway and provide it with a hardcoded service.

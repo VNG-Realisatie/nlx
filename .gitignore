@@ -1,2 +1,7 @@
 /*/dist
+/**/*.swagger.go
+/**/*.swagger.json
+/**/*.pb.go
+/**/*.pb.gw.go
+
 .DS_Store
