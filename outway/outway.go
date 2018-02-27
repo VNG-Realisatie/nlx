@@ -95,6 +95,11 @@ func (o *Outway) updateServiceList() error {
 		// create the service
 		s, err := NewService(o.logger, o.tlsRoots, o.tlsOptions.OrgCertFile, o.tlsOptions.OrgKeyFile, service.OrganizationName, service.Name, service.InwayAddresses)
 		if err != nil {
+			if err == errNoInwaysAvailable {
+				// skip, we just pretend this service is not existing now
+				// TODO(GeertJohan): post-poc we should have the service availeble but with no inways attached. This can best be done once we have inway loadbalancing.
+				continue
+			}
 			o.logger.Fatal("failed to create new service", zap.String("service-organization-name", service.OrganizationName), zap.String("service-name", service.Name), zap.Error(err))
 		}
 		services[s.fullName()] = s

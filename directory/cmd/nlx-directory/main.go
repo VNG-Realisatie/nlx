@@ -60,11 +60,6 @@ func main() {
 
 	process.Setup(logger)
 
-	directoryService, err := directoryservice.New(logger)
-	if err != nil {
-		logger.Fatal("failed to create new directory service", zap.Error(err))
-	}
-
 	caCertPool, err := orgtls.LoadRootCert(options.NLXRootCert)
 	if err != nil {
 		logger.Fatal("failed to load root cert", zap.Error(err))
@@ -73,5 +68,14 @@ func main() {
 	if err != nil {
 		logger.Fatal("failed to load x509 keypair for directory", zap.Error(err))
 	}
+
+	store := directoryservice.NewStore(logger, "./directory-store.json")
+	directoryservice.StartStoreHealthChecker(logger, caCertPool, certKeyPair, store)
+
+	directoryService, err := directoryservice.New(store, logger)
+	if err != nil {
+		logger.Fatal("failed to create new directory service", zap.Error(err))
+	}
+
 	runServer(logger, options.ListenAddress, caCertPool, certKeyPair, directoryService)
 }

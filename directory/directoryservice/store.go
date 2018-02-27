@@ -5,21 +5,24 @@ import (
 	"log"
 	"os"
 	"sync"
-)
 
-var (
-	store = NewStore("./directory-store.json")
+	"go.uber.org/zap"
 )
 
 // In the absence of a database, just store services in-memory and save to JSON file.
 // This file is poorly documented as it is just a temporary store for PoC.
 
+// StoredService contains metadata about a service and a list of inways which provide this service.
 type StoredService struct {
 	OrganizationName string
 	ServiceName      string
-	InwayAddresses   map[string]bool
+
+	// InwayAddresses maps address to health state
+	InwayAddresses     map[string]bool
+	InwayAddressesLock sync.RWMutex `json:"-"` // lock protects the inway addresses map
 }
 
+// NewStoredService creates a new StoredService with provided names set and no inways attached.
 func NewStoredService(orgName, serviceName string) *StoredService {
 	return &StoredService{
 		OrganizationName: orgName,
@@ -28,34 +31,43 @@ func NewStoredService(orgName, serviceName string) *StoredService {
 	}
 }
 
-type Store struct {
-	savePath string // path/to/file.json
-
-	ServicesLock sync.RWMutex `json:"-"` // lock protects the services map
-	Services     map[string]*StoredService
+// CanonicalServiceName returns the canonical service name within the NLX network
+func (s *StoredService) CanonicalServiceName() string {
+	return s.OrganizationName + `.` + s.ServiceName
 }
 
-func NewStore(savePath string) *Store {
+// Store holds all services available in the directory. This is a PoC structure which will be replaced with a proper database post-poc.
+type Store struct {
+	savePath string // path/to/file.json
+	logger   *zap.Logger
+
+	// Services stores the list of services this directory is aware of
+	Services     map[string]*StoredService
+	ServicesLock sync.RWMutex `json:"-"` // lock protects the services map
+}
+
+// NewStore creates a new store from file. When no store file is available a new file is created.
+func NewStore(logger *zap.Logger, savePath string) *Store {
+	store := &Store{
+		savePath: savePath,
+		logger:   logger,
+
+		Services: make(map[string]*StoredService),
+	}
+
 	saveFile, err := os.Open(savePath)
 	if err != nil {
 		if os.IsNotExist(err) {
-			s := &Store{
-				savePath: savePath,
-				Services: make(map[string]*StoredService),
-			}
-			s.Save()
-			return s
+			store.Save()
+			return store
 		}
 		log.Fatalf("failed to open exising save file: %v", err)
 	}
-	s := &Store{
-		savePath: savePath,
-	}
-	err = json.NewDecoder(saveFile).Decode(s)
+	err = json.NewDecoder(saveFile).Decode(store)
 	if err != nil {
 		log.Fatalf("failed to decode store save contents: %v", err)
 	}
-	return s
+	return store
 }
 
 // Save can be calld on a store to save it to disk.

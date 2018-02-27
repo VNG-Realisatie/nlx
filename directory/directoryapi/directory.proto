@@ -40,5 +40,5 @@ message ListServicesResponse {
 message Service {
 	string name = 1;
 	string organization_name = 2;
-	repeated string inwayAddresses = 3;
+	repeated string inway_addresses = 3;
 }

@@ -11,10 +11,14 @@ import (
 	"google.golang.org/grpc/peer"
 )
 
-type registerInwayHandler struct{}
+type registerInwayHandler struct {
+	store *Store
+}
 
-func newRegisterInwayHandler(logger *zap.Logger) (*registerInwayHandler, error) {
-	return &registerInwayHandler{}, nil
+func newRegisterInwayHandler(store *Store, logger *zap.Logger) (*registerInwayHandler, error) {
+	return &registerInwayHandler{
+		store: store,
+	}, nil
 }
 
 func (p *registerInwayHandler) RegisterInway(ctx context.Context, req *directoryapi.RegisterInwayRequest) (*directoryapi.RegisterInwayResponse, error) {
@@ -30,14 +34,14 @@ func (p *registerInwayHandler) RegisterInway(ctx context.Context, req *directory
 	// TODO: when administrative (client-tls mandatory) and inspection (client-tls optional) endpoints have been seperated,
 	// use proper grpc authentication via middleware and context (based on client-tls fields (CN, O) like we do here)
 
-	store.ServicesLock.Lock()
-	defer store.SaveAndUnlock()
+	p.store.ServicesLock.Lock()
+	defer p.store.SaveAndUnlock()
 
 	for _, serviceName := range req.ServiceNames {
-		service, exists := store.Services[serviceName]
+		service, exists := p.store.Services[serviceName]
 		if !exists {
 			service = NewStoredService(organizationName, serviceName)
-			store.Services[serviceName] = service
+			p.store.Services[serviceName] = service
 		}
 		service.InwayAddresses[req.InwayAddress] = true
 	}
