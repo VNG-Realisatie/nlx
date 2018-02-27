@@ -69,7 +69,7 @@ SwaggerJSONDirectory = `
         "organization_name": {
           "type": "string"
         },
-        "inwayAddresses": {
+        "inway_addresses": {
           "type": "array",
           "items": {
             "type": "string"
