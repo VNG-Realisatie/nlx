@@ -184,3 +184,20 @@ services:
         done
         modd
       "
+
+  directory-ui:
+      build:
+        context: .
+        dockerfile: directory-ui/Dockerfile
+        target: build
+      depends_on:
+        - directory
+      networks:
+        default:
+          aliases:
+            - directory-ui.nlx.local
+      volumes:
+        - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
+      ports:
+        - '12021:4200'
+      command: npm run start
