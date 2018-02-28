@@ -1,0 +1,4 @@
+[services]
+
+	[services.PostmanEcho]
+	address = "https://postman-echo.com/"

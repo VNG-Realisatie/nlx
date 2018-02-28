@@ -9,10 +9,12 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"google.golang.org/grpc/codes"
 
+	"github.com/BurntSushi/toml"
 	flags "github.com/jessevdk/go-flags"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -33,7 +35,19 @@ var options struct {
 
 	SelfAddress string `long:"self-address" env:"SELF_ADDRESS" description:"The address that outways can use to reach me" required:"true"`
 
+	ServiceConfig string `long:"service-config" env:"SERVICE_CONFIG" default:"service-config.toml" description:"Location of the service config toml file"`
+
 	orgtls.TLSOptions
+}
+
+// ServiceConfig is the top-level for the service configuration file.
+type ServiceConfig struct {
+	Services map[string]ServiceDetails
+}
+
+// ServiceDetails holds the details for a single service definition.
+type ServiceDetails struct {
+	Address string
 }
 
 func main() {
@@ -119,17 +133,28 @@ func main() {
 		}
 	}
 
+	serviceConfig := &ServiceConfig{}
+	tomlMetaData, err := toml.DecodeFile(options.ServiceConfig, serviceConfig)
+	if err != nil {
+		logger.Fatal("failed to load service config", zap.Error(err))
+	}
+	if len(tomlMetaData.Undecoded()) > 0 {
+		logger.Fatal("unsupported values in toml", zap.String("key", strings.Join(tomlMetaData.Undecoded()[0], ">")))
+	}
+
 	// Create new inway and provide it with a hardcoded service.
 	iw, err := inway.NewInway(logger, roots, orgCert)
 	if err != nil {
 		logger.Fatal("cannot setup inway", zap.Error(err))
 	}
-	// NOTE: hardcoded service endpoint because we don't have any other means to register endpoints yet
-	echoServiceEndpoint, err := inway.NewHTTPServiceEndpoint(logger, "PostmanEcho", "https://postman-echo.com/")
-	if err != nil {
-		logger.Fatal("failed to create PostmanEcho service", zap.Error(err))
+
+	for serviceName, serviceDetails := range serviceConfig.Services {
+		endpoint, err := inway.NewHTTPServiceEndpoint(logger, serviceName, serviceDetails.Address)
+		if err != nil {
+			logger.Fatal("failed to create service", zap.Error(err))
+		}
+		iw.AddServiceEndpoint(endpoint)
 	}
-	iw.AddServiceEndpoint(echoServiceEndpoint)
 	// Listen on the address provided in the options
 	err = iw.ListenAndServeTLS(options.ListenAddress, roots, options.TLSOptions.OrgCertFile, options.TLSOptions.OrgKeyFile)
 	if err != nil {
