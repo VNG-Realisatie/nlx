@@ -1,15 +1,16 @@
 FROM node:alpine AS build
 
-# Install node dependencies
+# First copy only package.json en package-lock.json to make the dependency fetching step optional.
 COPY ./directory-ui/package.json \
      ./directory-ui/package-lock.json \
-     /go/src/github.com/VNG-Realisatie/nlx/
+     /go/src/github.com/VNG-Realisatie/nlx/directory-ui/
 
 WORKDIR /go/src/github.com/VNG-Realisatie/nlx/directory-ui
+
 RUN npm install
 
-# Build a new version
-COPY ./directory-ui /go/src/github.com/VNG-Realisatie/nlx/
+# Now copy the whole directory for the build step.
+COPY ./directory-ui /go/src/github.com/VNG-Realisatie/nlx/directory-ui
 RUN npm run build
 
 # Copy static docs to alpine-based nginx container.
