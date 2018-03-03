@@ -56,13 +56,19 @@ func NewOutway(logger *zap.Logger, tlsOptions orgtls.TLSOptions, directoryAddres
 		tlsRoots:   roots,
 	}
 
+	orgKeypair, err := tls.LoadX509KeyPair(tlsOptions.OrgCertFile, tlsOptions.OrgKeyFile)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to read tls keypair")
+	}
 	directoryDialCredentials := credentials.NewTLS(&tls.Config{
-		RootCAs: roots,
+		Certificates: []tls.Certificate{orgKeypair},
+		RootCAs:      roots,
 	})
 	directoryDialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(directoryDialCredentials),
 	}
-	directoryConnCtx, _ := context.WithTimeout(context.Background(), 1*time.Minute)
+	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(context.Background(), 1*time.Minute)
+	defer directoryConnCtxCancel()
 	directoryConn, err := grpc.DialContext(directoryConnCtx, directoryAddress, directoryDialOptions...)
 	if err != nil {
 		logger.Fatal("failed to setup connection to directory service", zap.Error(err))

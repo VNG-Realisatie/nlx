@@ -177,6 +177,7 @@ services:
       - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
     ports:
       - '1984:1984'
+      - '1985:1985'
     command: >
       /bin/ash -c "
         while [ ! -f /directory_cert/.done ]; do
