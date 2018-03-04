@@ -7,7 +7,6 @@ import (
 	"context"
 	"crypto/tls"
 	"crypto/x509"
-	"fmt"
 	"sync"
 	"time"
 
@@ -40,7 +39,6 @@ func NewOutway(logger *zap.Logger, tlsOptions orgtls.TLSOptions, directoryAddres
 	// load certs and get organization name from cert
 	roots, orgCert, err := orgtls.Load(tlsOptions)
 	if err != nil {
-		fmt.Println(err)
 		logger.Fatal("failed to load tls certs", zap.Error(err))
 	}
 	if len(orgCert.Subject.Organization) != 1 {
