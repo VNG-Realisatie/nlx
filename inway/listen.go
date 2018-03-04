@@ -38,9 +38,9 @@ func (i *Inway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		zap.String("request-path", r.URL.Path),
 		zap.String("request-remote-address", r.RemoteAddr),
 	)
-	subject := r.TLS.PeerCertificates[0].Subject.Organization[0]
+	subjectOrganization := r.TLS.PeerCertificates[0].Subject.Organization[0]
 	issuer := r.TLS.PeerCertificates[0].Issuer.Organization[0]
-	logger = logger.With(zap.String("issuer", issuer), zap.String("subject", subject))
+	logger = logger.With(zap.String("issuer", issuer), zap.String("subject", subjectOrganization))
 	logger.Debug("received request")
 
 	// simple health check
@@ -57,6 +57,8 @@ func (i *Inway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	serviceName := urlparts[0]
 	r.URL.Path = urlparts[1]
+
+	r.Header.Set("X-NLX-Requester-Organization", subjectOrganization)
 
 	i.serviceEndpointsLock.RLock()
 	serviceEndpoint := i.serviceEndpoints[serviceName]
