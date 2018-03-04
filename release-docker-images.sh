@@ -26,8 +26,8 @@ docker build \
 	-f outway/Dockerfile .
 
 docker build \
-        -t nlxio/certportal:${RELEASE_TAG} \
-        -f certportal/Dockerfile .
+	-t nlxio/directory-ui:${RELEASE_TAG} \
+	-f directory-ui/Dockerfile .
 
 # TODO: only push the image when this script is ran in CI/CD or forced using env var (backup-plan for when CI/CD is down/unavailable)
 docker push nlxio/docs:${RELEASE_TAG}
@@ -36,3 +36,4 @@ docker push nlxio/directory:${RELEASE_TAG}
 docker push nlxio/inway:${RELEASE_TAG}
 docker push nlxio/outway:${RELEASE_TAG}
 docker push nlxio/certportal:${RELEASE_TAG}
+docker push nlxio/directory-ui:${RELEASE_TAG}
