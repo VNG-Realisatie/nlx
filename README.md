@@ -14,7 +14,7 @@ Read more on how to ask questions, file bugs and contribute code and documentati
 
 ## Documentation
 
-Please find the lastest documentation of NLX on https://docs.nlx.io/
+Please find the latest documentation of NLX on https://docs.nlx.io/
 
 ## Build and run
 
