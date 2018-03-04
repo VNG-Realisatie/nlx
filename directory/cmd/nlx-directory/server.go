@@ -38,7 +38,7 @@ func newGRPCSplitterHandlerFunc(grpcServer *grpc.Server, otherHandler http.Handl
 }
 
 // runServer is a blocking function which sets up the grpc and http/json server and runs them on a single address/port.
-func runServer(log *zap.Logger, address string, caCertPool *x509.CertPool, certKeyPair tls.Certificate, directoryService directoryapi.DirectoryServer) {
+func runServer(log *zap.Logger, address string, addressPlain string, caCertPool *x509.CertPool, certKeyPair tls.Certificate, directoryService directoryapi.DirectoryServer) {
 
 	// setup logrus connection for global grpc logging
 	grpc_zap.ReplaceGrpcLogger(log)
@@ -94,32 +94,42 @@ func runServer(log *zap.Logger, address string, caCertPool *x509.CertPool, certK
 	}
 	httpRouter.Handle("/", gatewayMux)
 
-	// start a simple tcp listener
-	tcpListener, err := net.Listen("tcp", address)
-	if err != nil {
-		log.With(zap.Error(err)).Fatal(fmt.Sprintf("could not listen on %s", address))
-	}
+	// Start HTTPS server
+	go func() {
+		// start a simple tcp listener
+		tcpListener, err := net.Listen("tcp", address)
+		if err != nil {
+			log.With(zap.Error(err)).Fatal(fmt.Sprintf("could not listen on %s", address))
+		}
 
-	// wrap the tcp listener with tls
-	tlsConfig := &tls.Config{
-		Certificates: []tls.Certificate{certKeyPair},
-		NextProtos:   []string{"h2"},
-		ClientCAs:    caCertPool,
-		ClientAuth:   tls.VerifyClientCertIfGiven,
-		// TODO: ClientAUth must actually be tls.RequireAndVerifyClientCert, but we can only do that when the registration endpoint (client-tls mandatory)
-		// has been seperated from the inspection endpoint (client-tls optional). And perhaps the gateway should run seperately all together.
-	}
-	tlsListener := tls.NewListener(tcpListener, tlsConfig)
+		// wrap the tcp listener with tls
+		tlsConfig := &tls.Config{
+			Certificates: []tls.Certificate{certKeyPair},
+			NextProtos:   []string{"h2"},
+			ClientCAs:    caCertPool,
+			ClientAuth:   tls.RequireAndVerifyClientCert,
+		}
+		tlsListener := tls.NewListener(tcpListener, tlsConfig)
 
-	// let server handle connections on the tls Listener
-	srv := &http.Server{
-		Addr:    address,
-		Handler: newGRPCSplitterHandlerFunc(grpcServer, httpRouter),
-	}
-	err = srv.Serve(tlsListener)
-	if err != nil {
-		log.With(zap.Error(err)).Fatal("ListenAndServe failed")
-	}
+		// let server handle connections on the tls Listener
+		srv := &http.Server{
+			Addr:    address,
+			Handler: newGRPCSplitterHandlerFunc(grpcServer, httpRouter),
+		}
+		err = srv.Serve(tlsListener)
+		if err != nil {
+			log.Fatal("ListenAndServe for HTTPS failed", zap.Error(err))
+		}
+	}()
 
-	return
+	// Start plain HTTP server, during the PoC this is proxied by k8s ingress which adds TLS using letsencrypt.
+	// TODO: When directory has a seperate storage/backing, the inspection API should actually become a seperate process.
+	go func() {
+		err := http.ListenAndServe(addressPlain, httpRouter)
+		if err != nil {
+			log.Fatal("ListenAndServe plain HTTP failed", zap.Error(err))
+		}
+	}()
+
+	select {}
 }

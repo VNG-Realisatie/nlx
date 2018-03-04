@@ -16,7 +16,8 @@ import (
 )
 
 var options struct {
-	ListenAddress string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:1984" description:"Adress for the inway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	ListenAddress      string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:1984" description:"Adress for the inway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	ListenAddressPlain string `long:"listen-address-plain" env:"LISTEN_ADDRESS_PLAIN" default:"0.0.0.0:1985" description:"Adress for the inway to listen on using plain HTTP. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 
 	NLXRootCert       string `long:"tls-nlx-root-cert" env:"TLS_NLX_ROOT_CERT" description:"Absolute or relative path to the NLX CA root cert .pem"`
 	DirectoryCertFile string `long:"tls-directory-cert" env:"TLS_DIRECTORY_CERT" description:"Absolute or relative path to the Directory cert .pem"`
@@ -77,5 +78,5 @@ func main() {
 		logger.Fatal("failed to create new directory service", zap.Error(err))
 	}
 
-	runServer(logger, options.ListenAddress, caCertPool, certKeyPair, directoryService)
+	runServer(logger, options.ListenAddress, options.ListenAddressPlain, caCertPool, certKeyPair, directoryService)
 }
