@@ -1,3 +1,3 @@
 # docs
 
-[More info.](https://docs.tip.nlx.io/development/components/docs/)
+The current `master` version of the documentation is deployed at [docs.nlx.io](https://docs.nlx.io/)
