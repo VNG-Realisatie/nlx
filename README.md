@@ -12,6 +12,10 @@ The current goal of this project is to deliver a Proof of Concept for the [NLX P
 
 Read more on how to ask questions, file bugs and contribute code and documentation in [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
+## Documentation
+
+Please find the latest documentation of NLX on https://docs.nlx.io/
+
 ## Build and run
 
 Make sure you have installed the following tools:

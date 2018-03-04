@@ -5,7 +5,6 @@ package inway
 
 import (
 	"crypto/tls"
-	"crypto/x509"
 	"io"
 	"net/http"
 	"strings"
@@ -15,17 +14,17 @@ import (
 )
 
 // ListenAndServeTLS is a blocking function that listens on provided tcp address to handle requests.
-func (i *Inway) ListenAndServeTLS(address string, roots *x509.CertPool, certFile, keyFile string) error {
+func (i *Inway) ListenAndServeTLS(address string) error {
 	server := &http.Server{
 		Addr: address,
 		TLSConfig: &tls.Config{
 			// only allow clients that present a cert signed by our root CA
-			ClientCAs:  roots,
+			ClientCAs:  i.roots,
 			ClientAuth: tls.RequireAndVerifyClientCert,
 		},
 		Handler: i,
 	}
-	err := server.ListenAndServeTLS(certFile, keyFile)
+	err := server.ListenAndServeTLS(i.orgCertFile, i.orgKeyFile)
 	if err != nil {
 		return errors.Wrap(err, "failed to run http server")
 	}
