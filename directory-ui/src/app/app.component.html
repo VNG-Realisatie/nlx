@@ -1,0 +1,16 @@
+<div class="container mb-3">
+    <div class="py-5 text-center">
+        <h2>NLX Directory</h2>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+          <ul class="list-group">
+            <li *ngFor="let service of services" class="list-group-item">
+              <h2><i class="fa fa-circle text-success"></i>&nbsp;{{service.name}}</h2>
+              <h4>{{service.organization_name}}</h4>
+              <p>{{service.inwayAddresses}}</p>
+            </li>
+          </ul>
+        </div>
+    </div>
+</div>
