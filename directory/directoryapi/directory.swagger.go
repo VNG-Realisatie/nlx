@@ -74,6 +74,9 @@ SwaggerJSONDirectory = `
           "items": {
             "type": "string"
           }
+        },
+        "documentation_url": {
+          "type": "string"
         }
       }
     }

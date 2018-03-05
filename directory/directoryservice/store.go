@@ -20,6 +20,8 @@ type StoredService struct {
 	// InwayAddresses maps address to health state
 	InwayAddresses     map[string]bool
 	InwayAddressesLock sync.RWMutex `json:"-"` // lock protects the inway addresses map
+
+	DocumentationURL string
 }
 
 // NewStoredService creates a new StoredService with provided names set and no inways attached.

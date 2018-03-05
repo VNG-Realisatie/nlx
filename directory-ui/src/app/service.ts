@@ -3,4 +3,5 @@ export class Service {
   name: string;
   organization_name: string;
   inway_addresses: string[];
+  documentation_url: string;
 }

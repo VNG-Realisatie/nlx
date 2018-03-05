@@ -30,6 +30,7 @@ func (p *listServicesHandler) ListServices(ctx context.Context, req *directoryap
 		s := &directoryapi.Service{
 			Name:             serviceName,
 			OrganizationName: service.OrganizationName,
+			DocumentationUrl: service.DocumentationURL,
 		}
 		for inwayAddress, healthy := range service.InwayAddresses {
 			if !healthy {

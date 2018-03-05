@@ -7,9 +7,7 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strings"
 
-	"github.com/BurntSushi/toml"
 	flags "github.com/jessevdk/go-flags"
 	"go.uber.org/zap"
 
@@ -30,16 +28,6 @@ var options struct {
 
 	logoptions.LogOptions
 	orgtls.TLSOptions
-}
-
-// ServiceConfig is the top-level for the service configuration file.
-type ServiceConfig struct {
-	Services map[string]ServiceDetails
-}
-
-// ServiceDetails holds the details for a single service definition.
-type ServiceDetails struct {
-	Address string
 }
 
 func main() {
@@ -78,14 +66,7 @@ func main() {
 
 	process.Setup(logger)
 
-	serviceConfig := &ServiceConfig{}
-	tomlMetaData, err := toml.DecodeFile(options.ServiceConfig, serviceConfig)
-	if err != nil {
-		logger.Fatal("failed to load service config", zap.Error(err))
-	}
-	if len(tomlMetaData.Undecoded()) > 0 {
-		logger.Fatal("unsupported values in toml", zap.String("key", strings.Join(tomlMetaData.Undecoded()[0], ">")))
-	}
+	serviceConfig := loadServiceConfig(logger, options.ServiceConfig)
 
 	iw, err := inway.NewInway(logger, options.SelfAddress, options.TLSOptions, options.DirectoryAddress)
 	if err != nil {
@@ -97,7 +78,15 @@ func main() {
 		if err != nil {
 			logger.Fatal("failed to create service", zap.Error(err))
 		}
-		iw.AddServiceEndpoint(endpoint)
+		switch serviceDetails.AuthorizationModel {
+		case "none", "":
+			endpoint.SetAuthorizationPublic()
+		case "whitelist":
+			endpoint.SetAuthorizationWhitelist(serviceDetails.AuthorizationWhitelist)
+		default:
+			logger.Fatal(fmt.Sprintf(`invalid authorization model "%s" for service "%s"`, serviceDetails.AuthorizationModel, serviceName))
+		}
+		iw.AddServiceEndpoint(endpoint, serviceDetails.DocumentationURL)
 	}
 	// Listen on the address provided in the options
 	err = iw.ListenAndServeTLS(options.ListenAddress)

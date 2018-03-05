@@ -86,22 +86,23 @@ func NewInway(logger *zap.Logger, selfAddress string, tlsOptions orgtls.TLSOptio
 }
 
 // AddServiceEndpoint adds an ServiceEndpoint to the inway's internal registry.
-func (i *Inway) AddServiceEndpoint(s ServiceEndpoint) error {
+func (i *Inway) AddServiceEndpoint(s ServiceEndpoint, documentationURL string) error {
 	i.serviceEndpointsLock.Lock()
 	defer i.serviceEndpointsLock.Unlock()
 	if _, exists := i.serviceEndpoints[s.ServiceName()]; exists {
 		return errors.New("service endpoint for a service with the same name has already been registered")
 	}
 	i.serviceEndpoints[s.ServiceName()] = s
-	i.announceToDirectory(s)
+	i.announceToDirectory(s, documentationURL)
 	return nil
 }
 
-func (i *Inway) announceToDirectory(s ServiceEndpoint) {
+func (i *Inway) announceToDirectory(s ServiceEndpoint, documentationURL string) {
 	for {
 		resp, err := i.directoryClient.RegisterInway(context.Background(), &directoryapi.RegisterInwayRequest{
-			InwayAddress: i.selfAddress,
-			ServiceNames: []string{s.ServiceName()},
+			InwayAddress:     i.selfAddress,
+			ServiceNames:     []string{s.ServiceName()},
+			DocumentationUrl: documentationURL,
 		})
 		if err != nil {
 

@@ -30,7 +30,7 @@ export class AppComponent  implements OnInit, OnDestroy {
     .subscribe(services => {
       this.services = services;
       this.services.sort(
-        function(a,b){
+        function(a, b) {
            if (a.organization_name !== b.organization_name) {
               return (a.organization_name > b.organization_name) ? 1 : -1;
            } else {

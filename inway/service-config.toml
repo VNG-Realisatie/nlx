@@ -1,4 +1,31 @@
 [services]
 
+## This block defines a services exposed by this inway.
+## A single inway can expose multiple services, therefore this block can be added multiple times.
+## The name of the service (in this example PostmanEcho) must be unique for each block.
 	[services.PostmanEcho]
+
+	## `address` should be set to the address at which the service is available.
+	## In this example we simply expose the postman-echo.com website.
 	address = "https://postman-echo.com/"
+
+	## `documentation-url` points to the documentation for provided sevice
+	documentation-url = "https://docs.postman-echo.com/"
+
+	## `authorization-model` can or whitelist
+	authorization-model = "none"
+
+
+	## For testing purposes, we define a second service which exposes the postman-echo.com API.
+	## But this time we add a whitelist authorization model.
+	[services.PostmanEchoWhitelisted]
+	address = "https://postman-echo.com/"
+	documentation-url = "https://docs.postman-echo.com/"
+
+	## We will enable whitelist authorization for this service
+	authorization-model = "whitelist"
+
+	## `authorization-whitelist` is required when `authorization-model` is set to "whitelist".
+	## This is a list of organization names (as specified in the peers organization cert) which is allowed access.
+	authorization-whitelist = ["DemoRequesterOrganization"]
+
