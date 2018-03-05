@@ -6,11 +6,10 @@ COPY ./directory-ui/package.json \
      /go/src/github.com/VNG-Realisatie/nlx/directory-ui/
 
 WORKDIR /go/src/github.com/VNG-Realisatie/nlx/directory-ui
-
 RUN npm install
 
 # Now copy the whole directory for the build step.
-COPY ./directory-ui /go/src/github.com/VNG-Realisatie/nlx/directory-ui
+COPY ./* /go/src/github.com/VNG-Realisatie/nlx/directory-ui/
 RUN npm run build
 
 # Copy static docs to alpine-based nginx container.
