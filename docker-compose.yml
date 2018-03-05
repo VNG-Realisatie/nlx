@@ -207,4 +207,8 @@ services:
         - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
       ports:
         - '12021:4200'
-      command: npm run start
+      command: >
+        /bin/ash -c "
+          npm install
+          npm run start
+        "
