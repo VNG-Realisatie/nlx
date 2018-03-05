@@ -12,8 +12,8 @@ import (
 	"github.com/BurntSushi/toml"
 	flags "github.com/jessevdk/go-flags"
 	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 
+	"github.com/VNG-Realisatie/nlx/common/logoptions"
 	"github.com/VNG-Realisatie/nlx/common/orgtls"
 	"github.com/VNG-Realisatie/nlx/common/process"
 	"github.com/VNG-Realisatie/nlx/inway"
@@ -28,6 +28,7 @@ var options struct {
 
 	ServiceConfig string `long:"service-config" env:"SERVICE_CONFIG" default:"service-config.toml" description:"Location of the service config toml file"`
 
+	logoptions.LogOptions
 	orgtls.TLSOptions
 }
 
@@ -57,8 +58,7 @@ func main() {
 	}
 
 	// Setup new zap logger
-	config := zap.NewDevelopmentConfig()
-	config.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
+	config := options.LogOptions.ZapConfig()
 	logger, err := config.Build()
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)

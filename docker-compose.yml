@@ -65,6 +65,8 @@ services:
         aliases:
           - inway.nlx.local
     environment:
+      - LOG_TYPE=development
+      - LOG_LEVEL=debug
       - TLS_NLX_ROOT_CERT=/inway_cert/nlx_root.pem
       - TLS_ORG_CERT=/inway_cert/inway_nlx_local.pem
       - TLS_ORG_KEY=/inway_cert/inway_nlx_local-key.pem
@@ -110,6 +112,8 @@ services:
         aliases:
           - outway.nlx.local
     environment:
+      - LOG_TYPE=development
+      - LOG_LEVEL=debug
       - TLS_NLX_ROOT_CERT=/outway_cert/nlx_root.pem
       - TLS_ORG_CERT=/outway_cert/outway_nlx_local.pem
       - TLS_ORG_KEY=/outway_cert/outway_nlx_local-key.pem
@@ -169,6 +173,8 @@ services:
         aliases:
           - directory.nlx.local
     environment:
+      - LOG_TYPE=development
+      - LOG_LEVEL=debug
       - TLS_NLX_ROOT_CERT=/directory_cert/nlx_root.pem
       - TLS_DIRECTORY_CERT=/directory_cert/directory_nlx_local.pem
       - TLS_DIRECTORY_KEY=/directory_cert/directory_nlx_local-key.pem

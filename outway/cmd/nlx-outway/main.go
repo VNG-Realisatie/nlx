@@ -10,6 +10,7 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
+	"github.com/VNG-Realisatie/nlx/common/logoptions"
 	"github.com/VNG-Realisatie/nlx/common/orgtls"
 	"github.com/VNG-Realisatie/nlx/common/process"
 	"github.com/VNG-Realisatie/nlx/outway"
@@ -20,6 +21,7 @@ var options struct {
 
 	DirectoryAddress string `long:"directory-address" env:"DIRECTORY_ADDRESS" description:"Address for the directory where this outway can fetch the service list" required:"true"`
 
+	logoptions.LogOptions
 	orgtls.TLSOptions
 }
 
@@ -39,7 +41,7 @@ func main() {
 	}
 
 	// Setup new zap logger
-	config := zap.NewDevelopmentConfig()
+	config := options.LogOptions.ZapConfig()
 	config.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
 	logger, err := config.Build()
 	if err != nil {
