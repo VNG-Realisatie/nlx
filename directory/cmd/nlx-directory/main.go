@@ -10,6 +10,7 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
+	"github.com/VNG-Realisatie/nlx/common/logoptions"
 	"github.com/VNG-Realisatie/nlx/common/orgtls"
 	"github.com/VNG-Realisatie/nlx/common/process"
 	"github.com/VNG-Realisatie/nlx/directory/directoryservice"
@@ -22,6 +23,8 @@ var options struct {
 	NLXRootCert       string `long:"tls-nlx-root-cert" env:"TLS_NLX_ROOT_CERT" description:"Absolute or relative path to the NLX CA root cert .pem"`
 	DirectoryCertFile string `long:"tls-directory-cert" env:"TLS_DIRECTORY_CERT" description:"Absolute or relative path to the Directory cert .pem"`
 	DirectoryKeyFile  string `long:"tls-directory-key" env:"TLS_DIRECTORY_KEY" description:"Absolute or relative path to the Directory key .pem"`
+
+	logoptions.LogOptions
 }
 
 func main() {
@@ -39,8 +42,8 @@ func main() {
 		log.Fatalf("unexpected arguments: %v", args)
 	}
 
-	// Setup new zap logger
-	config := zap.NewDevelopmentConfig()
+	// Setup new zap loggerv
+	config := options.LogOptions.ZapConfig()
 	config.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
 	logger, err := config.Build()
 	if err != nil {
