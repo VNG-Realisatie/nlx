@@ -23,6 +23,7 @@ type HTTPServiceEndpoint struct {
 	serviceName string
 	logger      *zap.Logger
 
+	host  string
 	proxy *httputil.ReverseProxy
 }
 
@@ -38,6 +39,7 @@ func NewHTTPServiceEndpoint(logger *zap.Logger, serviceName, endpoint string) (*
 	if err != nil {
 		return nil, errors.Wrap(err, "invalid endpoint provided")
 	}
+	h.host = endpointURL.Host
 	h.proxy = httputil.NewSingleHostReverseProxy(endpointURL)
 	return h, nil
 }
@@ -48,5 +50,6 @@ func (h *HTTPServiceEndpoint) ServiceName() string {
 }
 
 func (h *HTTPServiceEndpoint) sendRequest(w http.ResponseWriter, r *http.Request) {
+	r.Header.Set("Host", h.host)
 	h.proxy.ServeHTTP(w, r)
 }
