@@ -35,4 +35,7 @@ We will use the NLX certportal to retrieve an NLX developer certificate.
 ## Request a certificate
 Now point your browser to [certportal.nlx.io](https://certportal.nlx.io) to request a certificate. Enter the content of ```{yourhostname}.csr``` and click on **Request certificate**. The system will instantly generate a valid developer certificate. Download the certificate and store it next to your private key.
 
+## Downloading the CA root certificate
+To validate certificates of other organizations, you will need our demo CA's root certificate. It's available for download at https://certportal.nlx.io/root.crt
+
 Now you are ready to develop on NLX.
