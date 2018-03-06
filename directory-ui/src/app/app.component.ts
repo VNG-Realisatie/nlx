@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { Service } from './service';
 import { DirectoryService } from './directory.service';
@@ -8,7 +8,7 @@ import { DirectoryService } from './directory.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent  implements OnInit {
+export class AppComponent  implements OnInit, OnDestroy {
   services: Service[];
   interval: any;
 
@@ -27,6 +27,16 @@ export class AppComponent  implements OnInit {
 
   getServices(): void {
     this.directoryService.getServices()
-    .subscribe(services => this.services = services);
+    .subscribe(services => {
+      this.services = services;
+      this.services.sort(
+        function(a,b){
+           if (a.organization_name !== b.organization_name) {
+              return (a.organization_name > b.organization_name) ? 1 : -1;
+           } else {
+              return (a.name > b.name) ? 1 : -1;
+           }
+        });
+      });
   }
 }
