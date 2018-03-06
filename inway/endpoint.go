@@ -50,6 +50,6 @@ func (h *HTTPServiceEndpoint) ServiceName() string {
 }
 
 func (h *HTTPServiceEndpoint) sendRequest(w http.ResponseWriter, r *http.Request) {
-	r.Header.Set("Host", h.host)
+	r.Host = h.host
 	h.proxy.ServeHTTP(w, r)
 }
