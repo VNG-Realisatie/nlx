@@ -11,7 +11,8 @@
                 'text-danger': !service.inway_addresses
               }"></i>&nbsp;{{service.name}}</h2>
               <h4>{{service.organization_name}}</h4>
-              <p>{{service.inway_addresses}}</p>
+              <span *ngIf="service.documentation_url" ><a [attr.href]="service.documentation_url" >Documentation</a></span>
+              <p>Service address: {{service.inway_addresses}}</p>
             </li>
           </ul>
         </div>

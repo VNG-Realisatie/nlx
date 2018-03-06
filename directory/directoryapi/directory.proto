@@ -24,6 +24,7 @@ service Directory {
 message RegisterInwayRequest {
 	string inway_address = 1;
 	repeated string service_names = 2;
+	string documentation_url = 3;
 }
 
 message RegisterInwayResponse {
@@ -41,4 +42,5 @@ message Service {
 	string name = 1;
 	string organization_name = 2;
 	repeated string inway_addresses = 3;
+	string documentation_url = 4;
 }

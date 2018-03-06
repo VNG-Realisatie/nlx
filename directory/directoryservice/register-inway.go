@@ -43,6 +43,7 @@ func (p *registerInwayHandler) RegisterInway(ctx context.Context, req *directory
 			service = NewStoredService(organizationName, serviceName)
 			p.store.Services[serviceName] = service
 		}
+		service.DocumentationURL = req.DocumentationUrl
 		service.InwayAddresses[req.InwayAddress] = true
 	}
 
