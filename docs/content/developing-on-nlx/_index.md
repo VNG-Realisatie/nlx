@@ -21,7 +21,7 @@ Answer the questions accordingly:
 - **Locality Name**, enter any value
 - **Organization Name**, please enter a URL-friendly value. Also make sure this value is unique for the network in the [directory overview](https://directory.demo.nlx.io) as we do not check for uniqueness yet.<br>A good value could be: `an-awesome-organization`.
 - **Organization Unit Name**, enter any value
-- **Common name**, when you would like to offer services to the NLX network make sure this corresponds to your external hostname or IP address.
+- **Common name**, when you would like to offer services to the NLX network make sure this corresponds to your external hostname.
 - **Email Address**, enter any value
 - **A challenge password**, leave empty
 
