@@ -11,11 +11,17 @@ volumes:
     driver_opts:
       type: tmpfs
       device: tmpfs
+  monitor_cert:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
   directory_cert:
     driver: local
     driver_opts:
       type: tmpfs
       device: tmpfs
+  postgres_data: {}
 
 services:
   docs:
@@ -37,6 +43,34 @@ services:
       - '8888:8888'
     working_dir: /ca
     command: ./start-ca.sh nlx.local
+
+  postgres:
+    image: 'postgres:10'
+    expose:
+      - 5432
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+  db:
+    build:
+      context: .
+      dockerfile: db/Dockerfile
+      target: build
+    volumes:
+      - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      PGHOST: postgres
+      PGUSER: postgres
+      PGPASSWORD: postgres
+    working_dir: /go/src/github.com/VNG-Realisatie/nlx/db
+    depends_on:
+      - postgres
 
   inway_cert:
     build:
@@ -84,6 +118,8 @@ services:
         done
         modd
       "
+    depends_on:
+      - inway_cert
 
   outway_cert:
     build:
@@ -130,6 +166,54 @@ services:
         done
         modd
       "
+    depends_on:
+      - outway_cert
+
+  monitor_cert:
+    build:
+      context: .
+      dockerfile: unsafe-ca/Dockerfile
+    depends_on:
+      - ca
+    volumes:
+      - monitor_cert:/monitor_cert
+    command: >
+      /bin/ash -c "
+        cd /monitor_cert &&
+        /ca/generate-cert.sh monitor.nlx.local NLX ca &&
+        touch /monitor_cert/.done
+      "
+
+  monitor:
+    build:
+      context: .
+      dockerfile: monitor/Dockerfile
+      target: build
+    depends_on:
+      - monitor_cert
+    networks:
+      default:
+        aliases:
+          - monitor.nlx.local
+    environment:
+      - LOG_TYPE=development
+      - LOG_LEVEL=debug
+      - TLS_NLX_ROOT_CERT=/monitor_cert/nlx_root.pem
+      - TLS_DIRECTORY_CERT=/monitor_cert/monitor_nlx_local.pem
+      - TLS_DIRECTORY_KEY=/monitor_cert/monitor_nlx_local-key.pem
+    volumes:
+      - monitor_cert:/monitor_cert
+      - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
+    command: >
+      /bin/ash -c "
+        while [ ! -f /monitor_cert/.done ]; do
+          sleep .2
+        done
+        modd
+      "
+    depends_on:
+      - monitor_cert
+      - postgres
 
   certportal:
     build:
@@ -191,6 +275,9 @@ services:
         done
         modd
       "
+    depends_on:
+      - directory_cert
+      - postgres
 
   directory-ui:
       build:

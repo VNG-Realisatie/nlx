@@ -38,6 +38,17 @@ SwaggerJSONDirectory = `
     }
   },
   "definitions": {
+    "RegisterInwayRequestRegisterService": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "documentation_url": {
+          "type": "string"
+        }
+      }
+    },
     "directoryapiListServicesResponse": {
       "type": "object",
       "properties": {

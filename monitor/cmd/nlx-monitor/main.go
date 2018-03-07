@@ -17,7 +17,7 @@ import (
 	"github.com/VNG-Realisatie/nlx/common/orgtls"
 	"github.com/VNG-Realisatie/nlx/common/process"
 	"github.com/VNG-Realisatie/nlx/db/dbversion"
-	"github.com/VNG-Realisatie/nlx/directory/directoryservice"
+	"github.com/VNG-Realisatie/nlx/monitor"
 )
 
 var options struct {
@@ -87,10 +87,8 @@ func main() {
 		logger.Fatal("failed to load x509 keypair for directory", zap.Error(err))
 	}
 
-	directoryService, err := directoryservice.New(logger, db)
+	err = monitor.RunHealthChecker(logger, db, caCertPool, certKeyPair)
 	if err != nil {
-		logger.Fatal("failed to create new directory service", zap.Error(err))
+		logger.Fatal("failed to run monitor healthchecker", zap.Error(err))
 	}
-
-	runServer(logger, options.ListenAddress, options.ListenAddressPlain, caCertPool, certKeyPair, directoryService)
 }

@@ -100,15 +100,18 @@ func (i *Inway) AddServiceEndpoint(s ServiceEndpoint, documentationURL string) e
 func (i *Inway) announceToDirectory(s ServiceEndpoint, documentationURL string) {
 	for {
 		resp, err := i.directoryClient.RegisterInway(context.Background(), &directoryapi.RegisterInwayRequest{
-			InwayAddress:     i.selfAddress,
-			ServiceNames:     []string{s.ServiceName()},
-			DocumentationUrl: documentationURL,
+			InwayAddress: i.selfAddress,
+			Services: []*directoryapi.RegisterInwayRequest_RegisterService{
+				{
+					Name:             s.ServiceName(),
+					DocumentationUrl: documentationURL,
+				},
+			},
 		})
 		if err != nil {
-
 			if errStatus, ok := status.FromError(err); ok && errStatus.Code() == codes.Unavailable {
 				i.logger.Info("waiting for director...")
-				time.Sleep(100 * time.Millisecond)
+				time.Sleep(1 * time.Second)
 				continue
 			}
 			i.logger.Error("failed to register to directory", zap.Error(err))

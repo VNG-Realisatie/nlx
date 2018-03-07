@@ -4,42 +4,68 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/lib/pq"
+
+	"github.com/jmoiron/sqlx"
+	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
 	"github.com/VNG-Realisatie/nlx/directory/directoryapi"
 )
 
 type listServicesHandler struct {
-	store *Store
+	stmtSelectServices *sqlx.Stmt
 }
 
-func newListServicesHandler(store *Store, logger *zap.Logger) (*listServicesHandler, error) {
-	return &listServicesHandler{
-		store: store,
-	}, nil
-}
+func newListServicesHandler(db *sqlx.DB, logger *zap.Logger) (*listServicesHandler, error) {
+	h := &listServicesHandler{}
 
-func (p *listServicesHandler) ListServices(ctx context.Context, req *directoryapi.ListServicesRequest) (*directoryapi.ListServicesResponse, error) {
-	fmt.Println("rpc request ListServices()")
-	repl := &directoryapi.ListServicesResponse{}
-
-	p.store.ServicesLock.RLock()
-	defer p.store.ServicesLock.RUnlock()
-
-	for serviceName, service := range p.store.Services {
-		s := &directoryapi.Service{
-			Name:             serviceName,
-			OrganizationName: service.OrganizationName,
-			DocumentationUrl: service.DocumentationURL,
-		}
-		for inwayAddress, healthy := range service.InwayAddresses {
-			if !healthy {
-				continue // skip unhealthy instances in the service list
-			}
-			s.InwayAddresses = append(s.InwayAddresses, inwayAddress)
-		}
-		repl.Services = append(repl.Services, s)
+	var err error
+	h.stmtSelectServices, err = db.Preparex(`
+		SELECT
+			organizations.name AS organization_name,
+			services.name AS name,
+			COALESCE(services.documentation_url, '') AS documentation_url,
+			array_remove(array_agg(inways.address), NULL) AS inway_addresses
+		FROM directory.services
+			INNER JOIN directory.organizations
+				ON services.organization_id = organizations.id
+			LEFT JOIN directory.availabilities
+				ON services.id = availabilities.service_id AND availabilities.healthy = true
+			LEFT JOIN directory.inways
+				ON availabilities.inway_id = inways.id
+		GROUP BY services.id, organizations.id
+	`)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to prepare stmtSelectServices")
 	}
 
-	return repl, nil
+	return h, nil
+}
+
+func (h *listServicesHandler) ListServices(ctx context.Context, req *directoryapi.ListServicesRequest) (*directoryapi.ListServicesResponse, error) {
+	fmt.Println("rpc request ListServices()")
+	resp := &directoryapi.ListServicesResponse{}
+
+	rows, err := h.stmtSelectServices.Queryx()
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to execute stmtSelectServices")
+	}
+	for rows.Next() {
+		var respService = &directoryapi.Service{}
+		var inwayAddresses = pq.StringArray{}
+		err = rows.Scan(
+			&respService.OrganizationName,
+			&respService.Name,
+			&respService.DocumentationUrl,
+			&inwayAddresses,
+		)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to scan into struct")
+		}
+		respService.InwayAddresses = []string(inwayAddresses)
+		resp.Services = append(resp.Services, respService)
+	}
+
+	return resp, nil
 }

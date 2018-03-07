@@ -22,9 +22,14 @@ service Directory {
 }
 
 message RegisterInwayRequest {
+	message RegisterService {
+		string name = 1;
+		string documentation_url = 2;
+	}
+	
 	string inway_address = 1;
-	repeated string service_names = 2;
-	string documentation_url = 3;
+	repeated RegisterService services = 2;
+	
 }
 
 message RegisterInwayResponse {
