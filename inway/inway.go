@@ -22,8 +22,8 @@ import (
 	"go.uber.org/zap"
 )
 
-// Inway handles incomming requests and holds a list of registered ServiceEndpoints.
-// The Inway is responsible for selecting the correct ServiceEndpoint for an incomming request.
+// Inway handles incoming requests and holds a list of registered ServiceEndpoints.
+// The Inway is responsible for selecting the correct ServiceEndpoint for an incoming request.
 type Inway struct {
 	logger           *zap.Logger
 	organizationName string

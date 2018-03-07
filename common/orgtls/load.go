@@ -29,7 +29,6 @@ func Load(options TLSOptions) (*x509.CertPool, *x509.Certificate, error) {
 	}
 
 	opts := x509.VerifyOptions{
-		// DNSName: "mail.google.com",
 		Roots: roots,
 	}
 	if _, err := cert.Verify(opts); err != nil {

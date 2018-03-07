@@ -64,7 +64,7 @@ func runServer(log *zap.Logger, address string, addressPlain string, caCertPool 
 		),
 	}
 
-	// start grpc server and attach director service
+	// start grpc server and attach directory service
 	grpcServer := grpc.NewServer(opts...)
 	directoryapi.RegisterDirectoryServer(grpcServer, directoryService)
 
@@ -72,7 +72,7 @@ func runServer(log *zap.Logger, address string, addressPlain string, caCertPool 
 	gatewayDialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(
 			credentials.NewTLS(&tls.Config{
-				Certificates:       []tls.Certificate{certKeyPair}, // using the grpc server's own cert to connect to it, perhaps find a way for the http/json gatewy to bypass tls locally
+				Certificates:       []tls.Certificate{certKeyPair}, // using the grpc server's own cert to connect to it, perhaps find a way for the http/json gateway to bypass TLS locally
 				RootCAs:            caCertPool,
 				InsecureSkipVerify: true, // This is a local connection; hostname won't match
 			}),
@@ -102,7 +102,7 @@ func runServer(log *zap.Logger, address string, addressPlain string, caCertPool 
 			log.With(zap.Error(err)).Fatal(fmt.Sprintf("could not listen on %s", address))
 		}
 
-		// wrap the tcp listener with tls
+		// wrap the tcp listener with TLS
 		tlsConfig := &tls.Config{
 			Certificates: []tls.Certificate{certKeyPair},
 			NextProtos:   []string{"h2"},
@@ -111,7 +111,7 @@ func runServer(log *zap.Logger, address string, addressPlain string, caCertPool 
 		}
 		tlsListener := tls.NewListener(tcpListener, tlsConfig)
 
-		// let server handle connections on the tls Listener
+		// let server handle connections on the TLS Listener
 		srv := &http.Server{
 			Addr:    address,
 			Handler: newGRPCSplitterHandlerFunc(grpcServer, httpRouter),

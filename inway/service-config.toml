@@ -1,6 +1,6 @@
 [services]
 
-## This block defines a services exposed by this inway.
+## This block defines a service exposed by this inway.
 ## A single inway can expose multiple services, therefore this block can be added multiple times.
 ## The name of the service (in this example PostmanEcho) must be unique for each block.
 	[services.PostmanEcho]
@@ -12,7 +12,7 @@
 	## `documentation-url` points to the documentation for provided sevice
 	documentation-url = "https://docs.postman-echo.com/"
 
-	## `authorization-model` can or whitelist
+	## `authorization-model` none or whitelist
 	authorization-model = "none"
 
 
@@ -26,6 +26,5 @@
 	authorization-model = "whitelist"
 
 	## `authorization-whitelist` is required when `authorization-model` is set to "whitelist".
-	## This is a list of organization names (as specified in the peers organization cert) which is allowed access.
+	## This is a list of organization names (as specified in the peers organization cert) that are allowed access.
 	authorization-whitelist = ["DemoRequesterOrganization"]
-
