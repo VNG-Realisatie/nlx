@@ -5,7 +5,6 @@ package inway
 
 import (
 	"crypto/tls"
-	"io"
 	"net/http"
 	"strings"
 
@@ -43,10 +42,6 @@ func (i *Inway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	logger.Debug("received request")
 
 	// simple health check
-	if r.URL.Path == "/health" {
-		io.WriteString(w, "ok")
-		return
-	}
 
 	urlparts := strings.SplitN(strings.TrimPrefix(r.URL.Path, "/"), "/", 2)
 	if len(urlparts) != 2 {
@@ -55,6 +50,12 @@ func (i *Inway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	serviceName := urlparts[0]
+
+	// handle requests to the health endpoint
+	if serviceName == ".nlx-health" {
+		i.handleHealthRequest(w, r, urlparts[1])
+		return
+	}
 
 	reqMD := &RequestMetadata{
 		requesterOrganization: requesterOrganization,

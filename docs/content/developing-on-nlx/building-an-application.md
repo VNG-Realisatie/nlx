@@ -19,6 +19,7 @@ wget https://certportal.demo.nlx.io/root.crt
 And store it next to your private key and certificate. Now start a new outway:
 
 ```bash
+docker pull nlxio/outway:latest
 docker run -d \
 -v /absolute/path/to/root.crt:/certs/root.crt \
 -v /absolute/path/to/{yourhostname}.crt:/certs/outway.crt \
