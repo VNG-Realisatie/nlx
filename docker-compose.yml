@@ -199,8 +199,8 @@ services:
       - LOG_TYPE=development
       - LOG_LEVEL=debug
       - TLS_NLX_ROOT_CERT=/monitor_cert/nlx_root.pem
-      - TLS_DIRECTORY_CERT=/monitor_cert/monitor_nlx_local.pem
-      - TLS_DIRECTORY_KEY=/monitor_cert/monitor_nlx_local-key.pem
+      - TLS_MONITOR_CERT=/monitor_cert/monitor_nlx_local.pem
+      - TLS_MONITOR_KEY=/monitor_cert/monitor_nlx_local-key.pem
     volumes:
       - monitor_cert:/monitor_cert
       - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx

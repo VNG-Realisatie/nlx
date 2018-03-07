@@ -21,12 +21,9 @@ import (
 )
 
 var options struct {
-	ListenAddress      string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:1984" description:"Adress for the inway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
-	ListenAddressPlain string `long:"listen-address-plain" env:"LISTEN_ADDRESS_PLAIN" default:"0.0.0.0:1985" description:"Adress for the inway to listen on using plain HTTP. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
-
-	NLXRootCert       string `long:"tls-nlx-root-cert" env:"TLS_NLX_ROOT_CERT" description:"Absolute or relative path to the NLX CA root cert .pem"`
-	DirectoryCertFile string `long:"tls-directory-cert" env:"TLS_DIRECTORY_CERT" description:"Absolute or relative path to the Directory cert .pem"`
-	DirectoryKeyFile  string `long:"tls-directory-key" env:"TLS_DIRECTORY_KEY" description:"Absolute or relative path to the Directory key .pem"`
+	NLXRootCert     string `long:"tls-nlx-root-cert" env:"TLS_NLX_ROOT_CERT" description:"Absolute or relative path to the NLX CA root cert .pem"`
+	MonitorCertFile string `long:"tls-monitor-cert" env:"TLS_MONITOR_CERT" description:"Absolute or relative path to the Monitor cert .pem"`
+	MonitorKeyFile  string `long:"tls-monitor-key" env:"TLS_MONITOR_KEY" description:"Absolute or relative path to the Monitor key .pem"`
 
 	PostgresDSN string `long:"postgres-dsn" env:"POSTGRES_DSN" default:"postgres://postgres:postgres@postgres/nlx?sslmode=disable" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
 
@@ -82,9 +79,9 @@ func main() {
 	if err != nil {
 		logger.Fatal("failed to load root cert", zap.Error(err))
 	}
-	certKeyPair, err := tls.LoadX509KeyPair(options.DirectoryCertFile, options.DirectoryKeyFile)
+	certKeyPair, err := tls.LoadX509KeyPair(options.MonitorCertFile, options.MonitorKeyFile)
 	if err != nil {
-		logger.Fatal("failed to load x509 keypair for directory", zap.Error(err))
+		logger.Fatal("failed to load x509 keypair for monitor", zap.Error(err))
 	}
 
 	err = monitor.RunHealthChecker(logger, db, caCertPool, certKeyPair)
