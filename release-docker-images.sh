@@ -33,6 +33,10 @@ docker build \
 	-t nlxio/certportal:latest -t nlxio/certportal:${RELEASE_TAG} \
 	-f certportal/Dockerfile .
 
+docker build \
+	-t nlxio/monitor:latest -t nlxio/monitor:${RELEASE_TAG} \
+	-f monitor/Dockerfile .
+
 # TODO: only push the image when this script is ran in CI/CD or forced using env var (backup-plan for when CI/CD is down/unavailable)
 docker push nlxio/docs:latest
 docker push nlxio/docs:${RELEASE_TAG}
@@ -48,3 +52,5 @@ docker push nlxio/certportal:latest
 docker push nlxio/certportal:${RELEASE_TAG}
 docker push nlxio/directory-ui:latest
 docker push nlxio/directory-ui:${RELEASE_TAG}
+docker push nlxio/monitor:latest
+docker push nlxio/monitor:${RELEASE_TAG}
