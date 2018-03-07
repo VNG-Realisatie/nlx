@@ -29,6 +29,7 @@ Now start a new inway:
 
 
 ```bash
+docker pull nlxio/inway:latest
 docker run -d \
 -v /absolute/path/to/root.crt:/certs/root.crt \
 -v /absolute/path/to/{yourhostname}.crt:/certs/inway.crt \
