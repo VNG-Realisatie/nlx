@@ -2,34 +2,34 @@
 	<div class="py-5 text-center">
 			<h1>NLX Directory</h1>
 	</div>
-		<table class="table table-hover">
-			<thead>
-				<tr>
-					<th scope="col"><h3>Organization name</h3></th>
-					<th scope="col"><h3>Service name</h3></th>
-					<th scope="col"><h3>Status</h3></th>
-					<th scope="col"></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr *ngFor="let service of services">
-					<td>
-						<h4>{{service.organization_name}}</h4>
-						<i>http://&#123;your-outway-address&#125;:12018/{{service.organization_name}}/{{service.name}}/</i>
-					</td>
-					<td><h4>{{service.name}}</h4></td>
-					<td>
-						<span class="badge badge-success" *ngIf="service.inway_addresses">Online ({{service.inway_addresses.length}})</span>
-						<span class="badge badge-danger" *ngIf="!service.inway_addresses">Offline</span>
-					</td>
-					<td>
-						<span *ngIf="service.documentation_url">
-							<a [attr.href]="service.documentation_url">API Documentation</a>
-						</span>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th scope="col"><h3>Organization name</h3></th>
+				<th scope="col"><h3>Service name</h3></th>
+				<th scope="col"><h3>Status</h3></th>
+				<th scope="col"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let service of services">
+				<td>
+					<h4>{{service.organization_name}}</h4>
+					<i>http://&#123;your-outway-address&#125;:12018/{{service.organization_name}}/{{service.name}}/</i>
+				</td>
+				<td><h4>{{service.name}}</h4></td>
+				<td>
+					<span class="badge badge-success" *ngIf="service.inway_addresses">Online ({{service.inway_addresses.length}})</span>
+					<span class="badge badge-danger" *ngIf="!service.inway_addresses">Offline</span>
+				</td>
+				<td>
+					<span *ngIf="service.documentation_url">
+						<a [attr.href]="service.documentation_url">API Documentation</a>
+					</span>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </div>
 
 	
