@@ -61,14 +61,15 @@ func (o *Outway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if processID := r.Header.Get("X-NLX-Request-Process-Id"); processID != "" {
 		logFields = append(logFields, zap.String("doelbinding-process-id", processID))
 	}
-	requestID, err := o.requestFlake.NextID()
+	requestIDNum, err := o.requestFlake.NextID()
 	if err != nil {
 		o.logger.Error("could not get new request ID", zap.Error(err))
 		http.Error(w, "outway: internal server error", http.StatusInternalServerError)
 		return
 	}
-	logFields = append(logFields, zap.Uint64("doelbinding-logrecord-id", requestID))
-	r.Header.Set("X-NLX-Request-Logrecord-Id", strconv.FormatUint(requestID, 10))
+	requestID := strconv.FormatUint(requestIDNum, 32)
+	logFields = append(logFields, zap.String("doelbinding-logrecord-id", requestID))
+	r.Header.Set("X-NLX-Request-Logrecord-Id", requestID)
 
 	o.logger.Info("sending request", logFields...)
 
