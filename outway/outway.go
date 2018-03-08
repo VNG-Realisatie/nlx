@@ -7,6 +7,7 @@ import (
 	"context"
 	"crypto/tls"
 	"crypto/x509"
+	"hash/crc64"
 	"sync"
 	"time"
 
@@ -33,6 +34,7 @@ type Outway struct {
 	directoryClient directoryapi.DirectoryClient
 
 	requestFlake *sonyflake.Sonyflake
+	ecmaTable    *crc64.Table
 
 	servicesLock sync.RWMutex
 	services     map[string]*Service // services mapped by <organizationName>.<serviceName>, PoC shortcut in the absence of directory
@@ -58,6 +60,7 @@ func NewOutway(logger *zap.Logger, tlsOptions orgtls.TLSOptions, directoryAddres
 		tlsRoots:   roots,
 
 		requestFlake: sonyflake.NewSonyflake(sonyflake.Settings{}),
+		ecmaTable:    crc64.MakeTable(crc64.ECMA),
 	}
 
 	orgKeypair, err := tls.LoadX509KeyPair(tlsOptions.OrgCertFile, tlsOptions.OrgKeyFile)
