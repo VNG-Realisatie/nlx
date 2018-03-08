@@ -28,7 +28,7 @@ func WaitUntilLatestVersion(logger *zap.Logger, db *sql.DB) {
 			continue
 		}
 		if version != LatestVersion {
-			logger.Info(fmt.Sprintf("db is at version %d, monitor requires version %d", version, LatestVersion))
+			logger.Info(fmt.Sprintf("db is at version %d, require version %d", version, LatestVersion))
 			time.Sleep(1 * time.Second)
 			continue
 		}
