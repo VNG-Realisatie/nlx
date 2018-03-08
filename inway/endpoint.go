@@ -86,6 +86,7 @@ Authorized:
 	r.Header.Set("X-NLX-Request-Organization", reqMD.requesterOrganization)
 
 	var logFields = []zapcore.Field{
+		zap.String("request-path", r.URL.Path),
 		zap.String("doelbinding-log", "yes"),
 		zap.String("doelbinding-requester-organization", reqMD.requesterOrganization),
 	}
