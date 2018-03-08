@@ -14,6 +14,10 @@ docker build \
 	-f unsafe-ca/Dockerfile .
 
 docker build \
+	-t nlxio/db:latest -t nlxio/db:${RELEASE_TAG} \
+	-f db/Dockerfile .
+
+docker build \
 	-t nlxio/directory:latest -t nlxio/directory:${RELEASE_TAG} \
 	-f directory/Dockerfile .
 
@@ -42,6 +46,8 @@ docker push nlxio/docs:latest
 docker push nlxio/docs:${RELEASE_TAG}
 docker push nlxio/unsafe-ca:latest
 docker push nlxio/unsafe-ca:${RELEASE_TAG}
+docker push nlxio/db:latest
+docker push nlxio/db:${RELEASE_TAG}
 docker push nlxio/directory:latest
 docker push nlxio/directory:${RELEASE_TAG}
 docker push nlxio/inway:latest
