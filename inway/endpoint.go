@@ -95,6 +95,9 @@ Authorized:
 	if logrecordID := r.Header.Get("X-NLX-Request-Logrecord-Id"); logrecordID != "" {
 		logFields = append(logFields, zap.String("doelbinding-logrecord-id", logrecordID))
 	}
+	if dataElements := r.Header.Get("X-NLX-Request-Data-Elements"); dataElements != "" {
+		logFields = append(logFields, zap.String("doelbinding-data-elements", dataElements))
+	}
 
 	h.logger.Info("forwarding request", logFields...)
 
