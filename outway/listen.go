@@ -5,7 +5,10 @@ package outway
 
 import (
 	"net/http"
+	"strconv"
 	"strings"
+
+	"go.uber.org/zap/zapcore"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -46,5 +49,30 @@ func (o *Outway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var logFields = []zapcore.Field{zap.String("doelbinding-log", "yes")}
+	if userID := r.Header.Get("X-NLX-Request-User-Id"); userID != "" {
+		logFields = append(logFields, zap.String("doelbinding-user-id", userID))
+		r.Header.Del("X-NLX-Request-User-Id")
+	}
+	if applicationID := r.Header.Get("X-NLX-Request-Application-Id"); applicationID != "" {
+		logFields = append(logFields, zap.String("doelbinding-application-id", applicationID))
+		r.Header.Del("X-NLX-Request-Application-Id")
+	}
+	if processID := r.Header.Get("X-NLX-Request-Process-Id"); processID != "" {
+		logFields = append(logFields, zap.String("doelbinding-process-id", processID))
+	}
+	requestID, err := o.requestFlake.NextID()
+	if err != nil {
+		o.logger.Error("could not get new request ID", zap.Error(err))
+		http.Error(w, "outway: internal server error", http.StatusInternalServerError)
+		return
+	}
+	logFields = append(logFields, zap.Uint64("doelbinding-logrecord-id", requestID))
+	r.Header.Set("X-NLX-Request-Logrecord-Id", strconv.FormatUint(requestID, 10))
+
+	o.logger.Info("sending request", logFields...)
+
 	service.proxyRequest(w, r)
+
+	o.logger.Info("sending request finished", logFields...)
 }
