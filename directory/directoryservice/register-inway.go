@@ -34,7 +34,7 @@ func newRegisterInwayHandler(db *sqlx.DB, logger *zap.Logger) (*registerInwayHan
 				SELECT org.id, $2, NULLIF($3, '')
 					FROM org
 				ON CONFLICT ON CONSTRAINT services_uq_name
-					DO UPDATE SET name = EXCLUDED.name -- no-op update to return id
+					DO UPDATE SET documentation_url = EXCLUDED.documentation_url -- (possibly) no-op update to return id
 				RETURNING id
 		), inway AS (
 			INSERT INTO directory.inways (organization_id, address)
