@@ -56,3 +56,10 @@ FROM ubuntu:artful
 
 COPY --from=build /usr/local/bin/migrate /usr/local/bin/migrate
 ADD db/migrations /opt/db-migrations
+
+ENV PGUSER postgres
+ENV PGPASS postgres
+ENV PGHOST postgres
+ENV PGDB nlx
+
+CMD ["/usr/local/bin/migrate", "-path=/opt/db-migrations", "-database=postgres://${PGUSER}:${PGPASS}@${PGHOST}/${PGDB}?sslmode=disable", "up"]
