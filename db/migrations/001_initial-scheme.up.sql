@@ -58,5 +58,3 @@ ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE directory.availabilities ADD CONSTRAINT availabilities_fk_service FOREIGN KEY (service_id)
 REFERENCES directory.services (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
-
-

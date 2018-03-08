@@ -78,6 +78,7 @@ else
   echo "No differences found for down"
 fi
 
+echo "Verifying db/dbversion const LatestVersion"
 if ! grep -q "^const LatestVersion = ${migrateLastVersion}\$" dbversion/version.go; then
     echo "dbversion/version.go is invalid, expected LatestVersion to equal ${migrateLastVersion}, got different value.";
     exit 64
