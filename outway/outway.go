@@ -10,6 +10,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/sony/sonyflake"
+
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -29,6 +31,8 @@ type Outway struct {
 	logger *zap.Logger
 
 	directoryClient directoryapi.DirectoryClient
+
+	requestFlake *sonyflake.Sonyflake
 
 	servicesLock sync.RWMutex
 	services     map[string]*Service // services mapped by <organizationName>.<serviceName>, PoC shortcut in the absence of directory
@@ -52,6 +56,8 @@ func NewOutway(logger *zap.Logger, tlsOptions orgtls.TLSOptions, directoryAddres
 
 		tlsOptions: tlsOptions,
 		tlsRoots:   roots,
+
+		requestFlake: sonyflake.NewSonyflake(sonyflake.Settings{}),
 	}
 
 	orgKeypair, err := tls.LoadX509KeyPair(tlsOptions.OrgCertFile, tlsOptions.OrgKeyFile)

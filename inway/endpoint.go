@@ -9,6 +9,8 @@ import (
 	"net/http/httputil"
 	"net/url"
 
+	"go.uber.org/zap/zapcore"
+
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
@@ -78,8 +80,25 @@ func (h *HTTPServiceEndpoint) handleRequest(reqMD *RequestMetadata, w http.Respo
 	}
 
 Authorized:
+
 	r.Host = h.host
 	r.URL.Path = reqMD.requestPath
-	r.Header.Set("X-NLX-Requester-Organization", reqMD.requesterOrganization)
+	r.Header.Set("X-NLX-Request-Organization", reqMD.requesterOrganization)
+
+	var logFields = []zapcore.Field{
+		zap.String("doelbinding-log", "yes"),
+		zap.String("doelbinding-requester-organization", reqMD.requesterOrganization),
+	}
+	if processID := r.Header.Get("X-NLX-Request-Process-Id"); processID != "" {
+		logFields = append(logFields, zap.String("doelbinding-process-id", processID))
+	}
+	if logrecordID := r.Header.Get("X-NLX-Request-Logrecord-Id"); logrecordID != "" {
+		logFields = append(logFields, zap.String("doelbinding-logrecord-id", logrecordID))
+	}
+
+	h.logger.Info("forwarding request", logFields...)
+
 	h.proxy.ServeHTTP(w, r)
+
+	h.logger.Info("forwarding request finished", logFields...)
 }
