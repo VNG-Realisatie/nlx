@@ -63,9 +63,13 @@ func (o *Outway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if processID := r.Header.Get("X-NLX-Request-Process-Id"); processID != "" {
 		logFields = append(logFields, zap.String("doelbinding-process-id", processID))
 	}
+	if dataElements := r.Header.Get("X-NLX-Request-Data-Elements"); dataElements != "" {
+		logFields = append(logFields, zap.String("doelbinding-data-elements", dataElements))
+	}
+
 	requestIDFlake, err := o.requestFlake.NextID()
 	if err != nil {
-		o.logger.Error("could not get new request ID", zap.Error(err))
+		logger.Error("could not get new request ID", zap.Error(err))
 		http.Error(w, "outway: internal server error", http.StatusInternalServerError)
 		return
 	}
@@ -76,9 +80,9 @@ func (o *Outway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	logFields = append(logFields, zap.String("doelbinding-logrecord-id", requestID))
 	r.Header.Set("X-NLX-Request-Logrecord-Id", requestID)
 
-	o.logger.Info("sending request", logFields...)
+	logger.Info("sending request", logFields...)
 
 	service.proxyRequest(w, r)
 
-	o.logger.Info("sending request finished", logFields...)
+	logger.Info("sending request finished", logFields...)
 }
