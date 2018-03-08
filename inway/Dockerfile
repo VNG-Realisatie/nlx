@@ -17,6 +17,9 @@ RUN make || true
 
 # Release binary on latest alpine image.
 FROM alpine:latest
+
+RUN apk add --no-cache ca-certificates
+
 COPY --from=build /go/src/github.com/VNG-Realisatie/nlx/inway/dist/bin/nlx-inway /usr/local/bin/nlx-inway
 
 EXPOSE 2018
