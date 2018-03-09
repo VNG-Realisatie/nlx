@@ -18,7 +18,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="organizations" hide-ext-attribs="true">
 	<schema name="directory"/>
 	<role name="postgres"/>
-	<position x="60" y="149"/>
+	<position x="60" y="140"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -36,7 +36,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="services" hide-ext-attribs="true">
 	<schema name="directory"/>
 	<role name="postgres"/>
-	<position x="640" y="229"/>
+	<position x="640" y="220"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -60,7 +60,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="inways" hide-ext-attribs="true">
 	<schema name="directory"/>
 	<role name="postgres"/>
-	<position x="640" y="89"/>
+	<position x="640" y="80"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -101,6 +101,42 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<columns names="inway_id,service_id" ref-type="src-columns"/>
 	</constraint>
 </table>
+
+<function name="availabilities_verify"
+		window-func="false"
+		returns-setof="false"
+		behavior-type="CALLED ON NULL INPUT"
+		function-type="VOLATILE"
+		security-type="SECURITY INVOKER"
+		execution-cost="1"
+		row-amount="0">
+	<schema name="directory"/>
+	<role name="postgres"/>
+	<language name="plpgsql" sql-disabled="true"/>
+	<return-type>
+	<type name="trigger" length="0"/>
+	</return-type>
+	<definition><![CDATA[DECLARE
+	_inway_org_id integer;
+	_service_org_id integer;
+BEGIN
+	SELECT organization_id INTO _inway_org_id
+		FROM directory.inways
+		WHERE id = NEW.inway_id;
+	SELECT organization_id INTO _service_org_id
+		FROM directory.services
+		WHERE id = NEW.service_id;
+	IF _inway_org_id != _service_org_id THEN
+		RAISE EXCEPTION 'service organization does not match inway organization';
+	END;
+END]]></definition>
+</function>
+
+<trigger name="availabilities_verify" firing-type="BEFORE" per-line="true" constraint="false"
+	 ins-event="true" del-event="false" upd-event="true" trunc-event="false"
+	 table="directory.availabilities">
+		<function signature="directory.availabilities_verify()"/>
+</trigger>
 
 <constraint name="services_fk_organization" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="directory.organizations" table="directory.services">

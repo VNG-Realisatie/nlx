@@ -4,6 +4,9 @@
 -- Project Site: pgmodeler.com.br
 -- Model Author: ---
 
+SET check_function_bodies = false;
+-- ddl-end --
+
 
 -- Database creation must be done outside an multicommand file.
 -- These commands were put in this file only for convenience.
@@ -79,6 +82,44 @@ CREATE TABLE directory.availabilities(
 );
 -- ddl-end --
 ALTER TABLE directory.availabilities OWNER TO postgres;
+-- ddl-end --
+
+-- object: directory.availabilities_verify | type: FUNCTION --
+-- DROP FUNCTION IF EXISTS directory.availabilities_verify() CASCADE;
+CREATE FUNCTION directory.availabilities_verify ()
+	RETURNS trigger
+	LANGUAGE plpgsql
+	VOLATILE 
+	CALLED ON NULL INPUT
+	SECURITY INVOKER
+	COST 1
+	AS $$
+DECLARE
+	_inway_org_id integer;
+	_service_org_id integer;
+BEGIN
+	SELECT organization_id INTO _inway_org_id
+		FROM directory.inways
+		WHERE id = NEW.inway_id;
+	SELECT organization_id INTO _service_org_id
+		FROM directory.services
+		WHERE id = NEW.service_id;
+	IF _inway_org_id != _service_org_id THEN
+		RAISE EXCEPTION 'service organization does not match inway organization';
+	END;
+END
+$$;
+-- ddl-end --
+ALTER FUNCTION directory.availabilities_verify() OWNER TO postgres;
+-- ddl-end --
+
+-- object: availabilities_verify | type: TRIGGER --
+-- DROP TRIGGER IF EXISTS availabilities_verify ON directory.availabilities CASCADE;
+CREATE TRIGGER availabilities_verify
+	BEFORE INSERT OR UPDATE
+	ON directory.availabilities
+	FOR EACH ROW
+	EXECUTE PROCEDURE directory.availabilities_verify();
 -- ddl-end --
 
 -- object: services_fk_organization | type: CONSTRAINT --
