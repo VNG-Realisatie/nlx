@@ -60,6 +60,10 @@ func (o *Outway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		logFields = append(logFields, zap.String("doelbinding-application-id", applicationID))
 		r.Header.Del("X-NLX-Request-Application-Id")
 	}
+	if subjectIdentifier := r.Header.Get("X-NLX-Request-Subject-Identifier"); subjectIdentifier != "" {
+		logFields = append(logFields, zap.String("doelbinding-subject-identifier", subjectIdentifier))
+		r.Header.Del("X-NLX-Request-Subject-Identifier")
+	}
 	if processID := r.Header.Get("X-NLX-Request-Process-Id"); processID != "" {
 		logFields = append(logFields, zap.String("doelbinding-process-id", processID))
 	}
@@ -77,8 +81,8 @@ func (o *Outway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	binary.PutUvarint(requestIDFlakeBytes, requestIDFlake)
 	requestIDNum := crc64.Checksum(requestIDFlakeBytes, o.ecmaTable)
 	requestID := strconv.FormatUint(requestIDNum, 32)
-	logFields = append(logFields, zap.String("doelbinding-logrecord-id", requestID))
-	r.Header.Set("X-NLX-Request-Logrecord-Id", requestID)
+	logFields = append(logFields, zap.String("request-id", requestID))
+	r.Header.Set("X-NLX-Request-Id", requestID)
 
 	logger.Info("sending request", logFields...)
 

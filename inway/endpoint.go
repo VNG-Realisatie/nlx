@@ -93,8 +93,8 @@ Authorized:
 	if processID := r.Header.Get("X-NLX-Request-Process-Id"); processID != "" {
 		logFields = append(logFields, zap.String("doelbinding-process-id", processID))
 	}
-	if logrecordID := r.Header.Get("X-NLX-Request-Logrecord-Id"); logrecordID != "" {
-		logFields = append(logFields, zap.String("doelbinding-logrecord-id", logrecordID))
+	if logrecordID := r.Header.Get("X-NLX-Request-Id"); logrecordID != "" {
+		logFields = append(logFields, zap.String("request-id", logrecordID))
 	}
 	if dataElements := r.Header.Get("X-NLX-Request-Data-Elements"); dataElements != "" {
 		logFields = append(logFields, zap.String("doelbinding-data-elements", dataElements))
