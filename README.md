@@ -6,7 +6,7 @@ NLX
 
 ## Goal
 
-The current goal of this project is to deliver a Proof of Concept for the [NLX Product Vision](./docs/content/introduction/product-vision.md).
+The current goal of this project is to deliver a Proof of Concept for the [NLX Product Vision](https://docs.nlx.io/introduction/product-vision/).
 
 ## Questions and contributions
 
