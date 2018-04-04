@@ -14,7 +14,7 @@ Read more on how to ask questions, file bugs and contribute code and documentati
 Please find the latest documentation of NLX on https://docs.nlx.io/. This is a good place to start if you would like to develop an application or service on top of NLX.
 
 ## Build and run NLX locally
-If you would like deploy an NLX network on your local machine or contribute to the NLX code please follow these steps.
+If you would like to deploy an NLX network on your local machine or contribute to the NLX code please follow these steps.
 
 Make sure you have installed the following tools:
 
