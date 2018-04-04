@@ -5,18 +5,16 @@ NLX
 **NLX** is an open source inter-organisational system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API landscape.
 
 ## Goal
-
 The current goal of this project is to deliver a Proof of Concept for the [NLX Product Vision](https://docs.nlx.io/introduction/product-vision/).
 
 ## Questions and contributions
-
 Read more on how to ask questions, file bugs and contribute code and documentation in [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## Documentation
+Please find the latest documentation of NLX on https://docs.nlx.io/. This is a good place to start if you would like to develop an application or service on top of NLX.
 
-Please find the latest documentation of NLX on https://docs.nlx.io/
-
-## Build and run
+## Build and run NLX locally
+If you would like deploy an NLX network on your local machine or contribute to the NLX code please follow these steps.
 
 Make sure you have installed the following tools:
 
@@ -36,7 +34,6 @@ cd nlx
 docker-compose up
 ```
 
-## Licence
-
+## License
 Copyright © VNG Realisatie 2017
 [Licensed under the EUPL](LICENCE.md)
