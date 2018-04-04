@@ -76,6 +76,10 @@ The `service-config.toml` file configures which services are available through t
 
 	## `authorization-whitelist` is required when `authorization-model` is set to "whitelist".
 	## This is a list of organization names (as specified in the peers organization cert) which is allowed access.
+
+	## WARNING: The currently deployed online NLX network is for demo purposes and not ready for connected resources containing sensitive data.
+	## When using real personal data, use your own NLX network in an environment you control.
+
 	#authorization-whitelist = ["DemoRequesterOrganization"]
 
 ```
