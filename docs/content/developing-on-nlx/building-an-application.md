@@ -21,9 +21,9 @@ And store it next to your private key and certificate. Now start a new outway:
 ```bash
 docker pull nlxio/outway:latest
 docker run -d \
--v /absolute/path/to/root.crt:/certs/root.crt \
--v /absolute/path/to/{yourhostname}.crt:/certs/outway.crt \
--v /absolute/path/to/{yourhostname}.key:/certs/outway.key \
+-v {/absolute/path/to/root.crt}:/certs/root.crt \
+-v {/absolute/path/to/yourhostname.crt}:/certs/outway.crt \
+-v {/absolute/path/to/yourhostname.key}:/certs/outway.key \
 -e DIRECTORY_ADDRESS=directory.demo.nlx.io:1984 \
 -e TLS_NLX_ROOT_CERT=/certs/root.crt \
 -e TLS_ORG_CERT=/certs/outway.crt \
