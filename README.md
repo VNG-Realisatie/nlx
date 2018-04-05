@@ -36,4 +36,5 @@ docker-compose up
 
 ## License
 Copyright © VNG Realisatie 2017
+
 [Licensed under the EUPL](LICENCE.md)
