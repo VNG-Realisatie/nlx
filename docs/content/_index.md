@@ -10,7 +10,7 @@ The need for the creation of NLX arises from the [Common Ground vision](https://
 
 In this vision, everyone should be able to use API's in other organisations as easy as their own, while core data objects should only be manipulated by the one administratively responsible and used by all others. An additional advantage is that public data can easily be made available to everyone. To make this technically feasible in a controllable manner, NLX comes in play.
 
-NLX provides a developer friendly way to use standardised resources between organizations. It provides an API gateway for querying services on the central network as well as an API gateway to offer services to the central network.
+NLX provides a developer friendly way to use standardised resources between organizations. It provides an API gateway for querying services on the central network as well as an API gateway to offer services to the central network. NLX provides support for HTTP/1.x services like REST/JSON and SOAP/XML. The support for HTTP/2 (gRPC) is a work in progress.
 
 **Warning**: Please note the current NLX software only serves as a **proof of concept** and is therefore **not** suitable for production usage.
 
