@@ -20,29 +20,29 @@ The outway appends a globally unique `X-NLX-Request-Id` to make a request tracea
 Logging is done to stdout in JSON format. You can use for example [fluentd](https://www.fluentd.org/) to collect the logs from the containers and forward them to a store. This is an example configuration for fluentd when using Kubernetes:
 
 ```
-    <match fluent.**>
-    @type null
-    </match>
+<match fluent.**>
+@type null
+</match>
 
-    <source>
-    @type tail
-    path /var/log/containers/*.log
-    pos_file /var/log/fluentd-containers.log.pos
-    time_format %Y-%m-%dT%H:%M:%S.%NZ
-    tag kubernetes.*
-    format json
-    read_from_head true
-    </source>
+<source>
+@type tail
+path /var/log/containers/*.log
+pos_file /var/log/fluentd-containers.log.pos
+time_format %Y-%m-%dT%H:%M:%S.%NZ
+tag kubernetes.*
+format json
+read_from_head true
+</source>
 
-    <filter kubernetes.**>
-    @type kubernetes_metadata
-    </filter>
+<filter kubernetes.**>
+@type kubernetes_metadata
+</filter>
 
-    <match kubernetes.var.log.containers.**fluentd**.log>
-    @type null
-    </match>
+<match kubernetes.var.log.containers.**fluentd**.log>
+@type null
+</match>
 
-    <match kubernetes.var.log.containers.**kube-system**.log>
-    @type null
-    </match>
+<match kubernetes.var.log.containers.**kube-system**.log>
+@type null
+</match>
 ```
