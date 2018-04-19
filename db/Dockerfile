@@ -66,7 +66,7 @@ RUN echo '#!/bin/sh\n\
 \n\
 set -e\n\
 \n\
-psql -tc "SELECT 1 FROM pg_database WHERE datname = '"'"'nlx'"'"'" | grep -q 1 || psql -c "CREATE DATABASE nlx"\n\
+psql postgres -tc "SELECT 1 FROM pg_database WHERE datname = '"'"'nlx'"'"'" | grep -q 1 || psql postgres -c "CREATE DATABASE nlx"\n\
 \n\
 /usr/local/bin/migrate -path=/opt/db-migrations -database=postgres://${PGUSER}:${PGPASSWORD}@${PGHOST}/${PGDATABASE}?sslmode=disable up\n'\
 > /opt/migrate-up.sh && chmod +x /opt/migrate-up.sh
