@@ -59,14 +59,14 @@ ADD db/migrations /opt/db-migrations
 
 ENV PGHOST postgres
 ENV PGUSER postgres
-ENV PGPASS postgres
+ENV PGPASSWORD postgres
 ENV PGDATABASE nlx
 
 RUN echo '#!/bin/sh\n\
 \n\
 psql -tc "SELECT 1 FROM pg_database WHERE datname = '"'"'nlx'"'"'" | grep -q 1 || psql -c "CREATE DATABASE nlx"\n\
 \n\
-/usr/local/bin/migrate -path=/opt/db-migrations -database=postgres://${PGUSER}:${PGPASS}@${PGHOST}/${PGDATABASE}?sslmode=disable up\n'\
+/usr/local/bin/migrate -path=/opt/db-migrations -database=postgres://${PGUSER}:${PGPASSWORD}@${PGHOST}/${PGDATABASE}?sslmode=disable up\n'\
 > /opt/migrate-up.sh && chmod +x /opt/migrate-up.sh
 
 CMD ["/opt/migrate-up.sh"]
