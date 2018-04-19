@@ -46,13 +46,13 @@ CMD ["/bin/sh", "-c", "/usr/local/bin/wait-for-postgres.sh xvfb-run /go/bin/modd
 
 FROM ubuntu:artful
 
-# RUN apt-get update && \
-#     apt-get -y install --no-install-recommends wget ca-certificates && \
-#     wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
-#     echo "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main" > /etc/apt/sources.list.d/postgres.list && \
-#     apt update && \
-#     apt -y install --no-install-recommends postgresql-client-10 && \
-#     rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+    apt-get -y install --no-install-recommends wget ca-certificates && \
+    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
+    echo "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main" > /etc/apt/sources.list.d/postgres.list && \
+    apt update && \
+    apt -y install --no-install-recommends postgresql-client-10 && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /usr/local/bin/migrate /usr/local/bin/migrate
 ADD db/migrations /opt/db-migrations
@@ -60,11 +60,13 @@ ADD db/migrations /opt/db-migrations
 ENV PGHOST postgres
 ENV PGUSER postgres
 ENV PGPASS postgres
-ENV PGDB nlx
+ENV PGDATABASE nlx
 
 RUN echo '#!/bin/sh\n\
 \n\
-/usr/local/bin/migrate -path=/opt/db-migrations -database=postgres://${PGUSER}:${PGPASS}@${PGHOST}/${PGDB}?sslmode=disable up\n'\
+psql -tc "SELECT 1 FROM pg_database WHERE datname = \'nlx\'" | grep -q 1 || psql -c "CREATE DATABASE nlx"\
+\n\
+/usr/local/bin/migrate -path=/opt/db-migrations -database=postgres://${PGUSER}:${PGPASS}@${PGHOST}/${PGDATABASE}?sslmode=disable up\n'\
 > /opt/migrate-up.sh && chmod +x /opt/migrate-up.sh
 
 CMD ["/opt/migrate-up.sh"]
