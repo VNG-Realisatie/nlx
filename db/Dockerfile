@@ -62,7 +62,7 @@ ENV PGUSER postgres
 ENV PGPASS postgres
 ENV PGDB nlx
 
-RUN echo $'#!/bin/sh\n\
+RUN echo '#!/bin/sh\n\
 \n\
 /usr/local/bin/migrate -path=/opt/db-migrations -database=postgres://\${PGUSER}:\${PGPASS}@\${PGHOST}/\${PGDB}?sslmode=disable up\n'\
 > /opt/migrate-up.sh && chmod +x /opt/migrate-up.sh
