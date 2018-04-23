@@ -11,7 +11,7 @@ The current goal of this project is to deliver a Proof of Concept for the [NLX P
 Read more on how to ask questions, file bugs and contribute code and documentation in [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## Documentation
-Please find the latest documentation of NLX on https://docs.nlx.io/. This is a good place to start if you would like to develop an application or service on top of NLX.
+Please find the latest documentation of NLX on [docs.nlx.io](https://docs.nlx.io). This is a good place to start if you would like to develop an application or service on top of NLX.
 
 ## Build and run NLX locally
 If you would like to deploy an NLX network on your local machine or contribute to the NLX code please follow these steps.
