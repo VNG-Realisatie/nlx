@@ -15,6 +15,7 @@ Read more on how to ask questions, file bugs and contribute code and documentati
 ## Building and running an NLX network locally
 If you want to develop locally, or run your own NLX network you need to get all of the components of the NLX network to run.
 
+### Requirements
 Make sure you have installed the following tools:
 
 - [docker](https://docs.docker.com/)
@@ -24,6 +25,7 @@ Make sure you have installed the following tools:
 Also you will need to have [configured a `GOPATH`](https://github.com/golang/go/wiki/SettingGOPATH) with `${GOPATH}/bin` added to your `PATH`.
 After you set the `GOPATH`, be sure to reopen your terminal/shell to be sure the environment variables have been set correctly.
 
+### Cloning
 ```bash
 mkdir -p $GOPATH/src/github.com/VNG-Realisatie
 cd $GOPATH/src/github.com/VNG-Realisatie
@@ -31,6 +33,7 @@ git clone git@github.com:VNG-Realisatie/nlx.git
 cd nlx
 ```
 
+### Running
 You can now start all the components with `docker-compose up`
 
 You can now see what services are up and on what port you can reach them using `docker ps`
