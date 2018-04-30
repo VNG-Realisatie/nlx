@@ -1,6 +1,8 @@
 # NLX documentation site
 The NLX documentation site is a resource for developers developing applications that on the NLX network.
 
+This site is generated with [Hugo](https://gohugo.io/), a static site generator written in Go.
+
 The current `master` version of the documentation is deployed at [docs.nlx.io](https://docs.nlx.io/)
 
 ## Viewing the documentation of your local branch
