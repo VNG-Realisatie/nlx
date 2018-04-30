@@ -37,6 +37,12 @@ cd nlx
 You can now start all the components with `docker-compose up`
 
 You can now see what services are up and on what port you can reach them using `docker ps`
+
+### Troubleshooting
+If you are running into issues after pulling changes you might need to rebuild your containers using `docker-compose build`
+
+If you are running into other issues, please [Post an Issue on GitHub](https://github.com/VNG-Realisatie/nlx/issues/new).
+
 ## License
 Copyright © VNG Realisatie 2017
 
