@@ -1,5 +1,5 @@
 # NLX documentation site
-The NLX documentation site is a resource for developers developing applications that on the NLX network.
+The NLX documentation site is a resource for developers that want to use and provide services on the NLX network.
 
 This site is generated with [Hugo](https://gohugo.io/), a static site generator written in Go.
 
