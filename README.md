@@ -15,6 +15,9 @@ Read more on how to ask questions, file bugs and contribute code and documentati
 ## Building and running an NLX network locally
 If you want to develop locally, or run your own NLX network you need to get all of the components of the NLX network to run.
 
+All of the components that make up the NLX platform are in this repository.
+Some components are meant to run as centralized NLX services, while others should run on-premise at organizations that want to connect to the network.
+
 ### Requirements
 Make sure you have installed the following tools:
 
