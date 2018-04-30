@@ -41,7 +41,10 @@ You can now start all the components with `docker-compose up`
 
 You can now see what services are up and on what port you can reach them using `docker ps`
 
+### Developing
+
 Where applicable, [`modd`](https://github.com/cortesi/modd) is used to rebuild and restart a component when changes in its source files are detected.
+There is no need to build individual components.
 
 ### Troubleshooting
 If you are running into issues after pulling changes you might need to rebuild your containers using `docker-compose build`
