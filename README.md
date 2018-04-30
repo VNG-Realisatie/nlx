@@ -6,11 +6,11 @@ NLX is an open source inter-organisational system facilitating federated authent
 
 This repository contains all of the components to the current **Proof of Concept** of the [NLX Product Vision](https://docs.nlx.io/introduction/product-vision/). Do **not** use this code in production.
 
+## Developing for NLX
+Please find the latest documentation for using NLX on [docs.nlx.io](https://docs.nlx.io). This is a good place to start if you would like to develop an application or service that uses or provides API access over NLX.
+
 ## Questions and contributions
 Read more on how to ask questions, file bugs and contribute code and documentation in [`CONTRIBUTING.md`](CONTRIBUTING.md).
-
-## Documentation
-Please find the latest documentation of NLX on [docs.nlx.io](https://docs.nlx.io). This is a good place to start if you would like to develop an application or service on top of NLX.
 
 ## Build and run NLX locally
 If you would like to deploy an NLX network on your local machine or contribute to the NLX code please follow these steps.
