@@ -29,9 +29,11 @@ mkdir -p $GOPATH/src/github.com/VNG-Realisatie
 cd $GOPATH/src/github.com/VNG-Realisatie
 git clone git@github.com:VNG-Realisatie/nlx.git
 cd nlx
-docker-compose up
 ```
 
+You can now start all the components with `docker-compose up`
+
+You can now see what services are up and on what port you can reach them using `docker ps`
 ## License
 Copyright © VNG Realisatie 2017
 
