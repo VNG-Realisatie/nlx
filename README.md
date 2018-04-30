@@ -37,7 +37,10 @@ cd nlx
 ```
 
 ### Running
-You can now start all the components with `docker-compose up`
+You can now start all the components with
+```bash
+docker-compose up
+```
 
 You can now see what services are up and on what port you can reach them using `docker ps`
 
