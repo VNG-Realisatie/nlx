@@ -22,8 +22,7 @@ Make sure you have installed the following tools:
 - [go](https://golang.org/doc/install)
 
 Also you will need to have [configured a `GOPATH`](https://github.com/golang/go/wiki/SettingGOPATH) with `${GOPATH}/bin` added to your `PATH`.
-
-Open a new shell so the `GOPATH` you have configured earlier is correctly loaded in the environment variables. Then run the following:
+After you set the `GOPATH`, be sure to reopen your terminal/shell to be sure the environment variables have been set correctly.
 
 ```bash
 mkdir -p $GOPATH/src/github.com/VNG-Realisatie
