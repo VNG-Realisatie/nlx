@@ -9,3 +9,8 @@ The current `master` version of the documentation is deployed at [docs.nlx.io](h
 If you [Build and run NLX](../README.md#build-and-run-nlx-locally) you can access the Documentation site on [localhost port 1313](http://localhost:1313/).
 The site will rebuild and refresh automatically whenever you change a file.
 
+## Editing the content of the site
+To edit pages, edit the [MarkDown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet) files in the [`/content` folder](content/).
+
+Each file needs to have Hugo [front-matter](https://gohugo.io/content-management/front-matter/) at the top.
+The front-matter sets the settings for each page, including `title` and the `weight` that determines the order that a page displays in lists.
