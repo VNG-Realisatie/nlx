@@ -54,6 +54,12 @@ If you are running into issues after pulling changes you might need to rebuild y
 
 If you are running into other issues, please [Post an Issue on GitHub](https://github.com/VNG-Realisatie/nlx/issues/new).
 
+## Deploying and releasing
+Our [CI system Jenkins](https://jenkins.nlx.io/) builds every push to the master branch and creates a release to Docker, tagging it with the short git commit hash.
+When a release is successful, it also gets deployed to the test environment.
+
+When a git tag is pushed, Jenkins builds and deploys it to the test and staging environments.
+
 ## License
 Copyright © VNG Realisatie 2017
 
