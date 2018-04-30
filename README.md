@@ -2,7 +2,7 @@ NLX
 ===
 [![Build Status](https://jenkins.nlx.io/job/nlx-release-master/badge/icon?style=plastic)](https://jenkins.nlx.io/) ![Repo Status](https://img.shields.io/badge/status-concept-lightgrey.svg?style=plastic)
 
-**NLX** is an open source inter-organisational system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API landscape.
+NLX is an open source inter-organisational system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API landscape.
 
 ## Goal
 The current goal of this project is to deliver a Proof of Concept for the [NLX Product Vision](https://docs.nlx.io/introduction/product-vision/).
