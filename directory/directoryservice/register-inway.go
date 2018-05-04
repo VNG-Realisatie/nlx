@@ -66,7 +66,7 @@ func (h *registerInwayHandler) RegisterInway(ctx context.Context, req *directory
 	}
 	tlsInfo := peer.AuthInfo.(credentials.TLSInfo)
 	organizationName := tlsInfo.State.VerifiedChains[0][0].Subject.Organization[0]
-	// TODO: when administrative (client-tls mandatory) and inspection (client-tls optional) endpoints have been seperated,
+	// TODO: #206 when administrative (client-tls mandatory) and inspection (client-tls optional) endpoints have been separated,
 	// use proper grpc authentication via middleware and context (based on client-tls fields (CN, O) like we do here)
 
 	for _, service := range req.Services {
