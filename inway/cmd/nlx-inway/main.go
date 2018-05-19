@@ -51,7 +51,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
-	defer func() { // TODO(GeertJohan): make this a common/process exitFunc?
+	defer func() { // TODO(GeertJohan): #205 make this a common/process exitFunc?
 		syncErr := logger.Sync()
 		if syncErr != nil {
 			// notify the user that proper logging has failed

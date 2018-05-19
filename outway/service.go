@@ -17,7 +17,7 @@ import (
 var errNoInwaysAvailable = errors.New("no inways available")
 
 // Service handles the proxying of a request to the inway
-// TODO: if we like this model in the PoC, Service should become an interface with multiple implementations (http/json, grpc, ??) like inway
+// TODO: #210 if we like this model in the PoC, Service should become an interface with multiple implementations (http/json, grpc, ??) like inway
 type Service struct {
 	organizationName string
 	serviceName      string
@@ -53,7 +53,7 @@ func NewService(logger *zap.Logger, roots *x509.CertPool, certFile string, keyFi
 	if !ok {
 		// This can happen when the internals of net/http change.
 		// Afaik an interface implementation isn't under the Go1 compatibility promise.
-		// TODO: consider setting up a custom http.Transport to use as the proxies RoundTripper.
+		// TODO: #209 consider setting up a custom http.Transport to use as the proxies RoundTripper.
 		panic("http.DefaultTransport must be of type *http.Transport")
 	}
 	// load client certificate
