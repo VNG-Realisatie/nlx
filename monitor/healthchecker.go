@@ -97,8 +97,8 @@ func (h *healthChecker) run() error {
 			default:
 			}
 
-			// TODO: use NOTIFY structure on postgres instead of reloading
-			// this list every 10 seconds
+			// TODO: #207 use NOTIFY structure on postgres instead of reloading
+			// refresh this list every 10 seconds
 			time.Sleep(10 * time.Second)
 		}
 	}()

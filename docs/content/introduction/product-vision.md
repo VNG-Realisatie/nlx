@@ -128,5 +128,3 @@ If NLX somehow enters a state of emergency, the system should be resilient. It s
 
 * GEMMA
 * Current transition from SOAP to RESTful API's
-
-(... Context to be extended ...)
