@@ -1,5 +1,5 @@
-NLX
-===
+<h1 align="center"><img alt="NLX" src="logo.png" width="200"></h1>
+
 [![Build Status](https://jenkins.nlx.io/job/nlx-release-master/badge/icon?style=plastic)](https://jenkins.nlx.io/) ![Repo Status](https://img.shields.io/badge/status-proof%20of%20concept-lightgrey.svg?longCache=true&style=plastic)
 
 NLX is an open source inter-organisational system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API landscape.
