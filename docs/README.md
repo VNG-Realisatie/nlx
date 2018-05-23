@@ -6,7 +6,7 @@ This site is generated with [Hugo](https://gohugo.io/), a static site generator 
 The current `master` version of the documentation is deployed at [docs.nlx.io](https://docs.nlx.io/)
 
 ## Building and running locally
-If you [Build and run NLX](../README.md#build-and-run-nlx-locally) you can access the Documentation site on [localhost port 1313](http://localhost:1313/).
+If you [Build and run NLX](../README.md#building-and-running-an-nlx-network-locally) you can access the Documentation site on [localhost port 1313](http://localhost:1313/).
 The site will rebuild and refresh automatically whenever you change a file.
 
 ## Editing the content of the site
