@@ -14,11 +14,15 @@ import (
 )
 
 type listServicesHandler struct {
+	logger *zap.Logger
+
 	stmtSelectServices *sqlx.Stmt
 }
 
 func newListServicesHandler(db *sqlx.DB, logger *zap.Logger) (*listServicesHandler, error) {
-	h := &listServicesHandler{}
+	h := &listServicesHandler{
+		logger: logger.With(zap.String("handler", "list-services")),
+	}
 
 	var err error
 	h.stmtSelectServices, err = db.Preparex(`
