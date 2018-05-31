@@ -1,5 +1,8 @@
 
+
 # Centralized configuration management
+
+This document describes how configuration management within NLX would work. This is a design/draft and is not implemented yet.
 
 A centralized configuration management is provided by NLX. This centralized component provides UI's and API endpoints to modify the configuration of NLX components in an organization.
 NLX components fetch their configuration when they are started, and automatically keep track of updates to the configuration.
@@ -22,7 +25,7 @@ A private Service needs requesting organizations to whitelisted. The central con
 
 ## Configuration groups
 
-To ease the management of multiple gateways (inways, outways) performing the same task InwaysGroups and OutwayGroups can be created. These groups 
+To ease the management of multiple gateways (inways, outways) performing the same task InwaysGroups and OutwayGroups can be created.
 
 An inway or outway can only be in one group. Need a machine to be in multiple groups? Run multiple Inways/Outways.
 
