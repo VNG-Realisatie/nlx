@@ -28,7 +28,7 @@ When submitting the pull request, please accompany it with a description of the 
 
 All contributions have to be reviewed by someone.
 
-It could be that your contribution can be merged immediately by a maintainer. However, usually, a new Pull Request needs some improvements before it can be merged. Other contributors (or helper robots) might have feedback. If this is the case the reviewing maintainer will help you improve your documentation and code.
+It could be that your contribution can be merged immediately by a maintainer. However, usually, a new Pull Request needs some improvements before it can be merged. Other contributors (or our automatic testing system Jenkins) might have feedback. If this is the case the reviewing maintainer will help you improve your documentation and code.
 
 If your documentation and code have passed human review and have passed the automated tests, it is merged.
 
