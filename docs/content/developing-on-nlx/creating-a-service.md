@@ -16,36 +16,7 @@ Now download the certificate of the NLX development CA:
 wget https://certportal.demo.nlx.io/root.crt
 ```
 
-And store it next to your private key and certificate. Now create a `service-config.toml` and adjust it to the services you would like to offer to the network. Use the following as an example:
-
-**service-config.toml**
-
-    [services]
-
-        [services.my-inway]
-        address = "http://{ip-address-to-the-local-service}:{port}/"
-
-Now start a new inway:
-
-
-```bash
-docker pull nlxio/inway:latest
-docker run -d \
--v /absolute/path/to/root.crt:/certs/root.crt \
--v /absolute/path/to/{yourhostname}.crt:/certs/inway.crt \
--v /absolute/path/to/{yourhostname}.key:/certs/inway.key \
--v /absolute/path/to/service-config.toml:/service-config.toml \
--e DIRECTORY_ADDRESS=directory.demo.nlx.io:1984 \
--e SELF_ADDRESS={external-inway-hostname-or-ip-address}:2018 \
--e SERVICE_CONFIG=/service-config.toml \
--e TLS_NLX_ROOT_CERT=/certs/root.crt \
--e TLS_ORG_CERT=/certs/inway.crt \
--e TLS_ORG_KEY=/certs/inway.key \
--p 2018:2018 \
-nlxio/inway:latest
-```
-
-The `service-config.toml` file configures which services are available through the inway. Example:
+And store it next to your private key and certificate. The `service-config.toml` file configures which services are available through the inway. Example:
 ```toml
 [services]
 
@@ -76,8 +47,34 @@ The `service-config.toml` file configures which services are available through t
 
 	## `authorization-whitelist` is required when `authorization-model` is set to "whitelist".
 	## This is a list of organization names (as specified in the peers organization cert) which is allowed access.
+
+	## WARNING: The currently deployed online NLX network is for demo purposes and not ready for connected resources containing sensitive data.
+	## When using real personal data, use your own NLX network in an environment you control.
+
 	#authorization-whitelist = ["DemoRequesterOrganization"]
 
+```
+
+where **MyPublicService** is the name of the service. Please note when using default Docker networking settings `localhost` points to the inway Docker container itself. When you run a service on the Docker host, please use the special Docker DNS name: `host.docker.internal`. NLX currently supports HTTP/1.x services like REST/JSON and SOAP/XML. HTTP/2 (gRPC) is work in progress.
+
+## Starting the inway
+When you configured the services, start the inway:
+
+```bash
+docker pull nlxio/inway:latest
+docker run -d \
+-v {/absolute/path/to/root.crt}:/certs/root.crt \
+-v {/absolute/path/to/yourhostname.crt}:/certs/inway.crt \
+-v {/absolute/path/to/yourhostname.key}:/certs/inway.key \
+-v {/absolute/path/to/service-config.toml}:/service-config.toml \
+-e DIRECTORY_ADDRESS=directory.demo.nlx.io:1984 \
+-e SELF_ADDRESS={external-inway-hostname-or-ip-address}:2018 \
+-e SERVICE_CONFIG=/service-config.toml \
+-e TLS_NLX_ROOT_CERT=/certs/root.crt \
+-e TLS_ORG_CERT=/certs/inway.crt \
+-e TLS_ORG_KEY=/certs/inway.key \
+-p 2018:2018 \
+nlxio/inway:latest
 ```
 
 The inway now connects itself to the NLX network and registers its services on the NLX networks. Please **make sure** external connection is possible to the specified port on the specified hostname or IP adress and port  public IP address are routed to the machine running the NLX inway otherwise connections to your inway and services will fail.
