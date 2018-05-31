@@ -1,5 +1,3 @@
-
-
 # Centralized configuration management
 
 This document describes how configuration management within NLX would work. This is a design/draft and is not implemented yet.
@@ -13,11 +11,11 @@ A Service is an NLX abstraction of an API provided and used by organizations.
 
 When creating a Service, several parameters can be configured.
 
- - Name, must be unique within the organization
- - The type of the service, e.g. REST, HTTP/JSON, gRPC, SOAP.
- - Link to human readable documentation
- - Link to system readable documentation ([OpenAPI](https://github.com/OAI/OpenAPI-Specification), [gRPC definitions](https://grpc.io/))
- - Security model (public, private)
+- Name, must be unique within the organization
+- The type of the service, e.g. REST, HTTP/JSON, gRPC, SOAP.
+- Link to human readable documentation
+- Link to system readable documentation ([OpenAPI](https://github.com/OAI/OpenAPI-Specification), [gRPC definitions](https://grpc.io/))
+- Security model (public, private)
 
 ### Service security
 
@@ -47,10 +45,10 @@ An Inway must have a publicly resolveable domain name pointing to it. The CN of 
 
 The centralized configuration management provides a dashboard where all connected gateways are listed. For each gateway several values are visible:
 
- - Healthy {yes, no, unreachable} (health-check reachable by healthchecker, health-check outcome can still be unhealthy)
- - Version number
- - Version status (indicating importance of updating)
- - Configuration in sync (when out of sync for too long, gateway should be taken down and inways become unhealthy)
+- Healthy {yes, no, unreachable} (health-check reachable by healthchecker, health-check outcome can still be unhealthy)
+- Version number
+- Version status (indicating importance of updating)
+- Configuration in sync (when out of sync for too long, gateway should be taken down and inways become unhealthy)
 
 ## Security
 
