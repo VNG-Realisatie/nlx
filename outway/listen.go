@@ -10,10 +10,10 @@ import (
 	"strconv"
 	"strings"
 
-	"go.uber.org/zap/zapcore"
-
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+
+	"go.nlx.io/nlx/common/transactionlog"
 )
 
 // ListenAndServe is a blocking function that listens on provided tcp address to handle requests.
@@ -38,12 +38,13 @@ func (o *Outway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		logger.Warn("received request with invalid path")
 		return
 	}
-	organizationName := urlparts[0]
-	serviceName := urlparts[1]
-	r.URL.Path = urlparts[2] // retain original path
+	destOrganizationName := urlparts[0]
+	destServiceName := urlparts[1]
+	requestPath := urlparts[2] // retain original path
+	r.URL.Path = requestPath
 
 	o.servicesLock.RLock()
-	service := o.services[organizationName+"."+serviceName]
+	service := o.services[destOrganizationName+"."+destServiceName]
 	o.servicesLock.RUnlock()
 	if service == nil {
 		http.Error(w, "nlx outway error: unknown service", http.StatusBadRequest)
@@ -51,42 +52,53 @@ func (o *Outway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var logFields = []zapcore.Field{zap.String("doelbinding-log", "yes")}
-	if userID := r.Header.Get("X-NLX-Request-User-Id"); userID != "" {
-		logFields = append(logFields, zap.String("doelbinding-user-id", userID))
-		r.Header.Del("X-NLX-Request-User-Id")
-	}
-	if applicationID := r.Header.Get("X-NLX-Request-Application-Id"); applicationID != "" {
-		logFields = append(logFields, zap.String("doelbinding-application-id", applicationID))
-		r.Header.Del("X-NLX-Request-Application-Id")
-	}
-	if subjectIdentifier := r.Header.Get("X-NLX-Request-Subject-Identifier"); subjectIdentifier != "" {
-		logFields = append(logFields, zap.String("doelbinding-subject-identifier", subjectIdentifier))
-		r.Header.Del("X-NLX-Request-Subject-Identifier")
-	}
-	if processID := r.Header.Get("X-NLX-Request-Process-Id"); processID != "" {
-		logFields = append(logFields, zap.String("doelbinding-process-id", processID))
-	}
-	if dataElements := r.Header.Get("X-NLX-Request-Data-Elements"); dataElements != "" {
-		logFields = append(logFields, zap.String("doelbinding-data-elements", dataElements))
-	}
+	var recordData = make(map[string]interface{})
+	recordData["request-path"] = requestPath
 
-	requestIDFlake, err := o.requestFlake.NextID()
+	logrecordIDFlake, err := o.requestFlake.NextID()
 	if err != nil {
 		logger.Error("could not get new request ID", zap.Error(err))
 		http.Error(w, "outway: internal server error", http.StatusInternalServerError)
 		return
 	}
-	requestIDFlakeBytes := make([]byte, binary.MaxVarintLen64)
-	binary.PutUvarint(requestIDFlakeBytes, requestIDFlake)
-	requestIDNum := crc64.Checksum(requestIDFlakeBytes, o.ecmaTable)
-	requestID := strconv.FormatUint(requestIDNum, 32)
-	logFields = append(logFields, zap.String("request-id", requestID))
-	r.Header.Set("X-NLX-Request-Id", requestID)
+	logrecordIDFlakeBytes := make([]byte, binary.MaxVarintLen64)
+	binary.PutUvarint(logrecordIDFlakeBytes, logrecordIDFlake)
+	logrecordIDNum := crc64.Checksum(logrecordIDFlakeBytes, o.ecmaTable)
+	logrecordID := strconv.FormatUint(logrecordIDNum, 32)
+	r.Header.Set("X-NLX-Logrecord-Id", logrecordID)
 
-	logger.Info("sending request", logFields...)
+	if processID := r.Header.Get("X-NLX-Request-Process-Id"); processID != "" {
+		recordData["doelbinding-process-id"] = processID
+	}
+	if dataElements := r.Header.Get("X-NLX-Request-Data-Elements"); dataElements != "" {
+		recordData["doelbinding-data-elements"] = dataElements
+	}
+
+	if userID := r.Header.Get("X-NLX-Request-User-Id"); userID != "" {
+		recordData["doelbinding-user-id"] = userID
+		r.Header.Del("X-NLX-Request-User-Id")
+	}
+	if applicationID := r.Header.Get("X-NLX-Request-Application-Id"); applicationID != "" {
+		recordData["doelbinding-application-id"] = applicationID
+		r.Header.Del("X-NLX-Request-Application-Id")
+	}
+	if subjectIdentifier := r.Header.Get("X-NLX-Request-Subject-Identifier"); subjectIdentifier != "" {
+		recordData["doelbinding-subject-identifier"] = subjectIdentifier
+		r.Header.Del("X-NLX-Request-Subject-Identifier")
+	}
+
+	err = o.txlogger.AddRecord(&transactionlog.Record{
+		SrcOrganization:  o.organizationName,
+		DestOrganization: destOrganizationName,
+		ServiceName:      destServiceName,
+		LogrecordID:      logrecordID,
+		Data:             recordData,
+	})
+	if err != nil {
+		http.Error(w, "server error", http.StatusInternalServerError)
+		o.logger.Error("failed to store transactionlog record", zap.Error(err))
+		return
+	}
 
 	service.proxyRequest(w, r)
-
-	logger.Info("sending request finished", logFields...)
 }

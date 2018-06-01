@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"go.nlx.io/nlx/monitor/health"
 	"go.uber.org/zap"
+
+	"go.nlx.io/nlx/monitor/health"
 )
 
 func (i *Inway) handleHealthRequest(w http.ResponseWriter, r *http.Request, serviceName string) {

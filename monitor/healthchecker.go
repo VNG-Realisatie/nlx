@@ -11,8 +11,9 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
-	"go.nlx.io/nlx/monitor/health"
 	"go.uber.org/zap"
+
+	"go.nlx.io/nlx/monitor/health"
 )
 
 // HealthChecker checks the inways of a StoredService and modifies it's health state directly in the StoredService struct.

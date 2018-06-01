@@ -59,7 +59,7 @@ func (i *Inway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	reqMD := &RequestMetadata{
 		requesterOrganization: requesterOrganization,
-		requestPath:           urlparts[1],
+		requestPath:           "/" + urlparts[1],
 	}
 
 	i.serviceEndpointsLock.RLock()

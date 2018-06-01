@@ -11,14 +11,15 @@ import (
 	"sync"
 	"time"
 
-	"github.com/sony/sonyflake"
-
+	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
+	"github.com/sony/sonyflake"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
 	"go.nlx.io/nlx/common/orgtls"
+	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/directory/directoryapi"
 )
 
@@ -31,6 +32,8 @@ type Outway struct {
 
 	logger *zap.Logger
 
+	txlogger *transactionlog.TransactionLogger
+
 	directoryClient directoryapi.DirectoryClient
 
 	requestFlake *sonyflake.Sonyflake
@@ -41,7 +44,7 @@ type Outway struct {
 }
 
 // NewOutway creates a new Outway and sets it up to handle requests.
-func NewOutway(logger *zap.Logger, tlsOptions orgtls.TLSOptions, directoryAddress string) (*Outway, error) {
+func NewOutway(logger *zap.Logger, logdb *sqlx.DB, tlsOptions orgtls.TLSOptions, directoryAddress string) (*Outway, error) {
 	// load certs and get organization name from cert
 	roots, orgCert, err := orgtls.Load(tlsOptions)
 	if err != nil {
@@ -61,6 +64,12 @@ func NewOutway(logger *zap.Logger, tlsOptions orgtls.TLSOptions, directoryAddres
 
 		requestFlake: sonyflake.NewSonyflake(sonyflake.Settings{}),
 		ecmaTable:    crc64.MakeTable(crc64.ECMA),
+	}
+
+	// setup transactionlog
+	o.txlogger, err = transactionlog.NewTransactionLogger(logdb, transactionlog.DirectionOut)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to setup transactionlog")
 	}
 
 	orgKeypair, err := tls.LoadX509KeyPair(tlsOptions.OrgCertFile, tlsOptions.OrgKeyFile)

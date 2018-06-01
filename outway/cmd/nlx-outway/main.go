@@ -6,13 +6,16 @@ package main
 import (
 	"log"
 
+	"github.com/huandu/xstrings"
 	flags "github.com/jessevdk/go-flags"
+	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
+	"go.nlx.io/nlx/logdb/logdbversion"
 	"go.nlx.io/nlx/outway"
 )
 
@@ -20,6 +23,8 @@ var options struct {
 	ListenAddress string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:12018" description:"Adress for the outway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 
 	DirectoryAddress string `long:"directory-address" env:"DIRECTORY_ADDRESS" description:"Address for the directory where this outway can fetch the service list" required:"true"`
+
+	PostgresDSN string `long:"postgres-dsn" env:"POSTGRES_DSN" default:"postgres://postgres:postgres@postgres/nlx_logdb?sslmode=disable" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
 
 	logoptions.LogOptions
 	orgtls.TLSOptions
@@ -56,8 +61,16 @@ func main() {
 
 	process.Setup(logger)
 
+	logDB, err := sqlx.Open("postgres", options.PostgresDSN)
+	if err != nil {
+		logger.Fatal("could not open connection to postgres", zap.Error(err))
+	}
+	logDB.MapperFunc(xstrings.ToSnakeCase)
+
+	logdbversion.WaitUntilLatestVersion(logger, logDB.DB)
+
 	// Create new outway and provide it with a hardcoded service.
-	ow, err := outway.NewOutway(logger, options.TLSOptions, options.DirectoryAddress)
+	ow, err := outway.NewOutway(logger, logDB, options.TLSOptions, options.DirectoryAddress)
 	if err != nil {
 		logger.Fatal("failed to setup outway", zap.Error(err))
 	}

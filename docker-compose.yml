@@ -72,6 +72,43 @@ services:
     depends_on:
       - postgres
 
+  logdb:
+    build:
+      context: .
+      dockerfile: logdb/Dockerfile
+      target: build
+    volumes:
+      - $GOPATH/src/go.nlx.io/nlx:/go/src/go.nlx.io/nlx
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      PGHOST: postgres
+      PGUSER: postgres
+      PGPASSWORD: postgres
+    working_dir: /go/src/go.nlx.io/nlx/logdb
+    depends_on:
+      - postgres
+
+  logdb-api:
+    build:
+      context: .
+      dockerfile: logdb-api/Dockerfile
+      target: build
+    networks:
+      default:
+        aliases:
+          - logdb-api.nlx.local
+    environment:
+      - LOG_TYPE=development
+      - LOG_LEVEL=debug
+    volumes:
+      - $GOPATH/src/go.nlx.io/nlx:/go/src/go.nlx.io/nlx
+    ports:
+      - '2019:2019'
+    working_dir: /go/src/go.nlx.io/nlx/logdb-api
+    command: modd
+    depends_on:
+      - logdb
+
   inway_cert:
     build:
       context: .
@@ -92,8 +129,6 @@ services:
       context: .
       dockerfile: inway/Dockerfile
       target: build
-    depends_on:
-      - inway_cert
     networks:
       default:
         aliases:

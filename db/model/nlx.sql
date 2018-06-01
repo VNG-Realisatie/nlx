@@ -1,16 +1,15 @@
 -- Database generated with pgModeler (PostgreSQL Database Modeler).
--- pgModeler  version: 0.9.0
--- PostgreSQL version: 9.6
--- Project Site: pgmodeler.com.br
+-- pgModeler  version: 0.9.1
+-- PostgreSQL version: 10.0
+-- Project Site: pgmodeler.io
 -- Model Author: ---
 
 
--- Database creation must be done outside an multicommand file.
--- These commands were put in this file only for convenience.
+-- Database creation must be done outside a multicommand file.
+-- These commands were put in this file only as a convenience.
 -- -- object: nlx | type: DATABASE --
 -- -- DROP DATABASE IF EXISTS nlx;
--- CREATE DATABASE nlx
--- ;
+-- CREATE DATABASE nlx;
 -- -- ddl-end --
 -- 
 
