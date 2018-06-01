@@ -72,6 +72,22 @@ services:
     depends_on:
       - postgres
 
+  logdb:
+    build:
+      context: .
+      dockerfile: logdb/Dockerfile
+      target: build
+    volumes:
+      - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      PGHOST: postgres
+      PGUSER: postgres
+      PGPASSWORD: postgres
+    working_dir: /go/src/github.com/VNG-Realisatie/nlx/logdb
+    depends_on:
+      - postgres
+
   inway_cert:
     build:
       context: .

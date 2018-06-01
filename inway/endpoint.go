@@ -9,8 +9,7 @@ import (
 	"net/http/httputil"
 	"net/url"
 
-	"go.uber.org/zap/zapcore"
-
+	"github.com/VNG-Realisatie/nlx/common/transactionlog"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
@@ -24,6 +23,8 @@ type ServiceEndpoint interface {
 
 // HTTPServiceEndpoint implements a ServiceEndpoint for plain HTTP requests.
 type HTTPServiceEndpoint struct {
+	inway *Inway
+
 	serviceName string
 	logger      *zap.Logger
 
@@ -37,8 +38,9 @@ type HTTPServiceEndpoint struct {
 var _ ServiceEndpoint = &HTTPServiceEndpoint{} // compile-time interface validation
 
 // NewHTTPServiceEndpoint creates a new ServiceEndpoint using a simple HTTP reverse proxy backend.
-func NewHTTPServiceEndpoint(logger *zap.Logger, serviceName, endpoint string) (*HTTPServiceEndpoint, error) {
+func (iw *Inway) NewHTTPServiceEndpoint(logger *zap.Logger, serviceName, endpoint string) (*HTTPServiceEndpoint, error) {
 	h := &HTTPServiceEndpoint{
+		inway:       iw,
 		serviceName: serviceName,
 		logger:      logger.With(zap.String("inway-service-name", serviceName)),
 	}
@@ -85,24 +87,24 @@ Authorized:
 	r.URL.Path = reqMD.requestPath
 	r.Header.Set("X-NLX-Request-Organization", reqMD.requesterOrganization)
 
-	var logFields = []zapcore.Field{
-		zap.String("request-path", r.URL.Path),
-		zap.String("doelbinding-log", "yes"),
-		zap.String("doelbinding-requester-organization", reqMD.requesterOrganization),
-	}
+	var recordData = make(map[string]interface{})
 	if processID := r.Header.Get("X-NLX-Request-Process-Id"); processID != "" {
-		logFields = append(logFields, zap.String("doelbinding-process-id", processID))
+		recordData["doelbinding-process-id"] = processID
 	}
 	if logrecordID := r.Header.Get("X-NLX-Request-Id"); logrecordID != "" {
-		logFields = append(logFields, zap.String("request-id", logrecordID))
+		recordData["request-id"] = logrecordID
 	}
 	if dataElements := r.Header.Get("X-NLX-Request-Data-Elements"); dataElements != "" {
-		logFields = append(logFields, zap.String("doelbinding-data-elements", dataElements))
+		recordData["doelbinding-data-elements"] = dataElements
 	}
 
-	h.logger.Info("forwarding request", logFields...)
+	h.inway.txlogger.AddRecord(&transactionlog.Record{
+		SrcOrganization:  reqMD.requesterOrganization,
+		DestOrganization: h.inway.organizationName,
+		ServiceName:      h.serviceName,
+		RequstPath:       r.URL.Path,
+		Data:             recordData,
+	})
 
 	h.proxy.ServeHTTP(w, r)
-
-	h.logger.Info("forwarding request finished", logFields...)
 }
