@@ -48,9 +48,6 @@ func NewInway(logger *zap.Logger, selfAddress string, tlsOptions orgtls.TLSOptio
 	if len(orgCert.Subject.Organization) != 1 {
 		return nil, errors.New("cannot obtain organization name from self cert")
 	}
-	if len(orgCert.Subject.Organization) != 1 {
-		return nil, errors.New("cannot obtain organization name from self cert")
-	}
 	organizationName := orgCert.Subject.Organization[0]
 	i := &Inway{
 		logger:           logger.With(zap.String("inway-organization-name", organizationName)),
