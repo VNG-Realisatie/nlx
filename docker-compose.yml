@@ -293,7 +293,7 @@ services:
       volumes:
         - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
       ports:
-        - '12021:8080'
+        - '12021:12021'
       command: >
         /bin/ash -c "
           npm install

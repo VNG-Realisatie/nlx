@@ -1,9 +1,0 @@
-{
-    "/api": {
-      "target": "http://directory:1985",
-      "secure": false,
-      "pathRewrite": {
-        "^/api": ""
-      }
-    }
-}
