@@ -296,6 +296,6 @@ services:
         - '12021:12021'
       command: >
         /bin/ash -c "
-          npm install
-          npm run start
+          yarn install
+          yarn run start
         "
