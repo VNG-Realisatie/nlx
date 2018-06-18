@@ -11,7 +11,7 @@
 
         <title>{{ .Title }} {{ if ne .Title .Site.Title }} &middot; {{ .Site.Title }}{{ end }}</title>
     </head>
-    <body>
+    <body class="bg-white">
         <a id="skippy" class="sr-only sr-only-focusable" href="#content">
             <div class="container">
                 <span class="skiplink-text">Skip to main content</span>
@@ -69,17 +69,19 @@
                 {{ $currentPage := . }}
                 {{ range .Site.Menus.docs }}
                     <ul class="navbar-nav">
-                        <li>
+                        <li class="nav-item {{ if $currentPage.IsMenuCurrent "docs" . }}active{{ end }}">
                             <a class="nav-link" href="{{ .URL }}">
-                                <small class="text-uppercase">{{ .Name }}</small>
+                                {{ .Name }}
                             </a>
                         </li>
                         {{ if .HasChildren }}
-                            {{ range .Children }}
-                                <li class="nav-item {{ if $currentPage.IsMenuCurrent "docs" . }}active{{ end }}">
-                                    <a class="nav-link" href="{{ .URL }}">{{ .Name }}</a>
-                                </li>
-                            {{ end }}
+                            <ul>
+                                {{ range .Children }}
+                                    <li class="nav-item {{ if $currentPage.IsMenuCurrent "docs" . }}active{{ end }}">
+                                        <a class="nav-link" href="{{ .URL }}">{{ .Name }}</a>
+                                    </li>
+                                {{ end }}
+                            </ul>
                         {{ end }}
                     </ul>
                 {{ end }}
