@@ -7,12 +7,12 @@ stages:
 build:
   stage: build
   script:
-  - return
+  - exit 0
 
 test:
   stage: test
   script:
-  - return
+  - exit 0
 
 release:
   stage: release
