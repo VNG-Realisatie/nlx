@@ -293,7 +293,7 @@ services:
       volumes:
         - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
       ports:
-        - '12021:12021'
+        - '12021:3000'
       command: >
         /bin/ash -c "
           yarn install
