@@ -2,7 +2,7 @@
 FROM golang:1-alpine AS build
 
 # Install build tools.
-RUN apk add --update make git ssh
+RUN apk add --update make git openssh-client
 
 # Install modd, which is used within docker-compose.
 RUN go get github.com/cortesi/modd/cmd/modd
