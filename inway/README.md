@@ -8,12 +8,13 @@ The path scheme is as follows:
 
 `/{ServiceName}/{OriginalPath}`
 
-`ServiceName` is the name of the service which is requested. `OriginalPath` is sent as path to the service, this is specific for each service and must be specified by organizations in the service API documentation.
+* `ServiceName` is the name of the service which is requested.
+* `OriginalPath` is sent as path to the service, this is specific for each service and must be specified by organizations in the service API documentation.
 
 ### Special endpoints
 
-Special endpoints provide the centralized NLX service to fetch information from the inway.
+Special endpoints provide the centralized NLX service to fetch information from the _inway_.
 
 #### `/-/health`
 
-The health endpoint tells the directory whether the inway is available and stable.
+The health endpoint tells the directory whether the _inway_ is available and stable.
