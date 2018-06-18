@@ -16,7 +16,11 @@
     "build-icons": "rm -rf src/components/Icons && mkdir -p src/components/Icons && svgr --ext jsx --no-title --template src/helpers/wrapIntoComponent.js --replace-attr-value '#000=currentColor' --tab-width 4 --ids -d src/components/Icons src/assets/icons"
   },
   "devDependencies": {
-    "@svgr/cli": "^2.0.0"
+    "@svgr/cli": "^2.0.0",
+    "bootstrap": "^4.1.1",
+    "classnames": "^2.2.6",
+    "jquery": "^3.3.1",
+    "popper.js": "^1.14.3"
   },
   "proxy": {
     "/api": {

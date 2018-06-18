@@ -2,14 +2,6 @@ import React from 'react'
 import Service from './Service'
 import axios from 'axios';
 
-const restData = [
-    {
-        name: 'ESuiteGatewayV1-Develop',
-        organization_name: 'Atos'
-    }
-]
-
-
 export default class Services extends React.Component {
     constructor(props) {
         super(props)
@@ -31,22 +23,26 @@ export default class Services extends React.Component {
     }
 
     render() {
+        const {
+            serviceFilter
+        } = this.props
+
         const filteredServices = this.state.services.filter((service) => {
-            if (!this.props.q) {
+            if (!serviceFilter) {
                 return true
             }
 
-            return service.name.toLowerCase().includes(this.props.q.toLowerCase()) ||
-                service.organization_name.toLowerCase().includes(this.props.q.toLowerCase())
+            return service.name.toLowerCase().includes(serviceFilter.toLowerCase()) ||
+                service.organization_name.toLowerCase().includes(serviceFilter.toLowerCase())
         })
 
         const services = filteredServices.map((service) => (
             <Service
                 key={service.organization_name + service.name}
-                name={service.organization_name}
-                service={service.name}
-                api="api"
-                offline
+                organizationName={service.organization_name}
+                name={service.name}
+                inwayAddresses={service.inway_addresses}
+                documentationUrl={service.documentation_url}
             />
         ))
 

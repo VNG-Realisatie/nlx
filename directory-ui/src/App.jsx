@@ -10,35 +10,35 @@ class App extends Component {
         super(props)
 
         this.state = {
-            q: ''
+            serviceFilter: ''
         }
 
         this.onChange = this.onChange.bind(this)
     }
 
     onChange(e) {
-        this.setState({ q: e.target.value })
+        this.setState({ serviceFilter: e.target.value })
     }
 
     render() {
         return (
             <div className="App">
                 <Navigation />
-                <Actions>
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-sm-6 col-lg-4 offset-lg-2">
-                                <Search onChange={this.onChange} value={this.state.q} />
-                            </div>
-                            <div className="col-sm-6 col-lg-6 d-flex align-items-center">
-                                <Switch id="switch1">Switch me</Switch>
-                            </div>
+                <section>
+                <div className="container">
+                    <div className="row">
+                        <div className="col-sm-6 col-lg-4 offset-lg-2">
+                            <Search onChange={this.onChange} value={this.state.serviceFilter} />
+                        </div>
+                        <div className="col-sm-6 col-lg-6 d-flex align-items-center">
+                            <Switch id="switch1">Online services</Switch>
                         </div>
                     </div>
-                </Actions>
+                </div>
+                </section>
                 <section>
                     <div className="container">
-                        <Services q={this.state.q} />
+                        <Services filter={this.state.serviceFilter} />
                     </div>
                 </section>
             </div>
