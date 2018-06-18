@@ -1,9 +1,18 @@
 {{ partial "header" . }}
-    <div class="d-none d-xl-block col-xl-2 bd-toc">
-        {{.TableOfContents}}
+    <div class="container-fluid gutter-lg">
+        <section class="white">
+            <div class="row">
+                <div class="col-sm-9">
+                    <h1 id="content">{{ .Title }}</h1>
+                    {{ .Content }}
+
+                </div>
+                <div class="col-sm-3">
+                    <div class="mt-4">
+                        {{.TableOfContents}}
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
-    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content" role="main">
-        <h1 id="content" class="bd-title">{{ .Title }}</h1>
-        {{ .Content }}
-    </main>
 {{ partial "footer" . }}

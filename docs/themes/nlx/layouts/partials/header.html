@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <link rel="stylesheet" href="{{ "css/base.css" | relURL }}" />
+        <link rel="stylesheet" href="//design-system.nlx.io/css/base.css" />
         <link rel="stylesheet" href="{{ "css/docsearch.min.css" | relURL }}" />
         <link rel="stylesheet" href="{{ "css/highlight.css" | relURL }}" />
         <link rel="stylesheet" href="{{ "css/main.css" | relURL }}">
@@ -17,7 +17,7 @@
                 <span class="skiplink-text">Skip to main content</span>
             </div>
         </a>
-        <header class="navbar sticky-top bg-white">
+        <header class="navbar fixed-top bg-white navbar-expand-md">
             <div class="container">
                 <nav aria-label="Page navigation">
                     <ul class="navbar-nav flex-row">
@@ -57,31 +57,33 @@
             </div>
         </header>
 
-        <div class="container-fluid">
-            <div class="row flex-xl-nowrap">
-                <div class="col-12 col-md-3 col-xl-2 bd-sidebar">
-                    <form class="bd-search d-flex align-items-center">
-                        <span class="algolia-autocomplete" style="position: relative; display: inline-block; direction: ltr;"><input type="search" class="form-control ds-input" id="search-input" placeholder="Search..." autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-owns="algolia-autocomplete-listbox-0" dir="auto" style="position: relative; vertical-align: top;"><pre aria-hidden="true" style="position: absolute; visibility: hidden; white-space: pre; font-family: -apple-system, system-ui, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px; font-style: normal; font-variant: normal; font-weight: 400; word-spacing: 0px; letter-spacing: normal; text-indent: 0px; text-rendering: auto; text-transform: none;"></pre><span class="ds-dropdown-menu" role="listbox" id="algolia-autocomplete-listbox-0" style="position: absolute; top: 100%; z-index: 100; display: none; left: 0px; right: auto;"><div class="ds-dataset-1"></div></span></span>
-                        <button class="btn btn-link bd-search-docs-toggle d-md-none p-0 ml-3" type="button" data-toggle="collapse" data-target="#bd-docs-nav" aria-controls="bd-docs-nav" aria-expanded="false" aria-label="Toggle docs navigation">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-                        </button>
-                    </form>
+        <div class="sidebar bg-light">
+            <div class="search">
+                <input type="search" class="form-control" id="search-input" placeholder="Search..." autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-owns="algolia-autocomplete-listbox-0">
+                <button class="search_button">
+                    <svg viewBox="0 0 13 13" width="14" height="14"><title>search</title><path d="M9.448 7.843L13 11.383 11.384 13 7.832 9.448c-.786.501-1.719.797-2.72.797A5.113 5.113 0 0 1 0 5.123 5.116 5.116 0 0 1 5.123 0a5.116 5.116 0 0 1 5.122 5.123 5.077 5.077 0 0 1-.797 2.72zm-4.325.125a2.847 2.847 0 0 0 0-5.691 2.847 2.847 0 0 0 0 5.691z" fill="currentColor" fill-rule="evenodd"></path></svg>
+                </button>
+            </div>
 
-                    {{ $currentPage := . }}
-                    <nav class="collapse bd-links" id="bd-docs-nav">
-                        {{ range .Site.Menus.docs }}
-                            <div class="bd-toc-item {{ if or ($currentPage.HasMenuCurrent "docs" .) ($currentPage.IsMenuCurrent "docs" .) }}active{{ end }}">
-                                <a class="bd-toc-link" href="{{ .URL }}">{{ .Name }}</a>
-                                {{ if .HasChildren }}
-                                    {{ range .Children }}
-                                        <ul class="nav bd-sidenav">
-                                            <li class="{{ if $currentPage.IsMenuCurrent "docs" . }}active bd-sidenav-active{{ end }}">
-                                                <a href="{{ .URL }}">{{ .Name }}</a>
-                                            </li>
-                                        </ul>
-                                    {{ end }}
-                                {{ end }}
-                            </div>
-                        {{end}}
-                    </nav>
-                </div>
+            <nav aria-label="Sub navigation">
+                {{ $currentPage := . }}
+                {{ range .Site.Menus.docs }}
+                    <ul class="navbar-nav">
+                        <li>
+                            <a class="nav-link" href="{{ .URL }}">
+                                <small class="text-uppercase">{{ .Name }}</small>
+                            </a>
+                        </li>
+                        {{ if .HasChildren }}
+                            {{ range .Children }}
+                                <li class="nav-item {{ if $currentPage.IsMenuCurrent "docs" . }}active{{ end }}">
+                                    <a class="nav-link" href="{{ .URL }}">{{ .Name }}</a>
+                                </li>
+                            {{ end }}
+                        {{ end }}
+                    </ul>
+                {{ end }}
+            </nav>
+        </div>
+
+        <div class="content">
