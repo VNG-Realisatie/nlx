@@ -4,56 +4,88 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="//design-system.nlx.io/css/base.css" />
         <link rel="stylesheet" href="{{ "css/docsearch.min.css" | relURL }}" />
         <link rel="stylesheet" href="{{ "css/highlight.css" | relURL }}" />
         <link rel="stylesheet" href="{{ "css/main.css" | relURL }}">
 
         <title>{{ .Title }} {{ if ne .Title .Site.Title }} &middot; {{ .Site.Title }}{{ end }}</title>
     </head>
-    <body>
+    <body class="bg-white">
         <a id="skippy" class="sr-only sr-only-focusable" href="#content">
             <div class="container">
                 <span class="skiplink-text">Skip to main content</span>
             </div>
         </a>
-        <header class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar bg-dark">
-            <a class="navbar-brand" href="{{ "/" | absLangURL }}">{{ .Site.Title }}</a>
-            <ul class="navbar-nav ml-md-auto">
-                <li class="nav-item">
-                    <a class="nav-link p-2" href="https://github.com/VNG-Realisatie/nlx" target="_blank" rel="noopener" aria-label="GitHub"><svg class="navbar-nav-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 499.36" focusable="false"><title>GitHub</title><path d="M256 0C114.64 0 0 114.61 0 256c0 113.09 73.34 209 175.08 242.9 12.8 2.35 17.47-5.56 17.47-12.34 0-6.08-.22-22.18-.35-43.54-71.2 15.49-86.2-34.34-86.2-34.34-11.64-29.57-28.42-37.45-28.42-37.45-23.27-15.84 1.73-15.55 1.73-15.55 25.69 1.81 39.21 26.38 39.21 26.38 22.84 39.12 59.92 27.82 74.5 21.27 2.33-16.54 8.94-27.82 16.25-34.22-56.84-6.43-116.6-28.43-116.6-126.49 0-27.95 10-50.8 26.35-68.69-2.63-6.48-11.42-32.5 2.51-67.75 0 0 21.49-6.88 70.4 26.24a242.65 242.65 0 0 1 128.18 0c48.87-33.13 70.33-26.24 70.33-26.24 14 35.25 5.18 61.27 2.55 67.75 16.41 17.9 26.31 40.75 26.31 68.69 0 98.35-59.85 120-116.88 126.32 9.19 7.9 17.38 23.53 17.38 47.41 0 34.22-.31 61.83-.31 70.23 0 6.85 4.61 14.81 17.6 12.31C438.72 464.97 512 369.08 512 256.02 512 114.62 397.37 0 256 0z" fill="currentColor" fill-rule="evenodd"></path></svg></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link p-2" href="https://nl-x.slack.com" target="_blank" rel="noopener" aria-label="Slack"><svg class="navbar-nav-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" focusable="false"><title>Slack</title><path fill="currentColor" d="M210.787 234.832l68.31-22.883 22.1 65.977-68.309 22.882z"></path><path d="M490.54 185.6C437.7 9.59 361.6-31.34 185.6 21.46S-31.3 150.4 21.46 326.4 150.4 543.3 326.4 490.54 543.34 361.6 490.54 185.6zM401.7 299.8l-33.15 11.05 11.46 34.38c4.5 13.92-2.87 29.06-16.78 33.56-2.87.82-6.14 1.64-9 1.23a27.32 27.32 0 0 1-24.56-18l-11.46-34.38-68.36 22.92 11.46 34.38c4.5 13.92-2.87 29.06-16.78 33.56-2.87.82-6.14 1.64-9 1.23a27.32 27.32 0 0 1-24.56-18l-11.46-34.43-33.15 11.05c-2.87.82-6.14 1.64-9 1.23a27.32 27.32 0 0 1-24.56-18c-4.5-13.92 2.87-29.06 16.78-33.56l33.12-11.03-22.1-65.9-33.15 11.05c-2.87.82-6.14 1.64-9 1.23a27.32 27.32 0 0 1-24.56-18c-4.48-13.93 2.89-29.07 16.81-33.58l33.15-11.05-11.46-34.38c-4.5-13.92 2.87-29.06 16.78-33.56s29.06 2.87 33.56 16.78l11.46 34.38 68.36-22.92-11.46-34.38c-4.5-13.92 2.87-29.06 16.78-33.56s29.06 2.87 33.56 16.78l11.47 34.42 33.15-11.05c13.92-4.5 29.06 2.87 33.56 16.78s-2.87 29.06-16.78 33.56L329.7 194.6l22.1 65.9 33.15-11.05c13.92-4.5 29.06 2.87 33.56 16.78s-2.88 29.07-16.81 33.57z" fill="currentColor"></path></svg></a>
-                </li>
-            </ul>
+        <header class="navbar fixed-top bg-white navbar-expand-md">
+            <div class="container">
+                <nav aria-label="Page navigation">
+                    <ul class="navbar-nav flex-row">
+                        <li class="nav-item">
+                            <a class="navbar-logo" href="https://www.nlx.io">
+                                <img src="{{ "img/logo.svg" | relURL }}" />
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://directory.nlx.io">Directory</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://docs.nlx.io">Docs</a>
+                        </li>
+                    </ul>
+                </nav>
+                <ul class="navbar-nav flex-row ml-md-auto">
+                    <li class="nav-item">
+                        <a class="nav-link p-2" href="https://github.com/VNG-Realisatie/nlx" target="_blank" rel="noopener" aria-label="GitHub">
+                            <svg width="25" height="24">
+                                    <use xlink:href="#github">
+                                        <svg id="github" viewBox="0 0 25 24" width="100%" height="100%"><title>github</title><path d="M12.303 0C5.51 0 0 5.509 0 12.305 0 17.74 3.525 22.35 8.415 23.979c.616.112.84-.267.84-.594 0-.291-.01-1.065-.017-2.092-3.422.743-4.144-1.65-4.144-1.65-.56-1.421-1.367-1.799-1.367-1.799-1.117-.763.085-.748.085-.748 1.235.087 1.885 1.268 1.885 1.268 1.097 1.88 2.879 1.337 3.58 1.023.112-.796.43-1.338.782-1.645-2.732-.31-5.605-1.367-5.605-6.081 0-1.343.48-2.442 1.267-3.302-.127-.311-.55-1.562.12-3.256 0 0 1.033-.33 3.384 1.261.98-.273 2.034-.41 3.08-.414 1.044.005 2.097.14 3.08.414 2.349-1.592 3.38-1.261 3.38-1.261.671 1.694.25 2.945.122 3.256.789.86 1.266 1.959 1.266 3.302 0 4.726-2.877 5.766-5.618 6.07.441.38.835 1.131.835 2.28 0 1.644-.015 2.97-.015 3.374 0 .33.221.713.846.592 4.884-1.63 8.407-6.238 8.407-11.672C24.608 5.509 19.098 0 12.303 0" fill="#181717" fill-rule="evenodd"></path></svg>
+                                    </use>
+                            </svg>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link p-2" href="https://nl-x.slack.com" target="_blank" rel="noopener" aria-label="Slack">
+                            <svg width="24" height="24">
+                                <use xlink:href="#slack">
+                                    <svg id="slack" viewBox="0 0 24 24" width="100%" height="100%"><title>slack</title><g fill-rule="nonzero" fill="none"><path d="M15.473 1.58A2.139 2.139 0 0 0 12.8.215a2.139 2.139 0 0 0-1.366 2.673l5.483 16.858a2.116 2.116 0 0 0 2.576 1.308c1.131-.332 1.814-1.522 1.444-2.615 0-.039-5.464-16.859-5.464-16.859z" fill="#ECB32D"></path><path d="M6.985 4.332a2.139 2.139 0 0 0-2.673-1.366 2.139 2.139 0 0 0-1.366 2.673L8.43 22.498a2.116 2.116 0 0 0 2.576 1.307c1.132-.332 1.815-1.522 1.444-2.615 0-.039-5.464-16.858-5.464-16.858z" fill="#63C1A0"></path><path d="M22.38 15.532a2.139 2.139 0 0 0 1.366-2.673 2.139 2.139 0 0 0-2.673-1.366L4.195 16.995a2.116 2.116 0 0 0-1.307 2.576c.332 1.131 1.522 1.814 2.614 1.444.04 0 16.878-5.483 16.878-5.483z" fill="#E01A59"></path><path d="M7.707 20.312c1.093-.351 2.517-.82 4.04-1.307-.352-1.093-.82-2.517-1.308-4.04L6.4 16.274l1.307 4.04z" fill="#331433"></path><path d="M16.215 17.541c1.522-.487 2.946-.956 4.039-1.307-.352-1.093-.82-2.517-1.308-4.039l-4.039 1.307 1.308 4.04z" fill="#D62027"></path><path d="M19.61 7.044a2.139 2.139 0 0 0 1.366-2.673 2.139 2.139 0 0 0-2.674-1.366L1.444 8.488a2.116 2.116 0 0 0-1.307 2.575c.331 1.132 1.522 1.815 2.614 1.444.04 0 16.859-5.463 16.859-5.463z" fill="#89D3DF"></path><path d="M4.956 11.805c1.093-.351 2.517-.82 4.04-1.307-.489-1.522-.957-2.947-1.308-4.04l-4.04 1.308 1.308 4.039z" fill="#258B74"></path><path d="M13.444 9.054c1.522-.488 2.946-.956 4.039-1.308-.488-1.522-.956-2.946-1.307-4.039l-4.04 1.308 1.308 4.039z" fill="#819C3C"></path></g></svg>
+                                </use>
+                            </svg>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </header>
 
-        <div class="container-fluid">
-            <div class="row flex-xl-nowrap">
-                <div class="col-12 col-md-3 col-xl-2 bd-sidebar">
-                    <form class="bd-search d-flex align-items-center">
-                        <span class="algolia-autocomplete" style="position: relative; display: inline-block; direction: ltr;"><input type="search" class="form-control ds-input" id="search-input" placeholder="Search..." autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-owns="algolia-autocomplete-listbox-0" dir="auto" style="position: relative; vertical-align: top;"><pre aria-hidden="true" style="position: absolute; visibility: hidden; white-space: pre; font-family: -apple-system, system-ui, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px; font-style: normal; font-variant: normal; font-weight: 400; word-spacing: 0px; letter-spacing: normal; text-indent: 0px; text-rendering: auto; text-transform: none;"></pre><span class="ds-dropdown-menu" role="listbox" id="algolia-autocomplete-listbox-0" style="position: absolute; top: 100%; z-index: 100; display: none; left: 0px; right: auto;"><div class="ds-dataset-1"></div></span></span>
-                        <button class="btn btn-link bd-search-docs-toggle d-md-none p-0 ml-3" type="button" data-toggle="collapse" data-target="#bd-docs-nav" aria-controls="bd-docs-nav" aria-expanded="false" aria-label="Toggle docs navigation">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-                        </button>
-                    </form>
+        <div class="sidebar bg-light">
+            <div class="search">
+                <input type="search" class="form-control" id="search-input" placeholder="Search..." autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-owns="algolia-autocomplete-listbox-0">
+                <button class="search_button">
+                    <svg viewBox="0 0 13 13" width="14" height="14"><title>search</title><path d="M9.448 7.843L13 11.383 11.384 13 7.832 9.448c-.786.501-1.719.797-2.72.797A5.113 5.113 0 0 1 0 5.123 5.116 5.116 0 0 1 5.123 0a5.116 5.116 0 0 1 5.122 5.123 5.077 5.077 0 0 1-.797 2.72zm-4.325.125a2.847 2.847 0 0 0 0-5.691 2.847 2.847 0 0 0 0 5.691z" fill="currentColor" fill-rule="evenodd"></path></svg>
+                </button>
+            </div>
 
-                    {{ $currentPage := . }}
-                    <nav class="collapse bd-links" id="bd-docs-nav">
-                        {{ range .Site.Menus.docs }}
-                            <div class="bd-toc-item {{ if or ($currentPage.HasMenuCurrent "docs" .) ($currentPage.IsMenuCurrent "docs" .) }}active{{ end }}">
-                                <a class="bd-toc-link" href="{{ .URL }}">{{ .Name }}</a>
-                                {{ if .HasChildren }}
-                                    {{ range .Children }}
-                                        <ul class="nav bd-sidenav">
-                                            <li class="{{ if $currentPage.IsMenuCurrent "docs" . }}active bd-sidenav-active{{ end }}">
-                                                <a href="{{ .URL }}">{{ .Name }}</a>
-                                            </li>
-                                        </ul>
-                                    {{ end }}
+            <nav aria-label="Sub navigation">
+                {{ $currentPage := . }}
+                {{ range .Site.Menus.docs }}
+                    <ul class="navbar-nav">
+                        <li class="nav-item {{ if $currentPage.IsMenuCurrent "docs" . }}active{{ end }}">
+                            <a class="nav-link" href="{{ .URL }}">
+                                {{ .Name }}
+                            </a>
+                        </li>
+                        {{ if .HasChildren }}
+                            <ul>
+                                {{ range .Children }}
+                                    <li class="nav-item {{ if $currentPage.IsMenuCurrent "docs" . }}active{{ end }}">
+                                        <a class="nav-link" href="{{ .URL }}">{{ .Name }}</a>
+                                    </li>
                                 {{ end }}
-                            </div>
-                        {{end}}
-                    </nav>
-                </div>
+                            </ul>
+                        {{ end }}
+                    </ul>
+                {{ end }}
+            </nav>
+        </div>
+
+        <div class="content">
