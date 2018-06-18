@@ -4,7 +4,9 @@ import Service from './Service'
 export default class Services extends React.Component {
     render() {
         const {
-            serviceList
+            serviceList,
+            sortBy,
+            sortAscending
         } = this.props
 
         const services = serviceList.map((service) => (
@@ -17,29 +19,41 @@ export default class Services extends React.Component {
             />
         ))
 
+        const sortArrow = (
+            <svg width="8" height="12" viewBox="0 0 8 12" name="sortingArrow">
+                <g id="arrow-down" fill="none" fillRule="evenodd">
+                    <path id="Shape" fill="currentColor" fillRule="nonzero" transform={sortAscending ? "rotate(90 4 5)" : "rotate(-90 4 5)"} d="M5 4h-6v2h6v3l4-4-4-4z"></path>
+                </g>
+            </svg>
+        )
+
         return (
             <div className="table-responsive">
                 <table className="table table-bordered">
                     <thead>
                         <tr>
                             <th scope="col" className="sorting ascending">
-                                <button>
+                                <button onClick={(e) => this.props.onSort('inway_addresses')}>
                                     Status
-                                    <svg width="8" height="12" viewBox="0 0 8 12" name="sortingArrow">
-                                        <g id="arrow-down" fill="none" fillRule="evenodd">
-                                            <path id="Shape" fill="currentColor" fillRule="nonzero" transform="rotate(90 4 5)" d="M5 4h-6v2h6v3l4-4-4-4z"></path>
-                                        </g>
-                                    </svg>
+                                    {sortBy === 'inway_addresses' && sortArrow}
                                 </button>
                             </th>
                             <th scope="col">
-                                <button>Organisation</button>
+                                <button onClick={(e) => this.props.onSort('organization_name')}>
+                                    Organisation
+                                    {sortBy === 'organization_name' && sortArrow}
+                                </button>
                             </th>
                             <th scope="col">
-                                <button>Service</button>
+                                <button onClick={(e) => this.props.onSort('name')}>
+                                    Service
+                                    {sortBy === 'name' && sortArrow}
+                                </button>
                             </th>
                             <th scope="col">
-                                <button>API</button>
+                                <button disabled>
+                                API
+                                </button>
                             </th>
                         </tr>
                     </thead>

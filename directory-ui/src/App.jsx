@@ -12,21 +12,59 @@ class App extends Component {
         this.state = {
             displayOnlyContaining: '',
             displayOnlyOnline: false,
-            sortBy: 'status',
+            sortBy: 'organization_name',
             sortAscending: true,
-            services: [],
+            services: [
+                {
+                    name: "d",
+                    organization_name: "A",
+                    inway_addresses: true,
+                    documentation_url: "https://docs.postman-echo.com/"
+                },
+                {
+                    name: "e",
+                    organization_name: "B",
+                    inway_addresses: false,
+                    documentation_url: "https://docs.postman-echo.com/"
+                },
+                {
+                    name: "b",
+                    organization_name: "E",
+                    inway_addresses: true,
+                    documentation_url: "https://docs.postman-echo.com/"
+                },
+                {
+                    name: "f",
+                    organization_name: "D",
+                    inway_addresses: true,
+                    documentation_url: "https://docs.postman-echo.com/"
+                },
+                {
+                    name: "c",
+                    organization_name: "C",
+                    inway_addresses: false,
+                    documentation_url: "https://docs.postman-echo.com/"
+                },
+                {
+                    name: "a",
+                    organization_name: "F",
+                    inway_addresses: true,
+                    documentation_url: "https://docs.postman-echo.com/"
+                },
+            ],
             filteredServices: []
         }
 
         this.searchOnChange = this.searchOnChange.bind(this)
         this.switchOnChange = this.switchOnChange.bind(this)
+        this.onSort = this.onSort.bind(this)
     }
 
     componentDidMount() {
         axios.get(`/api/directory/list-services`)
             .then(res => {
                 const services = res.data.services;
-                this.setState({ services });
+                // this.setState({ services });
             })
             .catch(e => {
                 this.errors.push(e)
@@ -39,6 +77,17 @@ class App extends Component {
 
     switchOnChange() {
         this.setState({ displayOnlyOnline: !this.state.displayOnlyOnline })
+    }
+
+    onSort(val) {
+        if (this.state.sortBy === val) {
+            this.setState({ sortAscending: !this.state.sortAscending })
+            return
+        }
+        this.setState({
+            sortBy: val,
+            sortAscending: true
+        })
     }
 
     render() {
@@ -67,6 +116,32 @@ class App extends Component {
             return true
         })
 
+        const {
+            sortBy,
+            sortAscending
+        } = this.state
+
+        let sortedServices = [].concat(filteredServices)
+            .sort((a, b) => {
+                switch (sortBy) {
+                    case "inway_addresses": {
+                        return (a.inway_addresses > b.inway_addresses)
+                    }
+                    case "organization_name": {
+                        return (a.organization_name > b.organization_name)
+                    }
+                    case "name": {
+                        return (a.name > b.name)
+                    }
+                }
+            })
+            .map((item) => {return item}
+        )
+
+        if (!sortAscending) {
+            sortedServices = sortedServices.reverse()
+        }
+
         return (
             <div className="App">
                 <Navigation />
@@ -84,7 +159,12 @@ class App extends Component {
                 </section>
                 <section>
                     <div className="container">
-                        <Services serviceList={filteredServices} />
+                        <Services
+                            serviceList={sortedServices}
+                            onSort={this.onSort}
+                            sortBy={this.state.sortBy}
+                            sortAscending={this.state.sortAscending}
+                        />
                     </div>
                 </section>
             </div>
