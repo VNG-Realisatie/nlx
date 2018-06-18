@@ -1,6 +1,6 @@
-
-# Build cfssl binaries
 FROM golang:1-alpine AS build-cfssl
+
+# Build and install cfssl binaries
 RUN apk add --update git g++
 RUN go get -u github.com/cloudflare/cfssl/cmd/...
 
