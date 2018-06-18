@@ -18,8 +18,8 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
-	"github.com/VNG-Realisatie/nlx/common/orgtls"
-	"github.com/VNG-Realisatie/nlx/directory/directoryapi"
+	"go.nlx.io/nlx/common/orgtls"
+	"go.nlx.io/nlx/directory/directoryapi"
 )
 
 // Outway handles requests from inside the organization

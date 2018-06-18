@@ -7,11 +7,11 @@ RUN apk add --update openssl make git
 RUN wget -O - "https://github.com/gohugoio/hugo/releases/download/v0.36/hugo_0.36_Linux-64bit.tar.gz" | tar --no-same-owner -C /usr/local/bin/ -xz hugo
 
 # Build docs.
-COPY . /go/src/github.com/VNG-Realisatie/nlx
-WORKDIR /go/src/github.com/VNG-Realisatie/nlx/docs
+COPY . /go/src/go.nlx.io/nlx
+WORKDIR /go/src/go.nlx.io/nlx/docs
 RUN make
 
 
 # Copy static docs to alpine-based nginx container.
 FROM nginx:alpine
-COPY --from=build /go/src/github.com/VNG-Realisatie/nlx/docs/public /usr/share/nginx/html
+COPY --from=build /go/src/go.nlx.io/nlx/docs/public /usr/share/nginx/html

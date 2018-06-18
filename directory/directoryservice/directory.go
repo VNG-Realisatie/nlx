@@ -5,7 +5,7 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
-	"github.com/VNG-Realisatie/nlx/directory/directoryapi"
+	"go.nlx.io/nlx/directory/directoryapi"
 )
 
 // compile-time interface implementation verification

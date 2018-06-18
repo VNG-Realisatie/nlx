@@ -12,7 +12,7 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/peer"
 
-	"github.com/VNG-Realisatie/nlx/directory/directoryapi"
+	"go.nlx.io/nlx/directory/directoryapi"
 )
 
 type registerInwayHandler struct {

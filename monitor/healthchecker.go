@@ -9,9 +9,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/VNG-Realisatie/nlx/monitor/health"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
+	"go.nlx.io/nlx/monitor/health"
 	"go.uber.org/zap"
 )
 

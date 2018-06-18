@@ -21,7 +21,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials"
 
-	"github.com/VNG-Realisatie/nlx/directory/directoryapi"
+	"go.nlx.io/nlx/directory/directoryapi"
 )
 
 // newGRPCSplitterHandlerFunc returns an http.Handler that delegates gRPC connections to grpcServer

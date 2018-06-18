@@ -10,7 +10,7 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
-	"github.com/VNG-Realisatie/nlx/certportal"
+	"go.nlx.io/nlx/certportal"
 )
 
 var options struct {
