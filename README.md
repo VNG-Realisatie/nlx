@@ -30,9 +30,9 @@ After you set the `GOPATH`, be sure to reopen your terminal/shell to be sure the
 
 ### Cloning
 ```bash
-mkdir -p $GOPATH/src/github.com/VNG-Realisatie
-cd $GOPATH/src/github.com/VNG-Realisatie
-git clone git@github.com:VNG-Realisatie/nlx.git
+mkdir -p $GOPATH/src/go.nlx.io
+cd $GOPATH/src/go.nlx.io
+git clone git@gitlab.com:commonground/nlx.git
 cd nlx
 ```
 
@@ -52,7 +52,7 @@ There is no need to build individual components.
 ### Troubleshooting
 If you are running into issues after pulling changes you might need to rebuild your containers using `docker-compose build`
 
-If you are running into other issues, please [Post an Issue on GitHub](https://github.com/VNG-Realisatie/nlx/issues/new).
+If you are running into other issues, please [Post an Issue on GitHub](https://go.nlx.io/nlx/issues/new).
 
 ## Deploying and releasing
 Our [CI system Jenkins](https://jenkins.nlx.io/) builds every push to the master branch and creates a release to Docker, tagging it with the short git commit hash.

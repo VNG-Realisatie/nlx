@@ -11,8 +11,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/VNG-Realisatie/nlx/common/orgtls"
-	"github.com/VNG-Realisatie/nlx/directory/directoryapi"
+	"go.nlx.io/nlx/common/orgtls"
+	"go.nlx.io/nlx/directory/directoryapi"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials"

@@ -30,7 +30,7 @@ services:
       dockerfile: docs/Dockerfile
       target: build
     volumes:
-      - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
+      - $GOPATH/src/go.nlx.io/nlx:/go/src/go.nlx.io/nlx
     ports:
       - '1313:1313'
     command: hugo server --bind 0.0.0.0
@@ -62,13 +62,13 @@ services:
       dockerfile: db/Dockerfile
       target: build
     volumes:
-      - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
+      - $GOPATH/src/go.nlx.io/nlx:/go/src/go.nlx.io/nlx
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       PGHOST: postgres
       PGUSER: postgres
       PGPASSWORD: postgres
-    working_dir: /go/src/github.com/VNG-Realisatie/nlx/db
+    working_dir: /go/src/go.nlx.io/nlx/db
     depends_on:
       - postgres
 
@@ -108,7 +108,7 @@ services:
       - DIRECTORY_ADDRESS=directory.nlx.local:1984
     volumes:
       - inway_cert:/inway_cert
-      - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
+      - $GOPATH/src/go.nlx.io/nlx:/go/src/go.nlx.io/nlx
     ports:
       - '2018:2018'
     command: >
@@ -156,7 +156,7 @@ services:
       - DIRECTORY_ADDRESS=directory.nlx.local:1984
     volumes:
       - outway_cert:/outway_cert
-      - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
+      - $GOPATH/src/go.nlx.io/nlx:/go/src/go.nlx.io/nlx
     ports:
       - '12018:12018'
     command: >
@@ -203,7 +203,7 @@ services:
       - TLS_MONITOR_KEY=/monitor_cert/monitor_nlx_local-key.pem
     volumes:
       - monitor_cert:/monitor_cert
-      - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
+      - $GOPATH/src/go.nlx.io/nlx:/go/src/go.nlx.io/nlx
     command: >
       /bin/ash -c "
         while [ ! -f /monitor_cert/.done ]; do
@@ -225,7 +225,7 @@ services:
     environment:
       - CA_HOST=ca
     volumes:
-      - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
+      - $GOPATH/src/go.nlx.io/nlx:/go/src/go.nlx.io/nlx
     ports:
       - '12020:12020'
     command: modd
@@ -264,7 +264,7 @@ services:
       - TLS_DIRECTORY_KEY=/directory_cert/directory_nlx_local-key.pem
     volumes:
       - directory_cert:/directory_cert
-      - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
+      - $GOPATH/src/go.nlx.io/nlx:/go/src/go.nlx.io/nlx
     ports:
       - '1984:1984'
       - '1985:1985'
@@ -291,7 +291,7 @@ services:
           aliases:
             - directory-ui.nlx.local
       volumes:
-        - $GOPATH/src/github.com/VNG-Realisatie/nlx:/go/src/github.com/VNG-Realisatie/nlx
+        - $GOPATH/src/go.nlx.io/nlx:/go/src/go.nlx.io/nlx
       ports:
         - '12021:4200'
       command: >

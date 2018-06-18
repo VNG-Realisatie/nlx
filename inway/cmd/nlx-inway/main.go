@@ -11,10 +11,10 @@ import (
 	flags "github.com/jessevdk/go-flags"
 	"go.uber.org/zap"
 
-	"github.com/VNG-Realisatie/nlx/common/logoptions"
-	"github.com/VNG-Realisatie/nlx/common/orgtls"
-	"github.com/VNG-Realisatie/nlx/common/process"
-	"github.com/VNG-Realisatie/nlx/inway"
+	"go.nlx.io/nlx/common/logoptions"
+	"go.nlx.io/nlx/common/orgtls"
+	"go.nlx.io/nlx/common/process"
+	"go.nlx.io/nlx/inway"
 )
 
 var options struct {

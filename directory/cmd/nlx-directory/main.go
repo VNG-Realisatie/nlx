@@ -13,11 +13,11 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
-	"github.com/VNG-Realisatie/nlx/common/logoptions"
-	"github.com/VNG-Realisatie/nlx/common/orgtls"
-	"github.com/VNG-Realisatie/nlx/common/process"
-	"github.com/VNG-Realisatie/nlx/db/dbversion"
-	"github.com/VNG-Realisatie/nlx/directory/directoryservice"
+	"go.nlx.io/nlx/common/logoptions"
+	"go.nlx.io/nlx/common/orgtls"
+	"go.nlx.io/nlx/common/process"
+	"go.nlx.io/nlx/db/dbversion"
+	"go.nlx.io/nlx/directory/directoryservice"
 )
 
 var options struct {
