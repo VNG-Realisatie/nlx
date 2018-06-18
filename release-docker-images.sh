@@ -3,7 +3,7 @@
 set -e # exit on error
 set -x # echo commands
 
-RELEASE_TAG=${RELEASE_TAG:-latest}
+RELEASE_TAG=${CI_COMMIT_SHA:0:8}
 
 docker build \
 	-t nlxio/docs:latest -t nlxio/docs:${RELEASE_TAG} \
