@@ -9,7 +9,7 @@ export default class Search extends React.Component {
 
         return (
             <div className="form-switch">
-                <input type="checkbox" className="form-switch-input" id={id} />
+                <input type="checkbox" className="form-switch-input" id={id} onChange={this.props.onChange} checked={this.props.value} />
                 <label className="form-switch-label" htmlFor={id}>{children}</label>
             </div>
         )

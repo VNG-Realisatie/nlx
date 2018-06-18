@@ -1,42 +1,13 @@
 import React from 'react'
 import Service from './Service'
-import axios from 'axios';
 
 export default class Services extends React.Component {
-    constructor(props) {
-        super(props)
-
-        this.state = {
-            services: []
-        }
-    }
-
-    componentDidMount() {
-        axios.get(`/api/directory/list-services`)
-            .then(res => {
-                const services = res.data.services;
-                this.setState({ services });
-            })
-            .catch(e => {
-                this.errors.push(e)
-            })
-    }
-
     render() {
         const {
-            serviceFilter
+            serviceList
         } = this.props
 
-        const filteredServices = this.state.services.filter((service) => {
-            if (!serviceFilter) {
-                return true
-            }
-
-            return service.name.toLowerCase().includes(serviceFilter.toLowerCase()) ||
-                service.organization_name.toLowerCase().includes(serviceFilter.toLowerCase())
-        })
-
-        const services = filteredServices.map((service) => (
+        const services = serviceList.map((service) => (
             <Service
                 key={service.organization_name + service.name}
                 organizationName={service.organization_name}
