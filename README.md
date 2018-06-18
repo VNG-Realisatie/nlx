@@ -34,7 +34,7 @@ mkdir -p $GOPATH/src/go.nlx.io
 cd $GOPATH/src/go.nlx.io
 git clone https://gitlab.com/commonground/nlx
 cd nlx
-git remote set-url --push origin git@gitlab.com:commonground/nlx.gi
+git remote set-url --push origin git@gitlab.com:commonground/nlx.git
 ```
 
 ### Running
