@@ -8,7 +8,7 @@ clean:
 
 .PHONY: vendor
 vendor:
-	go get ./...
+	go get -u -a ./...
 
 .PHONY: build
 build:

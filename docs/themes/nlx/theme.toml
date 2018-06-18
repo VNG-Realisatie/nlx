@@ -3,13 +3,13 @@
 
 name = "NLX"
 license = "EUPL-1.2"
-licenselink = "https://github.com/VNG-Realisatie/nlx/blob/master/LICENCE.md"
+licenselink = "https://go.nlx.io/nlx/blob/master/LICENCE.md"
 description = "A Bootstrap 4 theme for documentation"
-homepage = "https://github.com/VNG-Realisatie/nlx/"
+homepage = "https://go.nlx.io/nlx/"
 tags = []
 features = []
 min_version = "0.36"
 
 [author]
   name = "VNG Realisatie"
-  homepage = "https://github.com/VNG-Realisatie/nlx/"
+  homepage = "https://go.nlx.io/nlx/"

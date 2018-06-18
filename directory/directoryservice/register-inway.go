@@ -3,6 +3,8 @@ package directoryservice
 import (
 	"context"
 	"fmt"
+	"net/url"
+	"regexp"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
@@ -10,17 +12,29 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/peer"
 
-	"github.com/VNG-Realisatie/nlx/directory/directoryapi"
+	"go.nlx.io/nlx/directory/directoryapi"
 )
 
 type registerInwayHandler struct {
+	logger *zap.Logger
+
 	stmtInsertAvailability *sqlx.Stmt
+
+	regexpName *regexp.Regexp
 }
 
 func newRegisterInwayHandler(db *sqlx.DB, logger *zap.Logger) (*registerInwayHandler, error) {
-	h := &registerInwayHandler{}
+	h := &registerInwayHandler{
+		logger: logger.With(zap.String("handler", "register-inway")),
+	}
 
 	var err error
+
+	h.regexpName, err = regexp.Compile(`^[a-zA-Z0-9-]{1,100}$`)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to compile regexpName")
+	}
+
 	// NOTE: We do not have an endpoint yet to create services seperately, therefore insert on demand.
 	h.stmtInsertAvailability, err = db.Preparex(`
 		WITH org AS (
@@ -69,8 +83,21 @@ func (h *registerInwayHandler) RegisterInway(ctx context.Context, req *directory
 	// TODO: #206 when administrative (client-tls mandatory) and inspection (client-tls optional) endpoints have been separated,
 	// use proper grpc authentication via middleware and context (based on client-tls fields (CN, O) like we do here)
 
+	if !h.regexpName.MatchString(organizationName) {
+		return nil, errors.New("invalid organization name")
+	}
+
 	for _, service := range req.Services {
-		_, err := h.stmtInsertAvailability.Exec(organizationName, service.Name, service.DocumentationUrl, req.InwayAddress)
+		if !h.regexpName.MatchString(service.Name) {
+			return nil, errors.New("invalid service name")
+		}
+		_, err := url.Parse(service.DocumentationUrl)
+		if err != nil {
+			h.logger.Info("invalid documentation url provided by inway", zap.Error(err))
+			return nil, errors.New("invalid documentation URL provided")
+		}
+
+		_, err = h.stmtInsertAvailability.Exec(organizationName, service.Name, service.DocumentationUrl, req.InwayAddress)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to insert service and inway")
 		}

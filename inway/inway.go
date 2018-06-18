@@ -11,8 +11,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/VNG-Realisatie/nlx/common/orgtls"
-	"github.com/VNG-Realisatie/nlx/directory/directoryapi"
+	"go.nlx.io/nlx/common/orgtls"
+	"go.nlx.io/nlx/directory/directoryapi"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials"
@@ -44,9 +44,6 @@ func NewInway(logger *zap.Logger, selfAddress string, tlsOptions orgtls.TLSOptio
 	roots, orgCert, err := orgtls.Load(tlsOptions)
 	if err != nil {
 		logger.Fatal("failed to load tls certs", zap.Error(err))
-	}
-	if len(orgCert.Subject.Organization) != 1 {
-		return nil, errors.New("cannot obtain organization name from self cert")
 	}
 	if len(orgCert.Subject.Organization) != 1 {
 		return nil, errors.New("cannot obtain organization name from self cert")
