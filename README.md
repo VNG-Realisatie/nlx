@@ -32,8 +32,9 @@ After you set the `GOPATH`, be sure to reopen your terminal/shell to be sure the
 ```bash
 mkdir -p $GOPATH/src/go.nlx.io
 cd $GOPATH/src/go.nlx.io
-git clone git@gitlab.com:commonground/nlx.git
+git clone https://gitlab.com/commonground/nlx
 cd nlx
+git remote set-url --push origin git@gitlab.com:commonground/nlx.git
 ```
 
 ### Running
