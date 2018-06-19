@@ -42,7 +42,7 @@ docker build \
 	-f monitor/Dockerfile .
 
 # Only push the image when this script is ran in CI/CD or forced using env var (backup-plan for when CI/CD is down/unavailable)
-if [ "${RELEASE_TAG}" -ne "latest" ]; then
+if [ "${RELEASE_TAG}" != "latest" ]; then
 	docker push nlxio/docs:latest
 	docker push nlxio/docs:${RELEASE_TAG}
 	docker push nlxio/unsafe-ca:latest
