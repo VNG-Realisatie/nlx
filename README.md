@@ -39,7 +39,12 @@ mkdir -p $GOPATH/src/go.nlx.io
 cd $GOPATH/src/go.nlx.io
 git clone https://gitlab.com/commonground/nlx
 cd nlx
-git remote set-url --push origin git@gitlab.com:commonground/nlx.git
+```
+
+If you wish to contribute, fork the project and set the push origin to your fork.
+
+```bash
+git remote set-url --push origin git@gitlab.com:<YOUR-GITLAB-USERNAME>/nlx.git
 ```
 
 ### Running
