@@ -14,8 +14,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "build-icons": "rm -rf src/components/Icons && mkdir -p src/components/Icons && svgr --ext jsx --no-title --template src/helpers/wrapIntoComponent.js --replace-attr-value '#000=currentColor' --tab-width 4 --ids -d src/components/Icons src/assets/icons"
+    "eject": "react-scripts eject"
   },
   "devDependencies": {
     "@svgr/cli": "^2.0.0",

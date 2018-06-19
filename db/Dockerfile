@@ -40,7 +40,7 @@ RUN git clone https://github.com/GeertJohan/apgdiff.git /opt/apgdiff && \
 ADD db/wait-for-postgres.sh /usr/local/bin/wait-for-postgres.sh
 ADD db/pgmodeler-cli-config /root/.config/pgmodeler/
 
-WORKDIR /go/src/github.com/VNG-Realisatie/nlx/db
+WORKDIR /go/src/go.nlx.io/nlx/db
 CMD ["/bin/sh", "-c", "/usr/local/bin/wait-for-postgres.sh xvfb-run /go/bin/modd"]
 
 

@@ -11,8 +11,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/VNG-Realisatie/nlx/common/orgtls"
-	"github.com/VNG-Realisatie/nlx/directory/directoryapi"
+	"go.nlx.io/nlx/common/orgtls"
+	"go.nlx.io/nlx/directory/directoryapi"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials"
@@ -44,9 +44,6 @@ func NewInway(logger *zap.Logger, selfAddress string, tlsOptions orgtls.TLSOptio
 	roots, orgCert, err := orgtls.Load(tlsOptions)
 	if err != nil {
 		logger.Fatal("failed to load tls certs", zap.Error(err))
-	}
-	if len(orgCert.Subject.Organization) != 1 {
-		return nil, errors.New("cannot obtain organization name from self cert")
 	}
 	if len(orgCert.Subject.Organization) != 1 {
 		return nil, errors.New("cannot obtain organization name from self cert")
@@ -98,27 +95,31 @@ func (i *Inway) AddServiceEndpoint(s ServiceEndpoint, documentationURL string) e
 }
 
 func (i *Inway) announceToDirectory(s ServiceEndpoint, documentationURL string) {
-	for {
-		resp, err := i.directoryClient.RegisterInway(context.Background(), &directoryapi.RegisterInwayRequest{
-			InwayAddress: i.selfAddress,
-			Services: []*directoryapi.RegisterInwayRequest_RegisterService{
-				{
-					Name:             s.ServiceName(),
-					DocumentationUrl: documentationURL,
+	go func() {
+		for {
+			resp, err := i.directoryClient.RegisterInway(context.Background(), &directoryapi.RegisterInwayRequest{
+				InwayAddress: i.selfAddress,
+				Services: []*directoryapi.RegisterInwayRequest_RegisterService{
+					{
+						Name:             s.ServiceName(),
+						DocumentationUrl: documentationURL,
+					},
 				},
-			},
-		})
-		if err != nil {
-			if errStatus, ok := status.FromError(err); ok && errStatus.Code() == codes.Unavailable {
-				i.logger.Info("waiting for director...")
-				time.Sleep(1 * time.Second)
-				continue
+			})
+			if err != nil {
+				if errStatus, ok := status.FromError(err); ok && errStatus.Code() == codes.Unavailable {
+					i.logger.Info("waiting for director...")
+					time.Sleep(1 * time.Second)
+					continue
+				}
+				i.logger.Error("failed to register to directory", zap.Error(err))
 			}
-			i.logger.Error("failed to register to directory", zap.Error(err))
+			if resp != nil && resp.Error != "" {
+				i.logger.Error(fmt.Sprintf("failed to register to directory: %s", resp.Error))
+			}
+			
+			// sleep 10 seconds before re-registering
+			time.Sleep(10*time.Second)
 		}
-		if resp != nil && resp.Error != "" {
-			i.logger.Error(fmt.Sprintf("failed to register to directory: %s", resp.Error))
-		}
-		break
-	}
+	}()
 }

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/VNG-Realisatie/nlx/monitor/health"
+	"go.nlx.io/nlx/monitor/health"
 	"go.uber.org/zap"
 )
 

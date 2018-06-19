@@ -14,8 +14,8 @@ RUN go get \
         github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
 
 # Add code.
-COPY . /go/src/github.com/VNG-Realisatie/nlx
-WORKDIR /go/src/github.com/VNG-Realisatie/nlx/directory
+COPY . /go/src/go.nlx.io/nlx
+WORKDIR /go/src/go.nlx.io/nlx/directory
 
 # Ignore failing make to allow this stage to complete even when there are errors in the sourcecode.
 RUN make || true 
@@ -23,4 +23,4 @@ RUN make || true
 
 # Release binary on latest alpine image.
 FROM alpine:latest
-COPY --from=build /go/src/github.com/VNG-Realisatie/nlx/directory/dist/bin/nlx-directory /usr/local/bin/nlx-directory
+COPY --from=build /go/src/go.nlx.io/nlx/directory/dist/bin/nlx-directory /usr/local/bin/nlx-directory
