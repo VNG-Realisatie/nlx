@@ -3,6 +3,7 @@ import logo from '../assets/images/logo.svg'
 import menu from '../assets/icons/menu.svg'
 import github from '../assets/icons/github.svg'
 import slack from '../assets/icons/slack.svg'
+import {Link} from 'react-router-dom'
 
 export default class Navigation extends React.Component {
     render() {
@@ -24,9 +25,7 @@ export default class Navigation extends React.Component {
                                 </a>
                             </li>
                             <li className="nav-item active">
-                                <a className="nav-link" href="">
-                                    Directory
-                                </a>
+                                <Link className="nav-link" to="/">Directory</Link>
                             </li>
                             <li className="nav-item">
                                 <a className="nav-link" href="">

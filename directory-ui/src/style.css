@@ -1,0 +1,57 @@
+.redoc-wrap {
+    background-color: white;
+}
+
+.redoc-wrap h3 {
+    color: white;
+}
+
+.redoc-wrap h1 {
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.sc-bxivhb {
+    padding: 4rem;
+}
+
+.sc-jtRfpW:after {
+    border-color: rgba(0,0,0,0.1);
+}
+
+.-depth1, .sc-htoDjs {
+    text-transform: capitalize;
+}
+
+.-depth1 {
+    font-weight: 700;
+    color: #adb5bd;
+}
+
+.-depth1.active {
+    background-color: transparent;
+    color: #3d83fa;
+}
+
+.-depth1.active svg {
+    fill: #3d83fa;
+}
+
+.-depth1 svg {
+    fill: #adb5bd;
+}
+
+.-depth1:not(.active):hover svg {
+    fill: #6d5b6b;
+}
+
+.bYETmU:hover {
+    background-color: transparent;
+    color: #5b5e6d;
+}
+
+.-depth2:hover,
+.-depth2.active {
+    background-color: #e9ecef;
+    /* color: #3d83fa; */
+}
