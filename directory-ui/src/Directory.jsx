@@ -26,7 +26,9 @@ export default class Directory extends React.Component {
         axios.get(`/api/directory/list-services`)
             .then(res => {
                 const services = res.data.services;
-                this.setState({ services })
+                if (services) {
+                    this.setState({ services })
+                }
             })
             .catch(e => {
                 console.error(e);
