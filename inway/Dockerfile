@@ -2,7 +2,7 @@
 FROM golang:1-alpine AS build
 
 # Install build tools.
-RUN apk add --update make git openssh-client gcc musl-dev
+RUN apk add --update make git openssh-client gcc musl-dev ca-certificates
 
 # Install modd, which is used within docker-compose.
 RUN go get github.com/cortesi/modd/cmd/modd
@@ -12,7 +12,7 @@ COPY . /go/src/go.nlx.io/nlx
 WORKDIR /go/src/go.nlx.io/nlx/inway
 
 # Ignore failing make to allow this stage to complete even when there are errors in the sourcecode.
-RUN make || true 
+RUN make || true
 
 
 # Release binary on latest alpine image.

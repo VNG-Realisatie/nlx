@@ -17,6 +17,7 @@ import (
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/inway"
+	"go.nlx.io/nlx/inway/config"
 	"go.nlx.io/nlx/logdb/logdbversion"
 )
 
@@ -51,8 +52,8 @@ func main() {
 	}
 
 	// Setup new zap logger
-	config := options.LogOptions.ZapConfig()
-	logger, err := config.Build()
+	zapConfig := options.LogOptions.ZapConfig()
+	logger, err := zapConfig.Build()
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
@@ -71,7 +72,7 @@ func main() {
 
 	process.Setup(logger)
 
-	serviceConfig := loadServiceConfig(logger, options.ServiceConfig)
+	serviceConfig := config.LoadServiceConfig(logger, options.ServiceConfig)
 
 	logDB, err := sqlx.Open("postgres", options.PostgresDSN)
 	if err != nil {
@@ -81,13 +82,13 @@ func main() {
 
 	logdbversion.WaitUntilLatestVersion(logger, logDB.DB)
 
-	iw, err := inway.NewInway(logger, logDB, options.SelfAddress, options.TLSOptions, options.DirectoryAddress)
+	iw, err := inway.NewInway(logger, logDB, options.SelfAddress, options.TLSOptions, options.DirectoryAddress, serviceConfig)
 	if err != nil {
 		logger.Fatal("cannot setup inway", zap.Error(err))
 	}
 
 	for serviceName, serviceDetails := range serviceConfig.Services {
-		endpoint, err := iw.NewHTTPServiceEndpoint(logger, serviceName, serviceDetails.Address)
+		endpoint, err := iw.NewHTTPServiceEndpoint(logger, serviceName, serviceDetails.EndpointURL)
 		if err != nil {
 			logger.Fatal("failed to create service", zap.Error(err))
 		}
@@ -99,7 +100,7 @@ func main() {
 		default:
 			logger.Fatal(fmt.Sprintf(`invalid authorization model "%s" for service "%s"`, serviceDetails.AuthorizationModel, serviceName))
 		}
-		iw.AddServiceEndpoint(endpoint, serviceDetails.DocumentationURL)
+		iw.AddServiceEndpoint(endpoint, serviceDetails.DocumentationURL, serviceDetails.APISpecificationType)
 	}
 	// Listen on the address provided in the options
 	err = iw.ListenAndServeTLS(options.ListenAddress)

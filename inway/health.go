@@ -3,15 +3,18 @@ package inway
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/monitor/health"
 )
 
-func (i *Inway) handleHealthRequest(w http.ResponseWriter, r *http.Request, serviceName string) {
+func (i *Inway) handleHealthRequest(w http.ResponseWriter, r *http.Request) {
 	i.serviceEndpointsLock.RLock()
 	defer i.serviceEndpointsLock.RUnlock()
+
+	serviceName := strings.TrimPrefix(r.URL.Path, "/.nlx/health/")
 
 	// We currently only verify that the service still exists in this inway.
 	// There is no health check to the actual endpoint defined yet.

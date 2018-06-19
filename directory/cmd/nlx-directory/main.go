@@ -87,7 +87,7 @@ func main() {
 		logger.Fatal("failed to load x509 keypair for directory", zap.Error(err))
 	}
 
-	directoryService, err := directoryservice.New(logger, db)
+	directoryService, err := directoryservice.New(logger, db, caCertPool, certKeyPair)
 	if err != nil {
 		logger.Fatal("failed to create new directory service", zap.Error(err))
 	}

@@ -3,9 +3,9 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.0" last-position="0,0" last-zoom="1"
+<dbmodel pgmodeler-ver="0.9.1" last-position="0,0" last-zoom="1"
 	 default-schema="public" default-owner="postgres">
-<database name="nlx">
+<database name="nlx" is-template="false" allow-conns="true">
 </database>
 
 <schema name="public" fill-color="#e1e1e1" sql-disabled="true">
@@ -18,7 +18,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="organizations" hide-ext-attribs="true">
 	<schema name="directory"/>
 	<role name="postgres"/>
-	<position x="60" y="149"/>
+	<position x="60" y="140"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -36,7 +36,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="services" hide-ext-attribs="true">
 	<schema name="directory"/>
 	<role name="postgres"/>
-	<position x="640" y="229"/>
+	<position x="640" y="220"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -49,18 +49,28 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="documentation_url">
 		<type name="varchar" length="250"/>
 	</column>
+	<column name="api_specification_type">
+		<type name="varchar" length="20"/>
+	</column>
 	<constraint name="services_pk" type="pk-constr" table="directory.services">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 	<constraint name="services_uq_name" type="uq-constr" table="directory.services">
 		<columns names="organization_id,name" ref-type="src-columns"/>
 	</constraint>
+	<constraint name="services_check_typespec" type="ck-constr" table="directory.services">
+			<expression><![CDATA[api_specification_type IS NULL OR (
+	api_specification_type = 'OpenAPI2'
+	OR
+	api_specification_type = 'OpenAPI3'
+)]]></expression>
+	</constraint>
 </table>
 
 <table name="inways" hide-ext-attribs="true">
 	<schema name="directory"/>
 	<role name="postgres"/>
-	<position x="640" y="89"/>
+	<position x="640" y="80"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -128,22 +138,22 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <relationship name="rel_services_organizations" type="relfk"
 	 src-table="directory.services"
-	 dst-table="directory.organizations"
+	 dst-table="directory.organizations" reference-fk="services_fk_organization"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_inways_organizations" type="relfk"
 	 src-table="directory.inways"
-	 dst-table="directory.organizations"
+	 dst-table="directory.organizations" reference-fk="inways_fk_organization"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_availability_inways" type="relfk"
 	 src-table="directory.availabilities"
-	 dst-table="directory.inways"
+	 dst-table="directory.inways" reference-fk="availabilities_fk_inway"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_availability_services" type="relfk"
 	 src-table="directory.availabilities"
-	 dst-table="directory.services"
+	 dst-table="directory.services" reference-fk="availabilities_fk_service"
 	 src-required="false" dst-required="false"/>
 
 </dbmodel>

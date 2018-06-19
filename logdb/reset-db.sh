@@ -12,10 +12,11 @@ DROP DATABASE IF EXISTS nlx_logdb;
 CREATE DATABASE nlx_logdb;
 EOF
 
+
 echo "Creating database structure from migrations and adding testdata"
 dbVersion=0
-while migrate --path migrations/ --database "postgresql://postgres:postgres@postgres/nlx_logdb?sslmode=disable" up 1;
-do
+for _unused in $(find migrations -name "*.up.sql" -print0 | sort -z | xargs -r0 echo); do
+	migrate --path migrations/ --database "postgresql://postgres:postgres@postgres/nlx_logdb?sslmode=disable" up 1
 	let dbVersion=dbVersion+1
 	dbVersionZerofill=$(printf "%03d" ${dbVersion})
 	# Add test data

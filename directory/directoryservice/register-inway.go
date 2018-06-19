@@ -44,15 +44,15 @@ func newRegisterInwayHandler(db *sqlx.DB, logger *zap.Logger) (*registerInwayHan
 					DO UPDATE SET name = EXCLUDED.name
 				RETURNING id
 		), service AS (
-			INSERT INTO directory.services (organization_id, name, documentation_url)
-				SELECT org.id, $2, NULLIF($3, '')
+			INSERT INTO directory.services (organization_id, name, documentation_url, api_specification_type)
+				SELECT org.id, $2, NULLIF($3, ''), NULLIF($4, '')
 					FROM org
 				ON CONFLICT ON CONSTRAINT services_uq_name
 					DO UPDATE SET documentation_url = EXCLUDED.documentation_url -- (possibly) no-op update to return id
 				RETURNING id
 		), inway AS (
 			INSERT INTO directory.inways (organization_id, address)
-				SELECT org.id, $4
+				SELECT org.id, $5
 					FROM org
 				ON CONFLICT ON CONSTRAINT inways_uq_address
 					DO UPDATE SET address = EXCLUDED.address -- no-op update to return id
@@ -97,7 +97,7 @@ func (h *registerInwayHandler) RegisterInway(ctx context.Context, req *directory
 			return nil, errors.New("invalid documentation URL provided")
 		}
 
-		_, err = h.stmtInsertAvailability.Exec(organizationName, service.Name, service.DocumentationUrl, req.InwayAddress)
+		_, err = h.stmtInsertAvailability.Exec(organizationName, service.Name, service.DocumentationUrl, service.ApiSpecificationType, req.InwayAddress)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to insert service and inway")
 		}

@@ -19,6 +19,36 @@ SwaggerJSONDirectory = `
     "application/json"
   ],
   "paths": {
+    "/directory/get-service-api-spec/{organization_name}/{service_name}": {
+      "get": {
+        "operationId": "GetServiceAPISpec",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/directoryapiGetServiceAPISpecResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "organization_name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "service_name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Directory"
+        ]
+      }
+    },
     "/directory/list-services": {
       "get": {
         "summary": "ListServices lists all services and their gateways.",
@@ -46,6 +76,21 @@ SwaggerJSONDirectory = `
         },
         "documentation_url": {
           "type": "string"
+        },
+        "api_specification_type": {
+          "type": "string"
+        }
+      }
+    },
+    "directoryapiGetServiceAPISpecResponse": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "document": {
+          "type": "string",
+          "format": "byte"
         }
       }
     },
@@ -74,10 +119,10 @@ SwaggerJSONDirectory = `
     "directoryapiService": {
       "type": "object",
       "properties": {
-        "name": {
+        "organization_name": {
           "type": "string"
         },
-        "organization_name": {
+        "service_name": {
           "type": "string"
         },
         "inway_addresses": {
@@ -87,6 +132,9 @@ SwaggerJSONDirectory = `
           }
         },
         "documentation_url": {
+          "type": "string"
+        },
+        "api_specification_type": {
           "type": "string"
         }
       }

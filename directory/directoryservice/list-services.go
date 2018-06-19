@@ -59,7 +59,7 @@ func (h *listServicesHandler) ListServices(ctx context.Context, req *directoryap
 		var inwayAddresses = pq.StringArray{}
 		err = rows.Scan(
 			&respService.OrganizationName,
-			&respService.Name,
+			&respService.ServiceName,
 			&respService.DocumentationUrl,
 			&inwayAddresses,
 		)

@@ -1,6 +1,9 @@
 package directoryservice
 
 import (
+	"crypto/tls"
+	"crypto/x509"
+
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -15,10 +18,11 @@ var _ directoryapi.DirectoryServer = &DirectoryService{}
 type DirectoryService struct {
 	*registerInwayHandler
 	*listServicesHandler
+	*getServiceAPISpecHandler
 }
 
 // New sets up a new DirectoryService and returns an error when something failed during set.
-func New(logger *zap.Logger, db *sqlx.DB) (*DirectoryService, error) {
+func New(logger *zap.Logger, db *sqlx.DB, rootCA *x509.CertPool, certKeyPair tls.Certificate) (*DirectoryService, error) {
 	s := &DirectoryService{}
 
 	var err error
@@ -30,6 +34,10 @@ func New(logger *zap.Logger, db *sqlx.DB) (*DirectoryService, error) {
 	s.listServicesHandler, err = newListServicesHandler(db, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to setup ListServices handler")
+	}
+	s.getServiceAPISpecHandler, err = newGetServiceAPISpecHandler(db, logger, rootCA, certKeyPair)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to setup GetServiceAPISpecHandler handler")
 	}
 
 	return s, nil

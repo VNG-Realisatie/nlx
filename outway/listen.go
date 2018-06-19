@@ -34,20 +34,20 @@ func (o *Outway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	logger.Debug("received request")
 	urlparts := strings.SplitN(strings.TrimPrefix(r.URL.Path, "/"), "/", 3)
 	if len(urlparts) != 3 {
-		http.Error(w, "nlx outway error: invalid path in url", http.StatusBadRequest)
+		http.Error(w, "nlx outway: invalid path in url", http.StatusBadRequest)
 		logger.Warn("received request with invalid path")
 		return
 	}
 	destOrganizationName := urlparts[0]
 	destServiceName := urlparts[1]
-	requestPath := urlparts[2] // retain original path
+	requestPath := "/" + urlparts[2] // retain original path
 	r.URL.Path = requestPath
 
 	o.servicesLock.RLock()
 	service := o.services[destOrganizationName+"."+destServiceName]
 	o.servicesLock.RUnlock()
 	if service == nil {
-		http.Error(w, "nlx outway error: unknown service", http.StatusBadRequest)
+		http.Error(w, "nlx outway: unknown service", http.StatusBadRequest)
 		logger.Warn("received request for unknown service")
 		return
 	}
@@ -58,7 +58,7 @@ func (o *Outway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	logrecordIDFlake, err := o.requestFlake.NextID()
 	if err != nil {
 		logger.Error("could not get new request ID", zap.Error(err))
-		http.Error(w, "outway: internal server error", http.StatusInternalServerError)
+		http.Error(w, "nlx outway: internal server error", http.StatusInternalServerError)
 		return
 	}
 	logrecordIDFlakeBytes := make([]byte, binary.MaxVarintLen64)
@@ -95,7 +95,7 @@ func (o *Outway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		Data:             recordData,
 	})
 	if err != nil {
-		http.Error(w, "server error", http.StatusInternalServerError)
+		http.Error(w, "nlx outway: server error", http.StatusInternalServerError)
 		o.logger.Error("failed to store transactionlog record", zap.Error(err))
 		return
 	}

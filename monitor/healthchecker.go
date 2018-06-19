@@ -118,7 +118,7 @@ func (h *healthChecker) run() error {
 func (h *healthChecker) checkAvailabilityHealth(av availability) {
 	logger := h.logger.With(zap.String("canonical-service-name", av.OrganizationName+`.`+av.ServiceName), zap.String("inway-address", av.Address))
 
-	resp, err := h.httpClient.Get(`https://` + av.Address + "/.nlx-health/" + av.ServiceName)
+	resp, err := h.httpClient.Get(`https://` + av.Address + "/.nlx/health/" + av.ServiceName)
 	if err != nil {
 		logger.Error("failed to check health", zap.Error(err))
 		h.updateAvailabilityHealth(av, false)

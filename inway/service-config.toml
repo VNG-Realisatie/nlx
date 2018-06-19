@@ -5,9 +5,9 @@
 ## The name of the service (in this example PostmanEcho) must be unique for each block.
 	[services.PostmanEcho]
 
-	## `address` should be set to the address at which the service is available.
+	## `endpoint-url` should be set to the address at which the service is available.
 	## In this example we simply expose the postman-echo.com website.
-	address = "https://postman-echo.com/"
+	endpoint-url = "https://postman-echo.com/"
 
 	## `documentation-url` points to the documentation for provided sevice
 	documentation-url = "https://docs.postman-echo.com/"
@@ -19,7 +19,7 @@
 	## For testing purposes, we define a second service which exposes the postman-echo.com API.
 	## But this time we add a whitelist authorization model.
 	[services.PostmanEchoWhitelisted]
-	address = "https://postman-echo.com/"
+	endpoint-url = "https://postman-echo.com/"
 	documentation-url = "https://docs.postman-echo.com/"
 
 	## We will enable whitelist authorization for this service
@@ -27,8 +27,13 @@
 
 	## `authorization-whitelist` is required when `authorization-model` is set to "whitelist".
 	## This is a list of organization names (as specified in the peers organization cert) that are allowed access.
-
 	## WARNING: The currently deployed online NLX network is for demo purposes and not ready for connected resources containing sensitive data.
 	## When using real personal data, use your own NLX network in an environment you control.
-
 	authorization-whitelist = ["DemoRequesterOrganization"]
+
+	[services.Petstore]
+	endpoint-url = "https://petstore.swagger.io/v2"
+
+	authorization-model = "none"
+	api-specification-type = "OpenAPI2"
+	api-specification-document-url = "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/json/petstore.json"
