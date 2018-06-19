@@ -2,7 +2,6 @@ import React from 'react'
 import logo from '../assets/images/logo.svg'
 import menu from '../assets/icons/menu.svg'
 import github from '../assets/icons/github.svg'
-import slack from '../assets/icons/slack.svg'
 import {Link} from 'react-router-dom'
 
 export default class Navigation extends React.Component {
