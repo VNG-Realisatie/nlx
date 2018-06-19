@@ -32,19 +32,19 @@ export default class Services extends React.Component {
                 <table className="table table-bordered">
                     <thead>
                         <tr>
-                            <th scope="col" className="sorting ascending">
+                            <th scope="col" className={sortBy === 'inway_addresses' ? "sorting" : ""}>
                                 <button onClick={(e) => this.props.onSort('inway_addresses')}>
                                     Status
                                     {sortBy === 'inway_addresses' && sortArrow}
                                 </button>
                             </th>
-                            <th scope="col">
+                            <th scope="col" className={sortBy === 'organization_name' ? "sorting" : ""}>
                                 <button onClick={(e) => this.props.onSort('organization_name')}>
                                     Organisation
                                     {sortBy === 'organization_name' && sortArrow}
                                 </button>
                             </th>
-                            <th scope="col">
+                            <th scope="col" className={sortBy === 'name' ? "sorting" : ""}>
                                 <button onClick={(e) => this.props.onSort('name')}>
                                     Service
                                     {sortBy === 'name' && sortArrow}
@@ -52,7 +52,7 @@ export default class Services extends React.Component {
                             </th>
                             <th scope="col">
                                 <button disabled>
-                                API
+                                    API address
                                 </button>
                             </th>
                         </tr>

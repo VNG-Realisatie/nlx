@@ -1,15 +1,27 @@
 import React from 'react'
 import classnames from 'classnames'
 import plugIcon from '../assets/icons/plug.svg'
+import {CopyToClipboard} from 'react-copy-to-clipboard'
+import $ from 'jquery'
 
 export default class Directory extends React.Component {
     render() {
         const {
-            name,
             organizationName,
+            name,
             inwayAddresses,
             documentationUrl
         } = this.props
+
+        const apiAddress = `http://{your-outway-address}:12018/${organizationName}/${name}`
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip({
+                trigger: 'hover focus manual',
+                placement: 'bottom',
+                template: '<div class="tooltip" role="tooltip"><div class="tooltip-inner"></div></div>'
+            })
+        })
 
         return (
             <tr className={classnames({
@@ -30,9 +42,11 @@ export default class Directory extends React.Component {
                     <span>{name}</span>
                 </td>
                 <td>
-                    <button type="button" className="btn btn-icon" data-toggle="tooltip" title="Copy API url">
-                        <img src={plugIcon} alt="api"/>
-                    </button>
+                    <CopyToClipboard text={apiAddress}>
+                        <button type="button" className="btn btn-icon" data-toggle="tooltip" title="Copy API address" style={{marginTop: '-4px'}}>
+                            <img src={plugIcon} alt="api" style={{marginTop: '-2px'}} />
+                        </button>
+                    </CopyToClipboard>
                 </td>
             </tr>
         )

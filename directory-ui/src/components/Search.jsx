@@ -2,10 +2,14 @@ import React from 'react'
 
 export default class Search extends React.Component {
     render() {
+        const {
+            placeholder
+        } = this.props
+
         return (
             <div className="search">
-                <input className="form-control" type="text" placeholder="Search in docs" onChange={this.props.onChange} value={this.props.value} />
-                <button className="search_button">
+                <input className="form-control" type="text" placeholder={placeholder} onChange={this.props.onChange} value={this.props.value} />
+                <button className="search_button" disabled>
                     <svg width="13px" height="13px" viewBox="0 0 13 13" version="1.1">
                         <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                             <g id="Docs" transform="translate(-187.000000, -75.000000)" fill="currentColor">

@@ -64,7 +64,7 @@ class App extends Component {
         axios.get(`/api/directory/list-services`)
             .then(res => {
                 const services = res.data.services;
-                // this.setState({ services });
+                this.setState({ services });
             })
             .catch(e => {
                 this.errors.push(e)
@@ -121,7 +121,7 @@ class App extends Component {
             sortAscending
         } = this.state
 
-        let sortedServices = [].concat(filteredServices)
+        let filteredAndSortedServices = [].concat(filteredServices)
             .sort((a, b) => {
                 switch (sortBy) {
                     case "inway_addresses": {
@@ -133,13 +133,16 @@ class App extends Component {
                     case "name": {
                         return (a.name > b.name)
                     }
+                    default: {
+                        return false
+                    }
                 }
             })
             .map((item) => {return item}
         )
 
         if (!sortAscending) {
-            sortedServices = sortedServices.reverse()
+            filteredAndSortedServices = filteredAndSortedServices.reverse()
         }
 
         return (
@@ -149,10 +152,10 @@ class App extends Component {
                 <div className="container">
                     <div className="row">
                         <div className="col-sm-6 col-lg-4 offset-lg-2">
-                            <Search onChange={this.searchOnChange} value={this.state.displayOnlyContaining} />
+                            <Search onChange={this.searchOnChange} value={this.state.displayOnlyContaining} placeholder="Filter services" />
                         </div>
                         <div className="col-sm-6 col-lg-6 d-flex align-items-center">
-                            <Switch id="switch1" onChange={this.switchOnChange} checked={this.state.displayOnlyOnline}>Online services</Switch>
+                            <Switch id="switch1" onChange={this.switchOnChange} checked={this.state.displayOnlyOnline}>Only online services</Switch>
                         </div>
                     </div>
                 </div>
@@ -160,7 +163,7 @@ class App extends Component {
                 <section>
                     <div className="container">
                         <Services
-                            serviceList={sortedServices}
+                            serviceList={filteredAndSortedServices}
                             onSort={this.onSort}
                             sortBy={this.state.sortBy}
                             sortAscending={this.state.sortAscending}
