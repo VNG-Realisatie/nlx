@@ -46,11 +46,6 @@ export default class Navigation extends React.Component {
                                 <img src={github} alt="logo" />
                             </a>
                         </li>
-                        <li className="nav-item">
-                            <a className="nav-link p-2" href="https://nl-x.slack.com" target="_blank" rel="noopener noreferrer" aria-label="Slack">
-                                <img src={slack} alt="logo" />
-                            </a>
-                        </li>
                     </ul>
                 </div>
             </header>
