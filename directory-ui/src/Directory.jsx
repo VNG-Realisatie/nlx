@@ -1,5 +1,4 @@
 import React from 'react'
-import Navigation from './components/Navigation'
 import Search from './components/Search'
 import Switch from './components/Switch'
 import Services from './components/Services'
@@ -30,7 +29,7 @@ export default class Directory extends React.Component {
                 this.setState({ services })
             })
             .catch(e => {
-                this.errors.push(e)
+                console.error(e);
             })
     }
 

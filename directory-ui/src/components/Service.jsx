@@ -1,9 +1,9 @@
 import React from 'react'
 import classnames from 'classnames'
 import plugIcon from '../assets/icons/plug.svg'
-import {CopyToClipboard} from 'react-copy-to-clipboard'
 import $ from 'jquery'
 import {Link} from 'react-router-dom'
+import copy from 'copy-to-clipboard'
 
 export default class Directory extends React.Component {
     render() {
@@ -42,11 +42,14 @@ export default class Directory extends React.Component {
                         <span>{name}</span>
                     </td>
                     <td>
-                        <CopyToClipboard text={apiAddress}>
-                            <button type="button" className="btn btn-icon" data-toggle="tooltip" title="Copy API address" style={{marginTop: '-4px'}}>
-                                <img src={plugIcon} alt="api" style={{marginTop: '-2px'}} />
-                            </button>
-                        </CopyToClipboard>
+                        <button
+                            type="button" className="btn btn-icon"
+                            data-toggle="tooltip" title="Copy API address"
+                            style={{marginTop: '-4px'}}
+                            onClick={() => copy(apiAddress)}
+                        >
+                            <img src={plugIcon} alt="api" style={{marginTop: '-2px'}} />
+                        </button>
                     </td>
                 </tr>
             </React.Fragment>
