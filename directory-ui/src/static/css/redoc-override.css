@@ -11,6 +11,22 @@
     font-weight: 700;
 }
 
+.eJTGKW > .react-tabs__tab-panel {
+    color: wite;
+    background-color: #292d3e;
+    font-weight: 600;
+    font-size: .75rem;
+}
+
+.bUNDKR {
+    padding-left: 4px;
+    padding-right: 4px;
+    background-color: #f8f9fa;
+    border: 1px solid #e6e8eb;
+    border-radius: 3px;
+    font-size: .75rem;
+}
+
 .sc-bxivhb {
     padding: 4rem;
 }

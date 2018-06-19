@@ -32,12 +32,11 @@ export default class Directory extends React.Component {
                         <svg id="status" viewBox="0 0 10 10" width="10px" height="10px"><circle cx="5" cy="14" r="5" transform="translate(0 -9)" fill="currentColor" fillRule="evenodd"></circle></svg>
                     </td>
                     <td>
-                        <span>{organizationName}</span>
-                        {/* {documentationUrl ?
+                        {documentationUrl ?
                             <Link to="/doc">{organizationName}</Link>
                             :
                             <span>{organizationName}</span>
-                        } */}
+                        }
                     </td>
                     <td>
                         <span>{name}</span>
