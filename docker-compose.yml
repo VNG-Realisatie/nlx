@@ -328,9 +328,9 @@ services:
       volumes:
         - $GOPATH/src/go.nlx.io/nlx:/go/src/go.nlx.io/nlx
       ports:
-        - '12021:4200'
+        - '12021:3000'
       command: >
         /bin/ash -c "
-          npm install
-          npm run start
+          yarn install
+          yarn run start
         "
