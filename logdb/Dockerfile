@@ -39,7 +39,7 @@ RUN git clone https://github.com/GeertJohan/apgdiff.git /opt/apgdiff && \
 
 ADD db/wait-for-postgres.sh /usr/local/bin/wait-for-postgres.sh
 
-WORKDIR /go/src/go.nlx.io/nlx/db
+WORKDIR /go/src/github.com/VNG-Realisatie/nlx_logdb/db
 CMD ["/bin/sh", "-c", "/usr/local/bin/wait-for-postgres.sh xvfb-run /go/bin/modd"]
 
 
@@ -59,13 +59,13 @@ ADD db/migrations /opt/db-migrations
 ENV PGHOST postgres
 ENV PGUSER postgres
 ENV PGPASSWORD postgres
-ENV PGDATABASE nlx
+ENV PGDATABASE nlx_logdb
 
 RUN echo '#!/bin/sh\n\
 \n\
 set -e\n\
 \n\
-psql postgres -tc "SELECT 1 FROM pg_database WHERE datname = '"'"'nlx'"'"'" | grep -q 1 || psql postgres -c "CREATE DATABASE nlx"\n\
+psql postgres -tc "SELECT 1 FROM pg_database WHERE datname = '"'"'nlx_logdb'"'"'" | grep -q 1 || psql postgres -c "CREATE DATABASE nlx_logdb"\n\
 \n\
 /usr/local/bin/migrate -path=/opt/db-migrations -database=postgres://${PGUSER}:${PGPASSWORD}@${PGHOST}/${PGDATABASE}?sslmode=disable up\n'\
 > /opt/migrate-up.sh && chmod +x /opt/migrate-up.sh

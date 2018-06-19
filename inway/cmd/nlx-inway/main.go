@@ -8,13 +8,16 @@ import (
 	"log"
 	"os"
 
+	"github.com/huandu/xstrings"
 	flags "github.com/jessevdk/go-flags"
+	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/inway"
+	"go.nlx.io/nlx/logdb/logdbversion"
 )
 
 var options struct {
@@ -25,6 +28,8 @@ var options struct {
 	SelfAddress string `long:"self-address" env:"SELF_ADDRESS" description:"The address that outways can use to reach me" required:"true"`
 
 	ServiceConfig string `long:"service-config" env:"SERVICE_CONFIG" default:"service-config.toml" description:"Location of the service config toml file"`
+
+	PostgresDSN string `long:"postgres-dsn" env:"POSTGRES_DSN" default:"postgres://postgres:postgres@postgres/nlx_logdb?sslmode=disable" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
 
 	logoptions.LogOptions
 	orgtls.TLSOptions
@@ -68,13 +73,21 @@ func main() {
 
 	serviceConfig := loadServiceConfig(logger, options.ServiceConfig)
 
-	iw, err := inway.NewInway(logger, options.SelfAddress, options.TLSOptions, options.DirectoryAddress)
+	logDB, err := sqlx.Open("postgres", options.PostgresDSN)
+	if err != nil {
+		logger.Fatal("could not open connection to postgres", zap.Error(err))
+	}
+	logDB.MapperFunc(xstrings.ToSnakeCase)
+
+	logdbversion.WaitUntilLatestVersion(logger, logDB.DB)
+
+	iw, err := inway.NewInway(logger, logDB, options.SelfAddress, options.TLSOptions, options.DirectoryAddress)
 	if err != nil {
 		logger.Fatal("cannot setup inway", zap.Error(err))
 	}
 
 	for serviceName, serviceDetails := range serviceConfig.Services {
-		endpoint, err := inway.NewHTTPServiceEndpoint(logger, serviceName, serviceDetails.Address)
+		endpoint, err := iw.NewHTTPServiceEndpoint(logger, serviceName, serviceDetails.Address)
 		if err != nil {
 			logger.Fatal("failed to create service", zap.Error(err))
 		}

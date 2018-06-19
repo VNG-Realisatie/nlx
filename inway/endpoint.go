@@ -9,10 +9,10 @@ import (
 	"net/http/httputil"
 	"net/url"
 
-	"go.uber.org/zap/zapcore"
-
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+
+	"go.nlx.io/nlx/common/transactionlog"
 )
 
 // ServiceEndpoint handles the proxying of a request to the organization's API endpoint
@@ -24,6 +24,8 @@ type ServiceEndpoint interface {
 
 // HTTPServiceEndpoint implements a ServiceEndpoint for plain HTTP requests.
 type HTTPServiceEndpoint struct {
+	inway *Inway
+
 	serviceName string
 	logger      *zap.Logger
 
@@ -37,8 +39,9 @@ type HTTPServiceEndpoint struct {
 var _ ServiceEndpoint = &HTTPServiceEndpoint{} // compile-time interface validation
 
 // NewHTTPServiceEndpoint creates a new ServiceEndpoint using a simple HTTP reverse proxy backend.
-func NewHTTPServiceEndpoint(logger *zap.Logger, serviceName, endpoint string) (*HTTPServiceEndpoint, error) {
+func (iw *Inway) NewHTTPServiceEndpoint(logger *zap.Logger, serviceName, endpoint string) (*HTTPServiceEndpoint, error) {
 	h := &HTTPServiceEndpoint{
+		inway:       iw,
 		serviceName: serviceName,
 		logger:      logger.With(zap.String("inway-service-name", serviceName)),
 	}
@@ -85,24 +88,34 @@ Authorized:
 	r.URL.Path = reqMD.requestPath
 	r.Header.Set("X-NLX-Request-Organization", reqMD.requesterOrganization)
 
-	var logFields = []zapcore.Field{
-		zap.String("request-path", r.URL.Path),
-		zap.String("doelbinding-log", "yes"),
-		zap.String("doelbinding-requester-organization", reqMD.requesterOrganization),
+	logrecordID := r.Header.Get("X-NLX-Logrecord-Id")
+	if logrecordID == "" {
+		http.Error(w, "missing logrecord id", http.StatusBadRequest)
+		h.logger.Warn("Received request with missing logrecord id from " + reqMD.requesterOrganization)
+		return
 	}
+
+	var recordData = make(map[string]interface{})
 	if processID := r.Header.Get("X-NLX-Request-Process-Id"); processID != "" {
-		logFields = append(logFields, zap.String("doelbinding-process-id", processID))
-	}
-	if logrecordID := r.Header.Get("X-NLX-Request-Id"); logrecordID != "" {
-		logFields = append(logFields, zap.String("request-id", logrecordID))
+		recordData["doelbinding-process-id"] = processID
 	}
 	if dataElements := r.Header.Get("X-NLX-Request-Data-Elements"); dataElements != "" {
-		logFields = append(logFields, zap.String("doelbinding-data-elements", dataElements))
+		recordData["doelbinding-data-elements"] = dataElements
+	}
+	recordData["request-path"] = reqMD.requestPath
+
+	err := h.inway.txlogger.AddRecord(&transactionlog.Record{
+		SrcOrganization:  reqMD.requesterOrganization,
+		DestOrganization: h.inway.organizationName,
+		ServiceName:      h.serviceName,
+		LogrecordID:      logrecordID,
+		Data:             recordData,
+	})
+	if err != nil {
+		http.Error(w, "server error", http.StatusInternalServerError)
+		h.logger.Error("failed to store transactionlog record", zap.Error(err))
+		return
 	}
 
-	h.logger.Info("forwarding request", logFields...)
-
 	h.proxy.ServeHTTP(w, r)
-
-	h.logger.Info("forwarding request finished", logFields...)
 }

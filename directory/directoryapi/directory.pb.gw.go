@@ -47,14 +47,14 @@ func RegisterDirectoryHandlerFromEndpoint(ctx context.Context, mux *runtime.Serv
 	defer func() {
 		if err != nil {
 			if cerr := conn.Close(); cerr != nil {
-				grpclog.Printf("Failed to close conn to %s: %v", endpoint, cerr)
+				grpclog.Infof("Failed to close conn to %s: %v", endpoint, cerr)
 			}
 			return
 		}
 		go func() {
 			<-ctx.Done()
 			if cerr := conn.Close(); cerr != nil {
-				grpclog.Printf("Failed to close conn to %s: %v", endpoint, cerr)
+				grpclog.Infof("Failed to close conn to %s: %v", endpoint, cerr)
 			}
 		}()
 	}()
@@ -68,8 +68,8 @@ func RegisterDirectoryHandler(ctx context.Context, mux *runtime.ServeMux, conn *
 	return RegisterDirectoryHandlerClient(ctx, mux, NewDirectoryClient(conn))
 }
 
-// RegisterDirectoryHandler registers the http handlers for service Directory to "mux".
-// The handlers forward requests to the grpc endpoint over the given implementation of "DirectoryClient".
+// RegisterDirectoryHandlerClient registers the http handlers for service Directory
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "DirectoryClient".
 // Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "DirectoryClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
 // "DirectoryClient" to call the correct interceptors.

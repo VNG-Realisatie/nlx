@@ -4,9 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/lib/pq"
-
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 

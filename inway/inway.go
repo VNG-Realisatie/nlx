@@ -11,15 +11,17 @@ import (
 	"sync"
 	"time"
 
-	"go.nlx.io/nlx/common/orgtls"
-	"go.nlx.io/nlx/directory/directoryapi"
+	"github.com/jmoiron/sqlx"
+	"github.com/pkg/errors"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/status"
 
-	"github.com/pkg/errors"
-	"go.uber.org/zap"
+	"go.nlx.io/nlx/common/orgtls"
+	"go.nlx.io/nlx/common/transactionlog"
+	"go.nlx.io/nlx/directory/directoryapi"
 )
 
 // Inway handles incoming requests and holds a list of registered ServiceEndpoints.
@@ -36,11 +38,14 @@ type Inway struct {
 	serviceEndpointsLock sync.RWMutex
 	serviceEndpoints     map[string]ServiceEndpoint
 
+	txlogger *transactionlog.TransactionLogger
+
 	directoryClient directoryapi.DirectoryClient
 }
 
 // NewInway creates and prepares a new Inway.
-func NewInway(logger *zap.Logger, selfAddress string, tlsOptions orgtls.TLSOptions, directoryAddress string) (*Inway, error) {
+func NewInway(logger *zap.Logger, logdb *sqlx.DB, selfAddress string, tlsOptions orgtls.TLSOptions, directoryAddress string) (*Inway, error) {
+	// parse tls certificate
 	roots, orgCert, err := orgtls.Load(tlsOptions)
 	if err != nil {
 		logger.Fatal("failed to load tls certs", zap.Error(err))
@@ -49,6 +54,7 @@ func NewInway(logger *zap.Logger, selfAddress string, tlsOptions orgtls.TLSOptio
 		return nil, errors.New("cannot obtain organization name from self cert")
 	}
 	organizationName := orgCert.Subject.Organization[0]
+
 	i := &Inway{
 		logger:           logger.With(zap.String("inway-organization-name", organizationName)),
 		organizationName: organizationName,
@@ -61,6 +67,13 @@ func NewInway(logger *zap.Logger, selfAddress string, tlsOptions orgtls.TLSOptio
 		serviceEndpoints: make(map[string]ServiceEndpoint),
 	}
 
+	// setup transactionlog
+	i.txlogger, err = transactionlog.NewTransactionLogger(logdb, transactionlog.DirectionIn)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to setup transactionlog")
+	}
+
+	// setup directory client
 	orgKeypair, err := tls.LoadX509KeyPair(tlsOptions.OrgCertFile, tlsOptions.OrgKeyFile)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to read tls keypair")
@@ -117,9 +130,9 @@ func (i *Inway) announceToDirectory(s ServiceEndpoint, documentationURL string) 
 			if resp != nil && resp.Error != "" {
 				i.logger.Error(fmt.Sprintf("failed to register to directory: %s", resp.Error))
 			}
-			
+
 			// sleep 10 seconds before re-registering
-			time.Sleep(10*time.Second)
+			time.Sleep(10 * time.Second)
 		}
 	}()
 }
