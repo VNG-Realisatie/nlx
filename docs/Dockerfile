@@ -11,7 +11,10 @@ COPY . /go/src/go.nlx.io/nlx
 WORKDIR /go/src/go.nlx.io/nlx/docs
 RUN make
 
-
 # Copy static docs to alpine-based nginx container.
 FROM nginx:alpine
+
+# Copy nginx configuration
+COPY ./docs/docker/default.conf /etc/nginx/conf.d/default.conf
+
 COPY --from=build /go/src/go.nlx.io/nlx/docs/public /usr/share/nginx/html
