@@ -37,9 +37,8 @@ RUN git clone https://github.com/GeertJohan/apgdiff.git /opt/apgdiff && \
     echo "#!/bin/bash\njava -jar /opt/apgdiff.jar \$@" > /usr/local/bin/apgdiff &&\
     chmod +x /usr/local/bin/apgdiff
 
-ADD db/wait-for-postgres.sh /usr/local/bin/wait-for-postgres.sh
+ADD logdb/wait-for-postgres.sh /usr/local/bin/wait-for-postgres.sh
 
-WORKDIR /go/src/github.com/VNG-Realisatie/nlx_logdb/db
 CMD ["/bin/sh", "-c", "/usr/local/bin/wait-for-postgres.sh xvfb-run /go/bin/modd"]
 
 
@@ -54,7 +53,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /usr/local/bin/migrate /usr/local/bin/migrate
-ADD db/migrations /opt/db-migrations
+ADD logdb/migrations /opt/db-migrations
 
 ENV PGHOST postgres
 ENV PGUSER postgres
