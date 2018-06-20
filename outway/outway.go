@@ -32,7 +32,7 @@ type Outway struct {
 
 	logger *zap.Logger
 
-	txlogger *transactionlog.TransactionLogger
+	txlogger transactionlog.TransactionLogger
 
 	directoryClient directoryapi.DirectoryClient
 
@@ -67,9 +67,13 @@ func NewOutway(logger *zap.Logger, logdb *sqlx.DB, tlsOptions orgtls.TLSOptions,
 	}
 
 	// setup transactionlog
-	o.txlogger, err = transactionlog.NewTransactionLogger(logdb, transactionlog.DirectionOut)
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to setup transactionlog")
+	if logdb == nil {
+		o.txlogger = transactionlog.NewDiscardTransactionLogger()
+	} else {
+		o.txlogger, err = transactionlog.NewPostgresTransactionLogger(logdb, transactionlog.DirectionOut)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to setup transactionlog")
+		}
 	}
 
 	orgKeypair, err := tls.LoadX509KeyPair(tlsOptions.OrgCertFile, tlsOptions.OrgKeyFile)

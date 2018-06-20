@@ -24,7 +24,8 @@ var options struct {
 
 	DirectoryAddress string `long:"directory-address" env:"DIRECTORY_ADDRESS" description:"Address for the directory where this outway can fetch the service list" required:"true"`
 
-	PostgresDSN string `long:"postgres-dsn" env:"POSTGRES_DSN" default:"postgres://postgres:postgres@postgres/nlx_logdb?sslmode=disable" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
+	DisableLogdb bool   `long:"disable-logdb" env:"DISABLE_LOGDB" description:"Disable logdb connections"`
+	PostgresDSN  string `long:"postgres-dsn" env:"POSTGRES_DSN" default:"postgres://postgres:postgres@postgres/nlx_logdb?sslmode=disable" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
 
 	logoptions.LogOptions
 	orgtls.TLSOptions
@@ -61,13 +62,16 @@ func main() {
 
 	process.Setup(logger)
 
-	logDB, err := sqlx.Open("postgres", options.PostgresDSN)
-	if err != nil {
-		logger.Fatal("could not open connection to postgres", zap.Error(err))
-	}
-	logDB.MapperFunc(xstrings.ToSnakeCase)
+	var logDB *sqlx.DB
+	if !options.DisableLogdb {
+		logDB, err = sqlx.Open("postgres", options.PostgresDSN)
+		if err != nil {
+			logger.Fatal("could not open connection to postgres", zap.Error(err))
+		}
+		logDB.MapperFunc(xstrings.ToSnakeCase)
 
-	logdbversion.WaitUntilLatestVersion(logger, logDB.DB)
+		logdbversion.WaitUntilLatestVersion(logger, logDB.DB)
+	}
 
 	// Create new outway and provide it with a hardcoded service.
 	ow, err := outway.NewOutway(logger, logDB, options.TLSOptions, options.DirectoryAddress)

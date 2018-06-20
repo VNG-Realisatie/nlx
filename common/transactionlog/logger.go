@@ -8,16 +8,30 @@ import (
 	"github.com/pkg/errors"
 )
 
-// TransactionLogger helps inway and outway to write transaction logs to a data store.
-type TransactionLogger struct {
-	logdb *sqlx.DB
+type TransactionLogger interface {
+	AddRecord(rec *Record) error
+}
 
+// DiscardTransactionLogger discards records it gets
+type DiscardTransactionLogger struct{}
+
+func NewDiscardTransactionLogger() TransactionLogger {
+	return &DiscardTransactionLogger{}
+}
+
+func (txl *DiscardTransactionLogger) AddRecord(rec *Record) error {
+	return nil
+}
+
+// PostgresTransactionLogger helps inway and outway to write transaction logs to a data store.
+type PostgresTransactionLogger struct {
+	logdb                    *sqlx.DB
 	stmtInsertTransactionLog *sqlx.NamedStmt
 }
 
-// NewTransactionLogger prepares a new TransactionLogger.
-func NewTransactionLogger(logdb *sqlx.DB, direction Direction) (*TransactionLogger, error) {
-	txl := &TransactionLogger{
+// NewPostgressTransactionLogger prepares a new TransactionLogger.
+func NewPostgresTransactionLogger(logdb *sqlx.DB, direction Direction) (TransactionLogger, error) {
+	txl := &PostgresTransactionLogger{
 		logdb: logdb,
 	}
 
@@ -47,7 +61,7 @@ func NewTransactionLogger(logdb *sqlx.DB, direction Direction) (*TransactionLogg
 }
 
 // AddRecord inserts a record into the datastore. Returns an error when failed.
-func (txl *TransactionLogger) AddRecord(rec *Record) error {
+func (txl *PostgresTransactionLogger) AddRecord(rec *Record) error {
 	dataJSON, err := json.Marshal(rec.Data)
 	if err != nil {
 		return errors.Wrap(err, "failed to convert data to json")
