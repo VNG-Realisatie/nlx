@@ -43,8 +43,14 @@ CREATE TABLE directory.services(
 	organization_id integer NOT NULL,
 	name varchar(100) NOT NULL,
 	documentation_url varchar(250),
+	api_specification_type varchar(20),
 	CONSTRAINT services_pk PRIMARY KEY (id),
-	CONSTRAINT services_uq_name UNIQUE (organization_id,name)
+	CONSTRAINT services_uq_name UNIQUE (organization_id,name),
+	CONSTRAINT services_check_typespec CHECK (api_specification_type IS NULL OR (
+	api_specification_type = 'OpenAPI2'
+	OR
+	api_specification_type = 'OpenAPI3'
+))
 
 );
 -- ddl-end --

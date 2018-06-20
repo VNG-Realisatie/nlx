@@ -22,6 +22,7 @@ import (
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/directory/directoryapi"
+	"go.nlx.io/nlx/inway/config"
 )
 
 // Inway handles incoming requests and holds a list of registered ServiceEndpoints.
@@ -35,6 +36,8 @@ type Inway struct {
 	orgCertFile string
 	orgKeyFile  string
 
+	serviceConfig *config.ServiceConfig // This should be removed once we have centralized service management
+
 	serviceEndpointsLock sync.RWMutex
 	serviceEndpoints     map[string]ServiceEndpoint
 
@@ -44,7 +47,7 @@ type Inway struct {
 }
 
 // NewInway creates and prepares a new Inway.
-func NewInway(logger *zap.Logger, logdb *sqlx.DB, selfAddress string, tlsOptions orgtls.TLSOptions, directoryAddress string) (*Inway, error) {
+func NewInway(logger *zap.Logger, logdb *sqlx.DB, selfAddress string, tlsOptions orgtls.TLSOptions, directoryAddress string, serviceConfig *config.ServiceConfig) (*Inway, error) {
 	// parse tls certificate
 	roots, orgCert, err := orgtls.Load(tlsOptions)
 	if err != nil {
@@ -63,6 +66,8 @@ func NewInway(logger *zap.Logger, logdb *sqlx.DB, selfAddress string, tlsOptions
 		roots:       roots,
 		orgCertFile: tlsOptions.OrgCertFile,
 		orgKeyFile:  tlsOptions.OrgKeyFile,
+
+		serviceConfig: serviceConfig,
 
 		serviceEndpoints: make(map[string]ServiceEndpoint),
 	}
@@ -96,26 +101,27 @@ func NewInway(logger *zap.Logger, logdb *sqlx.DB, selfAddress string, tlsOptions
 }
 
 // AddServiceEndpoint adds an ServiceEndpoint to the inway's internal registry.
-func (i *Inway) AddServiceEndpoint(s ServiceEndpoint, documentationURL string) error {
+func (i *Inway) AddServiceEndpoint(s ServiceEndpoint, documentationURL string, apiSpecificationType string) error {
 	i.serviceEndpointsLock.Lock()
 	defer i.serviceEndpointsLock.Unlock()
 	if _, exists := i.serviceEndpoints[s.ServiceName()]; exists {
 		return errors.New("service endpoint for a service with the same name has already been registered")
 	}
 	i.serviceEndpoints[s.ServiceName()] = s
-	i.announceToDirectory(s, documentationURL)
+	i.announceToDirectory(s, documentationURL, apiSpecificationType)
 	return nil
 }
 
-func (i *Inway) announceToDirectory(s ServiceEndpoint, documentationURL string) {
+func (i *Inway) announceToDirectory(s ServiceEndpoint, documentationURL string, apiSpecificationType string) {
 	go func() {
 		for {
 			resp, err := i.directoryClient.RegisterInway(context.Background(), &directoryapi.RegisterInwayRequest{
 				InwayAddress: i.selfAddress,
 				Services: []*directoryapi.RegisterInwayRequest_RegisterService{
 					{
-						Name:             s.ServiceName(),
-						DocumentationUrl: documentationURL,
+						Name:                 s.ServiceName(),
+						DocumentationUrl:     documentationURL,
+						ApiSpecificationType: apiSpecificationType,
 					},
 				},
 			})

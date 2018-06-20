@@ -14,6 +14,8 @@
 		RegisterInwayResponse
 		ListServicesRequest
 		ListServicesResponse
+		GetServiceAPISpecRequest
+		GetServiceAPISpecResponse
 		Service
 */
 package directoryapi
@@ -51,8 +53,9 @@ func (*RegisterInwayRequest) ProtoMessage()               {}
 func (*RegisterInwayRequest) Descriptor() ([]byte, []int) { return fileDescriptorDirectory, []int{0} }
 
 type RegisterInwayRequest_RegisterService struct {
-	Name             string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	DocumentationUrl string `protobuf:"bytes,2,opt,name=documentation_url,json=documentationUrl,proto3" json:"documentation_url,omitempty"`
+	Name                 string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	DocumentationUrl     string `protobuf:"bytes,2,opt,name=documentation_url,json=documentationUrl,proto3" json:"documentation_url,omitempty"`
+	ApiSpecificationType string `protobuf:"bytes,3,opt,name=api_specification_type,json=apiSpecificationType,proto3" json:"api_specification_type,omitempty"`
 }
 
 func (m *RegisterInwayRequest_RegisterService) Reset()         { *m = RegisterInwayRequest_RegisterService{} }
@@ -89,17 +92,42 @@ func (m *ListServicesResponse) String() string            { return proto.Compact
 func (*ListServicesResponse) ProtoMessage()               {}
 func (*ListServicesResponse) Descriptor() ([]byte, []int) { return fileDescriptorDirectory, []int{3} }
 
+type GetServiceAPISpecRequest struct {
+	OrganizationName string `protobuf:"bytes,1,opt,name=organization_name,json=organizationName,proto3" json:"organization_name,omitempty"`
+	ServiceName      string `protobuf:"bytes,2,opt,name=service_name,json=serviceName,proto3" json:"service_name,omitempty"`
+}
+
+func (m *GetServiceAPISpecRequest) Reset()         { *m = GetServiceAPISpecRequest{} }
+func (m *GetServiceAPISpecRequest) String() string { return proto.CompactTextString(m) }
+func (*GetServiceAPISpecRequest) ProtoMessage()    {}
+func (*GetServiceAPISpecRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptorDirectory, []int{4}
+}
+
+type GetServiceAPISpecResponse struct {
+	Type     string `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`
+	Document []byte `protobuf:"bytes,2,opt,name=document,proto3" json:"document,omitempty"`
+}
+
+func (m *GetServiceAPISpecResponse) Reset()         { *m = GetServiceAPISpecResponse{} }
+func (m *GetServiceAPISpecResponse) String() string { return proto.CompactTextString(m) }
+func (*GetServiceAPISpecResponse) ProtoMessage()    {}
+func (*GetServiceAPISpecResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptorDirectory, []int{5}
+}
+
 type Service struct {
-	Name             string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	OrganizationName string   `protobuf:"bytes,2,opt,name=organization_name,json=organizationName,proto3" json:"organization_name,omitempty"`
-	InwayAddresses   []string `protobuf:"bytes,3,rep,name=inway_addresses,json=inwayAddresses" json:"inway_addresses,omitempty"`
-	DocumentationUrl string   `protobuf:"bytes,4,opt,name=documentation_url,json=documentationUrl,proto3" json:"documentation_url,omitempty"`
+	OrganizationName     string   `protobuf:"bytes,1,opt,name=organization_name,json=organizationName,proto3" json:"organization_name,omitempty"`
+	ServiceName          string   `protobuf:"bytes,2,opt,name=service_name,json=serviceName,proto3" json:"service_name,omitempty"`
+	InwayAddresses       []string `protobuf:"bytes,3,rep,name=inway_addresses,json=inwayAddresses" json:"inway_addresses,omitempty"`
+	DocumentationUrl     string   `protobuf:"bytes,4,opt,name=documentation_url,json=documentationUrl,proto3" json:"documentation_url,omitempty"`
+	ApiSpecificationType string   `protobuf:"bytes,5,opt,name=api_specification_type,json=apiSpecificationType,proto3" json:"api_specification_type,omitempty"`
 }
 
 func (m *Service) Reset()                    { *m = Service{} }
 func (m *Service) String() string            { return proto.CompactTextString(m) }
 func (*Service) ProtoMessage()               {}
-func (*Service) Descriptor() ([]byte, []int) { return fileDescriptorDirectory, []int{4} }
+func (*Service) Descriptor() ([]byte, []int) { return fileDescriptorDirectory, []int{6} }
 
 func init() {
 	proto.RegisterType((*RegisterInwayRequest)(nil), "directoryapi.RegisterInwayRequest")
@@ -107,6 +135,8 @@ func init() {
 	proto.RegisterType((*RegisterInwayResponse)(nil), "directoryapi.RegisterInwayResponse")
 	proto.RegisterType((*ListServicesRequest)(nil), "directoryapi.ListServicesRequest")
 	proto.RegisterType((*ListServicesResponse)(nil), "directoryapi.ListServicesResponse")
+	proto.RegisterType((*GetServiceAPISpecRequest)(nil), "directoryapi.GetServiceAPISpecRequest")
+	proto.RegisterType((*GetServiceAPISpecResponse)(nil), "directoryapi.GetServiceAPISpecResponse")
 	proto.RegisterType((*Service)(nil), "directoryapi.Service")
 }
 
@@ -125,6 +155,7 @@ type DirectoryClient interface {
 	RegisterInway(ctx context.Context, in *RegisterInwayRequest, opts ...grpc.CallOption) (*RegisterInwayResponse, error)
 	// ListServices lists all services and their gateways.
 	ListServices(ctx context.Context, in *ListServicesRequest, opts ...grpc.CallOption) (*ListServicesResponse, error)
+	GetServiceAPISpec(ctx context.Context, in *GetServiceAPISpecRequest, opts ...grpc.CallOption) (*GetServiceAPISpecResponse, error)
 }
 
 type directoryClient struct {
@@ -153,6 +184,15 @@ func (c *directoryClient) ListServices(ctx context.Context, in *ListServicesRequ
 	return out, nil
 }
 
+func (c *directoryClient) GetServiceAPISpec(ctx context.Context, in *GetServiceAPISpecRequest, opts ...grpc.CallOption) (*GetServiceAPISpecResponse, error) {
+	out := new(GetServiceAPISpecResponse)
+	err := grpc.Invoke(ctx, "/directoryapi.Directory/GetServiceAPISpec", in, out, c.cc, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Directory service
 
 type DirectoryServer interface {
@@ -160,6 +200,7 @@ type DirectoryServer interface {
 	RegisterInway(context.Context, *RegisterInwayRequest) (*RegisterInwayResponse, error)
 	// ListServices lists all services and their gateways.
 	ListServices(context.Context, *ListServicesRequest) (*ListServicesResponse, error)
+	GetServiceAPISpec(context.Context, *GetServiceAPISpecRequest) (*GetServiceAPISpecResponse, error)
 }
 
 func RegisterDirectoryServer(s *grpc.Server, srv DirectoryServer) {
@@ -202,6 +243,24 @@ func _Directory_ListServices_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Directory_GetServiceAPISpec_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetServiceAPISpecRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DirectoryServer).GetServiceAPISpec(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/directoryapi.Directory/GetServiceAPISpec",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DirectoryServer).GetServiceAPISpec(ctx, req.(*GetServiceAPISpecRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Directory_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "directoryapi.Directory",
 	HandlerType: (*DirectoryServer)(nil),
@@ -213,6 +272,10 @@ var _Directory_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListServices",
 			Handler:    _Directory_ListServices_Handler,
+		},
+		{
+			MethodName: "GetServiceAPISpec",
+			Handler:    _Directory_GetServiceAPISpec_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -281,6 +344,12 @@ func (m *RegisterInwayRequest_RegisterService) MarshalTo(dAtA []byte) (int, erro
 		i++
 		i = encodeVarintDirectory(dAtA, i, uint64(len(m.DocumentationUrl)))
 		i += copy(dAtA[i:], m.DocumentationUrl)
+	}
+	if len(m.ApiSpecificationType) > 0 {
+		dAtA[i] = 0x1a
+		i++
+		i = encodeVarintDirectory(dAtA, i, uint64(len(m.ApiSpecificationType)))
+		i += copy(dAtA[i:], m.ApiSpecificationType)
 	}
 	return i, nil
 }
@@ -363,6 +432,66 @@ func (m *ListServicesResponse) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
+func (m *GetServiceAPISpecRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetServiceAPISpecRequest) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.OrganizationName) > 0 {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintDirectory(dAtA, i, uint64(len(m.OrganizationName)))
+		i += copy(dAtA[i:], m.OrganizationName)
+	}
+	if len(m.ServiceName) > 0 {
+		dAtA[i] = 0x12
+		i++
+		i = encodeVarintDirectory(dAtA, i, uint64(len(m.ServiceName)))
+		i += copy(dAtA[i:], m.ServiceName)
+	}
+	return i, nil
+}
+
+func (m *GetServiceAPISpecResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetServiceAPISpecResponse) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.Type) > 0 {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintDirectory(dAtA, i, uint64(len(m.Type)))
+		i += copy(dAtA[i:], m.Type)
+	}
+	if len(m.Document) > 0 {
+		dAtA[i] = 0x12
+		i++
+		i = encodeVarintDirectory(dAtA, i, uint64(len(m.Document)))
+		i += copy(dAtA[i:], m.Document)
+	}
+	return i, nil
+}
+
 func (m *Service) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -378,17 +507,17 @@ func (m *Service) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.Name) > 0 {
-		dAtA[i] = 0xa
-		i++
-		i = encodeVarintDirectory(dAtA, i, uint64(len(m.Name)))
-		i += copy(dAtA[i:], m.Name)
-	}
 	if len(m.OrganizationName) > 0 {
-		dAtA[i] = 0x12
+		dAtA[i] = 0xa
 		i++
 		i = encodeVarintDirectory(dAtA, i, uint64(len(m.OrganizationName)))
 		i += copy(dAtA[i:], m.OrganizationName)
+	}
+	if len(m.ServiceName) > 0 {
+		dAtA[i] = 0x12
+		i++
+		i = encodeVarintDirectory(dAtA, i, uint64(len(m.ServiceName)))
+		i += copy(dAtA[i:], m.ServiceName)
 	}
 	if len(m.InwayAddresses) > 0 {
 		for _, s := range m.InwayAddresses {
@@ -410,6 +539,12 @@ func (m *Service) MarshalTo(dAtA []byte) (int, error) {
 		i++
 		i = encodeVarintDirectory(dAtA, i, uint64(len(m.DocumentationUrl)))
 		i += copy(dAtA[i:], m.DocumentationUrl)
+	}
+	if len(m.ApiSpecificationType) > 0 {
+		dAtA[i] = 0x2a
+		i++
+		i = encodeVarintDirectory(dAtA, i, uint64(len(m.ApiSpecificationType)))
+		i += copy(dAtA[i:], m.ApiSpecificationType)
 	}
 	return i, nil
 }
@@ -450,6 +585,10 @@ func (m *RegisterInwayRequest_RegisterService) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovDirectory(uint64(l))
 	}
+	l = len(m.ApiSpecificationType)
+	if l > 0 {
+		n += 1 + l + sovDirectory(uint64(l))
+	}
 	return n
 }
 
@@ -485,14 +624,42 @@ func (m *ListServicesResponse) Size() (n int) {
 	return n
 }
 
-func (m *Service) Size() (n int) {
+func (m *GetServiceAPISpecRequest) Size() (n int) {
 	var l int
 	_ = l
-	l = len(m.Name)
+	l = len(m.OrganizationName)
 	if l > 0 {
 		n += 1 + l + sovDirectory(uint64(l))
 	}
+	l = len(m.ServiceName)
+	if l > 0 {
+		n += 1 + l + sovDirectory(uint64(l))
+	}
+	return n
+}
+
+func (m *GetServiceAPISpecResponse) Size() (n int) {
+	var l int
+	_ = l
+	l = len(m.Type)
+	if l > 0 {
+		n += 1 + l + sovDirectory(uint64(l))
+	}
+	l = len(m.Document)
+	if l > 0 {
+		n += 1 + l + sovDirectory(uint64(l))
+	}
+	return n
+}
+
+func (m *Service) Size() (n int) {
+	var l int
+	_ = l
 	l = len(m.OrganizationName)
+	if l > 0 {
+		n += 1 + l + sovDirectory(uint64(l))
+	}
+	l = len(m.ServiceName)
 	if l > 0 {
 		n += 1 + l + sovDirectory(uint64(l))
 	}
@@ -503,6 +670,10 @@ func (m *Service) Size() (n int) {
 		}
 	}
 	l = len(m.DocumentationUrl)
+	if l > 0 {
+		n += 1 + l + sovDirectory(uint64(l))
+	}
+	l = len(m.ApiSpecificationType)
 	if l > 0 {
 		n += 1 + l + sovDirectory(uint64(l))
 	}
@@ -718,6 +889,35 @@ func (m *RegisterInwayRequest_RegisterService) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			m.DocumentationUrl = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ApiSpecificationType", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDirectory
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthDirectory
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ApiSpecificationType = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -979,6 +1179,224 @@ func (m *ListServicesResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+func (m *GetServiceAPISpecRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowDirectory
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetServiceAPISpecRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetServiceAPISpecRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OrganizationName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDirectory
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthDirectory
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.OrganizationName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ServiceName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDirectory
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthDirectory
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ServiceName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipDirectory(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthDirectory
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetServiceAPISpecResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowDirectory
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetServiceAPISpecResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetServiceAPISpecResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDirectory
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthDirectory
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Type = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Document", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDirectory
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthDirectory
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Document = append(m.Document[:0], dAtA[iNdEx:postIndex]...)
+			if m.Document == nil {
+				m.Document = []byte{}
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipDirectory(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthDirectory
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
 func (m *Service) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1010,35 +1428,6 @@ func (m *Service) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowDirectory
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthDirectory
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Name = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field OrganizationName", wireType)
 			}
 			var stringLen uint64
@@ -1065,6 +1454,35 @@ func (m *Service) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			m.OrganizationName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ServiceName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDirectory
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthDirectory
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ServiceName = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
@@ -1123,6 +1541,35 @@ func (m *Service) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			m.DocumentationUrl = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ApiSpecificationType", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDirectory
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthDirectory
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ApiSpecificationType = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -1253,32 +1700,41 @@ var (
 func init() { proto.RegisterFile("directory.proto", fileDescriptorDirectory) }
 
 var fileDescriptorDirectory = []byte{
-	// 426 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x84, 0x53, 0xdd, 0x6e, 0xd3, 0x30,
-	0x14, 0x9e, 0xdb, 0xf1, 0xd3, 0x43, 0x47, 0x87, 0x69, 0xa5, 0x28, 0x42, 0x51, 0xf0, 0x2e, 0xa8,
-	0x84, 0x9a, 0x88, 0xf2, 0x04, 0x20, 0x6e, 0x90, 0xd0, 0x2e, 0x82, 0xb8, 0xe1, 0xa6, 0x72, 0x13,
-	0x13, 0x2c, 0xa5, 0x76, 0xb0, 0x1d, 0xa6, 0x71, 0xc9, 0x2b, 0xf0, 0x02, 0x3c, 0xce, 0x2e, 0x91,
-	0x78, 0x00, 0x46, 0xc5, 0x83, 0xa0, 0xd9, 0x59, 0x94, 0x6c, 0x51, 0x7b, 0xe7, 0xf3, 0x9d, 0xcf,
-	0xc7, 0xe7, 0xfb, 0x3e, 0x19, 0x26, 0x19, 0x57, 0x2c, 0x35, 0x52, 0x9d, 0x47, 0xa5, 0x92, 0x46,
-	0xe2, 0x71, 0x03, 0xd0, 0x92, 0xfb, 0x4f, 0x72, 0x29, 0xf3, 0x82, 0xc5, 0xb4, 0xe4, 0x31, 0x15,
-	0x42, 0x1a, 0x6a, 0xb8, 0x14, 0xda, 0x71, 0xfd, 0x45, 0xce, 0xcd, 0xe7, 0x6a, 0x1d, 0xa5, 0x72,
-	0x13, 0xe7, 0x32, 0x97, 0xb1, 0x85, 0xd7, 0xd5, 0x27, 0x5b, 0xd9, 0xc2, 0x9e, 0x1c, 0x9d, 0xfc,
-	0x41, 0x30, 0x4d, 0x58, 0xce, 0xb5, 0x61, 0xea, 0xad, 0x38, 0xa3, 0xe7, 0x09, 0xfb, 0x52, 0x31,
-	0x6d, 0xf0, 0x09, 0x1c, 0xf1, 0xab, 0x7a, 0x45, 0xb3, 0x4c, 0x31, 0xad, 0x3d, 0x14, 0xa2, 0xf9,
-	0x28, 0x19, 0x5b, 0xf0, 0x95, 0xc3, 0xf0, 0x29, 0xdc, 0xd7, 0x4c, 0x7d, 0xe5, 0x29, 0xd3, 0xde,
-	0x20, 0x1c, 0xce, 0x1f, 0x2c, 0x97, 0x51, 0x7b, 0xd7, 0xa8, 0x6f, 0x74, 0x03, 0xbe, 0x77, 0x57,
-	0x93, 0x66, 0x86, 0x9f, 0xc0, 0xe4, 0x46, 0x13, 0x63, 0x38, 0x14, 0x74, 0xc3, 0xea, 0xe7, 0xed,
-	0x19, 0x3f, 0x87, 0x47, 0x99, 0x4c, 0xab, 0x0d, 0x13, 0x4e, 0xfb, 0xaa, 0x52, 0x85, 0x37, 0xb0,
-	0x84, 0xe3, 0x4e, 0xe3, 0x83, 0x2a, 0xc8, 0x02, 0x66, 0x37, 0xb6, 0xd0, 0xa5, 0x14, 0x9a, 0xe1,
-	0x29, 0xdc, 0x61, 0x4a, 0x49, 0x55, 0x8f, 0x76, 0x05, 0x99, 0xc1, 0xe3, 0x77, 0x5c, 0x9b, 0xfa,
-	0x79, 0x5d, 0xef, 0x4c, 0x56, 0x30, 0xed, 0xc2, 0xbb, 0x86, 0xe0, 0x17, 0xb7, 0x7c, 0x99, 0x75,
-	0x7d, 0xb9, 0x25, 0x9d, 0xfc, 0x44, 0x70, 0x6f, 0x8f, 0x66, 0xa9, 0x72, 0x2a, 0xf8, 0x37, 0x27,
-	0xd9, 0x12, 0x6a, 0xcd, 0xed, 0xc6, 0xe9, 0x15, 0xf9, 0x19, 0x4c, 0x3a, 0xe1, 0x31, 0xed, 0x0d,
-	0xc3, 0xe1, 0x7c, 0x94, 0x3c, 0x6c, 0xc7, 0xc7, 0x74, 0xbf, 0x93, 0x87, 0xfd, 0x4e, 0x2e, 0x2f,
-	0x11, 0x8c, 0xde, 0x5c, 0xab, 0xc0, 0x1f, 0xe1, 0xa8, 0xe3, 0x2b, 0x26, 0xfb, 0xa3, 0xf7, 0x4f,
-	0x76, 0x72, 0x9c, 0xa7, 0xe4, 0x00, 0x9f, 0xc1, 0xb8, 0xed, 0x36, 0x7e, 0xda, 0xbd, 0xd6, 0x13,
-	0x90, 0x4f, 0x76, 0x51, 0xea, 0xc1, 0xe1, 0xf7, 0xdf, 0xff, 0x7e, 0x0c, 0x7c, 0xec, 0xc5, 0x0d,
-	0x37, 0x2e, 0xb8, 0x36, 0x8b, 0xeb, 0x14, 0x5e, 0x1f, 0x5f, 0xfc, 0x0d, 0x0e, 0x2e, 0xb6, 0x01,
-	0xfa, 0xb5, 0x0d, 0xd0, 0xe5, 0x36, 0x40, 0xeb, 0xbb, 0xf6, 0x9f, 0xbc, 0xfc, 0x1f, 0x00, 0x00,
-	0xff, 0xff, 0x23, 0xbd, 0xc9, 0x9e, 0x95, 0x03, 0x00, 0x00,
+	// 576 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x54, 0xd1, 0x6a, 0x13, 0x4d,
+	0x14, 0xee, 0x26, 0xe9, 0xff, 0x37, 0xa7, 0xa9, 0x49, 0xc6, 0x44, 0xd6, 0x45, 0x42, 0xba, 0x05,
+	0x1b, 0x28, 0xc9, 0x62, 0xf4, 0x05, 0x5a, 0x0a, 0x52, 0x95, 0x22, 0x5b, 0xbd, 0xf1, 0x26, 0x4c,
+	0x36, 0xd3, 0x75, 0x24, 0xd9, 0x59, 0x67, 0x36, 0x96, 0x58, 0x7a, 0xe3, 0x95, 0xf7, 0x05, 0x9f,
+	0xc3, 0xc7, 0xe8, 0xa5, 0xe0, 0x0b, 0x68, 0xd0, 0xf7, 0x90, 0x9d, 0x99, 0x5d, 0x76, 0x9b, 0x34,
+	0x45, 0xf0, 0x6e, 0xce, 0x99, 0x6f, 0xbe, 0xfd, 0xce, 0x77, 0xbe, 0x04, 0xaa, 0x23, 0xca, 0x89,
+	0x17, 0x31, 0x3e, 0xeb, 0x85, 0x9c, 0x45, 0x0c, 0x55, 0xd2, 0x06, 0x0e, 0xa9, 0xf5, 0xc0, 0x67,
+	0xcc, 0x1f, 0x13, 0x07, 0x87, 0xd4, 0xc1, 0x41, 0xc0, 0x22, 0x1c, 0x51, 0x16, 0x08, 0x85, 0xb5,
+	0xba, 0x3e, 0x8d, 0xde, 0x4e, 0x87, 0x3d, 0x8f, 0x4d, 0x1c, 0x9f, 0xf9, 0xcc, 0x91, 0xed, 0xe1,
+	0xf4, 0x54, 0x56, 0xb2, 0x90, 0x27, 0x05, 0xb7, 0xbf, 0x14, 0xa0, 0xe1, 0x12, 0x9f, 0x8a, 0x88,
+	0xf0, 0xa3, 0xe0, 0x0c, 0xcf, 0x5c, 0xf2, 0x7e, 0x4a, 0x44, 0x84, 0x76, 0x60, 0x8b, 0xc6, 0xf5,
+	0x00, 0x8f, 0x46, 0x9c, 0x08, 0x61, 0x1a, 0x6d, 0xa3, 0x53, 0x76, 0x2b, 0xb2, 0xb9, 0xaf, 0x7a,
+	0xe8, 0x18, 0x36, 0x04, 0xe1, 0x1f, 0xa8, 0x47, 0x84, 0x59, 0x68, 0x17, 0x3b, 0x9b, 0xfd, 0x7e,
+	0x2f, 0xab, 0xb5, 0xb7, 0x8c, 0x3a, 0x6d, 0x9e, 0xa8, 0xa7, 0x6e, 0xca, 0x61, 0x7d, 0x36, 0xa0,
+	0x7a, 0xed, 0x16, 0x21, 0x28, 0x05, 0x78, 0x42, 0xf4, 0xf7, 0xe5, 0x19, 0xed, 0x41, 0x7d, 0xc4,
+	0xbc, 0xe9, 0x84, 0x04, 0x6a, 0xf8, 0xc1, 0x94, 0x8f, 0xcd, 0x82, 0x04, 0xd4, 0x72, 0x17, 0xaf,
+	0xf9, 0x18, 0x3d, 0x81, 0x7b, 0x38, 0xa4, 0x03, 0x11, 0x12, 0x8f, 0x9e, 0x52, 0x4f, 0x3d, 0x88,
+	0x66, 0x21, 0x31, 0x8b, 0xf2, 0x45, 0x03, 0x87, 0xf4, 0x24, 0x7b, 0xf9, 0x6a, 0x16, 0x12, 0xbb,
+	0x0b, 0xcd, 0x6b, 0xe2, 0x45, 0xc8, 0x02, 0x41, 0x50, 0x03, 0xd6, 0x09, 0xe7, 0x8c, 0x6b, 0x41,
+	0xaa, 0xb0, 0x9b, 0x70, 0xf7, 0x05, 0x15, 0x91, 0x16, 0x2d, 0xf4, 0xa8, 0xf6, 0x00, 0x1a, 0xf9,
+	0xf6, 0x2a, 0x12, 0xf4, 0x68, 0xc1, 0xce, 0x66, 0xde, 0xce, 0x05, 0xc7, 0xec, 0x77, 0x60, 0x3e,
+	0x25, 0x09, 0xff, 0xfe, 0xcb, 0xa3, 0x78, 0x90, 0x64, 0x85, 0x7b, 0x50, 0x67, 0xdc, 0xc7, 0x01,
+	0xfd, 0xa8, 0x66, 0xce, 0xd8, 0x58, 0xcb, 0x5e, 0x1c, 0xc7, 0x96, 0x6e, 0x43, 0x45, 0x93, 0x2a,
+	0x9c, 0x72, 0x73, 0x53, 0xf7, 0x62, 0x88, 0xfd, 0x1c, 0xee, 0x2f, 0xf9, 0x96, 0x9e, 0x08, 0x41,
+	0x49, 0x7a, 0xaa, 0xd7, 0x14, 0x9f, 0x91, 0x05, 0x1b, 0xc9, 0x36, 0x24, 0x5f, 0xc5, 0x4d, 0x6b,
+	0xfb, 0xb7, 0x01, 0xff, 0x27, 0x2b, 0xfe, 0xc7, 0x42, 0xd1, 0x2e, 0x54, 0x73, 0xd9, 0x25, 0xc2,
+	0x2c, 0xb6, 0x8b, 0x9d, 0xb2, 0x7b, 0x27, 0x9b, 0x5e, 0x22, 0x96, 0xe7, 0xa8, 0xf4, 0xd7, 0x39,
+	0x5a, 0xbf, 0x39, 0x47, 0xfd, 0xcb, 0x22, 0x94, 0x0f, 0x93, 0x1d, 0xa2, 0x37, 0xb0, 0x95, 0x4b,
+	0x15, 0xb2, 0x6f, 0xff, 0xbd, 0x58, 0x3b, 0x2b, 0x31, 0xca, 0x7f, 0x7b, 0x0d, 0x9d, 0x41, 0x25,
+	0x9b, 0x35, 0xb4, 0x9d, 0x7f, 0xb6, 0x24, 0x9e, 0x96, 0xbd, 0x0a, 0xa2, 0x89, 0xdb, 0x9f, 0xbe,
+	0xff, 0xba, 0x2c, 0x58, 0xc8, 0x74, 0x52, 0xac, 0x33, 0xa6, 0x22, 0xea, 0x26, 0x19, 0x44, 0x5f,
+	0x0d, 0xa8, 0x2f, 0x04, 0x03, 0x3d, 0xcc, 0x73, 0xdf, 0x94, 0x52, 0x6b, 0xf7, 0x56, 0x9c, 0x16,
+	0xf2, 0x4c, 0x0a, 0x39, 0x44, 0x07, 0x19, 0x21, 0x3e, 0x49, 0x75, 0x74, 0x71, 0x48, 0xbb, 0xf1,
+	0x72, 0x9c, 0xf3, 0x85, 0x30, 0x5d, 0x38, 0xe7, 0xd9, 0xcc, 0x5c, 0x1c, 0xd4, 0xae, 0x7e, 0xb6,
+	0xd6, 0xae, 0xe6, 0x2d, 0xe3, 0xdb, 0xbc, 0x65, 0xfc, 0x98, 0xb7, 0x8c, 0xe1, 0x7f, 0xf2, 0xff,
+	0xf0, 0xf1, 0x9f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x43, 0x4a, 0xe1, 0x7b, 0x7d, 0x05, 0x00, 0x00,
 }
