@@ -26,6 +26,8 @@ var options struct {
 
 	DirectoryAddress string `long:"directory-address" env:"DIRECTORY_ADDRESS" description:"Address for the directory where this inway can register it's services" required:"true"`
 
+	DisableLogdb bool `long:"disable-logdb" env:"DISABLE_LOGDB" description:"Disable logdb connections"`
+
 	SelfAddress string `long:"self-address" env:"SELF_ADDRESS" description:"The address that outways can use to reach me" required:"true"`
 
 	ServiceConfig string `long:"service-config" env:"SERVICE_CONFIG" default:"service-config.toml" description:"Location of the service config toml file"`
@@ -74,13 +76,16 @@ func main() {
 
 	serviceConfig := config.LoadServiceConfig(logger, options.ServiceConfig)
 
-	logDB, err := sqlx.Open("postgres", options.PostgresDSN)
-	if err != nil {
-		logger.Fatal("could not open connection to postgres", zap.Error(err))
-	}
-	logDB.MapperFunc(xstrings.ToSnakeCase)
+	var logDB *sqlx.DB
+	if !options.DisableLogdb {
+		logDB, err := sqlx.Open("postgres", options.PostgresDSN)
+		if err != nil {
+			logger.Fatal("could not open connection to postgres", zap.Error(err))
+		}
+		logDB.MapperFunc(xstrings.ToSnakeCase)
 
-	logdbversion.WaitUntilLatestVersion(logger, logDB.DB)
+		logdbversion.WaitUntilLatestVersion(logger, logDB.DB)
+	}
 
 	iw, err := inway.NewInway(logger, logDB, options.SelfAddress, options.TLSOptions, options.DirectoryAddress, serviceConfig)
 	if err != nil {
