@@ -32,7 +32,7 @@ services:
     volumes:
       - $GOPATH/src/go.nlx.io/nlx:/go/src/go.nlx.io/nlx
     ports:
-      - '1313:1313'
+      - '8002:1313'
     command: hugo server --bind 0.0.0.0
 
   ca:
@@ -40,7 +40,7 @@ services:
       context: .
       dockerfile: unsafe-ca/Dockerfile
     ports:
-      - '8888:8888'
+      - '50080:8888'
     working_dir: /ca
     command: ./start-ca.sh nlx.local
 
@@ -103,7 +103,7 @@ services:
     volumes:
       - $GOPATH/src/go.nlx.io/nlx:/go/src/go.nlx.io/nlx
     ports:
-      - '2019:2019'
+      - '40080:80'
     working_dir: /go/src/go.nlx.io/nlx/logdb-api
     command: modd
     depends_on:
@@ -139,13 +139,13 @@ services:
       - TLS_NLX_ROOT_CERT=/inway_cert/nlx_root.pem
       - TLS_ORG_CERT=/inway_cert/inway_nlx_local.pem
       - TLS_ORG_KEY=/inway_cert/inway_nlx_local-key.pem
-      - SELF_ADDRESS=inway.nlx.local:2018
-      - DIRECTORY_ADDRESS=directory.nlx.local:1984
+      - SELF_ADDRESS=inway.nlx.local:443
+      - DIRECTORY_ADDRESS=directory.nlx.local:443
     volumes:
       - inway_cert:/inway_cert
       - $GOPATH/src/go.nlx.io/nlx:/go/src/go.nlx.io/nlx
     ports:
-      - '2018:2018'
+      - '30443:443'
     command: >
       /bin/ash -c "
         while [ ! -f /inway_cert/.done ]; do
@@ -188,12 +188,12 @@ services:
       - TLS_NLX_ROOT_CERT=/outway_cert/nlx_root.pem
       - TLS_ORG_CERT=/outway_cert/outway_nlx_local.pem
       - TLS_ORG_KEY=/outway_cert/outway_nlx_local-key.pem
-      - DIRECTORY_ADDRESS=directory.nlx.local:1984
+      - DIRECTORY_ADDRESS=directory.nlx.local:443
     volumes:
       - outway_cert:/outway_cert
       - $GOPATH/src/go.nlx.io/nlx:/go/src/go.nlx.io/nlx
     ports:
-      - '12018:12018'
+      - '20080:80'
     command: >
       /bin/ash -c "
         while [ ! -f /outway_cert/.done ]; do
@@ -262,7 +262,7 @@ services:
     volumes:
       - $GOPATH/src/go.nlx.io/nlx:/go/src/go.nlx.io/nlx
     ports:
-      - '12020:12020'
+      - '8003:12020'
     command: modd
 
   directory_cert:
@@ -301,8 +301,8 @@ services:
       - directory_cert:/directory_cert
       - $GOPATH/src/go.nlx.io/nlx:/go/src/go.nlx.io/nlx
     ports:
-      - '1984:1984'
-      - '1985:1985'
+      - '10080:80'
+      - '10443:443'
     command: >
       /bin/ash -c "
         while [ ! -f /directory_cert/.done ]; do
@@ -328,7 +328,7 @@ services:
       volumes:
         - $GOPATH/src/go.nlx.io/nlx:/go/src/go.nlx.io/nlx
       ports:
-        - '12021:4200'
+        - '8001:4200'
       command: >
         /bin/ash -c "
           npm install
