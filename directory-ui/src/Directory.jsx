@@ -13,8 +13,7 @@ export default class Directory extends React.Component {
             displayOnlyOnline: false,
             sortBy: 'organization_name',
             sortAscending: true,
-            services: [],
-            filteredServices: []
+            services: []
         }
 
         this.searchOnChange = this.searchOnChange.bind(this)
@@ -126,7 +125,7 @@ export default class Directory extends React.Component {
                             onSort={this.onSort}
                             sortBy={this.state.sortBy}
                             sortAscending={this.state.sortAscending}
-                            />
+                        />
                     </div>
                 </section>
             </React.Fragment>

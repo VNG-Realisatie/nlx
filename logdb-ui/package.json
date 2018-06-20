@@ -21,10 +21,7 @@
   "proxy": {
     "/api": {
       "target": "http://logdb-api:2019",
-      "secure": false,
-      "pathRewrite": {
-        "^/api": "/"
-      }
+      "secure": false
     }
   }
 }
