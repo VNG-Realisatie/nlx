@@ -2,7 +2,7 @@ import React from 'react'
 import Search from './components/Search'
 import Switch from './components/Switch'
 import Services from './components/Services'
-import axios from 'axios';
+import axios from 'axios'
 
 export default class Directory extends React.Component {
     constructor(props) {
@@ -70,7 +70,7 @@ export default class Directory extends React.Component {
 
             if (displayOnlyContaining) {
                 if (
-                    !service.name.toLowerCase().includes(displayOnlyContaining.toLowerCase()) &&
+                    !service.service_name.toLowerCase().includes(displayOnlyContaining.toLowerCase()) &&
                     !service.organization_name.toLowerCase().includes(displayOnlyContaining.toLowerCase())
                 ) {
                     return false
@@ -95,7 +95,7 @@ export default class Directory extends React.Component {
                         return (a.organization_name > b.organization_name)
                     }
                     case "name": {
-                        return (a.name > b.name)
+                        return (a.service_name > b.service_name)
                     }
                     default: {
                         return false

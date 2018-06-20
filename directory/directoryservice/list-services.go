@@ -27,9 +27,10 @@ func newListServicesHandler(db *sqlx.DB, logger *zap.Logger) (*listServicesHandl
 	h.stmtSelectServices, err = db.Preparex(`
 		SELECT
 			organizations.name AS organization_name,
-			services.name AS name,
+			services.name AS service_name,
+			array_remove(array_agg(inways.address), NULL) AS inway_addresses,
 			COALESCE(services.documentation_url, '') AS documentation_url,
-			array_remove(array_agg(inways.address), NULL) AS inway_addresses
+			COALESCE(services.api_specification_type, '') AS api_specification_type
 		FROM directory.services
 			INNER JOIN directory.organizations
 				ON services.organization_id = organizations.id
@@ -60,8 +61,9 @@ func (h *listServicesHandler) ListServices(ctx context.Context, req *directoryap
 		err = rows.Scan(
 			&respService.OrganizationName,
 			&respService.ServiceName,
-			&respService.DocumentationUrl,
 			&inwayAddresses,
+			&respService.DocumentationUrl,
+			&respService.ApiSpecificationType,
 		)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to scan into struct")

@@ -7,14 +7,9 @@ import copy from 'copy-to-clipboard'
 
 export default class Directory extends React.Component {
     render() {
-        const {
-            organizationName,
-            name,
-            inwayAddresses,
-            documentationUrl
-        } = this.props
+        const { data } = this.props
 
-        const apiAddress = `http://{your-outway-address}:12018/${organizationName}/${name}`
+        const apiAddress = `http://{your-outway-address}:12018/${data.organization_name}/${data.service_name}`
 
         $(function () {
             $('[data-toggle="tooltip"]').tooltip({
@@ -26,20 +21,24 @@ export default class Directory extends React.Component {
 
         return (
             <React.Fragment>
-
-                <tr className={classnames({"status-inactive": !inwayAddresses})}>
+                <tr className={classnames({"status-inactive": !data.inway_addresses})}>
                     <td>
                         <svg id="status" viewBox="0 0 10 10" width="10px" height="10px"><circle cx="5" cy="14" r="5" transform="translate(0 -9)" fill="currentColor" fillRule="evenodd"></circle></svg>
                     </td>
                     <td>
-                        {documentationUrl ?
-                            <Link to="/doc">{organizationName}</Link>
-                            :
-                            <span>{organizationName}</span>
-                        }
+                        <span>{data.organization_name}</span>
                     </td>
                     <td>
-                        <span>{name}</span>
+                        {data.api_specification_type ? (
+                            <Link to={`/documentation/${data.organization_name}/${data.service_name}`}>
+                                <span>{data.service_name}</span>
+                            </Link>
+                        ) : (
+                            <span>{data.service_name}</span>
+                        )}
+                    </td>
+                    <td>
+                        {data.api_specification_type || '-' }
                     </td>
                     <td>
                         <button

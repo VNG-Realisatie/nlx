@@ -9,13 +9,10 @@ export default class Services extends React.Component {
             sortAscending
         } = this.props
 
-        const services = serviceList.map((service) => (
+        const services = serviceList.map((data) => (
             <Service
-                key={service.organization_name + service.name}
-                organizationName={service.organization_name}
-                name={service.name}
-                inwayAddresses={service.inway_addresses}
-                documentationUrl={service.documentation_url}
+                key={data.organization_name + data.service_name}
+                data={data}
             />
         ))
 
@@ -40,7 +37,7 @@ export default class Services extends React.Component {
                             </th>
                             <th scope="col" className={sortBy === 'organization_name' ? "sorting" : ""}>
                                 <button onClick={(e) => this.props.onSort('organization_name')}>
-                                    Organisation
+                                    Organization
                                     {sortBy === 'organization_name' && sortArrow}
                                 </button>
                             </th>
@@ -48,6 +45,11 @@ export default class Services extends React.Component {
                                 <button onClick={(e) => this.props.onSort('name')}>
                                     Service
                                     {sortBy === 'name' && sortArrow}
+                                </button>
+                            </th>
+                            <th scope="col">
+                                <button disabled>
+                                    API Type
                                 </button>
                             </th>
                             <th scope="col">
