@@ -40,6 +40,18 @@ docker build \
 docker build \
 	-t nlxio/monitor:latest -t nlxio/monitor:${RELEASE_TAG} \
 	-f monitor/Dockerfile .
+	
+docker build \
+	-t nlxio/logdb:latest -t nlxio/logdb:${RELEASE_TAG} \
+	-f logdb/Dockerfile .
+	
+docker build \
+	-t nlxio/logdb-api:latest -t nlxio/logdb-api:${RELEASE_TAG} \
+	-f logdb-api/Dockerfile .
+	
+docker build \
+	-t nlxio/logdb-ui:latest -t nlxio/logdb-ui:${RELEASE_TAG} \
+	-f logdb-ui/Dockerfile .
 
 # Only push the image when this script is ran in CI/CD or forced using env var (backup-plan for when CI/CD is down/unavailable)
 if [ "${RELEASE_TAG}" != "latest" ]; then
@@ -61,4 +73,10 @@ if [ "${RELEASE_TAG}" != "latest" ]; then
 	docker push nlxio/directory-ui:${RELEASE_TAG}
 	docker push nlxio/monitor:latest
 	docker push nlxio/monitor:${RELEASE_TAG}
+	docker push nlxio/logdb:latest
+	docker push nlxio/logdb:${RELEASE_TAG}
+	docker push nlxio/logdb-api:latest
+	docker push nlxio/logdb-api:${RELEASE_TAG}
+	docker push nlxio/logdb-ui:latest
+	docker push nlxio/logdb-ui:${RELEASE_TAG}
 fi
