@@ -14,4 +14,4 @@ RUN yarn run build
 
 # Copy static docs to alpine-based nginx container.
 FROM nginx:alpine
-COPY --from=build /go/src/go.nlx.io/nlx/logdb-ui/dist /usr/share/nginx/html
+COPY --from=build /go/src/go.nlx.io/nlx/logdb-ui/build /usr/share/nginx/html
