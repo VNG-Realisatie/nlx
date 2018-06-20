@@ -31,8 +31,6 @@ export default class Doc extends React.Component {
                     error: true
                 })
             })
-
-
     }
 
     render() {
@@ -47,6 +45,8 @@ export default class Doc extends React.Component {
             case "OpenAPI2":
                 spec = JSON.parse(this.state.document)
                 break
+            default:
+                return false
         }
 
         if (!spec) {

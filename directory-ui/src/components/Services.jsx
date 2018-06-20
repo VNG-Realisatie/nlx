@@ -24,13 +24,17 @@ export default class Services extends React.Component {
             </svg>
         )
 
+        const centerStyle = {
+            textAlign: 'center'
+        }
+
         return (
-            <div className="table-responsive">
+            <div className="table-responsive mb-5">
                 <table className="table table-bordered">
                     <thead>
                         <tr>
                             <th scope="col" className={sortBy === 'inway_addresses' ? "sorting" : ""}>
-                                <button onClick={(e) => this.props.onSort('inway_addresses')}>
+                                <button style={centerStyle} onClick={(e) => this.props.onSort('inway_addresses')}>
                                     Status
                                     {sortBy === 'inway_addresses' && sortArrow}
                                 </button>
@@ -53,7 +57,7 @@ export default class Services extends React.Component {
                                 </button>
                             </th>
                             <th scope="col">
-                                <button disabled>
+                                <button style={centerStyle} disabled>
                                     API address
                                 </button>
                             </th>

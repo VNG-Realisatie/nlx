@@ -1,5 +1,4 @@
 import React from 'react'
-import classnames from 'classnames'
 import plugIcon from '../assets/icons/plug.svg'
 import $ from 'jquery'
 import {Link} from 'react-router-dom'
@@ -21,9 +20,11 @@ export default class Directory extends React.Component {
 
         return (
             <React.Fragment>
-                <tr className={classnames({"status-inactive": !data.inway_addresses})}>
-                    <td>
-                        <svg id="status" viewBox="0 0 10 10" width="10px" height="10px"><circle cx="5" cy="14" r="5" transform="translate(0 -9)" fill="currentColor" fillRule="evenodd"></circle></svg>
+                <tr>
+                    <td style={{
+                        color: data.inway_addresses ? '#B3E87B' : '#FF8282'
+                    }}>
+                        <svg style={{margin: '0 auto'}} id="status" viewBox="0 0 10 10" width="10px" height="10px"><circle cx="5" cy="14" r="5" transform="translate(0 -9)" fill="currentColor" fillRule="evenodd"></circle></svg>
                     </td>
                     <td>
                         <span>{data.organization_name}</span>
@@ -31,7 +32,7 @@ export default class Directory extends React.Component {
                     <td>
                         {data.api_specification_type ? (
                             <Link to={`/documentation/${data.organization_name}/${data.service_name}`}>
-                                <span>{data.service_name}</span>
+                                <strong>{data.service_name}</strong>
                             </Link>
                         ) : (
                             <span>{data.service_name}</span>
@@ -40,11 +41,11 @@ export default class Directory extends React.Component {
                     <td>
                         {data.api_specification_type || '-' }
                     </td>
-                    <td>
+                    <td style={{textAlign: 'center'}}>
                         <button
+                            style={{marginTop: '-4px'}}
                             type="button" className="btn btn-icon"
                             data-toggle="tooltip" title="Copy API address"
-                            style={{marginTop: '-4px'}}
                             onClick={() => copy(apiAddress)}
                         >
                             <img src={plugIcon} alt="api" style={{marginTop: '-2px'}} />

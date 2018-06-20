@@ -1,13 +1,18 @@
 import React from 'react'
+import classnames from 'classnames'
 
 export default class Search extends React.Component {
     render() {
         const {
-            placeholder
+            placeholder,
+            filter
         } = this.props
 
         return (
-            <div className="search">
+            <div className={classnames({
+                "search": true,
+                "search-filter": filter
+            })}>
                 <input className="form-control" type="text" placeholder={placeholder} onChange={this.props.onChange} value={this.props.value} />
                 <button className="search_button" disabled>
                     <svg width="13px" height="13px" viewBox="0 0 13 13" version="1.1">

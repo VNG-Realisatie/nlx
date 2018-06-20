@@ -106,8 +106,8 @@ func RegisterDirectoryHandler(ctx context.Context, mux *runtime.ServeMux, conn *
 	return RegisterDirectoryHandlerClient(ctx, mux, NewDirectoryClient(conn))
 }
 
-// RegisterDirectoryHandlerClient registers the http handlers for service Directory
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "DirectoryClient".
+// RegisterDirectoryHandler registers the http handlers for service Directory to "mux".
+// The handlers forward requests to the grpc endpoint over the given implementation of "DirectoryClient".
 // Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "DirectoryClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
 // "DirectoryClient" to call the correct interceptors.
