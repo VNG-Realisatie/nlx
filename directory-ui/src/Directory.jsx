@@ -2,7 +2,7 @@ import React from 'react'
 import Search from './components/Search'
 import Switch from './components/Switch'
 import Services from './components/Services'
-import axios from 'axios';
+import axios from 'axios'
 
 export default class Directory extends React.Component {
     constructor(props) {
@@ -70,7 +70,7 @@ export default class Directory extends React.Component {
 
             if (displayOnlyContaining) {
                 if (
-                    !service.name.toLowerCase().includes(displayOnlyContaining.toLowerCase()) &&
+                    !service.service_name.toLowerCase().includes(displayOnlyContaining.toLowerCase()) &&
                     !service.organization_name.toLowerCase().includes(displayOnlyContaining.toLowerCase())
                 ) {
                     return false
@@ -88,18 +88,14 @@ export default class Directory extends React.Component {
         let filteredAndSortedServices = [].concat(filteredServices)
             .sort((a, b) => {
                 switch (sortBy) {
-                    case "inway_addresses": {
+                    case "inway_addresses":
                         return (a.inway_addresses > b.inway_addresses)
-                    }
-                    case "organization_name": {
+                    case "organization_name":
                         return (a.organization_name > b.organization_name)
-                    }
-                    case "name": {
-                        return (a.name > b.name)
-                    }
-                    default: {
+                    case "name":
+                        return (a.service_name > b.service_name)
+                    default:
                         return false
-                    }
                 }
             })
             .map((item) => {return item}
@@ -115,7 +111,7 @@ export default class Directory extends React.Component {
                     <div className="container">
                         <div className="row">
                             <div className="col-sm-6 col-lg-4 offset-lg-2">
-                                <Search onChange={this.searchOnChange} value={this.state.displayOnlyContaining} placeholder="Filter services" />
+                                <Search onChange={this.searchOnChange} value={this.state.displayOnlyContaining} placeholder="Filter services" filter />
                             </div>
                             <div className="col-sm-6 col-lg-6 d-flex align-items-center">
                                 <Switch id="switch1" onChange={this.switchOnChange} checked={this.state.displayOnlyOnline}>Only online services</Switch>

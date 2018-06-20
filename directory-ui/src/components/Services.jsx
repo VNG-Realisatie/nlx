@@ -9,13 +9,10 @@ export default class Services extends React.Component {
             sortAscending
         } = this.props
 
-        const services = serviceList.map((service) => (
+        const services = serviceList.map((data) => (
             <Service
-                key={service.organization_name + service.name}
-                organizationName={service.organization_name}
-                name={service.name}
-                inwayAddresses={service.inway_addresses}
-                documentationUrl={service.documentation_url}
+                key={data.organization_name + data.service_name}
+                data={data}
             />
         ))
 
@@ -27,20 +24,24 @@ export default class Services extends React.Component {
             </svg>
         )
 
+        const centerStyle = {
+            textAlign: 'center'
+        }
+
         return (
-            <div className="table-responsive">
+            <div className="table-responsive mb-5">
                 <table className="table table-bordered">
                     <thead>
                         <tr>
                             <th scope="col" className={sortBy === 'inway_addresses' ? "sorting" : ""}>
-                                <button onClick={(e) => this.props.onSort('inway_addresses')}>
+                                <button style={centerStyle} onClick={(e) => this.props.onSort('inway_addresses')}>
                                     Status
                                     {sortBy === 'inway_addresses' && sortArrow}
                                 </button>
                             </th>
                             <th scope="col" className={sortBy === 'organization_name' ? "sorting" : ""}>
                                 <button onClick={(e) => this.props.onSort('organization_name')}>
-                                    Organisation
+                                    Organization
                                     {sortBy === 'organization_name' && sortArrow}
                                 </button>
                             </th>
@@ -52,6 +53,11 @@ export default class Services extends React.Component {
                             </th>
                             <th scope="col">
                                 <button disabled>
+                                    API Type
+                                </button>
+                            </th>
+                            <th scope="col">
+                                <button style={centerStyle} disabled>
                                     API address
                                 </button>
                             </th>

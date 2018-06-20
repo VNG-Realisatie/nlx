@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Navigation from './components/Navigation'
 import Directory from './Directory'
-import Doc from './Doc'
+import Doc from './Documentation'
 
 import {
     BrowserRouter as Router,
@@ -16,7 +16,7 @@ class App extends Component {
                     <div>
                         <Navigation />
                         <Route exact path="/" component={Directory} />
-                        <Route path="/doc" component={Doc} />
+                        <Route path="/documentation/:organization_name/:service_name" component={Doc} />
                     </div>
                 </Router>
             </div>

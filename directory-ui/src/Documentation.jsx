@@ -1,12 +1,63 @@
 import React from 'react'
 import { RedocStandalone } from 'redoc'
-import './static/css/redoc-override.css';
+import axios from 'axios'
+import './static/css/redoc-override.css'
 
 export default class Doc extends React.Component {
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            loading: true,
+            type: null,
+            document: null
+        }
+    }
+
+    componentDidMount() {
+        const { match } = this.props
+
+        axios.get(`/api/directory/get-service-api-spec/${encodeURIComponent(match.params.organization_name)}/${encodeURIComponent(match.params.service_name)}`)
+            .then((res) => {
+                this.setState({
+                    loading: false,
+                    type: res.data.type,
+                    document: window.atob(res.data.document)
+                })
+            })
+            .catch(e => {
+                this.setState({
+                    loading: false,
+                    error: true
+                })
+            })
+    }
+
     render() {
+        if (this.state.loading) {
+            return (
+                <div>Loading...</div>
+            )
+        }
+
+        let spec
+        switch (this.state.type) {
+            case "OpenAPI2":
+                spec = JSON.parse(this.state.document)
+                break
+            default:
+                return false
+        }
+
+        if (!spec) {
+            return (
+                <div>Could not load document :(</div>
+            )
+        }
+
         return (
             <RedocStandalone
-                specUrl={"https://api.apis.guru/v2/specs/instagram.com/1.0.0/swagger.yaml"}
+                spec={JSON.parse(this.state.document)}
                 options={{
                     theme: {
                         baseFont: {
