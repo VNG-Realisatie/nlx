@@ -18,6 +18,8 @@ release:
   stage: release
   script:
   - ./release-docker-images.sh
+  only:
+  - master
 
 deploy_test:
   stage: deploy
@@ -30,5 +32,20 @@ deploy_test:
   - ssh console.nlx.io "/snap/bin/kubectl --namespace=${CI_ENVIRONMENT_NAME} set image deployment/monitor monitor=nlxio/monitor:${CI_COMMIT_SHA:0:8}"
   environment:
     name: test
+  only:
+  - master
+
+deploy_demo:
+  stage: deploy
+  when: manual
+  script:
+  - ssh console.nlx.io "/snap/bin/kubectl --namespace=${CI_ENVIRONMENT_NAME} set image deployment/unsafe-ca unsafe-ca=nlxio/unsafe-ca:${CI_COMMIT_SHA:0:8}"
+  - ssh console.nlx.io "/snap/bin/kubectl --namespace=${CI_ENVIRONMENT_NAME} set image deployment/certportal certportal=nlxio/certportal:${CI_COMMIT_SHA:0:8}"
+  - ssh console.nlx.io "/snap/bin/kubectl --namespace=${CI_ENVIRONMENT_NAME} set image deployment/docs docs=nlxio/docs:${CI_COMMIT_SHA:0:8}"
+  - ssh console.nlx.io "/snap/bin/kubectl --namespace=${CI_ENVIRONMENT_NAME} set image deployment/directory directory=nlxio/directory:${CI_COMMIT_SHA:0:8}"
+  - ssh console.nlx.io "/snap/bin/kubectl --namespace=${CI_ENVIRONMENT_NAME} set image deployment/directory-ui directory-ui=nlxio/directory-ui:${CI_COMMIT_SHA:0:8}"
+  - ssh console.nlx.io "/snap/bin/kubectl --namespace=${CI_ENVIRONMENT_NAME} set image deployment/monitor monitor=nlxio/monitor:${CI_COMMIT_SHA:0:8}"
+  environment:
+    name: demo
   only:
   - master
