@@ -153,17 +153,15 @@ export default class Overview extends React.Component {
                     </div>
                 </section>
                 <section>
-                    <div className="container-fluid">
-                        <div className="container-fluid">
-                            <Table
-                                heads={theads}
-                                rows={this.state.showLogs === 'in' ? filteredLogsIn.reverse() : filteredLogsOut.reverse()}
-                                // rows={filteredLogs}
-                                onSort={this.onSort.bind(this)}
-                                sortBy={this.state.sortBy}
-                                sortAscending={this.state.sortAscending}
-                            />
-                        </div>
+                    <div className="container">
+                        <Table
+                            heads={theads}
+                            rows={this.state.showLogs === 'in' ? filteredLogsIn.reverse() : filteredLogsOut.reverse()}
+                            // rows={filteredLogs}
+                            onSort={this.onSort.bind(this)}
+                            sortBy={this.state.sortBy}
+                            sortAscending={this.state.sortAscending}
+                        />
                     </div>
                 </section>
             </React.Fragment>
