@@ -41,7 +41,13 @@ We now have a certificate by which we can identify ourselves to other NLX servic
 wget https://certportal.demo.nlx.io/root.crt -O certs/root.crt
 ```
 
-We're now ready to start the outway. We do this by running the outway in docker. Docker starts by pulling the latest outway 'container image' from the docker registry. Docker will then start a container based on this image and the arguments we set.
+We're now ready to start the outway. We do this by running the outway in docker. First, download the latest version of the container image.
+
+```bash
+docker pull nlxio/outway:latest
+```
+
+Next, we want docker will to start a container based on this image.
 
 ```bash
 docker run \
@@ -67,6 +73,9 @@ We give docker several arguments:
 - `--publish` opens port 12018 for traffic. We will send requests to this port.
 - `nlxio/outway:latest` is the name of our docker image (`nlxio/outway`) as stored in the docker registry and the version we want to use (`latest`). The `--` tells docker that all arguments after this one are meant for the outway process, not for docker itself.
 - `/usr/local/bin/nlx-outway` is the binary in the container that we want to execute.
+
+All arguments after the image and executable name are passed to the process (nlx-outway) itself..
+
 - `--directory-address` is set to point the outway to the demo environment directory service. This means we can use this outway to connect to services in the demo environment.
 - `--tls-*` tells outway where to find the root, org-cert and org-key files.
 - `--disable-logdb` tells outway to not write request log records, because we have not set up a database for it. Logs are still written at services we will be using.
