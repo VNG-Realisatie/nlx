@@ -22,7 +22,7 @@ export default class Overview extends React.Component {
     }
 
     componentDidMount() {
-        axios.get(`/api/api/in`)
+        axios.get(`/api/in`)
             .then(res => {
                 const logs = res.data.records;
                 this.setState({ logsIn: logs })
@@ -31,7 +31,7 @@ export default class Overview extends React.Component {
                 console.error(e);
             })
 
-        axios.get(`/api/api/out`)
+        axios.get(`/api/out`)
             .then(res => {
                 const logs = res.data.records;
                 this.setState({ logsOut: logs })

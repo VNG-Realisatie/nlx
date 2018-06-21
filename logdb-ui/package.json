@@ -20,7 +20,7 @@
   },
   "proxy": {
     "/api": {
-      "target": "http://logdb-api:2019",
+      "target": "http://logdb-api:2019/api",
       "secure": false
     }
   }
