@@ -74,5 +74,5 @@ We give docker several arguments:
 Make a request through the outway.
 
 ```bash
-curl "http://localhost:12018/DemoProviderOrganization/PostmanEchoWhitelisted/get?foo=1"
+curl "localhost:12018/demo-organization/demo-api/"
 ```
