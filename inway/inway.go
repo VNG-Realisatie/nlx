@@ -76,7 +76,7 @@ func NewInway(logger *zap.Logger, logdb *sqlx.DB, selfAddress string, tlsOptions
 	if logdb == nil {
 		i.txlogger = transactionlog.NewDiscardTransactionLogger()
 	} else {
-		i.txlogger, err = transactionlog.NewPostgresTransactionLogger(logdb, transactionlog.DirectionOut)
+		i.txlogger, err = transactionlog.NewPostgresTransactionLogger(logdb, transactionlog.DirectionIn)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to setup transactionlog")
 		}
