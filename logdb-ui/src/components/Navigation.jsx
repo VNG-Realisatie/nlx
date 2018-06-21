@@ -1,8 +1,7 @@
 import React from 'react'
 import logo from '../assets/images/logo.svg'
 import menu from '../assets/icons/menu.svg'
-import github from '../assets/icons/github.svg'
-import {Link} from 'react-router-dom'
+import gitlab from '../assets/icons/gitlab.svg'
 
 export default class Navigation extends React.Component {
     render() {
@@ -28,8 +27,8 @@ export default class Navigation extends React.Component {
 
                     <ul className="navbar-nav flex-row ml-md-auto">
                         <li className="nav-item">
-                            <a className="nav-link p-2" href="https://github.com/VNG-Realisatie/nlx" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-                                <img src={github} alt="logo" />
+                        <a className="nav-link p-3" href="https://gitlab.com/commonground/nlx" target="_blank" rel="noopener noreferrer" aria-label="gitlab">
+                                <img src={gitlab} alt="logo" />
                             </a>
                         </li>
                     </ul>
