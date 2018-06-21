@@ -78,7 +78,7 @@ func main() {
 
 	var logDB *sqlx.DB
 	if !options.DisableLogdb {
-		logDB, err := sqlx.Open("postgres", options.PostgresDSN)
+		logDB, err = sqlx.Open("postgres", options.PostgresDSN)
 		if err != nil {
 			logger.Fatal("could not open connection to postgres", zap.Error(err))
 		}
