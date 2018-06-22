@@ -32,7 +32,7 @@
 	authorization-whitelist = ["DemoRequesterOrganization"]
 
 	[services.Petstore]
-	endpoint-url = "https://petstore.swagger.io/v2"
+	endpoint-url = "http://petstore.swagger.io/v2"
 
 	authorization-model = "none"
 	api-specification-type = "OpenAPI2"
