@@ -5,10 +5,10 @@ case $ARCH in
     armv6*) ARCH="ARM";;
     armv7*) ARCH="ARM";;
     aarch64) ARCH="ARM64";;
+    i686) ARCH="32bit";;
+    i386) ARCH="32bit";;
     x86) ARCH="32bit";;
     x86_64) ARCH="64bit";;
-    i686) ARCH="386";;
-    i386) ARCH="386";;
     *)
         echo "Sorry, could not find the Hugo binary for your architecture: $ARCH"
         exit 1
