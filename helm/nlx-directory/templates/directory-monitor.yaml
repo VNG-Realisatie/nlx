@@ -1,0 +1,67 @@
+{{ with set . "component" "directory-monitor" }}
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      release: {{ .Release.Name }}
+      app: {{ .Chart.Name }}
+      component: {{.component}}
+  template:
+    metadata:
+      labels: {{ include "nlx-directory.common.metadata-labels" . | nindent 8 }}
+    spec:
+
+      volumes:
+        - name: certs
+          emptyDir: {}
+
+      initContainers:
+        - name: directory-monitor-certs
+          image: {{.Values.caCfsslUnsafeImage}}
+          imagePullPolicy: {{.Values.imagePullPolicy}}
+          volumeMounts:
+            - name: certs
+              mountPath: /certs
+          command: ["/bin/ash"]
+          args:
+            - "-c"
+            - |-
+                cd /certs &&
+                /ca/generate-cert.sh {{.component}}.{{.Values.domain}} NLX ca-cfssl-unsafe
+
+      containers:
+        - name: directory-monitor
+          image: {{.Values.directoryMonitorImage}}
+          imagePullPolicy: {{.Values.imagePullPolicy}}
+          command: ["/usr/local/bin/nlx-directory-monitor"]
+          env:
+            - name: LOG_TYPE
+              value: development
+            - name: LOG_LEVEL
+              value: debug
+            - name: POSTGRES_DSN
+              value: postgresql://{{.Values.dbUsernameDirectory}}:{{.Values.dbPasswordDirectory}}@{{.Values.dbHost}}/{{.Values.dbDatabaseDirectory}}?sslmode=disable&connect_timeout=10
+            - name: TLS_NLX_ROOT_CERT
+              value: "/certs/nlx_root.pem"
+            - name: TLS_MONITOR_CERT
+              value: "/certs/{{.component}}_{{.Values.domain}}.pem"
+            - name: TLS_MONITOR_KEY
+              value: "/certs/{{.component}}_{{.Values.domain}}-key.pem"
+          volumeMounts:
+            - name: certs
+              mountPath: /certs
+
+      # NOTE: workarround because .minikube doesn't resolve via DNS
+      hostAliases:
+        - ip: "{{.Values.externalIP}}"
+          hostnames:
+            - "inway.minikube"
+
+      restartPolicy: Always
+  status: {}
+{{ end }}

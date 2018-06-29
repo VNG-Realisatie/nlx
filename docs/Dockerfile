@@ -3,7 +3,7 @@ FROM alpine:latest AS build
 # Install build tools.
 RUN apk add --update openssl make git
 
-COPY . /go/src/go.nlx.io/nlx
+COPY . /go/src/go.nlx.io/nlx/docs
 WORKDIR /go/src/go.nlx.io/nlx/docs
 
 RUN ./install-hugo.sh
@@ -15,6 +15,6 @@ RUN make
 FROM nginx:alpine
 
 # Copy nginx configuration
-COPY ./docs/docker/default.conf /etc/nginx/conf.d/default.conf
+COPY ./docker/default.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=build /go/src/go.nlx.io/nlx/docs/public /usr/share/nginx/html

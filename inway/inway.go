@@ -131,7 +131,7 @@ func (i *Inway) announceToDirectory(s ServiceEndpoint, documentationURL string, 
 			})
 			if err != nil {
 				if errStatus, ok := status.FromError(err); ok && errStatus.Code() == codes.Unavailable {
-					i.logger.Info("waiting for director...")
+					i.logger.Info("waiting for directory...")
 					time.Sleep(1 * time.Second)
 					continue
 				}

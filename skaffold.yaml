@@ -1,0 +1,98 @@
+apiVersion: skaffold/v1alpha2
+kind: Config
+
+build:
+  artifacts:
+    # Directory images
+    - imageName: nlxio/docs
+      workspace: docs
+    - imageName: nlxio/ca-cfssl-unsafe
+      workspace: ca-cfssl-unsafe
+    - imageName: nlxio/ca-certportal
+      workspace: ca-certportal
+    - imageName: nlxio/directory-db
+      workspace: .
+      docker:
+        dockerfilePath: directory-db/Dockerfile
+    - imageName: nlxio/directory
+      workspace: .
+      docker:
+        dockerfilePath: directory/Dockerfile
+    - imageName: nlxio/directory-monitor
+      workspace: .
+      docker:
+        dockerfilePath: directory-monitor/Dockerfile
+    - imageName: nlxio/directory-ui
+      workspace: directory-ui
+
+    # Organization images
+    - imageName: nlxio/txlog-db
+      workspace: .
+      docker:
+        dockerfilePath: txlog-db/Dockerfile
+    - imageName: nlxio/txlog-api
+      workspace: .
+      docker:
+        dockerfilePath: txlog-api/Dockerfile
+    - imageName: nlxio/txlog-ui
+      workspace: .
+      docker:
+        dockerfilePath: txlog-ui/Dockerfile
+    - imageName: nlxio/inway
+      workspace: .
+      docker:
+        dockerfilePath: inway/Dockerfile
+    - imageName: nlxio/outway
+      workspace: .
+      docker:
+        dockerfilePath: outway/Dockerfile
+
+  tagPolicy:
+    sha256: {}
+
+  local:
+    skipPush: true
+
+deploy:
+  helm:
+    releases:
+      - name: nlx-directory-dev
+        chartPath: helm/nlx-directory
+        valuesFilePath: helm/nlx-directory/values-dev.yaml
+        namespace: nlx-directory-dev
+        version: "v0.0.0"
+        values:
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          caCertportalImage: nlxio/ca-certportal
+          directoryDBImage: nlxio/directory-db
+          directoryImage: nlxio/directory
+          directoryMonitorImage: nlxio/directory-monitor
+          directoryUIImage: nlxio/directory-ui
+          docsImage: nlxio/docs
+        setValueTemplates:
+          externalIP: "{{.MINIKUBE_IP}}"
+
+      - name: nlx-organization-dev
+        chartPath: helm/nlx-organization
+        valuesFilePath: helm/nlx-organization/values-dev.yaml
+        namespace: nlx-organization-dev
+        version: "v0.0.0"
+        values:
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          txlogDBImage: nlxio/txlog-db
+          txlogAPIImage: nlxio/txlog-api
+          txlogUIImage: nlxio/txlog-ui
+          inwayImage: nlxio/inway
+          outwayImage: nlxio/outway
+        setValueTemplates:
+          externalIP: "{{.MINIKUBE_IP}}"
+
+profiles:
+  - name: release
+    build:
+      tagPolicy:
+        gitCommit: {} # This tags the artifact images using the git commit identifier, which will be a git tag when that is cleanly available.
+          # TODO: this creates nicely tagged releases for us, but doesn't publish "stable" versions. For that, we'll need to have manual extra tagging jobs in CI/CD pipeline which tags "latest" to be "vX.Y.Z".
+      local:
+        # TODO: Setup push to image registry
+        # TODO: Use local builder at all? Depends on CI/CD setup. Probably yes with gitlab ci when runner is of type 'shell'.

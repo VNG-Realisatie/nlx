@@ -125,7 +125,10 @@ func runServer(log *zap.Logger, address string, addressPlain string, caCertPool 
 	// Start plain HTTP server, during the PoC this is proxied by k8s ingress which adds TLS using letsencrypt.
 	// TODO: #206 When directory has a seperate storage/backing, the inspection API should actually become a seperate process.
 	go func() {
-		err := http.ListenAndServe(addressPlain, httpRouter)
+		err := http.ListenAndServe(addressPlain, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			fmt.Printf("proto:%d path:%s\n", r.ProtoMajor, r.URL.Path)
+			httpRouter.ServeHTTP(w, r)
+		}))
 		if err != nil {
 			log.Fatal("ListenAndServe plain HTTP failed", zap.Error(err))
 		}

@@ -1,0 +1,3 @@
+# Default values for this chart
+
+imagePullPolicy: "Never"

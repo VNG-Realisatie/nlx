@@ -6,7 +6,6 @@ RUN apk add --update make git protobuf
 
 # Install go-based dependencies and tools
 RUN go get \
-        github.com/cortesi/modd/cmd/modd \
         google.golang.org/grpc \
         github.com/golang/protobuf/protoc-gen-go \
         github.com/gogo/protobuf/protoc-gen-gogofast \
