@@ -6,13 +6,15 @@ export default class Services extends React.Component {
         const {
             serviceList,
             sortBy,
-            sortAscending
+            sortAscending,
+            displayOnlyContaining
         } = this.props
 
         const services = serviceList.map((data) => (
             <Service
                 key={data.organization_name + data.service_name}
                 data={data}
+                highlightWords={displayOnlyContaining}
             />
         ))
 
@@ -33,7 +35,7 @@ export default class Services extends React.Component {
                 <table className="table table-bordered">
                     <thead>
                         <tr>
-                            <th scope="col" className={sortBy === 'inway_addresses' ? "sorting" : ""}>
+                            <th scope="col" className={sortBy === 'inway_addresses' ? "sorting" : ""} style={{width:'100px'}}>
                                 <button style={centerStyle} onClick={(e) => this.props.onSort('inway_addresses')}>
                                     Status
                                     {sortBy === 'inway_addresses' && sortArrow}

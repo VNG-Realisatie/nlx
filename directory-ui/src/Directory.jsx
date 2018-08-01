@@ -19,9 +19,18 @@ export default class Directory extends React.Component {
         this.searchOnChange = this.searchOnChange.bind(this)
         this.switchOnChange = this.switchOnChange.bind(this)
         this.onSort = this.onSort.bind(this)
+        this.escFunction = this.escFunction.bind(this)
+    }
+
+    escFunction(event){
+        if (event.keyCode === 27) {
+            this.setState({ displayOnlyContaining: '' })
+        }
     }
 
     componentDidMount() {
+        document.addEventListener("keydown", this.escFunction, false);
+
         axios.get(`/api/directory/list-services`)
             .then(res => {
                 const services = res.data.services;
@@ -32,6 +41,10 @@ export default class Directory extends React.Component {
             .catch(e => {
                 console.error(e);
             })
+    }
+
+    omponentWillUnmount(){
+        document.removeEventListener("keydown", this.escFunction, false);
     }
 
     searchOnChange(e) {
@@ -110,9 +123,11 @@ export default class Directory extends React.Component {
                     <div className="container">
                         <div className="row">
                             <div className="col-sm-6 col-lg-4 offset-lg-2">
-                                <Search onChange={this.searchOnChange} value={this.state.displayOnlyContaining} placeholder="Filter services" filter />
+                                <div className="mb-4 mb-sm-0">
+                                    <Search onChange={this.searchOnChange} value={this.state.displayOnlyContaining} placeholder="Filter services" filter />
+                                </div>
                             </div>
-                            <div className="col-sm-6 col-lg-6 d-flex align-items-center">
+                            <div className="col-sm-6 col-lg-6 d-flex align-items-center justify-content-center justify-content-sm-start">
                                 <Switch id="switch1" onChange={this.switchOnChange} checked={this.state.displayOnlyOnline}>Only online services</Switch>
                             </div>
                         </div>
@@ -125,6 +140,7 @@ export default class Directory extends React.Component {
                             onSort={this.onSort}
                             sortBy={this.state.sortBy}
                             sortAscending={this.state.sortAscending}
+                            displayOnlyContaining={this.state.displayOnlyContaining}
                         />
                     </div>
                 </section>

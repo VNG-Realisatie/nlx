@@ -43,12 +43,9 @@ export default class Overview extends React.Component {
 
     switch(val) {
         if (val === 'in' || val === 'out') {
-            console.log('in');
-
             this.setState({ showLogs: val })
         }
         else {
-            console.log('else');
             this.setState({ showLogs: this.state.showLogs === 'in' ? 'out' : 'in' })
         }
     }

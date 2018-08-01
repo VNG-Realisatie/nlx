@@ -3,10 +3,14 @@ import plugIcon from '../assets/icons/plug.svg'
 import $ from 'jquery'
 import {Link} from 'react-router-dom'
 import copy from 'copy-to-clipboard'
+import Highlighter from "react-highlight-words";
 
 export default class Directory extends React.Component {
     render() {
-        const { data } = this.props
+        const {
+            data,
+            highlightWords
+        } = this.props
 
         const apiAddress = `http://{your-outway-address}:12018/${data.organization_name}/${data.service_name}`
 
@@ -27,15 +31,33 @@ export default class Directory extends React.Component {
                         <svg style={{margin: '0 auto'}} id="status" viewBox="0 0 10 10" width="10px" height="10px"><circle cx="5" cy="14" r="5" transform="translate(0 -9)" fill="currentColor" fillRule="evenodd"></circle></svg>
                     </td>
                     <td>
-                        <span>{data.organization_name}</span>
+                        <span>
+                            <Highlighter
+                                searchWords={[highlightWords]}
+                                autoEscape={true}
+                                textToHighlight={data.organization_name}
+                            />
+                        </span>
                     </td>
                     <td>
                         {data.api_specification_type ? (
                             <Link to={`/documentation/${data.organization_name}/${data.service_name}`}>
-                                <strong>{data.service_name}</strong>
+                                <strong>
+                                    <Highlighter
+                                        searchWords={[highlightWords]}
+                                        autoEscape={true}
+                                        textToHighlight={data.service_name}
+                                    />
+                                </strong>
                             </Link>
                         ) : (
-                            <span>{data.service_name}</span>
+                            <span>
+                                <Highlighter
+                                    searchWords={[highlightWords]}
+                                    autoEscape={true}
+                                    textToHighlight={data.service_name}
+                                />
+                            </span>
                         )}
                     </td>
                     <td>
