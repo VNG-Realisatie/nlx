@@ -72,7 +72,7 @@ export default class Doc extends React.Component {
                             family: '"Muli", sans-serif',
                         },
                         code: {
-                            fontSize: '14px',
+                            fontSize: '12px',
                             fontFamily: '"Fira Code", monospaced',
                         },
                         colors: {
@@ -81,7 +81,7 @@ export default class Doc extends React.Component {
                             redirect: '#ffa500',
                             error: '#e53935',
                             info: '#87ceeb',
-                            text: '#263238',
+                            text: '#000000',
                             code: '#e83e8c',
                             codeBg: '#f8f9fa',
                             warning: '#f1c400',
