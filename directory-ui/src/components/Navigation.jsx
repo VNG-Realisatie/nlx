@@ -25,7 +25,7 @@ export default class Navigation extends React.Component {
                             </li>
                             <li className="nav-item">
                                 <a className="nav-link" href="https://nlx.io/about/">
-                                    About
+                                    Over NLX
                                 </a>
                             </li>
                             <li className="nav-item">
