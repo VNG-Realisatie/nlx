@@ -100,5 +100,5 @@ func (o *Outway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	service.proxyRequest(w, r)
+	service.ProxyHTTPRequest(w, r)
 }

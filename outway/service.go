@@ -16,9 +16,14 @@ import (
 
 var errNoInwaysAvailable = errors.New("no inways available")
 
-// Service handles the proxying of a request to the inway
-// TODO: #210 if we like this model in the PoC, Service should become an interface with multiple implementations (http/json, grpc, ??) like inway
-type Service struct {
+// HTTPService abstracts HTTP-based services to a single usable format.
+type HTTPService interface {
+	FullName() string
+	ProxyHTTPRequest(w http.ResponseWriter, r *http.Request)
+}
+
+// SimpleHTTPService handles the proxying of a request to the inway
+type SimpleHTTPService struct {
 	organizationName string
 	serviceName      string
 
@@ -28,21 +33,19 @@ type Service struct {
 	proxy *httputil.ReverseProxy
 }
 
-// NewService creates a new Service instance with a single inway to forward requests to.
-// This is a PoC shortcut, the real outway will fetch services and their inways* from the directory
-// 		(* note the plural; a service can have multiple inways published by directory so that an outway can balance load to multiple inways)
-func NewService(logger *zap.Logger, roots *x509.CertPool, certFile string, keyFile string, organizationName, serviceName string, inwayAddresses []string) (*Service, error) {
+// NewSimpleHTTPService creates a SimpleHTTPService instance with a single inway to forward requests to.
+func NewSimpleHTTPService(logger *zap.Logger, roots *x509.CertPool, certFile string, keyFile string, organizationName, serviceName string, inwayAddresses []string) (*SimpleHTTPService, error) {
 	if len(inwayAddresses) == 0 {
 		return nil, errNoInwaysAvailable
 	}
 	inwayAddress := inwayAddresses[0] // no loadbalancing etc. yet in poc, just using the first inway available
 
-	s := &Service{
+	s := &SimpleHTTPService{
 		organizationName: organizationName,
 		serviceName:      serviceName,
 		roots:            roots,
 	}
-	s.logger = logger.With(zap.String("outway-service-full-name", s.fullName()))
+	s.logger = logger.With(zap.String("outway-service-full-name", s.FullName()))
 	endpointURL, err := url.Parse("https://" + inwayAddress)
 	if err != nil {
 		return nil, errors.Wrap(err, "invalid endpoint provided")
@@ -69,10 +72,12 @@ func NewService(logger *zap.Logger, roots *x509.CertPool, certFile string, keyFi
 	return s, nil
 }
 
-func (s *Service) fullName() string {
+// FullName returns the name of the service
+func (s *SimpleHTTPService) FullName() string {
 	return s.organizationName + "." + s.serviceName
 }
 
-func (s *Service) proxyRequest(w http.ResponseWriter, r *http.Request) {
+// ProxyHTTPRequest procies the HTTP request to the proper endpoint.
+func (s *SimpleHTTPService) ProxyHTTPRequest(w http.ResponseWriter, r *http.Request) {
 	s.proxy.ServeHTTP(w, r)
 }
