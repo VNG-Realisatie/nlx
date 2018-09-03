@@ -3,7 +3,14 @@
 set -e # exit on error
 set -x # echo commands
 
-RELEASE_TAG=${CI_COMMIT_SHA:0:8}
+RELEASE_TAG='latest' # Local builds use latest
+if [[ ! -z "$CI_COMMIT_TAG" ]]; then
+	# Build tagged releases using the version tag
+	RELEASE_TAG=${CI_COMMIT_TAG}
+elif [[ ! -z "$CI_COMMIT_SHA" ]]; then
+	# When not tagged but still on CI, use the commit SHA.
+	RELEASE_TAG=${CI_COMMIT_SHA}
+fi
 
 docker build \
 	-t nlxio/docs:latest -t nlxio/docs:${RELEASE_TAG} \
