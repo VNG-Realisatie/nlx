@@ -3,7 +3,14 @@
 set -e # exit on error
 set -x # echo commands
 
-RELEASE_TAG=${CI_COMMIT_SHA:0:8}
+RELEASE_TAG='latest' # Local builds use latest
+if [[ ! -z "$CI_COMMIT_TAG" ]]; then
+	# Build tagged releases using the version tag
+	RELEASE_TAG=${CI_COMMIT_TAG}
+elif [[ ! -z "$CI_COMMIT_SHA" ]]; then
+	# When not tagged but still on CI, use the commit SHA.
+	RELEASE_TAG=${CI_COMMIT_SHA}
+fi
 
 docker build \
 	-t nlxio/docs:latest -t nlxio/docs:${RELEASE_TAG} \
@@ -40,6 +47,18 @@ docker build \
 docker build \
 	-t nlxio/monitor:latest -t nlxio/monitor:${RELEASE_TAG} \
 	-f monitor/Dockerfile .
+	
+docker build \
+	-t nlxio/logdb:latest -t nlxio/logdb:${RELEASE_TAG} \
+	-f logdb/Dockerfile .
+	
+docker build \
+	-t nlxio/logdb-api:latest -t nlxio/logdb-api:${RELEASE_TAG} \
+	-f logdb-api/Dockerfile .
+	
+docker build \
+	-t nlxio/logdb-ui:latest -t nlxio/logdb-ui:${RELEASE_TAG} \
+	-f logdb-ui/Dockerfile .
 
 # Only push the image when this script is ran in CI/CD or forced using env var (backup-plan for when CI/CD is down/unavailable)
 if [ "${RELEASE_TAG}" != "latest" ]; then
@@ -61,4 +80,10 @@ if [ "${RELEASE_TAG}" != "latest" ]; then
 	docker push nlxio/directory-ui:${RELEASE_TAG}
 	docker push nlxio/monitor:latest
 	docker push nlxio/monitor:${RELEASE_TAG}
+	docker push nlxio/logdb:latest
+	docker push nlxio/logdb:${RELEASE_TAG}
+	docker push nlxio/logdb-api:latest
+	docker push nlxio/logdb-api:${RELEASE_TAG}
+	docker push nlxio/logdb-ui:latest
+	docker push nlxio/logdb-ui:${RELEASE_TAG}
 fi

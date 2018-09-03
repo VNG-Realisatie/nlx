@@ -109,6 +109,27 @@ services:
     depends_on:
       - logdb
 
+  logdb-ui:
+      build:
+        context: .
+        dockerfile: logdb-ui/Dockerfile
+        target: build
+      depends_on:
+        - logdb-api
+      networks:
+        default:
+          aliases:
+            - logdb-ui.nlx.local
+      volumes:
+        - $GOPATH/src/go.nlx.io/nlx:/go/src/go.nlx.io/nlx
+      ports:
+        - '12022:3000'
+      command: >
+        /bin/ash -c "
+          yarn install
+          yarn run start
+        "
+
   inway_cert:
     build:
       context: .
@@ -328,9 +349,9 @@ services:
       volumes:
         - $GOPATH/src/go.nlx.io/nlx:/go/src/go.nlx.io/nlx
       ports:
-        - '8001:4200'
+        - '8001:3000'
       command: >
         /bin/ash -c "
-          npm install
-          npm run start
+          yarn install
+          yarn run start
         "

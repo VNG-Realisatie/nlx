@@ -1,6 +1,6 @@
-<h1 align="center"><img alt="NLX" src="logo.png" width="200"></h1>
+<h1><img alt="NLX" src="logo.png" width="200"></h1>
 
-[![Build Status](https://jenkins.nlx.io/job/nlx-release-master/badge/icon?style=plastic)](https://jenkins.nlx.io/) ![Repo Status](https://img.shields.io/badge/status-proof%20of%20concept-lightgrey.svg?longCache=true&style=plastic)
+[![pipeline status](https://gitlab.com/commonground/nlx/badges/master/pipeline.svg)](https://gitlab.com/commonground/nlx/commits/master)  [![coverage report](https://gitlab.com/commonground/nlx/badges/master/coverage.svg)](https://gitlab.com/commonground/nlx/commits/master)  [![Repo Status](https://img.shields.io/badge/status-proof%20of%20concept-lightgrey.svg?longCache=true)](https://docs.nlx.io/introduction/product-vision/)
 
 NLX is an open source inter-organisational system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API landscape.
 
@@ -39,7 +39,12 @@ mkdir -p $GOPATH/src/go.nlx.io
 cd $GOPATH/src/go.nlx.io
 git clone https://gitlab.com/commonground/nlx
 cd nlx
-git remote set-url --push origin git@gitlab.com:commonground/nlx.git
+```
+
+If you wish to contribute, fork the project and set the push origin to your fork.
+
+```bash
+git remote set-url --push origin git@gitlab.com:<YOUR-GITLAB-USERNAME>/nlx.git
 ```
 
 ### Running
@@ -86,14 +91,14 @@ There is no need to build individual components.
 
 If you are running into issues after pulling changes you might need to rebuild your containers using `docker-compose build`
 
-If you are running into other issues, please [Post an Issue on GitHub](https://go.nlx.io/nlx/issues/new).
+If you are running into other issues, please [Post an Issue on GitLab](https://gitlab.com/commonground/nlx/issues).
 
 ## Deploying and releasing
 
-Our [CI system Jenkins](https://jenkins.nlx.io/) builds every push to the master branch and creates a release to Docker, tagging it with the short git commit hash.
+The [CI system of GitLab](https://gitlab.com/commonground/nlx/pipelines) builds every push to the master branch and creates a release to Docker, tagging it with the short git commit hash.
 When a release is successful, it also gets deployed to the test environment.
 
-When a git tag is pushed, Jenkins builds and deploys it to the test and staging environments.
+When a git tag is pushed, GitLab builds and deploys it to the test and staging environments.
 
 ## License
 

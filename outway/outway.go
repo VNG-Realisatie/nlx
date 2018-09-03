@@ -32,7 +32,7 @@ type Outway struct {
 
 	logger *zap.Logger
 
-	txlogger *transactionlog.TransactionLogger
+	txlogger transactionlog.TransactionLogger
 
 	directoryClient directoryapi.DirectoryClient
 
@@ -40,7 +40,7 @@ type Outway struct {
 	ecmaTable    *crc64.Table
 
 	servicesLock sync.RWMutex
-	services     map[string]*Service // services mapped by <organizationName>.<serviceName>, PoC shortcut in the absence of directory
+	services     map[string]HTTPService // services mapped by <organizationName>.<serviceName>, PoC shortcut in the absence of directory
 }
 
 // NewOutway creates a new Outway and sets it up to handle requests.
@@ -67,9 +67,13 @@ func NewOutway(logger *zap.Logger, logdb *sqlx.DB, tlsOptions orgtls.TLSOptions,
 	}
 
 	// setup transactionlog
-	o.txlogger, err = transactionlog.NewTransactionLogger(logdb, transactionlog.DirectionOut)
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to setup transactionlog")
+	if logdb == nil {
+		o.txlogger = transactionlog.NewDiscardTransactionLogger()
+	} else {
+		o.txlogger, err = transactionlog.NewPostgresTransactionLogger(logdb, transactionlog.DirectionOut)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to setup transactionlog")
+		}
 	}
 
 	orgKeypair, err := tls.LoadX509KeyPair(tlsOptions.OrgCertFile, tlsOptions.OrgKeyFile)
@@ -108,14 +112,14 @@ func NewOutway(logger *zap.Logger, logdb *sqlx.DB, tlsOptions orgtls.TLSOptions,
 }
 
 func (o *Outway) updateServiceList() error {
-	services := make(map[string]*Service)
+	services := make(map[string]HTTPService)
 	resp, err := o.directoryClient.ListServices(context.Background(), &directoryapi.ListServicesRequest{})
 	if err != nil {
 		return errors.Wrap(err, "failed to fetch services from directory")
 	}
 	for _, service := range resp.Services {
 		// create the service
-		s, err := NewService(o.logger, o.tlsRoots, o.tlsOptions.OrgCertFile, o.tlsOptions.OrgKeyFile, service.OrganizationName, service.ServiceName, service.InwayAddresses)
+		s, err := NewSimpleHTTPService(o.logger, o.tlsRoots, o.tlsOptions.OrgCertFile, o.tlsOptions.OrgKeyFile, service.OrganizationName, service.ServiceName, service.InwayAddresses)
 		if err != nil {
 			if err == errNoInwaysAvailable {
 				// skip, we just pretend this service is not existing now
@@ -124,7 +128,7 @@ func (o *Outway) updateServiceList() error {
 			}
 			o.logger.Fatal("failed to create new service", zap.String("service-organization-name", service.OrganizationName), zap.String("service-name", service.ServiceName), zap.Error(err))
 		}
-		services[s.fullName()] = s
+		services[s.FullName()] = s
 	}
 	o.servicesLock.Lock()
 	defer o.servicesLock.Unlock()

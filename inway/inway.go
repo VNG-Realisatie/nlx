@@ -41,7 +41,7 @@ type Inway struct {
 	serviceEndpointsLock sync.RWMutex
 	serviceEndpoints     map[string]ServiceEndpoint
 
-	txlogger *transactionlog.TransactionLogger
+	txlogger transactionlog.TransactionLogger
 
 	directoryClient directoryapi.DirectoryClient
 }
@@ -73,9 +73,13 @@ func NewInway(logger *zap.Logger, logdb *sqlx.DB, selfAddress string, tlsOptions
 	}
 
 	// setup transactionlog
-	i.txlogger, err = transactionlog.NewTransactionLogger(logdb, transactionlog.DirectionIn)
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to setup transactionlog")
+	if logdb == nil {
+		i.txlogger = transactionlog.NewDiscardTransactionLogger()
+	} else {
+		i.txlogger, err = transactionlog.NewPostgresTransactionLogger(logdb, transactionlog.DirectionIn)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to setup transactionlog")
+		}
 	}
 
 	// setup directory client

@@ -65,7 +65,7 @@ func RunHealthChecker(logger *zap.Logger, db *sqlx.DB, caCertPool *x509.CertPool
 	h.stmtUpdateHealth, err = db.Preparex(`
 		UPDATE directory.availabilities
 			SET healthy = $2
-			WHERE id = $1
+			WHERE id = $1 AND healthy != $2
 		`)
 	if err != nil {
 		return errors.Wrap(err, "failed to prepare stmtUpdateHealth")
