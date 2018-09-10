@@ -25,8 +25,8 @@ Some components are meant to run as centralized NLX services, while others shoul
 
 Make sure you have installed the following tools:
 
-- [minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+- [minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/)
 - [helm](https://docs.helm.sh/using_helm/)
 - [skaffold](https://github.com/GoogleContainerTools/skaffold#installation)
 
@@ -101,7 +101,6 @@ You may now test the following sites:
 To test a full request through outway>inway, use the PostmanEcho service through the exampleorg outway: `http://outway.dev.exampleorg.minikube:30080/DemoProviderOrganization/PostmanEcho/get?foo1=bar1&foo2=bar2`
 
 Note the ports; `30080` and `30443` are routed via traefik (TLS handled by traefik), whereas `:443` and `:80` are used by nginx-ingress, which does "tcp-proxying" with ssl passthrough so the mutual TLS can be handled by inway/outway/directory/etc.
-
 
 Read helm/README.md for more information about the skaffold setup.
 
