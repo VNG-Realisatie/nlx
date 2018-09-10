@@ -54,7 +54,11 @@ git remote set-url --push origin git@gitlab.com:<YOUR-GITLAB-USERNAME>/nlx.git
 
 ### Running complete stack in kubernetes/minikube
 
-Setup minikube on your local development machine.
+Setup minikube on your local development machine. For developers, it's advised to setup minikube with 4 cores, 8GB RAM and 100+G storage.
+
+e.g.: `minikube start --vm-driver=kvm2 --cpus 4 --memory 8192 --disk-size=100G`
+
+Read the [minikube README](https://github.com/kubernetes/minikube) for more information.
 
 Once minikube is running, install the following dependencies:
 
