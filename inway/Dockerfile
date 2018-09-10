@@ -7,8 +7,13 @@ RUN apk add --update make git openssh-client gcc musl-dev ca-certificates
 # Install modd, which is used within docker-compose.
 RUN go get github.com/cortesi/modd/cmd/modd
 
-# Add code.
-COPY . /go/src/go.nlx.io/nlx
+# Only add code that we use for building inway
+COPY inway						/go/src/go.nlx.io/nlx/inway
+COPY directory-monitor/health   /go/src/go.nlx.io/nlx/directory-monitor/health
+COPY directory/directoryapi     /go/src/go.nlx.io/nlx/directory/directoryapi
+COPY txlog-db/dbversion			/go/src/go.nlx.io/nlx/txlog-db/dbversion
+COPY common						/go/src/go.nlx.io/nlx/common
+
 WORKDIR /go/src/go.nlx.io/nlx/inway
 
 # Ignore failing make to allow this stage to complete even when there are errors in the sourcecode.

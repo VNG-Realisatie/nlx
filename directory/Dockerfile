@@ -12,8 +12,11 @@ RUN go get \
         github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway \
         github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
 
-# Add code.
-COPY . /go/src/go.nlx.io/nlx
+# Only add code that we use for building directory
+COPY directory					/go/src/go.nlx.io/nlx/directory
+COPY directory-db/dbversion		/go/src/go.nlx.io/nlx/directory-db/dbversion
+COPY common						/go/src/go.nlx.io/nlx/common
+
 WORKDIR /go/src/go.nlx.io/nlx/directory
 
 # Ignore failing make to allow this stage to complete even when there are errors in the sourcecode.

@@ -35,9 +35,7 @@ build:
       docker:
         dockerfilePath: txlog-api/Dockerfile
     - imageName: nlxio/txlog-ui
-      workspace: .
-      docker:
-        dockerfilePath: txlog-ui/Dockerfile
+      workspace: txlog-ui
     - imageName: nlxio/inway
       workspace: .
       docker:

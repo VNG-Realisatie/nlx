@@ -8,8 +8,12 @@ RUN apk add --update make git
 # RUN go get \
         # No extra pre-fetch packages currently required for txlog-api
 
-# Add code.
-COPY . /go/src/go.nlx.io/nlx
+
+# Only add code that we use for building directory
+COPY txlog-api					/go/src/go.nlx.io/nlx/txlog-api
+COPY txlog-db/dbversion			/go/src/go.nlx.io/nlx/txlog-db/dbversion
+COPY common						/go/src/go.nlx.io/nlx/common
+
 WORKDIR /go/src/go.nlx.io/nlx/txlog-api
 
 # Ignore failing make to allow this stage to complete even when there are errors in the sourcecode.

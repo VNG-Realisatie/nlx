@@ -7,8 +7,12 @@ RUN apk add --update make git
 # Install modd, which is used within docker-compose.
 RUN go get github.com/cortesi/modd/cmd/modd
 
-# Add code and build.
-COPY . /go/src/go.nlx.io/nlx
+# Only add code that we use for building outway
+COPY outway						/go/src/go.nlx.io/nlx/outway
+COPY directory/directoryapi     /go/src/go.nlx.io/nlx/directory/directoryapi
+COPY txlog-db/dbversion			/go/src/go.nlx.io/nlx/txlog-db/dbversion
+COPY common						/go/src/go.nlx.io/nlx/common
+
 WORKDIR /go/src/go.nlx.io/nlx/outway
 
 # Ignore failing make to allow this stage to complete even when there are errors in the sourcecode.

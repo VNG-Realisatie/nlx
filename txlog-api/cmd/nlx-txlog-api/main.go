@@ -8,16 +8,16 @@ import (
 	"os"
 	"time"
 
-	"go.nlx.io/nlx/common/transactionlog"
-
 	"github.com/huandu/xstrings"
 	"github.com/jmoiron/sqlx"
 	"github.com/jmoiron/sqlx/types"
 	flags "github.com/svent/go-flags"
+	"go.uber.org/zap"
+
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/process"
+	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/txlog-db/dbversion"
-	"go.uber.org/zap"
 )
 
 var options struct {
