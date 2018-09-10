@@ -49,9 +49,9 @@ spec:
             - name: TLS_NLX_ROOT_CERT
               value: "/certs/nlx_root.pem"
             - name: TLS_MONITOR_CERT
-              value: "/certs/{{.component}}_{{.Values.domain}}.pem"
+              value: "/certs/{{.component}}.{{.Values.domain}}.pem"
             - name: TLS_MONITOR_KEY
-              value: "/certs/{{.component}}_{{.Values.domain}}-key.pem"
+              value: "/certs/{{.component}}.{{.Values.domain}}-key.pem"
           volumeMounts:
             - name: certs
               mountPath: /certs
@@ -60,7 +60,7 @@ spec:
       hostAliases:
         - ip: "{{.Values.externalIP}}"
           hostnames:
-            - "inway.minikube"
+            - "{{.Values.inwayHostname}}"
 
       restartPolicy: Always
   status: {}

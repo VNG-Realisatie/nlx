@@ -8,10 +8,10 @@ RUN apk add --update make git
 RUN go get github.com/cortesi/modd/cmd/modd
 
 # Only add code that we use for building outway
-COPY outway						/go/src/go.nlx.io/nlx/outway
-COPY directory/directoryapi     /go/src/go.nlx.io/nlx/directory/directoryapi
-COPY txlog-db/dbversion			/go/src/go.nlx.io/nlx/txlog-db/dbversion
-COPY common						/go/src/go.nlx.io/nlx/common
+COPY outway                 /go/src/go.nlx.io/nlx/outway
+COPY directory/directoryapi /go/src/go.nlx.io/nlx/directory/directoryapi
+COPY txlog-db/dbversion     /go/src/go.nlx.io/nlx/txlog-db/dbversion
+COPY common                 /go/src/go.nlx.io/nlx/common
 
 WORKDIR /go/src/go.nlx.io/nlx/outway
 

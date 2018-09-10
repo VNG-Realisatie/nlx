@@ -10,9 +10,9 @@ RUN apk add --update make git
 
 
 # Only add code that we use for building directory
-COPY txlog-api					/go/src/go.nlx.io/nlx/txlog-api
-COPY txlog-db/dbversion			/go/src/go.nlx.io/nlx/txlog-db/dbversion
-COPY common						/go/src/go.nlx.io/nlx/common
+COPY txlog-api          /go/src/go.nlx.io/nlx/txlog-api
+COPY txlog-db/dbversion /go/src/go.nlx.io/nlx/txlog-db/dbversion
+COPY common             /go/src/go.nlx.io/nlx/common
 
 WORKDIR /go/src/go.nlx.io/nlx/txlog-api
 

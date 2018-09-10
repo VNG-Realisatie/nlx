@@ -1,5 +1,5 @@
 
-domain: minikube
+domain: dev.exampleorg.minikube
 
 dbHost: postgresql.postgresql
 dbUsernameSuperuser: postgres
@@ -15,5 +15,5 @@ dbPasswordTxlogWriter: nlx-txlog-writer
 caAddress: ca-cfssl-unsafe.nlx-directory-dev
 
 externalIP: ""
-directoryHostname: directory-api.minikube
-inwayHostname: inway.minikube
+directoryHostname: directory-api.dev.nlx.minikube
+inwayHostname: inway.dev.exampleorg.minikube

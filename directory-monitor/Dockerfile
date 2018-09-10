@@ -14,9 +14,9 @@ RUN go get \
         github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
 
 # Only add code that we use for building directory-monitor
-COPY directory-monitor          /go/src/go.nlx.io/nlx/directory-monitor
-COPY directory-db/dbversion     /go/src/go.nlx.io/nlx/directory-db/dbversion
-COPY common                     /go/src/go.nlx.io/nlx/common
+COPY directory-monitor      /go/src/go.nlx.io/nlx/directory-monitor
+COPY directory-db/dbversion /go/src/go.nlx.io/nlx/directory-db/dbversion
+COPY common                 /go/src/go.nlx.io/nlx/common
 
 WORKDIR /go/src/go.nlx.io/nlx/directory-monitor
 

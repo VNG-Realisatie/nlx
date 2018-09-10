@@ -74,6 +74,30 @@ When these components are running, you can start all the NLX components by execu
 MINIKUBE_IP=$(minikube ip) skaffold dev
 ```
 
+Finally, add the minikube hostnames to your machine's `/etc/hosts` file so you can reach the services from your browser.
+
+```bash
+echo "$(minikube ip)               traefik.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)          docs.dev.nlx.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)    certportal.dev.nlx.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)     directory.dev.nlx.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip) directory-api.dev.nlx.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip) outway.dev.exampleorg.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)  txlog.dev.exampleorg.minikube" | sudo tee -a /etc/hosts
+```
+
+You may now test the following sites:
+
+- https://traefik.minikube:30443             A webinterface showing the status of the traefik ingress controller.
+- http://docs.dev.nlx.minikube:30080         The NLX docs
+- http://certportal.dev.nlx.minikube:30080   The NLX certportal
+- http://directory.dev.nlx.minikube:30080    The NLX directory
+
+
+Note the ports; `30080` and `30443` are routed via traefik (TLS handled by traefik), whereas `:443` and `:80` are used by nginx-ingress, which does "tcp-proxying" with ssl passthrough so the mutual TLS can be handled by inway/outway/directory/etc.
+
+To test a service, visit: `http://outway.dev.exampleorg.minikube:30080/DemoProviderOrganization/PostmanEcho/get?foo1=bar1&foo2=bar2`
+
 Read helm/README.md for more information about the skaffold setup.
 
 ### Troubleshooting

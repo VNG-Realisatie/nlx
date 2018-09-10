@@ -47,9 +47,9 @@ spec:
             - name: TLS_NLX_ROOT_CERT
               value: "/certs/nlx_root.pem"
             - name: TLS_ORG_CERT
-              value: "/certs/{{.component}}_{{.Values.domain}}.pem"
+              value: "/certs/{{.component}}.{{.Values.domain}}.pem"
             - name: TLS_ORG_KEY
-              value: "/certs/{{.component}}_{{.Values.domain}}-key.pem"
+              value: "/certs/{{.component}}.{{.Values.domain}}-key.pem"
             - name: POSTGRES_DSN
               value: postgresql://{{.Values.dbUsernameTxlogWriter}}:{{.Values.dbPasswordTxlogWriter}}@{{.Values.dbHost}}/{{.Values.dbDatabaseTxlog}}?sslmode=disable&connect_timeout=10
             - name: DIRECTORY_ADDRESS

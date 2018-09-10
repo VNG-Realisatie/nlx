@@ -49,9 +49,9 @@ spec:
             - name: TLS_NLX_ROOT_CERT
               value: "/certs/nlx_root.pem"
             - name: TLS_DIRECTORY_CERT
-              value: "/certs/{{.component}}_{{.Values.domain}}.pem"
+              value: "/certs/{{.component}}.{{.Values.domain}}.pem"
             - name: TLS_DIRECTORY_KEY
-              value: "/certs/{{.component}}_{{.Values.domain}}-key.pem"
+              value: "/certs/{{.component}}.{{.Values.domain}}-key.pem"
           ports:
             - containerPort: 443
             - containerPort: 80

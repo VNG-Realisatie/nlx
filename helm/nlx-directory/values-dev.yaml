@@ -1,5 +1,5 @@
 
-domain: minikube
+domain: dev.nlx.minikube
 
 dbHost: postgresql.postgresql
 dbUsernameSuperuser: postgres
@@ -11,3 +11,4 @@ dbUsernameDirectory: nlx-directory
 dbPasswordDirectory: nlx-directory
 
 externalIP: ""
+inwayHostname: "inway.dev.exampleorg.minikube"

@@ -11,9 +11,7 @@ certDomain=$1
 certOrganization=$2
 remoteCA=$3
 
-certName=`echo ${certDomain} | tr "." "_"`
-
-csrFilename="${certName}-csr.json"
+csrFilename="${certDomain}-csr.json"
 echo '{"hosts": ["'${certDomain}'"], "key": {"algo": "rsa", "size": 4096}, "CN": "'${certDomain}'", "names": [{"O": "'${certOrganization}'", "OU": "NLX"}]}' > "${csrFilename}"
 
 ## Wait for remote CA (cfssl server) to be online
@@ -21,4 +19,4 @@ while ! nc -z "${remoteCA}" 8888 </dev/null; do echo "waiting for ca" && sleep 1
 ## Fetch root cert from remote CA (cfssl server)
 cfssl info -remote "${remoteCA}" | cfssljson -bare nlx_root
 ## Generate and sign cert using remote CA (cfssl server)
-cfssl gencert -remote="${remoteCA}" "${csrFilename}" | cfssljson -bare "${certName}"
+cfssl gencert -remote="${remoteCA}" "${csrFilename}" | cfssljson -bare "${certDomain}"

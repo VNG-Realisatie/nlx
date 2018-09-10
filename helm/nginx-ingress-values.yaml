@@ -5,7 +5,9 @@ controller:
     enable-ssl-passthrough: {}
   ingressClass: nginx-ingress
   useIngressClassOnly: true
+
 rbac:
   create: true
+
 podSecurityPolicy:
   enabled: true
