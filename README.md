@@ -6,7 +6,7 @@ NLX is an open source inter-organisational system facilitating federated authent
 
 This repository contains all of the components to the current **Proof of Concept** of the [NLX Product Vision](https://docs.nlx.io/introduction/product-vision/). Do **not** use this code in production.
 
-## Developing for NLX
+## Developing on NLX
 
 Please find the latest documentation for using NLX on [docs.nlx.io](https://docs.nlx.io). This is a good place to start if you would like to develop an application or service that uses or provides API access over NLX.
 
@@ -16,10 +16,9 @@ Read more on how to ask questions, file bugs and contribute code and documentati
 
 ## Building and running an NLX network locally
 
-If you want to develop locally, or run your own NLX network you need to get all of the components of the NLX network to run.
+The NLX project consists of multiple components that together make up the entire NLX platform. Some components run as centralized NLX services, others run on-premise at organizations. All components are maintained in a single repository. This means that a developer has all the tools and code to build and test the complete NLX platform in a single repository. It simplifies version and dependency management and allows changes that affect multiple components to be combined in a single feature branch and merge-request.
 
-All of the components that make up the NLX platform are in this repository.
-Some components are meant to run as centralized NLX services, while others should run on-premise at organizations that want to connect to the network.
+If you want to develop locally, or run your own NLX network, you will likely want to start all the components.
 
 ### Requirements
 
@@ -104,7 +103,7 @@ Note the ports; `30080` and `30443` are routed via traefik (TLS handled by traef
 
 Read helm/README.md for more information about the skaffold setup.
 
-### Troubleshooting
+## Troubleshooting
 
 If you are running into other issues, please [Post an Issue on GitLab](https://gitlab.com/commonground/nlx/issues).
 

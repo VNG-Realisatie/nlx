@@ -1,18 +1,13 @@
----
-title: "Functional Design"
-description: ""
-weight: 110
----
-
+# Functional design
 
 ## Index
+
 * [Introduction](#introduction)
 * [Logging in NLX](#logging-in-nlx)
 
 ## Introduction
+
 _Functional design will be growing from sprint to sprint._
-
-
 
 ## Logging in NLX
 
