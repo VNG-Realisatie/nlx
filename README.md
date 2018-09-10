@@ -6,7 +6,7 @@ NLX is an open source inter-organisational system facilitating federated authent
 
 This repository contains all of the components to the current **Proof of Concept** of the [NLX Product Vision](https://docs.nlx.io/introduction/product-vision/). Do **not** use this code in production.
 
-## Developing for NLX
+## Developing on NLX
 
 Please find the latest documentation for using NLX on [docs.nlx.io](https://docs.nlx.io). This is a good place to start if you would like to develop an application or service that uses or provides API access over NLX.
 
@@ -16,17 +16,21 @@ Read more on how to ask questions, file bugs and contribute code and documentati
 
 ## Building and running an NLX network locally
 
-If you want to develop locally, or run your own NLX network you need to get all of the components of the NLX network to run.
+The NLX project consists of multiple components that together make up the entire NLX platform. Some components run as centralized NLX services, others run on-premise at organizations. All components are maintained in a single repository. This means that a developer has all the tools and code to build and test the complete NLX platform in a single repository. It simplifies version and dependency management and allows changes that affect multiple components to be combined in a single feature branch and merge-request.
 
-All of the components that make up the NLX platform are in this repository.
-Some components are meant to run as centralized NLX services, while others should run on-premise at organizations that want to connect to the network.
+If you want to develop locally, or run your own NLX network, you will likely want to start all the components.
 
 ### Requirements
 
 Make sure you have installed the following tools:
 
-- [docker](https://docs.docker.com/)
-- [docker-compose](https://docs.docker.com/compose/)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+- [minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/)
+- [helm](https://docs.helm.sh/using_helm/)
+- [skaffold](https://github.com/GoogleContainerTools/skaffold#installation)
+
+For autocompletion and local development tasks, it's also recommended to install the following:
+
 - [go](https://golang.org/doc/install)
 
 Also you will need to have [configured a `GOPATH`](https://github.com/golang/go/wiki/SettingGOPATH) with `${GOPATH}/bin` added to your `PATH`.
@@ -47,53 +51,65 @@ If you wish to contribute, fork the project and set the push origin to your fork
 git remote set-url --push origin git@gitlab.com:<YOUR-GITLAB-USERNAME>/nlx.git
 ```
 
-### Running
+### Running complete stack in kubernetes/minikube
 
-You can now start all the components with
+Setup minikube on your local development machine. For developers, it's advised to setup minikube with 4 cores, 8GB RAM and 100+G storage.
+
+e.g.: `minikube start --vm-driver=kvm2 --cpus 4 --memory 8192 --disk-size=100G`
+
+Read the [minikube README](https://github.com/kubernetes/minikube) for more information.
+
+Once minikube is running, install the following dependencies:
+
+- `traefik` for web and rest-api requests.
+- `nginx-ingress` for grpc and mutual-tls connections. Latest version is currently(2018-09-06) broken, so needs `--version 0.17.1`
+- `postgres` for directory-db and txlog-db.
 
 ```bash
-docker-compose up
+helm install stable/traefik --name traefik --namespace traefik --values helm/traefik-values.yaml
+helm install stable/nginx-ingress --version 0.17.1 --name nginx-ingress --namespace=nginx-ingress --values helm/nginx-ingress-values.yaml
+helm install stable/postgresql --name postgresql --namespace=postgresql --values helm/postgresql-values.yaml
 ```
 
-You can now see what services are up and on what port you can reach them using `docker ps`
+When these components are running, you can start all the NLX components by executing:
 
-#### Ports in docker-compose
+```bash
+MINIKUBE_IP=$(minikube ip) skaffold dev
+```
 
-The NLX components default to standard ports (tcp/80, tcp/443) for http-based traffic. These ports are mapped to unique ports in docker-compose.yml.
+Finally, add the minikube hostnames to your machine's `/etc/hosts` file so you can reach the services from your browser.
 
-Web frontends (serving HTML):
+```bash
+echo "$(minikube ip)               traefik.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)          docs.dev.nlx.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)    certportal.dev.nlx.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)     directory.dev.nlx.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip) directory-api.dev.nlx.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip) outway.dev.exampleorg.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)  txlog.dev.exampleorg.minikube" | sudo tee -a /etc/hosts
+```
 
-- ` 8001`: directory-ui HTTP
-- ` 8002`: docs HTTP
-- ` 8003`: certportal HTTP
+You may now test the following sites:
 
-Database
+- https://traefik.minikube:30443              A webinterface showing the status of the traefik ingress controller.
+- http://docs.dev.nlx.minikube:30080          The NLX docs
+- http://certportal.dev.nlx.minikube:30080    The NLX certportal
+- http://directory.dev.nlx.minikube:30080     The NLX directory
+- http://txlog.dev.exampleorg.minikube:30080/ Transactionlogs for the example organization
 
-- ` 5432`: postgres container for directory and logdb (If you already have a postgresql running on your host, this will create a conflict)
+To test a full request through outway>inway, use the PostmanEcho service through the exampleorg outway: `http://outway.dev.exampleorg.minikube:30080/DemoProviderOrganization/PostmanEcho/get?foo1=bar1&foo2=bar2`
 
-API's:
+Note the ports; `30080` and `30443` are routed via traefik (TLS handled by traefik), whereas `:443` and `:80` are used by nginx-ingress, which does "tcp-proxying" with ssl passthrough so the mutual TLS can be handled by inway/outway/directory/etc.
 
-- `10443`: directory gRPC/HTTPS
-- `10080`: directory non-TLS HTTP
-- `20080`: outway request proxy
-- `30443`: inway requests proxy
-- `40080`: logdb-api
-- `50080`: unsafe-ca
+Read helm/README.md for more information about the skaffold setup.
 
-All these ports are TCP ports.
-
-### Developing
-
-Where applicable, [`modd`](https://github.com/cortesi/modd) is used to rebuild and restart a component when changes in its source files are detected.
-There is no need to build individual components.
-
-### Troubleshooting
-
-If you are running into issues after pulling changes you might need to rebuild your containers using `docker-compose build`
+## Troubleshooting
 
 If you are running into other issues, please [Post an Issue on GitLab](https://gitlab.com/commonground/nlx/issues).
 
 ## Deploying and releasing
+
+**NOTE: Automated releases are currently not available**
 
 The [CI system of GitLab](https://gitlab.com/commonground/nlx/pipelines) builds every push to the master branch and creates a release to Docker, tagging it with the short git commit hash.
 When a release is successful, it also gets deployed to the test environment.

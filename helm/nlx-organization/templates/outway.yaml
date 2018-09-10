@@ -1,0 +1,98 @@
+{{ with set . "component" "outway" }}
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      release: {{ .Release.Name }}
+      app: {{ .Chart.Name }}
+      component: {{.component}}
+  template:
+    metadata:
+      labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 8 }}
+    spec:
+  
+      volumes:
+        - name: certs
+          emptyDir: {}
+
+      initContainers:
+        - name: outway-certs
+          image: {{.Values.caCfsslUnsafeImage}}
+          imagePullPolicy: {{.Values.imagePullPolicy}}
+          volumeMounts:
+            - name: certs
+              mountPath: /certs
+          command: ["/bin/ash"]
+          args:
+            - "-c"
+            - |-
+                cd /certs &&
+                /ca/generate-cert.sh {{.component}}.{{.Values.domain}} DemoProviderOrganization {{.Values.caAddress}}
+
+      containers:
+        - name: outway
+          image: {{.Values.outwayImage}}
+          imagePullPolicy: {{.Values.imagePullPolicy}}
+          command: ["/usr/local/bin/nlx-outway"]
+          env:
+            - name: LOG_TYPE
+              value: development
+            - name: LOG_LEVEL
+              value: debug
+            - name: TLS_NLX_ROOT_CERT
+              value: "/certs/nlx_root.pem"
+            - name: TLS_ORG_CERT
+              value: "/certs/{{.component}}.{{.Values.domain}}.pem"
+            - name: TLS_ORG_KEY
+              value: "/certs/{{.component}}.{{.Values.domain}}-key.pem"
+            - name: POSTGRES_DSN
+              value: postgresql://{{.Values.dbUsernameTxlogWriter}}:{{.Values.dbPasswordTxlogWriter}}@{{.Values.dbHost}}/{{.Values.dbDatabaseTxlog}}?sslmode=disable&connect_timeout=10
+            - name: DIRECTORY_ADDRESS
+              value: "{{.Values.directoryHostname}}:443"
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: certs
+              mountPath: /certs
+
+      # NOTE: workarround because .minikube doesn't resolve via DNS
+      hostAliases:
+        - ip: "{{.Values.externalIP}}"
+          hostnames:
+            - "{{.Values.directoryHostname}}"
+            - "{{.Values.inwayHostname}}"
+
+      restartPolicy: Always
+  status: {}
+---
+apiVersion: v1
+kind: Service
+metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
+spec:
+  selector: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
+  ports:
+    - name: handler
+      protocol: TCP
+      port: 80
+  cluserIP: None
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+  - host: outway.{{.Values.domain}}
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: {{.component}}
+            servicePort: handler
+{{ end }}

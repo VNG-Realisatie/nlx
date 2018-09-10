@@ -1,0 +1,14 @@
+
+domain: dev.nlx.minikube
+
+dbHost: postgresql.postgresql
+dbUsernameSuperuser: postgres
+dbPasswordSuperuser: postgres
+
+dbDatabaseDirectory: nlx
+dbResetDirectory: true # WARNING: All data will be LOST, never use in production!
+dbUsernameDirectory: nlx-directory
+dbPasswordDirectory: nlx-directory
+
+externalIP: ""
+inwayHostname: "inway.dev.exampleorg.minikube"

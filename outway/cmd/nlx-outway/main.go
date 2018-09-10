@@ -15,8 +15,8 @@ import (
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
-	"go.nlx.io/nlx/logdb/logdbversion"
 	"go.nlx.io/nlx/outway"
+	"go.nlx.io/nlx/txlog-db/dbversion"
 )
 
 var options struct {
@@ -70,7 +70,7 @@ func main() {
 		}
 		logDB.MapperFunc(xstrings.ToSnakeCase)
 
-		logdbversion.WaitUntilLatestVersion(logger, logDB.DB)
+		dbversion.WaitUntilLatestTxlogDBVersion(logger, logDB.DB)
 	}
 
 	// Create new outway and provide it with a hardcoded service.

@@ -7,7 +7,7 @@ import (
 
 	"go.uber.org/zap"
 
-	"go.nlx.io/nlx/monitor/health"
+	"go.nlx.io/nlx/directory-monitor/health"
 )
 
 func (i *Inway) handleHealthRequest(w http.ResponseWriter, r *http.Request) {

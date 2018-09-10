@@ -1,0 +1,50 @@
+{{ with set . "component" "ca-certportal" }}
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels: {{ include "nlx-directory.common.metadata-labels" . | nindent 6 }}
+  template:
+    metadata:
+      labels: {{ include "nlx-directory.common.metadata-labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: ca-certportal
+          image: {{.Values.caCertportalImage}}
+          imagePullPolicy: {{.Values.imagePullPolicy}}
+          ports:
+            - containerPort: 80
+      restartPolicy: Always
+  status: {}
+---
+apiVersion: v1
+kind: Service
+metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
+spec:
+  selector: {{ include "nlx-directory.common.metadata-labels" . | nindent 4 }}
+  ports:
+    - name: webinterface
+      protocol: TCP
+      port: 80
+  cluserIP: None
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.frontend.rule.type: PathPrefixStrip
+spec:
+  rules:
+  - host: certportal.{{.Values.domain}}
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: {{.component}}
+            servicePort: webinterface
+{{ end }}

@@ -18,7 +18,7 @@ import (
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/inway"
 	"go.nlx.io/nlx/inway/config"
-	"go.nlx.io/nlx/logdb/logdbversion"
+	"go.nlx.io/nlx/txlog-db/dbversion"
 )
 
 var options struct {
@@ -84,7 +84,7 @@ func main() {
 		}
 		logDB.MapperFunc(xstrings.ToSnakeCase)
 
-		logdbversion.WaitUntilLatestVersion(logger, logDB.DB)
+		dbversion.WaitUntilLatestTxlogDBVersion(logger, logDB.DB)
 	}
 
 	iw, err := inway.NewInway(logger, logDB, options.SelfAddress, options.TLSOptions, options.DirectoryAddress, serviceConfig)

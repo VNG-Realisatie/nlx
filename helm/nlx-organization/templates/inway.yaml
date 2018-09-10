@@ -1,0 +1,99 @@
+{{ with set . "component" "inway" }}
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      release: {{ .Release.Name }}
+      app: {{ .Chart.Name }}
+      component: {{.component}}
+  template:
+    metadata:
+      labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 8 }}
+    spec:
+  
+      volumes:
+        - name: certs
+          emptyDir: {}
+
+      initContainers:
+        - name: inway-certs
+          image: {{.Values.caCfsslUnsafeImage}}
+          imagePullPolicy: {{.Values.imagePullPolicy}}
+          volumeMounts:
+            - name: certs
+              mountPath: /certs
+          command: ["/bin/ash"]
+          args:
+            - "-c"
+            - |-
+                cd /certs &&
+                /ca/generate-cert.sh {{.component}}.{{.Values.domain}} DemoProviderOrganization {{.Values.caAddress}}
+
+      containers:
+        - name: inway
+          image: {{.Values.inwayImage}}
+          imagePullPolicy: {{.Values.imagePullPolicy}}
+          command: ["/usr/local/bin/nlx-inway"]
+          env:
+            - name: LOG_TYPE
+              value: development
+            - name: LOG_LEVEL
+              value: debug
+            - name: TLS_NLX_ROOT_CERT
+              value: "/certs/nlx_root.pem"
+            - name: TLS_ORG_CERT
+              value: "/certs/{{.component}}.{{.Values.domain}}.pem"
+            - name: TLS_ORG_KEY
+              value: "/certs/{{.component}}.{{.Values.domain}}-key.pem"
+            - name: POSTGRES_DSN
+              value: postgresql://{{.Values.dbUsernameTxlogWriter}}:{{.Values.dbPasswordTxlogWriter}}@{{.Values.dbHost}}/{{.Values.dbDatabaseTxlog}}?sslmode=disable&connect_timeout=10
+            - name: SELF_ADDRESS
+              value: "{{.component}}.{{.Values.domain}}"
+            - name: DIRECTORY_ADDRESS
+              value: "{{.Values.directoryHostname}}:443"
+          ports:
+            - containerPort: 443
+          volumeMounts:
+            - name: certs
+              mountPath: /certs
+
+      # NOTE: workarround because .minikube doesn't resolve via DNS
+      hostAliases:
+        - ip: "{{.Values.externalIP}}"
+          hostnames:
+            - "{{.Values.directoryHostname}}"
+
+      restartPolicy: Always
+  status: {}
+---
+apiVersion: v1
+kind: Service
+metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
+spec:
+  selector: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
+  ports:
+    - name: gateway
+      protocol: TCP
+      port: 443
+  cluserIP: None
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
+  annotations:
+    kubernetes.io/ingress.class: nginx-ingress
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+spec:
+  rules:
+  - host: inway.{{.Values.domain}}
+    http:
+      paths:
+        - backend:
+            serviceName: {{.component}}
+            servicePort: gateway
+{{ end }}

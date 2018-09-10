@@ -16,7 +16,7 @@ import (
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
-	"go.nlx.io/nlx/db/dbversion"
+	"go.nlx.io/nlx/directory-db/dbversion"
 	"go.nlx.io/nlx/directory/directoryservice"
 )
 
@@ -76,7 +76,7 @@ func main() {
 	}
 	db.MapperFunc(xstrings.ToSnakeCase)
 
-	dbversion.WaitUntilLatestVersion(logger, db.DB)
+	dbversion.WaitUntilLatestDirectoryDBVersion(logger, db.DB)
 
 	caCertPool, err := orgtls.LoadRootCert(options.NLXRootCert)
 	if err != nil {

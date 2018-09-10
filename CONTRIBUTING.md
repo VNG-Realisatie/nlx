@@ -2,13 +2,13 @@
 
 We – [VNG realisatie](https://www.vngrealisatie.nl/) and the maintainers of this project – know we can only build NLX together with you. Thus we appreciate your input, enjoy feedback and welcome improvements to this project and are very open to collaboration.
 
-We love issues and pull requests from everyone.
+We love issues and merge requests from everyone.
 
 ## Problems, suggestions and questions in Issues
 
 You don't need to change any of our code or documentation to be a contributor. Please help development by reporting problems, suggesting changes and asking questions. To do this, you can [create a GitHub Issue](https://help.github.com/articles/creating-an-issue/) for this project in the [GitLab Issues for NLX](https://gitlab.com/commonground/nlx/issues).
 
-## Documentation and code in Pull Requests
+## Documentation and code in Merge Requests
 
 If you want to add to the documentation or code of one of our projects you should push a branch and make a Merge Request. If you never used GitLab, get up to speed by reading about the [GitLab Flow](https://about.gitlab.com/2014/09/29/gitlab-flow/).
 
@@ -20,7 +20,7 @@ Add your changes in commits [with a message that explains them](https://robots.t
 
 If you are adding code, make sure you've added and updated the relevant documentation and tests before you submit your Merge Request. Make sure to write tests that show the behaviour of the newly added or changed code.
 
-### 2. Pull Request
+### 2. Merge Request
 
 When submitting the Merge Request, please accompany it with a description of the problem you are trying to address and the issue numbers that this Merge Request fixes/addresses.
 

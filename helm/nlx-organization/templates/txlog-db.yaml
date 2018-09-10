@@ -1,0 +1,31 @@
+{{ with set . "component" "txlog-db" }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .component }}-{{ randAlphaNum 5 | lower }}
+  labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
+spec:
+  template:
+    spec:
+      containers:
+        - name: txlog-db
+          image: {{.Values.txlogDBImage}}
+          imagePullPolicy: {{.Values.imagePullPolicy}}
+          command:
+            {{- if .Values.dbResetTxlog }}
+            - /usr/local/bin/reset-db.sh
+            {{- else }}
+            - /usr/local/bin/upgrade-db.sh
+            {{- end }}
+          env:
+            - name: PGHOST
+              value: {{.Values.dbHost}}
+            - name: PGDATABASE
+              value: {{.Values.dbDatabaseTxlog}}
+            - name: PGUSER
+              value: {{.Values.dbUsernameSuperuser}}
+            - name: PGPASSWORD
+              value: {{.Values.dbPasswordSuperuser}}
+      restartPolicy: Never
+  backoffLimit: 4
+{{ end }}

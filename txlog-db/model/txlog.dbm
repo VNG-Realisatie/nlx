@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+         Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="0.9.1" last-position="0,0" last-zoom="1"
+	 default-schema="public" default-owner="postgres">
+<role name="nlx-txlog-api"
+      superuser="true"
+      login="true"
+      encrypted="true"
+      password="nlx-txlog-api">
+</role>
+
+<role name="nlx-txlog-writer"
+      superuser="true"
+      login="true"
+      encrypted="true"
+      password="nlx-txlog-writer">
+</role>
+
+<database name="txlog" is-template="false" allow-conns="true">
+</database>
+
+<schema name="public" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<schema name="transactionlog" rect-visible="true" fill-color="#e1e1e1">
+	<role name="postgres"/>
+</schema>
+
+<usertype name="direction" configuration="enumeration">
+	<schema name="transactionlog"/>
+	<role name="postgres"/>
+	<enumeration values="in,out"/>
+</usertype>
+
+<table name="records">
+	<schema name="transactionlog"/>
+	<role name="postgres"/>
+	<position x="1260" y="520"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="direction" not-null="true">
+		<type name="transactionlog.direction" length="0"/>
+	</column>
+	<column name="created" not-null="true" default-value="now()">
+		<type name="timestamptz" length="0"/>
+	</column>
+	<column name="src_organization" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="dest_organization" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="service_name" not-null="true">
+		<type name="text" length="200"/>
+	</column>
+	<column name="logrecord_id" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="data">
+		<type name="jsonb" length="0"/>
+	</column>
+	<constraint name="records_pk" type="pk-constr" table="transactionlog.records">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+</dbmodel>

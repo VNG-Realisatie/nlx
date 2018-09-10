@@ -1,0 +1,104 @@
+{{ with set . "component" "directory-api" }}
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      release: {{ .Release.Name }}
+      app: {{ .Chart.Name }}
+      component: {{.component}}
+  template:
+    metadata:
+      labels: {{ include "nlx-directory.common.metadata-labels" . | nindent 8 }}
+    spec:
+
+      volumes:
+        - name: certs
+          emptyDir: {}
+
+      initContainers:
+        - name: directory-certs
+          image: {{.Values.caCfsslUnsafeImage}}
+          imagePullPolicy: {{.Values.imagePullPolicy}}
+          volumeMounts:
+            - name: certs
+              mountPath: /certs
+          command: ["/bin/ash"]
+          args:
+            - "-c"
+            - |-
+                cd /certs &&
+                /ca/generate-cert.sh {{.component}}.{{.Values.domain}} NLX ca-cfssl-unsafe
+
+      containers:
+        - name: directory
+          image: {{.Values.directoryImage}}
+          imagePullPolicy: {{.Values.imagePullPolicy}}
+          command: ["/usr/local/bin/nlx-directory"]
+          env:
+            - name: LOG_TYPE
+              value: development
+            - name: LOG_LEVEL
+              value: debug
+            - name: POSTGRES_DSN
+              value: postgresql://{{.Values.dbUsernameDirectory}}:{{.Values.dbPasswordDirectory}}@{{.Values.dbHost}}/{{.Values.dbDatabaseDirectory}}?sslmode=disable&connect_timeout=10
+            - name: TLS_NLX_ROOT_CERT
+              value: "/certs/nlx_root.pem"
+            - name: TLS_DIRECTORY_CERT
+              value: "/certs/{{.component}}.{{.Values.domain}}.pem"
+            - name: TLS_DIRECTORY_KEY
+              value: "/certs/{{.component}}.{{.Values.domain}}-key.pem"
+          ports:
+            - containerPort: 443
+            - containerPort: 80
+          volumeMounts:
+            - name: certs
+              mountPath: /certs
+
+      restartPolicy: Always
+  status: {}
+---
+apiVersion: v1
+kind: Service
+metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
+spec:
+  selector: {{ include "nlx-directory.common.metadata-labels" . | nindent 4 }}
+  ports:
+    - name: api
+      protocol: TCP
+      port: 443
+  cluserIP: None
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: directory-webapi # TODO: move to seperate component when seperated into registration and listing api's: for listing add a grpc-web envoy proxy
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "nlx-directory.common.metadata-labels" . | nindent 2 }}
+spec:
+  selector: {{ include "nlx-directory.common.metadata-labels" . | nindent 4 }}
+  ports:
+    - name: webapi
+      protocol: TCP
+      port: 80
+  cluserIP: None
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
+  annotations:
+    kubernetes.io/ingress.class: nginx-ingress
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+spec:
+  rules:
+  - host: directory-api.{{.Values.domain}}
+    http:
+      paths:
+        - backend:
+            serviceName: {{.component}}
+            servicePort: api
+{{ end }}
