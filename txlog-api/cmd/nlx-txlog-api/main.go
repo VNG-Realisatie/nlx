@@ -71,8 +71,8 @@ func main() {
 
 	dbversion.WaitUntilLatestTxlogDBVersion(logger, logDB.DB)
 
-	http.HandleFunc("/api/in", newLogFetcher(logger, logDB, transactionlog.DirectionIn))
-	http.HandleFunc("/api/out", newLogFetcher(logger, logDB, transactionlog.DirectionOut))
+	http.HandleFunc("/in", newLogFetcher(logger, logDB, transactionlog.DirectionIn))
+	http.HandleFunc("/out", newLogFetcher(logger, logDB, transactionlog.DirectionOut))
 	err = http.ListenAndServe(options.ListenAddress, nil)
 	if err != nil {
 		logger.Fatal("failed to ListenAndServe", zap.Error(err))
