@@ -59,7 +59,9 @@ e.g.: `minikube start --vm-driver=kvm2 --cpus 4 --memory 8192 --disk-size=100G`
 
 Read the [minikube README](https://github.com/kubernetes/minikube) for more information.
 
-Once minikube is running, install the following dependencies:
+Once minikube is running, initialize helm by running `helm init`.
+
+Next, install the following dependencies:
 
 - `traefik` for web and rest-api requests.
 - `nginx-ingress` for grpc and mutual-tls connections. Latest version is currently(2018-09-06) broken, so needs `--version 0.17.1`
@@ -97,7 +99,7 @@ You may now test the following sites:
 - http://directory.dev.nlx.minikube:30080     The NLX directory
 - http://txlog.dev.exampleorg.minikube:30080/ Transactionlogs for the example organization
 
-To test a full request through outway>inway, use the PostmanEcho service through the exampleorg outway: `http://outway.dev.exampleorg.minikube:30080/DemoProviderOrganization/PostmanEcho/get?foo1=bar1&foo2=bar2`
+To test a full request through outway>inway, use the PostmanEcho service through the exampleorg outway: `curl http://outway.dev.exampleorg.minikube:30080/DemoProviderOrganization/PostmanEcho/get?foo1=bar1&foo2=bar2`
 
 Note the ports; `30080` and `30443` are routed via traefik (TLS handled by traefik), whereas `:443` and `:80` are used by nginx-ingress, which does "tcp-proxying" with ssl passthrough so the mutual TLS can be handled by inway/outway/directory/etc.
 
