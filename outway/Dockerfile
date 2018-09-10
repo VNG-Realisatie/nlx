@@ -23,5 +23,8 @@ RUN make || true
 FROM alpine:latest
 COPY --from=build /go/src/go.nlx.io/nlx/outway/dist/bin/nlx-outway /usr/local/bin/nlx-outway
 
+# Make sure /etc/hosts is resolved before DNS
+RUN echo "hosts: files dns" > /etc/nsswitch.conf
+
 EXPOSE 12018
 CMD ["/usr/local/bin/nlx-outway"]
