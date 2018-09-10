@@ -28,11 +28,12 @@ docker run -d \
 -e TLS_NLX_ROOT_CERT=/certs/root.crt \
 -e TLS_ORG_CERT=/certs/outway.crt \
 -e TLS_ORG_KEY=/certs/outway.key \
+-e DISABLE_LOGDB=1 \
 -p 12018:12018 \
 nlxio/outway:latest
 ```
 
-The outway is now running on http://localhost:12018.
+To get started quickly, we will disable transaction logs for now by setting the environment variable `DISABLE_LOGDB=1`. The outway is now running on http://localhost:12018.
 
 ## Querying services
 To query services on the NLX network, use the following structure:

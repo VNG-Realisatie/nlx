@@ -73,9 +73,12 @@ docker run -d \
 -e TLS_NLX_ROOT_CERT=/certs/root.crt \
 -e TLS_ORG_CERT=/certs/inway.crt \
 -e TLS_ORG_KEY=/certs/inway.key \
+-e DISABLE_LOGDB=1 \
 -p 2018:2018 \
 nlxio/inway:latest
 ```
+
+To get started quickly, we will disable transaction logs for now by setting the environment variable `DISABLE_LOGDB=1`.
 
 The inway now connects itself to the NLX network and registers its services on the NLX networks. Please **make sure** external connection is possible to the specified port on the specified hostname or IP adress and port  public IP address are routed to the machine running the NLX inway otherwise connections to your inway and services will fail.
 
