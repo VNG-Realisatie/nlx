@@ -88,15 +88,16 @@ echo "$(minikube ip)  txlog.dev.exampleorg.minikube" | sudo tee -a /etc/hosts
 
 You may now test the following sites:
 
-- https://traefik.minikube:30443             A webinterface showing the status of the traefik ingress controller.
-- http://docs.dev.nlx.minikube:30080         The NLX docs
-- http://certportal.dev.nlx.minikube:30080   The NLX certportal
-- http://directory.dev.nlx.minikube:30080    The NLX directory
+- https://traefik.minikube:30443              A webinterface showing the status of the traefik ingress controller.
+- http://docs.dev.nlx.minikube:30080          The NLX docs
+- http://certportal.dev.nlx.minikube:30080    The NLX certportal
+- http://directory.dev.nlx.minikube:30080     The NLX directory
+- http://txlog.dev.exampleorg.minikube:30080/ Transactionlogs for the example organization
 
+To test a full request through outway>inway, use the PostmanEcho service through the exampleorg outway: `http://outway.dev.exampleorg.minikube:30080/DemoProviderOrganization/PostmanEcho/get?foo1=bar1&foo2=bar2`
 
 Note the ports; `30080` and `30443` are routed via traefik (TLS handled by traefik), whereas `:443` and `:80` are used by nginx-ingress, which does "tcp-proxying" with ssl passthrough so the mutual TLS can be handled by inway/outway/directory/etc.
 
-To test a service, visit: `http://outway.dev.exampleorg.minikube:30080/DemoProviderOrganization/PostmanEcho/get?foo1=bar1&foo2=bar2`
 
 Read helm/README.md for more information about the skaffold setup.
 
