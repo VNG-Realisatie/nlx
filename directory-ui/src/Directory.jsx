@@ -43,7 +43,7 @@ export default class Directory extends React.Component {
             })
     }
 
-    omponentWillUnmount(){
+    componentWillUnmount(){
         document.removeEventListener("keydown", this.escFunction, false);
     }
 
