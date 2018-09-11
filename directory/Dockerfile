@@ -20,9 +20,12 @@ COPY common                 /go/src/go.nlx.io/nlx/common
 WORKDIR /go/src/go.nlx.io/nlx/directory
 
 # Ignore failing make to allow this stage to complete even when there are errors in the sourcecode.
-RUN make || true 
-
+RUN make || true
 
 # Release binary on latest alpine image.
 FROM alpine:latest
+
+# Make sure /etc/hosts is resolved before DNS
+RUN echo "hosts: files dns" > /etc/nsswitch.conf
+
 COPY --from=build /go/src/go.nlx.io/nlx/directory/dist/bin/nlx-directory /usr/local/bin/nlx-directory
