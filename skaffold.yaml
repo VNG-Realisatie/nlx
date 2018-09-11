@@ -70,10 +70,10 @@ deploy:
         setValueTemplates:
           externalIP: "{{.MINIKUBE_IP}}"
 
-      - name: nlx-organization-dev
+      - name: nlx-brp-dev
         chartPath: helm/nlx-organization
-        valuesFilePath: helm/nlx-organization/values-dev.yaml
-        namespace: nlx-organization-dev
+        valuesFilePath: helm/nlx-organization/values-brp-dev.yaml
+        namespace: nlx-brp-dev
         version: "v0.0.0"
         values:
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
@@ -81,6 +81,33 @@ deploy:
           txlogAPIImage: nlxio/txlog-api
           txlogUIImage: nlxio/txlog-ui
           inwayImage: nlxio/inway
+        setValueTemplates:
+          externalIP: "{{.MINIKUBE_IP}}"
+
+      - name: nlx-rdw-dev
+        chartPath: helm/nlx-organization
+        valuesFilePath: helm/nlx-organization/values-rdw-dev.yaml
+        namespace: nlx-rdw-dev
+        version: "v0.0.0"
+        values:
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          txlogDBImage: nlxio/txlog-db
+          txlogAPIImage: nlxio/txlog-api
+          txlogUIImage: nlxio/txlog-ui
+          inwayImage: nlxio/inway
+        setValueTemplates:
+          externalIP: "{{.MINIKUBE_IP}}"
+
+      - name: nlx-denhaag-dev
+        chartPath: helm/nlx-organization
+        valuesFilePath: helm/nlx-organization/values-denhaag-dev.yaml
+        namespace: nlx-denhaag-dev
+        version: "v0.0.0"
+        values:
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          txlogDBImage: nlxio/txlog-db
+          txlogAPIImage: nlxio/txlog-api
+          txlogUIImage: nlxio/txlog-ui
           outwayImage: nlxio/outway
         setValueTemplates:
           externalIP: "{{.MINIKUBE_IP}}"

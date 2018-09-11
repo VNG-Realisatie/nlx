@@ -8,8 +8,8 @@ RUN apt-get update && \
 # Build migrate with postgres support
 # TODO: Consider moving to single-stage docker build and obtain migrate from ppa.
 # 	See https://github.com/golang-migrate/migrate/tree/master/cli
-RUN go get -u -d github.com/mattes/migrate/cli github.com/lib/pq && \
-	go build -tags 'postgres' -o /usr/local/bin/migrate github.com/mattes/migrate/cli
+RUN go get -u -d github.com/golang-migrate/migrate/cli github.com/lib/pq && \
+	go build -tags 'postgres' -o /usr/local/bin/migrate github.com/golang-migrate/migrate/cli
 
 FROM ubuntu:artful
 

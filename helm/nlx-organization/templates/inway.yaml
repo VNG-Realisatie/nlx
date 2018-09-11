@@ -1,3 +1,4 @@
+{{ if .Values.inwayEnable }}
 {{ with set . "component" "inway" }}
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -32,7 +33,7 @@ spec:
             - "-c"
             - |-
                 cd /certs &&
-                /ca/generate-cert.sh {{.component}}.{{.Values.domain}} DemoProviderOrganization {{.Values.caAddress}}
+                /ca/generate-cert.sh {{.component}}.{{.Values.domain}} {{.Values.organizationName}} {{.Values.caAddress}}
 
       containers:
         - name: inway
@@ -96,4 +97,5 @@ spec:
         - backend:
             serviceName: {{.component}}
             servicePort: gateway
+{{ end }}
 {{ end }}

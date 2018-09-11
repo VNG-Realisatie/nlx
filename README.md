@@ -87,8 +87,10 @@ echo "$(minikube ip)          docs.dev.nlx.minikube" | sudo tee -a /etc/hosts
 echo "$(minikube ip)    certportal.dev.nlx.minikube" | sudo tee -a /etc/hosts
 echo "$(minikube ip)     directory.dev.nlx.minikube" | sudo tee -a /etc/hosts
 echo "$(minikube ip) directory-api.dev.nlx.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip) outway.dev.exampleorg.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)  txlog.dev.exampleorg.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)         txlog.dev.rdw.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)         txlog.dev.brp.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)    outway.dev.denhaag.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)     txlog.dev.denhaag.minikube" | sudo tee -a /etc/hosts
 ```
 
 You may now test the following sites:
@@ -97,7 +99,11 @@ You may now test the following sites:
 - http://docs.dev.nlx.minikube:30080          The NLX docs
 - http://certportal.dev.nlx.minikube:30080    The NLX certportal
 - http://directory.dev.nlx.minikube:30080     The NLX directory
-- http://txlog.dev.exampleorg.minikube:30080/ Transactionlogs for the example organization
+- http://txlog.dev.rdw.minikube:30080/        Transactionlogs for the RDW example organization
+- http://txlog.dev.brp.minikube:30080/        Transactionlogs for the BRP example organization
+- http://txlog.dev.denhaag.minikube:30080/    Transactionlogs for the Den-Haag example organization
+- http://outway.dev.denhaag.minikube:30080/   Outway in the Den-Haag example organization
+
 
 To test a full request through outway>inway, use the PostmanEcho service through the exampleorg outway: `curl http://outway.dev.exampleorg.minikube:30080/DemoProviderOrganization/PostmanEcho/get?foo1=bar1&foo2=bar2`
 

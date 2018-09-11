@@ -1,7 +1,34 @@
-DROP ROLE IF EXISTS "nlx-txlog-api";
-CREATE ROLE "nlx-txlog-api";
-ALTER ROLE "nlx-txlog-api" WITH SUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS PASSWORD 'md59394173faf221850af2bcbd99b3ddd9a';
 
-DROP ROLE IF EXISTS "nlx-txlog-writer";
-CREATE ROLE "nlx-txlog-writer";
-ALTER ROLE "nlx-txlog-writer" WITH SUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS PASSWORD 'md516e6ab91b15636484b216cb83016c983';
+DO
+$do$
+BEGIN
+	IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname='nlx-org-txlog-api') THEN
+		CREATE ROLE "nlx-org-txlog-api";
+	END IF;
+END
+$do$;
+
+ALTER ROLE "nlx-org-txlog-api" WITH INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS ENCRYPTED PASSWORD 'nlx-txlog-api';
+
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public, transactionlog FROM "nlx-org-txlog-api";
+GRANT SELECT ON TABLE public.schema_migrations TO "nlx-org-txlog-api";
+GRANT USAGE ON SCHEMA transactionlog TO "nlx-org-txlog-api";
+GRANT SELECT ON TABLE transactionlog.records TO "nlx-org-txlog-api";
+
+
+DO
+$do$
+BEGIN
+	IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname='nlx-org-txlog-writer') THEN
+		CREATE ROLE "nlx-org-txlog-writer";
+	END IF;
+END
+$do$;
+
+ALTER ROLE "nlx-org-txlog-writer" WITH INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS ENCRYPTED PASSWORD 'nlx-txlog-writer';
+
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public, transactionlog FROM "nlx-org-txlog-writer";
+GRANT SELECT ON TABLE public.schema_migrations TO "nlx-org-txlog-writer";
+GRANT USAGE ON SCHEMA transactionlog TO "nlx-org-txlog-writer";
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA transactionlog TO "nlx-org-txlog-writer";
+GRANT INSERT ON TABLE transactionlog.records TO "nlx-org-txlog-writer";

@@ -52,6 +52,10 @@ spec:
               value: "/certs/{{.component}}.{{.Values.domain}}.pem"
             - name: TLS_DIRECTORY_KEY
               value: "/certs/{{.component}}.{{.Values.domain}}-key.pem"
+            - name: DEMO_ENV
+              value: "{{.Values.demoEnv}}"
+            - name: DEMO_DOMAIN
+              value: "{{.Values.demoDomain}}"
           ports:
             - containerPort: 443
             - containerPort: 80
@@ -63,7 +67,9 @@ spec:
       hostAliases:
         - ip: "{{.Values.externalIP}}"
           hostnames:
-            - "{{.Values.inwayHostname}}"
+            {{- range .Values.inwayHostnames }}
+            - "{{.}}"
+            {{ end }}
 
       restartPolicy: Always
   status: {}

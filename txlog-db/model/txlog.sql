@@ -4,18 +4,16 @@
 -- Project Site: pgmodeler.io
 -- Model Author: ---
 
--- object: "nlx-txlog-api" | type: ROLE --
--- DROP ROLE IF EXISTS "nlx-txlog-api";
-CREATE ROLE "nlx-txlog-api" WITH 
-	SUPERUSER
+-- object: "nlx-org-txlog-api" | type: ROLE --
+-- DROP ROLE IF EXISTS "nlx-org-txlog-api";
+CREATE ROLE "nlx-org-txlog-api" WITH 
 	LOGIN
 	ENCRYPTED PASSWORD 'nlx-txlog-api';
 -- ddl-end --
 
--- object: "nlx-txlog-writer" | type: ROLE --
--- DROP ROLE IF EXISTS "nlx-txlog-writer";
-CREATE ROLE "nlx-txlog-writer" WITH 
-	SUPERUSER
+-- object: "nlx-org-txlog-writer" | type: ROLE --
+-- DROP ROLE IF EXISTS "nlx-org-txlog-writer";
+CREATE ROLE "nlx-org-txlog-writer" WITH 
 	LOGIN
 	ENCRYPTED PASSWORD 'nlx-txlog-writer';
 -- ddl-end --
@@ -47,10 +45,24 @@ CREATE TYPE transactionlog.direction AS
 ALTER TYPE transactionlog.direction OWNER TO postgres;
 -- ddl-end --
 
+-- object: transactionlog.records_id_seq | type: SEQUENCE --
+-- DROP SEQUENCE IF EXISTS transactionlog.records_id_seq CASCADE;
+CREATE SEQUENCE transactionlog.records_id_seq
+	INCREMENT BY 1
+	MINVALUE 0
+	MAXVALUE 2147483647
+	START WITH 1
+	CACHE 1
+	NO CYCLE
+	OWNED BY NONE;
+-- ddl-end --
+ALTER SEQUENCE transactionlog.records_id_seq OWNER TO postgres;
+-- ddl-end --
+
 -- object: transactionlog.records | type: TABLE --
 -- DROP TABLE IF EXISTS transactionlog.records CASCADE;
 CREATE TABLE transactionlog.records(
-	id serial NOT NULL,
+	id integer NOT NULL DEFAULT nextval('records_id_seq'),
 	direction transactionlog.direction NOT NULL,
 	created timestamptz NOT NULL DEFAULT now(),
 	src_organization text NOT NULL,
@@ -63,6 +75,41 @@ CREATE TABLE transactionlog.records(
 );
 -- ddl-end --
 ALTER TABLE transactionlog.records OWNER TO postgres;
+-- ddl-end --
+
+-- Appended SQL commands --
+ALTER SEQUENCE transactionlog.records_id_seq OWNED BY records.id;
+
+-- ddl-end --
+
+-- object: grant_e3a699271d | type: PERMISSION --
+GRANT SELECT
+   ON TABLE transactionlog.records
+   TO "nlx-org-txlog-api";
+-- ddl-end --
+
+-- object: grant_09ea658de9 | type: PERMISSION --
+GRANT INSERT
+   ON TABLE transactionlog.records
+   TO "nlx-org-txlog-writer";
+-- ddl-end --
+
+-- object: grant_a080fa2047 | type: PERMISSION --
+GRANT USAGE
+   ON SCHEMA transactionlog
+   TO "nlx-org-txlog-api";
+-- ddl-end --
+
+-- object: grant_43c252f634 | type: PERMISSION --
+GRANT USAGE
+   ON SCHEMA transactionlog
+   TO "nlx-org-txlog-writer";
+-- ddl-end --
+
+-- object: grant_1c54d8fa2f | type: PERMISSION --
+GRANT SELECT,USAGE
+   ON SEQUENCE transactionlog.records_id_seq
+   TO "nlx-org-txlog-writer";
 -- ddl-end --
 
 

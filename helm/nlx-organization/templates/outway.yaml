@@ -1,3 +1,4 @@
+{{ if .Values.outwayEnable }}
 {{ with set . "component" "outway" }}
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -32,7 +33,7 @@ spec:
             - "-c"
             - |-
                 cd /certs &&
-                /ca/generate-cert.sh {{.component}}.{{.Values.domain}} DemoProviderOrganization {{.Values.caAddress}}
+                /ca/generate-cert.sh {{.component}}.{{.Values.domain}} {{.Values.organizationName}} {{.Values.caAddress}}
 
       containers:
         - name: outway
@@ -65,7 +66,9 @@ spec:
         - ip: "{{.Values.externalIP}}"
           hostnames:
             - "{{.Values.directoryHostname}}"
-            - "{{.Values.inwayHostname}}"
+            {{- range .Values.inwayHostnames }}
+            - "{{.}}"
+            {{ end }}
 
       restartPolicy: Always
   status: {}
@@ -95,4 +98,5 @@ spec:
           backend:
             serviceName: {{.component}}
             servicePort: handler
+{{ end }}
 {{ end }}

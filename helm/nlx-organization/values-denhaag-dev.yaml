@@ -1,19 +1,25 @@
 
-domain: dev.exampleorg.minikube
+domain: dev.denhaag.minikube
+organizationName: denhaag
 
 dbHost: postgresql.postgresql
 dbUsernameSuperuser: postgres
 dbPasswordSuperuser: postgres
 
-dbDatabaseTxlog: txlog
+dbDatabaseTxlog: denhaag-txlog
 dbResetTxlog: true # WARNING: All data will be LOST, never use in production!
-dbUsernameTxlogAPI: nlx-txlog-api
+dbUsernameTxlogAPI: nlx-denhaag-txlog-api
 dbPasswordTxlogAPI: nlx-txlog-api
-dbUsernameTxlogWriter: nlx-txlog-writer
+dbUsernameTxlogWriter: nlx-denhaag-txlog-writer
 dbPasswordTxlogWriter: nlx-txlog-writer
 
 caAddress: ca-cfssl-unsafe.nlx-directory-dev
 
 externalIP: ""
 directoryHostname: directory-api.dev.nlx.minikube
-inwayHostname: inway.dev.exampleorg.minikube
+inwayHostnames:
+  - inway.dev.brp.minikube
+  - inway.dev.rdw.minikube
+
+inwayEnable: false
+outwayEnable: true

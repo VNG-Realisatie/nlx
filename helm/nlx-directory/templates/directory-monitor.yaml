@@ -60,7 +60,9 @@ spec:
       hostAliases:
         - ip: "{{.Values.externalIP}}"
           hostnames:
-            - "{{.Values.inwayHostname}}"
+            {{- range .Values.inwayHostnames }}
+            - "{{.}}"
+            {{ end }}
 
       restartPolicy: Always
   status: {}

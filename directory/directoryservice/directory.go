@@ -18,11 +18,12 @@ var _ directoryapi.DirectoryServer = &DirectoryService{}
 type DirectoryService struct {
 	*registerInwayHandler
 	*listServicesHandler
+	*listOrganizationsHandler
 	*getServiceAPISpecHandler
 }
 
 // New sets up a new DirectoryService and returns an error when something failed during set.
-func New(logger *zap.Logger, db *sqlx.DB, rootCA *x509.CertPool, certKeyPair tls.Certificate) (*DirectoryService, error) {
+func New(logger *zap.Logger, db *sqlx.DB, rootCA *x509.CertPool, certKeyPair tls.Certificate, demoEnv string, demoDomain string) (*DirectoryService, error) {
 	s := &DirectoryService{}
 
 	var err error
@@ -34,6 +35,10 @@ func New(logger *zap.Logger, db *sqlx.DB, rootCA *x509.CertPool, certKeyPair tls
 	s.listServicesHandler, err = newListServicesHandler(db, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to setup ListServices handler")
+	}
+	s.listOrganizationsHandler, err = newListOrganizationsHandler(db, logger, demoEnv, demoDomain)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to setup ListOrganizations handler")
 	}
 	s.getServiceAPISpecHandler, err = newGetServiceAPISpecHandler(db, logger, rootCA, certKeyPair)
 	if err != nil {

@@ -10,7 +10,6 @@ SET check_function_bodies = false;
 -- object: "nlx-directory" | type: ROLE --
 -- DROP ROLE IF EXISTS "nlx-directory";
 CREATE ROLE "nlx-directory" WITH 
-	SUPERUSER
 	LOGIN
 	ENCRYPTED PASSWORD 'nlx-directory';
 -- ddl-end --
@@ -39,12 +38,18 @@ SET search_path TO pg_catalog,public,directory;
 CREATE TABLE directory.organizations(
 	id serial NOT NULL,
 	name varchar(100) NOT NULL,
+	insight_log_endpoint varchar(250),
+	insight_irma_endpoint varchar(250),
 	CONSTRAINT organizations_pk PRIMARY KEY (id),
 	CONSTRAINT organizations_uq_name UNIQUE (name)
 
 );
 -- ddl-end --
 ALTER TABLE directory.organizations OWNER TO postgres;
+-- ddl-end --
+
+-- Appended SQL commands --
+GRANT USAGE, SELECT ON SEQUENCE organizations_id_seq TO "nlx-directory";
 -- ddl-end --
 
 -- object: directory.services | type: TABLE --
@@ -68,6 +73,10 @@ CREATE TABLE directory.services(
 ALTER TABLE directory.services OWNER TO postgres;
 -- ddl-end --
 
+-- Appended SQL commands --
+GRANT USAGE, SELECT ON SEQUENCE services_id_seq TO "nlx-directory";
+-- ddl-end --
+
 -- object: directory.inways | type: TABLE --
 -- DROP TABLE IF EXISTS directory.inways CASCADE;
 CREATE TABLE directory.inways(
@@ -80,6 +89,10 @@ CREATE TABLE directory.inways(
 );
 -- ddl-end --
 ALTER TABLE directory.inways OWNER TO postgres;
+-- ddl-end --
+
+-- Appended SQL commands --
+GRANT USAGE, SELECT ON SEQUENCE inways_id_seq TO "nlx-directory";
 -- ddl-end --
 
 -- object: directory.availabilities | type: TABLE --
@@ -95,6 +108,10 @@ CREATE TABLE directory.availabilities(
 );
 -- ddl-end --
 ALTER TABLE directory.availabilities OWNER TO postgres;
+-- ddl-end --
+
+-- Appended SQL commands --
+GRANT USAGE, SELECT ON SEQUENCE availabilities_id_seq TO "nlx-directory";
 -- ddl-end --
 
 -- object: directory.availabilities_verify | type: FUNCTION --
@@ -163,6 +180,36 @@ ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE directory.availabilities ADD CONSTRAINT availabilities_fk_service FOREIGN KEY (service_id)
 REFERENCES directory.services (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: grant_8c22b4ae71 | type: PERMISSION --
+GRANT SELECT,INSERT,UPDATE,DELETE
+   ON TABLE directory.organizations
+   TO "nlx-directory";
+-- ddl-end --
+
+-- object: grant_3955909e22 | type: PERMISSION --
+GRANT SELECT,INSERT,UPDATE,DELETE
+   ON TABLE directory.inways
+   TO "nlx-directory";
+-- ddl-end --
+
+-- object: grant_82dfa3fac0 | type: PERMISSION --
+GRANT SELECT,INSERT,UPDATE,DELETE
+   ON TABLE directory.services
+   TO "nlx-directory";
+-- ddl-end --
+
+-- object: grant_4fc2ba4088 | type: PERMISSION --
+GRANT SELECT,INSERT,UPDATE,DELETE
+   ON TABLE directory.availabilities
+   TO "nlx-directory";
+-- ddl-end --
+
+-- object: grant_e418ba6587 | type: PERMISSION --
+GRANT USAGE
+   ON SCHEMA directory
+   TO "nlx-directory";
 -- ddl-end --
 
 

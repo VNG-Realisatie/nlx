@@ -1,0 +1,22 @@
+
+domain: dev.brp.minikube
+organizationName: brp
+
+dbHost: postgresql.postgresql
+dbUsernameSuperuser: postgres
+dbPasswordSuperuser: postgres
+
+dbDatabaseTxlog: brp-txlog
+dbResetTxlog: true # WARNING: All data will be LOST, never use in production!
+dbUsernameTxlogAPI: nlx-brp-txlog-api
+dbPasswordTxlogAPI: nlx-txlog-api
+dbUsernameTxlogWriter: nlx-brp-txlog-writer
+dbPasswordTxlogWriter: nlx-txlog-writer
+
+caAddress: ca-cfssl-unsafe.nlx-directory-dev
+
+externalIP: ""
+directoryHostname: directory-api.dev.nlx.minikube
+
+inwayEnable: true
+outwayEnable: false
