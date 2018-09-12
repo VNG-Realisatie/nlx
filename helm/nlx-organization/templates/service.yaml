@@ -1,0 +1,56 @@
+{{ if .Values.serviceEnable }}
+{{ with set . "component" "service" }}
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      release: {{ .Release.Name }}
+      app: {{ .Chart.Name }}
+      component: {{.component}}
+  template:
+    metadata:
+      labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 8 }}
+    spec:
+  
+      containers:
+        - name: service
+          image: {{.Values.serviceImage}}
+          imagePullPolicy: {{.Values.imagePullPolicy}}
+          ports:
+            - containerPort: 8000
+      restartPolicy: Always
+  status: {}
+---
+apiVersion: v1
+kind: Service
+metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
+spec:
+  selector: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
+  ports:
+    - name: service
+      protocol: TCP
+      port: 8000
+  cluserIP: None
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.frontend.rule.type: PathPrefixStrip
+spec:
+  rules:
+  - host: service.{{.Values.domain}}
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: {{.component}}
+            servicePort: 8000
+{{ end }}
+{{ end }}

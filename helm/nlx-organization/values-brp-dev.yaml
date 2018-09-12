@@ -17,6 +17,8 @@ caAddress: ca-cfssl-unsafe.nlx-directory-dev
 
 inwayEnable: true
 outwayEnable: false
+serviceEnable: true
+serviceImage: nlxio/brp-mock-service:latest
 
 irma:
   apiServerImage: privacybydesign/irma_api_server:latest

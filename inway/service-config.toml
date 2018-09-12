@@ -37,3 +37,12 @@
 	authorization-model = "none"
 	api-specification-type = "OpenAPI2"
 	api-specification-document-url = "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/json/petstore.json"
+
+	[services.basisregistratie]
+	endpoint-url = "http://service:8000"
+	authorization-model = "none"
+
+	[services.kentekenregister]
+	endpoint-url = "http://service:8000"
+	authorization-model = "none"
+

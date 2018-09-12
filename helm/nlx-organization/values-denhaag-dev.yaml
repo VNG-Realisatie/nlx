@@ -17,6 +17,8 @@ caAddress: ca-cfssl-unsafe.nlx-directory-dev
 
 inwayEnable: false
 outwayEnable: true
+applicationEnable: true
+applicationImage: nlxio/parkeervergunning-application:latest
 
 irma:
   apiServerImage: privacybydesign/irma_api_server:latest
