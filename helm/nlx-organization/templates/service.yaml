@@ -1,4 +1,4 @@
-{{ if .Values.serviceEnable }}
+{{ if .Values.demoService.enable }}
 {{ with set . "component" "service" }}
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -16,10 +16,9 @@ spec:
     metadata:
       labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 8 }}
     spec:
-  
       containers:
         - name: service
-          image: {{.Values.serviceImage}}
+          image: {{.Values.demoService.genericServiceImage}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
           ports:
             - containerPort: 8000

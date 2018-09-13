@@ -1,4 +1,4 @@
-{{ if .Values.outwayEnable }}
+{{ if .Values.outway.enable }}
 {{ with set . "component" "outway" }}
 apiVersion: extensions/v1beta1
 kind: Deployment

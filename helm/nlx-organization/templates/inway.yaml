@@ -1,5 +1,17 @@
-{{ if .Values.inwayEnable }}
+{{ if .Values.inway.enable }}
 {{ with set . "component" "inway" }}
+{{ if .Values.inway.config }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: inway-service-config
+  namespace: {{.Release.Namespace}}
+  labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
+data:
+  service-config.toml: |
+    {{- .Values.inway.config | nindent 4 }}
+---
+{{ end }}
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
@@ -20,6 +32,11 @@ spec:
       volumes:
         - name: certs
           emptyDir: {}
+        {{ if .Values.inway.config }}
+        - name: inway-service-config
+          configMap:
+            name: inway-service-config
+        {{ end }}
 
       initContainers:
         - name: inway-certs
@@ -57,11 +74,19 @@ spec:
               value: "{{.component}}.{{.Values.domain}}"
             - name: DIRECTORY_ADDRESS
               value: "{{.Values.directoryHostname}}:443"
+            {{ if .Values.inway.config }}
+            - name: SERVICE_CONFIG
+              value: /inway-service-config/service-config.toml
+            {{ end }}
           ports:
             - containerPort: 443
           volumeMounts:
             - name: certs
               mountPath: /certs
+            {{ if .Values.inway.config }}
+            - name: inway-service-config
+              mountPath: /inway-service-config
+            {{ end }}
 
       # NOTE: workarround because .minikube doesn't resolve via DNS
       hostAliases:

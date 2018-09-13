@@ -15,10 +15,20 @@ dbPasswordTxlogWriter: nlx-txlog-writer
 
 caAddress: ca-cfssl-unsafe.nlx-directory-dev
 
-inwayEnable: true
-outwayEnable: false
-serviceEnable: true
-serviceImage: nlxio/brp-mock-service:latest
+inway:
+  enable: true
+  config: |
+    [services]
+      [services.basisregistratie]
+      endpoint-url = "http://service:8000"
+      authorization-model = "none"
+outway:
+  enable: false
+demoService:
+  enable: true
+  genericServiceImage: nlxio/brp-mock-service:latest
+demoApplication:
+  enable: false
 
 irma:
   apiServerImage: privacybydesign/irma_api_server:latest

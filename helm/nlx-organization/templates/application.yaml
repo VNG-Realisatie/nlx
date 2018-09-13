@@ -1,4 +1,4 @@
-{{ if .Values.applicationEnable }}
+{{ if .Values.demoApplication.enable }}
 {{ with set . "component" "application" }}
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: application
-          image: {{.Values.applicationImage}}
+          image: {{.Values.demoApplication.genericApplicationImage}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
           env:
             - name: SECRET_KEY
