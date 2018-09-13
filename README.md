@@ -82,15 +82,21 @@ MINIKUBE_IP=$(minikube ip) skaffold dev
 Finally, add the minikube hostnames to your machine's `/etc/hosts` file so you can reach the services from your browser.
 
 ```bash
-echo "$(minikube ip)               traefik.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)          docs.dev.nlx.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)    certportal.dev.nlx.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)     directory.dev.nlx.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip) directory-api.dev.nlx.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)         txlog.dev.rdw.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)         txlog.dev.brp.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)    outway.dev.denhaag.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)     txlog.dev.denhaag.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)                 traefik.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)            docs.dev.nlx.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)      certportal.dev.nlx.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)       directory.dev.nlx.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)   directory-api.dev.nlx.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)           txlog.dev.rdw.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)        irma-api.dev.rdw.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)         insight.dev.rdw.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)           txlog.dev.brp.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)        irma-api.dev.brp.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)         insight.dev.brp.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)       txlog.dev.denhaag.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)    irma-api.dev.denhaag.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)     insight.dev.denhaag.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)      outway.dev.denhaag.minikube" | sudo tee -a /etc/hosts
 ```
 
 You may now test the following sites:
