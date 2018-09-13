@@ -42,6 +42,14 @@ spec:
                 secretKeyRef:
                   name: jwt-rsa-{{.component}}
                   key: key
+            - name: IRMA_API_CONF_ENABLE_ISSUING
+              value: "true"
+            - name: IRMA_API_CONF_ALLOW_UNSIGNED_ISSUE_REQUESTS
+              value: "true"
+            - name: IRMA_API_CONF_AUTHORIZED_IDPS
+              value: "{insight: [*],* : [*]}"
+            - name: IRMA_API_CONF_REJECT_UNFLOORED_VALIDITY_TIMESTAMPS
+              value: "false"
           ports:
             - containerPort: 8080
       restartPolicy: Always

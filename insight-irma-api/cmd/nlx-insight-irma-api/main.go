@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -11,13 +12,17 @@ import (
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/logoptions"
+	"go.nlx.io/nlx/insight-irma-api/irma"
 )
 
 var options struct {
 	logoptions.LogOptions
 	ListenAddress   string   `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:80" description:"Adress for the api to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 	IRMACredentials []string `long:"irma-credentials" env:"IRMA_CREDENTIALS" description:"List of IRMA credentails that may be validated"`
+	IRMAEndpointURL string   `long:"irma-endpoint-url" env:"IRMA_ENDPOINT_URL" description:"URL for the IRMA api server (without the path /api/v2/... etc)"`
 }
+
+var irmaClient *irma.Client
 
 func main() {
 
@@ -53,6 +58,20 @@ func main() {
 			os.Exit(1)
 		}
 	}()
+	rsaPrivkeyFile, err := os.Open(options.RSAPrivateKeyFile)
+	if err != nil {
+		logger.Fatalf("failed to read rsa private key file: %v", err)
+	}
+	rsaPrivkeyBytes, err := ioutil.ReadAll(rsaPrivkeyFile)
+	rsaPrivkeyFile.Close()
+	if err != nil {
+		log.Fatalf("failed to read all bytes from rsa private key file: %v", err)
+	}
+	rsaPrivkey, err := ParseRSAPrivateKeyFromPEM(rsaPrivkeyBytes)
+	if err != nil {
+		log.Fatalf("failed to parse rsa private key: %v", err)
+	}
+	irmaClient, err = irma.NewClient("insight", options.IRMAEndpointURL, rsaPrivkey)
 
 	http.HandleFunc("/start-validation", newStartValidation(logger, options.IRMACredentials))
 	http.HandleFunc("/poll-validation", newPollValidation(logger))

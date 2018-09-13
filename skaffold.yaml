@@ -119,5 +119,6 @@ profiles:
         gitCommit: {} # This tags the artifact images using the git commit identifier, which will be a git tag when that is cleanly available.
           # TODO: this creates nicely tagged releases for us, but doesn't publish "stable" versions. For that, we'll need to have manual extra tagging jobs in CI/CD pipeline which tags "latest" to be "vX.Y.Z".
       local:
+        skipPush: false
         # TODO: Setup push to image registry
         # TODO: Use local builder at all? Depends on CI/CD setup. Probably yes with gitlab ci when runner is of type 'shell'.
