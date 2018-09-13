@@ -35,7 +35,7 @@ func newRegisterInwayHandler(db *sqlx.DB, logger *zap.Logger) (*registerInwayHan
 		return nil, errors.Wrap(err, "failed to compile regexpName")
 	}
 
-	// NOTE: We do not have an endpoint yet to create services seperately, therefore insert on demand.
+	// NOTE: We do not have an endpoint yet to create services separately, therefore insert on demand.
 	h.stmtInsertAvailability, err = db.Preparex(`
 		WITH org AS (
 			INSERT INTO directory.organizations (name)

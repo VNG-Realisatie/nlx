@@ -1,6 +1,6 @@
 package transactionlog
 
-// Record encompases the data stored in the transactionlog for a single recorded transaction.
+// Record encompasses the data stored in the transactionlog for a single recorded transaction.
 type Record struct {
 	SrcOrganization  string                 `json:"source_organization"`
 	DestOrganization string                 `json:"destination_organization"`
