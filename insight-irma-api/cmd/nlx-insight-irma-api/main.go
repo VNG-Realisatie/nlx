@@ -65,7 +65,7 @@ func main() {
 func newStartValidation(logger *zap.Logger, irmaCredentials []string) http.HandlerFunc {
 
 	type Out struct {
-		ValidationID        string `json"validation_id"`
+		ValidationID        string `json:"validation_id"`
 		ValidationChallenge string `json:"validation_challenge"`
 	}
 
