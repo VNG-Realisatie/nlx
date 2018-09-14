@@ -7,9 +7,9 @@ import (
 	"os"
 
 	"github.com/huandu/xstrings"
+	flags "github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	flags "github.com/svent/go-flags"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 

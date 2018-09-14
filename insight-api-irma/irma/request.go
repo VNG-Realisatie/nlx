@@ -3,12 +3,13 @@ package irma
 import (
 	"bytes"
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
-	"net/url"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 )
 
 // "iss": "Service provider name",
@@ -23,7 +24,7 @@ import (
 //     "request": "..."
 // }
 
-type VerificationClaims struct {
+type VerificationRequestClaims struct {
 	jwt.StandardClaims
 	SPRequest SPRequestClaims `json:"sprequest"`
 }
@@ -32,17 +33,21 @@ type SPRequestClaims struct {
 	Data        string           `json:"data"`
 	Validity    uint64           `json:"validity"`
 	Timeout     uint64           `json:"timeout"`
-	CallbackURL url.URL          `json:"callbackUrl"`
+	CallbackURL string           `json:"callbackUrl"`
 	Request     *DiscloseRequest `json:"request"`
 }
 
-type verificationResult struct {
-	U string `json:"u"`
+// VerificationDiscloseSession holds details for a disclose session as opened on the irma api server
+type VerificationDiscloseSession struct {
+	IRMAQR     string `json:"irmaqr"`
+	U          string `json:"u"`
+	Version    string `json:"v"`
+	VersionMax string `json:"vmax"`
 }
 
 // newVerificationRequestClaims creates a new VerificationClaims object for given DiscloseRequest
-func (c *Client) newVerificationRequestClaims(request *DiscloseRequest) *VerificationClaims {
-	claims := &VerificationClaims{
+func (c *Client) newVerificationRequestClaims(request *DiscloseRequest) *VerificationRequestClaims {
+	claims := &VerificationRequestClaims{
 		StandardClaims: jwt.StandardClaims{
 			Issuer:   c.ServiceProviderName,
 			IssuedAt: time.Now().Unix(),
@@ -59,30 +64,32 @@ func (c *Client) newVerificationRequestClaims(request *DiscloseRequest) *Verific
 }
 
 // SendVerificationRequest sends a verification request and returns the verificationID
-func (c *Client) SendVerificationRequest(request *DiscloseRequest) (string, error) {
+func (c *Client) SendVerificationRequest(request *DiscloseRequest) (*VerificationDiscloseSession, error) {
 	// prepare and sign jwt
 	claims := c.newVerificationRequestClaims(request)
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
-	signedToken, err := token.SignedString(c.RSASigningKey)
+	signedJWT, err := token.SignedString(c.RSASigningKey)
 	if err != nil {
-		return "", errors.Wrap(err, "failed to sign jwt")
+		return nil, errors.Wrap(err, "failed to sign jwt")
 	}
+	c.logger.Debug("sending verification request to irma api server", zap.String("jwt", signedJWT))
 
 	// make http request
-	resp, err := http.Post(c.IRMAEndpointURL.String()+"/api/v2/verification", "", bytes.NewBufferString(signedToken))
+	resp, err := http.Post(c.IRMAEndpointURL.String()+"/api/v2/verification", "text/plain", bytes.NewBufferString(signedJWT))
 	if err != nil {
-		return "", errors.Wrap(err, "failed to do http request to irma api server")
-	}
-	if resp.StatusCode != http.StatusOK {
-		return "", errors.New("failed to start verification, http status " + resp.Status)
+		return nil, errors.Wrap(err, "failed to do http request to irma api server")
 	}
 	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		data, _ := ioutil.ReadAll(resp.Body)
+		return nil, errors.New("failed to start verification, http status " + resp.Status + " and data " + string(data))
+	}
 
 	// unpack response
-	result := verificationResult{}
-	err = json.NewDecoder(resp.Body).Decode(&result)
+	session := &VerificationDiscloseSession{}
+	err = json.NewDecoder(resp.Body).Decode(session)
 	if err != nil {
-		return "", errors.Wrap(err, "failed to unmarshall response")
+		return nil, errors.Wrap(err, "failed to unmarshall response")
 	}
-	return result.U, nil
+	return session, nil
 }

@@ -9,9 +9,9 @@ import (
 	"time"
 
 	"github.com/huandu/xstrings"
+	flags "github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
 	"github.com/jmoiron/sqlx/types"
-	flags "github.com/svent/go-flags"
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/logoptions"

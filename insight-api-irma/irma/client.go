@@ -5,10 +5,13 @@ import (
 	"net/url"
 
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 )
 
 // Client wraps the irma api server
 type Client struct {
+	logger *zap.Logger
+
 	ServiceProviderName string
 
 	IRMAEndpointURL *url.URL
@@ -16,8 +19,9 @@ type Client struct {
 }
 
 // NewClient prepares a new client for use
-func NewClient(serviceProviderName string, irmaEndpointURL string, rsaSigningKey *rsa.PrivateKey) (*Client, error) {
+func NewClient(logger *zap.Logger, serviceProviderName string, irmaEndpointURL string, rsaSigningKey *rsa.PrivateKey) (*Client, error) {
 	client := &Client{
+		logger:              logger,
 		ServiceProviderName: serviceProviderName,
 		RSASigningKey:       rsaSigningKey,
 	}

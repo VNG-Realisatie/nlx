@@ -1,4 +1,4 @@
-{{ with set . "component" "irma-api-server" }}
+{{ with set . "component" "insight-api-irma" }}
 # TODO: When using proper k8s RBAC split this into two secrets; only api server can use privkey, others can only read pubkey.
 apiVersion: v1
 kind: Secret
@@ -8,8 +8,8 @@ metadata:
   labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
 type: Opaque
 data:
-  crt.der: {{ .Values.irma.certificate.crtDER | b64enc }}
-  key.der: {{ .Values.irma.certificate.keyDER | b64enc }}
+  crt.der: {{ .Values.insight.apiIrmaCertificate.crtDER | b64enc }}
+  key.der: {{ .Values.insight.apiIrmaCertificate.keyDER | b64enc }}
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -28,30 +28,29 @@ spec:
       labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 8 }}
     spec:
       containers:
-        - name: irma-api
-          image: {{.Values.irma.apiServerImage}}
-          imagePullPolicy: {{.Values.irma.pullPolicy}}
+        - name: insight-api-irma
+          image: {{.Values.insightApiIrmaImage}}
+          imagePullPolicy: {{.Values.imagePullPolicy}}
+          command: ["/usr/local/bin/nlx-insight-api-irma"]
           env:
-            - name: IRMA_API_CONF_BASE64_JWT_PUBLICKEY
+            - name: LOG_TYPE
+              value: development
+            - name: LOG_LEVEL
+              value: debug
+            - name: IRMA_JWT_RSA_VERIFY_PUBLIC_KEY_DER
               valueFrom:
                 secretKeyRef:
-                  name: jwt-rsa-{{.component}}
+                  name: jwt-rsa-irma-api-server
                   key: crt.der
-            - name: IRMA_API_CONF_BASE64_JWT_PRIVATEKEY
+            - name: IRMA_JWT_RSA_SIGN_PRIVATE_KEY_DER
               valueFrom:
                 secretKeyRef:
                   name: jwt-rsa-{{.component}}
                   key: key.der
-            - name: IRMA_API_CONF_ENABLE_ISSUING
-              value: "true"
-            - name: IRMA_API_CONF_ALLOW_UNSIGNED_ISSUE_REQUESTS
-              value: "true"
-            - name: IRMA_API_CONF_AUTHORIZED_IDPS
-              value: "{insight: [*],* : [*]}"
-            - name: IRMA_API_CONF_REJECT_UNFLOORED_VALIDITY_TIMESTAMPS
-              value: "false"
+            - name: IRMA_ENDPOINT_URL
+              value: http://irma-api-server:8080
           ports:
-            - containerPort: 8080
+            - containerPort: 80
       restartPolicy: Always
   status: {}
 ---
@@ -63,21 +62,6 @@ spec:
   ports:
     - name: api
       protocol: TCP
-      port: 8080
+      port: 80
   cluserIP: None
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    traefik.frontend.rule.type: PathPrefixStrip
-spec:
-  rules:
-  - host: irma-api.{{.Values.domain}}
-    http:
-      paths:
-        - backend:
-            serviceName: {{.component}}
-            servicePort: api
 {{ end }}
