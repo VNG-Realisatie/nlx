@@ -110,7 +110,6 @@ You may now test the following sites:
 - http://txlog.dev.denhaag.minikube:30080/    Transactionlogs for the Den-Haag example organization
 - http://outway.dev.denhaag.minikube:30080/   Outway in the Den-Haag example organization
 
-
 To test a full request through outway>inway, use the PostmanEcho service through the exampleorg outway: `curl http://outway.dev.exampleorg.minikube:30080/DemoProviderOrganization/PostmanEcho/get?foo1=bar1&foo2=bar2`
 
 Note the ports; `30080` and `30443` are routed via traefik (TLS handled by traefik), whereas `:443` and `:80` are used by nginx-ingress, which does "tcp-proxying" with ssl passthrough so the mutual TLS can be handled by inway/outway/directory/etc.
@@ -123,7 +122,7 @@ If you are running into other issues, please [Post an Issue on GitLab](https://g
 
 ## Deploying and releasing
 
-**NOTE: Automated releases are currently not available**
+**NOTE:** Automated releases are currently not available.
 
 The [CI system of GitLab](https://gitlab.com/commonground/nlx/pipelines) builds every push to the master branch and creates a release to Docker, tagging it with the short git commit hash.
 When a release is successful, it also gets deployed to the test environment.
