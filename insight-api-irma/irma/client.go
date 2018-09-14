@@ -4,6 +4,7 @@ import (
 	"crypto/rsa"
 	"net/url"
 
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
@@ -14,16 +15,18 @@ type Client struct {
 
 	ServiceProviderName string
 
-	IRMAEndpointURL *url.URL
-	RSASigningKey   *rsa.PrivateKey
+	IRMAEndpointURL          *url.URL
+	RSASigningKey            *rsa.PrivateKey
+	RSAVerificationPublicKey *rsa.PublicKey
 }
 
 // NewClient prepares a new client for use
-func NewClient(logger *zap.Logger, serviceProviderName string, irmaEndpointURL string, rsaSigningKey *rsa.PrivateKey) (*Client, error) {
+func NewClient(logger *zap.Logger, serviceProviderName string, irmaEndpointURL string, rsaSigningKey *rsa.PrivateKey, rsaVerificationpublicKey *rsa.PublicKey) (*Client, error) {
 	client := &Client{
-		logger:              logger,
-		ServiceProviderName: serviceProviderName,
-		RSASigningKey:       rsaSigningKey,
+		logger:                   logger,
+		ServiceProviderName:      serviceProviderName,
+		RSASigningKey:            rsaSigningKey,
+		RSAVerificationPublicKey: rsaVerificationpublicKey,
 	}
 
 	var err error
@@ -33,4 +36,8 @@ func NewClient(logger *zap.Logger, serviceProviderName string, irmaEndpointURL s
 	}
 
 	return client, nil
+}
+
+func (c *Client) jwtVerificationKeyFunc(*jwt.Token) (interface{}, error) {
+	return c.RSAVerificationPublicKey, nil
 }

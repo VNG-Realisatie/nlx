@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -76,7 +77,16 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to parse rsa private key: %v", err)
 	}
-	irmaClient, err = irma.NewClient(logger, "insight", options.IRMAEndpointURL, rsaPrivkey)
+	rsaVerifyPubkeyDecoder := base64.NewDecoder(base64.StdEncoding, bytes.NewBufferString(options.IRMAJWTRSAVerifyPublicKeyDER))
+	rsaVerifyPubkeyBytes, err := ioutil.ReadAll(rsaVerifyPubkeyDecoder)
+	if err != nil {
+		log.Fatalf("failed to decode all bytes from rsa private key string: %v", err)
+	}
+	rsaVerifyPubkey, err := decodeDEREncodedRSAPublicKey(rsaVerificationPubkeyBytes)
+	if err != nil {
+		log.Fatalf("failed to parse rsa private key: %v", err)
+	}
+	irmaClient, err = irma.NewClient(logger, "insight", options.IRMAEndpointURL, rsaVerifyPubkey)
 
 	http.HandleFunc("/verification-start", newVerificationStart(logger, options.IRMACredentials))
 	http.HandleFunc("/verification-poll", newVerificationPoll(logger))
@@ -100,10 +110,11 @@ func newVerificationStart(logger *zap.Logger, irmaCredentials []string) http.Han
 				},
 			},
 		}
-		verificationDiscloseSession, err := irmaClient.SendVerificationRequest(&discloseRequest)
+		verificationDiscloseSession, err := irmaClient.StartVerification(&discloseRequest)
 		if err != nil {
 			logger.Error("failed to send verification request to irma api server", zap.Error(err))
 			http.Error(w, "failed to send verification request to irma api server", http.StatusInternalServerError)
+			return
 		}
 
 		err = json.NewEncoder(w).Encode(verificationDiscloseSession)
@@ -117,19 +128,20 @@ func newVerificationStart(logger *zap.Logger, irmaCredentials []string) http.Han
 }
 
 func newVerificationPoll(logger *zap.Logger) http.HandlerFunc {
-
-	type Out struct {
-		ValidatedJWT string `json:"validated_jwt"`
-	}
-
 	return func(w http.ResponseWriter, r *http.Request) {
-		out := &Out{}
-		err := json.NewEncoder(w).Encode(out)
+		verificationID := r.FormValue("verificationID")
+		if verificationID == "" {
+			logger.Warn("missing verificationID")
+			http.Error(w, "missing verificationID", http.StatusBadRequest)
+			return
+		}
+
+		verificationResultJWT, verificationResultClaims, err := irmaClient.PollVerification(verificationID)
+		_, err = io.WriteString(w, verificationResultJWT)
 		if err != nil {
-			logger.Error("failed to output records", zap.Error(err))
+			logger.Error("failed to write JWT", zap.Error(err))
 			http.Error(w, "server error", http.StatusInternalServerError)
 			return
-
 		}
 	}
 }
@@ -146,6 +158,24 @@ func decodeDEREncodedRSAPrivateKey(bts []byte) (*rsa.PrivateKey, error) {
 	var pkey *rsa.PrivateKey
 	var ok bool
 	if pkey, ok = parsedKey.(*rsa.PrivateKey); !ok {
+		return nil, errors.New("key is not a private rsa key")
+	}
+
+	return pkey, nil
+}
+
+func decodeDEREncodedRSAPublicKey(bts []byte) (*rsa.PublicKey, error) {
+	var err error
+	var parsedKey interface{}
+	if parsedKey, err = x509.ParsePKCS1PublicKey(bts); err != nil {
+		if parsedKey, err = x509.ParsePKIXPublicKey(bts); err != nil {
+			return nil, err
+		}
+	}
+
+	var pkey *rsa.PublicKey
+	var ok bool
+	if pkey, ok = parsedKey.(*rsa.PublicKey); !ok {
 		return nil, errors.New("key is not a private rsa key")
 	}
 
