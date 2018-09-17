@@ -102,7 +102,7 @@ func (c *Client) StartVerification(request *DiscloseRequest) (*VerificationDiscl
 	// prepare and sign jwt
 	claims := c.newVerificationRequestClaims(request)
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
-	signedJWT, err := token.SignedString(c.RSASigningKey)
+	signedJWT, err := token.SignedString(c.RSASignPrivateKey)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to sign jwt")
 	}
@@ -148,7 +148,7 @@ func (c *Client) PollVerification(verificationID string) (string, *VerificationR
 
 	// unpack response
 	claims := &VerificationResultClaims{}
-	token, err := jwt.ParseWithClaims(string(jwtResult), claims, c.jwtVerificationKeyFunc)
+	token, err := jwt.ParseWithClaims(string(jwtResult), claims, c.jwtVerifyKeyFunc)
 	if err != nil {
 		//++
 	}

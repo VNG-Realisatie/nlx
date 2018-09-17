@@ -68,12 +68,12 @@ func main() {
 			os.Exit(1)
 		}
 	}()
-	rsaPrivkeyDecoder := base64.NewDecoder(base64.StdEncoding, bytes.NewBufferString(options.IRMAJWTRSASignPrivateKeyDER))
-	rsaPrivkeyBytes, err := ioutil.ReadAll(rsaPrivkeyDecoder)
+	rsaSignPrivateKeyDecoder := base64.NewDecoder(base64.StdEncoding, bytes.NewBufferString(options.IRMAJWTRSASignPrivateKeyDER))
+	rsaSignPrivateKeyBytes, err := ioutil.ReadAll(rsaSignPrivateKeyDecoder)
 	if err != nil {
 		log.Fatalf("failed to decode all bytes from rsa private key string: %v", err)
 	}
-	rsaPrivkey, err := decodeDEREncodedRSAPrivateKey(rsaPrivkeyBytes)
+	rsaSignPrivateKey, err := decodeDEREncodedRSAPrivateKey(rsaSignPrivateKeyBytes)
 	if err != nil {
 		log.Fatalf("failed to parse rsa private key: %v", err)
 	}
@@ -82,11 +82,11 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to decode all bytes from rsa private key string: %v", err)
 	}
-	rsaVerifyPubkey, err := decodeDEREncodedRSAPublicKey(rsaVerificationPubkeyBytes)
+	rsaVerifyPubkey, err := decodeDEREncodedRSAPublicKey(rsaVerifyPubkeyBytes)
 	if err != nil {
 		log.Fatalf("failed to parse rsa private key: %v", err)
 	}
-	irmaClient, err = irma.NewClient(logger, "insight", options.IRMAEndpointURL, rsaVerifyPubkey)
+	irmaClient, err = irma.NewClient(logger, "insight", options.IRMAEndpointURL, rsaSignPrivateKey, rsaVerifyPubkey)
 
 	http.HandleFunc("/verification-start", newVerificationStart(logger, options.IRMACredentials))
 	http.HandleFunc("/verification-poll", newVerificationPoll(logger))
@@ -143,6 +143,7 @@ func newVerificationPoll(logger *zap.Logger) http.HandlerFunc {
 			http.Error(w, "server error", http.StatusInternalServerError)
 			return
 		}
+		_ = verificationResultClaims
 	}
 }
 

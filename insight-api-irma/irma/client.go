@@ -15,18 +15,18 @@ type Client struct {
 
 	ServiceProviderName string
 
-	IRMAEndpointURL          *url.URL
-	RSASigningKey            *rsa.PrivateKey
-	RSAVerificationPublicKey *rsa.PublicKey
+	IRMAEndpointURL    *url.URL
+	RSASignPrivateKey  *rsa.PrivateKey
+	RSAVerifyPublicKey *rsa.PublicKey
 }
 
 // NewClient prepares a new client for use
-func NewClient(logger *zap.Logger, serviceProviderName string, irmaEndpointURL string, rsaSigningKey *rsa.PrivateKey, rsaVerificationpublicKey *rsa.PublicKey) (*Client, error) {
+func NewClient(logger *zap.Logger, serviceProviderName string, irmaEndpointURL string, rsaSignPrivateKey *rsa.PrivateKey, rsaVerifyPublicKey *rsa.PublicKey) (*Client, error) {
 	client := &Client{
-		logger:                   logger,
-		ServiceProviderName:      serviceProviderName,
-		RSASigningKey:            rsaSigningKey,
-		RSAVerificationPublicKey: rsaVerificationpublicKey,
+		logger:              logger,
+		ServiceProviderName: serviceProviderName,
+		RSASignPrivateKey:   rsaSignPrivateKey,
+		RSAVerifyPublicKey:  rsaVerifyPublicKey,
 	}
 
 	var err error
@@ -38,6 +38,6 @@ func NewClient(logger *zap.Logger, serviceProviderName string, irmaEndpointURL s
 	return client, nil
 }
 
-func (c *Client) jwtVerificationKeyFunc(*jwt.Token) (interface{}, error) {
-	return c.RSAVerificationPublicKey, nil
+func (c *Client) jwtVerifyKeyFunc(*jwt.Token) (interface{}, error) {
+	return c.RSAVerifyPublicKey, nil
 }
