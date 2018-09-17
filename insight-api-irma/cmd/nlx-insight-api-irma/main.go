@@ -144,6 +144,8 @@ func newVerificationPoll(logger *zap.Logger) http.HandlerFunc {
 			return
 		}
 		_ = verificationResultClaims
+
+		io.WriteString(w, verificationResultJWT)
 	}
 }
 
