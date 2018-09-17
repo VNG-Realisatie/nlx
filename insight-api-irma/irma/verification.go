@@ -150,7 +150,7 @@ func (c *Client) PollVerification(verificationID string) (string, *VerificationR
 	claims := &VerificationResultClaims{}
 	token, err := jwt.ParseWithClaims(string(jwtResult), claims, c.jwtVerifyKeyFunc)
 	if err != nil {
-		//++
+		return "", nil, errors.Wrap(err, "failed to parse JWT received from irma-api-server")
 	}
 	if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
 		return "", nil, errors.Errorf("JWT received from irma-api-server uses unexpected signing method %v", token.Header["alg"])
