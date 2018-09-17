@@ -114,7 +114,17 @@ To test a full request through outway>inway, use the PostmanEcho service through
 
 Note the ports; `30080` and `30443` are routed via traefik (TLS handled by traefik), whereas `:443` and `:80` are used by nginx-ingress, which does "tcp-proxying" with ssl passthrough so the mutual TLS can be handled by inway/outway/directory/etc.
 
-Read helm/README.md for more information about the skaffold setup.
+If you run minikube using a VM, then you may want to forward traffic to your host machine. This is useful, for example, when testing IRMA using a phone on the same WiFi network as your host machine. To make all traefik-based ingresses available run:
+
+```bash
+kubectl --namespace=traefik port-forward deployment/traefik 30080 30443
+```
+
+If you also want to forward NLX internal traffic to the VM, run this command as well:
+
+```bash
+sudo kubectl --namespace=nginx-ingress port-forward deployment/nginx-ingress-controller 80 443
+```
 
 ## Troubleshooting
 
