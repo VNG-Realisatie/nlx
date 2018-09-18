@@ -18,8 +18,8 @@ spec:
           backend:
             serviceName: insight-api-irma
             servicePort: api
-        # - path: /api/log
-        #   backend:
-        #     serviceName: insight-api-log
-        #     servicePort: api
+        - path: /api/txlog
+          backend:
+            serviceName: insight-api-txlog
+            servicePort: api
 {{ end }}
