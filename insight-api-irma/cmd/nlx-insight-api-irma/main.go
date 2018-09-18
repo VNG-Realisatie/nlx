@@ -2,14 +2,9 @@ package main
 
 import (
 	"bytes"
-	"crypto/rsa"
-	"crypto/x509"
-	"encoding/base64"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -17,6 +12,7 @@ import (
 	flags "github.com/jessevdk/go-flags"
 	"go.uber.org/zap"
 
+	"go.nlx.io/nlx/common/derrsa"
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/insight-api-irma/irma"
 )
@@ -68,21 +64,11 @@ func main() {
 			os.Exit(1)
 		}
 	}()
-	rsaSignPrivateKeyDecoder := base64.NewDecoder(base64.StdEncoding, bytes.NewBufferString(options.IRMAJWTRSASignPrivateKeyDER))
-	rsaSignPrivateKeyBytes, err := ioutil.ReadAll(rsaSignPrivateKeyDecoder)
-	if err != nil {
-		log.Fatalf("failed to decode all bytes from rsa private key string: %v", err)
-	}
-	rsaSignPrivateKey, err := decodeDEREncodedRSAPrivateKey(rsaSignPrivateKeyBytes)
+	rsaSignPrivateKey, err := derrsa.DecodeDEREncodedRSAPrivateKey(bytes.NewBufferString(options.IRMAJWTRSASignPrivateKeyDER))
 	if err != nil {
 		log.Fatalf("failed to parse rsa private key: %v", err)
 	}
-	rsaVerifyPubkeyDecoder := base64.NewDecoder(base64.StdEncoding, bytes.NewBufferString(options.IRMAJWTRSAVerifyPublicKeyDER))
-	rsaVerifyPubkeyBytes, err := ioutil.ReadAll(rsaVerifyPubkeyDecoder)
-	if err != nil {
-		log.Fatalf("failed to decode all bytes from rsa private key string: %v", err)
-	}
-	rsaVerifyPubkey, err := decodeDEREncodedRSAPublicKey(rsaVerifyPubkeyBytes)
+	rsaVerifyPubkey, err := derrsa.DecodeDEREncodedRSAPublicKey(bytes.NewBufferString(options.IRMAJWTRSAVerifyPublicKeyDER))
 	if err != nil {
 		log.Fatalf("failed to parse rsa private key: %v", err)
 	}
@@ -136,51 +122,13 @@ func newVerificationPoll(logger *zap.Logger) http.HandlerFunc {
 			return
 		}
 
-		verificationResultJWT, verificationResultClaims, err := irmaClient.PollVerification(verificationID)
-		_, err = io.WriteString(w, verificationResultJWT)
+		token, verificationResultClaims, err := irmaClient.PollVerification(verificationID)
+		_ = verificationResultClaims
+		_, err = io.WriteString(w, token.Raw)
 		if err != nil {
 			logger.Error("failed to write JWT", zap.Error(err))
 			http.Error(w, "server error", http.StatusInternalServerError)
 			return
 		}
-		_ = verificationResultClaims
-
-		io.WriteString(w, verificationResultJWT)
 	}
-}
-
-func decodeDEREncodedRSAPrivateKey(bts []byte) (*rsa.PrivateKey, error) {
-	var err error
-	var parsedKey interface{}
-	if parsedKey, err = x509.ParsePKCS1PrivateKey(bts); err != nil {
-		if parsedKey, err = x509.ParsePKCS8PrivateKey(bts); err != nil {
-			return nil, err
-		}
-	}
-
-	var pkey *rsa.PrivateKey
-	var ok bool
-	if pkey, ok = parsedKey.(*rsa.PrivateKey); !ok {
-		return nil, errors.New("key is not a private rsa key")
-	}
-
-	return pkey, nil
-}
-
-func decodeDEREncodedRSAPublicKey(bts []byte) (*rsa.PublicKey, error) {
-	var err error
-	var parsedKey interface{}
-	if parsedKey, err = x509.ParsePKCS1PublicKey(bts); err != nil {
-		if parsedKey, err = x509.ParsePKIXPublicKey(bts); err != nil {
-			return nil, err
-		}
-	}
-
-	var pkey *rsa.PublicKey
-	var ok bool
-	if pkey, ok = parsedKey.(*rsa.PublicKey); !ok {
-		return nil, errors.New("key is not a private rsa key")
-	}
-
-	return pkey, nil
 }

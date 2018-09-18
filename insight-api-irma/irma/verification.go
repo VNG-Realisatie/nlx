@@ -2,6 +2,7 @@ package irma
 
 import (
 	"bytes"
+	"crypto/rsa"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -129,35 +130,45 @@ func (c *Client) StartVerification(request *DiscloseRequest) (*VerificationDiscl
 }
 
 // PollVerification polls the irma-api-server for the status or result of a verification session.
-func (c *Client) PollVerification(verificationID string) (string, *VerificationResultClaims, error) {
+func (c *Client) PollVerification(verificationID string) (*jwt.Token, *VerificationResultClaims, error) {
 	// make http request
 	resp, err := http.Get(c.IRMAEndpointURL.String() + "/api/v2/verification/" + verificationID)
 	if err != nil {
-		return "", nil, errors.Wrap(err, "failed to do http request to irma-api-server")
+		return nil, nil, errors.Wrap(err, "failed to do http request to irma-api-server")
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
 		data, _ := ioutil.ReadAll(resp.Body)
-		return "", nil, errors.New("failed to start verification, http status " + resp.Status + " and data " + string(data))
+		return nil, nil, errors.New("failed to start verification, http status " + resp.Status + " and data " + string(data))
 	}
 
-	jwtResult, err := ioutil.ReadAll(resp.Body)
+	jwtBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return "", nil, errors.Wrap(err, "failed to read response body from irma-api-server")
+		return nil, nil, errors.Wrap(err, "failed to read response body from irma-api-server")
 	}
 
-	// unpack response
+	return VerifyIRMAVerificationResult(jwtBytes, c.RSAVerifyPublicKey)
+}
+
+func jwtVerifyKeyFunc(rsaVerifyPublicKey *rsa.PublicKey) jwt.Keyfunc {
+	return func(*jwt.Token) (interface{}, error) {
+		return rsaVerifyPublicKey, nil
+	}
+}
+
+// VerifyIRMAVerificationResult unpacks and validates IRMA Vericicaiotn Result JWT and returns the token and claims or an error.
+func VerifyIRMAVerificationResult(jwtBytes []byte, rsaVerifyPublicKey *rsa.PublicKey) (*jwt.Token, *VerificationResultClaims, error) {
 	claims := &VerificationResultClaims{}
-	token, err := jwt.ParseWithClaims(string(jwtResult), claims, c.jwtVerifyKeyFunc)
+	token, err := jwt.ParseWithClaims(string(jwtBytes), claims, jwtVerifyKeyFunc(rsaVerifyPublicKey))
 	if err != nil {
-		return "", nil, errors.Wrap(err, "failed to parse JWT received from irma-api-server")
+		return nil, nil, errors.Wrap(err, "failed to parse JWT received from irma-api-server")
 	}
 	if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
-		return "", nil, errors.Errorf("JWT received from irma-api-server uses unexpected signing method %v", token.Header["alg"])
+		return nil, nil, errors.Errorf("JWT received from irma-api-server uses unexpected signing method %v", token.Header["alg"])
 	}
 	if !token.Valid {
-		return "", nil, errors.New("JWT received from irma-api-server is invalid")
+		return nil, nil, errors.New("JWT received from irma-api-server is invalid")
 	}
 
-	return token.Raw, claims, nil
+	return token, claims, nil
 }

@@ -1,0 +1,48 @@
+{{ with set . "component" "insight-api-txlog" }}
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      release: {{ .Release.Name }}
+      app: {{ .Chart.Name }}
+      component: {{.component}}
+  template:
+    metadata:
+      labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: insight-api-txlog
+          image: {{.Values.insightApiTxlogImage}}
+          imagePullPolicy: {{.Values.imagePullPolicy}}
+          command: ["/usr/local/bin/nlx-insight-api-txlog"]
+          env:
+            - name: LOG_TYPE
+              value: development
+            - name: LOG_LEVEL
+              value: debug
+            - name: IRMA_JWT_RSA_VERIFY_PUBLIC_KEY_DER
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-rsa-irma-api-server
+                  key: crt.der
+          ports:
+            - containerPort: 80
+      restartPolicy: Always
+  status: {}
+---
+apiVersion: v1
+kind: Service
+metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
+spec:
+  selector: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
+  ports:
+    - name: api
+      protocol: TCP
+      port: 80
+  cluserIP: None
+{{ end }}

@@ -4,7 +4,6 @@ import (
 	"crypto/rsa"
 	"net/url"
 
-	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
@@ -36,8 +35,4 @@ func NewClient(logger *zap.Logger, serviceProviderName string, irmaEndpointURL s
 	}
 
 	return client, nil
-}
-
-func (c *Client) jwtVerifyKeyFunc(*jwt.Token) (interface{}, error) {
-	return c.RSAVerifyPublicKey, nil
 }
