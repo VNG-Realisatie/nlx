@@ -20,8 +20,10 @@ RUN apt-get update && apt-get -y install --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Install modd and migrate
-RUN go get github.com/cortesi/modd/cmd/modd && \
+RUN go get -u github.com/cortesi/modd/cmd/modd github.com/golang/dep/cmd/dep && \
     go get -u -d github.com/golang-migrate/migrate/cli github.com/lib/pq && \
+    cd $(go env GOPATH)/src/github.com/golang-migrate/migrate/cli && \
+    dep ensure && \
     go build -tags 'postgres' -o /usr/local/bin/migrate github.com/golang-migrate/migrate/cli
 
 # Install docker so developers can run the diff script in modd
