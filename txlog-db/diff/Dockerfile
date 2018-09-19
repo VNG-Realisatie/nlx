@@ -4,20 +4,29 @@ RUN mkdir /go
 ENV GOPATH /go
 ENV QT_QPA_PLATFORM=
 
+# Install postgres client
 RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
     echo "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main" > /etc/apt/sources.list.d/postgres.list && \
     apt update && \
     apt -y install --no-install-recommends postgresql-client-9.6 && \
     rm -rf /var/lib/apt/lists/*
 
+# Install java
 RUN apt-get update && apt-get -y install --no-install-recommends \
-    golang-go \
     git \
     ttf-dejavu \
     xvfb \
     maven openjdk-8-jdk \
     curl \
     && rm -rf /var/lib/apt/lists/*
+
+# Install go
+ENV GOLANG_VERSION 1.11
+RUN wget -O go.tgz "https://golang.org/dl/go${GOLANG_VERSION}.linux-amd64.tar.gz" && \
+    tar -C /usr/local -xzf go.tgz && \
+    rm go.tgz
+ENV GOPATH /go
+ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 
 # Install modd and migrate
 RUN go get github.com/cortesi/modd/cmd/modd && \
