@@ -82,13 +82,21 @@ MINIKUBE_IP=$(minikube ip) skaffold dev
 Finally, add the minikube hostnames to your machine's `/etc/hosts` file so you can reach the services from your browser.
 
 ```bash
-echo "$(minikube ip)               traefik.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)          docs.dev.nlx.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)    certportal.dev.nlx.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)     directory.dev.nlx.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip) directory-api.dev.nlx.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip) outway.dev.exampleorg.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)  txlog.dev.exampleorg.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)                 traefik.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)            docs.dev.nlx.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)      certportal.dev.nlx.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)       directory.dev.nlx.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)   directory-api.dev.nlx.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)           txlog.dev.rdw.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)        irma-api.dev.rdw.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)         insight.dev.rdw.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)           txlog.dev.brp.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)        irma-api.dev.brp.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)         insight.dev.brp.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)       txlog.dev.denhaag.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)    irma-api.dev.denhaag.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)     insight.dev.denhaag.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)      outway.dev.denhaag.minikube" | sudo tee -a /etc/hosts
 ```
 
 You may now test the following sites:
@@ -97,13 +105,23 @@ You may now test the following sites:
 - http://docs.dev.nlx.minikube:30080          The NLX docs
 - http://certportal.dev.nlx.minikube:30080    The NLX certportal
 - http://directory.dev.nlx.minikube:30080     The NLX directory
-- http://txlog.dev.exampleorg.minikube:30080/ Transactionlogs for the example organization
+- http://txlog.dev.rdw.minikube:30080/        Transactionlogs for the RDW example organization
+- http://txlog.dev.brp.minikube:30080/        Transactionlogs for the BRP example organization
+- http://txlog.dev.denhaag.minikube:30080/    Transactionlogs for the Den-Haag example organization
+- http://outway.dev.denhaag.minikube:30080/   Outway in the Den-Haag example organization
 
 To test a full request through outway>inway, use the PostmanEcho service through the exampleorg outway: `curl http://outway.dev.exampleorg.minikube:30080/DemoProviderOrganization/PostmanEcho/get?foo1=bar1&foo2=bar2`
 
 Note the ports; `30080` and `30443` are routed via traefik (TLS handled by traefik), whereas `:443` and `:80` are used by nginx-ingress, which does "tcp-proxying" with ssl passthrough so the mutual TLS can be handled by inway/outway/directory/etc.
 
-Read helm/README.md for more information about the skaffold setup.
+If you want to connect over IP instead of using a hostname, the ingress controller cannot route the request properly. Therefore you must setup a port-forward directly to the application you want to expose. This is useful, for example, when testing IRMA using a phone on the same WiFi network as your host machine.
+
+```bash
+kubectl --namespace nlx-rdw-dev port-forward deployment/irma-api-server 2222:8080
+socat tcp-listen:3333,fork tcp:127.0.0.1:2222
+```
+
+You can now let your phone connect to the IRMA api server of RDW on `your.host.machine.ip:3333`
 
 ## Troubleshooting
 
@@ -111,7 +129,7 @@ If you are running into other issues, please [Post an Issue on GitLab](https://g
 
 ## Deploying and releasing
 
-**NOTE: Automated releases are currently not available**
+**NOTE:** Automated releases are currently not available.
 
 The [CI system of GitLab](https://gitlab.com/commonground/nlx/pipelines) builds every push to the master branch and creates a release to Docker, tagging it with the short git commit hash.
 When a release is successful, it also gets deployed to the test environment.

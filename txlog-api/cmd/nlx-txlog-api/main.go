@@ -9,9 +9,9 @@ import (
 	"time"
 
 	"github.com/huandu/xstrings"
+	flags "github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
 	"github.com/jmoiron/sqlx/types"
-	flags "github.com/svent/go-flags"
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/logoptions"
@@ -22,8 +22,10 @@ import (
 
 var options struct {
 	logoptions.LogOptions
-	ListenAddress string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:80" description:"Address for the api to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
-	PostgresDSN   string `long:"postgres-dsn" env:"POSTGRES_DSN" default:"postgres://postgres:postgres@postgres/nlx_logdb?sslmode=disable" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
+
+	ListenAddress string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:80" description:"Adress for the api to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+
+	PostgresDSN string `long:"postgres-dsn" env:"POSTGRES_DSN" default:"postgres://postgres:postgres@postgres/nlx_logdb?sslmode=disable" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
 }
 
 func main() {

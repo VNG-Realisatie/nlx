@@ -15,9 +15,14 @@ option (gogoproto.goproto_getters_all) = false;
 service Directory {
 	// RegisterInway registers an inway for a given service
 	rpc RegisterInway (RegisterInwayRequest) returns (RegisterInwayResponse) {}
+	
 	// ListServices lists all services and their gateways.
 	rpc ListServices (ListServicesRequest) returns (ListServicesResponse) {
 		option (google.api.http).get = "/directory/list-services";
+	}
+	// ListOrganizations lists all organizations and their details.
+	rpc ListOrganizations (ListOrganizationsRequest) returns (ListOrganizationsResponse) {
+		option (google.api.http).get = "/directory/list-organizations";
 	}
 	rpc GetServiceAPISpec (GetServiceAPISpecRequest) returns (GetServiceAPISpecResponse) {
 		option (google.api.http).get = "/directory/get-service-api-spec/{organization_name}/{service_name}";
@@ -30,7 +35,7 @@ message RegisterInwayRequest {
 		string documentation_url = 2;
 		string api_specification_type = 3;
 	}
-	
+
 	string inway_address = 1;
 	repeated RegisterService services = 2;
 }
@@ -42,9 +47,32 @@ message RegisterInwayResponse {
 message ListServicesRequest {}
 
 message ListServicesResponse {
+	message Service {
+		string organization_name = 1;
+		string service_name = 2;
+		repeated string inway_addresses = 3;
+		string documentation_url = 4;
+		string api_specification_type = 5;
+	}
+
 	string error = 1;
 	repeated Service services = 2;
 }
+
+
+message ListOrganizationsRequest {}
+
+message ListOrganizationsResponse {
+	message Organization {
+		string name = 1;
+		string insight_irma_endpoint = 2;
+		string insight_log_endpoint = 3;
+	}
+
+	string error = 1;
+	repeated Organization organizations = 2;
+}
+
 
 message GetServiceAPISpecRequest {
 	string organization_name = 1;
@@ -56,10 +84,3 @@ message GetServiceAPISpecResponse {
 	bytes document = 2;
 }
 
-message Service {
-	string organization_name = 1;
-	string service_name = 2;
-	repeated string inway_addresses = 3;
-	string documentation_url = 4;
-	string api_specification_type = 5;
-}

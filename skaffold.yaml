@@ -26,6 +26,14 @@ build:
       workspace: directory-ui
 
     # Organization images
+    - imageName: nlxio/inway
+      workspace: .
+      docker:
+        dockerfilePath: inway/Dockerfile
+    - imageName: nlxio/outway
+      workspace: .
+      docker:
+        dockerfilePath: outway/Dockerfile
     - imageName: nlxio/txlog-db
       workspace: .
       docker:
@@ -36,14 +44,14 @@ build:
         dockerfilePath: txlog-api/Dockerfile
     - imageName: nlxio/txlog-ui
       workspace: txlog-ui
-    - imageName: nlxio/inway
+    - imageName: nlxio/insight-api-irma
       workspace: .
       docker:
-        dockerfilePath: inway/Dockerfile
-    - imageName: nlxio/outway
+        dockerfilePath: insight-api-irma/Dockerfile
+    - imageName: nlxio/insight-api-txlog
       workspace: .
       docker:
-        dockerfilePath: outway/Dockerfile
+        dockerfilePath: insight-api-txlog/Dockerfile
 
   tagPolicy:
     sha256: {}
@@ -70,10 +78,10 @@ deploy:
         setValueTemplates:
           externalIP: "{{.MINIKUBE_IP}}"
 
-      - name: nlx-organization-dev
+      - name: nlx-brp-dev
         chartPath: helm/nlx-organization
-        valuesFilePath: helm/nlx-organization/values-dev.yaml
-        namespace: nlx-organization-dev
+        valuesFilePath: helm/nlx-organization/values-brp-dev.yaml
+        namespace: nlx-brp-dev
         version: "v0.0.0"
         values:
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
@@ -81,7 +89,40 @@ deploy:
           txlogAPIImage: nlxio/txlog-api
           txlogUIImage: nlxio/txlog-ui
           inwayImage: nlxio/inway
+          insightApiIrmaImage: nlxio/insight-api-irma
+          insightApiTxlogImage: nlxio/insight-api-txlog
+        setValueTemplates:
+          externalIP: "{{.MINIKUBE_IP}}"
+
+      - name: nlx-rdw-dev
+        chartPath: helm/nlx-organization
+        valuesFilePath: helm/nlx-organization/values-rdw-dev.yaml
+        namespace: nlx-rdw-dev
+        version: "v0.0.0"
+        values:
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          txlogDBImage: nlxio/txlog-db
+          txlogAPIImage: nlxio/txlog-api
+          txlogUIImage: nlxio/txlog-ui
+          inwayImage: nlxio/inway
+          insightApiIrmaImage: nlxio/insight-api-irma
+          insightApiTxlogImage: nlxio/insight-api-txlog
+        setValueTemplates:
+          externalIP: "{{.MINIKUBE_IP}}"
+
+      - name: nlx-denhaag-dev
+        chartPath: helm/nlx-organization
+        valuesFilePath: helm/nlx-organization/values-denhaag-dev.yaml
+        namespace: nlx-denhaag-dev
+        version: "v0.0.0"
+        values:
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          txlogDBImage: nlxio/txlog-db
+          txlogAPIImage: nlxio/txlog-api
+          txlogUIImage: nlxio/txlog-ui
           outwayImage: nlxio/outway
+          insightApiIrmaImage: nlxio/insight-api-irma
+          insightApiTxlogImage: nlxio/insight-api-txlog
         setValueTemplates:
           externalIP: "{{.MINIKUBE_IP}}"
 
@@ -92,5 +133,6 @@ profiles:
         gitCommit: {} # This tags the artifact images using the git commit identifier, which will be a git tag when that is cleanly available.
           # TODO: this creates nicely tagged releases for us, but doesn't publish "stable" versions. For that, we'll need to have manual extra tagging jobs in CI/CD pipeline which tags "latest" to be "vX.Y.Z".
       local:
+        skipPush: false
         # TODO: Setup push to image registry
         # TODO: Use local builder at all? Depends on CI/CD setup. Probably yes with gitlab ci when runner is of type 'shell'.

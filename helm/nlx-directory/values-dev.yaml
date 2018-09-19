@@ -11,4 +11,8 @@ dbUsernameDirectory: nlx-directory
 dbPasswordDirectory: nlx-directory
 
 externalIP: ""
-inwayHostname: "inway.dev.exampleorg.minikube"
+demoEnv: "dev"
+demoDomain: "minikube"
+inwayHostnames:
+  - inway.dev.brp.minikube
+  - inway.dev.rdw.minikube

@@ -6,7 +6,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <dbmodel pgmodeler-ver="0.9.1" last-position="0,0" last-zoom="1"
 	 default-schema="public" default-owner="postgres">
 <role name="nlx-directory"
-      superuser="true"
       login="true"
       encrypted="true"
       password="nlx-directory">
@@ -25,12 +24,19 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="organizations" hide-ext-attribs="true">
 	<schema name="directory"/>
 	<role name="postgres"/>
-	<position x="60" y="140"/>
+	<appended-sql><![CDATA[GRANT USAGE, SELECT ON SEQUENCE organizations_id_seq TO "nlx-directory";]]></appended-sql>
+	<position x="120" y="280"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
 	<column name="name" not-null="true">
 		<type name="varchar" length="100"/>
+	</column>
+	<column name="insight_log_endpoint">
+		<type name="varchar" length="250"/>
+	</column>
+	<column name="insight_irma_endpoint">
+		<type name="varchar" length="250"/>
 	</column>
 	<constraint name="organizations_pk" type="pk-constr" table="directory.organizations">
 		<columns names="id" ref-type="src-columns"/>
@@ -43,7 +49,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="services" hide-ext-attribs="true">
 	<schema name="directory"/>
 	<role name="postgres"/>
-	<position x="640" y="220"/>
+	<appended-sql><![CDATA[GRANT USAGE, SELECT ON SEQUENCE services_id_seq TO "nlx-directory";]]></appended-sql>
+	<position x="1260" y="540"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -74,10 +81,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="inways" hide-ext-attribs="true">
+<table name="inways">
 	<schema name="directory"/>
 	<role name="postgres"/>
-	<position x="640" y="80"/>
+	<appended-sql><![CDATA[GRANT USAGE, SELECT ON SEQUENCE inways_id_seq TO "nlx-directory";]]></appended-sql>
+	<position x="1300" y="80"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -98,7 +106,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="availabilities" hide-ext-attribs="true">
 	<schema name="directory"/>
 	<role name="postgres"/>
-	<position x="1260" y="140"/>
+	<appended-sql><![CDATA[GRANT USAGE, SELECT ON SEQUENCE availabilities_id_seq TO "nlx-directory";]]></appended-sql>
+	<position x="2580" y="200"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -200,4 +209,29 @@ END]]></definition>
 	 dst-table="directory.services" reference-fk="availabilities_fk_service"
 	 src-required="false" dst-required="false"/>
 
+<permission>
+	<object name="directory.organizations" type="table"/>
+	<roles names="&quot;nlx-directory&quot;"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="directory.inways" type="table"/>
+	<roles names="&quot;nlx-directory&quot;"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="directory.services" type="table"/>
+	<roles names="&quot;nlx-directory&quot;"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="directory.availabilities" type="table"/>
+	<roles names="&quot;nlx-directory&quot;"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="directory" type="schema"/>
+	<roles names="&quot;nlx-directory&quot;"/>
+	<privileges usage="true"/>
+</permission>
 </dbmodel>

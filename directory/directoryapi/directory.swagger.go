@@ -49,6 +49,23 @@ SwaggerJSONDirectory = `
         ]
       }
     },
+    "/directory/list-organizations": {
+      "get": {
+        "summary": "ListOrganizations lists all organizations and their details.",
+        "operationId": "ListOrganizations",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/directoryapiListOrganizationsResponse"
+            }
+          }
+        },
+        "tags": [
+          "Directory"
+        ]
+      }
+    },
     "/directory/list-services": {
       "get": {
         "summary": "ListServices lists all services and their gateways.",
@@ -68,6 +85,43 @@ SwaggerJSONDirectory = `
     }
   },
   "definitions": {
+    "ListOrganizationsResponseOrganization": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "insight_irma_endpoint": {
+          "type": "string"
+        },
+        "insight_log_endpoint": {
+          "type": "string"
+        }
+      }
+    },
+    "ListServicesResponseService": {
+      "type": "object",
+      "properties": {
+        "organization_name": {
+          "type": "string"
+        },
+        "service_name": {
+          "type": "string"
+        },
+        "inway_addresses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "documentation_url": {
+          "type": "string"
+        },
+        "api_specification_type": {
+          "type": "string"
+        }
+      }
+    },
     "RegisterInwayRequestRegisterService": {
       "type": "object",
       "properties": {
@@ -94,6 +148,20 @@ SwaggerJSONDirectory = `
         }
       }
     },
+    "directoryapiListOrganizationsResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "organizations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListOrganizationsResponseOrganization"
+          }
+        }
+      }
+    },
     "directoryapiListServicesResponse": {
       "type": "object",
       "properties": {
@@ -103,7 +171,7 @@ SwaggerJSONDirectory = `
         "services": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/directoryapiService"
+            "$ref": "#/definitions/ListServicesResponseService"
           }
         }
       }
@@ -112,29 +180,6 @@ SwaggerJSONDirectory = `
       "type": "object",
       "properties": {
         "error": {
-          "type": "string"
-        }
-      }
-    },
-    "directoryapiService": {
-      "type": "object",
-      "properties": {
-        "organization_name": {
-          "type": "string"
-        },
-        "service_name": {
-          "type": "string"
-        },
-        "inway_addresses": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "documentation_url": {
-          "type": "string"
-        },
-        "api_specification_type": {
           "type": "string"
         }
       }

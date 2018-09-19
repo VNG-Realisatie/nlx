@@ -2,16 +2,16 @@
 set -e
 set -o pipefail
 
-echo "Drop existing database"
+echo "Drop existing database \"${PGDATABASE}\"";
 # We specify a low connect_timeout so a db pod/container doesn't hang a long time when the postgres is not created yet. Failing and restarting is faster.
 psql --echo-errors --variable "ON_ERROR_STOP=1" "postgresql://${PGUSER}:${PGPASSWORD}@${PGHOST}/postgres?sslmode=disable&connect_timeout=5" <<EOF
 UPDATE pg_database SET datallowconn = false WHERE datname = '${PGDATABASE}';
-SELECT pid, datname, usename, pg_terminate_backend(pg_stat_activity.pid) AS terminated
+SELECT pid, datname, usename, application_name, pg_terminate_backend(pid) AS terminated
 	FROM pg_stat_activity
-	WHERE pg_stat_activity.datname = '${PGDATABASE}'
+	WHERE datname = '${PGDATABASE}'
 		AND pid <> pg_backend_pid();
-DROP DATABASE IF EXISTS ${PGDATABASE};
-CREATE DATABASE ${PGDATABASE};
+DROP DATABASE IF EXISTS "${PGDATABASE}";
+CREATE DATABASE "${PGDATABASE}";
 EOF
 
 echo "Creating database structure from migrations and adding testdata"
@@ -25,5 +25,3 @@ for _unused in $(find /db-migrations -name "*.up.sql" -print0 | sort -z | xargs 
 		psql --echo-errors --variable "ON_ERROR_STOP=1" ${PGDATABASE} < ${dataFile} | awk "\$0=\"[${dataFile/.sql/}] \"\$0"
 	done
 done
-
-# TODO: alter password for users to password set in helm values (secret values?)

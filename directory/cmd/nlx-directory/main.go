@@ -7,9 +7,9 @@ import (
 	"os"
 
 	"github.com/huandu/xstrings"
+	flags "github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	flags "github.com/svent/go-flags"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
@@ -29,6 +29,9 @@ var options struct {
 	DirectoryKeyFile  string `long:"tls-directory-key" env:"TLS_DIRECTORY_KEY" description:"Absolute or relative path to the Directory key .pem"`
 
 	PostgresDSN string `long:"postgres-dsn" env:"POSTGRES_DSN" default:"postgres://postgres:postgres@postgres/nlx?sslmode=disable" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
+
+	DemoEnv    string `long:"demo-env" env:"DEMO_ENV" required:"true"`
+	DemoDomain string `long:"demo-domain" env:"DEMO_DOMAIN" required:"true"`
 
 	logoptions.LogOptions
 }
@@ -87,7 +90,7 @@ func main() {
 		logger.Fatal("failed to load x509 keypair for directory", zap.Error(err))
 	}
 
-	directoryService, err := directoryservice.New(logger, db, caCertPool, certKeyPair)
+	directoryService, err := directoryservice.New(logger, db, caCertPool, certKeyPair, options.DemoEnv, options.DemoDomain)
 	if err != nil {
 		logger.Fatal("failed to create new directory service", zap.Error(err))
 	}

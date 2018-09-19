@@ -1,0 +1,83 @@
+{{ with set . "component" "irma-api-server" }}
+# TODO: When using proper k8s RBAC split this into two secrets; only api server can use privkey, others can only read pubkey.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: jwt-rsa-{{.component}}
+  namespace: {{.Release.Namespace}}
+  labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
+type: Opaque
+data:
+  crt.der: {{ .Values.irma.certificate.crtDER | b64enc }}
+  key.der: {{ .Values.irma.certificate.keyDER | b64enc }}
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      release: {{ .Release.Name }}
+      app: {{ .Chart.Name }}
+      component: {{.component}}
+  template:
+    metadata:
+      labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: irma-api
+          image: {{.Values.irma.apiServerImage}}
+          imagePullPolicy: {{.Values.irma.pullPolicy}}
+          env:
+            - name: IRMA_API_CONF_BASE64_JWT_PUBLICKEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-rsa-{{.component}}
+                  key: crt.der
+            - name: IRMA_API_CONF_BASE64_JWT_PRIVATEKEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-rsa-{{.component}}
+                  key: key.der
+            - name: IRMA_API_CONF_ENABLE_ISSUING
+              value: "true"
+            - name: IRMA_API_CONF_ALLOW_UNSIGNED_ISSUE_REQUESTS
+              value: "true"
+            - name: IRMA_API_CONF_AUTHORIZED_IDPS
+              value: "{insight: [*],* : [*]}"
+            - name: IRMA_API_CONF_REJECT_UNFLOORED_VALIDITY_TIMESTAMPS
+              value: "false"
+          ports:
+            - containerPort: 8080
+      restartPolicy: Always
+  status: {}
+---
+apiVersion: v1
+kind: Service
+metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
+spec:
+  selector: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
+  ports:
+    - name: api
+      protocol: TCP
+      port: 8080
+  cluserIP: None
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.frontend.rule.type: PathPrefixStrip
+spec:
+  rules:
+  - host: irma-api.{{.Values.domain}}
+    http:
+      paths:
+        - backend:
+            serviceName: {{.component}}
+            servicePort: api
+{{ end }}

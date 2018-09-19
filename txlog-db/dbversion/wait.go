@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mattes/migrate"
-	"github.com/mattes/migrate/database/postgres"
+	"github.com/golang-migrate/migrate"
+	"github.com/golang-migrate/migrate/database/postgres"
 	"go.uber.org/zap"
 )
 

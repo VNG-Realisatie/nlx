@@ -4,14 +4,15 @@ RUN mkdir /go
 ENV GOPATH /go
 ENV QT_QPA_PLATFORM=
 
+# Install postgres client
 RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
     echo "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main" > /etc/apt/sources.list.d/postgres.list && \
     apt update && \
     apt -y install --no-install-recommends postgresql-client-9.6 && \
     rm -rf /var/lib/apt/lists/*
 
+# Install java
 RUN apt-get update && apt-get -y install --no-install-recommends \
-    golang-go \
     git \
     ttf-dejavu \
     xvfb \
@@ -19,10 +20,18 @@ RUN apt-get update && apt-get -y install --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
+# Intsall go
+ENV GOLANG_VERSION 1.11
+RUN wget -O go.tgz "https://golang.org/dl/go${GOLANG_VERSION}.linux-amd64.tar.gz" && \
+    tar -C /usr/local -xzf go.tgz && \
+    rm go.tgz
+ENV GOPATH /go
+ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
+
 # Install modd and migrate
-RUN go get github.com/cortesi/modd/cmd/modd && \
-    go get -u -d github.com/mattes/migrate/cli github.com/lib/pq && \
-    go build -tags 'postgres' -o /usr/local/bin/migrate github.com/mattes/migrate/cli
+RUN go get -u github.com/cortesi/modd/cmd/modd && \
+    go get -u -d github.com/golang-migrate/migrate/cli github.com/lib/pq && \
+    go build -tags 'postgres' -o /usr/local/bin/migrate github.com/golang-migrate/migrate/cli
 
 # Install docker so developers can run the diff script in modd
 RUN curl -fsSLO https://download.docker.com/linux/static/stable/x86_64/docker-17.09.0-ce.tgz && \

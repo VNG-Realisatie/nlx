@@ -1,0 +1,25 @@
+{{ with set . "component" "insight-ui" }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.frontend.rule.type: PathPrefixStrip
+spec:
+  rules:
+  - host: insight.{{.Values.domain}}
+    http:
+      paths:
+        # - path: /
+        #   backend:
+        #     serviceName: {{.component}}
+        #     servicePort: webinterface
+        - path: /api/irma
+          backend:
+            serviceName: insight-api-irma
+            servicePort: api
+        - path: /api/txlog
+          backend:
+            serviceName: insight-api-txlog
+            servicePort: api
+{{ end }}

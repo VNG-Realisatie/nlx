@@ -56,7 +56,7 @@ func (h *listServicesHandler) ListServices(ctx context.Context, req *directoryap
 		return nil, errors.Wrap(err, "failed to execute stmtSelectServices")
 	}
 	for rows.Next() {
-		var respService = &directoryapi.Service{}
+		var respService = &directoryapi.ListServicesResponse_Service{}
 		var inwayAddresses = pq.StringArray{}
 		err = rows.Scan(
 			&respService.OrganizationName,

@@ -16,8 +16,7 @@ COPY common                     /go/src/go.nlx.io/nlx/common
 
 WORKDIR /go/src/go.nlx.io/nlx/inway
 
-# Ignore failing make to allow this stage to complete even when there are errors in the sourcecode.
-RUN make || true
+RUN make
 
 
 # Release binary on latest alpine image.

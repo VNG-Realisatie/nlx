@@ -8,6 +8,7 @@ import (
 	"github.com/pkg/errors"
 )
 
+// TransactionLogger abstracts the writing of transactionlogs.
 type TransactionLogger interface {
 	AddRecord(rec *Record) error
 }
@@ -15,10 +16,12 @@ type TransactionLogger interface {
 // DiscardTransactionLogger discards records it gets
 type DiscardTransactionLogger struct{}
 
+// NewDiscardTransactionLogger creates a new TransactionLogger that discards all records.
 func NewDiscardTransactionLogger() TransactionLogger {
 	return &DiscardTransactionLogger{}
 }
 
+// AddRecord implements TransactionLogger.AddRecord and discards any given record.
 func (txl *DiscardTransactionLogger) AddRecord(rec *Record) error {
 	return nil
 }
@@ -29,10 +32,17 @@ type PostgresTransactionLogger struct {
 	stmtInsertTransactionLog *sqlx.NamedStmt
 }
 
-// NewPostgressTransactionLogger prepares a new TransactionLogger.
+// NewPostgresTransactionLogger prepares a new TransactionLogger.
 func NewPostgresTransactionLogger(logdb *sqlx.DB, direction Direction) (TransactionLogger, error) {
 	txl := &PostgresTransactionLogger{
 		logdb: logdb,
+	}
+
+	switch direction {
+	case DirectionIn:
+	case DirectionOut:
+	default:
+		return nil, errors.New("invalid direction value")
 	}
 
 	var err error
