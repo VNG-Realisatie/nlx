@@ -14,12 +14,19 @@ db_tests:
 build:
   stage: build
   script:
-  - skaffold build --profile release
+  - skaffold build
 
 test:
   stage: test
   script:
   - exit 0
+
+release:
+  stage: release
+  script:
+  - skaffold build --profile release
+  only:
+  - master
 
 # release:
 #   stage: release
