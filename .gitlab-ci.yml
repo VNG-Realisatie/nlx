@@ -2,7 +2,7 @@ stages:
   - db_tests
   - build
   - test
-  # - release
+  - release
   # - deploy
 
 db_tests:
