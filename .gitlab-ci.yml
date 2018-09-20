@@ -14,7 +14,7 @@ db_tests:
 build:
   stage: build
   script:
-  - exit 0
+  - skaffold build --profile release
 
 test:
   stage: test
