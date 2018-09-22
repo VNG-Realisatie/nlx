@@ -29,6 +29,7 @@ Release container images:
     - skaffold build --profile release
   only:
     - master
+    - tags
 
 .deploy:
   stage: Deploy
