@@ -23,6 +23,8 @@ No-op test:
 
 Release container images:
   stage: Release
+  tags:
+    - nlx-privileged
   script:
     - skaffold build --profile release
   only:
@@ -30,6 +32,8 @@ Release container images:
 
 .deploy:
   stage: Deploy
+  tags:
+    - nlx-privileged
   script:
     - skaffold run --profile release --profile deploy-${CI_ENVIRONMENT_NAME}
 
