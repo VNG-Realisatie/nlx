@@ -76,7 +76,7 @@ helm install stable/postgresql --name postgresql --namespace=postgresql --values
 When these components are running, you can start all the NLX components by executing:
 
 ```bash
-MINIKUBE_IP=$(minikube ip) skaffold dev
+MINIKUBE_IP=$(minikube ip) skaffold dev --profile minikube
 ```
 
 Finally, add the minikube hostnames to your machine's `/etc/hosts` file so you can reach the services from your browser.
