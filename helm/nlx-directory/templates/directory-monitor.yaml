@@ -57,12 +57,14 @@ spec:
               mountPath: /certs
 
       # NOTE: workarround because .minikube doesn't resolve via DNS
+      {{ if .Values.externalIP }}
       hostAliases:
         - ip: "{{.Values.externalIP}}"
           hostnames:
             {{- range .Values.inwayHostnames }}
             - "{{.}}"
             {{ end }}
+      {{ end }}
 
       restartPolicy: Always
   status: {}

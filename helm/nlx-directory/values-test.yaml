@@ -1,0 +1,17 @@
+
+domain: test.nlx.io
+
+dbHost: postgresql.postgresql
+dbUsernameSuperuser: postgres
+dbPasswordSuperuser: postgres
+
+dbDatabaseDirectory: nlx
+dbResetDirectory: true # WARNING: All data will be LOST, never use in production!
+dbUsernameDirectory: nlx-directory
+dbPasswordDirectory: nlx-directory
+
+demoEnv: "test"
+demoDomain: "nlx.io"
+inwayHostnames:
+  - inway.test.brp.nlx.io
+  - inway.test.rdw.nlx.io
