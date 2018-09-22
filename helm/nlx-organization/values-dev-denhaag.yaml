@@ -13,7 +13,7 @@ dbPasswordTxlogAPI: nlx-txlog-api
 dbUsernameTxlogWriter: nlx-denhaag-txlog-writer
 dbPasswordTxlogWriter: nlx-txlog-writer
 
-caAddress: ca-cfssl-unsafe.nlx-directory-dev
+caAddress: ca-cfssl-unsafe.nlx-dev-directory
 
 inway:
   enable: false

@@ -1,39 +1,60 @@
 stages:
-  - db_tests
-  - build
-  - test
-  - release
-  # - deploy
+  - Quick tests
+  - Build
+  - Tests
+  - Release
+  - Deploy
 
-db_tests:
-  stage: db_tests
+Database diff test:
+  stage: Quick tests
   script:
     - ./directory-db/diff.sh ci-once
     - ./txlog-db/diff.sh ci-once
 
-build:
-  stage: build
+Build:
+  stage: Build
   script:
-  - skaffold build
+    - skaffold build
 
-test:
-  stage: test
+No-op test:
+  stage: Tests
   script:
-  - exit 0
+    - exit 0
 
-release:
-  stage: release
+Release container images:
+  stage: Release
   script:
-  - skaffold build --profile release
+    - skaffold build --profile release
   only:
-  - master
+    - master
 
-# release:
-#   stage: release
-#   script:
-#   - ./release-docker-images.sh
-#   only:
-#   - master
+.deploy:
+  stage: Deploy
+  script:
+    - skaffold run --profile release --profile deploy-${CI_ENVIRONMENT_NAME}
+
+Deploy test:
+  extends: .deploy
+  environment:
+    name: test
+  only:
+    - master
+    - tags
+
+Deploy acceptance:
+  extends: .deploy
+  environment:
+    name: acc
+  only:
+    - tags
+
+Deploy demo:
+  extends: .deploy
+  environment:
+    name: demo
+  when: manual
+  only:
+    - tags
 
 # deploy_test:
 #   stage: deploy

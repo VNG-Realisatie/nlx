@@ -59,74 +59,75 @@ build:
   local:
     skipPush: true
 
-deploy:
-  helm:
-    releases:
-      - name: nlx-directory-dev
-        chartPath: helm/nlx-directory
-        valuesFilePath: helm/nlx-directory/values-dev.yaml
-        namespace: nlx-directory-dev
-        version: "v0.0.0"
-        values:
-          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-          caCertportalImage: nlxio/ca-certportal
-          directoryDBImage: nlxio/directory-db
-          directoryImage: nlxio/directory
-          directoryMonitorImage: nlxio/directory-monitor
-          directoryUIImage: nlxio/directory-ui
-          docsImage: nlxio/docs
-        setValueTemplates:
-          externalIP: "{{.MINIKUBE_IP}}"
-
-      - name: nlx-brp-dev
-        chartPath: helm/nlx-organization
-        valuesFilePath: helm/nlx-organization/values-brp-dev.yaml
-        namespace: nlx-brp-dev
-        version: "v0.0.0"
-        values:
-          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-          txlogDBImage: nlxio/txlog-db
-          txlogAPIImage: nlxio/txlog-api
-          txlogUIImage: nlxio/txlog-ui
-          inwayImage: nlxio/inway
-          insightApiIrmaImage: nlxio/insight-api-irma
-          insightApiTxlogImage: nlxio/insight-api-txlog
-        setValueTemplates:
-          externalIP: "{{.MINIKUBE_IP}}"
-
-      - name: nlx-rdw-dev
-        chartPath: helm/nlx-organization
-        valuesFilePath: helm/nlx-organization/values-rdw-dev.yaml
-        namespace: nlx-rdw-dev
-        version: "v0.0.0"
-        values:
-          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-          txlogDBImage: nlxio/txlog-db
-          txlogAPIImage: nlxio/txlog-api
-          txlogUIImage: nlxio/txlog-ui
-          inwayImage: nlxio/inway
-          insightApiIrmaImage: nlxio/insight-api-irma
-          insightApiTxlogImage: nlxio/insight-api-txlog
-        setValueTemplates:
-          externalIP: "{{.MINIKUBE_IP}}"
-
-      - name: nlx-denhaag-dev
-        chartPath: helm/nlx-organization
-        valuesFilePath: helm/nlx-organization/values-denhaag-dev.yaml
-        namespace: nlx-denhaag-dev
-        version: "v0.0.0"
-        values:
-          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-          txlogDBImage: nlxio/txlog-db
-          txlogAPIImage: nlxio/txlog-api
-          txlogUIImage: nlxio/txlog-ui
-          outwayImage: nlxio/outway
-          insightApiIrmaImage: nlxio/insight-api-irma
-          insightApiTxlogImage: nlxio/insight-api-txlog
-        setValueTemplates:
-          externalIP: "{{.MINIKUBE_IP}}"
-
 profiles:
+  - name: minikube
+    deploy:
+      helm:
+        releases:
+          - name: nlx-dev-directory
+            chartPath: helm/nlx-directory
+            valuesFilePath: helm/nlx-directory/values-dev.yaml
+            namespace: nlx-dev-directory
+            version: "v0.0.0"
+            values:
+              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+              caCertportalImage: nlxio/ca-certportal
+              directoryDBImage: nlxio/directory-db
+              directoryImage: nlxio/directory
+              directoryMonitorImage: nlxio/directory-monitor
+              directoryUIImage: nlxio/directory-ui
+              docsImage: nlxio/docs
+            setValueTemplates:
+              externalIP: "{{.MINIKUBE_IP}}" # 
+
+          - name: nlx-dev-brp
+            chartPath: helm/nlx-organization
+            valuesFilePath: helm/nlx-organization/values-dev-brp.yaml
+            namespace: nlx-dev-brp
+            version: "v0.0.0"
+            values:
+              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+              txlogDBImage: nlxio/txlog-db
+              txlogAPIImage: nlxio/txlog-api
+              txlogUIImage: nlxio/txlog-ui
+              inwayImage: nlxio/inway
+              insightApiIrmaImage: nlxio/insight-api-irma
+              insightApiTxlogImage: nlxio/insight-api-txlog
+            setValueTemplates:
+              externalIP: "{{.MINIKUBE_IP}}"
+
+          - name: nlx-dev-rdw
+            chartPath: helm/nlx-organization
+            valuesFilePath: helm/nlx-organization/values-dev-rdw.yaml
+            namespace: nlx-dev-rdw
+            version: "v0.0.0"
+            values:
+              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+              txlogDBImage: nlxio/txlog-db
+              txlogAPIImage: nlxio/txlog-api
+              txlogUIImage: nlxio/txlog-ui
+              inwayImage: nlxio/inway
+              insightApiIrmaImage: nlxio/insight-api-irma
+              insightApiTxlogImage: nlxio/insight-api-txlog
+            setValueTemplates:
+              externalIP: "{{.MINIKUBE_IP}}"
+
+          - name: nlx-dev-denhaag
+            chartPath: helm/nlx-organization
+            valuesFilePath: helm/nlx-organization/values-dev-denhaag.yaml
+            namespace: nlx-dev-denhaag
+            version: "v0.0.0"
+            values:
+              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+              txlogDBImage: nlxio/txlog-db
+              txlogAPIImage: nlxio/txlog-api
+              txlogUIImage: nlxio/txlog-ui
+              outwayImage: nlxio/outway
+              insightApiIrmaImage: nlxio/insight-api-irma
+              insightApiTxlogImage: nlxio/insight-api-txlog
+            setValueTemplates:
+              externalIP: "{{.MINIKUBE_IP}}"
+
   - name: release
     build:
       tagPolicy:
@@ -136,3 +137,21 @@ profiles:
         skipPush: false
         # TODO: Setup push to image registry
         # TODO: Use local builder at all? Depends on CI/CD setup. Probably yes with gitlab ci when runner is of type 'shell'.
+  
+  - name: deploy-test
+    deploy:
+      helm:
+        releases:
+          - name: nlx-test-directory
+            chartPath: helm/nlx-directory
+            valuesFilePath: helm/nlx-directory/values-test.yaml
+            namespace: nlx-test-directory
+            version: "v0.0.0"
+            values:
+              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+              caCertportalImage: nlxio/ca-certportal
+              directoryDBImage: nlxio/directory-db
+              directoryImage: nlxio/directory
+              directoryMonitorImage: nlxio/directory-monitor
+              directoryUIImage: nlxio/directory-ui
+              docsImage: nlxio/docs
