@@ -123,6 +123,11 @@ func newVerificationPoll(logger *zap.Logger) http.HandlerFunc {
 		}
 
 		token, verificationResultClaims, err := irmaClient.PollVerification(verificationID)
+		if err != nil {
+			logger.Error("failed to poll for verification", zap.Error(err))
+			http.Error(w, "server error", http.StatusInternalServerError)
+			return
+		}
 		_ = verificationResultClaims
 		_, err = io.WriteString(w, token.Raw)
 		if err != nil {
