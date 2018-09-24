@@ -4,7 +4,7 @@ description: ""
 weight: 120
 menu:
   docs:
-    parent: "developing-on-nlx"
+    parent: "providing-services-on-nlx"
 ---
 
 ## Deploying an inway

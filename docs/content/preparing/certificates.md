@@ -1,13 +1,16 @@
 ---
-title: "Developing on NLX"
+title: "Certificates"
 description: ""
-weight: 10
+weight: 100
+menu:
+  docs:
+    parent: "preparing"
 ---
 
-## Getting started
-Before you can start developing on NLX you need to request a development organisation certificate. With this certificate you can build applications on top of NLX and also provide services to the NLX network.
+To connect with other nodes on the NLX network, you'll need a certificate and private key. The certificate and key are used to encrypt traffic between you and other nodes.
 
 ## Generate a certificate
+
 First generate a certificate request using [openssl](https://www.openssl.org/). This can be done using the following command:
 
 ```bash
@@ -33,9 +36,11 @@ Now openssl wil generate two files:
 We will use the NLX certportal to retrieve an NLX developer certificate.
 
 ## Request a certificate
+
 Now point your browser to [certportal.nlx.io](https://certportal.nlx.io) to request a certificate. Enter the content of ```{yourhostname}.csr``` and click on **Request certificate**. The system will instantly generate a valid developer certificate. Download the certificate and store it next to your private key.
 
 ## Downloading the CA root certificate
+
 To validate certificates of other organizations, you will need our demo CA's root certificate. It's available for download at https://certportal.nlx.io/root.crt
 
 Now you are ready to develop on NLX.

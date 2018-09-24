@@ -4,7 +4,7 @@ description: ""
 weight: 110
 menu:
   docs:
-    parent: "developing-on-nlx"
+    parent: "using-services-on-nlx"
 ---
 
 ## Deploying an outway
