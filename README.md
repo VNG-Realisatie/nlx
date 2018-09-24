@@ -119,7 +119,7 @@ Note the ports; `30080` and `30443` are routed via traefik (TLS handled by traef
 If you want to connect over IP instead of using a hostname, the ingress controller cannot route the request properly. Therefore you must setup a port-forward directly to the application you want to expose. This is useful, for example, when testing IRMA using a phone on the same WiFi network as your host machine.
 
 ```bash
-kubectl --namespace nlx-rdw-dev port-forward deployment/irma-api-server 2222:8080
+kubectl --namespace nlx-dev-rdw port-forward deployment/irma-api-server 2222:8080
 socat tcp-listen:3333,fork tcp:127.0.0.1:2222
 ```
 
