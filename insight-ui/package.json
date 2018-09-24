@@ -29,9 +29,9 @@
     "typeface-muli": "^0.0.54",
     "typeface-source-sans-pro": "^0.0.54"
   },
-  "proxy":"https://diva-fieldlab.appx.cloud/api",
-  "proxy-test":{
+  "proxy": "https://diva-fieldlab.appx.cloud/api",
+  "proxy-test": {
     "/directory": "http://directory.dev.nlx.minikube:30080/api",
-    "/fieldlab":"https://diva-fieldlab.appx.cloud/api"
-  } 
+    "/fieldlab": "https://diva-fieldlab.appx.cloud/api"
+  }
 }
