@@ -1,19 +1,19 @@
-# NLX Workshop
+# NLX fieldlab
 
-During this workshop we'll setup an NLX outway and request a service that is available on the NLX demo network.
+During this fieldlab NLX walkthrough we'll setup an NLX outway and request a service that is available on the NLX demo network.
 
 To run the outway, we need a certificate for TLS communications with other NLX services.
 
-Lets start by creating a directory structure for this workshop.
+Lets start by creating a directory structure for this fieldlab.
 
 ```bash
-mkdir -p $HOME/nlx-workshop/certs
+mkdir -p $HOME/nlx-fieldlab/certs
 ```
 
-Change directory to the nlx-workshop folder.
+Change directory to the nlx-fieldlab folder.
 
 ```bash
-cd $HOME/nlx-workshop
+cd $HOME/nlx-fieldlab
 ```
 We need to create a key and certificate signing request (csr) for our organization.
 
@@ -52,8 +52,8 @@ Next, we want docker will to start a container based on this image.
 ```bash
 docker run \
     --tty --interactive \
-    --volume=$HOME/nlx-workshop/certs:/certs \
-    --publish=12018:12018 \
+    --volume=$HOME/nlx-fieldlab/certs:/certs \
+    --publish=2018:80 \
     nlxio/outway:latest \
     /usr/local/bin/nlx-outway \
     --log-type=development \
@@ -67,21 +67,25 @@ docker run \
 
 We give docker several arguments:
 
-- `-log-*` setup developmeng logs so we can see what's going on
 - `--tty --interactive` tells docker to show us the output of the process.
 - `--volume` tells docker to make the `certs` folder, where we just put the certificates, available inside the container.
-- `--publish` opens port 12018 for traffic. We will send requests to this port.
+- `--publish` connects port 2018 on the host machine to port 80 inside the container. This way, we can send requests to the outway.
 - `nlxio/outway:latest` is the name of our docker image (`nlxio/outway`) as stored in the docker registry and the version we want to use (`latest`). The `--` tells docker that all arguments after this one are meant for the outway process, not for docker itself.
 - `/usr/local/bin/nlx-outway` is the binary in the container that we want to execute.
 
 All arguments after the image and executable name are passed to the process (nlx-outway) itself..
 
+- `-log-*` setup developmeng logs so we can see what's going on
 - `--directory-address` is set to point the outway to the demo environment directory service. This means we can use this outway to connect to services in the demo environment.
 - `--tls-*` tells outway where to find the root, org-cert and org-key files.
-- `--disable-logdb` tells outway to not write request log records, because we have not set up a database for it. Logs are still written at services we will be using.
+- `--disable-logdb` tells outway to not write transaction log records, because we have not set up a database for it. Transactionlogs are still written at remote services we will be using.
 
-Make a request through the outway.
+Make a request through the outway. VNG-Realisatie is hosting a demo api on the network, lets try that.
 
 ```bash
-curl "localhost:12018/demo-organization/demo-api/"
+curl "localhost:2018/vng-realisatie/demo-api/"
 ```
+You now have a outway running and connected to the demo network of NLX. To make requests to a service, use the URL: `localhost:2018/<organization>/<service>`.
+
+Take a look at the NLX directory at https://directory.demo.nlx.io to find other services and their API documentation.
+
