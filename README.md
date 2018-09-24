@@ -89,13 +89,13 @@ echo "$(minikube ip)       directory.dev.nlx.minikube" | sudo tee -a /etc/hosts
 echo "$(minikube ip)   directory-api.dev.nlx.minikube" | sudo tee -a /etc/hosts
 echo "$(minikube ip)           txlog.dev.rdw.minikube" | sudo tee -a /etc/hosts
 echo "$(minikube ip)        irma-api.dev.rdw.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)         insight.dev.rdw.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)     insight-api.dev.rdw.minikube" | sudo tee -a /etc/hosts
 echo "$(minikube ip)           txlog.dev.brp.minikube" | sudo tee -a /etc/hosts
 echo "$(minikube ip)        irma-api.dev.brp.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)         insight.dev.brp.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)     insight-api.dev.brp.minikube" | sudo tee -a /etc/hosts
 echo "$(minikube ip)       txlog.dev.denhaag.minikube" | sudo tee -a /etc/hosts
 echo "$(minikube ip)    irma-api.dev.denhaag.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)     insight.dev.denhaag.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip) insight-api.dev.denhaag.minikube" | sudo tee -a /etc/hosts
 echo "$(minikube ip)      outway.dev.denhaag.minikube" | sudo tee -a /etc/hosts
 echo "$(minikube ip) application.dev.denhaag.minikube" | sudo tee -a /etc/hosts
 ```

@@ -1,4 +1,4 @@
-{{ with set . "component" "insight-ui" }}
+{{ with set . "component" "insight-api" }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
@@ -7,18 +7,14 @@ metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
     traefik.frontend.rule.type: PathPrefixStrip
 spec:
   rules:
-  - host: insight.{{.Values.domain}}
+  - host: insight-api.{{.Values.domain}}
     http:
       paths:
-        # - path: /
-        #   backend:
-        #     serviceName: {{.component}}
-        #     servicePort: webinterface
-        - path: /api/irma
+        - path: /irma
           backend:
             serviceName: insight-api-irma
             servicePort: api
-        - path: /api/txlog
+        - path: /txlog
           backend:
             serviceName: insight-api-txlog
             servicePort: api
