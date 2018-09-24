@@ -1,6 +1,10 @@
-# NLX outway walkthrough
+# NLX walkthrough
 
-During this walkthrough we'll setup an NLX outway and make a request to a service that is available on the NLX demo network.
+During this walkthrough we'll setup an NLX outway make a request to a service that is available on the NLX demo network.
+
+This guide is written for Mac/Linux users and assumes you have some experience with the terminal/shell. Windows 10 users may be able to follow this tutorial using [ubuntu for windows](https://tutorials.ubuntu.com/tutorial/tutorial-ubuntu-on-windows). However, the windows platform is not officially supported, we advise to use a VM with Ubuntu installed.
+
+## Certificate
 
 To run the outway, we need a certificate for encrypted/TLS communications with other NLX servers on the network.
 
@@ -46,7 +50,13 @@ We now have a certificate by which we can identify ourselves to other NLX servic
 wget https://certportal.demo.nlx.io/root.crt -O certs/root.crt
 ```
 
-We're now ready to start the outway. We do this by running the outway in docker. First, download the latest version of the container image.
+We're now ready to start outways and inways.
+
+## Outway
+
+The easiest way to run an outway is by using docker. Please make sure you have a recent stable version of docker [installed](https://docs.docker.com/install/).
+
+Start by downloading the latest version of the container image from the docker hub.
 
 ```bash
 docker pull nlxio/outway:latest
@@ -72,7 +82,7 @@ docker run \
 
 We give docker several arguments:
 
-- `--tty --interactive` tells docker to show us the output of the process.
+- `--tty` and `--interactive` tells docker to connect the terminal you're using with the container so you may view logs.
 - `--volume` tells docker to make the `certs` folder, where we just put the certificates, available inside the container.
 - `--publish` connects port 2018 on the host machine to port 80 inside the container. This way, we can send requests to the outway.
 - `nlxio/outway:latest` is the name of our docker image (`nlxio/outway`) as stored in the docker registry and the version we want to use (`latest`). The `--` tells docker that all arguments after this one are meant for the outway process, not for docker itself.
@@ -90,6 +100,7 @@ Make a request through the outway. VNG-Realisatie is hosting a demo api on the n
 ```bash
 curl "localhost:2018/vng-realisatie/demo-api/"
 ```
+
 You now have a outway running and connected to the demo network of NLX. To make requests to a service, use the URL: `localhost:2018/<organization>/<service>`.
 
 Take a look at the NLX directory at https://directory.demo.nlx.io to find other services and their API documentation.
