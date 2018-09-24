@@ -1,20 +1,23 @@
-# NLX fieldlab
+# NLX outway walkthrough
 
-During this fieldlab NLX walkthrough we'll setup an NLX outway and request a service that is available on the NLX demo network.
+During this walkthrough we'll setup an NLX outway and make a request to a service that is available on the NLX demo network.
 
-To run the outway, we need a certificate for TLS communications with other NLX services.
+To run the outway, we need a certificate for encrypted/TLS communications with other NLX servers on the network.
 
-Lets start by creating a directory structure for this fieldlab.
+The demo network is public, anyone can create a signed certificate using the "certportal". The certportal will simply sign any certificate with the demo network key. This allows anyone to get access to the demo network quickly without needing to contact a service desk for a valid certificate.
 
-```bash
-mkdir -p $HOME/nlx-fieldlab/certs
-```
-
-Change directory to the nlx-fieldlab folder.
+Lets start by creating a directory structure for this walkthrough.
 
 ```bash
-cd $HOME/nlx-fieldlab
+mkdir -p $HOME/nlx-walkthrough/certs
 ```
+
+Change directory to the nlx-walkthrough folder.
+
+```bash
+cd $HOME/nlx-walkthrough
+```
+
 We need to create a key and certificate signing request (csr) for our organization.
 
 ```bash
@@ -29,7 +32,9 @@ View the contents of `certs/org.csr`:
 cat certs/org.csr
 ```
 
-Go to https://certportal.demo.nlx.io and paste the contents of the ` you've just created. Click "Request Certificate" and copy the resulting certificate text.
+Copy the complete CSR, including `-----BEGIN CERTIFICATE REQUEST-----` and `-----END CERTIFICATE REQUEST-----`.
+
+Go to https://certportal.demo.nlx.io and paste the text of the csr you've just coped. Click "Request Certificate". Copy the resulting certificate text.
 
 Create a file, `certs/org.crt`, and paste the certificate. Or click download and move the `certificate.crt` to `certs/org.crt`.
 
@@ -52,7 +57,7 @@ Next, we want docker will to start a container based on this image.
 ```bash
 docker run \
     --tty --interactive \
-    --volume=$HOME/nlx-fieldlab/certs:/certs \
+    --volume=$HOME/nlx-walkthrough/certs:/certs \
     --publish=2018:80 \
     nlxio/outway:latest \
     /usr/local/bin/nlx-outway \
