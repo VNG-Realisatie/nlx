@@ -28,11 +28,10 @@ class QRPage extends React.Component {
   setSignature(){ 
     this.setState({
       qrcValue: JSON.stringify({
-        "qrContent": {
-          "u": "https://int-diva-irma-api-server.appx.cloud/api/v2/issue/yE0S826ETydH3bKP0I09BZ169pccRJTS350zcrqviR9W",
-          "v": "2.0",
-          "vmax": "2.3",
-          "irmaqr": "issuing"
+        "qrContent":{
+          "irmaqr":"disclosing",
+          "u":`https://example.com/verification/s8oA2gVkQbQ3sZWrGq5Bwc18q8hgBVdlBkyDgjD3lk`,
+          "v":"2.0","vmax":"2.3"
         }
       })
     })

@@ -29,7 +29,7 @@ const styles = theme => ({
 	}
 })
 
-class Company extends Component {
+class OrganizationPage extends Component {
     state={
         cid: null,
         loggedIn: false,
@@ -52,12 +52,12 @@ class Company extends Component {
 
     componentDidMount(){
         logGroup({
-            title: "Company",
+            title: "Organization",
             method: "componentDidMount",
             props:this.props,
             state: this.state
         });
-        this.getCompanyInfo()
+        this.getOrganizationInfo()
     }
 
     shouldComponentUpdate(nextProps, nextState){
@@ -74,21 +74,21 @@ class Company extends Component {
 
     componentDidUpdate(){
         logGroup({
-            title:"Company",
+            title:"Organization",
             method:"componentDidUpdate",
             props:this.props,
             state: this.state
         });
-        this.getCompanyInfo()
+        this.getOrganizationInfo()
     }
 
     /**
-     * Get company log info.
+     * Get Organization log info.
      * NOTE: The initial idea is to place api call here.
      * WARNING: Currently mock data is ONLY LOADED if
      * cid==2
      */
-    getCompanyInfo(){
+    getOrganizationInfo(){
         //debugger
         if (this.props.match.params.cid==="2"){
             this.setState({
@@ -207,7 +207,7 @@ class Company extends Component {
         return (
             <React.Fragment>
                 <Typography variant="title" color="primary" noWrap gutterBottom>
-                    Selected company {cid}
+                    Selected Organization {cid}
                 </Typography>
 
                 {this.createTable()}
@@ -227,6 +227,6 @@ export default WithSimpleDivaAuthorization(
     {},
     'pbdf.pbdf.email.email',
     'Email'
-)(Company);
+)(Organization);
 */
-export default withStyles(styles)(Company)
+export default withStyles(styles)(OrganizationPage)

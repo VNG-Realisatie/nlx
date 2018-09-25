@@ -10,7 +10,7 @@ import { Home, VerifiedUser, NotInterested }from '@material-ui/icons';
 import config from '../utils/config';
 import listServices from '../mockdata/directory.dev.nlx-list-services.json';
 
-class CompanyMenu extends Component {    
+class OrganizationList extends Component {    
     state={
         "services": []
     }    
@@ -38,7 +38,7 @@ class CompanyMenu extends Component {
         })
     }
     getMenuItem(item){
-        const uri = `/company/${item.id}`,
+        const uri = `/organization/${item.id}`,
             active = uri===this.props.location.pathname;           
         return (
             <MenuItem
@@ -99,5 +99,5 @@ class CompanyMenu extends Component {
     }
 }
 
-//export default withRouter(CompanyMenu);
-export default withRouter(CompanyMenu);
+//export default withRouter(MenuList);
+export default withRouter(OrganizationList);

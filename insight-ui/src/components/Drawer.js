@@ -13,8 +13,8 @@ import MenuIcon from '@material-ui/icons/Menu'
 
 import styles from '../styles/Drawer';
 import Home from './Home';
-import Company from './Company';
-import CompanyMenu from './CompanyMenu';
+import OrganizationPage from './OrganizationPage';
+import OrganizationList from './OrganizationList';
 import Logo from './Logo';
 import QRPage from './QRPage';
 
@@ -70,13 +70,13 @@ class ResponsiveDrawer extends React.Component {
 							<Logo />
 						</Toolbar>
 
-						<CompanyMenu />
+						<OrganizationList />
 					</Drawer>
 				</Hidden>
 				<Hidden smDown implementation="css">
 					<Drawer variant="permanent" className={classes.drawerPaper}>
 						<div className={classes.toolbar} />
-						<CompanyMenu />
+						<OrganizationList />
 					</Drawer>
 				</Hidden>
 				<main className={classes.content}>
@@ -84,7 +84,7 @@ class ResponsiveDrawer extends React.Component {
 					<Switch>
 						<Route exact path="/" component={Home} />
 						<Route exact path="/signin" component={QRPage} />
-						<Route exact path="/company/:cid" component={Company} />
+						<Route exact path="/organization/:cid" component={OrganizationPage} />
 					</Switch>
 				</main>
 			</div>
