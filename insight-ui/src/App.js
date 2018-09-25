@@ -8,7 +8,7 @@ import ResponsiveDrawer from './components/Drawer';
 
 class App extends Component {
     state={
-        appTitle:"App title"
+        appTitle:"NLx Insights"
     }
     componentDidMount() {
         //this.props.getSessionData();
