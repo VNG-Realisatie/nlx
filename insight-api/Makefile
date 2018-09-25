@@ -12,4 +12,4 @@ vendor:
 
 .PHONY: build
 build:
-	go build -o dist/bin/nlx-insight-api-txlog ./cmd/nlx-insight-api-txlog
+	go build -o dist/bin/nlx-insight-api ./cmd/nlx-insight-api

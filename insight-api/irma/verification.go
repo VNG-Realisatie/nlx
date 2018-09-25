@@ -98,6 +98,16 @@ type VerificationResultClaims struct {
 	Attributes map[string]string `json:"attributes"`
 }
 
+func (c *Client) GenerateAndSignJWT(request *DiscloseRequest) (string, error) {
+	claims := c.newVerificationRequestClaims(request)
+	token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
+	signedJWT, err := token.SignedString(c.RSASignPrivateKey)
+	if err != nil {
+		return "", errors.Wrap(err, "failed to sign jwt")
+	}
+	return signedJWT, nil
+}
+
 // StartVerification sends a verification request and returns the verification disclose session object.
 func (c *Client) StartVerification(request *DiscloseRequest) (*VerificationDiscloseSession, error) {
 	// prepare and sign jwt

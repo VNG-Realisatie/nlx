@@ -21,7 +21,7 @@ import (
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/transactionlog"
-	"go.nlx.io/nlx/insight-api-txlog/irma"
+	"go.nlx.io/nlx/insight-api/irma"
 	"go.nlx.io/nlx/txlog-db/dbversion"
 )
 
@@ -93,7 +93,7 @@ func main() {
 	}
 
 	// TODO: probably the whole client thing can be removed because we just need to sign the disclose request as a jwt and return it. No communication with irma-api-server anymore.
-	irmaClient, err = irma.NewClient(logger, "insight", options.IRMAEndpointURL, rsaSignPrivateKey, rsaVerifyPublicKey)
+	irmaClient, err = irma.NewClient(logger, "insight", "", rsaSignPrivateKey, rsaVerifyPublicKey)
 
 	http.HandleFunc("/generateJWT", newVerificationStart(logger))
 	http.HandleFunc("/fetch", newTxlogFetcher(logger, db, rsaVerifyPublicKey))
