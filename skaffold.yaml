@@ -155,4 +155,4 @@ profiles:
               directoryMonitorImage: nlxio/directory-monitor
               directoryUIImage: nlxio/directory-ui
               docsImage: nlxio/docs
-              imagePullPolicy: always
+              imagePullPolicy: IfNotPresent
