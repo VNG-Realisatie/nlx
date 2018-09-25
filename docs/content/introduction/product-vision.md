@@ -10,6 +10,7 @@ menu:
 **NLX** is an open source inter-organisational system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API landscape.
 
 ## Index
+
 * [Introduction](#introduction)
 * [Core Requirements](#core-requirements)
 * [NLX functionality in more detail](#nlx-functionality-in-more-detail)
@@ -17,6 +18,7 @@ menu:
 
 
 ## Introduction
+
 The need for the creation of NLX arises from the [Common Ground vision](https://github.com/VNG-Realisatie/common-ground), which aims to convert or replace the current monolithic information systems of Dutch municipalities (and wider government) with a state of the art, API-first software landscape, fulfilling societal demand for automation, transparency and privacy.
 
 In this vision, everyone should be able to use API's in other organisations as easy as their own, while core data objects should only be manipulated by the one administratively responsible and used by all others. An additional advantage is that public data can easily be made available to everyone. To make this technically feasible in a controllable manner, NLX comes in play.
@@ -24,7 +26,6 @@ In this vision, everyone should be able to use API's in other organisations as e
 In essence, NLX provides a developer friendly way to use standardised resources on the scale of a whole country.
 
 Next to a technological challenge the implementation of NLX will require changes in governance fitting on agile development and federated structures.
-
 
 ## Core requirements
 
@@ -56,7 +57,7 @@ Non-functional:
 
 Although the NLX system will be fairly complex and will require extensively detailed requirements, it is possible to grasp the core of NLX by describing the three core functional requirements. This is what NLX is all about.
 
-*For more details, read the [NLX Functional Design](./functional-design.md).*
+*For more details, read the [NLX Functional Design](https://gitlab.com/commonground/nlx/blob/master/design/functional-design.md).*
 
 
 ### Facilitate federated authentication and authorisation
