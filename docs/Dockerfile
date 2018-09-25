@@ -3,10 +3,11 @@ FROM alpine:latest AS build
 # Install build tools.
 RUN apk add --update openssl make git
 
+COPY ./install-hugo.sh /install-hugo.sh
+RUN /install-hugo.sh
+
 COPY . /go/src/go.nlx.io/nlx/docs
 WORKDIR /go/src/go.nlx.io/nlx/docs
-
-RUN ./install-hugo.sh
 
 # Build docs.
 RUN make
