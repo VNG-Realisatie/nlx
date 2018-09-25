@@ -1,4 +1,16 @@
 {{ with set . "component" "insight-api" }}
+# TODO: When using proper k8s RBAC split this into two secrets; only api server can use privkey, others can only read p
+apiVersion: v1
+kind: Secret
+metadata:
+  name: jwt-rsa-{{.component}}
+  namespace: {{.Release.Namespace}}
+  labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
+type: Opaque
+data:
+  crt.der: {{ .Values.insight.apiIrmaCertificate.crtDER | b64enc }}
+  key.der: {{ .Values.insight.apiIrmaCertificate.keyDER | b64enc }}
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
