@@ -78,7 +78,7 @@ profiles:
               directoryUIImage: nlxio/directory-ui
               docsImage: nlxio/docs
             setValueTemplates:
-              externalIP: "{{.MINIKUBE_IP}}" # 
+              externalIP: "{{.MINIKUBE_IP}}" #
 
           - name: nlx-dev-brp
             chartPath: helm/nlx-organization
@@ -137,7 +137,7 @@ profiles:
         skipPush: false
         # TODO: Setup push to image registry
         # TODO: Use local builder at all? Depends on CI/CD setup. Probably yes with gitlab ci when runner is of type 'shell'.
-  
+
   - name: deploy-test
     deploy:
       helm:
