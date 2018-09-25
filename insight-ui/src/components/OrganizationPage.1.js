@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-
+import { Link } from 'react-router-dom'
 import { withStyles } from '@material-ui/core'
 //import { WithSimpleDivaAuthorization } from 'diva-react';
 
@@ -12,11 +12,9 @@ import { prepTableData, logGroup } from '../utils/appUtils'
 import logsIn from '../mockdata/txlog.dev.denhaag-out.json'
 //import logsOut from '../store/logs-out';
 
-//import SimpleModal from './SimpleModal'
-import LogModal from './LogModal';
-import QRPage from './QRPage';
-//import ClockIcon from '@material-ui/icons/AccessTimeOutlined'
-//import CalendarIcon from '@material-ui/icons/CalendarToday'
+import SimpleModal from './SimpleModal'
+import ClockIcon from '@material-ui/icons/AccessTimeOutlined'
+import CalendarIcon from '@material-ui/icons/CalendarToday'
 
 const styles = theme => ({
 	calendarIcon: {
@@ -155,40 +153,57 @@ class OrganizationPage extends Component {
         })
     }
 
-    onJWT = (jwt) =>{
-        console.log("jwt received...", jwt);
-        this.setState({
-            jwt:jwt
-        });
-    }
+    render() {
+        const { classes } = this.props
+        const { cid } = this.props.match.params
+        const { modal } = this.state
+        const data = modal.data
 
-    getContent = () => {
-        debugger 
-        let { jwt } = this.state;
-        const { modal } = this.state;
-        if (jwt) {
-            return (
-                <section>
-                    { this.createTable() }
+        let modalContent
+        if (data) {
+            const d = new Date(data['created'])
+            const localDate = d.toLocaleDateString()
+            const localTime = d.toLocaleTimeString()
 
-                    { modal.data && <LogModal
-                        open={modal.open}
-                        closeModal={this.onCloseModal}
-                        data={modal.data} />                                    }
-                </section>                
-            )
-        } else {
-            return (
-                <QRPage
-                    onJWT={ this.onJWT }
-                />
+            modalContent = (
+                <React.Fragment>
+                    <Typography variant="title" color="primary" style={{marginLeft: -1, marginBottom: 5}}>
+                        {data['attributes'] ? data['attributes'] : "Geen attribuut opgevraagd."}
+                    </Typography>
+                    <div style={{display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap'}}>
+                        <Typography variant="caption">
+                            #{data['id']}
+                        </Typography>
+                        <Typography variant="caption">
+                            <CalendarIcon className={classes.calendarIcon} />{localDate}
+                            &nbsp;&nbsp;&nbsp;<ClockIcon className={classes.clockIcon} />{localTime}
+                        </Typography>
+                    </div>
+                    <br/>
+                    <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                        <div>
+                            <Typography variant="caption">
+                                Opgevraagd door
+                            </Typography>
+                            <Link to="">{data['destination_organization']}</Link>
+                        </div>
+                        <div>
+                            <Typography variant="caption" align="right">
+                            Opgevraagd bij
+                            </Typography>
+                            <Typography align="right">
+                                <Link to="">{data['source_organization']}</Link>
+                            </Typography>
+                        </div>
+                    </div>
+                    <br/>
+                    <Typography variant="caption">
+                        Reden
+                    </Typography>
+                        {data['reason'] ? data['reason'] : "Geen reden opgegeven."}
+                </React.Fragment>
             )
         }
-    }
-
-    render() {        
-        
-        const { cid } = this.props.match.params  
 
         return (
             <React.Fragment>
@@ -196,8 +211,14 @@ class OrganizationPage extends Component {
                     Selected Organization {cid}
                 </Typography>
 
-                {this.getContent()}
+                {this.createTable()}
 
+                <SimpleModal
+                    open={modal.open}
+                    closeModal={this.onCloseModal}
+                >
+                    {modalContent}
+                </SimpleModal>
             </React.Fragment>
         )
     }

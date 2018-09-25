@@ -1,16 +1,24 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import { Link } from 'react-router-dom'
+
 import { withStyles, Modal, 
-	Paper, IconButton
+	Paper, IconButton, 
+	Typography
 } from '@material-ui/core'
 
 import modalStyles from '../styles/SimpleModal'
-import { Close } from '@material-ui/icons'
+import { Close, CalendarToday } from '@material-ui/icons'
+import ClockIcon from '@material-ui/icons/AccessTimeOutlined'
+
 
 class SimpleModal extends React.Component {
 	render() {
-		const { children, classes, open, closeModal } = this.props;
+		const { data, classes, open, closeModal } = this.props;
+		const d = new Date(data['created'])
+		const localDate = d.toLocaleDateString()
+		const localTime = d.toLocaleTimeString()
 		return (
 			<Modal
 				aria-labelledby="simple-modal-title"
@@ -23,7 +31,40 @@ class SimpleModal extends React.Component {
 						<Close style={{ fontSize: 18 }} />
 					</IconButton>
 					
-					{children}
+					<Typography variant="title" color="primary" style={{marginLeft: -1, marginBottom: 5}}>
+                    {data['attributes'] ? data['attributes'] : "Geen attribuut opgevraagd."}
+                </Typography>
+                <div style={{display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap'}}>
+                    <Typography variant="caption">
+                        #{data['id']}
+                    </Typography>
+                    <Typography variant="caption">
+                        <CalendarToday className={classes.calendarIcon} />{localDate}
+                        &nbsp;&nbsp;&nbsp;<ClockIcon className={classes.clockIcon} />{localTime}
+                    </Typography>
+                </div>
+                <br/>
+                <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                    <div>
+                        <Typography variant="caption">
+                            Opgevraagd door
+                        </Typography>
+                        <Link to="">{data['destination_organization']}</Link>
+                    </div>
+                    <div>
+                        <Typography variant="caption" align="right">
+                        Opgevraagd bij
+                        </Typography>
+                        <Typography align="right">
+                            <Link to="">{data['source_organization']}</Link>
+                        </Typography>
+                    </div>
+                </div>
+                <br/>
+                <Typography variant="caption">
+                    Reden
+                </Typography>
+                    {data['reason'] ? data['reason'] : "Geen reden opgegeven."}
 				</Paper>
 			</Modal>
 		);

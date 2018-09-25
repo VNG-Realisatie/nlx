@@ -32,6 +32,7 @@
   "proxy": "https://diva-fieldlab.appx.cloud/api",
   "proxy-test": {
     "/directory": "http://directory.dev.nlx.minikube:30080/api",
-    "/fieldlab": "https://diva-fieldlab.appx.cloud/api"
+    "/fieldlab": "https://diva-fieldlab.appx.cloud/api",
+    "/irma":"http://insight-api.dev.denhaag.minikube:30080/irma/" 
   }
 }
