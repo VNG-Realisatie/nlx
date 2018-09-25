@@ -15,3 +15,4 @@ demoDomain: "nlx.io"
 inwayHostnames:
   - inway.test.brp.nlx.io
   - inway.test.rdw.nlx.io
+imagePullPolicy: IfNotPresent
