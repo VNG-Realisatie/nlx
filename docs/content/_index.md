@@ -1,7 +1,7 @@
 ---
 title: "Introduction"
 description: ""
-weight: 10
+weight: 100
 ---
 
 **NLX** is an open source peer-to-peer system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API landscape with many organisations.

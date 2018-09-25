@@ -1,10 +1,10 @@
 ---
-title: "Logging"
+title: "Headers"
 description: ""
 weight: 10
 menu:
   docs:
-    parent: "introduction"
+    parent: "transactionlogs"
 ---
 
 NLX logs requests on both the **outway** and **inway**. When an application performs a request it can append some additional headers for central logging:
