@@ -6,19 +6,19 @@ RUN apk add --update make git
 
 # Install go-based dependencies and tools
 # RUN go get \
-        # No extra pre-fetch packages currently required for insight-api-irma
+        # No extra pre-fetch packages currently required for insight-api
 
 
 # Only add code that we use for building directory
-COPY insight-api-irma   /go/src/go.nlx.io/nlx/insight-api-irma
+COPY insight-api        /go/src/go.nlx.io/nlx/insight-api
 COPY txlog-db/dbversion /go/src/go.nlx.io/nlx/txlog-db/dbversion
 COPY common             /go/src/go.nlx.io/nlx/common
 
-WORKDIR /go/src/go.nlx.io/nlx/insight-api-irma
+WORKDIR /go/src/go.nlx.io/nlx/insight-api
 
 RUN make
 
 
 # Release binary on latest alpine image.
 FROM alpine:latest
-COPY --from=build /go/src/go.nlx.io/nlx/insight-api-irma/dist/bin/nlx-insight-api-irma /usr/local/bin/nlx-insight-api-irma
+COPY --from=build /go/src/go.nlx.io/nlx/insight-api/dist/bin/nlx-insight-api /usr/local/bin/nlx-insight-api

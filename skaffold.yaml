@@ -44,14 +44,10 @@ build:
         dockerfilePath: txlog-api/Dockerfile
     - imageName: nlxio/txlog-ui
       workspace: txlog-ui
-    - imageName: nlxio/insight-api-irma
+    - imageName: nlxio/insight-api
       workspace: .
       docker:
-        dockerfilePath: insight-api-irma/Dockerfile
-    - imageName: nlxio/insight-api-txlog
-      workspace: .
-      docker:
-        dockerfilePath: insight-api-txlog/Dockerfile
+        dockerfilePath: insight-api/Dockerfile
 
   tagPolicy:
     sha256: {}
@@ -91,8 +87,7 @@ profiles:
               txlogAPIImage: nlxio/txlog-api
               txlogUIImage: nlxio/txlog-ui
               inwayImage: nlxio/inway
-              insightApiIrmaImage: nlxio/insight-api-irma
-              insightApiTxlogImage: nlxio/insight-api-txlog
+              insightAPIImage: nlxio/insight-api
             setValueTemplates:
               externalIP: "{{.MINIKUBE_IP}}"
 
@@ -107,8 +102,7 @@ profiles:
               txlogAPIImage: nlxio/txlog-api
               txlogUIImage: nlxio/txlog-ui
               inwayImage: nlxio/inway
-              insightApiIrmaImage: nlxio/insight-api-irma
-              insightApiTxlogImage: nlxio/insight-api-txlog
+              insightAPIImage: nlxio/insight-api
             setValueTemplates:
               externalIP: "{{.MINIKUBE_IP}}"
 
@@ -123,8 +117,7 @@ profiles:
               txlogAPIImage: nlxio/txlog-api
               txlogUIImage: nlxio/txlog-ui
               outwayImage: nlxio/outway
-              insightApiIrmaImage: nlxio/insight-api-irma
-              insightApiTxlogImage: nlxio/insight-api-txlog
+              insightAPIImage: nlxio/insight-api
             setValueTemplates:
               externalIP: "{{.MINIKUBE_IP}}"
 

@@ -21,7 +21,7 @@ import (
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/transactionlog"
-	"go.nlx.io/nlx/insight-api-irma/irma"
+	"go.nlx.io/nlx/insight-api-txlog/irma"
 	"go.nlx.io/nlx/txlog-db/dbversion"
 )
 
@@ -32,8 +32,11 @@ var options struct {
 
 	PostgresDSN string `long:"postgres-dsn" env:"POSTGRES_DSN" default:"postgres://postgres:postgres@postgres/nlx_logdb?sslmode=disable" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
 
+	IRMAJWTRSASignPrivateKeyDER  string `long:"irma-jwt-rsa-sign-private-key-der" env:"IRMA_JWT_RSA_SIGN_PRIVATE_KEY_DER" required:"true" description:"PEM RSA private key to sign requests for irma api server"`
 	IRMAJWTRSAVerifyPublicKeyDER string `long:"irma-jwt-rsa-verify-public-key-der" env:"IRMA_JWT_RSA_VERIFY_PUBLIC_KEY_DER" required:"true" description:"PEM RSA public key to verify results from irma api server"`
 }
+
+var irmaClient *irma.Client
 
 func main() {
 
@@ -80,15 +83,56 @@ func main() {
 
 	dbversion.WaitUntilLatestTxlogDBVersion(logger, db.DB)
 
+	rsaSignPrivateKey, err := derrsa.DecodeDEREncodedRSAPrivateKey(bytes.NewBufferString(options.IRMAJWTRSASignPrivateKeyDER))
+	if err != nil {
+		logger.Fatal("failed to parse rsa private key", zap.Error(err))
+	}
 	rsaVerifyPublicKey, err := derrsa.DecodeDEREncodedRSAPublicKey(bytes.NewBufferString(options.IRMAJWTRSAVerifyPublicKeyDER))
 	if err != nil {
-		log.Fatalf("failed to parse rsa private key: %v", err)
+		logger.Fatal("failed to parse rsa public key", zap.Error(err))
 	}
 
+	// TODO: probably the whole client thing can be removed because we just need to sign the disclose request as a jwt and return it. No communication with irma-api-server anymore.
+	irmaClient, err = irma.NewClient(logger, "insight", options.IRMAEndpointURL, rsaSignPrivateKey, rsaVerifyPublicKey)
+
+	http.HandleFunc("/generateJWT", newVerificationStart(logger))
 	http.HandleFunc("/fetch", newTxlogFetcher(logger, db, rsaVerifyPublicKey))
 	err = http.ListenAndServe(options.ListenAddress, nil)
 	if err != nil {
 		logger.Fatal("failed to ListenAndServe", zap.Error(err))
+	}
+}
+
+func newVerificationStart(logger *zap.Logger) http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		discloseRequest := irma.DiscloseRequest{
+			Content: []irma.DiscloseRequestContent{
+				irma.DiscloseRequestContent{
+					Label: "Over 18",
+					Attributes: []irma.Attribute{
+						irma.Attribute("irma-demo.MijnOverheid.ageLower.over18"),
+					},
+				},
+			},
+		}
+
+		// TODO: don't start verification here, just sign discloseRequest into a JWT and return the JWT to browser/client
+		verificationDiscloseSession, err := irmaClient.StartVerification(&discloseRequest)
+		if err != nil {
+			logger.Error("failed to send verification request to irma api server", zap.Error(err))
+			http.Error(w, "failed to send verification request to irma api server", http.StatusInternalServerError)
+			return
+		}
+
+		err = json.NewEncoder(w).Encode(verificationDiscloseSession)
+		if err != nil {
+			logger.Error("failed to output records", zap.Error(err))
+			http.Error(w, "server error", http.StatusInternalServerError)
+			return
+
+		}
 	}
 }
 
