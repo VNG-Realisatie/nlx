@@ -32,7 +32,7 @@ spec:
         - name: ca-cfssl-unsafe
           image: {{.Values.caCfsslUnsafeImage}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
-          {{- if .Values.ca.cert }}
+          {{- if .Values.ca.certPEM }}
           command: ["cfssl"]
           args: ["serve", "--address=0.0.0.0", "--ca=/ca-root-cert/cert.pem", "--ca-key=/ca-root-cert/key.pem"]
           {{- else }}
@@ -40,15 +40,17 @@ spec:
           args: ["nlx.local"]
           {{- end }}
           volumeMounts:
-          {{- if .Values.ca.cert }}
+          {{- if .Values.ca.certPEM }}
             - name: ca-root-cert
               mountPath: "/ca-root-cert"
               readOnly: true
           {{- end }}
       volumes:
+        {{- if .Values.ca.certPEM }}
         - name: ca-root-cert
           secret:
             secretName: ca-root-cert-{{.component}}
+        {{ end }}
       restartPolicy: Always
   status: {}
 ---
