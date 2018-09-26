@@ -1,16 +1,11 @@
 package irma
 
 import (
-	"bytes"
 	"crypto/rsa"
-	"encoding/json"
-	"io/ioutil"
-	"net/http"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 )
 
 type VerificationRequestClaims struct {
@@ -38,19 +33,11 @@ type DiscloseRequestContent struct {
 	Attributes []Attribute `json:"attributes"`
 }
 
-// VerificationDiscloseSession holds details for a disclose session as opened on the irma-api-server
-type VerificationDiscloseSession struct {
-	IRMAQR     string `json:"irmaqr"`
-	U          string `json:"u"`
-	Version    string `json:"v"`
-	VersionMax string `json:"vmax"`
-}
-
 // newVerificationRequestClaims creates a new VerificationClaims object for given DiscloseRequest
-func (c *Client) newVerificationRequestClaims(request *DiscloseRequest) *VerificationRequestClaims {
+func newVerificationRequestClaims(request *DiscloseRequest, serviceProviderName string) *VerificationRequestClaims {
 	claims := &VerificationRequestClaims{
 		StandardClaims: jwt.StandardClaims{
-			Issuer:   c.ServiceProviderName,
+			Issuer:   serviceProviderName,
 			IssuedAt: time.Now().Unix(),
 			Subject:  "verification_request",
 		},
@@ -98,66 +85,14 @@ type VerificationResultClaims struct {
 	Attributes map[string]string `json:"attributes"`
 }
 
-func (c *Client) GenerateAndSignJWT(request *DiscloseRequest) (string, error) {
-	claims := c.newVerificationRequestClaims(request)
+func GenerateAndSignJWT(request *DiscloseRequest, serviceProviderName string, rsaSignPrivateKey *rsa.PrivateKey) (string, error) {
+	claims := newVerificationRequestClaims(request, serviceProviderName)
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
-	signedJWT, err := token.SignedString(c.RSASignPrivateKey)
+	signedJWT, err := token.SignedString(rsaSignPrivateKey)
 	if err != nil {
 		return "", errors.Wrap(err, "failed to sign jwt")
 	}
 	return signedJWT, nil
-}
-
-// StartVerification sends a verification request and returns the verification disclose session object.
-func (c *Client) StartVerification(request *DiscloseRequest) (*VerificationDiscloseSession, error) {
-	// prepare and sign jwt
-	claims := c.newVerificationRequestClaims(request)
-	token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
-	signedJWT, err := token.SignedString(c.RSASignPrivateKey)
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to sign jwt")
-	}
-	c.logger.Debug("sending verification request to irma-api-server", zap.String("jwt", signedJWT))
-
-	// make http request
-	resp, err := http.Post(c.IRMAEndpointURL.String()+"/api/v2/verification", "text/plain", bytes.NewBufferString(signedJWT))
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to do http request to irma-api-server")
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
-		data, _ := ioutil.ReadAll(resp.Body)
-		return nil, errors.New("failed to start verification, http status " + resp.Status + " and data " + string(data))
-	}
-
-	// unpack response
-	session := &VerificationDiscloseSession{}
-	err = json.NewDecoder(resp.Body).Decode(session)
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to unmarshall response")
-	}
-	return session, nil
-}
-
-// PollVerification polls the irma-api-server for the status or result of a verification session.
-func (c *Client) PollVerification(verificationID string) (*jwt.Token, *VerificationResultClaims, error) {
-	// make http request
-	resp, err := http.Get(c.IRMAEndpointURL.String() + "/api/v2/verification/" + verificationID)
-	if err != nil {
-		return nil, nil, errors.Wrap(err, "failed to do http request to irma-api-server")
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
-		data, _ := ioutil.ReadAll(resp.Body)
-		return nil, nil, errors.New("failed to start verification, http status " + resp.Status + " and data " + string(data))
-	}
-
-	jwtBytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, nil, errors.Wrap(err, "failed to read response body from irma-api-server")
-	}
-
-	return VerifyIRMAVerificationResult(jwtBytes, c.RSAVerifyPublicKey)
 }
 
 func jwtVerifyKeyFunc(rsaVerifyPublicKey *rsa.PublicKey) jwt.Keyfunc {

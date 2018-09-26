@@ -22,6 +22,7 @@ import (
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/insight-api/irma"
+	"go.nlx.io/nlx/insight-api/config"
 	"go.nlx.io/nlx/txlog-db/dbversion"
 )
 
@@ -34,9 +35,9 @@ var options struct {
 
 	IRMAJWTRSASignPrivateKeyDER  string `long:"irma-jwt-rsa-sign-private-key-der" env:"IRMA_JWT_RSA_SIGN_PRIVATE_KEY_DER" required:"true" description:"PEM RSA private key to sign requests for irma api server"`
 	IRMAJWTRSAVerifyPublicKeyDER string `long:"irma-jwt-rsa-verify-public-key-der" env:"IRMA_JWT_RSA_VERIFY_PUBLIC_KEY_DER" required:"true" description:"PEM RSA public key to verify results from irma api server"`
-}
 
-var irmaClient *irma.Client
+	ServiceConfig string `long:"service-config" env:"SERVICE_CONFIG" default:"service-config.toml" description:"Location of the service config toml file"`
+}
 
 func main() {
 
@@ -55,8 +56,8 @@ func main() {
 	}
 
 	// Setup new zap logger
-	config := options.LogOptions.ZapConfig()
-	logger, err := config.Build()
+	zapConfig := options.LogOptions.ZapConfig()
+	logger, err := zapConfig.Build()
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
@@ -75,6 +76,8 @@ func main() {
 
 	process.Setup(logger)
 
+	serviceConfig := config.LoadServiceConfig(logger, options.ServiceConfig)
+
 	db, err := sqlx.Open("postgres", options.PostgresDSN)
 	if err != nil {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))
@@ -92,10 +95,7 @@ func main() {
 		logger.Fatal("failed to parse rsa public key", zap.Error(err))
 	}
 
-	// TODO: probably the whole client thing can be removed because we just need to sign the disclose request as a jwt and return it. No communication with irma-api-server anymore.
-	irmaClient, err = irma.NewClient(logger, "insight", "", rsaSignPrivateKey, rsaVerifyPublicKey)
-
-	http.HandleFunc("/generateJWT", newVerificationStart(logger))
+	http.HandleFunc("/generateJWT", generateJWT(logger, serviceConfig.DataSubjects, "insight", rsaSignPrivateKey))
 	http.HandleFunc("/fetch", newTxlogFetcher(logger, db, rsaVerifyPublicKey))
 	err = http.ListenAndServe(options.ListenAddress, nil)
 	if err != nil {
@@ -103,35 +103,30 @@ func main() {
 	}
 }
 
-func newVerificationStart(logger *zap.Logger) http.HandlerFunc {
-
+func generateJWT(logger *zap.Logger, dataSubjects map[string]config.DataSubject, serviceProviderName string, rsaSignPrivateKey *rsa.PrivateKey) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
 		discloseRequest := irma.DiscloseRequest{
-			Content: []irma.DiscloseRequestContent{
-				irma.DiscloseRequestContent{
-					Label: "Over 18",
-					Attributes: []irma.Attribute{
-						irma.Attribute("irma-demo.MijnOverheid.ageLower.over18"),
-					},
-				},
-			},
+			Content: []irma.DiscloseRequestContent{},
+		}
+		for _,v := range dataSubjects {
+			currentDiscloseContent := irma.DiscloseRequestContent{
+				Label: v.Label,
+				Attributes: v.IrmaAttributes,
+			}
+			discloseRequest.Content = append(discloseRequest.Content, currentDiscloseContent)
 		}
 
-		// TODO: don't start verification here, just sign discloseRequest into a JWT and return the JWT to browser/client
-		verificationDiscloseSession, err := irmaClient.StartVerification(&discloseRequest)
+		signedJWT, err := irma.GenerateAndSignJWT(&discloseRequest, serviceProviderName, rsaSignPrivateKey)
 		if err != nil {
-			logger.Error("failed to send verification request to irma api server", zap.Error(err))
-			http.Error(w, "failed to send verification request to irma api server", http.StatusInternalServerError)
-			return
+			logger.Error("failed to generate JWT", zap.Error(err))
+			http.Error(w, "failed to generate JWT", http.StatusInternalServerError)
 		}
 
-		err = json.NewEncoder(w).Encode(verificationDiscloseSession)
+		_, err = w.Write([]byte(signedJWT))
+
 		if err != nil {
-			logger.Error("failed to output records", zap.Error(err))
+			logger.Error("failed to output JWT", zap.Error(err))
 			http.Error(w, "server error", http.StatusInternalServerError)
-			return
-
 		}
 	}
 }
