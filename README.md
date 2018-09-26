@@ -93,11 +93,11 @@ echo "$(minikube ip)     insight-api.dev.rdw.minikube" | sudo tee -a /etc/hosts
 echo "$(minikube ip)           txlog.dev.brp.minikube" | sudo tee -a /etc/hosts
 echo "$(minikube ip)        irma-api.dev.brp.minikube" | sudo tee -a /etc/hosts
 echo "$(minikube ip)     insight-api.dev.brp.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)       txlog.dev.denhaag.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)    irma-api.dev.denhaag.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip) insight-api.dev.denhaag.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)      outway.dev.denhaag.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip) application.dev.denhaag.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)       txlog.dev.haarlem.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)    irma-api.dev.haarlem.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip) insight-api.dev.haarlem.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip)      outway.dev.haarlem.minikube" | sudo tee -a /etc/hosts
+echo "$(minikube ip) application.dev.haarlem.minikube" | sudo tee -a /etc/hosts
 ```
 
 You may now test the following sites:
@@ -108,9 +108,9 @@ You may now test the following sites:
 - http://directory.dev.nlx.minikube:30080        The NLX directory
 - http://txlog.dev.rdw.minikube:30080/           Transactionlogs for the RDW example organization
 - http://txlog.dev.brp.minikube:30080/           Transactionlogs for the BRP example organization
-- http://txlog.dev.denhaag.minikube:30080/       Transactionlogs for the Den-Haag example organization
-- http://outway.dev.denhaag.minikube:30080/      Outway in the Den-Haag example organization
-- http://application.dev.denhaag.minikube:30080/ Demo application
+- http://txlog.dev.haarlem.minikube:30080/       Transactionlogs for the Haarlem example organization
+- http://outway.dev.haarlem.minikube:30080/      Outway in the Haarlem example organization
+- http://application.dev.haarlem.minikube:30080/ Demo application
 
 To test a full request through outway>inway, use the PostmanEcho service through the exampleorg outway: `curl http://outway.dev.exampleorg.minikube:30080/DemoProviderOrganization/PostmanEcho/get?foo1=bar1&foo2=bar2`
 

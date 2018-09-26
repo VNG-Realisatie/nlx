@@ -106,10 +106,10 @@ profiles:
             setValueTemplates:
               externalIP: "{{.MINIKUBE_IP}}"
 
-          - name: nlx-dev-denhaag
+          - name: nlx-dev-haarlem
             chartPath: helm/nlx-organization
-            valuesFilePath: helm/nlx-organization/values-dev-denhaag.yaml
-            namespace: nlx-dev-denhaag
+            valuesFilePath: helm/nlx-organization/values-dev-haarlem.yaml
+            namespace: nlx-dev-haarlem
             version: "v0.0.0"
             values:
               caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe

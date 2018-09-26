@@ -1,16 +1,16 @@
 
-domain: dev.denhaag.minikube
-organizationName: denhaag
+domain: dev.haarlem.minikube
+organizationName: haarlem
 
 dbHost: postgresql.postgresql
 dbUsernameSuperuser: postgres
 dbPasswordSuperuser: postgres
 
-dbDatabaseTxlog: denhaag-txlog
+dbDatabaseTxlog: haarlem-txlog
 dbResetTxlog: true # WARNING: All data will be LOST, never use in production!
-dbUsernameTxlogAPI: nlx-denhaag-txlog-api
+dbUsernameTxlogAPI: nlx-haarlem-txlog-api
 dbPasswordTxlogAPI: nlx-txlog-api
-dbUsernameTxlogWriter: nlx-denhaag-txlog-writer
+dbUsernameTxlogWriter: nlx-haarlem-txlog-writer
 dbPasswordTxlogWriter: nlx-txlog-writer
 
 caAddress: ca-cfssl-unsafe.nlx-dev-directory
