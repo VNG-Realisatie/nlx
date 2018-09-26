@@ -16,8 +16,6 @@ spec:
         - name: insight-ui
           image: {{.Values.insightUIImage}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
-          ports:
-            - containerPort: 80
       restartPolicy: Always
   status: {}
 ---
