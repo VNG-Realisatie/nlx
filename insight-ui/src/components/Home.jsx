@@ -13,7 +13,7 @@ const Home = () => (
 				Welcome to the DIVA 3rd party reference implementation.
 			</p>			
 			<ul>
-				<li>Sign in with your IRMA app <Link to="/signin">here</Link></li>
+				<li>Sign in with your IRMA app <Link to="/irma">here</Link></li>
 				<li>Visit the pages using the left menu.</li>
 			</ul>				
 			<p>

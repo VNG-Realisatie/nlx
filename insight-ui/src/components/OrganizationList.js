@@ -16,10 +16,11 @@ class OrganizationList extends Component {
     }    
     componentDidMount(){                
         //get list of avaliable services        
-        //this.getServices();
+        this.getServices();
+        /*
         this.setState({
             services: listServices.services
-        })
+        })*/
     }  
     
     getServices(){

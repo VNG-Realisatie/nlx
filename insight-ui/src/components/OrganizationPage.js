@@ -3,6 +3,8 @@ import React, { Component } from 'react'
 import { withStyles } from '@material-ui/core'
 //import { WithSimpleDivaAuthorization } from 'diva-react';
 
+import { Route } from 'react-router-dom';
+
 import { Typography } from '@material-ui/core'
 
 import Table from './Table'
@@ -195,6 +197,7 @@ class OrganizationPage extends Component {
                 <Typography variant="title" color="primary" noWrap gutterBottom>
                     Selected Organization {cid}
                 </Typography>
+                
 
                 {this.getContent()}
 
