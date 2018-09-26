@@ -12,5 +12,6 @@ rbac:
 podSecurityPolicy:
   enabled: true
 
-nodeSelector:
-  hostname: node3
+controller:
+  nodeSelector:
+    kubernetes.io/hostname: node3

@@ -4,7 +4,7 @@ ssl:
 
 dashboard:
   enabled: true
-  domain: traefik.minikube
+  domain: traefik.test
   ingress:
     annotations:
       kubernetes.io/ingress.class: traefik
@@ -20,4 +20,4 @@ kubernetes:
 cpuLimit: 2
 
 nodeSelector:
-  hostname: node2
+  kubernetes.io/hostname: node2
