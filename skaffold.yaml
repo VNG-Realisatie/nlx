@@ -74,7 +74,7 @@ profiles:
               directoryUIImage: nlxio/directory-ui
               docsImage: nlxio/docs
             setValueTemplates:
-              externalIP: "{{.MINIKUBE_IP}}" #
+              externalIP: "{{.MINIKUBE_IP}}"
 
           - name: nlx-dev-brp
             chartPath: helm/nlx-organization
@@ -148,3 +148,42 @@ profiles:
               directoryMonitorImage: nlxio/directory-monitor
               directoryUIImage: nlxio/directory-ui
               docsImage: nlxio/docs
+
+          - name: nlx-test-brp
+            chartPath: helm/nlx-organization
+            valuesFilePath: helm/nlx-organization/values-test-brp.yaml
+            namespace: nlx-test-brp
+            version: "v0.0.0"
+            values:
+              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+              txlogDBImage: nlxio/txlog-db
+              txlogAPIImage: nlxio/txlog-api
+              txlogUIImage: nlxio/txlog-ui
+              inwayImage: nlxio/inway
+              insightAPIImage: nlxio/insight-api
+
+          - name: nlx-test-rdw
+            chartPath: helm/nlx-organization
+            valuesFilePath: helm/nlx-organization/values-test-rdw.yaml
+            namespace: nlx-test-rdw
+            version: "v0.0.0"
+            values:
+              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+              txlogDBImage: nlxio/txlog-db
+              txlogAPIImage: nlxio/txlog-api
+              txlogUIImage: nlxio/txlog-ui
+              inwayImage: nlxio/inway
+              insightAPIImage: nlxio/insight-api
+
+          - name: nlx-test-haarlem
+            chartPath: helm/nlx-organization
+            valuesFilePath: helm/nlx-organization/values-test-haarlem.yaml
+            namespace: nlx-test-haarlem
+            version: "v0.0.0"
+            values:
+              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+              txlogDBImage: nlxio/txlog-db
+              txlogAPIImage: nlxio/txlog-api
+              txlogUIImage: nlxio/txlog-ui
+              outwayImage: nlxio/outway
+              insightAPIImage: nlxio/insight-api
