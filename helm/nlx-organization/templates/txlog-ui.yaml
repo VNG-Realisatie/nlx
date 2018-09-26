@@ -16,8 +16,6 @@ spec:
         - name: txlog-ui
           image: {{.Values.txlogUIImage}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
-          ports:
-            - containerPort: 80
       restartPolicy: Always
   status: {}
 ---

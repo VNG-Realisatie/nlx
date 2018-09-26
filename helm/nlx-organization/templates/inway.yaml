@@ -78,8 +78,6 @@ spec:
             - name: SERVICE_CONFIG
               value: /inway-service-config/service-config.toml
             {{ end }}
-          ports:
-            - containerPort: 443
           volumeMounts:
             - name: certs
               mountPath: /certs

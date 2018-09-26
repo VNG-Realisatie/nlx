@@ -20,8 +20,6 @@ spec:
         - name: service
           image: {{.Values.demoService.genericServiceImage}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
-          ports:
-            - containerPort: 8000
       restartPolicy: Always
   status: {}
 ---

@@ -49,8 +49,6 @@ spec:
                 secretKeyRef:
                   name: jwt-rsa-{{.component}}
                   key: key.der
-          ports:
-            - containerPort: 80
       restartPolicy: Always
   status: {}
 ---

@@ -27,9 +27,6 @@ spec:
               value: debug
             - name: POSTGRES_DSN
               value: postgresql://{{.Values.dbUsernameTxlogAPI}}:{{.Values.dbPasswordTxlogAPI}}@{{.Values.dbHost}}/{{.Values.dbDatabaseTxlog}}?sslmode=disable&connect_timeout=10
-          ports:
-            - containerPort: 80
-
       restartPolicy: Always
   status: {}
 ---

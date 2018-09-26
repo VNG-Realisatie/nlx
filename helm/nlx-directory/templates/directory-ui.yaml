@@ -16,8 +16,6 @@ spec:
         - name: directory-ui
           image: {{.Values.directoryUIImage}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
-          ports:
-            - containerPort: 80
       restartPolicy: Always
   status: {}
 ---
