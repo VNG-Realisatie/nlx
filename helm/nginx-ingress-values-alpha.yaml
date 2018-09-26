@@ -5,13 +5,11 @@ controller:
     enable-ssl-passthrough: {}
   ingressClass: nginx-ingress
   useIngressClassOnly: true
+  nodeSelector:
+    kubernetes.io/hostname: node3
 
 rbac:
   create: true
 
 podSecurityPolicy:
   enabled: true
-
-controller:
-  nodeSelector:
-    kubernetes.io/hostname: node3
