@@ -4,7 +4,7 @@ ssl:
 
 dashboard:
   enabled: true
-  domain: traefik.test
+  domain: traefik.alpha.k8s.nlx.io
   ingress:
     annotations:
       kubernetes.io/ingress.class: traefik
@@ -21,3 +21,5 @@ cpuLimit: 2
 
 nodeSelector:
   kubernetes.io/hostname: node2
+
+externalIP: 185.54.114.95
