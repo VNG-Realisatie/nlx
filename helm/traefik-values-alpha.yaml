@@ -1,6 +1,14 @@
 ssl:
   enabled: true
-  insecureSkipVerify: true
+  enforced: true
+acme:
+  enabled: true
+  staging: false
+  challengeType: http-01
+  email: geertjohan+nlx-acme@geertjohan.net
+  persistence:
+    enabled: false # TODO: PVC doesn't work yet. Enable persistence when it does.
+
 
 dashboard:
   enabled: true

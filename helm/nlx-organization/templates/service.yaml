@@ -33,6 +33,7 @@ spec:
       protocol: TCP
       port: 8000
   cluserIP: None
+{{ if .Values.debugEnableServiceIngress }}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -49,5 +50,6 @@ spec:
           backend:
             serviceName: {{.component}}
             servicePort: 8000
+{{ end }}
 {{ end }}
 {{ end }}

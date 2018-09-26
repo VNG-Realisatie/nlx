@@ -83,6 +83,7 @@ spec:
       protocol: TCP
       port: 80
   cluserIP: None
+{{ if .Values.debugEnableOutwayIngress }}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -98,5 +99,6 @@ spec:
           backend:
             serviceName: {{.component}}
             servicePort: handler
+{{ end }}
 {{ end }}
 {{ end }}
