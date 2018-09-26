@@ -97,18 +97,65 @@ func main() {
 
 	http.HandleFunc("/generateJWT", generateJWT(logger, serviceConfig.DataSubjects, "insight", rsaSignPrivateKey))
 	http.HandleFunc("/fetch", newTxlogFetcher(logger, db, rsaVerifyPublicKey))
+	http.HandleFunc("/getDataSubjects", listDataSubjects(logger, serviceConfig.DataSubjects))
 	err = http.ListenAndServe(options.ListenAddress, nil)
 	if err != nil {
 		logger.Fatal("failed to ListenAndServe", zap.Error(err))
 	}
 }
 
-func generateJWT(logger *zap.Logger, dataSubjects map[string]config.DataSubject, serviceProviderName string, rsaSignPrivateKey *rsa.PrivateKey) http.HandlerFunc {
+func listDataSubjects(logger *zap.Logger, dataSubjects map[string]config.DataSubject) http.HandlerFunc {
+	type JSONDataSubject struct {
+		Label string `json:"label"`
+	}
+
+	type JSONResult struct {
+		DataSubjects map[string]JSONDataSubject `json:"dataSubjects"`
+	}
+
+	outputList := JSONResult{
+		DataSubjects: map[string]JSONDataSubject{},
+	}
+	for k,v := range dataSubjects {
+		outputList.DataSubjects[k] = JSONDataSubject{
+			Label: v.Label,
+		}
+	}
+
 	return func(w http.ResponseWriter, r *http.Request) {
+		err := json.NewEncoder(w).Encode(outputList)
+		if err != nil {
+			logger.Error("failed to output DataSubjects", zap.Error(err))
+			http.Error(w, "server error", http.StatusInternalServerError)
+			return
+		}
+	}
+}
+
+func generateJWT(logger *zap.Logger, dataSubjects map[string]config.DataSubject, serviceProviderName string, rsaSignPrivateKey *rsa.PrivateKey) http.HandlerFunc {
+	type JSONRequest struct {
+		DataSubjects []string `json:"dataSubjects"`
+	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		requestedDataSubjects := &JSONRequest{}
+		err := json.NewDecoder(r.Body).Decode(requestedDataSubjects)
+		if err != nil {
+			logger.Error("failed to decode requested data subjects", zap.Error(err))
+			http.Error(w, "incorrect request data", http.StatusBadRequest)
+			return
+		}
+
 		discloseRequest := irma.DiscloseRequest{
 			Content: []irma.DiscloseRequestContent{},
 		}
-		for _,v := range dataSubjects {
+		for _, k := range requestedDataSubjects.DataSubjects {
+			v, ok := dataSubjects[k]
+			if !ok {
+				logger.Error("unknown dataSubject")
+				http.Error(w, "incorrect request data", http.StatusBadRequest)
+				return
+			}
 			currentDiscloseContent := irma.DiscloseRequestContent{
 				Label: v.Label,
 				Attributes: v.IrmaAttributes,
