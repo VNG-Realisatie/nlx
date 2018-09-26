@@ -22,4 +22,8 @@ cpuLimit: 2
 nodeSelector:
   kubernetes.io/hostname: node2
 
-externalIP: 185.54.114.95
+deployment:
+  hostPort:
+    httpEnabled: true
+    httpsEnabled: true
+    dashboardEnabled: true
