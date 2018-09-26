@@ -17,6 +17,7 @@ import OrganizationPage from './OrganizationPage';
 import OrganizationList from './OrganizationList';
 import Logo from './Logo';
 import QRPage from './QRPage';
+import IrmaPage from './IrmaTest';
 
 class ResponsiveDrawer extends React.Component {
 	state = {
@@ -83,6 +84,7 @@ class ResponsiveDrawer extends React.Component {
 					<div className={classes.toolbar} />
 					<Switch>
 						<Route exact path="/" component={Home} />
+						<Route exact path="/irma" component={IrmaPage} />
 						<Route exact path="/signin" component={QRPage} />
 						<Route path="/organization/:cid" component={OrganizationPage} />
 						<Route exact path="/organization/:cid/signin" component={QRPage} />						

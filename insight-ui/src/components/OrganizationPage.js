@@ -55,24 +55,30 @@ class OrganizationPage extends Component {
     }
 
     componentDidMount(){
+        let {cid, jwt} = this.props.match;
         logGroup({
             title: "Organization",
             method: "componentDidMount",
             props:this.props,
             state: this.state
         });
-        this.getOrganizationInfo();
+        debugger 
+        if (jwt){
+            this.getOrganizationInfo();
+        } else {
+            console.log("no jwt...", jwt)
+        }
     }
     
     shouldComponentUpdate(nextProps, nextState){
         let { cid, jwt } = nextProps.match.params,
             { modal } = nextState;
         
-        //debugger 
+        debugger 
         
         if (cid === this.state.cid
             && modal.open === this.state.modal.open
-            && jwt == this.state.jwt ){
+            && jwt === this.state.jwt ){
             return false
         } else {
             return true
@@ -159,7 +165,7 @@ class OrganizationPage extends Component {
     }
 
     getContent = () => {
-        //debugger 
+        debugger 
         let { jwt } = this.props.match.params;
         const { modal } = this.state;
         //not completed 

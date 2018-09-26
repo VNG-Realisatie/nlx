@@ -7,6 +7,7 @@
     "@material-ui/icons": "^3.0.1",
     "axios": "^0.18.0",
     "diva-react": "^1.0.2",
+    "jquery": "^3.3.1",
     "material-ui": "^0.20.2",
     "qrcode.react": "^0.8.0",
     "react": "^16.5.0",
@@ -22,7 +23,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "dev": "BROWSER=none npm start"
   },
   "devDependencies": {
     "styled-components": "^3.4.6",
@@ -33,6 +35,6 @@
   "proxy-test": {
     "/directory": "http://directory.dev.nlx.minikube:30080/api",
     "/fieldlab": "https://diva-fieldlab.appx.cloud/api",
-    "/irma":"http://insight-api.dev.denhaag.minikube:30080/irma/" 
+    "/irma": "http://insight-api.dev.denhaag.minikube:30080/irma/"
   }
 }
