@@ -120,6 +120,7 @@ func generateJWT(logger *zap.Logger, dataSubjects map[string]config.DataSubject,
 		if err != nil {
 			logger.Error("failed to generate JWT", zap.Error(err))
 			http.Error(w, "failed to generate JWT", http.StatusInternalServerError)
+			return
 		}
 
 		_, err = w.Write([]byte(signedJWT))
@@ -127,6 +128,7 @@ func generateJWT(logger *zap.Logger, dataSubjects map[string]config.DataSubject,
 		if err != nil {
 			logger.Error("failed to output JWT", zap.Error(err))
 			http.Error(w, "server error", http.StatusInternalServerError)
+			return
 		}
 	}
 }
