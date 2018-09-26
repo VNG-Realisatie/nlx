@@ -1,4 +1,17 @@
 {{ with set . "component" "ca-cfssl-unsafe" }}
+{{ if .Values.ca.cert }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ca-root-cert-{{.component}}
+  namespace: {{.Release.Namespace}}
+  labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
+type: Opaque
+data:
+  cert.pem: {{ .Values.certPEM | b64enc }}
+  key.pem: {{ .Values.keyPEM | b64enc }}
+---
+{{ end }}
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
@@ -19,8 +32,23 @@ spec:
         - name: ca-cfssl-unsafe
           image: {{.Values.caCfsslUnsafeImage}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
+          {{- if .Values.ca.cert }}
+          command: ["cfssl"]
+          args: ["serve", "--address=0.0.0.0", "--ca=/ca-root-cert/cert.pem", "--ca-key=/ca-root-cert/key.pem"]
+          {{- else }}
           command: ["/ca/start-ca.sh"]
           args: ["nlx.local"]
+          {{- end }}
+          volumeMounts:
+          {{- if .Values.ca.cert }}
+            - name: ca-root-cert
+              mountPath: "/ca-root-cert"
+              readOnly: true
+          {{- end }}
+      volumes:
+        - name: ca-root-cert
+          secret:
+            secretName: ca-root-cert-{{.component}}
       restartPolicy: Always
   status: {}
 ---

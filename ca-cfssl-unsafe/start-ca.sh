@@ -2,9 +2,8 @@
 
 set -e # exit on error
 
-## This scripts generates a new self-signed CA cert and starts the cfssl server.
-## It takes one argument: the domain name for the CA.
-
+# This scripts generates a new self-signed CA cert and starts the cfssl server.
+# It takes one argument: the domain name for the CA.
 cadomain=$1
 if [ -z "${cadomain}" ]; then
 	echo "Missing first argument: CA domain name";
