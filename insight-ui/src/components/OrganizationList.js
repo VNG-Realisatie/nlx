@@ -16,27 +16,29 @@ class OrganizationList extends Component {
     }    
     componentDidMount(){                
         //get list of avaliable services        
-        this.getServices();
-        /*
-        this.setState({
-            services: listServices.services
-        })*/
+        //this.getServices();
+        
+        this.setServices(listServices.services);
     }  
     
     getServices(){
         let url = config.api.listServices();
         axios.get(url)
         .then(d =>{
-            //debugger            
-            this.setState({
-                services:d.data.services
-            });
+            this.setServices(d);
         },(e)=>{            
-            this.setState({
+            this.setServices({
                 "services": []
             });
             console.error(e)
         })
+    }
+
+    setServices = data => {
+        //debugger            
+        this.setState({
+            services: data 
+        });
     }
     getMenuItem(item){
         const uri = `/organization/${item.id}`,
@@ -83,7 +85,7 @@ class OrganizationList extends Component {
                 { this.getHomeItem() }
                 <Divider/>
                 <ListSubheader component="div">
-                    Services
+                    Organization
                 </ListSubheader>
                 <Divider/>
                 { 

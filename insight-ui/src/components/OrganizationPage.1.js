@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+
 import { withStyles } from '@material-ui/core'
 //import { WithSimpleDivaAuthorization } from 'diva-react';
+
+import { Route } from 'react-router-dom';
 
 import { Typography } from '@material-ui/core'
 
@@ -12,9 +14,11 @@ import { prepTableData, logGroup } from '../utils/appUtils'
 import logsIn from '../mockdata/txlog.dev.denhaag-out.json'
 //import logsOut from '../store/logs-out';
 
-import SimpleModal from './SimpleModal'
-import ClockIcon from '@material-ui/icons/AccessTimeOutlined'
-import CalendarIcon from '@material-ui/icons/CalendarToday'
+//import SimpleModal from './SimpleModal'
+import LogModal from './LogModal';
+import QRPage from './QRPage';
+//import ClockIcon from '@material-ui/icons/AccessTimeOutlined'
+//import CalendarIcon from '@material-ui/icons/CalendarToday'
 
 const styles = theme => ({
 	calendarIcon: {
@@ -32,6 +36,7 @@ const styles = theme => ({
 class OrganizationPage extends Component {
     state={
         cid: null,
+        //jwt to use at api point
         jwt: null,
         loggedIn: false,
         //column definitions to pass to table component
@@ -52,21 +57,30 @@ class OrganizationPage extends Component {
     }
 
     componentDidMount(){
+        let { cid } = this.props.match;
         logGroup({
             title: "Organization",
             method: "componentDidMount",
-            props:this.props,
+            props: this.props,
             state: this.state
         });
-        this.getOrganizationInfo()
+        debugger 
+        if (jwt){
+            this.getOrganizationInfo();
+        } else {
+            console.log("no jwt...", jwt)
+        }
     }
-
+    
     shouldComponentUpdate(nextProps, nextState){
-        let { cid } = nextProps.match.params,
+        let { cid, jwt } = nextProps.match.params,
             { modal } = nextState;
-
+        
+        debugger 
+        
         if (cid === this.state.cid
-            && modal.open === this.state.modal.open ){
+            && modal.open === this.state.modal.open
+            && jwt === this.state.jwt ){
             return false
         } else {
             return true
@@ -82,7 +96,6 @@ class OrganizationPage extends Component {
         });
         this.getOrganizationInfo()
     }
-
     /**
      * Get Organization log info.
      * NOTE: The initial idea is to place api call here.
@@ -153,72 +166,34 @@ class OrganizationPage extends Component {
         })
     }
 
-    render() {
-        const { classes } = this.props
-        const { cid } = this.props.match.params
-        const { modal } = this.state
-        const data = modal.data
+    getContent = () => {
+        debugger 
+        let { jwt } = this.props.match.params;
+        const { modal } = this.state;
+        return (
+            <section>
+                { this.createTable() }
+                { modal.data && <LogModal
+                    open={modal.open}
+                    closeModal={this.onCloseModal}
+                    data={modal.data} />                                    }
+            </section>                
+        )
+    }
 
-        let modalContent
-        if (data) {
-            const d = new Date(data['created'])
-            const localDate = d.toLocaleDateString()
-            const localTime = d.toLocaleTimeString()
-
-            modalContent = (
-                <React.Fragment>
-                    <Typography variant="title" color="primary" style={{marginLeft: -1, marginBottom: 5}}>
-                        {data['attributes'] ? data['attributes'] : "Geen attribuut opgevraagd."}
-                    </Typography>
-                    <div style={{display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap'}}>
-                        <Typography variant="caption">
-                            #{data['id']}
-                        </Typography>
-                        <Typography variant="caption">
-                            <CalendarIcon className={classes.calendarIcon} />{localDate}
-                            &nbsp;&nbsp;&nbsp;<ClockIcon className={classes.clockIcon} />{localTime}
-                        </Typography>
-                    </div>
-                    <br/>
-                    <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                        <div>
-                            <Typography variant="caption">
-                                Opgevraagd door
-                            </Typography>
-                            <Link to="">{data['destination_organization']}</Link>
-                        </div>
-                        <div>
-                            <Typography variant="caption" align="right">
-                            Opgevraagd bij
-                            </Typography>
-                            <Typography align="right">
-                                <Link to="">{data['source_organization']}</Link>
-                            </Typography>
-                        </div>
-                    </div>
-                    <br/>
-                    <Typography variant="caption">
-                        Reden
-                    </Typography>
-                        {data['reason'] ? data['reason'] : "Geen reden opgegeven."}
-                </React.Fragment>
-            )
-        }
+    render() {        
+        
+        const { cid } = this.props.match.params  
 
         return (
             <React.Fragment>
                 <Typography variant="title" color="primary" noWrap gutterBottom>
                     Selected Organization {cid}
                 </Typography>
+                
 
-                {this.createTable()}
+                { this.getContent() }
 
-                <SimpleModal
-                    open={modal.open}
-                    closeModal={this.onCloseModal}
-                >
-                    {modalContent}
-                </SimpleModal>
             </React.Fragment>
         )
     }

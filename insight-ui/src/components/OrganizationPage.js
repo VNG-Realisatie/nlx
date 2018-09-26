@@ -2,8 +2,7 @@ import React, { Component } from 'react'
 
 import { withStyles } from '@material-ui/core'
 //import { WithSimpleDivaAuthorization } from 'diva-react';
-
-import { Route } from 'react-router-dom';
+//import { Route } from 'react-router-dom';
 
 import { Typography } from '@material-ui/core'
 
@@ -16,7 +15,9 @@ import logsIn from '../mockdata/txlog.dev.denhaag-out.json'
 
 //import SimpleModal from './SimpleModal'
 import LogModal from './LogModal';
-import QRPage from './QRPage';
+import IrmaPage from './IrmaTest';
+//import IrmaPage from './IrmaTest';
+//import QRPage from './QRPage';
 //import ClockIcon from '@material-ui/icons/AccessTimeOutlined'
 //import CalendarIcon from '@material-ui/icons/CalendarToday'
 
@@ -57,21 +58,22 @@ class OrganizationPage extends Component {
     }
 
     componentDidMount(){
-        let {cid, jwt} = this.props.match;
+        //let { cid } = this.props.match;
+        //let { jwt } = this.state;
         logGroup({
             title: "Organization",
             method: "componentDidMount",
-            props:this.props,
+            props: this.props,
             state: this.state
         });
-        debugger 
+        /*debugger 
         if (jwt){
             this.getOrganizationInfo();
         } else {
             console.log("no jwt...", jwt)
-        }
+        }*/
     }
-    
+    /*
     shouldComponentUpdate(nextProps, nextState){
         let { cid, jwt } = nextProps.match.params,
             { modal } = nextState;
@@ -85,49 +87,41 @@ class OrganizationPage extends Component {
         } else {
             return true
         }
-    }
-
+    }*/
     componentDidUpdate(){
         logGroup({
             title:"Organization",
             method:"componentDidUpdate",
-            props:this.props,
+            props: this.props,
             state: this.state
         });
-        this.getOrganizationInfo()
+        //this.getOrganizationLogs();
     }
     /**
      * Get Organization log info.
      * NOTE: The initial idea is to place api call here.
-     * WARNING: Currently mock data is ONLY LOADED if
-     * cid==2
+     * WARNING: Currently mock data is DIRECTLY LOADED
      */
-    getOrganizationInfo(){
+    getOrganizationLogs = jwt =>{
         //debugger
-        if (this.props.match.params.cid==="2"){
-            this.setState({
-                cid: this.props.match.params.cid,
-                data: this.prepData(logsIn.records)
-            })
-        } else {
-            this.setState({
-                cid: this.props.match.params.cid,
-                data: []
-            })
-        }
+
+        this.setState({
+            cid: this.props.match.params.cid,
+            jwt: jwt,
+            data: this.prepData(logsIn.records)
+        })
     }
 
     /**
      * Convert raw log data to MUI table format
      * @param {object} rawData - array of objects
      */
-
-    prepData(rawData){
+    prepData = rawData => {
         let prepData = prepTableData({
             colDef: this.state.colDef,
             rawData: rawData
         })        
-        return prepData
+        return prepData;
     }
 
     getDetails = id => {
@@ -142,7 +136,7 @@ class OrganizationPage extends Component {
 
     createTable(){
         let { colDef, data } = this.state;
-        if (data.length>0){
+        if ( data.length > 0 ){
             return (
                 <Table
                     cols={colDef}
@@ -166,12 +160,23 @@ class OrganizationPage extends Component {
         })
     }
 
+    onJWT = jwt => {
+        debugger
+        console.log("jwt received...", jwt);
+        //get logs
+        this.getOrganizationLogs(jwt)
+        /*
+        this.setState({
+            jwt
+        })*/
+    }
+
     getContent = () => {
         debugger 
-        let { jwt } = this.props.match.params;
+        let { jwt } = this.state;
         const { modal } = this.state;
-        //not completed 
-        //if (jwt){
+        if (jwt){
+
             return (
                 <section>
                     { this.createTable() }
@@ -181,11 +186,9 @@ class OrganizationPage extends Component {
                         data={modal.data} />                                    }
                 </section>                
             )
-        /*}else{
-            return (
-                <QRPage {...this.props}/>
-            )
-        }*/
+        }else{
+            return(<IrmaPage onJWT={this.onJWT}/>)
+        }
     }
 
     render() {        
@@ -198,18 +201,11 @@ class OrganizationPage extends Component {
                     Selected Organization {cid}
                 </Typography>
                 
-
-                {this.getContent()}
+                { this.getContent() }
 
             </React.Fragment>
         )
     }
 }
-/*
-export default WithSimpleDivaAuthorization(
-    {},
-    'pbdf.pbdf.email.email',
-    'Email'
-)(Organization);
-*/
+
 export default withStyles(styles)(OrganizationPage)

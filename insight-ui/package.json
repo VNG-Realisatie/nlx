@@ -31,10 +31,10 @@
     "typeface-muli": "^0.0.54",
     "typeface-source-sans-pro": "^0.0.54"
   },
-  "proxy": "https://diva-fieldlab.appx.cloud/api",
-  "proxy-test": {
-    "/directory": "http://directory.dev.nlx.minikube:30080/api",
-    "/fieldlab": "https://diva-fieldlab.appx.cloud/api",
-    "/irma": "http://insight-api.dev.denhaag.minikube:30080/irma/"
+  "proxy-tes": "https://diva-fieldlab.appx.cloud/api",
+  "proxy": {
+    "/getDataSubject":{
+      "target": "http://insight-api.test.haarlem.commonground.nl/"
+    } 
   }
 }
