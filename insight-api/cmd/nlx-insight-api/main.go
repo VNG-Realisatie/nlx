@@ -21,8 +21,8 @@ import (
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/transactionlog"
-	"go.nlx.io/nlx/insight-api/irma"
 	"go.nlx.io/nlx/insight-api/config"
+	"go.nlx.io/nlx/insight-api/irma"
 	"go.nlx.io/nlx/txlog-db/dbversion"
 )
 
@@ -116,7 +116,7 @@ func listDataSubjects(logger *zap.Logger, dataSubjects map[string]config.DataSub
 	outputList := JSONResult{
 		DataSubjects: map[string]JSONDataSubject{},
 	}
-	for k,v := range dataSubjects {
+	for k, v := range dataSubjects {
 		outputList.DataSubjects[k] = JSONDataSubject{
 			Label: v.Label,
 		}
@@ -140,6 +140,7 @@ func generateJWT(logger *zap.Logger, dataSubjects map[string]config.DataSubject,
 	return func(w http.ResponseWriter, r *http.Request) {
 		requestedDataSubjects := &JSONRequest{}
 		err := json.NewDecoder(r.Body).Decode(requestedDataSubjects)
+		defer r.Body.Close()
 		if err != nil {
 			logger.Error("failed to decode requested data subjects", zap.Error(err))
 			http.Error(w, "incorrect request data", http.StatusBadRequest)
@@ -157,7 +158,7 @@ func generateJWT(logger *zap.Logger, dataSubjects map[string]config.DataSubject,
 				return
 			}
 			currentDiscloseContent := irma.DiscloseRequestContent{
-				Label: v.Label,
+				Label:      v.Label,
 				Attributes: v.IrmaAttributes,
 			}
 			discloseRequest.Content = append(discloseRequest.Content, currentDiscloseContent)
