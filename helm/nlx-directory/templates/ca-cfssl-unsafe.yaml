@@ -1,5 +1,5 @@
 {{ with set . "component" "ca-cfssl-unsafe" }}
-{{ if .Values.ca.cert }}
+{{ if .Values.ca.certPEM }}
 apiVersion: v1
 kind: Secret
 metadata:
@@ -8,8 +8,8 @@ metadata:
   labels: {{ include "nlx-directory.common.metadata-labels" . | nindent 4 }}
 type: Opaque
 data:
-  cert.pem: {{ .Values.certPEM | b64enc }}
-  key.pem: {{ .Values.keyPEM | b64enc }}
+  cert.pem: {{ .Values.ca.certPEM | b64enc }}
+  key.pem: {{ .Values.ca.keyPEM | b64enc }}
 ---
 {{ end }}
 apiVersion: extensions/v1beta1

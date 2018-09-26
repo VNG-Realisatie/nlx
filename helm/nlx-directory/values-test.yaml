@@ -15,7 +15,7 @@ demoDomain: "nlx.io"
 imagePullPolicy: IfNotPresent
 
 ca:
-  cert: |
+  certPEM: |
     -----BEGIN CERTIFICATE-----
     MIIFKjCCAxKgAwIBAgIUZ8R59m0GgMl1/LOHaztJlNczmW8wDQYJKoZIhvcNAQEN
     BQAwLTEdMBsGA1UEChMUQ29tbW9uIEdyb3VuZCBOTFggQ0ExDDAKBgNVBAsTA05M
@@ -46,7 +46,7 @@ ca:
     hEL2WbxjYeOvERKNMgA0FqmZ5qsv1JIrEiQ2L0QhL3j5xRd7wY8M3IbqF83DH2wg
     S+LtSS50VQ2uUqRjy6QHWULDmuK4Onv37q5TSCaD
     -----END CERTIFICATE-----
-  key: |
+  keyPEM: |
     -----BEGIN RSA PRIVATE KEY-----
     MIIJKgIBAAKCAgEA9+ziYbRaH2Sh5A8wiQu+Od7iGoqY9w7kngaMLzgPPr6nZgeE
     T26kdTyk7vP4Raso0iXdeWIvGW3ebrLcTbxV2gkMdnB/jftBFGDt8O7rAKw/lg/Z
