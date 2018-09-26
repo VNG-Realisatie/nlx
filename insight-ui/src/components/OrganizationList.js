@@ -76,7 +76,7 @@ class OrganizationList extends Component {
 
     render() {
         let { services } = this.state;
-        console.log("services...", services);
+        //console.log("services...", services);
         return (         
             <MenuList>
                 { this.getHomeItem() }

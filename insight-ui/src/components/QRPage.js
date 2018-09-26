@@ -37,7 +37,7 @@ class QRPage extends React.Component {
     //keep track of attempts
     attempt:{
       //try every xms
-      interval: 3000,
+      interval: 1000,
       //keep count
       count: 0,
       //max attempts
@@ -156,7 +156,7 @@ class QRPage extends React.Component {
     }, attempt.interval);
   }
   getVerificationState = () =>{
-    debugger
+    //debugger
     let uri = `${this.state.api.baseUriShort}/${this.state.api.getQRvalues}`;
     let options = {
       method:"POST",
@@ -193,7 +193,12 @@ class QRPage extends React.Component {
   }
   authenticated = (jwt) =>{
     //pass JWT to parent
-    this.props.onJWT(jwt);
+    /*
+    if (this.props.onJWT){
+      this.props.onJWT(jwt);
+    }*/
+    let url = `company/2/${jwt}`;
+    this.props.history.push(url);
   }
   render(){
     let {qrcValue, qrcError, qrcSize, pageTitle, pageDesc } = this.state;
@@ -217,7 +222,8 @@ class QRPage extends React.Component {
     logGroup({
       title:"QRPage",
       method:"componentDidMount",
-      state: this.state 
+      state: this.state,
+      props: this.props
     })    
     //if in demo mode we skip QRcode api call
     if (this.state.mode==="DEMO"){
@@ -230,12 +236,14 @@ class QRPage extends React.Component {
     logGroup({
       title:"QRPage",
       method:"componentDidUpdate",
-      state: this.state
+      state: this.state,
+      props: this.props
     })
     //check the state of component
     this.pageReducer();
   }
-  pageReducer = () => {    
+  pageReducer = () => {   
+    //debugger 
     switch(this.state.action.toUpperCase()){
       case "SET_QRC_VALUE":
       case "WAITING":        
@@ -244,7 +252,8 @@ class QRPage extends React.Component {
         break;              
       case "JWT": 
         //we received JWT       
-        console.log("JWT received...forward to log");
+        debugger 
+        console.log("JWT received...");        
         this.authenticated(this.state.jwt);
         break;      
       case "ERROR":        
@@ -260,7 +269,7 @@ class QRPage extends React.Component {
     }    
   }
   componentWillUnmount(){
-    debugger 
+    //debugger 
     this.removeInterval();
   }
 };

@@ -12,7 +12,7 @@ class App extends Component {
     }
     componentDidMount() {
         //this.props.getSessionData();
-        console.log(this.props)
+        //console.log(this.props)
     }
 
     render() {

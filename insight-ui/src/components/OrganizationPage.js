@@ -34,6 +34,7 @@ const styles = theme => ({
 class OrganizationPage extends Component {
     state={
         cid: null,
+        //jwt to use at api point
         jwt: null,
         loggedIn: false,
         //column definitions to pass to table component
@@ -60,15 +61,18 @@ class OrganizationPage extends Component {
             props:this.props,
             state: this.state
         });
-        this.getOrganizationInfo()
+        this.getOrganizationInfo();
     }
-
+    
     shouldComponentUpdate(nextProps, nextState){
-        let { cid } = nextProps.match.params,
+        let { cid, jwt } = nextProps.match.params,
             { modal } = nextState;
-
+        
+        //debugger 
+        
         if (cid === this.state.cid
-            && modal.open === this.state.modal.open ){
+            && modal.open === this.state.modal.open
+            && jwt == this.state.jwt ){
             return false
         } else {
             return true
@@ -84,7 +88,6 @@ class OrganizationPage extends Component {
         });
         this.getOrganizationInfo()
     }
-
     /**
      * Get Organization log info.
      * NOTE: The initial idea is to place api call here.
@@ -155,35 +158,26 @@ class OrganizationPage extends Component {
         })
     }
 
-    onJWT = (jwt) =>{
-        console.log("jwt received...", jwt);
-        this.setState({
-            jwt:jwt
-        });
-    }
-
     getContent = () => {
-        debugger 
-        let { jwt } = this.state;
+        //debugger 
+        let { jwt } = this.props.match.params;
         const { modal } = this.state;
-        if (jwt) {
+        //not completed 
+        //if (jwt){
             return (
                 <section>
                     { this.createTable() }
-
                     { modal.data && <LogModal
                         open={modal.open}
                         closeModal={this.onCloseModal}
                         data={modal.data} />                                    }
                 </section>                
             )
-        } else {
+        /*}else{
             return (
-                <QRPage
-                    onJWT={ this.onJWT }
-                />
+                <QRPage {...this.props}/>
             )
-        }
+        }*/
     }
 
     render() {        

@@ -84,7 +84,9 @@ class ResponsiveDrawer extends React.Component {
 					<Switch>
 						<Route exact path="/" component={Home} />
 						<Route exact path="/signin" component={QRPage} />
-						<Route exact path="/organization/:cid" component={OrganizationPage} />
+						<Route path="/organization/:cid" component={OrganizationPage} />
+						<Route exact path="/organization/:cid/signin" component={QRPage} />						
+						<Route exact path="/organization/:cid/:jwt" component={OrganizationPage} />
 					</Switch>
 				</main>
 			</div>
