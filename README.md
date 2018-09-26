@@ -114,7 +114,7 @@ You may now test the following sites:
 
 To test a full request through outway>inway, use the PostmanEcho service through the exampleorg outway: `curl http://outway.dev.exampleorg.minikube:30080/DemoProviderOrganization/PostmanEcho/get?foo1=bar1&foo2=bar2`
 
-Note the ports; `30080` and `30443` are routed via traefik (TLS handled by traefik), whereas `:443` and `:80` are used by nginx-ingress, which does "tcp-proxying" with ssl passthrough so the mutual TLS can be handled by inway/outway/directory/etc.
+Note the ports; `30080` and `30443` are routed via traefik (TLS handled by traefik), whereas `:80` and `:443` are used by nginx-ingress, which does "tcp-proxying" with ssl passthrough so the mutual TLS can be handled by inway/outway/directory/etc.
 
 If you want to connect over IP instead of using a hostname, the ingress controller cannot route the request properly. Therefore you must setup a port-forward directly to the application you want to expose. This is useful, for example, when testing IRMA using a phone on the same WiFi network as your host machine.
 
