@@ -50,8 +50,6 @@ spec:
               value: "{insight: [*],* : [*]}"
             - name: IRMA_API_CONF_REJECT_UNFLOORED_VALIDITY_TIMESTAMPS
               value: "false"
-          ports:
-            - containerPort: 8080
       restartPolicy: Always
   status: {}
 ---

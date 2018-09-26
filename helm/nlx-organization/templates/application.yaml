@@ -27,8 +27,6 @@ spec:
               value: "http://outway:80/rdw/kentekenregister/voertuigen"
             - name: BRP_URL
               value: "http://outway:80/brp/basisregistratie/ingeschreven_natuurlijke_personen"
-          ports:
-            - containerPort: 8000
       restartPolicy: Always
   status: {}
 ---

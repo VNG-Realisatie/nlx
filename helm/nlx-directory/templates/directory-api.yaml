@@ -56,9 +56,6 @@ spec:
               value: "{{.Values.demoEnv}}"
             - name: DEMO_DOMAIN
               value: "{{.Values.demoDomain}}"
-          ports:
-            - containerPort: 443
-            - containerPort: 80
           volumeMounts:
             - name: certs
               mountPath: /certs
