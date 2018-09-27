@@ -38,37 +38,28 @@ metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
     traefik.frontend.rule.type: PathPrefixStrip
 spec:
   rules:
-  - host: directory.{{.Values.domain}}
-    http:
-      paths:
-        - path: /
-          backend:
-            serviceName: {{.component}}
-            servicePort: webinterface
-        - path: /api
-          backend:
-            serviceName: directory-webapi
-            servicePort: webapi
+    - host: directory.{{.Values.domain}}
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: {{.component}}
+              servicePort: webinterface
+          - path: /api
+            backend:
+              serviceName: directory-webapi
+              servicePort: webapi
 {{ if eq .Values.domain "demo.nlx.io" }}
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    traefik.frontend.rule.type: PathPrefixStrip
-spec:
-  rules:
-  - host: directory.nlx.io
-    http:
-      paths:
-        - path: /
-          backend:
-            serviceName: {{.component}}
-            servicePort: webinterface
-        - path: /api
-          backend:
-            serviceName: directory-webapi
-            servicePort: webapi
+    - host: directory.nlx.io
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: {{.component}}
+              servicePort: webinterface
+          - path: /api
+            backend:
+              serviceName: directory-webapi
+              servicePort: webapi
 {{ end }}
 {{ end }}
