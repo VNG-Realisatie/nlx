@@ -86,6 +86,16 @@ func (o *Outway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		recordData["doelbinding-subject-identifier"] = subjectIdentifier
 		r.Header.Del("X-NLX-Request-Subject-Identifier")
 	}
+	var dataSubjects map[string]string
+	if dataSubjectsHeader := r.Header.Get("X-NLX-Request-Data-Subject"); dataSubjectsHeader != "" {
+		dataSubjects, err = transactionlog.ParseDataSubjectHeader(dataSubjectsHeader)
+		if err != nil {
+			http.Error(w, "nlx outway: invalid data subject header", http.StatusBadRequest)
+			o.logger.Warn("invalid data subject header", zap.Error(err))
+			return
+		}
+		r.Header.Del("X-NLX-Request-Data-Subject")
+	}
 
 	err = o.txlogger.AddRecord(&transactionlog.Record{
 		SrcOrganization:  o.organizationName,
@@ -93,6 +103,7 @@ func (o *Outway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		ServiceName:      destServiceName,
 		LogrecordID:      logrecordID,
 		Data:             recordData,
+		DataSubjects:     dataSubjects,
 	})
 	if err != nil {
 		http.Error(w, "nlx outway: server error", http.StatusInternalServerError)
