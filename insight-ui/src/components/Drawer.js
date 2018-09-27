@@ -84,7 +84,7 @@ class ResponsiveDrawer extends React.Component {
 					<div className={classes.toolbar} />
 					<Switch>
 						<Route exact path="/" component={Home} />
-						<Route exact path="/irma" component={IrmaPage} />
+						<Route exact path="/home" component={Home} />
 						<Route path="/organization/:cid" component = {OrganizationPage} />
 					</Switch>
 				</main>

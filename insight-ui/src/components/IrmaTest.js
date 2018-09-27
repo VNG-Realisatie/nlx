@@ -10,9 +10,9 @@ class IrmaPage extends Component {
     cancel:false,
     error:null,
     irma:{
-      //"https://demo.irmacard.org/tomcat/irma_api_server/api/v2/"
-      server:"http://irma-api.test.haarlem.commonground.nl/api/v2/",
-      /*attributes:[{
+      server:"https://demo.irmacard.org/tomcat/irma_api_server/api/v2/",
+      //server:"http://irma-api.test.haarlem.commonground.nl/api/v2/",
+      attributes:[{
           "label": "over12",
           "attributes": [
             "irma-demo.MijnOverheid.ageLower.over12"
@@ -23,7 +23,7 @@ class IrmaPage extends Component {
             "irma-demo.MijnOverheid.ageLower.over18"
           ]
         }
-      ]*/      
+      ]      
     }
   }
   render() {
@@ -36,10 +36,10 @@ class IrmaPage extends Component {
     })
     return ( 
       <div>
-          <h1>Irma test page</h1>
+          <h1>Irma verification page</h1>
           {jwt && <h2>Token received</h2>}
           {cancel && <h2>Verification session CANCELED</h2>}
-          {error && <h2>Token error: { JSON.stringify(error) }</h2>}
+          {error && <h2>Verification error: { JSON.stringify(error) }</h2>}
       </div>
     );
   }
@@ -51,9 +51,11 @@ class IrmaPage extends Component {
       props: this.props,
       state: this.state
     })
-    //this.performSteps();
+    this.performSteps();
     //just send JWT back
-    this.props.onJWT("asbnasdasdasd");
+    //this.props.onJWT("asbnasdasdasd");
+    //just cancel
+    //this.props.onCancel();
   }
 
   componentDidUpdate(){
@@ -67,12 +69,14 @@ class IrmaPage extends Component {
 
   performSteps = () =>{
     let {server, attributes } = this.state.irma;
-    debugger 
+    //debugger 
     //1. init IRMA server
     this.initIRMA(server)
     .then( d => {
       //debugger
-      return this.getDataSubjects("/haarlem/getDataSubjects")
+      //return this.getDataSubjects("/haarlem/getDataSubjects");
+      //temporary for test
+      return this.state.attributes;
     })
     .then( ds => {
       //debugger
@@ -80,27 +84,19 @@ class IrmaPage extends Component {
       return this.createUnsignedVerificationJWT(attributes);
     })
     .then((jwt1)=>{
-      debugger
+      //debugger
       //verify
       return this.irmaVerify(jwt1);
     })
     .then((jwt2)=>{
-      debugger
+      //debugger
       //console.log("success...", jwt);
-      this.setState({
-        jwt: jwt2,
-        error:null,
-        cancel: false
-      })
+      this.props.onJWT(jwt2);
     })
     .catch(e=>{
       debugger
       if (e==="CANCELED"){
-        this.setState({
-          jwt: null,
-          error: null,
-          cancel: true
-        })
+        this.props.onCancel(true);
         //console.log("CANCELED...go home")
       }else{
         //console.log("ERROR, SHOW ERROR...", e);
@@ -127,7 +123,7 @@ class IrmaPage extends Component {
   }
 
   getDataSubjects = url => {
-    debugger
+    //debugger
     return fetch(url)
       .then(d=>{
         debugger
@@ -145,7 +141,7 @@ class IrmaPage extends Component {
       }
     }    
     return new Promise ((res,rej)=>{
-      debugger
+      //debugger
       try{
         let jwt = window.IRMA.createUnsignedVerificationJWT(request);
         res(jwt);
@@ -163,7 +159,7 @@ class IrmaPage extends Component {
    */
   irmaVerify = jwt =>{
     return new Promise( (res, rej)=>{
-      debugger
+      //debugger
       window.IRMA.verify(jwt, 
         (d)=>{
           //console.log("success..",jwt);

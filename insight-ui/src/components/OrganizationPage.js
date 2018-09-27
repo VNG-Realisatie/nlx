@@ -161,22 +161,36 @@ class OrganizationPage extends Component {
     }
 
     onJWT = jwt => {
-        debugger
-        console.log("jwt received...", jwt);
+        //debugger
+        logGroup({
+            title: "Organization",
+            method: "onJWT",
+            jwt: jwt,
+            props: this.props,
+            state: this.state
+        });
         //get logs
         this.getOrganizationLogs(jwt)
-        /*
-        this.setState({
-            jwt
-        })*/
+    }
+
+    onCancelVerification = () =>{
+        //debugger
+        let { history } = this.props; 
+        logGroup({
+            title: "Organization",
+            method: "onCancelVerification",
+            action: "push to /",
+            props: this.props,
+            state: this.state
+        });
+        history.push('/');
     }
 
     getContent = () => {
-        debugger 
+        //debugger 
         let { jwt } = this.state;
         const { modal } = this.state;
         if (jwt){
-
             return (
                 <section>
                     { this.createTable() }
@@ -187,7 +201,10 @@ class OrganizationPage extends Component {
                 </section>                
             )
         }else{
-            return(<IrmaPage onJWT={this.onJWT}/>)
+            return(<IrmaPage 
+                onJWT={this.onJWT}
+                onCancel={this.onCancelVerification}/>
+            )
         }
     }
 

@@ -13,12 +13,12 @@ const Home = () => (
 				Welcome to the DIVA 3rd party reference implementation.
 			</p>			
 			<ul>
-				<li>Sign in with your IRMA app <Link to="/irma">here</Link></li>
-				<li>Visit the pages using the left menu.</li>
+				<li>Visit the organizations using the menu items on the left.</li>
+				<li>You need to sign in with your IRMA app.</li>
 			</ul>				
 			<p>
 				<strong>
-					You can only view them if you have disclosed the required IRMA attributes.<br />
+					You can only view organization logs if you have disclosed required IRMA attributes.<br />
 					If you haven&apos;t, you will be asked to do so.<br />
 				</strong>
 			</p>			
