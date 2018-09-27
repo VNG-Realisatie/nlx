@@ -50,7 +50,7 @@ ALTER TYPE transactionlog.direction OWNER TO postgres;
 CREATE SEQUENCE transactionlog.records_id_seq
 	INCREMENT BY 1
 	MINVALUE 0
-	MAXVALUE 2147483647
+	MAXVALUE 9223372036854775807
 	START WITH 1
 	CACHE 1
 	NO CYCLE
@@ -62,7 +62,7 @@ ALTER SEQUENCE transactionlog.records_id_seq OWNER TO postgres;
 -- object: transactionlog.records | type: TABLE --
 -- DROP TABLE IF EXISTS transactionlog.records CASCADE;
 CREATE TABLE transactionlog.records(
-	id integer NOT NULL DEFAULT nextval('records_id_seq'),
+	id bigint NOT NULL DEFAULT nextval('records_id_seq'),
 	direction transactionlog.direction NOT NULL,
 	created timestamptz NOT NULL DEFAULT now(),
 	src_organization text NOT NULL,
@@ -82,33 +82,97 @@ ALTER SEQUENCE transactionlog.records_id_seq OWNED BY records.id;
 
 -- ddl-end --
 
--- object: grant_bb34ebe74d | type: PERMISSION --
+-- object: transactionlog.datasubjects_id_seq | type: SEQUENCE --
+-- DROP SEQUENCE IF EXISTS transactionlog.datasubjects_id_seq CASCADE;
+CREATE SEQUENCE transactionlog.datasubjects_id_seq
+	INCREMENT BY 1
+	MINVALUE 0
+	MAXVALUE 9223372036854775807
+	START WITH 1
+	CACHE 1
+	NO CYCLE
+	OWNED BY NONE;
+-- ddl-end --
+ALTER SEQUENCE transactionlog.datasubjects_id_seq OWNER TO postgres;
+-- ddl-end --
+
+-- object: transactionlog.datasubjects | type: TABLE --
+-- DROP TABLE IF EXISTS transactionlog.datasubjects CASCADE;
+CREATE TABLE transactionlog.datasubjects(
+	id bigint NOT NULL DEFAULT nextval('datasubjects_id_seq'),
+	record_id integer NOT NULL,
+	key varchar(100) NOT NULL,
+	value varchar(100) NOT NULL,
+	CONSTRAINT datasubjects_pk PRIMARY KEY (id),
+	CONSTRAINT datasubjects_uq_key UNIQUE (record_id,key)
+
+);
+-- ddl-end --
+ALTER TABLE transactionlog.datasubjects OWNER TO postgres;
+-- ddl-end --
+
+-- object: datasubjects_index_keyvalue | type: INDEX --
+-- DROP INDEX IF EXISTS transactionlog.datasubjects_index_keyvalue CASCADE;
+CREATE INDEX datasubjects_index_keyvalue ON transactionlog.datasubjects
+	USING btree
+	(
+	  key,
+	  value ASC NULLS LAST
+	);
+-- ddl-end --
+
+-- object: datasubjects_fk_record | type: CONSTRAINT --
+-- ALTER TABLE transactionlog.datasubjects DROP CONSTRAINT IF EXISTS datasubjects_fk_record CASCADE;
+ALTER TABLE transactionlog.datasubjects ADD CONSTRAINT datasubjects_fk_record FOREIGN KEY (record_id)
+REFERENCES transactionlog.records (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: grant_44d1d56c5a | type: PERMISSION --
 GRANT SELECT
    ON TABLE transactionlog.records
    TO "nlx-org-txlog-api";
 -- ddl-end --
 
--- object: grant_028b7a9f82 | type: PERMISSION --
-GRANT INSERT
+-- object: grant_c011d34c83 | type: PERMISSION --
+GRANT SELECT,INSERT
    ON TABLE transactionlog.records
    TO "nlx-org-txlog-writer";
 -- ddl-end --
 
--- object: grant_9816aa9160 | type: PERMISSION --
+-- object: grant_51c82c7170 | type: PERMISSION --
 GRANT USAGE
    ON SCHEMA transactionlog
    TO "nlx-org-txlog-api";
 -- ddl-end --
 
--- object: grant_f7267add45 | type: PERMISSION --
+-- object: grant_04e581e244 | type: PERMISSION --
 GRANT USAGE
    ON SCHEMA transactionlog
    TO "nlx-org-txlog-writer";
 -- ddl-end --
 
--- object: grant_cbf55a140f | type: PERMISSION --
+-- object: grant_aa562a9360 | type: PERMISSION --
 GRANT SELECT,USAGE
    ON SEQUENCE transactionlog.records_id_seq
+   TO "nlx-org-txlog-writer";
+-- ddl-end --
+
+-- object: grant_de75a7700e | type: PERMISSION --
+GRANT SELECT
+   ON TABLE transactionlog.datasubjects
+   TO "nlx-org-txlog-api";
+-- ddl-end --
+
+-- object: grant_2fba446269 | type: PERMISSION --
+GRANT INSERT
+   ON TABLE transactionlog.datasubjects
+   TO "nlx-org-txlog-writer";
+-- ddl-end --
+
+-- object: grant_5e6736b63c | type: PERMISSION --
+GRANT SELECT,USAGE
+   ON SEQUENCE transactionlog.datasubjects_id_seq
    TO "nlx-org-txlog-writer";
 -- ddl-end --
 

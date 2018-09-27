@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"crypto/rsa"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -182,7 +183,27 @@ func generateJWT(logger *zap.Logger, dataSubjects map[string]config.DataSubject,
 }
 
 func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, rsaVerifyPublicKey *rsa.PublicKey) http.HandlerFunc {
-	stmtFetchLogs, err := db.Preparex(`
+	stmtCreateMatchDataSubjects, err := db.Preparex(`
+		CREATE TEMPORARY TABLE matchDataSubjects(
+			key varchar(100),
+			value varchar(100)
+		)
+		ON COMMIT DROP
+	`)
+	if err != nil {
+		logger.Fatal("failed to prepare stmtCreateMatchDataSubjects", zap.Error(err))
+	}
+
+	rawStmtInsertMatchDataSubjects := `INSERT INTO matchDataSubjects (key, value) VALUES ($1, $2)`
+
+	rawStmtFetchLogs := `
+		WITH matchedRecords AS (
+			SELECT DISTINCT record_id
+			FROM transactionlog.datasubjects
+				INNER JOIN matchDataSubjects
+					ON datasubjects.key = matchDataSubjects.key
+						AND datasubjects.value = matchDataSubjects.value
+		)
 		SELECT
 			created,
 			src_organization,
@@ -191,11 +212,10 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, rsaVerifyPublicKey *rsa.Pu
 			logrecord_id,
 			data AS data_json
 		FROM transactionlog.records
+			INNER JOIN matchedRecords
+				ON records.id = matchedRecords.record_id
 		ORDER BY created
-	`)
-	if err != nil {
-		logger.Fatal("failed to prepare query for fetching logs", zap.Error(err))
-	}
+	`
 
 	type Record struct {
 		*transactionlog.Record
@@ -216,7 +236,6 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, rsaVerifyPublicKey *rsa.Pu
 			return
 		}
 		token, claims, err := irma.VerifyIRMAVerificationResult(jwtBytes, rsaVerifyPublicKey)
-		_ = claims
 		_ = token
 		if err != nil {
 			logger.Error("failed to verify irma jwt", zap.Error(err))
@@ -224,6 +243,51 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, rsaVerifyPublicKey *rsa.Pu
 			return
 		}
 
+		tx, err := db.Beginx()
+		if err != nil {
+			logger.Error("failed to start transaction", zap.Error(err))
+			http.Error(w, "server error", http.StatusInternalServerError)
+			return
+		}
+		defer func() {
+			errRollback := tx.Rollback()
+			if errRollback == sql.ErrTxDone {
+				return // tx was already comitted
+			}
+			if errRollback != nil {
+				logger.Error("error rolling back transaction", zap.Error(errRollback))
+			}
+		}()
+
+		// TODO: investigate possible other solutions or optimizations for this crazy exercise
+		_, err = tx.Stmtx(stmtCreateMatchDataSubjects).Exec()
+		if err != nil {
+			logger.Error("failed to create temp table", zap.Error(err))
+			http.Error(w, "server error", http.StatusInternalServerError)
+			return
+		}
+
+		stmtInsertMatchDataSubjects, err := tx.Preparex(rawStmtInsertMatchDataSubjects)
+		if err != nil {
+			logger.Error("failed to prepare statement inserting query attributes into temp table", zap.Error(err))
+			http.Error(w, "server error", http.StatusInternalServerError)
+			return
+		}
+		for key, value := range claims.Attributes {
+			_, err = stmtInsertMatchDataSubjects.Exec(key, value)
+			if err != nil {
+				logger.Error("failed to insert query attributes into temp table", zap.Error(err))
+				http.Error(w, "server error", http.StatusInternalServerError)
+				return
+			}
+		}
+
+		stmtFetchLogs, err := tx.Preparex(rawStmtFetchLogs)
+		if err != nil {
+			logger.Error("failed to prepare statement for fetching transaction logs", zap.Error(err))
+			http.Error(w, "server error", http.StatusInternalServerError)
+			return
+		}
 		res, err := stmtFetchLogs.Queryx()
 		if err != nil {
 			logger.Error("failed to fetch transaction logs", zap.Error(err))
@@ -248,6 +312,12 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, rsaVerifyPublicKey *rsa.Pu
 				return
 			}
 			out.Records = append(out.Records, rec)
+		}
+
+		err = tx.Commit()
+		if err != nil {
+			logger.Warn("failed to commit transaction after succesful select", zap.Error(err))
+			// gracefully handle this situation, we can still serve the consumer.
 		}
 
 		err = json.NewEncoder(w).Encode(out)

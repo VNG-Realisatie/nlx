@@ -70,7 +70,7 @@ func NewOutway(logger *zap.Logger, logdb *sqlx.DB, tlsOptions orgtls.TLSOptions,
 	if logdb == nil {
 		o.txlogger = transactionlog.NewDiscardTransactionLogger()
 	} else {
-		o.txlogger, err = transactionlog.NewPostgresTransactionLogger(logdb, transactionlog.DirectionOut)
+		o.txlogger, err = transactionlog.NewPostgresTransactionLogger(logger, logdb, transactionlog.DirectionOut)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to setup transactionlog")
 		}

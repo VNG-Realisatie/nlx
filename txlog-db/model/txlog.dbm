@@ -35,7 +35,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <sequence name="records_id_seq"
 	 start="1" increment="1"
-	 min-value="0" max-value="2147483647"
+	 min-value="0" max-value="9223372036854775807"
 	 cache="1" cycle="false">
 	<schema name="transactionlog"/>
 	<role name="postgres"/>
@@ -48,7 +48,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 ]]></appended-sql>
 	<position x="1260" y="520"/>
 	<column name="id" not-null="true" default-value="nextval('records_id_seq')">
-		<type name="integer" length="0"/>
+		<type name="bigint" length="0"/>
 	</column>
 	<column name="direction" not-null="true">
 		<type name="transactionlog.direction" length="0"/>
@@ -76,6 +76,60 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
+<sequence name="datasubjects_id_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="transactionlog"/>
+	<role name="postgres"/>
+</sequence>
+
+<table name="datasubjects">
+	<schema name="transactionlog"/>
+	<role name="postgres"/>
+	<position x="2580" y="480"/>
+	<column name="id" not-null="true" default-value="nextval('datasubjects_id_seq')">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="record_id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="key" not-null="true">
+		<type name="varchar" length="100"/>
+	</column>
+	<column name="value" not-null="true">
+		<type name="varchar" length="100"/>
+	</column>
+	<constraint name="datasubjects_pk" type="pk-constr" table="transactionlog.datasubjects">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="datasubjects_uq_key" type="uq-constr" table="transactionlog.datasubjects">
+		<columns names="record_id,key" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<index name="datasubjects_index_keyvalue" table="transactionlog.datasubjects"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="key"/>
+		</idxelement>
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="value"/>
+		</idxelement>
+</index>
+
+<constraint name="datasubjects_fk_record" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="transactionlog.records" table="transactionlog.datasubjects">
+	<columns names="record_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<relationship name="rel_datasubjects_records" type="relfk"
+	 src-table="transactionlog.datasubjects"
+	 dst-table="transactionlog.records" reference-fk="datasubjects_fk_record"
+	 src-required="false" dst-required="false"/>
+
 <permission>
 	<object name="transactionlog.records" type="table"/>
 	<roles names="&quot;nlx-org-txlog-api&quot;"/>
@@ -84,7 +138,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <permission>
 	<object name="transactionlog.records" type="table"/>
 	<roles names="&quot;nlx-org-txlog-writer&quot;"/>
-	<privileges insert="true"/>
+	<privileges select="true" insert="true"/>
 </permission>
 <permission>
 	<object name="transactionlog" type="schema"/>
@@ -98,6 +152,21 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </permission>
 <permission>
 	<object name="transactionlog.records_id_seq" type="sequence"/>
+	<roles names="&quot;nlx-org-txlog-writer&quot;"/>
+	<privileges select="true" usage="true"/>
+</permission>
+<permission>
+	<object name="transactionlog.datasubjects" type="table"/>
+	<roles names="&quot;nlx-org-txlog-api&quot;"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="transactionlog.datasubjects" type="table"/>
+	<roles names="&quot;nlx-org-txlog-writer&quot;"/>
+	<privileges insert="true"/>
+</permission>
+<permission>
+	<object name="transactionlog.datasubjects_id_seq" type="sequence"/>
 	<roles names="&quot;nlx-org-txlog-writer&quot;"/>
 	<privileges select="true" usage="true"/>
 </permission>
