@@ -1,49 +1,34 @@
 import React, { Component } from 'react';
-
 import './IrmaVerify.css';
-import { logGroup } from '../utils/appUtils';
 
 class IrmaPage extends Component {
-  state={
-    jwt:null,
-    cancel:false,
-    error:null,
-    irma:{
-      server:"https://demo.irmacard.org/tomcat/irma_api_server/api/v2/",
-      //server:"http://irma-api.test.haarlem.commonground.nl/api/v2/",
-      attributes:[{
-          "label": "over18",
-          "attributes": [
-            "irma-demo.MijnOverheid.ageLower.over18"
-          ]
-        }
-      ]      
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      jwt:null,
+      cancel:false,
+      error:null,
+      irma:{
+        server: this.props.server,
+        attributes: this.props.attributes
+      }
     }
   }
+
   render() {
-    let { jwt, cancel, error } = this.state;
-    logGroup({
-      title:"IrmaPage",
-      method:"render",
-      state: this.state,
-      props: this.props 
-    })
-    return ( 
+    let { jwt, cancel, error } = this.state
+
+    return (
       <div>
           {jwt && <h2>Token received</h2>}
           {cancel && <h2>Verification session CANCELED</h2>}
           {error && <h2>Verification error: { JSON.stringify(error) }</h2>}
       </div>
-    );
+    )
   }
-  
-  componentDidMount(){
-    logGroup({
-      title:"IrmaPage",
-      method:'componentDidMount',
-      props: this.props,
-      state: this.state
-    })
+
+  componentDidMount() {
     //live
     this.performSteps();
     //test sending JWT back
@@ -52,18 +37,9 @@ class IrmaPage extends Component {
     //this.props.onCancel();
   }
 
-  componentDidUpdate(){
-    logGroup({
-      title:"IrmaPage",
-      method:'componentDidUpdate',
-      props: this.props,
-      state: this.state
-    })
-  }
-
   performSteps = () =>{
     let {server, attributes } = this.state.irma;
-    //debugger 
+
     //1. init IRMA server
     this.initIRMA(server)
     .then( d => {
@@ -88,7 +64,7 @@ class IrmaPage extends Component {
       this.props.onJWT(jwt2);
     })
     .catch( e => {
-      debugger
+      //debugger
       if (e==="CANCELED"){
         //debugger
         this.props.onCancel(true);

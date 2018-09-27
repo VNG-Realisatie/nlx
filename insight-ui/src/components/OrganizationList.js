@@ -1,86 +1,51 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 
 import { NavLink, withRouter } from 'react-router-dom'
-import { MenuList, MenuItem, ListItemIcon, 
+import { MenuList, MenuItem, ListItemIcon,
     ListItemText, Divider, ListSubheader
 } from '@material-ui/core';
 import { Home, VerifiedUser, NotInterested }from '@material-ui/icons';
 
-import config from '../utils/config';
-import listServices from '../mockdata/directory.dev.nlx-list-services.json';
-
-class OrganizationList extends Component {    
-    state={
-        "services": []
-    }    
-    componentDidMount(){                
-        //get list of avaliable services        
-        //this.getServices();
-        
-        this.setServices(listServices.services);
-    }  
-    
-    getServices(){
-        let url = config.api.listServices();
-        axios.get(url)
-        .then(d =>{
-            this.setServices(d);
-        },(e)=>{            
-            this.setServices({
-                "services": []
-            });
-            console.error(e)
-        })
-    }
-
-    setServices = data => {
-        //debugger            
-        this.setState({
-            services: data 
-        });
-    }
-    getMenuItem(item){
-        const uri = `/organization/${item.id}`,
-            active = uri===this.props.location.pathname;           
+class OrganizationList extends Component {
+    getMenuItem(item) {
+        const url = `/organization/${item.name}`
         return (
             <MenuItem
                 key={item.id}
-                component={NavLink} 
-                to={uri}
-                selected={active}
+                component={NavLink}
+                to={url}
+                selected={url === this.props.location.pathname}
                 title={item.signed ? "Signed in to service" : "Not signed to service"}>
                 <ListItemIcon>
                     {item.signed ? (
                         <VerifiedUser />
                     ):(
                         <NotInterested/>
-                    )}                    
+                    )}
                 </ListItemIcon>
                 <ListItemText primary={item.name} />
-            </MenuItem> 
+            </MenuItem>
         )
     }
-    getHomeItem(){
-        let active = "/" === this.props.location.pathname;   
+
+    getHomeItem() {
+        const url = "/"
         return (
             <MenuItem
                 key="home"
-                component={NavLink} 
-                to="/"
-                selected={active}>
+                component={NavLink}
+                to={url}
+                selected={url === this.props.location.pathname}>
                 <ListItemIcon>
                     <Home />
                 </ListItemIcon>
                 <ListItemText primary="Home" />
-            </MenuItem> 
+            </MenuItem>
         )
     }
 
     render() {
-        let { services } = this.state;
-        //console.log("services...", services);
-        return (         
+        return (
             <MenuList>
                 { this.getHomeItem() }
                 <Divider/>
@@ -88,19 +53,22 @@ class OrganizationList extends Component {
                     Organization
                 </ListSubheader>
                 <Divider/>
-                { 
-                    services.map((item,id)=>{
+                {
+                    this.props.organizations.map((item,id) => {
+                        if (!item.insight_irma_endpoint || !item.insight_log_endpoint) {
+                            return false
+                        }
+
                         return this.getMenuItem({
                             id: id,
-                            name: item.organization_name,
-                            signed: item.signed   
+                            name: item.name,
+                            signed: item.signed
                         });
-                    })    
-                }                
-            </MenuList> 
+                    })
+                }
+            </MenuList>
         );
     }
 }
 
-//export default withRouter(MenuList);
 export default withRouter(OrganizationList);

@@ -35,6 +35,7 @@ kind: Ingress
 metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
   annotations:
     kubernetes.io/ingress.class: traefik
+    ingress.kubernetes.io/custom-response-headers: 'Access-Control-Allow-Origin: *'
     traefik.frontend.rule.type: PathPrefixStrip
 spec:
   rules:

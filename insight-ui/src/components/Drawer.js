@@ -1,6 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Link, Switch, Route } from 'react-router-dom'
+import React from 'react'
+import PropTypes from 'prop-types'
+import { Link, Switch, Route, withRouter } from 'react-router-dom'
+import config from '../utils/config'
+import axios from 'axios'
 
 import {
 	withStyles,
@@ -16,20 +18,45 @@ import Home from './Home';
 import OrganizationPage from './OrganizationPage';
 import OrganizationList from './OrganizationList';
 import Logo from './Logo';
-//import QRPage from './QRPage';
-//import IrmaPage from './IrmaVerify';
 
 class ResponsiveDrawer extends React.Component {
 	state = {
-		mobileOpen: false
+		mobileOpen: false,
+		loading: true,
+		error: false,
+		organizations: []
 	};
+
+    componentDidMount() {
+        this.getOrganizations()
+    }
+
+    getOrganizations() {
+        axios.get(`${config.api.baseUri}/directory/list-organizations`)
+        .then(response => {
+            this.setState({
+				loading: false,
+                organizations: response.data.organizations
+            })
+        },(e)=>{
+			console.error(e)
+			this.setState({ error: true })
+        })
+    }
+
 
 	handleDrawerToggle = () => {
 		this.setState(state => ({ mobileOpen: !state.mobileOpen }));
 	};
 
 	render() {
-		const { classes, theme /*,appTitle*/} = this.props;
+		const { classes, theme } = this.props;
+
+		if (this.state.error) {
+			return (
+				<div>Could not load data, please try again</div>
+			)
+		}
 
 		return (
 			<div className={classes.root}>
@@ -49,9 +76,6 @@ class ResponsiveDrawer extends React.Component {
 								<Logo />
 							</Link>
 						</Hidden>
-						{/* <Typography variant="title" color="primary" noWrap>
-							{appTitle}
-						</Typography> */}
 					</Toolbar>
 				</AppBar>
 				<Hidden mdUp>
@@ -71,13 +95,13 @@ class ResponsiveDrawer extends React.Component {
 							<Logo />
 						</Toolbar>
 
-						<OrganizationList />
+						<OrganizationList organizations={this.state.organizations} />
 					</Drawer>
 				</Hidden>
 				<Hidden smDown implementation="css">
 					<Drawer variant="permanent" className={classes.drawerPaper}>
 						<div className={classes.toolbar} />
-						<OrganizationList />
+						<OrganizationList organizations={this.state.organizations} />
 					</Drawer>
 				</Hidden>
 				<main className={classes.content}>
@@ -85,7 +109,7 @@ class ResponsiveDrawer extends React.Component {
 					<Switch>
 						<Route exact path="/" component={Home} />
 						<Route exact path="/home" component={Home} />
-						<Route path="/organization/:cid" component = {OrganizationPage} />
+						<Route path="/organization/:name" render={() => <OrganizationPage organizations={this.state.organizations} />} />
 					</Switch>
 				</main>
 			</div>
@@ -98,4 +122,4 @@ ResponsiveDrawer.propTypes = {
 	theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(ResponsiveDrawer);
+export default withStyles(styles, { withTheme: true })(withRouter(ResponsiveDrawer));

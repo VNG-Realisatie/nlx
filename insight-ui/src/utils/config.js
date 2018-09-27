@@ -2,14 +2,10 @@
 export const config = {
   appTitle:"This is app title",
   logo:{
-    src:"" 
+    src:""
   },
   api:{
-    baseUri:"http://localhost:3000/api/",
-    listServices:()=>{
-      let url = "/directory/list-services";
-      return url;
-    },
+    baseUri:"http://directory.dev.nlx.minikube:30080/api",
   }
 }
 

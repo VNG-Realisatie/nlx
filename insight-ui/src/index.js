@@ -11,14 +11,14 @@ import configureStore from './configureStore';
 import registerServiceWorker from './registerServiceWorker';
 
 const store = configureStore();
-//console.log("muiTheme...", muiTheme);
 
-ReactDOM.render(	
+ReactDOM.render(
 	<Provider store={store}>
-		<MuiThemeProvider theme={muiTheme}>			
+		<MuiThemeProvider theme={muiTheme}>
 			<App />
 		</MuiThemeProvider>
-	</Provider>,	
+	</Provider>,
 	document.getElementById('root'),
 );
+
 registerServiceWorker();
