@@ -3,7 +3,6 @@ package directoryservice
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
@@ -50,15 +49,6 @@ func (h *listOrganizationsHandler) ListOrganizations(ctx context.Context, req *d
 	err := h.stmtSelectOrganizations.Select(&resp.Organizations)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to select organizations using stmtSelectOrganizations")
-	}
-
-	// Hardcoded
-	for _, org := range resp.Organizations {
-		switch org.Name {
-		case "gemeente", "rdw", "brp":
-			org.InsightLogEndpoint = fmt.Sprintf("insight-txlog-api.%s.%s.%s", h.demoEnv, strings.ToLower(org.Name), h.demoDomain)
-			org.InsightIrmaEndpoint = fmt.Sprintf("insight-irma-api.%s.%s.%s", h.demoEnv, strings.ToLower(org.Name), h.demoDomain)
-		}
 	}
 
 	return resp, nil

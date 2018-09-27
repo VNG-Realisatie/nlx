@@ -105,27 +105,30 @@ func NewInway(logger *zap.Logger, logdb *sqlx.DB, selfAddress string, tlsOptions
 }
 
 // AddServiceEndpoint adds an ServiceEndpoint to the inway's internal registry.
-func (i *Inway) AddServiceEndpoint(s ServiceEndpoint, documentationURL string, apiSpecificationType string) error {
+func (i *Inway) AddServiceEndpoint(s ServiceEndpoint, serviceDetails config.ServiceDetails) error {
 	i.serviceEndpointsLock.Lock()
 	defer i.serviceEndpointsLock.Unlock()
 	if _, exists := i.serviceEndpoints[s.ServiceName()]; exists {
 		return errors.New("service endpoint for a service with the same name has already been registered")
 	}
 	i.serviceEndpoints[s.ServiceName()] = s
-	i.announceToDirectory(s, documentationURL, apiSpecificationType)
+	i.announceToDirectory(s, serviceDetails)
 	return nil
 }
 
-func (i *Inway) announceToDirectory(s ServiceEndpoint, documentationURL string, apiSpecificationType string) {
+func (i *Inway) announceToDirectory(s ServiceEndpoint, serviceDetails config.ServiceDetails) {
 	go func() {
 		for {
 			resp, err := i.directoryClient.RegisterInway(context.Background(), &directoryapi.RegisterInwayRequest{
 				InwayAddress: i.selfAddress,
 				Services: []*directoryapi.RegisterInwayRequest_RegisterService{
 					{
-						Name:                 s.ServiceName(),
-						DocumentationUrl:     documentationURL,
-						ApiSpecificationType: apiSpecificationType,
+						Name:                        s.ServiceName(),
+						DocumentationUrl:            serviceDetails.DocumentationURL,
+						ApiSpecificationType:        serviceDetails.APISpecificationType,
+						ApiSpecificationDocumentUrl: serviceDetails.APISpecificationDocumentURL,
+						InsightApiUrl:               serviceDetails.InsightAPIURL,
+						IrmaApiUrl:                  serviceDetails.IrmaAPIURL,
 					},
 				},
 			})

@@ -18,7 +18,14 @@ caAddress: ca-cfssl-unsafe.nlx-dev-directory
 directoryHostname: directory-api.dev.nlx.minikube
 
 inway:
-  enable: false
+  enable: true
+  config: |
+    [services]
+      [services.kenau]
+      endpoint-url = "http://JustHereForRegisteringIntoDirectoryWithInsightAndIrmaApiURLs:8000"
+      authorization-model = "none"
+      insight-api-url = "insight-api.dev.haarlem.minikube"
+      irma-api-url = "irma-api.dev.haarlem.minikube"
 outway:
   enable: true
 demoService:

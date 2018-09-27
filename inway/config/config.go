@@ -20,6 +20,8 @@ type ServiceDetails struct {
 	DocumentationURL            string   `toml:"documentation-url"`              // Config parameter will be moved to directory admin interface
 	APISpecificationType        string   `toml:"api-specification-type"`         // Config parameter will be moved to directory admin interface
 	APISpecificationDocumentURL string   `toml:"api-specification-document-url"` // Config parameter will be moved to directory admin interface
+	InsightAPIURL               string   `toml:"insight-api-url"`                // Config parameter will be moved to directory admin interface
+	IrmaAPIURL                  string   `toml:"irma-api-url"`                   // Config parameter will be moved to directory admin interface
 }
 
 // LoadServiceConfig reads the service config from disk and returns.

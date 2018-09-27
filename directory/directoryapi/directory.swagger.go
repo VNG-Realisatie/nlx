@@ -133,6 +133,15 @@ SwaggerJSONDirectory = `
         },
         "api_specification_type": {
           "type": "string"
+        },
+        "api_specification_document_url": {
+          "type": "string"
+        },
+        "insight_api_url": {
+          "type": "string"
+        },
+        "irma_api_url": {
+          "type": "string"
         }
       }
     },

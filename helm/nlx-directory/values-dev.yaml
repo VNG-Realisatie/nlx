@@ -16,3 +16,4 @@ demoDomain: "minikube"
 inwayHostnames:
   - inway.dev.brp.minikube
   - inway.dev.rdw.minikube
+  - inway.dev.haarlem.minikube

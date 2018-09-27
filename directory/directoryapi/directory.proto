@@ -34,6 +34,9 @@ message RegisterInwayRequest {
 		string name = 1;
 		string documentation_url = 2;
 		string api_specification_type = 3;
+		string api_specification_document_url = 4;
+		string insight_api_url = 5;
+		string irma_api_url = 6;
 	}
 
 	string inway_address = 1;

@@ -38,10 +38,12 @@ func newRegisterInwayHandler(db *sqlx.DB, logger *zap.Logger) (*registerInwayHan
 	// NOTE: We do not have an endpoint yet to create services separately, therefore insert on demand.
 	h.stmtInsertAvailability, err = db.Preparex(`
 		WITH org AS (
-			INSERT INTO directory.organizations (name)
-				VALUES ($1)
+			INSERT INTO directory.organizations (name, insight_log_endpoint, insight_irma_endpoint)
+				VALUES ($1, $6, $7)
 				ON CONFLICT ON CONSTRAINT organizations_uq_name
-					DO UPDATE SET name = EXCLUDED.name
+					DO UPDATE SET
+						insight_log_endpoint = EXCLUDED.insight_log_endpoint,
+						insight_irma_endpoint = EXCLUDED.insight_irma_endpoint
 				RETURNING id
 		), service AS (
 			INSERT INTO directory.services (organization_id, name, documentation_url, api_specification_type)
@@ -97,7 +99,15 @@ func (h *registerInwayHandler) RegisterInway(ctx context.Context, req *directory
 			return nil, errors.New("invalid documentation URL provided")
 		}
 
-		_, err = h.stmtInsertAvailability.Exec(organizationName, service.Name, service.DocumentationUrl, service.ApiSpecificationType, req.InwayAddress)
+		_, err = h.stmtInsertAvailability.Exec(
+			organizationName,
+			service.Name,
+			service.DocumentationUrl,
+			service.ApiSpecificationType,
+			req.InwayAddress,
+			service.InsightApiUrl,
+			service.IrmaApiUrl,
+		)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to insert service and inway")
 		}

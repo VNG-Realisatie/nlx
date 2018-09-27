@@ -24,6 +24,8 @@ inway:
       [services.kentekenregister]
       endpoint-url = "http://service:8000"
       authorization-model = "none"
+      insight-api-url = "insight-api.dev.haarlem.minikube"
+      irma-api-url = "irma-api.dev.haarlem.minikube"
 outway:
   enable: false
 demoService:

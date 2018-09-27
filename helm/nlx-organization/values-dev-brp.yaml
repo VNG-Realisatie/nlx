@@ -24,6 +24,8 @@ inway:
       [services.basisregistratie]
       endpoint-url = "http://service:8000"
       authorization-model = "none"
+      insight-api-url = "insight-api.dev.brp.minikube"
+      irma-api-url = "irma-api.dev.brp.minikube"
 outway:
   enable: false
 demoService:

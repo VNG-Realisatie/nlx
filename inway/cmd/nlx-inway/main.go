@@ -105,7 +105,7 @@ func main() {
 		default:
 			logger.Fatal(fmt.Sprintf(`invalid authorization model "%s" for service "%s"`, serviceDetails.AuthorizationModel, serviceName))
 		}
-		iw.AddServiceEndpoint(endpoint, serviceDetails.DocumentationURL, serviceDetails.APISpecificationType)
+		iw.AddServiceEndpoint(endpoint, serviceDetails)
 	}
 	// Listen on the address provided in the options
 	err = iw.ListenAndServeTLS(options.ListenAddress)
