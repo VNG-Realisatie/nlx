@@ -5,10 +5,10 @@ dbHost: postgresql.postgresql
 dbUsernameSuperuser: postgres
 dbPasswordSuperuser: postgres
 
-dbDatabaseDirectory: dev-nlx
+dbDatabaseDirectory: nlx-dev
 dbResetDirectory: true # WARNING: All data will be LOST, never use in production!
-dbUsernameDirectory: dev-nlx-directory
-dbPasswordDirectory: dev-nlx-directory
+dbUsernameDirectory: nlx-dev-directory
+dbPasswordDirectory: nlx-dev-directory
 
 externalIP: ""
 demoEnv: "dev"

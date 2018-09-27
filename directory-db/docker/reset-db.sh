@@ -14,6 +14,8 @@ DROP DATABASE IF EXISTS "${PGDATABASE}";
 CREATE DATABASE "${PGDATABASE}";
 EOF
 
+sed -i "s/nlx-directory/${PGDATABASE}/g" /db-migrations/*.up.sql
+
 echo "Creating database structure from migrations and adding testdata"
 dbVersion=0
 for _unused in $(find /db-migrations -name "*.up.sql" -print0 | sort -z | xargs -r0 echo); do
