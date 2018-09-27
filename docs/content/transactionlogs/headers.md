@@ -14,6 +14,7 @@ NLX logs requests on both the **outway** and **inway**. When an application perf
 * `X-NLX-Request-Subject-Identifier`, an subject identifier for purpose registration (doelbinding)
 * `X-NLX-Request-Process-Id`, a process id for purpose registration (doelbinding)
 * `X-NLX-Request-Data-Elements`, a list of requested data elements
+* `X-NLX-Request-Data-Subject`, a key-value list of data subjects related to this request. e.g. `bsn=12345678,kenteken=ab-12-fg`
 
 The outway appends a globally unique `X-NLX-Request-Id` to make a request traceable through the network. All the headers are logged before the request leaves the outway. Then the fields `X-NLX-Request-User-Id`, `X-NLX-Request-Application-Id`, and `X-NLX-Request-Subject-Identifier` are stripped of and the request is forwarded to the inway. When a request arrives at the inway, the inway logs the request and also the requesting organization.
 
