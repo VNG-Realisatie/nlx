@@ -5,7 +5,7 @@ dbHost: postgresql.postgresql
 dbUsernameSuperuser: postgres
 dbPasswordSuperuser: postgres
 
-dbDatabaseDirectory: nlx-demo
+dbDatabaseDirectory: nlx-demo-directory
 dbResetDirectory: false
 dbUsernameDirectory: nlx-demo-directory
 dbPasswordDirectory: nlx-demo-directory

@@ -5,7 +5,7 @@ dbHost: postgresql.postgresql
 dbUsernameSuperuser: postgres
 dbPasswordSuperuser: postgres
 
-dbDatabaseDirectory: nlx-test
+dbDatabaseDirectory: nlx-test-directory
 dbResetDirectory: true # WARNING: All data will be LOST, never use in production!
 dbUsernameDirectory: nlx-test-directory
 dbPasswordDirectory: nlx-test-directory

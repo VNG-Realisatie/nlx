@@ -5,7 +5,7 @@ dbHost: postgresql.postgresql
 dbUsernameSuperuser: postgres
 dbPasswordSuperuser: postgres
 
-dbDatabaseDirectory: nlx-dev
+dbDatabaseDirectory: nlx-dev-directory
 dbResetDirectory: true # WARNING: All data will be LOST, never use in production!
 dbUsernameDirectory: nlx-dev-directory
 dbPasswordDirectory: nlx-dev-directory
