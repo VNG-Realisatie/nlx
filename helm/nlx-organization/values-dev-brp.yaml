@@ -6,12 +6,12 @@ dbHost: postgresql.postgresql
 dbUsernameSuperuser: postgres
 dbPasswordSuperuser: postgres
 
-dbDatabaseTxlog: dev-brp-txlog
+dbDatabaseTxlog: nlx-dev-brp-txlog
 dbResetTxlog: true # WARNING: All data will be LOST, never use in production!
-dbUsernameTxlogAPI: dev-nlx-brp-txlog-api
-dbPasswordTxlogAPI: dev-nlx-txlog-api
-dbUsernameTxlogWriter: dev-nlx-brp-txlog-writer
-dbPasswordTxlogWriter: dev-nlx-txlog-writer
+dbUsernameTxlogAPI: nlx-dev-brp-txlog-api
+dbPasswordTxlogAPI: nlx-txlog-api
+dbUsernameTxlogWriter: nlx-dev-brp-txlog-writer
+dbPasswordTxlogWriter: nlx-txlog-writer
 
 caAddress: ca-cfssl-unsafe.nlx-dev-directory
 

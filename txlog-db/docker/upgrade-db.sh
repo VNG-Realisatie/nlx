@@ -2,7 +2,7 @@
 set -e
 set -o pipefail
 
-sed -i "s/nlx-org-txlog-/nlx-${PGDATABASE}-/g" /db-migrations/*.up.sql
+sed -i "s/nlx-org-txlog-/${PGDATABASE}-/g" /db-migrations/*.up.sql
 
 /usr/local/bin/migrate \
     --database "postgres://${PGUSER}:${PGPASSWORD}@${PGHOST}:5432/${PGDATABASE}?sslmode=disable&connect_timeout=5" \
