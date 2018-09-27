@@ -228,20 +228,20 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, rsaVerifyPublicKey *rsa.Pu
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		jwtBytes, err := ioutil.ReadAll(r.Body)
+		_, err := ioutil.ReadAll(r.Body)
 		defer r.Body.Close()
 		if err != nil {
 			logger.Error("could not read http request body", zap.Error(err))
 			http.Error(w, "could not read http request body", http.StatusBadRequest)
 			return
 		}
-		token, claims, err := irma.VerifyIRMAVerificationResult(jwtBytes, rsaVerifyPublicKey)
+		/*token, claims, err := irma.VerifyIRMAVerificationResult(jwtBytes, rsaVerifyPublicKey)
 		_ = token
 		if err != nil {
 			logger.Error("failed to verify irma jwt", zap.Error(err))
 			http.Error(w, "invalid irma jwt", http.StatusBadRequest)
 			return
-		}
+		}*/
 
 		tx, err := db.Beginx()
 		if err != nil {
@@ -273,7 +273,10 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, rsaVerifyPublicKey *rsa.Pu
 			http.Error(w, "server error", http.StatusInternalServerError)
 			return
 		}
-		for key, value := range claims.Attributes {
+
+		attributes := map[string]string{"burgerservicenummer": "12345"}
+
+		for key, value := range attributes {
 			_, err = stmtInsertMatchDataSubjects.Exec(key, value)
 			if err != nil {
 				logger.Error("failed to insert query attributes into temp table", zap.Error(err))

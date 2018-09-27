@@ -43,9 +43,6 @@ class IrmaPage extends Component {
     //1. init IRMA server
     this.initIRMA(server)
     .then( d => {
-      //debugger
-      //return this.getDataSubjects("/haarlem/getDataSubjects");
-      //temporary for test
       return this.state.attributes;
     })
     .then( ds => {
@@ -79,7 +76,7 @@ class IrmaPage extends Component {
       }
     })
   }
-  
+
   initIRMA = server =>{
     return new Promise((res,rej)=>{
       try{
@@ -91,15 +88,6 @@ class IrmaPage extends Component {
         rej(e)
       }
     })
-  }
-
-  getDataSubjects = url => {
-    //debugger
-    return fetch(url)
-      .then(d=>{
-        debugger
-        return d.json()
-      })
   }
 
   createUnsignedVerificationJWT = attributes =>{

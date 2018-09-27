@@ -5,7 +5,8 @@ import { withStyles } from '@material-ui/core'
 import { Typography } from '@material-ui/core'
 
 import Table from './Table'
-import { prepTableData, logGroup } from '../utils/appUtils'
+import LogModal from './LogModal'
+import { prepTableData } from '../utils/appUtils'
 import IrmaVerify from './IrmaVerify'
 
 const styles = theme => ({
@@ -25,14 +26,18 @@ const colDef = [
     { id: 'date', label: 'Datum', width: 100, src:'created', type:"date", disablePadding: true},
     { id: 'time', label: 'Tijd', src:'created', type:"time", disablePadding: false},
     { id: 'source', label: 'Opgevraagd door', src:'source_organization', type:"string", disablePadding: false},
-    { id: 'destination', label: 'Opgevraagd bij', src:'destination_organization', type:"string", disablePadding: false},
-    { id: 'service', label: 'Reden', src:'service_name', type:"string", disablePadding: false }
+    { id: 'destination', label: 'Opgevraagd bij', src:'destination_organization', type:"string", disablePadding: false}
 ]
 
 const initialState = {
+    modal: {
+        open: false,
+        data: null
+    },
     dataSubjects: null,
     loggedIn: true,
     organization: null,
+    records: [],
     jwt: null
 }
 
@@ -75,6 +80,7 @@ class OrganizationPage extends Component {
         axios.get(`http://${organization.insight_log_endpoint}:30080/getDataSubjects`)
         .then(response => {
             this.setState({ dataSubjects: this.convertDataSubjects(response.data.dataSubjects) })
+            this.onJWT('123')
         },(e)=>{
 			console.error(e)
 			this.setState({ error: true })
@@ -90,70 +96,42 @@ class OrganizationPage extends Component {
         })
     }
 
-    prepData = rawData => {
-        let prepData = prepTableData({
-            colDef,
-            rawData
+    onJWT(jwt) {
+        this.setState({ loggedIn: true })
+
+        axios({
+            method: 'post',
+            url: `http://${this.state.organization.insight_log_endpoint}:30080/fetch`,
+            data: jwt
+        }).then(response => {
+            this.setState({records: response.data.records })
+        },(e)=>{
+			console.error(e)
+			this.setState({ error: true })
         })
-        return prepData;
+    }
+
+    onCancelVerification = () =>{
+        let { history } = this.props;
+        history.push('/');
     }
 
     getDetails = id => {
-        let row = this.state.data[id];
         this.setState({
             modal: {
-                open:true,
-                data:row
+                open: true,
+                data: this.state.records[id]
             }
         })
     }
 
-    createTable() {
-        let { data } = this.state;
-        if ( data.length > 0 ){
-            return (
-                <Table
-                    cols={colDef}
-                    data={data}
-                    onDetails={this.getDetails}
-                />
-            )
-        } else {
-            return (
-                <h1>No information available</h1>
-            )
-        }
-    }
-
-    onCloseModal = () => {
+    onCloseModal = () =>{
         this.setState({
             modal: {
                 open: false,
                 data: null
             }
         })
-    }
-
-    onJWT = jwt => {
-        logGroup({
-            title: "Organization",
-            method: "onJWT",
-            jwt: jwt,
-            props: this.props,
-            state: this.state
-        });
-    }
-
-    onCancelVerification = () =>{
-        let { history } = this.props;
-        logGroup({
-            title: "Organization",
-            method: "onCancelVerification",
-            action: "push to /",
-            props: this.props,
-            state: this.state
-        });
-        history.push('/');
     }
 
     render() {
@@ -172,8 +150,7 @@ class OrganizationPage extends Component {
         if (!this.state.loggedIn && this.state.dataSubjects) {
             return (
                 <IrmaVerify
-                    //server={`http://${this.state.organization.insight_irma_endpoint}:30080/api/v2/`}
-                    server="https://demo.irmacard.org/tomcat/irma_api_server/api/v2/"
+                    server={`http://${this.state.organization.insight_irma_endpoint}:30080/api/v2/`}
                     attributes={[{
                         label: "over18",
                         attributes: [
@@ -186,12 +163,34 @@ class OrganizationPage extends Component {
             )
         }
 
+        let table
+        if (this.state.records) {
+            table = (
+                <Table
+                    cols={colDef}
+                    onDetails={this.getDetails}
+                    data={prepTableData({
+                        colDef,
+                        rawData: this.state.records
+                    })}
+                />
+            )
+        } else {
+            table = (
+                <p>No information available</p>
+            )
+        }
+
+        const { modal } = this.state
+
         return (
-            <React.Fragment>
+            <div>
                 <Typography variant="title" color="primary" noWrap gutterBottom>
                     Organization: {this.state.organization.name}
                 </Typography>
-            </React.Fragment>
+                {table}
+                { modal.data && <LogModal open={modal.open} closeModal={this.onCloseModal} data={modal.data}/> }
+            </div>
         )
     }
 }

@@ -15,7 +15,8 @@ import ClockIcon from '@material-ui/icons/AccessTimeOutlined'
 
 class SimpleModal extends React.Component {
 	render() {
-		const { data, classes, open, closeModal } = this.props;
+        const { data, classes, open, closeModal } = this.props;
+
 		const d = new Date(data['created'])
 		const localDate = d.toLocaleDateString()
 		const localTime = d.toLocaleTimeString()
@@ -30,13 +31,13 @@ class SimpleModal extends React.Component {
 						className={classes.closeButton}>
 						<Close style={{ fontSize: 18 }} />
 					</IconButton>
-					
+
 					<Typography variant="title" color="primary" style={{marginLeft: -1, marginBottom: 5}}>
-                    {data['attributes'] ? data['attributes'] : "Geen attribuut opgevraagd."}
+                    {data['data']['doelbinding-data-elements'] ? data['data']['doelbinding-data-elements'] : "Geen attribuut opgevraagd."}
                 </Typography>
                 <div style={{display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap'}}>
                     <Typography variant="caption">
-                        #{data['id']}
+                        # {data['logrecord-id']}
                     </Typography>
                     <Typography variant="caption">
                         <CalendarToday className={classes.calendarIcon} />{localDate}
@@ -49,14 +50,14 @@ class SimpleModal extends React.Component {
                         <Typography variant="caption">
                             Opgevraagd door
                         </Typography>
-                        <Link to="">{data['destination_organization']}</Link>
+                        <Link to="">{data['source_organization']}</Link>
                     </div>
                     <div>
                         <Typography variant="caption" align="right">
                         Opgevraagd bij
                         </Typography>
                         <Typography align="right">
-                            <Link to="">{data['source_organization']}</Link>
+                            <Link to="">{data['destination_organization']}</Link>
                         </Typography>
                     </div>
                 </div>
@@ -64,7 +65,7 @@ class SimpleModal extends React.Component {
                 <Typography variant="caption">
                     Reden
                 </Typography>
-                    {data['reason'] ? data['reason'] : "Geen reden opgegeven."}
+                    {data['data']['doelbinding-process-id'] ? data['data']['doelbinding-process-id'] : "Geen reden opgegeven."}
 				</Paper>
 			</Modal>
 		);

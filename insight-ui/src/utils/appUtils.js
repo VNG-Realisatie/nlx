@@ -31,7 +31,6 @@ const logGroup = data =>{
  *  rawData: array of objects
  */
 const prepTableData = ({colDef, rawData}) =>{
-    //debugger
     let tableData = rawData.map((row, rid)=>{
         let rowData = {};
         //add row id
