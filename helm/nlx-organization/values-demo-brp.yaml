@@ -6,12 +6,12 @@ dbHost: postgresql.postgresql
 dbUsernameSuperuser: postgres
 dbPasswordSuperuser: postgres
 
-dbDatabaseTxlog: brp-txlog
+dbDatabaseTxlog: demo-brp-txlog
 dbResetTxlog: false
-dbUsernameTxlogAPI: nlx-brp-txlog-api
-dbPasswordTxlogAPI: nlx-txlog-api
-dbUsernameTxlogWriter: nlx-brp-txlog-writer
-dbPasswordTxlogWriter: nlx-txlog-writer
+dbUsernameTxlogAPI: demo-nlx-brp-txlog-api
+dbPasswordTxlogAPI: demo-nlx-txlog-api
+dbUsernameTxlogWriter: demo-nlx-brp-txlog-writer
+dbPasswordTxlogWriter: demo-nlx-txlog-writer
 
 caAddress: ca-cfssl-unsafe.nlx-demo-directory
 

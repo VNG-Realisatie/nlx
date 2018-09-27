@@ -82,31 +82,31 @@ ALTER SEQUENCE transactionlog.records_id_seq OWNED BY records.id;
 
 -- ddl-end --
 
--- object: grant_e3a699271d | type: PERMISSION --
+-- object: grant_bb34ebe74d | type: PERMISSION --
 GRANT SELECT
    ON TABLE transactionlog.records
    TO "nlx-org-txlog-api";
 -- ddl-end --
 
--- object: grant_09ea658de9 | type: PERMISSION --
+-- object: grant_028b7a9f82 | type: PERMISSION --
 GRANT INSERT
    ON TABLE transactionlog.records
    TO "nlx-org-txlog-writer";
 -- ddl-end --
 
--- object: grant_a080fa2047 | type: PERMISSION --
+-- object: grant_9816aa9160 | type: PERMISSION --
 GRANT USAGE
    ON SCHEMA transactionlog
    TO "nlx-org-txlog-api";
 -- ddl-end --
 
--- object: grant_43c252f634 | type: PERMISSION --
+-- object: grant_f7267add45 | type: PERMISSION --
 GRANT USAGE
    ON SCHEMA transactionlog
    TO "nlx-org-txlog-writer";
 -- ddl-end --
 
--- object: grant_1c54d8fa2f | type: PERMISSION --
+-- object: grant_cbf55a140f | type: PERMISSION --
 GRANT SELECT,USAGE
    ON SEQUENCE transactionlog.records_id_seq
    TO "nlx-org-txlog-writer";
