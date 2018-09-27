@@ -18,26 +18,31 @@ The `service-config.toml` file configures which services are available through t
 ```toml
 [services]
 
-## This block defines a services exposed by this inway.
-## A single inway can expose multiple services, therefore this block can be added multiple times.
-## The name of the service (in this example PostmanEcho) must be unique for each block.
+# This block defines a services exposed by this inway.
+# A single inway can expose multiple services, therefore this block can be added multiple times.
+# The name of the service (in this example PostmanEcho) must be unique for each block.
 	[services.MyPublicService]
 
-	## `address` should be set to the address at which the service/API is available.
-	## In this example we simply expose the postman-echo.com website.
-	address = "<< the address of your local service, e.g.: localhost:8080 >>"
+	# `endpoint-url` should be set to the address at which the service/API is available.
+	# In this example we simply expose the postman-echo.com website.
+	endpoint-url = "<< the address of your local service, e.g.: localhost:8080 >>"
 
-	## `documentation-url` points to the documentation for provided sevice
+	# `documentation-url` points to the documentation for provided sevice
 	documentation-url = "<< URL to online documentation for your service >>"
 
-	## `authorization-model` can or whitelist
+	# `authorization-model` can or whitelist
 	authorization-model = "none"
+
+	# OpenAPI2/3 specification can be provided to the directory. This will allow the directory to render the documentation in the webinterface.
+	# These configuration values are optional.
+	api-specification-type = "OpenAPI2" # Value can be either "OpenAPI2" or "OpenAPI3"
+	api-specification-document-url = "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/json/petstore.json"
 
 
 	## This second service is just an example, and therefore commented out.
 	## In this example we add a whitelist authorization model.
 	#[services.MyPrivateService]
-	#address = "https://postman-echo.com/"
+	#endpoint-url = "https://postman-echo.com/"
 	#documentation-url = "https://docs.postman-echo.com/"
 
 	## We will enable whitelist authorization for this service
