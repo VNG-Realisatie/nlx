@@ -187,3 +187,60 @@ profiles:
               txlogUIImage: nlxio/txlog-ui
               outwayImage: nlxio/outway
               insightAPIImage: nlxio/insight-api
+
+  - name: deploy-demo
+    deploy:
+      helm:
+        releases:
+          - name: nlx-demo-directory
+            chartPath: helm/nlx-directory
+            valuesFilePath: helm/nlx-directory/values-demo.yaml
+            namespace: nlx-demo-directory
+            version: "v0.0.0"
+            values:
+              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+              caCertportalImage: nlxio/ca-certportal
+              directoryDBImage: nlxio/directory-db
+              directoryImage: nlxio/directory
+              directoryMonitorImage: nlxio/directory-monitor
+              directoryUIImage: nlxio/directory-ui
+              docsImage: nlxio/docs
+
+          - name: nlx-demo-brp
+            chartPath: helm/nlx-organization
+            valuesFilePath: helm/nlx-organization/values-demo-brp.yaml
+            namespace: nlx-demo-brp
+            version: "v0.0.0"
+            values:
+              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+              txlogDBImage: nlxio/txlog-db
+              txlogAPIImage: nlxio/txlog-api
+              txlogUIImage: nlxio/txlog-ui
+              inwayImage: nlxio/inway
+              insightAPIImage: nlxio/insight-api
+
+          - name: nlx-demo-rdw
+            chartPath: helm/nlx-organization
+            valuesFilePath: helm/nlx-organization/values-demo-rdw.yaml
+            namespace: nlx-demo-rdw
+            version: "v0.0.0"
+            values:
+              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+              txlogDBImage: nlxio/txlog-db
+              txlogAPIImage: nlxio/txlog-api
+              txlogUIImage: nlxio/txlog-ui
+              inwayImage: nlxio/inway
+              insightAPIImage: nlxio/insight-api
+
+          - name: nlx-demo-haarlem
+            chartPath: helm/nlx-organization
+            valuesFilePath: helm/nlx-organization/values-demo-haarlem.yaml
+            namespace: nlx-demo-haarlem
+            version: "v0.0.0"
+            values:
+              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+              txlogDBImage: nlxio/txlog-db
+              txlogAPIImage: nlxio/txlog-api
+              txlogUIImage: nlxio/txlog-ui
+              outwayImage: nlxio/outway
+              insightAPIImage: nlxio/insight-api  
