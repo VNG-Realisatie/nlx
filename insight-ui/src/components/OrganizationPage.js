@@ -15,7 +15,7 @@ import logsIn from '../mockdata/txlog.dev.denhaag-out.json'
 
 //import SimpleModal from './SimpleModal'
 import LogModal from './LogModal';
-import IrmaPage from './IrmaTest';
+import IrmaPage from './IrmaVerify';
 //import IrmaPage from './IrmaTest';
 //import QRPage from './QRPage';
 //import ClockIcon from '@material-ui/icons/AccessTimeOutlined'

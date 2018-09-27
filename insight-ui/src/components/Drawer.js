@@ -17,7 +17,7 @@ import OrganizationPage from './OrganizationPage';
 import OrganizationList from './OrganizationList';
 import Logo from './Logo';
 //import QRPage from './QRPage';
-import IrmaPage from './IrmaTest';
+//import IrmaPage from './IrmaVerify';
 
 class ResponsiveDrawer extends React.Component {
 	state = {

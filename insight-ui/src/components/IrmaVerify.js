@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 
-import './IrmaTest.css';
+import './IrmaVerify.css';
 import { logGroup } from '../utils/appUtils';
-
 
 class IrmaPage extends Component {
   state={
@@ -13,11 +12,6 @@ class IrmaPage extends Component {
       server:"https://demo.irmacard.org/tomcat/irma_api_server/api/v2/",
       //server:"http://irma-api.test.haarlem.commonground.nl/api/v2/",
       attributes:[{
-          "label": "over12",
-          "attributes": [
-            "irma-demo.MijnOverheid.ageLower.over12"
-          ]
-        },{
           "label": "over18",
           "attributes": [
             "irma-demo.MijnOverheid.ageLower.over18"
@@ -36,7 +30,6 @@ class IrmaPage extends Component {
     })
     return ( 
       <div>
-          <h1>Irma verification page</h1>
           {jwt && <h2>Token received</h2>}
           {cancel && <h2>Verification session CANCELED</h2>}
           {error && <h2>Verification error: { JSON.stringify(error) }</h2>}
@@ -51,10 +44,11 @@ class IrmaPage extends Component {
       props: this.props,
       state: this.state
     })
+    //live
     this.performSteps();
-    //just send JWT back
+    //test sending JWT back
     //this.props.onJWT("asbnasdasdasd");
-    //just cancel
+    //test cancel verification
     //this.props.onCancel();
   }
 
@@ -83,19 +77,20 @@ class IrmaPage extends Component {
       //create Verification JWT
       return this.createUnsignedVerificationJWT(attributes);
     })
-    .then((jwt1)=>{
+    .then( jwt1 =>{
       //debugger
       //verify
       return this.irmaVerify(jwt1);
     })
-    .then((jwt2)=>{
+    .then( jwt2 => {
       //debugger
       //console.log("success...", jwt);
       this.props.onJWT(jwt2);
     })
-    .catch(e=>{
+    .catch( e => {
       debugger
       if (e==="CANCELED"){
+        //debugger
         this.props.onCancel(true);
         //console.log("CANCELED...go home")
       }else{
@@ -154,7 +149,7 @@ class IrmaPage extends Component {
    * Performs verification using irma.js
    * returns promise which resolves with JWT
    * reject has CANCEL and ERROR states
-   * CANCEL state occures when user cancels 
+   * CANCEL state occures when user cancels
    * QR code scanning session
    */
   irmaVerify = jwt =>{
