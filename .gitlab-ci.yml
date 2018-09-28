@@ -46,12 +46,12 @@ Deploy test:
     - master
     - tags
 
-Deploy acceptance:
-  extends: .deploy
-  environment:
-    name: acc
-  only:
-    - tags
+# Deploy acceptance:
+#   extends: .deploy
+#   environment:
+#     name: acc
+#   only:
+#     - tags
 
 Deploy demo:
   extends: .deploy
