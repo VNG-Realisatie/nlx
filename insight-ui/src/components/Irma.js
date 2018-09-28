@@ -57,7 +57,7 @@ export default class Irma extends Component {
                         method: 'get',
                         url: `${organization.insight_irma_endpoint}/api/v2/verification/${u}/status`
                     }).then(response => {
-                        if (response.data === "\"DONE\"") {
+                        if (response.data === "DONE") {
                             clearInterval(interval)
                             axios({
                                 method: 'get',
