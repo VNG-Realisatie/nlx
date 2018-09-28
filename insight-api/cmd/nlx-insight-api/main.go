@@ -12,6 +12,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/go-chi/chi"
 	"github.com/huandu/xstrings"
 	flags "github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
@@ -95,11 +96,12 @@ func main() {
 	if err != nil {
 		logger.Fatal("failed to parse rsa public key", zap.Error(err))
 	}
-
-	http.HandleFunc("/generateJWT", generateJWT(logger, serviceConfig.DataSubjects, "insight", rsaSignPrivateKey))
-	http.HandleFunc("/fetch", newTxlogFetcher(logger, db, rsaVerifyPublicKey))
-	http.HandleFunc("/getDataSubjects", listDataSubjects(logger, serviceConfig.DataSubjects))
-	err = http.ListenAndServe(options.ListenAddress, nil)
+	r := chi.NewRouter()
+	r.Use(HappyOptionsHandler)
+	r.Get("/getDataSubjects", listDataSubjects(logger, serviceConfig.DataSubjects))
+	r.Post("/generateJWT", generateJWT(logger, serviceConfig.DataSubjects, "insight", rsaSignPrivateKey))
+	r.Post("/fetch", newTxlogFetcher(logger, db, rsaVerifyPublicKey))
+	err = http.ListenAndServe(options.ListenAddress, r)
 	if err != nil {
 		logger.Fatal("failed to ListenAndServe", zap.Error(err))
 	}
