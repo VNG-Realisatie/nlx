@@ -30,9 +30,7 @@ export default class Irma extends Component {
             url: `${organization.insight_log_endpoint}/generateJWT`,
             data: {
                 dataSubjects: [
-                    //'burgerservicenummer',
-                    //'kenteken'
-                    'over18'
+                    'burgerservicenummer'
                 ]
             }
         }).then(response => {
