@@ -186,8 +186,8 @@ profiles:
               txlogDBImage: nlxio/txlog-db
               txlogAPIImage: nlxio/txlog-api
               txlogUIImage: nlxio/txlog-ui
-              outwayImage: nlxio/outway
               inwayImage: nlxio/inway
+              outwayImage: nlxio/outway
               insightAPIImage: nlxio/insight-api
 
   - name: deploy-demo
@@ -244,6 +244,6 @@ profiles:
               txlogDBImage: nlxio/txlog-db
               txlogAPIImage: nlxio/txlog-api
               txlogUIImage: nlxio/txlog-ui
-              outwayImage: nlxio/outway
               inwayImage: nlxio/inway
+              outwayImage: nlxio/outway
               insightAPIImage: nlxio/insight-api  

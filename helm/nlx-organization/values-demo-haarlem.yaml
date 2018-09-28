@@ -16,7 +16,14 @@ dbPasswordTxlogWriter: nlx-txlog-writer
 caAddress: ca-cfssl-unsafe.nlx-demo-directory
 
 inway:
-  enable: false
+  enable: true
+  config: |
+    [services]
+      [services.kenau]
+      endpoint-url = "http://JustHereForRegisteringIntoDirectoryWithInsightAndIrmaApiURLs:8000"
+      authorization-model = "none"
+      insight-api-url = "insight-api.demo.haarlem.commonground.nl"
+      irma-api-url = "irma-api.demo.haarlem.commonground.nl"
 outway:
   enable: true
 demoService:
