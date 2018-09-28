@@ -1,13 +1,10 @@
 import React, { Component } from 'react'
-import axios from 'axios'
 import { withRouter } from 'react-router-dom'
 import { withStyles } from '@material-ui/core'
 import { Typography } from '@material-ui/core'
 
-import Table from './Table'
-import LogModal from './LogModal'
-import { prepTableData } from '../utils/appUtils'
-import IrmaVerify from './IrmaVerify'
+import Irma from './Irma'
+import OrganizationRecords from './OrganizationRecords'
 
 const styles = theme => ({
 	calendarIcon: {
@@ -22,22 +19,9 @@ const styles = theme => ({
 	}
 })
 
-const colDef = [
-    { id: 'date', label: 'Datum', width: 100, src:'created', type:"date", disablePadding: true},
-    { id: 'time', label: 'Tijd', src:'created', type:"time", disablePadding: false},
-    { id: 'source', label: 'Opgevraagd door', src:'source_organization', type:"string", disablePadding: false},
-    { id: 'destination', label: 'Opgevraagd bij', src:'destination_organization', type:"string", disablePadding: false}
-]
-
 const initialState = {
-    modal: {
-        open: false,
-        data: null
-    },
-    dataSubjects: null,
-    loggedIn: true,
+    loggedIn: false,
     organization: null,
-    records: [],
     jwt: null
 }
 
@@ -46,6 +30,7 @@ class OrganizationPage extends Component {
         super(props)
 
         this.state = initialState
+        this.afterLogin = this.afterLogin.bind(this)
     }
 
     componentDidMount() {
@@ -70,67 +55,12 @@ class OrganizationPage extends Component {
         })
 
         this.setState(newState)
-
-        if (organization) {
-            this.getDataSubjects(organization)
-        }
     }
 
-    getDataSubjects(organization) {
-        axios.get(`http://${organization.insight_log_endpoint}:30080/getDataSubjects`)
-        .then(response => {
-            this.setState({ dataSubjects: this.convertDataSubjects(response.data.dataSubjects) })
-            this.onJWT('123')
-        },(e)=>{
-			console.error(e)
-			this.setState({ error: true })
-        })
-    }
-
-    convertDataSubjects(dataSubjects) {
-        return Object.keys(dataSubjects).map((key) => {
-            return {
-                label: dataSubjects[key].label,
-                attributes: [ key ]
-            }
-        })
-    }
-
-    onJWT(jwt) {
-        this.setState({ loggedIn: true })
-
-        axios({
-            method: 'post',
-            url: `http://${this.state.organization.insight_log_endpoint}:30080/fetch`,
-            data: jwt
-        }).then(response => {
-            this.setState({records: response.data.records })
-        },(e)=>{
-			console.error(e)
-			this.setState({ error: true })
-        })
-    }
-
-    onCancelVerification = () =>{
-        let { history } = this.props;
-        history.push('/');
-    }
-
-    getDetails = id => {
+    afterLogin(organization, jwt) {
         this.setState({
-            modal: {
-                open: true,
-                data: this.state.records[id]
-            }
-        })
-    }
-
-    onCloseModal = () =>{
-        this.setState({
-            modal: {
-                open: false,
-                data: null
-            }
+            loggedIn: true,
+            jwt
         })
     }
 
@@ -141,55 +71,29 @@ class OrganizationPage extends Component {
             )
         }
 
-        if (!this.state.loggedIn && !this.state.dataSubjects) {
-            return (
-                <div>Loading data subjects...</div>
-            )
-        }
-
-        if (!this.state.loggedIn && this.state.dataSubjects) {
-            return (
-                <IrmaVerify
-                    server={`http://${this.state.organization.insight_irma_endpoint}:30080/api/v2/`}
-                    attributes={[{
-                        label: "over18",
-                        attributes: [
-                            "irma-demo.MijnOverheid.ageLower.over18"
-                        ]
-                    }]}
-                    onJWT={this.onJWT}
-                    onCancel={this.onCancelVerification}
-                />
-            )
-        }
-
-        let table
-        if (this.state.records) {
-            table = (
-                <Table
-                    cols={colDef}
-                    onDetails={this.getDetails}
-                    data={prepTableData({
-                        colDef,
-                        rawData: this.state.records
-                    })}
+        let content
+        if (!this.state.loggedIn) {
+            content = (
+                <Irma
+                    organization={this.state.organization}
+                    afterLogin={this.afterLogin}
                 />
             )
         } else {
-            table = (
-                <p>No information available</p>
+            content = (
+                <OrganizationRecords
+                    organization={this.state.organization}
+                    jwt={this.state.jwt}
+                />
             )
         }
-
-        const { modal } = this.state
 
         return (
             <div>
                 <Typography variant="title" color="primary" noWrap gutterBottom>
-                    Organization: {this.state.organization.name}
+                Organization: {this.state.organization.name}
                 </Typography>
-                {table}
-                { modal.data && <LogModal open={modal.open} closeModal={this.onCloseModal} data={modal.data}/> }
+                {content}
             </div>
         )
     }
