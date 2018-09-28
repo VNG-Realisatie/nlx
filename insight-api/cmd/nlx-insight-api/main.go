@@ -139,12 +139,16 @@ func generateJWT(logger *zap.Logger, dataSubjects map[string]config.DataSubject,
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == "OPTIONS" {
+			return
+		}
+
 		requestedDataSubjects := &JSONRequest{}
 		err := json.NewDecoder(r.Body).Decode(requestedDataSubjects)
 		defer r.Body.Close()
 		if err != nil {
 			logger.Error("failed to decode requested data subjects", zap.Error(err))
-			http.Error(w, "incorrect request data", http.StatusBadRequest)
+			//http.Error(w, "incorrect request data", http.StatusBadRequest)
 			return
 		}
 
