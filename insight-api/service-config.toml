@@ -1,5 +1,9 @@
 [datasubjects]
 
-    [datasubjects."over18"]
-    label = "Over 18"
-    irma-attributes = ["irma-demo.MijnOverheid.ageLower.over18", "pbdf.pbdf.ageLimits.over18", "pbdf.nijmegen.ageLimits.over18"]
+    [datasubjects."burgerservicenummer"]
+    label = "Burgerservicenummer"
+    irma-attributes = ["irma-demo.nijmegen.bsn.bsn"]
+
+    [datasubjects."kenteken"]
+    label = "Kenteken"
+    irma-attributes = ["irma-demo.rdw.vrn.vrn"]
