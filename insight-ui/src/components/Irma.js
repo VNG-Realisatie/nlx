@@ -19,7 +19,7 @@ export default class Irma extends Component {
 
         axios({
             method: 'post',
-            url: `http://${organization.insight_log_endpoint}:30080/generateJWT`,
+            url: `//${organization.insight_log_endpoint}:30080/generateJWT`,
             data: {
                 dataSubjects: [
                     'over18'
@@ -30,7 +30,7 @@ export default class Irma extends Component {
 
             axios({
                 method: 'post',
-                url: `http://${organization.insight_irma_endpoint}:30080/api/v2/verification/`,
+                url: `//${organization.insight_irma_endpoint}:30080/api/v2/verification/`,
                 headers: { 'content-type': 'text/plain' },
                 data: firstJWT
             }).then(response => {
@@ -38,7 +38,7 @@ export default class Irma extends Component {
                 const u = irmaVerificationRequest['u']
 
                 // prepend IrmaVerifiationRequest with URL
-                irmaVerificationRequest['u'] = `http://${organization.insight_irma_endpoint}:30080/api/v2/verification/${u}`
+                irmaVerificationRequest['u'] = `//${organization.insight_irma_endpoint}:30080/api/v2/verification/${u}`
 
                 const qrCode = JSON.stringify(irmaVerificationRequest)
                 console.log(qrCode)
@@ -48,7 +48,7 @@ export default class Irma extends Component {
                 interval = setInterval(() => {
                     axios({
                         method: 'get',
-                        url: `http://${organization.insight_irma_endpoint}:30080/api/v2/verification/${u}/status`
+                        url: `//${organization.insight_irma_endpoint}:30080/api/v2/verification/${u}/status`
                     }).then(response => {
                         //console.log(response.data)
                         this.props.afterLogin(organization, response.data)
