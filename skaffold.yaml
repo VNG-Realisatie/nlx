@@ -24,6 +24,8 @@ build:
         dockerfilePath: directory-monitor/Dockerfile
     - imageName: nlxio/directory-ui
       workspace: directory-ui
+    - imageName: nlxio/insight-ui
+      workspace: insight-ui
 
     # Organization images
     - imageName: nlxio/inway
@@ -72,6 +74,7 @@ profiles:
               directoryImage: nlxio/directory
               directoryMonitorImage: nlxio/directory-monitor
               directoryUIImage: nlxio/directory-ui
+              insightUIImage: nlxio/insight-ui
               docsImage: nlxio/docs
             setValueTemplates:
               externalIP: "{{.MINIKUBE_IP}}"
@@ -148,6 +151,7 @@ profiles:
               directoryImage: nlxio/directory
               directoryMonitorImage: nlxio/directory-monitor
               directoryUIImage: nlxio/directory-ui
+              insightUIImage: nlxio/insight-ui
               docsImage: nlxio/docs
 
           - name: nlx-test-brp

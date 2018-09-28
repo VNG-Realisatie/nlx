@@ -1,0 +1,41 @@
+{
+  "name": "nlx-irma",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^3.0.3",
+    "@material-ui/icons": "^3.0.1",
+    "axios": "^0.18.0",
+    "diva-react": "^1.0.2",
+    "jquery": "^3.3.1",
+    "material-ui": "^0.20.2",
+    "qrcode.react": "^0.8.0",
+    "react": "^16.5.0",
+    "react-dom": "^16.5.0",
+    "react-qr-svg": "^2.1.0",
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "1.1.5",
+    "redux": "^4.0.0",
+    "redux-logger": "^3.0.6",
+    "redux-saga": "^0.16.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "dev": "BROWSER=none npm start"
+  },
+  "devDependencies": {
+    "styled-components": "^3.4.6",
+    "typeface-muli": "^0.0.54",
+    "typeface-source-sans-pro": "^0.0.54"
+  },
+  "proxy-tes": "https://diva-fieldlab.appx.cloud/api",
+  "proxy": {
+    "/getDataSubject": {
+      "target": "http://insight-api.test.haarlem.commonground.nl/"
+    }
+  }
+}
