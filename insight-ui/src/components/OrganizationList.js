@@ -4,7 +4,7 @@ import { NavLink, withRouter } from 'react-router-dom'
 import { MenuList, MenuItem, ListItemIcon,
     ListItemText, Divider, ListSubheader
 } from '@material-ui/core';
-import { Home, VerifiedUser, NotInterested }from '@material-ui/icons';
+import { Home } from '@material-ui/icons';
 
 class OrganizationList extends Component {
     getMenuItem(item) {
@@ -15,14 +15,7 @@ class OrganizationList extends Component {
                 component={NavLink}
                 to={url}
                 selected={url === this.props.location.pathname}
-                title={item.signed ? "Signed in to service" : "Not signed to service"}>
-                <ListItemIcon>
-                    {item.signed ? (
-                        <VerifiedUser />
-                    ):(
-                        <NotInterested/>
-                    )}
-                </ListItemIcon>
+            >
                 <ListItemText primary={item.name} />
             </MenuItem>
         )

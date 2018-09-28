@@ -278,7 +278,7 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, rsaVerifyPublicKey *rsa.Pu
 			return
 		}
 
-		attributes := map[string]string{"burgerservicenummer": "12345"}
+		attributes := map[string]string{"burgerservicenummer": "194837487"}
 
 		for key, value := range attributes {
 			_, err = stmtInsertMatchDataSubjects.Exec(key, value)

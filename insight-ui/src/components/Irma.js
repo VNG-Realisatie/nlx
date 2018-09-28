@@ -52,9 +52,10 @@ export default class Irma extends Component {
                     }).then(response => {
                         //console.log(response.data)
                         this.props.afterLogin(organization, response.data)
-                    }).catch(error => {
                         clearInterval(interval)
+                    }).catch(error => {
                         this.setState({ error: true })
+                        clearInterval(interval)
                     })
                 }, 5000)
             })

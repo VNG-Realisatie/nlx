@@ -3,7 +3,6 @@ import axios from 'axios'
 import Table from './Table'
 import LogModal from './LogModal'
 import { prepTableData } from '../utils/appUtils'
-import { Typography } from '@material-ui/core'
 
 const colDef = [
     { id: 'date', label: 'Datum', width: 100, src:'created', type:"date", disablePadding: true},
