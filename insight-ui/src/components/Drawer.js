@@ -32,7 +32,25 @@ class ResponsiveDrawer extends React.Component {
     }
 
     getOrganizations() {
-        axios.get(`${config.api.baseUri}/directory/list-organizations`)
+		const parser = document.createElement('a')
+		parser.href = window.location.href
+
+		let directoryProtocol, directoryHostname
+		if (parser.hostname.indexOf("minikube") !== -1) {
+			directoryProtocol = "http://"
+			directoryHostname = "directory.dev.nlx.minikube:30080"
+		} else if (parser.hostname.indexOf("localhost") !== -1) {
+			directoryProtocol = "http://"
+			directoryHostname = "directory.dev.nlx.minikube:30080"
+		} else if (parser.hostname.indexOf("test.nlx.io") !== -1) {
+			directoryProtocol = "https://"
+			directoryHostname = "directory.test.nlx.io"
+		} else {
+			directoryProtocol = "https://"
+			directoryHostname = "directory.demo.nlx.io"
+		}
+
+        axios.get(`${directoryProtocol}//${directoryHostname}/api/directory/list-organizations`)
         .then(response => {
             this.setState({
 				loading: false,
