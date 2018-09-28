@@ -46,7 +46,7 @@ export default class OrganizationRecords extends Component {
     componentDidMount() {
         axios({
             method: 'post',
-            url: `//${this.props.organization.insight_log_endpoint}/fetch`,
+            url: `${this.props.organization.insight_log_endpoint}/fetch`,
             headers: { 'content-type': 'text/plain' },
             data: this.props.jwt
         }).then(response => {
