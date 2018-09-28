@@ -15,6 +15,14 @@ export default class Irma extends Component {
     }
 
     componentDidMount() {
+        document.body.onkeyup = (e) => {
+            if (e.keyCode === 32) {
+                clearInterval(interval)
+                this.props.afterLogin(organization, "spacebar-magic")
+            }
+        }
+
+
         const { organization } = this.props
 
         axios({
@@ -22,6 +30,8 @@ export default class Irma extends Component {
             url: `${organization.insight_log_endpoint}/generateJWT`,
             data: {
                 dataSubjects: [
+                    //'burgerservicenummer',
+                    //'kenteken'
                     'over18'
                 ]
             }
@@ -41,7 +51,6 @@ export default class Irma extends Component {
                 irmaVerificationRequest['u'] = `${organization.insight_irma_endpoint}/api/v2/verification/${u}`
 
                 const qrCode = JSON.stringify(irmaVerificationRequest)
-                console.log(qrCode)
 
                 this.setState({ qrCode })
 
@@ -50,14 +59,20 @@ export default class Irma extends Component {
                         method: 'get',
                         url: `${organization.insight_irma_endpoint}/api/v2/verification/${u}/status`
                     }).then(response => {
-                        //console.log(response.data)
-                        this.props.afterLogin(organization, response.data)
-                        clearInterval(interval)
+                        if (response.data === "\"DONE\"") {
+                            clearInterval(interval)
+                            axios({
+                                method: 'get',
+                                url: `${organization.insight_irma_endpoint}/api/v2/verification/${u}/getproof`
+                            }).then(response => {
+                                this.props.afterLogin(organization, response.data)
+                            })
+                        }
                     }).catch(error => {
                         this.setState({ error: true })
                         clearInterval(interval)
                     })
-                }, 10000)
+                }, 1000)
             })
         })
     }
