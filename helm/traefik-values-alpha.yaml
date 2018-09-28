@@ -26,6 +26,7 @@ kubernetes:
   ingressClass: traefik # Only handle k8s Ingress objects with explicit kubernetes.io/ingress.class="traefik"
 
 cpuLimit: 2
+memoryLimit: 1024Mi
 
 nodeSelector:
   kubernetes.io/hostname: node2

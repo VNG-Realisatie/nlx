@@ -22,8 +22,8 @@ inway:
       [services.basisregistratie]
       endpoint-url = "http://service:8000"
       authorization-model = "none"
-      insight-api-url = "insight-api.demo.brp.commonground.nl"
-      irma-api-url = "irma-api.demo.brp.commonground.nl"
+      insight-api-url = "https://insight-api.demo.brp.commonground.nl"
+      irma-api-url = "https://irma-api.demo.brp.commonground.nl"
 outway:
   enable: false
 demoService:

@@ -24,8 +24,8 @@ inway:
       [services.kenau]
       endpoint-url = "http://JustHereForRegisteringIntoDirectoryWithInsightAndIrmaApiURLs:8000"
       authorization-model = "none"
-      insight-api-url = "insight-api.dev.haarlem.minikube"
-      irma-api-url = "irma-api.dev.haarlem.minikube"
+      insight-api-url = "http://insight-api.dev.haarlem.minikube:30080"
+      irma-api-url = "http://irma-api.dev.haarlem.minikube:30080"
 outway:
   enable: true
 demoService:

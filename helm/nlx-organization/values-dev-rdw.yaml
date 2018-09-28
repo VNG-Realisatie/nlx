@@ -24,8 +24,8 @@ inway:
       [services.kentekenregister]
       endpoint-url = "http://service:8000"
       authorization-model = "none"
-      insight-api-url = "insight-api.dev.rdw.minikube"
-      irma-api-url = "irma-api.dev.rdw.minikube"
+      insight-api-url = "http://insight-api.dev.rdw.minikube:30080"
+      irma-api-url = "http://irma-api.dev.rdw.minikube:30080"
 outway:
   enable: false
 demoService:
