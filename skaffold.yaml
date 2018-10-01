@@ -46,10 +46,12 @@ build:
       workspace: .
       docker:
         dockerfilePath: insight-api/Dockerfile
+
   tagPolicy:
     sha256: {}
   local:
     skipPush: true
+
 profiles:
   - name: minikube
     deploy:
@@ -114,7 +116,7 @@ profiles:
               txlogUIImage: nlxio/txlog-ui
             setValueTemplates:
               externalIP: '{{.MINIKUBE_IP}}'
-              
+
   - name: release
     build:
       tagPolicy:
