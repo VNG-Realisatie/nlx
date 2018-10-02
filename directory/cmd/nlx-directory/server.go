@@ -40,7 +40,7 @@ func newGRPCSplitterHandlerFunc(grpcServer *grpc.Server, otherHandler http.Handl
 // runServer is a blocking function which sets up the grpc and http/json server and runs them on a single address/port.
 func runServer(log *zap.Logger, address string, addressPlain string, caCertPool *x509.CertPool, certKeyPair tls.Certificate, directoryService directoryapi.DirectoryServer) {
 
-	// setup logrus connection for global grpc logging
+	// setup zap connection for global grpc logging
 	grpc_zap.ReplaceGrpcLogger(log)
 
 	recoveryOptions := []grpc_recovery.Option{

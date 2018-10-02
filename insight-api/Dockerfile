@@ -2,7 +2,7 @@
 FROM golang:1-alpine AS build
 
 # Install build tools.
-RUN apk add --update make git gcc musl-dev
+RUN apk add --update git gcc musl-dev
 
 # Cache dependencies
 COPY go.mod /go/src/go.nlx.io/nlx/go.mod
