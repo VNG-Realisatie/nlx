@@ -2,15 +2,16 @@ package directoryservice
 
 import (
 	"context"
-	"fmt"
 	"net/url"
 	"regexp"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/peer"
+	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/directory/directoryapi"
 )
@@ -73,11 +74,11 @@ func newRegisterInwayHandler(db *sqlx.DB, logger *zap.Logger) (*registerInwayHan
 }
 
 func (h *registerInwayHandler) RegisterInway(ctx context.Context, req *directoryapi.RegisterInwayRequest) (*directoryapi.RegisterInwayResponse, error) {
-	fmt.Printf("rpc request RegisterInway(%s)\n", req.InwayAddress)
+	h.logger.Info("rpc request RegisterInway", zap.String("inway address", req.InwayAddress))
 	resp := &directoryapi.RegisterInwayResponse{}
-
 	peer, ok := peer.FromContext(ctx)
 	if !ok {
+
 		return nil, errors.New("failed to obtain peer from context")
 	}
 	tlsInfo := peer.AuthInfo.(credentials.TLSInfo)
@@ -86,17 +87,19 @@ func (h *registerInwayHandler) RegisterInway(ctx context.Context, req *directory
 	// use proper grpc authentication via middleware and context (based on client-tls fields (CN, O) like we do here)
 
 	if !h.regexpName.MatchString(organizationName) {
-		return nil, errors.New("invalid organization name")
+		h.logger.Info("invalid organisation name in registerinwayrequest", zap.String("organization name", organizationName))
+		return nil, status.New(codes.InvalidArgument, "Invalid organisation name").Err()
 	}
 
 	for _, service := range req.Services {
 		if !h.regexpName.MatchString(service.Name) {
-			return nil, errors.New("invalid service name")
+			h.logger.Info("invalid service name in registerinwayrequest", zap.String("service name", service.Name))
+			return nil, status.New(codes.InvalidArgument, "Invalid servicename").Err()
 		}
 		_, err := url.Parse(service.DocumentationUrl)
 		if err != nil {
-			h.logger.Info("invalid documentation url provided by inway", zap.Error(err))
-			return nil, errors.New("invalid documentation URL provided")
+			h.logger.Info("invalid documentation url provided by inway", zap.String("documentation url", service.DocumentationUrl), zap.Error(err))
+			return nil, status.New(codes.InvalidArgument, "Invalid documentation URL provided").Err()
 		}
 
 		_, err = h.stmtInsertAvailability.Exec(
@@ -109,7 +112,8 @@ func (h *registerInwayHandler) RegisterInway(ctx context.Context, req *directory
 			service.IrmaApiUrl,
 		)
 		if err != nil {
-			return nil, errors.Wrap(err, "failed to insert service and inway")
+			h.logger.Error("failed to execute stmtInsertAvailability", zap.Error(err))
+			return nil, status.New(codes.Internal, "Database error.").Err()
 		}
 	}
 

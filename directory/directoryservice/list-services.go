@@ -2,12 +2,13 @@ package directoryservice
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/directory/directoryapi"
 )
@@ -48,12 +49,13 @@ func newListServicesHandler(db *sqlx.DB, logger *zap.Logger) (*listServicesHandl
 }
 
 func (h *listServicesHandler) ListServices(ctx context.Context, req *directoryapi.ListServicesRequest) (*directoryapi.ListServicesResponse, error) {
-	fmt.Println("rpc request ListServices()")
+	h.logger.Info("rpc request ListServices()")
 	resp := &directoryapi.ListServicesResponse{}
 
 	rows, err := h.stmtSelectServices.Queryx()
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to execute stmtSelectServices")
+		h.logger.Error("failed to execute stmtSelectServices", zap.Error(err))
+		return nil, status.New(codes.Internal, "Database error.").Err()
 	}
 	for rows.Next() {
 		var respService = &directoryapi.ListServicesResponse_Service{}
@@ -66,7 +68,8 @@ func (h *listServicesHandler) ListServices(ctx context.Context, req *directoryap
 			&respService.ApiSpecificationType,
 		)
 		if err != nil {
-			return nil, errors.Wrap(err, "failed to scan into struct")
+			h.logger.Error("failed to scan into struct", zap.Error(err))
+			return nil, status.New(codes.Internal, "Database error.").Err()
 		}
 		respService.InwayAddresses = []string(inwayAddresses)
 		resp.Services = append(resp.Services, respService)

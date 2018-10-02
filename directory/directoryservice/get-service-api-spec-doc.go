@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/tls"
 	"crypto/x509"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -13,6 +12,8 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/directory/directoryapi"
 )
@@ -69,13 +70,14 @@ func newGetServiceAPISpecHandler(db *sqlx.DB, logger *zap.Logger, rootCA *x509.C
 }
 
 func (h *getServiceAPISpecHandler) GetServiceAPISpec(ctx context.Context, req *directoryapi.GetServiceAPISpecRequest) (*directoryapi.GetServiceAPISpecResponse, error) {
-	fmt.Println("rpc request GetServiceAPISpec()")
+	h.logger.Info("rpc request GetServiceAPISpec()")
 	resp := &directoryapi.GetServiceAPISpecResponse{}
 
 	var inwayAddress string
 	err := h.stmtSelectServiceInway.QueryRowx(req.OrganizationName, req.ServiceName).Scan(&inwayAddress, &resp.Type)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to execute stmtSelectServiceInway")
+		h.logger.Error("failed to execute stmtSelectServiceInway", zap.Error(err))
+		return nil, status.New(codes.Internal, "Database error.").Err()
 	}
 
 	inwayURL := url.URL{
@@ -86,13 +88,15 @@ func (h *getServiceAPISpecHandler) GetServiceAPISpec(ctx context.Context, req *d
 
 	res, err := h.httpClient.Get(inwayURL.String())
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to fetch api spec doc from remote inway")
+		h.logger.Info("failed to fetch api spec doc from remote inway", zap.String("inwayURL", inwayURL.String()), zap.Error(err))
+		return nil, status.New(codes.InvalidArgument, "Invalid inway URL").Err()
 	}
 	defer res.Body.Close()
 
 	resp.Document, err = ioutil.ReadAll(res.Body)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to read all api spec doc bytes from remote inway response")
+		h.logger.Info("failed to read api spec doc from remote inway", zap.String("inwayURL", inwayURL.String()), zap.Error(err))
+		return nil, status.New(codes.InvalidArgument, "Invalid inway URL").Err()
 	}
 
 	return resp, nil
