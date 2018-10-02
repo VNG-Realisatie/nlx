@@ -2,10 +2,14 @@
 FROM golang:1-alpine AS build
 
 # Install build tools.
-RUN apk add --update make git
+RUN apk add --update make git gcc musl-dev
 
-# Install modd, which is used within docker-compose.
-RUN go get github.com/cortesi/modd/cmd/modd
+# Cache dependencies
+COPY go.mod /go/src/go.nlx.io/nlx/go.mod
+COPY go.sum /go/src/go.nlx.io/nlx/go.sum
+ENV GO111MODULE on
+WORKDIR /go/src/go.nlx.io/nlx
+RUN go mod download
 
 # Only add code that we use for building outway
 COPY outway                 /go/src/go.nlx.io/nlx/outway
@@ -15,7 +19,7 @@ COPY common                 /go/src/go.nlx.io/nlx/common
 
 WORKDIR /go/src/go.nlx.io/nlx/outway
 
-RUN make
+RUN go build -o dist/bin/nlx-outway ./cmd/nlx-outway
 
 
 # Release binary on latest alpine image.

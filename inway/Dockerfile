@@ -2,10 +2,14 @@
 FROM golang:1-alpine AS build
 
 # Install build tools.
-RUN apk add --update make git openssh-client gcc musl-dev ca-certificates
+RUN apk add --update make git gcc musl-dev
 
-# Install modd, which is used within docker-compose.
-RUN go get github.com/cortesi/modd/cmd/modd
+# Cache dependencies
+COPY go.mod /go/src/go.nlx.io/nlx/go.mod
+COPY go.sum /go/src/go.nlx.io/nlx/go.sum
+ENV GO111MODULE on
+WORKDIR /go/src/go.nlx.io/nlx
+RUN go mod download
 
 # Only add code that we use for building inway
 COPY inway                      /go/src/go.nlx.io/nlx/inway
@@ -16,7 +20,7 @@ COPY common                     /go/src/go.nlx.io/nlx/common
 
 WORKDIR /go/src/go.nlx.io/nlx/inway
 
-RUN make
+RUN go build -o dist/bin/nlx-inway ./cmd/nlx-inway
 
 
 # Release binary on latest alpine image.
