@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/jpillora/backoff"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -118,6 +119,11 @@ func (i *Inway) AddServiceEndpoint(s ServiceEndpoint, serviceDetails config.Serv
 
 func (i *Inway) announceToDirectory(s ServiceEndpoint, serviceDetails config.ServiceDetails) {
 	go func() {
+		expBackOff := &backoff.Backoff{
+			Min:    100 * time.Millisecond,
+			Factor: 2,
+			Max:    20 * time.Second,
+		}
 		for {
 			resp, err := i.directoryClient.RegisterInway(context.Background(), &directoryapi.RegisterInwayRequest{
 				InwayAddress: i.selfAddress,
@@ -135,7 +141,7 @@ func (i *Inway) announceToDirectory(s ServiceEndpoint, serviceDetails config.Ser
 			if err != nil {
 				if errStatus, ok := status.FromError(err); ok && errStatus.Code() == codes.Unavailable {
 					i.logger.Info("waiting for directory...")
-					time.Sleep(1 * time.Second)
+					time.Sleep(expBackOff.Duration())
 					continue
 				}
 				i.logger.Error("failed to register to directory", zap.Error(err))
@@ -146,6 +152,7 @@ func (i *Inway) announceToDirectory(s ServiceEndpoint, serviceDetails config.Ser
 
 			// sleep 10 seconds before re-registering
 			time.Sleep(10 * time.Second)
+			expBackOff.Reset()
 		}
 	}()
 }
