@@ -2,11 +2,12 @@ package directoryservice
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/directory/directoryapi"
 )
@@ -43,12 +44,13 @@ func newListOrganizationsHandler(db *sqlx.DB, logger *zap.Logger, demoEnv string
 }
 
 func (h *listOrganizationsHandler) ListOrganizations(ctx context.Context, req *directoryapi.ListOrganizationsRequest) (*directoryapi.ListOrganizationsResponse, error) {
-	fmt.Println("rpc request ListOrganizations()")
+	h.logger.Info("rpc request ListOrganizations")
 	resp := &directoryapi.ListOrganizationsResponse{}
 
 	err := h.stmtSelectOrganizations.Select(&resp.Organizations)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to select organizations using stmtSelectOrganizations")
+		h.logger.Error("failed to select organizations using stmtSelectOrganizations", zap.Error(err))
+		return nil, status.New(codes.Internal, "Database error.").Err()
 	}
 
 	return resp, nil

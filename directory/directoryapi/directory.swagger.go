@@ -160,9 +160,6 @@ SwaggerJSONDirectory = `
     "directoryapiListOrganizationsResponse": {
       "type": "object",
       "properties": {
-        "error": {
-          "type": "string"
-        },
         "organizations": {
           "type": "array",
           "items": {
@@ -174,9 +171,6 @@ SwaggerJSONDirectory = `
     "directoryapiListServicesResponse": {
       "type": "object",
       "properties": {
-        "error": {
-          "type": "string"
-        },
         "services": {
           "type": "array",
           "items": {

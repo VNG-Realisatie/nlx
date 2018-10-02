@@ -58,7 +58,6 @@ message ListServicesResponse {
 		string api_specification_type = 5;
 	}
 
-	string error = 1;
 	repeated Service services = 2;
 }
 
@@ -72,7 +71,6 @@ message ListOrganizationsResponse {
 		string insight_log_endpoint = 3;
 	}
 
-	string error = 1;
 	repeated Organization organizations = 2;
 }
 
