@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/jpillora/backoff"
 	"github.com/pkg/errors"
 	"github.com/sony/sonyflake"
 	"go.uber.org/zap"
@@ -98,17 +99,29 @@ func NewOutway(logger *zap.Logger, logdb *sqlx.DB, tlsOptions orgtls.TLSOptions,
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to update internal service directory")
 	}
-	go func() {
-		for {
-			time.Sleep(5 * time.Second)
-			err := o.updateServiceList()
-			if err != nil {
-				o.logger.Warn("failed to update the service list", zap.Error(err))
-			}
-		}
-	}()
 
+	go o.keepServiceListUpToDate()
 	return o, nil
+}
+
+func (o *Outway) keepServiceListUpToDate() {
+	expBackOff := &backoff.Backoff{
+		Min:    100 * time.Millisecond,
+		Factor: 2,
+		Max:    20 * time.Second,
+	}
+
+	for {
+		err := o.updateServiceList()
+		if err != nil {
+			o.logger.Warn("failed to update the service list", zap.Error(err))
+			time.Sleep(expBackOff.Duration())
+			continue
+		}
+
+		time.Sleep(20 * time.Second)
+		expBackOff.Reset()
+	}
 }
 
 func (o *Outway) updateServiceList() error {
