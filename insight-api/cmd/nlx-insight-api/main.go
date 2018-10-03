@@ -150,7 +150,7 @@ func generateJWT(logger *zap.Logger, dataSubjects map[string]config.DataSubject,
 		defer r.Body.Close()
 		if err != nil {
 			logger.Error("failed to decode requested data subjects", zap.Error(err))
-			//http.Error(w, "incorrect request data", http.StatusBadRequest)
+			http.Error(w, "incorrect request data", http.StatusBadRequest)
 			return
 		}
 
@@ -234,20 +234,19 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, rsaVerifyPublicKey *rsa.Pu
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		_, err := ioutil.ReadAll(r.Body)
+		jwtBytes, err := ioutil.ReadAll(r.Body)
 		defer r.Body.Close()
 		if err != nil {
 			logger.Error("could not read http request body", zap.Error(err))
 			http.Error(w, "could not read http request body", http.StatusBadRequest)
 			return
 		}
-		/*token, claims, err := irma.VerifyIRMAVerificationResult(jwtBytes, rsaVerifyPublicKey)
-		_ = token
+		_, claims, err := irma.VerifyIRMAVerificationResult(jwtBytes, rsaVerifyPublicKey)
 		if err != nil {
 			logger.Error("failed to verify irma jwt", zap.Error(err))
 			http.Error(w, "invalid irma jwt", http.StatusBadRequest)
 			return
-		}*/
+		}
 
 		tx, err := db.Beginx()
 		if err != nil {
@@ -280,9 +279,7 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, rsaVerifyPublicKey *rsa.Pu
 			return
 		}
 
-		attributes := map[string]string{"burgerservicenummer": "999993653"}
-
-		for key, value := range attributes {
+		for key, value := range claims.Attributes {
 			_, err = stmtInsertMatchDataSubjects.Exec(key, value)
 			if err != nil {
 				logger.Error("failed to insert query attributes into temp table", zap.Error(err))
