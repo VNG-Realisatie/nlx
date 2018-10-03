@@ -2,12 +2,14 @@
 FROM golang:1-alpine AS build
 
 # Install build tools.
-RUN apk add --update make git
+RUN apk add --update git gcc musl-dev
 
-# Install go-based dependencies and tools
-# RUN go get \
-        # No extra pre-fetch packages currently required for insight-api
-
+# Cache dependencies
+COPY go.mod /go/src/go.nlx.io/nlx/go.mod
+COPY go.sum /go/src/go.nlx.io/nlx/go.sum
+ENV GO111MODULE on
+WORKDIR /go/src/go.nlx.io/nlx
+RUN go mod download
 
 # Only add code that we use for building directory
 COPY insight-api        /go/src/go.nlx.io/nlx/insight-api
@@ -16,7 +18,7 @@ COPY common             /go/src/go.nlx.io/nlx/common
 
 WORKDIR /go/src/go.nlx.io/nlx/insight-api
 
-RUN make
+RUN go build -o dist/bin/nlx-insight-api ./cmd/nlx-insight-api
 
 
 # Release binary on latest alpine image.

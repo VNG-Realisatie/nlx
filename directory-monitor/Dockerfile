@@ -2,16 +2,14 @@
 FROM golang:1-alpine AS build
 
 # Install build tools.
-RUN apk add --update make git protobuf
+RUN apk add --update git gcc musl-dev
 
-# Install go-based dependencies and tools
-RUN go get \
-        github.com/cortesi/modd/cmd/modd \
-        google.golang.org/grpc \
-        github.com/golang/protobuf/protoc-gen-go \
-        github.com/gogo/protobuf/protoc-gen-gogofast \
-        github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway \
-        github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
+# Cache dependencies
+COPY go.mod /go/src/go.nlx.io/nlx/go.mod
+COPY go.sum /go/src/go.nlx.io/nlx/go.sum
+ENV GO111MODULE on
+WORKDIR /go/src/go.nlx.io/nlx
+RUN go mod download
 
 # Only add code that we use for building directory-monitor
 COPY directory-monitor      /go/src/go.nlx.io/nlx/directory-monitor
@@ -20,7 +18,7 @@ COPY common                 /go/src/go.nlx.io/nlx/common
 
 WORKDIR /go/src/go.nlx.io/nlx/directory-monitor
 
-RUN make
+RUN go build -o dist/bin/nlx-directory-monitor ./cmd/nlx-directory-monitor
 
 
 # Release binary on latest alpine image.

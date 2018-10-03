@@ -33,22 +33,18 @@ For autocompletion and local development tasks, it's also recommended to install
 
 - [go](https://golang.org/doc/install)
 
-Also you will need to have [configured a `GOPATH`](https://github.com/golang/go/wiki/SettingGOPATH) with `${GOPATH}/bin` added to your `PATH`.
-After you set the `GOPATH`, be sure to reopen your terminal/shell to be sure the environment variables have been set correctly.
+This project uses the new go module feature so it is not required to setup a `GOPATH`.
 
 ### Cloning
 
+Clone nlx in your workspace.
+
+Note for Go developers: We advise to not clone nlx inside the GOPATH. If you must, be sure to set the environment variable `GO111MODULE=on`.
+Go doesn't need to be located in the GOPATH since it uses Go module support.
+
 ```bash
-mkdir -p $GOPATH/src/go.nlx.io
-cd $GOPATH/src/go.nlx.io
 git clone https://gitlab.com/commonground/nlx
 cd nlx
-```
-
-If you wish to contribute, fork the project and set the push origin to your fork.
-
-```bash
-git remote set-url --push origin git@gitlab.com:<YOUR-GITLAB-USERNAME>/nlx.git
 ```
 
 ### Running complete stack in kubernetes/minikube

@@ -7,7 +7,9 @@ build:
     - imageName: nlxio/ca-cfssl-unsafe
       workspace: ca-cfssl-unsafe
     - imageName: nlxio/ca-certportal
-      workspace: ca-certportal
+      workspace: .
+      docker:
+        dockerfilePath: insight-api/Dockerfile
     - imageName: nlxio/directory-db
       workspace: .
       docker:
