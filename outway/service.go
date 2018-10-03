@@ -38,7 +38,7 @@ func NewSimpleHTTPService(logger *zap.Logger, roots *x509.CertPool, certFile str
 	if len(inwayAddresses) == 0 {
 		return nil, errNoInwaysAvailable
 	}
-	inwayAddress := inwayAddresses[0] // no loadbalancing etc. yet in poc, just using the first inway available
+	inwayAddress := inwayAddresses[0] // TODO #208. There's no loadbalancing yet in poc, just using the first inway available
 
 	s := &SimpleHTTPService{
 		organizationName: organizationName,
