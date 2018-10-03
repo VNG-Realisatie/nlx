@@ -23,10 +23,10 @@ Build:
   script:
     - skaffold build
 
-No-op test:
+Go test:
   stage: Tests
   script:
-    - exit 0
+    - /usr/local/go/bin/go test ./...
 
 Release container images:
   stage: Release
