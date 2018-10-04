@@ -211,7 +211,7 @@ function getSetupFromMetas() {
     }
 }
 
-/* TODO: Incomplete user agent detection */
+/* TODO: #335 Incomplete user agent detection */
 function detectUserAgent() {
     if (/Android/i.test(navigator.userAgent)) {
         log(Loglevel.Info, "Detected Android");
@@ -550,7 +550,7 @@ function handleFallbackStatusUpdate(xhr) {
             return;
         }
 
-        // TODO: for now also assume timeout on 400 status code
+        // TODO:#337 for now also assume timeout on 400 status code
         if (sessionTimedOut || xhr.status === 400) {
             // When timed-out we can ignore errors.
             log(Loglevel.Info, "Assuming polling error is due to timeout");
@@ -2992,7 +2992,7 @@ require('../../js/affix.js')
 
     function complete() {
       if (that.hoverState != 'in') $tip.detach()
-      if (that.$element) { // TODO: Check whether guarding this code with this `if` is really necessary.
+      if (that.$element) { // TODO: #336 Check whether guarding this code with this `if` is really necessary.
         that.$element
           .removeAttr('aria-describedby')
           .trigger('hidden.bs.' + that.type)

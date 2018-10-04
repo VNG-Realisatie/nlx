@@ -6,7 +6,7 @@ RUN apt-get update && \
 	rm -rf /var/lib/apt/lists/*
 
 # Build migrate with postgres support
-# TODO: Consider moving to single-stage docker build and obtain migrate from ppa.
+# TODO: #339 Consider moving to single-stage docker build and obtain migrate from ppa.
 # 	See https://github.com/golang-migrate/migrate/tree/master/cli
 RUN go get -u -d github.com/golang-migrate/migrate/cli github.com/lib/pq && \
 	go build -tags 'postgres' -o /usr/local/bin/migrate github.com/golang-migrate/migrate/cli

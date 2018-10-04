@@ -1,5 +1,5 @@
 {{ with set . "component" "insight-api" }}
-# TODO: When using proper k8s RBAC split this into two secrets; only api server can use privkey, others can only read p
+# TODO:#341 When using proper k8s RBAC split this into two secrets; only api server can use privkey, others can only read p
 apiVersion: v1
 kind: Secret
 metadata:

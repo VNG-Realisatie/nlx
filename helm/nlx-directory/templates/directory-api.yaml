@@ -87,7 +87,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata: 
-  name: directory-webapi # TODO: move to seperate component when seperated into registration and listing api's: for listing add a grpc-web envoy proxy
+  name: directory-webapi # TODO:#340 move to seperate component when seperated into registration and listing api's: for listing add a grpc-web envoy proxy
   namespace: {{ .Release.Namespace }}
   labels: {{- include "nlx-directory.common.metadata-labels" . | nindent 2 }}
 spec:

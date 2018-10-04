@@ -265,7 +265,7 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, rsaVerifyPublicKey *rsa.Pu
 			}
 		}()
 
-		// TODO: investigate possible other solutions or optimizations for this crazy exercise
+		// TODO: #345 investigate possible other solutions or optimizations for this crazy exercise
 		_, err = tx.Stmtx(stmtCreateMatchDataSubjects).Exec()
 		if err != nil {
 			logger.Error("failed to create temp table", zap.Error(err))
