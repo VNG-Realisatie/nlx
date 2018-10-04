@@ -9,7 +9,7 @@
 		"react-dom": "^16.4.1",
 		"react-router-dom": "^4.3.1",
 		"react-scripts": "1.1.5",
-		"redoc": "^2.0.0-alpha.24"
+		"redoc": "2.0.0-alpha.24"
 	},
 	"scripts": {
 		"start": "react-scripts start",
@@ -26,13 +26,14 @@
 		"popper.js": "^1.14.3",
 		"react-highlight-words": "^0.11.0"
 	},
-	"proxy": {
+	"proxy-old": {
 		"/api": {
-			"target": "http://directory:1985",
+			"target": "http://directory.dev.nlx.minikube:30080",
 			"secure": false,
 			"pathRewrite": {
 				"^/api": "/"
 			}
 		}
-	}
+	},
+	"proxy": "https://directory.dev.nlx.minikube:30443"
 }
