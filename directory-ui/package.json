@@ -26,14 +26,5 @@
 		"popper.js": "^1.14.3",
 		"react-highlight-words": "^0.11.0"
 	},
-	"proxy-old": {
-		"/api": {
-			"target": "http://directory.dev.nlx.minikube:30080",
-			"secure": false,
-			"pathRewrite": {
-				"^/api": "/"
-			}
-		}
-	},
 	"proxy": "https://directory.dev.nlx.minikube:30443"
 }
