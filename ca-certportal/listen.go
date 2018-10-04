@@ -27,7 +27,7 @@ func (cp *CertPortal) ListenAndServe(address string) error {
 	})
 
 	workDir, _ := os.Getwd()
-	filesDir := filepath.Join(workDir, "files")
+	filesDir := filepath.Join(workDir, "public")
 	FileServer(r, "/", http.Dir(filesDir))
 
 	err := http.ListenAndServe(address, r)

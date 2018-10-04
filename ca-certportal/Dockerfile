@@ -21,7 +21,7 @@ RUN go build -o dist/bin/nlx-ca-certportal ./cmd/nlx-ca-certportal
 FROM alpine:latest
 
 COPY --from=build /go/src/go.nlx.io/nlx/ca-certportal/dist/bin/nlx-ca-certportal /usr/local/bin/nlx-ca-certportal
-COPY --from=build /go/src/go.nlx.io/nlx/ca-certportal/files /home/nlx-ca-certportal/files
+COPY --from=build /go/src/go.nlx.io/nlx/ca-certportal/files /home/nlx-ca-certportal/public
 
 WORKDIR /home/nlx-ca-certportal
 EXPOSE 12020
