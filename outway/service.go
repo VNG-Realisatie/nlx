@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"sync"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -20,64 +21,92 @@ var errNoInwaysAvailable = errors.New("no inways available")
 type HTTPService interface {
 	FullName() string
 	ProxyHTTPRequest(w http.ResponseWriter, r *http.Request)
+	GetInwayAddresses() []string
 }
 
-// SimpleHTTPService handles the proxying of a request to the inway
-type SimpleHTTPService struct {
+// RoundRobinLoadBalancedHTTPService handles the proxying of a request to the inway
+type RoundRobinLoadBalancedHTTPService struct {
 	organizationName string
 	serviceName      string
+
+	inwayAddresses  []string
+	loadBalanceLock sync.Mutex
+	count           int
+	endPoints       []*url.URL
 
 	logger *zap.Logger
 	roots  *x509.CertPool
 
-	proxy *httputil.ReverseProxy
+	proxies []*httputil.ReverseProxy
 }
 
-// NewSimpleHTTPService creates a SimpleHTTPService instance with a single inway to forward requests to.
-func NewSimpleHTTPService(logger *zap.Logger, roots *x509.CertPool, certFile string, keyFile string, organizationName, serviceName string, inwayAddresses []string) (*SimpleHTTPService, error) {
+// NewRoundRobinLoadBalancedHTTPService creates a RoundRobinLoadBalancedHTTPService
+func NewRoundRobinLoadBalancedHTTPService(logger *zap.Logger, roots *x509.CertPool, certFile string, keyFile string, organizationName, serviceName string, inwayAddresses []string) (*RoundRobinLoadBalancedHTTPService, error) {
 	if len(inwayAddresses) == 0 {
 		return nil, errNoInwaysAvailable
 	}
-	inwayAddress := inwayAddresses[0] // TODO #208. There's no loadbalancing yet in poc, just using the first inway available
 
-	s := &SimpleHTTPService{
+	s := &RoundRobinLoadBalancedHTTPService{
 		organizationName: organizationName,
 		serviceName:      serviceName,
 		roots:            roots,
+		count:            0,
+		inwayAddresses:   inwayAddresses,
+		proxies:          make([]*httputil.ReverseProxy, len(inwayAddresses)),
 	}
 	s.logger = logger.With(zap.String("outway-service-full-name", s.FullName()))
-	endpointURL, err := url.Parse("https://" + inwayAddress)
-	if err != nil {
-		return nil, errors.Wrap(err, "invalid endpoint provided")
+	for i, inwayAddress := range inwayAddresses {
+		endpointURL, err := url.Parse("https://" + inwayAddress)
+		if err != nil {
+			return nil, errors.Wrap(err, "invalid endpoint provided")
+		}
+		endpointURL.Path = "/" + serviceName
+		proxy := httputil.NewSingleHostReverseProxy(endpointURL)
+		transport, ok := http.DefaultTransport.(*http.Transport)
+		if !ok {
+			// This can happen when the internals of net/http change.
+			// Afaik an interface implementation isn't under the Go1 compatibility promise.
+			// TODO: #209 consider setting up a custom http.Transport to use as the proxies RoundTripper.
+			panic("http.DefaultTransport must be of type *http.Transport")
+		}
+		// load client certificate
+		cert, err := tls.LoadX509KeyPair(certFile, keyFile)
+		if err != nil {
+			return nil, errors.Wrap(err, "invalid certificate provided")
+		}
+		transport.TLSClientConfig = &tls.Config{
+			RootCAs:      roots,
+			Certificates: []tls.Certificate{cert},
+		}
+		proxy.Transport = transport
+		s.proxies[i] = proxy
 	}
-	endpointURL.Path = "/" + serviceName
-	s.proxy = httputil.NewSingleHostReverseProxy(endpointURL)
-	transport, ok := http.DefaultTransport.(*http.Transport)
-	if !ok {
-		// This can happen when the internals of net/http change.
-		// Afaik an interface implementation isn't under the Go1 compatibility promise.
-		// TODO: #209 consider setting up a custom http.Transport to use as the proxies RoundTripper.
-		panic("http.DefaultTransport must be of type *http.Transport")
-	}
-	// load client certificate
-	cert, err := tls.LoadX509KeyPair(certFile, keyFile)
-	if err != nil {
-		return nil, errors.Wrap(err, "invalid certificate provided")
-	}
-	transport.TLSClientConfig = &tls.Config{
-		RootCAs:      roots,
-		Certificates: []tls.Certificate{cert},
-	}
-	s.proxy.Transport = transport
+
 	return s, nil
 }
 
 // FullName returns the name of the service
-func (s *SimpleHTTPService) FullName() string {
+func (s *RoundRobinLoadBalancedHTTPService) FullName() string {
 	return s.organizationName + "." + s.serviceName
 }
 
 // ProxyHTTPRequest procies the HTTP request to the proper endpoint.
-func (s *SimpleHTTPService) ProxyHTTPRequest(w http.ResponseWriter, r *http.Request) {
-	s.proxy.ServeHTTP(w, r)
+func (s *RoundRobinLoadBalancedHTTPService) ProxyHTTPRequest(w http.ResponseWriter, r *http.Request) {
+	s.getProxy().ServeHTTP(w, r)
+}
+
+// GetInwayAddresses returns the possible inwayaddresses of the httpservice
+func (s *RoundRobinLoadBalancedHTTPService) GetInwayAddresses() []string {
+	return s.inwayAddresses
+}
+
+func (s *RoundRobinLoadBalancedHTTPService) getProxy() *httputil.ReverseProxy {
+	if len(s.proxies) == 0 {
+		return nil
+	}
+	s.loadBalanceLock.Lock()
+	proxy := s.proxies[s.count]
+	s.count = (s.count + 1) % len(s.proxies)
+	s.loadBalanceLock.Unlock()
+	return proxy
 }
