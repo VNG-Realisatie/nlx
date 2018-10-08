@@ -9,7 +9,7 @@ build:
     - imageName: nlxio/ca-certportal
       workspace: .
       docker:
-        dockerfilePath: insight-api/Dockerfile
+        dockerfilePath: ca-certportal/Dockerfile
     - imageName: nlxio/directory-db
       workspace: .
       docker:
