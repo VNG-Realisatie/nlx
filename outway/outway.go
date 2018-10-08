@@ -8,6 +8,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"hash/crc64"
+	"reflect"
 	"sync"
 	"time"
 
@@ -41,7 +42,7 @@ type Outway struct {
 	ecmaTable    *crc64.Table
 
 	servicesLock sync.RWMutex
-	services     map[string]HTTPService // services mapped by <organizationName>.<serviceName>, PoC shortcut in the absence of directory
+	services     map[string]HTTPService // services mapped by <organizationName>.<serviceName>
 }
 
 // NewOutway creates a new Outway and sets it up to handle requests.
@@ -130,21 +131,26 @@ func (o *Outway) updateServiceList() error {
 	if err != nil {
 		return errors.Wrap(err, "failed to fetch services from directory")
 	}
-	for _, service := range resp.Services {
-		// create the service
-		s, err := NewSimpleHTTPService(o.logger, o.tlsRoots, o.tlsOptions.OrgCertFile, o.tlsOptions.OrgKeyFile, service.OrganizationName, service.ServiceName, service.InwayAddresses)
-		if err != nil {
-			if err == errNoInwaysAvailable {
-				// skip, we just pretend this service is not existing now
-				// TODO(GeertJohan): #208 post-poc we should have the service available but with no inways attached. This can best be done once we have inway loadbalancing.
-				continue
-			}
-			o.logger.Fatal("failed to create new service", zap.String("service-organization-name", service.OrganizationName), zap.String("service-name", service.ServiceName), zap.Error(err))
-		}
-		services[s.FullName()] = s
-	}
 	o.servicesLock.Lock()
 	defer o.servicesLock.Unlock()
+	for _, serviceToImplement := range resp.Services {
+		service, exists := o.services[serviceToImplement.OrganizationName+"."+serviceToImplement.ServiceName]
+		if !exists || !reflect.DeepEqual(service.GetInwayAddresses(), serviceToImplement.InwayAddresses) {
+			// create the service
+			rrlbService, err := NewRoundRobinLoadBalancedHTTPService(o.logger, o.tlsRoots, o.tlsOptions.OrgCertFile, o.tlsOptions.OrgKeyFile, serviceToImplement.OrganizationName, serviceToImplement.ServiceName, serviceToImplement.InwayAddresses)
+			if err != nil {
+				if err == errNoInwaysAvailable {
+					o.logger.Warn("service exists but there are no inwayaddresses available", zap.String("service-organization-name", serviceToImplement.OrganizationName), zap.String("service-name", serviceToImplement.ServiceName))
+					continue
+				}
+				o.logger.Fatal("failed to create new service", zap.String("service-organization-name", serviceToImplement.OrganizationName), zap.String("service-name", serviceToImplement.ServiceName), zap.Error(err))
+			}
+			service = rrlbService
+
+		}
+		services[service.FullName()] = service
+	}
+
 	o.services = services
 	return nil
 }
