@@ -10,6 +10,8 @@ dbResetDirectory: false
 dbUsernameDirectory: nlx-demo-directory
 dbPasswordDirectory: nlx-demo-directory
 
+caAddress: ca-cfssl-unsafe.nlx-demo-directory
+
 demoEnv: "demo"
 demoDomain: "nlx.io"
 imagePullPolicy: IfNotPresent

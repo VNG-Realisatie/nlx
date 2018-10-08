@@ -4,6 +4,8 @@
 package certportal
 
 import (
+	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -12,6 +14,7 @@ import (
 
 	"github.com/cloudflare/cfssl/cli"
 	"github.com/cloudflare/cfssl/cli/sign"
+	"github.com/cloudflare/cfssl/info"
 	"github.com/cloudflare/cfssl/signer"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
@@ -23,8 +26,9 @@ func (cp *CertPortal) ListenAndServe(address string) error {
 	r := chi.NewRouter()
 
 	r.Route("/api", func(r chi.Router) {
-		r.Post("/request_certificate", requestCertificate(cp.caHost))
+		r.Post("/request_certificate", requestCertificateHandler(cp.caHost))
 	})
+	r.Get("/root.crt", rootCertHandler(cp.caHost))
 
 	workDir, _ := os.Getwd()
 	filesDir := filepath.Join(workDir, "public")
@@ -37,7 +41,7 @@ func (cp *CertPortal) ListenAndServe(address string) error {
 	return nil
 }
 
-func requestCertificate(caHost string) func(http.ResponseWriter, *http.Request) {
+func requestCertificateHandler(caHost string) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		data := &certificateRequest{}
 		if err := render.Bind(r, data); err != nil {
@@ -89,6 +93,24 @@ type certificateResponse struct {
 
 func (rd *certificateResponse) Render(w http.ResponseWriter, r *http.Request) error {
 	return nil
+}
+
+func rootCertHandler(caHost string) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		signer, err := sign.SignerFromConfig(cli.Config{
+			Remote: caHost,
+		})
+		if err != nil {
+			fmt.Printf("error obtaining root.crt from cfssl root CA: %v\n", err)
+			http.Error(w, "failed to create new cfssl signer", http.StatusInternalServerError)
+		}
+		resp, err := signer.Info(info.Req{})
+		if err != nil {
+			fmt.Printf("error obtaining root.crt from cfssl root CA: %v\n", err)
+			http.Error(w, "failed to obtain root.crt from cfssl root CA", http.StatusInternalServerError)
+		}
+		io.WriteString(w, resp.Certificate)
+	}
 }
 
 // FileServer conveniently sets up a http.FileServer handler to serve

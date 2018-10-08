@@ -10,6 +10,8 @@ dbResetDirectory: true # WARNING: All data will be LOST, never use in production
 dbUsernameDirectory: nlx-test-directory
 dbPasswordDirectory: nlx-test-directory
 
+caAddress: ca-cfssl-unsafe.nlx-test-directory
+
 demoEnv: "test"
 demoDomain: "nlx.io"
 imagePullPolicy: IfNotPresent

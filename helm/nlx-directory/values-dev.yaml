@@ -10,6 +10,8 @@ dbResetDirectory: true # WARNING: All data will be LOST, never use in production
 dbUsernameDirectory: nlx-dev-directory
 dbPasswordDirectory: nlx-dev-directory
 
+caAddress: ca-cfssl-unsafe.nlx-dev-directory
+
 externalIP: ""
 demoEnv: "dev"
 demoDomain: "minikube"

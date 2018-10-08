@@ -16,6 +16,9 @@ spec:
         - name: ca-certportal
           image: {{.Values.caCertportalImage}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
+          env:
+            - name: CA_HOST
+              value: {{.Values.caAddress}}
       restartPolicy: Always
   status: {}
 ---
