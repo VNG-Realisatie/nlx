@@ -38,7 +38,7 @@ var options struct {
 	IRMAJWTRSASignPrivateKeyDER  string `long:"irma-jwt-rsa-sign-private-key-der" env:"IRMA_JWT_RSA_SIGN_PRIVATE_KEY_DER" required:"true" description:"PEM RSA private key to sign requests for irma api server"`
 	IRMAJWTRSAVerifyPublicKeyDER string `long:"irma-jwt-rsa-verify-public-key-der" env:"IRMA_JWT_RSA_VERIFY_PUBLIC_KEY_DER" required:"true" description:"PEM RSA public key to verify results from irma api server"`
 
-	ServiceConfig string `long:"service-config" env:"SERVICE_CONFIG" default:"service-config.toml" description:"Location of the service config toml file"`
+	InsightConfig string `long:"insight-config" env:"INSIGHT_CONFIG" default:"insight-config.toml" description:"Location of the insight config toml file"`
 }
 
 func main() {
@@ -78,7 +78,7 @@ func main() {
 
 	process.Setup(logger)
 
-	serviceConfig := config.LoadServiceConfig(logger, options.ServiceConfig)
+	insightConfig := config.LoadInsightConfig(logger, options.InsightConfig)
 
 	db, err := sqlx.Open("postgres", options.PostgresDSN)
 	if err != nil {
@@ -98,8 +98,8 @@ func main() {
 	}
 	r := chi.NewRouter()
 	r.Use(HappyOptionsHandler)
-	r.Get("/getDataSubjects", listDataSubjects(logger, serviceConfig.DataSubjects))
-	r.Post("/generateJWT", generateJWT(logger, serviceConfig.DataSubjects, "insight", rsaSignPrivateKey))
+	r.Get("/getDataSubjects", listDataSubjects(logger, insightConfig.DataSubjects))
+	r.Post("/generateJWT", generateJWT(logger, insightConfig.DataSubjects, "insight", rsaSignPrivateKey))
 	r.Post("/fetch", newTxlogFetcher(logger, db, rsaVerifyPublicKey))
 	err = http.ListenAndServe(options.ListenAddress, r)
 	if err != nil {
