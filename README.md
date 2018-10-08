@@ -134,6 +134,14 @@ When a release is successful, it also gets deployed to the test environment.
 
 When a git tag is pushed, GitLab builds and deploys it to the test and staging environments.
 
+## Live environments
+
+There are multiple live environments for NLX
+
+- `test`: deployed with a new version on master was build
+- `acc`: deployed when a version tag (git tag) was build
+- `demo`: manually deployed, only version tagged releases should be deployed to demo
+
 ## License
 
 Copyright © VNG Realisatie 2017
