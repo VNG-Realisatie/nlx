@@ -7,7 +7,7 @@ acme:
   challengeType: http-01
   email: geertjohan+nlx-acme@geertjohan.net
   persistence:
-    enabled: false # TODO: PVC doesn't work yet. Enable persistence when it does.
+    enabled: false # TODO:#343 PVC doesn't work yet. Enable persistence when it does.
 
 
 dashboard:

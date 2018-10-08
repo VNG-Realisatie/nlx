@@ -1,5 +1,5 @@
 {{ with set . "component" "irma-api-server" }}
-# TODO: When using proper k8s RBAC split this into two secrets; only api server can use privkey, others can only read pubkey.
+# TODO:#342 When using proper k8s RBAC split this into two secrets; only api server can use privkey, others can only read pubkey.
 apiVersion: v1
 kind: Secret
 metadata:

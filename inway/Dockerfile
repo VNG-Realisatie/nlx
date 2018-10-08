@@ -31,7 +31,7 @@ RUN apk add --no-cache ca-certificates bash
 COPY --from=build /go/src/go.nlx.io/nlx/inway/dist/bin/nlx-inway /usr/local/bin/nlx-inway
 
 
-# TODO: shouldn't be in container, instead move to secret/map, or wait until config file is removed at all (replaced by central managing interface)
+# TODO: 338 shouldn't be in container, instead move to secret/map, or wait until config file is removed at all (replaced by central managing interface)
 COPY --from=build /go/src/go.nlx.io/nlx/inway/service-config.toml /service-config.toml
 ENV SERVICE_CONFIG /service-config.toml
 
