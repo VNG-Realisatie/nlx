@@ -21,6 +21,8 @@ BEGIN {
         print "Executing `" cmdPush "` failed."
         exit 1
     }
+    
+    count++
 }
 
 END {
