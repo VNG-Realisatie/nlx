@@ -38,5 +38,4 @@ ENV SERVICE_CONFIG /service-config.toml
 # Make sure /etc/hosts is resolved before DNS
 RUN echo "hosts: files dns" > /etc/nsswitch.conf
 
-EXPOSE 2018
 CMD ["/usr/local/bin/nlx-inway"]
