@@ -4,6 +4,11 @@ BEGIN {
     count = 0;
 }
 
+{
+    # Echo all lines
+    print $0
+}
+
 # Match the release lines from skaffold
 /^nlxio\/[a-z-]* \-\> nlxio\/[a-z-]*\:[0-9a-z\.]*$/ {
     cmdTag=sprintf("docker tag %s %s:latest", $3, $1 )
@@ -21,7 +26,7 @@ BEGIN {
         print "Executing `" cmdPush "` failed."
         exit 1
     }
-    
+
     count++
 }
 

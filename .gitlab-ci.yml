@@ -73,7 +73,7 @@ Docker tag latest:
   tags:
     - nlx-privileged
   script:
-    - skaffold build --profile release | tee /dev/stderr | ./docker-tag-latest.awk
+    - skaffold build --profile release | ./docker-tag-latest.awk
   when: manual
   only:
     - tags
