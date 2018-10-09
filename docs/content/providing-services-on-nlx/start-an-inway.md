@@ -73,13 +73,13 @@ docker run --detach \
   --volume {/absolute/path/to/org.key}:/certs/org.key \
   --volume {/absolute/path/to/service-config.toml}:/service-config.toml \
   --env DIRECTORY_ADDRESS=directory-api.demo.nlx.io:443 \
-  --env SELF_ADDRESS={external-inway-hostname-or-ip-address}:4081 \
+  --env SELF_ADDRESS={external-inway-hostname-or-ip-address}:4443 \
   --env SERVICE_CONFIG=/service-config.toml \
   --env TLS_NLX_ROOT_CERT=/certs/root.crt \
   --env TLS_ORG_CERT=/certs/org.crt \
   --env TLS_ORG_KEY=/certs/org.key \
   --env DISABLE_LOGDB=1 \
-  --publish 4081:80 \
+  --publish 4443:443 \
   nlxio/inway:latest
 ```
 
