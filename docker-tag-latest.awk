@@ -10,7 +10,7 @@ BEGIN {
 }
 
 # Match the release lines from skaffold
-/^nlxio\/[a-z-]* \-\> nlxio\/[a-z-]*\:[0-9a-z\.]*$/ {
+/^nlxio\/[a-z-]* \-\> nlxio\/[a-z-]*\:[0-9a-z.-]*$/ {
     cmdTag=sprintf("docker tag %s %s:latest", $3, $1 )
     print cmdTag
     c = system(cmdTag)
