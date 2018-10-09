@@ -255,6 +255,7 @@ profiles:
               directoryMonitorImage: nlxio/directory-monitor
               directoryUIImage: nlxio/directory-ui
               docsImage: nlxio/docs
+              insightUIImage: nlxio/insight-ui
           - name: nlx-demo-brp
             namespace: nlx-demo-brp
             chartPath: helm/nlx-organization
