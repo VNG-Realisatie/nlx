@@ -23,7 +23,7 @@ docker run --detach \
   --volume {/absolute/path/to/root.crt}:/certs/root.crt \
   --volume {/absolute/path/to/yourhostname.crt}:/certs/org.crt \
   --volume {/absolute/path/to/yourhostname.key}:/certs/org.key \
-  --env DIRECTORY_ADDRESS=directory.demo.nlx.io:1984 \
+  --env DIRECTORY_ADDRESS=directory-api.demo.nlx.io:443 \
   --env TLS_NLX_ROOT_CERT=/certs/root.crt \
   --env TLS_ORG_CERT=/certs/org.crt \
   --env TLS_ORG_KEY=/certs/org.key \
