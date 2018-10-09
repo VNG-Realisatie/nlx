@@ -72,7 +72,7 @@ docker run --detach \
   --volume {/absolute/path/to/org.crt}:/certs/org.crt \
   --volume {/absolute/path/to/org.key}:/certs/org.key \
   --volume {/absolute/path/to/service-config.toml}:/service-config.toml \
-  --env DIRECTORY_ADDRESS=directory.demo.nlx.io:1984 \
+  --env DIRECTORY_ADDRESS=directory-api.demo.nlx.io:443 \
   --env SELF_ADDRESS={external-inway-hostname-or-ip-address}:4081 \
   --env SERVICE_CONFIG=/service-config.toml \
   --env TLS_NLX_ROOT_CERT=/certs/root.crt \
