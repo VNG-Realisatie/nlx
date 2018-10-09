@@ -68,6 +68,16 @@ Deploy demo:
   only:
     - tags
 
+Docker tag latest:
+  stage: Deploy
+  tags:
+    - nlx-privileged
+  script:
+    - skaffold build --profile release | ./docker-tag-latest.awk
+  when: manual
+  only:
+    - tags
+
 # deploy_test:
 #   stage: deploy
 #   script:
