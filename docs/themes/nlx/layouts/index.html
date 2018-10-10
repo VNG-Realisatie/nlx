@@ -1,14 +1,14 @@
 {{ partial "header" . }}
-    <div class="container-fluid gutter-lg">
-        <div class="container-fluid gutter-lg">
-            <section>
-                <div class="row">
-                    <div class="col-sm-9">
-                        <h1 id="content">{{ .Title }}</h1>
-                        {{ .Content }}
-                    </div>
-                </div>
-            </section>
+<div class="container-fluid">
+    <div class="row flex-lg-nowrap">
+        <div class="col-12 col-md-3 col-lg-2 sidebar bg-light pt-1">
+            {{ partial "sidebar" . }}
         </div>
+        <main class="col-12 col-md-9 py-md-3 px-md-5 bd-content">
+
+            <h1 id="content">{{ .Title }}</h1>
+            {{ .Content }}
+
+        </main>
     </div>
 {{ partial "footer" . }}
