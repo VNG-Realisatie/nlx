@@ -1,5 +1,18 @@
 {{ if .Values.demoService.enable }}
 {{ with set . "component" "service" }}
+{{ if .Values.demoService.key }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: service-tls
+  namespace: {{.Release.Namespace}}
+  labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
+type: kubernetes.io/tls
+data:
+  tls.crt: {{ .Values.demoService.crt }}
+  tls.key: {{ .Values.demoService.key }}
+---
+{{ end }}
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
@@ -20,6 +33,17 @@ spec:
         - name: service
           image: {{.Values.demoService.genericServiceImage}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
+          {{ if .Values.demoService.key }}
+          volumeMounts:
+            - name: tls
+              mountPath: /tls
+          {{ end }}
+      {{ if .Values.demoService.key }}          
+      volumes:
+        - name: tls
+          secret:
+            secretName: service-tls
+      {{ end }}
       restartPolicy: Always
   status: {}
 ---
@@ -31,25 +55,12 @@ spec:
   ports:
     - name: service
       protocol: TCP
+      {{ if .Values.demoService.key }}
+      port: 8443
+      {{ else }}
       port: 8000
+      {{ end }}
   cluserIP: None
-{{ if .Values.debugEnableServiceIngress }}
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    traefik.frontend.rule.type: PathPrefixStrip
-spec:
-  rules:
-  - host: service.{{.Values.domain}}
-    http:
-      paths:
-        - path: /
-          backend:
-            serviceName: {{.component}}
-            servicePort: 8000
 {{ end }}
 {{ end }}
-{{ end }}
+

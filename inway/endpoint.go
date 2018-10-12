@@ -4,10 +4,14 @@
 package inway
 
 import (
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
+	"net"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"time"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -31,15 +35,32 @@ type HTTPServiceEndpoint struct {
 
 	host  string
 	proxy *httputil.ReverseProxy
+	root  *x509.CertPool
 
 	public                   bool
 	whitelistedOrganizations []string
 }
 
+func newRoundTripHTTPTransport(tlsConfig *tls.Config) *http.Transport {
+	return &http.Transport{
+		Proxy: http.ProxyFromEnvironment,
+		DialContext: (&net.Dialer{
+			Timeout:   30 * time.Second,
+			KeepAlive: 30 * time.Second,
+			DualStack: true,
+		}).DialContext,
+		MaxIdleConns:          100,
+		IdleConnTimeout:       90 * time.Second,
+		TLSHandshakeTimeout:   10 * time.Second,
+		ExpectContinueTimeout: 1 * time.Second,
+		TLSClientConfig:       tlsConfig,
+	}
+}
+
 var _ ServiceEndpoint = &HTTPServiceEndpoint{} // compile-time interface validation
 
 // NewHTTPServiceEndpoint creates a new ServiceEndpoint using a simple HTTP reverse proxy backend.
-func (iw *Inway) NewHTTPServiceEndpoint(logger *zap.Logger, serviceName, endpoint string) (*HTTPServiceEndpoint, error) {
+func (iw *Inway) NewHTTPServiceEndpoint(logger *zap.Logger, serviceName, endpoint string, tlsConfig *tls.Config) (*HTTPServiceEndpoint, error) {
 	h := &HTTPServiceEndpoint{
 		inway:       iw,
 		serviceName: serviceName,
@@ -51,6 +72,7 @@ func (iw *Inway) NewHTTPServiceEndpoint(logger *zap.Logger, serviceName, endpoin
 	}
 	h.host = endpointURL.Host
 	h.proxy = httputil.NewSingleHostReverseProxy(endpointURL)
+	h.proxy.Transport = newRoundTripHTTPTransport(tlsConfig)
 	return h, nil
 }
 

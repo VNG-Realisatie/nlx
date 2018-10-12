@@ -57,6 +57,7 @@ func NewInway(logger *zap.Logger, logdb *sqlx.DB, selfAddress string, tlsOptions
 	if len(orgCert.Subject.Organization) != 1 {
 		return nil, errors.New("cannot obtain organization name from self cert")
 	}
+
 	organizationName := orgCert.Subject.Organization[0]
 
 	i := &Inway{
@@ -109,6 +110,7 @@ func NewInway(logger *zap.Logger, logdb *sqlx.DB, selfAddress string, tlsOptions
 func (i *Inway) AddServiceEndpoint(s ServiceEndpoint, serviceDetails config.ServiceDetails) error {
 	i.serviceEndpointsLock.Lock()
 	defer i.serviceEndpointsLock.Unlock()
+
 	if _, exists := i.serviceEndpoints[s.ServiceName()]; exists {
 		return errors.New("service endpoint for a service with the same name has already been registered")
 	}

@@ -4,6 +4,8 @@
 package main
 
 import (
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
 	"log"
 	"os"
@@ -93,7 +95,15 @@ func main() {
 	}
 
 	for serviceName, serviceDetails := range serviceConfig.Services {
-		endpoint, err := iw.NewHTTPServiceEndpoint(logger, serviceName, serviceDetails.EndpointURL)
+		var rootCrt *x509.CertPool
+
+		if len(serviceDetails.CACertPath) > 0 {
+			rootCrt, err = orgtls.LoadRootCert(serviceDetails.CACertPath)
+			if err != nil {
+				logger.Fatal("Unable to load ca certificate for inway", zap.Error(err))
+			}
+		}
+		endpoint, err := iw.NewHTTPServiceEndpoint(logger, serviceName, serviceDetails.EndpointURL, &tls.Config{RootCAs: rootCrt})
 		if err != nil {
 			logger.Fatal("failed to create service", zap.Error(err))
 		}
