@@ -2,10 +2,12 @@ package directoryservice
 
 import (
 	"context"
+	"fmt"
 	"net/url"
 	"regexp"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
@@ -111,9 +113,20 @@ func (h *registerInwayHandler) RegisterInway(ctx context.Context, req *directory
 			service.InsightApiUrl,
 			service.IrmaApiUrl,
 		)
+
 		if err != nil {
+			userFriendlyErrorText := "Database error."
+			statusCode := codes.Internal
+			pqErr, ok := err.(*pq.Error)
+			if ok {
+				switch pqErr.Constraint {
+				case "services_check_typespec":
+					userFriendlyErrorText = fmt.Sprintf("invalid api-specification-type '%s' configured for service '%s'", service.ApiSpecificationType, service.Name)
+					statusCode = codes.InvalidArgument
+				}
+			}
 			h.logger.Error("failed to execute stmtInsertAvailability", zap.Error(err))
-			return nil, status.New(codes.Internal, "Database error.").Err()
+			return nil, status.New(statusCode, userFriendlyErrorText).Err()
 		}
 	}
 
