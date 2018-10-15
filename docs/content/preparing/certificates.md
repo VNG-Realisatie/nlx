@@ -37,7 +37,13 @@ We will use the NLX certportal to retrieve an NLX developer certificate.
 
 ## Request a demo certificate
 
-Now point your browser to [certportal.demo.nlx.io](https://certportal.demo.nlx.io) to request a certificate. Enter the content of `org.csr` and click on **Request certificate**. The system will instantly sign your csr and returns the certificate. Download the certificate and store it next to your private key as `org.crt`.
+Now point your browser to [certportal.demo.nlx.io](https://certportal.demo.nlx.io) to request a certificate. We need to provide the content of `org.csr` We can get the content by executing the following command in a terminal:
+
+```bash
+cat org.csr
+```
+
+Copy the complete content of `org.csr` including -----BEGIN CERTIFICATE REQUEST----- and -----END CERTIFICATE REQUEST----- and paste the content in the `CSR` field on https://certportal.demo.nlx.io . Scroll to the bottom of the page and click on **Request certificate**. The system will instantly sign your csr and return your certificate. You can either copy paste your certificate and store it in a file or you can click **Download certificate** to download the certificate, just make sure you store it next to your private key as `org.crt`.
 
 ## Downloading the demo CA root certificate
 

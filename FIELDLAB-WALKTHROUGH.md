@@ -6,7 +6,7 @@ This guide is written for Mac/Linux users and assumes you have some experience w
 
 ## Certificate
 
-To run the outway, we need a certificate for encrypted/TLS communications with other NLX servers on the network.
+To run the outway, we need a certificate for encrypted/TLS communications with other NLX services on the network.
 
 The demo network is public, anyone can create a signed certificate using the "certportal". The certportal will simply sign any certificate with the demo network key. This allows anyone to get access to the demo network quickly without needing to contact a service desk for a valid certificate.
 
@@ -28,7 +28,7 @@ We need to create a key and certificate signing request (csr) for our organizati
 openssl req -utf8 -nodes -sha256 -newkey rsa:4096 -keyout certs/org.key -out certs/org.csr
 ```
 
-You will need to provide some bogus information to the questions asked. One field is of importance and is used in logs; the "Organization Name" field. Please use your name or make up a random name. e.g. "Louis-van-Gaal". Make sure this is something unique so you can easily find your own logs later.
+You will need to provide information to the questions asked. The only question that is important right now is `Organization Name (eg, company)` this field is used in the logs of NLX. Please use your name or make up a random name. e.g. "Louis-van-Gaal". Make sure this is something unique so you can easily find your own logs later.
 
 View the contents of `certs/org.csr`:
 
@@ -54,7 +54,7 @@ We're now ready to start outways and inways.
 
 ## Outway
 
-The easiest way to run an outway is by using docker. Please make sure you have a recent stable version of docker [installed](https://docs.docker.com/install/).
+The easiest way to run an outway is by using docker. Please make sure you have a recent stable version of docker [installed](https://docs.docker.com/install/). 
 
 Start by downloading the latest version of the container image from the docker hub.
 
@@ -67,13 +67,13 @@ Next, we want docker will to start a container based on this image.
 ```bash
 docker run \
     --tty --interactive \
-    --volume=$HOME/nlx-walkthrough/certs:/certs \
+    --volume=$HOME/nlx-walkthrough/certs:/certs:ro \
     --publish=2018:80 \
     nlxio/outway:latest \
     /usr/local/bin/nlx-outway \
     --log-type=development \
     --log-level=debug \
-    --directory-address=directory.demo.nlx.io:1984 \
+    --directory-address=directory-api.demo.nlx.io:443 \
     --tls-nlx-root-cert=/certs/root.crt \
     --tls-org-cert=/certs/org.crt \
     --tls-org-key=/certs/org.key \
