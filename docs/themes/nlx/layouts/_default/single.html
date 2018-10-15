@@ -1,10 +1,11 @@
 {{ partial "header" . }}
 <div class="container-fluid">
-    <div class="row flex-lg-nowrap">
-        <div class="col-12 col-md-3 col-xl-2 sidebar bg-light pt-1">
-            {{ partial "sidebar" . }}
-        </div>
+    <div class="row flex-md-nowrap">
+
+        {{ partial "sidebar" . }}
+
         <main class="col-12 col-md-9 col-lg-7 py-md-3 px-md-5 bd-content">
+            <!--<h1>single.html</h1>-->
             <h1 id="content">{{ .Title }}</h1>
             {{ .Content }}
         </main>
@@ -13,4 +14,5 @@
             {{.TableOfContents}}
         </div>
     </div>
+</div>
 {{ partial "footer" . }}
