@@ -5,10 +5,12 @@ import {Link} from 'react-router-dom'
 import copy from 'copy-to-clipboard'
 import Highlighter from "react-highlight-words";
 
+import './Service.css';
+
 export default class Directory extends React.Component {
     //local state object
     state = {
-        //currently the user replaces {your-outway-address} manually 
+        //currently the user replaces {your-outway-address} manually
         apiAddress:`http://{your-outway-address}:12018/${this.props.data.organization_name}/${this.props.data.service_name}`,
         //default tooltip message
         tooltip:"Copy API address to clipboard",
@@ -61,7 +63,7 @@ export default class Directory extends React.Component {
         this.showTooltip();
     }
     /**
-     * Manually show tooltip, 
+     * Manually show tooltip,
      * this function is used after changing the content of tooltip
      */
     showTooltip = () =>{
@@ -72,14 +74,14 @@ export default class Directory extends React.Component {
         }
     }
     /**
-     * Manually hide tooltip, 
+     * Manually hide tooltip,
      * this function is used after manual show is used
      */
     hideTooltip = () =>{
         //get current button DOM element
         let el = this.state.copyBtn.current;
         if (el){
-            $(el).tooltip('hide');    
+            $(el).tooltip('hide');
         }
     }
     /**
@@ -106,16 +108,16 @@ export default class Directory extends React.Component {
                     <td style={{
                         color: data.inway_addresses ? '#B3E87B' : '#FF8282'
                     }}>
-                        <svg style={{margin: '0 auto'}} id="status" viewBox="0 0 10 10" width="10px" height="10px"><circle cx="5" cy="14" r="5" transform="translate(0 -9)" fill="currentColor" fillRule="evenodd"></circle></svg>
+                        <svg id="status" viewBox="0 0 10 10" width="100%" height="1rem"><circle cx="5" cy="14" r="5" transform="translate(0 -9)" fill="currentColor" fillRule="evenodd"></circle></svg>
                     </td>
                     <td>
-                        <span>
+
                             <Highlighter
                                 searchWords={[highlightWords]}
                                 autoEscape={true}
                                 textToHighlight={data.organization_name}
                             />
-                        </span>
+
                     </td>
                     <td>
                         {data.api_specification_type ? (
@@ -129,19 +131,19 @@ export default class Directory extends React.Component {
                                 </strong>
                             </Link>
                         ) : (
-                            <span>
+
                                 <Highlighter
                                     searchWords={[highlightWords]}
                                     autoEscape={true}
                                     textToHighlight={data.service_name}
                                 />
-                            </span>
+
                         )}
                     </td>
                     <td>
                         {data.api_specification_type || '-' }
                     </td>
-                    <td style={{textAlign: 'center'}}>
+                    <td >
                         <button
                             style={{marginTop: '-4px'}}
                             type="button" className="btn btn-icon"
@@ -149,8 +151,8 @@ export default class Directory extends React.Component {
                             ref={this.state.copyBtn}
                             onClick={this.copyToClipboard}
                             onMouseEnter={this.showTooltip}
-                            onMouseLeave={this.hideTooltip}>                     
-                            <img src={plugIcon} alt="api" style={{marginTop: '-2px'}} />                
+                            onMouseLeave={this.hideTooltip}>
+                            <img src={plugIcon} alt="api" style={{marginTop: '-2px'}} />
                         </button>
                     </td>
                 </tr>

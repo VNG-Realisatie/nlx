@@ -3,6 +3,8 @@ import Navigation from './components/Navigation'
 import Directory from './Directory'
 import Doc from './Documentation'
 
+import './static/css/base-addon.css';
+
 import {
     BrowserRouter as Router,
     Route
