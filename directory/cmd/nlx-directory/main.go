@@ -10,14 +10,13 @@ import (
 	flags "github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
-
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/directory-db/dbversion"
 	"go.nlx.io/nlx/directory/directoryservice"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 var options struct {
@@ -71,8 +70,9 @@ func main() {
 		}
 	}()
 
-	process.Setup(logger)
+	ctx := process.Setup(logger)
 
+	// TODO: #205 db connection should be closed properly
 	db, err := sqlx.Open("postgres", options.PostgresDSN)
 	if err != nil {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))
@@ -95,5 +95,5 @@ func main() {
 		logger.Fatal("failed to create new directory service", zap.Error(err))
 	}
 
-	runServer(logger, options.ListenAddress, options.ListenAddressPlain, caCertPool, certKeyPair, directoryService)
+	runServer(ctx, logger, options.ListenAddress, options.ListenAddressPlain, caCertPool, certKeyPair, directoryService)
 }

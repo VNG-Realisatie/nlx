@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"crypto/tls"
 	"fmt"
 	"log"
@@ -10,14 +11,13 @@ import (
 	flags "github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
-
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/directory-db/dbversion"
 	"go.nlx.io/nlx/directory-monitor"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 var options struct {
@@ -65,8 +65,9 @@ func main() {
 		}
 	}()
 
-	process.Setup(logger)
+	ctx := process.Setup(logger)
 
+	// TODO: #205 db connection should be closed properly
 	db, err := sqlx.Open("postgres", options.PostgresDSN)
 	if err != nil {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))
@@ -84,8 +85,8 @@ func main() {
 		logger.Fatal("failed to load x509 keypair for monitor", zap.Error(err))
 	}
 
-	err = monitor.RunHealthChecker(logger, db, caCertPool, certKeyPair)
-	if err != nil {
+	err = monitor.RunHealthChecker(ctx, logger, db, caCertPool, certKeyPair)
+	if err != nil && err != context.DeadlineExceeded {
 		logger.Fatal("failed to run monitor healthchecker", zap.Error(err))
 	}
 }

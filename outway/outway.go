@@ -16,17 +16,17 @@ import (
 	"github.com/jpillora/backoff"
 	"github.com/pkg/errors"
 	"github.com/sony/sonyflake"
-	"go.uber.org/zap"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
-
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/directory/directoryapi"
+	"go.uber.org/zap"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 )
 
 // Outway handles requests from inside the organization
 type Outway struct {
+	wg               *sync.WaitGroup
 	organizationName string // the organization running this outway
 
 	tlsOptions orgtls.TLSOptions
@@ -46,7 +46,7 @@ type Outway struct {
 }
 
 // NewOutway creates a new Outway and sets it up to handle requests.
-func NewOutway(logger *zap.Logger, logdb *sqlx.DB, tlsOptions orgtls.TLSOptions, directoryAddress string) (*Outway, error) {
+func NewOutway(ctx context.Context, logger *zap.Logger, logdb *sqlx.DB, tlsOptions orgtls.TLSOptions, directoryAddress string) (*Outway, error) {
 	// load certs and get organization name from cert
 	roots, orgCert, err := orgtls.Load(tlsOptions)
 	if err != nil {
@@ -58,6 +58,7 @@ func NewOutway(logger *zap.Logger, logdb *sqlx.DB, tlsOptions orgtls.TLSOptions,
 	organizationName := orgCert.Subject.Organization[0]
 
 	o := &Outway{
+		wg:               &sync.WaitGroup{},
 		logger:           logger.With(zap.String("outway-organization-name", organizationName)),
 		organizationName: organizationName,
 
@@ -96,36 +97,50 @@ func NewOutway(logger *zap.Logger, logdb *sqlx.DB, tlsOptions orgtls.TLSOptions,
 		logger.Fatal("failed to setup connection to directory service", zap.Error(err))
 	}
 	o.directoryClient = directoryapi.NewDirectoryClient(directoryConn)
-	err = o.updateServiceList()
+	err = o.updateServiceList(ctx)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to update internal service directory")
 	}
 
-	go o.keepServiceListUpToDate()
+	go o.keepServiceListUpToDate(ctx)
 	return o, nil
 }
 
-func (o *Outway) keepServiceListUpToDate() {
+func (o *Outway) keepServiceListUpToDate(ctx context.Context) {
+	o.wg.Add(1)
+	defer o.wg.Done()
+
 	expBackOff := &backoff.Backoff{
 		Min:    100 * time.Millisecond,
 		Factor: 2,
 		Max:    20 * time.Second,
 	}
 
+	const baseInterval = 30 * time.Second
+	interval := baseInterval
 	for {
-		err := o.updateServiceList()
-		if err != nil {
-			o.logger.Warn("failed to update the service list", zap.Error(err))
-			time.Sleep(expBackOff.Duration())
-			continue
-		}
+		select {
+		case <-ctx.Done():
+			return
+		case <-time.After(interval):
+			err := o.updateServiceList(ctx)
+			if err != nil {
+				if err == context.Canceled {
+					// Will be returned if context was canceled
+					return
+				}
 
-		time.Sleep(20 * time.Second)
-		expBackOff.Reset()
+				o.logger.Warn("failed to update the service list", zap.Error(err))
+				interval = expBackOff.Duration() // Changing interval on retry
+			} else {
+				interval = baseInterval // Resetting interval to base on success update
+				expBackOff.Reset()
+			}
+		}
 	}
 }
 
-func (o *Outway) updateServiceList() error {
+func (o *Outway) updateServiceList(ctx context.Context) error {
 	services := make(map[string]HTTPService)
 	resp, err := o.directoryClient.ListServices(context.Background(), &directoryapi.ListServicesRequest{})
 	if err != nil {
@@ -134,6 +149,15 @@ func (o *Outway) updateServiceList() error {
 	o.servicesLock.Lock()
 	defer o.servicesLock.Unlock()
 	for _, serviceToImplement := range resp.Services {
+		select {
+		case <-ctx.Done():
+			// On app shutdown we have no need to update services.
+			// So we need to wait until started updated is finished and exit
+			return ctx.Err()
+		default:
+			// Need default to not to block
+		}
+
 		service, exists := o.services[serviceToImplement.OrganizationName+"."+serviceToImplement.ServiceName]
 		if !exists || !reflect.DeepEqual(service.GetInwayAddresses(), serviceToImplement.InwayAddresses) {
 			// create the service

@@ -9,16 +9,15 @@ import (
 	"os"
 
 	"github.com/huandu/xstrings"
-	flags "github.com/jessevdk/go-flags"
+	"github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
-	"go.uber.org/zap"
-
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/inway"
 	"go.nlx.io/nlx/inway/config"
 	"go.nlx.io/nlx/txlog-db/dbversion"
+	"go.uber.org/zap"
 )
 
 var options struct {
@@ -72,12 +71,13 @@ func main() {
 		}
 	}()
 
-	process.Setup(logger)
+	ctx := process.Setup(logger)
 
 	serviceConfig := config.LoadServiceConfig(logger, options.ServiceConfig)
 
 	var logDB *sqlx.DB
 	if !options.DisableLogdb {
+		// TODO: #205 db connection should be closed properly
 		logDB, err = sqlx.Open("postgres", options.PostgresDSN)
 		if err != nil {
 			logger.Fatal("could not open connection to postgres", zap.Error(err))
@@ -107,8 +107,9 @@ func main() {
 		}
 		iw.AddServiceEndpoint(endpoint, serviceDetails)
 	}
+
 	// Listen on the address provided in the options
-	err = iw.ListenAndServeTLS(options.ListenAddress)
+	err = iw.ListenAndServeTLS(ctx, options.ListenAddress)
 	if err != nil {
 		logger.Fatal("failed to listen and serve", zap.Error(err))
 	}

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -8,16 +9,17 @@ import (
 	"os"
 	"time"
 
+	"github.com/go-chi/chi"
 	"github.com/huandu/xstrings"
 	flags "github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
 	"github.com/jmoiron/sqlx/types"
-	"go.uber.org/zap"
-
+	"github.com/pkg/errors"
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/txlog-db/dbversion"
+	"go.uber.org/zap"
 )
 
 var options struct {
@@ -63,8 +65,9 @@ func main() {
 		}
 	}()
 
-	process.Setup(logger)
+	ctx := process.Setup(logger)
 
+	// TODO: #205 db connection should be closed properly
 	logDB, err := sqlx.Open("postgres", options.PostgresDSN)
 	if err != nil {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))
@@ -73,12 +76,40 @@ func main() {
 
 	dbversion.WaitUntilLatestTxlogDBVersion(logger, logDB.DB)
 
-	http.HandleFunc("/in", newLogFetcher(logger, logDB, transactionlog.DirectionIn))
-	http.HandleFunc("/out", newLogFetcher(logger, logDB, transactionlog.DirectionOut))
-	err = http.ListenAndServe(options.ListenAddress, nil)
-	if err != nil {
-		logger.Fatal("failed to ListenAndServe", zap.Error(err))
+	r := chi.NewRouter()
+	r.HandleFunc("/in", newLogFetcher(logger, logDB, transactionlog.DirectionIn))
+	r.HandleFunc("/out", newLogFetcher(logger, logDB, transactionlog.DirectionOut))
+
+	server := &http.Server{
+		Addr:    options.ListenAddress,
+		Handler: r,
 	}
+
+	done := make(chan struct{})
+	go func() {
+		<-ctx.Done()
+
+		// Context with timeout to terminate server if shutdown operation takes longer than minute
+		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
+		if err := server.Shutdown(localCtx); err != nil {
+			logger.Warn(errors.Wrap(err, "failed to shutdown gracefully").Error())
+		}
+		cancel() // do not remove. Otherwise it could cause implicit goroutine leak
+
+		close(done)
+	}()
+
+	err = server.ListenAndServe()
+	if err != nil {
+		if err != http.ErrServerClosed {
+			logger.Error("failed to ListenAndServe", zap.Error(err))
+		}
+		return
+	}
+
+	// Listener will return immediately on Shutdown call.
+	// So we need to wait until all open connections will be closed gracefully
+	<-done
 }
 
 type Record struct {

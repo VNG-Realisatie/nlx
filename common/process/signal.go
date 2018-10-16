@@ -1,6 +1,7 @@
 package process
 
 import (
+	"context"
 	"os"
 	"os/signal"
 	"syscall"
@@ -8,7 +9,11 @@ import (
 	"go.uber.org/zap"
 )
 
-func setupSignals() {
+func setupSignals(ctx context.Context) context.Context {
+	// Creating new nested context with CancelFunc to call it on signal
+	// All lower level contexts should be inherited from this one to receive cancel command on signal
+	newCtx, cancel := context.WithCancel(ctx)
+
 	// Catch signals
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT)
@@ -21,11 +26,11 @@ func setupSignals() {
 			switch syssig := sig.(syscall.Signal); syssig {
 			case syscall.SIGINT, syscall.SIGQUIT, syscall.SIGTERM:
 				logger.Info("shutting down because of signal")
-				// TODO(GeertJohan): #205 run through Exit() function which runs shutdown/cleanup functions (ExitFunc's) and tries to perform graceful shutdown. #205
-				os.Exit(128 + int(syssig))
+				cancel()
 			default:
 				logger.Info("ignoring signal")
 			}
 		}
 	}()
+	return newCtx
 }

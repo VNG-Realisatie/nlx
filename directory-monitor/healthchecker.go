@@ -1,6 +1,7 @@
 package monitor
 
 import (
+	"context"
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/json"
@@ -11,13 +12,13 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
-
 	"go.nlx.io/nlx/directory-monitor/health"
+	"go.uber.org/zap"
 )
 
 // HealthChecker checks the inways of a StoredService and modifies it's health state directly in the StoredService struct.
 type healthChecker struct {
+	wg         *sync.WaitGroup
 	logger     *zap.Logger
 	httpClient *http.Client
 
@@ -36,7 +37,7 @@ type availability struct {
 }
 
 // RunHealthChecker starts a healthchecker process
-func RunHealthChecker(logger *zap.Logger, db *sqlx.DB, caCertPool *x509.CertPool, certKeyPair tls.Certificate) error {
+func RunHealthChecker(ctx context.Context, logger *zap.Logger, db *sqlx.DB, caCertPool *x509.CertPool, certKeyPair tls.Certificate) error {
 	h := &healthChecker{
 		logger: logger,
 		httpClient: &http.Client{Transport: &http.Transport{
@@ -71,10 +72,10 @@ func RunHealthChecker(logger *zap.Logger, db *sqlx.DB, caCertPool *x509.CertPool
 		return errors.Wrap(err, "failed to prepare stmtUpdateHealth")
 	}
 
-	return h.run()
+	return h.run(ctx)
 }
 
-func (h *healthChecker) run() error {
+func (h *healthChecker) run(ctx context.Context) error {
 	chInitialLoad := make(chan struct{})
 
 	go func() {
@@ -106,12 +107,24 @@ func (h *healthChecker) run() error {
 
 	<-chInitialLoad // wait for initial load to be done
 	for {
-		h.availabilitiesLock.RLock()
-		for _, av := range h.availabilities {
-			go h.checkAvailabilityHealth(av)
+
+		select {
+		case <-ctx.Done(): // Checking if application shutdown started
+			h.wg.Wait() // Need to wait until all goroutines will stop
+			return ctx.Err()
+		case <-time.After(5 * time.Second):
+			h.availabilitiesLock.RLock()
+
+			h.wg.Add(len(h.availabilities)) // Registering all started goroutines to not to terminate connections on Exit
+			for _, av := range h.availabilities {
+				go func() {
+					h.checkAvailabilityHealth(av)
+					h.wg.Done()
+				}()
+			}
+
+			h.availabilitiesLock.RUnlock()
 		}
-		h.availabilitiesLock.RUnlock()
-		time.Sleep(5 * time.Second)
 	}
 }
 

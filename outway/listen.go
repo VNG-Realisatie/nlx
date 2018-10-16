@@ -4,24 +4,49 @@
 package outway
 
 import (
+	"context"
 	"encoding/binary"
 	"hash/crc64"
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
-
 	"go.nlx.io/nlx/common/transactionlog"
+	"go.uber.org/zap"
 )
 
 // ListenAndServe is a blocking function that listens on provided tcp address to handle requests.
-func (o *Outway) ListenAndServe(address string) error {
-	err := http.ListenAndServe(address, o)
-	if err != nil {
-		return errors.Wrap(err, "failed to run http server")
+func (o *Outway) ListenAndServe(ctx context.Context, address string) error {
+	server := &http.Server{
+		Addr:    address,
+		Handler: o,
 	}
+
+	done := make(chan struct{})
+	go func() {
+		<-ctx.Done()
+
+		// Context with timeout to terminate server if shutdown operation takes longer than minute
+		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
+		if err := server.Shutdown(localCtx); err != nil {
+			o.logger.Warn(errors.Wrap(err, "failed to shutdown gracefully").Error())
+		}
+		cancel() // do not remove. Otherwise it could cause implicit goroutine leak
+
+		close(done)
+	}()
+
+	err := server.ListenAndServe()
+	if err != nil {
+		if err != http.ErrServerClosed {
+			return errors.Wrap(err, "failed to run http server")
+		}
+	}
+
+	<-done
+	o.wg.Wait() // Wait until all async jobs will finish
 	return nil
 }
 

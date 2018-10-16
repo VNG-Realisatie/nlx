@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"crypto/rsa"
 	"database/sql"
 	"encoding/json"
@@ -17,8 +18,7 @@ import (
 	flags "github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
 	"github.com/jmoiron/sqlx/types"
-	"go.uber.org/zap"
-
+	"github.com/pkg/errors"
 	"go.nlx.io/nlx/common/derrsa"
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/process"
@@ -26,6 +26,7 @@ import (
 	"go.nlx.io/nlx/insight-api/config"
 	"go.nlx.io/nlx/insight-api/irma"
 	"go.nlx.io/nlx/txlog-db/dbversion"
+	"go.uber.org/zap"
 )
 
 var options struct {
@@ -76,10 +77,11 @@ func main() {
 		}
 	}()
 
-	process.Setup(logger)
+	ctx := process.Setup(logger)
 
 	insightConfig := config.LoadInsightConfig(logger, options.InsightConfig)
 
+	// TODO: #205 db connection should be closed properly
 	db, err := sqlx.Open("postgres", options.PostgresDSN)
 	if err != nil {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))
@@ -101,10 +103,37 @@ func main() {
 	r.Get("/getDataSubjects", listDataSubjects(logger, insightConfig.DataSubjects))
 	r.Post("/generateJWT", generateJWT(logger, insightConfig.DataSubjects, "insight", rsaSignPrivateKey))
 	r.Post("/fetch", newTxlogFetcher(logger, db, insightConfig.DataSubjects, rsaVerifyPublicKey))
+
+	server := &http.Server{
+		Addr:    options.ListenAddress,
+		Handler: r,
+	}
+
+	done := make(chan struct{})
+	go func() {
+		<-ctx.Done()
+
+		// Context with timeout to terminate server if shutdown operation takes longer than minute
+		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
+		if err := server.Shutdown(localCtx); err != nil {
+			logger.Warn(errors.Wrap(err, "failed to shutdown gracefully").Error())
+		}
+		cancel() // do not remove. Otherwise it could cause implicit goroutine leak
+
+		close(done)
+	}()
+
 	err = http.ListenAndServe(options.ListenAddress, r)
 	if err != nil {
-		logger.Fatal("failed to ListenAndServe", zap.Error(err))
+		if err != http.ErrServerClosed {
+			logger.Error("failed to ListenAndServe", zap.Error(err))
+			return
+		}
 	}
+
+	// Listener will return immediately on Shutdown call.
+	// So we need to wait until all open connections will be closed gracefully
+	<-done
 }
 
 func listDataSubjects(logger *zap.Logger, dataSubjects map[string]config.DataSubject) http.HandlerFunc {
