@@ -100,7 +100,7 @@ func main() {
 	r.Use(HappyOptionsHandler)
 	r.Get("/getDataSubjects", listDataSubjects(logger, insightConfig.DataSubjects))
 	r.Post("/generateJWT", generateJWT(logger, insightConfig.DataSubjects, "insight", rsaSignPrivateKey))
-	r.Post("/fetch", newTxlogFetcher(logger, db, rsaVerifyPublicKey))
+	r.Post("/fetch", newTxlogFetcher(logger, db, insightConfig.DataSubjects, rsaVerifyPublicKey))
 	err = http.ListenAndServe(options.ListenAddress, r)
 	if err != nil {
 		logger.Fatal("failed to ListenAndServe", zap.Error(err))
@@ -161,7 +161,7 @@ func generateJWT(logger *zap.Logger, dataSubjects map[string]config.DataSubject,
 			v, ok := dataSubjects[k]
 			if !ok {
 				logger.Error("unknown dataSubject")
-				http.Error(w, "incorrect request data", http.StatusBadRequest)
+				http.Error(w, "incorrect dataSubject requested", http.StatusBadRequest)
 				return
 			}
 			currentDiscloseContent := irma.DiscloseRequestContent{
@@ -188,7 +188,7 @@ func generateJWT(logger *zap.Logger, dataSubjects map[string]config.DataSubject,
 	}
 }
 
-func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, rsaVerifyPublicKey *rsa.PublicKey) http.HandlerFunc {
+func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, dataSubjects map[string]config.DataSubject, rsaVerifyPublicKey *rsa.PublicKey) http.HandlerFunc {
 	stmtCreateMatchDataSubjects, err := db.Preparex(`
 		CREATE TEMPORARY TABLE matchDataSubjects(
 			key varchar(100),
@@ -222,6 +222,14 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, rsaVerifyPublicKey *rsa.Pu
 				ON records.id = matchedRecords.record_id
 		ORDER BY created
 	`
+
+	// map irma attributes to a list of datasubjects that can be accessed by it
+	var dataSubjectsByIrmaAttribute = make(map[string][]string)
+	for dataSubjectKey, dataSubjectProperties := range dataSubjects {
+		for _, irmaAttribute := range dataSubjectProperties.IrmaAttributes {
+			dataSubjectsByIrmaAttribute[string(irmaAttribute)] = append(dataSubjectsByIrmaAttribute[string(irmaAttribute)], dataSubjectKey)
+		}
+	}
 
 	type Record struct {
 		*transactionlog.Record
@@ -279,12 +287,14 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, rsaVerifyPublicKey *rsa.Pu
 			return
 		}
 
-		for key, value := range claims.Attributes {
-			_, err = stmtInsertMatchDataSubjects.Exec(key, value)
-			if err != nil {
-				logger.Error("failed to insert query attributes into temp table", zap.Error(err))
-				http.Error(w, "server error", http.StatusInternalServerError)
-				return
+		for irmaAttributeKey, irmaAttributeValue := range claims.Attributes {
+			for _, dataSubjectKey := range dataSubjectsByIrmaAttribute[irmaAttributeKey] {
+				_, err = stmtInsertMatchDataSubjects.Exec(dataSubjectKey, irmaAttributeValue)
+				if err != nil {
+					logger.Error("failed to insert query attributes into temp table", zap.Error(err))
+					http.Error(w, "server error", http.StatusInternalServerError)
+					return
+				}
 			}
 		}
 

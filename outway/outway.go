@@ -140,10 +140,11 @@ func (o *Outway) updateServiceList() error {
 			rrlbService, err := NewRoundRobinLoadBalancedHTTPService(o.logger, o.tlsRoots, o.tlsOptions.OrgCertFile, o.tlsOptions.OrgKeyFile, serviceToImplement.OrganizationName, serviceToImplement.ServiceName, serviceToImplement.InwayAddresses)
 			if err != nil {
 				if err == errNoInwaysAvailable {
-					o.logger.Warn("service exists but there are no inwayaddresses available", zap.String("service-organization-name", serviceToImplement.OrganizationName), zap.String("service-name", serviceToImplement.ServiceName))
+					o.logger.Info("service exists but there are no inwayaddresses available", zap.String("service-organization-name", serviceToImplement.OrganizationName), zap.String("service-name", serviceToImplement.ServiceName))
 					continue
 				}
-				o.logger.Fatal("failed to create new service", zap.String("service-organization-name", serviceToImplement.OrganizationName), zap.String("service-name", serviceToImplement.ServiceName), zap.Error(err))
+				o.logger.Error("failed to create new service", zap.String("service-organization-name", serviceToImplement.OrganizationName), zap.String("service-name", serviceToImplement.ServiceName), zap.Error(err))
+				continue
 			}
 			service = rrlbService
 
