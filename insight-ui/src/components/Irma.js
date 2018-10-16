@@ -26,53 +26,62 @@ export default class Irma extends Component {
         const { organization } = this.props
 
         axios({
-            method: 'post',
-            url: `${organization.insight_log_endpoint}/generateJWT`,
-            data: {
-                dataSubjects: [
-                    'burgerservicenummer'
-                ]
-            }
+            method: 'get',
+            url: `${organization.insight_log_endpoint}/getDataSubjects`
         }).then(response => {
-            const firstJWT = response.data
+            console.dir(response);
+            let dataSubjects = response.data['dataSubjects']
+            console.dir(dataSubjects);
+
+            // TODO: some UI in which the user can select which dataSubjects they want to query for
 
             axios({
                 method: 'post',
-                url: `${organization.insight_irma_endpoint}/api/v2/verification/`,
-                headers: { 'content-type': 'text/plain' },
-                data: firstJWT
+                url: `${organization.insight_log_endpoint}/generateJWT`,
+                data: {
+                    dataSubjects: Object.keys(dataSubjects)
+                }
             }).then(response => {
-                let irmaVerificationRequest = response.data
-                const u = irmaVerificationRequest['u']
+                const firstJWT = response.data
 
-                // prepend IrmaVerifiationRequest with URL
-                irmaVerificationRequest['u'] = `${organization.insight_irma_endpoint}/api/v2/verification/${u}`
+                axios({
+                    method: 'post',
+                    url: `${organization.insight_irma_endpoint}/api/v2/verification/`,
+                    headers: { 'content-type': 'text/plain' },
+                    data: firstJWT
+                }).then(response => {
+                    let irmaVerificationRequest = response.data
+                    const u = irmaVerificationRequest['u']
 
-                const qrCode = JSON.stringify(irmaVerificationRequest)
+                    // prepend IrmaVerifiationRequest with URL
+                    irmaVerificationRequest['u'] = `${organization.insight_irma_endpoint}/api/v2/verification/${u}`
 
-                this.setState({ qrCode })
+                    const qrCode = JSON.stringify(irmaVerificationRequest)
 
-                interval = setInterval(() => {
-                    axios({
-                        method: 'get',
-                        url: `${organization.insight_irma_endpoint}/api/v2/verification/${u}/status`
-                    }).then(response => {
-                        if (response.data === "DONE") {
+                    this.setState({ qrCode })
+
+                    interval = setInterval(() => {
+                        axios({
+                            method: 'get',
+                            url: `${organization.insight_irma_endpoint}/api/v2/verification/${u}/status`
+                        }).then(response => {
+                            if (response.data === "DONE") {
+                                clearInterval(interval)
+                                axios({
+                                    method: 'get',
+                                    url: `${organization.insight_irma_endpoint}/api/v2/verification/${u}/getproof`
+                                }).then(response => {
+                                    this.props.afterLogin(organization, response.data)
+                                })
+                            }
+                        }).catch(error => {
+                            this.setState({ error: true })
                             clearInterval(interval)
-                            axios({
-                                method: 'get',
-                                url: `${organization.insight_irma_endpoint}/api/v2/verification/${u}/getproof`
-                            }).then(response => {
-                                this.props.afterLogin(organization, response.data)
-                            })
-                        }
-                    }).catch(error => {
-                        this.setState({ error: true })
-                        clearInterval(interval)
-                    })
-                }, 1000)
-            })
-        })
+                        })
+                    }, 1000)
+                });
+            });
+        });
     }
 
     componentWillUnmount() {
