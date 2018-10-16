@@ -11,6 +11,16 @@ data:
   crt.der: {{ .Values.insight.apiIrmaCertificate.crtDER | b64enc }}
   key.der: {{ .Values.insight.apiIrmaCertificate.keyDER | b64enc }}
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: insight-config
+  namespace: {{.Release.Namespace}}
+  labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
+data:
+  insight-config.toml: |
+    {{- .Values.insight.config | nindent 4 }}
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
@@ -27,6 +37,10 @@ spec:
     metadata:
       labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 8 }}
     spec:
+      volumes:
+        - name: insight-config
+          configMap:
+            name: insight-config
       containers:
         - name: insight-api
           image: {{.Values.insightAPIImage}}
@@ -49,6 +63,12 @@ spec:
                 secretKeyRef:
                   name: jwt-rsa-{{.component}}
                   key: key.der
+            - name: INSIGHT_CONFIG
+              value: /insight-config/insight-config.toml
+          volumeMounts:
+            - name: insight-config
+              mountPath: /insight-config
+
       restartPolicy: Always
   status: {}
 ---

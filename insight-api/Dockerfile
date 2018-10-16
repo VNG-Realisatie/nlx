@@ -25,6 +25,4 @@ RUN go build -o dist/bin/nlx-insight-api ./cmd/nlx-insight-api
 FROM alpine:latest
 COPY --from=build /go/src/go.nlx.io/nlx/insight-api/dist/bin/nlx-insight-api /usr/local/bin/nlx-insight-api
 
-# TODO:#344 shouldn't be in container, instead move to secret/map, or wait until config file is removed at all (replaced by central managing interface)
-COPY --from=build /go/src/go.nlx.io/nlx/insight-api/insight-config.toml /insight-config.toml
 ENV SERVICE_CONFIG /insight-config.toml
