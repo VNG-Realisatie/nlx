@@ -10,7 +10,7 @@ html {
   }
 }
 
-/* 87.5% xs 1rem = 12px*/
+/* 75% xs 1rem = 12px*/
 @media screen and (max-width: 768px) {
   html {
     font-size: 75%;
@@ -136,10 +136,6 @@ h2[id]::before,
 }
 
 .button {
-  /*top: 0;
-  right: 0;
-  bottom: 0;
-  width: 52px;*/
   color: #adb5bd;
   transition: color .15s ease;
 }
@@ -191,6 +187,10 @@ h1 {
 }
 
 @media (max-width: 768px) {
+  .container {
+		max-width: 100%;
+  }
+
   .search_button {
     display: none
   }
@@ -198,13 +198,8 @@ h1 {
   .sidebar .search .form-control {
     padding: 2rem;
     border: none;
-    /*border-bottom: 1px solid #e9ecef;*/
   }
   .sidebar{
     border-bottom: 1px solid #e9ecef;
   }
-
-  /*.sidebar > nav.show{
-    box-shadow: 0 0 1rem grey;
-  }*/
 }

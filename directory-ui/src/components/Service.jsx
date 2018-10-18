@@ -108,7 +108,7 @@ export default class Directory extends React.Component {
                     <td style={{
                         color: data.inway_addresses ? '#B3E87B' : '#FF8282'
                     }}>
-                        <svg id="status" class="service__status" viewBox="0 0 10 10" width="100%" height="1rem"><circle cx="5" cy="14" r="5" transform="translate(0 -9)" fill="currentColor" fillRule="evenodd"></circle></svg>
+                        <svg id="status" className="service__status" viewBox="0 0 10 10" width="100%" height="1rem"><circle cx="5" cy="14" r="5" transform="translate(0 -9)" fill="currentColor" fillRule="evenodd"></circle></svg>
                     </td>
                     <td>
 
@@ -143,7 +143,7 @@ export default class Directory extends React.Component {
                     <td>
                         {data.api_specification_type || '-' }
                     </td>
-                    <td >
+                    <td className="table-cell-center">
                         <button
                             style={{marginTop: '-4px'}}
                             type="button" className="btn btn-icon"

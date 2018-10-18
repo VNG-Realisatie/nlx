@@ -1,5 +1,12 @@
 
+/* inline styles removed to make flexible layout possible
+	the large screen styles are applied here*/
 
+.table.table-bordered .table-cell-center{
+	text-align: center;
+}
+
+/* change table into card */
 @media (max-width: 575px) {
 	.table tbody tr:last-child td:last-child {
 		box-shadow: none;
@@ -30,10 +37,6 @@
 		border: none;
 	}
 
-	tr:nth-child(even) td{
-		/*background-color: #F8F9FA;*/
-	}
-
 	td {
     /* Behave  like a "row" */
     flex-direction: row;
@@ -41,22 +44,14 @@
     justify-content: flex-start;
     border: none;
     position: relative;
-		/* border-bottom: 1px solid #eee;
-    padding-left: 50%;*/
 		padding: 0.5rem;
 		font-size: 1rem;
 	}
 
 	td:before {
 		/* Now like a table header */
-		/* position: absolute;
-		/* Top/left values mimic padding
-		top: 6px;*/
 		left: 1rem;
 		width: 50%;
-		/*
-		padding-right: 10px;
-		white-space: nowrap;*/
 	}
 
 	/*
@@ -68,10 +63,13 @@
 	td:nth-of-type(4):before { content: "Api type"; }
 	td:nth-of-type(5):before { content: "Api address"; }
 
-
 	/* style corrections */
 	.table td, .table th {
 		padding: 1rem;
+	}
+
+	.table.table-bordered .table-cell-center{
+		text-align: left;
 	}
 
 	.table tbody td>span{
@@ -105,17 +103,8 @@
 	.table tbody tr td:first-child {
 		margin-top: 1rem;
 		box-shadow: none;
-		/*border: 1px solid red;*/
-		/*background-color: #F8F9FA;*/
 		border-bottom: 1px solid #e6e8eb;
 	}
-}
-
-/* inline styles removed to make flexible layout possible
-	are applied for larger screen here */
-
-.table.table-bordered .table-cell-center{
-	text-align: center;
 }
 
 
