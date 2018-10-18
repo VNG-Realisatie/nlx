@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="{{ "css/docsearch.min.css" | relURL }}" />
         <link rel="stylesheet" href="{{ "css/highlight.css" | relURL }}" />
         <link rel="stylesheet" href="{{ "css/main.css" | relURL }}">
+        <link rel="stylesheet" href="{{ "css/base-addon.css" | relURL }}">
 
         <title>{{ .Title }} {{ if ne .Title .Site.Title }} &middot; {{ .Site.Title }}{{ end }}</title>
     </head>
@@ -17,15 +18,15 @@
                 <span class="skiplink-text">Skip to main content</span>
             </div>
         </a>
-        <header class="navbar fixed-top bg-white navbar-expand-md">
+
+        <!-- HEADER PARTIAL -->
+        <header class="navbar navbar-expand navbar-sticky flex-column bg-white navbar-expand-md">
             <div class="container">
-                <nav aria-label="Page navigation">
+                <nav class="collapse navbar-collapse " aria-label="Page navigation">
+                    <a class="navbar-logo" href="https://www.nlx.io">
+                        <img src="{{ "img/logo.svg" | relURL }}" />
+                    </a>
                     <ul class="navbar-nav flex-row">
-                        <li class="nav-item">
-                            <a class="navbar-logo" href="https://www.nlx.io">
-                                <img src="{{ "img/logo.svg" | relURL }}" />
-                            </a>
-                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="https://nlx.io/about/">Over NLX</a>
                         </li>
@@ -36,46 +37,11 @@
                             <a class="nav-link" href="https://directory.nlx.io">Directory</a>
                         </li>
                     </ul>
+
+                    <a class="nav-link" href="https://gitlab.com/commonground/nlx" target="_blank" aria-label="GitLab">
+                        <svg width="26" height="24" viewBox="0 0 26 24" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g id="Group" fill-rule="nonzero"><path d="M25.962 10.291l-1.454 4.474-2.88 8.867a.495.495 0 0 1-.942 0l-2.881-8.867H8.238l-2.88 8.867a.495.495 0 0 1-.943 0l-2.88-8.867L.08 10.291a.99.99 0 0 1 .36-1.107L13.02.044l12.581 9.14a.99.99 0 0 1 .36 1.107" id="path46" fill="#FC6D26" transform="matrix(1 0 0 -1 0 24.018)"/><path id="path50" fill="#E24329" transform="matrix(1 0 0 -1 0 33.226)" d="M13.021 9.252l4.784 14.722H8.238z"/><path id="path58" fill="#FC6D26" transform="matrix(1 0 0 -1 0 33.226)" d="M13.021 9.252L8.238 23.974H1.534z"/><path d="M1.534 23.974L.081 19.5a.99.99 0 0 1 .36-1.107l12.58-9.14-11.487 14.72z" id="path66" fill="#FCA326" transform="matrix(1 0 0 -1 0 33.226)"/><path d="M1.534.044h6.704L5.358 8.91a.495.495 0 0 1-.943 0L1.535.044z" id="path74" fill="#E24329" transform="matrix(1 0 0 -1 0 9.296)"/><path id="path78" fill="#FC6D26" transform="matrix(1 0 0 -1 0 33.226)" d="M13.021 9.252l4.784 14.722h6.704z"/><path d="M24.509 23.974l1.453-4.474a.99.99 0 0 0-.36-1.107l-12.58-9.14 11.487 14.72z" id="path82" fill="#FCA326" transform="matrix(1 0 0 -1 0 33.226)"/><path d="M24.509.044h-6.704l2.88 8.866a.495.495 0 0 0 .943 0l2.88-8.866z" id="path86" fill="#E24329" transform="matrix(1 0 0 -1 0 9.296)"/></g></g></svg>
+                    </a>
                 </nav>
-                <ul class="navbar-nav flex-row ml-md-auto">
-                    <li class="nav-item">
-                        <a class="nav-link p-3" href="https://gitlab.com/commonground/nlx" target="_blank" aria-label="GitLab">
-                            <svg width="26" height="24" viewBox="0 0 26 24" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g id="Group" fill-rule="nonzero"><path d="M25.962 10.291l-1.454 4.474-2.88 8.867a.495.495 0 0 1-.942 0l-2.881-8.867H8.238l-2.88 8.867a.495.495 0 0 1-.943 0l-2.88-8.867L.08 10.291a.99.99 0 0 1 .36-1.107L13.02.044l12.581 9.14a.99.99 0 0 1 .36 1.107" id="path46" fill="#FC6D26" transform="matrix(1 0 0 -1 0 24.018)"/><path id="path50" fill="#E24329" transform="matrix(1 0 0 -1 0 33.226)" d="M13.021 9.252l4.784 14.722H8.238z"/><path id="path58" fill="#FC6D26" transform="matrix(1 0 0 -1 0 33.226)" d="M13.021 9.252L8.238 23.974H1.534z"/><path d="M1.534 23.974L.081 19.5a.99.99 0 0 1 .36-1.107l12.58-9.14-11.487 14.72z" id="path66" fill="#FCA326" transform="matrix(1 0 0 -1 0 33.226)"/><path d="M1.534.044h6.704L5.358 8.91a.495.495 0 0 1-.943 0L1.535.044z" id="path74" fill="#E24329" transform="matrix(1 0 0 -1 0 9.296)"/><path id="path78" fill="#FC6D26" transform="matrix(1 0 0 -1 0 33.226)" d="M13.021 9.252l4.784 14.722h6.704z"/><path d="M24.509 23.974l1.453-4.474a.99.99 0 0 0-.36-1.107l-12.58-9.14 11.487 14.72z" id="path82" fill="#FCA326" transform="matrix(1 0 0 -1 0 33.226)"/><path d="M24.509.044h-6.704l2.88 8.866a.495.495 0 0 0 .943 0l2.88-8.866z" id="path86" fill="#E24329" transform="matrix(1 0 0 -1 0 9.296)"/></g></g></svg>
-                        </a>
-                    </li>
-                </ul>
             </div>
         </header>
 
-        <div class="sidebar bg-light">
-            <div class="search">
-                <input type="search" class="form-control" id="search-input" placeholder="Search..." autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-owns="algolia-autocomplete-listbox-0">
-                <button class="search_button">
-                    <svg viewBox="0 0 13 13" width="14" height="14"><title>search</title><path d="M9.448 7.843L13 11.383 11.384 13 7.832 9.448c-.786.501-1.719.797-2.72.797A5.113 5.113 0 0 1 0 5.123 5.116 5.116 0 0 1 5.123 0a5.116 5.116 0 0 1 5.122 5.123 5.077 5.077 0 0 1-.797 2.72zm-4.325.125a2.847 2.847 0 0 0 0-5.691 2.847 2.847 0 0 0 0 5.691z" fill="currentColor" fill-rule="evenodd"></path></svg>
-                </button>
-            </div>
-
-            <nav aria-label="Sub navigation">
-                {{ $currentPage := . }}
-                {{ range .Site.Menus.docs }}
-                    <ul class="navbar-nav">
-                        <li class="nav-item {{ if $currentPage.IsMenuCurrent "docs" . }}active{{ end }}">
-                            <a class="nav-link" href="{{ .URL }}">
-                                {{ .Name }}
-                            </a>
-                        </li>
-                        {{ if .HasChildren }}
-                            <ul>
-                                {{ range .Children }}
-                                    <li class="nav-item {{ if $currentPage.IsMenuCurrent "docs" . }}active{{ end }}">
-                                        <a class="nav-link" href="{{ .URL }}">{{ .Name }}</a>
-                                    </li>
-                                {{ end }}
-                            </ul>
-                        {{ end }}
-                    </ul>
-                {{ end }}
-            </nav>
-        </div>
-
-        <div class="content">

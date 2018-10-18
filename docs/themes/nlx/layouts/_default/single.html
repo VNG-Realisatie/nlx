@@ -1,19 +1,15 @@
 {{ partial "header" . }}
-    <div class="container-fluid gutter-lg">
-        <div class="container-fluid gutter-lg">
-            <section>
-                <div class="row">
-                    <div class="col-sm-9">
-                        <h1 id="content">{{ .Title }}</h1>
-                        {{ .Content }}
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="mt-4">
-                            {{.TableOfContents}}
-                        </div>
-                    </div>
-                </div>
-            </section>
+<div class="container-fluid">
+    <div class="row flex-md-nowrap">
+        {{ partial "sidebar" . }}
+        <main class="col-12 col-md-9 col-lg-7 py-md-3 px-md-5 bd-content">
+            <h1 id="content">{{ .Title }}</h1>
+            {{ .Content }}
+        </main>
+        <!--will fill the rest of the space-->
+        <div class="d-none d-lg-block bd-toc">
+            {{.TableOfContents}}
         </div>
     </div>
+</div>
 {{ partial "footer" . }}
