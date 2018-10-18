@@ -1,6 +1,10 @@
 
 
 @media (max-width: 575px) {
+	.table tbody tr:last-child td:last-child {
+		box-shadow: none;
+	}
+
 	.service__status {
 		width: auto;
 	}
@@ -22,8 +26,8 @@
 	}
 
 	tr {
-    flex-direction: column;
-    border: none;
+		flex-direction: column;
+		border: none;
 	}
 
 	tr:nth-child(even) td{

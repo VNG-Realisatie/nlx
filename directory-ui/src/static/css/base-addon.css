@@ -208,11 +208,3 @@ h1 {
     box-shadow: 0 0 1rem grey;
   }*/
 }
-
-@media (max-width: 576px){
-  .container {
-    max-width: 100%;
-    padding-right: 1rem;
-    padding-left: 1rem;
-  }
-}
