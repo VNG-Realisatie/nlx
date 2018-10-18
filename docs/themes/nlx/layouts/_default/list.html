@@ -1,12 +1,8 @@
 {{ partial "header" . }}
-
 <div class="container-fluid">
     <div class="row flex-md-nowrap">
-
         {{ partial "sidebar" . }}
-
         <main class="col-12 col-md-9 py-md-3 px-md-5 bd-content">
-            <!--<h1>list.html</h1>-->
             <h1 id="content">{{ .Title }}</h1>
             {{ .Content }}
         </main>
