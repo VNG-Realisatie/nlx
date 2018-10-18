@@ -1,6 +1,9 @@
 
 
 @media (max-width: 575px) {
+	.service__status {
+		width: auto;
+	}
 
   /* Force table to not be like tables anymore */
 	table, thead, tbody, th, td, tr {
