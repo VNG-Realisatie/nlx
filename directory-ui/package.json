@@ -26,5 +26,6 @@
 		"popper.js": "^1.14.3",
 		"react-highlight-words": "^0.11.0"
 	},
-	"proxy": "https://directory.dev.nlx.minikube:30443"
+	"proxy-local": "https://directory.dev.nlx.minikube:30443",
+	"proxy": "https://directory.demo.nlx.io"
 }

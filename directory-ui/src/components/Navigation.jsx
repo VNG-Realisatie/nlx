@@ -1,53 +1,37 @@
 import React from 'react'
 import logo from '../assets/images/logo.svg'
-import menu from '../assets/icons/menu.svg'
+//import menu from '../assets/icons/menu.svg'
 import gitlab from '../assets/icons/gitlab.svg'
-import {Link} from 'react-router-dom'
+//import {Link} from 'react-router-dom'
 
 export default class Navigation extends React.Component {
     render() {
         return (
-            <header className="navbar fixed-top bg-white navbar-expand-md">
-                <div className="container">
-                    <a className="navbar-logo d-md-none" href="">
-                        <img src={logo} alt="logo" />
+        <header className="navbar navbar-expand navbar-sticky flex-column bg-white navbar-expand-md">
+            <div className="container">
+                <nav className="collapse navbar-collapse " aria-label="Page navigation">
+                    <a className="navbar-logo" href="https://www.nlx.io">
+                        <img src={logo} alt="NLX logo"  />
                     </a>
-                    <button className="navbar-toggler navbar-logo d-md-none" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <img src={menu} alt="menu" />
-                    </button>
-
-                    <nav className="collapse navbar-collapse order-last order-md-first" id="navbarSupportedContent" aria-label="Page navigation">
-                        <ul className="navbar-nav flex-row-md">
-                            <li className="nav-item d-none d-md-block">
-                                <a className="navbar-logo" href="https://nlx.io/">
-                                    <img src={logo} alt="logo" />
-                                </a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="https://nlx.io/about/">
-                                    Over NLX
-                                </a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="https://docs.nlx.io/">
-                                    Docs
-                                </a>
-                            </li>
-                            <li className="nav-item active">
-                                <Link className="nav-link" to="/">Directory</Link>
-                            </li>
-                        </ul>
-                    </nav>
-
-                    <ul className="navbar-nav flex-row ml-md-auto">
+                    <ul className="navbar-nav flex-row">
                         <li className="nav-item">
-                            <a className="nav-link p-3" href="https://gitlab.com/commonground/nlx" target="_blank" rel="noopener noreferrer" aria-label="gitlab">
-                                <img src={gitlab} alt="logo" />
-                            </a>
+                            <a className="nav-link" href="https://nlx.io/about/">Over NLX</a>
+                        </li>
+                        <li className="nav-item">
+                            <a className="nav-link" href="https://docs.nlx.io">Docs</a>
+                        </li>
+                        <li className="nav-item active">
+                            <a className="nav-link" href="https://directory.nlx.io">Directory</a>
                         </li>
                     </ul>
-                </div>
-            </header>
+
+                    <a className="nav-link" href="https://gitlab.com/commonground/nlx" target="_blank" aria-label="GitLab" rel="noopener noreferrer">
+                        <img src={gitlab} alt="Gitlab logo" />
+                    </a>
+                </nav>
+            </div>
+        </header>
+
         )
     }
 }

@@ -1,5 +1,7 @@
 import React from 'react'
 
+import './Switch-addon.css';
+
 export default class Search extends React.Component {
     render() {
         const {

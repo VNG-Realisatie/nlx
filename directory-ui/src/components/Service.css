@@ -1,0 +1,110 @@
+
+/* inline styles removed to make flexible layout possible
+	the large screen styles are applied here*/
+
+.table.table-bordered .table-cell-center{
+	text-align: center;
+}
+
+/* change table into card */
+@media (max-width: 575px) {
+	.table tbody tr:last-child td:last-child {
+		box-shadow: none;
+	}
+
+	.service__status {
+		width: auto;
+	}
+
+  /* Force table to not be like tables anymore */
+	table, thead, tbody, th, td, tr {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    width: 100%;
+	}
+
+	/* Hide table headers (but not display: none;, for accessibility) */
+	thead tr {
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+
+	tr {
+		flex-direction: column;
+		border: none;
+	}
+
+	td {
+    /* Behave  like a "row" */
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    border: none;
+    position: relative;
+		padding: 0.5rem;
+		font-size: 1rem;
+	}
+
+	td:before {
+		/* Now like a table header */
+		left: 1rem;
+		width: 50%;
+	}
+
+	/*
+	Label the data
+	*/
+	td:nth-of-type(1):before { content: "Status"; }
+	td:nth-of-type(2):before { content: "Organization"; }
+	td:nth-of-type(3):before { content: "Service"; }
+	td:nth-of-type(4):before { content: "Api type"; }
+	td:nth-of-type(5):before { content: "Api address"; }
+
+	/* style corrections */
+	.table td, .table th {
+		padding: 1rem;
+	}
+
+	.table.table-bordered .table-cell-center{
+		text-align: left;
+	}
+
+	.table tbody td>span{
+		width: auto;
+	}
+
+	.table tbody tr td {
+		box-shadow: none;
+	}
+
+	.table tbody tr:first-child td:last-child {
+    border-top-right-radius: 0;
+	}
+	.table tbody tr td:last-child {
+		box-shadow: none;
+	}
+
+	.table tbody tr:last-child td:first-child {
+		border-bottom-left-radius: 0;
+		box-shadow: none;
+	}
+
+	.table tbody tr:last-child td {
+		box-shadow: none;
+
+	}
+	/*
+		This is first row of each 'card'
+		we use margin-top to separate each card/record
+	*/
+	.table tbody tr td:first-child {
+		margin-top: 1rem;
+		box-shadow: none;
+		border-bottom: 1px solid #e6e8eb;
+	}
+}
+
+

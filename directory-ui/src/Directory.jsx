@@ -30,7 +30,6 @@ export default class Directory extends React.Component {
 
     componentDidMount() {
         document.addEventListener("keydown", this.escFunction, false);
-
         axios.get(`/api/directory/list-services`)
             .then(res => {
                 const services = res.data.services;
