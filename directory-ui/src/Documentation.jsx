@@ -19,10 +19,19 @@ export default class Doc extends React.Component {
 
         axios.get(`/api/directory/get-service-api-spec/${encodeURIComponent(match.params.organization_name)}/${encodeURIComponent(match.params.service_name)}`)
             .then((res) => {
+                let document
+                switch (res.data.type) {
+                    case "OpenAPI2":
+                        document = JSON.parse(window.atob(res.data.document))
+                        break
+                    default:
+                        document = null
+                }
+
                 this.setState({
                     loading: false,
                     type: res.data.type,
-                    document: window.atob(res.data.document)
+                    document
                 })
             })
             .catch(e => {
@@ -40,16 +49,7 @@ export default class Doc extends React.Component {
             )
         }
 
-        let spec
-        switch (this.state.type) {
-            case "OpenAPI2":
-                spec = JSON.parse(this.state.document)
-                break
-            default:
-                return false
-        }
-
-        if (!spec) {
+        if (!this.state.document) {
             return (
                 <div>Could not load document :(</div>
             )
@@ -57,34 +57,47 @@ export default class Doc extends React.Component {
 
         return (
             <RedocStandalone
-                spec={JSON.parse(this.state.document)}
+                spec={this.state.document}
                 options={{
+                    hideDownloadButton: false,
                     theme: {
-                        baseFont: {
-                            size: '14px',
+                        typography: {
+                            fontSize: '14px',
                             lineHeight: '1.5',
-                            weight: '300',
-                            family: '"Muli", sans-serif',
+                            fontWeightRegular: '300',
+                            fontFamily: '"Muli", sans-serif',
                             smoothing: 'antialiased',
                             optimizeSpeed: true,
-                        },
-                        headingsFont: {
-                            family: '"Muli", sans-serif',
-                        },
-                        code: {
-                            fontSize: '12px',
-                            fontFamily: '"Fira Code", monospaced',
+                            headings: {
+                                fontFamily: '"Muli", sans-serif',
+                            },
+                            code: {
+                                fontSize: '12px',
+                                fontFamily: '"Fira Code", monospaced',
+                                color: '#e83e8c',
+                                backgroundColor: '#f8f9fa',
+                            }
                         },
                         colors: {
-                            main: '#3d83fa',
-                            success: '#00aa13',
-                            redirect: '#ffa500',
-                            error: '#e53935',
-                            info: '#87ceeb',
-                            text: '#000000',
-                            code: '#e83e8c',
-                            codeBg: '#f8f9fa',
-                            warning: '#f1c400',
+                            primary: {
+                                main: '#3d83fa',
+                            },
+                            success: {
+                                main: '#00aa13',
+                            },
+                            warning: {
+                                main: '#f1c400',
+                            },
+                            error: {
+                                main: '#e53935',
+                            },
+                            text: {
+                                primary: '#000000',
+                            },
+                            responses: {
+                                redirect: '#ffa500',
+                                info: '#87ceeb',
+                            },
                             http: {
                                 get: '#6bbd5b',
                                 post: '#248fb2',
@@ -106,7 +119,7 @@ export default class Doc extends React.Component {
                             width: '40%',
                         }
                     },
-                    scrollYOffset: '56',
+                    scrollYOffset: '80',
                     hideLoading: true
                 }}
             />

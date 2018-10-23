@@ -38,11 +38,9 @@ html {
   }
 }
 
-
 :root {
-  --header-height: 5rem;
+  --header-height: 80px;
 }
-
 
 body {
   padding-top: 0;
