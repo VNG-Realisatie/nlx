@@ -4,6 +4,10 @@ import Switch from './components/Switch'
 import Services from './components/Services'
 import axios from 'axios'
 
+import ErrorPage from './components/ErrorPage';
+import Spinner from './components/Spinner';
+
+
 export default class Directory extends React.Component {
     constructor(props) {
         super(props)
@@ -13,7 +17,9 @@ export default class Directory extends React.Component {
             displayOnlyOnline: false,
             sortBy: 'organization_name',
             sortAscending: true,
-            services: []
+            services: [],
+            loading:true,
+            error:false
         }
 
         this.searchOnChange = this.searchOnChange.bind(this)
@@ -30,15 +36,25 @@ export default class Directory extends React.Component {
 
     componentDidMount() {
         document.addEventListener("keydown", this.escFunction, false);
+
         axios.get(`/api/directory/list-services`)
             .then(res => {
                 const services = res.data.services;
+
                 if (services) {
-                    this.setState({ services })
+                    this.setState({
+                        services,
+                        loading: false,
+                        error: false
+                    })
                 }
             })
             .catch(e => {
-                console.error(e);
+                //console.error(e);
+                this.setState({
+                    loading: false,
+                    error: true
+                })
             })
     }
 
@@ -71,6 +87,18 @@ export default class Directory extends React.Component {
             displayOnlyOnline,
             displayOnlyContaining
         } = this.state
+
+        if (this.state.loading) {
+            return (
+                <Spinner/>
+            )
+        }
+
+        if (this.state.error) {
+            return (
+                <ErrorPage/>
+            )
+        }
 
         const filteredServices = services.filter(service => {
             if (displayOnlyOnline) {
