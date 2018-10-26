@@ -3,9 +3,7 @@ package main
 import (
 	"context"
 	"crypto/tls"
-	"fmt"
 	"log"
-	"os"
 
 	"github.com/huandu/xstrings"
 	flags "github.com/jessevdk/go-flags"
@@ -52,28 +50,13 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
-	defer func() { // TODO(GeertJohan): #205 make this a common/process exitFunc?
-		syncErr := logger.Sync()
-		if syncErr != nil {
-			// notify the user that proper logging has failed
-			fmt.Fprintf(os.Stderr, "failed to sync zap logger: %v\n", syncErr)
-			// don't exit when we're in a panic
-			if p := recover(); p != nil {
-				panic(p)
-			}
-			os.Exit(1)
-		}
-	}()
-
-	ctx := process.Setup(logger)
-
-	// TODO: #205 db connection should be closed properly
+	process := process.NewProcess(logger)
 	db, err := sqlx.Open("postgres", options.PostgresDSN)
 	if err != nil {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))
 	}
 	db.MapperFunc(xstrings.ToSnakeCase)
-
+	process.CloseGracefully(db.Close)
 	dbversion.WaitUntilLatestDirectoryDBVersion(logger, db.DB)
 
 	caCertPool, err := orgtls.LoadRootCert(options.NLXRootCert)
@@ -85,7 +68,7 @@ func main() {
 		logger.Fatal("failed to load x509 keypair for monitor", zap.Error(err))
 	}
 
-	err = monitor.RunHealthChecker(ctx, logger, db, caCertPool, certKeyPair)
+	err = monitor.RunHealthChecker(process, logger, db, caCertPool, certKeyPair)
 	if err != nil && err != context.DeadlineExceeded {
 		logger.Fatal("failed to run monitor healthchecker", zap.Error(err))
 	}

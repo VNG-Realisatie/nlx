@@ -16,13 +16,14 @@ import (
 	"github.com/grpc-ecosystem/go-grpc-middleware/recovery"
 	"github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"github.com/pkg/errors"
-	"go.nlx.io/nlx/directory/directoryapi"
 	"go.uber.org/zap"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials"
+
+	"go.nlx.io/nlx/common/process"
+	"go.nlx.io/nlx/directory/directoryapi"
 )
 
 // newGRPCSplitterHandlerFunc returns an http.Handler that delegates gRPC connections to grpcServer
@@ -36,10 +37,11 @@ func newGRPCSplitterHandlerFunc(grpcServer *grpc.Server, otherHandler http.Handl
 			otherHandler.ServeHTTP(w, r)
 		}
 	})
+
 }
 
 // runServer is a blocking function which sets up the grpc and http/json server and runs them on a single address/port.
-func runServer(ctx context.Context, log *zap.Logger, address string, addressPlain string, caCertPool *x509.CertPool, certKeyPair tls.Certificate, directoryService directoryapi.DirectoryServer) {
+func runServer(p *process.Process, log *zap.Logger, address string, addressPlain string, caCertPool *x509.CertPool, certKeyPair tls.Certificate, directoryService directoryapi.DirectoryServer) {
 
 	// setup zap connection for global grpc logging
 	grpc_zap.ReplaceGrpcLogger(log)
@@ -95,10 +97,6 @@ func runServer(ctx context.Context, log *zap.Logger, address string, addressPlai
 	}
 	httpRouter.Handle("/", gatewayMux)
 
-	// Need to have cancel control on this level to stop one server if another is failed to start
-	ctx, cancel := context.WithCancel(ctx)
-	defer cancel()
-
 	// Start HTTPS server
 	// let server handle connections on the TLS Listener
 	HTTPSHandler := &http.Server{
@@ -117,7 +115,6 @@ func runServer(ctx context.Context, log *zap.Logger, address string, addressPlai
 		if err != nil {
 			if err != http.ErrServerClosed {
 				log.Error("ListenAndServe for HTTPS failed", zap.Error(err))
-				cancel()
 			}
 		}
 	}()
@@ -135,32 +132,25 @@ func runServer(ctx context.Context, log *zap.Logger, address string, addressPlai
 		if err := HTTPHandler.ListenAndServe(); err != nil {
 			if err != http.ErrServerClosed {
 				log.Error("ListenAndServe plain HTTP failed", zap.Error(err))
-				cancel()
 			}
 		}
 	}()
+	wg := sync.WaitGroup{}
+	wg.Add(2)
+	p.CloseGracefully(func() error {
+		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
+		defer cancel() // do not remove. Otherwise it could cause implicit goroutine leak
+		err := HTTPSHandler.Shutdown(localCtx)
+		wg.Done()
+		return err
+	})
+	p.CloseGracefully(func() error {
+		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
+		defer cancel() // do not remove. Otherwise it could cause implicit goroutine leak
+		err := HTTPHandler.Shutdown(localCtx)
+		wg.Done()
+		return err
+	})
 
-	// Will be blocked on this line till cancel command is received
-	<-ctx.Done()
-
-	wg := &sync.WaitGroup{}
-
-	// Context with timeout to terminate server if shutdown operation takes longer than minute
-	localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
-	wg.Add(2) // 1 for each goroutine
-	go func() {
-		defer wg.Done()
-		if err := HTTPSHandler.Shutdown(localCtx); err != nil {
-			log.Warn(errors.Wrap(err, "failed to shutdown gracefully").Error())
-		}
-	}()
-	go func() {
-		defer wg.Done()
-		if err := HTTPHandler.Shutdown(localCtx); err != nil {
-			log.Warn(errors.Wrap(err, "failed to shutdown gracefully").Error())
-		}
-	}()
-	wg.Wait() // Waiting until both servers are stoped
-
-	cancel() // do not remove. Otherwise it could cause implicit goroutine leak
+	wg.Wait()
 }

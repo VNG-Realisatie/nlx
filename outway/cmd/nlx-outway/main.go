@@ -9,13 +9,14 @@ import (
 	"github.com/huandu/xstrings"
 	"github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/outway"
 	"go.nlx.io/nlx/txlog-db/dbversion"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 )
 
 var options struct {
@@ -59,28 +60,26 @@ func main() {
 		}
 	}()
 
-	ctx := process.Setup(logger)
-
+	process := process.NewProcess(logger)
 	var logDB *sqlx.DB
 	if !options.DisableLogdb {
-		// TODO: #205 db connection should be closed properly
 		logDB, err = sqlx.Open("postgres", options.PostgresDSN)
 		if err != nil {
 			logger.Fatal("could not open connection to postgres", zap.Error(err))
 		}
 		logDB.MapperFunc(xstrings.ToSnakeCase)
-
+		process.CloseGracefully(logDB.Close)
 		dbversion.WaitUntilLatestTxlogDBVersion(logger, logDB.DB)
 	}
 
 	// Create new outway and provide it with a hardcoded service.
-	ow, err := outway.NewOutway(ctx, logger, logDB, options.TLSOptions, options.DirectoryAddress)
+	ow, err := outway.NewOutway(process, logger, logDB, options.TLSOptions, options.DirectoryAddress)
 	if err != nil {
 		logger.Fatal("failed to setup outway", zap.Error(err))
 	}
 
 	// Listen on the address provided in the options
-	err = ow.ListenAndServe(ctx, options.ListenAddress)
+	err = ow.ListenAndServe(process, options.ListenAddress)
 	if err != nil {
 		logger.Fatal("failed to listen and serve", zap.Error(err))
 	}

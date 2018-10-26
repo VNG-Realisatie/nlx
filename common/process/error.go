@@ -2,9 +2,9 @@ package process
 
 import (
 	"errors"
-	"strconv"
 )
 
 var (
-	ErrMaxLevelReached = errors.New("maximum supported level is " + strconv.Itoa(maxLevel))
+	// ErrMaxLevelReached is thrown when trying to add a process to a level above the max level, max level is defined when creating a new process
+	ErrMaxLevelReached = errors.New("maximum number of levels reached")
 )

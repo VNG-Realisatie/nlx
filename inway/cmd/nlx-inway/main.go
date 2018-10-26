@@ -6,18 +6,18 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/huandu/xstrings"
 	"github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
+	"go.uber.org/zap"
+
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/inway"
 	"go.nlx.io/nlx/inway/config"
 	"go.nlx.io/nlx/txlog-db/dbversion"
-	"go.uber.org/zap"
 )
 
 var options struct {
@@ -58,26 +58,11 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
-	defer func() { // TODO(GeertJohan): #205 make this a common/process exitFunc?
-		syncErr := logger.Sync()
-		if syncErr != nil {
-			// notify the user that proper logging has failed
-			fmt.Fprintf(os.Stderr, "failed to sync zap logger: %v\n", syncErr)
-			// don't exit when we're in a panic
-			if p := recover(); p != nil {
-				panic(p)
-			}
-			os.Exit(1)
-		}
-	}()
-
-	ctx := process.Setup(logger)
+	process := process.NewProcess(logger)
 
 	serviceConfig := config.LoadServiceConfig(logger, options.ServiceConfig)
-
 	var logDB *sqlx.DB
 	if !options.DisableLogdb {
-		// TODO: #205 db connection should be closed properly
 		logDB, err = sqlx.Open("postgres", options.PostgresDSN)
 		if err != nil {
 			logger.Fatal("could not open connection to postgres", zap.Error(err))
@@ -85,6 +70,7 @@ func main() {
 		logDB.MapperFunc(xstrings.ToSnakeCase)
 
 		dbversion.WaitUntilLatestTxlogDBVersion(logger, logDB.DB)
+		process.CloseGracefully(logDB.Close)
 	}
 
 	iw, err := inway.NewInway(logger, logDB, options.SelfAddress, options.TLSOptions, options.DirectoryAddress, serviceConfig)
@@ -105,11 +91,11 @@ func main() {
 		default:
 			logger.Fatal(fmt.Sprintf(`invalid authorization model "%s" for service "%s"`, serviceDetails.AuthorizationModel, serviceName))
 		}
-		iw.AddServiceEndpoint(endpoint, serviceDetails)
+		iw.AddServiceEndpoint(process, endpoint, serviceDetails)
 	}
 
 	// Listen on the address provided in the options
-	err = iw.ListenAndServeTLS(ctx, options.ListenAddress)
+	err = iw.ListenAndServeTLS(process, options.ListenAddress)
 	if err != nil {
 		logger.Fatal("failed to listen and serve", zap.Error(err))
 	}

@@ -6,11 +6,9 @@ import (
 	"crypto/rsa"
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/go-chi/chi"
@@ -18,7 +16,8 @@ import (
 	flags "github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
 	"github.com/jmoiron/sqlx/types"
-	"github.com/pkg/errors"
+	"go.uber.org/zap"
+
 	"go.nlx.io/nlx/common/derrsa"
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/process"
@@ -26,7 +25,6 @@ import (
 	"go.nlx.io/nlx/insight-api/config"
 	"go.nlx.io/nlx/insight-api/irma"
 	"go.nlx.io/nlx/txlog-db/dbversion"
-	"go.uber.org/zap"
 )
 
 var options struct {
@@ -64,29 +62,15 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
-	defer func() { // TODO(GeertJohan): #205 make this a common/process exitFunc?
-		syncErr := logger.Sync()
-		if syncErr != nil {
-			// notify the user that proper logging has failed
-			fmt.Fprintf(os.Stderr, "failed to sync zap logger: %v\n", syncErr)
-			// don't exit when we're in a panic
-			if p := recover(); p != nil {
-				panic(p)
-			}
-			os.Exit(1)
-		}
-	}()
-
-	ctx := process.Setup(logger)
-
+	process := process.NewProcess(logger)
 	insightConfig := config.LoadInsightConfig(logger, options.InsightConfig)
 
-	// TODO: #205 db connection should be closed properly
 	db, err := sqlx.Open("postgres", options.PostgresDSN)
 	if err != nil {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))
 	}
 	db.MapperFunc(xstrings.ToSnakeCase)
+	process.CloseGracefully(db.Close)
 
 	dbversion.WaitUntilLatestTxlogDBVersion(logger, db.DB)
 
@@ -109,19 +93,13 @@ func main() {
 		Handler: r,
 	}
 
-	done := make(chan struct{})
-	go func() {
-		<-ctx.Done()
-
+	process.CloseGracefully(func() error {
 		// Context with timeout to terminate server if shutdown operation takes longer than minute
 		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
-		if err := server.Shutdown(localCtx); err != nil {
-			logger.Warn(errors.Wrap(err, "failed to shutdown gracefully").Error())
-		}
-		cancel() // do not remove. Otherwise it could cause implicit goroutine leak
+		defer cancel() // do not remove. Otherwise it could cause implicit goroutine leak
+		return server.Shutdown(localCtx)
 
-		close(done)
-	}()
+	})
 
 	err = http.ListenAndServe(options.ListenAddress, r)
 	if err != nil {
@@ -133,7 +111,7 @@ func main() {
 
 	// Listener will return immediately on Shutdown call.
 	// So we need to wait until all open connections will be closed gracefully
-	<-done
+	<-process.ShutdownComplete
 }
 
 func listDataSubjects(logger *zap.Logger, dataSubjects map[string]config.DataSubject) http.HandlerFunc {

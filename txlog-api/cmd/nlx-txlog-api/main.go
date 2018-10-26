@@ -3,10 +3,8 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/go-chi/chi"
@@ -14,12 +12,12 @@ import (
 	flags "github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
 	"github.com/jmoiron/sqlx/types"
-	"github.com/pkg/errors"
+	"go.uber.org/zap"
+
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/txlog-db/dbversion"
-	"go.uber.org/zap"
 )
 
 var options struct {
@@ -52,27 +50,13 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
-	defer func() { // TODO(GeertJohan): #205 make this a common/process exitFunc?
-		syncErr := logger.Sync()
-		if syncErr != nil {
-			// notify the user that proper logging has failed
-			fmt.Fprintf(os.Stderr, "failed to sync zap logger: %v\n", syncErr)
-			// don't exit when we're in a panic
-			if p := recover(); p != nil {
-				panic(p)
-			}
-			os.Exit(1)
-		}
-	}()
-
-	ctx := process.Setup(logger)
-
-	// TODO: #205 db connection should be closed properly
+	process := process.NewProcess(logger)
 	logDB, err := sqlx.Open("postgres", options.PostgresDSN)
 	if err != nil {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))
 	}
 	logDB.MapperFunc(xstrings.ToSnakeCase)
+	process.CloseGracefully(logDB.Close)
 
 	dbversion.WaitUntilLatestTxlogDBVersion(logger, logDB.DB)
 
@@ -85,19 +69,11 @@ func main() {
 		Handler: r,
 	}
 
-	done := make(chan struct{})
-	go func() {
-		<-ctx.Done()
-
-		// Context with timeout to terminate server if shutdown operation takes longer than minute
+	process.CloseGracefully(func() error {
 		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
-		if err := server.Shutdown(localCtx); err != nil {
-			logger.Warn(errors.Wrap(err, "failed to shutdown gracefully").Error())
-		}
-		cancel() // do not remove. Otherwise it could cause implicit goroutine leak
-
-		close(done)
-	}()
+		defer cancel()
+		return server.Shutdown(localCtx)
+	})
 
 	err = server.ListenAndServe()
 	if err != nil {
@@ -107,9 +83,6 @@ func main() {
 		return
 	}
 
-	// Listener will return immediately on Shutdown call.
-	// So we need to wait until all open connections will be closed gracefully
-	<-done
 }
 
 type Record struct {

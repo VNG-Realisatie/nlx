@@ -1,7 +1,6 @@
 package monitor
 
 import (
-	"context"
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/json"
@@ -9,6 +8,8 @@ import (
 	"net/http"
 	"sync"
 	"time"
+
+	"go.nlx.io/nlx/common/process"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
@@ -37,7 +38,7 @@ type availability struct {
 }
 
 // RunHealthChecker starts a healthchecker process
-func RunHealthChecker(ctx context.Context, logger *zap.Logger, db *sqlx.DB, caCertPool *x509.CertPool, certKeyPair tls.Certificate) error {
+func RunHealthChecker(process *process.Process, logger *zap.Logger, db *sqlx.DB, caCertPool *x509.CertPool, certKeyPair tls.Certificate) error {
 	h := &healthChecker{
 		logger: logger,
 		httpClient: &http.Client{Transport: &http.Transport{
@@ -72,12 +73,11 @@ func RunHealthChecker(ctx context.Context, logger *zap.Logger, db *sqlx.DB, caCe
 		return errors.Wrap(err, "failed to prepare stmtUpdateHealth")
 	}
 
-	return h.run(ctx)
+	return h.run(process)
 }
 
-func (h *healthChecker) run(ctx context.Context) error {
+func (h *healthChecker) run(process *process.Process) error {
 	chInitialLoad := make(chan struct{})
-
 	go func() {
 		for {
 			newAvailabilities := []availability{}
@@ -106,24 +106,21 @@ func (h *healthChecker) run(ctx context.Context) error {
 	}()
 
 	<-chInitialLoad // wait for initial load to be done
+	shutDown := make(chan struct{})
+	process.CloseGracefully(func() error {
+		close(shutDown)
+		return nil
+	})
 	for {
-
 		select {
-		case <-ctx.Done(): // Checking if application shutdown started
-			h.wg.Wait() // Need to wait until all goroutines will stop
-			return ctx.Err()
 		case <-time.After(5 * time.Second):
 			h.availabilitiesLock.RLock()
-
-			h.wg.Add(len(h.availabilities)) // Registering all started goroutines to not to terminate connections on Exit
 			for _, av := range h.availabilities {
-				go func() {
-					h.checkAvailabilityHealth(av)
-					h.wg.Done()
-				}()
+				go h.checkAvailabilityHealth(av)
 			}
-
 			h.availabilitiesLock.RUnlock()
+		case <-shutDown:
+			return nil
 		}
 	}
 }

@@ -12,31 +12,25 @@ import (
 	"strings"
 	"time"
 
-	"github.com/pkg/errors"
+	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/transactionlog"
+
+	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
 
 // ListenAndServe is a blocking function that listens on provided tcp address to handle requests.
-func (o *Outway) ListenAndServe(ctx context.Context, address string) error {
+func (o *Outway) ListenAndServe(process *process.Process, address string) error {
 	server := &http.Server{
 		Addr:    address,
 		Handler: o,
 	}
 
-	done := make(chan struct{})
-	go func() {
-		<-ctx.Done()
-
-		// Context with timeout to terminate server if shutdown operation takes longer than minute
+	process.CloseGracefully(func() error {
 		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
-		if err := server.Shutdown(localCtx); err != nil {
-			o.logger.Warn(errors.Wrap(err, "failed to shutdown gracefully").Error())
-		}
-		cancel() // do not remove. Otherwise it could cause implicit goroutine leak
-
-		close(done)
-	}()
+		defer cancel()
+		return server.Shutdown(localCtx)
+	})
 
 	err := server.ListenAndServe()
 	if err != nil {
@@ -45,7 +39,6 @@ func (o *Outway) ListenAndServe(ctx context.Context, address string) error {
 		}
 	}
 
-	<-done
 	o.wg.Wait() // Wait until all async jobs will finish
 	return nil
 }
