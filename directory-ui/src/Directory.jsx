@@ -18,8 +18,8 @@ export default class Directory extends React.Component {
             sortBy: 'organization_name',
             sortAscending: true,
             services: [],
-            loading:true,
-            error:false
+            loading: true,
+            error: false
         }
 
         this.searchOnChange = this.searchOnChange.bind(this)
@@ -50,7 +50,6 @@ export default class Directory extends React.Component {
                 }
             })
             .catch(e => {
-                //console.error(e);
                 this.setState({
                     loading: false,
                     error: true
