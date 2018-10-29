@@ -3,6 +3,9 @@ import { RedocStandalone } from 'redoc'
 import axios from 'axios'
 import './static/css/redoc-override.css'
 
+import ErrorPage from './components/ErrorPage';
+import Spinner from './components/Spinner';
+
 export default class Doc extends React.Component {
     constructor(props) {
         super(props)
@@ -45,13 +48,13 @@ export default class Doc extends React.Component {
     render() {
         if (this.state.loading) {
             return (
-                <div>Loading...</div>
+                <Spinner/>
             )
         }
 
         if (!this.state.document) {
             return (
-                <div>Could not load document :(</div>
+                <ErrorPage/>
             )
         }
 
