@@ -9,8 +9,8 @@ export default class Irma extends Component {
         super(props)
 
         this.state = {
-            qrCode: "",
-            error: false
+            qrCode: '',
+            error: false,
         }
     }
 
@@ -18,20 +18,17 @@ export default class Irma extends Component {
         document.body.onkeyup = (e) => {
             if (e.keyCode === 32) {
                 clearInterval(interval)
-                this.props.afterLogin(organization, "spacebar-magic")
+                this.props.afterLogin(organization, 'spacebar-magic')
             }
         }
-
 
         const { organization } = this.props
 
         axios({
             method: 'get',
-            url: `${organization.insight_log_endpoint}/getDataSubjects`
-        }).then(response => {
-            console.dir(response);
+            url: `${organization.insight_log_endpoint}/getDataSubjects`,
+        }).then((response) => {
             let dataSubjects = response.data['dataSubjects']
-            console.dir(dataSubjects);
 
             // TODO: some UI in which the user can select which dataSubjects they want to query for
 
@@ -39,22 +36,26 @@ export default class Irma extends Component {
                 method: 'post',
                 url: `${organization.insight_log_endpoint}/generateJWT`,
                 data: {
-                    dataSubjects: Object.keys(dataSubjects)
-                }
-            }).then(response => {
+                    dataSubjects: Object.keys(dataSubjects),
+                },
+            }).then((response) => {
                 const firstJWT = response.data
 
                 axios({
                     method: 'post',
-                    url: `${organization.insight_irma_endpoint}/api/v2/verification/`,
+                    url: `${
+                        organization.insight_irma_endpoint
+                    }/api/v2/verification/`,
                     headers: { 'content-type': 'text/plain' },
-                    data: firstJWT
-                }).then(response => {
+                    data: firstJWT,
+                }).then((response) => {
                     let irmaVerificationRequest = response.data
                     const u = irmaVerificationRequest['u']
 
                     // prepend IrmaVerifiationRequest with URL
-                    irmaVerificationRequest['u'] = `${organization.insight_irma_endpoint}/api/v2/verification/${u}`
+                    irmaVerificationRequest['u'] = `${
+                        organization.insight_irma_endpoint
+                    }/api/v2/verification/${u}`
 
                     const qrCode = JSON.stringify(irmaVerificationRequest)
 
@@ -63,25 +64,34 @@ export default class Irma extends Component {
                     interval = setInterval(() => {
                         axios({
                             method: 'get',
-                            url: `${organization.insight_irma_endpoint}/api/v2/verification/${u}/status`
-                        }).then(response => {
-                            if (response.data === "DONE") {
-                                clearInterval(interval)
-                                axios({
-                                    method: 'get',
-                                    url: `${organization.insight_irma_endpoint}/api/v2/verification/${u}/getproof`
-                                }).then(response => {
-                                    this.props.afterLogin(organization, response.data)
-                                })
-                            }
-                        }).catch(error => {
-                            this.setState({ error: true })
-                            clearInterval(interval)
+                            url: `${
+                                organization.insight_irma_endpoint
+                            }/api/v2/verification/${u}/status`,
                         })
+                            .then((response) => {
+                                if (response.data === 'DONE') {
+                                    clearInterval(interval)
+                                    axios({
+                                        method: 'get',
+                                        url: `${
+                                            organization.insight_irma_endpoint
+                                        }/api/v2/verification/${u}/getproof`,
+                                    }).then((response) => {
+                                        this.props.afterLogin(
+                                            organization,
+                                            response.data,
+                                        )
+                                    })
+                                }
+                            })
+                            .catch(() => {
+                                this.setState({ error: true })
+                                clearInterval(interval)
+                            })
                     }, 1000)
-                });
-            });
-        });
+                })
+            })
+        })
     }
 
     componentWillUnmount() {
@@ -91,11 +101,13 @@ export default class Irma extends Component {
     render() {
         return (
             <div>
-                Please login with Irma<br /><br />
-                { this.state.error && (
+                Please login with Irma
+                <br />
+                <br />
+                {this.state.error && (
                     <b>Something went wrong, refresh and try again</b>
                 )}
-                { this.state.qrCode &&
+                {this.state.qrCode && (
                     <QRCode
                         bgColor="#FFFFFF"
                         fgColor="#000000"
@@ -103,7 +115,7 @@ export default class Irma extends Component {
                         style={{ width: 256 }}
                         value={this.state.qrCode}
                     />
-                }
+                )}
             </div>
         )
     }

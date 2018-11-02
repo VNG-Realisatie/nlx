@@ -4,6 +4,9 @@ import Switch from './components/Switch'
 import Services from './components/Services'
 import axios from 'axios'
 
+import ErrorPage from './components/ErrorPage'
+import Spinner from './components/Spinner'
+
 export default class Directory extends React.Component {
     constructor(props) {
         super(props)
@@ -13,7 +16,9 @@ export default class Directory extends React.Component {
             displayOnlyOnline: false,
             sortBy: 'organization_name',
             sortAscending: true,
-            services: []
+            services: [],
+            loading: true,
+            error: false,
         }
 
         this.searchOnChange = this.searchOnChange.bind(this)
@@ -22,28 +27,36 @@ export default class Directory extends React.Component {
         this.escFunction = this.escFunction.bind(this)
     }
 
-    escFunction(event){
+    escFunction(event) {
         if (event.keyCode === 27) {
             this.setState({ displayOnlyContaining: '' })
         }
     }
 
     componentDidMount() {
-        document.addEventListener("keydown", this.escFunction, false);
-        axios.get(`/api/directory/list-services`)
-            .then(res => {
-                const services = res.data.services;
+        document.addEventListener('keydown', this.escFunction, false)
+        axios
+            .get(`/api/directory/list-services`)
+            .then((res) => {
+                const services = res.data.services
                 if (services) {
-                    this.setState({ services })
+                    this.setState({
+                        services,
+                        loading: false,
+                        error: false,
+                    })
                 }
             })
-            .catch(e => {
-                console.error(e);
+            .catch((e) => {
+                this.setState({
+                    loading: false,
+                    error: true,
+                })
             })
     }
 
-    componentWillUnmount(){
-        document.removeEventListener("keydown", this.escFunction, false);
+    componentWillUnmount() {
+        document.removeEventListener('keydown', this.escFunction, false)
     }
 
     searchOnChange(e) {
@@ -61,7 +74,7 @@ export default class Directory extends React.Component {
         }
         this.setState({
             sortBy: val,
-            sortAscending: true
+            sortAscending: true,
         })
     }
 
@@ -69,10 +82,18 @@ export default class Directory extends React.Component {
         const {
             services,
             displayOnlyOnline,
-            displayOnlyContaining
+            displayOnlyContaining,
         } = this.state
 
-        const filteredServices = services.filter(service => {
+        if (this.state.loading) {
+            return <Spinner />
+        }
+
+        if (this.state.error) {
+            return <ErrorPage />
+        }
+
+        const filteredServices = services.filter((service) => {
             if (displayOnlyOnline) {
                 if (!service.inway_addresses) {
                     return false
@@ -81,8 +102,12 @@ export default class Directory extends React.Component {
 
             if (displayOnlyContaining) {
                 if (
-                    !service.service_name.toLowerCase().includes(displayOnlyContaining.toLowerCase()) &&
-                    !service.organization_name.toLowerCase().includes(displayOnlyContaining.toLowerCase())
+                    !service.service_name
+                        .toLowerCase()
+                        .includes(displayOnlyContaining.toLowerCase()) &&
+                    !service.organization_name
+                        .toLowerCase()
+                        .includes(displayOnlyContaining.toLowerCase())
                 ) {
                     return false
                 }
@@ -91,26 +116,25 @@ export default class Directory extends React.Component {
             return true
         })
 
-        const {
-            sortBy,
-            sortAscending
-        } = this.state
+        const { sortBy, sortAscending } = this.state
 
-        let filteredAndSortedServices = [].concat(filteredServices)
+        let filteredAndSortedServices = []
+            .concat(filteredServices)
             .sort((a, b) => {
                 switch (sortBy) {
-                    case "inway_addresses":
-                        return (a.inway_addresses > b.inway_addresses)
-                    case "organization_name":
-                        return (a.organization_name > b.organization_name)
-                    case "name":
-                        return (a.service_name > b.service_name)
+                    case 'inway_addresses':
+                        return a.inway_addresses > b.inway_addresses
+                    case 'organization_name':
+                        return a.organization_name > b.organization_name
+                    case 'name':
+                        return a.service_name > b.service_name
                     default:
                         return false
                 }
             })
-            .map((item) => {return item}
-        )
+            .map((item) => {
+                return item
+            })
 
         if (!sortAscending) {
             filteredAndSortedServices = filteredAndSortedServices.reverse()
@@ -123,11 +147,22 @@ export default class Directory extends React.Component {
                         <div className="row">
                             <div className="col-sm-6 col-lg-4 offset-lg-2">
                                 <div className="mb-4 mb-sm-0">
-                                    <Search onChange={this.searchOnChange} value={this.state.displayOnlyContaining} placeholder="Filter services" filter />
+                                    <Search
+                                        onChange={this.searchOnChange}
+                                        value={this.state.displayOnlyContaining}
+                                        placeholder="Filter services"
+                                        filter
+                                    />
                                 </div>
                             </div>
                             <div className="col-sm-6 col-lg-6 d-flex align-items-center justify-content-center justify-content-sm-start">
-                                <Switch id="switch1" onChange={this.switchOnChange} checked={this.state.displayOnlyOnline}>Only online services</Switch>
+                                <Switch
+                                    id="switch1"
+                                    onChange={this.switchOnChange}
+                                    checked={this.state.displayOnlyOnline}
+                                >
+                                    Only online services
+                                </Switch>
                             </div>
                         </div>
                     </div>
@@ -139,7 +174,9 @@ export default class Directory extends React.Component {
                             onSort={this.onSort}
                             sortBy={this.state.sortBy}
                             sortAscending={this.state.sortAscending}
-                            displayOnlyContaining={this.state.displayOnlyContaining}
+                            displayOnlyContaining={
+                                this.state.displayOnlyContaining
+                            }
                         />
                     </div>
                 </section>

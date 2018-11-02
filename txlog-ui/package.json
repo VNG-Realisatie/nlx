@@ -1,5 +1,5 @@
 {
-  "name": "logdb-ui",
+  "name": "@nlxio/logdb-ui",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -13,10 +13,24 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint 'src/**/*.js*'"
   },
   "devDependencies": {
-    "classnames": "^2.2.6"
+    "classnames": "^2.2.6",
+    "eslint": "^5.8.0",
+    "eslint-config-jest-enzyme": "^7.0.0",
+    "eslint-config-prettier": "^3.1.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jest": "^21.26.2",
+    "eslint-plugin-node": "^8.0.0",
+    "eslint-plugin-prettier": "^3.0.0",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-react": "^7.11.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "jest-enzyme": "^7.0.0",
+    "prettier": "^1.14.3"
   },
   "proxy": {
     "/api": {

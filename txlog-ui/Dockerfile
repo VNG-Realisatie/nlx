@@ -2,15 +2,15 @@ FROM node:alpine AS build
 
 # First copy only package.json and yarn.lock to make the dependency fetching step optional.
 COPY ./package.json \
-     ./yarn.lock \
-     /go/src/go.nlx.io/nlx/txlog-ui/
+    ./package-lock.json \
+    /go/src/go.nlx.io/nlx/txlog-ui/
 
 WORKDIR /go/src/go.nlx.io/nlx/txlog-ui
-RUN yarn install
+RUN npm install
 
 # Now copy the whole directory for the build step.
 COPY . /go/src/go.nlx.io/nlx/txlog-ui
-RUN yarn run build
+RUN npm run build
 
 # Copy static docs to alpine-based nginx container.
 FROM nginx:alpine

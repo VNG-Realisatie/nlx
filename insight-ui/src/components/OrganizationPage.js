@@ -1,28 +1,27 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
-import { withStyles } from '@material-ui/core'
-import { Typography } from '@material-ui/core'
+import { withStyles, Typography } from '@material-ui/core'
 
 import Irma from './Irma'
 import OrganizationRecords from './OrganizationRecords'
 
-const styles = theme => ({
-	calendarIcon: {
-		fontSize: 14,
-		marginBottom: -2,
-		marginRight: 3
-	},
-	clockIcon: {
-		fontSize: 15,
-		marginBottom: -3,
-		marginRight: 2
-	}
+const styles = (theme) => ({
+    calendarIcon: {
+        fontSize: 14,
+        marginBottom: -2,
+        marginRight: 3,
+    },
+    clockIcon: {
+        fontSize: 15,
+        marginBottom: -3,
+        marginRight: 2,
+    },
 })
 
 const initialState = {
     loggedIn: false,
     organization: null,
-    jwt: null
+    jwt: null,
 }
 
 class OrganizationPage extends Component {
@@ -37,12 +36,14 @@ class OrganizationPage extends Component {
         this.updateOrganization(this.props)
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         this.updateOrganization(nextProps)
     }
 
     updateOrganization(props) {
-        let organization = props.organizations.filter((organization) => organization.name === props.match.params.name)
+        let organization = props.organizations.filter(
+            (organization) => organization.name === props.match.params.name,
+        )
 
         if (organization.length > 0) {
             organization = organization[0]
@@ -51,7 +52,7 @@ class OrganizationPage extends Component {
         }
 
         const newState = Object.assign({}, initialState, {
-            organization
+            organization,
         })
 
         this.setState(newState)
@@ -60,15 +61,13 @@ class OrganizationPage extends Component {
     afterLogin(organization, jwt) {
         this.setState({
             loggedIn: true,
-            jwt
+            jwt,
         })
     }
 
     render() {
         if (!this.state.organization) {
-            return (
-                <div>Loading organization...</div>
-            )
+            return <div>Loading organization...</div>
         }
 
         let content
@@ -91,7 +90,7 @@ class OrganizationPage extends Component {
         return (
             <div>
                 <Typography variant="title" color="primary" noWrap gutterBottom>
-                Organization: {this.state.organization.name}
+                    Organization: {this.state.organization.name}
                 </Typography>
                 {content}
             </div>

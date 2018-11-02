@@ -3,6 +3,9 @@ import { RedocStandalone } from 'redoc'
 import axios from 'axios'
 import './static/css/redoc-override.css'
 
+import ErrorPage from './components/ErrorPage'
+import Spinner from './components/Spinner'
+
 export default class Doc extends React.Component {
     constructor(props) {
         super(props)
@@ -10,18 +13,23 @@ export default class Doc extends React.Component {
         this.state = {
             loading: true,
             type: null,
-            document: null
+            document: null,
         }
     }
 
     componentDidMount() {
         const { match } = this.props
 
-        axios.get(`/api/directory/get-service-api-spec/${encodeURIComponent(match.params.organization_name)}/${encodeURIComponent(match.params.service_name)}`)
+        axios
+            .get(
+                `/api/directory/get-service-api-spec/${encodeURIComponent(
+                    match.params.organization_name,
+                )}/${encodeURIComponent(match.params.service_name)}`,
+            )
             .then((res) => {
                 let document
                 switch (res.data.type) {
-                    case "OpenAPI2":
+                    case 'OpenAPI2':
                         document = JSON.parse(window.atob(res.data.document))
                         break
                     default:
@@ -31,28 +39,24 @@ export default class Doc extends React.Component {
                 this.setState({
                     loading: false,
                     type: res.data.type,
-                    document
+                    document,
                 })
             })
-            .catch(e => {
+            .catch((e) => {
                 this.setState({
                     loading: false,
-                    error: true
+                    error: true,
                 })
             })
     }
 
     render() {
         if (this.state.loading) {
-            return (
-                <div>Loading...</div>
-            )
+            return <Spinner />
         }
 
         if (!this.state.document) {
-            return (
-                <div>Could not load document :(</div>
-            )
+            return <ErrorPage />
         }
 
         return (
@@ -76,7 +80,7 @@ export default class Doc extends React.Component {
                                 fontFamily: '"Fira Code", monospaced',
                                 color: '#e83e8c',
                                 backgroundColor: '#f8f9fa',
-                            }
+                            },
                         },
                         colors: {
                             primary: {
@@ -108,7 +112,7 @@ export default class Doc extends React.Component {
                                 basic: '#999',
                                 link: '#31bbb6',
                                 head: '#c167e4',
-                            }
+                            },
                         },
                         menu: {
                             width: '260px',
@@ -117,10 +121,10 @@ export default class Doc extends React.Component {
                         rightPanel: {
                             backgroundColor: '#ffffff',
                             width: '40%',
-                        }
+                        },
                     },
                     scrollYOffset: '80',
-                    hideLoading: true
+                    hideLoading: true,
                 }}
             />
         )

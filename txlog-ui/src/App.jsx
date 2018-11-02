@@ -2,10 +2,7 @@ import React, { Component } from 'react'
 import Navigation from './components/Navigation'
 import Overview from './Overview'
 
-import {
-    BrowserRouter as Router,
-    Route
-  } from 'react-router-dom'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 class App extends Component {
     render() {
@@ -22,4 +19,4 @@ class App extends Component {
     }
 }
 
-export default App;
+export default App

@@ -2,7 +2,7 @@ import React from 'react'
 import Switch from './components/Switch'
 import Search from './components/Search'
 import Table from './components/Table'
-import axios from 'axios';
+import axios from 'axios'
 
 export default class Overview extends React.Component {
     constructor(props) {
@@ -14,7 +14,7 @@ export default class Overview extends React.Component {
             logsOut: [],
             displayOnlyContaining: '',
             sortBy: 'created',
-            sortAscending: true
+            sortAscending: true,
         }
 
         this.switch = this.switch.bind(this)
@@ -22,31 +22,34 @@ export default class Overview extends React.Component {
     }
 
     componentDidMount() {
-        axios.get(`/api/in`)
-            .then(res => {
-                const logs = res.data.records;
+        axios
+            .get(`/api/in`)
+            .then((res) => {
+                const logs = res.data.records
                 this.setState({ logsIn: logs })
             })
-            .catch(e => {
-                console.error(e);
+            .catch((e) => {
+                console.error(e)
             })
 
-        axios.get(`/api/out`)
-            .then(res => {
-                const logs = res.data.records;
+        axios
+            .get(`/api/out`)
+            .then((res) => {
+                const logs = res.data.records
                 this.setState({ logsOut: logs })
             })
-            .catch(e => {
-                console.error(e);
+            .catch((e) => {
+                console.error(e)
             })
     }
 
     switch(val) {
         if (val === 'in' || val === 'out') {
             this.setState({ showLogs: val })
-        }
-        else {
-            this.setState({ showLogs: this.state.showLogs === 'in' ? 'out' : 'in' })
+        } else {
+            this.setState({
+                showLogs: this.state.showLogs === 'in' ? 'out' : 'in',
+            })
         }
     }
 
@@ -62,19 +65,25 @@ export default class Overview extends React.Component {
 
         this.setState({
             sortBy: val,
-            sortAscending: true
+            sortAscending: true,
         })
     }
 
     filterLogs(logs) {
-        const {displayOnlyContaining} = this.state
+        const { displayOnlyContaining } = this.state
 
-        const filteredLogs = logs.filter(log => {
+        const filteredLogs = logs.filter((log) => {
             if (displayOnlyContaining) {
                 if (
-                    !log['logrecord-id'].toLowerCase().includes(displayOnlyContaining.toLowerCase()) &&
-                    !log.source_organization.toLowerCase().includes(displayOnlyContaining.toLowerCase()) &&
-                    !log.service_name.toLowerCase().includes(displayOnlyContaining.toLowerCase())
+                    !log['logrecord-id']
+                        .toLowerCase()
+                        .includes(displayOnlyContaining.toLowerCase()) &&
+                    !log.source_organization
+                        .toLowerCase()
+                        .includes(displayOnlyContaining.toLowerCase()) &&
+                    !log.service_name
+                        .toLowerCase()
+                        .includes(displayOnlyContaining.toLowerCase())
                 ) {
                     return false
                 }
@@ -87,7 +96,7 @@ export default class Overview extends React.Component {
     }
 
     render() {
-        const {logsIn, logsOut} = this.state
+        const { logsIn, logsOut } = this.state
 
         const filteredLogsIn = this.filterLogs(logsIn)
         const filteredLogsOut = this.filterLogs(logsOut)
@@ -111,16 +120,16 @@ export default class Overview extends React.Component {
                 // sortBy: 'service_name'
             },
             {
-                label: 'Data'
-            }
+                label: 'Data',
+            },
         ]
 
         const inactiveStyle = {
-            color: '#ADB5BD'
+            color: '#ADB5BD',
         }
 
         const activeStyle = {
-            color: '#FEBF24'
+            color: '#FEBF24',
         }
 
         return (
@@ -128,15 +137,30 @@ export default class Overview extends React.Component {
                 <section>
                     <div className="container">
                         <div className="d-flex justify-content-center mb-4">
-                            <button className="btn btn-small mr-2"
-                                style={this.state.showLogs === 'in' ? activeStyle : inactiveStyle}
+                            <button
+                                className="btn btn-small mr-2"
+                                style={
+                                    this.state.showLogs === 'in'
+                                        ? activeStyle
+                                        : inactiveStyle
+                                }
                                 onClick={() => this.switch('in')}
                             >
                                 IN
                             </button>
-                            <Switch onChange={this.switch} checked={this.state.showLogs === 'out' ? true : false} id="inout" alwaysOn></Switch>
-                            <button className="btn btn-small"
-                                style={this.state.showLogs === 'out' ? activeStyle : inactiveStyle}
+                            <Switch
+                                onChange={this.switch}
+                                checked={this.state.showLogs === 'out'}
+                                id="inout"
+                                alwaysOn
+                            />
+                            <button
+                                className="btn btn-small"
+                                style={
+                                    this.state.showLogs === 'out'
+                                        ? activeStyle
+                                        : inactiveStyle
+                                }
                                 onClick={() => this.switch('out')}
                             >
                                 OUT
@@ -144,7 +168,12 @@ export default class Overview extends React.Component {
                         </div>
                         <div className="row">
                             <div className="col-sm-6 col-lg-4 offset-lg-4">
-                                <Search onChange={this.searchOnChange.bind(this)} value={this.state.displayOnlyContaining} placeholder="Filter logs" filter />
+                                <Search
+                                    onChange={this.searchOnChange.bind(this)}
+                                    value={this.state.displayOnlyContaining}
+                                    placeholder="Filter logs"
+                                    filter
+                                />
                             </div>
                         </div>
                     </div>
@@ -153,7 +182,11 @@ export default class Overview extends React.Component {
                     <div className="container">
                         <Table
                             heads={theads}
-                            rows={this.state.showLogs === 'in' ? filteredLogsIn.reverse() : filteredLogsOut.reverse()}
+                            rows={
+                                this.state.showLogs === 'in'
+                                    ? filteredLogsIn.reverse()
+                                    : filteredLogsOut.reverse()
+                            }
                             // rows={filteredLogs}
                             onSort={this.onSort.bind(this)}
                             sortBy={this.state.sortBy}
