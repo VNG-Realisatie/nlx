@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import React, { Component } from 'react'
+import { BrowserRouter } from 'react-router-dom'
 
-import { withStyles, CssBaseline } from '@material-ui/core';
-import { globalStyles} from './styles/muiTheme';
+import { withStyles, CssBaseline } from '@material-ui/core'
+import { globalStyles } from './styles/muiTheme'
 
-import Drawer from './components/Drawer';
+import Drawer from './components/Drawer'
 
 class App extends Component {
     render() {
@@ -15,8 +15,8 @@ class App extends Component {
                     <Drawer appTitle="NLX Insights" />
                 </div>
             </BrowserRouter>
-        );
+        )
     }
 }
 
-export default withStyles(globalStyles)(App);
+export default withStyles(globalStyles)(App)

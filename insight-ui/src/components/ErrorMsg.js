@@ -1,11 +1,7 @@
-import React from 'react';
+import React from 'react'
 
 const ErrorMsg = (props) => {
-  return (
-    <div>
-        { JSON.stringify(props) }
-    </div>
-  );
-};
+    return <div>{JSON.stringify(props)}</div>
+}
 
-export default ErrorMsg;
+export default ErrorMsg
