@@ -1,9 +1,8 @@
-
 export const config = {
-  appTitle:"This is app title",
-  logo:{
-    src:""
-  }
+    appTitle: 'This is app title',
+    logo: {
+        src: '',
+    },
 }
 
-export default config;
+export default config

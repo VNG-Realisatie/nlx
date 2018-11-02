@@ -3,12 +3,9 @@ import Navigation from './components/Navigation'
 import Directory from './Directory'
 import Doc from './Documentation'
 
-import './static/css/base-addon.css';
+import './static/css/base-addon.css'
 
-import {
-    BrowserRouter as Router,
-    Route
-  } from 'react-router-dom'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 class App extends Component {
     render() {
@@ -18,7 +15,10 @@ class App extends Component {
                     <div>
                         <Navigation />
                         <Route exact path="/" component={Directory} />
-                        <Route path="/documentation/:organization_name/:service_name" component={Doc} />
+                        <Route
+                            path="/documentation/:organization_name/:service_name"
+                            component={Doc}
+                        />
                     </div>
                 </Router>
             </div>
@@ -26,4 +26,4 @@ class App extends Component {
     }
 }
 
-export default App;
+export default App

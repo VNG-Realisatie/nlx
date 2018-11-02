@@ -1,23 +1,22 @@
-import axios from 'axios';
+import axios from 'axios'
 
 function getSessionData(baseUrl) {
-  return axios
-    .get(`${baseUrl}/get-session`, {
-      withCredentials: true,
-    })
-    .then(response => response.data);
+    return axios
+        .get(`${baseUrl}/get-session`, {
+            withCredentials: true,
+        })
+        .then((response) => response.data)
 }
 
 function deauthenticate(baseUrl) {
-  return axios
-    .get(`${baseUrl}/deauthenticate`, {
-      withCredentials: true,
-    });
+    return axios.get(`${baseUrl}/deauthenticate`, {
+        withCredentials: true,
+    })
 }
 
 const service = {
-  getSessionData,
-  deauthenticate,
-};
+    getSessionData,
+    deauthenticate,
+}
 
-export default service;
+export default service

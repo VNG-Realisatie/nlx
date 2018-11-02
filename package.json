@@ -1,0 +1,12 @@
+{
+  "name": "nlx",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "test": "lerna run test",
+    "lint": "lerna run lint"
+  },
+  "devDependencies": {
+    "lerna": "^3.4.3"
+  }
+}
