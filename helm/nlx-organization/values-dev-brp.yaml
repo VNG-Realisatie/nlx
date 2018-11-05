@@ -26,6 +26,7 @@ inway:
       authorization-model = "none"
       insight-api-url = "http://insight-api.dev.brp.minikube:30080"
       irma-api-url = "http://irma-api.dev.brp.minikube:30080"
+
 outway:
   enable: false
 demoService:

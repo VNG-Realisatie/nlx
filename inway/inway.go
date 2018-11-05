@@ -141,6 +141,7 @@ func (i *Inway) announceToDirectory(p *process.Process, s ServiceEndpoint, servi
 					Services: []*directoryapi.RegisterInwayRequest_RegisterService{
 						{
 							Name:                        s.ServiceName(),
+						    Internal:                    serviceDetails.Internal,
 							DocumentationUrl:            serviceDetails.DocumentationURL,
 							ApiSpecificationType:        serviceDetails.APISpecificationType,
 							ApiSpecificationDocumentUrl: serviceDetails.APISpecificationDocumentURL,

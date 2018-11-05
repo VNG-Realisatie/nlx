@@ -58,6 +58,7 @@ CREATE TABLE directory.services(
 	id serial NOT NULL,
 	organization_id integer NOT NULL,
 	name varchar(100) NOT NULL,
+	internal boolean NOT NULL DEFAULT false,
 	documentation_url varchar(250),
 	api_specification_type varchar(20),
 	CONSTRAINT services_pk PRIMARY KEY (id),
@@ -182,31 +183,31 @@ REFERENCES directory.services (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
--- object: grant_9df1e9cc76 | type: PERMISSION --
+-- object: grant_ea9cb4ebcf | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.organizations
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_6133a22714 | type: PERMISSION --
+-- object: grant_ee2fbca22d | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.inways
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_6dc9dbe1e9 | type: PERMISSION --
+-- object: grant_fa4d8b6cb0 | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.services
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_d697dfffc8 | type: PERMISSION --
+-- object: grant_e5e3cd3aca | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.availabilities
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_74248420be | type: PERMISSION --
+-- object: grant_2cbcbdee2f | type: PERMISSION --
 GRANT USAGE
    ON SCHEMA directory
    TO "nlx-directory";
