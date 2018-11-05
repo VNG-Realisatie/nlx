@@ -1,295 +1,289 @@
-apiVersion: skaffold/v1alpha3
+apiVersion: skaffold/v1alpha5
 kind: Config
 build:
   artifacts:
-    - imageName: nlxio/docs
-      workspace: docs
-    - imageName: nlxio/ca-cfssl-unsafe
-      workspace: ca-cfssl-unsafe
-    - imageName: nlxio/ca-certportal
-      workspace: .
-      docker:
-        dockerfilePath: ca-certportal/Dockerfile
-    - imageName: nlxio/directory-db
-      workspace: .
-      docker:
-        dockerfilePath: directory-db/Dockerfile
-    - imageName: nlxio/directory
-      workspace: .
-      docker:
-        dockerfilePath: directory/Dockerfile
-    - imageName: nlxio/directory-monitor
-      workspace: .
-      docker:
-        dockerfilePath: directory-monitor/Dockerfile
-    - imageName: nlxio/directory-ui
-      workspace: directory-ui
-    - imageName: nlxio/insight-ui
-      workspace: insight-ui
-    - imageName: nlxio/inway
-      workspace: .
-      docker:
-        dockerfilePath: inway/Dockerfile
-    - imageName: nlxio/outway
-      workspace: .
-      docker:
-        dockerfilePath: outway/Dockerfile
-    - imageName: nlxio/txlog-db
-      workspace: .
-      docker:
-        dockerfilePath: txlog-db/Dockerfile
-    - imageName: nlxio/txlog-api
-      workspace: .
-      docker:
-        dockerfilePath: txlog-api/Dockerfile
-    - imageName: nlxio/txlog-ui
-      workspace: txlog-ui
-    - imageName: nlxio/insight-api
-      workspace: .
-      docker:
-        dockerfilePath: insight-api/Dockerfile
-
+  - image: nlxio/docs
+    context: docs
+  - image: nlxio/ca-cfssl-unsafe
+    context: ca-cfssl-unsafe
+  - image: nlxio/ca-certportal
+    context: .
+    docker:
+      dockerfile: ca-certportal/Dockerfile
+  - image: nlxio/directory-db
+    context: .
+    docker:
+      dockerfile: directory-db/Dockerfile
+  - image: nlxio/directory
+    context: .
+    docker:
+      dockerfile: directory/Dockerfile
+  - image: nlxio/directory-monitor
+    context: .
+    docker:
+      dockerfile: directory-monitor/Dockerfile
+  - image: nlxio/directory-ui
+    context: directory-ui
+  - image: nlxio/insight-ui
+    context: insight-ui
+  - image: nlxio/inway
+    context: .
+    docker:
+      dockerfile: inway/Dockerfile
+  - image: nlxio/outway
+    context: .
+    docker:
+      dockerfile: outway/Dockerfile
+  - image: nlxio/txlog-db
+    context: .
+    docker:
+      dockerfile: txlog-db/Dockerfile
+  - image: nlxio/txlog-api
+    context: .
+    docker:
+      dockerfile: txlog-api/Dockerfile
+  - image: nlxio/txlog-ui
+    context: txlog-ui
+  - image: nlxio/insight-api
+    context: .
+    docker:
+      dockerfile: insight-api/Dockerfile
   tagPolicy:
     sha256: {}
   local:
-    skipPush: true
-
+    push: false
 profiles:
-  - name: minikube
-    deploy:
-      helm:
-        releases:
-          - name: nlx-dev-directory
-            namespace: nlx-dev-directory
-            chartPath: helm/nlx-directory
-            valuesFiles:
-              - helm/nlx-directory/values-dev.yaml
-            values:
-              caCertportalImage: nlxio/ca-certportal
-              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-              directoryDBImage: nlxio/directory-db
-              directoryImage: nlxio/directory
-              directoryMonitorImage: nlxio/directory-monitor
-              directoryUIImage: nlxio/directory-ui
-              docsImage: nlxio/docs
-              insightUIImage: nlxio/insight-ui
-            setValueTemplates:
-              externalIP: '{{.MINIKUBE_IP}}'
-          - name: nlx-dev-brp
-            namespace: nlx-dev-brp
-            chartPath: helm/nlx-organization
-            valuesFiles:
-              - helm/nlx-organization/values-dev-brp.yaml
-            values:
-              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-              insightAPIImage: nlxio/insight-api
-              inwayImage: nlxio/inway
-              txlogAPIImage: nlxio/txlog-api
-              txlogDBImage: nlxio/txlog-db
-              txlogUIImage: nlxio/txlog-ui
-            setValueTemplates:
-              externalIP: '{{.MINIKUBE_IP}}'
-          - name: nlx-dev-rdw
-            namespace: nlx-dev-rdw
-            chartPath: helm/nlx-organization
-            valuesFiles:
-              - helm/nlx-organization/values-dev-rdw.yaml
-            values:
-              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-              insightAPIImage: nlxio/insight-api
-              inwayImage: nlxio/inway
-              txlogAPIImage: nlxio/txlog-api
-              txlogDBImage: nlxio/txlog-db
-              txlogUIImage: nlxio/txlog-ui
-            setValueTemplates:
-              externalIP: '{{.MINIKUBE_IP}}'
-          - name: nlx-dev-haarlem
-            namespace: nlx-dev-haarlem
-            chartPath: helm/nlx-organization
-            valuesFiles:
-              - helm/nlx-organization/values-dev-haarlem.yaml
-            values:
-              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-              insightAPIImage: nlxio/insight-api
-              inwayImage: nlxio/inway
-              outwayImage: nlxio/outway
-              txlogAPIImage: nlxio/txlog-api
-              txlogDBImage: nlxio/txlog-db
-              txlogUIImage: nlxio/txlog-ui
-            setValueTemplates:
-              externalIP: '{{.MINIKUBE_IP}}'
-
-  - name: release
-    build:
-      tagPolicy:
-        gitCommit: {}
-      local:
-        skipPush: false
-
-  - name: deploy-test
-    deploy:
-      helm:
-        releases:
-          - name: nlx-test-directory
-            namespace: nlx-test-directory
-            chartPath: helm/nlx-directory
-            valuesFiles:
-              - helm/nlx-directory/values-test.yaml
-            values:
-              caCertportalImage: nlxio/ca-certportal
-              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-              directoryDBImage: nlxio/directory-db
-              directoryImage: nlxio/directory
-              directoryMonitorImage: nlxio/directory-monitor
-              directoryUIImage: nlxio/directory-ui
-              docsImage: nlxio/docs
-              insightUIImage: nlxio/insight-ui
-          - name: nlx-test-brp
-            namespace: nlx-test-brp
-            chartPath: helm/nlx-organization
-            valuesFiles:
-              - helm/nlx-organization/values-test-brp.yaml
-            values:
-              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-              insightAPIImage: nlxio/insight-api
-              inwayImage: nlxio/inway
-              txlogAPIImage: nlxio/txlog-api
-              txlogDBImage: nlxio/txlog-db
-              txlogUIImage: nlxio/txlog-ui
-          - name: nlx-test-rdw
-            namespace: nlx-test-rdw
-            chartPath: helm/nlx-organization
-            valuesFiles:
-              - helm/nlx-organization/values-test-rdw.yaml
-            values:
-              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-              insightAPIImage: nlxio/insight-api
-              inwayImage: nlxio/inway
-              txlogAPIImage: nlxio/txlog-api
-              txlogDBImage: nlxio/txlog-db
-              txlogUIImage: nlxio/txlog-ui
-          - name: nlx-test-haarlem
-            namespace: nlx-test-haarlem
-            chartPath: helm/nlx-organization
-            valuesFiles:
-              - helm/nlx-organization/values-test-haarlem.yaml
-            values:
-              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-              insightAPIImage: nlxio/insight-api
-              inwayImage: nlxio/inway
-              outwayImage: nlxio/outway
-              txlogAPIImage: nlxio/txlog-api
-              txlogDBImage: nlxio/txlog-db
-              txlogUIImage: nlxio/txlog-ui
-
-  - name: deploy-acc
-    deploy:
-      helm:
-        releases:
-          - name: nlx-acc-directory
-            namespace: nlx-acc-directory
-            chartPath: helm/nlx-directory
-            valuesFiles:
-              - helm/nlx-directory/values-acc.yaml
-            values:
-              caCertportalImage: nlxio/ca-certportal
-              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-              directoryDBImage: nlxio/directory-db
-              directoryImage: nlxio/directory
-              directoryMonitorImage: nlxio/directory-monitor
-              directoryUIImage: nlxio/directory-ui
-              docsImage: nlxio/docs
-              insightUIImage: nlxio/insight-ui
-          - name: nlx-acc-brp
-            namespace: nlx-acc-brp
-            chartPath: helm/nlx-organization
-            valuesFiles:
-              - helm/nlx-organization/values-acc-brp.yaml
-            values:
-              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-              insightAPIImage: nlxio/insight-api
-              inwayImage: nlxio/inway
-              txlogAPIImage: nlxio/txlog-api
-              txlogDBImage: nlxio/txlog-db
-              txlogUIImage: nlxio/txlog-ui
-          - name: nlx-acc-rdw
-            namespace: nlx-acc-rdw
-            chartPath: helm/nlx-organization
-            valuesFiles:
-              - helm/nlx-organization/values-acc-rdw.yaml
-            values:
-              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-              insightAPIImage: nlxio/insight-api
-              inwayImage: nlxio/inway
-              txlogAPIImage: nlxio/txlog-api
-              txlogDBImage: nlxio/txlog-db
-              txlogUIImage: nlxio/txlog-ui
-          - name: nlx-acc-haarlem
-            namespace: nlx-acc-haarlem
-            chartPath: helm/nlx-organization
-            valuesFiles:
-              - helm/nlx-organization/values-acc-haarlem.yaml
-            values:
-              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-              insightAPIImage: nlxio/insight-api
-              inwayImage: nlxio/inway
-              outwayImage: nlxio/outway
-              txlogAPIImage: nlxio/txlog-api
-              txlogDBImage: nlxio/txlog-db
-              txlogUIImage: nlxio/txlog-ui
-
-  - name: deploy-demo
-    deploy:
-      helm:
-        releases:
-          - name: nlx-demo-directory
-            namespace: nlx-demo-directory
-            chartPath: helm/nlx-directory
-            valuesFiles:
-              - helm/nlx-directory/values-demo.yaml
-            values:
-              caCertportalImage: nlxio/ca-certportal
-              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-              directoryDBImage: nlxio/directory-db
-              directoryImage: nlxio/directory
-              directoryMonitorImage: nlxio/directory-monitor
-              directoryUIImage: nlxio/directory-ui
-              docsImage: nlxio/docs
-              insightUIImage: nlxio/insight-ui
-          - name: nlx-demo-brp
-            namespace: nlx-demo-brp
-            chartPath: helm/nlx-organization
-            valuesFiles:
-              - helm/nlx-organization/values-demo-brp.yaml
-            values:
-              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-              insightAPIImage: nlxio/insight-api
-              inwayImage: nlxio/inway
-              txlogAPIImage: nlxio/txlog-api
-              txlogDBImage: nlxio/txlog-db
-              txlogUIImage: nlxio/txlog-ui
-          - name: nlx-demo-rdw
-            namespace: nlx-demo-rdw
-            chartPath: helm/nlx-organization
-            valuesFiles:
-              - helm/nlx-organization/values-demo-rdw.yaml
-            values:
-              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-              insightAPIImage: nlxio/insight-api
-              inwayImage: nlxio/inway
-              txlogAPIImage: nlxio/txlog-api
-              txlogDBImage: nlxio/txlog-db
-              txlogUIImage: nlxio/txlog-ui
-          - name: nlx-demo-haarlem
-            namespace: nlx-demo-haarlem
-            chartPath: helm/nlx-organization
-            valuesFiles:
-              - helm/nlx-organization/values-demo-haarlem.yaml
-            values:
-              caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-              insightAPIImage: nlxio/insight-api
-              inwayImage: nlxio/inway
-              outwayImage: nlxio/outway
-              txlogAPIImage: nlxio/txlog-api
-              txlogDBImage: nlxio/txlog-db
-              txlogUIImage: nlxio/txlog-ui
+- name: minikube
+  deploy:
+    helm:
+      releases:
+      - name: nlx-dev-directory
+        chartPath: helm/nlx-directory
+        valuesFiles:
+        - helm/nlx-directory/values-dev.yaml
+        values:
+          caCertportalImage: nlxio/ca-certportal
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          directoryDBImage: nlxio/directory-db
+          directoryImage: nlxio/directory
+          directoryMonitorImage: nlxio/directory-monitor
+          directoryUIImage: nlxio/directory-ui
+          docsImage: nlxio/docs
+          insightUIImage: nlxio/insight-ui
+        namespace: nlx-dev-directory
+        setValueTemplates:
+          externalIP: '{{.MINIKUBE_IP}}'
+      - name: nlx-dev-brp
+        chartPath: helm/nlx-organization
+        valuesFiles:
+        - helm/nlx-organization/values-dev-brp.yaml
+        values:
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          insightAPIImage: nlxio/insight-api
+          inwayImage: nlxio/inway
+          txlogAPIImage: nlxio/txlog-api
+          txlogDBImage: nlxio/txlog-db
+          txlogUIImage: nlxio/txlog-ui
+        namespace: nlx-dev-brp
+        setValueTemplates:
+          externalIP: '{{.MINIKUBE_IP}}'
+      - name: nlx-dev-rdw
+        chartPath: helm/nlx-organization
+        valuesFiles:
+        - helm/nlx-organization/values-dev-rdw.yaml
+        values:
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          insightAPIImage: nlxio/insight-api
+          inwayImage: nlxio/inway
+          txlogAPIImage: nlxio/txlog-api
+          txlogDBImage: nlxio/txlog-db
+          txlogUIImage: nlxio/txlog-ui
+        namespace: nlx-dev-rdw
+        setValueTemplates:
+          externalIP: '{{.MINIKUBE_IP}}'
+      - name: nlx-dev-haarlem
+        chartPath: helm/nlx-organization
+        valuesFiles:
+        - helm/nlx-organization/values-dev-haarlem.yaml
+        values:
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          insightAPIImage: nlxio/insight-api
+          inwayImage: nlxio/inway
+          outwayImage: nlxio/outway
+          txlogAPIImage: nlxio/txlog-api
+          txlogDBImage: nlxio/txlog-db
+          txlogUIImage: nlxio/txlog-ui
+        namespace: nlx-dev-haarlem
+        setValueTemplates:
+          externalIP: '{{.MINIKUBE_IP}}'
+- name: release
+  build:
+    tagPolicy:
+      gitCommit: {}
+    local:
+      push: true
+- name: deploy-test
+  deploy:
+    helm:
+      releases:
+      - name: nlx-test-directory
+        chartPath: helm/nlx-directory
+        valuesFiles:
+        - helm/nlx-directory/values-test.yaml
+        values:
+          caCertportalImage: nlxio/ca-certportal
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          directoryDBImage: nlxio/directory-db
+          directoryImage: nlxio/directory
+          directoryMonitorImage: nlxio/directory-monitor
+          directoryUIImage: nlxio/directory-ui
+          docsImage: nlxio/docs
+          insightUIImage: nlxio/insight-ui
+        namespace: nlx-test-directory
+      - name: nlx-test-brp
+        chartPath: helm/nlx-organization
+        valuesFiles:
+        - helm/nlx-organization/values-test-brp.yaml
+        values:
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          insightAPIImage: nlxio/insight-api
+          inwayImage: nlxio/inway
+          txlogAPIImage: nlxio/txlog-api
+          txlogDBImage: nlxio/txlog-db
+          txlogUIImage: nlxio/txlog-ui
+        namespace: nlx-test-brp
+      - name: nlx-test-rdw
+        chartPath: helm/nlx-organization
+        valuesFiles:
+        - helm/nlx-organization/values-test-rdw.yaml
+        values:
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          insightAPIImage: nlxio/insight-api
+          inwayImage: nlxio/inway
+          txlogAPIImage: nlxio/txlog-api
+          txlogDBImage: nlxio/txlog-db
+          txlogUIImage: nlxio/txlog-ui
+        namespace: nlx-test-rdw
+      - name: nlx-test-haarlem
+        chartPath: helm/nlx-organization
+        valuesFiles:
+        - helm/nlx-organization/values-test-haarlem.yaml
+        values:
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          insightAPIImage: nlxio/insight-api
+          inwayImage: nlxio/inway
+          outwayImage: nlxio/outway
+          txlogAPIImage: nlxio/txlog-api
+          txlogDBImage: nlxio/txlog-db
+          txlogUIImage: nlxio/txlog-ui
+        namespace: nlx-test-haarlem
+- name: deploy-acc
+  deploy:
+    helm:
+      releases:
+      - name: nlx-acc-directory
+        chartPath: helm/nlx-directory
+        valuesFiles:
+        - helm/nlx-directory/values-acc.yaml
+        values:
+          caCertportalImage: nlxio/ca-certportal
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          directoryDBImage: nlxio/directory-db
+          directoryImage: nlxio/directory
+          directoryMonitorImage: nlxio/directory-monitor
+          directoryUIImage: nlxio/directory-ui
+          docsImage: nlxio/docs
+          insightUIImage: nlxio/insight-ui
+        namespace: nlx-acc-directory
+      - name: nlx-acc-brp
+        chartPath: helm/nlx-organization
+        valuesFiles:
+        - helm/nlx-organization/values-acc-brp.yaml
+        values:
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          insightAPIImage: nlxio/insight-api
+          inwayImage: nlxio/inway
+          txlogAPIImage: nlxio/txlog-api
+          txlogDBImage: nlxio/txlog-db
+          txlogUIImage: nlxio/txlog-ui
+        namespace: nlx-acc-brp
+      - name: nlx-acc-rdw
+        chartPath: helm/nlx-organization
+        valuesFiles:
+        - helm/nlx-organization/values-acc-rdw.yaml
+        values:
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          insightAPIImage: nlxio/insight-api
+          inwayImage: nlxio/inway
+          txlogAPIImage: nlxio/txlog-api
+          txlogDBImage: nlxio/txlog-db
+          txlogUIImage: nlxio/txlog-ui
+        namespace: nlx-acc-rdw
+      - name: nlx-acc-haarlem
+        chartPath: helm/nlx-organization
+        valuesFiles:
+        - helm/nlx-organization/values-acc-haarlem.yaml
+        values:
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          insightAPIImage: nlxio/insight-api
+          inwayImage: nlxio/inway
+          outwayImage: nlxio/outway
+          txlogAPIImage: nlxio/txlog-api
+          txlogDBImage: nlxio/txlog-db
+          txlogUIImage: nlxio/txlog-ui
+        namespace: nlx-acc-haarlem
+- name: deploy-demo
+  deploy:
+    helm:
+      releases:
+      - name: nlx-demo-directory
+        chartPath: helm/nlx-directory
+        valuesFiles:
+        - helm/nlx-directory/values-demo.yaml
+        values:
+          caCertportalImage: nlxio/ca-certportal
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          directoryDBImage: nlxio/directory-db
+          directoryImage: nlxio/directory
+          directoryMonitorImage: nlxio/directory-monitor
+          directoryUIImage: nlxio/directory-ui
+          docsImage: nlxio/docs
+          insightUIImage: nlxio/insight-ui
+        namespace: nlx-demo-directory
+      - name: nlx-demo-brp
+        chartPath: helm/nlx-organization
+        valuesFiles:
+        - helm/nlx-organization/values-demo-brp.yaml
+        values:
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          insightAPIImage: nlxio/insight-api
+          inwayImage: nlxio/inway
+          txlogAPIImage: nlxio/txlog-api
+          txlogDBImage: nlxio/txlog-db
+          txlogUIImage: nlxio/txlog-ui
+        namespace: nlx-demo-brp
+      - name: nlx-demo-rdw
+        chartPath: helm/nlx-organization
+        valuesFiles:
+        - helm/nlx-organization/values-demo-rdw.yaml
+        values:
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          insightAPIImage: nlxio/insight-api
+          inwayImage: nlxio/inway
+          txlogAPIImage: nlxio/txlog-api
+          txlogDBImage: nlxio/txlog-db
+          txlogUIImage: nlxio/txlog-ui
+        namespace: nlx-demo-rdw
+      - name: nlx-demo-haarlem
+        chartPath: helm/nlx-organization
+        valuesFiles:
+        - helm/nlx-organization/values-demo-haarlem.yaml
+        values:
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          insightAPIImage: nlxio/insight-api
+          inwayImage: nlxio/inway
+          outwayImage: nlxio/outway
+          txlogAPIImage: nlxio/txlog-api
+          txlogDBImage: nlxio/txlog-db
+          txlogUIImage: nlxio/txlog-ui
+        namespace: nlx-demo-haarlem
