@@ -2,7 +2,7 @@ import React from 'react'
 import logo from '../assets/images/logo.svg'
 // import menu from '../assets/icons/menu.svg'
 import gitlab from '../assets/icons/gitlab.svg'
-// import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 export default class Navigation extends React.Component {
     render() {
@@ -34,12 +34,9 @@ export default class Navigation extends React.Component {
                                 </a>
                             </li>
                             <li className="nav-item active">
-                                <a
-                                    className="nav-link"
-                                    href="https://directory.nlx.io"
-                                >
+                                <Link className="nav-link" to="/">
                                     Directory
-                                </a>
+                                </Link>
                             </li>
                         </ul>
 
