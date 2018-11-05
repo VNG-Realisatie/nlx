@@ -29,6 +29,7 @@ func newListServicesHandler(db *sqlx.DB, logger *zap.Logger) (*listServicesHandl
 		SELECT
 			organizations.name AS organization_name,
 			services.name AS service_name,
+			services.internal as service_internal,
 			array_remove(array_agg(inways.address), NULL) AS inway_addresses,
 			COALESCE(services.documentation_url, '') AS documentation_url,
 			COALESCE(services.api_specification_type, '') AS api_specification_type
@@ -39,6 +40,8 @@ func newListServicesHandler(db *sqlx.DB, logger *zap.Logger) (*listServicesHandl
 				ON services.id = availabilities.service_id AND availabilities.healthy = true
 			LEFT JOIN directory.inways
 				ON availabilities.inway_id = inways.id
+		WHERE
+			internal = false OR (internal = true AND organizations.name = $1)
 		GROUP BY services.id, organizations.id
 	`)
 	if err != nil {
@@ -51,8 +54,11 @@ func newListServicesHandler(db *sqlx.DB, logger *zap.Logger) (*listServicesHandl
 func (h *listServicesHandler) ListServices(ctx context.Context, req *directoryapi.ListServicesRequest) (*directoryapi.ListServicesResponse, error) {
 	h.logger.Info("rpc request ListServices()")
 	resp := &directoryapi.ListServicesResponse{}
-
-	rows, err := h.stmtSelectServices.Queryx()
+	organizationName, err := getOrganisationNameFromRequest(ctx)
+	if err != nil {
+		return nil, err
+	}
+	rows, err := h.stmtSelectServices.Queryx(organizationName)
 	if err != nil {
 		h.logger.Error("failed to execute stmtSelectServices", zap.Error(err))
 		return nil, status.New(codes.Internal, "Database error.").Err()
@@ -63,6 +69,7 @@ func (h *listServicesHandler) ListServices(ctx context.Context, req *directoryap
 		err = rows.Scan(
 			&respService.OrganizationName,
 			&respService.ServiceName,
+			&respService.Internal,
 			&inwayAddresses,
 			&respService.DocumentationUrl,
 			&respService.ApiSpecificationType,

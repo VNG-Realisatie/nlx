@@ -37,6 +37,7 @@ message RegisterInwayRequest {
 		string api_specification_document_url = 4;
 		string insight_api_url = 5;
 		string irma_api_url = 6;
+		bool internal = 7;
 	}
 
 	string inway_address = 1;
@@ -56,6 +57,7 @@ message ListServicesResponse {
 		repeated string inway_addresses = 3;
 		string documentation_url = 4;
 		string api_specification_type = 5;
+		bool internal = 6;
 	}
 
 	repeated Service services = 2;
