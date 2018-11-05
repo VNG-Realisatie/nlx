@@ -1,13 +1,13 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"time"
 
+	"github.com/go-chi/chi"
 	"github.com/huandu/xstrings"
 	flags "github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
@@ -50,35 +50,39 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
-	defer func() { // TODO(GeertJohan): #205 make this a common/process exitFunc?
-		syncErr := logger.Sync()
-		if syncErr != nil {
-			// notify the user that proper logging has failed
-			fmt.Fprintf(os.Stderr, "failed to sync zap logger: %v\n", syncErr)
-			// don't exit when we're in a panic
-			if p := recover(); p != nil {
-				panic(p)
-			}
-			os.Exit(1)
-		}
-	}()
-
-	process.Setup(logger)
-
+	process := process.NewProcess(logger)
 	logDB, err := sqlx.Open("postgres", options.PostgresDSN)
 	if err != nil {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))
 	}
 	logDB.MapperFunc(xstrings.ToSnakeCase)
+	process.CloseGracefully(logDB.Close)
 
 	dbversion.WaitUntilLatestTxlogDBVersion(logger, logDB.DB)
 
-	http.HandleFunc("/in", newLogFetcher(logger, logDB, transactionlog.DirectionIn))
-	http.HandleFunc("/out", newLogFetcher(logger, logDB, transactionlog.DirectionOut))
-	err = http.ListenAndServe(options.ListenAddress, nil)
-	if err != nil {
-		logger.Fatal("failed to ListenAndServe", zap.Error(err))
+	r := chi.NewRouter()
+	r.HandleFunc("/in", newLogFetcher(logger, logDB, transactionlog.DirectionIn))
+	r.HandleFunc("/out", newLogFetcher(logger, logDB, transactionlog.DirectionOut))
+
+	server := &http.Server{
+		Addr:    options.ListenAddress,
+		Handler: r,
 	}
+
+	process.CloseGracefully(func() error {
+		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
+		defer cancel()
+		return server.Shutdown(localCtx)
+	})
+
+	err = server.ListenAndServe()
+	if err != nil {
+		if err != http.ErrServerClosed {
+			logger.Error("failed to ListenAndServe", zap.Error(err))
+		}
+		return
+	}
+
 }
 
 type Record struct {

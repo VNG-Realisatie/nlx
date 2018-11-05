@@ -1,23 +1,21 @@
 package main
 
 import (
+	"context"
 	"crypto/tls"
-	"fmt"
 	"log"
-	"os"
 
 	"github.com/huandu/xstrings"
 	flags "github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
-
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/directory-db/dbversion"
 	"go.nlx.io/nlx/directory-monitor"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 var options struct {
@@ -52,27 +50,13 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
-	defer func() { // TODO(GeertJohan): #205 make this a common/process exitFunc?
-		syncErr := logger.Sync()
-		if syncErr != nil {
-			// notify the user that proper logging has failed
-			fmt.Fprintf(os.Stderr, "failed to sync zap logger: %v\n", syncErr)
-			// don't exit when we're in a panic
-			if p := recover(); p != nil {
-				panic(p)
-			}
-			os.Exit(1)
-		}
-	}()
-
-	process.Setup(logger)
-
+	process := process.NewProcess(logger)
 	db, err := sqlx.Open("postgres", options.PostgresDSN)
 	if err != nil {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))
 	}
 	db.MapperFunc(xstrings.ToSnakeCase)
-
+	process.CloseGracefully(db.Close)
 	dbversion.WaitUntilLatestDirectoryDBVersion(logger, db.DB)
 
 	caCertPool, err := orgtls.LoadRootCert(options.NLXRootCert)
@@ -84,8 +68,8 @@ func main() {
 		logger.Fatal("failed to load x509 keypair for monitor", zap.Error(err))
 	}
 
-	err = monitor.RunHealthChecker(logger, db, caCertPool, certKeyPair)
-	if err != nil {
+	err = monitor.RunHealthChecker(process, logger, db, caCertPool, certKeyPair)
+	if err != nil && err != context.DeadlineExceeded {
 		logger.Fatal("failed to run monitor healthchecker", zap.Error(err))
 	}
 }

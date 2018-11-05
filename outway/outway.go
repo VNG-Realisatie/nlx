@@ -12,6 +12,8 @@ import (
 	"sync"
 	"time"
 
+	"go.nlx.io/nlx/common/process"
+
 	"github.com/jmoiron/sqlx"
 	"github.com/jpillora/backoff"
 	"github.com/pkg/errors"
@@ -27,6 +29,7 @@ import (
 
 // Outway handles requests from inside the organization
 type Outway struct {
+	wg               *sync.WaitGroup
 	organizationName string // the organization running this outway
 
 	tlsOptions orgtls.TLSOptions
@@ -46,7 +49,7 @@ type Outway struct {
 }
 
 // NewOutway creates a new Outway and sets it up to handle requests.
-func NewOutway(logger *zap.Logger, logdb *sqlx.DB, tlsOptions orgtls.TLSOptions, directoryAddress string) (*Outway, error) {
+func NewOutway(process *process.Process, logger *zap.Logger, logdb *sqlx.DB, tlsOptions orgtls.TLSOptions, directoryAddress string) (*Outway, error) {
 	// load certs and get organization name from cert
 	roots, orgCert, err := orgtls.Load(tlsOptions)
 	if err != nil {
@@ -58,6 +61,7 @@ func NewOutway(logger *zap.Logger, logdb *sqlx.DB, tlsOptions orgtls.TLSOptions,
 	organizationName := orgCert.Subject.Organization[0]
 
 	o := &Outway{
+		wg:               &sync.WaitGroup{},
 		logger:           logger.With(zap.String("outway-organization-name", organizationName)),
 		organizationName: organizationName,
 
@@ -96,36 +100,45 @@ func NewOutway(logger *zap.Logger, logdb *sqlx.DB, tlsOptions orgtls.TLSOptions,
 		logger.Fatal("failed to setup connection to directory service", zap.Error(err))
 	}
 	o.directoryClient = directoryapi.NewDirectoryClient(directoryConn)
-	err = o.updateServiceList()
+	err = o.updateServiceList(process)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to update internal service directory")
 	}
 
-	go o.keepServiceListUpToDate()
+	go o.keepServiceListUpToDate(process)
 	return o, nil
 }
 
-func (o *Outway) keepServiceListUpToDate() {
+func (o *Outway) keepServiceListUpToDate(process *process.Process) {
+	o.wg.Add(1)
+	defer o.wg.Done()
+
 	expBackOff := &backoff.Backoff{
 		Min:    100 * time.Millisecond,
 		Factor: 2,
 		Max:    20 * time.Second,
 	}
 
+	const baseInterval = 30 * time.Second
+	interval := baseInterval
 	for {
-		err := o.updateServiceList()
-		if err != nil {
-			o.logger.Warn("failed to update the service list", zap.Error(err))
-			time.Sleep(expBackOff.Duration())
-			continue
+		select {
+		case <-process.ShutdownComplete:
+			return
+		case <-time.After(interval):
+			err := o.updateServiceList(process)
+			if err != nil {
+				o.logger.Warn("failed to update the service list", zap.Error(err))
+				interval = expBackOff.Duration() // Changing interval on retry
+			} else {
+				interval = baseInterval // Resetting interval to base on success update
+				expBackOff.Reset()
+			}
 		}
-
-		time.Sleep(20 * time.Second)
-		expBackOff.Reset()
 	}
 }
 
-func (o *Outway) updateServiceList() error {
+func (o *Outway) updateServiceList(process *process.Process) error {
 	services := make(map[string]HTTPService)
 	resp, err := o.directoryClient.ListServices(context.Background(), &directoryapi.ListServicesRequest{})
 	if err != nil {
@@ -133,7 +146,21 @@ func (o *Outway) updateServiceList() error {
 	}
 	o.servicesLock.Lock()
 	defer o.servicesLock.Unlock()
+	shutDown := make(chan struct{})
+	process.CloseGracefully(func() error {
+		close(shutDown)
+		return nil
+	})
 	for _, serviceToImplement := range resp.Services {
+		select {
+		case <-shutDown:
+			// On app shutdown we have no need to update services.
+			// So we need to wait until started updated is finished and exit
+			return nil
+		default:
+			// Need default to not to block
+		}
+
 		service, exists := o.services[serviceToImplement.OrganizationName+"."+serviceToImplement.ServiceName]
 		if !exists || !reflect.DeepEqual(service.GetInwayAddresses(), serviceToImplement.InwayAddresses) {
 			// create the service
