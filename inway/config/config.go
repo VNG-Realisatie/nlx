@@ -18,7 +18,6 @@ type ServiceDetails struct {
 	AuthorizationModel          string   `toml:"authorization-model"`
 	AuthorizationWhitelist      []string `toml:"authorization-whitelist"`
 	DocumentationURL            string   `toml:"documentation-url"`              // Config parameter will be moved to directory admin interface
-	APISpecificationType        string   `toml:"api-specification-type"`         // Config parameter will be moved to directory admin interface
 	APISpecificationDocumentURL string   `toml:"api-specification-document-url"` // Config parameter will be moved to directory admin interface
 	InsightAPIURL               string   `toml:"insight-api-url"`                // Config parameter will be moved to directory admin interface
 	IrmaAPIURL                  string   `toml:"irma-api-url"`                   // Config parameter will be moved to directory admin interface

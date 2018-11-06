@@ -33,7 +33,7 @@ message RegisterInwayRequest {
 	message RegisterService {
 		string name = 1;
 		string documentation_url = 2;
-		string api_specification_type = 3;
+		string api_specification_type = 3; // Deprecated. Type is deducted from api_specification_document_url
 		string api_specification_document_url = 4;
 		string insight_api_url = 5;
 		string irma_api_url = 6;

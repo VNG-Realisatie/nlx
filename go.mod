@@ -9,6 +9,7 @@ require (
 	github.com/docker/docker v1.13.1 // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.3.3 // indirect
+	github.com/ghodss/yaml v1.0.0
 	github.com/go-chi/chi v3.3.3+incompatible
 	github.com/go-chi/render v1.0.1
 	github.com/go-sql-driver/mysql v1.4.0 // indirect
@@ -37,4 +38,5 @@ require (
 	golang.org/x/net v0.0.0-20180926154720-4dfa2610cdf3
 	google.golang.org/genproto v0.0.0-20180928223349-c7e5094acea1
 	google.golang.org/grpc v1.15.0
+	gopkg.in/yaml.v2 v2.2.1 // indirect
 )

@@ -4,10 +4,7 @@ import (
 	"context"
 	"crypto/tls"
 	"crypto/x509"
-	"io/ioutil"
 	"net/http"
-	"net/url"
-	"path"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
@@ -31,21 +28,7 @@ func newGetServiceAPISpecHandler(db *sqlx.DB, logger *zap.Logger, rootCA *x509.C
 		logger: logger.With(zap.String("handler", "list-services")),
 	}
 
-	transport, ok := http.DefaultTransport.(*http.Transport)
-	if !ok {
-		// This can happen when the internals of net/http change.
-		// Afaik an interface implementation isn't under the Go1 compatibility promise.
-		// TODO: #209 consider setting up a custom http.Transport to use as the proxies RoundTripper.
-		panic("http.DefaultTransport must be of type *http.Transport")
-	}
-	// load client certificate
-	transport.TLSClientConfig = &tls.Config{
-		RootCAs:      rootCA,
-		Certificates: []tls.Certificate{certKeyPair},
-	}
-	h.httpClient = &http.Client{
-		Transport: transport,
-	}
+	h.httpClient = newHTTPClient(rootCA, certKeyPair)
 
 	var err error
 	h.stmtSelectServiceInway, err = db.Preparex(`
@@ -80,22 +63,9 @@ func (h *getServiceAPISpecHandler) GetServiceAPISpec(ctx context.Context, req *d
 		return nil, status.New(codes.Internal, "Database error.").Err()
 	}
 
-	inwayURL := url.URL{
-		Scheme: "https",
-		Host:   inwayAddress,
-		Path:   path.Join("/.nlx/api-spec-doc/", req.ServiceName),
-	}
-
-	res, err := h.httpClient.Get(inwayURL.String())
+	resp.Document, err = getInwayAPISpecs(h.httpClient, inwayAddress, req.ServiceName)
 	if err != nil {
-		h.logger.Info("failed to fetch api spec doc from remote inway", zap.String("inwayURL", inwayURL.String()), zap.Error(err))
-		return nil, status.New(codes.InvalidArgument, "Invalid inway URL").Err()
-	}
-	defer res.Body.Close()
-
-	resp.Document, err = ioutil.ReadAll(res.Body)
-	if err != nil {
-		h.logger.Info("failed to read api spec doc from remote inway", zap.String("inwayURL", inwayURL.String()), zap.Error(err))
+		h.logger.Info("failed to read api spec doc from remote inway", zap.Error(err))
 		return nil, status.New(codes.InvalidArgument, "Invalid inway URL").Err()
 	}
 

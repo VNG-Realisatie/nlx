@@ -4,6 +4,9 @@ import (
 	"context"
 	"crypto/tls"
 	"crypto/x509"
+	"net"
+	"net/http"
+	"time"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
@@ -31,7 +34,7 @@ func New(logger *zap.Logger, db *sqlx.DB, rootCA *x509.CertPool, certKeyPair tls
 
 	var err error
 
-	s.registerInwayHandler, err = newRegisterInwayHandler(db, logger)
+	s.registerInwayHandler, err = newRegisterInwayHandler(db, logger, rootCA, certKeyPair)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to setup RegisterInway handler")
 	}
@@ -58,4 +61,26 @@ func getOrganisationNameFromRequest(ctx context.Context) (string, error) {
 	}
 	tlsInfo := peer.AuthInfo.(credentials.TLSInfo)
 	return tlsInfo.State.VerifiedChains[0][0].Subject.Organization[0], nil
+}
+
+func newHTTPClient(rootCA *x509.CertPool, certKeyPair tls.Certificate) *http.Client {
+	transport := &http.Transport{
+		Proxy: http.ProxyFromEnvironment,
+		DialContext: (&net.Dialer{
+			Timeout:   30 * time.Second,
+			KeepAlive: 30 * time.Second,
+			DualStack: true,
+		}).DialContext,
+		MaxIdleConns:          100,
+		IdleConnTimeout:       90 * time.Second,
+		TLSHandshakeTimeout:   10 * time.Second,
+		ExpectContinueTimeout: 1 * time.Second,
+		TLSClientConfig: &tls.Config{
+			RootCAs:      rootCA,
+			Certificates: []tls.Certificate{certKeyPair},
+		},
+	}
+	return &http.Client{
+		Transport: transport,
+	}
 }
