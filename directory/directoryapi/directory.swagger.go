@@ -108,6 +108,10 @@ SwaggerJSONDirectory = `
         "service_name": {
           "type": "string"
         },
+        "internal": {
+          "type": "boolean",
+          "format": "boolean"
+        },
         "inway_addresses": {
           "type": "array",
           "items": {
@@ -127,6 +131,10 @@ SwaggerJSONDirectory = `
       "properties": {
         "name": {
           "type": "string"
+        },
+        "internal": {
+          "type": "boolean",
+          "format": "boolean"
         },
         "documentation_url": {
           "type": "string"

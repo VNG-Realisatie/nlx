@@ -2,14 +2,13 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"crypto/rsa"
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/go-chi/chi"
@@ -63,21 +62,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
-	defer func() { // TODO(GeertJohan): #205 make this a common/process exitFunc?
-		syncErr := logger.Sync()
-		if syncErr != nil {
-			// notify the user that proper logging has failed
-			fmt.Fprintf(os.Stderr, "failed to sync zap logger: %v\n", syncErr)
-			// don't exit when we're in a panic
-			if p := recover(); p != nil {
-				panic(p)
-			}
-			os.Exit(1)
-		}
-	}()
-
-	process.Setup(logger)
-
+	process := process.NewProcess(logger)
 	insightConfig := config.LoadInsightConfig(logger, options.InsightConfig)
 
 	db, err := sqlx.Open("postgres", options.PostgresDSN)
@@ -85,6 +70,7 @@ func main() {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))
 	}
 	db.MapperFunc(xstrings.ToSnakeCase)
+	process.CloseGracefully(db.Close)
 
 	dbversion.WaitUntilLatestTxlogDBVersion(logger, db.DB)
 
@@ -101,10 +87,31 @@ func main() {
 	r.Get("/getDataSubjects", listDataSubjects(logger, insightConfig.DataSubjects))
 	r.Post("/generateJWT", generateJWT(logger, insightConfig.DataSubjects, "insight", rsaSignPrivateKey))
 	r.Post("/fetch", newTxlogFetcher(logger, db, insightConfig.DataSubjects, rsaVerifyPublicKey))
+
+	server := &http.Server{
+		Addr:    options.ListenAddress,
+		Handler: r,
+	}
+
+	process.CloseGracefully(func() error {
+		// Context with timeout to terminate server if shutdown operation takes longer than minute
+		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
+		defer cancel() // do not remove. Otherwise it could cause implicit goroutine leak
+		return server.Shutdown(localCtx)
+
+	})
+
 	err = http.ListenAndServe(options.ListenAddress, r)
 	if err != nil {
-		logger.Fatal("failed to ListenAndServe", zap.Error(err))
+		if err != http.ErrServerClosed {
+			logger.Error("failed to ListenAndServe", zap.Error(err))
+			return
+		}
 	}
+
+	// Listener will return immediately on Shutdown call.
+	// So we need to wait until all open connections will be closed gracefully
+	<-process.ShutdownComplete
 }
 
 func listDataSubjects(logger *zap.Logger, dataSubjects map[string]config.DataSubject) http.HandlerFunc {

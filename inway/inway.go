@@ -21,6 +21,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/orgtls"
+	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/directory/directoryapi"
 	"go.nlx.io/nlx/inway/config"
@@ -107,7 +108,7 @@ func NewInway(logger *zap.Logger, logdb *sqlx.DB, selfAddress string, tlsOptions
 }
 
 // AddServiceEndpoint adds an ServiceEndpoint to the inway's internal registry.
-func (i *Inway) AddServiceEndpoint(s ServiceEndpoint, serviceDetails config.ServiceDetails) error {
+func (i *Inway) AddServiceEndpoint(p *process.Process, s ServiceEndpoint, serviceDetails config.ServiceDetails) error {
 	i.serviceEndpointsLock.Lock()
 	defer i.serviceEndpointsLock.Unlock()
 
@@ -115,46 +116,57 @@ func (i *Inway) AddServiceEndpoint(s ServiceEndpoint, serviceDetails config.Serv
 		return errors.New("service endpoint for a service with the same name has already been registered")
 	}
 	i.serviceEndpoints[s.ServiceName()] = s
-	i.announceToDirectory(s, serviceDetails)
+	i.announceToDirectory(p, s, serviceDetails)
 	return nil
 }
 
-func (i *Inway) announceToDirectory(s ServiceEndpoint, serviceDetails config.ServiceDetails) {
+func (i *Inway) announceToDirectory(p *process.Process, s ServiceEndpoint, serviceDetails config.ServiceDetails) {
 	go func() {
 		expBackOff := &backoff.Backoff{
 			Min:    100 * time.Millisecond,
 			Factor: 2,
 			Max:    20 * time.Second,
 		}
+		shutDownComplete := make(chan struct{})
+		p.CloseGracefully(func() error {
+			close(shutDownComplete)
+			return nil
+		})
+		sleepDuration := 10 * time.Second
 		for {
-			resp, err := i.directoryClient.RegisterInway(context.Background(), &directoryapi.RegisterInwayRequest{
-				InwayAddress: i.selfAddress,
-				Services: []*directoryapi.RegisterInwayRequest_RegisterService{
-					{
-						Name:                        s.ServiceName(),
-						DocumentationUrl:            serviceDetails.DocumentationURL,
-						ApiSpecificationType:        serviceDetails.APISpecificationType,
-						ApiSpecificationDocumentUrl: serviceDetails.APISpecificationDocumentURL,
-						InsightApiUrl:               serviceDetails.InsightAPIURL,
-						IrmaApiUrl:                  serviceDetails.IrmaAPIURL,
+			select {
+			case <-shutDownComplete:
+				return
+			case <-time.After(sleepDuration):
+				resp, err := i.directoryClient.RegisterInway(context.Background(), &directoryapi.RegisterInwayRequest{
+					InwayAddress: i.selfAddress,
+					Services: []*directoryapi.RegisterInwayRequest_RegisterService{
+						{
+							Name:                        s.ServiceName(),
+						    Internal:                    serviceDetails.Internal,
+							DocumentationUrl:            serviceDetails.DocumentationURL,
+							ApiSpecificationType:        serviceDetails.APISpecificationType,
+							ApiSpecificationDocumentUrl: serviceDetails.APISpecificationDocumentURL,
+							InsightApiUrl:               serviceDetails.InsightAPIURL,
+							IrmaApiUrl:                  serviceDetails.IrmaAPIURL,
+						},
 					},
-				},
-			})
-			if err != nil {
-				if errStatus, ok := status.FromError(err); ok && errStatus.Code() == codes.Unavailable {
-					i.logger.Info("waiting for directory...")
-					time.Sleep(expBackOff.Duration())
-					continue
+				})
+				if err != nil {
+					if errStatus, ok := status.FromError(err); ok && errStatus.Code() == codes.Unavailable {
+						i.logger.Info("waiting for directory...")
+						sleepDuration = expBackOff.Duration()
+						continue
+					}
+					i.logger.Error("failed to register to directory", zap.Error(err))
 				}
-				i.logger.Error("failed to register to directory", zap.Error(err))
-			}
-			if resp != nil && resp.Error != "" {
-				i.logger.Error(fmt.Sprintf("failed to register to directory: %s", resp.Error))
+				if resp != nil && resp.Error != "" {
+					i.logger.Error(fmt.Sprintf("failed to register to directory: %s", resp.Error))
+				}
+				sleepDuration = 10 * time.Second
+				expBackOff.Reset()
 			}
 
-			// sleep 10 seconds before re-registering
-			time.Sleep(10 * time.Second)
-			expBackOff.Reset()
 		}
 	}()
 }

@@ -5,10 +5,11 @@ import (
 	"crypto/x509"
 	"fmt"
 	"io"
-	"net"
 	"net/http"
 	"runtime/debug"
 	"strings"
+	"sync"
+	"time"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
@@ -21,6 +22,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials"
 
+	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/directory/directoryapi"
 )
 
@@ -35,10 +37,11 @@ func newGRPCSplitterHandlerFunc(grpcServer *grpc.Server, otherHandler http.Handl
 			otherHandler.ServeHTTP(w, r)
 		}
 	})
+
 }
 
 // runServer is a blocking function which sets up the grpc and http/json server and runs them on a single address/port.
-func runServer(log *zap.Logger, address string, addressPlain string, caCertPool *x509.CertPool, certKeyPair tls.Certificate, directoryService directoryapi.DirectoryServer) {
+func runServer(p *process.Process, log *zap.Logger, address string, addressPlain string, caCertPool *x509.CertPool, certKeyPair tls.Certificate, directoryService directoryapi.DirectoryServer) {
 
 	// setup zap connection for global grpc logging
 	grpc_zap.ReplaceGrpcLogger(log)
@@ -95,44 +98,59 @@ func runServer(log *zap.Logger, address string, addressPlain string, caCertPool 
 	httpRouter.Handle("/", gatewayMux)
 
 	// Start HTTPS server
-	go func() {
-		// start a simple tcp listener
-		tcpListener, err := net.Listen("tcp", address)
-		if err != nil {
-			log.With(zap.Error(err)).Fatal(fmt.Sprintf("could not listen on %s", address))
-		}
-
-		// wrap the tcp listener with TLS
-		tlsConfig := &tls.Config{
+	// let server handle connections on the TLS Listener
+	HTTPSHandler := &http.Server{
+		Addr: address,
+		TLSConfig: &tls.Config{
 			Certificates: []tls.Certificate{certKeyPair},
 			NextProtos:   []string{"h2"},
 			ClientCAs:    caCertPool,
 			ClientAuth:   tls.RequireAndVerifyClientCert,
-		}
-		tlsListener := tls.NewListener(tcpListener, tlsConfig)
+		},
+		Handler: newGRPCSplitterHandlerFunc(grpcServer, httpRouter),
+	}
 
-		// let server handle connections on the TLS Listener
-		srv := &http.Server{
-			Addr:    address,
-			Handler: newGRPCSplitterHandlerFunc(grpcServer, httpRouter),
-		}
-		err = srv.Serve(tlsListener)
+	go func() {
+		err = HTTPSHandler.ListenAndServeTLS("", "") // Key and Cert is empty because we provided them in TLSConfig
 		if err != nil {
-			log.Fatal("ListenAndServe for HTTPS failed", zap.Error(err))
+			if err != http.ErrServerClosed {
+				log.Error("ListenAndServe for HTTPS failed", zap.Error(err))
+			}
 		}
 	}()
 
 	// Start plain HTTP server, during the PoC this is proxied by k8s ingress which adds TLS using letsencrypt.
-	// TODO: #206 When directory has a separate storage/backing, the inspection API should actually become a separate process.
-	go func() {
-		err := http.ListenAndServe(addressPlain, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	HTTPHandler := &http.Server{
+		Addr: addressPlain,
+		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			fmt.Printf("proto:%d path:%s\n", r.ProtoMajor, r.URL.Path)
 			httpRouter.ServeHTTP(w, r)
-		}))
-		if err != nil {
-			log.Fatal("ListenAndServe plain HTTP failed", zap.Error(err))
+		}),
+	}
+	// TODO: #206 When directory has a separate storage/backing, the inspection API should actually become a separate process.
+	go func() {
+		if err := HTTPHandler.ListenAndServe(); err != nil {
+			if err != http.ErrServerClosed {
+				log.Error("ListenAndServe plain HTTP failed", zap.Error(err))
+			}
 		}
 	}()
+	wg := sync.WaitGroup{}
+	wg.Add(2)
+	p.CloseGracefully(func() error {
+		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
+		defer cancel() // do not remove. Otherwise it could cause implicit goroutine leak
+		err := HTTPSHandler.Shutdown(localCtx)
+		wg.Done()
+		return err
+	})
+	p.CloseGracefully(func() error {
+		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
+		defer cancel() // do not remove. Otherwise it could cause implicit goroutine leak
+		err := HTTPHandler.Shutdown(localCtx)
+		wg.Done()
+		return err
+	})
 
-	select {}
+	wg.Wait()
 }

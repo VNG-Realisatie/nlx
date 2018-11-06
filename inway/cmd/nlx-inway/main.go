@@ -8,10 +8,9 @@ import (
 	"crypto/x509"
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/huandu/xstrings"
-	flags "github.com/jessevdk/go-flags"
+	"github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
@@ -61,23 +60,9 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
-	defer func() { // TODO(GeertJohan): #205 make this a common/process exitFunc?
-		syncErr := logger.Sync()
-		if syncErr != nil {
-			// notify the user that proper logging has failed
-			fmt.Fprintf(os.Stderr, "failed to sync zap logger: %v\n", syncErr)
-			// don't exit when we're in a panic
-			if p := recover(); p != nil {
-				panic(p)
-			}
-			os.Exit(1)
-		}
-	}()
-
-	process.Setup(logger)
+	process := process.NewProcess(logger)
 
 	serviceConfig := config.LoadServiceConfig(logger, options.ServiceConfig)
-
 	var logDB *sqlx.DB
 	if !options.DisableLogdb {
 		logDB, err = sqlx.Open("postgres", options.PostgresDSN)
@@ -87,6 +72,7 @@ func main() {
 		logDB.MapperFunc(xstrings.ToSnakeCase)
 
 		dbversion.WaitUntilLatestTxlogDBVersion(logger, logDB.DB)
+		process.CloseGracefully(logDB.Close)
 	}
 
 	iw, err := inway.NewInway(logger, logDB, options.SelfAddress, options.TLSOptions, options.DirectoryAddress, serviceConfig)
@@ -115,10 +101,11 @@ func main() {
 		default:
 			logger.Fatal(fmt.Sprintf(`invalid authorization model "%s" for service "%s"`, serviceDetails.AuthorizationModel, serviceName))
 		}
-		iw.AddServiceEndpoint(endpoint, serviceDetails)
+		iw.AddServiceEndpoint(process, endpoint, serviceDetails)
 	}
+
 	// Listen on the address provided in the options
-	err = iw.ListenAndServeTLS(options.ListenAddress)
+	err = iw.ListenAndServeTLS(process, options.ListenAddress)
 	if err != nil {
 		logger.Fatal("failed to listen and serve", zap.Error(err))
 	}

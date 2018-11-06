@@ -1,12 +1,15 @@
 package directoryservice
 
 import (
+	"context"
 	"crypto/tls"
 	"crypto/x509"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/peer"
 
 	"go.nlx.io/nlx/directory/directoryapi"
 )
@@ -46,4 +49,13 @@ func New(logger *zap.Logger, db *sqlx.DB, rootCA *x509.CertPool, certKeyPair tls
 	}
 
 	return s, nil
+}
+
+func getOrganisationNameFromRequest(ctx context.Context) (string, error) {
+	peer, ok := peer.FromContext(ctx)
+	if !ok {
+		return "", errors.New("failed to obtain peer from context")
+	}
+	tlsInfo := peer.AuthInfo.(credentials.TLSInfo)
+	return tlsInfo.State.VerifiedChains[0][0].Subject.Organization[0], nil
 }

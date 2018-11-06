@@ -9,15 +9,17 @@ import (
 	"sync"
 	"time"
 
+	"go.nlx.io/nlx/common/process"
+
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
-
 	"go.nlx.io/nlx/directory-monitor/health"
+	"go.uber.org/zap"
 )
 
 // HealthChecker checks the inways of a StoredService and modifies it's health state directly in the StoredService struct.
 type healthChecker struct {
+	wg         *sync.WaitGroup
 	logger     *zap.Logger
 	httpClient *http.Client
 
@@ -36,7 +38,7 @@ type availability struct {
 }
 
 // RunHealthChecker starts a healthchecker process
-func RunHealthChecker(logger *zap.Logger, db *sqlx.DB, caCertPool *x509.CertPool, certKeyPair tls.Certificate) error {
+func RunHealthChecker(process *process.Process, logger *zap.Logger, db *sqlx.DB, caCertPool *x509.CertPool, certKeyPair tls.Certificate) error {
 	h := &healthChecker{
 		logger: logger,
 		httpClient: &http.Client{Transport: &http.Transport{
@@ -71,12 +73,11 @@ func RunHealthChecker(logger *zap.Logger, db *sqlx.DB, caCertPool *x509.CertPool
 		return errors.Wrap(err, "failed to prepare stmtUpdateHealth")
 	}
 
-	return h.run()
+	return h.run(process)
 }
 
-func (h *healthChecker) run() error {
+func (h *healthChecker) run(process *process.Process) error {
 	chInitialLoad := make(chan struct{})
-
 	go func() {
 		for {
 			newAvailabilities := []availability{}
@@ -105,13 +106,22 @@ func (h *healthChecker) run() error {
 	}()
 
 	<-chInitialLoad // wait for initial load to be done
+	shutDown := make(chan struct{})
+	process.CloseGracefully(func() error {
+		close(shutDown)
+		return nil
+	})
 	for {
-		h.availabilitiesLock.RLock()
-		for _, av := range h.availabilities {
-			go h.checkAvailabilityHealth(av)
+		select {
+		case <-time.After(5 * time.Second):
+			h.availabilitiesLock.RLock()
+			for _, av := range h.availabilities {
+				go h.checkAvailabilityHealth(av)
+			}
+			h.availabilitiesLock.RUnlock()
+		case <-shutDown:
+			return nil
 		}
-		h.availabilitiesLock.RUnlock()
-		time.Sleep(5 * time.Second)
 	}
 }
 

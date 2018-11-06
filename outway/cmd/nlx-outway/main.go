@@ -7,7 +7,7 @@ import (
 	"log"
 
 	"github.com/huandu/xstrings"
-	flags "github.com/jessevdk/go-flags"
+	"github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -60,8 +60,7 @@ func main() {
 		}
 	}()
 
-	process.Setup(logger)
-
+	process := process.NewProcess(logger)
 	var logDB *sqlx.DB
 	if !options.DisableLogdb {
 		logDB, err = sqlx.Open("postgres", options.PostgresDSN)
@@ -69,17 +68,18 @@ func main() {
 			logger.Fatal("could not open connection to postgres", zap.Error(err))
 		}
 		logDB.MapperFunc(xstrings.ToSnakeCase)
-
+		process.CloseGracefully(logDB.Close)
 		dbversion.WaitUntilLatestTxlogDBVersion(logger, logDB.DB)
 	}
 
 	// Create new outway and provide it with a hardcoded service.
-	ow, err := outway.NewOutway(logger, logDB, options.TLSOptions, options.DirectoryAddress)
+	ow, err := outway.NewOutway(process, logger, logDB, options.TLSOptions, options.DirectoryAddress)
 	if err != nil {
 		logger.Fatal("failed to setup outway", zap.Error(err))
 	}
+
 	// Listen on the address provided in the options
-	err = ow.ListenAndServe(options.ListenAddress)
+	err = ow.ListenAndServe(process, options.ListenAddress)
 	if err != nil {
 		logger.Fatal("failed to listen and serve", zap.Error(err))
 	}

@@ -4,24 +4,42 @@
 package outway
 
 import (
+	"context"
 	"encoding/binary"
 	"hash/crc64"
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
+
+	"go.nlx.io/nlx/common/process"
+	"go.nlx.io/nlx/common/transactionlog"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
-
-	"go.nlx.io/nlx/common/transactionlog"
 )
 
 // ListenAndServe is a blocking function that listens on provided tcp address to handle requests.
-func (o *Outway) ListenAndServe(address string) error {
-	err := http.ListenAndServe(address, o)
-	if err != nil {
-		return errors.Wrap(err, "failed to run http server")
+func (o *Outway) ListenAndServe(process *process.Process, address string) error {
+	server := &http.Server{
+		Addr:    address,
+		Handler: o,
 	}
+
+	process.CloseGracefully(func() error {
+		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
+		defer cancel()
+		return server.Shutdown(localCtx)
+	})
+
+	err := server.ListenAndServe()
+	if err != nil {
+		if err != http.ErrServerClosed {
+			return errors.Wrap(err, "failed to run http server")
+		}
+	}
+
+	o.wg.Wait() // Wait until all async jobs will finish
 	return nil
 }
 

@@ -2,9 +2,7 @@ package main
 
 import (
 	"crypto/tls"
-	"fmt"
 	"log"
-	"os"
 
 	"github.com/huandu/xstrings"
 	flags "github.com/jessevdk/go-flags"
@@ -58,26 +56,14 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
-	defer func() { // TODO(GeertJohan): #205 make this a common/process exitFunc?
-		syncErr := logger.Sync()
-		if syncErr != nil {
-			// notify the user that proper logging has failed
-			fmt.Fprintf(os.Stderr, "failed to sync zap logger: %v\n", syncErr)
-			// don't exit when we're in a panic
-			if p := recover(); p != nil {
-				panic(p)
-			}
-			os.Exit(1)
-		}
-	}()
 
-	process.Setup(logger)
-
+	process := process.NewProcess(logger)
 	db, err := sqlx.Open("postgres", options.PostgresDSN)
 	if err != nil {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))
 	}
 	db.MapperFunc(xstrings.ToSnakeCase)
+	process.CloseGracefully(db.Close)
 
 	dbversion.WaitUntilLatestDirectoryDBVersion(logger, db.DB)
 
@@ -95,5 +81,5 @@ func main() {
 		logger.Fatal("failed to create new directory service", zap.Error(err))
 	}
 
-	runServer(logger, options.ListenAddress, options.ListenAddressPlain, caCertPool, certKeyPair, directoryService)
+	runServer(process, logger, options.ListenAddress, options.ListenAddressPlain, caCertPool, certKeyPair, directoryService)
 }
