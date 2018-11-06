@@ -22,6 +22,7 @@ type ServiceDetails struct {
 	APISpecificationDocumentURL string   `toml:"api-specification-document-url"` // Config parameter will be moved to directory admin interface
 	InsightAPIURL               string   `toml:"insight-api-url"`                // Config parameter will be moved to directory admin interface
 	IrmaAPIURL                  string   `toml:"irma-api-url"`                   // Config parameter will be moved to directory admin interface
+	CACertPath                  string   `toml:"ca-cert-path"`
 	Internal                    bool     `toml:"internal"`
 }
 

@@ -43,11 +43,11 @@ func LoadRootCert(rootCertFile string) (*x509.CertPool, error) {
 	roots := x509.NewCertPool()
 	rootPEM, err := ioutil.ReadFile(rootCertFile)
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to read NLX CA root PEM file `%s`", rootCertFile)
+		return nil, errors.Wrapf(err, "failed to read CA root PEM file `%s`", rootCertFile)
 	}
 	ok := roots.AppendCertsFromPEM(rootPEM)
 	if !ok {
-		return nil, errors.Errorf("failed to parse NLX CA root PEM from file `%s`", rootCertFile)
+		return nil, errors.Errorf("failed to parse CA root PEM from file `%s`", rootCertFile)
 	}
 	return roots, nil
 }

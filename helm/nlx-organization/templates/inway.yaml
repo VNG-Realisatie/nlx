@@ -10,6 +10,21 @@ data:
   service-config.toml: |
     {{- .Values.inway.config | nindent 4 }}
 ---
+{{ end }}
+{{ if .Values.inway.rootca }}  
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: inway-service-rootca
+  namespace: {{.Release.Namespace}}
+  labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
+data:
+  {{- range $key, $val := .Values.inway.rootca }}
+  {{- $key | nindent 2}}: |
+    {{- $val | nindent 4}}
+{{- end}}
+---
+{{ end}}
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
@@ -33,6 +48,12 @@ spec:
         - name: inway-service-config
           configMap:
             name: inway-service-config
+        {{ if .Values.inway.rootca }}
+        - name: ca-certs  
+          configmap:
+            name: inway-service-rootca
+        {{ end }} 
+        
 
       initContainers:
         - name: inway-certs
@@ -77,7 +98,10 @@ spec:
               mountPath: /certs
             - name: inway-service-config
               mountPath: /inway-service-config
-
+            {{ if .Values.inway.rootca }}  
+            - name: ca-certs
+              mountPath: /ca-certs
+            {{ end }}
       # NOTE: workarround because .minikube doesn't resolve via DNS
       {{ if .Values.externalIP }}
       hostAliases:
@@ -114,5 +138,4 @@ spec:
         - backend:
             serviceName: {{.component}}
             servicePort: gateway
-{{ end }}
 {{ end }}
