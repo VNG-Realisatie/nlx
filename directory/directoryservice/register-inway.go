@@ -2,8 +2,10 @@ package directoryservice
 
 import (
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
-	"net/url"
+	"net/http"
 	"regexp"
 
 	"github.com/jmoiron/sqlx"
@@ -21,15 +23,19 @@ type registerInwayHandler struct {
 
 	stmtInsertAvailability *sqlx.Stmt
 
+	httpClient *http.Client
+
 	regexpName *regexp.Regexp
 }
 
-func newRegisterInwayHandler(db *sqlx.DB, logger *zap.Logger) (*registerInwayHandler, error) {
+func newRegisterInwayHandler(db *sqlx.DB, logger *zap.Logger, rootCA *x509.CertPool, certKeyPair tls.Certificate) (*registerInwayHandler, error) {
 	h := &registerInwayHandler{
 		logger: logger.With(zap.String("handler", "register-inway")),
 	}
 
 	var err error
+
+	h.httpClient = newHTTPClient(rootCA, certKeyPair)
 
 	h.regexpName, err = regexp.Compile(`^[a-zA-Z0-9-]{1,100}$`)
 	if err != nil {
@@ -92,10 +98,16 @@ func (h *registerInwayHandler) RegisterInway(ctx context.Context, req *directory
 			h.logger.Info("invalid service name in registerinwayrequest", zap.String("service name", service.Name))
 			return nil, status.New(codes.InvalidArgument, "Invalid servicename").Err()
 		}
-		_, err := url.Parse(service.DocumentationUrl)
-		if err != nil {
-			h.logger.Info("invalid documentation url provided by inway", zap.String("documentation url", service.DocumentationUrl), zap.Error(err))
-			return nil, status.New(codes.InvalidArgument, "Invalid documentation URL provided").Err()
+		h.logger.Info("service documentation url", zap.String("documentation url", service.ApiSpecificationDocumentUrl))
+		var inwayAPISpecificationType string
+		if len(service.ApiSpecificationDocumentUrl) > 0 {
+			inwayAPISpecificationType, err = getInwayAPISpecsType(h.httpClient, req.InwayAddress, service.Name)
+			if err != nil {
+				h.logger.Info("invalid documentation url provided by inway", zap.String("documentation url", service.ApiSpecificationDocumentUrl), zap.Error(err))
+				return nil, status.New(codes.InvalidArgument, "Invalid documentation URL provided").Err()
+			}
+
+			h.logger.Info("detected api spec", zap.String("apispectype", inwayAPISpecificationType))
 		}
 
 		_, err = h.stmtInsertAvailability.Exec(
@@ -103,7 +115,7 @@ func (h *registerInwayHandler) RegisterInway(ctx context.Context, req *directory
 			service.Name,
 			service.Internal,
 			service.DocumentationUrl,
-			service.ApiSpecificationType,
+			inwayAPISpecificationType,
 			req.InwayAddress,
 			service.InsightApiUrl,
 			service.IrmaApiUrl,
