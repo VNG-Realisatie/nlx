@@ -89,7 +89,7 @@ class OrganizationPage extends Component {
 
         return (
             <div>
-                <Typography variant="title" color="primary" noWrap gutterBottom>
+                <Typography variant="h6" color="primary" noWrap gutterBottom>
                     Organization: {this.state.organization.name}
                 </Typography>
                 {content}

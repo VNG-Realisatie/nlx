@@ -4,18 +4,21 @@ import 'typeface-muli'
 
 export const muiTheme = createMuiTheme({
     typography: {
+        useNextVariants: true,
         fontFamily: "'Source Sans Pro', 'Helvetica', 'Arial', sans-serif",
         fontSize: 16,
         fontWeightLight: 300,
         fontWeightRegular: 400,
         fontWeightMedium: 600,
         lineHeight: 1.5,
-        headline: {
+        // previously called headline
+        h5: {
             fontFamily: "'Muli', 'Helvetica', 'Arial', sans-serif",
             fontWeight: 600,
             letterSpacing: -1,
         },
-        title: {
+        // previously called title
+        h6: {
             fontFamily: "'Muli', 'Helvetica', 'Arial', sans-serif",
             fontWeight: 600,
             letterSpacing: -1,
