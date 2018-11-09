@@ -4,6 +4,9 @@ import Search from './components/Search'
 import Table from './components/Table'
 import axios from 'axios'
 
+import ErrorPage from './components/ErrorPage'
+import Spinner from './components/Spinner'
+
 export default class Overview extends React.Component {
     constructor(props) {
         super(props)
@@ -15,32 +18,41 @@ export default class Overview extends React.Component {
             displayOnlyContaining: '',
             sortBy: 'created',
             sortAscending: true,
+            loading: true,
+            error: false,
         }
 
         this.switch = this.switch.bind(this)
         this.filterLogs = this.filterLogs.bind(this)
     }
 
-    componentDidMount() {
+    getLogs = () => {
+        let logsIn, logsOut
         axios
             .get(`/api/in`)
             .then((res) => {
-                const logs = res.data.records
-                this.setState({ logsIn: logs })
+                logsIn = res.data.records
+                return axios.get(`/api/out`)
             })
-            .catch((e) => {
-                console.error(e)
-            })
-
-        axios
-            .get(`/api/out`)
             .then((res) => {
-                const logs = res.data.records
-                this.setState({ logsOut: logs })
+                logsOut = res.data.records
+                this.setState({
+                    logsIn,
+                    logsOut,
+                    loading: false,
+                    error: false,
+                })
             })
             .catch((e) => {
-                console.error(e)
+                this.setState({
+                    loading: false,
+                    error: true,
+                })
             })
+    }
+
+    componentDidMount() {
+        this.getLogs()
     }
 
     switch(val) {
@@ -96,7 +108,15 @@ export default class Overview extends React.Component {
     }
 
     render() {
-        const { logsIn, logsOut } = this.state
+        const { logsIn, logsOut, loading, error } = this.state
+
+        if (loading) {
+            return <Spinner />
+        }
+
+        if (error) {
+            return <ErrorPage />
+        }
 
         const filteredLogsIn = this.filterLogs(logsIn)
         const filteredLogsOut = this.filterLogs(logsOut)

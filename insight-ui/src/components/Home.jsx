@@ -4,10 +4,10 @@ import { Typography } from '@material-ui/core'
 
 const Home = () => (
     <React.Fragment>
-        <Typography variant="title" color="primary" noWrap gutterBottom>
+        <Typography variant="h6" color="primary" noWrap gutterBottom>
             Home
         </Typography>
-        <Typography variant="subheading" color="default" noWrap gutterBottom>
+        <Typography variant="subtitle1" color="default" noWrap gutterBottom>
             <p>Welcome to the DIVA 3rd party reference implementation.</p>
             <ul>
                 <li>

@@ -32,10 +32,6 @@
     "jest-enzyme": "^7.0.0",
     "prettier": "^1.14.3"
   },
-  "proxy": {
-    "/api": {
-      "target": "http://logdb-api:2019/api",
-      "secure": false
-    }
-  }
+  "proxy-local": "http://txlog.dev.haarlem.minikube:30080",
+  "proxy": "https://txlog.demo.haarlem.commonground.nl/"
 }
