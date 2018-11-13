@@ -1,10 +1,10 @@
 <h1><img alt="NLX" src="logo.png" width="200"></h1>
 
-[![pipeline status](https://gitlab.com/commonground/nlx/badges/master/pipeline.svg)](https://gitlab.com/commonground/nlx/commits/master)  [![coverage report](https://gitlab.com/commonground/nlx/badges/master/coverage.svg)](https://gitlab.com/commonground/nlx/commits/master)  [![Repo Status](https://img.shields.io/badge/status-proof%20of%20concept-lightgrey.svg?longCache=true)](https://docs.nlx.io/introduction/product-vision/)
+[![pipeline status](https://gitlab.com/commonground/nlx/badges/master/pipeline.svg)](https://gitlab.com/commonground/nlx/commits/master)  [![coverage report](https://gitlab.com/commonground/nlx/badges/master/coverage.svg)](https://gitlab.com/commonground/nlx/commits/master)  [![Repo Status](https://img.shields.io/badge/status-alpha-lightgrey.svg?longCache=true)](https://docs.nlx.io/introduction/product-vision/)
 
 NLX is an open source inter-organisational system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API landscape.
 
-This repository contains all of the components to the current **Proof of Concept** of the [NLX Product Vision](https://docs.nlx.io/introduction/product-vision/). Do **not** use this code in production.
+This repository contains all of the components required to act out the [NLX Product Vision](https://docs.nlx.io/introduction/product-vision/).
 
 ## Developing on NLX
 
