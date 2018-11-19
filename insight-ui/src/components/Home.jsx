@@ -8,12 +8,11 @@ const Home = () => (
             Home
         </Typography>
         <Typography variant="subtitle1" color="default" noWrap gutterBottom>
-            <p>Welcome to the DIVA 3rd party reference implementation.</p>
+            <p>Welcome to the NLX Insight App.</p>
             <ul>
                 <li>
-                    Visit the organizations using the menu items on the left.
+                    View logs by selecting an organizations using the menu items on the left.
                 </li>
-                <li>You need to sign in with your IRMA app.</li>
             </ul>
             <p>
                 <strong>
