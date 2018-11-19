@@ -1,5 +1,5 @@
 
-domain: acc.haarlem.commonground.nl
+domain: acc.voorbeeld-haarlem.nl
 organizationName: haarlem
 
 dbHost: postgresql.postgresql
@@ -22,8 +22,8 @@ inway:
       [services.kenau]
       endpoint-url = "http://JustHereForRegisteringIntoDirectoryWithInsightAndIrmaApiURLs:8000"
       authorization-model = "none"
-      insight-api-url = "https://insight-api.acc.haarlem.commonground.nl"
-      irma-api-url = "https://irma-api.acc.haarlem.commonground.nl"
+      insight-api-url = "https://insight-api.acc.voorbeeld-haarlem.nl"
+      irma-api-url = "https://irma-api.acc.voorbeeld-haarlem.nl"
 outway:
   enable: true
 demoService:

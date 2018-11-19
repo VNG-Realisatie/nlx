@@ -1,5 +1,5 @@
 
-domain: acc.rdw.commonground.nl
+domain: acc.voorbeeld-rdw.nl
 organizationName: rdw
 
 dbHost: postgresql.postgresql
@@ -22,8 +22,8 @@ inway:
       [services.kentekenregister]
       endpoint-url = "http://service:8000"
       authorization-model = "none"
-      insight-api-url = "https://insight-api.acc.rdw.commonground.nl"
-      irma-api-url = "https://irma-api.acc.rdw.commonground.nl"
+      insight-api-url = "https://insight-api.acc.voorbeeld-rdw.nl"
+      irma-api-url = "https://irma-api.acc.voorbeeld-rdw.nl"
 outway:
   enable: false
 demoService:
