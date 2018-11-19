@@ -171,5 +171,8 @@ func getOrganisationNameFromRequest(ctx context.Context) (string, error) {
 		return "", errors.New("failed to obtain peer from context")
 	}
 	tlsInfo := peer.AuthInfo.(credentials.TLSInfo)
+	if len(tlsInfo.State.VerifiedChains) == 0 {
+		return "", errors.New("no valid TLS certificate chain found")
+	}
 	return tlsInfo.State.VerifiedChains[0][0].Subject.Organization[0], nil
 }

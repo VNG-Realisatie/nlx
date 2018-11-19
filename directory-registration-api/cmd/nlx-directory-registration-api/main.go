@@ -88,7 +88,9 @@ func main() {
 	opts := []grpc.ServerOption{
 		grpc.Creds(credentials.NewTLS(&tls.Config{
 			Certificates: []tls.Certificate{certKeyPair}, // using the grpc server's own cert to connect to it, perhaps find a way for the http/json gateway to bypass TLS locally
-			RootCAs:      caCertPool,
+			ClientCAs:    caCertPool,
+			NextProtos:   []string{"h2"},
+			ClientAuth:   tls.RequireAndVerifyClientCert,
 		})),
 	}
 
