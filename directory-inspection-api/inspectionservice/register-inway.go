@@ -1,4 +1,4 @@
-package directoryservice
+package inspectionservice
 
 import (
 	"context"
@@ -15,7 +15,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"go.nlx.io/nlx/directory/directoryapi"
+	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 )
 
 type registerInwayHandler struct {
@@ -79,9 +79,9 @@ func newRegisterInwayHandler(db *sqlx.DB, logger *zap.Logger, rootCA *x509.CertP
 	return h, nil
 }
 
-func (h *registerInwayHandler) RegisterInway(ctx context.Context, req *directoryapi.RegisterInwayRequest) (*directoryapi.RegisterInwayResponse, error) {
+func (h *registerInwayHandler) RegisterInway(ctx context.Context, req *inspectionapi.RegisterInwayRequest) (*inspectionapi.RegisterInwayResponse, error) {
 	h.logger.Info("rpc request RegisterInway", zap.String("inway address", req.InwayAddress))
-	resp := &directoryapi.RegisterInwayResponse{}
+	resp := &inspectionapi.RegisterInwayResponse{}
 	organizationName, err := getOrganisationNameFromRequest(ctx)
 	if err != nil {
 		return nil, err

@@ -15,7 +15,7 @@ import (
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/directory-db/dbversion"
-	"go.nlx.io/nlx/directory/directoryservice"
+	"go.nlx.io/nlx/directory-inspection-api/inspectionservice"
 )
 
 var options struct {
@@ -76,7 +76,7 @@ func main() {
 		logger.Fatal("failed to load x509 keypair for directory", zap.Error(err))
 	}
 
-	directoryService, err := directoryservice.New(logger, db, caCertPool, certKeyPair, options.DemoEnv, options.DemoDomain)
+	directoryService, err := inspectionservice.New(logger, db, caCertPool, certKeyPair, options.DemoEnv, options.DemoDomain)
 	if err != nil {
 		logger.Fatal("failed to create new directory service", zap.Error(err))
 	}

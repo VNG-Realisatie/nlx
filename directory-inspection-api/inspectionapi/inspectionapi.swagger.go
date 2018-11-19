@@ -1,8 +1,11 @@
+package inspectionapi
+const (
+SwaggerJSONDirectory = `
 {
   "swagger": "2.0",
   "info": {
-    "title": "directory.proto",
-    "description": "Package directoryapi defines the directory api.",
+    "title": "inspectionapi.proto",
+    "description": "Package inspectionapi defines the directory api.",
     "version": "version not set"
   },
   "schemes": [
@@ -23,7 +26,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/directoryapiGetServiceAPISpecResponse"
+              "$ref": "#/definitions/inspectionapiGetServiceAPISpecResponse"
             }
           }
         },
@@ -42,7 +45,7 @@
           }
         ],
         "tags": [
-          "Directory"
+          "InspectionService"
         ]
       }
     },
@@ -54,12 +57,12 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/directoryapiListOrganizationsResponse"
+              "$ref": "#/definitions/inspectionapiListOrganizationsResponse"
             }
           }
         },
         "tags": [
-          "Directory"
+          "InspectionService"
         ]
       }
     },
@@ -71,12 +74,12 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/directoryapiListServicesResponse"
+              "$ref": "#/definitions/inspectionapiListServicesResponse"
             }
           }
         },
         "tags": [
-          "Directory"
+          "InspectionService"
         ]
       }
     }
@@ -105,10 +108,6 @@
         "service_name": {
           "type": "string"
         },
-        "internal": {
-          "type": "boolean",
-          "format": "boolean"
-        },
         "inway_addresses": {
           "type": "array",
           "items": {
@@ -120,6 +119,10 @@
         },
         "api_specification_type": {
           "type": "string"
+        },
+        "internal": {
+          "type": "boolean",
+          "format": "boolean"
         }
       }
     },
@@ -128,10 +131,6 @@
       "properties": {
         "name": {
           "type": "string"
-        },
-        "internal": {
-          "type": "boolean",
-          "format": "boolean"
         },
         "documentation_url": {
           "type": "string"
@@ -147,10 +146,14 @@
         },
         "irma_api_url": {
           "type": "string"
+        },
+        "internal": {
+          "type": "boolean",
+          "format": "boolean"
         }
       }
     },
-    "directoryapiGetServiceAPISpecResponse": {
+    "inspectionapiGetServiceAPISpecResponse": {
       "type": "object",
       "properties": {
         "type": {
@@ -162,7 +165,7 @@
         }
       }
     },
-    "directoryapiListOrganizationsResponse": {
+    "inspectionapiListOrganizationsResponse": {
       "type": "object",
       "properties": {
         "organizations": {
@@ -173,7 +176,7 @@
         }
       }
     },
-    "directoryapiListServicesResponse": {
+    "inspectionapiListServicesResponse": {
       "type": "object",
       "properties": {
         "services": {
@@ -184,7 +187,7 @@
         }
       }
     },
-    "directoryapiRegisterInwayResponse": {
+    "inspectionapiRegisterInwayResponse": {
       "type": "object",
       "properties": {
         "error": {
@@ -194,3 +197,4 @@
     }
   }
 }
+`)

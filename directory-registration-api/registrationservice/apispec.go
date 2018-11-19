@@ -1,4 +1,4 @@
-package directoryservice
+package registrationservice
 
 import (
 	"encoding/json"

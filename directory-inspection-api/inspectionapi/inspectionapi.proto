@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-// Package directoryapi defines the directory api.
-package directoryapi;
+// Package inspectionapi defines the directory api.
+package inspectionapi;
 
 import "google/api/annotations.proto";
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
@@ -11,8 +11,8 @@ option (gogoproto.sizer_all) = true;
 option (gogoproto.unmarshaler_all) = true;
 option (gogoproto.goproto_getters_all) = false;
 
-// The Directory service definition.
-service Directory {
+// The Inspection service definition.
+service InspectionService {
 	// RegisterInway registers an inway for a given service
 	rpc RegisterInway (RegisterInwayRequest) returns (RegisterInwayResponse) {}
 	

@@ -14,10 +14,14 @@ build:
     context: .
     docker:
       dockerfile: directory-db/Dockerfile
-  - image: nlxio/directory
+  - image: nlxio/directory-inspection-api
     context: .
     docker:
-      dockerfile: directory/Dockerfile
+      dockerfile: directory-inspection-api/Dockerfile
+  - image: nlxio/directory-registration-api
+    context: .
+    docker:
+      dockerfile: directory-registration-api/Dockerfile
   - image: nlxio/directory-monitor
     context: .
     docker:
@@ -65,7 +69,8 @@ profiles:
           caCertportalImage: nlxio/ca-certportal
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           directoryDBImage: nlxio/directory-db
-          directoryImage: nlxio/directory
+          directoryInspectionImage: nlxio/directory-inspection-api
+          directoryRegistrationImage: nlxio/directory-registration-api
           directoryMonitorImage: nlxio/directory-monitor
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs
