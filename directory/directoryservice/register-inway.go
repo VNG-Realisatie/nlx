@@ -49,8 +49,8 @@ func newRegisterInwayHandler(db *sqlx.DB, logger *zap.Logger, rootCA *x509.CertP
 				VALUES ($1, $7, $8)
 				ON CONFLICT ON CONSTRAINT organizations_uq_name
 					DO UPDATE SET
-						insight_log_endpoint = EXCLUDED.insight_log_endpoint,
-						insight_irma_endpoint = EXCLUDED.insight_irma_endpoint
+						insight_log_endpoint = COALESCE(NULLIF(EXCLUDED.insight_log_endpoint, ''), organizations.insight_log_endpoint),
+						insight_irma_endpoint = COALESCE(NULLIF(EXCLUDED.insight_irma_endpoint, ''), organizations.insight_irma_endpoint)
 				RETURNING id
 		), service AS (
 			INSERT INTO directory.services (organization_id, name, internal, documentation_url, api_specification_type)
