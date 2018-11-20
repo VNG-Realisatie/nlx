@@ -139,7 +139,8 @@ profiles:
           caCertportalImage: nlxio/ca-certportal
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           directoryDBImage: nlxio/directory-db
-          directoryImage: nlxio/directory
+          directoryInspectionImage: nlxio/directory-inspection-api
+          directoryRegistrationImage: nlxio/directory-registration-api
           directoryMonitorImage: nlxio/directory-monitor
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs
@@ -194,7 +195,8 @@ profiles:
           caCertportalImage: nlxio/ca-certportal
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           directoryDBImage: nlxio/directory-db
-          directoryImage: nlxio/directory
+          directoryInspectionImage: nlxio/directory-inspection-api
+          directoryRegistrationImage: nlxio/directory-registration-api
           directoryMonitorImage: nlxio/directory-monitor
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs
@@ -249,7 +251,8 @@ profiles:
           caCertportalImage: nlxio/ca-certportal
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           directoryDBImage: nlxio/directory-db
-          directoryImage: nlxio/directory
+          directoryInspectionImage: nlxio/directory-inspection-api
+          directoryRegistrationImage: nlxio/directory-registration-api
           directoryMonitorImage: nlxio/directory-monitor
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs

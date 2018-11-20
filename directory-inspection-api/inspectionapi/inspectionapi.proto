@@ -12,9 +12,9 @@ option (gogoproto.unmarshaler_all) = true;
 option (gogoproto.goproto_getters_all) = false;
 
 // The Inspection service definition.
-service InspectionService {
+service Directory {
 	// RegisterInway registers an inway for a given service
-	rpc RegisterInway (RegisterInwayRequest) returns (RegisterInwayResponse) {}
+	rpc RegisterInway (RegisterInwayRequest) returns (RegisterInwayResponse) {} // TODO: This is a duplicate of the registration call in directory registration API. Should be remove when all enviroments use the registration API
 	
 	// ListServices lists all services and their gateways.
 	rpc ListServices (ListServicesRequest) returns (ListServicesResponse) {

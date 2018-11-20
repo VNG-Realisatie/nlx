@@ -39,7 +39,7 @@ type Outway struct {
 
 	txlogger transactionlog.TransactionLogger
 
-	inspectionClient inspectionapi.InspectionServiceClient
+	inspectionClient inspectionapi.DirectoryClient
 
 	requestFlake *sonyflake.Sonyflake
 	ecmaTable    *crc64.Table
@@ -99,7 +99,7 @@ func NewOutway(process *process.Process, logger *zap.Logger, logdb *sqlx.DB, tls
 	if err != nil {
 		logger.Fatal("failed to setup connection to directory service", zap.Error(err))
 	}
-	o.inspectionClient = inspectionapi.NewInspectionServiceClient(directoryConn)
+	o.inspectionClient = inspectionapi.NewDirectoryClient(directoryConn)
 	err = o.updateServiceList(process)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to update internal service directory")

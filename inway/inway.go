@@ -45,7 +45,7 @@ type Inway struct {
 
 	txlogger transactionlog.TransactionLogger
 
-	directoryRegistrationClient registrationapi.RegistrationServiceClient
+	directoryRegistrationClient registrationapi.DirectoryRegistrationClient
 }
 
 // NewInway creates and prepares a new Inway.
@@ -103,7 +103,7 @@ func NewInway(logger *zap.Logger, logdb *sqlx.DB, selfAddress string, tlsOptions
 	if err != nil {
 		logger.Fatal("failed to setup connection to directory service", zap.Error(err))
 	}
-	i.directoryRegistrationClient = registrationapi.NewRegistrationServiceClient(directoryConn)
+	i.directoryRegistrationClient = registrationapi.NewDirectoryRegistrationClient(directoryConn)
 	return i, nil
 }
 

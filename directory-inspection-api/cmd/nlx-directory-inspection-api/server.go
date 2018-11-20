@@ -41,7 +41,7 @@ func newGRPCSplitterHandlerFunc(grpcServer *grpc.Server, otherHandler http.Handl
 }
 
 // runServer is a blocking function which sets up the grpc and http/json server and runs them on a single address/port.
-func runServer(p *process.Process, log *zap.Logger, address string, addressPlain string, caCertPool *x509.CertPool, certKeyPair tls.Certificate, inspectionService inspectionapi.InspectionServiceServer) {
+func runServer(p *process.Process, log *zap.Logger, address string, addressPlain string, caCertPool *x509.CertPool, certKeyPair tls.Certificate, inspectionService inspectionapi.DirectoryServer) {
 
 	// setup zap connection for global grpc logging
 	grpc_zap.ReplaceGrpcLogger(log)
@@ -69,7 +69,7 @@ func runServer(p *process.Process, log *zap.Logger, address string, addressPlain
 
 	// start grpc server and attach directory service
 	grpcServer := grpc.NewServer(opts...)
-	inspectionapi.RegisterInspectionServiceServer(grpcServer, inspectionService)
+	inspectionapi.RegisterDirectoryServer(grpcServer, inspectionService)
 
 	// setup client credentials for grpc gateway
 	gatewayDialOptions := []grpc.DialOption{
@@ -90,7 +90,7 @@ func runServer(p *process.Process, log *zap.Logger, address string, addressPlain
 
 	// setup grpc gateway and attach to main mux
 	gatewayMux := runtime.NewServeMux()
-	err := inspectionapi.RegisterInspectionServiceHandlerFromEndpoint(context.Background(), gatewayMux, address, gatewayDialOptions)
+	err := inspectionapi.RegisterDirectoryHandlerFromEndpoint(context.Background(), gatewayMux, address, gatewayDialOptions)
 	if err != nil {
 		fmt.Printf("serve: %v\n", err)
 		return

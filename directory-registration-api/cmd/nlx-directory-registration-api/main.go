@@ -96,7 +96,7 @@ func main() {
 
 	// start grpc server and attach directory service
 	grpcServer := grpc.NewServer(opts...)
-	registrationapi.RegisterRegistrationServiceServer(grpcServer, registrationService)
+	registrationapi.RegisterDirectoryRegistrationServer(grpcServer, registrationService)
 	listen, err := net.Listen("tcp", options.ListenAddress)
 	if err != nil {
 		log.Fatal("failed to create listener", zap.Error(err))

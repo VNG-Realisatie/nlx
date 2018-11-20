@@ -42,7 +42,7 @@
           }
         ],
         "tags": [
-          "InspectionService"
+          "Directory"
         ]
       }
     },
@@ -59,7 +59,7 @@
           }
         },
         "tags": [
-          "InspectionService"
+          "Directory"
         ]
       }
     },
@@ -76,7 +76,7 @@
           }
         },
         "tags": [
-          "InspectionService"
+          "Directory"
         ]
       }
     }

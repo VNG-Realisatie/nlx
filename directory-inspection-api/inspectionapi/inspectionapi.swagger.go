@@ -45,7 +45,7 @@ SwaggerJSONDirectory = `
           }
         ],
         "tags": [
-          "InspectionService"
+          "Directory"
         ]
       }
     },
@@ -62,7 +62,7 @@ SwaggerJSONDirectory = `
           }
         },
         "tags": [
-          "InspectionService"
+          "Directory"
         ]
       }
     },
@@ -79,7 +79,7 @@ SwaggerJSONDirectory = `
           }
         },
         "tags": [
-          "InspectionService"
+          "Directory"
         ]
       }
     }

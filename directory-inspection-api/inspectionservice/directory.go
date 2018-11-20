@@ -18,7 +18,7 @@ import (
 )
 
 // compile-time interface implementation verification
-var _ inspectionapi.InspectionServiceServer = &InspectionService{}
+var _ inspectionapi.DirectoryServer = &InspectionService{}
 
 // InspectionService handles all requests for a directory inspection api
 type InspectionService struct {

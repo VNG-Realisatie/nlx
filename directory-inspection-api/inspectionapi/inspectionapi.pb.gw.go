@@ -28,7 +28,7 @@ var _ status.Status
 var _ = runtime.String
 var _ = utilities.NewDoubleArray
 
-func request_InspectionService_ListServices_0(ctx context.Context, marshaler runtime.Marshaler, client InspectionServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_Directory_ListServices_0(ctx context.Context, marshaler runtime.Marshaler, client DirectoryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq ListServicesRequest
 	var metadata runtime.ServerMetadata
 
@@ -37,7 +37,7 @@ func request_InspectionService_ListServices_0(ctx context.Context, marshaler run
 
 }
 
-func request_InspectionService_ListOrganizations_0(ctx context.Context, marshaler runtime.Marshaler, client InspectionServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_Directory_ListOrganizations_0(ctx context.Context, marshaler runtime.Marshaler, client DirectoryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq ListOrganizationsRequest
 	var metadata runtime.ServerMetadata
 
@@ -46,7 +46,7 @@ func request_InspectionService_ListOrganizations_0(ctx context.Context, marshale
 
 }
 
-func request_InspectionService_GetServiceAPISpec_0(ctx context.Context, marshaler runtime.Marshaler, client InspectionServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_Directory_GetServiceAPISpec_0(ctx context.Context, marshaler runtime.Marshaler, client DirectoryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetServiceAPISpecRequest
 	var metadata runtime.ServerMetadata
 
@@ -84,9 +84,9 @@ func request_InspectionService_GetServiceAPISpec_0(ctx context.Context, marshale
 
 }
 
-// RegisterInspectionServiceHandlerFromEndpoint is same as RegisterInspectionServiceHandler but
+// RegisterDirectoryHandlerFromEndpoint is same as RegisterDirectoryHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterInspectionServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterDirectoryHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.Dial(endpoint, opts...)
 	if err != nil {
 		return err
@@ -106,23 +106,23 @@ func RegisterInspectionServiceHandlerFromEndpoint(ctx context.Context, mux *runt
 		}()
 	}()
 
-	return RegisterInspectionServiceHandler(ctx, mux, conn)
+	return RegisterDirectoryHandler(ctx, mux, conn)
 }
 
-// RegisterInspectionServiceHandler registers the http handlers for service InspectionService to "mux".
+// RegisterDirectoryHandler registers the http handlers for service Directory to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterInspectionServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterInspectionServiceHandlerClient(ctx, mux, NewInspectionServiceClient(conn))
+func RegisterDirectoryHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterDirectoryHandlerClient(ctx, mux, NewDirectoryClient(conn))
 }
 
-// RegisterInspectionServiceHandlerClient registers the http handlers for service InspectionService
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "InspectionServiceClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "InspectionServiceClient"
+// RegisterDirectoryHandlerClient registers the http handlers for service Directory
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "DirectoryClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "DirectoryClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "InspectionServiceClient" to call the correct interceptors.
-func RegisterInspectionServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client InspectionServiceClient) error {
+// "DirectoryClient" to call the correct interceptors.
+func RegisterDirectoryHandlerClient(ctx context.Context, mux *runtime.ServeMux, client DirectoryClient) error {
 
-	mux.Handle("GET", pattern_InspectionService_ListServices_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Directory_ListServices_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		if cn, ok := w.(http.CloseNotifier); ok {
@@ -140,18 +140,18 @@ func RegisterInspectionServiceHandlerClient(ctx context.Context, mux *runtime.Se
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_InspectionService_ListServices_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Directory_ListServices_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_InspectionService_ListServices_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Directory_ListServices_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_InspectionService_ListOrganizations_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Directory_ListOrganizations_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		if cn, ok := w.(http.CloseNotifier); ok {
@@ -169,18 +169,18 @@ func RegisterInspectionServiceHandlerClient(ctx context.Context, mux *runtime.Se
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_InspectionService_ListOrganizations_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Directory_ListOrganizations_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_InspectionService_ListOrganizations_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Directory_ListOrganizations_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_InspectionService_GetServiceAPISpec_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Directory_GetServiceAPISpec_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		if cn, ok := w.(http.CloseNotifier); ok {
@@ -198,14 +198,14 @@ func RegisterInspectionServiceHandlerClient(ctx context.Context, mux *runtime.Se
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_InspectionService_GetServiceAPISpec_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Directory_GetServiceAPISpec_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_InspectionService_GetServiceAPISpec_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Directory_GetServiceAPISpec_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -213,17 +213,17 @@ func RegisterInspectionServiceHandlerClient(ctx context.Context, mux *runtime.Se
 }
 
 var (
-	pattern_InspectionService_ListServices_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"directory", "list-services"}, ""))
+	pattern_Directory_ListServices_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"directory", "list-services"}, ""))
 
-	pattern_InspectionService_ListOrganizations_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"directory", "list-organizations"}, ""))
+	pattern_Directory_ListOrganizations_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"directory", "list-organizations"}, ""))
 
-	pattern_InspectionService_GetServiceAPISpec_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 1, 0, 4, 1, 5, 3}, []string{"directory", "get-service-api-spec", "organization_name", "service_name"}, ""))
+	pattern_Directory_GetServiceAPISpec_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 1, 0, 4, 1, 5, 3}, []string{"directory", "get-service-api-spec", "organization_name", "service_name"}, ""))
 )
 
 var (
-	forward_InspectionService_ListServices_0 = runtime.ForwardResponseMessage
+	forward_Directory_ListServices_0 = runtime.ForwardResponseMessage
 
-	forward_InspectionService_ListOrganizations_0 = runtime.ForwardResponseMessage
+	forward_Directory_ListOrganizations_0 = runtime.ForwardResponseMessage
 
-	forward_InspectionService_GetServiceAPISpec_0 = runtime.ForwardResponseMessage
+	forward_Directory_GetServiceAPISpec_0 = runtime.ForwardResponseMessage
 )

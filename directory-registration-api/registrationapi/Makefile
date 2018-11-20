@@ -26,11 +26,11 @@ plugins=grpc:. \
 		-I$(GOPATH)/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
 		--swagger_out=logtostderr=true:. \
 		registrationapi.proto
-	echo 'package registrationapi'      > registrationapi.swagger.go
-	echo 'const ('                  >> registrationapi.swagger.go
-	echo 'SwaggerJSONDirectory = `' >> registrationapi.swagger.go
-	cat registrationapi.swagger.json      >> registrationapi.swagger.go
-	echo '`)'                       >> registrationapi.swagger.go
+	echo 'package registrationapi'		> registrationapi.swagger.go
+	echo 'const ('                  	>> registrationapi.swagger.go
+	echo 'SwaggerJSONDirectory = `' 	>> registrationapi.swagger.go
+	cat registrationapi.swagger.json	>> registrationapi.swagger.go
+	echo '`)'                       	>> registrationapi.swagger.go
 
 .PHONY: clean
 clean:
