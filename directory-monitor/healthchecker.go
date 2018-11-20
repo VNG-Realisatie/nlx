@@ -9,12 +9,13 @@ import (
 	"sync"
 	"time"
 
-	"go.nlx.io/nlx/common/process"
-
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 	"github.com/pkg/errors"
-	"go.nlx.io/nlx/directory-monitor/health"
 	"go.uber.org/zap"
+
+	"go.nlx.io/nlx/common/process"
+	"go.nlx.io/nlx/directory-monitor/health"
 )
 
 // HealthChecker checks the inways of a StoredService and modifies it's health state directly in the StoredService struct.
@@ -24,23 +25,31 @@ type healthChecker struct {
 	httpClient *http.Client
 
 	availabilitiesLock sync.RWMutex
-	availabilities     []availability
+	availabilities     map[uint64]*availability
 
 	stmtSelectAvailabilities *sqlx.Stmt
 	stmtUpdateHealth         *sqlx.Stmt
 }
 
 type availability struct {
-	ID               uint64
-	OrganizationName string
-	ServiceName      string
-	Address          string
+	ID               uint64 `json:"id"`
+	OrganizationName string `json:"organization_name"`
+	ServiceName      string `json:"service_name"`
+	Address          string `json:"address"`
 }
 
+type databaseAction struct {
+	Action       string        `json:"action"`
+	Availability *availability `json:"availability"`
+}
+
+const dbNotificationChannel = "availabilities"
+
 // RunHealthChecker starts a healthchecker process
-func RunHealthChecker(process *process.Process, logger *zap.Logger, db *sqlx.DB, caCertPool *x509.CertPool, certKeyPair tls.Certificate) error {
+func RunHealthChecker(process *process.Process, logger *zap.Logger, db *sqlx.DB, postgresDNS string, caCertPool *x509.CertPool, certKeyPair tls.Certificate) error {
 	h := &healthChecker{
-		logger: logger,
+		logger:         logger,
+		availabilities: make(map[uint64]*availability),
 		httpClient: &http.Client{Transport: &http.Transport{
 			TLSClientConfig: &tls.Config{
 				RootCAs:      caCertPool,
@@ -73,56 +82,103 @@ func RunHealthChecker(process *process.Process, logger *zap.Logger, db *sqlx.DB,
 		return errors.Wrap(err, "failed to prepare stmtUpdateHealth")
 	}
 
-	return h.run(process)
+	return h.run(process, postgresDNS)
 }
 
-func (h *healthChecker) run(process *process.Process) error {
-	chInitialLoad := make(chan struct{})
-	go func() {
-		for {
-			newAvailabilities := []availability{}
-			err := h.stmtSelectAvailabilities.Select(&newAvailabilities)
-			if err != nil {
-				h.logger.Error("failed to fetch availabilities", zap.Error(err))
-				time.Sleep(1 * time.Second)
-				continue
-			}
-
-			// replace availabilities slice in healthChecker
-			h.availabilitiesLock.Lock()
-			h.availabilities = newAvailabilities
-			h.availabilitiesLock.Unlock()
-
-			// signal initial load has completed
-			select {
-			case chInitialLoad <- struct{}{}:
-			default:
-			}
-
-			// TODO: #207 use NOTIFY structure on postgres instead of reloading
-			// refresh this list every 10 seconds
-			time.Sleep(10 * time.Second)
+func (h *healthChecker) run(process *process.Process, postgressDNS string) error {
+	listenerErrorCallback := func(ev pq.ListenerEventType, err error) {
+		if err != nil {
+			h.logger.Error("error listening for db events", zap.Error(err))
 		}
-	}()
+	}
+	listener := pq.NewListener(postgressDNS, 10*time.Second, time.Minute, listenerErrorCallback)
+	err := listener.Listen(dbNotificationChannel)
+	if err != nil {
+		panic(err)
+	}
+	process.CloseGracefully(listener.Close)
 
-	<-chInitialLoad // wait for initial load to be done
+	shutDownNotificationListener := make(chan struct{})
+	process.CloseGracefully(func() error {
+		close(shutDownNotificationListener)
+		return nil
+	})
+	go h.waitForNotification(listener, shutDownNotificationListener)
+
+	newAvailabilities := []*availability{}
+	err = h.stmtSelectAvailabilities.Select(&newAvailabilities)
+	if err != nil {
+		return err
+	}
+
+	h.availabilitiesLock.Lock()
+	for _, availability := range newAvailabilities {
+		h.availabilities[availability.ID] = availability
+	}
+	h.availabilitiesLock.Unlock()
+
 	shutDown := make(chan struct{})
 	process.CloseGracefully(func() error {
 		close(shutDown)
 		return nil
 	})
+
 	for {
 		select {
 		case <-time.After(5 * time.Second):
 			h.availabilitiesLock.RLock()
 			for _, av := range h.availabilities {
-				go h.checkAvailabilityHealth(av)
+				go h.checkAvailabilityHealth(*av)
 			}
 			h.availabilitiesLock.RUnlock()
 		case <-shutDown:
 			return nil
 		}
 	}
+}
+
+func (h *healthChecker) waitForNotification(l *pq.Listener, c <-chan struct{}) {
+	for {
+		select {
+		case n := <-l.Notify:
+			dbAction := &databaseAction{}
+			err := json.Unmarshal([]byte(n.Extra), dbAction)
+			if err != nil {
+				h.logger.Error("Error processing JSON", zap.Error(err))
+				continue
+			}
+			switch dbAction.Action {
+			case "INSERT":
+				h.addAvailability(dbAction.Availability)
+			case "DELETE":
+				h.removeAvailability(dbAction.Availability.ID)
+			default:
+				h.logger.Error("unknown database action", zap.String("database action", dbAction.Action))
+			}
+		case <-time.After(90 * time.Second):
+			// Check connection after 90 seconds without a notification
+			go func() {
+				if err := l.Ping(); err != nil {
+					h.logger.Error("error pinging DB listener", zap.Error(err))
+				}
+			}()
+		case <-c:
+			return
+
+		}
+	}
+}
+
+func (h *healthChecker) addAvailability(a *availability) {
+	h.availabilitiesLock.Lock()
+	h.availabilities[a.ID] = a
+	h.availabilitiesLock.Unlock()
+}
+
+func (h *healthChecker) removeAvailability(id uint64) {
+	h.availabilitiesLock.Lock()
+	delete(h.availabilities, id)
+	h.availabilitiesLock.Unlock()
 }
 
 func (h *healthChecker) checkAvailabilityHealth(av availability) {

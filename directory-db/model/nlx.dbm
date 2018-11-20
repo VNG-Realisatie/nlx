@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="630,0" last-zoom="1"
+<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="685,0" last-zoom="1"
 	 default-schema="public" default-owner="postgres">
 <role name="nlx-directory"
       login="true"
@@ -106,7 +106,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="availabilities" hide-ext-attribs="true">
+<table name="availabilities">
 	<schema name="directory"/>
 	<role name="postgres"/>
 	<appended-sql><![CDATA[GRANT USAGE, SELECT ON SEQUENCE availabilities_id_seq TO "nlx-directory";]]></appended-sql>
@@ -166,6 +166,62 @@ END]]></definition>
 	 ins-event="true" del-event="false" upd-event="true" trunc-event="false"
 	 table="directory.availabilities">
 		<function signature="directory.availabilities_verify()"/>
+</trigger>
+
+<function name="availabilities_notify_event"
+		window-func="false"
+		returns-setof="false"
+		behavior-type="CALLED ON NULL INPUT"
+		function-type="VOLATILE"
+		security-type="SECURITY INVOKER"
+		execution-cost="1"
+		row-amount="0">
+	<schema name="directory"/>
+	<role name="postgres"/>
+	<language name="plpgsql" sql-disabled="true"/>
+	<return-type>
+	<type name="trigger" length="0"/>
+	</return-type>
+	<definition><![CDATA[DECLARE 
+        data json;
+        notification json;
+    BEGIN
+        IF (TG_OP = 'DELETE') THEN
+            data = row_to_json(OLD);
+        ELSE
+             SELECT row_to_json(t) into data from (
+                SELECT
+                    availabilities.id,
+                    organizations.name AS organization_name,
+                    services.name AS service_name,
+                    inways.address
+                FROM directory.availabilities
+                    INNER JOIN directory.inways
+                        ON availabilities.inway_id = inways.id
+                    INNER JOIN directory.services
+                        ON availabilities.service_id = services.id
+                    INNER JOIN directory.organizations
+                        ON services.organization_id = organizations.id
+                WHERE 
+                    availabilities.id = NEW.id
+             ) t;
+        END IF;
+
+      
+        notification = json_build_object(
+                          'action', TG_OP,
+                          'availability', data);
+                
+        PERFORM pg_notify('availabilities',notification::text);
+   
+        RETURN NULL; 
+    END;]]></definition>
+</function>
+
+<trigger name="availabilities_notify" firing-type="AFTER" per-line="true" constraint="false"
+	 ins-event="true" del-event="true" upd-event="false" trunc-event="false"
+	 table="directory.availabilities">
+		<function signature="directory.availabilities_notify_event()"/>
 </trigger>
 
 <constraint name="services_fk_organization" type="fk-constr" comparison-type="MATCH FULL"

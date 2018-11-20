@@ -55,6 +55,7 @@ func main() {
 	if err != nil {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))
 	}
+
 	db.MapperFunc(xstrings.ToSnakeCase)
 	process.CloseGracefully(db.Close)
 	dbversion.WaitUntilLatestDirectoryDBVersion(logger, db.DB)
@@ -68,7 +69,7 @@ func main() {
 		logger.Fatal("failed to load x509 keypair for monitor", zap.Error(err))
 	}
 
-	err = monitor.RunHealthChecker(process, logger, db, caCertPool, certKeyPair)
+	err = monitor.RunHealthChecker(process, logger, db, options.PostgresDSN, caCertPool, certKeyPair)
 	if err != nil && err != context.DeadlineExceeded {
 		logger.Fatal("failed to run monitor healthchecker", zap.Error(err))
 	}
