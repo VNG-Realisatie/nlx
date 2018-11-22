@@ -7,7 +7,6 @@ import * as actionType from '../actions'
  * @param action: object, dispatched redux action
  */
 export const loaderReducer = (state = cfg.loader, action) => {
-    // just for fun use lowercased action types
     switch (action.type) {
         case actionType.SHOW_LOADER:
             return {

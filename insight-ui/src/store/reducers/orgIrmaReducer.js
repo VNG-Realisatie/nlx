@@ -5,9 +5,7 @@ import cfg from '../app.cfg'
  * @param state: object, current redux store state of loader store
  * @param action: object, dispatched redux action
  */
-
 export const orgIrmaReducer = (state = cfg.organization.irma, action) => {
-    // just for fun use lowercased action types
     switch (action.type) {
         case actionType.GET_QRCODE_OK:
             // debugger

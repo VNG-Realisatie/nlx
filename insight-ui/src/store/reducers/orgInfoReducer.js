@@ -1,7 +1,7 @@
 import cfg from '../app.cfg'
 import * as actionType from '../actions'
 // eslint-disable-next-line
-import { logGroup } from '../../utils/logGroup';
+// import { logGroup } from '../../utils/logGroup';
 
 /**
  * Language reducer containing lang info and translations
@@ -27,7 +27,6 @@ export const orgInfoReducer = (state = cfg.organization.info, action) => {
                 ...cfg.organization.info,
             }
         // always return state
-        // to continue 'event' chain
         default:
             return state
     }

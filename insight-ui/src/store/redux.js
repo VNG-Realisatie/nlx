@@ -8,7 +8,7 @@ import orgsReducer from './reducers/orgsReducer'
 import orgInfoReducer from './reducers/orgInfoReducer'
 import orgLogsReducer from './reducers/orgLogsReducer'
 import orgIrmaReducer from './reducers/orgIrmaReducer'
-// import loactionReducer from './reducers/locationReducers'
+
 // MIDDLEWARE -> mw
 // import mwActionLogger from './middleware/mwActionLogger'
 import mwOrganizations from './middleware/mwOrganizations'
@@ -26,7 +26,6 @@ const reducers = combineReducers({
     i18n: i18nReducer,
     organizations: orgsReducer,
     organization: orgReducer,
-    // href: loactionReducer,
 })
 
 const appStore = createStore(

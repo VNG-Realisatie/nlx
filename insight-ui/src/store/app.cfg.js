@@ -1,6 +1,6 @@
 /**
  * Inital app configuration
- * note! the values are imported into redux store
+ * These values are imported into redux store
  */
 const cfg = {
     // app-loader
@@ -52,7 +52,6 @@ const cfg = {
     },
     // list of all organizations
     organizations: {
-        // api: 'https://directory.test.nlx.io/api/directory/list-organizations',
         api: '/api/directory/list-organizations',
         list: [],
         error: null,
@@ -125,7 +124,7 @@ const cfg = {
     },
 }
 
-// in production the api point is FIXED to demo environment
+// the api point is FIXED to demo environment in production mode
 if (process.env.NODE_ENV === 'production') {
     cfg.organizations.api =
         'https://directory.demo.nlx.io/api/directory/list-organizations'

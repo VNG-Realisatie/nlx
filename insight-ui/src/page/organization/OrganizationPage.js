@@ -9,7 +9,7 @@ import * as actionType from '../../store/actions'
 
 import IrmaAuthPage from './IrmaAuthPage'
 import ViewRecordsPage from './ViewRecordsPage'
-import ErrorPage from '../../components/ErrorPage'
+import ErrorPage from '../ErrorPage'
 // import logGroup from '../../utils/logGroup'
 
 const styles = (theme) => ({

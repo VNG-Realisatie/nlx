@@ -1,7 +1,7 @@
 import cfg from '../app.cfg'
 import * as actionType from '../actions'
 // eslint-disable-next-line
-import { logGroup } from '../../utils/logGroup';
+// import { logGroup } from '../../utils/logGroup';
 
 /**
  * Language reducer containing lang info and translations

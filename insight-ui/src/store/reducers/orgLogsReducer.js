@@ -1,16 +1,14 @@
 import cfg from '../app.cfg'
 import * as actionType from '../actions'
 // eslint-disable-next-line
-import { logGroup } from '../../utils/logGroup';
+// import { logGroup } from '../../utils/logGroup';
 
 /**
  * Language reducer containing lang info and translations
  * @param {object} state previous state object
- * @param {object} action redux action with type and payload
  * @param {string} action.type redux action type, string constant
  * @param {object} action.payload redux action type, string constant
  */
-
 export const orgLogsReducer = (state = cfg.organization.logs, action) => {
     // debugger
     switch (action.type) {

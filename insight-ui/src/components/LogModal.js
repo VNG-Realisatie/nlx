@@ -11,7 +11,7 @@ import {
     Typography,
 } from '@material-ui/core'
 
-import modalStyles from '../styles/SimpleModal'
+import modalStyles from '../styles/LogModal'
 import { Close, CalendarToday } from '@material-ui/icons'
 import ClockIcon from '@material-ui/icons/AccessTimeOutlined'
 

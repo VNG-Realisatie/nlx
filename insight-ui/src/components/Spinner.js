@@ -5,7 +5,7 @@ import './Spinner.css'
 class Spinner extends Component {
     render() {
         return (
-            <div className="app-loader">
+            <div className="app-loader" data-test-id="app-loader">
                 <div className="lds-roller">
                     <div />
                     <div />

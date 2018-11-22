@@ -7,7 +7,6 @@ import * as actionType from '../actions'
  * @param action: object, dispatched redux action
  */
 export const locationReducer = (state = cfg.location.href, action) => {
-    // just for fun use lowercased action types
     switch (action.type) {
         case actionType.LOCATION_CHANGE:
             // debugger

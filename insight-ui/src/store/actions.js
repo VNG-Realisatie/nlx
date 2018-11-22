@@ -25,16 +25,9 @@ export const IRMA_LOGIN_IN_PROGRESS = 'IRMA_LOGIN_IN_PROGRESS'
 export const IRMA_GET_PROOF = 'IRMA_GET_PROOF'
 export const IRMA_GET_PROOF_OK = 'IRMA_GET_PROOF_OK'
 export const IRMA_GET_PROOF_ERR = 'IRMA_GET_PROOF_ERR'
-// export const IRMA_LOGIN_CANCEL = 'IRMA_LOGIN_CANCEL'
-// export const IRMA_LOGIN_RESET = 'IRMA_LOGIN_RESET'
 export const IRMA_LOGIN_ERR = 'IRMA_LOGIN_ERR'
 // logs
 export const GET_ORGANIZATION_LOGS = 'GET_ORGANIZATION_LOGS'
 export const GET_ORGANIZATION_LOGS_OK = 'GET_ORGANIZATION_LOGS_OK'
 export const GET_ORGANIZATION_LOGS_ERR = 'GET_ORGANIZATION_LOGS_ERR'
 export const RESET_ORGANIZATION_LOGS = 'RESET_ORGANIZATION_LOGS'
-
-// location change - redux way
-// drive location change to update connected component
-// see https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/guides/blocked-updates.md
-// export const LOCATION_CHANGE = 'LOCATION_CHANGE'

@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-// import { BrowserRouter } from 'react-router-dom'
 
 import { withStyles, CssBaseline } from '@material-ui/core'
 import { globalStyles } from './styles/muiTheme'

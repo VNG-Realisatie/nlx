@@ -54,23 +54,6 @@ class EnhancedTable extends React.Component {
         modalState: true,
         modalContent: '',
     }
-    /*
-	componentDidMount(){
-		logGroup({
-			title:"Table",
-			method: "componentDidMount",
-			props: this.props,
-			state: this.state
-		})
-	}
-	componentDidUpdate(){
-		logGroup({
-			title:"Table",
-			method: "componentDidUpdate",
-			props: this.props,
-			state: this.state
-		})
-	} */
 
     handleRequestSort = (property) => {
         // debugger
@@ -85,20 +68,7 @@ class EnhancedTable extends React.Component {
     }
 
     openModal = (id) => {
-        // get data from props
-        // debugger
-        // let {data} = this.props,
-        //	row = data[id];
-
         this.props.onDetails(id)
-
-        /*
-		if (row){
-			this.setState({
-				modalContent: row
-			})
-			this.modalRef.handleOpen()
-		} */
     }
 
     handleChangePage = (event, page) => {

@@ -6,11 +6,9 @@ import { logGroup } from '../../utils/logGroup';
 /**
  * Language reducer containing lang info and translations
  * @param {object} state previous state object
- * @param {object} action redux action with type and payload
  * @param {string} action.type redux action type, string constant
  * @param {object} action.payload redux action type, string constant
  */
-
 export const orgsReducer = (state = cfg.organizations, action) => {
     // debugger
     switch (action.type) {
