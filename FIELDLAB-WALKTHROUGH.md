@@ -59,7 +59,7 @@ The easiest way to run an outway is by using docker. Please make sure you have a
 Start by downloading the latest version of the container image from the docker hub.
 
 ```bash
-docker pull nlxio/outway:latest
+docker pull nlxio/outway:v0.0.20
 ```
 
 Next, we want docker will to start a container based on this image.
@@ -69,7 +69,7 @@ docker run \
     --tty --interactive \
     --volume=$HOME/nlx-walkthrough/certs:/certs:ro \
     --publish=2018:80 \
-    nlxio/outway:latest \
+    nlxio/outway:v0.0.20 \
     /usr/local/bin/nlx-outway \
     --log-type=development \
     --log-level=debug \
@@ -85,7 +85,7 @@ We give docker several arguments:
 - `--tty` and `--interactive` tells docker to connect the terminal you're using with the container so you may view logs.
 - `--volume` tells docker to make the `certs` folder, where we just put the certificates, available inside the container.
 - `--publish` connects port 2018 on the host machine to port 80 inside the container. This way, we can send requests to the outway.
-- `nlxio/outway:latest` is the name of our docker image (`nlxio/outway`) as stored in the docker registry and the version we want to use (`latest`). The `--` tells docker that all arguments after this one are meant for the outway process, not for docker itself.
+- `nlxio/outway:v0.0.20` is the name of our docker image (`nlxio/outway`) as stored in the docker registry and the version we want to use (`v0.0.20`). The `--` tells docker that all arguments after this one are meant for the outway process, not for docker itself.
 - `/usr/local/bin/nlx-outway` is the binary in the container that we want to execute.
 
 All arguments after the image and executable name are passed to the process (nlx-outway) itself..

@@ -17,7 +17,7 @@ First make sure you have installed a recent version of [Docker](https://www.dock
 To start the outway, run the following docker commands:
 
 ```bash
-docker pull nlxio/outway:latest
+docker pull nlxio/outway:v0.0.20
 
 docker run --detach \
   --name my-nlx-outway \
@@ -30,7 +30,7 @@ docker run --detach \
   --env TLS_ORG_KEY=/certs/org.key \
   --env DISABLE_LOGDB=1 \
   --publish 4080:80 \
-  nlxio/outway:latest
+  nlxio/outway:v0.0.20
 ```
 
 We give docker several arguments:
@@ -46,7 +46,7 @@ We give docker several arguments:
 - `--env TLS_ORG_KEY=/certs/org.key` sets the environment variable `TLS_ORG_KEY` this is the location of the organisation private key.
 - `--env DISABLE_LOGDB=1` sets the environment variable `DISABLE_LOGDB` the value 1 will disable the transaction logs, the value 0 will enable them.
 - `--publish` connects port 4080 on the host machine to port 80 inside the container. This way, we can send requests to the inway.
-- ` nlxio/outway:latest` is the name of our docker image (`nlxio/outway`) as stored in the docker registry and the version we want to use (`latest`). The `--` tells docker that all arguments after this one are meant for the outway process, not for docker itself.
+- ` nlxio/outway:v0.0.20` is the name of our docker image (`nlxio/outway`) as stored in the docker registry and the version we want to use (`v0.0.20`). The `--` tells docker that all arguments after this one are meant for the outway process, not for docker itself.
 
 To get started quickly, we will disable transaction logs for now by setting the environment variable `DISABLE_LOGDB=1`. The outway is now running and listening on `http://localhost:4080`.
 
