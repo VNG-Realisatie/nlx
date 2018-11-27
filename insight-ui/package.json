@@ -49,7 +49,7 @@
   "proxy-tes": "https://diva-fieldlab.appx.cloud/api",
   "proxy": {
     "/getDataSubject": {
-      "target": "http://insight-api.test.haarlem.commonground.nl/"
+      "target": "http://insight-api.test.voorbeeld-haarlem.nl/"
     }
   }
 }
