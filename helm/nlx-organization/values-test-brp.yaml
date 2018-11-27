@@ -1,5 +1,5 @@
 
-domain: test.brp.commonground.nl
+domain: test.voorbeeld-brp.nl
 organizationName: brp
 
 dbHost: postgresql.postgresql
@@ -22,8 +22,8 @@ inway:
       [services.basisregistratie]
       endpoint-url = "http://service:8000"
       authorization-model = "none"
-      insight-api-url = "https://insight-api.test.brp.commonground.nl"
-      irma-api-url = "https://irma-api.test.brp.commonground.nl"
+      insight-api-url = "https://insight-api.test.voorbeeld-brp.nl"
+      irma-api-url = "https://irma-api.test.voorbeeld-brp.nl"
 outway:
   enable: false
 demoService:
