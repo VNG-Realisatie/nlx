@@ -6,18 +6,16 @@
  * @param param.getState: fn, received from redux
  * @param param.dispatch: fn, received from redux
  */
-// import { logGroup } from '../../utils/logGroup'
+
 import axios from 'axios'
 import * as actionType from '../actions'
 import { extractError } from '../../utils/appUtils'
 
 function getOrganizations({ action, dispatch }) {
-    // debugger
     axios
         .get(action.payload)
         .then((response) => {
             if (response.data && response.data.organizations) {
-                // filter only organizations with irma api point
                 let orgList = response.data.organizations.filter((item) => {
                     return item.hasOwnProperty('insight_irma_endpoint')
                 })
@@ -43,10 +41,7 @@ function getOrganizations({ action, dispatch }) {
 
 export const mwOrganizations = ({ getState, dispatch }) => {
     return (next) => (action) => {
-        // pass action
         next(action)
-        // decide if additional work required
-        // debugger
         switch (action.type) {
             case actionType.GET_IRMA_ORGANIZATIONS:
                 getOrganizations({ action, dispatch })

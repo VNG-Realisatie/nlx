@@ -46,8 +46,6 @@ class EnhancedTable extends React.Component {
     state = {
         order: 'asc',
         orderBy: 'date',
-        // cols:[],
-        // data: [],
         page: 0,
         rowsPerPage: 10,
         rowsPerPageOptions: [10, 25, 50],
@@ -56,7 +54,6 @@ class EnhancedTable extends React.Component {
     }
 
     handleRequestSort = (property) => {
-        // debugger
         const orderBy = property
         let order = 'asc'
 

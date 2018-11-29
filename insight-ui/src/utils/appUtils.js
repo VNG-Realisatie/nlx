@@ -1,7 +1,3 @@
-/*
-    Utility functions
-    v.0.0.1
-*/
 /**
  * Prepare raw table data
  * params:
@@ -11,16 +7,14 @@
 const prepTableData = ({ colDef, rawData }) => {
     let tableData = rawData.map((row, rid) => {
         let rowData = {}
-        // add row id
+
         rowData['id'] = rid
-        // get col data
+
         for (let c in colDef) {
             let col = colDef[c]
             let src = col.src.split('.')
             if (row[src[0]]) {
                 let val = extractValue(src, row)
-                // format data based on type
-                // extend if needed with additional types
                 switch (col.type.toLowerCase()) {
                     case 'date':
                         rowData[col.id] = new Date(val).toLocaleDateString()

@@ -1,7 +1,5 @@
 import cfg from '../app.cfg'
 import * as actionType from '../actions'
-// eslint-disable-next-line
-// import { logGroup } from '../../utils/logGroup';
 
 /**
  * Language reducer containing lang info and translations
@@ -12,21 +10,18 @@ import * as actionType from '../actions'
  */
 
 export const orgInfoReducer = (state = cfg.organization.info, action) => {
-    // debugger
     switch (action.type) {
         case actionType.SELECT_ORGANIZATION:
-            // debugger
             return {
                 ...state,
                 ...action.payload,
             }
         case actionType.RESET_ORGANIZATION:
         case actionType.RESET_ORGANIZATION_LOGS:
-            // debugger
             return {
                 ...cfg.organization.info,
             }
-        // always return state
+
         default:
             return state
     }

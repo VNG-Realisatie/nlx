@@ -9,7 +9,6 @@ import * as actionType from '../actions'
 export const locationReducer = (state = cfg.location.href, action) => {
     switch (action.type) {
         case actionType.LOCATION_CHANGE:
-            // debugger
             return action.payload
         default:
             return state

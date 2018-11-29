@@ -8,14 +8,12 @@ import cfg from '../app.cfg'
 export const orgIrmaReducer = (state = cfg.organization.irma, action) => {
     switch (action.type) {
         case actionType.GET_QRCODE_OK:
-            // debugger
             return {
                 ...state,
                 ...action.payload,
             }
         case actionType.IRMA_LOGIN_START:
         case actionType.IRMA_LOGIN_IN_PROGRESS:
-            // debugger
             return {
                 ...state,
                 inProgress: true,
@@ -23,7 +21,6 @@ export const orgIrmaReducer = (state = cfg.organization.irma, action) => {
         case actionType.GET_QRCODE_ERR:
         case actionType.IRMA_LOGIN_ERR:
         case actionType.IRMA_GET_PROOF_ERR:
-            // debugger
             return {
                 ...state,
                 qrCode: null,
@@ -33,7 +30,6 @@ export const orgIrmaReducer = (state = cfg.organization.irma, action) => {
                 },
             }
         case actionType.IRMA_GET_PROOF_OK:
-            // debugger
             return {
                 ...state,
                 error: null,
@@ -41,8 +37,6 @@ export const orgIrmaReducer = (state = cfg.organization.irma, action) => {
                 jwt: action.payload,
             }
         case actionType.RESET_ORGANIZATION:
-            // reset irma object of organization
-            // debugger
             return {
                 ...cfg.organization.irma,
             }

@@ -10,9 +10,8 @@
 import { logGroup } from '../../utils/logGroup'
 export const actionLogger = ({ getState, dispatch }) => {
     return (next) => (action) => {
-        // call next to continue the chain
         next(action)
-        // log
+
         logGroup({
             title: `ACTION: ${action.type}`,
             method: 'actionLogger',

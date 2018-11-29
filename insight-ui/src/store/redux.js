@@ -10,7 +10,6 @@ import orgLogsReducer from './reducers/orgLogsReducer'
 import orgIrmaReducer from './reducers/orgIrmaReducer'
 
 // MIDDLEWARE -> mw
-// import mwActionLogger from './middleware/mwActionLogger'
 import mwOrganizations from './middleware/mwOrganizations'
 import mwOrganization from './middleware/mwOrganization'
 import mwIrma from './middleware/mwIrma'
@@ -31,13 +30,7 @@ const reducers = combineReducers({
 const appStore = createStore(
     reducers,
     composeWithDevTools(
-        applyMiddleware(
-            // NOTE! the middleware order matters
-            // mwActionLogger,
-            mwOrganizations,
-            mwIrma,
-            mwOrganization,
-        ),
+        applyMiddleware(mwOrganizations, mwIrma, mwOrganization),
     ),
 )
 

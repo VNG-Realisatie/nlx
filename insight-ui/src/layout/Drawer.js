@@ -22,8 +22,6 @@ import OrganizationList from '../components/OrganizationList'
 import Logo from '../components/Logo'
 import ErrorPage from '../page/ErrorPage'
 import Spinner from '../components/Spinner'
-// import logGroup from '../utils/logGroup'
-// import * as actionType from '../store/actions'
 
 class ResponsiveDrawer extends React.Component {
     state = {
@@ -122,13 +120,6 @@ class ResponsiveDrawer extends React.Component {
     }
 
     render() {
-        // logGroup({
-        //     title: 'Drawer',
-        //     method: 'render',
-        //     props: this.props,
-        //     state: this.state,
-        // })
-
         const { classes } = this.props
 
         return (
@@ -150,11 +141,6 @@ ResponsiveDrawer.propTypes = {
     theme: PropTypes.object.isRequired,
 }
 
-// -------------- REDUX CONNECTION ---------------------
-/**
- * Map redux store states to local component properties
- * @param state: object, redux store object
- */
 const mapStateToProps = (state) => {
     return {
         loading: state.loader.show,

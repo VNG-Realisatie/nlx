@@ -6,15 +6,13 @@
  * @param param.getState: fn, received from redux
  * @param param.dispatch: fn, received from redux
  */
-// import { logGroup } from '../../utils/logGroup'
+
 import axios from 'axios'
 import * as actionType from '../actions'
 import { extractError } from '../../utils/appUtils'
 
 function getOrganizationLogs({ action, dispatch }) {
     let { api, jwt, name } = action.payload
-
-    // debugger
 
     if (api && jwt) {
         axios({
@@ -24,7 +22,6 @@ function getOrganizationLogs({ action, dispatch }) {
             data: jwt,
         })
             .then((response) => {
-                // debugger
                 let items = response.data.records
                 dispatch({
                     type: actionType.GET_ORGANIZATION_LOGS_OK,
@@ -37,7 +34,6 @@ function getOrganizationLogs({ action, dispatch }) {
                 })
             })
             .catch((e) => {
-                // debugger
                 let error = extractError(e)
                 dispatch({
                     type: actionType.GET_ORGANIZATION_LOGS_ERR,
@@ -45,7 +41,6 @@ function getOrganizationLogs({ action, dispatch }) {
                 })
             })
     } else {
-        // debugger
         dispatch({
             type: actionType.GET_ORGANIZATION_LOGS_ERR,
             payload: {
@@ -58,21 +53,16 @@ function getOrganizationLogs({ action, dispatch }) {
 
 export const mwOrganization = ({ getState, dispatch }) => {
     return (next) => (action) => {
-        // pass action
         next(action)
-        // decide if additional work required
-        // debugger
+
         switch (action.type) {
             case actionType.SELECT_ORGANIZATION:
-                // now get qrCode
-                // debugger
                 dispatch({
                     type: actionType.GET_QRCODE,
                     payload: action.payload,
                 })
                 break
             case actionType.GET_ORGANIZATION_LOGS:
-                // debugger
                 getOrganizationLogs({ action, dispatch })
                 break
             default:

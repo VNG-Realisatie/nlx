@@ -15,13 +15,7 @@ import { Home } from '@material-ui/icons'
 class OrganizationList extends Component {
     pushToLocation = (item) => {
         let url = `/organization/${item.name}`
-        // debugger
         this.props.history.push(url)
-        // window.location.href = url
-    }
-
-    onLocationChange = (url) => {
-        // this.props.onLocationChange(url)
     }
 
     getMenuButton(item) {
@@ -59,9 +53,6 @@ class OrganizationList extends Component {
                 component={NavLink}
                 to={url}
                 selected={url === window.location.href}
-                /* onClick={() => {
-                    this.onLocationChange(url)
-                }} */
             >
                 <ListItemIcon>
                     <Home />
@@ -91,5 +82,4 @@ class OrganizationList extends Component {
     }
 }
 
-// export default withRouter(OrganizationList)
 export default OrganizationList

@@ -18,7 +18,6 @@ export const logGroup = (data) => {
     }
 
     props.forEach((key) => {
-        // debugger
         // only if not in ignore list
         if (ignore.indexOf(key) === -1) {
             // eslint-disable-next-line
