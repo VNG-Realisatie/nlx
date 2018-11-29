@@ -1,4 +1,4 @@
-# NLX/Insight-ui
+# insight-ui
 
 The insight-ui provides a human-readable view of users IRMA attributes exchanged between the government instances during the user interaction with the government.
 The communication between government instances is performed over secured NLX network layer.
