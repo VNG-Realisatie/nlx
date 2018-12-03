@@ -3,8 +3,7 @@ import { lighten, setLightness, darken } from 'polished'
 export default {
     font: {
         family: {
-            system: '-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"',
-            body: '"Source Sans Pro", sans-serif',
+            main: '"Source Sans Pro", sans-serif',
         },
         size: {
             large: '18px',
@@ -18,6 +17,7 @@ export default {
             }
         },
         lineHeight: {
+            large: '28px',
             normal: '24px',
             small: '20px',
             tiny: '20px',
@@ -39,25 +39,25 @@ export default {
     },
     color: {
         primary: {
-            main: '#FEBF24',
-            dark: darken(.03, '#FEBF24'),
-            light: lighten(.06, '#FEBF24'),
-            lighter: setLightness(.9, '#FEBF24'),
-            lightest: setLightness(.95, '#FEBF24'),
+            main: '#3D83FA',
+            dark: darken(.03, '#3D83FA'),
+            light: lighten(.06, '#3D83FA'),
+            lighter: setLightness(.94, '#3D83FA'),
+            lightest: setLightness(.97, '#3D83FA'),
         },
         secondary: {
-            main: '#1B6CF8', // maybe 5656FC
-            light: lighten(.06, '#1B6CF8'),
+            main: '#FEBF24', // maybe 5656FC
+            light: lighten(.06, '#FEBF24'),
         },
         white: '#FFFFFF',
-        black: '#212121',
+        black: '#424242',
         grey: {
             10: '#F9F9F9',  // body background
             20: '#F5F5F5',  // disabled background
             30: '#EAEAEA',  // input border
             40: '#DADADA',  // input border focus
             50: '#B4B4B4',  // label, helper
-            60: '#757575',  // readable grey
+            60: '#999999',  // #757575 readable grey
         },
         alert: 'rgb(249, 71, 71)',
         accept: 'rgb(84, 194, 119)',

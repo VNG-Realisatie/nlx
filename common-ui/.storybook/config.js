@@ -56,7 +56,7 @@ function loadStories() {
 // Global styles but theme- and update-able!
 const GlobalStyle = createGlobalStyle`
     html {
-        font-family: ${p => p.theme.font.family.body};
+        font-family: ${p => p.theme.font.family.main};
         color: ${p => p.theme.color.black};
         text-rendering: optimizeLegibility;
         -webkit-font-smoothing: antialiased;

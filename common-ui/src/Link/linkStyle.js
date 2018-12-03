@@ -2,7 +2,7 @@ import { css } from 'styled-components'
 
 export const linkStyle = css`
     display: inline-block;
-    color: ${(p) => p.theme.color.secondary.main};
+    color: ${(p) => p.theme.color.primary.main};
     text-decoration: none;
 
     ${(p) =>
@@ -12,7 +12,7 @@ export const linkStyle = css`
 
             &:hover,
             &:focus {
-                border-color: ${(p) => p.theme.color.secondary.light};
+                border-color: ${(p) => p.theme.color.primary.light};
             }
         `};
 `

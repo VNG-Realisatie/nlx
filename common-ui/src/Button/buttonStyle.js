@@ -3,11 +3,8 @@ import { css } from 'styled-components'
 export const buttonStyle = css`
     border-radius: ${p => p.theme.radius.small};
 
-    font-family: ${p => p.theme.font.family.system};
-    font-weight: ${p => p.theme.font.weight.semibold};
-    letter-spacing: .04em;
+    font-family: ${p => p.theme.font.family.main};
 
-    text-transform: uppercase;
     text-shadow: none;
     white-space: nowrap;
     overflow: hidden;
@@ -30,7 +27,7 @@ export const buttonStyle = css`
         css`
             height: ${(p) => p.theme.size.normal};
             padding: 0 1rem;
-            font-size: ${(p) => p.theme.font.size.small};
+            font-size: ${(p) => p.theme.font.size.normal};
 
             > span {
                 padding-bottom: 2px;
@@ -42,7 +39,7 @@ export const buttonStyle = css`
         css`
             height: ${(p) => p.theme.size.large};
             padding: 0 1.5rem;
-            font-size: ${(p) => p.theme.font.size.small};
+            font-size: ${(p) => p.theme.font.size.normal};
 
             > span {
                 padding-bottom: 2px;
@@ -50,9 +47,26 @@ export const buttonStyle = css`
         `}
 
     ${(p) =>
+        p.variant === 'primary' &&
+        css`
+            font-weight: ${p => p.theme.font.weight.bold};
+        `};
+
+    ${(p) =>
+        p.variant !== 'primary' &&
+        css`
+            font-weight: ${p => p.theme.font.weight.semibold};
+        `};
+
+    ${(p) =>
         p.variant === 'tertiary' &&
         css`
-        padding: .5rem;
+            color: ${p => p.theme.color.grey[60]};
+            border-color: ${p => p.theme.color.grey[40]};
+
+            &[disabled] {
+                border-color: ${p => p.theme.color.grey[20]};
+            }
         `};
 `
 
@@ -75,7 +89,7 @@ export const iconStyle = css`
     ${(p) =>
         p.variant === 'tertiary' &&
         css`
-            color: ${(p) => p.theme.color.grey[60]};
+            color: ${(p) => p.theme.color.grey[50]};
         `};
 `
 
@@ -98,6 +112,6 @@ export const iconRightStyle = css`
     ${(p) =>
         p.variant === 'tertiary' &&
         css`
-            color: ${(p) => p.theme.color.grey[60]};
+            color: ${(p) => p.theme.color.grey[50]};
         `};
 `
