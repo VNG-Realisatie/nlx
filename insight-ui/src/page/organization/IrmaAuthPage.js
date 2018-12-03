@@ -14,15 +14,15 @@ export class IrmaAuthPage extends Component {
      */
 
     showError = (error) => {
-        let { history, match } = this.props
-        let url = match.path.replace('login', 'error')
+        const { history, match } = this.props
+        const url = match.path.replace('login', 'error')
         history.push(url, {
             error,
         })
     }
 
     startLogin = () => {
-        let {
+        const {
             dispatch,
             qrCode,
             loginInProgress,
@@ -45,12 +45,11 @@ export class IrmaAuthPage extends Component {
     }
 
     stopLogin = () => {
-        let { dispatch, loginInProgress, error } = this.props
+        const { dispatch, loginInProgress, error } = this.props
 
         if (error || loginInProgress) {
             // leaving login page due to forward to error page
             // or user navigating away from login in progress
-            // debugger
             dispatch({
                 type: actionType.RESET_ORGANIZATION,
             })
@@ -58,7 +57,7 @@ export class IrmaAuthPage extends Component {
     }
 
     render() {
-        let { qrCode } = this.props
+        const { qrCode } = this.props
 
         if (qrCode) {
             return (
