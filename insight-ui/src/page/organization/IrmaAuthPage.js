@@ -4,7 +4,6 @@ import { QRCode } from 'react-qr-svg'
 import { connect } from 'react-redux'
 
 import Spinner from '../../components/Spinner'
-// import logGroup from '../../utils/logGroup'
 import * as actionType from '../../store/actions'
 
 export class IrmaAuthPage extends Component {
@@ -16,7 +15,6 @@ export class IrmaAuthPage extends Component {
 
     showError = (error) => {
         let { history, match } = this.props
-        // let url = `/organization/${match.params.name}/error`
         let url = match.path.replace('login', 'error')
         history.push(url, {
             error,
@@ -35,14 +33,11 @@ export class IrmaAuthPage extends Component {
         } = this.props
 
         if (error) {
-            // debugger
             this.showError(error)
         } else if (qrCode && !loginInProgress && jwt) {
-            // debugger
             let url = `/organization/${info.name}/view`
             history.push(url)
         } else if (qrCode && !loginInProgress && !jwt) {
-            // debugger
             dispatch({
                 type: actionType.IRMA_LOGIN_START,
             })
@@ -59,25 +54,16 @@ export class IrmaAuthPage extends Component {
             dispatch({
                 type: actionType.RESET_ORGANIZATION,
             })
-        } else {
-            // debugger
         }
     }
 
     render() {
         let { qrCode } = this.props
 
-        // logGroup({
-        //     title: 'IrmaAuthPage',
-        //     method: 'render',
-        //     props: this.props,
-        //     state: this.state,
-        // })
-
         if (qrCode) {
             return (
                 <div>
-                    Please scan QR code with Irma app
+                    Scan QR code with IRMA to get access to your logs
                     <br />
                     <br />
                     <QRCode

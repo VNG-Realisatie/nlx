@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-// import { withRouter } from 'react-router-dom'
 import { Switch, Route, Redirect } from 'react-router-dom'
 import { withStyles, Typography } from '@material-ui/core'
 
@@ -10,7 +9,6 @@ import * as actionType from '../../store/actions'
 import IrmaAuthPage from './IrmaAuthPage'
 import ViewRecordsPage from './ViewRecordsPage'
 import ErrorPage from '../ErrorPage'
-// import logGroup from '../../utils/logGroup'
 
 const styles = (theme) => ({
     calendarIcon: {
@@ -35,13 +33,12 @@ class OrganizationPage extends Component {
      */
     getOrganization = () => {
         let { match, organizations } = this.props
-        // debugger
+
         if (match.params && match.params.name && organizations) {
             let organization = organizations.filter((item) => {
                 return item.name === match.params.name
             })
             if (organization.length === 1) {
-                // debugger
                 if (this.organization === organization[0]) {
                     return this.organization.name
                 } else {
@@ -70,25 +67,17 @@ class OrganizationPage extends Component {
             localOrgName !== null &&
             !onErrorPage
         ) {
-            // debugger
             dispatch({
                 type: actionType.SELECT_ORGANIZATION,
                 payload: this.organization,
             })
-            // send to
+
             let url = `/organization/${match.params.name}/login`
             history.push(url)
         }
     }
 
     render() {
-        // logGroup({
-        //     title: 'OrganizationPage',
-        //     method: 'render',
-        //     props: this.props,
-        //     state: this.state,
-        // })
-        // to construct path
         let { match } = this.props
 
         return (
@@ -119,22 +108,10 @@ class OrganizationPage extends Component {
     }
 
     componentDidMount() {
-        // logGroup({
-        //     title: 'OrganizationPage',
-        //     method: 'componentDidMount',
-        //     props: this.props,
-        //     state: this.state,
-        // })
         this.dispatchAction()
     }
 
     componentDidUpdate() {
-        // logGroup({
-        //     title: 'OrganizationPage',
-        //     method: 'componentDidUpdate',
-        //     props: this.props,
-        //     state: this.state,
-        // })
         this.dispatchAction()
     }
 }

@@ -7,7 +7,6 @@ import LogModal from '../../components/LogModal'
 import { prepTableData } from '../../utils/appUtils'
 import Spinner from '../../components/Spinner'
 import * as actionType from '../../store/actions'
-// import logGroup from '../../utils/logGroup'
 
 class ViewRecordsPage extends Component {
     state = {
@@ -25,14 +24,13 @@ class ViewRecordsPage extends Component {
     showError = (error) => {
         let { history, match } = this.props
         let url = match.path.replace('view', 'error')
-        // debugger
+
         history.push(url, {
             error,
         })
     }
 
     getDetails = (id) => {
-        // debugger
         this.setState({
             modal: {
                 open: true,
@@ -42,7 +40,6 @@ class ViewRecordsPage extends Component {
     }
 
     onCloseModal = () => {
-        // debugger
         this.setState({
             modal: {
                 open: false,
@@ -53,7 +50,7 @@ class ViewRecordsPage extends Component {
 
     getTable = () => {
         let { colDef, logs } = this.props
-        // debugger
+
         if (logs.length > 0) {
             return (
                 <Table
@@ -87,9 +84,6 @@ class ViewRecordsPage extends Component {
 
     getContent = () => {
         let { loading, error } = this.props
-
-        // debugger
-
         if (error) {
             this.showError(error)
             return null
@@ -106,18 +100,11 @@ class ViewRecordsPage extends Component {
     }
 
     render() {
-        // logGroup({
-        //     title: 'ViewRecordsPage',
-        //     method: 'render',
-        //     props: this.props,
-        //     state: this.state,
-        // })
         return <div>{this.getContent()}</div>
     }
 
     componentWillUnmount() {
         let { dispatch } = this.props
-        // debugger
         dispatch({
             type: actionType.RESET_ORGANIZATION,
         })
