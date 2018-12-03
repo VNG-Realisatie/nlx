@@ -1,0 +1,28 @@
+import PropTypes from 'prop-types'
+import styled from 'styled-components'
+import {css} from 'styled-components'
+
+const Title = styled.div`
+    font-weight: ${p => p.theme.font.weight.bold};
+    color: ${p => p.theme.color.black};
+
+    ${p => p.size === 'normal' && css`
+        font-size: ${p => p.theme.font.size.title.normal};
+        line-height: ${p => p.theme.font.lineHeight.title.normal};
+    `}
+
+    ${p => p.size === 'large' && css`
+        font-size: ${p => p.theme.font.size.title.large};
+        line-height: ${p => p.theme.font.lineHeight.title.large};
+    `}
+`
+
+Title.propTypes = {
+    size: PropTypes.oneOf(['normal', 'large']),
+}
+
+Title.defaultProps = {
+    size: 'normal'
+}
+
+export default Title
