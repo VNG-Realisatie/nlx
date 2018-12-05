@@ -17,7 +17,7 @@ const StyledIconRight = styled.div`
     ${iconRightStyle};
 `
 
-export class Button extends React.Component {
+export default class Button extends React.Component {
     render() {
         const {
             children,

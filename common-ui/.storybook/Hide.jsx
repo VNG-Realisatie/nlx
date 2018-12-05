@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import theme from './theme'
+import theme from 'src/theme'
 
 const { breakpoints } = theme
 const lastIndex = breakpoints.length - 1
