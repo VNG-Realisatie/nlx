@@ -5,12 +5,10 @@
   "dependencies": {
     "@material-ui/core": "^3.0.3",
     "@material-ui/icons": "^3.0.1",
-    "babel-loader": "^8.0.4",
-    "material-ui": "^0.20.2",
     "react": "^16.5.0",
     "react-dom": "^16.5.0",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "1.1.5"
+    "react-scripts": "2.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -21,7 +19,12 @@
     "lint": "eslint 'src/**/*.js*'"
   },
   "devDependencies": {
-    "styled-components": "^3.4.6",
-    "typeface-source-sans-pro": "^0.0.54"
-  }
+    "styled-components": "^3.4.6"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
