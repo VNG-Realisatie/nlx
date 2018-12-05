@@ -1,7 +1,7 @@
 import React from 'react'
 import { configure, addDecorator } from '@storybook/react';
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
-import theme from './theme'
+import theme from 'src/theme.js'
 
 import { setDefaults } from '@storybook/addon-info'
 import { withOptions } from '@storybook/addon-options'
