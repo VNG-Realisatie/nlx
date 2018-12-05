@@ -10,6 +10,8 @@
         <link rel="stylesheet" href="{{ "css/main.css" | relURL }}">
         <link rel="stylesheet" href="{{ "css/base-addon.css" | relURL }}">
 
+        <link rel="shortcut icon" type="image/x-icon" href="{{ "img/favicon.ico" | relURL }}" />
+
         <title>{{ .Title }} {{ if ne .Title .Site.Title }} &middot; {{ .Site.Title }}{{ end }}</title>
     </head>
     <body class="bg-white">
@@ -31,7 +33,7 @@
                             <a class="nav-link" href="https://nlx.io/about/">Over NLX</a>
                         </li>
                         <li class="nav-item active">
-                            <a class="nav-link" href="https://docs.nlx.io">Docs</a>
+                            <a class="nav-link" href="/">Docs</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="https://directory.nlx.io">Directory</a>
