@@ -24,20 +24,20 @@ const RouteContainer = posed.div({
     enter: { opacity: 1, x: 0,
         transition: {
             default: {
-                type: 'spring', stiffness: 30
+                type: 'spring', stiffness: 30, mass: .5
             },
             opacity: {
-                ease: 'easeInOut', duration: 500
+                ease: 'easeInOut', duration: 750
             }
         }
     },
     exit: { opacity: 0, x: ({ direction }) => direction === 'next' ? '-100%' : '100%',
         transition: {
             default: {
-                type: 'spring', stiffness: 35
+                type: 'spring', stiffness: 30, mass: .5
             },
             opacity: {
-                ease: 'easeInOut', duration: 500
+                ease: 'easeInOut', duration: 300
             }
         }
     },
@@ -85,8 +85,8 @@ class App extends Component {
 		return (
 			<ThemeProvider theme={theme}>
 				<Route render={({ location }) => {
-                    let prevLink = null
-                    let nextLink = null
+                    let prevLink
+                    let nextLink
                     switch (location.pathname) {
                         case '/':
                             prevLink = null

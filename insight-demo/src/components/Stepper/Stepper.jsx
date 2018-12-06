@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { NavLink } from 'react-router-dom';
-import styled from 'styled-components'
+import styled, {css} from 'styled-components'
 
 const Wrapper = styled.div`
     position: relative;
@@ -68,6 +68,7 @@ class Stepper extends PureComponent {
 
             user-select: none;
             box-sizing: border-box;
+            transition: background-color ${p => p.theme.transition.fast}, color ${p => p.theme.transition.fast}, border-color ${p => p.theme.transition.fast};
 
             &:not(:last-child) {
                 margin-right: ${`${gutterWidth}px`};
@@ -76,6 +77,12 @@ class Stepper extends PureComponent {
             &[aria-current] {
                 color: ${p => p.theme.color.primary.main};
                 border-color: ${p => p.theme.color.primary.main};
+                pointer-events: none;
+            }
+
+            &:hover {
+                background-color: ${p => p.done && p.theme.color.primary.light};
+                border-color: ${p => !p.done && p.theme.color.grey[40]};
             }
         `
 
