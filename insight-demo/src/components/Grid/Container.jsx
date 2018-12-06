@@ -18,7 +18,7 @@ class Container extends PureComponent {
 Container.propTypes = {}
 
 Container.defaultProps = {
-    px: '20px',
+    px: '32px',
     mx: 'auto',
 }
 

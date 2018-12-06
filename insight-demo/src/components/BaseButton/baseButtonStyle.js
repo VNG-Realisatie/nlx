@@ -56,11 +56,11 @@ export const baseButtonStyle = css`
 
         &:hover,
         &:focus {
-            background-color: ${p => p.theme.color.hover};
+            background-color: ${p => p.theme.color.grey[10]};
         }
 
         &:active {
-            background-color: ${p => p.theme.color.active};
+            background-color: ${p => p.theme.color.grey[20]};
         }
     `}
 

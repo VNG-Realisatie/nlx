@@ -39,29 +39,18 @@ const StyledPage = styled.div`
     flex-grow: 1;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding-bottom: 8rem;
 `
 
 const StyledContent = styled.div`
-    width: 100%;
-    max-width: 520px;
-    margin: 0 auto;
+    flex-shrink: 1;
+    max-width: 584px;
+    padding: 0 2rem;
 `
 
 const buttonStyle = {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    margin: 'auto 0',
     zIndex: 1
-}
-
-const backButtonStyle = {
-    left: '4rem'
-}
-
-const nextButtonStyle = {
-    right: '4rem'
 }
 
 class App extends Component {
@@ -108,11 +97,10 @@ class App extends Component {
                                     </Container>
                                 </Box>
                                 <StyledPage>
-                                    {prevLink &&
-                                        <Button variant="tertiary" as={Link} to={prevLink} style={{...buttonStyle,...backButtonStyle}}>Back</Button>
-                                    }
-                                    {nextLink &&
-                                        <Button as={Link} to={nextLink} style={{...buttonStyle,...nextButtonStyle}}>Next</Button>
+                                    {prevLink ?
+                                        <Button variant="tertiary" as={Link} to={prevLink} style={buttonStyle}>Back</Button>
+                                        :
+                                        <Button variant="tertiary" disabled style={buttonStyle}>Back</Button>
                                     }
                                     <StyledContent>
                                         <PoseGroup>
@@ -127,6 +115,11 @@ class App extends Component {
                                             </RouteContainer>
                                         </PoseGroup>
                                     </StyledContent>
+                                    {nextLink ?
+                                        <Button as={Link} to={nextLink} style={buttonStyle}>Next</Button>
+                                        :
+                                        <Button disabled style={buttonStyle}>Next</Button>
+                                    }
                                 </StyledPage>
                             </StyledContainer>
                         </Fragment>

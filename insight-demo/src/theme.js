@@ -83,7 +83,7 @@ export default {
         materialSlow: '0.35s cubic-bezier(0.4, 0, 0.2, 1)',
     },
     space: [4, 8, 16, 24, 32, 40, 80],
-    containerWidth: '1140px',
+    containerWidth: '980px',
     breakpoints: [
         '576px', // Small devices (landscape phones, 576px and up)
         '768px', // Medium devices (tablets, 768px and up)

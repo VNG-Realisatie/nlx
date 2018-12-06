@@ -20,6 +20,7 @@ const GlobalStyle = createGlobalStyle`
     *:after,
     *:before {
         box-sizing: border-box;
+        flex-shrink: 0;
     }
 
     *:active {

@@ -51,7 +51,7 @@ Col.propTypes = {
 }
 
 Col.defaultProps = {
-    px: '10px',
+    px: '16px',
     xsUp: undefined,
     smUp: undefined,
     mdUp: undefined,

@@ -12,7 +12,7 @@ class Row extends PureComponent {
 Row.propTypes = {}
 
 Row.defaultProps = {
-    mx: '-10px',
+    mx: '-16px',
     flexWrap: 'wrap',
 }
 
