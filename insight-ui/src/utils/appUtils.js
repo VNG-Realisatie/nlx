@@ -58,6 +58,23 @@ const sortTableData = (array, cmp) => {
 }
 
 /**
+ * Sort array of objects on specified property (prop)
+ * @param {string} prop name of the property
+ * @param {string} type string value asc or desc
+ */
+const sortArrayOnProp = (prop, type = 'asc') => {
+    if (type === 'asc') {
+        return function(a, b) {
+            return a[prop] > b[prop] ? 1 : a[prop] < b[prop] ? -1 : 0
+        }
+    } else {
+        return function(a, b) {
+            return a[prop] < b[prop] ? 1 : a[prop] > b[prop] ? -1 : 0
+        }
+    }
+}
+
+/**
  * Extract error status (number) and description (string)
  * from error object. There are few variations how errors
  * are returned.
@@ -107,4 +124,4 @@ const extractError = (error) => {
     return err
 }
 
-export { prepTableData, sortTableData, extractError }
+export { prepTableData, sortTableData, sortArrayOnProp, extractError }

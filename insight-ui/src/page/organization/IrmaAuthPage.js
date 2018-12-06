@@ -62,7 +62,7 @@ export class IrmaAuthPage extends Component {
         if (qrCode) {
             return (
                 <div>
-                    Scan QR code with IRMA to get access to your logs
+                    Scan QR code with IRMA to get access to your logs.
                     <br />
                     <br />
                     <QRCode

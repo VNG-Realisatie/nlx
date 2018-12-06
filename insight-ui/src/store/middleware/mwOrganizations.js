@@ -9,7 +9,7 @@
 
 import axios from 'axios'
 import * as actionType from '../actions'
-import { extractError } from '../../utils/appUtils'
+import { extractError, sortArrayOnProp } from '../../utils/appUtils'
 
 function getOrganizations({ action, dispatch }) {
     axios
@@ -19,6 +19,7 @@ function getOrganizations({ action, dispatch }) {
                 let orgList = response.data.organizations.filter((item) => {
                     return item.hasOwnProperty('insight_irma_endpoint')
                 })
+                orgList.sort(sortArrayOnProp('name', 'asc'))
                 dispatch({
                     type: actionType.GET_IRMA_ORGANIZATIONS_OK,
                     payload: orgList,
