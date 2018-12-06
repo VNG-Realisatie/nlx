@@ -20,7 +20,7 @@ class StepThree extends Component {
                     </Paragraph>
                 </Box>
 				<Flex justifyContent="center">
-					<Button variant="secondary" as="a" href="" target="_blank">Apply for parking permit</Button>
+					<Button variant="secondary" as="a" href="https://application.demo.voorbeeld-haarlem.nl/" target="_blank">Apply for parking permit</Button>
 				</Flex>
             </Fragment>
 		)
