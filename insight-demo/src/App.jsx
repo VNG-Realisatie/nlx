@@ -19,13 +19,28 @@ import StepThree from './pages/Step3'
 import StepFour from './pages/Step4'
 
 const RouteContainer = posed.div({
-    before: { opacity: 0, x: '100%' },
+    before: { opacity: 0, x: ({ direction }) => direction === 'next' ? '100%' : '-100%',
+    },
     enter: { opacity: 1, x: 0,
         transition: {
-            default: { type: 'spring', stiffness: 35, damp: 200, duration: 150 }
+            default: {
+                type: 'spring', stiffness: 30
+            },
+            opacity: {
+                ease: 'easeInOut', duration: 500
+            }
         }
     },
-    exit: { opacity: 0, x: '-100%' },
+    exit: { opacity: 0, x: ({ direction }) => direction === 'next' ? '-100%' : '100%',
+        transition: {
+            default: {
+                type: 'spring', stiffness: 35
+            },
+            opacity: {
+                ease: 'easeInOut', duration: 500
+            }
+        }
+    },
 });
 
 const StyledContainer = styled(Container)`
@@ -54,6 +69,18 @@ const buttonStyle = {
 }
 
 class App extends Component {
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            direction: 'next'
+        }
+    }
+
+    setDirection = (direction) => {
+        this.setState({direction})
+    }
+
 	render() {
 		return (
 			<ThemeProvider theme={theme}>
@@ -98,25 +125,25 @@ class App extends Component {
                                 </Box>
                                 <StyledPage>
                                     {prevLink ?
-                                        <Button variant="tertiary" as={Link} to={prevLink} style={buttonStyle}>Back</Button>
+                                        <Button variant="tertiary" as={Link} to={prevLink} style={buttonStyle} onClick={() => this.setDirection('back')}>Back</Button>
                                         :
                                         <Button variant="tertiary" disabled style={buttonStyle}>Back</Button>
                                     }
                                     <StyledContent>
-                                        <PoseGroup>
+                                        <PoseGroup preEnterPose="before" direction={this.state.direction}>
                                             <RouteContainer key={location.pathname}>
-                                            <Switch location={location}>
-                                                <Route exact path="/" component={Intro} key="intro" />
-                                                <Route path="/stepone" component={StepOne} key="stepone" />
-                                                <Route path="/steptwo" component={StepTwo} key="steptwo" />
-                                                <Route path="/stepthree" component={StepThree} key="stepthree" />
-                                                <Route path="/stepfour" component={StepFour} key="stepfour" />
-                                            </Switch>
+                                                <Switch location={location}>
+                                                    <Route exact path="/" component={Intro} key="intro" />
+                                                    <Route path="/stepone" component={StepOne} key="stepone" />
+                                                    <Route path="/steptwo" component={StepTwo} key="steptwo" />
+                                                    <Route path="/stepthree" component={StepThree} key="stepthree" />
+                                                    <Route path="/stepfour" component={StepFour} key="stepfour" />
+                                                </Switch>
                                             </RouteContainer>
                                         </PoseGroup>
                                     </StyledContent>
                                     {nextLink ?
-                                        <Button as={Link} to={nextLink} style={buttonStyle}>Next</Button>
+                                        <Button as={Link} to={nextLink} style={buttonStyle} onClick={() => this.setDirection('next')}>Next</Button>
                                         :
                                         <Button disabled style={buttonStyle}>Next</Button>
                                     }
