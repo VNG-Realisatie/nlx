@@ -92,6 +92,8 @@ class App extends Component {
                             prevLink = "/stepthree"
                             nextLink = null
                             break
+                        default:
+                            break
                     }
 
                     return (

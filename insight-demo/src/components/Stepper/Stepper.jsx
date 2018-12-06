@@ -23,6 +23,8 @@ class Stepper extends PureComponent {
                 return progressWidth * 2
             case '/stepfour':
                 return progressWidth * 3
+            default:
+                break
         }
     }
 
