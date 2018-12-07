@@ -88,7 +88,7 @@ const LgButton = styled(Button)`
     `}
 
     ${media.xsUp`
-        display: block;
+        display: inline-flex;
     `}
 `
 
