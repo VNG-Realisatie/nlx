@@ -11,6 +11,7 @@ import { Container } from './components/Grid/Grid'
 
 import Button from "./components/Button/Button";
 import Stepper from "./components/Stepper/Stepper";
+import logo from './logo.svg'
 
 // Pages
 import Intro from './pages/Intro'
@@ -18,6 +19,39 @@ import StepOne from './pages/Step1'
 import StepTwo from './pages/Step2'
 import StepThree from './pages/Step3'
 import StepFour from './pages/Step4'
+
+const Header = styled.div`
+    ${media.xsDown`
+        padding-top: 32px;
+        padding-bottom: 40px;
+    `}
+
+    ${media.xsUp`
+        padding-top: 80px;
+        padding-bottom: 32px;
+    `}
+`
+
+const Logo = styled.div`
+    ${media.xsDown`
+        margin-bottom: 24px;
+    `}
+
+    ${media.xsUp`
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 2rem;
+        margin: 0 auto;
+    `}
+
+    display: flex;
+    justify-content: center;
+
+    img {
+        height: 16px;
+    }
+`
 
 const RouteContainer = posed.div({
     before: { opacity: 0, x: ({ direction }) => direction === 'next' ? '100%' : '-100%',
@@ -158,13 +192,18 @@ class App extends Component {
                         <Fragment>
                             <GlobalStyle />
                             <StyledContainer>
-                                <Box pt={6} pb={4}>
+                                <Header>
                                     <Container>
-                                        <Flex justifyContent="center">
+                                        <Flex alignItems="center" flexDirection="column">
+                                            <Logo>
+                                                <a href="https://nlx.io/" target="_blank">
+                                                    <img src={logo} alt="logo" />
+                                                </a>
+                                            </Logo>
                                             <Stepper pathname={location.pathname} />
                                         </Flex>
                                     </Container>
-                                </Box>
+                                </Header>
                                 <StyledPage>
                                     {prevLink ?
                                         <StyledLink to={prevLink} onClick={() => this.setDirection('back')}>
