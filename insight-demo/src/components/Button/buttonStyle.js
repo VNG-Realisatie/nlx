@@ -50,7 +50,7 @@ export const buttonStyle = css`
     ${(p) =>
         p.variant === 'primary' &&
         css`
-            font-weight: ${p => p.theme.font.weight.bold};
+            font-weight: ${p => p.theme.font.weight.semibold};
         `};
 
     ${(p) =>

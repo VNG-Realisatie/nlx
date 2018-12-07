@@ -1,6 +1,31 @@
 import { createGlobalStyle } from 'styled-components'
+import sourceSansProRegular from './fonts/sourcesanspro/SourceSansPro-Regular.ttf';
+import sourceSansProSemiBold from './fonts/sourcesanspro/SourceSansPro-SemiBold.ttf';
+import sourceSansProBold from './fonts/sourcesanspro/SourceSansPro-Bold.ttf';
+
 
 const GlobalStyle = createGlobalStyle`
+    @font-face {
+        font-family: ${p => p.theme.font.family.main};
+        src: url(${sourceSansProRegular}) format('truetype');
+        font-weight: ${p => p.theme.font.weight.normal};
+        font-style: normal;
+    }
+
+    @font-face {
+        font-family: ${p => p.theme.font.family.main};
+        src: url(${sourceSansProSemiBold}) format('truetype');
+        font-weight: ${p => p.theme.font.weight.semibold};
+        font-style: normal;
+    }
+
+    @font-face {
+        font-family: ${p => p.theme.font.family.main};
+        src: url(${sourceSansProBold}) format('truetype');
+        font-weight: ${p => p.theme.font.weight.bold};
+        font-style: normal;
+    }
+
     html {
         font-family: ${p => p.theme.font.family.main};
         color: ${p => p.theme.color.black};

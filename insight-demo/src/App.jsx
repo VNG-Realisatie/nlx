@@ -11,7 +11,7 @@ import { Container } from './components/Grid/Grid'
 
 import Button from "./components/Button/Button";
 import Stepper from "./components/Stepper/Stepper";
-import logo from './logo.svg'
+import logo from './images/logo.svg'
 
 // Pages
 import Intro from './pages/Intro'
@@ -41,7 +41,7 @@ const Logo = styled.div`
         position: absolute;
         left: 0;
         right: 0;
-        bottom: 2rem;
+        bottom: 1.75rem;
         margin: 0 auto;
     `}
 
