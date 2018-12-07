@@ -84,10 +84,14 @@ export default {
     },
     space: [4, 8, 16, 24, 32, 40, 80],
     containerWidth: '980px',
-    breakpoints: [
-        '576px', // Small devices (landscape phones, 576px and up)
-        '768px', // Medium devices (tablets, 768px and up)
-        '992px', // Large devices (desktops, 992px and up)
-        '1200px', // Extra large devices (large desktops, 1200px and up)
-    ],
+    breakpoints: {
+        breakpoints: {
+            xs: 576,
+            sm: 768,
+            md: 992,
+            lg: 1200,
+        },
+        unit: 'px',
+        step: 5,
+    },
 }

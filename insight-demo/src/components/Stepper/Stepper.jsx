@@ -1,28 +1,32 @@
 import React, { PureComponent } from 'react'
 import { NavLink } from 'react-router-dom';
-import styled, {css} from 'styled-components'
+import styled from 'styled-components'
+import { media } from '../../theme/helpers'
 
 const Wrapper = styled.div`
     position: relative;
     display: inline-flex;
 `
 
-const gutterWidth = 96
+const gutterWidth = 80
 const progressWidth = gutterWidth + 32
+const smallGutterWidth = 32
+const smallProgressWidth = smallGutterWidth + 32
 
 class Stepper extends PureComponent {
-    getProgressWidth = (pathname) => {
+    getProgressWidth = (pathname, size = 'large') => {
+        const width = size === 'large' ? progressWidth : smallProgressWidth
         switch (pathname) {
             case '/':
                 return 0
             case '/stepone':
                 return 0
             case '/steptwo':
-                return progressWidth
+                return width
             case '/stepthree':
-                return progressWidth * 2
+                return width * 2
             case '/stepfour':
-                return progressWidth * 3
+                return width * 3
             default:
                 break
         }
@@ -41,8 +45,15 @@ class Stepper extends PureComponent {
                 content: '';
                 display: block;
                 height: 100%;
-                width: ${p => `${this.getProgressWidth(this.props.pathname)}px`};
                 background-color: ${p => p.theme.color.primary.main};
+
+                ${media.xsDown`
+                    width: ${p => `${this.getProgressWidth(this.props.pathname, 'small')}px`};
+                `}
+
+                ${media.xsUp`
+                    width: ${p => `${this.getProgressWidth(this.props.pathname)}px`};
+                `}
             }
         `
 
@@ -70,8 +81,15 @@ class Stepper extends PureComponent {
             box-sizing: border-box;
             transition: background-color ${p => p.theme.transition.fast}, color ${p => p.theme.transition.fast}, border-color ${p => p.theme.transition.fast};
 
+
             &:not(:last-child) {
-                margin-right: ${`${gutterWidth}px`};
+                ${media.xsDown`
+                    margin-right: ${`${smallGutterWidth}px`};
+                `}
+
+                ${media.xsUp`
+                    margin-right: ${`${gutterWidth}px`};
+                `}
             }
 
             &[aria-current] {

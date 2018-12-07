@@ -2,10 +2,16 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { Box } from '@rebass/grid'
 
+/**
+ * Usage:
+ * Column will be half screen width on small screens and quarter width for medium screens and larger
+ * <Col sm={1 / 2} mdUp={1 / 4}>content</Col>
+ */
 class Col extends PureComponent {
     render() {
         const { children, ...sizes } = this.props
 
+        // Default to full width for all screen sizes
         const width = [
             1 / 1, // xs
             1 / 1, // sm
@@ -13,6 +19,7 @@ class Col extends PureComponent {
             1 / 1, // lg
         ]
 
+        // Define for each possible size prop, what position(s) in `width` array should be changed
         const inserts = new Map([
             ['xsUp', [0, 4]],
             ['smUp', [1, 3]],
@@ -26,7 +33,9 @@ class Col extends PureComponent {
         inserts.forEach((insert, prop) => {
             if (sizes[prop]) {
                 const [at, times] = insert
+                // Create new array `values` with passed size (eg. 1 / 2)
                 const values = Array(times).fill(sizes[prop])
+                // Replace the default width values with the passed value
                 width.splice(at, times, ...values)
             }
         })

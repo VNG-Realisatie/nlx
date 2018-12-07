@@ -1,9 +1,10 @@
 import React, { Fragment, Component } from "react"
 import { Route, Link, Switch } from 'react-router-dom';
 import posed, { PoseGroup } from 'react-pose';
+import { media } from './theme/helpers'
 
 import styled, { ThemeProvider } from 'styled-components'
-import theme from './theme'
+import theme from './theme/themeConstants'
 import GlobalStyle from './globalStyle'
 import { Flex, Box } from '@rebass/grid'
 import { Container } from './components/Grid/Grid'
@@ -48,25 +49,66 @@ const StyledContainer = styled(Container)`
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    overflow: hidden;
 `
 
 const StyledPage = styled.div`
     flex-grow: 1;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-bottom: 8rem;
+
+    ${media.xsDown`
+        padding-bottom: 6.5rem;
+    `}
+
+    ${media.xsUp`
+        padding-bottom: 8rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    `}
+`
+
+const StyledLink = styled(Link)`
+    text-decoration: none;
 `
 
 const StyledContent = styled.div`
     flex-shrink: 1;
     max-width: 584px;
-    padding: 0 2rem;
+
+    ${media.xsUp`
+        padding: 0 2rem;
+    `}
 `
 
-const buttonStyle = {
-    zIndex: 1
-}
+const LgButton = styled(Button)`
+    z-index: 1;
+
+    ${media.xsDown`
+        display: none;
+    `}
+
+    ${media.xsUp`
+        display: block;
+    `}
+`
+
+const SmButton = styled(Button)`
+    z-index: 1;
+`
+
+const Toolbar = styled(Flex)`
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0%;
+    padding: 12px 0 14px;
+    background-color: white;
+    box-shadow: rgba(0,0,0,0.03) 0px -1px 6px 0px, rgba(0,0,0,0.03) 0px -20px 20px -20px;
+
+    ${media.xsUp`
+        display: none;
+    `}
+`
 
 class App extends Component {
     constructor(props) {
@@ -125,9 +167,11 @@ class App extends Component {
                                 </Box>
                                 <StyledPage>
                                     {prevLink ?
-                                        <Button variant="tertiary" as={Link} to={prevLink} style={buttonStyle} onClick={() => this.setDirection('back')}>Back</Button>
+                                        <StyledLink to={prevLink} onClick={() => this.setDirection('back')}>
+                                            <LgButton variant="tertiary">Back</LgButton>
+                                        </StyledLink>
                                         :
-                                        <Button variant="tertiary" disabled style={buttonStyle}>Back</Button>
+                                        <LgButton variant="tertiary" disabled >Back</LgButton>
                                     }
                                     <StyledContent>
                                         <PoseGroup preEnterPose="before" direction={this.state.direction}>
@@ -143,10 +187,30 @@ class App extends Component {
                                         </PoseGroup>
                                     </StyledContent>
                                     {nextLink ?
-                                        <Button as={Link} to={nextLink} style={buttonStyle} onClick={() => this.setDirection('next')}>Next</Button>
+                                        <StyledLink to={nextLink} onClick={() => this.setDirection('next')}>
+                                            <LgButton>Next</LgButton>
+                                        </StyledLink>
                                         :
-                                        <Button disabled style={buttonStyle}>Next</Button>
+                                        <LgButton disabled >Next</LgButton>
                                     }
+                                    <Toolbar justifyContent="center" mt={6}>
+                                        <Box mr={3}>
+                                            {prevLink ?
+                                                <StyledLink to={prevLink} onClick={() => this.setDirection('back')}>
+                                                    <SmButton variant="tertiary">Back</SmButton>
+                                                </StyledLink>
+                                                :
+                                                <SmButton variant="tertiary" disabled >Back</SmButton>
+                                            }
+                                        </Box>
+                                        {nextLink ?
+                                            <StyledLink to={nextLink} onClick={() => this.setDirection('next')}>
+                                                <SmButton>Next</SmButton>
+                                            </StyledLink>
+                                            :
+                                            <SmButton disabled >Next</SmButton>
+                                        }
+                                    </Toolbar>
                                 </StyledPage>
                             </StyledContainer>
                         </Fragment>
