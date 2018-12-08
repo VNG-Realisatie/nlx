@@ -1,28 +1,38 @@
 import { createGlobalStyle } from 'styled-components'
-import sourceSansProRegular from './fonts/sourcesanspro/SourceSansPro-Regular.ttf';
-import sourceSansProSemiBold from './fonts/sourcesanspro/SourceSansPro-SemiBold.ttf';
-import sourceSansProBold from './fonts/sourcesanspro/SourceSansPro-Bold.ttf';
+/*
+    Dusan, 2018-12-07
+    GoogleFonts css file uses woff2 files instead of ttf. The difference in the level
+    of support is quite small but file size difference is signficant. I advice woff2.
+*/
+
+// import sourceSansProRegular from './fonts/sourcesanspro/SourceSansPro-Regular.ttf';
+// import sourceSansProSemiBold from './fonts/sourcesanspro/SourceSansPro-SemiBold.ttf';
+// import sourceSansProBold from './fonts/sourcesanspro/SourceSansPro-Bold.ttf';
+
+import sourceSansProRegular from './fonts/sourcesanspro/6xK3dSBYKcSV-LCoeQqfX1RYOo3qOK7l.woff2';
+import sourceSansProSemiBold from './fonts/sourcesanspro/6xKydSBYKcSV-LCoeQqfX1RYOo3i54rwlxdu.woff2';
+import sourceSansProBold from './fonts/sourcesanspro/6xKydSBYKcSV-LCoeQqfX1RYOo3ig4vwlxdu.woff2';
 
 
 const GlobalStyle = createGlobalStyle`
     @font-face {
-        font-family: ${p => p.theme.font.family.main};
-        src: url(${sourceSansProRegular}) format('truetype');
-        font-weight: ${p => p.theme.font.weight.normal};
+        font-family: 'Source Sans Pro';
+        src: url(${sourceSansProRegular}) format('woff2');
+        font-weight: 400;
         font-style: normal;
     }
 
     @font-face {
-        font-family: ${p => p.theme.font.family.main};
-        src: url(${sourceSansProSemiBold}) format('truetype');
-        font-weight: ${p => p.theme.font.weight.semibold};
+        font-family: 'Source Sans Pro';
+        src: url(${sourceSansProSemiBold}) format('woff2');
+        font-weight: 600;
         font-style: normal;
     }
 
     @font-face {
-        font-family: ${p => p.theme.font.family.main};
-        src: url(${sourceSansProBold}) format('truetype');
-        font-weight: ${p => p.theme.font.weight.bold};
+        font-family: 'Source Sans Pro';
+        src: url(${sourceSansProBold}) format('woff2');
+        font-weight: 700;
         font-style: normal;
     }
 
