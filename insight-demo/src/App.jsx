@@ -196,7 +196,7 @@ class App extends Component {
                                     <Container>
                                         <Flex alignItems="center" flexDirection="column">
                                             <Logo>
-                                                <a href="https://nlx.io/" target="_blank">
+                                                <a href="https://nlx.io/" target="_blank" rel="noopener noreferrer">
                                                     <img src={logo} alt="logo" />
                                                 </a>
                                             </Logo>
