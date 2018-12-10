@@ -42,23 +42,23 @@ const GlobalStyle = createGlobalStyle`
         font-style: normal;
     }
 
+    html {
+        box-sizing: border-box;
+    }
+
     body {
-        font-family: '${p => p.theme.font.family.main}';
-        color: ${p => p.theme.color.black};
-        background-color: ${p => p.theme.color.white};
         margin: 0;
+        background-color: ${p => p.theme.color.white};
         overflow-wrap: break-word;
         word-wrap: break-word;
         word-break: break-word;
-        text-rendering: optimizeLegibility;
         -webkit-font-smoothing: antialiased;
     }
 
     *,
     *:after,
     *:before {
-        box-sizing: border-box;
-        flex-shrink: 0;
+        box-sizing: inherit;
     }
 
     *:active {

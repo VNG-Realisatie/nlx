@@ -74,6 +74,8 @@ class Stepper extends PureComponent {
 
             background-color: ${p => p.done ? p.theme.color.primary.main : p.theme.color.white};
             color: ${p => p.done ? p.theme.color.white : p.theme.color.grey[60]};
+
+            font-family: ${p => p.theme.font.family.main};
             font-size: 16px;
             font-weight: bold;
             text-decoration: none;
