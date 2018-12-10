@@ -16,7 +16,7 @@ class StepFour extends Component {
                 </Box>
                 <Box mb={4}>
                     <Paragraph size="large">
-						Go to <Highlight>NLX Insight</Highlight> and click an organsation to see if it exchanged your BSN and VRN.
+						Go to <Highlight>NLX Insight</Highlight> and click an organization to see if it exchanged your BSN and VRN.
                     </Paragraph>
                 </Box>
 				<Flex justifyContent="center">
