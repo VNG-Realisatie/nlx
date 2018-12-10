@@ -1,4 +1,4 @@
-package inspectionservice
+package directoryservice
 
 import (
 	"context"
@@ -14,14 +14,14 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/peer"
 
-	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
+	"go.nlx.io/nlx/directory/directoryapi"
 )
 
 // compile-time interface implementation verification
-var _ inspectionapi.DirectoryServer = &InspectionService{}
+var _ directoryapi.DirectoryServer = &DirectoryService{}
 
-// InspectionService handles all requests for a directory inspection api
-type InspectionService struct {
+// DirectoryService handles all requests for a directory api
+type DirectoryService struct {
 	*registerInwayHandler
 	*listServicesHandler
 	*listOrganizationsHandler
@@ -29,8 +29,8 @@ type InspectionService struct {
 }
 
 // New sets up a new DirectoryService and returns an error when something failed during set.
-func New(logger *zap.Logger, db *sqlx.DB, rootCA *x509.CertPool, certKeyPair tls.Certificate, demoEnv string, demoDomain string) (*InspectionService, error) {
-	s := &InspectionService{}
+func New(logger *zap.Logger, db *sqlx.DB, rootCA *x509.CertPool, certKeyPair tls.Certificate, demoEnv string, demoDomain string) (*DirectoryService, error) {
+	s := &DirectoryService{}
 
 	var err error
 

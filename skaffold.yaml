@@ -14,14 +14,10 @@ build:
     context: .
     docker:
       dockerfile: directory-db/Dockerfile
-  - image: nlxio/directory-inspection-api
+  - image: nlxio/directory
     context: .
     docker:
-      dockerfile: directory-inspection-api/Dockerfile
-  - image: nlxio/directory-registration-api
-    context: .
-    docker:
-      dockerfile: directory-registration-api/Dockerfile
+      dockerfile: directory/Dockerfile
   - image: nlxio/directory-monitor
     context: .
     docker:
@@ -71,8 +67,7 @@ profiles:
           caCertportalImage: nlxio/ca-certportal
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           directoryDBImage: nlxio/directory-db
-          directoryInspectionImage: nlxio/directory-inspection-api
-          directoryRegistrationImage: nlxio/directory-registration-api
+          directoryImage: nlxio/directory
           directoryMonitorImage: nlxio/directory-monitor
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs
@@ -142,8 +137,7 @@ profiles:
           caCertportalImage: nlxio/ca-certportal
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           directoryDBImage: nlxio/directory-db
-          directoryInspectionImage: nlxio/directory-inspection-api
-          directoryRegistrationImage: nlxio/directory-registration-api
+          directoryImage: nlxio/directory
           directoryMonitorImage: nlxio/directory-monitor
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs
@@ -199,8 +193,7 @@ profiles:
           caCertportalImage: nlxio/ca-certportal
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           directoryDBImage: nlxio/directory-db
-          directoryInspectionImage: nlxio/directory-inspection-api
-          directoryRegistrationImage: nlxio/directory-registration-api
+          directoryImage: nlxio/directory
           directoryMonitorImage: nlxio/directory-monitor
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs
@@ -256,8 +249,7 @@ profiles:
           caCertportalImage: nlxio/ca-certportal
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           directoryDBImage: nlxio/directory-db
-          directoryInspectionImage: nlxio/directory-inspection-api
-          directoryRegistrationImage: nlxio/directory-registration-api
+          directoryImage: nlxio/directory
           directoryMonitorImage: nlxio/directory-monitor
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs

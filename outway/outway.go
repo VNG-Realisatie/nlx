@@ -24,7 +24,7 @@ import (
 
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/transactionlog"
-	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
+	"go.nlx.io/nlx/directory/directoryapi"
 )
 
 // Outway handles requests from inside the organization
@@ -39,7 +39,7 @@ type Outway struct {
 
 	txlogger transactionlog.TransactionLogger
 
-	inspectionClient inspectionapi.DirectoryClient
+	directoryClient directoryapi.DirectoryClient
 
 	requestFlake *sonyflake.Sonyflake
 	ecmaTable    *crc64.Table
@@ -99,7 +99,7 @@ func NewOutway(process *process.Process, logger *zap.Logger, logdb *sqlx.DB, tls
 	if err != nil {
 		logger.Fatal("failed to setup connection to directory service", zap.Error(err))
 	}
-	o.inspectionClient = inspectionapi.NewDirectoryClient(directoryConn)
+	o.directoryClient = directoryapi.NewDirectoryClient(directoryConn)
 	err = o.updateServiceList(process)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to update internal service directory")
@@ -140,7 +140,7 @@ func (o *Outway) keepServiceListUpToDate(process *process.Process) {
 
 func (o *Outway) updateServiceList(process *process.Process) error {
 	services := make(map[string]HTTPService)
-	resp, err := o.inspectionClient.ListServices(context.Background(), &inspectionapi.ListServicesRequest{})
+	resp, err := o.directoryClient.ListServices(context.Background(), &directoryapi.ListServicesRequest{})
 	if err != nil {
 		return errors.Wrap(err, "failed to fetch services from directory")
 	}

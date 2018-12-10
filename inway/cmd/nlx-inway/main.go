@@ -61,7 +61,7 @@ func main() {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
 	process := process.NewProcess(logger)
-	logger.Info("starting inwway", zap.String("directory address", options.DirectoryAddress))
+
 	serviceConfig := config.LoadServiceConfig(logger, options.ServiceConfig)
 	var logDB *sqlx.DB
 	if !options.DisableLogdb {

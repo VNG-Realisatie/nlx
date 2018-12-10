@@ -90,7 +90,7 @@ spec:
             - name: SELF_ADDRESS
               value: "{{.component}}.{{.Values.domain}}"
             - name: DIRECTORY_ADDRESS
-              value: "{{.Values.directoryRegistrationHostname}}:443"
+              value: "{{.Values.directoryHostname}}:443"
             - name: SERVICE_CONFIG
               value: /inway-service-config/service-config.toml
           volumeMounts:
@@ -107,7 +107,7 @@ spec:
       hostAliases:
         - ip: "{{.Values.externalIP}}"
           hostnames:
-            - "{{.Values.directoryRegistrationHostname}}"
+            - "{{.Values.directoryHostname}}"
       {{ end }}
 
       restartPolicy: Always

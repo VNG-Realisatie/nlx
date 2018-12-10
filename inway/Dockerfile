@@ -12,11 +12,11 @@ WORKDIR /go/src/go.nlx.io/nlx
 RUN go mod download
 
 # Only add code that we use for building inway
-COPY inway                                          /go/src/go.nlx.io/nlx/inway
-COPY directory-monitor/health                       /go/src/go.nlx.io/nlx/directory-monitor/health
-COPY directory-registration-api/registrationapi     /go/src/go.nlx.io/nlx/directory-registration-api/registrationapi
-COPY txlog-db/dbversion                             /go/src/go.nlx.io/nlx/txlog-db/dbversion
-COPY common                                         /go/src/go.nlx.io/nlx/common
+COPY inway                      /go/src/go.nlx.io/nlx/inway
+COPY directory-monitor/health   /go/src/go.nlx.io/nlx/directory-monitor/health
+COPY directory/directoryapi     /go/src/go.nlx.io/nlx/directory/directoryapi
+COPY txlog-db/dbversion         /go/src/go.nlx.io/nlx/txlog-db/dbversion
+COPY common                     /go/src/go.nlx.io/nlx/common
 
 WORKDIR /go/src/go.nlx.io/nlx/inway
 

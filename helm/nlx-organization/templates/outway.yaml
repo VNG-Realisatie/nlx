@@ -54,7 +54,7 @@ spec:
             - name: POSTGRES_DSN
               value: postgresql://{{.Values.dbUsernameTxlogWriter}}:{{.Values.dbPasswordTxlogWriter}}@{{.Values.dbHost}}/{{.Values.dbDatabaseTxlog}}?sslmode=disable&connect_timeout=10
             - name: DIRECTORY_ADDRESS
-              value: "{{.Values.directoryInspectionHostname}}:443"
+              value: "{{.Values.directoryHostname}}:443"
           volumeMounts:
             - name: certs
               mountPath: /certs
@@ -64,7 +64,7 @@ spec:
       hostAliases:
         - ip: "{{.Values.externalIP}}"
           hostnames:
-            - "{{.Values.directoryInspectionHostname}}"
+            - "{{.Values.directoryHostname}}"
             {{- range .Values.inwayHostnames }}
             - "{{.}}"
             {{ end }}

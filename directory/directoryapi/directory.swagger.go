@@ -1,11 +1,11 @@
-package inspectionapi
+package directoryapi
 const (
 SwaggerJSONDirectory = `
 {
   "swagger": "2.0",
   "info": {
-    "title": "inspectionapi.proto",
-    "description": "Package inspectionapi defines the directory api.",
+    "title": "directory.proto",
+    "description": "Package directoryapi defines the directory api.",
     "version": "version not set"
   },
   "schemes": [
@@ -26,7 +26,7 @@ SwaggerJSONDirectory = `
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/inspectionapiGetServiceAPISpecResponse"
+              "$ref": "#/definitions/directoryapiGetServiceAPISpecResponse"
             }
           }
         },
@@ -57,7 +57,7 @@ SwaggerJSONDirectory = `
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/inspectionapiListOrganizationsResponse"
+              "$ref": "#/definitions/directoryapiListOrganizationsResponse"
             }
           }
         },
@@ -74,7 +74,7 @@ SwaggerJSONDirectory = `
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/inspectionapiListServicesResponse"
+              "$ref": "#/definitions/directoryapiListServicesResponse"
             }
           }
         },
@@ -108,6 +108,10 @@ SwaggerJSONDirectory = `
         "service_name": {
           "type": "string"
         },
+        "internal": {
+          "type": "boolean",
+          "format": "boolean"
+        },
         "inway_addresses": {
           "type": "array",
           "items": {
@@ -119,10 +123,6 @@ SwaggerJSONDirectory = `
         },
         "api_specification_type": {
           "type": "string"
-        },
-        "internal": {
-          "type": "boolean",
-          "format": "boolean"
         }
       }
     },
@@ -131,6 +131,10 @@ SwaggerJSONDirectory = `
       "properties": {
         "name": {
           "type": "string"
+        },
+        "internal": {
+          "type": "boolean",
+          "format": "boolean"
         },
         "documentation_url": {
           "type": "string"
@@ -146,14 +150,10 @@ SwaggerJSONDirectory = `
         },
         "irma_api_url": {
           "type": "string"
-        },
-        "internal": {
-          "type": "boolean",
-          "format": "boolean"
         }
       }
     },
-    "inspectionapiGetServiceAPISpecResponse": {
+    "directoryapiGetServiceAPISpecResponse": {
       "type": "object",
       "properties": {
         "type": {
@@ -165,7 +165,7 @@ SwaggerJSONDirectory = `
         }
       }
     },
-    "inspectionapiListOrganizationsResponse": {
+    "directoryapiListOrganizationsResponse": {
       "type": "object",
       "properties": {
         "organizations": {
@@ -176,7 +176,7 @@ SwaggerJSONDirectory = `
         }
       }
     },
-    "inspectionapiListServicesResponse": {
+    "directoryapiListServicesResponse": {
       "type": "object",
       "properties": {
         "services": {
@@ -187,7 +187,7 @@ SwaggerJSONDirectory = `
         }
       }
     },
-    "inspectionapiRegisterInwayResponse": {
+    "directoryapiRegisterInwayResponse": {
       "type": "object",
       "properties": {
         "error": {

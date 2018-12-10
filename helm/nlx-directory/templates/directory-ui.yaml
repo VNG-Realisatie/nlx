@@ -48,7 +48,7 @@ spec:
               servicePort: webinterface
           - path: /api
             backend:
-              serviceName: directory-inspection-api
+              serviceName: directory-webapi
               servicePort: webapi
 {{ if eq .Values.domain "demo.nlx.io" }}
     - host: directory.nlx.io
@@ -60,7 +60,7 @@ spec:
               servicePort: webinterface
           - path: /api
             backend:
-              serviceName: directory-inspection-api
+              serviceName: directory-webapi
               servicePort: webapi
 {{ end }}
 {{ end }}

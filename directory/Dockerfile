@@ -12,12 +12,13 @@ WORKDIR /go/src/go.nlx.io/nlx
 RUN go mod download
 
 # Only add code that we use for building directory
-COPY directory-inspection-api   /go/src/go.nlx.io/nlx/directory-inspection-api
-COPY directory-db/dbversion     /go/src/go.nlx.io/nlx/directory-db/dbversion
-COPY common                     /go/src/go.nlx.io/nlx/common
+COPY directory              /go/src/go.nlx.io/nlx/directory
+COPY directory-db/dbversion /go/src/go.nlx.io/nlx/directory-db/dbversion
+COPY common                 /go/src/go.nlx.io/nlx/common
 
-WORKDIR /go/src/go.nlx.io/nlx/directory-inspection-api
-RUN go build -o dist/bin/nlx-directory-inspection-api ./cmd/nlx-directory-inspection-api
+WORKDIR /go/src/go.nlx.io/nlx/directory
+
+RUN go build -o dist/bin/nlx-directory ./cmd/nlx-directory
 
 
 # Release binary on latest alpine image.
@@ -26,4 +27,4 @@ FROM alpine:latest
 # Make sure /etc/hosts is resolved before DNS
 RUN echo "hosts: files dns" > /etc/nsswitch.conf
 
-COPY --from=build /go/src/go.nlx.io/nlx/directory-inspection-api/dist/bin/nlx-directory-inspection-api /usr/local/bin/nlx-directory-inspection-api
+COPY --from=build /go/src/go.nlx.io/nlx/directory/dist/bin/nlx-directory /usr/local/bin/nlx-directory

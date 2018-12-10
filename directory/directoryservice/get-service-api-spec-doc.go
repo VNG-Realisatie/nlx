@@ -1,4 +1,4 @@
-package inspectionservice
+package directoryservice
 
 import (
 	"context"
@@ -12,7 +12,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
+	"go.nlx.io/nlx/directory/directoryapi"
 )
 
 type getServiceAPISpecHandler struct {
@@ -52,9 +52,9 @@ func newGetServiceAPISpecHandler(db *sqlx.DB, logger *zap.Logger, rootCA *x509.C
 	return h, nil
 }
 
-func (h *getServiceAPISpecHandler) GetServiceAPISpec(ctx context.Context, req *inspectionapi.GetServiceAPISpecRequest) (*inspectionapi.GetServiceAPISpecResponse, error) {
+func (h *getServiceAPISpecHandler) GetServiceAPISpec(ctx context.Context, req *directoryapi.GetServiceAPISpecRequest) (*directoryapi.GetServiceAPISpecResponse, error) {
 	h.logger.Info("rpc request GetServiceAPISpec()")
-	resp := &inspectionapi.GetServiceAPISpecResponse{}
+	resp := &directoryapi.GetServiceAPISpecResponse{}
 
 	var inwayAddress string
 	err := h.stmtSelectServiceInway.QueryRowx(req.OrganizationName, req.ServiceName).Scan(&inwayAddress, &resp.Type)

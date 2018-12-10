@@ -14,8 +14,7 @@ dbPasswordTxlogWriter: nlx-txlog-writer
 
 caAddress: ca-cfssl-unsafe.nlx-dev-directory
 
-directoryRegistrationHostname: directory-registration-api.dev.nlx.minikube
-directoryInspectionHostname: directory-inspection-api.dev.nlx.minikube
+directoryHostname: directory-api.dev.nlx.minikube
 
 inway:
   enable: true

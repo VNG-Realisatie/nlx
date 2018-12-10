@@ -12,10 +12,10 @@ WORKDIR /go/src/go.nlx.io/nlx
 RUN go mod download
 
 # Only add code that we use for building outway
-COPY outway                                 /go/src/go.nlx.io/nlx/outway
-COPY directory-inspection-api/inspectionapi /go/src/go.nlx.io/nlx/directory-inspection-api/inspectionapi
-COPY txlog-db/dbversion                     /go/src/go.nlx.io/nlx/txlog-db/dbversion
-COPY common                                 /go/src/go.nlx.io/nlx/common
+COPY outway                 /go/src/go.nlx.io/nlx/outway
+COPY directory/directoryapi /go/src/go.nlx.io/nlx/directory/directoryapi
+COPY txlog-db/dbversion     /go/src/go.nlx.io/nlx/txlog-db/dbversion
+COPY common                 /go/src/go.nlx.io/nlx/common
 
 WORKDIR /go/src/go.nlx.io/nlx/outway
 
