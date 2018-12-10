@@ -144,13 +144,6 @@ func newLogFetcher(logger *zap.Logger, logDB *sqlx.DB, direction transactionlog.
 			return
 		}
 
-		rows, err := stmtFetchLogs.Queryx(requestParams.RowsPerPage, requestParams.RowsPerPage*requestParams.Page)
-		if err != nil {
-			logger.Error("failed to fetch transaction logs", zap.Error(err))
-			http.Error(w, "server error", http.StatusInternalServerError)
-			return
-		}
-
 		var out = Out{
 			Records:     make([]*Record, 0),
 			RowsPerPage: requestParams.RowsPerPage,
@@ -163,6 +156,14 @@ func newLogFetcher(logger *zap.Logger, logDB *sqlx.DB, direction transactionlog.
 			logger.Error("failed to fetch transaction log count", zap.Error(err))
 			http.Error(w, "server error", http.StatusInternalServerError)
 		}
+
+		rows, err := stmtFetchLogs.Queryx(requestParams.RowsPerPage, requestParams.RowsPerPage*requestParams.Page)
+		if err != nil {
+			logger.Error("failed to fetch transaction logs", zap.Error(err))
+			http.Error(w, "server error", http.StatusInternalServerError)
+			return
+		}
+		defer rows.Close()
 		for rows.Next() {
 			rec := &Record{}
 			err = rows.StructScan(rec)
