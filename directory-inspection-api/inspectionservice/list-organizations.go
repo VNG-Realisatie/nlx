@@ -1,4 +1,4 @@
-package directoryservice
+package inspectionservice
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"go.nlx.io/nlx/directory/directoryapi"
+	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 )
 
 type listOrganizationsHandler struct {
@@ -43,9 +43,9 @@ func newListOrganizationsHandler(db *sqlx.DB, logger *zap.Logger, demoEnv string
 	return h, nil
 }
 
-func (h *listOrganizationsHandler) ListOrganizations(ctx context.Context, req *directoryapi.ListOrganizationsRequest) (*directoryapi.ListOrganizationsResponse, error) {
+func (h *listOrganizationsHandler) ListOrganizations(ctx context.Context, req *inspectionapi.ListOrganizationsRequest) (*inspectionapi.ListOrganizationsResponse, error) {
 	h.logger.Info("rpc request ListOrganizations")
-	resp := &directoryapi.ListOrganizationsResponse{}
+	resp := &inspectionapi.ListOrganizationsResponse{}
 
 	err := h.stmtSelectOrganizations.Select(&resp.Organizations)
 	if err != nil {

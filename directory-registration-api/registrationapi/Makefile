@@ -25,12 +25,12 @@ plugins=grpc:. \
 		-I$(GOPATH)/src/github.com/gogo/protobuf/protobuf \
 		-I$(GOPATH)/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
 		--swagger_out=logtostderr=true:. \
-		directory.proto
-	echo 'package directoryapi'      > directory.swagger.go
-	echo 'const ('                  >> directory.swagger.go
-	echo 'SwaggerJSONDirectory = `' >> directory.swagger.go
-	cat directory.swagger.json      >> directory.swagger.go
-	echo '`)'                       >> directory.swagger.go
+		registrationapi.proto
+	echo 'package registrationapi'		> registrationapi.swagger.go
+	echo 'const ('                  	>> registrationapi.swagger.go
+	echo 'SwaggerJSONDirectory = `' 	>> registrationapi.swagger.go
+	cat registrationapi.swagger.json	>> registrationapi.swagger.go
+	echo '`)'                       	>> registrationapi.swagger.go
 
 .PHONY: clean
 clean:

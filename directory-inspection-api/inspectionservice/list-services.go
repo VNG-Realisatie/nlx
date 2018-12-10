@@ -1,4 +1,4 @@
-package directoryservice
+package inspectionservice
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"go.nlx.io/nlx/directory/directoryapi"
+	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 )
 
 type listServicesHandler struct {
@@ -51,9 +51,9 @@ func newListServicesHandler(db *sqlx.DB, logger *zap.Logger) (*listServicesHandl
 	return h, nil
 }
 
-func (h *listServicesHandler) ListServices(ctx context.Context, req *directoryapi.ListServicesRequest) (*directoryapi.ListServicesResponse, error) {
+func (h *listServicesHandler) ListServices(ctx context.Context, req *inspectionapi.ListServicesRequest) (*inspectionapi.ListServicesResponse, error) {
 	h.logger.Info("rpc request ListServices()")
-	resp := &directoryapi.ListServicesResponse{}
+	resp := &inspectionapi.ListServicesResponse{}
 	organizationName, err := getOrganisationNameFromRequest(ctx)
 	if err != nil {
 		return nil, err
@@ -64,7 +64,7 @@ func (h *listServicesHandler) ListServices(ctx context.Context, req *directoryap
 		return nil, status.New(codes.Internal, "Database error.").Err()
 	}
 	for rows.Next() {
-		var respService = &directoryapi.ListServicesResponse_Service{}
+		var respService = &inspectionapi.ListServicesResponse_Service{}
 		var inwayAddresses = pq.StringArray{}
 		err = rows.Scan(
 			&respService.OrganizationName,

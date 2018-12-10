@@ -1,4 +1,4 @@
-{{ with set . "component" "directory-api" }}
+{{ with set . "component" "directory-registration-api" }}
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
@@ -36,9 +36,9 @@ spec:
 
       containers:
         - name: directory
-          image: {{.Values.directoryImage}}
+          image: {{.Values.directoryRegistrationImage}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
-          command: ["/usr/local/bin/nlx-directory"]
+          command: ["/usr/local/bin/nlx-directory-registration-api"]
           env:
             - name: LOG_TYPE
               value: development
@@ -52,10 +52,6 @@ spec:
               value: "/certs/{{.component}}.{{.Values.domain}}.pem"
             - name: TLS_DIRECTORY_KEY
               value: "/certs/{{.component}}.{{.Values.domain}}-key.pem"
-            - name: DEMO_ENV
-              value: "{{.Values.demoEnv}}"
-            - name: DEMO_DOMAIN
-              value: "{{.Values.demoDomain}}"
           volumeMounts:
             - name: certs
               mountPath: /certs
@@ -84,20 +80,6 @@ spec:
       port: 443
   cluserIP: None
 ---
-apiVersion: v1
-kind: Service
-metadata: 
-  name: directory-webapi # TODO:#340 move to seperate component when seperated into registration and listing api's: for listing add a grpc-web envoy proxy
-  namespace: {{ .Release.Namespace }}
-  labels: {{- include "nlx-directory.common.metadata-labels" . | nindent 2 }}
-spec:
-  selector: {{ include "nlx-directory.common.metadata-labels" . | nindent 4 }}
-  ports:
-    - name: webapi
-      protocol: TCP
-      port: 80
-  cluserIP: None
----
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
@@ -106,7 +88,7 @@ metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
 spec:
   rules:
-  - host: directory-api.{{.Values.domain}}
+  - host: directory-registration-api.{{.Values.domain}}
     http:
       paths:
         - backend:

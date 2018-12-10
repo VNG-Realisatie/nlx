@@ -1,21 +1,25 @@
-package directoryservice
+package registrationservice
 
 import (
 	"context"
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
+	"net"
 	"net/http"
 	"regexp"
+	"time"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/peer"
 	"google.golang.org/grpc/status"
 
-	"go.nlx.io/nlx/directory/directoryapi"
+	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
 
 type registerInwayHandler struct {
@@ -28,7 +32,7 @@ type registerInwayHandler struct {
 	regexpName *regexp.Regexp
 }
 
-func newRegisterInwayHandler(db *sqlx.DB, logger *zap.Logger, rootCA *x509.CertPool, certKeyPair tls.Certificate) (*registerInwayHandler, error) {
+func NewRegisterInwayHandler(db *sqlx.DB, logger *zap.Logger, rootCA *x509.CertPool, certKeyPair tls.Certificate) (*registerInwayHandler, error) {
 	h := &registerInwayHandler{
 		logger: logger.With(zap.String("handler", "register-inway")),
 	}
@@ -49,8 +53,8 @@ func newRegisterInwayHandler(db *sqlx.DB, logger *zap.Logger, rootCA *x509.CertP
 				VALUES ($1, $7, $8)
 				ON CONFLICT ON CONSTRAINT organizations_uq_name
 					DO UPDATE SET
-						insight_log_endpoint = COALESCE(NULLIF(EXCLUDED.insight_log_endpoint, ''), organizations.insight_log_endpoint),
-						insight_irma_endpoint = COALESCE(NULLIF(EXCLUDED.insight_irma_endpoint, ''), organizations.insight_irma_endpoint)
+						insight_log_endpoint = EXCLUDED.insight_log_endpoint,
+						insight_irma_endpoint = EXCLUDED.insight_irma_endpoint
 				RETURNING id
 		), service AS (
 			INSERT INTO directory.services (organization_id, name, internal, documentation_url, api_specification_type)
@@ -79,15 +83,14 @@ func newRegisterInwayHandler(db *sqlx.DB, logger *zap.Logger, rootCA *x509.CertP
 	return h, nil
 }
 
-func (h *registerInwayHandler) RegisterInway(ctx context.Context, req *directoryapi.RegisterInwayRequest) (*directoryapi.RegisterInwayResponse, error) {
+func (h *registerInwayHandler) RegisterInway(ctx context.Context, req *registrationapi.RegisterInwayRequest) (*registrationapi.RegisterInwayResponse, error) {
 	h.logger.Info("rpc request RegisterInway", zap.String("inway address", req.InwayAddress))
-	resp := &directoryapi.RegisterInwayResponse{}
+	resp := &registrationapi.RegisterInwayResponse{}
 	organizationName, err := getOrganisationNameFromRequest(ctx)
 	if err != nil {
 		return nil, err
 	}
-	// TODO: #206 when administrative (client-tls mandatory) and inspection (client-tls optional) endpoints have been separated,
-	// use proper grpc authentication via middleware and context (based on client-tls fields (CN, O) like we do here)
+
 	if !h.regexpName.MatchString(organizationName) {
 		h.logger.Info("invalid organisation name in registerinwayrequest", zap.String("organization name", organizationName))
 		return nil, status.New(codes.InvalidArgument, "Invalid organisation name").Err()
@@ -138,4 +141,38 @@ func (h *registerInwayHandler) RegisterInway(ctx context.Context, req *directory
 	}
 
 	return resp, nil
+}
+
+func newHTTPClient(rootCA *x509.CertPool, certKeyPair tls.Certificate) *http.Client {
+	transport := &http.Transport{
+		Proxy: http.ProxyFromEnvironment,
+		DialContext: (&net.Dialer{
+			Timeout:   30 * time.Second,
+			KeepAlive: 30 * time.Second,
+			DualStack: true,
+		}).DialContext,
+		MaxIdleConns:          100,
+		IdleConnTimeout:       90 * time.Second,
+		TLSHandshakeTimeout:   10 * time.Second,
+		ExpectContinueTimeout: 1 * time.Second,
+		TLSClientConfig: &tls.Config{
+			RootCAs:      rootCA,
+			Certificates: []tls.Certificate{certKeyPair},
+		},
+	}
+	return &http.Client{
+		Transport: transport,
+	}
+}
+
+func getOrganisationNameFromRequest(ctx context.Context) (string, error) {
+	peer, ok := peer.FromContext(ctx)
+	if !ok {
+		return "", errors.New("failed to obtain peer from context")
+	}
+	tlsInfo := peer.AuthInfo.(credentials.TLSInfo)
+	if len(tlsInfo.State.VerifiedChains) == 0 {
+		return "", errors.New("no valid TLS certificate chain found")
+	}
+	return tlsInfo.State.VerifiedChains[0][0].Subject.Organization[0], nil
 }
