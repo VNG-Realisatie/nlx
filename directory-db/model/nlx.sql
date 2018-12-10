@@ -155,6 +155,64 @@ CREATE CONSTRAINT TRIGGER availabilities_verify
 	EXECUTE PROCEDURE directory.availabilities_verify();
 -- ddl-end --
 
+-- object: directory.availabilities_notify_event | type: FUNCTION --
+-- DROP FUNCTION IF EXISTS directory.availabilities_notify_event() CASCADE;
+CREATE FUNCTION directory.availabilities_notify_event ()
+	RETURNS trigger
+	LANGUAGE plpgsql
+	VOLATILE 
+	CALLED ON NULL INPUT
+	SECURITY INVOKER
+	COST 1
+	AS $$
+DECLARE 
+        data json;
+        notification json;
+    BEGIN
+        IF (TG_OP = 'DELETE') THEN
+            data = row_to_json(OLD);
+        ELSE
+             SELECT row_to_json(t) into data from (
+                SELECT
+                    availabilities.id,
+                    organizations.name AS organization_name,
+                    services.name AS service_name,
+                    inways.address
+                FROM directory.availabilities
+                    INNER JOIN directory.inways
+                        ON availabilities.inway_id = inways.id
+                    INNER JOIN directory.services
+                        ON availabilities.service_id = services.id
+                    INNER JOIN directory.organizations
+                        ON services.organization_id = organizations.id
+                WHERE 
+                    availabilities.id = NEW.id
+             ) t;
+        END IF;
+
+      
+        notification = json_build_object(
+                          'action', TG_OP,
+                          'availability', data);
+                
+        PERFORM pg_notify('availabilities',notification::text);
+   
+        RETURN NULL; 
+    END;
+$$;
+-- ddl-end --
+ALTER FUNCTION directory.availabilities_notify_event() OWNER TO postgres;
+-- ddl-end --
+
+-- object: availabilities_notify | type: TRIGGER --
+-- DROP TRIGGER IF EXISTS availabilities_notify ON directory.availabilities CASCADE;
+CREATE TRIGGER availabilities_notify
+	AFTER INSERT OR DELETE 
+	ON directory.availabilities
+	FOR EACH ROW
+	EXECUTE PROCEDURE directory.availabilities_notify_event();
+-- ddl-end --
+
 -- object: services_fk_organization | type: CONSTRAINT --
 -- ALTER TABLE directory.services DROP CONSTRAINT IF EXISTS services_fk_organization CASCADE;
 ALTER TABLE directory.services ADD CONSTRAINT services_fk_organization FOREIGN KEY (organization_id)
@@ -183,31 +241,31 @@ REFERENCES directory.services (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
--- object: grant_ea9cb4ebcf | type: PERMISSION --
+-- object: grant_ffb7ddcdf2 | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.organizations
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_ee2fbca22d | type: PERMISSION --
+-- object: grant_e87ba3314e | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.inways
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_fa4d8b6cb0 | type: PERMISSION --
+-- object: grant_624441a6a3 | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.services
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_e5e3cd3aca | type: PERMISSION --
+-- object: grant_1665d17f14 | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.availabilities
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_2cbcbdee2f | type: PERMISSION --
+-- object: grant_6f47aba076 | type: PERMISSION --
 GRANT USAGE
    ON SCHEMA directory
    TO "nlx-directory";
