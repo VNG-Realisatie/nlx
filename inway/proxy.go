@@ -16,7 +16,6 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 	requesterOrganization := r.TLS.PeerCertificates[0].Subject.Organization[0]
 	issuer := r.TLS.PeerCertificates[0].Issuer.Organization[0]
 	logger = logger.With(zap.String("cert-issuer", issuer), zap.String("requester", requesterOrganization))
-	logger.Debug("received request")
 
 	urlparts := strings.SplitN(strings.TrimPrefix(r.URL.Path, "/"), "/", 2)
 	if len(urlparts) != 2 {
@@ -25,6 +24,8 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	serviceName := urlparts[0]
+	logrecordID := r.Header.Get("X-NLX-Logrecord-Id")
+	logger.Info("received API request", zap.String("requester-organization", requesterOrganization), zap.String("service", serviceName), zap.String("logrecord-id", logrecordID))
 
 	reqMD := &RequestMetadata{
 		requesterOrganization: requesterOrganization,

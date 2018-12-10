@@ -129,5 +129,7 @@ func (o *Outway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	o.logger.Info("forwarding API request", zap.String("destination-organization", destOrganizationName), zap.String("service", destServiceName), zap.String("logrecord-id", logrecordID))
+
 	service.ProxyHTTPRequest(w, r)
 }
