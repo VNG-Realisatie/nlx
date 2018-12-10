@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import {css} from 'styled-components'
 
 const Title = styled.div`
+    font-family: ${p => p.theme.font.family.main};
     color: ${p => p.theme.color.black};
 
     ${p => p.size === 'small' && css`

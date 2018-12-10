@@ -2,6 +2,8 @@ import styled, { css } from 'styled-components'
 import PropTypes from 'prop-types'
 
 const Paragraph = styled.div`
+    font-family: ${p => p.theme.font.family.main};
+
     ${(p) =>
         p.size === 'normal' &&
         css`

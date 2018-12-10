@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react'
+import PropTypes from 'prop-types'
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components'
 import { media } from '../../theme/helpers'
@@ -48,11 +49,11 @@ class Stepper extends PureComponent {
                 background-color: ${p => p.theme.color.primary.main};
 
                 ${media.xsDown`
-                    width: ${p => `${this.getProgressWidth(this.props.pathname, 'small')}px`};
+                    width: ${`${this.getProgressWidth(this.props.pathname, 'small')}px`};
                 `}
 
                 ${media.xsUp`
-                    width: ${p => `${this.getProgressWidth(this.props.pathname)}px`};
+                    width: ${`${this.getProgressWidth(this.props.pathname)}px`};
                 `}
             }
         `
@@ -107,9 +108,9 @@ class Stepper extends PureComponent {
         return (
             <Wrapper>
                 <Progress/>
-                <Step as={NavLink} to="/stepone" done={['/steptwo', '/stepthree', '/stepfour'].includes(this.props.pathname)}>1</Step>
-                <Step as={NavLink} to="/steptwo" done={['/stepthree', '/stepfour'].includes(this.props.pathname)}>2</Step>
-                <Step as={NavLink} to="/stepthree" done={['/stepfour'].includes(this.props.pathname)}>3</Step>
+                <Step as={NavLink} to="/stepone" done={['/steptwo', '/stepthree', '/stepfour'].includes(this.props.pathname) ? 1 : 0}>1</Step>
+                <Step as={NavLink} to="/steptwo" done={['/stepthree', '/stepfour'].includes(this.props.pathname) ? 1 : 0}>2</Step>
+                <Step as={NavLink} to="/stepthree" done={['/stepfour'].includes(this.props.pathname) ? 1 : 0}>3</Step>
                 <Step as={NavLink} to="/stepfour">4</Step>
             </Wrapper>
         )
@@ -117,9 +118,7 @@ class Stepper extends PureComponent {
 }
 
 Stepper.propTypes = {
-}
-
-Stepper.defaultProps = {
+    pathname: PropTypes.string.isRequired
 }
 
 export default Stepper

@@ -3,7 +3,7 @@ import { lighten, setLightness, darken } from 'polished'
 export default {
     font: {
         family: {
-            main: '"Source Sans Pro", Calibri, sans-serif',
+            main: '"Source Sans Pro", sans-serif',
         },
         size: {
             large: '18px',
