@@ -1,4 +1,4 @@
-{{ with set . "component" "insight-ui" }}
+{{ with set . "component" "insight-demo" }}
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
@@ -13,8 +13,8 @@ spec:
       labels: {{ include "nlx-directory.common.metadata-labels" . | nindent 8 }}
     spec:
       containers:
-        - name: insight-ui
-          image: {{.Values.insightUIImage}}
+        - name: insight-demo
+          image: {{.Values.insightDemoImage}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
       restartPolicy: Always
   status: {}
@@ -38,11 +38,20 @@ metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
     traefik.frontend.rule.type: PathPrefixStrip
 spec:
   rules:
-    - host: insight.{{.Values.domain}}
+    - host: demo.{{.Values.domain}}
       http:
         paths:
           - path: /
             backend:
               serviceName: {{.component}}
               servicePort: webinterface
+{{ if eq .Values.domain "demo.nlx.io" }}
+    - host: demo.nlx.io
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: {{.component}}
+              servicePort: webinterface
+{{ end }}
 {{ end }}

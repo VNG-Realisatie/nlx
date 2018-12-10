@@ -26,6 +26,8 @@ build:
     context: directory-ui
   - image: nlxio/insight-ui
     context: insight-ui
+  - image: nlxio/insight-demo
+    context: insight-demo
   - image: nlxio/inway
     context: .
     docker:
@@ -70,6 +72,7 @@ profiles:
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs
           insightUIImage: nlxio/insight-ui
+          insightDemoImage: nlxio/insight-demo
         namespace: nlx-dev-directory
         setValueTemplates:
           externalIP: '{{.MINIKUBE_IP}}'
@@ -139,6 +142,7 @@ profiles:
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs
           insightUIImage: nlxio/insight-ui
+          insightDemoImage: nlxio/insight-demo
         namespace: nlx-test-directory
       - name: nlx-test-brp
         chartPath: helm/nlx-organization
@@ -194,6 +198,7 @@ profiles:
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs
           insightUIImage: nlxio/insight-ui
+          insightDemoImage: nlxio/insight-demo
         namespace: nlx-acc-directory
       - name: nlx-acc-brp
         chartPath: helm/nlx-organization
@@ -249,6 +254,7 @@ profiles:
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs
           insightUIImage: nlxio/insight-ui
+          insightDemoImage: nlxio/insight-demo
         namespace: nlx-demo-directory
       - name: nlx-demo-brp
         chartPath: helm/nlx-organization
