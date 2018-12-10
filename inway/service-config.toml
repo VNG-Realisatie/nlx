@@ -35,7 +35,6 @@
 	endpoint-url = "http://petstore.swagger.io/v2"
 
 	authorization-model = "none"
-	api-specification-type = "OpenAPI2"
 	api-specification-document-url = "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/json/petstore.json"
 
 	[services.basisregistratie]
