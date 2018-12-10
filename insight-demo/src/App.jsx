@@ -126,10 +126,6 @@ const LgButton = styled(Button)`
     `}
 `
 
-const SmButton = styled(Button)`
-    z-index: 1;
-`
-
 const Toolbar = styled(Flex)`
     position: fixed;
     bottom: 0;
@@ -149,7 +145,7 @@ class App extends Component {
         super(props)
 
         this.state = {
-            direction: 'next'
+            direction: null
         }
     }
 
@@ -234,21 +230,9 @@ class App extends Component {
                                     }
                                     <Toolbar justifyContent="center" mt={6}>
                                         <Box mr={3}>
-                                            {prevLink ?
-                                                <StyledLink to={prevLink} onClick={() => this.setDirection('back')}>
-                                                    <SmButton variant="tertiary">Back</SmButton>
-                                                </StyledLink>
-                                                :
-                                                <SmButton variant="tertiary" disabled >Back</SmButton>
-                                            }
+                                            <Button variant="tertiary" as={prevLink && Link} to={prevLink && prevLink} disabled={!prevLink} onClick={() => this.setDirection('back')}>Back</Button>
                                         </Box>
-                                        {nextLink ?
-                                            <StyledLink to={nextLink} onClick={() => this.setDirection('next')}>
-                                                <SmButton>Next</SmButton>
-                                            </StyledLink>
-                                            :
-                                            <SmButton disabled >Next</SmButton>
-                                        }
+                                        <Button as={nextLink && Link} to={nextLink && nextLink} disabled={!nextLink} onClick={() => this.setDirection('next')}>Next</Button>
                                     </Toolbar>
                                 </StyledPage>
                             </StyledContainer>
