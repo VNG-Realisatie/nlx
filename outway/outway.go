@@ -12,8 +12,6 @@ import (
 	"sync"
 	"time"
 
-	"go.nlx.io/nlx/common/process"
-
 	"github.com/jmoiron/sqlx"
 	"github.com/jpillora/backoff"
 	"github.com/pkg/errors"
@@ -23,8 +21,9 @@ import (
 	"google.golang.org/grpc/credentials"
 
 	"go.nlx.io/nlx/common/orgtls"
+	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/transactionlog"
-	"go.nlx.io/nlx/directory/directoryapi"
+	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 )
 
 // Outway handles requests from inside the organization
@@ -39,7 +38,7 @@ type Outway struct {
 
 	txlogger transactionlog.TransactionLogger
 
-	directoryClient directoryapi.DirectoryClient
+	directoryInspectionClient inspectionapi.DirectoryInspectionClient
 
 	requestFlake *sonyflake.Sonyflake
 	ecmaTable    *crc64.Table
@@ -49,7 +48,7 @@ type Outway struct {
 }
 
 // NewOutway creates a new Outway and sets it up to handle requests.
-func NewOutway(process *process.Process, logger *zap.Logger, logdb *sqlx.DB, tlsOptions orgtls.TLSOptions, directoryAddress string) (*Outway, error) {
+func NewOutway(process *process.Process, logger *zap.Logger, logdb *sqlx.DB, tlsOptions orgtls.TLSOptions, directoryInspectionAddress string) (*Outway, error) {
 	// load certs and get organization name from cert
 	roots, orgCert, err := orgtls.Load(tlsOptions)
 	if err != nil {
@@ -98,12 +97,12 @@ func NewOutway(process *process.Process, logger *zap.Logger, logdb *sqlx.DB, tls
 	}
 	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(context.Background(), 1*time.Minute)
 	defer directoryConnCtxCancel()
-	directoryConn, err := grpc.DialContext(directoryConnCtx, directoryAddress, directoryDialOptions...)
+	directoryConn, err := grpc.DialContext(directoryConnCtx, directoryInspectionAddress, directoryDialOptions...)
 	if err != nil {
 		logger.Fatal("failed to setup connection to directory service", zap.Error(err))
 	}
-	o.directoryClient = directoryapi.NewDirectoryClient(directoryConn)
-	logger.Info("directory client setup complete", zap.String("directory-address", directoryAddress))
+	o.directoryInspectionClient = inspectionapi.NewDirectoryInspectionClient(directoryConn)
+	logger.Info("directory inspection client setup complete", zap.String("directory-inspection-address", directoryInspectionAddress))
 	err = o.updateServiceList(process)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to update internal service directory")
@@ -144,7 +143,7 @@ func (o *Outway) keepServiceListUpToDate(process *process.Process) {
 
 func (o *Outway) updateServiceList(process *process.Process) error {
 	services := make(map[string]HTTPService)
-	resp, err := o.directoryClient.ListServices(context.Background(), &directoryapi.ListServicesRequest{})
+	resp, err := o.directoryInspectionClient.ListServices(context.Background(), &inspectionapi.ListServicesRequest{})
 	if err != nil {
 		return errors.Wrap(err, "failed to fetch services from directory")
 	}

@@ -25,7 +25,7 @@ import (
 var options struct {
 	ListenAddress string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:443" description:"Address for the inway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 
-	DirectoryAddress string `long:"directory-address" env:"DIRECTORY_ADDRESS" description:"Address for the directory where this inway can register it's services" required:"true"`
+	DirectoryRegistrationAddress string `long:"directory-registration-address" env:"DIRECTORY_REGISTRATION_ADDRESS" description:"Address for the directory where this inway can register it's services" required:"true"`
 
 	DisableLogdb bool `long:"disable-logdb" env:"DISABLE_LOGDB" description:"Disable logdb connections"`
 
@@ -61,7 +61,7 @@ func main() {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
 	process := process.NewProcess(logger)
-
+	logger.Info("starting inway", zap.String("directory-registration-address", options.DirectoryRegistrationAddress))
 	serviceConfig := config.LoadServiceConfig(logger, options.ServiceConfig)
 	var logDB *sqlx.DB
 	if !options.DisableLogdb {
@@ -75,7 +75,7 @@ func main() {
 		process.CloseGracefully(logDB.Close)
 	}
 
-	iw, err := inway.NewInway(logger, logDB, options.SelfAddress, options.TLSOptions, options.DirectoryAddress, serviceConfig)
+	iw, err := inway.NewInway(logger, logDB, options.SelfAddress, options.TLSOptions, options.DirectoryRegistrationAddress, serviceConfig)
 	if err != nil {
 		logger.Fatal("cannot setup inway", zap.Error(err))
 	}

@@ -1,4 +1,4 @@
-package directoryservice
+package inspectionservice
 
 import (
 	"context"
@@ -14,30 +14,25 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/peer"
 
-	"go.nlx.io/nlx/directory/directoryapi"
+	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 )
 
 // compile-time interface implementation verification
-var _ directoryapi.DirectoryServer = &DirectoryService{}
+var _ inspectionapi.DirectoryInspectionServer = &InspectionService{}
 
-// DirectoryService handles all requests for a directory api
-type DirectoryService struct {
-	*registerInwayHandler
+// InspectionService handles all requests for a directory inspection api
+type InspectionService struct {
 	*listServicesHandler
 	*listOrganizationsHandler
 	*getServiceAPISpecHandler
 }
 
 // New sets up a new DirectoryService and returns an error when something failed during set.
-func New(logger *zap.Logger, db *sqlx.DB, rootCA *x509.CertPool, certKeyPair tls.Certificate, demoEnv string, demoDomain string) (*DirectoryService, error) {
-	s := &DirectoryService{}
+func New(logger *zap.Logger, db *sqlx.DB, rootCA *x509.CertPool, certKeyPair tls.Certificate, demoEnv string, demoDomain string) (*InspectionService, error) {
+	s := &InspectionService{}
 
 	var err error
 
-	s.registerInwayHandler, err = newRegisterInwayHandler(db, logger, rootCA, certKeyPair)
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to setup RegisterInway handler")
-	}
 	s.listServicesHandler, err = newListServicesHandler(db, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to setup ListServices handler")

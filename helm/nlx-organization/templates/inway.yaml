@@ -89,8 +89,8 @@ spec:
               value: postgresql://{{.Values.dbUsernameTxlogWriter}}:{{.Values.dbPasswordTxlogWriter}}@{{.Values.dbHost}}/{{.Values.dbDatabaseTxlog}}?sslmode=disable&connect_timeout=10
             - name: SELF_ADDRESS
               value: "{{.component}}.{{.Values.domain}}"
-            - name: DIRECTORY_ADDRESS
-              value: "{{.Values.directoryHostname}}:443"
+            - name: DIRECTORY_REGISTRATION_ADDRESS
+              value: "{{.Values.directoryRegistrationHostname}}:443"
             - name: SERVICE_CONFIG
               value: /inway-service-config/service-config.toml
           volumeMounts:
@@ -107,7 +107,7 @@ spec:
       hostAliases:
         - ip: "{{.Values.externalIP}}"
           hostnames:
-            - "{{.Values.directoryHostname}}"
+            - "{{.Values.directoryRegistrationHostname}}"
       {{ end }}
 
       restartPolicy: Always
