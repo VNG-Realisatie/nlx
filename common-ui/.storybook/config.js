@@ -1,7 +1,7 @@
 import React from 'react'
 import { configure, addDecorator } from '@storybook/react';
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
-import theme from './theme'
+import theme from 'src/theme.js'
 
 import { setDefaults } from '@storybook/addon-info'
 import { withOptions } from '@storybook/addon-options'
@@ -56,7 +56,7 @@ function loadStories() {
 // Global styles but theme- and update-able!
 const GlobalStyle = createGlobalStyle`
     html {
-        font-family: ${p => p.theme.font.family.body};
+        font-family: ${p => p.theme.font.family.main};
         color: ${p => p.theme.color.black};
         text-rendering: optimizeLegibility;
         -webkit-font-smoothing: antialiased;

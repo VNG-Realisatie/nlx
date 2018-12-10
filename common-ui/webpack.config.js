@@ -37,5 +37,11 @@ module.exports = {
     plugins: [
         new MiniCssExtractPlugin({ filename: "[name].css", chunkFilename: "[id].css" })
     ],
-    devtool: 'cheap-module-eval-source-map'
+    devtool: 'cheap-module-eval-source-map',
+    resolve: {
+        extensions: ['.js', '.jsx'],
+        alias: {
+            src: path.join(__dirname, 'src')
+        }
+    }
 };

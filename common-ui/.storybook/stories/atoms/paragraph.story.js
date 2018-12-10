@@ -13,5 +13,13 @@ export const paragraphStory = (
                 NLX is an open source peer-to-peer system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API landscape with many organisations.
             </Paragraph>
         </Box>
+        <Box px={3} mb={4} width={[
+            1/1,
+            1/2,
+        ]}>
+            <Paragraph size="large">
+                NLX is an open source peer-to-peer system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API landscape with many organisations.
+            </Paragraph>
+        </Box>
     </Flex>
 )

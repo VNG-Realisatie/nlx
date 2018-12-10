@@ -23,7 +23,7 @@ export const listItemStyle = css`
     }
 
     &[aria-current] {
-        color: ${(p) => p.theme.color.secondary.main};
+        color: ${(p) => p.theme.color.primary.main};
     }
 
     > span {

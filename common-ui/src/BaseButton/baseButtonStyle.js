@@ -6,10 +6,7 @@ export const baseButtonStyle = css`
     height: ${p => p.theme.size.normal};
 
     background-color: ${p => p.theme.color.white};
-    color: ${p => p.theme.color.black};
-
     border: 2px solid transparent;
-
     user-select: none;
 
     display: inline-flex;
@@ -20,7 +17,7 @@ export const baseButtonStyle = css`
 
     ${p => p.variant === 'primary' && css`
         background-color: ${p => p.theme.color.primary.main};
-        color: ${p => readableColor(p.theme.color.primary.main)};
+        color: ${p => p.theme.color.white};
 
         &[disabled] {
             background-color: ${p => p.theme.color.grey[20]};
@@ -38,6 +35,7 @@ export const baseButtonStyle = css`
 
     ${p => p.variant === 'secondary' && css`
         border-color: ${p => p.theme.color.primary.light};
+        color: ${p => p.theme.color.primary.main};
 
         &[disabled] {
             border-color: ${p => p.theme.color.grey[20]};
@@ -55,6 +53,8 @@ export const baseButtonStyle = css`
     `}
 
     ${p => p.variant === 'tertiary' && css`
+        color: ${p => p.theme.color.black};
+
         &:hover,
         &:focus {
             background-color: ${p => p.theme.color.hover};

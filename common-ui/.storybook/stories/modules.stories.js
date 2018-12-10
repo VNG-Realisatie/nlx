@@ -77,7 +77,9 @@ storiesOf('Modules', module)
                                 <Flex justifyContent="space-between" alignItems="center">
                                     <Box>
                                         <Hide breakpoints={[1,2,3]}>
-                                            <IconButton size="large" variant="tertiary" icon={<MenuIcon/>} onClick={() => store.set({ showDrawer: !store.get("showDrawer") })} />
+                                            <IconButton size="large" variant="tertiary" onClick={() => store.set({ showDrawer: !store.get("showDrawer") })}>
+                                                <MenuIcon/>
+                                            </IconButton>
                                         </Hide>
                                         <Hide breakpoints={[0]}>
                                             <Flex>
@@ -89,7 +91,9 @@ storiesOf('Modules', module)
                                         </Hide>
                                     </Box>
                                     <Box>
-                                        <IconButton size="large" variant="tertiary" icon={gitlabLogo} as={'a'} href="https://gitlab.com/commonground/nlx" target="_blank" />
+                                        <IconButton size="large" variant="tertiary" as={'a'} href="https://gitlab.com/commonground/nlx" target="_blank">
+                                            {gitlabLogo}
+                                        </IconButton>
                                     </Box>
                                 </Flex>
                             </Container>

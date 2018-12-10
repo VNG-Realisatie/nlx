@@ -9,6 +9,10 @@ export const inputStyle = css`
     margin: 0;
     opacity: 0;
 
+    &[disabled] + label {
+        color: ${(p) => p.theme.color.grey[50]};
+    }
+
     &:not([disabled]) {
         cursor: pointer;
 
@@ -27,10 +31,6 @@ export const inputStyle = css`
                 transform: translateX(15px);
             }
         }
-    }
-
-    &[disabled] + label {
-        color: ${(p) => p.theme.color.grey[50]};
     }
 `
 
