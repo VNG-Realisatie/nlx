@@ -9,7 +9,7 @@ import (
 
 	"go.uber.org/zap"
 
-	"go.nlx.io.copy/nlx/directory-monitor/health"
+	"go.nlx.io/nlx/directory-monitor/health"
 )
 
 func TestHealth(t *testing.T) {
