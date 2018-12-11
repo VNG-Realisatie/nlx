@@ -1,0 +1,20 @@
+.nlx-nav-section {
+  position: fixed;
+  display: flex;
+  min-height: 6rem;
+  width: 100%;
+  padding: 0;
+  justify-content: center;
+  align-items: flex-end;
+  background-color: #f8f9fa;
+}
+
+.nlx-nav-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nlx-content {
+  padding-top: 6rem;
+}

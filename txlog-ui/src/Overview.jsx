@@ -1,114 +1,199 @@
 import React from 'react'
 import Switch from './components/Switch'
-import Search from './components/Search'
 import Table from './components/Table'
+import { TablePagination } from '@material-ui/core'
 import axios from 'axios'
 
+import './Overview.css'
 import ErrorPage from './components/ErrorPage'
 import Spinner from './components/Spinner'
 
-export default class Overview extends React.Component {
-    constructor(props) {
-        super(props)
+import { MuiThemeProvider } from '@material-ui/core/styles'
+import muiTheme from './styles/muiTheme'
 
-        this.state = {
-            showLogs: 'in',
-            logsIn: [],
-            logsOut: [],
-            displayOnlyContaining: '',
-            sortBy: 'created',
-            sortAscending: true,
-            loading: true,
-            error: false,
-        }
-
-        this.switch = this.switch.bind(this)
-        this.filterLogs = this.filterLogs.bind(this)
+export class Overview extends React.Component {
+    state = {
+        showLogs: 'out',
+        records: [],
+        displayOnlyContaining: '',
+        sortBy: 'created',
+        sortAscending: true,
+        loading: true,
+        error: false,
+        page: 0,
+        rowsPerPage: 5,
+        rowsPerPageOptions: [5, 10, 20],
+        rowCount: 0,
+        theads: [
+            {
+                label: 'Date',
+                width: '200px',
+            },
+            {
+                label: 'Id',
+            },
+            {
+                label: 'Organisation',
+            },
+            {
+                label: 'Service',
+            },
+            {
+                label: 'Data',
+            },
+        ],
     }
 
-    getLogs = () => {
-        let logsIn, logsOut
+    getLogs = ({ showLogs, page, rowsPerPage }) => {
+        let options = {
+            params: {
+                page,
+                rowsPerPage,
+            },
+        }
+
+        let apiPoint = `/api/${showLogs}`
+
         axios
-            .get(`/api/in`)
-            .then((res) => {
-                logsIn = res.data.records
-                return axios.get(`/api/out`)
-            })
-            .then((res) => {
-                logsOut = res.data.records
+            .get(apiPoint, options)
+            .then((resp) => {
+                const { records, page, rowCount, rowsPerPage } = resp.data
                 this.setState({
-                    logsIn,
-                    logsOut,
+                    showLogs,
+                    records,
+                    page,
+                    rowCount,
+                    rowsPerPage,
                     loading: false,
                     error: false,
                 })
             })
             .catch((e) => {
                 this.setState({
+                    records: [],
+                    page: 0,
+                    rowCount: 0,
                     loading: false,
                     error: true,
                 })
             })
     }
 
-    componentDidMount() {
-        this.getLogs()
+    switch = (val) => {
+        const { rowsPerPage } = this.state
+        this.getLogs({
+            showLogs: val,
+            // start with first page
+            page: 0,
+            rowsPerPage,
+        })
     }
 
-    switch(val) {
-        if (val === 'in' || val === 'out') {
-            this.setState({ showLogs: val })
+    toggleSwitch = (event) => {
+        if (this.state.showLogs === 'in') {
+            this.switch('out')
         } else {
-            this.setState({
-                showLogs: this.state.showLogs === 'in' ? 'out' : 'in',
-            })
+            this.switch('in')
         }
     }
 
-    searchOnChange(e) {
-        this.setState({ displayOnlyContaining: e.target.value })
-    }
-
-    onSort(val) {
-        if (this.state.sortBy === val) {
-            this.setState({ sortAscending: !this.state.sortAscending })
-            return
+    getSwitchHtml = () => {
+        const inactiveStyle = {
+            color: '#ADB5BD',
         }
+        const activeStyle = {
+            color: '#FEBF24',
+        }
+        return (
+            <div className="d-flex justify-content-center">
+                <button
+                    className="btn btn-small mr-2"
+                    style={
+                        this.state.showLogs === 'in'
+                            ? activeStyle
+                            : inactiveStyle
+                    }
+                    onClick={() => this.switch('in')}
+                >
+                    IN
+                </button>
+                <Switch
+                    onChange={this.toggleSwitch}
+                    checked={this.state.showLogs === 'out'}
+                    id="inout"
+                    alwaysOn
+                />
+                <button
+                    className="btn btn-small"
+                    style={
+                        this.state.showLogs === 'out'
+                            ? activeStyle
+                            : inactiveStyle
+                    }
+                    onClick={() => this.switch('out')}
+                >
+                    OUT
+                </button>
+            </div>
+        )
+    }
 
-        this.setState({
-            sortBy: val,
-            sortAscending: true,
+    getTableHtml = () => {
+        const { theads, records } = this.state
+
+        return (
+            <Table
+                heads={theads}
+                rows={records}
+                onSort={null}
+                sortBy="disabled"
+                sortAscending={this.state.sortAscending}
+            />
+        )
+    }
+
+    getPaginationHtml = () => {
+        const { rowCount, rowsPerPage, rowsPerPageOptions, page } = this.state
+        return (
+            <TablePagination
+                component="div"
+                count={rowCount}
+                rowsPerPage={rowsPerPage}
+                rowsPerPageOptions={rowsPerPageOptions}
+                page={page}
+                backIconButtonProps={{
+                    'aria-label': 'Back',
+                }}
+                nextIconButtonProps={{
+                    'aria-label': 'Next',
+                }}
+                labelRowsPerPage="Rows per page:"
+                onChangePage={this.handlePageChange}
+                onChangeRowsPerPage={this.handleChangeRowsPerPage}
+            />
+        )
+    }
+
+    handlePageChange = (event, page) => {
+        const { showLogs, rowsPerPage } = this.state
+        this.getLogs({
+            showLogs,
+            page,
+            rowsPerPage,
         })
     }
 
-    filterLogs(logs) {
-        const { displayOnlyContaining } = this.state
-
-        const filteredLogs = logs.filter((log) => {
-            if (displayOnlyContaining) {
-                if (
-                    !log['logrecord-id']
-                        .toLowerCase()
-                        .includes(displayOnlyContaining.toLowerCase()) &&
-                    !log.source_organization
-                        .toLowerCase()
-                        .includes(displayOnlyContaining.toLowerCase()) &&
-                    !log.service_name
-                        .toLowerCase()
-                        .includes(displayOnlyContaining.toLowerCase())
-                ) {
-                    return false
-                }
-            }
-
-            return true
+    handleChangeRowsPerPage = (event) => {
+        const { showLogs, page } = this.state
+        this.getLogs({
+            showLogs,
+            page,
+            rowsPerPage: event.target.value,
         })
-
-        return filteredLogs
     }
 
     render() {
-        const { logsIn, logsOut, loading, error } = this.state
+        const { loading, error } = this.state
 
         if (loading) {
             return <Spinner />
@@ -118,103 +203,26 @@ export default class Overview extends React.Component {
             return <ErrorPage />
         }
 
-        const filteredLogsIn = this.filterLogs(logsIn)
-        const filteredLogsOut = this.filterLogs(logsOut)
-
-        const theads = [
-            {
-                label: 'Date',
-                // sortBy: 'created',
-                width: '200px',
-            },
-            {
-                label: 'Id',
-                // sortBy: 'logrecord-id'
-            },
-            {
-                label: 'Organisation',
-                // sortBy: 'destination_organization'
-            },
-            {
-                label: 'Service',
-                // sortBy: 'service_name'
-            },
-            {
-                label: 'Data',
-            },
-        ]
-
-        const inactiveStyle = {
-            color: '#ADB5BD',
-        }
-
-        const activeStyle = {
-            color: '#FEBF24',
-        }
-
         return (
             <React.Fragment>
-                <section>
-                    <div className="container">
-                        <div className="d-flex justify-content-center mb-4">
-                            <button
-                                className="btn btn-small mr-2"
-                                style={
-                                    this.state.showLogs === 'in'
-                                        ? activeStyle
-                                        : inactiveStyle
-                                }
-                                onClick={() => this.switch('in')}
-                            >
-                                IN
-                            </button>
-                            <Switch
-                                onChange={this.switch}
-                                checked={this.state.showLogs === 'out'}
-                                id="inout"
-                                alwaysOn
-                            />
-                            <button
-                                className="btn btn-small"
-                                style={
-                                    this.state.showLogs === 'out'
-                                        ? activeStyle
-                                        : inactiveStyle
-                                }
-                                onClick={() => this.switch('out')}
-                            >
-                                OUT
-                            </button>
-                        </div>
-                        <div className="row">
-                            <div className="col-sm-6 col-lg-4 offset-lg-4">
-                                <Search
-                                    onChange={this.searchOnChange.bind(this)}
-                                    value={this.state.displayOnlyContaining}
-                                    placeholder="Filter logs"
-                                    filter
-                                />
-                            </div>
-                        </div>
+                <section className="nlx-nav-section">
+                    <div className="container nlx-nav-panel">
+                        {this.getSwitchHtml()}
+                        <MuiThemeProvider theme={muiTheme}>
+                            {this.getPaginationHtml()}
+                        </MuiThemeProvider>
                     </div>
                 </section>
-                <section>
-                    <div className="container">
-                        <Table
-                            heads={theads}
-                            rows={
-                                this.state.showLogs === 'in'
-                                    ? filteredLogsIn.reverse()
-                                    : filteredLogsOut.reverse()
-                            }
-                            // rows={filteredLogs}
-                            onSort={this.onSort.bind(this)}
-                            sortBy={this.state.sortBy}
-                            sortAscending={this.state.sortAscending}
-                        />
-                    </div>
+                <section className="nlx-content">
+                    <div className="container mb-4">{this.getTableHtml()}</div>
                 </section>
             </React.Fragment>
         )
     }
+
+    componentDidMount() {
+        this.getLogs(this.state)
+    }
 }
+
+export default Overview
