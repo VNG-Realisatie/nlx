@@ -16,7 +16,7 @@ class StepThree extends Component {
                 </Box>
                 <Box mb={4}>
                     <Paragraph size="large">
-						Visit our demo site to apply for a parking permit in Haarlem. Insert the <Highlight>BSN</Highlight> and <Highlight>VRN</Highlight> you now have in your IRMA app.
+                        Apply for a parking permit in Haarlem on our demo site. Insert the <Highlight>BSN</Highlight> and <Highlight>VRN</Highlight> you now have in your IRMA app.
                     </Paragraph>
                 </Box>
 				<Flex justifyContent="center">

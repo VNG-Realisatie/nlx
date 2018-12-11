@@ -12,7 +12,7 @@ class StepTwo extends Component {
             <Fragment>
                 <Box mb={4}>
                     <Small>Step 2</Small>
-                    <Title>Demo attributes</Title>
+                    <Title>IRMA attributes</Title>
                 </Box>
                 <Box mb={4}>
                     <Paragraph size="large">
