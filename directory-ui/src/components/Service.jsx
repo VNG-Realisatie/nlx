@@ -112,7 +112,7 @@ export default class Directory extends React.Component {
                             className="service__status"
                             viewBox="0 0 10 10"
                             width="100%"
-                            height="1rem"
+                            height="10px"
                         >
                             <circle
                                 cx="5"
