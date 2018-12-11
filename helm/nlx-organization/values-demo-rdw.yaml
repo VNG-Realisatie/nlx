@@ -2,6 +2,8 @@
 domain: demo.voorbeeld-rdw.nl
 organizationName: rdw
 
+logLevel: info
+
 dbHost: postgresql.postgresql
 dbUsernameSuperuser: postgres
 dbPasswordSuperuser: postgres

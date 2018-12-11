@@ -43,7 +43,7 @@ spec:
             - name: LOG_TYPE
               value: development
             - name: LOG_LEVEL
-              value: debug
+              value: {{ default "debug" .Values.logLevel }}
             - name: POSTGRES_DSN
               value: postgresql://{{.Values.dbUsernameDirectory}}:{{.Values.dbPasswordDirectory}}@{{.Values.dbHost}}/{{.Values.dbDatabaseDirectory}}?sslmode=disable&connect_timeout=10
             - name: TLS_NLX_ROOT_CERT

@@ -78,7 +78,7 @@ spec:
             - name: LOG_TYPE
               value: development
             - name: LOG_LEVEL
-              value: debug
+              value: {{ default "debug" .Values.logLevel }}
             - name: TLS_NLX_ROOT_CERT
               value: "/certs/nlx_root.pem"
             - name: TLS_ORG_CERT

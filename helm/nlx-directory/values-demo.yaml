@@ -1,6 +1,8 @@
 
 domain: demo.nlx.io
 
+logLevel: info
+
 dbHost: postgresql.postgresql
 dbUsernameSuperuser: postgres
 dbPasswordSuperuser: postgres
