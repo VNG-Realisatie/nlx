@@ -26,7 +26,7 @@ class StepOne extends Component {
 					<Button variant="secondary" as="a" href="https://itunes.apple.com/nl/app/irma-authentication/id1294092994" target="_blank">iOS</Button>
 				</Flex>
                 <Paragraph size="large">
-                    In this case we will demonstrate how events are logged by applying for a parking permit in Haarlem.
+                    We will use the app to acquire a demo citizen service number (BSN) and vehicle registration number (VRN).
                 </Paragraph>
             </Fragment>
 		)
