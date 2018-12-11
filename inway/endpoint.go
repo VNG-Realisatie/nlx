@@ -95,6 +95,7 @@ func (h *HTTPServiceEndpoint) ServiceName() string {
 func (h *HTTPServiceEndpoint) handleRequest(reqMD *RequestMetadata, w http.ResponseWriter, r *http.Request) {
 	if !h.public {
 		for _, whitelistedOrg := range h.whitelistedOrganizations {
+			h.logger.Info("org: " + whitelistedOrg)
 			if reqMD.requesterOrganization == whitelistedOrg {
 				goto Authorized
 			}
@@ -117,6 +118,7 @@ Authorized:
 		return
 	}
 
+	// TODO: issue #401
 	var recordData = make(map[string]interface{})
 	if processID := r.Header.Get("X-NLX-Request-Process-Id"); processID != "" {
 		recordData["doelbinding-process-id"] = processID
@@ -138,6 +140,5 @@ Authorized:
 		h.logger.Error("failed to store transactionlog record", zap.Error(err))
 		return
 	}
-
 	h.proxy.ServeHTTP(w, r)
 }

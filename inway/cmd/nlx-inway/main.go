@@ -80,6 +80,7 @@ func main() {
 		logger.Fatal("cannot setup inway", zap.Error(err))
 	}
 
+	// TODO: Issue #403
 	for serviceName, serviceDetails := range serviceConfig.Services {
 		logger.Info("loaded service from service-config.toml", zap.String("service-name", serviceName))
 		logger.Debug("service configuration details", zap.String("service-name", serviceName), zap.String("endpoint-url", serviceDetails.EndpointURL),
@@ -87,7 +88,6 @@ func main() {
 			zap.String("irma-api-url", serviceDetails.IrmaAPIURL), zap.String("insight-api-url", serviceDetails.InsightAPIURL),
 			zap.String("api-spec-url", serviceDetails.APISpecificationDocumentURL), zap.Bool("internal", serviceDetails.Internal))
 		var rootCrt *x509.CertPool
-
 		if len(serviceDetails.CACertPath) > 0 {
 			rootCrt, err = orgtls.LoadRootCert(serviceDetails.CACertPath)
 			if err != nil {
