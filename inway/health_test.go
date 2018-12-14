@@ -15,13 +15,15 @@ import (
 func TestHealth(t *testing.T) {
 	inway := &Inway{}
 	inway.serviceEndpoints = make(map[string]ServiceEndpoint, 0)
-	inway.serviceEndpoints["testingservice"] = &HTTPServiceEndpoint{}
+	inway.serviceEndpoints["mockservice"] = &HTTPServiceEndpoint{}
+
+	// Test health check
 	tests := []struct {
 		url      string
 		expected bool
 	}{
-		{url: "http://localhost:8080/.nlx/health/testingservice", expected: true},
-		{url: "http://localhost:8080/.nlx/health/testingservice1", expected: false},
+		{url: "http://localhost:8080/.nlx/health/mockservice", expected: true},
+		{url: "http://localhost:8080/.nlx/health/mockservice1", expected: false},
 	}
 	inway.logger = zap.NewNop()
 	for _, test := range tests {
@@ -34,7 +36,7 @@ func TestHealth(t *testing.T) {
 		status := &health.Status{}
 		response := recorder.Result()
 		if response.StatusCode != http.StatusOK {
-			t.Errorf("result: %d expected: http status code should be %d", response.StatusCode, http.StatusOK)
+			t.Errorf(`result: "%d", expected for: http status code should be "%d" for url "%s"`, response.StatusCode, http.StatusOK, test.url)
 		}
 		bytes, err := ioutil.ReadAll(response.Body)
 		if err != nil {
@@ -46,7 +48,7 @@ func TestHealth(t *testing.T) {
 		}
 
 		if status.Healthy != test.expected {
-			t.Errorf("result: %t expected: status.Healthy to be %t for url %s", status.Healthy, test.expected, test.url)
+			t.Errorf(`result: "%t" expected: status.Healthy to be "%t" for url "%s"`, status.Healthy, test.expected, test.url)
 		}
 	}
 }

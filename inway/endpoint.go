@@ -118,16 +118,7 @@ Authorized:
 		return
 	}
 
-	// TODO: issue #401
-	var recordData = make(map[string]interface{})
-	if processID := r.Header.Get("X-NLX-Request-Process-Id"); processID != "" {
-		recordData["doelbinding-process-id"] = processID
-	}
-	if dataElements := r.Header.Get("X-NLX-Request-Data-Elements"); dataElements != "" {
-		recordData["doelbinding-data-elements"] = dataElements
-	}
-	recordData["request-path"] = reqMD.requestPath
-
+	recordData := h.createRecordData(reqMD.requestPath, r.Header)
 	err := h.inway.txlogger.AddRecord(&transactionlog.Record{
 		SrcOrganization:  reqMD.requesterOrganization,
 		DestOrganization: h.inway.organizationName,
@@ -141,4 +132,17 @@ Authorized:
 		return
 	}
 	h.proxy.ServeHTTP(w, r)
+}
+
+func (h *HTTPServiceEndpoint) createRecordData(requestPath string, header http.Header) map[string]interface{} {
+	var recordData = make(map[string]interface{})
+	if processID := header.Get("X-NLX-Request-Process-Id"); processID != "" {
+		recordData["doelbinding-process-id"] = processID
+	}
+	if dataElements := header.Get("X-NLX-Request-Data-Elements"); dataElements != "" {
+		recordData["doelbinding-data-elements"] = dataElements
+	}
+	recordData["request-path"] = requestPath
+
+	return recordData
 }
