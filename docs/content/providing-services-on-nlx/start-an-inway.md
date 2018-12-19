@@ -34,8 +34,7 @@ The `service-config.toml` file configures which services are available through t
 	authorization-model = "none"
 
 	# OpenAPI2/3 specification can be provided to the directory. This will allow the directory to render the documentation in the webinterface.
-	# These configuration values are optional.
-	api-specification-type = "OpenAPI2" # Value can be either "OpenAPI2" or "OpenAPI3"
+	# This configuration value is optional.
 	api-specification-document-url = "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/json/petstore.json"
 
 
@@ -64,7 +63,7 @@ where **MyPublicService** is the name of the service. Please note when using def
 When you configured the services, start the inway:
 
 ```bash
-docker pull nlxio/inway:latest
+docker pull nlxio/inway:v0.0.29
 
 docker run --detach \
   --name my-nlx-inway \
@@ -80,7 +79,7 @@ docker run --detach \
   --env TLS_ORG_KEY=/certs/org.key \
   --env DISABLE_LOGDB=1 \
   --publish 4443:443 \
-  nlxio/inway:latest
+  nlxio/inway:v0.0.29
 ```
 
 We give docker several arguments:
@@ -98,7 +97,7 @@ We give docker several arguments:
 - `--env TLS_ORG_KEY=/certs/org.key` sets the environment variable `TLS_ORG_KEY` this is the location of the organisation private key.
 - `--env DISABLE_LOGDB=1` sets the environment variable `DISABLE_LOGDB` the value 1 will disable the transaction logs, the value 0 will enable them.
 - `--publish` connects port 2018 on the host machine to port 80 inside the container. This way, we can send requests to the inway.
-- ` nlxio/inway:latest` is the name of our docker image (`nlxio/inway`) as stored in the docker registry and the version we want to use (`latest`). The `--` tells docker that all arguments after this one are meant for the outway process, not for docker itself.
+- ` nlxio/inway:v0.0.29` is the name of our docker image (`nlxio/inway`) as stored in the docker registry and the version we want to use (`v0.0.29`). The `--` tells docker that all arguments after this one are meant for the outway process, not for docker itself.
 
 To get started quickly, we will disable transaction logs for now by setting the environment variable `DISABLE_LOGDB=1`. The outway is now running and listening on `http://localhost:4080`.
 
