@@ -287,3 +287,8 @@
     content: "PM> ";
     user-select: none;
 }
+
+.high-level-overview-illustration {
+    width: 100%;
+    max-width: 665px;
+}
