@@ -1,7 +1,7 @@
 import React from 'react'
 import classnames from 'classnames'
 
-export default class Search extends React.Component {
+class Search extends React.Component {
     render() {
         const { id, children, alwaysOn } = this.props
 
@@ -26,3 +26,5 @@ export default class Search extends React.Component {
         )
     }
 }
+
+export default Search
