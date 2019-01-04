@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 
-import Switch from '../../components/Switch'
+import Switch from '../../components/Switch/Switch'
 import Search from '../../components/Search/Search'
-import Table from '../../components/Table'
+import Table from '../../components/Table/Table'
 
 import ErrorPage from '../ErrorPage/ErrorPage'
 import Spinner from '../../components/Spinner/Spinner'

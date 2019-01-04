@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import TableRow from './TableRow'
 
-export default class Table extends React.Component {
+class Table extends Component {
     render() {
         const { heads, rows, sortBy, sortAscending } = this.props
 
@@ -67,3 +68,10 @@ export default class Table extends React.Component {
         )
     }
 }
+
+Table.propTypes = {
+    heads: PropTypes.array.isRequired,
+    rows: PropTypes.array.isRequired,
+}
+
+export default Table
