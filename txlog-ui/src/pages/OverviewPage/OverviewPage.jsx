@@ -1,13 +1,13 @@
-import React from 'react'
-import Switch from './components/Switch'
-import Search from './components/Search'
-import Table from './components/Table'
+import React, { Component } from 'react'
+import Switch from '../../components/Switch'
+import Search from '../../components/Search'
+import Table from '../../components/Table'
 import axios from 'axios'
 
-import ErrorPage from './pages/ErrorPage/ErrorPage'
-import Spinner from './components/Spinner'
+import ErrorPage from '../ErrorPage/ErrorPage'
+import Spinner from '../../components/Spinner'
 
-export default class Overview extends React.Component {
+export default class OverviewPage extends Component {
     constructor(props) {
         super(props)
 

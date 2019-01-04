@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Navigation from './components/Navigation'
-import Overview from './Overview'
+import OverviewPage from './pages/OverviewPage/OverviewPage'
 
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 
@@ -11,7 +11,7 @@ class App extends Component {
                 <Router>
                     <div>
                         <Navigation />
-                        <Route exact path="/" component={Overview} />
+                        <Route exact path="/" component={OverviewPage} />
                     </div>
                 </Router>
             </div>
