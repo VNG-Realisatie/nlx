@@ -5,7 +5,7 @@ import Table from '../../components/Table'
 import axios from 'axios'
 
 import ErrorPage from '../ErrorPage/ErrorPage'
-import Spinner from '../../components/Spinner'
+import Spinner from '../../components/Spinner/Spinner'
 
 export default class OverviewPage extends Component {
     constructor(props) {
