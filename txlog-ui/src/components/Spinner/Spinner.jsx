@@ -5,16 +5,16 @@ import './Spinner.scss'
 class Spinner extends Component {
     render() {
         return (
-            <div className="app-loader">
-                <div className="lds-roller">
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
+            <div className="Spinner">
+                <div className="Spinner__BulletContainer">
+                    <div className="Spinner__Bullet" />
+                    <div className="Spinner__Bullet" />
+                    <div className="Spinner__Bullet" />
+                    <div className="Spinner__Bullet" />
+                    <div className="Spinner__Bullet" />
+                    <div className="Spinner__Bullet" />
+                    <div className="Spinner__Bullet" />
+                    <div className="Spinner__Bullet" />
                 </div>
             </div>
         )
