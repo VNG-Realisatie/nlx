@@ -1,9 +1,10 @@
-import React from 'react'
-import logo from '../assets/images/logo.svg'
-import menu from '../assets/icons/menu.svg'
-import gitlab from '../assets/icons/gitlab.svg'
+import React, { Component } from 'react'
 
-export default class Navigation extends React.Component {
+import logo from './assets/logo.svg'
+import menu from './assets/menu.svg'
+import gitlab from './assets/gitlab.svg'
+
+export default class Navigation extends Component {
     render() {
         return (
             <header className="navbar fixed-top bg-white navbar-expand-md">
