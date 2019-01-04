@@ -1,4 +1,4 @@
-FROM node:alpine AS build
+FROM node:10.15.0-alpine AS build
 
 # First copy only package.json and yarn.lock to make the dependency fetching step optional.
 COPY ./package.json \
