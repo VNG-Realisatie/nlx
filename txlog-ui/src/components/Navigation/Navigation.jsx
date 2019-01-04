@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 
 import logo from './assets/logo.svg'
 import menu from './assets/menu.svg'
@@ -9,9 +10,10 @@ export default class Navigation extends Component {
         return (
             <header className="navbar fixed-top bg-white navbar-expand-md">
                 <div className="container">
-                    <a className="navbar-logo d-md-none" href="">
+                    <Link className="navbar-logo d-md-none" to="/">
                         <img src={logo} alt="logo" />
-                    </a>
+                    </Link>
+
                     <button
                         className="navbar-toggler navbar-logo d-md-none"
                         type="button"
@@ -31,9 +33,9 @@ export default class Navigation extends Component {
                     >
                         <ul className="navbar-nav flex-row-md">
                             <li className="nav-item d-none d-md-block">
-                                <a className="navbar-logo" href="">
+                                <Link className="navbar-logo" to="/">
                                     <img src={logo} alt="logo" />
-                                </a>
+                                </Link>
                             </li>
                         </ul>
                     </nav>
