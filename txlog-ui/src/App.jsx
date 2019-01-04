@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Navigation from './components/Navigation'
+import Navigation from './components/Navigation/Navigation'
 import OverviewPage from './pages/OverviewPage/OverviewPage'
 
 import { BrowserRouter as Router, Route } from 'react-router-dom'
