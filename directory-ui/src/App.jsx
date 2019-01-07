@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Navigation from './components/Navigation'
+import Navigation from './components/Navigation/Navigation'
 import Directory from './Directory'
 import DocumentationPage from './pages/Documentation/DocumentationPage'
 
