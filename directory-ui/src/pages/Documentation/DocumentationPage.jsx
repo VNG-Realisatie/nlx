@@ -2,12 +2,12 @@ import React, { Component } from 'react'
 import { RedocStandalone } from 'redoc'
 import axios from 'axios'
 
-import ErrorPage from './pages/ErrorPage/ErrorPage'
-import Spinner from './components/Spinner/Spinner'
+import Spinner from '../../components/Spinner/Spinner'
+import ErrorPage from '../ErrorPage/ErrorPage'
 
-import './static/css/redoc-override.css'
+import './DocumentationPage.scss'
 
-class Documentation extends Component {
+class DocumentationPage extends Component {
     constructor(props) {
         super(props)
 
@@ -20,6 +20,10 @@ class Documentation extends Component {
 
     componentDidMount() {
         const { match } = this.props
+
+        if (!match) {
+            return
+        }
 
         axios
             .get(
@@ -132,4 +136,4 @@ class Documentation extends Component {
     }
 }
 
-export default Documentation
+export default DocumentationPage
