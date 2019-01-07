@@ -1,13 +1,12 @@
-import React from 'react'
-import plugIcon from '../assets/icons/plug.svg'
+import React, { Component } from 'react'
 import $ from 'jquery'
 import { Link } from 'react-router-dom'
 import copy from 'copy-to-clipboard'
 import Highlighter from 'react-highlight-words'
 
-import './Service.css'
+import plugIcon from './assets/plug.svg'
 
-export default class Directory extends React.Component {
+class Service extends Component {
     // local state object
     state = {
         // currently the user replaces {your-outway-address} manually
@@ -32,7 +31,7 @@ export default class Directory extends React.Component {
     bindTooltip = () => {
         // debugger
         let el = this.state.copyBtn.current
-        if (el) {
+        if (el && el.tooltip) {
             // console.log("Show tooltip on...", el);
             // pass definitions
             $(el).tooltip({
@@ -179,3 +178,5 @@ export default class Directory extends React.Component {
         )
     }
 }
+
+export default Service

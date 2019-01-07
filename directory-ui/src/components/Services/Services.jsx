@@ -1,7 +1,9 @@
-import React from 'react'
-import Service from './Service'
+import React, { Component } from 'react'
+import Service from '../Service/Service'
 
-export default class Services extends React.Component {
+import './Services.scss'
+
+class Services extends Component {
     render() {
         const {
             serviceList,
@@ -107,3 +109,5 @@ export default class Services extends React.Component {
         )
     }
 }
+
+export default Services

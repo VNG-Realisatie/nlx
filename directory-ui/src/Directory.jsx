@@ -1,10 +1,10 @@
 import React from 'react'
 import axios from 'axios'
 
-import Search from './components/Search'
+import Search from './components/Search/Search'
 import Spinner from './components/Spinner/Spinner'
 import Switch from './components/Switch/Switch'
-import Services from './components/Services'
+import Services from './components/Services/Services'
 
 import ErrorPage from './pages/ErrorPage/ErrorPage'
 
