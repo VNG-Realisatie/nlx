@@ -1,11 +1,12 @@
 import React from 'react'
-import Search from './components/Search'
-import Switch from './components/Switch'
-import Services from './components/Services'
 import axios from 'axios'
 
-import ErrorPage from './components/ErrorPage'
-import Spinner from './components/Spinner'
+import Search from './components/Search'
+import Spinner from './components/Spinner/Spinner'
+import Switch from './components/Switch/Switch'
+import Services from './components/Services'
+
+import ErrorPage from './pages/ErrorPage/ErrorPage'
 
 export default class Directory extends React.Component {
     constructor(props) {

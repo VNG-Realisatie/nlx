@@ -10,7 +10,7 @@ export default class Navigation extends React.Component {
             <header className="navbar navbar-expand navbar-sticky flex-column bg-white navbar-expand-md">
                 <div className="container">
                     <nav
-                        className="collapse navbar-collapse "
+                        className="collapse navbar-collapse"
                         aria-label="Page navigation"
                     >
                         <a className="navbar-logo" href="https://www.nlx.io">
