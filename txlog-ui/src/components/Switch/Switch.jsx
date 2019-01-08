@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { Component } from 'react'
 import classnames from 'classnames'
 
-class Switch extends React.Component {
+class Switch extends Component {
     render() {
         const { id, children, alwaysOn } = this.props
 
