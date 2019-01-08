@@ -50,7 +50,7 @@ spec:
             name: inway-service-config
         {{ if .Values.inway.rootca }}
         - name: ca-certs  
-          configmap:
+          configMap:
             name: inway-service-rootca
         {{ end }} 
         
