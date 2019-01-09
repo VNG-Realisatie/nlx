@@ -66,7 +66,7 @@ Next, install the following dependencies:
 ```bash
 helm install stable/traefik --name traefik --namespace traefik --values helm/traefik-values-minikube.yaml
 helm install stable/nginx-ingress --version 0.17.1 --name nginx-ingress --namespace=nginx-ingress --values helm/nginx-ingress-values-minikube.yaml
-helm install stable/postgresql --name postgresql --namespace=postgresql --values helm/postgresql-values-minikube.yaml
+helm install stable/postgresql --version 0.18.1 --name postgresql --namespace=postgresql --values helm/postgresql-values-minikube.yaml
 ```
 
 When these components are running, you can start all the NLX components by executing:
