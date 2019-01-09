@@ -96,10 +96,12 @@ We give docker several arguments:
 - `--env TLS_ORG_CERT=/certs/org.crt` sets the environment variable `TLS_ORG_CERT` this is the location of the organisation certificate.
 - `--env TLS_ORG_KEY=/certs/org.key` sets the environment variable `TLS_ORG_KEY` this is the location of the organisation private key.
 - `--env DISABLE_LOGDB=1` sets the environment variable `DISABLE_LOGDB` the value 1 will disable the transaction logs, the value 0 will enable them.
-- `--publish` connects port 2018 on the host machine to port 80 inside the container. This way, we can send requests to the inway.
-- ` nlxio/inway:v0.0.29` is the name of our docker image (`nlxio/inway`) as stored in the docker registry and the version we want to use (`v0.0.29`). The `--` tells docker that all arguments after this one are meant for the outway process, not for docker itself.
+- `--publish 4443:443` connects port 4443 on the host machine to port 443 inside the container. This way, we can send requests to the inway.
+- ` nlxio/inway:v0.0.29` is the name of our docker image (`nlxio/inway`) as stored in the docker registry and the version we want to use (`v0.0.29`).
 
-To get started quickly, we will disable transaction logs for now by setting the environment variable `DISABLE_LOGDB=1`. The outway is now running and listening on `http://localhost:4080`.
+To get started quickly, we will disable transaction logs for now by setting the environment variable `DISABLE_LOGDB=1`. 
+
+The inway is now running and listening on `https://localhost:4443`.
 
 To verify your container is running execute the `docker ps` command, this will print the containers that are currently running. If your container is not running try to start it again without the `--detach` flag, the logs of the container will now be printed in your terminal. 
 
