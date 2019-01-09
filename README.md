@@ -37,9 +37,9 @@ This project uses the new go module feature so it is not required to setup a `GO
 
 ### Cloning
 
-Clone nlx in your workspace.
+Clone NLX in your workspace.
 
-Note for Go developers: We advise to not clone nlx inside the GOPATH. If you must, be sure to set the environment variable `GO111MODULE=on`.
+Note for Go developers: We advise to not clone NLX inside the GOPATH. If you must, be sure to set the environment variable `GO111MODULE=on`.
 Go doesn't need to be located in the GOPATH since it uses Go module support.
 
 ```bash
