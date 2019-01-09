@@ -83,7 +83,6 @@ export class Overview extends React.Component {
         const { rowsPerPage } = this.state
         this.getLogs({
             showLogs: val,
-            // start with first page
             page: 0,
             rowsPerPage,
         })
