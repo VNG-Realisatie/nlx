@@ -79,7 +79,7 @@ export class Overview extends React.Component {
             })
     }
 
-    switch = (val) => {
+    selectLogType = (val) => {
         const { rowsPerPage } = this.state
         this.getLogs({
             showLogs: val,
@@ -89,11 +89,11 @@ export class Overview extends React.Component {
         })
     }
 
-    toggleSwitch = (event) => {
+    toggleLogType = (event) => {
         if (this.state.showLogs === 'in') {
-            this.switch('out')
+            this.selectLogType('out')
         } else {
-            this.switch('in')
+            this.selectLogType('in')
         }
     }
 
@@ -113,12 +113,12 @@ export class Overview extends React.Component {
                             ? activeStyle
                             : inactiveStyle
                     }
-                    onClick={() => this.switch('in')}
+                    onClick={() => this.selectLogType('in')}
                 >
                     IN
                 </button>
                 <Switch
-                    onChange={this.toggleSwitch}
+                    onChange={this.toggleLogType}
                     checked={this.state.showLogs === 'out'}
                     id="inout"
                     alwaysOn
@@ -130,7 +130,7 @@ export class Overview extends React.Component {
                             ? activeStyle
                             : inactiveStyle
                     }
-                    onClick={() => this.switch('out')}
+                    onClick={() => this.selectLogType('out')}
                 >
                     OUT
                 </button>
