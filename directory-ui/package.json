@@ -9,6 +9,7 @@
     "core-js": "2.6.1",
     "mobx": "4.8.0",
     "node-sass": "4.11.0",
+    "popper.js": "1.14.3",
     "react": "16.7.0",
     "react-dom": "16.7.0",
     "react-router-dom": "4.3.1",
