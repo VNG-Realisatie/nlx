@@ -105,7 +105,11 @@ export default class OverviewPage extends Component {
             return true
         })
 
-        return filteredLogs
+        return filteredLogs.map((row) => {
+            row['sourceOrganization'] = row['source_organization']
+            row['serviceName'] = row['service_name']
+            return row
+        })
     }
 
     render() {

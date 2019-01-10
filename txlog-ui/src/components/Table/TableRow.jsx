@@ -4,8 +4,8 @@ import PropTypes from 'prop-types'
 const selectedData = [
     'created',
     'logrecord-id',
-    'source_organization',
-    'service_name',
+    'sourceOrganization',
+    'serviceName',
 ]
 
 class TableRow extends Component {
@@ -38,8 +38,8 @@ TableRow.propTypes = {
     data: PropTypes.shape({
         created: PropTypes.string.isRequired,
         'logrecord-id': PropTypes.string.isRequired,
-        source_organization: PropTypes.string.isRequired,
-        service_name: PropTypes.string.isRequired,
+        sourceOrganization: PropTypes.string.isRequired,
+        serviceName: PropTypes.string.isRequired,
         data: PropTypes.object.isRequired,
     }),
 }
