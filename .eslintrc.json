@@ -53,12 +53,7 @@
             }
         ],
         "camelcase": [
-            "error",
-            {
-                "allow": [
-                    "^UNSAFE_"
-                ]
-            }
+            "error"
         ],
         "no-console": [
             "warn",
