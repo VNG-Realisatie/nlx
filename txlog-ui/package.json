@@ -16,14 +16,24 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "eject": "react-scripts eject",
+    "lint": "eslint 'src/**/*.js*'"
   },
   "devDependencies": {
     "axios-mock-adapter": "1.16.0",
-    "classnames": "2.2.6"
+    "classnames": "2.2.6",
+    "eslint-config-jest-enzyme": "7.0.1",
+    "eslint-config-prettier": "3.3.0",
+    "eslint-config-standard": "12.0.0",
+    "eslint-plugin-import": "2.14.0",
+    "eslint-plugin-jest": "22.1.2",
+    "eslint-plugin-node": "8.0.0",
+    "eslint-plugin-prettier": "3.0.1",
+    "eslint-plugin-promise": "4.0.1",
+    "eslint-plugin-react": "7.12.2",
+    "eslint-plugin-standard": "4.0.0",
+    "jest-enzyme": "7.0.1",
+    "prettier": "1.15.3"
   },
   "proxy-local": "http://txlog.dev.haarlem.minikube:30080",
   "proxy": "https://txlog.demo.voorbeeld-haarlem.nl/",
