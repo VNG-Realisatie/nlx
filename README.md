@@ -37,9 +37,9 @@ This project uses the new go module feature so it is not required to setup a `GO
 
 ### Cloning
 
-Clone nlx in your workspace.
+Clone NLX in your workspace.
 
-Note for Go developers: We advise to not clone nlx inside the GOPATH. If you must, be sure to set the environment variable `GO111MODULE=on`.
+Note for Go developers: We advise to not clone NLX inside the GOPATH. If you must, be sure to set the environment variable `GO111MODULE=on`.
 Go doesn't need to be located in the GOPATH since it uses Go module support.
 
 ```bash
@@ -78,24 +78,7 @@ MINIKUBE_IP=$(minikube ip) skaffold dev --profile minikube
 Finally, add the minikube hostnames to your machine's `/etc/hosts` file so you can reach the services from your browser.
 
 ```bash
-echo "$(minikube ip)                 traefik.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)            docs.dev.nlx.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)      certportal.dev.nlx.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)       directory.dev.nlx.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)   directory-api.dev.nlx.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)         insight.dev.nlx.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)            demo.dev.nlx.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)           txlog.dev.rdw.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)        irma-api.dev.rdw.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)     insight-api.dev.rdw.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)           txlog.dev.brp.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)        irma-api.dev.brp.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)     insight-api.dev.brp.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)       txlog.dev.haarlem.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)    irma-api.dev.haarlem.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip) insight-api.dev.haarlem.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip)      outway.dev.haarlem.minikube" | sudo tee -a /etc/hosts
-echo "$(minikube ip) application.dev.haarlem.minikube" | sudo tee -a /etc/hosts
+sh initialize-hostnames.sh
 ```
 
 You may now test the following sites:
