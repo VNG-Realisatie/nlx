@@ -1,16 +1,19 @@
-import React from 'react'
-import logo from '../assets/images/logo.svg'
-import menu from '../assets/icons/menu.svg'
-import gitlab from '../assets/icons/gitlab.svg'
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 
-export default class Navigation extends React.Component {
+import logo from './assets/logo.svg'
+import menu from './assets/menu.svg'
+import gitlab from './assets/gitlab.svg'
+
+export default class Navigation extends Component {
     render() {
         return (
             <header className="navbar fixed-top bg-white navbar-expand-md">
                 <div className="container">
-                    <a className="navbar-logo d-md-none" href="">
+                    <Link className="navbar-logo d-md-none" to="/">
                         <img src={logo} alt="logo" />
-                    </a>
+                    </Link>
+
                     <button
                         className="navbar-toggler navbar-logo d-md-none"
                         type="button"
@@ -30,9 +33,9 @@ export default class Navigation extends React.Component {
                     >
                         <ul className="navbar-nav flex-row-md">
                             <li className="nav-item d-none d-md-block">
-                                <a className="navbar-logo" href="">
+                                <Link className="navbar-logo" to="/">
                                     <img src={logo} alt="logo" />
-                                </a>
+                                </Link>
                             </li>
                         </ul>
                     </nav>

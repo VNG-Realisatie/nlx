@@ -1,4 +1,6 @@
-FROM node:alpine AS build
+FROM node:10.15.0-alpine AS build
+
+ENV CI=true
 
 # First copy only package.json and yarn.lock to make the dependency fetching step optional.
 COPY ./package.json \
@@ -6,10 +8,12 @@ COPY ./package.json \
     /go/src/go.nlx.io/nlx/txlog-ui/
 
 WORKDIR /go/src/go.nlx.io/nlx/txlog-ui
-RUN npm install
+RUN npm ci --no-progress --color=false --quiet
 
 # Now copy the whole directory for the build step.
 COPY . /go/src/go.nlx.io/nlx/txlog-ui
+
+RUN npm test
 RUN npm run build
 
 # Copy static docs to alpine-based nginx container.

@@ -1,13 +1,14 @@
-import React from 'react'
-import Switch from './components/Switch'
-import Search from './components/Search'
-import Table from './components/Table'
+import React, { Component } from 'react'
 import axios from 'axios'
 
-import ErrorPage from './components/ErrorPage'
-import Spinner from './components/Spinner'
+import Switch from '../../components/Switch/Switch'
+import Search from '../../components/Search/Search'
+import Table from '../../components/Table/Table'
 
-export default class Overview extends React.Component {
+import ErrorPage from '../ErrorPage/ErrorPage'
+import Spinner from '../../components/Spinner/Spinner'
+
+export default class OverviewPage extends Component {
     constructor(props) {
         super(props)
 
@@ -104,7 +105,11 @@ export default class Overview extends React.Component {
             return true
         })
 
-        return filteredLogs
+        return filteredLogs.map((row) => {
+            row['sourceOrganization'] = row['source_organization']
+            row['serviceName'] = row['service_name']
+            return row
+        })
     }
 
     render() {
