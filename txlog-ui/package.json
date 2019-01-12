@@ -39,6 +39,7 @@
     "typeface-muli": "0.0.54"
   },
   "proxy-local": "http://txlog.dev.haarlem.minikube:30080",
+  "proxy-test": "https://txlog.test.voorbeeld-haarlem.nl/",
   "proxy": "https://txlog.demo.voorbeeld-haarlem.nl/",
   "browserslist": [
     ">0.2%",

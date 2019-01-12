@@ -10,6 +10,7 @@ import Spinner from '../../components/Spinner/Spinner'
 
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import muiTheme from '../../styles/muiTheme'
+import { InfoOutlined } from '@material-ui/icons'
 
 export class Overview extends React.Component {
     state = {
@@ -139,7 +140,12 @@ export class Overview extends React.Component {
 
     getTableHtml = () => {
         const { theads, records } = this.state
-        let tableHtml = null
+        let tableHtml = (
+            <p className="overview-page-empty">
+                <InfoOutlined /> <br />
+                No logs to show
+            </p>
+        )
         if (records.length > 0) {
             tableHtml = (
                 <Table
