@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { Component } from 'react'
 import classnames from 'classnames'
 
-export default class Search extends React.Component {
+class Search extends Component {
     render() {
         const { placeholder, filter } = this.props
 
@@ -51,3 +51,5 @@ export default class Search extends React.Component {
         )
     }
 }
+
+export default Search

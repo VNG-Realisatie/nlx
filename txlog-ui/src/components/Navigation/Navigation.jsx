@@ -1,8 +1,9 @@
-import React from 'react'
-import logo from '../assets/images/logo.svg'
-import gitlab from '../assets/icons/gitlab.svg'
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import logo from './assets/logo.svg'
+import gitlab from './assets/gitlab.svg'
 
-export default class Navigation extends React.Component {
+export default class Navigation extends Component {
     render() {
         return (
             <header
@@ -10,9 +11,9 @@ export default class Navigation extends React.Component {
                 style={{ minHeight: '64px' }}
             >
                 <div className="container">
-                    <a className="navbar-logo" href="/">
+                    <Link className="navbar-logo" to="/">
                         <img src={logo} alt="logo" />
-                    </a>
+                    </Link>
 
                     <ul className="navbar-nav flex-row ml-md-auto">
                         <li className="nav-item">

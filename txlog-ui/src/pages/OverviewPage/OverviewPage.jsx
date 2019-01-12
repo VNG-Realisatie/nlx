@@ -1,15 +1,15 @@
 import React from 'react'
-import Switch from './components/Switch'
-import Table from './components/Table'
+import Switch from '../../components/Switch/Switch'
+import Table from '../../components/Table/Table'
 import { TablePagination } from '@material-ui/core'
 import axios from 'axios'
 
-import './Overview.css'
-import ErrorPage from './components/ErrorPage'
-import Spinner from './components/Spinner'
+import './OverviewPage.scss'
+import ErrorPage from '../ErrorPage/ErrorPage'
+import Spinner from '../../components/Spinner/Spinner'
 
 import { MuiThemeProvider } from '@material-ui/core/styles'
-import muiTheme from './styles/muiTheme'
+import muiTheme from '../../styles/muiTheme'
 
 export class Overview extends React.Component {
     state = {
