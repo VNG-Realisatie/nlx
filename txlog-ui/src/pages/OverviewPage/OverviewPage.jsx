@@ -139,38 +139,47 @@ export class Overview extends React.Component {
 
     getTableHtml = () => {
         const { theads, records } = this.state
-
-        return (
-            <Table
-                heads={theads}
-                rows={records}
-                onSort={null}
-                sortBy="disabled"
-                sortAscending={this.state.sortAscending}
-            />
-        )
+        let tableHtml = null
+        if (records.length > 0) {
+            tableHtml = (
+                <Table
+                    heads={theads}
+                    rows={records}
+                    onSort={null}
+                    sortBy="disabled"
+                    sortAscending={this.state.sortAscending}
+                />
+            )
+        }
+        return tableHtml
     }
 
     getPaginationHtml = () => {
         const { rowCount, rowsPerPage, rowsPerPageOptions, page } = this.state
-        return (
-            <TablePagination
-                component="div"
-                count={rowCount}
-                rowsPerPage={rowsPerPage}
-                rowsPerPageOptions={rowsPerPageOptions}
-                page={page}
-                backIconButtonProps={{
-                    'aria-label': 'Back',
-                }}
-                nextIconButtonProps={{
-                    'aria-label': 'Next',
-                }}
-                labelRowsPerPage="Rows per page:"
-                onChangePage={this.handlePageChange}
-                onChangeRowsPerPage={this.handleChangeRowsPerPage}
-            />
-        )
+        let pagHtml = null
+        if (rowCount) {
+            pagHtml = (
+                <MuiThemeProvider theme={muiTheme}>
+                    <TablePagination
+                        component="div"
+                        count={rowCount}
+                        rowsPerPage={rowsPerPage}
+                        rowsPerPageOptions={rowsPerPageOptions}
+                        page={page}
+                        backIconButtonProps={{
+                            'aria-label': 'Back',
+                        }}
+                        nextIconButtonProps={{
+                            'aria-label': 'Next',
+                        }}
+                        labelRowsPerPage="Rows per page:"
+                        onChangePage={this.handlePageChange}
+                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                    />
+                </MuiThemeProvider>
+            )
+        }
+        return pagHtml
     }
 
     handlePageChange = (event, page) => {
@@ -207,9 +216,8 @@ export class Overview extends React.Component {
                 <section className="nlx-nav-section">
                     <div className="container nlx-nav-panel">
                         {this.getSwitchHtml()}
-                        <MuiThemeProvider theme={muiTheme}>
-                            {this.getPaginationHtml()}
-                        </MuiThemeProvider>
+
+                        {this.getPaginationHtml()}
                     </div>
                 </section>
                 <section className="nlx-content">
