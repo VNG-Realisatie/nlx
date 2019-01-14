@@ -6,8 +6,8 @@ it('renders without crashing', () => {
     const data = {
         created: '2018-12-12T15:35:52.177777Z',
         'logrecord-id': 'foo',
-        sourceOrganization: 'source_organization',
-        serviceName: 'service_name',
+        source_organization: 'source_organization',
+        service_name: 'service_name',
         data: {},
     }
 

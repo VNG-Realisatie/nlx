@@ -1,0 +1,40 @@
+.nlx-nav-section {
+  position: fixed;
+  display: flex;
+  min-height: 6rem;
+  width: 100%;
+  padding: 0;
+  justify-content: center;
+  align-items: flex-end;
+  background-color: #f8f9fa;
+}
+
+.nlx-nav-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 4rem;
+}
+
+.nlx-content {
+  padding-top: 6rem;
+}
+
+.overview-page-empty {
+  margin-top: 2rem;
+  padding: 3rem 1rem;
+  line-height: 1.1;
+  font-size: 4rem;
+  color: var(--color-dark);
+  opacity: 0.5;
+  text-align: center;
+  border: 1px dotted;
+  border-color: var(--color-dark);
+  border-radius: 4px;
+
+  svg {
+    width: 4rem;
+    height: 4rem;
+    //margin-right: 2rem;
+  }
+}
