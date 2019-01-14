@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import Navigation from './components/Navigation'
+import Navigation from './components/Navigation/Navigation'
 import Directory from './Directory'
-import Doc from './Documentation'
+import DocumentationPage from './pages/Documentation/DocumentationPage'
 
 import './static/css/base-addon.css'
 
@@ -14,10 +14,12 @@ class App extends Component {
                 <Router>
                     <div>
                         <Navigation />
-                        <Route exact path="/" component={Directory} />
-                        <Route
-                            path="/documentation/:organization_name/:service_name"
-                            component={Doc}
+
+                        <Route exact path="/"
+                               component={Directory}
+                        />
+                        <Route path="/documentation/:organization_name/:service_name"
+                               component={DocumentationPage}
                         />
                     </div>
                 </Router>

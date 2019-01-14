@@ -1,16 +1,16 @@
-import React from 'react'
-import logo from '../assets/images/logo.svg'
-// import menu from '../assets/icons/menu.svg'
-import gitlab from '../assets/icons/gitlab.svg'
+import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
-export default class Navigation extends React.Component {
+import logo from './assets/logo.svg'
+import gitlab from './assets/gitlab.svg'
+
+class Navigation extends Component {
     render() {
         return (
             <header className="navbar navbar-expand navbar-sticky flex-column bg-white navbar-expand-md">
                 <div className="container">
                     <nav
-                        className="collapse navbar-collapse "
+                        className="collapse navbar-collapse"
                         aria-label="Page navigation"
                     >
                         <a className="navbar-logo" href="https://www.nlx.io">
@@ -55,3 +55,5 @@ export default class Navigation extends React.Component {
         )
     }
 }
+
+export default Navigation

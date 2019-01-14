@@ -1,0 +1,6 @@
+@import "~bourbon/core/bourbon";
+
+.ErrorPage {
+  transform: translate(-50%,-50%);
+  @include position(absolute, 50% null null 50%);
+}
