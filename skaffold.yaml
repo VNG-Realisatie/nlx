@@ -1,4 +1,4 @@
-apiVersion: skaffold/v1alpha5
+apiVersion: skaffold/v1beta2
 kind: Config
 build:
   artifacts:
@@ -71,8 +71,8 @@ profiles:
           directoryMonitorImage: nlxio/directory-monitor
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs
-          insightUIImage: nlxio/insight-ui
           insightDemoImage: nlxio/insight-demo
+          insightUIImage: nlxio/insight-ui
         namespace: nlx-dev-directory
         setValueTemplates:
           externalIP: '{{.MINIKUBE_IP}}'
@@ -141,8 +141,8 @@ profiles:
           directoryMonitorImage: nlxio/directory-monitor
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs
-          insightUIImage: nlxio/insight-ui
           insightDemoImage: nlxio/insight-demo
+          insightUIImage: nlxio/insight-ui
         namespace: nlx-test-directory
       - name: nlx-test-brp
         chartPath: helm/nlx-organization
@@ -197,8 +197,8 @@ profiles:
           directoryMonitorImage: nlxio/directory-monitor
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs
-          insightUIImage: nlxio/insight-ui
           insightDemoImage: nlxio/insight-demo
+          insightUIImage: nlxio/insight-ui
         namespace: nlx-acc-directory
       - name: nlx-acc-brp
         chartPath: helm/nlx-organization
@@ -253,8 +253,8 @@ profiles:
           directoryMonitorImage: nlxio/directory-monitor
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs
-          insightUIImage: nlxio/insight-ui
           insightDemoImage: nlxio/insight-demo
+          insightUIImage: nlxio/insight-ui
         namespace: nlx-demo-directory
       - name: nlx-demo-brp
         chartPath: helm/nlx-organization
