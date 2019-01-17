@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-
 import { connect } from 'react-redux'
+import { Spinner } from '@commonground/design-system'
 
 import Table from '../../components/Table'
 import LogModal from '../../components/LogModal'
 import { prepTableData } from '../../utils/appUtils'
-import Spinner from '../../components/Spinner'
 import * as actionType from '../../store/actions'
 
 class ViewRecordsPage extends Component {
