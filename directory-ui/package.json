@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@commonground/design-system": "1.0.0",
     "ajv-keywords": "3.2.0",
     "axios": "0.18.0",
     "bourbon": "5.1.0",

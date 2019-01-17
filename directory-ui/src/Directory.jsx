@@ -1,8 +1,8 @@
 import React from 'react'
 import axios from 'axios'
+import { Spinner } from '@commonground/design-system'
 
 import Search from './components/Search/Search'
-import Spinner from './components/Spinner/Spinner'
 import Switch from './components/Switch/Switch'
 import Services from './components/Services/Services'
 
