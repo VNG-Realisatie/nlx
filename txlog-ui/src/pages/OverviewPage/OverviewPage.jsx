@@ -6,7 +6,7 @@ import axios from 'axios'
 
 import './OverviewPage.scss'
 import ErrorPage from '../ErrorPage/ErrorPage'
-import Spinner from '../../components/Spinner/Spinner'
+import { Spinner } from '@commonground/design-system'
 
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import muiTheme from '../../styles/muiTheme'
