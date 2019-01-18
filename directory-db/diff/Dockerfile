@@ -11,6 +11,13 @@ RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-k
     apt -y install --no-install-recommends postgresql-client-9.6 && \
     rm -rf /var/lib/apt/lists/*
 
+# Install migrate
+RUN wget --quiet -O - https://packagecloud.io/golang-migrate/migrate/gpgkey | apt-key add - && \
+    echo "deb https://packagecloud.io/golang-migrate/migrate/ubuntu/ xenial main" > /etc/apt/sources.list.d/migrate.list && \
+    apt-get update && \
+    apt-get install -y migrate && \
+    rm -rf /var/lib/apt/lists/*
+
 # Install java
 RUN apt-get update && apt-get -y install --no-install-recommends \
     git \
@@ -28,10 +35,8 @@ RUN wget -O go.tgz "https://golang.org/dl/go${GOLANG_VERSION}.linux-amd64.tar.gz
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 
-# Install modd and migrate
-RUN go get -u github.com/cortesi/modd/cmd/modd && \
-    go get -u -d github.com/golang-migrate/migrate/cli github.com/lib/pq && \
-    go build -tags 'postgres' -o /usr/local/bin/migrate github.com/golang-migrate/migrate/cli
+# Install modd
+RUN go get github.com/cortesi/modd/cmd/modd
 
 # Install docker so developers can run the diff script in modd
 RUN curl -fsSLO https://download.docker.com/linux/static/stable/x86_64/docker-17.09.0-ce.tgz && \
