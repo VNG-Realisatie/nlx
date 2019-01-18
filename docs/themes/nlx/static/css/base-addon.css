@@ -129,11 +129,6 @@ h2[id]::before,
   content: "";
 }
 
-.sidebar nav .navbar-nav .nav-item,
-.sidebar nav .navbar-nav ul {
-  width: 100%;
-}
-
 .button {
   /*top: 0;
   right: 0;
@@ -178,17 +173,6 @@ h1 {
   }
 }
 
-.sidebar nav .navbar-nav {
-  margin-bottom: 0;
-  padding-left: 0;
-  padding-right: 0;
-}
-
-.sidebar nav .navbar-nav .nav-item {
-  margin-left: 0;
-  margin-right: 0;
-}
-
 @media (max-width: 768px) {
   .search_button {
     display: none;
@@ -210,4 +194,34 @@ h1 {
 
 #TableOfContents {
   margin-top: 2rem;
+}
+
+.sidebar .search .form-control {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.sidebar nav .navbar-nav {
+  padding-left: 0;
+  padding-right: 0;
+  margin-bottom: 1rem;
+}
+
+.sidebar nav .navbar-nav .nav-item {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.sidebar nav .navbar-nav .nav-item .nav-link {
+  padding: .15rem 1.5rem .3rem;
+  line-height: 1.7;
+}
+
+.sidebar nav .navbar-nav ul {
+  width: 100%;
+}
+
+.sidebar nav .navbar-nav ul .nav-item .nav-link {
+  padding-left: 2rem;
 }
