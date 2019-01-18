@@ -17,8 +17,6 @@ import styles from '../styles/Table'
 
 class EnhancedTable extends React.Component {
     state = {
-        order: null,
-        orderBy: null,
         page: 0,
         rowsPerPage: 10,
         rowsPerPageOptions: [10, 25, 50],
