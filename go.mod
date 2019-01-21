@@ -5,7 +5,7 @@ require (
 	github.com/cloudflare/cfssl v0.0.0-20181213083726-b94e044bb51e
 	github.com/deckarep/golang-set v1.7.1 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/docker/distribution v2.7.0+incompatible // indirect
+	github.com/docker/distribution v2.7.1+incompatible // indirect
 	github.com/docker/docker v1.13.1 // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.3.3 // indirect
@@ -15,6 +15,7 @@ require (
 	github.com/go-sql-driver/mysql v1.4.1 // indirect
 	github.com/gogo/protobuf v1.2.0
 	github.com/golang-migrate/migrate v3.5.4+incompatible
+	github.com/golang/mock v1.2.0 // indirect
 	github.com/golang/protobuf v1.2.0
 	github.com/google/certificate-transparency-go v1.0.21 // indirect
 	github.com/gorilla/schema v1.0.2
@@ -26,6 +27,7 @@ require (
 	github.com/jpillora/backoff v0.0.0-20180909062703-3050d21c67d7
 	github.com/kisielk/sqlstruct v0.0.0-20150923205031-648daed35d49 // indirect
 	github.com/kr/pretty v0.1.0 // indirect
+	github.com/kr/pty v1.1.3 // indirect
 	github.com/ktr0731/toml v0.3.0
 	github.com/lib/pq v1.0.0
 	github.com/mattn/go-sqlite3 v1.10.0 // indirect
@@ -38,12 +40,14 @@ require (
 	go.uber.org/multierr v1.1.0 // indirect
 	go.uber.org/zap v1.9.1
 	golang.org/x/crypto v0.0.0-20190103213133-ff983b9c42bc // indirect
-	golang.org/x/net v0.0.0-20190110200230-915654e7eabc
-	golang.org/x/sync v0.0.0-20181221193216-37e7f081c4d4 // indirect
-	golang.org/x/sys v0.0.0-20190116161447-11f53e031339 // indirect
-	google.golang.org/appengine v1.4.0 // indirect
+	golang.org/x/lint v0.0.0-20181217174547-8f45f776aaf1 // indirect
+	golang.org/x/net v0.0.0-20190119204137-ed066c81e75e
+	golang.org/x/oauth2 v0.0.0-20190115181402-5dab4167f31c // indirect
+	golang.org/x/sys v0.0.0-20190121090251-770c60269bf0 // indirect
+	golang.org/x/tools v0.0.0-20190121143147-24cd39ecf745 // indirect
 	google.golang.org/genproto v0.0.0-20190111180523-db91494dd46c
 	google.golang.org/grpc v1.18.0
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 	gopkg.in/yaml.v2 v2.2.2 // indirect
+	honnef.co/go/tools v0.0.0-20190109154334-5bcec433c8ea // indirect
 )
