@@ -265,12 +265,19 @@ export const mwIrma = ({ getState, dispatch }) => {
                 let api = `${
                     store.organization.info.insight_log_endpoint
                 }/fetch`
+                // inital parameters taken from pageDef (defaults)
+                let { page, rowsPerPage } = store.organization.logs.pageDef
+                let params = {
+                    page,
+                    rowsPerPage,
+                }
                 dispatch({
                     type: actionType.GET_ORGANIZATION_LOGS,
                     payload: {
                         api,
                         name: store.organization.irma.name,
                         jwt: store.organization.irma.jwt,
+                        params,
                     },
                 })
                 break

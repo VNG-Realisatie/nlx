@@ -6,6 +6,7 @@ import Table from '../../components/Table'
 import LogModal from '../../components/LogModal'
 import { prepTableData } from '../../utils/appUtils'
 import * as actionType from '../../store/actions'
+import NoDataMessage from '../../components/NoDataMessage'
 
 class ViewRecordsPage extends Component {
     state = {
@@ -47,22 +48,43 @@ class ViewRecordsPage extends Component {
         })
     }
 
+    changeTableOptions = (pageDef) => {
+        const { api, jwt, name } = this.props
+        const { page, rowsPerPage } = pageDef
+        let params = {
+            page,
+            rowsPerPage,
+        }
+        this.props.dispatch({
+            type: actionType.GET_ORGANIZATION_LOGS,
+            payload: {
+                api,
+                name,
+                jwt,
+                params,
+            },
+        })
+    }
+
     getTable = () => {
-        let { colDef, logs } = this.props
+        let { colDef, logs, pageDef } = this.props
 
         if (logs.length > 0) {
+            let data = prepTableData({
+                colDef,
+                rawData: logs,
+            })
             return (
                 <Table
                     cols={colDef}
                     onDetails={this.getDetails}
-                    data={prepTableData({
-                        colDef,
-                        rawData: logs,
-                    })}
+                    onOptionsChange={this.changeTableOptions}
+                    options={pageDef}
+                    data={data}
                 />
             )
         } else {
-            return <p>No records - empty placeholder - IMPROVE</p>
+            return <NoDataMessage />
         }
     }
 
@@ -120,9 +142,11 @@ const mapStateToProps = (state) => {
         loading: true,
         colDef: state.organization.logs.colDef,
         logs: state.organization.logs.items,
+        pageDef: state.organization.logs.pageDef,
         error: state.organization.logs.error,
         name: state.organization.logs.name,
         jwt: state.organization.logs.jwt,
+        api: state.organization.logs.api,
     }
     if (
         state.organization.logs.items.length > 0 ||

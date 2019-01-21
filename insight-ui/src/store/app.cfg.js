@@ -120,6 +120,13 @@ const cfg = {
                     disablePadding: false,
                 },
             ],
+            // pagination definitions
+            pageDef: {
+                page: 0,
+                rowsPerPage: 10,
+                rowCount: 0,
+                rowsPerPageOptions: [10, 25, 50],
+            },
         },
     },
 }

@@ -1,9 +1,10 @@
 /**
- * Custom middleware function to load organization list,
- * listens to GET_ORGANIZATIONS action
+ * Custom middleware function to load organization logs,
+ * listens to GET_ORGANIZATION_LOGS action
  * it performs api call to load organizations list
- * on success dispatch GET_ORGANIZATIONS_OK or GET_ORGANIZATIONS_ERR action
- * @param param.getState: fn, received from redux
+ * on success dispatch GET_ORGANIZATION_LOGS_OK or
+ * GET_ORGANIZATION_LOGS_ERR
+ * @param param.action: fn, received from redux
  * @param param.dispatch: fn, received from redux
  */
 
@@ -12,24 +13,32 @@ import * as actionType from '../actions'
 import { extractError } from '../../utils/appUtils'
 
 function getOrganizationLogs({ action, dispatch }) {
-    let { api, jwt, name } = action.payload
+    let { api, jwt, name, params } = action.payload
 
     if (api && jwt) {
         axios({
             method: 'post',
             url: api,
             headers: { 'content-type': 'text/plain' },
+            params,
             data: jwt,
         })
             .then((response) => {
-                let items = response.data.records
+                let { records, page, rowCount } = response.data
+                // if page not returned by backend
+                // use original param value
+                if (!page) page = params.page
+
                 dispatch({
                     type: actionType.GET_ORGANIZATION_LOGS_OK,
                     payload: {
                         name,
                         api,
-                        items,
                         jwt,
+                        items: records,
+                        page,
+                        rowCount,
+                        rowsPerPage: params.rowsPerPage,
                     },
                 })
             })
