@@ -16,6 +16,7 @@ func (i *Inway) handleHealthRequest(w http.ResponseWriter, r *http.Request) {
 
 	serviceName := strings.TrimPrefix(r.URL.Path, "/.nlx/health/")
 
+	i.logger.Debug("received health check", zap.String("from-host", r.Host))
 	// We currently only verify that the service still exists in this inway.
 	// There is no health check to the actual endpoint defined yet.
 	status := health.Status{}
