@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/go-chi/chi"
+	"github.com/gorilla/schema"
 	"github.com/huandu/xstrings"
 	flags "github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
@@ -228,6 +229,8 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, dataSubjects map[string]co
 			INNER JOIN matchedRecords
 				ON records.id = matchedRecords.record_id
 		ORDER BY created
+		LIMIT CASE WHEN $1>0 THEN $1 ELSE NULL END
+		OFFSET $2
 	`
 
 	// map irma attributes to a list of datasubjects that can be accessed by it
@@ -238,6 +241,11 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, dataSubjects map[string]co
 		}
 	}
 
+	type getLogsRequest struct {
+		Page        int `schema:"page"`
+		RowsPerPage int `schema:"rowsPerPage"`
+	}
+
 	type Record struct {
 		*transactionlog.Record
 		Created  time.Time      `json:"created"`
@@ -245,7 +253,10 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, dataSubjects map[string]co
 	}
 
 	type Out struct {
-		Records []*Record `json:"records"`
+		Records     []*Record `json:"records"`
+		Page        int       `json:"page"`
+		RowsPerPage int       `json:"rowsPerPage"`
+		RowCount    int       `json:"rowCount"`
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -260,6 +271,14 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, dataSubjects map[string]co
 		if err != nil {
 			logger.Error("failed to verify irma jwt", zap.Error(err))
 			http.Error(w, "invalid irma jwt", http.StatusBadRequest)
+			return
+		}
+
+		requestParams := &getLogsRequest{}
+		err = schema.NewDecoder().Decode(requestParams, r.URL.Query())
+		if err != nil {
+			logger.Error("error parsing URL values", zap.Error(err))
+			http.Error(w, "failed to parse URL values", http.StatusBadRequest)
 			return
 		}
 
@@ -311,14 +330,16 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, dataSubjects map[string]co
 			http.Error(w, "server error", http.StatusInternalServerError)
 			return
 		}
-		res, err := stmtFetchLogs.Queryx()
+		res, err := stmtFetchLogs.Queryx(requestParams.RowsPerPage, requestParams.RowsPerPage*requestParams.Page)
 		if err != nil {
 			logger.Error("failed to fetch transaction logs", zap.Error(err))
 			http.Error(w, "server error", http.StatusInternalServerError)
 			return
 		}
 		var out = Out{
-			Records: make([]*Record, 0),
+			Records:     make([]*Record, 0),
+			RowsPerPage: requestParams.RowsPerPage,
+			Page:        requestParams.Page,
 		}
 		for res.Next() {
 			rec := &Record{}
