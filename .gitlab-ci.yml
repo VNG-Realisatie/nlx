@@ -15,6 +15,7 @@ Database diff test:
 #   stage: Quick tests
 #   script:
 #     - cp go.mod go.mod.orig
+#     - /usr/local/go/bin/go mod download
 #     - /usr/local/go/bin/go mod tidy
 #     - diff go.mod.orig go.mod
 
@@ -26,6 +27,7 @@ Build:
 Go test:
   stage: Tests
   script:
+    - /usr/local/go/bin/go mod download
     - /usr/local/go/bin/go test ./...
 
 Release container images:
