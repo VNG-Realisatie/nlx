@@ -59,6 +59,7 @@ func NewOutway(process *process.Process, logger *zap.Logger, logdb *sqlx.DB, tls
 		return nil, errors.New("cannot obtain organization name from self cert")
 	}
 	organizationName := orgCert.Subject.Organization[0]
+	logger.Info("loaded certificates for outway", zap.String("outway-organization-name", organizationName))
 
 	o := &Outway{
 		wg:               &sync.WaitGroup{},
@@ -74,12 +75,14 @@ func NewOutway(process *process.Process, logger *zap.Logger, logdb *sqlx.DB, tls
 
 	// setup transactionlog
 	if logdb == nil {
+		logger.Info("logging to transaction log disabled")
 		o.txlogger = transactionlog.NewDiscardTransactionLogger()
 	} else {
 		o.txlogger, err = transactionlog.NewPostgresTransactionLogger(logger, logdb, transactionlog.DirectionOut)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to setup transactionlog")
 		}
+		logger.Info("transaction logger created")
 	}
 
 	orgKeypair, err := tls.LoadX509KeyPair(tlsOptions.OrgCertFile, tlsOptions.OrgKeyFile)
@@ -100,6 +103,7 @@ func NewOutway(process *process.Process, logger *zap.Logger, logdb *sqlx.DB, tls
 		logger.Fatal("failed to setup connection to directory service", zap.Error(err))
 	}
 	o.directoryClient = directoryapi.NewDirectoryClient(directoryConn)
+	logger.Info("directory client setup complete", zap.String("directory-address", directoryAddress))
 	err = o.updateServiceList(process)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to update internal service directory")
@@ -160,9 +164,10 @@ func (o *Outway) updateServiceList(process *process.Process) error {
 		default:
 			// Need default to not to block
 		}
-
+		o.logger.Debug("directory listed service", zap.String("service-name", serviceToImplement.ServiceName), zap.String("service-organization-name", serviceToImplement.OrganizationName))
 		service, exists := o.services[serviceToImplement.OrganizationName+"."+serviceToImplement.ServiceName]
 		if !exists || !reflect.DeepEqual(service.GetInwayAddresses(), serviceToImplement.InwayAddresses) {
+
 			// create the service
 			rrlbService, err := NewRoundRobinLoadBalancedHTTPService(o.logger, o.tlsRoots, o.tlsOptions.OrgCertFile, o.tlsOptions.OrgKeyFile, serviceToImplement.OrganizationName, serviceToImplement.ServiceName, serviceToImplement.InwayAddresses)
 			if err != nil {
@@ -174,7 +179,7 @@ func (o *Outway) updateServiceList(process *process.Process) error {
 				continue
 			}
 			service = rrlbService
-
+			o.logger.Debug("implemented service", zap.String("service-name", serviceToImplement.ServiceName), zap.String("service-organization-name", serviceToImplement.OrganizationName))
 		}
 		services[service.FullName()] = service
 	}

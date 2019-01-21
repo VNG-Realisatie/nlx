@@ -49,7 +49,7 @@ func (o *Outway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		zap.String("request-path", r.URL.Path),
 		zap.String("request-remote-address", r.RemoteAddr),
 	)
-	logger.Debug("received request")
+
 	urlparts := strings.SplitN(strings.TrimPrefix(r.URL.Path, "/"), "/", 3)
 	if len(urlparts) != 3 {
 		http.Error(w, "nlx outway: invalid path in url", http.StatusBadRequest)
