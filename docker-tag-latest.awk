@@ -10,7 +10,7 @@ BEGIN {
 }
 
 # Match the release lines from skaffold
-/^nlxio\/[a-z-]* \-\> nlxio\/[a-z-]*\:[0-9a-z.-]*$/ {
+/^nlxio\/[a-z-]* -> nlxio\/[a-z-]*:[0-9a-z.-]*$/ {
     cmdTag=sprintf("docker tag %s %s:latest", $3, $1 )
     print cmdTag
     c = system(cmdTag)
@@ -32,4 +32,8 @@ BEGIN {
 
 END {
     print "Tagged and pushed " count " images with the `:latest` tag."
+    if (count==0) {
+        print "Error: no :latest tag images were pushed."
+        exit 1
+    }
 }
