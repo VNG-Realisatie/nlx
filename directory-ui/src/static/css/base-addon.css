@@ -1,55 +1,13 @@
-/* 100% xs 1rem = 16px*/
-html {
-  font-size: 100%;
-}
-
-/* 87.5% xs 1rem = 14px*/
-@media screen and (max-width: 1024px) {
-  html {
-    font-size: 87.5%;
-  }
-}
-
-/* 75% xs 1rem = 12px*/
-@media screen and (max-width: 768px) {
-  html {
-    font-size: 75%;
-  }
-}
-
-/* 68.75% 1rem = 11px*/
-@media screen and (max-width: 576px) {
-  html {
-    font-size: 68.75%;
-  }
-}
-
-/* 62.5% 1rem = 10px*/
-@media screen and (max-width: 374px) {
-  html {
-    font-size: 62.5%;
-  }
-}
-
-/* 50% 1rem = 8px*/
-@media screen and (max-width: 320px) {
-  html {
-    font-size: 50%;
-  }
-}
-
 :root {
-  --header-height: 80px;
+  --header-height: 64px;
 }
 
 body {
   padding-top: 0;
-
 }
 
-.navbar-logo img,
-.nav-link img{
-  height: 1.625rem;
+.navbar-logo img {
+  height: 20px;
 }
 
 .search-filter .form-control {
@@ -83,11 +41,14 @@ body {
   padding-left: 1rem;
   padding-right: 1rem;
   padding-bottom: 0;
-  font-size: 1rem;
+  white-space: nowrap;
+}
+
+.nav-link {
+  display: flex;
 }
 
 .navbar .navbar-logo {
-  height: 1.625rem;
   margin-right: 1rem;
   display: -ms-flexbox;
   display: flex;
@@ -215,3 +176,27 @@ h1 {
   }
 }
 
+@media screen and (max-width: 991px) {
+  .bd-content {
+    font-size: 14px;
+  }
+  .sidebar nav .navbar-nav .nav-item .nav-link {
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 575px) {
+  .navbar .navbar-nav .nav-link {
+    padding-left: .5rem;
+    padding-right: .5rem;
+    font-size: 14px;
+  }
+
+  .navbar-logo img {
+    height: 16px;
+  }
+
+  .nav-link img {
+    height: 20px;
+  }
+}
