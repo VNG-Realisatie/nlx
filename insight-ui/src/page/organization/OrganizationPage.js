@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
-import { withStyles, Typography } from '@material-ui/core'
+import { Typography } from '@material-ui/core'
 
 import { connect } from 'react-redux'
 import { compose } from 'redux'
@@ -9,19 +9,6 @@ import * as actionType from '../../store/actions'
 import IrmaAuthPage from './IrmaAuthPage'
 import ViewRecordsPage from './ViewRecordsPage'
 import ErrorPage from '../ErrorPage'
-
-const styles = (theme) => ({
-    calendarIcon: {
-        fontSize: 14,
-        marginBottom: -2,
-        marginRight: 3,
-    },
-    clockIcon: {
-        fontSize: 15,
-        marginBottom: -3,
-        marginRight: 2,
-    },
-})
 
 class OrganizationPage extends Component {
     // currently loaded organization
@@ -82,8 +69,8 @@ class OrganizationPage extends Component {
 
         return (
             <div>
-                <Typography variant="h6" color="primary" noWrap gutterBottom>
-                    Organization: {this.getOrganization()}
+                <Typography variant="h4" color="primary" noWrap gutterBottom>
+                    {this.getOrganization()}
                 </Typography>
                 <Switch>
                     <Route
@@ -129,7 +116,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default compose(
-    withStyles(styles),
-    connect(mapStateToProps),
-)(OrganizationPage)
+export default compose(connect(mapStateToProps))(OrganizationPage)

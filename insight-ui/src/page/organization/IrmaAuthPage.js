@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { QRCode } from 'react-qr-svg'
+import { Typography } from '@material-ui/core'
 import { connect } from 'react-redux'
 import { Spinner } from '@commonground/design-system'
 
@@ -60,10 +61,10 @@ export class IrmaAuthPage extends Component {
 
         if (qrCode) {
             return (
-                <div>
-                    Scan QR code with IRMA to get access to your logs.
-                    <br />
-                    <br />
+                <React.Fragment>
+                    <Typography variant="h6" color="default" gutterBottom>
+                        Scan QR code with IRMA app
+                    </Typography>
                     <QRCode
                         bgColor="#FFFFFF"
                         fgColor="#000000"
@@ -71,7 +72,7 @@ export class IrmaAuthPage extends Component {
                         style={{ width: 256 }}
                         value={qrCode}
                     />
-                </div>
+                </React.Fragment>
             )
         } else {
             return <Spinner />
