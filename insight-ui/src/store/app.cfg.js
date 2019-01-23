@@ -114,7 +114,7 @@ const cfg = {
                 },
                 {
                     id: 'reden',
-                    label: 'Reden',
+                    label: 'Process',
                     src: 'data.doelbinding-process-id',
                     type: 'string',
                     disablePadding: false,
