@@ -42,3 +42,9 @@ home = [ "HTML", "RSS", "JSON"]
   weight = 6
   identifier = "glossary"
   url = "/glossary/"
+
+[[menu.docs]]
+  name = "Get started"
+  weight = 7
+  identifier = "get-started"
+  url = "/get-started/"
