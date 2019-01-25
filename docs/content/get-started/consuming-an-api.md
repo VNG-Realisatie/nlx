@@ -8,7 +8,7 @@ menu:
 
 ## Intro - Setting up an outway
 
-To use a service that is provided via NLX, you need to route traffic through an outway onto the network.
+To use an API that is provided via NLX, you need to route traffic through an outway onto the network.
 To be able to connect with the other nodes on the NLX network, you'll need a certificate and private key. The certificate and key are used to encrypt traffic between you and other nodes.
 
 ## Before we can request a certificate
@@ -27,7 +27,7 @@ Answer the questions accordingly:
 - **Locality Name**, enter any value
 - **Organization Name**, please enter a URL-friendly value. Also make sure this value is unique for the network in the [directory overview](https://directory.demo.nlx.io) as we do not check for uniqueness yet.<br>A good value could be: `an-awesome-organization`.
 - **Organization Unit Name**, enter any value
-- **Common name**, when you would like to offer services to the NLX network make sure this corresponds to your external hostname.
+- **Common name**, when you would like to offer your API's to the NLX network make sure this corresponds to your external hostname.
 - **Email Address**, enter any value
 - **A challenge password**, leave empty
 
@@ -122,7 +122,7 @@ docker ps
 
 You should see your container id in the list of containers. The image name  of the container should be `nlxio/outway:v0.0.20`.
 
-## Querying services
+## Querying API's
 
 Now let's try to fetch some data from an API in the NLX network!
 To do so, we have to use the following structure:
@@ -139,7 +139,7 @@ curl http://localhost:4080/vng-realisatie/demo-api/
 
 Congratulations, you now made your first query on the NLX network!
 
-Take a look at the [directory](https://directory.nlx.io) to see which other services are available to fetch data from.
+Take a look at the [directory](https://directory.nlx.io) to see which other API's are available to fetch data from.
 
 ### Verification
 
@@ -158,8 +158,8 @@ The response of the `curl` command should look similar to the following output.
     
 So far, we have:
 
-- generated our own certificate, so we are allowed to communicate with the services on the NLX network.
+- generated our own certificate, so we are allowed to communicate with the API's on the NLX network.
 - setup a local NLX outway service, which we can use to get data from the network.
-- made a real request to the VNG Realisatie Demo API service.
+- made a real request to the VNG Realisatie Demo API API.
 
-Now let's see if we can provide our own services to the network in [part 3]({{< ref "/providing-a-service.md" >}}). 
+Now let's see if we can provide our own API's to the network in [part 3]({{< ref "/providing-an-api.md" >}}). 
