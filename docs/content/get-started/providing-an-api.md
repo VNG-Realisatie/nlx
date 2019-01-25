@@ -101,6 +101,9 @@ docker ps
 
 You should see your container id in the list of containers. The image name  of the container should be `nlxio/inway:v0.0.29`.
 
+
+Now let's verify our inway using the outway we have setup in step 2.
+
 ```bash
 curl http://localhost:4080/an-awesome-organization/DocsTestMyPublicAPI/
 ```
