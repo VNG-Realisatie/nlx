@@ -1,5 +1,5 @@
 ---
-title: "Part 2: Consuming a service"
+title: "Part 2: Consuming an API"
 description: ""
 menu:
   docs:
@@ -74,10 +74,12 @@ Make sure to store the file next to your private key as `org.crt`.
 Let's check if our certificate is alright.
 
 ```bash
-cat org.crt
+openssl x509 -in org.crt -text | grep Subject:
 ```
 
-The output should contain *-----BEGIN CERTIFICATE REQUEST-----* as the first line and *-----END CERTIFICATE REQUEST-----* at the very bottom.
+The output should contain the answers you've provided when you created the certificate.
+
+Example of the output: `Subject: C=nl, ST=noord-holland, L=haarlem, O=an-awesome-organization, OU=an-awesome-organization-unit, CN=an-awesome-organization.nl`
 
 
 ## Using the certificate with an outway
@@ -96,7 +98,7 @@ The following command will run the outway using the Docker image we just fetched
 docker run --detach \
              --name my-nlx-outway \
              --volume ~/nlx-setup/root.crt:/certs/root.crt:ro \
-             --volume ~/nlx-setup/certificate.crt:/certs/org.crt:ro \
+             --volume ~/nlx-setup/org.crt:/certs/org.crt:ro \
              --volume ~/nlx-setup/org.key:/certs/org.key:ro \
              --env DIRECTORY_ADDRESS=directory-api.demo.nlx.io:443 \
              --env TLS_NLX_ROOT_CERT=/certs/root.crt \

@@ -43,7 +43,10 @@ cd nlx-setup
 pwd
 ```
 
-The output should be `/Users/<your-username>/nlx-setup`
+The output should be:
+
+* For Mac: `/Users/<your-username>/nlx-setup`
+* For Linux: `/home/<your-username>/nlx-setup`
 
 All commands further down this guide assume you are located in this directory.
 
