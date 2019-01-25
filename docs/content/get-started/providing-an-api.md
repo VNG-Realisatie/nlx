@@ -101,8 +101,10 @@ docker ps
 
 You should see your container id in the list of containers. The image name  of the container should be `nlxio/inway:v0.0.29`.
 
+Take a look at the [directory](https://directory.nlx.io) to see if your API is present. It's status should show a green icon.
 
-Now let's verify our inway using the outway we have setup in step 2.
+To consume API's using NLX, requests always need to go through an inway and outway.
+Now let's verify our inway is working as expected using the outway we have setup in step 2.
 
 ```bash
 curl http://localhost:4080/an-awesome-organization/DocsTestMyPublicAPI/
