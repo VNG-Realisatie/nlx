@@ -1,5 +1,5 @@
 ---
-title: "Part 3: Providing a service"
+title: "Part 3: Providing an API"
 description: ""
 menu:
   docs:
@@ -8,28 +8,28 @@ menu:
 
 ## Intro - Setting up an inway
 
-To provide a service to the NLX network, you need to route traffic through an inway service.
-We will reuse the certificate which we retreived for the outway, to make sure traffic is encrypted between you and other nodes.
+To provide an API to the NLX network, you need to route traffic through an inway service.
+We will reuse the certificate which we retrieved for the outway, to make sure traffic is encrypted between you and other nodes.
 
-## Example service
+## Example API
 
-In this example we will use [postman-echo.com](https://postman-echo.com) as an example service.
+In this example we will use [postman-echo.com](https://postman-echo.com) as an example API.
 
-We have to define our service in a TOML-file. You can save the contents below as `service-config.toml`.
+We have to define our API in a TOML-file. You can save the contents below as `service-config.toml`.
 
 ```toml
 [services]
     
-# This block defines a services exposed by this inway.
-# A single inway can expose multiple services, therefore this block can be added multiple times.
-# The name of the service (in this example PostmanEcho) must be unique for each block.
-    [services.MyPublicServiceV1]
+# This block defines an API exposed by this inway.
+# A single inway can expose multiple API's, therefore this block can be added multiple times.
+# The name of the API (in this example PostmanEcho) must be unique for each block.
+    [services.MyPublicAPI]
 
-    # `endpoint-url` should be set to the address at which the service/API is available.
+    # `endpoint-url` should be set to the address at which the API is available.
     # In this example we simply expose the postman-echo.com website.
     endpoint-url = "postman-echo.com"
 
-    # `documentation-url` points to the documentation for provided sevice
+    # `documentation-url` points to the documentation for provided API
     documentation-url = "postman-echo.com"
 
     # `authorization-model` can or whitelist
@@ -86,7 +86,10 @@ To get started quickly, we will disable transaction logs for now by setting the 
 You will get back the container id of the container you created from this image.
 By running this command, we've launched our very own NLX inway. It is running and listening on `http://localhost:4443`.
 
-The inway now connects itself to the NLX network and registers its services on the NLX networks. Please **make sure** external connection is possible to the specified port on the specified hostname or IP adress and port  public IP address are routed to the machine running the NLX inway otherwise connections to your inway and services will fail.
+The inway now connects itself to the NLX network and registers its API's on the NLX networks.
+
+Please **make sure** external connection is possible to the specified port on the specified hostname or IP adress and port.
+Public IP address are routed to the machine running the NLX inway otherwise connections to your inway and API's will fail.
 
 ### Verification
 
