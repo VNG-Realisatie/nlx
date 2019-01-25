@@ -54,7 +54,7 @@ docker run --detach \
               --volume ~/nlx-setup/org.key:/certs/org.key:ro \
               --volume ~/nlx-setup/service-config.toml:/service-config.toml:ro \
               --env DIRECTORY_ADDRESS=directory-api.demo.nlx.io:443 \
-              --env SELF_ADDRESS={external-inway-hostname-or-ip-address}:4443 \
+              --env SELF_ADDRESS=an-awesome-organization.nl:4443 \
               --env SERVICE_CONFIG=/service-config.toml \
               --env TLS_NLX_ROOT_CERT=/certs/root.crt \
               --env TLS_ORG_CERT=/certs/org.crt \
@@ -99,13 +99,10 @@ To verify the container is running, execute:
 docker ps
 ```
 
-You should see your container id in the list of containers. The image name  of the container should be `nlxio/outway:v0.0.20`.
+You should see your container id in the list of containers. The image name  of the container should be `nlxio/inway:v0.0.29`.
 
-TODO
-====
+```bash
+curl http://localhost:4080/an-awesome-organization/DocsTestMyPublicAPI/
+```
 
-? service is rood
-via: curl http://localhost:4080/my-little-bedrijfje/MyPublicServiceV1/get?foo1=bar1&foo2=bar2
-geeft : nlx outway: unknown service
-
-
+geeft : nlx outway: unknown service?
