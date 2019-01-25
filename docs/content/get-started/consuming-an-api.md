@@ -27,7 +27,7 @@ Answer the questions accordingly:
 - **Locality Name**, enter any value
 - **Organization Name**, please enter a URL-friendly value. Also make sure this value is unique for the network in the [directory overview](https://directory.demo.nlx.io) as we do not check for uniqueness yet.<br>A good value could be: `an-awesome-organization`.
 - **Organization Unit Name**, enter any value
-- **Common name**, when you would like to offer your API's to the NLX network make sure this corresponds to your external hostname.
+- **Common name**, when you would like to offer your API's to the NLX network make sure this corresponds to your external hostname. For this guide we will use `an-awesome-organization.nl`.
 - **Email Address**, enter any value
 - **A challenge password**, leave empty
 
@@ -67,7 +67,7 @@ Scroll to the bottom of the page and click on **Request certificate**.
 The system will instantly sign your csr and return your certificate. 
 You can either copy paste your certificate and store it in a file or you can click **Download certificate** to download the certificate. 
 
-Make sure to store the file next to your private key as `org.crt`.
+Rename the file from `certificate.crt` to `org.crt` and store the file next to your private key.
 
 ### Verification
 
