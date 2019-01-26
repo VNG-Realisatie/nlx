@@ -13,8 +13,16 @@ import * as actionType from '../actions'
 import { extractError } from '../../utils/appUtils'
 
 function getOrganizationLogs({ action, dispatch }) {
+    if (!action.payload) {
+        return dispatch({
+            type: actionType.GET_ORGANIZATION_LOGS_ERR,
+            payload: {
+                status: 600,
+                description: 'url or jwt missing',
+            },
+        })
+    }
     let { api, jwt, name, params } = action.payload
-
     if (api && jwt) {
         axios({
             method: 'post',

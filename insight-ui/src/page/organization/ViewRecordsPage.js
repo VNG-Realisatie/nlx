@@ -8,7 +8,7 @@ import { prepTableData } from '../../utils/appUtils'
 import * as actionType from '../../store/actions'
 import NoDataMessage from '../../components/NoDataMessage'
 
-class ViewRecordsPage extends Component {
+export class ViewRecordsPage extends Component {
     state = {
         error: false,
         modal: {

@@ -6,7 +6,7 @@ import './NoDataMessage.scss'
 
 const NoDataMessage = (props) => {
     return (
-        <p className="NoDataMessage">
+        <p data-test-id="no-data-msg" className="NoDataMessage">
             <InfoOutlined /> <br />
             {props.msg ? props.msg : 'No logs to show'}
         </p>

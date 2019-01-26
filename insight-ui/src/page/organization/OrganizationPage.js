@@ -10,7 +10,7 @@ import IrmaAuthPage from './IrmaAuthPage'
 import ViewRecordsPage from './ViewRecordsPage'
 import ErrorPage from '../ErrorPage'
 
-class OrganizationPage extends Component {
+export class OrganizationPage extends Component {
     // currently loaded organization
     organization = null
     /**
