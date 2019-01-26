@@ -8,7 +8,7 @@
     "acc": "webpack-dev-server --env=acc",
     "demo": "webpack-dev-server --env=demo",
     "prod": "webpack-dev-server --env=prod",
-    "build": "webpack --env=prod",
+    "build": "webpack --env=prod --progress",
     "build:dev": "webpack --env=dev",
     "test": "jest",
     "tdd": "jest --watch",

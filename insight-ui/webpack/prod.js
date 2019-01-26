@@ -19,6 +19,9 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 
 const dist = path.resolve(__dirname, '../build')
 
+const optimization = require('./optimization')
+const { stats } = require('./stats')
+
 module.exports = {
     mode: 'production',
     entry: {
@@ -70,7 +73,7 @@ module.exports = {
                         loader: 'url-loader',
                         options: {
                             limit: 2048,
-                            name: 'img/[name].[ext]',
+                            name: '[name].[ext]',
                         },
                     },
                 ],
@@ -82,7 +85,7 @@ module.exports = {
                         loader: 'url-loader',
                         options: {
                             limit: 1024,
-                            name: 'font/[name].[ext]',
+                            name: '[name].[ext]',
                         },
                     },
                 ],
@@ -124,4 +127,16 @@ module.exports = {
             generateStatsFile: true,
         }), */
     ],
+
+    /*
+		optimize bundels
+		https://webpack.js.org/configuration/optimization/
+	*/
+    optimization: optimization,
+
+    /**
+     * Display stats, see link below for complete list
+     * https://webpack.js.org/configuration/stats/#stats
+     */
+    stats: stats,
 }
