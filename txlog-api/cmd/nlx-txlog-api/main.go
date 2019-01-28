@@ -62,6 +62,7 @@ func main() {
 	dbversion.WaitUntilLatestTxlogDBVersion(logger, logDB.DB)
 
 	r := chi.NewRouter()
+	r.Use(addHeadersHandler)
 	r.HandleFunc("/in", newLogFetcher(logger, logDB, transactionlog.DirectionIn))
 	r.HandleFunc("/out", newLogFetcher(logger, logDB, transactionlog.DirectionOut))
 
@@ -83,6 +84,14 @@ func main() {
 		}
 		return
 	}
+}
+
+func addHeadersHandler(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+		next.ServeHTTP(w, r)
+	})
 }
 
 type getLogsRequest struct {
