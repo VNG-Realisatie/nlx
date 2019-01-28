@@ -124,7 +124,7 @@ const cfg = {
                 page: 0,
                 rowsPerPage: 10,
                 rowCount: 0,
-                rowsPerPageOptions: [10, 25, 50],
+                rowsPerPageOptions: [5, 10, 25, 50],
             },
         },
     },

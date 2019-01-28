@@ -68,6 +68,17 @@ const initLoginProcess = ({ organization, dispatch }) => {
         .then((response) => {
             let irmaVerificationRequest = response.data
             const u = irmaVerificationRequest['u']
+            /**
+             * For local testing with IRMA app
+             * see README.md file lines 100-107 for all steps
+             * you need to overwrite "insight_irma_endpoint" with
+             * your local ip (after you setup port-forwarding)
+             * organization.insight_irma_endpoint = 'http://your.local.ip:3333'             *
+             *
+             * uncomment the line bellow and fill in your local ip
+             * where the insight-ui app is currenly running (not localhost:3000)
+             */
+            // organization.insight_irma_endpoint = 'http://192.168.7.77:3333'
 
             irmaVerificationRequest['u'] = `${
                 organization.insight_irma_endpoint
