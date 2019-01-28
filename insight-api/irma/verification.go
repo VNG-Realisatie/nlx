@@ -43,7 +43,7 @@ func newVerificationRequestClaims(request *DiscloseRequest, serviceProviderName 
 		},
 		SPRequest: SPRequestClaims{
 			Data:     "",
-			Validity: 60,
+			Validity: 3600,
 			Timeout:  60,
 			Request:  request,
 		},
