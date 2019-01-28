@@ -1,13 +1,15 @@
 FROM node:10.15.0-alpine AS build
 
-ENV CI=true
-
-# First copy only package.json and yarn.lock to make the dependency fetching step optional.
+# First copy only package.json to make the dependency fetching step optional.
 COPY ./package.json \
     ./package-lock.json \
     /go/src/go.nlx.io/nlx/txlog-ui/
 
 WORKDIR /go/src/go.nlx.io/nlx/txlog-ui
+
+ARG REACT_APP_API_BASE_URL
+ENV CI=true
+
 RUN npm ci --no-progress --color=false --quiet
 
 # Now copy the whole directory for the build step.

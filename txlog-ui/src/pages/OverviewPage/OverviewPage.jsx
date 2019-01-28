@@ -11,6 +11,7 @@ import Spinner from '../../components/Spinner/Spinner'
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import muiTheme from '../../styles/muiTheme'
 import { InfoOutlined } from '@material-ui/icons'
+import { relativeToFullUrl } from '../../helpers/api'
 
 export class Overview extends React.Component {
     state = {
@@ -53,7 +54,7 @@ export class Overview extends React.Component {
             },
         }
 
-        let apiPoint = `/api/${showLogs}`
+        let apiPoint = relativeToFullUrl(`/${showLogs}`)
 
         axios
             .get(apiPoint, options)
