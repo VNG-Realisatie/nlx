@@ -4,13 +4,13 @@ import { InfoOutlined } from '@material-ui/icons'
 
 import './NoDataMessage.scss'
 
-const NoDataMessage = (props) => {
-    return (
-        <p data-test-id="no-data-msg" className="NoDataMessage">
-            <InfoOutlined /> <br />
+const NoDataMessage = (props) => (
+    <p className="NoDataMessage">
+        <InfoOutlined /> <br />
+        <span data-test="message">
             {props.msg ? props.msg : 'No logs to show'}
-        </p>
-    )
-}
+        </span>
+    </p>
+)
 
 export default NoDataMessage

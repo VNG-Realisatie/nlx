@@ -1,31 +1,27 @@
 import React from 'react'
-import { mount } from 'enzyme'
+import { shallow } from 'enzyme'
 
 import NoDataMessage from './NoDataMessage'
 
-let component, msg
-
-beforeAll(() => {
-    component = mount(<NoDataMessage />)
-})
-
-beforeEach(() => {
-    msg = component.text('[data-test-id="no-data-msg"]')
-})
-
-describe('<NoDataMessage />', () => {
-    it('mounts NoDataMessage component', () => {
+describe('the <NoDataMessage /> component', () => {
+    it('mounts successfully', () => {
+        const component = shallow(<NoDataMessage />)
         expect(component).toBeTruthy()
     })
 
-    it('shows default text with length > 3', () => {
-        expect(msg.length).toBeGreaterThan(3)
+    describe('when no message is provided', () => {
+        it('should render a default message', () => {
+            const component = shallow(<NoDataMessage />)
+            const message = component.find('[data-test="message"]')
+            expect(message.text()).toBe('No logs to show')
+        })
     })
 
-    it('shows prop.msg received', () => {
-        const testProp = { msg: 'Test messsage!' }
-        component.setProps(testProp)
-        msg = component.text('[data-test-id="no-data-msg"]')
-        expect(msg).toContain(testProp.msg)
+    describe('when a message is provided', () => {
+        it('should show the provided message', () => {
+            const component = shallow(<NoDataMessage msg="Test message!" />)
+            const message = component.find('[data-test="message"]')
+            expect(message.text()).toBe('Test message!')
+        })
     })
 })
