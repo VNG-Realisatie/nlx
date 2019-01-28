@@ -35,6 +35,7 @@ class EnhancedTable extends React.Component {
     handleChangeRowsPerPage = (event) => {
         this.props.onOptionsChange({
             ...this.props.options,
+            page: 0,
             rowsPerPage: event.target.value,
         })
     }
@@ -89,24 +90,9 @@ class EnhancedTable extends React.Component {
     }
 
     getTableBody = () => {
-        const { cols, data, options } = this.props
-        let selection = []
-        /*
-            temporarly implemented pagination on front-end,
-            if backend returns more rows than rowsPerPage
-            we slice data here
-        */
+        const { cols, data } = this.props
 
-        if (data.length > options.rowsPerPage) {
-            selection = data.slice(
-                options.page * options.rowsPerPage,
-                options.page * options.rowsPerPage + options.rowsPerPage,
-            )
-        } else {
-            selection = data
-        }
-
-        const tableBody = selection.map((row) => {
+        const tableBody = data.map((row) => {
             return this.getTableRow(cols, row)
         })
 
