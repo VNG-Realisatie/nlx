@@ -23,6 +23,7 @@ function getOrganizationLogs({ action, dispatch }) {
         })
     }
     let { api, jwt, name, params } = action.payload
+
     if (api && jwt) {
         axios({
             method: 'post',
@@ -35,7 +36,7 @@ function getOrganizationLogs({ action, dispatch }) {
                 let { records, page, rowCount } = response.data
                 // if page not returned by backend
                 // use original param value
-                if (!page) page = params.page
+                if (typeof page === 'undefined') page = params.page
 
                 dispatch({
                     type: actionType.GET_ORGANIZATION_LOGS_OK,
