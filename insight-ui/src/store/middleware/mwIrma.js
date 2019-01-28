@@ -133,7 +133,6 @@ const getLoginStatus = ({ dispatch, getState }) => {
     }
 
     interval = setInterval(() => {
-        // debugger
         if (inProgressFlag === false) {
             let state = getState()
             if (state.organization.irma.inProgress === false) {
@@ -151,13 +150,11 @@ const getLoginStatus = ({ dispatch, getState }) => {
             .then((response) => {
                 let { stop, action } = handleLoginResponse(response.data)
                 if (action) {
-                    // debugger
                     dispatch(action)
                 }
                 if (stop) removeInterval()
             })
             .catch((e) => {
-                // debugger
                 let error = extractError(e)
                 dispatch({
                     type: actionType.IRMA_LOGIN_ERR,
@@ -265,7 +262,7 @@ export const mwIrma = ({ getState, dispatch }) => {
                 let api = `${
                     store.organization.info.insight_log_endpoint
                 }/fetch`
-                // inital parameters taken from pageDef (defaults)
+
                 let { page, rowsPerPage } = store.organization.logs.pageDef
                 let params = {
                     page,
