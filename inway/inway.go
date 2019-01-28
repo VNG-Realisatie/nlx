@@ -60,7 +60,7 @@ func NewInway(logger *zap.Logger, logdb *sqlx.DB, selfAddress string, tlsOptions
 	}
 
 	organizationName := orgCert.Subject.Organization[0]
-
+	logger.Info("loaded certificates for inway", zap.String("inway-organization-name", organizationName))
 	i := &Inway{
 		logger:           logger.With(zap.String("inway-organization-name", organizationName)),
 		organizationName: organizationName,
@@ -77,12 +77,14 @@ func NewInway(logger *zap.Logger, logdb *sqlx.DB, selfAddress string, tlsOptions
 
 	// setup transactionlog
 	if logdb == nil {
+		logger.Info("logging to transaction-log disabled")
 		i.txlogger = transactionlog.NewDiscardTransactionLogger()
 	} else {
 		i.txlogger, err = transactionlog.NewPostgresTransactionLogger(logger, logdb, transactionlog.DirectionIn)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to setup transactionlog")
 		}
+		logger.Info("transaction logger created")
 	}
 
 	// setup directory client
@@ -104,6 +106,7 @@ func NewInway(logger *zap.Logger, logdb *sqlx.DB, selfAddress string, tlsOptions
 		logger.Fatal("failed to setup connection to directory service", zap.Error(err))
 	}
 	i.directoryClient = directoryapi.NewDirectoryClient(directoryConn)
+	logger.Info("directory client setup complete", zap.String("directory-address", directoryAddress))
 	return i, nil
 }
 
@@ -162,6 +165,7 @@ func (i *Inway) announceToDirectory(p *process.Process, s ServiceEndpoint, servi
 				if resp != nil && resp.Error != "" {
 					i.logger.Error(fmt.Sprintf("failed to register to directory: %s", resp.Error))
 				}
+				i.logger.Info("directory registration successful")
 				sleepDuration = 10 * time.Second
 				expBackOff.Reset()
 			}
