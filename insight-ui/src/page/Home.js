@@ -10,7 +10,7 @@ const Home = () => (
             Welcome to the NLX Insight App
         </Typography>
         <Typography variant="body1" color="default" gutterBottom>
-            View logs by selecting an organizations using the menu items on the
+            View logs by selecting an organization using the menu items on the
             left.
         </Typography>
         <Typography variant="body2" color="default" gutterBottom>
