@@ -90,6 +90,7 @@ describe('orgLogsReducer', () => {
         actionType.GET_ORGANIZATION_LOGS_OK
     }`, () => {
         const initState = cfg.organization.logs
+        initState.pageDef.page = 1
         const action = {
             type: actionType.GET_ORGANIZATION_LOGS_OK,
             payload: {
@@ -97,7 +98,7 @@ describe('orgLogsReducer', () => {
                 api: 'https://myapi/fetch',
                 jwt: 'BASE64ENCODEDJWT',
                 items: [{ rec: true }],
-                page: 1,
+                page: 0,
                 rowCount: 10,
             },
         }
