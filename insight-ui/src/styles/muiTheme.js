@@ -14,6 +14,7 @@ export const muiTheme = createMuiTheme({
         h4: {
             fontFamily: 'Muli, sans-serif',
             letterSpacing: 4,
+            textTransform: 'capitalize',
             fontWeight: 700,
         },
         // previously called headline
