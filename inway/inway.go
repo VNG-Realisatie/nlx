@@ -23,7 +23,7 @@ import (
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/transactionlog"
-	"go.nlx.io/nlx/directory/directoryapi"
+	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 	"go.nlx.io/nlx/inway/config"
 )
 
@@ -45,11 +45,11 @@ type Inway struct {
 
 	txlogger transactionlog.TransactionLogger
 
-	directoryClient directoryapi.DirectoryClient
+	directoryRegistrationClient registrationapi.DirectoryRegistrationClient
 }
 
 // NewInway creates and prepares a new Inway.
-func NewInway(logger *zap.Logger, logdb *sqlx.DB, selfAddress string, tlsOptions orgtls.TLSOptions, directoryAddress string, serviceConfig *config.ServiceConfig) (*Inway, error) {
+func NewInway(logger *zap.Logger, logdb *sqlx.DB, selfAddress string, tlsOptions orgtls.TLSOptions, directoryRegistrationAddress string, serviceConfig *config.ServiceConfig) (*Inway, error) {
 	// parse tls certificate
 	roots, orgCert, err := orgtls.Load(tlsOptions)
 	if err != nil {
@@ -100,13 +100,13 @@ func NewInway(logger *zap.Logger, logdb *sqlx.DB, selfAddress string, tlsOptions
 		grpc.WithTransportCredentials(directoryDialCredentials),
 	}
 	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(context.Background(), 1*time.Minute)
-	directoryConn, err := grpc.DialContext(directoryConnCtx, directoryAddress, directoryDialOptions...)
+	directoryConn, err := grpc.DialContext(directoryConnCtx, directoryRegistrationAddress, directoryDialOptions...)
 	defer directoryConnCtxCancel()
 	if err != nil {
 		logger.Fatal("failed to setup connection to directory service", zap.Error(err))
 	}
-	i.directoryClient = directoryapi.NewDirectoryClient(directoryConn)
-	logger.Info("directory client setup complete", zap.String("directory-address", directoryAddress))
+	i.directoryRegistrationClient = registrationapi.NewDirectoryRegistrationClient(directoryConn)
+	logger.Info("directory registration client setup complete", zap.String("directory-address", directoryRegistrationAddress))
 	return i, nil
 }
 
@@ -141,9 +141,9 @@ func (i *Inway) announceToDirectory(p *process.Process, s ServiceEndpoint, servi
 			case <-shutDownComplete:
 				return
 			case <-time.After(sleepDuration):
-				resp, err := i.directoryClient.RegisterInway(context.Background(), &directoryapi.RegisterInwayRequest{
+				resp, err := i.directoryRegistrationClient.RegisterInway(context.Background(), &registrationapi.RegisterInwayRequest{
 					InwayAddress: i.selfAddress,
-					Services: []*directoryapi.RegisterInwayRequest_RegisterService{
+					Services: []*registrationapi.RegisterInwayRequest_RegisterService{
 						{
 							Name:                        s.ServiceName(),
 							Internal:                    serviceDetails.Internal,

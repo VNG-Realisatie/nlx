@@ -1,11 +1,11 @@
-package directoryapi
+package inspectionapi
 const (
-SwaggerJSONDirectory = `
+SwaggerJSONDirectoryInspection = `
 {
   "swagger": "2.0",
   "info": {
-    "title": "directory.proto",
-    "description": "Package directoryapi defines the directory api.",
+    "title": "inspectionapi.proto",
+    "description": "Package inspectionapi defines the directory api.",
     "version": "version not set"
   },
   "schemes": [
@@ -26,7 +26,7 @@ SwaggerJSONDirectory = `
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/directoryapiGetServiceAPISpecResponse"
+              "$ref": "#/definitions/inspectionapiGetServiceAPISpecResponse"
             }
           }
         },
@@ -45,7 +45,7 @@ SwaggerJSONDirectory = `
           }
         ],
         "tags": [
-          "Directory"
+          "DirectoryInspection"
         ]
       }
     },
@@ -57,12 +57,12 @@ SwaggerJSONDirectory = `
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/directoryapiListOrganizationsResponse"
+              "$ref": "#/definitions/inspectionapiListOrganizationsResponse"
             }
           }
         },
         "tags": [
-          "Directory"
+          "DirectoryInspection"
         ]
       }
     },
@@ -74,12 +74,12 @@ SwaggerJSONDirectory = `
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/directoryapiListServicesResponse"
+              "$ref": "#/definitions/inspectionapiListServicesResponse"
             }
           }
         },
         "tags": [
-          "Directory"
+          "DirectoryInspection"
         ]
       }
     }
@@ -108,10 +108,6 @@ SwaggerJSONDirectory = `
         "service_name": {
           "type": "string"
         },
-        "internal": {
-          "type": "boolean",
-          "format": "boolean"
-        },
         "inway_addresses": {
           "type": "array",
           "items": {
@@ -123,37 +119,14 @@ SwaggerJSONDirectory = `
         },
         "api_specification_type": {
           "type": "string"
-        }
-      }
-    },
-    "RegisterInwayRequestRegisterService": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
         },
         "internal": {
           "type": "boolean",
           "format": "boolean"
-        },
-        "documentation_url": {
-          "type": "string"
-        },
-        "api_specification_type": {
-          "type": "string"
-        },
-        "api_specification_document_url": {
-          "type": "string"
-        },
-        "insight_api_url": {
-          "type": "string"
-        },
-        "irma_api_url": {
-          "type": "string"
         }
       }
     },
-    "directoryapiGetServiceAPISpecResponse": {
+    "inspectionapiGetServiceAPISpecResponse": {
       "type": "object",
       "properties": {
         "type": {
@@ -165,7 +138,7 @@ SwaggerJSONDirectory = `
         }
       }
     },
-    "directoryapiListOrganizationsResponse": {
+    "inspectionapiListOrganizationsResponse": {
       "type": "object",
       "properties": {
         "organizations": {
@@ -176,7 +149,7 @@ SwaggerJSONDirectory = `
         }
       }
     },
-    "directoryapiListServicesResponse": {
+    "inspectionapiListServicesResponse": {
       "type": "object",
       "properties": {
         "services": {
@@ -184,14 +157,6 @@ SwaggerJSONDirectory = `
           "items": {
             "$ref": "#/definitions/ListServicesResponseService"
           }
-        }
-      }
-    },
-    "directoryapiRegisterInwayResponse": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "type": "string"
         }
       }
     }
