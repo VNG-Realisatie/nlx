@@ -36,6 +36,9 @@ We have to define our API in a TOML-file. You can save the contents below as `se
     authorization-model = "none"
 ```
 
+> If you are providing your own API using Docker, make sure to specify the IP-address of the host machine as endpoint-url. 
+Localhost won't work, because it is not available to the outside world.
+
 ## Setting up the inway
 
 Let's setup the inway service. First, fetch the Docker image from the [Docker Hub](https://hub.docker.com/u/nlxio).
@@ -103,7 +106,7 @@ You should see your container id in the list of containers. The image name  of t
 
 Take a look at the [directory](https://directory.nlx.io) to see if your API is present. It's status should show a green icon.
 
-To consume API's using NLX, requests always need to go through an inway and outway.
+To verify the inway you just created you will need to use an outway because an inway only accepts requests from an outway. 
 Now let's verify our inway is working as expected using the outway we have setup in [part 3]({{< ref "/consume-an-api.md" >}}).
 
 ```bash
