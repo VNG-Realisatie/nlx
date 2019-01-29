@@ -10,33 +10,29 @@ The insight-ui provides a human-readable view of information exchanged between t
   # run using local backend (proxy to http://directory.dev.nlx.minikube:30080)
   # see NLX (root) readme how to setup local backend environment
   npm start
+  
   # run in dev mode (proxy to https://directory.test.nlx.io/)
   npm run dev
+  
   # run in acc mode (proxy to https://directory.acc.nlx.io/)
   npm run acc
+  
   # run in demo mode (proxy to https://directory.demo.nlx.io/)
   npm run demo
-  # run in production mode (api point fixed to https://directory.demo.nlx.io/)
-  npm run prod
+  
   # build production (api point fixed to https://directory.demo.nlx.io/)
   npm run build
-  # build using dev mode
-  npm run build:dev
-  # run tests with jest (once)
+  
+  # run tests
   npm test
-  # run tests in watch mode (TDD)
-  npm run tdd
-  # lint all js
-  npm run lint
-  # run webpack in debug mode
-  npm run wp:dev
 ```
 
 ### Proxies
 
-The proxies are defined in webpack/proxy.js. During development each request starting with `/api` will be proxied to environment specific proxy. The proxy server is based on --env property passed to webpack-dev-server. See NPM scripts (or package.json) for dev scripts available (start, dev, demo & acc). See root NLX readme file for available NLX environments.
+The proxies are configured in `src/setupProxy.js`. 
+During development each request starting with `/api` will be proxied to environment specific proxy. 
 
-In production mode the directory api point is set to static value https://directory.demo.nlx.io/api/directory/list-organizations
+The proxy server is based on the `PROXY` environment variable property passed to the start script. See NPM scripts (or package.json) for all available scripts.
 
 ### Redux
 
@@ -69,8 +65,6 @@ Webpack can be debugged with chrome dev tools. Webpack is node.js app and debugg
 
   # start webpack in inspect mode
   node --inspect-brk ./node_modules/webpack/bin/webpack.js
-  # OR use available NPM script
-  npm run wp:dev
 
   # open chrome inspect tools at chrome://inspect/
   # use ctl + c (twice!) to stop debugging
