@@ -4,6 +4,7 @@ import { Link, Switch, Route, BrowserRouter } from 'react-router-dom'
 
 import { connect } from 'react-redux'
 import { compose } from 'redux'
+import { Spinner } from '@commonground/design-system'
 
 import {
     withStyles,
@@ -21,7 +22,6 @@ import OrganizationPage from '../page/organization/OrganizationPage'
 import OrganizationList from '../components/OrganizationList'
 import Logo from '../components/Logo'
 import ErrorPage from '../page/ErrorPage'
-import Spinner from '../components/Spinner'
 
 class ResponsiveDrawer extends React.Component {
     state = {

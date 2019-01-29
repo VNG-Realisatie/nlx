@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import { QRCode } from 'react-qr-svg'
-
 import { connect } from 'react-redux'
+import { Spinner } from '@commonground/design-system'
 
-import Spinner from '../../components/Spinner'
 import * as actionType from '../../store/actions'
 
 export class IrmaAuthPage extends Component {

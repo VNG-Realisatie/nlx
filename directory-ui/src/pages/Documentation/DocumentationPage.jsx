@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { RedocStandalone } from 'redoc'
 import axios from 'axios'
+import { Spinner } from '@commonground/design-system'
 
-import Spinner from '../../components/Spinner/Spinner'
 import ErrorPage from '../ErrorPage/ErrorPage'
 
 import './DocumentationPage.scss'
