@@ -50,12 +50,6 @@ The output should be:
 
 All commands further down this guide assume you are located in this directory.
 
-## Demo CA root certificate
-
-You will need our demo CA's root certificate. It will be used to validate certificates of other organizations.
- 
-Download [the root certificate](https://certportal.demo.nlx.io/root.crt) file and save it as `root.crt` in the working directory described above.
-
 ## Create a domain which refers to your external ip
 
 ```bash

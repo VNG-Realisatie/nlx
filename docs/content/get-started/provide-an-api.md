@@ -1,17 +1,17 @@
 ---
-title: "Part 3: Providing an API"
+title: "Part 4: Provide an API"
 description: ""
 menu:
   docs:
     parent: "get-started"
 ---
 
-## Intro - Setting up an inway
+## Introduction
 
-To provide an API to the NLX network, you need to route traffic through an inway service.
-We will reuse the certificate which we retrieved for the outway, to make sure traffic is encrypted between you and other nodes.
+To provide an API to the NLX network, you need to route traffic through an **inway** service.
+We will use the certificate which we've setup in [part 2]({{< ref "/create-certificates.md" >}}), to make sure traffic is encrypted between your and other nodes.
 
-## Example API
+## The API
 
 In this example we will use [postman-echo.com](https://postman-echo.com) as an example API.
 
@@ -36,7 +36,7 @@ We have to define our API in a TOML-file. You can save the contents below as `se
     authorization-model = "none"
 ```
 
-## Starting the inway
+## Setting up the inway
 
 Let's setup the inway service. First, fetch the Docker image from the [Docker Hub](https://hub.docker.com/u/nlxio).
     
@@ -104,7 +104,7 @@ You should see your container id in the list of containers. The image name  of t
 Take a look at the [directory](https://directory.nlx.io) to see if your API is present. It's status should show a green icon.
 
 To consume API's using NLX, requests always need to go through an inway and outway.
-Now let's verify our inway is working as expected using the outway we have setup in step 2.
+Now let's verify our inway is working as expected using the outway we have setup in [part 3]({{< ref "/consume-an-api.md" >}}).
 
 ```bash
 curl http://localhost:4080/an-awesome-organization/DocsTestMyPublicAPI/
