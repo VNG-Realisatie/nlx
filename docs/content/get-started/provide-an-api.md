@@ -56,7 +56,7 @@ docker run --detach \
               --volume ~/nlx-setup/org.crt:/certs/org.crt:ro \
               --volume ~/nlx-setup/org.key:/certs/org.key:ro \
               --volume ~/nlx-setup/service-config.toml:/service-config.toml:ro \
-              --env DIRECTORY_ADDRESS=directory-registration-api.demo.nlx.io:443 \
+              --env DIRECTORY_REGISTRATION_ADDRESS=directory-registration-api.demo.nlx.io:443 \
               --env SELF_ADDRESS=an-awesome-organization.nl:4443 \
               --env SERVICE_CONFIG=/service-config.toml \
               --env TLS_NLX_ROOT_CERT=/certs/root.crt \
