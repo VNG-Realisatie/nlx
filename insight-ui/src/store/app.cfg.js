@@ -130,10 +130,4 @@ const cfg = {
     },
 }
 
-// the api point is FIXED to demo environment in production mode
-if (process.env.NODE_ENV === 'production') {
-    cfg.organizations.api =
-        'https://directory.demo.nlx.io/api/directory/list-organizations'
-}
-
 export default cfg
