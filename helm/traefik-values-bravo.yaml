@@ -9,6 +9,8 @@ acme:
   persistence:
     enabled: false # TODO:#343 PVC doesn't work yet. Enable persistence when it does.
 
+debug:
+  enabled: true
 
 dashboard:
   enabled: true
@@ -23,6 +25,7 @@ rbac:
   enabled: true
 
 kubernetes:
+  endpoint: https://10.128.128.7:6443 # This is extremely un-nice, because it pins traefik to master1. However, we cannot use the ClusterIP that is created for the kubernetes API because somehow traefik listens on all IP's on the host machine (including clusterIP's...??)
   ingressClass: traefik # Only handle k8s Ingress objects with explicit kubernetes.io/ingress.class="traefik"
 
 cpuLimit: 2
