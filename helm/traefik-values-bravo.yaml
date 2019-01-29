@@ -25,7 +25,7 @@ rbac:
   enabled: true
 
 kubernetes:
-  # endpoint: https://10.128.128.7:6443 # This is extremely un-nice, because it pins traefik to master1. However, we cannot use the ClusterIP that is created for the kubernetes API because somehow traefik listens on all IP's on the host machine (including clusterIP's...??)
+  # endpoint: https://10.128.128.7:6443 # This is extremely un-nice, because it pins traefik to master1. However, we cannot use the ClusterIP that is created for the kubernetes API because when the traefik pod does not have `hostNetwork: true` because then traefik listens on all IP's on the host machine (including clusterIP's...). So make sure to run the command in README.md which adds the hostNetwork: true to the manifest after using helm install.
   ingressClass: traefik # Only handle k8s Ingress objects with explicit kubernetes.io/ingress.class="traefik"
 
 cpuLimit: 2
@@ -34,11 +34,7 @@ memoryLimit: 1024Mi
 nodeSelector:
   kubernetes.io/hostname: bravo-k8s-node-2
 
-# serviceType: LoadBalancer
-# externalIP: 185.54.112.206
-
 deployment:
   hostPort:
     httpEnabled: true
     httpsEnabled: true
-#     dashboardEnabled: true
