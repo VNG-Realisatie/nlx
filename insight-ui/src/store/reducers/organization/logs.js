@@ -1,5 +1,5 @@
-import cfg from '../app.cfg'
-import * as actionType from '../actions'
+import cfg from '../../app.cfg'
+import * as actionType from '../../actions'
 
 function mergePageDef(state, payload) {
     let pageDef = {
@@ -19,13 +19,7 @@ function mergePageDef(state, payload) {
     return pageDef
 }
 
-/**
- * Language reducer containing lang info and translations
- * @param {object} state previous state object
- * @param {string} action.type redux action type, string constant
- * @param {object} action.payload redux action type, string constant
- */
-export const orgLogsReducer = (state = cfg.organization.logs, action) => {
+export const logs = (state = cfg.organization.logs, action) => {
     switch (action.type) {
         case actionType.GET_ORGANIZATION_LOGS_OK:
             let pageDef = mergePageDef(state, action.payload)
@@ -56,4 +50,4 @@ export const orgLogsReducer = (state = cfg.organization.logs, action) => {
     }
 }
 
-export default orgLogsReducer
+export default logs

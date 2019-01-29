@@ -1,11 +1,7 @@
-import * as actionType from '../actions'
-import cfg from '../app.cfg'
-/**
- * Manage the loader states using redux store
- * @param state: object, current redux store state of loader store
- * @param action: object, dispatched redux action
- */
-export const orgIrmaReducer = (state = cfg.organization.irma, action) => {
+import * as actionType from '../../actions'
+import cfg from '../../app.cfg'
+
+export const irma = (state = cfg.organization.irma, action) => {
     switch (action.type) {
         case actionType.GET_QRCODE_OK:
             return {
@@ -45,4 +41,4 @@ export const orgIrmaReducer = (state = cfg.organization.irma, action) => {
     }
 }
 
-export default orgIrmaReducer
+export default irma
