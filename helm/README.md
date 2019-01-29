@@ -16,6 +16,17 @@ helm install stable/nginx-ingress --version 0.17.1 --name nginx-ingress --namesp
 helm install stable/postgresql --name postgresql --namespace=postgresql --values helm/postgresql-values.yaml
 ```
 
+Traefik does not work nice out of the box with k8s 1.13+.
+
+Run the following to attach the traefik pod to the hostNework.
+
+```bash
+kubectl -n traefik get deployment traefik -oyaml | perl -0777 -i.original -pe 's/      volumes:/      hostNetwork: true\n      volumes:/igs' | kubectl -n traefik apply -f -
+```
+
+It may be that after running this command, the deployment cant find a host to run traefik on. Because port 443 on node2 is still in use, and the new pod needs port 443 on node2..
+If that is case, manually delete the old pod.
+
 ### Execute skaffold
 
 In a local development environment it's best to use skaffold for building containers and executing helm.
