@@ -116,9 +116,9 @@ export const muiTheme = createMuiTheme({
         MuiMenuItem: {
             root: {
                 fontSize: '1rem',
-            },
-            selected: {
-                fontWeight: 700,
+                '&$selected': {
+                    fontWeight: 700,
+                },
             },
         },
         MuiListItem: {
