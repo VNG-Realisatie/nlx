@@ -71,7 +71,7 @@ docker run --detach \
   --volume {/absolute/path/to/org.crt}:/certs/org.crt:ro \
   --volume {/absolute/path/to/org.key}:/certs/org.key:ro \
   --volume {/absolute/path/to/service-config.toml}:/service-config.toml:ro \
-  --env DIRECTORY_ADDRESS=directory-api.demo.nlx.io:443 \
+  --env DIRECTORY_REGISTRATION_ADDRESS=directory-registration-api.demo.nlx.io:443 \
   --env SELF_ADDRESS={external-inway-hostname-or-ip-address}:4443 \
   --env SERVICE_CONFIG=/service-config.toml \
   --env TLS_NLX_ROOT_CERT=/certs/root.crt \
@@ -89,7 +89,7 @@ We give docker several arguments:
 - `--volume {/absolute/path/to/root.crt}:/certs/root.crt:ro` tells docker to make the `/certs/root.crt` file available inside the container.
 - `--volume {/absolute/path/to/org.crt}:/certs/org.crt:ro` tells docker to make the `/certs/org.crt` file available inside the container.
 - `--volume {/absolute/path/to/org.key}:/certs/org.key:ro` tells docker to make the `/certs/org.key` file available inside the container.
-- `--env DIRECTORY_ADDRESS=directory-api.demo.nlx.io:443` sets the environment variable `DIRECTORY_ADDRESS` this address is used by the inway to anounce itself to the directory.
+- `--env DDIRECTORY_REGISTRATION_ADDRESS=directory-registration-api.demo.nlx.io:443` sets the environment variable `DDIRECTORY_REGISTRATION_ADDRESS` this address is used by the inway to anounce itself to the directory.
 - `--env SELF_ADDRESS={external-inway-hostname-or-ip-address}:4443` sets the environment variable `SELF_ADDRESS` to the address of the inway so it can be reached by the NLX network.
 - `-env SERVICE_CONFIG=/service-config.toml` sets the environment variable `SERVICE_CONFIG` this is the location of the service-config.toml file which specifies the services conntected to the inway.
 - `--env TLS_NLX_ROOT_CERT=/certs/root.crt`sets the environment variable `TLS_NLX_ROOT_CERT` this is the location of the root certificate.
