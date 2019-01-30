@@ -40,7 +40,7 @@ We give docker several arguments:
 - `--volume {/absolute/path/to/root.crt}:/certs/root.crt:ro` tells docker to make the `/certs/root.crt` file available inside the container.
 - `--volume {/absolute/path/to/org.crt}:/certs/org.crt:ro` tells docker to make the `/certs/org.crt` file available inside the container.
 - `--volume {/absolute/path/to/org.key}:/certs/org.key:ro` tells docker to make the `/certs/org.key` file available inside the container.
-- `--env DIRECTORY_ADDRESS=directory-api.demo.nlx.io:443` sets the environment variable `DIRECTORY_ADDRESS` this address is used by the outway to anounce itself to the directory.
+- `--env DIRECTORY_INSPECTION_ADDRESS=directory-inspection-api.demo.nlx.io:443` sets the environment variable `DIRECTORY_INSPECTION_ADDRESS` this address is used by the outway to anounce itself to the directory.
 - `--env TLS_NLX_ROOT_CERT=/certs/root.crt`sets the environment variable `TLS_NLX_ROOT_CERT` this is the location of the root certificate.
 - `--env TLS_ORG_CERT=/certs/org.crt` sets the environment variable `TLS_ORG_CERT` this is the location of the organisation certificate.
 - `--env TLS_ORG_KEY=/certs/org.key` sets the environment variable `TLS_ORG_KEY` this is the location of the organisation private key.
