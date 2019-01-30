@@ -19,9 +19,6 @@ type openAPIVersion struct {
 const openAPI2 = "OpenAPI2"
 const openAPI3 = "OpenAPI3"
 
-const openAPI2Validation = "2.0"
-const openAPI3Validation = "3.0.0"
-
 func getInwayAPISpecsType(httpClient *http.Client, inwayAddress, serviceName string) (string, error) {
 	data, err := getInwayAPISpecs(httpClient, inwayAddress, serviceName)
 	if err != nil {
@@ -39,10 +36,18 @@ func getInwayAPISpecsType(httpClient *http.Client, inwayAddress, serviceName str
 		return "", err
 	}
 
-	if versionCheck.OpenAPI == openAPI3Validation {
-		return openAPI3, nil
-	} else if versionCheck.Swagger == openAPI2Validation {
+	var versionValue string
+	if versionCheck.OpenAPI != "" {
+		versionValue = versionCheck.OpenAPI
+	} else if versionCheck.Swagger != "" {
+		versionValue = versionCheck.Swagger
+	}
+
+	switch versionValue {
+	case "2.0":
 		return openAPI2, nil
+	case "3.0.0", "3.0.1", "3.0.2":
+		return openAPI3, nil
 	}
 
 	return "", fmt.Errorf("documentation format is neither openAPI2 or openAPI3")

@@ -101,13 +101,14 @@ func (h *registerInwayHandler) RegisterInway(ctx context.Context, req *registrat
 			h.logger.Info("invalid service name in registerinwayrequest", zap.String("service name", service.Name))
 			return nil, status.New(codes.InvalidArgument, "Invalid servicename").Err()
 		}
+		// TODO: we get the documentation spec doc via the inway, not directly. This field could probably be dropped form the communication to hte directory.
 		h.logger.Info("service documentation url", zap.String("documentation url", service.ApiSpecificationDocumentUrl))
 		var inwayAPISpecificationType string
 		if len(service.ApiSpecificationDocumentUrl) > 0 {
 			inwayAPISpecificationType, err = getInwayAPISpecsType(h.httpClient, req.InwayAddress, service.Name)
 			if err != nil {
-				h.logger.Info("invalid documentation url provided by inway", zap.String("documentation url", service.ApiSpecificationDocumentUrl), zap.Error(err))
-				return nil, status.New(codes.InvalidArgument, "Invalid documentation URL provided").Err()
+				h.logger.Info("invalid documentation specification document provided by inway", zap.String("documentation url", service.ApiSpecificationDocumentUrl), zap.Error(err))
+				return nil, status.New(codes.InvalidArgument, "Invalid documentation specification document provided").Err()
 			}
 
 			h.logger.Info("detected api spec", zap.String("apispectype", inwayAPISpecificationType))
