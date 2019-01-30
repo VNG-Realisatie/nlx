@@ -312,6 +312,7 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, dataSubjects map[string]co
 			http.Error(w, "server error", http.StatusInternalServerError)
 			return
 		}
+		defer stmtInsertMatchDataSubjects.Close()
 
 		for irmaAttributeKey, irmaAttributeValue := range claims.Attributes {
 			for _, dataSubjectKey := range dataSubjectsByIrmaAttribute[irmaAttributeKey] {
@@ -330,12 +331,14 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, dataSubjects map[string]co
 			http.Error(w, "server error", http.StatusInternalServerError)
 			return
 		}
+		defer stmtFetchLogs.Close()
 		res, err := stmtFetchLogs.Queryx(requestParams.RowsPerPage, requestParams.RowsPerPage*requestParams.Page)
 		if err != nil {
 			logger.Error("failed to fetch transaction logs", zap.Error(err))
 			http.Error(w, "server error", http.StatusInternalServerError)
 			return
 		}
+		defer res.Close()
 		var out = Out{
 			Records:     make([]*Record, 0),
 			RowsPerPage: requestParams.RowsPerPage,
