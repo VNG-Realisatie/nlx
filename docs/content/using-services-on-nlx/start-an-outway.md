@@ -17,7 +17,7 @@ First make sure you have installed a recent version of [Docker](https://www.dock
 To start the outway, run the following docker commands:
 
 ```bash
-docker pull nlxio/outway:v0.0.20
+docker pull nlxio/outway:latest
 
 docker run --detach \
   --name my-nlx-outway \
@@ -30,7 +30,7 @@ docker run --detach \
   --env TLS_ORG_KEY=/certs/org.key \
   --env DISABLE_LOGDB=1 \
   --publish 4080:80 \
-  nlxio/outway:v0.0.20
+  nlxio/outway:latest
 ```
 
 We give docker several arguments:

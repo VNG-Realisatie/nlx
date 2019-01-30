@@ -63,7 +63,7 @@ where **MyPublicService** is the name of the service. Please note when using def
 When you configured the services, start the inway:
 
 ```bash
-docker pull nlxio/inway:v0.0.29
+docker pull nlxio/inway:latest
 
 docker run --detach \
   --name my-nlx-inway \
@@ -79,7 +79,7 @@ docker run --detach \
   --env TLS_ORG_KEY=/certs/org.key \
   --env DISABLE_LOGDB=1 \
   --publish 4443:443 \
-  nlxio/inway:v0.0.29
+  nlxio/inway:latest
 ```
 
 We give docker several arguments:
