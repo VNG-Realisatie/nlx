@@ -16,7 +16,7 @@ We will use the certificate which we've setup in [part 2]({{< ref "/create-certi
 Let's setup the outway service. First, fetch the Docker image from the [Docker Hub](https://hub.docker.com/u/nlxio).
     
 ```bash
-docker pull nlxio/outway:v0.0.29
+docker pull nlxio/outway:latest
 ```
 
 The following command will run the outway using the Docker image we just fetched.
@@ -33,7 +33,7 @@ docker run --detach \
              --env TLS_ORG_KEY=/certs/org.key \
              --env DISABLE_LOGDB=1 \
              --publish 4080:80 \
-             nlxio/outway:v0.0.29
+             nlxio/outway:latest
 ```
 
 You will get back the container id of the container you created from this image.

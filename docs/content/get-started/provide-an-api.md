@@ -44,7 +44,7 @@ Localhost won't work, because it is not available to the outside world.
 Let's setup the inway service. First, fetch the Docker image from the [Docker Hub](https://hub.docker.com/u/nlxio).
     
 ```bash
-docker pull nlxio/inway:v0.0.29
+docker pull nlxio/inway:latest
 ```
 
 The following command will run the inway using the Docker image we just fetched.
@@ -64,7 +64,7 @@ docker run --detach \
               --env TLS_ORG_KEY=/certs/org.key \
               --env DISABLE_LOGDB=1 \
               --publish 4443:443 \
-              nlxio/inway:v0.0.29
+              nlxio/inway:latest
 ```
 
 We give docker several arguments:
