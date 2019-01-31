@@ -2,31 +2,26 @@ import React, { Component } from 'react'
 
 import './ErrorPage.css'
 
+const errorStateIsDefined = (location) =>
+    location &&
+    location.state &&
+    location.state.error &&
+    location.state.error.status
+
 class ErrorPage extends Component {
-    /**
-     * Extract oError passed by router as state.
-     */
-    getStateContent = () => {
-        if (!this.props.location) {
-            return null
-        } else if (
-            this.props.location.state &&
-            this.props.location.state.error
-        ) {
-            let { error } = this.props.location.state
-            if (error && error.status) {
-                return (
-                    <h5>
-                        Error {error.status}: {error.description}
-                    </h5>
-                )
-            } else {
-                return null
-            }
-        } else {
+    getErrorMessageFromState = () => {
+        if (!errorStateIsDefined(this.props.location)) {
             return null
         }
+
+        let { error } = this.props.location.state
+        return (
+            <h5>
+                Error {error.status}: {error.description}
+            </h5>
+        )
     }
+
     render() {
         return (
             <div className="ErrorPage">
@@ -36,7 +31,7 @@ class ErrorPage extends Component {
                     <br />
                     We apologize for any inconvenience.
                 </p>
-                {this.getStateContent()}
+                {this.getErrorMessageFromState()}
                 {this.props.children}
             </div>
         )
