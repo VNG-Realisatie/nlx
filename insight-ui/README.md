@@ -53,3 +53,14 @@ All redux files are in `src/store` folder. The actions are dispatched by pages a
   - `store`: redux store, actions, middleware and reducers
   - `styles`: CSS in JSS style definitions for all components
   - `utils`: utility functions for app and testing
+
+### Testing locally with IRMA app
+
+When testing IRMA using a phone on the same WiFi network as your host machine you must setup a port-forward directly to the application you want to expose.
+
+```bash
+kubectl --namespace nlx-dev-rdw port-forward deployment/irma-api-server 2222:8080
+socat tcp-listen:3333,fork tcp:127.0.0.1:2222
+```
+
+You can now let your phone connect to the IRMA api server of RDW on `your.host.machine.ip:3333`. See comment in src/store/middleware/mwIrma.js (line 72) for detailed instruction.
