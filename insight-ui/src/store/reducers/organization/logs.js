@@ -19,7 +19,7 @@ function mergePageDef(state, payload) {
     return pageDef
 }
 
-export const logs = (state = cfg.organization.logs, action) => {
+const logs = (state = cfg.organization.logs, action) => {
     switch (action.type) {
         case actionType.GET_ORGANIZATION_LOGS_OK:
             let pageDef = mergePageDef(state, action.payload)

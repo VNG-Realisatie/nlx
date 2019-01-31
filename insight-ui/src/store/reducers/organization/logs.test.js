@@ -1,7 +1,7 @@
-import cfg from '../app.cfg'
-import * as actionType from '../actions'
+import cfg from '../../app.cfg'
+import * as actionType from '../../actions'
 
-import orgLogsReducer from './orgLogsReducer'
+import orgLogsReducer from './logs'
 
 describe('orgLogsReducer', () => {
     it('returns inital state', () => {
