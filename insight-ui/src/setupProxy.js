@@ -5,5 +5,11 @@ const getProxyUrl = (proxy) =>
 
 module.exports = function(app) {
     const proxyUrl = getProxyUrl(process.env.PROXY)
-    app.use(proxy('/api', { target: proxyUrl }))
+    app.use(
+        proxy('/api', {
+            target: proxyUrl,
+            secure: false,
+            changeOrigin: true,
+        }),
+    )
 }
