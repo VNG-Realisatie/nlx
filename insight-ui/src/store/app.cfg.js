@@ -33,14 +33,6 @@ const cfg = {
                 data: 'locale/nl/nl.json',
                 icon: 'img/nl.svg',
             },
-            {
-                key: 'ru',
-                // i18next ns=namespace
-                ns: 'core',
-                label: 'Русский',
-                data: 'locale/ru/ru.json',
-                icon: 'img/ru.svg',
-            },
         ],
         // current language info goes here
         // see languageReducer for implementation
