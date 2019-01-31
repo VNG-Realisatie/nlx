@@ -1,7 +1,7 @@
 import React from 'react'
 import { Typography } from '@material-ui/core'
 
-const Home = () => (
+const HomePage = () => (
     <React.Fragment>
         <Typography variant="h4" color="primary" noWrap gutterBottom>
             Home
@@ -21,4 +21,4 @@ const Home = () => (
     </React.Fragment>
 )
 
-export default Home
+export default HomePage

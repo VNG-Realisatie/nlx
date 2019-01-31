@@ -17,11 +17,11 @@ import {
 import MenuIcon from '@material-ui/icons/Menu'
 
 import styles from '../styles/Drawer'
-import Home from '../page/Home'
-import OrganizationPage from '../page/organization/OrganizationPage'
+import HomePage from '../pages/HomePage/HomePage'
+import OrganizationPage from '../pages/organization/OrganizationPage'
 import OrganizationList from '../components/OrganizationList'
 import Logo from '../components/Logo'
-import ErrorPage from '../page/ErrorPage'
+import ErrorPage from '../pages/ErrorPage/ErrorPage'
 
 class ResponsiveDrawer extends React.Component {
     state = {
@@ -102,11 +102,11 @@ class ResponsiveDrawer extends React.Component {
             <main className={classes.content}>
                 <div className={classes.toolbar} />
                 <Switch>
-                    <Route exact path="/" component={Home} {...this.props} />
+                    <Route exact path="/" component={HomePage} {...this.props} />
                     <Route
                         exact
                         path="/home"
-                        component={Home}
+                        component={HomePage}
                         {...this.props}
                     />
                     <Route

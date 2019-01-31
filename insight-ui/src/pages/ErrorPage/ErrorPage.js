@@ -29,7 +29,7 @@ class ErrorPage extends Component {
     }
     render() {
         return (
-            <div className="app-error-page">
+            <div className="ErrorPage">
                 <h1>Failed to load information</h1>
                 <p>
                     Requested information is not available.

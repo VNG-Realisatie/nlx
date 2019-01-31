@@ -8,7 +8,7 @@ import * as actionType from '../../store/actions'
 
 import IrmaAuthPage from './IrmaAuthPage'
 import ViewRecordsPage from './ViewRecordsPage'
-import ErrorPage from '../ErrorPage'
+import ErrorPage from '../ErrorPage/ErrorPage'
 
 export class OrganizationPage extends Component {
     // currently loaded organization
