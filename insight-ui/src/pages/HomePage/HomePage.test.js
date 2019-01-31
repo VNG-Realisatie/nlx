@@ -1,14 +1,13 @@
 import React from 'react'
 import { shallow } from 'enzyme'
+import HomePage from './HomePage'
 
-import HomePage from './Home'
-
-let component
-
-beforeAll(() => {
-    component = shallow(<HomePage />)
+it('renders the HomePage', () => {
+    const component = shallow(<HomePage />)
+    expect(component).toBeTruthy()
 })
 
-it('renders Home component', () => {
-    expect(component).toBeTruthy()
+it('should match the snapshot', () => {
+    const component = shallow(<HomePage />)
+    expect(component).toMatchSnapshot()
 })
