@@ -10,7 +10,7 @@
 import axios from 'axios'
 import * as actionType from '../actions'
 import { extractError } from '../../utils/appUtils'
-
+import cfg from '../app.cfg'
 /**
  * Start login process for specified organization.
  * Combines 2 API requests and passes info recevied using setState.
@@ -38,7 +38,7 @@ const initLoginProcess = ({ organization, dispatch }) => {
         organization.insight_irma_endpoint
     }/api/v2/verification/`
 
-    axios({
+    return axios({
         method: 'get',
         url: urlGetDataSubjects,
     })
@@ -70,16 +70,12 @@ const initLoginProcess = ({ organization, dispatch }) => {
             const u = irmaVerificationRequest['u']
             /**
              * For local testing with IRMA app
-             * see README.md file lines 100-107 for all steps required
-             * here you need to overwrite "insight_irma_endpoint" with
-             * your local ip, like so
-             *
-             * organization.insight_irma_endpoint = 'http://your.local.ip:3333'             *
-             *
-             * uncomment line bellow and fill in local ip (incl. port 3333)
-             * where insight-ui app is currenly running (ip not localhost)
+             * IF cfg.localIp is provided in app.cfg.js
+             * we overwrite irma endpoint with localIp
              */
-            // organization.insight_irma_endpoint = 'http://192.168.7.77:3333'
+            if (cfg.localIp) {
+                organization.insight_irma_endpoint = cfg.localIp
+            }
 
             irmaVerificationRequest['u'] = `${
                 organization.insight_irma_endpoint
@@ -250,13 +246,12 @@ export const mwIrma = ({ getState, dispatch }) => {
 
         switch (action.type) {
             case actionType.GET_QRCODE:
-                initLoginProcess({
+                return initLoginProcess({
                     organization: {
                         ...action.payload,
                     },
                     dispatch,
                 })
-                break
             case actionType.IRMA_LOGIN_START:
                 getLoginStatus({
                     getState,

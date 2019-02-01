@@ -1,15 +1,25 @@
 /**
  * Inital app configuration
- * These values are imported into redux store
+ * Values are imported into redux store
  */
 const cfg = {
+    /**
+     * For testing in local env with IRMA app see README file
+     * for more info (line 57 onwards). Here you need to
+     * uncomment property "localIp" and provide local ip
+     * where insight-ui app is running, incl. port 3333
+     * Note: provided ip cannot be 'localhost:3333'     *
+     * IMPORTANT!
+     * before commiting you need to comment/disable localIp prop
+     * otherwise CI/CD tests will fail
+     */
+    // localIp: 'http://192.168.7.77:3333',
+    //
     // app-loader
     loader: {
         show: true,
     },
-    location: {
-        href: '/home',
-    },
+    //
     // internationalization
     i18n: {
         defaultLang: 'en',
@@ -42,12 +52,14 @@ const cfg = {
             data: null,
         },
     },
+    //
     // list of all organizations
     organizations: {
         api: '/api/directory/list-organizations',
         list: [],
         error: null,
     },
+    //
     // currently loaded organization
     organization: {
         info: {
