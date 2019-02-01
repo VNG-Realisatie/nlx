@@ -82,7 +82,7 @@ We give docker several arguments:
 - `--env TLS_ORG_KEY=/certs/org.key` sets the environment variable `TLS_ORG_KEY` this is the location of the organisation private key.
 - `--env DISABLE_LOGDB=1` sets the environment variable `DISABLE_LOGDB` the value 1 will disable the transaction logs, the value 0 will enable them.
 - `--publish 4443:443` connects port 4443 on the host machine to port 443 inside the container. This way, we can send requests to the inway.
-- ` nlxio/inway:v0.0.29` is the name of our docker image (`nlxio/inway`) as stored in the docker registry and the version we want to use (`v0.0.29`).
+- ` nlxio/inway:latest` is the name of our docker image (`nlxio/inway`) as stored in the docker registry and the version we want to use (`latest`).
 
 To get started quickly, we will disable transaction logs for now by setting the environment variable `DISABLE_LOGDB=1`. 
 
@@ -102,7 +102,7 @@ To verify the container is running, execute:
 docker ps
 ```
 
-You should see your container id in the list of containers. The image name  of the container should be `nlxio/inway:v0.0.29`.
+You should see your container id in the list of containers. The image name  of the container should be `nlxio/inway:latest`.
 
 Take a look at the [directory](https://directory.nlx.io) to see if your API is present. It's status should show a green icon.
 
