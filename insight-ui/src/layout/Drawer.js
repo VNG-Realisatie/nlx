@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link, Switch, Route, BrowserRouter } from 'react-router-dom'
+import { Link, Switch, Route, BrowserRouter, Redirect } from 'react-router-dom'
 
 import { connect } from 'react-redux'
 import { compose } from 'redux'
@@ -102,7 +102,12 @@ class ResponsiveDrawer extends React.Component {
             <main className={classes.content}>
                 <div className={classes.toolbar} />
                 <Switch>
-                    <Route exact path="/" component={HomePage} {...this.props} />
+                    <Route
+                        exact
+                        path="/"
+                        component={HomePage}
+                        {...this.props}
+                    />
                     <Route
                         exact
                         path="/home"
@@ -114,6 +119,7 @@ class ResponsiveDrawer extends React.Component {
                         component={OrganizationPage}
                         {...this.props}
                     />
+                    <Redirect to="/home" />
                 </Switch>
             </main>
         )
