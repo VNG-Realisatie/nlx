@@ -1,11 +1,10 @@
 import React from 'react'
 
-import './ErrorPage.scss'
+import './ErrorMessage.scss'
 
-const ErrorPage = () => (
-  <div className="ErrorPage">
+const ErrorMessage = () => (
+  <div className="ErrorMessage">
     <h1>Failed to load information</h1>
-
     <p>
       Requested information is not available.
       <br />
@@ -14,4 +13,4 @@ const ErrorPage = () => (
   </div>
 )
 
-export default ErrorPage
+export default ErrorMessage

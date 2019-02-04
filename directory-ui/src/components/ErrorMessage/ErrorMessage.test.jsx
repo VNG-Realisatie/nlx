@@ -1,8 +1,8 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-import ErrorPage from './ErrorPage'
+import ErrorMessage from './ErrorMessage'
 
 it('should match the snapshot', () => {
-    expect(shallow(<ErrorPage />)).toMatchSnapshot()
+    expect(shallow(<ErrorMessage />)).toMatchSnapshot()
 })

@@ -3,7 +3,7 @@ import { RedocStandalone } from 'redoc'
 import axios from 'axios'
 import { Spinner } from '@commonground/design-system'
 
-import ErrorPage from '../ErrorPage/ErrorPage'
+import ErrorMessage from '../../components/ErrorMessage/ErrorMessage'
 
 import './DocumentationPage.scss'
 
@@ -61,7 +61,7 @@ class DocumentationPage extends Component {
         }
 
         if (!this.state.document) {
-            return <ErrorPage />
+            return <ErrorMessage />
         }
 
         return (

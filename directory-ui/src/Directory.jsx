@@ -6,7 +6,7 @@ import Search from './components/Search/Search'
 import Switch from './components/Switch/Switch'
 import Services from './components/Services/Services'
 
-import ErrorPage from './pages/ErrorPage/ErrorPage'
+import ErrorMessage from './components/ErrorMessage/ErrorMessage'
 
 export default class Directory extends React.Component {
     constructor(props) {
@@ -91,7 +91,7 @@ export default class Directory extends React.Component {
         }
 
         if (this.state.error) {
-            return <ErrorPage />
+            return <ErrorMessage />
         }
 
         const filteredServices = services.filter((service) => {
