@@ -30,9 +30,13 @@
     "bootstrap": "4.2.1",
     "classnames": "2.2.6",
     "copy-to-clipboard": "3.0.8",
+    "enzyme": "3.8.0",
+    "enzyme-adapter-react-16": "1.8.0",
+    "enzyme-to-json": "3.3.5",
     "jquery": "3.3.1",
     "prettier": "1.15.3",
-    "react-highlight-words": "0.11.0"
+    "react-highlight-words": "0.11.0",
+    "react-test-renderer": "16.7.0"
   },
   "proxy-local": "https://directory.dev.nlx.minikube:30443",
   "proxy": "https://directory.demo.nlx.io",
@@ -41,5 +45,10 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "jest": {
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ]
+  }
 }
