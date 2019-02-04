@@ -1,6 +1,6 @@
 import React from 'react'
 import Navigation from './components/Navigation/Navigation'
-import Directory from './Directory'
+import ServiceOverviewPage from './pages/ServicesOverviewPage/ServicesOverviewPage'
 import DocumentationPage from './pages/DocumentationPage/DocumentationPage'
 
 import './static/css/base-addon.css'
@@ -13,7 +13,7 @@ const App = () => (
             <div>
                 <Navigation />
 
-                <Route exact path="/" component={Directory} />
+                <Route exact path="/" component={ServiceOverviewPage} />
                 <Route
                     path="/documentation/:organization_name/:service_name"
                     component={DocumentationPage}

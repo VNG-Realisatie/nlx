@@ -1,14 +1,14 @@
-import React from 'react'
+import React, { Component } from 'react'
 import axios from 'axios'
+
 import { Spinner } from '@commonground/design-system'
 
-import Search from './components/Search/Search'
-import Switch from './components/Switch/Switch'
-import Services from './components/Services/Services'
+import ErrorMessage from '../../components/ErrorMessage/ErrorMessage'
+import Search from '../../components/Search/Search'
+import Switch from '../../components/Switch/Switch'
+import Services from '../../components/Services/Services'
 
-import ErrorMessage from './components/ErrorMessage/ErrorMessage'
-
-export default class Directory extends React.Component {
+export default class ServicesOverviewPage extends Component {
     constructor(props) {
         super(props)
 
