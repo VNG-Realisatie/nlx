@@ -1,6 +1,0 @@
-@import "~bourbon/core/bourbon";
-
-.ErrorMessage {
-  transform: translate(-50%,-50%);
-  @include position(absolute, 50% null null 50%);
-}

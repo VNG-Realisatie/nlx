@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`should match the snapshot 1`] = `
-<div
-  className="ErrorMessage"
->
+<styled.div>
   <h1>
     Failed to load information
   </h1>
@@ -12,5 +10,5 @@ exports[`should match the snapshot 1`] = `
     <br />
     We apologize for any inconvenience.
   </p>
-</div>
+</styled.div>
 `;
