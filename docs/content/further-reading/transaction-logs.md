@@ -1,5 +1,5 @@
 ---
-title: "Transaction logs"
+title: "Transaction log headers"
 description: ""
 weight: 10
 menu:
