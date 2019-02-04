@@ -1,7 +1,7 @@
 import React from 'react'
 import Navigation from './components/Navigation/Navigation'
 import Directory from './Directory'
-import DocumentationPage from './pages/Documentation/DocumentationPage'
+import DocumentationPage from './pages/DocumentationPage/DocumentationPage'
 
 import './static/css/base-addon.css'
 
