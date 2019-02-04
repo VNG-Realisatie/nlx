@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should match snapshot 1`] = `
+<StyledComponent
+  align="left"
+  forwardedComponent={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "attrs": Array [],
+      "componentStyle": ComponentStyle {
+        "componentId": "sc-bdVaJa",
+        "isStatic": false,
+        "rules": Array [
+          "
+    display: table-cell;
+    border-bottom: 1px solid #EAEAEA;
+    padding: .65rem;
+
+    font-size: .85rem;
+    line-height: 1.25rem;
+    font-weight: 700;
+    color: #ADB3C6;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+    
+    text-align: ",
+          [Function],
+          ";
+
+    &:last-child {
+        padding-right: 1.5rem;
+    }
+",
+        ],
+      },
+      "defaultProps": Object {
+        "align": "left",
+      },
+      "displayName": "styled.th",
+      "foldedComponentIds": Array [],
+      "propTypes": Object {
+        "align": [Function],
+        "children": [Function],
+      },
+      "render": [Function],
+      "styledComponentId": "sc-bdVaJa",
+      "target": "th",
+      "toString": [Function],
+      "warnTooManyClasses": [Function],
+      "withComponent": [Function],
+    }
+  }
+  forwardedRef={null}
+/>
+`;
