@@ -108,11 +108,45 @@ You should see your container id in the list of containers. The image name  of t
 
 Take a look at the [directory](https://directory.nlx.io) to see if your API is present. It's status should show a green icon.
 
-To verify the inway you just created you will need to use an outway because an inway only accepts requests from an outway. 
-Now let's verify our inway is working as expected using the outway we have setup in [part 3]({{< ref "/consume-an-api.md" >}}).
+## Querying your own API's
+
+Now let's try to fetch some data from our inway using our outway.
+To do so, we have to use the following structure:
 
 ```bash
-curl http://localhost:4080/my-organization/DocsTestMyPublicAPI/
+curl http://localhost:4080/my-organization/DocsTestMyPublicAPI/get?foo1=bar1
 ```
 
-geeft : nlx outway: unknown service?
+### Verification
+
+The response of the `curl` command should look similar to the following output.
+
+```json
+{
+  "args": {
+    "foo1": "bar1"
+  },
+  "headers": {
+    "x-forwarded-proto": "https",
+    "host": "postman-echo.com",
+    "accept": "*/*",
+    "accept-encoding": "gzip",
+    "user-agent": "curl/7.54.0",
+    "x-nlx-logrecord-id": "<arbitrary-logrecord-id>",
+    "x-nlx-request-organization": "my-organization",
+    "x-forwarded-port": "443"
+  },
+  "url": "https://postman-echo.com/get?foo1=bar1"
+}
+```
+
+Congratulations, you can now consider yourself a member of the NLX club!
+
+## In sum
+
+You have provided your API to the NLX network. In this part, you have:
+
+- setup & configured the NLX inway.
+- used your outway to consume your own inway API.
+
+That's all folks! There's some more advanced concepts which you can explore from these docs.
