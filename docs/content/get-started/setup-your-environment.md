@@ -49,9 +49,3 @@ The output should be:
 * For Linux: `/home/<your-username>/nlx-setup`
 
 All commands further down this guide assume you are located in this directory.
-
-## Create a domain which refers to your external ip
-
-```bash
-echo "$(curl ifconfig.io) an-awesome-organization.nl" | sudo tee -a /etc/hosts
-```
