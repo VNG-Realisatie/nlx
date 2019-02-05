@@ -14,6 +14,7 @@ RUN npm ci --no-progress --color=false --quiet
 COPY . /go/src/go.nlx.io/nlx/insight-ui
 
 # Run tests and build
+RUN npm test
 RUN npm run build
 
 # Copy static docs to alpine-based nginx container.
