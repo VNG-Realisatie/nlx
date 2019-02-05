@@ -12,6 +12,8 @@ dbPasswordDirectory: nlx-dev-directory
 
 caAddress: ca-cfssl-unsafe.nlx-dev-directory
 
+insightDirectoryInspectionAPIURL: "http://directory.demo.nlx.io"
+
 externalIP: ""
 demoEnv: "dev"
 demoDomain: "minikube"
