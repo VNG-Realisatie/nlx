@@ -16,7 +16,7 @@ demoEnv: "test"
 demoDomain: "nlx.io"
 imagePullPolicy: IfNotPresent
 
-insightDirectoryInspectionAPIURL: "http://directory.test.nlx.io"
+insightDirectoryInspectionAPIURL: "directory-inspection-api"
 
 ca:
   certPEM: |
