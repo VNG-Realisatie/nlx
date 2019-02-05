@@ -15,12 +15,12 @@ Windows 10 is not officially supported. However, users may be able to follow alo
 
 ## Docker
 
-Make sure you have installed a recent version of [Docker](https://www.docker.com) installed.
+Make sure you have a recent version of [Docker](https://www.docker.com) installed.
 
 ## Working directory
 
 All steps in the guide assume you're located in the `~/nlx-setup` directory.
-You can use any directory you want. Just make sure to update the example commands of all future commands accordingly
+You can use any directory you want. Just make sure to update the example commands of all future commands accordingly.
 
 First, let's navigate to our home directory.
 
