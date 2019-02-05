@@ -48,9 +48,9 @@ Answer the questions accordingly:
 - **Country Name**, enter any value
 - **State**, enter any value
 - **Locality Name**, enter any value
-- **Organization Name**, please enter a URL-friendly value. Also make sure this value is unique for the network in the [directory overview](https://directory.demo.nlx.io) as we do not check for uniqueness yet.<br>A good value could be: `an-awesome-organization`.
+- **Organization Name**, please enter a URL-friendly value. Also make sure this value is unique for the network in the [directory overview](https://directory.demo.nlx.io) as we do not check for uniqueness yet.<br>A good value could be: `my-organization`.
 - **Organization Unit Name**, enter any value
-- **Common name**, when you would like to offer your API's to the NLX network make sure this corresponds to your external hostname. For this guide we will use `an-awesome-organization.nl`.
+- **Common name**, when you would like to offer your API's to the NLX network make sure this corresponds to your external hostname. For this guide we will use `my-organization.nl`.
 - **Email Address**, enter any value
 - **A challenge password**, leave empty
 
@@ -102,7 +102,7 @@ openssl x509 -in org.crt -text | grep Subject:
 
 The output should contain the answers you've provided when you created the certificate.
 
-Example of the output: `Subject: C=nl, ST=noord-holland, L=haarlem, O=an-awesome-organization, OU=an-awesome-organization-unit, CN=an-awesome-organization.nl`
+Example of the output: `Subject: C=nl, ST=noord-holland, L=haarlem, O=my-organization, OU=my-organization-unit, CN=an-awesome-organization.nl`
 
 
 ## In sum

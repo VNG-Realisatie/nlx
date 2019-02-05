@@ -47,7 +47,7 @@ To verify the container is running, execute:
 docker ps
 ```
 
-You should see your container id in the list of containers. The image name  of the container should be `nlxio/outway:v0.0.20`.
+You should see your container id in the list of containers. The image name  of the container should be `nlxio/outway:latest`.
 
 If the service is not present, it might have stopped for unknown reasons. You can see all your containers including stopped ones using
 

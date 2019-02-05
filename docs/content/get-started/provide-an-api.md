@@ -11,6 +11,11 @@ menu:
 To provide an API to the NLX network, you need to route traffic through an **inway** service.
 We will use the certificate which we've setup in [part 2]({{< ref "/create-certificates.md" >}}), to make sure traffic is encrypted between your and other nodes.
 
+Please note that you need a domain name to provide an inway. An IP address won't work. 
+
+It is not recommended to follow this guide when you're working from your home network. 
+Preferably you are able to start the inway service on a machine which is publicly accessible and it's port 4443 is open to the public.
+
 ## The API
 
 In this example we will use [postman-echo.com](https://postman-echo.com) as an example API.
@@ -27,17 +32,14 @@ We have to define our API in a TOML-file. You can save the contents below as `se
 
     # `endpoint-url` should be set to the address at which the API is available.
     # In this example we simply expose the postman-echo.com website.
-    endpoint-url = "postman-echo.com"
+    endpoint-url = "https://postman-echo.com/"
 
     # `documentation-url` points to the documentation for provided API
-    documentation-url = "postman-echo.com"
+    documentation-url = "https://docs.postman-echo.com/"
 
     # `authorization-model` can or whitelist
     authorization-model = "none"
 ```
-
-> If you are providing your own API using Docker, make sure to specify the IP-address of the host machine as endpoint-url. 
-Localhost won't work, because it is not available to the outside world.
 
 ## Setting up the inway
 
@@ -57,7 +59,7 @@ docker run --detach \
               --volume ~/nlx-setup/org.key:/certs/org.key:ro \
               --volume ~/nlx-setup/service-config.toml:/service-config.toml:ro \
               --env DIRECTORY_REGISTRATION_ADDRESS=directory-registration-api.demo.nlx.io:443 \
-              --env SELF_ADDRESS=$(curl ifconfig.io):4443 \
+              --env SELF_ADDRESS=my-organization.nl:4443 \
               --env SERVICE_CONFIG=/service-config.toml \
               --env TLS_NLX_ROOT_CERT=/certs/root.crt \
               --env TLS_ORG_CERT=/certs/org.crt \
@@ -110,7 +112,7 @@ To verify the inway you just created you will need to use an outway because an i
 Now let's verify our inway is working as expected using the outway we have setup in [part 3]({{< ref "/consume-an-api.md" >}}).
 
 ```bash
-curl http://localhost:4080/an-awesome-organization/DocsTestMyPublicAPI/
+curl http://localhost:4080/my-organization/DocsTestMyPublicAPI/
 ```
 
 geeft : nlx outway: unknown service?
