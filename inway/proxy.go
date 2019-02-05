@@ -31,7 +31,7 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 		requesterOrganization: requesterOrganization,
 		requestPath:           "/" + urlparts[1],
 	}
-
+	logger.Info("servicename: " + serviceName)
 	i.serviceEndpointsLock.RLock()
 	serviceEndpoint := i.serviceEndpoints[serviceName]
 	i.serviceEndpointsLock.RUnlock()
