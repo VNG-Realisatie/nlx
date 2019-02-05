@@ -44,6 +44,12 @@ SwaggerJSONDirectory = `
         "internal": {
           "type": "boolean",
           "format": "boolean"
+        },
+        "public_support_contact": {
+          "type": "string"
+        },
+        "tech_support_contact": {
+          "type": "string"
         }
       }
     },

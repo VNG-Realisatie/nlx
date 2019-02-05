@@ -57,8 +57,8 @@ func NewRegisterInwayHandler(db *sqlx.DB, logger *zap.Logger, rootCA *x509.CertP
 						insight_irma_endpoint = COALESCE(NULLIF(EXCLUDED.insight_irma_endpoint, ''), organizations.insight_irma_endpoint)
 				RETURNING id
 		), service AS (
-			INSERT INTO directory.services (organization_id, name, internal, documentation_url, api_specification_type)
-				SELECT org.id, $2, $3, NULLIF($4, ''), NULLIF($5, '')
+			INSERT INTO directory.services (organization_id, name, internal, documentation_url, api_specification_type, public_support_contact, tech_support_contact)
+				SELECT org.id, $2, $3, NULLIF($4, ''), NULLIF($5, ''), NULLIF($9, ''), NULLIF($10, '')
 					FROM org
 				ON CONFLICT ON CONSTRAINT services_uq_name
 					DO UPDATE SET documentation_url = EXCLUDED.documentation_url -- (possibly) no-op update to return id
@@ -123,6 +123,8 @@ func (h *registerInwayHandler) RegisterInway(ctx context.Context, req *registrat
 			req.InwayAddress,
 			service.InsightApiUrl,
 			service.IrmaApiUrl,
+			service.PublicSupportContact,
+			service.TechSupportContact,
 		)
 
 		if err != nil {

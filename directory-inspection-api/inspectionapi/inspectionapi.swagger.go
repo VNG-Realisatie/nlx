@@ -123,6 +123,9 @@ SwaggerJSONDirectoryInspection = `
         "internal": {
           "type": "boolean",
           "format": "boolean"
+        },
+        "public_support_contact": {
+          "type": "string"
         }
       }
     },

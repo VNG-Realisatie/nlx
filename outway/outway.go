@@ -164,6 +164,7 @@ func (o *Outway) updateServiceList(process *process.Process) error {
 			// Need default to not to block
 		}
 		o.logger.Debug("directory listed service", zap.String("service-name", serviceToImplement.ServiceName), zap.String("service-organization-name", serviceToImplement.OrganizationName))
+
 		service, exists := o.services[serviceToImplement.OrganizationName+"."+serviceToImplement.ServiceName]
 		if !exists || !reflect.DeepEqual(service.GetInwayAddresses(), serviceToImplement.InwayAddresses) {
 

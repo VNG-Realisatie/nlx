@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="685,0" last-zoom="1"
+<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="0,0" last-zoom="1"
 	 default-schema="public" default-owner="postgres">
 <role name="nlx-directory"
       login="true"
@@ -46,7 +46,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="services" hide-ext-attribs="true">
+<table name="services">
 	<schema name="directory"/>
 	<role name="postgres"/>
 	<appended-sql><![CDATA[GRANT USAGE, SELECT ON SEQUENCE services_id_seq TO "nlx-directory";]]></appended-sql>
@@ -68,6 +68,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="api_specification_type">
 		<type name="varchar" length="20"/>
+	</column>
+	<column name="tech_support_contact">
+		<type name="varchar" length="250"/>
+	</column>
+	<column name="public_support_contact">
+		<type name="varchar" length="250"/>
 	</column>
 	<constraint name="services_pk" type="pk-constr" table="directory.services">
 		<columns names="id" ref-type="src-columns"/>
