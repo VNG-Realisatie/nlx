@@ -86,7 +86,8 @@ func main() {
 		logger.Debug("service configuration details", zap.String("service-name", serviceName), zap.String("endpoint-url", serviceDetails.EndpointURL),
 			zap.String("root-ca-path", serviceDetails.CACertPath), zap.String("authorizatio-model", serviceDetails.AuthorizationModel),
 			zap.String("irma-api-url", serviceDetails.IrmaAPIURL), zap.String("insight-api-url", serviceDetails.InsightAPIURL),
-			zap.String("api-spec-url", serviceDetails.APISpecificationDocumentURL), zap.Bool("internal", serviceDetails.Internal))
+			zap.String("api-spec-url", serviceDetails.APISpecificationDocumentURL), zap.Bool("internal", serviceDetails.Internal),
+			zap.String("public-support-contact", serviceDetails.PublicSupportContact), zap.String("tech-support-contact", serviceDetails.TechSupportContact))
 		var rootCrt *x509.CertPool
 		if len(serviceDetails.CACertPath) > 0 {
 			rootCrt, err = orgtls.LoadRootCert(serviceDetails.CACertPath)

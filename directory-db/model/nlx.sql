@@ -61,6 +61,8 @@ CREATE TABLE directory.services(
 	internal boolean NOT NULL DEFAULT false,
 	documentation_url varchar(250),
 	api_specification_type varchar(20),
+	tech_support_contact varchar(250),
+	public_support_contact varchar(250),
 	CONSTRAINT services_pk PRIMARY KEY (id),
 	CONSTRAINT services_uq_name UNIQUE (organization_id,name),
 	CONSTRAINT services_check_typespec CHECK (api_specification_type IS NULL OR (
@@ -241,31 +243,31 @@ REFERENCES directory.services (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
--- object: grant_ffb7ddcdf2 | type: PERMISSION --
+-- object: grant_52a642e50e | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.organizations
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_e87ba3314e | type: PERMISSION --
+-- object: grant_b6b2587464 | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.inways
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_624441a6a3 | type: PERMISSION --
+-- object: grant_493c0fcaa3 | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.services
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_1665d17f14 | type: PERMISSION --
+-- object: grant_a790dc801d | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.availabilities
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_6f47aba076 | type: PERMISSION --
+-- object: grant_8af73cb51e | type: PERMISSION --
 GRANT USAGE
    ON SCHEMA directory
    TO "nlx-directory";

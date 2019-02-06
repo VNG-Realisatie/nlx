@@ -158,6 +158,8 @@ func (i *Inway) announceToDirectory(p *process.Process, s ServiceEndpoint, servi
 							ApiSpecificationDocumentUrl: serviceDetails.APISpecificationDocumentURL,
 							InsightApiUrl:               serviceDetails.InsightAPIURL,
 							IrmaApiUrl:                  serviceDetails.IrmaAPIURL,
+							PublicSupportContact:        serviceDetails.PublicSupportContact,
+							TechSupportContact:          serviceDetails.TechSupportContact,
 						},
 					},
 				})

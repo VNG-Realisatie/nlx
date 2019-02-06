@@ -32,7 +32,8 @@ func newListServicesHandler(db *sqlx.DB, logger *zap.Logger) (*listServicesHandl
 			services.internal as service_internal,
 			array_remove(array_agg(inways.address), NULL) AS inway_addresses,
 			COALESCE(services.documentation_url, '') AS documentation_url,
-			COALESCE(services.api_specification_type, '') AS api_specification_type
+			COALESCE(services.api_specification_type, '') AS api_specification_type,
+			COALESCE(services.public_support_contact, '') AS public_support_contact
 		FROM directory.services
 			INNER JOIN directory.organizations
 				ON services.organization_id = organizations.id
@@ -73,6 +74,7 @@ func (h *listServicesHandler) ListServices(ctx context.Context, req *inspectiona
 			&inwayAddresses,
 			&respService.DocumentationUrl,
 			&respService.ApiSpecificationType,
+			&respService.PublicSupportContact,
 		)
 		if err != nil {
 			h.logger.Error("failed to scan into struct", zap.Error(err))

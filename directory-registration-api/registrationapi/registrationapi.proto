@@ -27,6 +27,8 @@ message RegisterInwayRequest {
 		string insight_api_url = 5;
 		string irma_api_url = 6;
 		bool internal = 7;
+		string public_support_contact = 8;
+		string tech_support_contact = 9;
 	}
 
 	string inway_address = 1;
