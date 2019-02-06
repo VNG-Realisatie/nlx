@@ -22,8 +22,8 @@ inway:
   enable: true
   config: |
     [services]
-      [services.kenau]
-      endpoint-url = "http://JustHereForRegisteringIntoDirectoryWithInsightAndIrmaApiURLs:8000"
+      [services.demo-api]
+      endpoint-url = "https://postman-echo.com"
       authorization-model = "none"
       insight-api-url = "http://insight-api.dev.haarlem.minikube:30080"
       irma-api-url = "http://irma-api.dev.haarlem.minikube:30080"
