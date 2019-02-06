@@ -70,10 +70,10 @@ To do so, we have to use the following structure:
 curl http://localhost:4080/{organization-name}/{service-name}/{api-specific-path}
 ```
 
-For example, to query the NLX demo application use:
+For example, to query the Haarlem demo API application use:
 
 ```bash
-curl http://localhost:4080/vng-realisatie/demo-api/
+curl http://localhost:4080/haarlem/demo-api/
 ```
 
 ### Verification
