@@ -55,13 +55,12 @@ Deploy test:
     - master
     - tags
 
-# acc is disabled to make space (postgresql max_connections) for test and demo
-# Deploy acceptance:
-#   extends: .deploy
-#   environment:
-#     name: acc
-#   only:
-#     - tags
+Deploy acceptance:
+  extends: .deploy
+  environment:
+    name: acc
+  only:
+    - tags
 
 Deploy demo:
   extends: .deploy
