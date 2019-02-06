@@ -112,6 +112,14 @@ func NewInway(logger *zap.Logger, logdb *sqlx.DB, selfAddress string, tlsOptions
 
 // AddServiceEndpoint adds an ServiceEndpoint to the inway's internal registry.
 func (i *Inway) AddServiceEndpoint(p *process.Process, s ServiceEndpoint, serviceDetails config.ServiceDetails) error {
+	if err := i.addServiceEndpointToMap(s); err != nil {
+		return err
+	}
+	i.announceToDirectory(p, s, serviceDetails)
+	return nil
+}
+
+func (i *Inway) addServiceEndpointToMap(s ServiceEndpoint) error {
 	i.serviceEndpointsLock.Lock()
 	defer i.serviceEndpointsLock.Unlock()
 
@@ -119,7 +127,6 @@ func (i *Inway) AddServiceEndpoint(p *process.Process, s ServiceEndpoint, servic
 		return errors.New("service endpoint for a service with the same name has already been registered")
 	}
 	i.serviceEndpoints[s.ServiceName()] = s
-	i.announceToDirectory(p, s, serviceDetails)
 	return nil
 }
 
