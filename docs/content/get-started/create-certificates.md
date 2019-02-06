@@ -19,7 +19,7 @@ The very first certificate we need is the CA root certificate.
 This one is used to validate certificates of other organizations.
  
 Download [the root certificate](https://certportal.demo.nlx.io/root.crt) file and save it as `root.crt` in `~/nlx-setup/`.
-That is the working directory as described in [part 1]({{< ref "/setup-your-environment.md" >}}).
+That is the working directory as described in [part 1](../setup-your-environment).
 
 ### Verification
 
@@ -112,5 +112,4 @@ All required certificates are available now. So far, we have:
 - downloaded the CA root certificate.
 - generated our own certificate, so we are allowed to communicate with the API's on the NLX network.
 
-Now let's see if we can consume an API from the NLX network in [part 3]({{< ref "/consume-an-api.md" >}}).
- 
+Now let's see if we can consume an API from the NLX network in [part 3](../consume-an-api.md).
