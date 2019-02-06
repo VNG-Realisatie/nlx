@@ -14,31 +14,19 @@ home = [ "HTML", "RSS", "JSON"]
   url = "/"
 
 [[menu.docs]]
-  name = "Preparing"
+  name = "Get started"
   weight = 2
-  identifier = "preparing"
-  url = "/preparing/"
+  identifier = "get-started"
+  url = "/get-started/"
 
 [[menu.docs]]
-  name = "Using a service"
+  name = "Further reading"
   weight = 3
-  identifier = "using-services-on-nlx"
-  url = "/using-services-on-nlx/"
-
-[[menu.docs]]
-  name = "Providing a service"
-  weight = 4
-  identifier = "providing-services-on-nlx"
-  url = "/providing-services-on-nlx/"
-
-[[menu.docs]]
-  name = "Transactionlogs"
-  weight = 5
-  identifier = "transactionlogs"
-  url = "/transactionlogs/"
+  identifier = "further-reading"
+  url = "/further-reading/"
 
 [[menu.docs]]
   name = "Glossary"
-  weight = 6
+  weight = 4
   identifier = "glossary"
   url = "/glossary/"
