@@ -10,9 +10,6 @@ menu:
 
 This documentation is written for Mac and Linux users. It assumes you have some experience with the terminal / shell. 
 
-Windows 10 is not officially supported. However, users may be able to follow along using 
-[ubuntu for windows](https://tutorials.ubuntu.com/tutorial/tutorial-ubuntu-on-windows).
-
 ## Docker
 
 Make sure you have a recent version of [Docker](https://www.docker.com) installed.

@@ -44,6 +44,9 @@ We have to define our API in a TOML-file. You can save the contents below as `se
     authorization-model = "none"
 ```
 
+> If you're specifying you own API, please note that `localhost` won't work. If your API is running on the same machine as 
+your inway, the endpoint URL should be your network IP and not `localhost`.   
+
 ## Setting up the inway
 
 Let's setup the inway service. First, fetch the Docker image from the [Docker Hub](https://hub.docker.com/u/nlxio).
