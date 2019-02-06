@@ -98,7 +98,7 @@ Take a look at the [directory](https://directory.nlx.io).
     
 In this part, we have:
 
-- setup a local NLX outway service, which we can use to get data from the network.
-- made a real request to the VNG Realisatie Demo API API.
+- setup a local NLX outway, which we can use to get data from the network.
+- made a real request to the VNG Realisatie Demo API.
 
 Now let's see if we can provide our own API's to the network in [part 4]({{< ref "/provide-an-api.md" >}}). 

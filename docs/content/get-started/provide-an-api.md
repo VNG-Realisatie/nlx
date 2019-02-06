@@ -11,7 +11,10 @@ menu:
 To provide an API to the NLX network, you need to route traffic through an **inway** service.
 We will use the certificate which we've setup in [part 2]({{< ref "/create-certificates.md" >}}), to make sure traffic is encrypted between your and other nodes.
 
-Please note that you need a domain name to provide an inway. An IP address won't work. 
+Please note that:
+
+* **you need a domain name to provide an inway** (an IP address won't work)
+* **the domain should be the same as the domain you used to generate the certificates** (that was in [part 2]({{< ref "/create-certificates.md" >}})).
 
 It is not recommended to follow this guide when you're working from your home network. 
 Preferably you are able to start the inway service on a machine which is publicly accessible and it's port 4443 is open to the public.
@@ -91,10 +94,7 @@ To get started quickly, we will disable transaction logs for now by setting the 
 You will get back the container id of the container you created from this image.
 By running this command, we've launched our very own NLX inway. It is running and listening on `http://localhost:4443`.
 
-The inway now connects itself to the NLX network and registers its API's on the NLX networks.
-
-Please **make sure** external connection is possible to the specified port on the specified hostname or IP adress and port.
-Public IP address are routed to the machine running the NLX inway otherwise connections to your inway and API's will fail.
+The inway now connects itself to the NLX [directory](https://directory.nlx.io).
 
 ### Verification
 
