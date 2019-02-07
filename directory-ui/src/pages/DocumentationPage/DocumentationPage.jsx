@@ -74,11 +74,11 @@ class DocumentationPage extends Component {
                             fontSize: '14px',
                             lineHeight: '1.5',
                             fontWeightRegular: '300',
-                            fontFamily: '"Muli", sans-serif',
+                            fontFamily: '"Source Sans Pro", sans-serif',
                             smoothing: 'antialiased',
                             optimizeSpeed: true,
                             headings: {
-                                fontFamily: '"Muli", sans-serif',
+                                fontFamily: '"Source Sans Pro", sans-serif',
                             },
                             code: {
                                 fontSize: '12px',

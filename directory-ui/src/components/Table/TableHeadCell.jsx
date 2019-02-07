@@ -8,7 +8,7 @@ const TableHeadCell = styled.th`
 
     font-size: .85rem;
     line-height: 1.25rem;
-    font-weight: 700;
+    font-weight: 600;
     color: #ADB3C6;
     overflow: hidden;
     text-overflow: ellipsis;
