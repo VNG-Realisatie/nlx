@@ -16,6 +16,9 @@ spec:
         - name: insight-ui
           image: {{.Values.insightUIImage}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
+          env:
+            - name: DIRECTORY_INSPECTION_API_URL
+              value: {{.Values.insightDirectoryInspectionAPIURL}}
       restartPolicy: Always
   status: {}
 ---

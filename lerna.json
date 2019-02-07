@@ -1,9 +1,0 @@
-{
-  "packages": [
-    "directory-ui",
-    "insight-ui",
-    "txlog-ui"
-  ],
-  "version": "0.1.0",
-  "hoist": true
-}

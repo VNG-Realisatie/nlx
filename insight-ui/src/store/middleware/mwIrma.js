@@ -10,7 +10,7 @@
 import axios from 'axios'
 import * as actionType from '../actions'
 import { extractError } from '../../utils/appUtils'
-
+import cfg from '../app.cfg'
 /**
  * Start login process for specified organization.
  * Combines 2 API requests and passes info recevied using setState.
@@ -38,7 +38,7 @@ const initLoginProcess = ({ organization, dispatch }) => {
         organization.insight_irma_endpoint
     }/api/v2/verification/`
 
-    axios({
+    return axios({
         method: 'get',
         url: urlGetDataSubjects,
     })
@@ -68,6 +68,14 @@ const initLoginProcess = ({ organization, dispatch }) => {
         .then((response) => {
             let irmaVerificationRequest = response.data
             const u = irmaVerificationRequest['u']
+            /**
+             * For local testing with IRMA app
+             * IF cfg.localIp is provided in app.cfg.js
+             * we overwrite irma endpoint with localIp
+             */
+            if (cfg.localIp) {
+                organization.insight_irma_endpoint = cfg.localIp
+            }
 
             irmaVerificationRequest['u'] = `${
                 organization.insight_irma_endpoint
@@ -133,7 +141,6 @@ const getLoginStatus = ({ dispatch, getState }) => {
     }
 
     interval = setInterval(() => {
-        // debugger
         if (inProgressFlag === false) {
             let state = getState()
             if (state.organization.irma.inProgress === false) {
@@ -151,13 +158,11 @@ const getLoginStatus = ({ dispatch, getState }) => {
             .then((response) => {
                 let { stop, action } = handleLoginResponse(response.data)
                 if (action) {
-                    // debugger
                     dispatch(action)
                 }
                 if (stop) removeInterval()
             })
             .catch((e) => {
-                // debugger
                 let error = extractError(e)
                 dispatch({
                     type: actionType.IRMA_LOGIN_ERR,
@@ -241,13 +246,12 @@ export const mwIrma = ({ getState, dispatch }) => {
 
         switch (action.type) {
             case actionType.GET_QRCODE:
-                initLoginProcess({
+                return initLoginProcess({
                     organization: {
                         ...action.payload,
                     },
                     dispatch,
                 })
-                break
             case actionType.IRMA_LOGIN_START:
                 getLoginStatus({
                     getState,
@@ -265,12 +269,19 @@ export const mwIrma = ({ getState, dispatch }) => {
                 let api = `${
                     store.organization.info.insight_log_endpoint
                 }/fetch`
+
+                let { page, rowsPerPage } = store.organization.logs.pageDef
+                let params = {
+                    page,
+                    rowsPerPage,
+                }
                 dispatch({
                     type: actionType.GET_ORGANIZATION_LOGS,
                     payload: {
                         api,
                         name: store.organization.irma.name,
                         jwt: store.organization.irma.jwt,
+                        params,
                     },
                 })
                 break

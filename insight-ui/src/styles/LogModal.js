@@ -23,6 +23,16 @@ const modalStyles = (theme) => ({
         top: 12,
         right: 15,
     },
+    calendarIcon: {
+        fontSize: '1rem',
+        marginBottom: -2,
+        marginRight: 4,
+    },
+    clockIcon: {
+        fontSize: '1rem',
+        marginBottom: -2,
+        marginRight: 4,
+    },
 })
 
 export default modalStyles

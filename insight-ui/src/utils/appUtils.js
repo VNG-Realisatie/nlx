@@ -93,6 +93,9 @@ const extractError = (error) => {
     if (error.statusText) {
         err.description = error.statusText
     }
+    if (error.message) {
+        err.description = error.message
+    }
     if (error.description) {
         err.description = error.description
     }
@@ -119,6 +122,8 @@ const extractError = (error) => {
 
         if (error.response.data.description) {
             err.description = error.response.data.description
+        } else if (error.response.data) {
+            err.description = error.response.data
         }
     }
     return err

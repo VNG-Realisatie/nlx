@@ -1,8 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { Link } from 'react-router-dom'
-
 import {
     withStyles,
     Modal,
@@ -18,7 +16,6 @@ import ClockIcon from '@material-ui/icons/AccessTimeOutlined'
 class SimpleModal extends React.Component {
     render() {
         const { data, classes, open, closeModal } = this.props
-
         const d = new Date(data['created'])
         const localDate = d.toLocaleDateString()
         const localTime = d.toLocaleTimeString()
@@ -37,34 +34,47 @@ class SimpleModal extends React.Component {
                         <Close style={{ fontSize: 18 }} />
                     </IconButton>
 
-                    <Typography
-                        variant="h6"
-                        color="primary"
-                        style={{ marginLeft: -1, marginBottom: 5 }}
-                    >
-                        {data['data']['doelbinding-data-elements']
-                            ? data['data']['doelbinding-data-elements']
-                            : 'Geen attribuut opgevraagd.'}
+                    <Typography variant="caption">Tijdstip</Typography>
+                    <Typography variant="body2" gutterBottom>
+                        <CalendarToday className={classes.calendarIcon} />
+                        {localDate}
+                        &nbsp;&nbsp;&nbsp;
+                        <ClockIcon className={classes.clockIcon} />
+                        {localTime}
                     </Typography>
+
                     <div
                         style={{
                             display: 'flex',
                             justifyContent: 'space-between',
-                            flexWrap: 'wrap',
                         }}
                     >
-                        <Typography variant="caption">
-                            # {data['logrecord-id']}
-                        </Typography>
-                        <Typography variant="caption">
-                            <CalendarToday className={classes.calendarIcon} />
-                            {localDate}
-                            &nbsp;&nbsp;&nbsp;
-                            <ClockIcon className={classes.clockIcon} />
-                            {localTime}
-                        </Typography>
+                        <div>
+                            <Typography variant="caption">
+                                Applicatie
+                            </Typography>
+                            <Typography variant="body2" gutterBottom>
+                                {data['data']['doelbinding-application-id']
+                                    ? data['data']['doelbinding-application-id']
+                                    : 'Geen applicatie opgegeven.'}
+                            </Typography>
+                        </div>
+                        <div>
+                            <Typography variant="caption" align="right">
+                                Process
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                align="right"
+                                gutterBottom
+                            >
+                                {data['data']['doelbinding-process-id']
+                                    ? data['data']['doelbinding-process-id']
+                                    : 'Geen process opgegeven.'}
+                            </Typography>
+                        </div>
                     </div>
-                    <br />
+
                     <div
                         style={{
                             display: 'flex',
@@ -75,24 +85,52 @@ class SimpleModal extends React.Component {
                             <Typography variant="caption">
                                 Opgevraagd door
                             </Typography>
-                            <Link to="">{data['source_organization']}</Link>
+                            <Typography variant="body2" gutterBottom>
+                                {data['source_organization']}
+                            </Typography>
                         </div>
                         <div>
                             <Typography variant="caption" align="right">
                                 Opgevraagd bij
                             </Typography>
-                            <Typography align="right">
-                                <Link to="">
-                                    {data['destination_organization']}
-                                </Link>
+                            <Typography
+                                variant="body2"
+                                align="right"
+                                gutterBottom
+                            >
+                                {data['destination_organization']}
                             </Typography>
                         </div>
                     </div>
-                    <br />
-                    <Typography variant="caption">Reden</Typography>
-                    {data['data']['doelbinding-process-id']
-                        ? data['data']['doelbinding-process-id']
-                        : 'Geen reden opgegeven.'}
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                        }}
+                    >
+                        <div>
+                            <Typography variant="caption">
+                                Data elementen
+                            </Typography>
+                            <Typography variant="body2" gutterBottom>
+                                {data['data']['doelbinding-data-elements']
+                                    ? data['data']['doelbinding-data-elements']
+                                    : 'Geen data element opgevraagd.'}
+                            </Typography>
+                        </div>
+                        <div>
+                            <Typography variant="caption" align="right">
+                                Logrecord id
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                align="right"
+                                gutterBottom
+                            >
+                                {data['logrecord-id']}
+                            </Typography>
+                        </div>
+                    </div>
                 </Paper>
             </Modal>
         )

@@ -5,21 +5,27 @@ import 'typeface-muli'
 export const muiTheme = createMuiTheme({
     typography: {
         useNextVariants: true,
-        fontFamily: "'Source Sans Pro', 'Helvetica', 'Arial', sans-serif",
+        fontFamily: "'Source Sans Pro', Muli, sans-serif",
         fontSize: 16,
         fontWeightLight: 300,
         fontWeightRegular: 400,
         fontWeightMedium: 600,
         lineHeight: 1.5,
+        h4: {
+            fontFamily: 'Muli, sans-serif',
+            letterSpacing: 4,
+            textTransform: 'capitalize',
+            fontWeight: 700,
+        },
         // previously called headline
         h5: {
-            fontFamily: "'Muli', 'Helvetica', 'Arial', sans-serif",
+            fontFamily: 'Muli, sans-serif',
             fontWeight: 600,
             letterSpacing: -1,
         },
         // previously called title
         h6: {
-            fontFamily: "'Muli', 'Helvetica', 'Arial', sans-serif",
+            fontFamily: 'Muli, sans-serif',
             fontWeight: 600,
             letterSpacing: -1,
         },
@@ -110,9 +116,9 @@ export const muiTheme = createMuiTheme({
         MuiMenuItem: {
             root: {
                 fontSize: '1rem',
-            },
-            selected: {
-                fontWeight: 700,
+                '&$selected': {
+                    fontWeight: 700,
+                },
             },
         },
         MuiListItem: {
@@ -129,7 +135,7 @@ export const muiTheme = createMuiTheme({
             root: {
                 paddingRight: 0,
                 '& span': {
-                    fontSize: '.875rem',
+                    fontSize: '1rem',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                 },
@@ -160,11 +166,16 @@ export const muiTheme = createMuiTheme({
         },
         MuiTypography: {
             gutterBottom: {
-                marginBottom: '.8em',
+                marginBottom: '1.5rem',
             },
             body1: {
                 fontSize: '1rem',
                 lineHeight: 1.5,
+            },
+            body2: {
+                fontSize: '1rem',
+                lineHeight: 1.5,
+                fontWeight: 600,
             },
             caption: {
                 fontSize: '0.875rem',
@@ -199,7 +210,7 @@ export const muiTheme = createMuiTheme({
             head: {
                 paddingTop: 0,
                 paddingBottom: 0,
-                fontSize: '0.75rem',
+                fontSize: '0.875rem',
                 fontWeight: '400',
             },
         },

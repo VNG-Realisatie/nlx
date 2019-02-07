@@ -25,10 +25,7 @@ function getOrganizations({ action, dispatch }) {
                     payload: orgList,
                 })
             } else {
-                dispatch({
-                    type: actionType.GET_IRMA_ORGANIZATIONS_OK,
-                    payload: [],
-                })
+                throw new Error('Unexpected server response')
             }
         })
         .catch((e) => {

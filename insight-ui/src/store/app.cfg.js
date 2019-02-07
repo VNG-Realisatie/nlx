@@ -1,15 +1,25 @@
 /**
  * Inital app configuration
- * These values are imported into redux store
+ * Values are imported into redux store
  */
 const cfg = {
+    /**
+     * For testing in local env with IRMA app see README file
+     * for more info (line 57 onwards). Here you need to
+     * uncomment property "localIp" and provide local ip
+     * where insight-ui app is running, incl. port 3333
+     * Note: provided ip cannot be 'localhost:3333'     *
+     * IMPORTANT!
+     * before commiting you need to comment/disable localIp prop
+     * otherwise CI/CD tests will fail
+     */
+    // localIp: 'http://192.168.7.77:3333',
+    //
     // app-loader
     loader: {
         show: true,
     },
-    location: {
-        href: '/home',
-    },
+    //
     // internationalization
     i18n: {
         defaultLang: 'en',
@@ -33,14 +43,6 @@ const cfg = {
                 data: 'locale/nl/nl.json',
                 icon: 'img/nl.svg',
             },
-            {
-                key: 'ru',
-                // i18next ns=namespace
-                ns: 'core',
-                label: 'Русский',
-                data: 'locale/ru/ru.json',
-                icon: 'img/ru.svg',
-            },
         ],
         // current language info goes here
         // see languageReducer for implementation
@@ -50,12 +52,14 @@ const cfg = {
             data: null,
         },
     },
+    //
     // list of all organizations
     organizations: {
         api: '/api/directory/list-organizations',
         list: [],
         error: null,
     },
+    //
     // currently loaded organization
     organization: {
         info: {
@@ -114,20 +118,20 @@ const cfg = {
                 },
                 {
                     id: 'reden',
-                    label: 'Reden',
+                    label: 'Process',
                     src: 'data.doelbinding-process-id',
                     type: 'string',
                     disablePadding: false,
                 },
             ],
+            pageDef: {
+                page: 0,
+                rowsPerPage: 10,
+                rowCount: 0,
+                rowsPerPageOptions: [5, 10, 25, 50],
+            },
         },
     },
-}
-
-// the api point is FIXED to demo environment in production mode
-if (process.env.NODE_ENV === 'production') {
-    cfg.organizations.api =
-        'https://directory.demo.nlx.io/api/directory/list-organizations'
 }
 
 export default cfg

@@ -233,6 +233,21 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, dataSubjects map[string]co
 		OFFSET $2
 	`
 
+	rawStmtGetRowCount := `
+	WITH matchedRecords AS (
+		SELECT DISTINCT record_id
+		FROM transactionlog.datasubjects
+			INNER JOIN matchDataSubjects
+				ON datasubjects.key = matchDataSubjects.key
+					AND datasubjects.value = matchDataSubjects.value
+	)
+	SELECT
+		COUNT(*)
+	FROM transactionlog.records
+		INNER JOIN matchedRecords
+			ON records.id = matchedRecords.record_id
+	`
+
 	// map irma attributes to a list of datasubjects that can be accessed by it
 	var dataSubjectsByIrmaAttribute = make(map[string][]string)
 	for dataSubjectKey, dataSubjectProperties := range dataSubjects {
@@ -338,12 +353,13 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, dataSubjects map[string]co
 			http.Error(w, "server error", http.StatusInternalServerError)
 			return
 		}
-		defer res.Close()
+
 		var out = Out{
 			Records:     make([]*Record, 0),
 			RowsPerPage: requestParams.RowsPerPage,
 			Page:        requestParams.Page,
 		}
+
 		for res.Next() {
 			rec := &Record{}
 			err = res.StructScan(rec)
@@ -359,6 +375,20 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, dataSubjects map[string]co
 				return
 			}
 			out.Records = append(out.Records, rec)
+		}
+
+		stmtGetRowCount, err := tx.Preparex(rawStmtGetRowCount)
+		if err != nil {
+			logger.Error("failed to prepare statement for fetching transaction log row count", zap.Error(err))
+			http.Error(w, "server error", http.StatusInternalServerError)
+			return
+		}
+
+		resRowCount := stmtGetRowCount.QueryRowx()
+		err = resRowCount.Scan(&out.RowCount)
+		if err != nil {
+			logger.Error("failed to fetch transaction log count", zap.Error(err))
+			http.Error(w, "server error", http.StatusInternalServerError)
 		}
 
 		err = tx.Commit()

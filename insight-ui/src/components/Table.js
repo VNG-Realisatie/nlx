@@ -17,9 +17,6 @@ import styles from '../styles/Table'
 
 class EnhancedTable extends React.Component {
     state = {
-        page: 0,
-        rowsPerPage: 10,
-        rowsPerPageOptions: [10, 25, 50],
         modalState: true,
         modalContent: '',
     }
@@ -29,15 +26,22 @@ class EnhancedTable extends React.Component {
     }
 
     handleChangePage = (event, page) => {
-        this.setState({ page })
+        this.props.onOptionsChange({
+            ...this.props.options,
+            page,
+        })
     }
 
     handleChangeRowsPerPage = (event) => {
-        this.setState({ rowsPerPage: event.target.value })
+        this.props.onOptionsChange({
+            ...this.props.options,
+            page: 0,
+            rowsPerPage: event.target.value,
+        })
     }
 
-    getTableHead = (cols) => {
-        const { classes } = this.props
+    getTableHead = () => {
+        const { classes, cols } = this.props
 
         const colsHtml = cols.map((col) => {
             return (
@@ -87,35 +91,31 @@ class EnhancedTable extends React.Component {
 
     getTableBody = () => {
         const { cols, data } = this.props
-        const { rowsPerPage, page } = this.state
 
-        const tableBody = data
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((row) => {
-                return this.getTableRow(cols, row)
-            })
+        const tableBody = data.map((row) => {
+            return this.getTableRow(cols, row)
+        })
 
         return tableBody
     }
 
     render() {
-        const { classes, cols, data } = this.props
-        const { rowsPerPageOptions, rowsPerPage, page } = this.state
+        const { classes, options } = this.props
 
         return (
             <React.Fragment>
                 <div className={classes.tableWrapper}>
                     <Table>
-                        <TableHead>{this.getTableHead(cols)}</TableHead>
+                        <TableHead>{this.getTableHead()}</TableHead>
                         <TableBody>{this.getTableBody()}</TableBody>
                     </Table>
                 </div>
                 <TablePagination
                     component="div"
-                    count={data.length}
-                    rowsPerPage={rowsPerPage}
-                    rowsPerPageOptions={rowsPerPageOptions}
-                    page={page}
+                    count={options.rowCount}
+                    rowsPerPage={options.rowsPerPage}
+                    rowsPerPageOptions={options.rowsPerPageOptions}
+                    page={options.page}
                     backIconButtonProps={{
                         'aria-label': 'Vorige pagina',
                     }}
