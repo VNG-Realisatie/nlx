@@ -2,30 +2,32 @@
 
 exports[`should support the offline status 1`] = `
 <styled.svg
-  status="online"
-  viewBox="0 0 10 10"
+  viewBox="0 0 20 20"
 >
-  <circle
-    cx="5"
-    cy="14"
-    fill="currentColor"
-    r="5"
-    transform="translate(0 -9)"
+  <styled.circle
+    cx="10"
+    cy="10"
+    fill="none"
+    fillRule="evenodd"
+    r="4"
+    status="online"
+    strokeWidth="2"
   />
 </styled.svg>
 `;
 
 exports[`should support the online status 1`] = `
 <styled.svg
-  status="offline"
-  viewBox="0 0 10 10"
+  viewBox="0 0 20 20"
 >
-  <circle
-    cx="5"
-    cy="14"
-    fill="currentColor"
-    r="5"
-    transform="translate(0 -9)"
+  <styled.circle
+    cx="10"
+    cy="10"
+    fill="none"
+    fillRule="evenodd"
+    r="4"
+    status="offline"
+    strokeWidth="2"
   />
 </styled.svg>
 `;

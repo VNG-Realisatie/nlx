@@ -1,16 +1,10 @@
 import React from 'react'
 import { oneOf } from 'prop-types'
-import StyledSvg from './StatusIcon.styles'
+import { StyledSvg, StyledCircle } from './StatusIcon.styles'
 
 const StatusIcon = ({ status }) =>
-  <StyledSvg viewBox="0 0 10 10" status={status}>
-    <circle
-      cx="5"
-      cy="14"
-      r="5"
-      transform="translate(0 -9)"
-      fill="currentColor"
-    />
+  <StyledSvg viewBox="0 0 20 20">
+    <StyledCircle status={status} strokeWidth="2" cx="10" cy="10" r="4" fill="none" fillRule="evenodd"/>
   </StyledSvg>
 
 StatusIcon.propTypes = {

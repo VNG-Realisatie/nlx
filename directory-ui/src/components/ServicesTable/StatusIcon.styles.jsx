@@ -1,13 +1,14 @@
 import styled from 'styled-components'
 
-const green = 'rgb(179, 232, 123)'
-const red = 'rgb(255, 130, 130)'
+const online = '#63D19E'
+const offline = '#CAD0E0'
 
-const StyledSvg = styled.svg`
+export const StyledSvg = styled.svg`
   display: inline-block;
-  width: 10px;
-  height: 10px;
-  color: ${ p => p.status === 'online' ? green : red}
+  width: 20px;
+  height: 20px;
 `
 
-export default StyledSvg
+export const StyledCircle = styled.circle`
+  stroke: ${ p => p.status === 'online' ? online : offline}
+`
