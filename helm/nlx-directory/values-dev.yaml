@@ -12,7 +12,7 @@ dbPasswordDirectory: nlx-dev-directory
 
 caAddress: ca-cfssl-unsafe.nlx-dev-directory
 
-insightDirectoryInspectionAPIURL: "directory-inspection-api"
+insightDirectoryInspectionAPIURL: "http://directory-inspection-api"
 
 externalIP: ""
 demoEnv: "dev"
