@@ -8,7 +8,7 @@ const TableBodyCell = styled.td`
 
     font-size: 1rem;
     line-height: 1.9rem;
-j    font-weight: 400;
+    font-weight: 400;
     color: #2D3240;
     
     text-align: ${ p => p.align};
