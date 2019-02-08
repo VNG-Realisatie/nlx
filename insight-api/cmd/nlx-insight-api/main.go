@@ -39,6 +39,9 @@ var options struct {
 	IRMAJWTRSAVerifyPublicKeyDER string `long:"irma-jwt-rsa-verify-public-key-der" env:"IRMA_JWT_RSA_VERIFY_PUBLIC_KEY_DER" required:"true" description:"PEM RSA public key to verify results from irma api server"`
 
 	InsightConfig string `long:"insight-config" env:"INSIGHT_CONFIG" default:"insight-config.toml" description:"Location of the insight config toml file"`
+
+	CertFile string `long:"tls-cert" env:"TLS_CERT" description:"Absolute or relative path to the cert .pem"`
+	KeyFile  string `long:"tls-key" env:"TLS_KEY" description:"Absolute or relative path to the key .pem"`
 }
 
 func main() {
@@ -63,6 +66,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
+
 	process := process.NewProcess(logger)
 	insightConfig := config.LoadInsightConfig(logger, options.InsightConfig)
 
@@ -102,7 +106,12 @@ func main() {
 
 	})
 
-	err = http.ListenAndServe(options.ListenAddress, r)
+	if len(options.CertFile) > 0 {
+		err = http.ListenAndServeTLS(options.ListenAddress, options.CertFile, options.KeyFile, r)
+	} else {
+		err = http.ListenAndServe(options.ListenAddress, r)
+	}
+
 	if err != nil {
 		if err != http.ErrServerClosed {
 			logger.Error("failed to ListenAndServe", zap.Error(err))
