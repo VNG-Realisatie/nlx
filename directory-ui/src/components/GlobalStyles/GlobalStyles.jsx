@@ -31,7 +31,10 @@ const fontDefinitions = [
 export default createGlobalStyle`
   ${generateFontFaceDefinitions(fontDefinitions)}
 
+  html,
   body {
-    font-family: 'Source Sans Pro', sans-serif
+    background: #F7F9FC;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 14px;
   }
 `

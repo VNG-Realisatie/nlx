@@ -3,11 +3,11 @@ import styled from 'styled-components'
 
 const TableBodyCell = styled.td`
     display: table-cell;
-    padding: .65rem;
+    padding: .6rem;
     border: 2px solid transparent;
 
     font-size: 1rem;
-    line-height: 1.9rem;
+    line-height: 1rem;
     font-weight: 400;
     
     text-align: ${ p => p.align};
