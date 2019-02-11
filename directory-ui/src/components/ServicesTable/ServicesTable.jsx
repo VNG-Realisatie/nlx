@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { Table, TableBody, TableRow, TableHead, TableHeadCell } from '../Table'
+import { Table, TableBody, TableRow, TableHead, TableHeadCell, SortableTableHeadCell } from "../Table";
 import ServicesTableRow from './ServicesTableRow';
-import SortableTableHeadCell, { ASCENDING, DESCENDING } from './../Table/SortableTableHeadCell';
+import { ASCENDING, DESCENDING } from './../Table/SortableTableHeadCell';
 
 const services = [
   { status: 'online', organization: 'Bitkode', name: 'DemoService', apiType: 'OpenAPI2', apiAddress: 'Icon' },
