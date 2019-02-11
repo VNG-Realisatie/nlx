@@ -13,13 +13,12 @@ exports[`should match snapshot 1`] = `
         "rules": Array [
           "
     display: table-cell;
-    padding: .65rem;
+    padding: .6rem;
     border: 2px solid transparent;
 
     font-size: 1rem;
-    line-height: 1.9rem;
-    font-weight: normal;
-    color: #2D3240;
+    line-height: 1rem;
+    font-weight: 400;
     
     text-align: ",
           [Function],

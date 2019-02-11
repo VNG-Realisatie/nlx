@@ -16,7 +16,7 @@ exports[`should match snapshot 1`] = `
               "componentStyle": ComponentStyle {
                 "componentId": "sc-bdVaJa",
                 "isStatic": false,
-                "lastClassName": "gFvXFy",
+                "lastClassName": "beXzTJ",
                 "rules": Array [
                   "
     display: table-cell;
@@ -25,7 +25,7 @@ exports[`should match snapshot 1`] = `
 
     font-size: .85rem;
     line-height: 1.25rem;
-    font-weight: 700;
+    font-weight: 600;
     color: #ADB3C6;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -62,7 +62,7 @@ exports[`should match snapshot 1`] = `
           forwardedRef={null}
         >
           <th
-            className="sc-bdVaJa gFvXFy"
+            className="sc-bdVaJa beXzTJ"
           />
         </StyledComponent>
       </styled.th>
