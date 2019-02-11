@@ -24,11 +24,11 @@ const TableHeadCell = styled.th`
 
 TableHeadCell.propTypes = {
   children: node,
-  align: oneOf(['left', 'center', 'right']),
+  align: oneOf(['left', 'center', 'right'])
 }
 
 TableHeadCell.defaultProps = {
-  align: 'left',
+  align: 'left'
 }
 
 export default TableHeadCell
