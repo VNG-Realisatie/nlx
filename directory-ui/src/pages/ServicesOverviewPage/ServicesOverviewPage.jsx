@@ -7,6 +7,7 @@ import ErrorMessage from '../../components/ErrorMessage/ErrorMessage'
 import Search from '../../components/Search/Search'
 import Switch from '../../components/Switch/Switch'
 import Services from '../../components/Services/Services'
+import ServicesTable from '../../components/ServicesTable/ServicesTable';
 
 export default class ServicesOverviewPage extends Component {
     constructor(props) {
@@ -170,6 +171,8 @@ export default class ServicesOverviewPage extends Component {
                 </section>
                 <section>
                     <div className="container">
+                        <ServicesTable/>
+
                         <Services
                             serviceList={filteredAndSortedServices}
                             onSort={this.onSort}
