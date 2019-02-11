@@ -14,12 +14,11 @@ export const ServicesTable = () => {
     <Table>
       <TableHead>
         <TableRow>
-          <TableHeadCell style={({width: '100px'})} align="center">Status</TableHeadCell>
+          <TableHeadCell style={({width: '30px'})} align="center" />
           <TableHeadCell>Organization</TableHeadCell>
           <TableHeadCell>Service</TableHeadCell>
-          <TableHeadCell>API type</TableHeadCell>
-          <TableHeadCell align="center">Link</TableHeadCell>
-          <TableHeadCell align="center">Docs</TableHeadCell>
+          <TableHeadCell align="right">API type</TableHeadCell>
+          <TableHeadCell/>
         </TableRow>
       </TableHead>
 

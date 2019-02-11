@@ -14,13 +14,11 @@ const ServicesTableRow = ({ status, organization, name, apiType, apiAddress }) =
       <TableBodyCell align="center"><StatusIcon status={status} /></TableBodyCell>
       <TableBodyCell>{ organization }</TableBodyCell>
       <TableBodyCell>{ name }</TableBodyCell>
-      <TableBodyCell align="center">{ apiType }</TableBodyCell>
+      <TableBodyCell align="right">{ apiType }</TableBodyCell>
       <TableBodyCell align="center">
-          <a href={apiAddress} style={({ lineHeight: '1rem' })} target="_blank" rel="noopener noreferrer">
-            <LinkIcon color={statusToIconColor(status)} />
-          </a>
-      </TableBodyCell>
-      <TableBodyCell align="center">
+        <a href={apiAddress} style={({ lineHeight: '1rem' })} target="_blank" rel="noopener noreferrer">
+          <LinkIcon color={statusToIconColor(status)} />
+        </a>
         <DocsIcon color={statusToIconColor(status)} />
       </TableBodyCell>
     </StyledServiceTableRow>
