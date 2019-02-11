@@ -1,6 +1,13 @@
 import React from 'react'
-import { Table, TableBody, TableRow, TableHead, TableHeadCell, TableBodyCell } from '../Table'
-import StatusIcon from "./StatusIcon";
+import { Table, TableBody, TableRow, TableHead, TableHeadCell } from '../Table'
+import ServicesTableRow from "./ServicesTableRow";
+
+const services = [
+  { status: 'online', organization: 'Bitkode', name: 'DemoService', apiType: 'OpenAPI2', apiAddress: 'Icon' },
+  { status: 'online', organization: 'Bitkode', name: 'DemoService', apiType: 'OpenAPI2', apiAddress: 'Icon' },
+  { status: 'offline', organization: 'Bitkode', name: 'DemoService', apiType: 'OpenAPI2', apiAddress: 'Icon' },
+  { status: 'online', organization: 'Bitkode', name: 'DemoService', apiType: 'OpenAPI2', apiAddress: 'Icon' }
+]
 
 export const ServicesTable = () => {
   return (
@@ -11,39 +18,24 @@ export const ServicesTable = () => {
           <TableHeadCell>Organization</TableHeadCell>
           <TableHeadCell>Service</TableHeadCell>
           <TableHeadCell>API type</TableHeadCell>
-          <TableHeadCell align="center">API address</TableHeadCell>
+          <TableHeadCell align="center">Link</TableHeadCell>
+          <TableHeadCell align="center">Docs</TableHeadCell>
         </TableRow>
       </TableHead>
 
       <TableBody>
-        <TableRow>
-          <TableBodyCell align="center"><StatusIcon status="online" /></TableBodyCell>
-          <TableBodyCell>Bitkode</TableBodyCell>
-          <TableBodyCell>DemoService</TableBodyCell>
-          <TableBodyCell>OpenAPI2</TableBodyCell>
-          <TableBodyCell align="center">Icon</TableBodyCell>
-        </TableRow>
-        <TableRow>
-          <TableBodyCell align="center"><StatusIcon status="offline" /></TableBodyCell>
-          <TableBodyCell>Bitkode</TableBodyCell>
-          <TableBodyCell>DemoService</TableBodyCell>
-          <TableBodyCell>OpenAPI2</TableBodyCell>
-          <TableBodyCell align="center">Icon</TableBodyCell>
-        </TableRow>
-        <TableRow>
-          <TableBodyCell align="center"><StatusIcon status="online" /></TableBodyCell>
-          <TableBodyCell>Bitkode</TableBodyCell>
-          <TableBodyCell>DemoService</TableBodyCell>
-          <TableBodyCell>OpenAPI2</TableBodyCell>
-          <TableBodyCell align="center">Icon</TableBodyCell>
-        </TableRow>
-        <TableRow>
-          <TableBodyCell align="center"><StatusIcon status="online" /></TableBodyCell>
-          <TableBodyCell>Bitkode</TableBodyCell>
-          <TableBodyCell>DemoService</TableBodyCell>
-          <TableBodyCell>OpenAPI2</TableBodyCell>
-          <TableBodyCell align="center">Icon</TableBodyCell>
-        </TableRow>
+        {
+          services
+            .map((service, i) =>
+              <ServicesTableRow key={i}
+                                status={service.status}
+                                name={service.name}
+                                organization={service.organization}
+                                apiType={service.apiType}
+                                apiAddress={service.apiAddress}
+              />
+            )
+        }
       </TableBody>
     </Table>
   )
