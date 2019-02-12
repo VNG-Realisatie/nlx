@@ -1,5 +1,5 @@
 import React from 'react'
-import { mount } from 'enzyme'
+import { mount, shallow } from 'enzyme'
 import TableHeadCell from './TableHeadCell'
 
 const insertTableHeadCellIntoValidTable = tableHeadCell =>
@@ -17,23 +17,23 @@ it('should match snapshot', () => {
 })
 
 it('should render the contents', () => {
-  const wrapper = mount(insertTableHeadCellIntoValidTable(<TableHeadCell>Heading</TableHeadCell>))
+  const wrapper = shallow(insertTableHeadCellIntoValidTable(<TableHeadCell>Heading</TableHeadCell>))
   expect(wrapper.text()).toEqual('Heading')
 })
 
 describe('text alignment', () => {
   it('should use left alignment as default', () => {
-    const wrapper = mount(insertTableHeadCellIntoValidTable(<TableHeadCell/>))
+    const wrapper = shallow(insertTableHeadCellIntoValidTable(<TableHeadCell/>))
     expect(wrapper.find(TableHeadCell).prop('align')).toEqual('left')
   })
 
   it('should support center alignment', () => {
-    const wrapper = mount(insertTableHeadCellIntoValidTable(<TableHeadCell align="center"/>))
+    const wrapper = shallow(insertTableHeadCellIntoValidTable(<TableHeadCell align="center"/>))
     expect(wrapper.find(TableHeadCell).prop('align')).toEqual('center')
   })
 
   it('should support right alignment', () => {
-    const wrapper = mount(insertTableHeadCellIntoValidTable(<TableHeadCell align="right"/>))
+    const wrapper = shallow(insertTableHeadCellIntoValidTable(<TableHeadCell align="right"/>))
     expect(wrapper.find(TableHeadCell).prop('align')).toEqual('right')
   })
 })
