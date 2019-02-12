@@ -10,7 +10,7 @@ const TableBodyCell = styled.td`
     line-height: 1rem;
     font-weight: 400;
     
-    text-align: ${ p => p.align};
+    text-align: ${p => p.align};
 
     &:last-child {
         padding-right: 1.5rem;
