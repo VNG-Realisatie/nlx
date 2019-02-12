@@ -15,10 +15,13 @@ RUN go mod download
 COPY directory-monitor      /go/src/go.nlx.io/nlx/directory-monitor
 COPY directory-db/dbversion /go/src/go.nlx.io/nlx/directory-db/dbversion
 COPY common                 /go/src/go.nlx.io/nlx/common
+COPY .git                   /go/src/go.nlx.io/nlx/directory-monitor/.git
 
 WORKDIR /go/src/go.nlx.io/nlx/directory-monitor
 
-RUN go build -o dist/bin/nlx-directory-monitor ./cmd/nlx-directory-monitor
+RUN SOURCE_HASH=$(git rev-parse HEAD) && \
+VERSION=$(git describe --tags) && \
+go build -ldflags="-X 'go.nlx.io/nlx/common/version.BuildSourceHash=$SOURCE_HASH' -X 'go.nlx.io/nlx/common/version.BuildVersion=$VERSION'" -o dist/bin/nlx-directory-monitor ./cmd/nlx-directory-monitor
 
 
 # Release binary on latest alpine image.

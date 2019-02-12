@@ -19,6 +19,7 @@ import (
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
+	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/directory-db/dbversion"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 	"go.nlx.io/nlx/directory-registration-api/registrationservice"
@@ -59,6 +60,9 @@ func main() {
 	}
 
 	process := process.NewProcess(logger)
+	// Log component version information
+	version.Log(logger)
+
 	db, err := sqlx.Open("postgres", options.PostgresDSN)
 	if err != nil {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))

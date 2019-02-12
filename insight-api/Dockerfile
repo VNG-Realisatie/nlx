@@ -15,10 +15,14 @@ RUN go mod download
 COPY insight-api        /go/src/go.nlx.io/nlx/insight-api
 COPY txlog-db/dbversion /go/src/go.nlx.io/nlx/txlog-db/dbversion
 COPY common             /go/src/go.nlx.io/nlx/common
+COPY .git               /go/src/go.nlx.io/nlx/insight-api/.git
+
 
 WORKDIR /go/src/go.nlx.io/nlx/insight-api
 
-RUN go build -o dist/bin/nlx-insight-api ./cmd/nlx-insight-api
+RUN SOURCE_HASH=$(git rev-parse HEAD) && \
+VERSION=$(git describe --tags) && \
+go build -ldflags="-X 'go.nlx.io/nlx/common/version.BuildSourceHash=$SOURCE_HASH' -X 'go.nlx.io/nlx/common/version.BuildVersion=$VERSION'" -o dist/bin/nlx-insight-api ./cmd/nlx-insight-api
 
 
 # Release binary on latest alpine image.
