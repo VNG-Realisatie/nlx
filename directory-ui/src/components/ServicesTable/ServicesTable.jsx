@@ -8,7 +8,8 @@ const ServicesTable = ({ services, sortBy, sortOrder, onToggleSorting }) =>
     <TableHead>
       <TableRow>
         <TableHeadCell style={({ width: '30px' })} align="center" />
-        <SortableTableHeadCell direction={sortBy === 'organization' ? sortOrder : null}
+        <SortableTableHeadCell style={({ width: '210px' })}
+                               direction={sortBy === 'organization' ? sortOrder : null}
                                onClick={() => onToggleSorting('organization')}>
           Organization
         </SortableTableHeadCell>
@@ -16,8 +17,8 @@ const ServicesTable = ({ services, sortBy, sortOrder, onToggleSorting }) =>
                                onClick={() => onToggleSorting('name')}>
           Service
         </SortableTableHeadCell>
-        <TableHeadCell align="right">API type</TableHeadCell>
-        <TableHeadCell/>
+        <TableHeadCell style={({ width: '120px' })} align="right">API type</TableHeadCell>
+        <TableHeadCell style={({ width: '130px' })}/>
       </TableRow>
     </TableHead>
 
