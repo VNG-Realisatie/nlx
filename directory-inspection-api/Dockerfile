@@ -15,9 +15,13 @@ RUN go mod download
 COPY directory-inspection-api   /go/src/go.nlx.io/nlx/directory-inspection-api
 COPY directory-db/dbversion     /go/src/go.nlx.io/nlx/directory-db/dbversion
 COPY common                     /go/src/go.nlx.io/nlx/common
+COPY .git                       /go/src/go.nlx.io/nlx/directory-inspection-api/.git
 
 WORKDIR /go/src/go.nlx.io/nlx/directory-inspection-api
-RUN go build -o dist/bin/nlx-directory-inspection-api ./cmd/nlx-directory-inspection-api
+
+RUN SOURCE_HASH=$(git rev-parse HEAD) && \
+VERSION=$(git describe --tags) && \
+go build -ldflags="-X 'go.nlx.io/nlx/common/version.BuildSourceHash=$SOURCE_HASH' -X 'go.nlx.io/nlx/common/version.BuildVersion=$VERSION'" -o dist/bin/nlx-directory-inspection-api ./cmd/nlx-directory-inspection-api
 
 
 # Release binary on latest alpine image.

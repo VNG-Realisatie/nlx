@@ -16,15 +16,18 @@ COPY outway                                 /go/src/go.nlx.io/nlx/outway
 COPY directory-inspection-api/inspectionapi /go/src/go.nlx.io/nlx/directory-inspection-api/inspectionapi
 COPY txlog-db/dbversion                     /go/src/go.nlx.io/nlx/txlog-db/dbversion
 COPY common                                 /go/src/go.nlx.io/nlx/common
+COPY .git                                   /go/src/go.nlx.io/nlx/outway/.git
 
 WORKDIR /go/src/go.nlx.io/nlx/outway
 
-RUN go build -o dist/bin/nlx-outway ./cmd/nlx-outway
-
+RUN SOURCE_HASH=$(git rev-parse HEAD) && \
+VERSION=$(git describe --tags) && \
+go build -ldflags="-X 'go.nlx.io/nlx/common/version.BuildSourceHash=$SOURCE_HASH' -X 'go.nlx.io/nlx/common/version.BuildVersion=$VERSION' " -o  dist/bin/nlx-outway ./cmd/nlx-outway
 
 # Release binary on latest alpine image.
 FROM alpine:latest
 COPY --from=build /go/src/go.nlx.io/nlx/outway/dist/bin/nlx-outway /usr/local/bin/nlx-outway
+
 
 # Make sure /etc/hosts is resolved before DNS
 RUN echo "hosts: files dns" > /etc/nsswitch.conf

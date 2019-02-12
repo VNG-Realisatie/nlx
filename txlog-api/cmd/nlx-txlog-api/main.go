@@ -18,6 +18,7 @@ import (
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/transactionlog"
+	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/txlog-db/dbversion"
 )
 
@@ -52,6 +53,10 @@ func main() {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
 	process := process.NewProcess(logger)
+
+	// Log component version information
+	version.Log(logger)
+
 	logDB, err := sqlx.Open("postgres", options.PostgresDSN)
 	if err != nil {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))

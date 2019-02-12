@@ -15,10 +15,13 @@ RUN go mod download
 COPY directory-registration-api  /go/src/go.nlx.io/nlx/directory-registration-api
 COPY directory-db/dbversion      /go/src/go.nlx.io/nlx/directory-db/dbversion
 COPY common                      /go/src/go.nlx.io/nlx/common
+COPY .git                        /go/src/go.nlx.io/nlx/directory-registration-api/.git
 
 WORKDIR /go/src/go.nlx.io/nlx/directory-registration-api
 
-RUN go build -o dist/bin/nlx-directory-registration-api ./cmd/nlx-directory-registration-api
+RUN SOURCE_HASH=$(git rev-parse HEAD) && \
+VERSION=$(git describe --tags) && \
+go build -ldflags="-X 'go.nlx.io/nlx/common/version.BuildSourceHash=$SOURCE_HASH' -X 'go.nlx.io/nlx/common/version.BuildVersion=$VERSION'" -o dist/bin/nlx-directory-registration-api ./cmd/nlx-directory-registration-api
 
 
 # Release binary on latest alpine image.
