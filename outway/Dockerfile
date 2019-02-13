@@ -20,9 +20,9 @@ COPY .git                                   /go/src/go.nlx.io/nlx/outway/.git
 
 WORKDIR /go/src/go.nlx.io/nlx/outway
 
-RUN SOURCE_HASH=$(git rev-parse HEAD) && \
-VERSION=$(git describe --tags) && \
-go build -ldflags="-X 'go.nlx.io/nlx/common/version.BuildSourceHash=$SOURCE_HASH' -X 'go.nlx.io/nlx/common/version.BuildVersion=$VERSION' " -o  dist/bin/nlx-outway ./cmd/nlx-outway
+RUN GIT_COMMIT_HASH=$(git rev-parse HEAD) && \
+    GIT_TAG_NAME=$(git describe --tags) && \
+    go build -ldflags="-X 'go.nlx.io/nlx/common/version.BuildSourceHash=$GIT_COMMIT_HASH' -X 'go.nlx.io/nlx/common/version.BuildVersion=$GIT_TAG_NAME' " -o  dist/bin/nlx-outway ./cmd/nlx-outway
 
 # Release binary on latest alpine image.
 FROM alpine:latest
