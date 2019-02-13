@@ -16,7 +16,9 @@ RUN npm ci --no-progress --color=false --quiet
 COPY . /go/src/go.nlx.io/nlx/txlog-ui
 
 RUN npm test
-RUN npm run build
+RUN REACT_APP_GIT_COMMIT_HASH=$(git rev-parse HEAD) && \
+    REACT_APP_GIT_TAG_NAME=$(git describe --tags) && \
+    npm run build
 
 # Copy static docs to alpine-based nginx container.
 FROM nginx:alpine
