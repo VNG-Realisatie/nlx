@@ -6,6 +6,7 @@
     "@commonground/design-system": "1.0.0",
     "ajv-keywords": "3.2.0",
     "axios": "0.18.0",
+    "copy-text-to-clipboard": "1.0.4",
     "mobx": "4.9.2",
     "node-sass": "4.11.0",
     "react": "16.7.0",
@@ -24,7 +25,6 @@
   },
   "devDependencies": {
     "classnames": "2.2.6",
-    "copy-to-clipboard": "3.0.8",
     "enzyme": "3.8.0",
     "enzyme-adapter-react-16": "1.8.0",
     "enzyme-to-json": "3.3.5",
