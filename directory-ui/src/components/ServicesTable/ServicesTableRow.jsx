@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import copy from 'copy-to-clipboard'
+import copy from 'copy-text-to-clipboard'
 import { TableBodyCell } from '../Table'
 import { oneOf, string } from 'prop-types'
 import StatusIcon from './Icons/StatusIcon/StatusIcon'
@@ -8,10 +8,10 @@ import DocsIcon from './Icons/DocsIcon/DocsIcon'
 import LinkIcon from './Icons/LinkIcon/LinkIcon'
 import { StyledServiceTableRow, StyledApiTypeLabel } from './ServiceTableRow.styles'
 
-const apiAddressForService = (name, organization) =>
+export const apiAddressForService = (name, organization) =>
   `http://{your-outway-address}:12018/${organization}/${name}`
 
-const ServicesTableRow = ({ status, organization, name, apiType, apiAddress }) =>
+const ServicesTableRow = ({ status, organization, name, apiType }) =>
     <StyledServiceTableRow status={status}>
       <TableBodyCell align="center"><StatusIcon status={status} /></TableBodyCell>
       <TableBodyCell>{ organization }</TableBodyCell>
@@ -23,7 +23,8 @@ const ServicesTableRow = ({ status, organization, name, apiType, apiAddress }) =
         }
       </TableBodyCell>
       <TableBodyCell style={({ borderLeft: '1px solid #F0F2F7' })}>
-          <LinkIcon style={({ lineHeight: '1rem', cursor: 'pointer' })}
+          <LinkIcon dataTest="link-icon"
+                    style={({ lineHeight: '1rem', cursor: 'pointer' })}
                     color="blue"
                     onClick={() => copy(apiAddressForService(name, organization))}
           />
@@ -43,7 +44,6 @@ ServicesTableRow.propTypes = {
   status: oneOf(['online', 'offline']).isRequired,
   organization: string.isRequired,
   name: string.isRequired,
-  apiAddress: string
 }
 
 export default ServicesTableRow
