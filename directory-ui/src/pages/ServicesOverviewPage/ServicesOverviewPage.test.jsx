@@ -1,9 +1,9 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 import { Spinner } from '@commonground/design-system'
-import ServicesOverviewPage, { mapListServicesAPIResponse } from "./ServicesOverviewPage";
-import ErrorMessage from "../../components/ErrorMessage/ErrorMessage";
-import ServicesTableContainer from "../../containers/ServicesTableContainer/ServicesTableContainer";
+import ServicesOverviewPage from './ServicesOverviewPage';
+import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
+import ServicesTableContainer from '../../containers/ServicesTableContainer/ServicesTableContainer'
 
 describe('ServicesOverviewPage', () => {
   let wrapper
@@ -14,25 +14,12 @@ describe('ServicesOverviewPage', () => {
     instance = wrapper.instance()
   })
 
-  describe('mapping the API response', () => {
-    it('should map the properties', () => {
-      const apiResponse = {
-        services: [{
-          organization_name: 'foo',
-          service_name: 'bar',
-          inway_addresses: ['https://www.duck.com'],
-          documentation_url: 'https://www.duck.com',
-          api_specification_type: 'openapi',
-        }]
-      }
-
-      expect(mapListServicesAPIResponse(apiResponse)).toEqual([{
-        organization: 'foo',
-        name: 'bar',
-        status: 'online',
-        documentationLink: 'https://www.duck.com',
-        apiType: 'openapi'
-      }])
+  describe('the initial state', () => {
+    it('should have no filters applied', () => {
+      expect(wrapper.state()).toMatchObject({
+        query: '',
+        displayOfflineServices: true
+      })
     })
   })
 
@@ -65,7 +52,7 @@ describe('ServicesOverviewPage', () => {
         services: []
       })
 
-      expect(wrapper.contains(<ServicesTableContainer />)).toBe(true)
+      expect(wrapper.exists('ServicesTableContainer')).toBe(true)
     })
   })
 
@@ -73,15 +60,13 @@ describe('ServicesOverviewPage', () => {
     it('should clear the search query', () => {
       const ESCAPE_KEY_CODE = 27
 
-      wrapper.setState({
-        displayOnlyContaining: 'foo'
-      })
+      wrapper.setState({ query: 'foo' })
 
       global.document.dispatchEvent(new KeyboardEvent('keydown', {
         keyCode: ESCAPE_KEY_CODE
       }))
 
-      expect(wrapper.state('displayOnlyContaining')).toBe('')
+      expect(wrapper.state('query')).toBe('')
     })
   })
 })

@@ -73,7 +73,7 @@ class ServicesTableContainer extends Component {
   }
 
   render() {
-    const { services, filterQuery, filterByOnlineServices } = this.props
+    const { services, filterQuery, filterByOnlineServices, ...props } = this.props
     const { sortBy, sortOrder } = this.state
     const filteredServices = this.filterServices(services, filterQuery, filterByOnlineServices)
     const sortedFilteredServices = this.sortServices(filteredServices, sortBy, sortOrder)
@@ -83,6 +83,7 @@ class ServicesTableContainer extends Component {
                      sortBy={sortBy}
                      sortOrder={sortOrder}
                      onToggleSorting={property => this.onToggleSorting(property)}
+                     {...props}
       />
     )
   }

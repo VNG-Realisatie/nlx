@@ -1,10 +1,10 @@
 import React from 'react'
 import { func, string, arrayOf, shape } from 'prop-types'
-import { Table, TableBody, TableRow, TableHead, TableHeadCell, SortableTableHeadCell } from "../Table";
-import ServicesTableRow from './ServicesTableRow';
+import { Table, TableBody, TableRow, TableHead, TableHeadCell, SortableTableHeadCell } from '../Table'
+import ServicesTableRow from './ServicesTableRow'
 
-const ServicesTable = ({ services, sortBy, sortOrder, onToggleSorting }) =>
-  <Table>
+const ServicesTable = ({ services, sortBy, sortOrder, onToggleSorting, ...props }) =>
+  <Table {...props}>
     <TableHead>
       <TableRow>
         <TableHeadCell style={({ width: '30px' })} align="center" />
@@ -18,7 +18,8 @@ const ServicesTable = ({ services, sortBy, sortOrder, onToggleSorting }) =>
           Service
         </SortableTableHeadCell>
         <TableHeadCell style={({ width: '120px' })} align="right">API type</TableHeadCell>
-        <TableHeadCell style={({ width: '130px' })}/>
+        <TableHeadCell style={({ width: '24px' })}/>
+        <TableHeadCell style={({ width: '24px' })}/>
       </TableRow>
     </TableHead>
 

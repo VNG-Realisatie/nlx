@@ -3,18 +3,10 @@ import React, { Component } from 'react'
 import { Spinner } from '@commonground/design-system'
 
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage'
-import Search from '../../components/Search/Search'
-import Switch from '../../components/Switch/Switch'
-import ServicesTableContainer from '../../containers/ServicesTableContainer/ServicesTableContainer'
+import { StyledFilters, StyledServicesTableContainer } from './ServicesOverviewPage.styles';
+import { mapListServicesAPIResponse } from './map-list-services-api-response';
 
-export const mapListServicesAPIResponse = response =>
-  response.services.map(service => ({
-    organization: service['organization_name'],
-    name: service['service_name'],
-    status: service['inway_addresses'] ? 'online' : 'offline',
-    documentationLink: service['documentation_url'],
-    apiType: service['api_specification_type']
-  }))
+const ESCAPE_KEY_CODE = 27
 
 class ServicesOverviewPage extends Component {
     constructor(props) {
@@ -23,7 +15,9 @@ class ServicesOverviewPage extends Component {
         this.state = {
             loading: true,
             error: null,
-            services: []
+            services: [],
+            query: '',
+            displayOfflineServices: true
         }
 
         this.searchOnChange = this.searchOnChange.bind(this)
@@ -37,8 +31,8 @@ class ServicesOverviewPage extends Component {
     }
 
     escFunction(event) {
-        if (event.keyCode === 27) {
-            this.setState({ displayOnlyContaining: '' })
+        if (event.keyCode === ESCAPE_KEY_CODE) {
+            this.setState({ query: '' })
         }
     }
 
@@ -60,16 +54,16 @@ class ServicesOverviewPage extends Component {
         document.removeEventListener('keydown', this.escFunction, false)
     }
 
-    searchOnChange(e) {
-        this.setState({ displayOnlyContaining: e.target.value })
+    searchOnChange(query) {
+        this.setState({ query })
     }
 
-    switchOnChange() {
-        this.setState({ displayOnlyOnline: !this.state.displayOnlyOnline })
+    switchOnChange(checked) {
+        this.setState({ displayOfflineServices: checked })
     }
 
     render() {
-        const { displayOnlyOnline, displayOnlyContaining, loading, error, services } = this.state
+        const { displayOfflineServices, query, loading, error, services } = this.state
 
         if (loading) {
             return <Spinner />
@@ -80,41 +74,17 @@ class ServicesOverviewPage extends Component {
         }
 
         return (
-            <React.Fragment>
-                <section>
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-sm-6 col-lg-4 offset-lg-2">
-                                <div className="mb-4 mb-sm-0">
-                                    <Search
-                                        onChange={this.searchOnChange}
-                                        value={displayOnlyContaining}
-                                        placeholder="Filter services"
-                                        filter
-                                    />
-                                </div>
-                            </div>
-                            <div className="col-sm-6 col-lg-6 d-flex align-items-center justify-content-center justify-content-sm-start">
-                                <Switch
-                                    id="switch1"
-                                    onChange={this.switchOnChange}
-                                    checked={displayOnlyOnline}
-                                >
-                                    Only online services
-                                </Switch>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <section>
-                    <div className="container">
-                        <ServicesTableContainer services={services}
-                                                filterQuery={displayOnlyContaining}
-                                                filterByOnlineServices={displayOnlyOnline}
-                        />
-                    </div>
-                </section>
-            </React.Fragment>
+          <div>
+              <StyledFilters onQueryChanged={this.searchOnChange}
+                             onStatusFilterChanged={this.switchOnChange}
+                             queryValue={query}
+              />
+
+              <StyledServicesTableContainer services={services}
+                                            filterQuery={query}
+                                            filterByOnlineServices={!displayOfflineServices}
+              />
+          </div>
         )
     }
 }
