@@ -13,7 +13,7 @@ RUN npm ci --no-progress --color=false --quiet
 # Now copy the whole workdir for the build step.
 COPY . /go/src/go.nlx.io/nlx/directory-ui
 RUN npm run build
-RUN npm test
+RUN npm test -- --coverage
 
 # Copy static docs to alpine-based nginx container.
 FROM nginx:alpine
