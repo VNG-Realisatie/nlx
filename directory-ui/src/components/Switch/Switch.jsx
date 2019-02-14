@@ -1,30 +1,54 @@
-import React, { Component } from 'react'
-import classnames from 'classnames'
+import React, { PureComponent } from 'react'
+import { string, bool } from 'prop-types'
+import styled from 'styled-components'
 
-class Switch extends Component {
+import { inputStyle, labelStyle } from './Switch.styles'
+
+const StyledWrapper = styled.div`
+    position: relative;
+`
+
+const StyledInput = styled.input`
+    ${inputStyle};
+`
+
+const StyledLabel = styled.label`
+    ${labelStyle};
+`
+
+class Switch extends PureComponent {
   render() {
-    const { id, children, alwaysOn } = this.props
+    const { label, id, required, disabled, ...props } = this.props
 
     return (
-      <div
-        className={classnames({
-          'form-switch': true,
-          'form-switch--alwaysOn': alwaysOn,
-        })}
-      >
-        <input
+      <StyledWrapper {...props}>
+        <StyledInput
           type="checkbox"
-          className="form-switch-input"
           id={id}
-          onChange={this.props.onChange}
-          checked={this.props.checked}
+          disabled={disabled}
+          defaultChecked
         />
-        <label className="form-switch-label" htmlFor={id}>
-          {children}
-        </label>
-      </div>
+        <StyledLabel htmlFor={id} title={label}>
+          {label}
+          {required && ' *'}
+        </StyledLabel>
+      </StyledWrapper>
     )
   }
+}
+
+Switch.propTypes = {
+  id: string,
+  label: string,
+  required: bool,
+  disabled: bool,
+}
+
+Switch.defaultProps = {
+  id: '',
+  label: '',
+  required: false,
+  disabled: false,
 }
 
 export default Switch
