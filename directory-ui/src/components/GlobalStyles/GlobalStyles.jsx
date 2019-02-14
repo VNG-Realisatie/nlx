@@ -37,4 +37,8 @@ export default createGlobalStyle`
     font-family: 'Source Sans Pro', sans-serif;
     font-size: 14px;
   }
+  
+  body {
+    margin: 0;
+  }
 `
