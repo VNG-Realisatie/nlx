@@ -16,7 +16,6 @@ describe('mapping the API response', () => {
       organization: 'foo',
       name: 'bar',
       status: 'online',
-      documentationLink: 'https://www.duck.com',
       apiType: 'openapi'
     }])
   })
