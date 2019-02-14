@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { RedocStandalone } from 'redoc'
-import axios from 'axios'
 import { Spinner } from '@commonground/design-system'
 
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage'
@@ -23,17 +22,22 @@ class DocumentationPage extends Component {
             return
         }
 
-        axios
-            .get(
-                `/api/directory/get-service-api-spec/${encodeURIComponent(
-                    match.params.organization_name,
-                )}/${encodeURIComponent(match.params.service_name)}`,
-            )
+        const { organization_name, service_name } = match.params
+
+        const url =`/api/directory/get-service-api-spec/${
+            encodeURIComponent(organization_name)
+        }/${
+            encodeURIComponent(service_name)
+        }`
+
+        fetch(url)
+            .then(res => res.json())
             .then((res) => {
                 let document
-                switch (res.data.type) {
+
+                switch (res.type) {
                     case 'OpenAPI2':
-                        document = JSON.parse(window.atob(res.data.document))
+                        document = JSON.parse(window.atob(res.document))
                         break
                     default:
                         document = null
@@ -41,11 +45,11 @@ class DocumentationPage extends Component {
 
                 this.setState({
                     loading: false,
-                    type: res.data.type,
+                    type: res.type,
                     document,
                 })
             })
-            .catch((e) => {
+            .catch(() => {
                 this.setState({
                     loading: false,
                     error: true,
