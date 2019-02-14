@@ -10,4 +10,6 @@ export const StyledFilters = styled(Filters)`
 export const StyledServicesTableContainer = styled(ServicesTableContainer)`
   width: 1140px;
   margin: 0 auto 50px auto;
-`.displayName = 'ServicesTableContainer'
+`
+
+StyledServicesTableContainer.displayName = 'ServicesTableContainer'
