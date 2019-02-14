@@ -5,8 +5,6 @@ import { Spinner } from '@commonground/design-system'
 
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage'
 
-import './DocumentationPage.scss'
-
 class DocumentationPage extends Component {
     constructor(props) {
         super(props)
@@ -65,7 +63,8 @@ class DocumentationPage extends Component {
         }
 
         return (
-            <RedocStandalone
+          <div style={({ background: '#ffffff' })}>
+              <RedocStandalone
                 spec={this.state.document}
                 options={{
                     hideDownloadButton: false,
@@ -84,7 +83,7 @@ class DocumentationPage extends Component {
                                 fontSize: '12px',
                                 fontFamily: '"Fira Code", monospaced',
                                 color: '#e83e8c',
-                                backgroundColor: '#f8f9fa',
+                                backgroundColor: '#ffffff',
                             },
                         },
                         colors: {
@@ -131,7 +130,8 @@ class DocumentationPage extends Component {
                     scrollYOffset: '80',
                     hideLoading: true,
                 }}
-            />
+              />
+          </div>
         )
     }
 }
