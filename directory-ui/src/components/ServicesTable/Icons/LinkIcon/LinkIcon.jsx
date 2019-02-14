@@ -7,8 +7,8 @@ const colors = {
   grey: '#CAD0E0'
 }
 
-const LinkIcon = ({ color }) =>
-  <StyledLinkIcon viewBox="0 0 24 24">
+const LinkIcon = ({ color, ...props }) =>
+  <StyledLinkIcon viewBox="0 0 24 24" {...props}>
     <g fill="none" fillRule="evenodd">
       <circle cx="12" cy="12" r="12"/>
       <path
