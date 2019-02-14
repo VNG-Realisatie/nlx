@@ -16,11 +16,10 @@ exports[`should match snapshot 1`] = `
               "componentStyle": ComponentStyle {
                 "componentId": "sc-bdVaJa",
                 "isStatic": false,
-                "lastClassName": "beXzTJ",
+                "lastClassName": "HYiSs",
                 "rules": Array [
                   "
     display: table-cell;
-    border-bottom: 1px solid #EAEAEA;
     padding: .65rem;
 
     font-size: .85rem;
@@ -35,10 +34,6 @@ exports[`should match snapshot 1`] = `
     text-align: ",
                   [Function],
                   ";
-
-    &:last-child {
-        padding-right: 1.5rem;
-    }
 ",
                 ],
               },
@@ -62,7 +57,7 @@ exports[`should match snapshot 1`] = `
           forwardedRef={null}
         >
           <th
-            className="sc-bdVaJa beXzTJ"
+            className="sc-bdVaJa HYiSs"
           />
         </StyledComponent>
       </styled.th>

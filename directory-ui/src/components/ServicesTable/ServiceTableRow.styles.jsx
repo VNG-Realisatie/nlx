@@ -7,9 +7,11 @@ const onlineBackgroundColor = '#FFFFFF'
 const onlineTextColor = '#2D3240'
 
 export const StyledServiceTableRow = styled(TableRow)`
-  background-color: ${
-    p => p.status === 'offline' ? 
-      offlineBackgroundColor : onlineBackgroundColor
+  td {
+    background-color: ${
+      p => p.status === 'offline' ?
+        offlineBackgroundColor : onlineBackgroundColor
+      }
   }
   color: ${
     p => p.status === 'offline' ? 

@@ -11,7 +11,7 @@ exports[`should match snapshot 1`] = `
         "isStatic": true,
         "rules": Array [
           "
-    border-collapse: collapse;
+    border-collapse: separate;
     border-spacing: 0;
     display: table;
     width: 100%;

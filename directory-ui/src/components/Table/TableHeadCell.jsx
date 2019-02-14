@@ -3,7 +3,6 @@ import styled from 'styled-components'
 
 const TableHeadCell = styled.th`
     display: table-cell;
-    border-bottom: 1px solid #EAEAEA;
     padding: .65rem;
 
     font-size: .85rem;
@@ -16,10 +15,6 @@ const TableHeadCell = styled.th`
     white-space: nowrap;
     
     text-align: ${ p => p.align};
-
-    &:last-child {
-        padding-right: 1.5rem;
-    }
 `
 
 TableHeadCell.propTypes = {
