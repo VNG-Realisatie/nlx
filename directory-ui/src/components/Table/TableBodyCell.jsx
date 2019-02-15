@@ -14,7 +14,7 @@ const TableBodyCell = styled.td`
 
 TableBodyCell.propTypes = {
   children: node,
-  align: oneOf(['left', 'center', 'right']).isRequired,
+  align: oneOf(['left', 'center', 'right'])
 }
 
 TableBodyCell.defaultProps = {

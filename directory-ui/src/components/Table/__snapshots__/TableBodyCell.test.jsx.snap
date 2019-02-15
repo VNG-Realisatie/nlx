@@ -45,3 +45,73 @@ exports[`should match snapshot 1`] = `
   forwardedRef={null}
 />
 `;
+
+exports[`should match snapshot 2`] = `
+<StyledComponent
+  align="left"
+  forwardedComponent={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "attrs": Array [],
+      "componentStyle": ComponentStyle {
+        "componentId": "sc-bdVaJa",
+        "isStatic": false,
+        "rules": Array [
+          "
+    display: table-cell;
+    padding: .6rem;
+
+    font-size: 1rem;
+    line-height: 1rem;
+    font-weight: 400;
+    
+    text-align: ",
+          [Function],
+          ";
+",
+        ],
+      },
+      "defaultProps": Object {
+        "align": "left",
+      },
+      "displayName": "styled.td",
+      "foldedComponentIds": Array [],
+      "propTypes": Object {
+        "align": [Function],
+        "children": [Function],
+      },
+      "render": [Function],
+      "styledComponentId": "sc-bdVaJa",
+      "target": "td",
+      "toString": [Function],
+      "warnTooManyClasses": [Function],
+      "withComponent": [Function],
+    }
+  }
+  forwardedRef={null}
+/>
+`;
+
+exports[`should support center alignment 1`] = `
+<table>
+  <styled.td
+    align="center"
+  />
+</table>
+`;
+
+exports[`should support left alignment 1`] = `
+<table>
+  <styled.td
+    align="left"
+  />
+</table>
+`;
+
+exports[`should support right alignment 1`] = `
+<table>
+  <styled.td
+    align="right"
+  />
+</table>
+`;
