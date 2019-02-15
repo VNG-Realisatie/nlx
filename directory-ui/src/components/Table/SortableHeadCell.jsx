@@ -1,6 +1,6 @@
 import React from 'react'
 import { oneOf } from 'prop-types'
-import { StyledSortableTableHeadCell, StyledArrow } from './SortableTableHeadCell.styles'
+import { StyledSortableTableHeadCell, StyledArrow } from './SortableHeadCell.styles'
 
 export const ASCENDING = 'asc'
 export const DESCENDING = 'desc'
@@ -18,14 +18,14 @@ const ArrowDown = () =>
 const SortableArrow = ({ direction }) =>
   direction === ASCENDING ? <ArrowDown/> : <ArrowUp/>
 
-const SortableTableHeadCell = ({ children, direction, ...other }) =>
+const SortableHeadCell = ({ children, direction, ...other }) =>
   <StyledSortableTableHeadCell {...other}>
     {children}
     {direction ? <SortableArrow direction={direction} /> : null}
   </StyledSortableTableHeadCell>
 
-SortableTableHeadCell.propTypes = {
+SortableHeadCell.propTypes = {
   direction: oneOf([ASCENDING, DESCENDING, null])
 }
 
-export default SortableTableHeadCell
+export default SortableHeadCell

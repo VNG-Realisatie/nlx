@@ -1,12 +1,12 @@
 import { node } from 'prop-types'
 import styled from 'styled-components'
 
-const TableHead = styled.thead`
+const Head = styled.thead`
     display: table-header-group;
 `
 
-TableHead.propTypes = {
+Head.propTypes = {
   children: node,
 }
 
-export default TableHead
+export default Head

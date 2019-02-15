@@ -1,0 +1,234 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should match snapshot 1`] = `
+<StyledComponent
+  forwardedComponent={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "Body": Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "attrs": Array [],
+        "componentStyle": ComponentStyle {
+          "componentId": "sc-bdVaJa",
+          "isStatic": true,
+          "rules": Array [
+            "
+    display: table-row-group;
+",
+          ],
+        },
+        "displayName": "styled.tbody",
+        "foldedComponentIds": Array [],
+        "render": [Function],
+        "styledComponentId": "sc-bdVaJa",
+        "target": "tbody",
+        "toString": [Function],
+        "warnTooManyClasses": [Function],
+        "withComponent": [Function],
+      },
+      "BodyCell": Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "attrs": Array [],
+        "componentStyle": ComponentStyle {
+          "componentId": "sc-htpNat",
+          "isStatic": false,
+          "rules": Array [
+            "
+    display: table-cell;
+    padding: .6rem;
+
+    font-size: 1rem;
+    line-height: 1rem;
+    font-weight: 400;
+    
+    text-align: ",
+            [Function],
+            ";
+",
+          ],
+        },
+        "defaultProps": Object {
+          "align": "left",
+        },
+        "displayName": "styled.td",
+        "foldedComponentIds": Array [],
+        "propTypes": Object {
+          "align": [Function],
+          "children": [Function],
+        },
+        "render": [Function],
+        "styledComponentId": "sc-htpNat",
+        "target": "td",
+        "toString": [Function],
+        "warnTooManyClasses": [Function],
+        "withComponent": [Function],
+      },
+      "Head": Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "attrs": Array [],
+        "componentStyle": ComponentStyle {
+          "componentId": "sc-bxivhb",
+          "isStatic": true,
+          "rules": Array [
+            "
+    display: table-header-group;
+",
+          ],
+        },
+        "displayName": "styled.thead",
+        "foldedComponentIds": Array [],
+        "propTypes": Object {
+          "children": [Function],
+        },
+        "render": [Function],
+        "styledComponentId": "sc-bxivhb",
+        "target": "thead",
+        "toString": [Function],
+        "warnTooManyClasses": [Function],
+        "withComponent": [Function],
+      },
+      "HeadCell": Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "attrs": Array [],
+        "componentStyle": ComponentStyle {
+          "componentId": "sc-bwzfXH",
+          "isStatic": false,
+          "rules": Array [
+            "
+    display: table-cell;
+    padding: .65rem;
+
+    font-size: .85rem;
+    line-height: 1.25rem;
+    font-weight: 600;
+    color: #ADB3C6;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+    
+    text-align: ",
+            [Function],
+            ";
+",
+          ],
+        },
+        "defaultProps": Object {
+          "align": "left",
+        },
+        "displayName": "styled.th",
+        "foldedComponentIds": Array [],
+        "propTypes": Object {
+          "align": [Function],
+          "children": [Function],
+        },
+        "render": [Function],
+        "styledComponentId": "sc-bwzfXH",
+        "target": "th",
+        "toString": [Function],
+        "warnTooManyClasses": [Function],
+        "withComponent": [Function],
+      },
+      "Row": Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "attrs": Array [],
+        "componentStyle": ComponentStyle {
+          "componentId": "sc-ifAKCX",
+          "isStatic": true,
+          "rules": Array [
+            "
+    display: table-row;
+    
+    &:first-child {
+      td {
+        border-top: 1px solid #EDEFF1;
+      }
+    
+      td {
+        &:first-child {
+          border-top-left-radius: 3px;
+          border-left: 1px solid #EDEFF1;
+        }
+        
+        &:last-child {
+          border-top-right-radius: 3px;
+          border-right: 1px solid #EDEFF1;
+        }
+      }
+    }
+    
+    &:not(:last-child) {
+      td {
+        border-bottom: 1px solid #EDEFF1;
+      }
+    }
+    
+    &:not(:first-child):not(:last-child) {
+      td {
+        &:first-child {
+          border-left: 1px solid #EDEFF1;
+        }
+        
+        &:last-child {
+          border-right: 1px solid #EDEFF1;
+        }
+      }        
+    }
+    
+    &:last-child {
+      td {
+        border-bottom: 1px solid #EDEFF1;
+      
+        &:first-child {
+          border-bottom-left-radius: 3px;
+          border-left: 1px solid #EDEFF1;
+        }
+        
+        &:last-child {
+          border-bottom-right-radius: 3px;
+          border-right: 1px solid #EDEFF1;
+        }
+      }
+    }
+",
+          ],
+        },
+        "displayName": "styled.tr",
+        "foldedComponentIds": Array [],
+        "render": [Function],
+        "styledComponentId": "sc-ifAKCX",
+        "target": "tr",
+        "toString": [Function],
+        "warnTooManyClasses": [Function],
+        "withComponent": [Function],
+      },
+      "SortableHeadCell": [Function],
+      "attrs": Array [],
+      "componentStyle": ComponentStyle {
+        "componentId": "sc-gzVnrw",
+        "isStatic": true,
+        "rules": Array [
+          "
+    border-collapse: separate;
+    border-spacing: 0;
+    display: table;
+    width: 100%;
+",
+        ],
+      },
+      "displayName": "styled.table",
+      "foldedComponentIds": Array [],
+      "propTypes": Object {
+        "children": [Function],
+      },
+      "render": [Function],
+      "styledComponentId": "sc-gzVnrw",
+      "target": "table",
+      "toString": [Function],
+      "warnTooManyClasses": [Function],
+      "withComponent": [Function],
+    }
+  }
+  forwardedRef={null}
+/>
+`;

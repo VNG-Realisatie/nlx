@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-const TableRow = styled.tr`
+const Row = styled.tr`
     display: table-row;
     
     &:first-child {
@@ -56,4 +56,4 @@ const TableRow = styled.tr`
     }
 `
 
-export default TableRow
+export default Row

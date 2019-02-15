@@ -1,7 +1,7 @@
 import styled from 'styled-components'
-import TableHeadCell from './TableHeadCell'
+import HeadCell from './HeadCell'
 
-export const StyledSortableTableHeadCell = styled(TableHeadCell)`
+export const StyledSortableTableHeadCell = styled(HeadCell)`
     cursor: pointer;
 `
 

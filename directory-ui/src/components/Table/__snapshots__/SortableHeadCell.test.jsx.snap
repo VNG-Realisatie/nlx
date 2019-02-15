@@ -10,7 +10,7 @@ exports[`should support the ascending direction 1`] = `
 <table>
   <thead>
     <tr>
-      <SortableTableHeadCell
+      <SortableHeadCell
         direction="asc"
       >
         <Styled(styled.th)
@@ -128,7 +128,7 @@ exports[`should support the ascending direction 1`] = `
             </th>
           </StyledComponent>
         </Styled(styled.th)>
-      </SortableTableHeadCell>
+      </SortableHeadCell>
     </tr>
   </thead>
 </table>
@@ -138,7 +138,7 @@ exports[`should support the descending direction 1`] = `
 <table>
   <thead>
     <tr>
-      <SortableTableHeadCell
+      <SortableHeadCell
         direction="desc"
       >
         <Styled(styled.th)
@@ -256,7 +256,7 @@ exports[`should support the descending direction 1`] = `
             </th>
           </StyledComponent>
         </Styled(styled.th)>
-      </SortableTableHeadCell>
+      </SortableHeadCell>
     </tr>
   </thead>
 </table>

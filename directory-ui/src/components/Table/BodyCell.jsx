@@ -1,7 +1,7 @@
 import { node, oneOf } from 'prop-types'
 import styled from 'styled-components'
 
-const TableBodyCell = styled.td`
+const BodyCell = styled.td`
     display: table-cell;
     padding: .6rem;
 
@@ -12,13 +12,13 @@ const TableBodyCell = styled.td`
     text-align: ${p => p.align};
 `
 
-TableBodyCell.propTypes = {
+BodyCell.propTypes = {
   children: node,
   align: oneOf(['left', 'center', 'right'])
 }
 
-TableBodyCell.defaultProps = {
+BodyCell.defaultProps = {
   align: 'left',
 }
 
-export default TableBodyCell
+export default BodyCell

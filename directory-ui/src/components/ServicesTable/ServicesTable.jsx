@@ -1,29 +1,29 @@
 import React from 'react'
 import { func, string, arrayOf, shape } from 'prop-types'
-import { Table, TableBody, TableRow, TableHead, TableHeadCell, SortableTableHeadCell } from '../Table'
+import Table from '../Table'
 import ServicesTableRow from './ServicesTableRow'
 
 const ServicesTable = ({ services, sortBy, sortOrder, onToggleSorting, ...props }) =>
   <Table {...props}>
-    <TableHead>
-      <TableRow>
-        <TableHeadCell style={({ width: '30px' })} align="center" />
-        <SortableTableHeadCell style={({ width: '210px' })}
+    <Table.Head>
+      <Table.Row>
+        <Table.HeadCell style={({ width: '30px' })} align="center" />
+        <Table.SortableHeadCell style={({ width: '210px' })}
                                direction={sortBy === 'organization' ? sortOrder : null}
                                onClick={() => onToggleSorting('organization')}>
           Organization
-        </SortableTableHeadCell>
-        <SortableTableHeadCell direction={sortBy === 'name' ? sortOrder : null}
+        </Table.SortableHeadCell>
+        <Table.SortableHeadCell direction={sortBy === 'name' ? sortOrder : null}
                                onClick={() => onToggleSorting('name')}>
           Service
-        </SortableTableHeadCell>
-        <TableHeadCell style={({ width: '120px' })} align="right">API type</TableHeadCell>
-        <TableHeadCell style={({ width: '24px' })}/>
-        <TableHeadCell style={({ width: '24px' })}/>
-      </TableRow>
-    </TableHead>
+        </Table.SortableHeadCell>
+        <Table.HeadCell style={({ width: '120px' })} align="right">API type</Table.HeadCell>
+        <Table.HeadCell style={({ width: '24px' })}/>
+        <Table.HeadCell style={({ width: '24px' })}/>
+      </Table.Row>
+    </Table.Head>
 
-    <TableBody>
+    <Table.Body>
       {
         services
           .map((service, i) =>
@@ -36,7 +36,7 @@ const ServicesTable = ({ services, sortBy, sortOrder, onToggleSorting, ...props 
             />
           )
       }
-    </TableBody>
+    </Table.Body>
   </Table>
 
 ServicesTable.propTypes = {

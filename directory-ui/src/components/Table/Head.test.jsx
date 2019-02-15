@@ -1,17 +1,17 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import TableHead from './TableHead'
+import Head from './Head'
 
 it('should match snapshot', () => {
-  expect(shallow(<TableHead/>)).toMatchSnapshot()
+  expect(shallow(<Head/>)).toMatchSnapshot()
 })
 
 it('should render child elements', () => {
-  expect(shallow(<TableHead>
+  expect(shallow(<Head>
     <tr>
       <th>Table head</th>
     </tr>
-  </TableHead>).contains(<tr>
+  </Head>).contains(<tr>
     <th>Table head</th>
   </tr>)).toEqual(true)
 })

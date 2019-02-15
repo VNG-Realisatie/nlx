@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { bool, string, array } from 'prop-types'
 import ServicesTable from '../../components/ServicesTable/ServicesTable';
-import { ASCENDING, DESCENDING } from '../../components/Table/SortableTableHeadCell';
+import { ASCENDING, DESCENDING } from '../../components/Table/SortableHeadCell';
 
 class ServicesTableContainer extends Component {
   constructor(props) {

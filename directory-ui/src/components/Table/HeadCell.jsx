@@ -1,7 +1,7 @@
 import { node, oneOf } from 'prop-types'
 import styled from 'styled-components'
 
-const TableHeadCell = styled.th`
+const HeadCell = styled.th`
     display: table-cell;
     padding: .65rem;
 
@@ -17,13 +17,13 @@ const TableHeadCell = styled.th`
     text-align: ${ p => p.align};
 `
 
-TableHeadCell.propTypes = {
+HeadCell.propTypes = {
   children: node,
   align: oneOf(['left', 'center', 'right'])
 }
 
-TableHeadCell.defaultProps = {
+HeadCell.defaultProps = {
   align: 'left'
 }
 
-export default TableHeadCell
+export default HeadCell

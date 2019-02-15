@@ -15,6 +15,14 @@ class DocumentationPage extends Component {
         }
     }
 
+    fetchServiceApiSpec(name, organization) {
+        const urlSafeName = encodeURIComponent(name)
+        const urlSafeOrganization = encodeURIComponent(organization)
+
+        const url =`/api/directory/get-service-api-spec/${urlSafeOrganization}/${urlSafeName}`
+        return fetch(url).then(res => res.json())
+    }
+
     componentDidMount() {
         const { match } = this.props
 
@@ -24,24 +32,12 @@ class DocumentationPage extends Component {
 
         const { organization_name, service_name } = match.params
 
-        const url =`/api/directory/get-service-api-spec/${
-            encodeURIComponent(organization_name)
-        }/${
-            encodeURIComponent(service_name)
-        }`
-
-        fetch(url)
-            .then(res => res.json())
-            .then((res) => {
-                let document
-
-                switch (res.type) {
-                    case 'OpenAPI2':
-                        document = JSON.parse(window.atob(res.document))
-                        break
-                    default:
-                        document = null
-                }
+        this
+            .fetchServiceApiSpec(service_name, organization_name)
+            .then(res => {
+                const document = res.type === 'OpenAPI2' ?
+                  JSON.parse(window.atob(res.document)) :
+                  null;
 
                 this.setState({
                     loading: false,
@@ -58,18 +54,20 @@ class DocumentationPage extends Component {
     }
 
     render() {
-        if (this.state.loading) {
+        const { loading, document } = this.state
+
+        if (loading) {
             return <Spinner />
         }
 
-        if (!this.state.document) {
+        if (!document) {
             return <ErrorMessage />
         }
 
         return (
           <div style={({ background: '#ffffff' })}>
               <RedocStandalone
-                spec={this.state.document}
+                spec={document}
                 options={{
                     hideDownloadButton: false,
                     theme: {

@@ -1,12 +1,12 @@
 import styled from 'styled-components'
-import TableRow from '../Table/TableRow'
+import Table from '../Table'
 
 const offlineBackgroundColor = '#F7F9FC'
 const offlineTextColor = '#A3AABF'
 const onlineBackgroundColor = '#FFFFFF'
 const onlineTextColor = '#2D3240'
 
-export const StyledServiceTableRow = styled(TableRow)`
+export const StyledServiceTableRow = styled(Table.Row)`
   td {
     background-color: ${
       p => p.status === 'offline' ?
