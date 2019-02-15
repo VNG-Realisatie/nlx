@@ -1,5 +1,7 @@
 FROM node:10.15.0-alpine AS build
 
+RUN apk add git
+
 # First copy only package.json to make the dependency fetching step optional.
 COPY txlog-ui/package.json \
     txlog-ui/package-lock.json \

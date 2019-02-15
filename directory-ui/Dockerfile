@@ -1,5 +1,7 @@
 FROM node:10.15.0-alpine AS build
 
+RUN apk add git
+
 ENV CI=true
 
 # First copy only package.json and yarn.lock to make the dependency fetching step optional.
