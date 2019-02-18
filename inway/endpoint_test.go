@@ -5,8 +5,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 
 	"go.uber.org/zap"
 
@@ -19,54 +20,34 @@ func TestSetAuthorization(t *testing.T) {
 	endpoint := &HTTPServiceEndpoint{}
 	// Test if public authorization is set
 	endpoint.SetAuthorizationPublic()
-	if endpoint.public != true {
-		t.Fatalf("result: %v, expected HttpServiceEndpoint to be true", endpoint.public)
-	}
+	assert.True(t, endpoint.public)
 
 	// Test if whitelist is created
 	whiteList := []string{"demo-org"}
 	endpoint.SetAuthorizationWhitelist(whiteList)
-	if endpoint.public != false {
-		t.Fatalf("result: %v, expected HttpServiceEndpoint to be false", endpoint.public)
-	}
-
-	if len(endpoint.whitelistedOrganizations) != 1 {
-		t.Fatalf("result: %d, expected HttpServiceEndpoint.whitelistedOrganizations to have a length of 1", len(endpoint.whitelistedOrganizations))
-	}
-
-	if strings.Compare("demo-org", endpoint.whitelistedOrganizations[0]) != 0 {
-		t.Fatalf("demo-org not present in endpoint.whitelistedOrganizations")
-	}
+	assert.False(t, endpoint.public)
+	assert.Len(t, endpoint.whitelistedOrganizations, 1)
+	assert.Equal(t, whiteList, endpoint.whitelistedOrganizations)
 
 	// Test if a not whitelisted organization will receive a 403 response
 	var err error
 	endpoint.logger = zap.NewNop()
 	httpRecorder := httptest.NewRecorder()
-	req, err := http.NewRequest("GET", "localhost/whitelist", nil)
-	if err != nil {
-		t.Fatal("error creating request", err)
-	}
+	req := httptest.NewRequest("GET", "/whitelist", nil)
 	reqMD := &RequestMetadata{
 		requesterOrganization: "demo-org-fault",
 	}
 	endpoint.handleRequest(reqMD, httpRecorder, req)
 
 	result := httpRecorder.Result()
-	if result.StatusCode != http.StatusForbidden {
-		t.Fatalf("result: %d, expected http status code: %d", result.StatusCode, http.StatusForbidden)
-	}
+	assert.Equal(t, http.StatusForbidden, result.StatusCode)
 
 	bytes, err := ioutil.ReadAll(result.Body)
 	if err != nil {
 		t.Fatal("error parsing result.body", err)
 	}
 
-	resultBody := strings.Trim(string(bytes[:len(bytes)]), "\n")
-	expected := fmt.Sprintf(`nlx outway: could not handle your request, organization "%s" is not allowed access.`, reqMD.requesterOrganization)
-	if strings.Compare(resultBody, expected) != 0 {
-		t.Fatalf("result: %s, expected: %s", resultBody, expected)
-	}
-
+	assert.Equal(t, fmt.Sprintf("nlx outway: could not handle your request, organization \"%s\" is not allowed access.\n", reqMD.requesterOrganization), string(bytes))
 }
 
 func TestInwayAddServiceEndpoint(t *testing.T) {
@@ -81,40 +62,24 @@ func TestInwayAddServiceEndpoint(t *testing.T) {
 
 	iw, err := NewInway(logger, nil, "localhost:1812", tlsOptions,
 		"localhost:1815", nil)
-	if err != nil {
-		t.Fatal(err)
-	}
+	assert.Nil(t, err)
 
 	p := process.NewProcess(logger)
 	// Test NewHTTPServiceEnpoint with invalid url
 	endpoint, err := iw.NewHTTPServiceEndpoint(logger, "mock-service", "12://invalid-endpoint", nil)
-	if err == nil {
-		t.Fatal("no error when adding a service with invalid endpoint")
-	}
-
-	if !strings.HasPrefix(err.Error(), "invalid endpoint provided") {
-		t.Fatalf("result: %s, expected error message to start with: invalid endpoint provided", err.Error())
-	}
+	assert.EqualError(t, err, "invalid endpoint provided: parse 12://invalid-endpoint: first path segment in URL cannot contain colon")
 
 	// Test NewHTTPServicedEnpoint
 	endpoint, err = iw.NewHTTPServiceEndpoint(logger, "mock-service", "127.0.0.1", nil)
-	if err != nil {
-		t.Fatal("failed to create service", err)
-	}
-
-	if strings.Compare(endpoint.ServiceName(), "mock-service") != 0 {
-		t.Fatalf("result %s, expected servicename : mock-service", endpoint.ServiceName())
-	}
+	assert.Nil(t, err)
+	assert.Equal(t, "mock-service", endpoint.ServiceName())
 
 	// Test if duplicate endpoints are disallowed
 	err = iw.AddServiceEndpoint(p, endpoint, config.ServiceDetails{
 		EndpointURL:            "http://127.0.0.1:1813",
 		AuthorizationWhitelist: []string{"nlx-forbidden"},
 	})
-
-	if err != nil {
-		t.Fatal("failed to add service endpoint", err)
-	}
+	assert.Nil(t, err)
 
 	err = iw.AddServiceEndpoint(p, endpoint, config.ServiceDetails{
 		EndpointURL:            "http://127.0.0.1:1813",
@@ -123,10 +88,7 @@ func TestInwayAddServiceEndpoint(t *testing.T) {
 	if err == nil {
 		t.Fatal("result: error is nil, expected error when calling AddServiceEndpoint with a duplicate service")
 	}
-
-	if strings.Compare(err.Error(), "service endpoint for a service with the same name has already been registered") != 0 {
-		t.Fatalf("result: %s, expected error message: service endpoint for a service with the same name has already been registered", err.Error())
-	}
+	assert.EqualError(t, err, "service endpoint for a service with the same name has already been registered")
 
 }
 
@@ -152,18 +114,8 @@ func TestHTTPServiceEndpointCreateRecordData(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		value, exists := recordData[test.doelBindingName]
-		if !exists {
-			t.Fatalf(`result: no value for  "doelbinding-process-id", expected value to be "%s"`, processID)
-		}
-
-		stringValue, ok := value.(string)
-		if !ok {
-			t.Fatalf(`result: value of "%s" cannot be cast to a string, expected value of " %s" to be of type string`, test.doelBindingName, test.doelBindingName)
-		}
-		if strings.Compare(stringValue, test.doelBindingValue) != 0 {
-			t.Fatalf(`result: %s, expected "doelbinding-process-id" to be %s`, stringValue, test.doelBindingValue)
-		}
+		assert.Contains(t, recordData, test.doelBindingName)
+		assert.Equal(t, recordData[test.doelBindingName], test.doelBindingValue)
 	}
 
 }
