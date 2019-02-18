@@ -6,7 +6,7 @@ ENV CI=true
 
 # First copy only package.json and yarn.lock to make the dependency fetching step optional.
 COPY directory-ui/package.json \
-    directory-ui/package-lock.json \
+     directory-ui/package-lock.json \
     /go/src/go.nlx.io/nlx/directory-ui/
 COPY .git /go/src/go.nlx.io/nlx/directory-ui/.git
 

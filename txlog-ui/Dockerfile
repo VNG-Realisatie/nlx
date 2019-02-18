@@ -4,8 +4,8 @@ RUN apk add git
 
 # First copy only package.json to make the dependency fetching step optional.
 COPY txlog-ui/package.json \
-    txlog-ui/package-lock.json \
-    /go/src/go.nlx.io/nlx/txlog-ui/
+     txlog-ui/package-lock.json \
+     /go/src/go.nlx.io/nlx/txlog-ui/
 COPY .git /go/src/go.nlx.io/nlx/txlog-ui/.git
 
 WORKDIR /go/src/go.nlx.io/nlx/txlog-ui
