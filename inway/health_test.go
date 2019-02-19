@@ -7,6 +7,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/directory-monitor/health"
@@ -28,27 +30,22 @@ func TestHealth(t *testing.T) {
 	inway.logger = zap.NewNop()
 	for _, test := range tests {
 		recorder := httptest.NewRecorder()
-		request, err := http.NewRequest("GET", test.url, nil)
-		if err != nil {
-			t.Errorf("error creating http request: %s", err)
-		}
+		request := httptest.NewRequest("GET", test.url, nil)
 		inway.handleHealthRequest(recorder, request)
 		status := &health.Status{}
 		response := recorder.Result()
-		if response.StatusCode != http.StatusOK {
-			t.Errorf(`result: "%d", expected for: http status code should be "%d" for url "%s"`, response.StatusCode, http.StatusOK, test.url)
-		}
+		assert.Equal(t, http.StatusOK, response.StatusCode)
+
 		bytes, err := ioutil.ReadAll(response.Body)
 		if err != nil {
 			t.Errorf("error reading bytes from response: %s", err)
 		}
+
 		err = json.Unmarshal(bytes, status)
 		if err != nil {
 			t.Errorf("error decoding bytes: %s", err)
 		}
 
-		if status.Healthy != test.expected {
-			t.Errorf(`result: "%t" expected: status.Healthy to be "%t" for url "%s"`, status.Healthy, test.expected, test.url)
-		}
+		assert.Equal(t, test.expected, status.Healthy)
 	}
 }
