@@ -113,6 +113,7 @@ func (s *RoundRobinLoadBalancedHTTPService) GetInwayAddresses() []string {
 }
 
 func (s *RoundRobinLoadBalancedHTTPService) getProxy() *httputil.ReverseProxy {
+	// TODO: unnecessary check? seems impossible that len(s.proxies) could be 0
 	if len(s.proxies) == 0 {
 		return nil
 	}
