@@ -21,7 +21,9 @@ WORKDIR /go/src/go.nlx.io/nlx/directory-registration-api
 
 RUN GIT_COMMIT_HASH=$(git rev-parse HEAD) && \
     GIT_TAG_NAME=$(git describe --tags) && \
-    go build -ldflags="-X 'go.nlx.io/nlx/common/version.BuildSourceHash=$GIT_COMMIT_HASH' -X 'go.nlx.io/nlx/common/version.BuildVersion=$GIT_TAG_NAME'" -o dist/bin/nlx-directory-registration-api ./cmd/nlx-directory-registration-api
+    go build \
+        -ldflags="-X 'go.nlx.io/nlx/common/version.BuildSourceHash=$GIT_COMMIT_HASH' -X 'go.nlx.io/nlx/common/version.BuildVersion=$GIT_TAG_NAME'" \
+        -o dist/bin/nlx-directory-registration-api ./cmd/nlx-directory-registration-api
 
 
 # Release binary on latest alpine image.

@@ -57,10 +57,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
-
+	logger = version.AddVersionToLogger(logger)
 	process := process.NewProcess(logger)
-	// Log component version information
-	version.Log(logger)
 
 	db, err := sqlx.Open("postgres", options.PostgresDSN)
 	if err != nil {
