@@ -61,7 +61,9 @@ func main() {
 		}
 	}()
 
-	logger = version.AddVersionToLogger(logger)
+	logger.Info("version info", zap.String("version", version.BuildVersion), zap.String("source-hash", version.BuildSourceHash))
+	logger = logger.With(zap.String("version", version.BuildVersion))
+
 	process := process.NewProcess(logger)
 
 	var logDB *sqlx.DB

@@ -67,7 +67,9 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
-	logger = version.AddVersionToLogger(logger)
+	logger.Info("version info", zap.String("version", version.BuildVersion), zap.String("source-hash", version.BuildSourceHash))
+	logger = logger.With(zap.String("version", version.BuildVersion))
+
 	process := process.NewProcess(logger)
 
 	insightConfig := config.LoadInsightConfig(logger, options.InsightConfig)
