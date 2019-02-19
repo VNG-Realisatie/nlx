@@ -61,10 +61,8 @@ func main() {
 		}
 	}()
 
+	logger = version.AddVersionToLogger(logger)
 	process := process.NewProcess(logger)
-
-	// Log component version information
-	version.Log(logger)
 
 	var logDB *sqlx.DB
 	if !options.DisableLogdb {

@@ -11,7 +11,7 @@ var (
 	BuildSourceHash = "unknown"
 )
 
-// Log writes the version and sourcehash to the logger
-func Log(logger *zap.Logger) {
-	logger.Info("Version information", zap.String("version", BuildVersion), zap.String("source-hash", BuildSourceHash))
+// AddVersionToLogger adds the version and sourcehash to the logger
+func AddVersionToLogger(logger *zap.Logger) *zap.Logger {
+	return logger.With(zap.String("version", BuildVersion), zap.String("source-hash", BuildSourceHash))
 }

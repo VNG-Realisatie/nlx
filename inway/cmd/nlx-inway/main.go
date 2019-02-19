@@ -61,9 +61,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
+	logger = version.AddVersionToLogger(logger)
 	process := process.NewProcess(logger)
-	// Log component version information
-	version.Log(logger)
 
 	logger.Info("starting inway", zap.String("directory-registration-address", options.DirectoryRegistrationAddress))
 	serviceConfig := config.LoadServiceConfig(logger, options.ServiceConfig)
