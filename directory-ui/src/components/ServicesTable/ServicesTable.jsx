@@ -7,8 +7,8 @@ const ServicesTable = ({ services, sortBy, sortOrder, onToggleSorting, ...props 
   <Table {...props}>
     <Table.Head>
       <Table.Row>
-        <Table.HeadCell style={({ width: '30px' })} align="center" />
-        <Table.SortableHeadCell style={({ width: '210px' })}
+        <Table.HeadCell style={({ width: '56px' })} align="center" />
+        <Table.SortableHeadCell
                                direction={sortBy === 'organization' ? sortOrder : null}
                                onClick={() => onToggleSorting('organization')}>
           Organization
@@ -17,9 +17,9 @@ const ServicesTable = ({ services, sortBy, sortOrder, onToggleSorting, ...props 
                                onClick={() => onToggleSorting('name')}>
           Service
         </Table.SortableHeadCell>
-        <Table.HeadCell style={({ width: '120px' })} align="right">API type</Table.HeadCell>
-        <Table.HeadCell style={({ width: '24px' })}/>
-        <Table.HeadCell style={({ width: '24px' })}/>
+        <Table.HeadCell align="right">API type</Table.HeadCell>
+        <Table.HeadCell style={({ width: '48px' })}/>
+        <Table.HeadCell style={({ width: '48px' })}/>
       </Table.Row>
     </Table.Head>
 

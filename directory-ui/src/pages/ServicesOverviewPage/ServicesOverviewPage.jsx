@@ -84,7 +84,7 @@ class ServicesOverviewPage extends Component {
                 <StyledServicesTableContainer services={services}
                                                 filterQuery={query}
                                                 filterByOnlineServices={!displayOfflineServices}
-                />
+                                                />
             </Container>
         )
     }

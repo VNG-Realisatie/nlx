@@ -1,14 +1,13 @@
-import React from 'react'
-import { oneOf } from 'prop-types'
-import { StyledSvg, StyledCircle } from './StatusIcon.styles'
+import styled from 'styled-components'
 
-const StatusIcon = ({ status }) =>
-  <StyledSvg viewBox="0 0 20 20">
-    <StyledCircle status={status} strokeWidth="2" cx="10" cy="10" r="4" fill="none" fillRule="evenodd"/>
-  </StyledSvg>
+export default styled.div`
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #63D19E;
 
-StatusIcon.propTypes = {
-  status: oneOf(['online', 'offline']).isRequired
-}
-
-export default StatusIcon
+  &[disabled] {
+    border-color: #CAD0E0;
+  }
+`

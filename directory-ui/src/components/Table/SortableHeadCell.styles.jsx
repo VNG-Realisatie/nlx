@@ -3,6 +3,8 @@ import HeadCell from './HeadCell'
 
 export const StyledSortableTableHeadCell = styled(HeadCell)`
     cursor: pointer;
+
+    color: ${p => p.isSorting && '#2D3240'}
 `
 
 export const StyledArrow = styled.svg`

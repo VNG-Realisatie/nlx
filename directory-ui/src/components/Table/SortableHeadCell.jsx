@@ -19,7 +19,7 @@ const SortableArrow = ({ direction }) =>
   direction === ASCENDING ? <ArrowDown/> : <ArrowUp/>
 
 const SortableHeadCell = ({ children, direction, ...other }) =>
-  <StyledSortableTableHeadCell {...other}>
+  <StyledSortableTableHeadCell isSorting={direction} {...other}>
     {children}
     {direction ? <SortableArrow direction={direction} /> : null}
   </StyledSortableTableHeadCell>
