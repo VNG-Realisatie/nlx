@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 
 export default styled.header`
-  padding: 0 36px;
   background: #ffffff;
   border-bottom: 1px solid #EAECF0;
 
