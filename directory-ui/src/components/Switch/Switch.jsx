@@ -1,38 +1,24 @@
 import React, { PureComponent } from 'react'
 import { string, bool } from 'prop-types'
-import styled from 'styled-components'
-
-import { inputStyle, labelStyle } from './Switch.styles'
-
-const StyledWrapper = styled.div`
-    position: relative;
-`
-
-const StyledInput = styled.input`
-    ${inputStyle};
-`
-
-const StyledLabel = styled.label`
-    ${labelStyle};
-`
+import { Wrapper, Input, Label } from './Switch.styles'
 
 class Switch extends PureComponent {
   render() {
     const { label, id, required, disabled, ...props } = this.props
 
     return (
-      <StyledWrapper {...props}>
-        <StyledInput
+      <Wrapper {...props}>
+        <Input
           type="checkbox"
           id={id}
           disabled={disabled}
           defaultChecked
         />
-        <StyledLabel htmlFor={id} title={label}>
+        <Label htmlFor={id} title={label}>
           {label}
           {required && ' *'}
-        </StyledLabel>
-      </StyledWrapper>
+        </Label>
+      </Wrapper>
     )
   }
 }

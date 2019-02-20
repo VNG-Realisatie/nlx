@@ -1,6 +1,11 @@
-import { css } from 'styled-components'
+import styled from 'styled-components'
 
-export const inputStyle = css`
+export const Wrapper = styled.div`
+    position: relative;
+    display: flex;
+`
+
+export const Input = styled.input`
     position: absolute;
     top: 0;
     left: 0;
@@ -16,29 +21,20 @@ export const inputStyle = css`
     &:not([disabled]) {
         cursor: pointer;
 
-        &:focus + label {
-            &:after {
-                border-color: #B4B4B4;
-            }
-        }
-
         &:checked + label {
             &:before {
                 background-color: #517FFF;
             }
             &:after {
-                width: 18px;
-                height: 18px;
-                top: -1px;
                 border-color: #517FFF;
-                transform: translateX(15px);
+                transform: translateX(12px);
             }
         }
     }
 `
 
-export const labelStyle = css`
-    padding: 0 0 0 46px;
+export const Label = styled.label`
+    padding: 0 0 0 38px;
 
     font-size: 1rem;
     line-height: 1.5rem;
@@ -49,28 +45,26 @@ export const labelStyle = css`
     &:before {
         content: '';
         position: absolute;
-        display: block;
-        width: 34px;
-        height: 18px;
-        top: 1px;
+        top: 3px;
         left: 0;
+        width: 28px;
+        height: 16px;
         border: 0;
-        border-radius: 9px;
-        background-color: #EAEAEA;
+        border-radius: 8px;
+        background-color: #F0F2F7;
         transition: background-color 0.25s ease;
     }
 
     &:after {
         content: '';
         position: absolute;
-        display: block;
-        width: 16px;
-        height: 16px;
-        top: 0px;
-        left: 0;
+        width: 18px;
+        height: 18px;
+        top: 2px;
+        left: -1px;
         border-radius: 50%;
         background-color: white;
-        border: 2px solid #DADADA;
+        border: 2px solid #CAD0E0;
         transform: translateX(-1px);
         transition: transform 0.25s ease;
     }
