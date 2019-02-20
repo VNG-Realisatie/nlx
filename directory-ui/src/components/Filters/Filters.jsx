@@ -1,12 +1,12 @@
 import React from 'react'
 import { func } from 'prop-types'
-import { StyledFilters, StyledInput, StyledSwitch, StyledSearchIcon } from './Filters.styles'
+import { StyledFilters, StyledInput, StyledSearchIcon, StyledSwitch } from './Filters.styles'
 
 const Filters = ({ onQueryChanged, onStatusFilterChanged, queryValue, ...props }) =>
   <StyledFilters {...props}>
     <StyledSearchIcon />
     <StyledInput dataTest="query" value={queryValue} placeholder="Search for an organization or service…" onChange={event => onQueryChanged(event.target.value)} />
-    <StyledSwitch label="Offline services" onChange={event => onStatusFilterChanged(event.target.checked)} />
+    <StyledSwitch label="Include offline" onChange={event => onStatusFilterChanged(event.target.checked)} />
   </StyledFilters>
 
 Filters.propTypes = {
