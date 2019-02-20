@@ -14,13 +14,13 @@ API stands for application programming interface, which is a software intermedia
 
 ## Application
 
-_Application_ is one of the main concepts of the NLX network, An application is only available within a organization and usually provide users an interface to query and mutate data. Applications call API's of [services](#service) in the NLX network. 
+_Application_ is one of the main concepts of the NLX network, An application is only available within a organization and usually provide users an interface to query and mutate data. Applications call API's of [services](#service) in the NLX network.
 
-# C 
+# C
 
-## CA 
+## CA
 
-In cryptography, a certificate authority or certification authority (CA) is an entity that issues digital certificates. A digital certificate certifies the ownership of a public key by the named subject of the certificate. This allows others (relying parties) to rely upon signatures or on assertions made about the private key that corresponds to the certified public key. A CA acts as a trusted third party—trusted both by the subject (owner) of the certificate and by the party relying upon the certificate. The format of these certificates is specified by the X.509 standard. 
+In cryptography, a certificate authority or certification authority (CA) is an entity that issues digital certificates. A digital certificate certifies the ownership of a public key by the named subject of the certificate. This allows others (relying parties) to rely upon signatures or on assertions made about the private key that corresponds to the certified public key. A CA acts as a trusted third party—trusted both by the subject (owner) of the certificate and by the party relying upon the certificate. The format of these certificates is specified by the X.509 standard.
 
 [wiki](https://en.wikipedia.org/wiki/Certificate_authority)
 
@@ -38,7 +38,7 @@ Docker is a tool designed to make it easier to create, deploy, and run applicati
 
 [Video  : Learn docker in 12 minutes](https://www.youtube.com/watch?v=YFl2mCHdv24)
 
-# G 
+# G
 
 ## Golang
 
@@ -58,13 +58,13 @@ Charts are easy to create, version, share, and publish — so start using Helm a
 
 ## HTTP
 
-The Hypertext Transfer Protocol (HTTP) is an application protocol for distributed, collaborative, hypermedia information systems.[1] HTTP is the foundation of data communication for the World Wide Web, where hypertext documents include hyperlinks to other resources that the user can easily access, for example by a mouse click or by tapping the screen. HTTP was developed to facilitate hypertext and the World Wide Web. 
+The Hypertext Transfer Protocol (HTTP) is an application protocol for distributed, collaborative, hypermedia information systems. HTTP is the foundation of data communication for the World Wide Web, where hypertext documents include hyperlinks to other resources that the user can easily access, for example by a mouse click or by tapping the screen. HTTP was developed to facilitate hypertext and the World Wide Web.
 
 [wiki](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol)
 
 ## HTTPS
 
-Hypertext Transfer Protocol Secure (HTTPS) is an extension of the Hypertext Transfer Protocol (HTTP) for secure communication over a computer network, and is widely used on the Internet.[1][2] In HTTPS, the communication protocol is encrypted using Transport Layer Security (TLS), or formerly, its predecessor, Secure Sockets Layer (SSL). The protocol is therefore also often referred to as HTTP over TLS
+Hypertext Transfer Protocol Secure (HTTPS) is an extension of the Hypertext Transfer Protocol (HTTP) for secure communication over a computer network, and is widely used on the Internet. In HTTPS, the communication protocol is encrypted using Transport Layer Security (TLS), or formerly, its predecessor, Secure Sockets Layer (SSL). The protocol is therefore also often referred to as HTTP over TLS
 
 [wiki](https://en.wikipedia.org/wiki/HTTPS)
 
@@ -134,8 +134,3 @@ TLS stand for transport layer security and is a crypthographic protocol designed
 Requests made by an [application](#application) to a [service](#service) are logged in the transaction log. The logging is done by the [outway](#outway) of the application and the [inway](#inway) of the [service](#service).
 
 [Transaction logs](../transactionlogs/)
-
-
-
-
-
