@@ -136,5 +136,3 @@ There are multiple live environments for NLX
 Copyright © VNG Realisatie 2017
 
 [Licensed under the EUPL](LICENCE.md)
-
-hoi
