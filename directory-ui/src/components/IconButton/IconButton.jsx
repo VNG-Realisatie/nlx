@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { string, bool } from 'prop-types'
+import { bool } from 'prop-types'
 
 const IconButton = styled.button`
     position: relative;
