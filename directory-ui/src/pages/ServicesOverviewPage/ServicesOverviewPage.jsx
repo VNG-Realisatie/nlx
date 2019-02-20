@@ -5,7 +5,6 @@ import { Spinner } from '@commonground/design-system'
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage'
 import Container from '../../components/Container/Container'
 import { StyledFilters, StyledServicesTableContainer } from './ServicesOverviewPage.styles';
-import ServicesTableContainer from "../../containers/ServicesTableContainer/ServicesTableContainer";
 import { mapListServicesAPIResponse } from './map-list-services-api-response';
 
 const ESCAPE_KEY_CODE = 27

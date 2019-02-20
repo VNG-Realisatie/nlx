@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 
 import GlobalStyles from './components/GlobalStyles/GlobalStyles'
-import Navigation from './components/Navigation/Navigation'
+import Header from './components/Header/Header'
 import ServiceOverviewPage from './pages/ServicesOverviewPage/ServicesOverviewPage'
 import DocumentationPage from './pages/DocumentationPage/DocumentationPage'
 
@@ -11,15 +11,15 @@ const App = () => (
     <div className="App">
         <GlobalStyles/>
         <Router>
-            <div>
-                <Navigation />
+            <Fragment>
+                <Header />
 
                 <Route exact path="/" component={ServiceOverviewPage} />
                 <Route
                     path="/documentation/:organization_name/:service_name"
                     component={DocumentationPage}
                 />
-            </div>
+            </Fragment>
         </Router>
     </div>
 )
