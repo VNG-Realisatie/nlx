@@ -36,8 +36,8 @@ export const Input = styled.input`
 export const Label = styled.label`
     padding: 0 0 0 38px;
 
-    font-size: 1rem;
-    line-height: 1.5rem;
+    font-size: 14px;
+    line-height: 22px;
 
     user-select: none;
     pointer-events: none;
