@@ -24,18 +24,27 @@ const fontDefinitions = [
 export default createGlobalStyle`
   ${generateFontFaceDefinitions(fontDefinitions)}
 
-  html,
-  body {
-    background: #F7F9FC;
+  html {
+    color: #2D3240;
     font-family: 'Source Sans Pro', sans-serif;
     font-size: 14px;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
+    background-color: #F7F9FC;
     margin: 0;
+    word-wrap: break-word;
+    word-break: break-word;
   }
 
   *, *:before, *:after {
     box-sizing: border-box;
+  }
+
+  *:focus {
+    outline: none;
   }
 `

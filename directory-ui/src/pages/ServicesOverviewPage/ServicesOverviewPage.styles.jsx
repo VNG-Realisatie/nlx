@@ -3,7 +3,8 @@ import Filters from '../../components/Filters/Filters'
 import ServicesTableContainer from "../../containers/ServicesTableContainer/ServicesTableContainer";
 
 export const StyledFilters = styled(Filters)`
-  width: 600px;
+  width: 100%;
+  max-width: 600px;
   margin: 48px auto 32px;
 `
 
