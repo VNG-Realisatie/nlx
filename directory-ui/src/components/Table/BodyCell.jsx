@@ -5,10 +5,10 @@ const BodyCell = styled.td`
     display: table-cell;
     padding: .6rem;
 
-    font-size: 1rem;
-    line-height: 1rem;
+    font-size: 14px;
+    line-height: 22px;
     font-weight: 400;
-    
+
     text-align: ${p => p.align};
 `
 

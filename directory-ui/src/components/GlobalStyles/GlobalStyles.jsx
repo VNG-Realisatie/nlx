@@ -27,7 +27,8 @@ export default createGlobalStyle`
   html {
     color: #2D3240;
     font-family: 'Source Sans Pro', sans-serif;
-    font-size: 14px;
+    font-size: 16px;
+    line-height: 24px;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

@@ -14,13 +14,16 @@ export const StyledServiceTableRow = styled(Table.Row)`
       }
   }
   color: ${
-    p => p.status === 'offline' ? 
-      offlineTextColor : onlineTextColor 
+    p => p.status === 'offline' ?
+      offlineTextColor : onlineTextColor
   }
 `
 
 export const StyledApiTypeLabel = styled.span`
-  padding: .3rem .5rem;
+  display: inline-flex;
+  font-size: 12px;
+  line-height: 20px;
+  padding: 3px 8px 5px;
   border-radius: 3px;
   border: 1px solid #CAD0E0;
   opacity: ${
