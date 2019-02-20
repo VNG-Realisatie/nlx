@@ -1,6 +1,7 @@
 import styled from 'styled-components'
+import { string, bool } from 'prop-types'
 
-export default styled.button`
+const IconButton = styled.button`
     position: relative;
     display: flex;
     align-items: center;
@@ -13,6 +14,7 @@ export default styled.button`
     user-select: none;
     background: none;
     border: none;
+    border-radius: ${p => p.isRounded ? '50%' : 0};
     overflow: hidden;
 
     &:not([disabled]) {
@@ -51,3 +53,15 @@ export default styled.button`
         }
     }
 `
+
+IconButton.propTypes = {
+    isRounded: bool,
+    disabled: bool,
+}
+
+IconButton.defaultProps = {
+    isRounded: true,
+    disabled: false,
+}
+
+export default IconButton

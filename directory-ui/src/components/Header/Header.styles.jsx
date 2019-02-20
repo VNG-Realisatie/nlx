@@ -38,9 +38,11 @@ export default styled.header`
 
       a {
         font-size: 14px;
+        font-weight: 600;
         text-decoration: none;
-        padding: 4px 10px 6px;
+        padding: 2px 10px 4px;
         border-radius: 3px;
+        white-space: nowrap;
       }
 
       &:not(.active) a {

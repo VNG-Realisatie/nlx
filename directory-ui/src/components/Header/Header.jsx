@@ -5,6 +5,7 @@ import logo from './assets/logo.svg'
 import gitlab from './assets/gitlab.svg'
 
 import StyledHeader, {StyledNavigation} from './Header.styles'
+import IconButton from '../IconButton/IconButton'
 
 const Header = () =>
     <StyledHeader>
@@ -27,9 +28,9 @@ const Header = () =>
                 </li>
             </ul>
 
-            <a className="navbar-gitlab" href="https://gitlab.com/commonground/nlx" target="_blank" aria-label="GitLab" rel="noopener noreferrer">
+            <IconButton as="a" className="navbar-gitlab" href="https://gitlab.com/commonground/nlx" target="_blank" aria-label="GitLab" rel="noopener noreferrer">
                 <img src={gitlab} alt="Gitlab logo" />
-            </a>
+            </IconButton>
         </StyledNavigation>
     </StyledHeader>
 
