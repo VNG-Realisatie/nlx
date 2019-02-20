@@ -3,7 +3,9 @@ import React, { Component } from 'react'
 import { Spinner } from '@commonground/design-system'
 
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage'
+import Container from '../../components/Container/Container'
 import { StyledFilters, StyledServicesTableContainer } from './ServicesOverviewPage.styles';
+import ServicesTableContainer from "../../containers/ServicesTableContainer/ServicesTableContainer";
 import { mapListServicesAPIResponse } from './map-list-services-api-response';
 
 const ESCAPE_KEY_CODE = 27
@@ -74,17 +76,17 @@ class ServicesOverviewPage extends Component {
         }
 
         return (
-          <div>
-              <StyledFilters onQueryChanged={this.searchOnChange}
-                             onStatusFilterChanged={this.switchOnChange}
-                             queryValue={query}
-              />
+            <Container>
+                <StyledFilters onQueryChanged={this.searchOnChange}
+                                onStatusFilterChanged={this.switchOnChange}
+                                queryValue={query}
+                />
 
-              <StyledServicesTableContainer services={services}
-                                            filterQuery={query}
-                                            filterByOnlineServices={!displayOfflineServices}
-              />
-          </div>
+                <StyledServicesTableContainer services={services}
+                                                filterQuery={query}
+                                                filterByOnlineServices={!displayOfflineServices}
+                />
+            </Container>
         )
     }
 }

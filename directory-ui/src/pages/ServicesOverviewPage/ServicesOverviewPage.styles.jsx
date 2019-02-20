@@ -4,12 +4,11 @@ import ServicesTableContainer from "../../containers/ServicesTableContainer/Serv
 
 export const StyledFilters = styled(Filters)`
   width: 600px;
-  margin: 60px auto;
+  margin: 48px auto 32px;
 `
 
 export const StyledServicesTableContainer = styled(ServicesTableContainer)`
-  width: 1140px;
-  margin: 0 auto 50px auto;
+  margin-bottom: 56px;
 `
 
 StyledServicesTableContainer.displayName = 'ServicesTableContainer'
