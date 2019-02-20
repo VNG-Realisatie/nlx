@@ -25,7 +25,7 @@ const ServicesTableRow = ({ status, organization, name, apiType }) =>
         }
       </Table.BodyCell>
       <Table.BodyCell padding="none" border="left">
-        <IconButton dataTest="link-icon"
+        <IconButton isRounded={false} dataTest="link-icon"
                     onClick={() => copy(apiAddressForService(name, organization))}
           >
             <LinkIcon />
@@ -34,7 +34,7 @@ const ServicesTableRow = ({ status, organization, name, apiType }) =>
       <Table.BodyCell padding="none" border="left">
         {
           apiType ?
-            <IconButton as={Link} to={`/documentation/${organization}/${name}`}>
+            <IconButton as={Link} to={`/documentation/${organization}/${name}`} isRounded={false}>
               <DocsIcon />
             </IconButton> :
             <IconButton disabled><DocsIcon /></IconButton>

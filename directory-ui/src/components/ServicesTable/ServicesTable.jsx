@@ -8,7 +8,7 @@ const ServicesTable = ({ services, sortBy, sortOrder, onToggleSorting, ...props 
     <Table.Head>
       <Table.Row>
         <Table.HeadCell style={({ width: '56px' })} align="center" />
-        <Table.SortableHeadCell
+        <Table.SortableHeadCell style={({ width: '300px' })}
                                direction={sortBy === 'organization' ? sortOrder : null}
                                onClick={() => onToggleSorting('organization')}>
           Organization

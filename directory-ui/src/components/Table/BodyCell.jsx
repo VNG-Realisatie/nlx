@@ -3,7 +3,7 @@ import styled, {css} from 'styled-components'
 
 const BodyCell = styled.td`
     display: table-cell;
-    padding: ${p => p.padding === 'none' ? 0 : '8px 16px 9px 0'};
+    padding: ${p => p.padding === 'none' ? 0 : '9px 16px 10px 0'};
 
     font-size: 14px;
     line-height: 22px;

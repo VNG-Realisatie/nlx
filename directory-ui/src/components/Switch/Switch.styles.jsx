@@ -34,6 +34,7 @@ export const Input = styled.input`
 `
 
 export const Label = styled.label`
+    color: #2D3240;
     padding: 0 0 0 38px;
 
     font-size: 14px;
@@ -45,13 +46,13 @@ export const Label = styled.label`
     &:before {
         content: '';
         position: absolute;
-        top: 3px;
+        top: 4px;
         left: 0;
         width: 28px;
         height: 16px;
         border: 0;
         border-radius: 8px;
-        background-color: #F0F2F7;
+        background-color: #CAD0E0;
         transition: background-color 0.25s ease;
     }
 
@@ -60,7 +61,7 @@ export const Label = styled.label`
         position: absolute;
         width: 18px;
         height: 18px;
-        top: 2px;
+        top: 3px;
         left: -1px;
         border-radius: 50%;
         background-color: white;

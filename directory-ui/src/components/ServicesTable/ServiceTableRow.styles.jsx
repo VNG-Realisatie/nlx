@@ -16,6 +16,7 @@ export const StyledApiTypeLabel = styled.span`
   padding: 1px 8px 2px;
   border-radius: 3px;
   border: 1px solid #CAD0E0;
+  white-space: nowrap;
   opacity: ${
   p => p.status === 'offline' ?
     .4 : 1
