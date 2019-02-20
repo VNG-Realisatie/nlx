@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export default styled.header`
   background: #ffffff;
-  border-bottom: 1px solid #EAECF0;
+  box-shadow: 0 0 0 1px rgba(45,50,64,.04), 0 1px 8px rgba(45,50,64,.04);
 
   .navbar-logo {
     margin-right: 24px;
