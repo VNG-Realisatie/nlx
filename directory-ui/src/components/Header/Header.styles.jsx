@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export default styled.header`
   background: #ffffff;
-  box-shadow: 0 0 0 1px rgba(45,50,64,.04), 0 1px 8px rgba(45,50,64,.04);
+  box-shadow: 0 0 0 1px rgba(45,50,64,.05), 0 1px 8px rgba(45,50,64,.05);
 
   .navbar-logo {
     margin-right: 24px;
@@ -47,8 +47,14 @@ export default styled.header`
       &:not(.active) a {
         color: #A3AABF;
 
-        &:hover {
+        &:hover,
+        &:focus {
           background-color: #F7F9FC;
+          color: #676D80;
+        }
+
+        &:active {
+          background-color: #F0F2F7;
         }
       }
 
