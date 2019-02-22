@@ -12,7 +12,7 @@ const Table = styled.table`
     border-collapse: separate;
     border-spacing: 0;
     display: table;
-    width: 100%;
+    margin: 0 auto;
 `
 
 Table.propTypes = {
