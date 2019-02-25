@@ -24,6 +24,9 @@ If you are adding code, make sure you've added and updated the relevant document
 
 When submitting the Merge Request, please accompany it with a description of the problem you are trying to address and the issue numbers that this Merge Request fixes/addresses.
 
+When working on a feature which requires specific knowledge of multiple disciplines (eg. both frontend & backend), make sure to complete your MR before asking for a review.
+By doing so, the reviewer can consider the complete solution and give more insightful feedback.
+
 ### 3. Improve
 
 All contributions have to be reviewed by someone.
