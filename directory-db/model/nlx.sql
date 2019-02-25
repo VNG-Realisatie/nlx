@@ -105,6 +105,9 @@ CREATE TABLE directory.availabilities(
 	inway_id integer NOT NULL,
 	service_id integer NOT NULL,
 	healthy bool NOT NULL DEFAULT false,
+	unhealthy_since timestamptz,
+	last_announced timestamptz NOT NULL DEFAULT NOW(),
+	active bool NOT NULL DEFAULT false,
 	CONSTRAINT availabilities_pk PRIMARY KEY (id),
 	CONSTRAINT availabilities_uq_inway_service UNIQUE (inway_id,service_id)
 
@@ -168,39 +171,41 @@ CREATE FUNCTION directory.availabilities_notify_event ()
 	COST 1
 	AS $$
 DECLARE 
-        data json;
-        notification json;
-    BEGIN
-        IF (TG_OP = 'DELETE') THEN
-            data = row_to_json(OLD);
-        ELSE
-             SELECT row_to_json(t) into data from (
-                SELECT
-                    availabilities.id,
-                    organizations.name AS organization_name,
-                    services.name AS service_name,
-                    inways.address
-                FROM directory.availabilities
-                    INNER JOIN directory.inways
-                        ON availabilities.inway_id = inways.id
-                    INNER JOIN directory.services
-                        ON availabilities.service_id = services.id
-                    INNER JOIN directory.organizations
-                        ON services.organization_id = organizations.id
-                WHERE 
-                    availabilities.id = NEW.id
-             ) t;
-        END IF;
-
-      
-        notification = json_build_object(
-                          'action', TG_OP,
-                          'availability', data);
-                
-        PERFORM pg_notify('availabilities',notification::text);
-   
-        RETURN NULL; 
-    END;
+	data json;	
+	notification json;
+BEGIN
+	IF (TG_OP = 'DELETE') THEN
+		data = row_to_json(OLD);
+	ELSIF TG_OP = 'INSERT' OR (TG_OP = 'UPDATE' AND OLD.active != NEW.active) THEN
+		SELECT row_to_json(t) into data from (
+			SELECT
+				availabilities.id,
+				organizations.name AS organization_name,
+				services.name AS service_name,
+				inways.address,
+				availabilities.active
+			FROM directory.availabilities
+				INNER JOIN directory.inways
+					ON availabilities.inway_id = inways.id
+				INNER JOIN directory.services
+					ON availabilities.service_id = services.id
+				INNER JOIN directory.organizations
+					ON services.organization_id = organizations.id
+			WHERE 
+				availabilities.id = NEW.id
+		 ) t;
+	END IF;
+		
+	IF (TG_OP = 'UPDATE' AND OLD.active = NEW.active) = false THEN 
+		notification = json_build_object(
+					 	 'action', TG_OP,
+					  	'availability', data);
+			
+		PERFORM pg_notify('availabilities',notification::text);
+ 	END IF;
+	
+	RETURN NULL;
+END;
 $$;
 -- ddl-end --
 ALTER FUNCTION directory.availabilities_notify_event() OWNER TO postgres;
@@ -209,10 +214,46 @@ ALTER FUNCTION directory.availabilities_notify_event() OWNER TO postgres;
 -- object: availabilities_notify | type: TRIGGER --
 -- DROP TRIGGER IF EXISTS availabilities_notify ON directory.availabilities CASCADE;
 CREATE TRIGGER availabilities_notify
-	AFTER INSERT OR DELETE 
+	AFTER INSERT OR DELETE OR UPDATE
 	ON directory.availabilities
 	FOR EACH ROW
 	EXECUTE PROCEDURE directory.availabilities_notify_event();
+-- ddl-end --
+
+-- object: inways_organization_id | type: INDEX --
+-- DROP INDEX IF EXISTS directory.inways_organization_id CASCADE;
+CREATE INDEX inways_organization_id ON directory.inways
+	USING btree
+	(
+	  organization_id
+	);
+-- ddl-end --
+
+-- object: services_organization_id | type: INDEX --
+-- DROP INDEX IF EXISTS directory.services_organization_id CASCADE;
+CREATE INDEX services_organization_id ON directory.services
+	USING btree
+	(
+	  organization_id
+	);
+-- ddl-end --
+
+-- object: availabilities_service_id | type: INDEX --
+-- DROP INDEX IF EXISTS directory.availabilities_service_id CASCADE;
+CREATE INDEX availabilities_service_id ON directory.availabilities
+	USING btree
+	(
+	  service_id
+	);
+-- ddl-end --
+
+-- object: availabilities_inway_id | type: INDEX --
+-- DROP INDEX IF EXISTS directory.availabilities_inway_id CASCADE;
+CREATE INDEX availabilities_inway_id ON directory.availabilities
+	USING btree
+	(
+	  inway_id
+	);
 -- ddl-end --
 
 -- object: services_fk_organization | type: CONSTRAINT --
@@ -243,31 +284,31 @@ REFERENCES directory.services (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
--- object: grant_52a642e50e | type: PERMISSION --
+-- object: grant_4c7d53dbd7 | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.organizations
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_b6b2587464 | type: PERMISSION --
+-- object: grant_f5b2131b1e | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.inways
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_493c0fcaa3 | type: PERMISSION --
+-- object: grant_cf8ff83cc3 | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.services
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_a790dc801d | type: PERMISSION --
+-- object: grant_4ca9c15a39 | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.availabilities
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_8af73cb51e | type: PERMISSION --
+-- object: grant_70f31162dc | type: PERMISSION --
 GRANT USAGE
    ON SCHEMA directory
    TO "nlx-directory";

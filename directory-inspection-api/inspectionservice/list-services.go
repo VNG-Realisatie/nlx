@@ -42,7 +42,9 @@ func newListServicesHandler(db *sqlx.DB, logger *zap.Logger) (*listServicesHandl
 			LEFT JOIN directory.inways
 				ON availabilities.inway_id = inways.id
 		WHERE
-			internal = false OR (internal = true AND organizations.name = $1)
+			(internal = false OR (internal = true AND organizations.name = $1))
+		AND 
+			services.id IN (SELECT service_id FROM directory.availabilities WHERE active = true )  
 		GROUP BY services.id, organizations.id
 	`)
 	if err != nil {
@@ -59,6 +61,7 @@ func (h *listServicesHandler) ListServices(ctx context.Context, req *inspectiona
 	if err != nil {
 		return nil, err
 	}
+	h.logger.Debug("querying services", zap.String("organizationName", organizationName))
 	rows, err := h.stmtSelectServices.Queryx(organizationName)
 	if err != nil {
 		h.logger.Error("failed to execute stmtSelectServices", zap.Error(err))

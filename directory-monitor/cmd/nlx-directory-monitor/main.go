@@ -19,11 +19,11 @@ import (
 )
 
 var options struct {
-	NLXRootCert     string `long:"tls-nlx-root-cert" env:"TLS_NLX_ROOT_CERT" description:"Absolute or relative path to the NLX CA root cert .pem"`
-	MonitorCertFile string `long:"tls-monitor-cert" env:"TLS_MONITOR_CERT" description:"Absolute or relative path to the Monitor cert .pem"`
-	MonitorKeyFile  string `long:"tls-monitor-key" env:"TLS_MONITOR_KEY" description:"Absolute or relative path to the Monitor key .pem"`
-
-	PostgresDSN string `long:"postgres-dsn" env:"POSTGRES_DSN" default:"postgres://postgres:postgres@postgres/nlx?sslmode=disable" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
+	NLXRootCert       string `long:"tls-nlx-root-cert" env:"TLS_NLX_ROOT_CERT" description:"Absolute or relative path to the NLX CA root cert .pem"`
+	MonitorCertFile   string `long:"tls-monitor-cert" env:"TLS_MONITOR_CERT" description:"Absolute or relative path to the Monitor cert .pem"`
+	MonitorKeyFile    string `long:"tls-monitor-key" env:"TLS_MONITOR_KEY" description:"Absolute or relative path to the Monitor key .pem"`
+	TTLOfflineService int    `long:"ttl-offline-service" env:"TTL_OFFLINE_SERVICE" description:"Days a service can be offline before being removed from the directory" required:"true"`
+	PostgresDSN       string `long:"postgres-dsn" env:"POSTGRES_DSN" default:"postgres://postgres:postgres@postgres/nlx?sslmode=disable" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
 
 	logoptions.LogOptions
 }
@@ -69,7 +69,8 @@ func main() {
 		logger.Fatal("failed to load x509 keypair for monitor", zap.Error(err))
 	}
 
-	err = monitor.RunHealthChecker(process, logger, db, options.PostgresDSN, caCertPool, certKeyPair)
+	logger.Debug("starting health checker", zap.Int("ttlOfflineService", options.TTLOfflineService))
+	err = monitor.RunHealthChecker(process, logger, db, options.PostgresDSN, caCertPool, certKeyPair, options.TTLOfflineService)
 	if err != nil && err != context.DeadlineExceeded {
 		logger.Fatal("failed to run monitor healthchecker", zap.Error(err))
 	}

@@ -52,6 +52,8 @@ spec:
               value: "/certs/{{.component}}.{{.Values.domain}}.pem"
             - name: TLS_MONITOR_KEY
               value: "/certs/{{.component}}.{{.Values.domain}}-key.pem"
+            - name: TTL_OFFLINE_SERVICE
+              value: "{{.Values.ttlOfflineService}}"
           volumeMounts:
             - name: certs
               mountPath: /certs

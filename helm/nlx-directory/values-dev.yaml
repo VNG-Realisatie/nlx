@@ -14,6 +14,8 @@ caAddress: ca-cfssl-unsafe.nlx-dev-directory
 
 insightDirectoryInspectionAPIURL: "http://directory-inspection-api"
 
+ttlOfflineService: 1
+
 externalIP: ""
 demoEnv: "dev"
 demoDomain: "minikube"
