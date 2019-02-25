@@ -6,11 +6,11 @@ We love issues and merge requests from everyone.
 
 ## Problems, suggestions and questions in Issues
 
-You don't need to change any of our code or documentation to be a contributor. Please help development by reporting problems, suggesting changes and asking questions. To do this, you can [create a GitHub Issue](https://help.github.com/articles/creating-an-issue/) for this project in the [GitLab Issues for NLX](https://gitlab.com/commonground/nlx/issues).
+You don't need to change any of our code or documentation to be a contributor. Please help development by reporting problems, suggesting changes and asking questions. To do this, you can [create an issue using GitLab](https://docs.gitlab.com/ee/user/project/issues/create_new_issue.html) for this project in the [GitLab Issues for NLX](https://gitlab.com/commonground/nlx/issues).
 
 ## Documentation and code in Merge Requests
 
-If you want to add to the documentation or code of one of our projects you should push a branch and make a Merge Request. If you never used GitLab, get up to speed by reading about the [GitLab Flow](https://about.gitlab.com/2014/09/29/gitlab-flow/).
+If you want to add to the documentation or code of one of our projects you should push a branch and make a Merge Request. If you have never used GitLab before, get up to speed by reading about the [GitLab Flow](https://about.gitlab.com/2014/09/29/gitlab-flow/).
 
 ### 1. Make your changes
 
