@@ -1,4 +1,4 @@
-apiVersion: skaffold/v1beta2
+apiVersion: skaffold/v1beta5
 kind: Config
 build:
   artifacts:
@@ -55,7 +55,7 @@ build:
   - image: nlxio/txlog-ui
     context: .
     docker:
-        dockerfile: txlog-ui/Dockerfile
+      dockerfile: txlog-ui/Dockerfile
   - image: nlxio/insight-api
     context: .
     docker:
@@ -78,8 +78,8 @@ profiles:
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           directoryDBImage: nlxio/directory-db
           directoryInspectionImage: nlxio/directory-inspection-api
-          directoryRegistrationImage: nlxio/directory-registration-api
           directoryMonitorImage: nlxio/directory-monitor
+          directoryRegistrationImage: nlxio/directory-registration-api
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs
           insightDemoImage: nlxio/insight-demo
@@ -149,8 +149,8 @@ profiles:
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           directoryDBImage: nlxio/directory-db
           directoryInspectionImage: nlxio/directory-inspection-api
-          directoryRegistrationImage: nlxio/directory-registration-api
           directoryMonitorImage: nlxio/directory-monitor
+          directoryRegistrationImage: nlxio/directory-registration-api
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs
           insightDemoImage: nlxio/insight-demo
@@ -206,8 +206,8 @@ profiles:
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           directoryDBImage: nlxio/directory-db
           directoryInspectionImage: nlxio/directory-inspection-api
-          directoryRegistrationImage: nlxio/directory-registration-api
           directoryMonitorImage: nlxio/directory-monitor
+          directoryRegistrationImage: nlxio/directory-registration-api
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs
           insightDemoImage: nlxio/insight-demo
@@ -263,8 +263,8 @@ profiles:
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           directoryDBImage: nlxio/directory-db
           directoryInspectionImage: nlxio/directory-inspection-api
-          directoryRegistrationImage: nlxio/directory-registration-api
           directoryMonitorImage: nlxio/directory-monitor
+          directoryRegistrationImage: nlxio/directory-registration-api
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs
           insightDemoImage: nlxio/insight-demo
