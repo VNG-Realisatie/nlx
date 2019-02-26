@@ -241,7 +241,7 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, dataSubjects map[string]co
 		FROM transactionlog.records
 			INNER JOIN matchedRecords
 				ON records.id = matchedRecords.record_id
-		ORDER BY created
+		ORDER BY created DESC
 		LIMIT CASE WHEN $1>0 THEN $1 ELSE NULL END
 		OFFSET $2
 	`
