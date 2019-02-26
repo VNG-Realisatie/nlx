@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="0,0" last-zoom="1"
+<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="965,0" last-zoom="1"
 	 default-schema="public" default-owner="postgres">
 <role name="nlx-directory"
       login="true"
@@ -25,7 +25,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="directory"/>
 	<role name="postgres"/>
 	<appended-sql><![CDATA[GRANT USAGE, SELECT ON SEQUENCE organizations_id_seq TO "nlx-directory";]]></appended-sql>
-	<position x="120" y="280"/>
+	<position x="120" y="260"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -50,7 +50,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="directory"/>
 	<role name="postgres"/>
 	<appended-sql><![CDATA[GRANT USAGE, SELECT ON SEQUENCE services_id_seq TO "nlx-directory";]]></appended-sql>
-	<position x="1260" y="540"/>
+	<position x="1260" y="520"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -94,7 +94,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="directory"/>
 	<role name="postgres"/>
 	<appended-sql><![CDATA[GRANT USAGE, SELECT ON SEQUENCE inways_id_seq TO "nlx-directory";]]></appended-sql>
-	<position x="1300" y="80"/>
+	<position x="1300" y="60"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -116,7 +116,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="directory"/>
 	<role name="postgres"/>
 	<appended-sql><![CDATA[GRANT USAGE, SELECT ON SEQUENCE availabilities_id_seq TO "nlx-directory";]]></appended-sql>
-	<position x="2580" y="200"/>
+	<position x="2580" y="180"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -127,6 +127,15 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="integer" length="0"/>
 	</column>
 	<column name="healthy" not-null="true" default-value="false">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="unhealthy_since">
+		<type name="timestamptz" length="0"/>
+	</column>
+	<column name="last_announced" not-null="true" default-value="NOW()">
+		<type name="timestamptz" length="0"/>
+	</column>
+	<column name="active" not-null="true" default-value="false">
 		<type name="bool" length="0"/>
 	</column>
 	<constraint name="availabilities_pk" type="pk-constr" table="directory.availabilities">
@@ -189,46 +198,80 @@ END]]></definition>
 	<type name="trigger" length="0"/>
 	</return-type>
 	<definition><![CDATA[DECLARE 
-        data json;
-        notification json;
-    BEGIN
-        IF (TG_OP = 'DELETE') THEN
-            data = row_to_json(OLD);
-        ELSE
-             SELECT row_to_json(t) into data from (
-                SELECT
-                    availabilities.id,
-                    organizations.name AS organization_name,
-                    services.name AS service_name,
-                    inways.address
-                FROM directory.availabilities
-                    INNER JOIN directory.inways
-                        ON availabilities.inway_id = inways.id
-                    INNER JOIN directory.services
-                        ON availabilities.service_id = services.id
-                    INNER JOIN directory.organizations
-                        ON services.organization_id = organizations.id
-                WHERE 
-                    availabilities.id = NEW.id
-             ) t;
-        END IF;
-
-      
-        notification = json_build_object(
-                          'action', TG_OP,
-                          'availability', data);
-                
-        PERFORM pg_notify('availabilities',notification::text);
-   
-        RETURN NULL; 
-    END;]]></definition>
+	data json;	
+	notification json;
+BEGIN
+	IF (TG_OP = 'DELETE') THEN
+		data = row_to_json(OLD);
+	ELSIF TG_OP = 'INSERT' OR (TG_OP = 'UPDATE' AND OLD.active != NEW.active) THEN
+		SELECT row_to_json(t) into data from (
+			SELECT
+				availabilities.id,
+				organizations.name AS organization_name,
+				services.name AS service_name,
+				inways.address,
+				availabilities.active
+			FROM directory.availabilities
+				INNER JOIN directory.inways
+					ON availabilities.inway_id = inways.id
+				INNER JOIN directory.services
+					ON availabilities.service_id = services.id
+				INNER JOIN directory.organizations
+					ON services.organization_id = organizations.id
+			WHERE 
+				availabilities.id = NEW.id
+		 ) t;
+	END IF;
+		
+	IF (TG_OP = 'UPDATE' AND OLD.active = NEW.active) = false THEN 
+		notification = json_build_object(
+					 	 'action', TG_OP,
+					  	'availability', data);
+			
+		PERFORM pg_notify('availabilities',notification::text);
+ 	END IF;
+	
+	RETURN NULL;
+END;]]></definition>
 </function>
 
 <trigger name="availabilities_notify" firing-type="AFTER" per-line="true" constraint="false"
-	 ins-event="true" del-event="true" upd-event="false" trunc-event="false"
+	 ins-event="true" del-event="true" upd-event="true" trunc-event="false"
 	 table="directory.availabilities">
 		<function signature="directory.availabilities_notify_event()"/>
 </trigger>
+
+<index name="inways_organization_id" table="directory.inways"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="organization_id"/>
+		</idxelement>
+</index>
+
+<index name="services_organization_id" table="directory.services"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="organization_id"/>
+		</idxelement>
+</index>
+
+<index name="availabilities_service_id" table="directory.availabilities"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="service_id"/>
+		</idxelement>
+</index>
+
+<index name="availabilities_inway_id" table="directory.availabilities"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="inway_id"/>
+		</idxelement>
+</index>
 
 <constraint name="services_fk_organization" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="directory.organizations" table="directory.services">

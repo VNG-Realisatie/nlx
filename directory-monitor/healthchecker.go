@@ -27,8 +27,9 @@ type healthChecker struct {
 	availabilitiesLock sync.RWMutex
 	availabilities     map[uint64]*availability
 
-	stmtSelectAvailabilities *sqlx.Stmt
-	stmtUpdateHealth         *sqlx.Stmt
+	stmtSelectAvailabilities  *sqlx.Stmt
+	stmtUpdateHealth          *sqlx.Stmt
+	stmtCleanUpAvailabilities *sqlx.Stmt
 }
 
 type availability struct {
@@ -36,6 +37,7 @@ type availability struct {
 	OrganizationName string `json:"organization_name"`
 	ServiceName      string `json:"service_name"`
 	Address          string `json:"address"`
+	Active           bool   `json:"active"`
 }
 
 type databaseAction struct {
@@ -46,7 +48,7 @@ type databaseAction struct {
 const dbNotificationChannel = "availabilities"
 
 // RunHealthChecker starts a healthchecker process
-func RunHealthChecker(process *process.Process, logger *zap.Logger, db *sqlx.DB, postgresDNS string, caCertPool *x509.CertPool, certKeyPair tls.Certificate) error {
+func RunHealthChecker(process *process.Process, logger *zap.Logger, db *sqlx.DB, postgresDNS string, caCertPool *x509.CertPool, certKeyPair tls.Certificate, ttlOfflineService int) error {
 	h := &healthChecker{
 		logger:         logger,
 		availabilities: make(map[uint64]*availability),
@@ -64,22 +66,53 @@ func RunHealthChecker(process *process.Process, logger *zap.Logger, db *sqlx.DB,
 			availabilities.id,
 			organizations.name AS organization_name,
 			services.name AS service_name,
-			inways.address
+			inways.address,
+			availabilities.active as active
 		FROM directory.availabilities
 			INNER JOIN directory.inways
 				ON availabilities.inway_id = inways.id
 			INNER JOIN directory.services
-				ON availabilities.service_id = services.id
+				ON availabilities.service_id = services.id 
 			INNER JOIN directory.organizations
 				ON services.organization_id = organizations.id
 	`)
+
 	h.stmtUpdateHealth, err = db.Preparex(`
-		UPDATE directory.availabilities
-			SET healthy = $2
-			WHERE id = $1 AND healthy != $2
-		`)
+		UPDATE 
+			directory.availabilities
+		SET 
+			healthy = $2,
+			unhealthy_since = 
+				CASE WHEN $2 = false THEN 
+					NOW()
+				ELSE 
+					NULL
+				END,
+			active = 
+				CASE WHEN $2 = true THEN 
+					true
+				ELSE 
+					active
+				END
+		WHERE 
+			id = $1 AND healthy != $2`)
 	if err != nil {
 		return errors.Wrap(err, "failed to prepare stmtUpdateHealth")
+	}
+
+	h.stmtCleanUpAvailabilities, err = db.Preparex(fmt.Sprintf(`
+		UPDATE 
+			directory.availabilities
+		SET
+			active = false
+		WHERE 
+			NOW() - INTERVAL '%d minute' > availabilities.unhealthy_since 
+		AND 
+			NOW() - INTERVAL '%d minute' > availabilities.last_announced
+		AND
+			active = true`, ttlOfflineService, ttlOfflineService))
+	if err != nil {
+		return errors.Wrap(err, "failed to prepare stmtCleanUpAvailabilities")
 	}
 
 	return h.run(process, postgresDNS)
@@ -123,35 +156,62 @@ func (h *healthChecker) run(process *process.Process, postgressDNS string) error
 		return nil
 	})
 
+	go h.runCleanUpServices(shutDown)
+	h.runHealthChecker(shutDown)
+	return nil
+}
+
+func (h *healthChecker) runCleanUpServices(shutDown chan struct{}) {
 	for {
 		select {
-		case <-time.After(5 * time.Second):
-			h.availabilitiesLock.RLock()
-			for _, av := range h.availabilities {
-				go h.checkAvailabilityHealth(*av)
+		case <-time.After(1 * time.Minute):
+			h.logger.Debug("cleaning up offline services")
+			servicesRemoved, err := h.cleanUpServices()
+			if err != nil {
+				h.logger.Error("error cleaning up offline services", zap.Error(err))
+				continue
 			}
-			h.availabilitiesLock.RUnlock()
+			h.logger.Debug("cleanup complete", zap.Int64("services set to inactive", servicesRemoved))
 		case <-shutDown:
-			return nil
+			return
 		}
 	}
+}
+
+func (h *healthChecker) cleanUpServices() (int64, error) {
+	res, err := h.stmtCleanUpAvailabilities.Exec()
+	if err != nil {
+		return 0, err
+	}
+
+	return res.RowsAffected()
 }
 
 func (h *healthChecker) waitForNotification(l *pq.Listener, c <-chan struct{}) {
 	for {
 		select {
 		case n := <-l.Notify:
+
 			dbAction := &databaseAction{}
 			err := json.Unmarshal([]byte(n.Extra), dbAction)
 			if err != nil {
 				h.logger.Error("Error processing JSON", zap.Error(err))
 				continue
 			}
+
+			h.logger.Debug("received DB action", zap.String("action", dbAction.Action))
 			switch dbAction.Action {
 			case "INSERT":
 				h.addAvailability(dbAction.Availability)
 			case "DELETE":
 				h.removeAvailability(dbAction.Availability.ID)
+			// The update notification will only be received if the value of availability.active has changed.
+			case "UPDATE":
+				if dbAction.Availability.Active {
+					h.addAvailability(dbAction.Availability)
+				} else {
+					h.removeAvailability(dbAction.Availability.ID)
+				}
 			default:
 				h.logger.Error("unknown database action", zap.String("database action", dbAction.Action))
 			}
@@ -181,6 +241,21 @@ func (h *healthChecker) removeAvailability(id uint64) {
 	h.availabilitiesLock.Unlock()
 }
 
+func (h *healthChecker) runHealthChecker(shutDown chan struct{}) {
+	for {
+		select {
+		case <-time.After(5 * time.Second):
+			h.availabilitiesLock.RLock()
+			for _, av := range h.availabilities {
+				go h.checkAvailabilityHealth(*av)
+			}
+			h.availabilitiesLock.RUnlock()
+		case <-shutDown:
+			return
+		}
+	}
+}
+
 func (h *healthChecker) checkAvailabilityHealth(av availability) {
 	logger := h.logger.With(zap.String("canonical-service-name", av.OrganizationName+`.`+av.ServiceName), zap.String("inway-address", av.Address))
 
@@ -204,7 +279,9 @@ func (h *healthChecker) checkAvailabilityHealth(av availability) {
 		h.updateAvailabilityHealth(av, false)
 		return
 	}
+
 	h.updateAvailabilityHealth(av, status.Healthy)
+
 }
 
 func (h *healthChecker) updateAvailabilityHealth(av availability, newHealth bool) {
@@ -213,18 +290,16 @@ func (h *healthChecker) updateAvailabilityHealth(av availability, newHealth bool
 		h.logger.Error("failed to update health in db", zap.Error(err))
 		return
 	}
-	affected, err := res.RowsAffected()
+
+	rowsAffected, err := res.RowsAffected()
 	if err != nil {
-		h.logger.Error("failed to get affected rows after updating health in db", zap.Error(err))
+		h.logger.Error("failed to get rows affected update health in db", zap.Error(err))
 		return
 	}
-
-	if affected == 1 {
-		// log health change
+	if rowsAffected == 1 {
 		if !newHealth {
 			h.logger.Info(fmt.Sprintf("inway %s.%s>%s became unhealthy", av.OrganizationName, av.ServiceName, av.Address))
-		}
-		if newHealth {
+		} else {
 			h.logger.Info(fmt.Sprintf("inway %s.%s>%s became healthy", av.OrganizationName, av.ServiceName, av.Address))
 		}
 	}
