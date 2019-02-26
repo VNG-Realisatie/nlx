@@ -12,6 +12,7 @@ import (
 	"github.com/pkg/errors"
 
 	"go.nlx.io/nlx/common/process"
+	"go.nlx.io/nlx/common/tlsconfig"
 )
 
 // ListenAndServeTLS is a blocking function that listens on provided tcp address to handle requests.
@@ -30,6 +31,7 @@ func (i *Inway) ListenAndServeTLS(process *process.Process, address string) erro
 		},
 		Handler: serveMux,
 	}
+	tlsconfig.ApplyDefaults(server.TLSConfig)
 
 	shutDownComplete := make(chan struct{})
 	process.CloseGracefully(func() error {

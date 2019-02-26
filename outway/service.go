@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
+	"go.nlx.io/nlx/common/tlsconfig"
 	"go.uber.org/zap"
 )
 
@@ -43,7 +44,8 @@ type RoundRobinLoadBalancedHTTPService struct {
 }
 
 func newRoundTripHTTPTransport(tlsConfig *tls.Config) *http.Transport {
-	return &http.Transport{
+	tlsconfig.ApplyDefaults(tlsConfig)
+	transport := &http.Transport{
 		Proxy: http.ProxyFromEnvironment,
 		DialContext: (&net.Dialer{
 			Timeout:   30 * time.Second,
@@ -56,6 +58,7 @@ func newRoundTripHTTPTransport(tlsConfig *tls.Config) *http.Transport {
 		ExpectContinueTimeout: 1 * time.Second,
 		TLSClientConfig:       tlsConfig,
 	}
+	return transport
 }
 
 // NewRoundRobinLoadBalancedHTTPService creates a RoundRobinLoadBalancedHTTPService

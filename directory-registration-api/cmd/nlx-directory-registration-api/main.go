@@ -6,6 +6,8 @@ import (
 	"net"
 	"net/http"
 
+	"go.nlx.io/nlx/common/tlsconfig"
+
 	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	"github.com/huandu/xstrings"
 	flags "github.com/jessevdk/go-flags"
@@ -89,13 +91,15 @@ func main() {
 	// setup zap connection for global grpc logging
 	grpc_zap.ReplaceGrpcLogger(logger)
 	// prepare grpc server options
+	serverTLSConfig := &tls.Config{
+		Certificates: []tls.Certificate{certKeyPair}, // using the grpc server's own cert to connect to it, perhaps find a way for the http/json gateway to bypass TLS locally
+		ClientCAs:    caCertPool,
+		NextProtos:   []string{"h2"},
+		ClientAuth:   tls.RequireAndVerifyClientCert,
+	}
+	tlsconfig.ApplyDefaults(serverTLSConfig)
 	opts := []grpc.ServerOption{
-		grpc.Creds(credentials.NewTLS(&tls.Config{
-			Certificates: []tls.Certificate{certKeyPair}, // using the grpc server's own cert to connect to it, perhaps find a way for the http/json gateway to bypass TLS locally
-			ClientCAs:    caCertPool,
-			NextProtos:   []string{"h2"},
-			ClientAuth:   tls.RequireAndVerifyClientCert,
-		})),
+		grpc.Creds(credentials.NewTLS(serverTLSConfig)),
 	}
 
 	// start grpc server and attach directory service
