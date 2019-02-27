@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { bool } from 'prop-types'
+import { bool, string } from 'prop-types'
 
 const IconButton = styled.button`
     position: relative;
@@ -14,7 +14,7 @@ const IconButton = styled.button`
     user-select: none;
     background: none;
     border: none;
-    border-radius: ${p => p.isRounded ? '50%' : 0};
+    border-radius: ${p => p.rounded === 'true' ? '50%' : 0};
     overflow: hidden;
 
     &:not([disabled]) {
@@ -55,12 +55,12 @@ const IconButton = styled.button`
 `
 
 IconButton.propTypes = {
-    isRounded: bool,
+    rounded: string,
     disabled: bool,
 }
 
 IconButton.defaultProps = {
-    isRounded: true,
+    rounded: 'true',
     disabled: false,
 }
 
