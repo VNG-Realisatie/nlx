@@ -1,5 +1,5 @@
 import React from 'react'
-import { mount, shallow } from 'enzyme'
+import { shallow } from 'enzyme'
 import HeadCell from './HeadCell'
 
 const insertHeadCellIntoValidTable = headCell =>
@@ -10,11 +10,6 @@ const insertHeadCellIntoValidTable = headCell =>
       </tr>
     </tbody>
   </table>
-
-it('should match snapshot', () => {
-  const wrapper = mount(insertHeadCellIntoValidTable(<HeadCell/>))
-  expect(wrapper).toMatchSnapshot()
-})
 
 it('should render the contents', () => {
   const wrapper = shallow(insertHeadCellIntoValidTable(<HeadCell>Heading</HeadCell>))

@@ -6,18 +6,16 @@ exports[`should match the snapshot 1`] = `
 >
   <GlobalStyleComponent />
   <BrowserRouter>
-    <div>
-      <Header />
-      <Route
-        component={[Function]}
-        exact={true}
-        path="/"
-      />
-      <Route
-        component={[Function]}
-        path="/documentation/:organization_name/:service_name"
-      />
-    </div>
+    <Header />
+    <Route
+      component={[Function]}
+      exact={true}
+      path="/"
+    />
+    <Route
+      component={[Function]}
+      path="/documentation/:organization_name/:service_name"
+    />
   </BrowserRouter>
 </div>
 `;

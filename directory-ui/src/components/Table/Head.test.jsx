@@ -2,10 +2,6 @@ import React from 'react'
 import { shallow } from 'enzyme'
 import Head from './Head'
 
-it('should match snapshot', () => {
-  expect(shallow(<Head/>)).toMatchSnapshot()
-})
-
 it('should render child elements', () => {
   expect(shallow(<Head>
     <tr>
