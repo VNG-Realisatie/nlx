@@ -15,7 +15,7 @@ export const apiAddressForService = (name, organization) =>
 
 const ServicesTableRow = ({ status, organization, name, apiType }) =>
     <StyledServiceTableRow status={status}>
-      <Table.BodyCell align="center" padding="none" title={status}><StatusIcon disabled={status === 'offline'} /></Table.BodyCell>
+      <Table.BodyCell align="center" padding="none" title={status}><StatusIcon status={status} /></Table.BodyCell>
       <Table.BodyCell>{ organization }</Table.BodyCell>
       <Table.BodyCell>{ name }</Table.BodyCell>
       <Table.BodyCell align="right">

@@ -1,13 +1,24 @@
-import styled from 'styled-components'
+import { oneOf } from 'prop-types'
+import styled, {css}from 'styled-components'
 
-export default styled.div`
+const StatusICon = styled.div`
   display: inline-block;
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  border: 2px solid #63D19E;
+  border: 2px solid transparent;
 
-  &[disabled] {
-    border-color: #CAD0E0;
-  }
+  ${p => p.status === 'online' && css`
+    border-color:  #63D19E;
+  `}
+
+  ${p => p.status === 'offline' && css`
+    border-color:  #CAD0E0;
+  `}
 `
+
+StatusICon.propTypes = {
+  status: oneOf(['online', 'offline']).isRequired
+}
+
+export default StatusICon
