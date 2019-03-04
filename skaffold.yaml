@@ -307,3 +307,37 @@ profiles:
           txlogDBImage: nlxio/txlog-db
           txlogUIImage: nlxio/txlog-ui
         namespace: nlx-demo-haarlem
+- name: deploy-preprod
+  deploy:
+    helm:
+      releases:
+      - name: nlx-preprod-directory
+        chartPath: helm/nlx-directory
+        valuesFiles:
+        - helm/nlx-directory/values-preprod.yaml
+        values:
+          directoryDBImage: nlxio/directory-db
+          directoryInspectionImage: nlxio/directory-inspection-api
+          directoryMonitorImage: nlxio/directory-monitor
+          directoryRegistrationImage: nlxio/directory-registration-api
+          directoryUIImage: nlxio/directory-ui
+          docsImage: nlxio/docs
+          insightUIImage: nlxio/insight-ui
+        namespace: nlx-preprod-directory
+- name: deploy-prod
+  deploy:
+    helm:
+      releases:
+      - name: nlx-prod-directory
+        chartPath: helm/nlx-directory
+        valuesFiles:
+        - helm/nlx-directory/values-prod.yaml
+        values:
+          directoryDBImage: nlxio/directory-db
+          directoryInspectionImage: nlxio/directory-inspection-api
+          directoryMonitorImage: nlxio/directory-monitor
+          directoryRegistrationImage: nlxio/directory-registration-api
+          directoryUIImage: nlxio/directory-ui
+          docsImage: nlxio/docs
+          insightUIImage: nlxio/insight-ui
+        namespace: nlx-prod-directory

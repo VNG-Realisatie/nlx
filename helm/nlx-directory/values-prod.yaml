@@ -1,0 +1,25 @@
+
+domain: prod.nlx.io
+
+logLevel: info
+
+dbHost: postgresql.postgresql
+dbUsernameSuperuser: postgres
+dbPasswordSuperuser: postgres
+
+dbDatabaseDirectory: nlx-prod-directory
+dbResetDirectory: false
+dbUsernameDirectory: nlx-prod-directory
+dbPasswordDirectory: nlx-prod-directory
+
+imagePullPolicy: IfNotPresent
+
+insightDirectoryInspectionAPIURL: "http://directory-inspection-api"
+
+ttlOfflineService: 14
+
+demo:
+  enabled: false
+
+ca:
+  kind: "private"
