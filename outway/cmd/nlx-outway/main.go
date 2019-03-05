@@ -28,6 +28,9 @@ var options struct {
 	DisableLogdb bool   `long:"disable-logdb" env:"DISABLE_LOGDB" description:"Disable logdb connections"`
 	PostgresDSN  string `long:"postgres-dsn" env:"POSTGRES_DSN" default:"postgres://postgres:postgres@postgres/nlx_logdb?sslmode=disable" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
 
+	AuthorizationServiceAddress string `long:"authorization-service-address" env:"AUTHORIZATION_SERVICE_ADDRESS" description:"Address of the authorization service. If set calls will go through the authorization service before being send to the inway"`
+	AuthorizationCA             string `long:"authorization-root-ca" env:"AUTHORIZATION_ROOT_CA" description:"absolute path to root CA used to verify auth service certifcate"`
+
 	logoptions.LogOptions
 	orgtls.TLSOptions
 }
@@ -78,7 +81,7 @@ func main() {
 	}
 
 	// Create new outway and provide it with a hardcoded service.
-	ow, err := outway.NewOutway(process, logger, logDB, options.TLSOptions, options.DirectoryInspectionAddress)
+	ow, err := outway.NewOutway(process, logger, logDB, options.TLSOptions, options.DirectoryInspectionAddress, options.AuthorizationServiceAddress, options.AuthorizationCA)
 	if err != nil {
 		logger.Fatal("failed to setup outway", zap.Error(err))
 	}

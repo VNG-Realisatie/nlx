@@ -88,7 +88,7 @@ func main() {
 	for serviceName, serviceDetails := range serviceConfig.Services {
 		logger.Info("loaded service from service-config.toml", zap.String("service-name", serviceName))
 		logger.Debug("service configuration details", zap.String("service-name", serviceName), zap.String("endpoint-url", serviceDetails.EndpointURL),
-			zap.String("root-ca-path", serviceDetails.CACertPath), zap.String("authorizatio-model", serviceDetails.AuthorizationModel),
+			zap.String("root-ca-path", serviceDetails.CACertPath), zap.String("authorization-model", serviceDetails.AuthorizationModel),
 			zap.String("irma-api-url", serviceDetails.IrmaAPIURL), zap.String("insight-api-url", serviceDetails.InsightAPIURL),
 			zap.String("api-spec-url", serviceDetails.APISpecificationDocumentURL), zap.Bool("internal", serviceDetails.Internal),
 			zap.String("public-support-contact", serviceDetails.PublicSupportContact), zap.String("tech-support-contact", serviceDetails.TechSupportContact))

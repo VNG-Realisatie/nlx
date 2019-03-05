@@ -142,6 +142,14 @@ func (h *HTTPServiceEndpoint) createRecordData(requestPath string, header http.H
 	if dataElements := header.Get("X-NLX-Request-Data-Elements"); dataElements != "" {
 		recordData["doelbinding-data-elements"] = dataElements
 	}
+
+	if userData := header.Get("X-NLX-Requester-User"); userData != "" {
+		recordData["doelbinding-user"] = userData
+	}
+
+	if claims := header.Get("X-NLX-Requester-Claims"); claims != "" {
+		recordData["doelbinding-claims"] = claims
+	}
 	recordData["request-path"] = requestPath
 
 	return recordData

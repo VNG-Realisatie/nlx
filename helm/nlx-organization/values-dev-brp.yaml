@@ -63,6 +63,7 @@ inway:
       ca-cert-path = "/ca-certs/basisregistratie.pem"
 outway:
   enable: false
+  authService: false
 demoService:
   enable: true
   genericServiceImage: nlxio/brp-mock-service-https:latest

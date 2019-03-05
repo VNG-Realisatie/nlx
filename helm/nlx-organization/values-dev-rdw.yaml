@@ -29,6 +29,7 @@ inway:
       irma-api-url = "http://irma-api.dev.rdw.minikube:30080"
 outway:
   enable: false
+  authService: false
 demoService:
   enable: true
   genericServiceImage: nlxio/rdw-mock-service:latest

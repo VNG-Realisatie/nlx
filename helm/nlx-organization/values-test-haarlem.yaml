@@ -26,6 +26,10 @@ inway:
       irma-api-url = "https://irma-api.test.voorbeeld-haarlem.nl"
 outway:
   enable: true
+  authService: true
+  authorizationServiceURL: https://auth-service:8443
+  authorizationRootCA: /certs/nlx_root.pem
+  
 demoService:
   enable: false
 demoApplication:
