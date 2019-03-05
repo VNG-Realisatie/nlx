@@ -71,10 +71,11 @@ func NewRegisterInwayHandler(db *sqlx.DB, logger *zap.Logger, rootCA *x509.CertP
 					DO UPDATE SET address = EXCLUDED.address -- no-op update to return id
 				RETURNING id
 		)
-		INSERT INTO directory.availabilities (inway_id, service_id)
-			SELECT inway.id, service.id
+		INSERT INTO directory.availabilities (inway_id, service_id, last_announced)
+			SELECT inway.id, service.id, NOW()
 				FROM inway, service
-			ON CONFLICT ON CONSTRAINT availabilities_uq_inway_service DO NOTHING
+			ON CONFLICT ON CONSTRAINT availabilities_uq_inway_service DO UPDATE
+				SET last_announced = NOW(), active = true
 	`)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to prepare stmtAssertService")

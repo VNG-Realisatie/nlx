@@ -15,6 +15,7 @@ import (
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
+	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/outway"
 	"go.nlx.io/nlx/txlog-db/dbversion"
 )
@@ -60,7 +61,11 @@ func main() {
 		}
 	}()
 
+	logger.Info("version info", zap.String("version", version.BuildVersion), zap.String("source-hash", version.BuildSourceHash))
+	logger = logger.With(zap.String("version", version.BuildVersion))
+
 	process := process.NewProcess(logger)
+
 	var logDB *sqlx.DB
 	if !options.DisableLogdb {
 		logDB, err = sqlx.Open("postgres", options.PostgresDSN)

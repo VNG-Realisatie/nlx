@@ -23,6 +23,7 @@ import (
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/transactionlog"
+	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/insight-api/config"
 	"go.nlx.io/nlx/insight-api/irma"
 	"go.nlx.io/nlx/txlog-db/dbversion"
@@ -39,6 +40,9 @@ var options struct {
 	IRMAJWTRSAVerifyPublicKeyDER string `long:"irma-jwt-rsa-verify-public-key-der" env:"IRMA_JWT_RSA_VERIFY_PUBLIC_KEY_DER" required:"true" description:"PEM RSA public key to verify results from irma api server"`
 
 	InsightConfig string `long:"insight-config" env:"INSIGHT_CONFIG" default:"insight-config.toml" description:"Location of the insight config toml file"`
+
+	CertFile string `long:"tls-cert" env:"TLS_CERT" description:"Absolute or relative path to the cert .pem"`
+	KeyFile  string `long:"tls-key" env:"TLS_KEY" description:"Absolute or relative path to the key .pem"`
 }
 
 func main() {
@@ -63,7 +67,11 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
+	logger.Info("version info", zap.String("version", version.BuildVersion), zap.String("source-hash", version.BuildSourceHash))
+	logger = logger.With(zap.String("version", version.BuildVersion))
+
 	process := process.NewProcess(logger)
+
 	insightConfig := config.LoadInsightConfig(logger, options.InsightConfig)
 
 	db, err := sqlx.Open("postgres", options.PostgresDSN)
@@ -102,7 +110,12 @@ func main() {
 
 	})
 
-	err = http.ListenAndServe(options.ListenAddress, r)
+	if len(options.CertFile) > 0 {
+		err = http.ListenAndServeTLS(options.ListenAddress, options.CertFile, options.KeyFile, r)
+	} else {
+		err = http.ListenAndServe(options.ListenAddress, r)
+	}
+
 	if err != nil {
 		if err != http.ErrServerClosed {
 			logger.Error("failed to ListenAndServe", zap.Error(err))
@@ -228,7 +241,7 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, dataSubjects map[string]co
 		FROM transactionlog.records
 			INNER JOIN matchedRecords
 				ON records.id = matchedRecords.record_id
-		ORDER BY created
+		ORDER BY created DESC
 		LIMIT CASE WHEN $1>0 THEN $1 ELSE NULL END
 		OFFSET $2
 	`

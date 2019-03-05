@@ -42,6 +42,16 @@ We have to define our API in a TOML-file. You can save the contents below as `se
 
     # `authorization-model` can or whitelist
     authorization-model = "none"
+
+    # `public-support-contact` contains an email address which NLX users can contact if they need support using your API.
+    # This email address is published in the directory.
+    # this field is optional
+    # public-support-contact = "support@my-organization.nl"
+
+    # `tech-support-contact` contains an email address which we (the NLX organization) can contact if they have any questions about your API
+    # This email address will NOT be published in the directory
+    # this field is optional
+    # tech-support-contact   = "tech@my-organization.nl"
 ```
 
 > If you're specifying you own API, please note that `localhost` won't work. If your API is running on the same machine as 

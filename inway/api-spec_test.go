@@ -6,8 +6,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 
 	"go.uber.org/zap"
 
@@ -22,9 +23,7 @@ func TestInwayApiSpec(t *testing.T) {
 		OrgCertFile: "../testing/org-nlx-test.crt",
 		OrgKeyFile:  "../testing/org-nlx-test.key"}
 	pool, err := orgtls.LoadRootCert(tlsOptions.NLXRootCert)
-	if err != nil {
-		t.Fatal(`error loading root certificate`, err)
-	}
+	assert.Nil(t, err)
 
 	mockAPISpecEndpoint := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
@@ -51,9 +50,7 @@ func TestInwayApiSpec(t *testing.T) {
 	logger := zap.NewNop()
 	iw, err := NewInway(logger, nil, "localhost:1812", tlsOptions,
 		"localhost:1815", serviceConfig)
-	if err != nil {
-		t.Fatal("error creating inway", err)
-	}
+	assert.Nil(t, err)
 
 	p := process.NewProcess(logger)
 	apiSpecMockServer := httptest.NewUnstartedServer(http.HandlerFunc(iw.handleAPISpecDocRequest))
@@ -66,9 +63,7 @@ func TestInwayApiSpec(t *testing.T) {
 
 	for serviceName, serviceDetails := range serviceConfig.Services {
 		endpoint, err := iw.NewHTTPServiceEndpoint(logger, serviceName, serviceDetails.EndpointURL, nil)
-		if err != nil {
-			t.Fatal("failed to create service endpoint", err)
-		}
+		assert.Nil(t, err)
 
 		switch serviceDetails.AuthorizationModel {
 		case "none", "":
@@ -86,9 +81,7 @@ func TestInwayApiSpec(t *testing.T) {
 	}
 
 	cert, err := tls.LoadX509KeyPair(tlsOptions.OrgCertFile, tlsOptions.OrgKeyFile)
-	if err != nil {
-		t.Fatal(err)
-	}
+	assert.Nil(t, err)
 
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true, RootCAs: pool, Certificates: []tls.Certificate{cert}}}
@@ -102,10 +95,10 @@ func TestInwayApiSpec(t *testing.T) {
 		statusCode   int
 		errorMessage string
 	}{
-		{fmt.Sprintf("%s/.nlx/api-spec-doc/mock-service-public", apiSpecMockServer.URL), "dummy-ID", http.StatusNotFound, `api specification not found for service`},
-		{fmt.Sprintf("%s/.nlx/api-spec-doc/nonexisting-service", apiSpecMockServer.URL), "dummy-ID", http.StatusNotFound, `service not found`},
-		{fmt.Sprintf("%s/.nlx/api-spec-doc/mock-service-public-invalid-apispec", apiSpecMockServer.URL), "dummy-ID", http.StatusInternalServerError, `server error`},
-		{fmt.Sprintf("%s/.nlx/api-spec-doc/mock-service-public-apispec", apiSpecMockServer.URL), "dummy-ID", http.StatusOK, ``},
+		{fmt.Sprintf("%s/.nlx/api-spec-doc/mock-service-public", apiSpecMockServer.URL), "dummy-ID", http.StatusNotFound, "api specification not found for service\n"},
+		{fmt.Sprintf("%s/.nlx/api-spec-doc/nonexisting-service", apiSpecMockServer.URL), "dummy-ID", http.StatusNotFound, "service not found\n"},
+		{fmt.Sprintf("%s/.nlx/api-spec-doc/mock-service-public-invalid-apispec", apiSpecMockServer.URL), "dummy-ID", http.StatusInternalServerError, "server error\n"},
+		{fmt.Sprintf("%s/.nlx/api-spec-doc/mock-service-public-apispec", apiSpecMockServer.URL), "dummy-ID", http.StatusOK, ""},
 	}
 
 	for _, test := range tests {
@@ -120,18 +113,12 @@ func TestInwayApiSpec(t *testing.T) {
 			t.Fatal(`error doing http request`, err)
 		}
 
-		if resp.StatusCode != test.statusCode {
-			t.Fatalf(`result: "%d" for url "%s", expected http status code : "%d"`, resp.StatusCode, test.url, test.statusCode)
-		}
-
 		bytes, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			t.Fatal("error parsing result.body", err)
 		}
 
-		resultBody := strings.Trim(string(bytes[:len(bytes)]), "\n")
-		if strings.Compare(resultBody, test.errorMessage) != 0 {
-			t.Fatalf(`result: "%s" for url "%s", expected http body: "%s"`, resultBody, test.url, test.errorMessage)
-		}
+		assert.Equal(t, test.statusCode, resp.StatusCode)
+		assert.Equal(t, test.errorMessage, string(bytes))
 	}
 }

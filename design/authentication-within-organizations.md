@@ -15,7 +15,7 @@ Organizations have different mechanisms for user authentication. Therefore NLX o
 
 The external authentication service of an organization is also responsible for adding user-specific metadata (claims) to the request that can be used by services on the network to perform further authorization. This metadata can exist of certain claims, for example a unique username or organization-specific roles. The unique user attribute can be set using the `X-NLX-Requester-User` header. Other claims can be made in a JSON serialized header `X-NLX-Requester-Claims`.
 
-Note that user-specific headers are only available on traffic that happens within organizations. When a request is made between organizations, the request is first logged on the outway of the requesting organization (including the user-specific metadata). Then the user-specific data is stripped from the request and finally the request travels further through the network.
+Note that user-specific headers (`X-NLX-Requester-User` and `X-NLX-Requester-Claims`) are only available on traffic that happens within organizations. When a request is made between organizations, the request is first logged on the outway of the requesting organization (including the user-specific metadata). Then the user-specific data is stripped from the request and finally the request travels further through the network.
 
 ## Generic authorization features on outways and inways
 Services are mainly responsible for handling authorization on the NLX network. Depending on the specific service requirements they implement organization- or user-based authorization rules.

@@ -6,8 +6,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 
 	"go.uber.org/zap"
 
@@ -23,9 +24,7 @@ func TestInWayProxyRequest(t *testing.T) {
 		OrgKeyFile:  "../testing/org-nlx-test.key",
 	}
 	pool, err := orgtls.LoadRootCert(tlsOptions.NLXRootCert)
-	if err != nil {
-		t.Fatal(`error loading root certificate`, err)
-	}
+	assert.Nil(t, err)
 
 	// Mock endpoint (service)
 	mockEndPoint := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -53,9 +52,7 @@ func TestInWayProxyRequest(t *testing.T) {
 	logger := zap.NewNop()
 	iw, err := NewInway(logger, nil, "localhost:1812", tlsOptions,
 		"localhost:1815", serviceConfig)
-	if err != nil {
-		t.Fatal("error creating inway", err)
-	}
+	assert.Nil(t, err)
 
 	p := process.NewProcess(logger)
 
@@ -84,15 +81,11 @@ func TestInWayProxyRequest(t *testing.T) {
 		}
 
 		err = iw.AddServiceEndpoint(p, endpoint, serviceDetails)
-		if err != nil {
-			t.Fatal("error adding endpoint", err)
-		}
+		assert.Nil(t, err)
 	}
 
 	cert, err := tls.LoadX509KeyPair(tlsOptions.OrgCertFile, tlsOptions.OrgKeyFile)
-	if err != nil {
-		t.Fatal(err)
-	}
+	assert.Nil(t, err)
 
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true, RootCAs: pool, Certificates: []tls.Certificate{cert}}}
@@ -109,24 +102,21 @@ func TestInWayProxyRequest(t *testing.T) {
 	}{
 		{fmt.Sprintf("%s/mock-service-public/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusOK, ""},
 		{fmt.Sprintf("%s/mock-service-whitelist/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusOK, ""},
-		{fmt.Sprintf("%s/mock-servicewhitelist-unauthorized/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusForbidden, `nlx outway: could not handle your request, organization "nlx-test" is not allowed access.`},
-		{fmt.Sprintf("%s/mock-service", proxyRequestMockServer.URL), "dummy-ID", http.StatusBadRequest, `nlx inway error: invalid path in url`},
-		{fmt.Sprintf("%s/mock-service/fictive", proxyRequestMockServer.URL), "dummy-ID", http.StatusBadRequest, `nlx inway error: no endpoint for service`},
-		{fmt.Sprintf("%s/mock-service-public/dummy", proxyRequestMockServer.URL), "", http.StatusBadRequest, `nlx outway: missing logrecord id`},
+		{fmt.Sprintf("%s/mock-servicewhitelist-unauthorized/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusForbidden, "nlx outway: could not handle your request, organization \"nlx-test\" is not allowed access.\n"},
+		{fmt.Sprintf("%s/mock-service", proxyRequestMockServer.URL), "dummy-ID", http.StatusBadRequest, "nlx inway error: invalid path in url\n"},
+		{fmt.Sprintf("%s/mock-service/fictive", proxyRequestMockServer.URL), "dummy-ID", http.StatusBadRequest, "nlx inway error: no endpoint for service\n"},
+		{fmt.Sprintf("%s/mock-service-public/dummy", proxyRequestMockServer.URL), "", http.StatusBadRequest, "nlx outway: missing logrecord id\n"},
 	}
 
 	for _, test := range tests {
 		req, err := http.NewRequest("GET", test.url, nil)
-		if err != nil {
-			t.Fatal(err)
-		}
+		assert.Nil(t, err)
 
 		req.Header.Add("X-NLX-Logrecord-Id", test.logRecordID)
 		resp, err := client.Do(req)
-		if err != nil {
-			t.Fatal(`error doing http request`, err)
-		}
+		assert.Nil(t, err)
 
+		assert.Equal(t, test.statusCode, resp.StatusCode)
 		if resp.StatusCode != test.statusCode {
 			t.Fatalf(`result: "%d" for url "%s", expected http status code : "%d"`, resp.StatusCode, test.url, test.statusCode)
 		}
@@ -135,10 +125,6 @@ func TestInWayProxyRequest(t *testing.T) {
 		if err != nil {
 			t.Fatal("error parsing result.body", err)
 		}
-
-		resultBody := strings.Trim(string(bytes[:len(bytes)]), "\n")
-		if strings.Compare(resultBody, test.errorMessage) != 0 {
-			t.Fatalf(`result: "%s" for url "%s", expected http body: "%s"`, resultBody, test.url, test.errorMessage)
-		}
+		assert.Equal(t, test.errorMessage, string(bytes))
 	}
 }

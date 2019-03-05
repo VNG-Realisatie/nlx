@@ -1,4 +1,4 @@
-apiVersion: skaffold/v1beta2
+apiVersion: skaffold/v1beta5
 kind: Config
 build:
   artifacts:
@@ -27,9 +27,13 @@ build:
     docker:
       dockerfile: directory-monitor/Dockerfile
   - image: nlxio/directory-ui
-    context: directory-ui
+    context: .
+    docker:
+      dockerfile: directory-ui/Dockerfile
   - image: nlxio/insight-ui
-    context: insight-ui
+    context: .
+    docker:
+      dockerfile: insight-ui/Dockerfile
   - image: nlxio/insight-demo
     context: insight-demo
   - image: nlxio/inway
@@ -49,7 +53,9 @@ build:
     docker:
       dockerfile: txlog-api/Dockerfile
   - image: nlxio/txlog-ui
-    context: txlog-ui
+    context: .
+    docker:
+      dockerfile: txlog-ui/Dockerfile
   - image: nlxio/insight-api
     context: .
     docker:
@@ -72,8 +78,8 @@ profiles:
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           directoryDBImage: nlxio/directory-db
           directoryInspectionImage: nlxio/directory-inspection-api
-          directoryRegistrationImage: nlxio/directory-registration-api
           directoryMonitorImage: nlxio/directory-monitor
+          directoryRegistrationImage: nlxio/directory-registration-api
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs
           insightDemoImage: nlxio/insight-demo
@@ -143,8 +149,8 @@ profiles:
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           directoryDBImage: nlxio/directory-db
           directoryInspectionImage: nlxio/directory-inspection-api
-          directoryRegistrationImage: nlxio/directory-registration-api
           directoryMonitorImage: nlxio/directory-monitor
+          directoryRegistrationImage: nlxio/directory-registration-api
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs
           insightDemoImage: nlxio/insight-demo
@@ -200,8 +206,8 @@ profiles:
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           directoryDBImage: nlxio/directory-db
           directoryInspectionImage: nlxio/directory-inspection-api
-          directoryRegistrationImage: nlxio/directory-registration-api
           directoryMonitorImage: nlxio/directory-monitor
+          directoryRegistrationImage: nlxio/directory-registration-api
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs
           insightDemoImage: nlxio/insight-demo
@@ -257,8 +263,8 @@ profiles:
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           directoryDBImage: nlxio/directory-db
           directoryInspectionImage: nlxio/directory-inspection-api
-          directoryRegistrationImage: nlxio/directory-registration-api
           directoryMonitorImage: nlxio/directory-monitor
+          directoryRegistrationImage: nlxio/directory-registration-api
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs
           insightDemoImage: nlxio/insight-demo

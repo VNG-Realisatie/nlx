@@ -165,7 +165,7 @@ func (i *Inway) announceToDirectory(p *process.Process, s ServiceEndpoint, servi
 				})
 				if err != nil {
 					if errStatus, ok := status.FromError(err); ok && errStatus.Code() == codes.Unavailable {
-						i.logger.Info("waiting for directory...")
+						i.logger.Info("waiting for directory...", zap.Error(err))
 						sleepDuration = expBackOff.Duration()
 						continue
 					}
