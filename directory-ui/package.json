@@ -5,12 +5,8 @@
   "dependencies": {
     "@commonground/design-system": "1.0.0",
     "ajv-keywords": "3.2.0",
-    "axios": "0.18.0",
-    "bourbon": "5.1.0",
-    "core-js": "2.6.1",
-    "mobx": "4.8.0",
-    "node-sass": "4.11.0",
-    "popper.js": "1.14.3",
+    "copy-text-to-clipboard": "1.0.4",
+    "mobx": "4.9.2",
     "react": "16.7.0",
     "react-app-polyfill": "0.2.0",
     "react-dom": "16.7.0",
@@ -26,13 +22,10 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "@svgr/cli": "2.4.1",
-    "bootstrap": "4.2.1",
-    "classnames": "2.2.6",
-    "copy-to-clipboard": "3.0.8",
-    "jquery": "3.3.1",
-    "prettier": "1.15.3",
-    "react-highlight-words": "0.11.0"
+    "enzyme": "3.8.0",
+    "enzyme-adapter-react-16": "1.8.0",
+    "enzyme-to-json": "3.3.5",
+    "react-test-renderer": "16.7.0"
   },
   "proxy-local": "https://directory.dev.nlx.minikube:30443",
   "proxy": "https://directory.demo.nlx.io",
@@ -41,5 +34,10 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "jest": {
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ]
+  }
 }

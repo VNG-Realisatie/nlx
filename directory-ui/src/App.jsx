@@ -1,31 +1,27 @@
-import React, { Component } from 'react'
-import Navigation from './components/Navigation/Navigation'
-import Directory from './Directory'
-import DocumentationPage from './pages/Documentation/DocumentationPage'
+import React, { Fragment } from 'react'
 
-import './static/css/base-addon.css'
+import GlobalStyles from './components/GlobalStyles/GlobalStyles'
+import Header from './components/Header/Header'
+import ServiceOverviewPage from './pages/ServicesOverviewPage/ServicesOverviewPage'
+import DocumentationPage from './pages/DocumentationPage/DocumentationPage'
 
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 
-class App extends Component {
-    render() {
-        return (
-            <div className="App">
-                <Router>
-                    <div>
-                        <Navigation />
+const App = () => (
+    <div className="App">
+        <GlobalStyles/>
+        <Router>
+            <Fragment>
+                <Header />
 
-                        <Route exact path="/"
-                               component={Directory}
-                        />
-                        <Route path="/documentation/:organization_name/:service_name"
-                               component={DocumentationPage}
-                        />
-                    </div>
-                </Router>
-            </div>
-        )
-    }
-}
+                <Route exact path="/" component={ServiceOverviewPage} />
+                <Route
+                    path="/documentation/:organization_name/:service_name"
+                    component={DocumentationPage}
+                />
+            </Fragment>
+        </Router>
+    </div>
+)
 
 export default App
