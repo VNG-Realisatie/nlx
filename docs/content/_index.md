@@ -8,7 +8,7 @@ weight: 100
 
 The need for the creation of NLX arises from the [Common Ground vision](https://github.com/VNG-Realisatie/common-ground), which aims to convert or replace the current monolithic information systems of Dutch municipalities (and wider government) with a state of the art, API-first software landscape, fulfilling societal demand for automation, transparency and privacy.
 
-In this vision, everyone should be able to use API's in other organisations as easy as their own, while core data objects should only be manipulated by the one administratively responsible and used by all others. An additional advantage is that public government data can easily be made available to everyone. To make this technically feasible in a controllable manner, NLX comes in play.
+In this vision, everyone should be able to use API's in other organisations as easy as their own, while core data objects should only be manipulated by the one administratively responsible and used by all others. An additional advantage is that public data can easily be made available to everyone. To make this technically feasible in a controllable manner, NLX comes in play.
 
 **Warning**: Please note the current NLX software only serves as a **proof of concept** and is therefore **not** suitable for production usage.
 
@@ -18,7 +18,7 @@ Starting with NLX implies starting with API’s. Organizations that are willing 
 
 Setting up the first Outway for testing is done in a matter of a few hours, setting up an Inway requires having a basic API and a publicly resolvable URL so this is usually done in a day or maybe two. Launching a service on a public available network (the internet) requires more than just bringing the NLX and API software to production. A project should address all functional and non functional requirements and business context before launch. Depending on the service this wil take a few weeks or months.
 
-Over all consuming API’s is much more straight forward and easy compared to providing an API. When new to API’s one should start with consuming API’s. For example the [BAG API](https://zakelijk.kadaster.nl/-/bag-api) of the Dutch Kadaster or the [KVK API](https://developers.kvk.nl/) of the Dutch Chamber of Commerce.
+Over all consuming API’s is much more straightforward and easy compared to providing an API. When new to API’s one should start with consuming API’s. For example the [BAG API](https://zakelijk.kadaster.nl/-/bag-api) of the Dutch Kadaster or the [KVK API](https://developers.kvk.nl/) of the Dutch Chamber of Commerce.
 
 Providing API’s trough NLX is quite straightforward when the API’s are already available. Suitable API’s to start with as a provider are two examples of API’s that Amsterdam has made available. Consider providing an API for monuments or garbage bin’s by reusing the already developed API specifications: [Monumenten API](https://api.data.amsterdam.nl/monumenten) or [Afval API](https://api.data.amsterdam.nl/afval/).
 
