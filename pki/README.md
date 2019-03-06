@@ -1,6 +1,6 @@
 # pki
 
-This document how the initial NLX pki is configured. This component does not contain any secrets.
+This document describes how the initial NLX pki is configured. This component does not contain any secrets.
 
 ## Introduction
 
@@ -97,7 +97,7 @@ env=preprod echo '{"hosts": ["'${env}'.nlx.io"], "key": {"algo": "rsa", "size": 
 	cfssljson -bare ca
 ```
 
-Sign a certificate for the directory compoments, run for all components that need a cert.
+Sign a certificate for the directory components, run for all components that need a cert.
 
 ```bash
 env=preprod
@@ -128,7 +128,7 @@ kubectl -n ${namespace} create secret generic certs-${component} \
 	--from-file=./ca.pem
 ```
 
-Create a key and certificate for an external party, run:
+To create a key and certificate for an external party, run:
 
 ```bash
 certDomain=< the domain of the inway/outway that needs a cert >
