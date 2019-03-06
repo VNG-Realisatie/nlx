@@ -1,8 +1,8 @@
 #!/usr/bin/awk -f
 
 BEGIN {
-    count = 0;
-    totalPercentage = 0;
+    statementCount = 0;
+    coverageCount = 0;
 }
 
 {
@@ -12,14 +12,20 @@ BEGIN {
 }
 
 # Match the release lines from skaffold
-/^coverage:\s(\w+.\w+)% of statements/ {
-    totalPercentage+=$2
-    count++
+/,\w+.\w+\s(\w+)\s(\w+)/ {
+    print("le match")
+    print($2)
+    print($3)
+    statementCount+=$2
+    coverageCount+=$3
+   
 }
 
 END {
-    if (count > 0) {
-        printf "coverage percentage of all packages: %.1f%\n", totalPercentage / count    
+    coverage = (coverageCount / statementCount) * 100
+    print(coverage)
+    if (coverage > 0) {
+        printf "coverage percentage of all packages: %.1f%\n", coverage
     } else {
         print "coverage percentage of all packages: 0.0%"
     }

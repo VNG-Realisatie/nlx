@@ -19,7 +19,8 @@ Go tests:
   stage: Tests
   script:
     - /usr/local/go/bin/go mod download
-    - /usr/local/go/bin/go test $(/usr/local/go/bin/go list ./...) -v -coverprofile coverage.out | ./go-coverage-sum.awk
+    - /usr/local/go/bin/go test $(/usr/local/go/bin/go list ./...) -v -coverprofile coverage.out
+    - cat coverage.out | ./go-coverage-sum.awk
     - /usr/local/go/bin/go tool cover -html=coverage.out -o coverage.html
   coverage: /^coverage percentage of all packages:\s(\d+.\d+%)/
   artifacts:
