@@ -20,7 +20,7 @@ Setting up the first Outway for testing is done in a matter of a few hours, sett
 
 Over all consuming API’s is much more straight forward and easy compared to providing an API. When new to API’s one should start with consuming API’s. For example the [BAG API](https://zakelijk.kadaster.nl/-/bag-api) of the Dutch Kadaster or the [KVK API](https://developers.kvk.nl/) of the Dutch Chamber of Commerce.
 
-Providing API’s trough NLX is quite straightforward when the API’s are already available. Suitable API’s to start with as a provider are two example’s of API’s that Amsterdam has made available. Consider providing an API for monuments of garbage bin’s by reusing the already developed API specifications: [Monumenten API](https://api.data.amsterdam.nl/monumenten) or [Afval API](https://api.data.amsterdam.nl/afval/).
+Providing API’s trough NLX is quite straightforward when the API’s are already available. Suitable API’s to start with as a provider are two examples of API’s that Amsterdam has made available. Consider providing an API for monuments or garbage bin’s by reusing the already developed API specifications: [Monumenten API](https://api.data.amsterdam.nl/monumenten) or [Afval API](https://api.data.amsterdam.nl/afval/).
 
 The business benefits of adopting NLX for consuming and providing API’s is the increase in security, flexibility, maintainability and privacy as well as contributing to the Common Ground and adopting cutting edge technology.
 
