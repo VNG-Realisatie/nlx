@@ -126,7 +126,7 @@ Deploy test:
     - master
     - tags
   tags:
-    - nlx
+    - nlx-privileged
     - shell-executor
 
 Deploy acceptance:
@@ -136,7 +136,7 @@ Deploy acceptance:
   only:
     - tags
   tags:
-    - nlx
+    - nlx-privileged
     - shell-executor
 
 Deploy demo:
@@ -147,7 +147,7 @@ Deploy demo:
   only:
     - tags
   tags:
-    - nlx
+    - nlx-privileged
     - shell-executor
 
 Docker tag latest:
