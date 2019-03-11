@@ -18,7 +18,6 @@ RUN npm ci --no-progress --color=false --quiet
 # Now copy the whole directory for the build step.
 COPY txlog-ui /go/src/go.nlx.io/nlx/txlog-ui
 
-RUN npm test
 RUN REACT_APP_GIT_COMMIT_HASH=$(git rev-parse HEAD) \
     REACT_APP_GIT_TAG_NAME=$(git describe --tags) \
     npm run build

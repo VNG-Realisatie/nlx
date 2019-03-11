@@ -16,7 +16,6 @@ RUN npm ci --no-progress --color=false --quiet
 # Now copy the whole workdir for the build step.
 COPY directory-ui /go/src/go.nlx.io/nlx/directory-ui
 
-RUN npm test
 RUN REACT_APP_GIT_COMMIT_HASH=$(git rev-parse HEAD) \
     REACT_APP_GIT_TAG_NAME=$(git describe --tags) \
     npm run build

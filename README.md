@@ -2,7 +2,7 @@
 
 [![Go Report Card](https://goreportcard.com/badge/go.nlx.io/nlx)](https://goreportcard.com/report/go.nlx.io/nlx)
 [![pipeline status](https://gitlab.com/commonground/nlx/badges/master/pipeline.svg)](https://gitlab.com/commonground/nlx/commits/master)
-[![coverage report](https://gitlab.com/commonground/nlx/badges/master/coverage.svg)](https://gitlab.com/commonground/nlx/commits/master)
+[![coverage report](https://gitlab.com/commonground/nlx/badges/feature/455-add-code-coverage-badge/coverage.svg)](https://gitlab.com/commonground/nlx/commits/feature/455-add-code-coverage-badge)
 [![Repo Status](https://img.shields.io/badge/status-alpha-lightgrey.svg?longCache=true)](https://docs.nlx.io/introduction/product-vision/)
 
 
