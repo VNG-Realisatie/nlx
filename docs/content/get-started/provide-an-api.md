@@ -21,7 +21,7 @@ Preferably you are able to start the inway service on a machine which is publicl
 
 ## The API
 
-In this example we will use [postman-echo.com](https://postman-echo.com) as an example API.
+In this example we will use [Swagger Petstore](https://petstore.swagger.io) as an example API.
 
 We have to define our API in a TOML-file. You can save the contents below as `service-config.toml`.
 
@@ -30,18 +30,21 @@ We have to define our API in a TOML-file. You can save the contents below as `se
     
 # This block defines an API exposed by this inway.
 # A single inway can expose multiple API's, therefore this block can be added multiple times.
-# The name of the API (in this example PostmanEcho) must be unique for each block.
-    [services.MyPublicAPI]
+# The name of the API (in this example SwaggerPetstore) must be unique for each block.
+    [services.SwaggerPetstore]
 
     # `endpoint-url` should be set to the address at which the API is available.
-    # In this example we simply expose the postman-echo.com website.
-    endpoint-url = "https://postman-echo.com/"
+    # In this example we expose the petstore.swagger.io website.
+    endpoint-url = "https://petstore.swagger.io"
 
-    # `documentation-url` points to the documentation for provided API
-    documentation-url = "https://docs.postman-echo.com/"
+    # `documentation-url` should point to the documentation for the API
+    documentation-url = "https://petstore.swagger.io"
 
     # `authorization-model` can or whitelist
     authorization-model = "none"
+    
+    # `api-specification-document-url` defines the specification document for the API
+    api-specification-document-url = "https://petstore.swagger.io/v2/swagger.json"
 
     # `public-support-contact` contains an email address which NLX users can contact if they need support using your API.
     # This email address is published in the directory.
@@ -127,7 +130,7 @@ Now let's try to fetch some data from our inway using our outway.
 To do so, we have to use the following structure:
 
 ```bash
-curl http://localhost:4080/my-organization/DocsTestMyPublicAPI/get?foo1=bar1
+curl http://localhost:4080/my-organization/SwaggerPetstore/v2/pet/20002085
 ```
 
 ### Verification
@@ -136,12 +139,10 @@ The response of the `curl` command should look similar to the following output.
 
 ```json
 {
-  "args": {
-    "foo1": "bar1"
-  },
+  "args": {},
   "headers": {
     "x-forwarded-proto": "https",
-    "host": "postman-echo.com",
+    "host": "petstore.swagger.io",
     "accept": "*/*",
     "accept-encoding": "gzip",
     "user-agent": "curl/7.54.0",
@@ -149,7 +150,7 @@ The response of the `curl` command should look similar to the following output.
     "x-nlx-request-organization": "my-organization",
     "x-forwarded-port": "443"
   },
-  "url": "https://postman-echo.com/get?foo1=bar1"
+  "url": "https://petstore.swagger.io/v2/pet/20002085"
 }
 ```
 
