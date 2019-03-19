@@ -310,7 +310,13 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, dataSubjects map[string]co
 			return
 		}
 
-		tx, err := db.Beginx()
+		var tx sqlx.Tx
+		for retry := 0; retry < 3; retry++ {
+			tx, err = db.Beginx()
+			if err == nil {
+				break
+			}
+		}
 		if err != nil {
 			logger.Error("failed to start transaction", zap.Error(err))
 			http.Error(w, "server error", http.StatusInternalServerError)
