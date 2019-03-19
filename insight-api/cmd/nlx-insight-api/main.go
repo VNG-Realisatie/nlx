@@ -310,7 +310,7 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, dataSubjects map[string]co
 			return
 		}
 
-		var tx sqlx.Tx
+		var tx *sqlx.Tx
 		for retry := 0; retry < 3; retry++ {
 			tx, err = db.Beginx()
 			if err == nil {
