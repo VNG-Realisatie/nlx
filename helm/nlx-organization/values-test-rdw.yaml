@@ -33,7 +33,7 @@ demoApplication:
   enable: false
 
 irma:
-  apiServerImage: privacybydesign/irma_api_server:2.0.1
+  apiServerImage: privacybydesign/irma_api_server:latest
   pullPolicy: Always
   certificate:
     crtDER: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwDsrbcGRs/xTcPvqtI71nzpJWH8Q9oYEfXJEDgmrSofVnZa3V6mjvDZ2KJA3tSsQa7tRX6qrIpj5Zix3+87BdfyZKmZc70Ct56Gqqc0qTzrnUQexAJs3xjzFcTOjzw9P0/H0d1XC59f6s43o5xaG+dnuzm+1PHOVoNskY+VHgTSRVqgAoJl8ba9SWZvX881SirfnSVxob3/iwP2ozHXA3j7nlzDrQQeTJEf4E53EnNhLBJaC1N+pE2APafZMdKBVRzw8oJnQJwUodQ8Pm9Aw80U6A+Sy86C4H4CRfSwlpqb/LjsXa7SwSvegZ3Bfadk8BrnvJnK50xOd+D5XjpZCXQIDAQAB

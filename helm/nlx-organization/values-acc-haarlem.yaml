@@ -33,7 +33,7 @@ demoApplication:
   genericApplicationImage: nlxio/parkeervergunning-application:latest
 
 irma:
-  apiServerImage: privacybydesign/irma_api_server:2.0.1
+  apiServerImage: privacybydesign/irma_api_server:latest
   pullPolicy: Always
   certificate:
     crtDER: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyJJQqF7nvhfWHLhnVkCfM0VPq8YEoyjQsDnm2RMJXSJe2pkUWRbFyqdR6bgmv1ZEtduWMhbKVQHcWE8ZfaYSQmVe92obSwOMYcXL0VS+ouTD0vjAWc0oucZ0U1adndMykgugi9PaWf0I7nCEgYRlsf62sXoF+YqwPiWLPPdzsoBDsmtWOYGfSxtJEucXXbbjiBvRsgipHqCwYsuXEc5TDXqE2iyrgDwVrme9vXxAHGRQgaISUTkOZUcVg3zkGx4SreGz5Hh1iL0VPOA0y4SCtl0a/6ccWxnapfZm03ygoxpsMoYhkFKRP32BYYorPMglck3IeW3fp24gZ7TnqeF29QIDAQAB
