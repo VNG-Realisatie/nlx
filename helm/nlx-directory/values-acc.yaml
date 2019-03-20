@@ -18,7 +18,7 @@ imagePullPolicy: IfNotPresent
 
 insightDirectoryInspectionAPIURL: "http://directory-inspection-api"
 
-ttlOfflineService: 14
+ttlOfflineService: 1
 
 ca:
   certPEM: |
