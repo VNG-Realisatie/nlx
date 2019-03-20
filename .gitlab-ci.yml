@@ -14,7 +14,7 @@ Go go.mod tidy test:
   tags:
     - nlx
     - shell-executor
-    
+
 Go tests:
   stage: Tests
   script:
@@ -34,6 +34,10 @@ Go tests:
 Directory-ui tests:
   image: node:10.15.1-alpine
   stage: Tests
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+    - node_modules/
   before_script:
     - cd directory-ui/
     - npm install
@@ -51,6 +55,10 @@ Directory-ui tests:
 Insight-ui tests:
   image: node:10.15.1-alpine
   stage: Tests
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+    - node_modules/
   before_script:
     - cd insight-ui/
     - npm install
@@ -68,6 +76,10 @@ Insight-ui tests:
 Txlog-ui tests:
   image: node:10.15.1-alpine
   stage: Tests
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+    - node_modules/
   before_script:
     - cd txlog-ui/
     - npm install
