@@ -8,7 +8,7 @@ weight: 100
 
 NLX is built as a core component of the [Common Ground vision](https://github.com/VNG-Realisatie/common-ground), which aims to convert or replace the current monolithic information systems of Dutch municipalities (and wider government) with a state of the art, API-first software landscape, fulfilling societal demand for automation, transparency and privacy.
 
-In this vision, everyone should be able to use API's in other organisations as easy as their own, while core data objects should only be manipulated by the one administratively responsible and used by all others. An additional advantage is that public data can easily be made available to everyone. To make this technically feasible in a controllable manner, NLX comes in play.
+To reduce integration costs and simplify building component based software systems, everyone should be (technically) able to use API's in other organisations as easy as in their own, while core data objects should only be manipulated by the one administratively responsible and used by all others. An additional advantage is that public data can easily be made available to everyone. To make this technically feasible in a controllable manner, NLX comes in play.
 
 **Warning**: Please note the current NLX software only serves as a **proof of concept** and is therefore **not** suitable for production usage.
 
