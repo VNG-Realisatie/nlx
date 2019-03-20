@@ -18,7 +18,7 @@ Starting with NLX implies starting with API’s. More specific it's starting wit
 
 Setting up the first Outway for testing is done in a matter of a few hours, setting up an Inway requires having a basic API and a publicly resolvable URL so this is usually done in a few days. Launching a service on a public available network (the internet) requires more than just bringing the NLX and API software to production. A project should address all functional and non functional requirements and business context before launch. Depending on the service this wil take a few weeks or months.
 
-Consuming API’s is easier than providing an API. When new to API’s one should start with consuming API’s. For example the [BAG API](https://zakelijk.kadaster.nl/-/bag-api) of the Dutch Kadaster or the [KVK API](https://developers.kvk.nl/) of the Dutch Chamber of Commerce.
+Consuming API’s is easier than providing an API. A good place to start is to consume an already available API. Such as for example the [BAG API](https://zakelijk.kadaster.nl/-/bag-api) of the Dutch Kadaster or the [KVK API](https://developers.kvk.nl/) of the Dutch Chamber of Commerce.
 
 Providing API’s trough NLX is quite straightforward when the API’s are already available. Suitable API’s to start with as a provider are two examples of API’s that Amsterdam has made available. Consider providing an API for monuments or garbage bin’s by reusing the already developed API specifications: [Monumenten API](https://api.data.amsterdam.nl/monumenten) or [Afval API](https://api.data.amsterdam.nl/afval/).
 
