@@ -11,6 +11,8 @@ import (
 	"sync"
 	"time"
 
+	"go.nlx.io/nlx/common/tlsconfig"
+
 	"github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	"github.com/grpc-ecosystem/go-grpc-middleware/recovery"
@@ -109,6 +111,7 @@ func runServer(p *process.Process, log *zap.Logger, address string, addressPlain
 		},
 		Handler: newGRPCSplitterHandlerFunc(grpcServer, httpRouter),
 	}
+	tlsconfig.ApplyDefaults(HTTPSHandler.TLSConfig)
 
 	go func() {
 		err = HTTPSHandler.ListenAndServeTLS("", "") // Key and Cert is empty because we provided them in TLSConfig
