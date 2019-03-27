@@ -1,4 +1,4 @@
-FROM golang:1.11-alpine AS build-cfssl
+FROM golang:1.12-alpine AS build-cfssl
 
 # Build and install cfssl binaries
 RUN apk add --update git g++

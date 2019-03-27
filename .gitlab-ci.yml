@@ -107,6 +107,9 @@ Build:
   stage: Build
   script:
     - skaffold build
+  except:
+    - master
+    - tags
   tags:
     - nlx
     - shell-executor

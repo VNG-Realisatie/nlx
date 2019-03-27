@@ -1,5 +1,5 @@
 # Use go 1.x based on the latest alpine image.
-FROM golang:1.11-alpine AS build
+FROM golang:1.12-alpine AS build
 
 # Install build tools.
 RUN apk add --update git gcc musl-dev
@@ -20,8 +20,8 @@ COPY .git               /go/src/go.nlx.io/nlx/txlog-api/.git
 WORKDIR /go/src/go.nlx.io/nlx/txlog-api
 
 RUN GIT_COMMIT_HASH=$(git rev-parse HEAD) && \
-    GIT_TAG_NAME=$(git describe --tags) && \
-    go build \
+        GIT_TAG_NAME=$(git describe --tags) && \
+        go build \
         -ldflags="-X 'go.nlx.io/nlx/common/version.BuildSourceHash=$GIT_COMMIT_HASH' -X 'go.nlx.io/nlx/common/version.BuildVersion=$GIT_TAG_NAME'" \
         -o dist/bin/nlx-txlog-api ./cmd/nlx-txlog-api
 
