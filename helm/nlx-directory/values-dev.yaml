@@ -16,6 +16,12 @@ insightDirectoryInspectionAPIURL: "http://directory-inspection-api"
 
 ttlOfflineService: 1
 
+demo:
+  enabled: true
+
+ca:
+  kind: "public"
+
 externalIP: ""
 demoEnv: "dev"
 demoDomain: "minikube"

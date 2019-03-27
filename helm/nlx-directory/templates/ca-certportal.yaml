@@ -1,3 +1,4 @@
+{{ if eq .Values.ca.kind "public" }}
 {{ with set . "component" "ca-certportal" }}
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -56,5 +57,6 @@ spec:
             backend:
               serviceName: {{.component}}
               servicePort: webinterface
+{{ end }}
 {{ end }}
 {{ end }}

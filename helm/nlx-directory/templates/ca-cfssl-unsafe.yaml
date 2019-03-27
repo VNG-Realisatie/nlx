@@ -1,3 +1,4 @@
+{{ if eq .Values.ca.kind "public" }}
 {{ with set . "component" "ca-cfssl-unsafe" }}
 {{ if .Values.ca.certPEM }}
 apiVersion: v1
@@ -67,4 +68,5 @@ spec:
       protocol: TCP
       port: 8888
   cluserIP: None
+{{ end }}
 {{ end }}

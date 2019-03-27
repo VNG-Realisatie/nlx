@@ -14,6 +14,8 @@ dbPasswordDirectory: nlx-demo-directory
 
 caAddress: ca-cfssl-unsafe.nlx-demo-directory
 
+demo:
+  enabled: true
 demoEnv: "demo"
 demoDomain: "nlx.io"
 imagePullPolicy: IfNotPresent
@@ -23,6 +25,7 @@ insightDirectoryInspectionAPIURL: "http://directory-inspection-api"
 ttlOfflineService: 1
 
 ca:
+  kind: "public"
   certPEM: |
     -----BEGIN CERTIFICATE-----
     MIIFjjCCA3agAwIBAgIUETfEQ3CBxDQoa7TxaXlDzNHOFbowDQYJKoZIhvcNAQEN

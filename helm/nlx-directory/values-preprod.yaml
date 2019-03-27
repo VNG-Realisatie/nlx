@@ -1,0 +1,25 @@
+
+domain: preprod.nlx.io
+
+logLevel: info
+
+dbHost: postgresql.postgresql
+dbUsernameSuperuser: postgres
+dbPasswordSuperuser: postgres
+
+dbDatabaseDirectory: nlx-preprod-directory
+dbResetDirectory: false
+dbUsernameDirectory: nlx-preprod-directory
+dbPasswordDirectory: nlx-preprod-directory
+
+imagePullPolicy: IfNotPresent
+
+insightDirectoryInspectionAPIURL: "http://directory-inspection-api"
+
+ttlOfflineService: 14
+
+demo:
+  enabled: false
+
+ca:
+  kind: "private"

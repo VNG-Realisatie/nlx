@@ -18,6 +18,11 @@ spec:
 
       volumes:
         - name: certs
+          {{ if eq .Values.ca.kind "private" }}
+          secret:
+            secretName: certs-{{ .component }}
+          {{ end }}
+          {{ if eq .Values.ca.kind "public" }}
           emptyDir: {}
 
       initContainers:
@@ -33,6 +38,7 @@ spec:
             - |-
                 cd /certs &&
                 /ca/generate-cert.sh {{.component}}.{{.Values.domain}} NLX ca-cfssl-unsafe
+      {{ end }}
 
       containers:
         - name: directory
@@ -47,7 +53,12 @@ spec:
             - name: POSTGRES_DSN
               value: postgresql://{{.Values.dbUsernameDirectory}}:{{.Values.dbPasswordDirectory}}@{{.Values.dbHost}}/{{.Values.dbDatabaseDirectory}}?sslmode=disable&connect_timeout=10
             - name: TLS_NLX_ROOT_CERT
+              {{ if eq .Values.ca.kind "private" }}
+              value: "/certs/ca.pem"
+              {{ end }}
+              {{ if eq .Values.ca.kind "public" }}
               value: "/certs/nlx_root.pem"
+              {{ end }}
             - name: TLS_DIRECTORY_CERT
               value: "/certs/{{.component}}.{{.Values.domain}}.pem"
             - name: TLS_DIRECTORY_KEY

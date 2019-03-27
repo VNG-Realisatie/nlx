@@ -162,6 +162,22 @@ Deploy demo:
     - nlx-privileged
     - shell-executor
 
+Deploy preprod:
+  extends: .deploy
+  environment:
+    name: preprod
+  when: manual
+  only:
+    - tags
+
+Deploy prod:
+  extends: .deploy
+  environment:
+    name: prod
+  when: manual
+  only:
+    - tags
+
 Docker tag latest:
   stage: Deploy
   script:
