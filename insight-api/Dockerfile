@@ -15,10 +15,13 @@ RUN go mod download
 COPY insight-api        /go/src/go.nlx.io/nlx/insight-api
 COPY txlog-db/dbversion /go/src/go.nlx.io/nlx/txlog-db/dbversion
 COPY common             /go/src/go.nlx.io/nlx/common
-COPY .git               /go/src/go.nlx.io/nlx/insight-api/.git
 
 
 WORKDIR /go/src/go.nlx.io/nlx/insight-api
+
+RUN go build ./cmd/nlx-insight-api
+
+COPY .git /go/src/go.nlx.io/nlx/insight-api/.git
 
 RUN GIT_COMMIT_HASH=$(git rev-parse HEAD) && \
         GIT_TAG_NAME=$(git describe --tags) && \

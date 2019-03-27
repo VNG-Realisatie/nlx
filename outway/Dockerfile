@@ -16,9 +16,12 @@ COPY outway                                 /go/src/go.nlx.io/nlx/outway
 COPY directory-inspection-api/inspectionapi /go/src/go.nlx.io/nlx/directory-inspection-api/inspectionapi
 COPY txlog-db/dbversion                     /go/src/go.nlx.io/nlx/txlog-db/dbversion
 COPY common                                 /go/src/go.nlx.io/nlx/common
-COPY .git                                   /go/src/go.nlx.io/nlx/outway/.git
 
 WORKDIR /go/src/go.nlx.io/nlx/outway
+
+RUN go build ./cmd/nlx-outway
+
+COPY .git /go/src/go.nlx.io/nlx/outway/.git
 
 RUN GIT_COMMIT_HASH=$(git rev-parse HEAD) && \
         GIT_TAG_NAME=$(git describe --tags) && \

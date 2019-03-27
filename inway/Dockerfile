@@ -17,9 +17,12 @@ COPY directory-monitor/health                       /go/src/go.nlx.io/nlx/direct
 COPY directory-registration-api/registrationapi     /go/src/go.nlx.io/nlx/directory-registration-api/registrationapi
 COPY txlog-db/dbversion                             /go/src/go.nlx.io/nlx/txlog-db/dbversion
 COPY common                                         /go/src/go.nlx.io/nlx/common
-COPY .git                                           /go/src/go.nlx.io/nlx/inway/.git
 
 WORKDIR /go/src/go.nlx.io/nlx/inway
+
+RUN go build ./cmd/nlx-inway
+
+COPY .git /go/src/go.nlx.io/nlx/inway/.git
 
 RUN GIT_COMMIT_HASH=$(git rev-parse HEAD) && \
         GIT_TAG_NAME=$(git describe --tags) && \
