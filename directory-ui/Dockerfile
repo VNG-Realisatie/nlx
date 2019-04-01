@@ -1,6 +1,6 @@
 FROM node:10.15.0-alpine AS build
 
-RUN apk add git
+RUN apk add git jq
 
 ENV CI=true
 
@@ -17,9 +17,9 @@ COPY directory-ui /go/src/go.nlx.io/nlx/directory-ui
 
 RUN npm run build
 
-# Add file with version identifier from git
+# Add file with version tag from git
 COPY .git /go/src/go.nlx.io/nlx/directory-ui/.git
-RUN ash -c 'git describe --tags > /tmp/version'
+RUN ash -c 'echo "\"$(git describe --tags)\"" | jq "{tag: .}" > /tmp/version.json'
 
 # Copy static docs to alpine-based nginx container.
 FROM nginx:alpine
@@ -28,4 +28,4 @@ FROM nginx:alpine
 COPY directory-ui/docker/default.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=build /go/src/go.nlx.io/nlx/directory-ui/build /usr/share/nginx/html
-COPY --from=build /tmp/version /usr/share/nginx/html/version
+COPY --from=build /tmp/version.json /usr/share/nginx/html/version.json

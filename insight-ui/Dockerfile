@@ -1,6 +1,6 @@
 FROM node:10.15.0-alpine AS build
 
-RUN apk add git
+RUN apk add git jq
 
 ENV CI=true
 
@@ -20,7 +20,7 @@ RUN npm run build
 
 # Add file with version identifier from git
 COPY .git /go/src/go.nlx.io/nlx/insight-ui/.git
-RUN ash -c 'git describe --tags > /tmp/version'
+RUN ash -c 'echo "\"$(git describe --tags)\"" | jq "{tag: .}" > /tmp/version.json'
 
 # Copy static docs to alpine-based nginx container.
 FROM nginx:alpine
@@ -29,7 +29,7 @@ FROM nginx:alpine
 COPY insight-ui/docker/default.conf /etc/nginx/conf.d/default.conf.template
 
 COPY --from=build /go/src/go.nlx.io/nlx/insight-ui/build /usr/share/nginx/html
-COPY --from=build /tmp/version /usr/share/nginx/html/version
+COPY --from=build /tmp/version.json /usr/share/nginx/html/version.json
 
 # The API base URL should be configurable at run-time. Because Nginx does not suppport using environment variables
 # in the config file, we use envsubst to substitute the desired value for $DIRECTORY_INSPECTION_API_URL in the config file.
