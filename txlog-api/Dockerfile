@@ -15,12 +15,9 @@ RUN go mod download
 COPY txlog-api          /go/src/go.nlx.io/nlx/txlog-api
 COPY txlog-db/dbversion /go/src/go.nlx.io/nlx/txlog-db/dbversion
 COPY common             /go/src/go.nlx.io/nlx/common
+COPY .git               /go/src/go.nlx.io/nlx/txlog-api/.git
 
 WORKDIR /go/src/go.nlx.io/nlx/txlog-api
-
-RUN go build ./cmd/nlx-txlog-api
-
-COPY .git /go/src/go.nlx.io/nlx/txlog-api/.git
 
 RUN GIT_COMMIT_HASH=$(git rev-parse HEAD) && \
         GIT_TAG_NAME=$(git describe --tags) && \

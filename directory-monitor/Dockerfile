@@ -15,12 +15,9 @@ RUN go mod download
 COPY directory-monitor      /go/src/go.nlx.io/nlx/directory-monitor
 COPY directory-db/dbversion /go/src/go.nlx.io/nlx/directory-db/dbversion
 COPY common                 /go/src/go.nlx.io/nlx/common
+COPY .git                   /go/src/go.nlx.io/nlx/directory-monitor/.git
 
 WORKDIR /go/src/go.nlx.io/nlx/directory-monitor
-
-RUN go build ./cmd/nlx-directory-monitor
-
-COPY .git /go/src/go.nlx.io/nlx/directory-monitor/.git
 
 RUN GIT_COMMIT_HASH=$(git rev-parse HEAD) && \
         GIT_TAG_NAME=$(git describe --tags) && \

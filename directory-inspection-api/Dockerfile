@@ -15,12 +15,9 @@ RUN go mod download
 COPY directory-inspection-api   /go/src/go.nlx.io/nlx/directory-inspection-api
 COPY directory-db/dbversion     /go/src/go.nlx.io/nlx/directory-db/dbversion
 COPY common                     /go/src/go.nlx.io/nlx/common
+COPY .git                       /go/src/go.nlx.io/nlx/directory-inspection-api/.git
 
 WORKDIR /go/src/go.nlx.io/nlx/directory-inspection-api
-
-RUN go build ./cmd/nlx-directory-inspection-api
-
-COPY .git /go/src/go.nlx.io/nlx/directory-inspection-api/.git
 
 RUN GIT_COMMIT_HASH=$(git rev-parse HEAD) && \
         GIT_TAG_NAME=$(git describe --tags) && \
