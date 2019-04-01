@@ -4,9 +4,8 @@ RUN apk add git
 
 # First copy only package.json to make the dependency fetching step optional.
 COPY txlog-ui/package.json \
-     txlog-ui/package-lock.json \
-     /go/src/go.nlx.io/nlx/txlog-ui/
-COPY .git /go/src/go.nlx.io/nlx/txlog-ui/.git
+    txlog-ui/package-lock.json \
+    /go/src/go.nlx.io/nlx/txlog-ui/
 
 WORKDIR /go/src/go.nlx.io/nlx/txlog-ui
 
@@ -18,9 +17,11 @@ RUN npm ci --no-progress --color=false --quiet
 # Now copy the whole directory for the build step.
 COPY txlog-ui /go/src/go.nlx.io/nlx/txlog-ui
 
-RUN REACT_APP_GIT_COMMIT_HASH=$(git rev-parse HEAD) \
-    REACT_APP_GIT_TAG_NAME=$(git describe --tags) \
-    npm run build
+RUN npm run build
+
+# Add file with version identifier from git
+COPY .git /go/src/go.nlx.io/nlx/txlog-ui/.git
+RUN ash -c 'git describe --tags > /tmp/version'
 
 # Copy static docs to alpine-based nginx container.
 FROM nginx:alpine
@@ -29,3 +30,4 @@ FROM nginx:alpine
 COPY txlog-ui/docker/default.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=build /go/src/go.nlx.io/nlx/txlog-ui/build /usr/share/nginx/html
+COPY --from=build /tmp/version /usr/share/nginx/html/version

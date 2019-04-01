@@ -8,7 +8,6 @@ ENV CI=true
 COPY insight-ui/package.json \
   insight-ui/package-lock.json \
   /go/src/go.nlx.io/nlx/insight-ui/
-COPY .git /go/src/go.nlx.io/nlx/insight-ui/.git
 
 WORKDIR /go/src/go.nlx.io/nlx/insight-ui
 RUN npm ci --no-progress --color=false --quiet
@@ -17,9 +16,11 @@ RUN npm ci --no-progress --color=false --quiet
 COPY insight-ui /go/src/go.nlx.io/nlx/insight-ui
 
 # Run tests and build
-RUN REACT_APP_GIT_COMMIT_HASH=$(git rev-parse HEAD) \
-    REACT_APP_GIT_TAG_NAME=$(git describe --tags) \
-    npm run build
+RUN npm run build
+
+# Add file with version identifier from git
+COPY .git /go/src/go.nlx.io/nlx/insight-ui/.git
+RUN ash -c 'git describe --tags > /tmp/version'
 
 # Copy static docs to alpine-based nginx container.
 FROM nginx:alpine
@@ -28,6 +29,7 @@ FROM nginx:alpine
 COPY insight-ui/docker/default.conf /etc/nginx/conf.d/default.conf.template
 
 COPY --from=build /go/src/go.nlx.io/nlx/insight-ui/build /usr/share/nginx/html
+COPY --from=build /tmp/version /usr/share/nginx/html/version
 
 # The API base URL should be configurable at run-time. Because Nginx does not suppport using environment variables
 # in the config file, we use envsubst to substitute the desired value for $DIRECTORY_INSPECTION_API_URL in the config file.
