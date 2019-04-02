@@ -82,6 +82,9 @@ spec:
     - name: handler
       protocol: TCP
       port: 80
+    - name: handler-tls
+      protocol: TCP
+      port: 443
   cluserIP: None
 {{ if .Values.debugEnableOutwayIngress }}
 ---
