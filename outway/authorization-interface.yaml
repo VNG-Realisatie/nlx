@@ -1,0 +1,55 @@
+openapi: 3.0.0
+info:
+  description: |
+    The outway has the option to configure a authorization service. Once configured, the requests going through the outway will be authorized by this authorization service. 
+    In order to enable communication between the outway and their authorization service, each organization is required to implement the interface described in this specification on their authorization service.
+  version: "1.0.0"
+  title: Authorization
+paths:
+  /auth:
+    post:
+      summary: Authorization request
+      responses:
+        200:
+          description: The authorization request has been handled successfully. This does not mean the request is authorized, it means that the request has been processed successfully 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorizationResponse'
+      requestBody:
+        $ref: '#/components/requestBodies/AuthorizationRequest'
+components:
+  schemas:
+    AuthorizationRequest:
+      type: object
+      properties:
+        headers:
+           type: object
+           additionalProperties:
+            type: array
+            items:
+              type: string
+           description: Contains the HTTP-headers of the request made to the outway 
+        organization:
+          type: string
+          description: organization targeted by the request send to the outway 
+        service:
+          type: string
+          description: service targeted by the request send to the outway
+    AuthorizationResponse:
+      type: object
+      properties:
+        authorized:
+          type: boolean
+          description: true if the request is authorized. The outway will continue to send the request to the targeted service. false when the authorization has failed for whatever reason. The outway will return a 401 to the requesting client.
+        reason:
+          type: string   
+          description: If the authorization has failed this field can be used to explain why. This field will be send to the client responsible for the original request.
+  requestBodies:
+    AuthorizationRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AuthorizationRequest'
+      description: The body of the request send to the authorization service
+      required: true
