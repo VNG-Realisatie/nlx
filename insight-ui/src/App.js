@@ -3,7 +3,7 @@
 
 import React, { Component } from 'react'
 
-import StyledApp, {StyledSidebar, StyledContent, StyledOrganizationList, StyledSidebarHeader} from './App.styles'
+import StyledApp, {StyledSidebar, StyledContent, StyledOrganizationList, StyledSidebarHeader, StyledCard} from './App.styles'
 import GlobalStyles from './components/GlobalStyles'
 import Logo from './components/Logo/index';
 
@@ -21,7 +21,16 @@ const App = () =>
       </StyledOrganizationList>
     </StyledSidebar>
     <StyledContent>
-      Content
+      <StyledCard>
+        <p>
+          View logs by selecting an organization on the left.
+          You can only view logs by disclosing the required IRMA attributes.
+        </p>
+
+        <p className="text-muted">
+          Read more about IRMA and what it does <a href="https://privacybydesign.foundation/irma/" target="_blank" rel="noopener noreferrer">here</a>.
+        </p>
+      </StyledCard>
     </StyledContent>
   </StyledApp>
 

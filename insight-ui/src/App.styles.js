@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import Card from './components/Card'
 
 export default styled.div`
   display: flex;
@@ -18,6 +19,7 @@ export const StyledSidebarHeader = styled.a`
   color: #676D80;
   font-weight: 600;
   text-decoration: none;
+  vertical-align: middle;
   
   svg {
     display: inline-block;
@@ -28,6 +30,9 @@ export const StyledSidebarHeader = styled.a`
 export const StyledContent = styled.div`
   flex: 1;
   background: #F7F9FC;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 export const StyledOrganizationList = styled.ul`
@@ -51,5 +56,20 @@ export const StyledOrganizationList = styled.ul`
     display: block;
     padding-left: 20px;
     line-height: 32px;
+  }
+`
+
+export const StyledCard = styled(Card)`
+  width: 400px;
+  padding: 8px 24px 8px 24px;
+  
+  .text-muted {
+    font-size: 12px;
+    color: #A3AABF;
+    
+    a {
+      text-decoration: none;
+      color: #517FFF;
+    }
   }
 `
