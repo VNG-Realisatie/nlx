@@ -3,20 +3,26 @@
 
 import React, { Component } from 'react'
 
-import { withStyles, CssBaseline } from '@material-ui/core'
-import { globalStyles } from './styles/muiTheme'
+import StyledApp, {StyledSidebar, StyledContent, StyledOrganizationList, StyledSidebarHeader} from './App.styles'
+import GlobalStyles from './components/GlobalStyles'
+import Logo from './components/Logo/index';
 
-import Drawer from './layout/Drawer'
+const App = () =>
+  <StyledApp>
+    <GlobalStyles/>
+    <StyledSidebar>
+      <StyledSidebarHeader href="#">
+        <Logo/> Insight
+      </StyledSidebarHeader>
+      <StyledOrganizationList>
+        <li><a href="#">BRP</a></li>
+        <li className="active"><a href="#">Haarlem</a></li>
+        <li><a href="#">Kadaster</a></li>
+      </StyledOrganizationList>
+    </StyledSidebar>
+    <StyledContent>
+      Content
+    </StyledContent>
+  </StyledApp>
 
-class App extends Component {
-    render() {
-        return (
-            <div className="App">
-                <CssBaseline />
-                <Drawer />
-            </div>
-        )
-    }
-}
-
-export default withStyles(globalStyles)(App)
+export default App
