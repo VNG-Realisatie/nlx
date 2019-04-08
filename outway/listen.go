@@ -12,6 +12,8 @@ import (
 	"strings"
 	"time"
 
+	"go.nlx.io/nlx/common/tlsconfig"
+
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/transactionlog"
 
@@ -33,10 +35,31 @@ func (o *Outway) ListenAndServe(process *process.Process, address string) error 
 	})
 
 	err := server.ListenAndServe()
-	if err != nil {
-		if err != http.ErrServerClosed {
-			return errors.Wrap(err, "failed to run http server")
-		}
+	if err != nil && err != http.ErrServerClosed {
+		return errors.Wrap(err, "failed to run http server")
+	}
+
+	o.wg.Wait() // Wait until all async jobs will finish
+	return nil
+}
+
+// ListenAndServeTLS is a blocking function that listens on provided tcp address to handle requests.
+func (o *Outway) ListenAndServeTLS(process *process.Process, address string, certFile, keyFile string) error {
+	server := &http.Server{
+		Addr:      address,
+		Handler:   o,
+		TLSConfig: tlsconfig.Defaults(),
+	}
+
+	process.CloseGracefully(func() error {
+		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
+		defer cancel()
+		return server.Shutdown(localCtx)
+	})
+
+	err := server.ListenAndServeTLS(certFile, keyFile)
+	if err != nil && err != http.ErrServerClosed {
+		return errors.Wrap(err, "failed to run http server")
 	}
 
 	o.wg.Wait() // Wait until all async jobs will finish
