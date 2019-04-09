@@ -13,7 +13,7 @@
     "react-app-polyfill": "0.2.0",
     "react-dom": "16.8.6",
     "react-qr-svg": "2.1.0",
-    "react-redux": "5.0.7",
+    "react-redux": "7.0.1",
     "react-router-dom": "5.0.0",
     "redux": "4.0.1",
     "styled-components": "4.2.0",
