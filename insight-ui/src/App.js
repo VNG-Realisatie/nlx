@@ -5,8 +5,9 @@ import React, { Component } from 'react'
 
 import StyledApp, {StyledSidebar, StyledContent, StyledOrganizationList, StyledCard} from './App.styles'
 import GlobalStyles from './components/GlobalStyles'
-import { StyledNavbar, StyledSearch } from "./App.styles";
 import { StyledNavbarNavLinkListItem } from '@commonground/design-system/dist/components/Navbar/index.styles'
+import Sidebar from './components/Sidebar'
+import Home from "./pages/Home";
 
 const App = () =>
   <StyledApp>
@@ -21,25 +22,10 @@ const App = () =>
         </StyledNavbarNavLinkListItem>
       </StyledNavbar>
 
-      <StyledSidebar>
-        <StyledSearch placeholder="Filter organisations" />
-        <StyledOrganizationList>
-          <li><a href="#">BRP</a></li>
-          <li className="active"><a href="#">Haarlem</a></li>
-          <li><a href="#">Kadaster</a></li>
-        </StyledOrganizationList>
-      </StyledSidebar>
-      <StyledContent>
-        <StyledCard>
-          <p>
-            View logs by selecting an organization on the left.
-            You can only view logs by disclosing the required IRMA attributes.
-          </p>
+      <Sidebar />
 
-          <p className="text-muted">
-            Read more about IRMA and what it does <a href="https://privacybydesign.foundation/irma/" target="_blank" rel="noopener noreferrer">here</a>.
-          </p>
-        </StyledCard>
+      <StyledContent>
+        <Route path="/" exact component={Home} />
       </StyledContent>
   </StyledApp>
 
