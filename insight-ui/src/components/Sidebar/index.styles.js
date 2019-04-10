@@ -18,16 +18,6 @@ export const StyledOrganizationList = styled.ul`
   list-style-type: none;
   padding: 0;
   
-  li {
-    &.active {
-      color: #517FFF;
-    
-      a {
-        border-left: 2px solid #517FFF;
-      }
-    }
-  }
-  
   a {
     color: #A3AABF;
     font-weight: 600;
@@ -35,5 +25,10 @@ export const StyledOrganizationList = styled.ul`
     display: block;
     padding-left: 20px;
     line-height: 32px;
+    
+    &.active {
+      color: #517FFF;
+      border-left: 2px solid #517FFF;
+    }
   }
 `
