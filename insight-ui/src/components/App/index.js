@@ -1,10 +1,10 @@
 import React from 'react'
-import { Route } from 'react-router-dom'
+import { NavLink, Route } from 'react-router-dom'
 
 import StyledApp, {StyledNavbar, StyledContent} from './index.styles'
 import GlobalStyles from '../../components/GlobalStyles'
 import { StyledNavbarNavLinkListItem } from '@commonground/design-system/dist/components/Navbar/index.styles'
-import Sidebar from '../../containers/Sidebar'
+import Sidebar from '../../containers/SidebarContainer'
 import Home from '../../pages/Home'
 
 const App = () =>
@@ -16,7 +16,7 @@ const App = () =>
         <a href="#">Directory</a>
       </StyledNavbarNavLinkListItem>
       <StyledNavbarNavLinkListItem>
-        <a href="#" className="active">Insight</a>
+        <NavLink to="/">Insight</NavLink>
       </StyledNavbarNavLinkListItem>
     </StyledNavbar>
 
