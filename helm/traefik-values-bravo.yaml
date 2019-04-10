@@ -9,9 +9,6 @@ acme:
   persistence:
     enabled: false # TODO:#343 PVC doesn't work yet. Enable persistence when it does.
 
-debug:
-  enabled: true
-
 dashboard:
   enabled: true
   domain: traefik.bravo.k8s.nlx.io
