@@ -1,6 +1,25 @@
 // Copyright © VNG Realisatie 2018
 // Licensed under the EUPL
 
+import { call, put } from 'redux-saga/effects'
+import * as TYPES from './types'
+
+const api = url => fetch(url).then(response => response.json())
+
+export const fetchOrganizationsRequest = () => ({
+  type: TYPES.FETCH_ORGANIZATIONS_REQUEST
+})
+
+export function* fetchOrganizations() {
+  try {
+    const organizations = yield call(api, '/api/directory/list-organizations')
+    yield put({ type: TYPES.FETCH_ORGANIZATIONS_SUCCESS, data: organizations.organizations })
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+// old actions
 // loader actions
 export const SHOW_LOADER = 'SHOW_LOADER'
 export const HIDE_LOADER = 'HIDE_LOADER'
