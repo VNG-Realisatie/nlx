@@ -4,8 +4,10 @@ import { NavLink, Route } from 'react-router-dom'
 import StyledApp, {StyledNavbar, StyledContent} from './index.styles'
 import GlobalStyles from '../../components/GlobalStyles'
 import { StyledNavbarNavLinkListItem } from '@commonground/design-system/dist/components/Navbar/index.styles'
-import Sidebar from '../../containers/SidebarContainer'
-import Home from '../../pages/Home'
+import SidebarContainer from '../../containers/SidebarContainer'
+
+import HomePage from '../../components/HomePage'
+import LoginPage from '../../components/LoginPage'
 
 const App = () =>
   <StyledApp>
@@ -20,10 +22,11 @@ const App = () =>
       </StyledNavbarNavLinkListItem>
     </StyledNavbar>
 
-    <Sidebar />
+    <SidebarContainer />
 
     <StyledContent>
-      <Route path="/" exact component={Home} />
+      <Route path="/" exact component={HomePage} />
+      <Route path="/organization/:organization/login" component={LoginPage} />
     </StyledContent>
   </StyledApp>
 

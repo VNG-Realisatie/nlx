@@ -1,11 +1,14 @@
 import React from 'react'
 import { StyledCard } from './index.styles'
 
-const Home = () =>
+const LoginPage = () =>
   <StyledCard>
     <p>
-      View logs by selecting an organization on the left.
-      You can only view logs by disclosing the required IRMA attributes.
+      Scan this QR code with the <a href="https://privacybydesign.foundation/download-en/" target="_blank" rel="noopener noreferrer">IRMA app</a> to get access to your logs.
+    </p>
+
+    <p>
+      TODO: QR code
     </p>
 
     <p className="text-muted">
@@ -13,4 +16,4 @@ const Home = () =>
     </p>
   </StyledCard>
 
-export default Home
+export default LoginPage
