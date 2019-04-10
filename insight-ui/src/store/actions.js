@@ -4,7 +4,7 @@
 import { call, put } from 'redux-saga/effects'
 import * as TYPES from './types'
 
-const api = url => fetch(url).then(response => response.json())
+export const api = url => fetch(url).then(response => response.json())
 
 export const fetchOrganizationsRequest = () => ({
   type: TYPES.FETCH_ORGANIZATIONS_REQUEST
