@@ -22,6 +22,10 @@ SidebarContainer.propTypes = {
   }))
 }
 
+SidebarContainer.defaultProps = {
+  organizations: []
+}
+
 const mapStateToProps = ({ organizations }) =>
   ({ organizations })
 

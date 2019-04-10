@@ -6,7 +6,6 @@ describe('SidebarContainer', () => {
   describe('on initialization', () => {
     it('should fetch the organizations', () => {
       const props = {
-        organizations: [],
         fetchOrganizationsRequest: jest.fn()
       }
       const wrapper = shallow(<SidebarContainer {...props} />)
