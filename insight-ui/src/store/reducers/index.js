@@ -21,7 +21,7 @@ export const organizations = (state = [], action) => {
 
 export default combineReducers({
     organizations: organizations,
-    loginInformation: (state = {}, action) => {
+    loginRequestInfo: (state = {}, action) => {
         switch (action.type) {
             case TYPES.FETCH_IRMA_LOGIN_INFORMATION_SUCCESS:
                 return action.data

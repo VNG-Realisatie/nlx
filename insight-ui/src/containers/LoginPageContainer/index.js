@@ -39,10 +39,10 @@ export class LoginPageContainer extends Component {
   }
 
   render() {
-    const { loginInformation } = this.props
+    const { loginRequestInfo } = this.props
 
-    return loginInformation && loginInformation.qrCodeValue ?
-      <LoginPage qrCodeValue={loginInformation.qrCodeValue} /> :
+    return loginRequestInfo && loginRequestInfo.qrCodeValue ?
+      <LoginPage qrCodeValue={loginRequestInfo.qrCodeValue} /> :
       null
   }
 }
@@ -53,16 +53,16 @@ LoginPageContainer.propTypes = {
     insight_irma_endpoint: string.isRequired,
     insight_log_endpoint: string.isRequired
   }),
-  loginInformation: shape({
+  loginRequestInfo: shape({
     qrCodeValue: string
   }),
 }
 
-const mapStateToProps = ({ organizations, loginInformation }, ownProps) => {
+const mapStateToProps = ({ organizations, loginRequestInfo }, ownProps) => {
   const { organizationName } = ownProps.match.params
   return {
     organization: organizations.find(organization => organization.name === organizationName),
-    loginInformation: loginInformation,
+    loginRequestInfo: loginRequestInfo,
   }
 }
 
