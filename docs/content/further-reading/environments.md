@@ -40,7 +40,7 @@ Leaving the environment empty will redirect to production. For example:
 |[demo.nlx.io](https://demo.nlx.io/) |`Production`| Demo application (applying for a parking permit in Haarlem)|
 |[nlx.io](https://nlx.io/) |`Production`| NLX home page |
 
-*Note that: All non production CA's (Certificate Authority's) are un secured and for development and demonstration purpose only. Preproduction & Production require a restricted CA configuration and related certificates.*
+*Note: All non production CA's (Certificate Authority's) are unsafe, for development and demonstration purpose only. Preproduction & production require a restricted CA configuration and related certificates.*
 
 An overview of the environments and the deployment flow is illustrated in the following archimate model:
 
