@@ -33,12 +33,12 @@ Leaving the environment empty will redirect to production. For example:
 
 |URL   | Environment | Component  |
 |:-----|:----------:|:-------------|
-| [Insight.demo.nlx.io](https://insight.demo.nlx.io/) |`Demo` |Insight application for viewing log entries|
-|[Docs.preprod.nlx.io](https://docs.preprod.nlx.io)|`Preproduction`| Technical documentation of NLX|
-|[Certportal.acc.nlx.io](https://certportal.acc.nlx.io/) |`Acceptance`| NLX certificate portal for this environment|
-|[Directory.acc.nlx.io](https://directory.acc.nlx.io/) |`Acceptance`|Directory with all available api’s for this environment  |
-|[Demo.nlx.io](https://demo.nlx.io/) |`Production`| Demo application (applying for a parking permit in Haarlem)|
-|[NLX.io](https://nlx.io/) |`Production`| NLX home page |
+|[insight.demo.nlx.io](https://insight.demo.nlx.io/) |`Demo` |Insight application for viewing log entries|
+|[docs.preprod.nlx.io](https://docs.preprod.nlx.io)|`Preproduction`| Technical documentation of NLX|
+|[certportal.acc.nlx.io](https://certportal.acc.nlx.io/) |`Acceptance`| NLX certificate portal for this environment|
+|[directory.acc.nlx.io](https://directory.acc.nlx.io/) |`Acceptance`|Directory with all available api’s for this environment  |
+|[demo.nlx.io](https://demo.nlx.io/) |`Production`| Demo application (applying for a parking permit in Haarlem)|
+|[nlx.io](https://nlx.io/) |`Production`| NLX home page |
 
 *Note that: All non production CA's (Certificate Authority's) are un secured and for development and demonstration purpose only. Preproduction & Production require a restricted CA configuration and related certificates.*
 
