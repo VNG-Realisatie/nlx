@@ -1,4 +1,4 @@
-import { organizations } from './index'
+import { organizations, loginStatus } from './index'
 import * as TYPES from '../types'
 
 describe('organizations reducer', () => {
@@ -39,6 +39,32 @@ describe('organizations reducer', () => {
         insight_irma_endpoint: 'irma_endpoint',
         insight_log_endpoint: 'log_endpoint'
       }])
+    })
+  })
+})
+
+describe('loginStatus reducer', () => {
+  it('should return the initial state', () => {
+    expect(loginStatus(undefined, {})).toEqual(null)
+  })
+
+  describe('the IRMA_LOGIN_REQUEST_SUCCESS action', () => {
+    it('should use the action its data', () => {
+      const action = {
+        type: TYPES.IRMA_LOGIN_REQUEST_SUCCESS,
+        data: 'foo'
+      }
+      expect(loginStatus(undefined, action)).toEqual('foo')
+    })
+  })
+
+  describe('the IRMA_LOGIN_REQUEST_FAILED action', () => {
+    it('should use the action its data', () => {
+      const action = {
+        type: TYPES.IRMA_LOGIN_REQUEST_FAILED,
+        data: 'foo'
+      }
+      expect(loginStatus(undefined, action)).toEqual('foo')
     })
   })
 })

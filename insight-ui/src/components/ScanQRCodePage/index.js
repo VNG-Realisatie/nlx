@@ -3,7 +3,7 @@ import { string } from 'prop-types'
 import { StyledCard } from './index.styles'
 import { QRCode } from 'react-qr-svg'
 
-const LoginPage = ({ qrCodeValue }) =>
+const ScanQRCodePage = ({ qrCodeValue }) =>
   <StyledCard>
     <p>
       Scan this QR code with the <a href="https://privacybydesign.foundation/download-en/" target="_blank" rel="noopener noreferrer">IRMA app</a> to get access to your logs.
@@ -24,8 +24,8 @@ const LoginPage = ({ qrCodeValue }) =>
     </p>
   </StyledCard>
 
-LoginPage.propTypes = {
+ScanQRCodePage.propTypes = {
   qrCodeValue: string.isRequired
 }
 
-export default LoginPage
+export default ScanQRCodePage

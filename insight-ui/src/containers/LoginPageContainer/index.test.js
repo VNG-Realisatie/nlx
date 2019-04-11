@@ -57,4 +57,33 @@ describe('LoginPageContainer', () => {
       })
     })
   })
+
+  describe('when the login status changes', () => {
+    describe('the login is successful', () => {
+      it('should redirect to the view logs page', () => {
+        const props = {
+          history: {
+            push: jest.fn()
+          },
+          fetchIrmaLoginInformation: () => {},
+          organization: {
+            name: 'foo',
+            insight_irma_endpoint: 'foo_irma_endpoint',
+            insight_log_endpoint: 'foo_log_endpoint'
+          }
+        }
+
+        const loginStatus = {
+          error: false,
+          response: 'DONE'
+        }
+
+        const wrapper = shallow(<LoginPageContainer {...props} />)
+        const instance = wrapper.instance()
+        wrapper.setProps({loginStatus})
+
+        expect(instance.props.history.push).toHaveBeenNthCalledWith(1, '/organization/foo/logs')
+      })
+    })
+  })
 })

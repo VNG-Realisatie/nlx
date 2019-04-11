@@ -69,14 +69,25 @@ export function* fetchIrmaLoginInformation({ insight_log_endpoint, insight_irma_
   }
 }
 
-const IRMA_LOGIN_STATUS_INITIALIZED = 'INITIALIZED'
-const IRMA_LOGIN_STATUS_CONNECTED = 'CONNECTED'
-const IRMA_LOGIN_STATUS_CANCELLED = 'CANCELLED'
-const IRMA_LOGIN_STATUS_DONE = 'DONE'
+export const IRMA_LOGIN_STATUS_INITIALIZED = 'INITIALIZED'
+export const IRMA_LOGIN_STATUS_CONNECTED = 'CONNECTED'
+export const IRMA_LOGIN_STATUS_CANCELLED = 'CANCELLED'
+export const IRMA_LOGIN_STATUS_DONE = 'DONE'
+export const IRMA_LOGIN_STATUS_SESSION_UNKNOWN = 'SESSION_UNKNOWN'
 
 export const apiHandleLoginStatus = url =>
   api(url)
-    .then(response => response.toUpperCase())
+    .then(response => {
+      if (typeof response === 'string') {
+        return response.toUpperCase()
+      }
+
+      if (response.error === IRMA_LOGIN_STATUS_SESSION_UNKNOWN) {
+        return IRMA_LOGIN_STATUS_SESSION_UNKNOWN
+      }
+
+      return JSON.stringify(response)
+    })
     .then(response => {
       switch (response) {
         case IRMA_LOGIN_STATUS_INITIALIZED:
@@ -87,6 +98,7 @@ export const apiHandleLoginStatus = url =>
 
         case IRMA_LOGIN_STATUS_DONE:
         case IRMA_LOGIN_STATUS_CANCELLED:
+        case IRMA_LOGIN_STATUS_SESSION_UNKNOWN:
           return response
 
         default:
@@ -95,13 +107,19 @@ export const apiHandleLoginStatus = url =>
       }
     })
 
-export function* getIrmaLoginStatus({ statusUrl }) {
+export function* getIrmaLoginStatus({ statusUrl }, api = apiHandleLoginStatus) {
   try {
     const SECOND = 1000
-    const response = yield retry(90, 1 * SECOND, apiHandleLoginStatus, statusUrl)
-    yield put({ type: TYPES.IRMA_LOGIN_REQUEST_SUCCESS, payload: response })
+    const response = yield retry(60, 1 * SECOND, api, statusUrl)
+    yield put({ type: TYPES.IRMA_LOGIN_REQUEST_SUCCESS, data: {
+      error: response !== IRMA_LOGIN_STATUS_DONE,
+      response
+    }})
   } catch (error) {
-    yield put({ type: TYPES.IRMA_LOGIN_REQUEST_FAILED, payload: { error } })
+    yield put({ type: TYPES.IRMA_LOGIN_REQUEST_FAILED, data: {
+      error: true,
+      response: error
+    }})
   }
 }
 

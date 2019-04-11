@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { shape, string } from 'prop-types'
+import { bool, shape, string } from 'prop-types'
 import {connect} from 'react-redux'
 
-import { fetchIrmaLoginInformationRequest } from '../../store/actions'
-import LoginPage from '../../components/LoginPage'
+import { fetchIrmaLoginInformationRequest, IRMA_LOGIN_STATUS_DONE } from "../../store/actions";
+import ScanQRCodePage from '../../components/ScanQRCodePage'
+import ErrorPage from '../../components/ErrorPage'
 
 export class LoginPageContainer extends Component {
   fetchIrmaLoginInformation(organization) {
@@ -17,9 +18,13 @@ export class LoginPageContainer extends Component {
     });
   }
 
-  componentWillUpdate(nextProps) {
-    const { organization } = nextProps
+  componentWillReceiveProps(nextProps) {
+    const { organization, loginStatus } = nextProps
     const { organization: prevOrganization } = this.props
+
+    if (loginStatus && loginStatus.response === IRMA_LOGIN_STATUS_DONE) {
+      this.props.history.push(`/organization/${organization.name}/logs`)
+    }
 
     if (organization === prevOrganization) {
       return
@@ -39,11 +44,15 @@ export class LoginPageContainer extends Component {
   }
 
   render() {
-    const { loginRequestInfo } = this.props
+    const { loginRequestInfo, loginStatus } = this.props
 
-    return loginRequestInfo && loginRequestInfo.qrCodeValue ?
-      <LoginPage qrCodeValue={loginRequestInfo.qrCodeValue} /> :
-      null
+    return loginStatus && loginStatus.error ?
+      <ErrorPage title="Failed to load information">
+        <p>{loginStatus.response}</p>
+      </ErrorPage> :
+      loginRequestInfo && loginRequestInfo.qrCodeValue ?
+        <ScanQRCodePage qrCodeValue={loginRequestInfo.qrCodeValue} /> :
+        null
   }
 }
 
@@ -56,13 +65,18 @@ LoginPageContainer.propTypes = {
   loginRequestInfo: shape({
     qrCodeValue: string
   }),
+  loginStatus: shape({
+    error: bool.isRequired,
+    response: string.isRequired
+  })
 }
 
-const mapStateToProps = ({ organizations, loginRequestInfo }, ownProps) => {
+const mapStateToProps = ({ organizations, loginRequestInfo, loginStatus }, ownProps) => {
   const { organizationName } = ownProps.match.params
   return {
     organization: organizations.find(organization => organization.name === organizationName),
-    loginRequestInfo: loginRequestInfo,
+    loginRequestInfo,
+    loginStatus
   }
 }
 

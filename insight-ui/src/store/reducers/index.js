@@ -19,6 +19,17 @@ export const organizations = (state = [], action) => {
     }
 }
 
+export const loginStatus = (state = null, action) => {
+    switch (action.type) {
+        case TYPES.IRMA_LOGIN_REQUEST_SUCCESS:
+        case TYPES.IRMA_LOGIN_REQUEST_FAILED:
+            return action.data
+
+        default:
+            return state
+    }
+}
+
 export default combineReducers({
     organizations: organizations,
     loginRequestInfo: (state = {}, action) => {
@@ -28,5 +39,6 @@ export default combineReducers({
             default:
                 return state
         }
-    }
+    },
+    loginStatus: loginStatus
 })

@@ -1,7 +1,15 @@
-import { call, put } from 'redux-saga/effects'
+import { call, put, retry } from 'redux-saga/effects'
 
 import * as TYPES from './types'
-import { fetchOrganizations, fetchIrmaLoginInformation, api, apiPostWithJSONResponse, apiPostWithTextResponse } from './actions'
+import {
+  fetchOrganizations,
+  fetchIrmaLoginInformation,
+  getIrmaLoginStatus,
+  api,
+  apiHandleLoginStatus,
+  apiPostWithJSONResponse,
+  apiPostWithTextResponse
+} from './actions'
 
 describe('fetch organizations', () => {
   const organizationsGen = fetchOrganizations()
@@ -58,6 +66,28 @@ describe('fetch IRMA login information', () => {
           statusUrl: 'irma_endpoint/api/v2/verification/u/status',
           proofUrl: 'irma_endpoint/api/v2/verification/u/getproof',
           JWT: 'u'
+        }
+      }))
+  })
+})
+
+describe('get IRMA login status', () => {
+  const irmaLoginStatusGen = getIrmaLoginStatus({
+    statusUrl: 'status_url'
+  }, apiHandleLoginStatus)
+
+  it('should make requests to the status URL to get the login status for 1 minute, with a delay of 1 second', () => {
+    expect(irmaLoginStatusGen.next().value)
+      .toEqual(retry(60, 1000, apiHandleLoginStatus, 'status_url'))
+  })
+
+  it('should dispatch a success action with the request response as data', () => {
+    expect(irmaLoginStatusGen.next('DONE').value)
+      .toEqual(put({
+        type: TYPES.IRMA_LOGIN_REQUEST_SUCCESS,
+        data: {
+          error: false,
+          response: 'DONE'
         }
       }))
   })
