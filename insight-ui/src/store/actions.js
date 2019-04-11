@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2018
 // Licensed under the EUPL
 
-import { call, put } from 'redux-saga/effects'
+import { call, put, retry } from 'redux-saga/effects'
 import * as TYPES from './types'
 
 export const api = url => fetch(url).then(response => response.json())
@@ -66,6 +66,42 @@ export function* fetchIrmaLoginInformation({ insight_log_endpoint, insight_irma_
     }})
   } catch (err) {
     console.log(err);
+  }
+}
+
+const IRMA_LOGIN_STATUS_INITIALIZED = 'INITIALIZED'
+const IRMA_LOGIN_STATUS_CONNECTED = 'CONNECTED'
+const IRMA_LOGIN_STATUS_CANCELLED = 'CANCELLED'
+const IRMA_LOGIN_STATUS_DONE = 'DONE'
+
+export const apiHandleLoginStatus = url =>
+  api(url)
+    .then(response => response.toUpperCase())
+    .then(response => {
+      switch (response) {
+        case IRMA_LOGIN_STATUS_INITIALIZED:
+          throw new Error('Login is initialized but not yet confirmed.')
+
+        case IRMA_LOGIN_STATUS_CONNECTED:
+          throw new Error('User is connected, but has not yet confirmed.')
+
+        case IRMA_LOGIN_STATUS_DONE:
+        case IRMA_LOGIN_STATUS_CANCELLED:
+          return response
+
+        default:
+          console.error(`Unexpected response '${response}' while getting the login status.`)
+          return response
+      }
+    })
+
+export function* getIrmaLoginStatus({ statusUrl }) {
+  try {
+    const SECOND = 1000
+    const response = yield retry(90, 1 * SECOND, apiHandleLoginStatus, statusUrl)
+    yield put({ type: TYPES.IRMA_LOGIN_REQUEST_SUCCESS, payload: response })
+  } catch (error) {
+    yield put({ type: TYPES.IRMA_LOGIN_REQUEST_FAILED, payload: { error } })
   }
 }
 
