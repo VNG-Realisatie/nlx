@@ -1,2 +1,7 @@
 export const FETCH_ORGANIZATIONS_REQUEST = 'fetch_organizations_request'
 export const FETCH_ORGANIZATIONS_SUCCESS = 'fetch_organizations_success'
+export const FETCH_IRMA_LOGIN_INFORMATION_REQUEST = 'fetch_irma_login_information_request'
+export const FETCH_IRMA_LOGIN_INFORMATION_SUCCESS = 'fetch_irma_login_information_success'
+export const FETCH_IRMA_LOGIN_STATUS_REQUEST = 'fetch_irma_login_status_request'
+export const IRMA_LOGIN_REQUEST_FAILED = 'irma_login_request_failed'
+export const IRMA_LOGIN_REQUEST_SUCCESS = 'irma_login_request_success'

@@ -7,7 +7,7 @@ import { StyledNavbarNavLinkListItem } from '@commonground/design-system/dist/co
 import SidebarContainer from '../../containers/SidebarContainer'
 
 import HomePage from '../../components/HomePage'
-import LoginPage from '../../components/LoginPage'
+import LoginPageContainer from '../../containers/LoginPageContainer'
 
 const App = () =>
   <StyledApp>
@@ -26,7 +26,7 @@ const App = () =>
 
     <StyledContent>
       <Route path="/" exact component={HomePage} />
-      <Route path="/organization/:organization/login" component={LoginPage} />
+      <Route path="/organization/:organizationName/login" component={LoginPageContainer} />
     </StyledContent>
   </StyledApp>
 

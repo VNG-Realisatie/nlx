@@ -5,15 +5,65 @@ import { call, put } from 'redux-saga/effects'
 import * as TYPES from './types'
 
 export const api = url => fetch(url).then(response => response.json())
+export const apiPost = (url, data) =>
+  fetch(url,{
+    method: 'POST',
+    body: JSON.stringify(data)
+  })
+
+export const apiPostWithTextResponse = (url, data) => {
+  return apiPost(url, data)
+    .then(response => response.text())
+}
+export const apiPostWithJSONResponse = (url, data) => {
+  return apiPost(url, data)
+    .then(response => response.json())
+}
 
 export const fetchOrganizationsRequest = () => ({
   type: TYPES.FETCH_ORGANIZATIONS_REQUEST
 })
 
+export const fetchIrmaLoginInformationRequest = ({ insight_log_endpoint, insight_irma_endpoint }) =>
+  ({
+    type: TYPES.FETCH_IRMA_LOGIN_INFORMATION_REQUEST,
+    data: { insight_log_endpoint, insight_irma_endpoint }
+  })
+
 export function* fetchOrganizations() {
   try {
     const organizations = yield call(api, '/api/directory/list-organizations')
     yield put({ type: TYPES.FETCH_ORGANIZATIONS_SUCCESS, data: organizations.organizations })
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+function mapDataSubjectsResponseToArray(dataSubjectsResponse) {
+  return Object.keys(dataSubjectsResponse.dataSubjects)
+}
+
+export function* fetchIrmaLoginInformation({ insight_log_endpoint, insight_irma_endpoint }) {
+  try {
+    const dataSubjects = yield call(api, `${insight_log_endpoint}/getDataSubjects`)
+    const jwtToken = yield call(apiPostWithTextResponse, `${insight_log_endpoint}/generateJWT`, { dataSubjects: mapDataSubjectsResponseToArray(dataSubjects) })
+    const JWTVerification = yield call(apiPostWithJSONResponse, `${insight_irma_endpoint}/api/v2/verification/`, jwtToken)
+    const u = JWTVerification.u
+
+    const qrCodeContents = {
+      u:`${insight_irma_endpoint}/api/v2/verification/${u}`,
+      v: JWTVerification.v,
+      vmax: JWTVerification.vmax,
+      irmaqr: JWTVerification.irmaqr
+    }
+
+    yield put({ type: TYPES.FETCH_IRMA_LOGIN_INFORMATION_SUCCESS, data: {
+        dataSubjects: mapDataSubjectsResponseToArray(dataSubjects),
+        qrCodeValue: JSON.stringify(qrCodeContents),
+        statusUrl: `${insight_irma_endpoint}/api/v2/verification/${u}/status`,
+        proofUrl: `${insight_irma_endpoint}/api/v2/verification/${u}/getproof`,
+        JWT: u,
+    }})
   } catch (err) {
     console.log(err);
   }
