@@ -25,7 +25,7 @@ Besides the public environments there are private development and test environme
 
 All new features are developed in separate [Gitlab branches](https://gitlab.com/commonground/nlx/branches), after the initial tests the branches are merged into the master branch and deployed to the test and acceptance environment using the [CI/CD pipelines of Gitlab](https://gitlab.com/commonground/nlx/pipelines). The pipeline for NLX requires manual code review and approval followed bij automated build, unit test, integration tests, packaging and deployment.
 
-After testing by the stakeholders (in the Acc environment) the version of the master is tagged and this identical version is deployed to preproduction, production and demo.
+After approval by Product Owner (eventually after consulting with stakeholders), the version of the master is tagged and this identical version is deployed to preproduction, production and demo.
 All components like the directory, certportal, docs, demo and insight are available on all environments. The components are accessible using the following url construction:
 * *< componentname.environment.product.topleveldomain >.*
 
