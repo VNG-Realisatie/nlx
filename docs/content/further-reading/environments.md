@@ -12,7 +12,7 @@ menu:
 
 NLX is build on a modern infrastructure based on OpenStack and Kubernetes, with a development street that automates most of the build, test and deployment tasks. The project and code repository are available on [Gitlab](https://gitlab.com/commonground/nlx). NLX developers have their own CI/CD flow with several private and public environments. The following Environments are publicly available for different audiences:
 
-* `Acceptance (Acc)`; for testing new features and formal acceptance - *available for team members and stakeholders only.*
+* `Acceptance (Acc)`; for testing new features and formal acceptance - available for team members and stakeholders only.
 * `Demo`; for testing the general setup and functionality - available for all interested parties.
 * `Preproduction(Preprod)`; for testing the interaction of NLX with developers own software - available for all developers after acquiring a certificate.
 * `Production`; for production functionality only - available to all users and developers after testing the interaction on preproduction.
