@@ -12,7 +12,7 @@ const Sidebar = ({ organizations, ...props }) =>
         organizations
           .map((organization, i) =>
             <li key={i}>
-              <NavLink to={`/organization/${organization}/login`}>{organization}</NavLink>
+              <NavLink to={`/organization/${organization}`}>{organization}</NavLink>
             </li>
           )
       }

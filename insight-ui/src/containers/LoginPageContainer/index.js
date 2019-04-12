@@ -61,7 +61,7 @@ LoginPageContainer.propTypes = {
     name: string.isRequired,
     insight_irma_endpoint: string.isRequired,
     insight_log_endpoint: string.isRequired
-  }),
+  }).isRequired,
   loginRequestInfo: shape({
     qrCodeValue: string
   }),
@@ -71,10 +71,8 @@ LoginPageContainer.propTypes = {
   })
 }
 
-const mapStateToProps = ({ organizations, loginRequestInfo, loginStatus }, ownProps) => {
-  const { organizationName } = ownProps.match.params
+const mapStateToProps = ({ organizations, loginRequestInfo, loginStatus }) => {
   return {
-    organization: organizations.find(organization => organization.name === organizationName),
     loginRequestInfo,
     loginStatus
   }

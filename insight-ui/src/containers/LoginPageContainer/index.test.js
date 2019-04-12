@@ -4,23 +4,21 @@ import { LoginPageContainer } from './index'
 
 describe('LoginPageContainer', () => {
   describe('on initialization', () => {
-    describe('when the organization has been loaded', () => {
-      it('should fetch the login information', () => {
-        const props = {
-          fetchIrmaLoginInformation: jest.fn(),
-          organization: {
-            name: 'foo',
-            insight_irma_endpoint: 'irma_endpoint',
-            insight_log_endpoint: 'log_endpoint'
-          }
-        }
-
-        const wrapper = shallow(<LoginPageContainer {...props} />)
-        const instance = wrapper.instance()
-        expect(instance.props.fetchIrmaLoginInformation).toHaveBeenCalledWith({
+    it('should fetch the login information', () => {
+      const props = {
+        fetchIrmaLoginInformation: jest.fn(),
+        organization: {
+          name: 'foo',
           insight_irma_endpoint: 'irma_endpoint',
           insight_log_endpoint: 'log_endpoint'
-        })
+        }
+      }
+
+      const wrapper = shallow(<LoginPageContainer {...props} />)
+      const instance = wrapper.instance()
+      expect(instance.props.fetchIrmaLoginInformation).toHaveBeenCalledWith({
+        insight_irma_endpoint: 'irma_endpoint',
+        insight_log_endpoint: 'log_endpoint'
       })
     })
   })
