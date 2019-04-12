@@ -24,7 +24,15 @@ export const loginStatus = (state = null, action) => {
         case TYPES.IRMA_LOGIN_REQUEST_SUCCESS:
         case TYPES.IRMA_LOGIN_REQUEST_FAILED:
             return action.data
+        default:
+            return state
+    }
+}
 
+export const logs = (state = [], action) => {
+    switch (action.type) {
+        case TYPES.IRMA_LOGIN_REQUEST_SUCCESS:
+            return action.data.records
         default:
             return state
     }
@@ -40,5 +48,6 @@ export default combineReducers({
                 return state
         }
     },
-    loginStatus: loginStatus
+    loginStatus: loginStatus,
+    logs: logs
 })

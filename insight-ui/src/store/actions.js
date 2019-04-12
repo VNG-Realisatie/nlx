@@ -5,11 +5,37 @@ import { call, put, retry } from 'redux-saga/effects'
 import * as TYPES from './types'
 
 export const api = url => fetch(url).then(response => response.json())
+
+// NOTE: we should use this method as default `api` method, but because of
+// the insight-api not returning the correct content-type, we have to
+// use a separate method for now.
+// Bug report at https://gitlab.com/commonground/nlx/issues/543
+export const apiWithResponseDetection = url => fetch(url)
+  .then(response => {
+    // via https://stackoverflow.com/a/37121496/363448
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.indexOf('application/json') !== -1) {
+      return response.json()
+    } else {
+      return response.text()
+    }
+  })
+
 export const apiPost = (url, data) =>
   fetch(url,{
     method: 'POST',
     body: JSON.stringify(data)
   })
+
+export const apiPostWithTextAndJSONAsOutput = (url, data) =>
+  fetch(url,{
+    headers: {
+      'Content-Type': 'text/plain'
+    },
+    method: 'POST',
+    body: data
+  })
+    .then(response => response.json())
 
 export const apiPostWithTextResponse = (url, data) => {
   return apiPost(url, data)
@@ -22,6 +48,14 @@ export const apiPostWithJSONResponse = (url, data) => {
 
 export const fetchOrganizationsRequest = () => ({
   type: TYPES.FETCH_ORGANIZATIONS_REQUEST
+})
+
+export const fetchOrganizationLogsRequest = ({ insight_log_endpoint, proofUrl }) => ({
+  type: TYPES.FETCH_ORGANIZATION_LOGS_REQUEST,
+  data: {
+    insight_log_endpoint,
+    proofUrl
+  }
 })
 
 export const fetchIrmaLoginInformationRequest = ({ insight_log_endpoint, insight_irma_endpoint }) =>
@@ -107,10 +141,10 @@ export const apiHandleLoginStatus = url =>
       }
     })
 
-export function* getIrmaLoginStatus({ statusUrl }, api = apiHandleLoginStatus) {
+export function* getIrmaLoginStatus({ statusUrl }) {
   try {
     const SECOND = 1000
-    const response = yield retry(60, 1 * SECOND, api, statusUrl)
+    const response = yield retry(60, 1 * SECOND, apiHandleLoginStatus, statusUrl)
     yield put({ type: TYPES.IRMA_LOGIN_REQUEST_SUCCESS, data: {
       error: response !== IRMA_LOGIN_STATUS_DONE,
       response
@@ -120,6 +154,28 @@ export function* getIrmaLoginStatus({ statusUrl }, api = apiHandleLoginStatus) {
       error: true,
       response: error
     }})
+  }
+}
+
+export function* fetchOrganizationLogs({ proofUrl, insight_log_endpoint }) {
+  try {
+    const proof = yield call(apiWithResponseDetection, proofUrl)
+    if (proof) {
+      const logs = yield call(apiPostWithTextAndJSONAsOutput, `${insight_log_endpoint}/fetch`, proof)
+      yield put({ type: TYPES.FETCH_ORGANIZATION_LOGS_SUCCESS, data: logs })
+    } else {
+      yield put({ type: TYPES.FETCH_ORGANIZATION_LOGS_FAILED, data: {
+        error: true,
+          response: 'Invalid proof'
+        }
+      })
+    }
+  } catch (error) {
+    yield put({ type: TYPES.FETCH_ORGANIZATION_LOGS_FAILED, data: {
+        error: true,
+        response: error
+      }
+    })
   }
 }
 

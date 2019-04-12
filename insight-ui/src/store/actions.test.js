@@ -3,12 +3,13 @@ import { call, put, retry } from 'redux-saga/effects'
 import * as TYPES from './types'
 import {
   fetchOrganizations,
+  fetchOrganizationLogs,
   fetchIrmaLoginInformation,
   getIrmaLoginStatus,
   api,
   apiHandleLoginStatus,
   apiPostWithJSONResponse,
-  apiPostWithTextResponse
+  apiPostWithTextResponse, apiWithResponseDetection, apiPostWithTextAndJSONAsOutput
 } from './actions'
 
 describe('fetch organizations', () => {
@@ -74,7 +75,7 @@ describe('fetch IRMA login information', () => {
 describe('get IRMA login status', () => {
   const irmaLoginStatusGen = getIrmaLoginStatus({
     statusUrl: 'status_url'
-  }, apiHandleLoginStatus)
+  })
 
   it('should make requests to the status URL to get the login status for 1 minute, with a delay of 1 second', () => {
     expect(irmaLoginStatusGen.next().value)
@@ -89,6 +90,31 @@ describe('get IRMA login status', () => {
           error: false,
           response: 'DONE'
         }
+      }))
+  })
+})
+
+describe('fetch organization logs', () => {
+  const fetchOrganizationLogsGen = fetchOrganizationLogs({
+    proofUrl: 'proof_url',
+    insight_log_endpoint: 'log_endpoint'
+  })
+
+  it('should get the proof value', () => {
+    expect(fetchOrganizationLogsGen.next().value)
+      .toEqual(call(apiWithResponseDetection, 'proof_url'))
+  })
+
+  it('should fetch the logs with the provided proof', () => {
+    expect(fetchOrganizationLogsGen.next('the_proof').value)
+      .toEqual(call(apiPostWithTextAndJSONAsOutput, 'log_endpoint/fetch', 'the_proof'))
+  })
+
+  it('should dispatch a success action with the request response as data', () => {
+    expect(fetchOrganizationLogsGen.next({ response: [] }).value)
+      .toEqual(put({
+        type: TYPES.FETCH_ORGANIZATION_LOGS_SUCCESS,
+        data: { response: [] }
       }))
   })
 })

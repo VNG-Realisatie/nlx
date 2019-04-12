@@ -8,6 +8,7 @@ import SidebarContainer from '../../containers/SidebarContainer'
 
 import HomePage from '../../components/HomePage'
 import LoginPageContainer from '../../containers/LoginPageContainer'
+import LogsPageContainer from '../../containers/LogsPageContainer'
 
 const App = () =>
   <StyledApp>
@@ -27,6 +28,7 @@ const App = () =>
     <StyledContent>
       <Route path="/" exact component={HomePage} />
       <Route path="/organization/:organizationName/login" component={LoginPageContainer} />
+      <Route path="/organization/:organizationName/logs" component={LogsPageContainer} />
     </StyledContent>
   </StyledApp>
 
