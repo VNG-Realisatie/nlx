@@ -152,7 +152,7 @@ export function* getIrmaLoginStatus({ statusUrl }) {
   } catch (error) {
     yield put({ type: TYPES.IRMA_LOGIN_REQUEST_FAILED, data: {
       error: true,
-      response: error
+      response: error.message
     }})
   }
 }
