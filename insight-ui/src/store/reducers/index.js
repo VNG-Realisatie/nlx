@@ -31,7 +31,7 @@ export const loginStatus = (state = null, action) => {
 
 export const logs = (state = [], action) => {
     switch (action.type) {
-        case TYPES.IRMA_LOGIN_REQUEST_SUCCESS:
+        case TYPES.FETCH_ORGANIZATION_LOGS_SUCCESS:
             return action.data.records
         default:
             return state
