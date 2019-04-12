@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import Card from "../../components/Card";
+import {Card} from '@commonground/design-system'
 
 export const StyledCard = styled(Card)`
   width: 400px;
