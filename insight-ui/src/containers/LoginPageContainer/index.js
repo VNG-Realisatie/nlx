@@ -71,7 +71,7 @@ LoginPageContainer.propTypes = {
   })
 }
 
-const mapStateToProps = ({ organizations, loginRequestInfo, loginStatus }) => {
+const mapStateToProps = ({ loginRequestInfo, loginStatus }) => {
   return {
     loginRequestInfo,
     loginStatus
