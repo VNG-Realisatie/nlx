@@ -13,7 +13,7 @@ export class OrganizationPageContainer extends Component {
       <div>
         <Route path={url} exact render={() => <Redirect to={`${url}/login`} />} />
         <Route path={`${url}/login`} render={props => <LoginPageContainer {...props} organization={organization} />} />
-        <Route path={`${url}/logs`} component={LogsPageContainer} />
+        <Route path={`${url}/logs`} render={props => <LogsPageContainer {...props} organization={organization} />} />
       </div> : null
   }
 }

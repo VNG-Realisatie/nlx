@@ -31,7 +31,7 @@ export class LogsPageContainer extends Component {
   componentDidMount() {
     const { organization, loginRequestInfo } = this.props
 
-    if (!organization || !loginRequestInfo) {
+    if (!loginRequestInfo) {
       return
     }
 
@@ -48,7 +48,7 @@ LogsPageContainer.propTypes = {
   organization: shape({
     name: string.isRequired,
     insight_log_endpoint: string.isRequired
-  }),
+  }).isRequired,
   loginRequestInfo: shape({
     proofUrl: string
   }),
@@ -57,10 +57,8 @@ LogsPageContainer.propTypes = {
   }))
 }
 
-const mapStateToProps = ({ organizations, loginRequestInfo, logs }, ownProps) => {
-  const { organizationName } = ownProps.match.params
+const mapStateToProps = ({ loginRequestInfo, logs }) => {
   return {
-    organization: organizations.find(organization => organization.name === organizationName),
     loginRequestInfo,
     logs
   }
