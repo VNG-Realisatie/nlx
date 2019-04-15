@@ -1,10 +1,13 @@
 import React from 'react'
-import { StyledCard } from './index.styles'
+import { string, node } from 'prop-types'
+import ErrorMessage from '../ErrorMessage'
 
-const ErrorPage = ({ title, children, ...props}) =>
-  <StyledCard {...props}>
-    <h1>{title}</h1>
-    {children}
-  </StyledCard>
+const ErrorPage = ({ ...props}) =>
+  <ErrorMessage {...props} />
+
+ErrorPage.propTypes = {
+  title: string.isRequired,
+  children: node
+}
 
 export default ErrorPage

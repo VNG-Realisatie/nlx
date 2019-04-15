@@ -39,8 +39,8 @@ export class LogsPageContainer extends Component {
   }
 
   render() {
-    const { logs } = this.props
-    return <LogsPage logs={logs} />
+    const { logs, organization } = this.props
+    return <LogsPage logs={logs} organizationName={organization.name} />
   }
 }
 
