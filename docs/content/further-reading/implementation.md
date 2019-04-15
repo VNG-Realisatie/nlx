@@ -74,5 +74,5 @@ Different implementation types have different advantages and disadvantages. The 
 |4. K8s Cloud| 1. hosted, scalable and resilient environment;  2. outsource the main infrastructure work to the specialist K8s cloud provider | 1. relatively complex to set up and maintain at first. |
 |5. Embedded CI/CD| 1. full control of the CI/CD; 2. ability to incorporate NLX in your own application. | 1. no advantages of pre configured containers or infrastructure. |
 
-### Advise
+### Advice
 We advise organizations to consider reusing the available containers and reuse the infrastructure setup of NLX based on [Openstack](https://www.openstack.org/) and [Kubernetes](https://kubernetes.io/) and [Docker](https://www.docker.com/). Especially when developing new clients and/or api's.
