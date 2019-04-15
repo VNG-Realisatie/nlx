@@ -13,9 +13,11 @@ const App = () =>
   <StyledApp>
     <GlobalStyles/>
 
-    <StyledNavbar>
+    <StyledNavbar homePageURL={process.env.REACT_APP_NAVBAR_HOME_PAGE_URL}
+                  aboutPageURL={process.env.REACT_APP_NAVBAR_ABOUT_PAGE_URL}
+                  docsPageURL={process.env.REACT_APP_NAVBAR_DOCS_PAGE_URL}>
       <StyledNavbarNavLinkListItem>
-        <a href="#">Directory</a>
+        <a href={process.env.REACT_APP_NAVBAR_DIRECTORY_URL}>Directory</a>
       </StyledNavbarNavLinkListItem>
       <StyledNavbarNavLinkListItem>
         <NavLink to="/">Insight</NavLink>

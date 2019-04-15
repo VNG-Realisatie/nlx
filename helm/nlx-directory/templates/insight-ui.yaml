@@ -19,6 +19,14 @@ spec:
           env:
             - name: DIRECTORY_INSPECTION_API_URL
               value: {{.Values.insightDirectoryInspectionAPIURL}}
+            - name: REACT_APP_NAVBAR_HOME_PAGE_URL
+              value: {{.Values.insightNavbarHomePageURL}}
+            - name: REACT_APP_NAVBAR_ABOUT_PAGE_URL
+              value: {{.Values.insightNavbarAboutPageURL}}
+            - name: REACT_APP_NAVBAR_DOCS_PAGE_URL
+              value: {{.Values.insightNavbarDocsPageURL}}
+            - name: REACT_APP_NAVBAR_DIRECTORY_URL
+                value: {{.Values.insightNavbarDirectoryURL}}
       restartPolicy: Always
   status: {}
 ---
