@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { arrayOf, shape, string } from 'prop-types'
+import { arrayOf, instanceOf, shape, string } from "prop-types";
 import {connect} from 'react-redux'
 
 import { fetchOrganizationLogsRequest } from '../../store/actions'
@@ -40,7 +40,7 @@ export class LogsPageContainer extends Component {
 
   render() {
     const { logs } = this.props
-    return <LogsPage />
+    return <LogsPage logs={logs} />
   }
 }
 
@@ -53,14 +53,27 @@ LogsPageContainer.propTypes = {
     proofUrl: string
   }),
   logs: arrayOf(shape({
-
+    subjects: arrayOf(string),
+    requestedBy: string,
+    requestedAt: string,
+    reason: string,
+    date: instanceOf(Date)
   }))
 }
+
+const mapRawLogsToTableFormat = rawLogs =>
+  rawLogs.map(rawLog => ({
+    subjects: rawLog.data['doelbinding-data-elements'].split(','),
+    requestedBy: rawLog['source_organization'],
+    requestedAt: rawLog['destination_organization'],
+    reason: rawLog.data['doelbinding-process-id'],
+    date: new Date(rawLog['created'])
+  }))
 
 const mapStateToProps = ({ loginRequestInfo, logs }) => {
   return {
     loginRequestInfo,
-    logs
+    logs: mapRawLogsToTableFormat(logs)
   }
 }
 
