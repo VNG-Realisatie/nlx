@@ -13,9 +13,9 @@ const App = () =>
   <StyledApp>
     <GlobalStyles/>
 
-    <StyledNavbar homePageURL={process.env.REACT_APP_NAVBAR_HOME_PAGE_URL}
-                  aboutPageURL={process.env.REACT_APP_NAVBAR_ABOUT_PAGE_URL}
-                  docsPageURL={process.env.REACT_APP_NAVBAR_DOCS_PAGE_URL}>
+    <StyledNavbar homePageURL={process.env.REACT_APP_NAVBAR_HOME_PAGE_URL || 'https://www.nlx.io'}
+                  aboutPageURL={process.env.REACT_APP_NAVBAR_ABOUT_PAGE_URL || 'https://www.nlx.io/about'}
+                  docsPageURL={process.env.REACT_APP_NAVBAR_DOCS_PAGE_URL || 'https://docs.nlx.io'}>
       <StyledNavbarNavLinkListItem>
         <a href={process.env.REACT_APP_NAVBAR_DIRECTORY_URL}>Directory</a>
       </StyledNavbarNavLinkListItem>
