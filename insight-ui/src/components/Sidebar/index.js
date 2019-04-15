@@ -1,11 +1,11 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import { arrayOf, string } from 'prop-types'
+import { arrayOf, string, func } from 'prop-types'
 import { StyledOrganizationList, StyledSearch, StyledSidebar } from './index.styles'
 
-const Sidebar = ({ organizations, ...props }) =>
+const Sidebar = ({ organizations, onSearchQueryChanged, ...props }) =>
   <StyledSidebar {...props}>
-    <StyledSearch placeholder="Filter organisations" />
+    <StyledSearch placeholder="Filter organisations" onQueryChanged={onSearchQueryChanged} />
 
     <StyledOrganizationList>
       {
@@ -20,11 +20,13 @@ const Sidebar = ({ organizations, ...props }) =>
   </StyledSidebar>
 
 Sidebar.propTypes = {
-  organizations: arrayOf(string)
+  organizations: arrayOf(string),
+  onSearchQueryChanged: func,
 }
 
 Sidebar.defaultProps = {
-  organizations: []
+  organizations: [],
+  onSearchQueryChanged: () => {}
 }
 
 export default Sidebar
