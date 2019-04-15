@@ -18,7 +18,7 @@ The most common implementations we expect to see regarding NLX are the following
 3. **SaaS Cloud:** Use NLX as part of a SaaS proposition in the cloud environment of a solution provider.
 4. **K8s Cloud:** Install in a kubernetes native cloud environment (just like the [nlx.io demo](https://demo.nlx.io/)).
 *An alternative approach might be to:*  
-5. **Embedded CI/CD:** Embed the NLX codebase as part of your own application codebase and include NLX in the CI/CD of the project your developing.  
+5. **Embedded CI/CD:** Embed the NLX codebase as part of your own application codebase and include NLX in the CI/CD of the project you are developing.  
 
 The first four implementation types are illustrated in this model:
 ![NLX implementation view](implementation-957ab.png).
