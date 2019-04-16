@@ -6,14 +6,18 @@ import {fetchOrganizationsRequest } from '../../store/actions'
 import Sidebar from '../../components/Sidebar'
 
 export class SidebarContainer extends Component {
-  componentWillMount() {
-    this.props.fetchOrganizationsRequest()
+  constructor(props) {
+    super(props)
 
-    this.setState({
+    this.state = {
       query: ''
-    })
+    }
 
     this.onSearchQueryChanged = this.onSearchQueryChanged.bind(this)
+  }
+
+  componentWillMount() {
+    this.props.fetchOrganizationsRequest()
   }
 
   onSearchQueryChanged(query) {
