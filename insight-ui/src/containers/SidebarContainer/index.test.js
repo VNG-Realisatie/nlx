@@ -1,6 +1,7 @@
 import React from 'react'
 import {shallow} from 'enzyme'
 import { SidebarContainer } from './index'
+import Sidebar from '../../components/Sidebar'
 
 describe('SidebarContainer', () => {
   describe('on initialization', () => {
@@ -25,37 +26,40 @@ describe('SidebarContainer', () => {
     })
   })
 
-  describe('organizations shown in the sidebar', () => {
-    let wrapper
+  describe('filtering the organizations by query', () => {
     let instance
 
     beforeEach(() => {
-      const organizations = [
-        { name: 'foo'},
-        { name: 'bar'},
-        { name: 'baz'},
-      ]
-
-      wrapper = shallow(<SidebarContainer organizations={organizations} />)
+      const wrapper = shallow(<SidebarContainer />)
       instance = wrapper.instance()
     })
 
     it('should include the name of the organizations', () => {
-      expect(instance.getOrganizationsForSidebar()).toEqual(['foo', 'bar', 'baz'])
+      const organizations = [ { name: 'foo'} ]
+      expect(instance.getFilteredOrganizationsByQuery(organizations, ''))
+        .toEqual(['foo'])
     })
 
-    describe('when the query is set', () => {
-      describe('filtering', () => {
-        it('should be done by organization name', () => {
-          instance.setState({ query: 'ba' })
-          expect(instance.getOrganizationsForSidebar()).toEqual(['bar', 'baz'])
-        })
+    it('should filter by organization name', () => {
+      const organizations = [ { name: 'foo'}, { name: 'bar'}, { name: 'baz'} ]
+      expect(instance.getFilteredOrganizationsByQuery(organizations, 'ba')).toEqual(['bar', 'baz'])
+    })
 
-        it('should be case-insensitive', () => {
-          instance.setState({ query: 'FoO' })
-          expect(instance.getOrganizationsForSidebar()).toEqual(['foo'])
-        })
-      })
+    it('should be case-insensitive', () => {
+      const organizations = [ { name: 'foo'}, { name: 'bar'}, { name: 'baz'} ]
+      expect(instance.getFilteredOrganizationsByQuery(organizations, 'FoO')).toEqual(['foo'])
+    })
+  })
+
+  describe('the organizations shown in the sidebar', () => {
+    it('should be the filtered organizations by query', () => {
+      jest
+        .spyOn(SidebarContainer.prototype, 'getFilteredOrganizationsByQuery')
+        .mockImplementation(() => ['filteredByQuery'])
+
+      const wrapper = shallow(<SidebarContainer />)
+      expect(wrapper.instance().getFilteredOrganizationsByQuery).toHaveBeenCalled()
+      expect(wrapper.find(Sidebar).prop('organizations')).toEqual(['filteredByQuery'])
     })
   })
 })

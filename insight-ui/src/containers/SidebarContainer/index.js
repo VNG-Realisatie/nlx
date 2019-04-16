@@ -20,18 +20,17 @@ export class SidebarContainer extends Component {
     this.setState({ query })
   }
 
-  getOrganizationsForSidebar() {
-    const { organizations } = this.props
-    const { query } = this.state
-
+  getFilteredOrganizationsByQuery(organizations, query = '') {
     return organizations
       .map(organization => organization.name)
       .filter(organization => organization.includes(query.toLowerCase()))
   }
 
   render() {
+    const { organizations } = this.props
+    const { query } = this.state
     return <Sidebar onSearchQueryChanged={this.onSearchQueryChanged}
-                    organizations={this.getOrganizationsForSidebar()} />
+                    organizations={this.getFilteredOrganizationsByQuery(organizations, query)} />
   }
 }
 
