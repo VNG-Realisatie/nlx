@@ -117,14 +117,10 @@ func TestInWayProxyRequest(t *testing.T) {
 		assert.Nil(t, err)
 
 		assert.Equal(t, test.statusCode, resp.StatusCode)
-		if resp.StatusCode != test.statusCode {
-			t.Fatalf(`result: "%d" for url "%s", expected http status code : "%d"`, resp.StatusCode, test.url, test.statusCode)
-		}
 
 		bytes, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			t.Fatal("error parsing result.body", err)
-		}
+		assert.Nil(t, err)
+
 		assert.Equal(t, test.errorMessage, string(bytes))
 	}
 }

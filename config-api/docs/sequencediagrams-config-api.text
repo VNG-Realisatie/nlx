@@ -1,0 +1,24 @@
+title Get config sequence
+
+Inway->Config-API: open config stream()
+Config-API->Config-API: verify origanization in certificate
+Config-API->Inway: return stream
+Inway->Inway: verify organization in certificate
+Config-API->ETCD: get config()
+ETCD->Config-API: config
+Config-API->Inway: config
+Inway->Inway: start with config
+
+title Config update sequence
+
+NLX-CTL->Config-API: update inway config() 
+Config-API->ETCD: update config()
+Config-API->NLX-CTL: update ok
+ETCD->Config-API: broadcast config updated
+Config-API->Config-API: is inway online?
+Config-API->Inway: push new config
+Inway->Inway: graceful shutdown
+Inway->Inway: start with new config
+
+
+https://www.websequencediagrams.com/

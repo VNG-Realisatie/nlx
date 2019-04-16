@@ -1,41 +1,51 @@
 package config
 
 import (
-	"strings"
-
-	"github.com/ktr0731/toml"
 	"go.uber.org/zap"
+	"gopkg.in/yaml.v2"
 )
 
-// ServiceConfig is the top-level for the service configuration file.
-type ServiceConfig struct {
-	Services map[string]ServiceDetails
+// AuthorizationMode holds the authorization details of a API
+type AuthorizationMode struct {
+	Mode          string   `yaml:"mode"`
+	Organizations []string `yaml:"organizations"`
 }
 
-// ServiceDetails holds the details for a single service definition.
-type ServiceDetails struct {
-	EndpointURL                 string   `toml:"endpoint-url"`
-	AuthorizationModel          string   `toml:"authorization-model"`
-	AuthorizationWhitelist      []string `toml:"authorization-whitelist"`
-	DocumentationURL            string   `toml:"documentation-url"`              // Config parameter will be moved to directory admin interface
-	APISpecificationDocumentURL string   `toml:"api-specification-document-url"` // Config parameter will be moved to directory admin interface
-	InsightAPIURL               string   `toml:"insight-api-url"`                // Config parameter will be moved to directory admin interface
-	IrmaAPIURL                  string   `toml:"irma-api-url"`                   // Config parameter will be moved to directory admin interface
-	CACertPath                  string   `toml:"ca-cert-path"`
-	PublicSupportContact        string   `toml:"public-support-contact"`
-	TechSupportContact          string   `toml:"tech-support-contact"`
-	Internal                    bool     `toml:"internal"`
+type Config struct {
+	Kind   string       `json:"kind"`
+	Config *InwayConfig `json:"config"`
 }
 
-// LoadServiceConfig reads the service config from disk and returns.
-func LoadServiceConfig(logger *zap.Logger, serviceConfigLocation string) *ServiceConfig {
-	serviceConfig := &ServiceConfig{}
-	tomlMetaData, err := toml.DecodeFile(serviceConfigLocation, serviceConfig)
+// InwayConfig is the top-level for the service configuration file.
+type InwayConfig struct {
+	Name              string       `yaml:"name"`
+	ListenAddress     string       `yaml:"listenAddress"`
+	SelfAddress       string       `yaml:"selfAddress"`
+	DisableLogging    bool         `yaml:"disableLogging"`
+	DirectoryAddress  string       `yaml:"directoryAddress"`
+	TransactionLogDSN string       `yaml:"transactionLogDSN"`
+	APIS              []APIDetails `yaml:"APIs"`
+}
+
+// APIDetails holds the details for a single service definition.
+type APIDetails struct {
+	Name                        string             `yaml:"name"`
+	EndpointURL                 string             `yaml:"endpointURL"`
+	DocumentationURL            string             `yaml:"documentationURL"`
+	APISpecificationDocumentURL string             `yaml:"apiSpecificationURL"`
+	CACertPath                  string             `yaml:"caCertPath"`
+	PublicSupportContact        string             `yaml:"publicSupportContact"`
+	TechSupportContact          string             `yaml:"techSupportContact"`
+	Internal                    bool               `yaml:"internal"`
+	Authorization               *AuthorizationMode `yaml:"authorizationSettings"`
+}
+
+// ParseConfig reads the service config from bytes and returns.
+func ParseConfig(logger *zap.Logger, configBytes []byte) (*Config, error) {
+	inwayConfig := &Config{}
+	err := yaml.Unmarshal(configBytes, inwayConfig)
 	if err != nil {
-		logger.Fatal("failed to load service config", zap.Error(err))
+		return nil, err
 	}
-	if len(tomlMetaData.Undecoded()) > 0 {
-		logger.Fatal("unsupported values in toml", zap.String("key", strings.Join(tomlMetaData.Undecoded()[0], ">")))
-	}
-	return serviceConfig
+	return inwayConfig, nil
 }

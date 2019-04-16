@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package configapi;
+
+import "google/api/annotations.proto";
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.sizer_all) = true;
+option (gogoproto.unmarshaler_all) = true;
+option (gogoproto.goproto_getters_all) = false;
+
+service ConfigApi {
+    rpc ListAnnouncements(Empty) returns (ListAnnouncementsResponse) {}
+    rpc Announce (AnnounceRequest) returns (AnnounceResponse) {}
+	rpc CreateConfigStream (CreateConfigStreamRequest) returns (stream Config) {}
+    rpc SetConfig (SetConfigRequest) returns (SetConfigResponse) {}
+    /*
+    rpc DeleteConfig (DeleteConfigRequest) returns (DeleteConfigResponse) {}
+    */
+}
+
+message Empty {}
+
+message CreateConfigStreamRequest {
+    string componentType = 1;
+    string componentURL = 2;
+    string componentName = 3;
+}
+
+message AnnounceRequest {
+    string signature = 1;
+    string componentName = 2;
+}
+
+message AnnounceResponse {
+	string error = 1;
+}
+
+message ConfigurationResponse {
+    string name = 1;
+}
+
+message SetConfigRequest {
+    string componentName = 1;
+    Config config = 2;
+}
+
+message SetConfigResponse {
+	string error = 1;
+}
+
+message DeleteConfigRequest {
+    string componentName = 1;
+}
+
+message DeleteConfigResponse {
+	string error = 1;
+}
+
+message Config {
+    string kind = 1;
+    string config = 2;
+}
+
+message ListAnnouncementsResponse {
+    message Announcement {
+        string componentName = 1;
+        string componentType = 2;
+    }
+
+    repeated Announcement announcements = 1;
+}

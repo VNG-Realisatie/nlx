@@ -1,0 +1,33 @@
+kind: Inway
+config:
+  name: "My inway"
+  selfAddress: 127.0.0.1
+  listenAddress: 0.0.0.0:1334
+  disableLogging: true
+  transactionLogDSN: postgres://postgres:postgres@postgres/nlx_logdb?sslmode=disable
+  directoryAddress: directory-api.nlx.io
+
+  APIs:
+    - name: postman
+      endpointURL: postman.com
+      documentationURL: bla
+      apiSpecificationURL: bla
+      internal: false
+      techSupportContact: r.koster@bitkode.nl
+      publicSupportContact: r.koster@support.nl
+      authorizationSettings: 
+        mode: "whitelist"
+        organizations:  
+          - haarlem
+          - utrecht
+    - name: postman2
+      endpointURL: postman2.com
+      documentationURL: bla
+      internal: false
+      techSupportContact: r.koster@bitkode.nl
+      publicSupportContact: r.koster@support.nl
+      authorizationSettings: 
+        mode: "whitelist"
+        organizations: 
+          - haarlem
+          - utrecht

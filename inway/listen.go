@@ -34,13 +34,14 @@ func (i *Inway) ListenAndServeTLS(process *process.Process, address string) erro
 	tlsconfig.ApplyDefaults(server.TLSConfig)
 
 	shutDownComplete := make(chan struct{})
-	process.CloseGracefully(func() error {
+	go func() {
+		<-i.stopChan
+		i.logger.Debug("received stop signal gracefully shutting down http server")
 		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
 		defer cancel() // do not remove. Otherwise it could cause implicit goroutine leak
-		err := server.Shutdown(localCtx)
+		server.Shutdown(localCtx)
 		close(shutDownComplete)
-		return err
-	})
+	}()
 
 	// ErrServerClosed is more info message than error
 	if err := server.ListenAndServeTLS(i.orgCertFile, i.orgKeyFile); err != nil {

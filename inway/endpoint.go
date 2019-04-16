@@ -66,6 +66,7 @@ func (iw *Inway) NewHTTPServiceEndpoint(logger *zap.Logger, serviceName, endpoin
 		serviceName: serviceName,
 		logger:      logger.With(zap.String("inway-service-name", serviceName)),
 	}
+
 	endpointURL, err := url.Parse(endpoint)
 	if err != nil {
 		return nil, errors.Wrap(err, "invalid endpoint provided")
