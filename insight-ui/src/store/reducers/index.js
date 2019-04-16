@@ -5,16 +5,7 @@ import { combineReducers } from 'redux'
 import * as TYPES from '../types'
 import organizations from './organizations'
 import logs from './logs'
-
-export const loginStatus = (state = null, action) => {
-    switch (action.type) {
-        case TYPES.IRMA_LOGIN_REQUEST_SUCCESS:
-        case TYPES.IRMA_LOGIN_REQUEST_FAILED:
-            return action.data
-        default:
-            return state
-    }
-}
+import loginStatus from './loginStatus'
 
 export default combineReducers({
     organizations,
@@ -26,6 +17,6 @@ export default combineReducers({
                 return state
         }
     },
-    loginStatus: loginStatus,
+    loginStatus,
     logs
 })
