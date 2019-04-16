@@ -14,14 +14,14 @@ describe('Sidebar', () => {
   })
 
   describe('the organizations', () => {
-    it('should link to the organization login page', () => {
+    it('should link to the organization detail page', () => {
       const links = wrapper
         .find('li')
         .map(node => node.find(NavLink).prop('to'))
 
-      expect(links[0]).toEqual('/organization/a/login')
-      expect(links[1]).toEqual('/organization/b/login')
-      expect(links[2]).toEqual('/organization/c/login')
+      expect(links[0]).toEqual('/organization/a')
+      expect(links[1]).toEqual('/organization/b')
+      expect(links[2]).toEqual('/organization/c')
     })
   })
 })
