@@ -6,7 +6,7 @@ export const StyledSidebar = styled.div`
   background: #ffffff;
   box-shadow: 0 0 0 1px rgba(45,50,64,.05), 0 1px 8px rgba(45,50,64,.05);
   z-index: 1;
-  height: calc(100% - 56px);
+  min-height: calc(100% - 56px);
 `
 
 export const StyledSearch = styled(Search)`
