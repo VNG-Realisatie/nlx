@@ -1,11 +1,15 @@
 import React from 'react'
-import { arrayOf, shape, string, instanceOf } from 'prop-types'
-import LogsTable from "../LogsTable";
+import { arrayOf, shape, string, instanceOf, func } from 'prop-types'
+import LogsTable from '../LogsTable'
 import ErrorMessage from '../ErrorMessage'
+import { StyledLogsPage, StyledSearch } from './index.styles'
 
-const LogsPage = ({ logs, organizationName }) =>
+const LogsPage = ({ logs, organizationName, onSearchQueryChanged }) =>
   logs && logs.length ?
-    <LogsTable logs={logs} /> :
+    <StyledLogsPage>
+      <StyledSearch placeholder="Filter logs…" onQueryChanged={onSearchQueryChanged} />
+      <LogsTable logs={logs} />
+    </StyledLogsPage> :
     <ErrorMessage title="No logs found">
       <p><strong>{organizationName}</strong> has no logs to show, unfortunately.</p>
     </ErrorMessage>
@@ -18,11 +22,13 @@ LogsPage.propTypes = {
     reason: string,
     date: instanceOf(Date)
   })),
-  organizationName: string.isRequired
+  organizationName: string.isRequired,
+  onSearchQueryChanged: func
 }
 
 LogsPage.defaultProps = {
-  logs: []
+  logs: [],
+  onSearchQueryChanged: () => {}
 }
 
 export default LogsPage
