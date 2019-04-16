@@ -2,7 +2,7 @@ import React from 'react'
 import { shallow } from 'enzyme'
 import LogsPage from './index'
 import ErrorMessage from '../ErrorMessage'
-import LogsTable from '../LogsTable'
+import { StyledLogsPage } from './index.styles'
 
 describe('LogsPage', () => {
   let wrapper
@@ -19,7 +19,7 @@ describe('LogsPage', () => {
   })
 
   it('should show the LogsTable', () => {
-    expect(wrapper.is(LogsTable)).toEqual(true)
+    expect(wrapper.is(StyledLogsPage)).toEqual(true)
   })
 
   describe('when no logs are available', () => {

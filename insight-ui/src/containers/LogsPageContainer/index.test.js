@@ -20,7 +20,7 @@ describe('LogsPageContainer', () => {
         }
       }
 
-      const wrapper = shallow(<LogsPageContainer {...props} />)
+      wrapper = shallow(<LogsPageContainer {...props} />)
       instance = wrapper.instance()
     })
 
