@@ -7,7 +7,10 @@ import (
 	"context"
 	"crypto/tls"
 	"crypto/x509"
+	"fmt"
 	"hash/crc64"
+	"net/http"
+	"net/url"
 	"reflect"
 	"sync"
 	"time"
@@ -43,12 +46,17 @@ type Outway struct {
 	requestFlake *sonyflake.Sonyflake
 	ecmaTable    *crc64.Table
 
+	headersStripList *http.Header
+
+	authorizationSettings *authSettings
+	authorizationClient   http.Client
+
 	servicesLock sync.RWMutex
 	services     map[string]HTTPService // services mapped by <organizationName>.<serviceName>
 }
 
 // NewOutway creates a new Outway and sets it up to handle requests.
-func NewOutway(process *process.Process, logger *zap.Logger, logdb *sqlx.DB, tlsOptions orgtls.TLSOptions, directoryInspectionAddress string) (*Outway, error) {
+func NewOutway(process *process.Process, logger *zap.Logger, logdb *sqlx.DB, tlsOptions orgtls.TLSOptions, directoryInspectionAddress, authServiceURL, authCAPath string) (*Outway, error) {
 	// load certs and get organization name from cert
 	roots, orgCert, err := orgtls.Load(tlsOptions)
 	if err != nil {
@@ -57,6 +65,7 @@ func NewOutway(process *process.Process, logger *zap.Logger, logdb *sqlx.DB, tls
 	if len(orgCert.Subject.Organization) != 1 {
 		return nil, errors.New("cannot obtain organization name from self cert")
 	}
+
 	organizationName := orgCert.Subject.Organization[0]
 	logger.Info("loaded certificates for outway", zap.String("outway-organization-name", organizationName))
 
@@ -70,6 +79,33 @@ func NewOutway(process *process.Process, logger *zap.Logger, logdb *sqlx.DB, tls
 
 		requestFlake: sonyflake.NewSonyflake(sonyflake.Settings{}),
 		ecmaTable:    crc64.MakeTable(crc64.ECMA),
+	}
+
+	if len(authServiceURL) > 0 {
+		if len(authCAPath) == 0 {
+			return nil, fmt.Errorf("authorization service URL set but no CA for authorization provided")
+		}
+		url, err := url.Parse(authServiceURL)
+		if err != nil {
+			return nil, err
+		}
+
+		if url.Scheme != "https" {
+			return nil, fmt.Errorf("scheme of authorization service URL is not 'https'")
+		}
+		o.authorizationSettings = &authSettings{
+			serviceURL: fmt.Sprintf("%s/auth", authServiceURL),
+		}
+
+		o.authorizationSettings.ca, err = orgtls.LoadRootCert(authCAPath)
+		if err != nil {
+			return nil, err
+		}
+
+		o.authorizationClient = http.Client{
+			Transport: createHTTPTransport(&tls.Config{
+				RootCAs: o.authorizationSettings.ca}),
+		}
 	}
 
 	// setup transactionlog
@@ -167,7 +203,6 @@ func (o *Outway) updateServiceList(process *process.Process) error {
 
 		service, exists := o.services[serviceToImplement.OrganizationName+"."+serviceToImplement.ServiceName]
 		if !exists || !reflect.DeepEqual(service.GetInwayAddresses(), serviceToImplement.InwayAddresses) {
-
 			// create the service
 			rrlbService, err := NewRoundRobinLoadBalancedHTTPService(o.logger, o.tlsRoots, o.tlsOptions.OrgCertFile, o.tlsOptions.OrgKeyFile, serviceToImplement.OrganizationName, serviceToImplement.ServiceName, serviceToImplement.InwayAddresses)
 			if err != nil {
@@ -186,4 +221,11 @@ func (o *Outway) updateServiceList(process *process.Process) error {
 
 	o.services = services
 	return nil
+}
+
+func (o *Outway) getService(organization, service string) HTTPService {
+	o.servicesLock.RLock()
+	httpService := o.services[organization+"."+service]
+	o.servicesLock.RUnlock()
+	return httpService
 }

@@ -18,6 +18,7 @@ caAddress: ca-cfssl-unsafe.nlx-dev-directory
 directoryRegistrationHostname: directory-registration-api.dev.nlx.minikube
 directoryInspectionHostname: directory-inspection-api.dev.nlx.minikube
 
+
 inway:
   enable: true
   config: |
@@ -29,6 +30,10 @@ inway:
       irma-api-url = "http://irma-api.dev.haarlem.minikube:30080"
 outway:
   enable: true
+  authService: true
+  authorizationServiceURL: https://auth-service:8443
+  authorizationRootCA: /certs/nlx_root.pem
+  
 demoService:
   enable: false
 demoApplication:
@@ -64,3 +69,4 @@ externalIP: ""
 inwayHostnames:
   - inway.dev.brp.minikube
   - inway.dev.rdw.minikube
+  - inway.dev.haarlem.minikube

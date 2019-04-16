@@ -60,6 +60,10 @@ build:
     context: .
     docker:
       dockerfile: insight-api/Dockerfile
+  - image: nlxio/auth-service
+    context: .
+    docker:
+      dockerfile: auth-service/Dockerfile
   tagPolicy:
     sha256: {}
   local:
@@ -92,6 +96,7 @@ profiles:
         valuesFiles:
         - helm/nlx-organization/values-dev-brp.yaml
         values:
+          authServiceImage: nlxio/auth-service
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
@@ -106,6 +111,7 @@ profiles:
         valuesFiles:
         - helm/nlx-organization/values-dev-rdw.yaml
         values:
+          authServiceImage: nlxio/auth-service
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
@@ -120,6 +126,7 @@ profiles:
         valuesFiles:
         - helm/nlx-organization/values-dev-haarlem.yaml
         values:
+          authServiceImage: nlxio/auth-service
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
