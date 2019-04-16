@@ -3,21 +3,7 @@
 
 import { combineReducers } from 'redux'
 import * as TYPES from '../types'
-
-const filterOutInvalidOrganizations = organizations =>
-  organizations
-    .filter(organization =>
-      organization.insight_irma_endpoint && organization.insight_log_endpoint
-    )
-
-export const organizations = (state = [], action) => {
-    switch (action.type) {
-        case TYPES.FETCH_ORGANIZATIONS_SUCCESS:
-            return filterOutInvalidOrganizations(action.data)
-        default:
-            return state
-    }
-}
+import organizations from './organizations'
 
 export const loginStatus = (state = null, action) => {
     switch (action.type) {
@@ -39,7 +25,7 @@ export const logs = (state = [], action) => {
 }
 
 export default combineReducers({
-    organizations: organizations,
+    organizations,
     loginRequestInfo: (state = {}, action) => {
         switch (action.type) {
             case TYPES.FETCH_IRMA_LOGIN_INFORMATION_SUCCESS:
