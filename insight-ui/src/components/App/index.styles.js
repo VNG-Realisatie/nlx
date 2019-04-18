@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Navbar } from '@commonground/design-system'
+import { NLXNavbar } from '@commonground/design-system'
 
 export default styled.div`
   display: flex;
@@ -8,7 +8,7 @@ export default styled.div`
   align-content: flex-start;
 `
 
-export const StyledNavbar = styled(Navbar)`
+export const StyledNLXNavbar = styled(NLXNavbar)`
   flex: 1 100%;
   z-index: 3;
 `

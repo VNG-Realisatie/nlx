@@ -1,9 +1,9 @@
 import React from 'react'
 import { NavLink, Route } from 'react-router-dom'
 
-import StyledApp, {StyledNavbar, StyledContent} from './index.styles'
+import StyledApp, {StyledNLXNavbar, StyledContent} from './index.styles'
 import GlobalStyles from '../../components/GlobalStyles'
-import { StyledNavbarNavLinkListItem } from '@commonground/design-system/dist/components/Navbar/index.styles'
+import { Navigation } from '@commonground/design-system'
 import SidebarContainer from '../../containers/SidebarContainer'
 
 import HomePage from '../../components/HomePage'
@@ -13,16 +13,16 @@ const App = () =>
   <StyledApp>
     <GlobalStyles/>
 
-    <StyledNavbar homePageURL={process.env.REACT_APP_NAVBAR_HOME_PAGE_URL || 'https://www.nlx.io'}
-                  aboutPageURL={process.env.REACT_APP_NAVBAR_ABOUT_PAGE_URL || 'https://www.nlx.io/about'}
-                  docsPageURL={process.env.REACT_APP_NAVBAR_DOCS_PAGE_URL || 'https://docs.nlx.io'}>
-      <StyledNavbarNavLinkListItem>
+    <StyledNLXNavbar homePageURL={process.env.REACT_APP_NAVBAR_HOME_PAGE_URL || 'https://www.nlx.io'}
+                     aboutPageURL={process.env.REACT_APP_NAVBAR_ABOUT_PAGE_URL || 'https://www.nlx.io/about'}
+                     docsPageURL={process.env.REACT_APP_NAVBAR_DOCS_PAGE_URL || 'https://docs.nlx.io'}>
+      <Navigation.Item>
         <a href={process.env.REACT_APP_NAVBAR_DIRECTORY_URL}>Directory</a>
-      </StyledNavbarNavLinkListItem>
-      <StyledNavbarNavLinkListItem>
+      </Navigation.Item>
+      <Navigation.Item>
         <NavLink to="/">Insight</NavLink>
-      </StyledNavbarNavLinkListItem>
-    </StyledNavbar>
+      </Navigation.Item>
+    </StyledNLXNavbar>
 
     <SidebarContainer />
 
