@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@commonground/design-system": "1.0.3",
+    "@commonground/design-system": "2.0.0",
     "prop-types": "15.7.2",
     "react": "16.8.6",
     "react-app-polyfill": "0.2.2",
