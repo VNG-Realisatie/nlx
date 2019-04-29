@@ -19,21 +19,13 @@ SwaggerJSONDirectory = `
   ],
   "paths": {},
   "definitions": {
-    "ListAnnouncementsResponseAnnouncement": {
+    "ListComponentsResponseComponent": {
       "type": "object",
       "properties": {
-        "componentName": {
+        "name": {
           "type": "string"
         },
-        "componentType": {
-          "type": "string"
-        }
-      }
-    },
-    "configapiAnnounceResponse": {
-      "type": "object",
-      "properties": {
-        "error": {
+        "kind": {
           "type": "string"
         }
       }
@@ -49,13 +41,13 @@ SwaggerJSONDirectory = `
         }
       }
     },
-    "configapiListAnnouncementsResponse": {
+    "configapiListComponentsResponse": {
       "type": "object",
       "properties": {
-        "announcements": {
+        "components": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ListAnnouncementsResponseAnnouncement"
+            "$ref": "#/definitions/ListComponentsResponseComponent"
           }
         }
       }

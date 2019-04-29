@@ -14,18 +14,24 @@ import (
 
 // ConfigService handles all requests for the config api
 type ConfigService struct {
-	connections          map[string]*connection
+	connections          map[string]*component
 	organization         string
 	logger               *zap.Logger
 	etcdCli              *clientv3.Client
 	transportCredentials nlxTransportCredentials
 }
 
+type component struct {
+	name       string
+	kind       string
+	connection *connection
+}
+
 // New creates new ConfigService
 func New(logger *zap.Logger, etcdClient *clientv3.Client, organization string, transportCredentials credentials.TransportCredentials) *ConfigService {
 	return &ConfigService{
 		etcdCli:              etcdClient,
-		connections:          make(map[string]*connection),
+		connections:          make(map[string]*component),
 		organization:         organization,
 		transportCredentials: newTransportCredentials(transportCredentials, organization),
 		logger:               logger,

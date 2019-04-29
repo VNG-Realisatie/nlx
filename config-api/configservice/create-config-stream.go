@@ -4,8 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"go.nlx.io/nlx/config-api/configapi"
 	"go.uber.org/zap"
+
+	"go.nlx.io/nlx/config-api/configapi"
 )
 
 type connection struct {
@@ -23,7 +24,11 @@ func (s *ConfigService) CreateConfigStream(in *configapi.CreateConfigStreamReque
 		active: true,
 		error:  make(chan error),
 	}
-	s.connections[conn.id] = conn
+
+	s.connections[conn.id] = &component{
+		kind: in.ComponentKind,
+		name: in.ComponentName,
+	}
 	s.logger.Info("rpc request CreateConfigStream")
 	wChan := s.etcdCli.Watch(context.Background(), in.ComponentName)
 

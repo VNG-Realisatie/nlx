@@ -180,6 +180,7 @@ func (i *Inway) setupConfigStream() configapi.ConfigApi_CreateConfigStreamClient
 	for {
 		stream, err := i.configAPIClient.CreateConfigStream(context.Background(), &configapi.CreateConfigStreamRequest{
 			ComponentName: i.certFingerPrint,
+			ComponentKind: "inway",
 		})
 
 		if err != nil {

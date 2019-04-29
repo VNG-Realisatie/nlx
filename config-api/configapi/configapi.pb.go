@@ -37,7 +37,7 @@ func (m *Empty) Reset()         { *m = Empty{} }
 func (m *Empty) String() string { return proto.CompactTextString(m) }
 func (*Empty) ProtoMessage()    {}
 func (*Empty) Descriptor() ([]byte, []int) {
-	return fileDescriptor_configapi_d5b968cb5dde47f1, []int{0}
+	return fileDescriptor_configapi_f6c87b556e59b696, []int{0}
 }
 func (m *Empty) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -67,9 +67,8 @@ func (m *Empty) XXX_DiscardUnknown() {
 var xxx_messageInfo_Empty proto.InternalMessageInfo
 
 type CreateConfigStreamRequest struct {
-	ComponentType        string   `protobuf:"bytes,1,opt,name=componentType,proto3" json:"componentType,omitempty"`
-	ComponentURL         string   `protobuf:"bytes,2,opt,name=componentURL,proto3" json:"componentURL,omitempty"`
-	ComponentName        string   `protobuf:"bytes,3,opt,name=componentName,proto3" json:"componentName,omitempty"`
+	ComponentKind        string   `protobuf:"bytes,1,opt,name=componentKind,proto3" json:"componentKind,omitempty"`
+	ComponentName        string   `protobuf:"bytes,2,opt,name=componentName,proto3" json:"componentName,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -79,7 +78,7 @@ func (m *CreateConfigStreamRequest) Reset()         { *m = CreateConfigStreamReq
 func (m *CreateConfigStreamRequest) String() string { return proto.CompactTextString(m) }
 func (*CreateConfigStreamRequest) ProtoMessage()    {}
 func (*CreateConfigStreamRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_configapi_d5b968cb5dde47f1, []int{1}
+	return fileDescriptor_configapi_f6c87b556e59b696, []int{1}
 }
 func (m *CreateConfigStreamRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -108,127 +107,6 @@ func (m *CreateConfigStreamRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_CreateConfigStreamRequest proto.InternalMessageInfo
 
-type AnnounceRequest struct {
-	Signature            string   `protobuf:"bytes,1,opt,name=signature,proto3" json:"signature,omitempty"`
-	ComponentName        string   `protobuf:"bytes,2,opt,name=componentName,proto3" json:"componentName,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *AnnounceRequest) Reset()         { *m = AnnounceRequest{} }
-func (m *AnnounceRequest) String() string { return proto.CompactTextString(m) }
-func (*AnnounceRequest) ProtoMessage()    {}
-func (*AnnounceRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_configapi_d5b968cb5dde47f1, []int{2}
-}
-func (m *AnnounceRequest) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *AnnounceRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_AnnounceRequest.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalTo(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (dst *AnnounceRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_AnnounceRequest.Merge(dst, src)
-}
-func (m *AnnounceRequest) XXX_Size() int {
-	return m.Size()
-}
-func (m *AnnounceRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_AnnounceRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_AnnounceRequest proto.InternalMessageInfo
-
-type AnnounceResponse struct {
-	Error                string   `protobuf:"bytes,1,opt,name=error,proto3" json:"error,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *AnnounceResponse) Reset()         { *m = AnnounceResponse{} }
-func (m *AnnounceResponse) String() string { return proto.CompactTextString(m) }
-func (*AnnounceResponse) ProtoMessage()    {}
-func (*AnnounceResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_configapi_d5b968cb5dde47f1, []int{3}
-}
-func (m *AnnounceResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *AnnounceResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_AnnounceResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalTo(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (dst *AnnounceResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_AnnounceResponse.Merge(dst, src)
-}
-func (m *AnnounceResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *AnnounceResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_AnnounceResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_AnnounceResponse proto.InternalMessageInfo
-
-type ConfigurationResponse struct {
-	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *ConfigurationResponse) Reset()         { *m = ConfigurationResponse{} }
-func (m *ConfigurationResponse) String() string { return proto.CompactTextString(m) }
-func (*ConfigurationResponse) ProtoMessage()    {}
-func (*ConfigurationResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_configapi_d5b968cb5dde47f1, []int{4}
-}
-func (m *ConfigurationResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *ConfigurationResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_ConfigurationResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalTo(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (dst *ConfigurationResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ConfigurationResponse.Merge(dst, src)
-}
-func (m *ConfigurationResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *ConfigurationResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_ConfigurationResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ConfigurationResponse proto.InternalMessageInfo
-
 type SetConfigRequest struct {
 	ComponentName        string   `protobuf:"bytes,1,opt,name=componentName,proto3" json:"componentName,omitempty"`
 	Config               *Config  `protobuf:"bytes,2,opt,name=config" json:"config,omitempty"`
@@ -241,7 +119,7 @@ func (m *SetConfigRequest) Reset()         { *m = SetConfigRequest{} }
 func (m *SetConfigRequest) String() string { return proto.CompactTextString(m) }
 func (*SetConfigRequest) ProtoMessage()    {}
 func (*SetConfigRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_configapi_d5b968cb5dde47f1, []int{5}
+	return fileDescriptor_configapi_f6c87b556e59b696, []int{2}
 }
 func (m *SetConfigRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -281,7 +159,7 @@ func (m *SetConfigResponse) Reset()         { *m = SetConfigResponse{} }
 func (m *SetConfigResponse) String() string { return proto.CompactTextString(m) }
 func (*SetConfigResponse) ProtoMessage()    {}
 func (*SetConfigResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_configapi_d5b968cb5dde47f1, []int{6}
+	return fileDescriptor_configapi_f6c87b556e59b696, []int{3}
 }
 func (m *SetConfigResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -321,7 +199,7 @@ func (m *DeleteConfigRequest) Reset()         { *m = DeleteConfigRequest{} }
 func (m *DeleteConfigRequest) String() string { return proto.CompactTextString(m) }
 func (*DeleteConfigRequest) ProtoMessage()    {}
 func (*DeleteConfigRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_configapi_d5b968cb5dde47f1, []int{7}
+	return fileDescriptor_configapi_f6c87b556e59b696, []int{4}
 }
 func (m *DeleteConfigRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -361,7 +239,7 @@ func (m *DeleteConfigResponse) Reset()         { *m = DeleteConfigResponse{} }
 func (m *DeleteConfigResponse) String() string { return proto.CompactTextString(m) }
 func (*DeleteConfigResponse) ProtoMessage()    {}
 func (*DeleteConfigResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_configapi_d5b968cb5dde47f1, []int{8}
+	return fileDescriptor_configapi_f6c87b556e59b696, []int{5}
 }
 func (m *DeleteConfigResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -402,7 +280,7 @@ func (m *Config) Reset()         { *m = Config{} }
 func (m *Config) String() string { return proto.CompactTextString(m) }
 func (*Config) ProtoMessage()    {}
 func (*Config) Descriptor() ([]byte, []int) {
-	return fileDescriptor_configapi_d5b968cb5dde47f1, []int{9}
+	return fileDescriptor_configapi_f6c87b556e59b696, []int{6}
 }
 func (m *Config) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -431,25 +309,25 @@ func (m *Config) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_Config proto.InternalMessageInfo
 
-type ListAnnouncementsResponse struct {
-	Announcements        []*ListAnnouncementsResponse_Announcement `protobuf:"bytes,1,rep,name=announcements" json:"announcements,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                                  `json:"-"`
-	XXX_unrecognized     []byte                                    `json:"-"`
-	XXX_sizecache        int32                                     `json:"-"`
+type ListComponentsResponse struct {
+	Components           []*ListComponentsResponse_Component `protobuf:"bytes,1,rep,name=components" json:"components,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                            `json:"-"`
+	XXX_unrecognized     []byte                              `json:"-"`
+	XXX_sizecache        int32                               `json:"-"`
 }
 
-func (m *ListAnnouncementsResponse) Reset()         { *m = ListAnnouncementsResponse{} }
-func (m *ListAnnouncementsResponse) String() string { return proto.CompactTextString(m) }
-func (*ListAnnouncementsResponse) ProtoMessage()    {}
-func (*ListAnnouncementsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_configapi_d5b968cb5dde47f1, []int{10}
+func (m *ListComponentsResponse) Reset()         { *m = ListComponentsResponse{} }
+func (m *ListComponentsResponse) String() string { return proto.CompactTextString(m) }
+func (*ListComponentsResponse) ProtoMessage()    {}
+func (*ListComponentsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_configapi_f6c87b556e59b696, []int{7}
 }
-func (m *ListAnnouncementsResponse) XXX_Unmarshal(b []byte) error {
+func (m *ListComponentsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *ListAnnouncementsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *ListComponentsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_ListAnnouncementsResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_ListComponentsResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalTo(b)
@@ -459,40 +337,38 @@ func (m *ListAnnouncementsResponse) XXX_Marshal(b []byte, deterministic bool) ([
 		return b[:n], nil
 	}
 }
-func (dst *ListAnnouncementsResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ListAnnouncementsResponse.Merge(dst, src)
+func (dst *ListComponentsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListComponentsResponse.Merge(dst, src)
 }
-func (m *ListAnnouncementsResponse) XXX_Size() int {
+func (m *ListComponentsResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *ListAnnouncementsResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_ListAnnouncementsResponse.DiscardUnknown(m)
+func (m *ListComponentsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListComponentsResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ListAnnouncementsResponse proto.InternalMessageInfo
+var xxx_messageInfo_ListComponentsResponse proto.InternalMessageInfo
 
-type ListAnnouncementsResponse_Announcement struct {
-	ComponentName        string   `protobuf:"bytes,1,opt,name=componentName,proto3" json:"componentName,omitempty"`
-	ComponentType        string   `protobuf:"bytes,2,opt,name=componentType,proto3" json:"componentType,omitempty"`
+type ListComponentsResponse_Component struct {
+	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Kind                 string   `protobuf:"bytes,2,opt,name=kind,proto3" json:"kind,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ListAnnouncementsResponse_Announcement) Reset() {
-	*m = ListAnnouncementsResponse_Announcement{}
+func (m *ListComponentsResponse_Component) Reset()         { *m = ListComponentsResponse_Component{} }
+func (m *ListComponentsResponse_Component) String() string { return proto.CompactTextString(m) }
+func (*ListComponentsResponse_Component) ProtoMessage()    {}
+func (*ListComponentsResponse_Component) Descriptor() ([]byte, []int) {
+	return fileDescriptor_configapi_f6c87b556e59b696, []int{7, 0}
 }
-func (m *ListAnnouncementsResponse_Announcement) String() string { return proto.CompactTextString(m) }
-func (*ListAnnouncementsResponse_Announcement) ProtoMessage()    {}
-func (*ListAnnouncementsResponse_Announcement) Descriptor() ([]byte, []int) {
-	return fileDescriptor_configapi_d5b968cb5dde47f1, []int{10, 0}
-}
-func (m *ListAnnouncementsResponse_Announcement) XXX_Unmarshal(b []byte) error {
+func (m *ListComponentsResponse_Component) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *ListAnnouncementsResponse_Announcement) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *ListComponentsResponse_Component) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_ListAnnouncementsResponse_Announcement.Marshal(b, m, deterministic)
+		return xxx_messageInfo_ListComponentsResponse_Component.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalTo(b)
@@ -502,31 +378,28 @@ func (m *ListAnnouncementsResponse_Announcement) XXX_Marshal(b []byte, determini
 		return b[:n], nil
 	}
 }
-func (dst *ListAnnouncementsResponse_Announcement) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ListAnnouncementsResponse_Announcement.Merge(dst, src)
+func (dst *ListComponentsResponse_Component) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListComponentsResponse_Component.Merge(dst, src)
 }
-func (m *ListAnnouncementsResponse_Announcement) XXX_Size() int {
+func (m *ListComponentsResponse_Component) XXX_Size() int {
 	return m.Size()
 }
-func (m *ListAnnouncementsResponse_Announcement) XXX_DiscardUnknown() {
-	xxx_messageInfo_ListAnnouncementsResponse_Announcement.DiscardUnknown(m)
+func (m *ListComponentsResponse_Component) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListComponentsResponse_Component.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ListAnnouncementsResponse_Announcement proto.InternalMessageInfo
+var xxx_messageInfo_ListComponentsResponse_Component proto.InternalMessageInfo
 
 func init() {
 	proto.RegisterType((*Empty)(nil), "configapi.Empty")
 	proto.RegisterType((*CreateConfigStreamRequest)(nil), "configapi.CreateConfigStreamRequest")
-	proto.RegisterType((*AnnounceRequest)(nil), "configapi.AnnounceRequest")
-	proto.RegisterType((*AnnounceResponse)(nil), "configapi.AnnounceResponse")
-	proto.RegisterType((*ConfigurationResponse)(nil), "configapi.ConfigurationResponse")
 	proto.RegisterType((*SetConfigRequest)(nil), "configapi.SetConfigRequest")
 	proto.RegisterType((*SetConfigResponse)(nil), "configapi.SetConfigResponse")
 	proto.RegisterType((*DeleteConfigRequest)(nil), "configapi.DeleteConfigRequest")
 	proto.RegisterType((*DeleteConfigResponse)(nil), "configapi.DeleteConfigResponse")
 	proto.RegisterType((*Config)(nil), "configapi.Config")
-	proto.RegisterType((*ListAnnouncementsResponse)(nil), "configapi.ListAnnouncementsResponse")
-	proto.RegisterType((*ListAnnouncementsResponse_Announcement)(nil), "configapi.ListAnnouncementsResponse.Announcement")
+	proto.RegisterType((*ListComponentsResponse)(nil), "configapi.ListComponentsResponse")
+	proto.RegisterType((*ListComponentsResponse_Component)(nil), "configapi.ListComponentsResponse.Component")
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -541,10 +414,9 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type ConfigApiClient interface {
-	ListAnnouncements(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ListAnnouncementsResponse, error)
-	Announce(ctx context.Context, in *AnnounceRequest, opts ...grpc.CallOption) (*AnnounceResponse, error)
 	CreateConfigStream(ctx context.Context, in *CreateConfigStreamRequest, opts ...grpc.CallOption) (ConfigApi_CreateConfigStreamClient, error)
 	SetConfig(ctx context.Context, in *SetConfigRequest, opts ...grpc.CallOption) (*SetConfigResponse, error)
+	ListComponents(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ListComponentsResponse, error)
 }
 
 type configApiClient struct {
@@ -553,24 +425,6 @@ type configApiClient struct {
 
 func NewConfigApiClient(cc *grpc.ClientConn) ConfigApiClient {
 	return &configApiClient{cc}
-}
-
-func (c *configApiClient) ListAnnouncements(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ListAnnouncementsResponse, error) {
-	out := new(ListAnnouncementsResponse)
-	err := c.cc.Invoke(ctx, "/configapi.ConfigApi/ListAnnouncements", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *configApiClient) Announce(ctx context.Context, in *AnnounceRequest, opts ...grpc.CallOption) (*AnnounceResponse, error) {
-	out := new(AnnounceResponse)
-	err := c.cc.Invoke(ctx, "/configapi.ConfigApi/Announce", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *configApiClient) CreateConfigStream(ctx context.Context, in *CreateConfigStreamRequest, opts ...grpc.CallOption) (ConfigApi_CreateConfigStreamClient, error) {
@@ -614,52 +468,24 @@ func (c *configApiClient) SetConfig(ctx context.Context, in *SetConfigRequest, o
 	return out, nil
 }
 
+func (c *configApiClient) ListComponents(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ListComponentsResponse, error) {
+	out := new(ListComponentsResponse)
+	err := c.cc.Invoke(ctx, "/configapi.ConfigApi/ListComponents", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ConfigApiServer is the server API for ConfigApi service.
 type ConfigApiServer interface {
-	ListAnnouncements(context.Context, *Empty) (*ListAnnouncementsResponse, error)
-	Announce(context.Context, *AnnounceRequest) (*AnnounceResponse, error)
 	CreateConfigStream(*CreateConfigStreamRequest, ConfigApi_CreateConfigStreamServer) error
 	SetConfig(context.Context, *SetConfigRequest) (*SetConfigResponse, error)
+	ListComponents(context.Context, *Empty) (*ListComponentsResponse, error)
 }
 
 func RegisterConfigApiServer(s *grpc.Server, srv ConfigApiServer) {
 	s.RegisterService(&_ConfigApi_serviceDesc, srv)
-}
-
-func _ConfigApi_ListAnnouncements_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ConfigApiServer).ListAnnouncements(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/configapi.ConfigApi/ListAnnouncements",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConfigApiServer).ListAnnouncements(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ConfigApi_Announce_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AnnounceRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ConfigApiServer).Announce(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/configapi.ConfigApi/Announce",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConfigApiServer).Announce(ctx, req.(*AnnounceRequest))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _ConfigApi_CreateConfigStream_Handler(srv interface{}, stream grpc.ServerStream) error {
@@ -701,21 +527,35 @@ func _ConfigApi_SetConfig_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ConfigApi_ListComponents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ConfigApiServer).ListComponents(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/configapi.ConfigApi/ListComponents",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ConfigApiServer).ListComponents(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _ConfigApi_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "configapi.ConfigApi",
 	HandlerType: (*ConfigApiServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ListAnnouncements",
-			Handler:    _ConfigApi_ListAnnouncements_Handler,
-		},
-		{
-			MethodName: "Announce",
-			Handler:    _ConfigApi_Announce_Handler,
-		},
-		{
 			MethodName: "SetConfig",
 			Handler:    _ConfigApi_SetConfig_Handler,
+		},
+		{
+			MethodName: "ListComponents",
+			Handler:    _ConfigApi_ListComponents_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
@@ -764,110 +604,17 @@ func (m *CreateConfigStreamRequest) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.ComponentType) > 0 {
+	if len(m.ComponentKind) > 0 {
 		dAtA[i] = 0xa
 		i++
-		i = encodeVarintConfigapi(dAtA, i, uint64(len(m.ComponentType)))
-		i += copy(dAtA[i:], m.ComponentType)
-	}
-	if len(m.ComponentURL) > 0 {
-		dAtA[i] = 0x12
-		i++
-		i = encodeVarintConfigapi(dAtA, i, uint64(len(m.ComponentURL)))
-		i += copy(dAtA[i:], m.ComponentURL)
-	}
-	if len(m.ComponentName) > 0 {
-		dAtA[i] = 0x1a
-		i++
-		i = encodeVarintConfigapi(dAtA, i, uint64(len(m.ComponentName)))
-		i += copy(dAtA[i:], m.ComponentName)
-	}
-	if m.XXX_unrecognized != nil {
-		i += copy(dAtA[i:], m.XXX_unrecognized)
-	}
-	return i, nil
-}
-
-func (m *AnnounceRequest) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *AnnounceRequest) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if len(m.Signature) > 0 {
-		dAtA[i] = 0xa
-		i++
-		i = encodeVarintConfigapi(dAtA, i, uint64(len(m.Signature)))
-		i += copy(dAtA[i:], m.Signature)
+		i = encodeVarintConfigapi(dAtA, i, uint64(len(m.ComponentKind)))
+		i += copy(dAtA[i:], m.ComponentKind)
 	}
 	if len(m.ComponentName) > 0 {
 		dAtA[i] = 0x12
 		i++
 		i = encodeVarintConfigapi(dAtA, i, uint64(len(m.ComponentName)))
 		i += copy(dAtA[i:], m.ComponentName)
-	}
-	if m.XXX_unrecognized != nil {
-		i += copy(dAtA[i:], m.XXX_unrecognized)
-	}
-	return i, nil
-}
-
-func (m *AnnounceResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *AnnounceResponse) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if len(m.Error) > 0 {
-		dAtA[i] = 0xa
-		i++
-		i = encodeVarintConfigapi(dAtA, i, uint64(len(m.Error)))
-		i += copy(dAtA[i:], m.Error)
-	}
-	if m.XXX_unrecognized != nil {
-		i += copy(dAtA[i:], m.XXX_unrecognized)
-	}
-	return i, nil
-}
-
-func (m *ConfigurationResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *ConfigurationResponse) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if len(m.Name) > 0 {
-		dAtA[i] = 0xa
-		i++
-		i = encodeVarintConfigapi(dAtA, i, uint64(len(m.Name)))
-		i += copy(dAtA[i:], m.Name)
 	}
 	if m.XXX_unrecognized != nil {
 		i += copy(dAtA[i:], m.XXX_unrecognized)
@@ -1026,7 +773,7 @@ func (m *Config) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
-func (m *ListAnnouncementsResponse) Marshal() (dAtA []byte, err error) {
+func (m *ListComponentsResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalTo(dAtA)
@@ -1036,13 +783,13 @@ func (m *ListAnnouncementsResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *ListAnnouncementsResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *ListComponentsResponse) MarshalTo(dAtA []byte) (int, error) {
 	var i int
 	_ = i
 	var l int
 	_ = l
-	if len(m.Announcements) > 0 {
-		for _, msg := range m.Announcements {
+	if len(m.Components) > 0 {
+		for _, msg := range m.Components {
 			dAtA[i] = 0xa
 			i++
 			i = encodeVarintConfigapi(dAtA, i, uint64(msg.Size()))
@@ -1059,7 +806,7 @@ func (m *ListAnnouncementsResponse) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
-func (m *ListAnnouncementsResponse_Announcement) Marshal() (dAtA []byte, err error) {
+func (m *ListComponentsResponse_Component) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalTo(dAtA)
@@ -1069,22 +816,22 @@ func (m *ListAnnouncementsResponse_Announcement) Marshal() (dAtA []byte, err err
 	return dAtA[:n], nil
 }
 
-func (m *ListAnnouncementsResponse_Announcement) MarshalTo(dAtA []byte) (int, error) {
+func (m *ListComponentsResponse_Component) MarshalTo(dAtA []byte) (int, error) {
 	var i int
 	_ = i
 	var l int
 	_ = l
-	if len(m.ComponentName) > 0 {
+	if len(m.Name) > 0 {
 		dAtA[i] = 0xa
 		i++
-		i = encodeVarintConfigapi(dAtA, i, uint64(len(m.ComponentName)))
-		i += copy(dAtA[i:], m.ComponentName)
+		i = encodeVarintConfigapi(dAtA, i, uint64(len(m.Name)))
+		i += copy(dAtA[i:], m.Name)
 	}
-	if len(m.ComponentType) > 0 {
+	if len(m.Kind) > 0 {
 		dAtA[i] = 0x12
 		i++
-		i = encodeVarintConfigapi(dAtA, i, uint64(len(m.ComponentType)))
-		i += copy(dAtA[i:], m.ComponentType)
+		i = encodeVarintConfigapi(dAtA, i, uint64(len(m.Kind)))
+		i += copy(dAtA[i:], m.Kind)
 	}
 	if m.XXX_unrecognized != nil {
 		i += copy(dAtA[i:], m.XXX_unrecognized)
@@ -1119,67 +866,11 @@ func (m *CreateConfigStreamRequest) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.ComponentType)
-	if l > 0 {
-		n += 1 + l + sovConfigapi(uint64(l))
-	}
-	l = len(m.ComponentURL)
+	l = len(m.ComponentKind)
 	if l > 0 {
 		n += 1 + l + sovConfigapi(uint64(l))
 	}
 	l = len(m.ComponentName)
-	if l > 0 {
-		n += 1 + l + sovConfigapi(uint64(l))
-	}
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
-	}
-	return n
-}
-
-func (m *AnnounceRequest) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Signature)
-	if l > 0 {
-		n += 1 + l + sovConfigapi(uint64(l))
-	}
-	l = len(m.ComponentName)
-	if l > 0 {
-		n += 1 + l + sovConfigapi(uint64(l))
-	}
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
-	}
-	return n
-}
-
-func (m *AnnounceResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Error)
-	if l > 0 {
-		n += 1 + l + sovConfigapi(uint64(l))
-	}
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
-	}
-	return n
-}
-
-func (m *ConfigurationResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Name)
 	if l > 0 {
 		n += 1 + l + sovConfigapi(uint64(l))
 	}
@@ -1277,14 +968,14 @@ func (m *Config) Size() (n int) {
 	return n
 }
 
-func (m *ListAnnouncementsResponse) Size() (n int) {
+func (m *ListComponentsResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if len(m.Announcements) > 0 {
-		for _, e := range m.Announcements {
+	if len(m.Components) > 0 {
+		for _, e := range m.Components {
 			l = e.Size()
 			n += 1 + l + sovConfigapi(uint64(l))
 		}
@@ -1295,17 +986,17 @@ func (m *ListAnnouncementsResponse) Size() (n int) {
 	return n
 }
 
-func (m *ListAnnouncementsResponse_Announcement) Size() (n int) {
+func (m *ListComponentsResponse_Component) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = len(m.ComponentName)
+	l = len(m.Name)
 	if l > 0 {
 		n += 1 + l + sovConfigapi(uint64(l))
 	}
-	l = len(m.ComponentType)
+	l = len(m.Kind)
 	if l > 0 {
 		n += 1 + l + sovConfigapi(uint64(l))
 	}
@@ -1410,7 +1101,7 @@ func (m *CreateConfigStreamRequest) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ComponentType", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ComponentKind", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1435,145 +1126,7 @@ func (m *CreateConfigStreamRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ComponentType = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ComponentURL", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowConfigapi
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthConfigapi
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.ComponentURL = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ComponentName", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowConfigapi
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthConfigapi
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.ComponentName = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipConfigapi(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthConfigapi
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *AnnounceRequest) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowConfigapi
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: AnnounceRequest: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: AnnounceRequest: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Signature", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowConfigapi
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthConfigapi
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Signature = string(dAtA[iNdEx:postIndex])
+			m.ComponentKind = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
@@ -1603,166 +1156,6 @@ func (m *AnnounceRequest) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			m.ComponentName = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipConfigapi(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthConfigapi
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *AnnounceResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowConfigapi
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: AnnounceResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: AnnounceResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Error", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowConfigapi
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthConfigapi
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Error = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipConfigapi(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthConfigapi
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *ConfigurationResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowConfigapi
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: ConfigurationResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ConfigurationResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowConfigapi
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthConfigapi
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Name = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -2248,7 +1641,7 @@ func (m *Config) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *ListAnnouncementsResponse) Unmarshal(dAtA []byte) error {
+func (m *ListComponentsResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2271,15 +1664,15 @@ func (m *ListAnnouncementsResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: ListAnnouncementsResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: ListComponentsResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ListAnnouncementsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: ListComponentsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Announcements", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Components", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -2303,8 +1696,8 @@ func (m *ListAnnouncementsResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Announcements = append(m.Announcements, &ListAnnouncementsResponse_Announcement{})
-			if err := m.Announcements[len(m.Announcements)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.Components = append(m.Components, &ListComponentsResponse_Component{})
+			if err := m.Components[len(m.Components)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -2330,7 +1723,7 @@ func (m *ListAnnouncementsResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *ListAnnouncementsResponse_Announcement) Unmarshal(dAtA []byte) error {
+func (m *ListComponentsResponse_Component) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2353,15 +1746,15 @@ func (m *ListAnnouncementsResponse_Announcement) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: Announcement: wiretype end group for non-group")
+			return fmt.Errorf("proto: Component: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: Announcement: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: Component: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ComponentName", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -2386,11 +1779,11 @@ func (m *ListAnnouncementsResponse_Announcement) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ComponentName = string(dAtA[iNdEx:postIndex])
+			m.Name = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ComponentType", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Kind", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -2415,7 +1808,7 @@ func (m *ListAnnouncementsResponse_Announcement) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ComponentType = string(dAtA[iNdEx:postIndex])
+			m.Kind = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -2544,40 +1937,35 @@ var (
 	ErrIntOverflowConfigapi   = fmt.Errorf("proto: integer overflow")
 )
 
-func init() { proto.RegisterFile("configapi.proto", fileDescriptor_configapi_d5b968cb5dde47f1) }
+func init() { proto.RegisterFile("configapi.proto", fileDescriptor_configapi_f6c87b556e59b696) }
 
-var fileDescriptor_configapi_d5b968cb5dde47f1 = []byte{
-	// 503 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x54, 0xcf, 0x6e, 0xd3, 0x30,
-	0x18, 0xaf, 0x3b, 0x56, 0xc8, 0xb7, 0x4d, 0x6b, 0xcd, 0x40, 0x5d, 0xa8, 0xaa, 0xc9, 0xda, 0xa1,
-	0x13, 0xd0, 0x42, 0xe1, 0xc6, 0x69, 0x8c, 0x49, 0x1c, 0xc6, 0x24, 0x3a, 0x26, 0x24, 0x6e, 0x6e,
-	0xf0, 0x82, 0xc5, 0x62, 0x07, 0xc7, 0x39, 0xec, 0x19, 0x78, 0x27, 0xce, 0x3b, 0xee, 0x11, 0xa0,
-	0x4f, 0x82, 0x6a, 0x37, 0x89, 0xd3, 0x64, 0x53, 0x77, 0xb3, 0x7f, 0xdf, 0xcf, 0xbf, 0xef, 0xbf,
-	0x61, 0x3b, 0x90, 0xe2, 0x82, 0x87, 0x34, 0xe6, 0xc3, 0x58, 0x49, 0x2d, 0xb1, 0x97, 0x03, 0x7e,
-	0x2f, 0x94, 0x32, 0xbc, 0x64, 0x23, 0x1a, 0xf3, 0x11, 0x15, 0x42, 0x6a, 0xaa, 0xb9, 0x14, 0x89,
-	0x25, 0xfa, 0x2f, 0x43, 0xae, 0x7f, 0xa4, 0xd3, 0x61, 0x20, 0xa3, 0x51, 0x28, 0x43, 0x39, 0x32,
-	0xf0, 0x34, 0xbd, 0x30, 0x37, 0x73, 0x31, 0x27, 0x4b, 0x27, 0x0f, 0x61, 0xfd, 0x38, 0x8a, 0xf5,
-	0x15, 0xf9, 0x8d, 0x60, 0xf7, 0x48, 0x31, 0xaa, 0xd9, 0x91, 0xf1, 0x74, 0xa6, 0x15, 0xa3, 0xd1,
-	0x84, 0xfd, 0x4a, 0x59, 0xa2, 0xf1, 0x3e, 0x6c, 0x05, 0x32, 0x8a, 0xa5, 0x60, 0x42, 0x7f, 0xb9,
-	0x8a, 0x59, 0x17, 0xed, 0xa1, 0x81, 0x37, 0x29, 0x83, 0x98, 0xc0, 0x66, 0x0e, 0x9c, 0x4f, 0x4e,
-	0xba, 0x4d, 0x43, 0x2a, 0x61, 0x25, 0xa5, 0x53, 0x1a, 0xb1, 0xee, 0xda, 0x92, 0xd2, 0x1c, 0x24,
-	0xe7, 0xb0, 0x7d, 0x28, 0x84, 0x4c, 0x45, 0xc0, 0xb2, 0x10, 0x7a, 0xe0, 0x25, 0x3c, 0x14, 0x54,
-	0xa7, 0x2a, 0x73, 0x5f, 0x00, 0x55, 0xd9, 0x66, 0x9d, 0xec, 0x00, 0xda, 0x85, 0x6c, 0x12, 0x4b,
-	0x91, 0x30, 0xbc, 0x03, 0xeb, 0x4c, 0x29, 0xa9, 0x16, 0x9a, 0xf6, 0x42, 0x9e, 0xc3, 0x13, 0x5b,
-	0x87, 0x54, 0x99, 0xf2, 0xe6, 0x74, 0x0c, 0x0f, 0xc4, 0x5c, 0xdf, 0xb2, 0xcd, 0x99, 0x04, 0xd0,
-	0x3e, 0x63, 0xda, 0xf2, 0xeb, 0x2a, 0x76, 0x5a, 0x3c, 0x28, 0x83, 0xf8, 0x00, 0x5a, 0xb6, 0xb1,
-	0x26, 0xde, 0x8d, 0x71, 0x67, 0x58, 0x34, 0x7e, 0xa1, 0xb7, 0x20, 0x90, 0x03, 0xe8, 0x38, 0x4e,
-	0xee, 0x0c, 0xfe, 0x1d, 0x3c, 0xfe, 0xc0, 0x2e, 0x59, 0xd6, 0xca, 0x7b, 0x85, 0x44, 0x5e, 0xc0,
-	0x4e, 0xf9, 0xf1, 0x9d, 0xae, 0xde, 0x42, 0xcb, 0xf2, 0xe6, 0x85, 0xf9, 0xc9, 0xc5, 0xf7, 0xac,
-	0x30, 0xf3, 0x33, 0x7e, 0x5a, 0x4a, 0xcf, 0xcb, 0x73, 0xb9, 0x41, 0xb0, 0x7b, 0xc2, 0x13, 0x9d,
-	0x35, 0x23, 0x62, 0x42, 0x27, 0xb9, 0xa7, 0xaf, 0xb0, 0x45, 0x5d, 0x43, 0x17, 0xed, 0xad, 0x0d,
-	0x36, 0xc6, 0xaf, 0x9d, 0xda, 0xdc, 0xfa, 0x78, 0xe8, 0xa2, 0x93, 0xb2, 0x8e, 0xff, 0x0d, 0x36,
-	0x5d, 0xf3, 0x8a, 0x3d, 0xaa, 0xcc, 0x7e, 0xb3, 0x66, 0xf6, 0xc7, 0x7f, 0x9a, 0xe0, 0xd9, 0x4a,
-	0x1c, 0xc6, 0x1c, 0x7f, 0x82, 0x4e, 0x25, 0x44, 0xdc, 0x76, 0x12, 0x30, 0x4b, 0xe7, 0xef, 0xaf,
-	0x92, 0x12, 0x69, 0xe0, 0x63, 0x78, 0x94, 0x99, 0xb0, 0xef, 0xbc, 0x59, 0xda, 0x11, 0xff, 0x59,
-	0xad, 0x2d, 0x97, 0xf9, 0x0c, 0xb8, 0xba, 0xe2, 0xd8, 0x0d, 0xe2, 0xd6, 0x1f, 0xc0, 0xaf, 0x4e,
-	0x26, 0x69, 0xbc, 0x42, 0xf8, 0x23, 0x78, 0xf9, 0x54, 0x62, 0xd7, 0xfd, 0xf2, 0x42, 0xf8, 0xbd,
-	0x7a, 0x63, 0x16, 0xdc, 0xfb, 0xf6, 0xf5, 0xbf, 0x7e, 0xe3, 0x7a, 0xd6, 0x47, 0x37, 0xb3, 0x3e,
-	0xfa, 0x3b, 0xeb, 0xa3, 0x69, 0xcb, 0x7c, 0x51, 0x6f, 0xfe, 0x07, 0x00, 0x00, 0xff, 0xff, 0xfe,
-	0x83, 0x77, 0xe9, 0x0d, 0x05, 0x00, 0x00,
+var fileDescriptor_configapi_f6c87b556e59b696 = []byte{
+	// 420 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x53, 0xd1, 0x8e, 0xd2, 0x40,
+	0x14, 0xed, 0xa0, 0x60, 0x7a, 0x89, 0x0a, 0x23, 0x21, 0x58, 0x49, 0x83, 0x13, 0x1e, 0x20, 0x6a,
+	0x6b, 0xc0, 0x37, 0x9f, 0x14, 0x8d, 0x26, 0x18, 0x13, 0xe1, 0x0b, 0x4a, 0x1d, 0xea, 0x44, 0x3a,
+	0x53, 0xdb, 0xe1, 0xc1, 0x5f, 0xf1, 0x8b, 0x78, 0xf4, 0x13, 0x76, 0xf9, 0x83, 0xfd, 0x83, 0x4d,
+	0xa7, 0x30, 0x6d, 0xa1, 0xbb, 0x9b, 0x7d, 0x9b, 0xb9, 0x73, 0xce, 0x3d, 0xf7, 0x9e, 0x7b, 0x07,
+	0x9e, 0xfa, 0x82, 0xaf, 0x59, 0xe0, 0x45, 0xcc, 0x89, 0x62, 0x21, 0x05, 0x36, 0x75, 0xc0, 0xea,
+	0x07, 0x42, 0x04, 0x1b, 0xea, 0x7a, 0x11, 0x73, 0x3d, 0xce, 0x85, 0xf4, 0x24, 0x13, 0x3c, 0xc9,
+	0x80, 0xd6, 0x9b, 0x80, 0xc9, 0x5f, 0xdb, 0x95, 0xe3, 0x8b, 0xd0, 0x0d, 0x44, 0x20, 0x5c, 0x15,
+	0x5e, 0x6d, 0xd7, 0xea, 0xa6, 0x2e, 0xea, 0x94, 0xc1, 0xc9, 0x23, 0xa8, 0x7f, 0x0e, 0x23, 0xf9,
+	0x97, 0x04, 0xf0, 0x7c, 0x16, 0x53, 0x4f, 0xd2, 0x99, 0x12, 0x5a, 0xca, 0x98, 0x7a, 0xe1, 0x82,
+	0xfe, 0xd9, 0xd2, 0x44, 0xe2, 0x21, 0x3c, 0xf6, 0x45, 0x18, 0x09, 0x4e, 0xb9, 0x9c, 0x33, 0xfe,
+	0xb3, 0x87, 0x06, 0x68, 0x64, 0x2e, 0xca, 0xc1, 0x12, 0xea, 0xbb, 0x17, 0xd2, 0x5e, 0xed, 0x04,
+	0x95, 0x06, 0x89, 0x0f, 0xad, 0x25, 0x95, 0x99, 0x4a, 0x55, 0x7e, 0xc5, 0x44, 0x15, 0x4c, 0x3c,
+	0x86, 0x46, 0xe6, 0x82, 0x4a, 0xdc, 0x9c, 0xb4, 0x9d, 0xdc, 0xa5, 0x43, 0xbe, 0x03, 0x80, 0x8c,
+	0xa1, 0x5d, 0x10, 0x49, 0x22, 0xc1, 0x13, 0x8a, 0x3b, 0x50, 0xa7, 0x71, 0x2c, 0xe2, 0x43, 0xf6,
+	0xec, 0x42, 0xde, 0xc3, 0xb3, 0x4f, 0x74, 0x43, 0x8f, 0x8d, 0xdf, 0xab, 0x24, 0xf2, 0x1a, 0x3a,
+	0x65, 0xf2, 0xad, 0x52, 0xef, 0xa0, 0x91, 0xe1, 0x30, 0x86, 0x87, 0xbf, 0x73, 0x1f, 0xd5, 0x19,
+	0x77, 0x4b, 0xed, 0x99, 0xba, 0x97, 0x7f, 0x08, 0xba, 0xdf, 0x58, 0x22, 0x67, 0x47, 0xe5, 0x44,
+	0xcb, 0xcc, 0x01, 0x74, 0x3d, 0x49, 0x0f, 0x0d, 0x1e, 0x8c, 0x9a, 0x93, 0x57, 0x05, 0x57, 0xaa,
+	0x69, 0x8e, 0x0e, 0x2d, 0x0a, 0x74, 0x6b, 0x0a, 0xa6, 0x7e, 0x48, 0x0b, 0xe4, 0x79, 0xd7, 0xea,
+	0xac, 0x8b, 0xae, 0xe5, 0x45, 0x4f, 0xae, 0x50, 0xca, 0x4a, 0xf5, 0x3e, 0x44, 0x0c, 0xff, 0x00,
+	0x7c, 0xbe, 0x44, 0x78, 0x58, 0x9c, 0xd3, 0x4d, 0x3b, 0x66, 0x9d, 0x4f, 0x93, 0x18, 0x6f, 0x11,
+	0xfe, 0x0a, 0xa6, 0x9e, 0x24, 0x7e, 0x51, 0xc0, 0x9c, 0x2e, 0x91, 0xd5, 0xaf, 0x7e, 0xcc, 0x7a,
+	0x26, 0x06, 0xfe, 0x02, 0x4f, 0xca, 0x7e, 0xe0, 0x56, 0x81, 0xa1, 0x7e, 0x81, 0xf5, 0xf2, 0x4e,
+	0xf3, 0x88, 0xf1, 0xb1, 0xb5, 0xbb, 0xb4, 0x8d, 0xdd, 0xde, 0x46, 0xff, 0xf7, 0x36, 0xba, 0xd8,
+	0xdb, 0x68, 0xd5, 0x50, 0x9f, 0x69, 0x7a, 0x1d, 0x00, 0x00, 0xff, 0xff, 0x9b, 0x48, 0x99, 0xe0,
+	0xb7, 0x03, 0x00, 0x00,
 }

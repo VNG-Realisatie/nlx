@@ -6,14 +6,15 @@ import (
 	"go.nlx.io/nlx/config-api/configapi"
 )
 
-//ListAnnouncements returns components who have announced them selfs to the config-API
-func (s *ConfigService) ListAnnouncements(ctx context.Context, req *configapi.Empty) (*configapi.ListAnnouncementsResponse, error) {
+//ListComponents returns components who have announced them selfs to the config-API
+func (s *ConfigService) ListComponents(ctx context.Context, req *configapi.Empty) (*configapi.ListComponentsResponse, error) {
 	s.logger.Info("rpc request ListAnnouncements")
-	resp := &configapi.ListAnnouncementsResponse{}
+	resp := &configapi.ListComponentsResponse{}
 
 	for _, value := range s.connections {
-		resp.Announcements = append(resp.Announcements, &configapi.ListAnnouncementsResponse_Announcement{
-			ComponentName: value.id,
+		resp.Components = append(resp.Components, &configapi.ListComponentsResponse_Component{
+			Name: value.name,
+			Kind: value.kind,
 		})
 	}
 	return resp, nil

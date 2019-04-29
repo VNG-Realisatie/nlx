@@ -11,10 +11,9 @@ option (gogoproto.unmarshaler_all) = true;
 option (gogoproto.goproto_getters_all) = false;
 
 service ConfigApi {
-    rpc ListAnnouncements(Empty) returns (ListAnnouncementsResponse) {}
-    rpc Announce (AnnounceRequest) returns (AnnounceResponse) {}
 	rpc CreateConfigStream (CreateConfigStreamRequest) returns (stream Config) {}
     rpc SetConfig (SetConfigRequest) returns (SetConfigResponse) {}
+    rpc ListComponents (Empty) returns  (ListComponentsResponse) {}
     /*
     rpc DeleteConfig (DeleteConfigRequest) returns (DeleteConfigResponse) {}
     */
@@ -23,22 +22,8 @@ service ConfigApi {
 message Empty {}
 
 message CreateConfigStreamRequest {
-    string componentType = 1;
-    string componentURL = 2;
-    string componentName = 3;
-}
-
-message AnnounceRequest {
-    string signature = 1;
+    string componentKind = 1;
     string componentName = 2;
-}
-
-message AnnounceResponse {
-	string error = 1;
-}
-
-message ConfigurationResponse {
-    string name = 1;
 }
 
 message SetConfigRequest {
@@ -63,11 +48,11 @@ message Config {
     string config = 2;
 }
 
-message ListAnnouncementsResponse {
-    message Announcement {
-        string componentName = 1;
-        string componentType = 2;
+message ListComponentsResponse {
+    message Component {
+        string name = 1;
+        string kind = 2;
     }
 
-    repeated Announcement announcements = 1;
+    repeated Component components = 1;
 }
