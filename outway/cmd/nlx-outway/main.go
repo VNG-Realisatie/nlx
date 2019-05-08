@@ -21,8 +21,8 @@ import (
 )
 
 var options struct {
-	ListenAddress    string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:80" description:"Address for the outway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
-	ListenAddressTLS string `long:"listen-address-tls" env:"LISTEN_ADDRESS_TLS" default:"0.0.0.0:443" description:"Address for the outway to listen on for TLS connections. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	ListenAddress    string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:8080" description:"Address for the outway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	ListenAddressTLS string `long:"listen-address-tls" env:"LISTEN_ADDRESS_TLS" default:"0.0.0.0:8443" description:"Address for the outway to listen on for TLS connections. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 
 	DirectoryInspectionAddress string `long:"directory-inspection-address" env:"DIRECTORY_INSPECTION_ADDRESS" description:"Address for the directory where this outway can fetch the service list" required:"true"`
 

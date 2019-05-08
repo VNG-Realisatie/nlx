@@ -1,5 +1,5 @@
 # Use go 1.x based on the latest alpine image.
-FROM golang:1.12-alpine AS build
+FROM golang:1-alpine AS build
 
 # Install build tools.
 RUN apk add --update git gcc musl-dev
@@ -24,4 +24,9 @@ COPY --from=build /go/src/go.nlx.io/nlx/ca-certportal/dist/bin/nlx-ca-certportal
 COPY --from=build /go/src/go.nlx.io/nlx/ca-certportal/public /var/lib/nlx-ca-certportal/public
 
 WORKDIR /var/lib/nlx-ca-certportal
+
+# Add non-priveleged user
+RUN adduser -D -u 1001 appuser
+USER appuser
+
 CMD ["/usr/local/bin/nlx-ca-certportal"]

@@ -28,6 +28,17 @@ FROM nginx:alpine
 
 # Copy nginx configuration
 COPY txlog-ui/docker/default.conf /etc/nginx/conf.d/default.conf
+COPY txlog-ui/docker/nginx.conf /etc/nginx/nginx.conf
 
 COPY --from=build /go/src/go.nlx.io/nlx/txlog-ui/build /usr/share/nginx/html
 COPY --from=build /tmp/version.json /usr/share/nginx/html/version.json
+
+# Add non-privileged user
+RUN adduser -D -u 1001 appuser
+
+# Set ownership nginx.pid and cache folder in order to run nginx as non-root user
+RUN touch /var/run/nginx.pid && \
+    chown -R appuser /var/run/nginx.pid && \ 
+    chown -R appuser /var/cache/nginx
+
+USER appuser

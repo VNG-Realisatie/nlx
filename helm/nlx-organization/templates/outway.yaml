@@ -16,7 +16,6 @@ spec:
     metadata:
       labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 8 }}
     spec:
-  
       volumes:
         - name: certs
           emptyDir: {}
@@ -89,10 +88,10 @@ spec:
   ports:
     - name: handler
       protocol: TCP
-      port: 80
+      port: 8080
     - name: handler-tls
       protocol: TCP
-      port: 443
+      port: 8443
   cluserIP: None
 {{ if .Values.debugEnableOutwayIngress }}
 ---

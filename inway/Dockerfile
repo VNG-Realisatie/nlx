@@ -42,4 +42,8 @@ ENV SERVICE_CONFIG /service-config.toml
 # Make sure /etc/hosts is resolved before DNS
 RUN echo "hosts: files dns" > /etc/nsswitch.conf
 
+# Add non-privileged user
+RUN adduser -D -u 1001 appuser
+USER appuser
+
 CMD ["/usr/local/bin/nlx-inway"]

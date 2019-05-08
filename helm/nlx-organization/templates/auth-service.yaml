@@ -16,6 +16,8 @@ spec:
     metadata:
       labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 8 }}
     spec:
+      securityContext:
+        runAsUser: 1001
       volumes:
         - name: certs
           emptyDir: {}
@@ -57,7 +59,6 @@ spec:
     - name: handler
       protocol: TCP
       port: 8443
-      targetPort: 443
   cluserIP: None
 {{ end }}
 {{ end }}

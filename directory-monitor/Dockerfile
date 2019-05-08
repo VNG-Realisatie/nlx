@@ -1,5 +1,5 @@
 # Use go 1.x based on the latest alpine image.
-FROM golang:1.12-alpine AS build
+FROM golang:1-alpine AS build
 
 # Install build tools.
 RUN apk add --update git gcc musl-dev
@@ -32,3 +32,7 @@ FROM alpine:latest
 RUN echo "hosts: files dns" > /etc/nsswitch.conf
 
 COPY --from=build /go/src/go.nlx.io/nlx/directory-monitor/dist/bin/nlx-directory-monitor /usr/local/bin/nlx-directory-monitor
+
+# Add non-priveleged user
+RUN adduser -D -u 1001 appuser
+USER appuser
