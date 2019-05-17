@@ -12,6 +12,10 @@ export const StyledSidebar = styled.div`
 export const StyledSearch = styled(Search)`
   box-shadow: none;
   border-bottom: 1px solid #F0F2F7;
+
+  input {
+    font-size: 14px;
+  }
 `
 
 export const StyledOrganizationList = styled.ul`
@@ -23,12 +27,15 @@ export const StyledOrganizationList = styled.ul`
     font-weight: 600;
     text-decoration: none;
     display: block;
-    padding-left: 20px;
-    line-height: 32px;
+    padding: 5px 0 5px 20px;
+    line-height: 22px;
+    font-size: 14px;
+
     
     &.active {
       color: #517FFF;
       border-left: 2px solid #517FFF;
+      padding-left: 18px;
     }
   }
 `
