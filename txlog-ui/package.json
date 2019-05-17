@@ -36,7 +36,7 @@
     "eslint-plugin-promise": "4.0.1",
     "eslint-plugin-react": "7.12.2",
     "eslint-plugin-standard": "4.0.0",
-    "jest-enzyme": "7.0.1",
+    "jest-enzyme": "7.0.2",
     "prettier": "1.15.3",
     "typeface-muli": "0.0.54"
   },
