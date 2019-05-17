@@ -6,7 +6,7 @@
     "@commonground/design-system": "1.0.3",
     "ajv-keywords": "3.2.0",
     "copy-text-to-clipboard": "1.0.4",
-    "mobx": "4.9.2",
+    "mobx": "4.9.4",
     "react": "16.7.0",
     "react-app-polyfill": "0.2.0",
     "react-dom": "16.7.0",
