@@ -7,7 +7,6 @@ menu:
     parent: "further-reading"
 ---
 
-
 ## Implementation of NLX in your own infrastructure
 
 Implementing NLX is a crucial part of building your Common Ground infrastructure. The current NLX infrastructure is based upon [Openstack](https://www.openstack.org/),  [Kubernetes (K8s)](https://kubernetes.io/) and [Docker](https://www.docker.com/). This current infrastructure choice of the development team however isn't mandatory and because the NLX software is developed open source it's also possible to deploy it on your own infrastructure of choice.  
@@ -22,7 +21,7 @@ The most common implementations we expect to see regarding NLX are the following
 
 Bear in mind that you only need to run an outway to support your clients or an inway to expose your api's. Running NLX as stand alone system won't be a common situation and thus for most cases the infrastructure on which the client or api is running will be the default option to also run the NLX inway or outway.
 
-### Considerations and remarks for the different types:
+### Considerations and remarks for the different types
 
 **1. Dedicated machine:**
 
@@ -40,7 +39,6 @@ Bear in mind that you only need to run an outway to support your clients or an i
 - [x] use your own Host OS and docker installation.
 - [x] Deploy onsite or offsite.
 
-
 **3. SaaS Cloud:**
 
 - [x] this type will outsource the entire technical NLX setup to the contracted SaaS provider and use NLX as add-on service.
@@ -56,11 +54,12 @@ Bear in mind that you only need to run an outway to support your clients or an i
 **5. Embedded CI/CD:**
 
 - [x] because the source of NLX is available online it's possible to include the source of our components in your own project.
- - [x] this will allow you to have full control of the CI/CD pipeline actions.
+- [x] this will allow you to have full control of the CI/CD pipeline actions.
 - [x] it's possible to write and execute additional unit and integration tests.
 - [x] NLX can be deployed as part of your own application stack.  
 
-### Pro's and Con's of the different implementation types:
+### Pro's and Con's of the different implementation types
+
 Different implementation types have different advantages and disadvantages. The most important ones are listed in the following table:
 
 |Implementation type | Pro's | Con's  |
@@ -72,4 +71,5 @@ Different implementation types have different advantages and disadvantages. The 
 |5. Embedded CI/CD| 1. full control of the CI/CD; 2. ability to incorporate NLX in your own application. | 1. no advantages of pre configured containers or infrastructure. |
 
 ### Advice
+
 We advise organizations to consider reusing the available containers and reuse the infrastructure setup of NLX based on [Openstack](https://www.openstack.org/) and [Kubernetes](https://kubernetes.io/) and [Docker](https://www.docker.com/). Especially when developing new clients and/or api's.
