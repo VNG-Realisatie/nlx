@@ -19,7 +19,7 @@
     "lint": "eslint 'src/**/*.js*'"
   },
   "devDependencies": {
-    "@rebass/grid": "6.0.0-6",
+    "@rebass/grid": "6.0.0",
     "polished": "2.3.1",
     "react-pose": "4.0.3",
     "styled-components": "4.1.2"
