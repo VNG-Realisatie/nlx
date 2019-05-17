@@ -1,4 +1,4 @@
-FROM node:10.15.0-alpine AS build
+FROM node:10.15.3-alpine AS build
 
 RUN apk add git jq
 
