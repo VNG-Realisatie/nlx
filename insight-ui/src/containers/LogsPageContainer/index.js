@@ -5,22 +5,7 @@ import {connect} from 'react-redux'
 import { fetchOrganizationLogsRequest } from '../../store/actions'
 import LogsPage from '../../components/LogsPage'
 
-const arrayContainsString = (input, query) =>
-  input
-    .filter(item => item.includes(query.toLowerCase()))
-    .length > 0
-
 export class LogsPageContainer extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      query: ''
-    }
-
-    this.onSearchQueryChanged = this.onSearchQueryChanged.bind(this)
-  }
-
   fetchOrganizationLogs(organization, loginRequestInfo) {
     if (!organization || !loginRequestInfo) {
       return
@@ -30,10 +15,6 @@ export class LogsPageContainer extends Component {
       proofUrl: loginRequestInfo.proofUrl,
       insight_log_endpoint: organization.insight_log_endpoint
     });
-  }
-
-  onSearchQueryChanged(query) {
-    this.setState({ query })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -57,24 +38,11 @@ export class LogsPageContainer extends Component {
     this.fetchOrganizationLogs(organization, loginRequestInfo)
   }
 
-  getFilteredLogsByQuery(logs = [], query = '') {
-    return logs
-      .filter(log => {
-        const { subjects = [], requestedBy = '', requestedAt = '', reason = '' } = log
-        return arrayContainsString(subjects, query) ||
-          requestedBy.includes(query.toLowerCase()) ||
-          requestedAt.includes(query.toLowerCase()) ||
-          reason.includes(query.toLowerCase())
-      })
-  }
-
   render() {
     const { logs, organization } = this.props
-    const { query } = this.state
 
-    return <LogsPage logs={this.getFilteredLogsByQuery(logs, query)}
-                     organizationName={organization.name}
-                     onSearchQueryChanged={this.onSearchQueryChanged} />
+    return <LogsPage logs={logs}
+                     organizationName={organization.name} />
   }
 }
 
