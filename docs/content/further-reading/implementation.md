@@ -42,7 +42,7 @@ Bear in mind that you only need to run an outway to support your clients or an i
 **3. SaaS Cloud:**
 
 - [x] this type will outsource the entire technical NLX setup to the contracted SaaS provider and use NLX as add-on service.
-- [x] the SaaS provider will need to invest time to adopt NLX and build a multi-tennant setup for multiple clients.
+- [x] the SaaS provider will need to invest time to adopt NLX and build a multi-tenant setup for multiple clients.
 - [x] this will take time and effort of the SaaS provider and currently isn't a commodity. Your implementation will be the launching customer.
 
 **4. K8s Cloud:**
@@ -65,7 +65,7 @@ Different implementation types have different advantages and disadvantages. The 
 |Implementation type | Pro's | Con's  |
 |:-------------------|:------|:-------|
 |1. Dedicated machine| 1. choose and harden your own OS. | 1. no advantages of pre configured containers or infrastructure. |
-|2. Hosted containers| 1. reuse the preconfigured containers on your own host OS and docker installation. | 1. the need to trust the preconfigured container setup or generate your own containers. |
+|2. Hosted containers| 1. reuse the pre-configured containers on your own host OS and docker installation. | 1. the need to trust the pre-configured container setup or generate your own containers. |
 |3. SaaS Cloud| 1. outsource the entire technical NLX setup to the SaaS provider; 2. use NLX as add-on. | 1. currently isn't a commodity. |
 |4. K8s Cloud| 1. hosted, scalable and resilient environment;  2. outsource the main infrastructure work to the specialist K8s cloud provider | 1. relatively complex to set up and maintain at first. |
 |5. Embedded CI/CD| 1. full control of the CI/CD; 2. ability to incorporate NLX in your own application. | 1. no advantages of pre configured containers or infrastructure. |
