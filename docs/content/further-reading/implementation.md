@@ -20,9 +20,6 @@ The most common implementations we expect to see regarding NLX are the following
 *An alternative approach might be to:*  
 5. **Embedded CI/CD:** Embed the NLX codebase as part of your own application codebase and include NLX in the CI/CD of the project you are developing.  
 
-The first four implementation types are illustrated in this model:
-![NLX implementation view](implementation-957ab.png).
-
 Bear in mind that you only need to run an outway to support your clients or an inway to expose your api's. Running NLX as stand alone system won't be a common situation and thus for most cases the infrastructure on which the client or api is running will be the default option to also run the NLX inway or outway.
 
 ### Considerations and remarks for the different types:
