@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import styled from 'styled-components'
 import Card from '../Card/Card';
 import SearchIcon from './SearchIcon';

@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 export const mapListServicesAPIResponse = response =>
   response && response.services ?
     response.services.map(service => ({

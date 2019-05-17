@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import React, { Fragment, Component } from "react"
 import { Flex, Box } from '@rebass/grid'
 import Small from '../components/Small/Small'

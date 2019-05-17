@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import { mapListServicesAPIResponse } from './map-list-services-api-response';
 
 describe('mapping the API response', () => {

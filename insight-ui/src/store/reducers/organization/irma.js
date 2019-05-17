@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import * as actionType from '../../actions'
 import cfg from '../../app.cfg'
 

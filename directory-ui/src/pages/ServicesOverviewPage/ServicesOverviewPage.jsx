@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import React, { Component } from 'react'
 
 import { Spinner } from '@commonground/design-system'

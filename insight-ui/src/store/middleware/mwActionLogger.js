@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 /**
  * Custom middleware function that logs when called,
  * it should return next(action) function

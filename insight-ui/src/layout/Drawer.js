@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Link, Switch, Route, BrowserRouter, Redirect } from 'react-router-dom'

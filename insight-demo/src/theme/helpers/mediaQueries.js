@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import { css } from 'styled-components'
 
 import themeConstants from '../themeConstants'

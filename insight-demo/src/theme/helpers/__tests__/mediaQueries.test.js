@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import media, { down, up, only } from '../mediaQueries'
 
 jest.mock('../../themeConstants', () => ({

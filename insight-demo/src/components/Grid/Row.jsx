@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import React, { PureComponent } from 'react'
 import { Flex } from '@rebass/grid'
 

@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import React, { Fragment } from 'react'
 
 import GlobalStyles from './components/GlobalStyles/GlobalStyles'
