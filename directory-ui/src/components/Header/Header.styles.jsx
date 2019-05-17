@@ -1,8 +1,10 @@
 import styled from 'styled-components'
 
 export default styled.header`
-  background: #ffffff;
-  box-shadow: 0 0 0 1px rgba(45,50,64,.05), 0 1px 8px rgba(45,50,64,.05);
+    position: relative;
+    background: #ffffff;
+    box-shadow: 0 0 0 1px rgba(45,50,64,.05), 0 1px 8px rgba(45,50,64,.05);
+    z-index: 1;
 
   .navbar-logo {
     margin-right: 24px;
