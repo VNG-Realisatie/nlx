@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@commonground/design-system": "1.0.3",
-    "ajv-keywords": "3.2.0",
+    "ajv-keywords": "3.4.0",
     "copy-text-to-clipboard": "1.0.4",
     "mobx": "4.9.2",
     "react": "16.7.0",
