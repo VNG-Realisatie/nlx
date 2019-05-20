@@ -132,7 +132,6 @@ Release container images:
   script:
     - skaffold build --profile release
   only:
-    - master
     - tags
   tags:
     - nlx-privileged
@@ -151,7 +150,6 @@ Deploy test:
   environment:
     name: test
   only:
-    - master
     - tags
   tags:
     - nlx-privileged
@@ -161,6 +159,7 @@ Deploy acceptance:
   extends: .deploy
   environment:
     name: acc
+  when: manual
   only:
     - tags
   tags:
