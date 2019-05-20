@@ -114,6 +114,19 @@ Build:
     - nlx
     - shell-executor
 
+Run semantic release:
+  image: node:10.15.3
+  stage: Release
+  before_script:
+  - npm ci
+  script:
+    - npx semantic-release
+  only:
+    - master
+  tags:
+    - nlx
+    - docker-executor  
+
 Release container images:
   stage: Release
   script:

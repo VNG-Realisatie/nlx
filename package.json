@@ -1,0 +1,14 @@
+{
+  "name": "nlx",
+  "version": "0.55.0",
+  "description": "NLX is an open source inter-organisational system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API landscape.",
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "@semantic-release/gitlab": "3.1.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/commonground/nlx.git"
+  }
+}
