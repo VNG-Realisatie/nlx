@@ -20,14 +20,45 @@ Add your changes in commits [with a message that explains them](https://robots.t
 
 If you are adding code, make sure you've added and updated the relevant documentation and tests before you submit your Merge Request. Make sure to write tests that show the behaviour of the newly added or changed code.
 
-### 2. Merge Request
+### 2. Commit messages
+
+This project uses [semantic-release](https://semantic-release.gitbook.io/semantic-release/). When merging a MR to master, this will automatically generate our [CHANGELOG](./CHANGELOG.md) based on the commit messages and a version tag will be added.
+
+We follow the [Angular Comment Message Conventions](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines). This convention requires you to pas a subject and scope in the commit message. The scope is based on the applications in the repository. If you are not sure which scope to use please leave the scope empty.
+
+The available scopes are:
+
+- auth-service
+- ca-certportal
+- ca-cfssl-unsafe
+- common
+- design
+- directory-db
+- directory-monitor
+- directory-inspection-api
+- directory-registration-api
+- directory-ui
+- docs
+- helm
+- insight-api
+- insight-demo
+- insight-ui
+- inway
+- outway
+- txlog-api
+- txlog-db
+- txlog-ui
+
+
+
+### 3. Merge Request
 
 When submitting the Merge Request, please accompany it with a description of the problem you are trying to address and the issue numbers that this Merge Request fixes/addresses.
 
 When working on a feature which requires specific knowledge of multiple disciplines (eg. both frontend & backend), make sure to complete your MR before asking for a review.
 By doing so, the reviewer can consider the complete solution and give more insightful feedback.
 
-### 3. Improve
+### 4. Improve
 
 All contributions have to be reviewed by someone.
 
@@ -35,7 +66,7 @@ It could be that your contribution can be merged immediately by a maintainer. Ho
 
 If your documentation and code have passed human review and have passed the automated tests, it is merged.
 
-### 4. Celebrate
+### 5. Celebrate
 
 Your ideas, documentation and code have become an integral part of this project. You are the Open Source hero we need.
 
