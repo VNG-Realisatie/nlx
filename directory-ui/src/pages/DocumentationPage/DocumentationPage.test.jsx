@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import React from 'react'
 import ReactDOM from 'react-dom'
 import DocumentationPage from './DocumentationPage'

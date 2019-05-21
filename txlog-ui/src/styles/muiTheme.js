@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import { createMuiTheme } from '@material-ui/core/styles'
 
 import 'typeface-muli'

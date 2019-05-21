@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 // This optional code is used to register a service worker.
 // register() is not called by default.
 

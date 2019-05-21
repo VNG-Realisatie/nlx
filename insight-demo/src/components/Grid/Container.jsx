@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import React, { PureComponent } from 'react'
 import styled from 'styled-components'
 import { Box } from '@rebass/grid'

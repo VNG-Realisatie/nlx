@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import React, { Component } from 'react'
 import { bool, string, array } from 'prop-types'
 import ServicesTable from '../../components/ServicesTable/ServicesTable';

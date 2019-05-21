@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 /**
  * Log key...val pairs as log group
  * @param {Object} data: key - value pairs. title is used to display title of group

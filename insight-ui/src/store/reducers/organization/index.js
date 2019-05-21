@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import { combineReducers } from 'redux'
 
 import info from './info'

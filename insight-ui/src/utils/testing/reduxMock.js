@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 const createStore = (middleware, state = {}) => {
     const store = {
         getState: jest.fn(() => state),

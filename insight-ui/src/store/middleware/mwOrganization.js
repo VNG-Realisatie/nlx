@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 /**
  * Custom middleware function to load organization logs,
  * listens to GET_ORGANIZATION_LOGS action

@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import styled, { css } from 'styled-components'
 import PropTypes from 'prop-types'
 
