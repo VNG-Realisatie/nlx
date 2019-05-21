@@ -28,3 +28,7 @@ RUN GIT_COMMIT_HASH=$(git rev-parse HEAD) && \
 # Release binary on latest alpine image.
 FROM alpine:latest
 COPY --from=build /go/src/go.nlx.io/nlx/txlog-api/dist/bin/nlx-txlog-api /usr/local/bin/nlx-txlog-api
+
+# Add non-privileged user
+RUN adduser -D -u 1001 appuser
+USER appuser

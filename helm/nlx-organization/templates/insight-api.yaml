@@ -80,7 +80,7 @@ spec:
   ports:
     - name: api
       protocol: TCP
-      port: 80
+      port: 8080
   cluserIP: None
 ---
 apiVersion: extensions/v1beta1

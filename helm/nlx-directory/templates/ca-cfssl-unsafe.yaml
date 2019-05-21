@@ -29,29 +29,24 @@ spec:
     metadata:
       labels: {{ include "nlx-directory.common.metadata-labels" . | nindent 8 }}
     spec:
+      securityContext:
+        fsGroup: 1001
       containers:
         - name: ca-cfssl-unsafe
           image: {{.Values.caCfsslUnsafeImage}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
-          {{- if .Values.ca.certPEM }}
+      {{- if .Values.ca.certPEM }}
           command: ["cfssl"]
           args: ["serve", "--address=0.0.0.0", "--ca=/ca-root-cert/cert.pem", "--ca-key=/ca-root-cert/key.pem"]
-          {{- else }}
-          command: ["/ca/start-ca.sh"]
-          args: ["nlx.local"]
-          {{- end }}
           volumeMounts:
-          {{- if .Values.ca.certPEM }}
             - name: ca-root-cert
               mountPath: "/ca-root-cert"
               readOnly: true
-          {{- end }}
       volumes:
-        {{- if .Values.ca.certPEM }}
         - name: ca-root-cert
           secret:
             secretName: ca-root-cert-{{.component}}
-        {{ end }}
+      {{ end }}
       restartPolicy: Always
   status: {}
 ---

@@ -14,7 +14,7 @@ import (
 )
 
 var options struct {
-	ListenAddress string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:80" description:"Address for the certportal to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	ListenAddress string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:8080" description:"Address for the certportal to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 	CAHost        string `long:"ca-host" env:"CA_HOST" default:"localhost" description:"The host of the certificate authority (CA)."`
 }
 

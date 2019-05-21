@@ -41,7 +41,6 @@ spec:
     metadata:
       labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 8 }}
     spec:
-  
       volumes:
         - name: certs
           emptyDir: {}
@@ -121,7 +120,7 @@ spec:
   ports:
     - name: gateway
       protocol: TCP
-      port: 443
+      port: 8443
   cluserIP: None
 ---
 apiVersion: extensions/v1beta1

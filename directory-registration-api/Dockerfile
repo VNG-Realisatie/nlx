@@ -33,3 +33,7 @@ FROM alpine:latest
 RUN echo "hosts: files dns" > /etc/nsswitch.conf
 
 COPY --from=build /go/src/go.nlx.io/nlx/directory-registration-api/dist/bin/nlx-directory-registration-api /usr/local/bin/nlx-directory-registration-api
+
+# Add non-privileged user
+RUN adduser -D -u 1001 appuser
+USER appuser

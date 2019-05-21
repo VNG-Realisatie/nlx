@@ -20,3 +20,11 @@ COPY txlog-db/docker/reset-db.sh		/usr/local/bin/reset-db.sh
 COPY txlog-db/docker/upgrade-db.sh		/usr/local/bin/upgrade-db.sh
 COPY txlog-db/migrations	/db-migrations
 COPY txlog-db/testdata		/db-testdata
+
+# Add non-privileged user
+RUN useradd -ms /bin/bash appuser
+
+RUN chown appuser /db-migrations
+RUN chown appuser /db-testdata
+
+USER appuser

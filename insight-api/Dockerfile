@@ -31,3 +31,7 @@ FROM alpine:latest
 COPY --from=build /go/src/go.nlx.io/nlx/insight-api/dist/bin/nlx-insight-api /usr/local/bin/nlx-insight-api
 
 ENV SERVICE_CONFIG /insight-config.toml
+
+# Add non-privileged user
+RUN adduser -D -u 1001 appuser
+USER appuser

@@ -34,4 +34,8 @@ COPY --from=build /go/src/go.nlx.io/nlx/outway/dist/bin/nlx-outway /usr/local/bi
 # Make sure /etc/hosts is resolved before DNS
 RUN echo "hosts: files dns" > /etc/nsswitch.conf
 
+# Add non-privileged user
+RUN adduser -D -u 1001 appuser
+USER appuser
+
 CMD ["/usr/local/bin/nlx-outway"]
