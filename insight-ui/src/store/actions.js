@@ -157,11 +157,25 @@ export function* getIrmaLoginStatus({ statusUrl }) {
   }
 }
 
-export function* fetchOrganizationLogs({ proofUrl, insight_log_endpoint }) {
+export function* fetchOrganizationLogs({ page, rowsPerPage, proofUrl, insight_log_endpoint }) {
   try {
     const proof = yield call(apiWithResponseDetection, proofUrl)
     if (proof) {
-      const logs = yield call(apiPostWithTextAndJSONAsOutput, `${insight_log_endpoint}/fetch`, proof)
+      const url = `${insight_log_endpoint}/fetch`
+      const searchParams = new URLSearchParams()
+
+      if (typeof page !== 'undefined') {
+        searchParams.append('page', page)
+      }
+
+      if (typeof rowsPerPage !== 'undefined') {
+        searchParams.append('rowsPerPage', rowsPerPage)
+      }
+
+      const queryString = Array.from(searchParams.entries()).length > 0 ?
+        `?${searchParams.toString()}` : ''
+
+      const logs = yield call(apiPostWithTextAndJSONAsOutput, `${url}${queryString}`, proof)
       yield put({ type: TYPES.FETCH_ORGANIZATION_LOGS_SUCCESS, data: logs })
     } else {
       yield put({ type: TYPES.FETCH_ORGANIZATION_LOGS_FAILED, data: {

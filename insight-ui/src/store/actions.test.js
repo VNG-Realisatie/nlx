@@ -117,4 +117,19 @@ describe('fetch organization logs', () => {
         data: { response: [] }
       }))
   })
+
+  describe('with pagination', () => {
+    it('should pass the pagination params to the fetch endpoint', () => {
+      const fetchOrganizationLogsGen = fetchOrganizationLogs({
+        proofUrl: 'proof_url',
+        insight_log_endpoint: 'log_endpoint',
+        page: 2,
+        rowsPerPage: 42
+      })
+
+      fetchOrganizationLogsGen.next()
+      expect(fetchOrganizationLogsGen.next('the_proof').value)
+        .toEqual(call(apiPostWithTextAndJSONAsOutput, 'log_endpoint/fetch?page=2&rowsPerPage=42', 'the_proof'))
+    })
+  })
 })
