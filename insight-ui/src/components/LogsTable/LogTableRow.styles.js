@@ -1,11 +1,19 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { Table } from '@commonground/design-system'
 
 export const StyledLogTableRow = styled(Table.Row)`
+  cursor: pointer;
+
   td {
     background-color: #FFFFFF;
     color: #2D3240;
   }
+
+  td:first-child {
+    ${p => p.active && css`
+      border-left: 2px solid #517FFF;
+      padding-left: 14px;
+    `}
 `
 
 export const StyledSubjectLabel = styled.span`

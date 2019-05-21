@@ -1,11 +1,19 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
+import { Route } from 'react-router-dom'
 import { arrayOf, instanceOf, shape, string } from "prop-types";
 import {connect} from 'react-redux'
 
 import { fetchOrganizationLogsRequest } from '../../store/actions'
 import LogsPage from '../../components/LogsPage'
+import LogDetailPaneContainer from '../LogDetailPaneContainer'
 
 export class LogsPageContainer extends Component {
+  constructor(props) {
+    super(props)
+
+    this.logClickedHandler = this.logClickedHandler.bind(this)
+  }
+
   fetchOrganizationLogs(organization, loginRequestInfo) {
     if (!organization || !loginRequestInfo) {
       return
@@ -38,15 +46,33 @@ export class LogsPageContainer extends Component {
     this.fetchOrganizationLogs(organization, loginRequestInfo)
   }
 
+  logClickedHandler(log) {
+    const { history, match: { url } } = this.props
+    history.push(`${url}/${log.id}`)
+  }
+
   render() {
     const { logs, organization } = this.props
+    const { match: { url } } = this.props
+    const { pathname } = this.props.location
+    const activeLogId = pathname.substr(url.length + 1)
 
-    return <LogsPage logs={logs}
-                     organizationName={organization.name} />
+    return (
+      <Fragment>
+        <LogsPage logs={logs} organizationName={organization.name} activeLogId={activeLogId} logClickedHandler={log => this.logClickedHandler(log)} />
+        <Route path={`${url}/:logid/`} render={props => <LogDetailPaneContainer parentURL={url} {...props} />} />
+      </Fragment>
+    )
   }
 }
 
 LogsPageContainer.propTypes = {
+  match: shape({
+    url: string
+  }),
+  location: shape({
+    pathname: string
+  }),
   organization: shape({
     name: string.isRequired,
     insight_log_endpoint: string.isRequired
@@ -55,27 +81,29 @@ LogsPageContainer.propTypes = {
     proofUrl: string
   }),
   logs: arrayOf(shape({
+    id: string,
     subjects: arrayOf(string),
     requestedBy: string,
     requestedAt: string,
+    application: string,
     reason: string,
     date: instanceOf(Date)
   }))
 }
 
-const mapRawLogsToTableFormat = rawLogs =>
-  rawLogs.map(rawLog => ({
-    subjects: rawLog.data['doelbinding-data-elements'].split(','),
-    requestedBy: rawLog['source_organization'],
-    requestedAt: rawLog['destination_organization'],
-    reason: rawLog.data['doelbinding-process-id'],
-    date: new Date(rawLog['created'])
-  }))
+LogsPageContainer.defaultProps = {
+  match: {
+    url: ''
+  },
+  location: {
+    pathname: ''
+  }
+}
 
 const mapStateToProps = ({ loginRequestInfo, logs }) => {
   return {
     loginRequestInfo,
-    logs: mapRawLogsToTableFormat(logs)
+    logs
   }
 }
 

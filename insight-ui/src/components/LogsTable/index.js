@@ -1,9 +1,9 @@
 import React from 'react'
-import { string, arrayOf, shape, instanceOf } from 'prop-types'
+import { string, arrayOf, shape, instanceOf, func } from 'prop-types'
 import { Table } from '@commonground/design-system'
 import LogTableRow from './LogTableRow'
 
-const LogsTable = ({ logs, ...props }) =>
+const LogsTable = ({ logs, activeLogId, logClickedHandler, ...props }) =>
   <Table {...props}>
     <Table.Head>
       <Table.Row>
@@ -25,6 +25,8 @@ const LogsTable = ({ logs, ...props }) =>
                          requestedAt={log.requestedAt}
                          reason={log.reason}
                          date={log.date}
+                         active={log.id === activeLogId}
+                         onClick={() => logClickedHandler(log)}
             />
           )
       }
@@ -32,6 +34,8 @@ const LogsTable = ({ logs, ...props }) =>
   </Table>
 
 LogsTable.propTypes = {
+  activeLogId: string,
+  logClickedHandler: func,
   logs: arrayOf(shape({
     subjects: arrayOf(string),
     requestedBy: string,
@@ -42,7 +46,8 @@ LogsTable.propTypes = {
 }
 
 LogsTable.defaultProps = {
-  logs: []
+  logs: [],
+  logClickedHandler: () => {}
 }
 
 export default LogsTable

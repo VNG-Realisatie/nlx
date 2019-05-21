@@ -10,8 +10,8 @@ const dateOptions = {
   year: 'numeric'
 }
 
-const LogTableRow = ({ subjects, requestedBy, requestedAt, reason, date }) =>
-    <StyledLogTableRow>
+const LogTableRow = ({ subjects, requestedBy, requestedAt, reason, date, ...props }) =>
+    <StyledLogTableRow {...props}>
       <Table.BodyCell>
         {
           subjects.map((subject, i) =>
