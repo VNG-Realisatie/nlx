@@ -12,9 +12,27 @@ describe('the logs reducer', () => {
     expect(logsReducer(undefined, {
       type: TYPES.FETCH_ORGANIZATION_LOGS_SUCCESS,
       data: {
-        records: ['foo', 'bar']
+        records: [{
+          data: {
+            'doelbinding-data-elements': 'a,b',
+            'doelbinding-process-id': 'process id',
+            'doelbinding-application-id': 'application'
+          },
+          created: '2019-05-17T07:22:49.996932Z',
+          source_organization: 'source organization',
+          destination_organization: 'destination organization',
+          'logrecord-id': 'id'
+        }]
       }
     }))
-      .toEqual([ 'foo', 'bar' ])
+      .toEqual([{
+        id: 'id',
+        subjects: ['a', 'b'],
+        requestedBy: 'source organization',
+        requestedAt: 'destination organization',
+        application: 'application',
+        reason: 'process id',
+        date: new Date(2019, 4, 17, 9, 22, 49, 996)
+      }])
   })
 })
