@@ -36,7 +36,7 @@ Go linter:
   before_script:
    - export PATH=$PATH:/usr/local/go/bin
   script: 
-    - golangci-lint run --new-from-rev $(git rev-parse master)
+    - golangci-lint run --new-from-rev $(git rev-parse origin/master)
   tags:
     - nlx
     - shell-executor
