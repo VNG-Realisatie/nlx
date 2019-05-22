@@ -7,7 +7,6 @@ describe('the logs reducer', () => {
       .toEqual([])
   })
 
-
   it('should handle FETCH_ORGANIZATION_LOGS_SUCCESS', () => {
     expect(logsReducer(undefined, {
       type: TYPES.FETCH_ORGANIZATION_LOGS_SUCCESS,
@@ -32,7 +31,7 @@ describe('the logs reducer', () => {
         requestedAt: 'destination organization',
         application: 'application',
         reason: 'process id',
-        date: new Date(2019, 4, 17, 9, 22, 49, 996)
+        date: new Date(Date.UTC(2019, 4, 17, 7, 22, 49, 996))
       }])
   })
 })
