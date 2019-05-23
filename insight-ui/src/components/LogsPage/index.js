@@ -2,14 +2,13 @@ import React from 'react'
 import { arrayOf, shape, string, instanceOf, func } from 'prop-types'
 import LogsTable from '../LogsTable'
 import ErrorMessage from '../ErrorMessage'
-import { StyledLogsPage } from './index.styles'
-import { Pagination } from '@commonground/design-system'
+import { StyledLogsPage, StyledPagination } from './index.styles'
 
 const LogsPage = ({ logs, organizationName, currentPage, amountOfPages, onPageChangedHandler, activeLogId, logClickedHandler }) =>
   logs && logs.length ?
     <StyledLogsPage>
       <LogsTable logs={logs} activeLogId={activeLogId} logClickedHandler={logClickedHandler} />
-      <Pagination currentPage={currentPage} amountOfPages={amountOfPages} onPageChangedHandler={onPageChangedHandler} />
+      <StyledPagination currentPage={currentPage} amountOfPages={amountOfPages} onPageChangedHandler={onPageChangedHandler} />
     </StyledLogsPage> :
     <ErrorMessage title="No logs found">
       <p><strong>{organizationName}</strong> has no logs to show, unfortunately.</p>
