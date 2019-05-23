@@ -47,7 +47,7 @@ LogDetailPaneContainer.defaultProps = {
 
 const mapStateToProps = ({ logs }, ownProps) => {
   return {
-    log: logs
+    log: logs.records
       .find(log => log.id === ownProps.match.params.logid)
   }
 }

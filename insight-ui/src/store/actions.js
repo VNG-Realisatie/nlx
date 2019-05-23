@@ -50,11 +50,13 @@ export const fetchOrganizationsRequest = () => ({
   type: TYPES.FETCH_ORGANIZATIONS_REQUEST
 })
 
-export const fetchOrganizationLogsRequest = ({ insight_log_endpoint, proofUrl }) => ({
+export const fetchOrganizationLogsRequest = ({ insight_log_endpoint, proofUrl, page, rowsPerPage }) => ({
   type: TYPES.FETCH_ORGANIZATION_LOGS_REQUEST,
   data: {
     insight_log_endpoint,
-    proofUrl
+    proofUrl,
+    page,
+    rowsPerPage
   }
 })
 
@@ -164,11 +166,11 @@ export function* fetchOrganizationLogs({ page, rowsPerPage, proofUrl, insight_lo
       const url = `${insight_log_endpoint}/fetch`
       const searchParams = new URLSearchParams()
 
-      if (typeof page !== 'undefined') {
+      if (typeof page !== 'undefined' && page !== null) {
         searchParams.append('page', page)
       }
 
-      if (typeof rowsPerPage !== 'undefined') {
+      if (typeof rowsPerPage !== 'undefined' && page !== null) {
         searchParams.append('rowsPerPage', rowsPerPage)
       }
 

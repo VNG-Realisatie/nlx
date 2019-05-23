@@ -10,10 +10,18 @@ export const modelFromAPIResponse = logFromAPIResponse => ({
     date: new Date(logFromAPIResponse['created'])
 })
 
-export default (state = [], action) => {
+const defaultState = {
+  records: [],
+  pageCount: 0
+}
+
+export default (state = defaultState, action) => {
   switch (action.type) {
     case TYPES.FETCH_ORGANIZATION_LOGS_SUCCESS:
-      return action.data.records.map(record => modelFromAPIResponse(record))
+      return {
+        pageCount: Math.ceil(action.data.rowCount / action.data.rowsPerPage),
+        records: action.data.records.map(record => modelFromAPIResponse(record))
+      }
     default:
       return state
   }

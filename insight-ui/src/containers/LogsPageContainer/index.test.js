@@ -27,7 +27,8 @@ describe('LogsPageContainer', () => {
     it('should fetch the organization logs', () => {
       expect(instance.props.fetchOrganizationLogs).toHaveBeenCalledWith({
         proofUrl: 'proof_url',
-        insight_log_endpoint: 'log_endpoint'
+        insight_log_endpoint: 'log_endpoint',
+        page: 1
       })
     })
   })
@@ -58,12 +59,14 @@ describe('LogsPageContainer', () => {
 
       expect(instance.props.fetchOrganizationLogs).toHaveBeenNthCalledWith(1, {
         proofUrl: 'proof_url',
-        insight_log_endpoint: 'foo_log_endpoint'
+        insight_log_endpoint: 'foo_log_endpoint',
+        page: 1
       })
 
       expect(instance.props.fetchOrganizationLogs).toHaveBeenNthCalledWith(2, {
         proofUrl: 'proof_url',
-        insight_log_endpoint: 'bar_log_endpoint'
+        insight_log_endpoint: 'bar_log_endpoint',
+        page: 1
       })
     })
   })

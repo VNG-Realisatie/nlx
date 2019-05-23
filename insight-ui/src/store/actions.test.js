@@ -131,5 +131,18 @@ describe('fetch organization logs', () => {
       expect(fetchOrganizationLogsGen.next('the_proof').value)
         .toEqual(call(apiPostWithTextAndJSONAsOutput, 'log_endpoint/fetch?page=2&rowsPerPage=42', 'the_proof'))
     })
+    
+    it('should pass not pass the pagination params to the fetch endpoint if the params are null values', () => {
+      const fetchOrganizationLogsGen = fetchOrganizationLogs({
+        proofUrl: 'proof_url',
+        insight_log_endpoint: 'log_endpoint',
+        page: null,
+        rowsPerPage: null
+      })
+
+      fetchOrganizationLogsGen.next()
+      expect(fetchOrganizationLogsGen.next('the_proof').value)
+        .toEqual(call(apiPostWithTextAndJSONAsOutput, 'log_endpoint/fetch', 'the_proof'))
+    })
   })
 })
