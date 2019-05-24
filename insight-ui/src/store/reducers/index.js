@@ -6,10 +6,12 @@ import organizations from './organizations'
 import logs from './logs'
 import loginStatus from './loginStatus'
 import loginRequestInfo from './loginRequestInfo'
+import proof from './proof'
 
 export default combineReducers({
     organizations,
     loginRequestInfo,
     loginStatus,
-    logs
+    logs,
+    proof
 })

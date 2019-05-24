@@ -5,6 +5,7 @@ import {
   fetchOrganizations,
   fetchOrganizationLogs,
   fetchIrmaLoginInformation,
+  fetchProof,
   getIrmaLoginStatus,
   api,
   apiHandleLoginStatus,
@@ -47,7 +48,7 @@ describe('fetch IRMA login information', () => {
   it('should call the IRMA API to verify the JWT token', () => {
     const jwtTokenResponse = 'dummy-jt-token'
     expect(irmaLoginInformationGen.next(jwtTokenResponse).value)
-      .toEqual(call(apiPostWithJSONResponse, 'irma_endpoint/api/v2/verification/', jwtTokenResponse))
+      .toEqual(call(apiPostWithTextAndJSONAsOutput, 'irma_endpoint/api/v2/verification/', jwtTokenResponse))
   })
 
   it('should dispatch the success action when the login flow succeeds', () => {
@@ -94,15 +95,29 @@ describe('get IRMA login status', () => {
   })
 })
 
-describe('fetch organization logs', () => {
-  const fetchOrganizationLogsGen = fetchOrganizationLogs({
-    proofUrl: 'proof_url',
-    insight_log_endpoint: 'log_endpoint'
-  })
+describe('fetch proof', () => {
+  const fetchProofGen = fetchProof({
+    proofUrl: 'proof_url'
+  }) 
 
   it('should get the proof value', () => {
-    expect(fetchOrganizationLogsGen.next().value)
+    expect(fetchProofGen.next().value)
       .toEqual(call(apiWithResponseDetection, 'proof_url'))
+  })
+
+  it('should dispatch a success action with the proof as data', () => {
+    expect(fetchProofGen.next({ response: 'the-proof' }).value)
+      .toEqual(put({
+        type: TYPES.FETCH_PROOF_SUCCESS,
+        data: { response: 'the-proof' }
+      }))
+  })
+})
+
+describe('fetch organization logs', () => {
+  const fetchOrganizationLogsGen = fetchOrganizationLogs({
+    proof: 'the_proof',
+    insight_log_endpoint: 'log_endpoint'
   })
 
   it('should fetch the logs with the provided proof', () => {
@@ -121,26 +136,24 @@ describe('fetch organization logs', () => {
   describe('with pagination', () => {
     it('should pass the pagination params to the fetch endpoint', () => {
       const fetchOrganizationLogsGen = fetchOrganizationLogs({
-        proofUrl: 'proof_url',
+        proof: 'the_proof',
         insight_log_endpoint: 'log_endpoint',
         page: 2,
         rowsPerPage: 42
       })
 
-      fetchOrganizationLogsGen.next()
       expect(fetchOrganizationLogsGen.next('the_proof').value)
         .toEqual(call(apiPostWithTextAndJSONAsOutput, 'log_endpoint/fetch?page=2&rowsPerPage=42', 'the_proof'))
     })
     
     it('should pass not pass the pagination params to the fetch endpoint if the params are null values', () => {
       const fetchOrganizationLogsGen = fetchOrganizationLogs({
-        proofUrl: 'proof_url',
+        proof: 'the_proof',
         insight_log_endpoint: 'log_endpoint',
         page: null,
         rowsPerPage: null
       })
 
-      fetchOrganizationLogsGen.next()
       expect(fetchOrganizationLogsGen.next('the_proof').value)
         .toEqual(call(apiPostWithTextAndJSONAsOutput, 'log_endpoint/fetch', 'the_proof'))
     })

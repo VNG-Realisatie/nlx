@@ -57,30 +57,48 @@ describe('LoginPageContainer', () => {
   })
 
   describe('when the login status changes', () => {
-    describe('the login is successful', () => {
-      it('should redirect to the view logs page', () => {
-        const props = {
-          history: {
-            push: jest.fn()
-          },
-          fetchIrmaLoginInformation: () => {},
-          organization: {
-            name: 'foo',
-            insight_irma_endpoint: 'foo_irma_endpoint',
-            insight_log_endpoint: 'foo_log_endpoint'
-          }
-        }
+    let wrapper
+    let instance
 
+    beforeEach(() => {
+      const props = {
+        history: {
+          push: jest.fn()
+        },
+        fetchIrmaLoginInformation: () => {},
+        organization: {
+          name: 'foo',
+          insight_irma_endpoint: 'foo_irma_endpoint',
+          insight_log_endpoint: 'foo_log_endpoint'
+        }
+      }
+
+      wrapper = shallow(<LoginPageContainer {...props} />)
+      instance = wrapper.instance()
+    })
+
+    describe('when the login is successful', () => {
+      beforeEach(() => {
         const loginStatus = {
           error: false,
           response: 'DONE'
         }
 
-        const wrapper = shallow(<LoginPageContainer {...props} />)
-        const instance = wrapper.instance()
-        wrapper.setProps({loginStatus})
+        wrapper.setProps({ loginStatus })
+      })
 
-        expect(instance.props.history.push).toHaveBeenNthCalledWith(1, '/organization/foo/logs')
+      describe('the proof is not loaded yet', () => {
+        it('should not redirect to the view logs page', () => {
+          wrapper.setProps({ proof: { loaded: false }})
+          expect(instance.props.history.push).not.toHaveBeenCalled()
+        })
+      })
+
+      describe('the proof is loaded', () => {
+        it('should redirect to the view logs page', () => {
+          wrapper.setProps({ proof: { loaded: true }})
+          expect(instance.props.history.push).toHaveBeenNthCalledWith(1, '/organization/foo/logs')
+        })
       })
     })
   })

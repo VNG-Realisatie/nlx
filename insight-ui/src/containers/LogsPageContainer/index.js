@@ -1,15 +1,15 @@
 import React, { Component, Fragment } from 'react'
 import { Route } from 'react-router-dom'
-import { arrayOf, instanceOf, shape, string, number } from "prop-types";
-import {connect} from 'react-redux'
+import { arrayOf, instanceOf, shape, string, number } from 'prop-types'
+import { connect } from 'react-redux'
 
 import { fetchOrganizationLogsRequest } from '../../store/actions'
 import LogsPage from '../../components/LogsPage'
 import LogDetailPaneContainer from '../LogDetailPaneContainer'
 
-const LOGS_PER_PAGE = 20
+const LOGS_PER_PAGE = 10
 
-const getPageFromQueryString = queryString => {
+export const getPageFromQueryString = queryString => {
   const page = new URLSearchParams(queryString).get('page')
   return page !== null ? parseInt(page, 10) : undefined
 }
@@ -21,45 +21,53 @@ export class LogsPageContainer extends Component {
     this.logClickedHandler = this.logClickedHandler.bind(this)
   }
 
-  fetchOrganizationLogs(organization, loginRequestInfo, page = 1) {
-    if (!organization || !loginRequestInfo) {
+  fetchOrganizationLogs(organization, proof, page = 1) {
+    if (!organization) {
+      return
+    }
+
+    if (!proof) {
       return
     }
 
     this.props.fetchOrganizationLogs({
-      proofUrl: loginRequestInfo.proofUrl,
       insight_log_endpoint: organization.insight_log_endpoint,
-      page
+      proof,
+      page: page - 1 // the API's pages are 0-based 
     });
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { organization, loginRequestInfo, location: { prevSearch } } = nextProps
-    const { organization: prevOrganization, location: { search } } = this.props
+  componentDidUpdate(prevProps) {
+    const { organization, location: { search }, proof } = this.props
+    const { organization: prevOrganization, location: { search: prevSearch }, proof: prevProof } = prevProps
     const page = getPageFromQueryString(search)
     const prevPage = getPageFromQueryString(prevSearch)
 
-    if (organization === prevOrganization && page === prevPage) {
+    if (!proof) {
       return
     }
 
-    this.fetchOrganizationLogs(organization, loginRequestInfo, page)
+    if (organization === prevOrganization && proof === prevProof && page === prevPage) {
+      return
+    }
+
+    this.fetchOrganizationLogs(organization, proof, page)
   }
 
   componentDidMount() {
-    const { organization, loginRequestInfo, location: { search } } = this.props
+    const { organization, location: { search }, proof } = this.props
 
-    if (!loginRequestInfo) {
+    if (!proof) {
       return
     }
 
     const page = getPageFromQueryString(search)
-    this.fetchOrganizationLogs(organization, loginRequestInfo, page)
+    this.fetchOrganizationLogs(organization, proof, page)
   }
 
   logClickedHandler(log) {
-    const { history, match: { url } } = this.props
-    history.push(`${url}/${log.id}`)
+    const { history, match: { url }, location: { search } } = this.props
+    history.push(`${url}/${log.id}${search}`)
   }
 
   onPageChangedHandler(page) {
@@ -107,9 +115,6 @@ LogsPageContainer.propTypes = {
     name: string.isRequired,
     insight_log_endpoint: string.isRequired
   }).isRequired,
-  loginRequestInfo: shape({
-    proofUrl: string
-  }),
   logs: shape({
     records: arrayOf(shape({
       id: string,
@@ -121,7 +126,8 @@ LogsPageContainer.propTypes = {
       date: instanceOf(Date)
     })),
     pageCount: number
-  })
+  }),
+  proof: string
 }
 
 LogsPageContainer.defaultProps = {
@@ -137,16 +143,16 @@ LogsPageContainer.defaultProps = {
   }
 }
 
-const mapStateToProps = ({ loginRequestInfo, logs }) => {
+const mapStateToProps = ({ logs, proof }) => {
   return {
-    loginRequestInfo,
-    logs
+    logs,
+    proof: proof.value
   }
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchOrganizationLogs: ({ insight_log_endpoint, proofUrl, page }) =>
-    dispatch(fetchOrganizationLogsRequest({ insight_log_endpoint, proofUrl, page, rowsPerPage: LOGS_PER_PAGE }))
+  fetchOrganizationLogs: ({ insight_log_endpoint, proof, page }) =>
+    dispatch(fetchOrganizationLogsRequest({ insight_log_endpoint, proof, page, rowsPerPage: LOGS_PER_PAGE }))
 })
 
 export default connect(

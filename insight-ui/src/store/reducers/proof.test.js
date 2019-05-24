@@ -1,0 +1,42 @@
+import proofReducer from './proof'
+import * as TYPES from '../types'
+
+describe('the proof reducer', () => {
+  it('should return the initial state', () => {
+    expect(proofReducer(undefined, {}))
+      .toEqual({
+        loaded: false,
+        error: false,
+        value: null,
+        response: null
+      })
+  })
+
+  it('should handle FETCH_PROOF_SUCCESS', () => {
+    expect(proofReducer(undefined, {
+      type: TYPES.FETCH_PROOF_SUCCESS,
+      data: 'xyz'
+    }))
+      .toEqual({
+        loaded: true,
+        error: false,
+        value: 'xyz',
+        message: null
+      })
+  })
+
+  it('should handle FETCH_PROOF_FAILED', () => {
+    expect(proofReducer(undefined, {
+      type: TYPES.FETCH_PROOF_FAILED,
+      data: {
+        response: 'an error occured'
+      }
+    }))
+      .toEqual({
+        loaded: true,
+        error: true,
+        value: null,
+        message: 'an error occured'
+      })
+  })
+})

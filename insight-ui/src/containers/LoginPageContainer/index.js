@@ -17,13 +17,14 @@ export class LoginPageContainer extends Component {
       insight_log_endpoint: organization.insight_log_endpoint,
     });
   }
-
+  
   componentWillReceiveProps(nextProps) {
-    const { organization, loginStatus } = nextProps
+    const { organization, loginStatus, proof } = nextProps
     const { organization: prevOrganization } = this.props
 
-    if (loginStatus && loginStatus.response === IRMA_LOGIN_STATUS_DONE) {
+    if (loginStatus && loginStatus.response === IRMA_LOGIN_STATUS_DONE && proof && proof.loaded) {
       this.props.history.push(`/organization/${organization.name}/logs`)
+      return
     }
 
     if (organization === prevOrganization) {
@@ -68,13 +69,20 @@ LoginPageContainer.propTypes = {
   loginStatus: shape({
     error: bool.isRequired,
     response: string.isRequired
+  }),
+  proof: shape({
+    loaded: bool,
+    error: bool,
+    value: string,
+    message: string
   })
 }
 
-const mapStateToProps = ({ loginRequestInfo, loginStatus }) => {
+const mapStateToProps = ({ loginRequestInfo, loginStatus, proof }) => {
   return {
     loginRequestInfo,
-    loginStatus
+    loginStatus,
+    proof
   }
 }
 

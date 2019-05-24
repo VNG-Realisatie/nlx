@@ -1,6 +1,6 @@
 import React from 'react'
 import {shallow} from 'enzyme'
-import { LogsPageContainer } from './index'
+import { LogsPageContainer, getPageFromQueryString } from './index'
 
 describe('LogsPageContainer', () => {
   describe('on initialization', () => {
@@ -15,9 +15,7 @@ describe('LogsPageContainer', () => {
           insight_irma_endpoint: 'irma_endpoint',
           insight_log_endpoint: 'log_endpoint'
         },
-        loginRequestInfo: {
-          proofUrl: 'proof_url'
-        }
+        proof: 'the_proof'
       }
 
       wrapper = shallow(<LogsPageContainer {...props} />)
@@ -26,9 +24,9 @@ describe('LogsPageContainer', () => {
 
     it('should fetch the organization logs', () => {
       expect(instance.props.fetchOrganizationLogs).toHaveBeenCalledWith({
-        proofUrl: 'proof_url',
+        proof: 'the_proof',
         insight_log_endpoint: 'log_endpoint',
-        page: 1
+        page: 0
       })
     })
   })
@@ -42,9 +40,7 @@ describe('LogsPageContainer', () => {
           insight_irma_endpoint: 'foo_irma_endpoint',
           insight_log_endpoint: 'foo_log_endpoint'
         },
-        loginRequestInfo: {
-          proofUrl: 'proof_url'
-        }
+        proof: 'the_proof'
       }
 
       const newOrganization = {
@@ -58,17 +54,29 @@ describe('LogsPageContainer', () => {
       wrapper.setProps({organization: newOrganization})
 
       expect(instance.props.fetchOrganizationLogs).toHaveBeenNthCalledWith(1, {
-        proofUrl: 'proof_url',
+        proof: 'the_proof',
         insight_log_endpoint: 'foo_log_endpoint',
-        page: 1
+        page: 0
       })
 
       expect(instance.props.fetchOrganizationLogs).toHaveBeenNthCalledWith(2, {
-        proofUrl: 'proof_url',
+        proof: 'the_proof',
         insight_log_endpoint: 'bar_log_endpoint',
-        page: 1
+        page: 0
       })
     })
+  })
+})
+
+describe('get page from the query string', () => {
+  it.each([
+    ['', undefined], 
+    ['?page=0', 0], 
+    ['?page=1', 1]
+  ])(
+    '%s', (queryString, expected) => {
+    const result = getPageFromQueryString(queryString)
+    expect(result).toEqual(expected)  
   })
 })
 

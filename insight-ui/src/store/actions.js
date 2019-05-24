@@ -50,11 +50,11 @@ export const fetchOrganizationsRequest = () => ({
   type: TYPES.FETCH_ORGANIZATIONS_REQUEST
 })
 
-export const fetchOrganizationLogsRequest = ({ insight_log_endpoint, proofUrl, page, rowsPerPage }) => ({
+export const fetchOrganizationLogsRequest = ({ insight_log_endpoint, proof, page, rowsPerPage }) => ({
   type: TYPES.FETCH_ORGANIZATION_LOGS_REQUEST,
   data: {
     insight_log_endpoint,
-    proofUrl,
+    proof,
     page,
     rowsPerPage
   }
@@ -83,7 +83,7 @@ export function* fetchIrmaLoginInformation({ insight_log_endpoint, insight_irma_
   try {
     const dataSubjects = yield call(api, `${insight_log_endpoint}/getDataSubjects`)
     const jwtToken = yield call(apiPostWithTextResponse, `${insight_log_endpoint}/generateJWT`, { dataSubjects: mapDataSubjectsResponseToArray(dataSubjects) })
-    const JWTVerification = yield call(apiPostWithJSONResponse, `${insight_irma_endpoint}/api/v2/verification/`, jwtToken)
+    const JWTVerification = yield call(apiPostWithTextAndJSONAsOutput, `${insight_irma_endpoint}/api/v2/verification/`, jwtToken)
     const u = JWTVerification.u
 
     const qrCodeContents = {
@@ -159,33 +159,39 @@ export function* getIrmaLoginStatus({ statusUrl }) {
   }
 }
 
-export function* fetchOrganizationLogs({ page, rowsPerPage, proofUrl, insight_log_endpoint }) {
+export function *fetchProof({ proofUrl }) {
   try {
     const proof = yield call(apiWithResponseDetection, proofUrl)
-    if (proof) {
-      const url = `${insight_log_endpoint}/fetch`
-      const searchParams = new URLSearchParams()
+    yield put({
+      type: TYPES.FETCH_PROOF_SUCCESS,
+      data: proof
+    })
+  } catch (error) {
+    yield put({
+      type: TYPES.FETCH_PROOF_FAILED,
+      response: error
+    })
+  }
+}
 
-      if (typeof page !== 'undefined' && page !== null) {
-        searchParams.append('page', page)
-      }
+export function* fetchOrganizationLogs({ page, rowsPerPage, proof, insight_log_endpoint }) {
+  try {
+    const url = `${insight_log_endpoint}/fetch`
+    const searchParams = new URLSearchParams()
 
-      if (typeof rowsPerPage !== 'undefined' && page !== null) {
-        searchParams.append('rowsPerPage', rowsPerPage)
-      }
-
-      const queryString = Array.from(searchParams.entries()).length > 0 ?
-        `?${searchParams.toString()}` : ''
-
-      const logs = yield call(apiPostWithTextAndJSONAsOutput, `${url}${queryString}`, proof)
-      yield put({ type: TYPES.FETCH_ORGANIZATION_LOGS_SUCCESS, data: logs })
-    } else {
-      yield put({ type: TYPES.FETCH_ORGANIZATION_LOGS_FAILED, data: {
-        error: true,
-          response: 'Invalid proof'
-        }
-      })
+    if (typeof page !== 'undefined' && page !== null) {
+      searchParams.append('page', page)
     }
+
+    if (typeof rowsPerPage !== 'undefined' && page !== null) {
+      searchParams.append('rowsPerPage', rowsPerPage)
+    }
+
+    const queryString = Array.from(searchParams.entries()).length > 0 ?
+      `?${searchParams.toString()}` : ''
+
+    const logs = yield call(apiPostWithTextAndJSONAsOutput, `${url}${queryString}`, proof)
+    yield put({ type: TYPES.FETCH_ORGANIZATION_LOGS_SUCCESS, data: logs })
   } catch (error) {
     yield put({ type: TYPES.FETCH_ORGANIZATION_LOGS_FAILED, data: {
         error: true,
