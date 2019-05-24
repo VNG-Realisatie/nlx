@@ -30,8 +30,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "dev": "PROXY=https://directory.test.nlx.io/ BROWSER=none npm start",
-    "demo": "PROXY=https://directory.demo.nlx.io/ npm start",
-    "acc": "PROXY=https://directory.acc.nlx.io/ npm start"
+    "demo": "PROXY=https://directory.demo.nlx.io/ BROWSER=none npm start",
+    "acc": "PROXY=https://directory.acc.nlx.io/ BROWSER=none npm start"
   },
   "browserslist": [
     "> 0.50%",
