@@ -42,4 +42,15 @@ describe('the logs reducer', () => {
         }]
       })
   })
+
+
+  it('should handle RESET_LOGIN_INFORMATION', () => {
+    expect(logsReducer(undefined, {
+      type: TYPES.RESET_LOGIN_INFORMATION
+    }))
+      .toEqual({
+        records: [],
+        pageCount: 0
+      })
+  })
 })

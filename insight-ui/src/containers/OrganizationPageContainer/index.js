@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Route, Redirect } from 'react-router-dom'
 import { shape, string } from 'prop-types'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
 import LoginPageContainer from '../LoginPageContainer'
 import LogsPageContainer from '../LogsPageContainer'

@@ -14,4 +14,11 @@ describe('the loginRequestInfo reducer', () => {
     }))
       .toEqual('foo')
   })
+
+  it('should handle RESET_LOGIN_INFORMATION', () => {
+    expect(loginRequestInfoReducer(undefined, {
+      type: TYPES.RESET_LOGIN_INFORMATION
+    }))
+      .toEqual({})
+  })
 })

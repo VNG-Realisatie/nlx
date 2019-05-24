@@ -50,6 +50,10 @@ export const fetchOrganizationsRequest = () => ({
   type: TYPES.FETCH_ORGANIZATIONS_REQUEST
 })
 
+export const resetLoginInformation = () => ({
+  type: TYPES.RESET_LOGIN_INFORMATION
+})
+
 export const fetchOrganizationLogsRequest = ({ insight_log_endpoint, proof, page, rowsPerPage }) => ({
   type: TYPES.FETCH_ORGANIZATION_LOGS_REQUEST,
   data: {

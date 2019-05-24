@@ -22,4 +22,11 @@ describe('the loginStatus reducer', () => {
     }))
       .toEqual('foo')
   })
+
+  it('should handle RESET_LOGIN_INFORMATION', () => {
+    expect(loginStatusReducer(undefined, {
+      type: TYPES.RESET_LOGIN_INFORMATION
+    }))
+      .toEqual(null)
+  })
 })

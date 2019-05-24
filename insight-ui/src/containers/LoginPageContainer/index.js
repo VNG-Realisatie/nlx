@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { bool, shape, string } from 'prop-types'
 import {connect} from 'react-redux'
 
-import { fetchIrmaLoginInformationRequest, IRMA_LOGIN_STATUS_DONE } from "../../store/actions";
+import { resetLoginInformation, fetchIrmaLoginInformationRequest, IRMA_LOGIN_STATUS_DONE } from '../../store/actions'
 import ScanQRCodePage from '../../components/ScanQRCodePage'
 import ErrorPage from '../../components/ErrorPage'
 
@@ -18,12 +18,16 @@ export class LoginPageContainer extends Component {
     });
   }
   
-  componentWillReceiveProps(nextProps) {
-    const { organization, loginStatus, proof } = nextProps
-    const { organization: prevOrganization } = this.props
+  componentWillMount() {
+    this.props.resetLoginInformation()
+  }
+
+  componentDidUpdate(prevProps) {
+    const { organization, loginStatus, proof, history } = this.props
+    const { organization: prevOrganization } = prevProps 
 
     if (loginStatus && loginStatus.response === IRMA_LOGIN_STATUS_DONE && proof && proof.loaded) {
-      this.props.history.push(`/organization/${organization.name}/logs`)
+      history.push(`/organization/${organization.name}/logs`)
       return
     }
 
@@ -31,7 +35,7 @@ export class LoginPageContainer extends Component {
       return
     }
 
-    this.fetchIrmaLoginInformation(nextProps.organization)
+    this.fetchIrmaLoginInformation(organization)
   }
 
   componentDidMount() {
@@ -88,7 +92,9 @@ const mapStateToProps = ({ loginRequestInfo, loginStatus, proof }) => {
 
 const mapDispatchToProps = dispatch => ({
   fetchIrmaLoginInformation: ({ insight_log_endpoint, insight_irma_endpoint }) =>
-    dispatch(fetchIrmaLoginInformationRequest({ insight_log_endpoint, insight_irma_endpoint }))
+    dispatch(fetchIrmaLoginInformationRequest({ insight_log_endpoint, insight_irma_endpoint })),
+  resetLoginInformation: () =>
+    dispatch(resetLoginInformation())
 })
 
 export default connect(

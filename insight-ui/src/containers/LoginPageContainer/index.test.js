@@ -4,9 +4,13 @@ import { LoginPageContainer } from './index'
 
 describe('LoginPageContainer', () => {
   describe('on initialization', () => {
-    it('should fetch the login information', () => {
+    let wrapper
+    let instance
+
+    beforeEach(() => {
       const props = {
         fetchIrmaLoginInformation: jest.fn(),
+        resetLoginInformation: jest.fn(),
         organization: {
           name: 'foo',
           insight_irma_endpoint: 'irma_endpoint',
@@ -14,8 +18,15 @@ describe('LoginPageContainer', () => {
         }
       }
 
-      const wrapper = shallow(<LoginPageContainer {...props} />)
-      const instance = wrapper.instance()
+      wrapper = shallow(<LoginPageContainer {...props} />)
+      instance = wrapper.instance()
+    })
+
+    it('should reset the login information', () => {
+      expect(instance.props.resetLoginInformation).toHaveBeenCalledTimes(1)
+    })
+
+    it('should fetch the login information', () => {
       expect(instance.props.fetchIrmaLoginInformation).toHaveBeenCalledWith({
         insight_irma_endpoint: 'irma_endpoint',
         insight_log_endpoint: 'log_endpoint'
@@ -27,6 +38,7 @@ describe('LoginPageContainer', () => {
     it('should re-fetch the login information', () => {
       const props = {
         fetchIrmaLoginInformation: jest.fn(),
+        resetLoginInformation: () => {},
         organization: {
           name: 'foo',
           insight_irma_endpoint: 'foo_irma_endpoint',
@@ -66,6 +78,7 @@ describe('LoginPageContainer', () => {
           push: jest.fn()
         },
         fetchIrmaLoginInformation: () => {},
+        resetLoginInformation: () => {},
         organization: {
           name: 'foo',
           insight_irma_endpoint: 'foo_irma_endpoint',

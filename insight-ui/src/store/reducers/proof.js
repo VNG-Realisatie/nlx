@@ -23,6 +23,8 @@ export default (state = defaultState, action) => {
         value: null,
         message: action.data.response
       }
+    case TYPES.RESET_LOGIN_INFORMATION:
+      return defaultState
     default:
       return state
   }

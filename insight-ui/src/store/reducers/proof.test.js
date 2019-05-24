@@ -39,4 +39,16 @@ describe('the proof reducer', () => {
         message: 'an error occured'
       })
   })
+
+  it('should handle RESET_LOGIN_INFORMATION', () => {
+    expect(proofReducer(undefined, {
+      type: TYPES.RESET_LOGIN_INFORMATION
+    }))
+      .toEqual({
+        loaded: false,
+        error: false,
+        value: null,
+        response: null
+      })
+  })
 })

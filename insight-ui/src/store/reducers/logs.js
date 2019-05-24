@@ -22,6 +22,8 @@ export default (state = defaultState, action) => {
         pageCount: Math.ceil(action.data.rowCount / action.data.rowsPerPage),
         records: action.data.records.map(record => modelFromAPIResponse(record))
       }
+    case TYPES.RESET_LOGIN_INFORMATION:
+      return defaultState
     default:
       return state
   }
