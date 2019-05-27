@@ -5,6 +5,11 @@ package main
 
 import (
 	"log"
+	"net/http"
+
+	"github.com/cloudflare/cfssl/cli"
+	"github.com/cloudflare/cfssl/cli/sign"
+	"github.com/cloudflare/cfssl/signer"
 
 	flags "github.com/jessevdk/go-flags"
 	"go.uber.org/zap"
@@ -48,9 +53,18 @@ func main() {
 	}()
 
 	// Create new certportal and provide it with a hardcoded service.
-	cp := certportal.NewCertPortal(logger, options.CAHost)
+	cp := certportal.NewCertPortal(logger, func() (signer.Signer, error) {
+		signer, err := sign.SignerFromConfig(cli.Config{
+			Remote: options.CAHost,
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		return signer, nil
+	})
 	// Listen on the address provided in the options
-	err = cp.ListenAndServe(options.ListenAddress)
+	err = http.ListenAndServe(options.ListenAddress, cp.GetRouter())
 	if err != nil {
 		logger.Fatal("failed to listen and serve", zap.Error(err))
 	}
