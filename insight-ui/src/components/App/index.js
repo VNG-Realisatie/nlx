@@ -16,11 +16,11 @@ const App = () =>
   <StyledApp>
     <GlobalStyles/>
 
-    <StyledNLXNavbar homePageURL={process.env.REACT_APP_NAVBAR_HOME_PAGE_URL || 'https://www.nlx.io'}
-                     aboutPageURL={process.env.REACT_APP_NAVBAR_ABOUT_PAGE_URL || 'https://www.nlx.io/about'}
-                     docsPageURL={process.env.REACT_APP_NAVBAR_DOCS_PAGE_URL || 'https://docs.nlx.io'}>
+    <StyledNLXNavbar homePageURL={window._env.NAVBAR_HOME_PAGE_URL || 'https://www.nlx.io'}
+                     aboutPageURL={window._env.REACT_APP_NAVBAR_ABOUT_PAGE_URL || 'https://www.nlx.io/about'}
+                     docsPageURL={window._env.REACT_APP_NAVBAR_DOCS_PAGE_URL || 'https://docs.nlx.io'}>
       <Navigation.Item>
-        <a href={process.env.REACT_APP_NAVBAR_DIRECTORY_URL || 'https://directory.nlx.io'}>Directory</a>
+        <a href={window._env.REACT_APP_NAVBAR_DIRECTORY_URL || 'https://directory.nlx.io'}>Directory</a>
       </Navigation.Item>
       <Navigation.Item>
         <NavLink to="/">Insight</NavLink>
