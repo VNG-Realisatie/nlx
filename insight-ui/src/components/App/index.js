@@ -20,7 +20,7 @@ const App = () =>
                      aboutPageURL={process.env.REACT_APP_NAVBAR_ABOUT_PAGE_URL || 'https://www.nlx.io/about'}
                      docsPageURL={process.env.REACT_APP_NAVBAR_DOCS_PAGE_URL || 'https://docs.nlx.io'}>
       <Navigation.Item>
-        <a href={process.env.REACT_APP_NAVBAR_DIRECTORY_URL}>Directory</a>
+        <a href={process.env.REACT_APP_NAVBAR_DIRECTORY_URL || 'https://directory.nlx.io'}>Directory</a>
       </Navigation.Item>
       <Navigation.Item>
         <NavLink to="/">Insight</NavLink>
