@@ -31,6 +31,16 @@ Go tests:
     - nlx
     - shell-executor
 
+Go linter:
+  stage: Tests
+  before_script:
+   - export PATH=$PATH:/usr/local/go/bin
+  script: 
+    - golangci-lint run --new-from-rev $(git rev-parse origin/master)
+  tags:
+    - nlx
+    - shell-executor
+  
 Directory-ui tests:
   image: node:10.15.3-alpine
   stage: Tests
