@@ -5,6 +5,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 
 	flags "github.com/jessevdk/go-flags"
 	"go.uber.org/zap"
@@ -50,7 +51,7 @@ func main() {
 	// Create new certportal and provide it with a hardcoded service.
 	cp := certportal.NewCertPortal(logger, options.CAHost)
 	// Listen on the address provided in the options
-	err = cp.ListenAndServe(options.ListenAddress)
+	err = http.ListenAndServe(options.ListenAddress, cp.GetRouter())
 	if err != nil {
 		logger.Fatal("failed to listen and serve", zap.Error(err))
 	}
