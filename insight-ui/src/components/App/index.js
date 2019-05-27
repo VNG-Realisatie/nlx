@@ -12,6 +12,8 @@ import SidebarContainer from '../../containers/SidebarContainer'
 import HomePage from '../../components/HomePage'
 import OrganizationPageContainer from '../../containers/OrganizationPageContainer'
 
+window._env = window._env || {}
+
 const App = () =>
   <StyledApp>
     <GlobalStyles/>
