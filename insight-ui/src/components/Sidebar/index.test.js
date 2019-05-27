@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { shallow } from 'enzyme'

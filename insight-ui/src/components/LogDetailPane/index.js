@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import React from 'react'
 import { func, string, arrayOf, instanceOf } from 'prop-types'
 import { StyledLogDetailPane, StyledTitle, StyledSubtitle, StyledDl, StyledCloseButton } from './index.styles'

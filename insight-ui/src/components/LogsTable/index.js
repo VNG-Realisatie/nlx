@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import React from 'react'
 import { string, arrayOf, shape, instanceOf, func } from 'prop-types'
 import { Table } from '@commonground/design-system'

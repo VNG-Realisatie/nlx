@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import proofReducer from './proof'
 import * as TYPES from '../types'
 

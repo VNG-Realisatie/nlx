@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import React, { Component, Fragment } from 'react'
 import { Route } from 'react-router-dom'
 import { arrayOf, instanceOf, shape, string, number } from 'prop-types'

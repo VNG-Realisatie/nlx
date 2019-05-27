@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import React, { Component } from 'react'
 import { bool, shape, string } from 'prop-types'
 import {connect} from 'react-redux'

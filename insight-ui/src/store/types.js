@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 export const FETCH_ORGANIZATIONS_REQUEST = 'fetch_organizations_request'
 export const FETCH_ORGANIZATIONS_SUCCESS = 'fetch_organizations_success'
 export const FETCH_IRMA_LOGIN_INFORMATION_REQUEST = 'fetch_irma_login_information_request'

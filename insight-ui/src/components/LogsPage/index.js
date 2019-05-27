@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import React from 'react'
 import { arrayOf, shape, string, instanceOf, func } from 'prop-types'
 import LogsTable from '../LogsTable'

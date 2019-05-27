@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import { call, put, retry } from 'redux-saga/effects'
 
 import * as TYPES from './types'
