@@ -16,7 +16,7 @@ require (
 	github.com/gogo/protobuf v1.2.1
 	github.com/golang-migrate/migrate v3.5.4+incompatible
 	github.com/golang/mock v1.2.0
-	github.com/golang/protobuf v1.2.0
+	github.com/golang/protobuf v1.3.1
 	github.com/google/certificate-transparency-go v1.0.21 // indirect
 	github.com/gorilla/schema v1.0.2
 	github.com/grpc-ecosystem/go-grpc-middleware v1.0.0
@@ -40,11 +40,9 @@ require (
 	go.uber.org/zap v1.9.1
 	golang.org/x/crypto v0.0.0-20190517084516-22d7a77e9e5f // indirect
 	golang.org/x/net v0.0.0-20190522183715-f3200d17e092
-	golang.org/x/sync v0.0.0-20190517054156-112230192c58 // indirect
 	golang.org/x/text v0.3.1-0.20180807135948-17ff2d5776d2 // indirect
-	google.golang.org/appengine v1.4.0 // indirect
-	google.golang.org/genproto v0.0.0-20190215211957-bd968387e4aa
-	google.golang.org/grpc v1.18.0
+	google.golang.org/genproto v0.0.0-20190528123533-c2c4e71fbf69
+	google.golang.org/grpc v1.19.0
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 	gopkg.in/yaml.v2 v2.2.2 // indirect
 )
