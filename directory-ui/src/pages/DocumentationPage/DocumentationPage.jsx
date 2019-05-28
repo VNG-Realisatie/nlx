@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import React, { Component } from 'react'
 import { RedocStandalone } from 'redoc'
 import { Spinner } from '@commonground/design-system'
@@ -70,66 +73,6 @@ class DocumentationPage extends Component {
                 spec={document}
                 options={{
                     hideDownloadButton: false,
-                    theme: {
-                        typography: {
-                            fontSize: '14px',
-                            lineHeight: '1.5',
-                            fontWeightRegular: '300',
-                            fontFamily: '"Source Sans Pro", sans-serif',
-                            smoothing: 'antialiased',
-                            optimizeSpeed: true,
-                            headings: {
-                                fontFamily: '"Source Sans Pro", sans-serif',
-                            },
-                            code: {
-                                fontSize: '12px',
-                                fontFamily: '"Fira Code", monospaced',
-                                color: '#e83e8c',
-                                backgroundColor: '#ffffff',
-                            },
-                        },
-                        colors: {
-                            primary: {
-                                main: '#3d83fa',
-                            },
-                            success: {
-                                main: '#00aa13',
-                            },
-                            warning: {
-                                main: '#f1c400',
-                            },
-                            error: {
-                                main: '#e53935',
-                            },
-                            text: {
-                                primary: '#000000',
-                            },
-                            responses: {
-                                redirect: '#ffa500',
-                                info: '#87ceeb',
-                            },
-                            http: {
-                                get: '#6bbd5b',
-                                post: '#248fb2',
-                                put: '#9b708b',
-                                options: '#d3ca12',
-                                patch: '#e09d43',
-                                delete: '#e27a7a',
-                                basic: '#999',
-                                link: '#31bbb6',
-                                head: '#c167e4',
-                            },
-                        },
-                        menu: {
-                            width: '260px',
-                            backgroundColor: '#f8f9fa',
-                        },
-                        rightPanel: {
-                            backgroundColor: '#ffffff',
-                            width: '40%',
-                        },
-                    },
-                    scrollYOffset: '80',
                     hideLoading: true,
                 }}
               />

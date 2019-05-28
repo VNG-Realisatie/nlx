@@ -1,4 +1,4 @@
-FROM node:10.15.0-alpine AS build
+FROM node:10.15.3-alpine AS build
 
 RUN apk add git jq
 
@@ -26,6 +26,17 @@ FROM nginx:alpine
 
 # Copy nginx configuration
 COPY directory-ui/docker/default.conf /etc/nginx/conf.d/default.conf
+COPY directory-ui/docker/nginx.conf /etc/nginx/nginx.conf
 
 COPY --from=build /go/src/go.nlx.io/nlx/directory-ui/build /usr/share/nginx/html
 COPY --from=build /tmp/version.json /usr/share/nginx/html/version.json
+
+# Add non-privileged user
+RUN adduser -D -u 1001 appuser
+
+# Set ownership nginx.pid and cache folder in order to run nginx as non-root user
+RUN touch /var/run/nginx.pid && \
+    chown -R appuser /var/run/nginx.pid && \ 
+    chown -R appuser /var/cache/nginx
+
+USER appuser

@@ -32,7 +32,7 @@ docker run --detach \
              --env TLS_ORG_CERT=/certs/org.crt \
              --env TLS_ORG_KEY=/certs/org.key \
              --env DISABLE_LOGDB=1 \
-             --publish 4080:80 \
+             --publish 4080:8080 \
              nlxio/outway:latest
 ```
 
@@ -73,7 +73,7 @@ curl http://localhost:4080/{organization-name}/{service-name}/{api-specific-path
 For example, to query the Haarlem demo API application use:
 
 ```bash
-curl http://localhost:4080/haarlem/demo-api/
+curl http://localhost:4080/haarlem/demo-api/get
 ```
 
 ### Verification
@@ -82,10 +82,17 @@ The response of the `curl` command should look similar to the following output.
 
 ```json
 {
-  "message": "Hi there, greetings from the nlx-demo API!", 
-  "local_time": "2019-01-22T15:19:13.618494", 
-  "nlx_request_organization": "<your-organization-name>", 
-  "nlx_request_logrecord_id": null
+  "args":{},
+  "headers":{
+      "x-forwarded-proto":"https",
+      "host":"postman-echo.com",
+      "accept":"*/*",
+      "accept-encoding":"gzip",
+      "user-agent":"curl/7.61.0",
+      "x-nlx-logrecord-id":"<log-record-id>",
+      "x-nlx-request-organization":"<your-organization-name>",
+      "x-forwarded-port":"443"},
+  "url":"https://postman-echo.com/get"
 }
 ```
 

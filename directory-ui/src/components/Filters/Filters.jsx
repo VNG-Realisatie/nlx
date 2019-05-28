@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import React from 'react'
 import { func } from 'prop-types'
 import { StyledFilters, StyledInput, StyledSearchIcon, StyledSwitch } from './Filters.styles'

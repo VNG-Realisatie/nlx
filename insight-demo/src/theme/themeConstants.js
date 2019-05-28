@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import { lighten, setLightness, darken } from 'polished'
 
 export default {

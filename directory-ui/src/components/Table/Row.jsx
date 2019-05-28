@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import styled from 'styled-components'
 
 const Row = styled.tr`

@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import build from '../build'
 
 import parseColorDerivates from '../parseColorDerivates'

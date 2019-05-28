@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import React, { Fragment, Component } from "react"
 import { Box } from '@rebass/grid'
 import Title from '../components/Title/Title'

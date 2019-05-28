@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import React, { PureComponent } from 'react'
 import { string, bool } from 'prop-types'
 import { Wrapper, Input, Label } from './Switch.styles'

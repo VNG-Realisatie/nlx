@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 const proxy = require('http-proxy-middleware')
 
 const getProxyUrl = (proxy) =>

@@ -19,6 +19,14 @@ spec:
           env:
             - name: DIRECTORY_INSPECTION_API_URL
               value: {{.Values.insightDirectoryInspectionAPIURL}}
+            - name: NAVBAR_HOME_PAGE_URL
+              value: {{.Values.insightNavbarHomePageURL}}
+            - name: NAVBAR_ABOUT_PAGE_URL
+              value: {{.Values.insightNavbarAboutPageURL}}
+            - name: NAVBAR_DOCS_PAGE_URL
+              value: {{.Values.insightNavbarDocsPageURL}}
+            - name: NAVBAR_DIRECTORY_URL
+              value: {{.Values.insightNavbarDirectoryURL}}
       restartPolicy: Always
   status: {}
 ---
@@ -30,7 +38,7 @@ spec:
   ports:
     - name: webinterface
       protocol: TCP
-      port: 80
+      port: 8080
   cluserIP: None
 ---
 apiVersion: extensions/v1beta1
@@ -48,4 +56,8 @@ spec:
             backend:
               serviceName: {{.component}}
               servicePort: webinterface
+          - path: /api
+            backend:
+              serviceName: directory-inspection-api
+              servicePort: webapi
 {{ end }}

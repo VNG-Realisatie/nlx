@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 package outway
 
 import (
@@ -71,4 +74,36 @@ func TestOutwayListen(t *testing.T) {
 
 		assert.Equal(t, test.errorMessage, string(bytes))
 	}
+}
+
+func TestParseURLPath(t *testing.T) {
+	destination, err := parseURLPath("/organization/service/path")
+	assert.Nil(t, err)
+	assert.Equal(t, "organization", destination.Organization)
+	assert.Equal(t, "service", destination.Service)
+	assert.Equal(t, "path", destination.Path)
+
+	destination, err = parseURLPath("/organization/service")
+	assert.EqualError(t, err, "invalid path in url")
+}
+
+func TestCreateRecordData(t *testing.T) {
+	headers := http.Header{}
+	headers.Add("X-NLX-Request-Process-Id", "process-id")
+	headers.Add("X-NLX-Request-Data-Elements", "data-elements")
+	headers.Add("X-NLX-Requester-User", "user")
+	headers.Add("X-NLX-Requester-Claims", "claims")
+	headers.Add("X-NLX-Request-User-Id", "user-id")
+	headers.Add("X-NLX-Request-Application-Id", "application-id")
+	headers.Add("X-NLX-Request-Subject-Identifier", "subject-identifier")
+	recordData := createRecordData(headers, "/path")
+
+	assert.Equal(t, "process-id", recordData["doelbinding-process-id"])
+	assert.Equal(t, "data-elements", recordData["doelbinding-data-elements"])
+	assert.Equal(t, "user", recordData["doelbinding-user"])
+	assert.Equal(t, "claims", recordData["doelbinding-claims"])
+	assert.Equal(t, "user-id", recordData["doelbinding-user-id"])
+	assert.Equal(t, "application-id", recordData["doelbinding-application-id"])
+	assert.Equal(t, "subject-identifier", recordData["doelbinding-subject-identifier"])
+	assert.Equal(t, "/path", recordData["request-path"])
 }

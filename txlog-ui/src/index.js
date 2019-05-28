@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import 'react-app-polyfill/ie11'
 
 import React from 'react'

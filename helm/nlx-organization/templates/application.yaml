@@ -24,9 +24,9 @@ spec:
             - name: SECRET_KEY
               value: {{ randAlphaNum 12 }}
             - name: RDW_URL
-              value: "http://outway:80/rdw/kentekenregister/voertuigen"
+              value: "http://outway:8080/rdw/kentekenregister/voertuigen"
             - name: BRP_URL
-              value: "http://outway:80/brp/basisregistratie/ingeschreven_natuurlijke_personen"
+              value: "http://outway:8080/brp/basisregistratie/ingeschreven_natuurlijke_personen"
       restartPolicy: Always
   status: {}
 ---

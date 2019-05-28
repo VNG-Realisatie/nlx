@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 package outway_test
 
 import (
@@ -16,6 +19,8 @@ func TestNewOutwayExeception(t *testing.T) {
 	p := process.NewProcess(logger)
 	tests := []struct {
 		config               orgtls.TLSOptions
+		authServiceURL       string
+		authCAPath           string
 		expectedErrorMessage string
 	}{
 		{
@@ -24,6 +29,8 @@ func TestNewOutwayExeception(t *testing.T) {
 				OrgCertFile: "../testing/org_without_name.crt",
 				OrgKeyFile:  "../testing/org_without_name.key",
 			},
+			"",
+			"",
 			"cannot obtain organization name from self cert",
 		},
 		{
@@ -32,6 +39,8 @@ func TestNewOutwayExeception(t *testing.T) {
 				OrgCertFile: "../testing/org-nlx-test.crt",
 				OrgKeyFile:  "../testing/org-non-existing.key",
 			},
+			"",
+			"",
 			"failed to read tls keypair: open ../testing/org-non-existing.key: no such file or directory",
 		}, {
 			orgtls.TLSOptions{
@@ -39,12 +48,34 @@ func TestNewOutwayExeception(t *testing.T) {
 				OrgCertFile: "../testing/org-nlx-test.crt",
 				OrgKeyFile:  "../testing/org-nlx-test.key",
 			},
-			"failed to update internal service directory: failed to fetch services from directory: rpc error: code = Unavailable desc = all SubConns are in TransientFailure, latest connection error: connection error: desc = \"transport: Error while dialing dial tcp: missing address\"",
+			"http://auth.nlx.io",
+			"",
+			"authorization service URL set but no CA for authorization provided",
+		},
+		{
+			orgtls.TLSOptions{
+				NLXRootCert: "../testing/root.crt",
+				OrgCertFile: "../testing/org-nlx-test.crt",
+				OrgKeyFile:  "../testing/org-nlx-test.key",
+			},
+			"http://auth.nlx.io",
+			"/path/to",
+			"scheme of authorization service URL is not 'https'",
+		},
+		{
+			orgtls.TLSOptions{
+				NLXRootCert: "../testing/root.crt",
+				OrgCertFile: "../testing/org-nlx-test.crt",
+				OrgKeyFile:  "../testing/org-nlx-test.key",
+			},
+			"https://auth.nlx.io",
+			"/path/to/non-existing.crt",
+			"failed to read root CA certificate file `/path/to/non-existing.crt`: open /path/to/non-existing.crt: no such file or directory",
 		},
 	}
 	// Test exceptions during outway creation
 	for _, test := range tests {
-		_, err := outway.NewOutway(p, logger, nil, test.config, "")
+		_, err := outway.NewOutway(p, logger, nil, test.config, "", test.authServiceURL, test.authCAPath)
 		assert.EqualError(t, err, test.expectedErrorMessage)
 	}
 }

@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 $(document).ready(function() {
     $("#form").submit(function(e) {
         e.preventDefault();

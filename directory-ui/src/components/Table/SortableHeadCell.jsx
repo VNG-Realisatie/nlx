@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 import React from 'react'
 import { oneOf } from 'prop-types'
 import { StyledSortableTableHeadCell, StyledArrow } from './SortableHeadCell.styles'

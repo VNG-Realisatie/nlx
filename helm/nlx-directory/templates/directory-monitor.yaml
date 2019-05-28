@@ -15,7 +15,6 @@ spec:
     metadata:
       labels: {{ include "nlx-directory.common.metadata-labels" . | nindent 8 }}
     spec:
-
       volumes:
         - name: certs
           {{ if eq .Values.ca.kind "private" }}

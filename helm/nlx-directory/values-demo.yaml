@@ -22,6 +22,11 @@ imagePullPolicy: IfNotPresent
 
 insightDirectoryInspectionAPIURL: "http://directory-inspection-api"
 
+insightNavbarHomePageURL: "https://www.nlx.io"
+insightNavbarAboutPageURL: "https://nlx.io/about/"
+insightNavbarDocsPageURL: "https://docs.demo.nlx.io"
+insightNavbarDirectoryURL: "https://directory.demo.nlx.io"
+
 ttlOfflineService: 1
 
 ca:

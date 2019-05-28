@@ -1,5 +1,5 @@
 # Use go 1.x based on the latest alpine image.
-FROM golang:1.12-alpine AS build
+FROM golang:1-alpine AS build
 
 # Install build tools.
 RUN apk add --update git gcc musl-dev
@@ -28,3 +28,7 @@ RUN GIT_COMMIT_HASH=$(git rev-parse HEAD) && \
 # Release binary on latest alpine image.
 FROM alpine:latest
 COPY --from=build /go/src/go.nlx.io/nlx/txlog-api/dist/bin/nlx-txlog-api /usr/local/bin/nlx-txlog-api
+
+# Add non-privileged user
+RUN adduser -D -u 1001 appuser
+USER appuser

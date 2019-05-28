@@ -15,7 +15,8 @@ spec:
     metadata:
       labels: {{ include "nlx-directory.common.metadata-labels" . | nindent 8 }}
     spec:
-
+      securityContext:
+        runAsUser: 1001
       volumes:
         - name: certs
           {{ if eq .Values.ca.kind "private" }}
@@ -88,7 +89,7 @@ spec:
   ports:
     - name: api
       protocol: TCP
-      port: 443
+      port: 8443
   cluserIP: None
 ---
 apiVersion: extensions/v1beta1

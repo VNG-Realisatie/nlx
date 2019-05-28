@@ -28,6 +28,7 @@ inway:
       irma-api-url = "https://irma-api.demo.voorbeeld-rdw.nl"
 outway:
   enable: false
+  authService: false
 demoService:
   enable: true
   genericServiceImage: nlxio/rdw-mock-service:latest

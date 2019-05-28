@@ -1,4 +1,4 @@
-FROM node:10.15.0-alpine AS build
+FROM node:10.15.3-alpine AS build
 
 RUN apk add git jq
 
@@ -27,11 +27,27 @@ FROM nginx:alpine
 
 # Copy nginx configuration
 COPY insight-ui/docker/default.conf /etc/nginx/conf.d/default.conf.template
+COPY insight-ui/docker/nginx.conf /etc/nginx/nginx.conf
 
 COPY --from=build /go/src/go.nlx.io/nlx/insight-ui/build /usr/share/nginx/html
 COPY --from=build /tmp/version.json /usr/share/nginx/html/version.json
 
-# The API base URL should be configurable at run-time. Because Nginx does not suppport using environment variables
-# in the config file, we use envsubst to substitute the desired value for $DIRECTORY_INSPECTION_API_URL in the config file.
-# See https://github.com/docker-library/docs/tree/master/nginx#using-environment-variables-in-nginx-configuration
-CMD envsubst < /etc/nginx/conf.d/default.conf.template '$DIRECTORY_INSPECTION_API_URL' > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'
+# Add non-privileged user
+RUN adduser -D -u 1001 appuser
+
+# Set ownership nginx.pid and cache folder in order to run nginx as non-root user
+RUN touch /var/run/nginx.pid && \
+    chown -R appuser /var/run/nginx.pid && \ 
+    chown -R appuser /var/cache/nginx
+
+# Set ownership of nginx/conf.d/default.conf because we will edit this file once we run nginx as non-root user
+RUN touch /etc/nginx/conf.d/default.conf && \
+    chown -R appuser /etc/nginx/conf.d/default.conf
+
+RUN chown -R appuser /usr/share/nginx/html
+
+USER appuser
+
+COPY insight-ui/docker/startup.sh .
+CMD ["./startup.sh"]
+

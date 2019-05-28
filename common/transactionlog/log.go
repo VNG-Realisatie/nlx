@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 package transactionlog
 
 // Record encompasses the data stored in the transactionlog for a single recorded transaction.
