@@ -1,3 +1,10 @@
+## [0.61.1](https://gitlab.com/commonground/nlx/compare/v0.61.0...v0.61.1) (2019-05-28)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @material-ui/core to v3.9.3 ([f69ec2f](https://gitlab.com/commonground/nlx/commit/f69ec2f))
+
 # [0.58.0](https://gitlab.com/commonground/nlx/compare/v0.57.1...v0.58.0) (2019-05-28)
 
 
