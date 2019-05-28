@@ -21,7 +21,7 @@
   "devDependencies": {
     "@rebass/grid": "6.0.0-6",
     "polished": "2.3.1",
-    "react-pose": "4.0.3",
+    "react-pose": "4.0.8",
     "styled-components": "4.1.2"
   },
   "browserslist": [
