@@ -56,4 +56,8 @@ spec:
             backend:
               serviceName: {{.component}}
               servicePort: webinterface
+          - path: /api
+            backend:
+              serviceName: directory-inspection-api
+              servicePort: webapi
 {{ end }}
