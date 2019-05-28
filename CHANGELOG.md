@@ -1,3 +1,15 @@
+# [0.58.0](https://gitlab.com/commonground/nlx/compare/v0.57.1...v0.58.0) (2019-05-28)
+
+
+### Bug Fixes
+
+* **insight-ui:** make sure the runtime environment variables are passed ([a1886c7](https://gitlab.com/commonground/nlx/commit/a1886c7))
+
+
+### Features
+
+* **gitlab-ci:** Select kube context before deploy ([767da85](https://gitlab.com/commonground/nlx/commit/767da85))
+
 ## [0.57.1](https://gitlab.com/commonground/nlx/compare/v0.57.0...v0.57.1) (2019-05-28)
 
 
