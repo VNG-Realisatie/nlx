@@ -155,17 +155,17 @@ Release container images:
     - nlx-privileged
     - shell-executor
 
-Deploy test:
-  extends: .deploy
-  before_script:
-    - kubectl config use-context charlie.k8s.nlx.io
-  environment:
-    name: test
-  only:
-    - tags
-  tags:
-    - nlx-privileged
-    - shell-executor
+# Deploy test:
+#   extends: .deploy
+#   before_script:
+#     - kubectl config use-context charlie.k8s.nlx.io
+#   environment:
+#     name: test
+#   only:
+#     - tags
+#   tags:
+#     - nlx-privileged
+#     - shell-executor
 
 Deploy acceptance:
   extends: .deploy
