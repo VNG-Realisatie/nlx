@@ -1,3 +1,10 @@
+## [0.57.1](https://gitlab.com/commonground/nlx/compare/v0.57.0...v0.57.1) (2019-05-28)
+
+
+### Bug Fixes
+
+* **.releaserc:** removed label to skip the CI for release commits ([5e3ba0c](https://gitlab.com/commonground/nlx/commit/5e3ba0c))
+
 # [0.57.0](https://gitlab.com/commonground/nlx/compare/v0.56.0...v0.57.0) (2019-05-28)
 
 
