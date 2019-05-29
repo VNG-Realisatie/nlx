@@ -20,13 +20,12 @@ require (
 	github.com/google/certificate-transparency-go v1.0.21 // indirect
 	github.com/gorilla/schema v1.0.2
 	github.com/grpc-ecosystem/go-grpc-middleware v1.0.0
-	github.com/grpc-ecosystem/grpc-gateway v1.7.0
+	github.com/grpc-ecosystem/grpc-gateway v1.9.0
 	github.com/huandu/xstrings v1.2.0
 	github.com/jessevdk/go-flags v1.4.0
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/jpillora/backoff v0.0.0-20180909062703-3050d21c67d7
 	github.com/kisielk/sqlstruct v0.0.0-20150923205031-648daed35d49 // indirect
-	github.com/kr/pretty v0.1.0 // indirect
 	github.com/ktr0731/toml v0.3.0
 	github.com/lib/pq v1.0.0
 	github.com/mattn/go-sqlite3 v1.10.0 // indirect
@@ -44,7 +43,6 @@ require (
 	golang.org/x/text v0.3.1-0.20180807135948-17ff2d5776d2 // indirect
 	google.golang.org/appengine v1.4.0 // indirect
 	google.golang.org/genproto v0.0.0-20190215211957-bd968387e4aa
-	google.golang.org/grpc v1.18.0
-	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
+	google.golang.org/grpc v1.19.0
 	gopkg.in/yaml.v2 v2.2.2 // indirect
 )
