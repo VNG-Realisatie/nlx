@@ -37,7 +37,7 @@ require (
 	github.com/stretchr/testify v1.3.0
 	go.uber.org/atomic v1.3.2 // indirect
 	go.uber.org/multierr v1.1.0 // indirect
-	go.uber.org/zap v1.9.1
+	go.uber.org/zap v1.10.0
 	golang.org/x/crypto v0.0.0-20190517084516-22d7a77e9e5f // indirect
 	golang.org/x/net v0.0.0-20190522183715-f3200d17e092
 	golang.org/x/sync v0.0.0-20190517054156-112230192c58 // indirect
