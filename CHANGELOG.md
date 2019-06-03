@@ -1,3 +1,10 @@
+## [0.61.2](https://gitlab.com/commonground/nlx/compare/v0.61.1...v0.61.2) (2019-06-03)
+
+
+### Bug Fixes
+
+* **deps:** update dependency styled-components to v4.2.1 ([4bc9ef0](https://gitlab.com/commonground/nlx/commit/4bc9ef0))
+
 ## [0.61.1](https://gitlab.com/commonground/nlx/compare/v0.61.0...v0.61.1) (2019-05-28)
 
 
