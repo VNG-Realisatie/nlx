@@ -1,6 +1,8 @@
 
 domain: dev.nlx.minikube
 
+logType: local
+
 dbDatabaseDirectory: nlx-dev-directory
 dbResetDirectory: true # WARNING: All data will be LOST, never use in production!
 dbUsernameDirectory: nlx-dev-directory

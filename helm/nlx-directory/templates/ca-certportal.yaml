@@ -18,6 +18,10 @@ spec:
           image: {{.Values.caCertportalImage}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
           env:
+            - name: LOG_TYPE
+              value: {{ default "live" .Values.logType }}
+            - name: LOG_LEVEL
+              value: {{ default "debug" .Values.logLevel }}
             - name: CA_HOST
               value: {{.Values.caAddress}}
       restartPolicy: Always

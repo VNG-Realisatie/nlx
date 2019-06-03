@@ -2,6 +2,7 @@
 domain: demo.nlx.io
 
 logLevel: info
+logType: live
 
 dbDatabaseDirectory: nlx-demo-directory
 dbResetDirectory: false

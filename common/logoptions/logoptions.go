@@ -10,7 +10,7 @@ import (
 
 // LogOptions contains go-flags fields which can be used to configure a go-uber/zap config.
 type LogOptions struct {
-	LogType  string `long:"log-type" env:"LOG_TYPE" default:"production" description:"Set the logging config. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger." choice:"production" choice:"development"`
+	LogType  string `long:"log-type" env:"LOG_TYPE" default:"production" description:"Set the logging config. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger." choice:"live" choice:"local"`
 	LogLevel string `long:"log-level" env:"LOG_LEVEL" description:"Override the default loglevel as set by --log-type." choice:"debug" choice:"info" choice:"warn"`
 }
 
@@ -18,11 +18,31 @@ type LogOptions struct {
 func (o *LogOptions) ZapConfig() zap.Config {
 	var config zap.Config
 	switch o.LogType {
-	case "production":
-		config = zap.NewProductionConfig()
-	case "development":
+	case "live":
+		config = zap.Config{
+			Development: true,
+			Encoding:    "json",
+			EncoderConfig: zapcore.EncoderConfig{
+				MessageKey:     "message",
+				TimeKey:        "time",
+				LevelKey:       "level",
+				NameKey:        "name",
+				CallerKey:      "caller",
+				StacktraceKey:  "stacktrace",
+				LineEnding:     zapcore.DefaultLineEnding,
+				EncodeLevel:    zapcore.CapitalLevelEncoder,
+				EncodeTime:     zapcore.ISO8601TimeEncoder,
+				EncodeDuration: zapcore.StringDurationEncoder,
+				EncodeCaller:   zapcore.ShortCallerEncoder,
+			},
+			Level:            zap.NewAtomicLevelAt(zap.InfoLevel),
+			OutputPaths:      []string{"stderr"},
+			ErrorOutputPaths: []string{"stderr"},
+		}
+	case "local":
 		config = zap.NewDevelopmentConfig()
 		config.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
+		config.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
 	default:
 		// This should never ocur since choices are limited by go-flags
 		panic("invalid value " + o.LogType + " for option log type")

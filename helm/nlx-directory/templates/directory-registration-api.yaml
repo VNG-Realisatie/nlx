@@ -51,9 +51,9 @@ spec:
           command: ["/usr/local/bin/nlx-directory-registration-api"]
           env:
             - name: LOG_TYPE
-              value: development
+              value: {{ default "live" .Values.logType }}
             - name: LOG_LEVEL
-              value: debug
+              value: {{ default "debug" .Values.logLevel }}
             - name: POSTGRES_DSN
               value: postgresql://{{.Values.dbUsernameDirectory}}:{{.Values.dbPasswordDirectory}}@postgres/{{.Values.dbDatabaseDirectory}}?sslmode=disable&connect_timeout=10
             - name: TLS_NLX_ROOT_CERT

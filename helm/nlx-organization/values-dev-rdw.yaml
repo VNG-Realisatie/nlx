@@ -1,6 +1,7 @@
 
 domain: dev.rdw.minikube
 organizationName: rdw
+logType: local
 
 
 dbDatabaseTxlog: nlx-dev-rdw-txlog

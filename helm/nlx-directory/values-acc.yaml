@@ -1,6 +1,8 @@
 
 domain: acc.nlx.io
 
+logType: live
+
 dbDatabaseDirectory: nlx-acc-directory
 dbResetDirectory: false
 dbUsernameDirectory: nlx-acc-directory

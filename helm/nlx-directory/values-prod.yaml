@@ -2,6 +2,7 @@
 domain: prod.nlx.io
 
 logLevel: info
+logType: live
 
 dbDatabaseDirectory: nlx-prod-directory
 dbResetDirectory: false

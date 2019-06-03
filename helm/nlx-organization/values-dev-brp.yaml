@@ -1,5 +1,6 @@
 domain: dev.brp.minikube
 organizationName: brp
+logType: local
 
 
 dbDatabaseTxlog: nlx-dev-brp-txlog

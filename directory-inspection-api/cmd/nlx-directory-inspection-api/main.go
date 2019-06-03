@@ -12,7 +12,6 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/orgtls"
@@ -55,7 +54,6 @@ func main() {
 
 	// Setup new zap loggerv
 	config := options.LogOptions.ZapConfig()
-	config.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
 	logger, err := config.Build()
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)

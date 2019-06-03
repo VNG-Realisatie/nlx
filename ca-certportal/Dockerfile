@@ -12,7 +12,9 @@ WORKDIR /go/src/go.nlx.io/nlx
 RUN go mod download
 
 # Add code and build.
-COPY ca-certportal /go/src/go.nlx.io/nlx/ca-certportal
+COPY ca-certportal      /go/src/go.nlx.io/nlx/ca-certportal
+COPY common/logoptions  /go/src/go.nlx.io/nlx/common/logoptions
+
 WORKDIR /go/src/go.nlx.io/nlx/ca-certportal
 RUN go build -o dist/bin/nlx-ca-certportal ./cmd/nlx-ca-certportal
 

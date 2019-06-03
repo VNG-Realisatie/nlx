@@ -2,6 +2,7 @@
 domain: preprod.nlx.io
 
 logLevel: info
+logType: live
 
 dbDatabaseDirectory: nlx-preprod-directory
 dbResetDirectory: false
