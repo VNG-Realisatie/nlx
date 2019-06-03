@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@babel/polyfill": "7.4.4",
-    "prop-types": "15.6.2",
+    "prop-types": "15.7.2",
     "react": "16.6.3",
     "react-dom": "16.6.3",
     "react-router-dom": "4.3.1",
