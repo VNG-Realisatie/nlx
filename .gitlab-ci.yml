@@ -43,7 +43,7 @@ Go linter:
     - shell-executor
   
 Directory-ui tests:
-  image: node:10.15.3-alpine
+  image: node:10.16.0-alpine
   stage: Tests
   cache:
     key: ${CI_COMMIT_REF_SLUG}
@@ -64,7 +64,7 @@ Directory-ui tests:
     - docker-executor
 
 Insight-ui tests:
-  image: node:10.15.3-alpine
+  image: node:10.16.0-alpine
   stage: Tests
   cache:
     key: ${CI_COMMIT_REF_SLUG}
@@ -85,7 +85,7 @@ Insight-ui tests:
     - docker-executor
 
 Txlog-ui tests:
-  image: node:10.15.3-alpine
+  image: node:10.16.0-alpine
   stage: Tests
   cache:
     key: ${CI_COMMIT_REF_SLUG}
@@ -126,7 +126,7 @@ Build:
     - shell-executor
 
 Run semantic release:
-  image: node:10.15.3
+  image: node:10.16.0
   stage: Tools
   before_script:
   - npm ci
