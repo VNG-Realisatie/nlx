@@ -2,7 +2,7 @@
 domain: dev.haarlem.minikube
 organizationName: haarlem
 
-dbHost: postgresql.postgresql
+dbHost: postgresql-postgresql.postgresql
 dbUsernameSuperuser: postgres
 dbPasswordSuperuser: postgres
 

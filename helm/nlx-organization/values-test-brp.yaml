@@ -2,7 +2,7 @@
 domain: test.voorbeeld-brp.nl
 organizationName: brp
 
-dbHost: postgresql.postgresql
+dbHost: postgresql-postgresql.postgresql
 dbUsernameSuperuser: postgres
 dbPasswordSuperuser: postgres
 

@@ -1,8 +1,7 @@
 
-imageTag: 9.6.9
-postgresPassword: postgres
+postgresqlPassword: postgres
 persistence:
-  enabled: false
+  size: 40Gi
 
 postgresqlConfiguration:
-  max_connections: 300
+  max_connections: 3000

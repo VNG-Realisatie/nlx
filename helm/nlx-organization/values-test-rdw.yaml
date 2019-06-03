@@ -2,7 +2,7 @@
 domain: test.voorbeeld-rdw.nl
 organizationName: rdw
 
-dbHost: postgresql.postgresql
+dbHost: postgresql-postgresql.postgresql
 dbUsernameSuperuser: postgres
 dbPasswordSuperuser: postgres
 

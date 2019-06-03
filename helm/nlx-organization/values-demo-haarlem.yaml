@@ -4,7 +4,7 @@ organizationName: haarlem
 
 logLevel: info
 
-dbHost: postgresql.postgresql
+dbHost: postgresql-postgresql.postgresql
 dbUsernameSuperuser: postgres
 dbPasswordSuperuser: postgres
 
