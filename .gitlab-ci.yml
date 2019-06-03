@@ -1,6 +1,7 @@
 stages:
   - Tests
   - Build
+  - Tools
   - Release
   - Deploy
 
@@ -126,13 +127,14 @@ Build:
 
 Run semantic release:
   image: node:10.15.3
-  stage: Release
+  stage: Tools
   before_script:
   - npm ci
   script:
     - npx semantic-release
   only:
     - master
+  when: manual
   tags:
     - nlx
     - docker-executor  
@@ -142,6 +144,7 @@ Release container images:
   script:
     - skaffold build --profile release
   only:
+    - master
     - tags
   tags:
     - nlx-privileged
@@ -162,7 +165,7 @@ Deploy test:
   environment:
     name: test
   only:
-    - tags
+    - master
   tags:
     - nlx-privileged
     - shell-executor
@@ -173,7 +176,6 @@ Deploy acceptance:
     - kubectl config use-context charlie.k8s.nlx.io
   environment:
     name: acc
-  when: manual
   only:
     - tags
   tags:
@@ -186,9 +188,9 @@ Deploy demo:
     - kubectl config use-context charlie.k8s.nlx.io
   environment:
     name: demo
-  when: manual
   only:
     - tags
+  when: manual
   tags:
     - nlx-privileged
     - shell-executor
@@ -217,9 +219,9 @@ Docker tag latest:
   stage: Deploy
   script:
     - skaffold build --profile release | ./docker-tag-latest.awk
-  when: manual
   only:
     - tags
+  when: manual
   tags:
     - nlx-privileged
     - shell-executor
