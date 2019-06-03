@@ -19,13 +19,19 @@ spec:
             {{- end }}
           env:
             - name: PGHOST
-              value: {{.Values.dbHost}}
+              value: postgres
             - name: PGDATABASE
               value: {{.Values.dbDatabaseDirectory}}
             - name: PGUSER
-              value: {{.Values.dbUsernameSuperuser}}
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-auth
+                  key: POSTGRES_USER
             - name: PGPASSWORD
-              value: {{.Values.dbPasswordSuperuser}}
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-auth
+                  key: POSTGRES_PASSWORD
       restartPolicy: Never
   backoffLimit: 4
 {{ end }}

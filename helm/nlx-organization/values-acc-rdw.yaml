@@ -2,9 +2,6 @@
 domain: acc.voorbeeld-rdw.nl
 organizationName: rdw
 
-dbHost: postgresql-postgresql.postgresql
-dbUsernameSuperuser: postgres
-dbPasswordSuperuser: postgres
 
 dbDatabaseTxlog: nlx-acc-rdw-txlog
 dbResetTxlog: false

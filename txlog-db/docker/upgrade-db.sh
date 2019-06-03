@@ -2,6 +2,10 @@
 set -e
 set -o pipefail
 
+psql --echo-errors --variable "ON_ERROR_STOP=1" "postgresql://${PGUSER}:${PGPASSWORD}@${PGHOST}/postgres?sslmode=disable&connect_timeout=5" <<EOF
+    SELECT 'CREATE DATABASE "${PGDATABASE}"' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '${PGDATABASE}')\gexec
+EOF
+
 sed -i "s/nlx-org-txlog-/${PGDATABASE}-/g" /db-migrations/*.up.sql
 
 /usr/local/bin/migrate \

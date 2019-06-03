@@ -55,7 +55,7 @@ spec:
             - name: LOG_LEVEL
               value: {{ default "debug" .Values.logLevel }}
             - name: POSTGRES_DSN
-              value: postgresql://{{.Values.dbUsernameTxlogAPI}}:{{.Values.dbPasswordTxlogAPI}}@{{.Values.dbHost}}/{{.Values.dbDatabaseTxlog}}?sslmode=disable&connect_timeout=10
+              value: postgresql://{{.Values.dbUsernameTxlogAPI}}:{{.Values.dbPasswordTxlogAPI}}@postgres/{{.Values.dbDatabaseTxlog}}?sslmode=disable&connect_timeout=10
             - name: IRMA_JWT_RSA_VERIFY_PUBLIC_KEY_DER
               valueFrom:
                 secretKeyRef:

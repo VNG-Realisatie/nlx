@@ -1,0 +1,17 @@
+apiVersion: kubedb.com/v1alpha1
+kind: Postgres
+metadata:
+  name: postgres
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "nlx-organization.common.metadata-labels" . | nindent 4 }}
+spec:
+  version: "11.1"
+  storageType: "Durable"
+  storage:
+    storageClassName: standard
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 8Gi
+  terminationPolicy: WipeOut

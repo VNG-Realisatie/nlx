@@ -4,9 +4,6 @@ organizationName: haarlem
 
 logLevel: info
 
-dbHost: postgresql-postgresql.postgresql
-dbUsernameSuperuser: postgres
-dbPasswordSuperuser: postgres
 
 dbDatabaseTxlog: nlx-demo-haarlem-txlog
 dbResetTxlog: false

@@ -2,9 +2,6 @@
 domain: acc.voorbeeld-haarlem.nl
 organizationName: haarlem
 
-dbHost: postgresql-postgresql.postgresql
-dbUsernameSuperuser: postgres
-dbPasswordSuperuser: postgres
 
 dbDatabaseTxlog: nlx-acc-haarlem-txlog
 dbResetTxlog: false

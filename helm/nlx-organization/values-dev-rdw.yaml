@@ -2,9 +2,6 @@
 domain: dev.rdw.minikube
 organizationName: rdw
 
-dbHost: postgresql-postgresql.postgresql
-dbUsernameSuperuser: postgres
-dbPasswordSuperuser: postgres
 
 dbDatabaseTxlog: nlx-dev-rdw-txlog
 dbResetTxlog: true # WARNING: All data will be LOST, never use in production!

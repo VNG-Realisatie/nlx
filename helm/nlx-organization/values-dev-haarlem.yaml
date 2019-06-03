@@ -2,9 +2,6 @@
 domain: dev.haarlem.minikube
 organizationName: haarlem
 
-dbHost: postgresql-postgresql.postgresql
-dbUsernameSuperuser: postgres
-dbPasswordSuperuser: postgres
 
 dbDatabaseTxlog: nlx-dev-haarlem-txlog
 dbResetTxlog: true # WARNING: All data will be LOST, never use in production!

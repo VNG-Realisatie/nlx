@@ -2,9 +2,6 @@
 domain: test.voorbeeld-haarlem.nl
 organizationName: haarlem
 
-dbHost: postgresql-postgresql.postgresql
-dbUsernameSuperuser: postgres
-dbPasswordSuperuser: postgres
 
 dbDatabaseTxlog: nlx-test-haarlem-txlog
 dbResetTxlog: true # WARNING: All data will be LOST, never use in production!

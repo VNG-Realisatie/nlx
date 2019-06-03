@@ -3,10 +3,6 @@ domain: prod.nlx.io
 
 logLevel: info
 
-dbHost: postgresql-postgresql.postgresql
-dbUsernameSuperuser: postgres
-dbPasswordSuperuser: postgres
-
 dbDatabaseDirectory: nlx-prod-directory
 dbResetDirectory: false
 dbUsernameDirectory: nlx-prod-directory

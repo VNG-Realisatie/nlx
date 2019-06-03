@@ -55,7 +55,7 @@ spec:
             - name: LOG_LEVEL
               value: {{ default "debug" .Values.logLevel }}
             - name: POSTGRES_DSN
-              value: postgresql://{{.Values.dbUsernameDirectory}}:{{.Values.dbPasswordDirectory}}@{{.Values.dbHost}}/{{.Values.dbDatabaseDirectory}}?sslmode=disable&connect_timeout=10
+              value: postgresql://{{.Values.dbUsernameDirectory}}:{{.Values.dbPasswordDirectory}}@postgres/{{.Values.dbDatabaseDirectory}}?sslmode=disable&connect_timeout=10
             - name: TLS_NLX_ROOT_CERT
               {{ if eq .Values.ca.kind "private" }}
               value: "/certs/ca.pem"

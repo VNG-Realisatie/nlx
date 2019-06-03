@@ -88,7 +88,7 @@ spec:
             - name: TLS_ORG_KEY
               value: "/certs/{{.component}}.{{.Values.domain}}-key.pem"
             - name: POSTGRES_DSN
-              value: postgresql://{{.Values.dbUsernameTxlogWriter}}:{{.Values.dbPasswordTxlogWriter}}@{{.Values.dbHost}}/{{.Values.dbDatabaseTxlog}}?sslmode=disable&connect_timeout=10
+              value: postgresql://{{.Values.dbUsernameTxlogWriter}}:{{.Values.dbPasswordTxlogWriter}}@postgres/{{.Values.dbDatabaseTxlog}}?sslmode=disable&connect_timeout=10
             - name: SELF_ADDRESS
               value: "{{.component}}.{{.Values.domain}}"
             - name: DIRECTORY_REGISTRATION_ADDRESS

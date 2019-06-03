@@ -1,9 +1,6 @@
 domain: dev.brp.minikube
 organizationName: brp
 
-dbHost: postgresql-postgresql.postgresql
-dbUsernameSuperuser: postgres
-dbPasswordSuperuser: postgres
 
 dbDatabaseTxlog: nlx-dev-brp-txlog
 dbResetTxlog: true # WARNING: All data will be LOST, never use in production!

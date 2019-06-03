@@ -2,9 +2,6 @@
 domain: acc.voorbeeld-brp.nl
 organizationName: brp
 
-dbHost: postgresql-postgresql.postgresql
-dbUsernameSuperuser: postgres
-dbPasswordSuperuser: postgres
 
 dbDatabaseTxlog: nlx-acc-brp-txlog
 dbResetTxlog: false
