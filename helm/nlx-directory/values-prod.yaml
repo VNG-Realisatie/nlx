@@ -28,3 +28,5 @@ demo:
 
 ca:
   kind: "private"
+
+replicas: 3

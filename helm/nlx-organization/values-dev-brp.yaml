@@ -93,3 +93,5 @@ insight:
 
 # Workarround to resolve minikube external IP's
 externalIP: ""
+
+replicas: 1

@@ -61,3 +61,5 @@ insight:
 
 directoryRegistrationHostname: directory-registration-api.acc.nlx.io
 directoryInspectionHostname: directory-inspection-api.acc.nlx.io
+
+replicas: 2

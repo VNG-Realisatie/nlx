@@ -29,3 +29,5 @@ inwayHostnames:
   - inway.dev.brp.minikube
   - inway.dev.rdw.minikube
   - inway.dev.haarlem.minikube
+
+replicas: 1

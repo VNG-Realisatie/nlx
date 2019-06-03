@@ -116,3 +116,5 @@ ca:
     LmUF2Hn+TmDMq6snr6U8FAqgnHTemH76v9iydFoC/Vou0yyowHhprr39l6uLnOCF
     khdzEIJCtmG18B1+nxQMem/DJBADpNtRl3ZnIKe4fJKhYeJx4t9wzgzoiquasw==
     -----END RSA PRIVATE KEY-----
+
+replicas: 3

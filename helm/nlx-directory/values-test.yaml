@@ -112,3 +112,5 @@ ca:
     qxGInol53Onkx2sUSdPoBAMBxamAe6jHrYPlenyz8HMYpt1jD1Kt1DobVkbLOxuM
     M1WUpk84/hCFvMuXOrXF3Brg3RKzWOpCEA3bDjgSMokozBoZO08Eqbn8YMMLNg==
     -----END RSA PRIVATE KEY-----
+
+replicas: 2
