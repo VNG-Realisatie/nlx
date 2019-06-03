@@ -28,7 +28,7 @@ insightNavbarDirectoryURL: "https://directory.acc.nlx.io"
 ttlOfflineService: 1
 
 ca:
-  public: true
+  kind: "public"
   certPEM: |
     -----BEGIN CERTIFICATE-----
     MIIFKjCCAxKgAwIBAgIUHICIGRRsN2Rv+H6SQlobvUtx+YAwDQYJKoZIhvcNAQEN
