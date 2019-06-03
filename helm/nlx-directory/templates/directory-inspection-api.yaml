@@ -87,41 +87,41 @@ spec:
 ---
 apiVersion: v1
 kind: Service
+metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
+spec:
+  selector: {{ include "nlx-directory.common.metadata-labels" . | nindent 4 }}
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 8443
+---
+apiVersion: v1
+kind: Service
 metadata: 
-  name: inspection-api
+  name: directory-inspection-api-internal
   namespace: {{ .Release.Namespace }}
   labels: {{- include "nlx-directory.common.metadata-labels" . | nindent 2 }}
 spec:
   selector: {{ include "nlx-directory.common.metadata-labels" . | nindent 4 }}
   ports:
-    - name: api
-      protocol: TCP
-      port: 8443
-  cluserIP: None
----
-apiVersion: v1
-kind: Service
-metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
-spec:
-  selector: {{ include "nlx-directory.common.metadata-labels" . | nindent 4 }}
-  ports:
     - name: webapi
       protocol: TCP
-      port: 8080
-  cluserIP: None
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
-  annotations:
-    kubernetes.io/ingress.class: nginx-ingress
-    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-spec:
-  rules:
-  - host: directory-inspection-api.{{.Values.domain}}
-    http:
-      paths:
-        - backend:
-            serviceName: inspection-api
-            servicePort: api
+      port: 80
+      targetPort: 8080
+# ---
+# apiVersion: extensions/v1beta1
+# kind: Ingress
+# metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
+#   annotations:
+#     kubernetes.io/ingress.class: nginx-ingress
+#     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+# spec:
+#   rules:
+#   - host: directory-inspection-api.{{.Values.domain}}
+#     http:
+#       paths:
+#         - backend:
+#             serviceName: inspection-api
+#             servicePort: api
 {{ end }}

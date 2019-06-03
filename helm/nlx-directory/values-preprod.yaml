@@ -14,7 +14,7 @@ dbPasswordDirectory: nlx-preprod-directory
 
 imagePullPolicy: IfNotPresent
 
-insightDirectoryInspectionAPIURL: "http://directory-inspection-api"
+insightDirectoryInspectionAPIURL: "http://directory-inspection-api-internal"
 
 insightNavbarHomePageURL: "https://www.nlx.io"
 insightNavbarAboutPageURL: "https://nlx.io/about/"

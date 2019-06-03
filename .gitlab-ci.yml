@@ -155,22 +155,22 @@ Release container images:
     - nlx-privileged
     - shell-executor
 
-# Deploy test:
-#   extends: .deploy
-#   before_script:
-#     - kubectl config use-context charlie.k8s.nlx.io
-#   environment:
-#     name: test
-#   only:
-#     - tags
-#   tags:
-#     - nlx-privileged
-#     - shell-executor
+Deploy test:
+  extends: .deploy
+  before_script:
+    - kubectl config use-context charlie.k8s.nlx.io
+  environment:
+    name: test
+  only:
+    - tags
+  tags:
+    - nlx-privileged
+    - shell-executor
 
 Deploy acceptance:
   extends: .deploy
   before_script:
-    - kubectl config use-context bravo.k8s.nlx.io
+    - kubectl config use-context charlie.k8s.nlx.io
   environment:
     name: acc
   when: manual
@@ -183,7 +183,7 @@ Deploy acceptance:
 Deploy demo:
   extends: .deploy
   before_script:
-    - kubectl config use-context bravo.k8s.nlx.io
+    - kubectl config use-context charlie.k8s.nlx.io
   environment:
     name: demo
   when: manual
@@ -196,7 +196,7 @@ Deploy demo:
 Deploy preprod:
   extends: .deploy
   before_script:
-    - kubectl config use-context bravo.k8s.nlx.io
+    - kubectl config use-context charlie.k8s.nlx.io
   environment:
     name: preprod
   when: manual
@@ -206,7 +206,7 @@ Deploy preprod:
 Deploy prod:
   extends: .deploy
   before_script:
-    - kubectl config use-context bravo.k8s.nlx.io
+    - kubectl config use-context charlie.k8s.nlx.io
   environment:
     name: prod
   when: manual
