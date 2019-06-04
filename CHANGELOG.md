@@ -1,3 +1,10 @@
+## [0.66.1](https://gitlab.com/commonground/nlx/compare/v0.66.0...v0.66.1) (2019-06-04)
+
+
+### Bug Fixes
+
+* **ca-certportal:** Fix serving of public assets ([ba7548c](https://gitlab.com/commonground/nlx/commit/ba7548c))
+
 ## [0.61.2](https://gitlab.com/commonground/nlx/compare/v0.61.1...v0.61.2) (2019-06-03)
 
 
