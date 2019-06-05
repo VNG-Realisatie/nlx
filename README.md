@@ -47,19 +47,25 @@ cd nlx
 
 ### Running complete stack in kubernetes/minikube
 
-Setup minikube on your local development machine. For developers, it's advised to setup minikube with 4 cores, 8GB RAM and 100+G storage.
-
-e.g.: `minikube start --vm-driver=kvm2 --cpus 4 --memory 8192 --disk-size=100G`
+Setup minikube on your local development machine. 
 
 Read the [minikube README](https://github.com/kubernetes/minikube) for more information.
 
-Once minikube is running, initialize helm by running `helm init`.
+Configure the vm driver for minikube:
+- for Linux: `minikube config set vm-driver kvm2`
+- for Mac: `minikube config set vm-driver hyperkit`
+
+For developers, it's advised to setup minikube with 4 cores, 8GB RAM and 100+G storage.
+e.g.: `minikube start --cpus 4 --memory 8192 --disk-size=100G`
+
+Once minikube is running, initialize helm by running `helm init` followed by `helm repo update`
 
 Next, install the following dependencies:
 
 - `traefik` for web and rest-api requests.
 - `nginx-ingress` for grpc and mutual-tls connections. Latest version is currently(2018-09-06) broken, so needs `--version 0.17.1`
 - `postgres` for directory-db and txlog-db.
+- [KubeDB](https://kubedb.com/docs/0.12.0/setup/install/#using-helm)
 
 ```bash
 helm install stable/traefik --name traefik --namespace traefik --values helm/traefik-values-minikube.yaml
