@@ -1,4 +1,4 @@
-<h1><img alt="NLX" src="logo.png" width="200"></h1>
+<h1><img alt="NLX" src="logo.png" width="200"> Stelsel</h1>
 
 NLX is an open source inter-organisational system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API landscape.
 
