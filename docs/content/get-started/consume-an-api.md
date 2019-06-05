@@ -37,7 +37,7 @@ docker run --detach \
 ```
 
 You will get back the container id of the container you created from this image.
-By running this command, we've launched our very own NLX outway. It is running on `http://localhost`.
+By running this command, we've launched our very own NLX outway. It is running on [`http://localhost:4080`](http://localhost:4080).
 
 ### Verification
 
