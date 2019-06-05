@@ -1,3 +1,6 @@
 
 imageTag: 9.6.9
 postgresPassword: postgres
+persistence:
+  resourcePolicy: delete
+
