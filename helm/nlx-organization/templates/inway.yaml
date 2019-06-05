@@ -122,7 +122,8 @@ spec:
   selector: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
   type: LoadBalancer
   ports:
-    - protocol: TCP
+    - name: nht # nlx http traffic
+      protocol: TCP
       port: 443
       targetPort: 8443
 # ---

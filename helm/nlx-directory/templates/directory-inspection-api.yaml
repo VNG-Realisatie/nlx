@@ -95,7 +95,8 @@ spec:
   selector: {{ include "nlx-directory.common.metadata-labels" . | nindent 4 }}
   type: LoadBalancer
   ports:
-    - protocol: TCP
+    - name: grpc
+      protocol: TCP
       port: 443
       targetPort: 8443
 ---
