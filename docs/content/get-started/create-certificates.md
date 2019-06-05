@@ -112,4 +112,4 @@ All required certificates are available now. So far, we have:
 - downloaded the CA root certificate.
 - generated our own certificate, so we are allowed to communicate with the API's on the NLX network.
 
-Now let's see if we can consume an API from the NLX network in [part 3](../consume-an-api.md).
+Now let's see if we can consume an API from the NLX network in [part 3](../consume-an-api).
