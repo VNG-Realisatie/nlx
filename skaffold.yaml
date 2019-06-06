@@ -35,9 +35,7 @@ build:
     docker:
       dockerfile: directory-monitor/Dockerfile
   - image: nlxio/directory-ui
-    context: .
-    docker:
-      dockerfile: directory-ui/Dockerfile
+    context: directory-ui
   - image: nlxio/insight-ui
     context: .
     docker:
