@@ -1,0 +1,23 @@
+FROM golang:1-alpine AS build
+
+# Install build tools.
+RUN apk add --update git gcc musl-dev
+
+# Cache dependencies
+ENV GO111MODULE on
+WORKDIR /go/src/go.nlx.io/nlx
+COPY go.mod /go/src/go.nlx.io/nlx/go.mod
+COPY go.sum /go/src/go.nlx.io/nlx/go.sum
+
+RUN go mod download
+
+FROM golang:1-alpine
+
+# Install build tools.
+RUN apk add --update git gcc musl-dev
+
+# Cache dependencies
+ENV GO111MODULE on
+
+COPY --from=build /go/src/ /go/src/
+COPY --from=build /go/pkg/ /go/pkg/

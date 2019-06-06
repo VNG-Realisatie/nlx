@@ -2,6 +2,10 @@ apiVersion: skaffold/v1beta11
 kind: Config
 build:
   artifacts:
+  - image: nlxio/go_base
+    context: .
+    docker:
+      dockerfile: Dockerfile.go_base
   - image: nlxio/docs
     context: docs
   - image: nlxio/ca-cfssl-unsafe
