@@ -6,6 +6,10 @@ build:
     context: .
     docker:
       dockerfile: Dockerfile.go_base
+  - image: nlxio/version_base
+    context: .
+    docker:
+      dockerfile: Dockerfile.version_base
   - image: nlxio/docs
     context: docs
   - image: nlxio/ca-cfssl-unsafe

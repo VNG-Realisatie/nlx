@@ -1,0 +1,11 @@
+FROM alpine AS version
+
+WORKDIR /src/base
+RUN apk add git jq
+
+COPY .git /src/base/.git
+RUN ash -c 'echo "\"$(git describe --tags)\"" | jq "{tag: .}" > version.json'
+
+FROM scratch
+
+COPY --from=version /src/base/version.json version.json
