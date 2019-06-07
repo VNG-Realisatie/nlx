@@ -14,7 +14,7 @@ We will use the certificate which we've setup in [part 2](../create-certificates
 ## Setting up the outway
 
 Let's setup the outway service. First, fetch the Docker image from the [Docker Hub](https://hub.docker.com/u/nlxio).
-    
+
 ```bash
 docker pull nlxio/outway:latest
 ```
@@ -32,12 +32,12 @@ docker run --detach \
              --env TLS_ORG_CERT=/certs/org.crt \
              --env TLS_ORG_KEY=/certs/org.key \
              --env DISABLE_LOGDB=1 \
-             --publish 4080:8080 \
+             --publish 80:8080 \
              nlxio/outway:latest
 ```
 
 You will get back the container id of the container you created from this image.
-By running this command, we've launched our very own NLX outway. It is running on `http://localhost:4080`.
+By running this command, we've launched our very own NLX outway. It is running on `http://localhost`.
 
 ### Verification
 
@@ -67,13 +67,13 @@ Now let's try to fetch some data from an API in the NLX network!
 To do so, we have to use the following structure:
 
 ```bash
-curl http://localhost:4080/{organization-name}/{service-name}/{api-specific-path}
+curl http://localhost/{organization-name}/{service-name}/{api-specific-path}
 ```
 
 For example, to query the Haarlem demo API application use:
 
 ```bash
-curl http://localhost:4080/haarlem/demo-api/get
+curl http://localhost/haarlem/demo-api/get
 ```
 
 ### Verification
@@ -82,30 +82,31 @@ The response of the `curl` command should look similar to the following output.
 
 ```json
 {
-  "args":{},
-  "headers":{
-      "x-forwarded-proto":"https",
-      "host":"postman-echo.com",
-      "accept":"*/*",
-      "accept-encoding":"gzip",
-      "user-agent":"curl/7.61.0",
-      "x-nlx-logrecord-id":"<log-record-id>",
-      "x-nlx-request-organization":"<your-organization-name>",
-      "x-forwarded-port":"443"},
+  "args": {},
+  "headers": {
+    "x-forwarded-proto":"https",
+    "host":"postman-echo.com",
+    "accept":"*/*",
+    "accept-encoding":"gzip",
+    "user-agent":"curl/7.61.0",
+    "x-nlx-logrecord-id":"<log-record-id>",
+    "x-nlx-request-organization":"<your-organization-name>",
+    "x-forwarded-port":"443"
+  },
   "url":"https://postman-echo.com/get"
 }
 ```
 
 Congratulations, you now made your first query on the NLX network!
 
-API's provided on the NLX network are published in the NLX directory. You can use this directory to see which other API's are available. 
+API's provided on the NLX network are published in the NLX directory. You can use this directory to see which other API's are available.
 Take a look at the [directory](https://directory.nlx.io).
 
 ## In sum
-    
+
 In this part, we have:
 
 - setup a local NLX outway, which we can use to get data from the network.
 - made a real request to the VNG Realisatie Demo API.
 
-Now let's see if we can provide our own API's to the network in [part 4](../provide-an-api). 
+Now let's see if we can provide our own API's to the network in [part 4](../provide-an-api).

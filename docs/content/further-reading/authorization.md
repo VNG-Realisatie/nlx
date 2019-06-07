@@ -14,13 +14,13 @@ To enable authorization, organizations can plug-in their own authorization servi
 
 ## How it works
 
-Once an authorization service is configured the outway will, after receiving a request from an application, extract all the HTTP-headers from the request. Only the HTTP headers along with the destination organization and service will be send to the authorization service. The authorization service can use this information to determine if authorization should be granted. The authorization service will send the result back to the the outway. If the authorization is granted the outway will strip the HTTP headers starting with `X-NLX` from the request and continue sending the request (body + HTTP headers) to the destination inway.   
- 
+Once an authorization service is configured the outway will, after receiving a request from an application, extract all the HTTP-headers from the request. Only the HTTP headers along with the destination organization and service will be send to the authorization service. The authorization service can use this information to determine if authorization should be granted. The authorization service will send the result back to the the outway. If the authorization is granted the outway will strip the HTTP headers starting with `X-NLX` from the request and continue sending the request (body + HTTP headers) to the destination inway.
+
 ## The authorization interface
 
 In order to keep the NLX components as flexible as possible, each organization will have to implement the "authorization interface" on their own authorization service. Implementing this interface will enable communication between the outway and the authorization service.
 We have described this interface using Open API Specification (OAS). [This specification can be found here](https://gitlab.com/commonground/nlx/tree/master/outway/authorization-interface.yaml).
-A reference implementation has also been made available in the [NLX repository](https://gitlab.com/commonground/nlx/blob/master/auth-service/). 
+A reference implementation has also been made available in the [NLX repository](https://gitlab.com/commonground/nlx/blob/master/auth-service/).
 
 ## Configuring the outway
 
@@ -40,7 +40,7 @@ docker run --detach \
              --env AUTHORIZATION_SERVICE_ADDRESS=https://auth.nlx.io \
              --env AUTHORIZATION_ROOT_CA=~/nlx-setup/root.crt:/certs/root.crt:ro \
              --env DISABLE_LOGDB=1 \
-             --publish 4080:80 \
+             --publish 80:8080 \
              nlxio/outway:latest
 ```
 
@@ -52,7 +52,7 @@ HTTP-headers are used to pass around authorization information. NLX provides a s
 
 - `X-NLX-Requester-User`  should contain information about the user, for example a userID
 - `X-NLX-Requester-Claims` should contain claims granted to the user
-- `Proxy-Authorization` should contain the credentials to authenticate a user or application with a server. For example, a JWT token. This header will **always** be stripped, even if the request does not leave the organisation. Take a look at the [Mozilla Proxy-Authorization header documentation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Proxy-Authorization) for more information about this header. 
+- `Proxy-Authorization` should contain the credentials to authenticate a user or application with a server. For example, a JWT token. This header will **always** be stripped, even if the request does not leave the organisation. Take a look at the [Mozilla Proxy-Authorization header documentation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Proxy-Authorization) for more information about this header.
 
 
 

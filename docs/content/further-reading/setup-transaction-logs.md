@@ -19,13 +19,13 @@ Make sure you have installed a recent version of [Git](https://git-scm.com/downl
 
 ## Introduction
 
-The inway and the outway are able to log meta-data of the requests they process. In this guide you will learn how to setup the transaction-log service and connect it to an outway. 
+The inway and the outway are able to log meta-data of the requests they process. In this guide you will learn how to setup the transaction-log service and connect it to an outway.
 
 ## Docker compose
 
-To make the setup of the transaction-log as easy as possible you can clone our nlx-compose repository. This repository contains a docker-compose file for setting up the transaction-log. Docker-compose is a tool to setup multiple docker containers at once. 
+To make the setup of the transaction-log as easy as possible you can clone our nlx-compose repository. This repository contains a docker-compose file for setting up the transaction-log. Docker-compose is a tool to setup multiple docker containers at once.
 
-Start by cloning our nlx-compose repository using git. 
+Start by cloning our nlx-compose repository using git.
 
 execute
 
@@ -35,14 +35,14 @@ git clone https://gitlab.com/commonground/nlx-compose
 
 This repository contains `transaction-log.yml` this script will
 * Setup a [postgres](https://www.postgresql.org/) database.
-* Create the transaction-log database structure. 
+* Create the transaction-log database structure.
 * Setup the transaction-log-api. The transaction-log-api is an API we can use to retrieve log records from the database.
 
-After pulling the repository lets navigate to the correct directory. 
+After pulling the repository lets navigate to the correct directory.
 
 execute
 
-```bash 
+```bash
 cd nlx-compose
 ```
 
@@ -52,9 +52,9 @@ We can now use `docker-compose` to setup our transaction-log
 
 execute
 
-```bash  
-docker-compose -f transaction-log.yml up -d  
-```  
+```bash
+docker-compose -f transaction-log.yml up -d
+```
 
 
 ## Verify
@@ -75,7 +75,7 @@ There won't be any records in the transaction-log so the response should be
    {"records":[]}
 ```
 
-Congratulations, the transaction-log is up and running! 
+Congratulations, the transaction-log is up and running!
 
 
 ## Connect an outway to the transaction log
@@ -84,7 +84,7 @@ The next step is to connect an inway or an outway to the transaction-log databas
 
 Stop the outway you creating in the [Get started](../../get-started/consume-an-api) guide, if it is still running.
 
-execute 
+execute
 
 ```bash
 docker rm -f my-nlx-outway
@@ -106,11 +106,11 @@ docker run --detach \
   --env TLS_ORG_KEY=/certs/org.key \
   --env POSTGRES_DSN='postgres://postgres:postgres@postgres/txlog-db?sslmode=disable&connect_timeout=10' \
   --network nlx-network \
-  --publish 4080:80 \
+  --publish 80:8080 \
   nlxio/outway:latest
 ```
 
-There are some key differences in the docker command compared to the one used to start the outway in [Get started](../../get-started/consume-an-api). 
+There are some key differences in the docker command compared to the one used to start the outway in [Get started](../../get-started/consume-an-api).
 
 We will go over them briefly
 
@@ -121,12 +121,12 @@ We will go over them briefly
 
 ## Verify
 
-Let's make a request through our outway and check if the log records are being writen. 
+Let's make a request through our outway and check if the log records are being writen.
 
 execute
 
 ```bash
-curl http://localhost:4080/haarlem/demo-api/get?foo1=bar1
+curl http://localhost/haarlem/demo-api/get?foo1=bar1
 ```
 
 If successful the response should be
