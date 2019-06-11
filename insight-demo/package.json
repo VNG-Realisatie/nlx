@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "@rebass/grid": "6.0.0",
-    "polished": "2.3.1",
+    "polished": "3.4.0",
     "react-pose": "4.0.8",
     "styled-components": "4.3.1"
   },
