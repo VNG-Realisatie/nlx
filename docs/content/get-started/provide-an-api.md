@@ -16,8 +16,8 @@ Please note that:
 * **you need a domain name to provide an inway** (an IP address won't work)
 * **the domain should be the same as the domain you used to generate the certificates** (that was in [part 2](../create-certificates)).
 
-It is not recommended to follow this guide when you're working from your home network. 
-Preferably you are able to start the inway service on a machine which is publicly accessible and it's port 4443 is open to the public.
+It is not recommended to follow this guide when you're working from your home network.
+Preferably you are able to start the inway service on a machine which is publicly accessible and it's port 443 is open to the public.
 
 ## The API
 
@@ -27,7 +27,7 @@ We have to define our API in a TOML-file. You can save the contents below as `se
 
 ```toml
 [services]
-    
+
 # This block defines an API exposed by this inway.
 # A single inway can expose multiple API's, therefore this block can be added multiple times.
 # The name of the API (in this example SwaggerPetstore) must be unique for each block.
@@ -42,7 +42,7 @@ We have to define our API in a TOML-file. You can save the contents below as `se
 
     # `authorization-model` can or whitelist
     authorization-model = "none"
-    
+
     # `api-specification-document-url` defines the specification document for the API
     api-specification-document-url = "https://petstore.swagger.io/v2/swagger.json"
 
@@ -57,13 +57,13 @@ We have to define our API in a TOML-file. You can save the contents below as `se
     # tech-support-contact   = "tech@my-organization.nl"
 ```
 
-> If you're specifying you own API, please note that `localhost` won't work. If your API is running on the same machine as 
-your inway, the endpoint URL should be your network IP and not `localhost`.   
+> If you're specifying you own API, please note that `localhost` won't work. If your API is running on the same machine as
+your inway, the endpoint URL should be your network IP and not `localhost`.
 
 ## Setting up the inway
 
 Let's setup the inway service. First, fetch the Docker image from the [Docker Hub](https://hub.docker.com/u/nlxio).
-    
+
 ```bash
 docker pull nlxio/inway:latest
 ```
@@ -78,37 +78,37 @@ docker run --detach \
               --volume ~/nlx-setup/org.key:/certs/org.key:ro \
               --volume ~/nlx-setup/service-config.toml:/service-config.toml:ro \
               --env DIRECTORY_REGISTRATION_ADDRESS=directory-registration-api.demo.nlx.io:443 \
-              --env SELF_ADDRESS=my-organization.nl:4443 \
+              --env SELF_ADDRESS=my-organization.nl:443 \
               --env SERVICE_CONFIG=/service-config.toml \
               --env TLS_NLX_ROOT_CERT=/certs/root.crt \
               --env TLS_ORG_CERT=/certs/org.crt \
               --env TLS_ORG_KEY=/certs/org.key \
               --env DISABLE_LOGDB=1 \
-              --publish 4443:8443 \
+              --publish 443:8443 \
               nlxio/inway:latest
 ```
 
 We give docker several arguments:
 
 - `--detach` will make the container run in the background and print the container ID
-- `--name my-nlx-inway` the name of your docker container 
+- `--name my-nlx-inway` the name of your docker container
 - `--volume {/absolute/path/to/root.crt}:/certs/root.crt:ro` tells docker to make the `/certs/root.crt` file available inside the container.
 - `--volume {/absolute/path/to/org.crt}:/certs/org.crt:ro` tells docker to make the `/certs/org.crt` file available inside the container.
 - `--volume {/absolute/path/to/org.key}:/certs/org.key:ro` tells docker to make the `/certs/org.key` file available inside the container.
 - `--env DIRECTORY_REGISTRATION_ADDRESS=directory-registration-api.demo.nlx.io:443` sets the environment variable `DIRECTORY_REGISTRATION_ADDRESS` this address is used by the inway to anounce itself to the directory.
-- `--env SELF_ADDRESS={external-inway-hostname-or-ip-address}:4443` sets the environment variable `SELF_ADDRESS` to the address of the inway so it can be reached by the NLX network.
+- `--env SELF_ADDRESS={external-inway-hostname-or-ip-address}:443` sets the environment variable `SELF_ADDRESS` to the address of the inway so it can be reached by the NLX network.
 - `--env SERVICE_CONFIG=/service-config.toml` sets the environment variable `SERVICE_CONFIG` this is the location of the service-config.toml file which specifies the services connected to the inway.
 - `--env TLS_NLX_ROOT_CERT=/certs/root.crt`sets the environment variable `TLS_NLX_ROOT_CERT` this is the location of the root certificate.
 - `--env TLS_ORG_CERT=/certs/org.crt` sets the environment variable `TLS_ORG_CERT` this is the location of the organisation certificate.
 - `--env TLS_ORG_KEY=/certs/org.key` sets the environment variable `TLS_ORG_KEY` this is the location of the organisation private key.
 - `--env DISABLE_LOGDB=1` sets the environment variable `DISABLE_LOGDB` the value 1 will disable the transaction logs, the value 0 will enable them.
-- `--publish 4443:8443` connects port 4443 on the host machine to port 8443 inside the container. This way, we can send requests to the inway.
+- `--publish 443:8443` connects port 443 on the host machine to port 8443 inside the container. This way, we can send requests to the inway.
 - ` nlxio/inway:latest` is the name of our docker image (`nlxio/inway`) as stored in the docker registry and the version we want to use (`latest`).
 
-To get started quickly, we will disable transaction logs for now by setting the environment variable `DISABLE_LOGDB=1`. 
+To get started quickly, we will disable transaction logs for now by setting the environment variable `DISABLE_LOGDB=1`.
 
 You will get back the container id of the container you created from this image.
-By running this command, we've launched our very own NLX inway. It is running and listening on `http://localhost:4443`.
+By running this command, we've launched our very own NLX inway. It is running and listening on `https://localhost:443`.
 
 The inway now connects itself to the NLX [directory](https://directory.nlx.io).
 
@@ -130,7 +130,7 @@ Now let's try to fetch some data from our inway using our outway.
 To do so, we have to use the following structure:
 
 ```bash
-curl http://localhost:4080/my-organization/SwaggerPetstore/v2/pet/20002085
+curl http://localhost/my-organization/SwaggerPetstore/v2/pet/20002085
 ```
 
 ### Verification
