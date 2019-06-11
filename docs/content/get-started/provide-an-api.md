@@ -8,20 +8,20 @@ menu:
 
 ## Introduction
 
-To provide an API to the NLX network, you need to route traffic through an **inway** service.
-We will use the certificate which we've setup in [part 2](../create-certificates), to make sure traffic is encrypted between your and other nodes.
+To provide an API to the NLX network, you need to route traffic through an **inway** service. 
+To make sure traffic is encrypted between your and other nodes, we will use the certificate which we've setup in [part 2](../create-certificates).
 
 Please note that:
 
-* **you need a domain name to provide an inway** (an IP address won't work)
+* **you need a domain name to provide an inway** (an IP address will not work)
 * **the domain should be the same as the domain you used to generate the certificates** (that was in [part 2](../create-certificates)).
 
 It is not recommended to follow this guide when you're working from your home network.
-Preferably you are able to start the inway service on a machine which is publicly accessible and it's port 443 is open to the public.
+Preferably, you are able to start the inway service on a machine which is publicly available. Make sure and the port of the inway (we recommend using port 443) is open to the public.
 
 ## The API
 
-In this example we will use [Swagger Petstore](https://petstore.swagger.io) as an example API.
+In the following example we will use [Swagger Petstore](https://petstore.swagger.io) as an example API.
 
 We have to define our API in a TOML-file. You can save the contents below as `service-config.toml`.
 
@@ -88,7 +88,7 @@ docker run --detach \
               nlxio/inway:latest
 ```
 
-We give docker several arguments:
+We give Docker several arguments:
 
 - `--detach` will make the container run in the background and print the container ID
 - `--name my-nlx-inway` the name of your docker container
@@ -122,12 +122,11 @@ docker ps
 
 You should see your container id in the list of containers. The image name  of the container should be `nlxio/inway:latest`.
 
-Take a look at the [directory](https://directory.nlx.io) to see if your API is present. It's status should show a green icon.
+Take a look at the [directory](https://directory.nlx.io) to see if your API is present. Its status should show a green icon.
 
 ## Querying your own API's
 
-Now let's try to fetch some data from our inway using our outway.
-To do so, we have to use the following structure:
+Now let's try to fetch some data from our inway using our outway using `curl`:
 
 ```bash
 curl http://localhost/my-organization/SwaggerPetstore/v2/pet/20002085
