@@ -24,6 +24,7 @@
     "enzyme": "3.9.0",
     "enzyme-adapter-react-16": "1.14.0",
     "enzyme-to-json": "3.3.5",
+    "jest-fetch-mock": "2.1.2",
     "react-test-renderer": "16.8.0"
   },
   "proxy-local": "https://directory.dev.nlx.minikube:30443",
