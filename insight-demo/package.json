@@ -22,7 +22,7 @@
     "@rebass/grid": "6.0.0",
     "polished": "2.3.1",
     "react-pose": "4.0.8",
-    "styled-components": "4.2.1"
+    "styled-components": "4.3.1"
   },
   "browserslist": [
     ">0.2%",
