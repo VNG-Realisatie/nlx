@@ -63,14 +63,10 @@ Once minikube is running, initialize helm by running `helm init` followed by `he
 Next, install the following dependencies:
 
 - `traefik` for web and rest-api requests.
-- `nginx-ingress` for grpc and mutual-tls connections. Latest version is currently(2018-09-06) broken, so needs `--version 0.17.1`
-- `postgres` for directory-db and txlog-db.
 - [KubeDB](https://kubedb.com/docs/0.12.0/setup/install/#using-helm)
 
 ```bash
 helm install stable/traefik --name traefik --namespace traefik --values helm/traefik-values-minikube.yaml
-helm install stable/nginx-ingress --name nginx-ingress --namespace=nginx-ingress --values helm/nginx-ingress-values-minikube.yaml
-helm install stable/postgresql --version 0.18.1 --name postgresql --namespace=postgresql --values helm/postgresql-values-minikube.yaml
 ```
 
 When these components are running, you can start all the NLX components by executing:
