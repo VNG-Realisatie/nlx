@@ -38,7 +38,7 @@
     "eslint-plugin-standard": "4.0.0",
     "jest-enzyme": "7.0.1",
     "prettier": "1.17.1",
-    "typeface-muli": "0.0.54"
+    "typeface-muli": "0.0.71"
   },
   "proxy-local": "http://txlog.dev.haarlem.minikube:30080",
   "proxy-test": "https://txlog.test.voorbeeld-haarlem.nl/",
