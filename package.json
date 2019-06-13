@@ -5,10 +5,10 @@
   "private": true,
   "dependencies": {},
   "devDependencies": {
-    "@semantic-release/changelog": "3.0.2",
-    "@semantic-release/gitlab": "3.1.2",
-    "@semantic-release/git": "7.0.8",
-    "semantic-release": "15.13.12"
+    "@semantic-release/changelog": "3.0.4",
+    "@semantic-release/gitlab": "3.1.5",
+    "@semantic-release/git": "7.0.12",
+    "semantic-release": "15.13.16"
   },
   "repository": {
     "type": "git",
