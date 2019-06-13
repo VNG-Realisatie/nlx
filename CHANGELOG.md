@@ -1,3 +1,18 @@
+## [0.66.2](https://gitlab.com/commonground/nlx/compare/v0.66.1...v0.66.2) (2019-06-13)
+
+
+### Bug Fixes
+
+* **common:** update default logType for the go-flags [#547](https://gitlab.com/commonground/nlx/issues/547) ([dd6ae3a](https://gitlab.com/commonground/nlx/commit/dd6ae3a))
+* **deps:** update dependency axios to v0.19.0 ([3fca974](https://gitlab.com/commonground/nlx/commit/3fca974))
+* **deps:** update dependency copy-text-to-clipboard to v2 ([1b98930](https://gitlab.com/commonground/nlx/commit/1b98930))
+* **deps:** update dependency mobx to v4.10.0 ([8085d4d](https://gitlab.com/commonground/nlx/commit/8085d4d))
+* **deps:** update dependency mobx to v5 ([c60b640](https://gitlab.com/commonground/nlx/commit/c60b640))
+* **deps:** update dependency prop-types to v15.7.2 ([52007aa](https://gitlab.com/commonground/nlx/commit/52007aa))
+* **deps:** update dependency react-scripts to v2.1.8 ([0753ea1](https://gitlab.com/commonground/nlx/commit/0753ea1))
+* **deps:** update dependency styled-components to v4.3.1 ([97dd734](https://gitlab.com/commonground/nlx/commit/97dd734))
+* **README.md:** NLX Stelsel ([e3e897f](https://gitlab.com/commonground/nlx/commit/e3e897f))
+
 ## [0.66.1](https://gitlab.com/commonground/nlx/compare/v0.66.0...v0.66.1) (2019-06-04)
 
 
