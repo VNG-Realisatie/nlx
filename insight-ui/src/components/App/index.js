@@ -6,7 +6,7 @@ import { NavLink, Route } from 'react-router-dom'
 
 import StyledApp, {StyledNLXNavbar, StyledContent} from './index.styles'
 import GlobalStyles from '../../components/GlobalStyles'
-import { Navigation } from '@commonground/design-system'
+import { Navigation, VersionLogger } from '@commonground/design-system'
 import SidebarContainer from '../../containers/SidebarContainer'
 
 import HomePage from '../../components/HomePage'
@@ -35,6 +35,7 @@ const App = () =>
       <Route path="/" exact component={HomePage} />
       <Route path="/organization/:organizationName/" component={OrganizationPageContainer} />
     </StyledContent>
+    <VersionLogger />
   </StyledApp>
 
 export default App
