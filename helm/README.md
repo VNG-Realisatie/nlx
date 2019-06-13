@@ -18,13 +18,13 @@ helm install stable/postgresql --name postgresql --namespace=postgresql --values
 
 Traefik does not work nice out of the box with k8s 1.13+.
 
-Run the following to attach the traefik pod to the hostNework.
+Run the following to attach the traefik pod to the hostNetwork.
 
 ```bash
 kubectl -n traefik get deployment traefik -oyaml | perl -0777 -i.original -pe 's/      volumes:/      hostNetwork: true\n      volumes:/igs' | kubectl -n traefik apply -f -
 ```
 
-It may be that after running this command, the deployment cant find a host to run traefik on. Because port 443 on node2 is still in use, and the new pod needs port 443 on node2..
+It may be that after running this command, the deployment cannot find a host to run traefik on. Most likely this is because port 443 on node2 is still in use and the new pod needs port 443 on node2.
 If that is case, manually delete the old pod.
 
 ### Execute skaffold
@@ -37,7 +37,7 @@ Internally doesn't work because the internal hostnames for services (e.g. `direc
 
 ### Domains
 
-The NLX demo simulation (used in environments `test`, `acc` and `demo`) is based on fictional communications between Haarlem, RDW and BRP. Ofcourse, this is just an example and the organizations themselves are not involved, so we have dedicated three domains to this simulation.
+The NLX demo simulation (used in environments `test`, `acc` and `demo`) is based on fictional communications between Haarlem, RDW and BRP. This is just an example and the organizations themselves are not involved, so we have dedicated three domains to this simulation.
 
 - `voorbeeld-haarlem.nl`
 - `voorbeeld-rdw.nl`

@@ -5,7 +5,7 @@ This document describes how the initial NLX pki is configured. This component do
 ## Introduction
 
 pki-nlx describes the PKI that is used for NLX components. The PKI is setup using [cfssl](https://github.com/cloudflare/cfssl).
-This document currently describes the initial version of the pki-nlx, which is not at all intended to be final and supersecure. The main goal is to have a prod and preprod environment that developers can use, and to discover what features pki-nlx should provide. This means that **future pki-nlx iterations will break the current iteration.**
+This document currently describes the initial version of the pki-nlx, which is not at all intended to be final or super secure. The main goal is to have a prod and preprod environment that developers can use, and to discover what features pki-nlx should provide. This means that **future pki-nlx iterations will break the current iteration.**
 
 ### Create a veracrypt container
 
@@ -92,8 +92,8 @@ Protect hidden volume (if any)? (y=Yes/n=No) [No]: < leave empty >
 Create a ca
 
 ```bash
-env=preprod echo '{"hosts": ["'${env}'.nlx.io"], "key": {"algo": "rsa", "size": 4096}, "names": [{"O": "Common Ground NLX CA", "OU": "NLX"}]}' | 
-	cfssl genkey -initca /dev/stdin | 
+env=preprod echo '{"hosts": ["'${env}'.nlx.io"], "key": {"algo": "rsa", "size": 4096}, "names": [{"O": "Common Ground NLX CA", "OU": "NLX"}]}' |
+	cfssl genkey -initca /dev/stdin |
 	cfssljson -bare ca
 ```
 
@@ -114,7 +114,7 @@ cfssl gencert -ca ca.pem -ca-key ca-key.pem "${csrFilename}" | cfssljson -bare "
 
 The root cert of the ca is `~/some-folder/pki-nlx/preprod/ca.pem`.
 
-To add a keypair as secret in kubernetes, run for alle components that need a cert:
+To add a keypair as secret in kubernetes, run for all components that need a cert:
 
 ```bash
 env=preprod

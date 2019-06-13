@@ -1,6 +1,6 @@
 # inway
 
-The NLX inway proxies incomming requests to the service endpoints of an organization. The inway process is operated by each organization that provides services.
+The NLX _inway_ proxies incoming requests to the service endpoints of an organization. The _inway_ process is operated by each organization that provides services.
 
 ## URI path scheme
 
