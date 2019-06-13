@@ -3,6 +3,7 @@
 
 import React from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { VersionLogger } from '@commonground/design-system'
 import Navigation from './components/Navigation/Navigation'
 import OverviewPage from './pages/OverviewPage/OverviewPage'
 
@@ -14,6 +15,7 @@ const App = () => (
                 <Route exact path="/" component={OverviewPage} />
             </div>
         </Router>
+        <VersionLogger />
     </div>
 )
 
