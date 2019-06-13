@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@commonground/design-system": "1.0.3",
+    "@commonground/design-system": "7.1.0",
     "ajv-keywords": "3.4.0",
     "copy-text-to-clipboard": "2.1.0",
     "mobx": "5.10.1",
-    "react": "16.8.0",
-    "react-dom": "16.8.0",
-    "react-router-dom": "4.3.1",
+    "react": "16.8.6",
+    "react-dom": "16.8.6",
+    "react-router-dom": "5.0.1",
     "react-scripts": "2.1.8",
     "redoc": "2.0.0-rc.8-1",
     "styled-components": "4.3.1"

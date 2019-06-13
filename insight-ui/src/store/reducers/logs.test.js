@@ -9,7 +9,8 @@ describe('the logs reducer', () => {
     expect(logsReducer(undefined, {}))
       .toEqual({
         records: [],
-        pageCount: 0
+        rowCount: 0,
+        rowsPerPage: 0,
       })
   })
 
@@ -33,7 +34,8 @@ describe('the logs reducer', () => {
       }
     }))
       .toEqual({
-        pageCount: 3,
+        rowCount: 11,
+        rowsPerPage: 5,
         records: [{
           id: 'id',
           subjects: ['a', 'b'],
@@ -53,7 +55,8 @@ describe('the logs reducer', () => {
     }))
       .toEqual({
         records: [],
-        pageCount: 0
+        rowCount: 0,
+        rowsPerPage: 0,
       })
   })
 })
