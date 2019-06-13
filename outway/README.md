@@ -1,5 +1,5 @@
 # outway
-The NLX outway proxies outgoing requests to an inway. The outway process is operated by each organization that is making requests to other organizations.
+The NLX _outway_ proxies outgoing requests to an _inway_. The _outway_ process is operated by each organization that is making requests via NLX.
 
 ## URI path scheme
 
