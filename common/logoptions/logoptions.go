@@ -10,7 +10,7 @@ import (
 
 // LogOptions contains go-flags fields which can be used to configure a go-uber/zap config.
 type LogOptions struct {
-	LogType  string `long:"log-type" env:"LOG_TYPE" default:"production" description:"Set the logging config. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger." choice:"live" choice:"local"`
+	LogType  string `long:"log-type" env:"LOG_TYPE" default:"live" description:"Set the logging config. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger." choice:"live" choice:"local"`
 	LogLevel string `long:"log-level" env:"LOG_LEVEL" description:"Override the default loglevel as set by --log-type." choice:"debug" choice:"info" choice:"warn"`
 }
 
