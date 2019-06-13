@@ -1,6 +1,7 @@
 
 domain: dev.haarlem.minikube
 organizationName: haarlem
+logType: local
 
 
 dbDatabaseTxlog: nlx-dev-haarlem-txlog

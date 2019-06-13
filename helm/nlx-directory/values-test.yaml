@@ -1,6 +1,8 @@
 
 domain: test.nlx.io
 
+logType: live
+
 dbDatabaseDirectory: nlx-test-directory
 dbResetDirectory: true # WARNING: All data will be LOST, never use in production!
 dbUsernameDirectory: nlx-test-directory

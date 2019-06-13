@@ -51,7 +51,7 @@ spec:
           command: ["/usr/local/bin/nlx-insight-api"]
           env:
             - name: LOG_TYPE
-              value: development
+              value: {{ default "live" .Values.logType }}
             - name: LOG_LEVEL
               value: {{ default "debug" .Values.logLevel }}
             - name: POSTGRES_DSN
