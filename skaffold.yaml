@@ -15,9 +15,7 @@ build:
   - image: nlxio/ca-cfssl-unsafe
     context: ca-cfssl-unsafe
   - image: nlxio/ca-certportal
-    context: .
-    docker:
-      dockerfile: ca-certportal/Dockerfile
+    context: ca-certportal
   - image: nlxio/directory-db
     context: .
     docker:
