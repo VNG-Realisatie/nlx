@@ -3,7 +3,7 @@
 
 import React from 'react'
 import { func, string, arrayOf, instanceOf } from 'prop-types'
-import { StyledLogDetailPane, StyledTitle, StyledSubtitle, StyledDl, StyledCloseButton } from './index.styles'
+import { StyledLogDetailPane, StyledHeader, StyledTitle, StyledSubtitle, StyledDl, StyledCloseButton } from './index.styles'
 import CloseIcon from '../CloseIcon'
 
 const dateOptions = {
@@ -20,12 +20,14 @@ const timeOptions = {
 
 const LogDetailPane = ({ id, subjects, requestedBy, requestedAt, application, reason, date, closeHandler }) =>
   <StyledLogDetailPane>
-    <StyledTitle>
-      Log
+    <StyledHeader>
+      <StyledTitle>
+        Log
+      </StyledTitle>
       <StyledCloseButton onClick={() => closeHandler()}>
         <CloseIcon />
       </StyledCloseButton>
-    </StyledTitle>
+    </StyledHeader>
 
     <StyledSubtitle>Requested</StyledSubtitle>
     <StyledDl>
@@ -44,7 +46,7 @@ const LogDetailPane = ({ id, subjects, requestedBy, requestedAt, application, re
       <dt>Application</dt>
       <dd>{ application }</dd>
     </StyledDl>
-    
+
     <StyledSubtitle>Details</StyledSubtitle>
     <StyledDl>
       <dt>ID</dt>
@@ -52,7 +54,7 @@ const LogDetailPane = ({ id, subjects, requestedBy, requestedAt, application, re
 
       <dt>Date</dt>
       <dd>{ date.toLocaleDateString('nl-nl', dateOptions) }</dd>
-      
+
       <dt>Time</dt>
       <dd>{ date.toLocaleTimeString('nl-nl', timeOptions) }</dd>
     </StyledDl>

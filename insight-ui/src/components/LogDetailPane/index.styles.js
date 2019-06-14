@@ -15,25 +15,43 @@ export const StyledLogDetailPane = styled.div`
   padding: 20px 24px;
 `
 
+export const StyledHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`
+
 export const StyledTitle = styled.h3`
   color: #517FFF;
   font-size: 20px;
+  line-height: 28px;
   font-weight: 700;
-  line-height: 25px;
-  overflow: hidden;
 `
 
 export const StyledCloseButton = styled.button`
+  width: 40px;
+  height: 40px;
   background: none;
-  border: 0 none;
-  padding: 5px;
-  float: right;
+  border: none;
+  border-radius: 50%;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: #F7F9FC;
+  }
+
+  &:active {
+    background-color: #F0F2F7;
+  }
 `
 
 export const StyledSubtitle = styled.h4`
   font-weight: 600;
   font-size: 12px;
+  line-height: 20px;
   color: #2D3240;
   margin-bottom: 8px;
 `
@@ -41,6 +59,7 @@ export const StyledSubtitle = styled.h4`
 export const StyledDl = styled.dl`
   margin-top: 0;
   font-size: 12px;
+  line-height: 20px;
   overflow: hidden;
 
   dt {
