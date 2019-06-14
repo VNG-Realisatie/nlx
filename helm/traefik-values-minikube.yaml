@@ -17,13 +17,13 @@ rbac:
 kubernetes:
   ingressClass: traefik # Only handle k8s Ingress objects with explicit kubernetes.io/ingress.class="traefik"
 
-# For use with minikube, select different ports for traefik since nginx-ingress already uses 80 and 443
-serviceType: NodePort
-service:
-  nodePorts:
-    http: 30080
-    https: 30443
+deployment:
+  hostPort:
+    httpEnabled: true
+    httpsEnabled: true
+    dashboardEnabled: true
 
 resources:
   limits:
     cpu: "2"
+    memory: "1024Mi"

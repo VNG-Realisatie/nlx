@@ -73,7 +73,7 @@ metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
     traefik.frontend.rule.type: PathPrefixStrip
 spec:
   rules:
-  - host: irma-api.{{.Values.domain}}
+  - host: irma-api.{{.Values.externalDomain}}
     http:
       paths:
         - backend:

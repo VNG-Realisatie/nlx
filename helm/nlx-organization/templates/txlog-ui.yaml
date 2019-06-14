@@ -41,7 +41,7 @@ metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
     traefik.frontend.rule.type: PathPrefixStrip
 spec:
   rules:
-  - host: txlog.{{.Values.domain}}
+  - host: txlog.{{.Values.externalDomain}}
     http:
       paths:
         - path: /

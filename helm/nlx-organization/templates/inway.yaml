@@ -104,14 +104,6 @@ spec:
             - name: ca-certs
               mountPath: /ca-certs
             {{ end }}
-      # NOTE: workarround because .minikube doesn't resolve via DNS
-      {{ if .Values.externalIP }}
-      hostAliases:
-        - ip: "{{.Values.externalIP}}"
-          hostnames:
-            - "{{.Values.directoryRegistrationHostname}}"
-      {{ end }}
-
       restartPolicy: Always
   status: {}
 ---
@@ -126,19 +118,4 @@ spec:
       protocol: TCP
       port: 443
       targetPort: 8443
-# ---
-# apiVersion: extensions/v1beta1
-# kind: Ingress
-# metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
-#   annotations:
-#     kubernetes.io/ingress.class: nginx-ingress
-#     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-# spec:
-#   rules:
-#   - host: inway.{{.Values.domain}}
-#     http:
-#       paths:
-#         - backend:
-#             serviceName: {{.component}}
-#             servicePort: gateway
 {{ end }}

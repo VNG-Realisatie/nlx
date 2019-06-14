@@ -42,7 +42,7 @@ metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
     traefik.frontend.rule.type: PathPrefixStrip
 spec:
   rules:
-    - host: directory.{{.Values.domain}}
+    - host: directory.{{.Values.externalDomain}}
       http:
         paths:
           - path: /

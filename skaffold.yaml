@@ -89,8 +89,6 @@ profiles:
           insightDemoImage: nlxio/insight-demo
           insightUIImage: nlxio/insight-ui
         namespace: nlx-dev-directory
-        setValueTemplates:
-          externalIP: '{{.MINIKUBE_IP}}'
       - name: nlx-dev-brp
         chartPath: helm/nlx-organization
         valuesFiles:
@@ -104,8 +102,6 @@ profiles:
           txlogDBImage: nlxio/txlog-db
           txlogUIImage: nlxio/txlog-ui
         namespace: nlx-dev-brp
-        setValueTemplates:
-          externalIP: '{{.MINIKUBE_IP}}'
       - name: nlx-dev-rdw
         chartPath: helm/nlx-organization
         valuesFiles:
@@ -119,8 +115,6 @@ profiles:
           txlogDBImage: nlxio/txlog-db
           txlogUIImage: nlxio/txlog-ui
         namespace: nlx-dev-rdw
-        setValueTemplates:
-          externalIP: '{{.MINIKUBE_IP}}'
       - name: nlx-dev-haarlem
         chartPath: helm/nlx-organization
         valuesFiles:
@@ -135,8 +129,6 @@ profiles:
           txlogDBImage: nlxio/txlog-db
           txlogUIImage: nlxio/txlog-ui
         namespace: nlx-dev-haarlem
-        setValueTemplates:
-          externalIP: '{{.MINIKUBE_IP}}'
 - name: release
   build:
     tagPolicy:

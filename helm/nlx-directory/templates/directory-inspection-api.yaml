@@ -74,17 +74,6 @@ spec:
           volumeMounts:
             - name: certs
               mountPath: /certs
-
-      # NOTE: workarround because .minikube doesn't resolve via DNS
-      {{ if .Values.externalIP }}
-      hostAliases:
-        - ip: "{{.Values.externalIP}}"
-          hostnames:
-            {{- range .Values.inwayHostnames }}
-            - "{{.}}"
-            {{ end }}
-      {{ end }}
-
       restartPolicy: Always
   status: {}
 ---
@@ -102,7 +91,7 @@ spec:
 ---
 apiVersion: v1
 kind: Service
-metadata: 
+metadata:
   name: directory-inspection-api-internal
   namespace: {{ .Release.Namespace }}
   labels: {{- include "nlx-directory.common.metadata-labels" . | nindent 2 }}
@@ -113,19 +102,4 @@ spec:
       protocol: TCP
       port: 80
       targetPort: 8080
-# ---
-# apiVersion: extensions/v1beta1
-# kind: Ingress
-# metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
-#   annotations:
-#     kubernetes.io/ingress.class: nginx-ingress
-#     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-# spec:
-#   rules:
-#   - host: directory-inspection-api.{{.Values.domain}}
-#     http:
-#       paths:
-#         - backend:
-#             serviceName: inspection-api
-#             servicePort: api
 {{ end }}

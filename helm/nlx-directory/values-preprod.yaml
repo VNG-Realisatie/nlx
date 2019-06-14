@@ -1,5 +1,6 @@
 
 domain: preprod.nlx.io
+externalDomain: preprod.nlx.io
 
 logLevel: info
 logType: live

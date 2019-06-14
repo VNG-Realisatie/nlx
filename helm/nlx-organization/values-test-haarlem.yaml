@@ -1,5 +1,7 @@
 
 domain: test.voorbeeld-haarlem.nl
+externalDomain: test.voorbeeld-haarlem.nl
+
 organizationName: haarlem
 
 

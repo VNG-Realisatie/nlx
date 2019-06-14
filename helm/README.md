@@ -30,10 +30,7 @@ If that is case, manually delete the old pod.
 ### Execute skaffold
 
 In a local development environment it's best to use skaffold for building containers and executing helm.
-Execute skaffold in the following way: `MINIKUBE_IP=$(minikube ip) skaffold dev`.
-
-The minikube IP is required to let inway/outway/directory communicate with eachother via the ingresses, instead of internally.
-Internally doesn't work because the internal hostnames for services (e.g. `directory-api.nlx-directory-dev`) do not match the TLS certificates (e.g. `directory-api.minikube`).
+Execute skaffold in the following way: `skaffold dev`.
 
 ### Domains
 

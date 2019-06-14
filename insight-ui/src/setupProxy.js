@@ -4,7 +4,7 @@
 const proxy = require('http-proxy-middleware')
 
 const getProxyUrl = (proxy) =>
-    proxy ? proxy : 'http://directory.dev.nlx.minikube:30080/'
+    proxy ? proxy : 'http://directory.nlx-dev-directory.minikube/'
 
 module.exports = function(app) {
     const proxyUrl = getProxyUrl(process.env.PROXY)

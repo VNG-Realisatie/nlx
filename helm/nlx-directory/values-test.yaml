@@ -1,5 +1,6 @@
 
 domain: test.nlx.io
+externalDomain: test.nlx.io
 
 logType: live
 

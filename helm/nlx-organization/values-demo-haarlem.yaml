@@ -1,5 +1,7 @@
 
 domain: demo.voorbeeld-haarlem.nl
+externalDomain: demo.voorbeeld-haarlem.nl
+
 organizationName: haarlem
 
 logLevel: info

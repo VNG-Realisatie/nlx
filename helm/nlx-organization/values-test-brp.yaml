@@ -1,5 +1,7 @@
 
 domain: test.voorbeeld-brp.nl
+externalDomain: test.voorbeeld-brp.nl
+
 organizationName: brp
 
 
