@@ -14,17 +14,22 @@ If you want to add to the documentation or code of one of our projects you shoul
 
 ### 1. Make your changes
 
+#### 1.1. Use OneFlow
 This project uses the **OneFlow branching model** and workflow. When you've forked this repository, please make sure to create a feature branch following the OneFlow model. Read this [short blogpost](http://endoflineblog.com/oneflow-a-git-branching-model-and-workflow) when you're not yet familiar with OneFlow.
 
-Add your changes in commits [with a message that explains them](https://robots.thoughtbot.com/5-useful-tips-for-a-better-commit-message). Document choices or decisions you make in the commit message, this will enable everyone to be informed of your choices in the future.
-
-If you are adding code, make sure you've added and updated the relevant documentation and tests before you submit your Merge Request. Make sure to write tests that show the behaviour of the newly added or changed code.
+#### 1.2. Add docs and tests
+If you are adding code, make sure you've added and updated the relevant documentation and tests before you submit your Merge Request. Make sure to write unit tests that show the behaviour of the newly added or changed code.
 
 ### 2. Commit messages
 
+#### 2.1. Explain your contributions
+Add your changes in commits [with a message that explains them](https://robots.thoughtbot.com/5-useful-tips-for-a-better-commit-message). Document choices or decisions you make in the commit message, this will enable everyone to be informed of your choices in the future.
+
+#### 2.2. Semantic Release
 This project uses [semantic-release](https://semantic-release.gitbook.io/semantic-release/). When merging a MR to master, this will automatically generate our [CHANGELOG](./CHANGELOG.md) based on the commit messages and a version tag will be added.
 
-We follow the [Angular Comment Message Conventions](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines). This convention requires you to pas a subject and scope in the commit message. The scope is based on the applications in the repository. If you are not sure which scope to use please leave the scope empty.
+#### 2.3. Conventions for commit messages
+We follow the [Angular Commit Message conventions](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines). This convention requires you to pas a subject and scope in the commit message. The scope is based on the applications in the repository. If you are not sure which scope to use please leave the scope empty.
 
 The available scopes are:
 
@@ -49,22 +54,40 @@ The available scopes are:
 - txlog-db
 - txlog-ui
 
-
+#### 2.4. Do NOT close issues with commit messages
+Make sure _not_ to use the commit message to [automatically close issues](https://docs.gitlab.com/ee/user/project/issues/automatic_issue_closing.html), since we do _not_ want issues to be closed immediately after merging to the master branch.
 
 ### 3. Merge Request
 
-When submitting the Merge Request, please accompany it with a description of the problem you are trying to address and the issue numbers that this Merge Request fixes/addresses.
+#### 3.1. Always refer to an issue
+Before starting a Merge Request, make sure there are one or more User Stories describing what you want to achieve with the MR. [Create user stories by submitting a new issue](https://gitlab.com/commonground/nlx/issues) if there are none. New issues come with a User Story template. This template helps you think from the user perspective: 'who wants this new feature and why?'
 
+#### 3.2. Describe the MR
+
+When submitting the Merge Request, please accompany it with a short description of the problem you are trying to address and the issue numbers that this Merge Request fixes/addresses.
+
+#### 3.3. Combine frontend and backend work in one MR
 When working on a feature which requires specific knowledge of multiple disciplines (eg. both frontend & backend), make sure to complete your MR before asking for a review.
 By doing so, the reviewer can consider the complete solution and give more insightful feedback.
 
 ### 4. Improve
 
-All contributions have to be reviewed by someone.
+#### 4.1. Reviews
+All contributions have to be reviewed by someone. It could be that your contribution can be merged immediately by a maintainer. However, usually, a new Merge Request needs some improvements before it can be merged. Other contributors (or our automatic testing jobs) might have feedback. If this is the case the reviewing maintainer will help you improve your documentation and code.
 
-It could be that your contribution can be merged immediately by a maintainer. However, usually, a new Merge Request needs some improvements before it can be merged. Other contributors (or our automatic testing system Jenkins) might have feedback. If this is the case the reviewing maintainer will help you improve your documentation and code.
+#### 4.2. Definition of Done
 
-If your documentation and code have passed human review and have passed the automated tests, it is merged.
+With MR's we make User Stories become reality. A User Story is DONE when:
+- Code has been written
+- Documentation has been added or updated where necessary
+- All changes have been reviewed and approved by another developer from [team NLX](https://gitlab.com/commonground/nlx/-/project_members)
+- Deliverables (functionality + documentation) have been demoed to the development team and any resulting feedback has been processed
+- Deliverables (functionality + documentation) have been demoed to the Product Owner and any resulting feedback has been processed
+- Any spin-off user stories have been clearly identified and brought to the attention of the Product Owner
+- Sprint demo has been prepared (test data, scenarios, etc.)
+- Product owner has accepted the user story
+- All changes are deployed to the production environments
+
 
 ### 5. Celebrate
 
