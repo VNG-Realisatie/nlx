@@ -1,3 +1,18 @@
+# [0.67.0](https://gitlab.com/commonground/nlx/compare/v0.66.2...v0.67.0) (2019-06-17)
+
+
+### Bug Fixes
+
+* **deps:** update dependency react-app-polyfill to v1 ([996031b](https://gitlab.com/commonground/nlx/commit/996031b))
+* **deps:** update dependency react-redux to v7.1.0 ([a095392](https://gitlab.com/commonground/nlx/commit/a095392))
+* **deps:** update dependency redux-saga to v1.0.3 ([fb00941](https://gitlab.com/commonground/nlx/commit/fb00941))
+* **deps:** update mui monorepo ([43a08b1](https://gitlab.com/commonground/nlx/commit/43a08b1))
+
+
+### Features
+
+* **ui:** add hover/active styling to organisation, log row and close button ([e286611](https://gitlab.com/commonground/nlx/commit/e286611))
+
 ## [0.66.2](https://gitlab.com/commonground/nlx/compare/v0.66.1...v0.66.2) (2019-06-13)
 
 
