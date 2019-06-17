@@ -33,5 +33,5 @@ spec:
                   name: postgres-auth
                   key: POSTGRES_PASSWORD
       restartPolicy: Never
-  backoffLimit: 4
+  backoffLimit: 50
 {{ end }}

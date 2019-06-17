@@ -52,24 +52,24 @@ Setup minikube on your local development machine.
 Read the [minikube README](https://github.com/kubernetes/minikube) for more information.
 
 Configure the vm driver for minikube:
+
 - for Linux: `minikube config set vm-driver kvm2`
 - for Mac: `minikube config set vm-driver hyperkit`
 
-For developers, it's advised to setup minikube with 4 cores, 8GB RAM and 100+G storage.
+For developers, it's advised to setup minikube with 4 cores, 8GB RAM and at least 100G storage.
 e.g.: `minikube start --cpus 4 --memory 8192 --disk-size=100G`
 
 Once minikube is running, initialize helm by running `helm init` followed by `helm repo update`
 
-Next, install the following dependencies:
-
-- `traefik` for web and rest-api requests.
-- [KubeDB](https://kubedb.com/docs/0.12.0/setup/install/#using-helm)
+Next, install Traefik as ingress controller for web and rest-api requests.
 
 ```bash
 helm install stable/traefik --name traefik --namespace traefik --values helm/traefik-values-minikube.yaml
 ```
 
-When these components are running, you can start all the NLX components by executing:
+Also install KubeDB, an operator that manages postgres instances. Follow the [kubedb.com instructions for installing using helm](https://kubedb.com/docs/0.12.0/setup/install/#using-helm).
+
+When Traefik and KubeDB are running, you can start all the NLX components by executing:
 
 ```bash
 skaffold dev --profile minikube
