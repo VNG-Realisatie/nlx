@@ -84,14 +84,16 @@ export class LogsPageContainer extends Component {
     const { logs, organization, location: { pathname, search }, match: { url } } = this.props
     const activeLogId = pathname.substr(url.length + 1)
     const currentPage = getPageFromQueryString(search) || 1
-    const amountOfPages = logs.pageCount || 1
+    const rowCount = logs.rowCount || 0
+    const rowsPerPage = logs.rowsPerPage || 0
 
     return (
       <Fragment>
         <LogsPage 
           logs={logs.records} 
           currentPage={currentPage} 
-          amountOfPages={amountOfPages} 
+          rowCount={rowCount} 
+          rowsPerPage={rowsPerPage} 
           onPageChangedHandler={page => this.onPageChangedHandler(page)} 
           organizationName={organization.name} 
           activeLogId={activeLogId} 
@@ -128,7 +130,8 @@ LogsPageContainer.propTypes = {
       reason: string,
       date: instanceOf(Date)
     })),
-    pageCount: number
+    rowCount: number,
+    rowsPerPage: number,
   }),
   proof: string
 }
@@ -142,7 +145,8 @@ LogsPageContainer.defaultProps = {
   },
   logs: {
     records: [],
-    pageCount: 0
+    rowCount: 0,
+    rowsPerPage: 0,
   }
 }
 

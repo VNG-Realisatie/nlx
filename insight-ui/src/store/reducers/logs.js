@@ -15,15 +15,18 @@ export const modelFromAPIResponse = logFromAPIResponse => ({
 
 const defaultState = {
   records: [],
-  pageCount: 0
+  rowsPerPage: 0,
+  rowCount: 0
 }
 
 export default (state = defaultState, action) => {
   switch (action.type) {
     case TYPES.FETCH_ORGANIZATION_LOGS_SUCCESS:
+      const {rowCount, rowsPerPage, records} = action.data
       return {
-        pageCount: Math.ceil(action.data.rowCount / action.data.rowsPerPage),
-        records: action.data.records.map(record => modelFromAPIResponse(record))
+        rowCount,
+        rowsPerPage,
+        records: records.map(modelFromAPIResponse)
       }
     case TYPES.RESET_LOGIN_INFORMATION:
       return defaultState
