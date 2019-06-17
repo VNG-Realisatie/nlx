@@ -7,7 +7,7 @@ The insight-ui provides a human-readable view of information exchanged between t
 ### NPM scripts
 
 ```bash
-  # run using local backend (proxy to http://directory.dev.nlx.minikube:30080)
+  # run using local backend (proxy to http://directory.nlx-dev-directory.minikube/)
   # see NLX (root) readme how to setup local backend environment
   npm start
 

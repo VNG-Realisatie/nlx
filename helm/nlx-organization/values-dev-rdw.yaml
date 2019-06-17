@@ -1,5 +1,6 @@
+domain: nlx-dev-rdw
+externalDomain: nlx-dev-rdw.minikube
 
-domain: dev.rdw.minikube
 organizationName: rdw
 logType: local
 
@@ -13,8 +14,8 @@ dbPasswordTxlogWriter: nlx-txlog-writer
 
 caAddress: ca-cfssl-unsafe.nlx-dev-directory
 
-directoryRegistrationHostname: directory-registration-api.dev.nlx.minikube
-directoryInspectionHostname: directory-inspection-api.dev.nlx.minikube
+directoryRegistrationHostname: directory-registration-api.nlx-dev-directory
+directoryInspectionHostname: directory-inspection-api.nlx-dev-directory
 
 inway:
   enable: true
@@ -23,8 +24,8 @@ inway:
       [services.kentekenregister]
       endpoint-url = "http://service:8000"
       authorization-model = "none"
-      insight-api-url = "http://insight-api.dev.rdw.minikube:30080"
-      irma-api-url = "http://irma-api.dev.rdw.minikube:30080"
+      insight-api-url = "http://insight-api.nlx-dev-rdw.minikube"
+      irma-api-url = "http://irma-api.nlx-dev-rdw.minikube"
 outway:
   enable: false
   authService: false
@@ -51,9 +52,5 @@ insight:
   apiIrmaCertificate:
     crtDER: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzrZt0jwUE/zlnSugN/z7r9bWcrvMwRN4os7lALwP0w/kTlDewBKIsKDJJPjshQQ7ojImL3IDsROxUunJzBvQo7BgrfFhxBzqTo2bQYPgBWzsuMQ0s6+4GnSxex628JQOW1/Mh5+DoQWCXzl0hAIBi+m08MDLsWI/yyMeYvmqhhemH3t5dSohVDasq+EFZuNmvxC7bUlcfXcYijooGxLmWl2OoOYFeAVey38s4dJW/0vZoZTy2evYrsILtlICtBFXa7dhFY9TzP/1xCUcebtGUiGOBTD4pVkEMyuFwQdvkrjDi7B1eKscl1E7vs+NHZ2w3OJl0V9FOvhXwXoTlzzK+wIDAQAB
     keyDER: MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDOtm3SPBQT/OWdK6A3/Puv1tZyu8zBE3iizuUAvA/TD+ROUN7AEoiwoMkk+OyFBDuiMiYvcgOxE7FS6cnMG9CjsGCt8WHEHOpOjZtBg+AFbOy4xDSzr7gadLF7HrbwlA5bX8yHn4OhBYJfOXSEAgGL6bTwwMuxYj/LIx5i+aqGF6Yfe3l1KiFUNqyr4QVm42a/ELttSVx9dxiKOigbEuZaXY6g5gV4BV7Lfyzh0lb/S9mhlPLZ69iuwgu2UgK0EVdrt2EVj1PM//XEJRx5u0ZSIY4FMPilWQQzK4XBB2+SuMOLsHV4qxyXUTu+z40dnbDc4mXRX0U6+FfBehOXPMr7AgMBAAECggEBAMQn3UL4+9yTyZhBw8IdcQDFj65Eg+JcBcgJKMpvq1yP4ghnOVluvQNPMFDDXj5DbAtYJ2Ayg0pP859IdtQXOP976eJmAm5FOhrcyY18BONhH6mdlp1EjCGexqSc2uCkvpL6721rc08jmTmfne9+r9UDK06ixShIoVy0sKsfXC/tH+GfR7yRWMnuyHR7IwJMU4IQjL7vM/GexifG9Gfl21nT1w783MW0E31ewEi2uFjGqFisk93UDxd8NgRraqJPjy6AedANK3rDPUmak3OHE1oEidS2joqbR8K91oBEhaSGY17Qx0u5pIeY1cg4xG9fiEF2rFC4+unhPuSbHot9r0ECgYEA8rJG+PELcWeKf6FND0ka5FV0srlA+iJA5yhZBa/xUV2CFqcvt++HsBJukPuKkgen6joD165Uysg0G149zxH0cLl9j9xa65FnGQIRiCX/EZONw8rcn4V37ew6Zvn4qPO/H+CEfFlL+xdaII5hGzQGTgSNp1zJfOgI1xcq08Y2o/ECgYEA2gsyVuQ5vBZdiuPzgWsRThEKWcQP8lILq9XTe9C5KOiKwBNALdvveuZFN91TvmqEaDMP7kRH16gFTO+n7WZqcsT3Fr9hIT3IulMuRi47gbmlczOePavlU06ZndWgKOzKsjYK6NxRzQSEOlAsyywaxGiEXzACK1Y0DeI6GCom2asCgYEA27Xtbny5gUbdKUIbgxUJlWCPryTq4AeWfi4WuYFYk/J1TJC6MGhWjF2DXxl5j04DA5bV17Ho7VNlaMleZ1G32zzxoQU6Ajy1+vvWZ00OpxjPpErIhFnOAsRy8rqmFD3l7rPQ/MnScVPoscRzwK7Obl7M5pCnj754ElDU4rd0y+ECgYA+GxBUlZ8oRsqQJAuY4lFEhjAHj4PnRp1SbY5WZwZGc64JtbIDHfEhdXNjzSPsSdS7BUhVWpeIArC30E9pnFFXrWifzxUwbbO99rFohgSnF6TbomlBMbQZPXsd7No4rfGyPxhuaUrXdaDgJzQLDt308bw6jKchhuU+yyA2/9KfDwKBgQCEYS0sgsmshBOmSPToQg2aQj+b/aSrh4sSmxq9qba0iHDTG9frrnv/Epf/XZCUo5L1FAOacurUdx7ZCh0G/yQxIiXNF9jrrKpSElsA2rX3v+RB9s+721BYdw9MUiHf29yYKOVAB3UiNd92dxKDLZm4Nwd865XkQcbghjx/0Ygcmw==
-
-
-# Workarround to resolve minikube external IP's
-externalIP: ""
 
 replicas: 1

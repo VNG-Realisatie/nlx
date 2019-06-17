@@ -1,5 +1,7 @@
 
 domain: demo.voorbeeld-rdw.nl
+externalDomain: demo.voorbeeld-rdw.nl
+
 organizationName: rdw
 
 logLevel: info

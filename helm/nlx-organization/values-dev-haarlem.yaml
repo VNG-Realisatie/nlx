@@ -1,5 +1,6 @@
+domain: nlx-dev-haarlem
+externalDomain: nlx-dev-haarlem.minikube
 
-domain: dev.haarlem.minikube
 organizationName: haarlem
 logType: local
 
@@ -13,8 +14,8 @@ dbPasswordTxlogWriter: nlx-txlog-writer
 
 caAddress: ca-cfssl-unsafe.nlx-dev-directory
 
-directoryRegistrationHostname: directory-registration-api.dev.nlx.minikube
-directoryInspectionHostname: directory-inspection-api.dev.nlx.minikube
+directoryRegistrationHostname: directory-registration-api.nlx-dev-directory
+directoryInspectionHostname: directory-inspection-api.nlx-dev-directory
 
 
 inway:
@@ -24,8 +25,8 @@ inway:
       [services.demo-api]
       endpoint-url = "https://postman-echo.com"
       authorization-model = "none"
-      insight-api-url = "http://insight-api.dev.haarlem.minikube:30080"
-      irma-api-url = "http://irma-api.dev.haarlem.minikube:30080"
+      insight-api-url = "http://insight-api.nlx-dev-haarlem.minikube"
+      irma-api-url = "http://irma-api.nlx-dev-haarlem.minikube"
 outway:
   enable: true
   authService: true
@@ -61,12 +62,5 @@ insight:
     keyDER: MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC05Ac22sFpvXDYaQA/B/+WcXv8EPiPyYs1ZAcQ8ZG7eMp9kOv8+JQEXW2CbesVWw0QYQICDATrdCs6niC2qydOZYwWUQjt13JVekT9PvDi8dP5EpMyWaiDe2rDj3CGgZCXIwiMTQ6I8OUxUCPt20M7I2vQce+Alh+2/XvYmflop8n6BuEX+pRJi9Vw4X1i+rplGzdfDq6c5kdRTYCbcL2aWjgG85mafkRqdrPb7NuZDGB9p6CLjzkHrYiAKsazGH1A1t7Y4bhngKqQrMN4k2MNHbIY9D8cawMWkPMtI1vBxZLmIRV3NpWasgvzKMMpnok7xivmVgU8FPUQkZgA8BBZAgMBAAECggEAK7hxhfCZjtUa0TOPu6xTOilzrhjr+tTbsKvciVvZvVYUmwTMBPiPzf5G2Z93klHPdoX71kLRbZdGW4Sco4n6lhg1I6+yWMoZ+E71HcB4uGF6ulii+yhwclcCFwI0UE5AhEcTadW2DaMrwh98j6DPPxvwkxD2sj2WrMPXiyKsBX8f4mx0asgkQVfFC8tMzgfLj+tDiovOSqhzxkpYDHxp8ACdC+a4+81HBfAgkmR2x+DIOD6o1mW0vnlf2BFo6ZcoUXwqtFXK8xGBKPFpOfPB+hg85gYVStD0vMbTgFmeH5HKTmpZmhJqY4BTSEPGf3JP0/tddkT81IoUwNFS6JQmAQKBgQDuNg7xwxy4f4SL/cNKeKbd/DtIUQPdDuKWyHaM2pctrL5U5Kf26vWV13oqYCJdC3/odZVTnAzoOi8TAay8g1C31D/BCgUt1IW7077Sgb5Jsazmpco6DnZj+ufpKnp/ZHzSNP6dgI/dQEIfG9DBT/xqGSO1bemwm1goRJz7//zMTQKBgQDCZik218RGLFr3KWpXvgj5gVSABxIsuyhvIfPwzGoCBb7YEjPEQtOgTMtM7wn1TY5HA05GY6M8DFxaUbyaCor5AG3N5ZvoCfysoTgezw8WjCXzTNhh308iP2q3JZ2B+C2zPf0aSK/1BntzryYewnoNcyHsGb28KrXtM88N4UnqPQKBgCOjiNbY1xovUdhT7fzdUjHSA9iM7mQLTxE6CqqGJaoatxsiXpLNklKJu2hNm7aJ+uf/d4jbxv6Tfel9DafiiZgHNEagRigWLK/uPRVnfd2urGyRj1DiSwooRrwWs98NXLNiZFmSG3QBoiLfWXsiiWQiQLprKFRY2Xak1UvKf7rdAoGAB+0CYSoK5pGIY+tcWpd05jdPqqifJRO8YkuQFpE/ATYawdR8J9RRrId1An38efPfiSWpW1VUom4eldAfUGh9oglScMKbyKofkyo/j4IBq3mrUnAfol3obA0J3M27zkDAHD66wweTpPnOrrjFZRuovkOjbmzeP32+TR1/o6E70kECgYA2cBAFXM0eBIavlK96Pz1Yl90aFDai43sauZG9KUjjjF1Fcpn7+DaHK8H6l5DiqqUe6Ll2coRD9VZoLmQEIH5ON3I1OfioiKUXgqba1JXQO7TOkC8lFO2znpzxrdbyaJG2nw6SnjqEIf/4lyWi5oHZBvTwMVhnucBQ4c3cCwptOA==
 
 debugEnableOutwayIngress: true
-
-# Workarround to resolve minikube external IP's
-externalIP: ""
-inwayHostnames:
-  - inway.dev.brp.minikube
-  - inway.dev.rdw.minikube
-  - inway.dev.haarlem.minikube
 
 replicas: 1

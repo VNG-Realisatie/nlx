@@ -70,17 +70,6 @@ spec:
           volumeMounts:
             - name: certs
               mountPath: /certs
-
-      # NOTE: workarround because .minikube doesn't resolve via DNS
-      {{ if .Values.externalIP }}
-      hostAliases:
-        - ip: "{{.Values.externalIP}}"
-          hostnames:
-            {{- range .Values.inwayHostnames }}
-            - "{{.}}"
-            {{ end }}
-      {{ end }}
-
       restartPolicy: Always
   status: {}
 ---
@@ -95,19 +84,4 @@ spec:
       protocol: TCP
       port: 443
       targetPort: 8443
-# ---
-# apiVersion: extensions/v1beta1
-# kind: Ingress
-# metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
-#   annotations:
-#     kubernetes.io/ingress.class: nginx-ingress
-#     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-# spec:
-#   rules:
-#   - host: directory-registration-api.{{.Values.domain}}
-#     http:
-#       paths:
-#         - backend:
-#             serviceName: {{.component}}
-#             servicePort: api
 {{ end }}

@@ -1,5 +1,5 @@
-
-domain: dev.nlx.minikube
+domain: nlx-dev-directory
+externalDomain: nlx-dev-directory.minikube
 
 logType: local
 
@@ -20,12 +20,7 @@ demo:
 ca:
   kind: "public"
 
-externalIP: ""
 demoEnv: "dev"
 demoDomain: "minikube"
-inwayHostnames:
-  - inway.dev.brp.minikube
-  - inway.dev.rdw.minikube
-  - inway.dev.haarlem.minikube
 
 replicas: 1

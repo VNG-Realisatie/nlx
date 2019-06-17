@@ -46,7 +46,7 @@ metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
     traefik.frontend.rule.type: PathPrefixStrip
 spec:
   rules:
-    - host: certportal.{{.Values.domain}}
+    - host: certportal.{{.Values.externalDomain}}
       http:
         paths:
           - path: /

@@ -1,5 +1,7 @@
 
 domain: demo.voorbeeld-brp.nl
+externalDomain: demo.voorbeeld-brp.nl
+
 organizationName: brp
 
 logLevel: info

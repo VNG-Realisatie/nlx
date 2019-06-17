@@ -47,32 +47,32 @@ cd nlx
 
 ### Running complete stack in kubernetes/minikube
 
-Setup minikube on your local development machine. 
+Setup minikube on your local development machine.
 
 Read the [minikube README](https://github.com/kubernetes/minikube) for more information.
 
 Configure the vm driver for minikube:
+
 - for Linux: `minikube config set vm-driver kvm2`
 - for Mac: `minikube config set vm-driver hyperkit`
 
-For developers, it's advised to setup minikube with 4 cores, 8GB RAM and 100+G storage.
+For developers, it's advised to setup minikube with 4 cores, 8GB RAM and at least 100G storage.
 e.g.: `minikube start --cpus 4 --memory 8192 --disk-size=100G`
 
 Once minikube is running, initialize helm by running `helm init` followed by `helm repo update`
 
-Next, install the following dependencies:
-
-- `traefik` for web and rest-api requests.
-- [KubeDB](https://kubedb.com/docs/0.12.0/setup/install/#using-helm)
+Next, install Traefik as ingress controller for web and rest-api requests.
 
 ```bash
 helm install stable/traefik --name traefik --namespace traefik --values helm/traefik-values-minikube.yaml
 ```
 
-When these components are running, you can start all the NLX components by executing:
+Also install KubeDB, an operator that manages postgres instances. Follow the [kubedb.com instructions for installing using helm](https://kubedb.com/docs/0.12.0/setup/install/#using-helm).
+
+When Traefik and KubeDB are running, you can start all the NLX components by executing:
 
 ```bash
-MINIKUBE_IP=$(minikube ip) skaffold dev --profile minikube
+skaffold dev --profile minikube
 ```
 
 Finally, add the minikube hostnames to your machine's `/etc/hosts` file so you can reach the services from your browser.
@@ -83,19 +83,17 @@ sh initialize-hostnames.sh
 
 You may now test the following sites:
 
-- https://traefik.minikube:30443                 A webinterface showing the status of the traefik ingress controller.
-- http://docs.dev.nlx.minikube:30080             The NLX docs
-- http://certportal.dev.nlx.minikube:30080       The NLX certportal
-- http://directory.dev.nlx.minikube:30080        The NLX directory
-- http://txlog.dev.rdw.minikube:30080/           Transactionlogs for the RDW example organization
-- http://txlog.dev.brp.minikube:30080/           Transactionlogs for the BRP example organization
-- http://txlog.dev.haarlem.minikube:30080/       Transactionlogs for the Haarlem example organization
-- http://outway.dev.haarlem.minikube:30080/      Outway in the Haarlem example organization
-- http://application.dev.haarlem.minikube:30080/ Demo application
+- https://traefik.minikube/                         Webinterface showing the status of the traefik ingress controller
+- http://docs.nlx-dev-directory.minikube/           Documentation
+- http://certportal.nlx-dev-directory.minikube/     Portal to generate TLS certificates
+- http://directory.nlx-dev-directory.minikube/      Overview of all services in the network
+- http://application.nlx-dev-haarlem.minikube/      Demo application for requesting a parking permit
+- http://outway.nlx-dev-haarlem.minikube/           Outway of the Haarlem example organization
+- http://txlog.nlx-dev-rdw.minikube/                Transaction logs of the RDW example organization
+- http://txlog.nlx-dev-brp.minikube/                Transaction logs of the BRP example organization
+- http://insight.nlx-dev-directory.minikube/        Insight in logs concerning a specific person
 
-To test a full request through outway>inway, use the PostmanEcho service through the exampleorg outway: `curl http://outway.dev.exampleorg.minikube:30080/DemoProviderOrganization/PostmanEcho/get?foo1=bar1&foo2=bar2`
-
-Note the ports; `30080` and `30443` are routed via traefik (TLS handled by traefik), whereas `:80` and `:443` are used by nginx-ingress, which does "tcp-proxying" with ssl passthrough so the mutual TLS can be handled by inway/outway/directory/etc.
+To test a full request through outway>inway, use the PostmanEcho service through the exampleorg outway: `curl http://outway.nlx-dev-haarlem.minikube/DemoProviderOrganization/PostmanEcho/get?foo1=bar1&foo2=bar2`
 
 If you want to connect over IP instead of using a hostname, the ingress controller cannot route the request properly. Therefore you must setup a port-forward directly to the application you want to expose. This is useful, for example, when testing IRMA using a phone on the same WiFi network as your host machine.
 

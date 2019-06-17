@@ -68,18 +68,6 @@ spec:
           volumeMounts:
             - name: certs
               mountPath: /certs
-
-      # NOTE: workarround because .minikube doesn't resolve via DNS
-      {{ if .Values.externalIP }}
-      hostAliases:
-        - ip: "{{.Values.externalIP}}"
-          hostnames:
-            - "{{.Values.directoryInspectionHostname}}"
-            {{- range .Values.inwayHostnames }}
-            - "{{.}}"
-            {{ end }}
-      {{ end }}
-
       restartPolicy: Always
   status: {}
 ---
@@ -105,7 +93,7 @@ metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
     kubernetes.io/ingress.class: traefik
 spec:
   rules:
-  - host: outway.{{.Values.domain}}
+  - host: outway.{{.Values.externalDomain}}
     http:
       paths:
         - path: /

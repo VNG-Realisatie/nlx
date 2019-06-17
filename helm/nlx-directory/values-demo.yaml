@@ -1,5 +1,6 @@
 
 domain: demo.nlx.io
+externalDomain: demo.nlx.io
 
 logLevel: info
 logType: live
