@@ -1,8 +1,8 @@
 
 **IMPORTANT! When reporting an abusable security issue in our production
-environment, please send an e-mail to support@nlx.io instead of using this form.**
+environment, please send an email to security@nlx.io instead of using this form.**
 
-**When using this form, please select the "confidential" checkbox below this input field.**
+**Please select the "confidential" checkbox below this input field.**
 
 (Replace warning above and this hint with a summarised description of the security issue.)
 

@@ -22,14 +22,14 @@ If you are adding code, make sure you've added and updated the relevant document
 
 ### 2. Commit messages
 
-#### 2.1. Explain your contrributions
+#### 2.1. Explain your contributions
 Add your changes in commits [with a message that explains them](https://robots.thoughtbot.com/5-useful-tips-for-a-better-commit-message). Document choices or decisions you make in the commit message, this will enable everyone to be informed of your choices in the future.
 
 #### 2.2. Semantic Release
 This project uses [semantic-release](https://semantic-release.gitbook.io/semantic-release/). When merging a MR to master, this will automatically generate our [CHANGELOG](./CHANGELOG.md) based on the commit messages and a version tag will be added.
 
-#### 2.3. Use Angular Commit Message Convention
-We follow the [Angular Commit Message Convention](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines). This convention requires you to pas a subject and scope in the commit message. The scope is based on the applications in the repository. If you are not sure which scope to use please leave the scope empty.
+#### 2.3. Conventions for commit messages
+We follow the [Angular Commit Message conventions](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines). This convention requires you to pas a subject and scope in the commit message. The scope is based on the applications in the repository. If you are not sure which scope to use please leave the scope empty.
 
 The available scopes are:
 
@@ -66,7 +66,7 @@ Before starting a Merge Request, make sure there are one or more User Stories de
 
 When submitting the Merge Request, please accompany it with a short description of the problem you are trying to address and the issue numbers that this Merge Request fixes/addresses.
 
-#### 3.1. Combine frontend and backend work in one MR
+#### 3.3. Combine frontend and backend work in one MR
 When working on a feature which requires specific knowledge of multiple disciplines (eg. both frontend & backend), make sure to complete your MR before asking for a review.
 By doing so, the reviewer can consider the complete solution and give more insightful feedback.
 
@@ -83,7 +83,6 @@ With MR's we make User Stories become reality. A User Story is DONE when:
 - All changes have been reviewed and approved by another developer from [team NLX](https://gitlab.com/commonground/nlx/-/project_members)
 - Deliverables (functionality + documentation) have been demoed to the development team and any resulting feedback has been processed
 - Deliverables (functionality + documentation) have been demoed to the Product Owner and any resulting feedback has been processed
-- Known bugs/issues have been resolved
 - Any spin-off user stories have been clearly identified and brought to the attention of the Product Owner
 - Sprint demo has been prepared (test data, scenarios, etc.)
 - Product owner has accepted the user story
