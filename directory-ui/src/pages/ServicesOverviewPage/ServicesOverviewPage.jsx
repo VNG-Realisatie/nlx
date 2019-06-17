@@ -30,8 +30,11 @@ class ServicesOverviewPage extends Component {
     }
 
     fetchServices() {
-      return fetch(`/api/directory/list-services`)
-        .then(response => response.json())
+      return fetch(`/api/directory/list-services`,{
+        headers: {
+            'Content-Type': 'application/json',
+        },
+      }).then(response => response.json())
     }
 
     escFunction(event) {

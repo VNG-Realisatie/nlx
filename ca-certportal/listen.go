@@ -66,6 +66,7 @@ func (rd *certificateResponse) Render(w http.ResponseWriter, r *http.Request) er
 
 func rootCertHandler(logger *zap.Logger, createSigner createSignerFunc) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/plain")
 		signer, err := createSigner()
 		if err != nil {
 			logger.Error("error obtaining root.crt from cfssl root CA", zap.Error(err))

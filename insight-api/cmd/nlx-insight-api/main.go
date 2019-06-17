@@ -150,6 +150,7 @@ func listDataSubjects(logger *zap.Logger, dataSubjects map[string]config.DataSub
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
 		err := json.NewEncoder(w).Encode(outputList)
 		if err != nil {
 			logger.Error("failed to output DataSubjects", zap.Error(err))
@@ -291,6 +292,7 @@ func newTxlogFetcher(logger *zap.Logger, db *sqlx.DB, dataSubjects map[string]co
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
 		jwtBytes, err := ioutil.ReadAll(r.Body)
 		defer r.Body.Close()
 		if err != nil {
