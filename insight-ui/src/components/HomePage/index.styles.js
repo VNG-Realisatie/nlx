@@ -7,12 +7,13 @@ import {Card} from '@commonground/design-system'
 export const StyledCard = styled(Card)`
   width: 400px;
   padding: 8px 24px 8px 24px;
-  
+
   .text-muted {
     font-size: 12px;
+    line-height: 20px;
     color: #A3AABF;
   }
-  
+
   a {
     text-decoration: none;
     color: #517FFF;

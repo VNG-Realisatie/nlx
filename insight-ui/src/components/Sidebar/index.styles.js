@@ -24,7 +24,7 @@ export const StyledSearch = styled(Search)`
 export const StyledOrganizationList = styled.ul`
   list-style-type: none;
   padding: 0;
-  
+
   a {
     color: #A3AABF;
     font-weight: 600;
@@ -34,7 +34,14 @@ export const StyledOrganizationList = styled.ul`
     line-height: 22px;
     font-size: 14px;
 
-    
+    &:hover {
+      background-color: #F7F9FC;
+    }
+
+    &:active {
+      background-color: #F0F2F7;
+    }
+
     &.active {
       color: #517FFF;
       border-left: 2px solid #517FFF;
