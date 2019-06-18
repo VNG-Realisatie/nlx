@@ -1,3 +1,20 @@
+# [0.68.0](https://gitlab.com/commonground/nlx/compare/v0.67.0...v0.68.0) (2019-06-18)
+
+
+### Bug Fixes
+
+* specify a form action for all forms to prevent HTTP parameter override attacks [#588](https://gitlab.com/commonground/nlx/issues/588) ([7403437](https://gitlab.com/commonground/nlx/commit/7403437))
+* **txlog-ui:** install the correct @commonground/design-system version ([313c2ea](https://gitlab.com/commonground/nlx/commit/313c2ea))
+* **txlog-ui:** remove deprecated spacing property ([afbe6e6](https://gitlab.com/commonground/nlx/commit/afbe6e6))
+
+
+### Features
+
+* **directory-ui:** replace local VersionLogger with shared component ([860c10d](https://gitlab.com/commonground/nlx/commit/860c10d))
+* **directory-ui:** show the tag field from version.json in the console log ([2046380](https://gitlab.com/commonground/nlx/commit/2046380))
+* **insight-ui:** add VersionLogger component to log the version on the console ([251f872](https://gitlab.com/commonground/nlx/commit/251f872))
+* **txlog-ui:** add VersionLogger component to log the version on the console ([f1e3c73](https://gitlab.com/commonground/nlx/commit/f1e3c73))
+
 # [0.67.0](https://gitlab.com/commonground/nlx/compare/v0.66.2...v0.67.0) (2019-06-17)
 
 
