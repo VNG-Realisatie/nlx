@@ -27,9 +27,6 @@ export const muiTheme = createMuiTheme({
             letterSpacing: -1,
         },
     },
-    spacing: {
-        unit: 16,
-    },
     palette: {
         common: {
             black: '#000',
