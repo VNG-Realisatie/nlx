@@ -18,13 +18,20 @@ type CertPortal struct {
 	router chi.Router
 }
 
+func SetXContentTypeHandler(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("X-Content-Type-Options", "nosniff")
+		next.ServeHTTP(w, r)
+	})
+}
+
 // NewCertPortal creates a new CertPortal and sets it up to handle requests.
 func NewCertPortal(l *zap.Logger, createSigner createSignerFunc) *CertPortal {
 	i := &CertPortal{
 		logger: l,
 	}
 	r := chi.NewRouter()
-
+	r.Use(SetXContentTypeHandler)
 	r.Route("/api", func(r chi.Router) {
 		r.Post("/request_certificate", requestCertificateHandler(i.logger, createSigner))
 	})
