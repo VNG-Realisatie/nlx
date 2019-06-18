@@ -3,8 +3,6 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import axios from 'axios'
-import MockAdapter from 'axios-mock-adapter'
 import App from './App'
 
 describe('App', () => {
