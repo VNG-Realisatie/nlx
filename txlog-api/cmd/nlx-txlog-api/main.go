@@ -63,7 +63,10 @@ func main() {
 	if err != nil {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))
 	}
+	logDB.SetConnMaxLifetime(5 * time.Minute)
+	logDB.SetMaxIdleConns(2)
 	logDB.MapperFunc(xstrings.ToSnakeCase)
+
 	process.CloseGracefully(logDB.Close)
 
 	dbversion.WaitUntilLatestTxlogDBVersion(logger, logDB.DB)

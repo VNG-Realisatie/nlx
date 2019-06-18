@@ -6,6 +6,7 @@ package main
 import (
 	"crypto/tls"
 	"log"
+	"time"
 
 	"github.com/huandu/xstrings"
 	flags "github.com/jessevdk/go-flags"
@@ -67,7 +68,10 @@ func main() {
 	if err != nil {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))
 	}
+	db.SetConnMaxLifetime(5 * time.Minute)
+	db.SetMaxIdleConns(2)
 	db.MapperFunc(xstrings.ToSnakeCase)
+
 	process.CloseGracefully(db.Close)
 
 	dbversion.WaitUntilLatestDirectoryDBVersion(logger, db.DB)
