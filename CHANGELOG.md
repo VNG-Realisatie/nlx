@@ -1,3 +1,11 @@
+## [0.68.1](https://gitlab.com/commonground/nlx/compare/v0.68.0...v0.68.1) (2019-06-19)
+
+
+### Bug Fixes
+
+* fix releaserc config ([b1efafc](https://gitlab.com/commonground/nlx/commit/b1efafc))
+* rework releaserc config to only specify preset overrides ([749caa5](https://gitlab.com/commonground/nlx/commit/749caa5))
+
 # [0.68.0](https://gitlab.com/commonground/nlx/compare/v0.67.0...v0.68.0) (2019-06-18)
 
 
