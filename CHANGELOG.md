@@ -1,3 +1,10 @@
+## [0.68.2](https://gitlab.com/commonground/nlx/compare/v0.68.1...v0.68.2) (2019-06-19)
+
+
+### Bug Fixes
+
+* loosen CSP to make sure apps work ([3e1666c](https://gitlab.com/commonground/nlx/commit/3e1666c))
+
 ## [0.68.1](https://gitlab.com/commonground/nlx/compare/v0.68.0...v0.68.1) (2019-06-19)
 
 
