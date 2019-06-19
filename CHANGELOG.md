@@ -1,3 +1,5 @@
+## [0.68.3](https://gitlab.com/commonground/nlx/compare/v0.68.2...v0.68.3) (2019-06-19)
+
 ## [0.68.2](https://gitlab.com/commonground/nlx/compare/v0.68.1...v0.68.2) (2019-06-19)
 
 
