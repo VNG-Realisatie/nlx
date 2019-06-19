@@ -18,9 +18,13 @@ type CertPortal struct {
 	router chi.Router
 }
 
-func SetXContentTypeHandler(next http.Handler) http.Handler {
+func SetSecurityHeadersHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Security-Policy", "default-src 'self'; style-src 'self' 'unsafe-inline'")
+		w.Header().Set("Referrer-Policy", "same-origin")
 		w.Header().Set("X-Content-Type-Options", "nosniff")
+		w.Header().Set("X-Frame-Options", "DENY")
+		w.Header().Set("X-XSS-Protection", "1; mode=block")
 		next.ServeHTTP(w, r)
 	})
 }
@@ -31,7 +35,7 @@ func NewCertPortal(l *zap.Logger, createSigner createSignerFunc) *CertPortal {
 		logger: l,
 	}
 	r := chi.NewRouter()
-	r.Use(SetXContentTypeHandler)
+	r.Use(SetSecurityHeadersHandler)
 	r.Route("/api", func(r chi.Router) {
 		r.Post("/request_certificate", requestCertificateHandler(i.logger, createSigner))
 	})
