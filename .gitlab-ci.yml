@@ -173,7 +173,7 @@ Deploy test:
 Deploy acceptance:
   extends: .deploy
   before_script:
-    - kubectl config use-context charlie.k8s.nlx.io
+    - kubectl config use-context delta.k8s.nlx.io
   environment:
     name: acc
   only:
@@ -185,7 +185,7 @@ Deploy acceptance:
 Deploy demo:
   extends: .deploy
   before_script:
-    - kubectl config use-context charlie.k8s.nlx.io
+    - kubectl config use-context delta.k8s.nlx.io
   environment:
     name: demo
   only:
@@ -198,7 +198,7 @@ Deploy demo:
 # Deploy preprod:
 #   extends: .deploy
 #   before_script:
-#     - kubectl config use-context charlie.k8s.nlx.io
+#     - kubectl config use-context delta.k8s.nlx.io
 #   environment:
 #     name: preprod
 #   when: manual
@@ -208,7 +208,7 @@ Deploy demo:
 # Deploy prod:
 #   extends: .deploy
 #   before_script:
-#     - kubectl config use-context charlie.k8s.nlx.io
+#     - kubectl config use-context delta.k8s.nlx.io
 #   environment:
 #     name: prod
 #   when: manual
