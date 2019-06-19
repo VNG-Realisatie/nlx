@@ -161,7 +161,7 @@ Release container images:
 Deploy test:
   extends: .deploy
   before_script:
-    - kubectl config use-context charlie.k8s.nlx.io
+    - kubectl config use-context delta.k8s.nlx.io
   environment:
     name: test
   only:
