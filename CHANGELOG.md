@@ -1,3 +1,10 @@
+# [0.70.0](https://gitlab.com/commonground/nlx/compare/v0.69.0...v0.70.0) (2019-06-24)
+
+
+### Features
+
+* **directory-ui:** show tooltip on API URL and documentation button + show notifier when URL is copied ([af2c7af](https://gitlab.com/commonground/nlx/commit/af2c7af))
+
 # [0.69.0](https://gitlab.com/commonground/nlx/compare/v0.68.3...v0.69.0) (2019-06-20)
 
 
