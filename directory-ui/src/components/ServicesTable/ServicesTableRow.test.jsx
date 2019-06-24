@@ -4,7 +4,7 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 import copy from 'copy-text-to-clipboard'
-import ServicesTableRow, { apiAddressForService } from './ServicesTableRow'
+import ServicesTableRow, { apiUrlForService } from './ServicesTableRow'
 jest.mock('copy-text-to-clipboard')
 
 it('renders without crashing', () => {
@@ -16,7 +16,7 @@ it('renders without crashing', () => {
 
 describe('the API address', () => {
   it('should consist out of the organization and service name', () => {
-    const apiAddress = apiAddressForService('service', 'organization')
+    const apiAddress = apiUrlForService('organization', 'service')
     expect(apiAddress).toBe('http://{your-outway-address}:12018/organization/service')
   })
 })
