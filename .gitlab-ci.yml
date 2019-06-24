@@ -4,6 +4,7 @@ stages:
   - Tools
   - Release
   - Deploy
+  - Scan
 
 Go go.mod tidy test:
   stage: Tests
@@ -246,3 +247,50 @@ Docker tag latest:
     - shell-executor
   except:
     - schedules
+
+# Scan configuration based on
+# the offical GitLab documentation and adjusted to be able to:
+# - scan multiple images, based on images-to-scan.txt
+# - transform the output files of the scans into one file named gl-container-scanning-report.json
+# Via https://docs.gitlab.com/ee/user/application_security/container_scanning/#including-the-provided-template
+Scan images:
+  stage: Scan
+  image: docker:stable
+  tags:
+    - docker
+    - linux
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+  services:
+    - docker:dind
+  variables:
+    CLAIR_LOCAL_SCAN_VERSION: v2.0.8_fe9b059d930314b54c78f75afe265955faf4fdc1
+    NO_PROXY: docker,localhost
+  only:
+    - schedules
+    - master
+  allow_failure: true
+  script:
+    - apk add jq
+    - docker run -d --name db arminc/clair-db:latest
+    - docker run -p 6060:6060 --link db:postgres -d --name clair --restart on-failure arminc/clair-local-scan:${CLAIR_LOCAL_SCAN_VERSION}
+    - apk add -U wget ca-certificates
+    - cat images-to-scan.txt | xargs -n1 docker pull
+    - wget https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64
+    - mv clair-scanner_linux_amd64 clair-scanner
+    - chmod +x clair-scanner
+    - touch clair-whitelist.yml
+    - retries=0
+    - echo "Waiting for clair daemon to start"
+    - while( ! wget -T 10 -q -O /dev/null http://docker:6060/v1/namespaces ) ; do sleep 1 ; echo -n "." ; if [ $retries -eq 10 ] ; then echo " Timeout, aborting." ; exit 1 ; fi ; retries=$(($retries+1)) ; done
+    - mkdir scanning-reports
+    - cat images-to-scan.txt | awk '{ system(sprintf("./clair-scanner -c http://docker:6060 --ip $(hostname -i) -r scanning-reports/report-%s.json -l clair.log -w clair-whitelist.yml %s || true", NR, $0)) }'
+    - ls scanning-reports/ | xargs -I % sh -c "cat scanning-reports/% | jq '.image as \$prefix | .vulnerabilities[].description |= \$prefix + \" - \" + .' > scanning-reports/processed-%"
+    - jq -s '[.[] | to_entries] | flatten | reduce .[] as $dot ({}; .[$dot.key] += $dot.value) | .image = "nlxio" | .unapproved |= unique' scanning-reports/processed-* > gl-container-scanning-report.json
+  artifacts:
+    paths:
+      - scanning-reports/
+      - gl-container-scanning-report.json
+    reports:
+      container_scanning: gl-container-scanning-report.json
