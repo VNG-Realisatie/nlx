@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2018
 // Licensed under the EUPL
 
-package main
+package insightapi
 
 import "net/http"
 

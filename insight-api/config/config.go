@@ -4,6 +4,7 @@
 package config
 
 import (
+	"fmt"
 	"strings"
 
 	"go.nlx.io/nlx/insight-api/irma"
@@ -23,14 +24,15 @@ type DataSubject struct {
 }
 
 // LoadInsightConfig reads the service config from disk and returns.
-func LoadInsightConfig(logger *zap.Logger, insightConfigLocation string) *InsightConfig {
+func LoadInsightConfig(logger *zap.Logger, insightConfigLocation string) (*InsightConfig, error) {
 	insightConfig := &InsightConfig{}
 	tomlMetaData, err := toml.DecodeFile(insightConfigLocation, insightConfig)
 	if err != nil {
-		logger.Fatal("failed to load service config", zap.Error(err))
+		return nil, err
 	}
 	if len(tomlMetaData.Undecoded()) > 0 {
-		logger.Fatal("unsupported values in toml", zap.String("key", strings.Join(tomlMetaData.Undecoded()[0], ">")))
+		return nil, fmt.Errorf("unsupported values in toml. key: " + strings.Join(tomlMetaData.Undecoded()[0], ">"))
+
 	}
-	return insightConfig
+	return insightConfig, nil
 }
