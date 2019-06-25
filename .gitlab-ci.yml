@@ -115,6 +115,8 @@ Txlog-ui tests:
   tags:
     - nlx
     - docker-executor
+  except:
+    - schedules
 
 Database diff test:
   stage: Tests
@@ -250,7 +252,7 @@ Docker tag latest:
 
 # Scan configuration based on
 # the offical GitLab documentation and adjusted to be able to:
-# - scan multiple images, based on images-to-scan.txt
+# - scan multiple images, based on `container-scanning/images-to-scan.txt`
 # - transform the output files of the scans into one file named gl-container-scanning-report.json
 # Via https://docs.gitlab.com/ee/user/application_security/container_scanning/#including-the-provided-template
 Scan images:
@@ -269,14 +271,13 @@ Scan images:
     NO_PROXY: docker,localhost
   only:
     - schedules
-    - master
   allow_failure: true
   script:
     - apk add jq
     - docker run -d --name db arminc/clair-db:latest
     - docker run -p 6060:6060 --link db:postgres -d --name clair --restart on-failure arminc/clair-local-scan:${CLAIR_LOCAL_SCAN_VERSION}
     - apk add -U wget ca-certificates
-    - cat images-to-scan.txt | xargs -n1 docker pull
+    - cat container-scanning/images-to-scan.txt | xargs -n1 docker pull
     - wget https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64
     - mv clair-scanner_linux_amd64 clair-scanner
     - chmod +x clair-scanner
@@ -287,7 +288,7 @@ Scan images:
     - sh container-scanning/generate-report.sh container-scanning/images-to-scan.txt gl-container-scanning-report.json
   artifacts:
     paths:
-      - scanning-reports/
+      - tmp-scanning-reports/
       - gl-container-scanning-report.json
     reports:
       container_scanning: gl-container-scanning-report.json
