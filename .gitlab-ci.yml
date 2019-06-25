@@ -271,7 +271,6 @@ Scan images:
     NO_PROXY: docker,localhost
   only:
     - schedules
-    - master
   allow_failure: true
   script:
     - apk add jq
@@ -289,7 +288,7 @@ Scan images:
     - sh container-scanning/generate-report.sh container-scanning/images-to-scan.txt gl-container-scanning-report.json
   artifacts:
     paths:
-      - scanning-reports/
+      - tmp-scanning-reports/
       - gl-container-scanning-report.json
     reports:
       container_scanning: gl-container-scanning-report.json
