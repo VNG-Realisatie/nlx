@@ -115,6 +115,8 @@ Txlog-ui tests:
   tags:
     - nlx
     - docker-executor
+  except:
+    - schedules
 
 Database diff test:
   stage: Tests
