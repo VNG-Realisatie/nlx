@@ -2,6 +2,8 @@ apiVersion: skaffold/v1beta11
 kind: Config
 build:
   artifacts:
+  - image: nlxio/common
+    context: common
   - image: nlxio/go_base
     context: .
     docker:
