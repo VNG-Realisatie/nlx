@@ -67,9 +67,7 @@ build:
     docker:
       dockerfile: insight-api/Dockerfile
   - image: nlxio/auth-service
-    context: .
-    docker:
-      dockerfile: auth-service/Dockerfile
+    context: .auth-service
   tagPolicy:
     sha256: {}
   local:

@@ -1,15 +1,5 @@
 # Use go 1.x based on the latest alpine image.
-FROM golang:1-alpine AS build
-
-# Install build tools.
-RUN apk add --update git gcc musl-dev
-
-# Cache dependencies
-COPY go.mod /go/src/go.nlx.io/nlx/go.mod
-COPY go.sum /go/src/go.nlx.io/nlx/go.sum
-ENV GO111MODULE on
-WORKDIR /go/src/go.nlx.io/nlx
-RUN go mod download
+FROM nlxio/go_base AS build
 
 COPY auth-service /go/src/go.nlx.io/nlx/auth-service
 WORKDIR /go/src/go.nlx.io/nlx/auth-service
