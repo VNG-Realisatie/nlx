@@ -1,3 +1,11 @@
+## [0.70.1](https://gitlab.com/commonground/nlx/compare/v0.70.0...v0.70.1) (2019-06-25)
+
+
+### Bug Fixes
+
+* **docs:** links to folders without slashes now work as expected ([f5a2659](https://gitlab.com/commonground/nlx/commit/f5a2659))
+* add security headers also on error pages ([5b70507](https://gitlab.com/commonground/nlx/commit/5b70507))
+
 # [0.70.0](https://gitlab.com/commonground/nlx/compare/v0.69.0...v0.70.0) (2019-06-24)
 
 
