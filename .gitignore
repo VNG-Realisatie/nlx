@@ -4,3 +4,5 @@ node_modules/
 /vendor
 .DS_Store
 .idea
+tmp-scanning-reports
+gl-container-scanning-report.json
