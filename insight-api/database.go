@@ -105,15 +105,34 @@ func (i *InsightDatabase) GetLogRecords(rowsPerPage, page int, dataSubjectsByIrm
 		}
 	}()
 
-	// TODO: #345 investigate possible other solutions or optimizations for this crazy exercise
-	_, err = tx.Stmtx(i.stmtCreateMatchDataSubjects).Exec()
+	err = i.matchDataSubjects(tx, dataSubjectsByIrmaAttribute, claims)
 	if err != nil {
-		return nil, fmt.Errorf("error executing stmtCreateMatchDataSubjects: %s", err)
+		return nil, err
+	}
+
+	out, err := i.fetchRecords(tx, page, rowsPerPage)
+	if err != nil {
+		return nil, err
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		i.logger.Warn("failed to commit transaction after succesful select", zap.Error(err))
+	}
+
+	return out, nil
+}
+
+func (i *InsightDatabase) matchDataSubjects(tx *sqlx.Tx, dataSubjectsByIrmaAttribute map[string][]string, claims *irma.VerificationResultClaims) error {
+	// TODO: #345 investigate possible other solutions or optimizations for this crazy exercise
+	_, err := tx.Stmtx(i.stmtCreateMatchDataSubjects).Exec()
+	if err != nil {
+		return fmt.Errorf("error executing stmtCreateMatchDataSubjects: %s", err)
 	}
 
 	stmtInsertMatchDataSubjects, err := tx.Preparex(i.rawStmtInsertMatchDataSubjects)
 	if err != nil {
-		return nil, fmt.Errorf("error perparing stmtInsertMatchDataSubjects: %s", err)
+		return fmt.Errorf("error perparing stmtInsertMatchDataSubjects: %s", err)
 	}
 	defer stmtInsertMatchDataSubjects.Close()
 
@@ -121,11 +140,15 @@ func (i *InsightDatabase) GetLogRecords(rowsPerPage, page int, dataSubjectsByIrm
 		for _, dataSubjectKey := range dataSubjectsByIrmaAttribute[irmaAttributeKey] {
 			_, err = stmtInsertMatchDataSubjects.Exec(dataSubjectKey, irmaAttributeValue)
 			if err != nil {
-				return nil, fmt.Errorf("error executing stmtInsertMatchDataSubjects: %s", err)
+				return fmt.Errorf("error executing stmtInsertMatchDataSubjects: %s", err)
 			}
 		}
 	}
 
+	return nil
+}
+
+func (i *InsightDatabase) fetchRecords(tx *sqlx.Tx, page, rowsPerPage int) (*GetLogRecordsResponse, error) {
 	stmtFetchLogs, err := tx.Preparex(i.rawStmtFetchLogs)
 	if err != nil {
 		return nil, fmt.Errorf("error preparing stmtFetchLogs: %s", err)
@@ -164,11 +187,6 @@ func (i *InsightDatabase) GetLogRecords(rowsPerPage, page int, dataSubjectsByIrm
 	err = resRowCount.Scan(&out.RowCount)
 	if err != nil {
 		return nil, fmt.Errorf("error scanning rowcount: %s", err)
-	}
-
-	err = tx.Commit()
-	if err != nil {
-		i.logger.Warn("failed to commit transaction after succesful select", zap.Error(err))
 	}
 
 	return out, nil

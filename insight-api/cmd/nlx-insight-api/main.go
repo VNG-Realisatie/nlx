@@ -60,7 +60,6 @@ func main() {
 	insightConfig, err := config.LoadInsightConfig(logger, options.InsightConfig)
 	if err != nil {
 		logger.Fatal("error loading insight config", zap.Error(err))
-
 	}
 
 	db, err := sqlx.Open("postgres", options.PostgresDSN)
