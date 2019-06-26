@@ -88,7 +88,19 @@ type VerificationResultClaims struct {
 	Attributes map[string]string `json:"attributes"`
 }
 
-func GenerateAndSignJWT(request *DiscloseRequest, serviceProviderName string, rsaSignPrivateKey *rsa.PrivateKey) (string, error) {
+type JWTHandler interface {
+	GenerateAndSignJWT(request *DiscloseRequest, serviceProviderName string, rsaSignPrivateKey *rsa.PrivateKey) (string, error)
+	VerifyIRMAVerificationResult(jwtBytes []byte, rsaVerifyPublicKey *rsa.PublicKey) (*jwt.Token, *VerificationResultClaims, error)
+}
+
+type JWTGenerator struct {
+}
+
+func NewJWTGenerator() *JWTGenerator {
+	return &JWTGenerator{}
+}
+
+func (j *JWTGenerator) GenerateAndSignJWT(request *DiscloseRequest, serviceProviderName string, rsaSignPrivateKey *rsa.PrivateKey) (string, error) {
 	claims := newVerificationRequestClaims(request, serviceProviderName)
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
 	signedJWT, err := token.SignedString(rsaSignPrivateKey)
@@ -105,7 +117,7 @@ func jwtVerifyKeyFunc(rsaVerifyPublicKey *rsa.PublicKey) jwt.Keyfunc {
 }
 
 // VerifyIRMAVerificationResult unpacks and validates IRMA Vericicaiotn Result JWT and returns the token and claims or an error.
-func VerifyIRMAVerificationResult(jwtBytes []byte, rsaVerifyPublicKey *rsa.PublicKey) (*jwt.Token, *VerificationResultClaims, error) {
+func (j *JWTGenerator) VerifyIRMAVerificationResult(jwtBytes []byte, rsaVerifyPublicKey *rsa.PublicKey) (*jwt.Token, *VerificationResultClaims, error) {
 	claims := &VerificationResultClaims{}
 	token, err := jwt.ParseWithClaims(string(jwtBytes), claims, jwtVerifyKeyFunc(rsaVerifyPublicKey))
 	if err != nil {

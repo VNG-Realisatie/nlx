@@ -1,0 +1,10 @@
+[datasubjects]
+
+    [datasubjects."burgerservicenummer"]
+    label = "Burgerservicenummer"
+    irma-attributes = ["irma-demo.nijmegen.bsn.bsn"]
+
+    [datasubjects."kenteken"]
+    label = "Kenteken"
+    irma-attributes = ["irma-demo.rdw.vrn.vrn"]
+    unkown-attibute = "attribute unknown"
