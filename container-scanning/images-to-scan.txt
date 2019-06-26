@@ -11,7 +11,5 @@ nlxio/insight-demo:latest
 nlxio/inway:latest
 nlxio/outway:latest
 nlxio/txlog-db:latest
-nlxio/txlog-api:latest
-nlxio/txlog-ui:latest
 nlxio/insight-api:latest
 nlxio/auth-service:latest

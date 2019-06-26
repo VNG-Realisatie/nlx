@@ -48,14 +48,6 @@ build:
     context: .
     docker:
       dockerfile: txlog-db/Dockerfile
-  - image: nlxio/txlog-api
-    context: .
-    docker:
-      dockerfile: txlog-api/Dockerfile
-  - image: nlxio/txlog-ui
-    context: .
-    docker:
-      dockerfile: txlog-ui/Dockerfile
   - image: nlxio/insight-api
     context: .
     docker:
@@ -98,9 +90,7 @@ profiles:
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
-          txlogAPIImage: nlxio/txlog-api
           txlogDBImage: nlxio/txlog-db
-          txlogUIImage: nlxio/txlog-ui
         namespace: nlx-dev-brp
       - name: nlx-dev-rdw
         chartPath: helm/nlx-organization
@@ -111,9 +101,7 @@ profiles:
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
-          txlogAPIImage: nlxio/txlog-api
           txlogDBImage: nlxio/txlog-db
-          txlogUIImage: nlxio/txlog-ui
         namespace: nlx-dev-rdw
       - name: nlx-dev-haarlem
         chartPath: helm/nlx-organization
@@ -125,9 +113,7 @@ profiles:
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
           outwayImage: nlxio/outway
-          txlogAPIImage: nlxio/txlog-api
           txlogDBImage: nlxio/txlog-db
-          txlogUIImage: nlxio/txlog-ui
         namespace: nlx-dev-haarlem
 - name: release
   build:
@@ -164,9 +150,7 @@ profiles:
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
-          txlogAPIImage: nlxio/txlog-api
           txlogDBImage: nlxio/txlog-db
-          txlogUIImage: nlxio/txlog-ui
         namespace: nlx-test-brp
       - name: nlx-test-rdw
         chartPath: helm/nlx-organization
@@ -177,9 +161,7 @@ profiles:
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
-          txlogAPIImage: nlxio/txlog-api
           txlogDBImage: nlxio/txlog-db
-          txlogUIImage: nlxio/txlog-ui
         namespace: nlx-test-rdw
       - name: nlx-test-haarlem
         chartPath: helm/nlx-organization
@@ -191,9 +173,7 @@ profiles:
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
           outwayImage: nlxio/outway
-          txlogAPIImage: nlxio/txlog-api
           txlogDBImage: nlxio/txlog-db
-          txlogUIImage: nlxio/txlog-ui
         namespace: nlx-test-haarlem
 - name: deploy-acc
   deploy:
@@ -224,9 +204,7 @@ profiles:
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
-          txlogAPIImage: nlxio/txlog-api
           txlogDBImage: nlxio/txlog-db
-          txlogUIImage: nlxio/txlog-ui
         namespace: nlx-acc-brp
       - name: nlx-acc-rdw
         chartPath: helm/nlx-organization
@@ -237,9 +215,7 @@ profiles:
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
-          txlogAPIImage: nlxio/txlog-api
           txlogDBImage: nlxio/txlog-db
-          txlogUIImage: nlxio/txlog-ui
         namespace: nlx-acc-rdw
       - name: nlx-acc-haarlem
         chartPath: helm/nlx-organization
@@ -251,9 +227,7 @@ profiles:
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
           outwayImage: nlxio/outway
-          txlogAPIImage: nlxio/txlog-api
           txlogDBImage: nlxio/txlog-db
-          txlogUIImage: nlxio/txlog-ui
         namespace: nlx-acc-haarlem
 - name: deploy-demo
   deploy:
@@ -284,9 +258,7 @@ profiles:
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
-          txlogAPIImage: nlxio/txlog-api
           txlogDBImage: nlxio/txlog-db
-          txlogUIImage: nlxio/txlog-ui
         namespace: nlx-demo-brp
       - name: nlx-demo-rdw
         chartPath: helm/nlx-organization
@@ -297,9 +269,7 @@ profiles:
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
-          txlogAPIImage: nlxio/txlog-api
           txlogDBImage: nlxio/txlog-db
-          txlogUIImage: nlxio/txlog-ui
         namespace: nlx-demo-rdw
       - name: nlx-demo-haarlem
         chartPath: helm/nlx-organization
@@ -311,9 +281,7 @@ profiles:
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
           outwayImage: nlxio/outway
-          txlogAPIImage: nlxio/txlog-api
           txlogDBImage: nlxio/txlog-db
-          txlogUIImage: nlxio/txlog-ui
         namespace: nlx-demo-haarlem
 - name: deploy-preprod
   deploy:

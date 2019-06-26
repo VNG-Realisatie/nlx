@@ -50,9 +50,7 @@ The available scopes are:
 - insight-ui
 - inway
 - outway
-- txlog-api
 - txlog-db
-- txlog-ui
 
 #### 2.4. Do NOT close issues with commit messages
 Make sure _not_ to use the commit message to [automatically close issues](https://docs.gitlab.com/ee/user/project/issues/automatic_issue_closing.html), since we do _not_ want issues to be closed immediately after merging to the master branch.

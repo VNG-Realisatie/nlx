@@ -95,29 +95,6 @@ Insight-ui tests:
   except:
     - schedules
 
-Txlog-ui tests:
-  image: node:10.16.0-alpine
-  stage: Tests
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-    - node_modules/
-  before_script:
-    - cd txlog-ui/
-    - npm install
-  script:
-    - npm test -- --coverage
-  coverage: /All\sfiles.*?\s+(\d+.\d+)/
-  artifacts:
-    expire_in: 1 month
-    paths:
-      - txlog-ui/coverage
-  tags:
-    - nlx
-    - docker-executor
-  except:
-    - schedules
-
 Database diff test:
   stage: Tests
   script:
