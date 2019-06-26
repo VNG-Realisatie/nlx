@@ -41,9 +41,15 @@ func TestSetAuthorization(t *testing.T) {
 		requesterOrganization: "demo-org-fault",
 	}
 	endpoint.handleRequest(reqMD, httpRecorder, req)
-
 	result := httpRecorder.Result()
 	assert.Equal(t, http.StatusForbidden, result.StatusCode)
+
+	// Test if missing organization will recieve a 400 response
+	reqMD2 := &RequestMetadata{}
+
+	endpoint.handleRequest(reqMD2, httpRecorder, req)
+	result2 := httpRecorder.Result()
+	assert.Equal(t, http.StatusForbidden, result2.StatusCode)
 
 	bytes, err := ioutil.ReadAll(result.Body)
 	if err != nil {

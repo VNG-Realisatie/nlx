@@ -94,6 +94,12 @@ func (h *HTTPServiceEndpoint) ServiceName() string {
 
 func (h *HTTPServiceEndpoint) handleRequest(reqMD *RequestMetadata, w http.ResponseWriter, r *http.Request) {
 	if !h.public {
+
+		// Provide developer friendly response.
+		if reqMD.requesterOrganization == "" {
+			goto BadRequest
+		}
+
 		for _, whitelistedOrg := range h.whitelistedOrganizations {
 			h.logger.Info("org: " + whitelistedOrg)
 			if reqMD.requesterOrganization == whitelistedOrg {
@@ -103,7 +109,14 @@ func (h *HTTPServiceEndpoint) handleRequest(reqMD *RequestMetadata, w http.Respo
 		http.Error(w, fmt.Sprintf(`nlx outway: could not handle your request, organization "%s" is not allowed access.`, reqMD.requesterOrganization), http.StatusForbidden)
 		h.logger.Info("unauthorized request blocked, requester was not whitelisted")
 		return
+	} else {
+		goto Authorized
 	}
+
+BadRequest:
+	http.Error(w, fmt.Sprint(`nlx outway: could not handle your request, missing requesterOrganization header.`, reqMD.requesterOrganization), http.StatusBadRequest)
+	h.logger.Info("request blocked, missing requesterOrganization header.")
+	return
 
 Authorized:
 
