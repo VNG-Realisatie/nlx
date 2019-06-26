@@ -26,8 +26,11 @@ type InsightDatabase struct {
 	rawStmtGetRowCount             string
 }
 
-func NewInsightDatabase(db *sqlx.DB) (*InsightDatabase, error) {
-	i := &InsightDatabase{}
+func NewInsightDatabase(logger *zap.Logger, db *sqlx.DB) (*InsightDatabase, error) {
+	i := &InsightDatabase{
+		db:     db,
+		logger: logger,
+	}
 	var err error
 	i.stmtCreateMatchDataSubjects, err = db.Preparex(`
 		CREATE TEMPORARY TABLE matchDataSubjects(
