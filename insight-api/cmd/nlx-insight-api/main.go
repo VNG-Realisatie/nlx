@@ -75,7 +75,7 @@ func main() {
 
 	dbversion.WaitUntilLatestTxlogDBVersion(logger, db.DB)
 
-	insightLogFetcher, err := insightapi.NewInsightDatabase(db)
+	insightLogFetcher, err := insightapi.NewInsightDatabase(logger, db)
 	if err != nil {
 		logger.Fatal("error creating log fetcher", zap.Error(err))
 	}
