@@ -38,9 +38,7 @@ class DocumentationPage extends Component {
         this
             .fetchServiceApiSpec(service_name, organization_name)
             .then(res => {
-                const document = res.type === 'OpenAPI2' ?
-                  JSON.parse(window.atob(res.document)) :
-                  null;
+                const document = JSON.parse(window.atob(res.document))
 
                 this.setState({
                     loading: false,
