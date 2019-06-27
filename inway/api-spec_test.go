@@ -25,12 +25,11 @@ func TestInwayApiSpec(t *testing.T) {
 		NLXRootCert: "../testing/root.crt",
 		OrgCertFile: "../testing/org-nlx-test.crt",
 		OrgKeyFile:  "../testing/org-nlx-test.key"}
-	pool, err := orgtls.LoadRootCert(tlsOptions.NLXRootCert)
-	assert.Nil(t, err)
 
-	mockAPISpecEndpoint := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-	}))
+	mockAPISpecEndpoint := httptest.NewServer(
+		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(http.StatusOK)
+		}))
 	defer mockAPISpecEndpoint.Close()
 
 	serviceConfig := &config.ServiceConfig{}
@@ -83,27 +82,23 @@ func TestInwayApiSpec(t *testing.T) {
 		}
 	}
 
-	cert, err := tls.LoadX509KeyPair(tlsOptions.OrgCertFile, tlsOptions.OrgKeyFile)
-	assert.Nil(t, err)
-
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true, RootCAs: pool, Certificates: []tls.Certificate{cert}}}
-	client := http.Client{
-		Transport: tr,
-	}
-
-	tests := []struct {
-		url          string
-		logRecordID  string
-		statusCode   int
-		errorMessage string
-	}{
-		{fmt.Sprintf("%s/.nlx/api-spec-doc/mock-service-public", apiSpecMockServer.URL), "dummy-ID", http.StatusNotFound, "api specification not found for service\n"},
-		{fmt.Sprintf("%s/.nlx/api-spec-doc/nonexisting-service", apiSpecMockServer.URL), "dummy-ID", http.StatusNotFound, "service not found\n"},
-		{fmt.Sprintf("%s/.nlx/api-spec-doc/mock-service-public-invalid-apispec", apiSpecMockServer.URL), "dummy-ID", http.StatusInternalServerError, "server error\n"},
+	tests := []testDefinition{
+		{fmt.Sprintf("%s/.nlx/api-spec-doc/mock-service-public", apiSpecMockServer.URL),
+			"dummy-ID", http.StatusNotFound, "api specification not found for service\n"},
+		{fmt.Sprintf("%s/.nlx/api-spec-doc/nonexisting-service", apiSpecMockServer.URL),
+			"dummy-ID", http.StatusNotFound, "service not found\n"},
+		{fmt.Sprintf("%s/.nlx/api-spec-doc/mock-service-public-invalid-apispec", apiSpecMockServer.URL),
+			"dummy-ID", http.StatusInternalServerError, "server error\n"},
 		{fmt.Sprintf("%s/.nlx/api-spec-doc/mock-service-public-apispec", apiSpecMockServer.URL), "dummy-ID", http.StatusOK, ""},
 	}
 
+	// setting up test client for doing the requests.
+	client := SetupClient(tlsOptions, t)
+
+	runtests(client, tests, t)
+}
+
+func runtests(client http.Client, tests []testDefinition, t *testing.T) {
 	for _, test := range tests {
 		req, err := http.NewRequest("GET", test.url, nil)
 		if err != nil {

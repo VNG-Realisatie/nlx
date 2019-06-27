@@ -126,5 +126,4 @@ func TestHTTPServiceEndpointCreateRecordData(t *testing.T) {
 		assert.Contains(t, recordData, test.doelBindingName)
 		assert.Equal(t, recordData[test.doelBindingName], test.doelBindingValue)
 	}
-
 }

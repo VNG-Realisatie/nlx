@@ -17,6 +17,13 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 		zap.String("request-remote-address", r.RemoteAddr),
 	)
 	requesterOrganization := r.TLS.PeerCertificates[0].Subject.Organization[0]
+
+	if requesterOrganization == "" {
+		http.Error(w, "nlx inway error: requester organization is empty", http.StatusBadRequest)
+		logger.Warn("received request with empty organization")
+		return
+	}
+
 	issuer := r.TLS.PeerCertificates[0].Issuer.Organization[0]
 	logger = logger.With(zap.String("cert-issuer", issuer), zap.String("requester", requesterOrganization))
 
@@ -34,6 +41,7 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 		requesterOrganization: requesterOrganization,
 		requestPath:           "/" + urlparts[1],
 	}
+
 	logger.Info("servicename: " + serviceName)
 	i.serviceEndpointsLock.RLock()
 	serviceEndpoint := i.serviceEndpoints[serviceName]

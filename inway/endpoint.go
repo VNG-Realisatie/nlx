@@ -109,9 +109,9 @@ func (h *HTTPServiceEndpoint) handleRequest(reqMD *RequestMetadata, w http.Respo
 		http.Error(w, fmt.Sprintf(`nlx outway: could not handle your request, organization "%s" is not allowed access.`, reqMD.requesterOrganization), http.StatusForbidden)
 		h.logger.Info("unauthorized request blocked, requester was not whitelisted")
 		return
-	} else {
-		goto Authorized
 	}
+	// public endpoint so authorized
+	goto Authorized
 
 BadRequest:
 	http.Error(w, fmt.Sprint(`nlx outway: could not handle your request, missing requesterOrganization header.`, reqMD.requesterOrganization), http.StatusBadRequest)

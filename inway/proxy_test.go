@@ -26,8 +26,6 @@ func TestInWayProxyRequest(t *testing.T) {
 		OrgCertFile: "../testing/org-nlx-test.crt",
 		OrgKeyFile:  "../testing/org-nlx-test.key",
 	}
-	pool, err := orgtls.LoadRootCert(tlsOptions.NLXRootCert)
-	assert.Nil(t, err)
 
 	// Mock endpoint (service)
 	mockEndPoint := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -87,14 +85,7 @@ func TestInWayProxyRequest(t *testing.T) {
 		assert.Nil(t, err)
 	}
 
-	cert, err := tls.LoadX509KeyPair(tlsOptions.OrgCertFile, tlsOptions.OrgKeyFile)
-	assert.Nil(t, err)
-
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true, RootCAs: pool, Certificates: []tls.Certificate{cert}}}
-	client := http.Client{
-		Transport: tr,
-	}
+	client := SetupClient(tlsOptions, t)
 
 	// Test http responses
 	tests := []struct {
