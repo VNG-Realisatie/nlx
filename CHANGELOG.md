@@ -1,3 +1,17 @@
+# [0.71.0](https://gitlab.com/commonground/nlx/compare/v0.70.2...v0.71.0) (2019-06-27)
+
+
+### Bug Fixes
+
+* **directory-ui:** loosen CSP to make sure images work on API documentation page ([e88b3aa](https://gitlab.com/commonground/nlx/commit/e88b3aa))
+* **directory-ui:** make sure OpenAPI3 specification is displayed correctly ([4d3b5de](https://gitlab.com/commonground/nlx/commit/4d3b5de))
+* **docs:** use the correct portnumber in the example link ([61c7d3b](https://gitlab.com/commonground/nlx/commit/61c7d3b))
+
+
+### Features
+
+* add api-specification-document-url to example service basisregistratie ([bc0441b](https://gitlab.com/commonground/nlx/commit/bc0441b))
+
 ## [0.70.2](https://gitlab.com/commonground/nlx/compare/v0.70.1...v0.70.2) (2019-06-27)
 
 
