@@ -1,3 +1,14 @@
+## [0.70.2](https://gitlab.com/commonground/nlx/compare/v0.70.1...v0.70.2) (2019-06-27)
+
+
+### Bug Fixes
+
+* exclude txlog-ui tests from the schedules [#602](https://gitlab.com/commonground/nlx/issues/602) ([a34661b](https://gitlab.com/commonground/nlx/commit/a34661b))
+* update images-to-scan.txt location ([f4ae4de](https://gitlab.com/commonground/nlx/commit/f4ae4de))
+* update variable substitution for xargs [#602](https://gitlab.com/commonground/nlx/issues/602) ([81f7fcb](https://gitlab.com/commonground/nlx/commit/81f7fcb))
+* **directory-ui:** adjust CSP to make sure Swagger UI is working as well ([5641a93](https://gitlab.com/commonground/nlx/commit/5641a93))
+* **docs:** add  .js.map files for dependencies ([ce81b18](https://gitlab.com/commonground/nlx/commit/ce81b18))
+
 ## [0.70.1](https://gitlab.com/commonground/nlx/compare/v0.70.0...v0.70.1) (2019-06-25)
 
 
