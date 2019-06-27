@@ -1,7 +1,9 @@
 {
   "extends": [
     "config:base",
-    ":semanticCommits"
+    ":semanticCommits",
+    "schedule:nonOfficeHours",
+    "group:allNonMajor"
   ],
   "postUpdateOptions": ["gomodTidy"]
 }
