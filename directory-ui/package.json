@@ -13,8 +13,8 @@
     "react-router-dom": "5.0.1",
     "react-scripts": "2.1.8",
     "redoc": "2.0.0-rc.8-1",
-    "styled-components": "4.3.1",
-    "@tippy.js/react": "2.2.1"
+    "styled-components": "4.3.2",
+    "@tippy.js/react": "2.2.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -23,7 +23,7 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "enzyme": "3.9.0",
+    "enzyme": "3.10.0",
     "enzyme-adapter-react-16": "1.14.0",
     "enzyme-to-json": "3.3.5",
     "react-test-renderer": "16.8.6"
