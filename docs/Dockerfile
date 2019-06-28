@@ -15,6 +15,8 @@ RUN make
 # Copy static docs to alpine-based nginx container.
 FROM nginx:alpine
 
+RUN apk add --update jq
+
 # Copy nginx configuration
 COPY ./docker/default.conf /etc/nginx/conf.d/default.conf
 COPY ./docker/nginx.conf  /etc/nginx/nginx.conf
@@ -29,4 +31,11 @@ RUN touch /var/run/nginx.pid && \
     chown -R appuser /var/run/nginx.pid && \ 
     chown -R appuser /var/cache/nginx
 
+# Set ownership of /html because we will add env.js here
+RUN chown -R appuser /usr/share/nginx/html
+
 USER appuser
+
+COPY ./docker/startup.sh .
+CMD ["./startup.sh"]
+
