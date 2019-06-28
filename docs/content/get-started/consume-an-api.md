@@ -20,7 +20,11 @@ docker pull nlxio/outway:latest
 ```
 
 The following command will run the outway using the Docker image we just fetched.
-You might need to give `org.key` the group read permisson.
+You might need to give `org.key` group read permisson so docker can access the key.
+
+```bash
+chmod g+r org.key
+```
 
 ```bash
 docker run --detach \
