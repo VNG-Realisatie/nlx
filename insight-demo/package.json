@@ -5,8 +5,8 @@
   "dependencies": {
     "@babel/polyfill": "7.4.4",
     "prop-types": "15.7.2",
-    "react": "16.6.3",
-    "react-dom": "16.6.3",
+    "react": "16.8.6",
+    "react-dom": "16.8.6",
     "react-router-dom": "4.3.1",
     "react-scripts": "2.1.8"
   },
@@ -20,9 +20,9 @@
   },
   "devDependencies": {
     "@rebass/grid": "6.0.0",
-    "polished": "3.4.0",
+    "polished": "3.4.1",
     "react-pose": "4.0.8",
-    "styled-components": "4.3.1"
+    "styled-components": "4.3.2"
   },
   "browserslist": [
     ">0.2%",
