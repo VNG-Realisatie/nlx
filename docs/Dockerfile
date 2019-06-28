@@ -31,7 +31,7 @@ RUN touch /var/run/nginx.pid && \
     chown -R appuser /var/run/nginx.pid && \ 
     chown -R appuser /var/cache/nginx
 
-# Set ownership of /html because we will add env.js here
+# Set ownership of the html directory because we will add env.js here
 RUN chown -R appuser /usr/share/nginx/html
 
 USER appuser
