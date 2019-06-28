@@ -8,13 +8,13 @@ menu:
 
 ## Introduction
 
-To provide an API to the NLX network, you need to route traffic through an **inway** service. 
-To make sure traffic is encrypted between your and other nodes, we will use the certificate which we've setup in [part 2](../create-certificates).
+To provide an API to the NLX network, you need to route traffic through an **inway** service.
+To make sure traffic is encrypted between your and other nodes, we will use the certificate which we've setup in [part 2](../create-certificates/).
 
 Please note that:
 
 * **you need a domain name to provide an inway** (an IP address will not work)
-* **the domain should be the same as the domain you used to generate the certificates** (that was in [part 2](../create-certificates)).
+* **the domain should be the same as the domain you used to generate the certificates** (that was in [part 2](../create-certificates/)).
 
 It is not recommended to follow this guide when you're working from your home network.
 Preferably, you are able to start the inway service on a machine which is publicly available. Make sure and the port of the inway (we recommend using port 443) is open to the public.
