@@ -16,6 +16,13 @@ spec:
         - name: docs
           image: {{.Values.docsImage}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
+          env:
+            - name: NAVBAR_HOME_PAGE_URL
+              value: {{.Values.docsNavbarHomePageURL}}
+            - name: NAVBAR_ABOUT_PAGE_URL
+              value: {{.Values.docsNavbarAboutPageURL}}
+            - name: NAVBAR_DIRECTORY_URL
+              value: {{.Values.insightNavbarDirectoryURL}}
       restartPolicy: Always
   status: {}
 ---

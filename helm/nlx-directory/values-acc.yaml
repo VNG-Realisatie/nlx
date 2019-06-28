@@ -24,6 +24,10 @@ insightNavbarAboutPageURL: "https://nlx.io/about/"
 insightNavbarDocsPageURL: "https://docs.acc.nlx.io"
 insightNavbarDirectoryURL: "https://directory.acc.nlx.io"
 
+docsNavbarHomePageURL: "https://www.nlx.io"
+docsNavbarAboutPageURL: "https://nlx.io/about/"
+docsNavbarDirectoryURL: "https://directory.acc.nlx.io"
+
 ttlOfflineService: 1
 
 ca:
