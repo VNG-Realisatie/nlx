@@ -12,6 +12,15 @@ caAddress: ca-cfssl-unsafe.nlx-dev-directory
 
 insightDirectoryInspectionAPIURL: "http://directory-inspection-api-internal"
 
+insightNavbarHomePageURL: "https://www.nlx.io"
+insightNavbarAboutPageURL: "https://nlx.io/about/"
+insightNavbarDocsPageURL: "https://docs.test.nlx.io"
+insightNavbarDirectoryURL: "https://directory.test.nlx.io"
+
+docsNavbarHomePageURL: "http://nlx.minikube/"
+docsNavbarAboutPageURL: "http://nlx.minikube/about/"
+docsNavbarDirectoryURL: "http://directory.nlx-dev-directory.minikube/"
+
 ttlOfflineService: 1
 
 demo:

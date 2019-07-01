@@ -22,7 +22,7 @@ spec:
             - name: NAVBAR_ABOUT_PAGE_URL
               value: {{.Values.docsNavbarAboutPageURL}}
             - name: NAVBAR_DIRECTORY_URL
-              value: {{.Values.insightNavbarDirectoryURL}}
+              value: {{.Values.docsNavbarDirectoryURL}}
       restartPolicy: Always
   status: {}
 ---
