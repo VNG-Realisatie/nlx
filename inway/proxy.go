@@ -10,13 +10,31 @@ import (
 	"go.uber.org/zap"
 )
 
-// handleProxyRequest handles requests from an NLX Outway to the Inway. It verifies authentication and selects the correct EnvpointService to handle the request based on the request's URI.
+// handleProxyRequest handles requests from an NLX Outway to the Inway.
+// It verifies authentication and selects the correct EnvpointService to
+// handle the request based on the request's URI.
 func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 	logger := i.logger.With(
 		zap.String("request-path", r.URL.Path),
 		zap.String("request-remote-address", r.RemoteAddr),
 	)
-	requesterOrganization := r.TLS.PeerCertificates[0].Subject.Organization[0]
+
+	peerCertificates := r.TLS.PeerCertificates
+
+	if len(peerCertificates) == 0 {
+		http.Error(w, "nlx inway error: requester is missing certificates", http.StatusBadRequest)
+		logger.Warn("received request no certificates")
+	}
+
+	peerCertificate := peerCertificates[0]
+	organizations := peerCertificate.Subject.Organization
+
+	if len(organizations) == 0 {
+		http.Error(w, "nlx inway error: requester certificate is missing organization", http.StatusBadRequest)
+		logger.Warn("received request no organization on certificate")
+		return
+	}
+	requesterOrganization := organizations[0]
 
 	if requesterOrganization == "" {
 		http.Error(w, "nlx inway error: requester organization is empty", http.StatusBadRequest)
@@ -25,7 +43,10 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	issuer := r.TLS.PeerCertificates[0].Issuer.Organization[0]
-	logger = logger.With(zap.String("cert-issuer", issuer), zap.String("requester", requesterOrganization))
+	logger = logger.With(
+		zap.String("cert-issuer", issuer),
+		zap.String("requester", requesterOrganization),
+	)
 
 	urlparts := strings.SplitN(strings.TrimPrefix(r.URL.Path, "/"), "/", 2)
 	if len(urlparts) != 2 {
@@ -35,7 +56,12 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 	}
 	serviceName := urlparts[0]
 	logrecordID := r.Header.Get("X-NLX-Logrecord-Id")
-	logger.Info("received API request", zap.String("requester-organization", requesterOrganization), zap.String("service", serviceName), zap.String("logrecord-id", logrecordID))
+	logger.Info(
+		"received API request",
+		zap.String("requester-organization", requesterOrganization),
+		zap.String("service", serviceName),
+		zap.String("logrecord-id", logrecordID),
+	)
 
 	reqMD := &RequestMetadata{
 		requesterOrganization: requesterOrganization,

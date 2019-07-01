@@ -20,18 +20,15 @@ import (
 	"go.nlx.io/nlx/inway/config"
 )
 
-func TestInWayProxyRequest(t *testing.T) {
-	tlsOptions := orgtls.TLSOptions{
-		NLXRootCert: "../testing/root.crt",
-		OrgCertFile: "../testing/org-nlx-test.crt",
-		OrgKeyFile:  "../testing/org-nlx-test.key",
-	}
+func newTestEnv(t *testing.T, tlsOptions orgtls.TLSOptions) testEnv {
 
 	// Mock endpoint (service)
-	mockEndPoint := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-	}))
-	defer mockEndPoint.Close()
+	mockEndPoint := httptest.NewServer(
+		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(http.StatusOK)
+		}))
+	// defer is missing do this in you test!!
+	// defer mockEndPoint.Close()
 
 	serviceConfig := &config.ServiceConfig{}
 	serviceConfig.Services = make(map[string]config.ServiceDetails)
@@ -51,19 +48,12 @@ func TestInWayProxyRequest(t *testing.T) {
 	}
 
 	logger := zap.NewNop()
-	iw, err := NewInway(logger, nil, "localhost:1812", tlsOptions,
-		"localhost:1815", serviceConfig)
-	assert.Nil(t, err)
-
 	p := process.NewProcess(logger)
 
-	proxyRequestMockServer := httptest.NewUnstartedServer(http.HandlerFunc(iw.handleProxyRequest))
-	proxyRequestMockServer.TLS = &tls.Config{
-		ClientCAs:  iw.roots,
-		ClientAuth: tls.RequireAndVerifyClientCert,
-	}
-	proxyRequestMockServer.StartTLS()
-	defer proxyRequestMockServer.Close()
+	iw, err := NewInway(logger, nil, "localhost:1812", tlsOptions,
+		"localhost:1815", serviceConfig)
+
+	assert.Nil(t, err)
 
 	// Add service endpoints
 	for serviceName, serviceDetails := range serviceConfig.Services {
@@ -85,15 +75,42 @@ func TestInWayProxyRequest(t *testing.T) {
 		assert.Nil(t, err)
 	}
 
-	client := SetupClient(tlsOptions, t)
+	assert.Nil(t, err)
+
+	proxyRequestMockServer := httptest.NewUnstartedServer(http.HandlerFunc(iw.handleProxyRequest))
+	proxyRequestMockServer.TLS = &tls.Config{
+		ClientCAs:  iw.roots,
+		ClientAuth: tls.RequireAndVerifyClientCert,
+	}
+
+	testsenvironment := testEnv{
+		proxyRequestMockServer,
+		mockEndPoint,
+	}
+
+	return testsenvironment
+
+}
+
+func TestInWayProxyRequest(t *testing.T) {
+
+	tlsOptions := orgtls.TLSOptions{
+		NLXRootCert: "../testing/root.crt",
+		OrgCertFile: "../testing/org-nlx-test.crt",
+		OrgKeyFile:  "../testing/org-nlx-test.key",
+	}
+
+	testEnvironment := newTestEnv(t, tlsOptions)
+	proxyRequestMockServer := testEnvironment.proxy
+	proxyRequestMockServer.StartTLS()
+	defer proxyRequestMockServer.Close()
+	mockEndPoint := testEnvironment.mock
+	defer mockEndPoint.Close()
+
+	client := SetupClient(t, tlsOptions)
 
 	// Test http responses
-	tests := []struct {
-		url          string
-		logRecordID  string
-		statusCode   int
-		errorMessage string
-	}{
+	tests := []testDefinition{
 		{fmt.Sprintf("%s/mock-service-public/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusOK, ""},
 		{fmt.Sprintf("%s/mock-service-whitelist/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusOK, ""},
 		{fmt.Sprintf("%s/mock-service-whitelist-unauthorized/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusForbidden, "nlx outway: could not handle your request, organization \"nlx-test\" is not allowed access.\n"},
@@ -109,7 +126,7 @@ func TestInWayProxyRequest(t *testing.T) {
 		req.Header.Add("X-NLX-Logrecord-Id", test.logRecordID)
 		resp, err := client.Do(req)
 		assert.Nil(t, err)
-
+		assert.NotNil(t, resp)
 		assert.Equal(t, test.statusCode, resp.StatusCode)
 		if resp.StatusCode != test.statusCode {
 			t.Fatalf(`result: "%d" for url "%s", expected http status code : "%d"`, resp.StatusCode, test.url, test.statusCode)
@@ -120,5 +137,56 @@ func TestInWayProxyRequest(t *testing.T) {
 			t.Fatal("error parsing result.body", err)
 		}
 		assert.Equal(t, test.errorMessage, string(bytes))
+	}
+}
+
+func TestInWayNoOrgProxyRequest(t *testing.T) {
+
+	tlsOptions := orgtls.TLSOptions{
+		NLXRootCert: "../testing/root.crt",
+		OrgCertFile: "../testing/org-nlx-test.crt",
+		OrgKeyFile:  "../testing/org-nlx-test.key",
+	}
+
+	tlsNoOrgOptions := orgtls.TLSOptions{
+		NLXRootCert: "../testing/root.crt",
+		OrgCertFile: "../testing/no-org-nlx-test.crt",
+		OrgKeyFile:  "../testing/no-org-nlx-test.key",
+	}
+
+	// Clients with no organization specified in the certificate
+	// should not be allowed on the nlx network.
+	testEnvironment := newTestEnv(t, tlsOptions)
+	proxyRequestMockServer := testEnvironment.proxy
+	proxyRequestMockServer.StartTLS()
+	defer proxyRequestMockServer.Close()
+	mockEndPoint := testEnvironment.mock
+	defer mockEndPoint.Close()
+
+	// Test http responses
+	tests := []testDefinition{
+		{fmt.Sprintf("%s/mock-service-public/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusBadRequest, ""},
+		{fmt.Sprintf("%s/mock-service-whitelist/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusBadRequest, ""},
+		{fmt.Sprintf("%s/mock-service-whitelist-unauthorized/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusForbidden, "nlx outway: could not handle your request, organization \"nlx-test\" is not allowed access.\n"},
+		{fmt.Sprintf("%s/mock-service", proxyRequestMockServer.URL), "dummy-ID", http.StatusBadRequest, "nlx inway error: invalid path in url\n"},
+		{fmt.Sprintf("%s/mock-service/fictive", proxyRequestMockServer.URL), "dummy-ID", http.StatusBadRequest, "nlx inway error: no endpoint for service\n"},
+		{fmt.Sprintf("%s/mock-service-public/dummy", proxyRequestMockServer.URL), "", http.StatusBadRequest, "nlx outway: missing logrecord id\n"},
+	}
+
+	noOrgClient := SetupClient(t, tlsNoOrgOptions)
+
+	for _, test := range tests {
+		req, err := http.NewRequest("GET", test.url, nil)
+		assert.Nil(t, err)
+
+		req.Header.Add("X-NLX-Logrecord-Id", test.logRecordID)
+		resp, err := noOrgClient.Do(req)
+		assert.Nil(t, err)
+
+		if resp.StatusCode != 400 {
+			t.Fatalf(
+				`result: "%d" for url "%s", expected http status code : "%d"`,
+				resp.StatusCode, test.url, 400)
+		}
 	}
 }

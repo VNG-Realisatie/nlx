@@ -77,6 +77,7 @@ func TestInwayApiSpec(t *testing.T) {
 		}
 
 		err = iw.AddServiceEndpoint(p, endpoint, serviceDetails)
+
 		if err != nil {
 			t.Fatal("error adding endpoint", err)
 		}
@@ -93,7 +94,7 @@ func TestInwayApiSpec(t *testing.T) {
 	}
 
 	// setting up test client for doing the requests.
-	client := SetupClient(tlsOptions, t)
+	client := SetupClient(t, tlsOptions)
 
 	runtests(client, tests, t)
 }

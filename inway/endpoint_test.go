@@ -44,7 +44,7 @@ func TestSetAuthorization(t *testing.T) {
 	result := httpRecorder.Result()
 	assert.Equal(t, http.StatusForbidden, result.StatusCode)
 
-	// Test if missing organization will recieve a 400 response
+	// Test if missing organization will receive a 400 response
 	reqMD2 := &RequestMetadata{}
 
 	endpoint.handleRequest(reqMD2, httpRecorder, req)
@@ -62,7 +62,8 @@ func TestSetAuthorization(t *testing.T) {
 func TestInwayAddServiceEndpoint(t *testing.T) {
 	logger := zap.NewNop()
 
-	// Certificate organisation = nlx-test
+	// Certificate organization = nlx-test
+
 	tlsOptions := orgtls.TLSOptions{
 		NLXRootCert: "../testing/root.crt",
 		OrgCertFile: "../testing/org-nlx-test.crt",
