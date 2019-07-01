@@ -39,7 +39,7 @@ require (
 	golang.org/x/crypto v0.0.0-20190627225343-cc06ce4a13d4 // indirect
 	golang.org/x/net v0.0.0-20190628085848-3b0461eec859
 	google.golang.org/appengine v1.6.1 // indirect
-	google.golang.org/genproto v0.0.0-20190628085920-eb59cef1c072
+	google.golang.org/genproto v0.0.0-20190701235733-710ae3a149df
 	google.golang.org/grpc v1.21.1
 	gopkg.in/yaml.v2 v2.2.2 // indirect
 )
