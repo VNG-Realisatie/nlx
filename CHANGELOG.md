@@ -1,3 +1,20 @@
+# [1.0.0](https://gitlab.com/commonground/nlx/compare/v0.71.0...v1.0.0) (2019-07-01)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([447140a](https://gitlab.com/commonground/nlx/commit/447140a))
+
+
+### Code Refactoring
+
+* **txlog-ui, txlog-api:** eliminate txlog-ui and txlog-api ([6f9e407](https://gitlab.com/commonground/nlx/commit/6f9e407))
+
+
+### BREAKING CHANGES
+
+* **txlog-ui, txlog-api:** txlog-ui and txlog-api are not available any more
+
 # [0.71.0](https://gitlab.com/commonground/nlx/compare/v0.70.2...v0.71.0) (2019-06-27)
 
 
