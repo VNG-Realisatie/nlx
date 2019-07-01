@@ -8,7 +8,7 @@ menu:
 
 ## Operating System
 
-This documentation is written for Mac and Linux users. It assumes you have some experience with the terminal / shell. 
+This documentation is written for Mac and Linux users. It assumes you have some experience with the terminal / shell.
 
 ## Docker
 
@@ -25,7 +25,7 @@ First, let's navigate to our home directory.
 cd ~
 ```
 
-Now, let's create the `nlx-setup` directory. 
+Now, let's create the `nlx-setup` directory.
 
 ```bash
 mkdir nlx-setup
@@ -46,3 +46,5 @@ The output should be:
 * For Linux: `/home/<your-username>/nlx-setup`
 
 All commands further down this guide assume you are located in this directory.
+
+The Next step is to create some certificates [part 2](../create-certificates/).

@@ -15,9 +15,9 @@ In this part we will generate & install all required certificates.
 
 ## Demo CA root certificate
 
-The very first certificate we need is the CA root certificate. 
+The very first certificate we need is the CA root certificate.
 This one is used to validate certificates of other organizations.
- 
+
 Download [the root certificate](https://certportal.demo.nlx.io/root.crt) file and save it as `root.crt` in `~/nlx-setup/`.
 That is the working directory as described in [part 1](../setup-your-environment).
 
@@ -36,7 +36,7 @@ Example of the output: `Subject: C=NL, ST=Noord-Holland, L=Amsterdam, O=Common G
 Now we have the root certificate installed. The next certificate we need is our own generated certificate.
 It should include information about the API we will provide or consume.
 
-In order to request or own certificate, we need to generate a key and Certificate Signing Request (CSR). 
+In order to request or own certificate, we need to generate a key and Certificate Signing Request (CSR).
 We can create these using [openssl](https://www.openssl.org/).
 
 ```bash
@@ -82,13 +82,13 @@ Make sure to copy the complete output, including *-----BEGIN CERTIFICATE REQUEST
 ```bash
 cat org.csr
 ```
- 
-Open [certportal](https://certportal.demo.nlx.io) and paste the content in the `CSR` field.
- 
-Scroll to the bottom of the page and click on **Request certificate**. 
 
-The system will instantly sign your csr and return your certificate. 
-You can either copy paste your certificate and store it in a file or you can click **Download certificate** to download the certificate. 
+Open [certportal](https://certportal.demo.nlx.io) and paste the content in the `CSR` field.
+
+Scroll to the bottom of the page and click on **Request certificate**.
+
+The system will instantly sign your csr and return your certificate.
+You can either copy paste your certificate and store it in a file or you can click **Download certificate** to download the certificate.
 
 Rename the file from `certificate.crt` to `org.crt` and store the file next to your private key.
 
@@ -112,4 +112,4 @@ All required certificates are available now. So far, we have:
 - downloaded the CA root certificate.
 - generated our own certificate, so we are allowed to communicate with the API's on the NLX network.
 
-Now let's see if we can consume an API from the NLX network in [part 3](../consume-an-api).
+Now let's see if we can consume an API from the NLX network in [part 3](../consume-an-api/).

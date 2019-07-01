@@ -20,6 +20,11 @@ docker pull nlxio/outway:latest
 ```
 
 The following command will run the outway using the Docker image we just fetched.
+You might need to give `org.key` group read permisson so docker can access the key.
+
+```bash
+chmod g+r org.key
+```
 
 ```bash
 docker run --detach \
@@ -109,4 +114,4 @@ In this part, we have:
 - setup a local NLX outway, which we can use to get data from the network.
 - made a real request to the VNG Realisatie Demo API.
 
-Now let's see if we can provide our own API's to the network in [part 4](../provide-an-api).
+Now let's see if we can provide our own API's to the network in [part 4](../provide-an-api/).
