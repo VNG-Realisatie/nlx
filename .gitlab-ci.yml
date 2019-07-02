@@ -194,25 +194,25 @@ Deploy demo:
     - nlx-privileged
     - shell-executor
 
-# Deploy preprod:
-#   extends: .deploy
-#   before_script:
-#     - kubectl config use-context delta.k8s.nlx.io
-#   environment:
-#     name: preprod
-#   when: manual
-#   only:
-#     - tags
+Deploy preprod:
+  extends: .deploy
+  before_script:
+    - kubectl config use-context delta.k8s.nlx.io
+  environment:
+    name: preprod
+  when: manual
+  only:
+    - tags
 
-# Deploy prod:
-#   extends: .deploy
-#   before_script:
-#     - kubectl config use-context delta.k8s.nlx.io
-#   environment:
-#     name: prod
-#   when: manual
-#   only:
-#     - tags
+Deploy prod:
+  extends: .deploy
+  before_script:
+    - kubectl config use-context delta.k8s.nlx.io
+  environment:
+    name: prod
+  when: manual
+  only:
+    - tags
 
 Docker tag latest:
   stage: Deploy
