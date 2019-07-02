@@ -95,6 +95,7 @@ func TestInWayProxyRequest(t *testing.T) {
 	}
 
 	proxyRequestMockServer, mockEndPoint := newTestEnv(t, tlsOptions)
+	proxyRequestMockServer.StartTLS()
 	defer proxyRequestMockServer.Close()
 	defer mockEndPoint.Close()
 
@@ -148,6 +149,7 @@ func TestInWayNoOrgProxyRequest(t *testing.T) {
 	// Clients with no organization specified in the certificate
 	// should not be allowed on the nlx network.
 	proxyRequestMockServer, mockEndPoint := newTestEnv(t, tlsOptions)
+	proxyRequestMockServer.StartTLS()
 	defer proxyRequestMockServer.Close()
 	defer mockEndPoint.Close()
 
