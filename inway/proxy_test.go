@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -89,9 +90,9 @@ func newTestEnv(t *testing.T, tlsOptions orgtls.TLSOptions) (proxy, mock *httpte
 func TestInWayProxyRequest(t *testing.T) {
 
 	tlsOptions := orgtls.TLSOptions{
-		NLXRootCert: "../testing/root.crt",
-		OrgCertFile: "../testing/org-nlx-test.crt",
-		OrgKeyFile:  "../testing/org-nlx-test.key",
+		NLXRootCert: filepath.Join("..", "testing", "root.crt"),
+		OrgCertFile: filepath.Join("..", "testing", "org-nlx-test.crt"),
+		OrgKeyFile:  filepath.Join("..", "testing", "org-nlx-test.key"),
 	}
 
 	proxyRequestMockServer, mockEndPoint := newTestEnv(t, tlsOptions)
@@ -140,15 +141,15 @@ func TestInWayProxyRequest(t *testing.T) {
 func TestInWayNoOrgProxyRequest(t *testing.T) {
 
 	tlsOptions := orgtls.TLSOptions{
-		NLXRootCert: "../testing/root.crt",
-		OrgCertFile: "../testing/org-nlx-test.crt",
-		OrgKeyFile:  "../testing/org-nlx-test.key",
+		NLXRootCert: filepath.Join("..", "testing", "root.crt"),
+		OrgCertFile: filepath.Join("..", "testing", "org-nlx-test.crt"),
+		OrgKeyFile:  filepath.Join("..", "testing", "org-nlx-test.key"),
 	}
 
 	tlsNoOrgOptions := orgtls.TLSOptions{
-		NLXRootCert: "../testing/root.crt",
-		OrgCertFile: "../testing/no-org-nlx-test.crt",
-		OrgKeyFile:  "../testing/no-org-nlx-test.key",
+		NLXRootCert: filepath.Join("..", "testing", "root.crt"),
+		OrgCertFile: filepath.Join("..", "testing", "no-org-nlx-test.crt"),
+		OrgKeyFile:  filepath.Join("..", "testing", "no-org-nlx-test.key"),
 	}
 
 	// Clients with no organization specified in the certificate
