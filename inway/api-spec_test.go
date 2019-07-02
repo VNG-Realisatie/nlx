@@ -83,7 +83,12 @@ func TestInwayApiSpec(t *testing.T) {
 		}
 	}
 
-	tests := []testDefinition{
+	tests := []struct {
+		url          string
+		logRecordID  string
+		statusCode   int
+		errorMessage string
+	}{
 		{fmt.Sprintf("%s/.nlx/api-spec-doc/mock-service-public", apiSpecMockServer.URL),
 			"dummy-ID", http.StatusNotFound, "api specification not found for service\n"},
 		{fmt.Sprintf("%s/.nlx/api-spec-doc/nonexisting-service", apiSpecMockServer.URL),
@@ -95,10 +100,6 @@ func TestInwayApiSpec(t *testing.T) {
 
 	client := setupClient(t, tlsOptions)
 
-	runtests(t, client, tests)
-}
-
-func runtests(t *testing.T, client http.Client, tests []testDefinition) {
 	for _, test := range tests {
 		req, err := http.NewRequest("GET", test.url, nil)
 		if err != nil {
@@ -115,6 +116,7 @@ func runtests(t *testing.T, client http.Client, tests []testDefinition) {
 		if err != nil {
 			t.Fatal("error parsing result.body", err)
 		}
+		resp.Body.Close()
 
 		assert.Equal(t, test.statusCode, resp.StatusCode)
 		assert.Equal(t, test.errorMessage, string(bytes))

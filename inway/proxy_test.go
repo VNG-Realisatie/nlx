@@ -102,7 +102,12 @@ func TestInWayProxyRequest(t *testing.T) {
 	client := setupClient(t, tlsOptions)
 
 	// Test http responses
-	tests := []testDefinition{
+	tests := []struct {
+		url          string
+		logRecordID  string
+		statusCode   int
+		errorMessage string
+	}{
 		{fmt.Sprintf("%s/mock-service-public/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusOK, ""},
 		{fmt.Sprintf("%s/mock-service-whitelist/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusOK, ""},
 		{fmt.Sprintf("%s/mock-service-whitelist-unauthorized/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusForbidden, "nlx-outway: could not handle your request, organization \"nlx-test\" is not allowed access.\n"},
@@ -154,7 +159,12 @@ func TestInWayNoOrgProxyRequest(t *testing.T) {
 	defer mockEndPoint.Close()
 
 	// Test http responses
-	tests := []testDefinition{
+	tests := []struct {
+		url          string
+		logRecordID  string
+		statusCode   int
+		errorMessage string
+	}{
 		{fmt.Sprintf("%s/mock-service-public/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusBadRequest, ""},
 		{fmt.Sprintf("%s/mock-service-whitelist/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusBadRequest, ""},
 		{fmt.Sprintf("%s/mock-service-whitelist-unauthorized/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusForbidden, "nlx-outway: could not handle your request, organization \"nlx-test\" is not allowed access.\n"},
