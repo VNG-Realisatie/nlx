@@ -33,7 +33,7 @@ Example of the output: `Subject: C=NL, ST=Noord-Holland, L=Amsterdam, O=Common G
 
 ## The certificate for our service
 
-Now we have the root certificate installed. The next certificate we need is our own generated certificate.
+We now have access to the root certificate on our local machine. The next certificate we need is our own generated certificate.
 It should include information about the API we will provide or consume.
 
 In order to request or own certificate, we need to generate a key and Certificate Signing Request (CSR).
