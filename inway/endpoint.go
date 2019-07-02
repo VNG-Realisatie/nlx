@@ -96,7 +96,9 @@ func (h *HTTPServiceEndpoint) handleRequest(reqMD *RequestMetadata, w http.Respo
 	if !h.public {
 
 		if reqMD.requesterOrganization == "" {
-			goto BadRequest
+			http.Error(w, fmt.Sprint(`nlx-outway: could not handle your request, missing requesterOrganization header.`, reqMD.requesterOrganization), http.StatusBadRequest)
+			h.logger.Info("request blocked, missing requesterOrganization header")
+			return
 		}
 
 		for _, whitelistedOrg := range h.whitelistedOrganizations {
@@ -109,13 +111,7 @@ func (h *HTTPServiceEndpoint) handleRequest(reqMD *RequestMetadata, w http.Respo
 		h.logger.Info("unauthorized request blocked, requester was not whitelisted")
 		return
 	}
-	// public endpoint so authorized
-	goto Authorized
-
-BadRequest:
-	http.Error(w, fmt.Sprint(`nlx-outway: could not handle your request, missing requesterOrganization header.`, reqMD.requesterOrganization), http.StatusBadRequest)
-	h.logger.Info("request blocked, missing requesterOrganization header")
-	return
+	// we are public or authorized now.
 
 Authorized:
 

@@ -95,10 +95,10 @@ func TestInwayApiSpec(t *testing.T) {
 
 	client := setupClient(t, tlsOptions)
 
-	runtests(client, tests, t)
+	runtests(t, client, tests)
 }
 
-func runtests(client http.Client, tests []testDefinition, t *testing.T) {
+func runtests(t *testing.T, client http.Client, tests []testDefinition) {
 	for _, test := range tests {
 		req, err := http.NewRequest("GET", test.url, nil)
 		if err != nil {
