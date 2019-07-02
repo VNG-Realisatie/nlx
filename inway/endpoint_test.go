@@ -56,7 +56,7 @@ func TestSetAuthorization(t *testing.T) {
 		t.Fatal("error parsing result.body", err)
 	}
 
-	assert.Equal(t, fmt.Sprintf("nlx outway: could not handle your request, organization \"%s\" is not allowed access.\n", reqMD.requesterOrganization), string(bytes))
+	assert.Equal(t, fmt.Sprintf("nlx-outway: could not handle your request, organization \"%s\" is not allowed access.\n", reqMD.requesterOrganization), string(bytes))
 }
 
 func TestInwayAddServiceEndpoint(t *testing.T) {

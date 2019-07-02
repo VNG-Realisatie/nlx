@@ -2,11 +2,13 @@ package inway
 
 import (
 	"crypto/tls"
-	"github.com/stretchr/testify/assert"
-	"go.nlx.io/nlx/common/orgtls"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+
+	"go.nlx.io/nlx/common/orgtls"
 )
 
 type testDefinition struct {
@@ -21,8 +23,8 @@ type testEnv struct {
 	mock  *httptest.Server
 }
 
-// SetupClient create a test client with certificates
-func SetupClient(t *testing.T, tlsOptions orgtls.TLSOptions) http.Client {
+// setupClient create a test client with certificates
+func setupClient(t *testing.T, tlsOptions orgtls.TLSOptions) http.Client {
 	cert, err := tls.LoadX509KeyPair(tlsOptions.OrgCertFile, tlsOptions.OrgKeyFile)
 	assert.Nil(t, err)
 	pool, err := orgtls.LoadRootCert(tlsOptions.NLXRootCert)

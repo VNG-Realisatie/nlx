@@ -34,17 +34,13 @@ func (i *Inway) ListenAndServeTLS(xprocess *process.Process, address string) err
 	tlsconfig.ApplyDefaults(server.TLSConfig)
 
 	shutDownComplete := make(chan struct{})
-	err := xprocess.CloseGracefully(func() error {
+	xprocess.CloseGracefully(func() error {
 		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
 		defer cancel() // do not remove. Otherwise it could cause implicit goroutine leak
 		err := server.Shutdown(localCtx)
 		close(shutDownComplete)
 		return err
 	})
-
-	if err != nil {
-		return errors.Wrap(err, "failed to close gracefully")
-	}
 
 	// ErrServerClosed is more info message than error
 	if err := server.ListenAndServeTLS(i.orgCertFile, i.orgKeyFile); err != nil {

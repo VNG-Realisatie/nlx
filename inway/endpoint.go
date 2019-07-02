@@ -95,7 +95,6 @@ func (h *HTTPServiceEndpoint) ServiceName() string {
 func (h *HTTPServiceEndpoint) handleRequest(reqMD *RequestMetadata, w http.ResponseWriter, r *http.Request) {
 	if !h.public {
 
-		// Provide developer friendly response.
 		if reqMD.requesterOrganization == "" {
 			goto BadRequest
 		}
@@ -106,7 +105,7 @@ func (h *HTTPServiceEndpoint) handleRequest(reqMD *RequestMetadata, w http.Respo
 				goto Authorized
 			}
 		}
-		http.Error(w, fmt.Sprintf(`nlx outway: could not handle your request, organization "%s" is not allowed access.`, reqMD.requesterOrganization), http.StatusForbidden)
+		http.Error(w, fmt.Sprintf(`nlx-outway: could not handle your request, organization "%s" is not allowed access.`, reqMD.requesterOrganization), http.StatusForbidden)
 		h.logger.Info("unauthorized request blocked, requester was not whitelisted")
 		return
 	}
@@ -114,8 +113,8 @@ func (h *HTTPServiceEndpoint) handleRequest(reqMD *RequestMetadata, w http.Respo
 	goto Authorized
 
 BadRequest:
-	http.Error(w, fmt.Sprint(`nlx outway: could not handle your request, missing requesterOrganization header.`, reqMD.requesterOrganization), http.StatusBadRequest)
-	h.logger.Info("request blocked, missing requesterOrganization header.")
+	http.Error(w, fmt.Sprint(`nlx-outway: could not handle your request, missing requesterOrganization header.`, reqMD.requesterOrganization), http.StatusBadRequest)
+	h.logger.Info("request blocked, missing requesterOrganization header")
 	return
 
 Authorized:
@@ -126,7 +125,7 @@ Authorized:
 
 	logrecordID := r.Header.Get("X-NLX-Logrecord-Id")
 	if logrecordID == "" {
-		http.Error(w, "nlx outway: missing logrecord id", http.StatusBadRequest)
+		http.Error(w, "nlx-outway: missing logrecord id", http.StatusBadRequest)
 		h.logger.Warn("Received request with missing logrecord id from " + reqMD.requesterOrganization)
 		return
 	}
@@ -140,7 +139,7 @@ Authorized:
 		Data:             recordData,
 	})
 	if err != nil {
-		http.Error(w, "nlx outway: server error", http.StatusInternalServerError)
+		http.Error(w, "nlx-outway: server error", http.StatusInternalServerError)
 		h.logger.Error("failed to store transactionlog record", zap.Error(err))
 		return
 	}

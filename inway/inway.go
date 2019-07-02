@@ -141,14 +141,12 @@ func (i *Inway) announceToDirectory(
 			Max:    20 * time.Second,
 		}
 		shutDownComplete := make(chan struct{})
-		err := p.CloseGracefully(func() error {
+
+		p.CloseGracefully(func() error {
 			close(shutDownComplete)
 			return nil
 		})
-		if err != nil {
-			i.logger.Error("failed to shutdown gracefully", zap.Error(err))
-			return
-		}
+
 		sleepDuration := 10 * time.Second
 		for {
 			select {

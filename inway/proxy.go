@@ -22,27 +22,38 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 	peerCertificates := r.TLS.PeerCertificates
 
 	if len(peerCertificates) == 0 {
-		http.Error(w, "nlx inway error: requester is missing certificates", http.StatusBadRequest)
+		http.Error(w, "nlx-inway: invalid connection: missing peer certificates", http.StatusBadRequest)
 		logger.Warn("received request no certificates")
+		return
 	}
 
 	peerCertificate := peerCertificates[0]
 	organizations := peerCertificate.Subject.Organization
 
 	if len(organizations) == 0 {
-		http.Error(w, "nlx inway error: requester certificate is missing organization", http.StatusBadRequest)
-		logger.Warn("received request no organization on certificate")
+		msg := "invalid certificate provided: missing value for organization in subject"
+		http.Error(w, "nlx-inway: "+msg, http.StatusBadRequest)
+		logger.Warn(msg)
 		return
 	}
 	requesterOrganization := organizations[0]
 
 	if requesterOrganization == "" {
-		http.Error(w, "nlx inway error: requester organization is empty", http.StatusBadRequest)
-		logger.Warn("received request with empty organization")
+		msg := "invalid certificate provided: missing value for organization in subject"
+		http.Error(w, "nlx-inway: "+msg, http.StatusBadRequest)
+		logger.Warn(msg)
+		return
+	}
+
+	if len(peerCertificate.Issuer.Organization) == 0 {
+		msg := "invalid certificate provided: missing value for issuer organization in issuer"
+		http.Error(w, "nlx-inway: "+msg, http.StatusBadRequest)
+		logger.Warn(msg)
 		return
 	}
 
 	issuer := r.TLS.PeerCertificates[0].Issuer.Organization[0]
+
 	logger = logger.With(
 		zap.String("cert-issuer", issuer),
 		zap.String("requester", requesterOrganization),
@@ -50,7 +61,7 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 
 	urlparts := strings.SplitN(strings.TrimPrefix(r.URL.Path, "/"), "/", 2)
 	if len(urlparts) != 2 {
-		http.Error(w, "nlx inway error: invalid path in url", http.StatusBadRequest)
+		http.Error(w, "nlx-inway: invalid path in url", http.StatusBadRequest)
 		logger.Warn("received request with invalid path")
 		return
 	}
@@ -73,7 +84,7 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 	serviceEndpoint := i.serviceEndpoints[serviceName]
 	i.serviceEndpointsLock.RUnlock()
 	if serviceEndpoint == nil {
-		http.Error(w, "nlx inway error: no endpoint for service", http.StatusBadRequest)
+		http.Error(w, "nlx-inway: no endpoint for service", http.StatusBadRequest)
 		logger.Warn("received request for service with no known endpoint")
 		return
 	}

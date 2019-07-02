@@ -93,8 +93,7 @@ func TestInwayApiSpec(t *testing.T) {
 		{fmt.Sprintf("%s/.nlx/api-spec-doc/mock-service-public-apispec", apiSpecMockServer.URL), "dummy-ID", http.StatusOK, ""},
 	}
 
-	// setting up test client for doing the requests.
-	client := SetupClient(t, tlsOptions)
+	client := setupClient(t, tlsOptions)
 
 	runtests(client, tests, t)
 }
