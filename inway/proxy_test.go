@@ -20,7 +20,7 @@ import (
 	"go.nlx.io/nlx/inway/config"
 )
 
-func newTestEnv(t *testing.T, tlsOptions orgtls.TLSOptions) testEnv {
+func newTestEnv(t *testing.T, tlsOptions orgtls.TLSOptions) (proxy, mock *httptest.Server) {
 
 	// Mock endpoint (service)
 	mockEndPoint := httptest.NewServer(
@@ -52,7 +52,6 @@ func newTestEnv(t *testing.T, tlsOptions orgtls.TLSOptions) testEnv {
 
 	iw, err := NewInway(logger, nil, "localhost:1812", tlsOptions,
 		"localhost:1815", serviceConfig)
-
 	assert.Nil(t, err)
 
 	// Add service endpoints
@@ -83,12 +82,7 @@ func newTestEnv(t *testing.T, tlsOptions orgtls.TLSOptions) testEnv {
 		ClientAuth: tls.RequireAndVerifyClientCert,
 	}
 
-	testsenvironment := testEnv{
-		proxyRequestMockServer,
-		mockEndPoint,
-	}
-
-	return testsenvironment
+	return proxyRequestMockServer, mockEndPoint
 
 }
 
@@ -100,11 +94,8 @@ func TestInWayProxyRequest(t *testing.T) {
 		OrgKeyFile:  "../testing/org-nlx-test.key",
 	}
 
-	testEnvironment := newTestEnv(t, tlsOptions)
-	proxyRequestMockServer := testEnvironment.proxy
-	proxyRequestMockServer.StartTLS()
+	proxyRequestMockServer, mockEndPoint := newTestEnv(t, tlsOptions)
 	defer proxyRequestMockServer.Close()
-	mockEndPoint := testEnvironment.mock
 	defer mockEndPoint.Close()
 
 	client := setupClient(t, tlsOptions)
@@ -156,11 +147,8 @@ func TestInWayNoOrgProxyRequest(t *testing.T) {
 
 	// Clients with no organization specified in the certificate
 	// should not be allowed on the nlx network.
-	testEnvironment := newTestEnv(t, tlsOptions)
-	proxyRequestMockServer := testEnvironment.proxy
-	proxyRequestMockServer.StartTLS()
+	proxyRequestMockServer, mockEndPoint := newTestEnv(t, tlsOptions)
 	defer proxyRequestMockServer.Close()
-	mockEndPoint := testEnvironment.mock
 	defer mockEndPoint.Close()
 
 	// Test http responses

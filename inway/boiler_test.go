@@ -3,7 +3,6 @@ package inway
 import (
 	"crypto/tls"
 	"net/http"
-	"net/http/httptest"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -16,11 +15,6 @@ type testDefinition struct {
 	logRecordID  string
 	statusCode   int
 	errorMessage string
-}
-
-type testEnv struct {
-	proxy *httptest.Server
-	mock  *httptest.Server
 }
 
 // setupClient create a test client with certificates
