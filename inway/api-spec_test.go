@@ -63,7 +63,7 @@ func TestInwayApiSpec(t *testing.T) {
 	apiSpecMockServer.StartTLS()
 	defer apiSpecMockServer.Close()
 
-	for serviceName, serviceDetails := range serviceConfig.Services {
+	for serviceName, serviceDetails := range serviceConfig.Services { //nolint
 		endpoint, err := iw.NewHTTPServiceEndpoint(logger, serviceName, serviceDetails.EndpointURL, nil)
 		assert.Nil(t, err)
 

@@ -31,7 +31,7 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 	organizations := peerCertificate.Subject.Organization
 
 	if len(organizations) == 0 {
-		msg := "invalid certificate provided: missing value for organization in subject"
+		msg := "invalid certificate provided: missing organizations attribute in subject"
 		http.Error(w, "nlx-inway: "+msg, http.StatusBadRequest)
 		logger.Warn(msg)
 		return

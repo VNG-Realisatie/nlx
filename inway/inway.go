@@ -113,7 +113,7 @@ func NewInway(logger *zap.Logger, logdb *sqlx.DB, selfAddress string, tlsOptions
 // AddServiceEndpoint adds an ServiceEndpoint to the inway's internal registry.
 func (i *Inway) AddServiceEndpoint(
 	p *process.Process, s ServiceEndpoint,
-	serviceDetails config.ServiceDetails) error {
+	serviceDetails config.ServiceDetails) error { //nolint
 	if err := i.addServiceEndpointToMap(s); err != nil {
 		return err
 	}

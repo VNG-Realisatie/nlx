@@ -10,13 +10,6 @@ import (
 	"go.nlx.io/nlx/common/orgtls"
 )
 
-type testDefinition struct {
-	url          string
-	logRecordID  string
-	statusCode   int
-	errorMessage string
-}
-
 // setupClient create a test client with certificates
 func setupClient(t *testing.T, tlsOptions orgtls.TLSOptions) http.Client {
 	cert, err := tls.LoadX509KeyPair(tlsOptions.OrgCertFile, tlsOptions.OrgKeyFile)
@@ -26,7 +19,7 @@ func setupClient(t *testing.T, tlsOptions orgtls.TLSOptions) http.Client {
 
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{
-			InsecureSkipVerify: true,
+			InsecureSkipVerify: true, //nolint
 			RootCAs:            pool,
 			Certificates:       []tls.Certificate{cert}}}
 

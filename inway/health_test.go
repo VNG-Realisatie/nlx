@@ -43,6 +43,7 @@ func TestHealth(t *testing.T) {
 		if err != nil {
 			t.Errorf("error reading bytes from response: %s", err)
 		}
+		response.Body.Close()
 
 		err = json.Unmarshal(bytes, status)
 		if err != nil {

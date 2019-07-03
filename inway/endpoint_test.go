@@ -50,11 +50,13 @@ func TestSetAuthorization(t *testing.T) {
 	endpoint.handleRequest(reqMD2, httpRecorder, req)
 	result2 := httpRecorder.Result()
 	assert.Equal(t, http.StatusForbidden, result2.StatusCode)
+	result2.Body.Close()
 
 	bytes, err := ioutil.ReadAll(result.Body)
 	if err != nil {
 		t.Fatal("error parsing result.body", err)
 	}
+	result.Body.Close()
 
 	assert.Equal(t, fmt.Sprintf("nlx-outway: could not handle your request, organization \"%s\" is not allowed access.\n", reqMD.requesterOrganization), string(bytes))
 }
@@ -76,11 +78,11 @@ func TestInwayAddServiceEndpoint(t *testing.T) {
 
 	p := process.NewProcess(logger)
 	// Test NewHTTPServiceEnpoint with invalid url
-	endpoint, err := iw.NewHTTPServiceEndpoint(logger, "mock-service", "12://invalid-endpoint", nil)
+	_, err = iw.NewHTTPServiceEndpoint(logger, "mock-service", "12://invalid-endpoint", nil)
 	assert.EqualError(t, err, "invalid endpoint provided: parse 12://invalid-endpoint: first path segment in URL cannot contain colon")
 
 	// Test NewHTTPServicedEnpoint
-	endpoint, err = iw.NewHTTPServiceEndpoint(logger, "mock-service", "127.0.0.1", nil)
+	endpoint, err := iw.NewHTTPServiceEndpoint(logger, "mock-service", "127.0.0.1", nil)
 	assert.Nil(t, err)
 	assert.Equal(t, "mock-service", endpoint.ServiceName())
 

@@ -41,7 +41,7 @@ var options struct {
 	orgtls.TLSOptions
 }
 
-func main() {
+func main() { //nolint
 	// Parse options
 	args, err := flags.Parse(&options)
 	if err != nil {
@@ -64,7 +64,7 @@ func main() {
 	}
 	logger.Info("version info", zap.String("version", version.BuildVersion), zap.String("source-hash", version.BuildSourceHash))
 	logger = logger.With(zap.String("version", version.BuildVersion))
-	process := process.NewProcess(logger)
+	xprocess := process.NewProcess(logger)
 
 	logger.Info("starting inway", zap.String("directory-registration-address", options.DirectoryRegistrationAddress))
 	serviceConfig := config.LoadServiceConfig(logger, options.ServiceConfig)
@@ -79,7 +79,7 @@ func main() {
 		logDB.MapperFunc(xstrings.ToSnakeCase)
 
 		dbversion.WaitUntilLatestTxlogDBVersion(logger, logDB.DB)
-		process.CloseGracefully(logDB.Close)
+		xprocess.CloseGracefully(logDB.Close)
 	}
 
 	iw, err := inway.NewInway(logger, logDB, options.SelfAddress, options.TLSOptions, options.DirectoryRegistrationAddress, serviceConfig)
@@ -88,7 +88,7 @@ func main() {
 	}
 
 	// TODO: Issue #403
-	for serviceName, serviceDetails := range serviceConfig.Services {
+	for serviceName, serviceDetails := range serviceConfig.Services { //nolint
 		logger.Info("loaded service from service-config.toml", zap.String("service-name", serviceName))
 		logger.Debug("service configuration details", zap.String("service-name", serviceName), zap.String("endpoint-url", serviceDetails.EndpointURL),
 			zap.String("root-ca-path", serviceDetails.CACertPath), zap.String("authorization-model", serviceDetails.AuthorizationModel),
@@ -102,8 +102,8 @@ func main() {
 				logger.Fatal("Unable to load ca certificate for inway", zap.Error(err))
 			}
 		}
-		endpoint, err := iw.NewHTTPServiceEndpoint(logger, serviceName, serviceDetails.EndpointURL, &tls.Config{RootCAs: rootCrt})
-		if err != nil {
+		endpoint, errr := iw.NewHTTPServiceEndpoint(logger, serviceName, serviceDetails.EndpointURL, &tls.Config{RootCAs: rootCrt})
+		if errr != nil {
 			logger.Fatal("failed to create service", zap.Error(err))
 		}
 		switch serviceDetails.AuthorizationModel {
@@ -114,11 +114,14 @@ func main() {
 		default:
 			logger.Fatal(fmt.Sprintf(`invalid authorization model "%s" for service "%s"`, serviceDetails.AuthorizationModel, serviceName))
 		}
-		iw.AddServiceEndpoint(process, endpoint, serviceDetails)
+		err = iw.AddServiceEndpoint(xprocess, endpoint, serviceDetails)
+		if err != nil {
+			logger.Fatal(fmt.Sprintf(`adding endpoint "%s"`, err))
+		}
 	}
 
 	// Listen on the address provided in the options
-	err = iw.ListenAndServeTLS(process, options.ListenAddress)
+	err = iw.ListenAndServeTLS(xprocess, options.ListenAddress)
 	if err != nil {
 		logger.Fatal("failed to listen and serve", zap.Error(err))
 	}

@@ -56,9 +56,9 @@ func newTestEnv(t *testing.T, tlsOptions orgtls.TLSOptions) (proxy, mock *httpte
 	assert.Nil(t, err)
 
 	// Add service endpoints
-	for serviceName, serviceDetails := range serviceConfig.Services {
-		endpoint, err := iw.NewHTTPServiceEndpoint(logger, serviceName, serviceDetails.EndpointURL, nil)
-		if err != nil {
+	for serviceName, serviceDetails := range serviceConfig.Services { //nolint
+		endpoint, errr := iw.NewHTTPServiceEndpoint(logger, serviceName, serviceDetails.EndpointURL, nil)
+		if errr != nil {
 			t.Fatal("failed to create service endpoint", err)
 		}
 
@@ -87,7 +87,7 @@ func newTestEnv(t *testing.T, tlsOptions orgtls.TLSOptions) (proxy, mock *httpte
 
 }
 
-func TestinWayProxyRequest(t *testing.T) {
+func TestInwayProxyRequest(t *testing.T) {
 
 	tlsOptions := orgtls.TLSOptions{
 		NLXRootCert: filepath.Join("..", "testing", "root.crt"),
@@ -102,7 +102,7 @@ func TestinWayProxyRequest(t *testing.T) {
 
 	client := setupClient(t, tlsOptions)
 
-	// Test http responses
+	//nolint
 	tests := []struct {
 		url          string
 		logRecordID  string
@@ -138,7 +138,7 @@ func TestinWayProxyRequest(t *testing.T) {
 	}
 }
 
-func TestinWayNoOrgProxyRequest(t *testing.T) {
+func TestInwayNoOrgProxyRequest(t *testing.T) {
 
 	tlsOptions := orgtls.TLSOptions{
 		NLXRootCert: filepath.Join("..", "testing", "root.crt"),
@@ -159,7 +159,7 @@ func TestinWayNoOrgProxyRequest(t *testing.T) {
 	defer proxyRequestMockServer.Close()
 	defer mockEndPoint.Close()
 
-	// Test http responses
+	//nolint
 	tests := []struct {
 		url          string
 		logRecordID  string
@@ -189,5 +189,6 @@ func TestinWayNoOrgProxyRequest(t *testing.T) {
 				`result: "%d" for url "%s", expected http status code : "%d"`,
 				resp.StatusCode, test.url, 400)
 		}
+		resp.Body.Close()
 	}
 }
