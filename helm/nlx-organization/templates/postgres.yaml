@@ -8,7 +8,7 @@ spec:
   version: "11.1"
   storageType: "Durable"
   storage:
-    storageClassName: standard
+    # storageClassName: standard
     accessModes:
     - ReadWriteOnce
     resources:
