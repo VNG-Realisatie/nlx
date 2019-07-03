@@ -233,8 +233,8 @@ All issues in the column "Acceptance" are reviewed by the Product Owner. If the 
 Once accepted, the release can be deployed to the following environments:
 
 * Demo
-* Preprod (currently not online)
-* Prod (currently not online)
+* Preprod
+* Prod
 
 These three environments should be at the same version at all times.
 
