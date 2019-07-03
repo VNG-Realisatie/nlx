@@ -3,7 +3,9 @@ stages:
   - Build
   - Tools
   - Release
-  - Deploy
+  - Deploy test
+  - Deploy acc
+  - Deploy prod
   - Scan
 
 Go go.mod tidy test:
@@ -100,11 +102,11 @@ Database diff test:
   script:
     - ./directory-db/diff.sh ci-once
     - ./txlog-db/diff.sh ci-once
+  except:
+    - schedules
   tags:
     - nlx
     - shell-executor
-  except:
-    - schedules
 
 Build:
   stage: Build
@@ -127,12 +129,12 @@ Run semantic release:
     - npx semantic-release
   only:
     - master
+  except:
+    - schedules
   when: manual
   tags:
     - nlx
     - docker-executor  
-  except:
-    - schedules
 
 Release container images:
   stage: Release
@@ -141,14 +143,13 @@ Release container images:
   only:
     - master
     - tags
+  except:
+    - schedules
   tags:
     - nlx-privileged
     - shell-executor
-  except:
-    - schedules
 
 .deploy:
-  stage: Deploy
   script:
     - skaffold run --profile release --profile deploy-${CI_ENVIRONMENT_NAME}
   tags:
@@ -159,73 +160,69 @@ Release container images:
 
 Deploy test:
   extends: .deploy
+  stage: Deploy test
   before_script:
     - kubectl config use-context delta.k8s.nlx.io
   environment:
     name: test
   only:
     - master
-  tags:
-    - nlx-privileged
-    - shell-executor
 
 Deploy acceptance:
   extends: .deploy
-  before_script:
-    - kubectl config use-context delta.k8s.nlx.io
+  stage: Deploy acc
   environment:
     name: acc
+  before_script:
+    - kubectl config use-context delta.k8s.nlx.io
   only:
     - tags
-  tags:
-    - nlx-privileged
-    - shell-executor
 
 Deploy demo:
   extends: .deploy
-  before_script:
-    - kubectl config use-context delta.k8s.nlx.io
+  stage: Deploy prod
   environment:
     name: demo
+  before_script:
+    - kubectl config use-context delta.k8s.nlx.io
   only:
     - tags
   when: manual
-  tags:
-    - nlx-privileged
-    - shell-executor
 
 Deploy preprod:
   extends: .deploy
-  before_script:
-    - kubectl config use-context delta.k8s.nlx.io
+  stage: Deploy prod
   environment:
     name: preprod
-  when: manual
+  before_script:
+    - kubectl config use-context delta.k8s.nlx.io
   only:
     - tags
+  when: manual
 
 Deploy prod:
   extends: .deploy
-  before_script:
-    - kubectl config use-context delta.k8s.nlx.io
+  stage: Deploy prod
   environment:
     name: prod
-  when: manual
+  before_script:
+    - kubectl config use-context delta.k8s.nlx.io
   only:
     - tags
+  when: manual
 
 Docker tag latest:
-  stage: Deploy
+  stage: Deploy prod
   script:
     - skaffold build --profile release | ./docker-tag-latest.awk
   only:
     - tags
+  except:
+    - schedules
   when: manual
   tags:
     - nlx-privileged
     - shell-executor
-  except:
-    - schedules
 
 # Scan configuration based on
 # the offical GitLab documentation and adjusted to be able to:
