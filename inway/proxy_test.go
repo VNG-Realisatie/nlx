@@ -87,7 +87,7 @@ func newTestEnv(t *testing.T, tlsOptions orgtls.TLSOptions) (proxy, mock *httpte
 
 }
 
-func TestInWayProxyRequest(t *testing.T) {
+func TestinWayProxyRequest(t *testing.T) {
 
 	tlsOptions := orgtls.TLSOptions{
 		NLXRootCert: filepath.Join("..", "testing", "root.crt"),
@@ -138,7 +138,7 @@ func TestInWayProxyRequest(t *testing.T) {
 	}
 }
 
-func TestInWayNoOrgProxyRequest(t *testing.T) {
+func TestinWayNoOrgProxyRequest(t *testing.T) {
 
 	tlsOptions := orgtls.TLSOptions{
 		NLXRootCert: filepath.Join("..", "testing", "root.crt"),
