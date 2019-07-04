@@ -75,8 +75,6 @@ func newTestEnv(t *testing.T, tlsOptions orgtls.TLSOptions) (proxy, mock *httpte
 		assert.Nil(t, err)
 	}
 
-	assert.Nil(t, err)
-
 	proxyRequestMockServer := httptest.NewUnstartedServer(http.HandlerFunc(iw.handleProxyRequest))
 	proxyRequestMockServer.TLS = &tls.Config{
 		ClientCAs:  iw.roots,
