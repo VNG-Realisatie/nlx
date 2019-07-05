@@ -48,7 +48,6 @@ spec:
         - name: insight-api
           image: {{.Values.insightAPIImage}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
-          command: ["/usr/local/bin/nlx-insight-api"]
           env:
             - name: LOG_TYPE
               value: {{ default "live" .Values.logType }}

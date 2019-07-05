@@ -36,3 +36,5 @@ COPY --from=build /go/src/go.nlx.io/nlx/directory-monitor/dist/bin/nlx-directory
 # Add non-priveleged user
 RUN adduser -D -u 1001 appuser
 USER appuser
+
+CMD ["/usr/local/bin/nlx-directory-monitor"]

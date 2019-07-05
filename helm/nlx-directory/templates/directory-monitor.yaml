@@ -43,7 +43,6 @@ spec:
         - name: directory-monitor
           image: {{.Values.directoryMonitorImage}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
-          command: ["/usr/local/bin/nlx-directory-monitor"]
           env:
             - name: LOG_TYPE
               value: {{ default "live" .Values.logType }}
