@@ -48,7 +48,6 @@ spec:
         - name: directory
           image: {{.Values.directoryRegistrationImage}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
-          command: ["/usr/local/bin/nlx-directory-registration-api"]
           env:
             - name: LOG_TYPE
               value: {{ default "live" .Values.logType }}

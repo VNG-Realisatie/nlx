@@ -41,7 +41,6 @@ spec:
         - name: outway
           image: {{.Values.outwayImage}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
-          command: ["/usr/local/bin/nlx-outway"]
           env:
             - name: LOG_TYPE
               value: {{ default "live" .Values.logType }}

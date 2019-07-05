@@ -11,7 +11,7 @@ ENV GO111MODULE on
 WORKDIR /go/src/go.nlx.io/nlx
 RUN go mod download
 
-# Only add code that we use for building director 
+# Only add code that we use for building director
 COPY directory-registration-api  /go/src/go.nlx.io/nlx/directory-registration-api
 COPY directory-db/dbversion      /go/src/go.nlx.io/nlx/directory-db/dbversion
 COPY common                      /go/src/go.nlx.io/nlx/common
@@ -37,3 +37,5 @@ COPY --from=build /go/src/go.nlx.io/nlx/directory-registration-api/dist/bin/nlx-
 # Add non-privileged user
 RUN adduser -D -u 1001 appuser
 USER appuser
+
+CMD ["/usr/local/bin/nlx-directory-registration-api"]

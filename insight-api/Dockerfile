@@ -35,3 +35,5 @@ ENV SERVICE_CONFIG /insight-config.toml
 # Add non-privileged user
 RUN adduser -D -u 1001 appuser
 USER appuser
+
+CMD ["/usr/local/bin/nlx-insight-api"]

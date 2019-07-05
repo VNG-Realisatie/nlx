@@ -37,3 +37,4 @@ COPY --from=build /go/src/go.nlx.io/nlx/directory-inspection-api/dist/bin/nlx-di
 RUN adduser -D -u 1001 appuser
 USER appuser
 
+CMD ["/usr/local/bin/nlx-directory-inspection-api"]

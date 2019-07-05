@@ -11,7 +11,7 @@ data:
     {{- .Values.inway.config | nindent 4 }}
 ---
 {{ end }}
-{{ if .Values.inway.rootca }}  
+{{ if .Values.inway.rootca }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -51,11 +51,11 @@ spec:
           configMap:
             name: inway-service-config
         {{ if .Values.inway.rootca }}
-        - name: ca-certs  
+        - name: ca-certs
           configMap:
             name: inway-service-rootca
-        {{ end }} 
-        
+        {{ end }}
+
 
       initContainers:
         - name: inway-certs
@@ -75,7 +75,6 @@ spec:
         - name: inway
           image: {{.Values.inwayImage}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
-          command: ["/usr/local/bin/nlx-inway"]
           env:
             - name: LOG_TYPE
               value: {{ default "live" .Values.logType }}
@@ -100,7 +99,7 @@ spec:
               mountPath: /certs
             - name: inway-service-config
               mountPath: /inway-service-config
-            {{ if .Values.inway.rootca }}  
+            {{ if .Values.inway.rootca }}
             - name: ca-certs
               mountPath: /ca-certs
             {{ end }}
