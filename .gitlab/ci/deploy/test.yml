@@ -1,0 +1,9 @@
+Deploy test:
+  extends: .deploy
+  stage: Deploy test
+  before_script:
+    - kubectl config use-context delta.k8s.nlx.io
+  environment:
+    name: test
+  only:
+    - master

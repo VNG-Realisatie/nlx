@@ -1,0 +1,87 @@
+Go go.mod tidy test:
+  stage: Tests
+  script:
+    - cp go.mod go.mod.orig
+    - /usr/local/go/bin/go mod download
+    - /usr/local/go/bin/go mod tidy
+    - diff go.mod.orig go.mod
+  tags:
+    - nlx
+    - shell-executor
+
+Go tests:
+  stage: Tests
+  script:
+    - /usr/local/go/bin/go mod download
+    - /usr/local/go/bin/go test ./... -coverprofile coverage.out
+    - /usr/local/go/bin/go tool cover -html=coverage.out -o coverage.html
+    - /usr/local/go/bin/go tool cover -func=coverage.out
+  coverage: /total:\t+\(statements\)\t+([\d\.]+?%)/
+  artifacts:
+    expire_in: 1 month
+    paths:
+      - coverage.html
+  tags:
+    - nlx
+    - shell-executor
+
+Go linter:
+  stage: Tests
+  before_script:
+   - export PATH=$PATH:/usr/local/go/bin
+  script:
+    - golangci-lint run --new-from-rev $(git rev-parse origin/master)
+  tags:
+    - nlx
+    - shell-executor
+
+Directory-ui tests:
+  image: node:10.16.0-alpine
+  stage: Tests
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+    - node_modules/
+  before_script:
+    - cd directory-ui/
+    - npm install
+  script:
+    - npm test -- --coverage
+  coverage: /All\sfiles.*?\s+(\d+.\d+)/
+  artifacts:
+    expire_in: 1 month
+    paths:
+      - directory-ui/coverage
+  tags:
+    - nlx
+    - docker-executor
+
+Insight-ui tests:
+  image: node:10.16.0-alpine
+  stage: Tests
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+    - node_modules/
+  before_script:
+    - cd insight-ui/
+    - npm install
+  script:
+    - npm test -- --coverage
+  coverage: /All\sfiles.*?\s+(\d+.\d+)/
+  artifacts:
+    expire_in: 1 month
+    paths:
+      - insight-ui/coverage
+  tags:
+    - nlx
+    - docker-executor
+
+Database diff test:
+  stage: Tests
+  script:
+    - ./directory-db/diff.sh ci-once
+    - ./txlog-db/diff.sh ci-once
+  tags:
+    - nlx
+    - shell-executor

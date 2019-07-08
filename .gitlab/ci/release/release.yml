@@ -1,0 +1,10 @@
+Release container images:
+  stage: Release
+  script:
+    - skaffold build --profile release
+  only:
+    - master
+    - tags
+  tags:
+    - nlx-privileged
+    - shell-executor
