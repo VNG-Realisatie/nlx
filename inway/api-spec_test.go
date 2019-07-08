@@ -25,12 +25,11 @@ func TestInwayApiSpec(t *testing.T) {
 		NLXRootCert: "../testing/root.crt",
 		OrgCertFile: "../testing/org-nlx-test.crt",
 		OrgKeyFile:  "../testing/org-nlx-test.key"}
-	pool, err := orgtls.LoadRootCert(tlsOptions.NLXRootCert)
-	assert.Nil(t, err)
 
-	mockAPISpecEndpoint := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-	}))
+	mockAPISpecEndpoint := httptest.NewServer(
+		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(http.StatusOK)
+		}))
 	defer mockAPISpecEndpoint.Close()
 
 	serviceConfig := &config.ServiceConfig{}
@@ -64,7 +63,7 @@ func TestInwayApiSpec(t *testing.T) {
 	apiSpecMockServer.StartTLS()
 	defer apiSpecMockServer.Close()
 
-	for serviceName, serviceDetails := range serviceConfig.Services {
+	for serviceName, serviceDetails := range serviceConfig.Services { //nolint
 		endpoint, err := iw.NewHTTPServiceEndpoint(logger, serviceName, serviceDetails.EndpointURL, nil)
 		assert.Nil(t, err)
 
@@ -78,18 +77,10 @@ func TestInwayApiSpec(t *testing.T) {
 		}
 
 		err = iw.AddServiceEndpoint(p, endpoint, serviceDetails)
+
 		if err != nil {
 			t.Fatal("error adding endpoint", err)
 		}
-	}
-
-	cert, err := tls.LoadX509KeyPair(tlsOptions.OrgCertFile, tlsOptions.OrgKeyFile)
-	assert.Nil(t, err)
-
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true, RootCAs: pool, Certificates: []tls.Certificate{cert}}}
-	client := http.Client{
-		Transport: tr,
 	}
 
 	tests := []struct {
@@ -98,11 +89,16 @@ func TestInwayApiSpec(t *testing.T) {
 		statusCode   int
 		errorMessage string
 	}{
-		{fmt.Sprintf("%s/.nlx/api-spec-doc/mock-service-public", apiSpecMockServer.URL), "dummy-ID", http.StatusNotFound, "api specification not found for service\n"},
-		{fmt.Sprintf("%s/.nlx/api-spec-doc/nonexisting-service", apiSpecMockServer.URL), "dummy-ID", http.StatusNotFound, "service not found\n"},
-		{fmt.Sprintf("%s/.nlx/api-spec-doc/mock-service-public-invalid-apispec", apiSpecMockServer.URL), "dummy-ID", http.StatusInternalServerError, "server error\n"},
+		{fmt.Sprintf("%s/.nlx/api-spec-doc/mock-service-public", apiSpecMockServer.URL),
+			"dummy-ID", http.StatusNotFound, "api specification not found for service\n"},
+		{fmt.Sprintf("%s/.nlx/api-spec-doc/nonexisting-service", apiSpecMockServer.URL),
+			"dummy-ID", http.StatusNotFound, "service not found\n"},
+		{fmt.Sprintf("%s/.nlx/api-spec-doc/mock-service-public-invalid-apispec", apiSpecMockServer.URL),
+			"dummy-ID", http.StatusInternalServerError, "server error\n"},
 		{fmt.Sprintf("%s/.nlx/api-spec-doc/mock-service-public-apispec", apiSpecMockServer.URL), "dummy-ID", http.StatusOK, ""},
 	}
+
+	client := setupClient(t, tlsOptions)
 
 	for _, test := range tests {
 		req, err := http.NewRequest("GET", test.url, nil)
@@ -120,6 +116,7 @@ func TestInwayApiSpec(t *testing.T) {
 		if err != nil {
 			t.Fatal("error parsing result.body", err)
 		}
+		resp.Body.Close()
 
 		assert.Equal(t, test.statusCode, resp.StatusCode)
 		assert.Equal(t, test.errorMessage, string(bytes))

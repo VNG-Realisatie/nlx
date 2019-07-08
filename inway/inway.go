@@ -111,11 +111,13 @@ func NewInway(logger *zap.Logger, logdb *sqlx.DB, selfAddress string, tlsOptions
 }
 
 // AddServiceEndpoint adds an ServiceEndpoint to the inway's internal registry.
-func (i *Inway) AddServiceEndpoint(p *process.Process, s ServiceEndpoint, serviceDetails config.ServiceDetails) error {
+func (i *Inway) AddServiceEndpoint(
+	p *process.Process, s ServiceEndpoint,
+	serviceDetails config.ServiceDetails) error { //nolint
 	if err := i.addServiceEndpointToMap(s); err != nil {
 		return err
 	}
-	i.announceToDirectory(p, s, serviceDetails)
+	i.announceToDirectory(p, s, &serviceDetails)
 	return nil
 }
 
@@ -130,7 +132,8 @@ func (i *Inway) addServiceEndpointToMap(s ServiceEndpoint) error {
 	return nil
 }
 
-func (i *Inway) announceToDirectory(p *process.Process, s ServiceEndpoint, serviceDetails config.ServiceDetails) {
+func (i *Inway) announceToDirectory(
+	p *process.Process, s ServiceEndpoint, serviceDetails *config.ServiceDetails) {
 	go func() {
 		expBackOff := &backoff.Backoff{
 			Min:    100 * time.Millisecond,
@@ -138,10 +141,12 @@ func (i *Inway) announceToDirectory(p *process.Process, s ServiceEndpoint, servi
 			Max:    20 * time.Second,
 		}
 		shutDownComplete := make(chan struct{})
+
 		p.CloseGracefully(func() error {
 			close(shutDownComplete)
 			return nil
 		})
+
 		sleepDuration := 10 * time.Second
 		for {
 			select {

@@ -19,7 +19,7 @@ import (
 
 func TestHealth(t *testing.T) {
 	inway := &Inway{}
-	inway.serviceEndpoints = make(map[string]ServiceEndpoint, 0)
+	inway.serviceEndpoints = make(map[string]ServiceEndpoint)
 	inway.serviceEndpoints["mockservice"] = &HTTPServiceEndpoint{}
 
 	// Test health check
@@ -43,6 +43,7 @@ func TestHealth(t *testing.T) {
 		if err != nil {
 			t.Errorf("error reading bytes from response: %s", err)
 		}
+		response.Body.Close()
 
 		err = json.Unmarshal(bytes, status)
 		if err != nil {

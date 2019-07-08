@@ -34,5 +34,10 @@ func (i *Inway) handleAPISpecDocRequest(w http.ResponseWriter, r *http.Request) 
 	}
 	defer resp.Body.Close()
 
-	io.Copy(w, resp.Body)
+	_, err = io.Copy(w, resp.Body)
+	if err != nil {
+		http.Error(w, "server error", http.StatusInternalServerError)
+		i.logger.Error("copy response body failed", zap.Error(err))
+		return
+	}
 }

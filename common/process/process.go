@@ -50,12 +50,10 @@ func NewProcess(logger *zap.Logger) *Process {
 }
 
 // CloseGracefully will append ShutdownFunc and a channel for closing to the queue of things that should be closed before process exit.
-func (p *Process) CloseGracefully(toClose ShutdownFunc) error {
+func (p *Process) CloseGracefully(toClose ShutdownFunc) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
-
 	p.close = append(p.close, toClose)
-	return nil
 }
 
 // Exit will do shutdown procedure. It will close all dependencies in reversed sequential order.
