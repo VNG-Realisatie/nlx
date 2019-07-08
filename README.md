@@ -18,6 +18,9 @@ The NLX project consists of multiple components that together make up the entire
 
 If you want to develop locally, or run your own NLX network, you will likely want to start all the components.
 
+Microk8s is also possible now on linux / ubuntu machines. Microk8s does not need an extra VM and has 
+a much smaller footprint for local developement.
+
 ### Requirements
 
 Make sure you have installed the following tools:
