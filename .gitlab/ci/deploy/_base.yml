@@ -1,0 +1,6 @@
+.deploy:
+  script:
+    - skaffold run --profile release --profile deploy-${CI_ENVIRONMENT_NAME}
+  tags:
+    - nlx-privileged
+    - shell-executor

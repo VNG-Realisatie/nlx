@@ -1,0 +1,13 @@
+Run semantic release:
+  image: node:10.16.0
+  stage: Tools
+  before_script:
+  - npm ci
+  script:
+    - npx semantic-release
+  only:
+    - master
+  when: manual
+  tags:
+    - nlx
+    - docker-executor
