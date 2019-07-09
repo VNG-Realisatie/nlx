@@ -15,7 +15,7 @@ RUN go mod download
 COPY directory-registration-api  /go/src/go.nlx.io/nlx/directory-registration-api
 COPY directory-db/dbversion      /go/src/go.nlx.io/nlx/directory-db/dbversion
 COPY common                      /go/src/go.nlx.io/nlx/common
-COPY .git                        /go/src/go.nlx.io/nlx/directory-registration-api/.git
+COPY .git                        /go/src/go.nlx.io/nlx/.git
 
 WORKDIR /go/src/go.nlx.io/nlx/directory-registration-api
 

@@ -15,7 +15,7 @@ RUN go mod download
 COPY insight-api        /go/src/go.nlx.io/nlx/insight-api
 COPY txlog-db/dbversion /go/src/go.nlx.io/nlx/txlog-db/dbversion
 COPY common             /go/src/go.nlx.io/nlx/common
-COPY .git               /go/src/go.nlx.io/nlx/insight-api/.git
+COPY .git               /go/src/go.nlx.io/nlx/.git
 
 
 WORKDIR /go/src/go.nlx.io/nlx/insight-api

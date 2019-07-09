@@ -10,6 +10,14 @@ build:
     context: .
     docker:
       dockerfile: ca-certportal/Dockerfile
+  - image: nlxio/config-api
+    context: .
+    docker:
+      dockerfile: config-api/Dockerfile
+  - image: nlxio/config-db
+    context: .
+    docker:
+      dockerfile: config-db/Dockerfile
   - image: nlxio/directory-db
     context: .
     docker:

@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+// Package configproto defines the config api.
+package configproto;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.sizer_all) = true;
+option (gogoproto.unmarshaler_all) = true;
+option (gogoproto.goproto_getters_all) = false;
+
+// The Config service definition.
+service Config {
+	rpc SetInwayConfig (SetInwayConfigRequest) returns (google.protobuf.Empty) {
+	}
+	rpc GetInwayConfig (GetInwayConfigRequest) returns (stream GetInwayConfigResponse) {
+	}
+}
+
+message SetInwayConfigRequest {
+	InwayConfig config = 1;
+}
+
+message GetInwayConfigRequest {
+	string name = 1;
+	bool watch = 2;
+}
+
+message GetInwayConfigResponse {
+	InwayConfig config = 1;
+}
+
+message InwayConfig {
+	string name = 1;
+}
