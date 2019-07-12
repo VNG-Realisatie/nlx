@@ -1,3 +1,18 @@
+# [0.74.0](https://gitlab.com/commonground/nlx/compare/v0.73.0...v0.74.0) (2019-07-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency ajv-keywords to v3.4.1 ([e59049a](https://gitlab.com/commonground/nlx/commit/e59049a))
+* **deps:** update dependency redux to v4.0.2 ([8b6d3ad](https://gitlab.com/commonground/nlx/commit/8b6d3ad))
+* **deps:** update dependency redux to v4.0.4 ([d842dec](https://gitlab.com/commonground/nlx/commit/d842dec))
+* **directory-registration-api:** fix inway config not being updated in the directory database ([367a851](https://gitlab.com/commonground/nlx/commit/367a851))
+
+
+### Features
+
+* **design:** Add sequence diagrams for organization management and keyless and improved organization management config. ([37c7d24](https://gitlab.com/commonground/nlx/commit/37c7d24))
+
 # [0.71.0-one.zero](https://gitlab.com/commonground/nlx/compare/v0.71.0...v0.71.0-one.zero) (2019-07-01)
 
 ### Bug Fixes
