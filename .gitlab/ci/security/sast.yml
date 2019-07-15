@@ -12,10 +12,10 @@ Static application security testing (SAST):
     - export SAST_VERSION=${SP_VERSION:-$(echo "$CI_SERVER_VERSION" | sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')}
     - |
       docker run \
-        --env SAST_ANALYZER_IMAGES \
+        --env SAST_ANALYZER_IMAGES="registry.gitlab.com/bartjkdp/gosec:feature-upgrade-to-gosec-2" \
         --env SAST_ANALYZER_IMAGE_PREFIX \
         --env SAST_ANALYZER_IMAGE_TAG \
-        --env SAST_DEFAULT_ANALYZERS \
+        --env SAST_DEFAULT_ANALYZERS="bandit,brakeman,spotbugs,flawfinder,phpcs-security-audit,security-code-scan,nodejs-scan,eslint,tslint,secrets,sobelow" \
         --env SAST_EXCLUDED_PATHS \
         --env SAST_BANDIT_EXCLUDED_PATHS \
         --env SAST_BRAKEMAN_LEVEL \
