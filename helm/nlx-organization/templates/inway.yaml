@@ -106,6 +106,21 @@ spec:
       restartPolicy: Always
   status: {}
 ---
+{{ if .Values.disableLoadBalancers }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: inway
+  namespace: {{ .Release.Namespace }}
+  labels: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
+spec:
+  selector: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
+  ports:
+    - name: inway-internal
+      protocol: TCP
+      port: 443
+      targetPort: 8443
+{{ else }}
 apiVersion: v1
 kind: Service
 metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
@@ -117,4 +132,5 @@ spec:
       protocol: TCP
       port: 443
       targetPort: 8443
+{{ end }}
 {{ end }}

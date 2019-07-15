@@ -72,6 +72,21 @@ spec:
       restartPolicy: Always
   status: {}
 ---
+{{ if .Values.disableLoadBalancers }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: directory-registration-api
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "nlx-directory.common.metadata-labels" . | nindent 2 }}
+spec:
+  selector: {{ include "nlx-directory.common.metadata-labels" . | nindent 4 }}
+  ports:
+    - name: directory-registration
+      protocol: TCP
+      port: 443
+      targetPort: 8443
+{{ else }}
 apiVersion: v1
 kind: Service
 metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
@@ -83,4 +98,5 @@ spec:
       protocol: TCP
       port: 443
       targetPort: 8443
+{{ end }}
 {{ end }}

@@ -115,6 +115,118 @@ profiles:
           outwayImage: nlxio/outway
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-dev-haarlem
+- name: deploy-review-directory
+  deploy:
+    helm:
+      releases:
+      - name: "nlx-directory-{{.CI_ENVIRONMENT_SLUG}}"
+        chartPath: helm/nlx-directory
+        valuesFiles:
+        - helm/nlx-directory/values-review.yaml
+        setValueTemplates:
+          caCertportalImage: "nlxio/ca-certportal:{{.CI_COMMIT_SHORT_SHA}}"
+          caCfsslUnsafeImage: "nlxio/ca-cfssl-unsafe:{{.CI_COMMIT_SHORT_SHA}}"
+          directoryDBImage: "nlxio/directory-db:{{.CI_COMMIT_SHORT_SHA}}"
+          directoryInspectionImage: nlxio/directory-inspection-api:{{.CI_COMMIT_SHORT_SHA}}
+          directoryMonitorImage: nlxio/directory-monitor:{{.CI_COMMIT_SHORT_SHA}}
+          directoryRegistrationImage: nlxio/directory-registration-api:{{.CI_COMMIT_SHORT_SHA}}
+          directoryUIImage: nlxio/directory-ui:{{.CI_COMMIT_SHORT_SHA}}
+          docsImage: nlxio/docs:{{.CI_COMMIT_SHORT_SHA}}
+          insightDemoImage: nlxio/insight-demo:{{.CI_COMMIT_SHORT_SHA}}
+          insightUIImage: nlxio/insight-ui:{{.CI_COMMIT_SHORT_SHA}}
+          caAddress: ca-cfssl-unsafe.nlx-directory-$CI_ENVIRONMENT_SLUG
+          disableLoadBalancers: true
+          insightDirectoryInspectionAPIURL: http://directory-inspection-api-internal.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
+          externalDomain: nlx-directory-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
+          domain: nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
+- name: deploy-review-brp
+  deploy:
+    helm:
+      releases:
+      - name: "nlx-brp-{{.CI_ENVIRONMENT_SLUG}}"
+        chartPath: helm/nlx-organization
+        valuesFiles:
+        - helm/nlx-organization/values-review-brp.yaml
+        setValueTemplates:
+          authServiceImage: nlxio/auth-service:{{.CI_COMMIT_SHORT_SHA}}
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe:{{.CI_COMMIT_SHORT_SHA}}
+          insightAPIImage: nlxio/insight-api:{{.CI_COMMIT_SHORT_SHA}}
+          inwayImage: nlxio/inway:{{.CI_COMMIT_SHORT_SHA}}
+          txlogDBImage: nlxio/txlog-db:{{.CI_COMMIT_SHORT_SHA}}
+          directoryRegistrationHostname: directory-registration-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
+          directoryInspectionHostname: directory-inspection-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}} 
+          caAddress: ca-cfssl-unsafe.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
+          externalDomain: nlx-brp-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
+          domain: nlx-brp-{{.CI_ENVIRONMENT_SLUG}}
+          inway.config: |
+            [services]
+                [services.basisregistratie]
+                endpoint-url = 'https://service:8443'
+                authorization-model = 'none'
+                api-specification-document-url = 'https://gitlab.com/commonground/nlx-demo/raw/ae41adad73beb01f1d45902ed4dbb5927907441c/brp-mock-service/openapi.json'
+                insight-api-url = 'https://insight-api.nlx-brp-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}'
+                irma-api-url = 'https://irma-api.nlx-brp-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
+                ca-cert-path = '/ca-certs/basisregistratie.pem'
+- name: deploy-review-rdw
+  deploy:
+    helm:
+      releases:
+      - name: "nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}"
+        chartPath: helm/nlx-organization
+        valuesFiles:
+        - helm/nlx-organization/values-review-rdw.yaml
+        setValueTemplates:
+          authServiceImage: nlxio/auth-service:{{.CI_COMMIT_SHORT_SHA}}
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe:{{.CI_COMMIT_SHORT_SHA}}
+          insightAPIImage: nlxio/insight-api:{{.CI_COMMIT_SHORT_SHA}}
+          inwayImage: nlxio/inway:{{.CI_COMMIT_SHORT_SHA}}
+          txlogDBImage: nlxio/txlog-db:{{.CI_COMMIT_SHORT_SHA}}
+          directoryRegistrationHostname: directory-registration-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
+          directoryInspectionHostname: directory-inspection-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
+          caAddress: ca-cfssl-unsafe.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
+          externalDomain: nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
+          domain: nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}
+          inway.config: |
+            [services]
+                [services.kentekenregister]
+                endpoint-url = 'http://service:8000'
+                authorization-model = 'none'
+                insight-api-url = 'https://insight-api.nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}'
+                irma-api-url = 'https://irma-api.nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}'
+- name: deploy-review-haarlem
+  deploy:
+    helm:
+      releases:
+      - name: "nlx-haarlem-{{.CI_ENVIRONMENT_SLUG}}"
+        chartPath: helm/nlx-organization
+        valuesFiles:
+        - helm/nlx-organization/values-review-haarlem.yaml
+        setValueTemplates:
+          authServiceImage: nlxio/auth-service:{{.CI_COMMIT_SHORT_SHA}}
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe:{{.CI_COMMIT_SHORT_SHA}}
+          insightAPIImage: nlxio/insight-api:{{.CI_COMMIT_SHORT_SHA}}
+          inwayImage: nlxio/inway:{{.CI_COMMIT_SHORT_SHA}}
+          outwayImage: nlxio/outway:{{.CI_COMMIT_SHORT_SHA}}
+          txlogDBImage: nlxio/txlog-db:{{.CI_COMMIT_SHORT_SHA}}
+          directoryRegistrationHostname: directory-registration-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
+          directoryInspectionHostname: directory-inspection-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
+          caAddress: ca-cfssl-unsafe.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
+          externalDomain: nlx-haarlem-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
+          domain: nlx-haarlem-{{.CI_ENVIRONMENT_SLUG}}
+          inway.config: |
+            services]
+                [services.demo-api]
+                endpoint-url = 'https://postman-echo.com'
+                authorization-model = 'none'
+                insight-api-url = 'https://insight-api.nlx-haarlem-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}'
+                irma-api-url = 'https://irma-api.nlx-haarlem-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}'
+- name: release-review
+  build:
+    tagPolicy:
+       envTemplate:
+         template: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/{{.IMAGE_NAME}}:{{.CI_COMMIT_SHORT_SHA}}"
+    local:
+      push: true
 - name: release
   build:
     tagPolicy:

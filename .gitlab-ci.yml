@@ -1,9 +1,11 @@
+
 stages:
   - Tests
   - Build
   - Security
   - Tools
   - Release
+  - Review
   - Deploy test
   - Deploy acc
   - Deploy prod
@@ -14,6 +16,7 @@ include:
   - '.gitlab/ci/security/sast.yml'
   - '.gitlab/ci/tools/semantic_release.yml'
   - '.gitlab/ci/release/release.yml'
+  - '.gitlab/ci/review/review.yml'
   - '.gitlab/ci/deploy/_base.yml'
   - '.gitlab/ci/deploy/test.yml'
   - '.gitlab/ci/deploy/acc.yml'
