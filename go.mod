@@ -2,7 +2,7 @@ module go.nlx.io/nlx
 
 require (
 	github.com/Microsoft/go-winio v0.4.12 // indirect
-	github.com/cloudflare/cfssl v0.0.0-20190627233635-2001f384ec4f
+	github.com/cloudflare/cfssl v0.0.0-20190716224954-5fc50ce768d7
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/docker/distribution v2.7.1+incompatible // indirect
 	github.com/docker/docker v1.13.1 // indirect
@@ -33,6 +33,8 @@ require (
 	github.com/sirupsen/logrus v1.4.2 // indirect
 	github.com/sony/sonyflake v1.0.0
 	github.com/stretchr/testify v1.3.0
+	github.com/zmap/zcrypto v0.0.0-20190711184618-e267965e6343 // indirect
+	github.com/zmap/zlint v0.0.0-20190711184653-dfa3ce3b1d70 // indirect
 	go.uber.org/atomic v1.4.0 // indirect
 	go.uber.org/multierr v1.1.0 // indirect
 	go.uber.org/zap v1.10.0
