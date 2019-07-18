@@ -71,21 +71,21 @@ docker pull nlxio/inway:latest
 The following command will run the inway using the Docker image we just fetched.
 
 ```bash
-docker run --detach \
-              --name my-nlx-inway \
-              --volume ~/nlx-setup/root.crt:/certs/root.crt:ro \
-              --volume ~/nlx-setup/org.crt:/certs/org.crt:ro \
-              --volume ~/nlx-setup/org.key:/certs/org.key:ro \
-              --volume ~/nlx-setup/service-config.toml:/service-config.toml:ro \
-              --env DIRECTORY_REGISTRATION_ADDRESS=directory-registration-api.demo.nlx.io:443 \
-              --env SELF_ADDRESS=my-organization.nl:443 \
-              --env SERVICE_CONFIG=/service-config.toml \
-              --env TLS_NLX_ROOT_CERT=/certs/root.crt \
-              --env TLS_ORG_CERT=/certs/org.crt \
-              --env TLS_ORG_KEY=/certs/org.key \
-              --env DISABLE_LOGDB=1 \
-              --publish 443:8443 \
-              nlxio/inway:latest
+docker run --rm \
+  --name my-nlx-inway \
+  --volume ~/nlx-setup/root.crt:/certs/root.crt:ro \
+  --volume ~/nlx-setup/org.crt:/certs/org.crt:ro \
+  --volume ~/nlx-setup/org.key:/certs/org.key:ro \
+  --volume ~/nlx-setup/service-config.toml:/service-config.toml:ro \
+  --env DIRECTORY_REGISTRATION_ADDRESS=directory-registration-api.demo.nlx.io:443 \
+  --env SELF_ADDRESS=my-organization.nl:443 \
+  --env SERVICE_CONFIG=/service-config.toml \
+  --env TLS_NLX_ROOT_CERT=/certs/root.crt \
+  --env TLS_ORG_CERT=/certs/org.crt \
+  --env TLS_ORG_KEY=/certs/org.key \
+  --env DISABLE_LOGDB=1 \
+  --publish 443:8443 \
+  nlxio/inway:latest
 ```
 
 We give Docker several arguments:

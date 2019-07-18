@@ -72,7 +72,7 @@ docker rm -f my-nlx-outway
 To connect the transaction log database to our outway we need to start the outway with a different docker command:
 
 ```bash
-docker run --detach \
+docker run --rm \
   --name my-nlx-outway \
   --volume ~/nlx-setup/root.crt:/certs/root.crt:ro \
   --volume ~/nlx-setup/yourhostname.crt:/certs/org.crt:ro \

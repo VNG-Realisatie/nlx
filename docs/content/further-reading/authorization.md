@@ -28,20 +28,20 @@ After you have implemented the `authorization interface` on your authorization s
 For example, the URL of our authorization service is `https://auth.nlx.io`, we can start the outway by running the following docker command:
 
 ```bash
-docker run --detach \
-             --name my-nlx-outway \
-             --volume ~/nlx-setup/root.crt:/certs/root.crt:ro \
-             --volume ~/nlx-setup/org.crt:/certs/org.crt:ro \
-             --volume ~/nlx-setup/org.key:/certs/org.key:ro \
-             --env DIRECTORY_INSPECTION_ADDRESS=directory-inspection-api.demo.nlx.io:443 \
-             --env TLS_NLX_ROOT_CERT=/certs/root.crt \
-             --env TLS_ORG_CERT=/certs/org.crt \
-             --env TLS_ORG_KEY=/certs/org.key \
-             --env AUTHORIZATION_SERVICE_ADDRESS=https://auth.nlx.io \
-             --env AUTHORIZATION_ROOT_CA=~/nlx-setup/root.crt:/certs/root.crt:ro \
-             --env DISABLE_LOGDB=1 \
-             --publish 80:8080 \
-             nlxio/outway:latest
+docker run --rm \
+  --name my-nlx-outway \
+  --volume ~/nlx-setup/root.crt:/certs/root.crt:ro \
+  --volume ~/nlx-setup/org.crt:/certs/org.crt:ro \
+  --volume ~/nlx-setup/org.key:/certs/org.key:ro \
+  --env DIRECTORY_INSPECTION_ADDRESS=directory-inspection-api.demo.nlx.io:443 \
+  --env TLS_NLX_ROOT_CERT=/certs/root.crt \
+  --env TLS_ORG_CERT=/certs/org.crt \
+  --env TLS_ORG_KEY=/certs/org.key \
+  --env AUTHORIZATION_SERVICE_ADDRESS=https://auth.nlx.io \
+  --env AUTHORIZATION_ROOT_CA=~/nlx-setup/root.crt:/certs/root.crt:ro \
+  --env DISABLE_LOGDB=1 \
+  --publish 80:8080 \
+  nlxio/outway:latest
 ```
 
 Please note we are also setting the environment variable `AUTHORIZATION_ROOT_CA`. This variable contains the path to a root Certificate Authority(CA). To keep everything as secure as possible, your authorization service **must** only accept connections with TLS enabled. The configured root CA will be used by the outway to verify the certificates of your authorization service.
