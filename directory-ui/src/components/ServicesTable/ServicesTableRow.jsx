@@ -15,7 +15,7 @@ import LinkIcon from './Icons/LinkIcon/LinkIcon'
 import { StyledServiceTableRow, StyledApiTypeLabel } from './ServiceTableRow.styles'
 
 export const apiUrlForService = (organization, name) =>
-  `http://{your-outway-address}:12018/${organization}/${name}`
+  `http://{your-outway-address}/${organization}/${name}`
 
 
 const ServicesTableRow = ({ status, organization, name, apiType }) => {

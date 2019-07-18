@@ -17,7 +17,7 @@ it('renders without crashing', () => {
 describe('the API address', () => {
   it('should consist out of the organization and service name', () => {
     const apiAddress = apiUrlForService('organization', 'service')
-    expect(apiAddress).toBe('http://{your-outway-address}:12018/organization/service')
+    expect(apiAddress).toBe('http://{your-outway-address}/organization/service')
   })
 })
 
@@ -28,6 +28,6 @@ describe('clicking the link icon', () => {
                                               name="service"
     />)
     wrapper.find('[dataTest="link-icon"]').simulate('click')
-    expect(copy).toHaveBeenCalledWith('http://{your-outway-address}:12018/organization/service')
+    expect(copy).toHaveBeenCalledWith('http://{your-outway-address}/organization/service')
   })
 })
