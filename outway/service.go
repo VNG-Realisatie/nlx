@@ -16,6 +16,7 @@ import (
 	"github.com/pkg/errors"
 	"go.nlx.io/nlx/common/tlsconfig"
 	"go.uber.org/zap"
+	"golang.org/x/net/http2"
 )
 
 var errNoInwaysAvailable = errors.New("no inways available")
@@ -43,7 +44,7 @@ type RoundRobinLoadBalancedHTTPService struct {
 	proxies []*httputil.ReverseProxy
 }
 
-func newRoundTripHTTPTransport(tlsConfig *tls.Config) *http.Transport {
+func newRoundTripHTTPTransport(logger *zap.Logger, tlsConfig *tls.Config) *http.Transport {
 	tlsconfig.ApplyDefaults(tlsConfig)
 	transport := &http.Transport{
 		Proxy: http.ProxyFromEnvironment,
@@ -58,6 +59,10 @@ func newRoundTripHTTPTransport(tlsConfig *tls.Config) *http.Transport {
 		ExpectContinueTimeout: 1 * time.Second,
 		TLSClientConfig:       tlsConfig,
 	}
+	if err := http2.ConfigureTransport(transport); err != nil {
+		logger.Error("failed to add http2 to transport")
+	}
+
 	return transport
 }
 
@@ -89,10 +94,12 @@ func NewRoundRobinLoadBalancedHTTPService(
 	if err != nil {
 		return nil, errors.Wrap(err, "invalid certificate provided")
 	}
-	roundTripTransport := newRoundTripHTTPTransport(&tls.Config{
-		RootCAs:      roots,
-		Certificates: []tls.Certificate{cert},
-	})
+	roundTripTransport := newRoundTripHTTPTransport(
+		logger,
+		&tls.Config{
+			RootCAs:      roots,
+			Certificates: []tls.Certificate{cert},
+		})
 
 	for i, inwayAddress := range inwayAddresses {
 		endpointURL, err := url.Parse("https://" + inwayAddress)
