@@ -36,7 +36,6 @@ type RoundRobinLoadBalancedHTTPService struct {
 	inwayAddresses  []string
 	loadBalanceLock sync.Mutex
 	count           int
-	// endPoints       []*url.URL
 
 	logger *zap.Logger
 	roots  *x509.CertPool
