@@ -39,6 +39,7 @@ type Inway struct {
 	orgKeyFile  string
 
 	serviceConfig *config.ServiceConfig // This should be removed once we have centralized service management
+	process       *process.Process
 
 	serviceEndpointsLock sync.RWMutex
 	serviceEndpoints     map[string]ServiceEndpoint
@@ -49,7 +50,14 @@ type Inway struct {
 }
 
 // NewInway creates and prepares a new Inway.
-func NewInway(logger *zap.Logger, logdb *sqlx.DB, selfAddress string, tlsOptions orgtls.TLSOptions, directoryRegistrationAddress string, serviceConfig *config.ServiceConfig) (*Inway, error) {
+func NewInway(
+	logger *zap.Logger,
+	logDB *sqlx.DB,
+	mainProcess *process.Process,
+	selfAddress string,
+	tlsOptions orgtls.TLSOptions,
+	directoryRegistrationAddress string,
+	serviceConfig *config.ServiceConfig) (*Inway, error) {
 	// parse tls certificate
 	roots, orgCert, err := orgtls.Load(tlsOptions)
 	if err != nil {
@@ -57,6 +65,14 @@ func NewInway(logger *zap.Logger, logdb *sqlx.DB, selfAddress string, tlsOptions
 	}
 	if len(orgCert.Subject.Organization) != 1 {
 		return nil, errors.New("cannot obtain organization name from self cert")
+	}
+
+	if selfAddress == "" {
+		logger.Info("\n\n inway selfaddress is empty \n\n")
+	}
+
+	if mainProcess == nil {
+		return nil, errors.New("process argument is nil. needed to close gracefully")
 	}
 
 	organizationName := orgCert.Subject.Organization[0]
@@ -71,16 +87,17 @@ func NewInway(logger *zap.Logger, logdb *sqlx.DB, selfAddress string, tlsOptions
 		orgKeyFile:  tlsOptions.OrgKeyFile,
 
 		serviceConfig: serviceConfig,
+		process:       mainProcess,
 
 		serviceEndpoints: make(map[string]ServiceEndpoint),
 	}
 
 	// setup transactionlog
-	if logdb == nil {
+	if logDB == nil {
 		logger.Info("logging to transaction-log disabled")
 		i.txlogger = transactionlog.NewDiscardTransactionLogger()
 	} else {
-		i.txlogger, err = transactionlog.NewPostgresTransactionLogger(logger, logdb, transactionlog.DirectionIn)
+		i.txlogger, err = transactionlog.NewPostgresTransactionLogger(logger, logDB, transactionlog.DirectionIn)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to setup transactionlog")
 		}
@@ -111,13 +128,12 @@ func NewInway(logger *zap.Logger, logdb *sqlx.DB, selfAddress string, tlsOptions
 }
 
 // AddServiceEndpoint adds an ServiceEndpoint to the inway's internal registry.
-func (i *Inway) AddServiceEndpoint(
-	p *process.Process, s ServiceEndpoint,
+func (i *Inway) AddServiceEndpoint(s ServiceEndpoint,
 	serviceDetails config.ServiceDetails) error { //nolint
 	if err := i.addServiceEndpointToMap(s); err != nil {
 		return err
 	}
-	i.announceToDirectory(p, s, &serviceDetails)
+	i.announceToDirectory(s, &serviceDetails)
 	return nil
 }
 
@@ -132,8 +148,7 @@ func (i *Inway) addServiceEndpointToMap(s ServiceEndpoint) error {
 	return nil
 }
 
-func (i *Inway) announceToDirectory(
-	p *process.Process, s ServiceEndpoint, serviceDetails *config.ServiceDetails) {
+func (i *Inway) announceToDirectory(s ServiceEndpoint, serviceDetails *config.ServiceDetails) {
 	go func() {
 		expBackOff := &backoff.Backoff{
 			Min:    100 * time.Millisecond,
@@ -141,12 +156,12 @@ func (i *Inway) announceToDirectory(
 			Max:    20 * time.Second,
 		}
 		shutDownComplete := make(chan struct{})
-
-		p.CloseGracefully(func() error {
-			close(shutDownComplete)
-			return nil
-		})
-
+		if i.process != nil {
+			i.process.CloseGracefully(func() error {
+				close(shutDownComplete)
+				return nil
+			})
+		}
 		sleepDuration := 10 * time.Second
 		for {
 			select {

@@ -42,11 +42,12 @@ type Outway struct {
 	txlogger transactionlog.TransactionLogger
 
 	directoryInspectionClient inspectionapi.DirectoryInspectionClient
+	process                   *process.Process
 
 	requestFlake *sonyflake.Sonyflake
 	ecmaTable    *crc64.Table
 
-	headersStripList *http.Header
+	// headersStripList *http.Header
 
 	authorizationSettings *authSettings
 	authorizationClient   http.Client
@@ -55,19 +56,107 @@ type Outway struct {
 	services     map[string]HTTPService // services mapped by <organizationName>.<serviceName>
 }
 
-// NewOutway creates a new Outway and sets it up to handle requests.
-func NewOutway(process *process.Process, logger *zap.Logger, logdb *sqlx.DB, tlsOptions orgtls.TLSOptions, directoryInspectionAddress, authServiceURL, authCAPath string) (*Outway, error) {
+func loadCertificates(logger *zap.Logger, tlsOptions orgtls.TLSOptions) (*x509.CertPool, string, error) {
+
 	// load certs and get organization name from cert
 	roots, orgCert, err := orgtls.Load(tlsOptions)
 	if err != nil {
-		logger.Fatal("failed to load tls certs", zap.Error(err))
+		msg := "cannot obtain organization name from self cert"
+		logger.Fatal("failed to load tls certs "+msg, zap.Error(err))
+		return nil, "", errors.New(msg)
+
 	}
 	if len(orgCert.Subject.Organization) != 1 {
-		return nil, errors.New("cannot obtain organization name from self cert")
+		return nil, "", errors.New("cannot obtain organization name from self cert")
 	}
 
 	organizationName := orgCert.Subject.Organization[0]
 	logger.Info("loaded certificates for outway", zap.String("outway-organization-name", organizationName))
+
+	return roots, organizationName, nil
+}
+
+func (o *Outway) validateAuthURL(authCAPath, authServiceURL string) error {
+	if authServiceURL == "" {
+		return nil
+	}
+
+	if authCAPath == "" {
+		return fmt.Errorf("authorization service URL set but no CA for authorization provided")
+	}
+
+	authURL, err := url.Parse(authServiceURL)
+	if err != nil {
+		return err
+	}
+
+	if authURL.Scheme != "https" {
+		return errors.New("scheme of authorization service URL is not 'https'")
+	}
+	o.authorizationSettings = &authSettings{
+		serviceURL: fmt.Sprintf("%s/auth", authServiceURL),
+	}
+
+	o.authorizationSettings.ca, err = orgtls.LoadRootCert(authCAPath)
+	if err != nil {
+		return err
+	}
+
+	o.authorizationClient = http.Client{
+		Transport: createHTTPTransport(&tls.Config{
+			RootCAs: o.authorizationSettings.ca}),
+	}
+	return nil
+}
+
+func (o *Outway) startDirectoryInspector(directoryInspectionAddress string) error {
+
+	orgKeypair, err := tls.LoadX509KeyPair(o.tlsOptions.OrgCertFile, o.tlsOptions.OrgKeyFile)
+	if err != nil {
+		return errors.Wrap(err, "failed to read tls keypair")
+	}
+	directoryDialCredentials := credentials.NewTLS(&tls.Config{
+		Certificates: []tls.Certificate{orgKeypair},
+		RootCAs:      o.tlsRoots,
+	})
+	directoryDialOptions := []grpc.DialOption{
+		grpc.WithTransportCredentials(directoryDialCredentials),
+	}
+	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(context.Background(), 1*time.Minute)
+	defer directoryConnCtxCancel()
+	directoryConn, err := grpc.DialContext(directoryConnCtx, directoryInspectionAddress, directoryDialOptions...)
+	if err != nil {
+		o.logger.Fatal("failed to setup connection to directory service", zap.Error(err))
+	}
+	o.directoryInspectionClient = inspectionapi.NewDirectoryInspectionClient(directoryConn)
+	o.logger.Info("directory inspection client setup complete", zap.String("directory-inspection-address", directoryInspectionAddress))
+	err = o.updateServiceList()
+	if err != nil {
+		return errors.Wrap(err, "failed to update internal service directory")
+	}
+
+	go o.keepServiceListUpToDate()
+	return nil
+}
+
+// NewOutway creates a new Outway and sets it up to handle requests.
+func NewOutway(
+	logger *zap.Logger,
+	logdb *sqlx.DB,
+	mainProcess *process.Process,
+	tlsOptions orgtls.TLSOptions,
+	directoryInspectionAddress,
+	authServiceURL,
+	authCAPath string) (*Outway, error) {
+
+	roots, organizationName, err := loadCertificates(logger, tlsOptions)
+	if err != nil {
+		return nil, err
+	}
+
+	if mainProcess == nil {
+		return nil, errors.New("process argument is nil. needed enable to close gracefully")
+	}
 
 	o := &Outway{
 		wg:               &sync.WaitGroup{},
@@ -76,36 +165,15 @@ func NewOutway(process *process.Process, logger *zap.Logger, logdb *sqlx.DB, tls
 
 		tlsOptions: tlsOptions,
 		tlsRoots:   roots,
+		process:    mainProcess,
 
 		requestFlake: sonyflake.NewSonyflake(sonyflake.Settings{}),
 		ecmaTable:    crc64.MakeTable(crc64.ECMA),
 	}
 
-	if len(authServiceURL) > 0 {
-		if len(authCAPath) == 0 {
-			return nil, fmt.Errorf("authorization service URL set but no CA for authorization provided")
-		}
-		url, err := url.Parse(authServiceURL)
-		if err != nil {
-			return nil, err
-		}
-
-		if url.Scheme != "https" {
-			return nil, fmt.Errorf("scheme of authorization service URL is not 'https'")
-		}
-		o.authorizationSettings = &authSettings{
-			serviceURL: fmt.Sprintf("%s/auth", authServiceURL),
-		}
-
-		o.authorizationSettings.ca, err = orgtls.LoadRootCert(authCAPath)
-		if err != nil {
-			return nil, err
-		}
-
-		o.authorizationClient = http.Client{
-			Transport: createHTTPTransport(&tls.Config{
-				RootCAs: o.authorizationSettings.ca}),
-		}
+	err = o.validateAuthURL(authCAPath, authServiceURL)
+	if err != nil {
+		return nil, err
 	}
 
 	// setup transactionlog
@@ -120,35 +188,14 @@ func NewOutway(process *process.Process, logger *zap.Logger, logdb *sqlx.DB, tls
 		logger.Info("transaction logger created")
 	}
 
-	orgKeypair, err := tls.LoadX509KeyPair(tlsOptions.OrgCertFile, tlsOptions.OrgKeyFile)
+	err = o.startDirectoryInspector(directoryInspectionAddress)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to read tls keypair")
+		return nil, err
 	}
-	directoryDialCredentials := credentials.NewTLS(&tls.Config{
-		Certificates: []tls.Certificate{orgKeypair},
-		RootCAs:      roots,
-	})
-	directoryDialOptions := []grpc.DialOption{
-		grpc.WithTransportCredentials(directoryDialCredentials),
-	}
-	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(context.Background(), 1*time.Minute)
-	defer directoryConnCtxCancel()
-	directoryConn, err := grpc.DialContext(directoryConnCtx, directoryInspectionAddress, directoryDialOptions...)
-	if err != nil {
-		logger.Fatal("failed to setup connection to directory service", zap.Error(err))
-	}
-	o.directoryInspectionClient = inspectionapi.NewDirectoryInspectionClient(directoryConn)
-	logger.Info("directory inspection client setup complete", zap.String("directory-inspection-address", directoryInspectionAddress))
-	err = o.updateServiceList(process)
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to update internal service directory")
-	}
-
-	go o.keepServiceListUpToDate(process)
 	return o, nil
 }
 
-func (o *Outway) keepServiceListUpToDate(process *process.Process) {
+func (o *Outway) keepServiceListUpToDate() {
 	o.wg.Add(1)
 	defer o.wg.Done()
 
@@ -162,10 +209,10 @@ func (o *Outway) keepServiceListUpToDate(process *process.Process) {
 	interval := baseInterval
 	for {
 		select {
-		case <-process.ShutdownComplete:
+		case <-o.process.ShutdownComplete:
 			return
 		case <-time.After(interval):
-			err := o.updateServiceList(process)
+			err := o.updateServiceList()
 			if err != nil {
 				o.logger.Warn("failed to update the service list", zap.Error(err))
 				interval = expBackOff.Duration() // Changing interval on retry
@@ -177,7 +224,7 @@ func (o *Outway) keepServiceListUpToDate(process *process.Process) {
 	}
 }
 
-func (o *Outway) updateServiceList(process *process.Process) error {
+func (o *Outway) updateServiceList() error {
 	services := make(map[string]HTTPService)
 	resp, err := o.directoryInspectionClient.ListServices(context.Background(), &inspectionapi.ListServicesRequest{})
 	if err != nil {
@@ -186,7 +233,7 @@ func (o *Outway) updateServiceList(process *process.Process) error {
 	o.servicesLock.Lock()
 	defer o.servicesLock.Unlock()
 	shutDown := make(chan struct{})
-	process.CloseGracefully(func() error {
+	o.process.CloseGracefully(func() error {
 		close(shutDown)
 		return nil
 	})

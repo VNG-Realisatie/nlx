@@ -5,7 +5,6 @@ package inway
 
 import (
 	"crypto/tls"
-	"crypto/x509"
 	"fmt"
 	"net"
 	"net/http"
@@ -35,7 +34,7 @@ type HTTPServiceEndpoint struct {
 
 	host  string
 	proxy *httputil.ReverseProxy
-	root  *x509.CertPool
+	// root  *x509.CertPool
 
 	public                   bool
 	whitelistedOrganizations []string

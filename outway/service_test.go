@@ -5,6 +5,7 @@ package outway
 
 import (
 	"net/http/httputil"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -12,12 +13,15 @@ import (
 	"go.uber.org/zap"
 )
 
+const mockorg string = "mockorg"
+const mockservicename string = "mockservicename"
+
 func TestNewRoundRobinLoadBalancerExceptions(t *testing.T) {
-	organisationName := "mockorg"
-	serviceName := "mockservicename"
+	organisationName := mockorg
+	serviceName := mockservicename
 	inwayAddresses := []string{"mockaddress1", "mockaddress2"}
-	certFile := "../testing/org-nlx-test.crt"
-	keyFile := "../testing/org-nlx-test.key"
+	certFile := filepath.Join("..", "testing", "org-nlx-test.crt")
+	keyFile := filepath.Join("..", "testing", "org-nlx-test.key")
 	// Test possible exceptions during RoundRoblinLoadBalancerCreation
 	_, err := NewRoundRobinLoadBalancedHTTPService(zap.NewNop(), nil, certFile, keyFile, organisationName, serviceName, []string{})
 	assert.Equal(t, errNoInwaysAvailable, err)
@@ -33,11 +37,11 @@ func TestNewRoundRobinLoadBalancerExceptions(t *testing.T) {
 }
 
 func TestNewRoundRobinLoadBalancer(t *testing.T) {
-	organisationName := "mockorg"
-	serviceName := "mockservicename"
+	organisationName := mockorg
+	serviceName := mockservicename
 	inwayAddresses := []string{"mockaddress1", "mockaddress2"}
-	certFile := "../testing/org-nlx-test.crt"
-	keyFile := "../testing/org-nlx-test.key"
+	certFile := filepath.Join("..", "testing", "org-nlx-test.crt")
+	keyFile := filepath.Join("..", "testing", "org-nlx-test.key")
 	l, err := NewRoundRobinLoadBalancedHTTPService(zap.NewNop(), nil, certFile, keyFile, organisationName, serviceName, inwayAddresses)
 	assert.Nil(t, err)
 	assert.Equal(t, inwayAddresses, l.GetInwayAddresses())

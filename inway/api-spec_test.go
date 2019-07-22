@@ -36,25 +36,25 @@ func TestInwayApiSpec(t *testing.T) {
 	serviceConfig.Services = make(map[string]config.ServiceDetails)
 	serviceConfig.Services["mock-service-public"] = config.ServiceDetails{
 		EndpointURL:        mockAPISpecEndpoint.URL,
-		AuthorizationModel: "none",
+		AuthorizationModel: config.AuthorizationmodelNone,
 	}
 	serviceConfig.Services["mock-service-public-apispec"] = config.ServiceDetails{
 		EndpointURL:                 mockAPISpecEndpoint.URL,
-		AuthorizationModel:          "none",
+		AuthorizationModel:          config.AuthorizationmodelNone,
 		APISpecificationDocumentURL: mockAPISpecEndpoint.URL,
 	}
 	serviceConfig.Services["mock-service-public-invalid-apispec"] = config.ServiceDetails{
 		EndpointURL:                 mockAPISpecEndpoint.URL,
-		AuthorizationModel:          "none",
+		AuthorizationModel:          config.AuthorizationmodelNone,
 		APISpecificationDocumentURL: "invalid",
 	}
 
 	logger := zap.NewNop()
-	iw, err := NewInway(logger, nil, "localhost:1812", tlsOptions,
+	testProcess := process.NewProcess(logger)
+	iw, err := NewInway(logger, nil, testProcess, "localhost:1812", tlsOptions,
 		"localhost:1815", serviceConfig)
 	assert.Nil(t, err)
 
-	p := process.NewProcess(logger)
 	apiSpecMockServer := httptest.NewUnstartedServer(http.HandlerFunc(iw.handleAPISpecDocRequest))
 	apiSpecMockServer.TLS = &tls.Config{
 		ClientCAs:  iw.roots,
@@ -68,16 +68,15 @@ func TestInwayApiSpec(t *testing.T) {
 		assert.Nil(t, err)
 
 		switch serviceDetails.AuthorizationModel {
-		case "none", "":
+		case config.AuthorizationmodelNone, "":
 			endpoint.SetAuthorizationPublic()
-		case "whitelist":
+		case config.AuthorizationmodelWhitelist:
 			endpoint.SetAuthorizationWhitelist(serviceDetails.AuthorizationWhitelist)
 		default:
 			logger.Fatal(fmt.Sprintf(`invalid authorization model "%s" for service "%s"`, serviceDetails.AuthorizationModel, serviceName))
 		}
 
-		err = iw.AddServiceEndpoint(p, endpoint, serviceDetails)
-
+		err = iw.AddServiceEndpoint(endpoint, serviceDetails)
 		if err != nil {
 			t.Fatal("error adding endpoint", err)
 		}

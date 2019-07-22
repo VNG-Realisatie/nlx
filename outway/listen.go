@@ -17,7 +17,6 @@ import (
 
 	"go.nlx.io/nlx/common/tlsconfig"
 
-	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/transactionlog"
 
 	"github.com/pkg/errors"
@@ -25,13 +24,13 @@ import (
 )
 
 // ListenAndServe is a blocking function that listens on provided tcp address to handle requests.
-func (o *Outway) ListenAndServe(process *process.Process, address string) error {
+func (o *Outway) ListenAndServe(address string) error {
 	server := &http.Server{
 		Addr:    address,
 		Handler: o,
 	}
 
-	process.CloseGracefully(func() error {
+	o.process.CloseGracefully(func() error {
 		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
 		defer cancel()
 		return server.Shutdown(localCtx)
@@ -47,14 +46,14 @@ func (o *Outway) ListenAndServe(process *process.Process, address string) error 
 }
 
 // ListenAndServeTLS is a blocking function that listens on provided tcp address to handle requests.
-func (o *Outway) ListenAndServeTLS(process *process.Process, address string, certFile, keyFile string) error {
+func (o *Outway) ListenAndServeTLS(address, certFile, keyFile string) error {
 	server := &http.Server{
 		Addr:      address,
 		Handler:   o,
 		TLSConfig: tlsconfig.Defaults(),
 	}
 
-	process.CloseGracefully(func() error {
+	o.process.CloseGracefully(func() error {
 		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
 		defer cancel()
 		return server.Shutdown(localCtx)
@@ -93,16 +92,16 @@ func (o *Outway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	destination, err := parseURLPath(r.URL.Path)
 	if err != nil {
-		logger.Error("error parsing URL", zap.Error(err))
+		logger.Error("no organization / service in URL", zap.Error(err))
 		http.Error(w, "nlx outway: invalid path in url", http.StatusBadRequest)
 		return
 	}
 
 	// Authorize request with plugged authorization service if authorization settings are set.
 	if o.authorizationSettings != nil {
-		authResponse, err := o.authorizeRequest(r.Header, destination)
-		if err != nil {
-			logger.Error("error authorizing request", zap.Error(err))
+		authResponse, authErr := o.authorizeRequest(r.Header, destination)
+		if authErr != nil {
+			logger.Error("error authorizing request", zap.Error(authErr))
 			http.Error(w, "nlx outway: error authorizing request", http.StatusInternalServerError)
 			return
 		}

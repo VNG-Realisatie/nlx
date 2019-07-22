@@ -49,7 +49,8 @@ func NewProcess(logger *zap.Logger) *Process {
 	return p
 }
 
-// CloseGracefully will append ShutdownFunc and a channel for closing to the queue of things that should be closed before process exit.
+// CloseGracefully will append ShutdownFunc and a channel for closing to
+// the queue of things that should be closed before process exit.
 func (p *Process) CloseGracefully(toClose ShutdownFunc) {
 	p.mu.Lock()
 	defer p.mu.Unlock()

@@ -49,9 +49,8 @@ func newTestEnv(t *testing.T, tlsOptions orgtls.TLSOptions) (proxy, mock *httpte
 	}
 
 	logger := zap.NewNop()
-	p := process.NewProcess(logger)
-
-	iw, err := NewInway(logger, nil, "localhost:1812", tlsOptions,
+	testProcess := process.NewProcess(logger)
+	iw, err := NewInway(logger, nil, testProcess, "localhost:1812", tlsOptions,
 		"localhost:1815", serviceConfig)
 	assert.Nil(t, err)
 
@@ -71,7 +70,7 @@ func newTestEnv(t *testing.T, tlsOptions orgtls.TLSOptions) (proxy, mock *httpte
 			logger.Fatal(fmt.Sprintf(`invalid authorization model "%s" for service "%s"`, serviceDetails.AuthorizationModel, serviceName))
 		}
 
-		err = iw.AddServiceEndpoint(p, endpoint, serviceDetails)
+		err = iw.AddServiceEndpoint(endpoint, serviceDetails)
 		assert.Nil(t, err)
 	}
 
@@ -124,6 +123,7 @@ func TestInwayProxyRequest(t *testing.T) {
 		assert.Nil(t, err)
 		assert.NotNil(t, resp)
 		assert.Equal(t, test.statusCode, resp.StatusCode)
+		defer resp.Body.Close()
 		if resp.StatusCode != test.statusCode {
 			t.Fatalf(`result: "%d" for url "%s", expected http status code : "%d"`, resp.StatusCode, test.url, test.statusCode)
 		}
@@ -181,12 +181,12 @@ func TestInwayNoOrgProxyRequest(t *testing.T) {
 		req.Header.Add("X-NLX-Logrecord-Id", test.logRecordID)
 		resp, err := noOrgClient.Do(req)
 		assert.Nil(t, err)
+		defer resp.Body.Close()
 
 		if resp.StatusCode != 400 {
 			t.Fatalf(
 				`result: "%d" for url "%s", expected http status code : "%d"`,
 				resp.StatusCode, test.url, 400)
 		}
-		resp.Body.Close()
 	}
 }

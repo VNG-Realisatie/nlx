@@ -36,8 +36,7 @@ var options struct {
 	orgtls.TLSOptions
 }
 
-func main() {
-	// Parse options
+func parseOptions() {
 	args, err := flags.Parse(&options)
 	if err != nil {
 		if et, ok := err.(*flags.Error); ok {
@@ -50,6 +49,10 @@ func main() {
 	if len(args) > 0 {
 		log.Fatalf("unexpected arguments: %v", args)
 	}
+}
+
+func main() {
+	parseOptions()
 
 	// Setup new zap logger
 	config := options.LogOptions.ZapConfig()
@@ -67,7 +70,7 @@ func main() {
 	logger.Info("version info", zap.String("version", version.BuildVersion), zap.String("source-hash", version.BuildSourceHash))
 	logger = logger.With(zap.String("version", version.BuildVersion))
 
-	process := process.NewProcess(logger)
+	mainProcess := process.NewProcess(logger)
 
 	var logDB *sqlx.DB
 	if !options.DisableLogdb {
@@ -79,26 +82,27 @@ func main() {
 		logDB.SetMaxIdleConns(2)
 		logDB.MapperFunc(xstrings.ToSnakeCase)
 
-		process.CloseGracefully(logDB.Close)
 		dbversion.WaitUntilLatestTxlogDBVersion(logger, logDB.DB)
+		mainProcess.CloseGracefully(logDB.Close)
 	}
 
 	// Create new outway and provide it with a hardcoded service.
-	ow, err := outway.NewOutway(process, logger, logDB, options.TLSOptions, options.DirectoryInspectionAddress, options.AuthorizationServiceAddress, options.AuthorizationCA)
+	ow, err := outway.NewOutway(logger, logDB, mainProcess, options.TLSOptions, options.DirectoryInspectionAddress, options.AuthorizationServiceAddress, options.AuthorizationCA)
+
 	if err != nil {
 		logger.Fatal("failed to setup outway", zap.Error(err))
 	}
 
 	go func() {
 		// Listen on the address provided in the options
-		err = ow.ListenAndServeTLS(process, options.ListenAddressTLS, options.TLSOptions.OrgCertFile, options.TLSOptions.OrgKeyFile)
+		err = ow.ListenAndServeTLS(options.ListenAddressTLS, options.TLSOptions.OrgCertFile, options.TLSOptions.OrgKeyFile)
 		if err != nil {
 			logger.Fatal("failed to listen and serve", zap.Error(err))
 		}
 	}()
 
 	// Listen on the address provided in the options
-	err = ow.ListenAndServe(process, options.ListenAddress)
+	err = ow.ListenAndServe(options.ListenAddress)
 	if err != nil {
 		logger.Fatal("failed to listen and serve", zap.Error(err))
 	}

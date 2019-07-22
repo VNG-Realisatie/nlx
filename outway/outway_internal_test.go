@@ -6,6 +6,8 @@ package outway
 import (
 	"context"
 	"fmt"
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -25,21 +27,30 @@ func TestUpdateServiceList(t *testing.T) {
 	client := mock.NewMockDirectoryInspectionClient(ctrl)
 
 	logger := zap.NewNop()
+	mainProcess := process.NewProcess(logger)
+
+	workDir, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+	parent := filepath.Dir(workDir)
+
 	o := &Outway{
 		directoryInspectionClient: client,
 		logger:                    logger,
 		tlsOptions: orgtls.TLSOptions{
-			NLXRootCert: "../testing/root.crt",
-			OrgCertFile: "../testing/org-nlx-test.crt",
-			OrgKeyFile:  "../testing/org-nlx-test.key"},
+			NLXRootCert: filepath.Join(parent, "testing", "root.crt"),
+			OrgCertFile: filepath.Join(parent, "testing", "org-nlx-test.crt"),
+			OrgKeyFile:  filepath.Join(parent, "testing", "org-nlx-test.key"),
+		},
+		process: mainProcess,
 	}
 
 	// Make the mock directory client return an error when calling ListServices
 	client.EXPECT().ListServices(context.Background(), &inspectionapi.ListServicesRequest{}).Return(nil, fmt.Errorf("mock error"))
-	p := process.NewProcess(logger)
 
 	// Test of updateServiceList generates the correct error
-	err := o.updateServiceList(p)
+	err = o.updateServiceList()
 	assert.EqualError(t, err, "failed to fetch services from directory: mock error")
 
 	mockServiceAInwayAddresses := []string{"mock-service-a-1:123", "mock-service-a-2:123"}
@@ -50,14 +61,14 @@ func TestUpdateServiceList(t *testing.T) {
 	client.EXPECT().ListServices(context.Background(), &inspectionapi.ListServicesRequest{}).Return(
 		&inspectionapi.ListServicesResponse{
 			Services: []*inspectionapi.ListServicesResponse_Service{
-				&inspectionapi.ListServicesResponse_Service{ServiceName: "mock-service-a", OrganizationName: "mock-org-a", InwayAddresses: mockServiceAInwayAddresses},
-				&inspectionapi.ListServicesResponse_Service{ServiceName: "mock-service-b", OrganizationName: "mock-org-b", InwayAddresses: mockServiceBInwayAddresses},
-				&inspectionapi.ListServicesResponse_Service{ServiceName: "mock-service-c", OrganizationName: "mock-org-c"},
+				{ServiceName: "mock-service-a", OrganizationName: "mock-org-a", InwayAddresses: mockServiceAInwayAddresses},
+				{ServiceName: "mock-service-b", OrganizationName: "mock-org-b", InwayAddresses: mockServiceBInwayAddresses},
+				{ServiceName: "mock-service-c", OrganizationName: "mock-org-c"},
 			},
 		}, nil)
 
 	// Test of updateServiceList creates a correct o.services map
-	err = o.updateServiceList(p)
+	err = o.updateServiceList()
 	assert.Nil(t, err)
 
 	// mock-service-c should not be included because this service does not have any inwayaddresses

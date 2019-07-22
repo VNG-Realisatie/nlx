@@ -1,6 +1,6 @@
 # db
 
-Databae for centralized components.
+Database for centralized components.
 
 ## Development
 

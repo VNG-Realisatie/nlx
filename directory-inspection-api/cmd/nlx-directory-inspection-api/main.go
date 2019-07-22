@@ -62,7 +62,7 @@ func main() {
 	logger.Info("version info", zap.String("version", version.BuildVersion), zap.String("source-hash", version.BuildSourceHash))
 	logger = logger.With(zap.String("version", version.BuildVersion))
 
-	process := process.NewProcess(logger)
+	mainProcess := process.NewProcess(logger)
 
 	db, err := sqlx.Open("postgres", options.PostgresDSN)
 	if err != nil {
@@ -72,7 +72,7 @@ func main() {
 	db.SetMaxIdleConns(2)
 	db.MapperFunc(xstrings.ToSnakeCase)
 
-	process.CloseGracefully(db.Close)
+	mainProcess.CloseGracefully(db.Close)
 
 	dbversion.WaitUntilLatestDirectoryDBVersion(logger, db.DB)
 
@@ -85,10 +85,10 @@ func main() {
 		logger.Fatal("failed to load x509 keypair for directory inspection api", zap.Error(err))
 	}
 
-	directoryService, err := inspectionservice.New(logger, db, caCertPool, certKeyPair, options.DemoEnv, options.DemoDomain)
+	directoryService, err := inspectionservice.New(logger, db, caCertPool, &certKeyPair, options.DemoEnv, options.DemoDomain)
 	if err != nil {
 		logger.Fatal("failed to create new directory inspection service", zap.Error(err))
 	}
 
-	runServer(process, logger, options.ListenAddress, options.ListenAddressPlain, caCertPool, certKeyPair, directoryService)
+	runServer(mainProcess, logger, options.ListenAddress, options.ListenAddressPlain, caCertPool, certKeyPair, directoryService)
 }

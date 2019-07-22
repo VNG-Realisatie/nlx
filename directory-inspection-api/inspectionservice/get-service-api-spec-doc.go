@@ -26,7 +26,12 @@ type getServiceAPISpecHandler struct {
 	stmtSelectServiceInway *sqlx.Stmt
 }
 
-func newGetServiceAPISpecHandler(db *sqlx.DB, logger *zap.Logger, rootCA *x509.CertPool, certKeyPair tls.Certificate) (*getServiceAPISpecHandler, error) {
+func newGetServiceAPISpecHandler(
+	db *sqlx.DB,
+	logger *zap.Logger,
+	rootCA *x509.CertPool,
+	certKeyPair *tls.Certificate,
+) (*getServiceAPISpecHandler, error) {
 	h := &getServiceAPISpecHandler{
 		logger: logger.With(zap.String("handler", "list-services")),
 	}

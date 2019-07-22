@@ -64,11 +64,14 @@ func main() { //nolint
 	}
 	logger.Info("version info", zap.String("version", version.BuildVersion), zap.String("source-hash", version.BuildSourceHash))
 	logger = logger.With(zap.String("version", version.BuildVersion))
-	xprocess := process.NewProcess(logger)
 
 	logger.Info("starting inway", zap.String("directory-registration-address", options.DirectoryRegistrationAddress))
 	serviceConfig := config.LoadServiceConfig(logger, options.ServiceConfig)
+
+	mainProcess := process.NewProcess(logger)
+
 	var logDB *sqlx.DB
+
 	if !options.DisableLogdb {
 		logDB, err = sqlx.Open("postgres", options.PostgresDSN)
 		if err != nil {
@@ -79,10 +82,10 @@ func main() { //nolint
 		logDB.MapperFunc(xstrings.ToSnakeCase)
 
 		dbversion.WaitUntilLatestTxlogDBVersion(logger, logDB.DB)
-		xprocess.CloseGracefully(logDB.Close)
+		mainProcess.CloseGracefully(logDB.Close)
 	}
 
-	iw, err := inway.NewInway(logger, logDB, options.SelfAddress, options.TLSOptions, options.DirectoryRegistrationAddress, serviceConfig)
+	iw, err := inway.NewInway(logger, logDB, mainProcess, options.SelfAddress, options.TLSOptions, options.DirectoryRegistrationAddress, serviceConfig)
 	if err != nil {
 		logger.Fatal("cannot setup inway", zap.Error(err))
 	}
@@ -91,7 +94,7 @@ func main() { //nolint
 	for serviceName, serviceDetails := range serviceConfig.Services { //nolint
 		logger.Info("loaded service from service-config.toml", zap.String("service-name", serviceName))
 		logger.Debug("service configuration details", zap.String("service-name", serviceName), zap.String("endpoint-url", serviceDetails.EndpointURL),
-			zap.String("root-ca-path", serviceDetails.CACertPath), zap.String("authorization-model", serviceDetails.AuthorizationModel),
+			zap.String("root-ca-path", serviceDetails.CACertPath), zap.String("authorization-model", string(serviceDetails.AuthorizationModel)),
 			zap.String("irma-api-url", serviceDetails.IrmaAPIURL), zap.String("insight-api-url", serviceDetails.InsightAPIURL),
 			zap.String("api-spec-url", serviceDetails.APISpecificationDocumentURL), zap.Bool("internal", serviceDetails.Internal),
 			zap.String("public-support-contact", serviceDetails.PublicSupportContact), zap.String("tech-support-contact", serviceDetails.TechSupportContact))
@@ -114,14 +117,14 @@ func main() { //nolint
 		default:
 			logger.Fatal(fmt.Sprintf(`invalid authorization model "%s" for service "%s"`, serviceDetails.AuthorizationModel, serviceName))
 		}
-		err = iw.AddServiceEndpoint(xprocess, endpoint, serviceDetails)
+		err = iw.AddServiceEndpoint(endpoint, serviceDetails)
 		if err != nil {
 			logger.Fatal(fmt.Sprintf(`adding endpoint "%s"`, err))
 		}
 	}
 
 	// Listen on the address provided in the options
-	err = iw.ListenAndServeTLS(xprocess, options.ListenAddress)
+	err = iw.ListenAndServeTLS(options.ListenAddress)
 	if err != nil {
 		logger.Fatal("failed to listen and serve", zap.Error(err))
 	}

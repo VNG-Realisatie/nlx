@@ -83,13 +83,17 @@ func TestAuthListen(t *testing.T) {
 		authResponse := &authResponse{}
 		if user := authRequest.Headers.Get("Authorization-Proxy"); user == "Bearer token" {
 			authResponse.Authorized = true
-			json.NewEncoder(w).Encode(authResponse)
+			if encodeErr := json.NewEncoder(w).Encode(authResponse); encodeErr != nil {
+				panic(encodeErr)
+			}
 			return
 		}
 
 		authResponse.Authorized = false
 		authResponse.Reason = "invalid user"
-		json.NewEncoder(w).Encode(authResponse)
+		if encodeErr := json.NewEncoder(w).Encode(authResponse); encodeErr != nil {
+			panic(encodeErr)
+		}
 	}))
 	defer mockAuthServer.Close()
 
@@ -123,6 +127,7 @@ func TestAuthListen(t *testing.T) {
 
 		resp, err := client.Do(req)
 		assert.Nil(t, err)
+		defer resp.Body.Close()
 		assert.Equal(t, test.statusCode, resp.StatusCode)
 
 		bytes, err := ioutil.ReadAll(resp.Body)

@@ -63,6 +63,7 @@ func TestSetAuthorization(t *testing.T) {
 
 func TestInwayAddServiceEndpoint(t *testing.T) {
 	logger := zap.NewNop()
+	testProcess := process.NewProcess(logger)
 
 	// Certificate organization = nlx-test
 
@@ -72,11 +73,10 @@ func TestInwayAddServiceEndpoint(t *testing.T) {
 		OrgKeyFile:  "../testing/org-nlx-test.key",
 	}
 
-	iw, err := NewInway(logger, nil, "localhost:1812", tlsOptions,
+	iw, err := NewInway(logger, nil, testProcess, "localhost:1812", tlsOptions,
 		"localhost:1815", nil)
 	assert.Nil(t, err)
 
-	p := process.NewProcess(logger)
 	// Test NewHTTPServiceEnpoint with invalid url
 	_, err = iw.NewHTTPServiceEndpoint(logger, "mock-service", "12://invalid-endpoint", nil)
 	assert.EqualError(t, err, "invalid endpoint provided: parse 12://invalid-endpoint: first path segment in URL cannot contain colon")
@@ -87,13 +87,13 @@ func TestInwayAddServiceEndpoint(t *testing.T) {
 	assert.Equal(t, "mock-service", endpoint.ServiceName())
 
 	// Test if duplicate endpoints are disallowed
-	err = iw.AddServiceEndpoint(p, endpoint, config.ServiceDetails{
+	err = iw.AddServiceEndpoint(endpoint, config.ServiceDetails{
 		EndpointURL:            "http://127.0.0.1:1813",
 		AuthorizationWhitelist: []string{"nlx-forbidden"},
 	})
 	assert.Nil(t, err)
 
-	err = iw.AddServiceEndpoint(p, endpoint, config.ServiceDetails{
+	err = iw.AddServiceEndpoint(endpoint, config.ServiceDetails{
 		EndpointURL:            "http://127.0.0.1:1813",
 		AuthorizationWhitelist: []string{"nlx-forbidden"},
 	})

@@ -35,7 +35,7 @@ type RoundRobinLoadBalancedHTTPService struct {
 	inwayAddresses  []string
 	loadBalanceLock sync.Mutex
 	count           int
-	endPoints       []*url.URL
+	// endPoints       []*url.URL
 
 	logger *zap.Logger
 	roots  *x509.CertPool
@@ -62,7 +62,15 @@ func newRoundTripHTTPTransport(tlsConfig *tls.Config) *http.Transport {
 }
 
 // NewRoundRobinLoadBalancedHTTPService creates a RoundRobinLoadBalancedHTTPService
-func NewRoundRobinLoadBalancedHTTPService(logger *zap.Logger, roots *x509.CertPool, certFile string, keyFile string, organizationName, serviceName string, inwayAddresses []string) (*RoundRobinLoadBalancedHTTPService, error) {
+func NewRoundRobinLoadBalancedHTTPService(
+	logger *zap.Logger,
+	roots *x509.CertPool,
+	certFile, keyFile,
+	organizationName,
+	serviceName string,
+	inwayAddresses []string,
+) (*RoundRobinLoadBalancedHTTPService, error) {
+
 	if len(inwayAddresses) == 0 {
 		return nil, errNoInwaysAvailable
 	}

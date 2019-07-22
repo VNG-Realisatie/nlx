@@ -31,7 +31,13 @@ type InspectionService struct {
 }
 
 // New sets up a new DirectoryService and returns an error when something failed during set.
-func New(logger *zap.Logger, db *sqlx.DB, rootCA *x509.CertPool, certKeyPair tls.Certificate, demoEnv string, demoDomain string) (*InspectionService, error) {
+func New(
+	logger *zap.Logger,
+	db *sqlx.DB, rootCA *x509.CertPool,
+	certKeyPair *tls.Certificate,
+	demoEnv,
+	demoDomain string,
+) (*InspectionService, error) {
 	s := &InspectionService{}
 
 	var err error
@@ -53,15 +59,15 @@ func New(logger *zap.Logger, db *sqlx.DB, rootCA *x509.CertPool, certKeyPair tls
 }
 
 func getOrganisationNameFromRequest(ctx context.Context) (string, error) {
-	peer, ok := peer.FromContext(ctx)
+	peerContext, ok := peer.FromContext(ctx)
 	if !ok {
 		return "", errors.New("failed to obtain peer from context")
 	}
-	tlsInfo := peer.AuthInfo.(credentials.TLSInfo)
+	tlsInfo := peerContext.AuthInfo.(credentials.TLSInfo)
 	return tlsInfo.State.VerifiedChains[0][0].Subject.Organization[0], nil
 }
 
-func newHTTPClient(rootCA *x509.CertPool, certKeyPair tls.Certificate) *http.Client {
+func newHTTPClient(rootCA *x509.CertPool, certKeyPair *tls.Certificate) *http.Client {
 	transport := &http.Transport{
 		Proxy: http.ProxyFromEnvironment,
 		DialContext: (&net.Dialer{
@@ -75,7 +81,7 @@ func newHTTPClient(rootCA *x509.CertPool, certKeyPair tls.Certificate) *http.Cli
 		ExpectContinueTimeout: 1 * time.Second,
 		TLSClientConfig: &tls.Config{
 			RootCAs:      rootCA,
-			Certificates: []tls.Certificate{certKeyPair},
+			Certificates: []tls.Certificate{*certKeyPair},
 		},
 	}
 	return &http.Client{

@@ -65,6 +65,7 @@ func TestOutwayListen(t *testing.T) {
 		if err != nil {
 			t.Fatal("error doing http request", err)
 		}
+		defer resp.Body.Close()
 
 		assert.Equal(t, test.statusCode, resp.StatusCode)
 		bytes, err := ioutil.ReadAll(resp.Body)
@@ -83,7 +84,7 @@ func TestParseURLPath(t *testing.T) {
 	assert.Equal(t, "service", destination.Service)
 	assert.Equal(t, "path", destination.Path)
 
-	destination, err = parseURLPath("/organization/service")
+	_, err = parseURLPath("/organization/service")
 	assert.EqualError(t, err, "invalid path in url")
 }
 
