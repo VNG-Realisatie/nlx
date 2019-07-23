@@ -89,8 +89,11 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
   annotations:
-    kubernetes.io/ingress.class: traefik
     ingress.kubernetes.io/custom-response-headers: 'Access-Control-Allow-Origin: * || Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept'
+    ingress.kubernetes.io/hsts-include-subdomains: 'true'
+    ingress.kubernetes.io/hsts-max-age: '315360000'
+    ingress.kubernetes.io/hsts-preload: 'true'
+    kubernetes.io/ingress.class: traefik
     traefik.frontend.rule.type: PathPrefixStrip
 spec:
   rules:
