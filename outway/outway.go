@@ -124,16 +124,15 @@ func (o *Outway) startDirectoryInspector(directoryInspectionAddress string) erro
 	}
 	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(context.Background(), 1*time.Minute)
 	defer directoryConnCtxCancel()
-	directoryConn, err := grpc.DialContext(directoryConnCtx, directoryInspectionAddress, directoryDialOptions...)
+	directoryConn, err := grpc.DialContext(
+		directoryConnCtx, directoryInspectionAddress, directoryDialOptions...)
 	if err != nil {
 		o.logger.Fatal("failed to setup connection to directory service", zap.Error(err))
 	}
 	o.directoryInspectionClient = inspectionapi.NewDirectoryInspectionClient(directoryConn)
-	o.logger.Info("directory inspection client setup complete", zap.String("directory-inspection-address", directoryInspectionAddress))
-	err = o.updateServiceList()
-	if err != nil {
-		return errors.Wrap(err, "failed to update internal service directory")
-	}
+	o.logger.Info(
+		"directory inspection client setup complete",
+		zap.String("directory-inspection-address", directoryInspectionAddress))
 
 	go o.keepServiceListUpToDate()
 	return nil
@@ -199,6 +198,15 @@ func (o *Outway) keepServiceListUpToDate() {
 	o.wg.Add(1)
 	defer o.wg.Done()
 
+	// update service for the first time
+	err := o.updateServiceList()
+	if err != nil {
+		o.logger.Error("failed to update the service list from directory on startup.", zap.Error(err))
+		o.process.ExitGracefully()
+		return
+	}
+
+	// update service list every x seconds
 	expBackOff := &backoff.Backoff{
 		Min:    100 * time.Millisecond,
 		Factor: 2,
@@ -209,7 +217,7 @@ func (o *Outway) keepServiceListUpToDate() {
 	interval := baseInterval
 	for {
 		select {
-		case <-o.process.ShutdownComplete:
+		case <-o.process.ShutdownRequested:
 			return
 		case <-time.After(interval):
 			err := o.updateServiceList()
@@ -232,36 +240,45 @@ func (o *Outway) updateServiceList() error {
 	}
 	o.servicesLock.Lock()
 	defer o.servicesLock.Unlock()
-	shutDown := make(chan struct{})
-	o.process.CloseGracefully(func() error {
-		close(shutDown)
-		return nil
-	})
 	for _, serviceToImplement := range resp.Services {
-		select {
-		case <-shutDown:
-			// On app shutdown we have no need to update services.
-			// So we need to wait until started updated is finished and exit
-			return nil
-		default:
-			// Need default to not to block
-		}
-		o.logger.Debug("directory listed service", zap.String("service-name", serviceToImplement.ServiceName), zap.String("service-organization-name", serviceToImplement.OrganizationName))
+
+		o.logger.Debug(
+			"directory listed service",
+			zap.String("service-name", serviceToImplement.ServiceName),
+			zap.String("service-organization-name", serviceToImplement.OrganizationName))
 
 		service, exists := o.services[serviceToImplement.OrganizationName+"."+serviceToImplement.ServiceName]
 		if !exists || !reflect.DeepEqual(service.GetInwayAddresses(), serviceToImplement.InwayAddresses) {
 			// create the service
-			rrlbService, err := NewRoundRobinLoadBalancedHTTPService(o.logger, o.tlsRoots, o.tlsOptions.OrgCertFile, o.tlsOptions.OrgKeyFile, serviceToImplement.OrganizationName, serviceToImplement.ServiceName, serviceToImplement.InwayAddresses)
+			rrlbService, err := NewRoundRobinLoadBalancedHTTPService(
+				o.logger,
+				o.tlsRoots,
+				o.tlsOptions.OrgCertFile,
+				o.tlsOptions.OrgKeyFile,
+				serviceToImplement.OrganizationName,
+				serviceToImplement.ServiceName,
+				serviceToImplement.InwayAddresses)
 			if err != nil {
 				if err == errNoInwaysAvailable {
-					o.logger.Debug("service exists but there are no inwayaddresses available", zap.String("service-organization-name", serviceToImplement.OrganizationName), zap.String("service-name", serviceToImplement.ServiceName))
+					o.logger.Debug(
+						"service exists but there are no inwayaddresses available",
+						zap.String("service-organization-name", serviceToImplement.OrganizationName),
+						zap.String("service-name", serviceToImplement.ServiceName))
 					continue
 				}
-				o.logger.Error("failed to create new service", zap.String("service-organization-name", serviceToImplement.OrganizationName), zap.String("service-name", serviceToImplement.ServiceName), zap.Error(err))
+				o.logger.Error(
+					"failed to create new service",
+					zap.String("service-organization-name", serviceToImplement.OrganizationName),
+					zap.String("service-name", serviceToImplement.ServiceName),
+					zap.Error(err))
 				continue
 			}
 			service = rrlbService
-			o.logger.Debug("implemented service", zap.String("service-name", serviceToImplement.ServiceName), zap.String("service-organization-name", serviceToImplement.OrganizationName))
+			o.logger.Debug(
+				"implemented service",
+				zap.String("service-name", serviceToImplement.ServiceName),
+				zap.String("service-organization-name", serviceToImplement.OrganizationName),
+			)
 		}
 		services[service.FullName()] = service
 	}

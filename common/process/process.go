@@ -23,27 +23,29 @@ type shutdown struct {
 	closeComplete chan bool
 }
 
-//Process manages closing of processes
+// Process manages closing of processes
 type Process struct {
-	mu               *sync.Mutex
-	close            []ShutdownFunc
-	logger           *zap.Logger
-	maxLevel         uint
-	ShutdownComplete chan bool
+	mu                *sync.Mutex
+	close             []ShutdownFunc
+	logger            *zap.Logger
+	ShutdownComplete  chan bool
+	ShutdownRequested chan bool
 }
 
 // NewProcess initializes a new process
 func NewProcess(logger *zap.Logger) *Process {
 	logger.Debug("setting up process")
-	// Currently we develop for linux, binaries might be compiled for other platforms but we should warn the user about possible unexpected behaviour
+	// Currently we develop for linux, binaries might be compiled for other platforms
+	// but we should warn the user about possible unexpected behavior
 	if runtime.GOOS != "linux" {
 		logger.Warn("detected non-linux OS, program might behave unexpected", zap.String("os", runtime.GOOS))
 	}
 	p := &Process{
-		mu:               &sync.Mutex{},
-		logger:           logger,
-		close:            make([]ShutdownFunc, 0),
-		ShutdownComplete: make(chan bool),
+		mu:                &sync.Mutex{},
+		logger:            logger,
+		close:             make([]ShutdownFunc, 0),
+		ShutdownComplete:  make(chan bool),
+		ShutdownRequested: make(chan bool),
 	}
 	p.start()
 	return p
@@ -57,9 +59,10 @@ func (p *Process) CloseGracefully(toClose ShutdownFunc) {
 	p.close = append(p.close, toClose)
 }
 
-// Exit will do shutdown procedure. It will close all dependencies in reversed sequential order.
-func (p *Process) exit(s syscall.Signal) {
+// closeLoop will close all dependencies in reversed sequential order.
+func (p *Process) closeLoop() {
 	p.mu.Lock()
+	close(p.ShutdownRequested)
 	for i := len(p.close) - 1; i >= 0; i-- {
 		err := p.close[i]()
 		// TODO: retry logic
@@ -74,6 +77,17 @@ func (p *Process) exit(s syscall.Signal) {
 	}
 	close(p.ShutdownComplete)
 	fmt.Fprint(os.Stdout, "shutdown complete\n")
+}
+
+// ExitGracefully start shutdown procedure manually.
+func (p *Process) ExitGracefully() {
+	p.closeLoop()
+	os.Exit(0)
+}
+
+// Exit will start shutdown procedure on os signal.
+func (p *Process) exit(s syscall.Signal) {
+	p.closeLoop()
 	os.Exit(128 + int(s))
 }
 
