@@ -81,6 +81,58 @@ SwaggerJSONDirectory = `
         "tags": [
           "ConfigApi"
         ]
+      },
+      "delete": {
+        "operationId": "DeleteInway",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configapiEmpty"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ConfigApi"
+        ]
+      },
+      "put": {
+        "operationId": "UpdateInway",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configapiInway"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/configapiInway"
+            }
+          }
+        ],
+        "tags": [
+          "ConfigApi"
+        ]
       }
     },
     "/api/v1/services": {
@@ -155,7 +207,7 @@ SwaggerJSONDirectory = `
         ]
       },
       "delete": {
-        "operationId": "DeleteInway",
+        "operationId": "DeleteService",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -177,12 +229,12 @@ SwaggerJSONDirectory = `
         ]
       },
       "put": {
-        "operationId": "UpdateInway",
+        "operationId": "UpdateService",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/configapiInway"
+              "$ref": "#/definitions/configapiService"
             }
           }
         },
@@ -198,7 +250,7 @@ SwaggerJSONDirectory = `
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/configapiUpdateInwayRequest"
+              "$ref": "#/definitions/configapiService"
             }
           }
         ],
@@ -293,28 +345,6 @@ SwaggerJSONDirectory = `
           "items": {
             "type": "string"
           }
-        }
-      }
-    },
-    "configapiUpdateInwayRequest": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "inway": {
-          "$ref": "#/definitions/configapiInway"
-        }
-      }
-    },
-    "configapiUpdateServiceRequest": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "service": {
-          "$ref": "#/definitions/configapiService"
         }
       }
     }

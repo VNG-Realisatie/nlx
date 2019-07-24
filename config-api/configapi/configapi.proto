@@ -21,7 +21,7 @@ service ConfigApi {
 		option (google.api.http) = { post: "/api/v1/services" body: "*" };
 	}
 	rpc UpdateService (UpdateServiceRequest) returns (Service) {
-		option (google.api.http) = { put: "/api/v1/services/{name}" body: "*" };
+		option (google.api.http) = { put: "/api/v1/services/{name}" body: "service" };
 	}
 	rpc DeleteService (DeleteServiceRequest) returns (Empty) {
 		option (google.api.http) = { delete: "/api/v1/services/{name}" };
@@ -36,10 +36,10 @@ service ConfigApi {
 		option (google.api.http) = { post: "/api/v1/inways" body: "*" };
 	}
 	rpc UpdateInway (UpdateInwayRequest) returns (Inway) {
-		option (google.api.http) = { put: "/api/v1/services/{name}" body: "*" };
+		option (google.api.http) = { put: "/api/v1/inways/{name}" body: "inway" };
 	}
 	rpc DeleteInway (DeleteInwayRequest) returns (Empty) {
-		option (google.api.http) = { delete: "/api/v1/services/{name}" };
+		option (google.api.http) = { delete: "/api/v1/inways/{name}" };
 	}
 }
 

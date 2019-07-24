@@ -51,4 +51,7 @@ insight:
 
 debugEnableOutwayIngress: true
 
+management:
+  enable: true
+
 replicas: 1

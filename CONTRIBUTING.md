@@ -37,6 +37,7 @@ The available scopes are:
 - ca-certportal
 - ca-cfssl-unsafe
 - common
+- config-api
 - design
 - directory-db
 - directory-monitor
@@ -49,6 +50,7 @@ The available scopes are:
 - insight-demo
 - insight-ui
 - inway
+- management-api
 - outway
 - txlog-db
 
