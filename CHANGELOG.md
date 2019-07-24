@@ -1,3 +1,11 @@
+## [0.74.1](https://gitlab.com/commonground/nlx/compare/v0.74.0...v0.74.1) (2019-07-24)
+
+
+### Bug Fixes
+
+* **directory-ui:** change default port of outway to 80 to be consistent with docs ([1e21bb3](https://gitlab.com/commonground/nlx/commit/1e21bb3))
+* **docs:** do not detach docker run commands ([f6af586](https://gitlab.com/commonground/nlx/commit/f6af586))
+
 # [0.74.0](https://gitlab.com/commonground/nlx/compare/v0.73.0...v0.74.0) (2019-07-12)
 
 
