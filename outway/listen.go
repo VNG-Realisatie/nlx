@@ -83,7 +83,8 @@ func createHTTPTransport(tlsConfig *tls.Config) *http.Transport {
 	}
 }
 
-// ServeHTTP handles requests from the organization to the outway, it selects the correct service backend and lets it handle the request further.
+// ServeHTTP handles requests from the organization to the outway,
+// it selects the correct service backend and lets it handle the request further.
 func (o *Outway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	logger := o.logger.With(
 		zap.String("request-path", r.URL.Path),
@@ -91,9 +92,11 @@ func (o *Outway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	)
 
 	destination, err := parseURLPath(r.URL.Path)
+
 	if err != nil {
-		logger.Error("no organization / service in URL", zap.Error(err))
-		http.Error(w, "nlx outway: invalid path in url", http.StatusBadRequest)
+		msg := "no valid url path expecting: organization/service/apipathL"
+		logger.Error(msg, zap.Error(err))
+		o.helpUser(w, msg, nil, r.URL.Path)
 		return
 	}
 
@@ -117,9 +120,11 @@ func (o *Outway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	recordData := createRecordData(r.Header, destination.Path)
 	service := o.getService(destination.Organization, destination.Service)
+
 	if service == nil {
-		http.Error(w, "nlx outway: unknown service", http.StatusBadRequest)
+		msg := "nlx outway: unknown service"
 		logger.Warn("received request for unknown service")
+		o.helpUser(w, msg, destination, r.URL.Path)
 		return
 	}
 
@@ -205,8 +210,9 @@ type destination struct {
 
 func parseURLPath(urlPath string) (*destination, error) {
 	pathParts := strings.SplitN(strings.TrimPrefix(urlPath, "/"), "/", 3)
+
 	if len(pathParts) != 3 {
-		return nil, fmt.Errorf("invalid path in url")
+		return nil, fmt.Errorf("invalid path in url expecting: /organization/serivice/path")
 	}
 
 	return &destination{

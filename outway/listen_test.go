@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -38,7 +39,9 @@ func TestOutwayListen(t *testing.T) {
 	mockService.EXPECT().ProxyHTTPRequest(gomock.Any(), gomock.Any()).Do(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
-	outway.services["mockorg.mockservice"] = mockService
+	for i := 0; i < 11; i++ {
+		outway.services["mockorg.mockservice"+strconv.Itoa(i)] = mockService
+	}
 
 	// Setup mock http server with the outway as http handler
 	mockServer := httptest.NewServer(outway)
@@ -50,9 +53,18 @@ func TestOutwayListen(t *testing.T) {
 		statusCode   int
 		errorMessage string
 	}{
-		{fmt.Sprintf("%s/invalidpath", mockServer.URL), http.StatusBadRequest, "nlx outway: invalid path in url\n"},
-		{fmt.Sprintf("%s/mockorg/nonexistingservice/add/", mockServer.URL), http.StatusBadRequest, "nlx outway: unknown service\n"},
-		{fmt.Sprintf("%s/mockorg/mockservice/", mockServer.URL), http.StatusOK, ""},
+		{
+			fmt.Sprintf("%s/invalidpath", mockServer.URL),
+			http.StatusBadRequest,
+			"nlx outway: invalid /organization/service/ url: valid organizations : [mockorg]\n",
+		}, {
+			fmt.Sprintf("%s/mockorg/nonexistingservice/add/", mockServer.URL),
+			http.StatusBadRequest,
+			"nlx outway: invalid organization/service path: valid services : [mockservice0, mockservice1, mockservice10, mockservice2, mockservice3, mockservice4, mockservice5, mockservice6, mockservice7, mockservice8, mockservice9]\n",
+		}, {
+			fmt.Sprintf("%s/mockorg/mockservice0/", mockServer.URL),
+			http.StatusOK,
+			""},
 	}
 	client := http.Client{}
 	for _, test := range tests {
@@ -85,7 +97,7 @@ func TestParseURLPath(t *testing.T) {
 	assert.Equal(t, "path", destination.Path)
 
 	_, err = parseURLPath("/organization/service")
-	assert.EqualError(t, err, "invalid path in url")
+	assert.EqualError(t, err, "invalid path in url expecting: /organization/serivice/path")
 }
 
 func TestCreateRecordData(t *testing.T) {

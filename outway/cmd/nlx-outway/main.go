@@ -87,7 +87,14 @@ func main() {
 	}
 
 	// Create new outway and provide it with a hardcoded service.
-	ow, err := outway.NewOutway(logger, logDB, mainProcess, options.TLSOptions, options.DirectoryInspectionAddress, options.AuthorizationServiceAddress, options.AuthorizationCA)
+	ow, err := outway.NewOutway(
+		logger,
+		logDB,
+		mainProcess,
+		options.TLSOptions,
+		options.DirectoryInspectionAddress,
+		options.AuthorizationServiceAddress,
+		options.AuthorizationCA)
 
 	if err != nil {
 		logger.Fatal("failed to setup outway", zap.Error(err))

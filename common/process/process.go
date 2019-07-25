@@ -35,8 +35,8 @@ type Process struct {
 // NewProcess initializes a new process
 func NewProcess(logger *zap.Logger) *Process {
 	logger.Debug("setting up process")
-	// Currently we develop for linux, binaries might be compiled for other platforms
-	// but we should warn the user about possible unexpected behavior
+	// Currently we develop for linux, binaries might be compiled for other
+	// platforms but we should warn the user about possible unexpected behavior
 	if runtime.GOOS != "linux" {
 		logger.Warn("detected non-linux OS, program might behave unexpected", zap.String("os", runtime.GOOS))
 	}
