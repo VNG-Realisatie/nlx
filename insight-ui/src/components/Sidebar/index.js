@@ -9,7 +9,7 @@ import { StyledOrganizationList, StyledSearch, StyledSidebar } from './index.sty
 const Sidebar = ({ organizations, onSearchQueryChanged, ...props }) =>
   <StyledSidebar {...props}>
     <StyledSearch inputProps={({
-      placeholder: 'Filter organisations'
+      placeholder: 'Filter organizations'
     })} onQueryChanged={onSearchQueryChanged} />
 
     <StyledOrganizationList>

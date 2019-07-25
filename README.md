@@ -1,6 +1,6 @@
 <h1><img alt="NLX" src="logo.png" width="200"> System</h1>
 
-NLX is an open source inter-organisational system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API landscape.
+NLX is an open source inter-organizational system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API landscape.
 
 This repository contains all of the components required to act out the [NLX Product Vision](https://docs.nlx.io/introduction/product-vision/).
 

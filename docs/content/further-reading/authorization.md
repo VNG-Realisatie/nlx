@@ -52,7 +52,7 @@ HTTP-headers are used to pass around authorization information. NLX provides a s
 
 - `X-NLX-Requester-User`  should contain information about the user, for example a userID
 - `X-NLX-Requester-Claims` should contain claims granted to the user
-- `Proxy-Authorization` should contain the credentials to authenticate a user or application with a server. For example, a JWT token. This header will **always** be stripped, even if the request does not leave the organisation. Take a look at the [Mozilla Proxy-Authorization header documentation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Proxy-Authorization) for more information about this header.
+- `Proxy-Authorization` should contain the credentials to authenticate a user or application with a server. For example, a JWT token. This header will **always** be stripped, even if the request does not leave the organization. Take a look at the [Mozilla Proxy-Authorization header documentation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Proxy-Authorization) for more information about this header.
 
 
 

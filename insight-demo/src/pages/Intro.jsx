@@ -15,7 +15,7 @@ class Intro extends Component {
                 </Box>
                 <Box mb={4}>
                     <Paragraph size="large">
-                        This demo will show how to gain insight into which organisations exchanged your personal data through NLX.
+                        This demo will show how to gain insight into which organizations exchanged your personal data through NLX.
                     </Paragraph>
                 </Box>
                 <Paragraph size="large">

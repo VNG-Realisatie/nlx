@@ -87,7 +87,7 @@ Mutual TLS is a an optional feature of TLS and it enables the server to authenic
 
 ## Inway
 
-The inway is used by an organisation to provide [services](#service) to the NLX network.
+The inway is used by an organization to provide [services](#service) to the NLX network.
 
 [How to start an inway](../providing-services-on-nlx/start-an-inway/)
 
@@ -102,7 +102,7 @@ The OpenAPI Initiative (OAI) was created by a consortium of forward-looking indu
 
 ## Outway
 
-The outway is used by an organisation to query [services](#service) available on the NLX network.
+The outway is used by an organization to query [services](#service) available on the NLX network.
 
 [How to start an outway](../using-services-on-nlx/start-an-outway/)
 

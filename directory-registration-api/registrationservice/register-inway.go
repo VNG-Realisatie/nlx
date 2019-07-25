@@ -101,8 +101,8 @@ func (h *registerInwayHandler) RegisterInway(ctx context.Context, req *registrat
 	}
 
 	if !h.regexpName.MatchString(organizationName) {
-		h.logger.Info("invalid organisation name in registerinwayrequest", zap.String("organization name", organizationName))
-		return nil, status.New(codes.InvalidArgument, "Invalid organisation name").Err()
+		h.logger.Info("invalid organization name in registerinwayrequest", zap.String("organization name", organizationName))
+		return nil, status.New(codes.InvalidArgument, "Invalid organization name").Err()
 	}
 
 	for _, service := range req.Services {

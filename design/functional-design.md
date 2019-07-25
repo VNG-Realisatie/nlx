@@ -20,7 +20,7 @@ NLX nodes will be required to keep a log of all the incoming and outgoing servic
 * Auditing and accountability
 * Quality improvement
 * Monitoring
-* Inter-organisational billing
+* Inter-organizational billing
 
 The NLX logs must comply with a number of EU rules and regulations concerning data protection:
 * GDPR Purpose limitation principle
@@ -49,7 +49,7 @@ _Note: During Field Lab  (March 5th - 9th) this will be specified and build, if 
 - [ ] This begs for extensive exploration of use cases.
 
 ### GDPR Data minimisation principle   
-The principle of data minimisation is essentially the idea that, subject to limited exceptions, an organisation should only process the personal data that it actually needs to process in order to achieve its processing purposes.
+The principle of data minimisation is essentially the idea that, subject to limited exceptions, an organization should only process the personal data that it actually needs to process in order to achieve its processing purposes.
 - [ ] NLX should only log personal data which is needed for the functional purposes of the NLX logs as described in these logging requirements;
 
 ### GDPR Right of access for data subjects
@@ -65,14 +65,14 @@ Exercising the right to access involves the data subject logging into a portal, 
   - [ ] How does NLX know what data to withhold?
 - [ ] Requests for access to the data by the data subject must  be logged as well
 
-### Inter-organisational billing
-The NLX logs can be used to implement inter-organisational billing based on the use of services offered by the NLX node. Whether this is used or not is depending on policy, but the design choices should make it easy to implement. This way, the overhead for billing can be kept minimal.
-- [ ] Count the number of successful requests per API per organisation
+### Inter-organizational billing
+The NLX logs can be used to implement inter-organizational billing based on the use of services offered by the NLX node. Whether this is used or not is depending on policy, but the design choices should make it easy to implement. This way, the overhead for billing can be kept minimal.
+- [ ] Count the number of successful requests per API per organization
 - [ ] Offer an API to exchange this info including a way to mark records as processed
-- [ ] Organisational suggestion: Most efficient would be to use a clearing house construction: One organisation that calculates all and deals with invoicing
+- [ ] Organisational suggestion: Most efficient would be to use a clearing house construction: One organization that calculates all and deals with invoicing
 
 ### Assisting non-repudiation controls
-Non-repudiation is a method of assuring that something that’s actually valid cannot be disowned or denied. From the point of NLX, non-repudiation applies to communication between NLX nodes and the transfer of data. Its aim is to ensure that organisations that exchange data are unable to deny the authenticity of their signatures on the these data transfer, or that they were the originator of a particular message or transfer. The NLX logs will have to include artefacts which may be used to dispute the claims of organisations that denies being the originator of an action or communication. These artefacts are:
+Non-repudiation is a method of assuring that something that’s actually valid cannot be disowned or denied. From the point of NLX, non-repudiation applies to communication between NLX nodes and the transfer of data. Its aim is to ensure that organizations that exchange data are unable to deny the authenticity of their signatures on the these data transfer, or that they were the originator of a particular message or transfer. The NLX logs will have to include artefacts which may be used to dispute the claims of organizations that denies being the originator of an action or communication. These artefacts are:
 - [ ] An identity
 - [ ] The authentication of the identity
 - [ ] Evidence connecting the identified party to a communication or action
@@ -81,10 +81,10 @@ Non-repudiation is a method of assuring that something that’s actually valid c
 _To be specified later_
 - [ ] Find ways to optimise the whole landscape
 - [ ] Find ways to optimise single API’s
-- [ ] Find organisations that miss opportunities etc.
+- [ ] Find organizations that miss opportunities etc.
 
 ### Auditing and accountability
-Essential for the NLX concept. The logs should provide all information needed for public accountability and performing audits. Through regular audits organisations will be asked to prove that the use of services for which they have been authorised has been compliant with laws, regulations and bilateral agreements. By performing these audits check organisations can be asked to prove that they have used their autorisations correctly.
+Essential for the NLX concept. The logs should provide all information needed for public accountability and performing audits. Through regular audits organizations will be asked to prove that the use of services for which they have been authorised has been compliant with laws, regulations and bilateral agreements. By performing these audits check organizations can be asked to prove that they have used their autorisations correctly.
 
 ### Monitoring
 By monitoring we aim to trigger processes with events. Events can be advanced (correlating other events, or found with Machine Learning methods) or simple - but in the end it should trigger an action. For example, an audit, of a specific analysis for Quality Improvement.

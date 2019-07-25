@@ -99,8 +99,8 @@ We give Docker several arguments:
 - `--env SELF_ADDRESS={external-inway-hostname-or-ip-address}:443` sets the environment variable `SELF_ADDRESS` to the address of the inway so it can be reached by the NLX network.
 - `--env SERVICE_CONFIG=/service-config.toml` sets the environment variable `SERVICE_CONFIG` this is the location of the service-config.toml file which specifies the services connected to the inway.
 - `--env TLS_NLX_ROOT_CERT=/certs/root.crt`sets the environment variable `TLS_NLX_ROOT_CERT` this is the location of the root certificate.
-- `--env TLS_ORG_CERT=/certs/org.crt` sets the environment variable `TLS_ORG_CERT` this is the location of the organisation certificate.
-- `--env TLS_ORG_KEY=/certs/org.key` sets the environment variable `TLS_ORG_KEY` this is the location of the organisation private key.
+- `--env TLS_ORG_CERT=/certs/org.crt` sets the environment variable `TLS_ORG_CERT` this is the location of the organization certificate.
+- `--env TLS_ORG_KEY=/certs/org.key` sets the environment variable `TLS_ORG_KEY` this is the location of the organization private key.
 - `--env DISABLE_LOGDB=1` sets the environment variable `DISABLE_LOGDB` the value 1 will disable the transaction logs, the value 0 will enable them.
 - `--publish 443:8443` connects port 443 on the host machine to port 8443 inside the container. This way, we can send requests to the inway.
 - ` nlxio/inway:latest` is the name of our docker image (`nlxio/inway`) as stored in the docker registry and the version we want to use (`latest`).

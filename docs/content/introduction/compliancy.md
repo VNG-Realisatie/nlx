@@ -93,7 +93,7 @@ The EIF describes a set of 47 recommendations, as actionable items to be impleme
 | **Type** | Recommendation |
 | **Compliant** | Yes |
 | **Description** | Do not impose any technological solutions on citizens, businesses and other administrations that are technology-specific or disproportionate to their real needs.  |
-| **Implications** |<li>The NLX doesn&#39;t impose any technical solutions on organisations or businesses which are disproportionate to their needs.</li><li>The NLX is being developed as a lightweight solution based on open source development. </li> |
+| **Implications** |<li>The NLX doesn&#39;t impose any technical solutions on organizations or businesses which are disproportionate to their needs.</li><li>The NLX is being developed as a lightweight solution based on open source development. </li> |
 
 | **Requirement** | NLX0009 |
 | --- | --- |
@@ -102,7 +102,7 @@ The EIF describes a set of 47 recommendations, as actionable items to be impleme
 | **Type** | Recommendation |
 | **Compliant** | N/A |
 | **Description** | Ensure data portability, namely that data is easily transferable between systems and applications supporting the implementation and evolution of European public services without unjustified restrictions, if legally possible.  |
-| **Implications** |<li>Ensuring data portability is the responsibility of the data owner;</li><li>NLX can accommodate the transfer of the data between systems and organisations.</li> |
+| **Implications** |<li>Ensuring data portability is the responsibility of the data owner;</li><li>NLX can accommodate the transfer of the data between systems and organizations.</li> |
 
 | **Requirement** | NLX0010 |
 | --- | --- |
@@ -281,7 +281,7 @@ The EIF describes a set of 47 recommendations, as actionable items to be impleme
 | **Category** | Organisational interoperability |
 | **Type** | Recommendation |
 | **Compliant** | N/A |
-| **Description** | Clarify and formalise your organisational relationships for establishing and operating European public services. |
+| **Description** | Clarify and formalise your organizational relationships for establishing and operating European public services. |
 | **Implications** |<li>This is the responsibility of the public administration.</li> |
 
 | **Requirement** | NLX0030 |
@@ -345,7 +345,7 @@ The EIF describes a set of 47 recommendations, as actionable items to be impleme
 | **Type** | Recommendation |
 | **Compliant** | Yes |
 | **Description** | Develop a shared infrastructure of reusable services and information sources that can be used by all public administrations. |
-| **Implications** |<li>NLX is an open source inter-organisational system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API landscape.</li> |
+| **Implications** |<li>NLX is an open source inter-organizational system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API landscape.</li> |
 
 | **Requirement** | NLX0037 |
 | --- | --- |
