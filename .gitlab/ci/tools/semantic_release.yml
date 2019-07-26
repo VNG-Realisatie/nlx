@@ -10,4 +10,4 @@ Run semantic release:
   when: manual
   tags:
     - nlx
-    - docker-executor
+    - docker

@@ -2,12 +2,7 @@
 
 Static application security testing (SAST):
   stage: Security
-  image: docker:stable
-  variables:
-    DOCKER_DRIVER: overlay2
   allow_failure: true
-  services:
-    - docker:stable-dind
   script:
     - export SAST_VERSION=${SP_VERSION:-$(echo "$CI_SERVER_VERSION" | sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')}
     - |
@@ -24,13 +19,13 @@ Static application security testing (SAST):
         --env SAST_DOCKER_CLIENT_NEGOTIATION_TIMEOUT \
         --env SAST_PULL_ANALYZER_IMAGE_TIMEOUT \
         --env SAST_RUN_ANALYZER_TIMEOUT \
+        --volume "/var/run/docker.sock:/var/run/docker.sock" \
         --volume "$PWD:/code" \
-        --volume /var/run/docker.sock:/var/run/docker.sock \
         "registry.gitlab.com/gitlab-org/security-products/sast:$SAST_VERSION" /app/bin/run /code
   dependencies: []
   artifacts:
     reports:
       sast: gl-sast-report.json
   tags:
-    - docker
-    - linux
+    - shell
+    - nlx

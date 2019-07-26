@@ -40,4 +40,4 @@ Docker tag latest:
   when: manual
   tags:
     - nlx-privileged
-    - shell-executor
+    - shell

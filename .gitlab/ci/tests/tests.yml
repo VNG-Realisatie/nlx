@@ -7,7 +7,7 @@ Go go.mod tidy test:
     - diff go.mod.orig go.mod
   tags:
     - nlx
-    - shell-executor
+    - shell
 
 Go tests:
   stage: Tests
@@ -23,7 +23,7 @@ Go tests:
       - coverage.html
   tags:
     - nlx
-    - shell-executor
+    - shell
 
 Go linter:
   stage: Tests
@@ -33,7 +33,7 @@ Go linter:
     - golangci-lint run --new-from-rev $(git rev-parse origin/master)
   tags:
     - nlx
-    - shell-executor
+    - shell
 
 Directory-ui tests:
   image: node:10.16.0-alpine
@@ -54,7 +54,7 @@ Directory-ui tests:
       - directory-ui/coverage
   tags:
     - nlx
-    - docker-executor
+    - docker
 
 Insight-ui tests:
   image: node:10.16.0-alpine
@@ -75,7 +75,7 @@ Insight-ui tests:
       - insight-ui/coverage
   tags:
     - nlx
-    - docker-executor
+    - docker
 
 Database diff test:
   stage: Tests
@@ -84,4 +84,4 @@ Database diff test:
     - ./txlog-db/diff.sh ci-once
   tags:
     - nlx
-    - shell-executor
+    - shell
