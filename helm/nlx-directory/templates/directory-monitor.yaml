@@ -1,3 +1,4 @@
+{{ if .Values.components.directory.monitor.enable }}
 {{ with set . "component" "directory-monitor" }}
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -68,4 +69,5 @@ spec:
               mountPath: /certs
       restartPolicy: Always
   status: {}
+{{ end }}
 {{ end }}

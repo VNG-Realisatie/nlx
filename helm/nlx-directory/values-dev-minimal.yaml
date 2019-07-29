@@ -1,0 +1,45 @@
+domain: nlx-dev-directory
+externalDomain: nlx-dev-directory.minikube
+
+logType: local
+
+dbDatabaseDirectory: nlx-dev-directory
+dbResetDirectory: true # WARNING: All data will be LOST, never use in production!
+dbUsernameDirectory: nlx-dev-directory
+dbPasswordDirectory: nlx-dev-directory
+
+caAddress: ca-cfssl-unsafe.nlx-dev-directory
+
+insightDirectoryInspectionAPIURL: "http://directory-inspection-api-internal"
+
+ttlOfflineService: 1
+
+components:
+    docs:
+      enable: true
+    directory:
+      registration:
+        enable: true
+      ui: 
+        enable: false
+      inspection:
+        enable: true
+      monitor:
+        enable: true 
+      db:
+        enable: true
+    insight:
+      ui:
+        enable: false
+      api:
+        enable: false
+      demo:
+        enable: false
+
+ca:
+  kind: "public"
+
+demoEnv: "dev"
+demoDomain: "minikube"
+
+replicas: 1

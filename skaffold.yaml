@@ -61,6 +61,52 @@ build:
   local:
     push: false
 profiles:
+- name: minimal
+  build:
+    local:
+      push: true
+  deploy:
+    helm:
+      releases:
+      - name: nlx-dev-directory
+        chartPath: helm/nlx-directory
+        valuesFiles:
+        - helm/nlx-directory/values-dev-minimal.yaml
+        values:
+          caCertportalImage: nlxio/ca-certportal
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          directoryDBImage: nlxio/directory-db
+          directoryInspectionImage: nlxio/directory-inspection-api
+          directoryMonitorImage: nlxio/directory-monitor
+          directoryRegistrationImage: nlxio/directory-registration-api
+          directoryUIImage: nlxio/directory-ui
+          docsImage: nlxio/docs
+          insightDemoImage: nlxio/insight-demo
+          insightUIImage: nlxio/insight-ui
+        namespace: nlx-dev-directory
+      - name: nlx-dev-brp
+        chartPath: helm/nlx-organization
+        valuesFiles:
+        - helm/nlx-organization/values-dev-brp.yaml
+        values:
+          authServiceImage: nlxio/auth-service
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          insightAPIImage: nlxio/insight-api
+          inwayImage: nlxio/inway
+          txlogDBImage: nlxio/txlog-db
+        namespace: nlx-dev-brp
+      - name: nlx-dev-haarlem
+        chartPath: helm/nlx-organization
+        valuesFiles:
+        - helm/nlx-organization/values-dev-haarlem.yaml
+        values:
+          authServiceImage: nlxio/auth-service
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          insightAPIImage: nlxio/insight-api
+          inwayImage: nlxio/inway
+          outwayImage: nlxio/outway
+          txlogDBImage: nlxio/txlog-db
+        namespace: nlx-dev-haarlem
 - name: minikube
   build:
     local:

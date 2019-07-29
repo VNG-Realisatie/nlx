@@ -1,3 +1,4 @@
+{{ if .Values.components.docs.enable }}
 {{ with set . "component" "docs" }}
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -56,5 +57,6 @@ spec:
             backend:
               serviceName: {{.component}}
               servicePort: webinterface
+{{ end }}
 {{ end }}
 {{ end }}

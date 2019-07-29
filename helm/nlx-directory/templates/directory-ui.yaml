@@ -1,3 +1,4 @@
+{{ if .Values.components.directory.ui.enable }}
 {{ with set . "component" "directory-ui" }}
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -68,5 +69,6 @@ spec:
             backend:
               serviceName: directory-inspection-api-internal
               servicePort: webapi
+{{ end }}
 {{ end }}
 {{ end }}

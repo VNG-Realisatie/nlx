@@ -1,4 +1,4 @@
-{{ if .Values.demo.enabled }}
+{{ if .Values.components.insight.demo.enable }}
 {{ with set . "component" "insight-demo" }}
 apiVersion: extensions/v1beta1
 kind: Deployment

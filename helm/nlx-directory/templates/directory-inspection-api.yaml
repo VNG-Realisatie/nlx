@@ -1,3 +1,4 @@
+{{ if .Values.components.directory.inspection.enable }}
 {{ with set . "component" "directory-inspection-api" }}
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -101,4 +102,5 @@ spec:
       protocol: TCP
       port: 80
       targetPort: 8080
+{{ end }}
 {{ end }}
