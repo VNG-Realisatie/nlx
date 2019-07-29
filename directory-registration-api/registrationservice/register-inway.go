@@ -25,7 +25,7 @@ import (
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
 
-type registerInwayHandler struct {
+type RegisterInwayHandler struct {
 	logger *zap.Logger
 
 	stmtInsertAvailability *sqlx.Stmt
@@ -35,8 +35,13 @@ type registerInwayHandler struct {
 	regexpName *regexp.Regexp
 }
 
-func NewRegisterInwayHandler(db *sqlx.DB, logger *zap.Logger, rootCA *x509.CertPool, certKeyPair tls.Certificate) (*registerInwayHandler, error) {
-	h := &registerInwayHandler{
+func NewRegisterInwayHandler(
+	db *sqlx.DB,
+	logger *zap.Logger,
+	rootCA *x509.CertPool,
+	certKeyPair *tls.Certificate,
+) (*RegisterInwayHandler, error) {
+	h := &RegisterInwayHandler{
 		logger: logger.With(zap.String("handler", "register-inway")),
 	}
 
@@ -44,10 +49,7 @@ func NewRegisterInwayHandler(db *sqlx.DB, logger *zap.Logger, rootCA *x509.CertP
 
 	h.httpClient = newHTTPClient(rootCA, certKeyPair)
 
-	h.regexpName, err = regexp.Compile(`^[a-zA-Z0-9-]{1,100}$`)
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to compile regexpName")
-	}
+	h.regexpName = regexp.MustCompile(`^[a-zA-Z0-9-]{1,100}$`)
 
 	// NOTE: We do not have an endpoint yet to create services separately, therefore insert on demand.
 	h.stmtInsertAvailability, err = db.Preparex(`
@@ -92,7 +94,7 @@ func NewRegisterInwayHandler(db *sqlx.DB, logger *zap.Logger, rootCA *x509.CertP
 	return h, nil
 }
 
-func (h *registerInwayHandler) RegisterInway(ctx context.Context, req *registrationapi.RegisterInwayRequest) (*registrationapi.RegisterInwayResponse, error) {
+func (h *RegisterInwayHandler) RegisterInway(ctx context.Context, req *registrationapi.RegisterInwayRequest) (*registrationapi.RegisterInwayResponse, error) {
 	h.logger.Info("rpc request RegisterInway", zap.String("inway address", req.InwayAddress))
 	resp := &registrationapi.RegisterInwayResponse{}
 	organizationName, err := getOrganisationNameFromRequest(ctx)
@@ -117,7 +119,9 @@ func (h *registerInwayHandler) RegisterInway(ctx context.Context, req *registrat
 			inwayAPISpecificationType, err = getInwayAPISpecsType(h.httpClient, req.InwayAddress, service.Name)
 			if err != nil {
 				h.logger.Info("invalid documentation specification document provided by inway", zap.String("documentation url", service.ApiSpecificationDocumentUrl), zap.Error(err))
-				return nil, status.New(codes.InvalidArgument, "Invalid documentation specification document provided").Err()
+				// DO NOT STOP WHEN  documentation fails.
+				// return nil, status.New(codes.InvalidArgument, "Invalid documentation specification document provided").Err()
+				inwayAPISpecificationType = ""
 			}
 
 			h.logger.Info("detected api spec", zap.String("apispectype", inwayAPISpecificationType))
@@ -141,8 +145,7 @@ func (h *registerInwayHandler) RegisterInway(ctx context.Context, req *registrat
 			statusCode := codes.Internal
 			pqErr, ok := err.(*pq.Error)
 			if ok {
-				switch pqErr.Constraint {
-				case "services_check_typespec":
+				if pqErr.Constraint == "services_check_typespec" {
 					userFriendlyErrorText = fmt.Sprintf("invalid api-specification-type '%s' configured for service '%s'", service.ApiSpecificationType, service.Name)
 					statusCode = codes.InvalidArgument
 				}
@@ -155,7 +158,7 @@ func (h *registerInwayHandler) RegisterInway(ctx context.Context, req *registrat
 	return resp, nil
 }
 
-func newHTTPClient(rootCA *x509.CertPool, certKeyPair tls.Certificate) *http.Client {
+func newHTTPClient(rootCA *x509.CertPool, certKeyPair *tls.Certificate) *http.Client {
 	transport := &http.Transport{
 		Proxy: http.ProxyFromEnvironment,
 		DialContext: (&net.Dialer{
@@ -169,7 +172,7 @@ func newHTTPClient(rootCA *x509.CertPool, certKeyPair tls.Certificate) *http.Cli
 		ExpectContinueTimeout: 1 * time.Second,
 		TLSClientConfig: &tls.Config{
 			RootCAs:      rootCA,
-			Certificates: []tls.Certificate{certKeyPair},
+			Certificates: []tls.Certificate{*certKeyPair},
 		},
 	}
 	return &http.Client{
@@ -178,11 +181,11 @@ func newHTTPClient(rootCA *x509.CertPool, certKeyPair tls.Certificate) *http.Cli
 }
 
 func getOrganisationNameFromRequest(ctx context.Context) (string, error) {
-	peer, ok := peer.FromContext(ctx)
+	orgPeer, ok := peer.FromContext(ctx)
 	if !ok {
 		return "", errors.New("failed to obtain peer from context")
 	}
-	tlsInfo := peer.AuthInfo.(credentials.TLSInfo)
+	tlsInfo := orgPeer.AuthInfo.(credentials.TLSInfo)
 	if len(tlsInfo.State.VerifiedChains) == 0 {
 		return "", errors.New("no valid TLS certificate chain found")
 	}

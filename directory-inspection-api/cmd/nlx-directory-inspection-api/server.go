@@ -26,6 +26,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
@@ -33,7 +34,10 @@ import (
 
 // newGRPCSplitterHandlerFunc returns an http.Handler that delegates gRPC connections to grpcServer
 // and all other connections to otherHandler.
-func newGRPCSplitterHandlerFunc(grpcServer *grpc.Server, otherHandler http.Handler) http.Handler {
+func newGRPCSplitterHandlerFunc(
+	grpcServer,
+	otherHandler http.Handler,
+) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// gRPC connection detected when HTTP protocol is version 2 and content-type is application/grpc
 		if r.ProtoMajor == 2 && strings.Contains(r.Header.Get("Content-Type"), "application/grpc") {
@@ -46,7 +50,15 @@ func newGRPCSplitterHandlerFunc(grpcServer *grpc.Server, otherHandler http.Handl
 }
 
 // runServer is a blocking function which sets up the grpc and http/json server and runs them on a single address/port.
-func runServer(p *process.Process, log *zap.Logger, address string, addressPlain string, caCertPool *x509.CertPool, certKeyPair tls.Certificate, inspectionService inspectionapi.DirectoryInspectionServer) {
+func runServer(
+	p *process.Process,
+	log *zap.Logger,
+	address,
+	addressPlain string,
+	caCertPool *x509.CertPool,
+	certKeyPair *tls.Certificate,
+	inspectionService inspectionapi.DirectoryInspectionServer,
+) {
 
 	// setup zap connection for global grpc logging
 	grpc_zap.ReplaceGrpcLogger(log)
@@ -54,7 +66,7 @@ func runServer(p *process.Process, log *zap.Logger, address string, addressPlain
 	recoveryOptions := []grpc_recovery.Option{
 		grpc_recovery.WithRecoveryHandler(func(p interface{}) error {
 			log.Warn("recovered from a panic in a grpc request handler", zap.ByteString("stack", debug.Stack()))
-			return grpc.Errorf(codes.Internal, "%s", p)
+			return status.Errorf(codes.Internal, "%s", p)
 		}),
 	}
 
@@ -80,7 +92,7 @@ func runServer(p *process.Process, log *zap.Logger, address string, addressPlain
 	gatewayDialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(
 			credentials.NewTLS(&tls.Config{
-				Certificates:       []tls.Certificate{certKeyPair}, // using the grpc server's own cert to connect to it, perhaps find a way for the http/json gateway to bypass TLS locally
+				Certificates:       []tls.Certificate{*certKeyPair}, // using the grpc server's own cert to connect to it, perhaps find a way for the http/json gateway to bypass TLS locally
 				RootCAs:            caCertPool,
 				InsecureSkipVerify: true, // This is a local connection; hostname won't match
 			}),
@@ -89,13 +101,25 @@ func runServer(p *process.Process, log *zap.Logger, address string, addressPlain
 
 	// root http serve mux
 	httpRouter := http.NewServeMux()
-	httpRouter.HandleFunc("/swagger.json", func(w http.ResponseWriter, req *http.Request) {
-		io.Copy(w, strings.NewReader(inspectionapi.SwaggerJSONDirectoryInspection))
-	})
+	httpRouter.HandleFunc(
+		"/swagger.json",
+		func(w http.ResponseWriter, req *http.Request) {
+			_, err := io.Copy(
+				w,
+				strings.NewReader(inspectionapi.SwaggerJSONDirectoryInspection))
+			if err != nil {
+				log.Error("Failed writing response")
+			}
+		})
 
 	// setup grpc gateway and attach to main mux
 	gatewayMux := runtime.NewServeMux()
-	err := inspectionapi.RegisterDirectoryInspectionHandlerFromEndpoint(context.Background(), gatewayMux, address, gatewayDialOptions)
+	err := inspectionapi.RegisterDirectoryInspectionHandlerFromEndpoint(
+		context.Background(),
+		gatewayMux,
+		address,
+		gatewayDialOptions,
+	)
 	if err != nil {
 		fmt.Printf("serve: %v\n", err)
 		return
@@ -107,7 +131,7 @@ func runServer(p *process.Process, log *zap.Logger, address string, addressPlain
 	HTTPSHandler := &http.Server{
 		Addr: address,
 		TLSConfig: &tls.Config{
-			Certificates: []tls.Certificate{certKeyPair},
+			Certificates: []tls.Certificate{*certKeyPair},
 			NextProtos:   []string{"h2"},
 			ClientCAs:    caCertPool,
 			ClientAuth:   tls.RequireAndVerifyClientCert,
