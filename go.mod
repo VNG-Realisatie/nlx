@@ -33,7 +33,7 @@ require (
 	github.com/sirupsen/logrus v1.4.2 // indirect
 	github.com/sony/sonyflake v1.0.0
 	github.com/stretchr/testify v1.3.0
-	github.com/zmap/zcrypto v0.0.0-20190711184618-e267965e6343 // indirect
+	github.com/zmap/zcrypto v0.0.0-20190729224132-9051775e6a2e // indirect
 	github.com/zmap/zlint v0.0.0-20190720024348-a0632adea60b // indirect
 	go.uber.org/atomic v1.4.0 // indirect
 	go.uber.org/multierr v1.1.0 // indirect
