@@ -15,6 +15,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	nlxhttp "go.nlx.io/nlx/common/http"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 )
 
@@ -36,7 +37,7 @@ func newGetServiceAPISpecHandler(
 		logger: logger.With(zap.String("handler", "list-services")),
 	}
 
-	h.httpClient = newHTTPClient(rootCA, certKeyPair)
+	h.httpClient = nlxhttp.NewHTTPClient(rootCA, certKeyPair)
 
 	var err error
 	h.stmtSelectServiceInway, err = db.Preparex(`

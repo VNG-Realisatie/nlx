@@ -7,10 +7,6 @@ import (
 	"context"
 	"crypto/tls"
 	"crypto/x509"
-	"net"
-	"net/http"
-	"time"
-
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -65,26 +61,4 @@ func getOrganisationNameFromRequest(ctx context.Context) (string, error) {
 	}
 	tlsInfo := peerContext.AuthInfo.(credentials.TLSInfo)
 	return tlsInfo.State.VerifiedChains[0][0].Subject.Organization[0], nil
-}
-
-func newHTTPClient(rootCA *x509.CertPool, certKeyPair *tls.Certificate) *http.Client {
-	transport := &http.Transport{
-		Proxy: http.ProxyFromEnvironment,
-		DialContext: (&net.Dialer{
-			Timeout:   30 * time.Second,
-			KeepAlive: 30 * time.Second,
-			DualStack: true,
-		}).DialContext,
-		MaxIdleConns:          100,
-		IdleConnTimeout:       90 * time.Second,
-		TLSHandshakeTimeout:   10 * time.Second,
-		ExpectContinueTimeout: 1 * time.Second,
-		TLSClientConfig: &tls.Config{
-			RootCAs:      rootCA,
-			Certificates: []tls.Certificate{*certKeyPair},
-		},
-	}
-	return &http.Client{
-		Transport: transport,
-	}
 }
