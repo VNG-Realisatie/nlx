@@ -90,5 +90,12 @@ func main() {
 		logger.Fatal("failed to create new directory inspection service", zap.Error(err))
 	}
 
-	runServer(mainProcess, logger, options.ListenAddress, options.ListenAddressPlain, caCertPool, certKeyPair, directoryService)
+	runServer(
+		mainProcess,
+		logger,
+		options.ListenAddress,
+		options.ListenAddressPlain,
+		caCertPool,
+		&certKeyPair,
+		directoryService)
 }
