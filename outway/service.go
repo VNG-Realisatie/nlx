@@ -34,6 +34,7 @@ type RoundRobinLoadBalancedHTTPService struct {
 	serviceName      string
 
 	inwayAddresses  []string
+	healthyStatuses []bool
 	loadBalanceLock sync.Mutex
 	count           int
 
@@ -69,10 +70,12 @@ func newRoundTripHTTPTransport(logger *zap.Logger, tlsConfig *tls.Config) *http.
 func NewRoundRobinLoadBalancedHTTPService(
 	logger *zap.Logger,
 	roots *x509.CertPool,
-	certFile, keyFile,
+	certFile,
+	keyFile,
 	organizationName,
 	serviceName string,
 	inwayAddresses []string,
+	healthyStatuses []bool,
 ) (*RoundRobinLoadBalancedHTTPService, error) {
 
 	if len(inwayAddresses) == 0 {
@@ -85,6 +88,7 @@ func NewRoundRobinLoadBalancedHTTPService(
 		roots:            roots,
 		count:            0,
 		inwayAddresses:   inwayAddresses,
+		healthyStatuses:  healthyStatuses,
 		proxies:          make([]*httputil.ReverseProxy, len(inwayAddresses)),
 	}
 	s.logger = logger.With(zap.String("outway-service-full-name", s.FullName()))
@@ -103,7 +107,7 @@ func NewRoundRobinLoadBalancedHTTPService(
 	for i, inwayAddress := range inwayAddresses {
 		endpointURL, err := url.Parse("https://" + inwayAddress)
 		if err != nil {
-			return nil, errors.Wrap(err, "invalid endpoint provided")
+			return nil, errors.Wrap(err, "inway address:"+inwayAddress+" is not a valid url")
 		}
 		endpointURL.Path = "/" + serviceName
 		proxy := httputil.NewSingleHostReverseProxy(endpointURL)
@@ -130,7 +134,6 @@ func (s *RoundRobinLoadBalancedHTTPService) GetInwayAddresses() []string {
 }
 
 func (s *RoundRobinLoadBalancedHTTPService) getProxy() *httputil.ReverseProxy {
-	// TODO: unnecessary check? seems impossible that len(s.proxies) could be 0
 	if len(s.proxies) == 0 {
 		return nil
 	}

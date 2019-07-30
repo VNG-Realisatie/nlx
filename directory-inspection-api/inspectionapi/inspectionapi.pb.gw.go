@@ -9,13 +9,13 @@ It translates gRPC into RESTful JSON APIs.
 package inspectionapi
 
 import (
+	"context"
 	"io"
 	"net/http"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/grpc-ecosystem/grpc-gateway/utilities"
-	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/grpclog"
@@ -125,15 +125,6 @@ func RegisterDirectoryInspectionHandlerClient(ctx context.Context, mux *runtime.
 	mux.Handle("GET", pattern_DirectoryInspection_ListServices_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
-		if cn, ok := w.(http.CloseNotifier); ok {
-			go func(done <-chan struct{}, closed <-chan bool) {
-				select {
-				case <-done:
-				case <-closed:
-					cancel()
-				}
-			}(ctx.Done(), cn.CloseNotify())
-		}
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		rctx, err := runtime.AnnotateContext(ctx, mux, req)
 		if err != nil {
@@ -154,15 +145,6 @@ func RegisterDirectoryInspectionHandlerClient(ctx context.Context, mux *runtime.
 	mux.Handle("GET", pattern_DirectoryInspection_ListOrganizations_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
-		if cn, ok := w.(http.CloseNotifier); ok {
-			go func(done <-chan struct{}, closed <-chan bool) {
-				select {
-				case <-done:
-				case <-closed:
-					cancel()
-				}
-			}(ctx.Done(), cn.CloseNotify())
-		}
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		rctx, err := runtime.AnnotateContext(ctx, mux, req)
 		if err != nil {
@@ -183,15 +165,6 @@ func RegisterDirectoryInspectionHandlerClient(ctx context.Context, mux *runtime.
 	mux.Handle("GET", pattern_DirectoryInspection_GetServiceAPISpec_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
-		if cn, ok := w.(http.CloseNotifier); ok {
-			go func(done <-chan struct{}, closed <-chan bool) {
-				select {
-				case <-done:
-				case <-closed:
-					cancel()
-				}
-			}(ctx.Done(), cn.CloseNotify())
-		}
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		rctx, err := runtime.AnnotateContext(ctx, mux, req)
 		if err != nil {
@@ -213,11 +186,11 @@ func RegisterDirectoryInspectionHandlerClient(ctx context.Context, mux *runtime.
 }
 
 var (
-	pattern_DirectoryInspection_ListServices_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"directory", "list-services"}, ""))
+	pattern_DirectoryInspection_ListServices_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"directory", "list-services"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_DirectoryInspection_ListOrganizations_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"directory", "list-organizations"}, ""))
+	pattern_DirectoryInspection_ListOrganizations_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"directory", "list-organizations"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_DirectoryInspection_GetServiceAPISpec_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 1, 0, 4, 1, 5, 3}, []string{"directory", "get-service-api-spec", "organization_name", "service_name"}, ""))
+	pattern_DirectoryInspection_GetServiceAPISpec_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 1, 0, 4, 1, 5, 3}, []string{"directory", "get-service-api-spec", "organization_name", "service_name"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (

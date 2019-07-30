@@ -168,6 +168,7 @@ func NewOutway(
 
 		requestFlake: sonyflake.NewSonyflake(sonyflake.Settings{}),
 		ecmaTable:    crc64.MakeTable(crc64.ECMA),
+		services:     make(map[string]HTTPService),
 	}
 
 	err = o.validateAuthURL(authCAPath, authServiceURL)
@@ -223,7 +224,8 @@ func (o *Outway) keepServiceListUpToDate() {
 			err := o.updateServiceList()
 			if err != nil {
 				o.logger.Warn("failed to update the service list", zap.Error(err))
-				interval = expBackOff.Duration() // Changing interval on retry
+				// Change interval on retry
+				interval = expBackOff.Duration()
 			} else {
 				interval = baseInterval // Resetting interval to base on success update
 				expBackOff.Reset()
@@ -232,14 +234,63 @@ func (o *Outway) keepServiceListUpToDate() {
 	}
 }
 
+func (o *Outway) createService(
+	serviceToImplement *inspectionapi.ListServicesResponse_Service,
+	inwayAddresses []string,
+	healthyStatuses []bool,
+) {
+
+	o.servicesLock.Lock()
+	defer o.servicesLock.Unlock()
+
+	rrlbService, err := NewRoundRobinLoadBalancedHTTPService(
+		o.logger,
+		o.tlsRoots,
+		o.tlsOptions.OrgCertFile,
+		o.tlsOptions.OrgKeyFile,
+		serviceToImplement.OrganizationName,
+		serviceToImplement.ServiceName,
+		inwayAddresses,
+		healthyStatuses,
+	)
+	if err != nil {
+		if err == errNoInwaysAvailable {
+			o.logger.Debug(
+				"service exists but there are no inwayaddresses available",
+				zap.String("service-organization-name", serviceToImplement.OrganizationName),
+				zap.String("service-name", serviceToImplement.ServiceName))
+			return
+		}
+		o.logger.Error(
+			"failed to create new service",
+			zap.String("service-organization-name", serviceToImplement.OrganizationName),
+			zap.String("service-name", serviceToImplement.ServiceName),
+			zap.Error(err))
+		return
+	}
+
+	service := rrlbService
+	o.logger.Debug(
+		"implemented service",
+		zap.String("service-name", serviceToImplement.ServiceName),
+		zap.String("service-organization-name", serviceToImplement.OrganizationName),
+	)
+
+	if o.services == nil {
+		o.services = make(map[string]HTTPService)
+	}
+
+	o.services[service.FullName()] = service
+
+}
+
 func (o *Outway) updateServiceList() error {
-	services := make(map[string]HTTPService)
+
 	resp, err := o.directoryInspectionClient.ListServices(context.Background(), &inspectionapi.ListServicesRequest{})
 	if err != nil {
 		return errors.Wrap(err, "failed to fetch services from directory")
 	}
-	o.servicesLock.Lock()
-	defer o.servicesLock.Unlock()
+
 	for _, serviceToImplement := range resp.Services {
 
 		o.logger.Debug(
@@ -247,43 +298,32 @@ func (o *Outway) updateServiceList() error {
 			zap.String("service-name", serviceToImplement.ServiceName),
 			zap.String("service-organization-name", serviceToImplement.OrganizationName))
 
-		service, exists := o.services[serviceToImplement.OrganizationName+"."+serviceToImplement.ServiceName]
-		if !exists || !reflect.DeepEqual(service.GetInwayAddresses(), serviceToImplement.InwayAddresses) {
-			// create the service
-			rrlbService, err := NewRoundRobinLoadBalancedHTTPService(
-				o.logger,
-				o.tlsRoots,
-				o.tlsOptions.OrgCertFile,
-				o.tlsOptions.OrgKeyFile,
-				serviceToImplement.OrganizationName,
-				serviceToImplement.ServiceName,
-				serviceToImplement.InwayAddresses)
-			if err != nil {
-				if err == errNoInwaysAvailable {
-					o.logger.Debug(
-						"service exists but there are no inwayaddresses available",
-						zap.String("service-organization-name", serviceToImplement.OrganizationName),
-						zap.String("service-name", serviceToImplement.ServiceName))
-					continue
-				}
-				o.logger.Error(
-					"failed to create new service",
-					zap.String("service-organization-name", serviceToImplement.OrganizationName),
-					zap.String("service-name", serviceToImplement.ServiceName),
-					zap.Error(err))
-				continue
-			}
-			service = rrlbService
+		inwayAddresses := make([]string, 0)
+		healthyStatuses := make([]bool, 0)
+
+		for i := range serviceToImplement.InwayAddresses {
+			ia := serviceToImplement.InwayAddresses[i]
+			inwayAddresses = append(inwayAddresses, ia.Address)
+			healthyStatuses = append(healthyStatuses, ia.Healthy)
+		}
+
+		if len(inwayAddresses) == 0 {
 			o.logger.Debug(
-				"implemented service",
+				"directory listed service missing inway addresses for:",
 				zap.String("service-name", serviceToImplement.ServiceName),
 				zap.String("service-organization-name", serviceToImplement.OrganizationName),
 			)
+			continue
 		}
-		services[service.FullName()] = service
+
+		service, exists := o.services[serviceToImplement.OrganizationName+"."+serviceToImplement.ServiceName]
+
+		if !exists || !reflect.DeepEqual(
+			service.GetInwayAddresses(), inwayAddresses) {
+			o.createService(serviceToImplement, inwayAddresses, healthyStatuses)
+		}
 	}
 
-	o.services = services
 	return nil
 }
 

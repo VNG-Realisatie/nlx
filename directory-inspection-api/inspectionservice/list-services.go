@@ -30,25 +30,24 @@ func newListServicesHandler(db *sqlx.DB, logger *zap.Logger) (*listServicesHandl
 	var err error
 	h.stmtSelectServices, err = db.Preparex(`
 		SELECT
-			organizations.name AS organization_name,
-			services.name AS service_name,
-			services.internal as service_internal,
-			array_remove(array_agg(inways.address), NULL) AS inway_addresses,
-			COALESCE(services.documentation_url, '') AS documentation_url,
-			COALESCE(services.api_specification_type, '') AS api_specification_type,
-			COALESCE(services.public_support_contact, '') AS public_support_contact
-		FROM directory.services
-			INNER JOIN directory.organizations
-				ON services.organization_id = organizations.id
-			LEFT JOIN directory.availabilities
-				ON services.id = availabilities.service_id AND availabilities.healthy = true
-			LEFT JOIN directory.inways
-				ON availabilities.inway_id = inways.id
+			o.name AS organization_name,
+			s.name AS service_name,
+			s.internal as service_internal,
+			array_remove(array_agg(i.address), NULL) AS inway_addresses,
+			COALESCE(s.documentation_url, '') AS documentation_url,
+			COALESCE(s.api_specification_type, '') AS api_specification_type,
+			COALESCE(s.public_support_contact, '') AS public_support_contact,
+			array_remove(array_agg(a.healthy), NULL) as healthy_statuses
+		FROM directory.services s
+			INNER JOIN directory.organizations o
+				ON s.organization_id = o.id
+			LEFT JOIN directory.availabilities a
+				ON s.id = a.service_id
+			LEFT JOIN directory.inways i
+				ON a.inway_id = i.id
 		WHERE
-			(internal = false OR (internal = true AND organizations.name = $1))
-		AND 
-			services.id IN (SELECT service_id FROM directory.availabilities WHERE active = true )  
-		GROUP BY services.id, organizations.id
+			(internal = false OR (internal = true AND o.name = $1))
+		GROUP BY s.id, o.id
 	`)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to prepare stmtSelectServices")
@@ -73,6 +72,7 @@ func (h *listServicesHandler) ListServices(ctx context.Context, req *inspectiona
 	for rows.Next() {
 		var respService = &inspectionapi.ListServicesResponse_Service{}
 		var inwayAddresses = pq.StringArray{}
+		var healthyStatuses = pq.BoolArray{}
 		err = rows.Scan(
 			&respService.OrganizationName,
 			&respService.ServiceName,
@@ -81,12 +81,25 @@ func (h *listServicesHandler) ListServices(ctx context.Context, req *inspectiona
 			&respService.DocumentationUrl,
 			&respService.ApiSpecificationType,
 			&respService.PublicSupportContact,
+			&healthyStatuses,
 		)
 		if err != nil {
 			h.logger.Error("failed to scan into struct", zap.Error(err))
 			return nil, status.New(codes.Internal, "Database error.").Err()
 		}
-		respService.InwayAddresses = []string(inwayAddresses)
+
+		if len(inwayAddresses) != len(healthyStatuses) {
+			h.logger.Error("length inwayadresses do not match healthchecks")
+		} else {
+			for i := range inwayAddresses {
+				a := inwayAddresses[i]
+				h := healthyStatuses[i]
+				iw := &inspectionapi.ListServicesResponse_Service_Inway{}
+				iw.Address = a
+				iw.Healthy = h
+				respService.InwayAddresses = append(respService.InwayAddresses, iw)
+			}
+		}
 		resp.Services = append(resp.Services, respService)
 	}
 

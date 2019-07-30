@@ -20,29 +20,63 @@ func TestNewRoundRobinLoadBalancerExceptions(t *testing.T) {
 	organizationName := mockorg
 	serviceName := mockservicename
 	inwayAddresses := []string{"mockaddress1", "mockaddress2"}
+	healtyStates := []bool{true, true}
+
 	certFile := filepath.Join("..", "testing", "org-nlx-test.crt")
 	keyFile := filepath.Join("..", "testing", "org-nlx-test.key")
 	// Test possible exceptions during RoundRoblinLoadBalancerCreation
-	_, err := NewRoundRobinLoadBalancedHTTPService(zap.NewNop(), nil, certFile, keyFile, organizationName, serviceName, []string{})
+	_, err := NewRoundRobinLoadBalancedHTTPService(
+		zap.NewNop(),
+		nil,
+		certFile,
+		keyFile,
+		organizationName,
+		serviceName,
+		nil,
+		nil,
+	)
 	assert.Equal(t, errNoInwaysAvailable, err)
 
-	_, err = NewRoundRobinLoadBalancedHTTPService(zap.NewNop(), nil, "invalid certfile", keyFile, organizationName, serviceName, inwayAddresses)
+	_, err = NewRoundRobinLoadBalancedHTTPService(
+		zap.NewNop(),
+		nil,
+		"invalid certfile",
+		keyFile, organizationName, serviceName,
+		inwayAddresses,
+		healtyStates,
+	)
+
 	if err == nil {
 		t.Fatalf("result: err is nil, expected err to be set when providing invalid cert file")
 	}
 	assert.EqualError(t, err, "invalid certificate provided: open invalid certfile: no such file or directory")
 
-	_, err = NewRoundRobinLoadBalancedHTTPService(zap.NewNop(), nil, certFile, "invalid key file", organizationName, serviceName, inwayAddresses)
+	_, err = NewRoundRobinLoadBalancedHTTPService(
+		zap.NewNop(),
+		nil,
+		certFile,
+		"invalid key file",
+		organizationName,
+		serviceName,
+		inwayAddresses,
+		healtyStates,
+	)
 	assert.EqualError(t, err, "invalid certificate provided: open invalid key file: no such file or directory")
 }
 
 func TestNewRoundRobinLoadBalancer(t *testing.T) {
 	organizationName := mockorg
 	serviceName := mockservicename
+
 	inwayAddresses := []string{"mockaddress1", "mockaddress2"}
+	healtyStates := []bool{true, true}
 	certFile := filepath.Join("..", "testing", "org-nlx-test.crt")
 	keyFile := filepath.Join("..", "testing", "org-nlx-test.key")
-	l, err := NewRoundRobinLoadBalancedHTTPService(zap.NewNop(), nil, certFile, keyFile, organizationName, serviceName, inwayAddresses)
+	l, err := NewRoundRobinLoadBalancedHTTPService(
+		zap.NewNop(), nil, certFile, keyFile,
+		organizationName, serviceName,
+		inwayAddresses, healtyStates)
+
 	assert.Nil(t, err)
 	assert.Equal(t, inwayAddresses, l.GetInwayAddresses())
 

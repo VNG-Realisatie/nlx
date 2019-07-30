@@ -53,8 +53,16 @@ func TestUpdateServiceList(t *testing.T) {
 	err = o.updateServiceList()
 	assert.EqualError(t, err, "failed to fetch services from directory: mock error")
 
-	mockServiceAInwayAddresses := []string{"mock-service-a-1:123", "mock-service-a-2:123"}
-	mockServiceBInwayAddresses := []string{"mock-service-b-1:123", "mock-service-b-2:123"}
+	mockServiceAInwayAddresses := []*inspectionapi.ListServicesResponse_Service_Inway{
+		{Address: "mock-service-a-1:123", Healthy: true},
+		{Address: "mock-service-a-2:123", Healthy: true},
+	}
+
+	mockServiceBInwayAddresses := []*inspectionapi.ListServicesResponse_Service_Inway{
+		{Address: "mock-service-b-1:123", Healthy: true},
+		{Address: "mock-service-b-2:123", Healthy: true},
+	}
+
 	mockServiceAFullName := "mock-org-a.mock-service-a"
 	mockServiceBFullName := "mock-org-b.mock-service-b"
 	// Make the mock directory client provide a list of services when calling ListServices
@@ -72,7 +80,7 @@ func TestUpdateServiceList(t *testing.T) {
 	assert.Nil(t, err)
 
 	// mock-service-c should not be included because this service does not have any inwayaddresses
-	assert.Len(t, o.services, 2)
+	assert.Len(t, o.services, 2, fmt.Sprintf("%v", o.services))
 
 	tests := []struct {
 		serviceName    string
@@ -80,16 +88,19 @@ func TestUpdateServiceList(t *testing.T) {
 	}{
 		{
 			mockServiceAFullName,
-			mockServiceAInwayAddresses,
+			[]string{"mock-service-a-1:123", "mock-service-a-2:123"},
 		},
 		{
 			mockServiceBFullName,
-			mockServiceBInwayAddresses,
+			[]string{"mock-service-b-1:123", "mock-service-b-2:123"},
 		},
 	}
 
 	for _, test := range tests {
 		assert.Contains(t, o.services, test.serviceName)
-		assert.ElementsMatch(t, o.services[test.serviceName].GetInwayAddresses(), test.inwayAddresses)
+		assert.ElementsMatch(
+			t,
+			o.services[test.serviceName].GetInwayAddresses(),
+			test.inwayAddresses)
 	}
 }
