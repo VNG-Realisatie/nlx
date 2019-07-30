@@ -24,7 +24,10 @@ type listOrganizationsHandler struct {
 	stmtSelectOrganizations *sqlx.Stmt
 }
 
-func newListOrganizationsHandler(db *sqlx.DB, logger *zap.Logger, demoEnv string, demoDomain string) (*listOrganizationsHandler, error) {
+func newListOrganizationsHandler(
+	db *sqlx.DB, logger *zap.Logger,
+	demoEnv, demoDomain string,
+) (*listOrganizationsHandler, error) {
 	h := &listOrganizationsHandler{
 		logger:     logger.With(zap.String("handler", "list-organizations")),
 		demoEnv:    demoEnv,

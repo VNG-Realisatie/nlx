@@ -24,7 +24,7 @@ SwaggerJSONDirectoryInspection = `
         "operationId": "GetServiceAPISpec",
         "responses": {
           "200": {
-            "description": "",
+            "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/inspectionapiGetServiceAPISpecResponse"
             }
@@ -55,7 +55,7 @@ SwaggerJSONDirectoryInspection = `
         "operationId": "ListOrganizations",
         "responses": {
           "200": {
-            "description": "",
+            "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/inspectionapiListOrganizationsResponse"
             }
@@ -72,7 +72,7 @@ SwaggerJSONDirectoryInspection = `
         "operationId": "ListServices",
         "responses": {
           "200": {
-            "description": "",
+            "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/inspectionapiListServicesResponse"
             }
@@ -111,7 +111,7 @@ SwaggerJSONDirectoryInspection = `
         "inway_addresses": {
           "type": "array",
           "items": {
-            "type": "string"
+            "$ref": "#/definitions/ServiceInway"
           }
         },
         "documentation_url": {
@@ -126,6 +126,18 @@ SwaggerJSONDirectoryInspection = `
         },
         "public_support_contact": {
           "type": "string"
+        }
+      }
+    },
+    "ServiceInway": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "healthy": {
+          "type": "boolean",
+          "format": "boolean"
         }
       }
     },
