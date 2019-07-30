@@ -41,13 +41,13 @@ var options struct {
 	logoptions.LogOptions
 }
 
-func main() {
+func parseArgs() error {
 	// Parse options
 	args, err := flags.Parse(&options)
 	if err != nil {
 		if et, ok := err.(*flags.Error); ok {
 			if et.Type == flags.ErrHelp {
-				return
+				return err
 			}
 		}
 		log.Fatalf("error parsing flags: %v", err)
@@ -55,17 +55,11 @@ func main() {
 	if len(args) > 0 {
 		log.Fatalf("unexpected arguments: %v", args)
 	}
+	return nil
 
-	// Setup new zap loggerv
-	config := options.LogOptions.ZapConfig()
-	logger, err := config.Build()
-	if err != nil {
-		log.Fatalf("failed to create new zap logger: %v", err)
-	}
-	logger.Info("version info", zap.String("version", version.BuildVersion), zap.String("source-hash", version.BuildSourceHash))
-	logger = logger.With(zap.String("version", version.BuildVersion))
+}
 
-	process := process.NewProcess(logger)
+func setupDB(logger *zap.Logger) *sqlx.DB {
 
 	db, err := sqlx.Open("postgres", options.PostgresDSN)
 	if err != nil {
@@ -75,7 +69,32 @@ func main() {
 	db.SetMaxIdleConns(2)
 	db.MapperFunc(xstrings.ToSnakeCase)
 
-	process.CloseGracefully(db.Close)
+	return db
+}
+
+func newZapLogger() *zap.Logger {
+	config := options.LogOptions.ZapConfig()
+	logger, err := config.Build()
+	if err != nil {
+		log.Fatalf("failed to create new zap logger: %v", err)
+	}
+	logger.Info("version info", zap.String("version", version.BuildVersion), zap.String("source-hash", version.BuildSourceHash))
+	logger = logger.With(zap.String("version", version.BuildVersion))
+
+	return logger
+}
+
+func main() {
+	err := parseArgs()
+	if err != nil {
+		return
+	}
+
+	logger := newZapLogger()
+
+	mainProcess := process.NewProcess(logger)
+	db := setupDB(logger)
+	mainProcess.CloseGracefully(db.Close)
 
 	dbversion.WaitUntilLatestDirectoryDBVersion(logger, db.DB)
 
@@ -88,7 +107,7 @@ func main() {
 		logger.Fatal("failed to load x509 keypair for directory registration api", zap.Error(err))
 	}
 
-	registrationService, err := registrationservice.NewRegisterInwayHandler(db, logger, caCertPool, certKeyPair)
+	registrationService, err := registrationservice.NewRegisterInwayHandler(db, logger, caCertPool, &certKeyPair)
 	if err != nil {
 		logger.Fatal("failed to create new directory registration service", zap.Error(err))
 	}
@@ -114,7 +133,7 @@ func main() {
 	if err != nil {
 		log.Fatal("failed to create listener", zap.Error(err))
 	}
-	process.CloseGracefully(func() error {
+	mainProcess.CloseGracefully(func() error {
 		grpcServer.GracefulStop()
 		return nil
 	})
