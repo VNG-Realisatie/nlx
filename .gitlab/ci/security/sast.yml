@@ -3,24 +3,35 @@
 Static application security testing (SAST):
   stage: Security
   allow_failure: true
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
     - export SAST_VERSION=${SP_VERSION:-$(echo "$CI_SERVER_VERSION" | sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')}
+    - | # this is required to avoid undesirable reset of Docker image ENV variables being set on build stage
+      function propagate_env_vars() {
+        CURRENT_ENV=$(printenv)
+
+        for VAR_NAME; do
+          echo $CURRENT_ENV | grep "${VAR_NAME}=" > /dev/null && echo "--env $VAR_NAME "
+        done
+      }
     - |
       docker run \
+        $(propagate_env_vars \
+          SAST_ANALYZER_IMAGE_PREFIX \
+          SAST_ANALYZER_IMAGE_TAG \
+          SAST_PULL_ANALYZER_IMAGES \
+          SAST_GOSEC_LEVEL \
+          SAST_EXCLUDED_PATHS \
+          SAST_DOCKER_CLIENT_NEGOTIATION_TIMEOUT \
+          SAST_PULL_ANALYZER_IMAGE_TIMEOUT \
+          SAST_RUN_ANALYZER_TIMEOUT \
+          FAIL_NEVER \
+        ) \
         --env SAST_ANALYZER_IMAGES="registry.gitlab.com/bartjkdp/gosec:feature-upgrade-to-gosec-2" \
-        --env SAST_ANALYZER_IMAGE_PREFIX \
-        --env SAST_ANALYZER_IMAGE_TAG \
-        --env SAST_DEFAULT_ANALYZERS="bandit,brakeman,spotbugs,flawfinder,phpcs-security-audit,security-code-scan,nodejs-scan,eslint,tslint,secrets,sobelow" \
-        --env SAST_EXCLUDED_PATHS \
-        --env SAST_BANDIT_EXCLUDED_PATHS \
-        --env SAST_BRAKEMAN_LEVEL \
-        --env SAST_GOSEC_LEVEL \
-        --env SAST_FLAWFINDER_LEVEL \
-        --env SAST_DOCKER_CLIENT_NEGOTIATION_TIMEOUT \
-        --env SAST_PULL_ANALYZER_IMAGE_TIMEOUT \
-        --env SAST_RUN_ANALYZER_TIMEOUT \
-        --volume "/var/run/docker.sock:/var/run/docker.sock" \
+        --env SAST_DEFAULT_ANALYZERS="eslint,secrets" \
         --volume "$PWD:/code" \
+        --volume "/var/run/docker.sock:/var/run/docker.sock" \
         "registry.gitlab.com/gitlab-org/security-products/sast:$SAST_VERSION" /app/bin/run /code
   dependencies: []
   artifacts:
