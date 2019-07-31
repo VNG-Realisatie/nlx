@@ -41,7 +41,7 @@ Directory-ui tests:
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
-    - node_modules/
+    - directory-ui/node_modules/
   before_script:
     - cd directory-ui/
     - npm install
@@ -62,7 +62,7 @@ Insight-ui tests:
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
-    - node_modules/
+    - insight-ui/node_modules/
   before_script:
     - cd insight-ui/
     - npm install
