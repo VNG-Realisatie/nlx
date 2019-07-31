@@ -10,7 +10,6 @@ stages:
 
 include:
   - '.gitlab/ci/tests/tests.yml'
-  - '.gitlab/ci/build/build.yml'
   - '.gitlab/ci/security/dependency_scanning.yml'
   - '.gitlab/ci/security/sast.yml'
   - '.gitlab/ci/tools/semantic_release.yml'
