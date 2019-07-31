@@ -30,7 +30,10 @@ Go linter:
   before_script:
    - export PATH=$PATH:/usr/local/go/bin
   script:
-    - golangci-lint run --new-from-rev $(git rev-parse origin/master)
+    - golangci-lint run --new-from-rev $(git rev-parse origin/master) --out-format code-climate > code-climate.json
+  artifacts:
+    reports:
+      codequality: code-climate.json
   tags:
     - nlx
     - shell
