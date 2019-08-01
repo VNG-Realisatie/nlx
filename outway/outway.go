@@ -236,8 +236,6 @@ func (o *Outway) keepServiceListUpToDate() {
 
 func (o *Outway) createService(
 	serviceToImplement *inspectionapi.ListServicesResponse_Service,
-	inwayAddresses []string,
-	healthyStatuses []bool,
 ) {
 
 	o.servicesLock.Lock()
@@ -250,8 +248,8 @@ func (o *Outway) createService(
 		o.tlsOptions.OrgKeyFile,
 		serviceToImplement.OrganizationName,
 		serviceToImplement.ServiceName,
-		inwayAddresses,
-		healthyStatuses,
+		serviceToImplement.InwayAddresses,
+		serviceToImplement.HealthyStates,
 	)
 	if err != nil {
 		if err == errNoInwaysAvailable {
@@ -298,16 +296,7 @@ func (o *Outway) updateServiceList() error {
 			zap.String("service-name", serviceToImplement.ServiceName),
 			zap.String("service-organization-name", serviceToImplement.OrganizationName))
 
-		inwayAddresses := make([]string, 0)
-		healthyStatuses := make([]bool, 0)
-
-		for i := range serviceToImplement.InwayAddresses {
-			ia := serviceToImplement.InwayAddresses[i]
-			inwayAddresses = append(inwayAddresses, ia.Address)
-			healthyStatuses = append(healthyStatuses, ia.Healthy)
-		}
-
-		if len(inwayAddresses) == 0 {
+		if len(serviceToImplement.InwayAddresses) == 0 {
 			o.logger.Debug(
 				"directory listed service missing inway addresses for:",
 				zap.String("service-name", serviceToImplement.ServiceName),
@@ -319,8 +308,8 @@ func (o *Outway) updateServiceList() error {
 		service, exists := o.services[serviceToImplement.OrganizationName+"."+serviceToImplement.ServiceName]
 
 		if !exists || !reflect.DeepEqual(
-			service.GetInwayAddresses(), inwayAddresses) {
-			o.createService(serviceToImplement, inwayAddresses, healthyStatuses)
+			service.GetInwayAddresses(), serviceToImplement.InwayAddresses) {
+			o.createService(serviceToImplement)
 		}
 	}
 
