@@ -28,7 +28,7 @@ Static application security testing (SAST):
           SAST_RUN_ANALYZER_TIMEOUT \
           FAIL_NEVER \
         ) \
-        --env SAST_ANALYZER_IMAGES="registry.gitlab.com/bartjkdp/gosec:feature-upgrade-to-gosec-2" \
+        --env SAST_ANALYZER_IMAGES="registry.gitlab.com/gitlab-org/security-products/analyzers/gosec:edge" \
         --env SAST_DEFAULT_ANALYZERS="eslint,secrets" \
         --volume "$PWD:/code" \
         --volume "/var/run/docker.sock:/var/run/docker.sock" \
