@@ -56,7 +56,10 @@ func newListServicesHandler(db *sqlx.DB, logger *zap.Logger) (*listServicesHandl
 	return h, nil
 }
 
-func (h *listServicesHandler) ListServices(ctx context.Context, req *inspectionapi.ListServicesRequest) (*inspectionapi.ListServicesResponse, error) {
+func (h *listServicesHandler) ListServices(
+	ctx context.Context,
+	req *inspectionapi.ListServicesRequest,
+) (*inspectionapi.ListServicesResponse, error) {
 	h.logger.Info("rpc request ListServices()")
 	resp := &inspectionapi.ListServicesResponse{}
 	organizationName, err := getOrganisationNameFromRequest(ctx)
@@ -91,14 +94,8 @@ func (h *listServicesHandler) ListServices(ctx context.Context, req *inspectiona
 		if len(inwayAddresses) != len(healthyStatuses) {
 			h.logger.Error("length inwayadresses do not match healthchecks")
 		} else {
-			for i := range inwayAddresses {
-				a := inwayAddresses[i]
-				h := healthyStatuses[i]
-				iw := &inspectionapi.ListServicesResponse_Service_Inway{}
-				iw.Address = a
-				iw.Healthy = h
-				respService.InwayAddresses = append(respService.InwayAddresses, iw)
-			}
+			respService.InwayAddresses = inwayAddresses
+			respService.HealthyStates = healthyStatuses
 		}
 		resp.Services = append(resp.Services, respService)
 	}

@@ -111,7 +111,7 @@ SwaggerJSONDirectoryInspection = `
         "inway_addresses": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ServiceInway"
+            "type": "string"
           }
         },
         "documentation_url": {
@@ -126,18 +126,13 @@ SwaggerJSONDirectoryInspection = `
         },
         "public_support_contact": {
           "type": "string"
-        }
-      }
-    },
-    "ServiceInway": {
-      "type": "object",
-      "properties": {
-        "address": {
-          "type": "string"
         },
-        "healthy": {
-          "type": "boolean",
-          "format": "boolean"
+        "healthy_states": {
+          "type": "array",
+          "items": {
+            "type": "boolean",
+            "format": "boolean"
+          }
         }
       }
     },

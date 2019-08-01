@@ -34,7 +34,7 @@ type RoundRobinLoadBalancedHTTPService struct {
 	serviceName      string
 
 	inwayAddresses  []string
-	healthyStatuses []bool
+	healthyStates   []bool
 	loadBalanceLock sync.Mutex
 	count           int
 
@@ -75,7 +75,7 @@ func NewRoundRobinLoadBalancedHTTPService(
 	organizationName,
 	serviceName string,
 	inwayAddresses []string,
-	healthyStatuses []bool,
+	healthyStates []bool,
 ) (*RoundRobinLoadBalancedHTTPService, error) {
 
 	if len(inwayAddresses) == 0 {
@@ -88,7 +88,7 @@ func NewRoundRobinLoadBalancedHTTPService(
 		roots:            roots,
 		count:            0,
 		inwayAddresses:   inwayAddresses,
-		healthyStatuses:  healthyStatuses,
+		healthyStates:    healthyStates,
 		proxies:          make([]*httputil.ReverseProxy, len(inwayAddresses)),
 	}
 	s.logger = logger.With(zap.String("outway-service-full-name", s.FullName()))

@@ -47,21 +47,16 @@ func TestUpdateServiceList(t *testing.T) {
 	}
 
 	// Make the mock directory client return an error when calling ListServices
-	client.EXPECT().ListServices(context.Background(), &inspectionapi.ListServicesRequest{}).Return(nil, fmt.Errorf("mock error"))
+	client.EXPECT().ListServices(
+		context.Background(),
+		&inspectionapi.ListServicesRequest{}).Return(nil, fmt.Errorf("mock error"))
 
 	// Test of updateServiceList generates the correct error
 	err = o.updateServiceList()
 	assert.EqualError(t, err, "failed to fetch services from directory: mock error")
 
-	mockServiceAInwayAddresses := []*inspectionapi.ListServicesResponse_Service_Inway{
-		{Address: "mock-service-a-1:123", Healthy: true},
-		{Address: "mock-service-a-2:123", Healthy: true},
-	}
-
-	mockServiceBInwayAddresses := []*inspectionapi.ListServicesResponse_Service_Inway{
-		{Address: "mock-service-b-1:123", Healthy: true},
-		{Address: "mock-service-b-2:123", Healthy: true},
-	}
+	mockServiceAInwayAddresses := []string{"mock-service-a-1:123", "mock-service-a-2:123"}
+	mockServiceBInwayAddresses := []string{"mock-service-b-1:123", "mock-service-b-2:123"}
 
 	mockServiceAFullName := "mock-org-a.mock-service-a"
 	mockServiceBFullName := "mock-org-b.mock-service-b"
