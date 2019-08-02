@@ -16,6 +16,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
+	common_db "go.nlx.io/nlx/common/db"
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/version"
@@ -73,7 +74,7 @@ func main() {
 
 	proc.CloseGracefully(db.Close)
 
-	dbversion.WaitUntilLatestTxlogDBVersion(logger, db.DB)
+	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestTxlogDBVersion)
 
 	insightLogFetcher, err := insightapi.NewInsightDatabase(logger, db)
 	if err != nil {

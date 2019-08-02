@@ -14,6 +14,7 @@ import (
 	_ "github.com/lib/pq"
 	"go.uber.org/zap"
 
+	common_db "go.nlx.io/nlx/common/db"
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
@@ -74,7 +75,7 @@ func main() {
 
 	mainProcess.CloseGracefully(db.Close)
 
-	dbversion.WaitUntilLatestDirectoryDBVersion(logger, db.DB)
+	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
 
 	caCertPool, err := orgtls.LoadRootCert(options.NLXRootCert)
 	if err != nil {

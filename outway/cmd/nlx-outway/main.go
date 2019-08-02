@@ -12,6 +12,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
+	common_db "go.nlx.io/nlx/common/db"
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
@@ -82,7 +83,7 @@ func main() {
 		logDB.SetMaxIdleConns(2)
 		logDB.MapperFunc(xstrings.ToSnakeCase)
 
-		dbversion.WaitUntilLatestTxlogDBVersion(logger, logDB.DB)
+		common_db.WaitForLatestDBVersion(logger, logDB.DB, dbversion.LatestTxlogDBVersion)
 		mainProcess.CloseGracefully(logDB.Close)
 	}
 

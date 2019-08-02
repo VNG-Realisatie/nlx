@@ -13,6 +13,8 @@ import (
 	"github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
+
+	common_db "go.nlx.io/nlx/common/db"
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
@@ -44,7 +46,7 @@ func main() {
 	}
 
 	proc.CloseGracefully(db.Close)
-	dbversion.WaitUntilLatestDirectoryDBVersion(logger, db.DB)
+	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
 
 	caCertPool, err := orgtls.LoadRootCert(options.NLXRootCert)
 	if err != nil {
