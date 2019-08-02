@@ -1,3 +1,4 @@
+{{ if .Values.insight.enable }}
 {{ with set . "component" "insight-api" }}
 # TODO:#341 When using proper k8s RBAC split this into two secrets; only api server can use privkey, others can only read p
 apiVersion: v1
@@ -103,4 +104,5 @@ spec:
         - backend:
             serviceName: {{.component}}
             servicePort: api
+{{ end }}
 {{ end }}
