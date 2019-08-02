@@ -87,13 +87,13 @@ func TestInwayAddServiceEndpoint(t *testing.T) {
 	assert.Equal(t, "mock-service", endpoint.ServiceName())
 
 	// Test if duplicate endpoints are disallowed
-	err = iw.AddServiceEndpoint(endpoint, config.ServiceDetails{
+	err = iw.AddServiceEndpoint(endpoint, &config.ServiceDetails{
 		EndpointURL:            "http://127.0.0.1:1813",
 		AuthorizationWhitelist: []string{"nlx-forbidden"},
 	})
 	assert.Nil(t, err)
 
-	err = iw.AddServiceEndpoint(endpoint, config.ServiceDetails{
+	err = iw.AddServiceEndpoint(endpoint, &config.ServiceDetails{
 		EndpointURL:            "http://127.0.0.1:1813",
 		AuthorizationWhitelist: []string{"nlx-forbidden"},
 	})

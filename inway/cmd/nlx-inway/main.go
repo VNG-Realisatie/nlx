@@ -41,7 +41,7 @@ var options struct {
 	orgtls.TLSOptions
 }
 
-func main() { //nolint
+func main() {
 	// Parse options
 	args, err := flags.Parse(&options)
 	if err != nil {
@@ -90,8 +90,20 @@ func main() { //nolint
 		logger.Fatal("cannot setup inway", zap.Error(err))
 	}
 
+	loadServices(logger, serviceConfig, iw)
+
+	// Listen on the address provided in the options
+	err = iw.ListenAndServeTLS(options.ListenAddress)
+	if err != nil {
+		logger.Fatal("failed to listen and serve", zap.Error(err))
+	}
+}
+
+func loadServices(logger *zap.Logger, serviceConfig *config.ServiceConfig, iw *inway.Inway) {
 	// TODO: Issue #403
-	for serviceName, serviceDetails := range serviceConfig.Services { //nolint
+	for serviceName := range serviceConfig.Services {
+		serviceDetails := serviceConfig.Services[serviceName]
+
 		logger.Info("loaded service from service-config.toml", zap.String("service-name", serviceName))
 		logger.Debug("service configuration details", zap.String("service-name", serviceName), zap.String("endpoint-url", serviceDetails.EndpointURL),
 			zap.String("root-ca-path", serviceDetails.CACertPath), zap.String("authorization-model", string(serviceDetails.AuthorizationModel)),
@@ -99,6 +111,7 @@ func main() { //nolint
 			zap.String("api-spec-url", serviceDetails.APISpecificationDocumentURL), zap.Bool("internal", serviceDetails.Internal),
 			zap.String("public-support-contact", serviceDetails.PublicSupportContact), zap.String("tech-support-contact", serviceDetails.TechSupportContact))
 		var rootCrt *x509.CertPool
+		var err error
 		if len(serviceDetails.CACertPath) > 0 {
 			rootCrt, err = orgtls.LoadRootCert(serviceDetails.CACertPath)
 			if err != nil {
@@ -117,15 +130,9 @@ func main() { //nolint
 		default:
 			logger.Fatal(fmt.Sprintf(`invalid authorization model "%s" for service "%s"`, serviceDetails.AuthorizationModel, serviceName))
 		}
-		err = iw.AddServiceEndpoint(endpoint, serviceDetails)
+		err = iw.AddServiceEndpoint(endpoint, &serviceDetails)
 		if err != nil {
 			logger.Fatal(fmt.Sprintf(`adding endpoint "%s"`, err))
 		}
-	}
-
-	// Listen on the address provided in the options
-	err = iw.ListenAndServeTLS(options.ListenAddress)
-	if err != nil {
-		logger.Fatal("failed to listen and serve", zap.Error(err))
 	}
 }

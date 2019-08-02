@@ -18,11 +18,6 @@ import (
 // ShutdownFunc functions should gracefully close a process
 type ShutdownFunc func() error
 
-type shutdown struct {
-	shutDownFunc  ShutdownFunc
-	closeComplete chan bool
-}
-
 // Process manages closing of processes
 type Process struct {
 	mu                *sync.Mutex

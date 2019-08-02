@@ -120,7 +120,7 @@ func (i *InsightDatabase) GetLogRecords(rowsPerPage, page int, dataSubjectsByIrm
 
 	err = tx.Commit()
 	if err != nil {
-		i.logger.Warn("failed to commit transaction after succesful select", zap.Error(err))
+		i.logger.Warn("failed to commit transaction after successful select", zap.Error(err))
 	}
 
 	return out, nil

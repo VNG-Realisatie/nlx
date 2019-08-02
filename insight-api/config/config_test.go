@@ -17,7 +17,7 @@ func TestLoadConfig(t *testing.T) {
 	nop := zap.NewNop()
 	_, err := LoadInsightConfig(nop, "../../testing/insight-api/insight-config-invalid.toml")
 	assert.NotNil(t, err)
-	assert.Equal(t, "unsupported values in toml. key: datasubjects>kenteken>unkown-attibute", err.Error())
+	assert.Equal(t, "unsupported values in toml. key: datasubjects>kenteken>unknown-attribute", err.Error())
 
 	_, err = LoadInsightConfig(nop, "../../testing/insight-api/non-existing-config-file.toml")
 	assert.NotNil(t, err)

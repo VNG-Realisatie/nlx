@@ -63,7 +63,8 @@ func TestInwayApiSpec(t *testing.T) {
 	apiSpecMockServer.StartTLS()
 	defer apiSpecMockServer.Close()
 
-	for serviceName, serviceDetails := range serviceConfig.Services { //nolint
+	for serviceName := range serviceConfig.Services {
+		serviceDetails := serviceConfig.Services[serviceName]
 		endpoint, err := iw.NewHTTPServiceEndpoint(logger, serviceName, serviceDetails.EndpointURL, nil)
 		assert.Nil(t, err)
 
@@ -76,7 +77,7 @@ func TestInwayApiSpec(t *testing.T) {
 			logger.Fatal(fmt.Sprintf(`invalid authorization model "%s" for service "%s"`, serviceDetails.AuthorizationModel, serviceName))
 		}
 
-		err = iw.AddServiceEndpoint(endpoint, serviceDetails)
+		err = iw.AddServiceEndpoint(endpoint, &serviceDetails)
 		if err != nil {
 			t.Fatal("error adding endpoint", err)
 		}

@@ -23,7 +23,6 @@ import (
 
 // HealthChecker checks the inways of a StoredService and modifies it's health state directly in the StoredService struct.
 type healthChecker struct {
-	wg         *sync.WaitGroup
 	logger     *zap.Logger
 	httpClient *http.Client
 
@@ -51,14 +50,14 @@ type databaseAction struct {
 const dbNotificationChannel = "availabilities"
 
 // RunHealthChecker starts a healthchecker process
-func RunHealthChecker(process *process.Process, logger *zap.Logger, db *sqlx.DB, postgresDNS string, caCertPool *x509.CertPool, certKeyPair tls.Certificate, ttlOfflineService int) error {
+func RunHealthChecker(proc *process.Process, logger *zap.Logger, db *sqlx.DB, postgresDNS string, caCertPool *x509.CertPool, certKeyPair *tls.Certificate, ttlOfflineService int) error {
 	h := &healthChecker{
 		logger:         logger,
 		availabilities: make(map[uint64]*availability),
 		httpClient: &http.Client{Transport: &http.Transport{
 			TLSClientConfig: &tls.Config{
 				RootCAs:      caCertPool,
-				Certificates: []tls.Certificate{certKeyPair},
+				Certificates: []tls.Certificate{*certKeyPair},
 			},
 		}},
 	}
@@ -75,42 +74,46 @@ func RunHealthChecker(process *process.Process, logger *zap.Logger, db *sqlx.DB,
 			INNER JOIN directory.inways
 				ON availabilities.inway_id = inways.id
 			INNER JOIN directory.services
-				ON availabilities.service_id = services.id 
+				ON availabilities.service_id = services.id
 			INNER JOIN directory.organizations
 				ON services.organization_id = organizations.id
 	`)
 
+	if err != nil {
+		return errors.Wrap(err, "failed to prepare stmtSelectAvailabilities")
+	}
+
 	h.stmtUpdateHealth, err = db.Preparex(`
-		UPDATE 
+		UPDATE
 			directory.availabilities
-		SET 
+		SET
 			healthy = $2,
-			unhealthy_since = 
-				CASE WHEN $2 = false THEN 
+			unhealthy_since =
+				CASE WHEN $2 = false THEN
 					NOW()
-				ELSE 
+				ELSE
 					NULL
 				END,
-			active = 
-				CASE WHEN $2 = true THEN 
+			active =
+				CASE WHEN $2 = true THEN
 					true
-				ELSE 
+				ELSE
 					active
 				END
-		WHERE 
+		WHERE
 			id = $1 AND healthy != $2`)
 	if err != nil {
 		return errors.Wrap(err, "failed to prepare stmtUpdateHealth")
 	}
 
 	h.stmtCleanUpAvailabilities, err = db.Preparex(fmt.Sprintf(`
-		UPDATE 
+		UPDATE
 			directory.availabilities
 		SET
 			active = false
-		WHERE 
-			NOW() - INTERVAL '%d minute' > availabilities.unhealthy_since 
-		AND 
+		WHERE
+			NOW() - INTERVAL '%d minute' > availabilities.unhealthy_since
+		AND
 			NOW() - INTERVAL '%d minute' > availabilities.last_announced
 		AND
 			active = true`, ttlOfflineService, ttlOfflineService))
@@ -118,10 +121,10 @@ func RunHealthChecker(process *process.Process, logger *zap.Logger, db *sqlx.DB,
 		return errors.Wrap(err, "failed to prepare stmtCleanUpAvailabilities")
 	}
 
-	return h.run(process, postgresDNS)
+	return h.run(proc, postgresDNS)
 }
 
-func (h *healthChecker) run(process *process.Process, postgressDNS string) error {
+func (h *healthChecker) run(proc *process.Process, postgressDNS string) error {
 	listenerErrorCallback := func(ev pq.ListenerEventType, err error) {
 		if err != nil {
 			h.logger.Error("error listening for db events", zap.Error(err))
@@ -132,10 +135,10 @@ func (h *healthChecker) run(process *process.Process, postgressDNS string) error
 	if err != nil {
 		panic(err)
 	}
-	process.CloseGracefully(listener.Close)
+	proc.CloseGracefully(listener.Close)
 
 	shutDownNotificationListener := make(chan struct{})
-	process.CloseGracefully(func() error {
+	proc.CloseGracefully(func() error {
 		close(shutDownNotificationListener)
 		return nil
 	})
@@ -154,7 +157,7 @@ func (h *healthChecker) run(process *process.Process, postgressDNS string) error
 	h.availabilitiesLock.Unlock()
 
 	shutDown := make(chan struct{})
-	process.CloseGracefully(func() error {
+	proc.CloseGracefully(func() error {
 		close(shutDown)
 		return nil
 	})
@@ -194,30 +197,8 @@ func (h *healthChecker) waitForNotification(l *pq.Listener, c <-chan struct{}) {
 	for {
 		select {
 		case n := <-l.Notify:
+			h.onDatabaseNotification(n.Extra)
 
-			dbAction := &databaseAction{}
-			err := json.Unmarshal([]byte(n.Extra), dbAction)
-			if err != nil {
-				h.logger.Error("Error processing JSON", zap.Error(err))
-				continue
-			}
-
-			h.logger.Debug("received DB action", zap.String("action", dbAction.Action))
-			switch dbAction.Action {
-			case "INSERT":
-				h.addAvailability(dbAction.Availability)
-			case "DELETE":
-				h.removeAvailability(dbAction.Availability.ID)
-			// The update notification will only be received if the value of availability.active has changed.
-			case "UPDATE":
-				if dbAction.Availability.Active {
-					h.addAvailability(dbAction.Availability)
-				} else {
-					h.removeAvailability(dbAction.Availability.ID)
-				}
-			default:
-				h.logger.Error("unknown database action", zap.String("database action", dbAction.Action))
-			}
 		case <-time.After(90 * time.Second):
 			// Check connection after 90 seconds without a notification
 			go func() {
@@ -229,6 +210,32 @@ func (h *healthChecker) waitForNotification(l *pq.Listener, c <-chan struct{}) {
 			return
 
 		}
+	}
+}
+
+func (h *healthChecker) onDatabaseNotification(payload string) {
+	dbAction := &databaseAction{}
+	err := json.Unmarshal([]byte(payload), dbAction)
+	if err != nil {
+		h.logger.Error("Error processing JSON", zap.Error(err))
+		return
+	}
+
+	h.logger.Debug("received DB action", zap.String("action", dbAction.Action))
+	switch dbAction.Action {
+	case "INSERT":
+		h.addAvailability(dbAction.Availability)
+	case "DELETE":
+		h.removeAvailability(dbAction.Availability.ID)
+	// The update notification will only be received if the value of availability.active has changed.
+	case "UPDATE":
+		if dbAction.Availability.Active {
+			h.addAvailability(dbAction.Availability)
+		} else {
+			h.removeAvailability(dbAction.Availability.ID)
+		}
+	default:
+		h.logger.Error("unknown database action", zap.String("database action", dbAction.Action))
 	}
 }
 

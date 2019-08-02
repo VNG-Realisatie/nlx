@@ -14,9 +14,9 @@ import (
 
 // DecodeDEREncodedRSAPrivateKey reads from the io.Reader until EOF.
 // The resulting bytes are decoded as parsed as an rsa private key.
+//nolint:dupl
 func DecodeDEREncodedRSAPrivateKey(r io.Reader) (*rsa.PrivateKey, error) {
-	decoder := base64.NewDecoder(base64.StdEncoding, r)
-	bts, err := ioutil.ReadAll(decoder)
+	bts, err := readBase64(r)
 	if err != nil {
 		return nil, err
 	}
@@ -39,9 +39,9 @@ func DecodeDEREncodedRSAPrivateKey(r io.Reader) (*rsa.PrivateKey, error) {
 
 // DecodeDEREncodedRSAPublicKey reads from the io.Reader until EOF.
 // The resulting bytes are decoded as parsed as an rsa public key.
+//nolint:dupl
 func DecodeDEREncodedRSAPublicKey(r io.Reader) (*rsa.PublicKey, error) {
-	decoder := base64.NewDecoder(base64.StdEncoding, r)
-	bts, err := ioutil.ReadAll(decoder)
+	bts, err := readBase64(r)
 	if err != nil {
 		return nil, err
 	}
@@ -60,4 +60,13 @@ func DecodeDEREncodedRSAPublicKey(r io.Reader) (*rsa.PublicKey, error) {
 	}
 
 	return pkey, nil
+}
+
+func readBase64(r io.Reader) ([]byte, error) {
+	decoder := base64.NewDecoder(base64.StdEncoding, r)
+	b, err := ioutil.ReadAll(decoder)
+	if err != nil {
+		return nil, err
+	}
+	return b, nil
 }

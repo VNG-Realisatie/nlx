@@ -16,10 +16,10 @@ import (
 
 	"go.nlx.io/nlx/common/tlsconfig"
 
-	"github.com/grpc-ecosystem/go-grpc-middleware"
-	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
-	"github.com/grpc-ecosystem/go-grpc-middleware/recovery"
-	"github.com/grpc-ecosystem/go-grpc-middleware/tags"
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
+	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
+	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"go.uber.org/zap"
 	"golang.org/x/net/context"
@@ -92,9 +92,10 @@ func runServer(
 	gatewayDialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(
 			credentials.NewTLS(&tls.Config{
-				Certificates:       []tls.Certificate{*certKeyPair}, // using the grpc server's own cert to connect to it, perhaps find a way for the http/json gateway to bypass TLS locally
-				RootCAs:            caCertPool,
-				InsecureSkipVerify: true, // This is a local connection; hostname won't match
+				Certificates: []tls.Certificate{*certKeyPair}, // using the grpc server's own cert to connect to it, perhaps find a way for the http/json gateway to bypass TLS locally
+				RootCAs:      caCertPool,
+				// This is a local connection; hostname won't match
+				InsecureSkipVerify: true, //nolint:gosec
 			}),
 		),
 	}

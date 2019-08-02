@@ -14,7 +14,7 @@ import (
 	flags "github.com/jessevdk/go-flags"
 	"go.uber.org/zap"
 
-	"go.nlx.io/nlx/ca-certportal"
+	certportal "go.nlx.io/nlx/ca-certportal"
 	"go.nlx.io/nlx/common/logoptions"
 )
 
@@ -54,11 +54,11 @@ func main() {
 
 	// Create new certportal and provide it with a hardcoded service.
 	cp := certportal.NewCertPortal(logger, func() (signer.Signer, error) {
-		signer, err := sign.SignerFromConfig(cli.Config{
+		signer, signErr := sign.SignerFromConfig(cli.Config{
 			Remote: options.CAHost,
 		})
-		if err != nil {
-			return nil, err
+		if signErr != nil {
+			return nil, signErr
 		}
 
 		return signer, nil

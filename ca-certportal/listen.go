@@ -45,9 +45,12 @@ func requestCertificateHandler(logger *zap.Logger, createSigner createSignerFunc
 
 		render.Status(r, http.StatusCreated)
 		render.SetContentType(render.ContentTypeJSON)
-		render.Render(w, r, &certificateResponse{
+		err = render.Render(w, r, &certificateResponse{
 			Certificate: string(cert),
 		})
+		if err != nil {
+			logger.Error("error rendering response", zap.Error(err))
+		}
 	}
 }
 
@@ -67,18 +70,23 @@ func (rd *certificateResponse) Render(w http.ResponseWriter, r *http.Request) er
 func rootCertHandler(logger *zap.Logger, createSigner createSignerFunc) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/plain")
-		signer, err := createSigner()
+		sign, err := createSigner()
 		if err != nil {
 			logger.Error("error obtaining root.crt from cfssl root CA", zap.Error(err))
 			http.Error(w, "failed to create new cfssl signer", http.StatusInternalServerError)
 			return
 		}
-		resp, err := signer.Info(info.Req{})
+		resp, err := sign.Info(info.Req{})
 		if err != nil {
 			logger.Error("error obtaining root.crt from cfssl root CA", zap.Error(err))
 			http.Error(w, "failed to obtain root.crt from cfssl root CA", http.StatusInternalServerError)
 			return
 		}
-		io.WriteString(w, resp.Certificate)
+
+		_, err = io.WriteString(w, resp.Certificate)
+		if err != nil {
+			logger.Error("error in sending root certificate as response", zap.Error(err))
+			http.Error(w, "error in sending root certificate as response ", http.StatusInternalServerError)
+		}
 	}
 }

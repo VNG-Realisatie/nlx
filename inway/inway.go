@@ -128,12 +128,11 @@ func NewInway(
 }
 
 // AddServiceEndpoint adds an ServiceEndpoint to the inway's internal registry.
-func (i *Inway) AddServiceEndpoint(s ServiceEndpoint,
-	serviceDetails config.ServiceDetails) error { //nolint
+func (i *Inway) AddServiceEndpoint(s ServiceEndpoint, serviceDetails *config.ServiceDetails) error {
 	if err := i.addServiceEndpointToMap(s); err != nil {
 		return err
 	}
-	i.announceToDirectory(s, &serviceDetails)
+	i.announceToDirectory(s, serviceDetails)
 	return nil
 }
 

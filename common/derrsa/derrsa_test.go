@@ -20,7 +20,6 @@ func TestDecodeDEREncodedRSAPublicKeyHappy(t *testing.T) {
 }
 
 func TestDecodeDEREncodedRSAPublicKeyException(t *testing.T) {
-	invalidKey := "invalidKey"
 	_, err := DecodeDEREncodedRSAPublicKey(strings.NewReader(invalidKey))
 	if err == nil {
 		t.Errorf("parsing invalid public key did not generate a error")

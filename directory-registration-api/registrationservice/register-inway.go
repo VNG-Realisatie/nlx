@@ -65,7 +65,7 @@ func NewRegisterInwayHandler(
 				SELECT org.id, $2, $3, NULLIF($4, ''), NULLIF($5, ''), NULLIF($9, ''), NULLIF($10, '')
 					FROM org
 				ON CONFLICT ON CONSTRAINT services_uq_name
-					DO UPDATE SET 
+					DO UPDATE SET
 						internal = EXCLUDED.internal,
 						documentation_url = EXCLUDED.documentation_url,-- (possibly) no-op update to return id
 						api_specification_type = EXCLUDED.api_specification_type,

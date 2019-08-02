@@ -7,8 +7,8 @@ package transactionlog
 type Direction string
 
 const (
-	//DirectionIn is the direction for records written by inway
+	// DirectionIn is the direction for records written by inway
 	DirectionIn Direction = `in`
-	//DirectionOut is the direction for records written by outway
+	// DirectionOut is the direction for records written by outway
 	DirectionOut Direction = `out`
 )

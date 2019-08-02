@@ -37,6 +37,7 @@ type PostgresTransactionLogger struct {
 	logdb                    *sqlx.DB
 	stmtInsertTransactionLog *sqlx.NamedStmt
 	stmtInsertDataSubject    *sqlx.Stmt
+	direction                Direction
 }
 
 // NewPostgresTransactionLogger prepares a new TransactionLogger.
@@ -51,6 +52,8 @@ func NewPostgresTransactionLogger(zapLogger *zap.Logger, logdb *sqlx.DB, directi
 	default:
 		return nil, errors.New("invalid direction value")
 	}
+
+	txl.direction = direction
 
 	var err error
 	txl.stmtInsertDataSubject, err = logdb.Preparex(`
@@ -77,7 +80,7 @@ func NewPostgresTransactionLogger(zapLogger *zap.Logger, logdb *sqlx.DB, directi
 			logrecord_id,
 			data
 		) VALUES (
-			'` + string(direction) + `'::::transactionlog.direction,
+			:direction,
 			:src_organization,
 			:dest_organization,
 			:service_name,
@@ -101,10 +104,12 @@ func (txl *PostgresTransactionLogger) AddRecord(rec *Record) error {
 	}
 	insertRecord := struct {
 		*Record
-		DataJSON types.JSONText
+		Direction string
+		DataJSON  types.JSONText
 	}{
-		Record:   rec,
-		DataJSON: types.JSONText(dataJSON),
+		Record:    rec,
+		Direction: string(txl.direction),
+		DataJSON:  types.JSONText(dataJSON),
 	}
 
 	dbtx, err := txl.logdb.Beginx()
@@ -115,7 +120,7 @@ func (txl *PostgresTransactionLogger) AddRecord(rec *Record) error {
 		// always try a rollback when returning from function
 		errRollback := dbtx.Rollback()
 		if errRollback == sql.ErrTxDone {
-			return // tx was already comitted, all is fine
+			return // tx was already committed, all is fine
 		}
 		if errRollback != nil {
 			txl.zapLogger.Error("error rolling back transaction", zap.Error(errRollback))

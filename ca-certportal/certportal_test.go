@@ -78,6 +78,7 @@ func TestRouteRequestCertificate(t *testing.T) {
 		responseBody, err := ioutil.ReadAll(resp.Body)
 		assert.NoError(t, err)
 		assert.Equal(t, test.expectedBody, string(responseBody))
+		resp.Body.Close()
 	}
 }
 
@@ -124,6 +125,7 @@ func TestRouteRoot(t *testing.T) {
 		responseBody, err := ioutil.ReadAll(resp.Body)
 		assert.NoError(t, err)
 		assert.Equal(t, test.expectedBody, string(responseBody))
+		resp.Body.Close()
 	}
 }
 
@@ -141,8 +143,10 @@ func TestRoutesInvalidSigner(t *testing.T) {
 	resp, err := http.Post(fmt.Sprintf("%s/api/request_certificate", srv.URL), "application/json", bytes.NewReader(jsonBytesCertificateRequest))
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusInternalServerError, resp.StatusCode)
+	resp.Body.Close()
 
 	resp, err = http.Get(fmt.Sprintf("%s/root.crt", srv.URL))
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusInternalServerError, resp.StatusCode)
+	resp.Body.Close()
 }

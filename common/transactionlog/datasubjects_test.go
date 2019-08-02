@@ -22,7 +22,7 @@ func TestParseDataSubjectHeaderHappy(t *testing.T) {
 
 	valuesChecked := make(map[string]string)
 	for key, value := range keyValuesPairs {
-		if len(valuesChecked[key]) != 0 {
+		if valuesChecked[key] != "" {
 			continue
 		}
 

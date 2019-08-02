@@ -80,6 +80,7 @@ func TestListDataSubjectHandler(t *testing.T) {
 	if err != nil {
 		t.Fatal("error doing http request", err)
 	}
+	defer resp.Body.Close()
 
 	expectedResponse := &insightapi.GetDataSubjectsResponse{}
 	expectedResponse.DataSubjects = make(map[string]insightapi.DataSubject)
@@ -96,7 +97,6 @@ func TestListDataSubjectHandler(t *testing.T) {
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
 	assert.Equal(t, expectedResponse, getDataSubjectsResponse)
 	assert.Equal(t, "application/json; charset=utf-8", resp.Header.Get("content-type"))
-
 }
 
 func TestGenerateJWTHandler(t *testing.T) {
@@ -186,6 +186,7 @@ func TestGenerateJWTHandler(t *testing.T) {
 		assert.Equal(t, test.statuscode, resp.StatusCode)
 
 		bodyBytes, err := ioutil.ReadAll(resp.Body)
+		resp.Body.Close()
 		assert.Nil(t, err)
 
 		assert.Equal(t, test.response, string(bodyBytes))
@@ -312,6 +313,7 @@ func TestLogFetcherHandler(t *testing.T) {
 		assert.Equal(t, test.statuscode, resp.StatusCode)
 
 		bodyBytes, err := ioutil.ReadAll(resp.Body)
+		resp.Body.Close()
 		assert.Nil(t, err)
 		assert.Equal(t, test.response, string(bodyBytes))
 
@@ -374,6 +376,7 @@ func TestHappyOptionsHandler(t *testing.T) {
 			actualValue := resp.Header[key]
 			assert.Equal(t, expectedValue, actualValue)
 		}
+		resp.Body.Close()
 	}
 
 }

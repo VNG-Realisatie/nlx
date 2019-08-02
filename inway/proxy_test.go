@@ -55,7 +55,8 @@ func newTestEnv(t *testing.T, tlsOptions orgtls.TLSOptions) (proxy, mock *httpte
 	assert.Nil(t, err)
 
 	// Add service endpoints
-	for serviceName, serviceDetails := range serviceConfig.Services { //nolint
+	for serviceName := range serviceConfig.Services {
+		serviceDetails := serviceConfig.Services[serviceName]
 		endpoint, errr := iw.NewHTTPServiceEndpoint(logger, serviceName, serviceDetails.EndpointURL, nil)
 		if errr != nil {
 			t.Fatal("failed to create service endpoint", err)
@@ -70,7 +71,7 @@ func newTestEnv(t *testing.T, tlsOptions orgtls.TLSOptions) (proxy, mock *httpte
 			logger.Fatal(fmt.Sprintf(`invalid authorization model "%s" for service "%s"`, serviceDetails.AuthorizationModel, serviceName))
 		}
 
-		err = iw.AddServiceEndpoint(endpoint, serviceDetails)
+		err = iw.AddServiceEndpoint(endpoint, &serviceDetails)
 		assert.Nil(t, err)
 	}
 
@@ -99,7 +100,7 @@ func TestInwayProxyRequest(t *testing.T) {
 
 	client := setupClient(t, tlsOptions)
 
-	//nolint
+	//nolint:dupl
 	tests := []struct {
 		url          string
 		logRecordID  string
@@ -157,7 +158,7 @@ func TestInwayNoOrgProxyRequest(t *testing.T) {
 	defer proxyRequestMockServer.Close()
 	defer mockEndPoint.Close()
 
-	//nolint
+	//nolint:dupl
 	tests := []struct {
 		url          string
 		logRecordID  string

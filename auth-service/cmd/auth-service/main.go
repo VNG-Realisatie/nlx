@@ -29,7 +29,7 @@ type authResponse struct {
 }
 
 var options struct {
-	ListenAddress string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:8443" description:"Adress for the api to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	ListenAddress string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:8443" description:"Address for the api to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 	CVSFile       string `long:"csv-file" env:"CSV_FILE" description:"absolute path to csv file to expose" required:"true"`
 	CertFile      string `long:"tls-cert" env:"TLS_CERT" description:"Absolute or relative path to the Organization cert .pem"`
 	KeyFile       string `long:"tls-key" env:"TLS_KEY" description:"Absolute or relative path to the Organization key .pem"`
@@ -67,7 +67,7 @@ func main() {
 }
 
 func loadCSVFile(filePath string) (map[string]*user, error) {
-	data, err := ioutil.ReadFile(options.CVSFile)
+	data, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		return nil, err
 	}
@@ -105,22 +105,33 @@ func authenticateHandler(w http.ResponseWriter, r *http.Request) {
 	_, exists := users[token]
 	if !exists {
 		log.Println("user not found")
-		json.NewEncoder(w).Encode(&authResponse{
+		encErr := json.NewEncoder(w).Encode(&authResponse{
 			Authorized: false,
 			Reason:     "invalid credentials",
 		})
+
+		if encErr != nil {
+			log.Print("error encoding auth response")
+			http.Error(w, "error encoding auth response", http.StatusInternalServerError)
+		}
+
 		return
 	}
 
-	json.NewEncoder(w).Encode(&authResponse{
+	err = json.NewEncoder(w).Encode(&authResponse{
 		Authorized: true,
 	})
+
+	if err != nil {
+		log.Print("error encoding auth response")
+		http.Error(w, "error encoding auth response", http.StatusInternalServerError)
+	}
 }
 
 // Parses token from the Proxy-Authorization header. The header should be in format <type> <credentials>
 func parseToken(h http.Header) string {
 	authString := h.Get("Proxy-Authorization")
-	if len(authString) == 0 {
+	if authString == "" {
 		log.Println("empty authorization header")
 		return ""
 	}

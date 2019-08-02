@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/huandu/xstrings"
-	flags "github.com/jessevdk/go-flags"
+	"github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"go.nlx.io/nlx/common/logoptions"
@@ -18,7 +18,7 @@ import (
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/directory-db/dbversion"
-	"go.nlx.io/nlx/directory-monitor"
+	monitor "go.nlx.io/nlx/directory-monitor"
 	"go.uber.org/zap"
 )
 
@@ -33,40 +33,17 @@ var options struct {
 }
 
 func main() {
-	// Parse options
-	args, err := flags.Parse(&options)
-	if err != nil {
-		if et, ok := err.(*flags.Error); ok {
-			if et.Type == flags.ErrHelp {
-				return
-			}
-		}
-		log.Fatalf("error parsing flags: %v", err)
-	}
-	if len(args) > 0 {
-		log.Fatalf("unexpected arguments: %v", args)
-	}
+	parseOptions()
 
-	// Setup new zap loggerv
-	config := options.LogOptions.ZapConfig()
-	logger, err := config.Build()
-	if err != nil {
-		log.Fatalf("failed to create new zap logger: %v", err)
-	}
-	logger.Info("version info", zap.String("version", version.BuildVersion), zap.String("source-hash", version.BuildSourceHash))
-	logger = logger.With(zap.String("version", version.BuildVersion))
+	logger := initLogger()
+	proc := process.NewProcess(logger)
 
-	process := process.NewProcess(logger)
-
-	db, err := sqlx.Open("postgres", options.PostgresDSN)
+	db, err := initDatabase(options.PostgresDSN)
 	if err != nil {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))
 	}
-	db.SetConnMaxLifetime(5 * time.Minute)
-	db.SetMaxIdleConns(2)
-	db.MapperFunc(xstrings.ToSnakeCase)
 
-	process.CloseGracefully(db.Close)
+	proc.CloseGracefully(db.Close)
 	dbversion.WaitUntilLatestDirectoryDBVersion(logger, db.DB)
 
 	caCertPool, err := orgtls.LoadRootCert(options.NLXRootCert)
@@ -79,8 +56,48 @@ func main() {
 	}
 
 	logger.Debug("starting health checker", zap.Int("ttlOfflineService", options.TTLOfflineService))
-	err = monitor.RunHealthChecker(process, logger, db, options.PostgresDSN, caCertPool, certKeyPair, options.TTLOfflineService)
+	err = monitor.RunHealthChecker(proc, logger, db, options.PostgresDSN, caCertPool, &certKeyPair, options.TTLOfflineService)
 	if err != nil && err != context.DeadlineExceeded {
 		logger.Fatal("failed to run monitor healthchecker", zap.Error(err))
 	}
+}
+
+func parseOptions() {
+	args, err := flags.Parse(&options)
+	if err != nil {
+		if et, ok := err.(*flags.Error); ok {
+			if et.Type == flags.ErrHelp {
+				return
+			}
+		}
+		log.Fatalf("error parsing flags: %v", err)
+	}
+	if len(args) > 0 {
+		log.Fatalf("unexpected arguments: %v", args)
+	}
+}
+
+func initLogger() *zap.Logger {
+	config := options.LogOptions.ZapConfig()
+	logger, err := config.Build()
+	if err != nil {
+		log.Fatalf("failed to create new zap logger: %v", err)
+	}
+	logger.Info("version info", zap.String("version", version.BuildVersion), zap.String("source-hash", version.BuildSourceHash))
+	logger = logger.With(zap.String("version", version.BuildVersion))
+
+	return logger
+}
+
+func initDatabase(dsn string) (*sqlx.DB, error) {
+	db, err := sqlx.Open("postgres", dsn)
+	if err != nil {
+		return nil, err
+	}
+
+	db.SetConnMaxLifetime(5 * time.Minute)
+	db.SetMaxIdleConns(2)
+	db.MapperFunc(xstrings.ToSnakeCase)
+
+	return db, nil
 }

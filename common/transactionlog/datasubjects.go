@@ -15,7 +15,7 @@ var regExpValue = regexp.MustCompile("^[a-zA-Z0-9.-]{1,100}$")
 
 // ParseDataSubjectHeader parses a data subject header value and returns a key/value map, or an error.
 func ParseDataSubjectHeader(header string) (map[string]string, error) {
-	if len(header) == 0 {
+	if header == "" {
 		return make(map[string]string), nil
 	}
 	parts := strings.Split(header, ",")
