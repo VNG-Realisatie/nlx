@@ -53,7 +53,11 @@ type Outway struct {
 	authorizationClient   http.Client
 
 	servicesLock sync.RWMutex
-	services     map[string]HTTPService // services mapped by <organizationName>.<serviceName>
+	// services mapped by <organizationName>.<serviceName>
+	// httpService
+	servicesHTTP map[string]HTTPService
+	// directory listing copy
+	servicesDirectory map[string]*inspectionapi.ListServicesResponse_Service
 }
 
 func loadCertificates(logger *zap.Logger, tlsOptions orgtls.TLSOptions) (*x509.CertPool, string, error) {
@@ -166,9 +170,10 @@ func NewOutway(
 		tlsRoots:   roots,
 		process:    mainProcess,
 
-		requestFlake: sonyflake.NewSonyflake(sonyflake.Settings{}),
-		ecmaTable:    crc64.MakeTable(crc64.ECMA),
-		services:     make(map[string]HTTPService),
+		requestFlake:      sonyflake.NewSonyflake(sonyflake.Settings{}),
+		ecmaTable:         crc64.MakeTable(crc64.ECMA),
+		servicesHTTP:      make(map[string]HTTPService),
+		servicesDirectory: make(map[string]*inspectionapi.ListServicesResponse_Service),
 	}
 
 	err = o.validateAuthURL(authCAPath, authServiceURL)
@@ -234,6 +239,10 @@ func (o *Outway) keepServiceListUpToDate() {
 	}
 }
 
+func serviceKey(s *inspectionapi.ListServicesResponse_Service) string {
+	return s.OrganizationName + "." + s.ServiceName
+}
+
 func (o *Outway) createService(
 	serviceToImplement *inspectionapi.ListServicesResponse_Service,
 ) {
@@ -266,6 +275,17 @@ func (o *Outway) createService(
 			zap.Error(err))
 		return
 	}
+	for i, healthy := range serviceToImplement.HealthyStates {
+		if !healthy {
+			inwayAddres := serviceToImplement.InwayAddresses[i]
+			o.logger.Debug(
+				"inway might not be healthy / reachable by directory / behind firewall",
+				zap.String("service-organization-name", serviceToImplement.OrganizationName),
+				zap.String("service-name", serviceToImplement.ServiceName),
+				zap.String("inway address", inwayAddres),
+			)
+		}
+	}
 
 	service := rrlbService
 	o.logger.Debug(
@@ -274,20 +294,30 @@ func (o *Outway) createService(
 		zap.String("service-organization-name", serviceToImplement.OrganizationName),
 	)
 
-	if o.services == nil {
-		o.services = make(map[string]HTTPService)
-	}
-
-	o.services[service.FullName()] = service
+	o.servicesHTTP[service.FullName()] = service
 
 }
 
 func (o *Outway) updateServiceList() error {
 
+	o.servicesLock.Lock()
+	defer o.servicesLock.Unlock()
+
+	if o.servicesDirectory == nil {
+		o.servicesDirectory = make(map[string]*inspectionapi.ListServicesResponse_Service)
+	}
+
+	if o.servicesHTTP == nil {
+		o.servicesHTTP = make(map[string]HTTPService)
+	}
+
 	resp, err := o.directoryInspectionClient.ListServices(context.Background(), &inspectionapi.ListServicesRequest{})
 	if err != nil {
 		return errors.Wrap(err, "failed to fetch services from directory")
 	}
+
+	// keep track of currently known directory services.
+	servicesToKeep := make(map[string]bool)
 
 	for _, serviceToImplement := range resp.Services {
 
@@ -305,20 +335,64 @@ func (o *Outway) updateServiceList() error {
 			continue
 		}
 
-		service, exists := o.services[serviceToImplement.OrganizationName+"."+serviceToImplement.ServiceName]
+		serviceKey := serviceKey(serviceToImplement)
+		// update directory list
+		o.servicesDirectory[serviceKey] = serviceToImplement
+		servicesToKeep[serviceKey] = true
 
-		if !exists || !reflect.DeepEqual(
-			service.GetInwayAddresses(), serviceToImplement.InwayAddresses) {
-			o.createService(serviceToImplement)
+		service, exists := o.servicesHTTP[serviceKey]
+
+		// if HttpService is used/created before update
+		// httpService  on changes.
+		if exists {
+			if !reflect.DeepEqual(
+				service.GetInwayAddresses(),
+				serviceToImplement.InwayAddresses) {
+				o.createService(serviceToImplement)
+			}
 		}
 	}
+
+	o.cleanUpservices(servicesToKeep)
 
 	return nil
 }
 
+func (o *Outway) cleanUpservices(servicesToKeep map[string]bool) {
+	// remove old directory listings.
+	// keep cache?
+	for serviceKey := range o.servicesDirectory {
+		_, exists := servicesToKeep[serviceKey]
+		if !exists {
+			// service is no longer active in directory.
+			delete(o.servicesDirectory, serviceKey)
+			_, exists = o.servicesHTTP[serviceKey]
+			// remove HttpService if present.
+			if exists {
+				// remove http service.
+				// TODO maybe leave it as cache?
+				delete(o.servicesHTTP, serviceKey)
+			}
+		}
+	}
+}
+
 func (o *Outway) getService(organization, service string) HTTPService {
+	serviceKey := organization + "." + service
 	o.servicesLock.RLock()
-	httpService := o.services[organization+"."+service]
+	httpService := o.servicesHTTP[serviceKey]
 	o.servicesLock.RUnlock()
+
+	if httpService == nil {
+		// create the HttpService if possible.
+		directoryService := o.servicesDirectory[serviceKey]
+		if directoryService != nil {
+			o.createService(directoryService)
+
+			o.servicesLock.RLock()
+			httpService = o.servicesHTTP[serviceKey]
+			o.servicesLock.RUnlock()
+		}
+	}
 	return httpService
 }

@@ -34,7 +34,7 @@ func createList(options []string) string {
 func (o *Outway) helpUserOrg(w http.ResponseWriter, organization string) {
 	suggestion := make([]string, 0)
 	if organization != "" {
-		for k := range o.services {
+		for k := range o.servicesDirectory {
 			if strings.HasPrefix(k, organization) {
 				matchorg := strings.Split(k, ".")
 				suggestion = append(suggestion, matchorg[0])
@@ -43,7 +43,7 @@ func (o *Outway) helpUserOrg(w http.ResponseWriter, organization string) {
 	}
 	if len(suggestion) == 0 {
 		// list all organizations.
-		for k := range o.services {
+		for k := range o.servicesDirectory {
 			matchorg := strings.Split(k, ".")
 			suggestion = append(suggestion, matchorg[0])
 		}
@@ -61,7 +61,7 @@ func (o *Outway) helpUserService(
 	// check if organization exists.
 	org := ""
 	services := make([]string, 0)
-	for k := range o.services {
+	for k := range o.servicesDirectory {
 		matchorg := strings.Split(k, ".")
 		if matchorg[0] == organization {
 			org = matchorg[0]

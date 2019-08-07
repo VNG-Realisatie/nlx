@@ -60,7 +60,7 @@ func TestAuthListen(t *testing.T) {
 	// Createa a outway with a mock service
 	outway := &Outway{
 		organizationName: "org",
-		services:         make(map[string]HTTPService),
+		servicesHTTP:     make(map[string]HTTPService),
 		logger:           logger,
 		requestFlake:     sonyflake.NewSonyflake(sonyflake.Settings{}),
 		ecmaTable:        crc64.MakeTable(crc64.ECMA),
@@ -97,7 +97,7 @@ func TestAuthListen(t *testing.T) {
 	}))
 	defer mockAuthServer.Close()
 
-	outway.services["mockorg.mockservice"] = mockService
+	outway.servicesHTTP["mockorg.mockservice"] = mockService
 	outway.authorizationSettings = &authSettings{
 		serviceURL: mockAuthServer.URL,
 	}

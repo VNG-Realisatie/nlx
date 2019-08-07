@@ -43,7 +43,9 @@ func TestUpdateServiceList(t *testing.T) {
 			OrgCertFile: filepath.Join(parent, "testing", "org-nlx-test.crt"),
 			OrgKeyFile:  filepath.Join(parent, "testing", "org-nlx-test.key"),
 		},
-		process: mainProcess,
+		process:           mainProcess,
+		servicesHTTP:      make(map[string]HTTPService),
+		servicesDirectory: make(map[string]*inspectionapi.ListServicesResponse_Service),
 	}
 
 	// Make the mock directory client return an error when calling ListServices
@@ -57,16 +59,29 @@ func TestUpdateServiceList(t *testing.T) {
 
 	mockServiceAInwayAddresses := []string{"mock-service-a-1:123", "mock-service-a-2:123"}
 	mockServiceBInwayAddresses := []string{"mock-service-b-1:123", "mock-service-b-2:123"}
+	healthyStatesA := []bool{true, false}
+	healthyStatesB := []bool{true, true}
 
-	mockServiceAFullName := "mock-org-a.mock-service-a"
-	mockServiceBFullName := "mock-org-b.mock-service-b"
 	// Make the mock directory client provide a list of services when calling ListServices
 	client.EXPECT().ListServices(context.Background(), &inspectionapi.ListServicesRequest{}).Return(
 		&inspectionapi.ListServicesResponse{
 			Services: []*inspectionapi.ListServicesResponse_Service{
-				{ServiceName: "mock-service-a", OrganizationName: "mock-org-a", InwayAddresses: mockServiceAInwayAddresses},
-				{ServiceName: "mock-service-b", OrganizationName: "mock-org-b", InwayAddresses: mockServiceBInwayAddresses},
-				{ServiceName: "mock-service-c", OrganizationName: "mock-org-c"},
+				{
+					ServiceName:      "mock-service-a",
+					OrganizationName: "mock-org-a",
+					InwayAddresses:   mockServiceAInwayAddresses,
+					HealthyStates:    healthyStatesA,
+				},
+				{
+					ServiceName:      "mock-service-b",
+					OrganizationName: "mock-org-b",
+					InwayAddresses:   mockServiceBInwayAddresses,
+					HealthyStates:    healthyStatesB,
+				},
+				{
+					ServiceName:      "mock-service-c",
+					OrganizationName: "mock-org-c",
+				},
 			},
 		}, nil)
 
@@ -74,8 +89,19 @@ func TestUpdateServiceList(t *testing.T) {
 	err = o.updateServiceList()
 	assert.Nil(t, err)
 
+	mockServiceAFullName := "mock-org-a.mock-service-a"
+	mockServiceBFullName := "mock-org-b.mock-service-b"
+
 	// mock-service-c should not be included because this service does not have any inwayaddresses
-	assert.Len(t, o.services, 2, fmt.Sprintf("%v", o.services))
+	assert.Len(t, o.servicesDirectory, 2, fmt.Sprintf("%v", o.servicesDirectory))
+
+	// create the HttpServices
+	o.getService("mock-org-a", "mock-service-a")
+	o.getService("mock-org-b", "mock-service-b")
+	o.getService("mock-org-c", "mock-service-c")
+
+	// mock-service-c should not be included because this service does not have any inwayaddresses
+	assert.Len(t, o.servicesHTTP, 2, fmt.Sprintf("%v", o.servicesHTTP))
 
 	tests := []struct {
 		serviceName    string
@@ -83,19 +109,19 @@ func TestUpdateServiceList(t *testing.T) {
 	}{
 		{
 			mockServiceAFullName,
-			[]string{"mock-service-a-1:123", "mock-service-a-2:123"},
+			mockServiceAInwayAddresses,
 		},
 		{
 			mockServiceBFullName,
-			[]string{"mock-service-b-1:123", "mock-service-b-2:123"},
+			mockServiceBInwayAddresses,
 		},
 	}
 
 	for _, test := range tests {
-		assert.Contains(t, o.services, test.serviceName)
+		assert.Contains(t, o.servicesHTTP, test.serviceName)
 		assert.ElementsMatch(
 			t,
-			o.services[test.serviceName].GetInwayAddresses(),
+			o.servicesHTTP[test.serviceName].GetInwayAddresses(),
 			test.inwayAddresses)
 	}
 }

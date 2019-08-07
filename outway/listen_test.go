@@ -18,18 +18,21 @@ import (
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/transactionlog"
+	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 	mock "go.nlx.io/nlx/outway/mock"
 )
 
 func TestOutwayListen(t *testing.T) {
 	logger := zap.NewNop()
-	// Createa a outway with a mock service
+
+	// Create a outway with a mock service
 	outway := &Outway{
-		services:     make(map[string]HTTPService),
-		logger:       logger,
-		requestFlake: sonyflake.NewSonyflake(sonyflake.Settings{}),
-		ecmaTable:    crc64.MakeTable(crc64.ECMA),
-		txlogger:     transactionlog.NewDiscardTransactionLogger(),
+		servicesHTTP:      make(map[string]HTTPService),
+		servicesDirectory: make(map[string]*inspectionapi.ListServicesResponse_Service),
+		logger:            logger,
+		requestFlake:      sonyflake.NewSonyflake(sonyflake.Settings{}),
+		ecmaTable:         crc64.MakeTable(crc64.ECMA),
+		txlogger:          transactionlog.NewDiscardTransactionLogger(),
 	}
 
 	// Setup mock httpservice
@@ -40,7 +43,14 @@ func TestOutwayListen(t *testing.T) {
 		w.WriteHeader(http.StatusOK)
 	})
 	for i := 0; i < 11; i++ {
-		outway.services["mockorg.mockservice"+strconv.Itoa(i)] = mockService
+		outway.servicesHTTP["mockorg.mockservice"+strconv.Itoa(i)] = mockService
+		inwayMessage := inspectionapi.ListServicesResponse_Service{
+			ServiceName:      "mockservice" + strconv.Itoa(i),
+			OrganizationName: "mockorg",
+			InwayAddresses:   []string{"mock-service-a-1:123"},
+			HealthyStates:    []bool{true},
+		}
+		outway.servicesDirectory["mockorg.mockservice"+strconv.Itoa(i)] = &inwayMessage
 	}
 
 	// Setup mock http server with the outway as http handler
