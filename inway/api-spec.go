@@ -34,6 +34,8 @@ func (i *Inway) handleAPISpecDocRequest(w http.ResponseWriter, r *http.Request) 
 	}
 	defer resp.Body.Close()
 
+	w.Header().Set("Content-Type", resp.Header.Get("Content-Type"))
+
 	_, err = io.Copy(w, resp.Body)
 	if err != nil {
 		http.Error(w, "server error", http.StatusInternalServerError)
