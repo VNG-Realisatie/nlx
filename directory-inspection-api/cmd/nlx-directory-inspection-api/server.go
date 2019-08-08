@@ -7,14 +7,11 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
-	"io"
 	"net/http"
 	"runtime/debug"
 	"strings"
 	"sync"
 	"time"
-
-	"go.nlx.io/nlx/common/tlsconfig"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
@@ -29,6 +26,8 @@ import (
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/process"
+	"go.nlx.io/nlx/common/tlsconfig"
+	directory_http "go.nlx.io/nlx/directory-inspection-api/http"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 )
 
@@ -58,6 +57,7 @@ func runServer(
 	caCertPool *x509.CertPool,
 	certKeyPair *tls.Certificate,
 	inspectionService inspectionapi.DirectoryInspectionServer,
+	httpServer *directory_http.Server,
 ) {
 
 	// setup zap connection for global grpc logging
@@ -100,19 +100,6 @@ func runServer(
 		),
 	}
 
-	// root http serve mux
-	httpRouter := http.NewServeMux()
-	httpRouter.HandleFunc(
-		"/swagger.json",
-		func(w http.ResponseWriter, req *http.Request) {
-			_, err := io.Copy(
-				w,
-				strings.NewReader(inspectionapi.SwaggerJSONDirectoryInspection))
-			if err != nil {
-				log.Error("failed writing response")
-			}
-		})
-
 	// setup grpc gateway and attach to main mux
 	gatewayMux := runtime.NewServeMux()
 	err := inspectionapi.RegisterDirectoryInspectionHandlerFromEndpoint(
@@ -125,7 +112,8 @@ func runServer(
 		fmt.Printf("serve: %v\n", err)
 		return
 	}
-	httpRouter.Handle("/", gatewayMux)
+
+	httpServer.Mount("/", gatewayMux)
 
 	// Start HTTPS server
 	// let server handle connections on the TLS Listener
@@ -137,7 +125,7 @@ func runServer(
 			ClientCAs:    caCertPool,
 			ClientAuth:   tls.RequireAndVerifyClientCert,
 		},
-		Handler: newGRPCSplitterHandlerFunc(grpcServer, httpRouter),
+		Handler: newGRPCSplitterHandlerFunc(grpcServer, httpServer),
 	}
 	tlsconfig.ApplyDefaults(HTTPSHandler.TLSConfig)
 
@@ -155,7 +143,7 @@ func runServer(
 		Addr: addressPlain,
 		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			fmt.Printf("proto:%d path:%s\n", r.ProtoMajor, r.URL.Path)
-			httpRouter.ServeHTTP(w, r)
+			httpServer.ServeHTTP(w, r)
 		}),
 	}
 	// TODO: #206 When directory has a separate storage/backing, the inspection API should actually become a separate process.

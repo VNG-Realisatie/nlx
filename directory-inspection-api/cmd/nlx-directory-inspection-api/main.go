@@ -20,6 +20,7 @@ import (
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/directory-db/dbversion"
+	"go.nlx.io/nlx/directory-inspection-api/http"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionservice"
 )
 
@@ -91,6 +92,8 @@ func main() {
 		logger.Fatal("failed to create new directory inspection service", zap.Error(err))
 	}
 
+	httpServer := http.NewServer(db, caCertPool, &certKeyPair, logger)
+
 	runServer(
 		mainProcess,
 		logger,
@@ -98,5 +101,7 @@ func main() {
 		options.ListenAddressPlain,
 		caCertPool,
 		&certKeyPair,
-		directoryService)
+		directoryService,
+		httpServer,
+	)
 }
