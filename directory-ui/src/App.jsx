@@ -20,7 +20,7 @@ const App = () => (
 
                 <Route exact path="/" component={ServiceOverviewPage} />
                 <Route
-                    path="/documentation/:organization_name/:service_name"
+                    path="/documentation/:organizationName/:serviceName"
                     component={DocumentationPage}
                 />
             </Fragment>
