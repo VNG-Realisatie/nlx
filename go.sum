@@ -108,8 +108,8 @@ github.com/zmap/zcertificate v0.0.0-20180516150559-0e3d58b1bac4/go.mod h1:5iU54t
 github.com/zmap/zcrypto v0.0.0-20190729165852-9051775e6a2e/go.mod h1:w7kd3qXHh8FNaczNjslXqvFQiv5mMWRXlL9klTUAHc8=
 github.com/zmap/zcrypto v0.0.0-20190729224132-9051775e6a2e h1:sbcLQA/Q1adlSBboxcyo1kW3GDg0KDVEoRbPAy+ihn8=
 github.com/zmap/zcrypto v0.0.0-20190729224132-9051775e6a2e/go.mod h1:w7kd3qXHh8FNaczNjslXqvFQiv5mMWRXlL9klTUAHc8=
-github.com/zmap/zlint v0.0.0-20190805222949-1fdad3421775 h1:EO9IK5ejUkWUMfMtvpgnzw7uXZQ2B5yB01myl+Kq1nk=
-github.com/zmap/zlint v0.0.0-20190805222949-1fdad3421775/go.mod h1:29UiAJNsiVdvTBFCJW8e3q6dcDbOoPkhMgttOSCIMMY=
+github.com/zmap/zlint v0.0.0-20190808075720-88c3f6b6f2f5 h1:wZ/z2oRUB5mow7vjeEzoEzkTdE4NixqGLdpFeVuYU+M=
+github.com/zmap/zlint v0.0.0-20190808075720-88c3f6b6f2f5/go.mod h1:29UiAJNsiVdvTBFCJW8e3q6dcDbOoPkhMgttOSCIMMY=
 go.uber.org/atomic v1.4.0 h1:cxzIVoETapQEqDhQu3QfnvXAV4AlzcvUCxkVUFw3+EU=
 go.uber.org/atomic v1.4.0/go.mod h1:gD2HeocX3+yG+ygLZcrzQJaqmWj9AIm7n08wl/qW/PE=
 go.uber.org/multierr v1.1.0 h1:HoEmRHQPVSqub6w2z2d2EOVs2fjyFRGyofhKuyDq0QI=
