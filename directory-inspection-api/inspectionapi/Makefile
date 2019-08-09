@@ -1,14 +1,21 @@
 .PHONY: all
 all: generate
 
+.PHONY: dependencies
+dependencies:
+	GO111MODULE=off go get \
+		github.com/gogo/protobuf/gogoproto \
+		github.com/gogo/protobuf/protoc-gen-gogofast \
+		github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway \
+		github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
+
 .PHONY: generate
 generate: clean
-
 	@# Generate go, gateway, validators
 	protoc -I. \
-		-I$(GOPATH)/src \
-		-I$(GOPATH)/src/github.com/gogo/protobuf/protobuf \
-		-I$(GOPATH)/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+		-I$(shell go env GOPATH)/src \
+		-I$(shell go env GOPATH)/src/github.com/gogo/protobuf/protobuf \
+		-I$(shell go env GOPATH)/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
 		--gogofast_out=\
 Mgoogle/protobuf/any.proto=github.com/gogo/protobuf/types,\
 Mgoogle/protobuf/duration.proto=github.com/gogo/protobuf/types,\
@@ -18,7 +25,7 @@ Mgoogle/protobuf/wrappers.proto=github.com/gogo/protobuf/types,\
 plugins=grpc:. \
 		--grpc-gateway_out=logtostderr=true:. \
 		*.proto
-	
+
 	@# Generate swagger.json
 	protoc -I. \
 		-I$(GOPATH)/src \
