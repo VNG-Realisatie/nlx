@@ -21,9 +21,6 @@ service DirectoryInspection {
 	rpc ListOrganizations (ListOrganizationsRequest) returns (ListOrganizationsResponse) {
 		option (google.api.http).get = "/directory/list-organizations";
 	}
-	rpc GetServiceAPISpec (GetServiceAPISpecRequest) returns (GetServiceAPISpecResponse) {
-		option (google.api.http).get = "/directory/get-service-api-spec/{organization_name}/{service_name}";
-	}
 }
 
 message ListServicesRequest {}
@@ -55,15 +52,3 @@ message ListOrganizationsResponse {
 
 	repeated Organization organizations = 2;
 }
-
-
-message GetServiceAPISpecRequest {
-	string organization_name = 1;
-	string service_name = 2;
-}
-
-message GetServiceAPISpecResponse {
-	string type = 1;
-	bytes document = 2;
-}
-

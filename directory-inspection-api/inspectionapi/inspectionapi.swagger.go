@@ -19,36 +19,6 @@ SwaggerJSONDirectoryInspection = `
     "application/json"
   ],
   "paths": {
-    "/directory/get-service-api-spec/{organization_name}/{service_name}": {
-      "get": {
-        "operationId": "GetServiceAPISpec",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/inspectionapiGetServiceAPISpecResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "organization_name",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "service_name",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "DirectoryInspection"
-        ]
-      }
-    },
     "/directory/list-organizations": {
       "get": {
         "summary": "ListOrganizations lists all organizations and their details.",
@@ -133,18 +103,6 @@ SwaggerJSONDirectoryInspection = `
             "type": "boolean",
             "format": "boolean"
           }
-        }
-      }
-    },
-    "inspectionapiGetServiceAPISpecResponse": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string"
-        },
-        "document": {
-          "type": "string",
-          "format": "byte"
         }
       }
     },

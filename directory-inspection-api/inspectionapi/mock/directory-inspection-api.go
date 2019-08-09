@@ -75,26 +75,6 @@ func (mr *MockDirectoryInspectionClientMockRecorder) ListOrganizations(ctx, in i
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOrganizations", reflect.TypeOf((*MockDirectoryInspectionClient)(nil).ListOrganizations), varargs...)
 }
 
-// GetServiceAPISpec mocks base method
-func (m *MockDirectoryInspectionClient) GetServiceAPISpec(ctx context.Context, in *inspectionapi.GetServiceAPISpecRequest, opts ...grpc.CallOption) (*inspectionapi.GetServiceAPISpecResponse, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "GetServiceAPISpec", varargs...)
-	ret0, _ := ret[0].(*inspectionapi.GetServiceAPISpecResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetServiceAPISpec indicates an expected call of GetServiceAPISpec
-func (mr *MockDirectoryInspectionClientMockRecorder) GetServiceAPISpec(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetServiceAPISpec", reflect.TypeOf((*MockDirectoryInspectionClient)(nil).GetServiceAPISpec), varargs...)
-}
-
 // MockDirectoryInspectionServer is a mock of DirectoryInspectionServer interface
 type MockDirectoryInspectionServer struct {
 	ctrl     *gomock.Controller
@@ -146,19 +126,4 @@ func (m *MockDirectoryInspectionServer) ListOrganizations(arg0 context.Context, 
 func (mr *MockDirectoryInspectionServerMockRecorder) ListOrganizations(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOrganizations", reflect.TypeOf((*MockDirectoryInspectionServer)(nil).ListOrganizations), arg0, arg1)
-}
-
-// GetServiceAPISpec mocks base method
-func (m *MockDirectoryInspectionServer) GetServiceAPISpec(arg0 context.Context, arg1 *inspectionapi.GetServiceAPISpecRequest) (*inspectionapi.GetServiceAPISpecResponse, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetServiceAPISpec", arg0, arg1)
-	ret0, _ := ret[0].(*inspectionapi.GetServiceAPISpecResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetServiceAPISpec indicates an expected call of GetServiceAPISpec
-func (mr *MockDirectoryInspectionServerMockRecorder) GetServiceAPISpec(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetServiceAPISpec", reflect.TypeOf((*MockDirectoryInspectionServer)(nil).GetServiceAPISpec), arg0, arg1)
 }

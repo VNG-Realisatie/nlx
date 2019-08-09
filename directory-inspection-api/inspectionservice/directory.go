@@ -24,7 +24,6 @@ var _ inspectionapi.DirectoryInspectionServer = &InspectionService{}
 type InspectionService struct {
 	*listServicesHandler
 	*listOrganizationsHandler
-	*getServiceAPISpecHandler
 }
 
 // New sets up a new DirectoryService and returns an error when something failed during set.
@@ -46,10 +45,6 @@ func New(
 	s.listOrganizationsHandler, err = newListOrganizationsHandler(db, logger, demoEnv, demoDomain)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to setup ListOrganizations handler")
-	}
-	s.getServiceAPISpecHandler, err = newGetServiceAPISpecHandler(db, logger, rootCA, certKeyPair)
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to setup GetServiceAPISpecHandler handler")
 	}
 
 	return s, nil
