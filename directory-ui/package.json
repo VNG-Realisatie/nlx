@@ -7,9 +7,9 @@
     "ajv-keywords": "3.4.1",
     "copy-text-to-clipboard": "2.1.0",
     "mobx": "5.13.0",
-    "react": "16.8.6",
-    "react-app-polyfill": "1.0.1",
-    "react-dom": "16.8.6",
+    "react": "16.9.0",
+    "react-app-polyfill": "1.0.2",
+    "react-dom": "16.9.0",
     "react-router-dom": "5.0.1",
     "react-scripts": "2.1.8",
     "redoc": "2.0.0-rc.8-1",
@@ -26,7 +26,7 @@
     "enzyme": "3.10.0",
     "enzyme-adapter-react-16": "1.14.0",
     "enzyme-to-json": "3.4.0",
-    "react-test-renderer": "16.8.6"
+    "react-test-renderer": "16.9.0"
   },
   "proxy-local": "https://directory.dev.nlx.minikube:30443",
   "proxy": "https://directory.demo.nlx.io",

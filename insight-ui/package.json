@@ -5,9 +5,9 @@
   "dependencies": {
     "@commonground/design-system": "7.1.0",
     "prop-types": "15.7.2",
-    "react": "16.8.6",
-    "react-app-polyfill": "1.0.1",
-    "react-dom": "16.8.6",
+    "react": "16.9.0",
+    "react-app-polyfill": "1.0.2",
+    "react-dom": "16.9.0",
     "react-qr-svg": "2.2.1",
     "react-redux": "7.1.0",
     "react-router-dom": "5.0.1",
@@ -21,7 +21,7 @@
     "enzyme-to-json": "3.4.0",
     "eslint-plugin-react": "7.14.3",
     "http-proxy-middleware": "0.19.1",
-    "react-scripts": "3.0.1",
+    "react-scripts": "3.1.0",
     "redux-devtools-extension": "2.13.8"
   },
   "scripts": {
