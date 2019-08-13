@@ -21,6 +21,7 @@ inway:
       [services.kentekenregister]
       endpoint-url = "http://service.nlx-acc-rdw:8000"
       authorization-model = "none"
+      api-specification-document-url = "http://service.nlx-acc-rdw:8000/openapi.yaml"
       insight-api-url = "https://insight-api.acc.voorbeeld-rdw.nl"
       irma-api-url = "https://irma-api.acc.voorbeeld-rdw.nl"
 outway:

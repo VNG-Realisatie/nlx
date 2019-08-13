@@ -24,6 +24,7 @@ inway:
       [services.kentekenregister]
       endpoint-url = "http://service.nlx-dev-rdw:8000"
       authorization-model = "none"
+      api-specification-document-url = "http://service.nlx-dev-rdw:8000/openapi.yaml"
       #insight-api-url = "http://insight-api.nlx-dev-rdw.minikube"
       #irma-api-url = "http://irma-api.nlx-dev-rdw.minikube"
 outway:
