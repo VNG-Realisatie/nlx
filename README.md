@@ -41,7 +41,7 @@ Note for Go developers: We advise to not clone NLX inside the GOPATH. If you mus
 Go doesn't need to be located in the GOPATH since it uses Go module support.
 
 ```bash
-git clone https://gitlab.com/commonground/nlx
+git clone https://gitlab.com/commonground/nlx/nlx
 cd nlx
 ```
 
@@ -106,13 +106,13 @@ You can now let your phone connect to the IRMA api server of RDW on `your.host.m
 
 ## Troubleshooting
 
-If you are running into other issues, please [Post an Issue on GitLab](https://gitlab.com/commonground/nlx/issues).
+If you are running into other issues, please [Post an Issue on GitLab](https://gitlab.com/commonground/nlx/nlx/issues).
 
 ## Deploying and releasing
 
 **NOTE:** Automated releases are currently not available.
 
-The [CI system of GitLab](https://gitlab.com/commonground/nlx/pipelines) builds every push to the master branch and creates a release to Docker, tagging it with the short git commit hash.
+The [CI system of GitLab](https://gitlab.com/commonground/nlx/nlx/pipelines) builds every push to the master branch and creates a release to Docker, tagging it with the short git commit hash.
 When a release is successful, it also gets deployed to the test environment.
 
 When a git tag is pushed, GitLab builds and deploys it to the test and staging environments.

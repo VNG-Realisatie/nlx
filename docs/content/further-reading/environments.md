@@ -9,7 +9,7 @@ menu:
 
 ## Environments
 
-NLX is build on a modern infrastructure based on OpenStack and Kubernetes, with a development street that automates most of the build, test and deployment tasks. The project and code repository are available on [Gitlab](https://gitlab.com/commonground/nlx). NLX developers have their own CI/CD flow with several private and public environments. The following Environments are publicly available for different audiences:
+NLX is build on a modern infrastructure based on OpenStack and Kubernetes, with a development street that automates most of the build, test and deployment tasks. The project and code repository are available on [Gitlab](https://gitlab.com/commonground/nlx/nlx). NLX developers have their own CI/CD flow with several private and public environments. The following Environments are publicly available for different audiences:
 
 * `Acceptance (Acc)`; for testing new features and formal acceptance - available for team members and stakeholders only.
 * `Demo`; for testing the general setup and functionality - available for all interested parties.
@@ -23,7 +23,7 @@ Besides the public environments there are private development and test environme
 * `Development`; private environments for development - available for team members only.
 * `Test`; environment for testing new features - available for team members and stakeholders.
 
-All new features are developed in separate [Gitlab branches](https://gitlab.com/commonground/nlx/branches), after the initial tests the branches are merged into the master branch and deployed to the feature test and acceptance environments using the [CI/CD pipelines of Gitlab](https://gitlab.com/commonground/nlx/pipelines). The pipeline for NLX requires manual code review and approval followed bij automated build, unit test, integration tests, packaging and deployment. The link to the feature test environment is made available in the details of the [merge requests on Gitlab](https://gitlab.com/commonground/nlx/merge_requests).
+All new features are developed in separate [Gitlab branches](https://gitlab.com/commonground/nlx/nlx/branches), after the initial tests the branches are merged into the master branch and deployed to the feature test and acceptance environments using the [CI/CD pipelines of Gitlab](https://gitlab.com/commonground/nlx/nlx/pipelines). The pipeline for NLX requires manual code review and approval followed bij automated build, unit test, integration tests, packaging and deployment. The link to the feature test environment is made available in the details of the [merge requests on Gitlab](https://gitlab.com/commonground/nlx/nlx/merge_requests).
 
 After approval by Product Owner (eventually after consulting with stakeholders), the version of the master is tagged and this identical version is deployed to preproduction, production and demo.
 All components like the directory, certportal, docs, demo and insight are available on all environments. The components are accessible using the following url construction:

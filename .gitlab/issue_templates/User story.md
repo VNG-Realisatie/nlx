@@ -13,5 +13,5 @@
 
 **:link: Reference links**
 
-* [Project Definition of Done](https://gitlab.com/commonground/nlx/blob/master/CONTRIBUTING.md#4-2-definition-of-done)
+* [Project Definition of Done](https://gitlab.com/commonground/nlx/nlx/blob/master/CONTRIBUTING.md#4-2-definition-of-done)
 * 

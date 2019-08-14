@@ -19,8 +19,8 @@ Once an authorization service is configured the outway will, after receiving a r
 ## The authorization interface
 
 In order to keep the NLX components as flexible as possible, each organization will have to implement the "authorization interface" on their own authorization service. Implementing this interface will enable communication between the outway and the authorization service.
-We have described this interface using Open API Specification (OAS). [This specification can be found here](https://gitlab.com/commonground/nlx/tree/master/outway/authorization-interface.yaml).
-A reference implementation has also been made available in the [NLX repository](https://gitlab.com/commonground/nlx/blob/master/auth-service/).
+We have described this interface using Open API Specification (OAS). [This specification can be found here](https://gitlab.com/commonground/nlx/nlx/tree/master/outway/authorization-interface.yaml).
+A reference implementation has also been made available in the [NLX repository](https://gitlab.com/commonground/nlx/nlx/blob/master/auth-service/).
 
 ## Configuring the outway
 

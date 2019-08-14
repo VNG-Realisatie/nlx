@@ -6,7 +6,7 @@ We love issues and merge requests from everyone.
 
 ## 1. Problems, suggestions and questions in Issues
 
-You don't need to change any of our code or documentation to be a contributor. Please help development by reporting problems, suggesting changes and asking questions. To do this, you can [create an issue using GitLab](https://docs.gitlab.com/ee/user/project/issues/create_new_issue.html) for this project in the [GitLab Issues for NLX](https://gitlab.com/commonground/nlx/issues).
+You don't need to change any of our code or documentation to be a contributor. Please help development by reporting problems, suggesting changes and asking questions. To do this, you can [create an issue using GitLab](https://docs.gitlab.com/ee/user/project/issues/create_new_issue.html) for this project in the [GitLab Issues for NLX](https://gitlab.com/commonground/nlx/nlx/issues).
 
 ## 2. Documentation and code in Merge Requests
 
@@ -58,7 +58,7 @@ Make sure _not_ to use the commit message to [automatically close issues](https:
 ### 2.3. Merge Request
 
 #### 2.3.1. Always refer to an issue
-Before starting a Merge Request, make sure there is a User Storiy describing what you want to achieve with the MR. [Create a story by submitting a new issue](https://gitlab.com/commonground/nlx/issues) if there is none. New issues come with a User Story template. This template helps you think from the user perspective: 'who wants this new feature and why?'
+Before starting a Merge Request, make sure there is a User Storiy describing what you want to achieve with the MR. [Create a story by submitting a new issue](https://gitlab.com/commonground/nlx/nlx/issues) if there is none. New issues come with a User Story template. This template helps you think from the user perspective: 'who wants this new feature and why?'
 
 #### 2.3.2. Describe the MR
 
@@ -84,7 +84,7 @@ All contributions have to be reviewed. The reviewer will look at the submitted c
 With MR's we make User Stories become reality. A User Story is DONE when:
 * Code has been written.
 * Documentation has been added or updated where necessary.
-* All changes have been reviewed and approved by another developer from [team NLX](https://gitlab.com/commonground/nlx/-/project_members).
+* All changes have been reviewed and approved by another developer from [team NLX](https://gitlab.com/commonground/nlx/nlx/-/project_members).
 * Deliverables (functionality + documentation) have been demoed to the development team and any resulting feedback has been processed.
 * Deliverables (functionality + documentation) have been demoed to the Product Owner and any resulting feedback has been processed.
 * Any spin-off user stories have been clearly identified and brought to the attention of the Product Owner.
@@ -124,12 +124,12 @@ The development process is structured in sprints:
 
 To keep track of the work, we use the [issue boards](https://docs.gitlab.com/ee/user/project/issue_board.html) of Gitlab:
 
-* [Refinement board](https://gitlab.com/commonground/nlx/-/boards/871734?milestone_title=No+Milestone&), to prepare the next sprint:
+* [Refinement board](https://gitlab.com/commonground/nlx/nlx/-/boards/871734?milestone_title=No+Milestone&), to prepare the next sprint:
   * Column "Open" is the backlog, filled with new user stories. The Product Owner prioritizes the backlog and selects user stories that come up next.
   * Column "Refinement" contains prioritized user stories that we are currently refining. The Product Owner takes care of a clear functional description and acceptance criteria. The team enhances on this with a proposed technical solution and complexity points (the "weight").
   * Column "Ready for Sprint" contains user stories that are refined, estimated and can be picked up in a sprint. Mostly this will happen during a sprint during Sprint planning session. When a sprint is done before the end, team members can grab new user stories from this column. Stories move from this board to the next by adding a Milestone with the name of the sprint to it.
 
-* [Sprint board](https://gitlab.com/commonground/nlx/-/boards/871691?milestone_title=Sprint%2015&), which guides us through the sprint:
+* [Sprint board](https://gitlab.com/commonground/nlx/nlx/-/boards/871691?milestone_title=Sprint%2015&), which guides us through the sprint:
   * This board contains the sprint backlog, the commited estimation and scope of the Sprint Goal, as planned during the sprint planning.
   * How stories flow through this board is more thoroughly described in [3.2 Development flow](#3-2-development-flow).
   * Column "Open" contains user stories that are waiting to be worked on.

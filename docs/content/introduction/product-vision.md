@@ -57,7 +57,7 @@ Non-functional:
 
 Although the NLX system will be fairly complex and will require extensively detailed requirements, it is possible to grasp the core of NLX by describing the three core functional requirements. This is what NLX is all about.
 
-*For more details, read the [NLX Functional Design](https://gitlab.com/commonground/nlx/blob/master/design/functional-design.md).*
+*For more details, read the [NLX Functional Design](https://gitlab.com/commonground/nlx/nlx/blob/master/design/functional-design.md).*
 
 
 ### Facilitate federated authentication and authorisation

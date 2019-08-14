@@ -9,7 +9,7 @@ export const api = url => fetch(url).then(response => response.json())
 // NOTE: we should use this method as default `api` method, but because of
 // the insight-api not returning the correct content-type, we have to
 // use a separate method for now.
-// Bug report at https://gitlab.com/commonground/nlx/issues/543
+// Bug report at https://gitlab.com/commonground/nlx/nlx/issues/543
 export const apiWithResponseDetection = url => fetch(url)
   .then(response => {
     // via https://stackoverflow.com/a/37121496/363448
