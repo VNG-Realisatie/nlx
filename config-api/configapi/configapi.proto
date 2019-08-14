@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+package configapi;
+
+import "google/api/annotations.proto";
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.sizer_all) = true;
+option (gogoproto.unmarshaler_all) = true;
+option (gogoproto.goproto_getters_all) = false;
+
+service ConfigApi {
+	rpc ListServices (ListServicesRequest) returns (ListServicesResponse) {
+		option (google.api.http) = { get: "/api/v1/services" };
+	}
+	rpc GetService (GetServiceRequest) returns (Service) {
+		option (google.api.http) = { get: "/api/v1/services/{name}" };
+	}
+	rpc CreateService (Service) returns (Service) {
+		option (google.api.http) = { post: "/api/v1/services" body: "*" };
+	}
+	rpc UpdateService (UpdateServiceRequest) returns (Service) {
+		option (google.api.http) = { put: "/api/v1/services/{name}" body: "*" };
+	}
+	rpc DeleteService (DeleteServiceRequest) returns (Empty) {
+		option (google.api.http) = { delete: "/api/v1/services/{name}" };
+	}
+	rpc ListInways (ListInwaysRequest) returns (ListInwaysResponse) {
+		option (google.api.http) = { get: "/api/v1/inways" };
+	}
+	rpc GetInway (GetInwayRequest) returns (Inway) {
+		option (google.api.http) = { get: "/api/v1/inways/{name}" };
+	}
+	rpc CreateInway (Inway) returns (Inway) {
+		option (google.api.http) = { post: "/api/v1/inways" body: "*" };
+	}
+	rpc UpdateInway (UpdateInwayRequest) returns (Inway) {
+		option (google.api.http) = { put: "/api/v1/services/{name}" body: "*" };
+	}
+	rpc DeleteInway (DeleteInwayRequest) returns (Empty) {
+		option (google.api.http) = { delete: "/api/v1/services/{name}" };
+	}
+}
+
+message Service {
+	string name = 1;
+	string endpointURL = 2;
+	string documentationURL = 3;
+	string apiSpecificationURL = 4;
+	bool internal = 5;
+	string techSupportContact = 6;
+	string publicSupportContact = 7;
+	AuthorizationSettings authorizationSettings = 8;
+	repeated string inways = 9;
+
+	message AuthorizationSettings {
+		string mode = 1;
+		repeated string organizations = 2;
+	}
+}
+
+message Empty {}
+
+message Inway {
+	string name = 1;
+	bool approved = 2;
+}
+
+message ListServicesRequest {}
+
+message ListServicesResponse {
+	repeated Service services = 1;
+}
+
+message GetServiceRequest {
+	string name = 1;
+}
+
+message UpdateServiceRequest {
+	string name = 1;
+	Service service = 2;
+}
+
+message DeleteServiceRequest {
+	string name = 1;
+}
+
+message ListInwaysRequest {}
+
+message ListInwaysResponse {
+	repeated Inway inways = 1;
+}
+
+message GetInwayRequest {
+	string name = 1;
+}
+
+message UpdateInwayRequest {
+	string name = 1;
+	Inway inway = 2;
+}
+
+message DeleteInwayRequest {
+	string name = 1;
+}

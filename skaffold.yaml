@@ -10,6 +10,10 @@ build:
     context: .
     docker:
       dockerfile: ca-certportal/Dockerfile
+  - image: nlxio/config-api
+    context: .
+    docker:
+      dockerfile: config-api/Dockerfile
   - image: nlxio/directory-db
     context: .
     docker:
@@ -88,6 +92,7 @@ profiles:
         values:
           authServiceImage: nlxio/auth-service
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          configAPIImage: nlxio/config-api
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
           txlogDBImage: nlxio/txlog-db
@@ -99,6 +104,7 @@ profiles:
         values:
           authServiceImage: nlxio/auth-service
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          configAPIImage: nlxio/config-api
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
           txlogDBImage: nlxio/txlog-db
@@ -110,6 +116,7 @@ profiles:
         values:
           authServiceImage: nlxio/auth-service
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          configAPIImage: nlxio/config-api
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
           outwayImage: nlxio/outway
@@ -150,6 +157,7 @@ profiles:
         setValueTemplates:
           authServiceImage: nlxio/auth-service:{{.CI_COMMIT_SHORT_SHA}}
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe:{{.CI_COMMIT_SHORT_SHA}}
+          configAPIImage: nlxio/config-api:{{.CI_COMMIT_SHORT_SHA}}
           insightAPIImage: nlxio/insight-api:{{.CI_COMMIT_SHORT_SHA}}
           inwayImage: nlxio/inway:{{.CI_COMMIT_SHORT_SHA}}
           txlogDBImage: nlxio/txlog-db:{{.CI_COMMIT_SHORT_SHA}}
@@ -178,6 +186,7 @@ profiles:
         setValueTemplates:
           authServiceImage: nlxio/auth-service:{{.CI_COMMIT_SHORT_SHA}}
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe:{{.CI_COMMIT_SHORT_SHA}}
+          configAPIImage: nlxio/config-api:{{.CI_COMMIT_SHORT_SHA}}
           insightAPIImage: nlxio/insight-api:{{.CI_COMMIT_SHORT_SHA}}
           inwayImage: nlxio/inway:{{.CI_COMMIT_SHORT_SHA}}
           txlogDBImage: nlxio/txlog-db:{{.CI_COMMIT_SHORT_SHA}}
@@ -204,6 +213,7 @@ profiles:
         setValueTemplates:
           authServiceImage: nlxio/auth-service:{{.CI_COMMIT_SHORT_SHA}}
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe:{{.CI_COMMIT_SHORT_SHA}}
+          configAPIImage: nlxio/config-api:{{.CI_COMMIT_SHORT_SHA}}
           insightAPIImage: nlxio/insight-api:{{.CI_COMMIT_SHORT_SHA}}
           inwayImage: nlxio/inway:{{.CI_COMMIT_SHORT_SHA}}
           outwayImage: nlxio/outway:{{.CI_COMMIT_SHORT_SHA}}
@@ -260,6 +270,7 @@ profiles:
         values:
           authServiceImage: nlxio/auth-service
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          configAPIImage: nlxio/config-api
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
           txlogDBImage: nlxio/txlog-db
@@ -271,6 +282,7 @@ profiles:
         values:
           authServiceImage: nlxio/auth-service
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          configAPIImage: nlxio/config-api
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
           txlogDBImage: nlxio/txlog-db
@@ -282,6 +294,7 @@ profiles:
         values:
           authServiceImage: nlxio/auth-service
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          configAPIImage: nlxio/config-api
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
           outwayImage: nlxio/outway
@@ -314,6 +327,7 @@ profiles:
         values:
           authServiceImage: nlxio/auth-service
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          configAPIImage: nlxio/config-api
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
           txlogDBImage: nlxio/txlog-db
@@ -325,6 +339,7 @@ profiles:
         values:
           authServiceImage: nlxio/auth-service
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          configAPIImage: nlxio/config-api
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
           txlogDBImage: nlxio/txlog-db
@@ -336,6 +351,7 @@ profiles:
         values:
           authServiceImage: nlxio/auth-service
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          configAPIImage: nlxio/config-api
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
           outwayImage: nlxio/outway
@@ -368,6 +384,7 @@ profiles:
         values:
           authServiceImage: nlxio/auth-service
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          configAPIImage: nlxio/config-api
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
           txlogDBImage: nlxio/txlog-db
@@ -379,6 +396,7 @@ profiles:
         values:
           authServiceImage: nlxio/auth-service
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          configAPIImage: nlxio/config-api
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
           txlogDBImage: nlxio/txlog-db
@@ -390,6 +408,7 @@ profiles:
         values:
           authServiceImage: nlxio/auth-service
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          configAPIImage: nlxio/config-api
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
           outwayImage: nlxio/outway

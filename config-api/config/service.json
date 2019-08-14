@@ -1,0 +1,17 @@
+{
+  "name": "my-service",
+  "endpointURL": "my-service.test:8000",
+  "documentationURL": "my-service.test:8000/docs",
+  "apiSpecificationURL": "my-service.test:8000/openapi.json",
+  "internal": false,
+  "techSupportContact": "tech@organization.test",
+  "publicSupportContact": "public@organization.test",
+  "authorizationSettings": {
+    "mode": "whitelist",
+    "organizations": [
+      "haarlem",
+      "utrecht"
+    ]
+  },
+  "inways": ["inway.test"]
+}
