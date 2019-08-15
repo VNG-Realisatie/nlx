@@ -80,7 +80,8 @@ func main() {
 			logger.Fatal("could not open connection to postgres", zap.Error(err))
 		}
 		logDB.SetConnMaxLifetime(5 * time.Minute)
-		logDB.SetMaxIdleConns(2)
+		logDB.SetMaxOpenConns(100)
+		logDB.SetMaxIdleConns(100)
 		logDB.MapperFunc(xstrings.ToSnakeCase)
 
 		common_db.WaitForLatestDBVersion(logger, logDB.DB, dbversion.LatestTxlogDBVersion)
