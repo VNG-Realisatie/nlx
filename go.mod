@@ -19,7 +19,7 @@ require (
 	github.com/google/certificate-transparency-go v1.0.21 // indirect
 	github.com/gorilla/schema v1.1.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.0.0
-	github.com/grpc-ecosystem/grpc-gateway v1.9.5
+	github.com/grpc-ecosystem/grpc-gateway v1.9.6
 	github.com/huandu/xstrings v1.2.0
 	github.com/jessevdk/go-flags v1.4.0
 	github.com/jmoiron/sqlx v1.2.0
@@ -32,7 +32,7 @@ require (
 	github.com/pkg/errors v0.8.1
 	github.com/sirupsen/logrus v1.4.2 // indirect
 	github.com/sony/sonyflake v1.0.0
-	github.com/stretchr/testify v1.3.0
+	github.com/stretchr/testify v1.4.0
 	github.com/zmap/zcrypto v0.0.0-20190729224132-9051775e6a2e // indirect
 	github.com/zmap/zlint v0.0.0-20190812234524-3307e6abe190 // indirect
 	go.uber.org/atomic v1.4.0 // indirect
@@ -43,5 +43,4 @@ require (
 	google.golang.org/appengine v1.6.1 // indirect
 	google.golang.org/genproto v0.0.0-20190801224524-fa694d86fc64
 	google.golang.org/grpc v1.23.0
-	gopkg.in/yaml.v2 v2.2.2 // indirect
 )
