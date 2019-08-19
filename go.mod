@@ -34,7 +34,7 @@ require (
 	github.com/sony/sonyflake v1.0.0
 	github.com/stretchr/testify v1.4.0
 	github.com/zmap/zcrypto v0.0.0-20190729224132-9051775e6a2e // indirect
-	github.com/zmap/zlint v0.0.0-20190812234524-3307e6abe190 // indirect
+	github.com/zmap/zlint v1.0.0 // indirect
 	go.uber.org/atomic v1.4.0 // indirect
 	go.uber.org/multierr v1.1.0 // indirect
 	go.uber.org/zap v1.10.0
