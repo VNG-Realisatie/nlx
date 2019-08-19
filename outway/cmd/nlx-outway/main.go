@@ -61,12 +61,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
-	defer func() {
-		syncErr := logger.Sync()
-		if syncErr != nil {
-			log.Fatalf("failed to sync zap logger: %v", syncErr)
-		}
-	}()
 
 	logger.Info("version info", zap.String("version", version.BuildVersion), zap.String("source-hash", version.BuildSourceHash))
 	logger = logger.With(zap.String("version", version.BuildVersion))

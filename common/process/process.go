@@ -66,10 +66,8 @@ func (p *Process) closeLoop() {
 		}
 	}
 
-	err := p.logger.Sync()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "failed to sync zap logger: %v\n", err)
-	}
+	p.syncLogger()
+
 	close(p.ShutdownComplete)
 	fmt.Fprint(os.Stdout, "shutdown complete\n")
 }
@@ -106,4 +104,31 @@ func (p *Process) start() {
 			}
 		}
 	}()
+}
+
+func (p *Process) syncLogger() {
+	p.logger.Debug("syncing logger")
+	err := p.logger.Sync()
+	if err == nil {
+		return
+	}
+
+	if pathErr, ok := err.(*os.PathError); ok {
+		if pathErr.Op == "sync" && ignoreSyncError(pathErr.Err) {
+			return
+		}
+	}
+
+	fmt.Fprintf(os.Stderr, "failed to sync zap logger: %v\n", err)
+}
+
+func ignoreSyncError(err error) bool {
+	switch err {
+	case
+		// On MacOS and on Linux when closing /dev/stdout or /dev/stderr
+		syscall.ENOTTY, syscall.EINVAL:
+		return true
+	}
+
+	return false
 }

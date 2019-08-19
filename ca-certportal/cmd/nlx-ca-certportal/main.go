@@ -16,6 +16,7 @@ import (
 
 	certportal "go.nlx.io/nlx/ca-certportal"
 	"go.nlx.io/nlx/common/logoptions"
+	"go.nlx.io/nlx/common/process"
 )
 
 var options struct {
@@ -45,12 +46,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
-	defer func() {
-		syncErr := logger.Sync()
-		if syncErr != nil {
-			log.Fatalf("failed to sync zap logger: %v", syncErr)
-		}
-	}()
+
+	process.NewProcess(logger)
 
 	// Create new certportal and provide it with a hardcoded service.
 	cp := certportal.NewCertPortal(logger, func() (signer.Signer, error) {
