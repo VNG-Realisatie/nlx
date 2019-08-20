@@ -37,11 +37,20 @@ spec:
           image: {{.Values.demoService.genericServiceImage}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
           {{ if .Values.demoService.key }}
+          env:
+            - name: USE_TLS
+              value: "1"
+            - name: TLS_KEY
+              value: "/tls/tls.key"
+            - name: TLS_CERT
+              value: "/tls/tls.crt"
+            - name: PORT
+              value: "8443"
           volumeMounts:
             - name: tls
               mountPath: /tls
           {{ end }}
-      {{ if .Values.demoService.key }}          
+      {{ if .Values.demoService.key }}
       volumes:
         - name: tls
           secret:
@@ -66,4 +75,3 @@ spec:
   cluserIP: None
 {{ end }}
 {{ end }}
-
