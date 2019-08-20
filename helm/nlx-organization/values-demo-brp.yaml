@@ -21,9 +21,9 @@ inway:
   config: |
     [services]
       [services.basisregistratie]
-      endpoint-url = "http://service:8000"
+      endpoint-url = "https://service:8443"
       authorization-model = "none"
-      api-specification-document-url = "https://gitlab.com/commonground/nlx-demo/raw/ae41adad73beb01f1d45902ed4dbb5927907441c/brp-mock-service/openapi.json"
+      api-specification-document-url = "https://service:8443/openapi.json"
       insight-api-url = "https://insight-api.demo.voorbeeld-brp.nl"
       irma-api-url = "https://irma-api.demo.voorbeeld-brp.nl"
 outway:

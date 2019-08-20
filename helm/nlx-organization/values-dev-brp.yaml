@@ -19,8 +19,8 @@ directoryInspectionHostname: directory-inspection-api.nlx-dev-directory
 inway:
   enable: true
 
-  rootca: 
-    basisregistratie.pem: | 
+  rootca:
+    basisregistratie.pem: |
       -----BEGIN CERTIFICATE-----
       MIIFUDCCAzigAwIBAgIJAM3SIzjwyJB9MA0GCSqGSIb3DQEBCwUAMD0xCzAJBgNV
       BAYTAk5MMQswCQYDVQQIDAJOSDEQMA4GA1UEBwwHQWxrbWFhcjEPMA0GA1UECgwG
@@ -57,7 +57,7 @@ inway:
       [services.basisregistratie]
       endpoint-url = "https://service:8443"
       authorization-model = "none"
-      api-specification-document-url = "https://gitlab.com/commonground/nlx-demo/raw/ae41adad73beb01f1d45902ed4dbb5927907441c/brp-mock-service/openapi.json"
+      api-specification-document-url = "https://service:8443/openapi.json"
       #insight-api-url = "http://insight-api.nlx-dev-brp.minikube"
       #irma-api-url = "http://irma-api.nlx-dev-brp.minikube"
       ca-cert-path = "/ca-certs/basisregistratie.pem"
