@@ -28,7 +28,7 @@ func (i *Inway) handleAPISpecDocRequest(w http.ResponseWriter, r *http.Request) 
 	}
 	i.logger.Info("fetching api spec doc", zap.String("api-spec-doc-url", serviceDetails.APISpecificationDocumentURL))
 
-	resp, err := http.Get(serviceDetails.APISpecificationDocumentURL)
+	resp, err := serviceEndpoint.GetAPISpec()
 	if err != nil {
 		http.Error(w, "server error", http.StatusInternalServerError)
 		i.logger.Error("failed to fetch api specification document", zap.Error(err))

@@ -24,6 +24,7 @@ type ServiceEndpoint interface {
 	ServiceName() string
 	ServiceDetails() *config.ServiceDetails
 	SetAuthorizationWhitelist(whitelistedOrganizations []string)
+	GetAPISpec() (*http.Response, error)
 	handleRequest(reqMD *RequestMetadata, w http.ResponseWriter, r *http.Request)
 }
 
@@ -35,9 +36,9 @@ type HTTPServiceEndpoint struct {
 	serviceDetails *config.ServiceDetails
 	logger         *zap.Logger
 
-	host  string
-	proxy *httputil.ReverseProxy
-	// root  *x509.CertPool
+	host       string
+	proxy      *httputil.ReverseProxy
+	httpClient *http.Client
 
 	public                   bool
 	whitelistedOrganizations []string
@@ -69,6 +70,7 @@ func (iw *Inway) NewHTTPServiceEndpoint(serviceName string, serviceDetails *conf
 		serviceName:    serviceName,
 		serviceDetails: serviceDetails,
 		logger:         iw.logger.With(zap.String("inway-service-name", serviceName)),
+		httpClient:     &http.Client{Transport: newRoundTripHTTPTransport(tlsConfig)},
 	}
 	endpointURL, err := url.Parse(serviceDetails.EndpointURL)
 	if err != nil {
@@ -99,6 +101,11 @@ func (h *HTTPServiceEndpoint) ServiceName() string {
 // ServiceDetails returns the config that this endpoint is based upon
 func (h *HTTPServiceEndpoint) ServiceDetails() *config.ServiceDetails {
 	return h.serviceDetails
+}
+
+// GetAPISpec returns the response of the request to the API Spec Documentation URL
+func (h *HTTPServiceEndpoint) GetAPISpec() (*http.Response, error) {
+	return h.httpClient.Get(h.serviceDetails.APISpecificationDocumentURL)
 }
 
 func (h *HTTPServiceEndpoint) handleRequest(reqMD *RequestMetadata, w http.ResponseWriter, r *http.Request) {
