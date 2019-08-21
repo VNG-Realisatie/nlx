@@ -9,6 +9,7 @@ weight: 100
 NLX is built as a core component of the [Common Ground vision](https://github.com/VNG-Realisatie/common-ground), which aims to convert or replace the current monolithic information systems of Dutch municipalities (and wider government) with a state of the art, API-first software landscape, fulfilling societal demand for automation, transparency and privacy.
 
 Important business benefits of NLX are:
+
 * Lower integration costs because of standardised API integration layer
 * Better data quality because data is used at the data source
 * Better AVG compliance because end users get insight into data usage
