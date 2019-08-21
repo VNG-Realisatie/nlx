@@ -19,9 +19,9 @@ inway:
   config: |
     [services]
       [services.basisregistratie]
-      endpoint-url = "http://service:8000"
+      endpoint-url = "http://service.nlx-test-brp:8000"
       authorization-model = "none"
-      api-specification-document-url = "http://service:8000/openapi.json"
+      api-specification-document-url = "http://service.nlx-test-brp:8000/openapi.json"
       insight-api-url = "https://insight-api.test.voorbeeld-brp.nl"
       irma-api-url = "https://irma-api.test.voorbeeld-brp.nl"
 outway:

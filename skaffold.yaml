@@ -207,7 +207,7 @@ profiles:
           inway.config: |
             [services]
                 [services.kentekenregister]
-                endpoint-url = 'http://service:8000'
+                endpoint-url = 'http://service.nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}:8000'
                 authorization-model = 'none'
                 insight-api-url = 'https://insight-api.nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}'
                 irma-api-url = 'https://irma-api.nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}'

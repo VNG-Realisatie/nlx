@@ -19,7 +19,7 @@ inway:
   config: |
     [services]
       [services.kentekenregister]
-      endpoint-url = "http://service:8000"
+      endpoint-url = "http://service.nlx-acc-rdw:8000"
       authorization-model = "none"
       insight-api-url = "https://insight-api.acc.voorbeeld-rdw.nl"
       irma-api-url = "https://irma-api.acc.voorbeeld-rdw.nl"
