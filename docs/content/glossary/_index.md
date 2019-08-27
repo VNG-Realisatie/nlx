@@ -89,7 +89,7 @@ Mutual TLS is a an optional feature of TLS and it enables the server to authenic
 
 The inway is used by an organization to provide [services](#service) to the NLX network.
 
-[How to start an inway](../providing-services-on-nlx/start-an-inway/)
+[How to start an inway](../get-started/provide-an-api/)
 
 # O
 
@@ -104,7 +104,7 @@ The OpenAPI Initiative (OAI) was created by a consortium of forward-looking indu
 
 The outway is used by an organization to query [services](#service) available on the NLX network.
 
-[How to start an outway](../using-services-on-nlx/start-an-outway/)
+[How to start an outway](../get-started/consume-an-api/)
 
 # R
 
@@ -133,4 +133,4 @@ TLS stand for transport layer security and is a crypthographic protocol designed
 
 Requests made by an [application](#application) to a [service](#service) are logged in the transaction log. The logging is done by the [outway](#outway) of the application and the [inway](#inway) of the [service](#service).
 
-[Transaction logs](../transactionlogs/)
+[Transaction logs](../further-reading/setup-transaction-logs/)
