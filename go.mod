@@ -50,7 +50,7 @@ require (
 	go.etcd.io/etcd v3.3.13+incompatible
 	go.uber.org/zap v1.10.0
 	golang.org/x/crypto v0.0.0-20190820222955-60c769a6c586 // indirect
-	golang.org/x/net v0.0.0-20190730004929-ca1201d0de80
+	golang.org/x/net v0.0.0-20190827165448-ba9fcec4b297
 	google.golang.org/appengine v1.6.1 // indirect
 	google.golang.org/genproto v0.0.0-20190819223450-24fa4b261c55
 	google.golang.org/grpc v1.23.0
