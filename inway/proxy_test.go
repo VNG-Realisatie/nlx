@@ -50,14 +50,13 @@ func newTestEnv(t *testing.T, tlsOptions orgtls.TLSOptions) (proxy, mock *httpte
 
 	logger := zap.NewNop()
 	testProcess := process.NewProcess(logger)
-	iw, err := NewInway(logger, nil, testProcess, "localhost:1812", tlsOptions,
-		"localhost:1815", serviceConfig)
+	iw, err := NewInway(logger, nil, testProcess, "localhost:1812", tlsOptions, "localhost:1815")
 	assert.Nil(t, err)
 
 	// Add service endpoints
 	for serviceName := range serviceConfig.Services {
 		serviceDetails := serviceConfig.Services[serviceName]
-		endpoint, errr := iw.NewHTTPServiceEndpoint(logger, serviceName, serviceDetails.EndpointURL, nil)
+		endpoint, errr := iw.NewHTTPServiceEndpoint(serviceName, &serviceDetails, nil)
 		if errr != nil {
 			t.Fatal("failed to create service endpoint", err)
 		}
@@ -71,7 +70,7 @@ func newTestEnv(t *testing.T, tlsOptions orgtls.TLSOptions) (proxy, mock *httpte
 			logger.Fatal(fmt.Sprintf(`invalid authorization model "%s" for service "%s"`, serviceDetails.AuthorizationModel, serviceName))
 		}
 
-		err = iw.AddServiceEndpoint(endpoint, &serviceDetails)
+		err = iw.AddServiceEndpoint(endpoint)
 		assert.Nil(t, err)
 	}
 

@@ -24,7 +24,6 @@ import (
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
-	"go.nlx.io/nlx/inway/config"
 )
 
 // Inway handles incoming requests and holds a list of registered ServiceEndpoints.
@@ -38,8 +37,7 @@ type Inway struct {
 	orgCertFile string
 	orgKeyFile  string
 
-	serviceConfig *config.ServiceConfig // This should be removed once we have centralized service management
-	process       *process.Process
+	process *process.Process
 
 	serviceEndpointsLock sync.RWMutex
 	serviceEndpoints     map[string]ServiceEndpoint
@@ -56,8 +54,7 @@ func NewInway(
 	mainProcess *process.Process,
 	selfAddress string,
 	tlsOptions orgtls.TLSOptions,
-	directoryRegistrationAddress string,
-	serviceConfig *config.ServiceConfig) (*Inway, error) {
+	directoryRegistrationAddress string) (*Inway, error) {
 	// parse tls certificate
 	roots, orgCert, err := orgtls.Load(tlsOptions)
 	if err != nil {
@@ -86,8 +83,7 @@ func NewInway(
 		orgCertFile: tlsOptions.OrgCertFile,
 		orgKeyFile:  tlsOptions.OrgKeyFile,
 
-		serviceConfig: serviceConfig,
-		process:       mainProcess,
+		process: mainProcess,
 
 		serviceEndpoints: make(map[string]ServiceEndpoint),
 	}
@@ -128,11 +124,11 @@ func NewInway(
 }
 
 // AddServiceEndpoint adds an ServiceEndpoint to the inway's internal registry.
-func (i *Inway) AddServiceEndpoint(s ServiceEndpoint, serviceDetails *config.ServiceDetails) error {
+func (i *Inway) AddServiceEndpoint(s ServiceEndpoint) error {
 	if err := i.addServiceEndpointToMap(s); err != nil {
 		return err
 	}
-	i.announceToDirectory(s, serviceDetails)
+	i.announceToDirectory(s)
 	return nil
 }
 
@@ -147,7 +143,7 @@ func (i *Inway) addServiceEndpointToMap(s ServiceEndpoint) error {
 	return nil
 }
 
-func (i *Inway) announceToDirectory(s ServiceEndpoint, serviceDetails *config.ServiceDetails) {
+func (i *Inway) announceToDirectory(s ServiceEndpoint) {
 	go func() {
 		expBackOff := &backoff.Backoff{
 			Min:    100 * time.Millisecond,
@@ -167,6 +163,7 @@ func (i *Inway) announceToDirectory(s ServiceEndpoint, serviceDetails *config.Se
 			case <-shutDownComplete:
 				return
 			case <-time.After(sleepDuration):
+				serviceDetails := s.ServiceDetails()
 				resp, err := i.directoryRegistrationClient.RegisterInway(context.Background(), &registrationapi.RegisterInwayRequest{
 					InwayAddress: i.selfAddress,
 					Services: []*registrationapi.RegisterInwayRequest_RegisterService{

@@ -15,7 +15,6 @@ import (
 
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/inway"
-	"go.nlx.io/nlx/inway/config"
 )
 
 func TestNewInwayException(t *testing.T) {
@@ -29,9 +28,7 @@ func TestNewInwayException(t *testing.T) {
 
 	testProcess := process.NewProcess(logger)
 
-	serviceConfig := &config.ServiceConfig{}
-
-	_, err := inway.NewInway(logger, nil, testProcess, "", tlsOptions, "", serviceConfig)
+	_, err := inway.NewInway(logger, nil, testProcess, "", tlsOptions, "")
 	if err == nil {
 		t.Fatal(`result: err is nil, expected err to be set when calling NewInway with invalid certificates`)
 	}
@@ -58,7 +55,7 @@ func TestNewInwayException(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		_, err = inway.NewInway(logger, nil, testProcess, "", test.tlsConfig, "", serviceConfig)
+		_, err = inway.NewInway(logger, nil, testProcess, "", test.tlsConfig, "")
 		assert.EqualError(t, err, test.expectedErrorMessage)
 	}
 
@@ -68,7 +65,7 @@ func TestNewInwayException(t *testing.T) {
 		OrgKeyFile:  filepath.Join("..", "testing", "org-nlx-test.key"),
 	}
 
-	testInway, err := inway.NewInway(logger, nil, testProcess, "", tlsOptions, "", serviceConfig)
+	testInway, err := inway.NewInway(logger, nil, testProcess, "", tlsOptions, "")
 	if err != nil {
 		t.Fatal(err)
 	}

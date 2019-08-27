@@ -87,7 +87,7 @@ func main() {
 		mainProcess.CloseGracefully(logDB.Close)
 	}
 
-	iw, err := inway.NewInway(logger, logDB, mainProcess, options.SelfAddress, options.TLSOptions, options.DirectoryRegistrationAddress, serviceConfig)
+	iw, err := inway.NewInway(logger, logDB, mainProcess, options.SelfAddress, options.TLSOptions, options.DirectoryRegistrationAddress)
 	if err != nil {
 		logger.Fatal("cannot setup inway", zap.Error(err))
 	}
@@ -120,7 +120,7 @@ func loadServices(logger *zap.Logger, serviceConfig *config.ServiceConfig, iw *i
 				logger.Fatal("Unable to load ca certificate for inway", zap.Error(err))
 			}
 		}
-		endpoint, errr := iw.NewHTTPServiceEndpoint(logger, serviceName, serviceDetails.EndpointURL, &tls.Config{RootCAs: rootCrt})
+		endpoint, errr := iw.NewHTTPServiceEndpoint(serviceName, &serviceDetails, &tls.Config{RootCAs: rootCrt})
 		if errr != nil {
 			logger.Fatal("failed to create service", zap.Error(err))
 		}
@@ -132,7 +132,7 @@ func loadServices(logger *zap.Logger, serviceConfig *config.ServiceConfig, iw *i
 		default:
 			logger.Fatal(fmt.Sprintf(`invalid authorization model "%s" for service "%s"`, serviceDetails.AuthorizationModel, serviceName))
 		}
-		err = iw.AddServiceEndpoint(endpoint, &serviceDetails)
+		err = iw.AddServiceEndpoint(endpoint)
 		if err != nil {
 			logger.Fatal(fmt.Sprintf(`adding endpoint "%s"`, err))
 		}

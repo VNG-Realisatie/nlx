@@ -16,11 +16,13 @@ import (
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/transactionlog"
+	"go.nlx.io/nlx/inway/config"
 )
 
 // ServiceEndpoint handles the proxying of a request to the organization's API endpoint
 type ServiceEndpoint interface {
 	ServiceName() string
+	ServiceDetails() *config.ServiceDetails
 	SetAuthorizationWhitelist(whitelistedOrganizations []string)
 	handleRequest(reqMD *RequestMetadata, w http.ResponseWriter, r *http.Request)
 }
@@ -29,8 +31,9 @@ type ServiceEndpoint interface {
 type HTTPServiceEndpoint struct {
 	inway *Inway
 
-	serviceName string
-	logger      *zap.Logger
+	serviceName    string
+	serviceDetails *config.ServiceDetails
+	logger         *zap.Logger
 
 	host  string
 	proxy *httputil.ReverseProxy
@@ -60,13 +63,14 @@ func newRoundTripHTTPTransport(tlsConfig *tls.Config) *http.Transport {
 var _ ServiceEndpoint = &HTTPServiceEndpoint{} // compile-time interface validation
 
 // NewHTTPServiceEndpoint creates a new ServiceEndpoint using a simple HTTP reverse proxy backend.
-func (iw *Inway) NewHTTPServiceEndpoint(logger *zap.Logger, serviceName, endpoint string, tlsConfig *tls.Config) (*HTTPServiceEndpoint, error) {
+func (iw *Inway) NewHTTPServiceEndpoint(serviceName string, serviceDetails *config.ServiceDetails, tlsConfig *tls.Config) (*HTTPServiceEndpoint, error) {
 	h := &HTTPServiceEndpoint{
-		inway:       iw,
-		serviceName: serviceName,
-		logger:      logger.With(zap.String("inway-service-name", serviceName)),
+		inway:          iw,
+		serviceName:    serviceName,
+		serviceDetails: serviceDetails,
+		logger:         iw.logger.With(zap.String("inway-service-name", serviceName)),
 	}
-	endpointURL, err := url.Parse(endpoint)
+	endpointURL, err := url.Parse(serviceDetails.EndpointURL)
 	if err != nil {
 		return nil, errors.Wrap(err, "invalid endpoint provided")
 	}
@@ -90,6 +94,11 @@ func (h *HTTPServiceEndpoint) SetAuthorizationWhitelist(whitelistedOrganizations
 // ServiceName returns the service name that the attached endpoint handles
 func (h *HTTPServiceEndpoint) ServiceName() string {
 	return h.serviceName
+}
+
+// ServiceDetails returns the config that this endpoint is based upon
+func (h *HTTPServiceEndpoint) ServiceDetails() *config.ServiceDetails {
+	return h.serviceDetails
 }
 
 func (h *HTTPServiceEndpoint) handleRequest(reqMD *RequestMetadata, w http.ResponseWriter, r *http.Request) {

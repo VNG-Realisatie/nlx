@@ -15,7 +15,6 @@
 	## `authorization-model` none or whitelist
 	authorization-model = "none"
 
-
 	## For testing purposes, we define a second service which exposes the postman-echo.com API.
 	## But this time we add a whitelist authorization model.
 	[services.PostmanEchoWhitelisted]

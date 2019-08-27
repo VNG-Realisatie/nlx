@@ -43,8 +43,12 @@ We have to define our API in a TOML-file. You can save the contents below as `se
     # `authorization-model` can or whitelist
     authorization-model = "none"
 
-    # `api-specification-document-url` defines the specification document for the API
-    api-specification-document-url = "https://petstore.swagger.io/v2/swagger.json"
+    # `api-specification-document-url` defines the specification document for the API.
+    # When using the `ca-cert-path` option, the server behind this URL should provide a certificate signed by that root certifictate. 
+    api-specification-document-url = "https://petstore.swagger.io/swagger.json"
+    
+    # `ca-cert-path` can be used when the server behind the endpoint url is providing a TLS certificate signed by a custom root certificate. 
+    # ca-cert-path = "/path/to/custom-root-ca.crt"
 
     # `public-support-contact` contains an email address which NLX users can contact if they need support using your API.
     # This email address is published in the directory.
@@ -54,7 +58,7 @@ We have to define our API in a TOML-file. You can save the contents below as `se
     # `tech-support-contact` contains an email address which we (the NLX organization) can contact if they have any questions about your API
     # This email address will NOT be published in the directory
     # this field is optional
-    # tech-support-contact   = "tech@my-organization.nl"
+    # tech-support-contact = "tech@my-organization.nl"
 ```
 
 > If you're specifying you own API, please note that `localhost` won't work. If your API is running on the same machine as
