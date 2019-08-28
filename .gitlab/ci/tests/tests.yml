@@ -13,7 +13,9 @@ Go tests:
   stage: Tests
   script:
     - /usr/local/go/bin/go mod download
-    - /usr/local/go/bin/go test ./... -coverprofile coverage.out
+    - /usr/local/go/bin/go test ./... -coverprofile coverage.out.tmp
+    - cat coverage.out.tmp | grep -v '.pb.go\|.pb.gw.go' > coverage.out
+    - rm coverage.out.tmp
     - /usr/local/go/bin/go tool cover -html=coverage.out -o coverage.html
     - /usr/local/go/bin/go tool cover -func=coverage.out
   coverage: /total:\t+\(statements\)\t+([\d\.]+?%)/
