@@ -112,6 +112,7 @@ func NewRoundRobinLoadBalancedHTTPService(
 		endpointURL.Path = "/" + serviceName
 		proxy := httputil.NewSingleHostReverseProxy(endpointURL)
 		proxy.Transport = roundTripTransport
+		proxy.ErrorHandler = s.LogServiceErrors
 		s.proxies[i] = proxy
 	}
 
@@ -123,9 +124,24 @@ func (s *RoundRobinLoadBalancedHTTPService) FullName() string {
 	return s.organizationName + "." + s.serviceName
 }
 
-// ProxyHTTPRequest procies the HTTP request to the proper endpoint.
+// ProxyHTTPRequest process the HTTP request to the proper endpoint.
 func (s *RoundRobinLoadBalancedHTTPService) ProxyHTTPRequest(w http.ResponseWriter, r *http.Request) {
 	s.getProxy().ServeHTTP(w, r)
+}
+
+// Used for testing purposes to change transport
+func (s *RoundRobinLoadBalancedHTTPService) GetProxies() []*httputil.ReverseProxy {
+	return s.proxies
+}
+
+// LogServiceErrors request failed but service was announced to directory
+// log the error and return some helpful text.
+// set 503 Status Service Temporarily Unavailable response.
+func (s *RoundRobinLoadBalancedHTTPService) LogServiceErrors(w http.ResponseWriter, r *http.Request, e error) {
+	msg := "failed request to " + r.URL.String() + " try again later / check firewall?"
+	s.logger.Error(msg)
+	http.Error(
+		w, msg, http.StatusServiceUnavailable)
 }
 
 // GetInwayAddresses returns the possible inwayaddresses of the httpservice

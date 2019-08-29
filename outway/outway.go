@@ -388,7 +388,6 @@ func (o *Outway) getService(organization, service string) HTTPService {
 		directoryService := o.servicesDirectory[serviceKey]
 		if directoryService != nil {
 			o.createService(directoryService)
-
 			o.servicesLock.RLock()
 			httpService = o.servicesHTTP[serviceKey]
 			o.servicesLock.RUnlock()

@@ -99,10 +99,6 @@ func (o *Outway) helpUserService(
 
 func (o *Outway) helpUser(w http.ResponseWriter, msg string, dest *destination, urlPath string) {
 
-	if urlPath == "" {
-		http.Error(w, "nlx outway: missing urlpath"+msg, http.StatusBadRequest)
-	}
-
 	// we did not get a complete 3 part url path. help user create one.
 	if dest == nil {
 		pathParts := strings.SplitN(strings.TrimPrefix(urlPath, "/"), "/", 3)
@@ -128,5 +124,11 @@ func (o *Outway) helpUser(w http.ResponseWriter, msg string, dest *destination, 
 		// do suggestions
 	} else {
 		o.helpUserService(w, dest.Organization, dest.Service)
+		return
+	}
+
+	if urlPath == "" {
+		http.Error(w, "nlx outway: missing urlpath for service"+msg, http.StatusBadRequest)
+		return
 	}
 }
