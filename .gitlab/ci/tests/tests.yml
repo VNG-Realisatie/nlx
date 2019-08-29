@@ -11,18 +11,20 @@ Go go.mod tidy test:
 
 Go tests:
   stage: Tests
+  before_script:
+    - mkdir -p tmp-coverage-reports/
   script:
     - /usr/local/go/bin/go mod download
-    - /usr/local/go/bin/go test ./... -coverprofile coverage.out.tmp
-    - cat coverage.out.tmp | grep -v '.pb.go\|.pb.gw.go' > coverage.out
-    - rm coverage.out.tmp
-    - /usr/local/go/bin/go tool cover -html=coverage.out -o coverage.html
-    - /usr/local/go/bin/go tool cover -func=coverage.out
+    - /usr/local/go/bin/go test ./... -coverprofile tmp-coverage-reports/coverage.out.tmp
+    - cat tmp-coverage-reports/coverage.out.tmp | grep -v '.pb.go\|.pb.gw.go' > tmp-coverage-reports/coverage.out
+    - rm tmp-coverage-reports/coverage.out.tmp
+    - /usr/local/go/bin/go tool cover -html=tmp-coverage-reports/coverage.out -o tmp-coverage-reports/coverage.html
+    - /usr/local/go/bin/go tool cover -func=tmp-coverage-reports/coverage.out
   coverage: /total:\t+\(statements\)\t+([\d\.]+?%)/
   artifacts:
     expire_in: 1 month
     paths:
-      - coverage.html
+      - tmp-coverage-reports/coverage.html
   tags:
     - nlx
     - shell
