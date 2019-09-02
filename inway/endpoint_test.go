@@ -4,6 +4,7 @@
 package inway
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -58,7 +59,12 @@ func TestSetAuthorization(t *testing.T) {
 	}
 	result.Body.Close()
 
-	assert.Equal(t, fmt.Sprintf("nlx-outway: could not handle your request, organization \"%s\" is not allowed access.\n", reqMD.requesterOrganization), string(bytes))
+	assert.Equal(
+		t,
+		fmt.Sprintf("nlx-outway: could not handle your request, organization \"%s\" is not allowed access.\n",
+			reqMD.requesterOrganization),
+		string(bytes),
+	)
 }
 
 func TestInwayAddServiceEndpoint(t *testing.T) {
@@ -82,7 +88,10 @@ func TestInwayAddServiceEndpoint(t *testing.T) {
 
 	// Test NewHTTPServiceEnpoint with invalid url
 	_, err = iw.NewHTTPServiceEndpoint("mock-service", serviceDetails, nil)
-	assert.EqualError(t, err, "invalid endpoint provided: parse 12://invalid-endpoint: first path segment in URL cannot contain colon")
+	assert.EqualError(
+		t,
+		err,
+		"invalid endpoint provided: parse 12://invalid-endpoint: first path segment in URL cannot contain colon")
 
 	serviceDetails = &config.ServiceDetails{
 		EndpointURL: "127.0.0.1",
@@ -103,6 +112,69 @@ func TestInwayAddServiceEndpoint(t *testing.T) {
 	}
 	assert.EqualError(t, err, "service endpoint for a service with the same name has already been registered")
 
+}
+
+type failingRoundTripper struct{}
+
+func (failingRoundTripper) RoundTrip(*http.Request) (*http.Response, error) {
+	return nil, errors.New("some error")
+}
+
+// Test if a failing api service results in clear logs about the error
+func TestInwayLoggingBadService(t *testing.T) {
+	logger := zap.NewNop()
+	testProcess := process.NewProcess(logger)
+
+	// Certificate organization = nlx-test
+
+	tlsOptions := orgtls.TLSOptions{
+		NLXRootCert: "../testing/root.crt",
+		OrgCertFile: "../testing/org-nlx-test.crt",
+		OrgKeyFile:  "../testing/org-nlx-test.key",
+	}
+
+	iw, err := NewInway(logger, nil, testProcess, "localhost:1812", tlsOptions, "localhost:1815")
+	assert.Nil(t, err)
+
+	serviceDetails := &config.ServiceDetails{
+		EndpointURL: "127.0.0.1",
+	}
+
+	// Test NewHTTPServiceEndpoint
+	endpoint, err := iw.NewHTTPServiceEndpoint(
+		"mock-service", serviceDetails, nil)
+	endpoint.SetAuthorizationPublic()
+
+	assert.Nil(t, err)
+	assert.Equal(t, "mock-service", endpoint.ServiceName())
+	// replacing the transport with an always failing one.
+	endpoint.proxy.Transport = new(failingRoundTripper)
+
+	httpRecorder := httptest.NewRecorder()
+	req := httptest.NewRequest("GET", "/mock-service/", nil)
+	req.Header.Add("X-NLX-Logrecord-Id", "dummy-id")
+
+	reqMD := &RequestMetadata{
+		requesterOrganization: "demo-org-fault",
+	}
+	endpoint.handleRequest(reqMD, httpRecorder, req)
+
+	result := httpRecorder.Result()
+	defer result.Body.Close()
+	bytes, err := ioutil.ReadAll(result.Body)
+	t.Log(string(bytes))
+	assert.Equal(t, http.StatusServiceUnavailable, result.StatusCode)
+
+	if err != nil {
+		t.Fatal("error parsing result.body", err)
+	}
+	result.Body.Close()
+
+	assert.Equal(
+		t,
+		"nlx-outway: failed internal API request to 127.0.0.1/ try again later / service api down/unreachable\n",
+		string(bytes),
+	)
 }
 
 func TestHTTPServiceEndpointCreateRecordData(t *testing.T) {

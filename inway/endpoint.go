@@ -79,7 +79,15 @@ func (iw *Inway) NewHTTPServiceEndpoint(serviceName string, serviceDetails *conf
 	h.host = endpointURL.Host
 	h.proxy = httputil.NewSingleHostReverseProxy(endpointURL)
 	h.proxy.Transport = newRoundTripHTTPTransport(tlsConfig)
+	h.proxy.ErrorHandler = iw.LogAPIErrors
 	return h, nil
+}
+
+func (iw *Inway) LogAPIErrors(w http.ResponseWriter, r *http.Request, e error) {
+	msg := "nlx-outway: failed internal API request to " + r.URL.String() + " try again later / service api down/unreachable"
+	iw.logger.Error(msg)
+	http.Error(w, msg, http.StatusServiceUnavailable)
+
 }
 
 // SetAuthorizationPublic makes the service publicly available.
