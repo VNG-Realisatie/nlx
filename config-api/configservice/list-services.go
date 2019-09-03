@@ -3,6 +3,7 @@ package configservice
 
 import (
 	"context"
+	"strings"
 
 	"go.nlx.io/nlx/config-api/configapi"
 	"go.uber.org/zap"
@@ -21,7 +22,19 @@ func (s *ConfigService) ListServices(ctx context.Context, req *configapi.ListSer
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	return &configapi.ListServicesResponse{
-		Services: services,
-	}, nil
+	response := &configapi.ListServicesResponse{}
+	if len(req.InwayName) > 0 {
+		for _, service := range services {
+			for _, inway := range service.Inways {
+				if strings.Compare(req.InwayName, inway) == 0 {
+					response.Services = append(response.Services, service)
+					break
+				}
+			}
+		}
+	} else {
+		response.Services = services
+	}
+
+	return response, nil
 }

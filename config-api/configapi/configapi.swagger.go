@@ -94,6 +94,14 @@ SwaggerJSONDirectory = `
             }
           }
         },
+        "parameters": [
+          {
+            "name": "inwayName",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
         "tags": [
           "ConfigApi"
         ]

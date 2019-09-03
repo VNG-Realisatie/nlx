@@ -19,6 +19,8 @@ func init() { //nolint:gochecknoinits
 	serviceCommand.AddCommand(updateServiceCommand)
 	serviceCommand.AddCommand(deleteServiceCommand)
 
+	listServicesCommand.Flags().StringVarP(&serviceListOptions.inwayName, "inway", "i", "", "name of the inway of which you want to list the services")
+
 	createServiceCommand.Flags().StringVarP(&serviceOptions.configPath, "config", "c", "", "config of service")
 	err := createServiceCommand.MarkFlagRequired("config")
 	if err != nil {
@@ -41,6 +43,10 @@ func init() { //nolint:gochecknoinits
 	if err != nil {
 		panic(err)
 	}
+}
+
+var serviceListOptions struct {
+	inwayName string
 }
 
 var serviceOptions struct {

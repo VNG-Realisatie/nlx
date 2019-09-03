@@ -67,7 +67,9 @@ message Inway {
 	bool approved = 2;
 }
 
-message ListServicesRequest {}
+message ListServicesRequest {
+	string inwayName = 1;
+}
 
 message ListServicesResponse {
 	repeated Service services = 1;
