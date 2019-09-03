@@ -131,16 +131,16 @@ profiles:
         valuesFiles:
         - helm/nlx-directory/values-review.yaml
         setValueTemplates:
-          caCertportalImage: "nlxio/ca-certportal:{{.CI_COMMIT_SHORT_SHA}}"
-          caCfsslUnsafeImage: "nlxio/ca-cfssl-unsafe:{{.CI_COMMIT_SHORT_SHA}}"
-          directoryDBImage: "nlxio/directory-db:{{.CI_COMMIT_SHORT_SHA}}"
-          directoryInspectionImage: nlxio/directory-inspection-api:{{.CI_COMMIT_SHORT_SHA}}
-          directoryMonitorImage: nlxio/directory-monitor:{{.CI_COMMIT_SHORT_SHA}}
-          directoryRegistrationImage: nlxio/directory-registration-api:{{.CI_COMMIT_SHORT_SHA}}
-          directoryUIImage: nlxio/directory-ui:{{.CI_COMMIT_SHORT_SHA}}
-          docsImage: nlxio/docs:{{.CI_COMMIT_SHORT_SHA}}
-          insightDemoImage: nlxio/insight-demo:{{.CI_COMMIT_SHORT_SHA}}
-          insightUIImage: nlxio/insight-ui:{{.CI_COMMIT_SHORT_SHA}}
+          caCertportalImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/ca-certportal:{{.CI_COMMIT_SHORT_SHA}}"
+          caCfsslUnsafeImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/ca-cfssl-unsafe:{{.CI_COMMIT_SHORT_SHA}}"
+          directoryDBImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/directory-db:{{.CI_COMMIT_SHORT_SHA}}"
+          directoryInspectionImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/directory-inspection-api:{{.CI_COMMIT_SHORT_SHA}}"
+          directoryMonitorImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/directory-monitor:{{.CI_COMMIT_SHORT_SHA}}"
+          directoryRegistrationImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/directory-registration-api:{{.CI_COMMIT_SHORT_SHA}}"
+          directoryUIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/directory-ui:{{.CI_COMMIT_SHORT_SHA}}"
+          docsImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/docs:{{.CI_COMMIT_SHORT_SHA}}"
+          insightDemoImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/insight-demo:{{.CI_COMMIT_SHORT_SHA}}"
+          insightUIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/insight-ui:{{.CI_COMMIT_SHORT_SHA}}"
           caAddress: ca-cfssl-unsafe.nlx-directory-$CI_ENVIRONMENT_SLUG
           disableLoadBalancers: true
           insightDirectoryInspectionAPIURL: http://directory-inspection-api-internal.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
@@ -155,12 +155,12 @@ profiles:
         valuesFiles:
         - helm/nlx-organization/values-review-brp.yaml
         setValueTemplates:
-          authServiceImage: nlxio/auth-service:{{.CI_COMMIT_SHORT_SHA}}
-          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe:{{.CI_COMMIT_SHORT_SHA}}
-          configAPIImage: nlxio/config-api:{{.CI_COMMIT_SHORT_SHA}}
-          insightAPIImage: nlxio/insight-api:{{.CI_COMMIT_SHORT_SHA}}
-          inwayImage: nlxio/inway:{{.CI_COMMIT_SHORT_SHA}}
-          txlogDBImage: nlxio/txlog-db:{{.CI_COMMIT_SHORT_SHA}}
+          authServiceImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/auth-service:{{.CI_COMMIT_SHORT_SHA}}"
+          caCfsslUnsafeImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/ca-cfssl-unsafe:{{.CI_COMMIT_SHORT_SHA}}"
+          configAPIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/config-api:{{.CI_COMMIT_SHORT_SHA}}"
+          insightAPIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/insight-api:{{.CI_COMMIT_SHORT_SHA}}"
+          inwayImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/inway:{{.CI_COMMIT_SHORT_SHA}}"
+          txlogDBImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/txlog-db:{{.CI_COMMIT_SHORT_SHA}}"
           directoryRegistrationHostname: directory-registration-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           directoryInspectionHostname: directory-inspection-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           caAddress: ca-cfssl-unsafe.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
@@ -184,12 +184,12 @@ profiles:
         valuesFiles:
         - helm/nlx-organization/values-review-rdw.yaml
         setValueTemplates:
-          authServiceImage: nlxio/auth-service:{{.CI_COMMIT_SHORT_SHA}}
-          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe:{{.CI_COMMIT_SHORT_SHA}}
-          configAPIImage: nlxio/config-api:{{.CI_COMMIT_SHORT_SHA}}
-          insightAPIImage: nlxio/insight-api:{{.CI_COMMIT_SHORT_SHA}}
-          inwayImage: nlxio/inway:{{.CI_COMMIT_SHORT_SHA}}
-          txlogDBImage: nlxio/txlog-db:{{.CI_COMMIT_SHORT_SHA}}
+          authServiceImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/auth-service:{{.CI_COMMIT_SHORT_SHA}}"
+          caCfsslUnsafeImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/ca-cfssl-unsafe:{{.CI_COMMIT_SHORT_SHA}}"
+          configAPIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/config-api:{{.CI_COMMIT_SHORT_SHA}}"
+          insightAPIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/insight-api:{{.CI_COMMIT_SHORT_SHA}}"
+          inwayImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/inway:{{.CI_COMMIT_SHORT_SHA}}"
+          txlogDBImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/txlog-db:{{.CI_COMMIT_SHORT_SHA}}"
           directoryRegistrationHostname: directory-registration-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           directoryInspectionHostname: directory-inspection-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           caAddress: ca-cfssl-unsafe.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
@@ -211,13 +211,13 @@ profiles:
         valuesFiles:
         - helm/nlx-organization/values-review-haarlem.yaml
         setValueTemplates:
-          authServiceImage: nlxio/auth-service:{{.CI_COMMIT_SHORT_SHA}}
-          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe:{{.CI_COMMIT_SHORT_SHA}}
-          configAPIImage: nlxio/config-api:{{.CI_COMMIT_SHORT_SHA}}
-          insightAPIImage: nlxio/insight-api:{{.CI_COMMIT_SHORT_SHA}}
-          inwayImage: nlxio/inway:{{.CI_COMMIT_SHORT_SHA}}
-          outwayImage: nlxio/outway:{{.CI_COMMIT_SHORT_SHA}}
-          txlogDBImage: nlxio/txlog-db:{{.CI_COMMIT_SHORT_SHA}}
+          authServiceImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/auth-service:{{.CI_COMMIT_SHORT_SHA}}"
+          caCfsslUnsafeImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/ca-cfssl-unsafe:{{.CI_COMMIT_SHORT_SHA}}"
+          configAPIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/config-api:{{.CI_COMMIT_SHORT_SHA}}"
+          insightAPIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/insight-api:{{.CI_COMMIT_SHORT_SHA}}"
+          inwayImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/inway:{{.CI_COMMIT_SHORT_SHA}}"
+          outwayImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/outway:{{.CI_COMMIT_SHORT_SHA}}"
+          txlogDBImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/txlog-db:{{.CI_COMMIT_SHORT_SHA}}"
           directoryRegistrationHostname: directory-registration-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           directoryInspectionHostname: directory-inspection-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           caAddress: ca-cfssl-unsafe.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
