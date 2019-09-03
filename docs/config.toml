@@ -20,6 +20,12 @@ home = [ "HTML", "RSS", "JSON"]
   url = "/get-started/"
 
 [[menu.docs]]
+  name = "Support"
+  weight = 2
+  identifier = "Support"
+  url = "/support/"
+
+[[menu.docs]]
   name = "Further reading"
   weight = 3
   identifier = "further-reading"
