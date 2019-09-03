@@ -258,13 +258,11 @@ func TestUpdateInway(t *testing.T) {
 	ctx := context.Background()
 
 	mockInway := &configapi.Inway{
-		Name:     "my-inway",
-		Approved: false,
+		Name: "my-inway",
 	}
 
 	mockUpdatedInway := &configapi.Inway{
-		Name:     "my-inway",
-		Approved: true,
+		Name: "my-inway",
 	}
 
 	err := cluster.DB.CreateInway(ctx, mockInway)

@@ -67,7 +67,7 @@ func TestSetAuthorization(t *testing.T) {
 	)
 }
 
-func TestInwayAddServiceEndpoint(t *testing.T) {
+func TestInwaySetServiceEndpoints(t *testing.T) {
 	logger := zap.NewNop()
 	testProcess := process.NewProcess(logger)
 
@@ -79,7 +79,7 @@ func TestInwayAddServiceEndpoint(t *testing.T) {
 		OrgKeyFile:  "../testing/org-nlx-test.key",
 	}
 
-	iw, err := NewInway(logger, nil, testProcess, "localhost:1812", tlsOptions, "localhost:1815")
+	iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", tlsOptions, "localhost:1815")
 	assert.Nil(t, err)
 
 	serviceDetails := &config.ServiceDetails{
@@ -102,11 +102,12 @@ func TestInwayAddServiceEndpoint(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, "mock-service", endpoint.ServiceName())
 
-	// Test if duplicate endpoints are disallowed
-	err = iw.AddServiceEndpoint(endpoint)
-	assert.Nil(t, err)
+	endpoints := []ServiceEndpoint{
+		endpoint,
+		endpoint,
+	}
 
-	err = iw.AddServiceEndpoint(endpoint)
+	err = iw.SetServiceEndpoints(endpoints)
 	if err == nil {
 		t.Fatal("result: error is nil, expected error when calling AddServiceEndpoint with a duplicate service")
 	}
@@ -133,7 +134,7 @@ func TestInwayLoggingBadService(t *testing.T) {
 		OrgKeyFile:  "../testing/org-nlx-test.key",
 	}
 
-	iw, err := NewInway(logger, nil, testProcess, "localhost:1812", tlsOptions, "localhost:1815")
+	iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", tlsOptions, "localhost:1815")
 	assert.Nil(t, err)
 
 	serviceDetails := &config.ServiceDetails{

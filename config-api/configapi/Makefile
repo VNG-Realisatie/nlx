@@ -7,7 +7,9 @@ dependencies:
 		github.com/gogo/protobuf/gogoproto \
 		github.com/gogo/protobuf/protoc-gen-gogofast \
 		github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway \
-		github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
+		github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger \
+		github.com/golang/mock/gomock
+	go install github.com/golang/mock/mockgen
 
 .PHONY: generate
 generate: clean
@@ -40,6 +42,9 @@ plugins=grpc:. \
 	echo 'SwaggerJSONDirectory = `' 	>> configapi.swagger.go
 	cat configapi.swagger.json			>> configapi.swagger.go
 	echo '`)'                       	>> configapi.swagger.go
+
+	@# Generate mock file
+	mockgen -source configapi.pb.go  -destination mock/mock_configapi.go
 
 .PHONY: clean
 clean:

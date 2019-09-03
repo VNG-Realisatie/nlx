@@ -72,6 +72,7 @@ func (iw *Inway) NewHTTPServiceEndpoint(serviceName string, serviceDetails *conf
 		logger:         iw.logger.With(zap.String("inway-service-name", serviceName)),
 		httpClient:     &http.Client{Transport: newRoundTripHTTPTransport(tlsConfig)},
 	}
+
 	endpointURL, err := url.Parse(serviceDetails.EndpointURL)
 	if err != nil {
 		return nil, errors.Wrap(err, "invalid endpoint provided")

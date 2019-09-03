@@ -64,7 +64,6 @@ message Empty {}
 
 message Inway {
 	string name = 1;
-	bool approved = 2;
 }
 
 message ListServicesRequest {

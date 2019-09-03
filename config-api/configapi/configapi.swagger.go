@@ -283,10 +283,6 @@ SwaggerJSONDirectory = `
       "properties": {
         "name": {
           "type": "string"
-        },
-        "approved": {
-          "type": "boolean",
-          "format": "boolean"
         }
       }
     },

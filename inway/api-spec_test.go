@@ -51,7 +51,7 @@ func TestInwayApiSpec(t *testing.T) {
 
 	logger := zap.NewNop()
 	testProcess := process.NewProcess(logger)
-	iw, err := NewInway(logger, nil, testProcess, "localhost:1812", tlsOptions, "localhost:1815")
+	iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", tlsOptions, "localhost:1815")
 	assert.Nil(t, err)
 
 	apiSpecMockServer := httptest.NewUnstartedServer(http.HandlerFunc(iw.handleAPISpecDocRequest))
@@ -61,7 +61,7 @@ func TestInwayApiSpec(t *testing.T) {
 	}
 	apiSpecMockServer.StartTLS()
 	defer apiSpecMockServer.Close()
-
+	endPoints := []ServiceEndpoint{}
 	for serviceName := range serviceConfig.Services {
 		serviceDetails := serviceConfig.Services[serviceName]
 		endpoint, err := iw.NewHTTPServiceEndpoint(serviceName, &serviceDetails, nil)
@@ -75,11 +75,12 @@ func TestInwayApiSpec(t *testing.T) {
 		default:
 			logger.Fatal(fmt.Sprintf(`invalid authorization model "%s" for service "%s"`, serviceDetails.AuthorizationModel, serviceName))
 		}
+		endPoints = append(endPoints, endpoint)
 
-		err = iw.AddServiceEndpoint(endpoint)
-		if err != nil {
-			t.Fatal("error adding endpoint", err)
-		}
+	}
+	err = iw.SetServiceEndpoints(endPoints)
+	if err != nil {
+		t.Fatal("error adding endpoint", err)
 	}
 
 	tests := []struct {

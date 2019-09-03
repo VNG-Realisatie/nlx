@@ -5,8 +5,10 @@ package inway
 
 import (
 	"context"
+	"crypto/sha1"
 	"crypto/tls"
 	"crypto/x509"
+	"encoding/base64"
 	"fmt"
 	"sync"
 	"time"
@@ -23,6 +25,7 @@ import (
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/transactionlog"
+	"go.nlx.io/nlx/config-api/configapi"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
 
@@ -37,12 +40,17 @@ type Inway struct {
 	orgCertFile string
 	orgKeyFile  string
 
+	name string
+
 	process *process.Process
 
 	serviceEndpointsLock sync.RWMutex
 	serviceEndpoints     map[string]ServiceEndpoint
+	stopInwayChannel     chan struct{}
 
 	txlogger transactionlog.TransactionLogger
+
+	configAPIClient configapi.ConfigApiClient
 
 	directoryRegistrationClient registrationapi.DirectoryRegistrationClient
 }
@@ -52,6 +60,7 @@ func NewInway(
 	logger *zap.Logger,
 	logDB *sqlx.DB,
 	mainProcess *process.Process,
+	name,
 	selfAddress string,
 	tlsOptions orgtls.TLSOptions,
 	directoryRegistrationAddress string) (*Inway, error) {
@@ -86,6 +95,7 @@ func NewInway(
 		process: mainProcess,
 
 		serviceEndpoints: make(map[string]ServiceEndpoint),
+		stopInwayChannel: make(chan struct{}),
 	}
 
 	// setup transactionlog
@@ -105,6 +115,18 @@ func NewInway(
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to read tls keypair")
 	}
+
+	if name != "" {
+		i.name = name
+	} else {
+		i.name = getFingerPrint(orgKeypair.Certificate[0])
+	}
+
+	mainProcess.CloseGracefully(func() error {
+		i.stop()
+		return nil
+	})
+
 	directoryDialCredentials := credentials.NewTLS(&tls.Config{
 		Certificates: []tls.Certificate{orgKeypair},
 		RootCAs:      roots,
@@ -123,24 +145,19 @@ func NewInway(
 	return i, nil
 }
 
-// AddServiceEndpoint adds an ServiceEndpoint to the inway's internal registry.
-func (i *Inway) AddServiceEndpoint(s ServiceEndpoint) error {
-	if err := i.addServiceEndpointToMap(s); err != nil {
-		return err
+func getFingerPrint(rawCert []byte) string {
+	rawSum := sha1.Sum(rawCert)
+	bytes := make([]byte, 20)
+	for i, b := range rawSum {
+		bytes[i] = b
 	}
-	i.announceToDirectory(s)
-	return nil
+
+	return base64.URLEncoding.EncodeToString(bytes)
 }
 
-func (i *Inway) addServiceEndpointToMap(s ServiceEndpoint) error {
-	i.serviceEndpointsLock.Lock()
-	defer i.serviceEndpointsLock.Unlock()
-
-	if _, exists := i.serviceEndpoints[s.ServiceName()]; exists {
-		return errors.New("service endpoint for a service with the same name has already been registered")
-	}
-	i.serviceEndpoints[s.ServiceName()] = s
-	return nil
+// stop will stop the announcement of services and the config retrieval process (if a configAPI is configured)
+func (i *Inway) stop() {
+	close(i.stopInwayChannel)
 }
 
 func (i *Inway) announceToDirectory(s ServiceEndpoint) {
@@ -150,17 +167,12 @@ func (i *Inway) announceToDirectory(s ServiceEndpoint) {
 			Factor: 2,
 			Max:    20 * time.Second,
 		}
-		shutDownComplete := make(chan struct{})
-		if i.process != nil {
-			i.process.CloseGracefully(func() error {
-				close(shutDownComplete)
-				return nil
-			})
-		}
+
 		sleepDuration := 10 * time.Second
 		for {
 			select {
-			case <-shutDownComplete:
+			case <-i.stopInwayChannel:
+				i.logger.Info("stopping directory announcement", zap.String("service-name", s.ServiceName()))
 				return
 			case <-time.After(sleepDuration):
 				serviceDetails := s.ServiceDetails()

@@ -8,11 +8,9 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/orgtls"
-
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/inway"
 )
@@ -28,10 +26,8 @@ func TestNewInwayException(t *testing.T) {
 
 	testProcess := process.NewProcess(logger)
 
-	_, err := inway.NewInway(logger, nil, testProcess, "", tlsOptions, "")
-	if err == nil {
-		t.Fatal(`result: err is nil, expected err to be set when calling NewInway with invalid certificates`)
-	}
+	_, err := inway.NewInway(logger, nil, testProcess, "", "", tlsOptions, "")
+	assert.NotNil(t, err)
 
 	tests := []struct {
 		tlsConfig            orgtls.TLSOptions
@@ -55,7 +51,7 @@ func TestNewInwayException(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		_, err = inway.NewInway(logger, nil, testProcess, "", test.tlsConfig, "")
+		_, err = inway.NewInway(logger, nil, testProcess, "", "", test.tlsConfig, "")
 		assert.EqualError(t, err, test.expectedErrorMessage)
 	}
 
@@ -65,7 +61,7 @@ func TestNewInwayException(t *testing.T) {
 		OrgKeyFile:  filepath.Join("..", "testing", "org-nlx-test.key"),
 	}
 
-	testInway, err := inway.NewInway(logger, nil, testProcess, "", tlsOptions, "")
+	testInway, err := inway.NewInway(logger, nil, testProcess, "", "", tlsOptions, "")
 	if err != nil {
 		t.Fatal(err)
 	}

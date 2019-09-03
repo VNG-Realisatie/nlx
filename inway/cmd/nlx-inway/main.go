@@ -32,11 +32,15 @@ var options struct {
 
 	DisableLogdb bool `long:"disable-logdb" env:"DISABLE_LOGDB" description:"Disable logdb connections"`
 
+	ConfigAPIAddress string `long:"config-api-address" env:"CONFIG_API_ADDRESS" description:"The address of the config API"`
+
 	SelfAddress string `long:"self-address" env:"SELF_ADDRESS" description:"The address that outways can use to reach me" required:"true"`
 
 	ServiceConfig string `long:"service-config" env:"SERVICE_CONFIG" default:"service-config.toml" description:"Location of the service config toml file"`
 
 	PostgresDSN string `long:"postgres-dsn" env:"POSTGRES_DSN" default:"postgres://postgres:postgres@postgres/nlx_logdb?sslmode=disable" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
+
+	InwayName string `long:"name" env:"INWAY_NAME" description:"Name of the inway"`
 
 	logoptions.LogOptions
 	orgtls.TLSOptions
@@ -58,6 +62,39 @@ func main() {
 	}
 
 	// Setup new zap logger
+	logger := setupLogger()
+	mainProcess := process.NewProcess(logger)
+
+	logDB := setupDatabase(logger, mainProcess)
+
+	iw, err := inway.NewInway(logger, logDB, mainProcess, options.InwayName, options.SelfAddress, options.TLSOptions, options.DirectoryRegistrationAddress)
+	if err != nil {
+		logger.Fatal("cannot setup inway", zap.Error(err))
+	}
+
+	if len(options.ConfigAPIAddress) > 0 {
+		logger.Info("config-api set")
+		err = iw.SetConfigAPIAddress(options.ConfigAPIAddress)
+		if err != nil {
+			logger.Fatal("cannot configure config-api", zap.Error(err))
+		}
+		err = iw.StartConfigurationPolling()
+		if err != nil {
+			logger.Fatal("cannot retrieving inway configuration from the config-api", zap.Error(err))
+		}
+	} else {
+		serviceConfig := config.LoadServiceConfig(logger, options.ServiceConfig)
+		loadServices(logger, serviceConfig, iw)
+	}
+
+	// Listen on the address provided in the options
+	err = iw.ListenAndServeTLS(options.ListenAddress)
+	if err != nil {
+		logger.Fatal("failed to listen and serve", zap.Error(err))
+	}
+}
+
+func setupLogger() *zap.Logger {
 	zapConfig := options.LogOptions.ZapConfig()
 	logger, err := zapConfig.Build()
 	if err != nil {
@@ -67,13 +104,13 @@ func main() {
 	logger = logger.With(zap.String("version", version.BuildVersion))
 
 	logger.Info("starting inway", zap.String("directory-registration-address", options.DirectoryRegistrationAddress))
-	serviceConfig := config.LoadServiceConfig(logger, options.ServiceConfig)
+	return logger
+}
 
-	mainProcess := process.NewProcess(logger)
-
+func setupDatabase(logger *zap.Logger, mainProcess *process.Process) *sqlx.DB {
 	var logDB *sqlx.DB
-
 	if !options.DisableLogdb {
+		var err error
 		logDB, err = sqlx.Open("postgres", options.PostgresDSN)
 		if err != nil {
 			logger.Fatal("could not open connection to postgres", zap.Error(err))
@@ -87,25 +124,15 @@ func main() {
 		mainProcess.CloseGracefully(logDB.Close)
 	}
 
-	iw, err := inway.NewInway(logger, logDB, mainProcess, options.SelfAddress, options.TLSOptions, options.DirectoryRegistrationAddress)
-	if err != nil {
-		logger.Fatal("cannot setup inway", zap.Error(err))
-	}
-
-	loadServices(logger, serviceConfig, iw)
-
-	// Listen on the address provided in the options
-	err = iw.ListenAndServeTLS(options.ListenAddress)
-	if err != nil {
-		logger.Fatal("failed to listen and serve", zap.Error(err))
-	}
+	return logDB
 }
 
 func loadServices(logger *zap.Logger, serviceConfig *config.ServiceConfig, iw *inway.Inway) {
 	// TODO: Issue #403
+	serviceEndpoints := make([]inway.ServiceEndpoint, len(serviceConfig.Services))
+	i := 0
 	for serviceName := range serviceConfig.Services {
 		serviceDetails := serviceConfig.Services[serviceName]
-
 		logger.Info("loaded service from service-config.toml", zap.String("service-name", serviceName))
 		logger.Debug("service configuration details", zap.String("service-name", serviceName), zap.String("endpoint-url", serviceDetails.EndpointURL),
 			zap.String("root-ca-path", serviceDetails.CACertPath), zap.String("authorization-model", string(serviceDetails.AuthorizationModel)),
@@ -132,9 +159,13 @@ func loadServices(logger *zap.Logger, serviceConfig *config.ServiceConfig, iw *i
 		default:
 			logger.Fatal(fmt.Sprintf(`invalid authorization model "%s" for service "%s"`, serviceDetails.AuthorizationModel, serviceName))
 		}
-		err = iw.AddServiceEndpoint(endpoint)
-		if err != nil {
-			logger.Fatal(fmt.Sprintf(`adding endpoint "%s"`, err))
-		}
+
+		serviceEndpoints[i] = endpoint
+		i++
+	}
+
+	err := iw.SetServiceEndpoints(serviceEndpoints)
+	if err != nil {
+		logger.Fatal(fmt.Sprintf(`error setting service endpoints "%s"`, err))
 	}
 }
