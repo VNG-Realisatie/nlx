@@ -2,7 +2,7 @@ module go.nlx.io/nlx
 
 require (
 	github.com/Microsoft/go-winio v0.4.14 // indirect
-	github.com/cloudflare/cfssl v0.0.0-20190808015941-b1ec8c586c2a
+	github.com/cloudflare/cfssl v0.0.0-20190808011637-b1ec8c586c2a
 	github.com/coreos/bbolt v1.3.3 // indirect
 	github.com/coreos/etcd v3.3.13+incompatible // indirect
 	github.com/coreos/go-semver v0.3.0 // indirect
@@ -44,16 +44,17 @@ require (
 	github.com/spf13/viper v1.4.0
 	github.com/stretchr/testify v1.4.0
 	github.com/svent/go-flags v0.0.0-20141123140740-4bcbad344f03
-	github.com/zmap/zcrypto v0.0.0-20190729224132-9051775e6a2e // indirect
 	github.com/zmap/zlint v1.0.1 // indirect
 	go.etcd.io/bbolt v1.3.3 // indirect
 	go.etcd.io/etcd v3.3.13+incompatible
 	go.uber.org/zap v1.10.0
 	golang.org/x/crypto v0.0.0-20190829043050-9756ffdc2472 // indirect
-	golang.org/x/net v0.0.0-20190827165448-ba9fcec4b297
+	golang.org/x/net v0.0.0-20190827160401-ba9fcec4b297
 	golang.org/x/sys v0.0.0-20190902133755-9109b7679e13 // indirect
 	google.golang.org/appengine v1.6.2 // indirect
-	google.golang.org/genproto v0.0.0-20190819223450-24fa4b261c55
+	google.golang.org/genproto v0.0.0-20190819201941-24fa4b261c55
 	google.golang.org/grpc v1.23.0
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 )
+
+go 1.13
