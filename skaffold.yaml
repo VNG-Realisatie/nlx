@@ -181,7 +181,7 @@ profiles:
                 authorization-model = 'none'
                 api-specification-document-url = 'https://service:8443/openapi.json'
                 insight-api-url = 'https://insight-api.nlx-brp-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}'
-                irma-api-url = 'https://irma-api.nlx-brp-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
+                irma-api-url = 'https://irma-api.nlx-brp-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}'
                 ca-cert-path = '/ca-certs/basisregistratie.pem'
 - name: deploy-review-rdw
   deploy:
