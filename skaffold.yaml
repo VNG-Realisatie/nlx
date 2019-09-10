@@ -235,7 +235,7 @@ profiles:
           externalDomain: nlx-haarlem-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
           domain: nlx-haarlem-{{.CI_ENVIRONMENT_SLUG}}
           inway.config: |
-            services]
+            [services]
                 [services.demo-api]
                 endpoint-url = 'https://postman-echo.com'
                 authorization-model = 'none'
