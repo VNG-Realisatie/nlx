@@ -24,3 +24,5 @@ demoEnv: "dev"
 demoDomain: "minikube"
 
 replicas: 1
+
+imagePullPolicy: IfNotPresent

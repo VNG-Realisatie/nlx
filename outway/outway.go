@@ -299,10 +299,6 @@ func (o *Outway) createService(
 }
 
 func (o *Outway) updateServiceList() error {
-
-	o.servicesLock.Lock()
-	defer o.servicesLock.Unlock()
-
 	if o.servicesDirectory == nil {
 		o.servicesDirectory = make(map[string]*inspectionapi.ListServicesResponse_Service)
 	}
@@ -318,6 +314,10 @@ func (o *Outway) updateServiceList() error {
 
 	// keep track of currently known directory services.
 	servicesToKeep := make(map[string]bool)
+
+	// once we have a response. we lock the services.
+	o.servicesLock.Lock()
+	defer o.servicesLock.Unlock()
 
 	for _, serviceToImplement := range resp.Services {
 

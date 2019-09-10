@@ -7,9 +7,11 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"reflect"
 	"runtime"
 	"sync"
 	"syscall"
+	"time"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -21,7 +23,7 @@ type ShutdownFunc func() error
 // Process manages closing of processes
 type Process struct {
 	mu                *sync.Mutex
-	close             []ShutdownFunc
+	cleanup           []ShutdownFunc
 	logger            *zap.Logger
 	ShutdownComplete  chan bool
 	ShutdownRequested chan bool
@@ -38,7 +40,7 @@ func NewProcess(logger *zap.Logger) *Process {
 	p := &Process{
 		mu:                &sync.Mutex{},
 		logger:            logger,
-		close:             make([]ShutdownFunc, 0),
+		cleanup:           make([]ShutdownFunc, 0),
 		ShutdownComplete:  make(chan bool),
 		ShutdownRequested: make(chan bool),
 	}
@@ -51,19 +53,42 @@ func NewProcess(logger *zap.Logger) *Process {
 func (p *Process) CloseGracefully(toClose ShutdownFunc) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
-	p.close = append(p.close, toClose)
+	p.cleanup = append(p.cleanup, toClose)
+}
+
+func (p *Process) closeWithinTime(c1 chan string) {
+	go func() {
+		for i := len(p.cleanup) - 1; i >= 0; i-- {
+			shutdown := p.cleanup[i]
+			err := shutdown()
+			// TODO: retry logic
+			for err != nil {
+				p.logger.Error(errors.Wrap(err, "failed to close").Error())
+			}
+		}
+		c1 <- "done"
+	}()
+}
+
+func GetFunctionName(i interface{}) string {
+	return runtime.FuncForPC(reflect.ValueOf(i).Pointer()).Name()
 }
 
 // closeLoop will close all dependencies in reversed sequential order.
 func (p *Process) closeLoop() {
 	p.mu.Lock()
 	close(p.ShutdownRequested)
-	for i := len(p.close) - 1; i >= 0; i-- {
-		err := p.close[i]()
-		// TODO: retry logic
-		for err != nil {
-			p.logger.Error(errors.Wrap(err, "failed to close").Error())
-		}
+
+	c1 := make(chan string, 1)
+	go p.closeWithinTime(c1)
+
+	select {
+	case res := <-c1:
+		fmt.Println(res)
+	case <-time.After(5 * time.Second):
+		p.logger.Warn(
+			"timeout while trying to shutdown",
+			zap.Int("shutdownlist", len(p.cleanup)))
 	}
 
 	p.syncLogger()

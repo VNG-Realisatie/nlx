@@ -1,5 +1,5 @@
 # Default values for this chart
 
-imagePullPolicy: "Never"
+imagePullPolicy: IfNotPresent
 
 ca: {}
