@@ -41,6 +41,10 @@ Remove Review App:
     - helm delete --purge nlx-haarlem-$CI_ENVIRONMENT_SLUG
     - helm delete --purge nlx-rdw-$CI_ENVIRONMENT_SLUG
     - helm delete --purge nlx-brp-$CI_ENVIRONMENT_SLUG
+    - kubectl delete namespace nlx-directory-$CI_ENVIRONMENT_SLUG
+    - kubectl delete namespace nlx-haarlem-$CI_ENVIRONMENT_SLUG
+    - kubectl delete namespace nlx-rdw-$CI_ENVIRONMENT_SLUG
+    - kubectl delete namespace nlx-brp-$CI_ENVIRONMENT_SLUG
   when: manual
   environment:
     name: $CI_COMMIT_REF_NAME
