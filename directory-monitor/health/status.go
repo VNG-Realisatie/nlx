@@ -8,5 +8,6 @@ package health
 // Status is a structure used to indicate health of a service
 // provided by an inway.
 type Status struct {
-	Healthy bool `json:"healthy"`
+	Healthy bool   `json:"healthy"`
+	Version string `json:"version"`
 }

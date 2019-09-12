@@ -50,7 +50,15 @@ type databaseAction struct {
 const dbNotificationChannel = "availabilities"
 
 // RunHealthChecker starts a healthchecker process
-func RunHealthChecker(proc *process.Process, logger *zap.Logger, db *sqlx.DB, postgresDNS string, caCertPool *x509.CertPool, certKeyPair *tls.Certificate, ttlOfflineService int) error {
+func RunHealthChecker(
+	proc *process.Process,
+	logger *zap.Logger,
+	db *sqlx.DB,
+	postgresDNS string,
+	caCertPool *x509.CertPool,
+	certKeyPair *tls.Certificate,
+	ttlOfflineService int,
+) error {
 	h := &healthChecker{
 		logger:         logger,
 		availabilities: make(map[uint64]*availability),
@@ -88,6 +96,7 @@ func RunHealthChecker(proc *process.Process, logger *zap.Logger, db *sqlx.DB, po
 			directory.availabilities
 		SET
 			healthy = $2,
+			version = $3,
 			unhealthy_since =
 				CASE WHEN $2 = false THEN
 					NOW()
@@ -227,7 +236,8 @@ func (h *healthChecker) onDatabaseNotification(payload string) {
 		h.addAvailability(dbAction.Availability)
 	case "DELETE":
 		h.removeAvailability(dbAction.Availability.ID)
-	// The update notification will only be received if the value of availability.active has changed.
+	// The update notification will only be received if the value of availability
+	// .active has changed.
 	case "UPDATE":
 		if dbAction.Availability.Active {
 			h.addAvailability(dbAction.Availability)
@@ -272,30 +282,30 @@ func (h *healthChecker) checkAvailabilityHealth(av availability) {
 	resp, err := h.httpClient.Get(`https://` + av.Address + "/.nlx/health/" + av.ServiceName)
 	if err != nil {
 		logger.Error("failed to check health", zap.Error(err))
-		h.updateAvailabilityHealth(av, false)
+		h.updateAvailabilityHealth(av, false, "no response")
 		return
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
 		logger.Info(fmt.Sprintf("inway /health endpoint returned non-200 http status: %d", resp.StatusCode))
-		h.updateAvailabilityHealth(av, false)
+		h.updateAvailabilityHealth(av, false, "no 200")
 		return
 	}
 	status := &health.Status{}
 	err = json.NewDecoder(resp.Body).Decode(&status)
 	if err != nil {
 		logger.Info("failed to parse json returned by the inway", zap.Error(err))
-		h.updateAvailabilityHealth(av, false)
+		h.updateAvailabilityHealth(av, false, "unknown_json")
 		return
 	}
 
-	h.updateAvailabilityHealth(av, status.Healthy)
+	h.updateAvailabilityHealth(av, status.Healthy, status.Version)
 
 }
 
-func (h *healthChecker) updateAvailabilityHealth(av availability, newHealth bool) {
-	res, err := h.stmtUpdateHealth.Exec(av.ID, newHealth)
+func (h *healthChecker) updateAvailabilityHealth(av availability, newHealth bool, version string) {
+	res, err := h.stmtUpdateHealth.Exec(av.ID, newHealth, version)
 	if err != nil {
 		h.logger.Error("failed to update health in db", zap.Error(err))
 		return
