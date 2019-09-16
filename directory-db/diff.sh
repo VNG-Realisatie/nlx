@@ -4,6 +4,7 @@
 ## The diff/modd.sh file watches for changes to the model or migrations, and verifies that the migrations match the model.
 
 set -e
+set -x
 
 dockerCmd=''
 dockerRunArgs='-ti'

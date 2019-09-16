@@ -6,14 +6,14 @@ ENV QT_QPA_PLATFORM=
 
 # Install postgres client
 RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
-    echo "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main" > /etc/apt/sources.list.d/postgres.list && \
-    apt update && \
-    apt -y install --no-install-recommends postgresql-client-9.6 && \
+    echo "deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main" > /etc/apt/sources.list.d/postgres.list && \
+    apt-get update && \
+    apt-get -y install --no-install-recommends postgresql-client-10 && \
     rm -rf /var/lib/apt/lists/*
 
 # Install migrate
 RUN wget --quiet -O - https://packagecloud.io/golang-migrate/migrate/gpgkey | apt-key add - && \
-    echo "deb https://packagecloud.io/golang-migrate/migrate/ubuntu/ xenial main" > /etc/apt/sources.list.d/migrate.list && \
+    echo "deb https://packagecloud.io/golang-migrate/migrate/ubuntu/ bionic main" > /etc/apt/sources.list.d/migrate.list && \
     apt-get update && \
     apt-get install -y migrate && \
     rm -rf /var/lib/apt/lists/*
@@ -44,9 +44,9 @@ RUN curl -fsSLO https://download.docker.com/linux/static/stable/x86_64/docker-17
     rm docker-17.09.0-ce.tgz
 
 # Download/compile apgdiff
-RUN git clone https://github.com/GeertJohan/apgdiff.git /opt/apgdiff && \
+RUN git clone https://github.com/fordfrog/apgdiff.git /opt/apgdiff && \
     (cd /opt/apgdiff && mvn package) && \
-    cp /opt/apgdiff/target/apgdiff-2.5.0-SNAPSHOT.jar /opt/apgdiff.jar &&\
+    cp /opt/apgdiff/target/apgdiff-2.6.0-SNAPSHOT.jar /opt/apgdiff.jar &&\
     rm -rf /opt/apgdiff && \
     echo "#!/bin/bash\njava -jar /opt/apgdiff.jar \$@" > /usr/local/bin/apgdiff &&\
     chmod +x /usr/local/bin/apgdiff

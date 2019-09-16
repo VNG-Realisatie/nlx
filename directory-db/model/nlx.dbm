@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="965,0" last-zoom="1"
+<dbmodel pgmodeler-ver="0.9.1" last-position="1069,0" last-zoom="1"
 	 default-schema="public" default-owner="postgres">
 <role name="nlx-directory"
       login="true"
@@ -58,7 +58,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="integer" length="0"/>
 	</column>
 	<column name="name" not-null="true">
-		<type name="varchar" length="100"/>
+		<type name="varchar" length="250"/>
 	</column>
 	<column name="internal" not-null="true" default-value="false">
 		<type name="boolean" length="0"/>
@@ -137,6 +137,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="active" not-null="true" default-value="false">
 		<type name="bool" length="0"/>
+	</column>
+	<column name="inway_version">
+		<type name="character varying" length="100"/>
 	</column>
 	<constraint name="availabilities_pk" type="pk-constr" table="directory.availabilities">
 		<columns names="id" ref-type="src-columns"/>

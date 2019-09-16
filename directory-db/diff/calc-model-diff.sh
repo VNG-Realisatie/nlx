@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e # exit on error
+set -x
 
 tmpdir=`mktemp -d -t nlx_db_diff-XXXXXXXX`
 
@@ -16,8 +17,8 @@ function cleanupDockerContainers {
   docker rm nlx_diff_target &> /dev/null || true
 }
 cleanupDockerContainers
-pgTargetContainer=`docker run --name nlx_diff_target ${dockerNetwork} -e POSTGRES_PASSWORD=postgres -d postgres:9.6`
-pgMigrateContainer=`docker run --name nlx_diff_migrate ${dockerNetwork} -e POSTGRES_PASSWORD=postgres -d postgres:9.6`
+pgTargetContainer=`docker run --name nlx_diff_target ${dockerNetwork} -e POSTGRES_PASSWORD=postgres -d postgres:10`
+pgMigrateContainer=`docker run --name nlx_diff_migrate ${dockerNetwork} -e POSTGRES_PASSWORD=postgres -d postgres:10`
 trap cleanupDockerContainers EXIT
 export PGPASSWORD=postgres
 
