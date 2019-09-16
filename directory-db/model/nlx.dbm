@@ -104,6 +104,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="address" not-null="true">
 		<type name="varchar" length="100"/>
 	</column>
+	<column name="version">
+		<type name="varchar" length="100"/>
+	</column>
 	<constraint name="inways_pk" type="pk-constr" table="directory.inways">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
@@ -116,7 +119,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="directory"/>
 	<role name="postgres"/>
 	<appended-sql><![CDATA[GRANT USAGE, SELECT ON SEQUENCE availabilities_id_seq TO "nlx-directory";]]></appended-sql>
-	<position x="2580" y="180"/>
+	<position x="2432" y="174"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -137,9 +140,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="active" not-null="true" default-value="false">
 		<type name="bool" length="0"/>
-	</column>
-	<column name="inway_version">
-		<type name="character varying" length="100"/>
 	</column>
 	<constraint name="availabilities_pk" type="pk-constr" table="directory.availabilities">
 		<columns names="id" ref-type="src-columns"/>

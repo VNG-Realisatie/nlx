@@ -7,11 +7,8 @@ import (
 	"context"
 	"crypto/tls"
 	"log"
-	"time"
 
-	"github.com/huandu/xstrings"
 	"github.com/jessevdk/go-flags"
-	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 
 	common_db "go.nlx.io/nlx/common/db"
@@ -40,7 +37,7 @@ func main() {
 	logger := initLogger()
 	proc := process.NewProcess(logger)
 
-	db, err := initDatabase(options.PostgresDSN)
+	db, err := monitor.InitDatabase(options.PostgresDSN)
 	if err != nil {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))
 	}
@@ -89,17 +86,4 @@ func initLogger() *zap.Logger {
 	logger = logger.With(zap.String("version", version.BuildVersion))
 
 	return logger
-}
-
-func initDatabase(dsn string) (*sqlx.DB, error) {
-	db, err := sqlx.Open("postgres", dsn)
-	if err != nil {
-		return nil, err
-	}
-
-	db.SetConnMaxLifetime(5 * time.Minute)
-	db.SetMaxIdleConns(2)
-	db.MapperFunc(xstrings.ToSnakeCase)
-
-	return db, nil
 }

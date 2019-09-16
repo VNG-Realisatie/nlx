@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+  postgres:
+    image: "postgres:11-alpine"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "postgres"
+    ports:
+      - "5432:5432"
+
+  directory-db:
+    build:
+      context: "../../"
+      dockerfile: "directory-db/Dockerfile"
+    command: ["/usr/local/bin/upgrade-db.sh"]
+    depends_on:
+      - "postgres"
+    environment:
+      PGHOST: "postgres"
+      PGUSER: "postgres"
+      PGPASSWORD: "postgres"
+      PGDATABASE: "postgres"

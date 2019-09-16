@@ -1,5 +1,5 @@
-# Use go 1.x based on the latest alpine image.
-FROM golang:1-alpine AS build
+# Use go 1.x based on alpine image.
+FROM golang:1.13.0-alpine3.10 AS build
 
 # Install build tools.
 RUN apk add --update git gcc musl-dev

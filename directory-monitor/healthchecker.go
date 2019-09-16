@@ -32,6 +32,7 @@ type healthChecker struct {
 	stmtSelectAvailabilities  *sqlx.Stmt
 	stmtUpdateHealth          *sqlx.Stmt
 	stmtCleanUpAvailabilities *sqlx.Stmt
+	stmtUpdateInwayVersion    *sqlx.Stmt
 }
 
 type availability struct {
@@ -40,12 +41,15 @@ type availability struct {
 	ServiceName      string `json:"service_name"`
 	Address          string `json:"address"`
 	Active           bool   `json:"active"`
+	InwayID          uint64 `json:"inway_id"`
 }
 
 type databaseAction struct {
 	Action       string        `json:"action"`
 	Availability *availability `json:"availability"`
 }
+
+var RunningHealthChecker *healthChecker
 
 const dbNotificationChannel = "availabilities"
 
@@ -74,6 +78,7 @@ func RunHealthChecker(
 	h.stmtSelectAvailabilities, err = db.Preparex(`
 		SELECT
 			availabilities.id,
+			availabilities.inway_id,
 			organizations.name AS organization_name,
 			services.name AS service_name,
 			inways.address,
@@ -96,7 +101,6 @@ func RunHealthChecker(
 			directory.availabilities
 		SET
 			healthy = $2,
-			version = $3,
 			unhealthy_since =
 				CASE WHEN $2 = false THEN
 					NOW()
@@ -113,6 +117,17 @@ func RunHealthChecker(
 			id = $1 AND healthy != $2`)
 	if err != nil {
 		return errors.Wrap(err, "failed to prepare stmtUpdateHealth")
+	}
+
+	h.stmtUpdateInwayVersion, err = db.Preparex(`
+		UPDATE
+			directory.inways
+		SET
+			version = $2
+		WHERE id = $1
+	`)
+	if err != nil {
+		return errors.Wrap(err, "failed to prepare stmtUpdateInwayVersion")
 	}
 
 	h.stmtCleanUpAvailabilities, err = db.Preparex(fmt.Sprintf(`
@@ -145,6 +160,8 @@ func (h *healthChecker) run(proc *process.Process, postgressDNS string) error {
 		panic(err)
 	}
 	proc.CloseGracefully(listener.Close)
+
+	RunningHealthChecker = h
 
 	shutDownNotificationListener := make(chan struct{})
 	proc.CloseGracefully(func() error {
@@ -267,7 +284,7 @@ func (h *healthChecker) runHealthChecker(shutDown chan struct{}) {
 		case <-time.After(5 * time.Second):
 			h.availabilitiesLock.RLock()
 			for _, av := range h.availabilities {
-				go h.checkAvailabilityHealth(*av)
+				go h.checkInwayStatus(*av)
 			}
 			h.availabilitiesLock.RUnlock()
 		case <-shutDown:
@@ -276,36 +293,36 @@ func (h *healthChecker) runHealthChecker(shutDown chan struct{}) {
 	}
 }
 
-func (h *healthChecker) checkAvailabilityHealth(av availability) {
+func (h *healthChecker) checkInwayStatus(av availability) {
 	logger := h.logger.With(zap.String("canonical-service-name", av.OrganizationName+`.`+av.ServiceName), zap.String("inway-address", av.Address))
 
 	resp, err := h.httpClient.Get(`https://` + av.Address + "/.nlx/health/" + av.ServiceName)
 	if err != nil {
 		logger.Error("failed to check health", zap.Error(err))
-		h.updateAvailabilityHealth(av, false, "no response")
+		h.updateAvailabilityHealth(av, false)
 		return
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
 		logger.Info(fmt.Sprintf("inway /health endpoint returned non-200 http status: %d", resp.StatusCode))
-		h.updateAvailabilityHealth(av, false, "no 200")
+		h.updateAvailabilityHealth(av, false)
 		return
 	}
 	status := &health.Status{}
 	err = json.NewDecoder(resp.Body).Decode(&status)
 	if err != nil {
 		logger.Info("failed to parse json returned by the inway", zap.Error(err))
-		h.updateAvailabilityHealth(av, false, "unknown_json")
+		h.updateAvailabilityHealth(av, false)
 		return
 	}
 
-	h.updateAvailabilityHealth(av, status.Healthy, status.Version)
-
+	h.updateAvailabilityHealth(av, status.Healthy)
+	h.updateInwayVersion(av, status.Version)
 }
 
-func (h *healthChecker) updateAvailabilityHealth(av availability, newHealth bool, version string) {
-	res, err := h.stmtUpdateHealth.Exec(av.ID, newHealth, version)
+func (h *healthChecker) updateAvailabilityHealth(av availability, newHealth bool) {
+	res, err := h.stmtUpdateHealth.Exec(av.ID, newHealth)
 	if err != nil {
 		h.logger.Error("failed to update health in db", zap.Error(err))
 		return
@@ -322,5 +339,26 @@ func (h *healthChecker) updateAvailabilityHealth(av availability, newHealth bool
 		} else {
 			h.logger.Info(fmt.Sprintf("inway %s.%s>%s became healthy", av.OrganizationName, av.ServiceName, av.Address))
 		}
+	}
+}
+
+func (h *healthChecker) updateInwayVersion(av availability, version string) {
+	if version == "" {
+		h.logger.Info("no inway version recieved")
+		return
+	}
+	res, err := h.stmtUpdateInwayVersion.Exec(av.InwayID, version)
+	if err != nil {
+		h.logger.Error("failed to update inway version in db", zap.Error(err))
+		return
+	}
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		h.logger.Error("failed to get rows affected update inwayversion in db", zap.Error(err))
+		return
+	}
+	if rowsAffected == 1 {
+		h.logger.Info(fmt.Sprintf("inway %s.%s>%s version %s",
+			av.OrganizationName, av.ServiceName, av.Address, version))
 	}
 }

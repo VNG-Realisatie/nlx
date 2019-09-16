@@ -93,6 +93,29 @@ func NewRegisterInwayHandler(
 	return h, nil
 }
 
+// InsertInway for test purposes we add a manual way
+// to insert items in db.
+func (h *RegisterInwayHandler) InsertInway(
+	organizationName, serviceName, inwayAddress string,
+) {
+	_, err := h.stmtInsertAvailability.Exec(
+		organizationName,
+		serviceName,
+		0,
+		"",
+		"",
+		inwayAddress,
+		"",
+		"",
+		"",
+		"",
+	)
+	if err != nil {
+		h.logger.Error("database insert failed", zap.Error(err))
+		panic(err)
+	}
+}
+
 func (h *RegisterInwayHandler) RegisterInway(ctx context.Context, req *registrationapi.RegisterInwayRequest) (*registrationapi.RegisterInwayResponse, error) {
 	h.logger.Info("rpc request RegisterInway", zap.String("inway address", req.InwayAddress))
 	resp := &registrationapi.RegisterInwayResponse{}

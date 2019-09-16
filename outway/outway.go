@@ -247,9 +247,6 @@ func (o *Outway) createService(
 	serviceToImplement *inspectionapi.ListServicesResponse_Service,
 ) {
 
-	o.servicesLock.Lock()
-	defer o.servicesLock.Unlock()
-
 	rrlbService, err := NewRoundRobinLoadBalancedHTTPService(
 		o.logger,
 		o.tlsRoots,
@@ -294,7 +291,9 @@ func (o *Outway) createService(
 		zap.String("service-organization-name", serviceToImplement.OrganizationName),
 	)
 
+	o.servicesLock.Lock()
 	o.servicesHTTP[service.FullName()] = service
+	o.servicesLock.Unlock()
 
 }
 
@@ -315,10 +314,6 @@ func (o *Outway) updateServiceList() error {
 	// keep track of currently known directory services.
 	servicesToKeep := make(map[string]bool)
 
-	// once we have a response. we lock the services.
-	o.servicesLock.Lock()
-	defer o.servicesLock.Unlock()
-
 	for _, serviceToImplement := range resp.Services {
 
 		o.logger.Debug(
@@ -337,13 +332,16 @@ func (o *Outway) updateServiceList() error {
 
 		serviceKey := serviceKey(serviceToImplement)
 		// update directory list
+		o.servicesLock.Lock()
 		o.servicesDirectory[serviceKey] = serviceToImplement
+		o.servicesLock.Unlock()
+
 		servicesToKeep[serviceKey] = true
 
 		service, exists := o.servicesHTTP[serviceKey]
 
 		// if HttpService is used/created before update
-		// httpService  on changes.
+		// httpService on changes.
 		if exists {
 			if !reflect.DeepEqual(
 				service.GetInwayAddresses(),
@@ -358,12 +356,13 @@ func (o *Outway) updateServiceList() error {
 	return nil
 }
 
+// cleanUpservices removes no longer advertised services
 func (o *Outway) cleanUpservices(servicesToKeep map[string]bool) {
-	// remove old directory listings.
-	// keep cache?
+
 	for serviceKey := range o.servicesDirectory {
 		_, exists := servicesToKeep[serviceKey]
 		if !exists {
+			o.servicesLock.Lock()
 			// service is no longer active in directory.
 			delete(o.servicesDirectory, serviceKey)
 			_, exists = o.servicesHTTP[serviceKey]
@@ -373,6 +372,7 @@ func (o *Outway) cleanUpservices(servicesToKeep map[string]bool) {
 				// TODO maybe leave it as cache?
 				delete(o.servicesHTTP, serviceKey)
 			}
+			o.servicesLock.Unlock()
 		}
 	}
 }

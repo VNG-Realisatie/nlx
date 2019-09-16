@@ -51,5 +51,6 @@ func TestHealth(t *testing.T) {
 		}
 
 		assert.Equal(t, test.expected, status.Healthy)
+		assert.Equal(t, "unknown_unknown", status.Version)
 	}
 }

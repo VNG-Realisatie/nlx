@@ -1,10 +1,11 @@
 FROM ubuntu:bionic
 
 # Install psql
-RUN apt-get -y install --no-install-recommends wget ca-certificates gnupg && \
+RUN apt-get update && \
+	apt-get -y install --no-install-recommends wget ca-certificates gnupg && \
 	wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
 	echo "deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main" > /etc/apt/sources.list.d/postgres.list && \
-    apt-get update && \
+	apt-get update && \
 	apt-get -y install --no-install-recommends postgresql-client-10 && \
 	rm -rf /var/lib/apt/lists/*
 
