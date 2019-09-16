@@ -48,6 +48,10 @@ build:
     context: .
     docker:
       dockerfile: management-api/Dockerfile
+  - image: nlxio/management-ui
+    context: .
+    docker:
+      dockerfile: management-ui/Dockerfile
   - image: nlxio/outway
     context: .
     docker:
@@ -100,6 +104,7 @@ profiles:
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
           managementAPIImage: nlxio/management-api
+          managementUIImage: nlxio/management-ui
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-dev-brp
       - name: nlx-dev-rdw
@@ -113,6 +118,7 @@ profiles:
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
           managementAPIImage: nlxio/management-api
+          managementUIImage: nlxio/management-ui
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-dev-rdw
       - name: nlx-dev-haarlem
@@ -127,6 +133,7 @@ profiles:
           inwayImage: nlxio/inway
           outwayImage: nlxio/outway
           managementAPIImage: nlxio/management-api
+          managementUIImage: nlxio/management-ui
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-dev-haarlem
 - name: deploy-review-directory
@@ -168,6 +175,7 @@ profiles:
           insightAPIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/insight-api:{{.CI_COMMIT_SHORT_SHA}}"
           inwayImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/inway:{{.CI_COMMIT_SHORT_SHA}}"
           managementAPIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/management-api:{{.CI_COMMIT_SHORT_SHA}}"
+          managementUIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/management-ui:{{.CI_COMMIT_SHORT_SHA}}"
           txlogDBImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/txlog-db:{{.CI_COMMIT_SHORT_SHA}}"
           directoryRegistrationHostname: directory-registration-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           directoryInspectionHostname: directory-inspection-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
@@ -198,6 +206,7 @@ profiles:
           insightAPIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/insight-api:{{.CI_COMMIT_SHORT_SHA}}"
           inwayImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/inway:{{.CI_COMMIT_SHORT_SHA}}"
           managementAPIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/management-api:{{.CI_COMMIT_SHORT_SHA}}"
+          managementUIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/management-ui:{{.CI_COMMIT_SHORT_SHA}}"
           txlogDBImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/txlog-db:{{.CI_COMMIT_SHORT_SHA}}"
           directoryRegistrationHostname: directory-registration-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           directoryInspectionHostname: directory-inspection-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
@@ -227,6 +236,7 @@ profiles:
           insightAPIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/insight-api:{{.CI_COMMIT_SHORT_SHA}}"
           inwayImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/inway:{{.CI_COMMIT_SHORT_SHA}}"
           managementAPIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/management-api:{{.CI_COMMIT_SHORT_SHA}}"
+          managementUIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/management-ui:{{.CI_COMMIT_SHORT_SHA}}"
           outwayImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/outway:{{.CI_COMMIT_SHORT_SHA}}"
           txlogDBImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/txlog-db:{{.CI_COMMIT_SHORT_SHA}}"
           directoryRegistrationHostname: directory-registration-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
@@ -285,6 +295,7 @@ profiles:
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
           managementAPIImage: nlxio/management-api
+          managementUIImage: nlxio/management-ui
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-test-brp
       - name: nlx-test-rdw
@@ -298,6 +309,7 @@ profiles:
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
           managementAPIImage: nlxio/management-api
+          managementUIImage: nlxio/management-ui
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-test-rdw
       - name: nlx-test-haarlem
@@ -311,6 +323,7 @@ profiles:
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
           managementAPIImage: nlxio/management-api
+          managementUIImage: nlxio/management-ui
           outwayImage: nlxio/outway
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-test-haarlem
@@ -345,6 +358,7 @@ profiles:
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
           managementAPIImage: nlxio/management-api
+          managementUIImage: nlxio/management-ui
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-acc-brp
       - name: nlx-acc-rdw
@@ -358,6 +372,7 @@ profiles:
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
           managementAPIImage: nlxio/management-api
+          managementUIImage: nlxio/management-ui
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-acc-rdw
       - name: nlx-acc-haarlem
@@ -371,6 +386,7 @@ profiles:
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
           managementAPIImage: nlxio/management-api
+          managementUIImage: nlxio/management-ui
           outwayImage: nlxio/outway
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-acc-haarlem
@@ -393,7 +409,6 @@ profiles:
           docsImage: nlxio/docs
           insightDemoImage: nlxio/insight-demo
           insightUIImage: nlxio/insight-ui
-          managementAPIImage: nlxio/management-api
         namespace: nlx-demo-directory
       - name: nlx-demo-brp
         chartPath: helm/nlx-organization
@@ -406,6 +421,7 @@ profiles:
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
           managementAPIImage: nlxio/management-api
+          managementUIImage: nlxio/management-ui
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-demo-brp
       - name: nlx-demo-rdw
@@ -419,6 +435,7 @@ profiles:
           insightAPIImage: nlxio/insight-api
           inwayImage: nlxio/inway
           managementAPIImage: nlxio/management-api
+          managementUIImage: nlxio/management-ui
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-demo-rdw
       - name: nlx-demo-haarlem
@@ -433,6 +450,7 @@ profiles:
           inwayImage: nlxio/inway
           outwayImage: nlxio/outway
           managementAPIImage: nlxio/management-api
+          managementUIImage: nlxio/management-ui
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-demo-haarlem
 - name: deploy-preprod

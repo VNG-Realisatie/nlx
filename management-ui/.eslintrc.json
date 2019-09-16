@@ -1,0 +1,97 @@
+{
+    "root": true,
+    "parser": "babel-eslint",
+    "parserOptions": {
+        "ecmaVersion": 8,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true
+        }
+    },
+    "env": {
+        "browser": true,
+        "node": true,
+        "jest/globals": true
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
+    "extends": [
+        "standard",
+        "plugin:react/recommended",
+        "prettier",
+        "prettier/react",
+        "prettier/standard",
+        "plugin:jest/recommended",
+        "jest-enzyme"
+    ],
+    "plugins": [
+        "react",
+        "prettier",
+        "standard",
+        "jest"
+    ],
+    "rules": {
+        "prettier/prettier": [
+            "error",
+            {
+                "tabWidth": 4,
+                "useTabs": false,
+                "semi": false,
+                "singleQuote": true,
+                "trailingComma": "all",
+                "arrowParens": "always",
+                "parser": "babel"
+            }
+        ],
+        "react/prop-types": "off",
+        "react/jsx-pascal-case": [
+            "error",
+            {
+                "allowAllCaps": true
+            }
+        ],
+        "camelcase": [
+            "error",
+            {
+                "allow": [
+                    "^UNSAFE_"
+                ]
+            }
+        ],
+        "no-console": [
+            "warn",
+            {
+                "allow": [
+                    "error",
+                    "warn"
+                ]
+            }
+        ],
+        "jest/consistent-test-it": [
+            "error",
+            {
+                "fn": "it",
+                "withinDescribe": "it"
+            }
+        ],
+        "jest/expect-expect": [
+            "error",
+            {
+                "assertFunctionNames": [
+                    "expect"
+                ]
+            }
+        ],
+        "jest/no-jasmine-globals": "error",
+        "jest/no-test-callback": "error",
+        "jest/prefer-to-be-null": "error",
+        "jest/prefer-to-be-undefined": "error",
+        "jest/prefer-to-contain": "error",
+        "jest/prefer-to-have-length": "error",
+        "jest/valid-describe": "error",
+        "jest/valid-expect-in-promise": "error"
+    }
+}

@@ -84,6 +84,28 @@ Insight-ui tests:
     - nlx
     - docker
 
+Management-ui linter and tests:
+  image: node:10.16.3-alpine
+  stage: Tests
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+    - management-ui/node_modules/
+  before_script:
+    - cd management-ui/
+    - npm install
+  script:
+    - npm run lint
+    - npm test -- --coverage
+  coverage: /All\sfiles.*?\s+(\d+.\d+)/
+  artifacts:
+    expire_in: 1 month
+    paths:
+      - management-ui/coverage
+  tags:
+    - nlx
+    - docker
+
 Database diff test:
   stage: Tests
   script:
