@@ -18,6 +18,7 @@ directoryInspectionHostname: directory-inspection-api.nlx-dev-directory
 
 inway:
   enable: true
+  useConfigAPI: false
 
   rootca:
     basisregistratie.pem: |

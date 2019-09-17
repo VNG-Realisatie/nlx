@@ -16,6 +16,7 @@ caAddress: ca-cfssl-unsafe.nlx-test-directory
 
 inway:
   enable: true
+  useConfigAPI: false
   config: |
     [services]
       [services.kentekenregister]

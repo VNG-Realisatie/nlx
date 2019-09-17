@@ -16,6 +16,7 @@ caAddress: ca-cfssl-unsafe.nlx-acc-directory
 
 inway:
   enable: true
+  useConfigAPI: false
   config: |
     [services]
       [services.basisregistratie]

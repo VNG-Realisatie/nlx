@@ -13,8 +13,9 @@ dbPasswordTxlogWriter: nlx-txlog-writer
 imagePullPolicy: "Always"
 
 inway:
+  useConfigAPI: false
   enable: true
-
+  
   rootca: 
     basisregistratie.pem: | 
       -----BEGIN CERTIFICATE-----

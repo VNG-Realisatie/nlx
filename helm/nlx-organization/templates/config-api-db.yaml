@@ -1,0 +1,60 @@
+{{ if .Values.inway.useConfigAPI }}
+{{ with set . "component" "config-api-db" }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: service-configuration
+  namespace: {{.Release.Namespace}}
+  labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
+data:
+  service.json: |
+    {{.Values.configAPI.serviceConfig | nindent 4 }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .component }}-{{ randAlphaNum 5 | lower }}
+  labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
+spec:
+  template:
+    spec:
+      volumes:
+        - name: service-configuration
+          configMap:
+            name: service-configuration
+        - name: certs
+          emptyDir: {}
+      initContainers:
+        - name: nxctl-certs
+          image: {{.Values.caCfsslUnsafeImage}}
+          imagePullPolicy: {{.Values.imagePullPolicy}}
+          volumeMounts:
+            - name: certs
+              mountPath: /certs
+          command: ["/bin/ash"]
+          args:
+            - "-c"
+            - |-
+                cd /certs &&
+                /ca/generate-cert.sh {{.component}}.{{.Values.domain}} {{.Values.organizationName}} {{.Values.caAddress}}
+      containers:
+        - name: config-api-db
+          image: {{.Values.nlxctlImage}}
+          imagePullPolicy: {{.Values.imagePullPolicy}}
+          volumeMounts:
+            - name: service-configuration
+              mountPath: /service-configuration
+            - name: certs
+              mountPath: /certs
+          command: ['/bin/sh']
+          args:
+            - "-c"
+            - | 
+                nlxctl init --address config-api.{{.Values.domain}}:443 --cert /certs/{{.component}}.{{.Values.domain}}.pem --key /certs/{{.component}}.{{.Values.domain}}-key.pem --ca /certs/nlx_root.pem && 
+                nlxctl service create -c /service-configuration/service.json &&
+                nlxctl service list
+
+      restartPolicy: Never
+  backoffLimit: 50
+{{ end }}
+{{ end }}

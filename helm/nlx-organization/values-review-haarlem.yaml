@@ -15,6 +15,7 @@ imagePullPolicy: "Always"
 
 inway:
   enable: true
+  useConfigAPI: false
 outway:
   enable: true
   authService: true

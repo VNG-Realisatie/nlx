@@ -52,6 +52,10 @@ build:
     context: .
     docker:
       dockerfile: management-ui/Dockerfile
+  - image: nlxio/nlxctl
+    context: .
+    docker:
+      dockerfile: nlxctl/Dockerfile
   - image: nlxio/outway
     context: .
     docker:
@@ -105,6 +109,7 @@ profiles:
           inwayImage: nlxio/inway
           managementAPIImage: nlxio/management-api
           managementUIImage: nlxio/management-ui
+          nlxctlImage: nlxio/nlxctl
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-dev-brp
       - name: nlx-dev-rdw
@@ -119,6 +124,7 @@ profiles:
           inwayImage: nlxio/inway
           managementAPIImage: nlxio/management-api
           managementUIImage: nlxio/management-ui
+          nlxctlImage: nlxio/nlxctl
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-dev-rdw
       - name: nlx-dev-haarlem
@@ -134,6 +140,7 @@ profiles:
           outwayImage: nlxio/outway
           managementAPIImage: nlxio/management-api
           managementUIImage: nlxio/management-ui
+          nlxctlImage: nlxio/nlxctl
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-dev-haarlem
 - name: deploy-review-directory
@@ -176,6 +183,7 @@ profiles:
           inwayImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/inway:{{.CI_COMMIT_SHORT_SHA}}"
           managementAPIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/management-api:{{.CI_COMMIT_SHORT_SHA}}"
           managementUIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/management-ui:{{.CI_COMMIT_SHORT_SHA}}"
+          nlxctlImage:  "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/nlxctl:{{.CI_COMMIT_SHORT_SHA}}"
           txlogDBImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/txlog-db:{{.CI_COMMIT_SHORT_SHA}}"
           directoryRegistrationHostname: directory-registration-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           directoryInspectionHostname: directory-inspection-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
@@ -207,6 +215,7 @@ profiles:
           inwayImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/inway:{{.CI_COMMIT_SHORT_SHA}}"
           managementAPIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/management-api:{{.CI_COMMIT_SHORT_SHA}}"
           managementUIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/management-ui:{{.CI_COMMIT_SHORT_SHA}}"
+          nlxctlImage:  "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/nlxctl:{{.CI_COMMIT_SHORT_SHA}}"
           txlogDBImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/txlog-db:{{.CI_COMMIT_SHORT_SHA}}"
           directoryRegistrationHostname: directory-registration-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           directoryInspectionHostname: directory-inspection-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
@@ -237,6 +246,7 @@ profiles:
           inwayImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/inway:{{.CI_COMMIT_SHORT_SHA}}"
           managementAPIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/management-api:{{.CI_COMMIT_SHORT_SHA}}"
           managementUIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/management-ui:{{.CI_COMMIT_SHORT_SHA}}"
+          nlxctlImage:  "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/nlxctl:{{.CI_COMMIT_SHORT_SHA}}"
           outwayImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/outway:{{.CI_COMMIT_SHORT_SHA}}"
           txlogDBImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/txlog-db:{{.CI_COMMIT_SHORT_SHA}}"
           directoryRegistrationHostname: directory-registration-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
@@ -296,6 +306,7 @@ profiles:
           inwayImage: nlxio/inway
           managementAPIImage: nlxio/management-api
           managementUIImage: nlxio/management-ui
+          nlxctlImage: nlxio/nlxctl
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-test-brp
       - name: nlx-test-rdw
@@ -310,6 +321,7 @@ profiles:
           inwayImage: nlxio/inway
           managementAPIImage: nlxio/management-api
           managementUIImage: nlxio/management-ui
+          nlxctlImage: nlxio/nlxctl
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-test-rdw
       - name: nlx-test-haarlem
@@ -324,6 +336,7 @@ profiles:
           inwayImage: nlxio/inway
           managementAPIImage: nlxio/management-api
           managementUIImage: nlxio/management-ui
+          nlxctlImage: nlxio/nlxctl
           outwayImage: nlxio/outway
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-test-haarlem
@@ -359,6 +372,7 @@ profiles:
           inwayImage: nlxio/inway
           managementAPIImage: nlxio/management-api
           managementUIImage: nlxio/management-ui
+          nlxctlImage: nlxio/nlxctl
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-acc-brp
       - name: nlx-acc-rdw
@@ -373,6 +387,7 @@ profiles:
           inwayImage: nlxio/inway
           managementAPIImage: nlxio/management-api
           managementUIImage: nlxio/management-ui
+          nlxctlImage: nlxio/nlxctl
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-acc-rdw
       - name: nlx-acc-haarlem
@@ -387,6 +402,7 @@ profiles:
           inwayImage: nlxio/inway
           managementAPIImage: nlxio/management-api
           managementUIImage: nlxio/management-ui
+          nlxctlImage: nlxio/nlxctl
           outwayImage: nlxio/outway
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-acc-haarlem
@@ -422,6 +438,7 @@ profiles:
           inwayImage: nlxio/inway
           managementAPIImage: nlxio/management-api
           managementUIImage: nlxio/management-ui
+          nlxctlImage: nlxio/nlxctl
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-demo-brp
       - name: nlx-demo-rdw
@@ -436,6 +453,7 @@ profiles:
           inwayImage: nlxio/inway
           managementAPIImage: nlxio/management-api
           managementUIImage: nlxio/management-ui
+          nlxctlImage: nlxio/nlxctl
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-demo-rdw
       - name: nlx-demo-haarlem
@@ -451,6 +469,7 @@ profiles:
           outwayImage: nlxio/outway
           managementAPIImage: nlxio/management-api
           managementUIImage: nlxio/management-ui
+          nlxctlImage: nlxio/nlxctl
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-demo-haarlem
 - name: deploy-preprod
