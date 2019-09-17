@@ -83,19 +83,23 @@ var createServiceCommand = &cobra.Command{
 			panic(err)
 		}
 
-		service := &configapi.Service{}
-		err = json.Unmarshal(configBytes, service)
-		if err != nil {
-			panic(err)
+		serviceConfigs := splitConfigString(string(configBytes))
+		for _, configString := range serviceConfigs {
+			service := &configapi.Service{}
+			err = json.Unmarshal([]byte(configString), service)
+			if err != nil {
+				panic(err)
+			}
+
+			ctx := context.Background()
+			_, err = getConfigClient().CreateService(ctx, service)
+			if err != nil {
+				panic(err)
+			}
+
+			println(fmt.Sprintf("created service: %+v", service))
 		}
 
-		ctx := context.Background()
-		_, err = getConfigClient().CreateService(ctx, service)
-		if err != nil {
-			panic(err)
-		}
-
-		println(fmt.Sprintf("created service: %+v", service))
 	},
 }
 

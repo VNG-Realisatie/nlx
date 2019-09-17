@@ -15,3 +15,21 @@
   },
   "inways": ["inway.test"]
 }
+---
+{
+  "name": "my-second-service",
+  "endpointURL": "my-second-service:8000",
+  "documentationURL": "my-second-service:8000/docs",
+  "apiSpecificationURL": "my-second-service:8000/openapi.json",
+  "internal": false,
+  "techSupportContact": "tech@organization.test",
+  "publicSupportContact": "public@organization.test",
+  "authorizationSettings": {
+    "mode": "whitelist",
+    "organizations": [
+      "haarlem",
+      "utrecht"
+    ]
+  },
+  "inways": ["inway.test"]
+}

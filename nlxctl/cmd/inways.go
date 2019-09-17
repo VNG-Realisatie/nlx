@@ -77,19 +77,23 @@ var createInwayCommand = &cobra.Command{
 			panic(err)
 		}
 
-		inway := &configapi.Inway{}
-		err = json.Unmarshal(configBytes, inway)
-		if err != nil {
-			panic(err)
+		inwayConfig := splitConfigString(string(configBytes))
+		for _, configString := range inwayConfig {
+			inway := &configapi.Inway{}
+			err = json.Unmarshal([]byte(configString), inway)
+			if err != nil {
+				panic(err)
+			}
+
+			ctx := context.Background()
+			_, err = getConfigClient().CreateInway(ctx, inway)
+			if err != nil {
+				panic(err)
+			}
+
+			println(fmt.Sprintf("created inway with name: %+v", inway))
 		}
 
-		ctx := context.Background()
-		_, err = getConfigClient().CreateInway(ctx, inway)
-		if err != nil {
-			panic(err)
-		}
-
-		println(fmt.Sprintf("created inway with name: %+v", inway))
 	},
 }
 
