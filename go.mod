@@ -2,7 +2,7 @@ module go.nlx.io/nlx
 
 require (
 	github.com/Microsoft/go-winio v0.4.14 // indirect
-	github.com/cloudflare/cfssl v0.0.0-20190808011637-b1ec8c586c2a
+	github.com/cloudflare/cfssl v0.0.0-20190911221928-1a911ca1b1d6
 	github.com/coreos/bbolt v1.3.3 // indirect
 	github.com/coreos/etcd v3.3.13+incompatible // indirect
 	github.com/coreos/go-semver v0.3.0 // indirect
