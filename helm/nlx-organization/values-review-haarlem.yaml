@@ -1,8 +1,8 @@
+organizationName: haarlem
+
 disableLoadBalancers: true
 
-organizationName: haarlem
 logType: local
-
 
 dbDatabaseTxlog: nlx-dev-haarlem-txlog
 dbResetTxlog: true # WARNING: All data will be LOST, never use in production!
@@ -15,7 +15,15 @@ imagePullPolicy: "Always"
 
 inway:
   enable: true
-  useConfigAPI: false
+  config: |
+    [services]
+      [services.demo-api]
+      endpoint-url = "https://postman-echo.com"
+      authorization-model = "none"
+      [services.parkeervergunning]
+      endpoint-url = "http://application:8000"
+      authorization-model = "none"
+
 outway:
   enable: true
   authService: true
@@ -24,6 +32,7 @@ outway:
 
 demoService:
   enable: false
+
 demoApplication:
   enable: true
   genericApplicationImage: nlxio/parkeervergunning-application:latest
@@ -52,7 +61,10 @@ insight:
 
 debugEnableOutwayIngress: true
 
+configAPI:
+  enabled: false
+
 management:
-  enable: true
+  enable: false
 
 replicas: 1

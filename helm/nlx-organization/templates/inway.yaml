@@ -1,6 +1,6 @@
 {{ if .Values.inway.enable }}
 {{ with set . "component" "inway" }}
-{{ if not .Values.inway.useConfigAPI }}
+{{ if .Values.inway.config }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -48,7 +48,7 @@ spec:
       volumes:
         - name: certs
           emptyDir: {}
-        {{ if not .Values.inway.useConfigAPI }}
+        {{ if .Values.inway.config }}
         - name: inway-service-config
           configMap:
             name: inway-service-config
@@ -95,10 +95,11 @@ spec:
               value: "{{.component}}.{{.Values.domain}}"
             - name: DIRECTORY_REGISTRATION_ADDRESS
               value: "{{.Values.directoryRegistrationHostname}}:443"
-            {{ if .Values.inway.useConfigAPI }}
+            {{ if .Values.configAPI.enabled }}
             - name: CONFIG_API_ADDRESS
-              value: config-api.{{.Values.domain}}:443
-            {{ else }}
+              value: config-api:443
+            {{ end }}
+            {{ if .Values.inway.config }}
             - name: SERVICE_CONFIG
               value: /inway-service-config/service-config.toml
             {{ end }}
@@ -109,7 +110,7 @@ spec:
           volumeMounts:
             - name: certs
               mountPath: /certs
-            {{ if not .Values.inway.useConfigAPI }}
+            {{ if .Values.inway.config }}
             - name: inway-service-config
               mountPath: /inway-service-config
             {{ end }}

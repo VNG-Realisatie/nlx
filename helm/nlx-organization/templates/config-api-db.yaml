@@ -1,4 +1,4 @@
-{{ if .Values.inway.useConfigAPI }}
+{{ if and .Values.configAPI.enabled .Values.configAPI.serviceConfig }}
 {{ with set . "component" "config-api-db" }}
 apiVersion: v1
 kind: ConfigMap
@@ -36,7 +36,7 @@ spec:
             - "-c"
             - |-
                 cd /certs &&
-                /ca/generate-cert.sh {{.component}}.{{.Values.domain}} {{.Values.organizationName}} {{.Values.caAddress}}
+                /ca/generate-cert.sh {{.component}} {{.Values.organizationName}} {{.Values.caAddress}}
       containers:
         - name: config-api-db
           image: {{.Values.nlxctlImage}}
@@ -49,11 +49,10 @@ spec:
           command: ['/bin/sh']
           args:
             - "-c"
-            - | 
-                nlxctl init --address config-api.{{.Values.domain}}:443 --cert /certs/{{.component}}.{{.Values.domain}}.pem --key /certs/{{.component}}.{{.Values.domain}}-key.pem --ca /certs/nlx_root.pem && 
+            - |
+                nlxctl init --address config-api:443 --cert /certs/{{.component}}.pem --key /certs/{{.component}}-key.pem --ca /certs/nlx_root.pem &&
                 nlxctl service create -c /service-configuration/service.json &&
                 nlxctl service list
-
       restartPolicy: Never
   backoffLimit: 50
 {{ end }}

@@ -1,3 +1,4 @@
+{{ if .Values.configAPI.enabled }}
 {{ with set . "component" "config-api" }}
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -34,7 +35,7 @@ spec:
             - "-c"
             - |-
                 cd /certs &&
-                /ca/generate-cert.sh {{.component}}.{{.Values.domain}} {{.Values.organizationName}} {{.Values.caAddress}}
+                /ca/generate-cert.sh {{.component}} {{.Values.organizationName}} {{.Values.caAddress}}
       containers:
         - name: config-api
           image: {{.Values.configAPIImage}}
@@ -47,9 +48,9 @@ spec:
             - name: TLS_NLX_ROOT_CERT
               value: "/certs/nlx_root.pem"
             - name: TLS_ORG_CERT
-              value: "/certs/{{.component}}.{{.Values.domain}}.pem"
+              value: "/certs/{{.component}}.pem"
             - name: TLS_ORG_KEY
-              value: "/certs/{{.component}}.{{.Values.domain}}-key.pem"
+              value: "/certs/{{.component}}-key.pem"
             - name: ETCD_CONNECTION_STRING
               value: "http://etcd:2379"
           volumeMounts:
@@ -67,4 +68,5 @@ spec:
       protocol: TCP
       port: 443
       targetPort: 8443
+{{ end }}
 {{ end }}

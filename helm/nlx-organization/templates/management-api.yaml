@@ -35,7 +35,7 @@ spec:
             - "-c"
             - |-
                 cd /certs &&
-                /ca/generate-cert.sh {{.component}}.{{.Values.domain}} {{.Values.organizationName}} {{.Values.caAddress}}
+                /ca/generate-cert.sh {{.component}} {{.Values.organizationName}} {{.Values.caAddress}}
 
       containers:
         - name: management-api
@@ -49,11 +49,11 @@ spec:
             - name: TLS_NLX_ROOT_CERT
               value: "/certs/nlx_root.pem"
             - name: TLS_ORG_CERT
-              value: "/certs/{{.component}}.{{.Values.domain}}.pem"
+              value: "/certs/{{.component}}.pem"
             - name: TLS_ORG_KEY
-              value: "/certs/{{.component}}.{{.Values.domain}}-key.pem"
+              value: "/certs/{{.component}}-key.pem"
             - name: CONFIG_API_ADDRESS
-              value: "config-api.{{.Values.domain}}:443"
+              value: "config-api:443"
           volumeMounts:
             - name: certs
               mountPath: /certs

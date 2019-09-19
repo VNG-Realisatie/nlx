@@ -50,7 +50,7 @@ spec:
               value: "/certs/{{.component}}-key.pem"
           volumeMounts:
             - name: certs
-              mountPath: /certs 
+              mountPath: /certs
       restartPolicy: Always
 ---
 apiVersion: v1
