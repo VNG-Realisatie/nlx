@@ -108,7 +108,7 @@ func main() {
 		logger.Fatal("failed to load x509 keypair for directory registration api", zap.Error(err))
 	}
 
-	registrationService, err := registrationservice.NewRegisterInwayHandler(db, logger, caCertPool, &certKeyPair)
+	registrationService, err := registrationservice.New(logger, db, caCertPool, &certKeyPair)
 	if err != nil {
 		logger.Fatal("failed to create new directory registration service", zap.Error(err))
 	}

@@ -53,6 +53,8 @@ spec:
               value: "/certs/{{.component}}-key.pem"
             - name: ETCD_CONNECTION_STRING
               value: "http://etcd:2379"
+            - name: DIRECTORY_REGISTRATION_ADDRESS
+              value: "{{.Values.directoryRegistrationHostname}}:443"
           volumeMounts:
             - name: certs
               mountPath: /certs

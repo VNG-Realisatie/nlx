@@ -235,6 +235,46 @@ func (mr *MockConfigApiClientMockRecorder) DeleteInway(ctx, in interface{}, opts
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteInway", reflect.TypeOf((*MockConfigApiClient)(nil).DeleteInway), varargs...)
 }
 
+// PutInsightConfiguration mocks base method
+func (m *MockConfigApiClient) PutInsightConfiguration(ctx context.Context, in *configapi.InsightConfiguration, opts ...grpc.CallOption) (*configapi.InsightConfiguration, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "PutInsightConfiguration", varargs...)
+	ret0, _ := ret[0].(*configapi.InsightConfiguration)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// PutInsightConfiguration indicates an expected call of PutInsightConfiguration
+func (mr *MockConfigApiClientMockRecorder) PutInsightConfiguration(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PutInsightConfiguration", reflect.TypeOf((*MockConfigApiClient)(nil).PutInsightConfiguration), varargs...)
+}
+
+// GetInsightConfiguration mocks base method
+func (m *MockConfigApiClient) GetInsightConfiguration(ctx context.Context, in *configapi.Empty, opts ...grpc.CallOption) (*configapi.InsightConfiguration, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetInsightConfiguration", varargs...)
+	ret0, _ := ret[0].(*configapi.InsightConfiguration)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetInsightConfiguration indicates an expected call of GetInsightConfiguration
+func (mr *MockConfigApiClientMockRecorder) GetInsightConfiguration(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInsightConfiguration", reflect.TypeOf((*MockConfigApiClient)(nil).GetInsightConfiguration), varargs...)
+}
+
 // MockConfigApiServer is a mock of ConfigApiServer interface
 type MockConfigApiServer struct {
 	ctrl     *gomock.Controller
@@ -406,4 +446,34 @@ func (m *MockConfigApiServer) DeleteInway(arg0 context.Context, arg1 *configapi.
 func (mr *MockConfigApiServerMockRecorder) DeleteInway(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteInway", reflect.TypeOf((*MockConfigApiServer)(nil).DeleteInway), arg0, arg1)
+}
+
+// PutInsightConfiguration mocks base method
+func (m *MockConfigApiServer) PutInsightConfiguration(arg0 context.Context, arg1 *configapi.InsightConfiguration) (*configapi.InsightConfiguration, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PutInsightConfiguration", arg0, arg1)
+	ret0, _ := ret[0].(*configapi.InsightConfiguration)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// PutInsightConfiguration indicates an expected call of PutInsightConfiguration
+func (mr *MockConfigApiServerMockRecorder) PutInsightConfiguration(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PutInsightConfiguration", reflect.TypeOf((*MockConfigApiServer)(nil).PutInsightConfiguration), arg0, arg1)
+}
+
+// GetInsightConfiguration mocks base method
+func (m *MockConfigApiServer) GetInsightConfiguration(arg0 context.Context, arg1 *configapi.Empty) (*configapi.InsightConfiguration, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetInsightConfiguration", arg0, arg1)
+	ret0, _ := ret[0].(*configapi.InsightConfiguration)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetInsightConfiguration indicates an expected call of GetInsightConfiguration
+func (mr *MockConfigApiServerMockRecorder) GetInsightConfiguration(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInsightConfiguration", reflect.TypeOf((*MockConfigApiServer)(nil).GetInsightConfiguration), arg0, arg1)
 }

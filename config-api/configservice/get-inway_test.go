@@ -7,14 +7,15 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-	"go.nlx.io/nlx/config-api/configapi"
-	"go.nlx.io/nlx/config-api/configservice"
-	mock "go.nlx.io/nlx/config-api/configservice/mock"
+	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/process"
-	"go.uber.org/zap"
+	"go.nlx.io/nlx/config-api/configapi"
+	"go.nlx.io/nlx/config-api/configservice"
+	mock "go.nlx.io/nlx/config-api/configservice/mock"
+	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
 
 func TestGetInway(t *testing.T) {
@@ -26,7 +27,7 @@ func TestGetInway(t *testing.T) {
 	defer mockCtrl.Finish()
 
 	mockDatabase := mock.NewMockConfigDatabase(mockCtrl)
-	service := configservice.New(logger, testProcess, mockDatabase)
+	service := configservice.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
 
 	getInwayRequest := &configapi.GetInwayRequest{
 		Name: "inway42.test",

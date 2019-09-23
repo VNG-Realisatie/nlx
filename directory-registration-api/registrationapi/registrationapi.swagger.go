@@ -53,6 +53,9 @@ SwaggerJSONDirectory = `
         }
       }
     },
+    "registrationapiEmpty": {
+      "type": "object"
+    },
     "registrationapiRegisterInwayResponse": {
       "type": "object",
       "properties": {

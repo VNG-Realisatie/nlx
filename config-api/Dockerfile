@@ -14,6 +14,7 @@ RUN go mod download
 # Only add code that we use for building config-api
 COPY config-api                                     /go/src/go.nlx.io/nlx/config-api
 COPY common                                         /go/src/go.nlx.io/nlx/common
+COPY directory-registration-api                     /go/src/go.nlx.io/nlx/directory-registration-api
 COPY .git                                           /go/src/go.nlx.io/nlx/config-api/.git
 
 WORKDIR /go/src/go.nlx.io/nlx/config-api

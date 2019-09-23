@@ -7,6 +7,7 @@ import (
 
 	"go.nlx.io/nlx/config-api/configapi"
 	"go.nlx.io/nlx/config-api/configservice"
+	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 
 	mock_configservice "go.nlx.io/nlx/config-api/configservice/mock"
 
@@ -33,7 +34,7 @@ func TestCreateService(t *testing.T) {
 	mockDatabase := mock_configservice.NewMockConfigDatabase(mockCtrl)
 	mockDatabase.EXPECT().CreateService(ctx, requestService)
 
-	service := configservice.New(logger, testProcess, mockDatabase)
+	service := configservice.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
 
 	responseService, err := service.CreateService(ctx, requestService)
 	if err != nil {

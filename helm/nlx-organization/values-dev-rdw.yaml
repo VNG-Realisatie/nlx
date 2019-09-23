@@ -54,6 +54,8 @@ insight:
 
 configAPI:
   enabled: true
+  irmaServerURL: "https://irma-api.demo.voorbeeld-rdw.nl"
+  insightAPIURL: "https://insight-api.demo.voorbeeld-rdw.nl"
   serviceConfig: |
     {
       "name": "kentekenregister",

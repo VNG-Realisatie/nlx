@@ -9,7 +9,6 @@ import (
 	"crypto/x509"
 	"fmt"
 	"net/http"
-	"regexp"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
@@ -24,17 +23,17 @@ import (
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
 
+const FriendlyErrorDatabase = "Database error."
+
 type RegisterInwayHandler struct {
 	logger *zap.Logger
 
 	stmtInsertAvailability *sqlx.Stmt
 
 	httpClient *http.Client
-
-	regexpName *regexp.Regexp
 }
 
-func NewRegisterInwayHandler(
+func newRegisterInwayHandler(
 	db *sqlx.DB,
 	logger *zap.Logger,
 	rootCA *x509.CertPool,
@@ -47,8 +46,6 @@ func NewRegisterInwayHandler(
 	var err error
 
 	h.httpClient = nlxhttp.NewHTTPClient(rootCA, certKeyPair)
-
-	h.regexpName = regexp.MustCompile(`^[a-zA-Z0-9-]{1,100}$`)
 
 	// NOTE: We do not have an endpoint yet to create services separately, therefore insert on demand.
 	h.stmtInsertAvailability, err = db.Preparex(`
@@ -124,13 +121,13 @@ func (h *RegisterInwayHandler) RegisterInway(ctx context.Context, req *registrat
 		return nil, err
 	}
 
-	if !h.regexpName.MatchString(organizationName) {
+	if !validateName(organizationName) {
 		h.logger.Info("invalid organization name in registerinwayrequest", zap.String("organization name", organizationName))
 		return nil, status.New(codes.InvalidArgument, "Invalid organization name").Err()
 	}
 
 	for _, service := range req.Services {
-		if !h.regexpName.MatchString(service.Name) {
+		if !validateName(service.Name) {
 			h.logger.Info("invalid service name in registerinwayrequest", zap.String("service name", service.Name))
 			return nil, status.New(codes.InvalidArgument, "Invalid servicename").Err()
 		}
@@ -163,7 +160,7 @@ func (h *RegisterInwayHandler) RegisterInway(ctx context.Context, req *registrat
 		)
 
 		if err != nil {
-			userFriendlyErrorText := "Database error."
+			userFriendlyErrorText := FriendlyErrorDatabase
 			statusCode := codes.Internal
 			pqErr, ok := err.(*pq.Error)
 			if ok {

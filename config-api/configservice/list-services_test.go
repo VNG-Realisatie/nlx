@@ -5,15 +5,15 @@ import (
 	"context"
 	"testing"
 
-	"go.nlx.io/nlx/config-api/configapi"
-
 	gomock "github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-	"go.nlx.io/nlx/config-api/configservice"
-	mock "go.nlx.io/nlx/config-api/configservice/mock"
+	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/process"
-	"go.uber.org/zap"
+	"go.nlx.io/nlx/config-api/configapi"
+	"go.nlx.io/nlx/config-api/configservice"
+	mock "go.nlx.io/nlx/config-api/configservice/mock"
+	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
 
 func TestListServices(t *testing.T) {
@@ -25,7 +25,7 @@ func TestListServices(t *testing.T) {
 	defer mockCtrl.Finish()
 
 	mockDatabase := mock.NewMockConfigDatabase(mockCtrl)
-	service := configservice.New(logger, testProcess, mockDatabase)
+	service := configservice.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
 	myService := &configapi.Service{
 		Name:   "my-service",
 		Inways: []string{"inway.mock"},

@@ -19,6 +19,36 @@ SwaggerJSONDirectory = `
     "application/json"
   ],
   "paths": {
+    "/api/v1/insight-configuration": {
+      "get": {
+        "operationId": "GetInsightConfiguration",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configapiInsightConfiguration"
+            }
+          }
+        },
+        "tags": [
+          "ConfigApi"
+        ]
+      },
+      "put": {
+        "operationId": "PutInsightConfiguration",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configapiInsightConfiguration"
+            }
+          }
+        },
+        "tags": [
+          "ConfigApi"
+        ]
+      }
+    },
     "/api/v1/inways": {
       "get": {
         "operationId": "ListInways",
@@ -277,6 +307,17 @@ SwaggerJSONDirectory = `
     },
     "configapiEmpty": {
       "type": "object"
+    },
+    "configapiInsightConfiguration": {
+      "type": "object",
+      "properties": {
+        "irmaServerURL": {
+          "type": "string"
+        },
+        "insightAPIURL": {
+          "type": "string"
+        }
+      }
     },
     "configapiInway": {
       "type": "object",
