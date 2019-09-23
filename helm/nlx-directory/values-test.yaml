@@ -1,4 +1,3 @@
-
 domain: test.nlx.io
 externalDomain: test.nlx.io
 
@@ -15,6 +14,7 @@ demo:
   enabled: true
 demoEnv: "test"
 demoDomain: "nlx.io"
+
 imagePullPolicy: IfNotPresent
 
 insightDirectoryInspectionAPIURL: "http://directory-inspection-api-internal"

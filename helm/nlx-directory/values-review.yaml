@@ -6,6 +6,11 @@ dbResetDirectory: true # WARNING: All data will be LOST, never use in production
 dbUsernameDirectory: nlx-dev-directory
 dbPasswordDirectory: nlx-dev-directory
 
+ca:
+  kind: "public"
+demoEnv: "dev"
+demoDomain: "minikube"
+
 imagePullPolicy: "Always"
 
 ttlOfflineService: 1
@@ -13,10 +18,5 @@ ttlOfflineService: 1
 demo:
   enabled: true
 
-ca:
-  kind: "public"
-
-demoEnv: "dev"
-demoDomain: "minikube"
 
 replicas: 1

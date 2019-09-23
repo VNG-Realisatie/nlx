@@ -1,7 +1,7 @@
-
 domain: acc.nlx.io
 externalDomain: acc.nlx.io
 
+logLevel: info
 logType: live
 
 dbDatabaseDirectory: nlx-acc-directory
@@ -15,6 +15,7 @@ demo:
   enabled: true
 demoEnv: "acc"
 demoDomain: "nlx.io"
+
 imagePullPolicy: IfNotPresent
 
 insightDirectoryInspectionAPIURL: "http://directory-inspection-api-internal"

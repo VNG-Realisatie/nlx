@@ -1,6 +1,7 @@
 domain: nlx-dev-directory
 externalDomain: nlx-dev-directory.minikube
 
+logLevel: debug
 logType: local
 
 dbDatabaseDirectory: nlx-dev-directory
@@ -10,12 +11,14 @@ dbPasswordDirectory: nlx-dev-directory
 
 caAddress: ca-cfssl-unsafe.nlx-dev-directory
 
+demo:
+  enabled: true
+
+imagePullPolicy: IfNotPresent
+
 insightDirectoryInspectionAPIURL: "http://directory-inspection-api-internal"
 
 ttlOfflineService: 1
-
-demo:
-  enabled: true
 
 ca:
   kind: "public"
@@ -24,5 +27,3 @@ demoEnv: "dev"
 demoDomain: "minikube"
 
 replicas: 1
-
-imagePullPolicy: IfNotPresent

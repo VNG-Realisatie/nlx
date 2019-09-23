@@ -1,4 +1,3 @@
-
 domain: preprod.nlx.io
 externalDomain: preprod.nlx.io
 
@@ -10,6 +9,9 @@ dbResetDirectory: false
 dbUsernameDirectory: nlx-preprod-directory
 dbPasswordDirectory: nlx-preprod-directory
 
+demo:
+  enabled: false
+
 imagePullPolicy: IfNotPresent
 
 insightDirectoryInspectionAPIURL: "http://directory-inspection-api-internal"
@@ -20,9 +22,6 @@ insightNavbarDocsPageURL: "https://docs.preprod.nlx.io"
 insightNavbarDirectoryURL: "https://directory.preprod.nlx.io"
 
 ttlOfflineService: 14
-
-demo:
-  enabled: false
 
 ca:
   kind: "private"

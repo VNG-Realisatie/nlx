@@ -1,4 +1,3 @@
-
 domain: prod.nlx.io
 externalDomain: prod.nlx.io
 
@@ -10,6 +9,9 @@ dbResetDirectory: false
 dbUsernameDirectory: nlx-prod-directory
 dbPasswordDirectory: nlx-prod-directory
 
+demo:
+  enabled: false
+
 imagePullPolicy: IfNotPresent
 
 insightDirectoryInspectionAPIURL: "http://directory-inspection-api-internal"
@@ -20,9 +22,6 @@ insightNavbarDocsPageURL: "https://docs.nlx.io"
 insightNavbarDirectoryURL: "https://directory.nlx.io"
 
 ttlOfflineService: 14
-
-demo:
-  enabled: false
 
 ca:
   kind: "private"
