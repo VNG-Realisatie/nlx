@@ -9,12 +9,11 @@ import (
 	"strings"
 	"time"
 
-	"go.nlx.io/nlx/config-api/configapi"
-
+	"go.etcd.io/etcd/clientv3"
 	"go.uber.org/zap"
 
-	"go.etcd.io/etcd/clientv3"
 	"go.nlx.io/nlx/common/process"
+	"go.nlx.io/nlx/config-api/configapi"
 )
 
 const PREFIX = "nlx"
@@ -31,6 +30,8 @@ type ConfigDatabase interface {
 	CreateInway(ctx context.Context, inway *configapi.Inway) error
 	UpdateInway(ctx context.Context, name string, inway *configapi.Inway) error
 	DeleteInway(ctx context.Context, name string) error
+	PutInsightConfiguration(ctx context.Context, configuration *configapi.InsightConfiguration) error
+	GetInsightConfiguration(ctx context.Context) (*configapi.InsightConfiguration, error)
 }
 
 // ETCDConfigDatabase is the etcd implementation of ConfigDatabase
@@ -268,4 +269,43 @@ func (db ETCDConfigDatabase) DeleteInway(ctx context.Context, name string) error
 	}
 
 	return nil
+}
+
+// PutInsight sets the insight configuration
+func (db ETCDConfigDatabase) PutInsightConfiguration(ctx context.Context, insightConfiguration *configapi.InsightConfiguration) error {
+	key := path.Join(db.pathPrefix, "insight-configuration")
+
+	data, err := json.Marshal(&insightConfiguration)
+	if err != nil {
+		return err
+	}
+
+	_, err = db.etcdCli.Put(ctx, key, string(data))
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// GetInsight returns the insight configuration
+func (db ETCDConfigDatabase) GetInsightConfiguration(ctx context.Context) (*configapi.InsightConfiguration, error) {
+	key := path.Join(db.pathPrefix, "insight-configuration")
+
+	values, err := db.etcdCli.Get(ctx, key)
+	if err != nil {
+		return nil, err
+	}
+
+	if values.Count == 0 {
+		return nil, nil
+	}
+
+	insightConfiguration := &configapi.InsightConfiguration{}
+	err = json.Unmarshal(values.Kvs[0].Value, insightConfiguration)
+	if err != nil {
+		return nil, err
+	}
+
+	return insightConfiguration, nil
 }

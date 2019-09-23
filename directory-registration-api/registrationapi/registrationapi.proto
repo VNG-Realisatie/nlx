@@ -15,7 +15,7 @@ option (gogoproto.goproto_getters_all) = false;
 service DirectoryRegistration {
 	// RegisterInway registers an inway for a given service
 	rpc RegisterInway (RegisterInwayRequest) returns (RegisterInwayResponse) {}
-
+	rpc SetInsightConfiguration (SetInsightConfigurationRequest) returns (Empty) {}
 }
 
 message RegisterInwayRequest {
@@ -35,6 +35,13 @@ message RegisterInwayRequest {
 	repeated RegisterService services = 2;
 }
 
+message Empty {}
+
 message RegisterInwayResponse {
 	string error = 1;
+}
+
+message SetInsightConfigurationRequest {
+	string IrmaServerURL = 1;
+	string InsightAPIURL = 2;
 }

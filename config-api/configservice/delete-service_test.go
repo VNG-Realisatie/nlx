@@ -5,16 +5,14 @@ import (
 	"context"
 	"testing"
 
-	"go.nlx.io/nlx/config-api/configapi"
-
-	"go.nlx.io/nlx/config-api/configservice"
-
-	mock_configservice "go.nlx.io/nlx/config-api/configservice/mock"
-
 	"github.com/golang/mock/gomock"
+	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/process"
-	"go.uber.org/zap"
+	"go.nlx.io/nlx/config-api/configapi"
+	"go.nlx.io/nlx/config-api/configservice"
+	mock_configservice "go.nlx.io/nlx/config-api/configservice/mock"
+	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
 
 func TestDeleteService(t *testing.T) {
@@ -28,7 +26,7 @@ func TestDeleteService(t *testing.T) {
 	mockDatabase := mock_configservice.NewMockConfigDatabase(mockCtrl)
 	mockDatabase.EXPECT().DeleteService(ctx, "my-service")
 
-	service := configservice.New(logger, testProcess, mockDatabase)
+	service := configservice.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
 
 	deleteRequest := &configapi.DeleteServiceRequest{
 		Name: "my-service",

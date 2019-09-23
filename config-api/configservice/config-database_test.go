@@ -324,3 +324,28 @@ func TestDeleteInway(t *testing.T) {
 
 	assert.Nil(t, inway)
 }
+
+func TestPutGetInsight(t *testing.T) {
+	cluster := newTestCluster(t)
+	defer cluster.Terminate(t)
+
+	ctx := context.Background()
+
+	mockInsightConfiguration := &configapi.InsightConfiguration{
+		IrmaServerURL: "http://irma-url.com",
+		InsightAPIURL: "http://insight-url.com",
+	}
+
+	err := cluster.DB.PutInsightConfiguration(ctx, mockInsightConfiguration)
+	if err != nil {
+		t.Fatal("error putting insight configuration", err)
+	}
+
+	insightConfig, err := cluster.DB.GetInsightConfiguration(ctx)
+	if err != nil {
+		t.Fatal("error getting insight configuration", err)
+	}
+
+	assert.Equal(t, mockInsightConfiguration, insightConfig)
+
+}

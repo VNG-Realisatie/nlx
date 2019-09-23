@@ -1,13 +1,16 @@
 package main
 
 import (
+	"context"
 	"crypto/tls"
+	"crypto/x509"
 	"fmt"
 	"log"
 	"net"
 	"net/http"
 	"runtime/debug"
 	"strings"
+	"time"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
@@ -27,14 +30,19 @@ import (
 	"go.nlx.io/nlx/common/tlsconfig"
 	"go.nlx.io/nlx/config-api/configapi"
 	"go.nlx.io/nlx/config-api/configservice"
+	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
 
 var options struct {
-	ListenAddress        string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:8443" description:"Address for the directory to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
-	EtcdConnectionString string `long:"etcd-connection-string" env:"ETCD_CONNECTION_STRING" description:"A comma separated list of etcd backends." required:"true"`
+	ListenAddress                string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:8443" description:"Address for the directory to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	DirectoryRegistrationAddress string `long:"directory-registration-address" env:"DIRECTORY_REGISTRATION_ADDRESS" description:"Address for the directory" required:"true"`
+	EtcdConnectionString         string `long:"etcd-connection-string" env:"ETCD_CONNECTION_STRING" description:"A comma separated list of etcd backends." required:"true"`
+
 	orgtls.TLSOptions
 	logoptions.LogOptions
 }
+
+const defaultTimeOut = 1 * time.Minute
 
 func main() {
 	args, err := flags.Parse(&options)
@@ -94,9 +102,13 @@ func main() {
 	}
 
 	tlsconfig.ApplyDefaults(serverTLSConfig)
-
+	directoryRegistrationClient, err := setupDirectoryRegistrationClient(certPool, &certKeyPair)
+	if err != nil {
+		logger.Fatal("failed to setup directory client", zap.Error(err))
+	}
+	logger.Info("directory registration client setup complete", zap.String("directory-address", options.DirectoryRegistrationAddress))
 	transportCredentials := credentials.NewTLS(serverTLSConfig)
-	confServer := configservice.New(logger, p, db)
+	confServer := configservice.New(logger, p, directoryRegistrationClient, db)
 	opts := []grpc.ServerOption{
 		grpc.Creds(transportCredentials),
 		grpc_middleware.WithStreamServerChain(
@@ -134,4 +146,22 @@ func startServer(p *process.Process, grpcServer *grpc.Server) {
 			log.Fatal("error serving", zap.Error(err))
 		}
 	}
+}
+
+func setupDirectoryRegistrationClient(certPool *x509.CertPool, certKeyPair *tls.Certificate) (registrationapi.DirectoryRegistrationClient, error) {
+	directoryDialCredentials := credentials.NewTLS(&tls.Config{
+		Certificates: []tls.Certificate{*certKeyPair},
+		RootCAs:      certPool,
+	})
+	directoryDialOptions := []grpc.DialOption{
+		grpc.WithTransportCredentials(directoryDialCredentials),
+	}
+	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(context.Background(), defaultTimeOut)
+	directoryConn, err := grpc.DialContext(directoryConnCtx, options.DirectoryRegistrationAddress, directoryDialOptions...)
+	defer directoryConnCtxCancel()
+	if err != nil {
+		return nil, err
+	}
+	directoryRegistrationClient := registrationapi.NewDirectoryRegistrationClient(directoryConn)
+	return directoryRegistrationClient, nil
 }
