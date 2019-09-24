@@ -247,6 +247,42 @@ func (o *Outway) createService(
 	serviceToImplement *inspectionapi.ListServicesResponse_Service,
 ) {
 
+	// Look for healthy inwayaddresses unless it there is only one
+	// known address.
+	moreEndpoints := len(serviceToImplement.HealthyStates) > 1
+	InwayAddresses := []string{}
+	HealthyStates := []bool{}
+
+	for i, healthy := range serviceToImplement.HealthyStates {
+		inwayAddress := serviceToImplement.InwayAddresses[i]
+		if healthy {
+			// we want to use only healthy endpoints.
+			// if there is only one unhealthy endpoint then
+			// we use that one endpoint anyway which is useful
+			// for testing / setup purposes.
+			InwayAddresses = append(InwayAddresses, inwayAddress)
+			HealthyStates = append(HealthyStates, healthy)
+			continue
+		}
+
+		if !healthy && moreEndpoints {
+			o.logger.Info("ignoring unhealthy inway endpoint. we have healthy ones.", zap.String("unhealthy endpoint", inwayAddress))
+			continue
+		}
+
+		if !healthy && !moreEndpoints {
+			o.logger.Info(
+				"inway might not be healthy / reachable by directory / behind firewall",
+				zap.String("service-organization-name", serviceToImplement.OrganizationName),
+				zap.String("service-name", serviceToImplement.ServiceName),
+				zap.String("inway address", inwayAddress),
+			)
+			InwayAddresses = append(InwayAddresses, inwayAddress)
+			HealthyStates = append(HealthyStates, healthy)
+			continue
+		}
+	}
+
 	rrlbService, err := NewRoundRobinLoadBalancedHTTPService(
 		o.logger,
 		o.tlsRoots,
@@ -254,8 +290,8 @@ func (o *Outway) createService(
 		o.tlsOptions.OrgKeyFile,
 		serviceToImplement.OrganizationName,
 		serviceToImplement.ServiceName,
-		serviceToImplement.InwayAddresses,
-		serviceToImplement.HealthyStates,
+		InwayAddresses,
+		HealthyStates,
 	)
 	if err != nil {
 		if err == errNoInwaysAvailable {
@@ -271,17 +307,6 @@ func (o *Outway) createService(
 			zap.String("service-name", serviceToImplement.ServiceName),
 			zap.Error(err))
 		return
-	}
-	for i, healthy := range serviceToImplement.HealthyStates {
-		if !healthy {
-			inwayAddres := serviceToImplement.InwayAddresses[i]
-			o.logger.Debug(
-				"inway might not be healthy / reachable by directory / behind firewall",
-				zap.String("service-organization-name", serviceToImplement.OrganizationName),
-				zap.String("service-name", serviceToImplement.ServiceName),
-				zap.String("inway address", inwayAddres),
-			)
-		}
 	}
 
 	service := rrlbService
@@ -331,24 +356,31 @@ func (o *Outway) updateServiceList() error {
 		}
 
 		serviceKey := serviceKey(serviceToImplement)
-		// update directory list
+		_, exists := o.servicesHTTP[serviceKey]
+
+		// if HttpService is used/created before update
+		// httpService on changes.
+		if exists {
+			addressesChange := !reflect.DeepEqual(
+				o.servicesDirectory[serviceKey].InwayAddresses,
+				serviceToImplement.InwayAddresses)
+
+			healthyChange := !reflect.DeepEqual(
+				o.servicesDirectory[serviceKey].HealthyStates,
+				serviceToImplement.HealthyStates)
+
+			if addressesChange || healthyChange {
+				o.createService(serviceToImplement)
+			}
+		}
+
+		// update local cache directory list
 		o.servicesLock.Lock()
 		o.servicesDirectory[serviceKey] = serviceToImplement
 		o.servicesLock.Unlock()
 
 		servicesToKeep[serviceKey] = true
 
-		service, exists := o.servicesHTTP[serviceKey]
-
-		// if HttpService is used/created before update
-		// httpService on changes.
-		if exists {
-			if !reflect.DeepEqual(
-				service.GetInwayAddresses(),
-				serviceToImplement.InwayAddresses) {
-				o.createService(serviceToImplement)
-			}
-		}
 	}
 
 	o.cleanUpservices(servicesToKeep)

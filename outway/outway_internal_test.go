@@ -12,7 +12,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-	"go.uber.org/zap"
+	"go.uber.org/zap/zaptest"
 
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
@@ -26,7 +26,7 @@ func TestUpdateServiceList(t *testing.T) {
 	defer ctrl.Finish()
 	client := mock.NewMockDirectoryInspectionClient(ctrl)
 
-	logger := zap.NewNop()
+	logger := zaptest.NewLogger(t)
 	mainProcess := process.NewProcess(logger)
 
 	workDir, err := os.Getwd()
@@ -101,6 +101,7 @@ func TestUpdateServiceList(t *testing.T) {
 	o.getService("mock-org-c", "mock-service-c")
 
 	// mock-service-c should not be included because this service does not have any inwayaddresses
+	t.Log(o.servicesHTTP)
 	assert.Len(t, o.servicesHTTP, 2, fmt.Sprintf("%v", o.servicesHTTP))
 
 	tests := []struct {
@@ -109,7 +110,8 @@ func TestUpdateServiceList(t *testing.T) {
 	}{
 		{
 			mockServiceAFullName,
-			mockServiceAInwayAddresses,
+			// only one valid true healthy address
+			[]string{"mock-service-a-1:123"},
 		},
 		{
 			mockServiceBFullName,

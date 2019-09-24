@@ -205,14 +205,14 @@ func TestFailingTransport(t *testing.T) {
 	outway.servicesDirectory["mockorg.mockservice"] = &inwayMessage
 
 	inwayAddresses := []string{"inway.mockorg"}
-	healtyStates := []bool{true}
+	healthyStates := []bool{true}
 	certFile := filepath.Join("..", "testing", "org-nlx-test.crt")
 	keyFile := filepath.Join("..", "testing", "org-nlx-test.key")
 
 	l, err := NewRoundRobinLoadBalancedHTTPService(
 		zap.NewNop(), nil, certFile, keyFile,
 		"mockorg", "mockservice",
-		inwayAddresses, healtyStates)
+		inwayAddresses, healthyStates)
 
 	assert.Nil(t, err)
 	outway.servicesHTTP["mockorg.mockservice"] = l

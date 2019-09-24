@@ -20,7 +20,7 @@ func TestNewRoundRobinLoadBalancerExceptions(t *testing.T) {
 	organizationName := mockorg
 	serviceName := mockservicename
 	inwayAddresses := []string{"mockaddress1", "mockaddress2"}
-	healtyStates := []bool{true, true}
+	healthyStates := []bool{true, true}
 
 	certFile := filepath.Join("..", "testing", "org-nlx-test.crt")
 	keyFile := filepath.Join("..", "testing", "org-nlx-test.key")
@@ -43,7 +43,7 @@ func TestNewRoundRobinLoadBalancerExceptions(t *testing.T) {
 		"invalid certfile",
 		keyFile, organizationName, serviceName,
 		inwayAddresses,
-		healtyStates,
+		healthyStates,
 	)
 
 	if err == nil {
@@ -59,7 +59,7 @@ func TestNewRoundRobinLoadBalancerExceptions(t *testing.T) {
 		organizationName,
 		serviceName,
 		inwayAddresses,
-		healtyStates,
+		healthyStates,
 	)
 	assert.EqualError(t, err, "invalid certificate provided: open invalid key file: no such file or directory")
 }
@@ -69,13 +69,13 @@ func TestNewRoundRobinLoadBalancer(t *testing.T) {
 	serviceName := mockservicename
 
 	inwayAddresses := []string{"mockaddress1", "mockaddress2"}
-	healtyStates := []bool{true, true}
+	healthyStates := []bool{true, true}
 	certFile := filepath.Join("..", "testing", "org-nlx-test.crt")
 	keyFile := filepath.Join("..", "testing", "org-nlx-test.key")
 	l, err := NewRoundRobinLoadBalancedHTTPService(
 		zap.NewNop(), nil, certFile, keyFile,
 		organizationName, serviceName,
-		inwayAddresses, healtyStates)
+		inwayAddresses, healthyStates)
 
 	assert.Nil(t, err)
 	assert.Equal(t, inwayAddresses, l.GetInwayAddresses())
