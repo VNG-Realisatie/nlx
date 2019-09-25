@@ -1,12 +1,12 @@
 // Copyright © VNG Realisatie 2018
 // Licensed under the EUPL
 
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { bool, string, array } from 'prop-types'
 import ServicesTable from '../../components/ServicesTable/ServicesTable';
 import { ASCENDING, DESCENDING } from '../../components/Table/SortableHeadCell';
 
-class ServicesTableContainer extends Component {
+class ServicesTableContainer extends PureComponent {
   constructor(props) {
     super(props)
 

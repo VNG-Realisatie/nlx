@@ -2,6 +2,7 @@
 // Licensed under the EUPL
 
 import React, { Component } from 'react'
+import debounce from 'debounce'
 
 import { Spinner } from '@commonground/design-system'
 
@@ -21,12 +22,19 @@ class ServicesOverviewPage extends Component {
             error: null,
             services: [],
             query: '',
+            debouncedQuery: '',
             displayOfflineServices: true
         }
 
         this.searchOnChange = this.searchOnChange.bind(this)
         this.switchOnChange = this.switchOnChange.bind(this)
         this.escFunction = this.escFunction.bind(this)
+
+        this.searchOnChangeDebouncable = (query) => {
+            this.setState({ debouncedQuery: query })
+        }
+
+        this.searchOnChangeDebounced = debounce(this.searchOnChangeDebouncable, 400)
     }
 
     fetchServices() {
@@ -63,6 +71,7 @@ class ServicesOverviewPage extends Component {
 
     searchOnChange(query) {
         this.setState({ query })
+        this.searchOnChangeDebounced(query)
     }
 
     switchOnChange(checked) {
@@ -70,7 +79,7 @@ class ServicesOverviewPage extends Component {
     }
 
     render() {
-        const { displayOfflineServices, query, loading, error, services } = this.state
+        const { displayOfflineServices, query, debouncedQuery, loading, error, services } = this.state
 
         if (loading) {
             return <Spinner />
@@ -90,7 +99,7 @@ class ServicesOverviewPage extends Component {
                 <StyledServicesTableContainer services={services}
                                                 sortBy='organization'
                                                 sortOrder='asc'
-                                                filterQuery={query}
+                                                filterQuery={debouncedQuery}
                                                 filterByOnlineServices={!displayOfflineServices}
                                                 />
             </Container>
