@@ -6,7 +6,6 @@ import { shallow } from 'enzyme'
 import { Spinner } from '@commonground/design-system'
 import ServicesOverviewPage from './ServicesOverviewPage';
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
-import ServicesTableContainer from '../../containers/ServicesTableContainer/ServicesTableContainer'
 
 describe('ServicesOverviewPage', () => {
   let wrapper
@@ -70,6 +69,35 @@ describe('ServicesOverviewPage', () => {
       }))
 
       expect(wrapper.state('query')).toBe('')
+    })
+  })
+
+  describe('when a query parameter is set', () => {
+    beforeEach(() => {
+      const mockLocation = { search: '?q=test'}
+      wrapper = shallow(<ServicesOverviewPage location={mockLocation} />)
+    })
+
+    it('should store the value of the query parameter as internal state', () => {
+      expect(wrapper.state('query')).toBe('test')
+    })
+  })
+
+  describe('the searchOnChangeDebouncable handler', () => {
+    let mockHistory
+    beforeEach(() => {
+      jest.useFakeTimers()
+
+      mockHistory = { push: jest.fn() }
+      wrapper = shallow(<ServicesOverviewPage history={mockHistory} />)
+      instance = wrapper.instance()
+    })
+
+    it('should call a pushState', () => {
+      instance.searchOnChangeDebouncable('test')
+      jest.runAllTimers()
+
+      expect(mockHistory.push).toHaveBeenCalledWith('?q=test')
     })
   })
 })

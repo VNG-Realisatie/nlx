@@ -7,6 +7,7 @@
     "@tippy.js/react": "2.2.2",
     "ajv-keywords": "3.4.1",
     "copy-text-to-clipboard": "2.1.0",
+    "core-js": "3.2.1",
     "debounce": "1.2.0",
     "mobx": "5.13.0",
     "react": "16.9.0",

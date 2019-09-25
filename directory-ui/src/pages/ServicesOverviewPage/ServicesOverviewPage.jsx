@@ -17,12 +17,16 @@ class ServicesOverviewPage extends Component {
     constructor(props) {
         super(props)
 
+        const { location, history } = this.props
+
+        const urlParams = new URLSearchParams(location.search)
+
         this.state = {
             loading: true,
             error: null,
             services: [],
-            query: '',
-            debouncedQuery: '',
+            query: urlParams.get('q') || '',
+            debouncedQuery: urlParams.get('q') || '',
             displayOfflineServices: true
         }
 
@@ -32,6 +36,7 @@ class ServicesOverviewPage extends Component {
 
         this.searchOnChangeDebouncable = (query) => {
             this.setState({ debouncedQuery: query })
+            history.push(`?q=${encodeURIComponent(query)}`)
         }
 
         this.searchOnChangeDebounced = debounce(this.searchOnChangeDebouncable, 400)
@@ -105,6 +110,11 @@ class ServicesOverviewPage extends Component {
             </Container>
         )
     }
+}
+
+ServicesOverviewPage.defaultProps = {
+    location: window.location,
+    history: window.history
 }
 
 export default ServicesOverviewPage
