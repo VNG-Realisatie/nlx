@@ -48,6 +48,7 @@ func newListServicesHandler(db *sqlx.DB, logger *zap.Logger) (*listServicesHandl
 		WHERE
 			(internal = false OR (internal = true AND o.name = $1))
 		GROUP BY s.id, o.id
+		ORDER BY o.name, s.name
 	`)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to prepare stmtSelectServices")

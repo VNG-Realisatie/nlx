@@ -41,6 +41,7 @@ func newListOrganizationsHandler(
 			COALESCE(insight_irma_endpoint, '') AS insight_irma_endpoint,
 			COALESCE(insight_log_endpoint, '') AS insight_log_endpoint
 		FROM directory.organizations
+		ORDER BY name
 	`)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to prepare stmtSelectOrganizations")
