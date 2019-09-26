@@ -11,8 +11,8 @@ class ServicesTableContainer extends Component {
     super(props)
 
     this.state = {
-      sortBy: null,
-      sortOrder: null,
+      sortBy: props.sortBy,
+      sortOrder: props.sortOrder,
     }
   }
 
@@ -76,7 +76,7 @@ class ServicesTableContainer extends Component {
   }
 
   render() {
-    const { services, filterQuery, filterByOnlineServices, ...props } = this.props
+    const { services, filterQuery, filterByOnlineServices } = this.props
     const { sortBy, sortOrder } = this.state
     const filteredServices = this.filterServices(services, filterQuery, filterByOnlineServices)
     const sortedFilteredServices = this.sortServices(filteredServices, sortBy, sortOrder)
@@ -86,7 +86,6 @@ class ServicesTableContainer extends Component {
                      sortBy={sortBy}
                      sortOrder={sortOrder}
                      onToggleSorting={property => this.onToggleSorting(property)}
-                     {...props}
       />
     )
   }
@@ -95,13 +94,17 @@ class ServicesTableContainer extends Component {
 ServicesTableContainer.propTypes = {
   filterQuery: string,
   filterByOnlineServices: bool,
-  services: array
+  services: array,
+  sortBy: string,
+  sortOrder: string
 }
 
 ServicesTableContainer.defaultProps = {
   filterQuery: '',
   filterByOnlineServices: false,
-  services: []
+  services: [],
+  sortBy: null,
+  sortOrder: null
 }
 
 export default ServicesTableContainer

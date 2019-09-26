@@ -15,9 +15,19 @@ describe('ServicesTableContainer', () => {
   })
 
   describe('sorting', () => {
-    it('should have null values for default sorting', () => {
-      expect(wrapper.state('sortBy')).toBeNull()
-      expect(wrapper.state('sortOrder')).toBeNull()
+    describe('when no sort properties are provided', () => {
+      it('should have null values for default sorting', () => {
+        expect(wrapper.state('sortBy')).toBeNull()
+        expect(wrapper.state('sortOrder')).toBeNull()
+      })
+    })
+
+    describe('when sort properties are provided', () => {
+      it('should have the sorting state set to those values', () => {
+        wrapper = shallow(<ServicesTableContainer sortBy="test-column" sortOrder="test-order" />)
+        expect(wrapper.state('sortBy')).toEqual('test-column')
+        expect(wrapper.state('sortOrder')).toEqual('test-order')
+      })
     })
 
     describe('sorting the services', () => {

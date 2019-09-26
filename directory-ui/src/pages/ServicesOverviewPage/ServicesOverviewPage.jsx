@@ -88,6 +88,8 @@ class ServicesOverviewPage extends Component {
                 />
 
                 <StyledServicesTableContainer services={services}
+                                                sortBy='organization'
+                                                sortOrder='asc'
                                                 filterQuery={query}
                                                 filterByOnlineServices={!displayOfflineServices}
                                                 />
