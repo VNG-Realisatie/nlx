@@ -55,17 +55,18 @@ insight:
 configAPI:
   enabled: true
   serviceConfig: |
-      {
-        "name": "kentekenregister",
-        "endpointURL": "http://service:8000",
-        "apiSpecificationURL": "http://service:8000/openapi.yaml",
-        "authorizationSettings": {
-          "mode": "none"
-        },
-        "inways": ["inway.rdw"]
-      }
+    {
+      "name": "kentekenregister",
+      "endpointURL": "http://service:8000",
+      "apiSpecificationURL": "http://service:8000/openapi.yaml",
+      "authorizationSettings": {
+        "mode": "none"
+      },
+      "inways": ["inway.rdw"]
+    }
 
 management:
   enable: true
+  basicAuth: bWFuYWdlcjokMnkkMDUkbXNLc2wyUUdaVEtqOGNFQTd2VEhwT2lST1ZVRkVFdkFVS2VDYXpqQURzRWtqNHRZeFQxOU8K
 
 replicas: 1

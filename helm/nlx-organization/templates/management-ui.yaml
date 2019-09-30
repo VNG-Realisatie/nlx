@@ -1,5 +1,17 @@
 {{ if .Values.management.enable }}
 {{ with set . "component" "management-ui" }}
+{{ if  .Values.management.basicAuth }}
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: management-ui-auth
+  namespace: {{.Release.Namespace}}
+  labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
+data:
+  auth: {{ .Values.management.basicAuth }}
+---
+{{ end }}
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
@@ -44,6 +56,10 @@ metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
     ingress.kubernetes.io/hsts-include-subdomains: 'true'
     ingress.kubernetes.io/hsts-max-age: '315360000'
     ingress.kubernetes.io/hsts-preload: 'true'
+    {{ if  .Values.management.basicAuth }}
+    ingress.kubernetes.io/auth-type: basic
+    ingress.kubernetes.io/auth-secret: management-ui-auth
+    {{ end }}
     kubernetes.io/ingress.class: traefik
 spec:
   rules:
