@@ -17,8 +17,8 @@ import (
 )
 
 var options struct {
-	ListenAddress    string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:8080" description:"Adress for the api to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
-	ConfigAPIAddress string `long:"config-api-address" env:"CONFIG_API_ADDRESS" description:"Adress of the config API. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	ListenAddress    string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:8080" description:"Address for the api to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	ConfigAPIAddress string `long:"config-api-address" env:"CONFIG_API_ADDRESS" description:"Address of the config API. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 	logoptions.LogOptions
 	orgtls.TLSOptions
 }

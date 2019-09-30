@@ -234,7 +234,6 @@ func (h *healthChecker) waitForNotification(l *pq.Listener, c <-chan struct{}) {
 			}()
 		case <-c:
 			return
-
 		}
 	}
 }
@@ -344,7 +343,7 @@ func (h *healthChecker) updateAvailabilityHealth(av availability, newHealth bool
 
 func (h *healthChecker) updateInwayVersion(av availability, version string) {
 	if version == "" {
-		h.logger.Info("no inway version recieved")
+		h.logger.Info("no inway version received")
 		return
 	}
 	res, err := h.stmtUpdateInwayVersion.Exec(av.InwayID, version)
