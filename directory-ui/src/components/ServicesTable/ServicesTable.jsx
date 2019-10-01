@@ -6,7 +6,7 @@ import { func, string, arrayOf, shape } from 'prop-types'
 import Table from '../Table'
 import ServicesTableRow from './ServicesTableRow'
 
-const ServicesTable = ({ services, sortBy, sortOrder, onToggleSorting, ...props }) =>
+const ServicesTable = ({ services, sortBy, sortOrder, onToggleSorting, onServiceClickedHandler, ...props }) =>
   <Table {...props}>
     <Table.Head>
       <Table.Row>
@@ -36,6 +36,7 @@ const ServicesTable = ({ services, sortBy, sortOrder, onToggleSorting, ...props 
                               organization={service.organization}
                               apiType={service.apiType}
                               apiAddress={service.apiAddress}
+                              onClick={() => onServiceClickedHandler(service)}
             />
           )
       }
@@ -52,12 +53,14 @@ ServicesTable.propTypes = {
   })),
   sortBy: string,
   sortOrder: string,
-  onToggleSorting: func
+  onToggleSorting: func,
+  onServiceClickedHandler: func,
 }
 
 ServicesTable.defaultProps = {
   services: [],
-  onToggleSorting: () => {}
+  onToggleSorting: () => {},
+  onServiceClickedHandler: () => {},
 }
 
 export default ServicesTable

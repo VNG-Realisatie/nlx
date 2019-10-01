@@ -10,6 +10,16 @@ export const StyledServiceTableRow = styled(Table.Row)`
     color: ${
     p => p.status === 'offline' ? '#A3AABF' : '#2D3240'};
   }
+  
+  cursor: pointer;
+
+    &:hover td {
+      background-color: #F7F9FC;
+    }
+
+    &:active td {
+      background-color: #F0F2F7;
+    }
 `
 
 export const StyledApiTypeLabel = styled.span`

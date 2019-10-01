@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 
 import React, { PureComponent } from 'react'
-import { bool, string, array } from 'prop-types'
+import { bool, string, array, func } from 'prop-types'
 import ServicesTable from '../../components/ServicesTable/ServicesTable';
 import { ASCENDING, DESCENDING } from '../../components/Table/SortableHeadCell';
 
@@ -76,7 +76,7 @@ class ServicesTableContainer extends PureComponent {
   }
 
   render() {
-    const { services, filterQuery, filterByOnlineServices } = this.props
+    const { services, filterQuery, filterByOnlineServices, onServiceClickedHandler } = this.props
     const { sortBy, sortOrder } = this.state
     const filteredServices = this.filterServices(services, filterQuery, filterByOnlineServices)
     const sortedFilteredServices = this.sortServices(filteredServices, sortBy, sortOrder)
@@ -86,6 +86,7 @@ class ServicesTableContainer extends PureComponent {
                      sortBy={sortBy}
                      sortOrder={sortOrder}
                      onToggleSorting={property => this.onToggleSorting(property)}
+                     onServiceClickedHandler={onServiceClickedHandler}
       />
     )
   }
@@ -96,7 +97,8 @@ ServicesTableContainer.propTypes = {
   filterByOnlineServices: bool,
   services: array,
   sortBy: string,
-  sortOrder: string
+  sortOrder: string,
+  onServiceClickedHandler: func,
 }
 
 ServicesTableContainer.defaultProps = {
@@ -104,7 +106,8 @@ ServicesTableContainer.defaultProps = {
   filterByOnlineServices: false,
   services: [],
   sortBy: null,
-  sortOrder: null
+  sortOrder: null,
+  onServiceClickedHandler: () => {},
 }
 
 export default ServicesTableContainer

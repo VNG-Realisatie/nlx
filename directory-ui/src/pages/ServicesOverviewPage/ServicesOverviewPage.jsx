@@ -10,36 +10,52 @@ import ErrorMessage from '../../components/ErrorMessage/ErrorMessage'
 import Container from '../../components/Container/Container'
 import { StyledFilters, StyledServicesTableContainer } from './ServicesOverviewPage.styles';
 import { mapListServicesAPIResponse } from './map-list-services-api-response';
+import ServiceDetailPane from '../../components/ServiceDetailPane';
 
 const ESCAPE_KEY_CODE = 27
 
 class ServicesOverviewPage extends Component {
     constructor(props) {
-        super(props)
+      super(props)
 
-        const { location, history } = this.props
+      const { location, history } = this.props
 
-        const urlParams = new URLSearchParams(location.search)
+      const urlParams = new URLSearchParams(location.search)
 
-        this.state = {
-            loading: true,
-            error: null,
-            services: [],
-            query: urlParams.get('q') || '',
-            debouncedQuery: urlParams.get('q') || '',
-            displayOfflineServices: true
-        }
+      this.state = {
+        loading: true,
+        error: null,
+        services: [],
+        query: urlParams.get('q') || '',
+        debouncedQuery: urlParams.get('q') || '',
+        displayOfflineServices: true,
+        selectedService: null
+      }
 
-        this.searchOnChange = this.searchOnChange.bind(this)
-        this.switchOnChange = this.switchOnChange.bind(this)
-        this.escFunction = this.escFunction.bind(this)
+      this.searchOnChange = this.searchOnChange.bind(this)
+      this.switchOnChange = this.switchOnChange.bind(this)
+      this.escFunction = this.escFunction.bind(this)
+      this.onServiceClickedHandler = this.onServiceClickedHandler.bind(this)
+      this.detailPaneCloseHandler = this.detailPaneCloseHandler.bind(this)
 
-        this.searchOnChangeDebouncable = (query) => {
-            this.setState({ debouncedQuery: query })
-            history.push(`?q=${encodeURIComponent(query)}`)
-        }
+      this.searchOnChangeDebouncable = (query) => {
+        this.setState({ debouncedQuery: query })
+        history.push(`?q=${encodeURIComponent(query)}`)
+      }
 
-        this.searchOnChangeDebounced = debounce(this.searchOnChangeDebouncable, 400)
+      this.searchOnChangeDebounced = debounce(this.searchOnChangeDebouncable, 400)
+    }
+
+    onServiceClickedHandler(service) {
+      this.setState({
+        selectedService: service
+      });
+    }
+
+    detailPaneCloseHandler() {
+      this.setState({
+        selectedService: null
+      });
     }
 
     fetchServices() {
@@ -84,7 +100,7 @@ class ServicesOverviewPage extends Component {
     }
 
     render() {
-        const { displayOfflineServices, query, debouncedQuery, loading, error, services } = this.state
+        const { displayOfflineServices, query, debouncedQuery, loading, error, services, selectedService } = this.state
 
         if (loading) {
             return <Spinner />
@@ -106,7 +122,16 @@ class ServicesOverviewPage extends Component {
                                                 sortOrder='asc'
                                                 filterQuery={debouncedQuery}
                                                 filterByOnlineServices={!displayOfflineServices}
+                                                onServiceClickedHandler={(service) => this.onServiceClickedHandler(service)}
                                                 />
+              {
+                selectedService ?
+                  <ServiceDetailPane organizationName={selectedService.organization}
+                                     contactEmail={selectedService.contactEmail}
+                                     name={selectedService.name}
+                                     closeHandler={this.detailPaneCloseHandler}
+                  /> : null
+              }
             </Container>
         )
     }

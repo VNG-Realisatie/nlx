@@ -6,6 +6,7 @@ import { shallow } from 'enzyme'
 import { Spinner } from '@commonground/design-system'
 import ServicesOverviewPage from './ServicesOverviewPage';
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
+import ServiceDetailPane from "../../components/ServiceDetailPane";
 
 describe('ServicesOverviewPage', () => {
   let wrapper
@@ -21,6 +22,12 @@ describe('ServicesOverviewPage', () => {
       expect(wrapper.state()).toMatchObject({
         query: '',
         displayOfflineServices: true
+      })
+    })
+
+    it('should have no service selected', () => {
+      expect(wrapper.state()).toMatchObject({
+        selectedService: null
       })
     })
   })
@@ -47,14 +54,34 @@ describe('ServicesOverviewPage', () => {
   })
 
   describe('when the services are loaded', () => {
-    it('should show the services table', () => {
+    beforeEach(() => {
       wrapper.setState({
         loading: false,
         error: false,
         services: []
       })
+    })
 
+    it('should show the services table', () => {
       expect(wrapper.exists('ServicesTableContainer')).toBe(true)
+    })
+
+    describe('when no service is selected', () => {
+      it('should not show the service detail pane', () => {
+        wrapper.setState({
+          selectedService: null
+        })
+        expect(wrapper.exists('ServiceDetailPane')).toBe(false)
+      })
+    })
+
+    describe('when a service is selected', () => {
+      it('should show the service detail pane', () => {
+        wrapper.setState({
+          selectedService: { foo: 'bar' },
+        })
+        expect(wrapper.exists('ServiceDetailPane')).toBe(true)
+      })
     })
   })
 
@@ -98,6 +125,30 @@ describe('ServicesOverviewPage', () => {
       jest.runAllTimers()
 
       expect(mockHistory.push).toHaveBeenCalledWith('?q=test')
+    })
+  })
+
+  describe('the service clicked handler', () => {
+    it('should store the service as local state', () => {
+      wrapper.setState({
+        selectedService: null
+      })
+
+      wrapper.instance().onServiceClickedHandler({ foo: 'bar' })
+
+      expect(wrapper.state('selectedService')).toEqual({ foo: 'bar' })
+    })
+  })
+
+  describe('the service detail pane close handler', () => {
+    it('should clear the selectedService', () => {
+      wrapper.setState({
+        selectedService: {}
+      })
+
+      wrapper.instance().detailPaneCloseHandler()
+
+      expect(wrapper.state('selectedService')).toBe(null)
     })
   })
 })

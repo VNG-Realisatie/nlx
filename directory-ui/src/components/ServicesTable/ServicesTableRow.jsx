@@ -18,7 +18,7 @@ export const apiUrlForService = (organization, name) =>
   `http://{your-outway-address}/${organization}/${name}`
 
 
-const ServicesTableRow = ({ status, organization, name, apiType }) => {
+const ServicesTableRow = ({ status, organization, name, apiType, ...props }) => {
   const [isCopiedNotifierVisible, setIsCopiedNotifierVisible] = useState(false);
 
   const showCopiedNotifier = () => {
@@ -35,7 +35,7 @@ const ServicesTableRow = ({ status, organization, name, apiType }) => {
   }
 
   return (
-    <StyledServiceTableRow status={status}>
+    <StyledServiceTableRow status={status} {...props}>
       <Table.BodyCell align="center" padding="none" title={status}><StatusIcon status={status} /></Table.BodyCell>
       <Table.BodyCell>{organization}</Table.BodyCell>
       <Table.BodyCell>{name}</Table.BodyCell>

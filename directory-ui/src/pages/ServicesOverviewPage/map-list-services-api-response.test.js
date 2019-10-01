@@ -12,6 +12,7 @@ describe('mapping the API response', () => {
         inway_addresses: ['https://www.duck.com'],
         documentation_url: 'https://www.duck.com',
         api_specification_type: 'openapi',
+        public_support_contact: 'foo@bar.baz'
       }]
     }
 
@@ -19,7 +20,8 @@ describe('mapping the API response', () => {
       organization: 'foo',
       name: 'bar',
       status: 'online',
-      apiType: 'openapi'
+      apiType: 'openapi',
+      contactEmail: 'foo@bar.baz'
     }])
   })
 
