@@ -40,13 +40,11 @@ const defaultInitialValues = {
     inways: [],
 }
 
-const validationSchema = Yup.object().shape({
+export const validationSchema = Yup.object().shape({
     name: Yup.string().required(),
-    endpointURL: Yup.string()
-        .required()
-        .url(),
+    endpointURL: Yup.string().required(),
     documentationURL: Yup.string().url(),
-    apiSpecificationURL: Yup.string().url(),
+    apiSpecificationURL: Yup.string(),
     internal: Yup.boolean(),
     techSupportContact: Yup.string().email(),
     publicSupportContact: Yup.string().email(),

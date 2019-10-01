@@ -3,7 +3,8 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 import { Formik } from 'formik'
-import ServiceForm from './index'
+import ServiceForm, { validationSchema } from './index'
+import { ValidationError } from 'yup'
 
 describe('ServiceForm', () => {
     let onSubmit, wrapper
@@ -23,5 +24,36 @@ describe('ServiceForm', () => {
 
             expect(onSubmit).toHaveBeenCalledTimes(1)
         })
+    })
+})
+
+describe('the form validator', () => {
+    it('should be valid with a NON fully qualified domain name as endpointURL and apiSpecificationURL', () => {
+        var result = validationSchema.validate({
+            name: 'service.name',
+            endpointURL: 'http://service:8080',
+            apiSpecificationURL: 'http://service:8080/openapispec.yml',
+        })
+        return expect(result).resolves.toBeDefined()
+    })
+
+    it('should be valid with an IP address as endpointURL and apiSpecificationURL', () => {
+        var result = validationSchema.validate({
+            name: 'service.name',
+            endpointURL: 'http://10.0.0.1:8080',
+            apiSpecificationURL: 'http://10.0.0.1:8080/openapispec.yml',
+        })
+        return expect(result).resolves.toBeDefined()
+    })
+
+    it('should not be valid if the endpointURL is missing', () => {
+        var result = validationSchema.validate({
+            name: 'service.name',
+            endpointURL: '',
+            apiSpecificationURL: 'http://service:8080/openapispec.yml',
+        })
+        return expect(result).rejects.toEqual(
+            new ValidationError('endpointURL is a required field'),
+        )
     })
 })
