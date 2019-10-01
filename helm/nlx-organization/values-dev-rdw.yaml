@@ -67,6 +67,5 @@ configAPI:
 
 management:
   enable: true
-  basicAuth: bWFuYWdlcjokMnkkMDUkbXNLc2wyUUdaVEtqOGNFQTd2VEhwT2lST1ZVRkVFdkFVS2VDYXpqQURzRWtqNHRZeFQxOU8K
 
 replicas: 1
