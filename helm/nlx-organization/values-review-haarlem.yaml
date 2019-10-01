@@ -23,6 +23,8 @@ inway:
       [services.parkeervergunning]
       endpoint-url = "http://application:8000"
       authorization-model = "none"
+      public-support-contact = "public-support@nlx.io"
+      tech-support-contact = "tech-support@nlx.io"
 
 outway:
   enable: true

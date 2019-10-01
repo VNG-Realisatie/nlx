@@ -21,6 +21,8 @@ inway:
       authorization-model = "none"
       insight-api-url = "https://insight-api.test.voorbeeld-haarlem.nl"
       irma-api-url = "https://irma-api.test.voorbeeld-haarlem.nl"
+      public-support-contact = "public-support@nlx.io"
+      tech-support-contact = "tech-support@nlx.io"
 
 outway:
   enable: true
