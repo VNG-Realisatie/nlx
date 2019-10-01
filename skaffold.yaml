@@ -55,7 +55,7 @@ build:
   - image: nlxio/nlxctl
     context: .
     docker:
-      dockerfile: nlxctl/Dockerfile
+      dockerfile: nlxctl/Dockerfile 
   - image: nlxio/outway
     context: .
     docker:
@@ -222,14 +222,19 @@ profiles:
           caAddress: ca-cfssl-unsafe.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           externalDomain: nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
           domain: nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}
-          inway.config: |
-            [services]
-                [services.kentekenregister]
-                endpoint-url = 'http://service.nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}:8000'
-                authorization-model = 'none'
-                api-specification-document-url = 'http://service.nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}:8000/openapi.yaml'
-                insight-api-url = 'https://insight-api.nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}'
-                irma-api-url = 'https://irma-api.nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}'
+          configAPI.insightAPIURL: https://insight-api.nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
+          configAPI.irmaServerURL: https://irma-api.nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
+          configAPI.serviceConfig: |
+            \{
+              "name": "kentekenregister"\,
+              "endpointURL": "http://service.nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}:8000"\,
+              "apiSpecificationURL": "http://service.nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}:8000/openapi.yaml"\,
+              "authorizationSettings": \{
+                "mode": "none"
+              \}\,
+              "inways": ["inway.rdw"]
+            \}
+
 - name: deploy-review-haarlem
   deploy:
     helm:
@@ -311,6 +316,8 @@ profiles:
         namespace: nlx-test-brp
       - name: nlx-test-rdw
         chartPath: helm/nlx-organization
+        setValueTemplates:
+         management.basicAuth: "{{.MANAGEMENT_BASIC_AUTH}}"
         valuesFiles:
         - helm/nlx-organization/values-test-rdw.yaml
         values:
@@ -379,6 +386,8 @@ profiles:
         chartPath: helm/nlx-organization
         valuesFiles:
         - helm/nlx-organization/values-acc-rdw.yaml
+        setValueTemplates:
+         management.basicAuth: "{{.MANAGEMENT_BASIC_AUTH}}"
         values:
           authServiceImage: nlxio/auth-service
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
@@ -445,6 +454,8 @@ profiles:
         chartPath: helm/nlx-organization
         valuesFiles:
         - helm/nlx-organization/values-demo-rdw.yaml
+        setValueTemplates:
+         management.basicAuth: "{{.MANAGEMENT_BASIC_AUTH}}"
         values:
           authServiceImage: nlxio/auth-service
           caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
