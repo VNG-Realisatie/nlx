@@ -15,8 +15,8 @@ func init() { //nolint:gochecknoinits
 	insightCommand.AddCommand(putInsightCommand)
 	insightCommand.AddCommand(getInsightCommand)
 
-	putInsightCommand.Flags().StringVarP(&insightOptions.insightAPIURL, "insight-api-url", "i", "", "URL of the insight api")
-	putInsightCommand.Flags().StringVarP(&insightOptions.irmaServerURL, "irma-server-url", "r", "", "URL of the irma server")
+	putInsightCommand.Flags().StringVarP(&insightOptions.insightAPIURL, "insight-api-url", "i", "insight", "URL of the insight api")
+	putInsightCommand.Flags().StringVarP(&insightOptions.irmaServerURL, "irma-server-url", "r", "irma", "URL of the irma server")
 	err := putInsightCommand.MarkFlagRequired("insight-api-url")
 	if err != nil {
 		panic(err)
