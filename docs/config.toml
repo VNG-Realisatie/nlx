@@ -5,7 +5,11 @@ baseURL = "https://docs.nlx.io/"
 DefaultContentLanguage = "en"
 
 [outputs]
-home = [ "HTML", "RSS", "JSON"]
+home = [ 
+    "HTML", 
+    "RSS", 
+    #"JSON"
+]
 
 [[menu.docs]]
   name = "Introduction"
@@ -21,18 +25,30 @@ home = [ "HTML", "RSS", "JSON"]
 
 [[menu.docs]]
   name = "Support"
-  weight = 2
+  weight = 3
   identifier = "Support"
   url = "/support/"
 
 [[menu.docs]]
+  name = "Compliancy"
+  weight = 4
+  identifier = "compliancy"
+  url = "/compliancy/"
+
+[[menu.docs]]
+  name = "Usecases"
+  weight = 5
+  identifier = "usecases"
+  url = "/usecases/"
+
+[[menu.docs]]
   name = "Further reading"
-  weight = 3
+  weight = 6
   identifier = "further-reading"
   url = "/further-reading/"
 
 [[menu.docs]]
   name = "Glossary"
-  weight = 4
+  weight = 7
   identifier = "glossary"
   url = "/glossary/"

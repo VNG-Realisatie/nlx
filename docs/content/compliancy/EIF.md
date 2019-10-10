@@ -1,37 +1,62 @@
 ---
-title: "Compliancy with EU regulations"
-description: ""
+title: "EIF"
+description: "European Interoperability Framework (EIF)"
 weight: 140
 menu:
   docs:
-    parent: "introduction"
+    parent: "compliancy"
 ---
 
-# NLX architecture compliancy with EU regulations and architecture frameworks
+# NLX architecture compliancy with EU regulations 
+# and architecture frameworks
 
 # European Interoperability Framework (EIF)
 
-The European interoperability framework is a commonly agreed approach to the delivery of European public services in an interoperable manner. It defines basic interoperability guidelines in the form of common principles, models and recommendations.
+The European interoperability framework is a commonly
+agreed approach to the delivery of European public
+services in an interoperable manner. It defines basic
+interoperability guidelines in the form of common
+principles, models and recommendations.
 
 The purpose of the EIF is to:
 
-- inspire European public administrations in their efforts to design and deliver seamless European public services to other public administrations, citizens and businesses which are to the degree possible, digital-by-default (i.e. providing services and data preferably via digital channels), cross-border-by-default (i.e. accessible for all citizens in the EU) and open-by-default (i.e. enabling reuse, participation/access and transparency);
-- provide guidance to public administrations on the design and update of national interoperability frameworks (NIFs), or national policies, strategies and guidelines promoting interoperability;
-- contribute to the establishment of the digital single market by fostering cross-border and cross- sectoral interoperability for the delivery of European public services.
+- inspire European public administrations in their efforts 
+  to design and deliver seamless European public services to other public
+  administrations, citizens and businesses which are to the degree possible,
+  digital-by-default (i.e. providing services and data preferably via digital
+  channels), cross-border-by-default (i.e. accessible for all citizens in the
+  EU) and open-by-default (i.e. enabling reuse, participation/access and
+  transparency);
+- provide guidance to public administrations on the design and update 
+  of national interoperability frameworks (NIFs), or national policies,
+  strategies and guidelines promoting interoperability;
+- contribute to the establishment of the digital single market by fostering 
+  cross-border and cross- sectoral interoperability for the delivery of 
+  European public services.
 
-The EIF is meant to be a generic framework applicable to all public administrations in the EU. It lays out the basic conditions for achieving interoperability, acting as the common denominator for relevant initiatives at all levels including European, national, regional and local, embracing public administrations, citizens and businesses.
+The EIF is meant to be a generic framework applicable to all public
+administrations in the EU. It lays out the basic conditions for achieving
+interoperability, acting as the common denominator for relevant initiatives at
+all levels including European, national, regional and local, embracing public
+administrations, citizens and businesses.
 
-The EIF describes a set of 47 recommendations, as actionable items to be implemented by public administrations. Several these recommendations impact NLX. All recommendations from the EIF and their impact on NLX are detailed below.
+The EIF describes a set of 47 recommendations, as actionable items to be
+implemented by public administrations. Several these recommendations impact
+NLX. All recommendations from the EIF and their impact on NLX are detailed
+below.
 
 * **Requirement** NLX0001 
   * **Source**  European Interoperability Framework (EIF)
   * **Category**  Underlying principle: Subsidiarity and proportionality
   * **Type**  Recommendation 
   * **Compliant**  Yes 
-  * **Description** Ensure that national interoperability frameworks and interoperability strategies are aligned with the EIF and, if needed, tailor and extend them to address the national context and needs.  |
+  * **Description** Ensure that national interoperability frameworks and
+    interoperability strategies are aligned with the EIF and, if needed, tailor
+    and extend them to address the national context and needs.  |
   * **Implications** 
      *  The NLX will be aligned with the goals described in the EIF.
-     *  Extensions in the NLX have been added with regards to authentication and logging in the federated infrastructure
+     *  Extensions in the NLX have been added with regards to authentication
+        and logging in the federated infrastructure
 * **Requirement** NLX0002 
   * **Source**  European Interoperability Framework (EIF) 
   * **Category**  Underlying principle: Openness  
@@ -46,7 +71,9 @@ The EIF describes a set of 47 recommendations, as actionable items to be impleme
  * **Category**  Underlying principle: Openness
  * **Type**  Recommendation 
  * **Compliant**  Yes 
- * **Description**  Ensure a level playing field for open source software and demonstrate active and fair consideration of using open source software, taking into account the total cost of ownership of the solution. |
+ * **Description**  Ensure a level playing field for open source software and
+   demonstrate active and fair consideration of using open source software,
+   taking into account the total cost of ownership of the solution. |
  * **Implications** 
      * NLX is being developed as Open Source using Open Source components.
      * Development is done using the European Union Public License, version 1.2 (EUPL-1.2) license.
@@ -58,7 +85,8 @@ The EIF describes a set of 47 recommendations, as actionable items to be impleme
   * **Description**  Give preference to open specifications, taking due account of the coverage of functional needs, maturity and market support and innovation. 
   * **Implications** 
      * The NLX development exclusively uses both international and national open specifications.
-     * Examples of local open specifications are the Dutch DSO API/URI specification and Dutch government OAuth 2.0 profiles.
+     * Examples of local open specifications are the Dutch DSO API/URI
+       specification and Dutch government OAuth 2.0 profiles.
 * **Requirement**  NLX0005 
   * **Source**  European Interoperability Framework (EIF) 
   * **Category**  Underlying principle:Transparency  
@@ -67,13 +95,15 @@ The EIF describes a set of 47 recommendations, as actionable items to be impleme
   * **Description**  Ensure internal visibility and provide external interfaces for European public services.  
   * **Implications** 
      * NLX can be used as the infrastructure for provisioning the external interfaces.
-     * Ensuring internal visibility and provisioning of external interfaces is the responsibility of the public administration.
+     * Ensuring internal visibility and provisioning of external interfaces is
+       the responsibility of the public administration.
 *  **Requirement**  NLX0006 
   * **Source**  European Interoperability Framework (EIF) 
   * **Category**  Underlying principle:Reusability  
   * **Type**  Recommendation 
   * **Compliant**  Yes 
-  * **Description**  Reuse and share solutions, and cooperate in the development of joint solutions when implementing European public services.  
+  * **Description**  Reuse and share solutions, and cooperate in the
+    development of joint solutions when implementing European public services.  
   * **Implications** 
      * NLX is being developed as Open Source using Open Source components.
      * Development is done using the European Union Public License, version 1.2 (EUPL-1.2) license. 
@@ -90,16 +120,22 @@ The EIF describes a set of 47 recommendations, as actionable items to be impleme
   * **Category**  Underlying principle:Technological neutrality and data portability  
   * **Type**  Recommendation 
   * **Compliant**  Yes 
-  * **Description**  Do not impose any technological solutions on citizens, businesses and other administrations that are technology-specific or disproportionate to their real needs.  
+  * **Description**  Do not impose any technological solutions on citizens,
+    businesses and other administrations that are technology-specific or
+    disproportionate to their real needs.  
   * **Implications** 
-     * NLX doesn&#39;t impose any technical solutions on organizations or businesses which are disproportionate to their needs.
+     * NLX doesn&#39;t impose any technical solutions on organizations or
+       businesses which are disproportionate to their needs.
      * NLX is being developed as a lightweight solution based on open source development.
 * **Requirement**  NLX0009 
   * **Source**  European Interoperability Framework (EIF) 
   * **Category**  Underlying principle:Technological neutrality and data portability  
   * **Type**  Recommendation 
   * **Compliant**  N/A 
-  * **Description**  Ensure data portability, namely that data is easily transferable between systems and applications supporting the implementation and evolution of European public services without unjustified restrictions, if legally possible.  
+  * **Description**  Ensure data portability, namely that data is easily
+    transferable between systems and applications supporting the implementation
+    and evolution of European public services without unjustified restrictions,
+    if legally possible.  
   * **Implications** 
      * Ensuring data portability is the responsibility of the data owner;
      * NLX can accommodate the transfer of the data between systems and organizations.
@@ -108,32 +144,41 @@ The EIF describes a set of 47 recommendations, as actionable items to be impleme
   * **Category**  Underlying principle:User-centricity 
   * **Type**  Recommendation 
   * **Compliant**  N/A 
-  * **Description**  Use multiple channels to provide the European public service, to ensure that users can select the channel that best suits their needs. 
+  * **Description**  Use multiple channels to provide the European public
+    service, to ensure that users can select the channel that best suits their
+    needs. 
   * **Implications** 
-     * It is the responsibility of the public administration to provide multiple channels for provisioning of public services.
+     * It is the responsibility of the public administration to provide
+       multiple channels for provisioning of public services.
 * **Requirement**  NLX0011 
   * **Source**  European Interoperability Framework (EIF) 
   * **Category**  Underlying principle:User-centricity 
   * **Type**  Recommendation 
   * **Compliant**  N/A 
-  * **Description**  Provide a single point of contact in order to hide internal administrative complexity and facilitate users&#39; access to European public services. 
+  * **Description**  Provide a single point of contact in order to hide
+    internal administrative complexity and facilitate users&#39; access to
+    European public services. 
   * **Implications** 
-     * It is the responsibility of the public administration, or government, to provide a single point of contact in order to 
+     * It is the responsibility of the public administration, or government, to
+       provide a single point of contact in order to 
     hide internal administrative complexity. 
 * **Requirement**  NLX0012 
  * **Source**  European Interoperability Framework (EIF) 
  * **Category**  Underlying principle:User-centricity 
  * **Type**  Recommendation 
  * **Compliant**  N/A 
- * **Description**  Put in place mechanisms to involve users in analysis, design, assessment and further development of European public services. 
+ * **Description**  Put in place mechanisms to involve users in analysis,
+   design, assessment and further development of European public services. 
  * **Implications** 
-     * Involving users in analysis, design, assessment and further development of public services is the responsibility of the public administration.
+     * Involving users in analysis, design, assessment and further development
+       of public services is the responsibility of the public administration.
 * **Requirement**  NLX0013 
   * **Source**  European Interoperability Framework (EIF) 
   * **Category**  Underlying principle:User-centricity 
   * **Type**  Recommendation 
   * **Compliant**  N/A 
-  * **Description**  As far as possible under the legislation in force, ask users of European public services once-only and relevant-only information. 
+  * **Description**  As far as possible under the legislation in force, ask
+    users of European public services once-only and relevant-only information. 
   * **Implications** 
      * This is the responsibility of the public administration.
 * **Requirement**  NLX0014 
@@ -158,7 +203,10 @@ The EIF describes a set of 47 recommendations, as actionable items to be impleme
   * **Category**  Underlying principle:Multilingualism  
   * **Type**  Recommendation 
   * **Compliant**  Yes 
-  * **Description**  Use information systems and technical architectures that cater for multilingualism when establishing a European public service. Decide on the level of multilingualism support based on the needs of the expected users. 
+  * **Description**  Use information systems and technical architectures that
+    cater for multilingualism when establishing a European public service.
+    Decide on the level of multilingualism support based on the needs of the
+    expected users. 
   * **Implications** 
      * The main users of NLX and the services offered through NLX are developers
      * Developers are used to working in environments where English is the main language
@@ -169,15 +217,22 @@ The EIF describes a set of 47 recommendations, as actionable items to be impleme
   * **Category**  Underlying principle:Administrative simplification  
   * **Type**  Recommendation 
   * **Compliant**  N/A 
-  * **Description**  Simplify processes and use digital channels whenever appropriate for the delivery of European public services, to respond promptly and with high quality to users&#39; requests and reduce the administrative burden on public administrations, businesses and citizens. 
+  * **Description**  Simplify processes and use digital channels whenever
+    appropriate for the delivery of European public services, to respond
+    promptly and with high quality to users&#39; requests and reduce the
+    administrative burden on public administrations, businesses and citizens. 
   * **Implications** 
-     * Simplifying processes and using digital channels for the delivery of public services is the responsibility of the public administration offering these services.
+     * Simplifying processes and using digital channels for the delivery of
+       public services is the responsibility of the public administration
+       offering these services.
 * **Requirement**  NLX0018 
  * **Source**  European Interoperability Framework (EIF) 
  * **Category**  Underlying principle:Preservation of information  
  * **Type**  Recommendation 
  * **Compliant**  Yes 
- * **Description**  Formulate a long-term preservation policy for information related to European public services and especially for information that is exchanged across borders. 
+ * **Description**  Formulate a long-term preservation policy for information
+   related to European public services and especially for information that is
+   exchanged across borders. 
  * **Implications** 
      * NLX doesn&#39;t store any information related to European public services except transaction logs;
      * NLX transaction logs need to be preserved long-term to be able to comply with Dutch legislation.
@@ -194,7 +249,8 @@ The EIF describes a set of 47 recommendations, as actionable items to be impleme
   * **Category**  Interoperability governance 
   * **Type**  Recommendation 
   * **Compliant**  N/A 
-  * **Description**  Ensure holistic governance of interoperability activities across administrative levels and sectors. 
+  * **Description**  Ensure holistic governance of interoperability activities
+    across administrative levels and sectors. 
   * **Implications** 
      * This is the responsibility of the public administration, relevant trade associations (VNG Realisatie for Dutch municipalities) and the Dutch government.
 * **Requirement**  NLX0021 
@@ -202,7 +258,9 @@ The EIF describes a set of 47 recommendations, as actionable items to be impleme
   * **Category**  Interoperability governance 
   * **Type**  Recommendation 
   * **Compliant**  N/A 
-  * **Description**  Put in place processes to select relevant standards and specifications, evaluate them, monitor their implementation, check compliance and test their interoperability. 
+  * **Description**  Put in place processes to select relevant standards and
+    specifications, evaluate them, monitor their implementation, check
+    compliance and test their interoperability. 
   * **Implications** 
      * This is the responsibility of the public administration, relevant trade associations (VNG Realisatie for Dutch municipalities) and the Dutch government.
 * **Requirement**  NLX0022 
@@ -210,7 +268,10 @@ The EIF describes a set of 47 recommendations, as actionable items to be impleme
   * **Category**  Interoperability governance 
   * **Type**  Recommendation 
   * **Compliant**  N/A 
-  * **Description**  Use a structured, transparent, objective and common approach to assessing and selecting standards and specifications. Take into account relevant EU recommendations and seek to make the approach consistent across borders. 
+  * **Description**  Use a structured, transparent, objective and common
+    approach to assessing and selecting standards and specifications. Take into
+    account relevant EU recommendations and seek to make the approach
+    consistent across borders. 
   * **Implications** 
      * This is the responsibility of the public administration, relevant trade associations (VNG Realisatie for Dutch municipalities) and the Dutch government
      * The &#39;Forum Standaardisatie&#39; (Dutch Standardisation Forum) selects open standards taking into account the relevant EU recommendations 
@@ -220,7 +281,9 @@ The EIF describes a set of 47 recommendations, as actionable items to be impleme
  * **Category**  Interoperability governance 
  * **Type**  Recommendation 
  * **Compliant**  N/A 
- * **Description**  Consult relevant catalogues of standards, specifications and guidelines at national and EU level, in accordance with your NIF and relevant DIFs, when procuring and developing ICT solutions. 
+ * **Description**  Consult relevant catalogues of standards, specifications
+   and guidelines at national and EU level, in accordance with your NIF and
+   relevant DIFs, when procuring and developing ICT solutions. 
  * **Implications** This is the responsibility of the public administration.
 * **Requirement**  NLX0024 
  * **Source**  European Interoperability Framework (EIF) 
@@ -420,111 +483,3 @@ The EIF describes a set of 47 recommendations, as actionable items to be impleme
   * **Description**  Use trust services according to the Regulation on eID and Trust Services as mechanisms that ensure secure and protected data exchange in public services. 
   * **Implications** 
      * All services provided through NLX will be protected in accordance with the EU eIDAS regulation.
-
-# Regulation on electronic identification and trust services for electronic transactions in the internal market (eIDAS)
-
-The eIDAS directive provides for secure and protected data exchange during the delivery of public services. It ensures that people and businesses can use their own national electronic identification schemes (eIDs) to access public services in other EU countries where eIDs are available and creates a European internal market for eTS - namely electronic signatures, electronic seals, time stamp, electronic delivery service and website authentication - by ensuring that they will work across borders and have the same legal status as traditional paper based processes.
-
-The eIDAS regulation:
-
-- lays down the conditions under which Member States recognise electronic identification means of natural and legal persons falling under a notified electronic identification scheme of another Member State;
-- lays down rules for trust services, in particular for electronic transactions; and
-- establishes a legal framework for electronic signatures, electronic seals, electronic time stamps, electronic documents, electronic registered delivery services and certificate services for website authentication.
-
-This eIDAS Regulation applies to electronic identification schemes that have been notified by a Member State, 
-and to trust service providers that are established in the European Union. The Regulation does not apply to 
-the provision of trust services that are used exclusively within closed systems resulting from national law or 
-from agreements between a defined set of participants and does not affect national or Union law related to 
-the conclusion and validity of contracts or other legal or procedural obligations relating to form.
-
-* **Requirement**  NLX0048 
-  * **Source**  eIDAS 
-  * **Category**  article 8: Assurance levels of electronic identification schemes 
-  * **Type**  Mandatory 
-  * **Compliant**  Yes 
-  * **Description**  An electronic identification scheme notified pursuant to Article 9(1) shall specify assurance levels low, substantial and/or high for electronic identification means issued under that scheme.  
-                     The assurance levels low, substantial and high shall meet respectively the following criteria:
-     * assurance level **low** shall refer to an electronic identification means in the context of an electronic identification scheme, which provides a limited degree of confidence in the claimed or asserted identity of a person, and is characterised with reference to technical specifications, standards and procedures related thereto, including technical controls, the purpose of which is to decrease the risk of misuse or alteration of the identity;
-     * assurance level **substantial** shall refer to an electronic identification means in the context of an electronic identification scheme, which provides a substantial degree of confidence in the claimed or asserted identity of a person, and is characterised with reference to technical specifications, standards and procedures related thereto, including technical controls, the purpose of which is to decrease substantially the risk of misuse or alteration of the identity;
-     * assurance level **high** shall refer to an electronic identification means in the context of an electronic identification scheme, which provides a higher degree of confidence in the claimed or asserted identity of a person than electronic identification means with the assurance level substantial, and is characterised with reference to technical specifications, standards and procedures related thereto, including technical controls, the purpose of which is to prevent misuse or alteration of the identity.
-  * **Implications** 
-     * NLX will have to support configurations which enables using different assurance levels for APIs.
-* **Requirement**  NLX0049 
-  * **Source**  eIDAS 
-  * **Category**  article 15: Accessibility for persons with disabilities 
-  * **Type**  Mandatory 
-  * **Compliant**  Yes 
-  * **Description**  Where feasible, trust services provided and end-user products used in the provision of those services shall be made accessible for persons with disabilities. 
-  * **Implications** 
-     * The API Discovery user interface which publishes the NLX API&#39;s must comply with &quot;WCAG 2.0 Success Criterion 1.1.1 Non-text content&quot; as specified in the EN 301 549 v1.1.2 standard.
-
-# Standard - EN 301 549 v1.1.2: &quot;Accessibility requirements suitable for public procurement of ICT products and services in Europe&quot;
-
-Requirements intended to be used as the basis for an accessible ICT procurement toolkit. 
-The present requirements will primarily be useful for public procurers to identify the requirements for their 
-purchases, and also for manufacturers to employ it within their design, build and quality control procedures.
-
-* **Requirement**  NLX0050 
-  * **Source**  EN 301 549 
-  * **Category**  Web pages 
-  * **Type**  Recommendation (Mandatory after implementation in 2018 of Dutch legislation: &#39;Wet Digitale Overheid&#39; and &#39;AMvB: Besluit digitale toegankelijkheid&#39;) 
-  * **Compliant**  Yes 
-  * **Description**  Functional accessibility requirements applicable to ICT products and services, together with a description of the test procedures and evaluation methodology for each accessibility requirement in a form that is suitable for use in public procurement within Europe, in support of Mandate 376.  Incorporates WCAG2 for web pages. 
-  * **Implications** 
-     * The API Discovery user interface which publishes the NLX API&#39;s must comply with &quot;WCAG 2.0 Success Criterion 1.1.1 Non-text content&quot; as specified in the EN 301 549 v1.1.2 standard.</li> 
-
-
-# The EU General Data Protection Regulation (GDPR)
-
-The EU General Data Protection Regulation (GDPR) replaces the Data Protection Directive 95/46/EC and was designed to harmonize data privacy laws across Europe, to protect and empower all EU citizens&#39; 
-data privacy and to reshape the way organizations across the region approach data privacy.
-
-* **Requirement**  NLX0051 
-  * **Source**  EU General Data Protection Regulation (GDPR) 
-  * **Category**  Right to Access 
-  * **Type**  Mandatory 
-  * **Compliant**  Yes 
-  * **Description**  Part of the expanded rights of data subjects outlined by the GDPR is the right for data subjects to obtain from the data controller confirmation as to whether or not personal data concerning them is being processed, where and for what purpose. Further, the controller shall provide a copy of the personal data, free of charge, in an electronic format. This change is a dramatic shift to data transparency and empowerment of data subjects. 
-  * **Implications** 
-     * Although personal data is processed through the APIs published on NLX none of that data is stored by NLX;
-      The right to access data used by the API&#39;s will be offered to subjects by the API provider and not NLX;
-     * NLX maintains transaction logs. These logs contain personal data if API&#39;s have been accessed that access personal data. If this is the case then the _Right to Access_ applies to this data applies. NLX will provide means for citizens to access their personal data in an electronic format.
-* **Requirement**  NLX0052 
-  * **Source**  EU General Data Protection Regulation (GDPR) 
-  * **Category**  Right to be Forgotten 
-  * **Type**  Mandatory 
-  * **Compliant**  N/A
-  * **Description**  Also known as Data Erasure, the right to be forgotten entitles the data subject to have the data controller erase his/her personal data, cease further dissemination of the data, and potentially have third parties halt processing of the data. The conditions for erasure, as outlined in article 17, include the data no longer being relevant to original purposes for processing, or a data subjects withdrawing consent. It should also be noted that this right requires controllers to compare the subjects&#39; rights to &quot;the public interest in the availability of the data&quot; when considering such requests.
-  * **Implications** Although personal data is processed through the APIs published on NLX none of that data is stored by NLX;
-     * NLX maintains transaction logs. These logs contain personal data if API&#39;s have been accessed that 
-      access personal data. The transaction logs are used to provide a way to audit trail the transactions in 
-      the federated network. The integrity of these logs is paramount for these audit trails. 
-      The _Right to be Forgotten_ will therefore not apply to the NLX transaction logs.
-* **Requirement**  NLX0053 
-  * **Source**  EU General Data Protection Regulation (GDPR) 
-  * **Category**  Data Portability 
-  * **Type**  Mandatory 
-  * **Compliant**  N/A 
-  * **Description**  GDPR introduces data portability - the right for a data subject to receive the personal data concerning them, which they have previously provided in a &#39;commonly use and machine readable format&#39; and have the right to transmit that data to another controller. 
-  * **Implications** 
-      * Although personal data is processed through the APIs published on NLX none of that data is stored by NLX
-      * NLX maintains transaction logs. These logs contain personal data if API&#39;s have been accessed that access personal data.  
-      The _Data Portability_ right does not apply to the transaction log records. These records depict service calls which have been handled by the service provider. While in some cases these log records can be related to persons they do not constitute data which is transferrable to other parties.
-* **Requirement**  NLX0054 
-  *  **Source**  EU General Data Protection Regulation (GDPR) 
-  *  **Category**  Privacy by Design 
-  *  **Type**  Mandatory 
-  *  **Compliant**  Yes 
-  *  **Description**  Privacy by design as a concept has existed for years now, but it is only just becoming part of a legal requirement with the GDPR. At its core, privacy by design calls for the inclusion of data protection from the onset of the designing of systems, rather than an addition. More specifically - &#39;The controller shall..implement appropriate technical and organisational measures..in an effective way.. in order to meet the requirements of this Regulation and protect the rights of data subjects&#39;. Article 23 calls for controllers to hold and process only the data absolutely necessary for the completion of its duties (data minimisation), as well as limiting the access to personal data to those needing to act out the processing. 
-  *  **Implications** 
-     * NLX is designed and build based on the following privacy by design principles
-        * Minimize: Limit as much as possible the processing of personal data
-        * Separate: Distribute or isolate personal data as much as possible, to prevent Correlation
-        * Abstract: Limit as much as possible the detail in which personal data is Processed
-        * Hide: Prevent personal data to become public or known
-        * Inform: Inform data subjects about the processing of their personal data
-        * Control: Provide data subjects control about the processing of their personal data
-        * Enforce: Commit to processing personal data in a privacy friendly way, and enforce this
-        * Demonstrate: Demonstrate you are processing personal data in a privacy friendly way.
-        * NLX does not store any (personal) data, except for identifying numbers in transaction logs. 
-          Data stored in the transaction logs is limited to the data which is needed for audit trailing.

@@ -12,3 +12,23 @@ To edit pages, edit the [MarkDown](https://github.com/adam-p/markdown-here/wiki/
 
 Each file needs to have Hugo [front-matter](https://gohugo.io/content-management/front-matter/) at the top.
 The front-matter sets the settings for each page, including `title` and the `weight` that determines the order that a page displays in lists.
+
+
+## Development
+
+Install hugo
+
+    $ sudo apt-get install hugo
+
+    or
+    
+    $ snap install hugo
+
+    or 
+
+    $ brew install hugo
+
+
+Serve the html with live changes
+
+    $ hugo server
