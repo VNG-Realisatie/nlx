@@ -47,6 +47,8 @@ class ServicesOverviewPage extends Component {
     }
 
     onServiceClickedHandler(service) {
+      console.log('on service clicked handler', service);
+
       this.setState({
         selectedService: service
       });

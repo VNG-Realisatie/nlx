@@ -1,13 +1,12 @@
 // Copyright © VNG Realisatie 2018
 // Licensed under the EUPL
 
-import React, { useState } from 'react'
+import React from 'react'
 import { oneOf, string } from 'prop-types'
 import { Link } from 'react-router-dom'
 import copy from 'copy-text-to-clipboard'
 
 import Table from '../Table'
-import Tooltip from '../Tooltip/Tooltip'
 import StatusIcon from './Icons/StatusIcon/StatusIcon'
 import IconButton from '../IconButton/IconButton'
 import DocsIcon from './Icons/DocsIcon/DocsIcon'
@@ -19,19 +18,8 @@ export const apiUrlForService = (organization, name) =>
 
 
 const ServicesTableRow = ({ status, organization, name, apiType, ...props }) => {
-  const [isCopiedNotifierVisible, setIsCopiedNotifierVisible] = useState(false);
-
-  const showCopiedNotifier = () => {
-    setIsCopiedNotifierVisible(true)
-
-    setTimeout(() => {
-      setIsCopiedNotifierVisible(false)
-    }, 1500);
-  }
-
   const copyApiUrl = () => {
     copy(apiUrlForService(organization, name))
-    showCopiedNotifier()
   }
 
   return (
@@ -46,28 +34,18 @@ const ServicesTableRow = ({ status, organization, name, apiType, ...props }) => 
         }
       </Table.BodyCell>
       <Table.BodyCell padding="none" border="left">
-        <Tooltip content="Copy API URL">
-          <div>
-            <Tooltip content="URL copied!" isVisible={isCopiedNotifierVisible}>
-              <IconButton rounded="false" dataTest="link-icon"
-                onClick={copyApiUrl}
-              >
-                <LinkIcon />
-              </IconButton>
-            </Tooltip>
-          </div>
-        </Tooltip>
+        <IconButton rounded="false" dataTest="link-icon"
+                    onClick={copyApiUrl} title="Copy API URL"
+        >
+          <LinkIcon />
+        </IconButton>
       </Table.BodyCell>
       <Table.BodyCell padding="none" border="left">
         {
           apiType ?
-            <Tooltip content="Open API documentation">
-              <div>
-                <IconButton as={Link} to={`/documentation/${organization}/${name}`} rounded="false">
-                  <DocsIcon />
-                </IconButton>
-              </div>
-            </Tooltip>
+            <IconButton as={Link} to={`/documentation/${organization}/${name}`} rounded="false" title="Open API documentation">
+              <DocsIcon />
+            </IconButton>
             :
             <IconButton disabled><DocsIcon /></IconButton>
         }
