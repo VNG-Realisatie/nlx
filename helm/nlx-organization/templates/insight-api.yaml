@@ -22,7 +22,7 @@ data:
   insight-config.toml: |
     {{- .Values.insight.config | nindent 4 }}
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
 spec:

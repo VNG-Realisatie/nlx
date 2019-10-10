@@ -1,6 +1,6 @@
 {{ if eq .Values.ca.kind "public" }}
 {{ with set . "component" "ca-certportal" }}
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
 spec:

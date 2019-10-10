@@ -13,7 +13,7 @@ data:
   key.pem: {{ .Values.ca.keyPEM | b64enc }}
 ---
 {{ end }}
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
 spec:
