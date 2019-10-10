@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "@commonground/design-system": "7.1.0",
-    "@tippy.js/react": "3.0.1",
     "ajv-keywords": "3.4.1",
     "copy-text-to-clipboard": "2.1.0",
     "core-js": "3.2.1",
