@@ -1,6 +1,6 @@
 {{ if .Values.outway.authService }}
 {{ with set . "component" "auth-service" }}
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
 spec:
