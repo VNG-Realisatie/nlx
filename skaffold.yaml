@@ -38,8 +38,6 @@ build:
     context: .
     docker:
       dockerfile: insight-ui/Dockerfile
-  - image: nlxio/insight-demo
-    context: insight-demo
   - image: nlxio/inway
     context: .
     docker:
@@ -94,7 +92,6 @@ profiles:
           directoryRegistrationImage: nlxio/directory-registration-api
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs
-          insightDemoImage: nlxio/insight-demo
           insightUIImage: nlxio/insight-ui
         namespace: nlx-dev-directory
       - name: nlx-dev-brp
@@ -160,7 +157,6 @@ profiles:
           directoryRegistrationImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/directory-registration-api:{{.CI_COMMIT_SHORT_SHA}}"
           directoryUIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/directory-ui:{{.CI_COMMIT_SHORT_SHA}}"
           docsImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/docs:{{.CI_COMMIT_SHORT_SHA}}"
-          insightDemoImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/insight-demo:{{.CI_COMMIT_SHORT_SHA}}"
           insightUIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/insight-ui:{{.CI_COMMIT_SHORT_SHA}}"
           caAddress: ca-cfssl-unsafe.nlx-directory-$CI_ENVIRONMENT_SLUG
           disableLoadBalancers: true
@@ -291,7 +287,6 @@ profiles:
           directoryRegistrationImage: nlxio/directory-registration-api
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs
-          insightDemoImage: nlxio/insight-demo
           insightUIImage: nlxio/insight-ui
         namespace: nlx-test-directory
       - name: nlx-test-brp
@@ -357,7 +352,6 @@ profiles:
           directoryRegistrationImage: nlxio/directory-registration-api
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs
-          insightDemoImage: nlxio/insight-demo
           insightUIImage: nlxio/insight-ui
         namespace: nlx-acc-directory
       - name: nlx-acc-brp
@@ -423,7 +417,6 @@ profiles:
           directoryRegistrationImage: nlxio/directory-registration-api
           directoryUIImage: nlxio/directory-ui
           docsImage: nlxio/docs
-          insightDemoImage: nlxio/insight-demo
           insightUIImage: nlxio/insight-ui
         namespace: nlx-demo-directory
       - name: nlx-demo-brp

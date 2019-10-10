@@ -47,7 +47,6 @@ The available scopes are:
 - docs
 - helm
 - insight-api
-- insight-demo
 - insight-ui
 - inway
 - management-api
