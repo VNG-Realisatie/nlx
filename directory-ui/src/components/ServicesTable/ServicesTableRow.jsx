@@ -16,7 +16,6 @@ import { StyledServiceTableRow, StyledApiTypeLabel } from './ServiceTableRow.sty
 export const apiUrlForService = (organization, name) =>
   `http://{your-outway-address}/${organization}/${name}`
 
-
 const ServicesTableRow = ({ status, organization, name, apiType, ...props }) => {
   const copyApiUrl = () => {
     copy(apiUrlForService(organization, name))
