@@ -261,6 +261,9 @@ profiles:
                 authorization-model = 'none'
                 insight-api-url = 'https://insight-api.nlx-haarlem-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}'
                 irma-api-url = 'https://irma-api.nlx-haarlem-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}'
+                public-support-contact = "public-support@nlx.io"
+                tech-support-contact = "tech-support@nlx.io"
+
 - name: release-review
   build:
     tagPolicy:
