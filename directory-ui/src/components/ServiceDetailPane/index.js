@@ -21,11 +21,18 @@ const ServiceDetailPane = ({ name, organizationName, contactEmail, closeHandler 
       {organizationName}
     </StyledSecondTitle>
 
-    <StyledSubtitle>Contact</StyledSubtitle>
-    <StyledDl>
-      <dt>Email</dt>
-      <dd>{ contactEmail }</dd>
-    </StyledDl>
+    {
+      contactEmail ?
+        (
+          <>
+            <StyledSubtitle>Contact</StyledSubtitle>
+            <StyledDl>
+              <dt>Email</dt>
+              <dd>{ contactEmail }</dd>
+            </StyledDl>
+          </>
+      ) : null
+    }
   </StyledServiceDetailPane>
 
 ServiceDetailPane.propTypes = {
