@@ -2,17 +2,19 @@
 // Licensed under the EUPL
 
 import React, { Fragment } from 'react'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { VersionLogger } from '@commonground/design-system'
+
+import { StyledApp } from './App.styles'
 
 import GlobalStyles from './components/GlobalStyles/GlobalStyles'
 import Header from './components/Header/Header'
 import ServiceOverviewPage from './pages/ServicesOverviewPage/ServicesOverviewPage'
 import DocumentationPage from './pages/DocumentationPage/DocumentationPage'
-import { VersionLogger } from '@commonground/design-system'
 
-import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 const App = () => (
-    <div className="App">
+    <StyledApp>
         <GlobalStyles/>
         <Router>
             <Fragment>
@@ -26,7 +28,7 @@ const App = () => (
             </Fragment>
         </Router>
         <VersionLogger/>
-    </div>
+    </StyledApp>
 )
 
 export default App

@@ -4,7 +4,7 @@
 import styled from 'styled-components'
 
 export const StyledServiceDetailPane = styled.div`
-  position: absolute;
+  position: fixed;
   right: 0;
   top: 56px;
   width: 300px;
