@@ -7,8 +7,6 @@ import (
 	"fmt"
 	"strings"
 
-	"go.nlx.io/nlx/insight-api/irma"
-
 	"github.com/ktr0731/toml"
 	"go.uber.org/zap"
 )
@@ -19,9 +17,11 @@ type InsightConfig struct {
 }
 
 type DataSubject struct {
-	Label          string           `toml:"label"`
-	IrmaAttributes []irma.Attribute `toml:"irma-attributes"`
+	Label          string          `toml:"label"`
+	IrmaAttributes []IrmaAttribute `toml:"irma-attributes"`
 }
+
+type IrmaAttribute string
 
 // LoadInsightConfig reads the service config from disk and returns.
 func LoadInsightConfig(logger *zap.Logger, insightConfigLocation string) (*InsightConfig, error) {

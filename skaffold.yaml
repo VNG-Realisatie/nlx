@@ -70,6 +70,13 @@ build:
     context: .
     docker:
       dockerfile: auth-service/Dockerfile
+  - image: nlxio/irma
+    context: .
+    docker:
+      dockerfile: irma/Dockerfile
+      buildArgs:
+        IRMA_VERSION: 0.4.1
+        IRMA_CHECKSUM: 34c735c289e4f37d7e5fe1893578f7cdef606ed4f292245672f96516d4f513fb
   tagPolicy:
     sha256: {}
   local:
@@ -186,6 +193,7 @@ profiles:
           caAddress: ca-cfssl-unsafe.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           externalDomain: nlx-brp-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
           domain: nlx-brp-{{.CI_ENVIRONMENT_SLUG}}
+          irma.apiServerImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/irma:{{.CI_COMMIT_SHORT_SHA}}"
           inway.config: |
             [services]
                 [services.basisregistratie]
@@ -218,6 +226,7 @@ profiles:
           caAddress: ca-cfssl-unsafe.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           externalDomain: nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
           domain: nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}
+          irma.apiServerImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/irma:{{.CI_COMMIT_SHORT_SHA}}"
           configAPI.insightAPIURL: https://insight-api-nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
           configAPI.irmaServerURL: https://irma-api-nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
           configAPI.serviceConfig: |
@@ -255,6 +264,7 @@ profiles:
           caAddress: ca-cfssl-unsafe.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           externalDomain: nlx-haarlem-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
           domain: nlx-haarlem-{{.CI_ENVIRONMENT_SLUG}}
+          irma.apiServerImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/irma:{{.CI_COMMIT_SHORT_SHA}}"
           inway.config: |
             [services]
                 [services.demo-api]

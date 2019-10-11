@@ -1,16 +1,40 @@
 {{ if .Values.irma.enable }}
-{{ with set . "component" "irma-api-server" }}
+{{ with set . "component" "irma-server" }}
 # TODO:#342 When using proper k8s RBAC split this into two secrets; only api server can use privkey, others can only read pubkey.
 apiVersion: v1
 kind: Secret
 metadata:
-  name: jwt-rsa-{{.component}}
+  name: {{ .component }}-jwt
   namespace: {{.Release.Namespace}}
   labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
 type: Opaque
 data:
-  crt.der: {{ .Values.irma.certificate.crtDER | b64enc }}
-  key.der: {{ .Values.irma.certificate.keyDER | b64enc }}
+  sign-key.pem: {{ .Values.irma.jwtSignPrivateKey | b64enc }}
+  public-insight.pem: {{ .Values.irma.jwtInsightPublicKey | b64enc }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .component }}-config
+  namespace: {{.Release.Namespace}}
+  labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
+data:
+  irmaserver.yaml: |
+    production: true
+    no_auth: false
+    no_tls: {{ .Values.irma.disableTLS | default false }}
+    schemes_update: 0
+    no_email: true
+    url: {{ if .Values.irma.disableTLS }}http{{ else }}https{{ end }}://irma-api{{ if .Values.servicePartOfExternalDomain }}-{{ else }}.{{ end }}{{ .Values.externalDomain }}
+    jwt_privkey_file: "/etc/irmaserver/jwt/sign-key.pem"
+    requestors:
+      insight:
+        auth_method: "publickey"
+        key_file: "/etc/irmaserver/jwt/public-insight.pem"
+        disclose_perms: ["*"]
+        sign_perms: ["*"]
+        issue_perms: ["*"]
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -23,34 +47,30 @@ spec:
     matchLabels:
       release: {{ .Release.Name }}
       app: {{ .Chart.Name }}
-      component: {{.component}}
+      component: {{ .component }}
   template:
     metadata:
       labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 8 }}
     spec:
+      volumes:
+        - name: {{ .component }}-config
+          configMap:
+            name: {{ .component }}-config
+        - name: {{ .component }}-jwt
+          secret:
+            secretName: {{.component}}-jwt
       containers:
-        - name: irma-api
+        - name: {{ .component }}
           image: {{.Values.irma.apiServerImage}}
           imagePullPolicy: {{.Values.irma.pullPolicy}}
-          env:
-            - name: IRMA_API_CONF_BASE64_JWT_PUBLICKEY
-              valueFrom:
-                secretKeyRef:
-                  name: jwt-rsa-{{.component}}
-                  key: crt.der
-            - name: IRMA_API_CONF_BASE64_JWT_PRIVATEKEY
-              valueFrom:
-                secretKeyRef:
-                  name: jwt-rsa-{{.component}}
-                  key: key.der
-            - name: IRMA_API_CONF_ENABLE_ISSUING
-              value: "true"
-            - name: IRMA_API_CONF_ALLOW_UNSIGNED_ISSUE_REQUESTS
-              value: "true"
-            - name: IRMA_API_CONF_AUTHORIZED_IDPS
-              value: "{insight: [*],* : [*]}"
-            - name: IRMA_API_CONF_REJECT_UNFLOORED_VALIDITY_TIMESTAMPS
-              value: "false"
+          args: ["server", "run"]
+          volumeMounts:
+            - name: {{ .component }}-config
+              mountPath: /etc/irmaserver
+              readOnly: true
+            - name: {{ .component }}-jwt
+              mountPath: /etc/irmaserver/jwt
+              readOnly: true
       restartPolicy: Always
   status: {}
 ---
@@ -62,7 +82,7 @@ spec:
   ports:
     - name: api
       protocol: TCP
-      port: 8080
+      port: 8088
   cluserIP: None
 ---
 apiVersion: extensions/v1beta1

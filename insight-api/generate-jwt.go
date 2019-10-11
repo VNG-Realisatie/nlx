@@ -11,7 +11,8 @@ import (
 	"github.com/go-chi/render"
 	"go.uber.org/zap"
 
-	"go.nlx.io/nlx/insight-api/irma"
+	"github.com/dgrijalva/jwt-go"
+	irma "github.com/privacybydesign/irmago"
 )
 
 type GenerateJWTRequest struct {
@@ -29,9 +30,8 @@ func (i *InsightAPI) generateJWT(serviceProviderName string, rsaSignPrivateKey *
 			return
 		}
 
-		discloseRequest := irma.DiscloseRequest{
-			Content: []irma.DiscloseRequestContent{},
-		}
+		discloseRequest := irma.NewDisclosureRequest()
+
 		for _, k := range requestedDataSubjects.DataSubjects {
 			v, ok := i.irmaAttributes[k]
 			if !ok {
@@ -40,14 +40,17 @@ func (i *InsightAPI) generateJWT(serviceProviderName string, rsaSignPrivateKey *
 				return
 			}
 
-			currentDiscloseContent := irma.DiscloseRequestContent{
-				Label:      v.Label,
-				Attributes: v.IrmaAttributes,
+			id := irma.NewAttributeTypeIdentifier(string(v.IrmaAttributes[0]))
+			label := irma.TranslatedString{
+				"nl": v.Label,
 			}
-			discloseRequest.Content = append(discloseRequest.Content, currentDiscloseContent)
+
+			discloseRequest.AddSingle(id, nil, label)
 		}
 
-		signedJWT, err := i.irmaHandler.GenerateAndSignJWT(&discloseRequest, serviceProviderName, rsaSignPrivateKey)
+		sp := irma.NewServiceProviderJwt(serviceProviderName, discloseRequest)
+
+		signedJWT, err := sp.Sign(jwt.SigningMethodRS256, rsaSignPrivateKey)
 		if err != nil {
 			i.logger.Error("failed to generate JWT", zap.Error(err))
 			http.Error(w, "failed to generate JWT", http.StatusInternalServerError)

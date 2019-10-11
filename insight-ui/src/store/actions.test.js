@@ -51,26 +51,27 @@ describe('fetch IRMA login information', () => {
   it('should call the IRMA API to verify the JWT token', () => {
     const jwtTokenResponse = 'dummy-jt-token'
     expect(irmaLoginInformationGen.next(jwtTokenResponse).value)
-      .toEqual(call(apiPostWithTextAndJSONAsOutput, 'irma_endpoint/api/v2/verification/', jwtTokenResponse))
+      .toEqual(call(apiPostWithTextAndJSONAsOutput, 'irma_endpoint/session', jwtTokenResponse))
   })
 
   it('should dispatch the success action when the login flow succeeds', () => {
-    const jwtVerificationResponse = {
-      u: 'u',
-      v: 'v',
-      vmax: 'vmax',
-      irmaqr: 'irmaqr',
+    const irmaSessionResponse = {
+      token: 'test-token',
+      sessionPtr: {
+        irmaqr: 'irmaqr',
+        u: 'irma_endpoint/irma/session/test-session'
+      }
     }
 
-    expect(irmaLoginInformationGen.next(jwtVerificationResponse).value)
+    expect(irmaLoginInformationGen.next(irmaSessionResponse).value)
       .toEqual(put({
         type: TYPES.FETCH_IRMA_LOGIN_INFORMATION_SUCCESS,
         data: {
           dataSubjects: ['foo', 'bar'],
-          qrCodeValue: '{"u":"irma_endpoint/api/v2/verification/u","v":"v","vmax":"vmax","irmaqr":"irmaqr"}',
-          statusUrl: 'irma_endpoint/api/v2/verification/u/status',
-          proofUrl: 'irma_endpoint/api/v2/verification/u/getproof',
-          JWT: 'u'
+          qrCodeValue: '{"irmaqr":"irmaqr","u":"irma_endpoint/irma/session/test-session"}',
+          statusUrl: 'irma_endpoint/session/test-token/status',
+          proofUrl: 'irma_endpoint/session/test-token/getproof',
+          JWT: 'test-token'
         }
       }))
   })
@@ -101,7 +102,7 @@ describe('get IRMA login status', () => {
 describe('fetch proof', () => {
   const fetchProofGen = fetchProof({
     proofUrl: 'proof_url'
-  }) 
+  })
 
   it('should get the proof value', () => {
     expect(fetchProofGen.next().value)
@@ -148,7 +149,7 @@ describe('fetch organization logs', () => {
       expect(fetchOrganizationLogsGen.next('the_proof').value)
         .toEqual(call(apiPostWithTextAndJSONAsOutput, 'log_endpoint/fetch?page=2&rowsPerPage=42', 'the_proof'))
     })
-    
+
     it('should pass not pass the pagination params to the fetch endpoint if the params are null values', () => {
       const fetchOrganizationLogsGen = fetchOrganizationLogs({
         proof: 'the_proof',

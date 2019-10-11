@@ -36,21 +36,6 @@ func (m *MockJWTHandler) EXPECT() *MockJWTHandlerMockRecorder {
 	return m.recorder
 }
 
-// GenerateAndSignJWT mocks base method
-func (m *MockJWTHandler) GenerateAndSignJWT(request *irma.DiscloseRequest, serviceProviderName string, rsaSignPrivateKey *rsa.PrivateKey) (string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GenerateAndSignJWT", request, serviceProviderName, rsaSignPrivateKey)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GenerateAndSignJWT indicates an expected call of GenerateAndSignJWT
-func (mr *MockJWTHandlerMockRecorder) GenerateAndSignJWT(request, serviceProviderName, rsaSignPrivateKey interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GenerateAndSignJWT", reflect.TypeOf((*MockJWTHandler)(nil).GenerateAndSignJWT), request, serviceProviderName, rsaSignPrivateKey)
-}
-
 // VerifyIRMAVerificationResult mocks base method
 func (m *MockJWTHandler) VerifyIRMAVerificationResult(jwtBytes []byte, rsaVerifyPublicKey *rsa.PublicKey) (*jwt_go.Token, *irma.VerificationResultClaims, error) {
 	m.ctrl.T.Helper()

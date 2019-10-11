@@ -5,6 +5,8 @@ package insightapi_test
 
 import (
 	"bytes"
+	"crypto/rand"
+	"crypto/rsa"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -17,15 +19,16 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 
-	"go.nlx.io/nlx/common/derrsa"
 	insightapi "go.nlx.io/nlx/insight-api"
 	insightconfig "go.nlx.io/nlx/insight-api/config"
 	"go.nlx.io/nlx/insight-api/irma"
 	mock "go.nlx.io/nlx/insight-api/mock"
 )
 
-const publicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyJJQqF7nvhfWHLhnVkCfM0VPq8YEoyjQsDnm2RMJXSJe2pkUWRbFyqdR6bgmv1ZEtduWMhbKVQHcWE8ZfaYSQmVe92obSwOMYcXL0VS+ouTD0vjAWc0oucZ0U1adndMykgugi9PaWf0I7nCEgYRlsf62sXoF+YqwPiWLPPdzsoBDsmtWOYGfSxtJEucXXbbjiBvRsgipHqCwYsuXEc5TDXqE2iyrgDwVrme9vXxAHGRQgaISUTkOZUcVg3zkGx4SreGz5Hh1iL0VPOA0y4SCtl0a/6ccWxnapfZm03ygoxpsMoYhkFKRP32BYYorPMglck3IeW3fp24gZ7TnqeF29QIDAQAB"
-const privateKey = "MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC05Ac22sFpvXDYaQA/B/+WcXv8EPiPyYs1ZAcQ8ZG7eMp9kOv8+JQEXW2CbesVWw0QYQICDATrdCs6niC2qydOZYwWUQjt13JVekT9PvDi8dP5EpMyWaiDe2rDj3CGgZCXIwiMTQ6I8OUxUCPt20M7I2vQce+Alh+2/XvYmflop8n6BuEX+pRJi9Vw4X1i+rplGzdfDq6c5kdRTYCbcL2aWjgG85mafkRqdrPb7NuZDGB9p6CLjzkHrYiAKsazGH1A1t7Y4bhngKqQrMN4k2MNHbIY9D8cawMWkPMtI1vBxZLmIRV3NpWasgvzKMMpnok7xivmVgU8FPUQkZgA8BBZAgMBAAECggEAK7hxhfCZjtUa0TOPu6xTOilzrhjr+tTbsKvciVvZvVYUmwTMBPiPzf5G2Z93klHPdoX71kLRbZdGW4Sco4n6lhg1I6+yWMoZ+E71HcB4uGF6ulii+yhwclcCFwI0UE5AhEcTadW2DaMrwh98j6DPPxvwkxD2sj2WrMPXiyKsBX8f4mx0asgkQVfFC8tMzgfLj+tDiovOSqhzxkpYDHxp8ACdC+a4+81HBfAgkmR2x+DIOD6o1mW0vnlf2BFo6ZcoUXwqtFXK8xGBKPFpOfPB+hg85gYVStD0vMbTgFmeH5HKTmpZmhJqY4BTSEPGf3JP0/tddkT81IoUwNFS6JQmAQKBgQDuNg7xwxy4f4SL/cNKeKbd/DtIUQPdDuKWyHaM2pctrL5U5Kf26vWV13oqYCJdC3/odZVTnAzoOi8TAay8g1C31D/BCgUt1IW7077Sgb5Jsazmpco6DnZj+ufpKnp/ZHzSNP6dgI/dQEIfG9DBT/xqGSO1bemwm1goRJz7//zMTQKBgQDCZik218RGLFr3KWpXvgj5gVSABxIsuyhvIfPwzGoCBb7YEjPEQtOgTMtM7wn1TY5HA05GY6M8DFxaUbyaCor5AG3N5ZvoCfysoTgezw8WjCXzTNhh308iP2q3JZ2B+C2zPf0aSK/1BntzryYewnoNcyHsGb28KrXtM88N4UnqPQKBgCOjiNbY1xovUdhT7fzdUjHSA9iM7mQLTxE6CqqGJaoatxsiXpLNklKJu2hNm7aJ+uf/d4jbxv6Tfel9DafiiZgHNEagRigWLK/uPRVnfd2urGyRj1DiSwooRrwWs98NXLNiZFmSG3QBoiLfWXsiiWQiQLprKFRY2Xak1UvKf7rdAoGAB+0CYSoK5pGIY+tcWpd05jdPqqifJRO8YkuQFpE/ATYawdR8J9RRrId1An38efPfiSWpW1VUom4eldAfUGh9oglScMKbyKofkyo/j4IBq3mrUnAfol3obA0J3M27zkDAHD66wweTpPnOrrjFZRuovkOjbmzeP32+TR1/o6E70kECgYA2cBAFXM0eBIavlK96Pz1Yl90aFDai43sauZG9KUjjjF1Fcpn7+DaHK8H6l5DiqqUe6Ll2coRD9VZoLmQEIH5ON3I1OfioiKUXgqba1JXQO7TOkC8lFO2znpzxrdbyaJG2nw6SnjqEIf/4lyWi5oHZBvTwMVhnucBQ4c3cCwptOA=="
+var (
+	privateKey, _ = rsa.GenerateKey(rand.Reader, 2048)
+	publicKey, _  = privateKey.Public().(*rsa.PublicKey)
+)
 
 func TestNewInsightAPI(t *testing.T) {
 	logger := zap.NewNop()
@@ -35,17 +38,7 @@ func TestNewInsightAPI(t *testing.T) {
 	config, err := insightconfig.LoadInsightConfig(logger, "../testing/insight-api/insight-config.toml")
 	assert.Nil(t, err)
 
-	insightAPI, err := insightapi.NewInsightAPI(logger, config, mockIrmaHandler, mockInsightLogFetcher, "invalidKey", publicKey)
-	assert.NotNil(t, err)
-	assert.Contains(t, err.Error(), "error decoding private key:")
-	assert.Nil(t, insightAPI)
-
-	insightAPI, err = insightapi.NewInsightAPI(logger, config, mockIrmaHandler, mockInsightLogFetcher, privateKey, "invalidKey")
-	assert.NotNil(t, err)
-	assert.Contains(t, err.Error(), "error decoding public key:")
-	assert.Nil(t, insightAPI)
-
-	insightAPI, err = insightapi.NewInsightAPI(logger, config, mockIrmaHandler, mockInsightLogFetcher, privateKey, publicKey)
+	insightAPI, err := insightapi.NewInsightAPI(logger, config, mockIrmaHandler, mockInsightLogFetcher, privateKey, publicKey)
 	assert.Nil(t, err)
 	assert.NotNil(t, insightAPI)
 
@@ -57,7 +50,6 @@ func TestListDataSubjectHandler(t *testing.T) {
 	mockInsightLogFetcher := mock.NewMockInsightLogFetcher(ctrl)
 
 	mockIrmaHandler := mock.NewMockJWTHandler(ctrl)
-	mockIrmaHandler.EXPECT().GenerateAndSignJWT(gomock.Any(), gomock.Any(), gomock.Any()).Return("generatedjwt", nil)
 
 	config, err := insightconfig.LoadInsightConfig(logger, "../testing/insight-api/insight-config.toml")
 	assert.Nil(t, err)
@@ -119,15 +111,14 @@ func TestGenerateJWTHandler(t *testing.T) {
 
 	client := http.Client{}
 
-	expectedPrivateKey, err := derrsa.DecodeDEREncodedRSAPrivateKey(bytes.NewBufferString(privateKey))
-	assert.Nil(t, err)
 	tests := []struct {
 		request               *insightapi.GenerateJWTRequest
 		statuscode            int
 		response              string
 		jwtGenerationResponse func()
 	}{
-		{nil,
+		{
+			nil,
 			400,
 			"incorrect request data\n",
 			nil,
@@ -139,26 +130,6 @@ func TestGenerateJWTHandler(t *testing.T) {
 			400,
 			"incorrect dataSubject requested\n",
 			nil,
-		},
-		{
-			&insightapi.GenerateJWTRequest{
-				DataSubjects: []string{"kenteken", "burgerservicenummer"},
-			},
-			500,
-			"failed to generate JWT\n",
-			func() {
-				mockIrmaHandler.EXPECT().GenerateAndSignJWT(gomock.Any(), "insight", expectedPrivateKey).Return("", fmt.Errorf("JWT generation failed"))
-			},
-		},
-		{
-			&insightapi.GenerateJWTRequest{
-				DataSubjects: []string{"kenteken", "burgerservicenummer"},
-			},
-			200,
-			"generatedjwt",
-			func() {
-				mockIrmaHandler.EXPECT().GenerateAndSignJWT(gomock.Any(), "insight", expectedPrivateKey).Return("generatedjwt", nil)
-			},
 		},
 	}
 
@@ -194,7 +165,6 @@ func TestGenerateJWTHandler(t *testing.T) {
 			assert.Equal(t, "text/plain; charset=utf-8", resp.Header.Get("content-type"))
 		}
 	}
-
 }
 
 func TestLogFetcherHandler(t *testing.T) {
@@ -234,8 +204,6 @@ func TestLogFetcherHandler(t *testing.T) {
 	jsonBytes, err := json.Marshal(expectedGetLogsResponse)
 	assert.Nil(t, err)
 	expectedGetLogsResponseString := fmt.Sprintf("%s\n", string(jsonBytes))
-	expectedPublicKey, err := derrsa.DecodeDEREncodedRSAPublicKey(bytes.NewBufferString(publicKey))
-	assert.Nil(t, err)
 
 	jwt := "dummyjwt"
 	expectedJWTBytes := []byte(jwt)
@@ -252,7 +220,7 @@ func TestLogFetcherHandler(t *testing.T) {
 			400,
 			"invalid irma jwt\n",
 			func() {
-				mockIrmaHandler.EXPECT().VerifyIRMAVerificationResult(expectedJWTBytes, expectedPublicKey).Return(nil, &irma.VerificationResultClaims{}, fmt.Errorf("JWT verification failed"))
+				mockIrmaHandler.EXPECT().VerifyIRMAVerificationResult(expectedJWTBytes, publicKey).Return(nil, &irma.VerificationResultClaims{}, fmt.Errorf("JWT verification failed"))
 			},
 			nil,
 		},
@@ -261,7 +229,7 @@ func TestLogFetcherHandler(t *testing.T) {
 			400,
 			"failed to retrieve log records\n",
 			func() {
-				mockIrmaHandler.EXPECT().VerifyIRMAVerificationResult(expectedJWTBytes, expectedPublicKey).Return(nil, &irma.VerificationResultClaims{}, nil)
+				mockIrmaHandler.EXPECT().VerifyIRMAVerificationResult(expectedJWTBytes, publicKey).Return(nil, &irma.VerificationResultClaims{}, nil)
 			},
 			func() {
 				mockInsightLogFetcher.EXPECT().GetLogRecords(10, 1, expectedDataSubjects, gomock.Any()).Return(nil, fmt.Errorf("error getting log records"))
@@ -272,7 +240,7 @@ func TestLogFetcherHandler(t *testing.T) {
 			200,
 			expectedGetLogsResponseString,
 			func() {
-				mockIrmaHandler.EXPECT().VerifyIRMAVerificationResult(expectedJWTBytes, expectedPublicKey).Return(nil, &irma.VerificationResultClaims{}, nil)
+				mockIrmaHandler.EXPECT().VerifyIRMAVerificationResult(expectedJWTBytes, publicKey).Return(nil, &irma.VerificationResultClaims{}, nil)
 			},
 			func() {
 				mockInsightLogFetcher.EXPECT().GetLogRecords(10, 1, expectedDataSubjects, gomock.Any()).Return(expectedGetLogsResponse, nil)
@@ -283,7 +251,7 @@ func TestLogFetcherHandler(t *testing.T) {
 			400,
 			"failed to parse URL values\n",
 			func() {
-				mockIrmaHandler.EXPECT().VerifyIRMAVerificationResult(expectedJWTBytes, expectedPublicKey).Return(nil, &irma.VerificationResultClaims{}, nil)
+				mockIrmaHandler.EXPECT().VerifyIRMAVerificationResult(expectedJWTBytes, publicKey).Return(nil, &irma.VerificationResultClaims{}, nil)
 			},
 			func() {
 				mockInsightLogFetcher.EXPECT().GetLogRecords(10, 1, expectedDataSubjects, gomock.Any()).Return(nil, fmt.Errorf("error getting log records"))
@@ -321,7 +289,6 @@ func TestLogFetcherHandler(t *testing.T) {
 			assert.Equal(t, "application/json; charset=utf-8", resp.Header.Get("content-type"))
 		}
 	}
-
 }
 
 func TestHappyOptionsHandler(t *testing.T) {

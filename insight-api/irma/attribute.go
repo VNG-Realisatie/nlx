@@ -3,7 +3,7 @@
 
 package irma
 
-type Attribute string
+// type Attribute string
 
 // TODO: Create a more structured mapping for the attribute value, perhaps based on the following.
 // TODO: See if IRMA doesn't already have an attribute implementation which can be used.

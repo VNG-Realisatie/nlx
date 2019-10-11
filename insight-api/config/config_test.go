@@ -6,8 +6,6 @@ package config
 import (
 	"testing"
 
-	"go.nlx.io/nlx/insight-api/irma"
-
 	"github.com/stretchr/testify/assert"
 
 	"go.uber.org/zap"
@@ -28,13 +26,13 @@ func TestLoadConfig(t *testing.T) {
 	expectedDataSubjects := make(map[string]DataSubject)
 	expectedDataSubjects["burgerservicenummer"] = DataSubject{
 		Label: "Burgerservicenummer",
-		IrmaAttributes: []irma.Attribute{
+		IrmaAttributes: []IrmaAttribute{
 			"irma-demo.nijmegen.bsn.bsn",
 		},
 	}
 	expectedDataSubjects["kenteken"] = DataSubject{
 		Label: "Kenteken",
-		IrmaAttributes: []irma.Attribute{
+		IrmaAttributes: []IrmaAttribute{
 			"irma-demo.rdw.vrn.vrn",
 		},
 	}
