@@ -3,7 +3,7 @@
 
 import React from 'react'
 import { func, string } from 'prop-types'
-import { StyledServiceDetailPane, StyledHeader, StyledTitle, StyledSecondTitle, StyledSubtitle, StyledDl, StyledCloseButton } from './index.styles'
+import { StyledServiceDetailPane, StyledHeader, StyledTitle, StyledSecondTitle, StyledSubtitle, StyledDl, StyledEmailAddressLink, StyledCloseButton } from './index.styles'
 import CloseIcon from '../CloseIcon'
 
 const ServiceDetailPane = ({ name, organizationName, contactEmail, closeHandler }) =>
@@ -27,8 +27,8 @@ const ServiceDetailPane = ({ name, organizationName, contactEmail, closeHandler 
           <>
             <StyledSubtitle>Support</StyledSubtitle>
             <StyledDl>
-              <dt>Email</dt>
-              <dd>{ contactEmail }</dd>
+              <dt>Email address</dt>
+              <dd><StyledEmailAddressLink href={'mailto:' + contactEmail  }>{contactEmail}</StyledEmailAddressLink></dd>
             </StyledDl>
           </>
       ) : null

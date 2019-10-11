@@ -88,3 +88,8 @@ export const StyledDl = styled.dl`
     padding-bottom: 8px;
   }
 `
+
+export const StyledEmailAddressLink = styled.a`
+  color: #2D3240;
+  text-decoration: underline;
+`
