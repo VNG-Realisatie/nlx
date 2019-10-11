@@ -5,21 +5,17 @@ import styled from 'styled-components'
 import Table from '../Table'
 
 export const StyledServiceTableRow = styled(Table.Row)`
+  cursor: pointer;
+
   td {
     background-color: #FFFFFF;
     color: ${
     p => p.status === 'offline' ? '#A3AABF' : '#2D3240'};
   }
-  
-  cursor: pointer;
 
-    &:hover td {
-      background-color: #F7F9FC;
-    }
-
-    &:active td {
-      background-color: #F0F2F7;
-    }
+  &:hover td {
+    background-color: #F7F9FC;
+  }
 `
 
 export const StyledApiTypeLabel = styled.span`

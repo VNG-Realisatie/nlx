@@ -16,56 +16,54 @@ const ESCAPE_KEY_CODE = 27
 
 class ServicesOverviewPage extends Component {
     constructor(props) {
-      super(props)
+        super(props)
 
-      const { location, history } = this.props
+        const { location, history } = this.props
 
-      const urlParams = new URLSearchParams(location.search)
+        const urlParams = new URLSearchParams(location.search)
 
-      this.state = {
-        loading: true,
-        error: null,
-        services: [],
-        query: urlParams.get('q') || '',
-        debouncedQuery: urlParams.get('q') || '',
-        displayOfflineServices: true,
-        selectedService: null
-      }
+        this.state = {
+            loading: true,
+            error: null,
+            services: [],
+            query: urlParams.get('q') || '',
+            debouncedQuery: urlParams.get('q') || '',
+            displayOfflineServices: true,
+            selectedService: null
+        }
 
-      this.searchOnChange = this.searchOnChange.bind(this)
-      this.switchOnChange = this.switchOnChange.bind(this)
-      this.escFunction = this.escFunction.bind(this)
-      this.onServiceClickedHandler = this.onServiceClickedHandler.bind(this)
-      this.detailPaneCloseHandler = this.detailPaneCloseHandler.bind(this)
+        this.searchOnChange = this.searchOnChange.bind(this)
+        this.switchOnChange = this.switchOnChange.bind(this)
+        this.escFunction = this.escFunction.bind(this)
+        this.onServiceClickedHandler = this.onServiceClickedHandler.bind(this)
+        this.detailPaneCloseHandler = this.detailPaneCloseHandler.bind(this)
 
-      this.searchOnChangeDebouncable = (query) => {
-        this.setState({ debouncedQuery: query })
-        history.push(`?q=${encodeURIComponent(query)}`)
-      }
+        this.searchOnChangeDebouncable = (query) => {
+            this.setState({ debouncedQuery: query })
+            history.push(`?q=${encodeURIComponent(query)}`)
+        }
 
-      this.searchOnChangeDebounced = debounce(this.searchOnChangeDebouncable, 400)
+        this.searchOnChangeDebounced = debounce(this.searchOnChangeDebouncable, 400)
     }
 
     onServiceClickedHandler(service) {
-      console.log('on service clicked handler', service);
-
-      this.setState({
-        selectedService: service
-      });
+        this.setState({
+            selectedService: service
+        });
     }
 
     detailPaneCloseHandler() {
-      this.setState({
-        selectedService: null
-      });
+        this.setState({
+            selectedService: null
+        });
     }
 
     fetchServices() {
-      return fetch(`/api/directory/list-services`,{
-        headers: {
-            'Content-Type': 'application/json',
-        },
-      }).then(response => response.json())
+        return fetch(`/api/directory/list-services`,{
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(response => response.json())
     }
 
     escFunction(event) {
@@ -78,14 +76,14 @@ class ServicesOverviewPage extends Component {
         document.addEventListener('keydown', this.escFunction, false)
 
         this
-          .fetchServices()
-          .then(response => mapListServicesAPIResponse(response))
-          .then(services => {
-            this.setState({ loading: false, error: false, services })
-          })
-          .catch(() => {
-            this.setState({ loading: false, error: true })
-          })
+            .fetchServices()
+            .then(response => mapListServicesAPIResponse(response))
+            .then(services => {
+                this.setState({ loading: false, error: false, services })
+            })
+            .catch(() => {
+                this.setState({ loading: false, error: true })
+            })
     }
 
     componentWillUnmount() {
@@ -126,14 +124,14 @@ class ServicesOverviewPage extends Component {
                                                 filterByOnlineServices={!displayOfflineServices}
                                                 onServiceClickedHandler={(service) => this.onServiceClickedHandler(service)}
                                                 />
-              {
-                selectedService ?
-                  <ServiceDetailPane organizationName={selectedService.organization}
-                                     contactEmail={selectedService.contactEmail}
-                                     name={selectedService.name}
-                                     closeHandler={this.detailPaneCloseHandler}
-                  /> : null
-              }
+                {
+                    selectedService ?
+                        <ServiceDetailPane organizationName={selectedService.organization}
+                                           contactEmail={selectedService.contactEmail}
+                                           name={selectedService.name}
+                                           closeHandler={this.detailPaneCloseHandler}
+                        /> : null
+                }
             </Container>
         )
     }
