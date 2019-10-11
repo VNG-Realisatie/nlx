@@ -25,7 +25,7 @@ const ServiceDetailPane = ({ name, organizationName, contactEmail, closeHandler 
       contactEmail ?
         (
           <>
-            <StyledSubtitle>Contact</StyledSubtitle>
+            <StyledSubtitle>Support</StyledSubtitle>
             <StyledDl>
               <dt>Email</dt>
               <dd>{ contactEmail }</dd>
