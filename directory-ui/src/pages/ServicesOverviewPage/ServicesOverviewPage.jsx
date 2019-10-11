@@ -127,7 +127,7 @@ class ServicesOverviewPage extends Component {
                 {
                     selectedService ?
                         <ServiceDetailPane organizationName={selectedService.organization}
-                                           contactEmail={selectedService.contactEmailAddress}
+                                           contactEmailAddress={selectedService.contactEmailAddress}
                                            name={selectedService.name}
                                            closeHandler={this.detailPaneCloseHandler}
                         /> : null
