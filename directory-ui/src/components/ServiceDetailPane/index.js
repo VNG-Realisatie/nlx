@@ -6,7 +6,7 @@ import { func, string } from 'prop-types'
 import { StyledServiceDetailPane, StyledHeader, StyledTitle, StyledSecondTitle, StyledSubtitle, StyledDl, StyledEmailAddressLink, StyledCloseButton } from './index.styles'
 import CloseIcon from '../CloseIcon'
 
-const ServiceDetailPane = ({ name, organizationName, contactEmail, closeHandler }) =>
+const ServiceDetailPane = ({ name, organizationName, contactEmailAddress, closeHandler }) =>
   <StyledServiceDetailPane>
     <StyledHeader>
       <StyledTitle>
@@ -22,13 +22,13 @@ const ServiceDetailPane = ({ name, organizationName, contactEmail, closeHandler 
     </StyledSecondTitle>
 
     {
-      contactEmail ?
+      contactEmailAddress ?
         (
           <>
             <StyledSubtitle>Support</StyledSubtitle>
             <StyledDl>
               <dt>Email address</dt>
-              <dd><StyledEmailAddressLink href={'mailto:' + contactEmail  }>{contactEmail}</StyledEmailAddressLink></dd>
+              <dd><StyledEmailAddressLink href={'mailto:' + contactEmailAddress  }>{contactEmailAddress}</StyledEmailAddressLink></dd>
             </StyledDl>
           </>
       ) : null
@@ -38,7 +38,7 @@ const ServiceDetailPane = ({ name, organizationName, contactEmail, closeHandler 
 ServiceDetailPane.propTypes = {
   name: string,
   organizationName: string,
-  contactEmail: string,
+  contactEmailAddress: string,
   closeHandler: func,
 }
 

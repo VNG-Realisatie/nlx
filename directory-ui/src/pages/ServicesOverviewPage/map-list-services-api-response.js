@@ -8,5 +8,5 @@ export const mapListServicesAPIResponse = response =>
       name: service['service_name'],
       status: service['inway_addresses'] ? 'online' : 'offline',
       apiType: service['api_specification_type'],
-      contactEmail: service['public_support_contact']
+      contactEmailAddress: service['public_support_contact']
     })) : []
