@@ -42,7 +42,7 @@ Go linter:
     - nlx
     - shell
 
-Directory-ui tests:
+Directory-ui linter and tests:
   image: node:10.16.0-alpine
   stage: Tests
   cache:
@@ -53,6 +53,7 @@ Directory-ui tests:
     - cd directory-ui/
     - npm install
   script:
+    - npm run lint
     - npm test -- --coverage
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
   artifacts:
