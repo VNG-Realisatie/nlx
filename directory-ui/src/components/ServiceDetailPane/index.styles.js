@@ -74,7 +74,7 @@ export const StyledDl = styled.dl`
 
   dt {
     color: #A3AABF;
-    width: 75px;
+    width: 90px;
     float: left;
     clear: both;
     padding-bottom: 8px;
@@ -84,7 +84,7 @@ export const StyledDl = styled.dl`
     color: #2D3240;
     float: right;
     margin-left: 0;
-    width: calc(100% - 75px);
+    width: calc(100% - 90px);
     padding-bottom: 8px;
   }
 `
