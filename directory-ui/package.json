@@ -21,11 +21,24 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
+    "lint": "eslint src/**",
     "eject": "react-scripts eject"
   },
   "devDependencies": {
     "enzyme": "3.10.0",
-    "enzyme-adapter-react-16": "1.14.0"
+    "enzyme-adapter-react-16": "1.14.0",
+    "eslint": "6.4.0",
+    "eslint-config-jest-enzyme": "7.1.1",
+    "eslint-config-prettier": "6.2.0",
+    "eslint-config-standard": "14.1.0",
+    "eslint-plugin-import": "2.18.2",
+    "eslint-plugin-jest": "22.17.0",
+    "eslint-plugin-node": "10.0.0",
+    "eslint-plugin-prettier": "3.1.0",
+    "eslint-plugin-promise": "4.2.1",
+    "eslint-plugin-react": "7.14.3",
+    "eslint-plugin-standard": "4.0.1",
+    "prettier": "1.18.2"
   },
   "proxy-local": "https://directory.dev.nlx.minikube:30443",
   "proxy": "https://directory.demo.nlx.io",

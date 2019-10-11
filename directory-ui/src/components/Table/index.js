@@ -19,7 +19,7 @@ const Table = styled.table`
 `
 
 Table.propTypes = {
-  children: node,
+    children: node,
 }
 
 Table.Body = Body

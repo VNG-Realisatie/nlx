@@ -15,7 +15,7 @@ import DocumentationPage from './pages/DocumentationPage/DocumentationPage'
 
 const App = () => (
     <StyledApp>
-        <GlobalStyles/>
+        <GlobalStyles />
         <Router>
             <Fragment>
                 <Header />
@@ -27,7 +27,7 @@ const App = () => (
                 />
             </Fragment>
         </Router>
-        <VersionLogger/>
+        <VersionLogger />
     </StyledApp>
 )
 
