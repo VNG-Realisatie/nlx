@@ -2,6 +2,7 @@ module go.nlx.io/nlx
 
 require (
 	github.com/Microsoft/go-winio v0.4.14 // indirect
+	github.com/bwesterb/go-atum v1.0.1 // indirect
 	github.com/cloudflare/cfssl v0.0.0-20190911221928-1a911ca1b1d6
 	github.com/coreos/bbolt v1.3.3 // indirect
 	github.com/coreos/etcd v3.3.13+incompatible // indirect
@@ -16,6 +17,7 @@ require (
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-chi/chi v4.0.2+incompatible
 	github.com/go-chi/render v1.0.1
+	github.com/go-errors/errors v1.0.1 // indirect
 	github.com/go-sql-driver/mysql v1.4.1 // indirect
 	github.com/gogo/protobuf v1.3.0
 	github.com/golang-migrate/migrate v3.5.4+incompatible
@@ -26,7 +28,9 @@ require (
 	github.com/gorilla/schema v1.1.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.0.0
 	github.com/grpc-ecosystem/grpc-gateway v1.11.1
+	github.com/hashicorp/go-retryablehttp v0.6.2 // indirect
 	github.com/huandu/xstrings v1.2.0
+	github.com/jasonlvhit/gocron v0.0.0-20191007145845-57f89394836a // indirect
 	github.com/jessevdk/go-flags v1.4.0
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/jpillora/backoff v1.0.0
@@ -38,6 +42,8 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect
 	github.com/pkg/errors v0.8.1
+	github.com/privacybydesign/gabi v0.0.0-20190503104928-ce779395f4c9 // indirect
+	github.com/privacybydesign/irmago v0.4.0
 	github.com/prometheus/client_golang v1.0.0 // indirect
 	github.com/sirupsen/logrus v1.4.2 // indirect
 	github.com/sony/sonyflake v1.0.0
@@ -45,6 +51,7 @@ require (
 	github.com/spf13/viper v1.4.0
 	github.com/stretchr/testify v1.4.0
 	github.com/svent/go-flags v0.0.0-20141123140740-4bcbad344f03
+	github.com/timshannon/bolthold v0.0.0-20191009161117-ccb01ed9dec4 // indirect
 	github.com/zmap/zlint v1.0.1 // indirect
 	go.etcd.io/bbolt v1.3.3 // indirect
 	go.etcd.io/etcd v3.3.13+incompatible

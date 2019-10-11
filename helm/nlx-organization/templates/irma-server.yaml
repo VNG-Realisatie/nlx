@@ -1,0 +1,125 @@
+{{ if .Values.irma.enable }}
+{{ with set . "component" "irma-server" }}
+# TODO:#342 When using proper k8s RBAC split this into two secrets; only api server can use privkey, others can only read pubkey.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .component }}-jwt
+  namespace: {{.Release.Namespace}}
+  labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
+type: Opaque
+data:
+  sign-key.pem: {{ .Values.irma.jwtSignPrivateKey | b64enc }}
+  public-insight.pem: {{ .Values.irma.jwtInsightPublicKey | b64enc }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .component }}-config
+  namespace: {{.Release.Namespace}}
+  labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
+data:
+  irmaserver.yaml: |
+    no_auth: false
+    disable_tls: true
+    schemes_update: 0
+    no_email: true
+    url: {{ .Values.irma.selfUrl }}
+    jwt_privkey_file: "/etc/irmaserver/jwt/sign-key.pem"
+    requestors:
+      insight:
+        auth_method: "publickey"
+        key_file: "/etc/irmaserver/jwt/public-insight.pem"
+        disclose_perms: ["*"]
+        sign_perms: ["*"]
+        issue_perms: ["*"]
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      release: {{ .Release.Name }}
+      app: {{ .Chart.Name }}
+      component: {{ .component }}
+  template:
+    metadata:
+      labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 8 }}
+    spec:
+      volumes:
+        - name: {{ .component }}-config
+          configMap:
+            name: {{ .component }}-config
+        - name: {{ .component }}-jwt
+          secret:
+            secretName: {{.component}}-jwt
+      containers:
+        - name: {{ .component }}
+          image: {{.Values.irma.apiServerImage}}
+          imagePullPolicy: {{.Values.irma.pullPolicy}}
+          args: ["server", "run", "-vv"]
+          volumeMounts:
+            - name: {{ .component }}-config
+              mountPath: /etc/irmaserver
+              readOnly: true
+            - name: {{ .component }}-jwt
+              mountPath: /etc/irmaserver/jwt
+              readOnly: true
+          # env:
+          #   - name: IRMA_API_CONF_BASE64_JWT_PUBLICKEY
+          #     valueFrom:
+          #       secretKeyRef:
+          #         name: jwt-rsa-{{.component}}
+          #         key: crt.der
+          #   - name: IRMA_API_CONF_BASE64_JWT_PRIVATEKEY
+          #     valueFrom:
+          #       secretKeyRef:
+          #         name: jwt-rsa-{{.component}}
+          #         key: key.der
+          #   - name: IRMA_API_CONF_ENABLE_ISSUING
+          #     value: "true"
+          #   - name: IRMA_API_CONF_ALLOW_UNSIGNED_ISSUE_REQUESTS
+          #     value: "true"
+          #   - name: IRMA_API_CONF_AUTHORIZED_IDPS
+          #     value: "{insight: [*],* : [*]}"
+          #   - name: IRMA_API_CONF_REJECT_UNFLOORED_VALIDITY_TIMESTAMPS
+          #     value: "false"
+      restartPolicy: Always
+  status: {}
+---
+apiVersion: v1
+kind: Service
+metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
+spec:
+  selector: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
+  ports:
+    - name: api
+      protocol: TCP
+      port: 8088
+  cluserIP: None
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
+  annotations:
+    ingress.kubernetes.io/custom-response-headers: 'Access-Control-Allow-Origin: *'
+    ingress.kubernetes.io/hsts-include-subdomains: 'true'
+    ingress.kubernetes.io/hsts-max-age: '315360000'
+    ingress.kubernetes.io/hsts-preload: 'true'
+    kubernetes.io/ingress.class: traefik
+    traefik.frontend.rule.type: PathPrefixStrip
+spec:
+  rules:
+  - host: irma-api.{{.Values.externalDomain}}
+    http:
+      paths:
+        - backend:
+            serviceName: {{.component}}
+            servicePort: api
+{{ end }}
+{{ end }}

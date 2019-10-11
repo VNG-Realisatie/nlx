@@ -72,6 +72,13 @@ build:
     context: .
     docker:
       dockerfile: auth-service/Dockerfile
+  - image: nlxio/irma
+    context: .
+    docker:
+      dockerfile: irma/Dockerfile
+      buildArgs:
+        IRMA_VERSION: 0.3.1
+        IRMA_CHECKSUM: f74bbafef1b37b954f233adb526c67cf3005b2fa9585cd0f8246054a85a5e7ba
   tagPolicy:
     sha256: {}
   local:

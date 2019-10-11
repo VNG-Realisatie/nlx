@@ -4,14 +4,12 @@
 package insightapi
 
 import (
-	"bytes"
 	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi"
 	"go.uber.org/zap"
 
-	"go.nlx.io/nlx/common/derrsa"
 	"go.nlx.io/nlx/insight-api/config"
 	"go.nlx.io/nlx/insight-api/irma"
 )
@@ -25,12 +23,12 @@ type InsightAPI struct {
 	dataSubjectsByIrmaAttribute map[string][]string
 }
 
-func NewInsightAPI(logger *zap.Logger, insightConfig *config.InsightConfig, jwtHandler irma.JWTHandler, logFetcher InsightLogFetcher, rsaPrivateKey, rsaPublicKey string) (*InsightAPI, error) {
-	rsaSignPrivateKey, err := derrsa.DecodeDEREncodedRSAPrivateKey(bytes.NewBufferString(rsaPrivateKey))
+func NewInsightAPI(logger *zap.Logger, insightConfig *config.InsightConfig, jwtHandler irma.JWTHandler, logFetcher InsightLogFetcher, rsaPrivateKeyFile, rsaPublicKeyFile string) (*InsightAPI, error) {
+	rsaSignPrivateKey, err := parseRSAPrivateKeyFile(rsaPrivateKeyFile)
 	if err != nil {
 		return nil, fmt.Errorf("error decoding private key: %s", err)
 	}
-	rsaVerifyPublicKey, err := derrsa.DecodeDEREncodedRSAPublicKey(bytes.NewBufferString(rsaPublicKey))
+	rsaVerifyPublicKey, err := parseRSAPublicKeyFile(rsaPublicKeyFile)
 	if err != nil {
 		return nil, fmt.Errorf("error decoding public key: %s", err)
 	}

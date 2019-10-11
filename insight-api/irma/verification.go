@@ -18,7 +18,6 @@ type VerificationRequestClaims struct {
 
 // SPRequestClaims contains the fields for a verification request
 type SPRequestClaims struct {
-	Data        string           `json:"data"`
 	Validity    uint64           `json:"validity"`
 	Timeout     uint64           `json:"timeout"`
 	CallbackURL string           `json:"callbackUrl"`
@@ -27,7 +26,8 @@ type SPRequestClaims struct {
 
 // DiscloseRequest contains the data for a disclose request
 type DiscloseRequest struct {
-	Content []DiscloseRequestContent `json:"content"`
+	Context  string                   `json:"@context"`
+	Disclose []DiscloseRequestContent `json:"disclose"`
 }
 
 // DiscloseRequestContent contains information about a required attribute(set) in a disclose request
@@ -45,7 +45,6 @@ func newVerificationRequestClaims(request *DiscloseRequest, serviceProviderName 
 			Subject:  "verification_request",
 		},
 		SPRequest: SPRequestClaims{
-			Data:     "",
 			Validity: 3600,
 			Timeout:  60,
 			Request:  request,

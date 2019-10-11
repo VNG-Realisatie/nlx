@@ -87,22 +87,20 @@ export function* fetchIrmaLoginInformation({ insight_log_endpoint, insight_irma_
   try {
     const dataSubjects = yield call(api, `${insight_log_endpoint}/getDataSubjects`)
     const jwtToken = yield call(apiPostWithTextResponse, `${insight_log_endpoint}/generateJWT`, { dataSubjects: mapDataSubjectsResponseToArray(dataSubjects) })
-    const JWTVerification = yield call(apiPostWithTextAndJSONAsOutput, `${insight_irma_endpoint}/api/v2/verification/`, jwtToken)
-    const u = JWTVerification.u
+    const JWTVerification = yield call(apiPostWithTextAndJSONAsOutput, `${insight_irma_endpoint}/session`, jwtToken)
+    console.log(JWTVerification)
+    const token = JWTVerification.token
 
-    const qrCodeContents = {
-      u:`${insight_irma_endpoint}/api/v2/verification/${u}`,
-      v: JWTVerification.v,
-      vmax: JWTVerification.vmax,
-      irmaqr: JWTVerification.irmaqr
-    }
+    const qrCodeContents = JWTVerification.sessionPtr
+
+    console.log(qrCodeContents)
 
     yield put({ type: TYPES.FETCH_IRMA_LOGIN_INFORMATION_SUCCESS, data: {
         dataSubjects: mapDataSubjectsResponseToArray(dataSubjects),
         qrCodeValue: JSON.stringify(qrCodeContents),
-        statusUrl: `${insight_irma_endpoint}/api/v2/verification/${u}/status`,
-        proofUrl: `${insight_irma_endpoint}/api/v2/verification/${u}/getproof`,
-        JWT: u,
+        statusUrl: `${insight_irma_endpoint}/session/${token}/status`,
+        proofUrl: `${insight_irma_endpoint}/session/${token}/getproof`,
+        JWT: token,
     }})
   } catch (err) {
     console.log(err);

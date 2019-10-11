@@ -32,8 +32,8 @@ var options struct {
 
 	PostgresDSN string `long:"postgres-dsn" env:"POSTGRES_DSN" default:"postgres://postgres:postgres@postgres/nlx_logdb?sslmode=disable" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
 
-	IRMAJWTRSASignPrivateKeyDER  string `long:"irma-jwt-rsa-sign-private-key-der" env:"IRMA_JWT_RSA_SIGN_PRIVATE_KEY_DER" required:"true" description:"PEM RSA private key to sign requests for irma api server"`
-	IRMAJWTRSAVerifyPublicKeyDER string `long:"irma-jwt-rsa-verify-public-key-der" env:"IRMA_JWT_RSA_VERIFY_PUBLIC_KEY_DER" required:"true" description:"PEM RSA public key to verify results from irma api server"`
+	IRMASignPrivateKeyFile  string `long:"irma-sign-private-key-file" env:"IRMA_SIGN_PRIVATE_KEY_FILE" required:"true" description:"PEM RSA private key to sign requests for IRMA server"`
+	IRMAVerifyPublicKeyFile string `long:"irma-verify-public-key-file" env:"IRMA_VERIFY_PUBLIC_KEY_FILE" required:"true" description:"PEM RSA public key to verify results from IRMA server"`
 
 	InsightConfig string `long:"insight-config" env:"INSIGHT_CONFIG" default:"insight-config.toml" description:"Location of the insight config toml file"`
 
@@ -83,7 +83,7 @@ func main() {
 
 	irmaHandler := irma.NewJWTGenerator()
 
-	insightAPI, err := insightapi.NewInsightAPI(logger, insightConfig, irmaHandler, insightLogFetcher, options.IRMAJWTRSASignPrivateKeyDER, options.IRMAJWTRSAVerifyPublicKeyDER)
+	insightAPI, err := insightapi.NewInsightAPI(logger, insightConfig, irmaHandler, insightLogFetcher, options.IRMASignPrivateKeyFile, options.IRMAVerifyPublicKeyFile)
 	if err != nil {
 		logger.Fatal("error creating insightAPI", zap.Error(err))
 	}
