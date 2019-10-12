@@ -26,8 +26,8 @@ describe('mapping the API response', () => {
                 name: 'bar',
                 status: 'online',
                 apiType: 'openapi',
-            contactEmailAddress: 'foo@bar.baz'
-    },
+                contactEmailAddress: 'foo@bar.baz',
+            },
         ])
     })
 

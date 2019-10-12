@@ -6,8 +6,8 @@ import { shallow } from 'enzyme'
 import ServiceDetailPane from './index'
 
 describe('ServiceDetailPane component', () => {
-  it('should render without errors', () => {
-    const wrapper = shallow(<ServiceDetailPane />)
-    expect(wrapper).toBeTruthy()
-  })
+    it('should render without errors', () => {
+        const wrapper = shallow(<ServiceDetailPane />)
+        expect(wrapper).toBeTruthy()
+    })
 })

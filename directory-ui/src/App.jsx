@@ -12,7 +12,6 @@ import Header from './components/Header/Header'
 import ServiceOverviewPage from './pages/ServicesOverviewPage/ServicesOverviewPage'
 import DocumentationPage from './pages/DocumentationPage/DocumentationPage'
 
-
 const App = () => (
     <StyledApp>
         <GlobalStyles />
