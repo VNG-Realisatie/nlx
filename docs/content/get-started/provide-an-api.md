@@ -23,7 +23,7 @@ Preferably, you are able to start the inway service on a machine which is public
 
 In the following example we will use [Swagger Petstore](https://petstore.swagger.io) as an example API.
 
-We have to define our API in a TOML-file. You can save the contents below as `service-config.toml`.
+We have to define our API in a TOML-file. You can save the contents below as `service-config.toml`. Please read our documentation about the [service configuration](../../further-reading/service-configuration/) to learn more about the configuration options.
 
 ```toml
 [services]

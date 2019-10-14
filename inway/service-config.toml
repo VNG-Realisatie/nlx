@@ -9,7 +9,7 @@
 	## In this example we simply expose the postman-echo.com website.
 	endpoint-url = "https://postman-echo.com/"
 
-	## `documentation-url` points to the documentation for provided sevice
+	## `documentation-url` points to the documentation for provided service
 	documentation-url = "https://docs.postman-echo.com/"
 
 	## `authorization-model` none or whitelist
