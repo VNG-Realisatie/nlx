@@ -222,6 +222,7 @@ profiles:
           caAddress: ca-cfssl-unsafe.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           externalDomain: nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
           domain: nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}
+          management.basicAuth: "{{.MANAGEMENT_BASIC_AUTH}}"
           configAPI.insightAPIURL: https://insight-api.nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
           configAPI.irmaServerURL: https://irma-api.nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
           configAPI.serviceConfig: |
