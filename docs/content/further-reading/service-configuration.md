@@ -43,7 +43,7 @@ If there is an [OpenAPI Specification](https://swagger.io/specification/)(OAS) a
 When using the [ca-cert-path](#field-ca-cert-path) option, the server behind this URL should provide a certificate signed by that root certifictate. 
 The following OAS versions are supported: 2.0, 3.0.0, 3.0.1, 3.0.2
 
-example: api-specification-document-url = "https://petstore.swagger.io/swagger.json"
+`example: api-specification-document-url = "https://petstore.swagger.io/swagger.json"`
 <a name="field-authorization-model"></a>
 ## authorization-model
 ***required***  
