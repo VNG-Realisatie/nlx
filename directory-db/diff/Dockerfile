@@ -36,6 +36,7 @@ ENV GOPATH /go
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 
 # Install modd
+ENV GO111MODULE on
 RUN go get github.com/cortesi/modd/cmd/modd
 
 # Install docker so developers can run the diff script in modd
