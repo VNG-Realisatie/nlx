@@ -16,7 +16,7 @@ NLX has authorization features for both the inway and the outway. This document 
 
 ### Introduction
 
-When you want to restrict which applications can access your outway, you can setup authorization on the outway.
+When you want to restrict which of your applications can communicate with other services using your outway, you can setup authorization on the outway.
 To enable authorization on an outway, organizations can plug-in their own authorization service. Once configured, all requests will be authorized by this service before routing the request to the targeted API in the NLX network.
 
 ### How it works
