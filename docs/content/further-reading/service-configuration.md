@@ -26,7 +26,7 @@ Below is an example configuration named `service-config.toml`.
     authorization-whitelist = ["DemoRequesterOrganization"]
     public-support-contact = "support@my-organization.nl"
     tech-support-contact = "tech@my-organization.nl"
-    # ca-cert-path = "/path/to/custom-root-ca.crt"
+    ca-cert-path = "/path/to/custom-root-ca.crt"
 ```
 # Service configuration fields
 ## endpoint-url 
