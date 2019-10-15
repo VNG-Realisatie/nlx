@@ -22,3 +22,7 @@ demo:
 
 
 replicas: 1
+
+reviewPage:
+  enabled: true
+  

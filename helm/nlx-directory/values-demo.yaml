@@ -116,3 +116,6 @@ ca:
     -----END RSA PRIVATE KEY-----
 
 replicas: 3
+
+reviewPage:
+  enabled: false

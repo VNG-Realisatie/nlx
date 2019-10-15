@@ -27,3 +27,6 @@ ca:
   kind: "private"
 
 replicas: 3
+
+reviewPage:
+  enabled: false

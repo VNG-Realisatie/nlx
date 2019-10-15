@@ -27,3 +27,7 @@ demoEnv: "dev"
 demoDomain: "minikube"
 
 replicas: 1
+
+reviewPage:
+  enabled: false
+  
