@@ -97,7 +97,7 @@ public-support-contact = "support@my-organization.nl"
 ```
 
 ## tech-support-contact  
-Contains an email address which we (the NLX organization) can contact if they have any questions about your API.
+Contains an email address which we (the NLX organization) can contact if we have any questions about your API.
 This email address will NOT be published in the directory.
 
 ***Example***
