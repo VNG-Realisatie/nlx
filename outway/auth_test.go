@@ -30,29 +30,78 @@ func TestStripHeaders(t *testing.T) {
 		"X-NLX-Request-Subject-Identifier",
 		"X-NLX-Request-Application-Id",
 		"X-NLX-Request-User-Id",
+		"X-NLX-Logrecord-ID",
+		"X-NLX-Request-Data-Subject",
+		"Proxy-Authorization",
+	}
+	unsafeHeaders := []string{
+		"X-NLX-Requester-User",
+		"X-NLX-Requester-Claims",
+		"X-NLX-Request-Subject-Identifier",
+		"X-NLX-Request-Application-Id",
+		"X-NLX-Request-User-Id",
+	}
+
+	safeHeaders := []string{
+		"X-NLX-Logrecord-ID",
 		"X-NLX-Request-Data-Subject",
 	}
 
-	r := &http.Request{
-		Header: http.Header{},
+	tests := []struct {
+		name                 string
+		receiverOrganization string
+		expectHeaders        []string
+		disallowedHeaders    []string
+	}{
+		{
+			name:                 "Different Organization",
+			receiverOrganization: "differentOrg",
+			expectHeaders:        safeHeaders,
+			disallowedHeaders:    unsafeHeaders,
+		},
+		{
+			name:                 "Same Organization",
+			receiverOrganization: "org",
+			expectHeaders:        append(safeHeaders, unsafeHeaders...),
+			disallowedHeaders:    nil,
+		},
+		{
+			name:                 "Do not pass Proxy-Authorization",
+			receiverOrganization: "differentOrg",
+			expectHeaders:        nil,
+			disallowedHeaders:    []string{"Proxy-Authorization"},
+		},
+		{
+			name:                 "Never pass Proxy-Authorization",
+			receiverOrganization: "org",
+			expectHeaders:        nil,
+			disallowedHeaders:    []string{"Proxy-Authorization"},
+		},
 	}
-	for _, header := range headers {
-		r.Header.Add(header, header)
-	}
+	for _, tc := range tests {
+		tc := tc
+		t.Run(tc.name, func(t *testing.T) {
+			r := &http.Request{
+				Header: http.Header{},
+			}
+			for _, header := range headers {
+				r.Header.Add(header, header)
+			}
 
-	o.stripHeaders(r, "org")
-	for _, header := range headers {
-		assert.Equal(t, header, r.Header.Get(header))
-	}
+			o.stripHeaders(r, tc.receiverOrganization)
 
-	o.stripHeaders(r, "differentOrg")
-	for _, header := range headers {
-		assert.Equal(t, "", r.Header.Get(header))
+			if tc.expectHeaders != nil {
+				for _, header := range tc.expectHeaders {
+					assert.Equal(t, header, r.Header.Get(header))
+				}
+			}
+			if tc.disallowedHeaders != nil {
+				for _, header := range tc.disallowedHeaders {
+					assert.Equal(t, "", r.Header.Get(header))
+				}
+			}
+		})
 	}
-
-	r.Header.Add("Proxy-Authorization", "Proxy-Authorization")
-	o.stripHeaders(r, "org")
-	assert.Equal(t, "", r.Header.Get("Proxy-Authorization"))
 }
 
 func TestAuthListen(t *testing.T) {
