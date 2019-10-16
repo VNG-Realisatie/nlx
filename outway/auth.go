@@ -70,7 +70,6 @@ func (o *Outway) stripHeaders(r *http.Request, receiverOrganization string) {
 		r.Header.Del("X-NLX-Request-Subject-Identifier")
 		r.Header.Del("X-NLX-Request-Application-Id")
 		r.Header.Del("X-NLX-Request-User-Id")
-		r.Header.Del("X-NLX-Request-Data-Subject")
 	}
 	r.Header.Del("Proxy-Authorization")
 }
