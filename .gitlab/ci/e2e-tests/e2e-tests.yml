@@ -1,4 +1,5 @@
 Directory UI - E2E Tests:
+  image: docker:stable
   stage: E2E tests
   variables:
     DOCKER_HOST: tcp://docker:2375/
