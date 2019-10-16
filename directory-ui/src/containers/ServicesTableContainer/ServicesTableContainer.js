@@ -75,7 +75,12 @@ class ServicesTableContainer extends PureComponent {
     }
 
     render() {
-        const { services, filterQuery, filterByOnlineServices, onServiceClickedHandler } = this.props
+        const {
+            services,
+            filterQuery,
+            filterByOnlineServices,
+            onServiceClickedHandler,
+        } = this.props
         const { sortBy, sortOrder } = this.state
         const filteredServices = this.filterServices(
             services,
@@ -107,7 +112,7 @@ ServicesTableContainer.propTypes = {
     services: array,
     sortBy: string,
     sortOrder: string,
-    onServiceClickedHandler: func
+    onServiceClickedHandler: func,
 }
 
 ServicesTableContainer.defaultProps = {

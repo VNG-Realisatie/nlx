@@ -6,6 +6,7 @@ stages:
   - Release
   - Review
   - Deploy test
+  - E2E tests
   - Deploy acc
   - Deploy prod
 
@@ -16,6 +17,7 @@ include:
   - '.gitlab/ci/tools/semantic_release.yml'
   - '.gitlab/ci/release/release.yml'
   - '.gitlab/ci/review/review.yml'
+  - '.gitlab/ci/e2e-tests/e2e-tests.yml'
   - '.gitlab/ci/deploy/_base.yml'
   - '.gitlab/ci/deploy/test.yml'
   - '.gitlab/ci/deploy/acc.yml'

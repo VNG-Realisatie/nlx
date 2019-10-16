@@ -1,0 +1,24 @@
+Directory UI - E2E Tests:
+  stage: E2E tests
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+  before_script:
+    - export URL=$([ -f ci_environment_url.txt ] && cat ci_environment_url.txt || echo "https://directory.test.nlx.io")
+    - export E2E_IMAGE=${CI_REGISTRY_IMAGE}/directory-e2e-tests
+  script:
+    - |
+      docker build --tag $E2E_IMAGE:$CI_COMMIT_SHORT_SHA \
+      -f directory-ui-e2e-tests/Dockerfile . && \
+      docker run --rm --cap-add=SYS_ADMIN \
+      -e URL=${URL} \
+      $E2E_IMAGE:$CI_COMMIT_SHORT_SHA \
+      /bin/sh -c "./wait-for-http.sh $URL && npm test"
+  tags:
+    - docker
+    - linux
+  services:
+    - docker:dind
+  only:
+    - master
+    - /^feature\/.*$/
