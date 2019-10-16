@@ -22,7 +22,7 @@ const ServicesTableRow = ({ status, organization, name, apiType, ...props }) => 
   }
 
   return (
-    <StyledServiceTableRow status={status} {...props}>
+    <StyledServiceTableRow data-test="service-table-row" status={status} {...props}>
       <Table.BodyCell align="center" padding="none" title={status}><StatusIcon status={status} /></Table.BodyCell>
       <Table.BodyCell>{organization}</Table.BodyCell>
       <Table.BodyCell>{name}</Table.BodyCell>

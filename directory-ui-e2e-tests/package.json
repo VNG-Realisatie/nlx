@@ -1,0 +1,20 @@
+{
+  "name": "directory-ui-e2e-tests",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Integration tests for the NLX Directory UI.",
+  "main": "index.test.js",
+  "scripts": {
+    "test": "jest",
+    "debug": "URL=http://localhost:3000 npm test"
+  },
+  "devDependencies": {
+    "axe-core": "3.3.2",
+    "jest": "24.9.0",
+    "jest-puppeteer": "4.3.0",
+    "puppeteer": "1.20.0"
+  },
+  "jest": {
+    "preset": "jest-puppeteer"
+  }
+}

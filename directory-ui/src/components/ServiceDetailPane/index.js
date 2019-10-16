@@ -21,7 +21,7 @@ const ServiceDetailPane = ({
     contactEmailAddress,
     closeHandler,
 }) => (
-    <StyledServiceDetailPane>
+    <StyledServiceDetailPane data-test="service-detail-pane">
         <StyledHeader>
             <StyledTitle>{name}</StyledTitle>
             <StyledCloseButton onClick={() => closeHandler()}>
@@ -39,6 +39,7 @@ const ServiceDetailPane = ({
                     <dd>
                         <StyledEmailAddressLink
                             href={'mailto:' + contactEmailAddress}
+                            data-test="email-address-link"
                         >
                             {contactEmailAddress}
                         </StyledEmailAddressLink>

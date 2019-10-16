@@ -95,6 +95,7 @@ class ServicesTableContainer extends PureComponent {
                 sortOrder={sortOrder}
                 onToggleSorting={(property) => this.onToggleSorting(property)}
                 onServiceClickedHandler={onServiceClickedHandler}
+                data-test="services-table"
             />
         )
     }
