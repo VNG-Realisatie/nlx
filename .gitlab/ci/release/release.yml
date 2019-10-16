@@ -23,8 +23,6 @@ Release container images review:
      - skaffold build --profile release-review
   only:
     - /^feature\/.*$/
-  services:
-    - docker:dind
   tags:
     - review
     - kubernetes

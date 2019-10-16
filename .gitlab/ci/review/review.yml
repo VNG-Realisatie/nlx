@@ -9,7 +9,7 @@ Deploy Review App:
   services:
     - docker:dind
   script:
-    - echo -e -n "https://$CI_ENVIRONMENT_SLUG.$REVIEW_BASE_DOMAIN" > ci_environment_url.txt
+    - echo -e -n "$CI_ENVIRONMENT_SLUG.$REVIEW_BASE_DOMAIN" > ci_environment_url.txt
     - skaffold deploy --profile deploy-review-directory --namespace nlx-directory-$CI_ENVIRONMENT_SLUG
     - skaffold deploy --profile deploy-review-haarlem --namespace nlx-haarlem-$CI_ENVIRONMENT_SLUG
     - skaffold deploy --profile deploy-review-rdw --namespace nlx-rdw-$CI_ENVIRONMENT_SLUG

@@ -5,14 +5,16 @@ Directory UI - E2E Tests:
     DOCKER_HOST: tcp://docker:2375/
     DOCKER_DRIVER: overlay2
   before_script:
-    - export URL=$([ -f ci_environment_url.txt ] && cat ci_environment_url.txt || echo "https://directory.test.nlx.io")
+    - export CI_ENV_URL=$([ -f ci_environment_url.txt ] && cat ci_environment_url.txt)
+    - export DIRECTORY_UI_URL=$([ -z "$CI_ENV_URL" ] && echo "https://directory.test.nlx.io" || echo "https://directory.nlx-directory-$CI_ENV_URL")
+    - echo $DIRECTORY_UI_URL
     - export E2E_IMAGE=${CI_REGISTRY_IMAGE}/directory-e2e-tests
   script:
     - |
       docker build --tag $E2E_IMAGE:$CI_COMMIT_SHORT_SHA \
       -f directory-ui-e2e-tests/Dockerfile . && \
       docker run --rm --cap-add=SYS_ADMIN \
-      -e URL=${URL} \
+      -e URL=$DIRECTORY_UI_URL \
       $E2E_IMAGE:$CI_COMMIT_SHORT_SHA \
       /bin/sh -c "./wait-for-http.sh $URL && npm test"
   tags:
