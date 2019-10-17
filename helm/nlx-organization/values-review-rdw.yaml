@@ -1,4 +1,5 @@
 organizationName: rdw
+servicePartOfExternalDomain: true
 
 disableLoadBalancers: true
 

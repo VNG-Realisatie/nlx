@@ -98,7 +98,7 @@ metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
     traefik.frontend.rule.type: PathPrefixStrip
 spec:
   rules:
-  - host: insight-api.{{.Values.externalDomain}}
+  - host: insight-api{{ if .Values.servicePartOfExternalDomain }}-{{ else }}.{{ end }}{{.Values.externalDomain}}
     http:
       paths:
         - backend:

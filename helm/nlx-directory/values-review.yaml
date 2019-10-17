@@ -1,3 +1,5 @@
+servicePartOfExternalDomain: true
+
 disableLoadBalancers: true
 logType: local
 

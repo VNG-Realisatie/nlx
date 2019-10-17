@@ -53,7 +53,7 @@ build:
   - image: nlxio/nlxctl
     context: .
     docker:
-      dockerfile: nlxctl/Dockerfile 
+      dockerfile: nlxctl/Dockerfile
   - image: nlxio/outway
     context: .
     docker:
@@ -192,8 +192,8 @@ profiles:
                 endpoint-url = 'https://service:8443'
                 authorization-model = 'none'
                 api-specification-document-url = 'https://service:8443/openapi.json'
-                insight-api-url = 'https://insight-api.nlx-brp-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}'
-                irma-api-url = 'https://irma-api.nlx-brp-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}'
+                insight-api-url = 'https://insight-api-nlx-brp-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}'
+                irma-api-url = 'https://irma-api-nlx-brp-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}'
                 ca-cert-path = '/ca-certs/basisregistratie.pem'
 - name: deploy-review-rdw
   deploy:
@@ -218,8 +218,8 @@ profiles:
           caAddress: ca-cfssl-unsafe.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           externalDomain: nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
           domain: nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}
-          configAPI.insightAPIURL: https://insight-api.nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
-          configAPI.irmaServerURL: https://irma-api.nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
+          configAPI.insightAPIURL: https://insight-api-nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
+          configAPI.irmaServerURL: https://irma-api-nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
           configAPI.serviceConfig: |
             \{
               "name": "kentekenregister"\,
@@ -260,8 +260,8 @@ profiles:
                 [services.demo-api]
                 endpoint-url = 'https://postman-echo.com'
                 authorization-model = 'none'
-                insight-api-url = 'https://insight-api.nlx-haarlem-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}'
-                irma-api-url = 'https://irma-api.nlx-haarlem-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}'
+                insight-api-url = 'https://insight-api-nlx-haarlem-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}'
+                irma-api-url = 'https://irma-api-nlx-haarlem-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}'
                 public-support-contact = "public-support@nlx.io"
                 tech-support-contact = "tech-support@nlx.io"
 

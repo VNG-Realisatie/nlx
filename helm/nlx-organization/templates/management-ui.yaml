@@ -63,7 +63,7 @@ metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
     kubernetes.io/ingress.class: traefik
 spec:
   rules:
-    - host: management.{{.Values.externalDomain}}
+    - host: management{{ if .Values.servicePartOfExternalDomain }}-{{ else }}.{{ end }}{{.Values.externalDomain}}
       http:
         paths:
           - path: /

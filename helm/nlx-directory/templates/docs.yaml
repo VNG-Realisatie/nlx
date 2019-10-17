@@ -41,7 +41,7 @@ metadata: {{ include "nlx-directory.common.metadata" . | nindent 2 }}
     traefik.frontend.rule.type: PathPrefixStrip
 spec:
   rules:
-    - host: docs.{{.Values.externalDomain}}
+    - host: docs{{ if .Values.servicePartOfExternalDomain }}-{{ else }}.{{ end }}{{.Values.externalDomain}}
       http:
         paths:
           - path: /

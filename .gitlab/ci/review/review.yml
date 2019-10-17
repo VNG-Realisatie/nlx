@@ -16,7 +16,7 @@ Deploy Review App:
     - skaffold deploy --profile deploy-review-brp --namespace nlx-brp-$CI_ENVIRONMENT_SLUG
   environment:
     name: $CI_COMMIT_REF_NAME
-    url: https://application.nlx-haarlem-$CI_ENVIRONMENT_SLUG.$REVIEW_BASE_DOMAIN
+    url: https://application-nlx-haarlem-$CI_ENVIRONMENT_SLUG.$REVIEW_BASE_DOMAIN
     on_stop: Remove Review App
   tags:
     - review

@@ -1,4 +1,5 @@
 organizationName: haarlem
+servicePartOfExternalDomain: true
 
 disableLoadBalancers: true
 
