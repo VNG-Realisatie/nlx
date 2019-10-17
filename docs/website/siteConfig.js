@@ -9,7 +9,7 @@
 // site configuration options.
 
 const siteConfig = {
-  title: 'NLX Documentation', // Title for your website.
+  title: 'Documentation', // Title for your website.
   tagline: '',
 
   url: '', // Your website URL
@@ -26,12 +26,13 @@ const siteConfig = {
 
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
+    {href: 'https://nlx.io/about/', label: 'Over NLX'},
     {doc: 'doc1', label: 'Docs'},
+    {href: 'https://directory.demo.nlx.io/', label: 'Directory'},
   ],
 
   /* path to images for header/footer */
-  headerIcon: 'img/favicon.ico',
-  footerIcon: 'img/favicon.ico',
+  headerIcon: 'img/logo.svg',
   favicon: 'img/favicon.ico',
 
   /* Colors for website */
