@@ -22,6 +22,9 @@ const App = () =>
                      aboutPageURL={window._env.REACT_APP_NAVBAR_ABOUT_PAGE_URL || 'https://www.nlx.io/about'}
                      docsPageURL={window._env.REACT_APP_NAVBAR_DOCS_PAGE_URL || 'https://docs.nlx.io'}>
       <Navigation.Item>
+        <a href={`${window._env.REACT_APP_NAVBAR_DOCS_PAGE_URL || 'https://docs.nlx.io'}/support`}>Support</a>
+      </Navigation.Item>
+      <Navigation.Item>
         <a href={window._env.REACT_APP_NAVBAR_DIRECTORY_URL || 'https://directory.nlx.io'}>Directory</a>
       </Navigation.Item>
       <Navigation.Item>
