@@ -9,8 +9,8 @@
 // site configuration options.
 
 const siteConfig = {
-  title: 'Test Site', // Title for your website.
-  tagline: 'A website for testing',
+  title: 'NLX Documentation', // Title for your website.
+  tagline: '',
 
   url: '', // Your website URL
   baseUrl: '/', // Base URL for your project */
@@ -21,11 +21,8 @@ const siteConfig = {
   //   baseUrl: '/test-site/',
 
   // Used for publishing and more
-  projectName: 'test-site',
-  organizationName: 'facebook',
-  // For top-level user or org sites, the organization is still the same.
-  // e.g., for the https://JoelMarcey.github.io site, it would be set like...
-  //   organizationName: 'JoelMarcey'
+  projectName: 'nlx-docs',
+  organizationName: 'common-ground',
 
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
@@ -39,26 +36,12 @@ const siteConfig = {
 
   /* Colors for website */
   colors: {
-    primaryColor: '#482664',
-    secondaryColor: '#321a46',
+    primaryColor: '#3d83fa',
+    secondaryColor: '#FEBF24',
   },
-
-  /* Custom fonts for website */
-  /*
-  fonts: {
-    myFont: [
-      "Times New Roman",
-      "Serif"
-    ],
-    myOtherFont: [
-      "-apple-system",
-      "system-ui"
-    ]
-  },
-  */
 
   // This copyright info is used in /core/Footer.js and blog RSS/Atom feeds.
-  copyright: `Copyright © ${new Date().getFullYear()} Your Name or Your Company Name`,
+  copyright: `Copyright © ${new Date().getFullYear()} VNG Realisatie`,
 
   highlight: {
     // Highlight.js theme to use for syntax highlighting in code blocks.
