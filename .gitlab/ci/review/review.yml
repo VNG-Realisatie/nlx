@@ -3,7 +3,7 @@ Deploy Review App:
   image: registry.gitlab.com/commonground/cg-review-app-deployer:latest
   variables:
     IMAGE_PREFIX: "$CI_REGISTRY/$CI_PROJECT_PATH"
-    REVIEW_BASE_DOMAIN: review.nlx.io
+    REVIEW_BASE_DOMAIN: nlx.reviews
     DOCKER_DRIVER: overlay2
     DOCKER_TLS_CERTDIR: ""
   services:
