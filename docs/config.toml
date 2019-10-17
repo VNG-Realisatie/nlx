@@ -22,7 +22,7 @@ home = [ "HTML", "RSS", "JSON"]
 [[menu.docs]]
   name = "Support"
   weight = 2
-  identifier = "Support"
+  identifier = "support"
   url = "/support/"
 
 [[menu.docs]]
