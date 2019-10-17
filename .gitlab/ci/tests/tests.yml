@@ -34,7 +34,7 @@ Go linter:
   before_script:
    - export PATH=$PATH:/usr/local/go/bin
   script:
-    - golangci-lint run --deadline=5m --new-from-rev $(git rev-parse origin/master) --out-format code-climate > code-climate.json
+    - golangci-lint run --timeout=5m --new-from-rev $(git rev-parse origin/master) --out-format code-climate > code-climate.json
   artifacts:
     reports:
       codequality: code-climate.json
