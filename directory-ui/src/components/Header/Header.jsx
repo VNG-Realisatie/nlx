@@ -25,6 +25,9 @@ const Header = () =>
                     <li className="nav-item">
                         <a className="nav-link" href="https://docs.nlx.io">Docs</a>
                     </li>
+                    <li className="nav-item">
+                        <a className="nav-link" href="https://docs.nlx.io/support">Support</a>
+                    </li>
                 </ul>
 
                 <ul className="navbar-nav">
