@@ -27,7 +27,7 @@ const siteConfig = {
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
     {href: 'https://nlx.io/about/', label: 'Over NLX'},
-    {doc: 'doc1', label: 'Docs'},
+    {doc: 'introduction', label: 'Docs'},
     {href: 'https://directory.demo.nlx.io/', label: 'Directory'},
   ],
 
