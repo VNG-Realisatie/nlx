@@ -1,7 +1,5 @@
 FROM node:10.16.3-alpine AS build
 
-RUN apk add git jq
-
 ENV CI=true
 
 # First copy only package.json and yarn.lock to make the dependency fetching step optional.
@@ -17,10 +15,6 @@ COPY docs /go/src/go.nlx.io/nlx/docs
 
 RUN npm run build
 
-# Add file with version tag from git
-COPY .git /go/src/go.nlx.io/nlx/docs/.git
-RUN ash -c 'echo "\"$(git describe --tags)\"" | jq "{tag: .}" > /tmp/version.json'
-
 # Copy static docs to alpine-based nginx container.
 FROM nginx:alpine
 
@@ -28,8 +22,7 @@ FROM nginx:alpine
 COPY docs/docker/default.conf /etc/nginx/conf.d/default.conf
 COPY docs/docker/nginx.conf /etc/nginx/nginx.conf
 
-COPY --from=build /go/src/go.nlx.io/nlx/directory-ui/build /usr/share/nginx/html
-COPY --from=build /tmp/version.json /usr/share/nginx/html/version.json
+COPY --from=build /go/src/go.nlx.io/nlx/docs/build /usr/share/nginx/html
 
 # Add non-privileged user
 RUN adduser -D -u 1001 appuser
