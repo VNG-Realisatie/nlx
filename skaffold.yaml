@@ -165,7 +165,7 @@ profiles:
           directoryUIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/directory-ui:{{.CI_COMMIT_SHORT_SHA}}"
           docsImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/docs:{{.CI_COMMIT_SHORT_SHA}}"
           insightUIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/insight-ui:{{.CI_COMMIT_SHORT_SHA}}"
-          caAddress: ca-cfssl-unsafe.nlx-directory-$CI_ENVIRONMENT_SLUG
+          caAddress: ca-cfssl-unsafe.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           disableLoadBalancers: true
           insightDirectoryInspectionAPIURL: http://directory-inspection-api-internal.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           externalDomain: nlx-directory-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
