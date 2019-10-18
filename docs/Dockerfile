@@ -1,10 +1,42 @@
-FROM node:8.11.4
+FROM node:10.16.3-alpine AS build
 
-WORKDIR /app/website
+RUN apk add git jq
 
-EXPOSE 3000 35729
-COPY ./docs /app/docs
-COPY ./website /app/website
-RUN yarn install
+ENV CI=true
 
-CMD ["yarn", "start"]
+# First copy only package.json and yarn.lock to make the dependency fetching step optional.
+COPY docs/package.json \
+    docs/package-lock.json \
+    /go/src/go.nlx.io/nlx/docs/
+
+WORKDIR /go/src/go.nlx.io/nlx/docs
+RUN npm ci --no-progress --color=false --quiet
+
+# Now copy the whole workdir for the build step.
+COPY docs /go/src/go.nlx.io/nlx/docs
+
+RUN npm run build
+
+# Add file with version tag from git
+COPY .git /go/src/go.nlx.io/nlx/docs/.git
+RUN ash -c 'echo "\"$(git describe --tags)\"" | jq "{tag: .}" > /tmp/version.json'
+
+# Copy static docs to alpine-based nginx container.
+FROM nginx:alpine
+
+# Copy nginx configuration
+COPY docs/docker/default.conf /etc/nginx/conf.d/default.conf
+COPY docs/docker/nginx.conf /etc/nginx/nginx.conf
+
+COPY --from=build /go/src/go.nlx.io/nlx/directory-ui/build /usr/share/nginx/html
+COPY --from=build /tmp/version.json /usr/share/nginx/html/version.json
+
+# Add non-privileged user
+RUN adduser -D -u 1001 appuser
+
+# Set ownership nginx.pid and cache folder in order to run nginx as non-root user
+RUN touch /var/run/nginx.pid && \
+    chown -R appuser /var/run/nginx.pid && \
+    chown -R appuser /var/cache/nginx
+
+USER appuser
