@@ -1,9 +1,6 @@
 ---
-title: "Part 2: Create certificates"
-description: ""
-menu:
-  docs:
-    parent: "get-started"
+id: compliancy
+title: Part 2: Create certificates
 ---
 
 ## Introduction

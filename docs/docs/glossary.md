@@ -1,7 +1,6 @@
 ---
-title: "Glossary"
-description: ""
-weight: 200
+id: glossary
+title: Glossary
 ---
 
 # A

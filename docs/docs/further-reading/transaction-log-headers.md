@@ -1,10 +1,6 @@
 ---
-title: "Transaction log headers"
-description: ""
-weight: 10
-menu:
-  docs:
-    parent: "further-reading"
+id: transaction-log-headers
+title: Transaction log headers
 ---
 
 NLX logs requests on both the **outway** and **inway**. NLX adds a globally unique id of the request `X-NLX-Logrecord-ID` for every request, which makes a request traceable throughout the network. The application that performs the request can append some additional headers that will be saved in the transaction log as well:

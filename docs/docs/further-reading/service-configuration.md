@@ -1,10 +1,6 @@
 ---
-title: "Service configuration"
-description: ""
-weight: 20
-menu:
-  docs:
-    parent: "further-reading"
+id: service-configuration
+title: Service configuration
 ---
 
 

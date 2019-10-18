@@ -1,12 +1,7 @@
 ---
-title: "Setup transaction logs"
-description: ""
-weight: 10
-menu:
-  docs:
-    parent: "further-reading"
+id: setup-transaction-logs
+title: Setup transaction logs
 ---
-
 
 ## Before you start
 

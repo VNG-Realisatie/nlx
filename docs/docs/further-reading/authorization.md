@@ -1,12 +1,7 @@
 ---
-title: "Authorization"
-description: ""
-weight: 20
-menu:
-  docs:
-    parent: "further-reading"
+id: authorization
+title: Authorization
 ---
-
 
 ## Introduction
 

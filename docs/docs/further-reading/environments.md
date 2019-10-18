@@ -1,10 +1,6 @@
 ---
-title: "Environments"
-description: ""
-weight: 20
-menu:
-  docs:
-    parent: "further-reading"
+id: environments
+title: Environments
 ---
 
 ## Environments

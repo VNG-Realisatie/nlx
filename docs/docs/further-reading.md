@@ -1,7 +1,6 @@
 ---
-title: "Further reading"
-description: ""
-weight: 500
+id: further-reading
+title: Further reading
 ---
 
 1. [Setup transaction logs]({{< ref "/setup-transaction-logs.md" >}})

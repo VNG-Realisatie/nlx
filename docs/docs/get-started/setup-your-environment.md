@@ -1,9 +1,6 @@
 ---
-title: "Part 1: Setup your environment"
-description: ""
-menu:
-  docs:
-    parent: "get-started"
+id: setup-your-environment
+title: Part 1: Setup your environment
 ---
 
 ## Operating System

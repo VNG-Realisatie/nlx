@@ -1,10 +1,6 @@
 ---
-title: "Production environment"
-description: ""
-weight: 20
-menu:
-  docs:
-    parent: "further-reading"
+id: production
+title: Production environment
 ---
 
 

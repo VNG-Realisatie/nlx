@@ -1,9 +1,6 @@
 ---
-title: "Part 3: Consume an API"
-description: ""
-menu:
-  docs:
-    parent: "get-started"
+id: consume-an-api
+title: Part 3: Consume an API
 ---
 
 ## Introduction

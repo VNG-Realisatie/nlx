@@ -1,6 +1,6 @@
 ---
-title: "Get started"
-description: ""
+id: get-started
+title: Get started
 ---
 
 Welcome! We are excited that you want to learn about NLX.

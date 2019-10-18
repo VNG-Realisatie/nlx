@@ -1,10 +1,27 @@
 {
   "docs": {
-    "Docusaurus": ["doc1"],
-    "First Category": ["doc2"],
-    "Second Category": ["doc3"]
-  },
-  "docs-other": {
-    "First Category": ["doc4", "doc5"]
+    "Welcome": [
+      "introduction",
+      "introduction/security",
+      "introduction/product-vision",
+      "introduction/compliancy"
+    ],
+    "Get started": [
+      "get-started",
+      "get-started/setup-your-environment",
+      "get-started/create-certificates",
+      "get-started/consume-an-api",
+      "get-started/provide-an-api"
+    ],
+    "Support": ["support"],
+    "Further reading": [
+      "further-reading",
+      "further-reading/setup-transaction-logs",
+      "further-reading/setup-transaction-log-headers",
+      "further-reading/authorization",
+      "further-reading/environments",
+      "further-reading/production"
+    ],
+    "Glossary": ["glossary"]
   }
 }

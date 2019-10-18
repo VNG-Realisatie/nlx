@@ -1,6 +1,6 @@
 ---
-title: "Support"
-description: ""
+id: support
+title: Support
 ---
 
 ## Help with common errors.

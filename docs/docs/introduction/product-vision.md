@@ -1,10 +1,6 @@
 ---
-title: "NLX Product Vision"
-description: ""
-weight: 130
-menu:
-  docs:
-    parent: "introduction"
+id: product-vision
+title: NLX Product Vision
 ---
 
 **NLX** is an open source inter-organisational system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API landscape.

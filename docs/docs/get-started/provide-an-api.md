@@ -1,9 +1,6 @@
 ---
-title: "Part 4: Provide an API"
-description: ""
-menu:
-  docs:
-    parent: "get-started"
+id: provide-an-api
+title: Part 4: Provide an API
 ---
 
 ## Introduction

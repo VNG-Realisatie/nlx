@@ -1,10 +1,6 @@
 ---
-title: "Compliancy with EU regulations"
-description: ""
-weight: 140
-menu:
-  docs:
-    parent: "introduction"
+id: compliancy
+title: Compliancy with EU regulations
 ---
 
 # NLX architecture compliancy with EU regulations and architecture frameworks
