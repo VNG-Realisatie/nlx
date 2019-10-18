@@ -6,8 +6,7 @@ Directory UI - E2E Tests:
     DOCKER_DRIVER: overlay2
   before_script:
     - export CI_ENV_URL=$([ -f ci_environment_url.txt ] && cat ci_environment_url.txt)
-    - export DIRECTORY_UI_URL=$([ -z "$CI_ENV_URL" ] && echo "https://directory.test.nlx.io" || echo "https://directory.nlx-directory-$CI_ENV_URL")
-    - echo $DIRECTORY_UI_URL
+    - export DIRECTORY_UI_URL=$([ -z "$CI_ENV_URL" ] && echo "https://directory.test.nlx.io" || echo "https://directory-nlx-directory-$CI_ENV_URL")
     - export E2E_IMAGE=${CI_REGISTRY_IMAGE}/directory-e2e-tests
   script:
     - |
@@ -16,7 +15,7 @@ Directory UI - E2E Tests:
       docker run --rm --cap-add=SYS_ADMIN \
       -e URL=$DIRECTORY_UI_URL \
       $E2E_IMAGE:$CI_COMMIT_SHORT_SHA \
-      /bin/sh -c "./wait-for-http.sh $URL && npm test"
+      /bin/sh -c './wait-for-http.sh $URL && npm test'
   tags:
     - docker
     - linux
