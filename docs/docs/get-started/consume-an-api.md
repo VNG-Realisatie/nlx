@@ -6,7 +6,7 @@ title: Part 3: Consume an API
 ## Introduction
 
 To use an API that is provided via NLX, you need to route traffic through an **outway** onto the network.
-We will use the certificate which we've setup in [part 2](../create-certificates), to make sure traffic is encrypted between your and other nodes.
+We will use the certificate which we've setup in [part 2](./create-certificates), to make sure traffic is encrypted between your and other nodes.
 
 ## Setting up the outway
 
@@ -111,4 +111,4 @@ In this part, we have:
 - setup a local NLX outway, which we can use to get data from the network.
 - made a real request to the VNG Realisatie Demo API.
 
-Now let's see if we can provide our own API's to the network in [part 4](../provide-an-api/).
+Now let's see if we can provide our own API's to the network.

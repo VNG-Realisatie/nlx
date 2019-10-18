@@ -3,9 +3,9 @@ id: compliancy
 title: Compliancy with EU regulations
 ---
 
-# NLX architecture compliancy with EU regulations and architecture frameworks
+NLX architecture compliancy with EU regulations and architecture frameworks
 
-# European Interoperability Framework (EIF)
+## European Interoperability Framework (EIF)
 
 The European interoperability framework is a commonly agreed approach to the delivery of European public services in an interoperable manner. It defines basic interoperability guidelines in the form of common principles, models and recommendations.
 

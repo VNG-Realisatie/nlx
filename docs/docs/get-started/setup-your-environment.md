@@ -44,4 +44,4 @@ The output should be:
 
 All commands further down this guide assume you are located in this directory.
 
-The Next step is to create some certificates [part 2](../create-certificates/).
+The Next step is to create some certificates.

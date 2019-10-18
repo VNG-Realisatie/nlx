@@ -5,14 +5,6 @@ title: NLX Product Vision
 
 **NLX** is an open source inter-organisational system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API landscape.
 
-## Index
-
-* [Introduction](#introduction)
-* [Core Requirements](#core-requirements)
-* [NLX functionality in more detail](#nlx-functionality-in-more-detail)
-* [Context](#context)
-
-
 ## Introduction
 
 The need for the creation of NLX arises from the [Common Ground vision](https://github.com/VNG-Realisatie/common-ground), which aims to convert or replace the current monolithic information systems of Dutch municipalities (and wider government) with a state of the art, API-first software landscape, fulfilling societal demand for automation, transparency and privacy.
@@ -27,26 +19,26 @@ Next to a technological challenge the implementation of NLX will require changes
 
 Functional:
 
-- [ ] Facilitate federated authentication and authorisation
-- [ ] Automate secure data connection setup
-- [ ] Protocol API requests, for:
-    - [ ] GDPR Purpose limitation principle
-    - [ ] Publication of data use to data subject
-    - [ ] Automated inter-organisational billing
-    - [ ] Quality improvement
-    - [ ] Auditing
-    - [ ] Monitoring
+- Facilitate federated authentication and authorisation
+- Automate secure data connection setup
+- Protocol API requests, for:
+    - GDPR Purpose limitation principle
+    - Publication of data use to data subject
+    - Automated inter-organisational billing
+    - Quality improvement
+    - Auditing
+    - Monitoring
 
 Non-functional:
 
-- [ ] Blazingly fast
-- [ ] Developer-friendly
-- [ ] Secure
-- [ ] Open
-- [ ] Federated
-- [ ] Scalable
-- [ ] Reliable
-- [ ] Resilient
+- Blazingly fast
+- Developer-friendly
+- Secure
+- Open
+- Federated
+- Scalable
+- Reliable
+- Resilient
 
 
 ## NLX functionality in more detail
