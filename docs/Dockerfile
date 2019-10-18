@@ -3,15 +3,15 @@ FROM node:10.16.3 AS build
 ENV CI=true
 
 # First copy only package.json and yarn.lock to make the dependency fetching step optional.
-COPY docs/website/package.json \
-    docs/website/package-lock.json \
+COPY website/package.json \
+    website/package-lock.json \
     /go/src/go.nlx.io/nlx/docs/website/
 
 WORKDIR /go/src/go.nlx.io/nlx/docs/website
 RUN npm ci --no-progress --color=false --quiet
 
 # Now copy the whole workdir for the build step.
-COPY docs /go/src/go.nlx.io/nlx/docs
+COPY . /go/src/go.nlx.io/nlx/docs
 
 RUN npm run build
 
