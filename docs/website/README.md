@@ -1,3 +1,5 @@
+- header not customizable in v1: https://github.com/facebook/Docusaurus/issues/872
+
 This website was created with [Docusaurus](https://docusaurus.io/).
 
 # What's In This Document
