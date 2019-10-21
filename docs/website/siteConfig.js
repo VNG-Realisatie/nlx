@@ -49,6 +49,7 @@ const siteConfig = {
     // Highlight.js theme to use for syntax highlighting in code blocks.
     theme: 'atom-one-dark',
   },
+  usePrism: ['bash', 'toml'],
 
   // Add custom scripts here that would be placed in <script> tags.
   scripts: [
