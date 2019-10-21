@@ -17,6 +17,7 @@ RUN npm run build
 
 # Copy static docs to alpine-based nginx container.
 FROM nginx:alpine
+EXPOSE 8080
 
 # Copy nginx configuration
 COPY docker/default.conf /etc/nginx/conf.d/default.conf

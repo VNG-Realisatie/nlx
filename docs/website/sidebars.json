@@ -13,7 +13,11 @@
       "get-started/consume-an-api",
       "get-started/provide-an-api"
     ],
-    "Support": ["support"],
+    "Support": [
+      "support",
+      "support/common-errors",
+      "support/contact"
+    ],
     "Further reading": [
       "further-reading",
       "further-reading/setup-transaction-logs",

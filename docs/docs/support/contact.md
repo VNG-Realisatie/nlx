@@ -1,12 +1,7 @@
 ---
-title: "Contact"
-description: ""
-menu:
-  docs:
-    parent: "support"
+id: contact
+title: Contact
 ---
-
-## Contact
 
 [Email](mailto:support@nlx.io)
 
