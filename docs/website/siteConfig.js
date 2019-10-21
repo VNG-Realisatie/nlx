@@ -65,6 +65,11 @@ const siteConfig = {
   // No .html extensions for paths.
   cleanUrl: true,
 
+  algolia: {
+    apiKey: 'f5d0c017e70ffe180e05515a2869c1e4',
+    indexName: 'nlx',
+  },
+
   // For sites with a sizable amount of content, set collapsible to true.
   // Expand/collapse the links and subcategories under categories.
   // docsSideNavCollapsible: true,
