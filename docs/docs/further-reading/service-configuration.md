@@ -3,7 +3,6 @@ id: service-configuration
 title: Service configuration
 ---
 
-
 A single inway can expose multiple services. You can tell an inway which services to expose by providing the inway a [toml](https://github.com/toml-lang/toml) file which contains the service configuration.
 
 Below is an example configuration named `service-config.toml`.

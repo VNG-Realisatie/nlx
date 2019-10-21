@@ -21,7 +21,8 @@
     "Further reading": [
       "further-reading",
       "further-reading/setup-transaction-logs",
-      "further-reading/setup-transaction-log-headers",
+      "further-reading/transaction-log-headers",
+      "further-reading/service-configuration",
       "further-reading/authorization",
       "further-reading/environments",
       "further-reading/production"
