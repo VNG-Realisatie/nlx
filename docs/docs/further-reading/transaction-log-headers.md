@@ -14,8 +14,7 @@ NLX logs requests on both the **outway** and **inway**. NLX adds a globally uniq
 
 The headers set by the application are optional.
 
-All request headers are logged before the request leaves the outway. The fields `X-NLX-Requester-User-Id`, `X-NLX-Request-Application-Id`, `X-NLX-Request-Subject-Identifier`, `X-NLX-Requester-Claims`, `X-NLX-Request-User` and `X-NLX-Request-Data-Subject` are stripped off the request before it is forwarded to the inway.
-When a request arrives at the inway, the inway logs the request together with the name of the requesting organization. Finally, the inway appends the header named `X-NLX-Request-Organization` before sending the request to the API.
+All request headers are logged before the request leaves the outway. The fields `X-NLX-Requester-User-Id`, `X-NLX-Request-Application-Id`, `X-NLX-Request-Subject-Identifier`, `X-NLX-Requester-Claims` and `X-NLX-Request-User` are stripped off the request before it is forwarded to the inway.
 
 The value of a `X-NLX-*` header is limited to 1024 characters.
 
