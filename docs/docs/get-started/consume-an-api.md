@@ -6,7 +6,7 @@ title: Part 3: Consume an API
 ## Introduction
 
 To use an API that is provided via NLX, you need to route traffic through an **outway** onto the network.
-We will use the certificate which we've setup in [part 2](./create-certificates), to make sure traffic is encrypted between your and other nodes.
+We will use the certificate which we've setup in [part 2](./create-certificates.md), to make sure traffic is encrypted between your and other nodes.
 
 ## Setting up the outway
 

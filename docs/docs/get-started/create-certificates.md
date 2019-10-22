@@ -16,7 +16,7 @@ The very first certificate we need is the CA root certificate.
 This one is used to validate certificates of other organizations.
 
 Download [the root certificate](https://certportal.demo.nlx.io/root.crt) file and save it as `root.crt` in `~/nlx-setup/`.
-That is the working directory as described in [part 1](./setup-your-environment).
+That is the working directory as described in [part 1](./setup-your-environment.md).
 
 ### Verification
 
