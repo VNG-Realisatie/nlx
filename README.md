@@ -121,9 +121,8 @@ When a git tag is pushed, GitLab builds and deploys it to the test and staging e
 
 There are multiple live environments for NLX
 
-- `test`: deployed with a new version on master was build
-- `acc`: deployed when a version tag (git tag) was build
-- `demo`: manually deployed, only version tagged releases should be deployed to demo
+- `acc`: follows the master branch automatically
+- `demo`, `preprod` and `prod`: updated after manually triggering a release
 
 ## License
 

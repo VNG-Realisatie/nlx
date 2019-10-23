@@ -9,6 +9,7 @@ Deploy acceptance:
   script:
     - skaffold run --profile acc
   only:
+    - master
     - tags
   tags:
     - nlx-privileged

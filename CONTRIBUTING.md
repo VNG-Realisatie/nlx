@@ -53,13 +53,10 @@ The available scopes are:
 - outway
 - txlog-db
 
-#### 2.2.4. Do NOT close issues with commit messages
-Make sure _not_ to use the commit message to [automatically close issues](https://docs.gitlab.com/ee/user/project/issues/automatic_issue_closing.html), since we do _not_ want issues to be closed immediately after merging to the master branch.
-
 ### 2.3. Merge Request
 
 #### 2.3.1. Always refer to an issue
-Before starting a Merge Request, make sure there is a User Storiy describing what you want to achieve with the MR. [Create a story by submitting a new issue](https://gitlab.com/commonground/nlx/nlx/issues) if there is none. New issues come with a User Story template. This template helps you think from the user perspective: 'who wants this new feature and why?'
+Before starting a Merge Request, make sure there is a User Story describing what you want to achieve with the MR. [Create a story by submitting a new issue](https://gitlab.com/commonground/nlx/nlx/issues) if there is none. New issues come with a User Story template. This template helps you think from the user perspective: 'who wants this new feature and why?'
 
 #### 2.3.2. Describe the MR
 
@@ -182,18 +179,17 @@ The development flow describes how we bring user stories from idea to production
 
 #### 3.2.1. Overview
 
-Development follows a flow:
+Development follows this flow:
 
 1. Add to backlog
-2. Select, refine, estimate and plan
-3. Code
-4. Review
-5. Merge to master branch
-6. Deploy to test environment
-7. Create a versioned release
-8. Deploy to acceptance environment
-9. Acceptance by Product Owner
-10. Deploy to production environment
+1. Select, refine, estimate and plan
+1. Code
+1. Review
+1. Acceptance by Product Owner
+1. Merge to master branch
+1. Automated deploy to acceptance environment
+1. Generate version tag (manual trigger)
+1. Deploy release to demo, preprod and prod (manual trigger)
 
 Issues can be created by anyone and start at the backlog.
 
@@ -224,59 +220,43 @@ One or more other developers will perform a code review, commenting and discussi
 
 The review makes sure that all code is seen by multiple people. This prevents all sort of mistakes, makes sure knowledge is shared throughout the team and makes sure more people feel responsible about the code.
 
-Once a reviewer is satisfied he or she will approve the Merge Request. At lease one approval is required to continue.
+Once a reviewer is satisfied he or she will approve the Merge Request. At lease one approval is required to continue. After approval the
+Product Owner accepts the story by also approving the Merge Request. The developer is responsible for merging the Merge Request to master.
 
-While an issue is in 'Review', it remains assigned to the developer who is working on the issue (not the reviewer), and it is the responsibility of this assignee to make sure a timely and complete review of the proposed changes. Stories shouldn't stay in Review too long.
+Small merge requests that do not change the behaviour of the software itself (e.g. dependency updates) do not have to be accepted by the Product Owner. They can be merged after code review.
 
+The required approval from the Product Owner can be removed by editing the Merge Request and setting the number of approvals required for PO Accept to 0.
 
-#### 3.2.5. Merge
+While an issue is in 'Review', it remains assigned to the developer who is working on the issue (not the reviewer), and it is the responsibility of this assignee to make sure a timely and complete review of the proposed changes.
 
-*Note: this part is identified as sub optimal. In the current setup, the best we can do is "Move fast and break things" (because code is merged before it is accepted). If we want to improve this we need review apps or release channels.*
+As we want to deliver value to the customer as soon as possible, stories shouldn't stay in Review too long. The author of the story should actively reach out to the team members to get the work reviewed.
 
-With the approval of the automatic tests from the pipeline and the human code review, the Merge Request is now ready to be merged. Gitlab will refuse to merge without those "green flags".
-
-Sometimes a merge cannot be done automatically because it contains commits that touch lines of code that were altered by another merge, resulting in a "merge conflict" that a developer can resolve manually.
-
-
-#### 3.2.6. Deploy to test environment
-
-A successful merge triggers another pipeline, which again runs unit tests. Then it releases the build containers and deploys them to the test environment.
-
-After deployment to test environment, the newly deployed features are checked online. If everything still works and the new features perform as intended, a new issue is selected to work on. If not, bug fixing is in order.
+When a branch begins with `feature/` a review app is created for that branch. This app can be used to inspect UI changes of the Merge Request.
 
 
-#### 3.2.7. Create a versioned release
+#### 3.2.5. Deploy to acceptance environment
 
-If the test environment looks OK, the deployment should move to acc (acceptance) environment where the new or changed functionality can be accepted.
+A successful merge triggers the pipeline. After testing, it releases the build containers and automatically deploys to the acceptance environment.
 
-For this, a versioned release is needed. The developer can manually trigger the Semantic Release tool. This tool looks at all commit messages on the Master branch since the latest version, and creates a new one. All commit messages are parsed and a new version number is generated. Depending on the commit messages, the major, minor or patch number is increased.
-
-
-#### 3.2.8. Deploy to acceptance environment
-
-With the versioned release, the same pipeline as for test deployment is fired again, this time to deploy to acc environment.
-
-After deployment to acc, the features are checked online. When OK, the issue on the board is moved from column "Review" to "Acceptance".
+After deployment to the acceptance environment, the newly deployed features are checked online by the developer. If everything still works and the new features perform as intended, the issue is moved to the 'Closed' column. If not, bug fixing is in order.
 
 
-#### 3.2.9. Acceptance by Product Owner
+#### 3.2.6. Version tag
 
-All issues in the column "Acceptance" are reviewed by the Product Owner. If the acceptance criteria are met and definition of done is followed, the issue is accepted and moved to the column "closed".
+A new version is tagged by running the manual Semantic Release job on the master branch. First a 'dry run' job is triggered manually to check the new version number and the generated changelog.
+
+When the output is as expected, the real release job is triggered. The job updates the [CHANGELOG.md](CHANGELOG.md), commits the changes and adds a new tag to the commit with the new version number.
 
 
-#### 3.2.10. Deploy to production environment
+#### 3.2.7. Deploy to production environment and release Docker images
 
-Once accepted, the release can be deployed to the following environments:
+A new production release is done by trigging the manual release job on the master branch. The release is deployed to the following environments:
 
 * Demo
 * Preprod
 * Prod
 
-These three environments should be at the same version at all times.
-
-Deployment is triggered manually by the Product Owner. After deployment, a manual check is done to check if everything still works as intended.
-
-If so, the issue is moved to the column "Closed".
+After deployment, a manual check is done to check if everything still works as intended.
 
 
 ### 3.3. Communication
@@ -292,11 +272,11 @@ If so, the issue is moved to the column "Closed".
   * The Slack workspace is reserved for the team
   * Slack is high traffic but topics strictly separated in channels
 
-#### 3.3.3. Appear.in
-  * Since the team does not work in one location every day, we organise our stand ups via video calls. We use https://appear.in for this
+#### 3.3.3. Whereby.com
+  * Since the team does not work in one location every day, we organise our stand ups via video calls. We use https://whereby.com for this
   * Stand ups last 15 - 20 minutes. We focus on sharing what every did and what will be done that day, with the occasional exchange about impediments
   * In case the Sprint Backlog needs to be renegotiated (i.e. the scope of the sprint goal is changed), this is done during the standup
-  * Appear.in is used for one-on-one communication between team members as well
+  * Whereby.com is used for one-on-one communication between team members as well
 
 ---
 
