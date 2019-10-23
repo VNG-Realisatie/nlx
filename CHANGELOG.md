@@ -1,3 +1,36 @@
+# [0.78.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.77.0...v0.78.0) (2019-10-23)
+
+
+### Bug Fixes
+
+* add service config for haarlem's demo-api service to the skaffold config [#449](https://gitlab.com/commonground/nlx/nlx/issues/449) ([2b8f217](https://gitlab.com/commonground/nlx/nlx/commit/2b8f217))
+* move service config from parkeervergunning service to the demo-api service [#449](https://gitlab.com/commonground/nlx/nlx/issues/449) ([9fcd39a](https://gitlab.com/commonground/nlx/nlx/commit/9fcd39a))
+* **directory-ui:** clicking a service should show the detail pane [#449](https://gitlab.com/commonground/nlx/nlx/issues/449) ([6de4485](https://gitlab.com/commonground/nlx/nlx/commit/6de4485))
+* **directory-ui:** increase width for detail pane labels so 'email address' fits a single line [#449](https://gitlab.com/commonground/nlx/nlx/issues/449) ([00f51e0](https://gitlab.com/commonground/nlx/nlx/commit/00f51e0))
+* **directory-ui:** properly pass contact email address [#449](https://gitlab.com/commonground/nlx/nlx/issues/449) ([bde1ed7](https://gitlab.com/commonground/nlx/nlx/commit/bde1ed7))
+* **docs:** Add missing pages to 'Further reading' index ([a30150a](https://gitlab.com/commonground/nlx/nlx/commit/a30150a))
+* **gitlab-ci:** fix review app URL [#449](https://gitlab.com/commonground/nlx/nlx/issues/449) ([58ebe94](https://gitlab.com/commonground/nlx/nlx/commit/58ebe94))
+* **gitlab-ci:** run e2e-tests in docker image [#449](https://gitlab.com/commonground/nlx/nlx/issues/449) ([fa74a55](https://gitlab.com/commonground/nlx/nlx/commit/fa74a55))
+* **gitlab-ci:** url for e2e tests [#449](https://gitlab.com/commonground/nlx/nlx/issues/449) ([89c6871](https://gitlab.com/commonground/nlx/nlx/commit/89c6871))
+* **nlxctl:** panic on incorrect shorthand flag ([ffd3129](https://gitlab.com/commonground/nlx/nlx/commit/ffd3129))
+
+
+### Features
+
+* **directory-ui:** add link to support to the header ([8516baa](https://gitlab.com/commonground/nlx/nlx/commit/8516baa))
+* **directory-ui:** convert to static Header & Detail pane [#449](https://gitlab.com/commonground/nlx/nlx/issues/449) ([087fb17](https://gitlab.com/commonground/nlx/nlx/commit/087fb17))
+* **directory-ui:** create link from email address [#449](https://gitlab.com/commonground/nlx/nlx/issues/449) ([43fa210](https://gitlab.com/commonground/nlx/nlx/commit/43fa210))
+* **directory-ui:** hide contact section if no email is available [#449](https://gitlab.com/commonground/nlx/nlx/issues/449) ([90e52cb](https://gitlab.com/commonground/nlx/nlx/commit/90e52cb))
+* **directory-ui:** rename contact section to support section [#449](https://gitlab.com/commonground/nlx/nlx/issues/449) ([98c3e6e](https://gitlab.com/commonground/nlx/nlx/commit/98c3e6e))
+* **directory-ui:** replace custom Tooltip with native title [#449](https://gitlab.com/commonground/nlx/nlx/issues/449) ([2cc755f](https://gitlab.com/commonground/nlx/nlx/commit/2cc755f))
+* **directory-ui:** show detail pane with contact details when clicking a service [#449](https://gitlab.com/commonground/nlx/nlx/issues/449) ([36e7e4f](https://gitlab.com/commonground/nlx/nlx/commit/36e7e4f))
+* **docs:** add Contacts to Support section and move common errors to a subsection ([a2410cc](https://gitlab.com/commonground/nlx/nlx/commit/a2410cc))
+* **docs:** update header documentation ([afcd9f4](https://gitlab.com/commonground/nlx/nlx/commit/afcd9f4))
+* **insight-ui:** add link to support to the header ([83004dc](https://gitlab.com/commonground/nlx/nlx/commit/83004dc))
+* **outway:** the header X-NLX-Request-Data-Subject is not stripped from the outway ([6fbee5c](https://gitlab.com/commonground/nlx/nlx/commit/6fbee5c))
+* add rdw with config-api deployment ([eb7789e](https://gitlab.com/commonground/nlx/nlx/commit/eb7789e))
+* Upgrade IRMA server ([46425c1](https://gitlab.com/commonground/nlx/nlx/commit/46425c1))
+
 # [0.77.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.76.0...v0.77.0) (2019-10-03)
 
 
