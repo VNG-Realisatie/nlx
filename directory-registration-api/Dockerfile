@@ -2,7 +2,7 @@
 FROM golang:1.13.3-alpine AS build
 
 # Install build tools.
-RUN apk add --update git gcc musl-dev
+RUN apk add --update gcc musl-dev
 
 # Cache dependencies
 COPY go.mod /go/src/go.nlx.io/nlx/go.mod
@@ -15,16 +15,15 @@ RUN go mod download
 COPY directory-registration-api  /go/src/go.nlx.io/nlx/directory-registration-api
 COPY directory-db/dbversion      /go/src/go.nlx.io/nlx/directory-db/dbversion
 COPY common                      /go/src/go.nlx.io/nlx/common
-COPY .git                        /go/src/go.nlx.io/nlx/directory-registration-api/.git
 
 WORKDIR /go/src/go.nlx.io/nlx/directory-registration-api
 
-RUN GIT_COMMIT_HASH=$(git rev-parse HEAD) && \
-        GIT_TAG_NAME=$(git describe --tags) && \
-        go build \
+ARG GIT_TAG_NAME=undefined
+ARG GIT_COMMIT_HASH=undefined
+
+RUN go build \
         -ldflags="-X 'go.nlx.io/nlx/common/version.BuildSourceHash=$GIT_COMMIT_HASH' -X 'go.nlx.io/nlx/common/version.BuildVersion=$GIT_TAG_NAME'" \
         -o dist/bin/nlx-directory-registration-api ./cmd/nlx-directory-registration-api
-
 
 # Release binary on latest alpine image.
 FROM alpine:latest

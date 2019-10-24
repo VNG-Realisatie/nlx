@@ -1,0 +1,144 @@
+version: '3'
+services:
+  auth-service:
+    image: "${IMAGE_PREFIX}nlxio/auth-service:${IMAGE_TAG}"
+    build:
+      context: .
+      dockerfile: auth-service/Dockerfile
+  ca-certportal:
+    image: "${IMAGE_PREFIX}nlxio/ca-certportal:${IMAGE_TAG}"
+    build:
+      context: .
+      dockerfile: ca-certportal/Dockerfile
+      args:
+        GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
+        GIT_TAG_NAME: "${GIT_TAG_NAME}"
+  ca-cfssl-unsafe:
+    image: "${IMAGE_PREFIX}nlxio/ca-cfssl-unsafe:${IMAGE_TAG}"
+    build:
+      context: ca-cfssl-unsafe
+      dockerfile: Dockerfile
+  config-api:
+    image: "${IMAGE_PREFIX}nlxio/config-api:${IMAGE_TAG}"
+    build:
+      context: .
+      dockerfile: config-api/Dockerfile
+      args:
+        GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
+        GIT_TAG_NAME: "${GIT_TAG_NAME}"
+  docs:
+    image: "${IMAGE_PREFIX}nlxio/docs:${IMAGE_TAG}"
+    build:
+      context: docs
+      dockerfile: Dockerfile
+      args:
+        GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
+        GIT_TAG_NAME: "${GIT_TAG_NAME}"
+  directory-db:
+    image: "${IMAGE_PREFIX}nlxio/directory-db:${IMAGE_TAG}"
+    build:
+      context: .
+      dockerfile: directory-db/Dockerfile
+  directory-inspection-api:
+    image: "${IMAGE_PREFIX}nlxio/directory-inspection-api:${IMAGE_TAG}"
+    build:
+      context: .
+      dockerfile: directory-inspection-api/Dockerfile
+      args:
+        GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
+        GIT_TAG_NAME: "${GIT_TAG_NAME}"
+  directory-registration-api:
+    image: "${IMAGE_PREFIX}nlxio/directory-registration-api:${IMAGE_TAG}"
+    build:
+      context: .
+      dockerfile: directory-registration-api/Dockerfile
+      args:
+        GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
+        GIT_TAG_NAME: "${GIT_TAG_NAME}"
+  directory-monitor:
+    image: "${IMAGE_PREFIX}nlxio/directory-monitor:${IMAGE_TAG}"
+    build:
+      context: .
+      dockerfile: directory-monitor/Dockerfile
+      args:
+        GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
+        GIT_TAG_NAME: "${GIT_TAG_NAME}"
+  directory-ui:
+    image: "${IMAGE_PREFIX}nlxio/directory-ui:${IMAGE_TAG}"
+    build:
+      context: .
+      dockerfile: directory-ui/Dockerfile
+      args:
+        GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
+        GIT_TAG_NAME: "${GIT_TAG_NAME}"
+  insight-api:
+    image: "${IMAGE_PREFIX}nlxio/insight-api:${IMAGE_TAG}"
+    build:
+      context: .
+      dockerfile: insight-api/Dockerfile
+      args:
+        GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
+        GIT_TAG_NAME: "${GIT_TAG_NAME}"
+  insight-ui:
+    image: "${IMAGE_PREFIX}nlxio/insight-ui:${IMAGE_TAG}"
+    build:
+      context: .
+      dockerfile: insight-ui/Dockerfile
+      args:
+        GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
+        GIT_TAG_NAME: "${GIT_TAG_NAME}"
+  inway:
+    image: "${IMAGE_PREFIX}nlxio/inway:${IMAGE_TAG}"
+    build:
+      context: .
+      dockerfile: inway/Dockerfile
+      args:
+        GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
+        GIT_TAG_NAME: "${GIT_TAG_NAME}"
+  irma:
+    image: "${IMAGE_PREFIX}nlxio/irma:${IMAGE_TAG}"
+    build:
+      context: .
+      dockerfile: irma/Dockerfile
+  management-api:
+    image: "${IMAGE_PREFIX}nlxio/management-api:${IMAGE_TAG}"
+    build:
+      context: .
+      dockerfile: management-api/Dockerfile
+      args:
+        GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
+        GIT_TAG_NAME: "${GIT_TAG_NAME}"
+  management-ui:
+    image: "${IMAGE_PREFIX}nlxio/management-ui:${IMAGE_TAG}"
+    build:
+      context: .
+      dockerfile: management-ui/Dockerfile
+      args:
+        GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
+        GIT_TAG_NAME: "${GIT_TAG_NAME}"
+  nlxctl:
+    image: "${IMAGE_PREFIX}nlxio/nlxctl:${IMAGE_TAG}"
+    build:
+      context: .
+      dockerfile: nlxctl/Dockerfile
+      args:
+        GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
+        GIT_TAG_NAME: "${GIT_TAG_NAME}"
+  outway:
+    image: "${IMAGE_PREFIX}nlxio/outway:${IMAGE_TAG}"
+    build:
+      context: .
+      dockerfile: outway/Dockerfile
+      args:
+        GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
+        GIT_TAG_NAME: "${GIT_TAG_NAME}"
+  review-page:
+    image: "${IMAGE_PREFIX}nlxio/review-page:${IMAGE_TAG}"
+    build:
+      context: review-page
+      dockerfile: Dockerfile
+  txlog-db:
+    image: "${IMAGE_PREFIX}nlxio/txlog-db:${IMAGE_TAG}"
+    build:
+      context: .
+      dockerfile: txlog-db/Dockerfile

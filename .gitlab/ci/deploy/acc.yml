@@ -1,9 +1,15 @@
 Deploy acceptance:
-  extends: .deploy
-  stage: Deploy acc
+  stage: Deploy
   environment:
     name: acc
   before_script:
     - kubectl config use-context delta.k8s.nlx.io
+    - export GIT_COMMIT_HASH=$(git rev-parse HEAD)
+    - export GIT_TAG_NAME=$(git describe --tags)
+  script:
+    - skaffold run --profile acc
   only:
     - tags
+  tags:
+    - nlx-privileged
+    - shell

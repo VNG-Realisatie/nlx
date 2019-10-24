@@ -16,47 +16,14 @@ imagePullPolicy: "Always"
 
 inway:
   enable: true
-  rootca:
-    basisregistratie.pem: |
-      -----BEGIN CERTIFICATE-----
-      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
-      wia/54TuX+eliyo7fiUd8yKUtSQ=
-      -----END CERTIFICATE-----
   config: |
     [services]
       [services.basisregistratie]
       endpoint-url = "http://service:8000"
       authorization-model = "none"
       api-specification-document-url = "http://service:8000/openapi.json"
-      ca-cert-path = "/ca-certs/basisregistratie.pem"
-
+      insight-api-url = "https://insight-api-nlx-{{.Values.externalDomain}}"
+      irma-api-url = "https://irma-api-nlx-{{.Values.externalDomain}}"
 outway:
   enable: false
   authService: false

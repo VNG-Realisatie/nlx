@@ -1,7 +1,7 @@
 # Based on https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#manual-job-definition-for-gitlab-115-and-later
 
 Dependency scanning:
-  stage: Security
+  stage: Tests
   allow_failure: true
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY

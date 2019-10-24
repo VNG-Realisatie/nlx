@@ -1,7 +1,7 @@
 # Based on https://docs.gitlab.com/ee/user/application_security/sast/#manual-job-definition-for-gitlab-115-and-later
 
 Static application security testing (SAST):
-  stage: Security
+  stage: Tests
   allow_failure: true
   before_script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY

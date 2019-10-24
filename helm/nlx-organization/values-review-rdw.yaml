@@ -121,6 +121,18 @@ insight:
 
 configAPI:
   enabled: true
+  insightAPIURL: https://insight-api-nlx-{{.Values.externalDomain}}
+  irmaServerURL: https://irma-api-nlx-{{.Values.externalDomain}}
+  serviceConfig: |
+    {
+      "name": "kentekenregister",
+      "endpointURL": "http://service:8000",
+      "apiSpecificationURL": "http://service:8000/openapi.yaml",
+      "authorizationSettings": {
+        "mode": "none"
+      },
+      "inways": ["inway.rdw"]
+    }
 
 management:
   enable: true

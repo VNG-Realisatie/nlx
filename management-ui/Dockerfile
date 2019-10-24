@@ -17,10 +17,6 @@ COPY management-ui /go/src/go.nlx.io/nlx/management-ui
 
 RUN npm run build
 
-# Add file with version tag from git
-COPY .git /go/src/go.nlx.io/nlx/management-ui/.git
-RUN ash -c 'echo "\"$(git describe --tags)\"" | jq "{tag: .}" > /tmp/version.json'
-
 # Copy static docs to alpine-based nginx container.
 FROM nginx:alpine
 
@@ -29,7 +25,11 @@ COPY management-ui/docker/default.conf /etc/nginx/conf.d/default.conf
 COPY management-ui/docker/nginx.conf /etc/nginx/nginx.conf
 
 COPY --from=build /go/src/go.nlx.io/nlx/management-ui/build /usr/share/nginx/html
-COPY --from=build /tmp/version.json /usr/share/nginx/html/version.json
+
+# Add file with version tag from git
+ARG GIT_TAG_NAME=undefined
+ARG GIT_COMMIT_HASH=undefined
+RUN ash -c 'echo "{\"tag\": \"$GIT_TAG_NAME\", \"commit\": \"$GIT_COMMIT_HASH\"}" > /usr/share/nginx/html/version.json'
 
 # Add non-privileged user
 RUN adduser -D -u 1001 appuser

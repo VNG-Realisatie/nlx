@@ -1,0 +1,17 @@
+Build review:
+  stage: Build
+  variables:
+    IMAGE_PREFIX: "${CI_REGISTRY_IMAGE}/"
+    IMAGE_TAG: $CI_COMMIT_SHORT_SHA
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - export GIT_COMMIT_HASH=$(git rev-parse HEAD)
+    - export GIT_TAG_NAME=$(git describe --tags)
+  script:
+    - time docker-compose build --parallel
+    - time docker-compose push
+  tags:
+    - review
+    - shell
+  only:
+    - /^feature\/.*$/
