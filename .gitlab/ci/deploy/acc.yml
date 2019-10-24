@@ -1,9 +1,13 @@
-Deploy acceptance:
-  extends: .deploy
-  stage: Deploy acc
+Deploy acc:
+  stage: Deploy
   environment:
     name: acc
   before_script:
     - kubectl config use-context delta.k8s.nlx.io
+  script:
+    - skaffold run --profile acc
   only:
     - tags
+  tags:
+    - nlx-privileged
+    - shell

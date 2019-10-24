@@ -1,9 +1,13 @@
 Deploy test:
-  extends: .deploy
-  stage: Deploy test
-  before_script:
-    - kubectl config use-context delta.k8s.nlx.io
+  stage: Deploy
   environment:
     name: test
+  before_script:
+    - kubectl config use-context delta.k8s.nlx.io
+  script:
+    - skaffold run --profile test
   only:
     - master
+  tags:
+    - nlx-privileged
+    - shell

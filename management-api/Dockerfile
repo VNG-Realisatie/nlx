@@ -15,13 +15,13 @@ RUN go mod download
 COPY config-api         /go/src/go.nlx.io/nlx/config-api
 COPY management-api     /go/src/go.nlx.io/nlx/management-api
 COPY common             /go/src/go.nlx.io/nlx/common
-COPY .git               /go/src/go.nlx.io/nlx/management-api/.git
 
 WORKDIR /go/src/go.nlx.io/nlx/management-api
 
-RUN GIT_COMMIT_HASH=$(git rev-parse HEAD) && \
-        GIT_TAG_NAME=$(git describe --tags) && \
-        go build \
+ARG GIT_TAG_NAME
+ARG GIT_COMMIT_HASH
+
+RUN go build \
         -ldflags="-X 'go.nlx.io/nlx/common/version.BuildSourceHash=$GIT_COMMIT_HASH' -X 'go.nlx.io/nlx/common/version.BuildVersion=$GIT_TAG_NAME'" \
         -o dist/bin/nlx-management-api ./cmd/nlx-management-api
 

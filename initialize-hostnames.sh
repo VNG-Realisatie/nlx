@@ -1,6 +1,8 @@
 #!/bin/bash
 
 minikube_ip=$(minikube ip)
+
+echo "${minikube ip}                              minikube"                   | sudo tee -a /etc/hosts
 echo "${minikube_ip}                              traefik.minikube"           | sudo tee -a /etc/hosts
 echo "${minikube_ip}                         docs.nlx-dev-directory.minikube" | sudo tee -a /etc/hosts
 echo "${minikube_ip}                   certportal.nlx-dev-directory.minikube" | sudo tee -a /etc/hosts

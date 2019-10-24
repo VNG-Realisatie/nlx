@@ -1,24 +1,21 @@
 
 stages:
-  - Tests
-  - Security
-  - Tools
-  - Release
+#  - Tests
+#  - Security
+#  - Tools
+  - Build
   - Review
-  - Deploy test
+#  - Deploy
   - E2E tests
-  - Deploy acc
-  - Deploy prod
 
 include:
-  - '.gitlab/ci/tests/tests.yml'
-  - '.gitlab/ci/security/dependency_scanning.yml'
-  - '.gitlab/ci/security/sast.yml'
-  - '.gitlab/ci/tools/semantic_release.yml'
-  - '.gitlab/ci/release/release.yml'
+#  - '.gitlab/ci/tests/tests.yml'
+#  - '.gitlab/ci/security/dependency_scanning.yml'
+#  - '.gitlab/ci/security/sast.yml'
+#  - '.gitlab/ci/tools/semantic_release.yml'
+  - '.gitlab/ci/build/review.yml'
   - '.gitlab/ci/review/review.yml'
+#  - '.gitlab/ci/deploy/test.yml'
+#  - '.gitlab/ci/deploy/acc.yml'
+#  - '.gitlab/ci/deploy/prod.yml'
   - '.gitlab/ci/e2e-tests/e2e-tests.yml'
-  - '.gitlab/ci/deploy/_base.yml'
-  - '.gitlab/ci/deploy/test.yml'
-  - '.gitlab/ci/deploy/acc.yml'
-  - '.gitlab/ci/deploy/prod.yml'

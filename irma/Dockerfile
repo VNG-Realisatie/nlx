@@ -1,13 +1,10 @@
 FROM alpine:3 AS build
-ARG IRMA_VERSION
-ARG IRMA_CHECKSUM
 
-RUN wget -O /usr/local/bin/irma https://github.com/privacybydesign/irmago/releases/download/v${IRMA_VERSION}/irma-master-linux-amd64 && \
+RUN wget -O /usr/local/bin/irma https://github.com/privacybydesign/irmago/releases/download/v0.4.1/irma-master-linux-amd64 && \
     sha256sum /usr/local/bin/irma && \
-    echo "${IRMA_CHECKSUM}  /usr/local/bin/irma" | sha256sum -c && \
+    echo "34c735c289e4f37d7e5fe1893578f7cdef606ed4f292245672f96516d4f513fb  /usr/local/bin/irma" | sha256sum -c && \
     chmod 0755 /usr/local/bin/irma && \
     /usr/local/bin/irma version
-
 
 FROM alpine:3
 COPY --from=build /usr/local/bin/irma /usr/local/bin/irma

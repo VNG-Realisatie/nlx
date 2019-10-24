@@ -1,0 +1,13 @@
+Build review:
+  stage: Build
+  variables:
+    IMAGE_PREFIX: "registry.gitlab.com/commonground/nlx/nlx/"
+    IMAGE_TAG: "$CI_COMMIT_TAG"
+    COMMIT_TAG: "$CI_COMMIT_TAG"
+    COMMIT_SHORT_SHA: "$CI_COMMIT_SHORT_SHA"
+  script:
+    - docker-compose build --parallel
+    - docker-compose push
+  tags:
+    - review
+    - shell

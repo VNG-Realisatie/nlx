@@ -1,90 +1,178 @@
-apiVersion: skaffold/v1beta5
+apiVersion: skaffold/v1beta16
 kind: Config
 build:
+  cluster:
+    namespace: kaniko
+    concurrency: 6
+    dockerConfig:
+      secretName: docker-config-gitlab
+      path: ~/.docker/config.json
   artifacts:
-  - image: nlxio/docs
-    context: docs
+  - image: nlxio/auth-service
+    kaniko:
+      dockerfile: auth-service/Dockerfile
+      buildArgs:
+        GIT_COMMIT_HASH: "{{.CI_COMMIT_SHORT_SHA}}"
+        GIT_TAG_NAME: "{{.CI_COMMIT_TAG}}"
+      cache:
+        hostPath: /tmp/kaniko-cache
+  - image: nlxio/ca-certportal
+    kaniko:
+      dockerfile: ca-certportal/Dockerfile
+      buildArgs:
+        GIT_COMMIT_HASH: "{{.CI_COMMIT_SHORT_SHA}}"
+        GIT_TAG_NAME: "{{.CI_COMMIT_TAG}}"
+      cache:
+        hostPath: /tmp/kaniko-cache
   - image: nlxio/ca-cfssl-unsafe
     context: ca-cfssl-unsafe
-  - image: nlxio/ca-certportal
-    context: .
-    docker:
-      dockerfile: ca-certportal/Dockerfile
+    kaniko:
+      buildArgs:
+        GIT_COMMIT_HASH: "{{.CI_COMMIT_SHORT_SHA}}"
+        GIT_TAG_NAME: "{{.CI_COMMIT_TAG}}"
+      cache:
+        hostPath: /tmp/kaniko-cache
   - image: nlxio/config-api
-    context: .
-    docker:
+    kaniko:
       dockerfile: config-api/Dockerfile
+      buildArgs:
+        GIT_COMMIT_HASH: "{{.CI_COMMIT_SHORT_SHA}}"
+        GIT_TAG_NAME: "{{.CI_COMMIT_TAG}}"
+      cache:
+        hostPath: /tmp/kaniko-cache
+  - image: nlxio/docs
+    context: docs
+    kaniko:
+      buildArgs:
+        GIT_COMMIT_HASH: "{{.CI_COMMIT_SHORT_SHA}}"
+        GIT_TAG_NAME: "{{.CI_COMMIT_TAG}}"
+      cache:
+        hostPath: /tmp/kaniko-cache
   - image: nlxio/directory-db
-    context: .
-    docker:
+    kaniko:
       dockerfile: directory-db/Dockerfile
+      buildArgs:
+        GIT_COMMIT_HASH: "{{.CI_COMMIT_SHORT_SHA}}"
+        GIT_TAG_NAME: "{{.CI_COMMIT_TAG}}"
+      cache:
+        hostPath: /tmp/kaniko-cache
   - image: nlxio/directory-inspection-api
-    context: .
-    docker:
+    kaniko:
       dockerfile: directory-inspection-api/Dockerfile
+      buildArgs:
+        GIT_COMMIT_HASH: "{{.CI_COMMIT_SHORT_SHA}}"
+        GIT_TAG_NAME: "{{.CI_COMMIT_TAG}}"
+      cache:
+        hostPath: /tmp/kaniko-cache
   - image: nlxio/directory-registration-api
-    context: .
-    docker:
+    kaniko:
       dockerfile: directory-registration-api/Dockerfile
+      buildArgs:
+        GIT_COMMIT_HASH: "{{.CI_COMMIT_SHORT_SHA}}"
+        GIT_TAG_NAME: "{{.CI_COMMIT_TAG}}"
+      cache:
+        hostPath: /tmp/kaniko-cache
   - image: nlxio/directory-monitor
-    context: .
-    docker:
+    kaniko:
       dockerfile: directory-monitor/Dockerfile
+      buildArgs:
+        GIT_COMMIT_HASH: "{{.CI_COMMIT_SHORT_SHA}}"
+        GIT_TAG_NAME: "{{.CI_COMMIT_TAG}}"
+      cache:
+        hostPath: /tmp/kaniko-cache
   - image: nlxio/directory-ui
-    context: .
-    docker:
+    kaniko:
       dockerfile: directory-ui/Dockerfile
-  - image: nlxio/insight-ui
-    context: .
-    docker:
-      dockerfile: insight-ui/Dockerfile
-  - image: nlxio/inway
-    context: .
-    docker:
-      dockerfile: inway/Dockerfile
-  - image: nlxio/management-api
-    context: .
-    docker:
-      dockerfile: management-api/Dockerfile
-  - image: nlxio/management-ui
-    context: .
-    docker:
-      dockerfile: management-ui/Dockerfile
-  - image: nlxio/nlxctl
-    context: .
-    docker:
-      dockerfile: nlxctl/Dockerfile
-  - image: nlxio/outway
-    context: .
-    docker:
-      dockerfile: outway/Dockerfile
-  - image: nlxio/review-page
-    context: review-page
-  - image: nlxio/txlog-db
-    context: .
-    docker:
-      dockerfile: txlog-db/Dockerfile
+      buildArgs:
+        GIT_COMMIT_HASH: "{{.CI_COMMIT_SHORT_SHA}}"
+        GIT_TAG_NAME: "{{.CI_COMMIT_TAG}}"
+      cache:
+        hostPath: /tmp/kaniko-cache
   - image: nlxio/insight-api
-    context: .
-    docker:
+    kaniko:
       dockerfile: insight-api/Dockerfile
-  - image: nlxio/auth-service
-    context: .
-    docker:
-      dockerfile: auth-service/Dockerfile
+      buildArgs:
+        GIT_COMMIT_HASH: "{{.CI_COMMIT_SHORT_SHA}}"
+        GIT_TAG_NAME: "{{.CI_COMMIT_TAG}}"
+      cache:
+        hostPath: /tmp/kaniko-cache
+  - image: nlxio/insight-ui
+    kaniko:
+      dockerfile: insight-ui/Dockerfile
+      buildArgs:
+        GIT_COMMIT_HASH: "{{.CI_COMMIT_SHORT_SHA}}"
+        GIT_TAG_NAME: "{{.CI_COMMIT_TAG}}"
+      cache:
+        hostPath: /tmp/kaniko-cache
+  - image: nlxio/inway
+    kaniko:
+      dockerfile: inway/Dockerfile
+      buildArgs:
+        GIT_COMMIT_HASH: "{{.CI_COMMIT_SHORT_SHA}}"
+        GIT_TAG_NAME: "{{.CI_COMMIT_TAG}}"
+      cache:
+        hostPath: /tmp/kaniko-cache
   - image: nlxio/irma
-    context: .
-    docker:
+    kaniko:
       dockerfile: irma/Dockerfile
       buildArgs:
         IRMA_VERSION: 0.4.1
         IRMA_CHECKSUM: 34c735c289e4f37d7e5fe1893578f7cdef606ed4f292245672f96516d4f513fb
-  tagPolicy:
-    sha256: {}
-  local:
-    push: false
+      cache:
+        hostPath: /tmp/kaniko-cache
+  - image: nlxio/management-api
+    kaniko:
+      dockerfile: management-api/Dockerfile
+      buildArgs:
+        GIT_COMMIT_HASH: "{{.CI_COMMIT_SHORT_SHA}}"
+        GIT_TAG_NAME: "{{.CI_COMMIT_TAG}}"
+      cache:
+        hostPath: /tmp/kaniko-cache
+  - image: nlxio/management-ui
+    kaniko:
+      dockerfile: management-ui/Dockerfile
+      buildArgs:
+        GIT_COMMIT_HASH: "{{.CI_COMMIT_SHORT_SHA}}"
+        GIT_TAG_NAME: "{{.CI_COMMIT_TAG}}"
+      cache:
+        hostPath: /tmp/kaniko-cache
+  - image: nlxio/nlxctl
+    kaniko:
+      dockerfile: nlxctl/Dockerfile
+      buildArgs:
+        GIT_COMMIT_HASH: "{{.CI_COMMIT_SHORT_SHA}}"
+        GIT_TAG_NAME: "{{.CI_COMMIT_TAG}}"
+      cache:
+        hostPath: /tmp/kaniko-cache
+  - image: nlxio/outway
+    kaniko:
+      dockerfile: outway/Dockerfile
+      buildArgs:
+        GIT_COMMIT_HASH: "{{.CI_COMMIT_SHORT_SHA}}"
+        GIT_TAG_NAME: "{{.CI_COMMIT_TAG}}"
+      cache:
+        hostPath: /tmp/kaniko-cache
+  - image: nlxio/review-page
+    context: review-page
+    kaniko:
+      buildArgs:
+        GIT_COMMIT_HASH: "{{.CI_COMMIT_SHORT_SHA}}"
+        GIT_TAG_NAME: "{{.CI_COMMIT_TAG}}"
+      cache:
+        hostPath: /tmp/kaniko-cache
+  - image: nlxio/txlog-db
+    kaniko:
+      dockerfile: txlog-db/Dockerfile
+      buildArgs:
+        GIT_COMMIT_HASH: "{{.CI_COMMIT_SHORT_SHA}}"
+        GIT_TAG_NAME: "{{.CI_COMMIT_TAG}}"
+      cache:
+        hostPath: /tmp/kaniko-cache
 profiles:
 - name: minikube
+  build:
+    tagPolicy:
+      sha256: {}
   deploy:
     helm:
       releases:
@@ -150,7 +238,11 @@ profiles:
           nlxctlImage: nlxio/nlxctl
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-dev-haarlem
-- name: deploy-review-directory
+- name: review-directory
+  build:
+    tagPolicy:
+      envTemplate:
+        template: "{{.IMAGE_NAME}}:{{.CI_COMMIT_SHORT_SHA}}"
   deploy:
     helm:
       releases:
@@ -159,23 +251,27 @@ profiles:
         valuesFiles:
         - helm/nlx-directory/values-review.yaml
         setValueTemplates:
-          caCertportalImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/ca-certportal:{{.CI_COMMIT_SHORT_SHA}}"
-          caCfsslUnsafeImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/ca-cfssl-unsafe:{{.CI_COMMIT_SHORT_SHA}}"
-          directoryDBImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/directory-db:{{.CI_COMMIT_SHORT_SHA}}"
-          directoryInspectionImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/directory-inspection-api:{{.CI_COMMIT_SHORT_SHA}}"
-          directoryMonitorImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/directory-monitor:{{.CI_COMMIT_SHORT_SHA}}"
-          directoryRegistrationImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/directory-registration-api:{{.CI_COMMIT_SHORT_SHA}}"
-          directoryUIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/directory-ui:{{.CI_COMMIT_SHORT_SHA}}"
-          docsImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/docs:{{.CI_COMMIT_SHORT_SHA}}"
-          insightUIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/insight-ui:{{.CI_COMMIT_SHORT_SHA}}"
-          reviewPageImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/review-page:{{.CI_COMMIT_SHORT_SHA}}"
+          caCertportalImage: nlxio/ca-certportal
+          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
+          directoryDBImage: nlxio/directory-db
+          directoryInspectionImage: nlxio/directory-inspection-api
+          directoryMonitorImage: nlxio/directory-monitor
+          directoryRegistrationImage: nlxio/directory-registration-api
+          directoryUIImage: nlxio/directory-ui
+          docsImage: nlxio/docs
+          insightUIImage: nlxio/insight-ui
+          reviewPageImage: nlxio/review-page
           caAddress: ca-cfssl-unsafe.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           disableLoadBalancers: true
           insightDirectoryInspectionAPIURL: http://directory-inspection-api-internal.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           externalDomain: nlx-directory-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
           domain: nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           reviewPage.environmentSlugWithDomain: "{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}"
-- name: deploy-review-brp
+- name: review-brp
+  build:
+    tagPolicy:
+      envTemplate:
+        template: "{{.IMAGE_NAME}}:{{.CI_COMMIT_SHORT_SHA}}"
   deploy:
     helm:
       releases:
@@ -184,21 +280,21 @@ profiles:
         valuesFiles:
         - helm/nlx-organization/values-review-brp.yaml
         setValueTemplates:
-          authServiceImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/auth-service:{{.CI_COMMIT_SHORT_SHA}}"
-          caCfsslUnsafeImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/ca-cfssl-unsafe:{{.CI_COMMIT_SHORT_SHA}}"
-          configAPIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/config-api:{{.CI_COMMIT_SHORT_SHA}}"
-          insightAPIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/insight-api:{{.CI_COMMIT_SHORT_SHA}}"
-          inwayImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/inway:{{.CI_COMMIT_SHORT_SHA}}"
-          managementAPIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/management-api:{{.CI_COMMIT_SHORT_SHA}}"
-          managementUIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/management-ui:{{.CI_COMMIT_SHORT_SHA}}"
-          nlxctlImage:  "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/nlxctl:{{.CI_COMMIT_SHORT_SHA}}"
-          txlogDBImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/txlog-db:{{.CI_COMMIT_SHORT_SHA}}"
+          authServiceImage: "nlxio/auth-service:{{.CI_COMMIT_SHORT_SHA}}"
+          caCfsslUnsafeImage: "nlxio/ca-cfssl-unsafe:{{.CI_COMMIT_SHORT_SHA}}"
+          configAPIImage: "nlxio/config-api:{{.CI_COMMIT_SHORT_SHA}}"
+          insightAPIImage: "nlxio/insight-api:{{.CI_COMMIT_SHORT_SHA}}"
+          inwayImage: "nlxio/inway:{{.CI_COMMIT_SHORT_SHA}}"
+          managementAPIImage: "nlxio/management-api:{{.CI_COMMIT_SHORT_SHA}}"
+          managementUIImage: "nlxio/management-ui:{{.CI_COMMIT_SHORT_SHA}}"
+          nlxctlImage:  "nlxio/nlxctl:{{.CI_COMMIT_SHORT_SHA}}"
+          txlogDBImage: "nlxio/txlog-db:{{.CI_COMMIT_SHORT_SHA}}"
           directoryRegistrationHostname: directory-registration-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           directoryInspectionHostname: directory-inspection-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           caAddress: ca-cfssl-unsafe.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           externalDomain: nlx-brp-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
           domain: nlx-brp-{{.CI_ENVIRONMENT_SLUG}}
-          irma.apiServerImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/irma:{{.CI_COMMIT_SHORT_SHA}}"
+          irma.apiServerImage: "nlxio/irma:{{.CI_COMMIT_SHORT_SHA}}"
           inway.config: |
             [services]
                 [services.basisregistratie]
@@ -208,7 +304,11 @@ profiles:
                 insight-api-url = 'https://insight-api-nlx-brp-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}'
                 irma-api-url = 'https://irma-api-nlx-brp-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}'
                 ca-cert-path = '/ca-certs/basisregistratie.pem'
-- name: deploy-review-rdw
+- name: review-rdw
+  build:
+    tagPolicy:
+      envTemplate:
+        template: "{{.IMAGE_NAME}}:{{.CI_COMMIT_SHORT_SHA}}"
   deploy:
     helm:
       releases:
@@ -217,21 +317,21 @@ profiles:
         valuesFiles:
         - helm/nlx-organization/values-review-rdw.yaml
         setValueTemplates:
-          authServiceImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/auth-service:{{.CI_COMMIT_SHORT_SHA}}"
-          caCfsslUnsafeImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/ca-cfssl-unsafe:{{.CI_COMMIT_SHORT_SHA}}"
-          configAPIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/config-api:{{.CI_COMMIT_SHORT_SHA}}"
-          insightAPIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/insight-api:{{.CI_COMMIT_SHORT_SHA}}"
-          inwayImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/inway:{{.CI_COMMIT_SHORT_SHA}}"
-          managementAPIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/management-api:{{.CI_COMMIT_SHORT_SHA}}"
-          managementUIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/management-ui:{{.CI_COMMIT_SHORT_SHA}}"
-          nlxctlImage:  "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/nlxctl:{{.CI_COMMIT_SHORT_SHA}}"
-          txlogDBImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/txlog-db:{{.CI_COMMIT_SHORT_SHA}}"
+          authServiceImage: "nlxio/auth-service:{{.CI_COMMIT_SHORT_SHA}}"
+          caCfsslUnsafeImage: "nlxio/ca-cfssl-unsafe:{{.CI_COMMIT_SHORT_SHA}}"
+          configAPIImage: "nlxio/config-api:{{.CI_COMMIT_SHORT_SHA}}"
+          insightAPIImage: "nlxio/insight-api:{{.CI_COMMIT_SHORT_SHA}}"
+          inwayImage: "nlxio/inway:{{.CI_COMMIT_SHORT_SHA}}"
+          managementAPIImage: "nlxio/management-api:{{.CI_COMMIT_SHORT_SHA}}"
+          managementUIImage: "nlxio/management-ui:{{.CI_COMMIT_SHORT_SHA}}"
+          nlxctlImage:  "nlxio/nlxctl:{{.CI_COMMIT_SHORT_SHA}}"
+          txlogDBImage: "nlxio/txlog-db:{{.CI_COMMIT_SHORT_SHA}}"
           directoryRegistrationHostname: directory-registration-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           directoryInspectionHostname: directory-inspection-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           caAddress: ca-cfssl-unsafe.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           externalDomain: nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
           domain: nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}
-          irma.apiServerImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/irma:{{.CI_COMMIT_SHORT_SHA}}"
+          irma.apiServerImage: "nlxio/irma:{{.CI_COMMIT_SHORT_SHA}}"
           configAPI.insightAPIURL: https://insight-api-nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
           configAPI.irmaServerURL: https://irma-api-nlx-rdw-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
           configAPI.serviceConfig: |
@@ -244,8 +344,11 @@ profiles:
               \}\,
               "inways": ["inway.rdw"]
             \}
-
-- name: deploy-review-haarlem
+- name: review-haarlem
+  build:
+    tagPolicy:
+      envTemplate:
+        template: "{{.IMAGE_NAME}}:{{.CI_COMMIT_SHORT_SHA}}"
   deploy:
     helm:
       releases:
@@ -254,22 +357,22 @@ profiles:
         valuesFiles:
         - helm/nlx-organization/values-review-haarlem.yaml
         setValueTemplates:
-          authServiceImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/auth-service:{{.CI_COMMIT_SHORT_SHA}}"
-          caCfsslUnsafeImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/ca-cfssl-unsafe:{{.CI_COMMIT_SHORT_SHA}}"
-          configAPIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/config-api:{{.CI_COMMIT_SHORT_SHA}}"
-          insightAPIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/insight-api:{{.CI_COMMIT_SHORT_SHA}}"
-          inwayImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/inway:{{.CI_COMMIT_SHORT_SHA}}"
-          managementAPIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/management-api:{{.CI_COMMIT_SHORT_SHA}}"
-          managementUIImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/management-ui:{{.CI_COMMIT_SHORT_SHA}}"
-          nlxctlImage:  "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/nlxctl:{{.CI_COMMIT_SHORT_SHA}}"
-          outwayImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/outway:{{.CI_COMMIT_SHORT_SHA}}"
-          txlogDBImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/txlog-db:{{.CI_COMMIT_SHORT_SHA}}"
+          authServiceImage: "nlxio/auth-service:{{.CI_COMMIT_SHORT_SHA}}"
+          caCfsslUnsafeImage: "nlxio/ca-cfssl-unsafe:{{.CI_COMMIT_SHORT_SHA}}"
+          configAPIImage: "nlxio/config-api:{{.CI_COMMIT_SHORT_SHA}}"
+          insightAPIImage: "nlxio/insight-api:{{.CI_COMMIT_SHORT_SHA}}"
+          inwayImage: "nlxio/inway:{{.CI_COMMIT_SHORT_SHA}}"
+          managementAPIImage: "nlxio/management-api:{{.CI_COMMIT_SHORT_SHA}}"
+          managementUIImage: "nlxio/management-ui:{{.CI_COMMIT_SHORT_SHA}}"
+          nlxctlImage:  "nlxio/nlxctl:{{.CI_COMMIT_SHORT_SHA}}"
+          outwayImage: "nlxio/outway:{{.CI_COMMIT_SHORT_SHA}}"
+          txlogDBImage: "nlxio/txlog-db:{{.CI_COMMIT_SHORT_SHA}}"
           directoryRegistrationHostname: directory-registration-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           directoryInspectionHostname: directory-inspection-api.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           caAddress: ca-cfssl-unsafe.nlx-directory-{{.CI_ENVIRONMENT_SLUG}}
           externalDomain: nlx-haarlem-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}
           domain: nlx-haarlem-{{.CI_ENVIRONMENT_SLUG}}
-          irma.apiServerImage: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/nlxio/irma:{{.CI_COMMIT_SHORT_SHA}}"
+          irma.apiServerImage: "nlxio/irma:{{.CI_COMMIT_SHORT_SHA}}"
           inway.config: |
             [services]
                 [services.demo-api]
@@ -279,21 +382,10 @@ profiles:
                 irma-api-url = 'https://irma-api-nlx-haarlem-{{.CI_ENVIRONMENT_SLUG}}.{{.REVIEW_BASE_DOMAIN}}'
                 public-support-contact = "public-support@nlx.io"
                 tech-support-contact = "tech-support@nlx.io"
-
-- name: release-review
-  build:
-    tagPolicy:
-       envTemplate:
-         template: "{{.CI_REGISTRY}}/{{.CI_PROJECT_PATH}}/{{.IMAGE_NAME}}:{{.CI_COMMIT_SHORT_SHA}}"
-    local:
-      push: true
-- name: release
+- name: test
   build:
     tagPolicy:
       gitCommit: {}
-    local:
-      push: true
-- name: deploy-test
   deploy:
     helm:
       releases:
@@ -360,7 +452,10 @@ profiles:
           outwayImage: nlxio/outway
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-test-haarlem
-- name: deploy-acc
+- name: acc
+  build:
+    tagPolicy:
+      gitCommit: {}
   deploy:
     helm:
       releases:
@@ -427,7 +522,10 @@ profiles:
           outwayImage: nlxio/outway
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-acc-haarlem
-- name: deploy-demo
+- name: demo
+  build:
+    tagPolicy:
+      gitCommit: {}
   deploy:
     helm:
       releases:
@@ -494,7 +592,10 @@ profiles:
           nlxctlImage: nlxio/nlxctl
           txlogDBImage: nlxio/txlog-db
         namespace: nlx-demo-haarlem
-- name: deploy-preprod
+- name: preprod
+  build:
+    tagPolicy:
+      gitCommit: {}
   deploy:
     helm:
       releases:
@@ -511,7 +612,10 @@ profiles:
           docsImage: nlxio/docs
           insightUIImage: nlxio/insight-ui
         namespace: nlx-preprod-directory
-- name: deploy-prod
+- name: prod
+  build:
+    tagPolicy:
+      gitCommit: {}
   deploy:
     helm:
       releases:

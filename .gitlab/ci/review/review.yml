@@ -2,18 +2,13 @@ Deploy Review App:
   stage: Review
   image: registry.gitlab.com/commonground/cg-review-app-deployer:latest
   variables:
-    IMAGE_PREFIX: "$CI_REGISTRY/$CI_PROJECT_PATH"
     REVIEW_BASE_DOMAIN: nlx.reviews
-    DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: ""
-  services:
-    - docker:dind
+  before_script:
+    - mkdir -p ~/.docker
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > ~/.docker/config.json
   script:
     - echo -e -n "$CI_ENVIRONMENT_SLUG.$REVIEW_BASE_DOMAIN" > ci_environment_url.txt
-    - skaffold deploy --profile deploy-review-directory --namespace nlx-directory-$CI_ENVIRONMENT_SLUG
-    - skaffold deploy --profile deploy-review-haarlem --namespace nlx-haarlem-$CI_ENVIRONMENT_SLUG
-    - skaffold deploy --profile deploy-review-rdw --namespace nlx-rdw-$CI_ENVIRONMENT_SLUG
-    - skaffold deploy --profile deploy-review-brp --namespace nlx-brp-$CI_ENVIRONMENT_SLUG
+    - skaffold run --profile review-directory --namespace nlx-directory-$CI_ENVIRONMENT_SLUG --default-repo registry-docker-registry.registry:5000 --insecure-registry registry-docker-registry.registry:5000
   environment:
     name: $CI_COMMIT_REF_NAME
     url: https://review-nlx-directory-$CI_ENVIRONMENT_SLUG.$REVIEW_BASE_DOMAIN
@@ -32,10 +27,6 @@ Remove Review App:
   image: registry.gitlab.com/commonground/cg-review-app-deployer:latest
   variables:
     GIT_STRATEGY: none
-    DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: ""
-  services:
-    - docker:dind
   script:
     - helm delete --purge nlx-directory-$CI_ENVIRONMENT_SLUG
     - helm delete --purge nlx-haarlem-$CI_ENVIRONMENT_SLUG

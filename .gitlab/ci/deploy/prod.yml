@@ -1,40 +1,13 @@
-Deploy demo:
-  extends: .deploy
-  stage: Deploy prod
+Deploy demo, preprod & prod:
+  stage: Deploy
   environment:
     name: demo
   before_script:
     - kubectl config use-context delta.k8s.nlx.io
-  only:
-    - tags
-  when: manual
-
-Deploy preprod:
-  extends: .deploy
-  stage: Deploy prod
-  environment:
-    name: preprod
-  before_script:
-    - kubectl config use-context delta.k8s.nlx.io
-  only:
-    - tags
-  when: manual
-
-Deploy prod:
-  extends: .deploy
-  stage: Deploy prod
-  environment:
-    name: prod
-  before_script:
-    - kubectl config use-context delta.k8s.nlx.io
-  only:
-    - tags
-  when: manual
-
-Docker tag latest:
-  stage: Deploy prod
   script:
-    - skaffold build --profile release | ./docker-tag-latest.awk
+    - skaffold run --profile demo
+    - skaffold run --profile preprod
+    - skaffold run --profile prod | ./docker-tag-latest.awk
   only:
     - tags
   when: manual

@@ -2,7 +2,7 @@
 FROM golang:1.13.3-alpine AS build
 
 # Install build tools.
-RUN apk add --update git gcc musl-dev
+RUN apk add --update gcc musl-dev
 
 # Cache dependencies
 COPY go.mod /go/src/go.nlx.io/nlx/go.mod
@@ -15,14 +15,14 @@ RUN go mod download
 COPY insight-api        /go/src/go.nlx.io/nlx/insight-api
 COPY txlog-db/dbversion /go/src/go.nlx.io/nlx/txlog-db/dbversion
 COPY common             /go/src/go.nlx.io/nlx/common
-COPY .git               /go/src/go.nlx.io/nlx/insight-api/.git
 
 
 WORKDIR /go/src/go.nlx.io/nlx/insight-api
 
-RUN GIT_COMMIT_HASH=$(git rev-parse HEAD) && \
-        GIT_TAG_NAME=$(git describe --tags) && \
-        go build \
+ARG GIT_TAG_NAME
+ARG GIT_COMMIT_HASH
+
+RUN go build \
         -ldflags="-X 'go.nlx.io/nlx/common/version.BuildSourceHash=$GIT_COMMIT_HASH' -X 'go.nlx.io/nlx/common/version.BuildVersion=$GIT_TAG_NAME'" \
         -o dist/bin/nlx-insight-api ./cmd/nlx-insight-api
 
