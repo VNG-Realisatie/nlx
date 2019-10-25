@@ -1,21 +1,20 @@
 
 stages:
-#  - Tests
-#  - Security
-#  - Tools
+  - Tests
+  - Security
   - Build
-  - Review
-#  - Deploy
+  - Deploy
   - E2E tests
+  - Tools
 
 include:
-#  - '.gitlab/ci/tests/tests.yml'
-#  - '.gitlab/ci/security/dependency_scanning.yml'
-#  - '.gitlab/ci/security/sast.yml'
-#  - '.gitlab/ci/tools/semantic_release.yml'
+  - '.gitlab/ci/tests/tests.yml'
+  - '.gitlab/ci/security/dependency_scanning.yml'
+  - '.gitlab/ci/security/sast.yml'
   - '.gitlab/ci/build/review.yml'
-  - '.gitlab/ci/review/review.yml'
-#  - '.gitlab/ci/deploy/test.yml'
-#  - '.gitlab/ci/deploy/acc.yml'
-#  - '.gitlab/ci/deploy/prod.yml'
+  - '.gitlab/ci/deploy/review.yml'
+  - '.gitlab/ci/deploy/test.yml'
+  - '.gitlab/ci/deploy/acc.yml'
+  - '.gitlab/ci/deploy/prod.yml'
   - '.gitlab/ci/e2e-tests/e2e-tests.yml'
+  - '.gitlab/ci/tools/semantic_release.yml'

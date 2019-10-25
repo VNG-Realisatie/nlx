@@ -27,9 +27,21 @@ COPY insight-ui/docker/startup.sh .
 COPY --from=build /go/src/go.nlx.io/nlx/insight-ui/build /usr/share/nginx/html
 
 # Add file with version tag from git
-ARG GIT_TAG_NAME
-ARG GIT_COMMIT_HASH
-
+ARG GIT_TAG_NAME=undefined
+ARG GIT_COMMIT_HASH=undefined
 RUN ash -c 'echo "{\"tag\": \"$GIT_TAG_NAME\", \"commit\": \"$GIT_COMMIT_HASH\"}" > /usr/share/nginx/html/version.json'
 
+# Add non-privileged user
+RUN adduser -D -u 1001 appuser
+
+# Set ownership to run nginx as non-root user
+RUN touch /var/run/nginx.pid && \
+    touch /etc/nginx/conf.d/default.conf && \
+    touch /usr/share/nginx/html/env.js && \
+    chown -R appuser /var/cache/nginx && \
+    chown -R appuser /var/run/nginx.pid && \
+    chown -R appuser /etc/nginx/conf.d/default.conf && \
+    chown -R appuser /usr/share/nginx/html/env.js
+
+USER appuser
 CMD ["./startup.sh"]

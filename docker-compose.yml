@@ -11,8 +11,8 @@ services:
       context: .
       dockerfile: ca-certportal/Dockerfile
       args:
-        GIT_COMMIT_HASH: "${COMMIT_SHORT_SHA}"
-        GIT_TAG_NAME: "${COMMIT_TAG}"
+        GIT_COMMIT_HASH: "${CI_COMMIT_SHORT_SHA}"
+        GIT_TAG_NAME: "${CI_COMMIT_TAG}"
   ca-cfssl-unsafe:
     image: "${IMAGE_PREFIX}nlxio/ca-cfssl-unsafe:${IMAGE_TAG}"
     build:
@@ -24,16 +24,16 @@ services:
       context: .
       dockerfile: config-api/Dockerfile
       args:
-        GIT_COMMIT_HASH: "${COMMIT_SHORT_SHA}"
-        GIT_TAG_NAME: "${COMMIT_TAG}"
+        GIT_COMMIT_HASH: "${CI_COMMIT_SHORT_SHA}"
+        GIT_TAG_NAME: "${CI_COMMIT_TAG}"
   docs:
     image: "${IMAGE_PREFIX}nlxio/docs:${IMAGE_TAG}"
     build:
       context: docs
       dockerfile: Dockerfile
       args:
-        GIT_COMMIT_HASH: "${COMMIT_SHORT_SHA}"
-        GIT_TAG_NAME: "${COMMIT_TAG}"
+        GIT_COMMIT_HASH: "${CI_COMMIT_SHORT_SHA}"
+        GIT_TAG_NAME: "${CI_COMMIT_TAG}"
   directory-db:
     image: "${IMAGE_PREFIX}nlxio/directory-db:${IMAGE_TAG}"
     build:
@@ -45,56 +45,56 @@ services:
       context: .
       dockerfile: directory-inspection-api/Dockerfile
       args:
-        GIT_COMMIT_HASH: "${COMMIT_SHORT_SHA}"
-        GIT_TAG_NAME: "${COMMIT_TAG}"
+        GIT_COMMIT_HASH: "${CI_COMMIT_SHORT_SHA}"
+        GIT_TAG_NAME: "${CI_COMMIT_TAG}"
   directory-registration-api:
     image: "${IMAGE_PREFIX}nlxio/directory-registration-api:${IMAGE_TAG}"
     build:
       context: .
       dockerfile: directory-registration-api/Dockerfile
       args:
-        GIT_COMMIT_HASH: "${COMMIT_SHORT_SHA}"
-        GIT_TAG_NAME: "${COMMIT_TAG}"
+        GIT_COMMIT_HASH: "${CI_COMMIT_SHORT_SHA}"
+        GIT_TAG_NAME: "${CI_COMMIT_TAG}"
   directory-monitor:
     image: "${IMAGE_PREFIX}nlxio/directory-monitor:${IMAGE_TAG}"
     build:
       context: .
       dockerfile: directory-monitor/Dockerfile
       args:
-        GIT_COMMIT_HASH: "${COMMIT_SHORT_SHA}"
-        GIT_TAG_NAME: "${COMMIT_TAG}"
+        GIT_COMMIT_HASH: "${CI_COMMIT_SHORT_SHA}"
+        GIT_TAG_NAME: "${CI_COMMIT_TAG}"
   directory-ui:
     image: "${IMAGE_PREFIX}nlxio/directory-ui:${IMAGE_TAG}"
     build:
       context: .
       dockerfile: directory-ui/Dockerfile
       args:
-        GIT_COMMIT_HASH: "${COMMIT_SHORT_SHA}"
-        GIT_TAG_NAME: "${COMMIT_TAG}"
+        GIT_COMMIT_HASH: "${CI_COMMIT_SHORT_SHA}"
+        GIT_TAG_NAME: "${CI_COMMIT_TAG}"
   insight-api:
     image: "${IMAGE_PREFIX}nlxio/insight-api:${IMAGE_TAG}"
     build:
       context: .
       dockerfile: insight-api/Dockerfile
       args:
-        GIT_COMMIT_HASH: "${COMMIT_SHORT_SHA}"
-        GIT_TAG_NAME: "${COMMIT_TAG}"
+        GIT_COMMIT_HASH: "${CI_COMMIT_SHORT_SHA}"
+        GIT_TAG_NAME: "${CI_COMMIT_TAG}"
   insight-ui:
     image: "${IMAGE_PREFIX}nlxio/insight-ui:${IMAGE_TAG}"
     build:
       context: .
       dockerfile: insight-ui/Dockerfile
       args:
-        GIT_COMMIT_HASH: "${COMMIT_SHORT_SHA}"
-        GIT_TAG_NAME: "${COMMIT_TAG}"
+        GIT_COMMIT_HASH: "${CI_COMMIT_SHORT_SHA}"
+        GIT_TAG_NAME: "${CI_COMMIT_TAG}"
   inway:
     image: "${IMAGE_PREFIX}nlxio/inway:${IMAGE_TAG}"
     build:
       context: .
       dockerfile: inway/Dockerfile
       args:
-        GIT_COMMIT_HASH: "${COMMIT_SHORT_SHA}"
-        GIT_TAG_NAME: "${COMMIT_TAG}"
+        GIT_COMMIT_HASH: "${CI_COMMIT_SHORT_SHA}"
+        GIT_TAG_NAME: "${CI_COMMIT_TAG}"
   irma:
     image: "${IMAGE_PREFIX}nlxio/irma:${IMAGE_TAG}"
     build:
@@ -106,32 +106,32 @@ services:
       context: .
       dockerfile: management-api/Dockerfile
       args:
-        GIT_COMMIT_HASH: "${COMMIT_SHORT_SHA}"
-        GIT_TAG_NAME: "${COMMIT_TAG}"
+        GIT_COMMIT_HASH: "${CI_COMMIT_SHORT_SHA}"
+        GIT_TAG_NAME: "${CI_COMMIT_TAG}"
   management-ui:
     image: "${IMAGE_PREFIX}nlxio/management-ui:${IMAGE_TAG}"
     build:
       context: .
       dockerfile: management-ui/Dockerfile
       args:
-        GIT_COMMIT_HASH: "${COMMIT_SHORT_SHA}"
-        GIT_TAG_NAME: "${COMMIT_TAG}"
+        GIT_COMMIT_HASH: "${CI_COMMIT_SHORT_SHA}"
+        GIT_TAG_NAME: "${CI_COMMIT_TAG}"
   nlxctl:
     image: "${IMAGE_PREFIX}nlxio/nlxctl:${IMAGE_TAG}"
     build:
       context: .
       dockerfile: nlxctl/Dockerfile
       args:
-        GIT_COMMIT_HASH: "${COMMIT_SHORT_SHA}"
-        GIT_TAG_NAME: "${COMMIT_TAG}"
+        GIT_COMMIT_HASH: "${CI_COMMIT_SHORT_SHA}"
+        GIT_TAG_NAME: "${CI_COMMIT_TAG}"
   outway:
     image: "${IMAGE_PREFIX}nlxio/outway:${IMAGE_TAG}"
     build:
       context: .
       dockerfile: outway/Dockerfile
       args:
-        GIT_COMMIT_HASH: "${COMMIT_SHORT_SHA}"
-        GIT_TAG_NAME: "${COMMIT_TAG}"
+        GIT_COMMIT_HASH: "${CI_COMMIT_SHORT_SHA}"
+        GIT_TAG_NAME: "${CI_COMMIT_TAG}"
   review-page:
     image: "${IMAGE_PREFIX}nlxio/review-page:${IMAGE_TAG}"
     build:

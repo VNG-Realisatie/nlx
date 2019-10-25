@@ -1,0 +1,89 @@
+Deploy Review App:
+  stage: Deploy
+  image: registry.gitlab.com/commonground/cg-review-app-deployer:latest
+  variables:
+    IMAGE_PREFIX: "${CI_REGISTRY_IMAGE}/"
+    IMAGE_TAG: $CI_COMMIT_SHORT_SHA
+    REVIEW_BASE_DOMAIN: nlx.reviews
+  script:
+    - echo -e -n "$CI_ENVIRONMENT_SLUG.$REVIEW_BASE_DOMAIN" > ci_environment_url.txt
+    - |
+        helm upgrade --install nlx-directory-$CI_ENVIRONMENT_SLUG ./helm/nlx-directory \
+        --namespace nlx-directory-$CI_ENVIRONMENT_SLUG \
+        --values ./helm/nlx-directory/values-review.yaml \
+        --set "caCertportalImage=${IMAGE_PREFIX}nlxio/ca-certportal:${IMAGE_TAG}" \
+        --set "caCfsslUnsafeImage=${IMAGE_PREFIX}nlxio/ca-cfssl-unsafe:${IMAGE_TAG}" \
+        --set "directoryDBImage=${IMAGE_PREFIX}nlxio/directory-db:${IMAGE_TAG}" \
+        --set "directoryInspectionImage=${IMAGE_PREFIX}nlxio/directory-inspection-api:${IMAGE_TAG}" \
+        --set "directoryMonitorImage=${IMAGE_PREFIX}nlxio/directory-monitor:${IMAGE_TAG}" \
+        --set "directoryRegistrationImage=${IMAGE_PREFIX}nlxio/directory-registration-api:${IMAGE_TAG}" \
+        --set "directoryUIImage=${IMAGE_PREFIX}nlxio/directory-ui:${IMAGE_TAG}" \
+        --set "docsImage=${IMAGE_PREFIX}nlxio/docs:${IMAGE_TAG}" \
+        --set "insightUIImage=${IMAGE_PREFIX}nlxio/insight-ui:${IMAGE_TAG}" \
+        --set "reviewPageImage=${IMAGE_PREFIX}nlxio/review-page:${IMAGE_TAG}" \
+        --set "caAddress=ca-cfssl-unsafe.nlx-directory-${CI_ENVIRONMENT_SLUG}" \
+        --set "insightDirectoryInspectionAPIURL=http://directory-inspection-api-internal.nlx-directory-${CI_ENVIRONMENT_SLUG}" \
+        --set "externalDomain=nlx-directory-${CI_ENVIRONMENT_SLUG}.${REVIEW_BASE_DOMAIN}" \
+        --set "domain=nlx-directory-${CI_ENVIRONMENT_SLUG}" \
+        --set "reviewPage.environmentSlugWithDomain=${CI_ENVIRONMENT_SLUG}.${REVIEW_BASE_DOMAIN}"
+    - |
+        for ORG_NAME in haarlem rdw brp
+        do
+          helm upgrade --install nlx-$ORG_NAME-$CI_ENVIRONMENT_SLUG ./helm/nlx-organization \
+          --namespace nlx-$ORG_NAME-$CI_ENVIRONMENT_SLUG \
+          --values ./helm/nlx-organization/values-review-$ORG_NAME.yaml \
+          --set "authServiceImage=${IMAGE_PREFIX}nlxio/auth-service:${IMAGE_TAG}" \
+          --set "caCfsslUnsafeImage=${IMAGE_PREFIX}nlxio/ca-cfssl-unsafe:${IMAGE_TAG}" \
+          --set "configAPIImage=${IMAGE_PREFIX}nlxio/config-api:${IMAGE_TAG}" \
+          --set "insightAPIImage=${IMAGE_PREFIX}nlxio/insight-api:${IMAGE_TAG}" \
+          --set "inwayImage=${IMAGE_PREFIX}nlxio/inway:${IMAGE_TAG}" \
+          --set "outwayImage=${IMAGE_PREFIX}nlxio/outway:${IMAGE_TAG}" \
+          --set "managementAPIImage=${IMAGE_PREFIX}nlxio/management-api:${IMAGE_TAG}" \
+          --set "managementUIImage=${IMAGE_PREFIX}nlxio/management-ui:${IMAGE_TAG}" \
+          --set "nlxctlImage=${IMAGE_PREFIX}nlxio/nlxctl:${IMAGE_TAG}" \
+          --set "txlogDBImage=${IMAGE_PREFIX}nlxio/txlog-db:${IMAGE_TAG}" \
+          --set "irma.apiServerImage=${IMAGE_PREFIX}nlxio/irma:${IMAGE_TAG}" \
+          --set "directoryRegistrationHostname=directory-registration-api.nlx-directory-${CI_ENVIRONMENT_SLUG}" \
+          --set "directoryInspectionHostname=directory-inspection-api.nlx-directory-${CI_ENVIRONMENT_SLUG}" \
+          --set "caAddress=ca-cfssl-unsafe.nlx-directory-${CI_ENVIRONMENT_SLUG}" \
+          --set "externalDomain=nlx-${ORG_NAME}-${CI_ENVIRONMENT_SLUG}.${REVIEW_BASE_DOMAIN}" \
+          --set "domain=nlx-${ORG_NAME}-${CI_ENVIRONMENT_SLUG}" \
+          --set "management.basicAuth=${MANAGEMENT_BASIC_AUTH}"
+        done
+  environment:
+    name: $CI_COMMIT_REF_NAME
+    url: https://review-nlx-directory-$CI_ENVIRONMENT_SLUG.$REVIEW_BASE_DOMAIN
+    on_stop: Remove Review App
+  tags:
+    - review
+    - kubernetes
+  only:
+    - /^feature\/.*$/
+  artifacts:
+    paths:
+      - ci_environment_url.txt
+
+Remove Review App:
+  stage: Deploy
+  image: registry.gitlab.com/commonground/cg-review-app-deployer:latest
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - helm delete --purge nlx-directory-$CI_ENVIRONMENT_SLUG
+    - helm delete --purge nlx-haarlem-$CI_ENVIRONMENT_SLUG
+    - helm delete --purge nlx-rdw-$CI_ENVIRONMENT_SLUG
+    - helm delete --purge nlx-brp-$CI_ENVIRONMENT_SLUG
+    - kubectl delete namespace nlx-directory-$CI_ENVIRONMENT_SLUG
+    - kubectl delete namespace nlx-haarlem-$CI_ENVIRONMENT_SLUG
+    - kubectl delete namespace nlx-rdw-$CI_ENVIRONMENT_SLUG
+    - kubectl delete namespace nlx-brp-$CI_ENVIRONMENT_SLUG
+  when: manual
+  environment:
+    name: $CI_COMMIT_REF_NAME
+    url: https://$CI_ENVIRONMENT_SLUG.$REVIEW_BASE_DOMAIN
+    action: stop
+  tags:
+    - review
+    - kubernetes
+  only:
+    - /^feature\/.*$/

@@ -26,7 +26,16 @@ COPY docker/nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /go/src/go.nlx.io/nlx/docs/website/build/nlx-docs /usr/share/nginx/html
 
 # Add file with version tag from git
-ARG GIT_TAG_NAME
-ARG GIT_COMMIT_HASH
-
+ARG GIT_TAG_NAME=undefined
+ARG GIT_COMMIT_HASH=undefined
 RUN ash -c 'echo "{\"tag\": \"$GIT_TAG_NAME\", \"commit\": \"$GIT_COMMIT_HASH\"}" > /usr/share/nginx/html/version.json'
+
+# Add non-privileged user
+RUN adduser -D -u 1001 appuser
+
+# Set ownership nginx.pid and cache folder in order to run nginx as non-root user
+RUN touch /var/run/nginx.pid && \
+    chown -R appuser /var/run/nginx.pid && \
+    chown -R appuser /var/cache/nginx
+
+USER appuser

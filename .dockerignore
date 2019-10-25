@@ -1,6 +1,6 @@
-.git
 */node_modules
 */dist
+.git
 
 # Skaffold watcher detects changes helm makes, ignore the whole helm directory completely, we don't need it in the build anyway.
 # Also see https://github.com/GoogleContainerTools/skaffold/issues/667

@@ -1,4 +1,4 @@
-Deploy acc:
+Deploy acceptance:
   stage: Deploy
   environment:
     name: acc

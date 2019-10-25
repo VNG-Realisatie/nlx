@@ -18,8 +18,8 @@ COPY common                      /go/src/go.nlx.io/nlx/common
 
 WORKDIR /go/src/go.nlx.io/nlx/directory-registration-api
 
-ARG GIT_TAG_NAME
-ARG GIT_COMMIT_HASH
+ARG GIT_TAG_NAME=undefined
+ARG GIT_COMMIT_HASH=undefined
 
 RUN go build \
         -ldflags="-X 'go.nlx.io/nlx/common/version.BuildSourceHash=$GIT_COMMIT_HASH' -X 'go.nlx.io/nlx/common/version.BuildVersion=$GIT_TAG_NAME'" \

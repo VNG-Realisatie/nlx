@@ -55,8 +55,8 @@ inway:
       endpoint-url = "http://service:8000"
       authorization-model = "none"
       api-specification-document-url = "http://service:8000/openapi.json"
-      ca-cert-path = "/ca-certs/basisregistratie.pem"
-
+      insight-api-url = "https://insight-api-nlx-{{.Values.externalDomain}}"
+      irma-api-url = "https://irma-api-nlx-{{.Values.externalDomain}}"
 outway:
   enable: false
   authService: false
