@@ -5,7 +5,7 @@
     "dependencies": {
         "@commonground/design-system": "7.2.0",
         "color": "3.1.2",
-        "formik": "1.5.8",
+        "formik": "2.0.3",
         "react": "16.10.2",
         "react-app-polyfill": "1.0.4",
         "react-dom": "16.10.2",
