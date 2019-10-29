@@ -2,16 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-
-    <link
-      href="css/bootstrap.min.css"
-      rel="stylesheet"
-      crossorigin="anonymous"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link href="css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
     <link href="css/app.css" rel="stylesheet" />
     <title>NLX Certportal</title>
   </head>
@@ -20,9 +12,7 @@
     <div class="container mb-3">
       <div class="py-5 text-center">
         <h2>Welcome to the certportal</h2>
-        <p class="lead">
-          You can use this portal to request a NLX development certificate.
-        </p>
+        <p class="lead">You can use this portal to request a NLX development certificate.</p>
       </div>
       <div class="row">
         <div class="col-md-12">
@@ -33,30 +23,20 @@
               the following command:
             </p>
             <pre>openssl req -utf8 -nodes -sha256 -newkey rsa:2048 -keyout {yourhostname}.key -out {yourhostname}.csr</pre>
-            <form id="form" action="." method="POST">
+            <form id="form" method="post">
               <h4 class="mb-3 mt-5">2. Enter certificate request details</h4>
               <p>
                 Now enter the contents of <code>{yourhostname}.csr</code> in the
                 following field:
               </p>
 
-              <div
-                id="error"
-                class="alert alert-danger"
-                role="alert"
-                style="display:none;"
-              >
+              <div id="error" class="alert alert-danger" role="alert" style="display:none;">
                 Something went wrong on the server, please try again...
               </div>
 
               <div class="form-group">
                 <label for="csr">CSR</label>
-                <textarea
-                  id="csr"
-                  name="csr"
-                  class="form-control"
-                  rows="20"
-                ></textarea>
+                <textarea id="csr" name="csr" class="form-control" rows="20"></textarea>
               </div>
 
               <hr class="mb-4" />
@@ -68,12 +48,7 @@
           </div>
           <div id="result" style="display:none;">
             <p>Here is your certificate, good luck with it!</p>
-            <textarea
-              id="crt"
-              class="form-control"
-              readonly
-              rows="20"
-            ></textarea>
+            <textarea id="crt" class="form-control" readonly rows="20"></textarea>
             <a href="#" id="download">Download certificate</a>
           </div>
         </div>
