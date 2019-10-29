@@ -18,6 +18,8 @@ This one is used to validate certificates of other organizations.
 Download [the root certificate](https://certportal.demo.nlx.io/root.crt) file and save it as `root.crt` in `~/nlx-setup/`.
 That is the working directory as described in [part 1](./setup-your-environment.md).
 
+>  If you are using Windows make sure that you select `All files` as file-type when saving the root certificate. If you do not do this Windows will add the extension `txt` to the file.
+
 ### Verification
 
 Let's check if our certificate is alright.
@@ -88,6 +90,8 @@ The system will instantly sign your csr and return your certificate.
 You can either copy paste your certificate and store it in a file or you can click **Download certificate** to download the certificate.
 
 Rename the file from `certificate.crt` to `org.crt` and store the file next to your private key.
+
+>  If you are using Windows make sure that you select `All files` as file type when saving your certificate. If you do not do this Windows will add the extenstion `txt` to the file.
 
 ### Verification
 

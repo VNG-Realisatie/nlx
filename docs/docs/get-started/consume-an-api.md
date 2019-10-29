@@ -16,13 +16,19 @@ Let's setup the outway service. First, fetch the Docker image from the [Docker H
 docker pull nlxio/outway:latest
 ```
 
-The following command will run the outway using the Docker image we just fetched.
-You might need to give `org.key` group read permisson so docker can access the key.
+Before you start your outway you will need to make sure the outway can read the private key you created in the previous step.
+If you are running on Linux or Mac OS you might need to give `org.key` group read permisson by running:
 
 ```bash
 chmod g+r org.key
 ```
 
+If you are running on Windows, Docker Desktop will ask you read premissions for the directory where you stored the certificate and private key (`~/nlx-setup`), please select yes.
+
+The following command will run the outway using the Docker image we just fetched.
+
+<!--DOCUSAURUS_CODE_TABS-->
+<!--Linux & macOS-->
 ```bash
 docker run --rm \
   --name my-nlx-outway \
@@ -35,8 +41,25 @@ docker run --rm \
   --env TLS_ORG_KEY=/certs/org.key \
   --env DISABLE_LOGDB=1 \
   --publish 80:8080 \
-  nlxio/outway:latest
+  nlxio/outway:latest  
 ```
+
+<!--Windows-->
+```powershell
+docker run --rm `
+--name my-nlx-outway `
+--volume ~/nlx-setup/root.crt:/certs/root.crt:ro `
+--volume ~/nlx-setup/org.crt:/certs/org.crt:ro `
+--volume ~/nlx-setup/org.key:/certs/org.key:ro `
+--env DIRECTORY_INSPECTION_ADDRESS=directory-inspection-api.demo.nlx.io:443 `
+--env TLS_NLX_ROOT_CERT=/certs/root.crt `
+--env TLS_ORG_CERT=/certs/org.crt `
+--env TLS_ORG_KEY=/certs/org.key `
+--env DISABLE_LOGDB=1 `
+--publish 80:8080 `
+nlxio/outway:latest  
+```
+<!--END_DOCUSAURUS_CODE_TABS-->
 
 You will get back the container id of the container you created from this image.
 By running this command, we've launched our very own NLX outway. It is running on [`http://localhost`](http://localhost).

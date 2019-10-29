@@ -3,13 +3,49 @@ id: setup-your-environment
 title: Part 1: Setup your environment
 ---
 
-## Operating System
 
-This documentation is written for Mac and Linux users. It assumes you have some experience with the terminal / shell.
+## Mac and Linux users
 
-## Docker
+### Docker
 
-Make sure you have a recent version of [Docker](https://www.docker.com) installed.
+You can download Docker for Linux and Mac OS [here](https://hub.docker.com?overlay=onboarding). Please note that you will have to create a free DockerHub account before you can download Docker.
+
+## Windows users
+
+We currently support Windows 10 64-bit: Pro, Enterprise, or Education (Build 15063 or later).
+
+### Powershell
+
+In order to succesfully execute all commands in this guide make sure you are using `PowerShell` in administrator mode and not the `Command prompt`. To launch `PowerShell` in administrator mode, type `PowerShell` in the searchfield of the taskbar, you should find `Windows PowerShell`, right click on it and select `Run as Administrator`.
+
+### Docker
+
+You can download Docker for Windows [here](https://hub.docker.com?overlay=onboarding). Please note that you will have to create a free DockerHub account before you can download Docker. Docker requires hyper-V to be enabled and Docker will ask you to enable it on start-up if this does not happen you can enable it yourself by running following command in PowerShell
+
+> You can also download Docker directly [here](https://download.docker.com/win/stable/Docker%20for%20Windows%20Installer.exe) 
+
+```bash
+Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
+```
+
+### OpenSSL
+
+You will need `OpenSSL` to create the TLS certificates you will need to run NLX. We advise you to install [Chocolatey](https://chocolatey.org/install), a package manager for Windows which will install `OpenSSL` for you. 
+
+Once you installed Chocolatey you can install OpenSSL by running
+
+```bash
+choco install openssl.light
+```
+
+Now close and reopen PowerShell and verify your OpenSSL installation by running
+
+```bash
+openssl version
+```
+
+if the installation was succesful OpenSSL should print its version number.
+
 
 ## Working directory
 
@@ -38,10 +74,9 @@ pwd
 ```
 
 The output should be:
-
-* For Mac: `/Users/<your-username>/nlx-setup`
+* For Mac & Windows: `/Users/<your-username>/nlx-setup`
 * For Linux: `/home/<your-username>/nlx-setup`
 
 All commands further down this guide assume you are located in this directory.
 
-The Next step is to create some certificates.
+The Next step is to create some certificates [part 2](../create-certificates/).
