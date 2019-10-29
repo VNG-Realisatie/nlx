@@ -1,28 +1,26 @@
-FROM ubuntu:bionic
+FROM alpine:3 AS build
+ARG MIGRATE_VERSION="4.7.0"
+ARG MIGATE_CHECKSUM="976e351a7f5afb5f13d2020123c450cb56bb66e6a0542efe563a89dbabc3fbdc"
 
-# Install psql
-RUN apt-get update && \
-	apt-get -y install --no-install-recommends wget ca-certificates gnupg && \
-	wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
-	echo "deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main" > /etc/apt/sources.list.d/postgres.list && \
-	apt-get update && \
-	apt-get -y install --no-install-recommends postgresql-client-10 && \
-	rm -rf /var/lib/apt/lists/*
+RUN wget -O /tmp/migrate.linux-amd64.tar.gz https://github.com/golang-migrate/migrate/releases/download/v${MIGRATE_VERSION}/migrate.linux-amd64.tar.gz && \
+    tar zxf /tmp/migrate.linux-amd64.tar.gz && \
+    echo "${MIGATE_CHECKSUM}  migrate.linux-amd64" | sha256sum -c && \
+    mv migrate.linux-amd64 /usr/local/bin/migrate && \
+    chmod 0755 /usr/local/bin/migrate && \
+    /usr/local/bin/migrate -version
 
-# Install migrate
-RUN wget --quiet -O - https://packagecloud.io/golang-migrate/migrate/gpgkey | apt-key add - && \
-    echo "deb https://packagecloud.io/golang-migrate/migrate/ubuntu/ bionic main" > /etc/apt/sources.list.d/migrate.list && \
-    apt-get update && \
-    apt-get install -y migrate && \
-    rm -rf /var/lib/apt/lists/*
 
-COPY directory-db/docker/reset-db.sh		/usr/local/bin/reset-db.sh
-COPY directory-db/docker/upgrade-db.sh		/usr/local/bin/upgrade-db.sh
-COPY directory-db/migrations	/db-migrations
-COPY directory-db/testdata		/db-testdata
+FROM alpine:3
+COPY --from=build /usr/local/bin/migrate /usr/local/bin/migrate
 
-# Add non-privileged user
-RUN useradd -ms /bin/bash appuser
+RUN apk --no-cache add bash postgresql-client
+
+COPY directory-db/docker/reset-db.sh /usr/local/bin/reset-db.sh
+COPY directory-db/docker/upgrade-db.sh /usr/local/bin/upgrade-db.sh
+COPY directory-db/migrations /db-migrations
+COPY directory-db/testdata /db-testdata
+
+RUN adduser -D -u 1001 appuser
 
 RUN chown appuser /db-migrations
 RUN chown appuser /db-testdata
