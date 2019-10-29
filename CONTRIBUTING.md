@@ -82,16 +82,51 @@ All contributions have to be reviewed. The reviewer will look at the submitted c
 
 #### 2.4.2. Definition of Done
 
-With MR's we make User Stories become reality. A User Story is DONE when:
-* Code has been written.
-* Documentation has been added or updated where necessary.
-* All changes have been reviewed and approved by another developer from [team NLX](https://gitlab.com/commonground/nlx/nlx/-/project_members).
-* Deliverables (functionality + documentation) have been demoed to the development team and any resulting feedback has been processed.
-* Deliverables (functionality + documentation) have been demoed to the Product Owner and any resulting feedback has been processed.
-* Any spin-off user stories have been clearly identified and brought to the attention of the Product Owner.
-* Sprint demo has been prepared (test data, scenarios, etc.).
-* Product owner has accepted the user story.
-* All changes are deployed to the production environments.
+With MR's we make User Stories become reality. 
+This section describes the Definition of Done expressed in the stages a story goes through from cradle to cradle.
+
+**1. Definition of Ready**<BR>
+*Responsible: PO/DEV*<BR>
+- A story passes the INVEST criteria:<BR>
+“I” ndependent (of all others)<BR>
+“N” egotiable (not a specific contract for features)<BR>
+“V” aluable (or vertical)<BR>
+“E” stimatable (to a good approximation)<BR>
+“S” mall (so as to fit within an iteration)<BR>
+“T” estable (in principle, even if there isn’t a test for it yet)
+  - Test scenario's are written down
+  - acceptance criteria are written down in a way no misinterpretations are possible
+- We describe the story with the end in mind. So part of the story is the way we are going to demonstrate it to the stakeholder
+- We describe the proposed solution which has been discussed during refinement
+
+**2. From Doing to Review**<BR>
+*Responsible: DEV*<BR>
+- Code builds
+  - linting errors are fixed
+  - security issues are fixed
+- Tests are added
+- The developer has checked all acceptance criteria and test scenarios first 
+- The developer is responsible for arranging the review of the story
+  - The developer will notify the team who's review his story
+- Developer moves story to review
+
+**3. From Review to Accept**<BR>
+*Responsible: DEV*<BR>
+- Test are in place and understood
+- Solution has been checked and discussed with responsible developer
+- Reviewer and developer agree upon the solution
+- Reviewer marks the story as being reviewed
+- Developer notifies PO that his story is ready to accept
+- Developer moves story to accept
+
+**4. From Accept to Done**<BR>
+*Responsible: PO*<BR>
+- PO checks all test scenarios and acceptance criteria
+- Spin off stories are collected
+- PO marks the story as being accepted
+- Developer merges the code to master
+- Developer moves story to done
+
 
 
 ### 2.5. Celebrate
