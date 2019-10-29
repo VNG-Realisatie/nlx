@@ -7,6 +7,7 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"io/ioutil"
+	"path/filepath"
 
 	"github.com/pkg/errors"
 )
@@ -43,11 +44,13 @@ func Load(options TLSOptions) (*x509.CertPool, *x509.Certificate, error) {
 
 // LoadRootCert loads the certificate from file and adds it to a new x509.CertPool which is returned.
 func LoadRootCert(rootCertFile string) (*x509.CertPool, error) {
-	roots := x509.NewCertPool()
-	rootPEM, err := ioutil.ReadFile(rootCertFile)
+	rootPEM, err := ioutil.ReadFile(filepath.Clean(rootCertFile))
+
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to read root CA certificate file `%s`", rootCertFile)
 	}
+
+	roots := x509.NewCertPool()
 	ok := roots.AppendCertsFromPEM(rootPEM)
 	if !ok {
 		return nil, errors.Errorf("failed to parse PEM for root certificate `%s`", rootCertFile)

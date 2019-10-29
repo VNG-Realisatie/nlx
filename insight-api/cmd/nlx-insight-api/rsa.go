@@ -9,6 +9,7 @@ import (
 	"encoding/pem"
 	"errors"
 	"io/ioutil"
+	"path/filepath"
 )
 
 func parseRSAPrivateKeyFile(keyFile string) (*rsa.PrivateKey, error) {
@@ -45,7 +46,7 @@ func parseRSAPublicKeyFile(keyFile string) (*rsa.PublicKey, error) {
 }
 
 func parseFileToPem(keyFile string) (*pem.Block, error) {
-	pemBlock, err := ioutil.ReadFile(keyFile)
+	pemBlock, err := ioutil.ReadFile(filepath.Clean(keyFile))
 	if err != nil {
 		return nil, err
 	}

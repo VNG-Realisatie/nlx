@@ -11,6 +11,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"path/filepath"
 	"strings"
 
 	flags "github.com/jessevdk/go-flags"
@@ -66,8 +67,8 @@ func main() {
 	log.Fatal(http.ListenAndServeTLS(options.ListenAddress, options.CertFile, options.KeyFile, nil))
 }
 
-func loadCSVFile(filePath string) (map[string]*user, error) {
-	data, err := ioutil.ReadFile(filePath)
+func loadCSVFile(csvPath string) (map[string]*user, error) {
+	data, err := ioutil.ReadFile(filepath.Clean(csvPath))
 	if err != nil {
 		return nil, err
 	}
