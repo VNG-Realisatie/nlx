@@ -91,11 +91,12 @@ func runServer(
 	// setup client credentials for grpc gateway
 	gatewayDialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(
+			/* #nosec G402 */
 			credentials.NewTLS(&tls.Config{
 				Certificates: []tls.Certificate{*certKeyPair}, // using the grpc server's own cert to connect to it, perhaps find a way for the http/json gateway to bypass TLS locally
 				RootCAs:      caCertPool,
 				// This is a local connection; hostname won't match
-				InsecureSkipVerify: true, //nolint:gosec
+				InsecureSkipVerify: true,
 			}),
 		),
 	}
