@@ -30,7 +30,7 @@
                 following field:
               </p>
 
-              <div id="error" class="alert alert-danger" role="alert" style="display:none;">
+              <div id="error" class="alert alert-danger d-none" role="alert">
                 Something went wrong on the server, please try again...
               </div>
 
@@ -46,7 +46,7 @@
               </button>
             </form>
           </div>
-          <div id="result" style="display:none;">
+          <div id="result" class="d-none">
             <p>Here is your certificate, good luck with it!</p>
             <textarea id="crt" class="form-control" readonly rows="20"></textarea>
             <a href="#" id="download">Download certificate</a>

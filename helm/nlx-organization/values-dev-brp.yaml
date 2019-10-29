@@ -59,8 +59,8 @@ inway:
       authorization-model = "none"
       api-specification-document-url = "https://service:8443/openapi.json"
       ca-cert-path = "/ca-certs/basisregistratie.pem"
-      insight-api-url = "http://insight-api.nlx-dev-brp.minikube"
-      irma-api-url = "http://irma-api.nlx-dev-brp.minikube"
+      insight-api-url = "https://insight-api.nlx-dev-brp.minikube"
+      irma-api-url = "https://irma-api.nlx-dev-brp.minikube"
 
 outway:
   enable: false

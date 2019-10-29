@@ -25,8 +25,8 @@ inway:
       [services.demo-api]
       endpoint-url = "https://postman-echo.com"
       authorization-model = "none"
-      insight-api-url = "http://insight-api.nlx-dev-haarlem.minikube"
-      irma-api-url = "http://irma-api.nlx-dev-haarlem.minikube"
+      insight-api-url = "https://insight-api.nlx-dev-haarlem.minikube"
+      irma-api-url = "https://irma-api.nlx-dev-haarlem.minikube"
       public-support-contact = "public-support@nlx.io"
       tech-support-contact = "tech-support@nlx.io"
 

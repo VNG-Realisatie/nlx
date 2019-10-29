@@ -1,6 +1,9 @@
 FROM node:10.17.0-alpine AS build
 
 ENV CI=true
+# Don't inlne scripts, troublesome with CSP headers
+# See https://create-react-app.dev/docs/advanced-configuration/
+ENV INLINE_RUNTIME_CHUNK=false
 
 # First copy only package.json and yarn.lock to make the dependency fetching step optional.
 COPY directory-ui/package.json \

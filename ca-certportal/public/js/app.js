@@ -19,16 +19,16 @@ $(document).ready(function() {
             contentType: "application/json",
             dataType: "json",
             success: function(data) {
-                $error.hide();
-                $request.toggle();
-                $result.toggle();
+                $error.addClass("d-none");
+                $request.toggleClass("d-none");
+                $result.toggleClass("d-none");
                 $crt.val(data.certificate);
 
                 $("#download").attr("href", "data:text/plain;charset=utf-8," + encodeURIComponent(data.certificate));
                 $("#download").attr("download", "certificate.crt");
             },
             error: function(error) {
-                $error.show();
+                $error.removeClass("d-none");
             }
         });
     });
