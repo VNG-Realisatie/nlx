@@ -1,3 +1,38 @@
+# [0.79.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.78.0...v0.79.0) (2019-10-29)
+
+
+### Bug Fixes
+
+* **docs:** CSP settings [#760](https://gitlab.com/commonground/nlx/nlx/issues/760) ([c1cf973](https://gitlab.com/commonground/nlx/nlx/commit/c1cf973))
+* **docs:** fix further reading links [#760](https://gitlab.com/commonground/nlx/nlx/issues/760) ([9e9293e](https://gitlab.com/commonground/nlx/nlx/commit/9e9293e))
+* **docs:** take skaffold build context into account [#760](https://gitlab.com/commonground/nlx/nlx/issues/760) ([78fb52a](https://gitlab.com/commonground/nlx/nlx/commit/78fb52a))
+* **docs:** take skaffold build context into account [#760](https://gitlab.com/commonground/nlx/nlx/issues/760) ([3a0fbb8](https://gitlab.com/commonground/nlx/nlx/commit/3a0fbb8))
+* **docs:** update links [#760](https://gitlab.com/commonground/nlx/nlx/issues/760) ([c71fdb6](https://gitlab.com/commonground/nlx/nlx/commit/c71fdb6))
+* **docs:** update links [#760](https://gitlab.com/commonground/nlx/nlx/issues/760) ([c4ebf56](https://gitlab.com/commonground/nlx/nlx/commit/c4ebf56))
+* **docs:** update paths + change node to not run on alpine because of Docusaurus [#760](https://gitlab.com/commonground/nlx/nlx/issues/760) ([d10c438](https://gitlab.com/commonground/nlx/nlx/commit/d10c438))
+
+
+### Features
+
+* **docs:** re-add Dockerfile [#760](https://gitlab.com/commonground/nlx/nlx/issues/760) ([003caf7](https://gitlab.com/commonground/nlx/nlx/commit/003caf7))
+* replace Hugo docs website with basic Docusaurus [#760](https://gitlab.com/commonground/nlx/nlx/issues/760) ([0a1fd08](https://gitlab.com/commonground/nlx/nlx/commit/0a1fd08))
+* **docs:** add NLX docs [#760](https://gitlab.com/commonground/nlx/nlx/issues/760) ([df4e4b0](https://gitlab.com/commonground/nlx/nlx/commit/df4e4b0))
+* **docs:** enable copy code button [#760](https://gitlab.com/commonground/nlx/nlx/issues/760) ([83b4a4f](https://gitlab.com/commonground/nlx/nlx/commit/83b4a4f))
+* **docs:** enable edit button [#760](https://gitlab.com/commonground/nlx/nlx/issues/760) ([b6cb10c](https://gitlab.com/commonground/nlx/nlx/commit/b6cb10c))
+* **docs:** enable search using Algolia [#760](https://gitlab.com/commonground/nlx/nlx/issues/760) ([4748ac2](https://gitlab.com/commonground/nlx/nlx/commit/4748ac2))
+* **docs:** fix internal links [#760](https://gitlab.com/commonground/nlx/nlx/issues/760) ([3b7f075](https://gitlab.com/commonground/nlx/nlx/commit/3b7f075))
+* **docs:** nlx-ize the styling [#760](https://gitlab.com/commonground/nlx/nlx/issues/760) ([120fedc](https://gitlab.com/commonground/nlx/nlx/commit/120fedc))
+* **docs:** re-add contact to Support section [#760](https://gitlab.com/commonground/nlx/nlx/issues/760) ([4b34112](https://gitlab.com/commonground/nlx/nlx/commit/4b34112))
+* **docs:** re-add modification to the transaction log headers [#760](https://gitlab.com/commonground/nlx/nlx/issues/760) ([5730916](https://gitlab.com/commonground/nlx/nlx/commit/5730916))
+* **docs:** re-add support link to navbar [#760](https://gitlab.com/commonground/nlx/nlx/issues/760) ([b822d63](https://gitlab.com/commonground/nlx/nlx/commit/b822d63))
+* **docs:** remove default Docusaurus images [#760](https://gitlab.com/commonground/nlx/nlx/issues/760) ([8ed0e41](https://gitlab.com/commonground/nlx/nlx/commit/8ed0e41))
+* **docs:** replace logo with white variant [#760](https://gitlab.com/commonground/nlx/nlx/issues/760) ([aeeeb59](https://gitlab.com/commonground/nlx/nlx/commit/aeeeb59))
+* **docs:** update existing docs to be present in the sidebar of Docusaurus [#760](https://gitlab.com/commonground/nlx/nlx/issues/760) ([56350c4](https://gitlab.com/commonground/nlx/nlx/commit/56350c4))
+* **docs:** update favicon [#760](https://gitlab.com/commonground/nlx/nlx/issues/760) ([1236c24](https://gitlab.com/commonground/nlx/nlx/commit/1236c24))
+* **docs:** update syntax highlight theme to atom-one-dark [#760](https://gitlab.com/commonground/nlx/nlx/issues/760) ([60ec7ac](https://gitlab.com/commonground/nlx/nlx/commit/60ec7ac))
+* **docs:** use docs instead of the website as the application root URL [#760](https://gitlab.com/commonground/nlx/nlx/issues/760) ([7c68de6](https://gitlab.com/commonground/nlx/nlx/commit/7c68de6))
+* **docs:** use Prism for bash & toml code [#760](https://gitlab.com/commonground/nlx/nlx/issues/760) ([d7f38ec](https://gitlab.com/commonground/nlx/nlx/commit/d7f38ec))
+
 # [0.78.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.77.0...v0.78.0) (2019-10-23)
 
 
