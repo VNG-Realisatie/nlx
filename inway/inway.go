@@ -5,7 +5,7 @@ package inway
 
 import (
 	"context"
-	"crypto/sha1"
+	"crypto/sha256"
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/base64"
@@ -146,8 +146,8 @@ func NewInway(
 }
 
 func getFingerPrint(rawCert []byte) string {
-	rawSum := sha1.Sum(rawCert)
-	bytes := make([]byte, 20)
+	rawSum := sha256.Sum256(rawCert)
+	bytes := make([]byte, sha256.Size)
 	for i, b := range rawSum {
 		bytes[i] = b
 	}

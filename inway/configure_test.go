@@ -259,7 +259,7 @@ func TestNewInwayName(t *testing.T) {
 	iw, err := NewInway(logger, nil, testProcess, "", "", tlsOptions, "")
 	assert.Nil(t, err)
 
-	assert.Equal(t, "6R9tZX2xObmn1UkShXwtjVy-PYI=", iw.name)
+	assert.Equal(t, "LK6jY7KRymRlBpKvjENDj7byr40fOjtmQNeMumrsjCg=", iw.name)
 
 	iw, err = NewInway(logger, nil, testProcess, "inway.test", "", tlsOptions, "")
 	assert.Nil(t, err)
