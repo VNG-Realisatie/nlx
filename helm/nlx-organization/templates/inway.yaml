@@ -9,7 +9,7 @@ metadata:
   labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
 data:
   service-config.toml: |
-    {{- .Values.inway.config | nindent 4 }}
+    {{ tpl .Values.inway.config . | nindent 4 }}
 ---
 {{ end }}
 {{ if .Values.inway.rootca }}
