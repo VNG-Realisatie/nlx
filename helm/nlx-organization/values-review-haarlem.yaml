@@ -2,6 +2,7 @@ organizationName: haarlem
 servicePartOfExternalDomain: true
 
 disableLoadBalancers: true
+storageType: Ephemeral
 
 logType: local
 

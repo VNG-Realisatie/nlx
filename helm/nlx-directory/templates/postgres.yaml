@@ -6,7 +6,7 @@ metadata:
   labels: {{- include "nlx-directory.common.metadata-labels" . | nindent 4 }}
 spec:
   version: "11.1"
-  storageType: "Durable"
+  storageType: {{ .Values.storageType }}
   storage:
     accessModes:
     - ReadWriteOnce

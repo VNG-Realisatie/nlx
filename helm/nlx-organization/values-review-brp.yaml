@@ -2,6 +2,7 @@ organizationName: brp
 servicePartOfExternalDomain: true
 
 disableLoadBalancers: true
+storageType: Ephemeral
 
 logType: local
 

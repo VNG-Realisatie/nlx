@@ -1,6 +1,8 @@
 servicePartOfExternalDomain: true
 
 disableLoadBalancers: true
+storageType: Ephemeral
+
 logType: local
 
 dbDatabaseDirectory: nlx-dev-directory

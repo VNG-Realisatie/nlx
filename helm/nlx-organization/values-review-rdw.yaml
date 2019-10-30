@@ -2,6 +2,7 @@ organizationName: rdw
 servicePartOfExternalDomain: true
 
 disableLoadBalancers: true
+storageType: Ephemeral
 
 logType: local
 
