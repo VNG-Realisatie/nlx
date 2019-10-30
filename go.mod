@@ -3,7 +3,7 @@ module go.nlx.io/nlx
 require (
 	github.com/Microsoft/go-winio v0.4.14 // indirect
 	github.com/bwesterb/go-atum v1.0.1 // indirect
-	github.com/cloudflare/cfssl v0.0.0-20191028202325-40f4f514ff4f
+	github.com/cloudflare/cfssl v0.0.0-20191030221119-2318616c6faa
 	github.com/coreos/bbolt v1.3.3 // indirect
 	github.com/coreos/etcd v3.3.16+incompatible // indirect
 	github.com/coreos/go-semver v0.3.0 // indirect
@@ -24,7 +24,6 @@ require (
 	github.com/golang/groupcache v0.0.0-20191002201903-404acd9df4cc // indirect
 	github.com/golang/mock v1.3.1
 	github.com/golang/protobuf v1.3.2
-	github.com/google/certificate-transparency-go v1.0.21 // indirect
 	github.com/google/uuid v1.1.1 // indirect
 	github.com/gorilla/schema v1.1.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.1.0
@@ -36,7 +35,6 @@ require (
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/jpillora/backoff v1.0.0
 	github.com/json-iterator/go v1.1.7 // indirect
-	github.com/kisielk/sqlstruct v0.0.0-20150923205031-648daed35d49 // indirect
 	github.com/ktr0731/toml v0.3.0
 	github.com/lib/pq v1.2.0
 	github.com/magiconair/properties v1.8.1 // indirect
