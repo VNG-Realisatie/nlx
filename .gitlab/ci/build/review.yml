@@ -1,10 +1,10 @@
 Build review:
   stage: Build
   variables:
-    IMAGE_PREFIX: "${CI_REGISTRY_IMAGE}/"
+    IMAGE_PREFIX: "${REVIEW_REGISTRY_HOST}/${CI_PROJECT_PATH}/"
     IMAGE_TAG: $CI_COMMIT_SHORT_SHA
   before_script:
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker login -u $REVIEW_REGISTRY_USERNAME -p $REVIEW_REGISTRY_PASSWORD $REVIEW_REGISTRY_HOST
     - export GIT_COMMIT_HASH=$(git rev-parse HEAD)
     - export GIT_TAG_NAME=$(git describe --tags)
   script:

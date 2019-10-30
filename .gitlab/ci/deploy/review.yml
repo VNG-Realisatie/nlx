@@ -2,7 +2,7 @@ Deploy Review App:
   stage: Deploy
   image: registry.gitlab.com/commonground/cg-review-app-deployer:latest
   variables:
-    IMAGE_PREFIX: "${CI_REGISTRY_IMAGE}/"
+    IMAGE_PREFIX: "${REVIEW_REGISTRY_HOST}/${CI_PROJECT_PATH}/"
     IMAGE_TAG: $CI_COMMIT_SHORT_SHA
     REVIEW_BASE_DOMAIN: nlx.reviews
   script:
