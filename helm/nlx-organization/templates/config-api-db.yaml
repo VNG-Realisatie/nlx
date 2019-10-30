@@ -53,7 +53,7 @@ spec:
                 nlxctl init --address config-api:443 --cert /certs/{{.component}}.pem --key /certs/{{.component}}-key.pem --ca /certs/nlx_root.pem &&
                 nlxctl service create -c /service-configuration/service.json &&
                 {{ if and .Values.configAPI.irmaServerURL .Values.configAPI.insightAPIURL }}
-                nlxctl insight put --insight-api-url {{.Values.configAPI.insightAPIURL}} --irma-server-url {{.Values.configAPI.irmaServerURL}} &&
+                nlxctl insight put --insight-api-url {{ tpl .Values.configAPI.insightAPIURL . }} --irma-server-url {{ tpl .Values.configAPI.irmaServerURL . }} &&
                 {{ end }}
                 nlxctl service list
       restartPolicy: Never

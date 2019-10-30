@@ -121,8 +121,8 @@ insight:
 
 configAPI:
   enabled: true
-  insightAPIURL: https://insight-api-nlx-{{.Values.externalDomain}}
-  irmaServerURL: https://irma-api-nlx-{{.Values.externalDomain}}
+  insightAPIURL: https://insight-api-{{.Values.externalDomain}}
+  irmaServerURL: https://irma-api-{{.Values.externalDomain}}
   serviceConfig: |
     {
       "name": "kentekenregister",
