@@ -1,4 +1,4 @@
-FROM node:10.16.3 AS build
+FROM node:10.17.0 AS build
 
 ENV CI=true
 

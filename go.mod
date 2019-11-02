@@ -19,7 +19,7 @@ require (
 	github.com/go-chi/render v1.0.1
 	github.com/go-errors/errors v1.0.1 // indirect
 	github.com/go-sql-driver/mysql v1.4.1 // indirect
-	github.com/gogo/protobuf v1.3.0
+	github.com/gogo/protobuf v1.3.1
 	github.com/golang-migrate/migrate v3.5.4+incompatible
 	github.com/golang/groupcache v0.0.0-20191002201903-404acd9df4cc // indirect
 	github.com/golang/mock v1.3.1
@@ -51,16 +51,16 @@ require (
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/spf13/viper v1.4.0
+	github.com/spf13/viper v1.5.0
 	github.com/stretchr/testify v1.4.0
 	github.com/svent/go-flags v0.0.0-20141123140740-4bcbad344f03
 	github.com/timshannon/bolthold v0.0.0-20191009161117-ccb01ed9dec4 // indirect
 	github.com/weppos/publicsuffix-go v0.10.0 // indirect
 	github.com/zmap/zlint v1.0.2 // indirect
 	go.etcd.io/bbolt v1.3.3 // indirect
-	go.etcd.io/etcd v3.3.16+incompatible
+	go.etcd.io/etcd v3.4.3+incompatible
 	go.uber.org/multierr v1.2.0 // indirect
-	go.uber.org/zap v1.10.0
+	go.uber.org/zap v1.12.0
 	golang.org/x/crypto v0.0.0-20191002192127-34f69633bfdc // indirect
 	golang.org/x/net v0.0.0-20191028085509-fe3aa8a45271
 	golang.org/x/sys v0.0.0-20191009170203-06d7bd2c5f4f // indirect
@@ -68,7 +68,7 @@ require (
 	google.golang.org/genproto v0.0.0-20191028173616-919d9bdd9fe6
 	google.golang.org/grpc v1.24.0
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
-	gotest.tools v2.2.0+incompatible
+	gotest.tools v2.3.0+incompatible
 	sigs.k8s.io/yaml v1.1.0 // indirect
 )
 
