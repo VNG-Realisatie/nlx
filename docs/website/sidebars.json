@@ -3,8 +3,7 @@
     "Welcome": [
       "introduction",
       "introduction/security",
-      "introduction/product-vision",
-      "introduction/compliancy"
+      "introduction/product-vision"
     ],
     "Get started": [
       "get-started",
@@ -27,6 +26,14 @@
       "further-reading/environments",
       "further-reading/production"
     ],
-    "Glossary": ["glossary"]
+    "Glossary": [
+      "glossary"
+    ],
+    "Compliancy": [
+      "compliancy/eif",
+      "compliancy/eidas",
+      "compliancy/accessibility",
+      "compliancy/gdpr"
+    ]
   }
 }
