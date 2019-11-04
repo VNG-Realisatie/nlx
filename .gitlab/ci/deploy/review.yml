@@ -1,6 +1,6 @@
 Deploy Review App:
   stage: Deploy
-  image: registry.gitlab.com/commonground/cg-review-app-deployer:latest
+  image: registry.gitlab.com/commonground/core/review-app-deployer:latest
   variables:
     IMAGE_PREFIX: "${REVIEW_REGISTRY_HOST}/${CI_PROJECT_PATH}/"
     IMAGE_TAG: $CI_COMMIT_SHORT_SHA
@@ -65,7 +65,7 @@ Deploy Review App:
 
 Remove Review App:
   stage: Deploy
-  image: registry.gitlab.com/commonground/cg-review-app-deployer:latest
+  image: registry.gitlab.com/commonground/core/review-app-deployer:latest
   variables:
     GIT_STRATEGY: none
   script:
