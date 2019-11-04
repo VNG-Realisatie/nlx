@@ -5,7 +5,7 @@ require (
 	github.com/bwesterb/go-atum v1.0.1 // indirect
 	github.com/cloudflare/cfssl v0.0.0-20191030221119-2318616c6faa
 	github.com/coreos/bbolt v1.3.3 // indirect
-	github.com/coreos/etcd v3.3.16+incompatible // indirect
+	github.com/coreos/etcd v3.3.16+incompatible
 	github.com/coreos/go-semver v0.3.0 // indirect
 	github.com/coreos/go-systemd v0.0.0-20190719114852-fd7a80b32e1f // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
@@ -37,7 +37,6 @@ require (
 	github.com/json-iterator/go v1.1.7 // indirect
 	github.com/ktr0731/toml v0.3.0
 	github.com/lib/pq v1.2.0
-	github.com/magiconair/properties v1.8.1 // indirect
 	github.com/mattn/go-sqlite3 v1.11.0 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect
@@ -58,8 +57,6 @@ require (
 	github.com/weppos/publicsuffix-go v0.10.0 // indirect
 	github.com/zmap/zlint v1.0.2 // indirect
 	go.etcd.io/bbolt v1.3.3 // indirect
-	go.etcd.io/etcd v3.4.3+incompatible
-	go.uber.org/multierr v1.2.0 // indirect
 	go.uber.org/zap v1.12.0
 	golang.org/x/crypto v0.0.0-20191002192127-34f69633bfdc // indirect
 	golang.org/x/net v0.0.0-20191028085509-fe3aa8a45271

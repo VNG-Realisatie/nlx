@@ -9,8 +9,8 @@ import (
 	"go.nlx.io/nlx/config-api/configapi"
 
 	"github.com/stretchr/testify/assert"
-	"go.etcd.io/etcd/clientv3"
-	"go.etcd.io/etcd/integration"
+	"github.com/coreos/etcd/clientv3"
+	"github.com/coreos/etcd/integration"
 	"go.nlx.io/nlx/common/process"
 	"go.uber.org/zap"
 )

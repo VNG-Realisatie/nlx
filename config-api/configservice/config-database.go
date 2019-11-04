@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"go.etcd.io/etcd/clientv3"
+	"github.com/coreos/etcd/clientv3"
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/process"
