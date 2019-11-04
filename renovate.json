@@ -5,5 +5,13 @@
     "schedule:nonOfficeHours",
     "group:allNonMajor"
   ],
-  "postUpdateOptions": ["gomodTidy"]
+  "postUpdateOptions": [
+    "gomodTidy"
+  ],
+  "masterIssue": true,
+  "gomod": {
+    "major": {
+      "masterIssueApproval": true
+    }
+  }
 }
