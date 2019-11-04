@@ -20,8 +20,8 @@ import (
 	"go.nlx.io/nlx/directory-db/dbversion"
 
 	"github.com/fgrosse/zaptest"
+	"github.com/stretchr/testify/assert"
 	"go.nlx.io/nlx/common/orgtls"
-	"gotest.tools/assert"
 )
 
 var db *sql.DB
