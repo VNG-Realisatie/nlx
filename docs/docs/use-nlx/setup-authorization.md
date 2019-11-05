@@ -1,6 +1,6 @@
 ---
-id: authorization
-title: Authorization
+id: setup-authorization
+title: Setup authorization
 ---
 
 ## Introduction
@@ -26,7 +26,7 @@ A reference implementation has also been made available in the [NLX repository](
 
 ### Configuring the outway
 
-After you have implemented the `authorization interface` on your authorization service, you will have to configure the outway to use it. This can be done by setting the environment variable `AUTHORIZATION_SERVICE_ADDRESS` in the docker image of the outway. This variable should contain the URL of your authorization service.
+After you have implemented the authorization interface on your authorization service, you will have to configure the outway to use it. This can be done by setting the environment variable `AUTHORIZATION_SERVICE_ADDRESS` in the docker image of the outway. This variable should contain the URL of your authorization service.
 For example, the URL of our authorization service is `https://auth.nlx.io`, we can start the outway by running the following docker command:
 
 ```bash
@@ -61,17 +61,17 @@ HTTP-headers are used to pass around authorization information. NLX provides a s
 ### Introduction
 
 When you want to restrict which organization can consume your services, you can setup authorization on the inway.
-Inways have the ability to provide authorization on an organization level per service. This means you can tell an inway which organizations can access each of its services, this is done by whitelisting organizations. 
+Inways have the ability to provide authorization on an organization level per service. This means you can tell an inway which organizations can access each of its services, this is done by whitelisting organizations.
 
 ### How does it work
 
-When starting an [inway](../../get-start/provide-an-api), you define the services that this inway will expose to the NLX network. You can configure which organizations are authorized to access each service.
-In order to access a service provided by an inway, an outway is needed. This outway is owned by an organization. The name of its organization is registered in its TLS certificate. 
+When starting an [inway](../try-nlx/provide-an-api.md#setting-up-the-inway), you define the services that this inway will expose to the NLX network. You can configure which organizations are authorized to access each service.
+In order to access a service provided by an inway, an outway is needed. This outway is owned by an organization. The name of its organization is registered in its TLS certificate.
 Once a request is received by the inway, it will extract the organization name from the certificate of the requesting outway and check if it is present in the list of authorized organizations.
-The request will be authorized by the inway, only if the organization is whitelisted. 
+The request will be authorized by the inway, only if the organization is whitelisted.
 
 
 ## Configuring the inway
 
-You can configure authorization on an inway by using the `authorization-model` and `authorization-whitelist` options in the [service configuration](../service-configuration/). 
+You can configure authorization on an inway by using the `authorization-model` and `authorization-whitelist` options in the [service configuration](../reference-information/service-configuration.md).
 

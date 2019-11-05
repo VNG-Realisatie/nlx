@@ -24,8 +24,8 @@ Below is an example configuration named `service-config.toml`.
     ca-cert-path = "/path/to/custom-root-ca.crt"
 ```
 # Service configuration fields
-## endpoint-url 
-***Required***   
+## endpoint-url
+***Required***
 Should be set to the address at which the API is available. Please make sure the inway can reach the API on this address!
 
 ***Example***
@@ -42,8 +42,8 @@ documentation-url = "https://petstore.swagger.io"
 ```
 
 ## api-specification-document-url
-If there is an [OpenAPI Specification](https://swagger.io/specification/)(OAS) available for the exposed API you can supply an URL to the OAS in this field. The OAS will be published to the [directory](https://directory.nlx.io).
-When using the [ca-cert-path](#field-ca-cert-path) option, the server behind this URL should provide a certificate signed by that root certifictate. 
+If there is an [OpenAPI Specification](https://swagger.io/specification/) (OAS) available for the exposed API you can supply an URL to the OAS in this field. The OAS will be published to the [directory](https://directory.nlx.io).
+When using the [ca-cert-path](#field-ca-cert-path) option, the server behind this URL should provide a certificate signed by that root certifictate.
 The following OAS versions are supported: 2.0, 3.0.0, 3.0.1, 3.0.2
 
 ***Example***
@@ -53,7 +53,7 @@ api-specification-document-url = "https://petstore.swagger.io/swagger.json"
 
 <a name="field-authorization-model"></a>
 ## authorization-model
-***Required***  
+***Required***
 The authorization model tells the inway how to authorise outways who are trying to consume this service.
 Currently there are two options available:
 
@@ -75,8 +75,8 @@ authorization-whitelist = ["DemoRequesterOrganization1", "DemoRequesterOrganizat
 ```
 
 <a name="field-ca-cert-path"></a>
-## ca-cert-path 
-Can be used if the API you are trying to expose is providing a TLS certificate signed by a custom root certificate. The root certificate has to be available on the machine running the inway and the absolute path to the root certificate should be the value of this field.  
+## ca-cert-path
+Can be used if the API you are trying to expose is providing a TLS certificate signed by a custom root certificate. The root certificate has to be available on the machine running the inway and the absolute path to the root certificate should be the value of this field.
 
 ***Example***
 ```toml
@@ -91,7 +91,7 @@ Contains an email address which NLX users can contact if they need your support 
 public-support-contact = "support@my-organization.nl"
 ```
 
-## tech-support-contact  
+## tech-support-contact
 Contains an email address which we (the NLX organization) can contact if we have any questions about your API.
 This email address will NOT be published in the directory.
 

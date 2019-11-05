@@ -27,9 +27,9 @@ const siteConfig = {
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
     {href: 'https://nlx.io/about/', label: 'Over NLX'},
-    {doc: 'introduction', label: 'Docs'},
+    {doc: 'understanding-the-basics/introduction', label: 'Docs'},
     {href: 'https://directory.demo.nlx.io/', label: 'Directory'},
-    {doc: 'support', label: 'Support'},
+    {doc: 'support/support', label: 'Support'},
   ],
 
   /* path to images for header/footer */

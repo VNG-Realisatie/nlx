@@ -25,13 +25,13 @@ To reduce integration costs and simplify building component based software syste
 Starting with NLX implies starting with API’s. More specific it's starting with
 generic API’s instead of one-off integration solutions. NLX is useful for both
 organizations that want to consume API's and organizations that want to
-provider API's to other consuming organizations.  
+provider API's to other consuming organizations.
 
 NLX is developed mainly by VNG Realisatie, but anyone can contribute on Gitlab.
 To start using NLX, it is not necessary to contribute to NLX development, since
 NLX can be installed 'as is'. A good way to start is by reading the
-documentation and having your system engineers or suppliers follow the getting
-started guides [(link)](https://docs.nlx.io/get-started/) to learn the concepts
+documentation and having your system engineers or suppliers follow the
+[Try NLX guide](../try-nlx/setup-your-environment.md) to learn the concepts
 of NLX and set up the first test implementation. Some knowledge of IT, the
 internet, API's and security is required. The NLX team is available through
 Gitlab for support to developers.

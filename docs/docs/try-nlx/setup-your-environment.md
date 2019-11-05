@@ -1,6 +1,6 @@
 ---
 id: setup-your-environment
-title: Part 1: Setup your environment
+title: Setup your environment
 ---
 
 
@@ -22,7 +22,7 @@ In order to succesfully execute all commands in this guide make sure you are usi
 
 You can download Docker for Windows [here](https://hub.docker.com?overlay=onboarding). Please note that you will have to create a free DockerHub account before you can download Docker. Docker requires hyper-V to be enabled and Docker will ask you to enable it on start-up if this does not happen you can enable it yourself by running following command in PowerShell
 
-> You can also download Docker directly [here](https://download.docker.com/win/stable/Docker%20for%20Windows%20Installer.exe) 
+> You can also download Docker directly [here](https://download.docker.com/win/stable/Docker%20for%20Windows%20Installer.exe).
 
 ```bash
 Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
@@ -49,7 +49,6 @@ if the installation was succesful OpenSSL should print its version number.
 
 ## Working directory
 
-All steps in the guide assume you're located in the `~/nlx-setup` directory.
 You can use any directory you want. Just make sure to update the example commands of all future commands accordingly.
 
 First, let's navigate to our home directory.
@@ -77,6 +76,4 @@ The output should be:
 * For Mac & Windows: `/Users/<your-username>/nlx-setup`
 * For Linux: `/home/<your-username>/nlx-setup`
 
-All commands further down this guide assume you are located in this directory.
-
-The Next step is to create some certificates [part 2](../create-certificates/).
+All commands later in this guide assume you are located in this directory.

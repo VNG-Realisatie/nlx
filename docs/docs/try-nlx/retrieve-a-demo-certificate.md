@@ -1,6 +1,6 @@
 ---
-id: create-certificates
-title: Part 2: Create certificates
+id: retrieve-a-demo-certificate
+title: Retrieve a demo certificate
 ---
 
 ## Introduction
@@ -71,7 +71,7 @@ If all of the above went well, you should see at least two files listed:
 * org.csr
 * org.key
 
-## Request the demo certificate
+## Retrieve the certificate
 
 We will use the NLX certportal to retrieve an NLX developer certificate.
 

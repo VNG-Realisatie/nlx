@@ -1,17 +1,17 @@
 ---
 id: provide-an-api
-title: Part 4: Provide an API
+title: Provide an API
 ---
 
 ## Introduction
 
 To provide an API to the NLX network, you need to route traffic through an **inway** service.
-To make sure traffic is encrypted between your and other nodes, we will use the certificate which we've setup in [part 2](./create-certificates.md).
+To make sure traffic is encrypted between your and other nodes, we will use the certificate which we've setup in [part 2](./retrieve-a-demo-certificate.md).
 
 Please note that:
 
 * You need a domain name to provide an inway (an IP address will not work).
-* The domain should be the same as the domain you used to generate the certificates (that was in [part 2](./create-certificates.md)).
+* The domain should be the same as the domain you used to generate the certificates (that was in [part 2](./retrieve-a-demo-certificate.md)).
 
 It is not recommended to follow this guide when you're working from your home network.
 Preferably, you are able to start the inway service on a machine which is publicly available. Make sure and the port of the inway (we recommend using port 443) is open to the public.
@@ -20,7 +20,7 @@ Preferably, you are able to start the inway service on a machine which is public
 
 In the following example we will use [Swagger Petstore](https://petstore.swagger.io) as an example API.
 
-We have to define our API in a TOML-file. You can save the contents below as `service-config.toml`. Please read our documentation about the [service configuration](../further-reading/service-configuration.md) to learn more about the configuration options.
+We have to define our API in a TOML-file. You can save the contents below as `service-config.toml`. Please read our documentation about the [service configuration](../reference-information/service-configuration.md) to learn more about the configuration options.
 
 ```toml
 [services]
@@ -43,8 +43,8 @@ We have to define our API in a TOML-file. You can save the contents below as `se
     # `api-specification-document-url` defines the specification document for the API.
     # When using the `ca-cert-path` option, the server behind this URL should provide a certificate signed by that root certifictate. 
     api-specification-document-url = "https://petstore.swagger.io/swagger.json"
-    
-    # `ca-cert-path` can be used when the server behind the endpoint url is providing a TLS certificate signed by a custom root certificate. 
+
+    # `ca-cert-path` can be used when the server behind the endpoint url is providing a TLS certificate signed by a custom root certificate.
     # ca-cert-path = "/path/to/custom-root-ca.crt"
 
     # `public-support-contact` contains an email address which NLX users can contact if they need support using your API.

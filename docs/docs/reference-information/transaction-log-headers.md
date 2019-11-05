@@ -17,33 +17,3 @@ The headers set by the application are optional.
 All request headers are logged before the request leaves the outway. The fields `X-NLX-Requester-User-Id`, `X-NLX-Request-Application-Id`, `X-NLX-Request-Subject-Identifier`, `X-NLX-Requester-Claims` and `X-NLX-Request-User` are stripped off the request before it is forwarded to the inway.
 
 The value of a `X-NLX-*` header is limited to 1024 characters.
-
-Logging is done to stdout in JSON format. You can use for example [fluentd](https://www.fluentd.org/) to collect the logs from the containers and forward them to a store. This is an example configuration for fluentd when using Kubernetes:
-
-```
-<match fluent.**>
-@type null
-</match>
-
-<source>
-@type tail
-path /var/log/containers/*.log
-pos_file /var/log/fluentd-containers.log.pos
-time_format %Y-%m-%dT%H:%M:%S.%NZ
-tag kubernetes.*
-format json
-read_from_head true
-</source>
-
-<filter kubernetes.**>
-@type kubernetes_metadata
-</filter>
-
-<match kubernetes.var.log.containers.**fluentd**.log>
-@type null
-</match>
-
-<match kubernetes.var.log.containers.**kube-system**.log>
-@type null
-</match>
-```

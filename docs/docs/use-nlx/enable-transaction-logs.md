@@ -1,11 +1,11 @@
 ---
-id: setup-transaction-logs
-title: Setup transaction logs
+id: enable-transaction-logs
+title: Enable transaction logs
 ---
 
 ## Before you start
 
-- Make sure you read our [Get started](../../get-started/setup-your-environment) guide.
+- Make sure you read our [try NLX](../try-nlx/setup-your-environment.md) guide.
 - Make sure you have installed a recent version of [Docker-Compose](https://docs.docker.com/compose/install/).
 - Make sure you have installed a recent version of [Git](https://git-scm.com/downloads).
 
@@ -54,9 +54,9 @@ As you can see there are nog logs yet.
 
 ## Connect an outway to the transaction log
 
-The next step is to connect an inway or an outway to the database. If you've followed the [Get started](../../get-started/setup-your-environment) guide you will either have an inway or an outway running. In this example we will connect the transaction log to the outway setup in the [Get started](../../get-started/consume-an-api) guide.
+The next step is to connect an inway or an outway to the database. If you've followed the [Try NLX](../try-nlx/setup-your-environment.md) guide you will either have an inway or an outway running. In this example we will connect the transaction log to the outway setup in the [Try NLX - consume an API](../try-nlx/consume-an-api.md) guide.
 
-If your outway from the [Get started](../../get-started/consume-an-api) guide is still running, you will have to stop it first.
+If your outway from the [Try NLX](../try-nlx/consume-an-api) guide is still running, you will have to stop it first.
 
 execute
 
@@ -82,7 +82,7 @@ docker run --rm \
   nlxio/outway:latest
 ```
 
-There are some key differences in the Docker command compared to the one used to start the outway in [Get started](../../get-started/consume-an-api).
+There are some key differences in the Docker command compared to the one used to start the outway in [Try NLX - consume an API](../try-nlx/consume-an-api.md).
 
 We will go over them briefly
 

@@ -1,33 +1,29 @@
 {
   "docs": {
-    "Welcome": [
-      "introduction",
-      "introduction/security",
-      "introduction/product-vision"
+    "Understanding the basics": [
+      "understanding-the-basics/introduction",
+      "understanding-the-basics/security",
+      "understanding-the-basics/product-vision"
     ],
-    "Get started": [
-      "get-started",
-      "get-started/setup-your-environment",
-      "get-started/create-certificates",
-      "get-started/consume-an-api",
-      "get-started/provide-an-api"
+    "Try NLX": [
+      "try-nlx/setup-your-environment",
+      "try-nlx/retrieve-a-demo-certificate",
+      "try-nlx/consume-an-api",
+      "try-nlx/provide-an-api"
+    ],
+    "Use NLX": [
+      "use-nlx/request-a-production-cert",
+      "use-nlx/enable-transaction-logs",
+      "use-nlx/setup-authorization"
+    ],
+    "Reference information": [
+      "reference-information/service-configuration",
+      "reference-information/transaction-log-headers"
     ],
     "Support": [
-      "support",
+      "support/support",
       "support/common-errors",
       "support/contact"
-    ],
-    "Further reading": [
-      "further-reading",
-      "further-reading/setup-transaction-logs",
-      "further-reading/transaction-log-headers",
-      "further-reading/service-configuration",
-      "further-reading/authorization",
-      "further-reading/environments",
-      "further-reading/production"
-    ],
-    "Glossary": [
-      "glossary"
     ],
     "Compliancy": [
       "compliancy/eif",
