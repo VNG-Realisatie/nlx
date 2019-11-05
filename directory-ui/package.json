@@ -14,7 +14,7 @@
     "react-dom": "16.11.0",
     "react-router-dom": "5.1.2",
     "react-scripts": "3.2.0",
-    "redoc": "2.0.0-rc.15",
+    "redoc": "2.0.0-rc.18",
     "styled-components": "4.4.1"
   },
   "scripts": {

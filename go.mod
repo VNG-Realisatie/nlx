@@ -27,7 +27,7 @@ require (
 	github.com/google/uuid v1.1.1 // indirect
 	github.com/gorilla/schema v1.1.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.1.0
-	github.com/grpc-ecosystem/grpc-gateway v1.11.3
+	github.com/grpc-ecosystem/grpc-gateway v1.12.0
 	github.com/hashicorp/go-retryablehttp v0.6.2 // indirect
 	github.com/huandu/xstrings v1.2.0
 	github.com/jasonlvhit/gocron v0.0.0-20191007145845-57f89394836a // indirect
