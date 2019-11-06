@@ -9,7 +9,8 @@ Deploy demo, preprod & prod:
   script:
     - skaffold run --profile demo
     - skaffold run --profile preprod
-    - skaffold run --profile prod | ./docker-tag-latest.awk
+    - skaffold run --profile prod
+    - skaffold build --profile prod | ./docker-tag-latest.awk
   only:
     - tags
   when: manual
