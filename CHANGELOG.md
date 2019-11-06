@@ -1,3 +1,19 @@
+## [0.79.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.79.0...v0.79.1) (2019-11-06)
+
+
+### Bug Fixes
+
+* Clean user provided path ([7024cb4](https://gitlab.com/commonground/nlx/nlx/commit/7024cb48ef4331cd827379f3bdc84627470de72a))
+* **deps:** switch to github.com/coreos/etcd for now due to version issues ([8503a62](https://gitlab.com/commonground/nlx/nlx/commit/8503a62054eab272e514182d2bcbc1eb82b7693f))
+* **deps:** update all non-major dependencies ([0dab644](https://gitlab.com/commonground/nlx/nlx/commit/0dab6444515fd9f20782e348ffc360abf01a8566))
+* **deps:** update dependency formik to v2 ([d982695](https://gitlab.com/commonground/nlx/nlx/commit/d98269512070ae4fc95d41f9ffd17957844eb162))
+* **deps:** update redoc to 2.0.0-rc.15 ([481958e](https://gitlab.com/commonground/nlx/nlx/commit/481958e027b27631470be28363618b21b026ae48))
+* **deps:** use only one assert package ([a9391a9](https://gitlab.com/commonground/nlx/nlx/commit/a9391a9f6341d49d9489583625056da26572a839))
+* **directory-inspection-api:** Ignore gosec G402 for local connection ([037c515](https://gitlab.com/commonground/nlx/nlx/commit/037c5158575cd8587fa5ab3b8502ec291e4c54ab))
+* **inway:** Use SHA264 when no inway name is provided ([0aec4a6](https://gitlab.com/commonground/nlx/nlx/commit/0aec4a679911c1a257b3e6971b31b8b1f763bc2e))
+* E2E test acceptance url ([2f1bb07](https://gitlab.com/commonground/nlx/nlx/commit/2f1bb07ec3eee511048ee4ee0feaf47ed7487257))
+* More strict security headers ([2ca5d81](https://gitlab.com/commonground/nlx/nlx/commit/2ca5d81ebf9f7b389b14a713de0c7ef028b2f4da))
+
 # [0.79.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.78.0...v0.79.0) (2019-10-29)
 
 
