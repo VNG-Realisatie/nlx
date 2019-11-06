@@ -11,11 +11,8 @@ The insight-ui provides a human-readable view of information exchanged between t
   # see NLX (root) readme how to setup local backend environment
   npm start
 
-  # run in dev mode (proxy to https://directory.test.nlx.io/)
+  # run in dev mode (proxy to https://directory.acc.nlx.io/)
   npm run dev
-
-  # run in acc mode (proxy to https://directory.acc.nlx.io/)
-  npm run acc
 
   # run in demo mode (proxy to https://directory.demo.nlx.io/)
   npm run demo

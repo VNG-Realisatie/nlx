@@ -41,7 +41,7 @@
     "prettier": "1.18.2"
   },
   "proxy-local": "https://directory.dev.nlx.minikube:30443",
-  "proxy": "https://directory.test.nlx.io",
+  "proxy": "https://directory.acc.nlx.io",
   "browserslist": [
     ">0.2%",
     "not dead",
