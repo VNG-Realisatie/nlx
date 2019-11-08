@@ -258,6 +258,10 @@ A new production release is done by trigging the manual release job on the maste
 
 After deployment, a manual check is done to check if everything still works as intended.
 
+#### 3.2.8. Version skew policy
+
+For the internal interfaces of the NLX system we have a version skew policy for MAJOR/MINOR releases of `n-2`. So for example a component of version 1.5 is able to communicate with a component of version 1.3 and a component of version 2.0 is able to communicate with the last two minor versions of the 1.x series.
+
 
 ### 3.3. Communication
 

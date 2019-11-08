@@ -14,7 +14,8 @@
     "Use NLX": [
       "use-nlx/request-a-production-cert",
       "use-nlx/enable-transaction-logs",
-      "use-nlx/setup-authorization"
+      "use-nlx/setup-authorization",
+      "use-nlx/new-releases"
     ],
     "Reference information": [
       "reference-information/service-configuration",
