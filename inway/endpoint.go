@@ -81,6 +81,16 @@ func (iw *Inway) NewHTTPServiceEndpoint(serviceName string, serviceDetails *conf
 	h.proxy = httputil.NewSingleHostReverseProxy(endpointURL)
 	h.proxy.Transport = newRoundTripHTTPTransport(tlsConfig)
 	h.proxy.ErrorHandler = iw.LogAPIErrors
+
+	switch serviceDetails.AuthorizationModel {
+	case "none", "":
+		h.SetAuthorizationPublic()
+	case "whitelist":
+		h.SetAuthorizationWhitelist(serviceDetails.AuthorizationWhitelist)
+	default:
+		iw.logger.Error(fmt.Sprintf(`invalid authorization model "%s" for service "%s"`, serviceDetails.AuthorizationModel, serviceName))
+	}
+
 	return h, nil
 }
 

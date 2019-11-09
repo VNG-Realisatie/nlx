@@ -189,6 +189,7 @@ func (i *Inway) createServiceEndpoints(response *configapi.ListServicesResponse)
 			i.logger.Error("cannot create HTTPServiceEndpoint from service configuration", zap.Error(err))
 			continue
 		}
+
 		endPoints[c] = endpoint
 		c++
 	}

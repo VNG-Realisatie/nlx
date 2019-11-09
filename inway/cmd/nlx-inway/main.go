@@ -151,14 +151,6 @@ func loadServices(logger *zap.Logger, serviceConfig *config.ServiceConfig, iw *i
 		if errr != nil {
 			logger.Fatal("failed to create service", zap.Error(err))
 		}
-		switch serviceDetails.AuthorizationModel {
-		case "none", "":
-			endpoint.SetAuthorizationPublic()
-		case "whitelist":
-			endpoint.SetAuthorizationWhitelist(serviceDetails.AuthorizationWhitelist)
-		default:
-			logger.Fatal(fmt.Sprintf(`invalid authorization model "%s" for service "%s"`, serviceDetails.AuthorizationModel, serviceName))
-		}
 
 		serviceEndpoints[i] = endpoint
 		i++

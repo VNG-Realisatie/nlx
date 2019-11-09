@@ -83,7 +83,8 @@ func TestInwaySetServiceEndpoints(t *testing.T) {
 	assert.Nil(t, err)
 
 	serviceDetails := &config.ServiceDetails{
-		EndpointURL: "12://invalid-endpoint",
+		EndpointURL:        "12://invalid-endpoint",
+		AuthorizationModel: "none",
 	}
 
 	// Test NewHTTPServiceEnpoint with invalid url
@@ -94,7 +95,8 @@ func TestInwaySetServiceEndpoints(t *testing.T) {
 		"invalid endpoint provided: parse 12://invalid-endpoint: first path segment in URL cannot contain colon")
 
 	serviceDetails = &config.ServiceDetails{
-		EndpointURL: "127.0.0.1",
+		EndpointURL:        "127.0.0.1",
+		AuthorizationModel: "none",
 	}
 
 	// Test NewHTTPServiceEndpoint

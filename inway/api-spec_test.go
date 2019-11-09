@@ -67,17 +67,9 @@ func TestInwayApiSpec(t *testing.T) {
 		endpoint, err := iw.NewHTTPServiceEndpoint(serviceName, &serviceDetails, nil)
 		assert.Nil(t, err)
 
-		switch serviceDetails.AuthorizationModel {
-		case config.AuthorizationmodelNone, "":
-			endpoint.SetAuthorizationPublic()
-		case config.AuthorizationmodelWhitelist:
-			endpoint.SetAuthorizationWhitelist(serviceDetails.AuthorizationWhitelist)
-		default:
-			logger.Fatal(fmt.Sprintf(`invalid authorization model "%s" for service "%s"`, serviceDetails.AuthorizationModel, serviceName))
-		}
 		endPoints = append(endPoints, endpoint)
-
 	}
+
 	err = iw.SetServiceEndpoints(endPoints)
 	if err != nil {
 		t.Fatal("error adding endpoint", err)

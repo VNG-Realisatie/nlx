@@ -62,15 +62,6 @@ func newTestEnv(t *testing.T, tlsOptions orgtls.TLSOptions) (proxy, mock *httpte
 			t.Fatal("failed to create service endpoint", err)
 		}
 
-		switch serviceDetails.AuthorizationModel {
-		case "none", "":
-			endpoint.SetAuthorizationPublic()
-		case "whitelist":
-			endpoint.SetAuthorizationWhitelist(serviceDetails.AuthorizationWhitelist)
-		default:
-			logger.Fatal(fmt.Sprintf(`invalid authorization model "%s" for service "%s"`, serviceDetails.AuthorizationModel, serviceName))
-		}
-
 		endPoints = append(endPoints, endpoint)
 	}
 
