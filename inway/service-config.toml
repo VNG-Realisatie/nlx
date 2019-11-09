@@ -12,7 +12,7 @@
 	## `documentation-url` points to the documentation for provided service
 	documentation-url = "https://docs.postman-echo.com/"
 
-	## `authorization-model` none or whitelist
+	# `authorization-model` can be whitelist or none (allow all)
 	authorization-model = "none"
 
 	## For testing purposes, we define a second service which exposes the postman-echo.com API.

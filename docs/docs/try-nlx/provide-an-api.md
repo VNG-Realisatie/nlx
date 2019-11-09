@@ -37,11 +37,11 @@ We have to define our API in a TOML-file. You can save the contents below as `se
     # `documentation-url` should point to the documentation for the API
     documentation-url = "https://petstore.swagger.io"
 
-    # `authorization-model` can or whitelist
+    # `authorization-model` can be whitelist or none (allow all)
     authorization-model = "none"
 
     # `api-specification-document-url` defines the specification document for the API.
-    # When using the `ca-cert-path` option, the server behind this URL should provide a certificate signed by that root certifictate. 
+    # When using the `ca-cert-path` option, the server behind this URL should provide a certificate signed by that root certificate.
     api-specification-document-url = "https://petstore.swagger.io/swagger.json"
 
     # `ca-cert-path` can be used when the server behind the endpoint url is providing a TLS certificate signed by a custom root certificate.
