@@ -6,7 +6,7 @@
   "dependencies": {},
   "devDependencies": {
     "@semantic-release/changelog": "3.0.5",
-    "@semantic-release/gitlab": "4.0.3",
+    "@semantic-release/gitlab": "4.0.4",
     "@semantic-release/git": "7.0.18",
     "semantic-release": "15.13.30"
   },
