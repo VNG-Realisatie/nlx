@@ -47,6 +47,7 @@ func newRegisterInwayHandler(
 
 	h.httpClient = nlxhttp.NewHTTPClient(rootCA, certKeyPair)
 
+	// TODO add inway version, find appropriate table
 	// NOTE: We do not have an endpoint yet to create services separately, therefore insert on demand.
 	h.stmtInsertAvailability, err = db.Preparex(`
 		WITH org AS (
@@ -70,8 +71,8 @@ func newRegisterInwayHandler(
 						tech_support_contact = EXCLUDED.tech_support_contact
 					RETURNING id
 		), inway AS (
-			INSERT INTO directory.inways (organization_id, address)
-				SELECT org.id, $6
+			INSERT INTO directory.inways (organization_id, address, version)
+				SELECT org.id, $6, NULLIF($11, '')
 					FROM org
 				ON CONFLICT ON CONSTRAINT inways_uq_address
 					DO UPDATE SET address = EXCLUDED.address -- no-op update to return id
@@ -106,6 +107,7 @@ func (h *RegisterInwayHandler) InsertInway(
 		"",
 		"",
 		"",
+		"",
 	)
 	if err != nil {
 		h.logger.Error("database insert failed", zap.Error(err))
@@ -114,7 +116,7 @@ func (h *RegisterInwayHandler) InsertInway(
 }
 
 func (h *RegisterInwayHandler) RegisterInway(ctx context.Context, req *registrationapi.RegisterInwayRequest) (*registrationapi.RegisterInwayResponse, error) {
-	h.logger.Info("rpc request RegisterInway", zap.String("inway address", req.InwayAddress))
+	h.logger.Info("rpc request RegisterInway", zap.String("inway address", req.InwayAddress), zap.String("inway version", req.InwayVersion))
 	resp := &registrationapi.RegisterInwayResponse{}
 	organizationName, err := getOrganisationNameFromRequest(ctx)
 	if err != nil {
@@ -157,6 +159,7 @@ func (h *RegisterInwayHandler) RegisterInway(ctx context.Context, req *registrat
 			service.IrmaApiUrl,
 			service.PublicSupportContact,
 			service.TechSupportContact,
+			req.InwayVersion,
 		)
 
 		if err != nil {

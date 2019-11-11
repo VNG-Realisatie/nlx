@@ -33,6 +33,7 @@ message RegisterInwayRequest {
 
 	string inway_address = 1;
 	repeated RegisterService services = 2;
+	string inway_version = 3;
 }
 
 message Empty {}

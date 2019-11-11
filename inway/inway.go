@@ -13,6 +13,8 @@ import (
 	"sync"
 	"time"
 
+	"go.nlx.io/nlx/common/version"
+
 	"github.com/jmoiron/sqlx"
 	"github.com/jpillora/backoff"
 	"github.com/pkg/errors"
@@ -178,6 +180,7 @@ func (i *Inway) announceToDirectory(s ServiceEndpoint) {
 				serviceDetails := s.ServiceDetails()
 				resp, err := i.directoryRegistrationClient.RegisterInway(context.Background(), &registrationapi.RegisterInwayRequest{
 					InwayAddress: i.selfAddress,
+					InwayVersion: version.BuildVersion,
 					Services: []*registrationapi.RegisterInwayRequest_RegisterService{
 						{
 							Name:                        s.ServiceName(),

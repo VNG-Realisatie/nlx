@@ -307,7 +307,6 @@ func (h *healthChecker) checkInwayStatus(av availability) {
 	}
 
 	h.updateAvailabilityHealth(av, status.Healthy)
-	h.updateInwayVersion(av, status.Version)
 }
 
 func (h *healthChecker) updateAvailabilityHealth(av availability, newHealth bool) {
@@ -328,26 +327,5 @@ func (h *healthChecker) updateAvailabilityHealth(av availability, newHealth bool
 		} else {
 			h.logger.Info(fmt.Sprintf("inway %s.%s>%s became healthy", av.OrganizationName, av.ServiceName, av.Address))
 		}
-	}
-}
-
-func (h *healthChecker) updateInwayVersion(av availability, version string) {
-	if version == "" {
-		h.logger.Info("no inway version recieved")
-		return
-	}
-	res, err := h.stmtUpdateInwayVersion.Exec(av.InwayID, version)
-	if err != nil {
-		h.logger.Error("failed to update inway version in db", zap.Error(err))
-		return
-	}
-	rowsAffected, err := res.RowsAffected()
-	if err != nil {
-		h.logger.Error("failed to get rows affected update inwayversion in db", zap.Error(err))
-		return
-	}
-	if rowsAffected == 1 {
-		h.logger.Info(fmt.Sprintf("inway %s.%s>%s version %s",
-			av.OrganizationName, av.ServiceName, av.Address, version))
 	}
 }

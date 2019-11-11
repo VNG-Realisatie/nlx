@@ -8,10 +8,6 @@ SwaggerJSONDirectory = `
     "description": "Package directoryapi defines the directory api.",
     "version": "version not set"
   },
-  "schemes": [
-    "http",
-    "https"
-  ],
   "consumes": [
     "application/json"
   ],
