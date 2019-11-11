@@ -94,8 +94,11 @@ func TestConfigApiResponseToEndpoints(t *testing.T) {
 	assert.Len(t, endpoints, 1)
 	endpoint = endpoints[0]
 	serviceDetails = endpoint.ServiceDetails()
+
 	assert.NotNil(t, serviceDetails)
-	assert.Equal(t, config.AuthorizationmodelNone, serviceDetails.AuthorizationModel)
+
+	// check if the default value of authorization mode is "whitelist"
+	assert.Equal(t, config.AuthorizationmodelWhitelist, serviceDetails.AuthorizationModel)
 }
 
 func TestSetConfigAPIAddress(t *testing.T) {

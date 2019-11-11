@@ -174,7 +174,7 @@ func serviceConfigToServiceDetails(service *configapi.Service) *config.ServiceDe
 		serviceDetails.AuthorizationModel = config.AuthorizationModel(service.AuthorizationSettings.Mode)
 		serviceDetails.AuthorizationWhitelist = service.AuthorizationSettings.Organizations
 	} else {
-		serviceDetails.AuthorizationModel = config.AuthorizationmodelNone
+		serviceDetails.AuthorizationModel = config.AuthorizationmodelWhitelist
 	}
 
 	return serviceDetails

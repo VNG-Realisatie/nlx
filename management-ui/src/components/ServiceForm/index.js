@@ -49,7 +49,7 @@ export const validationSchema = Yup.object().shape({
     techSupportContact: Yup.string().email(),
     publicSupportContact: Yup.string().email(),
     authorizationSettings: Yup.object().shape({
-        mode: Yup.string().oneOf(['whitelist', 'public']),
+        mode: Yup.string().oneOf(['whitelist', 'none']),
         organizations: Yup.array().of(Yup.string().required()),
     }),
 })
@@ -208,7 +208,9 @@ class ServiceForm extends Component {
                                     name="authorizationSettings[mode]"
                                 >
                                     <option value="whitelist">Whitelist</option>
-                                    <option value="public">Public</option>
+                                    <option value="none">
+                                        None (allow all)
+                                    </option>
                                 </Field>
                                 <HelperMessage>
                                     Create a whitelist for authorized

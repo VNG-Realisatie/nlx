@@ -83,10 +83,10 @@ func (iw *Inway) NewHTTPServiceEndpoint(serviceName string, serviceDetails *conf
 	h.proxy.ErrorHandler = iw.LogAPIErrors
 
 	switch serviceDetails.AuthorizationModel {
-	case "none", "":
-		h.SetAuthorizationPublic()
-	case "whitelist":
+	case "whitelist", "":
 		h.SetAuthorizationWhitelist(serviceDetails.AuthorizationWhitelist)
+	case "none":
+		h.SetAuthorizationPublic()
 	default:
 		iw.logger.Error(fmt.Sprintf(`invalid authorization model "%s" for service "%s"`, serviceDetails.AuthorizationModel, serviceName))
 	}
