@@ -1,3 +1,7 @@
+ifeq ($(GOPATH),)
+	GOPATH := $(shell go env GOPATH)
+endif
+
 .PHONY: all
 all: generate
 
@@ -16,9 +20,9 @@ generate: clean
 
 	@# Generate go, gateway, validators
 	protoc -I. \
-		-I$(shell go env GOPATH)/src \
-		-I$(shell go env GOPATH)/src/github.com/gogo/protobuf/protobuf \
-		-I$(shell go env GOPATH)/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+		-I$(GOPATH)/src \
+		-I$(GOPATH)/src/github.com/gogo/protobuf/protobuf \
+		-I$(GOPATH)/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
 		--gogofast_out=\
 Mgoogle/protobuf/any.proto=github.com/gogo/protobuf/types,\
 Mgoogle/protobuf/duration.proto=github.com/gogo/protobuf/types,\
@@ -31,9 +35,9 @@ plugins=grpc:. \
 
 	@# Generate swagger.json
 	protoc -I. \
-		-I$(shell go env GOPATH)/src \
-		-I$(shell go env GOPATH)/src/github.com/gogo/protobuf/protobuf \
-		-I$(shell go env GOPATH)/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+		-I$(GOPATH)/src \
+		-I$(GOPATH)/src/github.com/gogo/protobuf/protobuf \
+		-I$(GOPATH)/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
 		--swagger_out=logtostderr=true:. \
 		configapi.proto
 	echo '//nolint'                     > configapi.swagger.go

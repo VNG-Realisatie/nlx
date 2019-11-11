@@ -1,3 +1,7 @@
+ifeq ($(GOPATH),)
+	GOPATH := $(shell go env GOPATH)
+endif
+
 .PHONY: all
 all: generate
 
@@ -18,7 +22,7 @@ Mgoogle/protobuf/wrappers.proto=github.com/gogo/protobuf/types,\
 plugins=grpc:. \
 		--grpc-gateway_out=logtostderr=true:. \
 		*.proto
-	
+
 	@# Generate swagger.json
 	protoc -I. \
 		-I$(GOPATH)/src \
