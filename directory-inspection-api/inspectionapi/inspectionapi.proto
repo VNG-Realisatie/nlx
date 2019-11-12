@@ -23,6 +23,16 @@ service DirectoryInspection {
 	}
 }
 
+message Inway {
+	enum State {
+		UNKNOWN = 0;
+		UP = 1;
+		DOWN = 2;
+	}
+	string address = 1;
+	State state = 2 ;
+}
+
 message ListServicesRequest {}
 
 message ListServicesResponse {
@@ -35,6 +45,7 @@ message ListServicesResponse {
 		bool internal = 6;
 		string public_support_contact = 7;
 		repeated bool healthy_states = 8;
+		repeated Inway inways = 9;
 	}
 
 	repeated Service services = 2;

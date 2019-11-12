@@ -8,10 +8,6 @@ SwaggerJSONDirectoryInspection = `
     "description": "Package inspectionapi defines the directory api.",
     "version": "version not set"
   },
-  "schemes": [
-    "http",
-    "https"
-  ],
   "consumes": [
     "application/json"
   ],
@@ -55,6 +51,15 @@ SwaggerJSONDirectoryInspection = `
     }
   },
   "definitions": {
+    "InwayState": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "UP",
+        "DOWN"
+      ],
+      "default": "UNKNOWN"
+    },
     "ListOrganizationsResponseOrganization": {
       "type": "object",
       "properties": {
@@ -103,6 +108,23 @@ SwaggerJSONDirectoryInspection = `
             "type": "boolean",
             "format": "boolean"
           }
+        },
+        "inways": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/inspectionapiInway"
+          }
+        }
+      }
+    },
+    "inspectionapiInway": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/definitions/InwayState"
         }
       }
     },

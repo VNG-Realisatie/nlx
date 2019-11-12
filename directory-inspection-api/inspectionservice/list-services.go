@@ -100,6 +100,21 @@ func (h *listServicesHandler) ListServices(
 			respService.InwayAddresses = inwayAddresses
 			respService.HealthyStates = healthyStatuses
 		}
+
+		var inway *inspectionapi.Inway
+		for inwayIndex, inwayAddress := range inwayAddresses {
+			inway = &inspectionapi.Inway{
+				Address: inwayAddress,
+				State:   inspectionapi.Inway_DOWN,
+			}
+
+			if healthyStatuses[inwayIndex] {
+				inway.State = inspectionapi.Inway_UP
+			}
+
+			respService.Inways = append(respService.Inways, inway)
+		}
+
 		resp.Services = append(resp.Services, respService)
 	}
 
