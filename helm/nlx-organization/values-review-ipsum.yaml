@@ -1,0 +1,46 @@
+organizationName: lorem-ipsum
+servicePartOfExternalDomain: true
+
+disableLoadBalancers: true
+storageType: Ephemeral
+
+logType: local
+
+dbDatabaseTxlog: nlx-dev-ipsum-txlog
+dbResetTxlog: true # WARNING: All data will be LOST, never use in production!
+dbUsernameTxlogWriter: nlx-dev-ipsum-txlog-writer
+dbPasswordTxlogWriter: nlx-txlog-writer
+
+imagePullPolicy: "Always"
+
+inway:
+  enable: true
+  config: |
+    [services]
+      [services.lorem-ipsum]
+        endpoint-url = "https://postman-echo.com"
+        authorization-model = "none"
+
+outway:
+  enable: false
+  authService: false
+
+demoService:
+  enable: false
+
+demoApplication:
+  enable: false
+
+irma:
+  enable: false
+
+insight:
+  enable: false
+
+configAPI:
+  enabled: false
+
+management:
+  enable: false
+
+replicas: 1

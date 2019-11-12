@@ -92,7 +92,7 @@ spec:
             - name: POSTGRES_DSN
               value: postgresql://{{.Values.dbUsernameTxlogWriter}}:{{.Values.dbPasswordTxlogWriter}}@postgres/{{.Values.dbDatabaseTxlog}}?sslmode=disable&connect_timeout=10
             - name: SELF_ADDRESS
-              value: "{{.component}}.{{.Values.domain}}"
+              value: "{{ if .Values.inway.selfAddress }}{{ .Values.inway.selfAddress }}{{ else }}{{.component}}.{{.Values.domain}}{{ end }}"
             - name: DIRECTORY_REGISTRATION_ADDRESS
               value: "{{.Values.directoryRegistrationHostname}}:443"
             {{ if .Values.configAPI.enabled }}

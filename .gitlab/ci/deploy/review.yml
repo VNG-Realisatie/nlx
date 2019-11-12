@@ -27,7 +27,7 @@ Deploy Review App:
         --set "domain=nlx-directory-${CI_ENVIRONMENT_SLUG}" \
         --set "reviewPage.environmentSlugWithDomain=${CI_ENVIRONMENT_SLUG}.${REVIEW_BASE_DOMAIN}"
     - |
-        for ORG_NAME in haarlem rdw brp
+        for ORG_NAME in haarlem rdw brp lorem ipsum
         do
           helm upgrade --install nlx-$ORG_NAME-$CI_ENVIRONMENT_SLUG ./helm/nlx-organization \
           --namespace nlx-$ORG_NAME-$CI_ENVIRONMENT_SLUG \
@@ -69,14 +69,11 @@ Remove Review App:
   variables:
     GIT_STRATEGY: none
   script:
-    - helm delete --purge nlx-directory-$CI_ENVIRONMENT_SLUG
-    - helm delete --purge nlx-haarlem-$CI_ENVIRONMENT_SLUG
-    - helm delete --purge nlx-rdw-$CI_ENVIRONMENT_SLUG
-    - helm delete --purge nlx-brp-$CI_ENVIRONMENT_SLUG
-    - kubectl delete namespace nlx-directory-$CI_ENVIRONMENT_SLUG
-    - kubectl delete namespace nlx-haarlem-$CI_ENVIRONMENT_SLUG
-    - kubectl delete namespace nlx-rdw-$CI_ENVIRONMENT_SLUG
-    - kubectl delete namespace nlx-brp-$CI_ENVIRONMENT_SLUG
+    - |
+        for NAME in haarlem rdw brp lorem ipsum directory; do
+          helm delete --purge nlx-$NAME-$CI_ENVIRONMENT_SLUG
+          kubectl delete namespace nlx-$NAME-$CI_ENVIRONMENT_SLUG
+        done
   when: manual
   environment:
     name: $CI_COMMIT_REF_NAME
