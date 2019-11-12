@@ -94,7 +94,11 @@ describe('ServicesTableContainer', () => {
     describe('filtering', () => {
         describe('by status', () => {
             it('should filter out the offline services', () => {
-                const services = [{ status: 'online' }, { status: 'offline' }]
+                const services = [
+                    { status: 'up' },
+                    { status: 'down' },
+                    { status: 'degraded' },
+                ]
 
                 const result = instance.filterServicesByOnlineStatus(services)
                 expect(result).toHaveLength(1)

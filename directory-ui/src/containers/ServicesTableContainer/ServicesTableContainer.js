@@ -33,7 +33,7 @@ class ServicesTableContainer extends PureComponent {
     }
 
     filterServicesByOnlineStatus(services) {
-        return services.filter((service) => service.status === 'online')
+        return services.filter((service) => service.status === 'up')
     }
 
     filterServicesByQuery(services, query) {

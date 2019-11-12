@@ -54,7 +54,7 @@ const ServicesTableRow = ({ status, organization, name, apiType, ...props }) => 
 }
 
 ServicesTableRow.propTypes = {
-  status: oneOf(['online', 'offline']).isRequired,
+  status: oneOf(['unknown', 'up', 'degraded', 'down']).isRequired,
   organization: string.isRequired,
   name: string.isRequired,
 }

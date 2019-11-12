@@ -11,17 +11,25 @@ const StatusICon = styled.div`
   border-radius: 50%;
   border: 2px solid transparent;
 
-  ${p => p.status === 'online' && css`
+  ${p => p.status === 'unknown' && css`
+    border-color:  #CAD0E0;
+  `}
+
+  ${p => p.status === 'up' && css`
     border-color:  #63D19E;
   `}
 
-  ${p => p.status === 'offline' && css`
-    border-color:  #CAD0E0;
+  ${p => p.status === 'degraded' && css`
+    border-color:  #FEBF24;
+  `}
+
+  ${p => p.status === 'down' && css`
+    border-color:  #ff0000;
   `}
 `
 
 StatusICon.propTypes = {
-  status: oneOf(['online', 'offline']).isRequired
+  status: oneOf(['unknown', 'up', 'degraded', 'down']).isRequired
 }
 
 export default StatusICon

@@ -105,12 +105,6 @@ func RunHealthChecker(
 					NOW()
 				ELSE
 					NULL
-				END,
-			active =
-				CASE WHEN $2 = true THEN
-					true
-				ELSE
-					active
 				END
 		WHERE
 			id = $1 AND healthy != $2`)

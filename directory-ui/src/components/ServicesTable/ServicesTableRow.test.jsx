@@ -8,7 +8,7 @@ import ServicesTableRow, { apiUrlForService } from './ServicesTableRow'
 jest.mock('copy-text-to-clipboard')
 
 it('renders without crashing', () => {
-  shallow(<ServicesTableRow status="online"
+  shallow(<ServicesTableRow status="up"
                             organization="organization"
                             name="service name"
   />)
@@ -23,7 +23,7 @@ describe('the API address', () => {
 
 describe('clicking the link icon', () => {
   it('should copy the API address to the clipboard', () => {
-    const wrapper = shallow(<ServicesTableRow status="online"
+    const wrapper = shallow(<ServicesTableRow status="up"
                                               organization="organization"
                                               name="service"
     />)
