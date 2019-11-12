@@ -40,7 +40,6 @@ type availability struct {
 	OrganizationName string `json:"organization_name"`
 	ServiceName      string `json:"service_name"`
 	Address          string `json:"address"`
-	Active           bool   `json:"active"`
 	InwayID          uint64 `json:"inway_id"`
 }
 
@@ -52,6 +51,7 @@ type databaseAction struct {
 var RunningHealthChecker *healthChecker
 
 const dbNotificationChannel = "availabilities"
+const cleanupInterval = 90 * time.Second
 
 // RunHealthChecker starts a healthchecker process
 func RunHealthChecker(
@@ -81,8 +81,7 @@ func RunHealthChecker(
 			availabilities.inway_id,
 			organizations.name AS organization_name,
 			services.name AS service_name,
-			inways.address,
-			availabilities.active as active
+			inways.address
 		FROM directory.availabilities
 			INNER JOIN directory.inways
 				ON availabilities.inway_id = inways.id
@@ -131,16 +130,9 @@ func RunHealthChecker(
 	}
 
 	h.stmtCleanUpAvailabilities, err = db.Preparex(fmt.Sprintf(`
-		UPDATE
-			directory.availabilities
-		SET
-			active = false
-		WHERE
-			NOW() - INTERVAL '%d minute' > availabilities.unhealthy_since
-		AND
-			NOW() - INTERVAL '%d minute' > availabilities.last_announced
-		AND
-			active = true`, ttlOfflineService, ttlOfflineService))
+		DELETE FROM directory.availabilities
+		WHERE NOW() - INTERVAL '%d minute' > availabilities.last_announced`,
+		ttlOfflineService))
 	if err != nil {
 		return errors.Wrap(err, "failed to prepare stmtCleanUpAvailabilities")
 	}
@@ -194,16 +186,27 @@ func (h *healthChecker) run(proc *process.Process, postgressDNS string) error {
 }
 
 func (h *healthChecker) runCleanUpServices(shutDown chan struct{}) {
+	h.logger.Debug("initial cleaning up stale services")
+	servicesRemoved, err := h.cleanUpServices()
+
+	if err != nil {
+		h.logger.Error("error cleaning up offline services", zap.Error(err))
+	}
+
+	h.logger.Debug("cleanup complete", zap.Int64("services removed", servicesRemoved))
+
 	for {
 		select {
 		case <-time.After(1 * time.Minute):
 			h.logger.Debug("cleaning up offline services")
 			servicesRemoved, err := h.cleanUpServices()
+
 			if err != nil {
 				h.logger.Error("error cleaning up offline services", zap.Error(err))
 				continue
 			}
-			h.logger.Debug("cleanup complete", zap.Int64("services set to inactive", servicesRemoved))
+
+			h.logger.Debug("cleanup complete", zap.Int64("services removed", servicesRemoved))
 		case <-shutDown:
 			return
 		}
@@ -224,8 +227,7 @@ func (h *healthChecker) waitForNotification(l *pq.Listener, c <-chan struct{}) {
 		select {
 		case n := <-l.Notify:
 			h.onDatabaseNotification(n.Extra)
-
-		case <-time.After(90 * time.Second):
+		case <-time.After(cleanupInterval):
 			// Check connection after 90 seconds without a notification
 			go func() {
 				if err := l.Ping(); err != nil {
@@ -234,7 +236,6 @@ func (h *healthChecker) waitForNotification(l *pq.Listener, c <-chan struct{}) {
 			}()
 		case <-c:
 			return
-
 		}
 	}
 }
@@ -249,18 +250,10 @@ func (h *healthChecker) onDatabaseNotification(payload string) {
 
 	h.logger.Debug("received DB action", zap.String("action", dbAction.Action))
 	switch dbAction.Action {
-	case "INSERT":
+	case "INSERT", "UPDATE":
 		h.addAvailability(dbAction.Availability)
 	case "DELETE":
 		h.removeAvailability(dbAction.Availability.ID)
-	// The update notification will only be received if the value of availability
-	// .active has changed.
-	case "UPDATE":
-		if dbAction.Availability.Active {
-			h.addAvailability(dbAction.Availability)
-		} else {
-			h.removeAvailability(dbAction.Availability.ID)
-		}
 	default:
 		h.logger.Error("unknown database action", zap.String("database action", dbAction.Action))
 	}
