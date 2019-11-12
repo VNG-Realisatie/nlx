@@ -39,14 +39,16 @@ func newListServicesHandler(db *sqlx.DB, logger *zap.Logger) (*listServicesHandl
 			COALESCE(s.public_support_contact, '') AS public_support_contact,
 			array_remove(array_agg(a.healthy), NULL) as healthy_statuses
 		FROM directory.services s
-			INNER JOIN directory.organizations o
-				ON s.organization_id = o.id
-			LEFT JOIN directory.availabilities a
-				ON s.id = a.service_id
-			LEFT JOIN directory.inways i
-				ON a.inway_id = i.id
-		WHERE
-			(internal = false OR (internal = true AND o.name = $1))
+		INNER JOIN directory.availabilities a ON a.service_id = s.id
+		INNER JOIN directory.organizations o ON o.id = s.organization_id
+		INNER JOIN directory.inways i ON i.id = a.inway_id
+		WHERE (
+			internal = false
+			OR (
+				internal = true
+				AND o.name = $1
+			)
+		)
 		GROUP BY s.id, o.id
 		ORDER BY o.name, s.name
 	`)
