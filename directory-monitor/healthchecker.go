@@ -220,7 +220,9 @@ func (h *healthChecker) waitForNotification(l *pq.Listener, c <-chan struct{}) {
 	for {
 		select {
 		case n := <-l.Notify:
-			h.onDatabaseNotification(n.Extra)
+			if n != nil {
+				h.onDatabaseNotification(n.Extra)
+			}
 		case <-time.After(cleanupInterval):
 			// Check connection after 90 seconds without a notification
 			go func() {
