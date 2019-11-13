@@ -1,3 +1,13 @@
+## [0.79.3](https://gitlab.com/commonground/nlx/nlx/compare/v0.79.2...v0.79.3) (2019-11-13)
+
+
+### Bug Fixes
+
+* **deps:** add etcd and redoc to ignoreDeps as the automated upgrades fail ([53ba0d3](https://gitlab.com/commonground/nlx/nlx/commit/53ba0d34e1a2fdca87983a693c3d0231edbc73dc))
+* **deps:** update all non-major dependencies ([ca3019f](https://gitlab.com/commonground/nlx/nlx/commit/ca3019fa05de8b6e2055d5ded79f5a60ae5139b7))
+* **inway:** change default value of authorization-mode from none to whitelist, as this is a safer default ([2e39aef](https://gitlab.com/commonground/nlx/nlx/commit/2e39aef914d8e125b3e0478785506844556b5a9d))
+* **inway:** correctly set service permissions when using config-api, the inway blocked all requests before ([695a894](https://gitlab.com/commonground/nlx/nlx/commit/695a8941b19484c4d48c16c8405ac0b4da29a45f))
+
 ## [0.79.2](https://gitlab.com/commonground/nlx/nlx/compare/v0.79.1...v0.79.2) (2019-11-06)
 
 ## [0.79.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.79.0...v0.79.1) (2019-11-06)
