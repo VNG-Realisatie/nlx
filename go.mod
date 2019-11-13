@@ -57,7 +57,7 @@ require (
 	github.com/weppos/publicsuffix-go v0.10.0 // indirect
 	github.com/zmap/zlint v1.0.2 // indirect
 	go.etcd.io/bbolt v1.3.3 // indirect
-	go.uber.org/zap v1.12.0
+	go.uber.org/zap v1.13.0
 	golang.org/x/crypto v0.0.0-20191002192127-34f69633bfdc // indirect
 	golang.org/x/net v0.0.0-20191112182307-2180aed22343
 	golang.org/x/sys v0.0.0-20191009170203-06d7bd2c5f4f // indirect
