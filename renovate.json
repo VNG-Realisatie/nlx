@@ -8,6 +8,10 @@
   "postUpdateOptions": [
     "gomodTidy"
   ],
+  "ignoreDeps": [
+    "github.com/coreos/etcd",
+    "redoc"
+  ],
   "masterIssue": true,
   "gomod": {
     "major": {
