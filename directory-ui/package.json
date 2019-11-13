@@ -6,7 +6,7 @@
     "@commonground/design-system": "7.2.1",
     "ajv-keywords": "3.4.1",
     "copy-text-to-clipboard": "2.1.1",
-    "core-js": "3.4.0",
+    "core-js": "3.4.1",
     "debounce": "1.2.0",
     "mobx": "5.15.0",
     "react": "16.11.0",
