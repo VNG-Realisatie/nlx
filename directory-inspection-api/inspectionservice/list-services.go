@@ -19,7 +19,8 @@ import (
 type listServicesHandler struct {
 	logger *zap.Logger
 
-	stmtSelectServices *sqlx.Stmt
+	stmtSelectServices        *sqlx.Stmt
+	stmtRegisterOutwayVersion *sqlx.Stmt
 }
 
 func newListServicesHandler(db *sqlx.DB, logger *zap.Logger) (*listServicesHandler, error) {
@@ -56,6 +57,14 @@ func newListServicesHandler(db *sqlx.DB, logger *zap.Logger) (*listServicesHandl
 		return nil, errors.Wrap(err, "failed to prepare stmtSelectServices")
 	}
 
+	h.stmtRegisterOutwayVersion, err = db.Preparex(`
+		INSERT INTO directory.outways (version)
+		VALUES ($1)
+	`)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to prepare stmtRegisterOutwayVersion")
+	}
+
 	return h, nil
 }
 
@@ -63,6 +72,8 @@ func (h *listServicesHandler) ListServices(
 	ctx context.Context,
 	req *inspectionapi.ListServicesRequest,
 ) (*inspectionapi.ListServicesResponse, error) {
+	go h.registerOutwayVersion(ctx, req)
+
 	h.logger.Info("rpc request ListServices()")
 	resp := &inspectionapi.ListServicesResponse{}
 	organizationName, err := getOrganisationNameFromRequest(ctx)
@@ -119,4 +130,17 @@ func (h *listServicesHandler) ListServices(
 	}
 
 	return resp, nil
+}
+
+func (h *listServicesHandler) registerOutwayVersion(
+	ctx context.Context,
+	req *inspectionapi.ListServicesRequest,
+) {
+	h.logger.Debug("registering outway version", zap.String("outway_version", req.OutwayVersion))
+	if outwayVersion := req.OutwayVersion; len(outwayVersion) > 0 {
+		_, err := h.stmtRegisterOutwayVersion.Exec(outwayVersion)
+		if err != nil {
+			h.logger.Error("failed to log the outway version", zap.Error(err))
+		}
+	}
 }

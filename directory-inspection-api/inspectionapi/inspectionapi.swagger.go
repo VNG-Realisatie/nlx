@@ -44,6 +44,14 @@ SwaggerJSONDirectoryInspection = `
             }
           }
         },
+        "parameters": [
+          {
+            "name": "outway_version",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
         "tags": [
           "DirectoryInspection"
         ]
