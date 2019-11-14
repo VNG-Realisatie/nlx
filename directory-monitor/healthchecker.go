@@ -125,7 +125,7 @@ func RunHealthChecker(
 
 	h.stmtCleanUpAvailabilities, err = db.Preparex(fmt.Sprintf(`
 		DELETE FROM directory.availabilities
-		WHERE NOW() - INTERVAL '%d minute' > availabilities.last_announced`,
+		WHERE NOW() - INTERVAL '%d seconds' > availabilities.last_announced`,
 		ttlOfflineService))
 	if err != nil {
 		return errors.Wrap(err, "failed to prepare stmtCleanUpAvailabilities")

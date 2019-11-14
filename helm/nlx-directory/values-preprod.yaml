@@ -21,7 +21,7 @@ insightNavbarAboutPageURL: "https://nlx.io/about/"
 insightNavbarDocsPageURL: "https://docs.preprod.nlx.io"
 insightNavbarDirectoryURL: "https://directory.preprod.nlx.io"
 
-ttlOfflineService: 14
+ttlOfflineService: 86400  # 24 hours
 
 ca:
   kind: "private"

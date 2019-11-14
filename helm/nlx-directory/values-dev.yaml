@@ -18,7 +18,7 @@ imagePullPolicy: IfNotPresent
 
 insightDirectoryInspectionAPIURL: "http://directory-inspection-api-internal"
 
-ttlOfflineService: 1
+ttlOfflineService: 30  # seconds
 
 ca:
   kind: "public"
@@ -30,4 +30,3 @@ replicas: 1
 
 reviewPage:
   enabled: false
-  

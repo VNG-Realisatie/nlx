@@ -17,7 +17,7 @@ demoDomain: "minikube"
 
 imagePullPolicy: "Always"
 
-ttlOfflineService: 1
+ttlOfflineService: 30  # seconds
 
 demo:
   enabled: true

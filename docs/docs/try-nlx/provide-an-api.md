@@ -145,6 +145,8 @@ You should see your container id in the list of containers. The image name  of t
 
 Take a look at the [directory](https://directory.nlx.io) to see if your API is present. Its status should show a green icon.
 
+> The directory will remove stale services automatically. A service will be marked stale when it is not announced for more than 24 hours.
+
 ## Querying your own API's
 
 Now let's try to fetch some data from our inway using our outway using `curl`:
