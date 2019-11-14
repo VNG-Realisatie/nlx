@@ -175,7 +175,7 @@ func TestInwayLoggingBadService(t *testing.T) {
 
 	assert.Equal(
 		t,
-		"nlx-inway: failed internal API request to 127.0.0.1/ try again later / service api down/unreachable. check A1 error at https://docs.nlx.io/support/\n",
+		"nlx-inway: failed internal API request to 127.0.0.1/ try again later / service api down/unreachable. check A1 error at https://docs.nlx.io/support/common-errors/\n",
 		string(bytes),
 	)
 }

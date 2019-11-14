@@ -98,7 +98,7 @@ func (iw *Inway) LogAPIErrors(w http.ResponseWriter, r *http.Request, e error) {
 	msg := ("nlx-inway: failed internal API request to " +
 		r.URL.String() +
 		" try again later / service api down/unreachable." +
-		" check A1 error at https://docs.nlx.io/support/")
+		" check A1 error at https://docs.nlx.io/support/common-errors/")
 	iw.logger.Error(msg)
 	http.Error(w, msg, http.StatusServiceUnavailable)
 

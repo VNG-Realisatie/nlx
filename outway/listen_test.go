@@ -190,7 +190,7 @@ func TestFailingTransport(t *testing.T) {
 		{
 			fmt.Sprintf("%s/mockorg/mockservice/", mockServer.URL),
 			http.StatusServiceUnavailable,
-			"failed request to https://inway.mockorg/mockservice/ try again later / check firewall? check O1 and M1 at https://docs.nlx.io/support/\n",
+			"failed request to https://inway.mockorg/mockservice/ try again later / check firewall? check O1 and M1 at https://docs.nlx.io/support/common-errors/\n",
 		},
 	}
 

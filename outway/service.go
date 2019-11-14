@@ -140,7 +140,7 @@ func (s *RoundRobinLoadBalancedHTTPService) GetProxies() []*httputil.ReverseProx
 func (s *RoundRobinLoadBalancedHTTPService) LogServiceErrors(w http.ResponseWriter, r *http.Request, e error) {
 	msg := ("failed request to " + r.URL.String() +
 		" try again later / check firewall?" +
-		" check O1 and M1 at https://docs.nlx.io/support/")
+		" check O1 and M1 at https://docs.nlx.io/support/common-errors/")
 	s.logger.Error(msg)
 	http.Error(w, msg, http.StatusServiceUnavailable)
 }
