@@ -22,9 +22,8 @@
       "reference-information/transaction-log-headers"
     ],
     "Support": [
-      "support/support",
-      "support/common-errors",
-      "support/contact"
+      "support/contact",
+      "support/common-errors"
     ],
     "Compliancy": [
       "compliancy/eif",

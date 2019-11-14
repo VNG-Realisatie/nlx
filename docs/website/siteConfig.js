@@ -29,7 +29,7 @@ const siteConfig = {
     {href: 'https://nlx.io/about/', label: 'Over NLX'},
     {doc: 'understanding-the-basics/introduction', label: 'Docs'},
     {href: 'https://directory.demo.nlx.io/', label: 'Directory'},
-    {doc: 'support/support', label: 'Support'},
+    {doc: 'support/contact', label: 'Support'},
   ],
 
   /* path to images for header/footer */
