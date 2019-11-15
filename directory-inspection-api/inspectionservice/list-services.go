@@ -6,6 +6,8 @@ package inspectionservice
 import (
 	"context"
 
+	"go.nlx.io/nlx/common/nlxversion"
+
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 	"github.com/pkg/errors"
@@ -72,7 +74,7 @@ func (h *listServicesHandler) ListServices(
 	ctx context.Context,
 	req *inspectionapi.ListServicesRequest,
 ) (*inspectionapi.ListServicesResponse, error) {
-	go h.registerOutwayVersion(ctx, req)
+	go nlxversion.WithNlxVersionFromContext(ctx, h.registerOutwayVersion)
 
 	h.logger.Info("rpc request ListServices()")
 	resp := &inspectionapi.ListServicesResponse{}
@@ -132,15 +134,9 @@ func (h *listServicesHandler) ListServices(
 	return resp, nil
 }
 
-func (h *listServicesHandler) registerOutwayVersion(
-	ctx context.Context,
-	req *inspectionapi.ListServicesRequest,
-) {
-	h.logger.Debug("registering outway version", zap.String("outway_version", req.OutwayVersion))
-	if outwayVersion := req.OutwayVersion; len(outwayVersion) > 0 {
-		_, err := h.stmtRegisterOutwayVersion.Exec(outwayVersion)
-		if err != nil {
-			h.logger.Error("failed to log the outway version", zap.Error(err))
-		}
+func (h *listServicesHandler) registerOutwayVersion(nlxVersion string) {
+	_, err := h.stmtRegisterOutwayVersion.Exec(nlxVersion)
+	if err != nil {
+		h.logger.Error("failed to log the outway version", zap.Error(err))
 	}
 }

@@ -15,7 +15,7 @@ import (
 	"sync"
 	"time"
 
-	"go.nlx.io/nlx/common/version"
+	"go.nlx.io/nlx/common/nlxversion"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/jpillora/backoff"
@@ -333,7 +333,7 @@ func (o *Outway) updateServiceList() error {
 		o.servicesHTTP = make(map[string]HTTPService)
 	}
 
-	resp, err := o.directoryInspectionClient.ListServices(context.Background(), &inspectionapi.ListServicesRequest{OutwayVersion: version.BuildVersion})
+	resp, err := o.directoryInspectionClient.ListServices(nlxversion.NewContext("outway"), &inspectionapi.ListServicesRequest{})
 	if err != nil {
 		return errors.Wrap(err, "failed to fetch services from directory")
 	}

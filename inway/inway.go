@@ -13,7 +13,7 @@ import (
 	"sync"
 	"time"
 
-	"go.nlx.io/nlx/common/version"
+	"go.nlx.io/nlx/common/nlxversion"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/jpillora/backoff"
@@ -136,7 +136,7 @@ func NewInway(
 	directoryDialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(directoryDialCredentials),
 	}
-	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(context.Background(), 1*time.Minute)
+	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(nlxversion.NewContext("inway"), 1*time.Minute)
 	directoryConn, err := grpc.DialContext(directoryConnCtx, directoryRegistrationAddress, directoryDialOptions...)
 	defer directoryConnCtxCancel()
 	if err != nil {
@@ -180,7 +180,6 @@ func (i *Inway) announceToDirectory(s ServiceEndpoint) {
 				serviceDetails := s.ServiceDetails()
 				resp, err := i.directoryRegistrationClient.RegisterInway(context.Background(), &registrationapi.RegisterInwayRequest{
 					InwayAddress: i.selfAddress,
-					InwayVersion: version.BuildVersion,
 					Services: []*registrationapi.RegisterInwayRequest_RegisterService{
 						{
 							Name:                        s.ServiceName(),

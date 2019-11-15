@@ -33,9 +33,7 @@ message Inway {
 	State state = 2 ;
 }
 
-message ListServicesRequest {
-	string outway_version = 1;
-}
+message ListServicesRequest {}
 
 message ListServicesResponse {
 	message Service {

@@ -20,6 +20,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	nlxhttp "go.nlx.io/nlx/common/http"
+	"go.nlx.io/nlx/common/nlxversion"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
 
@@ -116,7 +117,7 @@ func (h *RegisterInwayHandler) InsertInway(
 }
 
 func (h *RegisterInwayHandler) RegisterInway(ctx context.Context, req *registrationapi.RegisterInwayRequest) (*registrationapi.RegisterInwayResponse, error) {
-	h.logger.Info("rpc request RegisterInway", zap.String("inway address", req.InwayAddress), zap.String("inway version", req.InwayVersion))
+	h.logger.Info("rpc request RegisterInway", zap.String("inway address", req.InwayAddress))
 	resp := &registrationapi.RegisterInwayResponse{}
 	organizationName, err := getOrganisationNameFromRequest(ctx)
 	if err != nil {
@@ -148,19 +149,21 @@ func (h *RegisterInwayHandler) RegisterInway(ctx context.Context, req *registrat
 			h.logger.Info("detected api spec", zap.String("apispectype", inwayAPISpecificationType))
 		}
 
-		_, err = h.stmtInsertAvailability.Exec(
-			organizationName,
-			service.Name,
-			service.Internal,
-			service.DocumentationUrl,
-			inwayAPISpecificationType,
-			req.InwayAddress,
-			service.InsightApiUrl,
-			service.IrmaApiUrl,
-			service.PublicSupportContact,
-			service.TechSupportContact,
-			req.InwayVersion,
-		)
+		nlxversion.WithNlxVersionFromContext(ctx, func(nlxVersion string) {
+			_, err = h.stmtInsertAvailability.Exec(
+				organizationName,
+				service.Name,
+				service.Internal,
+				service.DocumentationUrl,
+				inwayAPISpecificationType,
+				req.InwayAddress,
+				service.InsightApiUrl,
+				service.IrmaApiUrl,
+				service.PublicSupportContact,
+				service.TechSupportContact,
+				nlxVersion,
+			)
+		})
 
 		if err != nil {
 			userFriendlyErrorText := FriendlyErrorDatabase

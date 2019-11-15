@@ -5,14 +5,22 @@ endif
 .PHONY: all
 all: generate
 
-.PHONY: generate
-generate: clean
+.PHONY: dependencies
+dependencies:
+	GO111MODULE=off go get \
+		github.com/gogo/protobuf/gogoproto \
+		github.com/gogo/protobuf/protoc-gen-gogofast \
+		github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway \
+		github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
 
-	@# Generate go, gateway, validators
+protos = $(wildcard *.proto)
+results = $(protos:.proto=.pb.go) $(protos:.proto=.pb.gw.go) $(protos:.proto=.swagger.json) $(protos:.proto=.swagger.go)
+
+%.pb.go %.pb.gw.go: %.proto
 	protoc -I. \
-		-I$(GOPATH)/src \
-		-I$(GOPATH)/src/github.com/gogo/protobuf/protobuf \
-		-I$(GOPATH)/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+		-I$(shell go env GOPATH)/src \
+		-I$(shell go env GOPATH)/src/github.com/gogo/protobuf/protobuf \
+		-I$(shell go env GOPATH)/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
 		--gogofast_out=\
 Mgoogle/protobuf/any.proto=github.com/gogo/protobuf/types,\
 Mgoogle/protobuf/duration.proto=github.com/gogo/protobuf/types,\
@@ -21,20 +29,31 @@ Mgoogle/protobuf/timestamp.proto=github.com/gogo/protobuf/types,\
 Mgoogle/protobuf/wrappers.proto=github.com/gogo/protobuf/types,\
 plugins=grpc:. \
 		--grpc-gateway_out=logtostderr=true:. \
+<<<<<<< HEAD
 		*.proto
 
+=======
+		$<
+
+%.swagger.json: %.proto
+>>>>>>> feat(directory): moved inway and outway version to metadata
 	@# Generate swagger.json
 	protoc -I. \
-		-I$(GOPATH)/src \
-		-I$(GOPATH)/src/github.com/gogo/protobuf/protobuf \
-		-I$(GOPATH)/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+		-I$(shell go env GOPATH)/src \
+		-I$(shell go env GOPATH)/src/github.com/gogo/protobuf/protobuf \
+		-I$(shell go env GOPATH)/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
 		--swagger_out=logtostderr=true:. \
-		registrationapi.proto
-	echo 'package registrationapi'		> registrationapi.swagger.go
-	echo 'const ('                  	>> registrationapi.swagger.go
-	echo 'SwaggerJSONDirectory = `' 	>> registrationapi.swagger.go
-	cat registrationapi.swagger.json	>> registrationapi.swagger.go
-	echo '`)'                       	>> registrationapi.swagger.go
+		$<
+
+%.swagger.go: %.swagger.json
+	echo 'package $*'               >  $@
+	echo 'const ('                  >> $@
+	echo 'SwaggerJSONDirectory = `' >> $@
+	cat $<                          >> $@
+	echo '`)'                       >> $@
+
+.PHONY: generate
+generate: dependencies $(results)
 
 .PHONY: clean
 clean:
