@@ -62,7 +62,7 @@ require (
 	golang.org/x/net v0.0.0-20191116160921-f9c825593386
 	golang.org/x/sys v0.0.0-20191009170203-06d7bd2c5f4f // indirect
 	google.golang.org/appengine v1.6.2 // indirect
-	google.golang.org/genproto v0.0.0-20191108220845-16a3f7862a1a
+	google.golang.org/genproto v0.0.0-20191115221424-83cc0476cb11
 	google.golang.org/grpc v1.25.1
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	sigs.k8s.io/yaml v1.1.0 // indirect
