@@ -1,3 +1,11 @@
+## [0.79.4](https://gitlab.com/commonground/nlx/nlx/compare/v0.79.3...v0.79.4) (2019-11-15)
+
+
+### Bug Fixes
+
+* **docs:** add redirect from /support to /support/contact/ to fix broken incoming links ([b650eed](https://gitlab.com/commonground/nlx/nlx/commit/b650eed5da5e8147901e6f5c174a14afc01b0859))
+* added specific link for common error messages ([6b00886](https://gitlab.com/commonground/nlx/nlx/commit/6b00886fb3823361454ebbe856c0e93e2754f7ae))
+
 ## [0.79.3](https://gitlab.com/commonground/nlx/nlx/compare/v0.79.2...v0.79.3) (2019-11-13)
 
 
