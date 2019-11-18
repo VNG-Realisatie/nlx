@@ -8,17 +8,31 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-func WithNlxVersionFromContext(ctx context.Context, f func(nlxVersion string)) {
-	nlxVersion := "unknown"
+// NlxVersion contains the version for a component
+type NlxVersion struct {
+	Version   string
+	Component string
+}
+
+// WithNlxVersionFromContext reads the NLX version headers and passes them to the closure
+func WithNlxVersionFromContext(ctx context.Context, f func(nlxVersion NlxVersion)) {
+	nlxVersion := NlxVersion{
+		Version:   "unknown",
+		Component: "unknown",
+	}
 	if md, ok := metadata.FromIncomingContext(ctx); ok {
 		if contextNlxVersion, ok := firstString(md.Get("nlx-version")); ok && len(contextNlxVersion) > 0 {
-			nlxVersion = contextNlxVersion
+			nlxVersion.Version = contextNlxVersion
+		}
+		if contextNlxComponent, ok := firstString(md.Get("nlx-component")); ok && len(contextNlxComponent) > 0 {
+			nlxVersion.Component = contextNlxComponent
 		}
 	}
 
 	f(nlxVersion)
 }
 
+// NewContext returns a context with the NLX version metadata set
 func NewContext(nlxComponent string) context.Context {
 	return metadata.NewOutgoingContext(context.Background(), metadata.New(map[string]string{
 		"NLX-Component": nlxComponent,

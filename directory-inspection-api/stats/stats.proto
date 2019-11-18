@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+// Package stats defines the stats api.
+package stats;
+
+import "google/api/annotations.proto";
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.sizer_all) = true;
+option (gogoproto.unmarshaler_all) = true;
+option (gogoproto.goproto_getters_all) = false;
+
+// The DirectoryInspection service definition.
+service Stats {
+    // ListStats lists all versions for inways and outways.
+    rpc ListStats (StatsRequest) returns (StatsResponse) {
+        option (google.api.http).get = "/stats";
+    }
+}
+
+message StatsRequest {
+}
+
+message StatsResponse {
+    message VersionStat {
+        string type = 1;
+        string version = 2;
+        uint64 amount = 3;
+    }
+
+    repeated VersionStat versions = 2;
+}

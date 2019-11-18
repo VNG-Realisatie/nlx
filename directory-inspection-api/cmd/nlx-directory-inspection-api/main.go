@@ -8,6 +8,8 @@ import (
 	"log"
 	"time"
 
+	"go.nlx.io/nlx/directory-inspection-api/statsservice"
+
 	"github.com/huandu/xstrings"
 	flags "github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
@@ -92,16 +94,12 @@ func main() {
 		logger.Fatal("failed to create new directory inspection service", zap.Error(err))
 	}
 
+	statsService, err := statsservice.New(logger, db)
+	if err != nil {
+		logger.Fatal("failed to create new directory inspection service", zap.Error(err))
+	}
+
 	httpServer := http.NewServer(db, caCertPool, &certKeyPair, logger)
 
-	runServer(
-		mainProcess,
-		logger,
-		options.ListenAddress,
-		options.ListenAddressPlain,
-		caCertPool,
-		&certKeyPair,
-		directoryService,
-		httpServer,
-	)
+	runServer(mainProcess, logger, options.ListenAddress, options.ListenAddressPlain, caCertPool, &certKeyPair, directoryService, statsService, httpServer)
 }

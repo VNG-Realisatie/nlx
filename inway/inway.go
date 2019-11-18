@@ -178,7 +178,7 @@ func (i *Inway) announceToDirectory(s ServiceEndpoint) {
 				return
 			case <-time.After(sleepDuration):
 				serviceDetails := s.ServiceDetails()
-				resp, err := i.directoryRegistrationClient.RegisterInway(context.Background(), &registrationapi.RegisterInwayRequest{
+				resp, err := i.directoryRegistrationClient.RegisterInway(nlxversion.NewContext("inway"), &registrationapi.RegisterInwayRequest{
 					InwayAddress: i.selfAddress,
 					Services: []*registrationapi.RegisterInwayRequest_RegisterService{
 						{

@@ -22,7 +22,7 @@ type listServicesHandler struct {
 	logger *zap.Logger
 
 	stmtSelectServices        *sqlx.Stmt
-	stmtRegisterOutwayVersion *sqlx.Stmt
+	stmtRegisterOutwayVersion *sqlx.NamedStmt
 }
 
 func newListServicesHandler(db *sqlx.DB, logger *zap.Logger) (*listServicesHandler, error) {
@@ -59,9 +59,9 @@ func newListServicesHandler(db *sqlx.DB, logger *zap.Logger) (*listServicesHandl
 		return nil, errors.Wrap(err, "failed to prepare stmtSelectServices")
 	}
 
-	h.stmtRegisterOutwayVersion, err = db.Preparex(`
+	h.stmtRegisterOutwayVersion, err = db.PrepareNamed(`
 		INSERT INTO directory.outways (version)
-		VALUES ($1)
+		VALUES (:version)
 	`)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to prepare stmtRegisterOutwayVersion")
@@ -134,7 +134,7 @@ func (h *listServicesHandler) ListServices(
 	return resp, nil
 }
 
-func (h *listServicesHandler) registerOutwayVersion(nlxVersion string) {
+func (h *listServicesHandler) registerOutwayVersion(nlxVersion nlxversion.NlxVersion) {
 	_, err := h.stmtRegisterOutwayVersion.Exec(nlxVersion)
 	if err != nil {
 		h.logger.Error("failed to log the outway version", zap.Error(err))

@@ -13,6 +13,8 @@ import (
 	"sync"
 	"time"
 
+	"go.nlx.io/nlx/directory-inspection-api/stats"
+
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
@@ -57,6 +59,7 @@ func runServer(
 	caCertPool *x509.CertPool,
 	certKeyPair *tls.Certificate,
 	inspectionService inspectionapi.DirectoryInspectionServer,
+	statsService stats.StatsServer,
 	httpServer *directory_http.Server,
 ) {
 
@@ -88,6 +91,8 @@ func runServer(
 	grpcServer := grpc.NewServer(opts...)
 	inspectionapi.RegisterDirectoryInspectionServer(grpcServer, inspectionService)
 
+	stats.RegisterStatsServer(grpcServer, statsService)
+
 	// setup client credentials for grpc gateway
 	gatewayDialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(
@@ -104,6 +109,17 @@ func runServer(
 	// setup grpc gateway and attach to main mux
 	gatewayMux := runtime.NewServeMux()
 	err := inspectionapi.RegisterDirectoryInspectionHandlerFromEndpoint(
+		context.Background(),
+		gatewayMux,
+		address,
+		gatewayDialOptions,
+	)
+	if err != nil {
+		fmt.Printf("serve: %v\n", err)
+		return
+	}
+
+	err = stats.RegisterStatsHandlerFromEndpoint(
 		context.Background(),
 		gatewayMux,
 		address,

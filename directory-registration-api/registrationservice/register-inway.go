@@ -149,7 +149,7 @@ func (h *RegisterInwayHandler) RegisterInway(ctx context.Context, req *registrat
 			h.logger.Info("detected api spec", zap.String("apispectype", inwayAPISpecificationType))
 		}
 
-		nlxversion.WithNlxVersionFromContext(ctx, func(nlxVersion string) {
+		nlxversion.WithNlxVersionFromContext(ctx, func(nlxVersion nlxversion.NlxVersion) {
 			_, err = h.stmtInsertAvailability.Exec(
 				organizationName,
 				service.Name,
@@ -161,7 +161,7 @@ func (h *RegisterInwayHandler) RegisterInway(ctx context.Context, req *registrat
 				service.IrmaApiUrl,
 				service.PublicSupportContact,
 				service.TechSupportContact,
-				nlxVersion,
+				nlxVersion.Version,
 			)
 		})
 
