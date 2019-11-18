@@ -37,11 +37,12 @@ plugins=grpc:. \
 		$<
 
 %.swagger.go: %.swagger.json
-	echo 'package $*'                      >  $@
+	echo 'package $*'                         >  $@
 	echo 'const ('                            >> $@
 	echo 'SwaggerJSONDirectoryInspection = `' >> $@
 	cat $<                                    >> $@
 	echo '`)'                                 >> $@
+	gofmt -w $@
 
 .PHONY: generate
 generate: dependencies $(results)

@@ -48,7 +48,6 @@ func newRegisterInwayHandler(
 
 	h.httpClient = nlxhttp.NewHTTPClient(rootCA, certKeyPair)
 
-	// TODO add inway version, find appropriate table
 	// NOTE: We do not have an endpoint yet to create services separately, therefore insert on demand.
 	h.stmtInsertAvailability, err = db.Preparex(`
 		WITH org AS (
@@ -130,6 +129,7 @@ func (h *RegisterInwayHandler) RegisterInway(ctx context.Context, req *registrat
 	}
 
 	for _, service := range req.Services {
+		service := service
 		if !validateName(service.Name) {
 			h.logger.Info("invalid service name in registerinwayrequest", zap.String("service name", service.Name))
 			return nil, status.New(codes.InvalidArgument, "Invalid servicename").Err()

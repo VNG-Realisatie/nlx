@@ -1,6 +1,7 @@
 package stats
+
 const (
-SwaggerJSONDirectoryInspection = `
+	SwaggerJSONDirectoryInspection = `
 {
   "swagger": "2.0",
   "info": {
@@ -62,4 +63,5 @@ SwaggerJSONDirectoryInspection = `
     }
   }
 }
-`)
+`
+)

@@ -24,6 +24,7 @@ func New(logger *zap.Logger, db *sqlx.DB) (*StatsService, error) {
 	}
 
 	var err error
+
 	s.stmtSelectStats, err = db.Preparex(`
 		SELECT 'outway' AS type
 		,      version
@@ -38,7 +39,7 @@ func New(logger *zap.Logger, db *sqlx.DB) (*StatsService, error) {
 		FROM   directory.inways
 		GROUP BY version
 		ORDER BY type, version DESC
-`)
+	`)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to prepare stmtSelectStats")
 	}
@@ -47,6 +48,7 @@ func New(logger *zap.Logger, db *sqlx.DB) (*StatsService, error) {
 }
 func (s StatsService) ListStats(context.Context, *stats.StatsRequest) (*stats.StatsResponse, error) {
 	s.logger.Info("rpc request ListsStats")
+
 	resp := &stats.StatsResponse{}
 
 	err := s.stmtSelectStats.Select(&resp.Versions)

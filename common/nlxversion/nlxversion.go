@@ -20,11 +20,16 @@ func WithNlxVersionFromContext(ctx context.Context, f func(nlxVersion NlxVersion
 		Version:   "unknown",
 		Component: "unknown",
 	}
-	if md, ok := metadata.FromIncomingContext(ctx); ok {
-		if contextNlxVersion, ok := firstString(md.Get("nlx-version")); ok && len(contextNlxVersion) > 0 {
+
+	md, ok := metadata.FromIncomingContext(ctx)
+	if ok {
+		contextNlxVersion, ok := firstString(md.Get("nlx-version"))
+		if ok && len(contextNlxVersion) > 0 {
 			nlxVersion.Version = contextNlxVersion
 		}
-		if contextNlxComponent, ok := firstString(md.Get("nlx-component")); ok && len(contextNlxComponent) > 0 {
+
+		contextNlxComponent, ok := firstString(md.Get("nlx-component"))
+		if ok && len(contextNlxComponent) > 0 {
 			nlxVersion.Component = contextNlxComponent
 		}
 	}
@@ -43,7 +48,7 @@ func NewContext(nlxComponent string) context.Context {
 func firstString(strings []string) (string, bool) {
 	if len(strings) > 0 {
 		return strings[0], true
-	} else {
-		return "", false
 	}
+
+	return "", false
 }
