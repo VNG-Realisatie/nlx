@@ -4,11 +4,12 @@
 package outway
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
+
+	"go.nlx.io/nlx/common/nlxversion"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -50,7 +51,7 @@ func TestUpdateServiceList(t *testing.T) {
 
 	// Make the mock directory client return an error when calling ListServices
 	client.EXPECT().ListServices(
-		context.Background(),
+		nlxversion.NewContext("outway"),
 		&inspectionapi.ListServicesRequest{}).Return(nil, fmt.Errorf("mock error"))
 
 	// Test of updateServiceList generates the correct error
@@ -63,7 +64,7 @@ func TestUpdateServiceList(t *testing.T) {
 	healthyStatesB := []bool{true, true}
 
 	// Make the mock directory client provide a list of services when calling ListServices
-	client.EXPECT().ListServices(context.Background(), &inspectionapi.ListServicesRequest{}).Return(
+	client.EXPECT().ListServices(nlxversion.NewContext("outway"), &inspectionapi.ListServicesRequest{}).Return(
 		&inspectionapi.ListServicesResponse{
 			Services: []*inspectionapi.ListServicesResponse_Service{
 				{
