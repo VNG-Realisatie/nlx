@@ -1,7 +1,7 @@
 CREATE TABLE directory.outways(
 	id serial NOT NULL,
     announced timestamp with time zone DEFAULT now() NOT NULL,
-    version character varying(100),
+    version character varying(100) NOT NULL,
 	CONSTRAINT outways_pk PRIMARY KEY (id)
 );
 CREATE INDEX outways_announced ON directory.outways USING btree (announced);

@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.1" last-position="1069,0" last-zoom="1"
+<dbmodel pgmodeler-ver="0.9.1" last-position="0,0" last-zoom="1"
 	 default-schema="public" default-owner="postgres">
 <role name="nlx-directory"
       login="true"
@@ -25,7 +25,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="directory"/>
 	<role name="postgres"/>
 	<appended-sql><![CDATA[GRANT USAGE, SELECT ON SEQUENCE organizations_id_seq TO "nlx-directory";]]></appended-sql>
-	<position x="120" y="260"/>
+	<position x="20" y="80"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -50,7 +50,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="directory"/>
 	<role name="postgres"/>
 	<appended-sql><![CDATA[GRANT USAGE, SELECT ON SEQUENCE services_id_seq TO "nlx-directory";]]></appended-sql>
-	<position x="1260" y="520"/>
+	<position x="460" y="340"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -94,7 +94,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="directory"/>
 	<role name="postgres"/>
 	<appended-sql><![CDATA[GRANT USAGE, SELECT ON SEQUENCE inways_id_seq TO "nlx-directory";]]></appended-sql>
-	<position x="1300" y="60"/>
+	<position x="460" y="80"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -119,7 +119,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="directory"/>
 	<role name="postgres"/>
 	<appended-sql><![CDATA[GRANT USAGE, SELECT ON SEQUENCE availabilities_id_seq TO "nlx-directory";]]></appended-sql>
-	<position x="2432" y="174"/>
+	<position x="900" y="80"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -276,6 +276,33 @@ END;]]></definition>
 		</idxelement>
 </index>
 
+<table name="outways">
+	<schema name="directory"/>
+	<role name="postgres"/>
+	<appended-sql><![CDATA[GRANT USAGE, SELECT ON SEQUENCE outways_id_seq TO "nlx-directory";]]></appended-sql>
+	<position x="85" y="396"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="announced" not-null="true" default-value="NOW()">
+		<type name="timestamptz" length="0"/>
+	</column>
+	<column name="version" not-null="true">
+		<type name="varchar" length="100"/>
+	</column>
+	<constraint name="outways_pk" type="pk-constr" table="directory.outways">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<index name="outways_announced" table="directory.outways"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="announced"/>
+		</idxelement>
+</index>
+
 <constraint name="services_fk_organization" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="directory.organizations" table="directory.services">
 	<columns names="organization_id" ref-type="src-columns"/>
@@ -344,5 +371,10 @@ END;]]></definition>
 	<object name="directory" type="schema"/>
 	<roles names="&quot;nlx-directory&quot;"/>
 	<privileges usage="true"/>
+</permission>
+<permission>
+	<object name="directory.outways" type="table"/>
+	<roles names="&quot;nlx-directory&quot;"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
 </permission>
 </dbmodel>

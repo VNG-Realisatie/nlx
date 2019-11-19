@@ -257,6 +257,32 @@ CREATE INDEX availabilities_inway_id ON directory.availabilities
 	);
 -- ddl-end --
 
+-- object: directory.outways | type: TABLE --
+-- DROP TABLE IF EXISTS directory.outways CASCADE;
+CREATE TABLE directory.outways(
+	id serial NOT NULL,
+	announced timestamptz NOT NULL DEFAULT NOW(),
+	version varchar(100) NOT NULL,
+	CONSTRAINT outways_pk PRIMARY KEY (id)
+
+);
+-- ddl-end --
+ALTER TABLE directory.outways OWNER TO postgres;
+-- ddl-end --
+
+-- Appended SQL commands --
+GRANT USAGE, SELECT ON SEQUENCE outways_id_seq TO "nlx-directory";
+-- ddl-end --
+
+-- object: outways_announced | type: INDEX --
+-- DROP INDEX IF EXISTS directory.outways_announced CASCADE;
+CREATE INDEX outways_announced ON directory.outways
+	USING btree
+	(
+	  announced
+	);
+-- ddl-end --
+
 -- object: services_fk_organization | type: CONSTRAINT --
 -- ALTER TABLE directory.services DROP CONSTRAINT IF EXISTS services_fk_organization CASCADE;
 ALTER TABLE directory.services ADD CONSTRAINT services_fk_organization FOREIGN KEY (organization_id)
@@ -285,33 +311,39 @@ REFERENCES directory.services (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
--- object: grant_8d6de19fdf | type: PERMISSION --
+-- object: grant_8aa95606f1 | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.organizations
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_38d5e9eca4 | type: PERMISSION --
+-- object: grant_efea1c081a | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.inways
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_0b086592eb | type: PERMISSION --
+-- object: grant_6e135e26dd | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.services
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_25ae7b3f59 | type: PERMISSION --
+-- object: grant_981f395b3b | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.availabilities
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_2b19a09e82 | type: PERMISSION --
+-- object: grant_e0928fcb26 | type: PERMISSION --
 GRANT USAGE
    ON SCHEMA directory
+   TO "nlx-directory";
+-- ddl-end --
+
+-- object: grant_568f6024da | type: PERMISSION --
+GRANT SELECT,INSERT,UPDATE,DELETE
+   ON TABLE directory.outways
    TO "nlx-directory";
 -- ddl-end --
 
