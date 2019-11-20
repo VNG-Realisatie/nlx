@@ -31,20 +31,20 @@ var _ = runtime.String
 var _ = utilities.NewDoubleArray
 var _ = descriptor.ForMessage
 
-func request_Stats_ListStats_0(ctx context.Context, marshaler runtime.Marshaler, client StatsClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_Stats_ListVersionStatistics_0(ctx context.Context, marshaler runtime.Marshaler, client StatsClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq StatsRequest
 	var metadata runtime.ServerMetadata
 
-	msg, err := client.ListStats(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.ListVersionStatistics(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_Stats_ListStats_0(ctx context.Context, marshaler runtime.Marshaler, server StatsServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_Stats_ListVersionStatistics_0(ctx context.Context, marshaler runtime.Marshaler, server StatsServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq StatsRequest
 	var metadata runtime.ServerMetadata
 
-	msg, err := server.ListStats(ctx, &protoReq)
+	msg, err := server.ListVersionStatistics(ctx, &protoReq)
 	return msg, metadata, err
 
 }
@@ -54,7 +54,7 @@ func local_request_Stats_ListStats_0(ctx context.Context, marshaler runtime.Mars
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
 func RegisterStatsHandlerServer(ctx context.Context, mux *runtime.ServeMux, server StatsServer) error {
 
-	mux.Handle("GET", pattern_Stats_ListStats_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Stats_ListVersionStatistics_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
@@ -63,14 +63,14 @@ func RegisterStatsHandlerServer(ctx context.Context, mux *runtime.ServeMux, serv
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Stats_ListStats_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Stats_ListVersionStatistics_0(rctx, inboundMarshaler, server, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Stats_ListStats_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Stats_ListVersionStatistics_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -115,7 +115,7 @@ func RegisterStatsHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc
 // "StatsClient" to call the correct interceptors.
 func RegisterStatsHandlerClient(ctx context.Context, mux *runtime.ServeMux, client StatsClient) error {
 
-	mux.Handle("GET", pattern_Stats_ListStats_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Stats_ListVersionStatistics_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
@@ -124,14 +124,14 @@ func RegisterStatsHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Stats_ListStats_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Stats_ListVersionStatistics_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Stats_ListStats_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Stats_ListVersionStatistics_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -139,9 +139,9 @@ func RegisterStatsHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Stats_ListStats_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"stats"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Stats_ListVersionStatistics_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"stats"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (
-	forward_Stats_ListStats_0 = runtime.ForwardResponseMessage
+	forward_Stats_ListVersionStatistics_0 = runtime.ForwardResponseMessage
 )

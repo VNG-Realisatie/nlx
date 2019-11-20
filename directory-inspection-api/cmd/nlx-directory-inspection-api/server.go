@@ -13,8 +13,6 @@ import (
 	"sync"
 	"time"
 
-	"go.nlx.io/nlx/directory-inspection-api/stats"
-
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
@@ -31,6 +29,7 @@ import (
 	"go.nlx.io/nlx/common/tlsconfig"
 	directory_http "go.nlx.io/nlx/directory-inspection-api/http"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
+	"go.nlx.io/nlx/directory-inspection-api/stats"
 )
 
 // newGRPCSplitterHandlerFunc returns an http.Handler that delegates gRPC connections to grpcServer

@@ -15,8 +15,6 @@ import (
 	"sync"
 	"time"
 
-	"go.nlx.io/nlx/common/nlxversion"
-
 	"github.com/jmoiron/sqlx"
 	"github.com/jpillora/backoff"
 	"github.com/pkg/errors"
@@ -25,6 +23,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
+	"go.nlx.io/nlx/common/nlxversion"
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/transactionlog"

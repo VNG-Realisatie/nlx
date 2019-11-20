@@ -14,7 +14,7 @@ option (gogoproto.goproto_getters_all) = false;
 // The DirectoryInspection service definition.
 service Stats {
     // ListStats lists all versions for inways and outways.
-    rpc ListStats (StatsRequest) returns (StatsResponse) {
+    rpc ListVersionStatistics (StatsRequest) returns (StatsResponse) {
         option (google.api.http).get = "/stats";
     }
 }

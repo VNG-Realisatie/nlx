@@ -3,15 +3,15 @@ package nlxversion
 import (
 	"context"
 
-	"go.nlx.io/nlx/common/version"
-
 	"google.golang.org/grpc/metadata"
+
+	"go.nlx.io/nlx/common/version"
 )
 
 // NlxVersion contains the version for a component
 type NlxVersion struct {
-	Version   string
-	Component string
+	Version   string `db:"version"`
+	Component string `db:"component"`
 }
 
 // WithNlxVersionFromContext reads the NLX version headers and passes them to the closure

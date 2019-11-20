@@ -8,8 +8,6 @@ import (
 	"log"
 	"time"
 
-	"go.nlx.io/nlx/directory-inspection-api/statsservice"
-
 	"github.com/huandu/xstrings"
 	flags "github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
@@ -24,6 +22,7 @@ import (
 	"go.nlx.io/nlx/directory-db/dbversion"
 	"go.nlx.io/nlx/directory-inspection-api/http"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionservice"
+	"go.nlx.io/nlx/directory-inspection-api/statsservice"
 )
 
 var options struct {
@@ -96,7 +95,7 @@ func main() {
 
 	statsService, err := statsservice.New(logger, db)
 	if err != nil {
-		logger.Fatal("failed to create new directory inspection service", zap.Error(err))
+		logger.Fatal("failed to create new stats service", zap.Error(err))
 	}
 
 	httpServer := http.NewServer(db, caCertPool, &certKeyPair, logger)

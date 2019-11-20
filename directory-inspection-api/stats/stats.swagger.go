@@ -19,7 +19,7 @@ const (
     "/stats": {
       "get": {
         "summary": "ListStats lists all versions for inways and outways.",
-        "operationId": "ListStats",
+        "operationId": "ListVersionStatistics",
         "responses": {
           "200": {
             "description": "A successful response.",

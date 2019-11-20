@@ -22,6 +22,8 @@ linters-settings:
       - experimental
     disabled-checks:
       - wrapperFunc
+  goimports:
+    local-prefixes: go.nlx.io
 
 linters:
   enable-all: true
