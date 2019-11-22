@@ -1,3 +1,19 @@
+# [0.80.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.79.4...v0.80.0) (2019-11-22)
+
+
+### Bug Fixes
+
+* **directory-inspection-api:** delete availabilities after offline ttl ([6b63eea](https://gitlab.com/commonground/nlx/nlx/commit/6b63eeabe4755562269b6b783b6af7d6da70f5db))
+* **directory-inspection-api:** list only services that have an availability ([9ece85f](https://gitlab.com/commonground/nlx/nlx/commit/9ece85f43dda4c5b9aa44b7c61d97b5ae9ffa3cd))
+* **directory-monitor:** cleanup ttl to seconds and 24 hours ([2adb7bf](https://gitlab.com/commonground/nlx/nlx/commit/2adb7bf343b5fc658ee7b2f13ff3afc7e4c5def0))
+* **directory-monitor:** don't panic when connection to database is lost ([2048bdd](https://gitlab.com/commonground/nlx/nlx/commit/2048bdd944ee10ff3ca017ba7a159403388dacb4))
+
+
+### Features
+
+* **directory-inspection-api:** return inway state on list services ([0f79dce](https://gitlab.com/commonground/nlx/nlx/commit/0f79dce6f90a5b29b481a17c53a485296715c64e))
+* **directory-ui:** display up, down or degraded state of services ([b99f9e4](https://gitlab.com/commonground/nlx/nlx/commit/b99f9e43052d8962f56726ee94de0d1e9a9707f8))
+
 ## [0.79.4](https://gitlab.com/commonground/nlx/nlx/compare/v0.79.3...v0.79.4) (2019-11-15)
 
 
