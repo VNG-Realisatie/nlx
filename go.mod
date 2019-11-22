@@ -29,7 +29,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.1.0
 	github.com/grpc-ecosystem/grpc-gateway v1.12.1
 	github.com/hashicorp/go-retryablehttp v0.6.2 // indirect
-	github.com/huandu/xstrings v1.2.0
+	github.com/huandu/xstrings v1.2.1
 	github.com/jasonlvhit/gocron v0.0.0-20191007145845-57f89394836a // indirect
 	github.com/jessevdk/go-flags v1.4.0
 	github.com/jmoiron/sqlx v1.2.0
