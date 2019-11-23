@@ -14,5 +14,5 @@ purchases, and also for manufacturers to employ it within their design, build an
   * **Compliant**  Yes
   * **Description**  Functional accessibility requirements applicable to ICT products and services, together with a description of the test procedures and evaluation methodology for each accessibility requirement in a form that is suitable for use in public procurement within Europe, in support of Mandate 376.  Incorporates WCAG2 for web pages.
   * **Implications**
-     * The API Discovery user interface which publishes the NLX API&#39;s must comply with &quot;WCAG 2.0 Success Criterion 1.1.1 Non-text content&quot; as specified in the EN 301 549 v1.1.2 standard.</li>
+    * The API Discovery user interface which publishes the NLX API&#39;s must comply with &quot;WCAG 2.0 Success Criterion 1.1.1 Non-text content&quot; as specified in the EN 301 549 v1.1.2 standard.
 

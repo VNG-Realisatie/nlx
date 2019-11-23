@@ -47,7 +47,8 @@ Answer the questions accordingly:
 - **Country Name**, enter any value
 - **State**, enter any value
 - **Locality Name**, enter any value
-- **Organization Name**, please enter a URL-friendly value. Also make sure this value is unique for the network in the [directory overview](https://directory.demo.nlx.io) as we do not check for uniqueness yet.<br>A good value could be: `my-organization`.
+- **Organization Name**, please enter a URL-friendly value. Also make sure this value is unique for the network in the [directory overview](https://directory.demo.nlx.io) as we do not check for uniqueness yet.  
+  A good value could be: `my-organization`.
 - **Organization Unit Name**, enter any value
 - **Common name**, when you would like to offer your API's to the NLX network make sure this corresponds to your external hostname. For this guide we will use `my-organization.nl`.
 - **Email Address**, enter any value
