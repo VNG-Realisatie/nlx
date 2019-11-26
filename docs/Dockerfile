@@ -15,20 +15,15 @@ COPY . /go/src/go.nlx.io/nlx/docs
 
 RUN npm run build
 
-# Copy static docs to alpine-based nginx container.
-FROM nginx:alpine
-EXPOSE 8080
-
-# Copy nginx configuration
-COPY docker/default.conf /etc/nginx/conf.d/default.conf
-COPY docker/nginx.conf /etc/nginx/nginx.conf
-
-COPY --from=build /go/src/go.nlx.io/nlx/docs/website/build/nlx-docs /usr/share/nginx/html
-
+FROM alpine:3.10 AS version
 # Add file with version tag from git
 ARG GIT_TAG_NAME=undefined
 ARG GIT_COMMIT_HASH=undefined
-RUN ash -c 'echo "{\"tag\": \"$GIT_TAG_NAME\", \"commit\": \"$GIT_COMMIT_HASH\"}" > /usr/share/nginx/html/version.json'
+RUN ash -c 'echo "{\"tag\": \"$GIT_TAG_NAME\", \"commit\": \"$GIT_COMMIT_HASH\"}" > /version.json'
+
+# Copy static docs to alpine-based nginx container.
+FROM nginx:alpine
+EXPOSE 8080
 
 # Add non-privileged user
 RUN adduser -D -u 1001 appuser
@@ -37,5 +32,12 @@ RUN adduser -D -u 1001 appuser
 RUN touch /var/run/nginx.pid && \
     chown -R appuser /var/run/nginx.pid && \
     chown -R appuser /var/cache/nginx
+
+# Copy nginx configuration
+COPY docker/default.conf /etc/nginx/conf.d/default.conf
+COPY docker/nginx.conf /etc/nginx/nginx.conf
+
+COPY --from=build /go/src/go.nlx.io/nlx/docs/website/build /usr/share/nginx/html
+COPY --from=version /version.json /usr/share/nginx/html/
 
 USER appuser
