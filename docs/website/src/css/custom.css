@@ -14,9 +14,56 @@
 /* You can override the default Infima variables here. */
 :root {
     --ifm-color-primary: #3d83fa;
+    --ifm-navbar-link-color: var(--ifm-color-white);
+    --ifm-navbar-link-hover-color: var(--ifm-navbar-link-color);
+    --ifm-navbar-search-input-background-color: rgba(0,0,0,.2);
+    --ifm-navbar-search-input-placeholder-color: var(--ifm-color-black);
+    --ifm-navbar-search-input-color: var(--ifm-color-black);
 }
 html:not([data-theme='dark']) {
     --ifm-navbar-background-color: var(--ifm-color-primary);
-    --ifm-navbar-link-color: var(--ifm-color-white);
-    /*--ifm-navbar-background-color: #f1f4f9;*/
+}
+
+html:not([data-theme='dark']) .react-toggle-track {
+    background-color: #2d66c3 !important;
+}
+.navbar .navbar__link {
+    font-weight: var(--ifm-font-weight-light);
+}
+
+blockquote {
+    background-color: rgba(255,229,100,.3);
+    border-left: 8px solid #ffe564;
+    padding: 15px 30px 15px 15px;
+}
+.main-wrapper, .navbar__inner {
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.menu .menu__link.menu__link--sublist:after {
+    background-image: none !important;
+}
+.menu .menu__list .menu__list .menu__link {
+    font-size: 0.9em;
+    font-weight: var(--ifm-font-weight-normal);
+}
+.menu > .menu__list > .menu__list-item > .menu__link {
+    font-weight: var(--ifm-font-weight-bold) !important;
+}
+.navbar__brand {
+    height: 20px !important;
+    font-size: 1.25em !important;
+}
+.search-bar, .search-bar-expanded {
+    filter: invert(100%);
+}
+
+.algolia-autocomplete .algolia-docsearch-suggestion--category-header {
+    background-color: var(--ifm-color-primary) !important;
+}
+.algolia-autocomplete .ds-dropdown-menu:before {
+    border-top: var(--ifm-color-primary) !important;
+    border-right: var(--ifm-color-primary) !important;
+    background-color: var(--ifm-color-primary) !important;
 }

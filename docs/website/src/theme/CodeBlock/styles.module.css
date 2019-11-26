@@ -1,0 +1,32 @@
+.codeBlock {
+  border-radius: 0;
+  margin-bottom: 0;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.codeBlockWrapper {
+  position: relative;
+}
+
+.copyButton * {
+  vertical-align: text-bottom;
+}
+.copyButton {
+  border: 1px solid transparent;
+  background-color: transparent;
+  color: var(--ifm-color-white);
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+  position: absolute;
+  top: 4px;
+  right: var(--ifm-pre-padding);
+  height: 30px;
+  transition: all .25s ease-out;
+}
+.copyButton svg {
+  fill: currentColor;
+  margin-right: 3px;
+}

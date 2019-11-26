@@ -14,6 +14,7 @@ module.exports = {
   organizationName: 'common-ground',
   projectName: 'nlx-docs',
   themeConfig: {
+    sidebarCollapsible: false,
     navbar: {
       title: 'Documentation',
       logo: {
@@ -35,6 +36,10 @@ module.exports = {
         src: 'img/logo_vng_gs.svg',
       },
       copyright: `Copyright © ${new Date().getFullYear()} VNG Realisatie`,
+    },
+    algolia: {
+      apiKey: 'f5d0c017e70ffe180e05515a2869c1e4',
+      indexName: 'nlx',
     },
   },
   presets: [
