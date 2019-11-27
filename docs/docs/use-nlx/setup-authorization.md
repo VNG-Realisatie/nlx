@@ -65,7 +65,7 @@ Inways have the ability to provide authorization on an organization level per se
 
 ### How does it work
 
-When starting an [inway](../try-nlx/provide-an-api.md#setting-up-the-inway), you define the services that this inway will expose to the NLX network. You can configure which organizations are authorized to access each service.
+When starting an [inway](../try-nlx/provide-an-api.mdx#setting-up-the-inway), you define the services that this inway will expose to the NLX network. You can configure which organizations are authorized to access each service.
 In order to access a service provided by an inway, an outway is needed. This outway is owned by an organization. The name of its organization is registered in its TLS certificate.
 Once a request is received by the inway, it will extract the organization name from the certificate of the requesting outway and check if it is present in the list of authorized organizations.
 The request will be authorized by the inway, only if the organization is whitelisted.

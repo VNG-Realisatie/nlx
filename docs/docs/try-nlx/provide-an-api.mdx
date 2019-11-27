@@ -2,6 +2,8 @@
 id: provide-an-api
 title: Provide an API
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 ## Introduction
 
@@ -70,8 +72,16 @@ docker pull nlxio/inway:latest
 ```
 
 The following command will run the inway using the Docker image we just fetched.
-<!--DOCUSAURUS_CODE_TABS-->
-<!--Linux & macOS-->
+
+<Tabs
+  defaultValue="bash"
+  values={[
+    { label: 'Linux & macOS', value: 'bash', },
+    { label: 'Windows', value: 'powershell', },
+  ]}
+>
+<TabItem value="bash">
+
 ```bash
 docker run --rm \
   --name my-nlx-inway \
@@ -89,7 +99,10 @@ docker run --rm \
   --publish 443:8443 \
   nlxio/inway:latest
 ```
-<!--Windows-->
+
+</TabItem>
+<TabItem value="powershell">
+
 ```powershell
 docker run --rm `
 --name my-nlx-inway `
@@ -107,7 +120,9 @@ docker run --rm `
 --publish 443:8443 `
 nlxio/inway:latest
 ```
-<!--END_DOCUSAURUS_CODE_TABS-->
+
+</TabItem>
+</Tabs>
 
 We give Docker several arguments:
 

@@ -2,6 +2,8 @@
 id: consume-an-api
 title: Consume an API
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 ## Introduction
 
@@ -27,8 +29,15 @@ If you are running on Windows, Docker Desktop will ask you read premissions for 
 
 The following command will run the outway using the Docker image we just fetched.
 
-<!--DOCUSAURUS_CODE_TABS-->
-<!--Linux & macOS-->
+<Tabs
+  defaultValue="bash"
+  values={[
+    { label: 'Linux & macOS', value: 'bash', },
+    { label: 'Windows', value: 'powershell', },
+  ]}
+>
+<TabItem value="bash">
+
 ```bash
 docker run --rm \
   --name my-nlx-outway \
@@ -44,7 +53,9 @@ docker run --rm \
   nlxio/outway:latest  
 ```
 
-<!--Windows-->
+</TabItem>
+<TabItem value="powershell">
+
 ```powershell
 docker run --rm `
 --name my-nlx-outway `
@@ -59,7 +70,9 @@ docker run --rm `
 --publish 80:8080 `
 nlxio/outway:latest  
 ```
-<!--END_DOCUSAURUS_CODE_TABS-->
+
+</TabItem>
+</Tabs>
 
 You will get back the container id of the container you created from this image.
 By running this command, we've launched our very own NLX outway. It is running on [`http://localhost`](http://localhost).
