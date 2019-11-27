@@ -11,7 +11,6 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
 import useBaseUrl from '@docusaurus/useBaseUrl'
 import {Redirect} from 'react-router-dom'
 
-
 function Home() {
     const context = useDocusaurusContext()
     const {siteConfig = {}} = context
@@ -19,7 +18,7 @@ function Home() {
     return (<>
             <Redirect to={url}/>
             <p>
-                If you are not redirected automatically, follow this <Link to={url}>link</Link>.
+                Wanneer je niet automatisch wordt doorgestuurd, volg dan deze <Link to={url}>link</Link>.
             </p>
         </>
     )
