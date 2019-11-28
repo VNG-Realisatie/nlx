@@ -14,6 +14,13 @@ import rangeParser from 'parse-numeric-range';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import styles from './styles.module.css';
 
+import Prism from 'prismjs/components/prism-core';
+// For every language that is known to be used in our documentation, load the language definition
+import 'prismjs/components/prism-toml.js';
+import 'prismjs/components/prism-bash.js';
+import 'prismjs/components/prism-powershell.js';
+import 'prismjs/components/prism-json.js';
+
 const highlightLinesRangeRegex = /{([\d,-]+)}/;
 
 export default ({children, className: languageClassName, metastring}) => {
@@ -65,6 +72,7 @@ export default ({children, className: languageClassName, metastring}) => {
   return (
     <Highlight
       {...defaultProps}
+      Prism={Prism}
       theme={prism.theme || defaultTheme}
       code={children.trim()}
       language={language}>

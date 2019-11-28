@@ -2,9 +2,6 @@
 id: consume-an-api
 title: Consume an API
 ---
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 ## Introduction
 
 To use an API that is provided via NLX, you need to route traffic through an **outway** onto the network.
@@ -28,6 +25,9 @@ chmod g+r org.key
 If you are running on Windows, Docker Desktop will ask you read premissions for the directory where you stored the certificate and private key (`~/nlx-setup`), please select yes.
 
 The following command will run the outway using the Docker image we just fetched.
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 <Tabs
   defaultValue="bash"
