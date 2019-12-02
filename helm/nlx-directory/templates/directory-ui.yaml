@@ -16,8 +16,8 @@ spec:
       labels: {{ include "nlx-directory.common.metadata-labels" . | nindent 8 }}
     spec:
       containers:
-        - name: directory-ui
-          image: {{.Values.directoryUIImage}}
+        - name: {{.component}}
+          image: {{.Values.imagePrefix}}nlxio/{{.component}}{{.Values.imageTag}}}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
       restartPolicy: Always
   status: {}

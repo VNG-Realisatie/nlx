@@ -7,13 +7,14 @@ stages:
   - Tools
 
 include:
-  - '.gitlab/ci/tests/tests.yml'
-  - '.gitlab/ci/tests/dependency_scanning.yml'
-  - '.gitlab/ci/tests/sast.yml'
-  - '.gitlab/ci/build/acc-and-prod.yml'
+  - '.gitlab/ci/build/acc.yml'
+  - '.gitlab/ci/build/prod.yml'
   - '.gitlab/ci/build/review.yml'
-  - '.gitlab/ci/deploy/review.yml'
   - '.gitlab/ci/deploy/acc.yml'
   - '.gitlab/ci/deploy/prod.yml'
+  - '.gitlab/ci/deploy/review.yml'
   - '.gitlab/ci/e2e-tests/e2e-tests.yml'
+  - '.gitlab/ci/tests/dependency_scanning.yml'
+  - '.gitlab/ci/tests/sast.yml'
+  - '.gitlab/ci/tests/tests.yml'
   - '.gitlab/ci/tools/semantic_release.yml'
