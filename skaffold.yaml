@@ -2,6 +2,47 @@ apiVersion: skaffold/v1beta5
 kind: Config
 build:
   artifacts:
+  - image: nlxio/ca-certportal
+    docker:
+      dockerfile: ca-certportal/Dockerfile
+      buildArgs:
+        GIT_COMMIT_HASH: "{{.GIT_COMMIT_HASH}}"
+        GIT_TAG_NAME: "{{.GIT_TAG_NAME}}"
+profiles:
+- name: minikube
+  build:
+    tagPolicy:
+      sha256: {}
+    local:
+      push: false
+  deploy:
+    helm:
+      releases:
+      - name: nlx-dev-directory
+        chartPath: helm/nlx-directory
+        values:
+          caCertPortalImage: nlxio/ca-certportal
+        valuesFiles:
+        - helm/nlx-directory/values-dev.yaml
+        setValueTemplates:
+          imageTag: "{{.DIGEST_HEX}}"
+        namespace: nlx-dev-directory
+
+
+
+
+
+
+
+
+
+
+
+
+apiVersion: skaffold/v1beta5
+kind: Config
+build:
+  artifacts:
   - image: nlxio/auth-service
     docker:
       dockerfile: auth-service/Dockerfile

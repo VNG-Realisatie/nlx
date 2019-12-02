@@ -4,3 +4,6 @@ imagePullPolicy: IfNotPresent
 storageType: Durable
 
 ca: {}
+
+imageTag: latest
+imagePrefix: nlxio/

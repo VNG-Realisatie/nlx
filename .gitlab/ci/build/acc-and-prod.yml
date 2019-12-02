@@ -1,0 +1,17 @@
+Build acc and prod:
+  stage: Build
+  before_script:
+    - docker login -u $REVIEW_REGISTRY_USERNAME -p $REVIEW_REGISTRY_PASSWORD $REVIEW_REGISTRY_HOST
+    - export GIT_COMMIT_HASH=$(git rev-parse HEAD)
+    - export GIT_TAG_NAME=$(git describe --tags)
+    - export IMAGE_PREFIX="${CI_REGISTRY_IMAGE}/"
+    - export IMAGE_TAG="${GIT_TAG_NAME}"
+  script:
+    - time docker-compose build --parallel
+    - time docker-compose push
+  tags:
+    - review
+    - shell
+  only:
+    - master
+    - tags
