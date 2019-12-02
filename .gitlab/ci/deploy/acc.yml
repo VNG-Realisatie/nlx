@@ -19,3 +19,4 @@ Deploy acceptance:
     - /^fix\/821-builds/
   tags:
     - nlx-privileged
+    - shell

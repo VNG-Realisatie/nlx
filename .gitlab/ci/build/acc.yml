@@ -10,6 +10,7 @@ Build acc:
     - time docker-compose push
   tags:
     - nlx-privileged
+    - shell
   only:
     - master
     - tags
