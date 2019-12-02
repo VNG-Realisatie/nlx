@@ -16,8 +16,8 @@ spec:
       labels: {{ include "nlx-directory.common.metadata-labels" . | nindent 8 }}
     spec:
       containers:
-        - name: insight-ui
-          image: {{.Values.insightUIImage}}
+        - name: {{.component}}
+          image: {{.Values.imagePrefix}}nlxio/{{.component}}:{{.Values.imageTag}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
           env:
             - name: DIRECTORY_INSPECTION_API_URL

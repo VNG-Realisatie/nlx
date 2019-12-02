@@ -7,10 +7,12 @@ Deploy demo, preprod & prod:
     - export GIT_COMMIT_HASH=$(git rev-parse HEAD)
     - export GIT_TAG_NAME=$(git describe --tags)
   script:
-    - skaffold run --profile demo
-    - skaffold run --profile preprod
-    - skaffold run --profile prod
-    - skaffold build --profile prod | ./docker-tag-latest.awk
+    - helm upgrade --install nlx-demo-directory ./helm/nlx-directory --namespace nlx-demo-directory --values ./helm/nlx-directory/values-demo.yaml
+    - helm upgrade --install nlx-demo-brp ./helm/nlx-organization --namespace nlx-demo-brp --values ./helm/nlx-directory/values-demo-brp.yaml
+    - helm upgrade --install nlx-demo-rdw ./helm/nlx-organization --namespace nlx-demo-rdw --values ./helm/nlx-directory/values-demo-rdw.yaml
+    - helm upgrade --install nlx-demo-haarlem ./helm/nlx-organization --namespace nlx-demo-haarlem --values ./helm/nlx-directory/values-demo-haarlem.yaml
+    - helm upgrade --install nlx-preprod-directory ./helm/nlx-directory --namespace nlx-preprod-directory --values ./helm/nlx-directory/values-preprod.yaml
+    - helm upgrade --install nlx-prod-directory ./helm/nlx-directory --namespace nlx-prod-directory --values ./helm/nlx-directory/values-prod.yaml
   only:
     - tags
   when: manual

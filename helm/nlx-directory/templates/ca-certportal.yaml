@@ -14,8 +14,8 @@ spec:
       labels: {{ include "nlx-directory.common.metadata-labels" . | nindent 8 }}
     spec:
       containers:
-        - name: ca-certportal
-          image: {{.Values.caCertportalImage}}
+        - name: {{.component}}
+          image: {{.Values.imagePrefix}}nlxio/{{.component}}:{{.Values.imageTag}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
           env:
             - name: LOG_TYPE

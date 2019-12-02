@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install -y wget --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /src/*.deb
 
-COPY directory-ui-e2e-tests/wait-for-http.sh \
+COPY wait-for-http.sh \
      /go/src/commonground/nlx/directory-ui-e2e-tests/
 
 # Uncomment to skip the chromium download when installing puppeteer. If you do,
@@ -29,8 +29,8 @@ COPY directory-ui-e2e-tests/wait-for-http.sh \
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
 # Copy only package.json and package-lock.json to make the dependency fetching step optional.
-COPY directory-ui-e2e-tests/package.json \
-     directory-ui-e2e-tests/package-lock.json \
+COPY package.json \
+     package-lock.json \
      /go/src/commonground/nlx/directory-ui-e2e-tests/
 
 WORKDIR /go/src/commonground/nlx/directory-ui-e2e-tests
@@ -38,4 +38,4 @@ WORKDIR /go/src/commonground/nlx/directory-ui-e2e-tests
 RUN npm ci --no-progress --color=false --quiet
 
 # Now copy the whole workdir.
-COPY directory-ui-e2e-tests /go/src/commonground/nlx/directory-ui-e2e-tests
+COPY . /go/src/commonground/nlx/directory-ui-e2e-tests

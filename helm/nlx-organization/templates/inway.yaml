@@ -62,7 +62,7 @@ spec:
 
       initContainers:
         - name: inway-certs
-          image: {{.Values.caCfsslUnsafeImage}}
+          image: {{.Values.imagePrefix}}nlxio/ca-cfssl-unsafe:{{.Values.imageTag}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
           volumeMounts:
             - name: certs
@@ -76,7 +76,7 @@ spec:
 
       containers:
         - name: inway
-          image: {{.Values.inwayImage}}
+          image: {{.Values.imagePrefix}}nlxio/{{.component}}:{{.Values.imageTag}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
           env:
             - name: LOG_TYPE

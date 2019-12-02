@@ -66,8 +66,7 @@ services:
   directory-ui:
     image: "${IMAGE_PREFIX}nlxio/directory-ui:${IMAGE_TAG}"
     build:
-      context: .
-      dockerfile: directory-ui/Dockerfile
+      context: directory-ui
       args:
         GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
         GIT_TAG_NAME: "${GIT_TAG_NAME}"
@@ -82,8 +81,7 @@ services:
   insight-ui:
     image: "${IMAGE_PREFIX}nlxio/insight-ui:${IMAGE_TAG}"
     build:
-      context: .
-      dockerfile: insight-ui/Dockerfile
+      context: insight-ui
       args:
         GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
         GIT_TAG_NAME: "${GIT_TAG_NAME}"
@@ -111,8 +109,7 @@ services:
   management-ui:
     image: "${IMAGE_PREFIX}nlxio/management-ui:${IMAGE_TAG}"
     build:
-      context: .
-      dockerfile: management-ui/Dockerfile
+      context: management-ui
       args:
         GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
         GIT_TAG_NAME: "${GIT_TAG_NAME}"

@@ -6,11 +6,17 @@ Deploy acceptance:
     - kubectl config use-context delta.k8s.nlx.io
     - export GIT_COMMIT_HASH=$(git rev-parse HEAD)
     - export GIT_TAG_NAME=$(git describe --tags)
+    - export IMAGE_PREFIX="${CI_REGISTRY_IMAGE}/"
+    - export IMAGE_TAG="${GIT_TAG_NAME}"
   script:
-    - skaffold run --profile acc
+    - |
+      helm upgrade --install nlx-acc-directory ./helm/nlx-directory \
+        --namespace nlx-acc-directory \
+        --values ./helm/nlx-directory/values-acc.yaml
   only:
     - master
     - tags
+    - /^fix\/821-builds/
   tags:
     - nlx-privileged
     - shell

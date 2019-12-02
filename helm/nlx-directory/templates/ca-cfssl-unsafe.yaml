@@ -32,8 +32,8 @@ spec:
       securityContext:
         fsGroup: 1001
       containers:
-        - name: ca-cfssl-unsafe
-          image: {{.Values.caCfsslUnsafeImage}}
+        - name: {{.component}}
+          image: {{.Values.imagePrefix}}nlxio/{{.component}}:{{.Values.imageTag}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
       {{- if .Values.ca.certPEM }}
           command: ["cfssl"]

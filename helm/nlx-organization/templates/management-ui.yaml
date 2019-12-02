@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
         - name: management-ui
-          image: {{.Values.managementUIImage}}
+          image: {{.Values.imagePrefix}}nlxio/{{.component}}:{{.Values.imageTag}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
       restartPolicy: Always
   status: {}
