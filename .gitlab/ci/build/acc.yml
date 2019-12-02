@@ -6,6 +6,7 @@ Build acc:
     - export IMAGE_PREFIX="${CI_REGISTRY_IMAGE}/"
     - export IMAGE_TAG="${GIT_TAG_NAME}"
   script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - time docker-compose build --parallel
     - time docker-compose push
   tags:
