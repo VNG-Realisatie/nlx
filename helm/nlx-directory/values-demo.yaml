@@ -17,6 +17,7 @@ demoEnv: "demo"
 demoDomain: "nlx.io"
 
 imagePullPolicy: IfNotPresent
+imagePrefix: ""
 
 insightDirectoryInspectionAPIURL: "http://directory-inspection-api-internal"
 

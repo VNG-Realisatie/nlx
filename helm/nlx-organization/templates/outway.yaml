@@ -25,7 +25,7 @@ spec:
 
       initContainers:
         - name: outway-certs
-          image: {{.Values.caCfsslUnsafeImage}}
+          image: {{.Values.imagePrefix}}nlxio/ca-cfssl-unsafe:{{.Values.imageTag}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
           volumeMounts:
             - name: certs
@@ -39,7 +39,7 @@ spec:
 
       containers:
         - name: outway
-          image: {{.Values.outwayImage}}
+          image: {{.Values.imagePrefix}}nlxio/{{.component}}:{{.Values.imageTag}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
           env:
             - name: LOG_TYPE
@@ -82,7 +82,6 @@ spec:
     - name: handler-tls
       protocol: TCP
       port: 8443
-  cluserIP: None
 {{ if .Values.debugEnableOutwayIngress }}
 ---
 apiVersion: extensions/v1beta1

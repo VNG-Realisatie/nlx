@@ -6,31 +6,29 @@ ENV CI=true
 ENV INLINE_RUNTIME_CHUNK=false
 
 # First copy only package.json and yarn.lock to make the dependency fetching step optional.
-COPY directory-ui/package.json \
-    directory-ui/package-lock.json \
+COPY package.json \
+    package-lock.json \
     /go/src/go.nlx.io/nlx/directory-ui/
 
 WORKDIR /go/src/go.nlx.io/nlx/directory-ui
 RUN npm ci --no-progress --color=false --quiet
 
 # Now copy the whole workdir for the build step.
-COPY directory-ui /go/src/go.nlx.io/nlx/directory-ui
+COPY . /go/src/go.nlx.io/nlx/directory-ui
 
 RUN npm run build
 
-# Copy static docs to alpine-based nginx container.
-FROM nginx:alpine
+# Create version.json
+FROM alpine:3.10 AS version
 
-# Copy nginx configuration
-COPY directory-ui/docker/default.conf /etc/nginx/conf.d/default.conf
-COPY directory-ui/docker/nginx.conf /etc/nginx/nginx.conf
+RUN apk add --no-cache jq=1.6-r0
 
-COPY --from=build /go/src/go.nlx.io/nlx/directory-ui/build /usr/share/nginx/html
-
-# Add file with version tag from git
 ARG GIT_TAG_NAME=undefined
 ARG GIT_COMMIT_HASH=undefined
-RUN ash -c 'echo "{\"tag\": \"$GIT_TAG_NAME\", \"commit\": \"$GIT_COMMIT_HASH\"}" > /usr/share/nginx/html/version.json'
+RUN jq -ncM --arg tag $GIT_TAG_NAME --arg commit $GIT_COMMIT_HASH  '{tag: $tag, commit: $commit}' | tee /version.json
+
+# Copy static docs to alpine-based nginx container.
+FROM nginx:alpine
 
 # Add non-privileged user
 RUN adduser -D -u 1001 appuser
@@ -39,5 +37,12 @@ RUN adduser -D -u 1001 appuser
 RUN touch /var/run/nginx.pid && \
     chown -R appuser /var/run/nginx.pid && \
     chown -R appuser /var/cache/nginx
+
+# Copy nginx configuration
+COPY docker/nginx.conf /etc/nginx/nginx.conf
+COPY docker/default.conf /etc/nginx/conf.d/default.conf
+
+COPY --from=build /go/src/go.nlx.io/nlx/directory-ui/build /usr/share/nginx/html
+COPY --from=version /version.json /usr/share/nginx/html
 
 USER appuser

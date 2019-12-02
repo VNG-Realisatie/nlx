@@ -3,6 +3,7 @@ organizationName: rdw
 domain: nlx-dev-rdw
 externalDomain: nlx-dev-rdw.minikube
 
+logLevel: debug
 logType: local
 
 dbDatabaseTxlog: nlx-dev-rdw-txlog

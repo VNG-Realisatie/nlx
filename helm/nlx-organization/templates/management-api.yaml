@@ -25,7 +25,7 @@ spec:
 
       initContainers:
         - name: management-api-certs
-          image: {{.Values.caCfsslUnsafeImage}}
+          image: {{.Values.imagePrefix}}nlxio/ca-cfssl-unsafe:{{.Values.imageTag}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
           volumeMounts:
             - name: certs
@@ -39,7 +39,7 @@ spec:
 
       containers:
         - name: management-api
-          image: {{.Values.managementAPIImage}}
+          image: {{.Values.imagePrefix}}nlxio/{{.component}}:{{.Values.imageTag}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
           env:
             - name: LOG_TYPE
@@ -70,6 +70,5 @@ spec:
       protocol: TCP
       port: 80
       targetPort: 8080
-  cluserIP: None
 {{ end }}
 {{ end }}

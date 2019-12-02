@@ -15,11 +15,14 @@ COPY . /go/src/go.nlx.io/nlx/docs
 
 RUN npm run build
 
+# Create version.json
 FROM alpine:3.10 AS version
-# Add file with version tag from git
+
+RUN apk add --no-cache jq=1.6-r0
+
 ARG GIT_TAG_NAME=undefined
 ARG GIT_COMMIT_HASH=undefined
-RUN ash -c 'echo "{\"tag\": \"$GIT_TAG_NAME\", \"commit\": \"$GIT_COMMIT_HASH\"}" > /version.json'
+RUN jq -ncM --arg tag $GIT_TAG_NAME --arg commit $GIT_COMMIT_HASH  '{tag: $tag, commit: $commit}' | tee /version.json
 
 # Copy static docs to alpine-based nginx container.
 FROM nginx:alpine
@@ -34,8 +37,8 @@ RUN touch /var/run/nginx.pid && \
     chown -R appuser /var/cache/nginx
 
 # Copy nginx configuration
-COPY docker/default.conf /etc/nginx/conf.d/default.conf
 COPY docker/nginx.conf /etc/nginx/nginx.conf
+COPY docker/default.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=build /go/src/go.nlx.io/nlx/docs/website/build /usr/share/nginx/html
 COPY --from=version /version.json /usr/share/nginx/html/

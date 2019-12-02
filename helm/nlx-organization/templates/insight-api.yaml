@@ -43,7 +43,7 @@ spec:
     spec:
       containers:
         - name: insight-api
-          image: {{.Values.insightAPIImage}}
+          image: {{.Values.imagePrefix}}nlxio/{{.component}}:{{.Values.imageTag}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
           env:
             - name: LOG_TYPE
@@ -84,7 +84,6 @@ spec:
     - name: api
       protocol: TCP
       port: 8080
-  cluserIP: None
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress

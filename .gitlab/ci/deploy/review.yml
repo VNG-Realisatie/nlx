@@ -5,49 +5,34 @@ Deploy Review App:
     IMAGE_PREFIX: "${REVIEW_REGISTRY_HOST}/${CI_PROJECT_PATH}/"
     IMAGE_TAG: $CI_COMMIT_SHORT_SHA
     REVIEW_BASE_DOMAIN: nlx.reviews
+    NAME: "nlx-directory-${CI_ENVIRONMENT_SLUG}"
   script:
     - echo -e -n "$CI_ENVIRONMENT_SLUG.$REVIEW_BASE_DOMAIN" > ci_environment_url.txt
     - |
-        helm upgrade --install nlx-directory-$CI_ENVIRONMENT_SLUG ./helm/nlx-directory \
-        --namespace nlx-directory-$CI_ENVIRONMENT_SLUG \
+        helm upgrade --install ${NAME} ./helm/nlx-directory \
+        --namespace ${NAME} \
         --values ./helm/nlx-directory/values-review.yaml \
-        --set "caCertportalImage=${IMAGE_PREFIX}nlxio/ca-certportal:${IMAGE_TAG}" \
-        --set "caCfsslUnsafeImage=${IMAGE_PREFIX}nlxio/ca-cfssl-unsafe:${IMAGE_TAG}" \
-        --set "directoryDBImage=${IMAGE_PREFIX}nlxio/directory-db:${IMAGE_TAG}" \
-        --set "directoryInspectionImage=${IMAGE_PREFIX}nlxio/directory-inspection-api:${IMAGE_TAG}" \
-        --set "directoryMonitorImage=${IMAGE_PREFIX}nlxio/directory-monitor:${IMAGE_TAG}" \
-        --set "directoryRegistrationImage=${IMAGE_PREFIX}nlxio/directory-registration-api:${IMAGE_TAG}" \
-        --set "directoryUIImage=${IMAGE_PREFIX}nlxio/directory-ui:${IMAGE_TAG}" \
-        --set "docsImage=${IMAGE_PREFIX}nlxio/docs:${IMAGE_TAG}" \
-        --set "insightUIImage=${IMAGE_PREFIX}nlxio/insight-ui:${IMAGE_TAG}" \
-        --set "reviewPageImage=${IMAGE_PREFIX}nlxio/review-page:${IMAGE_TAG}" \
-        --set "caAddress=ca-cfssl-unsafe.nlx-directory-${CI_ENVIRONMENT_SLUG}" \
-        --set "insightDirectoryInspectionAPIURL=http://directory-inspection-api-internal.nlx-directory-${CI_ENVIRONMENT_SLUG}" \
-        --set "externalDomain=nlx-directory-${CI_ENVIRONMENT_SLUG}.${REVIEW_BASE_DOMAIN}" \
-        --set "domain=nlx-directory-${CI_ENVIRONMENT_SLUG}" \
+        --set imageTag=$IMAGE_TAG \
+        --set imagePrefix=$IMAGE_PREFIX \
+        --set "caAddress=ca-cfssl-unsafe.${NAME}" \
+        --set "insightDirectoryInspectionAPIURL=http://directory-inspection-api-internal.${NAME}" \
+        --set "externalDomain=${NAME}.${REVIEW_BASE_DOMAIN}" \
+        --set "domain=${NAME}" \
         --set "reviewPage.environmentSlugWithDomain=${CI_ENVIRONMENT_SLUG}.${REVIEW_BASE_DOMAIN}"
     - |
-        for ORG_NAME in haarlem rdw brp lorem ipsum
+        for ORG in haarlem rdw brp lorem ipsum
         do
-          helm upgrade --install nlx-$ORG_NAME-$CI_ENVIRONMENT_SLUG ./helm/nlx-organization \
-          --namespace nlx-$ORG_NAME-$CI_ENVIRONMENT_SLUG \
-          --values ./helm/nlx-organization/values-review-$ORG_NAME.yaml \
-          --set "authServiceImage=${IMAGE_PREFIX}nlxio/auth-service:${IMAGE_TAG}" \
-          --set "caCfsslUnsafeImage=${IMAGE_PREFIX}nlxio/ca-cfssl-unsafe:${IMAGE_TAG}" \
-          --set "configAPIImage=${IMAGE_PREFIX}nlxio/config-api:${IMAGE_TAG}" \
-          --set "insightAPIImage=${IMAGE_PREFIX}nlxio/insight-api:${IMAGE_TAG}" \
-          --set "inwayImage=${IMAGE_PREFIX}nlxio/inway:${IMAGE_TAG}" \
-          --set "outwayImage=${IMAGE_PREFIX}nlxio/outway:${IMAGE_TAG}" \
-          --set "managementAPIImage=${IMAGE_PREFIX}nlxio/management-api:${IMAGE_TAG}" \
-          --set "managementUIImage=${IMAGE_PREFIX}nlxio/management-ui:${IMAGE_TAG}" \
-          --set "nlxctlImage=${IMAGE_PREFIX}nlxio/nlxctl:${IMAGE_TAG}" \
-          --set "txlogDBImage=${IMAGE_PREFIX}nlxio/txlog-db:${IMAGE_TAG}" \
-          --set "irma.apiServerImage=${IMAGE_PREFIX}nlxio/irma:${IMAGE_TAG}" \
-          --set "directoryRegistrationHostname=directory-registration-api.nlx-directory-${CI_ENVIRONMENT_SLUG}" \
-          --set "directoryInspectionHostname=directory-inspection-api.nlx-directory-${CI_ENVIRONMENT_SLUG}" \
-          --set "caAddress=ca-cfssl-unsafe.nlx-directory-${CI_ENVIRONMENT_SLUG}" \
-          --set "externalDomain=nlx-${ORG_NAME}-${CI_ENVIRONMENT_SLUG}.${REVIEW_BASE_DOMAIN}" \
-          --set "domain=nlx-${ORG_NAME}-${CI_ENVIRONMENT_SLUG}" \
+          ORG_NAME=nlx-${ORG}-${CI_ENVIRONMENT_SLUG}
+          helm upgrade --install ${ORG_NAME} ./helm/nlx-organization \
+          --namespace ${ORG_NAME} \
+          --values ./helm/nlx-organization/values-review-${ORG}.yaml \
+          --set imageTag=$IMAGE_TAG \
+          --set imagePrefix=$IMAGE_PREFIX \
+          --set "directoryRegistrationHostname=directory-registration-api.${NAME}" \
+          --set "directoryInspectionHostname=directory-inspection-api.${NAME}" \
+          --set "caAddress=ca-cfssl-unsafe.${NAME}" \
+          --set "externalDomain=${ORG_NAME}.${REVIEW_BASE_DOMAIN}" \
+          --set "domain=${ORG_NAME}" \
           --set "management.basicAuth=${MANAGEMENT_BASIC_AUTH}"
         done
   environment:

@@ -8,6 +8,7 @@ Build review:
     - export GIT_COMMIT_HASH=$(git rev-parse HEAD)
     - export GIT_TAG_NAME=$(git describe --tags)
   script:
+    - docker-compose version
     - time docker-compose build --parallel
     - time docker-compose push
   tags:

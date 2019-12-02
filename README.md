@@ -25,7 +25,6 @@ Make sure you have installed the following tools:
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 - [minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/)
 - [helm](https://docs.helm.sh/using_helm/)
-- [skaffold](https://github.com/GoogleContainerTools/skaffold#installation)
 
 For autocompletion and local development tasks, it's also recommended to install the following:
 
@@ -59,6 +58,11 @@ Configure the vm driver for minikube:
 For developers, it's advised to setup minikube with 4 cores, 8GB RAM and at least 100G storage.
 e.g.: `minikube start --cpus 4 --memory 8192 --disk-size=100G`
 
+To let the docker commands make use of Minikube execute the following before proceeding or add it to your shell profile:
+```bash
+eval $(minikube docker-env)
+```
+
 Once minikube is running, initialize helm by running `helm init` followed by `helm repo update`
 
 Next, install Traefik as ingress controller for web and rest-api requests.
@@ -72,7 +76,11 @@ Also install KubeDB, an operator that manages postgres instances. Follow the [ku
 When Traefik and KubeDB are running, you can start all the NLX components by executing:
 
 ```bash
-skaffold dev --profile minikube
+docker-compose build --parallel
+helm upgrade --install nlx-dev-directory ./helm/nlx-directory --namespace nlx-dev-directory --values ./helm/nlx-directory/values-dev.yaml
+helm upgrade --install nlx-dev-brp ./helm/nlx-organization --namespace nlx-dev-brp --values ./helm/nlx-organization/values-dev-brp.yaml
+helm upgrade --install nlx-dev-rdw ./helm/nlx-organization --namespace nlx-dev-rdw --values ./helm/nlx-organization/values-dev-rdw.yaml
+helm upgrade --install nlx-dev-haarlem ./helm/nlx-organization --namespace nlx-dev-haarlem --values ./helm/nlx-organization/values-dev-haarlem.yaml
 ```
 
 Finally, add the minikube hostnames to your machine's `/etc/hosts` file so you can reach the services from your browser.

@@ -42,7 +42,6 @@ spec:
     - name: application
       protocol: TCP
       port: 8000
-  cluserIP: None
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress

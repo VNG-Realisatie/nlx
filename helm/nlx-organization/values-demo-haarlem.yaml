@@ -4,6 +4,7 @@ domain: demo.voorbeeld-haarlem.nl
 externalDomain: demo.voorbeeld-haarlem.nl
 
 logLevel: info
+imagePrefix: ""
 
 dbDatabaseTxlog: nlx-demo-haarlem-txlog
 dbResetTxlog: false

@@ -4,6 +4,7 @@ domain: demo.voorbeeld-brp.nl
 externalDomain: demo.voorbeeld-brp.nl
 
 logLevel: info
+imagePrefix: ""
 
 dbDatabaseTxlog: nlx-demo-brp-txlog
 dbResetTxlog: false

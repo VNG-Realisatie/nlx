@@ -3,6 +3,7 @@ organizationName: brp
 domain: nlx-dev-brp
 externalDomain: nlx-dev-brp.minikube
 
+logLevel: debug
 logType: local
 
 dbDatabaseTxlog: nlx-dev-brp-txlog

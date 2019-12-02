@@ -1,4 +1,6 @@
-*/node_modules
+Dockerfile
+website/node_modules
+website/build
+website/.docusaurus
 *.log
-*/build
 */i18n

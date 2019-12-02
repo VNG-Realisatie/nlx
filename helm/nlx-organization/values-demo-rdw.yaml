@@ -4,6 +4,7 @@ domain: demo.voorbeeld-rdw.nl
 externalDomain: demo.voorbeeld-rdw.nl
 
 logLevel: info
+imagePrefix: ""
 
 dbDatabaseTxlog: nlx-demo-rdw-txlog
 dbResetTxlog: false

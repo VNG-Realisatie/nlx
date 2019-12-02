@@ -61,7 +61,7 @@ spec:
             secretName: {{.component}}-jwt
       containers:
         - name: {{ .component }}
-          image: {{.Values.irma.apiServerImage}}
+          image: {{.Values.imagePrefix}}nlxio/irma:{{.Values.imageTag}}
           imagePullPolicy: {{.Values.irma.pullPolicy}}
           args: ["server", "run"]
           volumeMounts:
@@ -83,7 +83,6 @@ spec:
     - name: api
       protocol: TCP
       port: 8088
-  cluserIP: None
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress

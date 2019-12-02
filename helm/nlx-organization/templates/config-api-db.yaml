@@ -26,7 +26,7 @@ spec:
           emptyDir: {}
       initContainers:
         - name: nxctl-certs
-          image: {{.Values.caCfsslUnsafeImage}}
+          image: {{.Values.imagePrefix}}nlxio/ca-cfssl-unsafe:{{.Values.imageTag}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
           volumeMounts:
             - name: certs
@@ -39,7 +39,7 @@ spec:
                 /ca/generate-cert.sh {{.component}} {{.Values.organizationName}} {{.Values.caAddress}}
       containers:
         - name: config-api-db
-          image: {{.Values.nlxctlImage}}
+          image: {{.Values.imagePrefix}}nlxio/nlxctl:{{.Values.imageTag}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
           volumeMounts:
             - name: service-configuration

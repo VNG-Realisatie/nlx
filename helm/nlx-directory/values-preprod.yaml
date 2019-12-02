@@ -13,6 +13,7 @@ demo:
   enabled: false
 
 imagePullPolicy: IfNotPresent
+imagePrefix: ""
 
 insightDirectoryInspectionAPIURL: "http://directory-inspection-api-internal"
 
