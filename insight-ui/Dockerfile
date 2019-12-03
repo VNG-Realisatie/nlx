@@ -6,15 +6,15 @@ ENV CI=true
 ENV INLINE_RUNTIME_CHUNK=false
 
 # First copy package.json to make the dependency fetching step optional.
-COPY insight-ui/package.json \
-  insight-ui/package-lock.json \
+COPY package.json \
+  package-lock.json \
   /go/src/go.nlx.io/nlx/insight-ui/
 
 WORKDIR /go/src/go.nlx.io/nlx/insight-ui
 RUN npm ci --no-progress --color=false --quiet
 
 # Now copy the whole directory for the build step.
-COPY insight-ui /go/src/go.nlx.io/nlx/insight-ui
+COPY . /go/src/go.nlx.io/nlx/insight-ui
 
 # Run tests and build
 RUN npm run build
@@ -23,9 +23,9 @@ RUN npm run build
 FROM nginx:alpine
 
 # Copy nginx configuration
-COPY insight-ui/docker/default.conf /etc/nginx/conf.d/default.conf.template
-COPY insight-ui/docker/nginx.conf /etc/nginx/nginx.conf
-COPY insight-ui/docker/startup.sh .
+COPY docker/default.conf /etc/nginx/conf.d/default.conf.template
+COPY docker/nginx.conf /etc/nginx/nginx.conf
+COPY docker/startup.sh .
 
 COPY --from=build /go/src/go.nlx.io/nlx/insight-ui/build /usr/share/nginx/html
 

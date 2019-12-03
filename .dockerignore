@@ -14,4 +14,7 @@ helm
 docs/
 ca-cfssl-unsafe/
 review-page/
-
+insight-ui/
+directory-ui/
+directory-ui-e2e-tests/
+management-ui/
