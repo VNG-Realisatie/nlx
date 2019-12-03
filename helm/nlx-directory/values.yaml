@@ -6,4 +6,4 @@ storageType: Durable
 ca: {}
 
 imageTag: latest
-imagePrefix: nlxio/
+imagePrefix: ""
