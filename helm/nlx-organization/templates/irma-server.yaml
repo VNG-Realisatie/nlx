@@ -61,7 +61,7 @@ spec:
             secretName: {{.component}}-jwt
       containers:
         - name: {{ .component }}
-          image: {{.Values.irma.apiServerImage}}
+          image: {{.Values.imagePrefix}}nlxio/irma{{.Values.imageTag}}
           imagePullPolicy: {{.Values.irma.pullPolicy}}
           args: ["server", "run"]
           volumeMounts:
