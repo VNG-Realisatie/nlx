@@ -7,38 +7,38 @@ Dependency scanning:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - export DS_VERSION=${SP_VERSION:-$(echo "$CI_SERVER_VERSION" | sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')}
-#    - | # this is required to avoid undesirable reset of Docker image ENV variables being set on build stage
-#      function propagate_env_vars() {
-#        CURRENT_ENV=$(printenv)
-#
-#        for VAR_NAME; do
-#          echo $CURRENT_ENV | grep "${VAR_NAME}=" > /dev/null && echo "--env $VAR_NAME "
-#        done
-#      }
-#    - |
-#      docker run \
-#        $(propagate_env_vars \
-#          DS_ANALYZER_IMAGES \
-#          DS_ANALYZER_IMAGE_PREFIX \
-#          DS_ANALYZER_IMAGE_TAG \
-#          DS_DEFAULT_ANALYZERS \
-#          DS_EXCLUDED_PATHS \
-#          DEP_SCAN_DISABLE_REMOTE_CHECKS \
-#          DS_DOCKER_CLIENT_NEGOTIATION_TIMEOUT \
-#          DS_PULL_ANALYZER_IMAGE_TIMEOUT \
-#          DS_RUN_ANALYZER_TIMEOUT \
-#          DS_PYTHON_VERSION \
-#          DS_PIP_DEPENDENCY_PATH \
-#          PIP_INDEX_URL \
-#          PIP_EXTRA_INDEX_URL \
-#        ) \
-#      --volume "/var/run/docker.sock:/var/run/docker.sock" \
-#      --volume "$PWD:/code" \
-#      "registry.gitlab.com/gitlab-org/security-products/dependency-scanning:$DS_VERSION" /code
+    - | # this is required to avoid undesirable reset of Docker image ENV variables being set on build stage
+      function propagate_env_vars() {
+        CURRENT_ENV=$(printenv)
+
+        for VAR_NAME; do
+          echo $CURRENT_ENV | grep "${VAR_NAME}=" > /dev/null && echo "--env $VAR_NAME "
+        done
+      }
+    - |
+      docker run \
+        $(propagate_env_vars \
+          DS_ANALYZER_IMAGES \
+          DS_ANALYZER_IMAGE_PREFIX \
+          DS_ANALYZER_IMAGE_TAG \
+          DS_DEFAULT_ANALYZERS \
+          DS_EXCLUDED_PATHS \
+          DEP_SCAN_DISABLE_REMOTE_CHECKS \
+          DS_DOCKER_CLIENT_NEGOTIATION_TIMEOUT \
+          DS_PULL_ANALYZER_IMAGE_TIMEOUT \
+          DS_RUN_ANALYZER_TIMEOUT \
+          DS_PYTHON_VERSION \
+          DS_PIP_DEPENDENCY_PATH \
+          PIP_INDEX_URL \
+          PIP_EXTRA_INDEX_URL \
+        ) \
+      --volume "/var/run/docker.sock:/var/run/docker.sock" \
+      --volume "$PWD:/code" \
+      "registry.gitlab.com/gitlab-org/security-products/dependency-scanning:$DS_VERSION" /code
   dependencies: []
-#  artifacts:
-#    reports:
-#      dependency_scanning: gl-dependency-scanning-report.json
+  artifacts:
+    reports:
+      dependency_scanning: gl-dependency-scanning-report.json
   tags:
     - shell
     - nlx
