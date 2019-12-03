@@ -26,7 +26,7 @@ spec:
 
       initContainers:
         - name: directory-monitor-certs
-          image: {{.Values.imagePrefix}}nlxio/ca-cfssl-unsafe{{.Values.imageTag}}}}
+          image: {{.Values.imagePrefix}}nlxio/ca-cfssl-unsafe{{.Values.imageTag}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
           volumeMounts:
             - name: certs
@@ -40,8 +40,8 @@ spec:
       {{ end }}
 
       containers:
-        - name: {{.component}}}}
-          image: {{.Values.imagePrefix}}nlxio/{{.component}}{{.Values.imageTag}}}}
+        - name: {{.component}}
+          image: {{.Values.imagePrefix}}nlxio/{{.component}}{{.Values.imageTag}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
           env:
             - name: LOG_TYPE

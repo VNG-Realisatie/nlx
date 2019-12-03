@@ -9,7 +9,7 @@ spec:
     spec:
       containers:
         - name: directory-db
-          image: {{.Values.imagePrefix}}nlxio/directory-db{{.Values.imageTag}}}}
+          image: {{.Values.imagePrefix}}nlxio/directory-db{{.Values.imageTag}}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
           command:
             {{- if .Values.dbResetDirectory }}

@@ -2,47 +2,6 @@ apiVersion: skaffold/v1beta5
 kind: Config
 build:
   artifacts:
-  - image: nlxio/ca-certportal
-    docker:
-      dockerfile: ca-certportal/Dockerfile
-      buildArgs:
-        GIT_COMMIT_HASH: "{{.GIT_COMMIT_HASH}}"
-        GIT_TAG_NAME: "{{.GIT_TAG_NAME}}"
-profiles:
-- name: minikube
-  build:
-    tagPolicy:
-      sha256: {}
-    local:
-      push: false
-  deploy:
-    helm:
-      releases:
-      - name: nlx-dev-directory
-        chartPath: helm/nlx-directory
-        values:
-          caCertPortalImage: nlxio/ca-certportal
-        valuesFiles:
-        - helm/nlx-directory/values-dev.yaml
-        setValueTemplates:
-          imageTag: "{{.DIGEST_HEX}}"
-        namespace: nlx-dev-directory
-
-
-
-
-
-
-
-
-
-
-
-
-apiVersion: skaffold/v1beta5
-kind: Config
-build:
-  artifacts:
   - image: nlxio/auth-service
     docker:
       dockerfile: auth-service/Dockerfile
@@ -88,8 +47,8 @@ build:
         GIT_COMMIT_HASH: "{{.GIT_COMMIT_HASH}}"
         GIT_TAG_NAME: "{{.GIT_TAG_NAME}}"
   - image: nlxio/directory-ui
+    context: directory-ui
     docker:
-      dockerfile: directory-ui/Dockerfile
       buildArgs:
         GIT_COMMIT_HASH: "{{.GIT_COMMIT_HASH}}"
         GIT_TAG_NAME: "{{.GIT_TAG_NAME}}"
@@ -100,8 +59,8 @@ build:
         GIT_COMMIT_HASH: "{{.GIT_COMMIT_HASH}}"
         GIT_TAG_NAME: "{{.GIT_TAG_NAME}}"
   - image: nlxio/insight-ui
+    context: insight-ui
     docker:
-      dockerfile: insight-ui/Dockerfile
       buildArgs:
         GIT_COMMIT_HASH: "{{.GIT_COMMIT_HASH}}"
         GIT_TAG_NAME: "{{.GIT_TAG_NAME}}"
@@ -121,8 +80,8 @@ build:
         GIT_COMMIT_HASH: "{{.GIT_COMMIT_HASH}}"
         GIT_TAG_NAME: "{{.GIT_TAG_NAME}}"
   - image: nlxio/management-ui
+    context: management-ui
     docker:
-      dockerfile: management-ui/Dockerfile
       buildArgs:
         GIT_COMMIT_HASH: "{{.GIT_COMMIT_HASH}}"
         GIT_TAG_NAME: "{{.GIT_TAG_NAME}}"
@@ -157,136 +116,30 @@ profiles:
         chartPath: helm/nlx-directory
         valuesFiles:
         - helm/nlx-directory/values-dev.yaml
-        values:
-          caCertportalImage: nlxio/ca-certportal
-          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-          directoryDBImage: nlxio/directory-db
-          directoryInspectionImage: nlxio/directory-inspection-api
-          directoryMonitorImage: nlxio/directory-monitor
-          directoryRegistrationImage: nlxio/directory-registration-api
-          directoryUIImage: nlxio/directory-ui
-          docsImage: nlxio/docs
-          insightUIImage: nlxio/insight-ui
-          reviewPageImage: nlxio/review-page
+        setValueTemplates:
+          imageTag: "{{.DIGEST_HEX}}"
         namespace: nlx-dev-directory
       - name: nlx-dev-brp
+        namespace: nlx-dev-brp
         chartPath: helm/nlx-organization
         valuesFiles:
         - helm/nlx-organization/values-dev-brp.yaml
-        values:
-          authServiceImage: nlxio/auth-service
-          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-          configAPIImage: nlxio/config-api
-          insightAPIImage: nlxio/insight-api
-          inwayImage: nlxio/inway
-          managementAPIImage: nlxio/management-api
-          managementUIImage: nlxio/management-ui
-          nlxctlImage: nlxio/nlxctl
-          txlogDBImage: nlxio/txlog-db
-        namespace: nlx-dev-brp
+        setValueTemplates:
+          imageTag: "{{.DIGEST_HEX}}"
       - name: nlx-dev-rdw
+        namespace: nlx-dev-rdw
         chartPath: helm/nlx-organization
         valuesFiles:
         - helm/nlx-organization/values-dev-rdw.yaml
-        values:
-          authServiceImage: nlxio/auth-service
-          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-          configAPIImage: nlxio/config-api
-          insightAPIImage: nlxio/insight-api
-          inwayImage: nlxio/inway
-          managementAPIImage: nlxio/management-api
-          managementUIImage: nlxio/management-ui
-          nlxctlImage: nlxio/nlxctl
-          txlogDBImage: nlxio/txlog-db
-        namespace: nlx-dev-rdw
+        setValueTemplates:
+          imageTag: "{{.DIGEST_HEX}}"
       - name: nlx-dev-haarlem
+        namespace: nlx-dev-haarlem
         chartPath: helm/nlx-organization
         valuesFiles:
         - helm/nlx-organization/values-dev-haarlem.yaml
-        values:
-          authServiceImage: nlxio/auth-service
-          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-          configAPIImage: nlxio/config-api
-          insightAPIImage: nlxio/insight-api
-          inwayImage: nlxio/inway
-          outwayImage: nlxio/outway
-          managementAPIImage: nlxio/management-api
-          managementUIImage: nlxio/management-ui
-          nlxctlImage: nlxio/nlxctl
-          txlogDBImage: nlxio/txlog-db
-        namespace: nlx-dev-haarlem
-- name: acc
-  build:
-    tagPolicy:
-      gitCommit: {}
-    local:
-      push: true
-  deploy:
-    helm:
-      releases:
-      - name: nlx-acc-directory
-        chartPath: helm/nlx-directory
-        valuesFiles:
-        - helm/nlx-directory/values-acc.yaml
-        values:
-          caCertportalImage: nlxio/ca-certportal
-          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-          directoryDBImage: nlxio/directory-db
-          directoryInspectionImage: nlxio/directory-inspection-api
-          directoryMonitorImage: nlxio/directory-monitor
-          directoryRegistrationImage: nlxio/directory-registration-api
-          directoryUIImage: nlxio/directory-ui
-          docsImage: nlxio/docs
-          insightUIImage: nlxio/insight-ui
-        namespace: nlx-acc-directory
-      - name: nlx-acc-brp
-        chartPath: helm/nlx-organization
-        valuesFiles:
-        - helm/nlx-organization/values-acc-brp.yaml
-        values:
-          authServiceImage: nlxio/auth-service
-          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-          configAPIImage: nlxio/config-api
-          insightAPIImage: nlxio/insight-api
-          inwayImage: nlxio/inway
-          managementAPIImage: nlxio/management-api
-          managementUIImage: nlxio/management-ui
-          nlxctlImage: nlxio/nlxctl
-          txlogDBImage: nlxio/txlog-db
-        namespace: nlx-acc-brp
-      - name: nlx-acc-rdw
-        chartPath: helm/nlx-organization
-        valuesFiles:
-        - helm/nlx-organization/values-acc-rdw.yaml
         setValueTemplates:
-         management.basicAuth: "{{.MANAGEMENT_BASIC_AUTH}}"
-        values:
-          authServiceImage: nlxio/auth-service
-          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-          configAPIImage: nlxio/config-api
-          insightAPIImage: nlxio/insight-api
-          inwayImage: nlxio/inway
-          managementAPIImage: nlxio/management-api
-          managementUIImage: nlxio/management-ui
-          nlxctlImage: nlxio/nlxctl
-          txlogDBImage: nlxio/txlog-db
-        namespace: nlx-acc-rdw
-      - name: nlx-acc-haarlem
-        chartPath: helm/nlx-organization
-        valuesFiles:
-        - helm/nlx-organization/values-acc-haarlem.yaml
-        values:
-          authServiceImage: nlxio/auth-service
-          caCfsslUnsafeImage: nlxio/ca-cfssl-unsafe
-          configAPIImage: nlxio/config-api
-          insightAPIImage: nlxio/insight-api
-          inwayImage: nlxio/inway
-          managementAPIImage: nlxio/management-api
-          managementUIImage: nlxio/management-ui
-          nlxctlImage: nlxio/nlxctl
-          outwayImage: nlxio/outway
-          txlogDBImage: nlxio/txlog-db
-        namespace: nlx-acc-haarlem
+          imageTag: "{{.DIGEST_HEX}}"
 - name: demo
   build:
     tagPolicy:

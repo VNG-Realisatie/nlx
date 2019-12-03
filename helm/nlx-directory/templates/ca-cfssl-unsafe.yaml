@@ -33,7 +33,7 @@ spec:
         fsGroup: 1001
       containers:
         - name: {{.component}}
-          image: {{.Values.imagePrefix}}nlxio/{{.component}}{{.Values.imageTag}}}}
+          image: {{.Values.imagePrefix}}nlxio/{{.component}}{{.Values.imageTag}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
       {{- if .Values.ca.certPEM }}
           command: ["cfssl"]

@@ -1,4 +1,4 @@
-Build acc:
+Build acceptance:
   stage: Build
   before_script:
     - export GIT_COMMIT_HASH=$(git rev-parse HEAD)
