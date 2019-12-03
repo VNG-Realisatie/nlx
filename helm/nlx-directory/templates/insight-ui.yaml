@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: {{.component}}
-          image: {{.Values.imagePrefix}}nlxio/{{.component}}{{.Values.imageTag}}
+          image: {{.Values.imagePrefix}}nlxio/{{.component}}:{{.Values.imageTag}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
           env:
             - name: DIRECTORY_INSPECTION_API_URL

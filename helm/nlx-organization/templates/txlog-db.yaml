@@ -9,7 +9,7 @@ spec:
     spec:
       containers:
         - name: txlog-db
-          image: {{.Values.imagePrefix}}nlxio/{{.component}}{{.Values.imageTag}}
+          image: {{.Values.imagePrefix}}nlxio/{{.component}}:{{.Values.imageTag}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
           command:
             {{- if .Values.dbResetTxlog }}
