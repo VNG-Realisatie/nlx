@@ -3,10 +3,12 @@ Build prod:
   before_script:
     - export GIT_COMMIT_HASH=$(git rev-parse HEAD)
     - export GIT_TAG_NAME=$(git describe --tags)
+  script:
     - export IMAGE_PREFIX=""
     - export IMAGE_TAG="${GIT_TAG_NAME}"
-  script:
     - time docker-compose build --parallel
+    - time docker-compose push
+    - export IMAGE_TAG="latest"
     - time docker-compose push
   tags:
     - nlx-privileged
