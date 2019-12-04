@@ -9,14 +9,10 @@ Deploy acceptance:
     - export IMAGE_PREFIX="${CI_REGISTRY_IMAGE}/"
     - export IMAGE_TAG="${GIT_TAG_NAME}"
   script:
-    - |
-      helm upgrade --install nlx-acc-directory ./helm/nlx-directory \
-        --namespace nlx-acc-directory \
-        --values ./helm/nlx-directory/values-acc.yaml
+    - helm upgrade --install nlx-acc-directory ./helm/nlx-directory --namespace nlx-acc-directory --values ./helm/nlx-directory/values-acc.yaml
   only:
     - master
     - tags
-    - /^fix\/821-builds/
   tags:
     - nlx-privileged
     - shell

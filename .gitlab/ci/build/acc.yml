@@ -18,4 +18,3 @@ Build acceptance:
   only:
     - master
     - tags
-    - /^feature\/821-builds/
