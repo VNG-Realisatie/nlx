@@ -62,6 +62,6 @@ spec:
     - name: handler
       protocol: TCP
       port: 8443
-  cluserIP: None
+  clusterIP: None
 {{ end }}
 {{ end }}

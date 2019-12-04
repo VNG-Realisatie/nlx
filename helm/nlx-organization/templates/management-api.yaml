@@ -70,6 +70,6 @@ spec:
       protocol: TCP
       port: 80
       targetPort: 8080
-  cluserIP: None
+  clusterIP: None
 {{ end }}
 {{ end }}

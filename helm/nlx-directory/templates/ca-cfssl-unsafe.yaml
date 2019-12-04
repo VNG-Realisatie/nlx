@@ -62,6 +62,6 @@ spec:
     - name: api
       protocol: TCP
       port: 8888
-  cluserIP: None
+  clusterIP: None
 {{ end }}
 {{ end }}

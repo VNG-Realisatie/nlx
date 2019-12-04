@@ -82,7 +82,7 @@ spec:
     - name: handler-tls
       protocol: TCP
       port: 8443
-  cluserIP: None
+  clusterIP: None
 {{ if .Values.debugEnableOutwayIngress }}
 ---
 apiVersion: extensions/v1beta1
