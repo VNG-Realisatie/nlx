@@ -10,6 +10,7 @@ Build acceptance:
     - time docker-compose build --parallel
     - time docker-compose push
     - export IMAGE_TAG="latest"
+    - time docker-compose build --parallel
     - time docker-compose push
   tags:
     - nlx-privileged
