@@ -3,6 +3,7 @@ organizationName: haarlem
 domain: nlx-dev-haarlem
 externalDomain: nlx-dev-haarlem.minikube
 
+logLevel: debug
 logType: local
 
 dbDatabaseTxlog: nlx-dev-haarlem-txlog

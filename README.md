@@ -25,7 +25,6 @@ Make sure you have installed the following tools:
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 - [minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/)
 - [helm](https://docs.helm.sh/using_helm/)
-- [skaffold](https://github.com/GoogleContainerTools/skaffold#installation)
 
 For autocompletion and local development tasks, it's also recommended to install the following:
 
@@ -72,7 +71,11 @@ Also install KubeDB, an operator that manages postgres instances. Follow the [ku
 When Traefik and KubeDB are running, you can start all the NLX components by executing:
 
 ```bash
-skaffold dev --profile minikube
+docker-compose build --parallel
+helm upgrade --install nlx-dev-directory ./helm/nlx-directory --namespace nlx-dev-directory --values ./helm/nlx-directory/values-dev.yaml
+helm upgrade --install nlx-dev-brp ./helm/nlx-organization --namespace nlx-dev-brp --values ./helm/nlx-organization/values-dev-brp.yaml
+helm upgrade --install nlx-dev-rdw ./helm/nlx-organization --namespace nlx-dev-rdw --values ./helm/nlx-organization/values-dev-rdw.yaml
+helm upgrade --install nlx-dev-haarlem ./helm/nlx-organization --namespace nlx-dev-haarlem --values ./helm/nlx-organization/values-dev-haarlem.yaml
 ```
 
 Finally, add the minikube hostnames to your machine's `/etc/hosts` file so you can reach the services from your browser.

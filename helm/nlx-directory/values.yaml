@@ -5,5 +5,5 @@ storageType: Durable
 
 ca: {}
 
-imageTag: latest
 imagePrefix: ""
+imageTag: latest
