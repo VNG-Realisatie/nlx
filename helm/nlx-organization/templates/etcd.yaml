@@ -40,6 +40,5 @@ spec:
     - name: etcd
       protocol: TCP
       port: 2379
-  clusterIP: None
 {{ end }}
 {{ end }}

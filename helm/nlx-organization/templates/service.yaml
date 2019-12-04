@@ -72,6 +72,5 @@ spec:
       {{ else }}
       port: 8000
       {{ end }}
-  clusterIP: None
 {{ end }}
 {{ end }}

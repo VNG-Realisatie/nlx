@@ -84,7 +84,6 @@ spec:
     - name: api
       protocol: TCP
       port: 8080
-  clusterIP: None
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
