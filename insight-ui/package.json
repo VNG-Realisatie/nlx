@@ -6,7 +6,7 @@
     "@commonground/design-system": "7.2.1",
     "prop-types": "15.7.2",
     "react": "16.12.0",
-    "react-app-polyfill": "1.0.4",
+    "react-app-polyfill": "1.0.5",
     "react-dom": "16.12.0",
     "react-qr-svg": "2.2.1",
     "react-redux": "7.1.3",
@@ -21,7 +21,7 @@
     "enzyme-to-json": "3.4.3",
     "eslint-plugin-react": "7.17.0",
     "http-proxy-middleware": "0.20.0",
-    "react-scripts": "3.2.0",
+    "react-scripts": "3.3.0",
     "redux-devtools-extension": "2.13.8"
   },
   "scripts": {
