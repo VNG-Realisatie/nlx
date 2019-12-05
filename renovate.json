@@ -17,5 +17,11 @@
     "major": {
       "masterIssueApproval": true
     }
-  }
+  },
+  "packageRules": [{
+    "paths": ["docs/**"],
+    "packagePatterns": ["^@docusaurus/"],
+    "groupName": "docusaurus packages",
+    "allowedVersions": "2.0.0-alpha.36"
+  }]
 }
