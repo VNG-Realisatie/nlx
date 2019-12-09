@@ -1,3 +1,31 @@
+# [0.81.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.80.0...v0.81.0) (2019-12-09)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([83e3137](https://gitlab.com/commonground/nlx/nlx/commit/83e313718f801599bfc6712dbf78374eaf52acfb))
+* **deps:** update all non-major dependencies ([0ca7d69](https://gitlab.com/commonground/nlx/nlx/commit/0ca7d6975544fe623c3f37b254e9b8dbe25e9e74))
+* **deps:** update all non-major dependencies ([fcfe2e7](https://gitlab.com/commonground/nlx/nlx/commit/fcfe2e7e255dfcf37a0a66d5eef1cd0da33304a8))
+* **docs:** pin docusaurus version to 2.0.0-alpha.36 ([abb8386](https://gitlab.com/commonground/nlx/nlx/commit/abb8386b1b814229610c9268498b9485df5791a2))
+* **docs:** sync package-lock.json ([2a52750](https://gitlab.com/commonground/nlx/nlx/commit/2a52750e9db1004c2f99d365ae71c84c8ca4e09f))
+
+
+### Features
+
+* **directory:** moved inway and outway version to metadata ([c4c8c84](https://gitlab.com/commonground/nlx/nlx/commit/c4c8c841fda48e283566774a37b579fc8049bddc))
+* **directory-db:** update the model (+2 squashed commits) ([58cd7c5](https://gitlab.com/commonground/nlx/nlx/commit/58cd7c5e83c61782d19ba456ae159a160132def9))
+* **directory-inspection-api:** added stats endpoint ([ab20dc6](https://gitlab.com/commonground/nlx/nlx/commit/ab20dc66362684166db35e4e0d0b559ec2a37b8b))
+* **docs:** completed config of docusaurus v2 ([2dac346](https://gitlab.com/commonground/nlx/nlx/commit/2dac34608d74bd6db836420d1d13ab1e0418a8a7))
+* **docs:** completed config of docusaurus v2 ([563ecf6](https://gitlab.com/commonground/nlx/nlx/commit/563ecf6cfb76da578cf298bb0ea3f20a9c63a94b))
+* **docs:** enable syntax highlighting for bash, json, powershell and toml ([8c2d55b](https://gitlab.com/commonground/nlx/nlx/commit/8c2d55b114349283a775595896f99ae768ab2ecb))
+* **docs:** migrate docusaurus from v1 to v2 ([19e2f38](https://gitlab.com/commonground/nlx/nlx/commit/19e2f3887327d64f4def98b8c49c344e6bd0e7a6))
+* **docs:** migrate multi language code blocks to docusaurus v2 ([da7d5aa](https://gitlab.com/commonground/nlx/nlx/commit/da7d5aa1a0c4cb5784309dd138899659a49a3141))
+* **docs:** translated the docs landing to dutch ([251850f](https://gitlab.com/commonground/nlx/nlx/commit/251850f13d64c30edf2472be619d6bb46eea36a7))
+* **inway:** send version to directory-resgistration-api ([2f95f62](https://gitlab.com/commonground/nlx/nlx/commit/2f95f62c744bc8a047aee46360b70cdac1221c93))
+* **outway:** send and record outway version with a timestamp ([c7adf64](https://gitlab.com/commonground/nlx/nlx/commit/c7adf6429fa1536710a3d01c430e70d8b1312e5b))
+* add index to docusaurus 2 ([2f937d3](https://gitlab.com/commonground/nlx/nlx/commit/2f937d3266e198a1503f1f35f8e2c15c631f3b61))
+* directly use helm instead of skaffold ([508f47b](https://gitlab.com/commonground/nlx/nlx/commit/508f47b45b342f717589e4a2a2da1c09aa45cbd9))
+
 # [0.80.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.79.4...v0.80.0) (2019-11-22)
 
 
