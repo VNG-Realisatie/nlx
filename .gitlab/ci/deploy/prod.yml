@@ -9,25 +9,17 @@ Deploy demo, preprod & prod:
     - export IMAGE_TAG="${GIT_TAG_NAME}"
   script:
     - |
-      helm upgrade --install nlx-demo-directory ./helm/nlx-directory \
-        --namespace nlx-demo-directory \
-        --values ./helm/nlx-directory/values-demo.yaml \
+      helm upgrade --install nlx-${CI_ENVIRONMENT_NAME}-directory ./helm/nlx-directory \
+        --namespace nlx-${CI_ENVIRONMENT_NAME}-directory \
+        --values ./helm/nlx-directory/values-${CI_ENVIRONMENT_NAME}.yaml \
         --set imageTag=$IMAGE_TAG
-    - |
-      helm upgrade --install nlx-demo-brp ./helm/nlx-organization \
-        --namespace nlx-demo-brp \
-        --values ./helm/nlx-directory/values-demo-brp.yaml \
-        --set imageTag=$IMAGE_TAG
-    - |
-      helm upgrade --install nlx-demo-rdw ./helm/nlx-organization \
-        --namespace nlx-demo-rdw \
-        --values ./helm/nlx-directory/values-demo-rdw.yaml \
-        --set imageTag=$IMAGE_TAG
-    - |
-      helm upgrade --install nlx-demo-haarlem ./helm/nlx-organization \
-        --namespace nlx-demo-haarlem \
-        --values ./helm/nlx-directory/values-demo-haarlem.yaml \
-        --set imageTag=$IMAGE_TAG
+      for ORG in haarlem rdw brp
+      do
+        helm upgrade --install nlx-${CI_ENVIRONMENT_NAME}-${ORG} ./helm/nlx-organization \
+          --namespace nlx-${CI_ENVIRONMENT_NAME}-${ORG} \
+          --values ./helm/nlx-organization/values-${CI_ENVIRONMENT_NAME}-${ORG}.yaml \
+          --set imageTag=$IMAGE_TAG
+      done
     - |
       helm upgrade --install nlx-preprod-directory ./helm/nlx-directory \
         --namespace nlx-preprod-directory \
