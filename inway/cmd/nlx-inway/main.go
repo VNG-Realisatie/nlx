@@ -135,6 +135,10 @@ func setupDatabase(logger *zap.Logger, mainProcess *process.Process) *sqlx.DB {
 }
 
 func loadServices(logger *zap.Logger, serviceConfig *config.ServiceConfig, iw *inway.Inway) {
+	if len(serviceConfig.Services) == 0 {
+		logger.Warn("inway has 0 configured services")
+	}
+
 	// TODO: Issue #403
 	serviceEndpoints := make([]inway.ServiceEndpoint, len(serviceConfig.Services))
 	i := 0
