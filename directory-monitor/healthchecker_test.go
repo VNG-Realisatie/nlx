@@ -64,9 +64,9 @@ func TestSetupHealthMonitor(t *testing.T) {
 	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
 
 	tlsOptions := orgtls.TLSOptions{
-		NLXRootCert: filepath.Join("..", "testing", "root.crt"),
-		OrgCertFile: filepath.Join("..", "testing", "org-nlx-test.crt"),
-		OrgKeyFile:  filepath.Join("..", "testing", "org-nlx-test.key"),
+		NLXRootCert: filepath.Join("..", "testing", "pki", "ca.pem"),
+		OrgCertFile: filepath.Join("..", "testing", "pki", "org-nlx-test.pem"),
+		OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem"),
 	}
 
 	caCertPool, _ := orgtls.LoadRootCert(tlsOptions.NLXRootCert)

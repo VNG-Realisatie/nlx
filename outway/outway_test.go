@@ -25,9 +25,9 @@ func TestNewOutwayExeception(t *testing.T) {
 	}{
 		{
 			orgtls.TLSOptions{
-				NLXRootCert: filepath.Join("..", "testing", "root.crt"),
-				OrgCertFile: filepath.Join("..", "testing", "org_without_name.crt"),
-				OrgKeyFile:  filepath.Join("..", "testing", "org_without_name.key"),
+				NLXRootCert: filepath.Join("..", "testing", "pki", "ca.pem"),
+				OrgCertFile: filepath.Join("..", "testing", "pki", "org-without-name.pem"),
+				OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-without-name-key.pem"),
 			},
 			"",
 			"",
@@ -35,18 +35,18 @@ func TestNewOutwayExeception(t *testing.T) {
 		},
 		{
 			orgtls.TLSOptions{
-				NLXRootCert: filepath.Join("..", "testing", "root.crt"),
-				OrgCertFile: filepath.Join("..", "testing", "org-nlx-test.crt"),
-				OrgKeyFile:  filepath.Join("..", "testing", "org-non-existing.key"),
+				NLXRootCert: filepath.Join("..", "testing", "pki", "ca.pem"),
+				OrgCertFile: filepath.Join("..", "testing", "pki", "org-nlx-test.pem"),
+				OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-non-existing-key.pem"),
 			},
 			"",
 			"",
-			"failed to read tls keypair: open ../testing/org-non-existing.key: no such file or directory",
+			"failed to read tls keypair: open ../testing/pki/org-non-existing-key.pem: no such file or directory",
 		}, {
 			orgtls.TLSOptions{
-				NLXRootCert: filepath.Join("..", "testing", "root.crt"),
-				OrgCertFile: filepath.Join("..", "testing", "org-nlx-test.crt"),
-				OrgKeyFile:  filepath.Join("..", "testing", "org-nlx-test.key"),
+				NLXRootCert: filepath.Join("..", "testing", "pki", "ca.pem"),
+				OrgCertFile: filepath.Join("..", "testing", "pki", "org-nlx-test.pem"),
+				OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem"),
 			},
 			"http://auth.nlx.io",
 			"",
@@ -54,9 +54,9 @@ func TestNewOutwayExeception(t *testing.T) {
 		},
 		{
 			orgtls.TLSOptions{
-				NLXRootCert: filepath.Join("..", "testing", "root.crt"),
-				OrgCertFile: filepath.Join("..", "testing", "org-nlx-test.crt"),
-				OrgKeyFile:  filepath.Join("..", "testing", "org-nlx-test.key"),
+				NLXRootCert: filepath.Join("..", "testing", "pki", "ca.pem"),
+				OrgCertFile: filepath.Join("..", "testing", "pki", "org-nlx-test.pem"),
+				OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem"),
 			},
 			"http://auth.nlx.io",
 			"/path/to",
@@ -64,9 +64,9 @@ func TestNewOutwayExeception(t *testing.T) {
 		},
 		{
 			orgtls.TLSOptions{
-				NLXRootCert: filepath.Join("..", "testing", "root.crt"),
-				OrgCertFile: filepath.Join("..", "testing", "org-nlx-test.crt"),
-				OrgKeyFile:  filepath.Join("..", "testing", "org-nlx-test.key"),
+				NLXRootCert: filepath.Join("..", "testing", "pki", "ca.pem"),
+				OrgCertFile: filepath.Join("..", "testing", "pki", "org-nlx-test.pem"),
+				OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem"),
 			},
 			"https://auth.nlx.io",
 			"/path/to/non-existing.crt",

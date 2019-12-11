@@ -28,9 +28,9 @@ func createInway() (*Inway, error) {
 	testProcess := process.NewProcess(logger)
 
 	tlsOptions := orgtls.TLSOptions{
-		NLXRootCert: "../testing/root.crt",
-		OrgCertFile: "../testing/org-nlx-test.crt",
-		OrgKeyFile:  "../testing/org-nlx-test.key",
+		NLXRootCert: "../testing/pki/ca.pem",
+		OrgCertFile: "../testing/pki/org-nlx-test.pem",
+		OrgKeyFile:  "../testing/pki/org-nlx-test-key.pem",
 	}
 
 	return NewInway(logger, nil, testProcess, "mock.inway", "localhost:1812", tlsOptions, "localhost:1815")
@@ -253,16 +253,16 @@ func TestCreateServiceEndpoints(t *testing.T) {
 func TestNewInwayName(t *testing.T) {
 	logger := zap.NewNop()
 	tlsOptions := orgtls.TLSOptions{
-		NLXRootCert: filepath.Join("..", "testing", "root.crt"),
-		OrgCertFile: filepath.Join("..", "testing", "org-nlx-test.crt"),
-		OrgKeyFile:  filepath.Join("..", "testing", "org-nlx-test.key"),
+		NLXRootCert: filepath.Join("..", "testing", "pki", "ca.pem"),
+		OrgCertFile: filepath.Join("..", "testing", "pki", "org-nlx-test.pem"),
+		OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem"),
 	}
 
 	testProcess := process.NewProcess(logger)
 	iw, err := NewInway(logger, nil, testProcess, "", "", tlsOptions, "")
 	assert.Nil(t, err)
 
-	assert.Equal(t, "LK6jY7KRymRlBpKvjENDj7byr40fOjtmQNeMumrsjCg=", iw.name)
+	assert.Equal(t, "gohSkP8dSgaP25goDhO1-8k9gLWW78EAeLG5XJDtuwI=", iw.name)
 
 	iw, err = NewInway(logger, nil, testProcess, "inway.test", "", tlsOptions, "")
 	assert.Nil(t, err)

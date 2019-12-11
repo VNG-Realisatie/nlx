@@ -22,8 +22,8 @@ func TestNewRoundRobinLoadBalancerExceptions(t *testing.T) {
 	inwayAddresses := []string{"mockaddress1", "mockaddress2"}
 	healthyStates := []bool{true, true}
 
-	certFile := filepath.Join("..", "testing", "org-nlx-test.crt")
-	keyFile := filepath.Join("..", "testing", "org-nlx-test.key")
+	certFile := filepath.Join("..", "testing", "pki", "org-nlx-test.pem")
+	keyFile := filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem")
 	// Test possible exceptions during RoundRoblinLoadBalancerCreation
 	_, err := NewRoundRobinLoadBalancedHTTPService(
 		zap.NewNop(),
@@ -70,8 +70,8 @@ func TestNewRoundRobinLoadBalancer(t *testing.T) {
 
 	inwayAddresses := []string{"mockaddress1", "mockaddress2"}
 	healthyStates := []bool{true, true}
-	certFile := filepath.Join("..", "testing", "org-nlx-test.crt")
-	keyFile := filepath.Join("..", "testing", "org-nlx-test.key")
+	certFile := filepath.Join("..", "testing", "pki", "org-nlx-test.pem")
+	keyFile := filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem")
 	l, err := NewRoundRobinLoadBalancedHTTPService(
 		zap.NewNop(), nil, certFile, keyFile,
 		organizationName, serviceName,

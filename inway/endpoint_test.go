@@ -74,9 +74,9 @@ func TestInwaySetServiceEndpoints(t *testing.T) {
 	// Certificate organization = nlx-test
 
 	tlsOptions := orgtls.TLSOptions{
-		NLXRootCert: "../testing/root.crt",
-		OrgCertFile: "../testing/org-nlx-test.crt",
-		OrgKeyFile:  "../testing/org-nlx-test.key",
+		NLXRootCert: "../testing/pki/ca.pem",
+		OrgCertFile: "../testing/pki/org-nlx-test.pem",
+		OrgKeyFile:  "../testing/pki/org-nlx-test-key.pem",
 	}
 
 	iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", tlsOptions, "localhost:1815")
@@ -131,9 +131,9 @@ func TestInwayLoggingBadService(t *testing.T) {
 	// Certificate organization = nlx-test
 
 	tlsOptions := orgtls.TLSOptions{
-		NLXRootCert: "../testing/root.crt",
-		OrgCertFile: "../testing/org-nlx-test.crt",
-		OrgKeyFile:  "../testing/org-nlx-test.key",
+		NLXRootCert: "../testing/pki/ca.pem",
+		OrgCertFile: "../testing/pki/org-nlx-test.pem",
+		OrgKeyFile:  "../testing/pki/org-nlx-test-key.pem",
 	}
 
 	iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", tlsOptions, "localhost:1815")

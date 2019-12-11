@@ -206,8 +206,8 @@ func TestFailingTransport(t *testing.T) {
 
 	inwayAddresses := []string{"inway.mockorg"}
 	healthyStates := []bool{true}
-	certFile := filepath.Join("..", "testing", "org-nlx-test.crt")
-	keyFile := filepath.Join("..", "testing", "org-nlx-test.key")
+	certFile := filepath.Join("..", "testing", "pki", "org-nlx-test.pem")
+	keyFile := filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem")
 
 	l, err := NewRoundRobinLoadBalancedHTTPService(
 		zap.NewNop(), nil, certFile, keyFile,

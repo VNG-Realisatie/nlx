@@ -85,9 +85,9 @@ func newTestEnv(t *testing.T, tlsOptions orgtls.TLSOptions) (proxy, mock *httpte
 func TestInwayProxyRequest(t *testing.T) {
 
 	tlsOptions := orgtls.TLSOptions{
-		NLXRootCert: filepath.Join("..", "testing", "root.crt"),
-		OrgCertFile: filepath.Join("..", "testing", "org-nlx-test.crt"),
-		OrgKeyFile:  filepath.Join("..", "testing", "org-nlx-test.key"),
+		NLXRootCert: filepath.Join("..", "testing", "pki", "ca.pem"),
+		OrgCertFile: filepath.Join("..", "testing", "pki", "org-nlx-test.pem"),
+		OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem"),
 	}
 
 	proxyRequestMockServer, mockEndPoint := newTestEnv(t, tlsOptions)
@@ -138,15 +138,15 @@ func TestInwayProxyRequest(t *testing.T) {
 func TestInwayNoOrgProxyRequest(t *testing.T) {
 
 	tlsOptions := orgtls.TLSOptions{
-		NLXRootCert: filepath.Join("..", "testing", "root.crt"),
-		OrgCertFile: filepath.Join("..", "testing", "org-nlx-test.crt"),
-		OrgKeyFile:  filepath.Join("..", "testing", "org-nlx-test.key"),
+		NLXRootCert: filepath.Join("..", "testing", "pki", "ca.pem"),
+		OrgCertFile: filepath.Join("..", "testing", "pki", "org-nlx-test.pem"),
+		OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem"),
 	}
 
 	tlsNoOrgOptions := orgtls.TLSOptions{
-		NLXRootCert: filepath.Join("..", "testing", "root.crt"),
-		OrgCertFile: filepath.Join("..", "testing", "no-org-nlx-test.crt"),
-		OrgKeyFile:  filepath.Join("..", "testing", "no-org-nlx-test.key"),
+		NLXRootCert: filepath.Join("..", "testing", "pki", "ca.pem"),
+		OrgCertFile: filepath.Join("..", "testing", "pki", "org-without-name.pem"),
+		OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-without-name-key.pem"),
 	}
 
 	// Clients with no organization specified in the certificate
