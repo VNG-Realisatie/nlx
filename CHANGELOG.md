@@ -1,3 +1,16 @@
+# [0.82.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.81.0...v0.82.0) (2019-12-12)
+
+
+### Bug Fixes
+
+* expired test certificates ([f5504fd](https://gitlab.com/commonground/nlx/nlx/commit/f5504fdef1ac9c627e80f63c1b93d8f735bcd6a3))
+
+
+### Features
+
+* **gitlab:** add docker-compose build to renovate testing ([533c9b5](https://gitlab.com/commonground/nlx/nlx/commit/533c9b54de3514692193ca7f0541e144fb35f86d))
+* **gitlab:** deploy to acc and demo using the same snippet, including the demo organisations ([8da8ac8](https://gitlab.com/commonground/nlx/nlx/commit/8da8ac8d41c66c15b18118b2070b686482c5671e))
+
 # [0.81.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.80.0...v0.81.0) (2019-12-09)
 
 
