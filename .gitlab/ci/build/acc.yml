@@ -17,4 +17,5 @@ Build acceptance:
     - shell
   only:
     - master
+  except:
     - tags

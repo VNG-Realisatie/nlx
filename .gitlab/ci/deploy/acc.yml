@@ -25,6 +25,7 @@ Deploy acceptance:
       done
   only:
     - master
+  except:
     - tags
   tags:
     - nlx-privileged
