@@ -9,8 +9,7 @@
     "gomodTidy"
   ],
   "ignoreDeps": [
-    "github.com/coreos/etcd",
-    "redoc"
+    "github.com/coreos/etcd"
   ],
   "masterIssue": true,
   "gomod": {
