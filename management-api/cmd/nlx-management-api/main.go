@@ -13,14 +13,19 @@ import (
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/version"
-	api "go.nlx.io/nlx/management-api"
+	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/daos"
+	"go.nlx.io/nlx/management-api/repositories"
+	"go.nlx.io/nlx/management-api/session"
 )
 
 var options struct {
-	ListenAddress    string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:8080" description:"Adress for the api to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
-	ConfigAPIAddress string `long:"config-api-address" env:"CONFIG_API_ADDRESS" description:"Adress of the config API. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	ListenAddress    string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:8080" description:"Address for the api to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	ConfigAPIAddress string `long:"config-api-address" env:"CONFIG_API_ADDRESS" description:"Address of the config API. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 	logoptions.LogOptions
 	orgtls.TLSOptions
+	daos.AccountCSVOptions
+	session.SessionstoreOptions
 }
 
 func main() {
@@ -32,8 +37,10 @@ func main() {
 				return
 			}
 		}
+
 		log.Fatalf("error parsing flags: %v", err)
 	}
+
 	if len(args) > 0 {
 		log.Fatalf("unexpected arguments: %v", args)
 	}
@@ -41,9 +48,11 @@ func main() {
 	// Setup new zap logger
 	zapConfig := options.LogOptions.ZapConfig()
 	logger, err := zapConfig.Build()
+
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
+
 	logger.Info("version info", zap.String("version", version.BuildVersion), zap.String("source-hash", version.BuildSourceHash))
 	logger = logger.With(zap.String("version", version.BuildVersion))
 
@@ -51,7 +60,21 @@ func main() {
 
 	mainProcess := process.NewProcess(logger)
 
-	a, err := api.NewAPI(logger, mainProcess, options.TLSOptions, options.ConfigAPIAddress)
+	accountCSV, err := daos.NewAccountCSV(options.AccountCSVOptions.CsvFileName)
+	if err != nil {
+		logger.Fatal("cannot load accounts csv file", zap.String("csv file", options.AccountCSVOptions.CsvFileName), zap.Error(err))
+	}
+
+	accountRepository, err := repositories.NewAccount(accountCSV)
+	if err != nil {
+		logger.Fatal("cannot load accounts repository", zap.Error(err))
+	}
+
+	sessionstore := session.NewSessionstoreImpl(logger, options.SessionstoreOptions, accountRepository)
+
+	authorizer := &session.SessionAuthorizer{}
+
+	a, err := api.NewAPI(logger, mainProcess, options.TLSOptions, options.ConfigAPIAddress, sessionstore, authorizer)
 	if err != nil {
 		logger.Fatal("cannot setup management api", zap.Error(err))
 	}

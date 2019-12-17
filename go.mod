@@ -2,6 +2,7 @@ module go.nlx.io/nlx
 
 require (
 	github.com/Microsoft/go-winio v0.4.14 // indirect
+	github.com/alexedwards/argon2id v0.0.0-20190612080829-01a59b2b8802
 	github.com/bwesterb/go-atum v1.0.1 // indirect
 	github.com/cloudflare/cfssl v1.4.1
 	github.com/coreos/bbolt v1.3.3 // indirect
@@ -19,13 +20,16 @@ require (
 	github.com/go-chi/render v1.0.1
 	github.com/go-errors/errors v1.0.1 // indirect
 	github.com/go-sql-driver/mysql v1.4.1 // indirect
+	github.com/gocarina/gocsv v0.0.0-20191206133602-e709afbdb199
 	github.com/gogo/protobuf v1.3.1
 	github.com/golang-migrate/migrate v3.5.4+incompatible
 	github.com/golang/groupcache v0.0.0-20191002201903-404acd9df4cc // indirect
 	github.com/golang/mock v1.3.1
 	github.com/golang/protobuf v1.3.2
 	github.com/google/uuid v1.1.1 // indirect
+	github.com/gorilla/csrf v1.6.2
 	github.com/gorilla/schema v1.1.0
+	github.com/gorilla/sessions v1.2.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.1.0
 	github.com/grpc-ecosystem/grpc-gateway v1.12.1
 	github.com/hashicorp/go-retryablehttp v0.6.2 // indirect
@@ -45,6 +49,7 @@ require (
 	github.com/privacybydesign/gabi v0.0.0-20190503104928-ce779395f4c9 // indirect
 	github.com/privacybydesign/irmago v0.4.1
 	github.com/prometheus/client_golang v1.0.0 // indirect
+	github.com/satori/go.uuid v1.2.0
 	github.com/sony/sonyflake v1.0.0
 	github.com/spf13/afero v1.2.2 // indirect
 	github.com/spf13/cobra v0.0.5

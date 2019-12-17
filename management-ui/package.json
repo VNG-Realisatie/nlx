@@ -46,5 +46,5 @@
         "not ie <= 11",
         "not op_mini all"
     ],
-    "proxy": "http://management.nlx-dev-haarlem.minikube"
+    "proxy": "http://localhost:6017"
 }

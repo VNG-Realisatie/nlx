@@ -29,14 +29,9 @@ Mgoogle/protobuf/timestamp.proto=github.com/gogo/protobuf/types,\
 Mgoogle/protobuf/wrappers.proto=github.com/gogo/protobuf/types,\
 plugins=grpc:. \
 		--grpc-gateway_out=logtostderr=true:. \
-<<<<<<< HEAD
-		*.proto
-
-=======
 		$<
 
 %.swagger.json: %.proto
->>>>>>> feat(directory): moved inway and outway version to metadata
 	@# Generate swagger.json
 	protoc -I. \
 		-I$(shell go env GOPATH)/src \
