@@ -39,7 +39,7 @@ In order to request or own certificate, we need to generate a key and Certificat
 We can create these using [openssl](https://www.openssl.org/).
 
 ```bash
-openssl req -utf8 -nodes -sha256 -newkey rsa:4096 -keyout org.key -out org.csr
+openssl req -utf8 -nodes -sha256 -newkey rsa:3072 -keyout org.key -out org.csr
 ```
 
 Answer the questions accordingly:
