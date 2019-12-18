@@ -8,11 +8,10 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/gorilla/csrf"
-
 	"github.com/alexedwards/argon2id"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
+	"github.com/gorilla/csrf"
 	"github.com/gorilla/sessions"
 	"go.uber.org/zap"
 
@@ -65,20 +64,20 @@ func NewSessionstoreImpl(logger *zap.Logger, options SessionstoreOptions, accoun
 }
 
 // NewSession gathers all session info for a Request
-func (s *SessionstoreImpl) NewSession(r *http.Request) *Session {
+func (s *SessionstoreImpl) NewSession(r *http.Request) *Impl {
 	session, _ := s.cookiestore.Get(r, cookieName)
 
-	return &Session{
+	return &Impl{
 		sessionstore: s,
 		session:      session,
 		r:            r,
 	}
 }
 
-func getSession(r *http.Request) *Session {
+func getSession(r *http.Request) Session {
 	value := r.Context().Value(contextKey)
 	if value != nil {
-		return value.(*Session)
+		return value.(Session)
 	}
 
 	return nil
@@ -122,7 +121,7 @@ func (request *loginRequest) Bind(r *http.Request) error {
 		return errors.New("password is mandatory")
 	}
 
-	account, err := getSession(r).sessionstore.accountRepo.GetByName(request.Username)
+	account, err := getSession(r).AccountByName(request.Username)
 	if err != nil {
 		return err
 	}

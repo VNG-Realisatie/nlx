@@ -72,7 +72,7 @@ func main() {
 
 	sessionstore := session.NewSessionstoreImpl(logger, options.SessionstoreOptions, accountRepository)
 
-	authorizer := &session.SessionAuthorizer{}
+	authorizer := &session.Authorizer{}
 
 	a, err := api.NewAPI(logger, mainProcess, options.TLSOptions, options.ConfigAPIAddress, sessionstore, authorizer)
 	if err != nil {

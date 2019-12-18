@@ -25,7 +25,7 @@ func (a Authorization) Middleware(next http.Handler) http.Handler {
 		if a.authorizer.Authorize(r) {
 			next.ServeHTTP(w, r)
 		} else {
-			w.WriteHeader(http.StatusForbidden)
+			http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
 		}
 	})
 }

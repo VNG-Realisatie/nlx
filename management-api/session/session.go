@@ -11,14 +11,22 @@ import (
 	"go.nlx.io/nlx/management-api/models"
 )
 
-type Session struct {
+type Session interface {
+	IsAuthenticated() (bool, error)
+	Account() (*models.Account, error)
+	AccountByName(name string) (*models.Account, error)
+	Login(w http.ResponseWriter, id fmt.Stringer) error
+	Logout(w http.ResponseWriter) error
+}
+
+type Impl struct {
 	sessionstore *SessionstoreImpl
 	session      *sessions.Session
 	r            *http.Request
 }
 
 // IsAuthenticated returns if a user is logged in
-func (s *Session) IsAuthenticated() (bool, error) {
+func (s *Impl) IsAuthenticated() (bool, error) {
 	if s.session.Values["account"] != nil {
 		id := uuid.FromStringOrNil(s.session.Values["account"].(string))
 		account, err := s.sessionstore.accountRepo.GetByID(id)
@@ -36,7 +44,7 @@ func (s *Session) IsAuthenticated() (bool, error) {
 }
 
 // Account returns the model of the current logged in account
-func (s *Session) Account() (*models.Account, error) {
+func (s *Impl) Account() (*models.Account, error) {
 	rawID := s.session.Values["account"]
 	if rawID == nil {
 		return nil, nil
@@ -53,7 +61,7 @@ func (s *Session) Account() (*models.Account, error) {
 }
 
 // Login attaches the Account with the provided id to the current session
-func (s *Session) Login(w http.ResponseWriter, id fmt.Stringer) error {
+func (s *Impl) Login(w http.ResponseWriter, id fmt.Stringer) error {
 	if id == uuid.Nil {
 		return errors.New("field id is nil")
 	}
@@ -69,7 +77,7 @@ func (s *Session) Login(w http.ResponseWriter, id fmt.Stringer) error {
 }
 
 // Logout detaches the Account from the current session
-func (s *Session) Logout(w http.ResponseWriter) error {
+func (s *Impl) Logout(w http.ResponseWriter) error {
 	delete(s.session.Values, "account")
 
 	err := s.session.Save(s.r, w)
@@ -78,4 +86,8 @@ func (s *Session) Logout(w http.ResponseWriter) error {
 	}
 
 	return nil
+}
+
+func (s Impl) AccountByName(name string) (*models.Account, error) {
+	return s.sessionstore.accountRepo.GetByName(name)
 }

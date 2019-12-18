@@ -10,8 +10,6 @@ import (
 	"net/http"
 	"time"
 
-	"go.nlx.io/nlx/management-api/authorization"
-
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/pkg/errors"
@@ -19,12 +17,12 @@ import (
 	"google.golang.org/grpc/credentials"
 
 	"go.nlx.io/nlx/config-api/configapi"
+	"go.nlx.io/nlx/management-api/authorization"
 )
 
 // ListenAndServe is a blocking function that listens on provided tcp address to handle requests.
 func (a *API) ListenAndServe(address string) error {
-	ctx := context.Background()
-	ctx, cancel := context.WithCancel(ctx)
+	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
 	// setup client credentials for grpc gateway
@@ -47,17 +45,13 @@ func (a *API) ListenAndServe(address string) error {
 	r.Use(middleware.Logger)
 	r.Use(a.sessionstore.Middleware)
 
-	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
-		_, err := w.Write([]byte("ok"))
-		if err != nil {
-			panic(err)
-		}
-	})
+	r.Get("/health", heatlh)
 	r.Mount("/session", a.sessionstore.Routes())
 
 	apiRouter := chi.NewRouter()
 	apiRouter.Use(authorization.NewAuthorization(a.authorizer).Middleware)
 	r.Mount("/api", apiRouter)
+
 	server := &http.Server{
 		Addr:    address,
 		Handler: r,
@@ -71,6 +65,7 @@ func (a *API) ListenAndServe(address string) error {
 	}
 
 	shutDownComplete := make(chan struct{})
+
 	a.process.CloseGracefully(func() error {
 		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
 		defer cancel() // do not remove. Otherwise it could cause implicit goroutine leak
@@ -82,10 +77,15 @@ func (a *API) ListenAndServe(address string) error {
 	// Listener will return immediately on Shutdown call.
 	// So we need to wait until all open connections will be closed gracefully
 	<-shutDownComplete
+
 	return nil
 }
 
+func heatlh(w http.ResponseWriter, r *http.Request) {
+	http.Error(w, "ok", http.StatusOK)
+}
+
 // ServeHTTP handles a specific HTTP request
-func (a API) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (a *API) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	a.mux.ServeHTTP(w, r)
 }

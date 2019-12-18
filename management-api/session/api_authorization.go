@@ -14,13 +14,13 @@ var permissions = [...]struct {
 	{Method: "PUT", RolePattern: regexp.MustCompile("^(?i:admin)$")},          // Role must be admin (using a case insentive match)
 }
 
-type SessionAuthorizer struct{}
+type Authorizer struct{}
 
 // Authorize allow access to based on static conditions
-func (sa SessionAuthorizer) Authorize(r *http.Request) bool {
+func (sa Authorizer) Authorize(r *http.Request) bool {
 	if session := getSession(r); session != nil {
 		account, err := session.Account()
-		if err != nil {
+		if err == nil {
 			for _, p := range permissions {
 				if p.Method == r.Method && p.RolePattern.MatchString(account.Role) {
 					return true

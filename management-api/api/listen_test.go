@@ -10,7 +10,7 @@ import (
 )
 
 func TestManagementAPIListen(t *testing.T) {
-	api := API{
+	api := &API{
 		mux: runtime.NewServeMux(),
 	}
 

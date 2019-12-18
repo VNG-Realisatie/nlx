@@ -1,4 +1,4 @@
-SOURCES = sessionstore.go
+SOURCES = $(filter-out api_authorization.go $(wildcard *_test.go), $(wildcard *.go))
 
 ifeq ($(GOPATH),)
 	GOPATH := $(shell go env GOPATH)
