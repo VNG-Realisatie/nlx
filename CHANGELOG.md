@@ -1,3 +1,5 @@
+## [0.82.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.82.0...v0.82.1) (2019-12-20)
+
 # [0.82.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.81.0...v0.82.0) (2019-12-12)
 
 
