@@ -1,5 +1,27 @@
 {{ if .Values.management.enable }}
 {{ with set . "component" "management-api" }}
+{{ if  .Values.management.accountsCsv }}
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: management-api-accounts
+  namespace: {{.Release.Namespace}}
+  labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
+data:
+  accountsCsv: {{ .Values.management.accountsCsv }}
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: management-api-account-secret
+  namespace: {{.Release.Namespace}}
+  labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
+data:
+  secretKey: {{ randAlphaNum 32 | b64enc }}
+---
+{{ end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
@@ -22,7 +44,14 @@ spec:
       volumes:
         - name: certs
           emptyDir: {}
-
+{{ if  .Values.management.accountsCsv }}
+        - name: accounts
+          secret:
+            secretName: management-api-accounts
+            items:
+              - key: accountsCsv
+                path: accounts.csv
+{{ end }}
       initContainers:
         - name: management-api-certs
           image: {{.Values.imagePrefix}}nlxio/ca-cfssl-unsafe:{{.Values.imageTag}}
@@ -54,9 +83,27 @@ spec:
               value: "/certs/{{.component}}-key.pem"
             - name: CONFIG_API_ADDRESS
               value: "config-api:443"
+{{ if  .Values.management.accountsCsv }}
+            - name: CSV_FILENAME
+              value: /etc/accounts/accounts.csv
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: management-api-account-secret
+                  key: secretKey
+            - name: SESSION_COOKIE_SECURE
+              value: "true"
+            - name: SESSION_COOKIE_MAXAGE
+              value: "3600"
+{{ end }}
           volumeMounts:
             - name: certs
               mountPath: /certs
+{{ if  .Values.management.accountsCsv }}
+            - name: accounts
+              mountPath: "/etc/accounts/"
+              readOnly: true
+{{ end }}
       restartPolicy: Always
   status: {}
 ---

@@ -5,6 +5,7 @@ package daos
 
 import (
 	"errors"
+	"fmt"
 	"os"
 
 	"github.com/gocarina/gocsv"
@@ -13,17 +14,17 @@ import (
 	"go.nlx.io/nlx/management-api/models"
 )
 
-// AccountSQL implements the queries of the Account dao on the database
+// AccountCSV implements the queries of the Account dao on a csv file
 type AccountCSV struct {
 	accounts []*models.Account
 }
 
-// LogOptions contains go-flags fields which can be used to configure a go-uber/zap config.
+// AccountCSVOptions contains go-flags fields which can be used to configure this dao
 type AccountCSVOptions struct {
 	CsvFileName string `long:"csv-filename" env:"CSV_FILENAME" required:"true" description:"Name of the file that contains the user accounts"`
 }
 
-// NewAccountCSV sets up a new SQL DAO for the session resource
+// NewAccountCSV sets up a new CSV DAO for the session resource
 func NewAccountCSV(fileName string) (*AccountCSV, error) {
 	// Open the file
 	csvfile, err := os.Open(fileName)
@@ -36,6 +37,10 @@ func NewAccountCSV(fileName string) (*AccountCSV, error) {
 	accounts := []*models.Account{}
 	if err := gocsv.UnmarshalFile(csvfile, &accounts); err != nil {
 		return nil, err
+	}
+
+	for _, a := range accounts {
+		fmt.Printf("%s\n", a)
 	}
 
 	return &AccountCSV{accounts: accounts}, nil

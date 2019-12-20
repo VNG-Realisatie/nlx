@@ -140,9 +140,15 @@ func (request *loginRequest) Bind(r *http.Request) error {
 	return nil
 }
 
+type loginReponse struct {
+	Username string `json:"username"`
+	Role     string `json:"role"`
+}
+
 func (s SessionstoreImpl) login() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		request := &loginRequest{}
+		s.logger.Info("login", zap.Any("request", request))
 		if err := render.Bind(r, request); err != nil {
 			s.logger.Warn("Failed to login", zap.Error(err))
 			http.Error(w, http.StatusText(400), 400)
@@ -154,6 +160,15 @@ func (s SessionstoreImpl) login() func(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, http.StatusText(400), 400)
 			return
 		}
+
+		account, err := getSession(r).Account()
+		if err != nil {
+			s.logger.Warn("Failed to get account", zap.Error(err))
+			http.Error(w, http.StatusText(500), 500)
+			return
+		}
+
+		render.JSON(w, r, loginReponse{Username: account.Name, Role: account.Role})
 	}
 }
 

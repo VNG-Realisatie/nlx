@@ -46,10 +46,11 @@ func (a *API) ListenAndServe(address string) error {
 	r.Use(a.sessionstore.Middleware)
 
 	r.Get("/health", heatlh)
-	r.Mount("/session", a.sessionstore.Routes())
 
 	apiRouter := chi.NewRouter()
 	apiRouter.Use(authorization.NewAuthorization(a.authorizer).Middleware)
+	apiRouter.Mount("/auth", a.sessionstore.Routes())
+	apiRouter.Mount("/", a.mux)
 	r.Mount("/api", apiRouter)
 
 	server := &http.Server{

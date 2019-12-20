@@ -16,7 +16,7 @@ type Authorization struct {
 
 // NewAuthorization creates an Authorization
 func NewAuthorization(authorizer Authorizer) *Authorization {
-	return &Authorization{authorizer: authorizer}
+	return &Authorization{authorizer}
 }
 
 // Middleware returns StatusForbidden for Requests that fail to meet the conditions of the Authorizer
