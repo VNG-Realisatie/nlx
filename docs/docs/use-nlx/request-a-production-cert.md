@@ -50,7 +50,7 @@ To request a *PKI-Overheid Private Services G1* certificate, contact one of the 
 
 Follow the approval process and submit the certificate signing request *org.csr*. When you retrieved the certificate, name the files accordingly:
 
-- *root.crt*, the certificate of the [Staat der Nederlanden Private Services G1 root](/static/certs/DomPrivateServicesCA-G1/root.crt)
+- *root.crt*, the certificate of the [Staat der Nederlanden Private Services G1 root](/certs/DomPrivateServicesCA-G1/root.crt)
 - *org.crt*, the certificate you retrieved from the TSP
 - *org.key*, the private key you generated with the OpenSSL command
 
