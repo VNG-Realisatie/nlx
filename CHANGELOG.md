@@ -1,3 +1,10 @@
+## [0.82.2](https://gitlab.com/commonground/nlx/nlx/compare/v0.82.1...v0.82.2) (2019-12-20)
+
+
+### Bug Fixes
+
+* **docs:** link to PKI-O Private Services G1 root cert ([79c0bb7](https://gitlab.com/commonground/nlx/nlx/commit/79c0bb701088ff6c6890ea4a3ea63ae550e4c39e))
+
 ## [0.82.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.82.0...v0.82.1) (2019-12-20)
 
 # [0.82.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.81.0...v0.82.0) (2019-12-12)
