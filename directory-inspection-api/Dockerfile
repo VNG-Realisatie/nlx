@@ -6,9 +6,7 @@ ARG GIT_TAG_NAME=undefined
 ARG GIT_COMMIT_HASH=undefined
 
 # Install build tools.
-RUN apk add --no-cache \
-    gcc=8.3.0-r0 \
-    musl-dev=1.1.22-r3
+RUN apk add --update gcc musl-dev
 
 # Cache dependencies
 WORKDIR /go/src/go.nlx.io/nlx

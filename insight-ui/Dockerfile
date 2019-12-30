@@ -22,7 +22,7 @@ RUN npm run build
 # Create version.json
 FROM alpine:3.11 AS version
 
-RUN apk add --no-cache jq=1.6-r0
+RUN apk add --update jq
 
 ARG GIT_TAG_NAME=undefined
 ARG GIT_COMMIT_HASH=undefined

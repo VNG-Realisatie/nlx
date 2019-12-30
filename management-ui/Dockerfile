@@ -1,6 +1,6 @@
 FROM node:10.17.0-alpine AS build
 
-RUN apk add git jq
+RUN apk add --update git jq
 
 ENV CI=true
 
@@ -20,7 +20,7 @@ RUN npm run build
 # Create version.json
 FROM alpine:3.11 AS version
 
-RUN apk add --no-cache jq=1.6-r0
+RUN apk add --update jq
 
 ARG GIT_TAG_NAME=undefined
 ARG GIT_COMMIT_HASH=undefined
