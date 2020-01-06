@@ -32,8 +32,7 @@ Deploy Review App:
           --set "directoryInspectionHostname=directory-inspection-api.${NAME}" \
           --set "caAddress=ca-cfssl-unsafe.${NAME}" \
           --set "externalDomain=${ORG_NAME}.${REVIEW_BASE_DOMAIN}" \
-          --set "domain=${ORG_NAME}" \
-          --set "management.basicAuth=${MANAGEMENT_BASIC_AUTH}"
+          --set "domain=${ORG_NAME}"
         done
   environment:
     name: $CI_COMMIT_REF_NAME
