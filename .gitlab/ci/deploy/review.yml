@@ -9,6 +9,7 @@ Deploy Review App:
   script:
     - echo -e -n "$CI_ENVIRONMENT_SLUG.$REVIEW_BASE_DOMAIN" > ci_environment_url.txt
     - |
+        echo "install/upgrade ${NAME}"
         helm upgrade --install ${NAME} ./helm/nlx-directory \
         --namespace ${NAME} \
         --values ./helm/nlx-directory/values-review.yaml \
@@ -23,6 +24,7 @@ Deploy Review App:
         for ORG in haarlem rdw brp lorem ipsum
         do
           ORG_NAME=nlx-${ORG}-${CI_ENVIRONMENT_SLUG}
+          echo "install/upgrade ${ORG_NAME}"
           helm upgrade --install ${ORG_NAME} ./helm/nlx-organization \
           --namespace ${ORG_NAME} \
           --values ./helm/nlx-organization/values-review-${ORG}.yaml \
