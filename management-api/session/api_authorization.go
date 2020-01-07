@@ -3,17 +3,21 @@ package session
 import (
 	"net/http"
 	"regexp"
+
+	"go.nlx.io/nlx/management-api/models"
 )
 
-var permissions = [...]struct {
-	Method      string
-	PathPattern *regexp.Regexp
-	RolePattern *regexp.Regexp
-}{
-	{PathPattern: regexp.MustCompile("^/api/auth/.*$")},
-	{Method: "GET", RolePattern: regexp.MustCompile("^(?i:readonly|admin)$")}, // Role must be readonly or admin
-	{Method: "POST", RolePattern: regexp.MustCompile("^(?i:admin)$")},         // Role must be admin (using a case insentive match)
-	{Method: "PUT", RolePattern: regexp.MustCompile("^(?i:admin)$")},          // Role must be admin (using a case insentive match)
+type permission struct {
+	Method       string
+	PathsAllowed *regexp.Regexp
+	RolesAllowed []string
+}
+
+var permissions = [...]permission{
+	{PathsAllowed: regexp.MustCompile("^/api/auth/.*$")},
+	{Method: "GET", RolesAllowed: []string{"admin", "readonly"}}, // Role must be readonly or admin
+	{Method: "POST", RolesAllowed: []string{"admin"}},            // Role must be admin (using a case insentive match)
+	{Method: "PUT", RolesAllowed: []string{"admin"}},             // Role must be admin (using a case insentive match)
 }
 
 // Authorizer for a Session
@@ -31,15 +35,26 @@ func (a Authorizer) Authorize(r *http.Request) bool {
 
 	for _, p := range permissions {
 		if p.Method == "" || p.Method == r.Method {
-			if p.RolePattern != nil && session != nil {
+			if p.RolesAllowed != nil && session != nil {
 				if account, _ := session.Account(); account != nil {
-					if p.RolePattern.MatchString(account.Role) {
+					b := p.isRoleAllowedFor(account)
+					if b {
 						return true
 					}
 				}
-			} else if p.PathPattern != nil && p.PathPattern.MatchString(r.URL.Path) {
+			} else if p.PathsAllowed != nil && p.PathsAllowed.MatchString(r.URL.Path) {
 				return true
 			}
+		}
+	}
+
+	return false
+}
+
+func (p permission) isRoleAllowedFor(account *models.Account) bool {
+	for _, role := range p.RolesAllowed {
+		if role == account.Role {
+			return true
 		}
 	}
 
