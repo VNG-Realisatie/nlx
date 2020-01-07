@@ -34,6 +34,7 @@ Deploy Review App:
           --set "directoryInspectionHostname=directory-inspection-api.${NAME}" \
           --set "caAddress=ca-cfssl-unsafe.${NAME}" \
           --set "externalDomain=${ORG_NAME}.${REVIEW_BASE_DOMAIN}" \
+          --set "management.accountsCsv=${MANAGEMENT_ACCOUNTS}" \
           --set "domain=${ORG_NAME}"
         done
   environment:

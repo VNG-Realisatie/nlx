@@ -1,6 +1,6 @@
 {{ if .Values.management.enable }}
 {{ with set . "component" "management-api" }}
-{{ if  .Values.management.accountsCsv }}
+{{ if .Values.management.accountsCsv }}
 apiVersion: v1
 kind: Secret
 type: Opaque
@@ -44,7 +44,7 @@ spec:
       volumes:
         - name: certs
           emptyDir: {}
-{{ if  .Values.management.accountsCsv }}
+{{ if .Values.management.accountsCsv }}
         - name: accounts
           secret:
             secretName: management-api-accounts
@@ -83,7 +83,7 @@ spec:
               value: "/certs/{{.component}}-key.pem"
             - name: CONFIG_API_ADDRESS
               value: "config-api:443"
-{{ if  .Values.management.accountsCsv }}
+{{ if .Values.management.accountsCsv }}
             - name: CSV_FILENAME
               value: /etc/accounts/accounts.csv
             - name: SECRET_KEY
@@ -99,7 +99,7 @@ spec:
           volumeMounts:
             - name: certs
               mountPath: /certs
-{{ if  .Values.management.accountsCsv }}
+{{ if .Values.management.accountsCsv }}
             - name: accounts
               mountPath: "/etc/accounts/"
               readOnly: true

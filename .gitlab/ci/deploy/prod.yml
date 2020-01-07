@@ -18,6 +18,7 @@ Deploy demo, preprod & prod:
         helm upgrade --install nlx-${CI_ENVIRONMENT_NAME}-${ORG} ./helm/nlx-organization \
           --namespace nlx-${CI_ENVIRONMENT_NAME}-${ORG} \
           --values ./helm/nlx-organization/values-${CI_ENVIRONMENT_NAME}-${ORG}.yaml \
+          --set "management.accountsCsv=${MANAGEMENT_ACCOUNTS}" \
           --set imageTag=$IMAGE_TAG
       done
     - |
