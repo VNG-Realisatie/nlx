@@ -149,22 +149,26 @@ func (s SessionstoreImpl) login() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		request := &loginRequest{}
 		s.logger.Info("login", zap.Any("request", request))
+
 		if err := render.Bind(r, request); err != nil {
 			s.logger.Warn("Failed to login", zap.Error(err))
-			http.Error(w, http.StatusText(400), 400)
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+
 			return
 		}
 
 		if err := getSession(r).Login(w, request.Account.ID); err != nil {
 			s.logger.Warn("Failed to login", zap.Error(err))
-			http.Error(w, http.StatusText(400), 400)
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+
 			return
 		}
 
 		account, err := getSession(r).Account()
 		if err != nil {
 			s.logger.Warn("Failed to get account", zap.Error(err))
-			http.Error(w, http.StatusText(500), 500)
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+
 			return
 		}
 
@@ -177,7 +181,7 @@ func (s SessionstoreImpl) logout() func(w http.ResponseWriter, r *http.Request) 
 		err := getSession(r).Logout(w)
 		if err != nil {
 			s.logger.Debug("Failed to logout", zap.Error(err))
-			http.Error(w, http.StatusText(500), 500)
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		}
 	}
 }

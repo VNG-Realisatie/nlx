@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/gocarina/gocsv"
 	uuid "github.com/satori/go.uuid"
@@ -27,7 +28,7 @@ type AccountCSVOptions struct {
 // NewAccountCSV sets up a new CSV DAO for the session resource
 func NewAccountCSV(fileName string) (*AccountCSV, error) {
 	// Open the file
-	csvfile, err := os.Open(fileName)
+	csvfile, err := os.Open(filepath.Clean(fileName))
 	if err != nil {
 		return nil, err
 	}

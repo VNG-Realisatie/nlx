@@ -7,14 +7,13 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 
-	"go.nlx.io/nlx/management-api/authorization"
-
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
+	"go.nlx.io/nlx/management-api/authorization"
 	"go.nlx.io/nlx/management-api/session"
 )
 
@@ -30,6 +29,8 @@ type API struct {
 	authorizer       authorization.Authorizer
 }
 
+const singleElementArrayLength = 1
+
 // NewAPI creates and prepares a new API
 func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.TLSOptions, configAPIAddress string, sessionstore session.Sessionstore, authorizer authorization.Authorizer) (*API, error) {
 	if mainProcess == nil {
@@ -41,7 +42,7 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.
 		return nil, errors.Wrap(err, "failed to load tls certs")
 	}
 
-	if len(orgCert.Subject.Organization) != 1 {
+	if len(orgCert.Subject.Organization) != singleElementArrayLength {
 		return nil, errors.New("cannot obtain organization name from self cert")
 	}
 
@@ -50,7 +51,7 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.
 		return nil, errors.Wrap(err, "failed to load x509 keypair for organization")
 	}
 
-	if len(orgCert.Subject.Organization) != 1 {
+	if len(orgCert.Subject.Organization) != singleElementArrayLength {
 		return nil, errors.New("cannot obtain organization name from self cert")
 	}
 
