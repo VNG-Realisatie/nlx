@@ -7,6 +7,7 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
+	"io"
 	"net/http"
 	"time"
 
@@ -83,7 +84,8 @@ func (a *API) ListenAndServe(address string) error {
 }
 
 func heatlh(w http.ResponseWriter, r *http.Request) {
-	http.Error(w, "ok", http.StatusOK)
+	w.WriteHeader(http.StatusOK)
+	io.WriteString(w, "ok\n")
 }
 
 // ServeHTTP handles a specific HTTP request
