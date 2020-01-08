@@ -77,7 +77,10 @@ func (am *AuthenticationManagerImpl) NewSession(r *http.Request) *Impl {
 func getSession(r *http.Request) Session {
 	value := r.Context().Value(contextKey)
 	if value != nil {
-		return value.(Session)
+		session, ok := value.(Session)
+		if ok {
+			return session
+		}
 	}
 
 	return nil
