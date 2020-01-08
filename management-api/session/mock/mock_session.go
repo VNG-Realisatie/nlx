@@ -6,12 +6,10 @@ package mock_session
 
 import (
 	fmt "fmt"
+	gomock "github.com/golang/mock/gomock"
+	models "go.nlx.io/nlx/management-api/models"
 	http "net/http"
 	reflect "reflect"
-
-	gomock "github.com/golang/mock/gomock"
-
-	models "go.nlx.io/nlx/management-api/models"
 )
 
 // MockSession is a mock of Session interface
@@ -77,7 +75,7 @@ func (m *MockSession) AccountByName(name string) (*models.Account, error) {
 }
 
 // AccountByName indicates an expected call of AccountByName
-func (mr *MockSessionMockRecorder) GetAccountByName(name interface{}) *gomock.Call {
+func (mr *MockSessionMockRecorder) AccountByName(name interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AccountByName", reflect.TypeOf((*MockSession)(nil).AccountByName), name)
 }

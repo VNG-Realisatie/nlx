@@ -24,29 +24,29 @@ type key string
 const contextKey key = "session"
 const cookieName string = "nlx_management_session"
 
-// Sessionstore provides the interface for a session store
-type Sessionstore interface {
+// AuthenticationManager provides the interface for a session store
+type AuthenticationManager interface {
 	Middleware(next http.Handler) http.Handler
 	Routes() chi.Router
 }
 
-// SessionstoreImpl persists sessions and provides convinient helpers
-type SessionstoreImpl struct {
+// AuthenticationManagerImpl persists sessions and provides convinient helpers
+type AuthenticationManagerImpl struct {
 	accountRepo repositories.Account
 	cookiestore *sessions.CookieStore
 	logger      *zap.Logger
-	options     SessionstoreOptions
+	options     AuthenticationManagerOptions
 }
 
-// SessionstoreOptions provides the flags to configure the SessionstoreImpl
-type SessionstoreOptions struct {
+// AuthenticationManagerOptions provides the flags to configure the AuthenticationManagerImpl
+type AuthenticationManagerOptions struct {
 	SecretKey           string `long:"secret-key" env:"SECRET_KEY" description:"Secret key that is used for signing sessions" required:"true"`
 	SessionCookieSecure bool   `long:"session-cookie-secure" env:"SESSION_COOKIE_SECURE" description:"Use 'secure' cookies"`
 	SessionCookieMaxAge int    `long:"session-cookie-maxage" env:"SESSION_COOKIE_MAXAGE" default:"3600" description:"The lifetime of a session, in seconds"`
 }
 
-// NewSessionstoreImpl creates a new Sessionstore
-func NewSessionstoreImpl(logger *zap.Logger, options SessionstoreOptions, accountRepo repositories.Account) *SessionstoreImpl {
+// NewAuthenticationManager creates a new AuthenticationManagerImpl
+func NewAuthenticationManager(logger *zap.Logger, options AuthenticationManagerOptions, accountRepo repositories.Account) *AuthenticationManagerImpl {
 	cookiestore := sessions.NewCookieStore([]byte(options.SecretKey))
 	cookiestore.Options = &sessions.Options{
 		HttpOnly: true,
@@ -55,7 +55,7 @@ func NewSessionstoreImpl(logger *zap.Logger, options SessionstoreOptions, accoun
 		MaxAge:   options.SessionCookieMaxAge,
 	}
 
-	return &SessionstoreImpl{
+	return &AuthenticationManagerImpl{
 		logger:      logger,
 		cookiestore: cookiestore,
 		accountRepo: accountRepo,
@@ -64,13 +64,13 @@ func NewSessionstoreImpl(logger *zap.Logger, options SessionstoreOptions, accoun
 }
 
 // NewSession gathers all session info for a Request
-func (s *SessionstoreImpl) NewSession(r *http.Request) *Impl {
-	session, _ := s.cookiestore.Get(r, cookieName)
+func (am *AuthenticationManagerImpl) NewSession(r *http.Request) *Impl {
+	session, _ := am.cookiestore.Get(r, cookieName)
 
 	return &Impl{
-		sessionstore: s,
-		session:      session,
-		r:            r,
+		authenicationManager: am,
+		session:              session,
+		r:                    r,
 	}
 }
 
@@ -84,23 +84,23 @@ func getSession(r *http.Request) Session {
 }
 
 // Middleware propagates a new Context with a Session
-func (s *SessionstoreImpl) Middleware(next http.Handler) http.Handler {
+func (am *AuthenticationManagerImpl) Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		session := s.NewSession(r)
+		session := am.NewSession(r)
 		next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), contextKey, session)))
 	})
 }
 
 // Routes provides the routes for the Router
-func (s *SessionstoreImpl) Routes() chi.Router {
+func (am *AuthenticationManagerImpl) Routes() chi.Router {
 	r := chi.NewRouter()
 
-	csrfMiddleware := csrf.Protect([]byte(s.options.SecretKey), csrf.Secure(s.options.SessionCookieSecure), csrf.MaxAge(s.options.SessionCookieMaxAge))
+	csrfMiddleware := csrf.Protect([]byte(am.options.SecretKey), csrf.Secure(am.options.SessionCookieSecure), csrf.MaxAge(am.options.SessionCookieMaxAge))
 	r.Use(csrfMiddleware)
 
-	r.Get("/login", s.preLogin())
-	r.Post("/login", s.login())
-	r.Get("/logout", s.logout())
+	r.Get("/login", am.preLogin())
+	r.Post("/login", am.login())
+	r.Get("/logout", am.logout())
 
 	return r
 }
@@ -145,20 +145,20 @@ type loginReponse struct {
 	Role     string `json:"role"`
 }
 
-func (s SessionstoreImpl) login() func(w http.ResponseWriter, r *http.Request) {
+func (am AuthenticationManagerImpl) login() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		request := &loginRequest{}
-		s.logger.Info("login", zap.Any("request", request))
+		am.logger.Info("login", zap.Any("request", request))
 
 		if err := render.Bind(r, request); err != nil {
-			s.logger.Warn("Failed to login", zap.Error(err))
+			am.logger.Warn("Failed to login", zap.Error(err))
 			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 
 			return
 		}
 
 		if err := getSession(r).Login(w, request.Account.ID); err != nil {
-			s.logger.Warn("Failed to login", zap.Error(err))
+			am.logger.Warn("Failed to login", zap.Error(err))
 			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 
 			return
@@ -166,7 +166,7 @@ func (s SessionstoreImpl) login() func(w http.ResponseWriter, r *http.Request) {
 
 		account, err := getSession(r).Account()
 		if err != nil {
-			s.logger.Warn("Failed to get account", zap.Error(err))
+			am.logger.Warn("Failed to get account", zap.Error(err))
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 
 			return
@@ -176,17 +176,17 @@ func (s SessionstoreImpl) login() func(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s SessionstoreImpl) logout() func(w http.ResponseWriter, r *http.Request) {
+func (am AuthenticationManagerImpl) logout() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		err := getSession(r).Logout(w)
 		if err != nil {
-			s.logger.Debug("Failed to logout", zap.Error(err))
+			am.logger.Debug("Failed to logout", zap.Error(err))
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		}
 	}
 }
 
-func (s *SessionstoreImpl) preLogin() http.HandlerFunc {
+func (am *AuthenticationManagerImpl) preLogin() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("X-CSRF-Token", csrf.Token(r))
 	}

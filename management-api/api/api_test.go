@@ -70,7 +70,7 @@ func TestNewAPI(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
-	sessionstore := mock_session.NewMockSessionstore(mockCtrl)
+	authenticationManager := mock_session.NewMockAuthenticationManager(mockCtrl)
 	authorizer := mock_authorization.NewMockAuthorizer(mockCtrl)
 
 	// Test exceptions during management-api creation
@@ -78,7 +78,7 @@ func TestNewAPI(t *testing.T) {
 		test := test
 		t.Run(test.name, func(t *testing.T) {
 			fmt.Printf("%+v", test.tlsOptions)
-			_, err := NewAPI(logger, testProcess, test.tlsOptions, test.configAPIAddress, sessionstore, authorizer)
+			_, err := NewAPI(logger, testProcess, test.tlsOptions, test.configAPIAddress, authenticationManager, authorizer)
 
 			if test.expectedErrorMessage != "" {
 				assert.EqualError(t, err, test.expectedErrorMessage)

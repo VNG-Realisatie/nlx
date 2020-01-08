@@ -20,16 +20,16 @@ type Session interface {
 }
 
 type Impl struct {
-	sessionstore *SessionstoreImpl
-	session      *sessions.Session
-	r            *http.Request
+	authenicationManager *AuthenticationManagerImpl
+	session              *sessions.Session
+	r                    *http.Request
 }
 
 // IsAuthenticated returns if a user is logged in
 func (s *Impl) IsAuthenticated() (bool, error) {
 	if s.session.Values["account"] != nil {
 		id := uuid.FromStringOrNil(s.session.Values["account"].(string))
-		account, err := s.sessionstore.accountRepo.GetByID(id)
+		account, err := s.authenicationManager.accountRepo.GetByID(id)
 
 		if err != nil {
 			return false, err
@@ -52,7 +52,7 @@ func (s *Impl) Account() (*models.Account, error) {
 
 	id := uuid.FromStringOrNil(rawID.(string))
 
-	account, err := s.sessionstore.accountRepo.GetByID(id)
+	account, err := s.authenicationManager.accountRepo.GetByID(id)
 	if err != nil {
 		return nil, err
 	}
@@ -89,5 +89,5 @@ func (s *Impl) Logout(w http.ResponseWriter) error {
 }
 
 func (s Impl) AccountByName(name string) (*models.Account, error) {
-	return s.sessionstore.accountRepo.GetByName(name)
+	return s.authenicationManager.accountRepo.GetByName(name)
 }

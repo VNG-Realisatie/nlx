@@ -25,7 +25,7 @@ var options struct {
 	logoptions.LogOptions
 	orgtls.TLSOptions
 	daos.AccountCSVOptions
-	session.SessionstoreOptions
+	session.AuthenticationManagerOptions
 }
 
 func main() {
@@ -70,11 +70,11 @@ func main() {
 		logger.Fatal("cannot load accounts repository", zap.Error(err))
 	}
 
-	sessionstore := session.NewSessionstoreImpl(logger, options.SessionstoreOptions, accountRepository)
+	authenticationManager := session.NewAuthenticationManager(logger, options.AuthenticationManagerOptions, accountRepository)
 
 	authorizer := session.NewAuthorizer()
 
-	a, err := api.NewAPI(logger, mainProcess, options.TLSOptions, options.ConfigAPIAddress, sessionstore, authorizer)
+	a, err := api.NewAPI(logger, mainProcess, options.TLSOptions, options.ConfigAPIAddress, authenticationManager, authorizer)
 	if err != nil {
 		logger.Fatal("cannot setup management api", zap.Error(err))
 	}

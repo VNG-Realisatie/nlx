@@ -7,12 +7,12 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
-	"io"
 	"net/http"
 	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/render"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -44,13 +44,13 @@ func (a *API) ListenAndServe(address string) error {
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
-	r.Use(a.sessionstore.Middleware)
+	r.Use(a.authenticationManager.Middleware)
 
 	r.Get("/health", heatlh)
 
 	apiRouter := chi.NewRouter()
 	apiRouter.Use(authorization.NewAuthorization(a.authorizer).Middleware)
-	apiRouter.Mount("/auth", a.sessionstore.Routes())
+	apiRouter.Mount("/auth", a.authenticationManager.Routes())
 	apiRouter.Mount("/", a.mux)
 	r.Mount("/api", apiRouter)
 
@@ -83,9 +83,12 @@ func (a *API) ListenAndServe(address string) error {
 	return nil
 }
 
+type healthResponse struct {
+	Status string `json:"status"`
+}
+
 func heatlh(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	io.WriteString(w, "ok\n")
+	render.JSON(w, r, healthResponse{Status: "ok"})
 }
 
 // ServeHTTP handles a specific HTTP request

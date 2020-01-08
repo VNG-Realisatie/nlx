@@ -19,20 +19,20 @@ import (
 
 // API handles incoming requests, authenticates them and forwards them to the config-api and txlog-api
 type API struct {
-	logger           *zap.Logger
-	roots            *x509.CertPool
-	orgCertKeyPair   *tls.Certificate
-	process          *process.Process
-	mux              *runtime.ServeMux
-	configAPIAddress string
-	sessionstore     session.Sessionstore
-	authorizer       authorization.Authorizer
+	logger                *zap.Logger
+	roots                 *x509.CertPool
+	orgCertKeyPair        *tls.Certificate
+	process               *process.Process
+	mux                   *runtime.ServeMux
+	configAPIAddress      string
+	authenticationManager session.AuthenticationManager
+	authorizer            authorization.Authorizer
 }
 
 const singleElementArrayLength = 1
 
 // NewAPI creates and prepares a new API
-func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.TLSOptions, configAPIAddress string, sessionstore session.Sessionstore, authorizer authorization.Authorizer) (*API, error) {
+func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.TLSOptions, configAPIAddress string, authenticationManager session.AuthenticationManager, authorizer authorization.Authorizer) (*API, error) {
 	if mainProcess == nil {
 		return nil, errors.New("process argument is nil. needed to close gracefully")
 	}
@@ -59,8 +59,8 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.
 		return nil, errors.New("config API address is not configured")
 	}
 
-	if sessionstore == nil {
-		return nil, errors.New("sessionstore is not configured")
+	if authenticationManager == nil {
+		return nil, errors.New("authenticationManager is not configured")
 	}
 
 	if authorizer == nil {
@@ -71,14 +71,14 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.
 	logger.Info("loaded certificates for api", zap.String("api-organization-name", organizationName))
 
 	i := &API{
-		logger:           logger.With(zap.String("api-organization-name", organizationName)),
-		roots:            roots,
-		orgCertKeyPair:   &orgCertKeyPair,
-		configAPIAddress: configAPIAddress,
-		process:          mainProcess,
-		mux:              runtime.NewServeMux(),
-		sessionstore:     sessionstore,
-		authorizer:       authorizer,
+		logger:                logger.With(zap.String("api-organization-name", organizationName)),
+		roots:                 roots,
+		orgCertKeyPair:        &orgCertKeyPair,
+		configAPIAddress:      configAPIAddress,
+		process:               mainProcess,
+		mux:                   runtime.NewServeMux(),
+		authenticationManager: authenticationManager,
+		authorizer:            authorizer,
 	}
 
 	return i, nil
