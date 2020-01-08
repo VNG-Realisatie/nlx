@@ -19,14 +19,14 @@ type Session interface {
 	Logout(w http.ResponseWriter) error
 }
 
-type Impl struct {
-	authenicationManager *AuthenticationManagerImpl
+type HTTPSession struct {
+	authenicationManager *AuthenticationManager
 	session              *sessions.Session
 	r                    *http.Request
 }
 
 // IsAuthenticated returns if a user is logged in
-func (s *Impl) IsAuthenticated() (bool, error) {
+func (s *HTTPSession) IsAuthenticated() (bool, error) {
 	if s.session.Values["account"] != nil {
 		id := uuid.FromStringOrNil(s.session.Values["account"].(string))
 		account, err := s.authenicationManager.accountRepo.GetByID(id)
@@ -44,7 +44,7 @@ func (s *Impl) IsAuthenticated() (bool, error) {
 }
 
 // Account returns the model of the current logged in account
-func (s *Impl) Account() (*models.Account, error) {
+func (s *HTTPSession) Account() (*models.Account, error) {
 	rawID := s.session.Values["account"]
 	if rawID == nil {
 		return nil, nil
@@ -61,7 +61,7 @@ func (s *Impl) Account() (*models.Account, error) {
 }
 
 // Login attaches the Account with the provided id to the current session
-func (s *Impl) Login(w http.ResponseWriter, id fmt.Stringer) error {
+func (s *HTTPSession) Login(w http.ResponseWriter, id fmt.Stringer) error {
 	if id == uuid.Nil {
 		return errors.New("field id is nil")
 	}
@@ -77,7 +77,7 @@ func (s *Impl) Login(w http.ResponseWriter, id fmt.Stringer) error {
 }
 
 // Logout detaches the Account from the current session
-func (s *Impl) Logout(w http.ResponseWriter) error {
+func (s *HTTPSession) Logout(w http.ResponseWriter) error {
 	delete(s.session.Values, "account")
 
 	err := s.session.Save(s.r, w)
@@ -88,6 +88,6 @@ func (s *Impl) Logout(w http.ResponseWriter) error {
 	return nil
 }
 
-func (s Impl) AccountByName(name string) (*models.Account, error) {
+func (s HTTPSession) AccountByName(name string) (*models.Account, error) {
 	return s.authenicationManager.accountRepo.GetByName(name)
 }

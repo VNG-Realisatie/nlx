@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/assert"
 
 	"go.nlx.io/nlx/management-api/models"
 	mock_session "go.nlx.io/nlx/management-api/session/mock"
@@ -61,9 +62,7 @@ func TestSessionAuthorizer_Authorize(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			authorizer := Authorizer{}
-			if got := authorizer.Authorize(tt.args.r); got != tt.want {
-				t.Errorf("Authorize() = %v, want %v", got, tt.want)
-			}
+			assert.Equal(t, tt.want, authorizer.Authorize(tt.args.r))
 		})
 	}
 }

@@ -5,12 +5,10 @@
 package mock_repositories
 
 import (
-	reflect "reflect"
-
 	gomock "github.com/golang/mock/gomock"
 	go_uuid "github.com/satori/go.uuid"
-
 	models "go.nlx.io/nlx/management-api/models"
+	reflect "reflect"
 )
 
 // MockAccount is a mock of Account interface
@@ -51,32 +49,17 @@ func (mr *MockAccountMockRecorder) GetByID(id interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*MockAccount)(nil).GetByID), id)
 }
 
-// GetByExternalID mocks base method
-func (m *MockAccount) GetByExternalID(externalID string) (*models.Account, error) {
+// GetByName mocks base method
+func (m *MockAccount) GetByName(name string) (*models.Account, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetByExternalID", externalID)
+	ret := m.ctrl.Call(m, "GetByName", name)
 	ret0, _ := ret[0].(*models.Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetByExternalID indicates an expected call of GetByExternalID
-func (mr *MockAccountMockRecorder) GetByExternalID(externalID interface{}) *gomock.Call {
+// GetByName indicates an expected call of GetByName
+func (mr *MockAccountMockRecorder) GetByName(name interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByExternalID", reflect.TypeOf((*MockAccount)(nil).GetByExternalID), externalID)
-}
-
-// CreateOrUpdateByExternalID mocks base method
-func (m *MockAccount) CreateOrUpdateByExternalID(account *models.Account) (*go_uuid.UUID, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateOrUpdateByExternalID", account)
-	ret0, _ := ret[0].(*go_uuid.UUID)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// CreateOrUpdateByExternalID indicates an expected call of CreateOrUpdateByExternalID
-func (mr *MockAccountMockRecorder) CreateOrUpdateByExternalID(account interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrUpdateByExternalID", reflect.TypeOf((*MockAccount)(nil).CreateOrUpdateByExternalID), account)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByName", reflect.TypeOf((*MockAccount)(nil).GetByName), name)
 }

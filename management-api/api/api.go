@@ -25,14 +25,14 @@ type API struct {
 	process               *process.Process
 	mux                   *runtime.ServeMux
 	configAPIAddress      string
-	authenticationManager session.AuthenticationManager
+	authenticationManager *session.AuthenticationManager
 	authorizer            authorization.Authorizer
 }
 
 const singleElementArrayLength = 1
 
 // NewAPI creates and prepares a new API
-func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.TLSOptions, configAPIAddress string, authenticationManager session.AuthenticationManager, authorizer authorization.Authorizer) (*API, error) {
+func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.TLSOptions, configAPIAddress string, authenticationManager *session.AuthenticationManager, authorizer authorization.Authorizer) (*API, error) {
 	if mainProcess == nil {
 		return nil, errors.New("process argument is nil. needed to close gracefully")
 	}

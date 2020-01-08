@@ -3,11 +3,11 @@ package authorization
 import (
 	"net/http"
 	"net/http/httptest"
-	"reflect"
 	"strings"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/assert"
 
 	mock_authorization "go.nlx.io/nlx/management-api/authorization/mock"
 )
@@ -31,7 +31,8 @@ func TestAuthorization(t *testing.T) {
 	authorizer.EXPECT().Authorize(allowedRequest).Return(true).AnyTimes()
 
 	handlerFunc := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		http.Error(w, "OK", 200)
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte("OK"))
 	})
 	tests := []struct {
 		name   string
@@ -65,9 +66,7 @@ func TestAuthorization(t *testing.T) {
 			middleware.ServeHTTP(rs, tt.args.request)
 
 			got := strings.Trim(rs.Body.String(), "\n")
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Middleware() = %v, want %v", got, tt.want)
-			}
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

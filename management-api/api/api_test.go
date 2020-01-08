@@ -12,7 +12,8 @@ import (
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
 	mock_authorization "go.nlx.io/nlx/management-api/authorization/mock"
-	mock_session "go.nlx.io/nlx/management-api/session/mock"
+	mock_repositories "go.nlx.io/nlx/management-api/repositories/mock"
+	"go.nlx.io/nlx/management-api/session"
 )
 
 var tests = []struct {
@@ -63,6 +64,8 @@ var tests = []struct {
 	},
 }
 
+const i = 90
+
 func TestNewAPI(t *testing.T) {
 	logger := zap.NewNop()
 	testProcess := process.NewProcess(logger)
@@ -70,7 +73,11 @@ func TestNewAPI(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
-	authenticationManager := mock_session.NewMockAuthenticationManager(mockCtrl)
+	authenticationManager := session.NewAuthenticationManager(logger, session.AuthenticationManagerOptions{
+		SecretKey:           "test",
+		SessionCookieSecure: false,
+		SessionCookieMaxAge: i,
+	}, mock_repositories.NewMockAccount(mockCtrl))
 	authorizer := mock_authorization.NewMockAuthorizer(mockCtrl)
 
 	// Test exceptions during management-api creation
