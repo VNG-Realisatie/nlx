@@ -52,6 +52,7 @@ api-specification-document-url = "https://petstore.swagger.io/swagger.json"
 ```
 
 <a name="field-authorization-model"></a>
+
 ## authorization-model
 ***Required***
 The authorization model tells the inway how to authorise outways who are trying to consume this service.
@@ -66,6 +67,7 @@ authorization-model = "whitelist"
 ```
 
 <a name="field-authorization-whitelist"></a>
+
 ## authorization-whitelist
 A whitelist of organizations who are authorized to consume the service. When using the `authorization-whitelist` field the [authorization-model](#field-authorization-model) of the service should be set to `whitelist`.
 
@@ -75,6 +77,7 @@ authorization-whitelist = ["DemoRequesterOrganization1", "DemoRequesterOrganizat
 ```
 
 <a name="field-ca-cert-path"></a>
+
 ## ca-cert-path
 Can be used if the API you are trying to expose is providing a TLS certificate signed by a custom root certificate. The root certificate has to be available on the machine running the inway and the absolute path to the root certificate should be the value of this field.
 
