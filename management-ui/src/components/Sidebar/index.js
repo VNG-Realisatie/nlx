@@ -25,6 +25,10 @@ const Navbar = ({ onLinkClickHandler, ...props }) => (
                 <NavigationItem>
                     <Link to="/services">Services</Link>
                 </NavigationItem>
+
+                <NavigationItem>
+                    <Link to="/logout">Logout</Link>
+                </NavigationItem>
             </NavigationItems>
         </Nav>
     </Header>

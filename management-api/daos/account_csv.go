@@ -5,7 +5,6 @@ package daos
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"path/filepath"
 
@@ -38,10 +37,6 @@ func NewAccountCSV(fileName string) (*AccountCSV, error) {
 	accounts := []*models.Account{}
 	if err := gocsv.UnmarshalFile(csvfile, &accounts); err != nil {
 		return nil, err
-	}
-
-	for _, a := range accounts {
-		fmt.Printf("%s\n", a)
 	}
 
 	return &AccountCSV{accounts: accounts}, nil

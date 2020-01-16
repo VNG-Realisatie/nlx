@@ -1,0 +1,3 @@
+id,name,password_hash,role
+a65cbb4c-3835-11ea-a129-ebdc9895ced5,admin,"$argon2id$v=19$m=65536,t=3,p=2$GWbibTmLmtQTD8JXBQ5R+w$Jqm1VcK/t+QpdROhnIcgpar8/WrzDAEPccCyFlLplBc",admin
+a6ac742a-3835-11ea-a6f8-7f78743f9955,readonly,"$argon2id$v=19$m=65536,t=3,p=2$/2S/f841AsPMrKyOABgCoQ$//80qStI3FBe7IYvxvOkZRwhXDILESOET4IVNCd1SIo",readonly

@@ -2,9 +2,9 @@
 // Licensed under the EUPL
 import React from 'react'
 import { shallow } from 'enzyme'
-import AuthenticatedApp from './AuthenticatedApp'
+import UnauthenticatedApp from './UnauthenticatedApp'
 
 it('exists', () => {
-    const wrapper = shallow(<AuthenticatedApp />)
+    const wrapper = shallow(<UnauthenticatedApp />)
     expect(wrapper.exists()).toBe(true)
 })

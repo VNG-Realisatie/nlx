@@ -1,7 +1,13 @@
 // Copyright © VNG Realisatie 2019
 // Licensed under the EUPL
 import React from 'react'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { func } from 'prop-types'
+import {
+    BrowserRouter as Router,
+    Route,
+    Switch,
+    Redirect,
+} from 'react-router-dom'
 
 import Home from './pages/Home'
 import InwayList from './pages/InwayList'
@@ -10,7 +16,7 @@ import ServiceCreate from './pages/ServiceCreate'
 import ServiceUpdate from './pages/ServiceUpdate'
 import NotFound from './pages/NotFound'
 
-const AuthenticatedApp = () => (
+const AuthenticatedApp = ({ logout }) => (
     <Router>
         <Switch>
             <Route exact path="/" component={Home} />
@@ -22,9 +28,20 @@ const AuthenticatedApp = () => (
                 path="/services/update/:name"
                 component={ServiceUpdate}
             />
+            <Route
+                exact
+                path="/logout"
+                render={() => {
+                    logout()
+                    return <Redirect to={{ pathname: '/' }} />
+                }}
+            />
             <Route component={NotFound} />
         </Switch>
     </Router>
 )
+AuthenticatedApp.propTypes = {
+    logout: func.isRequired,
+}
 
 export default AuthenticatedApp

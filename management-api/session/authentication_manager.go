@@ -186,5 +186,17 @@ func (am AuthenticationManager) logout() func(w http.ResponseWriter, r *http.Req
 func (am *AuthenticationManager) preLogin() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("X-CSRF-Token", csrf.Token(r))
+		session := getSession(r)
+		authenticated, err := session.IsAuthenticated()
+		if err != nil {
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		}
+		if authenticated {
+			account, err := session.Account()
+			if err != nil {
+				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			}
+			render.JSON(w, r, loginReponse{Username: account.Name, Role: account.Role})
+		}
 	}
 }

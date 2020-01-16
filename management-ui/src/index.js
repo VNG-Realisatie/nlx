@@ -5,6 +5,6 @@ import 'react-app-polyfill/ie11'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import AuthenticatedApp from './App'
+import App from './App'
 
-ReactDOM.render(<AuthenticatedApp />, document.getElementById('root'))
+ReactDOM.render(<App />, document.getElementById('root'))
