@@ -46,7 +46,7 @@ func (a *API) ListenAndServe(address string) error {
 	r.Use(middleware.Logger)
 	r.Use(a.authenticationManager.Middleware)
 
-	r.Get("/health", heatlh)
+	r.Get("/health", health)
 
 	apiRouter := chi.NewRouter()
 	apiRouter.Use(authorization.NewAuthorization(a.authorizer).Middleware)
