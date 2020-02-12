@@ -24,7 +24,7 @@ type DirectoryRegistrationService struct {
 	*SetInsightConfigurationHandler
 }
 
-var regExpOrgName = regexp.MustCompile(`^[a-zA-Z0-9-]{1,100}$`)
+var regExpOrgName = regexp.MustCompile(`^[a-zA-Z0-9-\.\s]{1,100}$`)
 
 // New sets up a new DirectoryRegistrationService and returns an error when something failed during set.
 func New(
