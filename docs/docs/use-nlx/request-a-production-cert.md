@@ -46,7 +46,7 @@ To request a *PKI-Overheid Private Services G1* certificate, contact one of the 
 
 - [QuoVadis](https://www.quovadisglobal.nl/DigitaleCertificaten/PKIOverheidCertificaten.aspx)
 - [Digidentity](https://sslstore.digidentity.eu/)
-- [KPN](https://certificaat.kpn.com/)
+- [KPN](https://certificaat.kpn.com/pkioverheidcertificaten/servercertificaten/private-servercertificaat/)
 
 Follow the approval process and submit the certificate signing request *org.csr*. When you retrieved the certificate, name the files accordingly:
 
