@@ -26,7 +26,7 @@ import (
 )
 
 var (
-	privateKey, _ = rsa.GenerateKey(rand.Reader, 2048)
+	privateKey, _ = rsa.GenerateKey(rand.Reader, 4096)
 	publicKey, _  = privateKey.Public().(*rsa.PublicKey)
 )
 

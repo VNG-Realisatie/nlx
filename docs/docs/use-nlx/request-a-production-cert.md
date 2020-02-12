@@ -20,7 +20,7 @@ The process of connecting to the NLX production environment consists of the foll
 A private key and certificate signing request for the (pre-)production environment can be generated with the following command:
 
 ```bash
-openssl req -utf8 -nodes -sha256 -newkey rsa:3072 -keyout org.key -out org.csr
+openssl req -utf8 -nodes -sha256 -newkey rsa:4096 -keyout org.key -out org.csr
 ```
 
 Answer the questions accordingly:

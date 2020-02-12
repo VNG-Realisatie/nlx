@@ -92,7 +92,7 @@ Protect hidden volume (if any)? (y=Yes/n=No) [No]: < leave empty >
 Create a ca
 
 ```bash
-env=preprod echo '{"hosts": ["'${env}'.nlx.io"], "key": {"algo": "rsa", "size": 3072}, "names": [{"O": "Common Ground NLX CA", "OU": "NLX"}]}' |
+env=preprod echo '{"hosts": ["'${env}'.nlx.io"], "key": {"algo": "rsa", "size": 4096}, "names": [{"O": "Common Ground NLX CA", "OU": "NLX"}]}' |
 	cfssl genkey -initca /dev/stdin |
 	cfssljson -bare ca
 ```
@@ -106,7 +106,7 @@ certDomain=${component}.${env}.nlx.io
 certOrganization=NLX
 
 csrFilename="${certDomain}-csr.json"
-echo '{"hosts": ["'${certDomain}'"], "key": {"algo": "rsa", "size": 3072}, "CN": "'${certDomain}'", "names": [{"O": "'${certOrganization}'", "OU": "NLX"}]}' > "${csrFilename}"
+echo '{"hosts": ["'${certDomain}'"], "key": {"algo": "rsa", "size": 4096}, "CN": "'${certDomain}'", "names": [{"O": "'${certOrganization}'", "OU": "NLX"}]}' > "${csrFilename}"
 
 ## Generate and sign cert using remote CA (cfssl server)
 cfssl gencert -ca ca.pem -ca-key ca-key.pem "${csrFilename}" | cfssljson -bare "${certDomain}"
@@ -135,7 +135,7 @@ certDomain=< the domain of the inway/outway that needs a cert >
 certOrganization=< name of the organization that needs the cert >
 
 csrFilename="${certDomain}-csr.json"
-echo '{"hosts": ["'${certDomain}'"], "key": {"algo": "rsa", "size": 3072}, "CN": "'${certDomain}'", "names": [{"O": "'${certOrganization}'", "OU": "NLX"}]}' > "${csrFilename}"
+echo '{"hosts": ["'${certDomain}'"], "key": {"algo": "rsa", "size": 4096}, "CN": "'${certDomain}'", "names": [{"O": "'${certOrganization}'", "OU": "NLX"}]}' > "${csrFilename}"
 
 ## Generate and sign cert using remote CA (cfssl server)
 cfssl gencert -ca ca.pem -ca-key ca-key.pem "${csrFilename}" | cfssljson -bare "${certDomain}"
