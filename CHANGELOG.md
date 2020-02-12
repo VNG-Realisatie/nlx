@@ -1,3 +1,19 @@
+# [0.83.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.82.2...v0.83.0) (2020-02-12)
+
+
+### Bug Fixes
+
+* **deps:** do not pin versions of Alpine dependencies ([b0735e4](https://gitlab.com/commonground/nlx/nlx/commit/b0735e43ef87455206848e6f0499e700ea760477))
+* **docs:** fix formatting of headings in service-configuration.md ([03a8227](https://gitlab.com/commonground/nlx/nlx/commit/03a8227583d505da0443f8a0879952fdc9518120))
+
+
+### Features
+
+* **docs:** increase key size to 4096 as 3072 is not supported by all CA's ([3524328](https://gitlab.com/commonground/nlx/nlx/commit/3524328bc610e1877f0d35602fb96ac0afc4542d))
+* **management-api:** add login and sessions ([9d26a79](https://gitlab.com/commonground/nlx/nlx/commit/9d26a797f2609c68acf40875d6f6dd9ccae925af))
+* **management-ui:** basic logout ([00bba1d](https://gitlab.com/commonground/nlx/nlx/commit/00bba1ddf480fea436b61892bcd14c9a92899222))
+* **management-ui:** show login page when not yet authenticated ([9482eec](https://gitlab.com/commonground/nlx/nlx/commit/9482eec4e8ec5107a9ee182898c353b787d002cf))
+
 ## [0.82.2](https://gitlab.com/commonground/nlx/nlx/compare/v0.82.1...v0.82.2) (2019-12-20)
 
 
