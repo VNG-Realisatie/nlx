@@ -1,3 +1,10 @@
+## [0.83.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.83.0...v0.83.1) (2020-02-19)
+
+
+### Bug Fixes
+
+* **directory-registration-api:** allow spaces and dots in organisation name ([47fe829](https://gitlab.com/commonground/nlx/nlx/commit/47fe8298206983efd8bf7e2a9fac20e48193429e))
+
 # [0.83.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.82.2...v0.83.0) (2020-02-12)
 
 
