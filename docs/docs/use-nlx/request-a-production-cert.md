@@ -50,7 +50,7 @@ To request a *PKI-Overheid Private Services G1* certificate, contact one of the 
 
 Follow the approval process and submit the certificate signing request *org.csr*. When you retrieved the certificate, name the files accordingly:
 
-- *root.crt*, the certificate of the [Staat der Nederlanden Private Services G1 root](/certs/DomPrivateServicesCA-G1/root.crt)
+- *root.crt*, the certificates of the [G1 intermediates (TSPs)](/certs/DomPrivateServicesTSPs-G1/root.crt)
 - *org.crt*, the certificate you retrieved from the TSP
 - *org.key*, the private key you generated with the OpenSSL command
 
@@ -63,5 +63,5 @@ Inways and outways use the `DIRECTORY_REGISTRATION_ADDRESS` and `DIRECTORY_INSPE
 - directory-registration-api.preprod.nlx.io
 
 **Production**
-- directory-inspection-api.prod.nlx.io
-- directory-registration-api.prod.nlx.io
+- directory-inspection-api.nlx.io
+- directory-registration-api.nlx.io
