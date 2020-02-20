@@ -20,7 +20,7 @@
     "enzyme-adapter-react-16": "1.15.1",
     "enzyme-to-json": "3.4.3",
     "eslint-plugin-react": "7.17.0",
-    "http-proxy-middleware": "0.20.0",
+    "http-proxy-middleware": "1.0.0",
     "react-scripts": "3.4.0",
     "redux-devtools-extension": "2.13.8"
   },
