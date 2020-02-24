@@ -25,6 +25,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/logoptions"
+	"go.nlx.io/nlx/common/nlxversion"
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/tlsconfig"
@@ -156,7 +157,7 @@ func setupDirectoryRegistrationClient(certPool *x509.CertPool, certKeyPair *tls.
 	directoryDialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(directoryDialCredentials),
 	}
-	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(context.Background(), defaultTimeOut)
+	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(nlxversion.NewContext("config-api"), defaultTimeOut)
 	directoryConn, err := grpc.DialContext(directoryConnCtx, options.DirectoryRegistrationAddress, directoryDialOptions...)
 	defer directoryConnCtxCancel()
 	if err != nil {

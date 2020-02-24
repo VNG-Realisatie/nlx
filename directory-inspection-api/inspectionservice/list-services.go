@@ -13,6 +13,7 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
@@ -74,9 +75,17 @@ func (h *listServicesHandler) ListServices(
 	ctx context.Context,
 	req *inspectionapi.ListServicesRequest,
 ) (*inspectionapi.ListServicesResponse, error) {
-	go nlxversion.WithNlxVersionFromContext(ctx, h.registerOutwayVersion)
-
 	h.logger.Info("rpc request ListServices()")
+
+	// do not log requests coming from grpc-gateway
+	md, ok := metadata.FromIncomingContext(ctx)
+	if ok {
+		if _, ok := md["grpcgateway-internal"]; !ok {
+			version := nlxversion.GetNlxVersionFromContext(ctx)
+			go h.registerOutwayVersion(version)
+		}
+	}
+
 	resp := &inspectionapi.ListServicesResponse{}
 	organizationName, err := getOrganisationNameFromRequest(ctx)
 	if err != nil {

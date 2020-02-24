@@ -125,7 +125,7 @@ func (o *Outway) startDirectoryInspector(directoryInspectionAddress string) erro
 	directoryDialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(directoryDialCredentials),
 	}
-	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(context.Background(), 1*time.Minute)
+	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(nlxversion.NewContext("outway"), 1*time.Minute) //nolint:gomnd // This is clearer then specifying a constant
 	defer directoryConnCtxCancel()
 	directoryConn, err := grpc.DialContext(
 		directoryConnCtx, directoryInspectionAddress, directoryDialOptions...)

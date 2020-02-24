@@ -14,8 +14,8 @@ type NlxVersion struct {
 	Component string `db:"component"`
 }
 
-// WithNlxVersionFromContext reads the NLX version headers and passes them to the closure
-func WithNlxVersionFromContext(ctx context.Context, f func(nlxVersion NlxVersion)) {
+// GetNlxVersionFromContext reads the NLX version from the context metadata and returns it in a struct
+func GetNlxVersionFromContext(ctx context.Context) NlxVersion {
 	nlxVersion := NlxVersion{
 		Version:   "unknown",
 		Component: "unknown",
@@ -34,7 +34,7 @@ func WithNlxVersionFromContext(ctx context.Context, f func(nlxVersion NlxVersion
 		}
 	}
 
-	f(nlxVersion)
+	return nlxVersion
 }
 
 // NewContext returns a context with the NLX version metadata set

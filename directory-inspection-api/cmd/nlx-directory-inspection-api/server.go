@@ -23,6 +23,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/process"
@@ -106,7 +107,14 @@ func runServer(
 	}
 
 	// setup grpc gateway and attach to main mux
-	gatewayMux := runtime.NewServeMux()
+	gatewayMetadata := func(context.Context, *http.Request) metadata.MD {
+		return metadata.New(map[string]string{
+			"grpcgateway-internal": "true",
+		})
+	}
+
+	gatewayMux := runtime.NewServeMux(runtime.WithMetadata(gatewayMetadata))
+
 	err := inspectionapi.RegisterDirectoryInspectionHandlerFromEndpoint(
 		context.Background(),
 		gatewayMux,
