@@ -18,6 +18,7 @@ var permissions = [...]permission{
 	{Method: "GET", RolesAllowed: []string{"admin", "readonly"}}, // Role must be readonly or admin
 	{Method: "POST", RolesAllowed: []string{"admin"}},            // Role must be admin (using a case insentive match)
 	{Method: "PUT", RolesAllowed: []string{"admin"}},             // Role must be admin (using a case insentive match)
+	{Method: "DELETE", RolesAllowed: []string{"admin"}},          // Role must be admin (using a case insentive match)
 }
 
 // Authorizer for a Session

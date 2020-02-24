@@ -53,8 +53,18 @@ func TestSessionAuthorizer_Authorize(t *testing.T) {
 			want: false,
 		},
 		{
+			name: "DELETE readonly",
+			args: args{r: httptest.NewRequest("DELETE", "/readonly", nil).WithContext(context.WithValue(context.Background(), contextKey, readonlySession))},
+			want: false,
+		},
+		{
 			name: "POST admin",
 			args: args{r: httptest.NewRequest("POST", "/admin", nil).WithContext(context.WithValue(context.Background(), contextKey, adminSession))},
+			want: true,
+		},
+		{
+			name: "DELETE admin",
+			args: args{r: httptest.NewRequest("DELETE", "/admin", nil).WithContext(context.WithValue(context.Background(), contextKey, adminSession))},
 			want: true,
 		},
 	}
