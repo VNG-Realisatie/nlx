@@ -311,37 +311,37 @@ REFERENCES directory.services (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
--- object: grant_8aa95606f1 | type: PERMISSION --
+-- object: grant_01a2161366 | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.organizations
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_efea1c081a | type: PERMISSION --
+-- object: grant_f9a0a67dc9 | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.inways
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_6e135e26dd | type: PERMISSION --
+-- object: grant_111c134933 | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.services
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_981f395b3b | type: PERMISSION --
+-- object: grant_6dfd29d3bf | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.availabilities
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_e0928fcb26 | type: PERMISSION --
+-- object: grant_7e4b8c1805 | type: PERMISSION --
 GRANT USAGE
    ON SCHEMA directory
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_568f6024da | type: PERMISSION --
+-- object: grant_aaa0628197 | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.outways
    TO "nlx-directory";
