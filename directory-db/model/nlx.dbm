@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.1" last-position="0,0" last-zoom="1"
+<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="0,0" last-zoom="1"
 	 default-schema="public" default-owner="postgres">
 <role name="nlx-directory"
       login="true"
@@ -104,7 +104,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="address" not-null="true">
 		<type name="varchar" length="100"/>
 	</column>
-	<column name="version">
+	<column name="version" not-null="true" default-value="'unknown'">
 		<type name="varchar" length="100"/>
 	</column>
 	<constraint name="inways_pk" type="pk-constr" table="directory.inways">
@@ -280,7 +280,7 @@ END;]]></definition>
 	<schema name="directory"/>
 	<role name="postgres"/>
 	<appended-sql><![CDATA[GRANT USAGE, SELECT ON SEQUENCE outways_id_seq TO "nlx-directory";]]></appended-sql>
-	<position x="85" y="396"/>
+	<position x="80" y="400"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>

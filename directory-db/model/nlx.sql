@@ -86,7 +86,7 @@ CREATE TABLE directory.inways(
 	id serial NOT NULL,
 	organization_id integer NOT NULL,
 	address varchar(100) NOT NULL,
-	version varchar(100),
+	version varchar(100) NOT NULL DEFAULT 'unknown',
 	CONSTRAINT inways_pk PRIMARY KEY (id),
 	CONSTRAINT inways_uq_address UNIQUE (organization_id,address)
 
@@ -311,37 +311,37 @@ REFERENCES directory.services (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
--- object: grant_01a2161366 | type: PERMISSION --
+-- object: grant_1ceb2a0d06 | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.organizations
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_f9a0a67dc9 | type: PERMISSION --
+-- object: grant_3c879d5b54 | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.inways
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_111c134933 | type: PERMISSION --
+-- object: grant_1d00258e74 | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.services
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_6dfd29d3bf | type: PERMISSION --
+-- object: grant_baaa0e26cb | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.availabilities
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_7e4b8c1805 | type: PERMISSION --
+-- object: grant_0f13af9b64 | type: PERMISSION --
 GRANT USAGE
    ON SCHEMA directory
    TO "nlx-directory";
 -- ddl-end --
 
--- object: grant_aaa0628197 | type: PERMISSION --
+-- object: grant_15e1d02b37 | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE
    ON TABLE directory.outways
    TO "nlx-directory";
