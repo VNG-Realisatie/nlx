@@ -7,3 +7,7 @@ ALTER COLUMN version SET DEFAULT 'unknown';
 ALTER TABLE
     directory.inways
 ALTER COLUMN version SET NOT NULL;
+
+ALTER TABLE
+    directory.outways
+ALTER COLUMN version SET DEFAULT 'unknown'
