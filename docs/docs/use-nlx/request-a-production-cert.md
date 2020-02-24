@@ -3,7 +3,9 @@ id: request-a-production-cert
 title: Request a production certificate
 ---
 
-In production environment we trust certificates under the [PKI-Overheid Private Services G1](https://www.pkioverheid.nl/) root. A certificate can be requested at one of the Trusted Service Providers (TSP's).
+In production environment we trust PKIoverheid certificates issued under the [Staat der Nederlanden Private Root CA - G1](https://www.pkioverheid.nl/). A certificate can be requested at one of the Trusted Service Providers (TSP's).
+
+> Double check the type of certificate you are requesting. Only certificates issued under the **G1 private root** will work on NLX. Certificates issued under the EV, G2 or G3 root will not work.
 
 ## Connect to production
 
@@ -42,7 +44,7 @@ The command outputs two files: *org.key*, the private key and *org.csr*, the cer
 
 ## Request a certificate
 
-To request a *PKI-Overheid Private Services G1* certificate, contact one of the Trusted Service Providers (TSPs):
+To request a *Staat der Nederlanden Private Root CA - G1* certificate, contact one of the Trusted Service Providers (TSPs):
 
 - [QuoVadis](https://www.quovadisglobal.nl/DigitaleCertificaten/PKIOverheidCertificaten.aspx)
 - [Digidentity](https://sslstore.digidentity.eu/)
