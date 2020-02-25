@@ -12,6 +12,8 @@ linters-settings:
   goconst:
     min-len: 2
     min-occurrences: 2
+  funlen:
+    lines: 100
   misspell:
     locale: US
   gocritic:

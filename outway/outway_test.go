@@ -41,7 +41,7 @@ func TestNewOutwayExeception(t *testing.T) {
 			},
 			"",
 			"",
-			"failed to read tls keypair: open ../testing/pki/org-non-existing-key.pem: no such file or directory",
+			"failed to load organization certificate '../testing/pki/org-nlx-test.pem: open ../testing/pki/org-non-existing-key.pem: no such file or directory",
 		}, {
 			orgtls.TLSOptions{
 				NLXRootCert: filepath.Join("..", "testing", "pki", "ca.pem"),
@@ -61,16 +61,6 @@ func TestNewOutwayExeception(t *testing.T) {
 			"http://auth.nlx.io",
 			"/path/to",
 			"scheme of authorization service URL is not 'https'",
-		},
-		{
-			orgtls.TLSOptions{
-				NLXRootCert: filepath.Join("..", "testing", "pki", "ca.pem"),
-				OrgCertFile: filepath.Join("..", "testing", "pki", "org-nlx-test.pem"),
-				OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem"),
-			},
-			"https://auth.nlx.io",
-			"/path/to/non-existing.crt",
-			"failed to read root CA certificate file `/path/to/non-existing.crt`: open /path/to/non-existing.crt: no such file or directory",
 		},
 	}
 

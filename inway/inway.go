@@ -69,7 +69,7 @@ func NewInway(
 	// parse tls certificate
 	roots, orgCert, err := orgtls.Load(tlsOptions)
 	if err != nil {
-		logger.Fatal("failed to load tls certs", zap.Error(err))
+		return nil, err
 	}
 	if len(orgCert.Subject.Organization) != 1 {
 		return nil, errors.New("cannot obtain organization name from self cert")

@@ -46,7 +46,7 @@ func TestNewInwayException(t *testing.T) {
 				OrgCertFile: filepath.Join("..", "testing", "pki", "org-nlx-test.pem"),
 				OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-non-existing-key.pem"),
 			},
-			"failed to read tls keypair: open ../testing/pki/org-non-existing-key.pem: no such file or directory",
+			"failed to load organization certificate '../testing/pki/org-nlx-test.pem: open ../testing/pki/org-non-existing-key.pem: no such file or directory",
 		},
 	}
 

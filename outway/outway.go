@@ -66,9 +66,7 @@ func loadCertificates(logger *zap.Logger, tlsOptions orgtls.TLSOptions) (*x509.C
 	// load certs and get organization name from cert
 	roots, orgCert, err := orgtls.Load(tlsOptions)
 	if err != nil {
-		msg := "cannot obtain organization name from self cert"
-		logger.Fatal("failed to load tls certs "+msg, zap.Error(err))
-		return nil, "", errors.New(msg)
+		return nil, "", err
 
 	}
 	if len(orgCert.Subject.Organization) != 1 {
