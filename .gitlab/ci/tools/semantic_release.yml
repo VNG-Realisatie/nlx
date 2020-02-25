@@ -1,13 +1,13 @@
 Run semantic release:
-  image: node:10.16.0
+  image: node:10.17.0-alpine
   stage: Tools
   before_script:
-  - npm ci
+    - npm ci
   script:
     - npx semantic-release
   only:
-    - master
+    - master@commonground/nlx/nlx
   when: manual
   tags:
-    - nlx
     - docker
+    - linux

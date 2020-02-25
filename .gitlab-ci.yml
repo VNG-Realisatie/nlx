@@ -15,6 +15,5 @@ include:
   - '/.gitlab/ci/deploy/review.yml'
   - '/.gitlab/ci/e2e-tests/e2e-tests.yml'
   - '/.gitlab/ci/security/security.yml'
-  - '/.gitlab/ci/tests/renovate.yml'
   - '/.gitlab/ci/tests/tests.yml'
   - '/.gitlab/ci/tools/semantic_release.yml'

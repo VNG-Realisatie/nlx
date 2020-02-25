@@ -25,7 +25,7 @@ Deploy acceptance:
           --set imagePrefix=$IMAGE_PREFIX
       done
   only:
-    - master
+    - master@commonground/nlx/nlx
   except:
     - tags
   tags:

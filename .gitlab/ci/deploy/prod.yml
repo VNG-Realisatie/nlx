@@ -32,7 +32,7 @@ Deploy demo, preprod & prod:
         --values ./helm/nlx-directory/values-prod.yaml \
         --set imageTag=$IMAGE_TAG
   only:
-    - tags
+    - tags@commonground/nlx/nlx
   when: manual
   tags:
     - nlx-privileged

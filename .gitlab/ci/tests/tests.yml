@@ -1,16 +1,18 @@
 Go go.mod tidy test:
   stage: Tests
+  image: golang:1.13.8
   script:
     - cp go.mod go.mod.orig
     - /usr/local/go/bin/go mod download
     - /usr/local/go/bin/go mod tidy
     - diff go.mod.orig go.mod
   tags:
-    - nlx
-    - shell
+    - docker
+    - linux
 
 Go tests:
   stage: Tests
+  image: golang:1.13.8
   before_script:
     - mkdir -p tmp-coverage-reports/
   script:
@@ -26,11 +28,12 @@ Go tests:
     paths:
       - tmp-coverage-reports/coverage.html
   tags:
-    - nlx
-    - shell
+    - docker
+    - linux
 
 Go linter:
   stage: Tests
+  image: golangci/golangci-lint:v1.23
   before_script:
    - export PATH=$PATH:/usr/local/go/bin
   script:
@@ -40,16 +43,16 @@ Go linter:
     reports:
       codequality: code-climate.json
   tags:
-    - nlx
-    - shell
+    - docker
+    - linux
 
 Directory-ui linter and tests:
-  image: node:10.16.0-alpine
   stage: Tests
+  image: node:10.17.0-alpine
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
-    - directory-ui/node_modules/
+      - directory-ui/node_modules/
   before_script:
     - cd directory-ui/
     - npm install
@@ -62,16 +65,16 @@ Directory-ui linter and tests:
     paths:
       - directory-ui/coverage
   tags:
-    - nlx
     - docker
+    - linux
 
 Insight-ui tests:
-  image: node:10.16.0-alpine
   stage: Tests
+  image: node:10.17.0-alpine
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
-    - insight-ui/node_modules/
+      - insight-ui/node_modules/
   before_script:
     - cd insight-ui/
     - npm install
@@ -83,16 +86,16 @@ Insight-ui tests:
     paths:
       - insight-ui/coverage
   tags:
-    - nlx
     - docker
+    - linux
 
 Management-ui linter and tests:
-  image: node:10.16.3-alpine
   stage: Tests
+  image: node:10.17.0-alpine
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
-    - management-ui/node_modules/
+      - management-ui/node_modules/
   before_script:
     - cd management-ui/
     - npm install
@@ -105,14 +108,5 @@ Management-ui linter and tests:
     paths:
       - management-ui/coverage
   tags:
-    - nlx
     - docker
-
-Database diff test:
-  stage: Tests
-  script:
-    - ./directory-db/diff.sh ci-once
-    - ./txlog-db/diff.sh ci-once
-  tags:
-    - nlx
-    - shell
+    - linux

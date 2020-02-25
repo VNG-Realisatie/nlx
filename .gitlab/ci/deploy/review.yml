@@ -41,14 +41,14 @@ Deploy Review App:
     name: $CI_COMMIT_REF_NAME
     url: https://review-nlx-directory-$CI_ENVIRONMENT_SLUG.$REVIEW_BASE_DOMAIN
     on_stop: Remove Review App
-  tags:
-    - review
-    - kubernetes
   only:
-    - /^feature\/.*$/
+    - /^feature/.*$/@commonground/nlx/nlx
   artifacts:
     paths:
       - ci_environment_url.txt
+  tags:
+    - review
+    - kubernetes
 
 Remove Review App:
   stage: Deploy
@@ -66,8 +66,8 @@ Remove Review App:
     name: $CI_COMMIT_REF_NAME
     url: https://$CI_ENVIRONMENT_SLUG.$REVIEW_BASE_DOMAIN
     action: stop
+  only:
+    - /^feature/.*$/@commonground/nlx/nlx
   tags:
     - review
     - kubernetes
-  only:
-    - /^feature\/.*$/

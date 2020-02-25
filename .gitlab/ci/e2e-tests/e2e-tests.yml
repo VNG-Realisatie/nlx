@@ -1,9 +1,10 @@
 Directory UI - E2E Tests:
-  image: docker:stable
   stage: E2E tests
+  image: docker:19.03.1
   variables:
-    DOCKER_HOST: tcp://docker:2375/
-    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: "/certs"
+  services:
+    - docker:19.03.1-dind
   before_script:
     - export CI_ENV_URL=$([ -f ci_environment_url.txt ] && cat ci_environment_url.txt)
     - export DIRECTORY_UI_URL=$([ -z "$CI_ENV_URL" ] && echo "https://directory.acc.nlx.io" || echo "https://directory-nlx-directory-$CI_ENV_URL")
@@ -18,8 +19,6 @@ Directory UI - E2E Tests:
   tags:
     - docker
     - linux
-  services:
-    - docker:dind
   only:
-    - master
-    - /^feature\/.*$/
+    - /^feature/.*$/@commonground/nlx/nlx
+    - master@commonground/nlx/nlx

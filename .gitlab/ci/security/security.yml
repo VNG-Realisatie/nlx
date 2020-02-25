@@ -52,6 +52,11 @@ container_scanning:
   dependencies:
     - Build acceptance
     - Build review
+  only:
+    - master@commonground/nlx/nlx
+    - /^feature/.*$/@commonground/nlx/nlx
+  except:
+    - tags
 
 dependency_scanning:
   stage: Security

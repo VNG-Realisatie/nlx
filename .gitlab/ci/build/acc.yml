@@ -1,27 +1,28 @@
 Build acceptance:
   stage: Build
   before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - export GIT_COMMIT_HASH=$(git rev-parse HEAD)
     - export GIT_TAG_NAME=$(git describe --tags)
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  script:
-    - echo -n "$CI_REGISTRY" > ci_build_image_registry.txt
-    - echo -n "$GIT_TAG_NAME" > ci_build_image_tag.txt
     - export IMAGE_PREFIX="${CI_REGISTRY_IMAGE}/"
     - export IMAGE_TAG="${GIT_TAG_NAME}"
+  script:
+    - echo -n "$CI_REGISTRY" > ci_build_image_registry.txt
+    - echo -n "$IMAGE_TAG" > ci_build_image_tag.txt
+    - docker-compose version
     - time docker-compose build --parallel
     - time docker-compose push
     - export IMAGE_TAG="latest"
     - time docker-compose build --parallel
     - time docker-compose push
-  tags:
-    - nlx-privileged
-    - shell
-  only:
-    - master
-  except:
-    - tags
   artifacts:
     paths:
       - ci_build_image_registry.txt
       - ci_build_image_tag.txt
+  only:
+    - master@commonground/nlx/nlx
+  except:
+    - tags
+  tags:
+    - cg
+    - shell
