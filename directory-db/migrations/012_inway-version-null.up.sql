@@ -10,4 +10,4 @@ ALTER COLUMN version SET NOT NULL;
 
 ALTER TABLE
     directory.outways
-ALTER COLUMN version SET DEFAULT 'unknown'
+ALTER COLUMN version SET DEFAULT 'unknown';
