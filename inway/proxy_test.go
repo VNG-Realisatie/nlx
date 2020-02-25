@@ -13,7 +13,6 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/orgtls"
@@ -34,22 +33,30 @@ func newTestEnv(t *testing.T, tlsOptions orgtls.TLSOptions) (proxy, mock *httpte
 	serviceConfig := &config.ServiceConfig{}
 	serviceConfig.Services = make(map[string]config.ServiceDetails)
 	serviceConfig.Services["mock-service-whitelist"] = config.ServiceDetails{
-		EndpointURL:            mockEndPoint.URL,
-		AuthorizationWhitelist: []string{"nlx-test"},
-		AuthorizationModel:     "whitelist",
+		ServiceDetailsBase: config.ServiceDetailsBase{
+			EndpointURL:        mockEndPoint.URL,
+			AuthorizationModel: "whitelist",
+		},
+		AuthorizationWhitelist: []config.AuthorizationWhitelistItem{{OrganizationName: "nlx-test"}},
 	}
 	serviceConfig.Services["mock-service-whitelist-unauthorized"] = config.ServiceDetails{
-		EndpointURL:            mockEndPoint.URL,
-		AuthorizationWhitelist: []string{"nlx-forbidden"},
-		AuthorizationModel:     "whitelist",
+		ServiceDetailsBase: config.ServiceDetailsBase{
+			EndpointURL:        mockEndPoint.URL,
+			AuthorizationModel: "whitelist",
+		},
+		AuthorizationWhitelist: []config.AuthorizationWhitelistItem{{OrganizationName: "nlx-forbidden"}},
 	}
 	serviceConfig.Services["mock-service-unspecified-unauthorized"] = config.ServiceDetails{
-		EndpointURL:        mockEndPoint.URL,
-		AuthorizationModel: "",
+		ServiceDetailsBase: config.ServiceDetailsBase{
+			EndpointURL:        mockEndPoint.URL,
+			AuthorizationModel: "",
+		},
 	}
 	serviceConfig.Services["mock-service-public"] = config.ServiceDetails{
-		EndpointURL:        mockEndPoint.URL,
-		AuthorizationModel: "none",
+		ServiceDetailsBase: config.ServiceDetailsBase{
+			EndpointURL:        mockEndPoint.URL,
+			AuthorizationModel: "none",
+		},
 	}
 
 	logger := zap.NewNop()

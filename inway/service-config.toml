@@ -1,3 +1,5 @@
+version = 2
+
 [services]
 
 ## This block defines a service exposed by this inway.
@@ -25,10 +27,20 @@
 	authorization-model = "whitelist"
 
 	## `authorization-whitelist` is required when `authorization-model` is set to "whitelist".
-	## This is a list of organization names (as specified in the peers organization cert) that are allowed access.
+	## This is a list of items of organizations that are allowed access. An item consists of an organization name
+	## (as specified in the peers organization cert) or the public key in the `subjectPublicKeyInfo` field of their
+	## certificate.
 	## WARNING: The currently deployed online NLX network is for demo purposes and not ready for connected resources containing sensitive data.
 	## When using real personal data, use your own NLX network in an environment you control.
-	authorization-whitelist = ["DemoRequesterOrganization"]
+    [[services.PostmanEchoWhitelisted.authorization-whitelist]]
+    organization-name = "Gemeente Utrecht"
+    public-key = "sha256:452de56457e4be093eb4a99fae354b4882908cc6e04518e883c4507a7e99e8ef"
+
+    [[services.PostmanEchoWhitelisted.authorization-whitelist]]
+    public-key = "sha256:197eafd78afb28ff934d03f3ce68375e071a1157dcb02814c7a4df0c21d3bb93" # Gemeente Amsterdam
+
+    [[services.PostmanEchoWhitelisted.authorization-whitelist]]
+    organization-name = "Gemeente Haarlem"
 
 	[services.Petstore]
 	endpoint-url = "http://petstore.swagger.io/v2"

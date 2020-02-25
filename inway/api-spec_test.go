@@ -12,7 +12,6 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/orgtls"
@@ -35,18 +34,24 @@ func TestInwayApiSpec(t *testing.T) {
 	serviceConfig := &config.ServiceConfig{}
 	serviceConfig.Services = make(map[string]config.ServiceDetails)
 	serviceConfig.Services["mock-service-public"] = config.ServiceDetails{
-		EndpointURL:        mockAPISpecEndpoint.URL,
-		AuthorizationModel: config.AuthorizationmodelNone,
+		ServiceDetailsBase: config.ServiceDetailsBase{
+			EndpointURL:        mockAPISpecEndpoint.URL,
+			AuthorizationModel: config.AuthorizationmodelNone,
+		},
 	}
 	serviceConfig.Services["mock-service-public-apispec"] = config.ServiceDetails{
-		EndpointURL:                 mockAPISpecEndpoint.URL,
-		AuthorizationModel:          config.AuthorizationmodelNone,
-		APISpecificationDocumentURL: mockAPISpecEndpoint.URL,
+		ServiceDetailsBase: config.ServiceDetailsBase{
+			EndpointURL:                 mockAPISpecEndpoint.URL,
+			AuthorizationModel:          config.AuthorizationmodelNone,
+			APISpecificationDocumentURL: mockAPISpecEndpoint.URL,
+		},
 	}
 	serviceConfig.Services["mock-service-public-invalid-apispec"] = config.ServiceDetails{
-		EndpointURL:                 mockAPISpecEndpoint.URL,
-		AuthorizationModel:          config.AuthorizationmodelNone,
-		APISpecificationDocumentURL: "invalid",
+		ServiceDetailsBase: config.ServiceDetailsBase{
+			EndpointURL:                 mockAPISpecEndpoint.URL,
+			AuthorizationModel:          config.AuthorizationmodelNone,
+			APISpecificationDocumentURL: "invalid",
+		},
 	}
 
 	logger := zap.NewNop()

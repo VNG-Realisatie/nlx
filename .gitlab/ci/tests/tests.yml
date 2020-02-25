@@ -1,6 +1,6 @@
 Go go.mod tidy test:
   stage: Tests
-  image: golang:1.13.8
+  image: golang:1.14.0
   script:
     - cp go.mod go.mod.orig
     - /usr/local/go/bin/go mod download
@@ -12,7 +12,7 @@ Go go.mod tidy test:
 
 Go tests:
   stage: Tests
-  image: golang:1.13.8
+  image: golang:1.14.0
   before_script:
     - mkdir -p tmp-coverage-reports/
   script:

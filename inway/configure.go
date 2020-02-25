@@ -159,17 +159,23 @@ func (i *Inway) isServiceConfigDifferent(services []ServiceEndpoint) bool {
 
 func serviceConfigToServiceDetails(service *configapi.Service) *config.ServiceDetails {
 	serviceDetails := &config.ServiceDetails{
-		APISpecificationDocumentURL: service.ApiSpecificationURL,
-		DocumentationURL:            service.DocumentationURL,
-		EndpointURL:                 service.EndpointURL,
-		PublicSupportContact:        service.PublicSupportContact,
-		TechSupportContact:          service.TechSupportContact,
-		Internal:                    service.Internal,
+		ServiceDetailsBase: config.ServiceDetailsBase{
+			APISpecificationDocumentURL: service.ApiSpecificationURL,
+			DocumentationURL:            service.DocumentationURL,
+			EndpointURL:                 service.EndpointURL,
+			PublicSupportContact:        service.PublicSupportContact,
+			TechSupportContact:          service.TechSupportContact,
+			Internal:                    service.Internal,
+		},
 	}
 
 	if service.AuthorizationSettings != nil {
 		serviceDetails.AuthorizationModel = config.AuthorizationModel(service.AuthorizationSettings.Mode)
-		serviceDetails.AuthorizationWhitelist = service.AuthorizationSettings.Organizations
+		for _, organizationName := range service.AuthorizationSettings.Organizations {
+			serviceDetails.AuthorizationWhitelist = append(serviceDetails.AuthorizationWhitelist, config.AuthorizationWhitelistItem{
+				OrganizationName: organizationName,
+			})
+		}
 	} else {
 		serviceDetails.AuthorizationModel = config.AuthorizationmodelWhitelist
 	}

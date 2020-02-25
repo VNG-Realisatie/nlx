@@ -7,6 +7,7 @@ A single inway can expose multiple services. You can tell an inway which service
 
 Below is an example configuration named `service-config.toml`.
 ```toml
+version = 2
 [services]
 
 # This block defines an service exposed by this inway.
@@ -18,12 +19,31 @@ Below is an example configuration named `service-config.toml`.
     documentation-url = "https://petstore.swagger.io"
     api-specification-document-url = "https://petstore.swagger.io/swagger.json"
     authorization-model = "whitelist"
-    authorization-whitelist = ["DemoRequesterOrganization"]
     public-support-contact = "support@my-organization.nl"
     tech-support-contact = "tech@my-organization.nl"
     ca-cert-path = "/path/to/custom-root-ca.crt"
+    [[services.SwaggerPetstore.authorization-whitelist]]
+    organization-name = "DemoRequesterOrganization1"
+    
+    [[services.SwaggerPetstore.authorization-whitelist]]
+    organization-name = "DemoRequesterOrganization2"
+    public-key = "sha256:452de56457e4be093eb4a99fae354b4882908cc6e04518e883c4507a7e99e8ef"
+    
+    [[services.SwaggerPetstore.authorization-whitelist]]
+    public-key = "sha256:197eafd78afb28ff934d03f3ce68375e071a1157dcb02814c7a4df0c21d3bb93"
+```
+# Top level fields
+
+## version
+***Required***
+Should be set to the version of the config that is used, a deprecation warning is logged when the value is empty or less than 2.
+ 
+***Example***
+```toml
+version = 2
 ```
 # Service configuration fields
+
 ## endpoint-url
 ***Required***
 Should be set to the address at which the API is available. Please make sure the inway can reach the API on this address!
@@ -59,7 +79,7 @@ The authorization model tells the inway how to authorise outways who are trying 
 Currently there are two options available:
 
 1. `none` All outways with a valid NLX certificate can consume this service from the inway. No authorization check will be performed.
-1. `whitelist` An outway has to have a valid NLX certificate and the organization name in this certificate should be present in the [authorization-whitelist](#field-authorization-whitelist) of the inway. If not, the inway will not accept requests from this outway.
+1. `whitelist` An outway has to have a valid NLX certificate and the organization name and/or public key fingerprint of this certificate should be present in the [authorization-whitelist](#field-authorization-whitelist) of the inway. If not, the inway will not accept requests from this outway.
 
 ***Example***
 ```toml
@@ -70,10 +90,31 @@ authorization-model = "whitelist"
 
 ## authorization-whitelist
 A whitelist of organizations who are authorized to consume the service. When using the `authorization-whitelist` field the [authorization-model](#field-authorization-model) of the service should be set to `whitelist`.
+Each entry in the whitelist consists of an `organization-name` and/or `public-key`:
+* `public-key` is the preferred method of authorization as this:
+  * This restricts the certificates from a particular organization that can be used to setup NLX connections.
+  * This allows organizations to compartiment their security by having different security zones.
+  * This protects the NLX system of compromised CA's by pinning to specific public keys of certificates.
+* `organization-name` offers backward compatibility with the previous version of the whitelist.
 
 ***Example***
 ```toml
-authorization-whitelist = ["DemoRequesterOrganization1", "DemoRequesterOrganization2"] `
+[[services.SwaggerPetstore.authorization-whitelist]]
+organization-name = "DemoRequesterOrganization1"
+
+[[services.SwaggerPetstore.authorization-whitelist]]
+organization-name = "DemoRequesterOrganization2"
+public-key = "sha256:452de56457e4be093eb4a99fae354b4882908cc6e04518e883c4507a7e99e8ef"
+
+[[services.SwaggerPetstore.authorization-whitelist]]
+public-key = "sha256:197eafd78afb28ff934d03f3ce68375e071a1157dcb02814c7a4df0c21d3bb93"
+```
+
+***Example v1***
+
+_This syntax is deprecated and will cause a warning to be logged_
+```toml
+authorization-whitelist = ["DemoRequesterOrganization1", "DemoRequesterOrganization2"]
 ```
 
 <a name="field-ca-cert-path"></a>

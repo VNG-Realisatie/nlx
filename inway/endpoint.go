@@ -84,7 +84,12 @@ func (iw *Inway) NewHTTPServiceEndpoint(serviceName string, serviceDetails *conf
 
 	switch serviceDetails.AuthorizationModel {
 	case "whitelist", "":
-		h.SetAuthorizationWhitelist(serviceDetails.AuthorizationWhitelist)
+		var organizationNamesWhitelist []string
+		for _, authorizationWhitelistItem := range serviceDetails.AuthorizationWhitelist {
+			organizationNamesWhitelist = append(organizationNamesWhitelist, authorizationWhitelistItem.OrganizationName)
+		}
+
+		h.SetAuthorizationWhitelist(organizationNamesWhitelist)
 	case "none":
 		h.SetAuthorizationPublic()
 	default:

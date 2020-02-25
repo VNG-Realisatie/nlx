@@ -83,7 +83,14 @@ func main() {
 			logger.Fatal("cannot retrieving inway configuration from the config-api", zap.Error(err))
 		}
 	} else {
-		serviceConfig := config.LoadServiceConfig(logger, options.ServiceConfig)
+		serviceConfig, err2 := config.LoadServiceConfig(options.ServiceConfig)
+		if err2 != nil {
+			if serviceConfig == nil {
+				logger.Fatal("failed to load service config", zap.Error(err2))
+			} else {
+				logger.Warn("warning while loading service config", zap.Error(err))
+			}
+		}
 		loadServices(logger, serviceConfig, iw)
 	}
 

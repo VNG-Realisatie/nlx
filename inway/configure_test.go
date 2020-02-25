@@ -61,7 +61,8 @@ func TestServiceToServiceDetails(t *testing.T) {
 	assert.Equal(t, service.TechSupportContact, serviceDetails.TechSupportContact)
 	assert.Equal(t, service.Internal, serviceDetails.Internal)
 	assert.Equal(t, service.AuthorizationSettings.Mode, string(serviceDetails.AuthorizationModel))
-	assert.Equal(t, service.AuthorizationSettings.Organizations, serviceDetails.AuthorizationWhitelist)
+	assert.Equal(t, service.AuthorizationSettings.Organizations[0], serviceDetails.AuthorizationWhitelist[0].OrganizationName)
+	assert.Equal(t, service.AuthorizationSettings.Organizations[1], serviceDetails.AuthorizationWhitelist[1].OrganizationName)
 }
 
 func TestConfigApiResponseToEndpoints(t *testing.T) {
@@ -87,7 +88,8 @@ func TestConfigApiResponseToEndpoints(t *testing.T) {
 	assert.Equal(t, serviceConfig.PublicSupportContact, serviceDetails.PublicSupportContact)
 	assert.Equal(t, serviceConfig.TechSupportContact, serviceDetails.TechSupportContact)
 	assert.Equal(t, serviceConfig.AuthorizationSettings.Mode, string(serviceDetails.AuthorizationModel))
-	assert.Equal(t, serviceConfig.AuthorizationSettings.Organizations, serviceDetails.AuthorizationWhitelist)
+	assert.Equal(t, serviceConfig.AuthorizationSettings.Organizations[0], serviceDetails.AuthorizationWhitelist[0].OrganizationName)
+	assert.Equal(t, serviceConfig.AuthorizationSettings.Organizations[1], serviceDetails.AuthorizationWhitelist[1].OrganizationName)
 
 	serviceConfig.AuthorizationSettings = nil
 	endpoints = iw.createServiceEndpoints(response)

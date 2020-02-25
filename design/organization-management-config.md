@@ -23,7 +23,7 @@ A private Service needs requesting organizations to be whitelisted. The configur
 
 ## Inways and Outways
 
-Inways and outways self-register with the configuration management system, but must be acknowledged by an admin user. The admin user needs to enter the certificate fingerprint of the approved system. This is also the case for the insight-api.
+Inways and outways self-register with the configuration management system, but must be acknowledged by an admin user. The admin user needs to enter the public key of the approved system. This is also the case for the insight-api.
 
 ### Inway / outway deployment stratiegies
 
