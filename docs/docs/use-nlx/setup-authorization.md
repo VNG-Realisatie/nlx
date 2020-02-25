@@ -74,4 +74,11 @@ The request will be authorized by the inway, only if the organization is whiteli
 ## Configuring the inway
 
 You can configure authorization on an inway by using the `authorization-model` and `authorization-whitelist` options in the [service configuration](../reference-information/service-configuration.md).
+On startup the outway logs the public key that can be used in the whitelist. Or it can be generated using the following command
+
+```bash
+echo "sha256:$(openssl x509 -in org.crt -pubkey | openssl pkey -pubin -outform der | openssl dgst -sha256)"
+```
+
+
 
