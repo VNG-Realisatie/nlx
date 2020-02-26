@@ -40,7 +40,7 @@ func Load(options TLSOptions) (*x509.CertPool, *x509.Certificate, error) {
 	if _, err := keyPair.Leaf.Verify(opts); err != nil {
 		_, ok := err.(x509.UnknownAuthorityError)
 		if ok {
-			return nil, nil, fmt.Errorf("failed to verify certificate: certificate is signed by '%s' and not by provided root CA of '%s'", keyPair.Leaf.Subject.String(), rootCert.Subject.String())
+			return nil, nil, fmt.Errorf("failed to verify certificate: certificate is signed by '%s' and not by provided root CA of '%s'", keyPair.Leaf.Issuer.String(), rootCert.Subject.String())
 		}
 
 		return nil, nil, errors.Wrap(err, "failed to verify certificate")

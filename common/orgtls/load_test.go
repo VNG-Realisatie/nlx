@@ -37,7 +37,7 @@ func TestLoad(t *testing.T) {
 				OrgKeyFile:  filepath.Join("..", "..", "testing", "pki", "org-nlx-test-key.pem"),
 			},
 			expectError:          true,
-			expectedErrorMessage: "failed to verify certificate: certificate is signed by 'CN=inway.test,O=nlx-test' and not by provided root CA of 'CN=NLX Second CA,O=NLX Second CA'",
+			expectedErrorMessage: "failed to verify certificate: certificate is signed by 'CN=NLX CA,O=NLX CA' and not by provided root CA of 'CN=NLX Second CA,O=NLX Second CA'",
 		},
 		{
 			description: "the organization certification does not exist",
