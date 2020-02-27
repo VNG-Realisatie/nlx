@@ -23,6 +23,7 @@ Build acceptance:
     - master@commonground/nlx/nlx
   except:
     - tags
+    - schedules
   tags:
     - cg
     - shell

@@ -8,6 +8,8 @@ Run semantic release:
     - npx semantic-release
   only:
     - master@commonground/nlx/nlx
+  except:
+    - schedules
   when: manual
   tags:
     - docker

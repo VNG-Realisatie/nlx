@@ -20,9 +20,6 @@ RUN apt-get update && apt-get install -y wget --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /src/*.deb
 
-COPY wait-for-http.sh \
-     /go/src/commonground/nlx/directory-ui-e2e-tests/
-
 # Uncomment to skip the chromium download when installing puppeteer. If you do,
 # you'll need to launch puppeteer with:
 #     browser.launch({executablePath: 'google-chrome-unstable'})

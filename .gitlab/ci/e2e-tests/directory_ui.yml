@@ -1,21 +1,22 @@
 Directory UI - E2E Tests:
   stage: E2E tests
-  image: docker:19.03.1
+  image: docker:19.03.6
   variables:
     DOCKER_TLS_CERTDIR: "/certs"
   services:
-    - docker:19.03.1-dind
+    - docker:19.03.6-dind
   before_script:
     - export CI_ENV_URL=$([ -f ci_environment_url.txt ] && cat ci_environment_url.txt)
     - export DIRECTORY_UI_URL=$([ -z "$CI_ENV_URL" ] && echo "https://directory.acc.nlx.io" || echo "https://directory-nlx-directory-$CI_ENV_URL")
     - export E2E_IMAGE=${CI_REGISTRY_IMAGE}/directory-e2e-tests
   script:
+    - apk add --no-cache curl
+    - ./wait-for-http.sh $DIRECTORY_UI_URL
     - |
       docker build --tag $E2E_IMAGE:$CI_COMMIT_SHORT_SHA directory-ui-e2e-tests && \
       docker run --rm --cap-add=SYS_ADMIN \
       -e URL=$DIRECTORY_UI_URL \
-      $E2E_IMAGE:$CI_COMMIT_SHORT_SHA \
-      /bin/sh -c './wait-for-http.sh $URL && npm test'
+      $E2E_IMAGE:$CI_COMMIT_SHORT_SHA npm test
   tags:
     - docker
     - linux

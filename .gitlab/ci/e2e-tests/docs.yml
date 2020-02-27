@@ -1,0 +1,21 @@
+Documentation link checker:
+  stage: E2E tests
+  image: docker:19.03.6
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+  services:
+    - docker:19.03.6-dind
+  before_script:
+    - export CI_ENV_URL=$([ -f ci_environment_url.txt ] && cat ci_environment_url.txt)
+    - export DOCS_URL=$([ -z "$CI_ENV_URL" ] && echo "https://docs.acc.nlx.io" || echo "https://docs-nlx-directory-$CI_ENV_URL")
+  script:
+    - apk add --no-cache curl
+    - ./wait-for-http.sh $DOCS_URL
+    - |
+      docker run --rm raviqqe/muffet:1.3.3 $DOCS_URL --ignore-fragments --timeout 60 --exclude Windows%20Installer\.exe$
+  only:
+    - /^feature/.*$/@commonground/nlx/nlx
+    - master@commonground/nlx/nlx
+  tags:
+    - linux
+    - docker
