@@ -147,7 +147,7 @@ func (h *HTTPServiceEndpoint) handleRequest(reqMD *RequestMetadata, w http.Respo
 		for _, whitelistedOrg := range h.whitelistedOrganizations {
 			h.logger.Debug("whitelistitem",
 				zap.String("OrganizationName", whitelistedOrg.OrganizationName),
-				zap.String("CertificateFingerprint", whitelistedOrg.PublicKey))
+				zap.String("PublicKeyHash", whitelistedOrg.PublicKey))
 
 			if whitelistedOrg.OrganizationName == "" && whitelistedOrg.PublicKey == "" {
 				h.logger.Warn("Whitelist item missing both organization-name and public-key-hash")
