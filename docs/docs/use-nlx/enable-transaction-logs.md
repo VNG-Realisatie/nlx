@@ -56,7 +56,7 @@ As you can see there are nog logs yet.
 
 The next step is to connect an inway or an outway to the database. If you've followed the [Try NLX](../try-nlx/setup-your-environment.md) guide you will either have an inway or an outway running. In this example we will connect the transaction log to the outway setup in the [Try NLX - consume an API](../try-nlx/consume-an-api.mdx) guide.
 
-If your outway from the [Try NLX](../try-nlx/consume-an-api) guide is still running, you will have to stop it first.
+If your outway from the [Try NLX](../try-nlx/consume-an-api.mdx) guide is still running, you will have to stop it first.
 
 execute
 

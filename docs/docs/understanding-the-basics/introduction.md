@@ -77,7 +77,7 @@ gateways are usually deployed centrally within the organization although it is
 possible for one organization to deploy multiple instances of inway and outway
 on different locations.
 
-![figure 1](introduction-fig-1.svg)
+![figure 1](/img/introduction-fig-1.svg)
 
 Here you can see a full request-response flow on NLX. An application performs a
 request on the outway within the same organization. The outway routes the
