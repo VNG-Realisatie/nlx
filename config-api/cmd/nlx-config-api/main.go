@@ -96,7 +96,6 @@ func main() {
 		NextProtos:   []string{"h2"},
 		ClientAuth:   tls.RequireAndVerifyClientCert,
 	}
-
 	tlsconfig.ApplyDefaults(serverTLSConfig)
 
 	directoryRegistrationClient, err := setupDirectoryRegistrationClient(certPool, certKeyPair)

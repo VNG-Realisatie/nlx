@@ -28,16 +28,15 @@ version = 2
 
 	## `authorization-whitelist` is required when `authorization-model` is set to "whitelist".
 	## This is a list of items of organizations that are allowed access. An item consists of an organization name
-	## (as specified in the peers organization cert) or the public key in the `subjectPublicKeyInfo` field of their
-	## certificate.
+	## (as specified in the peers organization cert) or the a hash from the public key of their certificate.
 	## WARNING: The currently deployed online NLX network is for demo purposes and not ready for connected resources containing sensitive data.
 	## When using real personal data, use your own NLX network in an environment you control.
     [[services.PostmanEchoWhitelisted.authorization-whitelist]]
     organization-name = "Gemeente Utrecht"
-    public-key = "sha256:452de56457e4be093eb4a99fae354b4882908cc6e04518e883c4507a7e99e8ef"
+    public-key-hash = "sha256:452de56457e4be093eb4a99fae354b4882908cc6e04518e883c4507a7e99e8ef"
 
     [[services.PostmanEchoWhitelisted.authorization-whitelist]]
-    public-key = "sha256:197eafd78afb28ff934d03f3ce68375e071a1157dcb02814c7a4df0c21d3bb93" # Gemeente Amsterdam
+    public-key-hash = "sha256:197eafd78afb28ff934d03f3ce68375e071a1157dcb02814c7a4df0c21d3bb93" # Gemeente Amsterdam
 
     [[services.PostmanEchoWhitelisted.authorization-whitelist]]
     organization-name = "Gemeente Haarlem"

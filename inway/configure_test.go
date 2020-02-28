@@ -46,8 +46,12 @@ func createMockService() *configapi.Service {
 		TechSupportContact:   "techsupport@email.com",
 		Internal:             true,
 		AuthorizationSettings: &configapi.Service_AuthorizationSettings{
-			Mode:          "whitelist",
-			Organizations: []string{"demo-org1", "demo-org2"},
+			Mode: "whitelist",
+			Authorizations: []*configapi.Service_AuthorizationSettings_Authorization{
+				{OrganizationName: "demo-org1"},
+				{OrganizationName: "demo-org2"},
+				{PublicKeyHash: "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+			},
 		},
 	}
 }
@@ -61,8 +65,9 @@ func TestServiceToServiceDetails(t *testing.T) {
 	assert.Equal(t, service.TechSupportContact, serviceDetails.TechSupportContact)
 	assert.Equal(t, service.Internal, serviceDetails.Internal)
 	assert.Equal(t, service.AuthorizationSettings.Mode, string(serviceDetails.AuthorizationModel))
-	assert.Equal(t, service.AuthorizationSettings.Organizations[0], serviceDetails.AuthorizationWhitelist[0].OrganizationName)
-	assert.Equal(t, service.AuthorizationSettings.Organizations[1], serviceDetails.AuthorizationWhitelist[1].OrganizationName)
+	assert.Equal(t, service.AuthorizationSettings.Authorizations[0].OrganizationName, serviceDetails.AuthorizationWhitelist[0].OrganizationName)
+	assert.Equal(t, service.AuthorizationSettings.Authorizations[1].OrganizationName, serviceDetails.AuthorizationWhitelist[1].OrganizationName)
+	assert.Equal(t, service.AuthorizationSettings.Authorizations[2].PublicKeyHash, serviceDetails.AuthorizationWhitelist[2].PublicKeyHash)
 }
 
 func TestConfigApiResponseToEndpoints(t *testing.T) {
@@ -88,8 +93,9 @@ func TestConfigApiResponseToEndpoints(t *testing.T) {
 	assert.Equal(t, serviceConfig.PublicSupportContact, serviceDetails.PublicSupportContact)
 	assert.Equal(t, serviceConfig.TechSupportContact, serviceDetails.TechSupportContact)
 	assert.Equal(t, serviceConfig.AuthorizationSettings.Mode, string(serviceDetails.AuthorizationModel))
-	assert.Equal(t, serviceConfig.AuthorizationSettings.Organizations[0], serviceDetails.AuthorizationWhitelist[0].OrganizationName)
-	assert.Equal(t, serviceConfig.AuthorizationSettings.Organizations[1], serviceDetails.AuthorizationWhitelist[1].OrganizationName)
+	assert.Equal(t, serviceConfig.AuthorizationSettings.Authorizations[0].OrganizationName, serviceDetails.AuthorizationWhitelist[0].OrganizationName)
+	assert.Equal(t, serviceConfig.AuthorizationSettings.Authorizations[1].OrganizationName, serviceDetails.AuthorizationWhitelist[1].OrganizationName)
+	assert.Equal(t, serviceConfig.AuthorizationSettings.Authorizations[2].PublicKeyHash, serviceDetails.AuthorizationWhitelist[2].PublicKeyHash)
 
 	serviceConfig.AuthorizationSettings = nil
 	endpoints = iw.createServiceEndpoints(response)

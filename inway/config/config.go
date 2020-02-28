@@ -39,7 +39,7 @@ const (
 // AuthorizationWhitelistItem holds the criteria for the whitelist.
 type AuthorizationWhitelistItem struct {
 	OrganizationName string `toml:"organization-name"`
-	PublicKey        string `toml:"public-key"`
+	PublicKeyHash    string `toml:"public-key-hash"`
 }
 
 // ServiceDetails holds the details for a single service definition.

@@ -62,7 +62,12 @@ message Service {
 
 	message AuthorizationSettings {
 		string mode = 1;
-		repeated string organizations = 2;
+		repeated Authorization authorizations = 2;
+
+		message Authorization  {
+			string organizationName = 1;
+			string publicKeyHash = 2;
+		}
 	}
 }
 

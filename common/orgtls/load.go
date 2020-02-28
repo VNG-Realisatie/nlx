@@ -102,14 +102,13 @@ func loadCertificate(filePath string) (*x509.Certificate, error) {
 	return cert, nil
 }
 
-func CertificateFingerprint(certificate *x509.Certificate) (string, error) {
+func PublicKeyHash(certificate *x509.Certificate) (string, error) {
 	pubDER, err := x509.MarshalPKIXPublicKey(certificate.PublicKey)
 	if err != nil {
 		return "", err
 	}
 
 	sum := sha256.Sum256(pubDER)
-	fingerprint := "sha256:" + hex.EncodeToString(sum[:])
 
-	return fingerprint, nil
+	return "sha256:" + hex.EncodeToString(sum[:]), nil
 }

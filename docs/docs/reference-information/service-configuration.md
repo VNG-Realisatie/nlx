@@ -27,10 +27,10 @@ version = 2
     
     [[services.SwaggerPetstore.authorization-whitelist]]
     organization-name = "DemoRequesterOrganization2"
-    public-key = "sha256:452de56457e4be093eb4a99fae354b4882908cc6e04518e883c4507a7e99e8ef"
+    public-key-hash = "sha256:452de56457e4be093eb4a99fae354b4882908cc6e04518e883c4507a7e99e8ef"
     
     [[services.SwaggerPetstore.authorization-whitelist]]
-    public-key = "sha256:197eafd78afb28ff934d03f3ce68375e071a1157dcb02814c7a4df0c21d3bb93"
+    public-key-hash = "sha256:197eafd78afb28ff934d03f3ce68375e071a1157dcb02814c7a4df0c21d3bb93"
 ```
 # Top level fields
 
@@ -104,10 +104,10 @@ organization-name = "DemoRequesterOrganization1"
 
 [[services.SwaggerPetstore.authorization-whitelist]]
 organization-name = "DemoRequesterOrganization2"
-public-key = "sha256:452de56457e4be093eb4a99fae354b4882908cc6e04518e883c4507a7e99e8ef"
+public-key-hash = "sha256:452de56457e4be093eb4a99fae354b4882908cc6e04518e883c4507a7e99e8ef"
 
 [[services.SwaggerPetstore.authorization-whitelist]]
-public-key = "sha256:197eafd78afb28ff934d03f3ce68375e071a1157dcb02814c7a4df0c21d3bb93"
+public-key-hash = "sha256:197eafd78afb28ff934d03f3ce68375e071a1157dcb02814c7a4df0c21d3bb93"
 ```
 
 ***Example v1***

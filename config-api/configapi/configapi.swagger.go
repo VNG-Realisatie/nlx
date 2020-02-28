@@ -8,10 +8,6 @@ SwaggerJSONDirectory = `
     "title": "configapi.proto",
     "version": "version not set"
   },
-  "schemes": [
-    "http",
-    "https"
-  ],
   "consumes": [
     "application/json"
   ],
@@ -291,16 +287,27 @@ SwaggerJSONDirectory = `
     }
   },
   "definitions": {
+    "AuthorizationSettingsAuthorization": {
+      "type": "object",
+      "properties": {
+        "organizationName": {
+          "type": "string"
+        },
+        "publicKeyHash": {
+          "type": "string"
+        }
+      }
+    },
     "ServiceAuthorizationSettings": {
       "type": "object",
       "properties": {
         "mode": {
           "type": "string"
         },
-        "organizations": {
+        "authorizations": {
           "type": "array",
           "items": {
-            "type": "string"
+            "$ref": "#/definitions/AuthorizationSettingsAuthorization"
           }
         }
       }

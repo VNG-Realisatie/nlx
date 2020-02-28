@@ -71,7 +71,7 @@ func loadCertificates(logger *zap.Logger, tlsOptions orgtls.TLSOptions) (*x509.C
 
 	organizationName := orgCert.Subject.Organization[0]
 
-	fingerprint, err := orgtls.CertificateFingerprint(orgCert)
+	fingerprint, err := orgtls.PublicKeyHash(orgCert)
 	if err != nil {
 		return nil, "", err
 	}

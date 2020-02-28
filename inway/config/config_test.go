@@ -140,7 +140,7 @@ version = 2
 	internal = false
 	[[services.test.authorization-whitelist]]
 	  organization-name = "test org"
-      public-key = "finger"
+      public-key-hash = "finger"
 `,
 		},
 		wantDeprecatedErr: false,
@@ -161,7 +161,7 @@ version = 2
 				},
 					AuthorizationWhitelist: []AuthorizationWhitelistItem{{
 						OrganizationName: "test org",
-						PublicKey:        "finger",
+						PublicKeyHash:    "finger",
 					}},
 				},
 			},

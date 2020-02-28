@@ -76,7 +76,7 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 		zap.String("logrecord-id", logrecordID),
 	)
 
-	subjectPublicKeyInfo, err := orgtls.CertificateFingerprint(peerCertificate)
+	publicKeyHash, err := orgtls.PublicKeyHash(peerCertificate)
 	if err != nil {
 		http.Error(w, "nlx-inway: failed to process certificate public key", http.StatusInternalServerError)
 		logger.Warn("failed to process certificate public key", zap.Error(err))
@@ -85,9 +85,9 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	reqMD := &RequestMetadata{
-		requesterOrganization:         requesterOrganization,
-		requesterSubjectPublicKeyInfo: subjectPublicKeyInfo,
-		requestPath:                   "/" + urlparts[1],
+		requesterOrganization:  requesterOrganization,
+		requesterPublicKeyHash: publicKeyHash,
+		requestPath:            "/" + urlparts[1],
 	}
 
 	logger.Info("servicename: " + serviceName)

@@ -27,7 +27,7 @@ func TestSetAuthorization(t *testing.T) {
 	assert.True(t, endpoint.public)
 
 	// Test if whitelist is created
-	whiteList := []config.AuthorizationWhitelistItem{{OrganizationName: "demo-org"}, {PublicKey: "demo-cert"}}
+	whiteList := []config.AuthorizationWhitelistItem{{OrganizationName: "demo-org"}, {PublicKeyHash: "demo-cert"}}
 	endpoint.SetAuthorizationWhitelist(whiteList)
 	assert.False(t, endpoint.public)
 	assert.Len(t, endpoint.whitelistedOrganizations, 2)
@@ -72,8 +72,8 @@ func TestWhitelist(t *testing.T) {
 	endpoint := &HTTPServiceEndpoint{
 		whitelistedOrganizations: []config.AuthorizationWhitelistItem{
 			{OrganizationName: "only-org"},
-			{PublicKey: "only-cert"},
-			{OrganizationName: "with-name-and-cert", PublicKey: "with-cert-and-name"},
+			{PublicKeyHash: "only-cert"},
+			{OrganizationName: "with-name-and-cert", PublicKeyHash: "with-cert-and-name"},
 			{}, // This would be a anomaly but we don't want it to be an allow all rule
 		},
 		logger: zaptest.NewLogger(t),
@@ -92,7 +92,7 @@ func TestWhitelist(t *testing.T) {
 	}{
 		{
 			name:              "only certificate",
-			requesterMetadata: &RequestMetadata{requesterOrganization: "irrelevant", requesterSubjectPublicKeyInfo: "only-cert"},
+			requesterMetadata: &RequestMetadata{requesterOrganization: "irrelevant", requesterPublicKeyHash: "only-cert"},
 			want:              want{statusCode: http.StatusBadRequest, body: "nlx-inway: missing logrecord id\n"},
 		},
 		{
@@ -102,7 +102,7 @@ func TestWhitelist(t *testing.T) {
 		},
 		{
 			name:              "with name and cert",
-			requesterMetadata: &RequestMetadata{requesterOrganization: "with-name-and-cert", requesterSubjectPublicKeyInfo: "with-cert-and-name"},
+			requesterMetadata: &RequestMetadata{requesterOrganization: "with-name-and-cert", requesterPublicKeyHash: "with-cert-and-name"},
 			want:              want{statusCode: http.StatusBadRequest, body: "nlx-inway: missing logrecord id\n"},
 		},
 		{
@@ -112,7 +112,7 @@ func TestWhitelist(t *testing.T) {
 		},
 		{
 			name:              "name with wrong cert",
-			requesterMetadata: &RequestMetadata{requesterOrganization: "with-name-and-cert", requesterSubjectPublicKeyInfo: "wrong"},
+			requesterMetadata: &RequestMetadata{requesterOrganization: "with-name-and-cert", requesterPublicKeyHash: "wrong"},
 			want:              want{statusCode: http.StatusForbidden, body: "nlx-inway: permission denied, organization \"with-name-and-cert\" or public key \"wrong\" is not allowed access.\n"},
 		},
 	}

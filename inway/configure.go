@@ -171,9 +171,10 @@ func serviceConfigToServiceDetails(service *configapi.Service) *config.ServiceDe
 
 	if service.AuthorizationSettings != nil {
 		serviceDetails.AuthorizationModel = config.AuthorizationModel(service.AuthorizationSettings.Mode)
-		for _, organizationName := range service.AuthorizationSettings.Organizations {
+		for _, authorization := range service.AuthorizationSettings.Authorizations {
 			serviceDetails.AuthorizationWhitelist = append(serviceDetails.AuthorizationWhitelist, config.AuthorizationWhitelistItem{
-				OrganizationName: organizationName,
+				OrganizationName: authorization.OrganizationName,
+				PublicKeyHash:    authorization.PublicKeyHash,
 			})
 		}
 	} else {
