@@ -113,32 +113,32 @@ func TestInwayProxyRequest(t *testing.T) {
 	}{
 		{fmt.Sprintf("%s/mock-service-public/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusOK, ""},
 		{fmt.Sprintf("%s/mock-service-whitelist/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusOK, ""},
-		{fmt.Sprintf("%s/mock-service-whitelist-unauthorized/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusForbidden, "nlx-outway: could not handle your request, organization \"nlx-test\" is not allowed access.\n"},
-		{fmt.Sprintf("%s/mock-service-unspecified-unauthorized/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusForbidden, "nlx-outway: could not handle your request, organization \"nlx-test\" is not allowed access.\n"},
+		{fmt.Sprintf("%s/mock-service-whitelist-unauthorized/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusForbidden, "nlx-inway: permission denied, organization \"nlx-test\" or public key \"sha256:eb48a0a7a922688175e1b40274d88f3e188fdd727de6a2c5840148d5e989726e\" is not allowed access.\n"},
+		{fmt.Sprintf("%s/mock-service-unspecified-unauthorized/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusForbidden, "nlx-inway: permission denied, organization \"nlx-test\" or public key \"sha256:eb48a0a7a922688175e1b40274d88f3e188fdd727de6a2c5840148d5e989726e\" is not allowed access.\n"},
 		{fmt.Sprintf("%s/mock-service", proxyRequestMockServer.URL), "dummy-ID", http.StatusBadRequest, "nlx-inway: invalid path in url\n"},
 		{fmt.Sprintf("%s/mock-service/fictive", proxyRequestMockServer.URL), "dummy-ID", http.StatusBadRequest, "nlx-inway: no endpoint for service\n"},
-		{fmt.Sprintf("%s/mock-service-public/dummy", proxyRequestMockServer.URL), "", http.StatusBadRequest, "nlx-outway: missing logrecord id\n"},
+		{fmt.Sprintf("%s/mock-service-public/dummy", proxyRequestMockServer.URL), "", http.StatusBadRequest, "nlx-inway: missing logrecord id\n"},
 	}
 
 	for _, test := range tests {
-		req, err := http.NewRequest("GET", test.url, nil)
-		assert.Nil(t, err)
+		test := test
+		t.Run(test.url, func(t *testing.T) {
+			req, err := http.NewRequest("GET", test.url, nil)
+			assert.Nil(t, err)
 
-		req.Header.Add("X-NLX-Logrecord-Id", test.logRecordID)
-		resp, err := client.Do(req)
-		assert.Nil(t, err)
-		assert.NotNil(t, resp)
-		assert.Equal(t, test.statusCode, resp.StatusCode)
-		defer resp.Body.Close()
-		if resp.StatusCode != test.statusCode {
-			t.Fatalf(`result: "%d" for url "%s", expected http status code : "%d"`, resp.StatusCode, test.url, test.statusCode)
-		}
+			req.Header.Add("X-NLX-Logrecord-Id", test.logRecordID)
+			resp, err := client.Do(req)
+			assert.Nil(t, err)
+			assert.NotNil(t, resp)
+			assert.Equal(t, test.statusCode, resp.StatusCode)
 
-		bytes, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			t.Fatal("error parsing result.body", err)
-		}
-		assert.Equal(t, test.errorMessage, string(bytes))
+			defer resp.Body.Close()
+			bytes, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				t.Fatal("error parsing result.body", err)
+			}
+			assert.Equal(t, test.errorMessage, string(bytes))
+		})
 	}
 }
 

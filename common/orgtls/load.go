@@ -4,8 +4,10 @@
 package orgtls
 
 import (
+	"crypto/sha256"
 	"crypto/tls"
 	"crypto/x509"
+	"encoding/hex"
 	"encoding/pem"
 	"fmt"
 	"io/ioutil"
@@ -98,4 +100,16 @@ func loadCertificate(filePath string) (*x509.Certificate, error) {
 	}
 
 	return cert, nil
+}
+
+func CertificateFingerprint(certificate *x509.Certificate) (string, error) {
+	pubDER, err := x509.MarshalPKIXPublicKey(certificate.PublicKey)
+	if err != nil {
+		return "", err
+	}
+
+	sum := sha256.Sum256(pubDER)
+	fingerprint := "sha256:" + hex.EncodeToString(sum[:])
+
+	return fingerprint, nil
 }

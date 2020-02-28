@@ -24,7 +24,6 @@ spec:
             - name: ENVIRONMENT_SLUG_WITH_DOMAIN
               value: {{.Values.reviewPage.environmentSlugWithDomain}}
       restartPolicy: Always
-  status: {}
 ---
 apiVersion: v1
 kind: Service

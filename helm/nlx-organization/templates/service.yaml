@@ -57,7 +57,6 @@ spec:
             secretName: service-tls
       {{ end }}
       restartPolicy: Always
-  status: {}
 ---
 apiVersion: v1
 kind: Service

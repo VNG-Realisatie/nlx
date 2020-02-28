@@ -8,6 +8,8 @@ import (
 	"strings"
 
 	"go.uber.org/zap"
+
+	"go.nlx.io/nlx/common/orgtls"
 )
 
 // handleProxyRequest handles requests from an NLX Outway to the Inway.
@@ -74,9 +76,18 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 		zap.String("logrecord-id", logrecordID),
 	)
 
+	subjectPublicKeyInfo, err := orgtls.CertificateFingerprint(peerCertificate)
+	if err != nil {
+		http.Error(w, "nlx-inway: failed to process certificate public key", http.StatusInternalServerError)
+		logger.Warn("failed to process certificate public key", zap.Error(err))
+
+		return
+	}
+
 	reqMD := &RequestMetadata{
-		requesterOrganization: requesterOrganization,
-		requestPath:           "/" + urlparts[1],
+		requesterOrganization:         requesterOrganization,
+		requesterSubjectPublicKeyInfo: subjectPublicKeyInfo,
+		requestPath:                   "/" + urlparts[1],
 	}
 
 	logger.Info("servicename: " + serviceName)

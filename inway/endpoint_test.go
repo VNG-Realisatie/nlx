@@ -13,6 +13,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
+	"go.uber.org/zap/zaptest"
 
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
@@ -26,15 +27,16 @@ func TestSetAuthorization(t *testing.T) {
 	assert.True(t, endpoint.public)
 
 	// Test if whitelist is created
-	whiteList := []string{"demo-org"}
+	whiteList := []config.AuthorizationWhitelistItem{{OrganizationName: "demo-org"}, {PublicKey: "demo-cert"}}
 	endpoint.SetAuthorizationWhitelist(whiteList)
 	assert.False(t, endpoint.public)
-	assert.Len(t, endpoint.whitelistedOrganizations, 1)
+	assert.Len(t, endpoint.whitelistedOrganizations, 2)
 	assert.Equal(t, whiteList, endpoint.whitelistedOrganizations)
 
 	// Test if a not whitelisted organization will receive a 403 response
 	var err error
-	endpoint.logger = zap.NewNop()
+
+	endpoint.logger = zaptest.NewLogger(t)
 	httpRecorder := httptest.NewRecorder()
 	req := httptest.NewRequest("GET", "/whitelist", nil)
 	reqMD := &RequestMetadata{
@@ -60,10 +62,84 @@ func TestSetAuthorization(t *testing.T) {
 
 	assert.Equal(
 		t,
-		fmt.Sprintf("nlx-outway: could not handle your request, organization \"%s\" is not allowed access.\n",
+		fmt.Sprintf("nlx-inway: permission denied, organization \"%s\" or public key \"\" is not allowed access.\n",
 			reqMD.requesterOrganization),
 		string(bytes),
 	)
+}
+
+func TestWhitelist(t *testing.T) {
+	endpoint := &HTTPServiceEndpoint{
+		whitelistedOrganizations: []config.AuthorizationWhitelistItem{
+			{OrganizationName: "only-org"},
+			{PublicKey: "only-cert"},
+			{OrganizationName: "with-name-and-cert", PublicKey: "with-cert-and-name"},
+			{}, // This would be a anomaly but we don't want it to be an allow all rule
+		},
+		logger: zaptest.NewLogger(t),
+	}
+	req := httptest.NewRequest("GET", "/whitelist", nil)
+
+	type want struct {
+		statusCode int
+		body       string
+	}
+
+	tests := []struct {
+		name              string
+		requesterMetadata *RequestMetadata
+		want              want
+	}{
+		{
+			name:              "only certificate",
+			requesterMetadata: &RequestMetadata{requesterOrganization: "irrelevant", requesterSubjectPublicKeyInfo: "only-cert"},
+			want:              want{statusCode: http.StatusBadRequest, body: "nlx-inway: missing logrecord id\n"},
+		},
+		{
+			name:              "only organization",
+			requesterMetadata: &RequestMetadata{requesterOrganization: "only-org"},
+			want:              want{statusCode: http.StatusBadRequest, body: "nlx-inway: missing logrecord id\n"},
+		},
+		{
+			name:              "with name and cert",
+			requesterMetadata: &RequestMetadata{requesterOrganization: "with-name-and-cert", requesterSubjectPublicKeyInfo: "with-cert-and-name"},
+			want:              want{statusCode: http.StatusBadRequest, body: "nlx-inway: missing logrecord id\n"},
+		},
+		{
+			name:              "unknown",
+			requesterMetadata: &RequestMetadata{requesterOrganization: "unknown"},
+			want:              want{statusCode: http.StatusForbidden, body: "nlx-inway: permission denied, organization \"unknown\" or public key \"\" is not allowed access.\n"},
+		},
+		{
+			name:              "name with wrong cert",
+			requesterMetadata: &RequestMetadata{requesterOrganization: "with-name-and-cert", requesterSubjectPublicKeyInfo: "wrong"},
+			want:              want{statusCode: http.StatusForbidden, body: "nlx-inway: permission denied, organization \"with-name-and-cert\" or public key \"wrong\" is not allowed access.\n"},
+		},
+	}
+
+	for _, test := range tests {
+		test := test
+		t.Run(test.name, func(t *testing.T) {
+			responseRecorder := httptest.NewRecorder()
+			endpoint.handleRequest(test.requesterMetadata, responseRecorder, req)
+			statusCode, body := getResponseStatusAndBody(t, responseRecorder)
+			assert.Equal(t, test.want.statusCode, statusCode)
+			assert.Equal(t, test.want.body, body)
+		})
+	}
+}
+
+func getResponseStatusAndBody(t *testing.T, httpRecorder *httptest.ResponseRecorder) (statusCode int, body string) {
+	result := httpRecorder.Result()
+
+	bytes, err := ioutil.ReadAll(result.Body)
+	if err != nil {
+		t.Fatal("error parsing result.body", err)
+	}
+
+	result.Body.Close()
+
+	return result.StatusCode, string(bytes)
 }
 
 func TestInwaySetServiceEndpoints(t *testing.T) {

@@ -72,7 +72,6 @@ spec:
               mountPath: /etc/irmaserver/jwt
               readOnly: true
       restartPolicy: Always
-  status: {}
 ---
 apiVersion: v1
 kind: Service

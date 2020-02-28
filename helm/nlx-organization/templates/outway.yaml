@@ -71,7 +71,6 @@ spec:
             - name: certs
               mountPath: /certs
       restartPolicy: Always
-  status: {}
 ---
 apiVersion: v1
 kind: Service

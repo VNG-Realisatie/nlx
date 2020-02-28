@@ -48,7 +48,6 @@ spec:
             secretName: ca-root-cert-{{.component}}
       {{ end }}
       restartPolicy: Always
-  status: {}
 ---
 apiVersion: v1
 kind: Service

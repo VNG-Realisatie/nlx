@@ -23,7 +23,7 @@ import (
 type ServiceEndpoint interface {
 	ServiceName() string
 	ServiceDetails() *config.ServiceDetails
-	SetAuthorizationWhitelist(whitelistedOrganizations []string)
+	SetAuthorizationWhitelist(whitelistedOrganizations []config.AuthorizationWhitelistItem)
 	GetAPISpec() (*http.Response, error)
 	handleRequest(reqMD *RequestMetadata, w http.ResponseWriter, r *http.Request)
 }
@@ -41,7 +41,7 @@ type HTTPServiceEndpoint struct {
 	httpClient *http.Client
 
 	public                   bool
-	whitelistedOrganizations []string
+	whitelistedOrganizations []config.AuthorizationWhitelistItem
 }
 
 func newRoundTripHTTPTransport(tlsConfig *tls.Config) *http.Transport {
@@ -84,12 +84,7 @@ func (iw *Inway) NewHTTPServiceEndpoint(serviceName string, serviceDetails *conf
 
 	switch serviceDetails.AuthorizationModel {
 	case "whitelist", "":
-		var organizationNamesWhitelist []string
-		for _, authorizationWhitelistItem := range serviceDetails.AuthorizationWhitelist {
-			organizationNamesWhitelist = append(organizationNamesWhitelist, authorizationWhitelistItem.OrganizationName)
-		}
-
-		h.SetAuthorizationWhitelist(organizationNamesWhitelist)
+		h.SetAuthorizationWhitelist(serviceDetails.AuthorizationWhitelist)
 	case "none":
 		h.SetAuthorizationPublic()
 	default:
@@ -115,7 +110,7 @@ func (h *HTTPServiceEndpoint) SetAuthorizationPublic() {
 }
 
 // SetAuthorizationWhitelist makes the service private and sets the whitelisted organizations.
-func (h *HTTPServiceEndpoint) SetAuthorizationWhitelist(whitelistedOrganizations []string) {
+func (h *HTTPServiceEndpoint) SetAuthorizationWhitelist(whitelistedOrganizations []config.AuthorizationWhitelistItem) {
 	h.public = false
 	h.whitelistedOrganizations = whitelistedOrganizations
 }
@@ -144,27 +139,57 @@ func (h *HTTPServiceEndpoint) handleRequest(reqMD *RequestMetadata, w http.Respo
 			return
 		}
 
+		var authorized = false
+
+		h.logger.Debug("check against whitelist",
+			zap.String("requesterOrganization", reqMD.requesterOrganization),
+			zap.String("requesterSubjectPublicKeyInfo", reqMD.requesterSubjectPublicKeyInfo))
 		for _, whitelistedOrg := range h.whitelistedOrganizations {
-			h.logger.Info("org: " + whitelistedOrg)
-			if reqMD.requesterOrganization == whitelistedOrg {
-				goto Authorized
+			h.logger.Debug("whitelistitem",
+				zap.String("OrganizationName", whitelistedOrg.OrganizationName),
+				zap.String("CertificateFingerprint", whitelistedOrg.PublicKey))
+
+			if whitelistedOrg.OrganizationName == "" && whitelistedOrg.PublicKey == "" {
+				h.logger.Warn("Whitelist item missing both organization-name and public-key-hash")
+				continue
+			}
+
+			organizationNameMatches := false
+			if whitelistedOrg.OrganizationName == "" {
+				organizationNameMatches = true
+			} else {
+				organizationNameMatches = reqMD.requesterOrganization == whitelistedOrg.OrganizationName
+			}
+
+			certificateFingerprintMatches := false
+			if whitelistedOrg.PublicKey == "" {
+				certificateFingerprintMatches = true
+			} else {
+				certificateFingerprintMatches = reqMD.requesterSubjectPublicKeyInfo == whitelistedOrg.PublicKey
+			}
+
+			if organizationNameMatches && certificateFingerprintMatches {
+				authorized = true
+				break
 			}
 		}
-		http.Error(w, fmt.Sprintf(`nlx-outway: could not handle your request, organization "%s" is not allowed access.`, reqMD.requesterOrganization), http.StatusForbidden)
-		h.logger.Info("unauthorized request blocked, requester was not whitelisted")
-		return
+
+		if !authorized {
+			http.Error(w, fmt.Sprintf(`nlx-inway: permission denied, organization "%s" or public key "%s" is not allowed access.`, reqMD.requesterOrganization, reqMD.requesterSubjectPublicKeyInfo), http.StatusForbidden)
+			h.logger.Info("unauthorized request blocked, requester was not whitelisted", zap.String("organization-name", reqMD.requesterOrganization), zap.String("certificate-fingerprint", reqMD.requesterSubjectPublicKeyInfo))
+
+			return
+		}
 	}
+
 	// we are public or authorized now.
-
-Authorized:
-
 	r.Host = h.host
 	r.URL.Path = reqMD.requestPath
 	r.Header.Set("X-NLX-Request-Organization", reqMD.requesterOrganization)
 
 	logrecordID := r.Header.Get("X-NLX-Logrecord-Id")
 	if logrecordID == "" {
-		http.Error(w, "nlx-outway: missing logrecord id", http.StatusBadRequest)
+		http.Error(w, "nlx-inway: missing logrecord id", http.StatusBadRequest)
 		h.logger.Warn("Received request with missing logrecord id from " + reqMD.requesterOrganization)
 		return
 	}
@@ -178,7 +203,7 @@ Authorized:
 		Data:             recordData,
 	})
 	if err != nil {
-		http.Error(w, "nlx-outway: server error", http.StatusInternalServerError)
+		http.Error(w, "nlx-inway: server error", http.StatusInternalServerError)
 		h.logger.Error("failed to store transactionlog record", zap.Error(err))
 		return
 	}

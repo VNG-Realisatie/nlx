@@ -24,7 +24,6 @@ spec:
           image: {{.Values.imagePrefix}}nlxio/{{.component}}:{{.Values.imageTag}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
       restartPolicy: Always
-  status: {}
 ---
 apiVersion: v1
 kind: Service

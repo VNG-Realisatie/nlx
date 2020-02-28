@@ -76,7 +76,6 @@ spec:
           secret:
             secretName: {{ .component }}-jwt
       restartPolicy: Always
-  status: {}
 ---
 apiVersion: v1
 kind: Service

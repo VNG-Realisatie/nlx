@@ -70,5 +70,5 @@ spec:
             - name: certs
               mountPath: /certs
       restartPolicy: Always
-  status: {}
+
 {{ end }}

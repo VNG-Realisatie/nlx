@@ -73,7 +73,6 @@ spec:
             - name: certs
               mountPath: /certs
       restartPolicy: Always
-  status: {}
 ---
 {{ if .Values.disableLoadBalancers }}
 apiVersion: v1

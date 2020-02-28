@@ -5,6 +5,7 @@ externalDomain: nlx-dev-haarlem.minikube
 
 logLevel: debug
 logType: local
+imagePullPolicy: IfNotPresent
 
 dbDatabaseTxlog: nlx-dev-haarlem-txlog
 dbResetTxlog: true # WARNING: All data will be LOST, never use in production!

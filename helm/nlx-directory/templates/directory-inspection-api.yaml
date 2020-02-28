@@ -77,7 +77,6 @@ spec:
             - name: certs
               mountPath: /certs
       restartPolicy: Always
-  status: {}
 ---
 {{ if .Values.disableLoadBalancers }}
 apiVersion: v1
@@ -112,7 +111,7 @@ kind: Service
 metadata:
   name: directory-inspection-api-internal
   namespace: {{ .Release.Namespace }}
-  labels: {{- include "nlx-directory.common.metadata-labels" . | nindent 2 }}
+  labels: {{- include "nlx-directory.common.metadata-labels" . | nindent 4 }}
 spec:
   selector: {{ include "nlx-directory.common.metadata-labels" . | nindent 4 }}
   ports:

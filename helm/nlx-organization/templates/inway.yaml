@@ -122,7 +122,6 @@ spec:
               mountPath: /ca-certs
             {{ end }}
       restartPolicy: Always
-  status: {}
 ---
 {{ if .Values.disableLoadBalancers }}
 apiVersion: v1

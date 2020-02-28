@@ -31,7 +31,6 @@ spec:
             - name: NAVBAR_DIRECTORY_URL
               value: {{.Values.insightNavbarDirectoryURL}}
       restartPolicy: Always
-  status: {}
 ---
 apiVersion: v1
 kind: Service

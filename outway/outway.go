@@ -70,7 +70,13 @@ func loadCertificates(logger *zap.Logger, tlsOptions orgtls.TLSOptions) (*x509.C
 	}
 
 	organizationName := orgCert.Subject.Organization[0]
-	logger.Info("loaded certificates for outway", zap.String("outway-organization-name", organizationName))
+
+	fingerprint, err := orgtls.CertificateFingerprint(orgCert)
+	if err != nil {
+		return nil, "", err
+	}
+
+	logger.Info("loaded certificates for outway", zap.String("outway-organization-name", organizationName), zap.String("fingerprint", fingerprint))
 
 	return roots, organizationName, nil
 }

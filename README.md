@@ -139,6 +139,10 @@ When Traefik and KubeDB are running, you can start all the NLX components by exe
 
 ```bash
 docker-compose build --parallel
+kubectl create namespace nlx-dev-directory
+kubectl create namespace nlx-dev-brp
+kubectl create namespace nlx-dev-rdw
+kubectl create namespace nlx-dev-haarlem
 helm upgrade --install nlx-dev-directory ./helm/nlx-directory --namespace nlx-dev-directory --values ./helm/nlx-directory/values-dev.yaml
 helm upgrade --install nlx-dev-brp ./helm/nlx-organization --namespace nlx-dev-brp --values ./helm/nlx-organization/values-dev-brp.yaml
 helm upgrade --install nlx-dev-rdw ./helm/nlx-organization --namespace nlx-dev-rdw --values ./helm/nlx-organization/values-dev-rdw.yaml

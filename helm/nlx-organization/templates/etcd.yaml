@@ -29,7 +29,6 @@ spec:
             - name: ETCD_ADVERTISE_CLIENT_URLS
               value: "http://etcd:2379"
       restartPolicy: Always
-  status: {}
 ---
 apiVersion: v1
 kind: Service
