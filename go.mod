@@ -20,7 +20,7 @@ require (
 	github.com/go-chi/render v1.0.1
 	github.com/go-errors/errors v1.0.1 // indirect
 	github.com/go-sql-driver/mysql v1.4.1 // indirect
-	github.com/gocarina/gocsv v0.0.0-20200228153228-d03023afaf96
+	github.com/gocarina/gocsv v0.0.0-20200302151839-87c60d755c58
 	github.com/gogo/protobuf v1.3.1
 	github.com/golang-migrate/migrate v3.5.4+incompatible
 	github.com/golang/groupcache v0.0.0-20191002201903-404acd9df4cc // indirect
