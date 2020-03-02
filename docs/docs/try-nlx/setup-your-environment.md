@@ -20,9 +20,7 @@ In order to succesfully execute all commands in this guide make sure you are usi
 
 ### Docker
 
-You can download Docker for Windows [here](https://hub.docker.com?overlay=onboarding). Please note that you will have to create a free DockerHub account before you can download Docker. Docker requires hyper-V to be enabled and Docker will ask you to enable it on start-up if this does not happen you can enable it yourself by running following command in PowerShell
-
-> You can also download Docker directly [here](https://download.docker.com/win/stable/Docker%20for%20Windows%20Installer.exe).
+You can download Docker for Windows [here](https://hub.docker.com?overlay=onboarding). Please note that you will have to create a free DockerHub account before you can download Docker. Docker requires hyper-V to be enabled and Docker will ask you to enable it on start-up if this does not happen you can enable it yourself by running following command in PowerShell.
 
 ```bash
 Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
