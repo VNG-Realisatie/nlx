@@ -2,6 +2,7 @@ Run semantic release:
   image: node:12.16.1-alpine
   stage: Tools
   before_script:
+    - apk --no-cache add git
     - npm ci
   script:
     - npx semantic-release
