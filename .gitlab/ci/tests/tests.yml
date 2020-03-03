@@ -48,7 +48,7 @@ Go linter:
 
 Directory-ui linter and tests:
   stage: Tests
-  image: node:10.17.0-alpine
+  image: node:12.16.1-alpine
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
@@ -70,7 +70,7 @@ Directory-ui linter and tests:
 
 Insight-ui tests:
   stage: Tests
-  image: node:10.17.0-alpine
+  image: node:12.16.1-alpine
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
@@ -91,7 +91,7 @@ Insight-ui tests:
 
 Management-ui linter and tests:
   stage: Tests
-  image: node:10.17.0-alpine
+  image: node:12.16.1-alpine
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
