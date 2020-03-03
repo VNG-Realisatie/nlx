@@ -1,5 +1,5 @@
 Run semantic release:
-  image: node:10.17.0-alpine
+  image: node:12.16.1-alpine
   stage: Tools
   before_script:
     - npm ci
