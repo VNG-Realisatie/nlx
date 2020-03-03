@@ -1,3 +1,22 @@
+# [0.84.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.83.1...v0.84.0) (2020-03-03)
+
+
+### Bug Fixes
+
+* **common:** print the issuer of certificate instead of subject ([c789750](https://gitlab.com/commonground/nlx/nlx/commit/c789750533ce5e7c726cfac3663faa4c00f1c90f))
+* make sure the nlx version is sent in all calls to the directory ([d9fc13c](https://gitlab.com/commonground/nlx/nlx/commit/d9fc13c640fc522801b808de57969975314e36a1))
+* **deps:** update dependency styled-components to v5 ([8676100](https://gitlab.com/commonground/nlx/nlx/commit/86761001586872a5e7c1573f9eb7c4069227c00d))
+* **directory-db:** add missing ; ([c82d46a](https://gitlab.com/commonground/nlx/nlx/commit/c82d46a17f11793ae8506d0619cf095f65a08b01))
+* **directory-inspection-api:** fix stats endpoint. a version is now required for a inway ([20305ec](https://gitlab.com/commonground/nlx/nlx/commit/20305ecbbec4c575b94582eea3c23aa50ae1997c))
+* **docs:** correct instructions for connecting to the production environment ([01b8681](https://gitlab.com/commonground/nlx/nlx/commit/01b868140189dad03841bf2c6e18221534588d97))
+* **inway:** do not include non-existing services in service-config.toml ([6444b84](https://gitlab.com/commonground/nlx/nlx/commit/6444b848e236d58cbd02631225f2b2ab19e237cc))
+* **management-api:** allow users with the admin role to DELETE ([5bc5a0c](https://gitlab.com/commonground/nlx/nlx/commit/5bc5a0c8b470ffadc9e7258983823865d8abe64e))
+
+
+### Features
+
+* **docs:** enable custom 404 page for Nginx [#810](https://gitlab.com/commonground/nlx/nlx/issues/810) ([581cce8](https://gitlab.com/commonground/nlx/nlx/commit/581cce8870979f485b2aff4a67dcfc3484132f5c))
+
 ## [0.83.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.83.0...v0.83.1) (2020-02-19)
 
 
