@@ -27,15 +27,12 @@ var errConfigAPIUnavailable = fmt.Errorf("configAPI unavailable")
 
 // SetConfigAPIAddress configures the inway to use the config API instead of the config toml
 func (i *Inway) SetConfigAPIAddress(configAPIAddress string) error {
-	orgKeypair, err := tls.LoadX509KeyPair(i.orgCertFile, i.orgKeyFile)
-	if err != nil {
-		return err
+	tlsConfig := tls.Config{
+		RootCAs:      i.roots,
+		Certificates: []tls.Certificate{*i.orgKeyPair},
 	}
 
-	creds := credentials.NewTLS(&tls.Config{
-		Certificates: []tls.Certificate{orgKeypair},
-		RootCAs:      i.roots,
-	})
+	creds := credentials.NewTLS(&tlsConfig)
 
 	connCtx, connCtxCancel := context.WithTimeout(context.Background(), 1*time.Minute)
 	defer connCtxCancel()

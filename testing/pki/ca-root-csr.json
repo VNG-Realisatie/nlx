@@ -1,12 +1,12 @@
 {
-    "CN": "NLX CA",
+    "CN": "NLX Root CA",
     "key": {
         "algo": "rsa",
         "size": 4096
     },
     "names": [
         {
-            "O": "NLX CA"
+            "O": "NLX Root CA"
         }
     ],
     "ca": {

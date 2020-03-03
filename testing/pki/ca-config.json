@@ -4,6 +4,20 @@
             "expiry": "1753163h"
         },
         "profiles": {
+            "intermediate": {
+                "expiry": "1753163h",
+                "ca_constraint": {
+                    "is_ca": true,
+                    "max_path_len": 0,
+                    "max_path_len_zero": true
+                },
+                "usages":[
+                    "digital signature",
+                    "cert sign",
+                    "crl sign",
+                    "signing"
+                ]
+            },
             "peer": {
                 "expiry": "1753163h",
                 "usages": [

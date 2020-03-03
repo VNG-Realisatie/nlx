@@ -15,7 +15,7 @@ import (
 )
 
 // Load loads the root certs and own cert/key
-func Load(options TLSOptions) (*x509.CertPool, *x509.Certificate, error) {
+func Load(options TLSOptions) (*x509.CertPool, *tls.Certificate, error) {
 	keyPair, err := tls.LoadX509KeyPair(options.OrgCertFile, options.OrgKeyFile)
 	if err != nil {
 		return nil, nil, errors.Wrapf(err, "failed to load organization certificate '%s", options.OrgCertFile)
@@ -34,9 +34,13 @@ func Load(options TLSOptions) (*x509.CertPool, *x509.Certificate, error) {
 	roots := x509.NewCertPool()
 	roots.AddCert(rootCert)
 
+	intermediates := createIntermediatePool(&keyPair)
+
 	opts := x509.VerifyOptions{
-		Roots: roots,
+		Roots:         roots,
+		Intermediates: intermediates,
 	}
+
 	if _, err := keyPair.Leaf.Verify(opts); err != nil {
 		_, ok := err.(x509.UnknownAuthorityError)
 		if ok {
@@ -46,7 +50,7 @@ func Load(options TLSOptions) (*x509.CertPool, *x509.Certificate, error) {
 		return nil, nil, errors.Wrap(err, "failed to verify certificate")
 	}
 
-	return roots, keyPair.Leaf, nil
+	return roots, &keyPair, nil
 }
 
 // LoadRootCert loads the certificate from file and adds it to a new x509.CertPool which is returned.
@@ -62,6 +66,19 @@ func LoadRootCert(rootCertFile string) (*x509.CertPool, error) {
 		return nil, errors.Errorf("failed to parse PEM for root certificate `%s`", rootCertFile)
 	}
 	return roots, nil
+}
+
+func createIntermediatePool(cert *tls.Certificate) *x509.CertPool {
+	pool := x509.NewCertPool()
+
+	for _, pem := range cert.Certificate[1:] {
+		c, err := x509.ParseCertificate(pem)
+		if err == nil {
+			pool.AddCert(c)
+		}
+	}
+
+	return pool
 }
 
 func loadCertificate(filePath string) (*x509.Certificate, error) {

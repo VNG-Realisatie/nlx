@@ -22,8 +22,8 @@ func TestLoad(t *testing.T) {
 		{
 			description: "happy flow",
 			options: orgtls.TLSOptions{
-				NLXRootCert: filepath.Join("..", "..", "testing", "pki", "ca.pem"),
-				OrgCertFile: filepath.Join("..", "..", "testing", "pki", "org-nlx-test.pem"),
+				NLXRootCert: filepath.Join("..", "..", "testing", "pki", "ca-root.pem"),
+				OrgCertFile: filepath.Join("..", "..", "testing", "pki", "org-nlx-test-chain.pem"),
 				OrgKeyFile:  filepath.Join("..", "..", "testing", "pki", "org-nlx-test-key.pem"),
 			},
 			expectError:          false,
@@ -32,17 +32,17 @@ func TestLoad(t *testing.T) {
 		{
 			description: "certificate is not signed by provided root",
 			options: orgtls.TLSOptions{
-				NLXRootCert: filepath.Join("..", "..", "testing", "pki", "ca-second.pem"),
+				NLXRootCert: filepath.Join("..", "..", "testing", "pki", "ca-root-second.pem"),
 				OrgCertFile: filepath.Join("..", "..", "testing", "pki", "org-nlx-test.pem"),
 				OrgKeyFile:  filepath.Join("..", "..", "testing", "pki", "org-nlx-test-key.pem"),
 			},
 			expectError:          true,
-			expectedErrorMessage: "failed to verify certificate: certificate is signed by 'CN=NLX CA,O=NLX CA' and not by provided root CA of 'CN=NLX Second CA,O=NLX Second CA'",
+			expectedErrorMessage: "failed to verify certificate: certificate is signed by 'CN=NLX Intermediate CA,O=NLX Intermediate CA' and not by provided root CA of 'CN=NLX Second CA,O=NLX Second CA'",
 		},
 		{
 			description: "the organization certification does not exist",
 			options: orgtls.TLSOptions{
-				NLXRootCert: filepath.Join("..", "..", "testing", "pki", "ca.pem"),
+				NLXRootCert: filepath.Join("..", "..", "testing", "pki", "ca-root.pem"),
 				OrgCertFile: filepath.Join("..", "..", "testing", "pki", "org-not-existing.pem"),
 				OrgKeyFile:  filepath.Join("..", "..", "testing", "pki", "org-nlx-test-key.pem"),
 			},
@@ -52,7 +52,7 @@ func TestLoad(t *testing.T) {
 		{
 			description: "the organization key does not exist",
 			options: orgtls.TLSOptions{
-				NLXRootCert: filepath.Join("..", "..", "testing", "pki", "ca.pem"),
+				NLXRootCert: filepath.Join("..", "..", "testing", "pki", "ca-root.pem"),
 				OrgCertFile: filepath.Join("..", "..", "testing", "pki", "org-nlx-test.pem"),
 				OrgKeyFile:  filepath.Join("..", "..", "testing", "pki", "org-nlx-test-not-exist-key.pem"),
 			},
@@ -62,7 +62,7 @@ func TestLoad(t *testing.T) {
 		{
 			description: "the organization certificate is not a valid certifcate",
 			options: orgtls.TLSOptions{
-				NLXRootCert: filepath.Join("..", "..", "testing", "pki", "ca.pem"),
+				NLXRootCert: filepath.Join("..", "..", "testing", "pki", "ca-root.pem"),
 				OrgCertFile: filepath.Join("..", "..", "testing", "pki", "invalid-cert.pem"),
 				OrgKeyFile:  filepath.Join("..", "..", "testing", "pki", "org-nlx-test-key.pem"),
 			},

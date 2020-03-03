@@ -77,12 +77,7 @@ func main() {
 	// setup zap connection for global grpc logging
 	grpc_zap.ReplaceGrpcLogger(logger)
 
-	certKeyPair, err := tls.LoadX509KeyPair(options.TLSOptions.OrgCertFile, options.TLSOptions.OrgKeyFile)
-	if err != nil {
-		logger.Fatal("failed to load x509 keypair", zap.Error(err))
-	}
-
-	certPool, _, err := orgtls.Load(options.TLSOptions)
+	certPool, certKeyPair, err := orgtls.Load(options.TLSOptions)
 	if err != nil {
 		logger.Fatal("failed to load certifcates", zap.Error(err))
 	}
@@ -96,14 +91,15 @@ func main() {
 
 	// prepare grpc server options
 	serverTLSConfig := &tls.Config{
-		Certificates: []tls.Certificate{certKeyPair},
+		Certificates: []tls.Certificate{*certKeyPair},
 		ClientCAs:    certPool,
 		NextProtos:   []string{"h2"},
 		ClientAuth:   tls.RequireAndVerifyClientCert,
 	}
 
 	tlsconfig.ApplyDefaults(serverTLSConfig)
-	directoryRegistrationClient, err := setupDirectoryRegistrationClient(certPool, &certKeyPair)
+
+	directoryRegistrationClient, err := setupDirectoryRegistrationClient(certPool, certKeyPair)
 	if err != nil {
 		logger.Fatal("failed to setup directory client", zap.Error(err))
 	}

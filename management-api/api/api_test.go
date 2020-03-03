@@ -25,8 +25,8 @@ var tests = []struct {
 	{
 		"1",
 		orgtls.TLSOptions{
-			NLXRootCert: filepath.Join("..", "..", "testing", "pki", "ca.pem"),
-			OrgCertFile: filepath.Join("..", "..", "testing", "pki", "org-without-name.pem"),
+			NLXRootCert: filepath.Join("..", "..", "testing", "pki", "ca-root.pem"),
+			OrgCertFile: filepath.Join("..", "..", "testing", "pki", "org-without-name-chain.pem"),
 			OrgKeyFile:  filepath.Join("..", "..", "testing", "pki", "org-without-name-key.pem"),
 		},
 		"",
@@ -35,7 +35,7 @@ var tests = []struct {
 	{
 		"2",
 		orgtls.TLSOptions{
-			NLXRootCert: filepath.Join("..", "..", "testing", "pki", "ca.pem"),
+			NLXRootCert: filepath.Join("..", "..", "testing", "pki", "ca-root.pem"),
 			OrgCertFile: filepath.Join("..", "..", "testing", "pki", "org-nlx-test.pem"),
 			OrgKeyFile:  filepath.Join("..", "..", "testing", "pki", "org-non-existing-key.pem"),
 		},
@@ -45,8 +45,8 @@ var tests = []struct {
 	{
 		"3",
 		orgtls.TLSOptions{
-			NLXRootCert: filepath.Join("..", "..", "testing", "pki", "ca.pem"),
-			OrgCertFile: filepath.Join("..", "..", "testing", "pki", "org-nlx-test.pem"),
+			NLXRootCert: filepath.Join("..", "..", "testing", "pki", "ca-root.pem"),
+			OrgCertFile: filepath.Join("..", "..", "testing", "pki", "org-nlx-test-chain.pem"),
 			OrgKeyFile:  filepath.Join("..", "..", "testing", "pki", "org-nlx-test-key.pem"),
 		},
 		"",
@@ -55,8 +55,8 @@ var tests = []struct {
 	{
 		"4",
 		orgtls.TLSOptions{
-			NLXRootCert: filepath.Join("..", "..", "testing", "pki", "ca.pem"),
-			OrgCertFile: filepath.Join("..", "..", "testing", "pki", "org-nlx-test.pem"),
+			NLXRootCert: filepath.Join("..", "..", "testing", "pki", "ca-root.pem"),
+			OrgCertFile: filepath.Join("..", "..", "testing", "pki", "org-nlx-test-chain.pem"),
 			OrgKeyFile:  filepath.Join("..", "..", "testing", "pki", "org-nlx-test-key.pem"),
 		},
 		"config-api.test:8443",

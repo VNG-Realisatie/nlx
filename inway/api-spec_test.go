@@ -22,8 +22,8 @@ import (
 
 func TestInwayApiSpec(t *testing.T) {
 	tlsOptions := orgtls.TLSOptions{
-		NLXRootCert: "../testing/pki/ca.pem",
-		OrgCertFile: "../testing/pki/org-nlx-test.pem",
+		NLXRootCert: "../testing/pki/ca-root.pem",
+		OrgCertFile: "../testing/pki/org-nlx-test-chain.pem",
 		OrgKeyFile:  "../testing/pki/org-nlx-test-key.pem"}
 
 	mockAPISpecEndpoint := httptest.NewServer(

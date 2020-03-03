@@ -28,8 +28,8 @@ func createInway() (*Inway, error) {
 	testProcess := process.NewProcess(logger)
 
 	tlsOptions := orgtls.TLSOptions{
-		NLXRootCert: "../testing/pki/ca.pem",
-		OrgCertFile: "../testing/pki/org-nlx-test.pem",
+		NLXRootCert: "../testing/pki/ca-root.pem",
+		OrgCertFile: "../testing/pki/org-nlx-test-chain.pem",
 		OrgKeyFile:  "../testing/pki/org-nlx-test-key.pem",
 	}
 
@@ -107,11 +107,6 @@ func TestSetConfigAPIAddress(t *testing.T) {
 	err = iw.SetConfigAPIAddress("https://configapi.mock")
 	assert.Nil(t, err)
 	assert.NotNil(t, iw.configAPIClient)
-
-	iw.orgCertFile = "../non/existing.crt"
-	iw.orgKeyFile = "../non/existing.key"
-	err = iw.SetConfigAPIAddress("https://configapi.mock")
-	assert.NotNil(t, err)
 }
 
 func TestGetServicesFromConfigAPI(t *testing.T) {
@@ -253,8 +248,8 @@ func TestCreateServiceEndpoints(t *testing.T) {
 func TestNewInwayName(t *testing.T) {
 	logger := zap.NewNop()
 	tlsOptions := orgtls.TLSOptions{
-		NLXRootCert: filepath.Join("..", "testing", "pki", "ca.pem"),
-		OrgCertFile: filepath.Join("..", "testing", "pki", "org-nlx-test.pem"),
+		NLXRootCert: filepath.Join("..", "testing", "pki", "ca-root.pem"),
+		OrgCertFile: filepath.Join("..", "testing", "pki", "org-nlx-test-chain.pem"),
 		OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem"),
 	}
 
@@ -262,7 +257,7 @@ func TestNewInwayName(t *testing.T) {
 	iw, err := NewInway(logger, nil, testProcess, "", "", tlsOptions, "")
 	assert.Nil(t, err)
 
-	assert.Equal(t, "gohSkP8dSgaP25goDhO1-8k9gLWW78EAeLG5XJDtuwI=", iw.name)
+	assert.Equal(t, "XQpL-03EUOCXDNnc8FCsZXrOp41LkYIJ5U_Udz-1Chk=", iw.name)
 
 	iw, err = NewInway(logger, nil, testProcess, "inway.test", "", tlsOptions, "")
 	assert.Nil(t, err)

@@ -37,18 +37,15 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.
 		return nil, errors.New("process argument is nil. needed to close gracefully")
 	}
 
-	roots, orgCert, err := orgtls.Load(tlsOptions)
+	roots, orgKeyPair, err := orgtls.Load(tlsOptions)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to load tls certs")
 	}
 
+	orgCert := orgKeyPair.Leaf
+
 	if len(orgCert.Subject.Organization) != singleElementArrayLength {
 		return nil, errors.New("cannot obtain organization name from self cert")
-	}
-
-	orgCertKeyPair, err := tls.LoadX509KeyPair(tlsOptions.OrgCertFile, tlsOptions.OrgKeyFile)
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to load x509 keypair for organization")
 	}
 
 	if len(orgCert.Subject.Organization) != singleElementArrayLength {
@@ -73,7 +70,7 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.
 	i := &API{
 		logger:                logger.With(zap.String("api-organization-name", organizationName)),
 		roots:                 roots,
-		orgCertKeyPair:        &orgCertKeyPair,
+		orgCertKeyPair:        orgKeyPair,
 		configAPIAddress:      configAPIAddress,
 		process:               mainProcess,
 		mux:                   runtime.NewServeMux(),

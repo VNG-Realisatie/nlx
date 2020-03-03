@@ -21,16 +21,21 @@ func (i *Inway) ListenAndServeTLS(address string) error {
 	serveMux.HandleFunc("/.nlx/health/", i.handleHealthRequest)
 	serveMux.Handle("/.nlx/", http.NotFoundHandler())
 	serveMux.HandleFunc("/", i.handleProxyRequest)
-	server := &http.Server{
-		Addr: address,
-		TLSConfig: &tls.Config{
-			// only allow clients that present a cert signed by our root CA
-			ClientCAs:  i.roots,
-			ClientAuth: tls.RequireAndVerifyClientCert,
-		},
-		Handler: serveMux,
+
+	config := &tls.Config{
+		// only allow clients that present a cert signed by our root CA
+		ClientCAs:    i.roots,
+		ClientAuth:   tls.RequireAndVerifyClientCert,
+		Certificates: []tls.Certificate{*i.orgKeyPair},
 	}
-	tlsconfig.ApplyDefaults(server.TLSConfig)
+
+	tlsconfig.ApplyDefaults(config)
+
+	server := &http.Server{
+		Addr:      address,
+		Handler:   serveMux,
+		TLSConfig: config,
+	}
 
 	shutDownComplete := make(chan struct{})
 	i.process.CloseGracefully(func() error {
@@ -42,7 +47,7 @@ func (i *Inway) ListenAndServeTLS(address string) error {
 	})
 
 	// ErrServerClosed is more info message than error
-	if err := server.ListenAndServeTLS(i.orgCertFile, i.orgKeyFile); err != nil {
+	if err := server.ListenAndServeTLS("", ""); err != nil {
 		if err != http.ErrServerClosed {
 			return errors.Wrap(err, "failed to run http server")
 		}

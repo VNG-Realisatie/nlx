@@ -39,8 +39,7 @@ type Inway struct {
 
 	selfAddress string
 	roots       *x509.CertPool
-	orgCertFile string
-	orgKeyFile  string
+	orgKeyPair  *tls.Certificate
 
 	name string
 
@@ -67,10 +66,13 @@ func NewInway(
 	tlsOptions orgtls.TLSOptions,
 	directoryRegistrationAddress string) (*Inway, error) {
 	// parse tls certificate
-	roots, orgCert, err := orgtls.Load(tlsOptions)
+	roots, orgKeyPair, err := orgtls.Load(tlsOptions)
 	if err != nil {
 		return nil, err
 	}
+
+	orgCert := orgKeyPair.Leaf
+
 	if len(orgCert.Subject.Organization) != 1 {
 		return nil, errors.New("cannot obtain organization name from self cert")
 	}
@@ -91,8 +93,7 @@ func NewInway(
 
 		selfAddress: selfAddress,
 		roots:       roots,
-		orgCertFile: tlsOptions.OrgCertFile,
-		orgKeyFile:  tlsOptions.OrgKeyFile,
+		orgKeyPair:  orgKeyPair,
 
 		process: mainProcess,
 

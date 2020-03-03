@@ -40,7 +40,7 @@ func TestUpdateServiceList(t *testing.T) {
 		directoryInspectionClient: client,
 		logger:                    logger,
 		tlsOptions: orgtls.TLSOptions{
-			NLXRootCert: filepath.Join(parent, "testing", "pki", "ca.pem"),
+			NLXRootCert: filepath.Join(parent, "testing", "pki", "ca-root.pem"),
 			OrgCertFile: filepath.Join(parent, "testing", "pki", "org-nlx-test.pem"),
 			OrgKeyFile:  filepath.Join(parent, "testing", "pki", "org-nlx-test-key.pem"),
 		},
