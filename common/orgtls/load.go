@@ -82,7 +82,7 @@ func createIntermediatePool(cert *tls.Certificate) *x509.CertPool {
 }
 
 func loadCertificate(filePath string) (*x509.Certificate, error) {
-	certPEM, err := ioutil.ReadFile(filePath)
+	certPEM, err := ioutil.ReadFile(filepath.Clean(filePath))
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to open and read certificate file `%s`", filePath)
 	}
