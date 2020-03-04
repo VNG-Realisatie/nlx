@@ -26,7 +26,7 @@ message StatsResponse {
     message VersionStat {
         string type = 1;
         string version = 2;
-        uint64 amount = 3;
+        uint32 amount = 3;
     }
 
     repeated VersionStat versions = 2;
