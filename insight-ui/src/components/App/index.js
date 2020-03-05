@@ -6,7 +6,8 @@ import { NavLink, Route } from 'react-router-dom'
 
 import StyledApp, {StyledNLXNavbar, StyledContent} from './index.styles'
 import GlobalStyles from '../../components/GlobalStyles'
-import { Navigation, VersionLogger } from '@commonground/design-system'
+import Navigation from '../../components/Navigation'
+import { VersionLogger } from '@commonground/design-system'
 import SidebarContainer from '../../containers/SidebarContainer'
 
 import HomePage from '../../components/HomePage'
