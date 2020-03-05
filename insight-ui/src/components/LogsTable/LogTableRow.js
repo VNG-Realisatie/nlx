@@ -4,7 +4,7 @@
 import React from 'react'
 import { arrayOf, string, instanceOf } from "prop-types";
 
-import { Table } from '@commonground/design-system'
+import Table from '../Table'
 import { StyledLogTableRow, StyledSubjectLabel } from './LogTableRow.styles'
 
 const dateOptions = {

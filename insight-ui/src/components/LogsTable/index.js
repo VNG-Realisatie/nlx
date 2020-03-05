@@ -3,7 +3,7 @@
 
 import React from 'react'
 import { string, arrayOf, shape, instanceOf, func } from 'prop-types'
-import { Table } from '@commonground/design-system'
+import Table from '../Table'
 import LogTableRow from './LogTableRow'
 
 const LogsTable = ({ logs, activeLogId, logClickedHandler, ...props }) =>

@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 
 import styled, { css } from 'styled-components'
-import { Table } from '@commonground/design-system'
+import Table from '../Table'
 
 export const StyledLogTableRow = styled(Table.Row)`
   td {
