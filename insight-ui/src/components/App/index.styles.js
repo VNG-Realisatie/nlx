@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 
 import styled from 'styled-components'
-import { NLXNavbar } from '@commonground/design-system'
+import NLXNavbar from '../NLXNavbar'
 
 export default styled.div`
   display: flex;
