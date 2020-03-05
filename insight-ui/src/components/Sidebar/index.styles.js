@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 
 import styled from "styled-components";
-import { Search } from "@commonground/design-system";
+import Search from "../Search";
 
 export const StyledSidebar = styled.div`
   flex: 0 0 200px;
