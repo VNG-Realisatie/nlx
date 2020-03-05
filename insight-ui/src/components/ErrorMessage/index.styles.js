@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 
 import styled from 'styled-components'
-import {Card} from '@commonground/design-system'
+import Card from '../Card'
 
 export const StyledCard = styled(Card)`
   width: 400px;
