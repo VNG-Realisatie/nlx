@@ -18,20 +18,6 @@ The NLX project consists of multiple components that together make up the entire
 
 If you want to develop locally, or run your own NLX network, you will likely want to start all the components.
 
-### Requirements
-
-Make sure you have installed the following tools:
-
-- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
-- [minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/)
-- [helm](https://docs.helm.sh/using_helm/)
-
-For autocompletion and local development tasks, it's also recommended to install the following:
-
-- [go](https://golang.org/doc/install)
-
-This project uses the new go module feature so it is not required to setup a `GOPATH`.
-
 ### Cloning
 
 Clone NLX in your workspace.
@@ -44,7 +30,82 @@ git clone https://gitlab.com/commonground/nlx/nlx
 cd nlx
 ```
 
-### Running complete stack in kubernetes/minikube
+### Running the complete stack using modd
+
+Make sure you have installed the following tools:
+
+- [Docker Desktop / Docker engine](https://docs.docker.com/install/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+- [go](https://golang.org/doc/install)
+- [golang-migrate](https://github.com/golang-migrate/migrate)
+- [modd](https://github.com/cortesi/modd)
+
+Install the npm dependencies by running:
+
+```bash
+(cd directory-ui && npm install)
+(cd management-ui && npm install)
+(cd docs/website && npm install)
+(cd insight-ui && npm install)
+```
+
+Start a Postgres and etcd container through Docker Compose with:
+
+```bash
+docker-compose -f docker-compose.dev.yml up -d
+```
+
+Initially create the directory and txlog database with:
+
+```bash
+docker-compose -f docker-compose.dev.yml exec -u postgres postgres createdb directory
+docker-compose -f docker-compose.dev.yml exec -u postgres postgres createdb txlog
+```
+
+Run directory and txlog migrations with:
+
+```bash
+migrate -database "postgres://postgres:postgres@localhost:5432/directory?sslmode=disable" -path directory-db/migrations up
+migrate -database "postgres://postgres:postgres@localhost:5432/txlog?sslmode=disable" -path txlog-db/migrations up
+```
+
+Finally run the project with:
+
+```bash
+modd
+```
+
+This will start the following services:
+
+- directory-inspection-api (HTTP: 6010, HTTPS: 6011)
+- directory-registration-api (HTTPS: 6012)
+- directory-monitor
+- config-api (HTTPS: 6013)
+- outway (HTTP: 6014)
+- inway (HTTP: 6015)
+- inway (HTTP: 6016)
+- management-api (HTTP: 6017)
+
+And the following frontend applications:
+
+- docs (HTTP: 3000)
+- directory-ui (HTTP: 3001)
+- management-ui (HTTP: 3002)
+- insight-ui (HTTP: 3003)
+
+Services will reload automatically when the code changes.
+
+### Running the complete stack using Minikube
+
+Make sure you have installed the following tools:
+
+- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+- [minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/)
+- [helm](https://docs.helm.sh/using_helm/)
+
+For autocompletion and local development tasks, it's also recommended to install the following:
+
+- [go](https://golang.org/doc/install)
 
 Setup minikube on your local development machine.
 
@@ -59,6 +120,7 @@ For developers, it's advised to setup minikube with 4 cores, 8GB RAM and at leas
 e.g.: `minikube start --cpus 4 --memory 8192 --disk-size=100G`
 
 To let the docker commands make use of Minikube execute the following before proceeding or add it to your shell profile:
+
 ```bash
 eval $(minikube docker-env)
 ```

@@ -4,32 +4,8 @@ The insight-ui provides a human-readable view of information exchanged between t
 
 ## Development
 
-### NPM scripts
-
-```bash
-  # run using local backend (proxy to http://directory.nlx-dev-directory.minikube/)
-  # see NLX (root) readme how to setup local backend environment
-  npm start
-
-  # run in dev mode (proxy to https://directory.acc.nlx.io/)
-  npm run dev
-
-  # run in demo mode (proxy to https://directory.demo.nlx.io/)
-  npm run demo
-
-  # build production (api point fixed to https://directory.demo.nlx.io/)
-  npm run build
-
-  # run tests
-  npm test
-```
-
 ### Proxies
-
-The proxies are configured in `src/setupProxy.js`.
-During development each request starting with `/api` will be proxied to environment specific proxy.
-
-The proxy server is based on the `PROXY` environment variable property passed to the start script. See NPM scripts (or package.json) for all available scripts.
+Requests on `/api` are automatically proxied to http://localhost:6010. This behavior can be altered in `src/setupProxy.js`.
 
 ### Redux
 

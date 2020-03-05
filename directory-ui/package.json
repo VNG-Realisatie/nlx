@@ -38,10 +38,9 @@
     "eslint-plugin-promise": "4.2.1",
     "eslint-plugin-react": "7.18.3",
     "eslint-plugin-standard": "4.0.1",
+    "http-proxy-middleware": "1.0.1",
     "prettier": "1.19.1"
   },
-  "proxy-local": "https://directory.dev.nlx.minikube:30443",
-  "proxy": "https://directory.acc.nlx.io",
   "browserslist": [
     ">0.2%",
     "not dead",

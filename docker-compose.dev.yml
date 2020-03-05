@@ -1,0 +1,25 @@
+version: "3.7"
+services:
+  postgres:
+    image: postgres:11-alpine
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=nlx
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+  etcd:
+    image: gcr.io/etcd-development/etcd:v3.3.17
+    ports:
+      - 2379:2379
+    environment:
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+      - ETCD_ADVERTISE_CLIENT_URLS=http://localhost:2379
+    volumes:
+      - etcd-data:/default.etcd
+
+volumes:
+  postgres-data:
+  etcd-data:

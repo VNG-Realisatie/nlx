@@ -28,6 +28,7 @@
         "eslint-plugin-promise": "4.2.1",
         "eslint-plugin-react": "7.18.3",
         "eslint-plugin-standard": "4.0.1",
+        "http-proxy-middleware": "1.0.1",
         "prettier": "1.19.1"
     },
     "scripts": {
@@ -45,6 +46,5 @@
         "not dead",
         "not ie <= 11",
         "not op_mini all"
-    ],
-    "proxy": "http://localhost:6017"
+    ]
 }
