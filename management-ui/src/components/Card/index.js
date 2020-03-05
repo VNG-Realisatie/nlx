@@ -4,5 +4,6 @@ export default styled.div`
     width: 100%;
     background-color: white;
     border-radius: 3px;
-    box-shadow: 0 0 0 1px rgba(45,50,64,.05), 0 1px 8px rgba(45,50,64,.05);
+    box-shadow: 0 0 0 1px rgba(45, 50, 64, 0.05),
+        0 1px 8px rgba(45, 50, 64, 0.05);
 `
