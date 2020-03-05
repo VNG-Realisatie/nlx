@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2019
 // Licensed under the EUPL
 import styled from 'styled-components'
-import { Card as DesignSystemCard } from '@commonground/design-system'
+import DesignSystemCard from '../Card'
 
 export const Card = styled(DesignSystemCard)`
     padding: 10px;
