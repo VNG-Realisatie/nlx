@@ -4,7 +4,7 @@
 import React, { Component } from 'react'
 import debounce from 'debounce'
 
-import { Spinner } from '@commonground/design-system'
+import Spinner from '../../components/Spinner'
 
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage'
 import Container from '../../components/Container/Container'

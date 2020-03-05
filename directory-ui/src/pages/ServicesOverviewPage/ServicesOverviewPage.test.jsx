@@ -3,7 +3,7 @@
 
 import React from 'react'
 import { shallow } from 'enzyme'
-import { Spinner } from '@commonground/design-system'
+import Spinner from '../../components/Spinner'
 import ServicesOverviewPage from './ServicesOverviewPage';
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
 import ServiceDetailPane from "../../components/ServiceDetailPane";
