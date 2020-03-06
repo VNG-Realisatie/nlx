@@ -4,7 +4,7 @@ import { NLXLogo } from '@commonground/design-system'
 const LoginPage = () =>
   <div>
     <NLXLogo/>
-    <p>Welcome</p>
+    <p>Welkom</p>
   </div>
 
 export default LoginPage

@@ -6,5 +6,5 @@ test('renders a welcome message', () => {
   const { getByText } = render(
     <LoginPage />
   )
-  expect(getByText('Welcome')).toBeInTheDocument()
+  expect(getByText('Welkom')).toBeInTheDocument()
 })
