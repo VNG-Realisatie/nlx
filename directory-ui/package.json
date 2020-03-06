@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@commonground/design-system": "7.2.1",
+    "@commonground/design-system": "8.0.0",
     "ajv-keywords": "3.4.1",
     "copy-text-to-clipboard": "2.1.1",
     "core-js": "3.6.4",
