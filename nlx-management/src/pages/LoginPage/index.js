@@ -1,10 +1,15 @@
 import React from 'react'
-import { NLXLogo } from '@commonground/design-system'
+import { StyledContainer, StyledContent, StyledSidebar, StyledNLXLogo } from "./index.styles";
 
 const LoginPage = () =>
-  <div>
-    <NLXLogo/>
-    <p>Welkom</p>
-  </div>
+  <StyledContainer>
+    <StyledSidebar>
+      <StyledNLXLogo/><br/>
+      Management
+    </StyledSidebar>
+    <StyledContent>
+      <p>Welkom</p>
+    </StyledContent>
+  </StyledContainer>
 
 export default LoginPage
