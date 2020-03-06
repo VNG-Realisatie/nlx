@@ -2,8 +2,11 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import App from './App';
 
-test('renders the intro', () => {
-  const { getByText } = render(<App />);
-  const linkElement = getByText(/nlx management/i);
-  expect(linkElement).toBeInTheDocument();
+jest.mock('./pages/LoginPage', () => () => (
+  <div data-testid="login-page" />
+))
+
+test('redirects to the Login page when navigating to /', () => {
+  const { getByTestId } = render(<App />);
+  expect(getByTestId('login-page')).toBeInTheDocument();
 });
