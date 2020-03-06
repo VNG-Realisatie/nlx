@@ -23,6 +23,7 @@ container_scanning:
       irma
       management-api
       management-ui
+      nlx-management
       nlxctl
       outway
       txlog-db

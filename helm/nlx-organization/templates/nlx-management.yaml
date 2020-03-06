@@ -1,0 +1,62 @@
+{{ if .Values.management.enable }}
+{{ with set . "component" "nlx-management" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
+spec:
+  replicas: {{ .Values.replicas }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      release: {{ .Release.Name }}
+      app: {{ .Chart.Name }}
+      component: {{.component}}
+  template:
+    metadata:
+      labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: nlx-management
+          image: {{.Values.imagePrefix}}nlxio/{{.component}}:{{.Values.imageTag}}
+          imagePullPolicy: {{.Values.imagePullPolicy}}
+      restartPolicy: Always
+  status: {}
+---
+apiVersion: v1
+kind: Service
+metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
+spec:
+  selector: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8080
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
+  annotations:
+    ingress.kubernetes.io/hsts-include-subdomains: 'true'
+    ingress.kubernetes.io/hsts-max-age: '315360000'
+    ingress.kubernetes.io/hsts-preload: 'true'
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+    - host: nlx-management{{ if .Values.servicePartOfExternalDomain }}-{{ else }}.{{ end }}{{.Values.externalDomain}}
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: {{.component}}
+              servicePort: http
+          - path: /api
+            backend:
+              serviceName: management-api
+              servicePort: http
+{{ end }}
+{{ end }}
