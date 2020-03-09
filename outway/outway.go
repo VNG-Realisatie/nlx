@@ -160,6 +160,12 @@ func NewOutway(
 		return nil, errors.New("process argument is nil. needed enable to close gracefully")
 	}
 
+	requestFlake := sonyflake.NewSonyflake(sonyflake.Settings{})
+
+	if requestFlake == nil {
+		return nil, errors.New("failed to initialize request id generator")
+	}
+
 	o := &Outway{
 		wg:               &sync.WaitGroup{},
 		logger:           logger.With(zap.String("outway-organization-name", organizationName)),
@@ -169,7 +175,7 @@ func NewOutway(
 		tlsRoots:   roots,
 		process:    mainProcess,
 
-		requestFlake:      sonyflake.NewSonyflake(sonyflake.Settings{}),
+		requestFlake:      requestFlake,
 		ecmaTable:         crc64.MakeTable(crc64.ECMA),
 		servicesHTTP:      make(map[string]HTTPService),
 		servicesDirectory: make(map[string]*inspectionapi.ListServicesResponse_Service),
