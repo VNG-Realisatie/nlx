@@ -52,8 +52,8 @@ To request a *Staat der Nederlanden Private Root CA - G1* certificate, contact o
 
 Follow the approval process and submit the certificate signing request *org.csr*. When you retrieved the certificate, name the files accordingly:
 
-- *root.crt*, the certificates of the [G1 intermediates (TSPs)](/certs/DomPrivateServicesTSPs-G1/root.crt)
-- *org.crt*, the certificate you retrieved from the TSP
+- *root.crt*, the certificate of the [Staat der Nederlanden Private Root CA - G1](/certs/PKIoverheid-PrivateRootCA-G1.crt)
+- *org.crt*, the certificate you retrieved from the TSP, including the intermediate CA certificates
 - *org.key*, the private key you generated with the OpenSSL command
 
 ## Environments
