@@ -134,7 +134,7 @@ func (h *HTTPServiceEndpoint) handleRequest(reqMD *RequestMetadata, w http.Respo
 	if !h.public {
 
 		if reqMD.requesterOrganization == "" {
-			http.Error(w, fmt.Sprint(`nlx-outway: could not handle your request, missing requesterOrganization header.`, reqMD.requesterOrganization), http.StatusBadRequest)
+			http.Error(w, "nlx-inway: could not handle your request, missing requesterOrganization header.", http.StatusBadRequest)
 			h.logger.Info("request blocked, missing requesterOrganization header")
 			return
 		}

@@ -13,7 +13,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 	"go.uber.org/zap/zaptest"
+	"go.uber.org/zap/zaptest/observer"
 
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
@@ -91,6 +93,11 @@ func TestWhitelist(t *testing.T) {
 		want              want
 	}{
 		{
+			name:              "missing requesterOrganization",
+			requesterMetadata: &RequestMetadata{},
+			want:              want{statusCode: http.StatusBadRequest, body: "nlx-inway: could not handle your request, missing requesterOrganization header.\n"},
+		},
+		{
 			name:              "only certificate",
 			requesterMetadata: &RequestMetadata{requesterOrganization: "irrelevant", requesterPublicKeyHash: "only-cert"},
 			want:              want{statusCode: http.StatusBadRequest, body: "nlx-inway: missing logrecord id\n"},
@@ -143,57 +150,141 @@ func getResponseStatusAndBody(t *testing.T, httpRecorder *httptest.ResponseRecor
 }
 
 func TestInwaySetServiceEndpoints(t *testing.T) {
-	logger := zap.NewNop()
-	testProcess := process.NewProcess(logger)
 
 	// Certificate organization = nlx-test
-
 	tlsOptions := orgtls.TLSOptions{
 		NLXRootCert: "../testing/pki/ca-root.pem",
 		OrgCertFile: "../testing/pki/org-nlx-test-chain.pem",
 		OrgKeyFile:  "../testing/pki/org-nlx-test-key.pem",
 	}
 
-	iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", tlsOptions, "localhost:1815")
-	assert.Nil(t, err)
-
-	serviceDetails := &config.ServiceDetails{
-		ServiceDetailsBase: config.ServiceDetailsBase{
-			EndpointURL:        "12://invalid-endpoint",
-			AuthorizationModel: "none",
-		},
+	type args struct {
+		serviceName    string
+		serviceDetails *config.ServiceDetails
 	}
 
-	// Test NewHTTPServiceEnpoint with invalid url
-	_, err = iw.NewHTTPServiceEndpoint("mock-service", serviceDetails, nil)
-	assert.EqualError(
-		t,
-		err,
-		"invalid endpoint provided: parse \"12://invalid-endpoint\": first path segment in URL cannot contain colon")
+	type validatorState struct {
+		t        *testing.T
+		args     args
+		endpoint *HTTPServiceEndpoint
+		err      error
+		recorded *observer.ObservedLogs
+	}
 
-	serviceDetails = &config.ServiceDetails{
+	type want struct {
+		validator func(state validatorState)
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want want
+	}{
+		{
+			name: "authorization model none",
+			args: args{
+				serviceName: "public-service",
+				serviceDetails: &config.ServiceDetails{
+					ServiceDetailsBase: config.ServiceDetailsBase{
+						EndpointURL:        "127.0.0.1",
+						AuthorizationModel: "none",
+					},
+				},
+			},
+			want: want{
+				validator: func(state validatorState) {
+					assert.NoError(t, state.err)
+					assert.NotNil(t, state.endpoint)
+					assert.Equal(t, state.args.serviceName, state.endpoint.ServiceName())
+				},
+			},
+		},
+		{
+			name: "authorization model invalid",
+			args: args{
+				serviceName: "public-service",
+				serviceDetails: &config.ServiceDetails{
+					ServiceDetailsBase: config.ServiceDetailsBase{
+						EndpointURL:        "127.0.0.1",
+						AuthorizationModel: "invalid",
+					},
+				},
+			},
+			want: want{
+				validator: func(state validatorState) {
+					assert.Len(t, state.recorded.FilterMessageSnippet("invalid authorization model").All(), 1)
+				},
+			},
+		},
+		{
+			name: "invalid EndpointURL",
+			args: args{
+				serviceName: "invalid-service",
+				serviceDetails: &config.ServiceDetails{
+					ServiceDetailsBase: config.ServiceDetailsBase{
+						EndpointURL:        "12://invalid-endpoint",
+						AuthorizationModel: "none",
+					},
+				},
+			},
+			want: want{
+				validator: func(state validatorState) {
+					assert.EqualError(t, state.err, "invalid endpoint provided: parse \"12://invalid-endpoint\": first path segment in URL cannot contain colon")
+					assert.Nil(t, state.endpoint)
+				},
+			},
+		},
+	}
+	for _, test := range tests {
+		test := test
+		t.Run(test.name, func(t *testing.T) {
+			core, recorded := observer.New(zapcore.InfoLevel)
+			logger := zap.New(core)
+			testProcess := process.NewProcess(logger)
+			iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", tlsOptions, "localhost:1815")
+			assert.NoError(t, err)
+
+			endpoint, err := iw.NewHTTPServiceEndpoint(test.args.serviceName, test.args.serviceDetails, nil)
+
+			test.want.validator(validatorState{
+				t:        t,
+				args:     test.args,
+				endpoint: endpoint,
+				err:      err,
+				recorded: recorded,
+			})
+		})
+	}
+}
+
+func TestInwaySetServiceEnpointDuplicateEndpoint(t *testing.T) {
+	tlsOptions := orgtls.TLSOptions{
+		NLXRootCert: "../testing/pki/ca-intermediate.pem",
+		OrgCertFile: "../testing/pki/org-nlx-test.pem",
+		OrgKeyFile:  "../testing/pki/org-nlx-test-key.pem",
+	}
+
+	logger := zaptest.NewLogger(t)
+	testProcess := process.NewProcess(logger)
+	iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", tlsOptions, "localhost:1815")
+	assert.NoError(t, err)
+
+	serviceDetails := &config.ServiceDetails{
 		ServiceDetailsBase: config.ServiceDetailsBase{
 			EndpointURL:        "127.0.0.1",
 			AuthorizationModel: "none",
 		},
 	}
 
-	// Test NewHTTPServiceEndpoint
-	endpoint, err := iw.NewHTTPServiceEndpoint("mock-service", serviceDetails, nil)
-	assert.Nil(t, err)
-	assert.Equal(t, "mock-service", endpoint.ServiceName())
+	endpoint, err := iw.NewHTTPServiceEndpoint("no-duplicates-service", serviceDetails, nil)
+	assert.NoError(t, err)
 
 	endpoints := []ServiceEndpoint{
 		endpoint,
 		endpoint,
 	}
-
 	err = iw.SetServiceEndpoints(endpoints)
-	if err == nil {
-		t.Fatal("result: error is nil, expected error when calling AddServiceEndpoint with a duplicate service")
-	}
-	assert.EqualError(t, err, "service endpoint for a service with the same name has already been registered")
-
+	assert.EqualError(t, err, "service endpoint for a service with the same name has already been registered", "expected error when calling SetServiceEndpoints with a duplicate service")
 }
 
 type failingRoundTripper struct{}
