@@ -8,7 +8,6 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
-	"hash/crc64"
 	"net/http"
 	"net/url"
 	"reflect"
@@ -18,7 +17,6 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/jpillora/backoff"
 	"github.com/pkg/errors"
-	"github.com/sony/sonyflake"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -44,9 +42,6 @@ type Outway struct {
 
 	directoryInspectionClient inspectionapi.DirectoryInspectionClient
 	process                   *process.Process
-
-	requestFlake *sonyflake.Sonyflake
-	ecmaTable    *crc64.Table
 
 	// headersStripList *http.Header
 
@@ -161,12 +156,6 @@ func NewOutway(
 		return nil, errors.New("process argument is nil. needed enable to close gracefully")
 	}
 
-	requestFlake := sonyflake.NewSonyflake(sonyflake.Settings{})
-
-	if requestFlake == nil {
-		return nil, errors.New("failed to initialize request id generator")
-	}
-
 	o := &Outway{
 		wg:               &sync.WaitGroup{},
 		logger:           logger.With(zap.String("outway-organization-name", organizationName)),
@@ -176,8 +165,6 @@ func NewOutway(
 		tlsRoots:   roots,
 		process:    mainProcess,
 
-		requestFlake:      requestFlake,
-		ecmaTable:         crc64.MakeTable(crc64.ECMA),
 		servicesHTTP:      make(map[string]HTTPService),
 		servicesDirectory: make(map[string]*inspectionapi.ListServicesResponse_Service),
 	}

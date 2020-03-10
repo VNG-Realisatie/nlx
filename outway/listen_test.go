@@ -6,7 +6,6 @@ package outway
 import (
 	"errors"
 	"fmt"
-	"hash/crc64"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -15,7 +14,6 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/sony/sonyflake"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 
@@ -61,8 +59,6 @@ func TestOutwayListen(t *testing.T) {
 		servicesHTTP:      make(map[string]HTTPService),
 		servicesDirectory: make(map[string]*inspectionapi.ListServicesResponse_Service),
 		logger:            logger,
-		requestFlake:      sonyflake.NewSonyflake(sonyflake.Settings{}),
-		ecmaTable:         crc64.MakeTable(crc64.ECMA),
 		txlogger:          transactionlog.NewDiscardTransactionLogger(),
 	}
 
@@ -173,8 +169,6 @@ func TestFailingTransport(t *testing.T) {
 		servicesHTTP:      make(map[string]HTTPService),
 		servicesDirectory: make(map[string]*inspectionapi.ListServicesResponse_Service),
 		logger:            logger,
-		requestFlake:      sonyflake.NewSonyflake(sonyflake.Settings{}),
-		ecmaTable:         crc64.MakeTable(crc64.ECMA),
 		txlogger:          transactionlog.NewDiscardTransactionLogger(),
 	}
 

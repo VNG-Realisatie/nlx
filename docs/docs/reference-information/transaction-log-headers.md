@@ -3,7 +3,9 @@ id: transaction-log-headers
 title: Transaction log headers
 ---
 
-NLX logs requests on both the **outway** and **inway**. NLX adds a globally unique id of the request `X-NLX-Logrecord-ID` for every request, which makes a request traceable throughout the network. The application that performs the request can append some additional headers that will be saved in the transaction log as well:
+NLX logs requests on both the **outway** and **inway**. NLX adds a globally unique id of the request `X-NLX-Logrecord-ID` for every request, which makes a request traceable throughout the network. The log record ID is created from 128 bits cryptographically secure random data and then encoded into a hexadecimal string of 32 characters.
+
+The application that performs the request can append some additional headers that will be saved in the transaction log as well:
 
 * `X-NLX-Request-User-Id`, the id of the user performing the request
 * `X-NLX-Request-Application-Id`, the id of the application performing the request

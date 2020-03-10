@@ -50,7 +50,6 @@ require (
 	github.com/privacybydesign/irmago v0.4.1
 	github.com/prometheus/client_golang v1.0.0 // indirect
 	github.com/satori/go.uuid v1.2.0
-	github.com/sony/sonyflake v1.0.0
 	github.com/spf13/afero v1.2.2 // indirect
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect

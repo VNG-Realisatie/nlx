@@ -3,14 +3,12 @@ package outway
 import (
 	"encoding/json"
 	"fmt"
-	"hash/crc64"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/sony/sonyflake"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 
@@ -111,8 +109,6 @@ func TestAuthListen(t *testing.T) {
 		organizationName: "org",
 		servicesHTTP:     make(map[string]HTTPService),
 		logger:           logger,
-		requestFlake:     sonyflake.NewSonyflake(sonyflake.Settings{}),
-		ecmaTable:        crc64.MakeTable(crc64.ECMA),
 		txlogger:         transactionlog.NewDiscardTransactionLogger(),
 	}
 

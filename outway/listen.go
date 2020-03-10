@@ -6,12 +6,9 @@ package outway
 import (
 	"context"
 	"crypto/tls"
-	"encoding/binary"
 	"fmt"
-	"hash/crc64"
 	"net"
 	"net/http"
-	"strconv"
 	"strings"
 	"time"
 
@@ -128,18 +125,15 @@ func (o *Outway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	logrecordIDFlake, err := o.requestFlake.NextID()
+	l, err := NewLogRecordID()
 	if err != nil {
 		logger.Error("could not get new request ID", zap.Error(err))
 		http.Error(w, "nlx outway: internal server error", http.StatusInternalServerError)
 		return
 	}
 
-	logrecordIDFlakeBytes := make([]byte, binary.MaxVarintLen64)
-	binary.PutUvarint(logrecordIDFlakeBytes, logrecordIDFlake)
-	logrecordIDNum := crc64.Checksum(logrecordIDFlakeBytes, o.ecmaTable)
-	logrecordID := strconv.FormatUint(logrecordIDNum, 32)
-	r.Header.Set("X-NLX-Logrecord-Id", logrecordID)
+	logRecordID := l.String()
+	r.Header.Set("X-NLX-Logrecord-Id", logRecordID)
 
 	dataSubjects, err := parseDataSubjects(r)
 	if err != nil {
@@ -154,7 +148,7 @@ func (o *Outway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		SrcOrganization:  o.organizationName,
 		DestOrganization: destination.Organization,
 		ServiceName:      destination.Service,
-		LogrecordID:      logrecordID,
+		LogrecordID:      logRecordID,
 		Data:             recordData,
 		DataSubjects:     dataSubjects,
 	})
@@ -164,7 +158,7 @@ func (o *Outway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	o.logger.Info("forwarding API request", zap.String("destination-organization", destination.Organization), zap.String("service", destination.Service), zap.String("logrecord-id", logrecordID))
+	o.logger.Info("forwarding API request", zap.String("destination-organization", destination.Organization), zap.String("service", destination.Service), zap.String("logrecord-id", logRecordID))
 
 	service.ProxyHTTPRequest(w, r)
 }
