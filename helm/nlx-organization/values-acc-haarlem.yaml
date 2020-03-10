@@ -5,10 +5,6 @@ externalDomain: acc.voorbeeld-haarlem.nl
 
 dbDatabaseTxlog: nlx-acc-haarlem-txlog
 dbResetTxlog: false
-dbUsernameTxlogAPI: nlx-acc-haarlem-txlog-api
-dbPasswordTxlogAPI: nlx-txlog-api
-dbUsernameTxlogWriter: nlx-acc-haarlem-txlog-writer
-dbPasswordTxlogWriter: nlx-txlog-writer
 
 caAddress: ca-cfssl-unsafe.nlx-acc-directory
 

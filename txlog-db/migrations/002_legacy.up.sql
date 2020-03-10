@@ -1,0 +1,1 @@
+/* We keep this empty migration for legacy reasons */

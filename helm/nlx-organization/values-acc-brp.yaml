@@ -5,10 +5,6 @@ externalDomain: acc.voorbeeld-brp.nl
 
 dbDatabaseTxlog: nlx-acc-brp-txlog
 dbResetTxlog: false
-dbUsernameTxlogAPI: nlx-acc-brp-txlog-api
-dbPasswordTxlogAPI: nlx-txlog-api
-dbUsernameTxlogWriter: nlx-acc-brp-txlog-writer
-dbPasswordTxlogWriter: nlx-txlog-writer
 
 caAddress: ca-cfssl-unsafe.nlx-acc-directory
 

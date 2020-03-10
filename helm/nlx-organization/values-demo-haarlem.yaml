@@ -8,10 +8,6 @@ imagePrefix: ""
 
 dbDatabaseTxlog: nlx-demo-haarlem-txlog
 dbResetTxlog: false
-dbUsernameTxlogAPI: nlx-demo-haarlem-txlog-api
-dbPasswordTxlogAPI: nlx-txlog-api
-dbUsernameTxlogWriter: nlx-demo-haarlem-txlog-writer
-dbPasswordTxlogWriter: nlx-txlog-writer
 
 caAddress: ca-cfssl-unsafe.nlx-demo-directory
 

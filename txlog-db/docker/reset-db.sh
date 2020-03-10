@@ -1,6 +1,32 @@
 #!/bin/bash
+#
+# Reset the database, run migrations and load test data
+#
+# Usage: ./reset-db.sh
+#
+# The following environment variables should be set:
+#
+#   PGHOST
+#     Hostname of the database cluster/server. Unix socket directories are supported
+#     as well. Defaults to /tmp for unix sockets.
+#
+#   PGPORT
+#     Port number of the database cluster/server. Defaults to 5432.
+#
+#   PGDATABASE
+#     Name of the transaction log database. Will be created if it doesn't exist yet.
+#
+#   PGUSER:
+#     The administrative database user managing the schema of the transaction
+#     log database
+#
+#   PGPASSWORD:
+#     Password of the administrative database user account.
+#
+
 set -e
 set -o pipefail
+set -u  # fail on undefined (env) vars
 
 echo "Drop existing database ${PGDATABASE}"
 # We specify a low connect_timeout so a db pod/container doesn't hang a long time when the postgres is not created yet. Failing and restarting is faster.
@@ -13,8 +39,6 @@ SELECT pid, datname, usename, application_name, pg_terminate_backend(pid) AS ter
 DROP DATABASE IF EXISTS "${PGDATABASE}";
 CREATE DATABASE "${PGDATABASE}";
 EOF
-
-sed -i "s/nlx-org-txlog-/${PGDATABASE}-/g" /db-migrations/*.up.sql
 
 echo "Creating database structure from migrations and adding testdata"
 dbVersion=0

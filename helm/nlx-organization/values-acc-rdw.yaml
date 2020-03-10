@@ -5,10 +5,6 @@ externalDomain: acc.voorbeeld-rdw.nl
 
 dbDatabaseTxlog: nlx-acc-rdw-txlog
 dbResetTxlog: false
-dbUsernameTxlogAPI: nlx-acc-rdw-txlog-api
-dbPasswordTxlogAPI: nlx-txlog-api
-dbUsernameTxlogWriter: nlx-acc-rdw-txlog-writer
-dbPasswordTxlogWriter: nlx-txlog-writer
 
 caAddress: ca-cfssl-unsafe.nlx-acc-directory
 

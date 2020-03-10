@@ -8,10 +8,6 @@ imagePrefix: ""
 
 dbDatabaseTxlog: nlx-demo-brp-txlog
 dbResetTxlog: false
-dbUsernameTxlogAPI: nlx-demo-brp-txlog-api
-dbPasswordTxlogAPI: nlx-txlog-api
-dbUsernameTxlogWriter: nlx-demo-brp-txlog-writer
-dbPasswordTxlogWriter: nlx-txlog-writer
 
 caAddress: ca-cfssl-unsafe.nlx-demo-directory
 

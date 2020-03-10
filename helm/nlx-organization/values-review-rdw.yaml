@@ -8,10 +8,6 @@ logType: local
 
 dbDatabaseTxlog: nlx-dev-rdw-txlog
 dbResetTxlog: true # WARNING: All data will be LOST, never use in production!
-dbUsernameTxlogAPI: nlx-dev-rdw-txlog-api
-dbPasswordTxlogAPI: nlx-txlog-api
-dbUsernameTxlogWriter: nlx-dev-rdw-txlog-writer
-dbPasswordTxlogWriter: nlx-txlog-writer
 
 imagePullPolicy: "Always"
 

@@ -78,6 +78,9 @@ spec:
         - name: inway
           image: {{.Values.imagePrefix}}nlxio/{{.component}}:{{.Values.imageTag}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
+          envFrom:
+            - secretRef:
+                name: postgres-auth
           env:
             - name: LOG_TYPE
               value: {{ default "live" .Values.logType }}
@@ -90,7 +93,7 @@ spec:
             - name: TLS_ORG_KEY
               value: "/certs/{{.component}}.{{.Values.domain}}-key.pem"
             - name: POSTGRES_DSN
-              value: postgresql://{{.Values.dbUsernameTxlogWriter}}:{{.Values.dbPasswordTxlogWriter}}@postgres/{{.Values.dbDatabaseTxlog}}?sslmode=disable&connect_timeout=10
+              value: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@postgres/{{.Values.dbDatabaseTxlog}}?sslmode=disable&connect_timeout=10
             - name: SELF_ADDRESS
               value: "{{ if .Values.inway.selfAddress }}{{ .Values.inway.selfAddress }}{{ else }}{{.component}}.{{.Values.domain}}{{ end }}"
             - name: DIRECTORY_REGISTRATION_ADDRESS
