@@ -23,7 +23,7 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "@commonground/eslint-config-cra-standard-prettier"
   },
   "browserslist": {
     "production": [
@@ -38,6 +38,17 @@
     ]
   },
   "devDependencies": {
-    "history": "4.10.1"
+    "@commonground/eslint-config-cra-standard-prettier": "0.0.3",
+    "eslint-config-prettier": "6.10.0",
+    "eslint-config-react": "1.1.7",
+    "eslint-config-standard": "14.1.0",
+    "eslint-config-standard-react": "9.2.0",
+    "eslint-plugin-jest": "23.8.2",
+    "eslint-plugin-node": "11.0.0",
+    "eslint-plugin-prettier": "3.1.2",
+    "eslint-plugin-promise": "4.2.1",
+    "eslint-plugin-standard": "4.0.1",
+    "history": "4.10.1",
+    "prettier": "1.19.1"
   }
 }
