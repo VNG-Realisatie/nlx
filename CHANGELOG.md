@@ -1,3 +1,26 @@
+# [0.85.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.84.0...v0.85.0) (2020-03-12)
+
+
+### Bug Fixes
+
+* 'potential file inclusion via variable' ([d7d7e9f](https://gitlab.com/commonground/nlx/nlx/commit/d7d7e9fbfe16953e572329481da3881b141ad59d))
+* **deps:** update dependency @commonground/design-system to v8 ([7020c06](https://gitlab.com/commonground/nlx/nlx/commit/7020c06b8dab7e5605c531a6ea15e76516c7ee65))
+* **directory-inspection-api:** cast stats amount as integer in the REST api ([8b796a2](https://gitlab.com/commonground/nlx/nlx/commit/8b796a2861d44ac784eebe19a315a70eb0bb79c1))
+* **directory-ui:** fix linting [#872](https://gitlab.com/commonground/nlx/nlx/issues/872) ([64730b9](https://gitlab.com/commonground/nlx/nlx/commit/64730b9f8cfd0c60b310177297721bcd448922ef))
+* **directory-ui-e2e-tests:** adjust Chrome installation to resolve issue with gnupg ([a4145a0](https://gitlab.com/commonground/nlx/nlx/commit/a4145a0cb803994c582e77b9fd9d809bb18b50e1))
+* **docs:** fix broken links according to the link checker [#314](https://gitlab.com/commonground/nlx/nlx/issues/314) ([80948e9](https://gitlab.com/commonground/nlx/nlx/commit/80948e97fab5639913be95ff2277c4641a36971d))
+* **management-ui:** fix linting [#872](https://gitlab.com/commonground/nlx/nlx/issues/872) ([0605bf5](https://gitlab.com/commonground/nlx/nlx/commit/0605bf55d2fbba947be22e65b240d17cb9e26c4e))
+* **outway:** return error when sonyflake is nil ([a8aaa10](https://gitlab.com/commonground/nlx/nlx/commit/a8aaa1054bd012f6e565ea1b4c5824c88d6591df))
+
+
+### Features
+
+* **docs:** document to use the PKIoverheid root CA G1 cert ([3cd3059](https://gitlab.com/commonground/nlx/nlx/commit/3cd30591ea1fca79d919ef11101e042b66149889))
+* **docs:** remove direct link to Docker download for Windows [#314](https://gitlab.com/commonground/nlx/nlx/issues/314) ([f8c215b](https://gitlab.com/commonground/nlx/nlx/commit/f8c215b3c21cf8d1e48a479df86b3a0e5cc11570))
+* **gitlab-ci:** setup link checker for the docs [#314](https://gitlab.com/commonground/nlx/nlx/issues/314) ([03f7e76](https://gitlab.com/commonground/nlx/nlx/commit/03f7e76413a0d15c55e6c3788424c0c4fee5b862))
+* **outway:** replace sonyflake with random id ([69755df](https://gitlab.com/commonground/nlx/nlx/commit/69755dfa6265ad97319713f228c76cb242327444))
+* add support for certs singed by an intermediate CA ([dafada9](https://gitlab.com/commonground/nlx/nlx/commit/dafada9247d3f6b244418f4513db9a0337bd3cef))
+
 # [0.84.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.83.1...v0.84.0) (2020-03-03)
 
 
