@@ -1,14 +1,8 @@
 import React from 'react'
-import { I18nextProvider } from 'react-i18next'
-import { render } from '@testing-library/react'
-import i18n from '../../i18n'
+import { render } from '../../../test-utils' // TODO: root alias, so we don't need relative paths
 import LoginPage from './index'
 
 test('renders a welcome message', () => {
-  const { getByText } = render(
-    <I18nextProvider i18n={i18n}>
-      <LoginPage />
-    </I18nextProvider>,
-  )
+  const { getByText } = render(<LoginPage />)
   expect(getByText(/^Welkom$/)).toBeInTheDocument()
 })
