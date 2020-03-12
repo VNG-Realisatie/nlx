@@ -13,8 +13,6 @@ import (
 	"sync"
 	"time"
 
-	"go.nlx.io/nlx/common/nlxversion"
-
 	"github.com/jmoiron/sqlx"
 	"github.com/jpillora/backoff"
 	"github.com/pkg/errors"
@@ -24,6 +22,8 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/status"
 
+	"go.nlx.io/nlx/common/monitoring"
+	"go.nlx.io/nlx/common/nlxversion"
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/transactionlog"
@@ -49,6 +49,8 @@ type Inway struct {
 	serviceEndpoints     map[string]ServiceEndpoint
 	stopInwayChannel     chan struct{}
 
+	monitoringService *monitoring.Service
+
 	txlogger transactionlog.TransactionLogger
 
 	configAPIClient configapi.ConfigApiClient
@@ -63,6 +65,7 @@ func NewInway(
 	mainProcess *process.Process,
 	name,
 	selfAddress string,
+	monitoringAddress string,
 	tlsOptions orgtls.TLSOptions,
 	directoryRegistrationAddress string) (*Inway, error) {
 	// parse tls certificate
@@ -99,6 +102,12 @@ func NewInway(
 
 		serviceEndpoints: make(map[string]ServiceEndpoint),
 		stopInwayChannel: make(chan struct{}),
+	}
+
+	// setup monitoring service
+	i.monitoringService, err = monitoring.NewMonitoringService(monitoringAddress, logger)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to create monitoring service: ")
 	}
 
 	// setup transactionlog
@@ -160,6 +169,7 @@ func getFingerPrint(rawCert []byte) string {
 
 // stop will stop the announcement of services and the config retrieval process (if a configAPI is configured)
 func (i *Inway) stop() {
+	i.monitoringService.SetNotReady()
 	close(i.stopInwayChannel)
 }
 

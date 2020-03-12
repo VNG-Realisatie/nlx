@@ -7,6 +7,7 @@ import (
 	"context"
 	"crypto/tls"
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/pkg/errors"
@@ -14,8 +15,8 @@ import (
 	"go.nlx.io/nlx/common/tlsconfig"
 )
 
-// ListenAndServeTLS is a blocking function that listens on provided tcp address to handle requests.
-func (i *Inway) ListenAndServeTLS(address string) error {
+// RunServer is a blocking function that listens on provided tcp address to handle requests.
+func (i *Inway) RunServer(address string) error {
 	serveMux := http.NewServeMux()
 	serveMux.HandleFunc("/.nlx/api-spec-doc/", i.handleAPISpecDocRequest)
 	serveMux.HandleFunc("/.nlx/health/", i.handleHealthRequest)
@@ -37,24 +38,43 @@ func (i *Inway) ListenAndServeTLS(address string) error {
 		TLSConfig: config,
 	}
 
-	shutDownComplete := make(chan struct{})
+	errorChannel := make(chan error)
+
+	go func() {
+		if err := server.ListenAndServeTLS("", ""); err != nil {
+			if err != http.ErrServerClosed {
+				errorChannel <- errors.Wrap(err, "error listening on TLS server")
+			}
+		}
+	}()
+
+	go func() {
+		if err := i.monitoringService.Start(); err != nil {
+			errorChannel <- errors.Wrap(err, "error listening on TLS server")
+		}
+	}()
+
+	wg := sync.WaitGroup{}
+
+	numberOfServers := 2
+	wg.Add(numberOfServers)
+
 	i.process.CloseGracefully(func() error {
 		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
 		defer cancel() // do not remove. Otherwise it could cause implicit goroutine leak
 		err := server.Shutdown(localCtx)
-		close(shutDownComplete)
+		wg.Done()
 		return err
 	})
 
-	// ErrServerClosed is more info message than error
-	if err := server.ListenAndServeTLS("", ""); err != nil {
-		if err != http.ErrServerClosed {
-			return errors.Wrap(err, "failed to run http server")
-		}
-	}
+	i.process.CloseGracefully(func() error {
+		err := i.monitoringService.Stop()
+		wg.Done()
+		return err
+	})
 
 	// Listener will return immediately on Shutdown call.
 	// So we need to wait until all open connections will be closed gracefully
-	<-shutDownComplete
-	return nil
+
+	return <-errorChannel
 }

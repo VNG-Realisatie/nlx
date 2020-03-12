@@ -1,4 +1,5 @@
 storageType: Durable
 
 imagePrefix: ""
+imagePullPolicy: IfNotPresent
 imageTag: latest

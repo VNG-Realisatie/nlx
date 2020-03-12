@@ -33,7 +33,7 @@ func createInway() (*Inway, error) {
 		OrgKeyFile:  "../testing/pki/org-nlx-test-key.pem",
 	}
 
-	return NewInway(logger, nil, testProcess, "mock.inway", "localhost:1812", tlsOptions, "localhost:1815")
+	return NewInway(logger, nil, testProcess, "mock.inway", "localhost:1812", "localhost:1813", tlsOptions, "localhost:1815")
 }
 
 func createMockService() *configapi.Service {
@@ -262,12 +262,12 @@ func TestNewInwayName(t *testing.T) {
 	}
 
 	testProcess := process.NewProcess(logger)
-	iw, err := NewInway(logger, nil, testProcess, "", "", tlsOptions, "")
+	iw, err := NewInway(logger, nil, testProcess, "", "", "localhost:1813", tlsOptions, "")
 	assert.Nil(t, err)
 
 	assert.Equal(t, "XQpL-03EUOCXDNnc8FCsZXrOp41LkYIJ5U_Udz-1Chk=", iw.name)
 
-	iw, err = NewInway(logger, nil, testProcess, "inway.test", "", tlsOptions, "")
+	iw, err = NewInway(logger, nil, testProcess, "inway.test", "", "localhost:1813", tlsOptions, "")
 	assert.Nil(t, err)
 	assert.Equal(t, "inway.test", iw.name)
 }

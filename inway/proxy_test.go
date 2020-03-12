@@ -61,7 +61,7 @@ func newTestEnv(t *testing.T, tlsOptions orgtls.TLSOptions) (proxy, mock *httpte
 
 	logger := zap.NewNop()
 	testProcess := process.NewProcess(logger)
-	iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", tlsOptions, "localhost:1815")
+	iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", "localhost:1813", tlsOptions, "localhost:1815")
 	assert.Nil(t, err)
 
 	endPoints := []ServiceEndpoint{}

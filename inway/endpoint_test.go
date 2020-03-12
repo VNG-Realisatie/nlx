@@ -229,7 +229,7 @@ func TestInwaySetServiceEndpoints(t *testing.T) {
 			},
 			want: want{
 				validator: func(state validatorState) {
-					assert.EqualError(t, state.err, "invalid endpoint provided: parse \"12://invalid-endpoint\": first path segment in URL cannot contain colon")
+					assert.EqualError(t, state.err, "invalid endpoint provided: parse 12://invalid-endpoint: first path segment in URL cannot contain colon")
 					assert.Nil(t, state.endpoint)
 				},
 			},
@@ -241,7 +241,7 @@ func TestInwaySetServiceEndpoints(t *testing.T) {
 			core, recorded := observer.New(zapcore.InfoLevel)
 			logger := zap.New(core)
 			testProcess := process.NewProcess(logger)
-			iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", tlsOptions, "localhost:1815")
+			iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", "localhost:1813", tlsOptions, "localhost:1815")
 			assert.NoError(t, err)
 
 			endpoint, err := iw.NewHTTPServiceEndpoint(test.args.serviceName, test.args.serviceDetails, nil)
@@ -266,7 +266,7 @@ func TestInwaySetServiceEnpointDuplicateEndpoint(t *testing.T) {
 
 	logger := zaptest.NewLogger(t)
 	testProcess := process.NewProcess(logger)
-	iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", tlsOptions, "localhost:1815")
+	iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", "localhost:1813", tlsOptions, "localhost:1815")
 	assert.NoError(t, err)
 
 	serviceDetails := &config.ServiceDetails{
@@ -306,7 +306,7 @@ func TestInwayLoggingBadService(t *testing.T) {
 		OrgKeyFile:  "../testing/pki/org-nlx-test-key.pem",
 	}
 
-	iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", tlsOptions, "localhost:1815")
+	iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", "localhost:1813", tlsOptions, "localhost:1815")
 	assert.Nil(t, err)
 
 	serviceDetails := &config.ServiceDetails{

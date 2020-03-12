@@ -110,6 +110,8 @@ func (i *Inway) SetServiceEndpoints(endpoints []ServiceEndpoint) error {
 		i.announceToDirectory(endPoint)
 	}
 
+	i.monitoringService.SetReady()
+
 	return nil
 }
 

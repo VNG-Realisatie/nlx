@@ -28,6 +28,8 @@ import (
 var options struct {
 	ListenAddress string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:8443" description:"Address for the inway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 
+	MonitoringAddress string `long:"monitoring-address" env:"MONITORING_ADDRESS" default:"0.0.0.0:8080" description:"Address for the inway monitoring endpoints to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+
 	DirectoryRegistrationAddress string `long:"directory-registration-address" env:"DIRECTORY_REGISTRATION_ADDRESS" description:"Address for the directory where this inway can register it's services" required:"true"`
 
 	DisableLogdb bool `long:"disable-logdb" env:"DISABLE_LOGDB" description:"Disable logdb connections"`
@@ -67,7 +69,7 @@ func main() {
 
 	logDB := setupDatabase(logger, mainProcess)
 
-	iw, err := inway.NewInway(logger, logDB, mainProcess, options.InwayName, options.SelfAddress, options.TLSOptions, options.DirectoryRegistrationAddress)
+	iw, err := inway.NewInway(logger, logDB, mainProcess, options.InwayName, options.SelfAddress, options.MonitoringAddress, options.TLSOptions, options.DirectoryRegistrationAddress)
 	if err != nil {
 		logger.Fatal("cannot setup inway", zap.Error(err))
 	}
@@ -95,9 +97,9 @@ func main() {
 	}
 
 	// Listen on the address provided in the options
-	err = iw.ListenAndServeTLS(options.ListenAddress)
+	err = iw.RunServer(options.ListenAddress)
 	if err != nil {
-		logger.Fatal("failed to listen and serve", zap.Error(err))
+		logger.Fatal("failed to run server", zap.Error(err))
 	}
 }
 

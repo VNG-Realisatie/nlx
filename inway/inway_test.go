@@ -26,32 +26,49 @@ func TestNewInwayException(t *testing.T) {
 
 	testProcess := process.NewProcess(logger)
 
-	_, err := inway.NewInway(logger, nil, testProcess, "", "", tlsOptions, "")
+	_, err := inway.NewInway(logger, nil, testProcess, "", "", "localhost:8080", tlsOptions, "")
 	assert.NotNil(t, err)
 
 	tests := []struct {
+		description          string
 		tlsConfig            orgtls.TLSOptions
+		monitoringAddress    string
 		expectedErrorMessage string
 	}{
 		{
+			"certificates without an organization name",
 			orgtls.TLSOptions{
 				NLXRootCert: filepath.Join("..", "testing", "pki", "ca-root.pem"),
 				OrgCertFile: filepath.Join("..", "testing", "pki", "org-without-name-chain.pem"),
 				OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-without-name-key.pem"),
-			}, "cannot obtain organization name from self cert",
+			},
+			"localhost:8080",
+			"cannot obtain organization name from self cert",
 		},
 		{
+			"missing organization certificate",
 			orgtls.TLSOptions{
 				NLXRootCert: filepath.Join("..", "testing", "pki", "ca-root.pem"),
 				OrgCertFile: filepath.Join("..", "testing", "pki", "org-nlx-test-chain.pem"),
 				OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-non-existing-key.pem"),
 			},
+			"localhost:8080",
 			"failed to load organization certificate '../testing/pki/org-nlx-test-chain.pem: open ../testing/pki/org-non-existing-key.pem: no such file or directory",
+		},
+		{
+			"missing monitoring address",
+			orgtls.TLSOptions{
+				NLXRootCert: filepath.Join("..", "testing", "pki", "ca-root.pem"),
+				OrgCertFile: filepath.Join("..", "testing", "pki", "org-nlx-test-chain.pem"),
+				OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem"),
+			},
+			"localhost:8080",
+			"unable to create monitoring service: : address required",
 		},
 	}
 
 	for _, test := range tests {
-		_, err = inway.NewInway(logger, nil, testProcess, "", "", test.tlsConfig, "")
+		_, err = inway.NewInway(logger, nil, testProcess, "", "", "", test.tlsConfig, "")
 		assert.EqualError(t, err, test.expectedErrorMessage)
 	}
 
@@ -61,13 +78,9 @@ func TestNewInwayException(t *testing.T) {
 		OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem"),
 	}
 
-	testInway, err := inway.NewInway(logger, nil, testProcess, "", "", tlsOptions, "")
-	if err != nil {
-		t.Fatal(err)
-	}
-	err = testInway.ListenAndServeTLS("invalidlistenaddress")
-	assert.EqualError(t, err, "failed to run http server: listen tcp: address invalidlistenaddress: missing port in address")
-	if err == nil {
-		t.Fatal(`result: error is nil, expected error to be set when calling ListenAndServeTLS with an invalid listen address`)
-	}
+	testInway, err := inway.NewInway(logger, nil, testProcess, "", "", "localhost:8080", tlsOptions, "")
+	assert.Nil(t, err)
+
+	err = testInway.RunServer("invalidlistenaddress")
+	assert.EqualError(t, err, "error listening on TLS server: listen tcp: address invalidlistenaddress: missing port in address")
 }
