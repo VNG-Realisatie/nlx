@@ -4,7 +4,7 @@ import {
   StyledContainer,
   StyledContent,
   StyledSidebar,
-  StyledNLXLogo,
+  StyledNLXManagementLogo,
 } from './index.styles'
 
 const LoginPage = () => {
@@ -13,9 +13,7 @@ const LoginPage = () => {
   return (
     <StyledContainer>
       <StyledSidebar>
-        <StyledNLXLogo />
-        <br />
-        Management
+        <StyledNLXManagementLogo />
       </StyledSidebar>
       <StyledContent>
         <h2>{t('Welkom')}</h2>

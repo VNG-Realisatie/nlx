@@ -1,8 +1,8 @@
 import styled from 'styled-components'
-import { NLXLogo } from '@commonground/design-system'
+import NLXManagementLogo from '../../components/NLXManagementLogo'
 import nlxPattern from './nlx-pattern.svg'
 
-export const StyledNLXLogo = styled(NLXLogo)`
+export const StyledNLXManagementLogo = styled(NLXManagementLogo)`
   width: 100px;
 `
 
