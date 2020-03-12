@@ -18,7 +18,8 @@ const LoginPage = () => {
         Management
       </StyledSidebar>
       <StyledContent>
-        <p>{t('Welkom')}</p>
+        <h2>{t('Welkom')}</h2>
+        <p>{t('Login om verder te gaan.')}</p>
       </StyledContent>
     </StyledContainer>
   )
