@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2018
 // Licensed under the EUPL
 
-import React, { Fragment } from 'react'
+import React from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import VersionLogger from './components/VersionLogger'
 
@@ -13,21 +13,21 @@ import ServiceOverviewPage from './pages/ServicesOverviewPage/ServicesOverviewPa
 import DocumentationPage from './pages/DocumentationPage/DocumentationPage'
 
 const App = () => (
-    <StyledApp>
-        <GlobalStyles />
-        <Router>
-            <Fragment>
-                <Header />
+  <StyledApp>
+    <GlobalStyles />
+    <Router>
+      <>
+        <Header />
 
-                <Route exact path="/" component={ServiceOverviewPage} />
-                <Route
-                    path="/documentation/:organizationName/:serviceName"
-                    component={DocumentationPage}
-                />
-            </Fragment>
-        </Router>
-        <VersionLogger />
-    </StyledApp>
+        <Route exact path="/" component={ServiceOverviewPage} />
+        <Route
+          path="/documentation/:organizationName/:serviceName"
+          component={DocumentationPage}
+        />
+      </>
+    </Router>
+    <VersionLogger />
+  </StyledApp>
 )
 
 export default App

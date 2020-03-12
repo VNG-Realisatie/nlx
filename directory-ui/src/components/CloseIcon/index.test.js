@@ -6,8 +6,8 @@ import { shallow } from 'enzyme'
 import CloseIcon from './index'
 
 describe('CloseIcon component', () => {
-    it('should render without errors', () => {
-        const wrapper = shallow(<CloseIcon />)
-        expect(wrapper).toBeTruthy()
-    })
+  it('should render without errors', () => {
+    const wrapper = shallow(<CloseIcon />)
+    expect(wrapper).toBeTruthy()
+  })
 })

@@ -12,14 +12,14 @@ import Row from './Row'
 import SortableHeadCell from './SortableHeadCell'
 
 const Table = styled.table`
-    border-collapse: separate;
-    border-spacing: 0;
-    display: table;
-    margin: 0 auto;
+  border-collapse: separate;
+  border-spacing: 0;
+  display: table;
+  margin: 0 auto;
 `
 
 Table.propTypes = {
-    children: node,
+  children: node,
 }
 
 Table.Body = Body
