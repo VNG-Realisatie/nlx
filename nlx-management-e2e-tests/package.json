@@ -1,0 +1,13 @@
+{
+  "name": "nlx-management-e2e-tests",
+  "version": "0.0.0",
+  "scripts": {
+    "test:browserstack": "node outputUrl.js && testcafe 'browserstack:firefox,browserstack:chrome,browserstack:safari,browserstack:ie,browserstack:edge' --reporter 'spec,html:./test-results/index.html'",
+    "test:local": "node outputUrl.js && testcafe 'all' --reporter 'spec,html:./test-results/index.html'"
+  },
+  "devDependencies": {
+    "testcafe": "1.8.2",
+    "testcafe-browser-provider-browserstack": "1.12.0",
+    "testcafe-reporter-html": "1.4.6"
+  }
+}

@@ -16,7 +16,7 @@ const LoginPage = () => {
         <StyledNLXManagementLogo />
       </StyledSidebar>
       <StyledContent>
-        <h2>{t('Welkom')}</h2>
+        <h1>{t('Welkom')}</h1>
         <p>{t('Login om verder te gaan.')}</p>
       </StyledContent>
     </StyledContainer>

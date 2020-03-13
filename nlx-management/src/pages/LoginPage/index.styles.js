@@ -6,7 +6,7 @@ export const StyledNLXManagementLogo = styled(NLXManagementLogo)`
   width: 100px;
 `
 
-export const StyledContainer = styled.div`
+export const StyledContainer = styled.main`
   display: flex;
   align-items: center;
   height: 100%;
@@ -18,11 +18,11 @@ export const StyledSidebar = styled.div`
   flex: 0 0 532px;
   text-align: center;
   font-size: 14pt;
-  padding-top: 175px;
+  padding-top: 10rem;
   height: 100%;
 `
 
 export const StyledContent = styled.div`
   flex: 1;
-  padding: 0 180px;
+  padding: 0 10rem 10rem 10rem;
 `
