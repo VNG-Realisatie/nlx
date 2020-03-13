@@ -15,8 +15,8 @@ describe('LogsPageContainer', () => {
         fetchOrganizationLogs: jest.fn(),
         organization: {
           name: 'foo',
-          insight_irma_endpoint: 'irma_endpoint',
-          insight_log_endpoint: 'log_endpoint',
+          insight_irma_endpoint: 'irma_endpoint', // eslint-disable-line camelcase
+          insight_log_endpoint: 'log_endpoint', // eslint-disable-line camelcase
         },
         proof: 'the_proof',
       }
@@ -28,7 +28,7 @@ describe('LogsPageContainer', () => {
     it('should fetch the organization logs', () => {
       expect(instance.props.fetchOrganizationLogs).toHaveBeenCalledWith({
         proof: 'the_proof',
-        insight_log_endpoint: 'log_endpoint',
+        insight_log_endpoint: 'log_endpoint', // eslint-disable-line camelcase
         page: 0,
       })
     })
@@ -40,16 +40,16 @@ describe('LogsPageContainer', () => {
         fetchOrganizationLogs: jest.fn(),
         organization: {
           name: 'foo',
-          insight_irma_endpoint: 'foo_irma_endpoint',
-          insight_log_endpoint: 'foo_log_endpoint',
+          insight_irma_endpoint: 'foo_irma_endpoint', // eslint-disable-line camelcase
+          insight_log_endpoint: 'foo_log_endpoint', // eslint-disable-line camelcase
         },
         proof: 'the_proof',
       }
 
       const newOrganization = {
         name: 'bar',
-        insight_irma_endpoint: 'bar_irma_endpoint',
-        insight_log_endpoint: 'bar_log_endpoint',
+        insight_irma_endpoint: 'bar_irma_endpoint', // eslint-disable-line camelcase
+        insight_log_endpoint: 'bar_log_endpoint', // eslint-disable-line camelcase
       }
 
       const wrapper = shallow(<LogsPageContainer {...props} />)
@@ -58,13 +58,13 @@ describe('LogsPageContainer', () => {
 
       expect(instance.props.fetchOrganizationLogs).toHaveBeenNthCalledWith(1, {
         proof: 'the_proof',
-        insight_log_endpoint: 'foo_log_endpoint',
+        insight_log_endpoint: 'foo_log_endpoint', // eslint-disable-line camelcase
         page: 0,
       })
 
       expect(instance.props.fetchOrganizationLogs).toHaveBeenNthCalledWith(2, {
         proof: 'the_proof',
-        insight_log_endpoint: 'bar_log_endpoint',
+        insight_log_endpoint: 'bar_log_endpoint', // eslint-disable-line camelcase
         page: 0,
       })
     })

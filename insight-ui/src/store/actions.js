@@ -52,14 +52,14 @@ export const resetLoginInformation = () => ({
 })
 
 export const fetchOrganizationLogsRequest = ({
-  insight_log_endpoint,
+  insight_log_endpoint, // eslint-disable-line camelcase
   proof,
   page,
   rowsPerPage,
 }) => ({
   type: TYPES.FETCH_ORGANIZATION_LOGS_REQUEST,
   data: {
-    insight_log_endpoint,
+    insight_log_endpoint, // eslint-disable-line camelcase
     proof,
     page,
     rowsPerPage,
@@ -67,11 +67,11 @@ export const fetchOrganizationLogsRequest = ({
 })
 
 export const fetchIrmaLoginInformationRequest = ({
-  insight_log_endpoint,
-  insight_irma_endpoint,
+  insight_log_endpoint, // eslint-disable-line camelcase
+  insight_irma_endpoint, // eslint-disable-line camelcase
 }) => ({
   type: TYPES.FETCH_IRMA_LOGIN_INFORMATION_REQUEST,
-  data: { insight_log_endpoint, insight_irma_endpoint },
+  data: { insight_log_endpoint, insight_irma_endpoint }, // eslint-disable-line camelcase
 })
 
 export function* fetchOrganizations() {
@@ -91,22 +91,22 @@ function mapDataSubjectsResponseToArray(dataSubjectsResponse) {
 }
 
 export function* fetchIrmaLoginInformation({
-  insight_log_endpoint,
-  insight_irma_endpoint,
+  insight_log_endpoint, // eslint-disable-line camelcase
+  insight_irma_endpoint, // eslint-disable-line camelcase
 }) {
   try {
     const dataSubjects = yield call(
       api,
-      `${insight_log_endpoint}/getDataSubjects`,
+      `${insight_log_endpoint}/getDataSubjects`, // eslint-disable-line camelcase
     )
     const requestSessionJwt = yield call(
       apiPostWithTextResponse,
-      `${insight_log_endpoint}/generateJWT`,
+      `${insight_log_endpoint}/generateJWT`, // eslint-disable-line camelcase
       { dataSubjects: mapDataSubjectsResponseToArray(dataSubjects) },
     )
     const irmaSession = yield call(
       apiPostWithTextAndJSONAsOutput,
-      `${insight_irma_endpoint}/session`,
+      `${insight_irma_endpoint}/session`, // eslint-disable-line camelcase
       requestSessionJwt,
     )
     const sessionToken = irmaSession.token
@@ -116,8 +116,8 @@ export function* fetchIrmaLoginInformation({
       data: {
         dataSubjects: mapDataSubjectsResponseToArray(dataSubjects),
         qrCodeValue: JSON.stringify(irmaSession.sessionPtr),
-        statusUrl: `${insight_irma_endpoint}/session/${sessionToken}/status`,
-        proofUrl: `${insight_irma_endpoint}/session/${sessionToken}/getproof`,
+        statusUrl: `${insight_irma_endpoint}/session/${sessionToken}/status`, // eslint-disable-line camelcase
+        proofUrl: `${insight_irma_endpoint}/session/${sessionToken}/getproof`, // eslint-disable-line camelcase
         JWT: sessionToken,
       },
     })
@@ -212,10 +212,10 @@ export function* fetchOrganizationLogs({
   page,
   rowsPerPage,
   proof,
-  insight_log_endpoint,
+  insight_log_endpoint, // eslint-disable-line camelcase
 }) {
   try {
-    const url = `${insight_log_endpoint}/fetch`
+    const url = `${insight_log_endpoint}/fetch` // eslint-disable-line camelcase
     const searchParams = new URLSearchParams()
 
     if (typeof page !== 'undefined' && page !== null) {

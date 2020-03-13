@@ -17,16 +17,16 @@ describe('the organizations reducer', () => {
           data: [
             {
               name: 'foo',
-              insight_irma_endpoint: 'irma_endpoint',
-              insight_log_endpoint: 'log_endpoint',
+              insight_irma_endpoint: 'irma_endpoint', // eslint-disable-line camelcase
+              insight_log_endpoint: 'log_endpoint', // eslint-disable-line camelcase
             },
           ],
         }),
       ).toEqual([
         {
           name: 'foo',
-          insight_irma_endpoint: 'irma_endpoint',
-          insight_log_endpoint: 'log_endpoint',
+          insight_irma_endpoint: 'irma_endpoint', // eslint-disable-line camelcase
+          insight_log_endpoint: 'log_endpoint', // eslint-disable-line camelcase
         },
       ])
     })
@@ -38,8 +38,8 @@ describe('the organizations reducer', () => {
           data: [
             {
               name: 'foo',
-              insight_irma_endpoint: 'irma_endpoint',
-              insight_log_endpoint: 'log_endpoint',
+              insight_irma_endpoint: 'irma_endpoint', // eslint-disable-line camelcase
+              insight_log_endpoint: 'log_endpoint', // eslint-disable-line camelcase
             },
             { name: 'foo' },
           ],
@@ -47,8 +47,8 @@ describe('the organizations reducer', () => {
       ).toEqual([
         {
           name: 'foo',
-          insight_irma_endpoint: 'irma_endpoint',
-          insight_log_endpoint: 'log_endpoint',
+          insight_irma_endpoint: 'irma_endpoint', // eslint-disable-line camelcase
+          insight_log_endpoint: 'log_endpoint', // eslint-disable-line camelcase
         },
       ])
     })

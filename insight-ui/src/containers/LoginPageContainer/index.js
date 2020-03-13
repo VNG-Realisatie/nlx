@@ -20,8 +20,8 @@ export class LoginPageContainer extends Component {
     }
 
     this.props.fetchIrmaLoginInformation({
-      insight_irma_endpoint: organization.insight_irma_endpoint,
-      insight_log_endpoint: organization.insight_log_endpoint,
+      insight_irma_endpoint: organization.insight_irma_endpoint, // eslint-disable-line camelcase
+      insight_log_endpoint: organization.insight_log_endpoint, // eslint-disable-line camelcase
     })
   }
 
@@ -76,8 +76,8 @@ export class LoginPageContainer extends Component {
 LoginPageContainer.propTypes = {
   organization: shape({
     name: string.isRequired,
-    insight_irma_endpoint: string.isRequired,
-    insight_log_endpoint: string.isRequired,
+    insight_irma_endpoint: string.isRequired, // eslint-disable-line camelcase
+    insight_log_endpoint: string.isRequired, // eslint-disable-line camelcase
   }).isRequired,
   loginRequestInfo: shape({
     qrCodeValue: string,
@@ -104,13 +104,13 @@ const mapStateToProps = ({ loginRequestInfo, loginStatus, proof }) => {
 
 const mapDispatchToProps = (dispatch) => ({
   fetchIrmaLoginInformation: ({
-    insight_log_endpoint,
-    insight_irma_endpoint,
+    insight_log_endpoint, // eslint-disable-line camelcase
+    insight_irma_endpoint, // eslint-disable-line camelcase
   }) =>
     dispatch(
       fetchIrmaLoginInformationRequest({
-        insight_log_endpoint,
-        insight_irma_endpoint,
+        insight_log_endpoint, // eslint-disable-line camelcase
+        insight_irma_endpoint, // eslint-disable-line camelcase
       }),
     ),
   resetLoginInformation: () => dispatch(resetLoginInformation()),

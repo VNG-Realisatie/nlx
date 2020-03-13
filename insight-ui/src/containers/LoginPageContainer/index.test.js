@@ -16,8 +16,8 @@ describe('LoginPageContainer', () => {
         resetLoginInformation: jest.fn(),
         organization: {
           name: 'foo',
-          insight_irma_endpoint: 'irma_endpoint',
-          insight_log_endpoint: 'log_endpoint',
+          insight_irma_endpoint: 'irma_endpoint', // eslint-disable-line camelcase
+          insight_log_endpoint: 'log_endpoint', // eslint-disable-line camelcase
         },
       }
 
@@ -31,8 +31,8 @@ describe('LoginPageContainer', () => {
 
     it('should fetch the login information', () => {
       expect(instance.props.fetchIrmaLoginInformation).toHaveBeenCalledWith({
-        insight_irma_endpoint: 'irma_endpoint',
-        insight_log_endpoint: 'log_endpoint',
+        insight_irma_endpoint: 'irma_endpoint', // eslint-disable-line camelcase
+        insight_log_endpoint: 'log_endpoint', // eslint-disable-line camelcase
       })
     })
   })
@@ -44,15 +44,15 @@ describe('LoginPageContainer', () => {
         resetLoginInformation: () => {},
         organization: {
           name: 'foo',
-          insight_irma_endpoint: 'foo_irma_endpoint',
-          insight_log_endpoint: 'foo_log_endpoint',
+          insight_irma_endpoint: 'foo_irma_endpoint', // eslint-disable-line camelcase
+          insight_log_endpoint: 'foo_log_endpoint', // eslint-disable-line camelcase
         },
       }
 
       const newOrganization = {
         name: 'bar',
-        insight_irma_endpoint: 'bar_irma_endpoint',
-        insight_log_endpoint: 'bar_log_endpoint',
+        insight_irma_endpoint: 'bar_irma_endpoint', // eslint-disable-line camelcase
+        insight_log_endpoint: 'bar_log_endpoint', // eslint-disable-line camelcase
       }
 
       const wrapper = shallow(<LoginPageContainer {...props} />)
@@ -62,16 +62,16 @@ describe('LoginPageContainer', () => {
       expect(instance.props.fetchIrmaLoginInformation).toHaveBeenNthCalledWith(
         1,
         {
-          insight_irma_endpoint: 'foo_irma_endpoint',
-          insight_log_endpoint: 'foo_log_endpoint',
+          insight_irma_endpoint: 'foo_irma_endpoint', // eslint-disable-line camelcase
+          insight_log_endpoint: 'foo_log_endpoint', // eslint-disable-line camelcase
         },
       )
 
       expect(instance.props.fetchIrmaLoginInformation).toHaveBeenNthCalledWith(
         2,
         {
-          insight_irma_endpoint: 'bar_irma_endpoint',
-          insight_log_endpoint: 'bar_log_endpoint',
+          insight_irma_endpoint: 'bar_irma_endpoint', // eslint-disable-line camelcase
+          insight_log_endpoint: 'bar_log_endpoint', // eslint-disable-line camelcase
         },
       )
     })
@@ -90,8 +90,8 @@ describe('LoginPageContainer', () => {
         resetLoginInformation: () => {},
         organization: {
           name: 'foo',
-          insight_irma_endpoint: 'foo_irma_endpoint',
-          insight_log_endpoint: 'foo_log_endpoint',
+          insight_irma_endpoint: 'foo_irma_endpoint', // eslint-disable-line camelcase
+          insight_log_endpoint: 'foo_log_endpoint', // eslint-disable-line camelcase
         },
       }
 

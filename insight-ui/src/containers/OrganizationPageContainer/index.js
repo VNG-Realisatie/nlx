@@ -42,8 +42,8 @@ export class OrganizationPageContainer extends Component {
 OrganizationPageContainer.propTypes = {
   organization: shape({
     name: string.isRequired,
-    insight_irma_endpoint: string.isRequired,
-    insight_log_endpoint: string.isRequired,
+    insight_irma_endpoint: string.isRequired, // eslint-disable-line camelcase
+    insight_log_endpoint: string.isRequired, // eslint-disable-line camelcase
   }),
 }
 

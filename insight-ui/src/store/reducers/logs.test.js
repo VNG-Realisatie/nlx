@@ -28,8 +28,8 @@ describe('the logs reducer', () => {
                 'doelbinding-application-id': 'application',
               },
               created: '2019-05-17T07:22:49.996932Z',
-              source_organization: 'source organization',
-              destination_organization: 'destination organization',
+              source_organization: 'source organization', // eslint-disable-line camelcase
+              destination_organization: 'destination organization', // eslint-disable-line camelcase
               'logrecord-id': 'id',
             },
           ],

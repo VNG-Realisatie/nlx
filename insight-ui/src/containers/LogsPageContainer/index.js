@@ -33,8 +33,8 @@ export class LogsPageContainer extends Component {
       return
     }
 
-    this.props.fetchOrganizationLogs({
-      insight_log_endpoint: organization.insight_log_endpoint,
+    this.props.fetchOrganizationLogs({ // eslint-disable-line camelcase
+      insight_log_endpoint: organization.insight_log_endpoint, // eslint-disable-line camelcase
       proof,
       page: page - 1, // the API's pages are 0-based
     })
@@ -148,7 +148,7 @@ LogsPageContainer.propTypes = {
   }),
   organization: shape({
     name: string.isRequired,
-    insight_log_endpoint: string.isRequired,
+    insight_log_endpoint: string.isRequired, // eslint-disable-line camelcase
   }).isRequired,
   logs: shape({
     records: arrayOf(
@@ -190,10 +190,10 @@ const mapStateToProps = ({ logs, proof }) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchOrganizationLogs: ({ insight_log_endpoint, proof, page }) =>
+  fetchOrganizationLogs: ({ insight_log_endpoint, proof, page }) => // eslint-disable-line camelcase
     dispatch(
       fetchOrganizationLogsRequest({
-        insight_log_endpoint,
+        insight_log_endpoint, // eslint-disable-line camelcase
         proof,
         page,
         rowsPerPage: LOGS_PER_PAGE,

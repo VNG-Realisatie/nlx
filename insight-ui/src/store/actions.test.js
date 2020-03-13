@@ -40,8 +40,8 @@ describe('fetch organizations', () => {
 
 describe('fetch IRMA login information', () => {
   const irmaLoginInformationGen = fetchIrmaLoginInformation({
-    insight_log_endpoint: 'log_endpoint',
-    insight_irma_endpoint: 'irma_endpoint',
+    insight_log_endpoint: 'log_endpoint', // eslint-disable-line camelcase
+    insight_irma_endpoint: 'irma_endpoint', // eslint-disable-line camelcase
   })
 
   it('should call the insights API to get the data subjects', () => {
@@ -143,7 +143,7 @@ describe('fetch proof', () => {
 describe('fetch organization logs', () => {
   const fetchOrganizationLogsGen = fetchOrganizationLogs({
     proof: 'the_proof',
-    insight_log_endpoint: 'log_endpoint',
+    insight_log_endpoint: 'log_endpoint', // eslint-disable-line camelcase
   })
 
   it('should fetch the logs with the provided proof', () => {
@@ -165,7 +165,7 @@ describe('fetch organization logs', () => {
     it('should pass the pagination params to the fetch endpoint', () => {
       const fetchOrganizationLogsGen = fetchOrganizationLogs({
         proof: 'the_proof',
-        insight_log_endpoint: 'log_endpoint',
+        insight_log_endpoint: 'log_endpoint', // eslint-disable-line camelcase
         page: 2,
         rowsPerPage: 42,
       })
@@ -182,7 +182,7 @@ describe('fetch organization logs', () => {
     it('should pass not pass the pagination params to the fetch endpoint if the params are null values', () => {
       const fetchOrganizationLogsGen = fetchOrganizationLogs({
         proof: 'the_proof',
-        insight_log_endpoint: 'log_endpoint',
+        insight_log_endpoint: 'log_endpoint', // eslint-disable-line camelcase
         page: null,
         rowsPerPage: null,
       })
