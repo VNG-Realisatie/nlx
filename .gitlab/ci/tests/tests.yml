@@ -79,6 +79,7 @@ Insight-ui tests:
     - cd insight-ui/
     - npm install
   script:
+    - npm run lint
     - npm test -- --coverage
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
   artifacts:
