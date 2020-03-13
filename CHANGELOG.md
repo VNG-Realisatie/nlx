@@ -1,3 +1,10 @@
+## [0.85.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.85.0...v0.85.1) (2020-03-13)
+
+
+### Bug Fixes
+
+* **directory-db, txlog-db:** remove pgModeler, restructure database migrations, remove database roles from migrations ([d22e244](https://gitlab.com/commonground/nlx/nlx/commit/d22e24452ac7381e46398a21bb5dc37f54974dbd))
+
 # [0.85.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.84.0...v0.85.0) (2020-03-12)
 
 
