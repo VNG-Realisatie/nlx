@@ -82,7 +82,7 @@ export function* fetchOrganizations() {
       data: organizations.organizations,
     })
   } catch (err) {
-    console.log(err)
+    console.log(err) // eslint-disable-line no-console
   }
 }
 
@@ -122,7 +122,7 @@ export function* fetchIrmaLoginInformation({
       },
     })
   } catch (err) {
-    console.log(err)
+    console.log(err) // eslint-disable-line no-console
   }
 }
 

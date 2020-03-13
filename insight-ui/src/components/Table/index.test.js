@@ -1,4 +1,5 @@
 import React from 'react'
+import { shallow } from 'enzyme'
 import Table from './index'
 
 xtest('should render child elements', () => {

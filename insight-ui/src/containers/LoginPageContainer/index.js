@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 
 import React, { Component } from 'react'
-import { bool, shape, string } from 'prop-types'
+import { bool, func, shape, string } from 'prop-types'
 import { connect } from 'react-redux'
 
 import {
@@ -14,19 +14,18 @@ import ScanQRCodePage from '../../components/ScanQRCodePage'
 import ErrorPage from '../../components/ErrorPage'
 
 export class LoginPageContainer extends Component {
-  fetchIrmaLoginInformation(organization) {
+  componentWillMount() {
+    this.props.resetLoginInformation()
+  }
+
+  componentDidMount() {
+    const { organization } = this.props
+
     if (!organization) {
       return
     }
 
-    this.props.fetchIrmaLoginInformation({
-      insight_irma_endpoint: organization.insight_irma_endpoint, // eslint-disable-line camelcase
-      insight_log_endpoint: organization.insight_log_endpoint, // eslint-disable-line camelcase
-    })
-  }
-
-  componentWillMount() {
-    this.props.resetLoginInformation()
+    this.fetchIrmaLoginInformation(organization)
   }
 
   componentDidUpdate(prevProps) {
@@ -50,14 +49,15 @@ export class LoginPageContainer extends Component {
     this.fetchIrmaLoginInformation(organization)
   }
 
-  componentDidMount() {
-    const { organization } = this.props
-
+  fetchIrmaLoginInformation(organization) {
     if (!organization) {
       return
     }
 
-    this.fetchIrmaLoginInformation(organization)
+    this.props.fetchIrmaLoginInformation({
+      insight_irma_endpoint: organization.insight_irma_endpoint, // eslint-disable-line camelcase
+      insight_log_endpoint: organization.insight_log_endpoint, // eslint-disable-line camelcase
+    })
   }
 
   render() {
@@ -92,6 +92,9 @@ LoginPageContainer.propTypes = {
     value: string,
     message: string,
   }),
+  resetLoginInformation: func.isRequired,
+  fetchIrmaLoginInformation: func.isRequired,
+  history: shape({ push: func.isRequired }).isRequired,
 }
 
 const mapStateToProps = ({ loginRequestInfo, loginStatus, proof }) => {

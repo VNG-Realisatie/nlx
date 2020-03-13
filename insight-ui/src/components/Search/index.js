@@ -1,5 +1,5 @@
 import React from 'react'
-import { object, func } from 'prop-types'
+import { object, func, element } from 'prop-types'
 import { StyledSearch, StyledInput, StyledSearchIcon } from './index.styles'
 
 const Search = ({ inputProps, onQueryChanged, children, ...props }) => (
@@ -17,6 +17,7 @@ const Search = ({ inputProps, onQueryChanged, children, ...props }) => (
 Search.propTypes = {
   onQueryChanged: func,
   inputProps: object,
+  children: element,
 }
 
 Search.defaultProps = {

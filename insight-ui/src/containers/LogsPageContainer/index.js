@@ -1,9 +1,9 @@
 // Copyright © VNG Realisatie 2018
 // Licensed under the EUPL
 
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { Route } from 'react-router-dom'
-import { arrayOf, instanceOf, shape, string, number } from 'prop-types'
+import { arrayOf, instanceOf, shape, string, number, func } from 'prop-types'
 import { connect } from 'react-redux'
 
 import { fetchOrganizationLogsRequest } from '../../store/actions'
@@ -24,20 +24,19 @@ export class LogsPageContainer extends Component {
     this.logClickedHandler = this.logClickedHandler.bind(this)
   }
 
-  fetchOrganizationLogs(organization, proof, page = 1) {
-    if (!organization) {
-      return
-    }
+  componentDidMount() {
+    const {
+      organization,
+      location: { search },
+      proof,
+    } = this.props
 
     if (!proof) {
       return
     }
 
-    this.props.fetchOrganizationLogs({ // eslint-disable-line camelcase
-      insight_log_endpoint: organization.insight_log_endpoint, // eslint-disable-line camelcase
-      proof,
-      page: page - 1, // the API's pages are 0-based
-    })
+    const page = getPageFromQueryString(search)
+    this.fetchOrganizationLogs(organization, proof, page)
   }
 
   componentDidUpdate(prevProps) {
@@ -69,19 +68,21 @@ export class LogsPageContainer extends Component {
     this.fetchOrganizationLogs(organization, proof, page)
   }
 
-  componentDidMount() {
-    const {
-      organization,
-      location: { search },
-      proof,
-    } = this.props
+  fetchOrganizationLogs(organization, proof, page = 1) {
+    if (!organization) {
+      return
+    }
 
     if (!proof) {
       return
     }
 
-    const page = getPageFromQueryString(search)
-    this.fetchOrganizationLogs(organization, proof, page)
+    // eslint-disable-next-line camelcase
+    this.props.fetchOrganizationLogs({
+      insight_log_endpoint: organization.insight_log_endpoint, // eslint-disable-line camelcase
+      proof,
+      page: page - 1, // the API's pages are 0-based
+    })
   }
 
   logClickedHandler(log) {
@@ -146,6 +147,7 @@ LogsPageContainer.propTypes = {
     pathname: string,
     search: string,
   }),
+  history: shape({ push: func.isRequired }).isRequired,
   organization: shape({
     name: string.isRequired,
     insight_log_endpoint: string.isRequired, // eslint-disable-line camelcase
@@ -166,6 +168,7 @@ LogsPageContainer.propTypes = {
     rowsPerPage: number,
   }),
   proof: string,
+  fetchOrganizationLogs: func.isRequired,
 }
 
 LogsPageContainer.defaultProps = {
@@ -190,7 +193,10 @@ const mapStateToProps = ({ logs, proof }) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchOrganizationLogs: ({ insight_log_endpoint, proof, page }) => // eslint-disable-line camelcase
+  fetchOrganizationLogs: (
+    // eslint-disable-next-line camelcase
+    { insight_log_endpoint, proof, page },
+  ) =>
     dispatch(
       fetchOrganizationLogsRequest({
         insight_log_endpoint, // eslint-disable-line camelcase

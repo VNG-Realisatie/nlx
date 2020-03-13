@@ -16,14 +16,14 @@ export class SidebarContainer extends Component {
       query: '',
     }
 
-    this.onSearchQueryChanged = this.onSearchQueryChanged.bind(this)
+    this.handleSearchQueryChanged = this.handleSearchQueryChanged.bind(this)
   }
 
   componentWillMount() {
     this.props.fetchOrganizationsRequest()
   }
 
-  onSearchQueryChanged(query) {
+  handleSearchQueryChanged(query) {
     this.setState({ query })
   }
 
@@ -38,7 +38,7 @@ export class SidebarContainer extends Component {
     const { query } = this.state
     return (
       <Sidebar
-        onSearchQueryChanged={this.onSearchQueryChanged}
+        onSearchQueryChanged={this.handleSearchQueryChanged}
         organizations={this.getFilteredOrganizationsByQuery(
           organizations,
           query,

@@ -6,5 +6,6 @@ import { shallow } from 'enzyme'
 import LogsTable from './index'
 
 test('renders without crashing', () => {
-  shallow(<LogsTable />)
+  const wrapper = shallow(<LogsTable />)
+  expect(wrapper).toBeTruthy()
 })

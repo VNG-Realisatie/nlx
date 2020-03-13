@@ -43,11 +43,19 @@ const Pagination = ({
 }) => {
   const amountOfPages = calcAmountOfPages(totalRows, rowsPerPage)
 
+  const handlePreviousPageButtonClicked = () =>
+    onPreviousPageButtonClickedHandler(currentPage, onPageChangedHandler)
+
+  const handleNextPageButtonClicked = () =>
+    onNextPageButtonClickedHandler(
+      currentPage,
+      amountOfPages,
+      onPageChangedHandler,
+    )
   return (
     <StyledPagination {...props}>
       <StyledButton
-        onClick={() =>
-          onPreviousPageButtonClickedHandler(currentPage, onPageChangedHandler)}
+        onClick={handlePreviousPageButtonClicked}
         disabled={!hasPreviousPage(currentPage)}
         aria-label="Vorige pagina"
       >
@@ -68,12 +76,7 @@ const Pagination = ({
         van {amountOfPages}
       </StyledLabel>
       <StyledButton
-        onClick={() =>
-          onNextPageButtonClickedHandler(
-            currentPage,
-            amountOfPages,
-            onPageChangedHandler,
-        )}
+        onClick={handleNextPageButtonClicked}
         disabled={!hasNextPage(currentPage, amountOfPages)}
         aria-label="Volgende pagina"
       >

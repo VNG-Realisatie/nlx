@@ -45,6 +45,7 @@ OrganizationPageContainer.propTypes = {
     insight_irma_endpoint: string.isRequired, // eslint-disable-line camelcase
     insight_log_endpoint: string.isRequired, // eslint-disable-line camelcase
   }),
+  match: shape({ url: string.isRequired }).isRequired,
 }
 
 const mapStateToProps = (

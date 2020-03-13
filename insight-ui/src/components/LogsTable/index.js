@@ -21,6 +21,7 @@ const LogsTable = ({ logs, activeLogId, logClickedHandler, ...props }) => (
     <Table.Body>
       {logs.map((log, i) => (
         <LogTableRow
+          key={log.id}
           subjects={log.subjects}
           requestedBy={log.requestedBy}
           requestedAt={log.requestedAt}

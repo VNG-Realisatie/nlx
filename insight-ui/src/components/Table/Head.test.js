@@ -1,4 +1,5 @@
 import React from 'react'
+import { shallow } from 'enzyme'
 import Head from './Head'
 
 xtest('should render child elements', () => {

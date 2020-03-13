@@ -1,5 +1,5 @@
 import React, { Children } from 'react'
-import { string } from 'prop-types'
+import { element, string } from 'prop-types'
 
 import { NLXLogo, GitLabLogo } from '@commonground/design-system'
 import Header from '../Header'
@@ -58,6 +58,7 @@ NLXNavbar.propTypes = {
   homePageURL: string.isRequired,
   aboutPageURL: string.isRequired,
   docsPageURL: string.isRequired,
+  children: element,
 }
 
 export default NLXNavbar

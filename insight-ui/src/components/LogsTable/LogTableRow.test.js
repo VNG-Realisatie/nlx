@@ -6,7 +6,7 @@ import { shallow } from 'enzyme'
 import LogTableRow from './LogTableRow'
 
 test('renders without crashing', () => {
-  shallow(
+  const wrapper = shallow(
     <LogTableRow
       subjects={['a', 'b']}
       requestedBy="foo"
@@ -15,4 +15,5 @@ test('renders without crashing', () => {
       date={new Date()}
     />,
   )
+  expect(wrapper).toBeTruthy()
 })

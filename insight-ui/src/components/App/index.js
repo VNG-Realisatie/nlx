@@ -15,37 +15,30 @@ import StyledApp, { StyledNLXNavbar, StyledContent } from './index.styles'
 
 window._env = window._env || {}
 
+const HOME_PAGE_URL = window._env.NAVBAR_HOME_PAGE_URL || 'https://www.nlx.io'
+const ABOUT_PAGE_URL =
+  window._env.REACT_APP_NAVBAR_ABOUT_PAGE_URL || 'https://www.nlx.io/about'
+const DOCS_PAGE_URL =
+  window._env.REACT_APP_NAVBAR_DOCS_PAGE_URL || 'https://docs.nlx.io'
+const DIRECTORY_URL =
+  window._env.REACT_APP_NAVBAR_DIRECTORY_URL || 'https://directory.nlx.io'
+const SUPPORT_PAGE_URL = `${window._env.REACT_APP_NAVBAR_DOCS_PAGE_URL ||
+  'https://docs.nlx.io'}/support`
+
 const App = () => (
   <StyledApp>
     <GlobalStyles />
 
     <StyledNLXNavbar
-      homePageURL={window._env.NAVBAR_HOME_PAGE_URL || 'https://www.nlx.io'}
-      aboutPageURL={
-        window._env.REACT_APP_NAVBAR_ABOUT_PAGE_URL ||
-        'https://www.nlx.io/about'
-      }
-      docsPageURL={
-        window._env.REACT_APP_NAVBAR_DOCS_PAGE_URL || 'https://docs.nlx.io'
-      }
+      homePageURL={HOME_PAGE_URL}
+      aboutPageURL={ABOUT_PAGE_URL}
+      docsPageURL={DOCS_PAGE_URL}
     >
       <Navigation.Item>
-        <a
-          href={`${window._env.REACT_APP_NAVBAR_DOCS_PAGE_URL ||
-            'https://docs.nlx.io'}/support`}
-        >
-          Support
-        </a>
+        <a href={SUPPORT_PAGE_URL}>Support</a>
       </Navigation.Item>
       <Navigation.Item>
-        <a
-          href={
-            window._env.REACT_APP_NAVBAR_DIRECTORY_URL ||
-          'https://directory.nlx.io'
-          }
-        >
-          Directory
-        </a>
+        <a href={DIRECTORY_URL}>Directory</a>
       </Navigation.Item>
       <Navigation.Item>
         <NavLink to="/">Insight</NavLink>

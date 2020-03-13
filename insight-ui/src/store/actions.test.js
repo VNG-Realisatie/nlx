@@ -12,7 +12,6 @@ import {
   getIrmaLoginStatus,
   api,
   apiHandleLoginStatus,
-  apiPostWithJSONResponse,
   apiPostWithTextResponse,
   apiWithResponseDetection,
   apiPostWithTextAndJSONAsOutput,

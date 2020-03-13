@@ -42,6 +42,7 @@ const LogsPage = ({
 LogsPage.propTypes = {
   activeLogId: string,
   logClickedHandler: func,
+  onPageChangedHandler: func,
   logs: arrayOf(
     shape({
       subjects: arrayOf(string),

@@ -21,13 +21,14 @@ const defaultState = {
 
 export default (state = defaultState, action) => {
   switch (action.type) {
-    case TYPES.FETCH_ORGANIZATION_LOGS_SUCCESS:
+    case TYPES.FETCH_ORGANIZATION_LOGS_SUCCESS: {
       const { rowCount, rowsPerPage, records } = action.data
       return {
         rowCount,
         rowsPerPage,
         records: records.map(modelFromAPIResponse),
       }
+    }
     case TYPES.RESET_LOGIN_INFORMATION:
       return defaultState
     default:

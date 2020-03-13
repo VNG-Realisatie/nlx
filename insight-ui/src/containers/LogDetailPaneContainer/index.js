@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 
 import React, { Component } from 'react'
-import { shape, string, arrayOf, instanceOf } from 'prop-types'
+import { shape, string, arrayOf, instanceOf, func } from 'prop-types'
 import { connect } from 'react-redux'
 import LogDetailPane from '../../components/LogDetailPane'
 
@@ -33,6 +33,7 @@ LogDetailPaneContainer.propTypes = {
       logid: string,
     }),
   }),
+  history: shape({ push: func.isRequired }).isRequired,
   log: shape({
     id: string,
     subjects: arrayOf(string),
