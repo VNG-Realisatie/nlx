@@ -1,8 +1,8 @@
 import React from 'react'
-import { render } from '../../../test-utils' // TODO: root alias, so we don't need relative paths
+import { renderWithProviders } from '../../../test-utils'
 import LoginPage from './index'
 
 test('renders a welcome message', () => {
-  const { getByText } = render(<LoginPage />)
+  const { getByText } = renderWithProviders(<LoginPage />)
   expect(getByText(/^Welkom$/)).toBeInTheDocument()
 })
