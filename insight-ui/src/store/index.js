@@ -10,10 +10,8 @@ import rootSaga from './sagas'
 const sagaMiddleware = createSagaMiddleware()
 
 const store = createStore(
-    reducers,
-    composeWithDevTools(
-      applyMiddleware(sagaMiddleware)
-    )
+  reducers,
+  composeWithDevTools(applyMiddleware(sagaMiddleware)),
 )
 
 sagaMiddleware.run(rootSaga)

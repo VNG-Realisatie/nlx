@@ -5,15 +5,16 @@ import React from 'react'
 import { node, string } from 'prop-types'
 import { StyledCard } from './index.styles'
 
-const ErrorMessage = ({ title, children, ...props}) =>
+const ErrorMessage = ({ title, children, ...props }) => (
   <StyledCard {...props}>
     <h1>{title}</h1>
     {children}
   </StyledCard>
+)
 
 ErrorMessage.propTypes = {
   title: string.isRequired,
-  children: node
+  children: node,
 }
 
 export default ErrorMessage

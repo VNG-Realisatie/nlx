@@ -1,13 +1,13 @@
 // Copyright © VNG Realisatie 2018
 // Licensed under the EUPL
 
-import * as TYPES from "../types";
+import * as TYPES from '../types'
 
-const filterOutInvalidOrganizations = organizations =>
-  organizations
-    .filter(organization =>
-      organization.insight_irma_endpoint && organization.insight_log_endpoint
-    )
+const filterOutInvalidOrganizations = (organizations) =>
+  organizations.filter(
+    (organization) =>
+      organization.insight_irma_endpoint && organization.insight_log_endpoint,
+  )
 
 export default (state = [], action) => {
   switch (action.type) {

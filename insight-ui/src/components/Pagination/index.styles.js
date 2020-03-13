@@ -3,7 +3,7 @@ import styled from 'styled-components'
 export const StyledPagination = styled.div`
   display: flex;
   align-items: center;
-  color: #676D80;
+  color: #676d80;
 `
 
 export const StyledButton = styled.button`
@@ -14,8 +14,8 @@ export const StyledButton = styled.button`
 `
 
 export const StyledInput = styled.input`
-  background: #F7F9FC;
-  border: 1px solid #CAD0E0;
+  background: #f7f9fc;
+  border: 1px solid #cad0e0;
   border-radius: 2px;
   line-height: 24px;
   display: inline-block;
@@ -23,7 +23,7 @@ export const StyledInput = styled.input`
   width: 28px;
   box-sizing: border-box;
   text-align: center;
-  color: #2D3240;
+  color: #2d3240;
   margin-right: 6px;
 `
 

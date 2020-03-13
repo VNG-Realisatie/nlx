@@ -8,7 +8,9 @@ describe('Search', () => {
       const onQueryChangedSpy = jest.fn()
       const wrapper = mount(<Search onQueryChanged={onQueryChangedSpy} />)
 
-      wrapper.find('[dataTest="query"] input').simulate('change', {target: {value: 'abc'}})
+      wrapper
+        .find('[dataTest="query"] input')
+        .simulate('change', { target: { value: 'abc' } })
       expect(onQueryChangedSpy).toHaveBeenCalledWith('abc')
     })
   })

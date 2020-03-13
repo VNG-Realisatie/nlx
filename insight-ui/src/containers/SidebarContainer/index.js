@@ -3,9 +3,9 @@
 
 import React, { Component } from 'react'
 import { arrayOf, shape, string, func } from 'prop-types'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
-import {fetchOrganizationsRequest } from '../../store/actions'
+import { fetchOrganizationsRequest } from '../../store/actions'
 import Sidebar from '../../components/Sidebar'
 
 export class SidebarContainer extends Component {
@@ -13,7 +13,7 @@ export class SidebarContainer extends Component {
     super(props)
 
     this.state = {
-      query: ''
+      query: '',
     }
 
     this.onSearchQueryChanged = this.onSearchQueryChanged.bind(this)
@@ -29,38 +29,39 @@ export class SidebarContainer extends Component {
 
   getFilteredOrganizationsByQuery(organizations, query = '') {
     return organizations
-      .map(organization => organization.name)
-      .filter(organization => organization.includes(query.toLowerCase()))
+      .map((organization) => organization.name)
+      .filter((organization) => organization.includes(query.toLowerCase()))
   }
 
   render() {
     const { organizations } = this.props
     const { query } = this.state
-    return <Sidebar onSearchQueryChanged={this.onSearchQueryChanged}
-                    organizations={this.getFilteredOrganizationsByQuery(organizations, query)} />
+    return (
+      <Sidebar
+        onSearchQueryChanged={this.onSearchQueryChanged}
+      organizations={this.getFilteredOrganizationsByQuery(organizations, query)}
+           />
   }
 }
 
 SidebarContainer.propTypes = {
-  organizations: arrayOf(shape({
-    name: string.isRequired
-  })),
-  fetchOrganizationsRequest: func
+  organizations: arrayOf(
+    shape({
+      name: string.isRequired,
+    }),
+  ),
+  fetchOrganizationsRequest: func,
 }
 
 SidebarContainer.defaultProps = {
   organizations: [],
-  fetchOrganizationsRequest: () => {}
+  fetchOrganizationsRequest: () => {},
 }
 
-const mapStateToProps = ({ organizations }) =>
-  ({ organizations })
+const mapStateToProps = ({ organizations }) => ({ organizations })
 
-const mapDispatchToProps = dispatch => ({
-  fetchOrganizationsRequest: () => dispatch(fetchOrganizationsRequest())
+const mapDispatchToProps = (dispatch) => ({
+  fetchOrganizationsRequest: () => dispatch(fetchOrganizationsRequest()),
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SidebarContainer)
+export default connect(mapStateToProps, mapDispatchToProps)(SidebarContainer)

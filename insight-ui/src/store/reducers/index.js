@@ -9,9 +9,9 @@ import loginRequestInfo from './loginRequestInfo'
 import proof from './proof'
 
 export default combineReducers({
-    organizations,
-    loginRequestInfo,
-    loginStatus,
-    logs,
-    proof
+  organizations,
+  loginRequestInfo,
+  loginStatus,
+  logs,
+  proof,
 })

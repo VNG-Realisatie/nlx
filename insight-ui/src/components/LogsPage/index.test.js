@@ -3,22 +3,28 @@
 
 import React from 'react'
 import { shallow } from 'enzyme'
-import LogsPage from './index'
 import ErrorMessage from '../ErrorMessage'
 import { StyledLogsPage } from './index.styles'
+import LogsPage from './index'
 
 describe('LogsPage', () => {
   let wrapper
 
   beforeEach(() => {
-    wrapper = shallow(<LogsPage organizationName="dummy-name"
-                                logs={[{
-                                  subjects: [ "foo", "bar" ],
-                                  requestedBy: "requestedBy",
-                                  requestedAt: "requestedAt",
-                                  reason: "reason",
-                                  date: new Date()
-                                }]}/>)
+    wrapper = shallow(
+      <LogsPage
+        organizationName="dummy-name"
+      logs={[{
+          {
+            subjects: ['foo', 'bar'],
+            requestedBy: 'requestedBy',
+            requestedAt: 'requestedAt',
+            reason: 'reason',
+            date: new Date(),
+          },
+        ]}
+      />,
+    )
   })
 
   it('should show the LogsTable', () => {

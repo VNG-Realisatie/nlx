@@ -12,7 +12,7 @@ import LogDetailPaneContainer from '../LogDetailPaneContainer'
 
 const LOGS_PER_PAGE = 10
 
-export const getPageFromQueryString = queryString => {
+export const getPageFromQueryString = (queryString) => {
   const page = new URLSearchParams(queryString).get('page')
   return page !== null ? parseInt(page, 10) : undefined
 }
@@ -36,13 +36,21 @@ export class LogsPageContainer extends Component {
     this.props.fetchOrganizationLogs({
       insight_log_endpoint: organization.insight_log_endpoint,
       proof,
-      page: page - 1 // the API's pages are 0-based 
-    });
+      page: page - 1, // the API's pages are 0-based
+    })
   }
 
   componentDidUpdate(prevProps) {
-    const { organization, location: { search }, proof } = this.props
-    const { organization: prevOrganization, location: { search: prevSearch }, proof: prevProof } = prevProps
+    const {
+      organization,
+      location: { search },
+      proof,
+    } = this.props
+    const {
+      organization: prevOrganization,
+      location: { search: prevSearch },
+      proof: prevProof,
+    } = prevProps
     const page = getPageFromQueryString(search)
     const prevPage = getPageFromQueryString(prevSearch)
 
@@ -50,7 +58,11 @@ export class LogsPageContainer extends Component {
       return
     }
 
-    if (organization === prevOrganization && proof === prevProof && page === prevPage) {
+    if (
+      organization === prevOrganization &&
+      proof === prevProof &&
+      page === prevPage
+    ) {
       return
     }
 
@@ -58,7 +70,11 @@ export class LogsPageContainer extends Component {
   }
 
   componentDidMount() {
-    const { organization, location: { search }, proof } = this.props
+    const {
+      organization,
+      location: { search },
+      proof,
+    } = this.props
 
     if (!proof) {
       return
@@ -69,48 +85,62 @@ export class LogsPageContainer extends Component {
   }
 
   logClickedHandler(log) {
-    const { history, match: { url }, location: { search } } = this.props
+    const {
+      history,
+      match: { url },
+      location: { search },
+    } = this.props
     history.push(`${url}/${log.id}${search}`)
   }
 
   onPageChangedHandler(page) {
-    const { location: { search, pathname }, history } = this.props
+    const {
+      location: { search, pathname },
+      history,
+    } = this.props
     const searchParams = new URLSearchParams(search)
     searchParams.set('page', page)
     history.push(`${pathname}?${searchParams.toString()}`)
   }
 
   render() {
-    const { logs, organization, location: { pathname, search }, match: { url } } = this.props
+    const {
+      logs,
+      organization,
+      location: { pathname, search },
+      match: { url },
+    } = this.props
     const activeLogId = pathname.substr(url.length + 1)
     const currentPage = getPageFromQueryString(search) || 1
     const rowCount = logs.rowCount || 0
     const rowsPerPage = logs.rowsPerPage || 0
 
     return (
-      <Fragment>
-        <LogsPage 
-          logs={logs.records} 
-          currentPage={currentPage} 
-          rowCount={rowCount} 
-          rowsPerPage={rowsPerPage} 
-          onPageChangedHandler={page => this.onPageChangedHandler(page)} 
-          organizationName={organization.name} 
-          activeLogId={activeLogId} 
-          logClickedHandler={log => this.logClickedHandler(log)} 
+      <>
+        <LogsPage
+          logs={logs.records}
+          currentPage={currentPage}
+          rowCount={rowCount}
+          rowsPerPage={rowsPerPage}
+          onPageChangedHandler={(page) => this.onPageChangedHandler(page)}
+          organizationName={organization.name}
+          activeLogId={activeLogId}
+          logClickedHandler={(log) => this.logClickedHandler(log)}
         />
-        <Route 
-          path={`${url}/:logid/`} 
-          render={props => <LogDetailPaneContainer parentURL={url} {...props} />}
+        <Route
+          path={`${url}/:logid/`}
+          render={(props) => (
+            <LogDetailPaneContainer parentURL={url} {...props} />
+          )}
         />
-      </Fragment>
+      </>
     )
   }
 }
 
 LogsPageContainer.propTypes = {
   match: shape({
-    url: string
+    url: string,
   }),
   location: shape({
     pathname: string,
@@ -118,51 +148,57 @@ LogsPageContainer.propTypes = {
   }),
   organization: shape({
     name: string.isRequired,
-    insight_log_endpoint: string.isRequired
+    insight_log_endpoint: string.isRequired,
   }).isRequired,
   logs: shape({
-    records: arrayOf(shape({
-      id: string,
-      subjects: arrayOf(string),
-      requestedBy: string,
-      requestedAt: string,
-      application: string,
-      reason: string,
-      date: instanceOf(Date)
-    })),
+    records: arrayOf(
+      shape({
+        id: string,
+        subjects: arrayOf(string),
+        requestedBy: string,
+        requestedAt: string,
+        application: string,
+        reason: string,
+        date: instanceOf(Date),
+      }),
+    ),
     rowCount: number,
     rowsPerPage: number,
   }),
-  proof: string
+  proof: string,
 }
 
 LogsPageContainer.defaultProps = {
   match: {
-    url: ''
+    url: '',
   },
   location: {
-    pathname: ''
+    pathname: '',
   },
   logs: {
     records: [],
     rowCount: 0,
     rowsPerPage: 0,
-  }
+  },
 }
 
 const mapStateToProps = ({ logs, proof }) => {
   return {
     logs,
-    proof: proof.value
+    proof: proof.value,
   }
 }
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   fetchOrganizationLogs: ({ insight_log_endpoint, proof, page }) =>
-    dispatch(fetchOrganizationLogsRequest({ insight_log_endpoint, proof, page, rowsPerPage: LOGS_PER_PAGE }))
+    dispatch(
+      fetchOrganizationLogsRequest({
+        insight_log_endpoint,
+        proof,
+        page,
+        rowsPerPage: LOGS_PER_PAGE,
+      }),
+    ),
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LogsPageContainer)
+export default connect(mapStateToProps, mapDispatchToProps)(LogsPageContainer)

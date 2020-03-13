@@ -6,34 +6,38 @@ import Table from '../Table'
 
 export const StyledLogTableRow = styled(Table.Row)`
   td {
-    background-color: #FFFFFF;
-    color: #2D3240;
+    background-color: #ffffff;
+    color: #2d3240;
   }
 
-  ${p => p.active && css`
-    cursor: default;
+  ${(p) =>
+    p.active &&
+    css`
+      cursor: default;
 
-    td {
-      background-color: #F7F9FC;
-    }
+      td {
+        background-color: #f7f9fc;
+      }
 
-    td:first-child {
-      border-left: 2px solid #517FFF;
-      padding-left: 14px;
-    }
-  `}
+      td:first-child {
+        border-left: 2px solid #517fff;
+        padding-left: 14px;
+      }
+    `}
 
-  ${p => !p.active && css`
-    cursor: pointer;
+  ${(p) =>
+    !p.active &&
+    css`
+      cursor: pointer;
 
-    &:hover td {
-      background-color: #F7F9FC;
-    }
+      &:hover td {
+        background-color: #f7f9fc;
+      }
 
-    &:active td {
-      background-color: #F0F2F7;
-    }
-  `}
+      &:active td {
+        background-color: #f0f2f7;
+      }
+    `}
 `
 
 export const StyledSubjectLabel = styled.span`
@@ -45,7 +49,7 @@ export const StyledSubjectLabel = styled.span`
   padding: 0 8px 0 8px;
   border-radius: 3px;
   background-color: white;
-  border: 1px solid #E6EAF5;
+  border: 1px solid #e6eaf5;
   white-space: nowrap;
 
   &:not(:last-child) {

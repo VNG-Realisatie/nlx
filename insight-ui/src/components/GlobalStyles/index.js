@@ -3,7 +3,7 @@
 
 import { createGlobalStyle } from 'styled-components'
 
-const generateFontFaceDefinition = fontDefinition => `
+const generateFontFaceDefinition = (fontDefinition) => `
   @font-face {
       font-family: 'Source Sans Pro'
       font-weight: ${fontDefinition.weight}
@@ -15,8 +15,10 @@ const generateFontFaceDefinition = fontDefinition => `
   }
 `
 
-const generateFontFaceDefinitions = fontDefinitions =>
-  fontDefinitions.map(fontDefinition => generateFontFaceDefinition(fontDefinition))
+const generateFontFaceDefinitions = (fontDefinitions) =>
+  fontDefinitions.map((fontDefinition) =>
+    generateFontFaceDefinition(fontDefinition),
+  )
 
 const fontDefinitions = [
   { weight: 400, style: 'normal', fileName: 'Regular' },

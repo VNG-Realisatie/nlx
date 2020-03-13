@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 
 import React, { Component } from 'react'
-import {shape, string, arrayOf, instanceOf} from 'prop-types'
+import { shape, string, arrayOf, instanceOf } from 'prop-types'
 import { connect } from 'react-redux'
 import LogDetailPane from '../../components/LogDetailPane'
 
@@ -20,7 +20,9 @@ class LogDetailPaneContainer extends Component {
 
   render() {
     const { log } = this.props
-    return log ? <LogDetailPane closeHandler={this.onCloseHandler} {...log} /> : null
+    return log ? (
+      <LogDetailPane closeHandler={this.onCloseHandler} {...log} />
+    ) : null
   }
 }
 
@@ -28,8 +30,8 @@ LogDetailPaneContainer.propTypes = {
   parentURL: string.isRequired,
   match: shape({
     params: shape({
-      logid: string
-    })
+      logid: string,
+    }),
   }),
   log: shape({
     id: string,
@@ -38,24 +40,20 @@ LogDetailPaneContainer.propTypes = {
     requestedAt: string,
     application: string,
     reason: string,
-    date: instanceOf(Date)
-  })
+    date: instanceOf(Date),
+  }),
 }
 
 LogDetailPaneContainer.defaultProps = {
   match: {
-    params: {}
-  }
+    params: {},
+  },
 }
 
 const mapStateToProps = ({ logs }, ownProps) => {
   return {
-    log: logs.records
-      .find(log => log.id === ownProps.match.params.logid)
+    log: logs.records.find((log) => log.id === ownProps.match.params.logid),
   }
 }
 
-export default connect(
-  mapStateToProps
-)(LogDetailPaneContainer)
-
+export default connect(mapStateToProps)(LogDetailPaneContainer)

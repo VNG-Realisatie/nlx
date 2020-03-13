@@ -7,7 +7,7 @@ const defaultState = {
   loaded: false,
   error: false,
   value: null,
-  response: null
+  response: null,
 }
 
 export default (state = defaultState, action) => {
@@ -17,14 +17,14 @@ export default (state = defaultState, action) => {
         loaded: true,
         error: false,
         value: action.data,
-        message: null
+        message: null,
       }
     case TYPES.FETCH_PROOF_FAILED:
       return {
         loaded: true,
         error: true,
         value: null,
-        message: action.data.response
+        message: action.data.response,
       }
     case TYPES.RESET_LOGIN_INFORMATION:
       return defaultState

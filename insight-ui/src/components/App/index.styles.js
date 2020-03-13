@@ -18,7 +18,7 @@ export const StyledNLXNavbar = styled(NLXNavbar)`
 
 export const StyledContent = styled.div`
   flex: 1;
-  background: #F7F9FC;
+  background: #f7f9fc;
   display: flex;
   justify-content: center;
   align-items: center;

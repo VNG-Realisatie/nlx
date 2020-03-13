@@ -2,9 +2,9 @@
 // Licensed under the EUPL
 
 import React from 'react'
-import {shallow} from 'enzyme'
-import { SidebarContainer } from './index'
+import { shallow } from 'enzyme'
 import Sidebar from '../../components/Sidebar'
+import { SidebarContainer } from './index'
 
 describe('SidebarContainer', () => {
   describe('on initialization', () => {
@@ -13,7 +13,7 @@ describe('SidebarContainer', () => {
 
     beforeEach(() => {
       const props = {
-        fetchOrganizationsRequest: jest.fn()
+        fetchOrganizationsRequest: jest.fn(),
       }
 
       wrapper = shallow(<SidebarContainer {...props} />)
@@ -38,19 +38,24 @@ describe('SidebarContainer', () => {
     })
 
     it('should include the name of the organizations', () => {
-      const organizations = [ { name: 'foo'} ]
-      expect(instance.getFilteredOrganizationsByQuery(organizations, ''))
-        .toEqual(['foo'])
+      const organizations = [{ name: 'foo' }]
+      expect(
+        instance.getFilteredOrganizationsByQuery(organizations, ''),
+      ).toEqual(['foo'])
     })
 
     it('should filter by organization name', () => {
-      const organizations = [ { name: 'foo'}, { name: 'bar'}, { name: 'baz'} ]
-      expect(instance.getFilteredOrganizationsByQuery(organizations, 'ba')).toEqual(['bar', 'baz'])
+      const organizations = [{ name: 'foo' }, { name: 'bar' }, { name: 'baz' }]
+      expect(
+        instance.getFilteredOrganizationsByQuery(organizations, 'ba'),
+      ).toEqual(['bar', 'baz'])
     })
 
     it('should be case-insensitive', () => {
-      const organizations = [ { name: 'foo'}, { name: 'bar'}, { name: 'baz'} ]
-      expect(instance.getFilteredOrganizationsByQuery(organizations, 'FoO')).toEqual(['foo'])
+      const organizations = [{ name: 'foo' }, { name: 'bar' }, { name: 'baz' }]
+      expect(
+        instance.getFilteredOrganizationsByQuery(organizations, 'FoO'),
+      ).toEqual(['foo'])
     })
   })
 
@@ -61,8 +66,12 @@ describe('SidebarContainer', () => {
         .mockImplementation(() => ['filteredByQuery'])
 
       const wrapper = shallow(<SidebarContainer />)
-      expect(wrapper.instance().getFilteredOrganizationsByQuery).toHaveBeenCalled()
-      expect(wrapper.find(Sidebar).prop('organizations')).toEqual(['filteredByQuery'])
+      expect(
+        wrapper.instance().getFilteredOrganizationsByQuery,
+      ).toHaveBeenCalled()
+      expect(wrapper.find(Sidebar).prop('organizations')).toEqual([
+        'filteredByQuery',
+      ])
     })
   })
 })

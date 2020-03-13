@@ -11,11 +11,11 @@ export const StyledCard = styled(Card)`
   .text-muted {
     font-size: 12px;
     line-height: 20px;
-    color: #A3AABF;
+    color: #a3aabf;
   }
 
   a {
     text-decoration: none;
-    color: #517FFF;
+    color: #517fff;
   }
 `

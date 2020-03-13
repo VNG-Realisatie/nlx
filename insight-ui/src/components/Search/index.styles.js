@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import Card from '../Card';
-import SearchIcon from '../SearchIcon';
+import Card from '../Card'
+import SearchIcon from '../SearchIcon'
 
 export const StyledSearch = styled(Card)`
   display: flex;
@@ -25,6 +25,6 @@ export const StyledInput = styled.input`
   height: 48px;
 
   &::placeholder {
-    color: #CAD0E0;
+    color: #cad0e0;
   }
 `

@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 
 import React from 'react'
-import {shallow} from 'enzyme'
+import { shallow } from 'enzyme'
 import { LogsPageContainer, getPageFromQueryString } from './index'
 
 describe('LogsPageContainer', () => {
@@ -16,9 +16,9 @@ describe('LogsPageContainer', () => {
         organization: {
           name: 'foo',
           insight_irma_endpoint: 'irma_endpoint',
-          insight_log_endpoint: 'log_endpoint'
+          insight_log_endpoint: 'log_endpoint',
         },
-        proof: 'the_proof'
+        proof: 'the_proof',
       }
 
       wrapper = shallow(<LogsPageContainer {...props} />)
@@ -29,7 +29,7 @@ describe('LogsPageContainer', () => {
       expect(instance.props.fetchOrganizationLogs).toHaveBeenCalledWith({
         proof: 'the_proof',
         insight_log_endpoint: 'log_endpoint',
-        page: 0
+        page: 0,
       })
     })
   })
@@ -41,31 +41,31 @@ describe('LogsPageContainer', () => {
         organization: {
           name: 'foo',
           insight_irma_endpoint: 'foo_irma_endpoint',
-          insight_log_endpoint: 'foo_log_endpoint'
+          insight_log_endpoint: 'foo_log_endpoint',
         },
-        proof: 'the_proof'
+        proof: 'the_proof',
       }
 
       const newOrganization = {
         name: 'bar',
         insight_irma_endpoint: 'bar_irma_endpoint',
-        insight_log_endpoint: 'bar_log_endpoint'
+        insight_log_endpoint: 'bar_log_endpoint',
       }
 
       const wrapper = shallow(<LogsPageContainer {...props} />)
       const instance = wrapper.instance()
-      wrapper.setProps({organization: newOrganization})
+      wrapper.setProps({ organization: newOrganization })
 
       expect(instance.props.fetchOrganizationLogs).toHaveBeenNthCalledWith(1, {
         proof: 'the_proof',
         insight_log_endpoint: 'foo_log_endpoint',
-        page: 0
+        page: 0,
       })
 
       expect(instance.props.fetchOrganizationLogs).toHaveBeenNthCalledWith(2, {
         proof: 'the_proof',
         insight_log_endpoint: 'bar_log_endpoint',
-        page: 0
+        page: 0,
       })
     })
   })
@@ -73,13 +73,11 @@ describe('LogsPageContainer', () => {
 
 describe('get page from the query string', () => {
   it.each([
-    ['', undefined], 
-    ['?page=0', 0], 
-    ['?page=1', 1]
-  ])(
-    '%s', (queryString, expected) => {
+    ['', undefined],
+    ['?page=0', 0],
+    ['?page=1', 1],
+  ])('%s', (queryString, expected) => {
     const result = getPageFromQueryString(queryString)
-    expect(result).toEqual(expected)  
+    expect(result).toEqual(expected)
   })
 })
-
