@@ -14,7 +14,7 @@ describe('LogsPage', () => {
     wrapper = shallow(
       <LogsPage
         organizationName="dummy-name"
-      logs={[{
+        logs={[
           {
             subjects: ['foo', 'bar'],
             requestedBy: 'requestedBy',

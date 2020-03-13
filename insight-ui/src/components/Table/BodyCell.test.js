@@ -1,4 +1,5 @@
 import React from 'react'
+import { shallow } from 'enzyme'
 import BodyCell from './BodyCell'
 
 xtest('should render child elements', () => {
@@ -10,6 +11,9 @@ xtest('should render child elements', () => {
         </tr>
       </BodyCell>,
     ).contains(
+      <tr>
         <td>Table body</td>
-                            </tr>)).toEqual(true)
+      </tr>,
+    ),
+  ).toEqual(true)
 })

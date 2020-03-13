@@ -39,8 +39,12 @@ export class SidebarContainer extends Component {
     return (
       <Sidebar
         onSearchQueryChanged={this.onSearchQueryChanged}
-      organizations={this.getFilteredOrganizationsByQuery(organizations, query)}
-           />
+        organizations={this.getFilteredOrganizationsByQuery(
+          organizations,
+          query,
+        )}
+      />
+    )
   }
 }
 

@@ -13,7 +13,7 @@ import {
 const Sidebar = ({ organizations, onSearchQueryChanged, ...props }) => (
   <StyledSidebar {...props}>
     <StyledSearch
-inputProps={({
+      inputProps={{
         placeholder: 'Filter organizations',
       }}
       onQueryChanged={onSearchQueryChanged}
