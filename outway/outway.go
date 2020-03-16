@@ -21,6 +21,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
+	"go.nlx.io/nlx/common/monitoring"
 	"go.nlx.io/nlx/common/nlxversion"
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
@@ -44,6 +45,9 @@ type Outway struct {
 	process                   *process.Process
 
 	// headersStripList *http.Header
+	serverPlain    *http.Server
+	serverTLS      *http.Server
+	monitorService *monitoring.Service
 
 	authorizationSettings *authSettings
 	authorizationClient   http.Client
@@ -148,6 +152,7 @@ func NewOutway(
 	logger *zap.Logger,
 	logdb *sqlx.DB,
 	mainProcess *process.Process,
+	monitoringAddress string,
 	tlsOptions orgtls.TLSOptions,
 	directoryInspectionAddress,
 	authServiceURL,
@@ -178,6 +183,11 @@ func NewOutway(
 	err = o.validateAuthURL(authCAPath, authServiceURL)
 	if err != nil {
 		return nil, err
+	}
+
+	o.monitorService, err = monitoring.NewMonitoringService(monitoringAddress, logger)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to create monitoring service")
 	}
 
 	// setup transactionlog
@@ -383,6 +393,8 @@ func (o *Outway) updateServiceList() error {
 	}
 
 	o.cleanUpservices(servicesToKeep)
+
+	o.monitorService.SetReady()
 
 	return nil
 }

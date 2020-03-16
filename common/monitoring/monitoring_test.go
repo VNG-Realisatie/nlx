@@ -63,7 +63,7 @@ func TestReadiness(t *testing.T) {
 
 	for _, test := range tests {
 		recorder := httptest.NewRecorder()
-		request := httptest.NewRequest("GET", "/readiness", nil)
+		request := httptest.NewRequest("GET", "/health/ready", nil)
 		request.Host = "host"
 		service, err := NewMonitoringService(serviceAdddress, logger)
 		assert.Nil(t, err)

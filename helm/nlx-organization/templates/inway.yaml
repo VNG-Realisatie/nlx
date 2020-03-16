@@ -84,13 +84,13 @@ spec:
           livenessProbe:
             httpGet:
               path: /health/live
-              port: 8080
+              port: 8081
             initialDelaySeconds: 3
             periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /health/ready
-              port: 8080
+              port: 8081
             initialDelaySeconds: 3
             periodSeconds: 10
           env:
@@ -149,9 +149,6 @@ spec:
       protocol: TCP
       port: 443
       targetPort: 8443
-    - name: inway-monitoring
-      protocol: TCP
-      port: 8080
 {{ else }}
 apiVersion: v1
 kind: Service
@@ -164,9 +161,6 @@ spec:
       protocol: TCP
       port: 443
       targetPort: 8443
-    - name: nmt # nlx monitoring traffic
-      protocol: TCP
-      port: 8080
 {{ end }}
 {{ end }}
 {{ end }}

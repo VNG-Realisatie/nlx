@@ -27,6 +27,7 @@ module.exports = {
         "Reference information": [
             "reference-information/service-configuration",
             "reference-information/transaction-log-headers",
+            "reference-information/monitoring",
         ],
         "Support": [
             "support/contact",

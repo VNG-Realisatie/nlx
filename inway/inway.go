@@ -10,6 +10,7 @@ import (
 	"crypto/x509"
 	"encoding/base64"
 	"fmt"
+	"net/http"
 	"sync"
 	"time"
 
@@ -44,6 +45,8 @@ type Inway struct {
 	name string
 
 	process *process.Process
+
+	serverTLS *http.Server
 
 	serviceEndpointsLock sync.RWMutex
 	serviceEndpoints     map[string]ServiceEndpoint
@@ -107,7 +110,7 @@ func NewInway(
 	// setup monitoring service
 	i.monitoringService, err = monitoring.NewMonitoringService(monitoringAddress, logger)
 	if err != nil {
-		return nil, errors.Wrap(err, "unable to create monitoring service: ")
+		return nil, errors.Wrap(err, "unable to create monitoring service")
 	}
 
 	// setup transactionlog

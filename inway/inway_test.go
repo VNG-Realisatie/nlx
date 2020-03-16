@@ -63,7 +63,7 @@ func TestNewInwayException(t *testing.T) {
 				OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem"),
 			},
 			"localhost:8080",
-			"unable to create monitoring service: : address required",
+			"unable to create monitoring service: address required",
 		},
 	}
 

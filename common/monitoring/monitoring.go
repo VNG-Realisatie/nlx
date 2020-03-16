@@ -16,7 +16,7 @@ import (
 type Service struct {
 	isReady bool
 	logger  *zap.Logger
-	server  http.Server
+	server  *http.Server
 }
 
 // NewMonitoringService creates a new monitoring service
@@ -37,7 +37,7 @@ func NewMonitoringService(address string, logger *zap.Logger) (*Service, error) 
 	serveMux := http.NewServeMux()
 	serveMux.HandleFunc("/health/live", m.handleLivenessRequest)
 	serveMux.HandleFunc("/health/ready", m.handleReadinessRequest)
-	m.server = http.Server{
+	m.server = &http.Server{
 		Addr:    address,
 		Handler: serveMux,
 	}
@@ -84,12 +84,12 @@ func (m *Service) Stop() error {
 func (m *Service) handleReadinessRequest(w http.ResponseWriter, r *http.Request) {
 	m.logger.Debug("received readiness check", zap.String("from-host", r.Host))
 
-	if m.isReady {
-		w.WriteHeader(http.StatusOK)
+	if !m.isReady {
+		w.WriteHeader(http.StatusServiceUnavailable)
 		return
 	}
 
-	w.WriteHeader(http.StatusServiceUnavailable)
+	w.WriteHeader(http.StatusOK)
 }
 
 func (m *Service) handleLivenessRequest(w http.ResponseWriter, r *http.Request) {

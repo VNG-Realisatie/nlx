@@ -44,6 +44,18 @@ spec:
           envFrom:
             - secretRef:
                 name: postgres-auth
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 8081
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8081
+            initialDelaySeconds: 3
+            periodSeconds: 10
           env:
             - name: LOG_TYPE
               value: {{ default "live" .Values.logType }}

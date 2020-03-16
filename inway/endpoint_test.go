@@ -229,7 +229,7 @@ func TestInwaySetServiceEndpoints(t *testing.T) {
 			},
 			want: want{
 				validator: func(state validatorState) {
-					assert.EqualError(t, state.err, "invalid endpoint provided: parse 12://invalid-endpoint: first path segment in URL cannot contain colon")
+					assert.EqualError(t, state.err, "invalid endpoint provided: parse \"12://invalid-endpoint\": first path segment in URL cannot contain colon")
 					assert.Nil(t, state.endpoint)
 				},
 			},

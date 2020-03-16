@@ -9,6 +9,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"go.nlx.io/nlx/common/monitoring"
+
 	"go.nlx.io/nlx/common/nlxversion"
 
 	"github.com/golang/mock/gomock"
@@ -48,6 +50,9 @@ func TestUpdateServiceList(t *testing.T) {
 		servicesHTTP:      make(map[string]HTTPService),
 		servicesDirectory: make(map[string]*inspectionapi.ListServicesResponse_Service),
 	}
+
+	o.monitorService, err = monitoring.NewMonitoringService("localhost:8080", logger)
+	assert.Nil(t, err)
 
 	// Make the mock directory client return an error when calling ListServices
 	client.EXPECT().ListServices(

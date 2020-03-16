@@ -7,10 +7,10 @@ import (
 	"context"
 	"crypto/tls"
 	"net/http"
-	"sync"
 	"time"
 
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/tlsconfig"
 )
@@ -32,7 +32,7 @@ func (i *Inway) RunServer(address string) error {
 
 	tlsconfig.ApplyDefaults(config)
 
-	server := &http.Server{
+	i.serverTLS = &http.Server{
 		Addr:      address,
 		Handler:   serveMux,
 		TLSConfig: config,
@@ -41,7 +41,7 @@ func (i *Inway) RunServer(address string) error {
 	errorChannel := make(chan error)
 
 	go func() {
-		if err := server.ListenAndServeTLS("", ""); err != nil {
+		if err := i.serverTLS.ListenAndServeTLS("", ""); err != nil {
 			if err != http.ErrServerClosed {
 				errorChannel <- errors.Wrap(err, "error listening on TLS server")
 			}
@@ -50,31 +50,35 @@ func (i *Inway) RunServer(address string) error {
 
 	go func() {
 		if err := i.monitoringService.Start(); err != nil {
-			errorChannel <- errors.Wrap(err, "error listening on TLS server")
+			errorChannel <- errors.Wrap(err, "error listening on monitoring service")
 		}
 	}()
 
-	wg := sync.WaitGroup{}
-
-	numberOfServers := 2
-	wg.Add(numberOfServers)
-
 	i.process.CloseGracefully(func() error {
-		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
-		defer cancel() // do not remove. Otherwise it could cause implicit goroutine leak
-		err := server.Shutdown(localCtx)
-		wg.Done()
-		return err
+		i.shutDown()
+		return nil
 	})
 
-	i.process.CloseGracefully(func() error {
-		err := i.monitoringService.Stop()
-		wg.Done()
-		return err
-	})
+	err := <-errorChannel
 
-	// Listener will return immediately on Shutdown call.
-	// So we need to wait until all open connections will be closed gracefully
+	i.shutDown()
 
-	return <-errorChannel
+	return err
+}
+
+func (i *Inway) shutDown() {
+	i.monitoringService.SetNotReady()
+
+	localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
+	defer cancel() // do not remove. Otherwise it could cause implicit goroutine leak
+
+	err := i.serverTLS.Shutdown(localCtx)
+	if err != nil {
+		i.logger.Error("error shutting down server tls", zap.Error(err))
+	}
+
+	err = i.monitoringService.Stop()
+	if err != nil {
+		i.logger.Error("error shutting down monitoring service", zap.Error(err))
+	}
 }

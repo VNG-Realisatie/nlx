@@ -10,59 +10,106 @@ import (
 	"net"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
-
-	"go.nlx.io/nlx/common/tlsconfig"
-
-	"go.nlx.io/nlx/common/transactionlog"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+
+	"go.nlx.io/nlx/common/orgtls"
+	"go.nlx.io/nlx/common/tlsconfig"
+	"go.nlx.io/nlx/common/transactionlog"
 )
 
-// ListenAndServe is a blocking function that listens on provided tcp address to handle requests.
-func (o *Outway) ListenAndServe(address string) error {
-	server := &http.Server{
-		Addr:    address,
+// RunServer is a blocking function that listens on provided tcp address to handle requests.
+func (o *Outway) RunServer(listenAddress, listenAddressTLS string, tlsOptions orgtls.TLSOptions) error {
+	o.serverPlain = &http.Server{
+		Addr:    listenAddress,
 		Handler: o,
 	}
 
-	o.process.CloseGracefully(func() error {
-		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
-		defer cancel()
-		return server.Shutdown(localCtx)
-	})
-
-	err := server.ListenAndServe()
-	if err != nil && err != http.ErrServerClosed {
-		return errors.Wrap(err, "failed to run http server")
-	}
-
-	o.wg.Wait() // Wait until all async jobs will finish
-	return nil
-}
-
-// ListenAndServeTLS is a blocking function that listens on provided tcp address to handle requests.
-func (o *Outway) ListenAndServeTLS(address, certFile, keyFile string) error {
-	server := &http.Server{
-		Addr:      address,
+	o.serverTLS = &http.Server{
+		Addr:      listenAddressTLS,
 		Handler:   o,
 		TLSConfig: tlsconfig.Defaults(),
 	}
 
+	errorChannel := make(chan error)
+
+	go func() {
+		err := o.serverPlain.ListenAndServe()
+		if err != http.ErrServerClosed {
+			errorChannel <- errors.Wrap(err, "error listening on server")
+		}
+	}()
+
+	go func() {
+		err := o.serverTLS.ListenAndServeTLS(tlsOptions.OrgCertFile, tlsOptions.OrgKeyFile)
+		if err != http.ErrServerClosed {
+			errorChannel <- errors.Wrap(err, "error listening on TLS server")
+		}
+	}()
+
+	go func() {
+		err := o.monitorService.Start()
+		if err != nil {
+			errorChannel <- errors.Wrap(err, "error listening on monitoring service")
+		}
+	}()
+
 	o.process.CloseGracefully(func() error {
-		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
-		defer cancel()
-		return server.Shutdown(localCtx)
+		o.shutDown()
+		return nil
 	})
 
-	err := server.ListenAndServeTLS(certFile, keyFile)
-	if err != nil && err != http.ErrServerClosed {
-		return errors.Wrap(err, "failed to run http server")
+	err := <-errorChannel
+
+	o.shutDown()
+
+	return err
+}
+
+func (o *Outway) shutDown() {
+	o.logger.Debug("shutting down")
+
+	o.monitorService.SetNotReady()
+
+	wg := sync.WaitGroup{}
+
+	numberOfServers := 2
+	wg.Add(numberOfServers)
+
+	go func() {
+		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
+		defer cancel()
+
+		err := o.serverTLS.Shutdown(localCtx)
+		if err != nil {
+			o.logger.Error("error shutting down server tls", zap.Error(err))
+		}
+
+		wg.Done()
+	}()
+
+	go func() {
+		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
+		defer cancel()
+
+		err := o.serverPlain.Shutdown(localCtx)
+		if err != nil {
+			o.logger.Error("error shutting down server tls", zap.Error(err))
+		}
+
+		wg.Done()
+	}()
+
+	wg.Wait()
+
+	err := o.monitorService.Stop()
+	if err != nil {
+		o.logger.Error("error shutting down monitoring service", zap.Error(err))
 	}
 
-	o.wg.Wait() // Wait until all async jobs will finish
-	return nil
 }
 
 func createHTTPTransport(tlsConfig *tls.Config) *http.Transport {
