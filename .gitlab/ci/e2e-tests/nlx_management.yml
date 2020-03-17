@@ -4,13 +4,13 @@ NLX Management - a11y-tests:
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
-      - nlx-management-a11y-tests/node_modules/
+      - management-ui-a11y-tests/node_modules/
   before_script:
     - export CI_ENV_URL=$([ -f ci_environment_url.txt ] && cat ci_environment_url.txt)
-    - export URL="https://nlx-management-nlx-rdw-$CI_ENV_URL"
+    - export URL="https://management-nlx-rdw-$CI_ENV_URL"
   script:
     - ./wait-for-http.sh $URL
-    - cd nlx-management-a11y-tests/
+    - cd management-ui-a11y-tests/
     - npm install --no-progress --color=false --quiet
     - npm test
   only:
@@ -21,20 +21,20 @@ NLX Management - E2E-tests:
   stage: E2E tests
   cache:
     paths:
-      - nlx-management-e2e-tests/node_modules/
+      - management-ui-e2e-tests/node_modules/
   variables:
     BROWSERSTACK_PROJECT_NAME: "NLX Management E2E-tests"
     BROWSERSTACK_BUILD_ID: "Commit $CI_COMMIT_SHORT_SHA"
   script:
     - export CI_ENV_URL=$([ -f ci_environment_url.txt ] && cat ci_environment_url.txt)
-    - export URL="https://nlx-management-nlx-rdw-$CI_ENV_URL"
-    - cd nlx-management-e2e-tests/
+    - export URL="https://management-nlx-rdw-$CI_ENV_URL"
+    - cd management-ui-e2e-tests/
     - sh ../wait-for-http.sh $URL
     - npm install --no-progress --color=false --quiet
     - npm run test:browserstack
   artifacts:
     when: always
     paths:
-      - nlx-management-e2e-tests/test-results/
+      - management-ui-e2e-tests/test-results/
   only:
     - /^feature/.*$/@commonground/nlx/nlx

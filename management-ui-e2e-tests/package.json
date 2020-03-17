@@ -1,5 +1,5 @@
 {
-  "name": "nlx-management-e2e-tests",
+  "name": "@nlxio/management-ui-e2e-tests",
   "version": "0.0.0",
   "scripts": {
     "test:browserstack": "node outputUrl.js && testcafe 'browserstack:firefox,browserstack:chrome,browserstack:safari,browserstack:ie,browserstack:edge' --reporter 'spec,html:./test-results/index.html'",

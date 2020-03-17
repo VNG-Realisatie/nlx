@@ -7,13 +7,13 @@ ENV CI=true
 # Only copy package.json and package-lock.json so we can use Docker's caching mechanism.
 COPY package.json \
     package-lock.json \
-    /go/src/go.nlx.io/nlx/nlx-management/
+    /go/src/go.nlx.io/nlx/management-ui/
 
-WORKDIR /go/src/go.nlx.io/nlx/nlx-management
+WORKDIR /go/src/go.nlx.io/nlx/management-ui
 RUN npm ci --no-progress --color=false --quiet
 
 # Now copy the whole workdir for the build step.
-COPY . /go/src/go.nlx.io/nlx/nlx-management
+COPY . /go/src/go.nlx.io/nlx/management-ui
 
 RUN npm run build
 
@@ -41,7 +41,7 @@ RUN touch /var/run/nginx.pid && \
     chown -R appuser /var/run/nginx.pid && \
     chown -R appuser /var/cache/nginx
 
-COPY --from=build /go/src/go.nlx.io/nlx/nlx-management/build /usr/share/nginx/html
+COPY --from=build /go/src/go.nlx.io/nlx/management-ui/build /usr/share/nginx/html
 COPY --from=version /version.json /usr/share/nginx/html
 
 USER appuser

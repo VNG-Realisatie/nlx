@@ -113,13 +113,6 @@ services:
       args:
         GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
         GIT_TAG_NAME: "${GIT_TAG_NAME}"
-  nlx-management:
-    image: "${IMAGE_PREFIX}nlxio/nlx-management:${IMAGE_TAG}"
-    build:
-      context: nlx-management
-      args:
-        GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
-        GIT_TAG_NAME: "${GIT_TAG_NAME}"
   nlxctl:
     image: "${IMAGE_PREFIX}nlxio/nlxctl:${IMAGE_TAG}"
     build:

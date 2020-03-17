@@ -1,5 +1,5 @@
 {
-  "name": "nlx-management-a11y-tests",
+  "name": "@nlxio/management-ui-a11y-tests",
   "version": "0.0.0",
   "private": true,
   "description": "Accessibility tests for NLX Management.",
