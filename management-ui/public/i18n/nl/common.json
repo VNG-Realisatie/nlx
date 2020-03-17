@@ -12,7 +12,11 @@
   "Log in with organization account": "Inloggen met organisatieaccount",
 
   "Services": "Services",
-  "An overview of the services here.": "Hier komt een overzicht van services.",
+  "Name": "Naam",
+  "Authorization": "Toegang",
+  "Open": "Open",
+  "Whitelist": "Whitelist",
+  "Failed to load the services.": "De services konden niet worden opgehaald.",
 
   "Page not found": "Pagina niet gevonden",
   "We could not find what you were looking for.": "We konden de opgevraagde pagina niet vinden.",

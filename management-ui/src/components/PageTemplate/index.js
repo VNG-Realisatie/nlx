@@ -1,5 +1,8 @@
+// Copyright © VNG Realisatie 2020
+// Licensed under the EUPL
+
 import React from 'react'
-import { oneOfType, element, node, string } from 'prop-types'
+import { node, string } from 'prop-types'
 import PrimaryNavigation from '../PrimaryNavigation'
 import {
   StyledMain,
@@ -29,7 +32,7 @@ const PageTemplate = ({ title, description, children }) => {
 PageTemplate.propTypes = {
   title: string,
   description: string,
-  children: oneOfType([element, node]),
+  children: node,
 }
 
 PageTemplate.defaultProps = {

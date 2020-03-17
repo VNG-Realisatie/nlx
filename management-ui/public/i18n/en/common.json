@@ -12,7 +12,11 @@
   "Log in with organization account": "Log in with organization account",
 
   "Services": "Services",
-  "An overview of the services here.": "An overview of the services here.",
+  "Name": "Name",
+  "Authorization": "Authorization",
+  "Open": "Open",
+  "Whitelist": "Whitelist",
+  "Failed to load the services.": "Failed to load the services.",
 
   "Page not found": "Page not found",
   "We could not find what you were looking for.": "We could not find what you were looking for.",

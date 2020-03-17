@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2020
+// Licensed under the EUPL
+
 import React, { useState } from 'react'
 import { string } from 'prop-types'
 import Cookies from 'js-cookie'
