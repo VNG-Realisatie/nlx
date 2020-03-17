@@ -5,6 +5,9 @@ import { render } from '@testing-library/react'
 import App from './App'
 
 jest.mock('./pages/LoginPage', () => () => <div data-testid="login-page" />)
+jest.mock('./pages/ServicesPage', () => () => (
+  <div data-testid="services-page" />
+))
 
 test('redirects to /inloggen when navigating to /', async () => {
   const history = createMemoryHistory()
@@ -24,4 +27,14 @@ test('the /inloggen route renders the LoginPage', () => {
     </Router>,
   )
   expect(getByTestId('login-page')).toBeInTheDocument()
+})
+
+test('the /services route renders the ServicesPage', () => {
+  const history = createMemoryHistory({ initialEntries: ['/services'] })
+  const { getByTestId } = render(
+    <Router history={history}>
+      <App />
+    </Router>,
+  )
+  expect(getByTestId('services-page')).toBeInTheDocument()
 })

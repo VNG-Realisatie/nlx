@@ -11,4 +11,13 @@ export default createGlobalStyle`
     display: flex;
     flex-direction: column;
   }
+  
+  button,
+  a {
+    border: 2px solid transparent;
+    
+    &:focus {
+      border-color: ${(p) => p.theme.colorBorderDropdownFocus};
+    }
+  }  
 `

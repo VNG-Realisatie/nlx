@@ -8,6 +8,7 @@
     "@testing-library/react": "10.0.1",
     "@testing-library/user-event": "10.0.0",
     "i18next": "19.3.3",
+    "js-cookie": "2.2.1",
     "react": "16.13.1",
     "react-app-polyfill": "1.0.6",
     "react-dom": "16.13.1",
