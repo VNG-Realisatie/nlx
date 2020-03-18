@@ -29,7 +29,20 @@ Add your changes in commits [with a message that explains them](https://robots.t
 This project uses [semantic-release](https://semantic-release.gitbook.io/semantic-release/). When merging a MR to master, this will automatically generate our [CHANGELOG](./CHANGELOG.md) based on the commit messages and a version tag will be added.
 
 #### 2.2.3. Conventions for commit messages
-We follow the [Angular Commit Message conventions](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines). This convention requires you to pas a subject and scope in the commit message. The scope is based on the applications in the repository. If you are not sure which scope to use please leave the scope empty.
+We follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification. This is enforced with a linter in the build pipeline. This convention requires you to pas a type and an optional scope as the commit message. The scope is based on the applications in the repository. If you are not sure which scope to use please leave the scope empty.
+
+The type must be one of the following:
+
+- **build**: Changes that affect the build system or external dependencies
+- **ci**: Changes to our CI configuration files and scripts
+- **docs**: Documentation only changes
+- **feat**: A new feature
+- **fix**: A bug fix
+- **perf**: A code change that improves performance
+- **refactor**: A code change that neither fixes a bug nor adds a feature
+- **revert**: Changes that revert other changes
+- **style**: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+- **test**: Adding missing tests or correcting existing tests
 
 The available scopes are:
 
@@ -40,8 +53,8 @@ The available scopes are:
 - config-api
 - design
 - directory-db
-- directory-monitor
 - directory-inspection-api
+- directory-monitor
 - directory-registration-api
 - directory-ui
 - docs
@@ -79,7 +92,7 @@ All contributions have to be reviewed. The reviewer will look at the submitted c
 
 #### 2.4.2. Definition of Done
 
-With MR's we make User Stories become reality. 
+With MR's we make User Stories become reality.
 This section describes the Definition of Done expressed in the stages a story goes through from cradle to cradle.
 
 **1. Definition of Ready**<BR>
@@ -102,7 +115,7 @@ This section describes the Definition of Done expressed in the stages a story go
   - linting errors are fixed
   - security issues are fixed
 - Tests are added
-- The developer has checked all acceptance criteria and test scenarios first 
+- The developer has checked all acceptance criteria and test scenarios first
 - The developer is responsible for arranging the review of the story
   - The developer will notify the team who's review his story
 - Developer moves story to review

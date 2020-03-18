@@ -2,6 +2,8 @@
   "extends": [
     "config:base",
     ":semanticCommits",
+    ":semanticCommitTypeAll(build)",
+    ":semanticCommitScopeDisabled",
     "schedule:nonOfficeHours",
     "group:allNonMajor"
   ],
