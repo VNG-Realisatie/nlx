@@ -1,0 +1,40 @@
+---
+extends:
+  - "@commitlint/config-conventional"
+
+rules:
+  type-enum:
+    - 2
+    - always
+    - - build
+      - ci
+      - docs
+      - feat
+      - fix
+      - perf
+      - refactor
+      - revert
+      - style
+      - test
+  scope-enum:
+    - 2
+    - always
+    - - auth-service
+      - ca-certportal
+      - ca-cfssl-unsafe
+      - common
+      - config-api
+      - design
+      - directory-db
+      - directory-inspection-api
+      - directory-monitor
+      - directory-registration-api
+      - directory-ui
+      - docs
+      - helm
+      - insight-api
+      - insight-ui
+      - inway
+      - management-api
+      - outway
+      - txlog-db

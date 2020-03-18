@@ -1,3 +1,21 @@
+Lint commit messages:
+  stage: Tests
+  image: node:12.16.1-alpine
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+  before_script:
+    - apk --no-cache add git
+    - npm ci --quiet --no-progress --color=false
+  script:
+    - echo -e "section_start:$(date +%s):lint\r\e[0KLinting commit messages"
+    - npx commitlint --from $(git rev-parse origin/master)
+    - echo -e "section_end:$(date +%s):lint\r\e[0K"
+  tags:
+    - docker
+    - linux
+
 Go go.mod tidy test:
   stage: Tests
   image: golang:1.14.0
