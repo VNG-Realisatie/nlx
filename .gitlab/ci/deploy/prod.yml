@@ -1,9 +1,10 @@
 Deploy demo, preprod & prod:
   stage: Deploy
+  image: registry.gitlab.com/commonground/core/review-app-deployer:latest
   environment:
     name: demo
   before_script:
-    - kubectl config use-context delta.k8s.nlx.io
+    - export KUBECONFIG=/secrets/kubeconfig/delta.conf
     - export GIT_COMMIT_HASH=$(git rev-parse HEAD)
     - export GIT_TAG_NAME=$(git describe --tags)
     - export IMAGE_TAG="${GIT_TAG_NAME}"
@@ -35,5 +36,5 @@ Deploy demo, preprod & prod:
     - tags@commonground/nlx/nlx
   when: manual
   tags:
-    - nlx-privileged
-    - shell
+    - cg-privileged
+    - docker

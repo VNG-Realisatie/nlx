@@ -1,6 +1,7 @@
 Build production:
   stage: Build
   before_script:
+    - export DOCKER_CONFIG=/secrets/docker/nlxci
     - export GIT_COMMIT_HASH=$(git rev-parse HEAD)
     - export GIT_TAG_NAME=$(git describe --tags)
     - export IMAGE_PREFIX=""
@@ -15,5 +16,5 @@ Build production:
   only:
     - tags@commonground/nlx/nlx
   tags:
-    - nlx-privileged
+    - cg-privileged
     - shell

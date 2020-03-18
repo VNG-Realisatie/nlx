@@ -1,9 +1,10 @@
 Deploy acceptance:
   stage: Deploy
+  image: registry.gitlab.com/commonground/core/review-app-deployer:latest
   environment:
     name: acc
   before_script:
-    - kubectl config use-context delta.k8s.nlx.io
+    - export KUBECONFIG=/secrets/kubeconfig/delta.conf
     - export GIT_COMMIT_HASH=$(git rev-parse HEAD)
     - export GIT_TAG_NAME=$(git describe --tags)
     - export IMAGE_PREFIX="${CI_REGISTRY_IMAGE}/"
@@ -30,5 +31,5 @@ Deploy acceptance:
     - tags
     - schedules
   tags:
-    - nlx-privileged
-    - shell
+    - cg-privileged
+    - docker

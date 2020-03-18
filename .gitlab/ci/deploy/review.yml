@@ -2,6 +2,7 @@ Deploy Review App:
   stage: Deploy
   image: registry.gitlab.com/commonground/core/review-app-deployer:latest
   variables:
+    KUBECONFIG: /secrets/kubeconfig/review.conf
     IMAGE_PREFIX: "${REVIEW_REGISTRY_HOST}/${CI_PROJECT_PATH}/"
     IMAGE_TAG: $CI_COMMIT_SHORT_SHA
     REVIEW_BASE_DOMAIN: nlx.reviews
@@ -47,14 +48,15 @@ Deploy Review App:
     paths:
       - ci_environment_url.txt
   tags:
-    - review
-    - kubernetes
+    - cg
+    - docker
 
 Remove Review App:
   stage: Deploy
   image: registry.gitlab.com/commonground/core/review-app-deployer:latest
   variables:
     GIT_STRATEGY: none
+    KUBECONFIG: /secrets/kubeconfig/review.conf
   script:
     - |
         for NAME in haarlem rdw brp lorem ipsum directory; do
@@ -69,5 +71,5 @@ Remove Review App:
   only:
     - /^feature/.*$/@commonground/nlx/nlx
   tags:
-    - review
-    - kubernetes
+    - cg
+    - docker
