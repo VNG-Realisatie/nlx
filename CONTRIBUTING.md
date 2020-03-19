@@ -63,6 +63,7 @@ The available scopes are:
 - insight-ui
 - inway
 - management-api
+- management-ui
 - outway
 - txlog-db
 
