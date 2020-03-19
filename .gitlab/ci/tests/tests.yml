@@ -1,17 +1,12 @@
 Lint commit messages:
+  extends: .node-base
   stage: Tests
-  image: node:12.16.1-alpine
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - node_modules/
-  before_script:
-    - apk --no-cache add git
-    - npm ci --quiet --no-progress --color=false
   script:
-    - echo -e "section_start:$(date +%s):lint\r\e[0KLinting commit messages"
+    - apk --no-cache add git
+    - install_npm_dependencies
+    - start_section lint "Linting commit messages"
     - npx commitlint --from $(git rev-parse origin/master)
-    - echo -e "section_end:$(date +%s):lint\r\e[0K"
+    - stop_section lint
   tags:
     - docker
     - linux
@@ -65,18 +60,17 @@ Go linter:
     - linux
 
 Directory-ui linter and tests:
+  extends: .node-base
   stage: Tests
-  image: node:12.16.1-alpine
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - directory-ui/node_modules/
-  before_script:
-    - cd directory-ui/
-    - npm install
   script:
+    - cd directory-ui/
+    - install_npm_dependencies
+    - start_section lint "Running linter"
     - npm run lint
+    - stop_section lint
+    - start_section test "Running tests"
     - npm test -- --coverage
+    - stop_section test
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
   artifacts:
     expire_in: 1 month
@@ -87,18 +81,17 @@ Directory-ui linter and tests:
     - linux
 
 Insight-ui tests:
+  extends: .node-base
   stage: Tests
-  image: node:12.16.1-alpine
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - insight-ui/node_modules/
-  before_script:
-    - cd insight-ui/
-    - npm install
   script:
+    - cd insight-ui/
+    - install_npm_dependencies
+    - start_section lint "Running linter"
     - npm run lint
+    - stop_section lint
+    - start_section test "Running tests"
     - npm test -- --coverage
+    - stop_section test
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
   artifacts:
     expire_in: 1 month
@@ -109,18 +102,17 @@ Insight-ui tests:
     - linux
 
 Management-ui linter and tests:
+  extends: .node-base
   stage: Tests
-  image: node:12.16.1-alpine
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - management-ui/node_modules/
-  before_script:
-    - cd management-ui/
-    - npm install
   script:
+    - cd management-ui/
+    - install_npm_dependencies
+    - start_section lint "Running linter"
     - npm run lint
+    - stop_section lint
+    - start_section test "Running tests"
     - npm test -- --coverage
+    - stop_section test
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
   artifacts:
     expire_in: 1 month

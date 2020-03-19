@@ -1,11 +1,12 @@
 Run semantic release:
-  image: node:12.16.1-alpine
+  extends: .node-base
   stage: Tools
-  before_script:
-    - apk --no-cache add git
-    - npm ci
   script:
+    - apk --no-cache add git
+    - install_npm_dependencies
+    - start_section release "Running semanic release"
     - npx semantic-release
+    - stop_section release
   only:
     - master@commonground/nlx/nlx
   except:

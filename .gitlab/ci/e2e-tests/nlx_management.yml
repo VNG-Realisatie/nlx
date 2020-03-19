@@ -1,27 +1,24 @@
 NLX Management - a11y-tests:
+  extends: .node-base
   stage: E2E tests
   image: registry.gitlab.com/commonground/core/puppeteer
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - management-ui-a11y-tests/node_modules/
-  before_script:
+  script:
     - export CI_ENV_URL=$([ -f ci_environment_url.txt ] && cat ci_environment_url.txt)
     - export URL="https://management-nlx-rdw-$CI_ENV_URL"
-  script:
-    - ./wait-for-http.sh $URL
     - cd management-ui-a11y-tests/
-    - npm install --no-progress --color=false --quiet
+    - install_npm_dependencies
+    - wait_for_http "${URL}"
+    - start_section test "Running tests"
     - npm test
+    - stop_section test
   only:
     - /^feature/.*$/@commonground/nlx/nlx
 
 NLX Management - E2E-tests:
+  extends: .node-base
+  # BrowserStack does not run on Alpine. See https://github.com/browserstack/browserstack-local-nodejs/issues/33
   image: node:12.16.1
   stage: E2E tests
-  cache:
-    paths:
-      - management-ui-e2e-tests/node_modules/
   variables:
     BROWSERSTACK_PROJECT_NAME: "NLX Management E2E-tests"
     BROWSERSTACK_BUILD_ID: "Commit $CI_COMMIT_SHORT_SHA"
@@ -29,9 +26,11 @@ NLX Management - E2E-tests:
     - export CI_ENV_URL=$([ -f ci_environment_url.txt ] && cat ci_environment_url.txt)
     - export URL="https://management-nlx-rdw-$CI_ENV_URL"
     - cd management-ui-e2e-tests/
-    - sh ../wait-for-http.sh $URL
-    - npm install --no-progress --color=false --quiet
+    - install_npm_dependencies
+    - wait_for_http "${URL}"
+    - start_section test "Running tests"
     - npm run test:browserstack
+    - stop_section test
   artifacts:
     when: always
     paths:

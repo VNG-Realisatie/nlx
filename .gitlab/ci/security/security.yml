@@ -40,7 +40,7 @@ container_scanning:
           export ANALYZER_ARTIFACT_DIR="${REPORTS_DIRECTORY}/${IMAGE_SUFFIX}"
 
           SECTION_NAME="section_${IMAGE_SUFFIX}"
-          echo -e "section_start:$(date +%s):${SECTION_NAME}\r\e[0KScanning image: ${CI_APPLICATION_REPOSITORY}"
+          echo -e "start_section:$(date +%s):${SECTION_NAME}\r\e[0KScanning image: ${CI_APPLICATION_REPOSITORY}"
 
           mkdir ${ANALYZER_ARTIFACT_DIR}
           /analyzer run
