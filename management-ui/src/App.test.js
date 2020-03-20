@@ -9,18 +9,18 @@ jest.mock('./pages/ServicesPage', () => () => (
   <div data-testid="services-page" />
 ))
 
-test('redirects to /inloggen when navigating to /', async () => {
+test('redirects to /login when navigating to /', async () => {
   const history = createMemoryHistory()
   render(
     <Router history={history}>
       <App />
     </Router>,
   )
-  expect(history.location.pathname).toEqual('/inloggen')
+  expect(history.location.pathname).toEqual('/login')
 })
 
-test('the /inloggen route renders the LoginPage', () => {
-  const history = createMemoryHistory({ initialEntries: ['/inloggen'] })
+test('the /login route renders the LoginPage', () => {
+  const history = createMemoryHistory({ initialEntries: ['/login'] })
   const { getByTestId } = render(
     <Router history={history}>
       <App />

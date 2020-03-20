@@ -17,10 +17,10 @@ const App = () => (
 
       <Suspense fallback={null}>
         <Route exact path="/">
-          <Redirect to="/inloggen" />
+          <Redirect to="/login" />
         </Route>
 
-        <Route path="/inloggen">
+        <Route path="/login">
           <LoginPage />
         </Route>
 
