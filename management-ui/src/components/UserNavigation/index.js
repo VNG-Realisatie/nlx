@@ -44,7 +44,6 @@ const UserNavigation = ({ fullName, pictureUrl }) => {
         aria-expanded={menuIsOpen}
         aria-controls="user-menu-options"
         aria-label={t('Account menu')}
-        data-testid="user-menu-toggle"
       >
         <Avatar data-testid="avatar" alt={t('User avatar')} url={pictureUrl} />
         <StyledUserName data-testid="full-name">{fullName}</StyledUserName>

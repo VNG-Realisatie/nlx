@@ -31,8 +31,8 @@ describe('the UserNavigation', () => {
 
   describe('and toggled the menu', () => {
     beforeEach(() => {
-      const { queryByTestId } = result
-      queryByTestId('user-menu-toggle').click()
+      const { queryByLabelText } = result
+      queryByLabelText('Account menu').click()
     })
 
     it('should display the user menu', async () => {
@@ -42,8 +42,8 @@ describe('the UserNavigation', () => {
 
     describe('on blur', () => {
       beforeEach(() => {
-        const { queryByTestId } = result
-        queryByTestId('user-menu-toggle').click()
+        const { queryByTestId, queryByLabelText } = result
+        queryByLabelText('Account menu').click()
         queryByTestId('outside-user-menu').click()
       })
 
