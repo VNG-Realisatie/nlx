@@ -41,7 +41,7 @@ export const StyledAvatar = styled.figure`
   }
 `
 
-export const AuthenticatedUserMenu = styled.div`
+export const StyledUserMenu = styled.div`
   display: flex;
   align-items: center;
   position: relative;

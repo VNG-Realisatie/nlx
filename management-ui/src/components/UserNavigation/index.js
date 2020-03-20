@@ -4,7 +4,7 @@ import Cookies from 'js-cookie'
 import { useTranslation } from 'react-i18next'
 import Avatar from '../Avatar'
 import {
-  AuthenticatedUserMenu,
+  StyledUserMenu,
   StyledMenuToggleButton,
   StyledUserName,
   StyledIconChevron,
@@ -31,7 +31,7 @@ const UserNavigation = ({ fullName, pictureUrl }) => {
   }
 
   return (
-    <AuthenticatedUserMenu
+    <StyledUserMenu
       isOpen={menuIsOpen}
       onFocus={onFocusHandler}
       onBlur={onBlurHandler}
@@ -64,7 +64,7 @@ const UserNavigation = ({ fullName, pictureUrl }) => {
           </li>
         </ul>
       )}
-    </AuthenticatedUserMenu>
+    </StyledUserMenu>
   )
 }
 
