@@ -18,11 +18,11 @@ const PrimaryNavigation = () => {
   const { t } = useTranslation()
   return (
     <StyledNav>
-      <Link to="/" title={t('NLX Dashboard homepage')} data-testid="link-home">
+      <Link to="/" title={t('NLX Dashboard homepage')} aria-label="Homepage">
         <StyledNLXManagementLogo />
       </Link>
 
-      <StyledLink to="/services" data-testid="link-services">
+      <StyledLink to="/services" aria-label="Services page">
         <StyledIcon as={IconServices} />
         {t('Services')}
       </StyledLink>

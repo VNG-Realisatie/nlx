@@ -4,15 +4,15 @@ import { renderWithProviders } from '../../test-utils'
 import PrimaryNavigation from './index'
 
 test('PrimaryNavigation', () => {
-  const { getByTestId } = renderWithProviders(
+  const { getByLabelText } = renderWithProviders(
     <Router>
       <PrimaryNavigation />
     </Router>,
   )
 
-  const linkHome = getByTestId('link-home')
+  const linkHome = getByLabelText('Homepage')
   expect(linkHome.getAttribute('href')).toBe('/')
 
-  const linkServices = getByTestId('link-services')
+  const linkServices = getByLabelText('Services page')
   expect(linkServices.getAttribute('href')).toBe('/services')
 })
