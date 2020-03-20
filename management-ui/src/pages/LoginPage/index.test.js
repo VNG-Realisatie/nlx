@@ -4,5 +4,5 @@ import LoginPage from './index'
 
 test('renders a welcome message', () => {
   const { getByText } = renderWithProviders(<LoginPage />)
-  expect(getByText(/^Welkom$/)).toBeInTheDocument()
+  expect(getByText(/^Welcome$/)).toBeInTheDocument()
 })

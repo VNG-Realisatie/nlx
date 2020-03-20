@@ -4,8 +4,8 @@ import { render } from '@testing-library/react'
 import { I18nextProvider } from 'react-i18next'
 
 import { ThemeProvider } from 'styled-components'
-import i18n from '../i18n'
 import theme from '../theme'
+import i18n from './i18nTestConfig'
 
 // based on https://testing-library.com/docs/react-testing-library/setup#custom-render
 const AllTheProviders = ({ children }) => (

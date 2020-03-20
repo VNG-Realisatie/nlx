@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import { Route, Redirect } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components/macro'
 import { GlobalStyles as DSGlobalStyles } from '@commonground/design-system'
@@ -15,17 +15,19 @@ const App = () => (
       <DSGlobalStyles />
       <GlobalStyles />
 
-      <Route exact path="/">
-        <Redirect to="/inloggen" />
-      </Route>
+      <Suspense fallback={null}>
+        <Route exact path="/">
+          <Redirect to="/inloggen" />
+        </Route>
 
-      <Route path="/inloggen">
-        <LoginPage />
-      </Route>
+        <Route path="/inloggen">
+          <LoginPage />
+        </Route>
 
-      <Route path="/services">
-        <ServicesPage />
-      </Route>
+        <Route path="/services">
+          <ServicesPage />
+        </Route>
+      </Suspense>
     </ThemeProvider>
   </StyledContainer>
 )
