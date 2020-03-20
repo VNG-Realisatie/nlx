@@ -17,7 +17,7 @@ const LoginPage = () => {
       </StyledSidebar>
       <StyledContent>
         <h1>{t('Welcome')}</h1>
-        <p>{t('Log in to continue')}</p>
+        <p>{t('Log in to continue.')}</p>
       </StyledContent>
     </StyledContainer>
   )

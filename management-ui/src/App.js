@@ -15,6 +15,7 @@ const App = () => (
       <DSGlobalStyles />
       <GlobalStyles />
 
+      {/* Suspense is required for XHR backend i18next */}
       <Suspense fallback={null}>
         <Route exact path="/">
           <Redirect to="/login" />

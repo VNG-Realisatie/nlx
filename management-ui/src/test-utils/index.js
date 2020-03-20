@@ -1,5 +1,5 @@
 import React from 'react'
-import { element } from 'prop-types'
+import { oneOfType, element, node } from 'prop-types'
 import { render } from '@testing-library/react'
 import { I18nextProvider } from 'react-i18next'
 
@@ -13,6 +13,9 @@ const AllTheProviders = ({ children }) => (
     <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
   </ThemeProvider>
 )
+AllTheProviders.propTypes = {
+  children: oneOfType([element, node]),
+}
 
 AllTheProviders.propTypes = {
   children: element,

@@ -1,9 +1,7 @@
 import i18n from 'i18next'
-import XHR from 'i18next-xhr-backend'
 import { initReactI18next } from 'react-i18next'
 
 i18n
-  .use(XHR)
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
     lng: 'nl',
@@ -11,9 +9,7 @@ i18n
     ns: ['common'],
     defaultNS: 'common',
 
-    backend: {
-      loadPath: `${process.env.PUBLIC_URL}/i18n/{{lng}}/{{ns}}.json`,
-    },
+    resources: {},
 
     // We do not use keys in form messages.welcome
     keySeparator: false,
