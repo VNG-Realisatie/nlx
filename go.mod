@@ -63,7 +63,7 @@ require (
 	go.etcd.io/bbolt v1.3.3 // indirect
 	go.uber.org/zap v1.13.0
 	golang.org/x/crypto v0.0.0-20191002192127-34f69633bfdc // indirect
-	golang.org/x/net v0.0.0-20200301022130-244492dfa37a
+	golang.org/x/net v0.0.0-20200319234117-63522dbf7eec
 	golang.org/x/sys v0.0.0-20191009170203-06d7bd2c5f4f // indirect
 	google.golang.org/appengine v1.6.2 // indirect
 	google.golang.org/genproto v0.0.0-20200115191322-ca5a22157cba
