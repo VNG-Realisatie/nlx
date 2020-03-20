@@ -49,6 +49,7 @@ const UserNavigation = ({ fullName, pictureUrl }) => {
         <StyledUserName data-testid="full-name">{fullName}</StyledUserName>
         <StyledIconChevron flipHorizontal={menuIsOpen} />
       </StyledMenuToggleButton>
+
       {menuIsOpen && (
         <ul id="user-menu-options" data-testid="user-menu-options">
           <li>
