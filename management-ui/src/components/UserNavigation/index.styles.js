@@ -3,15 +3,15 @@ import React from 'react'
 import { bool } from 'prop-types'
 import IconChevron from '../IconChevron'
 
-const NavigationIconChevron = ({ flipHorizontal, ...props }) => (
+const UserNavigationIconChevron = ({ flipHorizontal, ...props }) => (
   <IconChevron {...props} />
 )
 
-NavigationIconChevron.propTypes = {
+UserNavigationIconChevron.propTypes = {
   flipHorizontal: bool,
 }
 
-export const StyledNavigationIconChevron = styled(NavigationIconChevron)`
+export const StyledIconChevron = styled(UserNavigationIconChevron)`
   fill: ${(p) => p.theme.colorText};
   width: ${(p) => p.theme.tokens.spacing06};
   height: ${(p) => p.theme.tokens.spacing06};
@@ -38,7 +38,7 @@ export const StyledAvatar = styled.figure`
   }
 `
 
-export const StyledUserMenu = styled.div`
+export const StyledUserNavigation = styled.div`
   display: flex;
   align-items: center;
   position: relative;
@@ -105,7 +105,7 @@ export const StyledUserMenu = styled.div`
   }
 `
 
-export const StyledMenuToggleButton = styled.button`
+export const StyledToggleButton = styled.button`
   padding: 0;
   font: inherit;
   color: inherit;
@@ -115,6 +115,6 @@ export const StyledMenuToggleButton = styled.button`
   align-items: center;
 `
 
-export const StyledUserName = styled.span`
+export const StyledUsername = styled.span`
   white-space: nowrap;
 `

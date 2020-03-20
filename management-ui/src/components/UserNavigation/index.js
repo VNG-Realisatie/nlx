@@ -4,10 +4,10 @@ import Cookies from 'js-cookie'
 import { useTranslation } from 'react-i18next'
 import Avatar from '../Avatar'
 import {
-  StyledUserMenu,
-  StyledMenuToggleButton,
-  StyledUserName,
-  StyledNavigationIconChevron,
+  StyledUserNavigation,
+  StyledToggleButton,
+  StyledUsername,
+  StyledIconChevron,
 } from './index.styles'
 
 const UserNavigation = ({ fullName, pictureUrl }) => {
@@ -31,13 +31,13 @@ const UserNavigation = ({ fullName, pictureUrl }) => {
   }
 
   return (
-    <StyledUserMenu
+    <StyledUserNavigation
       isOpen={menuIsOpen}
       onFocus={onFocusHandler}
       onBlur={onBlurHandler}
       data-testid="user-navigation"
     >
-      <StyledMenuToggleButton
+      <StyledToggleButton
         type="button"
         onClick={onClickHandler}
         aria-haspopup="true"
@@ -46,9 +46,9 @@ const UserNavigation = ({ fullName, pictureUrl }) => {
         aria-label={t('Account menu')}
       >
         <Avatar data-testid="avatar" alt={t('User avatar')} url={pictureUrl} />
-        <StyledUserName data-testid="full-name">{fullName}</StyledUserName>
-        <StyledNavigationIconChevron flipHorizontal={menuIsOpen} />
-      </StyledMenuToggleButton>
+        <StyledUsername data-testid="full-name">{fullName}</StyledUsername>
+        <StyledIconChevron flipHorizontal={menuIsOpen} />
+      </StyledToggleButton>
 
       {menuIsOpen && (
         <ul id="user-menu-options" data-testid="user-menu-options">
@@ -64,7 +64,7 @@ const UserNavigation = ({ fullName, pictureUrl }) => {
           </li>
         </ul>
       )}
-    </StyledUserMenu>
+    </StyledUserNavigation>
   )
 }
 
