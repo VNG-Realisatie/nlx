@@ -1,5 +1,7 @@
 module go.nlx.io/nlx
 
+go 1.14
+
 require (
 	github.com/Microsoft/go-winio v0.4.14 // indirect
 	github.com/alexedwards/argon2id v0.0.0-20190612080829-01a59b2b8802
@@ -71,5 +73,3 @@ require (
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	sigs.k8s.io/yaml v1.1.0 // indirect
 )
-
-go 1.13
