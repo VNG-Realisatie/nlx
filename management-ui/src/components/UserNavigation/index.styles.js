@@ -1,20 +1,17 @@
 import styled, { css } from 'styled-components/macro'
 import React from 'react'
 import { bool } from 'prop-types'
+import IconChevron from '../IconChevron'
 
-const IconChevron = ({ flipHorizontal, ...props }) => {
-  return (
-    <svg viewBox="0 0 24 24" {...props}>
-      <path d="M12 13.172l4.95-4.95 1.414 1.414L12 16 5.636 9.636 7.05 8.222z" />
-    </svg>
-  )
-}
+const NavigationIconChevron = ({ flipHorizontal, ...props }) => (
+  <IconChevron {...props} />
+)
 
-IconChevron.propTypes = {
+NavigationIconChevron.propTypes = {
   flipHorizontal: bool,
 }
 
-export const StyledIconChevron = styled(IconChevron)`
+export const StyledNavigationIconChevron = styled(NavigationIconChevron)`
   fill: ${(p) => p.theme.colorText};
   width: ${(p) => p.theme.tokens.spacing06};
   height: ${(p) => p.theme.tokens.spacing06};

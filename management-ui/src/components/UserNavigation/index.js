@@ -7,7 +7,7 @@ import {
   StyledUserMenu,
   StyledMenuToggleButton,
   StyledUserName,
-  StyledIconChevron,
+  StyledNavigationIconChevron,
 } from './index.styles'
 
 const UserNavigation = ({ fullName, pictureUrl }) => {
@@ -47,7 +47,7 @@ const UserNavigation = ({ fullName, pictureUrl }) => {
       >
         <Avatar data-testid="avatar" alt={t('User avatar')} url={pictureUrl} />
         <StyledUserName data-testid="full-name">{fullName}</StyledUserName>
-        <StyledIconChevron flipHorizontal={menuIsOpen} />
+        <StyledNavigationIconChevron flipHorizontal={menuIsOpen} />
       </StyledMenuToggleButton>
 
       {menuIsOpen && (
