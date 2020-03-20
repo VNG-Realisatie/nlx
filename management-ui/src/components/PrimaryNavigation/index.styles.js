@@ -1,22 +1,28 @@
 import styled from 'styled-components'
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import NLXManagementLogo from '../NLXManagementLogo'
 
 export const StyledNLXManagementLogo = styled(NLXManagementLogo)`
   width: 4rem;
-  margin-bottom: ${(p) => p.theme.tokens.spacing05};
+  display: block;
+  margin: 0 auto;
 `
 
 export const StyledNav = styled.nav`
   background: #313131;
   flex: 0 0 6.5rem;
   text-align: center;
-  padding-top: ${(p) => p.theme.tokens.spacing08};
+  padding-top: ${(p) => p.theme.tokens.spacing06};
   height: 100%;
   color: ${(p) => p.theme.tokens.colorPaletteGray500};
   list-style-type: none;
   font-size: ${(p) => p.theme.tokens.spacing04};
   text-align: center;
+`
+
+export const StyledHomeLink = styled(Link)`
+  display: block;
+  padding: ${(p) => p.theme.tokens.spacing05} 0;
 `
 
 export const StyledLink = styled(NavLink)`

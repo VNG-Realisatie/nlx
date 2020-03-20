@@ -1,9 +1,9 @@
-import { Link } from 'react-router-dom'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   StyledIcon,
   StyledLink,
+  StyledHomeLink,
   StyledNLXManagementLogo,
   StyledNav,
 } from './index.styles'
@@ -18,9 +18,13 @@ const PrimaryNavigation = () => {
   const { t } = useTranslation()
   return (
     <StyledNav>
-      <Link to="/" title={t('NLX Dashboard homepage')} aria-label="Homepage">
+      <StyledHomeLink
+        to="/"
+        title={t('NLX Dashboard homepage')}
+        aria-label="Homepage"
+      >
         <StyledNLXManagementLogo />
-      </Link>
+      </StyledHomeLink>
 
       <StyledLink to="/services" aria-label="Services page">
         <StyledIcon as={IconServices} />

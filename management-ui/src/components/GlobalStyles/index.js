@@ -17,6 +17,7 @@ export default createGlobalStyle`
     border: 2px solid transparent;
     
     &:focus {
+      outline: none;
       border-color: ${(p) => p.theme.colorBorderDropdownFocus};
     }
   }  
