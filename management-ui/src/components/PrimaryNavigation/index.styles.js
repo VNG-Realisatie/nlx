@@ -9,7 +9,7 @@ export const StyledNLXManagementLogo = styled(NLXManagementLogo)`
 
 export const StyledNav = styled.nav`
   background: #313131;
-  flex: 0 0 104px;
+  flex: 0 0 6.5rem;
   text-align: center;
   padding-top: ${(p) => p.theme.tokens.spacing08};
   height: 100%;
