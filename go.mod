@@ -61,7 +61,7 @@ require (
 	github.com/weppos/publicsuffix-go v0.13.0 // indirect
 	github.com/zmap/zlint v1.1.0 // indirect
 	go.uber.org/zap v1.14.1
-	golang.org/x/net v0.0.0-20200319234117-63522dbf7eec
+	golang.org/x/net v0.0.0-20200320220750-118fecf932d8
 	google.golang.org/genproto v0.0.0-20200115191322-ca5a22157cba
 	google.golang.org/grpc v1.25.1
 	sigs.k8s.io/yaml v1.2.0 // indirect
