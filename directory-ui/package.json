@@ -43,7 +43,7 @@
     "eslint-plugin-react": "7.18.3",
     "eslint-plugin-standard": "4.0.1",
     "http-proxy-middleware": "1.0.1",
-    "prettier": "1.19.1"
+    "prettier": "2.0.1"
   },
   "browserslist": [
     ">0.2%",
