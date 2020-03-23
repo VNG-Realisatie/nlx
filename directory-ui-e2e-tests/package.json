@@ -9,7 +9,7 @@
     "debug": "URL=http://localhost:3000 npm test"
   },
   "devDependencies": {
-    "axe-core": "3.5.1",
+    "axe-core": "3.5.2",
     "jest": "25.1.0",
     "jest-puppeteer": "4.4.0",
     "puppeteer": "2.1.1"
