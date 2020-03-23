@@ -1,12 +1,12 @@
 import React from 'react'
-import { element, string } from 'prop-types'
+import { oneOfType, element, node, string } from 'prop-types'
 import PrimaryNavigation from '../PrimaryNavigation'
-import UserNavigation from '../UserNavigation'
 import {
   StyledMain,
   StyledContent,
   StyledPageDescription,
   StyledPageTitle,
+  StyledUserNavigation,
   StyledPageHeader,
 } from './index.styles'
 
@@ -16,8 +16,8 @@ const PageTemplate = ({ title, description, children }) => {
       <PrimaryNavigation />
       <StyledContent>
         <StyledPageHeader>
-          <StyledPageTitle>{title}</StyledPageTitle>
-          <UserNavigation fullName="John Doe" />
+          {title && <StyledPageTitle>{title}</StyledPageTitle>}
+          <StyledUserNavigation fullName="John Doe" />
         </StyledPageHeader>
         <StyledPageDescription>{description}</StyledPageDescription>
         {children}
@@ -29,7 +29,7 @@ const PageTemplate = ({ title, description, children }) => {
 PageTemplate.propTypes = {
   title: string,
   description: string,
-  children: element,
+  children: oneOfType([element, node]),
 }
 
 PageTemplate.defaultProps = {

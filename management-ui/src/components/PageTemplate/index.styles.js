@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import UserNavigation from '../UserNavigation'
 
 export const StyledMain = styled.main`
   display: flex;
@@ -13,6 +14,10 @@ export const StyledContent = styled.div`
 
 export const StyledPageTitle = styled.h1`
   margin-bottom: ${(p) => p.theme.tokens.spacing01};
+`
+
+export const StyledUserNavigation = styled(UserNavigation)`
+  margin-left: auto; /* Aligns it right when no title present */
 `
 
 export const StyledPageDescription = styled.p`

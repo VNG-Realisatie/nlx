@@ -10,7 +10,7 @@ import {
   StyledIconChevron,
 } from './index.styles'
 
-const UserNavigation = ({ fullName, pictureUrl }) => {
+const UserNavigation = ({ fullName, pictureUrl, ...props }) => {
   const { t } = useTranslation()
   const [menuIsOpen, setMenuIsOpen] = useState(false)
 
@@ -35,6 +35,7 @@ const UserNavigation = ({ fullName, pictureUrl }) => {
       isOpen={menuIsOpen}
       onFocus={onFocusHandler}
       onBlur={onBlurHandler}
+      {...props}
       data-testid="user-navigation"
     >
       <StyledToggleButton
