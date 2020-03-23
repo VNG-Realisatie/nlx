@@ -22,8 +22,9 @@ const DOCS_PAGE_URL =
   window._env.REACT_APP_NAVBAR_DOCS_PAGE_URL || 'https://docs.nlx.io'
 const DIRECTORY_URL =
   window._env.REACT_APP_NAVBAR_DIRECTORY_URL || 'https://directory.nlx.io'
-const SUPPORT_PAGE_URL = `${window._env.REACT_APP_NAVBAR_DOCS_PAGE_URL ||
-  'https://docs.nlx.io'}/support`
+const SUPPORT_PAGE_URL = `${
+  window._env.REACT_APP_NAVBAR_DOCS_PAGE_URL || 'https://docs.nlx.io'
+}/support`
 
 const App = () => (
   <StyledApp>

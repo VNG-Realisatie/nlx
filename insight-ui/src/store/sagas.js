@@ -18,7 +18,7 @@ function* fetchProofOnLoginSuccess(action) {
   )
 }
 
-export default function*() {
+export default function* () {
   yield takeLatest(TYPES.FETCH_ORGANIZATIONS_REQUEST, fetchOrganizations)
   yield takeLatest(TYPES.FETCH_ORGANIZATION_LOGS_REQUEST, (action) =>
     fetchOrganizationLogs(action.data),
