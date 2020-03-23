@@ -19,10 +19,18 @@
       "masterIssueApproval": true
     }
   },
-  "packageRules": [{
-    "paths": ["docs/**"],
-    "packagePatterns": ["^@docusaurus/"],
-    "groupName": "docusaurus packages",
-    "allowedVersions": "2.0.0-alpha.36"
-  }]
+  "packageRules": [
+    {
+      "groupName": "docusaurus packages",
+      "paths": ["docs/**"],
+      "packagePatterns": ["^@docusaurus/"],
+      "allowedVersions": "2.0.0-alpha.36"
+    },
+    {
+      "groupName": "etcd fails with grpc >= 1.27.0",
+      "managers": ["gomod"],
+      "packageNames": ["google.golang.org/grpc"],
+      "allowedVersions": "<1.27.0"
+    }
+  ]
 }
