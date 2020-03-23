@@ -21,12 +21,12 @@ const PrimaryNavigation = () => {
       <StyledHomeLink
         to="/"
         title={t('NLX Dashboard homepage')}
-        aria-label="Homepage"
+        aria-label={t('Homepage')}
       >
         <StyledNLXManagementLogo />
       </StyledHomeLink>
 
-      <StyledLink to="/services" aria-label="Services page">
+      <StyledLink to="/services" aria-label={t('Services page')}>
         <StyledIcon as={IconServices} />
         {t('Services')}
       </StyledLink>
