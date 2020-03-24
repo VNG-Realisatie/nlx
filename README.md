@@ -101,7 +101,7 @@ Make sure you have installed the following tools:
 
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 - [minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/)
-- [helm](https://docs.helm.sh/using_helm/)
+- [helm](https://helm.sh/docs/intro/)
 
 For autocompletion and local development tasks, it's also recommended to install the following:
 
@@ -125,12 +125,16 @@ To let the docker commands make use of Minikube execute the following before pro
 eval $(minikube docker-env)
 ```
 
-Once minikube is running, initialize helm by running `helm init` followed by `helm repo update`
+Once minikube is running, add the stable repository to Helm:
+
+```bash
+helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+```
 
 Next, install Traefik as ingress controller for web and rest-api requests.
 
 ```bash
-helm install stable/traefik --name traefik --namespace traefik --values helm/traefik-values-minikube.yaml
+helm install traefik stable/traefik --namespace kube-system --values helm/traefik-values-minikube.yaml
 ```
 
 Also install KubeDB, an operator that manages postgres instances. Follow the [kubedb.com instructions for installing using helm](https://kubedb.com/docs/0.12.0/setup/install/#using-helm).

@@ -11,7 +11,8 @@ Deploy Review App:
     - echo -e -n "$CI_ENVIRONMENT_SLUG.$REVIEW_BASE_DOMAIN" > ci_environment_url.txt
     - |
         echo "install/upgrade ${NAME}"
-        helm upgrade --install ${NAME} ./helm/nlx-directory \
+        kubectl create namespace "${NAME}" || true
+        helm --debug upgrade --install ${NAME} ./helm/nlx-directory \
         --namespace ${NAME} \
         --values ./helm/nlx-directory/values-review.yaml \
         --set imageTag=$IMAGE_TAG \
@@ -26,6 +27,7 @@ Deploy Review App:
         do
           ORG_NAME=nlx-${ORG}-${CI_ENVIRONMENT_SLUG}
           echo "install/upgrade ${ORG_NAME}"
+          kubectl create namespace "${ORG_NAME}" || true
           helm upgrade --install ${ORG_NAME} ./helm/nlx-organization \
           --namespace ${ORG_NAME} \
           --values ./helm/nlx-organization/values-review-${ORG}.yaml \
@@ -60,7 +62,7 @@ Remove Review App:
   script:
     - |
         for NAME in haarlem rdw brp lorem ipsum directory; do
-          helm delete --purge nlx-$NAME-$CI_ENVIRONMENT_SLUG
+          helm uninstall nlx-$NAME-$CI_ENVIRONMENT_SLUG --namespace nlx-$NAME-$CI_ENVIRONMENT_SLUG
           kubectl delete namespace nlx-$NAME-$CI_ENVIRONMENT_SLUG
         done
   when: manual
