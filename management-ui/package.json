@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@commonground/design-system": "9.0.0",
+    "@commonground/design-system": "9.0.1",
     "@testing-library/jest-dom": "5.1.1",
     "@testing-library/react": "10.0.1",
     "@testing-library/user-event": "10.0.0",
@@ -51,7 +51,7 @@
     "eslint-plugin-promise": "4.2.1",
     "eslint-plugin-standard": "4.0.1",
     "history": "4.10.1",
-    "prettier": "2.0.1",
+    "prettier": "2.0.2",
     "typescript": "3.8.3"
   }
 }

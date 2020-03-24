@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@commonground/design-system": "9.0.0",
+    "@commonground/design-system": "9.0.1",
     "ajv-keywords": "3.4.1",
     "copy-text-to-clipboard": "2.1.1",
     "core-js": "3.6.4",
@@ -43,7 +43,7 @@
     "eslint-plugin-react": "7.19.0",
     "eslint-plugin-standard": "4.0.1",
     "http-proxy-middleware": "1.0.3",
-    "prettier": "2.0.1"
+    "prettier": "2.0.2"
   },
   "browserslist": [
     ">0.2%",
