@@ -27,10 +27,16 @@
       "allowedVersions": "2.0.0-alpha.36"
     },
     {
-      "groupName": "etcd fails with grpc >= 1.27.0",
+      "groupName": "etcd fails with grpc > 1.26.0",
       "managers": ["gomod"],
       "packageNames": ["google.golang.org/grpc"],
-      "allowedVersions": "<1.27.0"
+      "allowedVersions": "<=1.26.0"
+    },
+    {
+      "groupName": "genproto updates grpc > 1.26.0",
+      "managers": ["gomod"],
+      "packageNames": ["google.golang.org/genproto"],
+      "allowedVersions": "<=0.0.0-20200128133413-58ce757ed39b"
     }
   ]
 }
