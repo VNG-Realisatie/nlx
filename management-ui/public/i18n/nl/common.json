@@ -1,4 +1,15 @@
 {
+  "Homepage": "Homepage",
+  "NLX Dashboard homepage": "NLX Dashboard homepage",
+  "Services page": "Services pagina",
+
+  "Account menu": "Account menu",
+  "User avatar": "Avatar van gebruiker",
+  "Logout": "Uitloggen",
+
   "Welcome": "Welkom",
-  "Log in to continue.": "Login om verder te gaan."
+  "Log in to continue.": "Login om verder te gaan.",
+
+  "Services": "Services",
+  "An overview of the services here.": "Hier komt een overzicht van services."
 }

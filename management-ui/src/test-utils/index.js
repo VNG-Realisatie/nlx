@@ -1,5 +1,5 @@
 import React from 'react'
-import { oneOfType, element, node } from 'prop-types'
+import { node } from 'prop-types'
 import { render } from '@testing-library/react'
 import { I18nextProvider } from 'react-i18next'
 
@@ -14,11 +14,7 @@ const AllTheProviders = ({ children }) => (
   </ThemeProvider>
 )
 AllTheProviders.propTypes = {
-  children: oneOfType([element, node]),
-}
-
-AllTheProviders.propTypes = {
-  children: element,
+  children: node,
 }
 
 const renderWithProviders = (ui, options) =>

@@ -7,7 +7,7 @@ describe('LoginPage', () => {
         await page.setBypassCSP(true)
 
         // page should be loaded
-        await page.goto(`${baseUrl}/inloggen`, { waitUntil: 'load' })
+        await page.goto(`${baseUrl}/login`, { waitUntil: 'load' })
 
         // page content should be rendered
         await page.waitForSelector('p')
