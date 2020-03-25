@@ -80,7 +80,7 @@ kind: Service
 metadata:
   name: directory-registration-api
   namespace: {{ .Release.Namespace }}
-  labels: {{- include "nlx-directory.common.metadata-labels" . | nindent 2 }}
+  labels: {{- include "nlx-directory.common.metadata-labels" . | nindent 4 }}
 spec:
   selector: {{ include "nlx-directory.common.metadata-labels" . | nindent 4 }}
   ports:
