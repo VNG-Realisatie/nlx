@@ -10,10 +10,10 @@ const NotFoundPage = () => {
     <PageTemplate>
       <NotFoundContainer>
         <h1>{t('Page not found')}</h1>
-        <p>{t('We could not find what you were looking for')}</p>
+        <p>{t('We could not find what you were looking for.')}</p>
         <p>
           {t(
-            'Please contact the owner of the site that linked you here and let them know their link is broken',
+            'Please contact the person or organisation that linked you here and let them know their link is broken.',
           )}
         </p>
       </NotFoundContainer>
