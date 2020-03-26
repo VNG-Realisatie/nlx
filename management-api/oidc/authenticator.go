@@ -45,10 +45,10 @@ type Authenticator struct {
 
 // User contains all the details of a specific user
 type User struct {
-	Sub     string `json:"sub"`
-	Name    string `json:"name"`
-	Email   string `json:"email"`
-	Picture string `json:"picture"`
+	ID         string `json:"id"`
+	FullName   string `json:"fullName"`
+	Email      string `json:"email"`
+	PictureURL string `json:"pictureUrl"`
 }
 
 // NewAuthenticator creates a new OIDC authenticator
@@ -176,8 +176,14 @@ func (a *Authenticator) callback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := User{}
-	err = idToken.Claims(&user)
+	var claims struct {
+		Sub     string `json:"sub"`
+		Name    string `json:"name"`
+		Email   string `json:"email"`
+		Picture string `json:"picture"`
+	}
+
+	err = idToken.Claims(&claims)
 
 	if err != nil {
 		a.logger.Info("could not extract claims", zap.Error(err))
@@ -186,7 +192,12 @@ func (a *Authenticator) callback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	session.Values["user"] = user
+	session.Values["user"] = &User{
+		ID:         claims.Sub,
+		FullName:   claims.Name,
+		Email:      claims.Email,
+		PictureURL: claims.Picture,
+	}
 
 	err = session.Save(r, w)
 	if err != nil {

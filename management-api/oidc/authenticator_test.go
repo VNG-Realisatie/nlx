@@ -42,7 +42,7 @@ func TestOnlyAuthenticated(t *testing.T) {
 
 	mockLoggedInSession := sessions.NewSession(mockStore, "nlx_management_session")
 	mockLoggedInSession.Values["user"] = &User{
-		Sub: "42",
+		ID: "42",
 	}
 
 	srv := httptest.NewServer(authenticator.OnlyAuthenticated(mockHandler))
@@ -176,7 +176,7 @@ func TestLogoutEndpoint(t *testing.T) {
 
 	mockSession := sessions.NewSession(mockStore, "nlx_management_session")
 	mockSession.Values["user"] = &User{
-		Sub: "42",
+		ID: "42",
 	}
 
 	mockStore.EXPECT().Get(gomock.Any(), "nlx_management_session").Return(mockSession, nil).AnyTimes()

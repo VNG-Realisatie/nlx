@@ -13,10 +13,10 @@ describe('the UserRepository', () => {
             status: 200,
             json: () =>
               Promise.resolve({
+                id: '42',
+                fullName: 'full name',
                 email: 'email',
-                name: 'full name',
-                sub: 'external id',
-                picture: 'picture url',
+                pictureUrl: 'picture url',
               }),
           }),
         )
@@ -27,10 +27,10 @@ describe('the UserRepository', () => {
       it('should return the user', () => {
         expect.assertions(1)
         return expect(UserRepository.getAuthenticatedUser()).resolves.toEqual({
+          id: '42',
+          fullName: 'full name',
           email: 'email',
-          name: 'full name',
-          sub: 'external id',
-          picture: 'picture url',
+          pictureUrl: 'picture url',
         })
       })
     })

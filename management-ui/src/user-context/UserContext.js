@@ -68,7 +68,6 @@ UserContextProvider.propTypes = {
   children: node,
   user: shape({
     id: string,
-    externalId: string,
     fullName: string,
     email: string,
     pictureUrl: string,

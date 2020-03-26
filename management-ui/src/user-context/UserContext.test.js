@@ -13,7 +13,7 @@ describe('UserContext', () => {
           Promise.resolve({
             ok: true,
             status: 200,
-            json: () => Promise.resolve({ sub: '42' }),
+            json: () => Promise.resolve({ id: '42' }),
           }),
         )
       })
@@ -27,10 +27,10 @@ describe('UserContext', () => {
 
       it('should make the user available to the context consumers', () => {
         const { getByTestId } = render(
-          <UserContextProvider user={{ externalId: '43' }}>
+          <UserContextProvider user={{ id: '43' }}>
             <UserContext.Consumer>
               {({ user }) => (
-                <div data-testid="child">{user ? user.externalId : ''}</div>
+                <div data-testid="child">{user ? user.id : ''}</div>
               )}
             </UserContext.Consumer>
           </UserContextProvider>,
@@ -48,7 +48,7 @@ describe('UserContext', () => {
       afterEach(() => global.fetch.mockRestore())
 
       it('should not fetch the current user', async () => {
-        render(<UserContextProvider user={{ externalId: '42' }} />)
+        render(<UserContextProvider user={{ id: '42' }} />)
 
         expect(global.fetch).not.toHaveBeenCalled()
       })
