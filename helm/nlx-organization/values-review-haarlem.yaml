@@ -132,10 +132,4 @@ insight:
 
 debugEnableOutwayIngress: true
 
-configAPI:
-  enabled: false
-
-management:
-  enable: false
-
 replicas: 1

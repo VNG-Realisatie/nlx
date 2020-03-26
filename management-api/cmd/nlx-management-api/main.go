@@ -14,9 +14,7 @@ import (
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/management-api/api"
-	"go.nlx.io/nlx/management-api/daos"
-	"go.nlx.io/nlx/management-api/repositories"
-	"go.nlx.io/nlx/management-api/session"
+	"go.nlx.io/nlx/management-api/oidc"
 )
 
 var options struct {
@@ -24,8 +22,7 @@ var options struct {
 	ConfigAPIAddress string `long:"config-api-address" env:"CONFIG_API_ADDRESS" description:"Address of the config API. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 	logoptions.LogOptions
 	orgtls.TLSOptions
-	daos.AccountCSVOptions
-	session.AuthenticationManagerOptions
+	oidc.Options
 }
 
 func main() {
@@ -60,21 +57,9 @@ func main() {
 
 	mainProcess := process.NewProcess(logger)
 
-	accountCSV, err := daos.NewAccountCSV(options.AccountCSVOptions.CsvFileName)
-	if err != nil {
-		logger.Fatal("cannot load accounts csv file", zap.String("csv file", options.AccountCSVOptions.CsvFileName), zap.Error(err))
-	}
+	authenticator := oidc.NewAuthenticator(logger, &options.Options)
 
-	accountRepository, err := repositories.NewAccount(accountCSV)
-	if err != nil {
-		logger.Fatal("cannot load accounts repository", zap.Error(err))
-	}
-
-	authenticationManager := session.NewAuthenticationManager(logger, options.AuthenticationManagerOptions, accountRepository)
-
-	authorizer := session.NewAuthorizer()
-
-	a, err := api.NewAPI(logger, mainProcess, options.TLSOptions, options.ConfigAPIAddress, authenticationManager, authorizer)
+	a, err := api.NewAPI(logger, mainProcess, options.TLSOptions, options.ConfigAPIAddress, authenticator)
 	if err != nil {
 		logger.Fatal("cannot setup management api", zap.Error(err))
 	}

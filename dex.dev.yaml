@@ -1,0 +1,25 @@
+issuer: http://localhost:5556
+
+storage:
+  type: sqlite3
+  config:
+    file: /tmp/dex.db
+
+web:
+  http: 0.0.0.0:5556
+
+staticClients:
+- id: management
+  redirectURIs:
+    - 'http://localhost:3002/oidc/callback'
+  name: 'NLX Management'
+  secret: ZXhhbXBsZS1hcHAtc2VjcmV0
+
+enablePasswordDB: true
+
+staticPasswords:
+- email: "admin@example.com"
+  hash: "$2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W"  # hash for: password
+  username: "admin"
+  name: "admin"
+  userID: "23b027bf-b1b1-4a08-b95b-921d4afc38bc"

@@ -20,6 +20,15 @@ services:
     volumes:
       - etcd-data:/default.etcd
 
+  # OpenID connect provider
+  dex:
+    image: quay.io/dexidp/dex:v2.22.0
+    command: serve /config.yaml
+    ports:
+      - 5556:5556
+    volumes:
+      - ./dex.dev.yaml:/config.yaml
+
 volumes:
   postgres-data:
   etcd-data:

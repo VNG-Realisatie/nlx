@@ -4,11 +4,11 @@ go 1.14
 
 require (
 	github.com/Microsoft/go-winio v0.4.14 // indirect
-	github.com/alexedwards/argon2id v0.0.0-20190612080829-01a59b2b8802
 	github.com/bwesterb/go-atum v1.0.3 // indirect
 	github.com/cloudflare/cfssl v1.4.1
 	github.com/coreos/bbolt v1.3.3 // indirect
 	github.com/coreos/etcd v3.3.19+incompatible
+	github.com/coreos/go-oidc v2.2.1+incompatible
 	github.com/coreos/go-semver v0.3.0 // indirect
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
@@ -22,14 +22,12 @@ require (
 	github.com/go-chi/render v1.0.1
 	github.com/go-errors/errors v1.0.1 // indirect
 	github.com/go-sql-driver/mysql v1.5.0 // indirect
-	github.com/gocarina/gocsv v0.0.0-20200324105150-9eab084b7a45
 	github.com/gogo/protobuf v1.3.1
 	github.com/golang-migrate/migrate v3.5.4+incompatible
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/golang/mock v1.4.3
 	github.com/golang/protobuf v1.3.5
 	github.com/google/uuid v1.1.1 // indirect
-	github.com/gorilla/csrf v1.6.2
 	github.com/gorilla/schema v1.1.0
 	github.com/gorilla/sessions v1.2.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.0
@@ -47,10 +45,10 @@ require (
 	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect
 	github.com/pelletier/go-toml v1.6.0 // indirect
 	github.com/pkg/errors v0.9.1
+	github.com/pquerna/cachecontrol v0.0.0-20180517163645-1555304b9b35 // indirect
 	github.com/privacybydesign/gabi v0.0.0-20190503104928-ce779395f4c9 // indirect
 	github.com/privacybydesign/irmago v0.4.1
 	github.com/prometheus/client_golang v1.5.1 // indirect
-	github.com/satori/go.uuid v1.2.0
 	github.com/spf13/afero v1.2.2 // indirect
 	github.com/spf13/cobra v0.0.6
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
@@ -62,7 +60,9 @@ require (
 	github.com/zmap/zlint v1.1.0 // indirect
 	go.uber.org/zap v1.14.1
 	golang.org/x/net v0.0.0-20200320220750-118fecf932d8
+	golang.org/x/oauth2 v0.0.0-20180821212333-d2e6202438be
 	google.golang.org/genproto v0.0.0-20200115191322-ca5a22157cba
 	google.golang.org/grpc v1.26.0
+	gopkg.in/square/go-jose.v2 v2.4.1 // indirect
 	sigs.k8s.io/yaml v1.2.0 // indirect
 )

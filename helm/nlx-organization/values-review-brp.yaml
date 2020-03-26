@@ -121,10 +121,4 @@ insight:
     pwIDAQAB
     -----END PUBLIC KEY-----
 
-configAPI:
-  enabled: false
-
-management:
-  enable: false
-
 replicas: 1

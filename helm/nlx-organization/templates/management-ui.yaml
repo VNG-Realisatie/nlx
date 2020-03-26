@@ -53,6 +53,10 @@ spec:
             backend:
               serviceName: {{.component}}
               servicePort: http
+          - path: /oidc
+            backend:
+              serviceName: management-api
+              servicePort: http
           - path: /api
             backend:
               serviceName: management-api

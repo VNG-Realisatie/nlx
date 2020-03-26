@@ -18,7 +18,6 @@ import (
 	"google.golang.org/grpc/credentials"
 
 	"go.nlx.io/nlx/config-api/configapi"
-	"go.nlx.io/nlx/management-api/authorization"
 )
 
 // ListenAndServe is a blocking function that listens on provided tcp address to handle requests.
@@ -44,15 +43,10 @@ func (a *API) ListenAndServe(address string) error {
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
-	r.Use(a.authenticationManager.Middleware)
 
 	r.Get("/health", health)
-
-	apiRouter := chi.NewRouter()
-	apiRouter.Use(authorization.NewAuthorization(a.authorizer).Middleware)
-	apiRouter.Mount("/auth", a.authenticationManager.Routes())
-	apiRouter.Mount("/", a.mux)
-	r.Mount("/api", apiRouter)
+	r.Mount("/oidc", a.authenticator.Routes())
+	r.Mount("/api", a.authenticator.OnlyAuthenticated(a.mux))
 
 	server := &http.Server{
 		Addr:    address,

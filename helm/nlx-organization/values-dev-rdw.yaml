@@ -1,3 +1,5 @@
+imagePullPolicy: IfNotPresent
+
 organizationName: rdw
 
 domain: nlx-dev-rdw
@@ -133,7 +135,12 @@ configAPI:
       "inways": ["inway.rdw"]
     }
 
+dex:
+  enable: true
+
 management:
   enable: true
+  oidcDiscoveryUrl: http://dex.nlx-dev-rdw.minikube
+  oidcRedirectUrl: http://management.nlx-dev-rdw.minikube/oidc/callback
 
 replicas: 1

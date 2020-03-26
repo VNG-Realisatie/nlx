@@ -37,7 +37,8 @@ Deploy Review App:
           --set "directoryInspectionHostname=directory-inspection-api.${NAME}" \
           --set "caAddress=ca-cfssl-unsafe.${NAME}" \
           --set "externalDomain=${ORG_NAME}.${REVIEW_BASE_DOMAIN}" \
-          --set "management.accountsCsv=${MANAGEMENT_ACCOUNTS}" \
+          --set "management.oidcDiscoveryUrl=https://dex-${ORG_NAME}.${REVIEW_BASE_DOMAIN}" \
+          --set "management.oidcRedirectUrl=https://management-${ORG_NAME}.${REVIEW_BASE_DOMAIN}/oidc/callback" \
           --set "domain=${ORG_NAME}"
         done
   environment:

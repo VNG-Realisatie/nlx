@@ -1,3 +1,5 @@
+imagePullPolicy: IfNotPresent
+
 organizationName: brp
 
 domain: nlx-dev-brp
@@ -161,11 +163,5 @@ insight:
     ICYvDi+kwAaTzJRqhE9VnTQmkW0/CGZTOZiC/5vPaCS3a4VN44Vnamejd3Gw+fw9
     pwIDAQAB
     -----END PUBLIC KEY-----
-
-configAPI:
-  enabled: false
-
-management:
-  enable: false
 
 replicas: 1

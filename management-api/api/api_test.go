@@ -5,15 +5,12 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
-	mock_authorization "go.nlx.io/nlx/management-api/authorization/mock"
-	mock_repositories "go.nlx.io/nlx/management-api/repositories/mock"
-	"go.nlx.io/nlx/management-api/session"
+	"go.nlx.io/nlx/management-api/oidc"
 )
 
 var tests = []struct {
@@ -70,22 +67,12 @@ func TestNewAPI(t *testing.T) {
 	logger := zap.NewNop()
 	testProcess := process.NewProcess(logger)
 
-	mockCtrl := gomock.NewController(t)
-	defer mockCtrl.Finish()
-
-	authenticationManager := session.NewAuthenticationManager(logger, session.AuthenticationManagerOptions{
-		SecretKey:           "test",
-		SessionCookieSecure: false,
-		SessionCookieMaxAge: i,
-	}, mock_repositories.NewMockAccount(mockCtrl))
-	authorizer := mock_authorization.NewMockAuthorizer(mockCtrl)
-
 	// Test exceptions during management-api creation
 	for _, test := range tests {
 		test := test
 		t.Run(test.name, func(t *testing.T) {
 			fmt.Printf("%+v", test.tlsOptions)
-			_, err := NewAPI(logger, testProcess, test.tlsOptions, test.configAPIAddress, authenticationManager, authorizer)
+			_, err := NewAPI(logger, testProcess, test.tlsOptions, test.configAPIAddress, &oidc.Authenticator{})
 
 			if test.expectedErrorMessage != "" {
 				assert.EqualError(t, err, test.expectedErrorMessage)

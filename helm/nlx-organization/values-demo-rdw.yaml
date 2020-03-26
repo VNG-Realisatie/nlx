@@ -131,8 +131,14 @@ configAPI:
       "inways": ["inway.rdw"]
     }
 
+dex:
+  enable: true
+
 management:
   enable: true
+  sessionCookieSecure: true
+  oidcDiscoveryUrl: https://dex.demo.voorbeeld-rdw.nl
+  oidcRedirectUrl: https://management.demo.voorbeeld-rdw.nl/oidc/callback
 
 directoryRegistrationHostname: directory-registration-api.demo.nlx.io
 directoryInspectionHostname: directory-inspection-api.demo.nlx.io

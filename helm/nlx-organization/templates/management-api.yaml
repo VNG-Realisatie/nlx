@@ -1,27 +1,5 @@
 {{ if .Values.management.enable }}
 {{ with set . "component" "management-api" }}
-{{ if .Values.management.accountsCsv }}
-apiVersion: v1
-kind: Secret
-type: Opaque
-metadata:
-  name: management-api-accounts
-  namespace: {{.Release.Namespace}}
-  labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
-data:
-  accountsCsv: {{ .Values.management.accountsCsv }}
----
-apiVersion: v1
-kind: Secret
-type: Opaque
-metadata:
-  name: management-api-account-secret
-  namespace: {{.Release.Namespace}}
-  labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
-data:
-  secretKey: {{ randAlphaNum 32 | b64enc }}
----
-{{ end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata: {{ include "nlx-organization.common.metadata" . | nindent 2 }}
@@ -36,7 +14,7 @@ spec:
     matchLabels:
       release: {{ .Release.Name }}
       app: {{ .Chart.Name }}
-      component: {{.component}}
+      component: {{ .component }}
   template:
     metadata:
       labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 8 }}
@@ -44,14 +22,6 @@ spec:
       volumes:
         - name: certs
           emptyDir: {}
-{{ if .Values.management.accountsCsv }}
-        - name: accounts
-          secret:
-            secretName: management-api-accounts
-            items:
-              - key: accountsCsv
-                path: accounts.csv
-{{ end }}
       initContainers:
         - name: management-api-certs
           image: {{.Values.imagePrefix}}nlxio/ca-cfssl-unsafe:{{.Values.imageTag}}
@@ -65,9 +35,8 @@ spec:
             - |-
                 cd /certs &&
                 /ca/generate-cert.sh {{.component}} {{.Values.organizationName}} {{.Values.caAddress}}
-
       containers:
-        - name: management-api
+        - name: {{ .component }}
           image: {{.Values.imagePrefix}}nlxio/{{.component}}:{{.Values.imageTag}}
           imagePullPolicy: {{.Values.imagePullPolicy}}
           env:
@@ -83,27 +52,24 @@ spec:
               value: "/certs/{{.component}}-key.pem"
             - name: CONFIG_API_ADDRESS
               value: "config-api:443"
-{{ if .Values.management.accountsCsv }}
-            - name: CSV_FILENAME
-              value: /etc/accounts/accounts.csv
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: management-api-account-secret
+                  name: {{ .component }}
                   key: secretKey
             - name: SESSION_COOKIE_SECURE
-              value: "true"
-            - name: SESSION_COOKIE_MAXAGE
-              value: "3600"
-{{ end }}
+              value: {{ if .Values.management.sessionCookieSecure }}"1"{{ else }}"0"{{ end }}
+            - name: OIDC_CLIENT_ID
+              value: {{ .Values.management.oidcClientId }}
+            - name: OIDC_CLIENT_SECRET
+              value: {{ .Values.management.oidcClientSecret }}
+            - name: OIDC_DISCOVERY_URL
+              value: {{ .Values.management.oidcDiscoveryUrl }}
+            - name: OIDC_REDIRECT_URL
+              value: {{ .Values.management.oidcRedirectUrl }}
           volumeMounts:
             - name: certs
               mountPath: /certs
-{{ if .Values.management.accountsCsv }}
-            - name: accounts
-              mountPath: "/etc/accounts/"
-              readOnly: true
-{{ end }}
       restartPolicy: Always
 ---
 apiVersion: v1
@@ -116,5 +82,15 @@ spec:
       protocol: TCP
       port: 80
       targetPort: 8080
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: {{ .component }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{ include "nlx-organization.common.metadata-labels" . | nindent 4 }}
+data:
+  secretKey: {{ randAlphaNum 32 | b64enc }}
 {{ end }}
 {{ end }}

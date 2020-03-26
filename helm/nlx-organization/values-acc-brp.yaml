@@ -119,12 +119,6 @@ insight:
     pwIDAQAB
     -----END PUBLIC KEY-----
 
-configAPI:
-  enabled: false
-
-management:
-  enable: false
-
 directoryRegistrationHostname: directory-registration-api.acc.nlx.io
 directoryInspectionHostname: directory-inspection-api.acc.nlx.io
 

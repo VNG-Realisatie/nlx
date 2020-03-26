@@ -131,7 +131,11 @@ configAPI:
       "inways": ["inway.rdw"]
     }
 
+dex:
+  enable: true
+
 management:
   enable: true
+  sessionCookieSecure: true
 
 replicas: 1
