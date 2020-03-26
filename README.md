@@ -88,10 +88,10 @@ This will start the following services:
 
 And the following frontend applications:
 
-- docs (HTTP: 3000)
-- directory-ui (HTTP: 3001)
-- management-ui (HTTP: 3002)
-- insight-ui (HTTP: 3003)
+- [docs](http://localhost:3000) (HTTP: 3000)
+- [directory-ui](http://localhost:3001) (HTTP: 3001)
+- [management-ui](http://localhost:3002) (HTTP: 3002)
+- [insight-ui](http://localhost:3003) (HTTP: 3003)
 
 Services will reload automatically when the code changes.
 

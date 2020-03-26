@@ -2,6 +2,7 @@
   "name": "@nlxio/management-ui-e2e-tests",
   "version": "0.0.0",
   "scripts": {
+    "test": "if test -n \"$CI\"; then npm run test:browserstack; else npm run test:local; fi",
     "test:browserstack": "node outputUrl.js && testcafe 'browserstack:firefox,browserstack:chrome,browserstack:safari,browserstack:ie,browserstack:edge' --reporter 'spec,html:./test-results/index.html'",
     "test:local": "node outputUrl.js && testcafe 'all' --reporter 'spec,html:./test-results/index.html'"
   },

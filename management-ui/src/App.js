@@ -8,29 +8,30 @@ import theme from './theme'
 import LoginPage from './pages/LoginPage/index'
 import ServicesPage from './pages/ServicesPage'
 import { StyledContainer } from './App.styles'
+import { UserContextProvider } from './user-context/UserContext'
 
 const App = () => (
-  <StyledContainer>
-    <ThemeProvider theme={theme}>
-      <DSGlobalStyles />
-      <GlobalStyles />
+  <UserContextProvider>
+    <StyledContainer>
+      <ThemeProvider theme={theme}>
+        <DSGlobalStyles />
+        <GlobalStyles />
 
-      {/* Suspense is required for XHR backend i18next */}
-      <Suspense fallback={null}>
-        <Route exact path="/">
-          <Redirect to="/login" />
-        </Route>
-
-        <Route path="/login">
-          <LoginPage />
-        </Route>
-
-        <Route path="/services">
-          <ServicesPage />
-        </Route>
-      </Suspense>
-    </ThemeProvider>
-  </StyledContainer>
+        {/* Suspense is required for XHR backend i18next */}
+        <Suspense fallback={null}>
+          <Route exact path="/">
+            <Redirect to="/login" />
+          </Route>
+          <Route path="/login">
+            <LoginPage />
+          </Route>
+          <Route path="/services">
+            <ServicesPage />
+          </Route>
+        </Suspense>
+      </ThemeProvider>
+    </StyledContainer>
+  </UserContextProvider>
 )
 
 export default App

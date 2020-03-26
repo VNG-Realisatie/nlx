@@ -5,10 +5,11 @@
 
   "Account menu": "Account menu",
   "User avatar": "Avatar van gebruiker",
-  "Logout": "Uitloggen",
+  "Log out": "Uitloggen",
 
   "Welcome": "Welkom",
-  "Log in to continue.": "Login om verder te gaan.",
+  "Log in to continue.": "Log in om verder te gaan.",
+  "Log in with organization account": "Inloggen met organisatieaccount",
 
   "Services": "Services",
   "An overview of the services here.": "Hier komt een overzicht van services."

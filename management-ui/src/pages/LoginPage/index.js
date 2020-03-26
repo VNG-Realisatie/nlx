@@ -1,14 +1,18 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Button } from '@commonground/design-system'
+import UserContext from '../../user-context/UserContext'
 import {
   StyledContainer,
   StyledContent,
-  StyledSidebar,
+  StyledExternalLink,
   StyledNLXManagementLogo,
+  StyledSidebar,
 } from './index.styles'
 
 const LoginPage = () => {
   const { t } = useTranslation()
+  const { user } = useContext(UserContext)
 
   return (
     <StyledContainer>
@@ -17,7 +21,20 @@ const LoginPage = () => {
       </StyledSidebar>
       <StyledContent>
         <h1>{t('Welcome')}</h1>
-        <p>{t('Log in to continue.')}</p>
+        {!user ? (
+          <>
+            <p>{t('Log in to continue.')}</p>
+            <Button id="login" as="a" href="/oidc/authenticate">
+              {t('Log in with organization account')} <StyledExternalLink />
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button id="logout" as="a" href="/oidc/logout">
+              {t('Log out')}
+            </Button>
+          </>
+        )}
       </StyledContent>
     </StyledContainer>
   )
