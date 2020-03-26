@@ -7,7 +7,7 @@ describe('NotFoundPage', () => {
         await page.setBypassCSP(true)
 
         // page should be loaded
-        await page.goto(`${baseUrl}/notfoundd`, { waitUntil: 'load' })
+        await page.goto(`${baseUrl}/page-that-does-not-exist`, { waitUntil: 'load' })
 
         // page content should be rendered
         await page.waitForSelector('h1')

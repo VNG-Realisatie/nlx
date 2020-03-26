@@ -6,7 +6,7 @@ import { Selector } from 'testcafe'
 const makeUrl = require('../utils/makeUrl')
 
 fixture `NotFound (404) page`
-  .page(makeUrl('/notfoundd'))
+  .page(makeUrl('/page-that-does-not-exist'))
 
 test('404 page is properly loaded', async t => {
   await t

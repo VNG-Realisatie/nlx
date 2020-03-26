@@ -4,7 +4,7 @@ import { MemoryRouter as Router } from 'react-router-dom'
 import { renderWithProviders } from '../../test-utils'
 import NotFoundPage from './index'
 
-test('renders a welcome message', () => {
+test('renders a 404 page', () => {
   const { getByText } = renderWithProviders(
     <Router>
       <NotFoundPage />
