@@ -3,13 +3,12 @@
 
 import { Selector } from 'testcafe'
 
-const getBaseUrl = require('../getBaseUrl')
-const baseUrl = getBaseUrl();
+const makeUrl = require('../utils/makeUrl')
 
 fixture `NotFound (404) page`
-  .page `${baseUrl}/asdf`
+  .page(makeUrl('/notfoundd'))
 
-test('Page not found message is present', async t => {
+test('404 page is properly loaded', async t => {
   await t
-    .expect(Selector('h1').innerText).eql('Page not found');
-});
+    .expect(Selector('h1').innerText).eql('Page not found')
+})

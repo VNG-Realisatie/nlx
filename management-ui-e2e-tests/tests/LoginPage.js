@@ -3,15 +3,14 @@
 
 import { Selector } from 'testcafe'
 
-const getBaseUrl = require('../getBaseUrl')
-const baseUrl = getBaseUrl();
+const makeUrl = require('../utils/makeUrl')
 
 fixture `Login page`
-  .page `${baseUrl}`
+  .page(makeUrl())
 
 test('Welcome message is present', async t => {
   await t
-    .expect(Selector('h1').innerText).eql('Welkom');
+    .expect(Selector('h1').innerText).eql('Welcome')
 });
 
 test('Login button is present', async t => {
