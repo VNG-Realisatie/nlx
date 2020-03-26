@@ -36,7 +36,7 @@
       "groupName": "genproto updates grpc > 1.26.0",
       "managers": ["gomod"],
       "packageNames": ["google.golang.org/genproto"],
-      "allowedVersions": "<=0.0.0-20200128133413-58ce757ed39b"
+      "allowedVersions": "0.0.0-20200128133413-58ce757ed39b"
     }
   ]
 }
