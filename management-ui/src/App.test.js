@@ -1,7 +1,7 @@
 import React from 'react'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
-import { render } from '@testing-library/react'
+import { renderWithProviders } from './test-utils'
 import App from './App'
 
 jest.mock('./pages/LoginPage', () => () => <div data-testid="login-page" />)
@@ -11,7 +11,7 @@ jest.mock('./pages/ServicesPage', () => () => (
 
 test('redirects to /login when navigating to /', async () => {
   const history = createMemoryHistory()
-  render(
+  renderWithProviders(
     <Router history={history}>
       <App />
     </Router>,
@@ -21,7 +21,7 @@ test('redirects to /login when navigating to /', async () => {
 
 test('the /login route renders the LoginPage', () => {
   const history = createMemoryHistory({ initialEntries: ['/login'] })
-  const { getByTestId } = render(
+  const { getByTestId } = renderWithProviders(
     <Router history={history}>
       <App />
     </Router>,
@@ -31,7 +31,7 @@ test('the /login route renders the LoginPage', () => {
 
 test('the /services route renders the ServicesPage', () => {
   const history = createMemoryHistory({ initialEntries: ['/services'] })
-  const { getByTestId } = render(
+  const { getByTestId } = renderWithProviders(
     <Router history={history}>
       <App />
     </Router>,
