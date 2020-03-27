@@ -29,11 +29,11 @@ const LoginPage = () => {
             </Button>
           </>
         ) : (
-          <>
-            <Button id="logout" as="a" href="/oidc/logout">
+          <form method="POST" action="/oidc/logout">
+            <Button id="logout" type="submit">
               {t('Log out')}
             </Button>
-          </>
+          </form>
         )}
       </StyledContent>
     </StyledContainer>

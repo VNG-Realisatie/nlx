@@ -17,12 +17,14 @@ import (
 	"go.nlx.io/nlx/management-api/oidc"
 )
 
+type oidcOptions = oidc.Options
+
 var options struct {
 	ListenAddress    string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:8080" description:"Address for the api to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 	ConfigAPIAddress string `long:"config-api-address" env:"CONFIG_API_ADDRESS" description:"Address of the config API. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 	logoptions.LogOptions
 	orgtls.TLSOptions
-	oidc.Options
+	oidcOptions
 }
 
 func main() {
@@ -57,7 +59,7 @@ func main() {
 
 	mainProcess := process.NewProcess(logger)
 
-	authenticator := oidc.NewAuthenticator(logger, &options.Options)
+	authenticator := oidc.NewAuthenticator(logger, &options.oidcOptions)
 
 	a, err := api.NewAPI(logger, mainProcess, options.TLSOptions, options.ConfigAPIAddress, authenticator)
 	if err != nil {

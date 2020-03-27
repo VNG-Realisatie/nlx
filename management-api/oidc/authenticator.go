@@ -96,7 +96,7 @@ func (a *Authenticator) Routes() chi.Router {
 	r := chi.NewRouter()
 	r.Get("/authenticate", a.authenticate)
 	r.Get("/callback", a.callback)
-	r.Get("/logout", a.logout)
+	r.Post("/logout", a.logout)
 	r.Get("/me", a.me)
 
 	return r

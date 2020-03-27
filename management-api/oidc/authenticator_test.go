@@ -182,7 +182,7 @@ func TestLogoutEndpoint(t *testing.T) {
 	mockStore.EXPECT().Get(gomock.Any(), "nlx_management_session").Return(mockSession, nil).AnyTimes()
 	mockStore.EXPECT().Save(gomock.Any(), gomock.Any(), mockSession).Return(nil).AnyTimes()
 
-	resp, err := client.Get(fmt.Sprintf("%s/logout", srv.URL))
+	resp, err := client.Post(fmt.Sprintf("%s/logout", srv.URL), "application/x-www-form-urlencoded", nil)
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusFound, resp.StatusCode)
 	assert.Equal(t, resp.Header.Get("Location"), "/")
