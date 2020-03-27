@@ -58,6 +58,7 @@ func NewAuthenticator(logger *zap.Logger, options *Options) *Authenticator {
 	store := sessions.NewCookieStore([]byte(options.SecretKey))
 	store.Options = &sessions.Options{
 		HttpOnly: true,
+		SameSite: http.SameSiteStrictMode,
 		Secure:   options.SessionCookieSecure,
 		Path:     "/",
 	}
