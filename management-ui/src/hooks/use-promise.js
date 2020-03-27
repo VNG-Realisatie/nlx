@@ -4,7 +4,7 @@
 
 import { useState, useEffect } from 'react'
 
-const usePromise = (getPromise) => {
+const usePromise = (getPromise, ...args) => {
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -13,7 +13,7 @@ const usePromise = (getPromise) => {
     const resolvePromise = async () => {
       setLoading(true)
       try {
-        const res = await getPromise()
+        const res = await getPromise(...args)
         setResult(res)
         setLoading(false)
       } catch (error) {
@@ -23,7 +23,8 @@ const usePromise = (getPromise) => {
     }
 
     resolvePromise()
-  }, [getPromise])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return { loading, error, result }
 }
 

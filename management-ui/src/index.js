@@ -2,6 +2,7 @@
 // Licensed under the EUPL
 //
 import 'react-app-polyfill/ie11'
+import 'core-js/features/array/find'
 
 import React from 'react'
 import ReactDOM from 'react-dom'

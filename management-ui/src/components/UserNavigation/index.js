@@ -11,7 +11,7 @@ import {
   StyledUserNavigation,
   StyledToggleButton,
   StyledUsername,
-  StyledIconChevron,
+  UserNavigationChevron,
 } from './index.styles'
 
 const UserNavigation = ({ fullName, pictureUrl, ...props }) => {
@@ -52,7 +52,7 @@ const UserNavigation = ({ fullName, pictureUrl, ...props }) => {
       >
         <Avatar data-testid="avatar" alt={t('User avatar')} url={pictureUrl} />
         <StyledUsername data-testid="full-name">{fullName}</StyledUsername>
-        <StyledIconChevron flipHorizontal={menuIsOpen} />
+        <UserNavigationChevron flipHorizontal={menuIsOpen} />
       </StyledToggleButton>
 
       {menuIsOpen && (
@@ -64,7 +64,7 @@ const UserNavigation = ({ fullName, pictureUrl, ...props }) => {
                 name="csrfmiddlewaretoken"
                 value={Cookies.get('csrftoken')}
               />
-              <button type="submit">{t('Logout')}</button>
+              <button type="submit">{t('Log out')}</button>
             </form>
           </li>
         </ul>

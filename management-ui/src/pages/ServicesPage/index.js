@@ -6,10 +6,11 @@ import React from 'react'
 import { array, func, string } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { Alert, Button } from '@commonground/design-system'
-import { Link } from 'react-router-dom'
+import { Link, Route, useLocation } from 'react-router-dom'
 import PageTemplate from '../../components/PageTemplate'
 import usePromise from '../../hooks/use-promise'
 import ServiceRepository from '../../domain/service-repository'
+import ServiceDetailPage from '../ServiceDetailPage'
 import Table from './Table'
 import AuthorizationMode from './AuthorizationMode'
 import ServiceCount from './ServiceCount'
@@ -21,14 +22,18 @@ import {
 } from './index.styles'
 import Spinner from './Spinner'
 
-const ServiceRow = ({ name, authorizations, mode, ...props }) => (
-  <tr {...props}>
-    <Table.Td>{name}</Table.Td>
-    <Table.Td>
-      <AuthorizationMode authorizations={authorizations} mode={mode} />
-    </Table.Td>
-  </tr>
-)
+const ServiceRow = ({ name, authorizations, mode, ...props }) => {
+  const location = useLocation()
+
+  return (
+    <Table.Tr to={`${location.pathname}/${name}`} name={name} {...props}>
+      <Table.Td>{name}</Table.Td>
+      <Table.Td>
+        <AuthorizationMode authorizations={authorizations} mode={mode} />
+      </Table.Td>
+    </Table.Tr>
+  )
+}
 
 ServiceRow.propTypes = {
   name: string.isRequired,
@@ -72,12 +77,12 @@ const ServicesPage = ({ getServices }) => {
           {t('There are no services yet.')}
         </StyledNoServicesMessage>
       ) : result ? (
-        <Table data-testid="services-list" role="grid">
+        <Table withLinks data-testid="services-list" role="grid">
           <thead>
-            <tr>
+            <Table.TrHead>
               <Table.Th>{t('Name')}</Table.Th>
               <Table.Th>{t('Authorization')}</Table.Th>
-            </tr>
+            </Table.TrHead>
           </thead>
           <tbody>
             {result.map((service, i) => (
@@ -91,6 +96,9 @@ const ServicesPage = ({ getServices }) => {
           </tbody>
         </Table>
       ) : null}
+      <Route path="/services/:name">
+        <ServiceDetailPage parentUrl="/services" />
+      </Route>
     </PageTemplate>
   )
 }

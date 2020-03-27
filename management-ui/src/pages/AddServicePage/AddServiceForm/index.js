@@ -159,7 +159,7 @@ const AddServiceForm = ({
             <Fieldset>
               <Legend>{t('Authorization')}</Legend>
 
-              <Label>{t('Type authorisatie')}</Label>
+              <Label>{t('Type of authorization')}</Label>
               <StyledLabelWithInput>
                 <Field
                   id="authorizationModeWhitelist"

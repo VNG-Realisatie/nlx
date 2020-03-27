@@ -5,6 +5,7 @@ import { Selector } from 'testcafe'
 import { waitForReact } from 'testcafe-react-selectors'
 import { axeCheck, createReport } from 'axe-testcafe'
 import { adminUser } from "./roles";
+import getLocation from '../getLocation'
 
 const getBaseUrl = require('../getBaseUrl')
 const baseUrl = getBaseUrl()
@@ -31,7 +32,7 @@ test('Page title is visible', async t => {
 
 test('Service details are displayed', async t => {
   const servicesList = Selector('[data-testid="services-list"]');
-  const kentekenService = servicesList.find('tbody tr').nth(0)
+  const kentekenService = Selector('tr').withText('kentekenregister')
   const kentekenServiceColumns = kentekenService.find('td')
 
   const nameCell = kentekenServiceColumns.nth(0)
@@ -43,4 +44,12 @@ test('Service details are displayed', async t => {
 
     .expect(nameCell.textContent).eql('kentekenregister')
     .expect(accessCell.textContent).eql('Open')
+})
+
+test('Clicking a service navigates to the detail page', async t => {
+  const serviceRow = Selector('tr').withText('kentekenregister')
+
+  await t
+    .click(serviceRow)
+    .expect(getLocation()).contains(`${baseUrl}/services/kentekenregister`);
 })

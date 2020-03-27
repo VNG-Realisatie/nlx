@@ -1,32 +1,13 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import styled, { css } from 'styled-components/macro'
-import React from 'react'
-import { bool } from 'prop-types'
-import IconChevron from '../IconChevron'
+import styled from 'styled-components/macro'
+import FlippingChevron from '../FlippingChevron'
 
-const UserNavigationIconChevron = ({ flipHorizontal, ...props }) => (
-  <IconChevron {...props} />
-)
-
-UserNavigationIconChevron.propTypes = {
-  flipHorizontal: bool,
-}
-
-export const StyledIconChevron = styled(UserNavigationIconChevron)`
-  fill: ${(p) => p.theme.colorText};
+export const UserNavigationChevron = styled(FlippingChevron)`
   width: ${(p) => p.theme.tokens.spacing06};
   height: ${(p) => p.theme.tokens.spacing06};
   margin-left: ${(p) => p.theme.tokens.spacing04};
-  transition: 150ms ease-in-out;
-
-  ${(p) =>
-    p.flipHorizontal
-      ? css`
-          transform: rotate(180deg);
-        `
-      : ''}
 `
 
 export const StyledAvatar = styled.figure`

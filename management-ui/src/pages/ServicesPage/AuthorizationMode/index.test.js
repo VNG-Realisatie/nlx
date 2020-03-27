@@ -15,17 +15,19 @@ test('no authorization mode', () => {
 })
 
 test('white list mode', () => {
-  const { getByText } = renderWithProviders(
+  const { getByText, getByTestId } = renderWithProviders(
     <AuthorizationMode authorizations={[{}, {}]} mode="whitelist" />,
   )
 
-  expect(getByText('Whitelist (2)')).toBeInTheDocument()
+  expect(getByText('Whitelist')).toBeInTheDocument()
+  expect(getByTestId('authorization-mode-count').textContent).toBe('2')
 })
 
 test('authorizations not specified', () => {
-  const { getByText } = renderWithProviders(
+  const { container, getByTestId } = renderWithProviders(
     <AuthorizationMode mode="whitelist" />,
   )
 
-  expect(getByText('Whitelist (0)')).toBeInTheDocument()
+  expect(container).toHaveTextContent('Whitelist')
+  expect(getByTestId('authorization-mode-count')).toHaveTextContent('0')
 })

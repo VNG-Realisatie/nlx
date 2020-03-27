@@ -40,6 +40,7 @@ test('with a rejecting promise', async () => {
 
   const handler = () => promise
   const { result } = renderHook(() => usePromise(handler))
+
   expect(result.current).toStrictEqual({
     error: null,
     loading: true,
@@ -54,5 +55,26 @@ test('with a rejecting promise', async () => {
     error: new Error('arbitrary message'),
     loading: false,
     result: null,
+  })
+})
+
+test('with an argument', async () => {
+  const handler = async (argument) => argument
+  const { result, waitForNextUpdate } = renderHook(() =>
+    usePromise(handler, 'arbitrary argument'),
+  )
+
+  expect(result.current).toStrictEqual({
+    error: null,
+    loading: true,
+    result: null,
+  })
+
+  await waitForNextUpdate()
+
+  expect(result.current).toStrictEqual({
+    error: null,
+    loading: false,
+    result: 'arbitrary argument',
   })
 })

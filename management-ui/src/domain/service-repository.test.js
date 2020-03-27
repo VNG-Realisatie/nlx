@@ -120,4 +120,24 @@ describe('the ServiceRepository', () => {
       })
     })
   })
+
+  describe('getting a single service', () => {
+    beforeEach(() => {
+      jest.spyOn(global, 'fetch').mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: async () => ({ name: 'Service' }),
+      })
+    })
+
+    afterEach(() => global.fetch.mockRestore())
+
+    it('should return the service', async () => {
+      const result = await ServiceRepository.getByName('Service')
+
+      expect(result).toEqual({ name: 'Service' })
+
+      expect(global.fetch).toHaveBeenCalledWith('/api/v1/services/Service')
+    })
+  })
 })

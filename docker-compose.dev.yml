@@ -10,6 +10,7 @@ services:
       - POSTGRES_DB=nlx
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    restart: always
   etcd:
     image: gcr.io/etcd-development/etcd:v3.4.7
     ports:
@@ -19,6 +20,7 @@ services:
       - ETCD_ADVERTISE_CLIENT_URLS=http://localhost:2379
     volumes:
       - etcd-data:/default.etcd
+    restart: always
 
   # OpenID connect provider
   dex:
@@ -28,6 +30,7 @@ services:
       - 5556:5556
     volumes:
       - ./dex.dev.yaml:/config.yaml
+    restart: always
 
 volumes:
   postgres-data:

@@ -113,6 +113,13 @@ Management-ui linter and tests:
     - start_section test "Running tests"
     - npm test -- --coverage
     - stop_section test
+    - start_section i18n "Checking translations"
+    - cp public/i18n/en/common.json public/i18n/en/common.json.orig
+    - cp public/i18n/nl/common.json public/i18n/nl/common.json.orig
+    - npm run validate-translations
+    - diff -u public/i18n/en/common.json.orig public/i18n/en/common.json
+    - diff -u public/i18n/nl/common.json.orig public/i18n/nl/common.json
+    - stop_section i18n
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
   artifacts:
     expire_in: 1 month

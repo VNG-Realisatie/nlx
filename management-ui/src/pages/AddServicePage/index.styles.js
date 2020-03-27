@@ -4,7 +4,7 @@
 
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
-import IconChevron from '../../components/IconChevron'
+import { ReactComponent as IconChevron } from '../../components/FlippingChevron/chevron-down.svg'
 
 export const StyledBackButton = styled(Link)`
   text-decoration: none;

@@ -5,13 +5,17 @@
 import React from 'react'
 import { oneOf, array } from 'prop-types'
 import { useTranslation } from 'react-i18next'
+import Amount from '../../../components/Amount'
 
 const AuthorizationMode = ({ mode, authorizations }) => {
   const { t } = useTranslation()
-
   return mode === 'whitelist' ? (
     <span>
-      {t('Whitelist')} ({authorizations.length})
+      {t('Whitelist')}
+      <Amount
+        data-testid="authorization-mode-count"
+        value={authorizations.length}
+      />
     </span>
   ) : (
     <span>{t('Open')}</span>
