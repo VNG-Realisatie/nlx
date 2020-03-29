@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@commonground/design-system": "9.1.0",
+    "@commonground/design-system": "9.1.2",
     "ajv-keywords": "3.4.1",
     "copy-text-to-clipboard": "2.1.1",
     "core-js": "3.6.4",
@@ -14,7 +14,7 @@
     "react-dom": "16.13.1",
     "react-router-dom": "5.1.2",
     "react-scripts": "3.4.1",
-    "redoc": "2.0.0-rc.24",
+    "redoc": "2.0.0-rc.26",
     "styled-components": "5.0.1"
   },
   "scripts": {
@@ -35,9 +35,9 @@
     "eslint-config-react": "1.1.7",
     "eslint-config-standard": "14.1.1",
     "eslint-config-standard-react": "9.2.0",
-    "eslint-plugin-import": "2.20.1",
+    "eslint-plugin-import": "2.20.2",
     "eslint-plugin-jest": "23.8.2",
-    "eslint-plugin-node": "11.0.0",
+    "eslint-plugin-node": "11.1.0",
     "eslint-plugin-prettier": "3.1.2",
     "eslint-plugin-promise": "4.2.1",
     "eslint-plugin-react": "7.19.0",
