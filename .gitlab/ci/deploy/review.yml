@@ -12,7 +12,7 @@ Deploy Review App:
     - |
         echo "install/upgrade ${NAME}"
         kubectl create namespace "${NAME}" || true
-        helm --debug upgrade --install ${NAME} ./helm/nlx-directory \
+        helm upgrade --install ${NAME} ./helm/nlx-directory \
         --namespace ${NAME} \
         --values ./helm/nlx-directory/values-review.yaml \
         --set imageTag=$IMAGE_TAG \
