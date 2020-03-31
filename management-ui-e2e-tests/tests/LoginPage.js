@@ -1,13 +1,17 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 
-import { Selector } from 'testcafe'
+import { Selector, Role } from 'testcafe'
 import { axeCheck, createReport } from 'axe-testcafe'
 
-const makeUrl = require('../utils/makeUrl')
+const getBaseUrl = require('../getBaseUrl')
+const baseUrl = getBaseUrl();
 
 fixture `Login page`
-  .page(makeUrl())
+  .page `${baseUrl}`
+  .beforeEach(async (t) => {
+    await t.useRole(Role.anonymous())
+  })
 
 test('Automated accessibility testing', async t => {
   const { violations } = await axeCheck(t)
@@ -16,7 +20,7 @@ test('Automated accessibility testing', async t => {
 
 test('Welcome message is present', async t => {
   await t
-    .expect(Selector('h1').innerText).eql('Welcome')
+    .expect(Selector('h1').innerText).eql('Welkom')
 });
 
 test('Login button is present', async t => {
@@ -44,5 +48,4 @@ test('Login', async t => {
       .click(dexGrantAccessButton)
 
       .expect(managementLogoutButton.visible).ok()
-
 })

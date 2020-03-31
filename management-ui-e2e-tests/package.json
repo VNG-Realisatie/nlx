@@ -4,8 +4,7 @@
   "scripts": {
     "test": "if test -n \"$CI\"; then npm run test:browserstack; else npm run test:local; fi",
     "test:browserstack": "node outputUrl.js && testcafe 'browserstack:firefox,browserstack:chrome,browserstack:safari,browserstack:ie,browserstack:edge' --reporter 'spec,html:./test-results/index.html'",
-    "test:local": "node outputUrl.js && testcafe 'all' --reporter 'spec,html:./test-results/index.html'",
-    "test:dev": "node outputUrl.js && testcafe 'chrome:headless' --live --reporter 'spec,html:./test-results/index.html'"
+    "test:local": "node outputUrl.js && testcafe 'chrome:headless' --live --reporter 'spec,html:./test-results/index.html'"
   },
   "devDependencies": {
     "axe-core": "3.5.2",

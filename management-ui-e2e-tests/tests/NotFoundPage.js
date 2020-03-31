@@ -1,20 +1,24 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 
-import { Selector } from 'testcafe'
+import { Role, Selector } from "testcafe";
 import { axeCheck, createReport } from 'axe-testcafe'
 
-const makeUrl = require('../utils/makeUrl')
+const getBaseUrl = require('../getBaseUrl')
+const baseUrl = getBaseUrl();
 
-fixture `NotFound (404) page`
-  .page(makeUrl('/page-that-does-not-exist'))
+fixture `Not Found (404) page`
+  .page(`${baseUrl}/page-that-does-not-exist'`)
+  .beforeEach(async (t) => {
+    await t.useRole(Role.anonymous())
+  })
 
 test('Automated accessibility testing', async t => {
   const { violations } = await axeCheck(t)
   await t.expect(violations.length === 0).ok(createReport(violations));
 })
 
-test('404 page is properly loaded', async t => {
+test('Page not found message is present', async t => {
   await t
-    .expect(Selector('h1').innerText).eql('Page not found')
-})
+    .expect(Selector('h1').innerText).eql('Pagina niet gevonden');
+});

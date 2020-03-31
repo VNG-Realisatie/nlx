@@ -3,5 +3,6 @@
   "screenshots": {
     "path": "./test-results/screenshots",
     "takeOnFails": true
-  }
+  },
+  "speed": 0.5
 }

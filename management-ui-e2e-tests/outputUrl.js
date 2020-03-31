@@ -1,3 +1,3 @@
-const getBaseUrl = require('./utils/getBaseUrl')
+const getBaseUrl = require('./getBaseUrl')
 
 getBaseUrl()

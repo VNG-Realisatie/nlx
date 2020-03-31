@@ -2,13 +2,11 @@ import i18n from 'i18next'
 import XHR from 'i18next-xhr-backend'
 import { initReactI18next } from 'react-i18next'
 
-const isTest = !!(window && window.location.search.match(/[?&]isTest/))
-
 i18n
   .use(XHR)
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
-    lng: isTest ? 'cimode' : 'nl',
+    lng: 'nl',
     fallbackLng: 'en',
     ns: ['common'],
     defaultNS: 'common',
