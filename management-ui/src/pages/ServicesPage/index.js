@@ -11,7 +11,7 @@ import ServiceRepository from '../../domain/service-repository'
 import Table from './Table'
 import AuthorizationMode from './AuthorizationMode'
 import ServiceCount from './ServiceCount'
-import { StyledLoadingMessage } from './index.styles'
+import { StyledLoadingMessage, StyledNoServicesMessage } from './index.styles'
 import Spinner from './Spinner'
 
 const ServiceRow = ({ name, authorizations, mode, ...props }) => (
@@ -43,6 +43,10 @@ const ServicesPage = ({ getServices }) => {
         <Alert variant="error" data-testid="error-message">
           {t('Failed to load the services.')}
         </Alert>
+      ) : result != null && result.length === 0 ? (
+        <StyledNoServicesMessage>
+          {t('There are no services yet.')}
+        </StyledNoServicesMessage>
       ) : result ? (
         <>
           <ServiceCount count={result.length} />

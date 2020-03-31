@@ -38,6 +38,23 @@ test('listing all services', async () => {
   expect(await findByTestId('services-list')).toBeInTheDocument()
 })
 
+test('no services', async () => {
+  const fetchServicesHandler = jest.fn(() => Promise.resolve([]))
+
+  const { findByText, getByTestId } = renderWithProviders(
+    <Router>
+      <ServicesPage getServices={fetchServicesHandler} />
+    </Router>,
+  )
+
+  await act(async () => {
+    expect(
+      await findByText(/^There are no services yet\.$/),
+    ).toBeInTheDocument()
+    expect(() => getByTestId('services-list')).toThrow()
+  })
+})
+
 test('failed to load services', async () => {
   const fetchServicesHandler = jest
     .fn()
