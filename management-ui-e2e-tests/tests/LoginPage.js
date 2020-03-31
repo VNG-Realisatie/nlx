@@ -2,11 +2,17 @@
 // Licensed under the EUPL
 
 import { Selector } from 'testcafe'
+import { axeCheck, createReport } from 'axe-testcafe'
 
 const makeUrl = require('../utils/makeUrl')
 
 fixture `Login page`
   .page(makeUrl())
+
+test('Automated accessibility testing', async t => {
+  const { violations } = await axeCheck(t)
+  await t.expect(violations.length === 0).ok(createReport(violations));
+})
 
 test('Welcome message is present', async t => {
   await t
