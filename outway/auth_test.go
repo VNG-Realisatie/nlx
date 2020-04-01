@@ -112,10 +112,13 @@ func TestAuthListen(t *testing.T) {
 		txlogger:         transactionlog.NewDiscardTransactionLogger(),
 	}
 
+	outway.requestHTTPHandler = outway.handleHTTPRequest
+
 	// Setup mock httpservice
 	ctrl := gomock.NewController(t)
-	mockService := mock.NewMockHTTPService(ctrl)
 	defer ctrl.Finish()
+
+	mockService := mock.NewMockHTTPService(ctrl)
 	mockService.EXPECT().ProxyHTTPRequest(gomock.Any(), gomock.Any()).Do(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
@@ -162,6 +165,7 @@ func TestAuthListen(t *testing.T) {
 		{fmt.Sprintf("%s/mockorg/mockservice/", mockServer.URL), true, http.StatusOK, ""},
 	}
 	client := http.Client{}
+
 	for _, test := range tests {
 		req, err := http.NewRequest("GET", test.url, nil)
 		assert.Nil(t, err)
@@ -172,7 +176,9 @@ func TestAuthListen(t *testing.T) {
 
 		resp, err := client.Do(req)
 		assert.Nil(t, err)
+
 		defer resp.Body.Close()
+
 		assert.Equal(t, test.statusCode, resp.StatusCode)
 
 		bytes, err := ioutil.ReadAll(resp.Body)

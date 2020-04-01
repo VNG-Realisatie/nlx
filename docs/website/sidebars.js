@@ -28,6 +28,7 @@ module.exports = {
             "reference-information/service-configuration",
             "reference-information/transaction-log-headers",
             "reference-information/monitoring",
+            "reference-information/outway-as-proxy"
         ],
         "Support": [
             "support/contact",

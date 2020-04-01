@@ -33,6 +33,7 @@ func (o *Outway) authorizeRequest(h http.Header, d *destination) (*authResponse,
 	if err != nil {
 		return nil, err
 	}
+
 	authRequest := &authRequest{
 		Headers:      h,
 		Organization: d.Organization,
@@ -43,7 +44,9 @@ func (o *Outway) authorizeRequest(h http.Header, d *destination) (*authResponse,
 	if err != nil {
 		return nil, err
 	}
+
 	req.Body = ioutil.NopCloser(bytes.NewBuffer(body))
+
 	resp, err := o.authorizationClient.Do(req)
 	if err != nil {
 		return nil, err
@@ -55,6 +58,7 @@ func (o *Outway) authorizeRequest(h http.Header, d *destination) (*authResponse,
 	}
 
 	authResponse := &authResponse{}
+
 	err = json.NewDecoder(resp.Body).Decode(authResponse)
 	if err != nil {
 		return nil, err
@@ -71,5 +75,6 @@ func (o *Outway) stripHeaders(r *http.Request, receiverOrganization string) {
 		r.Header.Del("X-NLX-Request-Application-Id")
 		r.Header.Del("X-NLX-Request-User-Id")
 	}
+
 	r.Header.Del("Proxy-Authorization")
 }

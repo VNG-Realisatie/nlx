@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"path/filepath"
 	"strconv"
 	"testing"
@@ -32,6 +33,7 @@ func testRequests(t *testing.T, tests []struct {
 	errorMessage string
 }) {
 	client := http.Client{}
+
 	for _, test := range tests {
 		req, err := http.NewRequest("GET", test.url, nil)
 		if err != nil {
@@ -65,11 +67,14 @@ func TestOutwayListen(t *testing.T) {
 		txlogger:          transactionlog.NewDiscardTransactionLogger(),
 	}
 
+	outway.requestHTTPHandler = outway.handleHTTPRequest
+
 	// Setup mock httpservice
 	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
 	mockService := mock.NewMockHTTPService(ctrl)
 	mockFailService := mock.NewMockHTTPService(ctrl)
-	defer ctrl.Finish()
 
 	mockService.EXPECT().ProxyHTTPRequest(gomock.Any(), gomock.Any()).Do(
 		func(w http.ResponseWriter, r *http.Request) {
@@ -136,6 +141,205 @@ func TestOutwayListen(t *testing.T) {
 	testRequests(t, tests)
 }
 
+func createMockOutway() *Outway {
+	return &Outway{
+		servicesHTTP:      make(map[string]HTTPService),
+		servicesDirectory: make(map[string]*inspectionapi.ListServicesResponse_Service),
+		logger:            zap.NewNop(),
+		txlogger:          transactionlog.NewDiscardTransactionLogger(),
+	}
+}
+
+func TestOutwayAsProxy(t *testing.T) {
+	// Create a outway with a mock service
+	outway := createMockOutway()
+	outway.forwardingHTTPProxy = newForwardingProxy()
+
+	// Setup mock httpservice
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockService := mock.NewMockHTTPService(ctrl)
+	mockService.EXPECT().ProxyHTTPRequest(gomock.Any(), gomock.Any()).Do(
+		func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(http.StatusOK)
+		},
+	)
+
+	outway.servicesHTTP["mockorg.mockservice"] = mockService
+
+	// Setup mock http server with the outway as http handler
+	mockServer := httptest.NewServer(outway)
+	defer mockServer.Close()
+
+	mockPublicServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+	defer mockPublicServer.Close()
+
+	// Test http responses
+	tests := []struct {
+		description       string
+		url               string
+		statusCode        int
+		errorMessage      string
+		dataSubjectHeader string
+		httpHandler       loggerHTTPHandler
+	}{
+		{
+			"request using a services.nlx.local URL",
+			"http://mockservice.mockorg.services.nlx.local",
+			http.StatusOK,
+			"",
+			"",
+			outway.handleHTTPRequestAsProxy,
+		}, {
+			"request invalid url",
+			"http://invalid.mockservice.mockorg.services.nlx.local",
+			http.StatusBadRequest,
+			"nlx outway: no valid url expecting: service.organization.service.nlx.local/apipath\n",
+			"",
+			outway.handleHTTPRequestAsProxy,
+		}, {
+			"request to public internet",
+			mockPublicServer.URL,
+			http.StatusOK,
+			"",
+			"",
+			outway.handleHTTPRequestAsProxy,
+		}, {
+			"outway is running without the use-as-http-proxy flag",
+			"http://mockservice.mockorg.services.nlx.local",
+			http.StatusInternalServerError,
+			"please enable proxy mode by setting the 'use-as-http-proxy' flag to resolve: http://mockservice.mockorg.services.nlx.local/\n",
+			"",
+			outway.handleHTTPRequest,
+		},
+	}
+
+	outwayURL, err := url.Parse(mockServer.URL)
+	assert.Nil(t, err)
+
+	client := &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(outwayURL)}}
+
+	for _, test := range tests {
+		outway.requestHTTPHandler = test.httpHandler
+
+		req, err := http.NewRequest("GET", test.url, nil)
+		if err != nil {
+			t.Fatal("error creating http request", err)
+		}
+
+		req.Header.Add("X-NLX-Request-Data-Subject", test.dataSubjectHeader)
+		resp, err := client.Do(req)
+
+		if err != nil {
+			t.Fatal("error doing http request", err)
+		}
+		defer resp.Body.Close()
+
+		assert.Equal(t, test.statusCode, resp.StatusCode)
+
+		bytes, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			t.Fatal("error parsing result.body", err)
+		}
+
+		assert.Equal(t, test.errorMessage, string(bytes))
+	}
+}
+
+func TestHandleConnectMethodException(t *testing.T) {
+	logger := zap.NewNop()
+	outway := &Outway{}
+	outway.forwardingHTTPProxy = newForwardingProxy()
+
+	recorder := httptest.NewRecorder()
+
+	req := httptest.NewRequest(http.MethodConnect, "http://mockservice.mockorg.services.nlx.local", nil)
+	outway.handleHTTPRequestAsProxy(logger, recorder, req)
+
+	assert.Equal(t, http.StatusNotImplemented, recorder.Code)
+
+	bytes, err := ioutil.ReadAll(recorder.Body)
+	if err != nil {
+		t.Fatal("error parsing result.body", err)
+	}
+
+	assert.Equal(t, "CONNECT method is not supported\n", string(bytes))
+}
+
+type failingTransactionLogger struct {
+}
+
+func (f *failingTransactionLogger) AddRecord(record *transactionlog.Record) error {
+	return errors.New("cannot add transaction record")
+}
+
+func TestHandleOnNLXExceptions(t *testing.T) {
+	outway := createMockOutway()
+
+	// Setup mock httpservice
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockService := mock.NewMockHTTPService(ctrl)
+	outway.servicesHTTP["mockorg.mockservice"] = mockService
+
+	tests := []struct {
+		description          string
+		authSettings         *authSettings
+		txLogger             transactionlog.TransactionLogger
+		dataSubjectHeader    string
+		expectedStatusCode   int
+		exectpedErrorMessage string
+	}{
+		{"With failing auth settings",
+			&authSettings{},
+			&transactionlog.DiscardTransactionLogger{},
+			"",
+			http.StatusInternalServerError,
+			"nlx outway: error authorizing request\n",
+		},
+		{"With failing transactionlogger",
+			nil,
+			&failingTransactionLogger{},
+			"",
+			http.StatusInternalServerError,
+			"nlx outway: server error\n",
+		},
+		{"With invalid datasubject header",
+			nil,
+			&transactionlog.DiscardTransactionLogger{},
+			"invalid",
+			http.StatusInternalServerError,
+			"nlx outway: invalid data subject header\n",
+		},
+	}
+	recorder := httptest.NewRecorder()
+
+	for _, test := range tests {
+		outway.authorizationSettings = test.authSettings
+		outway.txlogger = test.txLogger
+		req := httptest.NewRequest("GET", "http://mockservice.mockorg.services.nlx.local", nil)
+		req.Header.Add("X-NLX-Request-Data-Subject", test.dataSubjectHeader)
+		outway.handleOnNLX(outway.logger, &destination{
+			Organization: "mockorg",
+			Service:      "mockservice",
+			Path:         "/",
+		}, recorder, req)
+
+		assert.Equal(t, test.expectedStatusCode, recorder.Code)
+
+		bytes, err := ioutil.ReadAll(recorder.Body)
+		if err != nil {
+			t.Fatal("error parsing result.body", err)
+		}
+
+		assert.Equal(t, test.exectpedErrorMessage, string(bytes))
+	}
+}
+
 type failingRoundTripper struct{}
 
 func (failingRoundTripper) RoundTrip(*http.Request) (*http.Response, error) {
@@ -174,6 +378,8 @@ func TestFailingTransport(t *testing.T) {
 		logger:            logger,
 		txlogger:          transactionlog.NewDiscardTransactionLogger(),
 	}
+
+	outway.requestHTTPHandler = outway.handleHTTPRequest
 
 	// Setup mock http server with the outway as http handler
 	mockServer := httptest.NewServer(outway)
@@ -216,17 +422,6 @@ func TestFailingTransport(t *testing.T) {
 	// set transports to fail.
 	outway.setFailingTransport()
 	testRequests(t, tests)
-}
-
-func TestParseURLPath(t *testing.T) {
-	destination, err := parseURLPath("/organization/service/path")
-	assert.Nil(t, err)
-	assert.Equal(t, "organization", destination.Organization)
-	assert.Equal(t, "service", destination.Service)
-	assert.Equal(t, "path", destination.Path)
-
-	_, err = parseURLPath("/organization/service")
-	assert.EqualError(t, err, "invalid path in url expecting: /organization/serivice/path")
 }
 
 func TestCreateRecordData(t *testing.T) {

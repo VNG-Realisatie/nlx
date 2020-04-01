@@ -29,6 +29,8 @@ var options struct {
 
 	DirectoryInspectionAddress string `long:"directory-inspection-address" env:"DIRECTORY_INSPECTION_ADDRESS" description:"Address for the directory where this outway can fetch the service list" required:"true"`
 
+	UseAsHTTPProxy bool `long:"use-as-http-proxy" env:"USE_AS_HTTP_PROXY" description:"An experimental flag which when true makes the outway function as an HTTP proxy"`
+
 	DisableLogdb bool   `long:"disable-logdb" env:"DISABLE_LOGDB" description:"Disable logdb connections"`
 	PostgresDSN  string `long:"postgres-dsn" env:"POSTGRES_DSN" default:"postgres://postgres:postgres@postgres/nlx_logdb?sslmode=disable" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
 
@@ -47,8 +49,10 @@ func parseOptions() {
 				return
 			}
 		}
+
 		log.Fatalf("error parsing flags: %v", err)
 	}
+
 	if len(args) > 0 {
 		log.Fatalf("unexpected arguments: %v", args)
 	}
@@ -60,6 +64,7 @@ func main() {
 	// Setup new zap logger
 	config := options.LogOptions.ZapConfig()
 	logger, err := config.Build()
+
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
@@ -75,6 +80,7 @@ func main() {
 		if err != nil {
 			logger.Fatal("could not open connection to postgres", zap.Error(err))
 		}
+
 		logDB.SetConnMaxLifetime(5 * time.Minute)
 		logDB.SetMaxOpenConns(100)
 		logDB.SetMaxIdleConns(100)
@@ -93,7 +99,8 @@ func main() {
 		options.TLSOptions,
 		options.DirectoryInspectionAddress,
 		options.AuthorizationServiceAddress,
-		options.AuthorizationCA)
+		options.AuthorizationCA,
+		options.UseAsHTTPProxy)
 
 	if err != nil {
 		logger.Fatal("failed to setup outway", zap.Error(err))

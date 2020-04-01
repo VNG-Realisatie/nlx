@@ -89,7 +89,7 @@ func TestNewOutwayExeception(t *testing.T) {
 	testProcess := process.NewProcess(logger)
 	// Test exceptions during outway creation
 	for _, test := range tests {
-		_, err := outway.NewOutway(logger, nil, testProcess, test.monitoringServiceAddress, test.config, "", test.authServiceURL, test.authCAPath)
+		_, err := outway.NewOutway(logger, nil, testProcess, test.monitoringServiceAddress, test.config, "", test.authServiceURL, test.authCAPath, false)
 		assert.EqualError(t, err, test.expectedErrorMessage)
 	}
 }

@@ -9,6 +9,7 @@ import (
 	"crypto/x509"
 	"fmt"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 	"reflect"
 	"sync"
@@ -29,6 +30,8 @@ import (
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 )
 
+type loggerHTTPHandler func(logger *zap.Logger, w http.ResponseWriter, r *http.Request)
+
 // Outway handles requests from inside the organization
 type Outway struct {
 	wg               *sync.WaitGroup
@@ -48,6 +51,10 @@ type Outway struct {
 	serverPlain    *http.Server
 	serverTLS      *http.Server
 	monitorService *monitoring.Service
+
+	requestHTTPHandler loggerHTTPHandler
+
+	forwardingHTTPProxy *httputil.ReverseProxy
 
 	authorizationSettings *authSettings
 	authorizationClient   http.Client
@@ -102,6 +109,7 @@ func (o *Outway) validateAuthURL(authCAPath, authServiceURL string) error {
 	if authURL.Scheme != "https" {
 		return errors.New("scheme of authorization service URL is not 'https'")
 	}
+
 	o.authorizationSettings = &authSettings{
 		serviceURL: fmt.Sprintf("%s/auth", authServiceURL),
 	}
@@ -115,15 +123,16 @@ func (o *Outway) validateAuthURL(authCAPath, authServiceURL string) error {
 		Transport: createHTTPTransport(&tls.Config{
 			RootCAs: o.authorizationSettings.ca}),
 	}
+
 	return nil
 }
 
 func (o *Outway) startDirectoryInspector(directoryInspectionAddress string) error {
-
 	orgKeypair, err := tls.LoadX509KeyPair(o.tlsOptions.OrgCertFile, o.tlsOptions.OrgKeyFile)
 	if err != nil {
 		return errors.Wrap(err, "failed to read tls keypair")
 	}
+
 	directoryDialCredentials := credentials.NewTLS(&tls.Config{
 		Certificates: []tls.Certificate{orgKeypair},
 		RootCAs:      o.tlsRoots,
@@ -131,19 +140,23 @@ func (o *Outway) startDirectoryInspector(directoryInspectionAddress string) erro
 	directoryDialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(directoryDialCredentials),
 	}
+
 	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(nlxversion.NewContext("outway"), 1*time.Minute) //nolint:gomnd // This is clearer then specifying a constant
 	defer directoryConnCtxCancel()
+
 	directoryConn, err := grpc.DialContext(
 		directoryConnCtx, directoryInspectionAddress, directoryDialOptions...)
 	if err != nil {
 		o.logger.Fatal("failed to setup connection to directory service", zap.Error(err))
 	}
+
 	o.directoryInspectionClient = inspectionapi.NewDirectoryInspectionClient(directoryConn)
 	o.logger.Info(
 		"directory inspection client setup complete",
 		zap.String("directory-inspection-address", directoryInspectionAddress))
 
 	go o.keepServiceListUpToDate()
+
 	return nil
 }
 
@@ -156,8 +169,7 @@ func NewOutway(
 	tlsOptions orgtls.TLSOptions,
 	directoryInspectionAddress,
 	authServiceURL,
-	authCAPath string) (*Outway, error) {
-
+	authCAPath string, useAsHTTPProxy bool) (*Outway, error) {
 	roots, organizationName, err := loadCertificates(logger, tlsOptions)
 	if err != nil {
 		return nil, err
@@ -180,6 +192,13 @@ func NewOutway(
 		servicesDirectory: make(map[string]*inspectionapi.ListServicesResponse_Service),
 	}
 
+	if useAsHTTPProxy {
+		o.requestHTTPHandler = o.handleHTTPRequestAsProxy
+		o.forwardingHTTPProxy = newForwardingProxy()
+	} else {
+		o.requestHTTPHandler = o.handleHTTPRequest
+	}
+
 	err = o.validateAuthURL(authCAPath, authServiceURL)
 	if err != nil {
 		return nil, err
@@ -193,6 +212,7 @@ func NewOutway(
 	// setup transactionlog
 	if logdb == nil {
 		logger.Info("logging to transaction log disabled")
+
 		o.txlogger = transactionlog.NewDiscardTransactionLogger()
 	} else {
 		o.txlogger, err = transactionlog.NewPostgresTransactionLogger(logger, logdb, transactionlog.DirectionOut)
@@ -207,6 +227,20 @@ func NewOutway(
 		return nil, err
 	}
 	return o, nil
+}
+
+//
+func newForwardingProxy() *httputil.ReverseProxy {
+	director := func(req *http.Request) {
+		if _, ok := req.Header["User-Agent"]; !ok {
+			// explicitly disable User-Agent so it's not set to default value
+			req.Header.Set("User-Agent", "")
+		}
+	}
+
+	return &httputil.ReverseProxy{
+		Director: director,
+	}
 }
 
 func (o *Outway) keepServiceListUpToDate() {

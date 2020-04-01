@@ -18,8 +18,20 @@ import (
 
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/tlsconfig"
-	"go.nlx.io/nlx/common/transactionlog"
 )
+
+const timeOut = 30 * time.Second
+const keepAlive = 30 * time.Second
+const maxIdelCons = 100
+const IdleConnTimeout = 20 * time.Second
+const TLSHandshakeTimeout = 10 * time.Second
+const ExpectConinueTimeout = 1 * time.Second
+
+type destination struct {
+	Organization string
+	Service      string
+	Path         string
+}
 
 // RunServer is a blocking function that listens on provided tcp address to handle requests.
 func (o *Outway) RunServer(listenAddress, listenAddressTLS string, tlsOptions orgtls.TLSOptions) error {
@@ -109,20 +121,19 @@ func (o *Outway) shutDown() {
 	if err != nil {
 		o.logger.Error("error shutting down monitoring service", zap.Error(err))
 	}
-
 }
 
 func createHTTPTransport(tlsConfig *tls.Config) *http.Transport {
 	return &http.Transport{
 		DialContext: (&net.Dialer{
-			Timeout:   30 * time.Second,
-			KeepAlive: 30 * time.Second,
+			Timeout:   timeOut,
+			KeepAlive: keepAlive,
 			DualStack: true,
 		}).DialContext,
-		MaxIdleConns:          100,
-		IdleConnTimeout:       20 * time.Second,
-		TLSHandshakeTimeout:   10 * time.Second,
-		ExpectContinueTimeout: 1 * time.Second,
+		MaxIdleConns:          maxIdelCons,
+		IdleConnTimeout:       IdleConnTimeout,
+		TLSHandshakeTimeout:   TLSHandshakeTimeout,
+		ExpectContinueTimeout: ExpectConinueTimeout,
 		TLSClientConfig:       tlsConfig,
 	}
 }
@@ -134,13 +145,62 @@ func (o *Outway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		zap.String("request-path", r.URL.Path),
 		zap.String("request-remote-address", r.RemoteAddr),
 	)
+	logger.Info("received request")
 
+	o.requestHTTPHandler(logger, w, r)
+}
+
+func (o *Outway) handleHTTPRequest(logger *zap.Logger, w http.ResponseWriter, r *http.Request) {
 	destination, err := parseURLPath(r.URL.Path)
-
 	if err != nil {
-		msg := "no valid url path expecting: organization/service/apipathL"
+		if isNLXUrl(r.URL) {
+			http.Error(w, fmt.Sprintf("please enable proxy mode by setting the 'use-as-http-proxy' flag to resolve: %s", r.URL.String()), http.StatusInternalServerError)
+			return
+		}
+
+		msg := "no valid url path expecting: organization/service/apipath"
 		logger.Error(msg, zap.Error(err))
+
 		o.helpUser(w, msg, nil, r.URL.Path)
+
+		return
+	}
+
+	o.handleOnNLX(logger, destination, w, r)
+}
+
+func (o *Outway) handleHTTPRequestAsProxy(logger *zap.Logger, w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodConnect {
+		logger.Error("CONNECT method not supported")
+		http.Error(w, "CONNECT method is not supported", http.StatusNotImplemented)
+
+		return
+	}
+
+	if !isNLXUrl(r.URL) {
+		o.forwardingHTTPProxy.ServeHTTP(w, r)
+		return
+	}
+
+	destination, err := parseLocalNLXURL(r.URL)
+	if err != nil {
+		logger.Error("error parsing desination", zap.Error(err))
+		http.Error(w, "nlx outway: no valid url expecting: service.organization.service.nlx.local/apipath", http.StatusBadRequest)
+
+		return
+	}
+
+	o.handleOnNLX(logger, destination, w, r)
+}
+
+func (o *Outway) handleOnNLX(logger *zap.Logger, destination *destination, w http.ResponseWriter, r *http.Request) {
+	service := o.getService(destination.Organization, destination.Service)
+	if service == nil {
+		logger.Warn("received request for unknown service")
+
+		msg := "nlx outway: unknown service"
+		o.helpUser(w, msg, destination, r.URL.Path)
+
 		return
 	}
 
@@ -150,123 +210,38 @@ func (o *Outway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if authErr != nil {
 			logger.Error("error authorizing request", zap.Error(authErr))
 			http.Error(w, "nlx outway: error authorizing request", http.StatusInternalServerError)
+
 			return
 		}
 
-		o.logger.Info("authorization result", zap.Bool("authorized", authResponse.Authorized), zap.String("reason", authResponse.Reason))
+		logger.Info("authorization result", zap.Bool("authorized", authResponse.Authorized), zap.String("reason", authResponse.Reason))
+
 		if !authResponse.Authorized {
 			http.Error(w, fmt.Sprintf("nlx outway: authorization failed. reason: %s", authResponse.Reason), http.StatusUnauthorized)
 			return
 		}
 	}
 
-	r.URL.Path = destination.Path
-
-	recordData := createRecordData(r.Header, destination.Path)
-	service := o.getService(destination.Organization, destination.Service)
-
-	if service == nil {
-		msg := "nlx outway: unknown service"
-		logger.Warn("received request for unknown service")
-		o.helpUser(w, msg, destination, r.URL.Path)
-		return
-	}
-
-	l, err := NewLogRecordID()
+	logRecordID, err := o.createLogRecord(r, destination)
 	if err != nil {
-		logger.Error("could not get new request ID", zap.Error(err))
-		http.Error(w, "nlx outway: internal server error", http.StatusInternalServerError)
+		logger.Error("failed to store transactionlog record", zap.Error(err))
+
+		if strings.Contains(err.Error(), "invalid data subject header") {
+			http.Error(w, "nlx outway: invalid data subject header", http.StatusBadRequest)
+		} else {
+			http.Error(w, "nlx outway: server error", http.StatusInternalServerError)
+		}
+
 		return
 	}
 
-	logRecordID := l.String()
-	r.Header.Set("X-NLX-Logrecord-Id", logRecordID)
-
-	dataSubjects, err := parseDataSubjects(r)
-	if err != nil {
-		http.Error(w, "nlx outway: invalid data subject header", http.StatusBadRequest)
-		o.logger.Warn("invalid data subject header", zap.Error(err))
-		return
-	}
+	addLogRecordIDToRequest(r, logRecordID)
 
 	o.stripHeaders(r, destination.Organization)
 
-	err = o.txlogger.AddRecord(&transactionlog.Record{
-		SrcOrganization:  o.organizationName,
-		DestOrganization: destination.Organization,
-		ServiceName:      destination.Service,
-		LogrecordID:      logRecordID,
-		Data:             recordData,
-		DataSubjects:     dataSubjects,
-	})
-	if err != nil {
-		http.Error(w, "nlx outway: server error", http.StatusInternalServerError)
-		o.logger.Error("failed to store transactionlog record", zap.Error(err))
-		return
-	}
+	logger.Info("forwarding API request", zap.String("destination-organization", destination.Organization), zap.String("service", destination.Service), zap.String("logrecord-id", logRecordID.String()))
 
-	o.logger.Info("forwarding API request", zap.String("destination-organization", destination.Organization), zap.String("service", destination.Service), zap.String("logrecord-id", logRecordID))
+	r.URL.Path = destination.Path
 
 	service.ProxyHTTPRequest(w, r)
-}
-
-func createRecordData(h http.Header, p string) map[string]interface{} {
-	recordData := make(map[string]interface{})
-	recordData["request-path"] = p
-	if processID := h.Get("X-NLX-Request-Process-Id"); processID != "" {
-		recordData["doelbinding-process-id"] = processID
-	}
-	if dataElements := h.Get("X-NLX-Request-Data-Elements"); dataElements != "" {
-		recordData["doelbinding-data-elements"] = dataElements
-	}
-
-	if userData := h.Get("X-NLX-Requester-User"); userData != "" {
-		recordData["doelbinding-user"] = userData
-	}
-
-	if claims := h.Get("X-NLX-Requester-Claims"); claims != "" {
-		recordData["doelbinding-claims"] = claims
-	}
-
-	if userID := h.Get("X-NLX-Request-User-Id"); userID != "" {
-		recordData["doelbinding-user-id"] = userID
-	}
-
-	if applicationID := h.Get("X-NLX-Request-Application-Id"); applicationID != "" {
-		recordData["doelbinding-application-id"] = applicationID
-	}
-
-	if subjectIdentifier := h.Get("X-NLX-Request-Subject-Identifier"); subjectIdentifier != "" {
-		recordData["doelbinding-subject-identifier"] = subjectIdentifier
-	}
-
-	return recordData
-}
-
-type destination struct {
-	Organization string
-	Service      string
-	Path         string
-}
-
-func parseURLPath(urlPath string) (*destination, error) {
-	pathParts := strings.SplitN(strings.TrimPrefix(urlPath, "/"), "/", 3)
-
-	if len(pathParts) != 3 {
-		return nil, fmt.Errorf("invalid path in url expecting: /organization/serivice/path")
-	}
-
-	return &destination{
-		Organization: pathParts[0],
-		Service:      pathParts[1],
-		Path:         pathParts[2],
-	}, nil
-}
-
-func parseDataSubjects(r *http.Request) (map[string]string, error) {
-	if dataSubjectsHeader := r.Header.Get("X-NLX-Request-Data-Subject"); dataSubjectsHeader != "" {
-		return transactionlog.ParseDataSubjectHeader(dataSubjectsHeader)
-	}
-
-	return map[string]string{}, nil
 }

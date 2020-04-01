@@ -77,6 +77,7 @@ nlxio/outway:latest
 You will get back the container id of the container you created from this image.
 By running this command, we've launched our very own NLX outway. It is running on `http://localhost`.
 
+
 ### Verification
 
 To verify the container is running, execute:
@@ -113,6 +114,9 @@ For example, to query the Haarlem demo API application use:
 ```bash
 curl http://localhost/haarlem/demo-api/get
 ```
+
+You can also run the outway as a HTTP proxy. This allows applications to call services on NLX by using `http://service-name.organization-name.services.nlx.local`.
+For more information read [the reference information](../reference-information/proxy.md) 
 
 ### Verification
 
