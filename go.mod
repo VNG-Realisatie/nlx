@@ -18,7 +18,7 @@ require (
 	github.com/docker/go-units v0.4.0 // indirect
 	github.com/fgrosse/zaptest v1.1.0
 	github.com/ghodss/yaml v1.0.0
-	github.com/go-chi/chi v4.0.4+incompatible
+	github.com/go-chi/chi v4.1.0+incompatible
 	github.com/go-chi/render v1.0.1
 	github.com/go-errors/errors v1.0.1 // indirect
 	github.com/go-sql-driver/mysql v1.5.0 // indirect

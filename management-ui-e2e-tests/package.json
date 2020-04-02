@@ -7,7 +7,7 @@
     "test:local": "node outputUrl.js && testcafe 'chrome:headless' --live --reporter 'spec,html:./test-results/index.html'"
   },
   "devDependencies": {
-    "axe-core": "3.5.2",
+    "axe-core": "3.5.3",
     "axe-testcafe": "3.0.0",
     "testcafe": "1.8.3",
     "testcafe-browser-provider-browserstack": "1.12.0",
