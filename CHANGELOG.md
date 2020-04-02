@@ -1,3 +1,44 @@
+# [0.86.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.85.1...v0.86.0) (2020-04-02)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @testing-library/react to v10 ([955d0fd](https://gitlab.com/commonground/nlx/nlx/commit/955d0fd9687d4d08f5a9afc63bd7519935c8969f))
+* **docs:** remove link to community ([05884f0](https://gitlab.com/commonground/nlx/nlx/commit/05884f095b890370a0d0d13c08bfb1b55bbaa6d6))
+* **helm:** indentation of metadata labels ([65b2e1e](https://gitlab.com/commonground/nlx/nlx/commit/65b2e1e66352ce49c1226376191efbb5e272dc53))
+* **management-ui:** added translations for 404 page ([1492d23](https://gitlab.com/commonground/nlx/nlx/commit/1492d23d498f6c2f887e8d4318882e4a78ba433c))
+* **management-ui:** processed feedback ([30546c3](https://gitlab.com/commonground/nlx/nlx/commit/30546c3396721d613083ef3fc381ba76ee3d39f6))
+* **management-ui:** rebase fixes and additions ([e7ea3da](https://gitlab.com/commonground/nlx/nlx/commit/e7ea3da378751e90208eb882ac5b2fe2eebc46d9))
+* **management-ui:** review feedback ([2e6d1aa](https://gitlab.com/commonground/nlx/nlx/commit/2e6d1aa6ac332960dd2abe7362fcb61999fb5817))
+* **management-ui:** unit test ([6a18a7a](https://gitlab.com/commonground/nlx/nlx/commit/6a18a7a21f012814d5d4702fa8c101468b8e3060))
+* **nlx-management:** i18next dependency [#873](https://gitlab.com/commonground/nlx/nlx/issues/873) ([2817bac](https://gitlab.com/commonground/nlx/nlx/commit/2817bac6ba18c8ca00b188fd6405de5e411edcde))
+
+
+### Features
+
+* **config-api:** extend whitelist with publicKeyHash ([a888cc7](https://gitlab.com/commonground/nlx/nlx/commit/a888cc703e54a548cb8e04f931db0278bf8539f0))
+* **inway:** create updated version of serviceconfig.toml with backward compatibility ([f2a4765](https://gitlab.com/commonground/nlx/nlx/commit/f2a476501936923132385969f8a3d86ece6e809b))
+* **inway:** create updated version of serviceconfig.toml with backward compatibility ([b140fa1](https://gitlab.com/commonground/nlx/nlx/commit/b140fa1366e06e79456c4e93e028614cdd8aa5c2))
+* **inway:** use whitelisted subjectPublicKeyInfo to allow outways through ([6e452de](https://gitlab.com/commonground/nlx/nlx/commit/6e452de9e75b86993e9ec74c2d5b3bf975f15845))
+* **inway:** use whitelisted subjectPublicKeyInfo to allow outways through ([b711e51](https://gitlab.com/commonground/nlx/nlx/commit/b711e510e13a1edb01c2113fe8f457d6da2f4e3b))
+* **management-api:** add OpenID Connect support ([b7fc893](https://gitlab.com/commonground/nlx/nlx/commit/b7fc893a65aa2442fe2542bf94f8afcd0baf5bca))
+* **management-ui:** add OpenID Connect support ([2470a01](https://gitlab.com/commonground/nlx/nlx/commit/2470a01d8e83f485ce1a85cab66fb3f0c7d53fd9))
+* **management-ui:** added 404 page ([9b2ad3a](https://gitlab.com/commonground/nlx/nlx/commit/9b2ad3aaa4c9cade3e613894bb73fae09eca3476))
+* **management-ui:** added translation files ([042f77c](https://gitlab.com/commonground/nlx/nlx/commit/042f77c8169f7b3fb53bce065dc7d1576bc4d4f0))
+* **management-ui:** adjust outline for PrimaryNavigation buttons [#876](https://gitlab.com/commonground/nlx/nlx/issues/876) ([37536ed](https://gitlab.com/commonground/nlx/nlx/commit/37536ed6795e70a9c6dfed1c2794c49777361f6b))
+* **management-ui:** display no results message [#881](https://gitlab.com/commonground/nlx/nlx/issues/881) ([dade50c](https://gitlab.com/commonground/nlx/nlx/commit/dade50c34164e9ec0129f7985e026dc38bdcdac5))
+* **management-ui:** e2e test NotFound page ([a0d3f40](https://gitlab.com/commonground/nlx/nlx/commit/a0d3f4074d99c4473385b91fcea56a55b490e197))
+* **management-ui:** e2e tests render i18n keys instead of translations ([d97d96b](https://gitlab.com/commonground/nlx/nlx/commit/d97d96be0944294acba02c66279cfe5c2bf4b75c))
+* **management-ui:** implement Services page [#876](https://gitlab.com/commonground/nlx/nlx/issues/876) ([5ff96ad](https://gitlab.com/commonground/nlx/nlx/commit/5ff96ad93ab6ce0ecb21e3dd1655e68dd97c743d))
+* **management-ui:** implement Services page [#881](https://gitlab.com/commonground/nlx/nlx/issues/881) ([2c9760e](https://gitlab.com/commonground/nlx/nlx/commit/2c9760efbd13dedb24ce9c2d1d4b45bb86ee21cb))
+* **management-ui:** translate aria labels [#876](https://gitlab.com/commonground/nlx/nlx/issues/876) ([6eaa6d0](https://gitlab.com/commonground/nlx/nlx/commit/6eaa6d0ecf2350df3c8c06e21cb2d629ccfcaed5))
+* **nlx-management:** add background pattern to Welcome page [#872](https://gitlab.com/commonground/nlx/nlx/issues/872) ([549e7fe](https://gitlab.com/commonground/nlx/nlx/commit/549e7feabee4e9036789df29907004b34d7c6403))
+* **nlx-management:** add initial setup using Create React App [#873](https://gitlab.com/commonground/nlx/nlx/issues/873) ([96b97ed](https://gitlab.com/commonground/nlx/nlx/commit/96b97ed9fdb1320afa0959c9d64984d7b12506da))
+* **nlx-management:** implement global styles using Styled Components [#873](https://gitlab.com/commonground/nlx/nlx/issues/873) ([06d2a8d](https://gitlab.com/commonground/nlx/nlx/commit/06d2a8d644e4b4ec0d57c380c830eff0b7f34988))
+* **nlx-management:** implement routing + redirect logic from / to /login [#873](https://gitlab.com/commonground/nlx/nlx/issues/873) ([7757b93](https://gitlab.com/commonground/nlx/nlx/commit/7757b933916b29c5711e85bb641ea0e9882a0b85))
+* **nlx-management:** implement Welcome page [#873](https://gitlab.com/commonground/nlx/nlx/issues/873) ([b290616](https://gitlab.com/commonground/nlx/nlx/commit/b2906165bfddf491c707c5956d17d508619c6425))
+* **nlx-management:** setup internationalization using react-i18n [#873](https://gitlab.com/commonground/nlx/nlx/issues/873) ([637843b](https://gitlab.com/commonground/nlx/nlx/commit/637843bf3c2eae8769fe4daffbd91f1592d34a98))
+
 ## [0.85.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.85.0...v0.85.1) (2020-03-13)
 
 
