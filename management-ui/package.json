@@ -20,7 +20,7 @@
     "styled-components": "5.0.1"
   },
   "scripts": {
-    "start": "BROWSER=none react-scripts start",
+    "start": "BROWSER=none PROXY=http://localhost:6017 PORT=3002 react-scripts start",
     "build": "react-scripts build",
     "lint": "eslint src/**",
     "test": "react-scripts test",
