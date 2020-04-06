@@ -13,7 +13,7 @@ class ServiceRepository {
     }
 
     const response = await result.json()
-    return response.services
+    return response.services ? response.services : []
   }
 }
 
