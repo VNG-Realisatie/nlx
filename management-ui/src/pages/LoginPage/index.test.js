@@ -2,7 +2,7 @@ import React from 'react'
 import { ThemeProvider } from 'styled-components/macro'
 import { defaultTheme } from '@commonground/design-system'
 import { renderWithProviders } from '../../test-utils'
-import { UserContextProvider } from '../../user-context/UserContext'
+import { UserContextProvider } from '../../user-context'
 import LoginPage from './index'
 
 test('renders a welcome message', () => {

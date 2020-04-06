@@ -10,7 +10,7 @@ import ServicesPage from './pages/ServicesPage'
 import NotFoundPage from './pages/NotFoundPage'
 
 import { StyledContainer } from './App.styles'
-import { UserContextProvider } from './user-context/UserContext'
+import { UserContextProvider } from './user-context'
 
 const App = () => (
   <UserContextProvider>

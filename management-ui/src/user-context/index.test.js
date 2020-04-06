@@ -3,7 +3,7 @@
 
 import React from 'react'
 import { act, render } from '@testing-library/react'
-import UserContext, { UserContextProvider } from './UserContext'
+import UserContext, { UserContextProvider } from './index'
 
 describe('UserContext', () => {
   describe('Provider', () => {

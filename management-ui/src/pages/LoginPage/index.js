@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@commonground/design-system'
-import UserContext from '../../user-context/UserContext'
+import UserContext from '../../user-context'
 import {
   StyledContainer,
   StyledContent,
