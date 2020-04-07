@@ -21,7 +21,6 @@ test('Automated accessibility testing', async t => {
 
 test('Page title is visible', async t => {
   const pageTitle = Selector('h1')
-  const servicesList = Selector('[data-testid="services-list"]');
 
   await t
     .expect(pageTitle.visible).ok()
@@ -38,7 +37,7 @@ test('Service details are displayed', async t => {
 
   await t
     .expect(servicesList.visible).ok()
-    .expect(servicesList.find('tbody tr').count).eql(1)
+    .expect(servicesList.find('tbody tr').count).gte(1) // until we have the delete option, we can't assert the exact amount of services
 
     .expect(nameCell.textContent).eql('kentekenregister')
     .expect(accessCell.textContent).eql('Open')
