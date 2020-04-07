@@ -13,16 +13,7 @@ import {
   AUTHORIZATION_TYPE_WHITELIST,
 } from '../../../vocabulary'
 import FieldValidationMessage from './FieldValidationMessage'
-import {
-  StyledField,
-  Fieldset,
-  Label,
-  FieldInfo,
-  StyledLayerTypeOption,
-  StyledLayerTypeOptionGroup,
-  StyledExpectedDateGroup,
-  StyledInput,
-} from './index.styles'
+import { Field, Fieldset, Label, Legend } from './index.styles'
 
 const DEFAULT_INITIAL_VALUES = {
   name: '',
@@ -57,7 +48,7 @@ const FieldWithValidation = ({ id, label, ...props }) => {
   return (
     <>
       <Label htmlFor={field.name}>{label}</Label>
-      <StyledInput
+      <Field
         id={id || undefined}
         {...field}
         className={error && touched ? 'invalid' : null}
@@ -92,8 +83,8 @@ const AddServiceForm = ({
       >
         {({ handleSubmit, errors, touched, values, submitCount }) => (
           <form onSubmit={handleSubmit} data-testid="form" {...props}>
-            <fieldset>
-              <legend>{t('API details')}</legend>
+            <Fieldset>
+              <Legend>{t('API details')}</Legend>
 
               <FieldWithValidation
                 label={t('API naam')}
@@ -125,10 +116,10 @@ const AddServiceForm = ({
                 id="internal"
                 type="checkbox"
               />
-            </fieldset>
+            </Fieldset>
 
-            <fieldset>
-              <legend>{t('Contact')}</legend>
+            <Fieldset>
+              <Legend>{t('Contact')}</Legend>
 
               <FieldWithValidation
                 label={t('Tech support email')}
@@ -141,13 +132,13 @@ const AddServiceForm = ({
                 name="publicSupportContact"
                 id="publicSupportContact"
               />
-            </fieldset>
+            </Fieldset>
 
-            <fieldset>
-              <legend>{t('Authorizatie')}</legend>
+            <Fieldset>
+              <Legend>{t('Authorizatie')}</Legend>
 
               <Label>{t('Type authorisatie')}</Label>
-              <StyledInput
+              <Field
                 id="authorizationModeWhitelist"
                 name="authorizationMode"
                 type="radio"
@@ -157,7 +148,7 @@ const AddServiceForm = ({
                 {t('Whitelist voor geauthorizeerde organisaties')}
               </Label>
 
-              <StyledInput
+              <Field
                 id="authorizationModeNone"
                 name="authorizationMode"
                 type="radio"
@@ -166,7 +157,7 @@ const AddServiceForm = ({
               <Label htmlFor="authorizationModeNone">
                 {t('Alle organisaties toestaan')}
               </Label>
-            </fieldset>
+            </Fieldset>
 
             <Button type="submit">{submitButtonText}</Button>
           </form>

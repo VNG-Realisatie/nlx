@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Field } from 'formik'
+import { Field as FormikField } from 'formik'
 
 export const Label = styled.label`
   display: block;
@@ -8,12 +8,7 @@ export const Label = styled.label`
   margin-top: ${(p) => p.theme.tokens.spacing06};
 `
 
-export const FieldInfo = styled.small`
-  display: block;
-  word-break: keep-all;
-`
-
-export const StyledInput = styled(Field)`
+export const Field = styled(FormikField)`
   background-color: ${(p) => p.theme.colorBackgroundInput};
   display: block;
   width: 100%;
@@ -43,4 +38,11 @@ export const StyledInput = styled(Field)`
 export const Fieldset = styled.fieldset`
   border: 0 none;
   padding: 0 0 3rem 0;
+`
+
+export const Legend = styled.legend`
+  line-height: ${(p) => p.theme.tokens.lineHeightHeading};
+  font-weight: ${(p) => p.theme.tokens.fontWeightBold};
+  font-size: ${(p) => p.theme.tokens.fontSizeLarge};
+  margin: 0;
 `
