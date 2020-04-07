@@ -13,6 +13,8 @@ export const StyledMain = styled.main`
 export const StyledContent = styled.div`
   flex: 1;
   padding: ${(p) => p.theme.tokens.spacing07} ${(p) => p.theme.tokens.spacing09};
+  overflow: auto;
+  height: 100%;
 `
 
 export const StyledPageTitle = styled.h1`

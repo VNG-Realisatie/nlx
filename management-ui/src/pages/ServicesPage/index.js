@@ -8,6 +8,7 @@ import { Alert } from '@commonground/design-system'
 import PageTemplate from '../../components/PageTemplate'
 import usePromise from '../../hooks/use-promise'
 import ServiceRepository from '../../domain/service-repository'
+import { AUTHORIZATION_TYPE_NONE } from '../../vocabulary'
 import Table from './Table'
 import AuthorizationMode from './AuthorizationMode'
 import ServiceCount from './ServiceCount'
@@ -28,6 +29,18 @@ ServiceRow.propTypes = {
   authorizations: array.isRequired,
   mode: string.isRequired,
 }
+
+const hydrateAuthorizationToServices = (services) =>
+  services.map((service) => {
+    if (!service.authorizationSettings) {
+      service.authorizationSettings = {
+        authorizations: [],
+        mode: AUTHORIZATION_TYPE_NONE,
+      }
+    }
+
+    return service
+  })
 
 const ServicesPage = ({ getServices }) => {
   const { t } = useTranslation()
@@ -58,7 +71,7 @@ const ServicesPage = ({ getServices }) => {
               </tr>
             </thead>
             <tbody>
-              {result.map((service, i) => (
+              {hydrateAuthorizationToServices(result).map((service, i) => (
                 <ServiceRow
                   name={service.name}
                   authorizations={service.authorizationSettings.authorizations}

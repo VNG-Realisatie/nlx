@@ -41,7 +41,7 @@ const validationSchema = Yup.object().shape({
   ]),
 })
 
-const FieldWithValidation = ({ id, label, ...props }) => {
+const FieldWithValidation = ({ label, ...props }) => {
   const [field, meta] = useField(props)
   const { error, touched } = meta
 
@@ -49,12 +49,12 @@ const FieldWithValidation = ({ id, label, ...props }) => {
     <>
       <Label htmlFor={field.name}>{label}</Label>
       <Field
-        id={id || undefined}
         {...field}
+        {...props}
         className={error && touched ? 'invalid' : null}
       />
       {error && touched ? (
-        <FieldValidationMessage data-testid={`${id}-error`}>
+        <FieldValidationMessage data-testid={`${props.id}-error`}>
           {error}
         </FieldValidationMessage>
       ) : null}
