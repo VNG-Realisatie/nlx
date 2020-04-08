@@ -32,6 +32,10 @@ export const StyledLink = styled(NavLink)`
   display: block;
   line-height: ${(p) => p.theme.tokens.spacing05};
 
+  svg path {
+    fill: ${(p) => p.theme.tokens.colorPaletteGray500};
+  }
+
   &:hover {
     color: ${(p) => p.theme.tokens.colorPaletteGray500};
     background: ${(p) => p.theme.tokens.colorPaletteGray800};
