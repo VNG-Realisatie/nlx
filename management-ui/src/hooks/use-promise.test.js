@@ -1,5 +1,6 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
+//
 
 import { renderHook, act } from '@testing-library/react-hooks'
 import usePromise from './use-promise'

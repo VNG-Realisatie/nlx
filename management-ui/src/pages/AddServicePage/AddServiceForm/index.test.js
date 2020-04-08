@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2020
+// Licensed under the EUPL
+//
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
 import { act, fireEvent, render } from '@testing-library/react'

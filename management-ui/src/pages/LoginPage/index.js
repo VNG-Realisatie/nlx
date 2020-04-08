@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2020
+// Licensed under the EUPL
+//
 import React, { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@commonground/design-system'

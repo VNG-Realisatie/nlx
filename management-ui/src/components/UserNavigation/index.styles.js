@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2020
+// Licensed under the EUPL
+//
 import styled, { css } from 'styled-components/macro'
 import React from 'react'
 import { bool } from 'prop-types'

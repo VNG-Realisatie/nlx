@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2020
+// Licensed under the EUPL
+//
 import i18n from 'i18next'
 import XHR from 'i18next-xhr-backend'
 import { initReactI18next } from 'react-i18next'

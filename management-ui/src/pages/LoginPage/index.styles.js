@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2020
+// Licensed under the EUPL
+//
 import styled from 'styled-components'
 import NLXManagementLogo from '../../components/NLXManagementLogo'
 import { ReactComponent as ExternalLink } from './external-link.svg'

@@ -1,5 +1,6 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
+//
 
 export const AUTHORIZATION_TYPE_NONE = 'none'
 export const AUTHORIZATION_TYPE_WHITELIST = 'whitelist'

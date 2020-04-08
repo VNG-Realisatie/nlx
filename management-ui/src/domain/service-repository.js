@@ -1,8 +1,6 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
-
-// API specification
-// https://gitlab.com/commonground/nlx/nlx/-/blob/master/config-api/configapi/configapi.swagger.json
+//
 
 class ServiceRepository {
   static async getAll() {

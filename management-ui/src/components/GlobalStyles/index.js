@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2020
+// Licensed under the EUPL
+//
 import { createGlobalStyle } from 'styled-components'
 
 export default createGlobalStyle`

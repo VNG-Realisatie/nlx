@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2020
+// Licensed under the EUPL
+//
 import React from 'react'
 import { fireEvent, act } from '@testing-library/react'
 import { MemoryRouter as Router } from 'react-router-dom'
