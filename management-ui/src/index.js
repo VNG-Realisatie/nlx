@@ -9,10 +9,13 @@ import './i18n'
 
 import { BrowserRouter as Router } from 'react-router-dom'
 import App from './App'
+import { UserContextProvider } from './user-context'
 
 ReactDOM.render(
   <Router>
-    <App />
+    <UserContextProvider>
+      <App />
+    </UserContextProvider>
   </Router>,
   document.getElementById('root'),
 )
