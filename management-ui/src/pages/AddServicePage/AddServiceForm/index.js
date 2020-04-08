@@ -26,7 +26,9 @@ const DEFAULT_INITIAL_VALUES = {
   internal: true,
   techSupportContact: '',
   publicSupportContact: '',
-  authorizationMode: AUTHORIZATION_TYPE_WHITELIST,
+  authorizationSettings: {
+    mode: AUTHORIZATION_TYPE_WHITELIST,
+  },
 }
 
 const validationSchema = Yup.object().shape({
@@ -38,10 +40,12 @@ const validationSchema = Yup.object().shape({
   internal: Yup.boolean(),
   techSupportContact: Yup.string(),
   publicSupportContact: Yup.string(),
-  authorizationMode: Yup.mixed().oneOf([
-    AUTHORIZATION_TYPE_WHITELIST,
-    AUTHORIZATION_TYPE_NONE,
-  ]),
+  authorizationSettings: Yup.object().shape({
+    mode: Yup.mixed().oneOf([
+      AUTHORIZATION_TYPE_WHITELIST,
+      AUTHORIZATION_TYPE_NONE,
+    ]),
+  }),
 })
 
 const FieldWithValidation = ({ label, ...props }) => {
@@ -143,7 +147,7 @@ const AddServiceForm = ({
               <Label>{t('Type authorisatie')}</Label>
               <Field
                 id="authorizationModeWhitelist"
-                name="authorizationMode"
+                name="authorizationSettings.mode"
                 type="radio"
                 value={AUTHORIZATION_TYPE_WHITELIST}
               />
@@ -153,7 +157,7 @@ const AddServiceForm = ({
 
               <Field
                 id="authorizationModeNone"
-                name="authorizationMode"
+                name="authorizationSettings.mode"
                 type="radio"
                 value={AUTHORIZATION_TYPE_NONE}
               />
@@ -180,10 +184,9 @@ AddServiceForm.propTypes = {
     internal: bool,
     techSupportContact: string,
     publicSupportContact: string,
-    authorizationMode: oneOf([
-      AUTHORIZATION_TYPE_WHITELIST,
-      AUTHORIZATION_TYPE_NONE,
-    ]),
+    authorizationSettings: shape({
+      mode: oneOf([AUTHORIZATION_TYPE_WHITELIST, AUTHORIZATION_TYPE_NONE]),
+    }),
   }),
   submitButtonText: string,
 }

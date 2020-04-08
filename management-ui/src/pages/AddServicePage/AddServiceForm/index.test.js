@@ -21,7 +21,9 @@ describe('with initial values', () => {
           internal: false,
           techSupportContact: 'tech@organization.test',
           publicSupportContact: 'public@organization.test',
-          authorizationMode: AUTHORIZATION_TYPE_WHITELIST,
+          authorizationSettings: {
+            mode: AUTHORIZATION_TYPE_WHITELIST,
+          },
         }}
       />,
     )
@@ -78,7 +80,9 @@ test('the form values of the onSubmitHandler', async () => {
         internal: false,
         techSupportContact: 'tech@organization.test',
         publicSupportContact: 'public@organization.test',
-        authorizationMode: AUTHORIZATION_TYPE_WHITELIST,
+        authorizationSettings: {
+          mode: AUTHORIZATION_TYPE_WHITELIST,
+        },
       }}
     />,
   )
@@ -116,6 +120,8 @@ test('the form values of the onSubmitHandler', async () => {
     internal: false,
     techSupportContact: 'tech@organization.test',
     publicSupportContact: 'public@organization.test',
-    authorizationMode: AUTHORIZATION_TYPE_WHITELIST,
+    authorizationSettings: {
+      mode: AUTHORIZATION_TYPE_WHITELIST,
+    },
   })
 })
