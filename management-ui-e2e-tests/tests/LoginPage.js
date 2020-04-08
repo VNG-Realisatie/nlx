@@ -2,6 +2,7 @@
 // Licensed under the EUPL
 
 import { Selector, Role } from 'testcafe'
+import { waitForReact } from 'testcafe-react-selectors'
 import { axeCheck, createReport } from 'axe-testcafe'
 
 const getBaseUrl = require('../getBaseUrl')
@@ -11,6 +12,7 @@ fixture `Login page`
   .page `${baseUrl}`
   .beforeEach(async (t) => {
     await t.useRole(Role.anonymous())
+    await waitForReact();
   })
 
 test('Automated accessibility testing', async t => {

@@ -2,6 +2,7 @@
 // Licensed under the EUPL
 
 import { Selector } from 'testcafe'
+import { waitForReact } from 'testcafe-react-selectors'
 import { axeCheck, createReport } from 'axe-testcafe'
 import { adminUser } from './roles'
 
@@ -12,6 +13,7 @@ fixture `Add Service page`
   .page(`${baseUrl}/services/add-service`)
   .beforeEach(async (t) => {
     await t.useRole(adminUser)
+    await waitForReact()
   })
 
 test('Automated accessibility testing', async t => {
