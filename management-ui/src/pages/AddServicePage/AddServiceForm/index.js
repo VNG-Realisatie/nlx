@@ -27,8 +27,8 @@ const DEFAULT_INITIAL_VALUES = {
 }
 
 const validationSchema = Yup.object().shape({
-  name: Yup.string().required('Dit veld is verplicht.'), // TODO: use translations
-  endpointURL: Yup.string().required('Ongeldig endpoint URL.'), // TODO: use translations
+  name: Yup.string().required(i18next.t('Dit veld is verplicht.')),
+  endpointURL: Yup.string().required(i18next.t('Ongeldig endpoint URL.')),
 
   documentationURL: Yup.string(),
   apiSpecificationURL: Yup.string(),
