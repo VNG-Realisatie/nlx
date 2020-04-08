@@ -16,6 +16,10 @@ const AddServicePage = ({ createHandler }) => {
   const [error, setError] = useState(null)
 
   const submitService = (service) => {
+    // placeholder until we've implemented adding authorizations in the form
+    service.authorizationSettings = service.authorizationSettings || {}
+    service.authorizationSettings.authorizations = []
+
     createHandler(service)
       .then(() => {
         setIsAdded(true)
