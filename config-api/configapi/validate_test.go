@@ -10,7 +10,8 @@ import (
 
 func TestServiceValidate(t *testing.T) {
 	testService := configapi.Service{
-		Name: "my-service",
+		Name:                  "my-service",
+		AuthorizationSettings: &configapi.Service_AuthorizationSettings{Mode: "none"},
 	}
 
 	err := testService.Validate()
@@ -19,6 +20,33 @@ func TestServiceValidate(t *testing.T) {
 	testService = configapi.Service{
 		Name:        "my-service",
 		EndpointURL: "my-service.test",
+	}
+
+	err = testService.Validate()
+	assert.Equal(t, errors.New("invalid authorization settings for service my-service"), err)
+
+	testService = configapi.Service{
+		Name:                  "my-service",
+		EndpointURL:           "my-service.test",
+		AuthorizationSettings: &configapi.Service_AuthorizationSettings{Mode: "nonexisting"},
+	}
+
+	err = testService.Validate()
+	assert.Equal(t, errors.New("invalid authorization mode for service my-service, expected whitelist or none, got nonexisting"), err)
+
+	testService = configapi.Service{
+		Name:                  "my-service",
+		EndpointURL:           "my-service.test",
+		AuthorizationSettings: &configapi.Service_AuthorizationSettings{Mode: "whitelist"},
+	}
+
+	err = testService.Validate()
+	assert.Equal(t, errors.New("invalid list of authorizations for service my-service, expected list of authorizations, got nil"), err)
+
+	testService = configapi.Service{
+		Name:                  "my-service",
+		EndpointURL:           "my-service.test",
+		AuthorizationSettings: &configapi.Service_AuthorizationSettings{Mode: "whitelist", Authorizations: []*configapi.Service_AuthorizationSettings_Authorization{}},
 	}
 
 	err = testService.Validate()

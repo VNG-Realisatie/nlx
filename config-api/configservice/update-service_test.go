@@ -22,8 +22,9 @@ func TestUpdateService(t *testing.T) {
 	ctx := context.Background()
 
 	mockService := &configapi.Service{
-		Name:        "my-service",
-		EndpointURL: "my-service.test",
+		Name:                  "my-service",
+		EndpointURL:           "my-service.test",
+		AuthorizationSettings: &configapi.Service_AuthorizationSettings{Mode: "none"},
 	}
 
 	mockCtrl := gomock.NewController(t)
