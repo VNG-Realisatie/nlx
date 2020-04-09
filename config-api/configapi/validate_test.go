@@ -41,7 +41,7 @@ func TestServiceValidate(t *testing.T) {
 	}
 
 	err = testService.Validate()
-	assert.Equal(t, errors.New("invalid list of authorizations for service my-service, expected list of authorizations, got nil"), err)
+	assert.Equal(t, nil, err)
 
 	testService = configapi.Service{
 		Name:                  "my-service",

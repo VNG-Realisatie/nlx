@@ -37,9 +37,5 @@ func (s *Service) Validate() error {
 		return fmt.Errorf("invalid authorization mode for service %s, expected whitelist or none, got %s", s.Name, s.AuthorizationSettings.Mode)
 	}
 
-	if s.AuthorizationSettings.Mode == authorizationModeWhitelist && s.AuthorizationSettings.Authorizations == nil {
-		return fmt.Errorf("invalid list of authorizations for service %s, expected list of authorizations, got nil", s.Name)
-	}
-
 	return nil
 }
