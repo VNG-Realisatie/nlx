@@ -16,6 +16,7 @@ export const adminUser = Role(`${baseUrl}/login`, async t => {
   const dexGrantAccessButton = Selector('button[type="submit"]');
 
   await t
+    .setTestSpeed(0.5)
     .click(managementLoginButton)
     .typeText(dexLoginText, 'admin@example.com')
     .typeText(dexPasswordText, 'password')
