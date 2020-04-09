@@ -1,0 +1,104 @@
+/**
+ * Copyright (c) 2017-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+@import url(//fonts.googleapis.com/css?family=Muli);
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    transition: var(--ifm-transition-fast) ease color;
+}
+
+body > div {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+
+html:not([data-theme='dark']) {
+    --ifm-navbar-background-color: var(--ifm-color-primary);
+    --ifm-font-base-color: #5b5e6d;
+}
+
+html:not([data-theme='dark']) .react-toggle-track {
+    background-color: #2d66c3 !important;
+}
+
+body {
+    font-family: Muli,sans-serif;
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.9;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+}
+
+.markdown > h2 {
+    font-weight: 600;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+}
+.markdown > h3 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+blockquote {
+    background-color: rgb(252,248,218);
+    border-left: 8px solid #FFBC2C;
+    padding: 15px 30px 15px 15px;
+}
+
+.padding-vert--lg {
+    padding-top: 0!important;
+}
+
+.main-wrapper {
+    flex: 1 0 auto;
+    margin-top: var(--ifm-navbar-height);
+    width: 100%;
+    padding-top: 3rem;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (min-width: 576px) {
+    .main-wrapper {
+        max-width: 540px;
+    }
+}
+@media (min-width: 768px) {
+    .main-wrapper {
+        max-width: 720px;
+    }
+}
+@media (min-width: 992px) {
+    .main-wrapper {
+        max-width: 960px;
+    }
+}
+@media (min-width: 1640px) {
+    .main-wrapper {
+        max-width: 1240px;
+    }
+}
+
+
+
+
+
+
+
+

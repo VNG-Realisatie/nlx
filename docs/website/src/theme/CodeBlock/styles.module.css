@@ -30,3 +30,7 @@
   fill: currentColor;
   margin-right: 3px;
 }
+
+.main-wrapper, .navbar__inner {
+    max-width: 960px!important;
+}
