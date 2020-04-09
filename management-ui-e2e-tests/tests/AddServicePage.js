@@ -41,7 +41,7 @@ test('Adding a new service', async t => {
     .click('#internal')
     .typeText('#techSupportContact', 'tech@organization.test')
     .typeText('#publicSupportContact', 'public@organization.test')
-    .click('#authorizationModeNone')
+    .click('#authorizationModeWhitelist')
     .click(submitButton)
 
     .expect(nameError.innerText).contains('Dit veld is verplicht.')
