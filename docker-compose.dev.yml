@@ -11,7 +11,7 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
   etcd:
-    image: gcr.io/etcd-development/etcd:v3.4.6
+    image: gcr.io/etcd-development/etcd:v3.4.7
     ports:
       - 2379:2379
     environment:
