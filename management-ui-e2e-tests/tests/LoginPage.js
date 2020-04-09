@@ -38,6 +38,7 @@ test('Login', async t => {
   const dexSubmitLoginButton = Selector('#submit-login');
   const dexGrantAccessButton = Selector('button[type="submit"]');
   await t
+      .setTestSpeed(0.5)
       .expect(managementLoginButton.visible).ok()
       .click(managementLoginButton)
 
