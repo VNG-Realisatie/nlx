@@ -9,6 +9,11 @@ import { Alert } from '@commonground/design-system'
 import PageTemplate from '../../components/PageTemplate'
 import ServiceRepository from '../../domain/service-repository'
 import AddServiceForm from './AddServiceForm'
+import {
+  StyledBackButton,
+  StyledIconChevron,
+  StyledTitle,
+} from './index.styles'
 
 const AddServicePage = ({ createHandler }) => {
   const { t } = useTranslation()
@@ -32,10 +37,18 @@ const AddServicePage = ({ createHandler }) => {
   }
 
   return (
-    <PageTemplate title={t('Nieuwe service toevoegen')}>
+    <PageTemplate>
+      <p>
+        <StyledBackButton to="/services" aria-label={t('Back')}>
+          <StyledIconChevron />
+          {t('Back')}
+        </StyledBackButton>
+      </p>
+
+      <StyledTitle>{t('Add new service')}</StyledTitle>
       {error ? (
         <Alert
-          title={t('Toevoegen mislukt')}
+          title={t('Failed adding service')}
           variant="error"
           data-testid="error-message"
           role="alert"
@@ -46,12 +59,15 @@ const AddServicePage = ({ createHandler }) => {
 
       {isAdded && !error ? (
         <Alert variant="success" data-testid="error-message" role="alert">
-          {t('De service is toegevoegd.')}
+          {t('The service has been added.')}
         </Alert>
       ) : null}
 
       {!isAdded ? (
-        <AddServiceForm onSubmitHandler={(values) => submitService(values)} />
+        <AddServiceForm
+          onSubmitHandler={(values) => submitService(values)}
+          submitButtonText={t('Add service')}
+        />
       ) : null}
     </PageTemplate>
   )

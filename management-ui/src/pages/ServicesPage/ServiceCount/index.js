@@ -7,11 +7,11 @@ import { number } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { StyledCount, StyledAmount } from './index.styles'
 
-const ServiceCount = ({ count }) => {
+const ServiceCount = ({ count, ...props }) => {
   const { t } = useTranslation()
 
   return (
-    <StyledCount>
+    <StyledCount {...props}>
       <StyledAmount>{count}</StyledAmount>
       <small>{t('Services')}</small>
     </StyledCount>

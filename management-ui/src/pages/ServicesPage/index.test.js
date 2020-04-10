@@ -15,7 +15,12 @@ test('listing all services', async () => {
   })
   const fetchServicesHandler = jest.fn(() => fetchServicesPromise)
 
-  const { getByRole, getByTestId, findByTestId } = renderWithProviders(
+  const {
+    getByRole,
+    getByTestId,
+    getByLabelText,
+    findByTestId,
+  } = renderWithProviders(
     <Router>
       <ServicesPage getServices={fetchServicesHandler} />
     </Router>,
@@ -37,6 +42,10 @@ test('listing all services', async () => {
   })
 
   expect(await findByTestId('services-list')).toBeInTheDocument()
+  expect(getByTestId('service-count')).toHaveTextContent('1Services')
+
+  const linkAddService = getByLabelText(/Add service/)
+  expect(linkAddService.getAttribute('href')).toBe('/services/add-service')
 })
 
 test('no services', async () => {
@@ -53,6 +62,7 @@ test('no services', async () => {
       await findByText(/^There are no services yet\.$/),
     ).toBeInTheDocument()
     expect(() => getByTestId('services-list')).toThrow()
+    expect(getByTestId('service-count')).toHaveTextContent('0Services')
   })
 })
 
@@ -71,4 +81,5 @@ test('failed to load services', async () => {
   expect(
     await findByText(/^Failed to load the services\.$/),
   ).toBeInTheDocument()
+  expect(getByTestId('service-count')).toHaveTextContent('0Services')
 })

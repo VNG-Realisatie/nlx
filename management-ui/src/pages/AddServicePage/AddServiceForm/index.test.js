@@ -10,7 +10,7 @@ import AddServiceForm from './index'
 
 describe('with initial values', () => {
   it('should pre-fill the form fields with the initial values', () => {
-    const { getByRole, getByLabelText } = renderWithProviders(
+    const { getByLabelText } = renderWithProviders(
       <AddServiceForm
         initialValues={{
           // values copied from config-api/config/service.json
@@ -25,23 +25,22 @@ describe('with initial values', () => {
             mode: AUTHORIZATION_TYPE_WHITELIST,
           },
         }}
+        submitButtonText="Submit"
       />,
     )
 
-    expect(getByLabelText('API naam').value).toBe('my-service')
+    expect(getByLabelText('API name').value).toBe('my-service')
     expect(getByLabelText('API endpoint URL').value).toBe(
       'my-service.test:8000',
     )
-    expect(getByLabelText('API documentatie URL').value).toBe(
+    expect(getByLabelText('API documentation URL').value).toBe(
       'my-service.test:8000/docs',
     )
-    expect(getByLabelText('API specificatie URL').value).toBe(
+    expect(getByLabelText('API specification URL').value).toBe(
       'my-service.test:8000/openapi.json',
     )
 
-    expect(getByLabelText('Publiceren in de centrale directory').value).toBe(
-      'false',
-    )
+    expect(getByLabelText('Publish to central directory').value).toBe('false')
 
     expect(getByLabelText('Tech support email').value).toBe(
       'tech@organization.test',
@@ -51,16 +50,13 @@ describe('with initial values', () => {
     )
 
     expect(
-      getByLabelText('Whitelist voor geauthorizeerde organisaties').checked,
+      getByLabelText('Whitelist for authorized organizations').checked,
     ).toBe(true)
-    expect(getByLabelText('Alle organisaties toestaan').checked).toBe(false)
-
-    expect(getByRole('button').textContent).toBe('Service toevoegen')
+    expect(getByLabelText('Allow all organizations').checked).toBe(false)
   })
 
   it('should allow configuring the submit button text', () => {
     const { getByRole } = render(<AddServiceForm submitButtonText="Opslaan" />)
-
     expect(getByRole('button').textContent).toBe('Opslaan')
   })
 })
@@ -70,6 +66,7 @@ test('the form values of the onSubmitHandler', async () => {
 
   const { container, getByTestId, findByTestId, getByLabelText } = render(
     <AddServiceForm
+      submitButtonText="Submit"
       onSubmitHandler={onSubmitHandlerSpy}
       initialValues={{
         // values copied from config-api/config/service.json
@@ -98,7 +95,7 @@ test('the form values of the onSubmitHandler', async () => {
   expect(nameError).not.toBeNull()
 
   // fill-in required fields
-  const nameField = getByLabelText('API naam')
+  const nameField = getByLabelText('API name')
   fireEvent.change(nameField, {
     target: { value: 'my-service' },
   })

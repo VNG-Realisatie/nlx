@@ -21,3 +21,11 @@ test('white list mode', () => {
 
   expect(getByText('Whitelist (2)')).toBeInTheDocument()
 })
+
+test('authorizations not specified', () => {
+  const { getByText } = renderWithProviders(
+    <AuthorizationMode mode="whitelist" />,
+  )
+
+  expect(getByText('Whitelist (0)')).toBeInTheDocument()
+})

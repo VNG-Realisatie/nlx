@@ -22,7 +22,7 @@ describe('the AddServicePage', () => {
 
   it('on initialization', () => {
     const userContext = { user: { id: '42' } }
-    const { getByTestId, queryByRole } = renderWithProviders(
+    const { getByTestId, queryByRole, getByLabelText } = renderWithProviders(
       <Router>
         <UserContext.Provider value={userContext}>
           <AddServicePage createHandler={() => {}} />
@@ -30,6 +30,8 @@ describe('the AddServicePage', () => {
       </Router>,
     )
 
+    const linkBack = getByLabelText(/Back/)
+    expect(linkBack.getAttribute('href')).toBe('/services')
     expect(getByTestId('form')).toBeTruthy()
     expect(queryByRole('dialog')).toBeNull()
   })
@@ -50,7 +52,7 @@ describe('the AddServicePage', () => {
     expect(queryByTestId('form')).toBeNull()
 
     expect(queryByRole('alert')).toBeTruthy()
-    expect(queryByRole('alert').textContent).toBe('De service is toegevoegd.')
+    expect(queryByRole('alert').textContent).toBe('The service has been added.')
   })
 
   it('re-submitting the form when the previous submission went wrong', async () => {
@@ -74,7 +76,7 @@ describe('the AddServicePage', () => {
     expect(createHandler).toHaveBeenCalledTimes(1)
     expect(queryByRole('alert')).toBeTruthy()
     expect(queryByRole('alert').textContent).toBe(
-      'Toevoegen misluktarbitrary error',
+      'Failed adding servicearbitrary error',
     )
 
     await act(async () => {
@@ -85,7 +87,7 @@ describe('the AddServicePage', () => {
 
     expect(createHandler).toHaveBeenCalledTimes(2)
     expect(queryByRole('alert')).toBeTruthy()
-    expect(queryByRole('alert').textContent).toBe('De service is toegevoegd.')
+    expect(queryByRole('alert').textContent).toBe('The service has been added.')
   })
 
   it('submitting when the HTTP response is not ok', async () => {
@@ -107,7 +109,7 @@ describe('the AddServicePage', () => {
 
     expect(queryByRole('alert')).toBeTruthy()
     expect(queryByRole('alert').textContent).toBe(
-      'Toevoegen misluktarbitrary error',
+      'Failed adding servicearbitrary error',
     )
   })
 })

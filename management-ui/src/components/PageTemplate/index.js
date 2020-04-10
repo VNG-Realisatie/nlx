@@ -3,41 +3,24 @@
 //
 
 import React from 'react'
-import { node, string } from 'prop-types'
+import { node } from 'prop-types'
 import PrimaryNavigation from '../PrimaryNavigation'
-import {
-  StyledMain,
-  StyledContent,
-  StyledPageDescription,
-  StyledPageTitle,
-  StyledUserNavigation,
-  StyledPageHeader,
-} from './index.styles'
+import Header from './Header'
+import { StyledMain, StyledContent } from './index.styles'
 
-const PageTemplate = ({ title, description, children }) => {
+const PageTemplate = ({ children }) => {
   return (
     <StyledMain>
       <PrimaryNavigation />
-      <StyledContent>
-        <StyledPageHeader>
-          {title && <StyledPageTitle>{title}</StyledPageTitle>}
-          <StyledUserNavigation fullName="John Doe" />
-        </StyledPageHeader>
-        <StyledPageDescription>{description}</StyledPageDescription>
-        {children}
-      </StyledContent>
+      <StyledContent>{children}</StyledContent>
     </StyledMain>
   )
 }
 
 PageTemplate.propTypes = {
-  title: string,
-  description: string,
   children: node,
 }
 
-PageTemplate.defaultProps = {
-  description: '\u00A0',
-}
+PageTemplate.Header = Header
 
 export default PageTemplate

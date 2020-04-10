@@ -5,14 +5,20 @@
 import React from 'react'
 import { array, func, string } from 'prop-types'
 import { useTranslation } from 'react-i18next'
-import { Alert } from '@commonground/design-system'
+import { Alert, Button } from '@commonground/design-system'
+import { Link } from 'react-router-dom'
 import PageTemplate from '../../components/PageTemplate'
 import usePromise from '../../hooks/use-promise'
 import ServiceRepository from '../../domain/service-repository'
 import Table from './Table'
 import AuthorizationMode from './AuthorizationMode'
 import ServiceCount from './ServiceCount'
-import { StyledLoadingMessage, StyledNoServicesMessage } from './index.styles'
+import {
+  StyledActionsBar,
+  StyledIconPlus,
+  StyledLoadingMessage,
+  StyledNoServicesMessage,
+} from './index.styles'
 import Spinner from './Spinner'
 
 const ServiceRow = ({ name, authorizations, mode, ...props }) => (
@@ -26,7 +32,7 @@ const ServiceRow = ({ name, authorizations, mode, ...props }) => (
 
 ServiceRow.propTypes = {
   name: string.isRequired,
-  authorizations: array.isRequired,
+  authorizations: array,
   mode: string.isRequired,
 }
 
@@ -35,7 +41,24 @@ const ServicesPage = ({ getServices }) => {
   const { loading, error, result } = usePromise(getServices)
 
   return (
-    <PageTemplate title={t('Services')}>
+    <PageTemplate>
+      <PageTemplate.Header title={t('Services')} />
+
+      <StyledActionsBar>
+        <ServiceCount
+          count={result ? result.length : 0}
+          data-testid="service-count"
+        />
+        <Button
+          as={Link}
+          to="/services/add-service"
+          aria-label={t('Add service')}
+        >
+          <StyledIconPlus />
+          {t('Add service')}
+        </Button>
+      </StyledActionsBar>
+
       {loading ? (
         <StyledLoadingMessage role="progressbar">
           <Spinner /> {t('Loading…')}
@@ -49,27 +72,24 @@ const ServicesPage = ({ getServices }) => {
           {t('There are no services yet.')}
         </StyledNoServicesMessage>
       ) : result ? (
-        <>
-          <ServiceCount count={result.length} />
-          <Table data-testid="services-list" role="grid">
-            <thead>
-              <tr>
-                <Table.Th>{t('Name')}</Table.Th>
-                <Table.Th>{t('Authorization')}</Table.Th>
-              </tr>
-            </thead>
-            <tbody>
-              {result.map((service, i) => (
-                <ServiceRow
-                  name={service.name}
-                  authorizations={service.authorizationSettings.authorizations}
-                  mode={service.authorizationSettings.mode}
-                  key={i}
-                />
-              ))}
-            </tbody>
-          </Table>
-        </>
+        <Table data-testid="services-list" role="grid">
+          <thead>
+            <tr>
+              <Table.Th>{t('Name')}</Table.Th>
+              <Table.Th>{t('Authorization')}</Table.Th>
+            </tr>
+          </thead>
+          <tbody>
+            {result.map((service, i) => (
+              <ServiceRow
+                name={service.name}
+                authorizations={service.authorizationSettings.authorizations}
+                mode={service.authorizationSettings.mode}
+                key={i}
+              />
+            ))}
+          </tbody>
+        </Table>
       ) : null}
     </PageTemplate>
   )

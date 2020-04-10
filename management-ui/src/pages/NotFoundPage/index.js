@@ -11,6 +11,8 @@ const NotFoundPage = () => {
   const { t } = useTranslation()
   return (
     <PageTemplate>
+      <PageTemplate.Header />
+
       <NotFoundContainer>
         <h1>{t('Page not found')}</h1>
         <p>{t('We could not find what you were looking for.')}</p>

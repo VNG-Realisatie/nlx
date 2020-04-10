@@ -1,8 +1,12 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import styled from 'styled-components'
-import { Field as FormikField } from 'formik'
+import styled, { css } from 'styled-components'
+import { Field } from 'formik'
+
+export const Form = styled.form`
+  margin-bottom: ${(p) => p.theme.tokens.spacing10};
+`
 
 export const Label = styled.label`
   display: block;
@@ -11,7 +15,7 @@ export const Label = styled.label`
   margin-top: ${(p) => p.theme.tokens.spacing06};
 `
 
-export const Field = styled(FormikField)`
+export const StyledField = styled(Field)`
   background-color: ${(p) => p.theme.colorBackgroundInput};
   display: block;
   width: 100%;
@@ -19,7 +23,7 @@ export const Field = styled(FormikField)`
   font-family: 'Source Sans Pro', sans-serif;
   padding: ${(p) => p.theme.tokens.spacing04};
   color: ${(p) => p.theme.colorTextInputLabel};
-  border: 1px solid ${(p) => p.theme.colorBorderInput};
+  border: 1px solid transparent;
   outline: none;
   line-height: ${(p) => p.theme.tokens.lineHeightText};
 
@@ -36,6 +40,27 @@ export const Field = styled(FormikField)`
     padding: calc(${(p) => p.theme.tokens.spacing04} - 1px);
     border: 2px solid ${(p) => p.theme.colorBorderInputError};
   }
+
+  ${(p) => {
+    let width
+    switch (p.size) {
+      case 's':
+        width = '480px'
+        break
+
+      case 'm':
+        width = '680px'
+        break
+
+      default:
+        width = '100%'
+        break
+    }
+
+    return css`
+      width: ${width};
+    `
+  }}
 `
 
 export const Fieldset = styled.fieldset`
@@ -48,4 +73,15 @@ export const Legend = styled.legend`
   font-weight: ${(p) => p.theme.tokens.fontWeightBold};
   font-size: ${(p) => p.theme.tokens.fontSizeLarge};
   margin: 0;
+`
+
+export const StyledLabelWithInput = styled(Label)`
+  display: inline-flex;
+  align-items: center;
+  line-height: 1rem;
+  margin-right: ${(p) => p.theme.tokens.spacing08};
+
+  input {
+    margin-right: ${(p) => p.theme.tokens.spacing04};
+  }
 `

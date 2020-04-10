@@ -20,7 +20,11 @@ const AuthorizationMode = ({ mode, authorizations }) => {
 
 AuthorizationMode.propTypes = {
   mode: oneOf(['none', 'whitelist']).isRequired,
-  authorizations: array.isRequired,
+  authorizations: array,
+}
+
+AuthorizationMode.defaultProps = {
+  authorizations: [],
 }
 
 export default AuthorizationMode

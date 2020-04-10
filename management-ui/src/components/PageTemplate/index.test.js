@@ -8,10 +8,26 @@ import { MemoryRouter as Router } from 'react-router-dom'
 import { renderWithProviders } from '../../test-utils'
 import PageTemplate from './index'
 
-test('PageTemplate with page elements', () => {
+test('PageTemplate', () => {
+  const { getByText } = renderWithProviders(
+    <Router>
+      <PageTemplate>
+        <p>Page content</p>
+      </PageTemplate>
+    </Router>,
+  )
+
+  expect(getByText(/^Page content$/)).toBeInTheDocument()
+})
+
+test('PageTemplate with Header', () => {
   const { getByText, getByTestId } = renderWithProviders(
     <Router>
-      <PageTemplate title="Page title" description="Page description">
+      <PageTemplate>
+        <PageTemplate.Header
+          title="Page title"
+          description="Page description"
+        />
         <p>Page content</p>
       </PageTemplate>
     </Router>,
