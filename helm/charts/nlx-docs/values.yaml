@@ -1,0 +1,52 @@
+# Global settings
+global:
+  imageRegistry: ""
+  imageTag: ""
+
+replicaCount: 1
+
+image:
+  registry: docker.io
+  repository: nlxio/docs
+  # Allow to override the tag. When set to null, the AppVersion from the Chart is used
+  tag: ""
+  pullPolicy: IfNotPresent
+  pullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  class: ""
+  annotations: {}
+  hosts: []
+  tls: []
+    # - secretName: chart-example-tls
+    #   hosts:
+    #     - chart-example.local
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

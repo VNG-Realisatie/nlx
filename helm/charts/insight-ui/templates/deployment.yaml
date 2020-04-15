@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "insight-ui.fullname" . }}
+  labels:
+    {{- include "insight-ui.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "insight-ui.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "insight-ui.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "insight-ui.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ template "insight-ui.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: DIRECTORY_INSPECTION_API_URL
+              value: {{.Values.config.directoryInspectionAPIURL}}
+            - name: NAVBAR_HOME_PAGE_URL
+              value: {{.Values.config.navbarHomePageURL}}
+            - name: NAVBAR_ABOUT_PAGE_URL
+              value: {{.Values.config.navbarAboutPageURL}}
+            - name: NAVBAR_DOCS_PAGE_URL
+              value: {{.Values.config.navbarDocsPageURL}}
+            - name: NAVBAR_DIRECTORY_URL
+              value: {{.Values.config.navbarDirectoryURL}}  
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

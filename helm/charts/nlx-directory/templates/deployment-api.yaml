@@ -1,0 +1,179 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "nlx-directory.fullname" . }}-api
+  labels:
+    {{- include "nlx-directory.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "nlx-directory.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: api
+  template:
+    metadata:
+      labels:
+        {{- include "nlx-directory.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: api
+      annotations:
+        checksum/secret-postgresql: {{ include (print $.Template.BasePath "/secret-postgresql.yaml") . | sha256sum }}
+        checksum/secret-tls: {{ include (print $.Template.BasePath "/secret-tls.yaml") . | sha256sum }}
+    spec:
+    {{- with .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "nlx-directory.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+    {{- if .Values.tls.generateCertificate }}
+      initContainers:
+        - name: generate-certificate
+          image: {{ template "nlx-directory.unsafeCA.image" . }}
+          imagePullPolicy: {{ .Values.unsafeCA.image.pullPolicy }}
+          workingDir: /certs
+          command: ["/bin/sh"]
+          args:
+            - "-exc"
+            - |-
+                /ca/generate-cert.sh "${INSPECTION_DOMAIN_NAME}" "${ORGANIZATION_NAME}" "${CFSSL_HOSTNAME}"
+                /ca/generate-cert.sh "${REGISTRATION_DOMAIN_NAME}" "${ORGANIZATION_NAME}" "${CFSSL_HOSTNAME}"
+                mv nlx_root.pem root.pem
+                mv "${INSPECTION_DOMAIN_NAME}-key.pem" inspection-cert-key.pem
+                mv "${INSPECTION_DOMAIN_NAME}.pem" inspection-cert.pem
+                mv "${REGISTRATION_DOMAIN_NAME}-key.pem" registration-cert-key.pem
+                mv "${REGISTRATION_DOMAIN_NAME}.pem" registration-cert.pem
+          env:
+            - name: INSPECTION_DOMAIN_NAME
+              value: {{ default (print (include "nlx-directory.fullname" .) "-inspection") .Values.unsafeCA.inspectionDomain | quote }}
+            - name: REGISTRATION_DOMAIN_NAME
+              value: {{ default (print (include "nlx-directory.fullname" .) "-registration") .Values.unsafeCA.registrationDomain | quote }}
+            - name: ORGANIZATION_NAME
+              value: {{ required "Unsafe CA organization name is required" (include "nlx-directory.unsafeCA.organizationName" .) | quote }}
+            - name: CFSSL_HOSTNAME
+              value: {{ required "Unsafe CA CFSSL hostname is required" (include "nlx-directory.unsafeCA.cfsslHostname" .) | quote }}
+          volumeMounts:
+            - name: certificates
+              mountPath: /certs
+    {{- end }}
+      containers:
+        - name: nlx-directory-inspection-api
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ template "nlx-directory.inspectionImage" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: inspection
+              containerPort: 8001
+              protocol: TCP
+            - name: inspectionplain
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: inspectionplain
+          readinessProbe:
+            tcpSocket:
+              port: inspectionplain
+          env:
+            - name: LISTEN_ADDRESS
+              value: "0.0.0.0:8001"
+            - name: LISTEN_ADDRESS_PLAIN
+              value: "0.0.0.0:8080"
+            - name: DEMO_ENV
+              value: ""
+            - name: DEMO_DOMAIN
+              value: ""
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nlx-directory.postgresql.secret" . }}
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nlx-directory.postgresql.secret" . }}
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DSN
+              value: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@{{ .Values.postgresql.hostname }}/{{ .Values.postgresql.database }}?sslmode=disable&connect_timeout=10
+            - name: TLS_NLX_ROOT_CERT
+              value: "/certs/root.pem"
+            - name: TLS_DIRECTORY_CERT
+              value: "/certs/inspection-cert.pem"
+            - name: TLS_DIRECTORY_KEY
+              value: "/certs/inspection-cert-key.pem"
+            - name: LOG_TYPE
+              value: {{ .Values.config.logType }}
+            - name: LOG_LEVEL
+              value: {{ .Values.config.logLevel }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: certificates
+              mountPath: /certs
+        - name: nlx-directory-registration-api
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ template "nlx-directory.registrationImage" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: registration
+              containerPort: 8002
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: registration
+          readinessProbe:
+            tcpSocket:
+              port: registration
+          env:
+            - name: LISTEN_ADDRESS
+              value: "0.0.0.0:8002"
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nlx-directory.postgresql.secret" . }}
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nlx-directory.postgresql.secret" . }}
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DSN
+              value: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@{{ .Values.postgresql.hostname }}/{{ .Values.postgresql.database }}?sslmode=disable&connect_timeout=10
+            - name: TLS_NLX_ROOT_CERT
+              value: "/certs/root.pem"
+            - name: TLS_DIRECTORY_CERT
+              value: "/certs/registration-cert.pem"
+            - name: TLS_DIRECTORY_KEY
+              value: "/certs/registration-cert-key.pem"
+            - name: LOG_TYPE
+              value: {{ .Values.config.logType }}
+            - name: LOG_LEVEL
+              value: {{ .Values.config.logLevel }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: certificates
+              mountPath: /certs
+      volumes:
+        - name: certificates
+        {{- if .Values.tls.generateCertificate }}
+          emptyDir: {}
+        {{- else }}
+          secret:
+            secretName: {{ template "nlx-directory.fullname" . }}-tls
+        {{- end }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

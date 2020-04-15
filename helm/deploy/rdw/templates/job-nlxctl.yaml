@@ -1,0 +1,72 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "rdw.fullname" . }}-nlxctl
+  labels:
+    {{- include "rdw.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "1"
+    helm.sh/hook-delete-policy: hook-succeeded
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "rdw.selectorLabels" . | nindent 8 }}
+    spec:
+      restartPolicy: OnFailure
+      initContainers:
+        - name: generate-certificate
+          image: {{ template "rdw.unsafeCA.image" . }}
+          imagePullPolicy: {{ .Values.unsafeCA.image.pullPolicy }}
+          workingDir: /certs
+          command: ["/bin/sh"]
+          args:
+            - "-exc"
+            - |
+                /ca/generate-cert.sh "${DOMAIN_NAME}" "${ORGANIZATION_NAME}" "${CFSSL_HOSTNAME}"
+                mv nlx_root.pem root.pem
+                mv "${DOMAIN_NAME}-key.pem" cert-key.pem
+                mv "${DOMAIN_NAME}.pem" cert.pem
+          env:
+            - name: DOMAIN_NAME
+              value: {{ include "rdw.fullname" . | quote }}
+            - name: ORGANIZATION_NAME
+              value: RDW
+            - name: CFSSL_HOSTNAME
+              value: {{ .Values.unsafeCA.cfsslHostname | quote }}
+          volumeMounts:
+            - name: certificates
+              mountPath: /certs
+      containers:
+        - name: nlxctl
+          image: {{ template "rdw.nlxctl.image" . }}
+          imagePullPolicy: {{ .Values.nlxctl.image.pullPolicy }}
+          command: ["/bin/sh"]
+          args:
+            - "-exc"
+            - |
+                nlxctl init --address "${CONFIG_API_ADDRESS}" --cert /certs/cert.pem --key /certs/cert-key.pem --ca /certs/root.pem
+                echo "${SERVICE_JSON}" > /tmp/service.json
+                nlxctl service create --config /tmp/service.json
+                nlxctl service list
+              {{- if hasKey .Values.configAPI "insight" }}
+                nlxctl insight put --insight-api-url "${INSIGHT_API_URL}" --irma-server-url "${IRMA_SERVER_URL}"
+              {{- end}}
+          env:
+            - name: CONFIG_API_ADDRESS
+              value: {{ .Values.configAPI.address | quote }}
+            - name: SERVICE_JSON
+              value: {{ .Values.configAPI.service | toJson | quote }}
+          {{- if hasKey .Values.configAPI "insight" }}
+            - name: INSIGHT_API_URL
+              value: {{ required "Insight API URL is required" .Values.configAPI.insight.insightAPIURL | quote }}
+            - name: IRMA_SERVER_URL
+              value: {{ required "IRMA server URL is required" .Values.configAPI.insight.irmaServerURL | quote }}
+          {{- end }}
+          volumeMounts:
+            - name: certificates
+              mountPath: /certs
+      volumes:
+        - name: certificates
+          emptyDir: {}

@@ -128,3 +128,19 @@ Management-ui linter and tests:
   tags:
     - docker
     - linux
+
+Helm lint:
+  extends: .base
+  stage: Tests
+  image: registry.gitlab.com/commonground/core/review-app-deployer:latest
+  script:
+    - cd helm/
+    - |
+      for CHART in $(find charts/* -type d -maxdepth 0 -print); do
+        start_section lint "Linting chart '${CHART}'"
+        helm lint --strict ${CHART}
+        stop_section lint
+      done
+  tags:
+    - docker
+    - linux

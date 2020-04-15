@@ -1,0 +1,111 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "irma-server.fullname" . }}
+  labels:
+    {{- include "irma-server.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "irma-server.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "irma-server.selectorLabels" . | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+    spec:
+    {{- with .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "irma-server.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: irma
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ template "irma-server.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: session
+              containerPort: 8088
+              protocol: TCP
+            - name: irma
+              containerPort: 8089
+              protocol: TCP
+          args: ["server", "run"]
+          livenessProbe:
+            tcpSocket:
+              port: session
+          readinessProbe:
+            tcpSocket:
+              port: session
+          env:
+            - name: IRMASERVER_LISTEN_ADDR
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: IRMASERVER_PORT
+              value: "8088"
+            - name: IRMASERVER_CLIENT_LISTEN_ADDR
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: IRMASERVER_CLIENT_PORT
+              value: "8089"
+            - name: IRMASERVER_PRODUCTION
+              value: "1"
+            - name: IRMASERVER_SCHEMES_UPDATE
+              value: "0"
+          {{- if .Values.config.emailAddress }}
+            - name: IRMASERVER_EMAIL
+              value: {{ .Values.config.emailAddress | quote }}
+          {{- else }}
+            - name: IRMASERVER_NO_EMAIL
+              value: "1"
+          {{- end }}
+            - name: IRMASERVER_NO_AUTH
+              value: {{ if .Values.authentication.enabled }}"0"{{ else }}"1"{{ end }}
+            # - name: IRMASERVER_NO_TLS
+            #   value: "0"
+          {{- if .Values.config.jwtKeyPEM }}
+            - name: IRMASERVER_JWT_PRIVKEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "irma-server.fullname" . }}
+                  key: jwt-key.pem
+          {{- end }}
+          {{- if .Values.ingress.enabled }}
+            - name: IRMASERVER_URL
+              value: {{ (print "https://" .Values.ingress.host) | quote }}
+          {{- end }}
+          {{- if .Values.config.verbosity }}
+            - name: IRMASERVER_VERBOSITY
+              value: {{ .Values.config.verbosity | quote }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /etc/irmaserver
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "irma-server.fullname" . }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

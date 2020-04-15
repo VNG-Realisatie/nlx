@@ -1,0 +1,70 @@
+# Global settings
+global:
+  imageRegistry: ""
+  imageTag: ""
+
+replicaCount: 1
+
+image:
+  registry: docker.io
+  repository: nlxio/irma
+  pullPolicy: IfNotPresent
+  tag: ""
+  pullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+config:
+  verbosity: ""
+  emailAddress: ""
+  jwtKeyPEM: ""
+
+authentication:
+  enabled: true
+  # Maps to the irmaServer config requestors parameter
+  requestors: {}
+    # example-requestor:
+    #   auth_method: "publickey"
+    #   key: ""
+    #   disclose_perms: ["*"]
+    #   sign_perms: ["*"]
+    #   issue_perms: ["*"]
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  sessionPort: 8088
+  irmaPort: 8089
+
+ingress:
+  enabled: false
+  class: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  host: ""
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

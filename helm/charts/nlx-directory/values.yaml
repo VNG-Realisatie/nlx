@@ -1,0 +1,102 @@
+# Global settings
+global:
+  unsafeCA:
+    cfsslHostname: ""
+    organizationName: ""
+  imageRegistry: ""
+  imageTag: ""
+
+replicaCount: 1
+
+image:
+  registry: docker.io
+  databaseRepository: nlxio/directory-db
+  inspectionRepository: nlxio/directory-inspection-api
+  registrationRepository: nlxio/directory-registration-api
+  monitorRepository: nlxio/directory-monitor
+  uiRepository: nlxio/directory-ui
+
+  # Allow to override the tag. When set to null, the AppVersion from the Chart is used
+  tag: ""
+  pullPolicy: IfNotPresent
+  pullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+config:
+  logType: live
+  logLevel: info
+  monitorOfflineServiceTTL: 86400  # 24 hours
+  resetDatabase: false
+
+postgresql:
+  hostname: postgresql
+  database: nlx-directory
+  username: ""
+  password: ""
+  existingSecret: ""
+
+tls:
+  generateCertificate: false
+  rootCertificatePEM: ""
+  certificatePEM: ""
+  certificateKeyPEM: ""
+  existingSecret: ""
+
+unsafeCA:
+  image:
+    registry: docker.io
+    repository: nlxio/ca-cfssl-unsafe
+    # Allow to override the tag. When set to null, the AppVersion from the Chart is used
+    tag: ""
+    pullPolicy: IfNotPresent
+  # The hostname of the CFSSL CA, used for generating the certificates
+  cfsslHostname: ca-cfssl-unsafe
+  # Name of the organization used for the certificate
+  organizationName: NLX Directory
+  # Domain name of the certificate
+  inspectionDomain: ""
+  registrationDomain: ""
+  monitorDomain: ""
+
+ui:
+  enabled: true
+  port: 80
+  ingress:
+    enabled: false
+    class: ""
+    annotations: {}
+    hosts: []
+      # - chart-example.local
+    tls: []
+      # - secretName: chart-example-tls
+      #   hosts:
+      #     - chart-example.local
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  inspectionPort: 443
+  inspectionPlainPort: 80
+  registrationPort: 443
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

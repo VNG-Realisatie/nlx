@@ -1,0 +1,6 @@
+apiVersion: v2
+name: insight-api
+description: The insight API enables an organization safely share log records
+type: application
+version: 0.1.0
+appVersion: 0.86.0

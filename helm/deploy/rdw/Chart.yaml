@@ -1,0 +1,11 @@
+apiVersion: v2
+name: rdw
+description: Metachart for the RDW demo organization
+type: application
+version: 0.1.0
+appVersion: 0.86.0
+
+dependencies:
+  - name: dex
+    version: 2.10.0
+    repository: "@stable"

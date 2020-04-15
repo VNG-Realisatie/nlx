@@ -4,7 +4,7 @@ Directory UI - E2E Tests:
   image: registry.gitlab.com/commonground/core/puppeteer
   script:
     - export CI_ENV_URL=$([ -f ci_environment_url.txt ] && cat ci_environment_url.txt)
-    - export URL=$([ -z "$CI_ENV_URL" ] && echo "https://directory.acc.nlx.io" || echo "https://directory-nlx-directory-$CI_ENV_URL")
+    - export URL=$([ -z "$CI_ENV_URL" ] && echo "https://directory.acc.nlx.io" || echo "https://directory-$CI_ENV_URL")
     - cd directory-ui-e2e-tests/
     - install_npm_dependencies
     - wait_for_http "${URL}"

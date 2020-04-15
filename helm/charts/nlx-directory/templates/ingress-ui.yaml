@@ -1,0 +1,43 @@
+{{- if and .Values.ui.enabled .Values.ui.ingress.enabled -}}
+{{- $fullName := include "nlx-directory.fullname" . -}}
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "nlx-directory.labels" . | nindent 4 }}
+{{- if or .Values.ui.ingress.class .Values.ui.ingress.annotations }}
+  annotations:
+  {{- if .Values.ui.ingress.class }}
+    kubernetes.io/ingress.class: {{ .Values.ui.ingress.class }}
+  {{- end }}
+  {{- with .Values.ui.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
+spec:
+{{- if .Values.ui.ingress.tls }}
+  tls:
+  {{- range .Values.ui.ingress.tls }}
+    - hosts:
+      {{- range .hosts }}
+        - {{ . | quote }}
+      {{- end }}
+      secretName: {{ .secretName }}
+  {{- end }}
+{{- end }}
+  rules:
+  {{- range .Values.ui.ingress.hosts }}
+    - host: {{ . | quote }}
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: {{ $fullName }}-ui
+              servicePort: http
+          - path: /api
+            backend:
+              serviceName: {{ $fullName }}-inspection-plain
+              servicePort: http
+  {{- end }}
+{{- end -}}

@@ -1,0 +1,6 @@
+apiVersion: v2
+name: parkeervergunning-application
+description: Parking permit demo application
+type: application
+version: 0.1.0
+appVersion: latest

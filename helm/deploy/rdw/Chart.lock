@@ -1,0 +1,6 @@
+dependencies:
+- name: dex
+  repository: https://kubernetes-charts.storage.googleapis.com
+  version: 2.10.0
+digest: sha256:6e0be550631d9e64dcb1c227cb9d7562daa307151283c5a6dc17279fdadcdf84
+generated: "2020-04-15T14:55:26.193099+02:00"

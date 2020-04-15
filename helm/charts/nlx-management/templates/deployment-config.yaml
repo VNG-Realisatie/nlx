@@ -1,0 +1,104 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "nlx-management.fullname" . }}-config
+  labels:
+    {{- include "nlx-management.labels" . | nindent 4 }}
+    app.kubernetes.io/component: config
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "nlx-management.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: config
+  template:
+    metadata:
+      labels:
+        {{- include "nlx-management.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: config
+      annotations:
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+    spec:
+    {{- with .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "nlx-management.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: generate-certificate
+          image: {{ template "nlx-management.unsafeCA.image" . }}
+          imagePullPolicy: {{ .Values.unsafeCA.image.pullPolicy }}
+          workingDir: /certs
+          command: ["/bin/sh"]
+          args:
+            - "-exc"
+            - |
+                /ca/generate-cert.sh "${DOMAIN_NAME}" "${ORGANIZATION_NAME}" "${CFSSL_HOSTNAME}"
+                mv nlx_root.pem root.pem
+                mv "${DOMAIN_NAME}-key.pem" cert-key.pem
+                mv "${DOMAIN_NAME}.pem" cert.pem
+          env:
+            - name: DOMAIN_NAME
+              value: {{ default (print (include "nlx-management.fullname" .) "-config") .Values.unsafeCA.domain | quote }}
+            - name: ORGANIZATION_NAME
+              value: {{ required "Unsafe CA organization name is required" (include "nlx-management.unsafeCA.organizationName" .) | quote }}
+            - name: CFSSL_HOSTNAME
+              value: {{ required "Unsafe CA CFSSL hostname is required" (include "nlx-management.unsafeCA.cfsslHostname" .) | quote }}
+          volumeMounts:
+            - name: certificates
+              mountPath: /certs
+      containers:
+        - name: config-api
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ template "nlx-management.configImage" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: https
+              containerPort: 8443
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: https
+          readinessProbe:
+            tcpSocket:
+              port: https
+          env:
+            - name: LISTEN_ADDRESS
+              value: "0.0.0.0:8443"
+            - name: ETCD_CONNECTION_STRING
+              value: http://{{ .Release.Name }}-etcd:2379
+            - name: DIRECTORY_REGISTRATION_ADDRESS
+              value: {{ required "Directory registration hostname is required" .Values.config.directoryRegistrationHostname }}:443
+            - name: TLS_NLX_ROOT_CERT
+              value: /certs/root.pem
+            - name: TLS_ORG_CERT
+              value: /certs/cert.pem
+            - name: TLS_ORG_KEY
+              value: /certs/cert-key.pem
+            - name: LOG_TYPE
+              value: {{ .Values.config.logType }}
+            - name: LOG_LEVEL
+              value: {{ .Values.config.logLevel }}
+          volumeMounts:
+            - name: certificates
+              mountPath: /certs
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: certificates
+          emptyDir: {}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

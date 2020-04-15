@@ -1,0 +1,6 @@
+apiVersion: v2
+name: insight-ui
+description: The insight-ui can be used to view logs of organization which have implemented the insight-api
+type: application
+version: 0.1.0
+appVersion: 0.86.0

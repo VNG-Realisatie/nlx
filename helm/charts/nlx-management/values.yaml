@@ -1,0 +1,82 @@
+# Global settings
+global:
+  unsafeCA:
+    cfsslHostname: ""
+    organizationName: ""
+  imageRegistry: ""
+  imageTag: ""
+
+replicaCount: 1
+
+image:
+  registry: docker.io
+  apiRepository: nlxio/management-api
+  uiRepository: nlxio/management-ui
+  configRepository: nlxio/config-api
+  # tag allows to override the tag. When set to null, the AppVersion from the Chart is used
+  tag: ""
+  pullPolicy: IfNotPresent
+  pullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+# Management specific settings
+config:
+  logType: live
+  logLevel: info
+
+  directoryRegistrationHostname: ""
+  sessionCookieSecure: false
+  secretKey: ""
+
+  oidc:
+    clientID: nlx-management
+    clientSecret: ""
+    discoveryURL: ""
+    redirectURL: ""
+    sessionSignKey: ""
+
+unsafeCA:
+  image:
+    registry: docker.io
+    repository: nlxio/ca-cfssl-unsafe
+    # Allow to override the tag. When set to null, the AppVersion from the Chart is used
+    tag: ""
+    pullPolicy: IfNotPresent
+  # The hostname of the CFSSL CA, used for generating the certificates
+  cfsslHostname: ""
+  organizationName: NLX Mangement
+  domain: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  class: ""
+  annotations: {}
+  uiHostname:
+  tlsSecretName:
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

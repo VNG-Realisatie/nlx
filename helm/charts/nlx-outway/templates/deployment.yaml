@@ -1,0 +1,149 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "nlx-outway.fullname" . }}
+  labels:
+    {{- include "nlx-outway.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      {{- include "nlx-outway.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "nlx-outway.selectorLabels" . | nindent 8 }}
+      annotations:
+        checksum/secret-postgresql: {{ include (print $.Template.BasePath "/secret-postgresql.yaml") . | sha256sum }}
+        checksum/secret-tls: {{ include (print $.Template.BasePath "/secret-tls.yaml") . | sha256sum }}
+    spec:
+    {{- with .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "nlx-outway.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+    {{- if .Values.tls.generateCertificate }}
+      initContainers:
+        - name: generate-certificate
+          image: {{ template "nlx-outway.unsafeCA.image" . }}
+          imagePullPolicy: {{ .Values.unsafeCA.image.pullPolicy }}
+          workingDir: /certs
+          command: ["/bin/sh"]
+          args:
+            - "-exc"
+            - |
+                /ca/generate-cert.sh "${DOMAIN_NAME}" "${ORGANIZATION_NAME}" "${CFSSL_HOSTNAME}"
+                mv nlx_root.pem root.crt
+                mv "${DOMAIN_NAME}-key.pem" tls.key
+                mv "${DOMAIN_NAME}.pem" tls.crt
+          env:
+            - name: DOMAIN_NAME
+              value: {{ default (include "nlx-outway.fullname" .) .Values.unsafeCA.domain | quote }}
+            - name: ORGANIZATION_NAME
+              value: {{ required "Unsafe CA organization name is required" (include "nlx-outway.unsafeCA.organizationName" .) | quote }}
+            - name: CFSSL_HOSTNAME
+              value: {{ required "Unsafe CA CFSSL hostname is required" (include "nlx-outway.unsafeCA.cfsslHostname" .) | quote }}
+          volumeMounts:
+            - name: certificates
+              mountPath: /certs
+    {{- end }}
+      containers:
+        - name: nlx-outway
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ template "nlx-outway.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: https
+              containerPort: 8443
+              protocol: TCP
+            - name: monitoring
+              containerPort: 8081
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: monitoring
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: monitoring
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          env:
+            - name: DIRECTORY_INSPECTION_ADDRESS
+              value: {{ .Values.config.directoryInspectionHostname }}:443
+          {{- if .Values.config.authorizationService.enabled }}
+            - name: AUTHORIZATION_SERVICE_ADDRESS
+              value: {{ .Values.config.authorizationService.url }}
+            - name: AUTHORIZATION_ROOT_CA
+              value: /certs/root.crt
+          {{- end }}
+            - name: TLS_NLX_ROOT_CERT
+              value: /certs/root.crt
+            - name: TLS_ORG_CERT
+              value: /certs/tls.crt
+            - name: TLS_ORG_KEY
+              value: /certs/tls.key
+          {{- if .Values.transactionLog.enabled }}
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nlx-outway.transactionLog.secret" . }}
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nlx-outway.transactionLog.secret" . }}
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_HOST
+              value: {{ required "PostgreSQL hostname is required" .Values.transactionLog.hostname }}
+            - name: POSTGRES_DB
+              value: {{ required "PostgreSQL database name is required" .Values.transactionLog.database }}
+            - name: POSTGRES_DSN
+              value: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST)/$(POSTGRES_DB)?sslmode=disable&connect_timeout=10
+          {{- else }}
+            - name: DISABLE_LOGDB
+              value: "1"
+          {{- end }}
+            - name: LOG_TYPE
+              value: {{ .Values.config.logType }}
+            - name: LOG_LEVEL
+              value: {{ .Values.config.logLevel }}
+          volumeMounts:
+            - name: certificates
+              mountPath: /certs
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: certificates
+        {{- if .Values.tls.generateCertificate }}
+          emptyDir: {}
+        {{- else }}
+          secret:
+            secretName: {{ template "nlx-outway.fullname" . }}-tls
+        {{- end }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

@@ -1,0 +1,161 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "nlx-inway.fullname" . }}
+  labels:
+    {{- include "nlx-inway.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      {{- include "nlx-inway.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "nlx-inway.selectorLabels" . | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret-postgresql: {{ include (print $.Template.BasePath "/secret-postgresql.yaml") . | sha256sum }}
+        checksum/secret-tls: {{ include (print $.Template.BasePath "/secret-tls.yaml") . | sha256sum }}
+    spec:
+    {{- with .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "nlx-inway.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+    {{- if .Values.tls.generateCertificate }}
+      initContainers:
+        - name: generate-certificate
+          image: {{ template "nlx-inway.unsafeCA.image" . }}
+          imagePullPolicy: {{ .Values.unsafeCA.image.pullPolicy }}
+          workingDir: /certs
+          command: ["/bin/sh"]
+          args:
+            - "-exc"
+            - |
+                /ca/generate-cert.sh "${DOMAIN_NAME}" "${ORGANIZATION_NAME}" "${CFSSL_HOSTNAME}"
+                mv nlx_root.pem root.pem
+                mv "${DOMAIN_NAME}-key.pem" cert-key.pem
+                mv "${DOMAIN_NAME}.pem" cert.pem
+          env:
+            - name: DOMAIN_NAME
+              value: {{ default (include "nlx-inway.fullname" .) .Values.unsafeCA.domain | quote }}
+            - name: ORGANIZATION_NAME
+              value: {{ required "Unsafe CA organization name is required" (include "nlx-inway.unsafeCA.organizationName" .) | quote }}
+            - name: CFSSL_HOSTNAME
+              value: {{ required "Unsafe CA CFSSL hostname is required" (include "nlx-inway.unsafeCA.cfsslHostname" .) | quote }}
+          volumeMounts:
+            - name: certificates
+              mountPath: /certs
+    {{- end }}
+      containers:
+        - name: nlx-inway
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ template "nlx-inway.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: https
+              containerPort: 8443
+              protocol: TCP
+            - name: monitoring
+              containerPort: 8081
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: monitoring
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: monitoring
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          env:
+            - name: INWAY_NAME
+              value: {{ default (include "nlx-inway.fullname" .) .Values.config.name }}
+            - name: SELF_ADDRESS
+              value: {{ include "nlx-inway.selfAddress" . }}
+            - name: DIRECTORY_REGISTRATION_ADDRESS
+              value: "{{ .Values.config.directoryRegistrationHostname }}:443"
+          {{- if .Values.config.configAPI.enabled }}
+            - name: CONFIG_API_ADDRESS
+              value: {{ required "Config API address is required" .Values.config.configAPI.address }}
+          {{- else }}
+            - name: SERVICE_CONFIG
+              value: /etc/nlx-inway/service-config.toml
+          {{- end }}
+          {{- if .Values.transactionLog.enabled }}
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nlx-inway.transactionLog.secret" . }}
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nlx-inway.transactionLog.secret" . }}
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_HOST
+              value: {{ required "PostgreSQL hostname is required" .Values.transactionLog.hostname }}
+            - name: POSTGRES_DB
+              value: {{ required "PostgreSQL database name is required" .Values.transactionLog.database }}
+            - name: POSTGRES_DSN
+              value: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST)/$(POSTGRES_DB)?sslmode=disable&connect_timeout=10
+          {{- else }}
+            - name: DISABLE_LOGDB
+              value: "1"
+          {{- end }}
+            - name: TLS_NLX_ROOT_CERT
+              value: "/certs/root.pem"
+            - name: TLS_ORG_CERT
+              value: "/certs/cert.pem"
+            - name: TLS_ORG_KEY
+              value: "/certs/cert-key.pem"
+            - name: LOG_TYPE
+              value: {{ .Values.config.logType }}
+            - name: LOG_LEVEL
+              value: {{ .Values.config.logLevel }}
+          volumeMounts:
+            - name: certificates
+              mountPath: /certs
+          {{- if not .Values.config.configAPI.enabled }}
+            - name: config
+              mountPath: /etc/nlx-inway
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: certificates
+        {{- if .Values.tls.generateCertificate }}
+          emptyDir: {}
+        {{- else }}
+          secret:
+            secretName: {{ template "nlx-inway.fullname" . }}-tls
+        {{- end }}
+      {{- if not .Values.config.configAPI.enabled }}
+        - name: config
+          configMap:
+            name: {{ template "nlx-inway.fullname" . }}
+      {{- end }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

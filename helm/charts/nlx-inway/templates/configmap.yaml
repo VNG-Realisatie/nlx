@@ -1,0 +1,11 @@
+{{ if not .Values.config.configAPI.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "nlx-inway.fullname" . }}
+  labels:
+    {{- include "nlx-inway.labels" . | nindent 4 }}
+data:
+  service-config.toml: |-
+    {{- (required "Service config is required" .Values.config.serviceConfig) | toToml | nindent 4 }}
+{{ end }}

@@ -1,0 +1,65 @@
+# Global settings
+global:
+  imageRegistry: ""
+  imageTag: ""
+
+replicaCount: 1
+
+image:
+  registry: docker.io
+  repository: nlxio/ca-cfssl-unsafe
+  # Allow to override the tag. When set to null, the AppVersion from the Chart is used
+  tag: ""
+  pullPolicy: IfNotPresent
+  pullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+# Unsafe CA specific settings
+config:
+  generateCertificate: true
+  cfsslCSR:
+    key:
+      algo: rsa
+      size: 4096
+    names:
+      - O: "Common Ground NLX CA"
+        OU: "NLX"
+  certPEM: ""
+  keyPEM: ""
+
+kubectl:
+  image:
+    repository: docker.io/bitnami/kubectl
+    tag: "1.18.0"
+    pullPolicy: IfNotPresent
+
+rbac:
+  # Specifies whether RBAC resources should be created
+  create: true
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 8888
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

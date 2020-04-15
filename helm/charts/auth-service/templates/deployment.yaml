@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "auth-service.fullname" . }}
+  labels:
+    {{- include "auth-service.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "auth-service.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "auth-service.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "auth-service.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: generate-certificate
+          image: {{ template "auth-service.unsafeCA.image" . }}
+          imagePullPolicy: {{ .Values.unsafeCA.image.pullPolicy }}
+          workingDir: /certs
+          command: ["/bin/sh"]
+          args:
+            - "-exc"
+            - |
+                /ca/generate-cert.sh "${DOMAIN_NAME}" "${ORGANIZATION_NAME}" "${CFSSL_HOSTNAME}"
+                mv nlx_root.pem root.pem
+                mv "${DOMAIN_NAME}-key.pem" cert-key.pem
+                mv "${DOMAIN_NAME}.pem" cert.pem
+          env:
+            - name: DOMAIN_NAME
+              value: {{ default (include "auth-service.fullname" .) .Values.unsafeCA.domain | quote }}
+            - name: ORGANIZATION_NAME
+              value: {{ required "Unsafe CA organization name is required" (include "auth-service.unsafeCA.organizationName" .) | quote }}
+            - name: CFSSL_HOSTNAME
+              value: {{ required "Unsafe CA CFSSL hostname is required" (include "auth-service.unsafeCA.cfsslHostname" .) | quote }}
+          volumeMounts:
+            - name: certificates
+              mountPath: /certs
+      containers:
+        - name: auth-service
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ template "auth-service.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8443
+              protocol: TCP
+          env:
+            - name: TLS_CERT
+              value: "/certs/cert.pem"
+            - name: TLS_KEY
+              value: "/certs/cert-key.pem"
+            - name: CSV_FILE
+              value: /users.csv
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: certificates
+              mountPath: /certs
+      volumes:
+        - name: certificates
+        {{- if .Values.tls.generateCertificate }}
+          emptyDir: {}
+        {{- else }}
+          secret:
+            secretName: {{ template "auth-service.fullname" . }}-tls
+        {{- end }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

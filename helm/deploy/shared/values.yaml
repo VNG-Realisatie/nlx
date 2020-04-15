@@ -1,0 +1,73 @@
+############
+## Global ##
+############
+global: {}
+  # imageRegistry:
+  # imageTag:
+
+###########
+## Chart ##
+###########
+nameOverride: ""
+fullnameOverride: ""
+
+postgresql:
+  version: "11.1"
+  storageType: Ephemeral
+  storageSize: 8Gi
+
+################
+## Sub-charts ##
+################
+nlx-directory:
+  config:
+    monitorOfflineServiceTTL: 30  # seconds
+  postgresql:
+    hostname: shared-postgresql
+    database: postgres
+    existingSecret: shared-postgresql-auth
+  tls:
+    generateCertificate: true
+  unsafeCA:
+    cfsslHostname: shared-ca-cfssl-unsafe
+    organizationName: NLX Directory
+    inspectionDomain: shared-nlx-directory-inspection
+    registrationDomain: shared-nlx-directory-registration
+    monitorDomain: shared-nlx-directory-monitor
+  ui:
+    ingress:
+      enabled: true
+      class: traefik
+      annotations:
+        traefik.frontend.rule.type: PathPrefixStrip
+      hosts:
+        - "directory.shared.nlx.minikube"
+
+nlx-docs:
+  ingress:
+    enabled: true
+    class: traefik
+    hosts:
+      - "docs.shared.nlx.minikube"
+
+ca-certportal:
+  config:
+    caAPIAddress: shared-ca-cfssl-unsafe
+  ingress:
+    enabled: true
+    class: traefik
+    hosts:
+      - "certportal.shared.nlx.minikube"
+
+insight-ui:
+  config:
+    directoryInspectionAPIURL: "http://shared-nlx-directory-inspection-plain"
+    navbarHomePageURL: "https://www.nlx.io"
+    navbarAboutPageURL: "https://nlx.io/about/"
+    navbarDocsPageURL:  "https://docs.shared.nlx.minikube"
+    navbarDirectoryURL: "https://directory.shared.nlx.minikube"
+  ingress:
+    enabled: true
+    class: traefik
+    hosts:
+      - "insight.shared.nlx.minikube"

@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ca-cfssl-unsafe.fullname" . }}
+  labels:
+    {{- include "ca-cfssl-unsafe.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "ca-cfssl-unsafe.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "ca-cfssl-unsafe.selectorLabels" . | nindent 8 }}
+      annotations:
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+    spec:
+    {{- with .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "ca-cfssl-unsafe.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: cfssl
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ template "ca-cfssl-unsafe.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["cfssl"]
+          args: ["serve", "--address=0.0.0.0", "--ca=/certs/tls.crt", "--ca-key=/certs/tls.key"]
+          ports:
+            - name: http
+              containerPort: 8888
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /api/v1/cfssl/health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /api/v1/cfssl/health
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: certificates
+              mountPath: "/certs"
+              readOnly: true
+      volumes:
+        - name: certificates
+          secret:
+            secretName: {{ include "ca-cfssl-unsafe.fullname" . }}-tls
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

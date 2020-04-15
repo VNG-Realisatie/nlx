@@ -1,3 +1,7 @@
+.base:
+  before_script:
+    - source ./.gitlab/ci/functions.sh
+
 .node-base:
   image: node:12.16.1-alpine
   variables:

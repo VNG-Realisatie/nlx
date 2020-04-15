@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "haarlem.fullname" . }}-transaction-log
+  labels:
+    {{- include "haarlem.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: post-install
+    helm.sh/hook-weight: "1"
+    helm.sh/hook-delete-policy: hook-succeeded
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "haarlem.selectorLabels" . | nindent 8 }}
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: txlog-db
+          image: {{ template "haarlem.transactionLog.image" . }}
+          imagePullPolicy: {{ .Values.transactionLog.image.pullPolicy }}
+          command:
+          {{- if .Values.transactionLog.resetDatabase }}
+            - /usr/local/bin/reset-db.sh
+          {{- else }}
+            - /usr/local/bin/upgrade-db.sh
+          {{- end }}
+          env:
+            - name: PGHOST
+              value: {{ .Values.transactionLog.hostname }}
+            - name: PGDATABASE
+              value: {{ .Values.transactionLog.databaseName }}
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.transactionLog.existingSecret }}
+                  key: POSTGRES_USER
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.transactionLog.existingSecret }}
+                  key: POSTGRES_PASSWORD

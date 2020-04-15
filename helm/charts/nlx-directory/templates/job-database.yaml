@@ -1,0 +1,65 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "nlx-directory.fullname" . }}-database
+  labels:
+    {{- include "nlx-directory.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: "post-install,pre-upgrade"
+    helm.sh/hook-weight: "1"
+    helm.sh/hook-delete-policy: hook-succeeded
+spec:
+  backoffLimit: 6
+  ttlSecondsAfterFinished: 60
+  template:
+    metadata:
+      labels:
+        {{- include "nlx-directory.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "nlx-directory.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      restartPolicy: OnFailure
+      containers:
+        - name: {{ .Chart.Name }}-database
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ template "nlx-directory.databaseImage" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+          {{- if .Values.config.resetDatabase }}
+            - /usr/local/bin/reset-db.sh
+          {{- else }}
+            - /usr/local/bin/upgrade-db.sh
+          {{- end }}
+          env:
+            - name: PGHOST
+              value: {{ .Values.postgresql.hostname }}
+            - name: PGDATABASE
+              value: {{ .Values.postgresql.database }}
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nlx-directory.postgresql.secret" . }}
+                  key: POSTGRES_USER
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nlx-directory.postgresql.secret" . }}
+                  key: POSTGRES_PASSWORD
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
