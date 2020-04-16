@@ -92,7 +92,6 @@ Remove Review App:
   stage: Deploy
   image: registry.gitlab.com/commonground/core/review-app-deployer:latest
   variables:
-    GIT_STRATEGY: none
     KUBECONFIG: /secrets/kubeconfig/review.conf
     NAME: "nlx-${CI_ENVIRONMENT_SLUG}"
   before_script:
