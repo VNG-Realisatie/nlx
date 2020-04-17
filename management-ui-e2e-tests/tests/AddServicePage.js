@@ -32,7 +32,7 @@ test('Page title is visible', async t => {
 test('Adding a new service', async t => {
   const submitButton = Selector('button[type="submit"]')
   const alert = Selector('[role="alert"]')
-  const nameError = Selector('[data-testid="name-error"]')
+  const nameError = Selector('[data-testid="error-name"]')
 
   await t
     .typeText('#endpointURL', 'my-service.test:8000')

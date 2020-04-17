@@ -91,7 +91,7 @@ test('the form values of the onSubmitHandler', async () => {
   })
 
   // assert the validation feedback is shown
-  const nameError = await findByTestId('name-error')
+  const nameError = await findByTestId('error-name')
   expect(nameError).not.toBeNull()
 
   // fill-in required fields

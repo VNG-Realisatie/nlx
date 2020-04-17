@@ -3,8 +3,15 @@
 //
 import React from 'react'
 import { func, shape, string, oneOf, bool } from 'prop-types'
-import { Formik, Field, useField } from 'formik'
-import { Button, Input } from '@commonground/design-system'
+import { Formik } from 'formik'
+import {
+  Button,
+  TextInput,
+  Radio,
+  Checkbox,
+  Fieldset,
+  Legend,
+} from '@commonground/design-system'
 
 import { ThemeProvider } from 'styled-components'
 import * as Yup from 'yup'
@@ -14,15 +21,7 @@ import {
   AUTHORIZATION_TYPE_NONE,
   AUTHORIZATION_TYPE_WHITELIST,
 } from '../../../vocabulary'
-import FieldValidationMessage from './FieldValidationMessage'
-import {
-  Form,
-  StyledField,
-  Fieldset,
-  Label,
-  Legend,
-  StyledLabelWithInput,
-} from './index.styles'
+import { Form } from './index.styles'
 
 const DEFAULT_INITIAL_VALUES = {
   name: '',
@@ -35,32 +34,6 @@ const DEFAULT_INITIAL_VALUES = {
   authorizationSettings: {
     mode: AUTHORIZATION_TYPE_WHITELIST,
   },
-}
-
-const FieldWithValidation = ({ label, ...props }) => {
-  const [field, meta] = useField(props)
-  const { error, touched } = meta
-
-  return (
-    <>
-      <Label htmlFor={field.name}>{label}</Label>
-      <StyledField
-        {...field}
-        {...props}
-        className={error && touched ? 'invalid' : null}
-      />
-      {error && touched ? (
-        <FieldValidationMessage data-testid={`${props.id}-error`}>
-          {error}
-        </FieldValidationMessage>
-      ) : null}
-    </>
-  )
-}
-
-FieldWithValidation.propTypes = {
-  id: string,
-  label: string,
 }
 
 const AddServiceForm = ({
@@ -99,88 +72,75 @@ const AddServiceForm = ({
             <Fieldset>
               <Legend>{t('API details')}</Legend>
 
-              <FieldWithValidation
-                label={t('API name')}
-                name="name"
-                id="name"
-                size="s"
-              />
+              <TextInput name="name" id="name" size="l">
+                {t('API name')}
+              </TextInput>
 
-              <FieldWithValidation
-                label={t('API endpoint URL')}
-                name="endpointURL"
-                id="endpointURL"
-                size="m"
-              />
+              <TextInput name="endpointURL" id="endpointURL" size="xl">
+                {t('API endpoint URL')}
+              </TextInput>
 
-              <FieldWithValidation
-                label={t('API documentation URL')}
+              <TextInput
                 name="documentationURL"
                 id="documentationURL"
-                size="m"
-              />
+                size="xl"
+              >
+                {t('API documentation URL')}
+              </TextInput>
 
-              <FieldWithValidation
-                label={t('API specification URL')}
+              <TextInput
                 name="apiSpecificationURL"
                 id="apiSpecificationURL"
-                size="m"
-              />
+                size="xl"
+              >
+                {t('API specification URL')}
+              </TextInput>
 
-              <StyledLabelWithInput>
-                <Field
-                  as={Input}
-                  id="internal"
-                  name="internal"
-                  type="checkbox"
-                />
+              <Checkbox name="internal" id="internal">
                 {t('Publish to central directory')}
-              </StyledLabelWithInput>
+              </Checkbox>
             </Fieldset>
 
             <Fieldset>
               <Legend>{t('Contact')}</Legend>
 
-              <FieldWithValidation
-                label={t('Tech support email')}
+              <TextInput
                 name="techSupportContact"
                 id="techSupportContact"
-                size="s"
-              />
+                size="l"
+              >
+                {t('Tech support email')}
+              </TextInput>
 
-              <FieldWithValidation
-                label={t('Public support email')}
+              <TextInput
                 name="publicSupportContact"
                 id="publicSupportContact"
-                size="s"
-              />
+                size="l"
+              >
+                {t('Public support email')}
+              </TextInput>
             </Fieldset>
 
             <Fieldset>
               <Legend>{t('Authorization')}</Legend>
 
-              <Label>{t('Type of authorization')}</Label>
-              <StyledLabelWithInput>
-                <Field
+              <Radio.Group label={t('Type of authorization')}>
+                <Radio
                   id="authorizationModeWhitelist"
                   name="authorizationSettings.mode"
-                  type="radio"
-                  as={Input}
                   value={AUTHORIZATION_TYPE_WHITELIST}
-                />
-                {t('Whitelist for authorized organizations')}
-              </StyledLabelWithInput>
+                >
+                  {t('Whitelist for authorized organizations')}
+                </Radio>
 
-              <StyledLabelWithInput>
-                <Field
+                <Radio
                   id="authorizationModeNone"
                   name="authorizationSettings.mode"
-                  type="radio"
-                  as={Input}
                   value={AUTHORIZATION_TYPE_NONE}
-                />
-                {t('Allow all organizations')}
-              </StyledLabelWithInput>
+                >
+                  {t('Allow all organizations')}
+                </Radio>
+              </Radio.Group>
             </Fieldset>
 
             <Button type="submit">{submitButtonText}</Button>
