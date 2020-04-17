@@ -1,5 +1,6 @@
-// Copyright © VNG Realisatie 2018
+// Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
+//
 
 import React, { PureComponent } from 'react'
 import { bool, string, array, func } from 'prop-types'

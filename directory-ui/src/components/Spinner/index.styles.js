@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2020
+// Licensed under the EUPL
+//
 import styled, { keyframes } from 'styled-components'
 
 const topValues = [50, 54, 57, 58, 57, 54, 50, 45]

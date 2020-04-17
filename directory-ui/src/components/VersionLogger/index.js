@@ -1,5 +1,6 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
+//
 
 import { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
