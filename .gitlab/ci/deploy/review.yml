@@ -77,7 +77,7 @@ Deploy Review App:
       stop_section deploy_review_page
   environment:
     name: $CI_COMMIT_REF_NAME
-    url: https://${DOMAIN_SUFFIX}
+    url: https://${NAME}.${REVIEW_BASE_DOMAIN}
     on_stop: Remove Review App
   only:
     - /^feature/.*$/@commonground/nlx/nlx
@@ -110,7 +110,6 @@ Remove Review App:
   when: manual
   environment:
     name: $CI_COMMIT_REF_NAME
-    url: https://$CI_ENVIRONMENT_SLUG.$REVIEW_BASE_DOMAIN
     action: stop
   only:
     - /^feature/.*$/@commonground/nlx/nlx
