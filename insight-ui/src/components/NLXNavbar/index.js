@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2020
+// Licensed under the EUPL
+//
 import React, { Children } from 'react'
 import { element, string } from 'prop-types'
 

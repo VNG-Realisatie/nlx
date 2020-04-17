@@ -1,5 +1,6 @@
-// Copyright © VNG Realisatie 2018
+// Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
+//
 
 import React, { Component } from 'react'
 import { Route, Redirect } from 'react-router-dom'

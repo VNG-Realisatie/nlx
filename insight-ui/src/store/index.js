@@ -1,5 +1,6 @@
-// Copyright © VNG Realisatie 2018
+// Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
+//
 
 import { applyMiddleware, createStore } from 'redux'
 import createSagaMiddleware from 'redux-saga'

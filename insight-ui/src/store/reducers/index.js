@@ -1,5 +1,6 @@
-// Copyright © VNG Realisatie 2018
+// Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
+//
 
 import { combineReducers } from 'redux'
 import organizations from './organizations'

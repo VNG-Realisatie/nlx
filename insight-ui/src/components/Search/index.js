@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2020
+// Licensed under the EUPL
+//
 import React from 'react'
 import { object, func, element } from 'prop-types'
 import { StyledSearch, StyledInput, StyledSearchIcon } from './index.styles'

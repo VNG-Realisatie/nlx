@@ -1,5 +1,6 @@
-// Copyright © VNG Realisatie 2018
+// Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
+//
 
 export const FETCH_ORGANIZATIONS_REQUEST = 'fetch_organizations_request'
 export const FETCH_ORGANIZATIONS_SUCCESS = 'fetch_organizations_success'
