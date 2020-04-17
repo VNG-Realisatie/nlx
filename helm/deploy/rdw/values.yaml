@@ -98,6 +98,10 @@ nlx-management:
 
 dex:
   config:
+    storage:
+      type: sqlite3
+      config:
+        file: ":memory:"
     logger:
       level: info
     issuer: http://dex.rdw.nlx.minikube
@@ -126,6 +130,13 @@ dex:
     web:
       servicePort: 80
   grpc: false
+  certs:
+    web:
+      create: false
+    grpc:
+      create: false
+  rbac:
+    create: false
 
 insight-api:
   config:
