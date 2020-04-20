@@ -137,7 +137,7 @@ Next, install Traefik as ingress controller for web and rest-api requests.
 helm install traefik stable/traefik --namespace kube-system --values helm/traefik-values-minikube.yaml
 ```
 
-Also install KubeDB, an operator that manages postgres instances. Follow the [kubedb.com instructions for installing using helm](https://kubedb.com/docs/0.12.0/setup/install/#using-helm).
+Also install KubeDB, an operator that manages postgres instances. Follow the [kubedb.com instructions for installing using helm](https://kubedb.com/docs/0.12.0/setup/install/#using-helm) and click the 'Helm' tab.
 
 When Traefik and KubeDB are running, you can start all the NLX components by executing:
 
