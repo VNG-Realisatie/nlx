@@ -77,7 +77,7 @@ Deploy Review App:
       stop_section deploy_review_page
   environment:
     name: $CI_COMMIT_REF_NAME
-    url: https://${NAME}.${REVIEW_BASE_DOMAIN}
+    url: https://nlx-${CI_ENVIRONMENT_SLUG}.${REVIEW_BASE_DOMAIN}
     on_stop: Remove Review App
     auto_stop_in: 1 week
   only:
