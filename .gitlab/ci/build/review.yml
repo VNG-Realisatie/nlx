@@ -2,6 +2,7 @@ Build review:
   stage: Build
   before_script:
     - docker login -u $REVIEW_REGISTRY_USERNAME -p $REVIEW_REGISTRY_PASSWORD $REVIEW_REGISTRY_HOST
+    - export GIT_TAG_NAME=$(git describe --tags --abbrev=0)-review
     - export IMAGE_PREFIX="${REVIEW_REGISTRY_HOST}/${CI_PROJECT_PATH}/"
     - export IMAGE_TAG="${CI_COMMIT_SHORT_SHA}"
   script:
