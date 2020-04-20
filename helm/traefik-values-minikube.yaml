@@ -22,8 +22,3 @@ deployment:
     httpEnabled: true
     httpsEnabled: true
     dashboardEnabled: true
-
-resources:
-  limits:
-    cpu: "2"
-    memory: "1024Mi"
