@@ -75,6 +75,9 @@ message Empty {}
 
 message Inway {
 	string name = 1;
+	string version = 2;
+	string hostname = 3;
+	string selfAddress = 4;
 }
 
 message ListServicesRequest {

@@ -30,6 +30,12 @@ func TestListInways(t *testing.T) {
 	mockListInways := []*configapi.Inway{
 		{Name: "inway42.test"},
 		{Name: "inway43.test"},
+		{
+			Name:        "inway.test",
+			Version:     "1.0.0",
+			Hostname:    "inway.test.local",
+			SelfAddress: "inway.nlx",
+		},
 	}
 
 	mockDatabase.EXPECT().ListInways(ctx).Return(mockListInways, nil)

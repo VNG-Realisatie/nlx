@@ -3,7 +3,7 @@
 //
 
 import React from 'react'
-import { renderWithProviders } from '../../../test-utils'
+import { renderWithProviders } from '../../test-utils'
 import Spinner from './index'
 
 test('renders without crashing', () => {

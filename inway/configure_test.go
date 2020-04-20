@@ -5,6 +5,7 @@ package inway
 import (
 	"context"
 	"fmt"
+	"os"
 	"path/filepath"
 	"testing"
 	"time"
@@ -161,11 +162,18 @@ func TestStartConfigurationPolling(t *testing.T) {
 	iw, err := createInway()
 	assert.Nil(t, err)
 
+	hostname, err := os.Hostname()
+	assert.Nil(t, err)
+
 	controller := gomock.NewController(t)
 	configAPIMockClient := configmock.NewMockConfigApiClient(controller)
 	configAPIMockClient.EXPECT().CreateInway(context.Background(), &configapi.Inway{
-		Name: iw.name,
+		Name:        "mock.inway",
+		Version:     "unknown",
+		Hostname:    hostname,
+		SelfAddress: "localhost:1812",
 	}).Return(nil, fmt.Errorf("error create inway"))
+
 	configAPIMockClient.EXPECT().ListServices(context.Background(), &configapi.ListServicesRequest{
 		InwayName: iw.name,
 	}).Return(nil, fmt.Errorf("error list services"))
@@ -176,15 +184,20 @@ func TestStartConfigurationPolling(t *testing.T) {
 	assert.Equal(t, "error create inway", err.Error())
 
 	configAPIMockClient.EXPECT().CreateInway(context.Background(), &configapi.Inway{
-		Name: iw.name,
+		Name:        "mock.inway",
+		Version:     "unknown",
+		Hostname:    hostname,
+		SelfAddress: "localhost:1812",
 	}).Return(&configapi.Inway{
-		Name: iw.name,
+		Name:        "mock.inway",
+		Version:     "unknown",
+		Hostname:    hostname,
+		SelfAddress: "localhost:1812",
 	}, nil)
 
 	err = iw.StartConfigurationPolling()
 	assert.NotNil(t, err)
 	assert.Equal(t, "error list services", err.Error())
-
 }
 
 func TestUpdateConfig(t *testing.T) {

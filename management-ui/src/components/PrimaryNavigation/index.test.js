@@ -16,6 +16,9 @@ test('PrimaryNavigation', () => {
   const linkHome = getByLabelText('Homepage')
   expect(linkHome.getAttribute('href')).toBe('/')
 
+  const linkInways = getByLabelText('Inways page')
+  expect(linkInways.getAttribute('href')).toBe('/inways')
+
   const linkServices = getByLabelText('Services page')
   expect(linkServices.getAttribute('href')).toBe('/services')
 })

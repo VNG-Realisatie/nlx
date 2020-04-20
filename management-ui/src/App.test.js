@@ -12,6 +12,7 @@ jest.mock('./pages/LoginPage', () => () => <div data-testid="login-page" />)
 jest.mock('./pages/ServicesPage', () => () => (
   <div data-testid="services-page" />
 ))
+jest.mock('./pages/InwaysPage', () => () => <div data-testid="inways-page" />)
 jest.mock('./pages/AddServicePage', () => () => (
   <div data-testid="add-service-page" />
 ))
@@ -64,4 +65,16 @@ test('the /services/add-service route renders the AddServicePage', () => {
     </Router>,
   )
   expect(getByTestId('add-service-page')).toBeInTheDocument()
+})
+
+test('the /inways route renders the InwaysPage', () => {
+  const history = createMemoryHistory({ initialEntries: ['/inways'] })
+  const { getByTestId } = renderWithProviders(
+    <Router history={history}>
+      <UserContextProvider user={{ id: '42' }}>
+        <App />
+      </UserContextProvider>
+    </Router>,
+  )
+  expect(getByTestId('inways-page')).toBeInTheDocument()
 })

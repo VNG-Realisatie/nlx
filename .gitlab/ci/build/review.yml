@@ -8,6 +8,7 @@ Build review:
   script:
     - echo -n "$REVIEW_REGISTRY_HOST" > ci_build_image_registry.txt
     - echo -n "$IMAGE_TAG" > ci_build_image_tag.txt
+    - echo -n "$GIT_TAG_NAME" > ci_build_git_tag_name.txt
     - docker-compose version
     - time docker-compose build --parallel
     - time docker-compose push
@@ -15,6 +16,7 @@ Build review:
     paths:
       - ci_build_image_registry.txt
       - ci_build_image_tag.txt
+      - ci_build_git_tag_name.txt
   only:
     - /^feature/.*$/@commonground/nlx/nlx
   except:

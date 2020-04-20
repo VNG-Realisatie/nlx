@@ -19,6 +19,7 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/status"
 
+	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/config-api/configapi"
 	"go.nlx.io/nlx/inway/config"
 )
@@ -51,7 +52,10 @@ func (i *Inway) SetConfigAPIAddress(configAPIAddress string) error {
 // StartConfigurationPolling will make the inway retrieve its configuration periodically
 func (i *Inway) StartConfigurationPolling() error {
 	_, err := i.configAPIClient.CreateInway(context.Background(), &configapi.Inway{
-		Name: i.name,
+		Name:        i.name,
+		Version:     version.BuildVersion,
+		Hostname:    i.hostname(),
+		SelfAddress: i.selfAddress,
 	})
 	if err != nil {
 		return err

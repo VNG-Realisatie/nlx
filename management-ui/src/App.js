@@ -10,6 +10,7 @@ import theme from './theme'
 
 import LoginPage from './pages/LoginPage/index'
 import ServicesPage from './pages/ServicesPage'
+import InwaysPage from './pages/InwaysPage'
 import AddServicePage from './pages/AddServicePage'
 import NotFoundPage from './pages/NotFoundPage'
 
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/login" component={LoginPage} />
           <Route path="/services/add-service" component={AddServicePage} />
           <Route path="/services" component={ServicesPage} />
+          <Route path="/inways" component={InwaysPage} />
 
           <Route path="*" component={NotFoundPage} />
         </Switch>

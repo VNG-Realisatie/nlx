@@ -75,6 +75,10 @@ Deploy Review App:
         --set-string ingress.class=traefik \
         --set-string ingress.hosts[0]=${DOMAIN_SUFFIX}
       stop_section deploy_review_page
+    - |
+      echo "export E2E_MANAGEMENT_UI_INWAY_NAME=rdw-nlx-inway" > e2e_environment.sh
+      echo "export E2E_MANAGEMENT_UI_INWAY_SELF_ADDRESS=rdw-nlx-inway:443" >> e2e_environment.sh
+      echo "export E2E_MANAGEMENT_UI_INWAY_VERSION=$(cat ci_build_git_tag_name.txt)" >> e2e_environment.sh
   environment:
     name: $CI_COMMIT_REF_NAME
     url: https://nlx-${CI_ENVIRONMENT_SLUG}.${REVIEW_BASE_DOMAIN}
@@ -85,6 +89,7 @@ Deploy Review App:
   artifacts:
     paths:
       - ci_environment_url.txt
+      - e2e_environment.sh
   tags:
     - cg
     - docker

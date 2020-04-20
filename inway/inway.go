@@ -11,6 +11,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"net/http"
+	"os"
 	"sync"
 	"time"
 
@@ -225,4 +226,16 @@ func (i *Inway) announceToDirectory(s ServiceEndpoint) {
 
 		}
 	}()
+}
+
+// hostname returns the hostname of this inway
+func (i *Inway) hostname() string {
+	h, err := os.Hostname()
+
+	if err != nil {
+		i.logger.Warn("failed to get inway hostname", zap.Error(err))
+		return ""
+	}
+
+	return h
 }

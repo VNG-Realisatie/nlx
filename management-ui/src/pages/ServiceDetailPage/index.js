@@ -10,7 +10,7 @@ import ServiceRepository from '../../domain/service-repository'
 import ServiceDetails from '../../components/ServiceDetails'
 import usePromise from '../../hooks/use-promise'
 import { StyledLoadingMessage } from '../ServicesPage/index.styles'
-import Spinner from '../ServicesPage/Spinner'
+import Spinner from '../../components/Spinner'
 
 const ServiceDetailPage = ({ getServiceByName, parentUrl }) => {
   const { name } = useParams()

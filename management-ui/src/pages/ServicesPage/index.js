@@ -11,7 +11,8 @@ import PageTemplate from '../../components/PageTemplate'
 import usePromise from '../../hooks/use-promise'
 import ServiceRepository from '../../domain/service-repository'
 import ServiceDetailPage from '../ServiceDetailPage'
-import Table from './Table'
+import Table from '../../components/Table'
+import Spinner from '../../components/Spinner'
 import AuthorizationMode from './AuthorizationMode'
 import ServiceCount from './ServiceCount'
 import {
@@ -20,7 +21,6 @@ import {
   StyledLoadingMessage,
   StyledNoServicesMessage,
 } from './index.styles'
-import Spinner from './Spinner'
 
 const ServiceRow = ({ name, authorizations, mode, ...props }) => {
   const location = useLocation()

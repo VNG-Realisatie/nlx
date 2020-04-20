@@ -7,6 +7,7 @@ NLX Management - E2E-tests:
     BROWSERSTACK_PROJECT_NAME: "NLX Management E2E-tests"
     BROWSERSTACK_BUILD_ID: "Commit $CI_COMMIT_SHORT_SHA"
   script:
+    - source e2e_environment.sh
     - export CI_ENV_URL=$([ -f ci_environment_url.txt ] && cat ci_environment_url.txt)
     - export URL="https://nlx-management-rdw-$CI_ENV_URL"
     - cd management-ui-e2e-tests/

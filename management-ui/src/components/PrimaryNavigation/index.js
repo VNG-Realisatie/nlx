@@ -10,7 +10,8 @@ import {
   StyledNLXManagementLogo,
   StyledNav,
 } from './index.styles'
-import IconServices from './IconServices'
+import { ReactComponent as IconServices } from './icons/services.svg'
+import { ReactComponent as IconInways } from './icons/inways.svg'
 
 const PrimaryNavigation = () => {
   const { t } = useTranslation()
@@ -23,6 +24,11 @@ const PrimaryNavigation = () => {
       >
         <StyledNLXManagementLogo />
       </StyledHomeLink>
+
+      <StyledLink to="/inways" aria-label={t('Inways page')}>
+        <StyledIcon as={IconInways} />
+        {t('Inways')}
+      </StyledLink>
 
       <StyledLink to="/services" aria-label={t('Services page')}>
         <StyledIcon as={IconServices} />

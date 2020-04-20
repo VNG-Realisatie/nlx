@@ -4,7 +4,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { arrayOf, bool, oneOf, shape, string } from 'prop-types'
-import Table from '../../pages/ServicesPage/Table'
+import Table from '../../components/Table'
 import Amount from '../Amount'
 import Collapsible from '../Collapsible'
 import {

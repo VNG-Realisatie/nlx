@@ -17,12 +17,18 @@ SwaggerJSONDirectory = `
   "paths": {
     "/api/v1/insight-configuration": {
       "get": {
-        "operationId": "GetInsightConfiguration",
+        "operationId": "ConfigApi_GetInsightConfiguration",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/configapiInsightConfiguration"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
             }
           }
         },
@@ -31,12 +37,18 @@ SwaggerJSONDirectory = `
         ]
       },
       "put": {
-        "operationId": "PutInsightConfiguration",
+        "operationId": "ConfigApi_PutInsightConfiguration",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/configapiInsightConfiguration"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
             }
           }
         },
@@ -47,12 +59,18 @@ SwaggerJSONDirectory = `
     },
     "/api/v1/inways": {
       "get": {
-        "operationId": "ListInways",
+        "operationId": "ConfigApi_ListInways",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/configapiListInwaysResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
             }
           }
         },
@@ -61,12 +79,18 @@ SwaggerJSONDirectory = `
         ]
       },
       "post": {
-        "operationId": "CreateInway",
+        "operationId": "ConfigApi_CreateInway",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/configapiInway"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
             }
           }
         },
@@ -87,12 +111,18 @@ SwaggerJSONDirectory = `
     },
     "/api/v1/inways/{name}": {
       "get": {
-        "operationId": "GetInway",
+        "operationId": "ConfigApi_GetInway",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/configapiInway"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
             }
           }
         },
@@ -109,12 +139,18 @@ SwaggerJSONDirectory = `
         ]
       },
       "delete": {
-        "operationId": "DeleteInway",
+        "operationId": "ConfigApi_DeleteInway",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/configapiEmpty"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
             }
           }
         },
@@ -131,12 +167,18 @@ SwaggerJSONDirectory = `
         ]
       },
       "put": {
-        "operationId": "UpdateInway",
+        "operationId": "ConfigApi_UpdateInway",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/configapiInway"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
             }
           }
         },
@@ -163,12 +205,18 @@ SwaggerJSONDirectory = `
     },
     "/api/v1/services": {
       "get": {
-        "operationId": "ListServices",
+        "operationId": "ConfigApi_ListServices",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/configapiListServicesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
             }
           }
         },
@@ -185,12 +233,18 @@ SwaggerJSONDirectory = `
         ]
       },
       "post": {
-        "operationId": "CreateService",
+        "operationId": "ConfigApi_CreateService",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/configapiService"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
             }
           }
         },
@@ -211,12 +265,18 @@ SwaggerJSONDirectory = `
     },
     "/api/v1/services/{name}": {
       "get": {
-        "operationId": "GetService",
+        "operationId": "ConfigApi_GetService",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/configapiService"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
             }
           }
         },
@@ -233,12 +293,18 @@ SwaggerJSONDirectory = `
         ]
       },
       "delete": {
-        "operationId": "DeleteService",
+        "operationId": "ConfigApi_DeleteService",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/configapiEmpty"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
             }
           }
         },
@@ -255,12 +321,18 @@ SwaggerJSONDirectory = `
         ]
       },
       "put": {
-        "operationId": "UpdateService",
+        "operationId": "ConfigApi_UpdateService",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/configapiService"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
             }
           }
         },
@@ -331,6 +403,15 @@ SwaggerJSONDirectory = `
       "properties": {
         "name": {
           "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "hostname": {
+          "type": "string"
+        },
+        "selfAddress": {
+          "type": "string"
         }
       }
     },
@@ -388,6 +469,39 @@ SwaggerJSONDirectory = `
           "type": "array",
           "items": {
             "type": "string"
+          }
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "type_url": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "runtimeError": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
           }
         }
       }
