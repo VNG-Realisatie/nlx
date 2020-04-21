@@ -33,6 +33,7 @@ test('Close navigates to the ServicesPage', async t => {
   const closeButton = Selector('[data-testid="close-button"]');
 
   await t
+    .expect(closeButton.exists).ok()
     .click(closeButton)
     .expect(getLocation()).contains(`${baseUrl}/services`);
 })
