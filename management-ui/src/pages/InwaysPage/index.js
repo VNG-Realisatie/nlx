@@ -3,7 +3,7 @@
 //
 
 import React from 'react'
-import { func, string } from 'prop-types'
+import { func, string, number } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { Alert } from '@commonground/design-system'
 import PageTemplate from '../../components/PageTemplate'
@@ -18,7 +18,14 @@ import {
   StyledIconTd,
 } from './index.styles'
 
-const InwayRow = ({ name, hostname, selfAddress, version, ...props }) => (
+const InwayRow = ({
+  name,
+  hostname,
+  selfAddress,
+  servicesCount,
+  version,
+  ...props
+}) => (
   <Table.Tr {...props}>
     <StyledIconTd>
       <StyledInwayIcon />
@@ -26,6 +33,7 @@ const InwayRow = ({ name, hostname, selfAddress, version, ...props }) => (
     <Table.Td>{name}</Table.Td>
     <Table.Td>{hostname}</Table.Td>
     <Table.Td>{selfAddress}</Table.Td>
+    <Table.Td data-testid="services-count">{servicesCount}</Table.Td>
     <Table.Td>{version}</Table.Td>
   </Table.Tr>
 )
@@ -34,7 +42,12 @@ InwayRow.propTypes = {
   name: string,
   hostname: string,
   selfAddress: string,
+  servicesCount: number,
   version: string,
+}
+
+InwayRow.defaultProps = {
+  servicesCount: 0,
 }
 
 const InwaysPage = ({ getInways }) => {
@@ -68,6 +81,7 @@ const InwaysPage = ({ getInways }) => {
               <Table.Th>{t('Name')}</Table.Th>
               <Table.Th>{t('Hostname')}</Table.Th>
               <Table.Th>{t('Self address')}</Table.Th>
+              <Table.Th>{t('Services')}</Table.Th>
               <Table.Th>{t('Version')}</Table.Th>
             </Table.TrHead>
           </thead>
@@ -77,6 +91,7 @@ const InwaysPage = ({ getInways }) => {
                 name={inway.name}
                 hostname={inway.hostname}
                 selfAddress={inway.selfAddress}
+                servicesCount={inway.services ? inway.services.length : 0}
                 version={inway.version}
                 key={i}
               />

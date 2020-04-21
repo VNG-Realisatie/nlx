@@ -15,7 +15,12 @@ test('listing all inways', async () => {
   })
   const fetchInwaysHandler = jest.fn(() => fetchInwaysPromise)
 
-  const { getByRole, getByTestId, findByTestId } = renderWithProviders(
+  const {
+    getByRole,
+    getByTestId,
+    findByTestId,
+    getByText,
+  } = renderWithProviders(
     <Router>
       <InwaysPage getInways={fetchInwaysHandler} />
     </Router>,
@@ -27,12 +32,25 @@ test('listing all inways', async () => {
   await act(async () => {
     resolveFetchInways([
       {
-        name: 'My First Inway',
+        name: 'name',
+        version: 'version',
+        hostname: 'hostname',
+        selfAddress: 'self-address',
+        services: [
+          {
+            name: 'service-1',
+          },
+        ],
       },
     ])
   })
 
   expect(await findByTestId('inways-list')).toBeInTheDocument()
+  expect(getByText('name')).toBeInTheDocument()
+  expect(getByText('hostname')).toBeInTheDocument()
+  expect(getByText('self-address')).toBeInTheDocument()
+  expect(getByTestId('services-count')).toHaveTextContent('1')
+  expect(getByText('version')).toBeInTheDocument()
 })
 
 test('no inways', async () => {

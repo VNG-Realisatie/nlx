@@ -17,9 +17,14 @@ describe('the InwayRepository', () => {
             inways: [
               {
                 name: 'An Inway',
+                version: 'version',
                 hostname: 'hostname',
                 selfAddress: 'self-address',
-                version: 'version',
+                services: [
+                  {
+                    name: 'my-service',
+                  },
+                ],
               },
             ],
           }),
@@ -33,6 +38,11 @@ describe('the InwayRepository', () => {
           hostname: 'hostname',
           selfAddress: 'self-address',
           version: 'version',
+          services: [
+            {
+              name: 'my-service',
+            },
+          ],
         },
       ])
 

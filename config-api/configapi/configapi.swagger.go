@@ -412,6 +412,20 @@ SwaggerJSONDirectory = `
         },
         "selfAddress": {
           "type": "string"
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/configapiInwayService"
+          }
+        }
+      }
+    },
+    "configapiInwayService": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
         }
       }
     },

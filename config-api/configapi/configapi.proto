@@ -74,10 +74,15 @@ message Service {
 message Empty {}
 
 message Inway {
+	message Service {
+		string name = 1;
+	}
+
 	string name = 1;
 	string version = 2;
 	string hostname = 3;
 	string selfAddress = 4;
+	repeated Service services = 5;
 }
 
 message ListServicesRequest {

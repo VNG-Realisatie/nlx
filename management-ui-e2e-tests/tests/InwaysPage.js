@@ -38,7 +38,8 @@ test('Inway details are displayed', async t => {
   const nameCell = initialServiceColumns.nth(1)
   const hostnameCell = initialServiceColumns.nth(2)
   const selfAddressCell = initialServiceColumns.nth(3)
-  const versionCell = initialServiceColumns.nth(4)
+  const serviceCountCell = initialServiceColumns.nth(4)
+  const versionCell = initialServiceColumns.nth(5)
 
   await t
     .expect(inwaysList.visible).ok()
@@ -47,5 +48,6 @@ test('Inway details are displayed', async t => {
     .expect(nameCell.textContent).eql(INWAY_NAME)
     .expect(hostnameCell.textContent).notEql('') // we only check for not empty, because the hostname is nondeterministic
     .expect(selfAddressCell.textContent).eql(INWAY_SELF_ADDRESS)
+    .expect(serviceCountCell.textContent).eql('1')
     .expect(versionCell.textContent).eql(INWAY_VERSION)
 })
