@@ -4,55 +4,86 @@
 import React from 'react'
 import { MemoryRouter as Router } from 'react-router-dom'
 
+import { act } from '@testing-library/react'
 import { renderWithProviders } from '../../test-utils'
+import { UserContextProvider } from '../../user-context'
 import UserNavigation from './index'
 
 describe('the UserNavigation', () => {
-  let result
+  describe('when not authenticated', () => {
+    it('should not render', () => {
+      const authenticationHandler = Promise.reject(new Error('arbitrary error'))
+      const { getByTestId } = renderWithProviders(
+        <Router>
+          <UserContextProvider
+            user={null}
+            fetchAuthenticatedUser={() => authenticationHandler}
+          >
+            <UserNavigation />
+          </UserContextProvider>
+        </Router>,
+      )
 
-  beforeEach(() => {
-    result = renderWithProviders(
-      <Router>
-        <UserNavigation fullName="John Doe" />
-        <div data-testid="outside-user-menu" />
-      </Router>,
-    )
+      act(() => {})
+
+      expect(() => getByTestId('user-navigation')).toThrow()
+    })
   })
 
-  it('should display the the full name and avatar', () => {
-    const { getByTestId } = result
+  describe('when authenticated', () => {
+    let result
 
-    expect(getByTestId('full-name').textContent).toEqual('John Doe')
-    expect(getByTestId('avatar')).toBeTruthy()
-  })
-
-  it('hides the user menu by default', () => {
-    const { queryByTestId } = result
-
-    expect(queryByTestId('user-menu-options')).toBeNull()
-  })
-
-  describe('and toggled the menu', () => {
     beforeEach(() => {
-      const { queryByLabelText } = result
-      queryByLabelText('Account menu').click()
+      result = renderWithProviders(
+        <Router>
+          <UserContextProvider
+            user={{
+              fullName: 'John Doe',
+              pictureUrl: 'https://my-pictures.com/nlx.jpg',
+            }}
+          >
+            <UserNavigation />
+            <div data-testid="outside-user-menu" />
+          </UserContextProvider>
+        </Router>,
+      )
     })
 
-    it('should display the user menu', async () => {
+    it('should display the the full name and avatar', () => {
+      const { getByTestId } = result
+
+      expect(getByTestId('full-name').textContent).toEqual('John Doe')
+      expect(getByTestId('avatar')).toBeTruthy()
+    })
+
+    it('hides the user menu by default', () => {
       const { queryByTestId } = result
-      expect(queryByTestId('user-menu-options')).toBeTruthy()
+
+      expect(queryByTestId('user-menu-options')).toBeNull()
     })
 
-    describe('on blur', () => {
+    describe('and toggled the menu', () => {
       beforeEach(() => {
-        const { queryByTestId, queryByLabelText } = result
+        const { queryByLabelText } = result
         queryByLabelText('Account menu').click()
-        queryByTestId('outside-user-menu').click()
       })
 
-      it('should hide the user menu', async () => {
+      it('should display the user menu', async () => {
         const { queryByTestId } = result
-        expect(queryByTestId('user-menu-options')).toBeNull()
+        expect(queryByTestId('user-menu-options')).toBeTruthy()
+      })
+
+      describe('on blur', () => {
+        beforeEach(() => {
+          const { queryByTestId, queryByLabelText } = result
+          queryByLabelText('Account menu').click()
+          queryByTestId('outside-user-menu').click()
+        })
+
+        it('should hide the user menu', async () => {
+          const { queryByTestId } = result
+          expect(queryByTestId('user-menu-options')).toBeNull()
+        })
       })
     })
   })

@@ -2,11 +2,11 @@
 // Licensed under the EUPL
 //
 
-import React, { useState } from 'react'
-import { string } from 'prop-types'
+import React, { useContext, useState } from 'react'
 import Cookies from 'js-cookie'
 import { useTranslation } from 'react-i18next'
 import Avatar from '../Avatar'
+import UserContext from '../../user-context'
 import {
   StyledUserNavigation,
   StyledToggleButton,
@@ -14,9 +14,10 @@ import {
   UserNavigationChevron,
 } from './index.styles'
 
-const UserNavigation = ({ fullName, pictureUrl, ...props }) => {
+const UserNavigation = ({ ...props }) => {
   const { t } = useTranslation()
   const [menuIsOpen, setMenuIsOpen] = useState(false)
+  const { user } = useContext(UserContext)
 
   const onClickHandler = (event) => {
     setMenuIsOpen(!menuIsOpen)
@@ -34,7 +35,7 @@ const UserNavigation = ({ fullName, pictureUrl, ...props }) => {
     clearTimeout(timeoutId)
   }
 
-  return (
+  return !user ? null : (
     <StyledUserNavigation
       isOpen={menuIsOpen}
       onFocus={onFocusHandler}
@@ -50,8 +51,14 @@ const UserNavigation = ({ fullName, pictureUrl, ...props }) => {
         aria-controls="user-menu-options"
         aria-label={t('Account menu')}
       >
-        <Avatar data-testid="avatar" alt={t('User avatar')} url={pictureUrl} />
-        <StyledUsername data-testid="full-name">{fullName}</StyledUsername>
+        <Avatar
+          data-testid="avatar"
+          alt={t('User avatar')}
+          url={user.pictureUrl}
+        />
+        <StyledUsername data-testid="full-name" title={user.fullName}>
+          {user.fullName}
+        </StyledUsername>
         <UserNavigationChevron flipHorizontal={menuIsOpen} />
       </StyledToggleButton>
 
@@ -71,11 +78,6 @@ const UserNavigation = ({ fullName, pictureUrl, ...props }) => {
       )}
     </StyledUserNavigation>
   )
-}
-
-UserNavigation.propTypes = {
-  fullName: string,
-  pictureUrl: string,
 }
 
 export default UserNavigation

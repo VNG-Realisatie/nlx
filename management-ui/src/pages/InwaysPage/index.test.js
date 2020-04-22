@@ -6,6 +6,7 @@ import React from 'react'
 import { MemoryRouter as Router } from 'react-router-dom'
 import { act } from '@testing-library/react'
 import { renderWithProviders } from '../../test-utils'
+import { UserContextProvider } from '../../user-context'
 import InwaysPage from './index'
 
 test('listing all inways', async () => {
@@ -22,7 +23,9 @@ test('listing all inways', async () => {
     getByText,
   } = renderWithProviders(
     <Router>
-      <InwaysPage getInways={fetchInwaysHandler} />
+      <UserContextProvider user={{}}>
+        <InwaysPage getInways={fetchInwaysHandler} />
+      </UserContextProvider>
     </Router>,
   )
 
@@ -58,7 +61,9 @@ test('no inways', async () => {
 
   const { findByText, getByTestId } = renderWithProviders(
     <Router>
-      <InwaysPage getInways={fetchInwaysHandler} />
+      <UserContextProvider user={{}}>
+        <InwaysPage getInways={fetchInwaysHandler} />
+      </UserContextProvider>
     </Router>,
   )
 
@@ -77,7 +82,9 @@ test('failed to load inways', async () => {
 
   const { findByText, getByTestId } = renderWithProviders(
     <Router>
-      <InwaysPage getInways={fetchInwaysHandler} />
+      <UserContextProvider user={{}}>
+        <InwaysPage getInways={fetchInwaysHandler} />
+      </UserContextProvider>
     </Router>,
   )
 

@@ -100,5 +100,8 @@ export const StyledToggleButton = styled.button`
 `
 
 export const StyledUsername = styled.span`
+  max-width: 15rem;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `

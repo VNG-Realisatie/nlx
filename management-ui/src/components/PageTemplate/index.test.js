@@ -6,6 +6,7 @@ import React from 'react'
 import { MemoryRouter as Router } from 'react-router-dom'
 
 import { renderWithProviders } from '../../test-utils'
+import { UserContextProvider } from '../../user-context'
 import PageTemplate from './index'
 
 test('PageTemplate', () => {
@@ -23,13 +24,15 @@ test('PageTemplate', () => {
 test('PageTemplate with Header', () => {
   const { getByText, getByTestId } = renderWithProviders(
     <Router>
-      <PageTemplate>
-        <PageTemplate.Header
-          title="Page title"
-          description="Page description"
-        />
-        <p>Page content</p>
-      </PageTemplate>
+      <UserContextProvider user={{}}>
+        <PageTemplate>
+          <PageTemplate.Header
+            title="Page title"
+            description="Page description"
+          />
+          <p>Page content</p>
+        </PageTemplate>
+      </UserContextProvider>
     </Router>,
   )
 

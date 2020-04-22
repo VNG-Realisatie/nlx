@@ -16,7 +16,7 @@ const Header = ({ title, description }) => {
     <>
       <StyledHeader>
         {title && <StyledPageTitle>{title}</StyledPageTitle>}
-        <StyledUserNavigation fullName="John Doe" />
+        <StyledUserNavigation />
       </StyledHeader>
       <StyledDescription>{description}</StyledDescription>
     </>

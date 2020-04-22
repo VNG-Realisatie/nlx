@@ -6,6 +6,7 @@ import React from 'react'
 import { MemoryRouter as Router } from 'react-router-dom'
 import { act } from '@testing-library/react'
 import { renderWithProviders } from '../../test-utils'
+import { UserContextProvider } from '../../user-context'
 import ServicesPage from './index'
 
 test('listing all services', async () => {
@@ -22,7 +23,9 @@ test('listing all services', async () => {
     findByTestId,
   } = renderWithProviders(
     <Router>
-      <ServicesPage getServices={fetchServicesHandler} />
+      <UserContextProvider user={{}}>
+        <ServicesPage getServices={fetchServicesHandler} />
+      </UserContextProvider>
     </Router>,
   )
 
@@ -53,7 +56,9 @@ test('no services', async () => {
 
   const { findByText, getByTestId } = renderWithProviders(
     <Router>
-      <ServicesPage getServices={fetchServicesHandler} />
+      <UserContextProvider user={{}}>
+        <ServicesPage getServices={fetchServicesHandler} />
+      </UserContextProvider>
     </Router>,
   )
 
@@ -73,7 +78,9 @@ test('failed to load services', async () => {
 
   const { findByText, getByTestId } = renderWithProviders(
     <Router>
-      <ServicesPage getServices={fetchServicesHandler} />
+      <UserContextProvider user={{}}>
+        <ServicesPage getServices={fetchServicesHandler} />
+      </UserContextProvider>
     </Router>,
   )
 
