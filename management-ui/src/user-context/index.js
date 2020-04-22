@@ -14,6 +14,7 @@ const UserContextProvider = ({
   user: defaultUser,
 }) => {
   const [user, setUser] = useState(defaultUser || null)
+  const [isReady, setReady] = useState(false)
   let canceled = false
 
   useEffect(
@@ -28,11 +29,16 @@ const UserContextProvider = ({
         } catch (err) {
           setUser(null)
         }
+
+        setReady(true)
       }
 
-      if (!defaultUser) {
-        fetchUser()
+      if (defaultUser) {
+        setReady(true)
+        return
       }
+
+      fetchUser()
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
@@ -54,6 +60,7 @@ const UserContextProvider = ({
     <UserContext.Provider
       value={{
         user: user,
+        isReady: isReady,
         cancelFetch: cancelFetchHandler,
         onLoginHandler: onLoginHandler,
         onLogoutHandler: onLogoutHandler,

@@ -4,29 +4,45 @@
 import React from 'react'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
-import { renderWithProviders } from './test-utils'
-import App from './App'
-import { UserContextProvider } from './user-context'
 
-jest.mock('./pages/LoginPage', () => () => <div data-testid="login-page" />)
-jest.mock('./pages/ServicesPage', () => () => (
+import { renderWithProviders } from '../test-utils'
+import { UserContextProvider } from '../user-context'
+import Routes from '.'
+
+jest.mock('../pages/LoginPage', () => () => <div data-testid="login-page" />)
+jest.mock('../pages/ServicesPage', () => () => (
   <div data-testid="services-page" />
 ))
-jest.mock('./pages/InwaysPage', () => () => <div data-testid="inways-page" />)
-jest.mock('./pages/AddServicePage', () => () => (
+jest.mock('../pages/InwaysPage', () => () => <div data-testid="inways-page" />)
+jest.mock('../pages/AddServicePage', () => () => (
   <div data-testid="add-service-page" />
 ))
 
-test('redirects to /login when navigating to /', async () => {
+test('when not authenticated it redirects to /login when navigating to /', async () => {
   const history = createMemoryHistory()
+  const fetchUser = () => {
+    throw new Error('not authenticated')
+  }
   renderWithProviders(
     <Router history={history}>
-      <UserContextProvider user={{ id: '42' }}>
-        <App />
+      <UserContextProvider fetchAuthenticatedUser={fetchUser}>
+        <Routes />
       </UserContextProvider>
     </Router>,
   )
   expect(history.location.pathname).toEqual('/login')
+})
+
+test('redirects to /inways when navigating to /', async () => {
+  const history = createMemoryHistory()
+  renderWithProviders(
+    <Router history={history}>
+      <UserContextProvider user={{ id: '42' }}>
+        <Routes />
+      </UserContextProvider>
+    </Router>,
+  )
+  expect(history.location.pathname).toEqual('/inways')
 })
 
 test('the /login route renders the LoginPage', () => {
@@ -34,7 +50,7 @@ test('the /login route renders the LoginPage', () => {
   const { getByTestId } = renderWithProviders(
     <Router history={history}>
       <UserContextProvider user={{ id: '42' }}>
-        <App />
+        <Routes />
       </UserContextProvider>
     </Router>,
   )
@@ -46,7 +62,7 @@ test('the /services route renders the ServicesPage', () => {
   const { getByTestId } = renderWithProviders(
     <Router history={history}>
       <UserContextProvider user={{ id: '42' }}>
-        <App />
+        <Routes />
       </UserContextProvider>
     </Router>,
   )
@@ -60,7 +76,7 @@ test('the /services/add-service route renders the AddServicePage', () => {
   const { getByTestId } = renderWithProviders(
     <Router history={history}>
       <UserContextProvider user={{ id: '42' }}>
-        <App />
+        <Routes />
       </UserContextProvider>
     </Router>,
   )
@@ -72,7 +88,7 @@ test('the /inways route renders the InwaysPage', () => {
   const { getByTestId } = renderWithProviders(
     <Router history={history}>
       <UserContextProvider user={{ id: '42' }}>
-        <App />
+        <Routes />
       </UserContextProvider>
     </Router>,
   )
