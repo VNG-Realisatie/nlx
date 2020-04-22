@@ -28,7 +28,7 @@ const LoginPage = () => {
           <>
             <p>{t('Log in to continue.')}</p>
             <Button id="login" as="a" href="/oidc/authenticate">
-              {t('Log in with organization account.')} <StyledExternalLink />
+              {t('Log in with organization account')} <StyledExternalLink />
             </Button>
           </>
         ) : (
