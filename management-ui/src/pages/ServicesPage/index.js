@@ -43,7 +43,7 @@ ServiceRow.propTypes = {
 
 const ServicesPage = ({ getServices }) => {
   const { t } = useTranslation()
-  const { loading, error, result } = usePromise(getServices)
+  const { loading, error, result, reload } = usePromise(getServices)
 
   return (
     <PageTemplate>
@@ -97,7 +97,7 @@ const ServicesPage = ({ getServices }) => {
         </Table>
       ) : null}
       <Route path="/services/:name">
-        <ServiceDetailPage parentUrl="/services" />
+        <ServiceDetailPage parentUrl="/services" refreshHandler={reload} />
       </Route>
     </PageTemplate>
   )

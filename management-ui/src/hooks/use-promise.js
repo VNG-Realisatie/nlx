@@ -9,6 +9,12 @@ const usePromise = (getPromise, ...args) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
+  const [reloadCounter, setReloadCounter] = useState(0)
+
+  const reload = () => {
+    setReloadCounter(reloadCounter + 1)
+  }
+
   useEffect(() => {
     const resolvePromise = async () => {
       setLoading(true)
@@ -24,8 +30,8 @@ const usePromise = (getPromise, ...args) => {
 
     resolvePromise()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-  return { loading, error, result }
+  }, [...(args || []), reloadCounter])
+  return { loading, error, result, reload }
 }
 
 export default usePromise

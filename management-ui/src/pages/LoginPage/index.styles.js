@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import styled from 'styled-components'
-import NLXManagementLogo from '../../components/NLXManagementLogo'
+import { ReactComponent as NLXManagementLogo } from '../../components/NLXManagementLogo/nlxManagementLogo.svg'
 import { ReactComponent as ExternalLink } from './external-link.svg'
 import nlxPattern from './nlx-pattern.svg'
 

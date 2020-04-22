@@ -114,4 +114,28 @@ describe('ServiceDetails', () => {
       'Organisatie A',
     )
   })
+
+  it('should call the removeHandler on remove', () => {
+    const handleRemove = jest.fn()
+    jest.spyOn(window, 'confirm').mockResolvedValue(true)
+    const { getByTestId } = renderWithProviders(
+      <Router>
+        <ServiceDetails
+          removeHandler={handleRemove}
+          service={{
+            ...service,
+            authorizationSettings: {
+              mode: 'whitelist',
+              authorizations: [{ organizationName: 'Organisatie A' }],
+            },
+          }}
+        />
+      </Router>,
+    )
+
+    fireEvent.click(getByTestId('remove-service'))
+    expect(window.confirm).toHaveBeenCalled()
+    expect(handleRemove).toBeCalled()
+    expect(getByTestId('remove-success')).toBeTruthy()
+  })
 })

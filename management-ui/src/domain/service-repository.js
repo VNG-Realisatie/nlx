@@ -35,6 +35,26 @@ class ServiceRepository {
     return result.json()
   }
 
+  static async remove(service) {
+    const result = await fetch(`/api/v1/services/${service.name}`, {
+      method: 'DELETE',
+    })
+
+    if (result.status === 404) {
+      throw new Error('not found')
+    }
+
+    if (result.status === 403) {
+      throw new Error('forbidden')
+    }
+
+    if (!result.ok) {
+      throw new Error('unable to handle the request')
+    }
+
+    return result.json()
+  }
+
   static async getByName(name) {
     const result = await fetch(`/api/v1/services/${name}`)
 
@@ -45,7 +65,13 @@ class ServiceRepository {
       throw new Error('unable to handle the request')
     }
 
-    return result.json()
+    const service = await result.json()
+    service.internal = !!service.internal
+    service.inways = service.inways || []
+    service.authorizationSettings.authorizations =
+      service.authorizationSettings.authorizations || []
+
+    return service
   }
 }
 

@@ -2,9 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { fireEvent } from '@testing-library/react'
-
-import { renderWithProviders } from '../../test-utils'
+import { renderWithProviders, fireEvent } from '../../test-utils'
 import Collapsible from './index'
 
 describe('Collapsible', () => {
@@ -49,5 +47,15 @@ describe('Collapsible', () => {
 
       expect(utils.queryByTestId('body')).toBeNull()
     })
+  })
+
+  it('should just render the title when there are no children', () => {
+    utils.rerender(
+      <Collapsible title={<span data-testid="title">title</span>}>
+        {null}
+      </Collapsible>,
+    )
+    expect(utils.getByTestId('title').textContent).toBe('title')
+    expect(utils.queryByTestId('collapsible')).toBeFalsy()
   })
 })

@@ -1,3 +1,7 @@
+// Copyright © VNG Realisatie 2020
+// Licensed under the EUPL
+//
+
 // i18next-parser.config.js
 
 const options = require('./src/i18n.options')

@@ -12,16 +12,25 @@ import usePromise from '../../hooks/use-promise'
 import { StyledLoadingMessage } from '../ServicesPage/index.styles'
 import Spinner from '../../components/Spinner'
 
-const ServiceDetailPage = ({ getServiceByName, parentUrl }) => {
+const ServiceDetailPage = ({
+  getServiceByName,
+  removeService,
+  refreshHandler,
+  parentUrl,
+}) => {
   const { name } = useParams()
   const { t } = useTranslation()
   const history = useHistory()
-  const { loading, error, result } = usePromise(getServiceByName, name)
+  const { loading, error, result: service } = usePromise(getServiceByName, name)
   const close = () => history.push(parentUrl)
 
+  const handleRemove = () => {
+    removeService(service)
+    refreshHandler()
+  }
   return (
     <Drawer closeHandler={close}>
-      {loading || (!error && !result) ? (
+      {loading || (!error && !service) ? (
         <StyledLoadingMessage role="progressbar">
           <Spinner /> {t('Loading…')}
         </StyledLoadingMessage>
@@ -29,8 +38,8 @@ const ServiceDetailPage = ({ getServiceByName, parentUrl }) => {
         <Alert variant="error" data-testid="error-message">
           {t('Failed to load the service.', { name })}
         </Alert>
-      ) : result ? (
-        <ServiceDetails service={result} />
+      ) : service ? (
+        <ServiceDetails service={service} removeHandler={handleRemove} />
       ) : null}
     </Drawer>
   )
@@ -38,11 +47,15 @@ const ServiceDetailPage = ({ getServiceByName, parentUrl }) => {
 
 ServiceDetailPage.propTypes = {
   getServiceByName: func,
+  refreshHandler: func,
+  removeService: func,
   parentUrl: string,
 }
 
 ServiceDetailPage.defaultProps = {
   getServiceByName: ServiceRepository.getByName,
+  removeService: ServiceRepository.remove,
+  refreshHandler: () => {},
   parentUrl: '/services',
 }
 

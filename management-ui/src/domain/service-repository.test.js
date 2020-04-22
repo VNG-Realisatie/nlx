@@ -126,7 +126,10 @@ describe('the ServiceRepository', () => {
       jest.spyOn(global, 'fetch').mockResolvedValue({
         ok: true,
         status: 200,
-        json: async () => ({ name: 'Service' }),
+        json: async () => ({
+          name: 'Service',
+          authorizationSettings: { mode: 'none' },
+        }),
       })
     })
 
@@ -135,9 +138,86 @@ describe('the ServiceRepository', () => {
     it('should return the service', async () => {
       const result = await ServiceRepository.getByName('Service')
 
-      expect(result).toEqual({ name: 'Service' })
+      expect(result).toEqual(
+        expect.objectContaining({
+          name: 'Service',
+          authorizationSettings: {
+            authorizations: [],
+            mode: expect.anything(),
+          },
+        }),
+      )
 
       expect(global.fetch).toHaveBeenCalledWith('/api/v1/services/Service')
+    })
+
+    it('should contains default values for required fields', async () => {
+      const result = await ServiceRepository.getByName('Service')
+
+      expect(result).toEqual(
+        expect.objectContaining({
+          inways: [],
+          authorizationSettings: {
+            authorizations: [],
+            mode: expect.anything(),
+          },
+          internal: false,
+        }),
+      )
+    })
+    describe('when required values are sent by the api', () => {
+      it('should not overwrite values', async () => {
+        jest.spyOn(global, 'fetch').mockResolvedValue({
+          ok: true,
+          status: 200,
+          json: async () => ({
+            name: 'Service',
+            internal: true,
+            inways: ['Inway1'],
+            authorizationSettings: {
+              mode: 'whitelist',
+              authorizations: ['Outway1'],
+            },
+          }),
+        })
+
+        const result = await ServiceRepository.getByName('Service')
+
+        expect(result).toEqual(
+          expect.objectContaining({
+            internal: true,
+            inways: ['Inway1'],
+            authorizationSettings: {
+              mode: 'whitelist',
+              authorizations: ['Outway1'],
+            },
+          }),
+        )
+      })
+
+      it('should add missing whitelist', async () => {
+        jest.spyOn(global, 'fetch').mockResolvedValue({
+          ok: true,
+          status: 200,
+          json: async () => ({
+            name: 'Service',
+            authorizationSettings: {
+              mode: 'whitelist',
+            },
+          }),
+        })
+
+        const result = await ServiceRepository.getByName('Service')
+
+        expect(result).toEqual(
+          expect.objectContaining({
+            authorizationSettings: {
+              mode: 'whitelist',
+              authorizations: [],
+            },
+          }),
+        )
+      })
     })
   })
 })

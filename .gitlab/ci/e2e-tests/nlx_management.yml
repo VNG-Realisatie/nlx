@@ -18,6 +18,7 @@ NLX Management - E2E-tests:
     - stop_section test
   artifacts:
     when: always
+    expose_as: 'Management UI e2e tests'
     paths:
       - management-ui-e2e-tests/test-results/
   only:
