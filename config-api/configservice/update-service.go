@@ -23,6 +23,10 @@ func (s *ConfigService) UpdateService(ctx context.Context, req *configapi.Update
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid service: %s", err))
 	}
 
+	if req.Name != req.Service.Name {
+		return nil, status.Error(codes.InvalidArgument, "changing the service name is not allowed")
+	}
+
 	err = s.configDatabase.UpdateService(ctx, req.Name, req.Service)
 	if err != nil {
 		logger.Error("error updating service in DB", zap.Error(err))

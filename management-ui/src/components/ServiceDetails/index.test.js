@@ -21,7 +21,9 @@ describe('ServiceDetails', () => {
 
   it('should display', () => {
     const { getByTestId, queryByTestId } = renderWithProviders(
-      <ServiceDetails service={service} />,
+      <Router>
+        <ServiceDetails service={service} />
+      </Router>,
     )
     expect(getByTestId('service-name')).toHaveTextContent('name')
     expect(getByTestId('service-published')).toHaveTextContent(
@@ -35,12 +37,14 @@ describe('ServiceDetails', () => {
 
   it('should show hidden icon', () => {
     const { getByTestId } = renderWithProviders(
-      <ServiceDetails
-        service={{
-          ...service,
-          internal: true,
-        }}
-      />,
+      <Router>
+        <ServiceDetails
+          service={{
+            ...service,
+            internal: true,
+          }}
+        />
+      </Router>,
     )
     expect(getByTestId('service-published')).toHaveTextContent(
       'hidden.svg' + 'Not visible in central directory', // eslint-disable-line no-useless-concat

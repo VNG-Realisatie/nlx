@@ -30,7 +30,13 @@ describe('the ServiceRepository', () => {
         },
       ])
 
-      expect(global.fetch).toHaveBeenCalledWith('/api/v1/services')
+      expect(global.fetch).toHaveBeenCalledWith('/api/v1/services', {
+        headers: {
+          'Cache-Control': 'no-cache',
+          Pragma: 'no-cache',
+          Expires: 'Sat, 01 Jan 2000 00:00:00 GMT',
+        },
+      })
     })
 
     it('should return an empty list when the response is an empty object', async () => {
@@ -44,7 +50,13 @@ describe('the ServiceRepository', () => {
 
       expect(result).toEqual([])
 
-      expect(global.fetch).toHaveBeenCalledWith('/api/v1/services')
+      expect(global.fetch).toHaveBeenCalledWith('/api/v1/services', {
+        headers: {
+          'Cache-Control': 'no-cache',
+          Pragma: 'no-cache',
+          Expires: 'Sat, 01 Jan 2000 00:00:00 GMT',
+        },
+      })
     })
   })
 
@@ -148,7 +160,13 @@ describe('the ServiceRepository', () => {
         }),
       )
 
-      expect(global.fetch).toHaveBeenCalledWith('/api/v1/services/Service')
+      expect(global.fetch).toHaveBeenCalledWith('/api/v1/services/Service', {
+        headers: {
+          'Cache-Control': 'no-cache',
+          Pragma: 'no-cache',
+          Expires: 'Sat, 01 Jan 2000 00:00:00 GMT',
+        },
+      })
     })
 
     it('should contains default values for required fields', async () => {
@@ -216,6 +234,33 @@ describe('the ServiceRepository', () => {
               authorizations: [],
             },
           }),
+        )
+      })
+    })
+  })
+
+  describe('updating a service', () => {
+    describe('when the payload is correct', () => {
+      beforeEach(() => {
+        jest.spyOn(global, 'fetch').mockImplementation(async () => ({
+          ok: true,
+          status: 200,
+          json: async () => null,
+        }))
+      })
+
+      afterEach(() => global.fetch.mockRestore())
+      it('should return successfully', async () => {
+        const result = await ServiceRepository.update('my-service', {
+          name: 'my-service',
+        })
+        await expect(result).toBeNull()
+        expect(global.fetch).toHaveBeenCalledWith(
+          '/api/v1/services/my-service',
+          {
+            method: 'PUT',
+            body: JSON.stringify({ name: 'my-service' }),
+          },
         )
       })
     })

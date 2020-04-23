@@ -38,7 +38,7 @@ test('Adding a new service', async t => {
     .typeText('#endpointURL', 'my-service.test:8000')
     .typeText('#documentationURL', 'my-service.test:8000/docs')
     .typeText('#apiSpecificationURL', 'my-service.test:8000/openapi.json')
-    .click('#internal')
+    .click('#publishedInDirectory')
     .typeText('#techSupportContact', 'tech@organization.test')
     .typeText('#publicSupportContact', 'public@organization.test')
     .click('#authorizationModeNone')

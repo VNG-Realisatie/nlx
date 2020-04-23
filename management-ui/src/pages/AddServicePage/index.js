@@ -8,12 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { Alert } from '@commonground/design-system'
 import PageTemplate from '../../components/PageTemplate'
 import ServiceRepository from '../../domain/service-repository'
-import AddServiceForm from './AddServiceForm'
-import {
-  StyledBackButton,
-  StyledIconChevron,
-  StyledTitle,
-} from './index.styles'
+import AddServiceForm from '../../components/ServiceForm'
 
 const AddServicePage = ({ createHandler }) => {
   const { t } = useTranslation()
@@ -38,27 +33,23 @@ const AddServicePage = ({ createHandler }) => {
 
   return (
     <PageTemplate>
-      <p>
-        <StyledBackButton to="/services" aria-label={t('Back')}>
-          <StyledIconChevron />
-          {t('Back')}
-        </StyledBackButton>
-      </p>
+      <PageTemplate.HeaderWithBackNavigation
+        backButtonTo="/services"
+        title={t('Add new service')}
+      />
 
-      <StyledTitle>{t('Add new service')}</StyledTitle>
       {error ? (
         <Alert
           title={t('Failed adding service')}
           variant="error"
           data-testid="error-message"
-          role="alert"
         >
           {error}
         </Alert>
       ) : null}
 
       {isAdded && !error ? (
-        <Alert variant="success" data-testid="error-message" role="alert">
+        <Alert variant="success" data-testid="error-message">
           {t('The service has been added.')}
         </Alert>
       ) : null}

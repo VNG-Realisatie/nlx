@@ -41,9 +41,12 @@ func TestUpdateService(t *testing.T) {
 	}
 
 	updateServiceResponse, err := service.UpdateService(ctx, updateServiceRequest)
-	if err != nil {
-		t.Error("could not update inway", err)
-	}
+	assert.Nil(t, err)
 
 	assert.Equal(t, mockService, updateServiceResponse)
+
+	updateServiceRequest.Name = "other-name"
+
+	_, err = service.UpdateService(ctx, updateServiceRequest)
+	assert.Errorf(t, err, "changing the service name is not allowed")
 }

@@ -9,7 +9,7 @@ import UserContext from '../../user-context'
 import { renderWithProviders } from '../../test-utils'
 import AddServicePage from './index'
 
-jest.mock('./AddServiceForm', () => ({ onSubmitHandler }) => (
+jest.mock('../../components/ServiceForm', () => ({ onSubmitHandler }) => (
   <form onSubmit={() => onSubmitHandler({ foo: 'bar' })} data-testid="form">
     <button type="submit" />
   </form>

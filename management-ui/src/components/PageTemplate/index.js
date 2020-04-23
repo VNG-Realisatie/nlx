@@ -6,6 +6,7 @@ import React from 'react'
 import { node } from 'prop-types'
 import PrimaryNavigation from '../PrimaryNavigation'
 import Header from './Header'
+import HeaderWithBackNavigation from './HeaderWithBackNavigation'
 import { StyledMain, StyledContent } from './index.styles'
 
 const PageTemplate = ({ children }) => {
@@ -22,5 +23,6 @@ PageTemplate.propTypes = {
 }
 
 PageTemplate.Header = Header
+PageTemplate.HeaderWithBackNavigation = HeaderWithBackNavigation
 
 export default PageTemplate

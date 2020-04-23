@@ -16,11 +16,11 @@ import {
 import { ThemeProvider } from 'styled-components'
 import * as Yup from 'yup'
 import { useTranslation } from 'react-i18next'
-import theme from '../../../theme'
+import theme from '../../theme'
 import {
   AUTHORIZATION_TYPE_NONE,
   AUTHORIZATION_TYPE_WHITELIST,
-} from '../../../vocabulary'
+} from '../../vocabulary'
 import { Form } from './index.styles'
 
 const DEFAULT_INITIAL_VALUES = {
@@ -28,7 +28,7 @@ const DEFAULT_INITIAL_VALUES = {
   endpointURL: '',
   documentationURL: '',
   apiSpecificationURL: '',
-  internal: true,
+  publishedInDirectory: true,
   techSupportContact: '',
   publicSupportContact: '',
   authorizationSettings: {
@@ -36,10 +36,11 @@ const DEFAULT_INITIAL_VALUES = {
   },
 }
 
-const AddServiceForm = ({
+const ServiceForm = ({
   initialValues,
   onSubmitHandler,
   submitButtonText,
+  disableName,
   ...props
 }) => {
   const { t } = useTranslation()
@@ -49,7 +50,7 @@ const AddServiceForm = ({
     endpointURL: Yup.string().required(t('Invalid endpoint URL.')),
     documentationURL: Yup.string(),
     apiSpecificationURL: Yup.string(),
-    internal: Yup.boolean(),
+    publishedInDirectory: Yup.boolean(),
     techSupportContact: Yup.string(),
     publicSupportContact: Yup.string(),
     authorizationSettings: Yup.object().shape({
@@ -63,16 +64,30 @@ const AddServiceForm = ({
   return (
     <ThemeProvider theme={theme}>
       <Formik
-        initialValues={{ ...DEFAULT_INITIAL_VALUES, ...initialValues }}
+        initialValues={{
+          ...DEFAULT_INITIAL_VALUES,
+          ...initialValues,
+          publishedInDirectory: !initialValues.internal,
+        }}
         validationSchema={validationSchema}
-        onSubmit={(values) => onSubmitHandler(values)}
+        onSubmit={({ publishedInDirectory, ...values }) => {
+          return onSubmitHandler({
+            ...values,
+            internal: !publishedInDirectory,
+          })
+        }}
       >
         {({ handleSubmit }) => (
           <Form onSubmit={handleSubmit} data-testid="form" {...props}>
             <Fieldset>
               <Legend>{t('API details')}</Legend>
 
-              <TextInput name="name" id="name" size="l">
+              <TextInput
+                name="name"
+                id="name"
+                size="l"
+                {...(disableName ? { disabled: true } : {})}
+              >
                 {t('API name')}
               </TextInput>
 
@@ -96,7 +111,7 @@ const AddServiceForm = ({
                 {t('API specification URL')}
               </TextInput>
 
-              <Checkbox name="internal" id="internal">
+              <Checkbox name="publishedInDirectory" id="publishedInDirectory">
                 {t('Publish to central directory')}
               </Checkbox>
             </Fieldset>
@@ -151,7 +166,7 @@ const AddServiceForm = ({
   )
 }
 
-AddServiceForm.propTypes = {
+ServiceForm.propTypes = {
   onSubmitHandler: func,
   initialValues: shape({
     name: string,
@@ -166,10 +181,12 @@ AddServiceForm.propTypes = {
     }),
   }),
   submitButtonText: string.isRequired,
+  disableName: bool,
 }
 
-AddServiceForm.defaultProps = {
+ServiceForm.defaultProps = {
   initialValues: DEFAULT_INITIAL_VALUES,
+  disableName: false,
 }
 
-export default AddServiceForm
+export default ServiceForm

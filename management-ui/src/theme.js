@@ -23,6 +23,7 @@ const theme = {
   colorBorderTable: tokens.colorPaletteGray800,
   colorBackgroundTableHover: 'rgba(255, 255, 255, 0.1)',
   colorBorderTableFocus: tokens.colorFocus,
+  colorTextButtonSecondary: tokens.colorPaletteGray100,
 }
 
 export default theme

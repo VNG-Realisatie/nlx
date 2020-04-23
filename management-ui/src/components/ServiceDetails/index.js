@@ -3,12 +3,14 @@
 //
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link, useLocation } from 'react-router-dom'
 import { arrayOf, bool, func, oneOf, shape, string } from 'prop-types'
 import { Alert } from '@commonground/design-system'
 
 import Table from '../../components/Table'
 import Amount from '../Amount'
 import Collapsible from '../Collapsible'
+import EditButton from '../EditButton'
 import {
   StyledActionsBar,
   StyledDrawerHeading,
@@ -27,6 +29,7 @@ const ServiceDetails = ({ service, removeHandler }) => {
   const { name, internal, authorizationSettings, inways } = service
   const [isRemoved, setIsRemoved] = useState(false)
   const { t } = useTranslation()
+  const location = useLocation()
 
   const handleRemove = () => {
     if (window.confirm(t('Do you want to remove the service?'))) {
@@ -46,6 +49,11 @@ const ServiceDetails = ({ service, removeHandler }) => {
       ) : (
         <>
           <StyledActionsBar>
+            <EditButton
+              as={Link}
+              to={`${location.pathname}/edit-service`}
+              data-testid="edit-button"
+            />
             <StyledRemoveButton
               data-testid="remove-service"
               onClick={handleRemove}
@@ -74,16 +82,17 @@ const ServiceDetails = ({ service, removeHandler }) => {
                 </StyledHeading>
               }
             >
-              {inways ? (
+              {inways.length ? (
                 <Table data-testid="service-inways-list" role="grid">
                   <tbody>
-                    {inways.map((inway, i) => (
-                      <Table.Tr key={i} data-testid={`service-inway-${i}`}>
-                        <Table.Td>
-                          <StyledInwayName>{inway}</StyledInwayName>
-                        </Table.Td>
-                      </Table.Tr>
-                    ))}
+                    {inways &&
+                      inways.map((inway, i) => (
+                        <Table.Tr key={i} data-testid={`service-inway-${i}`}>
+                          <Table.Td>
+                            <StyledInwayName>{inway}</StyledInwayName>
+                          </Table.Td>
+                        </Table.Tr>
+                      ))}
                   </tbody>
                 </Table>
               ) : null}
@@ -100,7 +109,7 @@ const ServiceDetails = ({ service, removeHandler }) => {
                   </StyledHeading>
                 }
               >
-                {authorizationSettings.authorizations ? (
+                {authorizationSettings.authorizations.length ? (
                   <Table data-testid="service-authorizations-list">
                     <tbody>
                       {authorizationSettings.authorizations.map(

@@ -4,8 +4,8 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
 import { act, fireEvent, render } from '@testing-library/react'
-import { AUTHORIZATION_TYPE_WHITELIST } from '../../../vocabulary'
-import { renderWithProviders } from '../../../test-utils'
+import { AUTHORIZATION_TYPE_WHITELIST } from '../../vocabulary'
+import { renderWithProviders } from '../../test-utils'
 import AddServiceForm from './index'
 
 describe('with initial values', () => {
@@ -40,7 +40,7 @@ describe('with initial values', () => {
       'my-service.test:8000/openapi.json',
     )
 
-    expect(getByLabelText('Publish to central directory').value).toBe('false')
+    expect(getByLabelText('Publish to central directory').value).toBe('true')
 
     expect(getByLabelText('Tech support email').value).toBe(
       'tech@organization.test',
