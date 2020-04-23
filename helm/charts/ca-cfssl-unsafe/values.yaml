@@ -32,7 +32,7 @@ config:
 kubectl:
   image:
     repository: docker.io/bitnami/kubectl
-    tag: "1.18.0"
+    tag: "1.18.2"
     pullPolicy: IfNotPresent
 
 rbac:
