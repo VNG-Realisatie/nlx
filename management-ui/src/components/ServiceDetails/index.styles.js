@@ -4,13 +4,6 @@
 import styled from 'styled-components'
 import RemoveButton from '../RemoveButton'
 
-export const StyledDrawerHeading = styled.div`
-  * {
-    margin: 0;
-  }
-  margin-bottom: ${(p) => p.theme.tokens.spacing08};
-`
-
 // Like an h3 but without the semantic meaning of that heading
 export const StyledHeading = styled.div`
   line-height: ${(p) => p.theme.tokens.lineHeightHeading};
@@ -28,6 +21,7 @@ export const StyledHeading = styled.div`
     top: -${(p) => p.theme.tokens.spacing01};
   }
 `
+
 export const StyledLightHeading = styled(StyledHeading)`
   line-height: ${(p) => p.theme.tokens.lineHeightText};
   font-weight: ${(p) => p.theme.tokens.fontWeightRegular};

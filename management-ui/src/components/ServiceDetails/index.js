@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
 import { arrayOf, bool, func, oneOf, shape, string } from 'prop-types'
-import { Alert } from '@commonground/design-system'
+import { Alert, Drawer } from '@commonground/design-system'
 
 import Table from '../../components/Table'
 import Amount from '../Amount'
@@ -14,7 +14,6 @@ import EditButton from '../EditButton'
 import {
   StyledActionsBar,
   StyledCollapsibleBody,
-  StyledDrawerHeading,
   StyledCollapsibleEmptyBody,
   StyledHeading,
   StyledInwayName,
@@ -41,58 +40,61 @@ const ServiceDetails = ({ service, removeHandler }) => {
   }
   return (
     <>
-      <StyledDrawerHeading data-testid="service-name">
-        <h1>{name}</h1>
-      </StyledDrawerHeading>
-      {isRemoved ? (
-        <Alert variant="success" data-testid="remove-success">
-          {t('The service has been removed.')}
-        </Alert>
-      ) : (
-        <>
-          <StyledActionsBar>
-            <EditButton
-              as={Link}
-              to={`${location.pathname}/edit-service`}
-              data-testid="edit-button"
-            />
-            <StyledRemoveButton
-              data-testid="remove-service"
-              onClick={handleRemove}
-            />
-          </StyledActionsBar>
-          <SectionGroup>
-            <StyledLightHeading data-testid="service-published">
-              {internal ? (
-                <>
-                  <IconHidden />
-                  {t('Not visible in central directory')}
-                </>
-              ) : (
-                <>
-                  <IconVisible />
-                  {t('Published in central directory')}
-                </>
-              )}
-            </StyledLightHeading>
-            <Collapsible
-              title={
-                <StyledHeading data-testid="service-inways">
-                  <IconInway />
-                  {t('Inways')}
-                  <Amount value={inways.length} />
-                </StyledHeading>
-              }
-            >
-              <StyledCollapsibleBody>
-                <Table data-testid="service-inways-list" role="grid">
-                  <tbody>
-                    {inways.length ? (
-                      inways.map((inway, i) => (
-                        <Table.Tr key={i} data-testid={`service-inway-${i}`}>
-                          <Table.Td>
-                            <StyledInwayName>{inway}</StyledInwayName>
-                          </Table.Td>
+      <Drawer.Header
+        title={name}
+        closeButtonLabel={t('Close')}
+        data-testid="service-name"
+      />
+      <Drawer.Content>
+        {isRemoved ? (
+          <Alert variant="success" data-testid="remove-success">
+            {t('The service has been removed.')}
+          </Alert>
+        ) : (
+          <>
+            <StyledActionsBar>
+              <EditButton
+                as={Link}
+                to={`${location.pathname}/edit-service`}
+                data-testid="edit-button"
+              />
+              <StyledRemoveButton
+                data-testid="remove-service"
+                onClick={handleRemove}
+              />
+            </StyledActionsBar>
+            <SectionGroup>
+              <StyledLightHeading data-testid="service-published">
+                {internal ? (
+                  <>
+                    <IconHidden />
+                    {t('Not visible in central directory')}
+                  </>
+                ) : (
+                  <>
+                    <IconVisible />
+                    {t('Published in central directory')}
+                  </>
+                )}
+              </StyledLightHeading>
+              <Collapsible
+                title={
+                  <StyledHeading data-testid="service-inways">
+                    <IconInway />
+                    {t('Inways')}
+                    <Amount value={inways.length} />
+                  </StyledHeading>
+                }
+              >
+                <StyledCollapsibleBody>
+                  <Table data-testid="service-inways-list" role="grid">
+                    <tbody>
+                      {inways .length ? (
+                        inways.map((inway, i) => (
+                          <Table.Tr key={i} data-testid={`service-inway-${i}`}>
+                            <Table.Td>
+                              <StyledInwayName>{inway}</StyledInwayName>
+                            </Table.Td>
                         </Table.Tr>
                       ))
                     ) : (
@@ -102,29 +104,28 @@ const ServiceDetails = ({ service, removeHandler }) => {
                             {t('No inways have been added')}
                           </StyledCollapsibleEmptyBody>
                         </Table.Td>
-                      </Table.Tr>
-                    )}
-                  </tbody>
-                </Table>
-              </StyledCollapsibleBody>
-            </Collapsible>
-            {authorizationSettings.mode === 'whitelist' ? (
-              <Collapsible
-                title={
-                  <StyledHeading data-testid="service-authorizations">
-                    <IconWhitelist />
-                    {t('Whitelisted organizations')}
-                    <Amount
-                      value={authorizationSettings.authorizations.length}
-                    />
-                  </StyledHeading>
-                }
-              >
-                <StyledCollapsibleBody>
-                  <Table data-testid="service-authorizations-list">
-                    <tbody>
-                      {authorizationSettings.authorizations.length ? (
-                        authorizationSettings.authorizations.map(
+                          </Table.Tr>
+                        )}
+                    </tbody>
+                  </Table>
+                </StyledCollapsibleBody>
+              </Collapsible>
+              {authorizationSettings.mode === 'whitelist' ? (
+                <Collapsible
+                  title={
+                    <StyledHeading data-testid="service-authorizations">
+                      <IconWhitelist />
+                      {t('Whitelisted organizations')}
+                      <Amount
+                        value={authorizationSettings.authorizations.length}
+                      />
+                    </StyledHeading>
+                  }
+                >
+                  <StyledCollapsibleBody>
+                    <Table data-testid="service-authorizations-list">
+                      <tbody>
+                        {authorizationSettings.authorizations.length ? (authorizationSettings.authorizations.map(
                           ({ organizationName }, i) => (
                             <Table.Tr
                               key={i}
@@ -142,15 +143,15 @@ const ServiceDetails = ({ service, removeHandler }) => {
                             </StyledCollapsibleEmptyBody>
                           </Table.Td>
                         </Table.Tr>
-                      )}
-                    </tbody>
-                  </Table>
-                </StyledCollapsibleBody>
-              </Collapsible>
-            ) : null}
-          </SectionGroup>
-        </>
-      )}
+                      )}</tbody>
+                    </Table>
+                  </StyledCollapsibleBody>
+                </Collapsible>
+              ) : null}
+            </SectionGroup>
+          </>
+        )}
+      </Drawer.Content>
     </>
   )
 }

@@ -20,12 +20,12 @@ describe('ServiceDetails', () => {
   })
 
   it('should display', () => {
-    const { getByTestId, queryByTestId } = renderWithProviders(
+    const { getByTestId, queryByTestId, getByText } = renderWithProviders(
       <Router>
         <ServiceDetails service={service} />
       </Router>,
     )
-    expect(getByTestId('service-name')).toHaveTextContent('name')
+    expect(getByText('name')).toBeInTheDocument()
     expect(getByTestId('service-published')).toHaveTextContent(
       'visible.svg' + 'Published in central directory', // eslint-disable-line no-useless-concat
     )
