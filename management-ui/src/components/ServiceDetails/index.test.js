@@ -73,6 +73,17 @@ describe('ServiceDetails', () => {
     expect(getByTestId('service-inway-0')).toHaveTextContent('inway 1')
   })
 
+  it('should show a block for an empty list of inways', async () => {
+    const { getByTestId } = renderWithProviders(
+      <Router>
+        <ServiceDetails service={service} />
+      </Router>,
+    )
+    fireEvent.click(getByTestId('service-inways'))
+
+    expect(getByTestId('service-no-inways')).toBeTruthy()
+  })
+
   it('should show a block for an empty whitelist', async () => {
     const { getByTestId } = renderWithProviders(
       <Router>
@@ -90,6 +101,9 @@ describe('ServiceDetails', () => {
     expect(getByTestId('service-authorizations')).toHaveTextContent(
       'whitelist.svg' + 'Whitelisted organizations' + '0', // eslint-disable-line no-useless-concat
     )
+    fireEvent.click(getByTestId('service-authorizations'))
+
+    expect(getByTestId('service-no-authorizations')).toBeTruthy()
   })
 
   it('should show a whitelist', async () => {

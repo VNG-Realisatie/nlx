@@ -15,7 +15,7 @@ import {
 const Collapsible = ({ title, children }) => {
   const [isOpen, setIsOpen] = useState(false)
   const toggle = () => setIsOpen(!isOpen)
-  return children ? (
+  return (
     <CollapsibleWrapper onClick={toggle} data-testid="collapsible">
       <CollapsibleButton
         aria-haspopup="true"
@@ -36,14 +36,12 @@ const Collapsible = ({ title, children }) => {
         <CollapsibleBody>{children}</CollapsibleBody>
       </CSSTransition>
     </CollapsibleWrapper>
-  ) : (
-    title
   )
 }
 
 Collapsible.propTypes = {
   title: node.isRequired,
-  children: node,
+  children: node.isRequired,
 }
 
 export default Collapsible

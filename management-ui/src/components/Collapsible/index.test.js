@@ -11,7 +11,10 @@ describe('Collapsible', () => {
     jest.useFakeTimers()
 
     utils = renderWithProviders(
-      <Collapsible title={<span data-testid="title">title</span>}>
+      <Collapsible
+        title={<span data-testid="title">title</span>}
+        fallbackMessage="fallback"
+      >
         <p data-testid="body">body</p>
       </Collapsible>,
     )
@@ -47,15 +50,5 @@ describe('Collapsible', () => {
 
       expect(utils.queryByTestId('body')).toBeNull()
     })
-  })
-
-  it('should just render the title when there are no children', () => {
-    utils.rerender(
-      <Collapsible title={<span data-testid="title">title</span>}>
-        {null}
-      </Collapsible>,
-    )
-    expect(utils.getByTestId('title').textContent).toBe('title')
-    expect(utils.queryByTestId('collapsible')).toBeFalsy()
   })
 })

@@ -13,7 +13,9 @@ import Collapsible from '../Collapsible'
 import EditButton from '../EditButton'
 import {
   StyledActionsBar,
+  StyledCollapsibleBody,
   StyledDrawerHeading,
+  StyledCollapsibleEmptyBody,
   StyledHeading,
   StyledInwayName,
   StyledLightHeading,
@@ -82,20 +84,29 @@ const ServiceDetails = ({ service, removeHandler }) => {
                 </StyledHeading>
               }
             >
-              {inways.length ? (
+              <StyledCollapsibleBody>
                 <Table data-testid="service-inways-list" role="grid">
                   <tbody>
-                    {inways &&
+                    {inways.length ? (
                       inways.map((inway, i) => (
                         <Table.Tr key={i} data-testid={`service-inway-${i}`}>
                           <Table.Td>
                             <StyledInwayName>{inway}</StyledInwayName>
                           </Table.Td>
                         </Table.Tr>
-                      ))}
+                      ))
+                    ) : (
+                      <Table.Tr data-testid="service-no-inways">
+                        <Table.Td>
+                          <StyledCollapsibleEmptyBody>
+                            {t('No inways have been added')}
+                          </StyledCollapsibleEmptyBody>
+                        </Table.Td>
+                      </Table.Tr>
+                    )}
                   </tbody>
                 </Table>
-              ) : null}
+              </StyledCollapsibleBody>
             </Collapsible>
             {authorizationSettings.mode === 'whitelist' ? (
               <Collapsible
@@ -109,22 +120,32 @@ const ServiceDetails = ({ service, removeHandler }) => {
                   </StyledHeading>
                 }
               >
-                {authorizationSettings.authorizations.length ? (
+                <StyledCollapsibleBody>
                   <Table data-testid="service-authorizations-list">
                     <tbody>
-                      {authorizationSettings.authorizations.map(
-                        ({ organizationName }, i) => (
-                          <Table.Tr
-                            key={i}
-                            data-testid={`service-authorization-${i}`}
-                          >
-                            <Table.Td>{organizationName}</Table.Td>
-                          </Table.Tr>
-                        ),
+                      {authorizationSettings.authorizations.length ? (
+                        authorizationSettings.authorizations.map(
+                          ({ organizationName }, i) => (
+                            <Table.Tr
+                              key={i}
+                              data-testid={`service-authorization-${i}`}
+                            >
+                              <Table.Td>{organizationName}</Table.Td>
+                            </Table.Tr>
+                          ),
+                        )
+                      ) : (
+                        <Table.Tr data-testid="service-no-authorizations">
+                          <Table.Td>
+                            <StyledCollapsibleEmptyBody>
+                              {t('No organizations have been added')}
+                            </StyledCollapsibleEmptyBody>
+                          </Table.Td>
+                        </Table.Tr>
                       )}
                     </tbody>
                   </Table>
-                ) : null}
+                </StyledCollapsibleBody>
               </Collapsible>
             ) : null}
           </SectionGroup>

@@ -52,3 +52,11 @@ export const StyledActionsBar = styled.div`
 export const StyledRemoveButton = styled(RemoveButton)`
   margin-left: auto;
 `
+
+export const StyledCollapsibleBody = styled.div`
+  margin-left: calc(1.25rem + ${(p) => p.theme.tokens.spacing03});
+`
+
+export const StyledCollapsibleEmptyBody = styled.p`
+  margin-bottom: 0;
+`
