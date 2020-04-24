@@ -15,7 +15,7 @@
   "Edit": "Aanpassen",
   "Edit existing service": "Bestaande service bijwerken",
   "Failed adding service": "Toevoegen mislukt",
-  "Failed to load the inways.": "De services konden niet worden opgehaald.",
+  "Failed to load the inways.": "De inways konden niet worden opgehaald.",
   "Failed to load the service.": "De service {{name}} konden niet worden opgehaald.",
   "Failed to load the services.": "De services konden niet worden opgehaald.",
   "Failed to update the service.": "De service kan niet worden bijgewerkt.",
