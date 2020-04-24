@@ -3,13 +3,16 @@
 //
 
 import React from 'react'
-import { MemoryRouter as Router } from 'react-router-dom'
-import { act } from '@testing-library/react'
+import { MemoryRouter, Router } from 'react-router-dom'
+import { createMemoryHistory } from 'history'
+import { act, fireEvent } from '@testing-library/react'
 import { renderWithProviders } from '../../test-utils'
 import { UserContextProvider } from '../../user-context'
 import ServicesPage from './index'
 
 test('listing all services', async () => {
+  const history = createMemoryHistory({ initialEntries: ['/services'] })
+
   let resolveFetchServices
   const fetchServicesPromise = new Promise((resolve) => {
     resolveFetchServices = resolve
@@ -21,8 +24,10 @@ test('listing all services', async () => {
     getByTestId,
     getByLabelText,
     findByTestId,
+    getByText,
+    queryAllByTestId,
   } = renderWithProviders(
-    <Router>
+    <Router history={history}>
       <UserContextProvider user={{}}>
         <ServicesPage getServices={fetchServicesHandler} />
       </UserContextProvider>
@@ -35,7 +40,7 @@ test('listing all services', async () => {
   await act(async () => {
     resolveFetchServices([
       {
-        name: 'My First Service',
+        name: 'my-first-service',
         authorizationSettings: {
           mode: 'none',
           authorizations: [],
@@ -49,17 +54,24 @@ test('listing all services', async () => {
 
   const linkAddService = getByLabelText(/Add service/)
   expect(linkAddService.getAttribute('href')).toBe('/services/add-service')
+
+  expect(queryAllByTestId('service-row')).toHaveLength(1)
+  expect(getByText('my-first-service')).toBeInTheDocument()
+
+  fireEvent.click(getByTestId('service-row'))
+
+  expect(history.location.pathname).toEqual('/services/my-first-service')
 })
 
 test('no services', async () => {
   const fetchServicesHandler = jest.fn(() => Promise.resolve([]))
 
   const { findByText, getByTestId } = renderWithProviders(
-    <Router>
+    <MemoryRouter>
       <UserContextProvider user={{}}>
         <ServicesPage getServices={fetchServicesHandler} />
       </UserContextProvider>
-    </Router>,
+    </MemoryRouter>,
   )
 
   await act(async () => {
@@ -77,11 +89,11 @@ test('failed to load services', async () => {
     .mockRejectedValue(new Error('arbitrary error'))
 
   const { findByText, getByTestId } = renderWithProviders(
-    <Router>
+    <MemoryRouter>
       <UserContextProvider user={{}}>
         <ServicesPage getServices={fetchServicesHandler} />
       </UserContextProvider>
-    </Router>,
+    </MemoryRouter>,
   )
 
   expect(() => getByTestId('services-list')).toThrow()

@@ -6,7 +6,7 @@ import React from 'react'
 import { array, func, string } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { Alert, Button, Spinner } from '@commonground/design-system'
-import { Link, Route, useLocation } from 'react-router-dom'
+import { Link, Route } from 'react-router-dom'
 import PageTemplate from '../../components/PageTemplate'
 import usePromise from '../../hooks/use-promise'
 import ServiceRepository from '../../domain/service-repository'
@@ -21,18 +21,19 @@ import {
   StyledNoServicesMessage,
 } from './index.styles'
 
-const ServiceRow = ({ name, authorizations, mode, ...props }) => {
-  const location = useLocation()
-
-  return (
-    <Table.Tr to={`${location.pathname}/${name}`} name={name} {...props}>
-      <Table.Td>{name}</Table.Td>
-      <Table.Td>
-        <AuthorizationMode authorizations={authorizations} mode={mode} />
-      </Table.Td>
-    </Table.Tr>
-  )
-}
+const ServiceRow = ({ name, authorizations, mode, ...props }) => (
+  <Table.Tr
+    to={`/services/${name}`}
+    name={name}
+    data-testid="service-row"
+    {...props}
+  >
+    <Table.Td>{name}</Table.Td>
+    <Table.Td>
+      <AuthorizationMode authorizations={authorizations} mode={mode} />
+    </Table.Td>
+  </Table.Tr>
+)
 
 ServiceRow.propTypes = {
   name: string.isRequired,
