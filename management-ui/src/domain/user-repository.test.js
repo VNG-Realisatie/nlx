@@ -3,6 +3,7 @@
 //
 
 import UserRepository from './user-repository'
+import { preventCaching } from './service-repository'
 
 describe('the UserRepository', () => {
   describe('getting the authenticated user', () => {
@@ -75,7 +76,12 @@ describe('the UserRepository', () => {
           new Error('unable to handle the request'),
         )
 
-        expect(global.fetch).toHaveBeenCalledWith('/oidc/me')
+        expect(global.fetch).toHaveBeenCalledWith(
+          '/oidc/me',
+          expect.objectContaining({
+            headers: expect.objectContaining(preventCaching),
+          }),
+        )
       })
     })
   })

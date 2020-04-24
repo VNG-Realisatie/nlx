@@ -2,9 +2,13 @@
 // Licensed under the EUPL
 //
 
+import { preventCaching } from './service-repository'
+
 class UserRepository {
   static async getAuthenticatedUser() {
-    const result = await fetch('/oidc/me')
+    const result = await fetch('/oidc/me', {
+      headers: preventCaching,
+    })
 
     if (result.status === 401) {
       throw new Error('no user is authenticated')
