@@ -20,7 +20,7 @@
     "yup": "0.28.3"
   },
   "scripts": {
-    "start": "BROWSER=none PROXY=http://localhost:6017 PORT=3002 react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "lint": "eslint src/**",
     "validate-translations": "i18next",

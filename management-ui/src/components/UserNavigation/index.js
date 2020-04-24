@@ -65,7 +65,7 @@ const UserNavigation = ({ ...props }) => {
       {menuIsOpen && (
         <ul id="user-menu-options" data-testid="user-menu-options">
           <li>
-            <form method="POST" action="/oidc/logout/">
+            <form method="POST" action="/oidc/logout">
               <input
                 type="hidden"
                 name="csrfmiddlewaretoken"
