@@ -4,13 +4,12 @@
 import React from 'react'
 import { func, string } from 'prop-types'
 import { useParams, useHistory } from 'react-router-dom'
-import { Alert, Drawer } from '@commonground/design-system'
+import { Alert, Drawer, Spinner } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import ServiceRepository from '../../domain/service-repository'
 import ServiceDetails from '../../components/ServiceDetails'
 import usePromise from '../../hooks/use-promise'
 import { StyledLoadingMessage } from '../ServicesPage/index.styles'
-import Spinner from '../../components/Spinner'
 
 const ServiceDetailPage = ({
   getServiceByName,

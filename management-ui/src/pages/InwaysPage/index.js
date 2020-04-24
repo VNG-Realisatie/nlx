@@ -5,10 +5,9 @@
 import React from 'react'
 import { func, string, number } from 'prop-types'
 import { useTranslation } from 'react-i18next'
-import { Alert } from '@commonground/design-system'
+import { Alert, Spinner } from '@commonground/design-system'
 import PageTemplate from '../../components/PageTemplate'
 import usePromise from '../../hooks/use-promise'
-import Spinner from '../../components/Spinner'
 import Table from '../../components/Table'
 import InwayRepository from '../../domain/inway-repository'
 import {

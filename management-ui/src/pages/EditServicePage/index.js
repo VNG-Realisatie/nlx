@@ -5,14 +5,13 @@
 import React, { useState } from 'react'
 import { func } from 'prop-types'
 import { useTranslation } from 'react-i18next'
-import { Alert } from '@commonground/design-system'
+import { Alert, Spinner } from '@commonground/design-system'
 import { useParams } from 'react-router-dom'
 import ServiceForm from '../../components/ServiceForm'
 import ServiceRepository from '../../domain/service-repository'
 import PageTemplate from '../../components/PageTemplate'
 import usePromise from '../../hooks/use-promise'
 import { StyledLoadingMessage } from '../ServicesPage/index.styles'
-import Spinner from '../../components/Spinner'
 import { StyledUpdatedError } from './index.styles'
 
 const EditServicePage = ({ updateHandler, getServiceByName }) => {
