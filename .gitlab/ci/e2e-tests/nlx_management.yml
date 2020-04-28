@@ -1,7 +1,7 @@
 NLX Management - E2E-tests:
   extends: .node-base
   # BrowserStack does not run on Alpine. See https://github.com/browserstack/browserstack-local-nodejs/issues/33
-  image: node:12.16.1
+  image: node:12.16.2
   stage: E2E tests
   variables:
     BROWSERSTACK_PROJECT_NAME: "NLX Management E2E-tests"
