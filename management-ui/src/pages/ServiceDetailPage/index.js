@@ -28,7 +28,7 @@ const ServiceDetailPage = ({
     refreshHandler()
   }
   return (
-    <Drawer closeHandler={close}>
+    <Drawer noMask closeHandler={close}>
       {loading || (!error && !service) ? (
         <StyledLoadingMessage role="progressbar">
           <Spinner /> {t('Loading…')}

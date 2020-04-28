@@ -89,23 +89,23 @@ const ServiceDetails = ({ service, removeHandler }) => {
                 <StyledCollapsibleBody>
                   <Table data-testid="service-inways-list" role="grid">
                     <tbody>
-                      {inways .length ? (
+                      {inways.length ? (
                         inways.map((inway, i) => (
                           <Table.Tr key={i} data-testid={`service-inway-${i}`}>
                             <Table.Td>
                               <StyledInwayName>{inway}</StyledInwayName>
                             </Table.Td>
-                        </Table.Tr>
-                      ))
-                    ) : (
-                      <Table.Tr data-testid="service-no-inways">
-                        <Table.Td>
-                          <StyledCollapsibleEmptyBody>
-                            {t('No inways have been added')}
-                          </StyledCollapsibleEmptyBody>
-                        </Table.Td>
                           </Table.Tr>
-                        )}
+                        ))
+                      ) : (
+                        <Table.Tr data-testid="service-no-inways">
+                          <Table.Td>
+                            <StyledCollapsibleEmptyBody>
+                              {t('No inways have been added')}
+                            </StyledCollapsibleEmptyBody>
+                          </Table.Td>
+                        </Table.Tr>
+                      )}
                     </tbody>
                   </Table>
                 </StyledCollapsibleBody>
@@ -125,25 +125,27 @@ const ServiceDetails = ({ service, removeHandler }) => {
                   <StyledCollapsibleBody>
                     <Table data-testid="service-authorizations-list">
                       <tbody>
-                        {authorizationSettings.authorizations.length ? (authorizationSettings.authorizations.map(
-                          ({ organizationName }, i) => (
-                            <Table.Tr
-                              key={i}
-                              data-testid={`service-authorization-${i}`}
-                            >
-                              <Table.Td>{organizationName}</Table.Td>
-                            </Table.Tr>
-                          ),
-                        )
-                      ) : (
-                        <Table.Tr data-testid="service-no-authorizations">
-                          <Table.Td>
-                            <StyledCollapsibleEmptyBody>
-                              {t('No organizations have been added')}
-                            </StyledCollapsibleEmptyBody>
-                          </Table.Td>
-                        </Table.Tr>
-                      )}</tbody>
+                        {authorizationSettings.authorizations.length ? (
+                          authorizationSettings.authorizations.map(
+                            ({ organizationName }, i) => (
+                              <Table.Tr
+                                key={i}
+                                data-testid={`service-authorization-${i}`}
+                              >
+                                <Table.Td>{organizationName}</Table.Td>
+                              </Table.Tr>
+                            ),
+                          )
+                        ) : (
+                          <Table.Tr data-testid="service-no-authorizations">
+                            <Table.Td>
+                              <StyledCollapsibleEmptyBody>
+                                {t('No organizations have been added')}
+                              </StyledCollapsibleEmptyBody>
+                            </Table.Td>
+                          </Table.Tr>
+                        )}
+                      </tbody>
                     </Table>
                   </StyledCollapsibleBody>
                 </Collapsible>
