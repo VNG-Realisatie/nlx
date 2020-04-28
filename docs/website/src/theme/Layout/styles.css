@@ -5,7 +5,61 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-@import url(//fonts.googleapis.com/css?family=Muli);
+@font-face {
+    font-family: 'Muli';
+    font-style: italic;
+    font-weight: 300;
+    src: local('Muli Light Italic'), local('Muli-LightItalic'), url('/fonts/Muli-LightItalic.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Muli';
+    font-style: italic;
+    font-weight: 400;
+    src: local('Muli Italic'), local('Muli-Italic'), url('/fonts/Muli-Italic.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Muli';
+    font-style: italic;
+    font-weight: 600;
+    src: local('Muli SemiBold Italic'), local('Muli-SemiBoldItalic'), url('/fonts/Muli-SemiBoldItalic.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Muli';
+    font-style: italic;
+    font-weight: 700;
+    src: local('Muli Bold Italic'), local('Muli-BoldItalic'), url('/fonts/Muli-BoldItalic.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Muli';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Muli Light'), local('Muli-Light'), url('/fonts/Muli-Light.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Muli';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Muli Regular'), local('Muli-Regular'), url('/fonts/Muli-Regular.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Muli';
+    font-style: normal;
+    font-weight: 600;
+    src: local('Muli SemiBold'), local('Muli-SemiBold'), url('/fonts/Muli-SemiBold.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Muli';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Muli Bold'), local('Muli-Bold'), url('/fonts/Muli-Bold.woff2') format('woff2');
+}
 
 html,
 body {
