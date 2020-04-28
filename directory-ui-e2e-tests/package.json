@@ -10,9 +10,9 @@
   },
   "devDependencies": {
     "axe-core": "3.5.3",
-    "jest": "25.2.7",
+    "jest": "25.4.0",
     "jest-puppeteer": "4.4.0",
-    "puppeteer": "3.0.0"
+    "puppeteer": "3.0.2"
   },
   "jest": {
     "preset": "jest-puppeteer"
