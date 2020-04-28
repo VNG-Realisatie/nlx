@@ -21,6 +21,7 @@ import {
   AUTHORIZATION_TYPE_NONE,
   AUTHORIZATION_TYPE_WHITELIST,
 } from '../../vocabulary'
+import FormikFocusError from '../FormikFocusError'
 import { Form } from './index.styles'
 
 const DEFAULT_INITIAL_VALUES = {
@@ -159,6 +160,8 @@ const ServiceForm = ({
             </Fieldset>
 
             <Button type="submit">{submitButtonText}</Button>
+
+            <FormikFocusError />
           </Form>
         )}
       </Formik>

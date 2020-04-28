@@ -8,6 +8,8 @@ import { AUTHORIZATION_TYPE_WHITELIST } from '../../vocabulary'
 import { renderWithProviders } from '../../test-utils'
 import AddServiceForm from './index'
 
+jest.mock('../FormikFocusError', () => () => <></>)
+
 describe('with initial values', () => {
   it('should pre-fill the form fields with the initial values', () => {
     const { getByLabelText } = renderWithProviders(
