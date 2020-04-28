@@ -2,6 +2,7 @@
 // Licensed under the EUPL
 
 import { Selector } from 'testcafe'
+import { waitForReact } from 'testcafe-react-selectors'
 import { axeCheck, createReport } from 'axe-testcafe'
 
 import { adminUser } from "./roles";
@@ -11,9 +12,11 @@ const getBaseUrl = require('../getBaseUrl')
 const baseUrl = getBaseUrl()
 
 fixture `ServiceDetails page`
-  .page(`${baseUrl}/services/kentekenregister`)
   .beforeEach(async (t) => {
-    await t.useRole(adminUser)
+    await t
+      .useRole(adminUser)
+      .navigateTo(`${baseUrl}/services/kentekenregister`)
+    await waitForReact()
   })
 
 test('Automated accessibility testing', async t => {

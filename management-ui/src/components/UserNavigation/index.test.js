@@ -4,7 +4,6 @@
 import React from 'react'
 import { MemoryRouter as Router } from 'react-router-dom'
 
-import { act } from '@testing-library/react'
 import { renderWithProviders } from '../../test-utils'
 import { UserContextProvider } from '../../user-context'
 import UserNavigation from './index'
@@ -12,19 +11,19 @@ import UserNavigation from './index'
 describe('the UserNavigation', () => {
   describe('when not authenticated', () => {
     it('should not render', () => {
-      const authenticationHandler = Promise.reject(new Error('arbitrary error'))
+      const authenticationHandler = () => {
+        throw new Error('not authenticated')
+      }
       const { getByTestId } = renderWithProviders(
         <Router>
           <UserContextProvider
             user={null}
-            fetchAuthenticatedUser={() => authenticationHandler}
+            fetchAuthenticatedUser={authenticationHandler}
           >
             <UserNavigation />
           </UserContextProvider>
         </Router>,
       )
-
-      act(() => {})
 
       expect(() => getByTestId('user-navigation')).toThrow()
     })

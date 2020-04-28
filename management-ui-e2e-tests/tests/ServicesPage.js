@@ -11,9 +11,10 @@ const getBaseUrl = require('../getBaseUrl')
 const baseUrl = getBaseUrl()
 
 fixture `Services page`
-  .page(`${baseUrl}/services`)
   .beforeEach(async (t) => {
-    await t.useRole(adminUser)
+    await t
+      .useRole(adminUser)
+      .navigateTo(`${baseUrl}/services`)
     await waitForReact()
   })
 

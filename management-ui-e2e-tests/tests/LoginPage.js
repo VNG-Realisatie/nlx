@@ -1,17 +1,17 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 
-import { Selector, Role } from 'testcafe'
+import { Selector, ClientFunction } from 'testcafe'
 import { waitForReact } from 'testcafe-react-selectors'
 import { axeCheck, createReport } from 'axe-testcafe'
+import { adminUser } from './roles';
 
 const getBaseUrl = require('../getBaseUrl')
 const baseUrl = getBaseUrl();
 
 fixture `Login page`
-  .page `${baseUrl}`
   .beforeEach(async (t) => {
-    await t.useRole(Role.anonymous())
+    await t.navigateTo(`${baseUrl}/login`)
     await waitForReact();
   })
 
@@ -31,24 +31,12 @@ test('Login button is present', async t => {
 })
 
 test('Login', async t => {
-  const managementLoginButton = Selector('#login');
+  const getLocation = ClientFunction(() => document.location.href.toString());
   const managementLogoutButton = Selector('#logout');
-  const dexLoginText = Selector('#login');
-  const dexPasswordText = Selector('#password');
-  const dexSubmitLoginButton = Selector('#submit-login');
-  const dexGrantAccessButton = Selector('button[type="submit"]');
   await t
-      .setTestSpeed(0.5)
-      .expect(managementLoginButton.visible).ok()
-      .click(managementLoginButton)
+    .useRole(adminUser)
+    .expect(getLocation()).contains('/inways')
 
-      .expect(dexSubmitLoginButton.visible).ok()
-      .typeText(dexLoginText, 'admin@example.com')
-      .typeText(dexPasswordText, 'password')
-      .click(dexSubmitLoginButton)
-
-      .expect(dexGrantAccessButton.visible).ok()
-      .click(dexGrantAccessButton)
-
-      .expect(managementLogoutButton.visible).ok()
+    .navigateTo(`${baseUrl}/login`)
+    .expect(managementLogoutButton.visible).ok()
 })

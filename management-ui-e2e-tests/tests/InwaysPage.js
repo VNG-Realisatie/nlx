@@ -11,9 +11,10 @@ const getBaseUrl = require('../getBaseUrl')
 const baseUrl = getBaseUrl()
 
 fixture `Inways page`
-  .page(`${baseUrl}/inways`)
   .beforeEach(async (t) => {
-    await t.useRole(adminUser)
+    await t
+      .useRole(adminUser)
+      .navigateTo(`${baseUrl}/inways`)
     await waitForReact()
   })
 

@@ -7,10 +7,10 @@ const getBaseUrl = require('../getBaseUrl')
 const baseUrl = getBaseUrl()
 
 fixture`Logout`
-  .page(`${baseUrl}/inways`) // TODO use `/` after merge of https://gitlab.com/commonground/nlx/nlx/-/merge_requests/1383
   .beforeEach(async (t) => {
-    console.log({ baseUrl })
-    await t.useRole(adminUser)
+    await t
+      .useRole(adminUser)
+      .navigateTo(`${baseUrl}/`)
     await waitForReact()
   })
 

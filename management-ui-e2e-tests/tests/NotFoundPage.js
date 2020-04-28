@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 
-import { Role, Selector } from "testcafe";
+import { Selector } from "testcafe";
 import { waitForReact } from 'testcafe-react-selectors'
 import { axeCheck, createReport } from 'axe-testcafe'
 
@@ -9,9 +9,8 @@ const getBaseUrl = require('../getBaseUrl')
 const baseUrl = getBaseUrl();
 
 fixture `Not Found (404) page`
-  .page(`${baseUrl}/page-that-does-not-exist'`)
   .beforeEach(async (t) => {
-    await t.useRole(Role.anonymous())
+    await t.navigateTo(`${baseUrl}/page-that-does-not-exist'`)
     await waitForReact()
   })
 

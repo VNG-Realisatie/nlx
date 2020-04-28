@@ -29,19 +29,19 @@ async function createService(t) {
 }
 
 fixture`Edit Service page`
-  .page(`${baseUrl}/services`)
   .beforeEach(async (t) => {
-    await t.useRole(adminUser)
+    await t
+      .useRole(adminUser)
+      .navigateTo(`${baseUrl}/services`)
     await waitForReact()
   })
 
 test('Automated accessibility testing', async t => {
   const serviceName = await createService(t)
-  const { violations } = await axeCheck(t)
+  await t.navigateTo(`${baseUrl}/services/${serviceName}/edit-service`)
 
-  await t
-    .navigateTo(`${baseUrl}/services/${serviceName}/edit-service`)
-    .expect(violations.length === 0).ok(createReport(violations));
+  const { violations } = await axeCheck(t)
+  await t.expect(violations.length === 0).ok(createReport(violations));
 })
 
 test('Page title is visible', async t => {

@@ -2,19 +2,15 @@
 // Licensed under the EUPL
 
 import { Selector } from 'testcafe'
-import { axeCheck, createReport } from 'axe-testcafe'
 
 import { adminUser } from "./roles"
-import getLocation from '../getLocation'
 
 const getBaseUrl = require('../getBaseUrl')
 const baseUrl = getBaseUrl()
 
 const id = `${Math.round(Math.random() * 1000000)}`
 
-
 fixture`ServiceDetails remove`
-  .page(`${baseUrl}/services/add-service`)
   .beforeEach(async t => {
     t.ctx.removableServiceName = `remove-service-${t.testRun.browserConnection.browserInfo.alias.replace(':', '_')}-${id}`
     const submitButton = Selector('button[type="submit"]')
@@ -22,6 +18,7 @@ fixture`ServiceDetails remove`
 
     await t
       .useRole(adminUser)
+      .navigateTo(`${baseUrl}/services/add-service`)
       .typeText('#name', t.ctx.removableServiceName)
       .typeText('#endpointURL', `${t.ctx.removableServiceName}.test:8000`)
       .typeText('#documentationURL', `${t.ctx.removableServiceName}.test:8000/docs`)
@@ -47,4 +44,3 @@ test('Removing a service', async t => {
     .expect(alert.visible).ok()
     .expect(alert.innerText).contains('De service is verwijderd.')
 })
-
