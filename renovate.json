@@ -4,8 +4,7 @@
     ":semanticCommits",
     ":semanticCommitTypeAll(build)",
     ":semanticCommitScopeDisabled",
-    "schedule:nonOfficeHours",
-    "group:allNonMajor"
+    "schedule:nonOfficeHours"
   ],
   "postUpdateOptions": [
     "gomodTidy"
