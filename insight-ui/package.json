@@ -47,8 +47,10 @@
     "lint": "eslint src"
   },
   "browserslist": [
-    "> 0.50%",
-    "IE > 9"
+    ">0.2%",
+    "not dead",
+    "not ie < 11",
+    "not op_mini all"
   ],
   "jest": {
     "snapshotSerializers": [
