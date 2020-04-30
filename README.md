@@ -153,10 +153,38 @@ helm upgrade --install nlx-dev-rdw ./helm/nlx-organization --namespace nlx-dev-r
 helm upgrade --install nlx-dev-haarlem ./helm/nlx-organization --namespace nlx-dev-haarlem --values ./helm/nlx-organization/values-dev-haarlem.yaml
 ```
 
-Finally, add the minikube hostnames to your machine's `/etc/hosts` file so you can reach the services from your browser.
+Finally, add the minikube hostnames to your machine's resolver so you can reach the services from your browser.
+
+> see https://github.com/kubernetes/minikube/tree/master/deploy/addons/ingress-dns
 
 ```bash
-sh initialize-hostnames.sh
+minikube addons enable ingress-dns
+```
+
+for Mac:
+```bash
+MINIKUBE_PROFILENAME=$(minikube profile)
+MINIKUBE_IP=$(minikube ip)
+MINIKUBE_DOMAIN=minikube
+sudo tee /etc/resolver/${MINIKUBE_PROFILENAME}-${MINIKUBE_DOMAIN} <<EOF
+domain ${MINIKUBE_DOMAIN}
+nameserver ${MINIKUBE_IP}
+search_order 1
+timeout 5
+EOF
+```
+
+for Linux:
+```bash
+MINIKUBE_IP=$(minikube ip)
+MINIKUBE_DOMAIN=minikube
+sudo tee -a /etc/resolvconf/resolv.conf.d/base <<EOF
+search ${MINIKUBE_DOMAIN}
+nameserver ${MINIKUBE_IP}
+timeout 5
+EOF
+
+sudo resolvconf -u
 ```
 
 You may now test the following sites:
