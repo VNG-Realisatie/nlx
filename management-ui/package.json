@@ -17,7 +17,7 @@
     "react-test-renderer": "16.13.1",
     "react-transition-group": "4.3.0",
     "styled-components": "5.1.0",
-    "yup": "0.28.3"
+    "yup": "0.28.5"
   },
   "scripts": {
     "start": "react-scripts start",
