@@ -47,6 +47,7 @@ func (a *API) ListenAndServe(address string) error {
 	r.Get("/health", health)
 	r.Mount("/oidc", a.authenticator.Routes())
 	r.Mount("/api", a.authenticator.OnlyAuthenticated(a.mux))
+	r.Mount("/api/v1/directory", directoryRoutes(a))
 
 	server := &http.Server{
 		Addr:    address,

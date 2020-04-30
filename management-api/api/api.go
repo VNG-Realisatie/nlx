@@ -13,24 +13,27 @@ import (
 
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
+	"go.nlx.io/nlx/management-api/directory"
 	"go.nlx.io/nlx/management-api/oidc"
 )
 
 // API handles incoming requests, authenticates them and forwards them to the config-api and txlog-api
 type API struct {
 	logger           *zap.Logger
+	organizationName string
 	roots            *x509.CertPool
 	orgCertKeyPair   *tls.Certificate
 	process          *process.Process
 	mux              *runtime.ServeMux
 	configAPIAddress string
 	authenticator    *oidc.Authenticator
+	directoryClient  *directory.Client
 }
 
 const singleElementArrayLength = 1
 
 // NewAPI creates and prepares a new API
-func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.TLSOptions, configAPIAddress string, authenticator *oidc.Authenticator) (*API, error) {
+func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.TLSOptions, configAPIAddress, directoryEndpointURL string, authenticator *oidc.Authenticator) (*API, error) {
 	if mainProcess == nil {
 		return nil, errors.New("process argument is nil. needed to close gracefully")
 	}
@@ -54,6 +57,10 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.
 		return nil, errors.New("config API address is not configured")
 	}
 
+	if directoryEndpointURL == "" {
+		return nil, errors.New("directory endpoint URL is not configured")
+	}
+
 	if authenticator == nil {
 		return nil, errors.New("authenticator is not configured")
 	}
@@ -61,14 +68,21 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.
 	organizationName := orgCert.Subject.Organization[0]
 	logger.Info("loaded certificates for api", zap.String("api-organization-name", organizationName))
 
+	directoryClient, err := directory.NewClient(directoryEndpointURL)
+	if err != nil {
+		return nil, err
+	}
+
 	i := &API{
 		logger:           logger.With(zap.String("api-organization-name", organizationName)),
+		organizationName: organizationName,
 		roots:            roots,
 		orgCertKeyPair:   orgKeyPair,
 		configAPIAddress: configAPIAddress,
 		process:          mainProcess,
 		mux:              runtime.NewServeMux(),
 		authenticator:    authenticator,
+		directoryClient:  directoryClient,
 	}
 
 	return i, nil
