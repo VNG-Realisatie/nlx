@@ -4,7 +4,7 @@
 
 import React from 'react'
 import { act, render } from '@testing-library/react'
-import { preventCaching } from '../domain/service-repository'
+import { PREVENT_CACHING_HEADERS } from '../domain/fetch-utils'
 import UserContext, { UserContextProvider } from './index'
 
 describe('UserContext', () => {
@@ -27,7 +27,7 @@ describe('UserContext', () => {
         expect(global.fetch).toHaveBeenCalledWith(
           '/oidc/me',
           expect.objectContaining({
-            headers: expect.objectContaining(preventCaching),
+            headers: expect.objectContaining(PREVENT_CACHING_HEADERS),
           }),
         )
       })

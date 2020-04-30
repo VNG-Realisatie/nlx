@@ -5,21 +5,18 @@
 import React from 'react'
 import { array, func, string } from 'prop-types'
 import { useTranslation } from 'react-i18next'
-import { Alert, Button, Spinner } from '@commonground/design-system'
+import { Alert, Button } from '@commonground/design-system'
 import { Link, Route } from 'react-router-dom'
 import PageTemplate from '../../components/PageTemplate'
 import usePromise from '../../hooks/use-promise'
 import ServiceRepository from '../../domain/service-repository'
 import ServiceDetailPage from '../ServiceDetailPage'
 import Table from '../../components/Table'
+import EmptyContentMessage from '../../components/EmptyContentMessage'
+import LoadingMessage from '../../components/LoadingMessage'
 import AuthorizationMode from './AuthorizationMode'
 import ServiceCount from './ServiceCount'
-import {
-  StyledActionsBar,
-  StyledIconPlus,
-  StyledLoadingMessage,
-  StyledNoServicesMessage,
-} from './index.styles'
+import { StyledActionsBar, StyledIconPlus } from './index.styles'
 
 const ServiceRow = ({ name, authorizations, mode, ...props }) => (
   <Table.Tr
@@ -43,7 +40,7 @@ ServiceRow.propTypes = {
 
 const ServicesPage = ({ getServices }) => {
   const { t } = useTranslation()
-  const { loading, error, result, reload } = usePromise(getServices)
+  const { isReady, error, result, reload } = usePromise(getServices)
 
   return (
     <PageTemplate>
@@ -64,18 +61,16 @@ const ServicesPage = ({ getServices }) => {
         </Button>
       </StyledActionsBar>
 
-      {loading ? (
-        <StyledLoadingMessage role="progressbar">
-          <Spinner /> {t('Loading…')}
-        </StyledLoadingMessage>
+      {!isReady ? (
+        <LoadingMessage />
       ) : error ? (
         <Alert variant="error" data-testid="error-message">
           {t('Failed to load the services.')}
         </Alert>
       ) : result != null && result.length === 0 ? (
-        <StyledNoServicesMessage>
+        <EmptyContentMessage>
           {t('There are no services yet.')}
-        </StyledNoServicesMessage>
+        </EmptyContentMessage>
       ) : result ? (
         <Table withLinks data-testid="services-list" role="grid">
           <thead>

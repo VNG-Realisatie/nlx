@@ -6,24 +6,21 @@ import React from 'react'
 import { MemoryRouter, Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import { act, fireEvent } from '@testing-library/react'
-import { renderWithProviders } from '../../test-utils'
+import { renderWithProviders, waitFor } from '../../test-utils'
+import deferredPromise from '../../test-utils/deferred-promise'
 import { UserContextProvider } from '../../user-context'
 import ServicesPage from './index'
 
 test('listing all services', async () => {
   const history = createMemoryHistory({ initialEntries: ['/services'] })
 
-  let resolveFetchServices
-  const fetchServicesPromise = new Promise((resolve) => {
-    resolveFetchServices = resolve
-  })
+  const fetchServicesPromise = deferredPromise()
   const fetchServicesHandler = jest.fn(() => fetchServicesPromise)
 
   const {
     getByRole,
     getByTestId,
     getByLabelText,
-    findByTestId,
     getByText,
     queryAllByTestId,
   } = renderWithProviders(
@@ -38,7 +35,7 @@ test('listing all services', async () => {
   expect(() => getByTestId('services-list')).toThrow()
 
   await act(async () => {
-    resolveFetchServices([
+    fetchServicesPromise.resolve([
       {
         name: 'my-first-service',
         authorizationSettings: {
@@ -49,7 +46,7 @@ test('listing all services', async () => {
     ])
   })
 
-  expect(await findByTestId('services-list')).toBeInTheDocument()
+  waitFor(() => expect(getByTestId('services-list')).toBeInTheDocument())
   expect(getByTestId('service-count')).toHaveTextContent('1Services')
 
   const linkAddService = getByLabelText(/Add service/)

@@ -3,7 +3,7 @@
 //
 
 import React from 'react'
-import { string } from 'prop-types'
+import { node, string } from 'prop-types'
 import {
   StyledHeader,
   StyledPageTitle,
@@ -25,7 +25,7 @@ const Header = ({ title, description }) => {
 
 Header.propTypes = {
   title: string,
-  description: string,
+  description: node,
 }
 
 Header.defaultProps = {

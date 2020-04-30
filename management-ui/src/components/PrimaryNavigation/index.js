@@ -12,6 +12,7 @@ import {
 } from './index.styles'
 import { ReactComponent as IconServices } from './icons/services.svg'
 import { ReactComponent as IconInways } from './icons/inways.svg'
+import { ReactComponent as IconDirectory } from './icons/directory.svg'
 
 const PrimaryNavigation = () => {
   const { t } = useTranslation()
@@ -33,6 +34,10 @@ const PrimaryNavigation = () => {
       <StyledLink to="/services" aria-label={t('Services page')}>
         <StyledIcon as={IconServices} />
         {t('Services')}
+      </StyledLink>
+      <StyledLink to="/directory" aria-label={t('Directory page')}>
+        <StyledIcon as={IconDirectory} />
+        {t('Directory')}
       </StyledLink>
     </StyledNav>
   )

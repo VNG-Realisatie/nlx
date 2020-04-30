@@ -2,15 +2,15 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { renderWithProviders } from '../../test-utils'
+import { renderWithProviders, waitFor } from '../../test-utils'
 import { UserContextProvider } from '../../user-context'
 import LoginPage from './index'
 
-test('renders a welcome message', () => {
+test('renders a welcome message', async () => {
   const { getByText } = renderWithProviders(
     <UserContextProvider>
       <LoginPage />
     </UserContextProvider>,
   )
-  expect(getByText(/^Welcome$/)).toBeInTheDocument()
+  waitFor(() => expect(getByText(/^Welcome$/)).toBeInTheDocument())
 })

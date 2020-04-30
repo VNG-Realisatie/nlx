@@ -7,13 +7,11 @@ import { MemoryRouter as Router } from 'react-router-dom'
 import { act } from '@testing-library/react'
 import { renderWithProviders } from '../../test-utils'
 import { UserContextProvider } from '../../user-context'
+import deferredPromise from '../../test-utils/deferred-promise'
 import InwaysPage from './index'
 
 test('listing all inways', async () => {
-  let resolveFetchInways
-  const fetchInwaysPromise = new Promise((resolve) => {
-    resolveFetchInways = resolve
-  })
+  const fetchInwaysPromise = deferredPromise()
   const fetchInwaysHandler = jest.fn(() => fetchInwaysPromise)
 
   const {
@@ -33,7 +31,7 @@ test('listing all inways', async () => {
   expect(() => getByTestId('inways-list')).toThrow()
 
   await act(async () => {
-    resolveFetchInways([
+    fetchInwaysPromise.resolve([
       {
         name: 'name',
         version: 'version',

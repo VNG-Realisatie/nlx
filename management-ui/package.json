@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@commonground/design-system": "12.1.2",
+    "fetch-defaults": "1.0.0",
     "formik": "2.1.4",
     "i18next": "19.4.4",
     "i18next-xhr-backend": "3.2.2",
@@ -64,6 +65,7 @@
     "http-proxy-middleware": "1.0.3",
     "i18next-parser": "1.0.6",
     "prettier": "2.0.5",
+    "jest-fetch-mock": "3.0.3",
     "typescript": "3.8.3"
   }
 }

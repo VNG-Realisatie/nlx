@@ -4,13 +4,9 @@
 
 import { fetchWithoutCaching } from './fetch-utils'
 
-class UserRepository {
-  static async getAuthenticatedUser() {
-    const result = await fetchWithoutCaching('/oidc/me')
-
-    if (result.status === 401) {
-      throw new Error('no user is authenticated')
-    }
+class DirectoryRepository {
+  static async getAll() {
+    const result = await fetchWithoutCaching(`/api/v1/directory/services`)
 
     if (!result.ok) {
       throw new Error('unable to handle the request')
@@ -20,4 +16,4 @@ class UserRepository {
   }
 }
 
-export default UserRepository
+export default DirectoryRepository

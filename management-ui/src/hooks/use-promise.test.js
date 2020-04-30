@@ -3,60 +3,53 @@
 //
 
 import { renderHook, act } from '@testing-library/react-hooks'
+import deferredPromise from '../test-utils/deferred-promise'
 import usePromise from './use-promise'
 
 test('with a resolving promise', async () => {
-  let promiseResolve
-
-  const promise = new Promise((resolve) => {
-    promiseResolve = resolve
-  })
+  const promise = deferredPromise()
 
   const handler = () => promise
   const { result } = renderHook(() => usePromise(handler))
   expect(result.current).toEqual({
     error: null,
-    loading: true,
+    isReady: false,
     result: null,
     reload: expect.any(Function),
   })
 
   await act(async () => {
-    promiseResolve('arbitrary message')
+    promise.resolve('arbitrary message')
   })
 
   expect(result.current).toEqual({
     error: null,
-    loading: false,
+    isReady: true,
     result: 'arbitrary message',
     reload: expect.any(Function),
   })
 })
 
 test('with a rejecting promise', async () => {
-  let promiseReject
-
-  const promise = new Promise((resolve, reject) => {
-    promiseReject = reject
-  })
+  const promise = deferredPromise()
 
   const handler = () => promise
   const { result } = renderHook(() => usePromise(handler))
 
   expect(result.current).toEqual({
     error: null,
-    loading: true,
+    isReady: false,
     result: null,
     reload: expect.any(Function),
   })
 
   await act(async () => {
-    promiseReject(new Error('arbitrary message'))
+    promise.reject(new Error('arbitrary message'))
   })
 
   expect(result.current).toEqual({
     error: new Error('arbitrary message'),
-    loading: false,
+    isReady: true,
     result: null,
     reload: expect.any(Function),
   })
@@ -70,7 +63,7 @@ test('with an argument', async () => {
 
   expect(result.current).toEqual({
     error: null,
-    loading: true,
+    isReady: false,
     result: null,
     reload: expect.any(Function),
   })
@@ -79,7 +72,7 @@ test('with an argument', async () => {
 
   expect(result.current).toEqual({
     error: null,
-    loading: false,
+    isReady: true,
     result: 'arbitrary argument',
     reload: expect.any(Function),
   })
@@ -94,7 +87,7 @@ test('reloading a resource', async () => {
 
   expect(result.current).toEqual({
     error: null,
-    loading: true,
+    isReady: false,
     result: null,
     reload: expect.any(Function),
   })
@@ -103,7 +96,7 @@ test('reloading a resource', async () => {
 
   expect(result.current).toEqual({
     error: null,
-    loading: false,
+    isReady: true,
     result: 'first-result',
     reload: expect.any(Function),
   })
@@ -112,7 +105,7 @@ test('reloading a resource', async () => {
   await waitForNextUpdate()
   expect(result.current).toEqual({
     error: null,
-    loading: false,
+    isReady: true,
     result: 'second-result',
     reload: expect.any(Function),
   })

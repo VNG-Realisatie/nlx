@@ -4,12 +4,12 @@
 import React from 'react'
 import { func, string } from 'prop-types'
 import { useParams, useHistory } from 'react-router-dom'
-import { Alert, Drawer, Spinner } from '@commonground/design-system'
+import { Alert, Drawer } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import ServiceRepository from '../../domain/service-repository'
 import ServiceDetails from '../../components/ServiceDetails'
 import usePromise from '../../hooks/use-promise'
-import { StyledLoadingMessage } from '../ServicesPage/index.styles'
+import LoadingMessage from '../../components/LoadingMessage'
 
 const ServiceDetailPage = ({
   getServiceByName,
@@ -20,7 +20,7 @@ const ServiceDetailPage = ({
   const { name } = useParams()
   const { t } = useTranslation()
   const history = useHistory()
-  const { loading, error, result: service } = usePromise(getServiceByName, name)
+  const { isReady, error, result: service } = usePromise(getServiceByName, name)
   const close = () => history.push(parentUrl)
 
   const handleRemove = () => {
@@ -29,10 +29,8 @@ const ServiceDetailPage = ({
   }
   return (
     <Drawer noMask closeHandler={close}>
-      {loading || (!error && !service) ? (
-        <StyledLoadingMessage role="progressbar">
-          <Spinner /> {t('Loading…')}
-        </StyledLoadingMessage>
+      {!isReady || (!error && !service) ? (
+        <LoadingMessage />
       ) : error ? (
         <Alert variant="error" data-testid="error-message">
           {t('Failed to load the service.', { name })}

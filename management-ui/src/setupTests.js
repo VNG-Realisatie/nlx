@@ -7,3 +7,6 @@ import '@testing-library/jest-dom/extend-expect'
 // open issue: https://github.com/facebook/create-react-app/pull/8362
 import MutationObserver from '@sheerun/mutationobserver-shim'
 window.MutationObserver = MutationObserver
+
+// Prevent fetch from going out to the network during test
+global.fetch = require('jest-fetch-mock')

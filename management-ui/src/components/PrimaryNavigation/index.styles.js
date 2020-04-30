@@ -66,6 +66,7 @@ export const StyledLink = styled(NavLink)`
 
 export const StyledIcon = styled.svg`
   width: ${(p) => p.theme.tokens.spacing07};
+  height: ${(p) => p.theme.tokens.spacing07};
   display: block;
   margin: 0 auto;
 `

@@ -5,17 +5,14 @@
 import React from 'react'
 import { func, string, number } from 'prop-types'
 import { useTranslation } from 'react-i18next'
-import { Alert, Spinner } from '@commonground/design-system'
+import { Alert } from '@commonground/design-system'
 import PageTemplate from '../../components/PageTemplate'
 import usePromise from '../../hooks/use-promise'
 import Table from '../../components/Table'
 import InwayRepository from '../../domain/inway-repository'
-import {
-  StyledLoadingMessage,
-  StyledNoServicesMessage,
-  StyledInwayIcon,
-  StyledIconTd,
-} from './index.styles'
+import EmptyContentMessage from '../../components/EmptyContentMessage'
+import LoadingMessage from '../../components/LoadingMessage'
+import { StyledInwayIcon, StyledIconTd } from './index.styles'
 
 const InwayRow = ({
   name,
@@ -51,7 +48,7 @@ InwayRow.defaultProps = {
 
 const InwaysPage = ({ getInways }) => {
   const { t } = useTranslation()
-  const { loading, error, result } = usePromise(getInways)
+  const { isReady, error, result } = usePromise(getInways)
 
   return (
     <PageTemplate>
@@ -60,18 +57,16 @@ const InwaysPage = ({ getInways }) => {
         description={t('Gateways to provide services.')}
       />
 
-      {loading ? (
-        <StyledLoadingMessage role="progressbar">
-          <Spinner /> {t('Loading…')}
-        </StyledLoadingMessage>
+      {!isReady ? (
+        <LoadingMessage />
       ) : error ? (
         <Alert variant="error" data-testid="error-message">
           {t('Failed to load the inways.')}
         </Alert>
       ) : result != null && result.length === 0 ? (
-        <StyledNoServicesMessage>
+        <EmptyContentMessage>
           {t('There are no inways registered yet.')}
-        </StyledNoServicesMessage>
+        </EmptyContentMessage>
       ) : result ? (
         <Table data-testid="inways-list" role="grid">
           <thead>

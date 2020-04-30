@@ -5,13 +5,13 @@
 import React, { useState } from 'react'
 import { func } from 'prop-types'
 import { useTranslation } from 'react-i18next'
-import { Alert, Spinner } from '@commonground/design-system'
+import { Alert } from '@commonground/design-system'
 import { useParams } from 'react-router-dom'
 import ServiceForm from '../../components/ServiceForm'
 import ServiceRepository from '../../domain/service-repository'
 import PageTemplate from '../../components/PageTemplate'
 import usePromise from '../../hooks/use-promise'
-import { StyledLoadingMessage } from '../ServicesPage/index.styles'
+import LoadingMessage from '../../components/LoadingMessage'
 import { StyledUpdatedError } from './index.styles'
 
 const EditServicePage = ({ updateHandler, getServiceByName }) => {
@@ -19,7 +19,7 @@ const EditServicePage = ({ updateHandler, getServiceByName }) => {
   const { t } = useTranslation()
   const [isUpdated, setisUpdated] = useState(false)
   const [updateError, setUpdatedError] = useState(null)
-  const { loading, error, result } = usePromise(getServiceByName, name)
+  const { isReady, error, result } = usePromise(getServiceByName, name)
 
   const submitService = async (service) => {
     // placeholder until we've implemented adding authorizations in the form
@@ -44,10 +44,8 @@ const EditServicePage = ({ updateHandler, getServiceByName }) => {
         title={t('Edit existing service')}
       />
 
-      {loading || (!error && !result) ? (
-        <StyledLoadingMessage role="progressbar">
-          <Spinner /> {t('Loading…')}
-        </StyledLoadingMessage>
+      {!isReady || (!error && !result) ? (
+        <LoadingMessage />
       ) : error ? (
         <Alert variant="error" data-testid="error-message">
           {t('Failed to load the service.', { name })}
