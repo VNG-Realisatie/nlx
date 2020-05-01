@@ -39,7 +39,7 @@ require (
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/jpillora/backoff v1.0.0
 	github.com/ktr0731/toml v0.3.0
-	github.com/lib/pq v1.3.0
+	github.com/lib/pq v1.4.0
 	github.com/mattn/go-sqlite3 v1.11.0 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect
