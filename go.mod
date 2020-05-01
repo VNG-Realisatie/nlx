@@ -58,7 +58,7 @@ require (
 	github.com/svent/go-flags v0.0.0-20141123140740-4bcbad344f03
 	github.com/weppos/publicsuffix-go v0.13.0 // indirect
 	github.com/zmap/zlint v1.1.0 // indirect
-	go.uber.org/zap v1.14.1
+	go.uber.org/zap v1.15.0
 	golang.org/x/net v0.0.0-20200425230154-ff2c4b7c35a0
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 	google.golang.org/genproto v0.0.0-20200115191322-ca5a22157cba
