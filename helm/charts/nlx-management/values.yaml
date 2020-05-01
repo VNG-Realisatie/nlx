@@ -27,6 +27,7 @@ config:
   logLevel: info
 
   directoryRegistrationHostname: ""
+  directoryEndpointURL: ""
   sessionCookieSecure: false
   secretKey: ""
 

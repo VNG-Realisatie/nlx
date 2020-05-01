@@ -11,6 +11,7 @@ configAPI:
 ################
 nlx-management:
   config:
+    directoryEndpointURL: https://directory-{{DOMAIN_SUFFIX}}/api
     oidc:
       clientSecret: ZXhhbXBsZS1hcHAtc2VjcmV0
       discoveryURL: https://dex-rdw-{{DOMAIN_SUFFIX}}

@@ -72,6 +72,8 @@ spec:
               value: "0.0.0.0:8080"
             - name: CONFIG_API_ADDRESS
               value: {{ include "nlx-management.fullname" . }}-config:8443
+            - name: DIRECTORY_ENDPOINT_URL
+              value: {{ required "Directory endpoint URL is required" .Values.config.directoryEndpointURL }}
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
