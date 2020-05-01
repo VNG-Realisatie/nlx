@@ -31,7 +31,7 @@ require (
 	github.com/gorilla/schema v1.1.0
 	github.com/gorilla/sessions v1.2.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.0
-	github.com/grpc-ecosystem/grpc-gateway v1.14.3
+	github.com/grpc-ecosystem/grpc-gateway v1.14.4
 	github.com/hashicorp/go-retryablehttp v0.6.4 // indirect
 	github.com/huandu/xstrings v1.3.0
 	github.com/jasonlvhit/gocron v0.0.0-20200319232826-9b00bf4b9ebc // indirect
