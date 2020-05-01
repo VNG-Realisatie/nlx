@@ -87,6 +87,14 @@ html:not([data-theme='dark']) .react-toggle-track {
     background-color: #2d66c3 !important;
 }
 
+html[data-theme='dark'] {
+    --ifm-navbar-background-color: #313131;
+    --ifm-background-color: #212121;
+    --ifm-color-primary: #1EA1D5;
+    --ifm-blockquote-color: #E0E0E0;
+    --ifm-background-surface-color: #424242;
+}
+
 body {
     font-family: Muli,sans-serif;
     font-size: 1rem;
@@ -109,9 +117,13 @@ body {
 }
 
 blockquote {
+    padding: 15px 30px 15px 15px;
     background-color: rgb(252,248,218);
     border-left: 8px solid #FFBC2C;
-    padding: 15px 30px 15px 15px;
+}
+
+html[data-theme='dark'] blockquote {
+    background-color: #4D4941;
 }
 
 .padding-vert--lg {
@@ -148,7 +160,6 @@ blockquote {
         max-width: 1240px;
     }
 }
-
 
 
 
