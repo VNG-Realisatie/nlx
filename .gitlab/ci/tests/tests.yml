@@ -46,7 +46,7 @@ Go tests:
 
 Go linter:
   stage: Tests
-  image: golangci/golangci-lint:v1.23
+  image: golangci/golangci-lint:v1.26.0
   before_script:
    - export PATH=$PATH:/usr/local/go/bin
   script:
