@@ -174,19 +174,6 @@ timeout 5
 EOF
 ```
 
-for Linux:
-```bash
-MINIKUBE_IP=$(minikube ip)
-MINIKUBE_DOMAIN=minikube
-sudo tee -a /etc/resolvconf/resolv.conf.d/base <<EOF
-search ${MINIKUBE_DOMAIN}
-nameserver ${MINIKUBE_IP}
-timeout 5
-EOF
-
-sudo resolvconf -u
-```
-
 You may now test the following sites:
 
 - https://traefik.minikube/                         Webinterface showing the status of the traefik ingress controller
