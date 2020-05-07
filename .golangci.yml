@@ -28,11 +28,60 @@ linters-settings:
     local-prefixes: go.nlx.io
 
 linters:
-  enable-all: true
-  disable:
-    - gochecknoglobals
-    - lll
-    - depguard
+  disable-all: true
+  enable:
+    - bodyclose
+    - deadcode
+    - dogsled
+    - dupl
+    - errcheck
+    - funlen
+    - gochecknoinits
+    - gocognit
+    - goconst
+    - gocritic
+    - gocyclo
+    - godox
+    - gofmt
+    - goimports
+    - golint
+    - gomnd
+    - gomodguard
+    - goprintffuncname
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - interfacer
+    - maligned
+    - misspell
+    - nakedret
+    - prealloc
+    - rowserrcheck
+    - scopelint
+    - staticcheck
+    - structcheck
+    - stylecheck
+    - testpackage
+    - typecheck
+    - unconvert
+    - unparam
+    - unused
+    - varcheck
+    - whitespace
+    - wsl
+
+  # Not enabled (yet)
+  # - asciicheck
+  # - go-err113
+  # - godot
+  # - nestif
+  # - nolint
+
+  # Don't enable
+  # - depguard
+  # - gochecknoglobals
+  # - lll
 
 run:
   skip-dirs:
