@@ -7,7 +7,7 @@ import (
 	"log"
 
 	"github.com/spf13/cobra"
-	"go.nlx.io/nlx/config-api/configapi"
+	"go.nlx.io/nlx/management-api/configapi"
 )
 
 func init() { //nolint:gochecknoinits

@@ -13,7 +13,7 @@ RUN go mod download
 
 # Only add code that we use for building nlxctl
 COPY nlxctl                                         /go/src/go.nlx.io/nlx/nlxctl
-COPY config-api                                     /go/src/go.nlx.io/nlx/config-api
+COPY management-api                                 /go/src/go.nlx.io/nlx/management-api
 COPY common                                         /go/src/go.nlx.io/nlx/common
 
 WORKDIR /go/src/go.nlx.io/nlx/nlxctl

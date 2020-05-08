@@ -1,4 +1,3 @@
-// nolint:dupl
 package configservice
 
 import (
@@ -13,7 +12,7 @@ import (
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/process"
-	"go.nlx.io/nlx/config-api/configapi"
+	"go.nlx.io/nlx/management-api/configapi"
 )
 
 const PREFIX = "nlx"
@@ -57,12 +56,12 @@ func NewEtcdConfigDatabase(logger *zap.Logger, p *process.Process, connectionStr
 	}
 
 	p.CloseGracefully(cli.Close)
+
 	return &ETCDConfigDatabase{
 		pathPrefix: pathPrefix,
 		etcdCli:    cli,
 		logger:     logger,
 	}, nil
-
 }
 
 // ListServices returns a list of services
@@ -78,9 +77,11 @@ func (db ETCDConfigDatabase) ListServices(ctx context.Context) ([]*configapi.Ser
 	}
 
 	services := []*configapi.Service{}
+
 	for _, kv := range getResponse.Kvs {
 		service := &configapi.Service{}
 		err := json.Unmarshal(kv.Value, service)
+
 		if err != nil {
 			return nil, err
 		}
@@ -106,6 +107,7 @@ func (db ETCDConfigDatabase) GetService(ctx context.Context, name string) (*conf
 
 	service := &configapi.Service{}
 	err = json.Unmarshal(values.Kvs[0].Value, service)
+
 	if err != nil {
 		return nil, err
 	}
@@ -131,6 +133,7 @@ func (db ETCDConfigDatabase) CreateService(ctx context.Context, service *configa
 }
 
 // UpdateService updates an existing service
+//nolint:dupl // test method
 func (db ETCDConfigDatabase) UpdateService(ctx context.Context, name string, service *configapi.Service) error {
 	key := path.Join(db.pathPrefix, "services", name)
 
@@ -181,9 +184,11 @@ func (db ETCDConfigDatabase) ListInways(ctx context.Context) ([]*configapi.Inway
 	}
 
 	inways := []*configapi.Inway{}
+
 	for _, kv := range getResponse.Kvs {
 		inway := &configapi.Inway{}
 		err := json.Unmarshal(kv.Value, inway)
+
 		if err != nil {
 			return nil, err
 		}
@@ -209,6 +214,7 @@ func (db ETCDConfigDatabase) GetInway(ctx context.Context, name string) (*config
 
 	inway := &configapi.Inway{}
 	err = json.Unmarshal(values.Kvs[0].Value, inway)
+
 	if err != nil {
 		return nil, err
 	}
@@ -234,6 +240,7 @@ func (db ETCDConfigDatabase) CreateInway(ctx context.Context, inway *configapi.I
 }
 
 // UpdateInway updates an existing inway
+//nolint:dupl // test method
 func (db ETCDConfigDatabase) UpdateInway(ctx context.Context, name string, inway *configapi.Inway) error {
 	key := path.Join(db.pathPrefix, "inways", name)
 
@@ -303,6 +310,7 @@ func (db ETCDConfigDatabase) GetInsightConfiguration(ctx context.Context) (*conf
 
 	insightConfiguration := &configapi.InsightConfiguration{}
 	err = json.Unmarshal(values.Kvs[0].Value, insightConfiguration)
+
 	if err != nil {
 		return nil, err
 	}

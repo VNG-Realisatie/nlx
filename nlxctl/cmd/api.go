@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/credentials"
 
 	"go.nlx.io/nlx/common/orgtls"
-	"go.nlx.io/nlx/config-api/configapi"
+	"go.nlx.io/nlx/management-api/configapi"
 )
 
 func getConfigClient() configapi.ConfigApiClient {

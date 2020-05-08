@@ -19,10 +19,10 @@ var initOptions struct {
 
 func init() { //nolint:gochecknoinits
 	rootCmd.AddCommand(initCommand)
-	initCommand.Flags().StringVarP(&initOptions.address, "address", "a", "", "address of the config-api")
+	initCommand.Flags().StringVarP(&initOptions.address, "address", "a", "", "address of the management-api")
 	initCommand.Flags().StringVarP(&initOptions.cert, "cert", "c", "", "path to certificate")
 	initCommand.Flags().StringVarP(&initOptions.key, "key", "k", "", "path to private key")
-	initCommand.Flags().StringVarP(&initOptions.ca, "ca", "", "", "path to CA used to verify the connection to the config-api")
+	initCommand.Flags().StringVarP(&initOptions.ca, "ca", "", "", "path to CA used to verify the connection to the management-api")
 
 	err := initCommand.MarkFlagRequired("key")
 	if err != nil {
@@ -41,7 +41,7 @@ func init() { //nolint:gochecknoinits
 var initCommand = &cobra.Command{
 	Use:   "init",
 	Short: "initialize nlx-ctl",
-	Long:  `use init to initialize the nlx-ctl with the address of the config-api and cert key pair`,
+	Long:  `use init to initialize the nlx-ctl with the address of the NLX management API and cert key pair`,
 	Run: func(cmd *cobra.Command, args []string) {
 		home, err := homedir.Dir()
 		if err != nil {

@@ -1,4 +1,4 @@
-// nolint:dupl
+//notlint:dupl // test function
 package configservice_test
 
 import (
@@ -9,14 +9,50 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/process"
-	"go.nlx.io/nlx/config-api/configapi"
-	"go.nlx.io/nlx/config-api/configservice"
-	mock_configservice "go.nlx.io/nlx/config-api/configservice/mock"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
+	"go.nlx.io/nlx/management-api/configapi"
+	"go.nlx.io/nlx/management-api/configservice"
+
 	mock_registrationapi "go.nlx.io/nlx/directory-registration-api/registrationapi/mock"
+	mock_configservice "go.nlx.io/nlx/management-api/configservice/mock"
 )
+
+func TestGetInsight(t *testing.T) {
+	logger := zap.NewNop()
+	testProcess := process.NewProcess(logger)
+	ctx := context.Background()
+
+	mockCtrl := gomock.NewController(t)
+	defer mockCtrl.Finish()
+
+	mockDatabase := mock_configservice.NewMockConfigDatabase(mockCtrl)
+	service := configservice.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+
+	emptyRequest := &configapi.Empty{}
+
+	mockDatabase.EXPECT().GetInsightConfiguration(ctx)
+
+	_, actualError := service.GetInsightConfiguration(ctx, emptyRequest)
+	expectedError := status.Error(codes.NotFound, "insight configuration not found")
+	assert.Error(t, actualError)
+	assert.Equal(t, expectedError, actualError)
+
+	mockInsightResponse := &configapi.InsightConfiguration{
+		InsightAPIURL: "http://insight-api-url",
+		IrmaServerURL: "http://irma-server-url",
+	}
+
+	mockDatabase.EXPECT().GetInsightConfiguration(ctx).Return(mockInsightResponse, nil)
+
+	getInsightConfigurationResponse, err := service.GetInsightConfiguration(ctx, emptyRequest)
+	assert.Nil(t, err)
+
+	assert.Equal(t, getInsightConfigurationResponse, getInsightConfigurationResponse)
+}
 
 func TestPutInsight(t *testing.T) {
 	logger := zap.NewNop()
@@ -42,6 +78,7 @@ func TestPutInsight(t *testing.T) {
 		InsightAPIURL: mockInsightConfig.InsightAPIURL,
 		IrmaServerURL: mockInsightConfig.IrmaServerURL,
 	}).Return(&registrationapi.Empty{}, nil)
+
 	service := configservice.New(logger, testProcess, mockDirectoryRegistrationClient, mockDatabase)
 
 	putInsightResponse, err := service.PutInsightConfiguration(ctx, mockInsightConfig)

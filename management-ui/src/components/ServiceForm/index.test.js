@@ -15,7 +15,7 @@ describe('with initial values', () => {
     const { getByLabelText } = renderWithProviders(
       <AddServiceForm
         initialValues={{
-          // values copied from config-api/config/service.json
+          // values copied from management-api/config/service.json
           name: 'my-service',
           endpointURL: 'my-service.test:8000',
           documentationURL: 'my-service.test:8000/docs',
@@ -71,7 +71,7 @@ test('the form values of the onSubmitHandler', async () => {
       submitButtonText="Submit"
       onSubmitHandler={onSubmitHandlerSpy}
       initialValues={{
-        // values copied from config-api/config/service.json
+        // values copied from management-api/config/service.json
         name: '',
         endpointURL: 'my-service.test:8000',
         documentationURL: 'my-service.test:8000/docs',

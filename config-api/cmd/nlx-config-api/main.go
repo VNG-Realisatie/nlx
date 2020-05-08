@@ -29,9 +29,9 @@ import (
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/tlsconfig"
-	"go.nlx.io/nlx/config-api/configapi"
-	"go.nlx.io/nlx/config-api/configservice"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
+	"go.nlx.io/nlx/management-api/configapi"
+	"go.nlx.io/nlx/management-api/configservice"
 )
 
 var options struct {

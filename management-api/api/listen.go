@@ -6,38 +6,50 @@ package api
 import (
 	"context"
 	"crypto/tls"
-	"fmt"
+	"log"
+	"net"
 	"net/http"
 	"time"
+
+	"golang.org/x/sync/errgroup"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/render"
 	"github.com/pkg/errors"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
+	"go.uber.org/zap"
 
-	"go.nlx.io/nlx/config-api/configapi"
+	"go.nlx.io/nlx/management-api/configapi"
 )
 
 // ListenAndServe is a blocking function that listens on provided tcp address to handle requests.
-func (a *API) ListenAndServe(address string) error {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
+func (a *API) ListenAndServe(address, configAddress string) error {
+	g, ctx := errgroup.WithContext(context.Background())
+
+	listen, err := net.Listen("tcp", configAddress)
+	if err != nil {
+		log.Fatal("failed to create listener", zap.Error(err))
+	}
+
+	g.Go(func() error {
+		return a.grpcServer.Serve(listen)
+	})
 
 	// setup client credentials for grpc gateway
 	gatewayDialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(
 			credentials.NewTLS(&tls.Config{
-				Certificates: []tls.Certificate{*a.orgCertKeyPair},
-				RootCAs:      a.roots,
+				Certificates:       []tls.Certificate{*a.orgCertKeyPair},
+				RootCAs:            a.roots,
+				InsecureSkipVerify: true, //nolint:gosec // this is an internal connection to itself
 			}),
 		),
 	}
 
-	err := configapi.RegisterConfigApiHandlerFromEndpoint(ctx, a.mux, a.configAPIAddress, gatewayDialOptions)
+	err = configapi.RegisterConfigApiHandlerFromEndpoint(ctx, a.mux, configAddress, gatewayDialOptions)
 	if err != nil {
-		fmt.Printf("serve: %v\n", err)
 		return err
 	}
 
@@ -55,25 +67,27 @@ func (a *API) ListenAndServe(address string) error {
 	}
 
 	// ErrServerClosed is more info message than error
-	if err := server.ListenAndServe(); err != nil {
-		if err != http.ErrServerClosed {
-			return errors.Wrap(err, "failed to run http server")
-		}
-	}
+	g.Go(server.ListenAndServe)
 
 	shutDownComplete := make(chan struct{})
 
 	a.process.CloseGracefully(func() error {
 		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
 		defer cancel() // do not remove. Otherwise it could cause implicit goroutine leak
-		err := server.Shutdown(localCtx)
+		sherr := server.Shutdown(localCtx)
 		close(shutDownComplete)
-		return err
+		return sherr
 	})
 
 	// Listener will return immediately on Shutdown call.
 	// So we need to wait until all open connections will be closed gracefully
 	<-shutDownComplete
+
+	err = g.Wait()
+
+	if err != http.ErrServerClosed {
+		return errors.Wrap(err, "failed to run http server")
+	}
 
 	return nil
 }

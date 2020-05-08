@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"go.nlx.io/nlx/config-api/configapi"
+	"go.nlx.io/nlx/management-api/configapi"
 )
 
 func TestServiceValidate(t *testing.T) {

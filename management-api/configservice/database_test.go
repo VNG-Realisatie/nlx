@@ -1,23 +1,23 @@
-// nolint:dupl
-package configservice
+package configservice_test
 
 import (
 	"context"
 	"testing"
 	"time"
 
-	"go.nlx.io/nlx/config-api/configapi"
-
 	"github.com/coreos/etcd/clientv3"
 	"github.com/coreos/etcd/integration"
 	"github.com/stretchr/testify/assert"
-	"go.nlx.io/nlx/common/process"
 	"go.uber.org/zap"
+
+	"go.nlx.io/nlx/common/process"
+	"go.nlx.io/nlx/management-api/configapi"
+	"go.nlx.io/nlx/management-api/configservice"
 )
 
 type TestCluster struct {
 	cluster *integration.ClusterV3
-	DB      ConfigDatabase
+	DB      configservice.ConfigDatabase
 	Addrs   []string
 }
 
@@ -45,7 +45,7 @@ func newTestCluster(t *testing.T) TestCluster {
 	logger := zap.NewNop()
 	testProcess := process.NewProcess(logger)
 
-	db, err := NewEtcdConfigDatabase(logger, testProcess, addrs)
+	db, err := configservice.NewEtcdConfigDatabase(logger, testProcess, addrs)
 	if err != nil {
 		t.Fatal("error constructing etcd config database", err)
 	}
@@ -64,7 +64,8 @@ func TestNewEtcdConfigDatabase(t *testing.T) {
 	assert.NotNil(t, cluster.DB)
 }
 
-func TestListServices(t *testing.T) {
+//nolint:dupl // test method
+func TestDatabaseListServices(t *testing.T) {
 	cluster := newTestCluster(t)
 	defer cluster.Terminate(t)
 
@@ -96,7 +97,7 @@ func TestListServices(t *testing.T) {
 	assert.Equal(t, []*configapi.Service{anotherMockService, mockService}, services)
 }
 
-func TestCreateGetService(t *testing.T) {
+func TestDatabaseCreateGetService(t *testing.T) {
 	cluster := newTestCluster(t)
 	defer cluster.Terminate(t)
 
@@ -119,7 +120,7 @@ func TestCreateGetService(t *testing.T) {
 	assert.Equal(t, service, mockService)
 }
 
-func TestUpdateService(t *testing.T) {
+func TestDatabaseUpdateService(t *testing.T) {
 	cluster := newTestCluster(t)
 	defer cluster.Terminate(t)
 
@@ -160,7 +161,7 @@ func TestUpdateService(t *testing.T) {
 	assert.Equal(t, service.EndpointURL, updatedMockService.EndpointURL)
 }
 
-func TestDeleteService(t *testing.T) {
+func TestDatabaseDeleteService(t *testing.T) {
 	cluster := newTestCluster(t)
 	defer cluster.Terminate(t)
 
@@ -196,7 +197,8 @@ func TestDeleteService(t *testing.T) {
 	assert.Nil(t, service)
 }
 
-func TestListInways(t *testing.T) {
+//nolint:dupl // test method
+func TestDatabaseListInways(t *testing.T) {
 	cluster := newTestCluster(t)
 	defer cluster.Terminate(t)
 
@@ -251,7 +253,7 @@ func TestCreateGetInway(t *testing.T) {
 	assert.Equal(t, service, mockInway)
 }
 
-func TestUpdateInway(t *testing.T) {
+func TestDatabaseUpdateInway(t *testing.T) {
 	cluster := newTestCluster(t)
 	defer cluster.Terminate(t)
 
@@ -290,7 +292,7 @@ func TestUpdateInway(t *testing.T) {
 	assert.Equal(t, inway, mockUpdatedInway)
 }
 
-func TestDeleteInway(t *testing.T) {
+func TestDatabaseDeleteInway(t *testing.T) {
 	cluster := newTestCluster(t)
 	defer cluster.Terminate(t)
 
@@ -347,5 +349,4 @@ func TestPutGetInsight(t *testing.T) {
 	}
 
 	assert.Equal(t, mockInsightConfiguration, insightConfig)
-
 }

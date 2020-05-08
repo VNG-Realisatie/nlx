@@ -7,7 +7,7 @@ package mock_configapi
 import (
 	context "context"
 	gomock "github.com/golang/mock/gomock"
-	configapi "go.nlx.io/nlx/config-api/configapi"
+	configapi "go.nlx.io/nlx/management-api/configapi"
 	grpc "google.golang.org/grpc"
 	reflect "reflect"
 )
