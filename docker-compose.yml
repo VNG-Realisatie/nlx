@@ -18,14 +18,6 @@ services:
     build:
       context: ca-cfssl-unsafe
       dockerfile: Dockerfile
-  config-api:
-    image: "${IMAGE_PREFIX}nlxio/config-api:${IMAGE_TAG}"
-    build:
-      context: .
-      dockerfile: config-api/Dockerfile
-      args:
-        GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
-        GIT_TAG_NAME: "${GIT_TAG_NAME}"
   docs:
     image: "${IMAGE_PREFIX}nlxio/docs:${IMAGE_TAG}"
     build:

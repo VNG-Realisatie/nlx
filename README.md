@@ -80,7 +80,6 @@ This will start the following services:
 - directory-inspection-api (HTTP: 6010, HTTPS: 6011)
 - directory-registration-api (HTTPS: 6012)
 - directory-monitor
-- config-api (HTTPS: 6013)
 - outway (HTTP: 6014)
 - inway (HTTP: 6015)
 - inway (HTTP: 6016)

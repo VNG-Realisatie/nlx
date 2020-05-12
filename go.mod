@@ -54,7 +54,6 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.7.0
 	github.com/stretchr/testify v1.5.1
-	github.com/svent/go-flags v0.0.0-20141123140740-4bcbad344f03
 	github.com/weppos/publicsuffix-go v0.13.0 // indirect
 	github.com/zmap/zlint v1.1.0 // indirect
 	go.uber.org/zap v1.15.0
