@@ -46,7 +46,6 @@ linters:
     - goimports
     - golint
     - gomnd
-    - gomodguard
     - goprintffuncname
     - gosec
     - gosimple
@@ -62,7 +61,6 @@ linters:
     - staticcheck
     - structcheck
     - stylecheck
-    - testpackage
     - typecheck
     - unconvert
     - unparam
@@ -75,8 +73,10 @@ linters:
   # - asciicheck
   # - go-err113
   # - godot
+  # - gomodguard
   # - nestif
   # - nolint
+  # - testpackage
 
   # Don't enable
   # - depguard
