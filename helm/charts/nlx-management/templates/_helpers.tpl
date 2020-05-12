@@ -85,17 +85,6 @@ Return the image name for the UI
 {{- end -}}
 
 {{/*
-Return the image name for the UI
-*/}}
-{{- define "nlx-management.configImage" -}}
-{{- $registryName := default .Values.image.registry .Values.global.imageRegistry -}}
-{{- $repositoryName := .Values.image.configRepository -}}
-{{- $tag := default (printf "v%s" .Chart.AppVersion) (default .Values.image.tag .Values.global.imageTag) -}}
-
-{{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
-{{- end -}}
-
-{{/*
 Return the image name for the unsafe ca
 */}}
 {{- define "nlx-management.unsafeCA.image" -}}

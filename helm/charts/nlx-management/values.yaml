@@ -12,7 +12,6 @@ image:
   registry: docker.io
   apiRepository: nlxio/management-api
   uiRepository: nlxio/management-ui
-  configRepository: nlxio/config-api
   # tag allows to override the tag. When set to null, the AppVersion from the Chart is used
   tag: ""
   pullPolicy: IfNotPresent
@@ -65,7 +64,9 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 80
+  apiPort: 80
+  apiConfigPort: 443
+  uiPort: 80
 
 ingress:
   enabled: false

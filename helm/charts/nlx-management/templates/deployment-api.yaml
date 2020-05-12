@@ -59,6 +59,9 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
+            - name: https
+              containerPort: 8443
+              protocol: TCP
           livenessProbe:
             httpGet:
               path: /health
@@ -70,8 +73,12 @@ spec:
           env:
             - name: LISTEN_ADDRESS
               value: "0.0.0.0:8080"
-            - name: CONFIG_API_ADDRESS
-              value: {{ include "nlx-management.fullname" . }}-config:8443
+            - name: CONFIG_LISTEN_ADDRESS
+              value: "0.0.0.0:8443"
+            - name: ETCD_CONNECTION_STRING
+              value: http://{{ .Release.Name }}-etcd:2379
+            - name: DIRECTORY_REGISTRATION_ADDRESS
+              value: {{ required "Directory registration hostname is required" .Values.config.directoryRegistrationHostname }}:443
             - name: DIRECTORY_ENDPOINT_URL
               value: {{ required "Directory endpoint URL is required" .Values.config.directoryEndpointURL }}
             - name: SECRET_KEY

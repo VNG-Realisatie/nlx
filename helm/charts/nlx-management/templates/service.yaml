@@ -12,8 +12,12 @@ spec:
     app.kubernetes.io/component: api
   ports:
     - name: http
-      port: {{ .Values.service.port }}
+      port: {{ .Values.service.apiPort }}
       targetPort: http
+      protocol: TCP
+    - name: https
+      port: {{ .Values.service.apiConfigPort }}
+      targetPort: https
       protocol: TCP
 ---
 apiVersion: v1
@@ -30,24 +34,6 @@ spec:
     app.kubernetes.io/component: ui
   ports:
     - name: http
-      port: {{ .Values.service.port }}
+      port: {{ .Values.service.uiPort }}
       targetPort: http
-      protocol: TCP
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ include "nlx-management.fullname" . }}-config
-  labels:
-    {{- include "nlx-management.labels" . | nindent 4 }}
-    app.kubernetes.io/component: config
-spec:
-  type: ClusterIP
-  selector:
-    {{- include "nlx-management.selectorLabels" . | nindent 4 }}
-    app.kubernetes.io/component: config
-  ports:
-    - name: https
-      port: 8443
-      targetPort: https
       protocol: TCP

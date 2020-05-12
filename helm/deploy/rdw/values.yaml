@@ -38,7 +38,7 @@ transactionLog:
   resetDatabase: false
 
 configAPI:
-  address: rdw-nlx-management-config:8443
+  address: rdw-nlx-management-api:443
   service:
     name: kentekenregister
     endpointURL: http://rdw-mock-service
@@ -67,7 +67,7 @@ nlx-inway:
     directoryRegistrationHostname: shared-nlx-directory-registration
     configAPI:
       enabled: true
-      address: rdw-nlx-management-config:8443
+      address: rdw-nlx-management-api:443
   transactionLog:
     hostname: rdw-postgresql
     database: rdw-transaction-log
