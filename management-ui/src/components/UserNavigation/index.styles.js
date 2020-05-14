@@ -31,6 +31,21 @@ export const StyledUserNavigation = styled.div`
     margin-right: ${(p) => p.theme.tokens.spacing04};
   }
 
+  .user-menu-slide-enter {
+    transition: transform ${(p) => p.animationDuration}ms ease-in-out;
+    transform: scaleY(0);
+  }
+  .user-menu-slide-enter-done {
+    transform: scaleY(1);
+  }
+  .user-menu-slide-exit {
+    transform: scaleY(1);
+  }
+  .user-menu-slide-exit-done {
+    transform: scaleY(0);
+    transition: transform ${(p) => p.animationDuration}ms ease-in-out;
+  }
+
   ul {
     display: block;
     position: absolute;

@@ -2,45 +2,44 @@
 // Licensed under the EUPL
 //
 
-import React, { useContext, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import Cookies from 'js-cookie'
 import { useTranslation } from 'react-i18next'
 import Avatar from '../Avatar'
 import UserContext from '../../user-context'
+import useClickOutside from '../../hooks/use-click-outside'
 import {
-  StyledUserNavigation,
   StyledToggleButton,
   StyledUsername,
+  StyledUserNavigation,
   UserNavigationChevron,
 } from './index.styles'
+
+const ANIMATION_DURATION = 150
 
 const UserNavigation = ({ ...props }) => {
   const { t } = useTranslation()
   const [menuIsOpen, setMenuIsOpen] = useState(false)
   const { user } = useContext(UserContext)
 
-  const onClickHandler = (event) => {
+  const onClickHandler = ({ currentTarget }) => {
     setMenuIsOpen(!menuIsOpen)
-    event.currentTarget.focus()
+    currentTarget.focus()
   }
 
-  let timeoutId
-  const onBlurHandler = () => {
-    timeoutId = setTimeout(() => {
-      setMenuIsOpen(false)
-    })
+  const onClickOutside = () => {
+    setMenuIsOpen(false)
   }
 
-  const onFocusHandler = () => {
-    clearTimeout(timeoutId)
-  }
+  const wrapperRef = useRef(null)
+  useClickOutside(wrapperRef, onClickOutside)
 
   return !user ? null : (
     <StyledUserNavigation
+      animationDuration={ANIMATION_DURATION}
       isOpen={menuIsOpen}
-      onFocus={onFocusHandler}
-      onBlur={onBlurHandler}
       {...props}
+      ref={wrapperRef}
       data-testid="user-navigation"
     >
       <StyledToggleButton
@@ -59,10 +58,13 @@ const UserNavigation = ({ ...props }) => {
         <StyledUsername data-testid="full-name" title={user.fullName}>
           {user.fullName}
         </StyledUsername>
-        <UserNavigationChevron flipHorizontal={menuIsOpen} />
+        <UserNavigationChevron
+          animationDuration={ANIMATION_DURATION}
+          flipHorizontal={menuIsOpen}
+        />
       </StyledToggleButton>
 
-      {menuIsOpen && (
+      {menuIsOpen ? (
         <ul id="user-menu-options" data-testid="user-menu-options">
           <li>
             <form method="POST" action="/oidc/logout">
@@ -75,7 +77,7 @@ const UserNavigation = ({ ...props }) => {
             </form>
           </li>
         </ul>
-      )}
+      ) : null}
     </StyledUserNavigation>
   )
 }
