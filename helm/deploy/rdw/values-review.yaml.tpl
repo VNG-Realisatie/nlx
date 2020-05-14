@@ -1,7 +1,7 @@
 ###########
 ## Chart ##
 ###########
-configAPI:
+managementAPI:
   insight:
     insightAPIURL: https://insight-api-rdw-{{DOMAIN_SUFFIX}}
     irmaServerURL: https://irma-rdw-{{DOMAIN_SUFFIX}}

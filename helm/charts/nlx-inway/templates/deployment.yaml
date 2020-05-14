@@ -87,9 +87,9 @@ spec:
               value: {{ include "nlx-inway.selfAddress" . }}
             - name: DIRECTORY_REGISTRATION_ADDRESS
               value: "{{ .Values.config.directoryRegistrationHostname }}:443"
-          {{- if .Values.config.configAPI.enabled }}
-            - name: CONFIG_API_ADDRESS
-              value: {{ required "Config API address is required" .Values.config.configAPI.address }}
+          {{- if .Values.config.managementAPI.enabled }}
+            - name: MANAGEMENT_API_ADDRESS
+              value: {{ required "Management API address is required" .Values.config.managementAPI.address }}
           {{- else }}
             - name: SERVICE_CONFIG
               value: /etc/nlx-inway/service-config.toml
@@ -128,7 +128,7 @@ spec:
           volumeMounts:
             - name: certificates
               mountPath: /certs
-          {{- if not .Values.config.configAPI.enabled }}
+          {{- if not .Values.config.managementAPI.enabled }}
             - name: config
               mountPath: /etc/nlx-inway
           {{- end }}
@@ -142,7 +142,7 @@ spec:
           secret:
             secretName: {{ template "nlx-inway.fullname" . }}-tls
         {{- end }}
-      {{- if not .Values.config.configAPI.enabled }}
+      {{- if not .Values.config.managementAPI.enabled }}
         - name: config
           configMap:
             name: {{ template "nlx-inway.fullname" . }}

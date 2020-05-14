@@ -46,23 +46,23 @@ spec:
           args:
             - "-exc"
             - |
-                nlxctl init --address "${CONFIG_API_ADDRESS}" --cert /certs/cert.pem --key /certs/cert-key.pem --ca /certs/root.pem
+                nlxctl init --address "${MANAGEMENT_API_ADDRESS}" --cert /certs/cert.pem --key /certs/cert-key.pem --ca /certs/root.pem
                 echo "${SERVICE_JSON}" > /tmp/service.json
                 nlxctl service create --config /tmp/service.json
                 nlxctl service list
-              {{- if hasKey .Values.configAPI "insight" }}
+              {{- if hasKey .Values.managementAPI "insight" }}
                 nlxctl insight put --insight-api-url "${INSIGHT_API_URL}" --irma-server-url "${IRMA_SERVER_URL}"
               {{- end}}
           env:
-            - name: CONFIG_API_ADDRESS
-              value: {{ .Values.configAPI.address | quote }}
+            - name: MANAGEMENT_API_ADDRESS
+              value: {{ .Values.managementAPI.address | quote }}
             - name: SERVICE_JSON
-              value: {{ .Values.configAPI.service | toJson | quote }}
-          {{- if hasKey .Values.configAPI "insight" }}
+              value: {{ .Values.managementAPI.service | toJson | quote }}
+          {{- if hasKey .Values.managementAPI "insight" }}
             - name: INSIGHT_API_URL
-              value: {{ required "Insight API URL is required" .Values.configAPI.insight.insightAPIURL | quote }}
+              value: {{ required "Insight API URL is required" .Values.managementAPI.insight.insightAPIURL | quote }}
             - name: IRMA_SERVER_URL
-              value: {{ required "IRMA server URL is required" .Values.configAPI.insight.irmaServerURL | quote }}
+              value: {{ required "IRMA server URL is required" .Values.managementAPI.insight.irmaServerURL | quote }}
           {{- end }}
           volumeMounts:
             - name: certificates

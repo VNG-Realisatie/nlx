@@ -1,4 +1,4 @@
-{{ if not .Values.config.configAPI.enabled }}
+{{ if not .Values.config.managementAPI.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:

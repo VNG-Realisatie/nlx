@@ -29,7 +29,7 @@ config:
   directoryRegistrationHostname: ""
   serviceConfig: {}
 
-  configAPI:
+  managementAPI:
     enabled: false
     address: ""
 

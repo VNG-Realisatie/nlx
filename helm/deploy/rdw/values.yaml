@@ -37,7 +37,7 @@ transactionLog:
   existingSecret: rdw-postgresql-auth
   resetDatabase: false
 
-configAPI:
+managementAPI:
   address: rdw-nlx-management-api:443
   service:
     name: kentekenregister
@@ -65,7 +65,7 @@ unsafeCA:
 nlx-inway:
   config:
     directoryRegistrationHostname: shared-nlx-directory-registration
-    configAPI:
+    managementAPI:
       enabled: true
       address: rdw-nlx-management-api:443
   transactionLog:

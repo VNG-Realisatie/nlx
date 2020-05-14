@@ -1,7 +1,7 @@
 ###########
 ## Chart ##
 ###########
-configAPI:
+managementAPI:
   insight:
     insightAPIURL: https://insight-api.acc.voorbeeld-rdw.nl
     irmaServerURL: https://irma-api.acc.voorbeeld-rdw.nl
