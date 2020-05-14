@@ -6,10 +6,10 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyledLoadingMessage } from './index.styles'
 
-const LoadingMessage = () => {
+const LoadingMessage = (props) => {
   const { t } = useTranslation()
   return (
-    <StyledLoadingMessage role="progressbar">
+    <StyledLoadingMessage role="progressbar" {...props}>
       <Spinner /> {t('Loading…')}
     </StyledLoadingMessage>
   )

@@ -117,6 +117,7 @@ test('the form values of the onSubmitHandler', async () => {
     documentationURL: 'my-service.test:8000/docs',
     apiSpecificationURL: 'my-service.test:8000/openapi.json',
     internal: false,
+    inways: [],
     techSupportContact: 'tech@organization.test',
     publicSupportContact: 'public@organization.test',
     authorizationSettings: {

@@ -2,15 +2,16 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { func, shape, string, oneOf, bool } from 'prop-types'
-import { Formik } from 'formik'
+import { arrayOf, bool, func, oneOf, shape, string } from 'prop-types'
+import { FieldArray, Formik } from 'formik'
 import {
   Button,
-  TextInput,
-  Radio,
   Checkbox,
   Fieldset,
+  Label,
   Legend,
+  Radio,
+  TextInput,
 } from '@commonground/design-system'
 
 import { ThemeProvider } from 'styled-components'
@@ -22,7 +23,16 @@ import {
   AUTHORIZATION_TYPE_WHITELIST,
 } from '../../vocabulary'
 import FormikFocusError from '../FormikFocusError'
-import { Form, ServiceNameWrapper } from './index.styles'
+import InwayRepository from '../../domain/inway-repository'
+import usePromise from '../../hooks/use-promise'
+import {
+  Form,
+  CheckboxGroup,
+  InwaysEmptyMessage,
+  ServiceNameWrapper,
+  VisibilityAlert,
+  InwaysLoadingMessage,
+} from './index.styles'
 
 const DEFAULT_INITIAL_VALUES = {
   name: '',
@@ -35,6 +45,7 @@ const DEFAULT_INITIAL_VALUES = {
   authorizationSettings: {
     mode: AUTHORIZATION_TYPE_WHITELIST,
   },
+  inways: [],
 }
 
 const ServiceForm = ({
@@ -42,10 +53,12 @@ const ServiceForm = ({
   onSubmitHandler,
   submitButtonText,
   disableName,
+  getInways,
   ...props
 }) => {
   const { t } = useTranslation()
 
+  const { isReady: allInwaysIsReady, result: allInways } = usePromise(getInways)
   const validationSchema = Yup.object().shape({
     name: Yup.string().required(t('This field is required.')),
     endpointURL: Yup.string().required(t('Invalid endpoint URL.')),
@@ -60,6 +73,7 @@ const ServiceForm = ({
         AUTHORIZATION_TYPE_NONE,
       ]),
     }),
+    inways: Yup.array().of(Yup.string()),
   })
 
   return (
@@ -78,7 +92,7 @@ const ServiceForm = ({
           })
         }}
       >
-        {({ handleSubmit }) => (
+        {({ handleSubmit, values: { inways, publishedInDirectory } }) => (
           <Form onSubmit={handleSubmit} data-testid="form" {...props}>
             <ServiceNameWrapper>
               <TextInput
@@ -136,6 +150,47 @@ const ServiceForm = ({
             </Fieldset>
 
             <Fieldset>
+              <Legend>{t('Inways')}</Legend>
+
+              {!allInwaysIsReady ? (
+                <InwaysLoadingMessage />
+              ) : !allInways || allInways.length === 0 ? (
+                <InwaysEmptyMessage data-testid="inways-empty">
+                  {t('There are no inways registered to be connected.')}
+                </InwaysEmptyMessage>
+              ) : (
+                <CheckboxGroup>
+                  <Label>
+                    {t('Connected inways for this service (optional)')}
+                  </Label>
+                  <FieldArray
+                    name="inways"
+                    render={(arrayHelpers) => {
+                      return allInways.map(({ name }) => (
+                        <Checkbox
+                          key={name}
+                          name="inways"
+                          value={name}
+                          checked={inways.includes(name)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              arrayHelpers.push(name)
+                            } else {
+                              const idx = inways.indexOf(name)
+                              arrayHelpers.remove(idx)
+                            }
+                          }}
+                        >
+                          {name}
+                        </Checkbox>
+                      ))
+                    }}
+                  />
+                </CheckboxGroup>
+              )}
+            </Fieldset>
+
+            <Fieldset>
               <Legend>{t('Authorization')}</Legend>
 
               <Radio.Group label={t('Type of authorization')}>
@@ -163,6 +218,18 @@ const ServiceForm = ({
               <Checkbox name="publishedInDirectory" id="publishedInDirectory">
                 {t('Publish to central directory')}
               </Checkbox>
+
+              {publishedInDirectory && inways.length === 0 ? (
+                <VisibilityAlert
+                  data-testid="publishedInDirectory-warning"
+                  variant="warning"
+                  title={t('Service not yet accessible')}
+                >
+                  {t(
+                    'There are no inways connected yet. Until then other organizations cannot access this service.',
+                  )}
+                </VisibilityAlert>
+              ) : null}
             </Fieldset>
 
             <Button type="submit">{submitButtonText}</Button>
@@ -188,14 +255,17 @@ ServiceForm.propTypes = {
     authorizationSettings: shape({
       mode: oneOf([AUTHORIZATION_TYPE_WHITELIST, AUTHORIZATION_TYPE_NONE]),
     }),
+    inways: arrayOf(string),
   }),
   submitButtonText: string.isRequired,
   disableName: bool,
+  getInways: func,
 }
 
 ServiceForm.defaultProps = {
   initialValues: DEFAULT_INITIAL_VALUES,
   disableName: false,
+  getInways: InwayRepository.getAll,
 }
 
 export default ServiceForm

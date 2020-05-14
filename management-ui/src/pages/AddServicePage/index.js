@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { Alert } from '@commonground/design-system'
 import PageTemplate from '../../components/PageTemplate'
 import ServiceRepository from '../../domain/service-repository'
-import AddServiceForm from '../../components/ServiceForm'
+import ServiceForm from '../../components/ServiceForm'
 
 const AddServicePage = ({ createHandler }) => {
   const { t } = useTranslation()
@@ -55,7 +55,7 @@ const AddServicePage = ({ createHandler }) => {
       ) : null}
 
       {!isAdded ? (
-        <AddServiceForm
+        <ServiceForm
           onSubmitHandler={(values) => submitService(values)}
           submitButtonText={t('Add service')}
         />

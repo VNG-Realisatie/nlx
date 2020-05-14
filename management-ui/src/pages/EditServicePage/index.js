@@ -41,7 +41,7 @@ const EditServicePage = ({ updateHandler, getServiceByName }) => {
     <PageTemplate>
       <PageTemplate.HeaderWithBackNavigation
         backButtonTo={`/services/${name}`}
-        title={t('Edit existing service')}
+        title={t('Edit service')}
       />
 
       {!isReady || (!error && !result) ? (
