@@ -19,9 +19,9 @@ import (
 
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
-	"go.nlx.io/nlx/config-api/configapi"
-	configmock "go.nlx.io/nlx/config-api/configapi/mock"
 	"go.nlx.io/nlx/inway/config"
+	"go.nlx.io/nlx/management-api/configapi"
+	configmock "go.nlx.io/nlx/management-api/configapi/mock"
 )
 
 func createInway() (*Inway, error) {
@@ -110,10 +110,10 @@ func TestConfigApiResponseToEndpoints(t *testing.T) {
 	assert.Equal(t, config.AuthorizationmodelWhitelist, serviceDetails.AuthorizationModel)
 }
 
-func TestSetConfigAPIAddress(t *testing.T) {
+func TestSetManagementAPIAddress(t *testing.T) {
 	iw, err := createInway()
 	assert.Nil(t, err)
-	err = iw.SetConfigAPIAddress("https://configapi.mock")
+	err = iw.SetManagementAPIAddress("https://managementapi.mock")
 	assert.Nil(t, err)
 	assert.NotNil(t, iw.configAPIClient)
 }

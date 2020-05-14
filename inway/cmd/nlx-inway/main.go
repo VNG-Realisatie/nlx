@@ -34,7 +34,7 @@ var options struct {
 
 	DisableLogdb bool `long:"disable-logdb" env:"DISABLE_LOGDB" description:"Disable logdb connections"`
 
-	ConfigAPIAddress string `long:"config-api-address" env:"CONFIG_API_ADDRESS" description:"The address of the config API"`
+	ManagementAPIAddress string `long:"management-api-address" env:"MANAGEMENT_API_ADDRESS" description:"The address of the NLX Management API"`
 
 	SelfAddress string `long:"self-address" env:"SELF_ADDRESS" description:"The address that outways can use to reach me" required:"true"`
 
@@ -74,15 +74,16 @@ func main() {
 		logger.Fatal("cannot setup inway", zap.Error(err))
 	}
 
-	if len(options.ConfigAPIAddress) > 0 {
-		logger.Info("config-api set")
-		err = iw.SetConfigAPIAddress(options.ConfigAPIAddress)
+	if len(options.ManagementAPIAddress) > 0 {
+		logger.Info("management-api set")
+
+		err = iw.SetManagementAPIAddress(options.ManagementAPIAddress)
 		if err != nil {
-			logger.Fatal("cannot configure config-api", zap.Error(err))
+			logger.Fatal("cannot configure mangement-api", zap.Error(err))
 		}
 		err = iw.StartConfigurationPolling()
 		if err != nil {
-			logger.Fatal("cannot retrieving inway configuration from the config-api", zap.Error(err))
+			logger.Fatal("cannot retrieving inway configuration from the mangement-api", zap.Error(err))
 		}
 	} else {
 		serviceConfig, err2 := config.LoadServiceConfig(options.ServiceConfig)

@@ -13,9 +13,9 @@ RUN go mod download
 
 # Only add code that we use for building inway
 COPY inway                                          /go/src/go.nlx.io/nlx/inway
-COPY config-api                                     /go/src/go.nlx.io/nlx/config-api
 COPY directory-monitor/health                       /go/src/go.nlx.io/nlx/directory-monitor/health
 COPY directory-registration-api/registrationapi     /go/src/go.nlx.io/nlx/directory-registration-api/registrationapi
+COPY management-api                                 /go/src/go.nlx.io/nlx/management-api
 COPY txlog-db/dbversion                             /go/src/go.nlx.io/nlx/txlog-db/dbversion
 COPY common                                         /go/src/go.nlx.io/nlx/common
 

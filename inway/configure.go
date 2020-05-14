@@ -20,14 +20,14 @@ import (
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/version"
-	"go.nlx.io/nlx/config-api/configapi"
 	"go.nlx.io/nlx/inway/config"
+	"go.nlx.io/nlx/management-api/configapi"
 )
 
 var errConfigAPIUnavailable = fmt.Errorf("configAPI unavailable")
 
-// SetConfigAPIAddress configures the inway to use the config API instead of the config toml
-func (i *Inway) SetConfigAPIAddress(configAPIAddress string) error {
+// SetManagementAPIAddress configures the inway to use the NLX Management API instead of the config toml
+func (i *Inway) SetManagementAPIAddress(configAPIAddress string) error {
 	tlsConfig := tls.Config{
 		RootCAs:      i.roots,
 		Certificates: []tls.Certificate{*i.orgKeyPair},
@@ -38,7 +38,7 @@ func (i *Inway) SetConfigAPIAddress(configAPIAddress string) error {
 	connCtx, connCtxCancel := context.WithTimeout(context.Background(), 1*time.Minute)
 	defer connCtxCancel()
 
-	i.logger.Info("creating config api connection", zap.String("config api address", configAPIAddress))
+	i.logger.Info("creating management api connection", zap.String("management api address", configAPIAddress))
 	configAPIConn, err := grpc.DialContext(connCtx, configAPIAddress, grpc.WithTransportCredentials(creds))
 	if err != nil {
 		return err
@@ -120,14 +120,15 @@ func (i *Inway) SetServiceEndpoints(endpoints []ServiceEndpoint) error {
 }
 
 func (i *Inway) updateConfig(expBackOff *backoff.Backoff, defaultInterval time.Duration) time.Duration {
-	i.logger.Info("retrieving config from the config-api", zap.String("inwayname", i.name))
+	i.logger.Info("retrieving config from the management-api", zap.String("inwayname", i.name))
 	services, err := i.getServicesFromConfigAPI()
 	if err != nil {
 		if err == errConfigAPIUnavailable {
-			i.logger.Info("waiting for config-api...", zap.Error(err))
+			i.logger.Info("waiting for management-api...", zap.Error(err))
 			return expBackOff.Duration()
 		}
-		i.logger.Error("failed to contact the config-api", zap.Error(err))
+
+		i.logger.Error("failed to contact the management-api", zap.Error(err))
 
 		return defaultInterval
 	}
@@ -136,7 +137,7 @@ func (i *Inway) updateConfig(expBackOff *backoff.Backoff, defaultInterval time.D
 		i.logger.Info("detected changes in inway service config. updating services")
 		err = i.SetServiceEndpoints(services)
 		if err != nil {
-			i.logger.Error("unable to configure the inway with the config-api response", zap.Error(err))
+			i.logger.Error("unable to configure the inway with the management-api response", zap.Error(err))
 			return defaultInterval
 		}
 	}

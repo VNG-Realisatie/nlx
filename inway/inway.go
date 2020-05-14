@@ -29,8 +29,8 @@ import (
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/transactionlog"
-	"go.nlx.io/nlx/config-api/configapi"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
+	"go.nlx.io/nlx/management-api/configapi"
 )
 
 // Inway handles incoming requests and holds a list of registered ServiceEndpoints.
