@@ -2,7 +2,7 @@ Deploy acceptance:
   stage: Deploy
   image: registry.gitlab.com/commonground/core/review-app-deployer:latest
   environment:
-    name: acc
+    name: acceptance
   before_script:
     - export KUBECONFIG=/secrets/kubeconfig/delta.conf
     - export GIT_COMMIT_HASH=$(git rev-parse HEAD)
