@@ -4,30 +4,32 @@ Deploy Review App:
   variables:
     KUBECONFIG: /secrets/kubeconfig/review.conf
     REVIEW_BASE_DOMAIN: nlx.reviews
-    IMAGE_REGISTRY: "${REVIEW_REGISTRY_HOST}/${CI_PROJECT_PATH}"
-    IMAGE_TAG: $CI_COMMIT_SHORT_SHA
-    NAME: "nlx-${CI_ENVIRONMENT_SLUG}"
+    K8S_NAMESPACE: "nlx-${CI_ENVIRONMENT_SLUG}"
   before_script:
     - source ./.gitlab/ci/functions.sh
   script:
-    - export DOMAIN_SUFFIX="${NAME}.${REVIEW_BASE_DOMAIN}"
-    - echo -e -n "${DOMAIN_SUFFIX}" > ci_environment_url.txt
+    - |
+      export IMAGE_REGISTRY=$(cat ci_build_image_registry.txt)
+      export IMAGE_TAG=$(cat ci_build_image_tag.txt)
+      export IMAGE_VERSION=$(cat ci_build_image_version.txt)
+      export DOMAIN_SUFFIX="${K8S_NAMESPACE}.${REVIEW_BASE_DOMAIN}"
+      echo -e -n "${DOMAIN_SUFFIX}" > ci_environment_url.txt
     - |
       start_section helm_repo "Update Helm repositories"
       helm repo add stable "https://kubernetes-charts.storage.googleapis.com"
       helm repo update
       stop_section helm_repo
     - |
-      start_section namespace "Create namespace '${NAME}'"
+      start_section namespace "Create namespace '${K8S_NAMESPACE}'"
       kubectl version
-      kubectl create namespace "${NAME}" || true
+      kubectl create namespace "${K8S_NAMESPACE}" || true
       stop_section namespace
     - |
       start_section deploy_shared "Deploy shared chart"
       sed -e "s|{{DOMAIN_SUFFIX}}|${DOMAIN_SUFFIX}|g" ./helm/deploy/shared/values-review.yaml.tpl > shared-values-review.yaml
       helm upgrade shared ./helm/deploy/shared \
         --install \
-        --namespace ${NAME} \
+        --namespace ${K8S_NAMESPACE} \
         --set-string global.imageRegistry=${IMAGE_REGISTRY} \
         --set-string global.imageTag=${IMAGE_TAG} \
         --values shared-values-review.yaml
@@ -37,7 +39,7 @@ Deploy Review App:
       sed -e "s|{{DOMAIN_SUFFIX}}|${DOMAIN_SUFFIX}|g" ./helm/deploy/brp/values-review.yaml.tpl > brp-values-review.yaml
       helm upgrade brp ./helm/deploy/brp \
         --install \
-        --namespace ${NAME} \
+        --namespace ${K8S_NAMESPACE} \
         --set-string global.imageRegistry=${IMAGE_REGISTRY} \
         --set-string global.imageTag=${IMAGE_TAG} \
         --values brp-values-review.yaml
@@ -48,7 +50,7 @@ Deploy Review App:
       helm dependency build ./helm/deploy/rdw
       helm upgrade rdw ./helm/deploy/rdw \
         --install \
-        --namespace ${NAME} \
+        --namespace ${K8S_NAMESPACE} \
         --set-string global.imageRegistry=${IMAGE_REGISTRY} \
         --set-string global.imageTag=${IMAGE_TAG} \
         --values rdw-values-review.yaml
@@ -58,7 +60,7 @@ Deploy Review App:
       sed -e "s|{{DOMAIN_SUFFIX}}|${DOMAIN_SUFFIX}|g" ./helm/deploy/haarlem/values-review.yaml.tpl > haarlem-values-review.yaml
       helm upgrade haarlem ./helm/deploy/haarlem \
         --install \
-        --namespace ${NAME} \
+        --namespace ${K8S_NAMESPACE} \
         --set-string global.imageRegistry=${IMAGE_REGISTRY} \
         --set-string global.imageTag=${IMAGE_TAG} \
         --values haarlem-values-review.yaml
@@ -67,7 +69,7 @@ Deploy Review App:
       start_section deploy_review_page "Deploy review page chart"
       helm upgrade review-page ./helm/charts/review-page \
         --install \
-        --namespace ${NAME} \
+        --namespace ${K8S_NAMESPACE} \
         --set-string global.imageRegistry=${IMAGE_REGISTRY} \
         --set-string global.imageTag=${IMAGE_TAG} \
         --set-string config.environmentSlugWithDomain=${DOMAIN_SUFFIX} \
@@ -76,7 +78,7 @@ Deploy Review App:
         --set-string ingress.hosts[0]=${DOMAIN_SUFFIX}
       stop_section deploy_review_page
     - |
-      echo "export E2E_MANAGEMENT_UI_INWAY_VERSION=$(cat ci_build_git_tag_name.txt)" > e2e_environment.sh
+      echo "export E2E_MANAGEMENT_UI_INWAY_VERSION=${IMAGE_VERSION}" > e2e_environment.sh
       echo "export E2E_MANAGEMENT_UI_INWAY_NAME=rdw-nlx-inway" >> e2e_environment.sh
       echo "export E2E_MANAGEMENT_UI_INWAY_SELF_ADDRESS=rdw-nlx-inway:443" >> e2e_environment.sh
       echo "export E2E_MANAGEMENT_UI_DIRECTORY_ORGANIZATION_NAME=BRP" >> e2e_environment.sh
@@ -90,6 +92,8 @@ Deploy Review App:
     auto_stop_in: 1 week
   only:
     - /^feature/.*$/@commonground/nlx/nlx
+  dependencies:
+    - Build review
   artifacts:
     paths:
       - ci_environment_url.txt
@@ -103,19 +107,19 @@ Remove Review App:
   image: registry.gitlab.com/commonground/core/review-app-deployer:latest
   variables:
     KUBECONFIG: /secrets/kubeconfig/review.conf
-    NAME: "nlx-${CI_ENVIRONMENT_SLUG}"
+    K8S_NAMESPACE: "nlx-${CI_ENVIRONMENT_SLUG}"
   before_script:
     - source ./.gitlab/ci/functions.sh
   script:
     - |
-      for RELEASE in $(helm list --all --short --namespace "${NAME}"); do
+      for RELEASE in $(helm list --all --short --namespace "${K8S_NAMESPACE}"); do
         start_section "uninstall_${RELEASE}" "Uninstall relasese ${RELEASE}"
-        helm uninstall "${RELEASE}" --namespace "${NAME}"
+        helm uninstall "${RELEASE}" --namespace "${K8S_NAMESPACE}"
         stop_section "uninstall_${RELEASE}"
       done
     - |
-      start_section namespace "Delete namespace '${NAME}'"
-      kubectl delete namespace "${NAME}"
+      start_section namespace "Delete namespace '${K8S_NAMESPACE}'"
+      kubectl delete namespace "${K8S_NAMESPACE}"
       stop_section namespace
   when: manual
   environment:

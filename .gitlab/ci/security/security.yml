@@ -6,7 +6,7 @@ include:
 container_scanning:
   stage: Security
   variables:
-    IMAGE_REPOSITORY_BASE: commonground/nlx/nlx/nlxio
+    IMAGE_REPOSITORY_BASE: nlxio
     IMAGE_SUFFIXES: >
       ca-certportal
       ca-cfssl-unsafe

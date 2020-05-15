@@ -3,12 +3,13 @@ Build review:
   before_script:
     - docker login -u $REVIEW_REGISTRY_USERNAME -p $REVIEW_REGISTRY_PASSWORD $REVIEW_REGISTRY_HOST
     - export GIT_TAG_NAME=$(git describe --tags --abbrev=0)-review
-    - export IMAGE_PREFIX="${REVIEW_REGISTRY_HOST}/${CI_PROJECT_PATH}/"
+    - export IMAGE_REGISTRY="${REVIEW_REGISTRY_HOST}/${CI_PROJECT_PATH}"
+    - export IMAGE_PREFIX="${IMAGE_REGISTRY}/"
     - export IMAGE_TAG="${CI_COMMIT_SHORT_SHA}"
   script:
-    - echo -n "$REVIEW_REGISTRY_HOST" > ci_build_image_registry.txt
-    - echo -n "$IMAGE_TAG" > ci_build_image_tag.txt
-    - echo -n "$GIT_TAG_NAME" > ci_build_git_tag_name.txt
+    - echo -n "${IMAGE_REGISTRY}" > ci_build_image_registry.txt
+    - echo -n "${IMAGE_TAG}" > ci_build_image_tag.txt
+    - echo -n "${GIT_TAG_NAME}" > ci_build_image_version.txt
     - docker-compose version
     - time docker-compose build --parallel
     - time docker-compose push
@@ -16,7 +17,7 @@ Build review:
     paths:
       - ci_build_image_registry.txt
       - ci_build_image_tag.txt
-      - ci_build_git_tag_name.txt
+      - ci_build_image_version.txt
   only:
     - /^feature/.*$/@commonground/nlx/nlx
   except:
