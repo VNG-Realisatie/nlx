@@ -3,27 +3,42 @@ Deploy acceptance:
   image: registry.gitlab.com/commonground/core/review-app-deployer:latest
   environment:
     name: acceptance
+  variables:
+    KUBECONFIG: /secrets/kubeconfig/delta.conf
+    K8S_NAMESPACE: nlx-acceptance
+    HELM_CHARTS_TO_DEPLOY: "shared brp rdw haarlem"
   before_script:
-    - export KUBECONFIG=/secrets/kubeconfig/delta.conf
-    - export GIT_COMMIT_HASH=$(git rev-parse HEAD)
-    - export GIT_TAG_NAME=$(git describe --tags)
-    - export IMAGE_PREFIX="${CI_REGISTRY_IMAGE}/"
-    - export IMAGE_TAG="${GIT_TAG_NAME}"
+    - source ./.gitlab/ci/functions.sh
   script:
     - |
-      helm upgrade --install nlx-${CI_ENVIRONMENT_NAME}-directory ./helm/nlx-directory \
-        --namespace nlx-${CI_ENVIRONMENT_NAME}-directory \
-        --values ./helm/nlx-directory/values-${CI_ENVIRONMENT_NAME}.yaml \
-        --set imageTag=$IMAGE_TAG \
-        --set imagePrefix=$IMAGE_PREFIX
-      for ORG in haarlem rdw brp
-      do
-        helm upgrade --install nlx-${CI_ENVIRONMENT_NAME}-${ORG} ./helm/nlx-organization \
-          --namespace nlx-${CI_ENVIRONMENT_NAME}-${ORG} \
-          --values ./helm/nlx-organization/values-${CI_ENVIRONMENT_NAME}-${ORG}.yaml \
-          --set imageTag=$IMAGE_TAG \
-          --set imagePrefix=$IMAGE_PREFIX
+      export IMAGE_REGISTRY=$(cat ci_build_image_registry.txt)
+      export IMAGE_TAG=$(cat ci_build_image_tag.txt)
+    - |
+      start_section helm_repo "Update Helm repositories"
+      helm repo add stable "https://kubernetes-charts.storage.googleapis.com"
+      helm repo update
+      stop_section helm_repo
+    - |
+      for CHART in ${HELM_CHARTS_TO_DEPLOY}; do
+        start_section deploy_${CHART} "Deploying chart '${CHART}'"
+        CHART_DIRECTORY="./helm/deploy/${CHART}"
+
+        if [ -f ${CHART_DIRECTORY}/Chart.lock ]; then
+          start_section dependency_${CHART} "Installing Chart dependencies"
+          helm dependency build ./helm/deploy/${CHART}
+          stop_section dependency_${CHART}
+        fi
+
+        helm upgrade ${CHART} ${CHART_DIRECTORY} \
+          --install \
+          --namespace ${K8S_NAMESPACE} \
+          --set-string global.imageRegistry=${IMAGE_REGISTRY} \
+          --set-string global.imageTag=${IMAGE_TAG} \
+          --values ${CHART_DIRECTORY}/values-acceptance.yaml
+        stop_section deploy_${CHART}
       done
+  dependencies:
+    - Build acceptance
   only:
     - master@commonground/nlx/nlx
   except:

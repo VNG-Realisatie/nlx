@@ -1,0 +1,26 @@
+################
+## Sub-charts ##
+################
+nlx-inway:
+  config:
+    serviceConfig:
+      services:
+        demo-api:
+          insight-api-url: https://insight-api.acc.voorbeeld-haarlem.nl
+          irma-api-url: https://irma-api.acc.voorbeeld-haarlem.nl
+
+insight-api:
+  ingress:
+    hosts:
+      - insight-api.acc.voorbeeld-haarlem.nl
+
+irma-server:
+  ingress:
+    annotations:
+      ingress.kubernetes.io/custom-response-headers: "Access-Control-Allow-Origin: https://insight.acc.nlx.io"
+    host: irma-api.acc.voorbeeld-haarlem.nl
+
+parkeervergunning-application:
+  ingress:
+    hosts:
+      - application.acc.voorbeeld-haarlem.nl

@@ -1,0 +1,115 @@
+################
+## Sub-charts ##
+################
+ca-cfssl-unsafe:
+  config:
+    generateCertificate: false
+    certPEM: |
+      # Subject: O=Common Ground NLX CA, OU=NLX
+      # Issuer: O=Common Ground NLX CA, OU=NLX
+      -----BEGIN CERTIFICATE-----
+      MIIFKjCCAxKgAwIBAgIUHICIGRRsN2Rv+H6SQlobvUtx+YAwDQYJKoZIhvcNAQEN
+      BQAwLTEdMBsGA1UEChMUQ29tbW9uIEdyb3VuZCBOTFggQ0ExDDAKBgNVBAsTA05M
+      WDAeFw0xODEwMDgxNTMzMDBaFw0yMzEwMDcxNTMzMDBaMC0xHTAbBgNVBAoTFENv
+      bW1vbiBHcm91bmQgTkxYIENBMQwwCgYDVQQLEwNOTFgwggIiMA0GCSqGSIb3DQEB
+      AQUAA4ICDwAwggIKAoICAQC/xaYd6KP9CQxka9/2dKF6sLq1jv3YMaty6/+dORdB
+      ND1qYnYncE0YsV/gzTbM2LELhqy6re+pEaIdof2ZncXNxwxzKvYsTW+jILHgUBF1
+      B4nYK7IrDdYFdjDsv3yKmBwkPsjX9A2ZM+RyQXBJiWlXIKOsNv8WoBamUWwgqAK4
+      hpJmpiXWj5mfei9otkBNpQVLSMYX13BsfCa28JCEplktGj5tKhckaXOU1dpHkGoe
+      WBfwL5pL4bkC15nBIA9frlzBjZkVykTOW1/B3rRSVkZTfA3bG7lBt+L2WtsECgo4
+      vSpHDlcUuzXSdPgTb8aWZyhCy/2zDh3St3YTfuNeX8WY1LVhmLFSNtJI8rvvBzSY
+      XJKHa2Dv5hRIE9cEUYLRoAjmIFVHWjdFWkfAteYhu2NNNUPFgb0W260m1qmZh8dL
+      znscKetmPjgPKyIWS1AOOUKtmR8xb7MSaboW1Ve54dTwk4YYxnySyOKfhR2EtWJA
+      LGv8LS/NNvKAEVcBPajstMx/mtlNVWrr0FZRTtSC3i+3DTGfwQZpv+baXlpNO5z6
+      52r+p5BiScLQQ8SQcHWQYuEDjpm4m1bdhTzZkEg5PjQDrMM1vER2V2mThdXVe/dc
+      DNjMTysM8mS21LHFqShxS7Ei03n0Es2pjI3BNHq4yXQpAT8UV6E4f1CUcGF3uIsL
+      nQIDAQABo0IwQDAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zAdBgNV
+      HQ4EFgQUD+ozn8yblDWSCoV016Xb4SEKbc8wDQYJKoZIhvcNAQENBQADggIBAFUa
+      DYG0i1ia1tUDq0BmlaT103kJCzYE6mTlqSL21RLPrayplAIKuqplRAeVqGBhil1d
+      +ZZSanup6PvhhILNeGV8HsOd0T7JmS8fViI/IpCEI/84Hc5fCp55eQl5d7ySyDF5
+      kzmy2Y69xBtJgOZPQIR2evOsbARxn2M+eYO8tR5u9xdFEVnIBsJmiGaf0gu3NNM4
+      hRxHpKdlQRAQ+Psd05TrS12TgSxcrrNP+cF9N9AVJgtOFzOPbj8c3+0zISdxjA8M
+      Ju8p2ZuP50ZEbSmsWo1AQi3HcJYXPHVb3RwY9R3FyuqOWgHgJawBaMSlvRqg2Ahz
+      PR9o4RxTpILWMBo/fdWyP81YzGYDUazXMe+Cu2GsxtGW3siNrXP9jpV3Gc/enrBm
+      kYYLXUYU6xmW6xmZi5M/bX8GOLaGwknOrvBaJ5NYJDVL+sEysVNTZtjgwZx0Udvf
+      fZKNkOrz9kRsYCAK6tfbHBMNLB0A12sH4ClLx0pacSlv958U3vafzpDXAyns//wr
+      at0GCC2Y90NO9Vp5j7Hr9zn1Vz+QVJNBMwvNePlIn14dZK2bKsoO2Ha73Vd1PbBg
+      oLYyKZLN9KDmOmv5+ctPGGgKA+IdjnWay+kXXCLKISpWjj8C/y7+9xH9gN5RRIbk
+      fW8ljrrTdfPZShlgVPSJAjXDMgq/EMSHmuumLjfV
+      -----END CERTIFICATE-----
+    keyPEM: |
+      -----BEGIN RSA PRIVATE KEY-----
+      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
+      -----END RSA PRIVATE KEY-----
+
+nlx-directory:
+  ui:
+    ingress:
+      hosts:
+        - "directory.acc.nlx.io"
+
+nlx-docs:
+  ingress:
+    hosts:
+      - "docs.acc.nlx.io"
+
+ca-certportal:
+  ingress:
+    hosts:
+      - "certportal.acc.nlx.io"
+
+insight-ui:
+  config:
+    navbarDocsPageURL: "https://docs.acc.nlx.io"
+    navbarDirectoryURL: "https://directory.acc.nlx.io"
+  ingress:
+    hosts:
+      - "insight.acc.nlx.io"

@@ -1,0 +1,45 @@
+###########
+## Chart ##
+###########
+configAPI:
+  insight:
+    insightAPIURL: https://insight-api.acc.voorbeeld-rdw.nl
+    irmaServerURL: https://irma-api.acc.voorbeeld-rdw.nl
+
+################
+## Sub-charts ##
+################
+nlx-management:
+  config:
+    directoryEndpointURL: https://directory.acc.nlx.io/api
+    oidc:
+      clientSecret: gKV1nhAtGx2fJLMbx0ao
+      discoveryURL: https://dex.acc.voorbeeld-rdw.nl
+      redirectURL: https://management.acc.voorbeeld-rdw.nl/oidc/callback
+      sessionSignKey: wXDSJYQjSLCsigtnRCbBMWjnvEhHFdu4
+  ingress:
+    uiHostname: management.acc.voorbeeld-rdw.nl
+
+dex:
+  config:
+    issuer: https://dex.acc.voorbeeld-rdw.nl
+    staticClients:
+      - id: nlx-management
+        name: NLX Management
+        secret: gKV1nhAtGx2fJLMbx0ao
+        redirectURIs:
+          - https://management.acc.voorbeeld-rdw.nl/oidc/callback
+  ingress:
+    hosts:
+      - dex.acc.voorbeeld-rdw.nl
+
+insight-api:
+  ingress:
+    hosts:
+      - insight-api.acc.voorbeeld-rdw.nl
+
+irma-server:
+  ingress:
+    annotations:
+      ingress.kubernetes.io/custom-response-headers: "Access-Control-Allow-Origin: https://insight.acc.nlx.io"
+    host: irma-api.acc.voorbeeld-rdw.nl

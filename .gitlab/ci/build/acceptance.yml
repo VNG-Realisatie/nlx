@@ -7,8 +7,8 @@ Build acceptance:
     - export IMAGE_PREFIX="${CI_REGISTRY_IMAGE}/"
     - export IMAGE_TAG="${GIT_TAG_NAME}"
   script:
-    - echo -n "$CI_REGISTRY" > ci_build_image_registry.txt
-    - echo -n "$IMAGE_TAG" > ci_build_image_tag.txt
+    - echo -n "${CI_REGISTRY_IMAGE}" > ci_build_image_registry.txt
+    - echo -n "${IMAGE_TAG}" > ci_build_image_tag.txt
     - docker-compose version
     - time docker-compose build --parallel
     - time docker-compose push
