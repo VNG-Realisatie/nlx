@@ -37,15 +37,15 @@ import (
 
 // API handles incoming requests and authenticates them
 type API struct {
-	logger           *zap.Logger
-	organizationName string
-	roots            *x509.CertPool
-	orgCertKeyPair   *tls.Certificate
-	process          *process.Process
-	mux              *runtime.ServeMux
-	grpcServer       *grpc.Server
-	authenticator    *oidc.Authenticator
-	directoryClient  *directory.Client
+	logger          *zap.Logger
+	environment     *Environment
+	roots           *x509.CertPool
+	orgCertKeyPair  *tls.Certificate
+	process         *process.Process
+	mux             *runtime.ServeMux
+	grpcServer      *grpc.Server
+	authenticator   *oidc.Authenticator
+	directoryClient *directory.Client
 }
 
 const (
@@ -91,9 +91,6 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.
 		return nil, errors.New("authenticator is not configured")
 	}
 
-	organizationName := orgCert.Subject.Organization[0]
-	logger.Info("loaded certificates for api", zap.String("api-organization-name", organizationName))
-
 	directoryRegistrationClient, err := newDirectoryRegistrationClient(roots, orgKeyPair, directoryRegistrationAddress)
 	if err != nil {
 		logger.Fatal("failed to setup directory client", zap.Error(err))
@@ -109,16 +106,20 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.
 		return nil, err
 	}
 
+	environment := &Environment{
+		OrganizationName: orgCert.Subject.Organization[0],
+	}
+
 	api := &API{
-		logger:           logger.With(zap.String("api-organization-name", organizationName)),
-		organizationName: organizationName,
-		roots:            roots,
-		orgCertKeyPair:   orgKeyPair,
-		grpcServer:       grpcServer,
-		process:          mainProcess,
-		mux:              runtime.NewServeMux(),
-		authenticator:    authenticator,
-		directoryClient:  directoryClient,
+		logger:          logger.With(zap.String("api-organization-name", environment.OrganizationName)),
+		environment:     environment,
+		roots:           roots,
+		orgCertKeyPair:  orgKeyPair,
+		grpcServer:      grpcServer,
+		process:         mainProcess,
+		mux:             runtime.NewServeMux(),
+		authenticator:   authenticator,
+		directoryClient: directoryClient,
 	}
 
 	return api, nil

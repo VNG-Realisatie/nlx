@@ -60,6 +60,7 @@ func (a *API) ListenAndServe(address, configAddress string) error {
 	r.Mount("/oidc", a.authenticator.Routes())
 	r.Mount("/api", a.authenticator.OnlyAuthenticated(a.mux))
 	r.Mount("/api/v1/directory", directoryRoutes(a))
+	r.Mount("/api/v1/environment", environmentRoutes(a))
 
 	server := &http.Server{
 		Addr:    address,

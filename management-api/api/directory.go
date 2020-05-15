@@ -55,7 +55,7 @@ func (a *API) directoryServicesHandler(w http.ResponseWriter, r *http.Request) {
 	filtered := make([]*DirectoryService, 0)
 
 	for _, s := range services {
-		if s.OrganizationName == a.organizationName {
+		if s.OrganizationName == a.environment.OrganizationName {
 			continue
 		}
 
