@@ -4,7 +4,7 @@ Deploy acceptance:
   environment:
     name: acceptance
   variables:
-    KUBECONFIG: /secrets/kubeconfig/delta.conf
+    KUBECONFIG: /secrets/kubeconfig/dv-core-prod.conf
     K8S_NAMESPACE: nlx-acceptance
     HELM_CHARTS_TO_DEPLOY: "shared brp rdw haarlem"
   before_script:
