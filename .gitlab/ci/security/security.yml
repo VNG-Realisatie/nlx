@@ -51,7 +51,7 @@ container_scanning:
     - jq -s '.[0].version as $version | [.[] | to_entries] | flatten | reduce .[] as $dot ({}; .[$dot.key] += $dot.value) | .version = $version' /reports/*/gl-container-scanning-report.json > gl-container-scanning-report.json
   dependencies:
     - Build acceptance
-    - Build review
+    # - Build review
   rules:
     - if: '$CI_COMMIT_BRANCH == "master" && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
     - if: '$CI_COMMIT_BRANCH =~ /^feature\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'

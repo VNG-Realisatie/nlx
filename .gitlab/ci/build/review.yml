@@ -1,4 +1,5 @@
-Build review:
+# Build review:
+.Build review:
   stage: Build
   before_script:
     - docker login -u $REVIEW_REGISTRY_USERNAME -p $REVIEW_REGISTRY_PASSWORD $REVIEW_REGISTRY_HOST

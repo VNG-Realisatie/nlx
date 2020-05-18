@@ -1,4 +1,5 @@
-Deploy Review App:
+# Deploy Review App:
+.Deploy Review App:
   stage: Deploy
   image: registry.gitlab.com/commonground/core/review-app-deployer:latest
   variables:
@@ -102,7 +103,8 @@ Deploy Review App:
     - cg
     - docker
 
-Remove Review App:
+# Remove Review App:
+.Remove Review App:
   stage: Deploy
   image: registry.gitlab.com/commonground/core/review-app-deployer:latest
   variables:

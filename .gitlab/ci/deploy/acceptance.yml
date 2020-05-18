@@ -40,7 +40,7 @@ Deploy acceptance:
   dependencies:
     - Build acceptance
   only:
-    - master@commonground/nlx/nlx
+    - feature/935-ci-acceptance-helm-v3@commonground/nlx/nlx
   except:
     - tags
     - schedules
