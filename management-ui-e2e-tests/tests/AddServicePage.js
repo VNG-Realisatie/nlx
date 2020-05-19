@@ -5,6 +5,8 @@ import { waitForReact } from 'testcafe-react-selectors'
 import { axeCheck, createReport } from 'axe-testcafe'
 import { adminUser } from './roles'
 import page, { AUTHORIZATION_TYPE_NONE } from './page-objects/add-service'
+import { INWAY_NAME } from './environment'
+import { generateServiceName, removeService } from './services'
 
 const getBaseUrl = require('../getBaseUrl')
 const baseUrl = getBaseUrl()
@@ -15,6 +17,11 @@ fixture `Add Service page`
       .useRole(adminUser)
       .navigateTo(`${baseUrl}/services/add-service`)
     await waitForReact()
+  })
+  .afterEach(async (t) => {
+    if (t.ctx.serviceName) {
+      await removeService()
+    }
   })
 
 test('Automated accessibility testing', async t => {
@@ -40,6 +47,7 @@ test('Adding a new service', async t => {
   })
   await t.expect(page.nameFieldError.innerText).contains('Dit veld is verplicht.')
 
-  await page.fillAndSubmitForm({ name: 'my-service' })
+  t.ctx.serviceName = generateServiceName()
+  await page.fillAndSubmitForm({ name: t.ctx.serviceName })
   await t.expect(page.alert.innerText).contains('De service is toegevoegd.')
 })

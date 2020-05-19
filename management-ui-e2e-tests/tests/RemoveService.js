@@ -4,28 +4,17 @@
 import { Selector } from 'testcafe'
 
 import { adminUser } from "./roles"
+import { createService } from './services'
 
 const getBaseUrl = require('../getBaseUrl')
 const baseUrl = getBaseUrl()
 
-const id = `${Math.round(Math.random() * 1000000)}`
-
 fixture`ServiceDetails remove`
   .beforeEach(async t => {
-    t.ctx.removableServiceName = `remove-service-${t.testRun.browserConnection.browserInfo.alias.replace(':', '_')}-${id}`
-    const submitButton = Selector('button[type="submit"]')
-    const alert = Selector('[role="alert"]')
-
     await t
       .useRole(adminUser)
-      .navigateTo(`${baseUrl}/services/add-service`)
-      .typeText('#name', t.ctx.removableServiceName)
-      .typeText('#endpointURL', `${t.ctx.removableServiceName}.test:8000`)
-      .typeText('#documentationURL', `${t.ctx.removableServiceName}.test:8000/docs`)
-      .typeText('#apiSpecificationURL', `${t.ctx.removableServiceName}.test:8000/openapi.json`)
-      .click(submitButton)
-      .expect(alert.innerText).contains('De service is toegevoegd.')
-      .navigateTo(`${baseUrl}/services/${t.ctx.removableServiceName}`)
+    const serviceName = await createService()
+    await t.navigateTo(`${baseUrl}/services/${serviceName}`)
   })
 
 test('Removing a service', async t => {
