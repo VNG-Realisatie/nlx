@@ -6,6 +6,7 @@ import { waitForReact } from 'testcafe-react-selectors'
 import { axeCheck, createReport } from 'axe-testcafe'
 import { adminUser } from './roles'
 import addPage from './page-objects/add-service'
+import detailPage from './page-objects/service-detail'
 import { INWAY_NAME } from './environment'
 import { createService, removeService } from './services'
 
@@ -31,7 +32,7 @@ test('Automated accessibility testing', async t => {
 })
 
 test('Page title is visible', async t => {
-  const pageTitle = Selector('h1')
+  const pageTitle = addPage.title
 
   await t
     .navigateTo(`${baseUrl}/services/${t.ctx.serviceName}/edit-service`)
@@ -40,16 +41,13 @@ test('Page title is visible', async t => {
 })
 
 test('Updating the service', async t => {
-  const submitButton = Selector('button[type="submit"]')
-  const alert = Selector('[role="alert"]')
-  const editButton = Selector('[data-testid="edit-button"]')
   await t
     .navigateTo(`${baseUrl}/services/${t.ctx.serviceName}`)
-    .click(editButton)
+    .click(detailPage.editButton)
     await addPage.fillAndSubmitForm({publishToCentralDirectory: false, inways: [INWAY_NAME]})
     await t
-    .expect(alert.innerText).contains('De service is bijgewerkt.')
-    .navigateTo(`${baseUrl}/services/${(t.ctx.serviceName)}`)
-    .expect(Selector('[data-testid="service-published"]').innerText).contains( 'Niet zichtbaar in centrale directory')
-    .expect(Selector('[data-testid="service-inways"]').innerText).eql( 'Inways1')
+    .expect(addPage.alert.innerText).contains('De service is bijgewerkt.')
+    .navigateTo(`${baseUrl}/services/${t.ctx.serviceName}`)
+    .expect(detailPage.published.innerText).contains( 'Niet zichtbaar in centrale directory')
+    .expect(detailPage.inways.innerText).eql( 'Inways1')
 })

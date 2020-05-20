@@ -2,7 +2,8 @@
 // Licensed under the EUPL
 
 import addPage, { AUTHORIZATION_TYPE_NONE } from './page-objects/add-service'
-import { Selector, t } from "testcafe"
+import detailPage from './page-objects/service-detail'
+import { t } from "testcafe"
 
 import getBaseUrl from '../getBaseUrl'
 
@@ -42,10 +43,7 @@ export async function createService() {
 }
 
 export async function removeService() {
-  const removeButton = Selector('[data-testid="remove-service"]')
-  const alert = Selector('[role="alert"]')
-
-  await t.navigateTo(`${baseUrl}/services/${(t.ctx.serviceName)}`)
+  await t.navigateTo(`${baseUrl}/services/${t.ctx.serviceName}`)
 
   await t
     .setNativeDialogHandler((type, text, url) => {
@@ -54,9 +52,9 @@ export async function removeService() {
       }
       return true
     })
-    .click(removeButton)
+    .click(detailPage.removeButton)
 
   await t
-    .expect(alert.innerText).contains('De service is verwijderd.')
+    .expect(detailPage.alert.innerText).contains('De service is verwijderd.')
   t.ctx.serviceName = null
 }

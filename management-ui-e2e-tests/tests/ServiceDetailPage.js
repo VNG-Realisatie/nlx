@@ -1,12 +1,12 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 
-import { Selector } from 'testcafe'
 import { waitForReact } from 'testcafe-react-selectors'
 import { axeCheck, createReport } from 'axe-testcafe'
 
-import { adminUser } from "./roles";
+import { adminUser } from "./roles"
 import getLocation from '../getLocation'
+import page from './page-objects/service-detail'
 
 const getBaseUrl = require('../getBaseUrl')
 const baseUrl = getBaseUrl()
@@ -25,19 +25,14 @@ test('Automated accessibility testing', async t => {
 })
 
 test('Service details are visible', async t => {
-  const serviceName = Selector('[data-testid="service-name"]');
-  const servicePublished = Selector('[data-testid="service-published"]');
-
   await t
-    .expect((await serviceName.innerText).trim()).eql('kentekenregister')
-    .expect(servicePublished.visible).ok()
+    .expect((await page.serviceName.innerText).trim()).eql('kentekenregister')
+    .expect(page.published.visible).ok()
 })
 
 test('Close navigates to the ServicesPage', async t => {
-  const closeButton = Selector('[data-testid="close-button"]');
-
   await t
-    .expect(closeButton.exists).ok()
-    .click(closeButton)
+    .expect(page.closeButton.exists).ok()
+    .click(page.closeButton)
     .expect(getLocation()).contains(`${baseUrl}/services`);
 })
