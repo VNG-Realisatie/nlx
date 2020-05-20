@@ -22,7 +22,7 @@ import {
   AUTHORIZATION_TYPE_WHITELIST,
 } from '../../vocabulary'
 import FormikFocusError from '../FormikFocusError'
-import { Form } from './index.styles'
+import { Form, ServiceNameWrapper } from './index.styles'
 
 const DEFAULT_INITIAL_VALUES = {
   name: '',
@@ -80,17 +80,19 @@ const ServiceForm = ({
       >
         {({ handleSubmit }) => (
           <Form onSubmit={handleSubmit} data-testid="form" {...props}>
-            <Fieldset>
-              <Legend>{t('API details')}</Legend>
-
+            <ServiceNameWrapper>
               <TextInput
                 name="name"
                 id="name"
                 size="l"
                 {...(disableName ? { disabled: true } : {})}
               >
-                {t('API name')}
+                {t('Service name')}
               </TextInput>
+            </ServiceNameWrapper>
+
+            <Fieldset>
+              <Legend>{t('API details')}</Legend>
 
               <TextInput name="endpointURL" id="endpointURL" size="xl">
                 {t('API endpoint URL')}
@@ -111,10 +113,6 @@ const ServiceForm = ({
               >
                 {t('API specification URL')}
               </TextInput>
-
-              <Checkbox name="publishedInDirectory" id="publishedInDirectory">
-                {t('Publish to central directory')}
-              </Checkbox>
             </Fieldset>
 
             <Fieldset>
@@ -157,6 +155,14 @@ const ServiceForm = ({
                   {t('Allow all organizations')}
                 </Radio>
               </Radio.Group>
+            </Fieldset>
+
+            <Fieldset>
+              <Legend>{t('Visibility')}</Legend>
+
+              <Checkbox name="publishedInDirectory" id="publishedInDirectory">
+                {t('Publish to central directory')}
+              </Checkbox>
             </Fieldset>
 
             <Button type="submit">{submitButtonText}</Button>

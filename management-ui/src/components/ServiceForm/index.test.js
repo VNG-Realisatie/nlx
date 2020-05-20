@@ -31,7 +31,7 @@ describe('with initial values', () => {
       />,
     )
 
-    expect(getByLabelText('API name').value).toBe('my-service')
+    expect(getByLabelText('Service name').value).toBe('my-service')
     expect(getByLabelText('API endpoint URL').value).toBe(
       'my-service.test:8000',
     )
@@ -97,7 +97,7 @@ test('the form values of the onSubmitHandler', async () => {
   expect(nameError).not.toBeNull()
 
   // fill-in required fields
-  const nameField = getByLabelText('API name')
+  const nameField = getByLabelText('Service name')
   fireEvent.change(nameField, {
     target: { value: 'my-service' },
   })
