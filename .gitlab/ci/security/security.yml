@@ -1,3 +1,8 @@
+# Workaround for https://gitlab.com/gitlab-org/gitlab/-/issues/213769
+# Opt-out of non-DinD solution based on https://gitlab.com/gitlab-org/gitlab/-/issues/37278
+variables:
+  SAST_DISABLE_DIND: "false"
+
 include:
   - template: Container-Scanning.gitlab-ci.yml
   - template: Dependency-Scanning.gitlab-ci.yml
