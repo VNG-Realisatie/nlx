@@ -4,7 +4,9 @@
 
 import React, { useContext, useRef, useState } from 'react'
 import Cookies from 'js-cookie'
+import { CSSTransition } from 'react-transition-group'
 import { useTranslation } from 'react-i18next'
+
 import Avatar from '../Avatar'
 import UserContext from '../../user-context'
 import useClickOutside from '../../hooks/use-click-outside'
@@ -64,7 +66,11 @@ const UserNavigation = ({ ...props }) => {
         />
       </StyledToggleButton>
 
-      {menuIsOpen ? (
+      <CSSTransition
+        in={menuIsOpen}
+        timeout={ANIMATION_DURATION}
+        classNames="user-menu-slide"
+      >
         <ul id="user-menu-options" data-testid="user-menu-options">
           <li>
             <form method="POST" action="/oidc/logout">
@@ -77,7 +83,7 @@ const UserNavigation = ({ ...props }) => {
             </form>
           </li>
         </ul>
-      ) : null}
+      </CSSTransition>
     </StyledUserNavigation>
   )
 }

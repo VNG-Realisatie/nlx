@@ -23,40 +23,50 @@ export const StyledAvatar = styled.figure`
 `
 
 export const StyledUserNavigation = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
-  position: relative;
 
   img {
     margin-right: ${(p) => p.theme.tokens.spacing04};
   }
 
-  .user-menu-slide-enter {
-    transition: transform ${(p) => p.animationDuration}ms ease-in-out;
-    transform: scaleY(0);
-  }
-  .user-menu-slide-enter-done {
-    transform: scaleY(1);
-  }
-  .user-menu-slide-exit {
-    transform: scaleY(1);
-  }
-  .user-menu-slide-exit-done {
-    transform: scaleY(0);
-    transition: transform ${(p) => p.animationDuration}ms ease-in-out;
+  @keyframes menuToggle {
+    0% {
+      transform: scaleY(0);
+    }
+    80% {
+      transform: scaleY(1.1);
+    }
+    100% {
+      transform: scaleY(1);
+    }
   }
 
   ul {
-    display: block;
     position: absolute;
     top: 35px;
     right: 0;
+    z-index: 2;
+    display: block;
     padding: 0;
+    min-width: 200px;
+    list-style-type: none;
     background: ${(p) => p.theme.tokens.colorPaletteGray800};
     box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.25);
-    list-style-type: none;
-    min-width: 200px;
-    z-index: 2;
+
+    transform: scaleY(0);
+    transform-origin: top center;
+    transition: transform ${(p) => p.animationDuration}ms ease-in-out;
+
+    &.user-menu-slide-enter,
+    &.user-menu-slide-enter-done {
+      transform: scaleY(1);
+    }
+    &.user-menu-slide-exit,
+    &.user-menu-slide-exit-done {
+      transform: scaleY(0);
+    }
 
     li {
       &:not(:last-child) {
