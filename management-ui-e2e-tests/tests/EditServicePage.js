@@ -36,7 +36,7 @@ test('Page title is visible', async t => {
   await t
     .navigateTo(`${baseUrl}/services/${t.ctx.serviceName}/edit-service`)
     .expect(pageTitle.visible).ok()
-    .expect(pageTitle.innerText).eql('Bestaande service bijwerken')
+    .expect(pageTitle.innerText).eql('Service bewerken')
 })
 
 test('Updating the service', async t => {
@@ -46,9 +46,10 @@ test('Updating the service', async t => {
   await t
     .navigateTo(`${baseUrl}/services/${t.ctx.serviceName}`)
     .click(editButton)
-    .click('#publishedInDirectory')
-    .click(submitButton)
+    await addPage.fillAndSubmitForm({publishToCentralDirectory: false, inways: [INWAY_NAME]})
+    await t
     .expect(alert.innerText).contains('De service is bijgewerkt.')
     .navigateTo(`${baseUrl}/services/${(t.ctx.serviceName)}`)
     .expect(Selector('[data-testid="service-published"]').innerText).contains( 'Niet zichtbaar in centrale directory')
+    .expect(Selector('[data-testid="service-inways"]').innerText).eql( 'Inways1')
 })

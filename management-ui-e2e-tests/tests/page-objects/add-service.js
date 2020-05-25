@@ -19,6 +19,12 @@ class Checkbox {
       await t.click(this.checkbox)
     }
   }
+  async disable() {
+    const checked = await this.checkbox.checked
+    if (checked) {
+      await t.click(this.checkbox)
+    }
+  }
 }
 
 class AuthorizationType {
@@ -43,6 +49,7 @@ class Page {
       whitelist: new AuthorizationType('Whitelist voor geauthorizeerde organisaties'),
       none: new AuthorizationType('Alle organisaties toestaan'),
     }
+    this.inway = (name) =>  Selector(`[name="inways"][value=${name}]`)
 
     this.submitButton = Selector('button[type="submit"]')
     this.alert = Selector('[role="alert"]')
@@ -50,7 +57,7 @@ class Page {
     this.nameFieldError = Selector('[data-testid="error-name"]')
   }
 
-  async fillAndSubmitForm({ name, endpointUrl, documentationUrl, apiSpecificationUrl, publishToCentralDirectory, techSupportContact, publicSupportContact, authorizationType }) {
+  async fillAndSubmitForm({ name, endpointUrl, documentationUrl, apiSpecificationUrl, publishToCentralDirectory, techSupportContact, publicSupportContact, authorizationType, inways }) {
     if (typeof name !== 'undefined') {
       await t.typeText(this.nameInput, name, { replace: true })
     }
@@ -66,8 +73,12 @@ class Page {
       await t.typeText(this.apiSpecificationUrlInput, apiSpecificationUrl, { replace: true })
     }
 
-    if (typeof publishToCentralDirectory !== 'undefined' && publishToCentralDirectory) {
-      await this.publishToCentralDirectory.enable()
+    if (typeof publishToCentralDirectory !== 'undefined') {
+      if (publishToCentralDirectory) {
+        await this.publishToCentralDirectory.enable()
+      } else {
+        await this.publishToCentralDirectory.disable()
+      }
     }
 
     if (typeof techSupportContact !== 'undefined') {
@@ -78,7 +89,13 @@ class Page {
       await t.typeText(this.publicSupportContactInput, publicSupportContact, { replace: true })
     }
 
-    if (typeof authorizationType !== undefined) {
+    if (typeof inways !== 'undefined') {
+      for (const inway in inways) {
+        await t.click(this.inway(inways[inway]))
+      }
+    }
+
+    if (typeof authorizationType !== 'undefined') {
       switch (authorizationType) {
         case AUTHORIZATION_TYPE_NONE:
           await t.click(this.authorizationModes.none.radioButton);
@@ -89,7 +106,7 @@ class Page {
           break;
 
         default:
-          console.error(`invalid authorization type '${authorizationType}'`)
+          throw new Error(`invalid authorization type '${authorizationType}'`)
       }
     }
 

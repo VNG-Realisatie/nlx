@@ -44,6 +44,7 @@ test('Adding a new service', async t => {
     techSupportContact: 'tech@organization.test',
     publicSupportContact: 'public@organization.test',
     authorizationType: AUTHORIZATION_TYPE_NONE,
+    inways: [INWAY_NAME],
   })
   await t.expect(page.nameFieldError.innerText).contains('Dit veld is verplicht.')
 
