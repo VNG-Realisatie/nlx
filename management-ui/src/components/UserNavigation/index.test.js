@@ -4,7 +4,7 @@
 import React from 'react'
 import { MemoryRouter as Router } from 'react-router-dom'
 
-import { renderWithProviders } from '../../test-utils'
+import { renderWithProviders, waitFor } from '../../test-utils'
 import { UserContextProvider } from '../../user-context'
 import UserNavigation from './index'
 
@@ -58,7 +58,9 @@ describe('the UserNavigation', () => {
     it('hides the user menu by default', () => {
       const { queryByTestId } = result
 
-      expect(queryByTestId('user-menu-options')).toBeNull()
+      waitFor(() => {
+        expect(queryByTestId('user-menu-options')).toBeNull()
+      })
     })
 
     describe('and toggled the menu', () => {
@@ -81,7 +83,9 @@ describe('the UserNavigation', () => {
 
         it('should hide the user menu', async () => {
           const { queryByTestId } = result
-          expect(queryByTestId('user-menu-options')).toBeNull()
+          waitFor(() => {
+            expect(queryByTestId('user-menu-options')).toBeNull()
+          })
         })
       })
     })
