@@ -151,17 +151,24 @@ func (i *Inway) updateConfig(expBackOff *backoff.Backoff, defaultInterval time.D
 func (i *Inway) isServiceConfigDifferent(services []ServiceEndpoint) bool {
 	i.serviceEndpointsLock.Lock()
 	defer i.serviceEndpointsLock.Unlock()
+
+	serviceCount := len(services)
+
+	if serviceCount != len(i.serviceEndpoints) {
+		return true
+	}
+
 	matches := 0
+
 	for _, inwayService := range i.serviceEndpoints {
 		for _, service := range services {
-
 			if reflect.DeepEqual(inwayService.ServiceDetails(), service.ServiceDetails()) && strings.Compare(service.ServiceName(), inwayService.ServiceName()) == 0 {
 				matches++
 			}
 		}
 	}
 
-	return matches != len(services)
+	return matches != serviceCount
 }
 
 func serviceConfigToServiceDetails(service *configapi.Service) *config.ServiceDetails {

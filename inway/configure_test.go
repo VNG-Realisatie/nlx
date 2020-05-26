@@ -4,6 +4,7 @@ package inway
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -264,6 +265,51 @@ func TestCreateServiceEndpoints(t *testing.T) {
 	services = iw.createServiceEndpoints(mockResponse)
 	isDifferent = iw.isServiceConfigDifferent(services)
 	assert.True(t, isDifferent)
+}
+
+func TestDeleteServiceEndpoints(t *testing.T) {
+	iw, err := createInway()
+	assert.Nil(t, err)
+
+	endpointA, _ := iw.NewHTTPServiceEndpoint("service-a", &config.ServiceDetails{
+		ServiceDetailsBase: config.ServiceDetailsBase{
+			EndpointURL: "https://api-a.test",
+		},
+	}, &tls.Config{})
+
+	endpointB, _ := iw.NewHTTPServiceEndpoint("service-b", &config.ServiceDetails{
+		ServiceDetailsBase: config.ServiceDetailsBase{
+			EndpointURL: "https://api-b.test",
+		},
+	}, &tls.Config{})
+
+	initEndpoints := []ServiceEndpoint{endpointA, endpointB}
+
+	err = iw.SetServiceEndpoints(initEndpoints)
+	assert.Nil(t, err)
+
+	mockResponse := &configapi.ListServicesResponse{
+		Services: []*configapi.Service{
+			{
+				Name:                "service-a",
+				ApiSpecificationURL: "https://api-a.test",
+			},
+		},
+	}
+
+	controller := gomock.NewController(t)
+	configAPIMockClient := configmock.NewMockConfigApiClient(controller)
+	configAPIMockClient.EXPECT().CreateInway(gomock.Any(), gomock.Any()).Return(nil, nil)
+	configAPIMockClient.EXPECT().ListServices(gomock.Any(), gomock.Any()).Return(mockResponse, nil)
+
+	iw.configAPIClient = configAPIMockClient
+
+	assert.Len(t, initEndpoints, 2)
+
+	err = iw.StartConfigurationPolling()
+	assert.Nil(t, err)
+
+	assert.Len(t, iw.serviceEndpoints, 1)
 }
 
 func TestNewInwayName(t *testing.T) {
