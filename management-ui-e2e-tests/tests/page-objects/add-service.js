@@ -38,13 +38,13 @@ class Page {
   constructor() {
     this.title = Selector('h1')
 
-    this.nameInput = Selector('#name')
-    this.endpointUrlInput = Selector('#endpointURL')
-    this.documentationUrlInput = Selector('#documentationURL')
-    this.apiSpecificationUrlInput = Selector('#apiSpecificationURL')
+    this.nameInput = Selector('[data-testid="name"]')
+    this.endpointUrlInput = Selector('[data-testid="endpointURL"]')
+    this.documentationUrlInput = Selector('[data-testid="documentationURL"]')
+    this.apiSpecificationUrlInput = Selector('[data-testid="apiSpecificationURL"]')
     this.publishToCentralDirectory = new Checkbox('Publiceren in de centrale directory')
-    this.techSupportContactInput = Selector('#techSupportContact')
-    this.publicSupportContactInput = Selector('#publicSupportContact')
+    this.techSupportContactInput = Selector('[data-testid="techSupportContact"]')
+    this.publicSupportContactInput = Selector('[data-testid="publicSupportContact"]')
     this.authorizationModes = {
       whitelist: new AuthorizationType('Whitelist voor geauthorizeerde organisaties'),
       none: new AuthorizationType('Alle organisaties toestaan'),

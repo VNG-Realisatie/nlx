@@ -94,7 +94,7 @@ const ServiceForm = ({
           <ServiceNameWrapper>
             <TextInput
               name="name"
-              id="name"
+              data-testid="name"
               size="l"
               {...(disableName ? { disabled: true } : {})}
             >
@@ -105,17 +105,21 @@ const ServiceForm = ({
           <Fieldset>
             <Legend>{t('API details')}</Legend>
 
-            <TextInput name="endpointURL" id="endpointURL" size="xl">
+            <TextInput name="endpointURL" data-testid="endpointURL" size="xl">
               {t('API endpoint URL')}
             </TextInput>
 
-            <TextInput name="documentationURL" id="documentationURL" size="xl">
+            <TextInput
+              name="documentationURL"
+              data-testid="documentationURL"
+              size="xl"
+            >
               {t('API documentation URL')}
             </TextInput>
 
             <TextInput
               name="apiSpecificationURL"
-              id="apiSpecificationURL"
+              data-testid="apiSpecificationURL"
               size="xl"
             >
               {t('API specification URL')}
@@ -127,7 +131,7 @@ const ServiceForm = ({
 
             <TextInput
               name="techSupportContact"
-              id="techSupportContact"
+              data-testid="techSupportContact"
               size="l"
             >
               {t('Tech support email')}
@@ -135,7 +139,7 @@ const ServiceForm = ({
 
             <TextInput
               name="publicSupportContact"
-              id="publicSupportContact"
+              data-testid="publicSupportContact"
               size="l"
             >
               {t('Public support email')}
@@ -190,7 +194,6 @@ const ServiceForm = ({
 
             <Radio.Group label={t('Type of authorization')}>
               <Radio
-                id="authorizationModeWhitelist"
                 name="authorizationSettings.mode"
                 value={AUTHORIZATION_TYPE_WHITELIST}
               >
@@ -198,7 +201,6 @@ const ServiceForm = ({
               </Radio>
 
               <Radio
-                id="authorizationModeNone"
                 name="authorizationSettings.mode"
                 value={AUTHORIZATION_TYPE_NONE}
               >
@@ -210,7 +212,7 @@ const ServiceForm = ({
           <Fieldset>
             <Legend>{t('Visibility')}</Legend>
 
-            <Checkbox name="publishedInDirectory" id="publishedInDirectory">
+            <Checkbox name="publishedInDirectory">
               {t('Publish to central directory')}
             </Checkbox>
 
