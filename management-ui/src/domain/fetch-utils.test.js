@@ -1,7 +1,11 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { fetchWithoutCaching } from './fetch-utils'
+import fetchMock from 'jest-fetch-mock'
+import { clear } from './async-memoize'
+import { fetchWithCaching, fetchWithoutCaching } from './fetch-utils'
+
+export const resetFetchWithCaching = () => clear(fetchWithCaching.memo)
 
 afterEach(() => global.fetch.mockRestore())
 
@@ -22,5 +26,31 @@ test('fetchWithoutCaching should use headers to prevent caching', async () => {
       Pragma: 'no-cache',
       Expires: 'Sat, 01 Jan 2000 00:00:00 GMT',
     },
+  })
+})
+
+describe('fetchMemoized', () => {
+  beforeEach(() => {
+    resetFetchWithCaching()
+    fetchMock.mockResponse(async (request) =>
+      JSON.stringify({ url: request.url }),
+    )
+  })
+  afterEach(() => {
+    fetchMock.resetMocks()
+  })
+
+  it('should call fetch only once for every url', async () => {
+    const firstResult = await (await fetchWithCaching('/test')).json()
+    expect(firstResult).toEqual({ url: '/test' })
+    expect(fetchMock.mock.calls).toHaveLength(1)
+
+    const secondResult = await (await fetchWithCaching('/test')).json()
+    expect(firstResult).toEqual(secondResult)
+    expect(fetchMock.mock.calls).toHaveLength(1)
+
+    const thirdResult = await (await fetchWithCaching('/other')).json()
+    expect(thirdResult).toEqual({ url: '/other' })
+    expect(fetchMock.mock.calls).toHaveLength(2)
   })
 })

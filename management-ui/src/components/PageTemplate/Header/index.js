@@ -4,24 +4,27 @@
 
 import React from 'react'
 import { node, string } from 'prop-types'
+import UserNavigation from '../../UserNavigation'
+import OrganizationName from '../../OrganizationName'
 import {
   StyledHeader,
   StyledPageTitle,
   StyledDescription,
-  StyledUserNavigation,
+  StyledHeaderItems,
 } from './index.styles'
 
-const Header = ({ title, description }) => {
-  return (
-    <>
-      <StyledHeader>
-        {title && <StyledPageTitle>{title}</StyledPageTitle>}
-        <StyledUserNavigation />
-      </StyledHeader>
-      <StyledDescription>{description}</StyledDescription>
-    </>
-  )
-}
+const Header = ({ title, description }) => (
+  <>
+    <StyledHeader>
+      {title && <StyledPageTitle>{title}</StyledPageTitle>}
+      <StyledHeaderItems>
+        <OrganizationName isHeader />
+        <UserNavigation />
+      </StyledHeaderItems>
+    </StyledHeader>
+    <StyledDescription>{description}</StyledDescription>
+  </>
+)
 
 Header.propTypes = {
   title: string,

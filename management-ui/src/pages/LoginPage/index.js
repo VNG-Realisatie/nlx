@@ -5,11 +5,14 @@ import React, { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@commonground/design-system'
 import UserContext from '../../user-context'
+import OrganizationName from '../../components/OrganizationName'
 import {
   StyledContainer,
   StyledContent,
   StyledExternalLink,
   StyledNLXManagementLogo,
+  StyledOrganization,
+  StyledOrganizationIcon,
   StyledSidebar,
 } from './index.styles'
 
@@ -27,13 +30,19 @@ const LoginPage = () => {
         {!user ? (
           <>
             <p>{t('Log in to continue.')}</p>
-            <Button id="login" as="a" href="/oidc/authenticate">
+
+            <StyledOrganization>
+              <StyledOrganizationIcon />
+              <OrganizationName data-testid="organizationName" />
+            </StyledOrganization>
+
+            <Button data-testid="login" as="a" href="/oidc/authenticate">
               {t('Log in with organization account')} <StyledExternalLink />
             </Button>
           </>
         ) : (
           <form method="POST" action="/oidc/logout">
-            <Button id="logout" type="submit">
+            <Button data-testid="logout" type="submit">
               {t('Log out')}
             </Button>
           </form>

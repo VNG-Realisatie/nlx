@@ -9,6 +9,8 @@ import { renderWithProviders } from '../../test-utils'
 import { UserContextProvider } from '../../user-context'
 import PageTemplate from './index'
 
+jest.mock('../OrganizationName', () => () => <span>test</span>)
+
 test('PageTemplate', () => {
   const { getByText } = renderWithProviders(
     <Router>

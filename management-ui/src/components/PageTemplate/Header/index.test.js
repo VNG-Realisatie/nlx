@@ -9,6 +9,8 @@ import { renderWithProviders } from '../../../test-utils'
 import { UserContextProvider } from '../../../user-context'
 import Header from './index'
 
+jest.mock('../../OrganizationName', () => () => <span>test</span>)
+
 test('Header with page elements', () => {
   const { getByText, getByTestId } = renderWithProviders(
     <Router>
