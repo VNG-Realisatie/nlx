@@ -4,6 +4,8 @@
 import React from 'react'
 import { arrayOf, bool, func, oneOf, shape, string } from 'prop-types'
 import { FieldArray, Formik } from 'formik'
+import * as Yup from 'yup'
+import { useTranslation } from 'react-i18next'
 import {
   Button,
   Checkbox,
@@ -14,10 +16,6 @@ import {
   TextInput,
 } from '@commonground/design-system'
 
-import { ThemeProvider } from 'styled-components'
-import * as Yup from 'yup'
-import { useTranslation } from 'react-i18next'
-import theme from '../../theme'
 import {
   AUTHORIZATION_TYPE_NONE,
   AUTHORIZATION_TYPE_WHITELIST,
@@ -77,168 +75,164 @@ const ServiceForm = ({
   })
 
   return (
-    <ThemeProvider theme={theme}>
-      <Formik
-        initialValues={{
-          ...DEFAULT_INITIAL_VALUES,
-          ...initialValues,
-          publishedInDirectory: !initialValues.internal,
-        }}
-        validationSchema={validationSchema}
-        onSubmit={({ publishedInDirectory, ...values }) => {
-          return onSubmitHandler({
-            ...values,
-            internal: !publishedInDirectory,
-          })
-        }}
-      >
-        {({ handleSubmit, values: { inways, publishedInDirectory } }) => (
-          <Form onSubmit={handleSubmit} data-testid="form" {...props}>
-            <ServiceNameWrapper>
-              <TextInput
-                name="name"
-                id="name"
-                size="l"
-                {...(disableName ? { disabled: true } : {})}
+    <Formik
+      initialValues={{
+        ...DEFAULT_INITIAL_VALUES,
+        ...initialValues,
+        publishedInDirectory: !initialValues.internal,
+      }}
+      validationSchema={validationSchema}
+      onSubmit={({ publishedInDirectory, ...values }) => {
+        return onSubmitHandler({
+          ...values,
+          internal: !publishedInDirectory,
+        })
+      }}
+    >
+      {({ handleSubmit, values: { inways, publishedInDirectory } }) => (
+        <Form onSubmit={handleSubmit} data-testid="form" {...props}>
+          <ServiceNameWrapper>
+            <TextInput
+              name="name"
+              id="name"
+              size="l"
+              {...(disableName ? { disabled: true } : {})}
+            >
+              {t('Service name')}
+            </TextInput>
+          </ServiceNameWrapper>
+
+          <Fieldset>
+            <Legend>{t('API details')}</Legend>
+
+            <TextInput name="endpointURL" id="endpointURL" size="xl">
+              {t('API endpoint URL')}
+            </TextInput>
+
+            <TextInput name="documentationURL" id="documentationURL" size="xl">
+              {t('API documentation URL')}
+            </TextInput>
+
+            <TextInput
+              name="apiSpecificationURL"
+              id="apiSpecificationURL"
+              size="xl"
+            >
+              {t('API specification URL')}
+            </TextInput>
+          </Fieldset>
+
+          <Fieldset>
+            <Legend>{t('Contact')}</Legend>
+
+            <TextInput
+              name="techSupportContact"
+              id="techSupportContact"
+              size="l"
+            >
+              {t('Tech support email')}
+            </TextInput>
+
+            <TextInput
+              name="publicSupportContact"
+              id="publicSupportContact"
+              size="l"
+            >
+              {t('Public support email')}
+            </TextInput>
+          </Fieldset>
+
+          <Fieldset>
+            <Legend>{t('Inways')}</Legend>
+
+            {!allInwaysIsReady ? (
+              <InwaysLoadingMessage />
+            ) : !allInways || allInways.length === 0 ? (
+              <InwaysEmptyMessage data-testid="inways-empty">
+                {t('There are no inways registered to be connected.')}
+              </InwaysEmptyMessage>
+            ) : (
+              <CheckboxGroup>
+                <Label>
+                  {t('Connected inways for this service (optional)')}
+                </Label>
+                <FieldArray
+                  name="inways"
+                  render={({ push, remove }) => {
+                    const handleChangeFor = (name) => (e) => {
+                      if (e.target.checked) {
+                        push(name)
+                      } else {
+                        const idx = inways.indexOf(name)
+                        remove(idx)
+                      }
+                    }
+
+                    return allInways.map(({ name }) => (
+                      <Checkbox
+                        key={name}
+                        name="inways"
+                        value={name}
+                        checked={inways.includes(name)}
+                        onChange={handleChangeFor(name)}
+                      >
+                        {name}
+                      </Checkbox>
+                    ))
+                  }}
+                />
+              </CheckboxGroup>
+            )}
+          </Fieldset>
+
+          <Fieldset>
+            <Legend>{t('Authorization')}</Legend>
+
+            <Radio.Group label={t('Type of authorization')}>
+              <Radio
+                id="authorizationModeWhitelist"
+                name="authorizationSettings.mode"
+                value={AUTHORIZATION_TYPE_WHITELIST}
               >
-                {t('Service name')}
-              </TextInput>
-            </ServiceNameWrapper>
+                {t('Whitelist for authorized organizations')}
+              </Radio>
 
-            <Fieldset>
-              <Legend>{t('API details')}</Legend>
-
-              <TextInput name="endpointURL" id="endpointURL" size="xl">
-                {t('API endpoint URL')}
-              </TextInput>
-
-              <TextInput
-                name="documentationURL"
-                id="documentationURL"
-                size="xl"
+              <Radio
+                id="authorizationModeNone"
+                name="authorizationSettings.mode"
+                value={AUTHORIZATION_TYPE_NONE}
               >
-                {t('API documentation URL')}
-              </TextInput>
+                {t('Allow all organizations')}
+              </Radio>
+            </Radio.Group>
+          </Fieldset>
 
-              <TextInput
-                name="apiSpecificationURL"
-                id="apiSpecificationURL"
-                size="xl"
+          <Fieldset>
+            <Legend>{t('Visibility')}</Legend>
+
+            <Checkbox name="publishedInDirectory" id="publishedInDirectory">
+              {t('Publish to central directory')}
+            </Checkbox>
+
+            {publishedInDirectory && inways.length === 0 ? (
+              <VisibilityAlert
+                data-testid="publishedInDirectory-warning"
+                variant="warning"
+                title={t('Service not yet accessible')}
               >
-                {t('API specification URL')}
-              </TextInput>
-            </Fieldset>
+                {t(
+                  'There are no inways connected yet. Until then other organizations cannot access this service.',
+                )}
+              </VisibilityAlert>
+            ) : null}
+          </Fieldset>
 
-            <Fieldset>
-              <Legend>{t('Contact')}</Legend>
+          <Button type="submit">{submitButtonText}</Button>
 
-              <TextInput
-                name="techSupportContact"
-                id="techSupportContact"
-                size="l"
-              >
-                {t('Tech support email')}
-              </TextInput>
-
-              <TextInput
-                name="publicSupportContact"
-                id="publicSupportContact"
-                size="l"
-              >
-                {t('Public support email')}
-              </TextInput>
-            </Fieldset>
-
-            <Fieldset>
-              <Legend>{t('Inways')}</Legend>
-
-              {!allInwaysIsReady ? (
-                <InwaysLoadingMessage />
-              ) : !allInways || allInways.length === 0 ? (
-                <InwaysEmptyMessage data-testid="inways-empty">
-                  {t('There are no inways registered to be connected.')}
-                </InwaysEmptyMessage>
-              ) : (
-                <CheckboxGroup>
-                  <Label>
-                    {t('Connected inways for this service (optional)')}
-                  </Label>
-                  <FieldArray
-                    name="inways"
-                    render={(arrayHelpers) => {
-                      return allInways.map(({ name }) => (
-                        <Checkbox
-                          key={name}
-                          name="inways"
-                          value={name}
-                          checked={inways.includes(name)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              arrayHelpers.push(name)
-                            } else {
-                              const idx = inways.indexOf(name)
-                              arrayHelpers.remove(idx)
-                            }
-                          }}
-                        >
-                          {name}
-                        </Checkbox>
-                      ))
-                    }}
-                  />
-                </CheckboxGroup>
-              )}
-            </Fieldset>
-
-            <Fieldset>
-              <Legend>{t('Authorization')}</Legend>
-
-              <Radio.Group label={t('Type of authorization')}>
-                <Radio
-                  id="authorizationModeWhitelist"
-                  name="authorizationSettings.mode"
-                  value={AUTHORIZATION_TYPE_WHITELIST}
-                >
-                  {t('Whitelist for authorized organizations')}
-                </Radio>
-
-                <Radio
-                  id="authorizationModeNone"
-                  name="authorizationSettings.mode"
-                  value={AUTHORIZATION_TYPE_NONE}
-                >
-                  {t('Allow all organizations')}
-                </Radio>
-              </Radio.Group>
-            </Fieldset>
-
-            <Fieldset>
-              <Legend>{t('Visibility')}</Legend>
-
-              <Checkbox name="publishedInDirectory" id="publishedInDirectory">
-                {t('Publish to central directory')}
-              </Checkbox>
-
-              {publishedInDirectory && inways.length === 0 ? (
-                <VisibilityAlert
-                  data-testid="publishedInDirectory-warning"
-                  variant="warning"
-                  title={t('Service not yet accessible')}
-                >
-                  {t(
-                    'There are no inways connected yet. Until then other organizations cannot access this service.',
-                  )}
-                </VisibilityAlert>
-              ) : null}
-            </Fieldset>
-
-            <Button type="submit">{submitButtonText}</Button>
-
-            <FormikFocusError />
-          </Form>
-        )}
-      </Formik>
-    </ThemeProvider>
+          <FormikFocusError />
+        </Form>
+      )}
+    </Formik>
   )
 }
 
