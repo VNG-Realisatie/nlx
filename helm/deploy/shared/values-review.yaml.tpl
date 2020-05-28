@@ -1,3 +1,9 @@
+###########
+## Chart ##
+###########
+postgresql:
+  storageType: Ephemeral
+
 ################
 ## Sub-charts ##
 ################

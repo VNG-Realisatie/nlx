@@ -16,7 +16,7 @@ fullnameOverride: ""
 
 postgresql:
   version: "11.1"
-  storageType: Ephemeral
+  storageType: Durable
   storageSize: 8Gi
 
 transactionLog:

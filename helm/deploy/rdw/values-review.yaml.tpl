@@ -1,6 +1,9 @@
 ###########
 ## Chart ##
 ###########
+postgresql:
+  storageType: Ephemeral
+
 managementAPI:
   insight:
     insightAPIURL: https://insight-api-rdw-{{DOMAIN_SUFFIX}}
