@@ -7,68 +7,9 @@ class Page {
   constructor() {
     this.title = Selector('h1')
 
-    this.nameInput = Selector('#name')
-    this.endpointUrlInput = Selector('#endpointURL')
-    this.documentationUrlInput = Selector('#documentationURL')
-    this.apiSpecificationUrlInput = Selector('#apiSpecificationURL')
-    this.publishToCentralDirectory = new Checkbox('Publiceren in de centrale directory')
-    this.techSupportContactInput = Selector('#techSupportContact')
-    this.publicSupportContactInput = Selector('#publicSupportContact')
-    this.authorizationModes = {
-      whitelist: new AuthorizationType('Whitelist voor geauthorizeerde organisaties'),
-      none: new AuthorizationType('Alle organisaties toestaan'),
-    }
-
-    this.submitButton = Selector('button[type="submit"]')
-    this.alert = Selector('[role="alert"]')
-
-    this.nameFieldError = Selector('[data-testid="error-name"]')
-  }
-
-  async fillAndSubmitForm({ name, endpointUrl, documentationUrl, apiSpecificationUrl, publishToCentralDirectory, techSupportContact, publicSupportContact, authorizationType }) {
-    if (typeof name !== 'undefined') {
-      await t.typeText(this.nameInput, name, { replace: true })
-    }
-
-    if (typeof endpointUrl !== 'undefined') {
-      await t.typeText(this.endpointUrlInput, endpointUrl, { replace: true })
-    }
-    if (typeof documentationUrl !== 'undefined') {
-      await t.typeText(this.documentationUrlInput, documentationUrl, { replace: true })
-    }
-
-    if (typeof apiSpecificationUrl !== 'undefined') {
-      await t.typeText(this.apiSpecificationUrlInput, apiSpecificationUrl, { replace: true })
-    }
-
-    if (typeof publishToCentralDirectory !== 'undefined' && publishToCentralDirectory) {
-      await this.publishToCentralDirectory.enable()
-    }
-
-    if (typeof techSupportContact !== 'undefined') {
-      await t.typeText(this.techSupportContactInput, techSupportContact, { replace: true })
-    }
-
-    if (typeof publicSupportContact !== 'undefined') {
-      await t.typeText(this.publicSupportContactInput, publicSupportContact, { replace: true })
-    }
-
-    if (typeof authorizationType !== undefined) {
-      switch (authorizationType) {
-        case AUTHORIZATION_TYPE_NONE:
-          await t.click(this.authorizationModes.none.radioButton);
-          break;
-
-        case AUTHORIZATION_TYPE_WHITELIST:
-          await t.click(this.authorizationModes.whitelist.radioButton);
-          break;
-
-        default:
-          console.error(`invalid authorization type '${authorizationType}'`)
-      }
-    }
-
-    await t.click(this.submitButton)
+    this.organizationName = Selector('[data-testid="organizationName"]')
+    this.loginButton = Selector('[data-testid="login"]')
+    this.logoutButton = Selector('[data-testid="logout"]')
   }
 }
 

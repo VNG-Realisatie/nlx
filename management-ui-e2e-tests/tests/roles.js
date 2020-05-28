@@ -2,12 +2,13 @@
 // Licensed under the EUPL
 
 import { Selector, Role } from 'testcafe'
+import loginPage from './page-objects/login'
 
 const getBaseUrl = require('../getBaseUrl')
 const baseUrl = getBaseUrl()
 
 export const adminUser = Role(`${baseUrl}/login`, async t => {
-  const managementLoginButton = Selector('#login');
+  const managementLoginButton = loginPage.loginButton;
   const dexLoginText = Selector('#login');
   const dexPasswordText = Selector('#password');
   const dexSubmitLoginButton = Selector('#submit-login');

@@ -1,7 +1,7 @@
 import { adminUser } from './roles'
 import { waitForReact } from 'testcafe-react-selectors'
-import { Selector, Role } from 'testcafe'
-import { axeCheck, createReport } from 'axe-testcafe'
+import { Selector } from 'testcafe'
+import loginPage from './page-objects/login'
 
 const getBaseUrl = require('../getBaseUrl')
 const baseUrl = getBaseUrl()
@@ -17,7 +17,6 @@ fixture`Logout`
 test('Logging out should navigate to the login page', async t => {
   const userMenuButton = Selector('[aria-label="Account menu"]')
   const userMenuLogoutButton = Selector('button').withText('Uitloggen')
-  const loginButton = Selector('#login')
 
   await t
     .expect(userMenuButton.visible).ok()
@@ -25,5 +24,5 @@ test('Logging out should navigate to the login page', async t => {
     .expect(userMenuLogoutButton.visible).ok()
     .click(userMenuLogoutButton)
     .wait(500)
-    .expect(loginButton.visible).ok()
+    .expect(loginPage.loginButton.visible).ok()
 })
