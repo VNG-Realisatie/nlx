@@ -4,6 +4,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"log"
 	"time"
 
@@ -22,8 +23,8 @@ import (
 )
 
 var options struct {
-	ListenAddress    string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:8080" description:"Address for the outway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
-	ListenAddressTLS string `long:"listen-address-tls" env:"LISTEN_ADDRESS_TLS" default:"0.0.0.0:8443" description:"Address for the outway to listen on for TLS connections. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	ListenAddress string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:8080" description:"Address for the outway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	ListenHTTPS   bool   `long:"listen-https" env:"LISTEN_HTTPS" description:"Enable HTTPS on the ListenAddress" required:"false"`
 
 	MonitoringAddress string `long:"monitoring-address" env:"MONITORING_ADDRESS" default:"0.0.0.0:8081" description:"Address for the outway monitoring endpoints to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 
@@ -36,6 +37,9 @@ var options struct {
 
 	AuthorizationServiceAddress string `long:"authorization-service-address" env:"AUTHORIZATION_SERVICE_ADDRESS" description:"Address of the authorization service. If set calls will go through the authorization service before being send to the inway"`
 	AuthorizationCA             string `long:"authorization-root-ca" env:"AUTHORIZATION_ROOT_CA" description:"absolute path to root CA used to verify auth service certifcate"`
+
+	ServerCertFile string `long:"tls-server-cert" env:"TLS_SERVER_CERT" description:"Path to a cert .pem, used for the HTTPS server" required:"false"`
+	ServerKeyFile  string `long:"tls-server-key" env:"TLS_SERVER_KEY" description:"Path the a key .pem, used for the HTTPS server" required:"false"`
 
 	logoptions.LogOptions
 	orgtls.TLSOptions
@@ -90,6 +94,22 @@ func main() {
 		mainProcess.CloseGracefully(logDB.Close)
 	}
 
+	var serverCertificate *tls.Certificate
+
+	if options.ListenHTTPS {
+		if options.ServerCertFile == "" || options.ServerKeyFile == "" {
+			logger.Fatal("server certificate and key are required")
+		}
+
+		cert, certErr := tls.LoadX509KeyPair(options.ServerCertFile, options.ServerKeyFile)
+
+		if certErr != nil {
+			logger.Fatal("failed to load server certificate", zap.Error(err))
+		}
+
+		serverCertificate = &cert
+	}
+
 	// Create new outway and provide it with a hardcoded service.
 	ow, err := outway.NewOutway(
 		logger,
@@ -106,7 +126,7 @@ func main() {
 		logger.Fatal("failed to setup outway", zap.Error(err))
 	}
 
-	err = ow.RunServer(options.ListenAddress, options.ListenAddressTLS, options.TLSOptions)
+	err = ow.RunServer(options.ListenAddress, serverCertificate)
 	if err != nil {
 		logger.Fatal("error running outway", zap.Error(err))
 	}

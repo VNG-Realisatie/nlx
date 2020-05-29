@@ -4,6 +4,7 @@
 package outway
 
 import (
+	"crypto/tls"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -19,7 +20,6 @@ import (
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/monitoring"
-	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
@@ -447,34 +447,29 @@ func TestCreateRecordData(t *testing.T) {
 
 func TestRunServer(t *testing.T) {
 	logger := zap.NewNop()
+
+	certificate, _ := tls.LoadX509KeyPair(
+		filepath.Join("..", "testing", "pki", "org-nlx-test-chain.pem"),
+		filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem"),
+	)
+
 	tests := []struct {
-		description      string
-		listenAddress    string
-		listenTLSAddress string
-		tlsOptions       orgtls.TLSOptions
-		errorMessage     string
+		description   string
+		listenAddress string
+		certificate   *tls.Certificate
+		errorMessage  string
 	}{
 		{
 			"invalid listen address",
 			"invalid",
-			"localhost:8443",
-			orgtls.TLSOptions{
-				NLXRootCert: filepath.Join("..", "testing", "pki", "ca-root.pem"),
-				OrgCertFile: filepath.Join("..", "testing", "pki", "org-nlx-test-chain.pem"),
-				OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem"),
-			},
+			nil,
 			"error listening on server: listen tcp: address invalid: missing port in address",
 		},
 		{
-			"invalid TLS listen address",
-			"localhost:8080",
+			"invalid listen address with TLS",
 			"invalid",
-			orgtls.TLSOptions{
-				NLXRootCert: filepath.Join("..", "testing", "pki", "ca-root.pem"),
-				OrgCertFile: filepath.Join("..", "testing", "pki", "org-nlx-test-chain.pem"),
-				OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem"),
-			},
-			"error listening on TLS server: listen tcp: address invalid: missing port in address",
+			&certificate,
+			"error listening on server: listen tcp: address invalid: missing port in address",
 		},
 	}
 
@@ -490,7 +485,7 @@ func TestRunServer(t *testing.T) {
 			process:        testProcess,
 		}
 
-		err = o.RunServer(test.listenAddress, test.listenTLSAddress, test.tlsOptions)
+		err = o.RunServer(test.listenAddress, test.certificate)
 		assert.EqualError(t, err, test.errorMessage)
 	}
 }

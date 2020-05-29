@@ -48,8 +48,7 @@ type Outway struct {
 	process                   *process.Process
 
 	// headersStripList *http.Header
-	serverPlain    *http.Server
-	serverTLS      *http.Server
+	httpServer     *http.Server
 	monitorService *monitoring.Service
 
 	requestHTTPHandler loggerHTTPHandler

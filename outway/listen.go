@@ -10,13 +10,11 @@ import (
 	"net"
 	"net/http"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
-	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/tlsconfig"
 )
 
@@ -34,33 +32,31 @@ type destination struct {
 }
 
 // RunServer is a blocking function that listens on provided tcp address to handle requests.
-func (o *Outway) RunServer(listenAddress, listenAddressTLS string, tlsOptions orgtls.TLSOptions) error {
-	o.serverPlain = &http.Server{
+func (o *Outway) RunServer(listenAddress string, serverCertificate *tls.Certificate) error {
+	o.httpServer = &http.Server{
 		Addr:    listenAddress,
 		Handler: o,
 	}
 
-	o.serverTLS = &http.Server{
-		Addr:      listenAddressTLS,
-		Handler:   o,
-		TLSConfig: tlsconfig.Defaults(),
-	}
-
 	errorChannel := make(chan error)
 
-	go func() {
-		err := o.serverPlain.ListenAndServe()
-		if err != http.ErrServerClosed {
-			errorChannel <- errors.Wrap(err, "error listening on server")
+	if serverCertificate == nil {
+		go func() {
+			o.logger.Info(fmt.Sprintf("starting HTTP server on %s", listenAddress))
+			errorChannel <- o.httpServer.ListenAndServe()
+		}()
+	} else {
+		tlsConfig := &tls.Config{
+			Certificates: []tls.Certificate{*serverCertificate},
 		}
-	}()
+		tlsconfig.ApplyDefaults(tlsConfig)
+		o.httpServer.TLSConfig = tlsConfig
 
-	go func() {
-		err := o.serverTLS.ListenAndServeTLS(tlsOptions.OrgCertFile, tlsOptions.OrgKeyFile)
-		if err != http.ErrServerClosed {
-			errorChannel <- errors.Wrap(err, "error listening on TLS server")
-		}
-	}()
+		go func() {
+			o.logger.Info(fmt.Sprintf("starting HTTPS server on %s", listenAddress))
+			errorChannel <- o.httpServer.ListenAndServeTLS("", "")
+		}()
+	}
 
 	go func() {
 		err := o.monitorService.Start()
@@ -76,9 +72,13 @@ func (o *Outway) RunServer(listenAddress, listenAddressTLS string, tlsOptions or
 
 	err := <-errorChannel
 
+	if err == http.ErrServerClosed {
+		return nil
+	}
+
 	o.shutDown()
 
-	return err
+	return errors.Wrap(err, "error listening on server")
 }
 
 func (o *Outway) shutDown() {
@@ -86,38 +86,16 @@ func (o *Outway) shutDown() {
 
 	o.monitorService.SetNotReady()
 
-	wg := sync.WaitGroup{}
+	localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
+	defer cancel()
 
-	numberOfServers := 2
-	wg.Add(numberOfServers)
+	err := o.httpServer.Shutdown(localCtx)
 
-	go func() {
-		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
-		defer cancel()
+	if err != nil {
+		o.logger.Error("error shutting down server", zap.Error(err))
+	}
 
-		err := o.serverTLS.Shutdown(localCtx)
-		if err != nil {
-			o.logger.Error("error shutting down server tls", zap.Error(err))
-		}
-
-		wg.Done()
-	}()
-
-	go func() {
-		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
-		defer cancel()
-
-		err := o.serverPlain.Shutdown(localCtx)
-		if err != nil {
-			o.logger.Error("error shutting down server tls", zap.Error(err))
-		}
-
-		wg.Done()
-	}()
-
-	wg.Wait()
-
-	err := o.monitorService.Stop()
+	err = o.monitorService.Stop()
 	if err != nil {
 		o.logger.Error("error shutting down monitoring service", zap.Error(err))
 	}
