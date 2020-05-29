@@ -4,8 +4,8 @@
 import { useTranslation } from 'react-i18next'
 import { func } from 'prop-types'
 import React from 'react'
+import { Table } from '@commonground/design-system'
 
-import Table from '../../../components/Table'
 import EmptyContentMessage from '../../../components/EmptyContentMessage'
 import DirectoryServiceStatus from '../DirectoryServiceStatus'
 

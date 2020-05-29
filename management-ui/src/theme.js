@@ -18,12 +18,6 @@ const theme = {
   colorBackgroundDropdownHover: '#515151',
   colorBackgroundDropdownActive: tokens.colorPaletteGray600,
   colorBorderDropdownFocus: '#1EA1D5',
-
-  // Table
-  colorBorderTable: tokens.colorPaletteGray800,
-  colorBackgroundTableHover: 'rgba(255, 255, 255, 0.1)',
-  colorBorderTableFocus: tokens.colorFocus,
-  colorTextButtonSecondary: tokens.colorPaletteGray100,
 }
 
 export default theme

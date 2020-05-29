@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@commonground/design-system": "12.1.2",
+    "@commonground/design-system": "12.2.0",
     "fetch-defaults": "1.0.0",
     "formik": "2.1.4",
     "i18next": "19.4.4",

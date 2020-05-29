@@ -3,7 +3,7 @@
 //
 
 import styled from 'styled-components'
-import Table from '../../components/Table'
+import { Table } from '@commonground/design-system'
 import { ReactComponent as InwayIcon } from './inway.svg'
 
 export const StyledIconTd = styled(Table.Td)`
