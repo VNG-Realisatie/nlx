@@ -43,7 +43,7 @@
     "eslint-plugin-standard": "4.0.1",
     "http-proxy-middleware": "1.0.3",
     "prettier": "2.0.5",
-    "typescript": "3.8.3"
+    "typescript": "3.9.3"
   },
   "browserslist": [
     ">0.2%",
