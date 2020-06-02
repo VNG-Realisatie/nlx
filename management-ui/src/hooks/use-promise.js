@@ -17,18 +17,27 @@ const usePromise = (getPromise, ...args) => {
 
   useEffect(() => {
     const resolvePromise = async () => {
+      if (isReady) {
+        // Clear any previous calls from same component
+        // Not clearing result, as you may want to keep it as long as there's nothing new
+        setIsReady(false)
+      }
+
       try {
         const res = await getPromise(...args)
         setResult(res)
+        setError(null)
       } catch (error) {
         setError(error)
       }
+
       setIsReady(true)
     }
 
     resolvePromise()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [...(args || []), reloadCounter])
+
   return { isReady, error, result, reload }
 }
 
