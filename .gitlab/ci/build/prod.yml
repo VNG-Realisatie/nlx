@@ -13,8 +13,8 @@ Build production:
     - export IMAGE_TAG="latest"
     - time docker-compose build --parallel
     - time docker-compose push
-  only:
-    - tags@commonground/nlx/nlx
+  rules:
+    - if: '$CI_COMMIT_TAG && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
   tags:
     - cg-privileged
     - shell

@@ -7,11 +7,14 @@ Run semantic release:
     - start_section release "Running semanic release"
     - npx semantic-release
     - stop_section release
-  only:
-    - master@commonground/nlx/nlx
-  except:
-    - schedules
-  when: manual
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "master" && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
+      when: manual
+      allow_failure: true
+      # The combination `when: manual` and `allow_failure: true` allow this step to be manual without blocking
+      # the pipeline. See https://docs.gitlab.com/ee/ci/yaml/README.html#rulesallow_failure
   tags:
     - docker
     - linux

@@ -21,5 +21,5 @@ NLX Management - E2E-tests:
     expose_as: 'Management UI e2e tests'
     paths:
       - management-ui-e2e-tests/test-results/
-  only:
-    - /^feature/.*$/@commonground/nlx/nlx
+  rules:
+    - if: '$CI_COMMIT_BRANCH =~ /^feature\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'

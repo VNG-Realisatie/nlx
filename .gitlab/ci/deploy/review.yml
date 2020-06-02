@@ -91,8 +91,8 @@ Deploy Review App:
     url: https://nlx-${CI_ENVIRONMENT_SLUG}.${REVIEW_BASE_DOMAIN}
     on_stop: Remove Review App
     auto_stop_in: 1 week
-  only:
-    - /^feature/.*$/@commonground/nlx/nlx
+  rules:
+    - if: '$CI_COMMIT_BRANCH =~ /^feature\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
   dependencies:
     - Build review
   artifacts:
@@ -122,12 +122,15 @@ Remove Review App:
       start_section namespace "Delete namespace '${K8S_NAMESPACE}'"
       kubectl delete namespace "${K8S_NAMESPACE}"
       stop_section namespace
-  when: manual
   environment:
     name: $CI_COMMIT_REF_NAME
     action: stop
-  only:
-    - /^feature/.*$/@commonground/nlx/nlx
+  rules:
+    - if: '$CI_COMMIT_BRANCH =~ /^feature\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
+      when: manual
+      allow_failure: true
+      # The combination `when: manual` and `allow_failure: true` allow this step to be manual without blocking
+      # the pipeline. See https://docs.gitlab.com/ee/ci/yaml/README.html#rulesallow_failure
   tags:
     - cg
     - docker

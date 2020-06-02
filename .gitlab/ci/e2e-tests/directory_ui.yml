@@ -11,6 +11,6 @@ Directory UI - E2E Tests:
     - start_section test "Running tests"
     - npm test
     - stop_section test
-  only:
-    - /^feature/.*$/@commonground/nlx/nlx
-    - master@commonground/nlx/nlx
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master" && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
+    - if: '$CI_COMMIT_BRANCH =~ /^feature\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'

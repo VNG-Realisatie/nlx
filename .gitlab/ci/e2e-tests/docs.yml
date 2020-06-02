@@ -13,9 +13,9 @@ Documentation link checker:
     - ./wait-for-http.sh $DOCS_URL
     - |
       docker run --rm raviqqe/muffet:1.3.3 $DOCS_URL --ignore-fragments --timeout 60
-  only:
-    - /^feature/.*$/@commonground/nlx/nlx
-    - master@commonground/nlx/nlx
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master" && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
+    - if: '$CI_COMMIT_BRANCH =~ /^feature\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
   tags:
     - linux
     - docker

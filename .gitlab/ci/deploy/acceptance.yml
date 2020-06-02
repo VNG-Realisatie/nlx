@@ -39,11 +39,10 @@ Deploy acceptance:
       done
   dependencies:
     - Build acceptance
-  only:
-    - master@commonground/nlx/nlx
-  except:
-    - tags
-    - schedules
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "master" && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
   tags:
     - cg-privileged
     - docker

@@ -18,10 +18,8 @@ Build review:
       - ci_build_image_registry.txt
       - ci_build_image_tag.txt
       - ci_build_image_version.txt
-  only:
-    - /^feature/.*$/@commonground/nlx/nlx
-  except:
-    - tags
+  rules:
+    - if: '$CI_COMMIT_BRANCH =~ /^feature\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
   tags:
     - cg
     - shell
