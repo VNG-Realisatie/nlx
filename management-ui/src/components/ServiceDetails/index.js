@@ -11,12 +11,14 @@ import Amount from '../Amount'
 import Collapsible from '../Collapsible'
 import EditButton from '../EditButton'
 import {
-  StyledActionsBar,
+  DetailHeading,
+  DetailHeadingLight,
   StyledCollapsibleBody,
   StyledCollapsibleEmptyBody,
-  StyledHeading,
+} from '../DetailViewStyles'
+import {
+  StyledActionsBar,
   StyledInwayName,
-  StyledLightHeading,
   StyledRemoveButton,
 } from './index.styles'
 import { ReactComponent as IconInway } from './inway.svg'
@@ -54,8 +56,9 @@ const ServiceDetails = ({ service, removeHandler }) => {
           onClick={handleRemove}
         />
       </StyledActionsBar>
+
       <SectionGroup>
-        <StyledLightHeading data-testid="service-published">
+        <DetailHeadingLight data-testid="service-published">
           {internal ? (
             <>
               <IconHidden />
@@ -67,14 +70,15 @@ const ServiceDetails = ({ service, removeHandler }) => {
               {t('Published in central directory')}
             </>
           )}
-        </StyledLightHeading>
+        </DetailHeadingLight>
+
         <Collapsible
           title={
-            <StyledHeading data-testid="service-inways">
+            <DetailHeading data-testid="service-inways">
               <IconInway />
               {t('Inways')}
               <Amount value={inways.length} />
-            </StyledHeading>
+            </DetailHeading>
           }
           ariaLabel={t('Inways')}
         >
@@ -106,11 +110,11 @@ const ServiceDetails = ({ service, removeHandler }) => {
         {authorizationSettings.mode === 'whitelist' ? (
           <Collapsible
             title={
-              <StyledHeading data-testid="service-authorizations">
+              <DetailHeading data-testid="service-authorizations">
                 <IconWhitelist />
                 {t('Whitelisted organizations')}
                 <Amount value={authorizationSettings.authorizations.length} />
-              </StyledHeading>
+              </DetailHeading>
             }
             ariaLabel={t('Whitelisted organizations')}
           >

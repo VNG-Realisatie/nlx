@@ -15,6 +15,7 @@ class InwayRepository {
   }
 
   static async getByName(name) {
+    // Actually searches by key
     const result = await fetch(`/api/v1/inways/${name}`)
 
     if (result.status === 404) {
@@ -30,8 +31,12 @@ class InwayRepository {
     }
 
     const inway = await result.json()
-    console.log(result)
-    console.log('-- inway: ', inway)
+
+    if (inway.services) {
+      inway.services = inway.services.map((service) => service.name)
+    } else {
+      inway.services = []
+    }
 
     return inway
   }
