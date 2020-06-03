@@ -12,13 +12,13 @@ export const StyledHeading = styled.div`
   margin: 0;
 
   svg {
-    fill: ${(p) => p.theme.colorTextLabel};
-    vertical-align: text-bottom;
+    position: relative;
+    top: -${(p) => p.theme.tokens.spacing01};
     width: 1.25rem;
     height: 1.25rem;
     margin-right: ${(p) => p.theme.tokens.spacing03};
-    position: relative;
-    top: -${(p) => p.theme.tokens.spacing01};
+    vertical-align: text-bottom;
+    fill: ${(p) => p.theme.colorTextLabel};
   }
 `
 

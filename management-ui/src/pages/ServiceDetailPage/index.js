@@ -27,6 +27,7 @@ const ServiceDetailPage = ({
     removeService(service)
     refreshHandler()
   }
+
   return (
     <Drawer noMask closeHandler={close}>
       <Drawer.Header

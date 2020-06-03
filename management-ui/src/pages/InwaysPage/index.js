@@ -6,9 +6,12 @@ import React from 'react'
 import { func, string, number } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { Alert, Table } from '@commonground/design-system'
+import { Route } from 'react-router-dom'
+
 import PageTemplate from '../../components/PageTemplate'
 import usePromise from '../../hooks/use-promise'
 import InwayRepository from '../../domain/inway-repository'
+import InwayDetailPage from '../InwayDetailPage'
 import EmptyContentMessage from '../../components/EmptyContentMessage'
 import LoadingMessage from '../../components/LoadingMessage'
 import { StyledInwayIcon, StyledIconTd } from './index.styles'
@@ -21,7 +24,12 @@ const InwayRow = ({
   version,
   ...props
 }) => (
-  <Table.Tr {...props}>
+  <Table.Tr
+    to={`/inways/${name}`}
+    name={name}
+    data-testid="inway-row"
+    {...props}
+  >
     <StyledIconTd>
       <StyledInwayIcon />
     </StyledIconTd>
@@ -67,7 +75,7 @@ const InwaysPage = ({ getInways }) => {
           {t('There are no inways registered yet.')}
         </EmptyContentMessage>
       ) : result ? (
-        <Table data-testid="inways-list" role="grid">
+        <Table withLinks data-testid="inways-list" role="grid">
           <thead>
             <Table.TrHead>
               <Table.Th>{t('Type')}</Table.Th>
@@ -92,6 +100,10 @@ const InwaysPage = ({ getInways }) => {
           </tbody>
         </Table>
       ) : null}
+
+      <Route exact path="/inways/:name">
+        <InwayDetailPage parentUrl="/inways" />
+      </Route>
     </PageTemplate>
   )
 }

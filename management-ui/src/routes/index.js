@@ -20,7 +20,8 @@ const Routes = () => {
       <Redirect exact path="/" to="/inways" />
       <Route path={LoginRoutePath} component={LoginPage} />
 
-      <AuthenticatedRoute exact path="/inways" component={InwaysPage} />
+      <AuthenticatedRoute path="/inways" component={InwaysPage} />
+
       <AuthenticatedRoute
         path="/services/add-service"
         component={AddServicePage}

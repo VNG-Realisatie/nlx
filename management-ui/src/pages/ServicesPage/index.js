@@ -7,6 +7,7 @@ import { array, func, string } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { Alert, Button, Table } from '@commonground/design-system'
 import { Link, Route } from 'react-router-dom'
+
 import PageTemplate from '../../components/PageTemplate'
 import usePromise from '../../hooks/use-promise'
 import ServiceRepository from '../../domain/service-repository'
@@ -90,6 +91,7 @@ const ServicesPage = ({ getServices }) => {
           </tbody>
         </Table>
       ) : null}
+
       <Route path="/services/:name">
         <ServiceDetailPage parentUrl="/services" refreshHandler={reload} />
       </Route>
