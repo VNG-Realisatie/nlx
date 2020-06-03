@@ -48,6 +48,16 @@ func (s *ConfigService) GetInway(ctx context.Context, req *configapi.GetInwayReq
 		return nil, status.Error(codes.NotFound, "inway not found")
 	}
 
+	services, err := s.configDatabase.ListServices(ctx)
+	if err != nil {
+		s.logger.Error("error getting services  from database", zap.Error(err))
+		return nil, status.Error(codes.Internal, "database error")
+	}
+
+	if len(services) > 0 {
+		inway.Services = FilterServices(services, inway)
+	}
+
 	return inway, nil
 }
 
@@ -104,15 +114,25 @@ func (s *ConfigService) ListInways(ctx context.Context, req *configapi.ListInway
 
 	if len(services) > 0 {
 		for _, i := range inways {
-			for _, service := range services {
-				if contains(service.Inways, i.Name) {
-					i.Services = append(i.Services, &configapi.Inway_Service{Name: service.Name})
-				}
-			}
+			inwayServices := FilterServices(services, i)
+			i.Services = append(i.Services, inwayServices...)
 		}
 	}
 
 	return &configapi.ListInwaysResponse{
 		Inways: inways,
 	}, nil
+}
+
+// FilterServices returns an array with only services for the given inway
+func FilterServices(services []*configapi.Service, i *configapi.Inway) []*configapi.Inway_Service {
+	result := []*configapi.Inway_Service{}
+
+	for _, service := range services {
+		if contains(service.Inways, i.Name) {
+			result = append(result, &configapi.Inway_Service{Name: service.Name})
+		}
+	}
+
+	return result
 }

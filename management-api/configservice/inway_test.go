@@ -15,7 +15,6 @@ import (
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 	"go.nlx.io/nlx/management-api/configapi"
 	"go.nlx.io/nlx/management-api/configservice"
-
 	mock_configservice "go.nlx.io/nlx/management-api/configservice/mock"
 )
 
@@ -69,7 +68,13 @@ func TestGetInway(t *testing.T) {
 	mockInwayResponse := &configapi.Inway{
 		Name: "inway42.test",
 	}
+	expectedResponse := &configapi.Inway{
+		Name:     "inway42.test",
+		Services: []*configapi.Inway_Service{{Name: "forty-two"}},
+	}
+	mockServices := []*configapi.Service{{Name: "forty-two", Inways: []string{"inway42.test"}}}
 
+	mockDatabase.EXPECT().ListServices(ctx).Return(mockServices, nil)
 	mockDatabase.EXPECT().GetInway(ctx, "inway42.test").Return(mockInwayResponse, nil)
 
 	getInwayResponse, err := service.GetInway(ctx, getInwayRequest)
@@ -77,7 +82,7 @@ func TestGetInway(t *testing.T) {
 		t.Fatal("could not get inway", err)
 	}
 
-	assert.Equal(t, mockInwayResponse, getInwayResponse)
+	assert.Equal(t, expectedResponse, getInwayResponse)
 }
 
 func TestUpdateInway(t *testing.T) {
@@ -195,4 +200,77 @@ func TestListInways(t *testing.T) {
 	}
 
 	assert.Equal(t, expectedResponse, actualResponse)
+}
+
+func TestFilterServices(t *testing.T) {
+	type args struct {
+		services []*configapi.Service
+		inway    *configapi.Inway
+	}
+
+	var filterServicesTests = []struct {
+		name string
+		want []*configapi.Inway_Service
+		args args
+	}{
+		{
+			name: "one service",
+			args: args{
+				services: []*configapi.Service{{
+					Name:   "service1",
+					Inways: []string{"inway1"},
+				}, {
+					Name:   "service2",
+					Inways: []string{"inway2"},
+				}},
+				inway: &configapi.Inway{
+					Name: "inway1",
+				}},
+			want: []*configapi.Inway_Service{{
+				Name: "service1",
+			}},
+		},
+		{
+			name: "two services",
+			args: args{
+				services: []*configapi.Service{{
+					Name:   "service11",
+					Inways: []string{"inway1"},
+				}, {
+					Name:   "service12",
+					Inways: []string{"inway1"},
+				}, {
+					Name:   "service2",
+					Inways: []string{"inway2"},
+				}},
+				inway: &configapi.Inway{
+					Name: "inway1",
+				}},
+			want: []*configapi.Inway_Service{{
+				Name: "service11",
+			}, {
+				Name: "service12",
+			}},
+		},
+		{
+			name: "no services",
+			args: args{
+				services: []*configapi.Service{{
+					Name:   "service1",
+					Inways: []string{"inway1"},
+				}},
+				inway: &configapi.Inway{
+					Name: "inway2",
+				}},
+			want: []*configapi.Inway_Service{},
+		},
+	}
+
+	for _, tt := range filterServicesTests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			actual := configservice.FilterServices(tt.args.services, tt.args.inway)
+			assert.Equal(t, tt.want, actual)
+		})
+	}
 }
