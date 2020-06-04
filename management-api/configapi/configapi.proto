@@ -83,6 +83,7 @@ message Inway {
 	string hostname = 3;
 	string selfAddress = 4;
 	repeated Service services = 5;
+	string ipAddress = 6;
 }
 
 message ListServicesRequest {

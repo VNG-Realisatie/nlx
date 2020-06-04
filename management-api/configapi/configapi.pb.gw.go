@@ -55,7 +55,10 @@ func local_request_ConfigApi_ListServices_0(ctx context.Context, marshaler runti
 	var protoReq ListServicesRequest
 	var metadata runtime.ServerMetadata
 
-	if err := runtime.PopulateQueryParameters(&protoReq, req.URL.Query(), filter_ConfigApi_ListServices_0); err != nil {
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ConfigApi_ListServices_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -530,7 +533,10 @@ func local_request_ConfigApi_PutInsightConfiguration_0(ctx context.Context, mars
 	var protoReq InsightConfiguration
 	var metadata runtime.ServerMetadata
 
-	if err := runtime.PopulateQueryParameters(&protoReq, req.URL.Query(), filter_ConfigApi_PutInsightConfiguration_0); err != nil {
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ConfigApi_PutInsightConfiguration_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -560,6 +566,7 @@ func local_request_ConfigApi_GetInsightConfiguration_0(ctx context.Context, mars
 // RegisterConfigApiHandlerServer registers the http handlers for service ConfigApi to "mux".
 // UnaryRPC     :call ConfigApiServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
+// Note that using this registration option will cause many gRPC library features (such as grpc.SendHeader, etc) to stop working. Consider using RegisterConfigApiHandlerFromEndpoint instead.
 func RegisterConfigApiHandlerServer(ctx context.Context, mux *runtime.ServeMux, server ConfigApiServer) error {
 
 	mux.Handle("GET", pattern_ConfigApi_ListServices_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {

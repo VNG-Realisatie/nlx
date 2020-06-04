@@ -4,9 +4,11 @@ package configservice
 import (
 	"context"
 	"fmt"
+	"net"
 
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/peer"
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/management-api/configapi"
@@ -15,7 +17,22 @@ import (
 // CreateInway creates a new inway
 func (s *ConfigService) CreateInway(ctx context.Context, inway *configapi.Inway) (*configapi.Inway, error) {
 	logger := s.logger.With(zap.String("name", inway.Name))
+
 	logger.Info("rpc request CreateInway")
+
+	p, ok := peer.FromContext(ctx)
+	if !ok {
+		logger.Error("peer context cannot be found")
+		return nil, status.Error(codes.Internal, "peer context cannot be found")
+	}
+
+	addr, ok := p.Addr.(*net.TCPAddr)
+	if !ok {
+		logger.Error("peer addr is invalid")
+		return nil, status.Error(codes.Internal, "peer addr is invalid")
+	}
+
+	inway.IpAddress = addr.IP.String()
 
 	err := inway.Validate()
 	if err != nil {

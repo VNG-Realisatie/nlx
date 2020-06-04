@@ -418,6 +418,9 @@ SwaggerJSONDirectory = `
           "items": {
             "$ref": "#/definitions/configapiInwayService"
           }
+        },
+        "ipAddress": {
+          "type": "string"
         }
       }
     },
