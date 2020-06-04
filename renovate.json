@@ -6,6 +6,8 @@
     ":semanticCommitScopeDisabled",
     "schedule:nonOfficeHours"
   ],
+  "automerge": true,
+  "automergeType": "pr",
   "postUpdateOptions": [
     "gomodTidy"
   ],
