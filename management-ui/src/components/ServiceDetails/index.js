@@ -15,17 +15,18 @@ import {
   DetailHeadingLight,
   StyledCollapsibleBody,
   StyledCollapsibleEmptyBody,
-} from '../DetailViewStyles'
+  SectionGroup,
+} from '../DetailView'
 import {
-  StyledActionsBar,
   StyledInwayName,
+  StyledActionsBar,
   StyledRemoveButton,
 } from './index.styles'
+
 import { ReactComponent as IconInway } from './inway.svg'
 import { ReactComponent as IconWhitelist } from './whitelist.svg'
 import { ReactComponent as IconVisible } from './visible.svg'
 import { ReactComponent as IconHidden } from './hidden.svg'
-import SectionGroup from './SectionGroup'
 
 const ServiceDetails = ({ service, removeHandler }) => {
   const { internal, authorizationSettings, inways } = service

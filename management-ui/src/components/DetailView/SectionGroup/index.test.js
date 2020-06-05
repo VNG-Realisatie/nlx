@@ -21,8 +21,8 @@ test('rendering multiple children', () => {
       <span data-testid="two" />
     </SectionGroup>,
   )
-  expect(getByTestId('one')).toBeTruthy()
-  expect(getByTestId('two')).toBeTruthy()
+  expect(getByTestId('one')).toBeInTheDocument()
+  expect(getByTestId('two')).toBeInTheDocument()
   expect(container.querySelectorAll('span')).toHaveLength(2)
 })
 
@@ -36,8 +36,8 @@ test('nulls are filtered out', () => {
     </SectionGroup>,
   )
 
-  expect(getByTestId('one')).toBeTruthy()
-  expect(queryByTestId('two')).toBeNull()
-  expect(getByTestId('three')).toBeTruthy()
+  expect(getByTestId('one')).toBeInTheDocument()
+  expect(queryByTestId('two')).not.toBeInTheDocument()
+  expect(getByTestId('three')).toBeInTheDocument()
   expect(container.querySelectorAll('span')).toHaveLength(2)
 })

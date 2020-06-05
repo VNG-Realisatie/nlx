@@ -3,6 +3,8 @@
 //
 import styled from 'styled-components'
 
+export { default as SectionGroup } from './SectionGroup'
+
 // Used as Heading above a collapsible block in *Detail views
 // Like an h3 but without the semantic meaning of that heading
 export const DetailHeading = styled.div`

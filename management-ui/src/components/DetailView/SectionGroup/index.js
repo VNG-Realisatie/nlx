@@ -10,7 +10,9 @@ const SectionGroup = ({ children }) => (
     {Array.isArray(children) ? children.filter((x) => x) : children}
   </StyledSectionGroup>
 )
+
 SectionGroup.propTypes = {
   children: node.isRequired,
 }
+
 export default SectionGroup
