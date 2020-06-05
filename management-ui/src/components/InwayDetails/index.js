@@ -8,10 +8,13 @@ import { Drawer } from '@commonground/design-system'
 
 import Amount from '../Amount'
 import Collapsible from '../Collapsible'
-import { DetailHeading, StyledCollapsibleBody } from '../DetailViewStyles'
-import Table from '../SpecTable'
+import {
+  DetailHeading,
+  StyledCollapsibleBody,
+} from '../DetailViewStyles'
+import SpecList from '../SpecList'
 import { ReactComponent as IconServices } from './services.svg'
-import { SubHeader, StyledIconInway } from './index.styles'
+import { SubHeader, StyledIconInway, StyledSpecList } from './index.styles'
 
 // Note: if inway- & outway details are interchangable, we can rename this to GatewayDetails
 const InwayDetails = ({ inway }) => {
@@ -31,22 +34,11 @@ const InwayDetails = ({ inway }) => {
           <StyledIconInway /> inway
         </SubHeader>
 
-        <Table data-testid="inway-specs" role="grid" valueAlignRight>
-          <tbody>
-            <Table.Tr>
-              <Table.Td>{t('IP-address')}</Table.Td>
-              <Table.Td>123.456.789.1</Table.Td>
-            </Table.Tr>
-            <Table.Tr>
-              <Table.Td>{t('Hostname')}</Table.Td>
-              <Table.Td>{hostname}</Table.Td>
-            </Table.Tr>
-            <Table.Tr>
-              <Table.Td>{t('Self address')}</Table.Td>
-              <Table.Td>{selfAddress}</Table.Td>
-            </Table.Tr>
-          </tbody>
-        </Table>
+        <StyledSpecList data-testid="inway-specs" role="grid" alignValuesRight>
+          <StyledSpecList.Item title={t('IP-address')} value="123.456.789.1" />
+          <StyledSpecList.Item title={t('Hostname')} value={hostname} />
+          <StyledSpecList.Item title={t('Self address')} value={selfAddress} />
+        </StyledSpecList>
 
         <Collapsible
           title={
