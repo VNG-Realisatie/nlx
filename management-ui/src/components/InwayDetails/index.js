@@ -52,7 +52,7 @@ const InwayDetails = ({ inway }) => {
           title={
             <DetailHeading data-testid="inway-services">
               <IconServices />
-              {t('Conntected services')}
+              {t('Connected services')}
               <Amount value={services.length} />
             </DetailHeading>
           }
