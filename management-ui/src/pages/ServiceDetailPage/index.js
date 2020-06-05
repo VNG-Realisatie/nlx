@@ -29,15 +29,22 @@ const ServiceDetailPage = ({
   }
   return (
     <Drawer noMask closeHandler={close}>
-      {!isReady || (!error && !service) ? (
-        <LoadingMessage />
-      ) : error ? (
-        <Alert variant="error" data-testid="error-message">
-          {t('Failed to load the service.', { name })}
-        </Alert>
-      ) : service ? (
-        <ServiceDetails service={service} removeHandler={handleRemove} />
-      ) : null}
+      <Drawer.Header
+        title={name}
+        closeButtonLabel={t('Close')}
+        data-testid="service-name"
+      />
+      <Drawer.Content>
+        {!isReady || (!error && !service) ? (
+          <LoadingMessage />
+        ) : error ? (
+          <Alert variant="error" data-testid="error-message">
+            {t('Failed to load the service.', { name })}
+          </Alert>
+        ) : service ? (
+          <ServiceDetails service={service} removeHandler={handleRemove} />
+        ) : null}
+      </Drawer.Content>
     </Drawer>
   )
 }
