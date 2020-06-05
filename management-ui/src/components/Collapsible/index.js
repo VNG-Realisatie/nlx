@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { node } from 'prop-types'
 import { CSSTransition } from 'react-transition-group'
 import {
@@ -12,16 +12,24 @@ import {
   CollapsibleWrapper,
 } from './index.styles'
 
-const Collapsible = ({ title, children }) => {
+const createRandomId = () => `r${Math.random().toString(36).slice(8)}`
+
+const Collapsible = ({ title, ariaLabel, children }) => {
   const [isOpen, setIsOpen] = useState(false)
+  const [id, setId] = useState()
   const toggle = () => setIsOpen(!isOpen)
+
+  useEffect(() => {
+    setId(createRandomId())
+  }, [])
+
   return (
     <CollapsibleWrapper onClick={toggle} data-testid="collapsible">
       <CollapsibleButton
         aria-haspopup="true"
         aria-expanded={isOpen}
-        aria-controls={title}
-        aria-label={title}
+        aria-controls={id}
+        aria-label={ariaLabel || title}
       >
         <CollapsibleTitle>{title}</CollapsibleTitle>
         <CollapsibleChevron flipHorizontal={isOpen} />
@@ -33,7 +41,7 @@ const Collapsible = ({ title, children }) => {
         unmountOnExit
         classNames="collapsible"
       >
-        <CollapsibleBody>{children}</CollapsibleBody>
+        <CollapsibleBody id={id}>{children}</CollapsibleBody>
       </CSSTransition>
     </CollapsibleWrapper>
   )
@@ -41,6 +49,13 @@ const Collapsible = ({ title, children }) => {
 
 Collapsible.propTypes = {
   title: node.isRequired,
+  ariaLabel: (props, propName, componentName) => {
+    if (typeof props.title !== 'string' && !props[propName]) {
+      return new Error(
+        'If Collapsible title is not a string, please provide an ariaLabel',
+      )
+    }
+  },
   children: node.isRequired,
 }
 

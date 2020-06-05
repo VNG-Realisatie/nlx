@@ -76,6 +76,7 @@ const ServiceDetails = ({ service, removeHandler }) => {
               <Amount value={inways.length} />
             </StyledHeading>
           }
+          ariaLabel={t('Inways')}
         >
           <StyledCollapsibleBody>
             <Table data-testid="service-inways-list" role="grid">
@@ -101,6 +102,7 @@ const ServiceDetails = ({ service, removeHandler }) => {
             </Table>
           </StyledCollapsibleBody>
         </Collapsible>
+
         {authorizationSettings.mode === 'whitelist' ? (
           <Collapsible
             title={
@@ -110,6 +112,7 @@ const ServiceDetails = ({ service, removeHandler }) => {
                 <Amount value={authorizationSettings.authorizations.length} />
               </StyledHeading>
             }
+            ariaLabel={t('Whitelisted organizations')}
           >
             <StyledCollapsibleBody>
               <Table data-testid="service-authorizations-list">
