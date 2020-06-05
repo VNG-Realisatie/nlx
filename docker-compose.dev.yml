@@ -24,7 +24,7 @@ services:
 
   # OpenID connect provider
   dex:
-    image: quay.io/dexidp/dex:v2.23.0
+    image: quay.io/dexidp/dex:v2.24.0
     command: serve /config.yaml
     ports:
       - 5556:5556
