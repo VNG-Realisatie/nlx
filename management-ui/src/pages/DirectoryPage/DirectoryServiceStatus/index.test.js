@@ -35,8 +35,8 @@ test('does not render when status is invalid', () => {
   const { container, rerender } = renderWithProviders(
     <DirectoryServiceStatus status={null} />,
   )
-  expect(container).toBeEmpty()
+  expect(container).toBeEmptyDOMElement()
 
   rerender(<DirectoryServiceStatus status="invalid" />)
-  expect(container).toBeEmpty()
+  expect(container).toBeEmptyDOMElement()
 })

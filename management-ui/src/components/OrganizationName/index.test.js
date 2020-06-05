@@ -15,7 +15,7 @@ test('show the organizationName', async () => {
     <OrganizationName getEnvironment={getEnvironment} />,
   )
 
-  expect(container).toBeEmpty()
+  expect(container).toBeEmptyDOMElement()
 
   await act(async () => {
     environment.resolve({ organizationName: 'test' })
