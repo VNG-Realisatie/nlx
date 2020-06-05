@@ -21,6 +21,7 @@ spec:
       annotations:
         checksum/secret-postgresql: {{ include (print $.Template.BasePath "/secret-postgresql.yaml") . | sha256sum }}
         checksum/secret-tls: {{ include (print $.Template.BasePath "/secret-tls.yaml") . | sha256sum }}
+        checksum/secret-tls-server: {{ include (print $.Template.BasePath "/secret-tls-server.yaml") . | sha256sum }}
     spec:
     {{- with .Values.image.pullSecrets }}
       imagePullSecrets:
@@ -34,7 +35,7 @@ spec:
         - name: generate-certificate
           image: {{ template "nlx-outway.unsafeCA.image" . }}
           imagePullPolicy: {{ .Values.unsafeCA.image.pullPolicy }}
-          workingDir: /certs
+          workingDir: /certs/organization
           command: ["/bin/sh"]
           args:
             - "-exc"
@@ -51,8 +52,8 @@ spec:
             - name: CFSSL_HOSTNAME
               value: {{ required "Unsafe CA CFSSL hostname is required" (include "nlx-outway.unsafeCA.cfsslHostname" .) | quote }}
           volumeMounts:
-            - name: certificates
-              mountPath: /certs
+            - name: certificates-organization
+              mountPath: /certs/organization
     {{- end }}
       containers:
         - name: nlx-outway
@@ -61,12 +62,15 @@ spec:
           image: {{ template "nlx-outway.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: http
-              containerPort: 8080
-              protocol: TCP
+          {{- if .Values.https.enabled }}
             - name: https
               containerPort: 8443
               protocol: TCP
+          {{- else }}
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          {{- end }}
             - name: monitoring
               containerPort: 8081
               protocol: TCP
@@ -83,20 +87,33 @@ spec:
             initialDelaySeconds: 3
             periodSeconds: 10
           env:
+          {{- if .Values.https.enabled }}
+            - name: LISTEN_ADDRESS
+              value: 0.0.0.0:8443
+            - name: LISTEN_HTTPS
+              value: "1"
+            - name: TLS_SERVER_CERT
+              value: /certs/server/tls.crt
+            - name: TLS_SERVER_KEY
+              value: /certs/server/tls.key
+          {{- else }}
+            - name: LISTEN_ADDRESS
+              value: 0.0.0.0:8080
+          {{- end }}
             - name: DIRECTORY_INSPECTION_ADDRESS
               value: {{ .Values.config.directoryInspectionHostname }}:443
           {{- if .Values.config.authorizationService.enabled }}
             - name: AUTHORIZATION_SERVICE_ADDRESS
               value: {{ .Values.config.authorizationService.url }}
             - name: AUTHORIZATION_ROOT_CA
-              value: /certs/root.crt
+              value: /certs/organization/root.crt
           {{- end }}
             - name: TLS_NLX_ROOT_CERT
-              value: /certs/root.crt
+              value: /certs/organization/root.crt
             - name: TLS_ORG_CERT
-              value: /certs/tls.crt
+              value: /certs/organization/tls.crt
             - name: TLS_ORG_KEY
-              value: /certs/tls.key
+              value: /certs/organization/tls.key
           {{- if .Values.transactionLog.enabled }}
             - name: POSTGRES_USER
               valueFrom:
@@ -123,18 +140,27 @@ spec:
             - name: LOG_LEVEL
               value: {{ .Values.config.logLevel }}
           volumeMounts:
-            - name: certificates
-              mountPath: /certs
+            - name: certificates-organization
+              mountPath: /certs/organization
+          {{- if .Values.https.enabled }}
+            - name: certificates-server
+              mountPath: /certs/server
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
-        - name: certificates
+        - name: certificates-organization
         {{- if .Values.tls.generateCertificate }}
           emptyDir: {}
         {{- else }}
           secret:
             secretName: {{ template "nlx-outway.fullname" . }}-tls
         {{- end }}
+      {{- if .Values.https.enabled }}
+        - name: certificates-server
+          secret:
+            secretName: {{ template "nlx-outway.fullname" . }}-tls-server
+      {{- end }}
     {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

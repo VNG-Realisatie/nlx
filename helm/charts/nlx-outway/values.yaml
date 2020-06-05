@@ -40,6 +40,11 @@ tls:
   keyPEM: ""
   certificatePEM: ""
 
+https:
+  enabled: false
+  keyPEM: ""
+  certificatePEM: ""
+
 unsafeCA:
   image:
     registry: docker.io
