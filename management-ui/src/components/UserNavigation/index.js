@@ -7,11 +7,13 @@ import Cookies from 'js-cookie'
 import { CSSTransition } from 'react-transition-group'
 import { useTranslation } from 'react-i18next'
 
-import Avatar from '../Avatar'
 import UserContext from '../../user-context'
 import useClickOutside from '../../hooks/use-click-outside'
 import {
+  StyledAvatar,
   StyledToggleButton,
+  StyledUserMenu,
+  StyledUserMenuItem,
   StyledUsername,
   StyledUserNavigation,
   UserNavigationChevron,
@@ -52,7 +54,7 @@ const UserNavigation = ({ ...props }) => {
         aria-controls="user-menu-options"
         aria-label={t('Account menu')}
       >
-        <Avatar
+        <StyledAvatar
           data-testid="avatar"
           alt={t('User avatar')}
           url={user.pictureUrl}
@@ -71,8 +73,8 @@ const UserNavigation = ({ ...props }) => {
         timeout={ANIMATION_DURATION}
         classNames="user-menu-slide"
       >
-        <ul id="user-menu-options" data-testid="user-menu-options">
-          <li>
+        <StyledUserMenu id="user-menu-options" data-testid="user-menu-options">
+          <StyledUserMenuItem>
             <form method="POST" action="/oidc/logout">
               <input
                 type="hidden"
@@ -81,8 +83,8 @@ const UserNavigation = ({ ...props }) => {
               />
               <button type="submit">{t('Log out')}</button>
             </form>
-          </li>
-        </ul>
+          </StyledUserMenuItem>
+        </StyledUserMenu>
       </CSSTransition>
     </StyledUserNavigation>
   )
