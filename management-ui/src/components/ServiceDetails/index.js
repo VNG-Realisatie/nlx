@@ -84,11 +84,15 @@ const ServiceDetails = ({ service, removeHandler }) => {
           ariaLabel={t('Inways')}
         >
           <StyledCollapsibleBody>
-            <Table data-testid="service-inways-list" role="grid">
+            <Table data-testid="service-inways-list" role="grid" withLinks>
               <tbody>
                 {inways.length ? (
                   inways.map((inway, i) => (
-                    <Table.Tr key={i} data-testid={`service-inway-${i}`}>
+                    <Table.Tr
+                      key={i}
+                      data-testid={`service-inway-${i}`}
+                      to={`/inways/${inway}`}
+                    >
                       <Table.Td>
                         <StyledInwayName>{inway}</StyledInwayName>
                       </Table.Td>
