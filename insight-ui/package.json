@@ -39,7 +39,7 @@
     "prettier": "2.0.5",
     "react-scripts": "3.4.1",
     "redux-devtools-extension": "2.13.8",
-    "typescript": "3.9.3"
+    "typescript": "3.9.5"
   },
   "scripts": {
     "start": "react-scripts start",
