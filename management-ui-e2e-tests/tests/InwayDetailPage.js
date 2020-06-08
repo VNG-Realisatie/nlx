@@ -1,6 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 
+import { Selector } from 'testcafe'
 import { waitForReact } from 'testcafe-react-selectors'
 import { axeCheck, createReport } from 'axe-testcafe'
 
@@ -32,23 +33,19 @@ test('Inway details are visible', async t => {
 })
 
 test('Lists connected services', async t => {
-  const services = await page.services
+  const services = page.services
   const toggleText = await services.innerText
 
   await t
     .expect(toggleText.substring(toggleText.length - 1)).eql('1')
 })
 
-// TODO: Can't get collapsible to open...
-// test('Links to service detail', async t => {
-//   const serviceMatch = new RegExp(DIRECTORY_SERVICE_NAME, 'g')
-//   const toggle = Selector('div').withText('Connected services')
-
-//   // await waitForReact()
-//   await t
-//     .click(await page.services)
-//     .expect(await page.servicesList.innerText).match(serviceMatch)
-// })
+test('Links to service detail', async t => {
+  await t
+    .click(page.services)
+    .click(Selector('td').withText('kentekenregister'))
+    .expect(getLocation()).contains(`${baseUrl}/services/kentekenregister`);
+})
 
 test('Close navigates to the InwaysPage', async t => {
   await t
