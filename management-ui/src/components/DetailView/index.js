@@ -36,6 +36,7 @@ export const DetailHeadingLight = styled(DetailHeading)`
 
 export const StyledCollapsibleBody = styled.div`
   margin-top: ${(p) => p.theme.tokens.spacing05};
+  margin-bottom: 2px; /* For focus styling in <Table withLinks /> */
   margin-left: calc(1.25rem + ${(p) => p.theme.tokens.spacing03});
 `
 

@@ -27,7 +27,6 @@ describe('InwayDetails', () => {
     )
 
     expect(getByTestId('gateway-type')).toHaveTextContent('inway')
-    expect(getByText('name')).toBeInTheDocument()
     expect(getByText('host.name')).toBeInTheDocument()
     expect(getByText('self.address')).toBeInTheDocument()
   })

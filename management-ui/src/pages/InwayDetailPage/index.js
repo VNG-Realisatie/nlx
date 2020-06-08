@@ -21,15 +21,23 @@ const InwayDetailPage = ({ getInwayByName, parentUrl }) => {
 
   return (
     <Drawer noMask closeHandler={close}>
-      {!isReady || (!error && !inway) ? (
-        <LoadingMessage />
-      ) : error ? (
-        <Alert variant="error" data-testid="error-message">
-          {t('Failed to load the details for this inway.', { name })}
-        </Alert>
-      ) : inway ? (
-        <InwayDetails inway={inway} />
-      ) : null}
+      <Drawer.Header
+        title={name}
+        closeButtonLabel={t('Close')}
+        data-testid="gateway-name"
+      />
+
+      <Drawer.Content>
+        {!isReady || (!error && !inway) ? (
+          <LoadingMessage />
+        ) : error ? (
+          <Alert variant="error" data-testid="error-message">
+            {t('Failed to load the details for this inway.', { name })}
+          </Alert>
+        ) : inway ? (
+          <InwayDetails inway={inway} />
+        ) : null}
+      </Drawer.Content>
     </Drawer>
   )
 }

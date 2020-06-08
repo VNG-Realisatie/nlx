@@ -35,6 +35,7 @@ const ServiceDetailPage = ({
         closeButtonLabel={t('Close')}
         data-testid="service-name"
       />
+
       <Drawer.Content>
         {!isReady || (!error && !service) ? (
           <LoadingMessage />
