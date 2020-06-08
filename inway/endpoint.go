@@ -143,7 +143,7 @@ func (h *HTTPServiceEndpoint) handleRequest(reqMD *RequestMetadata, w http.Respo
 
 		h.logger.Debug("check against whitelist",
 			zap.String("requesterOrganization", reqMD.requesterOrganization),
-			zap.String("requesterPublicKeyHash", reqMD.requesterPublicKeyHash))
+			zap.String("requesterPublicKeyHash", reqMD.requesterPublicKeyFingerprint))
 		for _, whitelistedOrg := range h.whitelistedOrganizations {
 			h.logger.Debug("whitelistitem",
 				zap.String("OrganizationName", whitelistedOrg.OrganizationName),
@@ -165,7 +165,7 @@ func (h *HTTPServiceEndpoint) handleRequest(reqMD *RequestMetadata, w http.Respo
 			if whitelistedOrg.PublicKeyHash == "" {
 				certificateFingerprintMatches = true
 			} else {
-				certificateFingerprintMatches = reqMD.requesterPublicKeyHash == whitelistedOrg.PublicKeyHash
+				certificateFingerprintMatches = reqMD.requesterPublicKeyFingerprint == whitelistedOrg.PublicKeyHash
 			}
 
 			if organizationNameMatches && certificateFingerprintMatches {
@@ -175,8 +175,8 @@ func (h *HTTPServiceEndpoint) handleRequest(reqMD *RequestMetadata, w http.Respo
 		}
 
 		if !authorized {
-			http.Error(w, fmt.Sprintf(`nlx-inway: permission denied, organization "%s" or public key "%s" is not allowed access.`, reqMD.requesterOrganization, reqMD.requesterPublicKeyHash), http.StatusForbidden)
-			h.logger.Info("unauthorized request blocked, requester was not whitelisted", zap.String("organization-name", reqMD.requesterOrganization), zap.String("certificate-fingerprint", reqMD.requesterPublicKeyHash))
+			http.Error(w, fmt.Sprintf(`nlx-inway: permission denied, organization "%s" or public key "%s" is not allowed access.`, reqMD.requesterOrganization, reqMD.requesterPublicKeyFingerprint), http.StatusForbidden)
+			h.logger.Info("unauthorized request blocked, requester was not whitelisted", zap.String("organization-name", reqMD.requesterOrganization), zap.String("certificate-fingerprint", reqMD.requesterPublicKeyFingerprint))
 
 			return
 		}

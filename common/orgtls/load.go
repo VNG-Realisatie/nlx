@@ -7,7 +7,7 @@ import (
 	"crypto/sha256"
 	"crypto/tls"
 	"crypto/x509"
-	"encoding/hex"
+	"encoding/base64"
 	"encoding/pem"
 	"fmt"
 	"io/ioutil"
@@ -102,13 +102,9 @@ func loadCertificate(filePath string) (*x509.Certificate, error) {
 	return cert, nil
 }
 
-func PublicKeyHash(certificate *x509.Certificate) (string, error) {
-	pubDER, err := x509.MarshalPKIXPublicKey(certificate.PublicKey)
-	if err != nil {
-		return "", err
-	}
+// PublicKeyFingerprint generates the base64 encoded fingerprint of the Subject Public Key Information (SPKI)
+func PublicKeyFingerprint(certificate *x509.Certificate) string {
+	sum := sha256.Sum256(certificate.RawSubjectPublicKeyInfo)
 
-	sum := sha256.Sum256(pubDER)
-
-	return "sha256:" + hex.EncodeToString(sum[:]), nil
+	return base64.StdEncoding.EncodeToString(sum[:])
 }

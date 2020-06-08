@@ -24,20 +24,20 @@ version = 2
     ca-cert-path = "/path/to/custom-root-ca.crt"
     [[services.SwaggerPetstore.authorization-whitelist]]
     organization-name = "DemoRequesterOrganization1"
-    
+
     [[services.SwaggerPetstore.authorization-whitelist]]
     organization-name = "DemoRequesterOrganization2"
-    public-key-hash = "sha256:452de56457e4be093eb4a99fae354b4882908cc6e04518e883c4507a7e99e8ef"
-    
+    public-key-hash = "tGbzEuAy88OB0zZWm+dolZoakhIKScV7zTK3wA15Ci8="
+
     [[services.SwaggerPetstore.authorization-whitelist]]
-    public-key-hash = "sha256:197eafd78afb28ff934d03f3ce68375e071a1157dcb02814c7a4df0c21d3bb93"
+    public-key-hash = "yX0i/6NJZxaZWw7+LoCoq/vlA+06qb/5j/cg4n/zT/A="
 ```
 # Top level fields
 
 ## version
 ***Required***
 Should be set to the version of the config that is used, a deprecation warning is logged when the value is empty or less than 2.
- 
+
 ***Example***
 ```toml
 version = 2
@@ -104,10 +104,10 @@ organization-name = "DemoRequesterOrganization1"
 
 [[services.SwaggerPetstore.authorization-whitelist]]
 organization-name = "DemoRequesterOrganization2"
-public-key-hash = "sha256:452de56457e4be093eb4a99fae354b4882908cc6e04518e883c4507a7e99e8ef"
+public-key-hash = "tGbzEuAy88OB0zZWm+dolZoakhIKScV7zTK3wA15Ci8="
 
 [[services.SwaggerPetstore.authorization-whitelist]]
-public-key-hash = "sha256:197eafd78afb28ff934d03f3ce68375e071a1157dcb02814c7a4df0c21d3bb93"
+public-key-hash = "yX0i/6NJZxaZWw7+LoCoq/vlA+06qb/5j/cg4n/zT/A="
 ```
 
 ***Example v1***

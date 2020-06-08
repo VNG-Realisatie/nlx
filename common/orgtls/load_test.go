@@ -4,6 +4,10 @@
 package orgtls_test
 
 import (
+	"crypto/x509"
+	"encoding/pem"
+	"fmt"
+	"io/ioutil"
 	"path/filepath"
 	"testing"
 
@@ -100,5 +104,40 @@ func TestLoad(t *testing.T) {
 		} else {
 			assert.Nil(t, err)
 		}
+	}
+}
+
+func TestPublicKeyFingerprint(t *testing.T) {
+	testCases := []struct {
+		file string
+		want string
+	}{
+		{
+			file: filepath.Join("..", "..", "testing", "pki", "org-nlx-test-chain.pem"),
+			want: "60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=",
+		},
+		{
+			file: filepath.Join("..", "..", "testing", "pki", "org-nlx-test.pem"),
+			want: "60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=",
+		},
+		{
+			file: filepath.Join("..", "..", "testing", "pki", "org-without-name.pem"),
+			want: "DQ4qU1DQo8t7fhI1ZODW/nRP4NTHv26tq7CWe9eZyhw=",
+		},
+	}
+
+	for _, tc := range testCases {
+		tc := tc
+		t.Run(fmt.Sprintf("fingerprint for %s", tc.file), func(t *testing.T) {
+			pemBytes, err := ioutil.ReadFile(tc.file)
+			assert.NoError(t, err)
+
+			block, _ := pem.Decode(pemBytes)
+
+			certificate, err := x509.ParseCertificate(block.Bytes)
+			assert.NoError(t, err)
+
+			assert.Equal(t, tc.want, orgtls.PublicKeyFingerprint(certificate))
+		})
 	}
 }

@@ -113,8 +113,8 @@ func TestInwayProxyRequest(t *testing.T) {
 	}{
 		{fmt.Sprintf("%s/mock-service-public/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusOK, ""},
 		{fmt.Sprintf("%s/mock-service-whitelist/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusOK, ""},
-		{fmt.Sprintf("%s/mock-service-whitelist-unauthorized/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusForbidden, "nlx-inway: permission denied, organization \"nlx-test\" or public key \"sha256:eb48a0a7a922688175e1b40274d88f3e188fdd727de6a2c5840148d5e989726e\" is not allowed access.\n"},
-		{fmt.Sprintf("%s/mock-service-unspecified-unauthorized/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusForbidden, "nlx-inway: permission denied, organization \"nlx-test\" or public key \"sha256:eb48a0a7a922688175e1b40274d88f3e188fdd727de6a2c5840148d5e989726e\" is not allowed access.\n"},
+		{fmt.Sprintf("%s/mock-service-whitelist-unauthorized/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusForbidden, "nlx-inway: permission denied, organization \"nlx-test\" or public key \"60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=\" is not allowed access.\n"},
+		{fmt.Sprintf("%s/mock-service-unspecified-unauthorized/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusForbidden, "nlx-inway: permission denied, organization \"nlx-test\" or public key \"60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=\" is not allowed access.\n"},
 		{fmt.Sprintf("%s/mock-service", proxyRequestMockServer.URL), "dummy-ID", http.StatusBadRequest, "nlx-inway: invalid path in url\n"},
 		{fmt.Sprintf("%s/mock-service/fictive", proxyRequestMockServer.URL), "dummy-ID", http.StatusBadRequest, "nlx-inway: no endpoint for service\n"},
 		{fmt.Sprintf("%s/mock-service-public/dummy", proxyRequestMockServer.URL), "", http.StatusBadRequest, "nlx-inway: missing logrecord id\n"},

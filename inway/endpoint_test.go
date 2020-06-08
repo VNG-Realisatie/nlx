@@ -99,7 +99,7 @@ func TestWhitelist(t *testing.T) {
 		},
 		{
 			name:              "only certificate",
-			requesterMetadata: &RequestMetadata{requesterOrganization: "irrelevant", requesterPublicKeyHash: "only-cert"},
+			requesterMetadata: &RequestMetadata{requesterOrganization: "irrelevant", requesterPublicKeyFingerprint: "only-cert"},
 			want:              want{statusCode: http.StatusBadRequest, body: "nlx-inway: missing logrecord id\n"},
 		},
 		{
@@ -109,7 +109,7 @@ func TestWhitelist(t *testing.T) {
 		},
 		{
 			name:              "with name and cert",
-			requesterMetadata: &RequestMetadata{requesterOrganization: "with-name-and-cert", requesterPublicKeyHash: "with-cert-and-name"},
+			requesterMetadata: &RequestMetadata{requesterOrganization: "with-name-and-cert", requesterPublicKeyFingerprint: "with-cert-and-name"},
 			want:              want{statusCode: http.StatusBadRequest, body: "nlx-inway: missing logrecord id\n"},
 		},
 		{
@@ -119,7 +119,7 @@ func TestWhitelist(t *testing.T) {
 		},
 		{
 			name:              "name with wrong cert",
-			requesterMetadata: &RequestMetadata{requesterOrganization: "with-name-and-cert", requesterPublicKeyHash: "wrong"},
+			requesterMetadata: &RequestMetadata{requesterOrganization: "with-name-and-cert", requesterPublicKeyFingerprint: "wrong"},
 			want:              want{statusCode: http.StatusForbidden, body: "nlx-inway: permission denied, organization \"with-name-and-cert\" or public key \"wrong\" is not allowed access.\n"},
 		},
 	}
