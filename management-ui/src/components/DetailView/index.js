@@ -35,6 +35,7 @@ export const DetailHeadingLight = styled(DetailHeading)`
 `
 
 export const StyledCollapsibleBody = styled.div`
+  margin-top: ${(p) => p.theme.tokens.spacing05};
   margin-left: calc(1.25rem + ${(p) => p.theme.tokens.spacing03});
 `
 

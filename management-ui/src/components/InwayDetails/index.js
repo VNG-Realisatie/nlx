@@ -28,7 +28,7 @@ const InwayDetails = ({ inway }) => {
       <Drawer.Header
         title={name}
         closeButtonLabel={t('Close')}
-        data-testid="service-name"
+        data-testid="gateway-name"
       />
 
       <Drawer.Content>
@@ -36,7 +36,7 @@ const InwayDetails = ({ inway }) => {
           <StyledIconInway /> inway
         </SubHeader>
 
-        <StyledSpecList data-testid="inway-specs" role="grid" alignValuesRight>
+        <StyledSpecList data-testid="inway-specs" alignValuesRight>
           <StyledSpecList.Item title={t('IP-address')} value={ipAddress} />
           <StyledSpecList.Item title={t('Hostname')} value={hostname} />
           <StyledSpecList.Item title={t('Self address')} value={selfAddress} />

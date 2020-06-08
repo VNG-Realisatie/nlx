@@ -38,7 +38,6 @@ class InwayRepository {
       inway.services = []
     }
 
-    console.log(inway)
     return inway
   }
 }
