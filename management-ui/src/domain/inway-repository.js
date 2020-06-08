@@ -31,12 +31,7 @@ class InwayRepository {
     }
 
     const inway = await result.json()
-
-    if (inway.services) {
-      inway.services = inway.services.map((service) => service.name)
-    } else {
-      inway.services = []
-    }
+    inway.services = inway.services || []
 
     return inway
   }

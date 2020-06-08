@@ -58,7 +58,7 @@ const EditServicePage = ({ updateHandler, getServiceByName }) => {
               variant="error"
               data-testid="error-message"
             >
-              {t(updateError)}
+              {t(`${updateError}`)}
             </StyledUpdatedError>
           ) : null}
 

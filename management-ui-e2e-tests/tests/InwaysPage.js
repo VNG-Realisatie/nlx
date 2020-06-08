@@ -49,6 +49,6 @@ test('Inway details are displayed', async t => {
     .expect(nameCell.textContent).eql(INWAY_NAME)
     .expect(hostnameCell.textContent).notEql('') // we only check for not empty, because the hostname is nondeterministic
     .expect(selfAddressCell.textContent).eql(INWAY_SELF_ADDRESS)
-    .expect(serviceCountCell.textContent).eql('2')
+    .expect(serviceCountCell.textContent).eql('1')
     .expect(versionCell.textContent).eql(INWAY_VERSION)
 })

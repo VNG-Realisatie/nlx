@@ -58,9 +58,9 @@ const InwayDetails = ({ inway }) => {
               <Table data-testid="service-inways-list" role="grid" withLinks>
                 <tbody>
                   {services.length ? (
-                    services.map((service) => (
-                      <Table.Tr key={service} to={`/services/${service}`}>
-                        <Table.Td>{service}</Table.Td>
+                    services.map(({ name }) => (
+                      <Table.Tr key={name} to={`/services/${name}`}>
+                        <Table.Td>{name}</Table.Td>
                       </Table.Tr>
                     ))
                   ) : (
@@ -89,7 +89,11 @@ InwayDetails.propTypes = {
     hostname: string,
     selfAddress: string,
     version: string,
-    services: arrayOf(string),
+    services: arrayOf(
+      shape({
+        name: string,
+      }),
+    ),
   }),
 }
 
