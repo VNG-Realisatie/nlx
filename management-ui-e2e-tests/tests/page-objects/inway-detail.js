@@ -5,7 +5,8 @@ import { Selector } from 'testcafe';
 
 class Page {
   constructor() {
-    this.closeButton = Selector('[data-testid="close-button"]')
+    // Wait until visible. Drawer animation can take some time and click interaction requires visibility
+    this.closeButton = Selector('[data-testid="close-button"]', { visibilityCheck: true })
     this.inwayName = Selector('[data-testid="gateway-name"]')
     this.gatewayType = Selector('[data-testid="gateway-type"]')
     this.inwaySpecs = Selector('[data-testid="inway-specs"]')

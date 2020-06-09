@@ -47,9 +47,17 @@ test('Links to service detail', async t => {
     .expect(getLocation()).contains(`${baseUrl}/services/kentekenregister`);
 })
 
-test('Close navigates to the InwaysPage', async t => {
-  await t
-    .expect(page.closeButton.exists).ok()
-    .click(page.closeButton)
-    .expect(getLocation()).contains(`${baseUrl}/inways`);
-})
+test.before( async t => {
+    await t
+      .useRole(adminUser)
+      .navigateTo(`${baseUrl}/inways`)
+  })
+  ('Close navigates to the InwaysPage', async t => {
+    const inwayRow = Selector('tr').withText(INWAY_NAME)
+
+    await t
+      .click(inwayRow)
+      .expect(page.closeButton.exists).ok()
+      .click(page.closeButton)
+      .expect(getLocation()).contains(`${baseUrl}/inways`);
+  })

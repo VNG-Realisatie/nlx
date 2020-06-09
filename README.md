@@ -196,6 +196,16 @@ socat tcp-listen:3333,fork tcp:127.0.0.1:2222
 
 You can now let your phone connect to the IRMA api server of RDW on `your.host.machine.ip:3333`
 
+## A note on frontend debugging IE11
+
+To locally debug and develop for IE11, please adjust `package.json` to the following:
+
+1. Find `"browserslist":`
+1. Copy the part under `production` to `development`
+1. `$ rm -rf node_modules/.cache`
+1. `$ npm i && npm start`
+1. Open your local app in VM or Browserstack
+
 ## Troubleshooting
 
 If you are running into other issues, please [Post an Issue on GitLab](https://gitlab.com/commonground/nlx/nlx/issues).

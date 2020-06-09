@@ -5,7 +5,8 @@ import { Selector } from 'testcafe';
 
 class Page {
   constructor() {
-    this.serviceName = Selector('[data-testid="service-name"]')
+    // Wait until visible. Drawer animation can take some time and click interaction requires visibility
+    this.serviceName = Selector('[data-testid="service-name"]', { visibilityCheck: true })
     this.published = Selector('[data-testid="service-published"]')
     this.editButton = Selector('[data-testid="edit-button"]')
     this.closeButton = Selector('[data-testid="close-button"]')
