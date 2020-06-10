@@ -4,13 +4,15 @@
 
 import React from 'react'
 import { func } from 'prop-types'
-import { useTranslation } from 'react-i18next'
+import { Route } from 'react-router-dom'
 import { Alert } from '@commonground/design-system'
-import PageTemplate from '../../components/PageTemplate'
+import { useTranslation } from 'react-i18next'
 
+import PageTemplate from '../../components/PageTemplate'
 import DirectoryRepository from '../../domain/directory-repository'
 import usePromise from '../../hooks/use-promise'
 import LoadingMessage from '../../components/LoadingMessage'
+import DirectoryDetailPage from '../DirectoryDetailPage'
 import DirectoryServiceCount from './DirectoryServiceCount'
 import DirectoryServices from './DirectoryServices'
 
@@ -39,7 +41,12 @@ const DirectoryPage = ({ getDirectoryServices }) => {
           {t('Failed to load the directory.')}
         </Alert>
       ) : (
-        <DirectoryServices directoryServices={() => result} />
+        <>
+          <DirectoryServices directoryServices={() => result} />
+          <Route exact path="/directory/:organizationName/:serviceName">
+            <DirectoryDetailPage parentUrl="/directory" />
+          </Route>
+        </>
       )}
     </PageTemplate>
   )

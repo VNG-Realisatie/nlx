@@ -18,7 +18,7 @@ const DirectoryServices = ({ directoryServices }) => {
       {t('There are no services yet.')}
     </EmptyContentMessage>
   ) : (
-    <Table role="grid" data-testid="directory-services">
+    <Table withLinks role="grid" data-testid="directory-services">
       <thead>
         <Table.TrHead>
           <Table.Th>{t('Organization')}</Table.Th>
@@ -29,7 +29,11 @@ const DirectoryServices = ({ directoryServices }) => {
       </thead>
       <tbody>
         {services.map((service, i) => (
-          <Table.Tr key={i} data-testid={`directory-service-row-${i}`}>
+          <Table.Tr
+            key={i}
+            to={`/directory/${service.organizationName}/${service.serviceName}`}
+            data-testid={`directory-service-row-${i}`}
+          >
             <Table.Td>{service.organizationName}</Table.Td>
             <Table.Td>{service.serviceName}</Table.Td>
             <Table.Td>
