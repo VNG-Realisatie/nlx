@@ -1,0 +1,185 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "directory.proto",
+    "version": "version not set"
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/directory/organizations/{organizationName}/services/{serviceName}": {
+      "get": {
+        "operationId": "Directory_GetOrganizationService",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/directoryDirectoryService"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "organizationName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "serviceName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Directory"
+        ]
+      }
+    },
+    "/api/v1/directory/organizations/{organizationName}/services/{serviceName}/access-requests": {
+      "post": {
+        "operationId": "Directory_RequestAccessToService",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/directoryEmpty"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "organizationName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "serviceName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Directory"
+        ]
+      }
+    },
+    "/api/v1/directory/services": {
+      "get": {
+        "operationId": "Directory_ListServices",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/directoryListServicesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "Directory"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "DirectoryServiceStatus": {
+      "type": "string",
+      "enum": [
+        "unknown",
+        "up",
+        "down",
+        "degraded"
+      ],
+      "default": "unknown"
+    },
+    "directoryDirectoryService": {
+      "type": "object",
+      "properties": {
+        "serviceName": {
+          "type": "string"
+        },
+        "organizationName": {
+          "type": "string"
+        },
+        "apiSpecificationType": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/DirectoryServiceStatus"
+        }
+      }
+    },
+    "directoryEmpty": {
+      "type": "object"
+    },
+    "directoryListServicesResponse": {
+      "type": "object",
+      "properties": {
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/directoryDirectoryService"
+          }
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "type_url": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "runtimeError": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

@@ -5,7 +5,7 @@ endif
 API_DIR := $(PWD)/api
 PKG_DIR := $(PWD)/pkg
 
-PROTO_NAMES:=configapi
+PROTO_NAMES:=configapi directory
 
 PROTO_MOCK_FILES := $(foreach proto,$(PROTO_NAMES),$(PKG_DIR)/$(proto)/mock/mock_$(proto).go)
 PROTO_GO_FILES := $(foreach proto,$(PROTO_NAMES),$(PKG_DIR)/$(proto)/$(proto).pb.go)
