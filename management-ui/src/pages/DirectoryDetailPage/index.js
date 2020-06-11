@@ -24,6 +24,8 @@ const DirectoryDetailPage = ({ getService, parentUrl }) => {
   )
   const close = () => history.push(parentUrl)
 
+  const handleRequestAccess = () => console.log('request access')
+
   return (
     <Drawer noMask closeHandler={close}>
       {service && <DrawerHeader service={service} />}
@@ -38,7 +40,10 @@ const DirectoryDetailPage = ({ getService, parentUrl }) => {
             })}
           </Alert>
         ) : service ? (
-          <DirectoryDetailView service={service} />
+          <DirectoryDetailView
+            service={service}
+            onRequestAccess={handleRequestAccess}
+          />
         ) : null}
       </Drawer.Content>
     </Drawer>

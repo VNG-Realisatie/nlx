@@ -20,14 +20,45 @@ class DirectoryRepository {
 
   static async getByName(organizationName, serviceName) {
     const result = await fetchWithoutCaching(
-      `api/v1/directory/organizations/${organizationName}/services/${serviceName}`,
+      `/api/v1/directory/organizations/${organizationName}/services/${serviceName}`,
     )
+
+    if (result.status === 400) {
+      throw new Error('invalid user input')
+    }
+
+    if (result.status === 403) {
+      throw new Error('forbidden')
+    }
 
     if (!result.ok) {
       throw new Error('unable to handle the request')
     }
 
-    return await result.json()
+    return result.json()
+  }
+
+  static async requestAccess(organizationName, serviceName) {
+    const result = await fetch(
+      `/api/v1/directory/organizations/${organizationName}/services/${serviceName}/access-requests`,
+      {
+        method: 'POST',
+      },
+    )
+
+    if (result.status === 400) {
+      throw new Error('invalid user input')
+    }
+
+    if (result.status === 403) {
+      throw new Error('forbidden')
+    }
+
+    if (!result.ok) {
+      throw new Error('unable to handle the request')
+    }
+
+    return result.json()
   }
 }
 

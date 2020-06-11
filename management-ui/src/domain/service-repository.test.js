@@ -183,6 +183,7 @@ describe('the ServiceRepository', () => {
         }),
       )
     })
+
     describe('when required values are sent by the api', () => {
       it('should not overwrite values', async () => {
         jest.spyOn(global, 'fetch').mockResolvedValue({

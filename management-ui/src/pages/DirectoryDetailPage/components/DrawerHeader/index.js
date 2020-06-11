@@ -30,8 +30,8 @@ const DrawerHeader = ({ service, ...props }) => {
 
 DrawerHeader.propTypes = {
   service: shape({
-    serviceName: string,
-    organizationName: string,
+    serviceName: string.isRequired,
+    organizationName: string.isRequired,
   }),
 }
 
