@@ -31,13 +31,14 @@ import (
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 	"go.nlx.io/nlx/management-api/pkg/configapi"
 	"go.nlx.io/nlx/management-api/pkg/directory"
+	"go.nlx.io/nlx/management-api/pkg/environment"
 	"go.nlx.io/nlx/management-api/pkg/oidc"
 )
 
 // API handles incoming requests and authenticates them
 type API struct {
 	logger          *zap.Logger
-	environment     *Environment
+	environment     *environment.Environment
 	roots           *x509.CertPool
 	orgCertKeyPair  *tls.Certificate
 	process         *process.Process
@@ -100,18 +101,18 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.
 
 	configapi.RegisterConfigApiServer(grpcServer, configService)
 
+	e := &environment.Environment{
+		OrganizationName: orgCert.Subject.Organization[0],
+	}
+
 	directoryClient, err := directory.NewClient(directoryEndpointURL)
 	if err != nil {
 		return nil, err
 	}
 
-	environment := &Environment{
-		OrganizationName: orgCert.Subject.Organization[0],
-	}
-
 	api := &API{
-		logger:          logger.With(zap.String("api-organization-name", environment.OrganizationName)),
-		environment:     environment,
+		logger:          logger.With(zap.String("api-organization-name", e.OrganizationName)),
+		environment:     e,
 		roots:           roots,
 		orgCertKeyPair:  orgKeyPair,
 		grpcServer:      grpcServer,

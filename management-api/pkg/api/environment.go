@@ -1,6 +1,5 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
-
 package api
 
 import (
@@ -10,10 +9,6 @@ import (
 	"github.com/go-chi/render"
 )
 
-type Environment struct {
-	OrganizationName string `json:"organizationName"`
-}
-
 func environmentRoutes(a *API) chi.Router {
 	r := chi.NewRouter()
 	r.Get("/", a.environmentHandler)
@@ -21,6 +16,6 @@ func environmentRoutes(a *API) chi.Router {
 	return r
 }
 
-func (a *API) environmentHandler(w http.ResponseWriter, r *http.Request) {
+func (a API) environmentHandler(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, a.environment)
 }
