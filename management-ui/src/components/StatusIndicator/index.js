@@ -13,13 +13,15 @@ import { StyledWrapper, StyledIconStatusDegraded } from './index.styles'
 
 export const DIRECTORY_SERVICE_STATUS = ['degraded', 'down', 'unknown', 'up']
 
-const DirectoryServiceStatus = ({ status }) => {
+// Generic component that will handle different kinds of status codes (not only directory service)
+const StatusIndicator = ({ status }) => {
   const { t } = useTranslation()
 
   if (!DIRECTORY_SERVICE_STATUS.includes(status)) {
-    console.warn(`invalid status '${status}'`)
+    console.warn(`Invalid status '${status}'`)
     return null
   }
+
   return (
     <StyledWrapper>
       {
@@ -34,8 +36,8 @@ const DirectoryServiceStatus = ({ status }) => {
   )
 }
 
-DirectoryServiceStatus.propTypes = {
+StatusIndicator.propTypes = {
   status: oneOf(DIRECTORY_SERVICE_STATUS),
 }
 
-export default DirectoryServiceStatus
+export default StatusIndicator

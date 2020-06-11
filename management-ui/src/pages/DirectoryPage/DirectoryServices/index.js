@@ -7,7 +7,7 @@ import React from 'react'
 import { Table } from '@commonground/design-system'
 
 import EmptyContentMessage from '../../../components/EmptyContentMessage'
-import DirectoryServiceStatus from '../DirectoryServiceStatus'
+import StatusIndicator from '../../../components/StatusIndicator'
 
 const DirectoryServices = ({ directoryServices }) => {
   const { t } = useTranslation()
@@ -32,7 +32,7 @@ const DirectoryServices = ({ directoryServices }) => {
             <Table.Td>{service.organizationName}</Table.Td>
             <Table.Td>{service.serviceName}</Table.Td>
             <Table.Td>
-              <DirectoryServiceStatus status={service.status} />
+              <StatusIndicator status={service.status} />
             </Table.Td>
             <Table.Td>{service.apiSpecificationType}</Table.Td>
           </Table.Tr>
