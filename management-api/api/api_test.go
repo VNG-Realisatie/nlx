@@ -95,8 +95,6 @@ var tests = []struct {
 	},
 }
 
-const i = 90
-
 func TestNewAPI(t *testing.T) {
 	logger := zap.NewNop()
 	testProcess := process.NewProcess(logger)
