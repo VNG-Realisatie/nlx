@@ -44,3 +44,17 @@ test('does not render when status is invalid', () => {
   rerender(<StatusIndicator status="invalid" />)
   expect(container).toBeEmptyDOMElement()
 })
+
+describe('status text', () => {
+  it('is hidden by default', () => {
+    const { queryByText } = renderWithProviders(<StatusIndicator status="up" />)
+    expect(queryByText('Up')).toBeNull()
+  })
+
+  it('shown with bool prop `showText`', () => {
+    const { getByText } = renderWithProviders(
+      <StatusIndicator status="up" showText />,
+    )
+    expect(getByText('Up')).toBeInTheDocument()
+  })
+})

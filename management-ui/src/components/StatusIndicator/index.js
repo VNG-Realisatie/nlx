@@ -2,17 +2,21 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { oneOf } from 'prop-types'
+import { oneOf, bool } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 
 import { IconStatusUp, IconStatusDown, IconStatusUnknown } from '../../icons'
 
-import { StyledWrapper, StyledIconStatusDegraded } from './index.styles'
+import {
+  StyledWrapper,
+  StyledIconStatusDegraded,
+  StatusText,
+} from './index.styles'
 
 export const DIRECTORY_SERVICE_STATUS = ['degraded', 'down', 'unknown', 'up']
 
 // Generic component that will handle different kinds of status codes (not only directory service)
-const StatusIndicator = ({ status }) => {
+const StatusIndicator = ({ status, showText }) => {
   const { t } = useTranslation()
 
   if (!DIRECTORY_SERVICE_STATUS.includes(status)) {
@@ -20,14 +24,35 @@ const StatusIndicator = ({ status }) => {
     return null
   }
 
+  // Make this smarter when refactoring for more statuses:
   return (
     <StyledWrapper>
       {
         {
-          degraded: <StyledIconStatusDegraded title={t('Degraded')} />,
-          down: <IconStatusDown title={t('Down')} />,
-          up: <IconStatusUp title={t('Up')} />,
-          unknown: <IconStatusUnknown title={t('Unknown')} />,
+          degraded: (
+            <>
+              <StyledIconStatusDegraded title={t('Degraded')} />
+              {showText && <StatusText>{t('Degraded')}</StatusText>}
+            </>
+          ),
+          down: (
+            <>
+              <IconStatusDown title={t('Down')} />
+              {showText && <StatusText>{t('Down')}</StatusText>}
+            </>
+          ),
+          up: (
+            <>
+              <IconStatusUp title={t('Up')} />
+              {showText && <StatusText>{t('Up')}</StatusText>}
+            </>
+          ),
+          unknown: (
+            <>
+              <IconStatusUnknown title={t('Unknown')} />
+              {showText && <StatusText>{t('Unknown')}</StatusText>}
+            </>
+          ),
         }[status]
       }
     </StyledWrapper>
@@ -36,6 +61,11 @@ const StatusIndicator = ({ status }) => {
 
 StatusIndicator.propTypes = {
   status: oneOf(DIRECTORY_SERVICE_STATUS),
+  showText: bool,
+}
+
+StatusIndicator.defaultProps = {
+  showText: false,
 }
 
 export default StatusIndicator
