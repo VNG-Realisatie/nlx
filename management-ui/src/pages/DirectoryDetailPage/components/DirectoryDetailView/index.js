@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { shape, string, func } from 'prop-types'
+import { func, bool } from 'prop-types'
 import { Button } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 
@@ -11,7 +11,7 @@ import { DetailHeading, SectionGroup } from '../../../../components/DetailView'
 import { Authorization } from './index.styles'
 import { ReactComponent as IconKey } from './whitelist.svg'
 
-const DirectoryDetailView = ({ service, onRequestAccess }) => {
+const DirectoryDetailView = ({ onRequestAccess, isAccessRequested }) => {
   const { t } = useTranslation()
 
   return (
@@ -21,20 +21,17 @@ const DirectoryDetailView = ({ service, onRequestAccess }) => {
           <IconKey />
           {t('Authorization')}
         </DetailHeading>
-        <Button onClick={onRequestAccess}>{t('Request Access')}</Button>
+        <Button onClick={onRequestAccess} disabled={isAccessRequested}>
+          {t('Request Access')}
+        </Button>
       </Authorization>
     </SectionGroup>
   )
 }
 
 DirectoryDetailView.propTypes = {
-  service: shape({
-    serviceName: string,
-    organizationName: string,
-    apiSpecificationType: string,
-    status: string,
-  }),
   onRequestAccess: func,
+  isAccessRequested: bool.isRequired,
 }
 
 export default DirectoryDetailView

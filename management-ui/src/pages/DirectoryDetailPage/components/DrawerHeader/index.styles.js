@@ -12,6 +12,7 @@ export const Summary = styled.div`
   display: flex;
 
   & > * {
+    font-size: ${(p) => p.theme.tokens.fontSizeSmall};
     margin-right: ${(p) => p.theme.tokens.spacing05};
     color: ${(p) => p.theme.colorTextLabel};
   }

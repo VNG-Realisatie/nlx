@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React from 'react'
+import React, { useState } from 'react'
 import { func, string } from 'prop-types'
 import { useParams, useHistory } from 'react-router-dom'
 import { Alert, Drawer } from '@commonground/design-system'
@@ -13,22 +13,35 @@ import LoadingMessage from '../../components/LoadingMessage'
 import DirectoryDetailView from './components/DirectoryDetailView'
 import DrawerHeader from './components/DrawerHeader'
 
-const DirectoryDetailPage = ({ getService, parentUrl }) => {
-  const { organizationName, serviceName } = useParams()
+const DirectoryDetailPage = ({ getService, requestAccess, parentUrl }) => {
   const { t } = useTranslation()
   const history = useHistory()
+  const { organizationName, serviceName } = useParams()
+  const { accessRequested, setAccessRequested } = useState()
+
   const { isReady, error, result: service } = usePromise(
     getService,
     organizationName,
     serviceName,
   )
+
   const close = () => history.push(parentUrl)
 
-  const handleRequestAccess = () => console.log('request access')
+  const handleRequestAccess = async () => {
+    try {
+      setAccessRequested(true)
+      await requestAccess(organizationName, serviceName)
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   return (
     <Drawer noMask closeHandler={close}>
       {service && <DrawerHeader service={service} />}
+      {error && (
+        <Drawer.Header title={serviceName} closeButtonLabel={t('Close')} />
+      )}
 
       <Drawer.Content>
         {!isReady || (!error && !service) ? (
@@ -43,6 +56,7 @@ const DirectoryDetailPage = ({ getService, parentUrl }) => {
           <DirectoryDetailView
             service={service}
             onRequestAccess={handleRequestAccess}
+            isAccessRequested={accessRequested}
           />
         ) : null}
       </Drawer.Content>
@@ -52,11 +66,13 @@ const DirectoryDetailPage = ({ getService, parentUrl }) => {
 
 DirectoryDetailPage.propTypes = {
   getService: func,
+  requestAccess: func,
   parentUrl: string,
 }
 
 DirectoryDetailPage.defaultProps = {
   getService: DirectoryRepository.getByName,
+  requestAccess: DirectoryDetailPage.requestAccess,
   parentUrl: '/directory',
 }
 
