@@ -21,6 +21,7 @@ import (
 	"google.golang.org/grpc/credentials"
 
 	"go.nlx.io/nlx/management-api/pkg/configapi"
+	"go.nlx.io/nlx/management-api/pkg/directory"
 )
 
 // ListenAndServe is a blocking function that listens on provided tcp address to handle requests.
@@ -52,13 +53,17 @@ func (a *API) ListenAndServe(address, configAddress string) error {
 		return err
 	}
 
+	err = directory.RegisterDirectoryHandlerFromEndpoint(ctx, a.mux, configAddress, gatewayDialOptions)
+	if err != nil {
+		return err
+	}
+
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
 	r.Get("/health", health)
 	r.Mount("/oidc", a.authenticator.Routes())
 	r.Mount("/api", a.authenticator.OnlyAuthenticated(a.mux))
-	r.Mount("/api/v1/directory", directoryRoutes(a))
 	r.Mount("/api/v1/environment", environmentRoutes(a))
 
 	server := &http.Server{

@@ -97,6 +97,7 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.
 	}
 
 	configService := newConfigService(logger, mainProcess, etcdConnectionString, directoryRegistrationClient)
+
 	grpcServer := newGRPCServer(logger, roots, orgKeyPair)
 
 	configapi.RegisterConfigApiServer(grpcServer, configService)
@@ -109,6 +110,10 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.
 	if err != nil {
 		return nil, err
 	}
+
+	directoryService := directory.NewDirectoryService(logger, e, directoryClient)
+
+	directory.RegisterDirectoryServer(grpcServer, directoryService)
 
 	api := &API{
 		logger:          logger.With(zap.String("api-organization-name", e.OrganizationName)),
