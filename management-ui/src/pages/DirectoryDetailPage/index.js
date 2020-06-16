@@ -17,7 +17,7 @@ const DirectoryDetailPage = ({ getService, requestAccess, parentUrl }) => {
   const { t } = useTranslation()
   const history = useHistory()
   const { organizationName, serviceName } = useParams()
-  const { accessRequested, setAccessRequested } = useState()
+  const [isAccessRequested, setAccessRequested] = useState(false)
 
   const { isReady, error, result: service } = usePromise(
     getService,
@@ -28,18 +28,25 @@ const DirectoryDetailPage = ({ getService, requestAccess, parentUrl }) => {
   const close = () => history.push(parentUrl)
 
   const handleRequestAccess = async () => {
-    try {
-      setAccessRequested(true)
-      await requestAccess(organizationName, serviceName)
-    } catch (e) {
-      console.error(e)
+    const confirmed = window.confirm(
+      t('The request will be sent to', { name: organizationName }),
+    )
+
+    if (confirmed) {
+      try {
+        setAccessRequested(true)
+        await requestAccess(organizationName, serviceName)
+      } catch (e) {
+        console.error(e)
+      }
     }
   }
 
   return (
     <Drawer noMask closeHandler={close}>
-      {service && <DrawerHeader service={service} />}
-      {error && (
+      {service ? (
+        <DrawerHeader service={service} />
+      ) : (
         <Drawer.Header title={serviceName} closeButtonLabel={t('Close')} />
       )}
 
@@ -54,9 +61,8 @@ const DirectoryDetailPage = ({ getService, requestAccess, parentUrl }) => {
           </Alert>
         ) : service ? (
           <DirectoryDetailView
-            service={service}
             onRequestAccess={handleRequestAccess}
-            isAccessRequested={accessRequested}
+            isAccessRequested={isAccessRequested}
           />
         ) : null}
       </Drawer.Content>
@@ -72,7 +78,7 @@ DirectoryDetailPage.propTypes = {
 
 DirectoryDetailPage.defaultProps = {
   getService: DirectoryRepository.getByName,
-  requestAccess: DirectoryDetailPage.requestAccess,
+  requestAccess: DirectoryRepository.requestAccess,
   parentUrl: '/directory',
 }
 

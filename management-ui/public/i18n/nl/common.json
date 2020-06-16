@@ -64,6 +64,7 @@
   "Services page": "Services pagina",
   "Status": "Status",
   "Tech support email": "Technisch support e-mailadres",
+  "The request will be sent to": "De aanvraag wordt gestuurd naar {{name}}.",
   "The service has been added.": "De service is toegevoegd.",
   "The service has been removed.": "De service is verwijderd.",
   "The service has been updated.": "De service is bijgewerkt.",

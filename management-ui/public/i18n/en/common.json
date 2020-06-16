@@ -64,6 +64,7 @@
   "Services page": "Services page",
   "Status": "Status",
   "Tech support email": "Tech support email",
+  "The request will be sent to": "The request will be sent to {{name}}.",
   "The service has been added.": "The service has been added.",
   "The service has been removed.": "The service has been removed.",
   "The service has been updated.": "The service has been updated.",
