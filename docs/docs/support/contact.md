@@ -3,6 +3,7 @@ id: contact
 title: Contact
 ---
 
-[Email](mailto:support@nlx.io)
+Contact NLX maintainers by using one of those options:
 
-[Gitlab](https://gitlab.com/commonground/nlx/nlx)
+- [Email](mailto:support@nlx.io)
+- [GitLab](https://gitlab.com/commonground/nlx/nlx)
