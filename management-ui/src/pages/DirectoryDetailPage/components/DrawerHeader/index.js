@@ -19,7 +19,7 @@ const DrawerHeader = ({ service }) => {
   const { t } = useTranslation()
 
   return (
-    <header data-testid="service-organisation-name">
+    <header data-testid="directory-detail-header">
       <Drawer.Header title={serviceName} closeButtonLabel={t('Close')} />
       <SubTitle>{organizationName}</SubTitle>
       <Summary>

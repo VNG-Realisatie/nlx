@@ -15,7 +15,7 @@ const DirectoryDetailView = ({ onRequestAccess, isAccessRequested }) => {
   const { t } = useTranslation()
 
   return (
-    <SectionGroup>
+    <SectionGroup data-testid="request-access-section">
       <Authorization>
         <DetailHeading>
           <IconKey />

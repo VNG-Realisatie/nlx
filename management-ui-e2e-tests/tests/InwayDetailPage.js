@@ -47,12 +47,14 @@ test('Links to service detail', async t => {
     .expect(getLocation()).contains(`${baseUrl}/services/kentekenregister`);
 })
 
+// In IE11 the transition doesn't always complete when directly navigating to detail
+// So X may not be visible/clickable
 test.before( async t => {
     await t
       .useRole(adminUser)
       .navigateTo(`${baseUrl}/inways`)
   })
-  ('Close navigates to the InwaysPage', async t => {
+  ('Opens and closes details view', async t => {
     const inwayRow = Selector('tr').withText(INWAY_NAME)
 
     await t

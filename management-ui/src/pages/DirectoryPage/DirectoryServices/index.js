@@ -28,20 +28,30 @@ const DirectoryServices = ({ directoryServices }) => {
         </Table.TrHead>
       </thead>
       <tbody>
-        {services.map((service, i) => (
-          <Table.Tr
-            key={i}
-            to={`/directory/${service.organizationName}/${service.serviceName}`}
-            data-testid={`directory-service-row-${i}`}
-          >
-            <Table.Td>{service.organizationName}</Table.Td>
-            <Table.Td>{service.serviceName}</Table.Td>
-            <Table.Td>
-              <StatusIndicator status={service.status} />
-            </Table.Td>
-            <Table.Td>{service.apiSpecificationType}</Table.Td>
-          </Table.Tr>
-        ))}
+        {services.map((service, i) => {
+          const {
+            organizationName,
+            serviceName,
+            status,
+            apiSpecificationType,
+          } = service
+
+          return (
+            <Table.Tr
+              key={i}
+              to={`/directory/${organizationName}/${serviceName}`}
+              name={`${organizationName} - ${serviceName}`}
+              data-testid={`directory-service-row-${i}`}
+            >
+              <Table.Td>{organizationName}</Table.Td>
+              <Table.Td>{serviceName}</Table.Td>
+              <Table.Td>
+                <StatusIndicator status={status} />
+              </Table.Td>
+              <Table.Td>{apiSpecificationType}</Table.Td>
+            </Table.Tr>
+          )
+        })}
       </tbody>
     </Table>
   )
