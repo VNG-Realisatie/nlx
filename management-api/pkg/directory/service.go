@@ -3,16 +3,16 @@
 
 package directory
 
-type Service struct {
+type InspectionAPIService struct {
 	Name                 string   `json:"service_name"`
 	OrganizationName     string   `json:"organization_name"`
 	APISpecificationType string   `json:"api_specification_type"`
 	Inways               []*Inway `json:"inways"`
 }
 
-type servicesRoot map[string][]*Service
+type servicesRoot map[string][]*InspectionAPIService
 
-func (d *Client) ListServices() ([]*Service, error) {
+func (d *Client) ListServices() ([]*InspectionAPIService, error) {
 	req, err := d.newRequest("GET", "list-services")
 	if err != nil {
 		return nil, err

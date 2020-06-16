@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/oauth2"
 
-	"go.nlx.io/nlx/management-api/oidc/mock"
+	"go.nlx.io/nlx/management-api/pkg/oidc/mock"
 )
 
 // client is a special client that does not follow redirects automatically

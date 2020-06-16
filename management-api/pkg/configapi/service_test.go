@@ -1,5 +1,5 @@
 //nolint:dupl // test package
-package configservice_test
+package configapi_test
 
 import (
 	"context"
@@ -13,10 +13,8 @@ import (
 
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
-	"go.nlx.io/nlx/management-api/configapi"
-	"go.nlx.io/nlx/management-api/configservice"
-
-	mock_configservice "go.nlx.io/nlx/management-api/configservice/mock"
+	"go.nlx.io/nlx/management-api/pkg/configapi"
+	mock_configapi "go.nlx.io/nlx/management-api/pkg/configapi/mock"
 )
 
 func TestCreateService(t *testing.T) {
@@ -33,10 +31,10 @@ func TestCreateService(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
-	mockDatabase := mock_configservice.NewMockConfigDatabase(mockCtrl)
+	mockDatabase := mock_configapi.NewMockConfigDatabase(mockCtrl)
 	mockDatabase.EXPECT().CreateService(ctx, requestService)
 
-	service := configservice.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+	service := configapi.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
 
 	responseService, err := service.CreateService(ctx, requestService)
 	if err != nil {
@@ -54,8 +52,8 @@ func TestGetService(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
-	mockDatabase := mock_configservice.NewMockConfigDatabase(mockCtrl)
-	service := configservice.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+	mockDatabase := mock_configapi.NewMockConfigDatabase(mockCtrl)
+	service := configapi.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
 
 	getServiceRequest := &configapi.GetServiceRequest{
 		Name: "my-service",
@@ -96,10 +94,10 @@ func TestUpdateService(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
-	mockDatabase := mock_configservice.NewMockConfigDatabase(mockCtrl)
+	mockDatabase := mock_configapi.NewMockConfigDatabase(mockCtrl)
 	mockDatabase.EXPECT().UpdateService(ctx, "my-service", mockService)
 
-	service := configservice.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+	service := configapi.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
 
 	updateServiceRequest := &configapi.UpdateServiceRequest{
 		Name:    "my-service",
@@ -125,10 +123,10 @@ func TestDeleteService(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
-	mockDatabase := mock_configservice.NewMockConfigDatabase(mockCtrl)
+	mockDatabase := mock_configapi.NewMockConfigDatabase(mockCtrl)
 	mockDatabase.EXPECT().DeleteService(ctx, "my-service")
 
-	service := configservice.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+	service := configapi.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
 
 	deleteRequest := &configapi.DeleteServiceRequest{
 		Name: "my-service",
@@ -148,8 +146,8 @@ func TestListServices(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
-	mockDatabase := mock_configservice.NewMockConfigDatabase(mockCtrl)
-	service := configservice.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+	mockDatabase := mock_configapi.NewMockConfigDatabase(mockCtrl)
+	service := configapi.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
 	myService := &configapi.Service{
 		Name:   "my-service",
 		Inways: []string{"inway.mock"},

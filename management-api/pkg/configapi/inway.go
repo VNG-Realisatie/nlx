@@ -1,5 +1,5 @@
 //nolint:dupl // service and inway structs look the same
-package configservice
+package configapi
 
 import (
 	"context"
@@ -10,12 +10,10 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/peer"
 	"google.golang.org/grpc/status"
-
-	"go.nlx.io/nlx/management-api/configapi"
 )
 
 // CreateInway creates a new inway
-func (s *ConfigService) CreateInway(ctx context.Context, inway *configapi.Inway) (*configapi.Inway, error) {
+func (s *ConfigService) CreateInway(ctx context.Context, inway *Inway) (*Inway, error) {
 	logger := s.logger.With(zap.String("name", inway.Name))
 
 	logger.Info("rpc request CreateInway")
@@ -50,7 +48,7 @@ func (s *ConfigService) CreateInway(ctx context.Context, inway *configapi.Inway)
 }
 
 // GetInway returns a specific inway
-func (s *ConfigService) GetInway(ctx context.Context, req *configapi.GetInwayRequest) (*configapi.Inway, error) {
+func (s *ConfigService) GetInway(ctx context.Context, req *GetInwayRequest) (*Inway, error) {
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request GetInway")
 
@@ -79,7 +77,7 @@ func (s *ConfigService) GetInway(ctx context.Context, req *configapi.GetInwayReq
 }
 
 // UpdateInway updates an existing inway
-func (s *ConfigService) UpdateInway(ctx context.Context, req *configapi.UpdateInwayRequest) (*configapi.Inway, error) {
+func (s *ConfigService) UpdateInway(ctx context.Context, req *UpdateInwayRequest) (*Inway, error) {
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request UpdateInway")
 
@@ -99,7 +97,7 @@ func (s *ConfigService) UpdateInway(ctx context.Context, req *configapi.UpdateIn
 }
 
 // DeleteInway deletes a specific inway
-func (s *ConfigService) DeleteInway(ctx context.Context, req *configapi.DeleteInwayRequest) (*configapi.Empty, error) {
+func (s *ConfigService) DeleteInway(ctx context.Context, req *DeleteInwayRequest) (*Empty, error) {
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request DeleteInway")
 
@@ -107,14 +105,14 @@ func (s *ConfigService) DeleteInway(ctx context.Context, req *configapi.DeleteIn
 
 	if err != nil {
 		logger.Error("error deleting inway in DB", zap.Error(err))
-		return &configapi.Empty{}, status.Error(codes.Internal, "database error")
+		return &Empty{}, status.Error(codes.Internal, "database error")
 	}
 
-	return &configapi.Empty{}, nil
+	return &Empty{}, nil
 }
 
 // ListInways returns a list of inways
-func (s *ConfigService) ListInways(ctx context.Context, req *configapi.ListInwaysRequest) (*configapi.ListInwaysResponse, error) {
+func (s *ConfigService) ListInways(ctx context.Context, req *ListInwaysRequest) (*ListInwaysResponse, error) {
 	s.logger.Info("rpc request ListInways")
 
 	inways, err := s.configDatabase.ListInways(ctx)
@@ -136,18 +134,18 @@ func (s *ConfigService) ListInways(ctx context.Context, req *configapi.ListInway
 		}
 	}
 
-	return &configapi.ListInwaysResponse{
+	return &ListInwaysResponse{
 		Inways: inways,
 	}, nil
 }
 
 // FilterServices returns an array with only services for the given inway
-func FilterServices(services []*configapi.Service, i *configapi.Inway) []*configapi.Inway_Service {
-	result := []*configapi.Inway_Service{}
+func FilterServices(services []*Service, i *Inway) []*Inway_Service {
+	result := []*Inway_Service{}
 
 	for _, service := range services {
 		if contains(service.Inways, i.Name) {
-			result = append(result, &configapi.Inway_Service{Name: service.Name})
+			result = append(result, &Inway_Service{Name: service.Name})
 		}
 	}
 

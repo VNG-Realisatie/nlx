@@ -9,7 +9,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"go.nlx.io/nlx/management-api/directory"
+	"go.nlx.io/nlx/management-api/pkg/directory"
 )
 
 var directoryServiceStatusTests = []struct {

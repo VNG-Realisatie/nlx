@@ -1,18 +1,17 @@
-package configservice
+package configapi
 
 import (
 	"context"
 
-	"go.nlx.io/nlx/directory-registration-api/registrationapi"
-	"go.nlx.io/nlx/management-api/configapi"
-
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
 
 // GetInsight returns the insight configuration of a organization
-func (s *ConfigService) GetInsightConfiguration(ctx context.Context, req *configapi.Empty) (*configapi.InsightConfiguration, error) {
+func (s *ConfigService) GetInsightConfiguration(ctx context.Context, req *Empty) (*InsightConfiguration, error) {
 	s.logger.Info("rpc request GetInsightConfiguration")
 
 	insightConfig, err := s.configDatabase.GetInsightConfiguration(ctx)
@@ -30,7 +29,7 @@ func (s *ConfigService) GetInsightConfiguration(ctx context.Context, req *config
 }
 
 // PutInsight sets the insight configuration of a organization
-func (s *ConfigService) PutInsightConfiguration(ctx context.Context, req *configapi.InsightConfiguration) (*configapi.InsightConfiguration, error) {
+func (s *ConfigService) PutInsightConfiguration(ctx context.Context, req *InsightConfiguration) (*InsightConfiguration, error) {
 	s.logger.Info("rpc request PutInsight")
 
 	_, err := s.directoryRegistrationClient.SetInsightConfiguration(ctx, &registrationapi.SetInsightConfigurationRequest{

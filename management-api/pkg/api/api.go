@@ -29,10 +29,9 @@ import (
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/tlsconfig"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
-	"go.nlx.io/nlx/management-api/configapi"
-	"go.nlx.io/nlx/management-api/configservice"
-	"go.nlx.io/nlx/management-api/directory"
-	"go.nlx.io/nlx/management-api/oidc"
+	"go.nlx.io/nlx/management-api/pkg/configapi"
+	"go.nlx.io/nlx/management-api/pkg/directory"
+	"go.nlx.io/nlx/management-api/pkg/oidc"
 )
 
 // API handles incoming requests and authenticates them
@@ -163,13 +162,13 @@ func newGRPCServer(logger *zap.Logger, roots *x509.CertPool, certKeyPair *tls.Ce
 	return grpc.NewServer(opts...)
 }
 
-func newConfigService(logger *zap.Logger, mainProcess *process.Process, etcdConnectionString string, directoryRegistrationClient registrationapi.DirectoryRegistrationClient) *configservice.ConfigService {
-	database, err := configservice.NewEtcdConfigDatabase(logger, mainProcess, strings.Split(etcdConnectionString, ","))
+func newConfigService(logger *zap.Logger, mainProcess *process.Process, etcdConnectionString string, directoryRegistrationClient registrationapi.DirectoryRegistrationClient) *configapi.ConfigService {
+	database, err := configapi.NewEtcdConfigDatabase(logger, mainProcess, strings.Split(etcdConnectionString, ","))
 	if err != nil {
 		logger.Fatal("failed to setup database", zap.Error(err))
 	}
 
-	return configservice.New(logger, mainProcess, directoryRegistrationClient, database)
+	return configapi.New(logger, mainProcess, directoryRegistrationClient, database)
 }
 
 func newDirectoryRegistrationClient(roots *x509.CertPool, certKeyPair *tls.Certificate, directoryRegistrationAddress string) (registrationapi.DirectoryRegistrationClient, error) {

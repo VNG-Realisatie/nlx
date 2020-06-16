@@ -1,5 +1,5 @@
 //notlint:dupl // test function
-package configservice_test
+package configapi_test
 
 import (
 	"context"
@@ -14,11 +14,9 @@ import (
 
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
-	"go.nlx.io/nlx/management-api/configapi"
-	"go.nlx.io/nlx/management-api/configservice"
-
 	mock_registrationapi "go.nlx.io/nlx/directory-registration-api/registrationapi/mock"
-	mock_configservice "go.nlx.io/nlx/management-api/configservice/mock"
+	"go.nlx.io/nlx/management-api/pkg/configapi"
+	mock_configapi "go.nlx.io/nlx/management-api/pkg/configapi/mock"
 )
 
 func TestGetInsight(t *testing.T) {
@@ -29,8 +27,8 @@ func TestGetInsight(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
-	mockDatabase := mock_configservice.NewMockConfigDatabase(mockCtrl)
-	service := configservice.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+	mockDatabase := mock_configapi.NewMockConfigDatabase(mockCtrl)
+	service := configapi.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
 
 	emptyRequest := &configapi.Empty{}
 
@@ -67,7 +65,7 @@ func TestPutInsight(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
-	mockDatabase := mock_configservice.NewMockConfigDatabase(mockCtrl)
+	mockDatabase := mock_configapi.NewMockConfigDatabase(mockCtrl)
 	mockDatabase.EXPECT().PutInsightConfiguration(ctx, mockInsightConfig)
 
 	mockCtrlDirectoryRegistrationAPI := gomock.NewController(t)
@@ -79,7 +77,7 @@ func TestPutInsight(t *testing.T) {
 		IrmaServerURL: mockInsightConfig.IrmaServerURL,
 	}).Return(&registrationapi.Empty{}, nil)
 
-	service := configservice.New(logger, testProcess, mockDirectoryRegistrationClient, mockDatabase)
+	service := configapi.New(logger, testProcess, mockDirectoryRegistrationClient, mockDatabase)
 
 	putInsightResponse, err := service.PutInsightConfiguration(ctx, mockInsightConfig)
 	if err != nil {

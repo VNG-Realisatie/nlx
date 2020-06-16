@@ -21,7 +21,7 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
-	"go.nlx.io/nlx/management-api/configapi"
+	"go.nlx.io/nlx/management-api/pkg/configapi"
 )
 
 // ListenAndServe is a blocking function that listens on provided tcp address to handle requests.

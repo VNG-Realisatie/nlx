@@ -13,8 +13,8 @@ import (
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/version"
-	"go.nlx.io/nlx/management-api/api"
-	"go.nlx.io/nlx/management-api/oidc"
+	"go.nlx.io/nlx/management-api/pkg/api"
+	"go.nlx.io/nlx/management-api/pkg/oidc"
 )
 
 type oidcOptions = oidc.Options

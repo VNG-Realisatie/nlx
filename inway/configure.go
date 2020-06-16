@@ -21,7 +21,7 @@ import (
 
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/inway/config"
-	"go.nlx.io/nlx/management-api/configapi"
+	"go.nlx.io/nlx/management-api/pkg/configapi"
 )
 
 var errConfigAPIUnavailable = fmt.Errorf("configAPI unavailable")

@@ -1,4 +1,4 @@
-package configservice
+package configapi
 
 import (
 	"go.uber.org/zap"

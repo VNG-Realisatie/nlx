@@ -1,5 +1,5 @@
 //nolint:dupl // service and inway structs look the same
-package configservice
+package configapi
 
 import (
 	"context"
@@ -9,12 +9,10 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-
-	"go.nlx.io/nlx/management-api/configapi"
 )
 
 // CreateService creates a new service
-func (s *ConfigService) CreateService(ctx context.Context, service *configapi.Service) (*configapi.Service, error) {
+func (s *ConfigService) CreateService(ctx context.Context, service *Service) (*Service, error) {
 	logger := s.logger.With(zap.String("name", service.Name))
 	logger.Info("rpc request CreateService")
 
@@ -34,7 +32,7 @@ func (s *ConfigService) CreateService(ctx context.Context, service *configapi.Se
 }
 
 // GetService returns a specific service
-func (s *ConfigService) GetService(ctx context.Context, req *configapi.GetServiceRequest) (*configapi.Service, error) {
+func (s *ConfigService) GetService(ctx context.Context, req *GetServiceRequest) (*Service, error) {
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request GetService")
 
@@ -53,7 +51,7 @@ func (s *ConfigService) GetService(ctx context.Context, req *configapi.GetServic
 }
 
 // UpdateService updates an existing service
-func (s *ConfigService) UpdateService(ctx context.Context, req *configapi.UpdateServiceRequest) (*configapi.Service, error) {
+func (s *ConfigService) UpdateService(ctx context.Context, req *UpdateServiceRequest) (*Service, error) {
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request UpdateService")
 
@@ -77,7 +75,7 @@ func (s *ConfigService) UpdateService(ctx context.Context, req *configapi.Update
 }
 
 // DeleteService deletes a specific service
-func (s *ConfigService) DeleteService(ctx context.Context, req *configapi.DeleteServiceRequest) (*configapi.Empty, error) {
+func (s *ConfigService) DeleteService(ctx context.Context, req *DeleteServiceRequest) (*Empty, error) {
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request DeleteService")
 
@@ -85,14 +83,14 @@ func (s *ConfigService) DeleteService(ctx context.Context, req *configapi.Delete
 
 	if err != nil {
 		logger.Error("error deleting service in DB", zap.Error(err))
-		return &configapi.Empty{}, status.Error(codes.Internal, "database error")
+		return &Empty{}, status.Error(codes.Internal, "database error")
 	}
 
-	return &configapi.Empty{}, nil
+	return &Empty{}, nil
 }
 
 // ListServices returns a list of services
-func (s *ConfigService) ListServices(ctx context.Context, req *configapi.ListServicesRequest) (*configapi.ListServicesResponse, error) {
+func (s *ConfigService) ListServices(ctx context.Context, req *ListServicesRequest) (*ListServicesResponse, error) {
 	s.logger.Info("rpc request ListServices")
 
 	services, err := s.configDatabase.ListServices(ctx)
@@ -101,7 +99,7 @@ func (s *ConfigService) ListServices(ctx context.Context, req *configapi.ListSer
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	response := &configapi.ListServicesResponse{}
+	response := &ListServicesResponse{}
 
 	if len(req.InwayName) > 0 {
 		for _, service := range services {

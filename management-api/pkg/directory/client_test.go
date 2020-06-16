@@ -47,7 +47,7 @@ func TestClientRequestHeaders(t *testing.T) {
 var listServicesTests = []struct {
 	responseCode     int
 	responseBody     string
-	expectedServices []*Service
+	expectedServices []*InspectionAPIService
 	expectError      bool
 }{
 	{
@@ -65,7 +65,7 @@ var listServicesTests = []struct {
 	{
 		200,
 		`{"services": [ {"service_name": "test", "organization_name": "Test Corp"} ]}`,
-		[]*Service{
+		[]*InspectionAPIService{
 			{
 				Name:                 "test",
 				OrganizationName:     "Test Corp",

@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/render"
 	"go.uber.org/zap"
 
-	"go.nlx.io/nlx/management-api/directory"
+	"go.nlx.io/nlx/management-api/pkg/directory"
 )
 
 func directoryRoutes(a *API) chi.Router {

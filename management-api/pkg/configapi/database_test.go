@@ -1,4 +1,4 @@
-package configservice_test
+package configapi_test
 
 import (
 	"context"
@@ -11,13 +11,12 @@ import (
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/process"
-	"go.nlx.io/nlx/management-api/configapi"
-	"go.nlx.io/nlx/management-api/configservice"
+	"go.nlx.io/nlx/management-api/pkg/configapi"
 )
 
 type TestCluster struct {
 	cluster *integration.ClusterV3
-	DB      configservice.ConfigDatabase
+	DB      configapi.ConfigDatabase
 	Addrs   []string
 }
 
@@ -45,7 +44,7 @@ func newTestCluster(t *testing.T) TestCluster {
 	logger := zap.NewNop()
 	testProcess := process.NewProcess(logger)
 
-	db, err := configservice.NewEtcdConfigDatabase(logger, testProcess, addrs)
+	db, err := configapi.NewEtcdConfigDatabase(logger, testProcess, addrs)
 	if err != nil {
 		t.Fatal("error constructing etcd config database", err)
 	}

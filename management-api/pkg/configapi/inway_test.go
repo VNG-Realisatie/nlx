@@ -1,5 +1,5 @@
 //nolint:dupl // test package
-package configservice_test
+package configapi_test
 
 import (
 	"context"
@@ -16,9 +16,8 @@ import (
 
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
-	"go.nlx.io/nlx/management-api/configapi"
-	"go.nlx.io/nlx/management-api/configservice"
-	mock_configservice "go.nlx.io/nlx/management-api/configservice/mock"
+	"go.nlx.io/nlx/management-api/pkg/configapi"
+	mock_configapi "go.nlx.io/nlx/management-api/pkg/configapi/mock"
 )
 
 type args struct {
@@ -80,11 +79,11 @@ func TestCreateInway(t *testing.T) {
 			defer mockCtrl.Finish()
 
 			ctx := peer.NewContext(context.Background(), tt.args.peer)
-			mockDatabase := mock_configservice.NewMockConfigDatabase(mockCtrl)
+			mockDatabase := mock_configapi.NewMockConfigDatabase(mockCtrl)
 			if tt.want != nil {
 				mockDatabase.EXPECT().CreateInway(ctx, tt.args.inway)
 			}
-			service := configservice.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+			service := configapi.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
 
 			response, err := service.CreateInway(ctx, tt.args.inway)
 			if tt.want != nil {
@@ -105,8 +104,8 @@ func TestGetInway(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
-	mockDatabase := mock_configservice.NewMockConfigDatabase(mockCtrl)
-	service := configservice.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+	mockDatabase := mock_configapi.NewMockConfigDatabase(mockCtrl)
+	service := configapi.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
 
 	getInwayRequest := &configapi.GetInwayRequest{
 		Name: "inway42.test",
@@ -151,10 +150,10 @@ func TestUpdateInway(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
-	mockDatabase := mock_configservice.NewMockConfigDatabase(mockCtrl)
+	mockDatabase := mock_configapi.NewMockConfigDatabase(mockCtrl)
 	mockDatabase.EXPECT().UpdateInway(ctx, "inway42.test", mockInway)
 
-	service := configservice.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+	service := configapi.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
 
 	updateInwayRequest := &configapi.UpdateInwayRequest{
 		Name:  "inway42.test",
@@ -177,10 +176,10 @@ func TestDeleteInway(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
-	mockDatabase := mock_configservice.NewMockConfigDatabase(mockCtrl)
+	mockDatabase := mock_configapi.NewMockConfigDatabase(mockCtrl)
 	mockDatabase.EXPECT().DeleteInway(ctx, "inway42.test")
 
-	service := configservice.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+	service := configapi.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
 
 	deleteRequest := &configapi.DeleteInwayRequest{
 		Name: "inway42.test",
@@ -200,7 +199,7 @@ func TestListInways(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
-	mockDatabase := mock_configservice.NewMockConfigDatabase(mockCtrl)
+	mockDatabase := mock_configapi.NewMockConfigDatabase(mockCtrl)
 
 	mockListServices := []*configapi.Service{
 		{
@@ -224,7 +223,7 @@ func TestListInways(t *testing.T) {
 
 	mockDatabase.EXPECT().ListInways(ctx).Return(mockListInways, nil)
 
-	service := configservice.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+	service := configapi.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
 	actualResponse, err := service.ListInways(ctx, &configapi.ListInwaysRequest{})
 
 	if err != nil {
@@ -323,7 +322,7 @@ func TestFilterServices(t *testing.T) {
 	for _, tt := range filterServicesTests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			actual := configservice.FilterServices(tt.args.services, tt.args.inway)
+			actual := configapi.FilterServices(tt.args.services, tt.args.inway)
 			assert.Equal(t, tt.want, actual)
 		})
 	}
