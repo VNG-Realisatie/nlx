@@ -11,7 +11,8 @@ import StatusIndicator from '../../../components/StatusIndicator'
 
 const DirectoryServices = ({ directoryServices }) => {
   const { t } = useTranslation()
-  const services = directoryServices()
+  const { services = [] } = directoryServices()
+
   return services.length === 0 ? (
     <EmptyContentMessage data-testid="directory-no-services">
       {t('There are no services yet.')}

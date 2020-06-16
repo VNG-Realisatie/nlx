@@ -8,13 +8,15 @@ import DirectoryServices from './index'
 
 test('renders without crashing', () => {
   expect(() =>
-    renderWithProviders(<DirectoryServices directoryServices={() => []} />),
+    renderWithProviders(
+      <DirectoryServices directoryServices={() => ({ services: [] })} />,
+    ),
   ).not.toThrow()
 })
 
 test('show a empty services message', () => {
   const { getByTestId } = renderWithProviders(
-    <DirectoryServices directoryServices={() => []} />,
+    <DirectoryServices directoryServices={() => ({ services: [] })} />,
   )
   expect(getByTestId('directory-no-services')).toHaveTextContent(
     'There are no services yet.',
@@ -24,14 +26,16 @@ test('show a table with rows for every service', () => {
   const { getByTestId, getByRole } = renderWithProviders(
     <MemoryRouter>
       <DirectoryServices
-        directoryServices={() => [
-          {
-            organizationName: 'Test Organization',
-            serviceName: 'Test Service',
-            status: 'degraded',
-            apiSpecificationType: 'API',
-          },
-        ]}
+        directoryServices={() => ({
+          services: [
+            {
+              organizationName: 'Test Organization',
+              serviceName: 'Test Service',
+              status: 'degraded',
+              apiSpecificationType: 'API',
+            },
+          ],
+        })}
       />
     </MemoryRouter>,
   )

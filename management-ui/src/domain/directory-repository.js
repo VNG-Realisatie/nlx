@@ -12,7 +12,10 @@ class DirectoryRepository {
       throw new Error('unable to handle the request')
     }
 
-    return await result.json()
+    const response = await result.json()
+    response.services = response.services || []
+
+    return response
   }
 }
 

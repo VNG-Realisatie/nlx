@@ -13,26 +13,30 @@ describe('the DirectoryRepository', () => {
         ok: true,
         status: 200,
         json: () =>
-          Promise.resolve([
-            {
-              serviceName: 'service',
-              organizationName: 'organization',
-              status: 'unknown',
-              apiSpecificationType: 'plain',
-            },
-          ]),
+          Promise.resolve({
+            services: [
+              {
+                serviceName: 'service',
+                organizationName: 'organization',
+                status: 'unknown',
+                apiSpecificationType: 'plain',
+              },
+            ],
+          }),
       })
 
       const result = await DirectoryRepository.getAll()
 
-      expect(result).toEqual([
-        {
-          serviceName: 'service',
-          organizationName: 'organization',
-          status: 'unknown',
-          apiSpecificationType: 'plain',
-        },
-      ])
+      expect(result).toEqual({
+        services: [
+          {
+            serviceName: 'service',
+            organizationName: 'organization',
+            status: 'unknown',
+            apiSpecificationType: 'plain',
+          },
+        ],
+      })
 
       expect(global.fetch).toHaveBeenCalledWith(
         '/api/v1/directory/services',
@@ -44,12 +48,12 @@ describe('the DirectoryRepository', () => {
       jest.spyOn(global, 'fetch').mockResolvedValue({
         ok: true,
         status: 200,
-        json: () => Promise.resolve([]),
+        json: () => Promise.resolve({}),
       })
 
       const result = await DirectoryRepository.getAll()
 
-      expect(result).toEqual([])
+      expect(result).toEqual({ services: [] })
 
       expect(global.fetch).toHaveBeenCalledWith(
         '/api/v1/directory/services',

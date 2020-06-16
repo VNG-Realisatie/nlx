@@ -10,10 +10,10 @@ import deferredPromise from '../../test-utils/deferred-promise'
 import DirectoryPage from './index'
 
 jest.mock('./DirectoryServices', () => ({ directoryServices }) => {
-  const result = directoryServices()
+  const { services } = directoryServices()
   return (
     <div data-testid="mock-directory-services">
-      {result.map((o, i) => (
+      {services.map((o, i) => (
         <span key={i} data-testid={`mock-directory-service-${i}`}>
           {o.serviceName}
         </span>
@@ -41,7 +41,7 @@ test('listing all services', async () => {
   )
 
   await act(async () => {
-    directoryServices.resolve([{ serviceName: 'Test Service' }])
+    directoryServices.resolve({ services: [{ serviceName: 'Test Service' }] })
   })
 
   waitFor(() =>
@@ -58,7 +58,7 @@ test('listing all services', async () => {
 })
 
 test('no services', async () => {
-  const getDirectoryServices = jest.fn(() => Promise.resolve([]))
+  const getDirectoryServices = jest.fn(() => Promise.resolve({ services: [] }))
 
   const { findByTestId, getByTestId } = renderWithProviders(
     <Router>

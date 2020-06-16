@@ -8,6 +8,8 @@ import DirectoryServiceCount from './index'
 
 test('renders without crashing', () => {
   expect(() =>
-    renderWithProviders(<DirectoryServiceCount directoryServices={() => 1} />),
+    renderWithProviders(
+      <DirectoryServiceCount directoryServices={() => ({ services: [{}] })} />,
+    ),
   ).not.toThrow()
 })

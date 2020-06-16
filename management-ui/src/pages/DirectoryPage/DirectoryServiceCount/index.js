@@ -6,8 +6,8 @@ import React from 'react'
 import { func } from 'prop-types'
 
 const DirectoryServiceCount = ({ directoryServices, ...props }) => {
-  const count = directoryServices().length
-  return <span {...props}> ({count})</span>
+  const { services = [] } = directoryServices()
+  return <span {...props}> ({services.length})</span>
 }
 
 DirectoryServiceCount.propTypes = {
