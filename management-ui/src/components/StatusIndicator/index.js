@@ -5,9 +5,7 @@ import React from 'react'
 import { oneOf } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 
-import { ReactComponent as IconStatusUp } from './status-up.svg'
-import { ReactComponent as IconStatusDown } from './status-down.svg'
-import { ReactComponent as IconStatusUnknown } from './status-unknown.svg'
+import { IconStatusUp, IconStatusDown, IconStatusUnknown } from '../../icons'
 
 import { StyledWrapper, StyledIconStatusDegraded } from './index.styles'
 

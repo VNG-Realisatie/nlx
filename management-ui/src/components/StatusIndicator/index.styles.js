@@ -3,7 +3,7 @@
 //
 
 import styled from 'styled-components'
-import { ReactComponent as IconStatusDegraded } from './status-degraded.svg'
+import { IconStatusDegraded } from '../../icons'
 
 export const StyledWrapper = styled.span`
   line-height: 0;

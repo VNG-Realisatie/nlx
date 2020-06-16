@@ -17,16 +17,13 @@ import {
   StyledCollapsibleEmptyBody,
   SectionGroup,
 } from '../DetailView'
+import { IconKey, IconHidden, IconVisible, IconInway } from '../../icons'
+
 import {
   StyledInwayName,
   StyledActionsBar,
   StyledRemoveButton,
 } from './index.styles'
-
-import { ReactComponent as IconInway } from './inway.svg'
-import { ReactComponent as IconWhitelist } from './whitelist.svg'
-import { ReactComponent as IconVisible } from './visible.svg'
-import { ReactComponent as IconHidden } from './hidden.svg'
 
 const ServiceDetails = ({ service, removeHandler }) => {
   const { internal, authorizationSettings, inways } = service
@@ -116,7 +113,7 @@ const ServiceDetails = ({ service, removeHandler }) => {
           <Collapsible
             title={
               <DetailHeading data-testid="service-authorizations">
-                <IconWhitelist />
+                <IconKey />
                 {t('Whitelisted organizations')}
                 <Amount value={authorizationSettings.authorizations.length} />
               </DetailHeading>

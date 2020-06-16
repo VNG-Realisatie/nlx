@@ -2,9 +2,8 @@
 // Licensed under the EUPL
 //
 import styled from 'styled-components'
-import { ReactComponent as NLXManagementLogo } from '../../components/NLXManagementLogo/nlxManagementLogo.svg'
-import { ReactComponent as ExternalLink } from './external-link.svg'
-import { ReactComponent as OrganizationIcon } from './organization.svg'
+import NLXManagementLogo from '../../components/NLXManagementLogo'
+import { IconExternalLink, IconOrganization } from '../../icons'
 import nlxPattern from './nlx-pattern.svg'
 
 export const StyledNLXManagementLogo = styled(NLXManagementLogo)`
@@ -18,7 +17,7 @@ export const StyledContainer = styled.main`
 `
 
 export const StyledSidebar = styled.div`
-  background: #313131;
+  background: ${(p) => p.theme.tokens.colorBackgroundAlt};
   background-image: url(${nlxPattern});
   flex: 0 0 532px;
   text-align: center;
@@ -33,7 +32,7 @@ export const StyledContent = styled.div`
   max-width: 70rem;
 `
 
-export const StyledExternalLink = styled(ExternalLink)`
+export const StyledExternalLink = styled(IconExternalLink)`
   height: 1rem;
   margin-left: ${(p) => p.theme.tokens.spacing01};
 `
@@ -46,7 +45,7 @@ export const StyledOrganization = styled.p`
     ${(p) => p.theme.tokens.spacing09};
 `
 
-export const StyledOrganizationIcon = styled(OrganizationIcon)`
+export const StyledIconOrganization = styled(IconOrganization)`
   fill: ${(p) => p.theme.tokens.colorPaletteGray500};
   margin-right: ${(p) => p.theme.tokens.spacing03};
   vertical-align: text-bottom;

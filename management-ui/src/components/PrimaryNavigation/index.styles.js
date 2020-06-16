@@ -3,12 +3,10 @@
 //
 import styled from 'styled-components'
 import { Link, NavLink } from 'react-router-dom'
-import { ReactComponent as NLXManagementLogo } from '../NLXManagementLogo/nlxManagementLogo.svg'
+import NLXManagementLogo from '../NLXManagementLogo'
 
 export const StyledNLXManagementLogo = styled(NLXManagementLogo)`
   width: 4rem;
-  display: block;
-  margin: 0 auto;
 `
 
 export const StyledNav = styled.nav`

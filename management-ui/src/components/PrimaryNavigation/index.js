@@ -3,6 +3,8 @@
 //
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+
+import { IconArrowLeftRight, IconServices, IconDirectory } from '../../icons'
 import {
   StyledIcon,
   StyledLink,
@@ -10,9 +12,6 @@ import {
   StyledNLXManagementLogo,
   StyledNav,
 } from './index.styles'
-import { ReactComponent as IconServices } from './icons/services.svg'
-import { ReactComponent as IconInways } from './icons/inways.svg'
-import { ReactComponent as IconDirectory } from './icons/directory.svg'
 
 const PrimaryNavigation = () => {
   const { t } = useTranslation()
@@ -27,7 +26,7 @@ const PrimaryNavigation = () => {
       </StyledHomeLink>
 
       <StyledLink to="/inways" aria-label={t('Inways page')}>
-        <StyledIcon as={IconInways} />
+        <StyledIcon as={IconArrowLeftRight} />
         {t('Inways')}
       </StyledLink>
 
@@ -35,6 +34,7 @@ const PrimaryNavigation = () => {
         <StyledIcon as={IconServices} />
         {t('Services')}
       </StyledLink>
+
       <StyledLink to="/directory" aria-label={t('Directory page')}>
         <StyledIcon as={IconDirectory} />
         {t('Directory')}

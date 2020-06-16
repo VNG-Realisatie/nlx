@@ -15,7 +15,7 @@ import {
   SectionGroup,
 } from '../DetailView'
 
-import { ReactComponent as IconServices } from './services.svg'
+import { IconServices } from '../../icons'
 import { SubHeader, StyledIconInway, StyledSpecList } from './index.styles'
 
 // Note: if inway- & outway details are interchangable, we can rename this to GatewayDetails

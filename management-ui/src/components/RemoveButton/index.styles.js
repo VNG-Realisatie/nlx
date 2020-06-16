@@ -2,9 +2,9 @@
 // Licensed under the EUPL
 //
 import styled from 'styled-components'
-import { ReactComponent as Bin } from './bin.svg'
+import { IconBin } from '../../icons'
 
-export const StyledBin = styled(Bin)`
+export const StyledBin = styled(IconBin)`
   width: ${(p) => p.theme.tokens.spacing05};
   height: ${(p) => p.theme.tokens.spacing05};
   margin-right: ${(p) => p.theme.tokens.spacing03};

@@ -12,7 +12,7 @@ import {
   StyledExternalLink,
   StyledNLXManagementLogo,
   StyledOrganization,
-  StyledOrganizationIcon,
+  StyledIconOrganization,
   StyledSidebar,
 } from './index.styles'
 
@@ -32,7 +32,7 @@ const LoginPage = () => {
             <p>{t('Log in to continue.')}</p>
 
             <StyledOrganization>
-              <StyledOrganizationIcon />
+              <StyledIconOrganization />
               <OrganizationName data-testid="organizationName" />
             </StyledOrganization>
 

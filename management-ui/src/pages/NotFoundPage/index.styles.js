@@ -3,7 +3,7 @@
 //
 import styled from 'styled-components'
 
-import iconAlertCircle from './iconAlertCircle.svg'
+import iconAlertCircle from '../../icons/iconAlertCircle.svg'
 
 export const NotFoundContainer = styled.section`
   position: relative;

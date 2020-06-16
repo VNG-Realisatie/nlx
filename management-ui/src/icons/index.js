@@ -1,0 +1,21 @@
+// Copyright © VNG Realisatie 2020
+// Licensed under the EUPL
+//
+export { ReactComponent as IconAlertCircle } from './iconAlertCircle.svg'
+export { ReactComponent as IconArrowLeftRight } from './arrow-left-right.svg'
+export { ReactComponent as IconBin } from './bin.svg'
+export { ReactComponent as IconChevron } from './chevron.svg'
+export { ReactComponent as IconDirectory } from './directory.svg'
+export { ReactComponent as IconExternalLink } from './external-link.svg'
+export { ReactComponent as IconHidden } from './hidden.svg'
+export { ReactComponent as IconInway } from './inway.svg'
+export { ReactComponent as IconKey } from './key.svg'
+export { ReactComponent as IconOrganization } from './organization.svg'
+export { ReactComponent as IconPencil } from './pencil.svg'
+export { ReactComponent as IconPlus } from './plus.svg'
+export { ReactComponent as IconServices } from './services.svg'
+export { ReactComponent as IconStatusDegraded } from './status-degraded.svg'
+export { ReactComponent as IconStatusDown } from './status-down.svg'
+export { ReactComponent as IconStatusUnknown } from './status-unknown.svg'
+export { ReactComponent as IconStatusUp } from './status-up.svg'
+export { ReactComponent as IconVisible } from './visible.svg'

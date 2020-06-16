@@ -1,10 +1,9 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
-import { ReactComponent as IconChevron } from '../../components/FlippingChevron/chevron-down.svg'
+import { IconChevron } from '../../icons'
 
 export const StyledBackButton = styled(Link)`
   text-decoration: none;
@@ -24,7 +23,7 @@ export const StyledIconChevron = styled(IconChevron)`
   width: ${(p) => p.theme.tokens.spacing05};
   height: ${(p) => p.theme.tokens.spacing05};
   margin: 0 ${(p) => p.theme.tokens.spacing04} 0 0;
-  transform: rotate(90deg);
+  transform: rotate(-90deg);
 `
 
 export const StyledTitle = styled.h1`

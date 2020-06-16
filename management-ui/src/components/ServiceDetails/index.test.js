@@ -99,7 +99,7 @@ describe('ServiceDetails', () => {
       </Router>,
     )
     expect(getByTestId('service-authorizations')).toHaveTextContent(
-      'whitelist.svg' + 'Whitelisted organizations' + '0', // eslint-disable-line no-useless-concat
+      'key.svg' + 'Whitelisted organizations' + '0', // eslint-disable-line no-useless-concat
     )
     fireEvent.click(getByTestId('service-authorizations'))
 
@@ -122,7 +122,7 @@ describe('ServiceDetails', () => {
     )
     expect(queryByTestId('service-authorizations-list')).toBeNull()
     expect(getByTestId('service-authorizations')).toHaveTextContent(
-      'whitelist.svg' + 'Whitelisted organizations' + '1', // eslint-disable-line no-useless-concat
+      'key.svg' + 'Whitelisted organizations' + '1', // eslint-disable-line no-useless-concat
     )
 
     fireEvent.click(getByTestId('service-authorizations'))

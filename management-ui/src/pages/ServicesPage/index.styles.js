@@ -3,7 +3,7 @@
 //
 
 import styled from 'styled-components'
-import { ReactComponent as IconPlus } from './plus.svg'
+import { IconPlus } from '../../icons'
 
 export const StyledActionsBar = styled.div`
   display: flex;

@@ -4,7 +4,7 @@
 import styled from 'styled-components'
 
 import SpecList from '../SpecList'
-import { ReactComponent as IconInway } from './inway.svg'
+import { IconInway } from '../../icons'
 
 export const SubHeader = styled.div`
   display: flex;
@@ -17,6 +17,7 @@ export const StyledIconInway = styled(IconInway)`
   width: ${(p) => p.theme.tokens.spacing05};
   height: ${(p) => p.theme.tokens.spacing05};
   margin-right: ${(p) => p.theme.tokens.spacing03};
+  fill: ${(p) => p.theme.tokens.colorPaletteGray50};
 `
 
 export const StyledSpecList = styled(SpecList)`
