@@ -19,5 +19,5 @@ export const StyledIconStatusDegraded = styled(IconStatusDegraded)`
 `
 
 export const StatusText = styled.span`
-  margin-left: 3px;
+  margin-left: ${(p) => p.theme.tokens.spacing02};
 `

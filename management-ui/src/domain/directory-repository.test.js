@@ -89,7 +89,7 @@ describe('the DirectoryRepository', () => {
       })
 
       expect(global.fetch).toHaveBeenCalledWith(
-        '/api/v1/directory/orgnazations/organization/services/service',
+        '/api/v1/directory/organizations/organization/services/service',
         expect.anything(),
       )
     })
@@ -113,7 +113,7 @@ describe('the DirectoryRepository', () => {
       await expect(result).toEqual({})
 
       expect(global.fetch).toHaveBeenCalledWith(
-        '/api/v1/directory/orgnazations/organization/services/service/access-requests',
+        '/api/v1/directory/organizations/organization/services/service/access-requests',
         {
           method: 'POST',
         },

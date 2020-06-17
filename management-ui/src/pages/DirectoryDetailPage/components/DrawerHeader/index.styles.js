@@ -13,7 +13,7 @@ export const Summary = styled.div`
 
   & > * {
     font-size: ${(p) => p.theme.tokens.fontSizeSmall};
-    margin-right: ${(p) => p.theme.tokens.spacing05};
+    margin-right: ${(p) => p.theme.tokens.spacing06};
     color: ${(p) => p.theme.colorTextLabel};
   }
 `

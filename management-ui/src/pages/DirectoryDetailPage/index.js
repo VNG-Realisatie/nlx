@@ -47,7 +47,11 @@ const DirectoryDetailPage = ({ getService, requestAccess, parentUrl }) => {
       {service ? (
         <DrawerHeader service={service} />
       ) : (
-        <Drawer.Header title={serviceName} closeButtonLabel={t('Close')} />
+        <Drawer.Header
+          as="header"
+          title={serviceName}
+          closeButtonLabel={t('Close')}
+        />
       )}
 
       <Drawer.Content>

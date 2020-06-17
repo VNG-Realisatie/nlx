@@ -6,6 +6,7 @@ import { waitForReact } from 'testcafe-react-selectors'
 import { axeCheck, createReport } from 'axe-testcafe'
 
 import getLocation from '../getLocation'
+import { DIRECTORY_ORGANIZATION_NAME, DIRECTORY_SERVICE_NAME, DIRECTORY_STATUS, DIRECTORY_API_SPECIFICATION_TYPE } from './environment'
 import { adminUser } from './roles'
 import page from './page-objects/directory-detail'
 
@@ -15,7 +16,7 @@ fixture `DirectoryDetails page`
   .beforeEach(async (t) => {
     await t
       .useRole(adminUser)
-      .navigateTo(`${baseUrl}/directory/BRP/basisregistratie`)
+      .navigateTo(`${baseUrl}/directory/${DIRECTORY_ORGANIZATION_NAME}/${DIRECTORY_SERVICE_NAME}`)
     await waitForReact()
   })
 
@@ -28,10 +29,10 @@ test('Directory service details are visible', async t => {
   const detailHeaderContent = page.detailHeader.textContent
   
   await t
-    .expect(detailHeaderContent).contains('basisregistratie')
-    .expect(detailHeaderContent).contains('BRP')
-    .expect(detailHeaderContent).contains('OpenAPI3')
-    .expect(detailHeaderContent).contains('Beschikbaar')
+    .expect(detailHeaderContent).contains(DIRECTORY_SERVICE_NAME)
+    .expect(detailHeaderContent).contains(DIRECTORY_ORGANIZATION_NAME)
+    .expect(detailHeaderContent).contains(DIRECTORY_API_SPECIFICATION_TYPE)
+    .expect(detailHeaderContent).contains(DIRECTORY_STATUS)
 })
 
 test('Request access button exists', async t => {
@@ -71,11 +72,11 @@ test.before( async t => {
       .navigateTo(`${baseUrl}/directory`)
   })
   ('Opens and closes detail view', async t => {
-    const row = Selector('tr').withText('basisregistratie')
+    const row = Selector('tr').withText(DIRECTORY_SERVICE_NAME)
 
     await t
       .click(row)
-      .expect(getLocation()).contains(`${baseUrl}/directory/BRP/basisregistratie`)
+      .expect(getLocation()).contains(`${baseUrl}/directory/${DIRECTORY_ORGANIZATION_NAME}/${DIRECTORY_SERVICE_NAME}`)
       .expect(page.closeButton.exists).ok()
       .click(page.closeButton)
       .expect(getLocation()).contains(`${baseUrl}/directory`);

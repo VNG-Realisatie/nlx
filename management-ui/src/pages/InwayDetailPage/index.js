@@ -22,6 +22,7 @@ const InwayDetailPage = ({ getInwayByName, parentUrl }) => {
   return (
     <Drawer noMask closeHandler={close}>
       <Drawer.Header
+        as="header"
         title={name}
         closeButtonLabel={t('Close')}
         data-testid="gateway-name"

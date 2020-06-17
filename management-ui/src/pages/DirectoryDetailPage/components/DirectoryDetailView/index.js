@@ -8,8 +8,8 @@ import { useTranslation } from 'react-i18next'
 
 import { DetailHeading, SectionGroup } from '../../../../components/DetailView'
 
+import { IconKey } from '../../../../icons'
 import { Authorization } from './index.styles'
-import { ReactComponent as IconKey } from './whitelist.svg'
 
 const DirectoryDetailView = ({ onRequestAccess, isAccessRequested }) => {
   const { t } = useTranslation()
