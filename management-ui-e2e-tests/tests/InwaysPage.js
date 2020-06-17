@@ -7,8 +7,7 @@ import { axeCheck, createReport } from 'axe-testcafe'
 import { adminUser } from './roles'
 import { INWAY_NAME, INWAY_SELF_ADDRESS, INWAY_VERSION } from './environment'
 
-const getBaseUrl = require('../getBaseUrl')
-const baseUrl = getBaseUrl()
+const baseUrl = require('../getBaseUrl')()
 
 fixture `Inways page`
   .beforeEach(async (t) => {

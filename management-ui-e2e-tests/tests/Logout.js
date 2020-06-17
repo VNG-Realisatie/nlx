@@ -3,8 +3,7 @@ import { waitForReact } from 'testcafe-react-selectors'
 import { Selector } from 'testcafe'
 import loginPage from './page-objects/login'
 
-const getBaseUrl = require('../getBaseUrl')
-const baseUrl = getBaseUrl()
+const baseUrl = require('../getBaseUrl')()
 
 fixture`Logout`
   .beforeEach(async (t) => {

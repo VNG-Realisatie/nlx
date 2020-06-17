@@ -8,8 +8,7 @@ import { LOGIN_ORGANIZATION_NAME } from './environment'
 import page from './page-objects/login'
 import getLocation from '../getLocation'
 
-const getBaseUrl = require('../getBaseUrl')
-const baseUrl = getBaseUrl();
+const baseUrl = require('../getBaseUrl')()
 
 fixture `Login page`
   .beforeEach(async (t) => {

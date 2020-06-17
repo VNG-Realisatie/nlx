@@ -7,8 +7,7 @@ import { axeCheck, createReport } from 'axe-testcafe'
 import { adminUser } from './roles'
 import { DIRECTORY_ORGANIZATION_NAME, DIRECTORY_SERVICE_NAME, DIRECTORY_STATUS, DIRECTORY_API_SPECIFICATION_TYPE } from './environment'
 
-const getBaseUrl = require('../getBaseUrl')
-const baseUrl = getBaseUrl()
+const baseUrl = require('../getBaseUrl')()
 
 fixture `Directory page`
   .beforeEach(async (t) => {
@@ -50,4 +49,3 @@ test('Directory details are displayed', async t => {
     .expect(statusTitle.textContent).eql(DIRECTORY_STATUS)
     .expect(apiSpecificationTypeCell.textContent).eql(DIRECTORY_API_SPECIFICATION_TYPE)
 })
-

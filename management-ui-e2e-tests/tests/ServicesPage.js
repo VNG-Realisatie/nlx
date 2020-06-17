@@ -7,8 +7,7 @@ import { axeCheck, createReport } from 'axe-testcafe'
 import { adminUser } from "./roles";
 import getLocation from '../getLocation'
 
-const getBaseUrl = require('../getBaseUrl')
-const baseUrl = getBaseUrl()
+const baseUrl = require('../getBaseUrl')()
 
 fixture `Services page`
   .beforeEach(async (t) => {

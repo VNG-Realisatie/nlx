@@ -8,8 +8,7 @@ import { adminUser } from "./roles"
 import getLocation from '../getLocation'
 import page from './page-objects/service-detail'
 
-const getBaseUrl = require('../getBaseUrl')
-const baseUrl = getBaseUrl()
+const baseUrl = require('../getBaseUrl')()
 
 fixture `ServiceDetails page`
   .beforeEach(async (t) => {

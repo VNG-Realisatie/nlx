@@ -10,8 +10,7 @@ import detailPage from './page-objects/service-detail'
 import { INWAY_NAME } from './environment'
 import { createService, removeService } from './services'
 
-const getBaseUrl = require('../getBaseUrl')
-const baseUrl = getBaseUrl()
+const baseUrl = require('../getBaseUrl')()
 
 fixture`Edit Service page`
   .beforeEach(async (t) => {

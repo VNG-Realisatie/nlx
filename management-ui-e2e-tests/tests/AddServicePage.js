@@ -3,13 +3,13 @@
 
 import { waitForReact } from 'testcafe-react-selectors'
 import { axeCheck, createReport } from 'axe-testcafe'
+
 import { adminUser } from './roles'
 import page, { AUTHORIZATION_TYPE_NONE } from './page-objects/add-service'
 import { INWAY_NAME } from './environment'
 import { generateServiceName, removeService } from './services'
 
-const getBaseUrl = require('../getBaseUrl')
-const baseUrl = getBaseUrl()
+const baseUrl = require('../getBaseUrl')()
 
 fixture `Add Service page`
   .beforeEach(async (t) => {

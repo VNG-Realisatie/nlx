@@ -4,8 +4,7 @@
 import { Selector, Role } from 'testcafe'
 import loginPage from './page-objects/login'
 
-const getBaseUrl = require('../getBaseUrl')
-const baseUrl = getBaseUrl()
+const baseUrl = require('../getBaseUrl')()
 
 export const adminUser = Role(`${baseUrl}/login`, async t => {
   const managementLoginButton = loginPage.loginButton;

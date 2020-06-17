@@ -5,9 +5,7 @@ import addPage, { AUTHORIZATION_TYPE_NONE } from './page-objects/add-service'
 import detailPage from './page-objects/service-detail'
 import { t } from "testcafe"
 
-import getBaseUrl from '../getBaseUrl'
-
-const baseUrl = getBaseUrl()
+const baseUrl = require('../getBaseUrl')()
 
 function randomNumberString() {
   return `${Math.floor(Math.random() * 10000)}`

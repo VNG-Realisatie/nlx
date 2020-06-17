@@ -5,8 +5,7 @@ import { adminUser } from "./roles"
 import { createService } from './services'
 import page from './page-objects/service-detail'
 
-const getBaseUrl = require('../getBaseUrl')
-const baseUrl = getBaseUrl()
+const baseUrl = require('../getBaseUrl')()
 
 fixture`ServiceDetails remove`
   .beforeEach(async t => {
