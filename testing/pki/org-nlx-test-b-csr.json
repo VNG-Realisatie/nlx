@@ -1,0 +1,16 @@
+{
+    "CN": "inway-b.test",
+    "key": {
+        "algo": "rsa",
+        "size": 4096
+    },
+    "hosts": [
+        "localhost",
+        "inway-b.test"
+    ],
+    "names": [
+        {
+            "O": "nlx-test-b"
+        }
+    ]
+}
