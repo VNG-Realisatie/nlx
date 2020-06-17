@@ -53,7 +53,7 @@ $(PKG_DIR)/$(PROTO)/$(PROTO).pb.go $(PKG_DIR)/$(PROTO)/$(PROTO).pb.gw.go: $(API_
 
 $(PKG_DIR)/$(PROTO)/mock/mock_$(PROTO).go: $(PKG_DIR)/$(PROTO)/$(PROTO).pb.go
 	@# Generate mock file
-	mockgen -destination $$@ -source $$<
+	cd $$(@D) && mockgen -source $$(shell realpath --relative-to=$$(@D) $$<) -destination $$(@F)
 
 endef # PROTOBUFFER_RULES
 
@@ -61,7 +61,7 @@ $(foreach PROTO,$(PROTO_NAMES),$(eval $(PROTOBUFFER_RULES)))
 
 $(PKG_DIR)/configapi/mock/mock_database.go: $(PKG_DIR)/configapi/database.go
 	@# Generate mock file
-	mockgen -source $< -destination $@
+	cd $(@D) && mockgen -source $(shell realpath --relative-to=$(@D) $<) -destination $(@F)
 
 $(API_DIR)/%.swagger.json: $(API_DIR)/%.proto
 	@# Generate swagger.json
