@@ -1,5 +1,6 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
+//
 
 import { t } from 'testcafe'
 
@@ -20,15 +21,14 @@ function getBrowserId() {
 }
 
 export function generateServiceName() {
-  return `service-e2e-${(getBrowserId())}-${testRunId}-${randomNumberString()}`
+  return `service-e2e-${getBrowserId()}-${testRunId}-${randomNumberString()}`
 }
 
 export async function createService(serviceProperties = {}) {
   t.ctx.serviceName = generateServiceName()
 
-  await t
-    .navigateTo(`${baseUrl}/services/add-service`)
-  
+  await t.navigateTo(`${baseUrl}/services/add-service`)
+
   await addPage.fillAndSubmitForm({
     name: t.ctx.serviceName,
     endpointUrl: 'my-service.test:8000',
@@ -37,11 +37,10 @@ export async function createService(serviceProperties = {}) {
     techSupportContact: 'tech@organization.test',
     publicSupportContact: 'public@organization.test',
     authorizationType: AUTHORIZATION_TYPE_NONE,
-    ...serviceProperties
+    ...serviceProperties,
   })
 
-  await t
-    .expect(addPage.alert.innerText).contains('De service is toegevoegd.')
+  await t.expect(addPage.alert.innerText).contains('De service is toegevoegd.')
 
   return t.ctx.serviceName
 }
@@ -60,6 +59,6 @@ export async function removeService() {
 
   await t
     .expect(detailPage.alert.innerText).contains('De service is verwijderd.')
-  
+
   t.ctx.serviceName = null
 }

@@ -1,5 +1,6 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
+//
 
 import { waitForReact } from 'testcafe-react-selectors'
 import { axeCheck, createReport } from 'axe-testcafe'
@@ -12,11 +13,9 @@ import page, { AUTHORIZATION_TYPE_NONE } from './page-models/add-service'
 
 const baseUrl = getBaseUrl()
 
-fixture `Add Service page`
+fixture`Add Service page`
   .beforeEach(async (t) => {
-    await t
-      .useRole(adminUser)
-      .navigateTo(`${baseUrl}/services/add-service`)
+    await t.useRole(adminUser).navigateTo(`${baseUrl}/services/add-service`)
     await waitForReact()
   })
   .afterEach(async (t) => {
@@ -25,18 +24,17 @@ fixture `Add Service page`
     }
   })
 
-test('Automated accessibility testing', async t => {
+test('Automated accessibility testing', async (t) => {
   const { violations } = await axeCheck(t)
-  await t.expect(violations.length === 0).ok(createReport(violations));
+  await t.expect(violations.length === 0).ok(createReport(violations))
 })
 
-test('Page title is visible', async t => {
-  await t
-    .expect(page.title.visible).ok()
-    .expect(page.title.innerText).eql('Nieuwe service toevoegen')
+test('Page title is visible', async (t) => {
+  await t.expect(page.title.visible).ok()
+  await t.expect(page.title.innerText).eql('Nieuwe service toevoegen')
 })
 
-test('Adding a new service', async t => {
+test('Adding a new service', async (t) => {
   await page.fillAndSubmitForm({
     endpointUrl: 'my-service.test:8000',
     documentationUrl: 'my-service.test:8000/docs',
@@ -47,7 +45,10 @@ test('Adding a new service', async t => {
     authorizationType: AUTHORIZATION_TYPE_NONE,
     inways: [INWAY_NAME],
   })
-  await t.expect(page.nameFieldError.innerText).contains('Dit veld is verplicht.')
+
+  await t
+    .expect(page.nameFieldError.innerText)
+    .contains('Dit veld is verplicht.')
 
   t.ctx.serviceName = generateServiceName()
   await page.fillAndSubmitForm({ name: t.ctx.serviceName })

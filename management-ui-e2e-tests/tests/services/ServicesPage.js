@@ -27,9 +27,8 @@ test('Automated accessibility testing', async t => {
 test('Page title is visible', async t => {
   const pageTitle = Selector('h1')
 
-  await t
-    .expect(pageTitle.visible).ok()
-    .expect(pageTitle.innerText).eql('Services')
+  await t.expect(pageTitle.visible).ok()
+  await t.expect(pageTitle.innerText).eql('Services')
 })
 
 test
@@ -43,18 +42,18 @@ test
     const { serviceName } = t.ctx
 
     const servicesList = Selector('[data-testid="services-list"]');
-    const kentekenService = Selector('tr').withText(serviceName)
-    const kentekenServiceColumns = kentekenService.find('td')
+    const service = Selector('tr').withText(serviceName)
+    const serviceColumns = service.find('td')
 
-    const nameCell = kentekenServiceColumns.nth(0)
-    const accessCell = kentekenServiceColumns.nth(1)
+    const nameCell = serviceColumns.nth(0)
+    const accessCell = serviceColumns.nth(1)
 
-    await t
-      .expect(servicesList.visible).ok()
-      .expect(servicesList.find('tbody tr').count).gte(1) // until we have the delete option, we can't assert the exact amount of services
+    await t.expect(servicesList.visible).ok()
+    // until we have the delete option, we can't assert the exact amount of services
+    await t.expect(servicesList.find('tbody tr').count).gte(1)
 
-      .expect(nameCell.textContent).eql(serviceName)
-      .expect(accessCell.textContent).eql('Open')
+    await t.expect(nameCell.textContent).eql(serviceName)
+    await t.expect(accessCell.textContent).eql('Open')
   })
   .after(async t => {
     await removeService()

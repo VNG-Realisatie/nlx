@@ -34,8 +34,7 @@ test('Service details are visible', async t => {
 })
 
 test('Close navigates to the ServicesPage', async t => {
-  await t
-    .expect(page.closeButton.exists).ok()
-    .click(page.closeButton)
-    .expect(getLocation()).contains(`${baseUrl}/services`);
+  await t.expect(page.closeButton.exists).ok()
+  await t.click(page.closeButton)
+  await t.expect(getLocation()).contains(`${baseUrl}/services`);
 })
