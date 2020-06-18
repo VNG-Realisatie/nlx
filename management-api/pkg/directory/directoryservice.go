@@ -44,10 +44,6 @@ func (s Service) ListServices(context.Context, *Empty) (*ListServicesResponse, e
 	services := []*DirectoryService{}
 
 	for _, service := range listServices {
-		if service.OrganizationName == s.environment.OrganizationName {
-			continue
-		}
-
 		services = append(services, convertDirectoryService(service))
 	}
 
