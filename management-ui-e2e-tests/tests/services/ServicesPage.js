@@ -5,8 +5,9 @@ import { Selector } from 'testcafe'
 import { waitForReact } from 'testcafe-react-selectors'
 import { axeCheck, createReport } from 'axe-testcafe'
 
-import { getBaseUrl, getLocation } from '../../utils'
+import { getBaseUrl } from '../../utils'
 import { adminUser } from '../roles'
+import { createService, removeService} from './actions'
 
 const baseUrl = getBaseUrl()
 
@@ -31,26 +32,30 @@ test('Page title is visible', async t => {
     .expect(pageTitle.innerText).eql('Services')
 })
 
-test('Service details are displayed', async t => {
-  const servicesList = Selector('[data-testid="services-list"]');
-  const kentekenService = Selector('tr').withText('kentekenregister')
-  const kentekenServiceColumns = kentekenService.find('td')
+test
+  .before(async t => {
+    await t.useRole(adminUser)
+    await createService()
+    await t.navigateTo(`${baseUrl}/services`)
+    await waitForReact()
+  })
+  ('Service details are displayed', async t => {
+    const { serviceName } = t.ctx
 
-  const nameCell = kentekenServiceColumns.nth(0)
-  const accessCell = kentekenServiceColumns.nth(1)
+    const servicesList = Selector('[data-testid="services-list"]');
+    const kentekenService = Selector('tr').withText(serviceName)
+    const kentekenServiceColumns = kentekenService.find('td')
 
-  await t
-    .expect(servicesList.visible).ok()
-    .expect(servicesList.find('tbody tr').count).gte(1) // until we have the delete option, we can't assert the exact amount of services
+    const nameCell = kentekenServiceColumns.nth(0)
+    const accessCell = kentekenServiceColumns.nth(1)
 
-    .expect(nameCell.textContent).eql('kentekenregister')
-    .expect(accessCell.textContent).eql('Open')
-})
+    await t
+      .expect(servicesList.visible).ok()
+      .expect(servicesList.find('tbody tr').count).gte(1) // until we have the delete option, we can't assert the exact amount of services
 
-test('Clicking a service navigates to the detail page', async t => {
-  const serviceRow = Selector('tr').withText('kentekenregister')
-
-  await t
-    .click(serviceRow)
-    .expect(getLocation()).contains(`${baseUrl}/services/kentekenregister`);
-})
+      .expect(nameCell.textContent).eql(serviceName)
+      .expect(accessCell.textContent).eql('Open')
+  })
+  .after(async t => {
+    await removeService()
+  })
