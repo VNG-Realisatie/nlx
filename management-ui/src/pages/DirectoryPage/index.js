@@ -18,7 +18,9 @@ import DirectoryServices from './DirectoryServices'
 
 const DirectoryPage = ({ getDirectoryServices }) => {
   const { t } = useTranslation()
-  const { isReady, result, error } = usePromise(getDirectoryServices)
+  const { isReady, result: directoryServices, error } = usePromise(
+    getDirectoryServices,
+  )
 
   return (
     <PageTemplate>
@@ -28,7 +30,7 @@ const DirectoryPage = ({ getDirectoryServices }) => {
           <span data-testid="directory-description">
             {t('List of all available services')}
             {isReady && !error ? (
-              <DirectoryServiceCount directoryServices={() => result} />
+              <DirectoryServiceCount directoryServices={directoryServices} />
             ) : null}
           </span>
         }
@@ -42,7 +44,7 @@ const DirectoryPage = ({ getDirectoryServices }) => {
         </Alert>
       ) : (
         <>
-          <DirectoryServices directoryServices={() => result} />
+          <DirectoryServices directoryServices={directoryServices} />
           <Route exact path="/directory/:organizationName/:serviceName">
             <DirectoryDetailPage parentUrl="/directory" />
           </Route>

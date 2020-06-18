@@ -9,7 +9,7 @@ import DirectoryServiceCount from './index'
 test('renders without crashing', () => {
   expect(() =>
     renderWithProviders(
-      <DirectoryServiceCount directoryServices={() => ({ services: [{}] })} />,
+      <DirectoryServiceCount directoryServices={{ services: [{}] }} />,
     ),
   ).not.toThrow()
 })

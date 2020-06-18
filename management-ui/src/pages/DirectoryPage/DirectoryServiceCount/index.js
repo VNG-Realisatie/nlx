@@ -3,15 +3,15 @@
 //
 
 import React from 'react'
-import { func } from 'prop-types'
+import { array, shape } from 'prop-types'
 
 const DirectoryServiceCount = ({ directoryServices, ...props }) => {
-  const { services = [] } = directoryServices()
+  const { services = [] } = directoryServices
   return <span {...props}> ({services.length})</span>
 }
 
 DirectoryServiceCount.propTypes = {
-  directoryServices: func.isRequired,
+  directoryServices: shape({ services: array.isRequired }).isRequired,
 }
 
 export default DirectoryServiceCount

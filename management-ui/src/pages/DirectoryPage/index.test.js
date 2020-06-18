@@ -10,7 +10,7 @@ import deferredPromise from '../../test-utils/deferred-promise'
 import DirectoryPage from './index'
 
 jest.mock('./DirectoryServices', () => ({ directoryServices }) => {
-  const { services } = directoryServices()
+  const { services } = directoryServices
   return (
     <div data-testid="mock-directory-services">
       {services.map((o, i) => (
