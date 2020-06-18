@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 
-import { Selector } from 'testcafe';
+import { Selector } from 'testcafe'
 
 class Page {
   constructor() {

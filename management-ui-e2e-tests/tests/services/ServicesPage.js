@@ -49,7 +49,7 @@ test
     const accessCell = serviceColumns.nth(1)
 
     await t.expect(servicesList.visible).ok()
-    // until we have the delete option, we can't assert the exact amount of services
+    // in a concurrent test we can't assert the exact amount of services, but at least the service in this test should be there
     await t.expect(servicesList.find('tbody tr').count).gte(1)
 
     await t.expect(nameCell.textContent).eql(serviceName)

@@ -5,12 +5,17 @@ import { Selector } from 'testcafe'
 import { waitForReact } from 'testcafe-react-selectors'
 import { axeCheck, createReport } from 'axe-testcafe'
 
-import getLocation from '../getLocation'
-import { DIRECTORY_ORGANIZATION_NAME, DIRECTORY_SERVICE_NAME, DIRECTORY_STATUS, DIRECTORY_API_SPECIFICATION_TYPE } from './environment'
-import { adminUser } from './roles'
-import page from './page-objects/directory-detail'
+import {
+  DIRECTORY_ORGANIZATION_NAME,
+  DIRECTORY_SERVICE_NAME,
+  DIRECTORY_STATUS,
+  DIRECTORY_API_SPECIFICATION_TYPE,
+} from '../../environment'
+import { getBaseUrl, getLocation } from '../../utils'
+import { adminUser } from '../roles'
+import page from './page-models/directory-detail'
 
-const baseUrl = require('../getBaseUrl')()
+const baseUrl = getBaseUrl()
 
 fixture `DirectoryDetails page`
   .beforeEach(async (t) => {
@@ -28,40 +33,37 @@ test('Automated accessibility testing', async t => {
 test('Directory service details are visible', async t => {
   const detailHeaderContent = page.detailHeader.textContent
   
-  await t
-    .expect(detailHeaderContent).contains(DIRECTORY_SERVICE_NAME)
-    .expect(detailHeaderContent).contains(DIRECTORY_ORGANIZATION_NAME)
-    .expect(detailHeaderContent).contains(DIRECTORY_API_SPECIFICATION_TYPE)
-    .expect(detailHeaderContent).contains(DIRECTORY_STATUS)
+  await t.expect(detailHeaderContent).contains(DIRECTORY_SERVICE_NAME)
+  await t.expect(detailHeaderContent).contains(DIRECTORY_ORGANIZATION_NAME)
+  await t.expect(detailHeaderContent).contains(DIRECTORY_API_SPECIFICATION_TYPE)
+  await t.expect(detailHeaderContent).contains(DIRECTORY_STATUS)
 })
 
 test('Request access button exists', async t => {
   const button = page.requestAccess.find('button')
-
-  await t
-    .expect(button.exists).ok()
+  await t.expect(button.exists).ok()
 })
 
 test('Request access can be cancelled in dialog', async t => {
   const button = page.requestAccess.find('button')
 
-  await t
-    .setNativeDialogHandler((type) => {
-      if (type === 'confirm') return false
-    })
-    .click(button)
-    .expect(Object.keys(button.attributes)).notContains('disabled')
+  await t.setNativeDialogHandler((type) => {
+    if (type === 'confirm') return false
+  })
+    
+  await t.click(button)
+  await t.expect(Object.keys(button.attributes)).notContains('disabled')
 })
 
 test('Requesting access disables button', async t => {
   const button = page.requestAccess.find('button')
 
-  await t
-    .setNativeDialogHandler((type) => {
-      if (type === 'confirm') return true
-    })
-    .click(button)
-    .expect(button.withAttribute('disabled').exists).ok
+  await t.setNativeDialogHandler((type) => {
+    if (type === 'confirm') return true
+  })
+  
+  await t.click(button)
+  await t.expect(button.withAttribute('disabled').exists).ok()
 })
 
 // In IE11 the transition doesn't always complete when directly navigating to detail
@@ -74,10 +76,10 @@ test.before( async t => {
   ('Opens and closes detail view', async t => {
     const row = Selector('tr').withText(DIRECTORY_SERVICE_NAME)
 
-    await t
-      .click(row)
-      .expect(getLocation()).contains(`${baseUrl}/directory/${DIRECTORY_ORGANIZATION_NAME}/${DIRECTORY_SERVICE_NAME}`)
-      .expect(page.closeButton.exists).ok()
-      .click(page.closeButton)
-      .expect(getLocation()).contains(`${baseUrl}/directory`);
+    await t.click(row)
+    await t.expect(getLocation()).contains(`${baseUrl}/directory/${DIRECTORY_ORGANIZATION_NAME}/${DIRECTORY_SERVICE_NAME}`)
+    await t.expect(page.closeButton.exists).ok()
+    
+    await t.click(page.closeButton)
+    await t.expect(getLocation()).contains(`${baseUrl}/directory`)
   })
