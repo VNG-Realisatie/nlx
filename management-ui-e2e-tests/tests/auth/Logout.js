@@ -1,9 +1,11 @@
-import { adminUser } from './roles'
-import { waitForReact } from 'testcafe-react-selectors'
 import { Selector } from 'testcafe'
-import loginPage from './page-objects/login'
+import { waitForReact } from 'testcafe-react-selectors'
 
-const baseUrl = require('../getBaseUrl')()
+import { getBaseUrl } from '../../utils'
+import { adminUser } from '../roles'
+import loginPage from './page-models/login'
+
+const baseUrl = getBaseUrl()
 
 fixture`Logout`
   .beforeEach(async (t) => {

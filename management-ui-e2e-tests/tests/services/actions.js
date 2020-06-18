@@ -1,11 +1,13 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 
-import addPage, { AUTHORIZATION_TYPE_NONE } from './page-objects/add-service'
-import detailPage from './page-objects/service-detail'
-import { t } from "testcafe"
+import { t } from 'testcafe'
 
-const baseUrl = require('../getBaseUrl')()
+import { getBaseUrl } from '../../utils'
+import addPage, { AUTHORIZATION_TYPE_NONE } from './page-models/add-service'
+import detailPage from './page-models/service-detail'
+
+const baseUrl = getBaseUrl()
 
 function randomNumberString() {
   return `${Math.floor(Math.random() * 10000)}`
@@ -21,10 +23,12 @@ export function generateServiceName() {
   return `service-e2e-${(getBrowserId())}-${testRunId}-${randomNumberString()}`
 }
 
-export async function createService() {
+export async function createService(serviceProperties = {}) {
   t.ctx.serviceName = generateServiceName()
+
   await t
     .navigateTo(`${baseUrl}/services/add-service`)
+  
   await addPage.fillAndSubmitForm({
     name: t.ctx.serviceName,
     endpointUrl: 'my-service.test:8000',
@@ -33,7 +37,9 @@ export async function createService() {
     techSupportContact: 'tech@organization.test',
     publicSupportContact: 'public@organization.test',
     authorizationType: AUTHORIZATION_TYPE_NONE,
+    ...serviceProperties
   })
+
   await t
     .expect(addPage.alert.innerText).contains('De service is toegevoegd.')
 
@@ -54,5 +60,6 @@ export async function removeService() {
 
   await t
     .expect(detailPage.alert.innerText).contains('De service is verwijderd.')
+  
   t.ctx.serviceName = null
 }

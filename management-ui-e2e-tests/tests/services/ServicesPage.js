@@ -4,10 +4,11 @@
 import { Selector } from 'testcafe'
 import { waitForReact } from 'testcafe-react-selectors'
 import { axeCheck, createReport } from 'axe-testcafe'
-import { adminUser } from "./roles";
-import getLocation from '../getLocation'
 
-const baseUrl = require('../getBaseUrl')()
+import { getBaseUrl, getLocation } from '../../utils'
+import { adminUser } from '../roles'
+
+const baseUrl = getBaseUrl()
 
 fixture `Services page`
   .beforeEach(async (t) => {

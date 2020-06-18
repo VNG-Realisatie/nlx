@@ -19,6 +19,7 @@ class Checkbox {
       await t.click(this.checkbox)
     }
   }
+  
   async disable() {
     const checked = await this.checkbox.checked
     if (checked) {

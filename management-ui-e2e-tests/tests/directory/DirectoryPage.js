@@ -4,10 +4,17 @@
 import { Selector } from 'testcafe'
 import { waitForReact } from 'testcafe-react-selectors'
 import { axeCheck, createReport } from 'axe-testcafe'
-import { adminUser } from './roles'
-import { DIRECTORY_ORGANIZATION_NAME, DIRECTORY_SERVICE_NAME, DIRECTORY_STATUS, DIRECTORY_API_SPECIFICATION_TYPE } from './environment'
 
-const baseUrl = require('../getBaseUrl')()
+import {
+  DIRECTORY_ORGANIZATION_NAME,
+  DIRECTORY_SERVICE_NAME,
+  DIRECTORY_STATUS,
+  DIRECTORY_API_SPECIFICATION_TYPE
+} from '../../environment'
+import { getBaseUrl } from '../../utils'
+import { adminUser } from '../roles'
+
+const baseUrl = getBaseUrl()
 
 fixture `Directory page`
   .beforeEach(async (t) => {

@@ -1,16 +1,17 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 
-import { Selector } from 'testcafe'
 import { waitForReact } from 'testcafe-react-selectors'
 import { axeCheck, createReport } from 'axe-testcafe'
-import { adminUser } from './roles'
-import addPage from './page-objects/add-service'
-import detailPage from './page-objects/service-detail'
-import { INWAY_NAME } from './environment'
-import { createService, removeService } from './services'
 
-const baseUrl = require('../getBaseUrl')()
+import { INWAY_NAME } from '../../environment'
+import { getBaseUrl } from '../../utils'
+import { adminUser } from '../roles'
+import { createService, removeService } from './actions'
+import addPage from './page-models/add-service'
+import detailPage from './page-models/service-detail'
+
+const baseUrl = getBaseUrl()
 
 fixture`Edit Service page`
   .beforeEach(async (t) => {

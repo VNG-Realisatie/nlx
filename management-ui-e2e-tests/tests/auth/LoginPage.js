@@ -3,12 +3,13 @@
 
 import { waitForReact } from 'testcafe-react-selectors'
 import { axeCheck, createReport } from 'axe-testcafe'
-import { adminUser } from './roles'
-import { LOGIN_ORGANIZATION_NAME } from './environment'
-import page from './page-objects/login'
-import getLocation from '../getLocation'
 
-const baseUrl = require('../getBaseUrl')()
+import { LOGIN_ORGANIZATION_NAME } from '../../environment'
+import { getBaseUrl, getLocation } from '../../utils'
+import { adminUser } from '../roles'
+import page from './page-models/login'
+
+const baseUrl = getBaseUrl()
 
 fixture `Login page`
   .beforeEach(async (t) => {

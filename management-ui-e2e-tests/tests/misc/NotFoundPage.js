@@ -5,7 +5,8 @@ import { Selector } from "testcafe";
 import { waitForReact } from 'testcafe-react-selectors'
 import { axeCheck, createReport } from 'axe-testcafe'
 
-const baseUrl = require('../getBaseUrl')()
+import { getBaseUrl } from '../../utils'
+const baseUrl = getBaseUrl()
 
 fixture `Not Found (404) page`
   .beforeEach(async (t) => {

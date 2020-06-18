@@ -1,11 +1,12 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 
-import { adminUser } from "./roles"
-import { createService } from './services'
-import page from './page-objects/service-detail'
+import { getBaseUrl } from '../../utils'
+import { adminUser } from '../roles'
+import { createService } from './actions'
+import page from './page-models/service-detail'
 
-const baseUrl = require('../getBaseUrl')()
+const baseUrl = getBaseUrl()
 
 fixture`ServiceDetails remove`
   .beforeEach(async t => {

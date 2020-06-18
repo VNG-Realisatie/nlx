@@ -2,9 +2,11 @@
 // Licensed under the EUPL
 
 import { Selector, Role } from 'testcafe'
-import loginPage from './page-objects/login'
 
-const baseUrl = require('../getBaseUrl')()
+import { getBaseUrl } from '../utils'
+import loginPage from './auth/page-models/login'
+
+const baseUrl = getBaseUrl()
 
 export const adminUser = Role(`${baseUrl}/login`, async t => {
   const managementLoginButton = loginPage.loginButton;
