@@ -9,7 +9,7 @@
     "test:local": "testcafe 'chrome:headless' -c 4 --live --reporter 'spec,html:./test-results/index.html'"
   },
   "devDependencies": {
-    "axe-core": "3.5.4",
+    "axe-core": "3.5.5",
     "axe-testcafe": "3.0.0",
     "testcafe": "1.8.6",
     "testcafe-browser-provider-browserstack": "1.13.0",
