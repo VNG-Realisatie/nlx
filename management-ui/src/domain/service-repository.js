@@ -13,7 +13,15 @@ class ServiceRepository {
     }
 
     const response = await result.json()
-    return response.services ? response.services : []
+    const services = response.services ? response.services : []
+    return services.map((service) => {
+      service.internal = !!service.internal
+      service.inways = service.inways || []
+      service.authorizationSettings = service.authorizationSettings || {}
+      service.authorizationSettings.authorizations =
+        service.authorizationSettings.authorizations || []
+      return service
+    })
   }
 
   static async create(service) {

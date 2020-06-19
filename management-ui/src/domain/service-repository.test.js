@@ -27,6 +27,11 @@ describe('the ServiceRepository', () => {
       expect(result).toEqual([
         {
           name: 'A Service',
+          authorizationSettings: {
+            authorizations: [],
+          },
+          inways: [],
+          internal: false,
         },
       ])
 

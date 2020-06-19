@@ -42,6 +42,8 @@ test('listing all services', async () => {
           mode: 'none',
           authorizations: [],
         },
+        inways: [],
+        internal: false,
       },
     ])
   })

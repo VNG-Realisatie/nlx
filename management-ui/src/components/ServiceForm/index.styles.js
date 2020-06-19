@@ -2,9 +2,9 @@
 // Licensed under the EUPL
 //
 import styled, { css } from 'styled-components'
-import { Alert } from '@commonground/design-system'
 import EmptyContentMessage from '../EmptyContentMessage'
 import LoadingMessage from '../LoadingMessage'
+import { ServiceVisibilityAlert } from '../ServiceVisibilityAlert'
 
 export const Form = styled.form`
   margin-bottom: ${(p) => p.theme.tokens.spacing10};
@@ -36,13 +36,13 @@ export const InwaysLoadingMessage = styled(LoadingMessage)`
   justify-content: flex-start;
 `
 
-export const VisibilityAlert = styled(Alert)`
-  margin-top: ${(p) => p.theme.tokens.spacing06};
-  margin-bottom: ${(p) => p.theme.tokens.spacing07};
-  width: 30rem;
-`
-
 export const ServiceNameWrapper = styled.div`
   margin-top: 0;
   margin-bottom: ${(p) => p.theme.tokens.spacing10};
+`
+
+export const StyledServiceVisibilityAlert = styled(ServiceVisibilityAlert)`
+  margin-top: ${(p) => p.theme.tokens.spacing06};
+  margin-bottom: ${(p) => p.theme.tokens.spacing07};
+  width: 30rem;
 `

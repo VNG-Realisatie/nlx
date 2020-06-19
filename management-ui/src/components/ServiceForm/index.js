@@ -23,13 +23,14 @@ import {
 import FormikFocusError from '../FormikFocusError'
 import InwayRepository from '../../domain/inway-repository'
 import usePromise from '../../hooks/use-promise'
+import { showServiceVisibilityAlert } from '../ServiceVisibilityAlert'
 import {
-  Form,
   CheckboxGroup,
+  Form,
   InwaysEmptyMessage,
-  ServiceNameWrapper,
-  VisibilityAlert,
   InwaysLoadingMessage,
+  ServiceNameWrapper,
+  StyledServiceVisibilityAlert,
 } from './index.styles'
 
 const DEFAULT_INITIAL_VALUES = {
@@ -216,16 +217,11 @@ const ServiceForm = ({
               {t('Publish to central directory')}
             </Checkbox>
 
-            {publishedInDirectory && inways.length === 0 ? (
-              <VisibilityAlert
-                data-testid="publishedInDirectory-warning"
-                variant="warning"
-                title={t('Service not yet accessible')}
-              >
-                {t(
-                  'There are no inways connected yet. Until then other organizations cannot access this service.',
-                )}
-              </VisibilityAlert>
+            {showServiceVisibilityAlert({
+              internal: !publishedInDirectory,
+              inways,
+            }) ? (
+              <StyledServiceVisibilityAlert data-testid="publishedInDirectory-warning" />
             ) : null}
           </Fieldset>
 

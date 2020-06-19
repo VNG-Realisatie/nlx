@@ -13,16 +13,17 @@ import EditButton from '../EditButton'
 import {
   DetailHeading,
   DetailHeadingLight,
+  SectionGroup,
   StyledCollapsibleBody,
   StyledCollapsibleEmptyBody,
-  SectionGroup,
 } from '../DetailView'
-import { IconKey, IconHidden, IconVisible, IconInway } from '../../icons'
-
+import { IconHidden, IconInway, IconKey, IconVisible } from '../../icons'
+import { showServiceVisibilityAlert } from '../ServiceVisibilityAlert'
 import {
-  StyledInwayName,
   StyledActionsBar,
+  StyledInwayName,
   StyledRemoveButton,
+  StyledServiceVisibilityAlert,
 } from './index.styles'
 
 const ServiceDetails = ({ service, removeHandler }) => {
@@ -43,6 +44,10 @@ const ServiceDetails = ({ service, removeHandler }) => {
     </Alert>
   ) : (
     <>
+      {showServiceVisibilityAlert({ internal, inways }) ? (
+        <StyledServiceVisibilityAlert />
+      ) : null}
+
       <StyledActionsBar>
         <EditButton
           as={Link}

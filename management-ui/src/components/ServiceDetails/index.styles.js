@@ -3,6 +3,7 @@
 //
 import styled from 'styled-components'
 import RemoveButton from '../RemoveButton'
+import { ServiceVisibilityAlert } from '../ServiceVisibilityAlert'
 
 export const StyledInwayName = styled.span`
   flex-grow: 1;
@@ -17,4 +18,10 @@ export const StyledActionsBar = styled.div`
 
 export const StyledRemoveButton = styled(RemoveButton)`
   margin-left: auto;
+`
+
+export const StyledServiceVisibilityAlert = styled(ServiceVisibilityAlert)`
+  margin-top: ${(p) => p.theme.tokens.spacing06};
+  margin-bottom: ${(p) => p.theme.tokens.spacing07};
+  width: 100%;
 `

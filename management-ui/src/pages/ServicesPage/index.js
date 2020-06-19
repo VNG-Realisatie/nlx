@@ -3,7 +3,7 @@
 //
 
 import React from 'react'
-import { array, func, string } from 'prop-types'
+import { array, bool, func, string } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { Alert, Button, Table } from '@commonground/design-system'
 import { Link, Route } from 'react-router-dom'
@@ -14,11 +14,22 @@ import ServiceRepository from '../../domain/service-repository'
 import ServiceDetailPage from '../ServiceDetailPage'
 import EmptyContentMessage from '../../components/EmptyContentMessage'
 import LoadingMessage from '../../components/LoadingMessage'
+import {
+  ServiceVisibilityMessage,
+  showServiceVisibilityAlert,
+} from '../../components/ServiceVisibilityAlert'
 import AuthorizationMode from './AuthorizationMode'
 import ServiceCount from './ServiceCount'
-import { StyledActionsBar, StyledIconPlus } from './index.styles'
+import { StyledActionsBar, StyledIconPlus, TdAlignRight } from './index.styles'
 
-const ServiceRow = ({ name, authorizations, mode, ...props }) => (
+const ServiceRow = ({
+  name,
+  authorizations,
+  mode,
+  internal,
+  inways,
+  ...props
+}) => (
   <Table.Tr
     to={`/services/${name}`}
     name={name}
@@ -29,6 +40,11 @@ const ServiceRow = ({ name, authorizations, mode, ...props }) => (
     <Table.Td>
       <AuthorizationMode authorizations={authorizations} mode={mode} />
     </Table.Td>
+    <TdAlignRight>
+      {showServiceVisibilityAlert({ internal, inways }) ? (
+        <ServiceVisibilityMessage />
+      ) : null}
+    </TdAlignRight>
   </Table.Tr>
 )
 
@@ -36,6 +52,8 @@ ServiceRow.propTypes = {
   name: string.isRequired,
   authorizations: array,
   mode: string.isRequired,
+  internal: bool.isRequired,
+  inways: array.isRequired,
 }
 
 const ServicesPage = ({ getServices }) => {
@@ -77,6 +95,7 @@ const ServicesPage = ({ getServices }) => {
             <Table.TrHead>
               <Table.Th>{t('Name')}</Table.Th>
               <Table.Th>{t('Authorization')}</Table.Th>
+              <Table.Th />
             </Table.TrHead>
           </thead>
           <tbody>
@@ -85,6 +104,8 @@ const ServicesPage = ({ getServices }) => {
                 name={service.name}
                 authorizations={service.authorizationSettings.authorizations}
                 mode={service.authorizationSettings.mode}
+                internal={service.internal}
+                inways={service.inways}
                 key={i}
               />
             ))}
