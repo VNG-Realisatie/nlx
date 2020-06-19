@@ -5,6 +5,7 @@
 import React, { useState } from 'react'
 import { func } from 'prop-types'
 import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router-dom'
 import { Alert } from '@commonground/design-system'
 import PageTemplate from '../../components/PageTemplate'
 import ServiceRepository from '../../domain/service-repository'
@@ -14,6 +15,7 @@ const AddServicePage = ({ createHandler }) => {
   const { t } = useTranslation()
   const [isAdded, setIsAdded] = useState(false)
   const [error, setError] = useState(null)
+  const history = useHistory()
 
   const submitService = (service) => {
     // placeholder until we've implemented adding authorizations in the form
@@ -21,9 +23,8 @@ const AddServicePage = ({ createHandler }) => {
     service.authorizationSettings.authorizations = []
 
     createHandler(service)
-      .then(() => {
-        setIsAdded(true)
-        setError(null)
+      .then((service) => {
+        history.push(`/services/${service.name}?new=true`)
       })
       .catch((err) => {
         setIsAdded(false)
@@ -45,12 +46,6 @@ const AddServicePage = ({ createHandler }) => {
           data-testid="error-message"
         >
           {error}
-        </Alert>
-      ) : null}
-
-      {isAdded && !error ? (
-        <Alert variant="success" data-testid="error-message">
-          {t('The service has been added.')}
         </Alert>
       ) : null}
 

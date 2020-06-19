@@ -21,6 +21,7 @@ import {
 import AuthorizationMode from './AuthorizationMode'
 import ServiceCount from './ServiceCount'
 import { StyledActionsBar, StyledIconPlus, TdAlignRight } from './index.styles'
+import ServiceAddedToastManager from './ServiceAddedToastManager'
 
 const ServiceRow = ({
   name,
@@ -62,6 +63,7 @@ const ServicesPage = ({ getServices }) => {
 
   return (
     <PageTemplate>
+      <ServiceAddedToastManager />
       <PageTemplate.Header title={t('Services')} />
 
       <StyledActionsBar>

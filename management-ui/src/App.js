@@ -3,7 +3,10 @@
 //
 import React, { Suspense } from 'react'
 import { ThemeProvider } from 'styled-components/macro'
-import { GlobalStyles as DSGlobalStyles } from '@commonground/design-system'
+import {
+  GlobalStyles as DSGlobalStyles,
+  ToasterProvider,
+} from '@commonground/design-system'
 
 import GlobalStyles from './components/GlobalStyles'
 import theme from './theme'
@@ -19,7 +22,9 @@ const App = () => (
 
       {/* Suspense is required for XHR backend i18next */}
       <Suspense fallback={null}>
-        <Routes />
+        <ToasterProvider>
+          <Routes />
+        </ToasterProvider>
       </Suspense>
     </ThemeProvider>
   </StyledContainer>
