@@ -34,7 +34,7 @@ test('Page title is visible', async t => {
 test
   .before(async t => {
     await t.useRole(adminUser)
-    await createService()
+    await createService({ publishToCentralDirectory: true })
     await t.navigateTo(`${baseUrl}/services`)
     await waitForReact()
   })
@@ -47,6 +47,7 @@ test
 
     const nameCell = serviceColumns.nth(0)
     const accessCell = serviceColumns.nth(1)
+    const alertColumn = serviceColumns.nth(2)
 
     await t.expect(servicesList.visible).ok()
     // in a concurrent test we can't assert the exact amount of services, but at least the service in this test should be there
@@ -54,6 +55,7 @@ test
 
     await t.expect(nameCell.textContent).eql(serviceName)
     await t.expect(accessCell.textContent).eql('Open')
+    await t.expect(alertColumn.textContent).eql('Service nog niet benaderbaar')
   })
   .after(async t => {
     await removeService()

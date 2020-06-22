@@ -54,3 +54,18 @@ test('Updating the service', async (t) => {
   await t.expect(detailPage.published.innerText).contains('Niet zichtbaar in centrale directory')
   await t.expect(detailPage.inways.innerText).eql('Inways1')
 })
+
+test('Show the missing inways warning', async (t) => {
+  await t
+    .navigateTo(`${baseUrl}/services/${t.ctx.serviceName}`)
+    .click(detailPage.editButton)
+
+  await addPage.fillAndSubmitForm({
+    publishToCentralDirectory: true,
+  })
+
+  await t.expect(addPage.alert.innerText).contains('De service is bijgewerkt.')
+
+  await t.navigateTo(`${baseUrl}/services/${t.ctx.serviceName}`)
+  await t.expect(detailPage.alertTitle.innerText).contains('Service nog niet benaderbaar')
+})

@@ -15,7 +15,8 @@ class Page {
     this.closeButton = Selector('[data-testid="close-button"]')
     this.removeButton = Selector('[data-testid="remove-service"]')
     this.inways = Selector('[data-testid="service-inways"]')
-    this.alert = Selector('[role="alert"]')
+    this.alert = Selector('div[role="alert"]')
+    this.alertTitle = this.alert.find('[data-testid="title"]')
   }
 }
 

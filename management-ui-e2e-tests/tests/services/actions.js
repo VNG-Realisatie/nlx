@@ -37,6 +37,7 @@ export async function createService(serviceProperties = {}) {
     techSupportContact: 'tech@organization.test',
     publicSupportContact: 'public@organization.test',
     authorizationType: AUTHORIZATION_TYPE_NONE,
+    publishToCentralDirectory: false,
     ...serviceProperties,
   })
 
@@ -55,7 +56,7 @@ export async function removeService() {
       }
       return true
     })
-    .click(detailPage.removeButton)
+    .click(detailPage.removeButton).takeScreenshot()
 
   await t
     .expect(detailPage.alert.innerText).contains('De service is verwijderd.')
