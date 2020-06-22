@@ -82,7 +82,7 @@ const DirectoryPage = ({ getDirectoryServices, requestAccess }) => {
           <Route exact path="/directory/:organizationName/:serviceName">
             <DirectoryDetailPage
               parentUrl="/directory"
-              refreshHandler={reload}
+              // isReloaded={isReloaded}
             />
           </Route>
         </AccessRequestContext.Provider>

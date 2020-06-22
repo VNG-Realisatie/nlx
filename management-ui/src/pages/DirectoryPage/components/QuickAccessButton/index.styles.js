@@ -11,7 +11,8 @@ export const AccessButton = styled.button`
   align-items: center;
   visibility: hidden;
   font-weight: ${(p) => p.theme.tokens.fontWeightSemiBold};
-  color: ${(p) => p.theme.colorTextLink};
+  color: ${(p) =>
+    p.disabled ? p.theme.colorTextLinkDisabled : p.theme.colorTextLink};
   background-color: transparent;
   cursor: pointer;
 

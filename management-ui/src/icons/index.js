@@ -4,6 +4,7 @@
 export { ReactComponent as IconAlertCircle } from './iconAlertCircle.svg'
 export { ReactComponent as IconArrowLeftRight } from './arrow-left-right.svg'
 export { ReactComponent as IconBin } from './bin.svg'
+export { ReactComponent as IconCheck } from './check.svg'
 export { ReactComponent as IconChevron } from './chevron.svg'
 export { ReactComponent as IconDirectory } from './directory.svg'
 export { ReactComponent as IconExternalLink } from './external-link.svg'

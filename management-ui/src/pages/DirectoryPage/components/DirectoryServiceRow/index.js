@@ -45,13 +45,13 @@ const DirectoryServiceRow = ({ service }) => {
       </Table.Td>
       <Table.Td>{apiSpecificationType}</Table.Td>
       <StyledTdAccess>
-        {latestAccessRequest || isRequestSentForThisService ? (
-          <AccessRequestMessage
-            latestAccessRequest={latestAccessRequest}
-            fallbackStatus="CREATED"
-          />
+        {latestAccessRequest ? (
+          <AccessRequestMessage latestAccessRequest={latestAccessRequest} />
         ) : (
-          <QuickAccessButton onClick={requestAccess} />
+          <QuickAccessButton
+            onClick={requestAccess}
+            disabled={isRequestSentForThisService}
+          />
         )}
       </StyledTdAccess>
     </Table.Tr>

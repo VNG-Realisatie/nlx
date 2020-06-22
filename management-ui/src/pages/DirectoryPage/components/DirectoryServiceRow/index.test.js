@@ -6,7 +6,7 @@ import { renderWithProviders, fireEvent } from '../../../../test-utils'
 import { AccessRequestContext } from '../../index'
 import DirectoryServiceRow from './index'
 
-describe('data from a service we do not have access to', () => {
+describe('show data from a service we do not have access to', () => {
   let service
   let requestSentTo
   let handleRequestAccess

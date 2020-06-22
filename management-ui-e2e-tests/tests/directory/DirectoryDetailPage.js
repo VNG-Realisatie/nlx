@@ -55,7 +55,7 @@ test('Request access can be cancelled in dialog', async t => {
   await t.expect(Object.keys(button.attributes)).notContains('disabled')
 })
 
-test('Requesting access disables button', async t => {
+test('After requesting access, I see no button and confirmation of my request', async t => {
   const button = page.requestAccess.find('button')
 
   await t.setNativeDialogHandler((type) => {
@@ -63,7 +63,8 @@ test('Requesting access disables button', async t => {
   })
   
   await t.click(button)
-  await t.expect(button.withAttribute('disabled').exists).ok()
+  await t.expect(button.exists).notOk()
+  await t.expect(Selector('[data-testid="access-message"]').textContent).eql('Toegang aangevraagd')
 })
 
 // In IE11 the transition doesn't always complete when directly navigating to detail

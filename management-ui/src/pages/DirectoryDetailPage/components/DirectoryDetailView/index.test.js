@@ -5,21 +5,67 @@ import React from 'react'
 import { fireEvent } from '@testing-library/react'
 
 import { renderWithProviders } from '../../../../test-utils'
+import { AccessRequestContext } from '../../../DirectoryPage'
 import DirectoryDetailView from './index'
 
-const mockRequestAccess = jest.fn()
+describe('detail view of directory service we do not have access to', () => {
+  let service
+  let requestSentTo
+  let handleRequestAccess
 
-test('should have a button to request access', () => {
-  const { getByText } = renderWithProviders(
-    <DirectoryDetailView
-      onRequestAccess={mockRequestAccess}
-      isAccessRequested={false}
-    />,
-  )
+  beforeEach(() => {
+    service = {
+      organizationName: 'Test Organization',
+      serviceName: 'Test Service',
+      status: 'degraded',
+      apiSpecificationType: 'API',
+      latestAccessRequest: null,
+    }
+    requestSentTo = {
+      organizationName: '',
+      serviceName: '',
+    }
+    handleRequestAccess = jest.fn()
+  })
 
-  const button = getByText('Request Access')
-  expect(button).toBeInTheDocument()
+  afterEach(() => {
+    handleRequestAccess.mockClear()
+  })
 
-  fireEvent.click(button)
-  expect(mockRequestAccess).toHaveBeenCalled()
+  it('should have a button to request access', () => {
+    const { getByText } = renderWithProviders(
+      <AccessRequestContext.Provider
+        value={{ requestSentTo, handleRequestAccess }}
+      >
+        <DirectoryDetailView {...service} />
+      </AccessRequestContext.Provider>,
+    )
+
+    const button = getByText('Request Access')
+    expect(button).toBeInTheDocument()
+
+    fireEvent.click(button)
+    expect(handleRequestAccess).toHaveBeenCalled()
+  })
+
+  it('should show a loading message', () => {
+    const serviceWithOutstandingAccessRequest = {
+      ...service,
+      latestAccessRequest: {
+        id: 'string',
+        status: 'CREATED',
+        createdAt: '2020-06-30T08:31:41.106Z',
+        updatedAt: '2020-06-30T08:31:41.106Z',
+      },
+    }
+    const { getByText } = renderWithProviders(
+      <AccessRequestContext.Provider
+        value={{ requestSentTo, handleRequestAccess }}
+      >
+        <DirectoryDetailView {...serviceWithOutstandingAccessRequest} />
+      </AccessRequestContext.Provider>,
+    )
+
+    expect(getByText('Sending request')).toBeInTheDocument()
+  })
 })

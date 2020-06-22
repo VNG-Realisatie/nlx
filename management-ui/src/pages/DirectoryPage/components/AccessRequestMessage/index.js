@@ -13,12 +13,9 @@ const statusMessage = {
   SENT: (t) => <span>{t('Requested')}</span>,
 }
 
-const AccessRequestMessage = ({ latestAccessRequest, fallbackStatus }) => {
+const AccessRequestMessage = ({ latestAccessRequest }) => {
   const { t } = useTranslation()
-
-  const status = latestAccessRequest
-    ? latestAccessRequest.status
-    : fallbackStatus || null
+  const status = latestAccessRequest ? latestAccessRequest.status : null
 
   return status ? statusMessage[status](t) : null
 }
@@ -30,7 +27,6 @@ AccessRequestMessage.propTypes = {
     createdAt: string,
     updatedAt: string,
   }),
-  fallbackStatus: oneOf(Object.keys(statusMessage)),
 }
 
 export default AccessRequestMessage

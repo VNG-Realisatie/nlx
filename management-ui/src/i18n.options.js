@@ -21,5 +21,12 @@ module.exports = {
 
   interpolation: {
     escapeValue: false, // react already safes from xss
+    format: (value, format, lng) => {
+      if (value instanceof Date) {
+        return new Intl.DateTimeFormat([lng, 'en'], {
+          dateStyle: format || 'short',
+        }).format(value)
+      }
+    },
   },
 }

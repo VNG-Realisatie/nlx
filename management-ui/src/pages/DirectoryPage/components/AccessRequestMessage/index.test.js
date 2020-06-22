@@ -11,13 +11,6 @@ test('by default should render nothing', () => {
   expect(container).toHaveTextContent('')
 })
 
-test('render fallback status (CREATED) when no latestAccessRequest given', () => {
-  const { getByText } = renderWithProviders(
-    <AccessRequestMessage fallbackStatus="CREATED" />,
-  )
-  expect(getByText('Sending request')).toBeInTheDocument()
-})
-
 describe('render correct message', () => {
   it('for state: FAILED', () => {
     const latestAccessRequest = {

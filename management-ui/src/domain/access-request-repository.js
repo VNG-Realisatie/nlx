@@ -10,12 +10,18 @@ class AccessRequestRepository {
       },
     )
 
-    if (result.status === 400) {
-      throw new Error('invalid user input')
+    if (result.status === 409) {
+      alert(
+        'Request already sent, please refresh the page to see the latest status.',
+      )
+      throw new Error(
+        'Request already sent, please refresh the page to see the latest status.',
+      )
     }
 
-    if (result.status === 403) {
-      throw new Error('forbidden')
+    if (result.status.toString().substring(0, 1) === '4') {
+      alert('Generic error')
+      throw new Error(`Error code: ${result.status}`)
     }
 
     if (!result.ok) {
