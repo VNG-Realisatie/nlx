@@ -55,8 +55,12 @@
   "Publish to central directory": "Publish to central directory",
   "Published in central directory": "Published in central directory",
   "Remove": "Remove",
+  "Request": "Request",
   "Request Access": "Request Access",
+  "Request could not be sent": "Request could not be sent",
+  "Requested": "Requested",
   "Self address": "Self address",
+  "Sending request": "Sending request",
   "Service": "Service",
   "Service name": "Service name",
   "Service not yet accessible": "Service not yet accessible",
@@ -85,6 +89,5 @@
   "Welcome": "Welcome",
   "Whitelist": "Whitelist",
   "Whitelist for authorized organizations": "Whitelist for authorized organizations",
-  "Whitelisted organizations": "Whitelisted organizations",
-  "Changing the service name is not allowed": "Changing the service name is not allowed"
+  "Whitelisted organizations": "Whitelisted organizations"
 }

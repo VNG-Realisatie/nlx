@@ -2,23 +2,54 @@
 // Licensed under the EUPL
 //
 
-import React from 'react'
+import React, { createContext, useState } from 'react'
 import { func } from 'prop-types'
 import { Route } from 'react-router-dom'
 import { Alert } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 
 import PageTemplate from '../../components/PageTemplate'
-import DirectoryRepository from '../../domain/directory-repository'
 import usePromise from '../../hooks/use-promise'
+import DirectoryRepository from '../../domain/directory-repository'
+import AccessRequestRepository from '../../domain/access-request-repository'
 import LoadingMessage from '../../components/LoadingMessage'
+
 import DirectoryDetailPage from '../DirectoryDetailPage'
 import DirectoryServiceCount from './components/DirectoryServiceCount'
 import DirectoryPageView from './components/DirectoryPageView'
 
-const DirectoryPage = ({ getDirectoryServices }) => {
+export const AccessRequestContext = createContext()
+
+const DEFAULT_REQUEST_SENT_STATE = {
+  organizationName: '',
+  serviceName: '',
+}
+
+const DirectoryPage = ({ getDirectoryServices, requestAccess }) => {
   const { t } = useTranslation()
-  const { isReady, result: services, error } = usePromise(getDirectoryServices)
+  const { isReady, result: services, error, reload } = usePromise(
+    getDirectoryServices,
+  )
+
+  const [requestSentTo, setRequestSentTo] = useState(DEFAULT_REQUEST_SENT_STATE)
+
+  const handleRequestAccess = async ({ organizationName, serviceName }) => {
+    const confirmed = window.confirm(
+      t('The request will be sent to', { name: organizationName }),
+    )
+
+    if (confirmed) {
+      setRequestSentTo({ organizationName, serviceName })
+
+      try {
+        await requestAccess(organizationName, serviceName)
+        reload()
+      } catch (e) {
+        console.error(e)
+        setRequestSentTo(DEFAULT_REQUEST_SENT_STATE)
+      }
+    }
+  }
 
   return (
     <PageTemplate>
@@ -41,12 +72,20 @@ const DirectoryPage = ({ getDirectoryServices }) => {
           {t('Failed to load the directory.')}
         </Alert>
       ) : (
-        <>
-          <DirectoryPageView services={services} />
+        <AccessRequestContext.Provider
+          value={{ requestSentTo, handleRequestAccess }}
+        >
+          <DirectoryPageView
+            services={services}
+            handleRequestAccess={handleRequestAccess}
+          />
           <Route exact path="/directory/:organizationName/:serviceName">
-            <DirectoryDetailPage parentUrl="/directory" />
+            <DirectoryDetailPage
+              parentUrl="/directory"
+              refreshHandler={reload}
+            />
           </Route>
-        </>
+        </AccessRequestContext.Provider>
       )}
     </PageTemplate>
   )
@@ -54,10 +93,12 @@ const DirectoryPage = ({ getDirectoryServices }) => {
 
 DirectoryPage.propTypes = {
   getDirectoryServices: func,
+  requestAccess: func,
 }
 
 DirectoryPage.defaultProps = {
   getDirectoryServices: DirectoryRepository.getAll,
+  requestAccess: AccessRequestRepository.requestAccess,
 }
 
 export default DirectoryPage

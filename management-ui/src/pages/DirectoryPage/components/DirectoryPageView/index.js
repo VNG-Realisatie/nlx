@@ -1,13 +1,13 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { useTranslation } from 'react-i18next'
-import { arrayOf, shape, string } from 'prop-types'
 import React from 'react'
+import { arrayOf, shape, string, object } from 'prop-types'
 import { Table } from '@commonground/design-system'
+import { useTranslation } from 'react-i18next'
 
 import EmptyContentMessage from '../../../../components/EmptyContentMessage'
-import StatusIndicator from '../../../../components/StatusIndicator'
+import DirectoryServiceRow from '../DirectoryServiceRow'
 
 const DirectoryPageView = ({ services }) => {
   const { t } = useTranslation()
@@ -28,30 +28,12 @@ const DirectoryPageView = ({ services }) => {
         </Table.TrHead>
       </thead>
       <tbody>
-        {services.map((service, i) => {
-          const {
-            organizationName,
-            serviceName,
-            status,
-            apiSpecificationType,
-          } = service
-
-          return (
-            <Table.Tr
-              key={i}
-              to={`/directory/${organizationName}/${serviceName}`}
-              name={`${organizationName} - ${serviceName}`}
-              data-testid={`directory-service-row-${i}`}
-            >
-              <Table.Td>{organizationName}</Table.Td>
-              <Table.Td>{serviceName}</Table.Td>
-              <Table.Td>
-                <StatusIndicator status={status} />
-              </Table.Td>
-              <Table.Td>{apiSpecificationType}</Table.Td>
-            </Table.Tr>
-          )
-        })}
+        {services.map((service) => (
+          <DirectoryServiceRow
+            key={`${service.organizationName}-${service.serviceName}`}
+            service={service}
+          />
+        ))}
       </tbody>
     </Table>
   )
@@ -64,6 +46,7 @@ DirectoryPageView.propTypes = {
       serviceName: string.isRequired,
       status: string.isRequired,
       apiSpecificationType: string,
+      latestAccessRequest: object,
     }),
   ).isRequired,
 }

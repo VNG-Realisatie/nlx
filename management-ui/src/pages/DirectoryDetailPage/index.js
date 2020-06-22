@@ -8,6 +8,7 @@ import { Alert, Drawer } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 
 import DirectoryRepository from '../../domain/directory-repository'
+import AccessRequestRepository from '../../domain/access-request-repository'
 import usePromise from '../../hooks/use-promise'
 import LoadingMessage from '../../components/LoadingMessage'
 import DirectoryDetailView from './components/DirectoryDetailView'
@@ -27,6 +28,7 @@ const DirectoryDetailPage = ({ getService, requestAccess, parentUrl }) => {
 
   const close = () => history.push(parentUrl)
 
+  // Concious duplication with DirectoryPage - until confirm box gets replaced by modal
   const handleRequestAccess = async () => {
     const confirmed = window.confirm(
       t('The request will be sent to', { name: organizationName }),
@@ -82,7 +84,7 @@ DirectoryDetailPage.propTypes = {
 
 DirectoryDetailPage.defaultProps = {
   getService: DirectoryRepository.getByName,
-  requestAccess: DirectoryRepository.requestAccess,
+  requestAccess: AccessRequestRepository.requestAccess,
   parentUrl: '/directory',
 }
 

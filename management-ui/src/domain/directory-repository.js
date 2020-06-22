@@ -4,6 +4,11 @@
 
 import { fetchWithoutCaching } from './fetch-utils'
 
+function ensureLatestAccessRequest(service) {
+  service.latestAccessRequest = service.latestAccessRequest || null
+  return service
+}
+
 class DirectoryRepository {
   static async getAll() {
     const result = await fetchWithoutCaching(`/api/v1/directory/services`)
@@ -13,8 +18,8 @@ class DirectoryRepository {
     }
 
     const response = await result.json()
-
-    return response.services ? response.services : []
+    const services = response.services || []
+    return services.map(ensureLatestAccessRequest)
   }
 
   static async getByName(organizationName, serviceName) {
@@ -34,30 +39,8 @@ class DirectoryRepository {
       throw new Error('unable to handle the request')
     }
 
-    return result.json()
-  }
-
-  static async requestAccess(organizationName, serviceName) {
-    const result = await fetch(
-      `/api/v1/directory/organizations/${organizationName}/services/${serviceName}/access-requests`,
-      {
-        method: 'POST',
-      },
-    )
-
-    if (result.status === 400) {
-      throw new Error('invalid user input')
-    }
-
-    if (result.status === 403) {
-      throw new Error('forbidden')
-    }
-
-    if (!result.ok) {
-      throw new Error('unable to handle the request')
-    }
-
-    return result.json()
+    const response = await result.json()
+    return ensureLatestAccessRequest(response)
   }
 }
 

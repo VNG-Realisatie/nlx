@@ -43,6 +43,7 @@ test('Directory details are displayed', async (t) => {
   const serviceNameCell = initialServiceColumns.nth(1)
   const statusTitle = initialServiceColumns.nth(2).find('svg title')
   const apiSpecificationTypeCell = initialServiceColumns.nth(3)
+  const accessCell = initialServiceColumns.nth(4)
 
   await t.expect(directoryList.visible).ok()
   await t.expect(directoryList.find('tbody tr').count).gte(2)
@@ -51,4 +52,5 @@ test('Directory details are displayed', async (t) => {
   await t.expect(serviceNameCell.textContent).eql(DIRECTORY_SERVICE_NAME)
   await t.expect(statusTitle.textContent).eql(DIRECTORY_STATUS)
   await t.expect(apiSpecificationTypeCell.textContent).eql(DIRECTORY_API_SPECIFICATION_TYPE)
+  await t.expect(accessCell.find('svg[data-testid="request-access"]')).ok()
 })

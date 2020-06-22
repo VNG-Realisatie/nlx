@@ -1,7 +1,6 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-
 import { fetchWithoutCaching } from './fetch-utils'
 
 class ServiceRepository {

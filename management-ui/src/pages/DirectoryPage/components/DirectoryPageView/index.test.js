@@ -2,9 +2,14 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { MemoryRouter } from 'react-router-dom'
 import { renderWithProviders } from '../../../../test-utils'
 import DirectoryServices from './index'
+
+jest.mock('../DirectoryServiceRow', () => ({ organizationName }) => (
+  <tr data-testid="testrow">
+    <td>{organizationName}</td>
+  </tr>
+))
 
 test('renders without crashing', () => {
   expect(() =>
@@ -20,27 +25,21 @@ test('show a empty services message', () => {
     'There are no services yet.',
   )
 })
+
 test('show a table with rows for every service', () => {
   const { getByTestId, getByRole } = renderWithProviders(
-    <MemoryRouter>
-      <DirectoryServices
-        directoryServices={{
-          services: [
-            {
-              organizationName: 'Test Organization',
-              serviceName: 'Test Service',
-              status: 'degraded',
-              apiSpecificationType: 'API',
-            },
-          ],
-        }}
-      />
-    </MemoryRouter>,
+    <DirectoryServices
+      services={[
+        {
+          organizationName: 'Test Organization',
+          serviceName: 'Test Service',
+          status: 'degraded',
+          apiSpecificationType: 'API',
+        },
+      ]}
+    />,
   )
+
   expect(getByRole('grid')).toBeTruthy()
-  const serviceRow = getByTestId('directory-service-row-0')
-  expect(serviceRow).toHaveTextContent('Test Organization')
-  expect(serviceRow).toHaveTextContent('Test Service')
-  expect(serviceRow).toHaveTextContent('status-degraded.svg')
-  expect(serviceRow).toHaveTextContent('API')
+  expect(getByTestId('testrow')).toBeInTheDocument()
 })

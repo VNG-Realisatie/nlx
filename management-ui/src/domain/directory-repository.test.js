@@ -20,6 +20,9 @@ describe('the DirectoryRepository', () => {
                 organizationName: 'organization',
                 status: 'unknown',
                 apiSpecificationType: 'plain',
+                latestAccessRequest: {
+                  status: 'FAILED',
+                },
               },
             ],
           }),
@@ -33,6 +36,62 @@ describe('the DirectoryRepository', () => {
           organizationName: 'organization',
           status: 'unknown',
           apiSpecificationType: 'plain',
+          latestAccessRequest: {
+            status: 'FAILED',
+          },
+        },
+      ])
+
+      expect(global.fetch).toHaveBeenCalledWith(
+        '/api/v1/directory/services',
+        expect.anything(),
+      )
+    })
+
+    it('should return the services and add missing latestAccessRequest properties', async () => {
+      jest.spyOn(global, 'fetch').mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: () =>
+          Promise.resolve({
+            services: [
+              {
+                serviceName: 'service',
+                organizationName: 'organization',
+                status: 'unknown',
+                apiSpecificationType: 'plain',
+                latestAccessRequest: {
+                  status: 'FAILED',
+                },
+              },
+              {
+                serviceName: 'service2',
+                organizationName: 'organization',
+                status: 'unknown',
+                apiSpecificationType: 'plain',
+              },
+            ],
+          }),
+      })
+
+      const result = await DirectoryRepository.getAll()
+
+      expect(result).toEqual([
+        {
+          serviceName: 'service',
+          organizationName: 'organization',
+          status: 'unknown',
+          apiSpecificationType: 'plain',
+          latestAccessRequest: {
+            status: 'FAILED',
+          },
+        },
+        {
+          serviceName: 'service2',
+          organizationName: 'organization',
+          status: 'unknown',
+          apiSpecificationType: 'plain',
+          latestAccessRequest: null,
         },
       ])
 
@@ -71,6 +130,9 @@ describe('the DirectoryRepository', () => {
             organizationName: 'organization',
             status: 'unknown',
             apiSpecificationType: 'plain',
+            latestAccessRequest: {
+              status: 'FAILED',
+            },
           }),
       })
 
@@ -84,6 +146,9 @@ describe('the DirectoryRepository', () => {
         organizationName: 'organization',
         status: 'unknown',
         apiSpecificationType: 'plain',
+        latestAccessRequest: {
+          status: 'FAILED',
+        },
       })
 
       expect(global.fetch).toHaveBeenCalledWith(
@@ -91,31 +156,32 @@ describe('the DirectoryRepository', () => {
         expect.anything(),
       )
     })
-  })
 
-  describe('requesting access to directory service', () => {
-    it('should resolve without errors', async () => {
-      jest.spyOn(global, 'fetch').mockImplementation(() =>
-        Promise.resolve({
-          ok: true,
-          status: 201,
-          json: () => Promise.resolve({}),
-        }),
-      )
+    it('should add latestAccessRequest prop (null)', async () => {
+      jest.spyOn(global, 'fetch').mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: () =>
+          Promise.resolve({
+            serviceName: 'service',
+            organizationName: 'organization',
+            status: 'unknown',
+            apiSpecificationType: 'plain',
+          }),
+      })
 
-      const result = await DirectoryRepository.requestAccess(
+      const result = await DirectoryRepository.getByName(
         'organization',
         'service',
       )
 
-      await expect(result).toEqual({})
-
-      expect(global.fetch).toHaveBeenCalledWith(
-        '/api/v1/directory/organizations/organization/services/service/access-requests',
-        {
-          method: 'POST',
-        },
-      )
+      expect(result).toEqual({
+        serviceName: 'service',
+        organizationName: 'organization',
+        status: 'unknown',
+        apiSpecificationType: 'plain',
+        latestAccessRequest: null,
+      })
     })
   })
 })

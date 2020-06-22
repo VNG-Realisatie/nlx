@@ -55,8 +55,12 @@
   "Publish to central directory": "Publiceren in de centrale directory",
   "Published in central directory": "Gepubliceerd in centrale directory",
   "Remove": "Verwijderen",
+  "Request": "Verzoek",
   "Request Access": "Toegang aanvragen",
+  "Request could not be sent": "Verzoek kon niet worden verstuurd",
+  "Requested": "Aangevraagd",
   "Self address": "Self address",
+  "Sending request": "Verzoek wordt verzonden",
   "Service": "Service",
   "Service name": "Servicenaam",
   "Service not yet accessible": "Service nog niet benaderbaar",
@@ -85,6 +89,5 @@
   "Welcome": "Welkom",
   "Whitelist": "Whitelist",
   "Whitelist for authorized organizations": "Whitelist voor geauthorizeerde organisaties",
-  "Whitelisted organizations": "Whitelisted organisaties",
-  "Changing the service name is not allowed": "Het aanpassen van de service naam is niet toegestaan"
+  "Whitelisted organizations": "Whitelisted organisaties"
 }
