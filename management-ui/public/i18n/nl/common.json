@@ -1,4 +1,5 @@
 {
+  "Access": "Toegang",
   "Account menu": "Account menu",
   "Add new service": "Nieuwe service toevoegen",
   "Add service": "Service toevoegen",
@@ -8,7 +9,6 @@
   "API endpoint URL": "API endpoint URL",
   "API specification URL": "API specificatie URL",
   "API Type": "API Type",
-  "Authorization": "Toegang",
   "Avatar": "Avatar",
   "Back": "Terug",
   "Close": "Sluiten",

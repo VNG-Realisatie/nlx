@@ -20,6 +20,7 @@ const DirectoryDetailView = ({ onRequestAccess, isAccessRequested }) => {
         <DetailHeading>
           <IconKey />
           {t('Authorization')}
+          {t('Access')}
         </DetailHeading>
         <Button onClick={onRequestAccess} disabled={isAccessRequested}>
           {t('Request Access')}

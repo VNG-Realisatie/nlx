@@ -191,7 +191,7 @@ const ServiceForm = ({
           </Fieldset>
 
           <Fieldset>
-            <Legend>{t('Authorization')}</Legend>
+            <Legend>{t('Access')}</Legend>
 
             <Radio.Group label={t('Type of authorization')}>
               <Radio

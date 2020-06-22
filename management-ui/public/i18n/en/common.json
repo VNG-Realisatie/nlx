@@ -1,4 +1,5 @@
 {
+  "Access": "Access",
   "Account menu": "Account menu",
   "Add new service": "Add new service",
   "Add service": "Add service",
@@ -8,7 +9,6 @@
   "API endpoint URL": "API endpoint URL",
   "API specification URL": "API specification URL",
   "API Type": "API Type",
-  "Authorization": "Authorization",
   "Avatar": "Avatar",
   "Back": "Back",
   "Close": "Close",

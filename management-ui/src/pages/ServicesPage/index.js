@@ -94,7 +94,7 @@ const ServicesPage = ({ getServices }) => {
           <thead>
             <Table.TrHead>
               <Table.Th>{t('Name')}</Table.Th>
-              <Table.Th>{t('Authorization')}</Table.Th>
+              <Table.Th>{t('Access')}</Table.Th>
               <Table.Th />
             </Table.TrHead>
           </thead>

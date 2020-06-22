@@ -24,6 +24,7 @@ const DirectoryPageView = ({ services }) => {
           <Table.Th>{t('Service')}</Table.Th>
           <Table.Th>{t('Status')}</Table.Th>
           <Table.Th>{t('API Type')}</Table.Th>
+          <Table.Th>{t('Access')}</Table.Th>
         </Table.TrHead>
       </thead>
       <tbody>
