@@ -13,9 +13,8 @@ class DirectoryRepository {
     }
 
     const response = await result.json()
-    response.services = response.services || []
 
-    return response
+    return response.services ? response.services : []
   }
 
   static async getByName(organizationName, serviceName) {

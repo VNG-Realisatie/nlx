@@ -6,12 +6,11 @@ import { arrayOf, shape, string } from 'prop-types'
 import React from 'react'
 import { Table } from '@commonground/design-system'
 
-import EmptyContentMessage from '../../../components/EmptyContentMessage'
-import StatusIndicator from '../../../components/StatusIndicator'
+import EmptyContentMessage from '../../../../components/EmptyContentMessage'
+import StatusIndicator from '../../../../components/StatusIndicator'
 
-const DirectoryServices = ({ directoryServices }) => {
+const DirectoryPageView = ({ services }) => {
   const { t } = useTranslation()
-  const { services = [] } = directoryServices
 
   return services.length === 0 ? (
     <EmptyContentMessage data-testid="directory-no-services">
@@ -57,17 +56,15 @@ const DirectoryServices = ({ directoryServices }) => {
   )
 }
 
-DirectoryServices.propTypes = {
-  directoryServices: shape({
-    services: arrayOf(
-      shape({
-        organizationName: string.isRequired,
-        serviceName: string.isRequired,
-        status: string.isRequired,
-        apiSpecificationType: string,
-      }),
-    ).isRequired,
-  }).isRequired,
+DirectoryPageView.propTypes = {
+  services: arrayOf(
+    shape({
+      organizationName: string.isRequired,
+      serviceName: string.isRequired,
+      status: string.isRequired,
+      apiSpecificationType: string,
+    }),
+  ).isRequired,
 }
 
-export default DirectoryServices
+export default DirectoryPageView

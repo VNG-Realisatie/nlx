@@ -3,20 +3,18 @@
 //
 import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
-import { renderWithProviders } from '../../../test-utils'
+import { renderWithProviders } from '../../../../test-utils'
 import DirectoryServices from './index'
 
 test('renders without crashing', () => {
   expect(() =>
-    renderWithProviders(
-      <DirectoryServices directoryServices={{ services: [] }} />,
-    ),
+    renderWithProviders(<DirectoryServices services={[]} />),
   ).not.toThrow()
 })
 
 test('show a empty services message', () => {
   const { getByTestId } = renderWithProviders(
-    <DirectoryServices directoryServices={{ services: [] }} />,
+    <DirectoryServices services={[]} />,
   )
   expect(getByTestId('directory-no-services')).toHaveTextContent(
     'There are no services yet.',

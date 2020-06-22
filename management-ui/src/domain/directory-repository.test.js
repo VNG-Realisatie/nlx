@@ -27,16 +27,14 @@ describe('the DirectoryRepository', () => {
 
       const result = await DirectoryRepository.getAll()
 
-      expect(result).toEqual({
-        services: [
-          {
-            serviceName: 'service',
-            organizationName: 'organization',
-            status: 'unknown',
-            apiSpecificationType: 'plain',
-          },
-        ],
-      })
+      expect(result).toEqual([
+        {
+          serviceName: 'service',
+          organizationName: 'organization',
+          status: 'unknown',
+          apiSpecificationType: 'plain',
+        },
+      ])
 
       expect(global.fetch).toHaveBeenCalledWith(
         '/api/v1/directory/services',
@@ -53,7 +51,7 @@ describe('the DirectoryRepository', () => {
 
       const result = await DirectoryRepository.getAll()
 
-      expect(result).toEqual({ services: [] })
+      expect(result).toEqual([])
 
       expect(global.fetch).toHaveBeenCalledWith(
         '/api/v1/directory/services',

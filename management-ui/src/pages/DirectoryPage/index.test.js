@@ -9,8 +9,7 @@ import { UserContextProvider } from '../../user-context'
 import deferredPromise from '../../test-utils/deferred-promise'
 import DirectoryPage from './index'
 
-jest.mock('./DirectoryServices', () => ({ directoryServices }) => {
-  const { services } = directoryServices
+jest.mock('./components/DirectoryPageView', () => ({ services }) => {
   return (
     <div data-testid="mock-directory-services">
       {services.map((o, i) => (
@@ -23,8 +22,8 @@ jest.mock('./DirectoryServices', () => ({ directoryServices }) => {
 })
 
 test('listing all services', async () => {
-  const directoryServices = deferredPromise()
-  const getDirectoryServices = jest.fn(() => directoryServices)
+  const services = deferredPromise()
+  const getDirectoryServices = jest.fn(() => services)
 
   const { getByRole, getByTestId } = renderWithProviders(
     <Router>
@@ -41,7 +40,7 @@ test('listing all services', async () => {
   )
 
   await act(async () => {
-    directoryServices.resolve({ services: [{ serviceName: 'Test Service' }] })
+    services.resolve([{ serviceName: 'Test Service' }])
   })
 
   waitFor(() =>
@@ -58,7 +57,7 @@ test('listing all services', async () => {
 })
 
 test('no services', async () => {
-  const getDirectoryServices = jest.fn(() => Promise.resolve({ services: [] }))
+  const getDirectoryServices = jest.fn(() => Promise.resolve([]))
 
   const { findByTestId, getByTestId } = renderWithProviders(
     <Router>

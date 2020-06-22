@@ -13,14 +13,12 @@ import DirectoryRepository from '../../domain/directory-repository'
 import usePromise from '../../hooks/use-promise'
 import LoadingMessage from '../../components/LoadingMessage'
 import DirectoryDetailPage from '../DirectoryDetailPage'
-import DirectoryServiceCount from './DirectoryServiceCount'
-import DirectoryServices from './DirectoryServices'
+import DirectoryServiceCount from './components/DirectoryServiceCount'
+import DirectoryPageView from './components/DirectoryPageView'
 
 const DirectoryPage = ({ getDirectoryServices }) => {
   const { t } = useTranslation()
-  const { isReady, result: directoryServices, error } = usePromise(
-    getDirectoryServices,
-  )
+  const { isReady, result: services, error } = usePromise(getDirectoryServices)
 
   return (
     <PageTemplate>
@@ -30,7 +28,7 @@ const DirectoryPage = ({ getDirectoryServices }) => {
           <span data-testid="directory-description">
             {t('List of all available services')}
             {isReady && !error ? (
-              <DirectoryServiceCount directoryServices={directoryServices} />
+              <DirectoryServiceCount services={services} />
             ) : null}
           </span>
         }
@@ -44,7 +42,7 @@ const DirectoryPage = ({ getDirectoryServices }) => {
         </Alert>
       ) : (
         <>
-          <DirectoryServices directoryServices={directoryServices} />
+          <DirectoryPageView services={services} />
           <Route exact path="/directory/:organizationName/:serviceName">
             <DirectoryDetailPage parentUrl="/directory" />
           </Route>
