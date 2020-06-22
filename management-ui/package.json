@@ -6,7 +6,7 @@
     "@commonground/design-system": "12.5.0",
     "fetch-defaults": "1.0.0",
     "formik": "2.1.4",
-    "i18next": "19.4.5",
+    "i18next": "19.5.1",
     "i18next-xhr-backend": "3.2.2",
     "js-cookie": "2.2.1",
     "p-memoize": "4.0.0",
