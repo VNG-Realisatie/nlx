@@ -12,7 +12,7 @@ PROTO_GO_FILES := $(foreach proto,$(PROTO_NAMES),$(PKG_DIR)/$(proto)/$(proto).pb
 PROTO_GATEWAY_FILES := $(foreach proto,$(PROTO_NAMES),$(PKG_DIR)/$(proto)/$(proto).pb.gw.go)
 PROTO_SWAGGER_FILES := $(PROTO_NAMES:%=$(API_DIR)/%.swagger.json)
 
-EXTRA_MOCK_FILES := $(PKG_DIR)/configapi/mock/mock_database.go
+EXTRA_MOCK_FILES := $(PKG_DIR)/database/mock/mock_database.go
 
 GENERATE_FILES := $(PROTO_GO_FILES) $(PROTO_SWAGGER_FILES) $(PROTO_MOCK_FILES) $(EXTRA_MOCK_FILES)
 
@@ -53,15 +53,15 @@ $(PKG_DIR)/$(PROTO)/$(PROTO).pb.go $(PKG_DIR)/$(PROTO)/$(PROTO).pb.gw.go: $(API_
 
 $(PKG_DIR)/$(PROTO)/mock/mock_$(PROTO).go: $(PKG_DIR)/$(PROTO)/$(PROTO).pb.go
 	@# Generate mock file
-	cd $$(@D) && mockgen -source $$(shell realpath --relative-to=$$(@D) $$<) -destination $$(@F)
+	cd $$(<D) && mockgen -source $$(<F) -destination $$@
 
 endef # PROTOBUFFER_RULES
 
 $(foreach PROTO,$(PROTO_NAMES),$(eval $(PROTOBUFFER_RULES)))
 
-$(PKG_DIR)/configapi/mock/mock_database.go: $(PKG_DIR)/configapi/database.go
+$(PKG_DIR)/database/mock/mock_database.go: $(PKG_DIR)/database/database.go
 	@# Generate mock file
-	cd $(@D) && mockgen -source $(shell realpath --relative-to=$(@D) $<) -destination $(@F)
+	cd $(<D) && mockgen -source $(<F) -destination $@
 
 $(API_DIR)/%.swagger.json: $(API_DIR)/%.proto
 	@# Generate swagger.json

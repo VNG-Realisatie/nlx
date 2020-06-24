@@ -9,6 +9,8 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
 // CreateService creates a new service
@@ -22,7 +24,24 @@ func (s *ConfigService) CreateService(ctx context.Context, service *Service) (*S
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid service: %s", err))
 	}
 
-	err = s.configDatabase.CreateService(ctx, service)
+	model := &database.Service{
+		Name:                 service.Name,
+		EndpointURL:          service.EndpointURL,
+		DocumentationURL:     service.DocumentationURL,
+		APISpecificationURL:  service.ApiSpecificationURL,
+		Internal:             service.Internal,
+		TechSupportContact:   service.TechSupportContact,
+		PublicSupportContact: service.PublicSupportContact,
+		Inways:               service.Inways,
+	}
+
+	if service.AuthorizationSettings != nil {
+		model.AuthorizationSettings = &database.ServiceAuthorizationSettings{
+			Mode: service.AuthorizationSettings.Mode,
+		}
+	}
+
+	err = s.configDatabase.CreateService(ctx, model)
 	if err != nil {
 		logger.Error("error creating service in DB", zap.Error(err))
 		return nil, status.Error(codes.Internal, "database error")
@@ -47,7 +66,9 @@ func (s *ConfigService) GetService(ctx context.Context, req *GetServiceRequest) 
 		return nil, status.Error(codes.NotFound, "service not found")
 	}
 
-	return service, nil
+	response := convertFromDatabaseService(service)
+
+	return response, nil
 }
 
 // UpdateService updates an existing service
@@ -65,7 +86,24 @@ func (s *ConfigService) UpdateService(ctx context.Context, req *UpdateServiceReq
 		return nil, status.Error(codes.InvalidArgument, "changing the service name is not allowed")
 	}
 
-	err = s.configDatabase.UpdateService(ctx, req.Name, req.Service)
+	service := &database.Service{
+		Name:                 req.Service.Name,
+		EndpointURL:          req.Service.EndpointURL,
+		DocumentationURL:     req.Service.DocumentationURL,
+		APISpecificationURL:  req.Service.ApiSpecificationURL,
+		Internal:             req.Service.Internal,
+		TechSupportContact:   req.Service.TechSupportContact,
+		PublicSupportContact: req.Service.PublicSupportContact,
+		Inways:               req.Service.Inways,
+	}
+
+	if req.Service.AuthorizationSettings != nil {
+		service.AuthorizationSettings = &database.ServiceAuthorizationSettings{
+			Mode: req.Service.AuthorizationSettings.Mode,
+		}
+	}
+
+	err = s.configDatabase.UpdateService(ctx, req.Name, service)
 	if err != nil {
 		logger.Error("error updating service in DB", zap.Error(err))
 		return nil, status.Error(codes.Internal, "database error")
@@ -101,18 +139,49 @@ func (s *ConfigService) ListServices(ctx context.Context, req *ListServicesReque
 
 	response := &ListServicesResponse{}
 
+	var filteredServices []*database.Service
+
 	if len(req.InwayName) > 0 {
 		for _, service := range services {
 			for _, inway := range service.Inways {
 				if strings.Compare(req.InwayName, inway) == 0 {
-					response.Services = append(response.Services, service)
+					filteredServices = append(filteredServices, service)
 					break
 				}
 			}
 		}
 	} else {
-		response.Services = services
+		filteredServices = services
+	}
+
+	if length := len(filteredServices); length > 0 {
+		response.Services = make([]*Service, length)
+
+		for i, service := range filteredServices {
+			response.Services[i] = convertFromDatabaseService(service)
+		}
 	}
 
 	return response, nil
+}
+
+func convertFromDatabaseService(model *database.Service) *Service {
+	service := &Service{
+		Name:                 model.Name,
+		EndpointURL:          model.EndpointURL,
+		DocumentationURL:     model.DocumentationURL,
+		ApiSpecificationURL:  model.APISpecificationURL,
+		Internal:             model.Internal,
+		TechSupportContact:   model.TechSupportContact,
+		PublicSupportContact: model.PublicSupportContact,
+		Inways:               model.Inways,
+	}
+
+	if model.AuthorizationSettings != nil {
+		service.AuthorizationSettings = &Service_AuthorizationSettings{
+			Mode: model.AuthorizationSettings.Mode,
+		}
+	}
+
+	return service
 }

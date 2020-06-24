@@ -10,6 +10,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/peer"
 	"google.golang.org/grpc/status"
+
+	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
 // CreateInway creates a new inway
@@ -38,7 +40,15 @@ func (s *ConfigService) CreateInway(ctx context.Context, inway *Inway) (*Inway, 
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid inway: %s", err))
 	}
 
-	err = s.configDatabase.CreateInway(ctx, inway)
+	model := &database.Inway{
+		Name:        inway.Name,
+		Version:     inway.Version,
+		Hostname:    inway.Hostname,
+		SelfAddress: inway.SelfAddress,
+		IPAddress:   inway.IpAddress,
+	}
+
+	err = s.configDatabase.CreateInway(ctx, model)
 	if err != nil {
 		logger.Error("error creating inway in DB", zap.Error(err))
 		return nil, status.Error(codes.Internal, "database error")
@@ -70,10 +80,28 @@ func (s *ConfigService) GetInway(ctx context.Context, req *GetInwayRequest) (*In
 	}
 
 	if len(services) > 0 {
-		inway.Services = FilterServices(services, inway)
+		services = database.FilterServices(services, inway)
 	}
 
-	return inway, nil
+	response := &Inway{
+		Name:        inway.Name,
+		Version:     inway.Version,
+		Hostname:    inway.Hostname,
+		SelfAddress: inway.SelfAddress,
+		IpAddress:   inway.IPAddress,
+	}
+
+	response.Services = make([]*Inway_Service, len(services))
+
+	for i, service := range services {
+		servicesResponse := &Inway_Service{
+			Name: service.Name,
+		}
+
+		response.Services[i] = servicesResponse
+	}
+
+	return response, nil
 }
 
 // UpdateInway updates an existing inway
@@ -87,7 +115,14 @@ func (s *ConfigService) UpdateInway(ctx context.Context, req *UpdateInwayRequest
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid inway: %s", err))
 	}
 
-	err = s.configDatabase.UpdateInway(ctx, req.Name, req.Inway)
+	inway := &database.Inway{
+		Name:        req.Inway.Name,
+		Version:     req.Inway.Version,
+		Hostname:    req.Inway.Hostname,
+		SelfAddress: req.Inway.SelfAddress,
+	}
+
+	err = s.configDatabase.UpdateInway(ctx, req.Name, inway)
 	if err != nil {
 		logger.Error("error updating inway in DB", zap.Error(err))
 		return nil, status.Error(codes.Internal, "database error")
@@ -127,27 +162,37 @@ func (s *ConfigService) ListInways(ctx context.Context, req *ListInwaysRequest) 
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	if len(services) > 0 {
-		for _, i := range inways {
-			inwayServices := FilterServices(services, i)
-			i.Services = append(i.Services, inwayServices...)
-		}
+	response := &ListInwaysResponse{}
+	response.Inways = make([]*Inway, len(inways))
+
+	for i, inway := range inways {
+		inwayServices := database.FilterServices(services, inway)
+		response.Inways[i] = convertFromDatabaseInway(inway, inwayServices)
 	}
 
-	return &ListInwaysResponse{
-		Inways: inways,
-	}, nil
+	return response, nil
 }
 
-// FilterServices returns an array with only services for the given inway
-func FilterServices(services []*Service, i *Inway) []*Inway_Service {
-	result := []*Inway_Service{}
+func convertFromDatabaseInway(model *database.Inway, services []*database.Service) *Inway {
+	inway := &Inway{
+		Name:        model.Name,
+		Version:     model.Version,
+		Hostname:    model.Hostname,
+		SelfAddress: model.SelfAddress,
+		IpAddress:   model.IPAddress,
+	}
 
-	for _, service := range services {
-		if contains(service.Inways, i.Name) {
-			result = append(result, &Inway_Service{Name: service.Name})
+	if length := len(services); length > 0 {
+		inway.Services = make([]*Inway_Service, length)
+
+		for i, service := range services {
+			inwayService := &Inway_Service{
+				Name: service.Name,
+			}
+
+			inway.Services[i] = inwayService
 		}
 	}
 
-	return result
+	return inway
 }

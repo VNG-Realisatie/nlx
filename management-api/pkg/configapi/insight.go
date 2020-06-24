@@ -8,6 +8,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
+	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
 // GetInsight returns the insight configuration of a organization
@@ -25,7 +26,12 @@ func (s *ConfigService) GetInsightConfiguration(ctx context.Context, req *Empty)
 		return nil, status.Error(codes.NotFound, "insight configuration not found")
 	}
 
-	return insightConfig, nil
+	response := &InsightConfiguration{
+		IrmaServerURL: insightConfig.IrmaServerURL,
+		InsightAPIURL: insightConfig.InsightAPIURL,
+	}
+
+	return response, nil
 }
 
 // PutInsight sets the insight configuration of a organization
@@ -41,7 +47,12 @@ func (s *ConfigService) PutInsightConfiguration(ctx context.Context, req *Insigh
 		return nil, err
 	}
 
-	err = s.configDatabase.PutInsightConfiguration(ctx, req)
+	config := &database.InsightConfiguration{
+		IrmaServerURL: req.IrmaServerURL,
+		InsightAPIURL: req.InsightAPIURL,
+	}
+
+	err = s.configDatabase.PutInsightConfiguration(ctx, config)
 	if err != nil {
 		s.logger.Error("error updating inway insight config in DB", zap.Error(err))
 		return nil, status.Error(codes.Internal, "database error")

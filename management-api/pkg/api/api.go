@@ -30,6 +30,7 @@ import (
 	"go.nlx.io/nlx/common/tlsconfig"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 	"go.nlx.io/nlx/management-api/pkg/configapi"
+	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/directory"
 	"go.nlx.io/nlx/management-api/pkg/environment"
 	"go.nlx.io/nlx/management-api/pkg/oidc"
@@ -169,12 +170,12 @@ func newGRPCServer(logger *zap.Logger, roots *x509.CertPool, certKeyPair *tls.Ce
 }
 
 func newConfigService(logger *zap.Logger, mainProcess *process.Process, etcdConnectionString string, directoryRegistrationClient registrationapi.DirectoryRegistrationClient) *configapi.ConfigService {
-	database, err := configapi.NewEtcdConfigDatabase(logger, mainProcess, strings.Split(etcdConnectionString, ","))
+	db, err := database.NewEtcdConfigDatabase(logger, mainProcess, strings.Split(etcdConnectionString, ","))
 	if err != nil {
 		logger.Fatal("failed to setup database", zap.Error(err))
 	}
 
-	return configapi.New(logger, mainProcess, directoryRegistrationClient, database)
+	return configapi.New(logger, mainProcess, directoryRegistrationClient, db)
 }
 
 func newDirectoryRegistrationClient(roots *x509.CertPool, certKeyPair *tls.Certificate, directoryRegistrationAddress string) (registrationapi.DirectoryRegistrationClient, error) {

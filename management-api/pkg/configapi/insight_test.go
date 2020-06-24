@@ -3,7 +3,6 @@ package configapi_test
 
 import (
 	"context"
-	"fmt"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -16,7 +15,8 @@ import (
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 	mock_registrationapi "go.nlx.io/nlx/directory-registration-api/registrationapi/mock"
 	"go.nlx.io/nlx/management-api/pkg/configapi"
-	mock_configapi "go.nlx.io/nlx/management-api/pkg/configapi/mock"
+	"go.nlx.io/nlx/management-api/pkg/database"
+	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
 )
 
 func TestGetInsight(t *testing.T) {
@@ -27,7 +27,7 @@ func TestGetInsight(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
-	mockDatabase := mock_configapi.NewMockConfigDatabase(mockCtrl)
+	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
 	service := configapi.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
 
 	emptyRequest := &configapi.Empty{}
@@ -39,17 +39,22 @@ func TestGetInsight(t *testing.T) {
 	assert.Error(t, actualError)
 	assert.Equal(t, expectedError, actualError)
 
-	mockInsightResponse := &configapi.InsightConfiguration{
+	mockInsightResponse := &database.InsightConfiguration{
 		InsightAPIURL: "http://insight-api-url",
 		IrmaServerURL: "http://irma-server-url",
 	}
 
 	mockDatabase.EXPECT().GetInsightConfiguration(ctx).Return(mockInsightResponse, nil)
 
-	getInsightConfigurationResponse, err := service.GetInsightConfiguration(ctx, emptyRequest)
+	actualResponse, err := service.GetInsightConfiguration(ctx, emptyRequest)
 	assert.Nil(t, err)
 
-	assert.Equal(t, getInsightConfigurationResponse, getInsightConfigurationResponse)
+	expectedResponse := &configapi.InsightConfiguration{
+		InsightAPIURL: "http://insight-api-url",
+		IrmaServerURL: "http://irma-server-url",
+	}
+
+	assert.Equal(t, expectedResponse, actualResponse)
 }
 
 func TestPutInsight(t *testing.T) {
@@ -57,7 +62,7 @@ func TestPutInsight(t *testing.T) {
 	testProcess := process.NewProcess(logger)
 	ctx := context.Background()
 
-	mockInsightConfig := &configapi.InsightConfiguration{
+	mockInsightConfig := &database.InsightConfiguration{
 		IrmaServerURL: "http://irma-url.com",
 		InsightAPIURL: "http://insight-url.com",
 	}
@@ -65,7 +70,7 @@ func TestPutInsight(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
-	mockDatabase := mock_configapi.NewMockConfigDatabase(mockCtrl)
+	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
 	mockDatabase.EXPECT().PutInsightConfiguration(ctx, mockInsightConfig)
 
 	mockCtrlDirectoryRegistrationAPI := gomock.NewController(t)
@@ -73,27 +78,24 @@ func TestPutInsight(t *testing.T) {
 
 	mockDirectoryRegistrationClient := mock_registrationapi.NewMockDirectoryRegistrationClient(mockCtrlDirectoryRegistrationAPI)
 	mockDirectoryRegistrationClient.EXPECT().SetInsightConfiguration(ctx, &registrationapi.SetInsightConfigurationRequest{
-		InsightAPIURL: mockInsightConfig.InsightAPIURL,
-		IrmaServerURL: mockInsightConfig.IrmaServerURL,
+		InsightAPIURL: "http://insight-url.com",
+		IrmaServerURL: "http://irma-url.com",
 	}).Return(&registrationapi.Empty{}, nil)
 
 	service := configapi.New(logger, testProcess, mockDirectoryRegistrationClient, mockDatabase)
 
-	putInsightResponse, err := service.PutInsightConfiguration(ctx, mockInsightConfig)
-	if err != nil {
-		t.Error("could not update inway", err)
+	request := &configapi.InsightConfiguration{
+		IrmaServerURL: "http://irma-url.com",
+		InsightAPIURL: "http://insight-url.com",
 	}
 
-	assert.Equal(t, mockInsightConfig, putInsightResponse)
+	putInsightResponse, err := service.PutInsightConfiguration(ctx, request)
+	assert.NoError(t, err)
 
-	mockError := fmt.Errorf("mock error")
-	mockDirectoryRegistrationClient.EXPECT().SetInsightConfiguration(ctx, &registrationapi.SetInsightConfigurationRequest{
-		InsightAPIURL: mockInsightConfig.InsightAPIURL,
-		IrmaServerURL: mockInsightConfig.IrmaServerURL,
-	}).Return(nil, mockError)
+	expectedResponse := &configapi.InsightConfiguration{
+		InsightAPIURL: "http://insight-url.com",
+		IrmaServerURL: "http://irma-url.com",
+	}
 
-	putInsightResponse, err = service.PutInsightConfiguration(ctx, mockInsightConfig)
-	assert.NotNil(t, err)
-	assert.Nil(t, putInsightResponse)
-	assert.Equal(t, mockError, err)
+	assert.Equal(t, expectedResponse, putInsightResponse)
 }
