@@ -10,8 +10,10 @@ import (
 	"crypto/x509"
 	"encoding/base64"
 	"fmt"
+	"net"
 	"net/http"
 	"os"
+	"strings"
 	"sync"
 	"time"
 
@@ -84,8 +86,9 @@ func NewInway(
 		return nil, errors.New("cannot obtain organization name from self cert")
 	}
 
-	if selfAddress == "" {
-		logger.Info("\n\n inway selfaddress is empty \n\n")
+	err = selfAddressIsInOrgCert(selfAddress, orgCert)
+	if err != nil {
+		return nil, err
 	}
 
 	if mainProcess == nil {
@@ -159,6 +162,31 @@ func NewInway(
 	i.directoryRegistrationClient = registrationapi.NewDirectoryRegistrationClient(directoryConn)
 	logger.Info("directory registration client setup complete", zap.String("directory-address", directoryRegistrationAddress))
 	return i, nil
+}
+
+func selfAddressIsInOrgCert(selfAddress string, orgCert *x509.Certificate) error {
+	hostname := selfAddress
+
+	if strings.Contains(hostname, ":") {
+		host, _, err := net.SplitHostPort(selfAddress)
+		if err != nil {
+			return errors.Wrapf(err, "Failed to parse selfAddress hostname from '%s'", selfAddress)
+		}
+
+		hostname = host
+	}
+
+	if hostname == orgCert.Subject.CommonName {
+		return nil
+	}
+
+	for _, dnsName := range orgCert.DNSNames {
+		if hostname == dnsName {
+			return nil
+		}
+	}
+
+	return errors.Errorf("'%s' is not in the list of DNS names of the certificate, %v", selfAddress, orgCert.DNSNames)
 }
 
 func getFingerPrint(rawCert []byte) string {

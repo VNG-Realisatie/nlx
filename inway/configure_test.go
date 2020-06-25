@@ -321,12 +321,12 @@ func TestNewInwayName(t *testing.T) {
 	}
 
 	testProcess := process.NewProcess(logger)
-	iw, err := NewInway(logger, nil, testProcess, "", "", "localhost:1813", tlsOptions, "")
+	iw, err := NewInway(logger, nil, testProcess, "", "inway.test", "localhost:1813", tlsOptions, "")
 	assert.Nil(t, err)
 
 	assert.Equal(t, "XQpL-03EUOCXDNnc8FCsZXrOp41LkYIJ5U_Udz-1Chk=", iw.name)
 
-	iw, err = NewInway(logger, nil, testProcess, "inway.test", "", "localhost:1813", tlsOptions, "")
+	iw, err = NewInway(logger, nil, testProcess, "inway.test", "inway.test", "localhost:1813", tlsOptions, "")
 	assert.Nil(t, err)
 	assert.Equal(t, "inway.test", iw.name)
 }
