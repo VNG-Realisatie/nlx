@@ -11,6 +11,76 @@
     "application/json"
   ],
   "paths": {
+    "/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}": {
+      "get": {
+        "operationId": "ConfigApi_ListOutgoingAccessRequests",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configapiListOutgoingAccessRequestsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "organizationName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "serviceName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ConfigApi"
+        ]
+      },
+      "post": {
+        "operationId": "ConfigApi_CreateAccessRequest",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/configapiAccessRequest"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "organizationName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "serviceName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ConfigApi"
+        ]
+      }
+    },
     "/api/v1/insight-configuration": {
       "get": {
         "operationId": "ConfigApi_GetInsightConfiguration",
@@ -355,6 +425,15 @@
     }
   },
   "definitions": {
+    "AccessRequestStatus": {
+      "type": "string",
+      "enum": [
+        "FAILED",
+        "CREATED",
+        "SEND"
+      ],
+      "default": "FAILED"
+    },
     "AuthorizationSettingsAuthorization": {
       "type": "object",
       "properties": {
@@ -377,6 +456,28 @@
           "items": {
             "$ref": "#/definitions/AuthorizationSettingsAuthorization"
           }
+        }
+      }
+    },
+    "configapiAccessRequest": {
+      "type": "object",
+      "properties": {
+        "organizationName": {
+          "type": "string"
+        },
+        "serviceName": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/AccessRequestStatus"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     },
@@ -435,6 +536,17 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/configapiInway"
+          }
+        }
+      }
+    },
+    "configapiListOutgoingAccessRequestsResponse": {
+      "type": "object",
+      "properties": {
+        "accessRequests": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/configapiAccessRequest"
           }
         }
       }

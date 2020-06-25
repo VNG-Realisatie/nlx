@@ -3,6 +3,7 @@ syntax = "proto3";
 package configapi;
 
 import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 
 option (gogoproto.marshaler_all) = true;
@@ -46,6 +47,14 @@ service ConfigApi {
 	}
 	rpc GetInsightConfiguration (Empty) returns (InsightConfiguration) {
 		option (google.api.http) = { get: "/api/v1/insight-configuration"};
+	}
+
+	rpc ListOutgoingAccessRequests (ListOutgoingAccessRequestsRequest) returns (ListOutgoingAccessRequestsResponse) {
+		option (google.api.http) = { get: "/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}"};
+	}
+
+	rpc CreateAccessRequest (CreateAccessRequestRequest) returns (AccessRequest) {
+		option (google.api.http) = { post: "/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}"};
 	}
 }
 
@@ -129,4 +138,32 @@ message DeleteInwayRequest {
 message InsightConfiguration {
 	string irmaServerURL = 1;
 	string insightAPIURL = 2;
+}
+
+message AccessRequest {
+	enum Status {
+		FAILED = 0;
+		CREATED = 1;
+		SEND = 2;
+	}
+
+	string organizationName = 1;
+	string serviceName = 2;
+	Status status = 3;
+	google.protobuf.Timestamp createdAt = 4;
+	google.protobuf.Timestamp updatedAt = 5;
+}
+
+message ListOutgoingAccessRequestsRequest {
+	string organizationName = 1;
+	string serviceName = 2;
+}
+
+message ListOutgoingAccessRequestsResponse {
+	repeated AccessRequest accessRequests = 1;
+}
+
+message CreateAccessRequestRequest {
+	string organizationName = 1;
+	string serviceName = 2;
 }
