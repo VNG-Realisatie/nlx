@@ -67,5 +67,4 @@ test('Show the missing inways warning', async (t) => {
   await t.expect(addPage.alert.innerText).contains('De service is bijgewerkt.')
 
   await t.navigateTo(`${baseUrl}/services/${t.ctx.serviceName}`)
-  await t.expect(detailPage.alertTitle.innerText).contains('Service nog niet benaderbaar')
 })

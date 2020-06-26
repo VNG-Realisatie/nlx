@@ -65,7 +65,6 @@ class Page {
     this.inway = (name) => Selector(`[name="inways"][value=${name}]`)
 
     this.submitButton = Selector('button[type="submit"]')
-    this.alert = Selector('[role="alert"]')
 
     this.nameFieldError = Selector('[data-testid="error-name"]')
   }

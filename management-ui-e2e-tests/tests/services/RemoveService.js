@@ -26,5 +26,4 @@ test('Removing a service', async (t) => {
   await t.click(page.removeButton).takeScreenshot()
   
   await t.expect(page.alert.visible).ok()
-  await t.expect(page.alert.innerText).contains('De service is verwijderd.')
 })

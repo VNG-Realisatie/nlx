@@ -55,5 +55,4 @@ test('Adding a new service', async (t) => {
 
   t.ctx.serviceName = generateServiceName()
   await page.fillAndSubmitForm({ name: t.ctx.serviceName })
-  await t.expect(page.alert.innerText).contains('De service is toegevoegd.')
 })
