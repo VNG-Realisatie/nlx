@@ -6,7 +6,7 @@ import React, { useState } from 'react'
 import { func } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { Alert } from '@commonground/design-system'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import ServiceForm from '../../components/ServiceForm'
 import ServiceRepository from '../../domain/service-repository'
 import PageTemplate from '../../components/PageTemplate'
@@ -20,6 +20,7 @@ const EditServicePage = ({ updateHandler, getServiceByName }) => {
   const [isUpdated, setisUpdated] = useState(false)
   const [updateError, setUpdatedError] = useState(null)
   const { isReady, error, result } = usePromise(getServiceByName, name)
+  const history = useHistory()
 
   const submitService = async (service) => {
     // placeholder until we've implemented adding authorizations in the form
@@ -28,9 +29,8 @@ const EditServicePage = ({ updateHandler, getServiceByName }) => {
       service.authorizationSettings.authorizations || []
 
     try {
-      await updateHandler(name, service)
-      setUpdatedError(null)
-      setisUpdated(true)
+      const updatedService = await updateHandler(name, service)
+      history.push(`/services/${updatedService.name}?edited=true`)
     } catch (err) {
       setUpdatedError(err.message)
       setisUpdated(false)
@@ -60,12 +60,6 @@ const EditServicePage = ({ updateHandler, getServiceByName }) => {
             >
               {t(`${updateError}`)}
             </StyledUpdatedError>
-          ) : null}
-
-          {isUpdated && !updateError ? (
-            <Alert variant="success" data-testid="error-message">
-              {t('The service has been updated.')}
-            </Alert>
           ) : null}
 
           {!isUpdated ? (

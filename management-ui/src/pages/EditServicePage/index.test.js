@@ -2,9 +2,10 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { fireEvent, act } from '@testing-library/react'
-import { StaticRouter as Router, Route } from 'react-router-dom'
+import { act, fireEvent } from '@testing-library/react'
+import { Route, StaticRouter, Router } from 'react-router-dom'
 
+import { createMemoryHistory } from 'history'
 import UserContext from '../../user-context'
 import { renderWithProviders } from '../../test-utils'
 import EditServicePage from './index'
@@ -27,13 +28,13 @@ describe('the EditServicePage', () => {
     })
     const userContext = { user: { id: '42' } }
     const { findByRole, getByLabelText } = renderWithProviders(
-      <Router location="/services/mock-service/edit-service">
+      <StaticRouter location="/services/mock-service/edit-service">
         <Route path="/services/:name/edit-service">
           <UserContext.Provider value={userContext}>
             <EditServicePage getServiceByName={getServiceByName} />
           </UserContext.Provider>
         </Route>
-      </Router>,
+      </StaticRouter>,
     )
 
     expect(await findByRole('progressbar')).toBeTruthy()
@@ -47,11 +48,11 @@ describe('the EditServicePage', () => {
       .mockRejectedValue(new Error('arbitrary error'))
     const userContext = { user: { id: '42' } }
     const { findByRole, queryByRole } = renderWithProviders(
-      <Router>
+      <StaticRouter>
         <UserContext.Provider value={userContext}>
           <EditServicePage getServiceByName={getServiceByName} />
         </UserContext.Provider>
-      </Router>,
+      </StaticRouter>,
     )
 
     expect(await findByRole('alert')).toBeTruthy()
@@ -64,23 +65,26 @@ describe('the EditServicePage', () => {
     })
     const userContext = { user: { id: '42' } }
     const { findByTestId } = renderWithProviders(
-      <Router>
+      <StaticRouter>
         <UserContext.Provider value={userContext}>
           <EditServicePage getServiceByName={getServiceByName} />
         </UserContext.Provider>
-      </Router>,
+      </StaticRouter>,
     )
 
     expect(await findByTestId('form')).toBeTruthy()
   })
 
   it('successfully submitting the form', async () => {
+    const history = createMemoryHistory()
     const getServiceByNameSpy = jest.fn().mockResolvedValue({
       name: 'mock-service',
     })
-    const updateHandler = jest.fn().mockResolvedValue()
-    const { findByTestId, queryByTestId, queryByRole } = renderWithProviders(
-      <Router>
+    const updateHandler = jest.fn().mockResolvedValue({
+      name: 'mock-service',
+    })
+    const { findByTestId } = renderWithProviders(
+      <Router history={history}>
         <EditServicePage
           updateHandler={updateHandler}
           getServiceByName={getServiceByNameSpy}
@@ -93,25 +97,24 @@ describe('the EditServicePage', () => {
       fireEvent.submit(editServiceForm)
     })
 
-    expect(queryByTestId('form')).toBeNull()
-
-    expect(queryByRole('alert')).toBeTruthy()
-    expect(queryByRole('alert').textContent).toBe(
-      'The service has been updated.',
-    )
+    expect(history.location.pathname).toEqual('/services/mock-service')
+    expect(history.location.search).toEqual('?edited=true')
   })
 
   it('re-submitting the form when the previous submission went wrong', async () => {
+    const history = createMemoryHistory()
     const getServiceByNameSpy = jest.fn().mockResolvedValue({
       name: 'mock-service',
     })
     const updateHandler = jest
       .fn()
-      .mockResolvedValue({})
+      .mockResolvedValue({
+        name: 'mock-service',
+      })
       .mockRejectedValueOnce(new Error('arbitrary error'))
 
     const { findByTestId, queryByRole } = renderWithProviders(
-      <Router>
+      <Router history={history}>
         <EditServicePage
           updateHandler={updateHandler}
           getServiceByName={getServiceByNameSpy}
@@ -135,13 +138,10 @@ describe('the EditServicePage', () => {
       await fireEvent.submit(editServiceForm)
     })
 
-    expect(await queryByRole('alert')).toBeTruthy()
-
     expect(updateHandler).toHaveBeenCalledTimes(2)
-    expect(queryByRole('alert')).toBeTruthy()
-    expect(queryByRole('alert').textContent).toBe(
-      'The service has been updated.',
-    )
+
+    expect(history.location.pathname).toEqual('/services/mock-service')
+    expect(history.location.search).toEqual('?edited=true')
   })
 
   it('submitting when the HTTP response is not ok', async () => {
@@ -153,12 +153,12 @@ describe('the EditServicePage', () => {
       .mockRejectedValue(new Error('arbitrary error'))
 
     const { findByTestId, queryByRole } = renderWithProviders(
-      <Router>
+      <StaticRouter>
         <EditServicePage
           updateHandler={updateHandler}
           getServiceByName={getServiceByNameSpy}
         />
-      </Router>,
+      </StaticRouter>,
     )
 
     const editServiceForm = await findByTestId('form')
