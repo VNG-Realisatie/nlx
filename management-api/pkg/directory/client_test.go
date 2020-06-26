@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func setup() (*Client, *http.ServeMux, func()) {
+func setup() (Client, *http.ServeMux, func()) {
 	mux := http.NewServeMux()
 
 	handler := http.NewServeMux()

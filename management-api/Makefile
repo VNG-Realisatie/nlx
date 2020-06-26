@@ -12,7 +12,7 @@ PROTO_GO_FILES := $(foreach proto,$(PROTO_NAMES),$(PKG_DIR)/$(proto)/$(proto).pb
 PROTO_GATEWAY_FILES := $(foreach proto,$(PROTO_NAMES),$(PKG_DIR)/$(proto)/$(proto).pb.gw.go)
 PROTO_SWAGGER_FILES := $(PROTO_NAMES:%=$(API_DIR)/%.swagger.json)
 
-EXTRA_MOCK_FILES := $(PKG_DIR)/database/mock/mock_database.go
+EXTRA_MOCK_FILES := $(PKG_DIR)/database/mock/mock_database.go $(PKG_DIR)/directory/mock/mock_client.go
 
 GENERATE_FILES := $(PROTO_GO_FILES) $(PROTO_SWAGGER_FILES) $(PROTO_MOCK_FILES) $(EXTRA_MOCK_FILES)
 
@@ -60,6 +60,10 @@ endef # PROTOBUFFER_RULES
 $(foreach PROTO,$(PROTO_NAMES),$(eval $(PROTOBUFFER_RULES)))
 
 $(PKG_DIR)/database/mock/mock_database.go: $(PKG_DIR)/database/database.go
+	@# Generate mock file
+	cd $(<D) && mockgen -source $(<F) -destination $@
+
+$(PKG_DIR)/directory/mock/mock_client.go: $(PKG_DIR)/directory/client.go
 	@# Generate mock file
 	cd $(<D) && mockgen -source $(<F) -destination $@
 

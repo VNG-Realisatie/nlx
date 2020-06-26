@@ -3,7 +3,9 @@ syntax = "proto3";
 package directory;
 
 import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
 
 option (gogoproto.marshaler_all) = true;
 option (gogoproto.sizer_all) = true;
@@ -35,16 +37,31 @@ message GetOrganizationServiceRequest {
     string serviceName = 2;
 }
 message DirectoryService {
-    string serviceName = 1;
-    string organizationName = 2;
-    string apiSpecificationType = 3 [(gogoproto.customname)="APISpecificationType"];
+    message AccessRequest {
+        enum Status {
+            FAILED = 0;
+            CREATED = 1;
+            SEND = 2;
+        }
+
+        string id = 1;
+        Status status = 2;
+        google.protobuf.Timestamp createdAt = 3;
+        google.protobuf.Timestamp updatedAt = 4;
+    }
+
     enum Status {
         unknown = 0;
         up = 1;
         down = 2;
         degraded = 3;
     }
+
+    string serviceName = 1;
+    string organizationName = 2;
+    string apiSpecificationType = 3 [(gogoproto.customname)="APISpecificationType"];
     Status status = 4;
+    AccessRequest latestAccessRequest = 5;
 
 }
 

@@ -206,3 +206,48 @@ func (mr *MockConfigDatabaseMockRecorder) GetInsightConfiguration(ctx interface{
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInsightConfiguration", reflect.TypeOf((*MockConfigDatabase)(nil).GetInsightConfiguration), ctx)
 }
+
+// ListAllOutgoingAccessRequests mocks base method
+func (m *MockConfigDatabase) ListAllOutgoingAccessRequests(ctx context.Context) ([]*database.AccessRequest, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListAllOutgoingAccessRequests", ctx)
+	ret0, _ := ret[0].([]*database.AccessRequest)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListAllOutgoingAccessRequests indicates an expected call of ListAllOutgoingAccessRequests
+func (mr *MockConfigDatabaseMockRecorder) ListAllOutgoingAccessRequests(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAllOutgoingAccessRequests", reflect.TypeOf((*MockConfigDatabase)(nil).ListAllOutgoingAccessRequests), ctx)
+}
+
+// ListOutgoingAccessRequests mocks base method
+func (m *MockConfigDatabase) ListOutgoingAccessRequests(ctx context.Context, organizationName, serviceName string) ([]*database.AccessRequest, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListOutgoingAccessRequests", ctx, organizationName, serviceName)
+	ret0, _ := ret[0].([]*database.AccessRequest)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListOutgoingAccessRequests indicates an expected call of ListOutgoingAccessRequests
+func (mr *MockConfigDatabaseMockRecorder) ListOutgoingAccessRequests(ctx, organizationName, serviceName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOutgoingAccessRequests", reflect.TypeOf((*MockConfigDatabase)(nil).ListOutgoingAccessRequests), ctx, organizationName, serviceName)
+}
+
+// CreateAccessRequest mocks base method
+func (m *MockConfigDatabase) CreateAccessRequest(ctx context.Context, accessRequest *database.AccessRequest) (*database.AccessRequest, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateAccessRequest", ctx, accessRequest)
+	ret0, _ := ret[0].(*database.AccessRequest)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateAccessRequest indicates an expected call of CreateAccessRequest
+func (mr *MockConfigDatabaseMockRecorder) CreateAccessRequest(ctx, accessRequest interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccessRequest", reflect.TypeOf((*MockConfigDatabase)(nil).CreateAccessRequest), ctx, accessRequest)
+}

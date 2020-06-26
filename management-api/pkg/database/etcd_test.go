@@ -14,12 +14,14 @@ import (
 
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/management-api/pkg/database"
+	"go.nlx.io/nlx/management-api/pkg/util/clock"
 )
 
 type TestCluster struct {
 	cluster *integration.ClusterV3
 	DB      database.ConfigDatabase
 	Addrs   []string
+	Clock   *clock.FakeClock
 }
 
 func (tc TestCluster) Terminate(t *testing.T) {
@@ -46,7 +48,9 @@ func newTestCluster(t *testing.T) TestCluster {
 	logger := zap.NewNop()
 	testProcess := process.NewProcess(logger)
 
-	db, err := database.NewEtcdConfigDatabase(logger, testProcess, addrs)
+	c := clock.NewFakeClock(time.Now())
+
+	db, err := database.NewEtcdConfigDatabase(logger, testProcess, addrs, c)
 	if err != nil {
 		t.Fatal("error constructing etcd config database", err)
 	}
@@ -55,6 +59,7 @@ func newTestCluster(t *testing.T) TestCluster {
 		cluster: cluster,
 		DB:      db,
 		Addrs:   addrs,
+		Clock:   c,
 	}
 }
 

@@ -8,6 +8,7 @@ import (
 	fmt "fmt"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
+	types "github.com/gogo/protobuf/types"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -27,6 +28,34 @@ var _ = math.Inf
 // A compilation error at this line likely means your copy of the
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
+
+type AccessRequest_Status int32
+
+const (
+	AccessRequest_FAILED  AccessRequest_Status = 0
+	AccessRequest_CREATED AccessRequest_Status = 1
+	AccessRequest_SEND    AccessRequest_Status = 2
+)
+
+var AccessRequest_Status_name = map[int32]string{
+	0: "FAILED",
+	1: "CREATED",
+	2: "SEND",
+}
+
+var AccessRequest_Status_value = map[string]int32{
+	"FAILED":  0,
+	"CREATED": 1,
+	"SEND":    2,
+}
+
+func (x AccessRequest_Status) String() string {
+	return proto.EnumName(AccessRequest_Status_name, int32(x))
+}
+
+func (AccessRequest_Status) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_70f5085b4dd6ac92, []int{14, 0}
+}
 
 type Service struct {
 	Name                  string                         `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
@@ -728,7 +757,175 @@ func (m *InsightConfiguration) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_InsightConfiguration proto.InternalMessageInfo
 
+type AccessRequest struct {
+	Id                   string               `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	OrganizationName     string               `protobuf:"bytes,2,opt,name=organizationName,proto3" json:"organizationName,omitempty"`
+	ServiceName          string               `protobuf:"bytes,3,opt,name=serviceName,proto3" json:"serviceName,omitempty"`
+	Status               AccessRequest_Status `protobuf:"varint,4,opt,name=status,proto3,enum=configapi.AccessRequest_Status" json:"status,omitempty"`
+	CreatedAt            *types.Timestamp     `protobuf:"bytes,5,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
+	UpdatedAt            *types.Timestamp     `protobuf:"bytes,6,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
+	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
+}
+
+func (m *AccessRequest) Reset()         { *m = AccessRequest{} }
+func (m *AccessRequest) String() string { return proto.CompactTextString(m) }
+func (*AccessRequest) ProtoMessage()    {}
+func (*AccessRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_70f5085b4dd6ac92, []int{14}
+}
+func (m *AccessRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *AccessRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_AccessRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *AccessRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AccessRequest.Merge(m, src)
+}
+func (m *AccessRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *AccessRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_AccessRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AccessRequest proto.InternalMessageInfo
+
+type ListOutgoingAccessRequestsRequest struct {
+	OrganizationName     string   `protobuf:"bytes,1,opt,name=organizationName,proto3" json:"organizationName,omitempty"`
+	ServiceName          string   `protobuf:"bytes,2,opt,name=serviceName,proto3" json:"serviceName,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ListOutgoingAccessRequestsRequest) Reset()         { *m = ListOutgoingAccessRequestsRequest{} }
+func (m *ListOutgoingAccessRequestsRequest) String() string { return proto.CompactTextString(m) }
+func (*ListOutgoingAccessRequestsRequest) ProtoMessage()    {}
+func (*ListOutgoingAccessRequestsRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_70f5085b4dd6ac92, []int{15}
+}
+func (m *ListOutgoingAccessRequestsRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ListOutgoingAccessRequestsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ListOutgoingAccessRequestsRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *ListOutgoingAccessRequestsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListOutgoingAccessRequestsRequest.Merge(m, src)
+}
+func (m *ListOutgoingAccessRequestsRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *ListOutgoingAccessRequestsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListOutgoingAccessRequestsRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListOutgoingAccessRequestsRequest proto.InternalMessageInfo
+
+type ListOutgoingAccessRequestsResponse struct {
+	AccessRequests       []*AccessRequest `protobuf:"bytes,1,rep,name=accessRequests,proto3" json:"accessRequests,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
+	XXX_unrecognized     []byte           `json:"-"`
+	XXX_sizecache        int32            `json:"-"`
+}
+
+func (m *ListOutgoingAccessRequestsResponse) Reset()         { *m = ListOutgoingAccessRequestsResponse{} }
+func (m *ListOutgoingAccessRequestsResponse) String() string { return proto.CompactTextString(m) }
+func (*ListOutgoingAccessRequestsResponse) ProtoMessage()    {}
+func (*ListOutgoingAccessRequestsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_70f5085b4dd6ac92, []int{16}
+}
+func (m *ListOutgoingAccessRequestsResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ListOutgoingAccessRequestsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ListOutgoingAccessRequestsResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *ListOutgoingAccessRequestsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListOutgoingAccessRequestsResponse.Merge(m, src)
+}
+func (m *ListOutgoingAccessRequestsResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *ListOutgoingAccessRequestsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListOutgoingAccessRequestsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListOutgoingAccessRequestsResponse proto.InternalMessageInfo
+
+type CreateAccessRequestRequest struct {
+	OrganizationName     string   `protobuf:"bytes,1,opt,name=organizationName,proto3" json:"organizationName,omitempty"`
+	ServiceName          string   `protobuf:"bytes,2,opt,name=serviceName,proto3" json:"serviceName,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *CreateAccessRequestRequest) Reset()         { *m = CreateAccessRequestRequest{} }
+func (m *CreateAccessRequestRequest) String() string { return proto.CompactTextString(m) }
+func (*CreateAccessRequestRequest) ProtoMessage()    {}
+func (*CreateAccessRequestRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_70f5085b4dd6ac92, []int{17}
+}
+func (m *CreateAccessRequestRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *CreateAccessRequestRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_CreateAccessRequestRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *CreateAccessRequestRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateAccessRequestRequest.Merge(m, src)
+}
+func (m *CreateAccessRequestRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *CreateAccessRequestRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateAccessRequestRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateAccessRequestRequest proto.InternalMessageInfo
+
 func init() {
+	proto.RegisterEnum("configapi.AccessRequest_Status", AccessRequest_Status_name, AccessRequest_Status_value)
 	proto.RegisterType((*Service)(nil), "configapi.Service")
 	proto.RegisterType((*Service_AuthorizationSettings)(nil), "configapi.Service.AuthorizationSettings")
 	proto.RegisterType((*Service_AuthorizationSettings_Authorization)(nil), "configapi.Service.AuthorizationSettings.Authorization")
@@ -746,74 +943,96 @@ func init() {
 	proto.RegisterType((*UpdateInwayRequest)(nil), "configapi.UpdateInwayRequest")
 	proto.RegisterType((*DeleteInwayRequest)(nil), "configapi.DeleteInwayRequest")
 	proto.RegisterType((*InsightConfiguration)(nil), "configapi.InsightConfiguration")
+	proto.RegisterType((*AccessRequest)(nil), "configapi.AccessRequest")
+	proto.RegisterType((*ListOutgoingAccessRequestsRequest)(nil), "configapi.ListOutgoingAccessRequestsRequest")
+	proto.RegisterType((*ListOutgoingAccessRequestsResponse)(nil), "configapi.ListOutgoingAccessRequestsResponse")
+	proto.RegisterType((*CreateAccessRequestRequest)(nil), "configapi.CreateAccessRequestRequest")
 }
 
 func init() { proto.RegisterFile("configapi.proto", fileDescriptor_70f5085b4dd6ac92) }
 
 var fileDescriptor_70f5085b4dd6ac92 = []byte{
-	// 985 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x56, 0xd1, 0x6e, 0xe3, 0x44,
-	0x17, 0xfe, 0xdd, 0x6e, 0x9a, 0xe4, 0xe4, 0xcf, 0x6e, 0xf6, 0x34, 0xdd, 0x7a, 0x4d, 0x93, 0x46,
-	0x56, 0x17, 0xa2, 0x88, 0x4d, 0xa0, 0x8b, 0xb8, 0xe8, 0x05, 0x52, 0x59, 0x60, 0xa9, 0xa8, 0x50,
-	0x95, 0xb2, 0x82, 0x1b, 0x16, 0x39, 0xce, 0xc4, 0x19, 0x29, 0xf1, 0x18, 0xcf, 0xa4, 0xa8, 0x20,
-	0x6e, 0xf6, 0x82, 0x17, 0xe0, 0xa5, 0x56, 0xe2, 0x06, 0x89, 0x17, 0x80, 0x0a, 0x71, 0xc9, 0x33,
-	0x20, 0xcf, 0xd8, 0xb1, 0x1d, 0x4f, 0x9a, 0xde, 0x79, 0xce, 0x9c, 0xf9, 0xce, 0x99, 0xef, 0x3b,
-	0xdf, 0x24, 0xf0, 0xc0, 0x65, 0xfe, 0x84, 0x7a, 0x4e, 0x40, 0xfb, 0x41, 0xc8, 0x04, 0xc3, 0xea,
-	0x32, 0x60, 0x1d, 0x78, 0x8c, 0x79, 0x33, 0x32, 0x70, 0x02, 0x3a, 0x70, 0x7c, 0x9f, 0x09, 0x47,
-	0x50, 0xe6, 0x73, 0x95, 0x68, 0x3d, 0xf5, 0xa8, 0x98, 0x2e, 0x46, 0x7d, 0x97, 0xcd, 0x07, 0x1e,
-	0xf3, 0xd8, 0x40, 0x86, 0x47, 0x8b, 0x89, 0x5c, 0xc9, 0x85, 0xfc, 0x52, 0xe9, 0xf6, 0x2f, 0x25,
-	0x28, 0x5f, 0x92, 0xf0, 0x8a, 0xba, 0x04, 0x11, 0xee, 0xf9, 0xce, 0x9c, 0x98, 0x46, 0xc7, 0xe8,
-	0x56, 0x87, 0xf2, 0x1b, 0x3b, 0x50, 0x23, 0xfe, 0x38, 0x60, 0xd4, 0x17, 0x2f, 0x87, 0xe7, 0xe6,
-	0x96, 0xdc, 0xca, 0x86, 0xb0, 0x07, 0x8d, 0x31, 0x73, 0x17, 0x73, 0xe2, 0xab, 0x46, 0xa2, 0xb4,
-	0x6d, 0x99, 0x56, 0x88, 0xe3, 0x7b, 0xb0, 0xeb, 0x04, 0xf4, 0x32, 0x20, 0x2e, 0x9d, 0x50, 0x77,
-	0x99, 0x7e, 0x4f, 0xa6, 0xeb, 0xb6, 0xd0, 0x82, 0x0a, 0xf5, 0x05, 0x09, 0x7d, 0x67, 0x66, 0x96,
-	0x3a, 0x46, 0xb7, 0x32, 0x5c, 0xae, 0xb1, 0x0f, 0x28, 0x88, 0x3b, 0xbd, 0x5c, 0x04, 0x01, 0x0b,
-	0xc5, 0x73, 0xe6, 0x0b, 0xc7, 0x15, 0xe6, 0x8e, 0x04, 0xd3, 0xec, 0xe0, 0x31, 0x34, 0x83, 0xc5,
-	0x68, 0x46, 0xdd, 0x95, 0x13, 0x65, 0x79, 0x42, 0xbb, 0x87, 0xaf, 0x60, 0xcf, 0x59, 0x88, 0x29,
-	0x0b, 0xe9, 0x8f, 0xb2, 0xa7, 0x4b, 0x22, 0x04, 0xf5, 0x3d, 0x6e, 0x56, 0x3a, 0x46, 0xb7, 0x76,
-	0xdc, 0xed, 0xa7, 0x42, 0xc5, 0x34, 0xf6, 0x4f, 0x75, 0xf9, 0x43, 0x3d, 0x0c, 0x3e, 0x82, 0x1d,
-	0xea, 0xff, 0xe0, 0x5c, 0x73, 0xb3, 0xda, 0xd9, 0xee, 0x56, 0x87, 0xf1, 0xca, 0xfa, 0xd7, 0x80,
-	0x3d, 0x2d, 0x50, 0xa4, 0xd2, 0x9c, 0x8d, 0x97, 0x2a, 0x45, 0xdf, 0xf8, 0x0a, 0xee, 0xe7, 0xe0,
-	0xb9, 0xb9, 0xd5, 0xd9, 0xee, 0xd6, 0x8e, 0x3f, 0xbc, 0x6b, 0x7b, 0xf9, 0xe8, 0x70, 0x05, 0xcd,
-	0x72, 0xa0, 0x9e, 0x4b, 0x88, 0x44, 0x67, 0xa1, 0xe7, 0xf8, 0xf1, 0xfa, 0xcb, 0x74, 0x6c, 0x0a,
-	0x71, 0x3c, 0x82, 0xba, 0xa2, 0xf6, 0x0b, 0x72, 0xfd, 0xb9, 0xc3, 0xa7, 0xf1, 0x10, 0xe5, 0x83,
-	0x76, 0x19, 0x4a, 0x9f, 0xce, 0x03, 0x71, 0x6d, 0xff, 0x63, 0x40, 0xe9, 0x2c, 0x22, 0x41, 0x3b,
-	0x8f, 0x26, 0x94, 0xaf, 0x48, 0xc8, 0x29, 0xf3, 0x63, 0x98, 0x64, 0x19, 0x4d, 0xca, 0x94, 0x71,
-	0x21, 0x4f, 0xa8, 0xf9, 0x5b, 0xae, 0xa3, 0x29, 0xe6, 0x64, 0x36, 0x39, 0x1d, 0x8f, 0x43, 0xc2,
-	0x79, 0x3c, 0x6f, 0xd9, 0x10, 0x7e, 0x00, 0x15, 0xae, 0x08, 0xe2, 0x66, 0x49, 0x72, 0x67, 0x66,
-	0xb8, 0x93, 0xfd, 0x24, 0x0c, 0x0e, 0x97, 0x99, 0x78, 0x00, 0x55, 0x1a, 0x24, 0xa8, 0x6a, 0xf0,
-	0xd2, 0x80, 0xd5, 0xba, 0xd5, 0x5a, 0xf6, 0x33, 0xd8, 0x3d, 0xa7, 0x5c, 0xc4, 0x29, 0x7c, 0x48,
-	0xbe, 0x5f, 0x10, 0x2e, 0x24, 0x66, 0x54, 0x2e, 0xc3, 0x69, 0x1a, 0xb0, 0x3f, 0x83, 0x66, 0xfe,
-	0x10, 0x0f, 0x98, 0xcf, 0x09, 0xf6, 0x33, 0xfd, 0x1b, 0xb2, 0x7f, 0x2c, 0x6a, 0x9f, 0x76, 0x6e,
-	0xbf, 0x03, 0x0f, 0x5f, 0x90, 0x04, 0x26, 0x29, 0xad, 0xeb, 0xf2, 0x1b, 0x68, 0xbe, 0x0c, 0xc6,
-	0x8e, 0x20, 0x9b, 0x73, 0xf1, 0x5d, 0x28, 0xc7, 0x05, 0xa4, 0x38, 0xfa, 0x1e, 0x92, 0x14, 0xbb,
-	0x07, 0xcd, 0x4f, 0xc8, 0x8c, 0xdc, 0x05, 0xd9, 0xde, 0x85, 0x87, 0xd1, 0xb5, 0xa5, 0x0e, 0x09,
-	0x53, 0xf6, 0x47, 0x80, 0xd9, 0x60, 0xcc, 0x44, 0x77, 0xe9, 0x28, 0xc5, 0x43, 0x63, 0x55, 0xc7,
-	0xc4, 0x63, 0xf6, 0x13, 0x78, 0xf0, 0x82, 0xa8, 0xe3, 0xb7, 0xd5, 0xbe, 0x00, 0x54, 0x0c, 0x6c,
-	0xca, 0xc4, 0xb7, 0xa1, 0x24, 0xa1, 0xe3, 0xdb, 0x17, 0x2b, 0xab, 0x6d, 0xbb, 0x0b, 0xa8, 0x6e,
-	0xbe, 0xb1, 0xf6, 0x08, 0x9a, 0x67, 0x3e, 0xa7, 0xde, 0x34, 0x7a, 0x90, 0x26, 0xd4, 0x5b, 0x84,
-	0xca, 0x7f, 0x47, 0x50, 0xa7, 0xe1, 0xdc, 0x89, 0x98, 0x23, 0x61, 0xf4, 0x84, 0xaa, 0x43, 0xf9,
-	0xa0, 0xcc, 0x52, 0xa7, 0x4f, 0x2f, 0xce, 0xd2, 0xe7, 0x3b, 0x1f, 0x3c, 0xfe, 0xad, 0x0a, 0x55,
-	0x85, 0x7e, 0x1a, 0x50, 0xa4, 0xf0, 0xff, 0xec, 0x80, 0x61, 0x3b, 0x73, 0x09, 0xcd, 0xb8, 0x5a,
-	0x87, 0x6b, 0xf7, 0x95, 0x1e, 0xb6, 0xf9, 0xfa, 0x8f, 0xbf, 0x7f, 0xdd, 0x42, 0x6c, 0xc8, 0x1f,
-	0xac, 0xab, 0xf7, 0x07, 0x4b, 0xf7, 0x7c, 0x07, 0x90, 0xce, 0x20, 0x1e, 0x64, 0x80, 0x0a, 0xa3,
-	0x69, 0x69, 0x26, 0xc9, 0x3e, 0x94, 0xc8, 0x8f, 0x71, 0x7f, 0x15, 0x79, 0xf0, 0x53, 0x44, 0xde,
-	0xcf, 0xf8, 0x15, 0xd4, 0x9f, 0x87, 0x24, 0x9d, 0x5d, 0xd4, 0xa0, 0x68, 0x91, 0xdf, 0x92, 0xc8,
-	0x7b, 0x76, 0xa1, 0xe7, 0x13, 0xa3, 0x87, 0x3e, 0xd4, 0x73, 0x8e, 0xc0, 0x2c, 0x05, 0x3a, 0xaf,
-	0x68, 0x4b, 0x74, 0x65, 0x09, 0xdb, 0x5a, 0xd7, 0xfc, 0x49, 0xe2, 0x13, 0x74, 0xa1, 0x9e, 0xf3,
-	0x49, 0xae, 0x9e, 0xce, 0x41, 0x56, 0x76, 0xf0, 0xd4, 0xa3, 0x1a, 0x53, 0xd5, 0x5b, 0x4b, 0x95,
-	0x03, 0x90, 0x7a, 0x29, 0xa7, 0x45, 0xc1, 0x77, 0x56, 0x6b, 0xcd, 0x6e, 0x2c, 0xf8, 0x23, 0x59,
-	0xab, 0x81, 0xf7, 0x93, 0x5a, 0xca, 0x6e, 0xf8, 0x35, 0x54, 0x12, 0xbb, 0xa1, 0x95, 0x17, 0x3b,
-	0xeb, 0x03, 0xab, 0x60, 0x1b, 0xbb, 0x25, 0x11, 0xf7, 0x71, 0x2f, 0x8f, 0x98, 0xf4, 0x7e, 0x0e,
-	0x35, 0x25, 0xb3, 0xc2, 0x2e, 0x9c, 0xd7, 0x20, 0x3e, 0x96, 0x88, 0xbb, 0xf6, 0x4a, 0x8f, 0x91,
-	0xbc, 0x63, 0xa8, 0x65, 0xec, 0x8e, 0xad, 0x82, 0xb8, 0x1b, 0x9a, 0x3d, 0x92, 0xd0, 0x6d, 0x4b,
-	0xdf, 0xec, 0x89, 0x7a, 0x02, 0xf0, 0x5b, 0xa8, 0x65, 0x9e, 0x80, 0x5c, 0x95, 0xe2, 0xd3, 0xa0,
-	0x11, 0x34, 0xa6, 0xa4, 0xb7, 0x86, 0x92, 0xd7, 0x06, 0xec, 0x5f, 0x2c, 0x84, 0xf6, 0xed, 0x38,
-	0xcc, 0xb5, 0x5c, 0x4c, 0xb0, 0x36, 0x25, 0xd8, 0x4f, 0x64, 0xf1, 0x43, 0xab, 0x95, 0x16, 0x97,
-	0x59, 0x4f, 0xdd, 0x5c, 0x21, 0x0e, 0xfb, 0x52, 0x5b, 0x4d, 0x0f, 0x85, 0x0b, 0xdd, 0xb9, 0x28,
-	0xde, 0x5e, 0xf4, 0xe3, 0xc6, 0x9b, 0xbf, 0xda, 0xff, 0x7b, 0x73, 0xd3, 0x36, 0x7e, 0xbf, 0x69,
-	0x1b, 0x7f, 0xde, 0xb4, 0x8d, 0xd1, 0x8e, 0xfc, 0xa7, 0xfb, 0xec, 0xbf, 0x00, 0x00, 0x00, 0xff,
-	0xff, 0xe9, 0x97, 0x07, 0x2d, 0x54, 0x0b, 0x00, 0x00,
+	// 1269 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x56, 0x4f, 0x6f, 0x1b, 0x55,
+	0x10, 0xef, 0xba, 0x8d, 0x13, 0x8f, 0xeb, 0xd4, 0x9d, 0x24, 0xcd, 0x76, 0x69, 0x62, 0xf3, 0xd4,
+	0x82, 0x15, 0x1a, 0x1b, 0x5c, 0x04, 0xa8, 0x07, 0x84, 0x69, 0xd2, 0x12, 0x11, 0x95, 0x6a, 0xdd,
+	0x8a, 0x0a, 0x89, 0xc2, 0x66, 0xfd, 0xbc, 0x7e, 0x28, 0xde, 0xdd, 0xee, 0xbe, 0x2d, 0x2a, 0x55,
+	0x2f, 0x3d, 0xf0, 0x05, 0xf8, 0x32, 0x7c, 0x03, 0x7a, 0x44, 0xe2, 0xc8, 0x05, 0xaa, 0x8a, 0x23,
+	0x9f, 0x01, 0xed, 0x7b, 0xfb, 0xd7, 0xbb, 0x8e, 0xc3, 0xa1, 0x37, 0xbf, 0x79, 0xbf, 0x37, 0x33,
+	0xfb, 0x9b, 0x99, 0xdf, 0x18, 0x2e, 0x98, 0x8e, 0x3d, 0x66, 0x96, 0xe1, 0xb2, 0xae, 0xeb, 0x39,
+	0xdc, 0xc1, 0x5a, 0x62, 0xd0, 0xae, 0x58, 0x8e, 0x63, 0x1d, 0xd3, 0x9e, 0xe1, 0xb2, 0x9e, 0x61,
+	0xdb, 0x0e, 0x37, 0x38, 0x73, 0x6c, 0x5f, 0x02, 0xb5, 0x56, 0x74, 0x2b, 0x4e, 0x47, 0xc1, 0xb8,
+	0xc7, 0xd9, 0x94, 0xfa, 0xdc, 0x98, 0xba, 0x11, 0x60, 0xd7, 0x62, 0x7c, 0x12, 0x1c, 0x75, 0x4d,
+	0x67, 0xda, 0xb3, 0x1c, 0xcb, 0x49, 0x91, 0xe1, 0x49, 0x1c, 0xc4, 0x2f, 0x09, 0x27, 0x3f, 0x2f,
+	0xc1, 0xf2, 0x90, 0x7a, 0x4f, 0x98, 0x49, 0x11, 0xe1, 0x9c, 0x6d, 0x4c, 0xa9, 0xaa, 0xb4, 0x95,
+	0x4e, 0x4d, 0x17, 0xbf, 0xb1, 0x0d, 0x75, 0x6a, 0x8f, 0x5c, 0x87, 0xd9, 0xfc, 0x81, 0x7e, 0xa8,
+	0x56, 0xc4, 0x55, 0xd6, 0x84, 0x3b, 0xd0, 0x1c, 0x39, 0x66, 0x30, 0xa5, 0xb6, 0xcc, 0x34, 0x84,
+	0x9d, 0x15, 0xb0, 0x82, 0x1d, 0xdf, 0x87, 0x35, 0xc3, 0x65, 0x43, 0x97, 0x9a, 0x6c, 0xcc, 0xcc,
+	0x04, 0x7e, 0x4e, 0xc0, 0xcb, 0xae, 0x50, 0x83, 0x15, 0x66, 0x73, 0xea, 0xd9, 0xc6, 0xb1, 0xba,
+	0xd4, 0x56, 0x3a, 0x2b, 0x7a, 0x72, 0xc6, 0x2e, 0x20, 0xa7, 0xe6, 0x64, 0x18, 0xb8, 0xae, 0xe3,
+	0xf1, 0x5b, 0x8e, 0xcd, 0x0d, 0x93, 0xab, 0x55, 0xe1, 0xac, 0xe4, 0x06, 0xfb, 0xb0, 0xee, 0x06,
+	0x47, 0xc7, 0xcc, 0x9c, 0x79, 0xb1, 0x2c, 0x5e, 0x94, 0xde, 0xe1, 0x23, 0xd8, 0x30, 0x02, 0x3e,
+	0x71, 0x3c, 0xf6, 0x93, 0xc8, 0x69, 0x48, 0x39, 0x67, 0xb6, 0xe5, 0xab, 0x2b, 0x6d, 0xa5, 0x53,
+	0xef, 0x77, 0xba, 0x69, 0x25, 0x23, 0x1a, 0xbb, 0x83, 0x32, 0xbc, 0x5e, 0xee, 0x06, 0x2f, 0x41,
+	0x95, 0xd9, 0x3f, 0x1a, 0x4f, 0x7d, 0xb5, 0xd6, 0x3e, 0xdb, 0xa9, 0xe9, 0xd1, 0x49, 0xfb, 0x57,
+	0x81, 0x8d, 0x52, 0x47, 0x61, 0x95, 0xa6, 0xce, 0x28, 0xa9, 0x52, 0xf8, 0x1b, 0x1f, 0xc1, 0x6a,
+	0xce, 0xbd, 0xaf, 0x56, 0xda, 0x67, 0x3b, 0xf5, 0xfe, 0x47, 0xa7, 0x4d, 0x2f, 0x6f, 0xd5, 0x67,
+	0xbc, 0x69, 0x06, 0x34, 0x72, 0x80, 0xb0, 0xe8, 0x8e, 0x67, 0x19, 0x76, 0x74, 0xbe, 0x9b, 0xb6,
+	0x4d, 0xc1, 0x8e, 0x57, 0xa1, 0x21, 0xa9, 0xfd, 0x92, 0x3e, 0xfd, 0xc2, 0xf0, 0x27, 0x51, 0x13,
+	0xe5, 0x8d, 0x64, 0x19, 0x96, 0xf6, 0xa7, 0x2e, 0x7f, 0x4a, 0xfe, 0x51, 0x60, 0xe9, 0x20, 0x24,
+	0xa1, 0xb4, 0x1f, 0x55, 0x58, 0x7e, 0x42, 0x3d, 0x9f, 0x39, 0x76, 0xe4, 0x26, 0x3e, 0x86, 0x9d,
+	0x32, 0x71, 0x7c, 0x2e, 0x5e, 0xc8, 0xfe, 0x4b, 0xce, 0x61, 0x17, 0xfb, 0xf4, 0x78, 0x3c, 0x18,
+	0x8d, 0x3c, 0xea, 0xfb, 0x51, 0xbf, 0x65, 0x4d, 0xf8, 0x21, 0xac, 0xf8, 0x92, 0x20, 0x5f, 0x5d,
+	0x12, 0xdc, 0xa9, 0x19, 0xee, 0x44, 0x3e, 0x31, 0x83, 0x7a, 0x82, 0xc4, 0x2b, 0x50, 0x63, 0x6e,
+	0xec, 0x55, 0x36, 0x5e, 0x6a, 0xd0, 0xb6, 0x4e, 0x1c, 0x2d, 0x72, 0x03, 0xd6, 0x0e, 0x99, 0xcf,
+	0x23, 0x88, 0xaf, 0xd3, 0xc7, 0x01, 0xf5, 0xb9, 0xf0, 0x19, 0x86, 0xcb, 0x70, 0x9a, 0x1a, 0xc8,
+	0x6d, 0x58, 0xcf, 0x3f, 0xf2, 0x5d, 0xc7, 0xf6, 0x29, 0x76, 0x33, 0xf9, 0x2b, 0x22, 0x7f, 0x2c,
+	0xd6, 0x3e, 0xcd, 0x9c, 0xbc, 0x0b, 0x17, 0xef, 0xd0, 0xd8, 0x4d, 0x1c, 0xba, 0x2c, 0xcb, 0x87,
+	0xb0, 0xfe, 0xc0, 0x1d, 0x19, 0x9c, 0x2e, 0xc6, 0xe2, 0x75, 0x58, 0x8e, 0x02, 0x88, 0xe2, 0x94,
+	0xe7, 0x10, 0x43, 0xc8, 0x0e, 0xac, 0xef, 0xd1, 0x63, 0x7a, 0x1a, 0xcf, 0x64, 0x0d, 0x2e, 0x86,
+	0x9f, 0x2d, 0xea, 0x10, 0x33, 0x45, 0x3e, 0x05, 0xcc, 0x1a, 0x23, 0x26, 0x3a, 0xc9, 0x44, 0x49,
+	0x1e, 0x9a, 0xb3, 0x75, 0x8c, 0x67, 0x8c, 0x5c, 0x83, 0x0b, 0x77, 0xa8, 0x7c, 0x7e, 0x52, 0xec,
+	0x7b, 0x80, 0x92, 0x81, 0x45, 0x48, 0x7c, 0x07, 0x96, 0x84, 0xeb, 0xe8, 0xeb, 0x8b, 0x91, 0xe5,
+	0x35, 0xe9, 0x00, 0xca, 0x2f, 0x5f, 0x18, 0xfb, 0x08, 0xd6, 0x0f, 0x6c, 0x9f, 0x59, 0x93, 0x50,
+	0x90, 0xc6, 0xcc, 0x0a, 0x3c, 0x39, 0x7f, 0x57, 0xa1, 0xc1, 0xbc, 0xa9, 0x11, 0x32, 0x47, 0xbd,
+	0x50, 0x42, 0xe5, 0xa3, 0xbc, 0x51, 0xa0, 0xe4, 0xeb, 0xc1, 0xbd, 0x83, 0x54, 0xbe, 0xf3, 0x46,
+	0xf2, 0x5b, 0x05, 0x1a, 0x03, 0xd3, 0xa4, 0x7e, 0xd2, 0x82, 0xab, 0x50, 0x61, 0xa3, 0xc8, 0x65,
+	0x85, 0x8d, 0x4a, 0xa7, 0xbd, 0x32, 0x67, 0xda, 0xc5, 0xa8, 0x89, 0x7a, 0xde, 0x4d, 0x27, 0x31,
+	0x6b, 0xc2, 0x8f, 0xa1, 0xea, 0x73, 0x83, 0x07, 0x72, 0x0e, 0x57, 0xfb, 0xad, 0x0c, 0x4d, 0xb9,
+	0x3c, 0xba, 0x43, 0x01, 0xd3, 0x23, 0x38, 0x7e, 0x02, 0x35, 0xd3, 0xa3, 0x06, 0xa7, 0xa3, 0x01,
+	0x17, 0xcb, 0xa0, 0xde, 0xd7, 0xba, 0x72, 0x1f, 0x76, 0xe3, 0x2d, 0xd7, 0xbd, 0x1f, 0xef, 0x43,
+	0x3d, 0x05, 0x87, 0x2f, 0x03, 0x51, 0xc2, 0xf0, 0x65, 0x75, 0xf1, 0xcb, 0x04, 0x4c, 0xde, 0x83,
+	0xaa, 0xcc, 0x02, 0x01, 0xaa, 0xb7, 0x07, 0x07, 0x87, 0xfb, 0x7b, 0xcd, 0x33, 0x58, 0x87, 0xe5,
+	0x5b, 0xfa, 0xfe, 0xe0, 0xfe, 0xfe, 0x5e, 0x53, 0xc1, 0x15, 0x38, 0x37, 0xdc, 0xbf, 0xbb, 0xd7,
+	0xac, 0x90, 0xc7, 0xf0, 0x76, 0xd8, 0x90, 0x5f, 0x05, 0xdc, 0x72, 0x98, 0x6d, 0xe5, 0x3e, 0x26,
+	0x21, 0xf7, 0xff, 0x48, 0xe7, 0x0c, 0x99, 0x95, 0x02, 0x99, 0x64, 0x0c, 0xe4, 0xa4, 0x90, 0xd1,
+	0x4c, 0x7c, 0x06, 0xab, 0x46, 0xee, 0x26, 0x9a, 0x0d, 0x75, 0x1e, 0xf5, 0xfa, 0x0c, 0x9e, 0xfc,
+	0x00, 0xda, 0x2d, 0x41, 0x67, 0x1e, 0xf6, 0x26, 0xbe, 0xa9, 0xff, 0xfa, 0x3c, 0xd4, 0x64, 0xbb,
+	0x0f, 0x5c, 0x86, 0x0c, 0xce, 0x67, 0x15, 0x0f, 0xb7, 0x33, 0x39, 0x97, 0xe8, 0xa7, 0xd6, 0x9a,
+	0x7b, 0x2f, 0xc9, 0x20, 0xea, 0x8b, 0x3f, 0x5e, 0xff, 0x52, 0x41, 0x6c, 0x8a, 0xbf, 0x58, 0x4f,
+	0x3e, 0xe8, 0x25, 0x72, 0xfe, 0x1d, 0x40, 0x2a, 0x8a, 0x78, 0x25, 0xe3, 0xa8, 0xa0, 0x95, 0x5a,
+	0x89, 0xb4, 0x91, 0x96, 0xf0, 0x7c, 0x19, 0x37, 0x67, 0x3d, 0xf7, 0x9e, 0x85, 0xd3, 0xfc, 0x1c,
+	0xef, 0x43, 0x43, 0xb2, 0x98, 0xec, 0x85, 0xa2, 0x97, 0x52, 0xcf, 0x6f, 0x09, 0xcf, 0x1b, 0xa4,
+	0x90, 0xf3, 0x4d, 0x65, 0x07, 0x6d, 0x68, 0xe4, 0x24, 0x1a, 0xb3, 0x14, 0x94, 0x89, 0x77, 0x69,
+	0x88, 0x8e, 0x08, 0x41, 0xb4, 0x79, 0xc9, 0xdf, 0x8c, 0x85, 0x1b, 0x4d, 0x68, 0xe4, 0x84, 0x3b,
+	0x17, 0xaf, 0x4c, 0xd2, 0xb5, 0xac, 0x12, 0xca, 0x2d, 0x1f, 0x51, 0xb5, 0x33, 0x97, 0x2a, 0x03,
+	0x20, 0x15, 0xf7, 0x5c, 0x2d, 0x0a, 0x8b, 0x40, 0xdb, 0x9a, 0x73, 0x1b, 0x15, 0xfc, 0x92, 0x88,
+	0xd5, 0xc4, 0xd5, 0x38, 0x96, 0xd4, 0x7f, 0xfc, 0x1a, 0x56, 0x62, 0xfd, 0x47, 0x2d, 0x5f, 0xec,
+	0xac, 0x30, 0x6b, 0x05, 0x1d, 0x27, 0x5b, 0xc2, 0xe3, 0x26, 0x6e, 0xe4, 0x3d, 0xc6, 0xb9, 0x1f,
+	0x42, 0x5d, 0x96, 0x59, 0xfa, 0x2e, 0xbc, 0x2f, 0xf1, 0x78, 0x59, 0x78, 0x5c, 0x23, 0x33, 0x39,
+	0x86, 0xe5, 0x1d, 0x41, 0x3d, 0xb3, 0x7f, 0x70, 0xab, 0x50, 0xdc, 0x05, 0xc9, 0x5e, 0x15, 0xae,
+	0xb7, 0xb5, 0xf2, 0x64, 0x6f, 0xca, 0x9d, 0x84, 0xdf, 0x42, 0x3d, 0xb3, 0x93, 0x72, 0x51, 0x8a,
+	0xbb, 0xaa, 0xa4, 0xa0, 0x11, 0x25, 0x3b, 0x73, 0x28, 0x79, 0xa1, 0xc0, 0xe6, 0xbd, 0x80, 0x97,
+	0x2e, 0xb3, 0x56, 0x2e, 0xe5, 0x22, 0x40, 0x5b, 0x04, 0x20, 0xd7, 0x44, 0xf0, 0x96, 0xb6, 0x95,
+	0x06, 0x17, 0xa8, 0x5d, 0x33, 0x17, 0xc8, 0x87, 0x4d, 0x51, 0xdb, 0x92, 0x1c, 0x0a, 0x1f, 0x74,
+	0xea, 0xa0, 0xb8, 0x20, 0xe8, 0x9f, 0x0a, 0x68, 0xf3, 0x25, 0x1a, 0xaf, 0xcf, 0xf4, 0xee, 0x89,
+	0xcb, 0x43, 0xdb, 0x3d, 0x25, 0x3a, 0xea, 0xfc, 0xef, 0x45, 0x8a, 0xdf, 0xe0, 0xc3, 0x38, 0x45,
+	0xa9, 0xea, 0xbb, 0x5e, 0x04, 0xec, 0x39, 0xd1, 0xfb, 0x5e, 0x56, 0xa6, 0xfd, 0xde, 0xb3, 0x59,
+	0xd5, 0x7e, 0x9e, 0x99, 0xcf, 0x8c, 0x54, 0x3f, 0xc7, 0x5f, 0x15, 0x58, 0x2b, 0x59, 0x0c, 0x78,
+	0x2d, 0x93, 0xe8, 0xfc, 0xc5, 0xa1, 0xcd, 0x5d, 0x40, 0x71, 0xea, 0xe4, 0x8d, 0xa5, 0xfe, 0x79,
+	0xf3, 0xe5, 0xdf, 0xdb, 0x67, 0x5e, 0xbe, 0xda, 0x56, 0x7e, 0x7f, 0xb5, 0xad, 0xfc, 0xf5, 0x6a,
+	0x5b, 0x39, 0xaa, 0x8a, 0xff, 0x02, 0x37, 0xfe, 0x0b, 0x00, 0x00, 0xff, 0xff, 0x9f, 0x10, 0x08,
+	0x51, 0x9f, 0x0f, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -840,6 +1059,8 @@ type ConfigApiClient interface {
 	DeleteInway(ctx context.Context, in *DeleteInwayRequest, opts ...grpc.CallOption) (*Empty, error)
 	PutInsightConfiguration(ctx context.Context, in *InsightConfiguration, opts ...grpc.CallOption) (*InsightConfiguration, error)
 	GetInsightConfiguration(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*InsightConfiguration, error)
+	ListOutgoingAccessRequests(ctx context.Context, in *ListOutgoingAccessRequestsRequest, opts ...grpc.CallOption) (*ListOutgoingAccessRequestsResponse, error)
+	CreateAccessRequest(ctx context.Context, in *CreateAccessRequestRequest, opts ...grpc.CallOption) (*AccessRequest, error)
 }
 
 type configApiClient struct {
@@ -958,6 +1179,24 @@ func (c *configApiClient) GetInsightConfiguration(ctx context.Context, in *Empty
 	return out, nil
 }
 
+func (c *configApiClient) ListOutgoingAccessRequests(ctx context.Context, in *ListOutgoingAccessRequestsRequest, opts ...grpc.CallOption) (*ListOutgoingAccessRequestsResponse, error) {
+	out := new(ListOutgoingAccessRequestsResponse)
+	err := c.cc.Invoke(ctx, "/configapi.ConfigApi/ListOutgoingAccessRequests", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *configApiClient) CreateAccessRequest(ctx context.Context, in *CreateAccessRequestRequest, opts ...grpc.CallOption) (*AccessRequest, error) {
+	out := new(AccessRequest)
+	err := c.cc.Invoke(ctx, "/configapi.ConfigApi/CreateAccessRequest", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ConfigApiServer is the server API for ConfigApi service.
 type ConfigApiServer interface {
 	ListServices(context.Context, *ListServicesRequest) (*ListServicesResponse, error)
@@ -972,6 +1211,8 @@ type ConfigApiServer interface {
 	DeleteInway(context.Context, *DeleteInwayRequest) (*Empty, error)
 	PutInsightConfiguration(context.Context, *InsightConfiguration) (*InsightConfiguration, error)
 	GetInsightConfiguration(context.Context, *Empty) (*InsightConfiguration, error)
+	ListOutgoingAccessRequests(context.Context, *ListOutgoingAccessRequestsRequest) (*ListOutgoingAccessRequestsResponse, error)
+	CreateAccessRequest(context.Context, *CreateAccessRequestRequest) (*AccessRequest, error)
 }
 
 // UnimplementedConfigApiServer can be embedded to have forward compatible implementations.
@@ -1013,6 +1254,12 @@ func (*UnimplementedConfigApiServer) PutInsightConfiguration(ctx context.Context
 }
 func (*UnimplementedConfigApiServer) GetInsightConfiguration(ctx context.Context, req *Empty) (*InsightConfiguration, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetInsightConfiguration not implemented")
+}
+func (*UnimplementedConfigApiServer) ListOutgoingAccessRequests(ctx context.Context, req *ListOutgoingAccessRequestsRequest) (*ListOutgoingAccessRequestsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListOutgoingAccessRequests not implemented")
+}
+func (*UnimplementedConfigApiServer) CreateAccessRequest(ctx context.Context, req *CreateAccessRequestRequest) (*AccessRequest, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateAccessRequest not implemented")
 }
 
 func RegisterConfigApiServer(s *grpc.Server, srv ConfigApiServer) {
@@ -1235,6 +1482,42 @@ func _ConfigApi_GetInsightConfiguration_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ConfigApi_ListOutgoingAccessRequests_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListOutgoingAccessRequestsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ConfigApiServer).ListOutgoingAccessRequests(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/configapi.ConfigApi/ListOutgoingAccessRequests",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ConfigApiServer).ListOutgoingAccessRequests(ctx, req.(*ListOutgoingAccessRequestsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ConfigApi_CreateAccessRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAccessRequestRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ConfigApiServer).CreateAccessRequest(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/configapi.ConfigApi/CreateAccessRequest",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ConfigApiServer).CreateAccessRequest(ctx, req.(*CreateAccessRequestRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _ConfigApi_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "configapi.ConfigApi",
 	HandlerType: (*ConfigApiServer)(nil),
@@ -1286,6 +1569,14 @@ var _ConfigApi_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetInsightConfiguration",
 			Handler:    _ConfigApi_GetInsightConfiguration_Handler,
+		},
+		{
+			MethodName: "ListOutgoingAccessRequests",
+			Handler:    _ConfigApi_ListOutgoingAccessRequests_Handler,
+		},
+		{
+			MethodName: "CreateAccessRequest",
+			Handler:    _ConfigApi_CreateAccessRequest_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -2030,6 +2321,206 @@ func (m *InsightConfiguration) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *AccessRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *AccessRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *AccessRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.XXX_unrecognized != nil {
+		i -= len(m.XXX_unrecognized)
+		copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	if m.UpdatedAt != nil {
+		{
+			size, err := m.UpdatedAt.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintConfigapi(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x32
+	}
+	if m.CreatedAt != nil {
+		{
+			size, err := m.CreatedAt.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintConfigapi(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x2a
+	}
+	if m.Status != 0 {
+		i = encodeVarintConfigapi(dAtA, i, uint64(m.Status))
+		i--
+		dAtA[i] = 0x20
+	}
+	if len(m.ServiceName) > 0 {
+		i -= len(m.ServiceName)
+		copy(dAtA[i:], m.ServiceName)
+		i = encodeVarintConfigapi(dAtA, i, uint64(len(m.ServiceName)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.OrganizationName) > 0 {
+		i -= len(m.OrganizationName)
+		copy(dAtA[i:], m.OrganizationName)
+		i = encodeVarintConfigapi(dAtA, i, uint64(len(m.OrganizationName)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Id) > 0 {
+		i -= len(m.Id)
+		copy(dAtA[i:], m.Id)
+		i = encodeVarintConfigapi(dAtA, i, uint64(len(m.Id)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *ListOutgoingAccessRequestsRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ListOutgoingAccessRequestsRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *ListOutgoingAccessRequestsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.XXX_unrecognized != nil {
+		i -= len(m.XXX_unrecognized)
+		copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	if len(m.ServiceName) > 0 {
+		i -= len(m.ServiceName)
+		copy(dAtA[i:], m.ServiceName)
+		i = encodeVarintConfigapi(dAtA, i, uint64(len(m.ServiceName)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.OrganizationName) > 0 {
+		i -= len(m.OrganizationName)
+		copy(dAtA[i:], m.OrganizationName)
+		i = encodeVarintConfigapi(dAtA, i, uint64(len(m.OrganizationName)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *ListOutgoingAccessRequestsResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ListOutgoingAccessRequestsResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *ListOutgoingAccessRequestsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.XXX_unrecognized != nil {
+		i -= len(m.XXX_unrecognized)
+		copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	if len(m.AccessRequests) > 0 {
+		for iNdEx := len(m.AccessRequests) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.AccessRequests[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintConfigapi(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *CreateAccessRequestRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *CreateAccessRequestRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *CreateAccessRequestRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.XXX_unrecognized != nil {
+		i -= len(m.XXX_unrecognized)
+		copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	if len(m.ServiceName) > 0 {
+		i -= len(m.ServiceName)
+		copy(dAtA[i:], m.ServiceName)
+		i = encodeVarintConfigapi(dAtA, i, uint64(len(m.ServiceName)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.OrganizationName) > 0 {
+		i -= len(m.OrganizationName)
+		copy(dAtA[i:], m.OrganizationName)
+		i = encodeVarintConfigapi(dAtA, i, uint64(len(m.OrganizationName)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintConfigapi(dAtA []byte, offset int, v uint64) int {
 	offset -= sovConfigapi(v)
 	base := offset
@@ -2377,6 +2868,99 @@ func (m *InsightConfiguration) Size() (n int) {
 		n += 1 + l + sovConfigapi(uint64(l))
 	}
 	l = len(m.InsightAPIURL)
+	if l > 0 {
+		n += 1 + l + sovConfigapi(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *AccessRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Id)
+	if l > 0 {
+		n += 1 + l + sovConfigapi(uint64(l))
+	}
+	l = len(m.OrganizationName)
+	if l > 0 {
+		n += 1 + l + sovConfigapi(uint64(l))
+	}
+	l = len(m.ServiceName)
+	if l > 0 {
+		n += 1 + l + sovConfigapi(uint64(l))
+	}
+	if m.Status != 0 {
+		n += 1 + sovConfigapi(uint64(m.Status))
+	}
+	if m.CreatedAt != nil {
+		l = m.CreatedAt.Size()
+		n += 1 + l + sovConfigapi(uint64(l))
+	}
+	if m.UpdatedAt != nil {
+		l = m.UpdatedAt.Size()
+		n += 1 + l + sovConfigapi(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *ListOutgoingAccessRequestsRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.OrganizationName)
+	if l > 0 {
+		n += 1 + l + sovConfigapi(uint64(l))
+	}
+	l = len(m.ServiceName)
+	if l > 0 {
+		n += 1 + l + sovConfigapi(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *ListOutgoingAccessRequestsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.AccessRequests) > 0 {
+		for _, e := range m.AccessRequests {
+			l = e.Size()
+			n += 1 + l + sovConfigapi(uint64(l))
+		}
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *CreateAccessRequestRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.OrganizationName)
+	if l > 0 {
+		n += 1 + l + sovConfigapi(uint64(l))
+	}
+	l = len(m.ServiceName)
 	if l > 0 {
 		n += 1 + l + sovConfigapi(uint64(l))
 	}
@@ -4348,6 +4932,571 @@ func (m *InsightConfiguration) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			m.InsightAPIURL = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipConfigapi(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *AccessRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowConfigapi
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: AccessRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: AccessRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowConfigapi
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Id = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OrganizationName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowConfigapi
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.OrganizationName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ServiceName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowConfigapi
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ServiceName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
+			}
+			m.Status = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowConfigapi
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Status |= AccessRequest_Status(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CreatedAt", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowConfigapi
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.CreatedAt == nil {
+				m.CreatedAt = &types.Timestamp{}
+			}
+			if err := m.CreatedAt.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field UpdatedAt", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowConfigapi
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.UpdatedAt == nil {
+				m.UpdatedAt = &types.Timestamp{}
+			}
+			if err := m.UpdatedAt.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipConfigapi(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ListOutgoingAccessRequestsRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowConfigapi
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ListOutgoingAccessRequestsRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ListOutgoingAccessRequestsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OrganizationName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowConfigapi
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.OrganizationName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ServiceName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowConfigapi
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ServiceName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipConfigapi(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ListOutgoingAccessRequestsResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowConfigapi
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ListOutgoingAccessRequestsResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ListOutgoingAccessRequestsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field AccessRequests", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowConfigapi
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.AccessRequests = append(m.AccessRequests, &AccessRequest{})
+			if err := m.AccessRequests[len(m.AccessRequests)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipConfigapi(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *CreateAccessRequestRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowConfigapi
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: CreateAccessRequestRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: CreateAccessRequestRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OrganizationName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowConfigapi
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.OrganizationName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ServiceName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowConfigapi
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthConfigapi
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ServiceName = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

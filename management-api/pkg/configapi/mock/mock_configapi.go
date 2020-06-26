@@ -275,6 +275,46 @@ func (mr *MockConfigApiClientMockRecorder) GetInsightConfiguration(ctx, in inter
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInsightConfiguration", reflect.TypeOf((*MockConfigApiClient)(nil).GetInsightConfiguration), varargs...)
 }
 
+// ListOutgoingAccessRequests mocks base method
+func (m *MockConfigApiClient) ListOutgoingAccessRequests(ctx context.Context, in *configapi.ListOutgoingAccessRequestsRequest, opts ...grpc.CallOption) (*configapi.ListOutgoingAccessRequestsResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListOutgoingAccessRequests", varargs...)
+	ret0, _ := ret[0].(*configapi.ListOutgoingAccessRequestsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListOutgoingAccessRequests indicates an expected call of ListOutgoingAccessRequests
+func (mr *MockConfigApiClientMockRecorder) ListOutgoingAccessRequests(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOutgoingAccessRequests", reflect.TypeOf((*MockConfigApiClient)(nil).ListOutgoingAccessRequests), varargs...)
+}
+
+// CreateAccessRequest mocks base method
+func (m *MockConfigApiClient) CreateAccessRequest(ctx context.Context, in *configapi.CreateAccessRequestRequest, opts ...grpc.CallOption) (*configapi.AccessRequest, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "CreateAccessRequest", varargs...)
+	ret0, _ := ret[0].(*configapi.AccessRequest)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateAccessRequest indicates an expected call of CreateAccessRequest
+func (mr *MockConfigApiClientMockRecorder) CreateAccessRequest(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccessRequest", reflect.TypeOf((*MockConfigApiClient)(nil).CreateAccessRequest), varargs...)
+}
+
 // MockConfigApiServer is a mock of ConfigApiServer interface
 type MockConfigApiServer struct {
 	ctrl     *gomock.Controller
@@ -476,4 +516,34 @@ func (m *MockConfigApiServer) GetInsightConfiguration(arg0 context.Context, arg1
 func (mr *MockConfigApiServerMockRecorder) GetInsightConfiguration(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInsightConfiguration", reflect.TypeOf((*MockConfigApiServer)(nil).GetInsightConfiguration), arg0, arg1)
+}
+
+// ListOutgoingAccessRequests mocks base method
+func (m *MockConfigApiServer) ListOutgoingAccessRequests(arg0 context.Context, arg1 *configapi.ListOutgoingAccessRequestsRequest) (*configapi.ListOutgoingAccessRequestsResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListOutgoingAccessRequests", arg0, arg1)
+	ret0, _ := ret[0].(*configapi.ListOutgoingAccessRequestsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListOutgoingAccessRequests indicates an expected call of ListOutgoingAccessRequests
+func (mr *MockConfigApiServerMockRecorder) ListOutgoingAccessRequests(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOutgoingAccessRequests", reflect.TypeOf((*MockConfigApiServer)(nil).ListOutgoingAccessRequests), arg0, arg1)
+}
+
+// CreateAccessRequest mocks base method
+func (m *MockConfigApiServer) CreateAccessRequest(arg0 context.Context, arg1 *configapi.CreateAccessRequestRequest) (*configapi.AccessRequest, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateAccessRequest", arg0, arg1)
+	ret0, _ := ret[0].(*configapi.AccessRequest)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateAccessRequest indicates an expected call of CreateAccessRequest
+func (mr *MockConfigApiServerMockRecorder) CreateAccessRequest(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccessRequest", reflect.TypeOf((*MockConfigApiServer)(nil).CreateAccessRequest), arg0, arg1)
 }

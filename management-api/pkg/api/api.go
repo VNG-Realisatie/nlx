@@ -34,6 +34,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/directory"
 	"go.nlx.io/nlx/management-api/pkg/environment"
 	"go.nlx.io/nlx/management-api/pkg/oidc"
+	"go.nlx.io/nlx/management-api/pkg/util/clock"
 )
 
 // API handles incoming requests and authenticates them
@@ -46,7 +47,7 @@ type API struct {
 	mux             *runtime.ServeMux
 	grpcServer      *grpc.Server
 	authenticator   *oidc.Authenticator
-	directoryClient *directory.Client
+	directoryClient directory.Client
 }
 
 const (
@@ -97,7 +98,8 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.
 		logger.Fatal("failed to setup directory client", zap.Error(err))
 	}
 
-	configService := newConfigService(logger, mainProcess, etcdConnectionString, directoryRegistrationClient)
+	db := newDatabase(logger, mainProcess, etcdConnectionString)
+	configService := configapi.New(logger, mainProcess, directoryRegistrationClient, db)
 
 	grpcServer := newGRPCServer(logger, roots, orgKeyPair)
 
@@ -112,7 +114,7 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.
 		return nil, err
 	}
 
-	directoryService := directory.NewDirectoryService(logger, e, directoryClient)
+	directoryService := directory.NewDirectoryService(logger, e, directoryClient, db)
 
 	directory.RegisterDirectoryServer(grpcServer, directoryService)
 
@@ -169,13 +171,15 @@ func newGRPCServer(logger *zap.Logger, roots *x509.CertPool, certKeyPair *tls.Ce
 	return grpc.NewServer(opts...)
 }
 
-func newConfigService(logger *zap.Logger, mainProcess *process.Process, etcdConnectionString string, directoryRegistrationClient registrationapi.DirectoryRegistrationClient) *configapi.ConfigService {
-	db, err := database.NewEtcdConfigDatabase(logger, mainProcess, strings.Split(etcdConnectionString, ","))
+func newDatabase(logger *zap.Logger, mainProcess *process.Process, etcdConnectionString string) database.ConfigDatabase {
+	c := clock.RealClock{}
+
+	db, err := database.NewEtcdConfigDatabase(logger, mainProcess, strings.Split(etcdConnectionString, ","), c)
 	if err != nil {
 		logger.Fatal("failed to setup database", zap.Error(err))
 	}
 
-	return configapi.New(logger, mainProcess, directoryRegistrationClient, db)
+	return db
 }
 
 func newDirectoryRegistrationClient(roots *x509.CertPool, certKeyPair *tls.Certificate, directoryRegistrationAddress string) (registrationapi.DirectoryRegistrationClient, error) {

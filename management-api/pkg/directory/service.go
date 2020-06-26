@@ -12,7 +12,7 @@ type InspectionAPIService struct {
 
 type servicesRoot map[string][]*InspectionAPIService
 
-func (d *Client) ListServices() ([]*InspectionAPIService, error) {
+func (d *HTTPClient) ListServices() ([]*InspectionAPIService, error) {
 	req, err := d.newRequest("GET", "list-services")
 	if err != nil {
 		return nil, err

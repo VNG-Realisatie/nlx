@@ -462,6 +462,9 @@
     "configapiAccessRequest": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string"
+        },
         "organizationName": {
           "type": "string"
         },

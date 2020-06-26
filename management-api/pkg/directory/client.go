@@ -14,13 +14,17 @@ const (
 	userAgent = "nlx-management"
 )
 
-type Client struct {
+type Client interface {
+	ListServices() ([]*InspectionAPIService, error)
+}
+
+type HTTPClient struct {
 	client    *http.Client
 	baseURL   *url.URL
 	userAgent string
 }
 
-func NewClient(endpointURL string) (*Client, error) {
+func NewClient(endpointURL string) (Client, error) {
 	httpClient := &http.Client{}
 
 	baseURL, err := url.Parse(endpointURL)
@@ -30,7 +34,7 @@ func NewClient(endpointURL string) (*Client, error) {
 
 	baseURL.Path += "/directory/"
 
-	c := &Client{
+	c := &HTTPClient{
 		client:    httpClient,
 		baseURL:   baseURL,
 		userAgent: userAgent,
@@ -39,7 +43,7 @@ func NewClient(endpointURL string) (*Client, error) {
 	return c, nil
 }
 
-func (d *Client) newRequest(method, pathStr string) (*http.Request, error) {
+func (d *HTTPClient) newRequest(method, pathStr string) (*http.Request, error) {
 	u, err := d.baseURL.Parse(pathStr)
 	if err != nil {
 		return nil, err
@@ -56,7 +60,7 @@ func (d *Client) newRequest(method, pathStr string) (*http.Request, error) {
 	return req, nil
 }
 
-func (d *Client) sendRequest(req *http.Request, v interface{}) (*http.Response, error) {
+func (d *HTTPClient) sendRequest(req *http.Request, v interface{}) (*http.Response, error) {
 	resp, err := d.client.Do(req)
 
 	if err != nil {

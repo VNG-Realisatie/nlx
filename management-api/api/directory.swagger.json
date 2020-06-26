@@ -107,15 +107,33 @@
     }
   },
   "definitions": {
-    "DirectoryServiceStatus": {
+    "DirectoryServiceAccessRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/DirectoryServiceAccessRequestStatus"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "DirectoryServiceAccessRequestStatus": {
       "type": "string",
       "enum": [
-        "unknown",
-        "up",
-        "down",
-        "degraded"
+        "FAILED",
+        "CREATED",
+        "SEND"
       ],
-      "default": "unknown"
+      "default": "FAILED"
     },
     "directoryDirectoryService": {
       "type": "object",
@@ -130,9 +148,22 @@
           "type": "string"
         },
         "status": {
-          "$ref": "#/definitions/DirectoryServiceStatus"
+          "$ref": "#/definitions/directoryDirectoryServiceStatus"
+        },
+        "latestAccessRequest": {
+          "$ref": "#/definitions/DirectoryServiceAccessRequest"
         }
       }
+    },
+    "directoryDirectoryServiceStatus": {
+      "type": "string",
+      "enum": [
+        "unknown",
+        "up",
+        "down",
+        "degraded"
+      ],
+      "default": "unknown"
     },
     "directoryEmpty": {
       "type": "object"

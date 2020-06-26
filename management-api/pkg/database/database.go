@@ -21,4 +21,8 @@ type ConfigDatabase interface {
 	DeleteInway(ctx context.Context, name string) error
 	PutInsightConfiguration(ctx context.Context, configuration *InsightConfiguration) error
 	GetInsightConfiguration(ctx context.Context) (*InsightConfiguration, error)
+
+	ListAllOutgoingAccessRequests(ctx context.Context) ([]*AccessRequest, error)
+	ListOutgoingAccessRequests(ctx context.Context, organizationName, serviceName string) ([]*AccessRequest, error)
+	CreateAccessRequest(ctx context.Context, accessRequest *AccessRequest) (*AccessRequest, error)
 }
