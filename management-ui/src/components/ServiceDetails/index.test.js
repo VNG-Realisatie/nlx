@@ -154,6 +154,5 @@ describe('ServiceDetails', () => {
     fireEvent.click(getByTestId('remove-service'))
     expect(window.confirm).toHaveBeenCalled()
     expect(handleRemove).toBeCalled()
-    expect(getByTestId('remove-success')).toBeTruthy()
   })
 })

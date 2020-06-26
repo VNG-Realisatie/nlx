@@ -23,8 +23,9 @@ const ServiceDetailPage = ({
   const { isReady, error, result: service } = usePromise(getServiceByName, name)
   const close = () => history.push(parentUrl)
 
-  const handleRemove = () => {
-    removeService(service)
+  const handleRemove = async () => {
+    await removeService(service)
+    history.push(`/services/${service.name}?removed=true`)
     refreshHandler()
   }
 

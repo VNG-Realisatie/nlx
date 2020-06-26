@@ -1,11 +1,11 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React, { useState } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
 import { arrayOf, bool, func, oneOf, shape, string } from 'prop-types'
-import { Alert, Table } from '@commonground/design-system'
+import { Table } from '@commonground/design-system'
 
 import Amount from '../Amount'
 import Collapsible from '../Collapsible'
@@ -28,21 +28,15 @@ import {
 
 const ServiceDetails = ({ service, removeHandler }) => {
   const { internal, authorizationSettings, inways } = service
-  const [isRemoved, setIsRemoved] = useState(false)
   const { t } = useTranslation()
   const location = useLocation()
 
   const handleRemove = () => {
     if (window.confirm(t('Do you want to remove the service?'))) {
       removeHandler()
-      setIsRemoved(true)
     }
   }
-  return isRemoved ? (
-    <Alert variant="success" data-testid="remove-success">
-      {t('The service has been removed.')}
-    </Alert>
-  ) : (
+  return (
     <>
       {showServiceVisibilityAlert({ internal, inways }) ? (
         <StyledServiceVisibilityAlert />

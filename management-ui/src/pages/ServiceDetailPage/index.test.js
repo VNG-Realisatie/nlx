@@ -2,13 +2,19 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { Route, StaticRouter as Router } from 'react-router-dom'
+import { Route, StaticRouter, Router } from 'react-router-dom'
 
+import { act } from '@testing-library/react'
+import { createMemoryHistory } from 'history'
 import { renderWithProviders } from '../../test-utils'
 import ServiceDetailPage from './index'
 
-jest.mock('../../components/ServiceDetails', () => ({ service }) => (
-  <div data-testid="service-details" />
+jest.mock('../../components/ServiceDetails', () => ({ removeHandler }) => (
+  <div data-testid="service-details">
+    <button type="button" onClick={removeHandler}>
+      Remove service
+    </button>
+  </div>
 ))
 
 test('display service details', async () => {
@@ -17,11 +23,11 @@ test('display service details', async () => {
   jest.useFakeTimers()
 
   const { findByTestId, getByText } = renderWithProviders(
-    <Router location="/services/forty-two">
+    <StaticRouter location="/services/forty-two">
       <Route path="/services/:name">
         <ServiceDetailPage getServiceByName={getServiceByName} />
       </Route>
-    </Router>,
+    </StaticRouter>,
   )
   expect(await findByTestId('service-details')).toBeInTheDocument()
   expect(getByText('forty-two')).toBeInTheDocument()
@@ -32,11 +38,11 @@ test('fetching a non-existing component', async () => {
   const getServiceByName = jest.fn().mockRejectedValue(new Error('not found'))
 
   const { findByTestId, getByText } = renderWithProviders(
-    <Router location="/services/forty-two">
+    <StaticRouter location="/services/forty-two">
       <Route path="/services/:name">
         <ServiceDetailPage getServiceByName={getServiceByName} />
       </Route>
-    </Router>,
+    </StaticRouter>,
   )
 
   const message = await findByTestId('error-message')
@@ -55,11 +61,11 @@ test('fetching service details fails for an unknown reason', async () => {
     .mockRejectedValue(new Error('arbitrary reason'))
 
   const { findByTestId, getByText } = renderWithProviders(
-    <Router location="/services/42">
+    <StaticRouter location="/services/42">
       <Route path="/services/:name">
         <ServiceDetailPage getServiceByName={getServiceByName} />
       </Route>
-    </Router>,
+    </StaticRouter>,
   )
 
   const message = await findByTestId('error-message')
@@ -70,4 +76,34 @@ test('fetching service details fails for an unknown reason', async () => {
 
   const closeButton = await findByTestId('close-button')
   expect(closeButton).toBeTruthy()
+})
+
+test('removing the service', async () => {
+  const history = createMemoryHistory()
+  const getServiceByName = jest
+    .fn()
+    .mockResolvedValue({ name: 'dummy-service' })
+  const refreshHandler = jest.fn()
+  const removeService = jest.fn().mockResolvedValue()
+
+  const { findByText } = renderWithProviders(
+    <Router history={history}>
+      <ServiceDetailPage
+        getServiceByName={getServiceByName}
+        refreshHandler={refreshHandler}
+        removeService={removeService}
+      />
+    </Router>,
+  )
+
+  const removeButton = await findByText('Remove service')
+  await act(() => {
+    removeButton.click()
+  })
+
+  expect(removeService).toHaveBeenCalledTimes(1)
+  await act(async () => {})
+  expect(history.location.pathname).toEqual('/services/dummy-service')
+  expect(history.location.search).toEqual('?removed=true')
+  expect(refreshHandler).toHaveBeenCalledTimes(1)
 })
