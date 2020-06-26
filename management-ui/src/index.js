@@ -4,6 +4,7 @@
 import 'react-app-polyfill/ie11'
 import 'core-js/features/array/find'
 import 'core-js/features/array/includes'
+import 'core-js/features/object/entries'
 
 import React from 'react'
 import ReactDOM from 'react-dom'
