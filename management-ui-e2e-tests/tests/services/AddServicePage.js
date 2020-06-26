@@ -43,11 +43,12 @@ test('Adding a new service', async (t) => {
     techSupportContact: 'tech@organization.test',
     publicSupportContact: 'public@organization.test',
     authorizationType: AUTHORIZATION_TYPE_NONE,
+    performSubmit: false,
   })
 
-  await t.expect(page.publishedInDirectoryWarning.visible).ok()
+  await t.expect(page.publishedInDirectoryWarning.count).eql(1)
   await page.fillAndSubmitForm({ inways: [INWAY_NAME] })
-  await t.expect(page.publishedInDirectoryWarning.visible).notOk()
+  await t.expect(page.publishedInDirectoryWarning.count).eql(0)
 
   await t
     .expect(page.nameFieldError.innerText)

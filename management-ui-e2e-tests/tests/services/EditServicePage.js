@@ -48,8 +48,6 @@ test('Updating the service', async (t) => {
     inways: [INWAY_NAME],
   })
 
-  await t.expect(addPage.alert.innerText).contains('De service is bijgewerkt.')
-
   await t.navigateTo(`${baseUrl}/services/${t.ctx.serviceName}`)
   await t.expect(detailPage.published.innerText).contains('Niet zichtbaar in centrale directory')
   await t.expect(detailPage.inways.innerText).eql('Inways1')
@@ -64,7 +62,7 @@ test('Show the missing inways warning', async (t) => {
     publishToCentralDirectory: true,
   })
 
-  await t.expect(addPage.alert.innerText).contains('De service is bijgewerkt.')
+  // await t.expect(addPage.alert.innerText).contains('De service is bijgewerkt.')
 
   await t.navigateTo(`${baseUrl}/services/${t.ctx.serviceName}`)
 })

@@ -41,8 +41,6 @@ export async function createService(serviceProperties = {}) {
     ...serviceProperties,
   })
 
-  await t.expect(addPage.alert.innerText).contains('De service is toegevoegd.')
-
   return t.ctx.serviceName
 }
 

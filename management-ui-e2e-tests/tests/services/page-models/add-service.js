@@ -79,6 +79,7 @@ class Page {
     publicSupportContact,
     authorizationType,
     inways,
+    performSubmit,
   }) {
     if (typeof name !== 'undefined') {
       await t.typeText(this.nameInput, name, { replace: true })
@@ -140,7 +141,9 @@ class Page {
       }
     }
 
-    await t.click(this.submitButton)
+    if (typeof performSubmit === 'undefined' || performSubmit === true) {
+      await t.click(this.submitButton)
+    }
   }
 }
 
