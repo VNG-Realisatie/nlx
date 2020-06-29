@@ -26,10 +26,10 @@ var inwayStateToDirectoryStatus = map[InwayState]DirectoryService_Status{
 	InwayStateDown:    DirectoryService_down,
 }
 
-var accessRequestStatus = map[database.AccessRequestStatus]DirectoryService_AccessRequest_Status{
-	database.AccessRequestFailed:  DirectoryService_AccessRequest_FAILED,
-	database.AccessRequestCreated: DirectoryService_AccessRequest_CREATED,
-	database.AccessRequestSend:    DirectoryService_AccessRequest_SEND,
+var accessRequestStatus = map[database.AccessRequestStatus]AccessRequest_Status{
+	database.AccessRequestFailed:  AccessRequest_FAILED,
+	database.AccessRequestCreated: AccessRequest_CREATED,
+	database.AccessRequestSent:    AccessRequest_SENT,
 }
 
 func NewDirectoryService(logger *zap.Logger, e *environment.Environment, directoryClient Client, configDatabase database.ConfigDatabase) *Service {
@@ -83,7 +83,7 @@ func (s Service) ListServices(ctx context.Context, _ *Empty) (*ListServicesRespo
 				break
 			}
 
-			services[i].LatestAccessRequest = &DirectoryService_AccessRequest{
+			services[i].LatestAccessRequest = &AccessRequest{
 				Id:        a.ID,
 				Status:    accessRequestStatus[a.Status],
 				CreatedAt: createdAt,
@@ -126,9 +126,24 @@ func (s Service) getService(logger *zap.Logger, organizationName, serviceName st
 }
 
 // RequestAccessToService records an access request and sends it to the organization
-func (s Service) RequestAccessToService(ctx context.Context, request *RequestAccessToServiceRequest) (*Empty, error) {
+func (s Service) RequestAccessToService(ctx context.Context, request *RequestAccessToServiceRequest) (*AccessRequest, error) {
 	logger := s.logger.With(zap.String("organizationName", request.OrganizationName), zap.String("serviceName", request.ServiceName))
 	logger.Info("rpc request RequestAccessToService")
+
+	ar := &database.AccessRequest{
+		OrganizationName: request.OrganizationName,
+		ServiceName:      request.ServiceName,
+	}
+
+	a, err := s.configDatabase.CreateAccessRequest(ctx, ar)
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := convertAccessRequest(a)
+	if err != nil {
+		return nil, err
+	}
 
 	service, err := s.getService(logger, request.OrganizationName, request.ServiceName)
 	if err != nil {
@@ -137,13 +152,9 @@ func (s Service) RequestAccessToService(ctx context.Context, request *RequestAcc
 
 	logger = logger.With(zap.Any("service", service))
 
-	logger.Debug("Check if permission is required, fail otherwise")
-
-	logger.Debug("persist access request")
-
 	logger.Debug("send access request to inway")
 
-	return &Empty{}, nil
+	return response, nil
 }
 
 func DetermineDirectoryServiceStatus(inways []*Inway) DirectoryService_Status {
@@ -179,4 +190,34 @@ func convertDirectoryService(s *InspectionAPIService) *DirectoryService {
 		APISpecificationType: s.APISpecificationType,
 		Status:               serviceStatus,
 	}
+}
+
+func convertAccessRequest(a *database.AccessRequest) (*AccessRequest, error) {
+	createdAt, err := types.TimestampProto(a.CreatedAt)
+	if err != nil {
+		return nil, err
+	}
+
+	updatedAt, err := types.TimestampProto(a.UpdatedAt)
+	if err != nil {
+		return nil, err
+	}
+
+	var accessRequestStatus AccessRequest_Status
+
+	switch a.Status {
+	case database.AccessRequestFailed:
+		accessRequestStatus = AccessRequest_FAILED
+	case database.AccessRequestCreated:
+		accessRequestStatus = AccessRequest_CREATED
+	case database.AccessRequestSent:
+		accessRequestStatus = AccessRequest_SENT
+	}
+
+	return &AccessRequest{
+		Id:        a.ID,
+		Status:    accessRequestStatus,
+		CreatedAt: createdAt,
+		UpdatedAt: updatedAt,
+	}, nil
 }

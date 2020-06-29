@@ -29,6 +29,34 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+type AccessRequest_Status int32
+
+const (
+	AccessRequest_FAILED  AccessRequest_Status = 0
+	AccessRequest_CREATED AccessRequest_Status = 1
+	AccessRequest_SENT    AccessRequest_Status = 2
+)
+
+var AccessRequest_Status_name = map[int32]string{
+	0: "FAILED",
+	1: "CREATED",
+	2: "SENT",
+}
+
+var AccessRequest_Status_value = map[string]int32{
+	"FAILED":  0,
+	"CREATED": 1,
+	"SENT":    2,
+}
+
+func (x AccessRequest_Status) String() string {
+	return proto.EnumName(AccessRequest_Status_name, int32(x))
+}
+
+func (AccessRequest_Status) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_988c26833273fd2e, []int{3, 0}
+}
+
 type DirectoryService_Status int32
 
 const (
@@ -57,35 +85,7 @@ func (x DirectoryService_Status) String() string {
 }
 
 func (DirectoryService_Status) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_988c26833273fd2e, []int{3, 0}
-}
-
-type DirectoryService_AccessRequest_Status int32
-
-const (
-	DirectoryService_AccessRequest_FAILED  DirectoryService_AccessRequest_Status = 0
-	DirectoryService_AccessRequest_CREATED DirectoryService_AccessRequest_Status = 1
-	DirectoryService_AccessRequest_SEND    DirectoryService_AccessRequest_Status = 2
-)
-
-var DirectoryService_AccessRequest_Status_name = map[int32]string{
-	0: "FAILED",
-	1: "CREATED",
-	2: "SEND",
-}
-
-var DirectoryService_AccessRequest_Status_value = map[string]int32{
-	"FAILED":  0,
-	"CREATED": 1,
-	"SEND":    2,
-}
-
-func (x DirectoryService_AccessRequest_Status) String() string {
-	return proto.EnumName(DirectoryService_AccessRequest_Status_name, int32(x))
-}
-
-func (DirectoryService_AccessRequest_Status) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_988c26833273fd2e, []int{3, 0, 0}
+	return fileDescriptor_988c26833273fd2e, []int{4, 0}
 }
 
 type Empty struct {
@@ -208,22 +208,65 @@ func (m *GetOrganizationServiceRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_GetOrganizationServiceRequest proto.InternalMessageInfo
 
+type AccessRequest struct {
+	Id                   string               `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Status               AccessRequest_Status `protobuf:"varint,2,opt,name=status,proto3,enum=directory.AccessRequest_Status" json:"status,omitempty"`
+	CreatedAt            *types.Timestamp     `protobuf:"bytes,3,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
+	UpdatedAt            *types.Timestamp     `protobuf:"bytes,4,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
+	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
+}
+
+func (m *AccessRequest) Reset()         { *m = AccessRequest{} }
+func (m *AccessRequest) String() string { return proto.CompactTextString(m) }
+func (*AccessRequest) ProtoMessage()    {}
+func (*AccessRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_988c26833273fd2e, []int{3}
+}
+func (m *AccessRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *AccessRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_AccessRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *AccessRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AccessRequest.Merge(m, src)
+}
+func (m *AccessRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *AccessRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_AccessRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AccessRequest proto.InternalMessageInfo
+
 type DirectoryService struct {
-	ServiceName          string                          `protobuf:"bytes,1,opt,name=serviceName,proto3" json:"serviceName,omitempty"`
-	OrganizationName     string                          `protobuf:"bytes,2,opt,name=organizationName,proto3" json:"organizationName,omitempty"`
-	APISpecificationType string                          `protobuf:"bytes,3,opt,name=apiSpecificationType,proto3" json:"apiSpecificationType,omitempty"`
-	Status               DirectoryService_Status         `protobuf:"varint,4,opt,name=status,proto3,enum=directory.DirectoryService_Status" json:"status,omitempty"`
-	LatestAccessRequest  *DirectoryService_AccessRequest `protobuf:"bytes,5,opt,name=latestAccessRequest,proto3" json:"latestAccessRequest,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                        `json:"-"`
-	XXX_unrecognized     []byte                          `json:"-"`
-	XXX_sizecache        int32                           `json:"-"`
+	ServiceName          string                  `protobuf:"bytes,1,opt,name=serviceName,proto3" json:"serviceName,omitempty"`
+	OrganizationName     string                  `protobuf:"bytes,2,opt,name=organizationName,proto3" json:"organizationName,omitempty"`
+	APISpecificationType string                  `protobuf:"bytes,3,opt,name=apiSpecificationType,proto3" json:"apiSpecificationType,omitempty"`
+	Status               DirectoryService_Status `protobuf:"varint,4,opt,name=status,proto3,enum=directory.DirectoryService_Status" json:"status,omitempty"`
+	LatestAccessRequest  *AccessRequest          `protobuf:"bytes,5,opt,name=latestAccessRequest,proto3" json:"latestAccessRequest,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
+	XXX_unrecognized     []byte                  `json:"-"`
+	XXX_sizecache        int32                   `json:"-"`
 }
 
 func (m *DirectoryService) Reset()         { *m = DirectoryService{} }
 func (m *DirectoryService) String() string { return proto.CompactTextString(m) }
 func (*DirectoryService) ProtoMessage()    {}
 func (*DirectoryService) Descriptor() ([]byte, []int) {
-	return fileDescriptor_988c26833273fd2e, []int{3}
+	return fileDescriptor_988c26833273fd2e, []int{4}
 }
 func (m *DirectoryService) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -252,49 +295,6 @@ func (m *DirectoryService) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_DirectoryService proto.InternalMessageInfo
 
-type DirectoryService_AccessRequest struct {
-	Id                   string                                `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Status               DirectoryService_AccessRequest_Status `protobuf:"varint,2,opt,name=status,proto3,enum=directory.DirectoryService_AccessRequest_Status" json:"status,omitempty"`
-	CreatedAt            *types.Timestamp                      `protobuf:"bytes,3,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
-	UpdatedAt            *types.Timestamp                      `protobuf:"bytes,4,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                              `json:"-"`
-	XXX_unrecognized     []byte                                `json:"-"`
-	XXX_sizecache        int32                                 `json:"-"`
-}
-
-func (m *DirectoryService_AccessRequest) Reset()         { *m = DirectoryService_AccessRequest{} }
-func (m *DirectoryService_AccessRequest) String() string { return proto.CompactTextString(m) }
-func (*DirectoryService_AccessRequest) ProtoMessage()    {}
-func (*DirectoryService_AccessRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_988c26833273fd2e, []int{3, 0}
-}
-func (m *DirectoryService_AccessRequest) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *DirectoryService_AccessRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_DirectoryService_AccessRequest.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *DirectoryService_AccessRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_DirectoryService_AccessRequest.Merge(m, src)
-}
-func (m *DirectoryService_AccessRequest) XXX_Size() int {
-	return m.Size()
-}
-func (m *DirectoryService_AccessRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_DirectoryService_AccessRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_DirectoryService_AccessRequest proto.InternalMessageInfo
-
 type RequestAccessToServiceRequest struct {
 	OrganizationName     string   `protobuf:"bytes,1,opt,name=organizationName,proto3" json:"organizationName,omitempty"`
 	ServiceName          string   `protobuf:"bytes,2,opt,name=serviceName,proto3" json:"serviceName,omitempty"`
@@ -307,7 +307,7 @@ func (m *RequestAccessToServiceRequest) Reset()         { *m = RequestAccessToSe
 func (m *RequestAccessToServiceRequest) String() string { return proto.CompactTextString(m) }
 func (*RequestAccessToServiceRequest) ProtoMessage()    {}
 func (*RequestAccessToServiceRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_988c26833273fd2e, []int{4}
+	return fileDescriptor_988c26833273fd2e, []int{5}
 }
 func (m *RequestAccessToServiceRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -337,13 +337,13 @@ func (m *RequestAccessToServiceRequest) XXX_DiscardUnknown() {
 var xxx_messageInfo_RequestAccessToServiceRequest proto.InternalMessageInfo
 
 func init() {
+	proto.RegisterEnum("directory.AccessRequest_Status", AccessRequest_Status_name, AccessRequest_Status_value)
 	proto.RegisterEnum("directory.DirectoryService_Status", DirectoryService_Status_name, DirectoryService_Status_value)
-	proto.RegisterEnum("directory.DirectoryService_AccessRequest_Status", DirectoryService_AccessRequest_Status_name, DirectoryService_AccessRequest_Status_value)
 	proto.RegisterType((*Empty)(nil), "directory.Empty")
 	proto.RegisterType((*ListServicesResponse)(nil), "directory.ListServicesResponse")
 	proto.RegisterType((*GetOrganizationServiceRequest)(nil), "directory.GetOrganizationServiceRequest")
+	proto.RegisterType((*AccessRequest)(nil), "directory.AccessRequest")
 	proto.RegisterType((*DirectoryService)(nil), "directory.DirectoryService")
-	proto.RegisterType((*DirectoryService_AccessRequest)(nil), "directory.DirectoryService.AccessRequest")
 	proto.RegisterType((*RequestAccessToServiceRequest)(nil), "directory.RequestAccessToServiceRequest")
 }
 
@@ -351,46 +351,46 @@ func init() { proto.RegisterFile("directory.proto", fileDescriptor_988c26833273f
 
 var fileDescriptor_988c26833273fd2e = []byte{
 	// 641 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x54, 0x4f, 0x6f, 0xd3, 0x3e,
-	0x18, 0x5e, 0xd2, 0xad, 0x5b, 0xdf, 0xee, 0xb7, 0x5f, 0x64, 0xa6, 0xa9, 0x0a, 0xa3, 0xab, 0x7c,
-	0x2a, 0xa0, 0x25, 0x50, 0x84, 0x40, 0xdc, 0x3a, 0x5a, 0x60, 0x62, 0xda, 0x20, 0xed, 0x05, 0xed,
-	0xe4, 0x25, 0x5e, 0xb0, 0x58, 0xe3, 0x10, 0x3b, 0x43, 0x63, 0xda, 0x85, 0x23, 0x1c, 0xf9, 0x26,
-	0x5c, 0xf8, 0x0a, 0x3b, 0x22, 0x71, 0x47, 0xac, 0xe2, 0x83, 0xa0, 0x3a, 0x69, 0x96, 0xfe, 0xa1,
-	0x70, 0x80, 0x9b, 0xfd, 0xf8, 0x79, 0xec, 0xc7, 0x8f, 0xdf, 0xd7, 0xf0, 0xbf, 0xc7, 0x22, 0xea,
-	0x4a, 0x1e, 0x9d, 0x58, 0x61, 0xc4, 0x25, 0x47, 0xa5, 0x0c, 0x30, 0xd7, 0x7d, 0xce, 0xfd, 0x23,
-	0x6a, 0x93, 0x90, 0xd9, 0x24, 0x08, 0xb8, 0x24, 0x92, 0xf1, 0x40, 0x24, 0x44, 0x73, 0x23, 0x5d,
-	0x55, 0xb3, 0x83, 0xf8, 0xd0, 0x96, 0xac, 0x47, 0x85, 0x24, 0xbd, 0x30, 0x25, 0x6c, 0xfa, 0x4c,
-	0xbe, 0x8c, 0x0f, 0x2c, 0x97, 0xf7, 0x6c, 0x9f, 0xfb, 0xfc, 0x92, 0x39, 0x98, 0xa9, 0x89, 0x1a,
-	0x25, 0x74, 0xbc, 0x08, 0x0b, 0xed, 0x5e, 0x28, 0x4f, 0xf0, 0x1e, 0xac, 0xee, 0x30, 0x21, 0x3b,
-	0x34, 0x3a, 0x66, 0x2e, 0x15, 0x0e, 0x15, 0x21, 0x0f, 0x04, 0x45, 0xf7, 0x60, 0x49, 0xa4, 0x58,
-	0x45, 0xab, 0x15, 0xea, 0xe5, 0xc6, 0x55, 0xeb, 0xd2, 0x7d, 0x6b, 0x38, 0x4a, 0x75, 0x4e, 0x46,
-	0xc6, 0x3d, 0xb8, 0xf6, 0x98, 0xca, 0xbd, 0xc8, 0x27, 0x01, 0x7b, 0xab, 0xee, 0x30, 0xe4, 0xd0,
-	0xd7, 0x31, 0x15, 0x12, 0xdd, 0x00, 0x83, 0xe7, 0x56, 0x77, 0x49, 0x8f, 0x56, 0xb4, 0x9a, 0x56,
-	0x2f, 0x39, 0x13, 0x38, 0xaa, 0x41, 0x39, 0xdd, 0x58, 0xd1, 0x74, 0x45, 0xcb, 0x43, 0xf8, 0xc3,
-	0x02, 0x18, 0xe3, 0x6e, 0xc6, 0x65, 0xda, 0x84, 0x6c, 0xaa, 0x09, 0xfd, 0x17, 0x26, 0x76, 0x60,
-	0x95, 0x84, 0xac, 0x13, 0x52, 0x97, 0x1d, 0x32, 0x57, 0xe1, 0xdd, 0x93, 0x90, 0x56, 0x0a, 0x03,
-	0xfe, 0x56, 0xa5, 0xff, 0x6d, 0x63, 0xb5, 0xf9, 0x6c, 0x7b, 0x62, 0xdd, 0x99, 0xaa, 0x42, 0x0f,
-	0xa0, 0x28, 0x24, 0x91, 0xb1, 0xa8, 0xcc, 0xd7, 0xb4, 0xfa, 0x4a, 0x03, 0xcf, 0x88, 0xd5, 0xea,
-	0x28, 0xa6, 0x93, 0x2a, 0xd0, 0x3e, 0x5c, 0x39, 0x22, 0x92, 0x0a, 0xd9, 0x74, 0x5d, 0x2a, 0x44,
-	0x9a, 0x68, 0x65, 0xa1, 0xa6, 0xd5, 0xcb, 0x8d, 0xeb, 0xb3, 0x36, 0x1a, 0x11, 0x38, 0xd3, 0x76,
-	0x31, 0xdf, 0xeb, 0xf0, 0xdf, 0x08, 0x82, 0x56, 0x40, 0x67, 0x5e, 0x9a, 0x9e, 0xce, 0x3c, 0xf4,
-	0x24, 0xb3, 0xae, 0x2b, 0xeb, 0xb7, 0xfe, 0xf8, 0xc4, 0xf1, 0x8b, 0xdc, 0x87, 0x92, 0x1b, 0x51,
-	0x22, 0xa9, 0xd7, 0x94, 0x2a, 0xc7, 0x72, 0xc3, 0xb4, 0x92, 0x12, 0xb7, 0x86, 0x85, 0x6b, 0x75,
-	0x87, 0x25, 0xee, 0x5c, 0x92, 0x07, 0xca, 0x38, 0xf4, 0x52, 0xe5, 0xfc, 0xef, 0x95, 0x19, 0x19,
-	0xdf, 0x84, 0x62, 0xe2, 0x02, 0x01, 0x14, 0x1f, 0x35, 0xb7, 0x77, 0xda, 0x2d, 0x63, 0x0e, 0x95,
-	0x61, 0xf1, 0xa1, 0xd3, 0x6e, 0x76, 0xdb, 0x2d, 0x43, 0x43, 0x4b, 0x30, 0xdf, 0x69, 0xef, 0xb6,
-	0x0c, 0x1d, 0xdf, 0xcd, 0xc8, 0x65, 0x58, 0x8c, 0x83, 0x57, 0x01, 0x7f, 0x13, 0x18, 0x73, 0xa8,
-	0x08, 0x7a, 0x1c, 0x26, 0x44, 0x6f, 0x80, 0xe8, 0x68, 0x19, 0x96, 0x3c, 0xea, 0x47, 0xc4, 0xa3,
-	0x9e, 0x51, 0x18, 0x14, 0x7f, 0x7a, 0xe3, 0xe4, 0xfa, 0x5d, 0xfe, 0x2f, 0x8b, 0xbf, 0x71, 0x51,
-	0x80, 0x52, 0x16, 0x3c, 0xa2, 0xb0, 0x9c, 0x6f, 0x65, 0x64, 0xe4, 0x9e, 0x47, 0x35, 0xbb, 0xb9,
-	0x91, 0x43, 0xa6, 0x75, 0x3d, 0xc6, 0xef, 0xbe, 0xfe, 0xf8, 0xa8, 0xaf, 0x23, 0x53, 0x7d, 0x43,
-	0xc7, 0xb7, 0xed, 0x8c, 0x6f, 0x0f, 0x1b, 0x1c, 0x7d, 0xd2, 0x60, 0x6d, 0x7a, 0x87, 0xa3, 0x7a,
-	0x6e, 0xff, 0x99, 0x9f, 0x80, 0x39, 0xeb, 0x33, 0xc1, 0xcf, 0x95, 0x8b, 0xa7, 0x68, 0x7b, 0xd2,
-	0x45, 0x3e, 0x24, 0x61, 0x9f, 0x8e, 0x67, 0x76, 0x96, 0xd9, 0xb4, 0x4f, 0x73, 0x41, 0x9d, 0xa1,
-	0xcf, 0x1a, 0xac, 0x4d, 0x7f, 0x99, 0x11, 0xd3, 0x33, 0x1f, 0xcf, 0x9c, 0x08, 0x14, 0x13, 0xe5,
-	0x74, 0x1f, 0xbf, 0xf8, 0x6b, 0x4e, 0x6d, 0xa2, 0xce, 0xde, 0x8c, 0x92, 0x33, 0xc5, 0x96, 0x71,
-	0x7e, 0x51, 0x9d, 0x3b, 0xef, 0x57, 0xb5, 0x2f, 0xfd, 0xaa, 0xf6, 0xbd, 0x5f, 0xd5, 0x0e, 0x8a,
-	0xaa, 0xce, 0xef, 0xfc, 0x0c, 0x00, 0x00, 0xff, 0xff, 0xbb, 0xd4, 0xf4, 0x8d, 0x4e, 0x06, 0x00,
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x54, 0xc1, 0x6e, 0xd3, 0x4c,
+	0x10, 0xae, 0x9d, 0x36, 0x6d, 0x26, 0xfd, 0xfb, 0x5b, 0x4b, 0x55, 0x45, 0xa6, 0xa4, 0xd1, 0x9e,
+	0x22, 0x50, 0x6d, 0x11, 0x84, 0x8a, 0xb8, 0xa5, 0x34, 0xa0, 0x42, 0xd5, 0x82, 0x93, 0x0b, 0xe2,
+	0xb4, 0xb5, 0xb7, 0x66, 0x45, 0xe3, 0x35, 0xde, 0x75, 0x51, 0xa9, 0x7a, 0xe1, 0x15, 0x78, 0x13,
+	0x5e, 0x80, 0x6b, 0x8f, 0x48, 0xdc, 0x11, 0x44, 0x5c, 0x38, 0xf0, 0x00, 0xdc, 0x50, 0xd6, 0x8e,
+	0xeb, 0x26, 0x4e, 0xb8, 0xc0, 0x6d, 0x77, 0xf6, 0x9b, 0xd9, 0x6f, 0xbf, 0x6f, 0x66, 0xe1, 0x7f,
+	0x8f, 0x45, 0xd4, 0x95, 0x3c, 0x3a, 0xb5, 0xc2, 0x88, 0x4b, 0x8e, 0x2a, 0x59, 0xc0, 0x5c, 0xf7,
+	0x39, 0xf7, 0x8f, 0xa9, 0x4d, 0x42, 0x66, 0x93, 0x20, 0xe0, 0x92, 0x48, 0xc6, 0x03, 0x91, 0x00,
+	0xcd, 0x8d, 0xf4, 0x54, 0xed, 0x0e, 0xe3, 0x23, 0x5b, 0xb2, 0x3e, 0x15, 0x92, 0xf4, 0xc3, 0x14,
+	0xb0, 0xe9, 0x33, 0xf9, 0x32, 0x3e, 0xb4, 0x5c, 0xde, 0xb7, 0x7d, 0xee, 0xf3, 0x4b, 0xe4, 0x70,
+	0xa7, 0x36, 0x6a, 0x95, 0xc0, 0xf1, 0x22, 0x2c, 0x74, 0xfa, 0xa1, 0x3c, 0xc5, 0x07, 0xb0, 0xba,
+	0xc7, 0x84, 0xec, 0xd2, 0xe8, 0x84, 0xb9, 0x54, 0x38, 0x54, 0x84, 0x3c, 0x10, 0x14, 0x6d, 0xc1,
+	0x92, 0x48, 0x63, 0x35, 0xad, 0x51, 0x6a, 0x56, 0x5b, 0xd7, 0xad, 0x4b, 0xf6, 0x3b, 0xa3, 0x55,
+	0x9a, 0xe7, 0x64, 0x60, 0xdc, 0x87, 0x1b, 0x8f, 0xa8, 0x3c, 0x88, 0x7c, 0x12, 0xb0, 0xb7, 0xea,
+	0x0d, 0x23, 0x0c, 0x7d, 0x1d, 0x53, 0x21, 0xd1, 0x4d, 0x30, 0x78, 0xee, 0x74, 0x9f, 0xf4, 0x69,
+	0x4d, 0x6b, 0x68, 0xcd, 0x8a, 0x33, 0x11, 0x47, 0x0d, 0xa8, 0xa6, 0x85, 0x15, 0x4c, 0x57, 0xb0,
+	0x7c, 0x08, 0xff, 0xd2, 0xe0, 0xbf, 0xb6, 0xeb, 0x52, 0x21, 0x46, 0xf5, 0x57, 0x40, 0x67, 0x5e,
+	0x5a, 0x51, 0x67, 0x1e, 0xda, 0x82, 0xb2, 0x90, 0x44, 0xc6, 0x42, 0xa5, 0xaf, 0xb4, 0x36, 0x72,
+	0xef, 0xb8, 0x92, 0x69, 0x75, 0x15, 0xcc, 0x49, 0xe1, 0xe8, 0x1e, 0x54, 0xdc, 0x88, 0x12, 0x49,
+	0xbd, 0xb6, 0xac, 0x95, 0x1a, 0x5a, 0xb3, 0xda, 0x32, 0xad, 0xc4, 0x07, 0x6b, 0xa4, 0xae, 0xd5,
+	0x1b, 0xf9, 0xe0, 0x5c, 0x82, 0x87, 0x99, 0x71, 0xe8, 0xa5, 0x99, 0xf3, 0x7f, 0xce, 0xcc, 0xc0,
+	0xf8, 0x16, 0x94, 0x13, 0x16, 0x08, 0xa0, 0xfc, 0xb0, 0xbd, 0xbb, 0xd7, 0xd9, 0x31, 0xe6, 0x50,
+	0x15, 0x16, 0x1f, 0x38, 0x9d, 0x76, 0xaf, 0xb3, 0x63, 0x68, 0x68, 0x09, 0xe6, 0xbb, 0x9d, 0xfd,
+	0x9e, 0xa1, 0xe3, 0x9f, 0x3a, 0x18, 0xe3, 0x4e, 0x8c, 0x4b, 0xa6, 0x4d, 0x48, 0x56, 0x68, 0x80,
+	0x3e, 0xc5, 0x80, 0x3d, 0x58, 0x25, 0x21, 0xeb, 0x86, 0xd4, 0x65, 0x47, 0xcc, 0x55, 0xf1, 0xde,
+	0x69, 0x48, 0x95, 0x1c, 0x95, 0xed, 0xda, 0xe0, 0xcb, 0xc6, 0x6a, 0xfb, 0xe9, 0xee, 0xc4, 0xb9,
+	0x53, 0x98, 0x85, 0xee, 0x67, 0x56, 0xcc, 0x2b, 0x2b, 0xf0, 0x8c, 0x96, 0x1a, 0x77, 0xe3, 0x31,
+	0x5c, 0x3b, 0x26, 0x92, 0x0a, 0x79, 0xc5, 0xb3, 0xda, 0x82, 0x52, 0xb7, 0x36, 0xcd, 0x53, 0xa7,
+	0x28, 0x09, 0xdf, 0xcd, 0x54, 0xae, 0xc2, 0x62, 0x1c, 0xbc, 0x0a, 0xf8, 0x9b, 0xc0, 0x98, 0x43,
+	0x65, 0xd0, 0xe3, 0x30, 0x51, 0xd8, 0x1b, 0x46, 0x74, 0xb4, 0x0c, 0x4b, 0x1e, 0xf5, 0x23, 0xe2,
+	0x51, 0xcf, 0x28, 0x0d, 0x5b, 0x3b, 0xad, 0x90, 0x94, 0xeb, 0xf1, 0x7f, 0xd9, 0xda, 0xad, 0x1f,
+	0x25, 0xa8, 0x64, 0xaa, 0x20, 0x0a, 0xcb, 0xf9, 0x41, 0x45, 0x46, 0xee, 0xc9, 0x6a, 0x94, 0xcd,
+	0x7c, 0x63, 0x17, 0xcd, 0x34, 0xc6, 0xef, 0x3e, 0x7f, 0x7f, 0xaf, 0xaf, 0x23, 0x53, 0x7d, 0x32,
+	0x27, 0xb7, 0xed, 0x0c, 0x6f, 0x8f, 0xc6, 0x17, 0x7d, 0xd0, 0x60, 0xad, 0x78, 0x7e, 0x51, 0x33,
+	0x57, 0x7f, 0xe6, 0x88, 0x9b, 0xb3, 0xbe, 0x0a, 0xfc, 0x4c, 0xb1, 0x78, 0x82, 0x76, 0x27, 0x59,
+	0xe4, 0x45, 0x12, 0xf6, 0xd9, 0xb8, 0x66, 0xe7, 0x19, 0x4d, 0xfb, 0x2c, 0x27, 0xd4, 0x39, 0xfa,
+	0xa8, 0xc1, 0x5a, 0xb1, 0x33, 0x57, 0x48, 0xcf, 0x34, 0xcf, 0x9c, 0xda, 0x43, 0x98, 0x28, 0xc6,
+	0x2f, 0xf0, 0xf3, 0xbf, 0xc6, 0xd8, 0x26, 0xea, 0x82, 0xcd, 0x28, 0xb9, 0x41, 0x6c, 0x1b, 0x17,
+	0xdf, 0xea, 0x73, 0x17, 0x83, 0xba, 0xf6, 0x69, 0x50, 0xd7, 0xbe, 0x0e, 0xea, 0xda, 0x61, 0x59,
+	0x7d, 0x14, 0x77, 0x7e, 0x07, 0x00, 0x00, 0xff, 0xff, 0xff, 0xc2, 0xae, 0xcf, 0x34, 0x06, 0x00,
 	0x00,
 }
 
@@ -408,7 +408,7 @@ const _ = grpc.SupportPackageIsVersion4
 type DirectoryClient interface {
 	ListServices(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ListServicesResponse, error)
 	GetOrganizationService(ctx context.Context, in *GetOrganizationServiceRequest, opts ...grpc.CallOption) (*DirectoryService, error)
-	RequestAccessToService(ctx context.Context, in *RequestAccessToServiceRequest, opts ...grpc.CallOption) (*Empty, error)
+	RequestAccessToService(ctx context.Context, in *RequestAccessToServiceRequest, opts ...grpc.CallOption) (*AccessRequest, error)
 }
 
 type directoryClient struct {
@@ -437,8 +437,8 @@ func (c *directoryClient) GetOrganizationService(ctx context.Context, in *GetOrg
 	return out, nil
 }
 
-func (c *directoryClient) RequestAccessToService(ctx context.Context, in *RequestAccessToServiceRequest, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
+func (c *directoryClient) RequestAccessToService(ctx context.Context, in *RequestAccessToServiceRequest, opts ...grpc.CallOption) (*AccessRequest, error) {
+	out := new(AccessRequest)
 	err := c.cc.Invoke(ctx, "/directory.Directory/RequestAccessToService", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -450,7 +450,7 @@ func (c *directoryClient) RequestAccessToService(ctx context.Context, in *Reques
 type DirectoryServer interface {
 	ListServices(context.Context, *Empty) (*ListServicesResponse, error)
 	GetOrganizationService(context.Context, *GetOrganizationServiceRequest) (*DirectoryService, error)
-	RequestAccessToService(context.Context, *RequestAccessToServiceRequest) (*Empty, error)
+	RequestAccessToService(context.Context, *RequestAccessToServiceRequest) (*AccessRequest, error)
 }
 
 // UnimplementedDirectoryServer can be embedded to have forward compatible implementations.
@@ -463,7 +463,7 @@ func (*UnimplementedDirectoryServer) ListServices(ctx context.Context, req *Empt
 func (*UnimplementedDirectoryServer) GetOrganizationService(ctx context.Context, req *GetOrganizationServiceRequest) (*DirectoryService, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrganizationService not implemented")
 }
-func (*UnimplementedDirectoryServer) RequestAccessToService(ctx context.Context, req *RequestAccessToServiceRequest) (*Empty, error) {
+func (*UnimplementedDirectoryServer) RequestAccessToService(ctx context.Context, req *RequestAccessToServiceRequest) (*AccessRequest, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RequestAccessToService not implemented")
 }
 
@@ -655,6 +655,69 @@ func (m *GetOrganizationServiceRequest) MarshalToSizedBuffer(dAtA []byte) (int, 
 	return len(dAtA) - i, nil
 }
 
+func (m *AccessRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *AccessRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *AccessRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.XXX_unrecognized != nil {
+		i -= len(m.XXX_unrecognized)
+		copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	if m.UpdatedAt != nil {
+		{
+			size, err := m.UpdatedAt.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintDirectory(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x22
+	}
+	if m.CreatedAt != nil {
+		{
+			size, err := m.CreatedAt.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintDirectory(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x1a
+	}
+	if m.Status != 0 {
+		i = encodeVarintDirectory(dAtA, i, uint64(m.Status))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.Id) > 0 {
+		i -= len(m.Id)
+		copy(dAtA[i:], m.Id)
+		i = encodeVarintDirectory(dAtA, i, uint64(len(m.Id)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
 func (m *DirectoryService) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -714,69 +777,6 @@ func (m *DirectoryService) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i -= len(m.ServiceName)
 		copy(dAtA[i:], m.ServiceName)
 		i = encodeVarintDirectory(dAtA, i, uint64(len(m.ServiceName)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *DirectoryService_AccessRequest) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *DirectoryService_AccessRequest) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *DirectoryService_AccessRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.XXX_unrecognized != nil {
-		i -= len(m.XXX_unrecognized)
-		copy(dAtA[i:], m.XXX_unrecognized)
-	}
-	if m.UpdatedAt != nil {
-		{
-			size, err := m.UpdatedAt.MarshalToSizedBuffer(dAtA[:i])
-			if err != nil {
-				return 0, err
-			}
-			i -= size
-			i = encodeVarintDirectory(dAtA, i, uint64(size))
-		}
-		i--
-		dAtA[i] = 0x22
-	}
-	if m.CreatedAt != nil {
-		{
-			size, err := m.CreatedAt.MarshalToSizedBuffer(dAtA[:i])
-			if err != nil {
-				return 0, err
-			}
-			i -= size
-			i = encodeVarintDirectory(dAtA, i, uint64(size))
-		}
-		i--
-		dAtA[i] = 0x1a
-	}
-	if m.Status != 0 {
-		i = encodeVarintDirectory(dAtA, i, uint64(m.Status))
-		i--
-		dAtA[i] = 0x10
-	}
-	if len(m.Id) > 0 {
-		i -= len(m.Id)
-		copy(dAtA[i:], m.Id)
-		i = encodeVarintDirectory(dAtA, i, uint64(len(m.Id)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -885,6 +885,33 @@ func (m *GetOrganizationServiceRequest) Size() (n int) {
 	return n
 }
 
+func (m *AccessRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Id)
+	if l > 0 {
+		n += 1 + l + sovDirectory(uint64(l))
+	}
+	if m.Status != 0 {
+		n += 1 + sovDirectory(uint64(m.Status))
+	}
+	if m.CreatedAt != nil {
+		l = m.CreatedAt.Size()
+		n += 1 + l + sovDirectory(uint64(l))
+	}
+	if m.UpdatedAt != nil {
+		l = m.UpdatedAt.Size()
+		n += 1 + l + sovDirectory(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
 func (m *DirectoryService) Size() (n int) {
 	if m == nil {
 		return 0
@@ -908,33 +935,6 @@ func (m *DirectoryService) Size() (n int) {
 	}
 	if m.LatestAccessRequest != nil {
 		l = m.LatestAccessRequest.Size()
-		n += 1 + l + sovDirectory(uint64(l))
-	}
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
-	}
-	return n
-}
-
-func (m *DirectoryService_AccessRequest) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Id)
-	if l > 0 {
-		n += 1 + l + sovDirectory(uint64(l))
-	}
-	if m.Status != 0 {
-		n += 1 + sovDirectory(uint64(m.Status))
-	}
-	if m.CreatedAt != nil {
-		l = m.CreatedAt.Size()
-		n += 1 + l + sovDirectory(uint64(l))
-	}
-	if m.UpdatedAt != nil {
-		l = m.UpdatedAt.Size()
 		n += 1 + l + sovDirectory(uint64(l))
 	}
 	if m.XXX_unrecognized != nil {
@@ -1229,6 +1229,183 @@ func (m *GetOrganizationServiceRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+func (m *AccessRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowDirectory
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: AccessRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: AccessRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDirectory
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthDirectory
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthDirectory
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Id = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
+			}
+			m.Status = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDirectory
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Status |= AccessRequest_Status(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CreatedAt", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDirectory
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthDirectory
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthDirectory
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.CreatedAt == nil {
+				m.CreatedAt = &types.Timestamp{}
+			}
+			if err := m.CreatedAt.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field UpdatedAt", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDirectory
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthDirectory
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthDirectory
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.UpdatedAt == nil {
+				m.UpdatedAt = &types.Timestamp{}
+			}
+			if err := m.UpdatedAt.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipDirectory(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthDirectory
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthDirectory
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
 func (m *DirectoryService) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1403,186 +1580,9 @@ func (m *DirectoryService) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			if m.LatestAccessRequest == nil {
-				m.LatestAccessRequest = &DirectoryService_AccessRequest{}
+				m.LatestAccessRequest = &AccessRequest{}
 			}
 			if err := m.LatestAccessRequest.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipDirectory(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthDirectory
-			}
-			if (iNdEx + skippy) < 0 {
-				return ErrInvalidLengthDirectory
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *DirectoryService_AccessRequest) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowDirectory
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: AccessRequest: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: AccessRequest: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowDirectory
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthDirectory
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthDirectory
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Id = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
-			}
-			m.Status = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowDirectory
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Status |= DirectoryService_AccessRequest_Status(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field CreatedAt", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowDirectory
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthDirectory
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthDirectory
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.CreatedAt == nil {
-				m.CreatedAt = &types.Timestamp{}
-			}
-			if err := m.CreatedAt.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field UpdatedAt", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowDirectory
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthDirectory
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthDirectory
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.UpdatedAt == nil {
-				m.UpdatedAt = &types.Timestamp{}
-			}
-			if err := m.UpdatedAt.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

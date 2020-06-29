@@ -76,14 +76,14 @@ func (mr *MockDirectoryClientMockRecorder) GetOrganizationService(ctx, in interf
 }
 
 // RequestAccessToService mocks base method
-func (m *MockDirectoryClient) RequestAccessToService(ctx context.Context, in *directory.RequestAccessToServiceRequest, opts ...grpc.CallOption) (*directory.Empty, error) {
+func (m *MockDirectoryClient) RequestAccessToService(ctx context.Context, in *directory.RequestAccessToServiceRequest, opts ...grpc.CallOption) (*directory.AccessRequest, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "RequestAccessToService", varargs...)
-	ret0, _ := ret[0].(*directory.Empty)
+	ret0, _ := ret[0].(*directory.AccessRequest)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -149,10 +149,10 @@ func (mr *MockDirectoryServerMockRecorder) GetOrganizationService(arg0, arg1 int
 }
 
 // RequestAccessToService mocks base method
-func (m *MockDirectoryServer) RequestAccessToService(arg0 context.Context, arg1 *directory.RequestAccessToServiceRequest) (*directory.Empty, error) {
+func (m *MockDirectoryServer) RequestAccessToService(arg0 context.Context, arg1 *directory.RequestAccessToServiceRequest) (*directory.AccessRequest, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RequestAccessToService", arg0, arg1)
-	ret0, _ := ret[0].(*directory.Empty)
+	ret0, _ := ret[0].(*directory.AccessRequest)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

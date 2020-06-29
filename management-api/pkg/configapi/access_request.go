@@ -66,8 +66,8 @@ func convertAccessRequest(a *database.AccessRequest) (*AccessRequest, error) {
 		status = AccessRequest_FAILED
 	case database.AccessRequestCreated:
 		status = AccessRequest_CREATED
-	case database.AccessRequestSend:
-		status = AccessRequest_SEND
+	case database.AccessRequestSent:
+		status = AccessRequest_SENT
 	}
 
 	return &AccessRequest{

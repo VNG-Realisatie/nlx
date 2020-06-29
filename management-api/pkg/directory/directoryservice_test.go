@@ -159,9 +159,9 @@ func TestListServices(t *testing.T) {
 			OrganizationName:     "test-organization-a",
 			APISpecificationType: "OpenAPI3",
 			Status:               directory.DirectoryService_unknown,
-			LatestAccessRequest: &directory.DirectoryService_AccessRequest{
+			LatestAccessRequest: &directory.AccessRequest{
 				Id:        "161c1bd32da2b400",
-				Status:    directory.DirectoryService_AccessRequest_CREATED,
+				Status:    directory.AccessRequest_CREATED,
 				CreatedAt: timestampProto(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 				UpdatedAt: timestampProto(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 			},
@@ -177,9 +177,9 @@ func TestListServices(t *testing.T) {
 			OrganizationName:     "test-organization-b",
 			APISpecificationType: "",
 			Status:               directory.DirectoryService_unknown,
-			LatestAccessRequest: &directory.DirectoryService_AccessRequest{
+			LatestAccessRequest: &directory.AccessRequest{
 				Id:        "161c188cfcea1939",
-				Status:    directory.DirectoryService_AccessRequest_CREATED,
+				Status:    directory.AccessRequest_CREATED,
 				CreatedAt: timestampProto(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
 				UpdatedAt: timestampProto(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
 			},

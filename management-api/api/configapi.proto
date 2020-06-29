@@ -144,7 +144,7 @@ message AccessRequest {
 	enum Status {
 		FAILED = 0;
 		CREATED = 1;
-		SEND = 2;
+		SENT = 2;
 	}
 
 	string id = 1;

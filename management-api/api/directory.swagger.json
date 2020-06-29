@@ -54,7 +54,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/directoryEmpty"
+              "$ref": "#/definitions/directoryAccessRequest"
             }
           },
           "default": {
@@ -107,14 +107,14 @@
     }
   },
   "definitions": {
-    "DirectoryServiceAccessRequest": {
+    "directoryAccessRequest": {
       "type": "object",
       "properties": {
         "id": {
           "type": "string"
         },
         "status": {
-          "$ref": "#/definitions/DirectoryServiceAccessRequestStatus"
+          "$ref": "#/definitions/directoryAccessRequestStatus"
         },
         "createdAt": {
           "type": "string",
@@ -126,12 +126,12 @@
         }
       }
     },
-    "DirectoryServiceAccessRequestStatus": {
+    "directoryAccessRequestStatus": {
       "type": "string",
       "enum": [
         "FAILED",
         "CREATED",
-        "SEND"
+        "SENT"
       ],
       "default": "FAILED"
     },
@@ -151,7 +151,7 @@
           "$ref": "#/definitions/directoryDirectoryServiceStatus"
         },
         "latestAccessRequest": {
-          "$ref": "#/definitions/DirectoryServiceAccessRequest"
+          "$ref": "#/definitions/directoryAccessRequest"
         }
       }
     },
@@ -164,9 +164,6 @@
         "degraded"
       ],
       "default": "unknown"
-    },
-    "directoryEmpty": {
-      "type": "object"
     },
     "directoryListServicesResponse": {
       "type": "object",

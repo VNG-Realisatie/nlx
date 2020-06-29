@@ -20,7 +20,7 @@ service Directory {
     rpc GetOrganizationService (GetOrganizationServiceRequest) returns (DirectoryService) {
         option (google.api.http) = { get: "/api/v1/directory/organizations/{organizationName}/services/{serviceName}" };
     }
-    rpc RequestAccessToService (RequestAccessToServiceRequest) returns (Empty) {
+    rpc RequestAccessToService (RequestAccessToServiceRequest) returns (AccessRequest) {
         option (google.api.http) = { post: "/api/v1/directory/organizations/{organizationName}/services/{serviceName}/access-requests" };
     }
 }
@@ -36,20 +36,21 @@ message GetOrganizationServiceRequest {
     string organizationName = 1;
     string serviceName = 2;
 }
-message DirectoryService {
-    message AccessRequest {
-        enum Status {
-            FAILED = 0;
-            CREATED = 1;
-            SEND = 2;
-        }
 
-        string id = 1;
-        Status status = 2;
-        google.protobuf.Timestamp createdAt = 3;
-        google.protobuf.Timestamp updatedAt = 4;
+message AccessRequest {
+    enum Status {
+        FAILED = 0;
+        CREATED = 1;
+        SENT = 2;
     }
 
+    string id = 1;
+    Status status = 2;
+    google.protobuf.Timestamp createdAt = 3;
+    google.protobuf.Timestamp updatedAt = 4;
+}
+
+message DirectoryService {
     enum Status {
         unknown = 0;
         up = 1;

@@ -24,7 +24,7 @@ type AccessRequestStatus int
 const (
 	AccessRequestFailed AccessRequestStatus = iota
 	AccessRequestCreated
-	AccessRequestSend
+	AccessRequestSent
 )
 
 func (db ETCDConfigDatabase) ListAllOutgoingAccessRequests(ctx context.Context) ([]*AccessRequest, error) {

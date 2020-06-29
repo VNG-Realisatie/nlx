@@ -430,7 +430,7 @@
       "enum": [
         "FAILED",
         "CREATED",
-        "SEND"
+        "SENT"
       ],
       "default": "FAILED"
     },
