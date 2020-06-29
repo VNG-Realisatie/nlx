@@ -237,6 +237,36 @@ func (mr *MockConfigDatabaseMockRecorder) ListOutgoingAccessRequests(ctx, organi
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOutgoingAccessRequests", reflect.TypeOf((*MockConfigDatabase)(nil).ListOutgoingAccessRequests), ctx, organizationName, serviceName)
 }
 
+// GetLatestOutgoingAccessRequest mocks base method
+func (m *MockConfigDatabase) GetLatestOutgoingAccessRequest(ctx context.Context, organizationName, serviceName string) (*database.AccessRequest, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetLatestOutgoingAccessRequest", ctx, organizationName, serviceName)
+	ret0, _ := ret[0].(*database.AccessRequest)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetLatestOutgoingAccessRequest indicates an expected call of GetLatestOutgoingAccessRequest
+func (mr *MockConfigDatabaseMockRecorder) GetLatestOutgoingAccessRequest(ctx, organizationName, serviceName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLatestOutgoingAccessRequest", reflect.TypeOf((*MockConfigDatabase)(nil).GetLatestOutgoingAccessRequest), ctx, organizationName, serviceName)
+}
+
+// ListAllLatestOutgoingAccessRequests mocks base method
+func (m *MockConfigDatabase) ListAllLatestOutgoingAccessRequests(ctx context.Context) (map[string]*database.AccessRequest, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListAllLatestOutgoingAccessRequests", ctx)
+	ret0, _ := ret[0].(map[string]*database.AccessRequest)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListAllLatestOutgoingAccessRequests indicates an expected call of ListAllLatestOutgoingAccessRequests
+func (mr *MockConfigDatabaseMockRecorder) ListAllLatestOutgoingAccessRequests(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAllLatestOutgoingAccessRequests", reflect.TypeOf((*MockConfigDatabase)(nil).ListAllLatestOutgoingAccessRequests), ctx)
+}
+
 // CreateAccessRequest mocks base method
 func (m *MockConfigDatabase) CreateAccessRequest(ctx context.Context, accessRequest *database.AccessRequest) (*database.AccessRequest, error) {
 	m.ctrl.T.Helper()

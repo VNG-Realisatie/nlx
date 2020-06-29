@@ -26,12 +26,6 @@ var inwayStateToDirectoryStatus = map[InwayState]DirectoryService_Status{
 	InwayStateDown:    DirectoryService_down,
 }
 
-var accessRequestStatus = map[database.AccessRequestStatus]AccessRequest_Status{
-	database.AccessRequestFailed:  AccessRequest_FAILED,
-	database.AccessRequestCreated: AccessRequest_CREATED,
-	database.AccessRequestSent:    AccessRequest_SENT,
-}
-
 func NewDirectoryService(logger *zap.Logger, e *environment.Environment, directoryClient Client, configDatabase database.ConfigDatabase) *Service {
 	return &Service{
 		logger:          logger,
@@ -51,19 +45,10 @@ func (s Service) ListServices(ctx context.Context, _ *Empty) (*ListServicesRespo
 		return nil, status.Errorf(codes.Internal, "directory error")
 	}
 
-	ar, err := s.configDatabase.ListAllOutgoingAccessRequests(ctx)
+	latestRequests, err := s.configDatabase.ListAllLatestOutgoingAccessRequests(ctx)
 	if err != nil {
 		s.logger.Error("error getting access requests", zap.Error(err))
-		return nil, status.Errorf(codes.Internal, "directory error")
-	}
-
-	latestRequests := make(map[string]*database.AccessRequest)
-
-	for _, a := range ar {
-		key := a.OrganizationName + a.ServiceName
-		if _, ok := latestRequests[key]; !ok {
-			latestRequests[key] = a
-		}
+		return nil, status.Errorf(codes.Internal, "database error")
 	}
 
 	services := make([]*DirectoryService, len(listServices))
@@ -73,21 +58,14 @@ func (s Service) ListServices(ctx context.Context, _ *Empty) (*ListServicesRespo
 
 		key := service.OrganizationName + service.Name
 		if a, ok := latestRequests[key]; ok {
-			createdAt, err := types.TimestampProto(a.CreatedAt)
+			latestAccessRequest, err := convertAccessRequest(a)
 			if err != nil {
-				break
+				s.logger.Error("error getting latest access request", zap.Error(err))
+				return nil, status.Errorf(codes.Internal, "database error")
 			}
 
-			updatedAt, err := types.TimestampProto(a.UpdatedAt)
-			if err != nil {
-				break
-			}
-
-			services[i].LatestAccessRequest = &AccessRequest{
-				Id:        a.ID,
-				Status:    accessRequestStatus[a.Status],
-				CreatedAt: createdAt,
-				UpdatedAt: updatedAt,
+			if latestAccessRequest != nil {
+				services[i].LatestAccessRequest = latestAccessRequest
 			}
 		}
 	}
@@ -96,7 +74,7 @@ func (s Service) ListServices(ctx context.Context, _ *Empty) (*ListServicesRespo
 }
 
 // GetOrganizationService returns a specific service of and organization
-func (s Service) GetOrganizationService(_ context.Context, request *GetOrganizationServiceRequest) (*DirectoryService, error) {
+func (s Service) GetOrganizationService(ctx context.Context, request *GetOrganizationServiceRequest) (*DirectoryService, error) {
 	logger := s.logger.With(zap.String("organizationName", request.OrganizationName), zap.String("serviceName", request.ServiceName))
 	logger.Info("rpc request GetOrganizationService")
 
@@ -105,7 +83,25 @@ func (s Service) GetOrganizationService(_ context.Context, request *GetOrganizat
 		return nil, err
 	}
 
-	return convertDirectoryService(service), nil
+	directoryService := convertDirectoryService(service)
+
+	latestAccessRequest, err := s.configDatabase.GetLatestOutgoingAccessRequest(ctx, request.OrganizationName, request.ServiceName)
+	if err != nil {
+		s.logger.Error("error getting access requests", zap.Error(err))
+		return nil, status.Errorf(codes.Internal, "database error")
+	}
+
+	if latestAccessRequest != nil {
+		accessRequest, err := convertAccessRequest(latestAccessRequest)
+		if err != nil {
+			s.logger.Error("error converting access request", zap.Error(err))
+			return nil, status.Errorf(codes.Internal, "database error")
+		}
+
+		directoryService.LatestAccessRequest = accessRequest
+	}
+
+	return directoryService, nil
 }
 
 func (s Service) getService(logger *zap.Logger, organizationName, serviceName string) (*InspectionAPIService, error) {

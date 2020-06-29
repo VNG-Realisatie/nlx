@@ -116,8 +116,8 @@ func TestListServices(t *testing.T) {
 		},
 	}
 
-	databaseAccessRequests := []*database.AccessRequest{
-		{
+	databaseAccessRequests := map[string]*database.AccessRequest{
+		"test-organization-btest-service-3": {
 			ID:               "161c188cfcea1939",
 			OrganizationName: "test-organization-b",
 			ServiceName:      "test-service-3",
@@ -125,15 +125,7 @@ func TestListServices(t *testing.T) {
 			CreatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
 			UpdatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
 		},
-		{
-			ID:               "161c1883711fba02",
-			OrganizationName: "test-organization-b",
-			ServiceName:      "test-service-3",
-			Status:           database.AccessRequestCreated,
-			CreatedAt:        time.Date(2020, time.June, 26, 12, 42, 1, 2, time.UTC),
-			UpdatedAt:        time.Date(2020, time.June, 26, 12, 42, 1, 2, time.UTC),
-		},
-		{
+		"test-organization-atest-service-1": {
 			ID:               "161c1bd32da2b400",
 			OrganizationName: "test-organization-a",
 			ServiceName:      "test-service-1",
@@ -147,7 +139,7 @@ func TestListServices(t *testing.T) {
 	client.EXPECT().ListServices().Return(clientServices, nil)
 
 	db := mock_database.NewMockConfigDatabase(mockCtrl)
-	db.EXPECT().ListAllOutgoingAccessRequests(ctx).Return(databaseAccessRequests, nil)
+	db.EXPECT().ListAllLatestOutgoingAccessRequests(ctx).Return(databaseAccessRequests, nil)
 
 	service := directory.NewDirectoryService(logger, env, client, db)
 	response, err := service.ListServices(ctx, &directory.Empty{})

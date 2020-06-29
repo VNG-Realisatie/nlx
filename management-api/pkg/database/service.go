@@ -149,6 +149,37 @@ func FilterServices(services []*Service, inway *Inway) []*Service {
 	return result
 }
 
+func (db ETCDConfigDatabase) ListAllLatestOutgoingAccessRequests(ctx context.Context) (map[string]*AccessRequest, error) {
+	accessRequests, err := db.ListAllOutgoingAccessRequests(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	latestAccessRequests := make(map[string]*AccessRequest)
+
+	for _, a := range accessRequests {
+		key := a.OrganizationName + a.ServiceName
+		if _, ok := latestAccessRequests[key]; !ok {
+			latestAccessRequests[key] = a
+		}
+	}
+
+	return latestAccessRequests, nil
+}
+
+func (db ETCDConfigDatabase) GetLatestOutgoingAccessRequest(ctx context.Context, organizationName, serviceName string) (*AccessRequest, error) {
+	accessRequests, err := db.ListOutgoingAccessRequests(ctx, organizationName, serviceName)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, a := range accessRequests {
+		return a, nil
+	}
+
+	return nil, nil
+}
+
 func contains(s []string, v string) bool {
 	for _, e := range s {
 		if e == v {
