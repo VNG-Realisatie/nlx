@@ -12,7 +12,7 @@
     "axe-core": "3.5.5",
     "jest": "26.1.0",
     "jest-puppeteer": "4.4.0",
-    "puppeteer": "3.3.0"
+    "puppeteer": "4.0.1"
   },
   "jest": {
     "preset": "jest-puppeteer"
