@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 
-import { t, Selector } from 'testcafe'
+import { t } from 'testcafe'
 
 import { getBaseUrl } from '../../utils'
 import addPage, { AUTHORIZATION_TYPE_NONE } from './page-models/add-service'
@@ -56,10 +56,10 @@ export async function removeService() {
       }
       return true
     })
-    .click(detailPage.removeButton).takeScreenshot()
+    .click(detailPage.removeButton)
 
   await t
-    .expect(Selector('[role="alert"]').innerText).contains('De service is verwijderd.')
+    .expect(detailPage.alert.innerText).contains('De service is verwijderd.')
 
   t.ctx.serviceName = null
 }
