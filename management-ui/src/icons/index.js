@@ -1,7 +1,6 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-export { ReactComponent as IconAlertCircle } from './iconAlertCircle.svg'
 export { ReactComponent as IconArrowLeftRight } from './arrow-left-right.svg'
 export { ReactComponent as IconBin } from './bin.svg'
 export { ReactComponent as IconCheck } from './check.svg'
@@ -20,3 +19,5 @@ export { ReactComponent as IconStatusDown } from './status-down.svg'
 export { ReactComponent as IconStatusUnknown } from './status-unknown.svg'
 export { ReactComponent as IconStatusUp } from './status-up.svg'
 export { ReactComponent as IconVisible } from './visible.svg'
+export { ReactComponent as IconWarningCircle } from './error-warning.svg'
+export { ReactComponent as IconWarningCircleFill } from './error-warning-fill.svg'

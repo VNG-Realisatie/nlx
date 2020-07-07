@@ -5,13 +5,15 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import PageTemplate from '../../components/PageTemplate'
 
-import { NotFoundContainer } from './index.styles'
+import { NotFoundContainer, StyledIconErrorCircle } from './index.styles'
 
 const NotFoundPage = () => {
   const { t } = useTranslation()
   return (
     <PageTemplate>
       <NotFoundContainer>
+        <StyledIconErrorCircle title={t('Error')} />
+
         <h1>{t('Page not found')}</h1>
         <p>{t('We could not find what you were looking for.')}</p>
         <p>
