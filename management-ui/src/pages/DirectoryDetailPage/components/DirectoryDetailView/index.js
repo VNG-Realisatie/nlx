@@ -10,8 +10,15 @@ import { AccessRequestContext } from '../../../DirectoryPage'
 import AccessRequestMessage from '../../../DirectoryPage/components/AccessRequestMessage'
 import { SectionGroup } from '../../../../components/DetailView'
 
-import { IconKey } from '../../../../icons'
-import { AccessSection, IconItem, StatusItem } from './index.styles'
+import { IconKey, IconRedo } from '../../../../icons'
+
+import {
+  StyledAlert,
+  RetryButton,
+  AccessSection,
+  IconItem,
+  StatusItem,
+} from './index.styles'
 
 const DirectoryDetailView = ({
   organizationName,
@@ -39,30 +46,47 @@ const DirectoryDetailView = ({
   }
 
   return (
-    <SectionGroup>
-      <AccessSection data-testid="request-access-section">
-        {latestAccessRequest ? (
-          <>
-            <IconItem as={icon} />
-            <StatusItem>
-              <AccessRequestMessage latestAccessRequest={latestAccessRequest} />
-              {icon === Spinner && '...'}
-            </StatusItem>
-          </>
-        ) : (
-          <>
-            <IconItem as={IconKey} />
-            <StatusItem>{t('You have no access')}</StatusItem>
-            <Button
-              onClick={requestAccess}
-              disabled={isRequestSentForThisService}
-            >
-              {t('Request Access')}
-            </Button>
-          </>
-        )}
-      </AccessSection>
-    </SectionGroup>
+    <>
+      {latestAccessRequest && latestAccessRequest.status === 'FAILED' ? (
+        <StyledAlert variant="error" title={t('Request could not be sent')}>
+          <RetryButton
+            onClick={requestAccess}
+            disabled={isRequestSentForThisService}
+          >
+            <IconRedo />
+            {t('Try again')}
+          </RetryButton>
+        </StyledAlert>
+      ) : null}
+
+      <SectionGroup>
+        <AccessSection data-testid="request-access-section">
+          {latestAccessRequest ? (
+            <>
+              <IconItem as={icon} />
+              <StatusItem>
+                <AccessRequestMessage
+                  latestAccessRequest={latestAccessRequest}
+                  inDetailView
+                />
+                {icon === Spinner && '...'}
+              </StatusItem>
+            </>
+          ) : (
+            <>
+              <IconItem as={IconKey} />
+              <StatusItem>{t('You have no access')}</StatusItem>
+              <Button
+                onClick={requestAccess}
+                disabled={isRequestSentForThisService}
+              >
+                {t('Request Access')}
+              </Button>
+            </>
+          )}
+        </AccessSection>
+      </SectionGroup>
+    </>
   )
 }
 

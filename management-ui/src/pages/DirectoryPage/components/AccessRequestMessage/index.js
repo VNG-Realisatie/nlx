@@ -2,22 +2,34 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { shape, string, oneOf } from 'prop-types'
+import { shape, string, oneOf, bool } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 
-import { WarnText } from './index.styles'
+import { IconWarningCircleFill } from '../../../../icons'
+import { FailedDetail, ErrorText, WarnText } from './index.styles'
 
 const statusMessage = {
-  FAILED: (t) => <WarnText>{t('Request could not be sent')}</WarnText>,
+  FAILED: (t, inDetailView) =>
+    inDetailView ? (
+      <FailedDetail>
+        <span>{t('Access request')}</span>
+        <ErrorText>
+          <IconWarningCircleFill title={t('Error')} />
+          {t('Request could not be sent')}
+        </ErrorText>
+      </FailedDetail>
+    ) : (
+      <WarnText>{t('Request could not be sent')}</WarnText>
+    ),
   CREATED: (t) => <span>{t('Sending request')}</span>,
   SENT: (t) => <span>{t('Requested')}</span>,
 }
 
-const AccessRequestMessage = ({ latestAccessRequest }) => {
+const AccessRequestMessage = ({ latestAccessRequest, inDetailView }) => {
   const { t } = useTranslation()
   const status = latestAccessRequest ? latestAccessRequest.status : null
 
-  return status ? statusMessage[status](t) : null
+  return status ? statusMessage[status](t, inDetailView) : null
 }
 
 AccessRequestMessage.propTypes = {
@@ -27,6 +39,7 @@ AccessRequestMessage.propTypes = {
     createdAt: string,
     updatedAt: string,
   }),
+  inDetailView: bool,
 }
 
 export default AccessRequestMessage

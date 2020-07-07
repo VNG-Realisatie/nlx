@@ -12,7 +12,7 @@ test('by default should render nothing', () => {
 })
 
 describe('render correct message', () => {
-  it('for state: FAILED', () => {
+  it('FAILED state', () => {
     const latestAccessRequest = {
       id: 'id',
       status: 'FAILED',
@@ -26,7 +26,25 @@ describe('render correct message', () => {
     expect(getByText('Request could not be sent')).toBeInTheDocument()
   })
 
-  it('for state: SENT', () => {
+  it('FAILED state in detail view', () => {
+    const latestAccessRequest = {
+      id: 'id',
+      status: 'FAILED',
+      createdAt: '2020-10-1T12:06:02Z',
+      updatedAt: '2020-10-1T12:06:04Z',
+    }
+    const { getByText } = renderWithProviders(
+      <AccessRequestMessage
+        latestAccessRequest={latestAccessRequest}
+        inDetailView
+      />,
+    )
+
+    expect(getByText('Access request')).toBeInTheDocument()
+    expect(getByText('Request could not be sent')).toBeInTheDocument()
+  })
+
+  it('SENT state', () => {
     const latestAccessRequest = {
       id: 'id',
       status: 'SENT',

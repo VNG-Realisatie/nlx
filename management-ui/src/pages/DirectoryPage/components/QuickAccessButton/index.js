@@ -5,14 +5,15 @@ import React from 'react'
 import { func } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 
-import { AccessButton, StyledIconKey } from './index.styles'
+import { IconKey } from '../../../../icons'
+import { AccessButton } from './index.styles'
 
 const QuickAccessButton = (props) => {
   const { t } = useTranslation()
 
   return (
     <AccessButton {...props}>
-      <StyledIconKey />
+      <IconKey />
       {t('Request')}
     </AccessButton>
   )

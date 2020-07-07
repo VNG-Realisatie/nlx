@@ -2,6 +2,17 @@
 // Licensed under the EUPL
 //
 import styled from 'styled-components'
+import { Alert } from '@commonground/design-system'
+
+import LinkButton from '../../../../components/LinkButton'
+
+export const StyledAlert = styled(Alert)`
+  margin-bottom: ${(p) => p.theme.tokens.spacing05};
+`
+
+export const RetryButton = styled(LinkButton)`
+  margin-top: ${(p) => p.theme.tokens.spacing05};
+`
 
 export const AccessSection = styled.section`
   display: flex;
@@ -10,7 +21,7 @@ export const AccessSection = styled.section`
 `
 
 export const IconItem = styled.div`
-  width: ${(p) => p.theme.tokens.spacing07};
+  margin-right: ${(p) => p.theme.tokens.spacing03};
   color: ${(p) => p.theme.colorTextLabel};
 `
 

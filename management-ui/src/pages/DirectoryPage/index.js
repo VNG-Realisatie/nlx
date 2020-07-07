@@ -44,6 +44,7 @@ const DirectoryPage = ({ getDirectoryServices, requestAccess }) => {
       try {
         await requestAccess(organizationName, serviceName)
         reload()
+        setRequestSentTo(DEFAULT_REQUEST_SENT_STATE)
       } catch (e) {
         console.error(e)
         setRequestSentTo(DEFAULT_REQUEST_SENT_STATE)

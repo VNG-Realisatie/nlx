@@ -49,7 +49,7 @@ describe('detail view of directory service we do not have access to', () => {
   })
 
   it('should show a loading message', () => {
-    const serviceWithOutstandingAccessRequest = {
+    const serviceWithOutstandingRequest = {
       ...service,
       latestAccessRequest: {
         id: 'string',
@@ -58,14 +58,44 @@ describe('detail view of directory service we do not have access to', () => {
         updatedAt: '2020-06-30T08:31:41.106Z',
       },
     }
+
     const { getByText } = renderWithProviders(
       <AccessRequestContext.Provider
         value={{ requestSentTo, handleRequestAccess }}
       >
-        <DirectoryDetailView {...serviceWithOutstandingAccessRequest} />
+        <DirectoryDetailView {...serviceWithOutstandingRequest} />
       </AccessRequestContext.Provider>,
     )
 
     expect(getByText('Sending request')).toBeInTheDocument()
+  })
+
+  it('should show a failed message and retry button', () => {
+    const serviceWithFailedRequest = {
+      ...service,
+      latestAccessRequest: {
+        id: 'string',
+        status: 'FAILED',
+        createdAt: '2020-06-30T08:31:41.106Z',
+        updatedAt: '2020-06-30T08:31:41.106Z',
+      },
+    }
+
+    const { getByText, getAllByText } = renderWithProviders(
+      <AccessRequestContext.Provider
+        value={{ requestSentTo, handleRequestAccess }}
+      >
+        <DirectoryDetailView {...serviceWithFailedRequest} />
+      </AccessRequestContext.Provider>,
+    )
+
+    const failedMessages = getAllByText('Request could not be sent')
+    const retryButton = getByText('Try again')
+
+    expect(failedMessages).toHaveLength(2)
+    expect(retryButton).toBeInTheDocument()
+
+    fireEvent.click(retryButton)
+    expect(handleRequestAccess).toHaveBeenCalled()
   })
 })
