@@ -1,0 +1,11 @@
+{{- if not .Values.tls.generateCertificate }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "nlx-outway.fullname" . }}
+  labels:
+    {{- include "nlx-outway.labels" . | nindent 4 }}
+data:
+  root.crt: |
+    {{ (required "Root certificate PEM is required" .Values.tls.rootCertificatePEM) | nindent 4 }}
+{{- end }}
