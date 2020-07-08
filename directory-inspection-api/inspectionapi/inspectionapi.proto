@@ -15,11 +15,11 @@ option (gogoproto.goproto_getters_all) = false;
 service DirectoryInspection {
 	// ListServices lists all services and their gateways.
 	rpc ListServices (ListServicesRequest) returns (ListServicesResponse) {
-		option (google.api.http).get = "/directory/list-services";
+		option (google.api.http).get = "/api/directory/list-services";
 	}
 	// ListOrganizations lists all organizations and their details.
 	rpc ListOrganizations (ListOrganizationsRequest) returns (ListOrganizationsResponse) {
-		option (google.api.http).get = "/directory/list-organizations";
+		option (google.api.http).get = "/api/directory/list-organizations";
 	}
 }
 

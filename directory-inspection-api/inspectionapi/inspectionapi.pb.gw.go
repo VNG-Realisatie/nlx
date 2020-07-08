@@ -70,6 +70,7 @@ func local_request_DirectoryInspection_ListOrganizations_0(ctx context.Context, 
 // RegisterDirectoryInspectionHandlerServer registers the http handlers for service DirectoryInspection to "mux".
 // UnaryRPC     :call DirectoryInspectionServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
+// Note that using this registration option will cause many gRPC library features (such as grpc.SendHeader, etc) to stop working. Consider using RegisterDirectoryInspectionHandlerFromEndpoint instead.
 func RegisterDirectoryInspectionHandlerServer(ctx context.Context, mux *runtime.ServeMux, server DirectoryInspectionServer) error {
 
 	mux.Handle("GET", pattern_DirectoryInspection_ListServices_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
@@ -197,9 +198,9 @@ func RegisterDirectoryInspectionHandlerClient(ctx context.Context, mux *runtime.
 }
 
 var (
-	pattern_DirectoryInspection_ListServices_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"directory", "list-services"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_DirectoryInspection_ListServices_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "directory", "list-services"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_DirectoryInspection_ListOrganizations_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"directory", "list-organizations"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_DirectoryInspection_ListOrganizations_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "directory", "list-organizations"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (

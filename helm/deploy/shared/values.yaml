@@ -38,8 +38,6 @@ nlx-directory:
     ingress:
       enabled: true
       class: traefik
-      annotations:
-        traefik.frontend.rule.type: PathPrefixStrip
       hosts:
         - "directory.shared.nlx.minikube"
 

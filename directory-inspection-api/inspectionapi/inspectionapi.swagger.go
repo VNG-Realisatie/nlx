@@ -15,15 +15,21 @@ SwaggerJSONDirectoryInspection = `
     "application/json"
   ],
   "paths": {
-    "/directory/list-organizations": {
+    "/api/directory/list-organizations": {
       "get": {
         "summary": "ListOrganizations lists all organizations and their details.",
-        "operationId": "ListOrganizations",
+        "operationId": "DirectoryInspection_ListOrganizations",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/inspectionapiListOrganizationsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
             }
           }
         },
@@ -32,15 +38,21 @@ SwaggerJSONDirectoryInspection = `
         ]
       }
     },
-    "/directory/list-services": {
+    "/api/directory/list-services": {
       "get": {
         "summary": "ListServices lists all services and their gateways.",
-        "operationId": "ListServices",
+        "operationId": "DirectoryInspection_ListServices",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/inspectionapiListServicesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
             }
           }
         },
@@ -146,6 +158,39 @@ SwaggerJSONDirectoryInspection = `
           "type": "array",
           "items": {
             "$ref": "#/definitions/ListServicesResponseService"
+          }
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "type_url": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "runtimeError": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
           }
         }
       }
