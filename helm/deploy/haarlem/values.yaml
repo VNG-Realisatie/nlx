@@ -121,7 +121,6 @@ insight-api:
     existingSecret: haarlem-postgresql-auth
   ingress:
     enabled: true
-    class: traefik
     hosts:
       - insight-api.haarlem.nlx.minikube
 
@@ -175,7 +174,6 @@ irma-server:
         issue_perms: ["*"]
   ingress:
     enabled: true
-    class: traefik
     annotations:
       ingress.kubernetes.io/custom-response-headers: "Access-Control-Allow-Origin: https://insight.shared.nlx.minikube"
     host: irma.haarlem.nlx.minikube
@@ -190,6 +188,5 @@ parkeervergunning-application:
     rdwURL: http://haarlem-nlx-outway/RDW/kentekenregister/voertuigen
   ingress:
     enabled: true
-    class: traefik
     hosts:
       - parkeren.haarlem.nlx.minikube

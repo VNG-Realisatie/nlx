@@ -111,7 +111,6 @@ insight-api:
     existingSecret: brp-postgresql-auth
   ingress:
     enabled: true
-    class: traefik
     hosts:
       - insight-api.brp.nlx.minikube
 
@@ -165,7 +164,6 @@ irma-server:
         issue_perms: ["*"]
   ingress:
     enabled: true
-    class: traefik
     annotations:
       ingress.kubernetes.io/custom-response-headers: "Access-Control-Allow-Origin: https://insight.shared.nlx.minikube"
     host: irma.brp.nlx.minikube

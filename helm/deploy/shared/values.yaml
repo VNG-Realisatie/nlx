@@ -37,14 +37,12 @@ nlx-directory:
   ui:
     ingress:
       enabled: true
-      class: traefik
       hosts:
         - "directory.shared.nlx.minikube"
 
 nlx-docs:
   ingress:
     enabled: true
-    class: traefik
     hosts:
       - "docs.shared.nlx.minikube"
 
@@ -53,7 +51,6 @@ ca-certportal:
     caAPIAddress: shared-ca-cfssl-unsafe
   ingress:
     enabled: true
-    class: traefik
     hosts:
       - "certportal.shared.nlx.minikube"
 
@@ -66,6 +63,5 @@ insight-ui:
     navbarDirectoryURL: "https://directory.shared.nlx.minikube"
   ingress:
     enabled: true
-    class: traefik
     hosts:
       - "insight.shared.nlx.minikube"

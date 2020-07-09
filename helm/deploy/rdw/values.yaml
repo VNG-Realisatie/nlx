@@ -94,7 +94,6 @@ nlx-management:
       sessionSignKey: 0Xn2DBfb4L4hwN3XosbwoKZalLBU68UU
   ingress:
     enabled: true
-    class: traefik
     uiHostname: nlx-management.rdw.nlx.minikube
 
 dex:
@@ -123,8 +122,6 @@ dex:
       skipApprovalScreen: false
   ingress:
     enabled: true
-    annotations:
-      kubernetes.io/ingress.class: traefik
     hosts:
       - dex.rdw.nlx.minikube
   ports:
@@ -191,7 +188,6 @@ insight-api:
     existingSecret: rdw-postgresql-auth
   ingress:
     enabled: true
-    class: traefik
     hosts:
       - insight-api.rdw.nlx.minikube
 
@@ -245,7 +241,6 @@ irma-server:
         issue_perms: ["*"]
   ingress:
     enabled: true
-    class: traefik
     annotations:
       ingress.kubernetes.io/custom-response-headers: "Access-Control-Allow-Origin: https://insight.shared.nlx.minikube"
     host: irma.rdw.nlx.minikube
