@@ -5,7 +5,7 @@
 import React from 'react'
 import { MemoryRouter, Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
-import { act, fireEvent } from '@testing-library/react'
+import { act } from '@testing-library/react'
 import { renderWithProviders, waitFor } from '../../test-utils'
 import deferredPromise from '../../test-utils/deferred-promise'
 import { UserContextProvider } from '../../user-context'
@@ -56,10 +56,6 @@ test('listing all services', async () => {
 
   expect(queryAllByTestId('service-row')).toHaveLength(1)
   expect(getByText('my-first-service')).toBeInTheDocument()
-
-  fireEvent.click(getByTestId('service-row'))
-
-  expect(history.location.pathname).toEqual('/services/my-first-service')
 })
 
 test('no services', async () => {
