@@ -98,7 +98,7 @@ describe('the EditServicePage', () => {
     })
 
     expect(history.location.pathname).toEqual('/services/mock-service')
-    expect(history.location.search).toEqual('?edited=true')
+    expect(history.location.search).toEqual('?lastAction=edited')
   })
 
   it('re-submitting the form when the previous submission went wrong', async () => {
@@ -141,7 +141,7 @@ describe('the EditServicePage', () => {
     expect(updateHandler).toHaveBeenCalledTimes(2)
 
     expect(history.location.pathname).toEqual('/services/mock-service')
-    expect(history.location.search).toEqual('?edited=true')
+    expect(history.location.search).toEqual('?lastAction=edited')
   })
 
   it('submitting when the HTTP response is not ok', async () => {

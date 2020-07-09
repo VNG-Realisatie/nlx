@@ -6,6 +6,8 @@ import { func, string } from 'prop-types'
 import { useParams, useHistory } from 'react-router-dom'
 import { Alert, Drawer } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
+
+import serviceActions from '../ServicesPage/serviceActions'
 import ServiceRepository from '../../domain/service-repository'
 import ServiceDetails from '../../components/ServiceDetails'
 import usePromise from '../../hooks/use-promise'
@@ -25,7 +27,9 @@ const ServiceDetailPage = ({
 
   const handleRemove = async () => {
     await removeService(service)
-    history.push(`/services/${service.name}?removed=true`)
+    history.push(
+      `/services/${service.name}?lastAction=${serviceActions.REMOVED}`,
+    )
     refreshHandler()
   }
 

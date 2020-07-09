@@ -1,12 +1,13 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-
 import React, { useState } from 'react'
 import { func } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
 import { Alert } from '@commonground/design-system'
+
+import serviceActions from '../ServicesPage/serviceActions'
 import PageTemplate from '../../components/PageTemplate'
 import ServiceRepository from '../../domain/service-repository'
 import ServiceForm from '../../components/ServiceForm'
@@ -24,7 +25,9 @@ const AddServicePage = ({ createHandler }) => {
 
     createHandler(service)
       .then((service) => {
-        history.push(`/services/${service.name}?new=true`)
+        history.push(
+          `/services/${service.name}?lastAction=${serviceActions.ADDED}`,
+        )
       })
       .catch((err) => {
         setIsAdded(false)

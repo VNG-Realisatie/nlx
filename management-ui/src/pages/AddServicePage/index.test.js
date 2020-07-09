@@ -54,7 +54,7 @@ describe('the AddServicePage', () => {
     })
 
     expect(history.location.pathname).toEqual('/services/my-service')
-    expect(history.location.search).toEqual('?new=true')
+    expect(history.location.search).toEqual('?lastAction=added')
   })
 
   it('re-submitting the form when the previous submission went wrong', async () => {
@@ -90,7 +90,7 @@ describe('the AddServicePage', () => {
 
     expect(createHandler).toHaveBeenCalledTimes(2)
     expect(history.location.pathname).toEqual('/services/my-service')
-    expect(history.location.search).toEqual('?new=true')
+    expect(history.location.search).toEqual('?lastAction=added')
   })
 
   it('submitting when the HTTP response is not ok', async () => {

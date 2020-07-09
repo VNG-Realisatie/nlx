@@ -21,9 +21,7 @@ import {
 import AuthorizationMode from './AuthorizationMode'
 import ServiceCount from './ServiceCount'
 import { StyledActionsBar, StyledIconPlus, TdAlignRight } from './index.styles'
-import ServiceAddedToastManager from './ServiceAddedToastManager'
-import ServiceEditedToastManager from './ServiceEditedToastManager'
-import ServiceRemovedToastManager from './ServiceRemovedToastManager'
+import ServiceToastManager from './ServiceToastManager'
 
 const ServiceRow = ({
   name,
@@ -65,9 +63,7 @@ const ServicesPage = ({ getServices }) => {
 
   return (
     <PageTemplate>
-      <ServiceAddedToastManager />
-      <ServiceEditedToastManager />
-      <ServiceRemovedToastManager />
+      <ServiceToastManager />
 
       <PageTemplate.Header title={t('Services')} />
 

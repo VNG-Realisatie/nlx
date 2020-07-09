@@ -97,13 +97,13 @@ test('removing the service', async () => {
   )
 
   const removeButton = await findByText('Remove service')
-  await act(() => {
+  act(() => {
     removeButton.click()
   })
 
   expect(removeService).toHaveBeenCalledTimes(1)
   await act(async () => {})
   expect(history.location.pathname).toEqual('/services/dummy-service')
-  expect(history.location.search).toEqual('?removed=true')
+  expect(history.location.search).toEqual('?lastAction=removed')
   expect(refreshHandler).toHaveBeenCalledTimes(1)
 })

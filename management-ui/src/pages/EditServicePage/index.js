@@ -7,6 +7,8 @@ import { func } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { Alert } from '@commonground/design-system'
 import { useHistory, useParams } from 'react-router-dom'
+
+import serviceActions from '../ServicesPage/serviceActions'
 import ServiceForm from '../../components/ServiceForm'
 import ServiceRepository from '../../domain/service-repository'
 import PageTemplate from '../../components/PageTemplate'
@@ -30,7 +32,9 @@ const EditServicePage = ({ updateHandler, getServiceByName }) => {
 
     try {
       const updatedService = await updateHandler(name, service)
-      history.push(`/services/${updatedService.name}?edited=true`)
+      history.push(
+        `/services/${updatedService.name}?lastAction=${serviceActions.EDITED}`,
+      )
     } catch (err) {
       setUpdatedError(err.message)
       setisUpdated(false)
