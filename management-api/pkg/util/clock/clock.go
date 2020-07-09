@@ -42,3 +42,10 @@ func (f *FakeClock) SetTime(t time.Time) {
 
 	f.time = t
 }
+
+func (f *FakeClock) Step(d time.Duration) {
+	f.mutex.Lock()
+	defer f.mutex.Unlock()
+
+	f.time = f.time.Add(d)
+}

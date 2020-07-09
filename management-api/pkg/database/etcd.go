@@ -54,14 +54,32 @@ func NewEtcdConfigDatabase(logger *zap.Logger, p *process.Process, connectionStr
 }
 
 func (db ETCDConfigDatabase) put(ctx context.Context, key string, value interface{}) error {
-	key = path.Join(db.pathPrefix, key)
-
 	data, err := json.Marshal(value)
 	if err != nil {
 		return err
 	}
 
-	_, err = db.etcdCli.Put(ctx, key, string(data))
+	_, err = db.etcdCli.Put(ctx, db.key(key), string(data))
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// get retrieves the value under key and stores the result in the value pointed to by dest.
+func (db ETCDConfigDatabase) get(ctx context.Context, key string, dest interface{}, opts ...clientv3.OpOption) error {
+	response, err := db.etcdCli.Get(ctx, db.key(key), opts...)
+	if err != nil {
+		return err
+	}
+
+	if response.Count == 0 {
+		return nil
+	}
+
+	err = json.Unmarshal(response.Kvs[0].Value, dest)
+
 	if err != nil {
 		return err
 	}
@@ -71,14 +89,12 @@ func (db ETCDConfigDatabase) put(ctx context.Context, key string, value interfac
 
 // list retrieves all the values under the key prefix and stores the result in the value pointed to by dest.
 // The value pointed by dest must be a slice.
-func (db ETCDConfigDatabase) list(ctx context.Context, key string, dest interface{}) error {
+func (db ETCDConfigDatabase) list(ctx context.Context, key string, dest interface{}, opts ...clientv3.OpOption) error {
 	destValue := reflect.ValueOf(dest).Elem()
 	destValueType := destValue.Type()
 	destElementType := destValueType.Elem().Elem()
 
-	key = path.Join(db.pathPrefix, key)
-
-	response, err := db.etcdCli.Get(ctx, key, clientv3.WithPrefix())
+	response, err := db.etcdCli.Get(ctx, db.key(key), append(opts, clientv3.WithPrefix())...)
 	if err != nil {
 		return err
 	}
@@ -103,4 +119,8 @@ func (db ETCDConfigDatabase) list(ctx context.Context, key string, dest interfac
 	}
 
 	return nil
+}
+
+func (db ETCDConfigDatabase) key(k string) string {
+	return path.Join(db.pathPrefix, k)
 }

@@ -2,11 +2,21 @@ package configapi
 
 import (
 	context "context"
+	"errors"
+	"fmt"
 
 	"github.com/gogo/protobuf/types"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
+
+var accessRequestStatus = map[database.AccessRequestStatus]AccessRequest_Status{
+	database.AccessRequestFailed:   AccessRequest_FAILED,
+	database.AccessRequestCreated:  AccessRequest_CREATED,
+	database.AccessRequestReceived: AccessRequest_RECEIVED,
+}
 
 func (s *ConfigService) ListOutgoingAccessRequests(ctx context.Context, req *ListOutgoingAccessRequestsRequest) (*ListOutgoingAccessRequestsResponse, error) {
 	l, err := s.configDatabase.ListOutgoingAccessRequests(ctx, req.OrganizationName, req.ServiceName)
@@ -37,6 +47,10 @@ func (s *ConfigService) CreateAccessRequest(ctx context.Context, req *CreateAcce
 
 	a, err := s.configDatabase.CreateAccessRequest(ctx, ar)
 	if err != nil {
+		if errors.Is(err, database.ErrActiveAccessRequest) {
+			return nil, status.Errorf(codes.AlreadyExists, "there is already an active access request")
+		}
+
 		return nil, err
 	}
 
@@ -59,22 +73,16 @@ func convertAccessRequest(a *database.AccessRequest) (*AccessRequest, error) {
 		return nil, err
 	}
 
-	var status AccessRequest_Status
-
-	switch a.Status {
-	case database.AccessRequestFailed:
-		status = AccessRequest_FAILED
-	case database.AccessRequestCreated:
-		status = AccessRequest_CREATED
-	case database.AccessRequestSent:
-		status = AccessRequest_SENT
+	aStatus, ok := accessRequestStatus[a.Status]
+	if !ok {
+		return nil, fmt.Errorf("unsupported status: %s", string(a.Status))
 	}
 
 	return &AccessRequest{
 		Id:               a.ID,
 		OrganizationName: a.OrganizationName,
 		ServiceName:      a.ServiceName,
-		Status:           status,
+		Status:           aStatus,
 		CreatedAt:        createdAt,
 		UpdatedAt:        updatedAt,
 	}, nil

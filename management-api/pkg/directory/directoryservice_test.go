@@ -117,7 +117,7 @@ func TestListServices(t *testing.T) {
 	}
 
 	databaseAccessRequests := map[string]*database.AccessRequest{
-		"test-organization-btest-service-3": {
+		"test-organization-b/test-service-3": {
 			ID:               "161c188cfcea1939",
 			OrganizationName: "test-organization-b",
 			ServiceName:      "test-service-3",
@@ -125,7 +125,7 @@ func TestListServices(t *testing.T) {
 			CreatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
 			UpdatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
 		},
-		"test-organization-atest-service-1": {
+		"test-organization-a/test-service-1": {
 			ID:               "161c1bd32da2b400",
 			OrganizationName: "test-organization-a",
 			ServiceName:      "test-service-1",

@@ -41,7 +41,7 @@ message AccessRequest {
     enum Status {
         FAILED = 0;
         CREATED = 1;
-        SENT = 2;
+        RECEIVED = 2;
     }
 
     string id = 1;

@@ -11,14 +11,14 @@
     "application/json"
   ],
   "paths": {
-    "/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}": {
-      "get": {
-        "operationId": "ConfigApi_ListOutgoingAccessRequests",
+    "/api/v1/access-requests": {
+      "post": {
+        "operationId": "ConfigApi_CreateAccessRequest",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/configapiListOutgoingAccessRequestsResponse"
+              "$ref": "#/definitions/configapiAccessRequest"
             }
           },
           "default": {
@@ -30,29 +30,27 @@
         },
         "parameters": [
           {
-            "name": "organizationName",
-            "in": "path",
+            "name": "body",
+            "in": "body",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "serviceName",
-            "in": "path",
-            "required": true,
-            "type": "string"
+            "schema": {
+              "$ref": "#/definitions/configapiCreateAccessRequestRequest"
+            }
           }
         ],
         "tags": [
           "ConfigApi"
         ]
-      },
-      "post": {
-        "operationId": "ConfigApi_CreateAccessRequest",
+      }
+    },
+    "/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}": {
+      "get": {
+        "operationId": "ConfigApi_ListOutgoingAccessRequests",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/configapiAccessRequest"
+              "$ref": "#/definitions/configapiListOutgoingAccessRequestsResponse"
             }
           },
           "default": {
@@ -430,7 +428,7 @@
       "enum": [
         "FAILED",
         "CREATED",
-        "SENT"
+        "RECEIVED"
       ],
       "default": "FAILED"
     },
@@ -481,6 +479,17 @@
         "updatedAt": {
           "type": "string",
           "format": "date-time"
+        }
+      }
+    },
+    "configapiCreateAccessRequestRequest": {
+      "type": "object",
+      "properties": {
+        "organizationName": {
+          "type": "string"
+        },
+        "serviceName": {
+          "type": "string"
         }
       }
     },

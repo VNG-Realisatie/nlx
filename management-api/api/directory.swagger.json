@@ -131,7 +131,7 @@
       "enum": [
         "FAILED",
         "CREATED",
-        "SENT"
+        "RECEIVED"
       ],
       "default": "FAILED"
     },

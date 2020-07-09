@@ -2,6 +2,7 @@ package directory
 
 import (
 	"context"
+	"path"
 
 	types "github.com/gogo/protobuf/types"
 	"go.uber.org/zap"
@@ -56,7 +57,7 @@ func (s Service) ListServices(ctx context.Context, _ *Empty) (*ListServicesRespo
 	for i, service := range listServices {
 		services[i] = convertDirectoryService(service)
 
-		key := service.OrganizationName + service.Name
+		key := path.Join(service.OrganizationName, service.Name)
 		if a, ok := latestRequests[key]; ok {
 			latestAccessRequest, err := convertAccessRequest(a)
 			if err != nil {
@@ -199,20 +200,20 @@ func convertAccessRequest(a *database.AccessRequest) (*AccessRequest, error) {
 		return nil, err
 	}
 
-	var accessRequestStatus AccessRequest_Status
+	var accessRequestState AccessRequest_Status
 
 	switch a.Status {
 	case database.AccessRequestFailed:
-		accessRequestStatus = AccessRequest_FAILED
+		accessRequestState = AccessRequest_FAILED
 	case database.AccessRequestCreated:
-		accessRequestStatus = AccessRequest_CREATED
-	case database.AccessRequestSent:
-		accessRequestStatus = AccessRequest_SENT
+		accessRequestState = AccessRequest_CREATED
+	case database.AccessRequestReceived:
+		accessRequestState = AccessRequest_RECEIVED
 	}
 
 	return &AccessRequest{
 		Id:        a.ID,
-		Status:    accessRequestStatus,
+		Status:    accessRequestState,
 		CreatedAt: createdAt,
 		UpdatedAt: updatedAt,
 	}, nil

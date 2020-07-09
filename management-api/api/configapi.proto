@@ -54,7 +54,7 @@ service ConfigApi {
 	}
 
 	rpc CreateAccessRequest (CreateAccessRequestRequest) returns (AccessRequest) {
-		option (google.api.http) = { post: "/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}"};
+		option (google.api.http) = { post: "/api/v1/access-requests" body: "*" };
 	}
 }
 
@@ -144,7 +144,7 @@ message AccessRequest {
 	enum Status {
 		FAILED = 0;
 		CREATED = 1;
-		SENT = 2;
+		RECEIVED = 2;
 	}
 
 	string id = 1;
