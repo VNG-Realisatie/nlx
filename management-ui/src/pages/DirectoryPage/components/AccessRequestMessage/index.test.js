@@ -44,10 +44,10 @@ describe('render correct message', () => {
     expect(getByText('Request could not be sent')).toBeInTheDocument()
   })
 
-  it('SENT state', () => {
+  it('RECEIVED state', () => {
     const latestAccessRequest = {
       id: 'id',
-      status: 'SENT',
+      status: 'RECEIVED',
       createdAt: '2020-10-1T12:06:02Z',
       updatedAt: '2020-10-1T12:06:04Z',
     }

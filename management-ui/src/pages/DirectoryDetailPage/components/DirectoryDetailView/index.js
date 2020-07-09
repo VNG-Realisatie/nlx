@@ -10,11 +10,10 @@ import { AccessRequestContext } from '../../../DirectoryPage'
 import AccessRequestMessage from '../../../DirectoryPage/components/AccessRequestMessage'
 import { SectionGroup } from '../../../../components/DetailView'
 
-import { IconKey, IconRedo } from '../../../../icons'
+import { IconKey } from '../../../../icons'
 
 import {
   StyledAlert,
-  RetryButton,
   AccessSection,
   IconItem,
   StatusItem,
@@ -40,24 +39,16 @@ const DirectoryDetailView = ({
   let icon = Spinner
   if (
     latestAccessRequest &&
-    ['FAILED', 'SENT'].includes(latestAccessRequest.status)
+    ['FAILED', 'RECEIVED'].includes(latestAccessRequest.status)
   ) {
     icon = IconKey
   }
 
   return (
     <>
-      {latestAccessRequest && latestAccessRequest.status === 'FAILED' ? (
-        <StyledAlert variant="error" title={t('Request could not be sent')}>
-          <RetryButton
-            onClick={requestAccess}
-            disabled={isRequestSentForThisService}
-          >
-            <IconRedo />
-            {t('Try again')}
-          </RetryButton>
-        </StyledAlert>
-      ) : null}
+      {latestAccessRequest && latestAccessRequest.status === 'FAILED' && (
+        <StyledAlert variant="error" title={t('Request could not be sent')} />
+      )}
 
       <SectionGroup>
         <AccessSection data-testid="request-access-section">

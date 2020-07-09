@@ -22,7 +22,7 @@ const statusMessage = {
       <WarnText>{t('Request could not be sent')}</WarnText>
     ),
   CREATED: (t) => <span>{t('Sending request')}</span>,
-  SENT: (t) => <span>{t('Requested')}</span>,
+  RECEIVED: (t) => <span>{t('Requested')}</span>,
 }
 
 const AccessRequestMessage = ({ latestAccessRequest, inDetailView }) => {

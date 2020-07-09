@@ -42,7 +42,7 @@ const DirectoryPage = ({ getDirectoryServices, requestAccess }) => {
       setRequestSentTo({ organizationName, serviceName })
 
       try {
-        await requestAccess(organizationName, serviceName)
+        await requestAccess({ organizationName, serviceName })
         reload()
         setRequestSentTo(DEFAULT_REQUEST_SENT_STATE)
       } catch (e) {
@@ -81,10 +81,7 @@ const DirectoryPage = ({ getDirectoryServices, requestAccess }) => {
             handleRequestAccess={handleRequestAccess}
           />
           <Route exact path="/directory/:organizationName/:serviceName">
-            <DirectoryDetailPage
-              parentUrl="/directory"
-              // isReloaded={isReloaded}
-            />
+            <DirectoryDetailPage parentUrl="/directory" />
           </Route>
         </AccessRequestContext.Provider>
       )}

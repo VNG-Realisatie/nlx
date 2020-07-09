@@ -2,13 +2,11 @@
 // Licensed under the EUPL
 //
 class AccessRequestRepository {
-  static async requestAccess(organizationName, serviceName) {
-    const result = await fetch(
-      `/api/v1/access-requests/outgoing/organizations/${organizationName}/services/${serviceName}`,
-      {
-        method: 'POST',
-      },
-    )
+  static async requestAccess(payload) {
+    const result = await fetch(`/api/v1/access-requests`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    })
 
     if (result.status === 409) {
       alert(
