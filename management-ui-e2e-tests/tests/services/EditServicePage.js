@@ -62,7 +62,5 @@ test('Show the missing inways warning', async (t) => {
     publishToCentralDirectory: true,
   })
 
-  // await t.expect(addPage.alert.innerText).contains('De service is bijgewerkt.')
-
   await t.navigateTo(`${baseUrl}/services/${t.ctx.serviceName}`)
 })
