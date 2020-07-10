@@ -22,6 +22,11 @@
   },
   "packageRules": [
     {
+      "packageNames": ["history"],
+      "manager": ["npm"],
+      "allowedVersions": "<5.0.0"
+    },
+    {
       "groupName": "etcd fails with grpc > 1.26.0",
       "managers": ["gomod"],
       "packageNames": ["google.golang.org/grpc"],
