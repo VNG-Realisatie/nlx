@@ -63,7 +63,7 @@
     "eslint-plugin-promise": "4.2.1",
     "eslint-plugin-standard": "4.0.1",
     "history": "4.10.1",
-    "http-proxy-middleware": "1.0.4",
+    "http-proxy-middleware": "1.0.5",
     "i18next-parser": "2.1.0",
     "jest-fetch-mock": "3.0.3",
     "prettier": "2.0.5",
