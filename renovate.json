@@ -22,12 +22,6 @@
   },
   "packageRules": [
     {
-      "groupName": "docusaurus packages",
-      "paths": ["docs/**"],
-      "packagePatterns": ["^@docusaurus/"],
-      "allowedVersions": "2.0.0-alpha.36"
-    },
-    {
       "groupName": "etcd fails with grpc > 1.26.0",
       "managers": ["gomod"],
       "packageNames": ["google.golang.org/grpc"],
