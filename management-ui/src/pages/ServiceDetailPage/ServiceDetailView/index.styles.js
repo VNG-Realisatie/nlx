@@ -2,8 +2,8 @@
 // Licensed under the EUPL
 //
 import styled from 'styled-components'
-import RemoveButton from '../RemoveButton'
-import { ServiceVisibilityAlert } from '../ServiceVisibilityAlert'
+import RemoveButton from '../../../components/RemoveButton'
+import { ServiceVisibilityAlert } from '../../../components/ServiceVisibilityAlert'
 
 export const StyledInwayName = styled.span`
   flex-grow: 1;

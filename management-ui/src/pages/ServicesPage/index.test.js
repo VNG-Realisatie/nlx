@@ -11,19 +11,17 @@ import deferredPromise from '../../test-utils/deferred-promise'
 import { UserContextProvider } from '../../user-context'
 import ServicesPage from './index'
 
-test('listing all services', async () => {
+jest.mock('./ServicesPageView', () => () => (
+  <p data-testid="services-list">mock-services</p>
+))
+
+test('fetching all services', async () => {
   const history = createMemoryHistory({ initialEntries: ['/services'] })
 
   const fetchServicesPromise = deferredPromise()
   const fetchServicesHandler = jest.fn(() => fetchServicesPromise)
 
-  const {
-    getByRole,
-    getByTestId,
-    getByLabelText,
-    getByText,
-    queryAllByTestId,
-  } = renderWithProviders(
+  const { getByRole, getByTestId, getByLabelText } = renderWithProviders(
     <Router history={history}>
       <UserContextProvider user={{}}>
         <ServicesPage getServices={fetchServicesHandler} />
@@ -48,34 +46,13 @@ test('listing all services', async () => {
     ])
   })
 
-  waitFor(() => expect(getByTestId('services-list')).toBeInTheDocument())
+  waitFor(() =>
+    expect(getByTestId('services-list')).toHaveTextContent('mock-services'),
+  )
   expect(getByTestId('service-count')).toHaveTextContent('1Services')
 
   const linkAddService = getByLabelText(/Add service/)
   expect(linkAddService.getAttribute('href')).toBe('/services/add-service')
-
-  expect(queryAllByTestId('service-row')).toHaveLength(1)
-  expect(getByText('my-first-service')).toBeInTheDocument()
-})
-
-test('no services', async () => {
-  const fetchServicesHandler = jest.fn(() => Promise.resolve([]))
-
-  const { findByText, getByTestId } = renderWithProviders(
-    <MemoryRouter>
-      <UserContextProvider user={{}}>
-        <ServicesPage getServices={fetchServicesHandler} />
-      </UserContextProvider>
-    </MemoryRouter>,
-  )
-
-  await act(async () => {
-    expect(
-      await findByText(/^There are no services yet\.$/),
-    ).toBeInTheDocument()
-    expect(() => getByTestId('services-list')).toThrow()
-    expect(getByTestId('service-count')).toHaveTextContent('0Services')
-  })
 })
 
 test('failed to load services', async () => {

@@ -7,18 +7,18 @@ import { Link, useLocation } from 'react-router-dom'
 import { arrayOf, bool, func, oneOf, shape, string } from 'prop-types'
 import { Table } from '@commonground/design-system'
 
-import Amount from '../Amount'
-import Collapsible from '../Collapsible'
-import EditButton from '../EditButton'
+import Amount from '../../../components/Amount'
+import Collapsible from '../../../components/Collapsible'
+import EditButton from '../../../components/EditButton'
 import {
   DetailHeading,
   DetailHeadingLight,
   SectionGroup,
   StyledCollapsibleBody,
   StyledCollapsibleEmptyBody,
-} from '../DetailView'
-import { IconHidden, IconInway, IconKey, IconVisible } from '../../icons'
-import { showServiceVisibilityAlert } from '../ServiceVisibilityAlert'
+} from '../../../components/DetailView'
+import { IconHidden, IconInway, IconKey, IconVisible } from '../../../icons'
+import { showServiceVisibilityAlert } from '../../../components/ServiceVisibilityAlert'
 import {
   StyledActionsBar,
   StyledInwayName,
@@ -26,7 +26,7 @@ import {
   StyledServiceVisibilityAlert,
 } from './index.styles'
 
-const ServiceDetails = ({ service, removeHandler }) => {
+const ServiceDetailView = ({ service, removeHandler }) => {
   const { internal, authorizationSettings, inways } = service
   const { t } = useTranslation()
   const location = useLocation()
@@ -152,7 +152,7 @@ const ServiceDetails = ({ service, removeHandler }) => {
   )
 }
 
-ServiceDetails.propTypes = {
+ServiceDetailView.propTypes = {
   service: shape({
     endpointURL: string,
     documentationURL: string,
@@ -171,8 +171,8 @@ ServiceDetails.propTypes = {
   removeHandler: func.isRequired,
 }
 
-ServiceDetails.defaultProps = {
+ServiceDetailView.defaultProps = {
   removeHandler: () => {},
 }
 
-export default ServiceDetails
+export default ServiceDetailView

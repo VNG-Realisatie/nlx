@@ -3,7 +3,7 @@
 //
 
 import React from 'react'
-import { renderWithProviders } from '../../../test-utils'
+import { renderWithProviders } from '../../../../../test-utils'
 import AuthorizationMode from './index'
 
 test('no authorization mode', () => {

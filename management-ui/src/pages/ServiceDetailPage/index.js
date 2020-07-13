@@ -9,9 +9,9 @@ import { useTranslation } from 'react-i18next'
 
 import serviceActions from '../ServicesPage/serviceActions'
 import ServiceRepository from '../../domain/service-repository'
-import ServiceDetails from '../../components/ServiceDetails'
 import usePromise from '../../hooks/use-promise'
 import LoadingMessage from '../../components/LoadingMessage'
+import ServiceDetailView from './ServiceDetailView'
 
 const ServiceDetailPage = ({
   getServiceByName,
@@ -50,7 +50,7 @@ const ServiceDetailPage = ({
             {t('Failed to load the service.', { name })}
           </Alert>
         ) : service ? (
-          <ServiceDetails service={service} removeHandler={handleRemove} />
+          <ServiceDetailView service={service} removeHandler={handleRemove} />
         ) : null}
       </Drawer.Content>
     </Drawer>

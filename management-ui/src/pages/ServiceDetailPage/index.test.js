@@ -9,7 +9,7 @@ import { createMemoryHistory } from 'history'
 import { renderWithProviders } from '../../test-utils'
 import ServiceDetailPage from './index'
 
-jest.mock('../../components/ServiceDetails', () => ({ removeHandler }) => (
+jest.mock('./ServiceDetailView', () => ({ removeHandler }) => (
   <div data-testid="service-details">
     <button type="button" onClick={removeHandler}>
       Remove service

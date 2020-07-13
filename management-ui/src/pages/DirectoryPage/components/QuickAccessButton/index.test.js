@@ -7,5 +7,7 @@ import { renderWithProviders } from '../../../../test-utils'
 import QuickAccessButton from './index'
 
 test('renders without crashing', () => {
-  expect(() => renderWithProviders(<QuickAccessButton />)).not.toThrow()
+  expect(() =>
+    renderWithProviders(<QuickAccessButton onClick={jest.fn()} />),
+  ).not.toThrow()
 })
