@@ -10,16 +10,15 @@ import { UserContextProvider } from '../../user-context'
 import deferredPromise from '../../test-utils/deferred-promise'
 import InwaysPage from './index'
 
+jest.mock('./InwaysPageView', () => () => (
+  <p data-testid="inways-list">mock inways</p>
+))
+
 test('listing all inways', async () => {
   const fetchInwaysPromise = deferredPromise()
   const fetchInwaysHandler = jest.fn(() => fetchInwaysPromise)
 
-  const {
-    getByRole,
-    getByTestId,
-    findByTestId,
-    getByText,
-  } = renderWithProviders(
+  const { getByRole, getByTestId, findByTestId } = renderWithProviders(
     <Router>
       <UserContextProvider user={{}}>
         <InwaysPage getInways={fetchInwaysHandler} />
@@ -46,31 +45,7 @@ test('listing all inways', async () => {
     ])
   })
 
-  expect(await findByTestId('inways-list')).toBeInTheDocument()
-  expect(getByText('name')).toBeInTheDocument()
-  expect(getByText('hostname')).toBeInTheDocument()
-  expect(getByText('self-address')).toBeInTheDocument()
-  expect(getByTestId('services-count')).toHaveTextContent('1')
-  expect(getByText('version')).toBeInTheDocument()
-})
-
-test('no inways', async () => {
-  const fetchInwaysHandler = jest.fn(() => Promise.resolve([]))
-
-  const { findByText, getByTestId } = renderWithProviders(
-    <Router>
-      <UserContextProvider user={{}}>
-        <InwaysPage getInways={fetchInwaysHandler} />
-      </UserContextProvider>
-    </Router>,
-  )
-
-  await act(async () => {
-    expect(
-      await findByText(/^There are no inways registered yet\.$/),
-    ).toBeInTheDocument()
-    expect(() => getByTestId('inways-list')).toThrow()
-  })
+  expect(await findByTestId('inways-list')).toHaveTextContent('mock inways')
 })
 
 test('failed to load inways', async () => {

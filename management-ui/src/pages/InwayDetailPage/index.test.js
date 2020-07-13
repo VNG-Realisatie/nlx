@@ -7,7 +7,7 @@ import { StaticRouter as Router, Route } from 'react-router-dom'
 import { renderWithProviders } from '../../test-utils'
 import InwayDetailPage from './index'
 
-jest.mock('../../components/InwayDetails', () => ({ inway }) => (
+jest.mock('./InwayDetailPageView', () => ({ inway }) => (
   <div data-testid="inway-details">{inway.name}</div>
 ))
 

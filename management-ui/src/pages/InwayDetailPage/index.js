@@ -8,9 +8,9 @@ import { Alert, Drawer } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 
 import InwayRepository from '../../domain/inway-repository'
-import InwayDetails from '../../components/InwayDetails'
 import usePromise from '../../hooks/use-promise'
 import LoadingMessage from '../../components/LoadingMessage'
+import InwayDetailPageView from './InwayDetailPageView'
 
 const InwayDetailPage = ({ getInwayByName, parentUrl }) => {
   const { name } = useParams()
@@ -35,9 +35,9 @@ const InwayDetailPage = ({ getInwayByName, parentUrl }) => {
           <Alert variant="error" data-testid="error-message">
             {t('Failed to load the details for this inway.', { name })}
           </Alert>
-        ) : inway ? (
-          <InwayDetails inway={inway} />
-        ) : null}
+        ) : (
+          <InwayDetailPageView inway={inway} />
+        )}
       </Drawer.Content>
     </Drawer>
   )

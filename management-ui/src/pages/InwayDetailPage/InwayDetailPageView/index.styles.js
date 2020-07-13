@@ -3,8 +3,8 @@
 //
 import styled from 'styled-components'
 
-import SpecList from '../SpecList'
-import { IconInway } from '../../icons'
+import SpecList from '../../../components/SpecList'
+import { IconInway } from '../../../icons'
 
 export const SubHeader = styled.div`
   display: flex;
