@@ -21,7 +21,8 @@ nlx-management:
       redirectURL: https://nlx-management-rdw-{{DOMAIN_SUFFIX}}/oidc/callback
       sessionSignKey: 0Xn2DBfb4L4hwN3XosbwoKZalLBU68UU
   ingress:
-    uiHostname: nlx-management-rdw-{{DOMAIN_SUFFIX}}
+    hosts:
+      - nlx-management-rdw-{{DOMAIN_SUFFIX}}
 
 dex:
   config:

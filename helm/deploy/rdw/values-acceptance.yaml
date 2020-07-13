@@ -18,7 +18,8 @@ nlx-management:
       redirectURL: https://management.acc.voorbeeld-rdw.nl/oidc/callback
       sessionSignKey: wXDSJYQjSLCsigtnRCbBMWjnvEhHFdu4
   ingress:
-    uiHostname: management.acc.voorbeeld-rdw.nl
+    hosts:
+      - management.acc.voorbeeld-rdw.nl
 
 dex:
   config:

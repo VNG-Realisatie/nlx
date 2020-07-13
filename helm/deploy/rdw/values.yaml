@@ -94,7 +94,8 @@ nlx-management:
       sessionSignKey: 0Xn2DBfb4L4hwN3XosbwoKZalLBU68UU
   ingress:
     enabled: true
-    uiHostname: nlx-management.rdw.nlx.minikube
+    hosts:
+      - nlx-management.rdw.nlx.minikube
 
 dex:
   config:

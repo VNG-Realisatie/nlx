@@ -72,8 +72,11 @@ ingress:
   enabled: false
   class: ""
   annotations: {}
-  uiHostname:
-  tlsSecretName:
+  hosts: []
+  tls: []
+    # - secretName: chart-example-tls
+    #   hosts:
+    #     - chart-example.local
 
 resources: {}
 
