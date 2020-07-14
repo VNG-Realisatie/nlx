@@ -42,6 +42,6 @@ will appear to be unhealthy.
    the service has to bring the service back online or has some internal 
    networking problems.
  - **M1** Directory monitoring cannot reach the inway to perform a healthcheck.
-   The registered Inway service will appear as unhealthy on https://directory.nlx.io.
+   The registered Inway service will appear as unhealthy on [https://directory.nlx.io](https://directory.nlx.io).
    An Outway will still recieve the advertised address of the Inway but
    most likely most Outway's cannot connect to an unhealthy Inway.

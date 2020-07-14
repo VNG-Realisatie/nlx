@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -22,7 +22,7 @@ function DocPage(props) {
   const {route: baseRoute, docsMetadata, location} = props;
   // case-sensitive route such as it is defined in the sidebar
   const currentRoute =
-    baseRoute.routes.find(route => {
+    baseRoute.routes.find((route) => {
       return matchPath(location.pathname, route);
     }) || {};
   const {permalinkToSidebar, docsSidebars, version} = docsMetadata;
@@ -31,6 +31,7 @@ function DocPage(props) {
     siteConfig: {themeConfig = {}} = {},
     isClient,
   } = useDocusaurusContext();
+
   const {sidebarCollapsible = true} = themeConfig;
 
   if (Object.keys(currentRoute).length === 0) {
@@ -41,7 +42,7 @@ function DocPage(props) {
     <Layout version={version} key={isClient}>
       <div className={styles.docPage}>
         {sidebar && (
-          <div className={styles.docSidebarContainer}>
+          <div className={styles.docSidebarContainer} role="complementary">
             <DocSidebar
               docsSidebars={docsSidebars}
               path={currentRoute.path}

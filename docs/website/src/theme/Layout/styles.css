@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -63,24 +63,28 @@
 
 html,
 body {
-    height: 100%;
+  height: 100%;
 }
 
 body {
-    margin: 0;
-    transition: var(--ifm-transition-fast) ease color;
+  margin: 0;
+  transition: var(--ifm-transition-fast) ease color;
 }
 
-body > div {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+#__docusaurus {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
+.main-wrapper {
+  flex: 1 0 auto;
+  margin-top: 0!important;
+}
 
 html:not([data-theme='dark']) {
     --ifm-navbar-background-color: var(--ifm-color-primary);
-    --ifm-font-base-color: #5b5e6d;
+    --ifm-font-color-base: #5b5e6d;
 }
 
 html:not([data-theme='dark']) .react-toggle-track {
@@ -160,10 +164,4 @@ html[data-theme='dark'] blockquote {
         max-width: 1240px;
     }
 }
-
-
-
-
-
-
 

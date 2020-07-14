@@ -31,10 +31,8 @@
 }
 
 .navbar.navbar--fixed-top {
-    height: 64px;
-    z-index: 1000;
+    min-height: 64px;
 }
-
 
 /* Navigation */
 .navbar .navbar__link {
@@ -73,6 +71,9 @@
 .navbar__search {
     position: absolute;
     right: 0;
+}
+.navbar__search-input {
+    filter: invert(100%);
 }
 .menu .menu__link.menu__link--sublist:after {
     background-image: none !important;
