@@ -18,8 +18,14 @@ nlx-management:
       redirectURL: https://management.acc.voorbeeld-rdw.nl/oidc/callback
       sessionSignKey: wXDSJYQjSLCsigtnRCbBMWjnvEhHFdu4
   ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
       - management.acc.voorbeeld-rdw.nl
+    tls:
+      - secretName: rdw-nlx-management-ingress-tls
+        hosts:
+          - management.acc.voorbeeld-rdw.nl
 
 dex:
   config:
@@ -31,16 +37,33 @@ dex:
         redirectURIs:
           - https://management.acc.voorbeeld-rdw.nl/oidc/callback
   ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
       - dex.acc.voorbeeld-rdw.nl
+    tls:
+      - secretName: rdw-dex-ingress-tls
+        hosts:
+          - dex.acc.voorbeeld-rdw.nl
 
 insight-api:
   ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
       - insight-api.acc.voorbeeld-rdw.nl
+    tls:
+      - secretName: rdw-insight-api-ingress-tls
+        hosts:
+          - insight-api.acc.voorbeeld-rdw.nl
 
 irma-server:
   ingress:
     annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
       ingress.kubernetes.io/custom-response-headers: "Access-Control-Allow-Origin: https://insight.acc.nlx.io"
     host: irma-api.acc.voorbeeld-rdw.nl
+    tls:
+      - secretName: rdw-irma-api-ingress-tls
+        hosts:
+          - irma-api.acc.voorbeeld-rdw.nl

@@ -11,11 +11,22 @@ nlx-inway:
 
 insight-api:
   ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
       - insight-api.acc.voorbeeld-brp.nl
+    tls:
+      - secretName: brp-insight-api-ingress-tls
+        hosts:
+          - insight-api.acc.voorbeeld-brp.nl
 
 irma-server:
   ingress:
     annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
       ingress.kubernetes.io/custom-response-headers: "Access-Control-Allow-Origin: https://insight.acc.nlx.io"
     host: irma-api.acc.voorbeeld-brp.nl
+    tls:
+      - secretName: brp-irma-server-ingress-tls
+        hosts:
+          - irma-api.acc.voorbeeld-brp.nl

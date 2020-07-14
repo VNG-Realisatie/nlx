@@ -11,16 +11,33 @@ nlx-inway:
 
 insight-api:
   ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
       - insight-api.acc.voorbeeld-haarlem.nl
+    tls:
+      - secretName: haarlem-insight-api-ingress-tls
+        hosts:
+          - insight-api.acc.voorbeeld-haarlem.nl
 
 irma-server:
   ingress:
     annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
       ingress.kubernetes.io/custom-response-headers: "Access-Control-Allow-Origin: https://insight.acc.nlx.io"
     host: irma-api.acc.voorbeeld-haarlem.nl
+    tls:
+      - secretName: haarlem-irma-server-ingress-tls
+        hosts:
+          - irma-api.acc.voorbeeld-haarlem.nl
 
 parkeervergunning-application:
   ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
       - application.acc.voorbeeld-haarlem.nl
+    tls:
+      - secretName: haarlem-parkeervergunning-application-ingress-tls
+        hosts:
+          - application.acc.voorbeeld-haarlem.nl
