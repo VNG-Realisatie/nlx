@@ -93,7 +93,7 @@ describe('the ServiceRepository', () => {
       beforeEach(() => {
         jest.spyOn(global, 'fetch').mockImplementation(() =>
           Promise.resolve({
-            ok: true,
+            ok: false,
             status: 400,
           }),
         )

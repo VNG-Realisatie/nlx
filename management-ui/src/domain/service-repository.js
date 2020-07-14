@@ -1,18 +1,18 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { fetchWithoutCaching } from './fetch-utils'
+import { fetchWithoutCaching, throwOnError } from './fetch-utils'
 
 class ServiceRepository {
   static async getAll() {
-    const result = await fetchWithoutCaching(`/api/v1/services`)
+    const response = await fetchWithoutCaching(`/api/v1/services`)
 
-    if (!result.ok) {
+    if (!response.ok) {
       throw new Error('unable to handle the request')
     }
 
-    const response = await result.json()
-    const services = response.services ? response.services : []
+    const result = await response.json()
+    const services = result.services ? result.services : []
     return services.map((service) => {
       service.internal = !!service.internal
       service.inways = service.inways || []
@@ -24,24 +24,14 @@ class ServiceRepository {
   }
 
   static async create(service) {
-    const result = await fetch('/api/v1/services', {
+    const response = await fetch('/api/v1/services', {
       method: 'POST',
       body: JSON.stringify(service),
     })
 
-    if (result.status === 400) {
-      throw new Error('invalid user input')
-    }
+    throwOnError(response)
 
-    if (result.status === 403) {
-      throw new Error('forbidden')
-    }
-
-    if (!result.ok) {
-      throw new Error('unable to handle the request')
-    }
-
-    return result.json()
+    return response.json()
   }
 
   static async update(name, service) {
@@ -49,62 +39,32 @@ class ServiceRepository {
       throw new Error('Changing the service name is not allowed')
     }
 
-    const result = await fetch(`/api/v1/services/${name}`, {
+    const response = await fetch(`/api/v1/services/${name}`, {
       method: 'PUT',
       body: JSON.stringify(service),
     })
 
-    if (result.status === 400) {
-      throw new Error('invalid user input')
-    }
+    throwOnError(response)
 
-    if (result.status === 403) {
-      throw new Error('forbidden')
-    }
-
-    if (!result.ok) {
-      throw new Error('unable to handle the request')
-    }
-
-    return result.json()
+    return response.json()
   }
 
   static async remove(service) {
-    const result = await fetch(`/api/v1/services/${service.name}`, {
+    const response = await fetch(`/api/v1/services/${service.name}`, {
       method: 'DELETE',
     })
 
-    if (result.status === 404) {
-      throw new Error('not found')
-    }
+    throwOnError(response)
 
-    if (result.status === 403) {
-      throw new Error('forbidden')
-    }
-
-    if (!result.ok) {
-      throw new Error('unable to handle the request')
-    }
-
-    return result.json()
+    return response.json()
   }
 
   static async getByName(name) {
-    const result = await fetchWithoutCaching(`/api/v1/services/${name}`)
+    const response = await fetchWithoutCaching(`/api/v1/services/${name}`)
 
-    if (result.status === 404) {
-      throw new Error('not found')
-    }
+    throwOnError(response)
 
-    if (result.status === 403) {
-      throw new Error('forbidden')
-    }
-
-    if (!result.ok) {
-      throw new Error('unable to handle the request')
-    }
-
-    const service = await result.json()
+    const service = await response.json()
     service.internal = !!service.internal
     service.inways = service.inways || []
     service.authorizationSettings.authorizations =

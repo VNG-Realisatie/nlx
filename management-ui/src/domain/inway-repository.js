@@ -1,36 +1,24 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
+import { throwOnError } from './fetch-utils'
 
 class InwayRepository {
   static async getAll() {
-    const result = await fetch(`/api/v1/inways`)
+    const response = await fetch(`/api/v1/inways`)
 
-    if (!result.ok) {
-      throw new Error('unable to handle the request')
-    }
+    throwOnError(response)
 
-    const response = await result.json()
-    return response.inways ? response.inways : []
+    const result = await response.json()
+    return result.inways ? result.inways : []
   }
 
   static async getByName(name) {
-    // Actually searches by key
-    const result = await fetch(`/api/v1/inways/${name}`)
+    const response = await fetch(`/api/v1/inways/${name}`)
 
-    if (result.status === 404) {
-      throw new Error('not found')
-    }
+    throwOnError(response)
 
-    if (result.status === 403) {
-      throw new Error('forbidden')
-    }
-
-    if (!result.ok) {
-      throw new Error('unable to handle the request')
-    }
-
-    const inway = await result.json()
+    const inway = await response.json()
     inway.services = inway.services || []
 
     return inway

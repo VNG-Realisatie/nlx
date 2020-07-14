@@ -3,7 +3,11 @@
 //
 import fetchMock from 'jest-fetch-mock'
 import { clear } from './async-memoize'
-import { fetchWithCaching, fetchWithoutCaching } from './fetch-utils'
+import {
+  fetchWithCaching,
+  fetchWithoutCaching,
+  throwOnError,
+} from './fetch-utils'
 
 export const resetFetchWithCaching = () => clear(fetchWithCaching.memo)
 
@@ -52,5 +56,23 @@ describe('fetchMemoized', () => {
     const thirdResult = await (await fetchWithCaching('/other')).json()
     expect(thirdResult).toEqual({ url: '/other' })
     expect(fetchMock.mock.calls).toHaveLength(2)
+  })
+})
+
+describe('throwOnError', () => {
+  it('should pass when everything is fine', () => {
+    expect(() =>
+      throwOnError({ status: 200, ok: true, json: jest.fn() }),
+    ).not.toThrow()
+  })
+
+  it('should throw when there is an error', () => {
+    expect(() => throwOnError({ status: 404, ok: false })).toThrow()
+  })
+
+  it('should throw when the response object is erroneous', () => {
+    expect(() => throwOnError()).toThrow()
+    expect(() => throwOnError({})).toThrow()
+    expect(() => throwOnError({ ok: false })).toThrow()
   })
 })

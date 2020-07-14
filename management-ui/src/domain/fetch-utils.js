@@ -1,9 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-
 import fetchDefaults from 'fetch-defaults'
-
 import asyncMemoize from './async-memoize'
 
 // needed to prevent caching on IE 11
@@ -29,3 +27,16 @@ export const fetchWithCaching = (...args) =>
 
 // Expose the memoize instance for tests to be able to clear it
 fetchWithCaching.memo = memoizedFetch
+
+const statusErrorMessage = {
+  400: 'invalid user input',
+  401: 'no user is authenticated',
+  403: 'forbidden',
+  404: 'not found',
+}
+const genericErrorMessage = 'unable to handle the request'
+
+export const throwOnError = (response) => {
+  if (response.ok) return response
+  throw new Error(statusErrorMessage[response.status] || genericErrorMessage)
+}

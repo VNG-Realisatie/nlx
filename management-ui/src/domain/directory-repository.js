@@ -1,7 +1,8 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { fetchWithoutCaching } from './fetch-utils'
+
+import { fetchWithoutCaching, throwOnError } from './fetch-utils'
 
 function ensureLatestAccessRequest(service) {
   service.latestAccessRequest = service.latestAccessRequest || null
@@ -10,36 +11,24 @@ function ensureLatestAccessRequest(service) {
 
 class DirectoryRepository {
   static async getAll() {
-    const result = await fetchWithoutCaching(`/api/v1/directory/services`)
+    const response = await fetchWithoutCaching(`/api/v1/directory/services`)
 
-    if (!result.ok) {
-      throw new Error('unable to handle the request')
-    }
+    throwOnError(response)
 
-    const response = await result.json()
-    const services = response.services || []
+    const result = await response.json()
+    const services = result.services || []
     return services.map(ensureLatestAccessRequest)
   }
 
   static async getByName(organizationName, serviceName) {
-    const result = await fetchWithoutCaching(
+    const response = await fetchWithoutCaching(
       `/api/v1/directory/organizations/${organizationName}/services/${serviceName}`,
     )
 
-    if (result.status === 400) {
-      throw new Error('invalid user input')
-    }
+    throwOnError(response)
 
-    if (result.status === 403) {
-      throw new Error('forbidden')
-    }
-
-    if (!result.ok) {
-      throw new Error('unable to handle the request')
-    }
-
-    const response = await result.json()
-    return ensureLatestAccessRequest(response)
+    const result = await response.json()
+    return ensureLatestAccessRequest(result)
   }
 }
 
