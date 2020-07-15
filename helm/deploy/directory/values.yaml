@@ -21,9 +21,9 @@ postgresql:
 ################
 nlx-directory:
   postgresql:
-    hostname: directory-postgresql
+    hostname: nlx-directory-postgresql
     database: postgres
-    existingSecret: directory-postgresql-auth
+    existingSecret: nlx-directory-postgresql-auth
   tls:
     api:
       existingSecret: nlx-directory-api-tls
