@@ -105,11 +105,11 @@ nlx-directory:
           hosts:
             - directory.demo.nlx.io
             - directory.nlx.io
+  service:
+    type: LoadBalancer
 
 nlx-docs:
   ingress:
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
       - docs.demo.nlx.io
       - docs.nlx.io
@@ -121,8 +121,6 @@ nlx-docs:
 
 ca-certportal:
   ingress:
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
       - certportal.demo.nlx.io
       - certportal.nlx.io
@@ -137,8 +135,6 @@ insight-ui:
     navbarDocsPageURL: "https://docs.demo.nlx.io"
     navbarDirectoryURL: "https://directory.demo.nlx.io"
   ingress:
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
       - insight.demo.nlx.io
     tls:
