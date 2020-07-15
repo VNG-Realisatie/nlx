@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "nlx-docs.labels" . | nindent 4 }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       {{- include "nlx-docs.selectorLabels" . | nindent 6 }}
