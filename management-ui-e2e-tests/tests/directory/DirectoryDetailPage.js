@@ -39,33 +39,33 @@ test('Directory service details are visible', async t => {
   await t.expect(detailHeaderContent).contains(DIRECTORY_STATUS)
 })
 
-test('Request access button exists', async t => {
-  const button = page.requestAccess.find('button')
-  await t.expect(button.exists).ok()
-})
+// test('Request access button exists', async t => {
+//   const button = page.requestAccess.find('button')
+//   await t.expect(button.exists).ok()
+// })
 
-test('Request access can be cancelled in dialog', async t => {
-  const button = page.requestAccess.find('button')
+// test('Request access can be cancelled in dialog', async t => {
+//   const button = page.requestAccess.find('button')
 
-  await t.setNativeDialogHandler((type) => {
-    if (type === 'confirm') return false
-  })
+//   await t.setNativeDialogHandler((type) => {
+//     if (type === 'confirm') return false
+//   })
     
-  await t.click(button)
-  await t.expect(Object.keys(button.attributes)).notContains('disabled')
-})
+//   await t.click(button)
+//   await t.expect(Object.keys(button.attributes)).notContains('disabled')
+// })
 
-test('After requesting access, I see no button and confirmation of my request', async t => {
-  const button = page.requestAccess.find('button')
+// test('After requesting access, I see no button and confirmation of my request', async t => {
+//   const button = page.requestAccess.find('button')
 
-  await t.setNativeDialogHandler((type) => {
-    if (type === 'confirm') return true
-  })
+//   await t.setNativeDialogHandler((type) => {
+//     if (type === 'confirm') return true
+//   })
   
-  await t.click(button)
-  await t.expect(button.exists).notOk()
-  await t.expect(Selector('[data-testid="access-message"]').textContent).eql('Toegang aangevraagd')
-})
+//   await t.click(button)
+//   await t.expect(button.exists).notOk()
+//   await t.expect(Selector('[data-testid="access-message"]').textContent).eql('Toegang aangevraagd')
+// })
 
 // In IE11 the transition doesn't always complete when directly navigating to detail
 // So X may not be visible/clickable
