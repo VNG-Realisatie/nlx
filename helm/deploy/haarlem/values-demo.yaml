@@ -1,0 +1,38 @@
+################
+## Sub-charts ##
+################
+nlx-inway:
+  config:
+    serviceConfig:
+      services:
+        demo-api:
+          insight-api-url: https://insight-api.demo.voorbeeld-haarlem.nl
+          irma-api-url: https://irma-api.demo.voorbeeld-haarlem.nl
+
+insight-api:
+  ingress:
+    hosts:
+      - insight-api.demo.voorbeeld-haarlem.nl
+    tls:
+      - secretName: haarlem-insight-api-ingress-tls
+        hosts:
+          - insight-api.demo.voorbeeld-haarlem.nl
+
+irma-server:
+  ingress:
+    annotations:
+      ingress.kubernetes.io/custom-response-headers: "Access-Control-Allow-Origin: https://insight.demo.nlx.io"
+    host: irma-api.demo.voorbeeld-haarlem.nl
+    tls:
+      - secretName: haarlem-irma-server-ingress-tls
+        hosts:
+          - irma-api.demo.voorbeeld-haarlem.nl
+
+parkeervergunning-application:
+  ingress:
+    hosts:
+      - application.demo.voorbeeld-haarlem.nl
+    tls:
+      - secretName: haarlem-parkeervergunning-application-ingress-tls
+        hosts:
+          - application.demo.voorbeeld-haarlem.nl

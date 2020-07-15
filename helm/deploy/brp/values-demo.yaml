@@ -1,0 +1,29 @@
+################
+## Sub-charts ##
+################
+nlx-inway:
+  config:
+    serviceConfig:
+      services:
+        basisregistratie:
+          insight-api-url: https://insight-api.demo.voorbeeld-brp.nl
+          irma-api-url: https://irma-api.demo.voorbeeld-brp.nl
+
+insight-api:
+  ingress:
+    hosts:
+      - insight-api.demo.voorbeeld-brp.nl
+    tls:
+      - secretName: brp-insight-api-ingress-tls
+        hosts:
+          - insight-api.demo.voorbeeld-brp.nl
+
+irma-server:
+  ingress:
+    annotations:
+      ingress.kubernetes.io/custom-response-headers: "Access-Control-Allow-Origin: https://insight.demo.nlx.io"
+    host: irma-api.demo.voorbeeld-brp.nl
+    tls:
+      - secretName: brp-irma-server-ingress-tls
+        hosts:
+          - irma-api.demo.voorbeeld-brp.nl

@@ -1,0 +1,46 @@
+Deploy demo:
+  stage: Deploy
+  image: registry.gitlab.com/commonground/core/review-app-deployer:latest
+  environment:
+    name: demo-test
+  variables:
+    KUBECONFIG: /secrets/kubeconfig/dv-core-prod.conf
+    K8S_NAMESPACE: nlx-demo
+    HELM_CHARTS_TO_DEPLOY: "shared brp rdw haarlem"
+    IMAGE_REGISTRY: registry.gitlab.com/commonground/nlx/nlx
+    IMAGE_TAG: v0.86.0-340-g50faf58f
+  before_script:
+    - source ./.gitlab/ci/functions.sh
+  script:
+    - |
+      start_section helm_repo "Update Helm repositories"
+      helm repo add stable "https://kubernetes-charts.storage.googleapis.com"
+      helm repo update
+      stop_section helm_repo
+    - |
+      for CHART in ${HELM_CHARTS_TO_DEPLOY}; do
+        start_section deploy_${CHART} "Deploying chart '${CHART}'"
+        CHART_DIRECTORY="./helm/deploy/${CHART}"
+
+        if [ -f ${CHART_DIRECTORY}/Chart.lock ]; then
+          start_section dependency_${CHART} "Installing Chart dependencies"
+          helm dependency build ./helm/deploy/${CHART}
+          stop_section dependency_${CHART}
+        fi
+
+        helm upgrade ${CHART} ${CHART_DIRECTORY} \
+          --install \
+          --namespace ${K8S_NAMESPACE} \
+          --set-string global.imageRegistry=${IMAGE_REGISTRY} \
+          --set-string global.imageTag=${IMAGE_TAG} \
+          --values ${CHART_DIRECTORY}/values-demo.yaml
+        stop_section deploy_${CHART}
+      done
+  # dependencies:
+  #  - Build production
+  # rules:
+  #   - if: '$CI_COMMIT_TAG && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
+  #     when: manual
+  tags:
+    - cg-privileged
+    - docker
