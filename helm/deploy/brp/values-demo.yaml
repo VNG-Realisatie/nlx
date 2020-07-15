@@ -17,6 +17,8 @@ nlx-inway:
 
 insight-api:
   ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
       - insight-api.demo.voorbeeld-brp.nl
     tls:
@@ -27,6 +29,7 @@ insight-api:
 irma-server:
   ingress:
     annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
       ingress.kubernetes.io/custom-response-headers: "Access-Control-Allow-Origin: https://insight.demo.nlx.io"
     host: irma-api.demo.voorbeeld-brp.nl
     tls:

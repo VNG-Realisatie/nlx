@@ -93,6 +93,7 @@ ca-cfssl-unsafe:
       -----END RSA PRIVATE KEY-----
 
 nlx-directory:
+  replicaCount: 3
   config:
     monitorOfflineServiceTTL: 86400  # 24 hours
   unsafeCA:
@@ -101,6 +102,8 @@ nlx-directory:
     monitorDomain: directory-monitor.demo.nlx.io
   ui:
     ingress:
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
       hosts:
         - directory.demo.nlx.io
         - directory.nlx.io
@@ -113,7 +116,10 @@ nlx-directory:
     type: LoadBalancer
 
 nlx-docs:
+  replicaCount: 3
   ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
       - docs.demo.nlx.io
       - docs.nlx.io
@@ -125,6 +131,8 @@ nlx-docs:
 
 ca-certportal:
   ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
       - certportal.demo.nlx.io
       - certportal.nlx.io
@@ -139,6 +147,8 @@ insight-ui:
     navbarDocsPageURL: "https://docs.demo.nlx.io"
     navbarDirectoryURL: "https://directory.demo.nlx.io"
   ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
       - insight.demo.nlx.io
     tls:
