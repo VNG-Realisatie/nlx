@@ -1,0 +1,14 @@
+################
+## Sub-charts ##
+################
+nlx-directory:
+  ui:
+    ingress:
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+      hosts:
+        - "directory.preprod.nlx.io"
+      tls:
+        - secretName: nlx-directory-ui-ingress-tls
+          hosts:
+            - directory.preprod.nlx.io

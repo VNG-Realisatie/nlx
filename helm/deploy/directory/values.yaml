@@ -1,0 +1,38 @@
+############
+## Global ##
+############
+global: {}
+  # imageRegistry:
+  # imageTag:
+
+###########
+## Chart ##
+###########
+nameOverride: ""
+fullnameOverride: ""
+
+postgresql:
+  version: "11.1"
+  storageType: Durable
+  storageSize: 8Gi
+  terminationPolicy: DoNotTerminate
+
+################
+## Sub-charts ##
+################
+nlx-directory:
+  replicaCount: 3
+  postgresql:
+    hostname: nlx-directory-postgresql
+    database: postgres
+    existingSecret: nlx-directory-postgresql-auth
+  tls:
+    api:
+      existingSecret: nlx-directory-api-tls
+    monitor:
+      existingSecret: nlx-directory-monitor-tls
+  ui:
+    ingress:
+      enabled: true
+  service:
+    type: LoadBalancer

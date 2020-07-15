@@ -1,0 +1,23 @@
+Deploy production:
+  stage: Deploy
+  image: registry.gitlab.com/commonground/core/review-app-deployer:latest
+  environment:
+    name: production
+  variables:
+    KUBECONFIG: /secrets/kubeconfig/dv-core-prod.conf
+    K8S_NAMESPACE: nlx-${CI_ENVIRONMENT_NAME}
+    CHART_DIRECTORY: ./helm/deploy/directory
+  script:
+    - |
+      helm upgrade nlx-directory ${CHART_DIRECTORY} \
+        --install \
+        --namespace ${K8S_NAMESPACE} \
+        --values ${CHART_DIRECTORY}/values-${CI_ENVIRONMENT_NAME}.yaml
+  dependencies:
+   - Build production
+  rules:
+    - if: '$CI_COMMIT_TAG && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
+      when: manual
+  tags:
+    - cg-privileged
+    - docker
