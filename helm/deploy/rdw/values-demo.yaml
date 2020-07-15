@@ -11,6 +11,7 @@ managementAPI:
 ################
 nlx-management:
   config:
+    directoryRegistrationHostname: directory-registration-api.demo.nlx.io
     directoryEndpointURL: https://directory.demo.nlx.io/api
     oidc:
       clientSecret: gKV1nhAtGx2fJLMbx0ao

@@ -99,7 +99,6 @@ nlx-directory:
     inspectionDomain: directory-inspection-api.demo.nlx.io
     registrationDomain: directory-registration-api.demo.nlx.io
     monitorDomain: directory-monitor.demo.nlx.io
-
   ui:
     ingress:
       hosts:
