@@ -1,0 +1,12 @@
+################
+## Sub-charts ##
+################
+nlx-directory:
+  ui:
+    ingress:
+      hosts:
+        - "directory.prod.nlx.io"
+      tls:
+        - secretName: nlx-directory-ui-ingress-tls
+          hosts:
+            - directory.prod.nlx.io

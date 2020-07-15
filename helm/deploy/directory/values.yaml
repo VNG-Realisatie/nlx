@@ -1,0 +1,38 @@
+############
+## Global ##
+############
+global: {}
+  # imageRegistry:
+  # imageTag:
+
+###########
+## Chart ##
+###########
+nameOverride: ""
+fullnameOverride: ""
+
+postgresql:
+  version: "11.1"
+  storageType: Durable
+  storageSize: 8Gi
+
+################
+## Sub-charts ##
+################
+nlx-directory:
+  postgresql:
+    hostname: directory-postgresql
+    database: postgres
+    existingSecret: directory-postgresql-auth
+  tls:
+    api:
+      existingSecret: nlx-directory-api-tls
+    monitor:
+      existingSecret: nlx-directory-monitor-tls
+  ui:
+    ingress:
+      enabled: true
+      hosts:
+        - directory.nlx.minikube
+  service:
+    type: LoadBalancer

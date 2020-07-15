@@ -13,7 +13,7 @@ include:
   # - '/.gitlab/ci/build/review.yml'
   # - '/.gitlab/ci/deploy/acceptance.yml'
   - '/.gitlab/ci/deploy/demo.yml'
-  # - '/.gitlab/ci/deploy/pre-production.yml'
+  - '/.gitlab/ci/deploy/pre-production.yml'
   # - '/.gitlab/ci/deploy/production.yml'
   # - '/.gitlab/ci/deploy/review.yml'
   # - '/.gitlab/ci/security/security.yml'
