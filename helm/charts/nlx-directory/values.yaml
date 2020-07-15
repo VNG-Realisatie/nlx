@@ -39,10 +39,16 @@ postgresql:
 
 tls:
   generateCertificate: false
-  rootCertificatePEM: ""
-  certificatePEM: ""
-  certificateKeyPEM: ""
-  existingSecret: ""
+  api:
+    rootCertificatePEM: ""
+    certificatePEM: ""
+    certificateKeyPEM: ""
+    existingSecret: ""
+  monitor:
+    rootCertificatePEM: ""
+    certificatePEM: ""
+    certificateKeyPEM: ""
+    existingSecret: ""
 
 unsafeCA:
   image:
