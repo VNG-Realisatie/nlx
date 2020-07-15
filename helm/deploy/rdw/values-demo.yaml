@@ -9,6 +9,15 @@ managementAPI:
 ################
 ## Sub-charts ##
 ################
+nlx-inway:
+  config:
+    selfAddress: inway.demo.voorbeeld-rdw.nl:443
+    directoryRegistrationHostname: directory-registration-api.demo.nlx.io
+  unsafeCA:
+    domain: inway.demo.voorbeeld-rdw.nl
+  service:
+    type: LoadBalancer
+
 nlx-management:
   config:
     directoryRegistrationHostname: directory-registration-api.demo.nlx.io

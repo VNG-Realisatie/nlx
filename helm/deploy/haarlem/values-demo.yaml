@@ -3,11 +3,17 @@
 ################
 nlx-inway:
   config:
+    selfAddress: inway.demo.voorbeeld-haarlem.nl:443
+    directoryRegistrationHostname: directory-registration-api.demo.nlx.io
     serviceConfig:
       services:
         demo-api:
           insight-api-url: https://insight-api.demo.voorbeeld-haarlem.nl
           irma-api-url: https://irma-api.demo.voorbeeld-haarlem.nl
+  unsafeCA:
+    domain: inway.demo.voorbeeld-haarlem.nl
+  service:
+    type: LoadBalancer
 
 insight-api:
   ingress:
