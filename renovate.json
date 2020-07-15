@@ -23,7 +23,7 @@
   "packageRules": [
     {
       "packageNames": ["history"],
-      "manager": ["npm"],
+      "managers": ["npm"],
       "allowedVersions": "<5.0.0"
     },
     {
