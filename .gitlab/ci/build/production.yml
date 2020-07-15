@@ -1,0 +1,20 @@
+Build production:
+  stage: Build
+  before_script:
+    - export DOCKER_CONFIG=/secrets/docker/nlxci
+    - export GIT_COMMIT_HASH=$(git rev-parse HEAD)
+    - export GIT_TAG_NAME=$(git describe --tags)
+    - export IMAGE_PREFIX=""
+  script:
+    - docker-compose version
+    - export IMAGE_TAG="${GIT_TAG_NAME}"
+    - time docker-compose build --parallel
+    - time docker-compose push
+    - export IMAGE_TAG="latest"
+    - time docker-compose build --parallel
+    - time docker-compose push
+  rules:
+    - if: '$CI_COMMIT_TAG && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
+  tags:
+    - cg-privileged
+    - shell

@@ -24,7 +24,7 @@ Deploy demo:
 
         if [ -f ${CHART_DIRECTORY}/Chart.lock ]; then
           start_section dependency_${CHART} "Installing Chart dependencies"
-          helm dependency build ./helm/deploy/${CHART}
+          helm dependency build ${CHART_DIRECTORY}
           stop_section dependency_${CHART}
         fi
 

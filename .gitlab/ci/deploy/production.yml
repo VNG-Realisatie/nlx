@@ -1,8 +1,8 @@
-Deploy pre-production:
+Deploy production:
   stage: Deploy
   image: registry.gitlab.com/commonground/core/review-app-deployer:latest
   environment:
-    name: pre-production
+    name: production
   variables:
     KUBECONFIG: /secrets/kubeconfig/dv-core-prod.conf
     K8S_NAMESPACE: nlx-${CI_ENVIRONMENT_NAME}
