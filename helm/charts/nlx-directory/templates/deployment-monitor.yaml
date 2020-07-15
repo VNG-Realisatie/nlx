@@ -18,7 +18,7 @@ spec:
         app.kubernetes.io/component: monitor
       annotations:
         checksum/secret-postgresql: {{ include (print $.Template.BasePath "/secret-postgresql.yaml") . | sha256sum }}
-        checksum/secret-tls: {{ include (print $.Template.BasePath "/secret-tls.yaml") . | sha256sum }}
+        checksum/secret-tls: {{ include (print $.Template.BasePath "/secret-tls-monitor.yaml") . | sha256sum }}
     spec:
     {{- with .Values.image.pullSecrets }}
       imagePullSecrets:
@@ -94,7 +94,7 @@ spec:
           emptyDir: {}
         {{- else }}
           secret:
-            secretName: {{ template "nlx-directory.fullname" . }}-tls
+            secretName: {{ default (printf "%s-tls-monitor" (include "nlx-directory.fullname" .)) .Values.tls.monitor.existingSecret }}
         {{- end }}
     {{- with .Values.nodeSelector }}
       nodeSelector:
