@@ -5,7 +5,7 @@ import React, { useContext } from 'react'
 import { shape, string, object } from 'prop-types'
 import { Table } from '@commonground/design-system'
 
-import StateIndicator from '../../../../components/StateIndicator'
+import StateIndicator from '../../../../../components/StatusIndicator'
 import { AccessRequestContext } from '../../index'
 import QuickAccessButton from '../QuickAccessButton'
 import AccessRequestMessage from '../AccessRequestMessage'

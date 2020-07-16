@@ -8,9 +8,9 @@ import { useTranslation } from 'react-i18next'
 
 import { AccessRequestContext } from '../../../DirectoryPage'
 import AccessRequestMessage from '../../../DirectoryPage/components/AccessRequestMessage'
-import { SectionGroup } from '../../../../components/DetailView'
+import { SectionGroup } from '../../../../../components/DetailView'
 
-import { IconKey } from '../../../../icons'
+import { IconKey } from '../../../../../icons'
 
 import { StyledAlert, AccessSection, IconItem, StateItem } from './index.styles'
 

@@ -4,7 +4,7 @@
 import styled from 'styled-components'
 import { Alert } from '@commonground/design-system'
 
-import LinkButton from '../../../../components/LinkButton'
+import LinkButton from '../../../../../components/LinkButton'
 
 export const StyledAlert = styled(Alert)`
   margin-bottom: ${(p) => p.theme.tokens.spacing05};

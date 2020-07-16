@@ -8,7 +8,7 @@ import LoginPage from '../pages/LoginPage/index'
 import ServicesPage from '../pages/ServicesPage'
 import InwaysPage from '../pages/InwaysPage'
 import AddServicePage from '../pages/AddServicePage'
-import DirectoryPage from '../pages/DirectoryPage'
+import DirectoryPage from '../pages/directory/DirectoryPage'
 import EditServicePage from '../pages/EditServicePage'
 import NotFoundPage from '../pages/NotFoundPage'
 

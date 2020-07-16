@@ -6,7 +6,7 @@ import { arrayOf, shape, string, object } from 'prop-types'
 import { Table } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 
-import EmptyContentMessage from '../../../../components/EmptyContentMessage'
+import EmptyContentMessage from '../../../../../components/EmptyContentMessage'
 import DirectoryServiceRow from '../DirectoryServiceRow'
 
 const DirectoryPageView = ({ services }) => {

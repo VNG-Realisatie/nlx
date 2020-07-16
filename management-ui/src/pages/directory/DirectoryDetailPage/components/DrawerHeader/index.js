@@ -6,7 +6,7 @@ import { shape, string } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { Drawer } from '@commonground/design-system'
 
-import StateIndicator from '../../../../components/StateIndicator'
+import StateIndicator from '../../../../../components/StateIndicator'
 import { SubTitle, Summary } from './index.styles'
 
 const DrawerHeader = ({ service }) => {

@@ -5,7 +5,7 @@ import React from 'react'
 import { func } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 
-import { IconKey } from '../../../../icons'
+import { IconKey } from '../../../../../icons'
 import { AccessButton } from './index.styles'
 
 const QuickAccessButton = (props) => {

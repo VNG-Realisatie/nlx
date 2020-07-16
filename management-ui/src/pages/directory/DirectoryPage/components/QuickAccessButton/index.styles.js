@@ -3,7 +3,7 @@
 //
 import styled from 'styled-components'
 
-import LinkButton from '../../../../components/LinkButton'
+import LinkButton from '../../../../../components/LinkButton'
 
 export const AccessButton = styled(LinkButton)`
   float: right;

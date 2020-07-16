@@ -7,9 +7,9 @@ import { useParams, useHistory } from 'react-router-dom'
 import { Alert, Drawer } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 
-import DirectoryRepository from '../../domain/directory-repository'
-import usePromise from '../../hooks/use-promise'
-import LoadingMessage from '../../components/LoadingMessage'
+import DirectoryRepository from '../../../domain/directory-repository'
+import usePromise from '../../../hooks/use-promise'
+import LoadingMessage from '../../../components/LoadingMessage'
 import DirectoryDetailView from './components/DirectoryDetailView'
 import DrawerHeader from './components/DrawerHeader'
 

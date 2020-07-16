@@ -5,7 +5,7 @@ import React from 'react'
 import { shape, string, oneOf, bool } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 
-import { IconWarningCircleFill } from '../../../../icons'
+import { IconWarningCircleFill } from '../../../../../icons'
 import { FailedDetail, ErrorText, WarnText } from './index.styles'
 
 const stateMessage = {
