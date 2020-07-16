@@ -2,15 +2,15 @@
 // Licensed under the EUPL
 //
 
-import React, { createContext, useState } from 'react'
+import React, { createContext, useState, useEffect } from 'react'
 import { func } from 'prop-types'
+import { observer } from 'mobx-react'
 import { Route } from 'react-router-dom'
 import { Alert } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 
 import PageTemplate from '../../../components/PageTemplate'
-import usePromise from '../../../hooks/use-promise'
-import DirectoryRepository from '../../../domain/directory-repository'
+import { useDirectoryStore } from '../../../hooks/use-stores'
 import AccessRequestRepository from '../../../domain/access-request-repository'
 import LoadingMessage from '../../../components/LoadingMessage'
 
@@ -25,13 +25,16 @@ const DEFAULT_REQUEST_SENT_STATE = {
   serviceName: '',
 }
 
-const DirectoryPage = ({ getDirectoryServices, requestAccess }) => {
+const DirectoryPage = ({ requestAccess }) => {
   const { t } = useTranslation()
-  const { isReady, result: services, error, reload } = usePromise(
-    getDirectoryServices,
-  )
+  const { getServices, services, isLoading, error } = useDirectoryStore()
 
   const [requestSentTo, setRequestSentTo] = useState(DEFAULT_REQUEST_SENT_STATE)
+
+  useEffect(() => {
+    getServices()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleRequestAccess = async ({ organizationName, serviceName }) => {
     const confirmed = window.confirm(
@@ -43,7 +46,6 @@ const DirectoryPage = ({ getDirectoryServices, requestAccess }) => {
 
       try {
         await requestAccess({ organizationName, serviceName })
-        reload()
         setRequestSentTo(DEFAULT_REQUEST_SENT_STATE)
       } catch (e) {
         console.error(e)
@@ -59,14 +61,14 @@ const DirectoryPage = ({ getDirectoryServices, requestAccess }) => {
         description={
           <span data-testid="directory-description">
             {t('List of all available services')}
-            {isReady && !error ? (
+            {!isLoading && !error ? (
               <DirectoryServiceCount services={services} />
             ) : null}
           </span>
         }
       />
 
-      {!isReady ? (
+      {isLoading ? (
         <LoadingMessage />
       ) : error ? (
         <Alert variant="error" data-testid="error-message">
@@ -90,13 +92,11 @@ const DirectoryPage = ({ getDirectoryServices, requestAccess }) => {
 }
 
 DirectoryPage.propTypes = {
-  getDirectoryServices: func,
   requestAccess: func,
 }
 
 DirectoryPage.defaultProps = {
-  getDirectoryServices: DirectoryRepository.getAll,
   requestAccess: AccessRequestRepository.requestAccess,
 }
 
-export default DirectoryPage
+export default observer(DirectoryPage)

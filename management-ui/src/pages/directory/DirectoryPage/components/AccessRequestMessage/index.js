@@ -2,9 +2,11 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { shape, string, oneOf, bool } from 'prop-types'
+import { instanceOf, bool } from 'prop-types'
+import { observer } from 'mobx-react'
 import { useTranslation } from 'react-i18next'
 
+import AccessRequestModel from '../../../../../models/OutgoingAccessRequestModel'
 import { IconWarningCircleFill } from '../../../../../icons'
 import { FailedDetail, ErrorText, WarnText } from './index.styles'
 
@@ -33,13 +35,8 @@ const AccessRequestMessage = ({ latestAccessRequest, inDetailView }) => {
 }
 
 AccessRequestMessage.propTypes = {
-  latestAccessRequest: shape({
-    id: string,
-    state: oneOf(Object.keys(stateMessage)),
-    createdAt: string,
-    updatedAt: string,
-  }),
+  latestAccessRequest: instanceOf(AccessRequestModel),
   inDetailView: bool,
 }
 
-export default AccessRequestMessage
+export default observer(AccessRequestMessage)

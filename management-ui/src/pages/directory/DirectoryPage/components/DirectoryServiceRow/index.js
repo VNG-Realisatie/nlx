@@ -2,9 +2,11 @@
 // Licensed under the EUPL
 //
 import React, { useContext } from 'react'
-import { shape, string, object } from 'prop-types'
+import { instanceOf } from 'prop-types'
+import { observer } from 'mobx-react'
 import { Table } from '@commonground/design-system'
 
+import DirectoryServiceModel from '../../../../../models/DirectoryServiceModel'
 import StateIndicator from '../../../../../components/StatusIndicator'
 import { AccessRequestContext } from '../../index'
 import QuickAccessButton from '../QuickAccessButton'
@@ -12,9 +14,7 @@ import AccessRequestMessage from '../AccessRequestMessage'
 import { StyledTdAccess } from './index.styles'
 
 const DirectoryServiceRow = ({ service }) => {
-  const { handleRequestAccess, requestSentTo } = useContext(
-    AccessRequestContext,
-  )
+  const { requestSentTo } = useContext(AccessRequestContext)
   const {
     organizationName,
     serviceName,
@@ -25,7 +25,8 @@ const DirectoryServiceRow = ({ service }) => {
 
   const requestAccess = (evt) => {
     evt.stopPropagation() // Prevent triggering click on table row
-    handleRequestAccess({ organizationName, serviceName })
+    // handleRequestAccess({ organizationName, serviceName })
+    service.requestAccess()
   }
 
   const isRequestSentForThisService =
@@ -59,13 +60,7 @@ const DirectoryServiceRow = ({ service }) => {
 }
 
 DirectoryServiceRow.propTypes = {
-  service: shape({
-    organizationName: string.isRequired,
-    serviceName: string.isRequired,
-    state: string.isRequired,
-    apiSpecificationType: string,
-    latestAccessRequest: object,
-  }),
+  service: instanceOf(DirectoryServiceModel),
 }
 
-export default DirectoryServiceRow
+export default observer(DirectoryServiceRow)

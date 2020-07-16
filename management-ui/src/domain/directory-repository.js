@@ -16,8 +16,7 @@ class DirectoryRepository {
     throwOnError(response)
 
     const result = await response.json()
-    const services = result.services || []
-    return services.map(ensureLatestAccessRequest)
+    return result.services || []
   }
 
   static async getByName(organizationName, serviceName) {
