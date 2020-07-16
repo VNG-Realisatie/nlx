@@ -7,7 +7,7 @@ metadata:
     {{- include "nlx-directory.labels" . | nindent 4 }}
     app.kubernetes.io/component: ui
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       {{- include "nlx-directory.selectorLabels" . | nindent 6 }}
