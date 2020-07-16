@@ -17,7 +17,7 @@ import (
 func createRouter(s *Server) *chi.Mux {
 	r := chi.NewRouter()
 
-	r.Get("/swagger.json", func(w http.ResponseWriter, req *http.Request) {
+	r.Get("/api/swagger.json", func(w http.ResponseWriter, req *http.Request) {
 		_, err := io.Copy(w, strings.NewReader(inspectionapi.SwaggerJSONDirectoryInspection))
 		if err != nil {
 			s.logger.Error("failed writing response")
@@ -29,7 +29,7 @@ func createRouter(s *Server) *chi.Mux {
 		s.logger.Fatal("Error creating API spec handler", zap.Error(err))
 	}
 
-	r.Route("/organizations/{organization_name}/services/{service_name}", func(r chi.Router) {
+	r.Route("/api/organizations/{organization_name}/services/{service_name}", func(r chi.Router) {
 		r.Use(s.ServiceCtx)
 		r.Get("/api-spec", apiSpecHandler.handleFunc())
 	})
