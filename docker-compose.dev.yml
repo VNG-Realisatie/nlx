@@ -12,7 +12,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
     restart: always
   etcd:
-    image: gcr.io/etcd-development/etcd:v3.4.9
+    image: gcr.io/etcd-development/etcd:v3.4.10
     ports:
       - 2379:2379
     environment:
