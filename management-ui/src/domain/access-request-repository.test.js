@@ -15,7 +15,7 @@ describe('the AccessRequestRepository', () => {
               id: 'string',
               organizationName: 'organization',
               serviceName: 'service',
-              status: 'CREATED',
+              state: 'CREATED',
               createdAt: '2020-06-30T10:36:57.100Z',
               updatedAt: '2020-06-30T10:36:57.100Z',
             }),
@@ -35,10 +35,27 @@ describe('the AccessRequestRepository', () => {
         id: 'string',
         organizationName: 'organization',
         serviceName: 'service',
-        status: 'CREATED',
+        state: 'CREATED',
         createdAt: '2020-06-30T10:36:57.100Z',
         updatedAt: '2020-06-30T10:36:57.100Z',
       })
+    })
+
+    it('rejects duplicate requests', async () => {
+      jest.spyOn(global, 'fetch').mockImplementation(async () => ({
+        ok: false,
+        status: 409,
+        // json: async () => '',
+      }))
+
+      expect(
+        AccessRequestRepository.requestAccess({
+          organizationName: 'organization',
+          serviceName: 'service',
+        }),
+      ).rejects.toThrowError(
+        /^Request already sent, please refresh the page to see the latest status\.$/,
+      )
     })
   })
 })

@@ -3,57 +3,55 @@
 //
 import React from 'react'
 import { renderWithProviders } from '../../test-utils'
-import StatusIndicator from './index'
+import StateIndicator from './index'
 
 test('renders without crashing', () => {
-  expect(() =>
-    renderWithProviders(<StatusIndicator status="up" />),
-  ).not.toThrow()
+  expect(() => renderWithProviders(<StateIndicator state="up" />)).not.toThrow()
 })
 
 test('renders an icon', () => {
   const { container, rerender } = renderWithProviders(
-    <StatusIndicator status="up" />,
+    <StateIndicator state="up" />,
   )
-  expect(container).toHaveTextContent('status-up.svg')
+  expect(container).toHaveTextContent('state-up.svg')
   expect(container.querySelector('svg')).toHaveAttribute('title', 'Up')
 
-  rerender(<StatusIndicator status="down" />)
-  expect(container).toHaveTextContent('status-down.svg')
+  rerender(<StateIndicator state="down" />)
+  expect(container).toHaveTextContent('state-down.svg')
   expect(container.querySelector('svg')).toHaveAttribute('title', 'Down')
 
-  rerender(<StatusIndicator status="degraded" />)
-  expect(container).toHaveTextContent('status-degraded.svg')
+  rerender(<StateIndicator state="degraded" />)
+  expect(container).toHaveTextContent('state-degraded.svg')
   expect(container.querySelector('svg')).toHaveAttribute('title', 'Degraded')
 
-  rerender(<StatusIndicator status="unknown" />)
-  expect(container).toHaveTextContent('status-unknown.svg')
+  rerender(<StateIndicator state="unknown" />)
+  expect(container).toHaveTextContent('state-unknown.svg')
   expect(container.querySelector('svg')).toHaveAttribute('title', 'Unknown')
 })
 
-test('does not render when status is invalid', () => {
+test('does not render when state is invalid', () => {
   // Suppress console output during test
   global.console.warn = jest.fn()
   global.console.error = jest.fn()
 
   const { container, rerender } = renderWithProviders(
-    <StatusIndicator status={null} />,
+    <StateIndicator state={null} />,
   )
   expect(container).toBeEmptyDOMElement()
 
-  rerender(<StatusIndicator status="invalid" />)
+  rerender(<StateIndicator state="invalid" />)
   expect(container).toBeEmptyDOMElement()
 })
 
-describe('status text', () => {
+describe('state text', () => {
   it('is hidden by default', () => {
-    const { queryByText } = renderWithProviders(<StatusIndicator status="up" />)
+    const { queryByText } = renderWithProviders(<StateIndicator state="up" />)
     expect(queryByText('Up')).toBeNull()
   })
 
   it('shown with bool prop `showText`', () => {
     const { getByText } = renderWithProviders(
-      <StatusIndicator status="up" showText />,
+      <StateIndicator state="up" showText />,
     )
     expect(getByText('Up')).toBeInTheDocument()
   })

@@ -5,7 +5,7 @@ import React, { useContext } from 'react'
 import { shape, string, object } from 'prop-types'
 import { Table } from '@commonground/design-system'
 
-import StatusIndicator from '../../../../components/StatusIndicator'
+import StateIndicator from '../../../../components/StateIndicator'
 import { AccessRequestContext } from '../../index'
 import QuickAccessButton from '../QuickAccessButton'
 import AccessRequestMessage from '../AccessRequestMessage'
@@ -18,7 +18,7 @@ const DirectoryServiceRow = ({ service }) => {
   const {
     organizationName,
     serviceName,
-    status,
+    state,
     apiSpecificationType,
     latestAccessRequest,
   } = service
@@ -41,7 +41,7 @@ const DirectoryServiceRow = ({ service }) => {
       <Table.Td>{organizationName}</Table.Td>
       <Table.Td>{serviceName}</Table.Td>
       <Table.Td>
-        <StatusIndicator status={status} />
+        <StateIndicator state={state} />
       </Table.Td>
       <Table.Td>{apiSpecificationType}</Table.Td>
       <StyledTdAccess>
@@ -62,7 +62,7 @@ DirectoryServiceRow.propTypes = {
   service: shape({
     organizationName: string.isRequired,
     serviceName: string.isRequired,
-    status: string.isRequired,
+    state: string.isRequired,
     apiSpecificationType: string,
     latestAccessRequest: object,
   }),

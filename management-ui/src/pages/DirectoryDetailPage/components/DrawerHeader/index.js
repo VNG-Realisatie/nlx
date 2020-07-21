@@ -6,16 +6,11 @@ import { shape, string } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { Drawer } from '@commonground/design-system'
 
-import StatusIndicator from '../../../../components/StatusIndicator'
+import StateIndicator from '../../../../components/StateIndicator'
 import { SubTitle, Summary } from './index.styles'
 
 const DrawerHeader = ({ service }) => {
-  const {
-    serviceName,
-    organizationName,
-    status,
-    apiSpecificationType,
-  } = service
+  const { serviceName, organizationName, state, apiSpecificationType } = service
   const { t } = useTranslation()
 
   return (
@@ -24,7 +19,7 @@ const DrawerHeader = ({ service }) => {
       <SubTitle>{organizationName}</SubTitle>
       <Summary>
         {apiSpecificationType && <span>{apiSpecificationType}</span>}
-        <StatusIndicator status={status} showText />
+        <StateIndicator state={state} showText />
       </Summary>
     </header>
   )
@@ -34,7 +29,7 @@ DrawerHeader.propTypes = {
   service: shape({
     serviceName: string,
     organizationName: string,
-    status: string,
+    state: string,
     apiSpecificationType: string,
   }),
 }

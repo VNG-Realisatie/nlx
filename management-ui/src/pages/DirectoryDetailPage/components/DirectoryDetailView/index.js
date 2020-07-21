@@ -12,12 +12,7 @@ import { SectionGroup } from '../../../../components/DetailView'
 
 import { IconKey } from '../../../../icons'
 
-import {
-  StyledAlert,
-  AccessSection,
-  IconItem,
-  StatusItem,
-} from './index.styles'
+import { StyledAlert, AccessSection, IconItem, StateItem } from './index.styles'
 
 const DirectoryDetailView = ({
   organizationName,
@@ -39,14 +34,14 @@ const DirectoryDetailView = ({
   let icon = Spinner
   if (
     latestAccessRequest &&
-    ['FAILED', 'RECEIVED'].includes(latestAccessRequest.status)
+    ['FAILED', 'RECEIVED'].includes(latestAccessRequest.state)
   ) {
     icon = IconKey
   }
 
   return (
     <>
-      {latestAccessRequest && latestAccessRequest.status === 'FAILED' && (
+      {latestAccessRequest && latestAccessRequest.state === 'FAILED' && (
         <StyledAlert variant="error" title={t('Request could not be sent')} />
       )}
 
@@ -55,18 +50,18 @@ const DirectoryDetailView = ({
           {latestAccessRequest ? (
             <>
               <IconItem as={icon} />
-              <StatusItem>
+              <StateItem>
                 <AccessRequestMessage
                   latestAccessRequest={latestAccessRequest}
                   inDetailView
                 />
                 {icon === Spinner && '...'}
-              </StatusItem>
+              </StateItem>
             </>
           ) : (
             <>
               <IconItem as={IconKey} />
-              <StatusItem>{t('You have no access')}</StatusItem>
+              <StateItem>{t('You have no access')}</StateItem>
               <Button
                 onClick={requestAccess}
                 disabled={isRequestSentForThisService}
@@ -86,7 +81,7 @@ DirectoryDetailView.propTypes = {
   serviceName: string,
   latestAccessRequest: shape({
     id: string,
-    status: string,
+    state: string,
     createdAt: string,
     updatedAt: string,
   }),

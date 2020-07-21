@@ -35,7 +35,7 @@ export const IconItem = styled.div`
   color: ${(p) => p.theme.colorTextLabel};
 `
 
-export const StatusItem = styled.div`
+export const StateItem = styled.div`
   flex: 1 1 auto;
 `
 

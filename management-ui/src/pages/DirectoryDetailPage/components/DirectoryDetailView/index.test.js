@@ -17,7 +17,7 @@ describe('detail view of directory service we do not have access to', () => {
     service = {
       organizationName: 'Test Organization',
       serviceName: 'Test Service',
-      status: 'degraded',
+      state: 'degraded',
       apiSpecificationType: 'API',
       latestAccessRequest: null,
     }
@@ -53,7 +53,7 @@ describe('detail view of directory service we do not have access to', () => {
       ...service,
       latestAccessRequest: {
         id: 'string',
-        status: 'CREATED',
+        state: 'CREATED',
         createdAt: '2020-06-30T08:31:41.106Z',
         updatedAt: '2020-06-30T08:31:41.106Z',
       },
@@ -75,7 +75,7 @@ describe('detail view of directory service we do not have access to', () => {
       ...service,
       latestAccessRequest: {
         id: 'string',
-        status: 'FAILED',
+        state: 'FAILED',
         createdAt: '2020-06-30T08:31:41.106Z',
         updatedAt: '2020-06-30T08:31:41.106Z',
       },

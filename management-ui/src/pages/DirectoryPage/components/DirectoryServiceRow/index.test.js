@@ -15,7 +15,7 @@ describe('show data from a service we do not have access to', () => {
     service = {
       organizationName: 'Test Organization',
       serviceName: 'Test Service',
-      status: 'degraded',
+      state: 'degraded',
       apiSpecificationType: 'API',
     }
     requestSentTo = {
@@ -45,7 +45,7 @@ describe('show data from a service we do not have access to', () => {
     const serviceRow = getByTestId('directory-service-row')
     expect(serviceRow).toHaveTextContent('Test Organization')
     expect(serviceRow).toHaveTextContent('Test Service')
-    expect(serviceRow).toHaveTextContent('status-degraded.svg')
+    expect(serviceRow).toHaveTextContent('state-degraded.svg')
     expect(serviceRow).toHaveTextContent('API')
 
     const button = getByText('Request')
@@ -76,15 +76,15 @@ describe('show data from a service we do not have access to', () => {
   })
 })
 
-test('show the status of the latest access request', () => {
+test('show the state of the latest access request', () => {
   const service = {
     organizationName: 'Test Organization',
     serviceName: 'Test Service',
-    status: 'degraded',
+    state: 'degraded',
     apiSpecificationType: 'API',
     latestAccessRequest: {
       id: 'string',
-      status: 'FAILED',
+      state: 'FAILED',
       createdAt: '2020-06-30T08:31:41.106Z',
       updatedAt: '2020-06-30T08:31:41.106Z',
     },

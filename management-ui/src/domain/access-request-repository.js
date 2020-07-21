@@ -10,7 +10,9 @@ class AccessRequestRepository {
       body: JSON.stringify(payload),
     })
 
-    throwOnError(response)
+    throwOnError(response, {
+      409: 'Request already sent, please refresh the page to see the latest status.',
+    })
 
     return await response.json()
   }

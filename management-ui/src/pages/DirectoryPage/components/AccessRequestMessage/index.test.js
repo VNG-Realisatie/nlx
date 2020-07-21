@@ -15,7 +15,7 @@ describe('render correct message', () => {
   it('FAILED state', () => {
     const latestAccessRequest = {
       id: 'id',
-      status: 'FAILED',
+      state: 'FAILED',
       createdAt: '2020-10-1T12:06:02Z',
       updatedAt: '2020-10-1T12:06:04Z',
     }
@@ -29,7 +29,7 @@ describe('render correct message', () => {
   it('FAILED state in detail view', () => {
     const latestAccessRequest = {
       id: 'id',
-      status: 'FAILED',
+      state: 'FAILED',
       createdAt: '2020-10-1T12:06:02Z',
       updatedAt: '2020-10-1T12:06:04Z',
     }
@@ -47,7 +47,7 @@ describe('render correct message', () => {
   it('RECEIVED state', () => {
     const latestAccessRequest = {
       id: 'id',
-      status: 'RECEIVED',
+      state: 'RECEIVED',
       createdAt: '2020-10-1T12:06:02Z',
       updatedAt: '2020-10-1T12:06:04Z',
     }

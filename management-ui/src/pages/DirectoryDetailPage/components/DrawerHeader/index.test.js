@@ -9,7 +9,7 @@ import DrawerHeader from './index'
 const service = {
   serviceName: 'service',
   organizationName: 'organisation',
-  status: 'up',
+  state: 'up',
   apiSpecificationType: 'OpenAPI',
 }
 

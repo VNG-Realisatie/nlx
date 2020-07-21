@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { IconWarningCircleFill } from '../../../../icons'
 import { FailedDetail, ErrorText, WarnText } from './index.styles'
 
-const statusMessage = {
+const stateMessage = {
   FAILED: (t, inDetailView) =>
     inDetailView ? (
       <FailedDetail>
@@ -27,15 +27,15 @@ const statusMessage = {
 
 const AccessRequestMessage = ({ latestAccessRequest, inDetailView }) => {
   const { t } = useTranslation()
-  const status = latestAccessRequest ? latestAccessRequest.status : null
+  const state = latestAccessRequest ? latestAccessRequest.state : null
 
-  return status ? statusMessage[status](t, inDetailView) : null
+  return state ? stateMessage[state](t, inDetailView) : null
 }
 
 AccessRequestMessage.propTypes = {
   latestAccessRequest: shape({
     id: string,
-    status: oneOf(Object.keys(statusMessage)),
+    state: oneOf(Object.keys(stateMessage)),
     createdAt: string,
     updatedAt: string,
   }),

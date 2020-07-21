@@ -18,10 +18,10 @@ describe('the DirectoryRepository', () => {
               {
                 serviceName: 'service',
                 organizationName: 'organization',
-                status: 'unknown',
+                state: 'unknown',
                 apiSpecificationType: 'plain',
                 latestAccessRequest: {
-                  status: 'FAILED',
+                  state: 'FAILED',
                 },
               },
             ],
@@ -34,10 +34,10 @@ describe('the DirectoryRepository', () => {
         {
           serviceName: 'service',
           organizationName: 'organization',
-          status: 'unknown',
+          state: 'unknown',
           apiSpecificationType: 'plain',
           latestAccessRequest: {
-            status: 'FAILED',
+            state: 'FAILED',
           },
         },
       ])
@@ -58,16 +58,16 @@ describe('the DirectoryRepository', () => {
               {
                 serviceName: 'service',
                 organizationName: 'organization',
-                status: 'unknown',
+                state: 'unknown',
                 apiSpecificationType: 'plain',
                 latestAccessRequest: {
-                  status: 'FAILED',
+                  state: 'FAILED',
                 },
               },
               {
                 serviceName: 'service2',
                 organizationName: 'organization',
-                status: 'unknown',
+                state: 'unknown',
                 apiSpecificationType: 'plain',
               },
             ],
@@ -80,16 +80,16 @@ describe('the DirectoryRepository', () => {
         {
           serviceName: 'service',
           organizationName: 'organization',
-          status: 'unknown',
+          state: 'unknown',
           apiSpecificationType: 'plain',
           latestAccessRequest: {
-            status: 'FAILED',
+            state: 'FAILED',
           },
         },
         {
           serviceName: 'service2',
           organizationName: 'organization',
-          status: 'unknown',
+          state: 'unknown',
           apiSpecificationType: 'plain',
           latestAccessRequest: null,
         },
@@ -128,10 +128,10 @@ describe('the DirectoryRepository', () => {
           Promise.resolve({
             serviceName: 'service',
             organizationName: 'organization',
-            status: 'unknown',
+            state: 'unknown',
             apiSpecificationType: 'plain',
             latestAccessRequest: {
-              status: 'FAILED',
+              state: 'FAILED',
             },
           }),
       })
@@ -144,10 +144,10 @@ describe('the DirectoryRepository', () => {
       expect(result).toEqual({
         serviceName: 'service',
         organizationName: 'organization',
-        status: 'unknown',
+        state: 'unknown',
         apiSpecificationType: 'plain',
         latestAccessRequest: {
-          status: 'FAILED',
+          state: 'FAILED',
         },
       })
 
@@ -165,7 +165,7 @@ describe('the DirectoryRepository', () => {
           Promise.resolve({
             serviceName: 'service',
             organizationName: 'organization',
-            status: 'unknown',
+            state: 'unknown',
             apiSpecificationType: 'plain',
           }),
       })
@@ -178,7 +178,7 @@ describe('the DirectoryRepository', () => {
       expect(result).toEqual({
         serviceName: 'service',
         organizationName: 'organization',
-        status: 'unknown',
+        state: 'unknown',
         apiSpecificationType: 'plain',
         latestAccessRequest: null,
       })

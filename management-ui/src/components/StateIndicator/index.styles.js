@@ -3,7 +3,7 @@
 //
 
 import styled from 'styled-components'
-import { IconStatusDegraded } from '../../icons'
+import { IconStateDegraded } from '../../icons'
 
 export const StyledWrapper = styled.span`
   display: flex;
@@ -12,12 +12,12 @@ export const StyledWrapper = styled.span`
   vertical-align: bottom;
 `
 
-export const StyledIconStatusDegraded = styled(IconStatusDegraded)`
+export const StyledIconStateDegraded = styled(IconStateDegraded)`
   .mainPath {
     fill: ${(p) => p.theme.tokens.colorAlertWarning};
   }
 `
 
-export const StatusText = styled.span`
+export const StateText = styled.span`
   margin-left: ${(p) => p.theme.tokens.spacing02};
 `

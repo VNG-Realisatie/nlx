@@ -15,7 +15,7 @@ test('display directory service details', async () => {
   const getService = jest.fn().mockResolvedValue({
     organizationName: 'organization',
     serviceName: 'service',
-    status: 'up',
+    state: 'up',
   })
 
   jest.useFakeTimers()

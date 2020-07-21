@@ -36,7 +36,10 @@ const statusErrorMessage = {
 }
 const genericErrorMessage = 'unable to handle the request'
 
-export const throwOnError = (response) => {
+export const throwOnError = (response, customStatusErrorMessage = {}) => {
   if (response.ok) return response
-  throw new Error(statusErrorMessage[response.status] || genericErrorMessage)
+  throw new Error(
+    { ...statusErrorMessage, ...customStatusErrorMessage }[response.status] ||
+      genericErrorMessage,
+  )
 }

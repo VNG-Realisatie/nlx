@@ -22,7 +22,7 @@ const DirectoryPageView = ({ services }) => {
         <Table.TrHead>
           <Table.Th>{t('Organization')}</Table.Th>
           <Table.Th>{t('Service')}</Table.Th>
-          <Table.Th>{t('Status')}</Table.Th>
+          <Table.Th>{t('State')}</Table.Th>
           <Table.Th>{t('API Type')}</Table.Th>
           <Table.Th>{t('Access')}</Table.Th>
         </Table.TrHead>
@@ -44,7 +44,7 @@ DirectoryPageView.propTypes = {
     shape({
       organizationName: string.isRequired,
       serviceName: string.isRequired,
-      status: string.isRequired,
+      state: string.isRequired,
       apiSpecificationType: string,
       latestAccessRequest: object,
     }),
