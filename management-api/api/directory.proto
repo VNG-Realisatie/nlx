@@ -38,20 +38,20 @@ message GetOrganizationServiceRequest {
 }
 
 message AccessRequest {
-    enum Status {
+    enum State {
         FAILED = 0;
         CREATED = 1;
         RECEIVED = 2;
     }
 
     string id = 1;
-    Status status = 2;
+    State state = 2;
     google.protobuf.Timestamp createdAt = 3;
     google.protobuf.Timestamp updatedAt = 4;
 }
 
 message DirectoryService {
-    enum Status {
+    enum State {
         unknown = 0;
         up = 1;
         down = 2;
@@ -61,7 +61,7 @@ message DirectoryService {
     string serviceName = 1;
     string organizationName = 2;
     string apiSpecificationType = 3 [(gogoproto.customname)="APISpecificationType"];
-    Status status = 4;
+    State state = 4;
     AccessRequest latestAccessRequest = 5;
 
 }

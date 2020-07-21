@@ -21,9 +21,9 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/environment"
 )
 
-var directoryServiceStatusTests = []struct {
-	ExpectedStatus directory.DirectoryService_Status
-	Inways         []*directory.Inway
+var directoryServiceStateTests = []struct {
+	ExpectedState directory.DirectoryService_State
+	Inways        []*directory.Inway
 }{
 	{
 		directory.DirectoryService_unknown,
@@ -78,14 +78,14 @@ var directoryServiceStatusTests = []struct {
 	},
 }
 
-func TestDirectoryServiceStatus(t *testing.T) {
-	for i, test := range directoryServiceStatusTests {
+func TestDirectoryServiceState(t *testing.T) {
+	for i, test := range directoryServiceStateTests {
 		name := strconv.Itoa(i + 1)
 		test := test
 
 		t.Run(name, func(t *testing.T) {
-			status := directory.DetermineDirectoryServiceStatus(test.Inways)
-			assert.Equal(t, test.ExpectedStatus, status)
+			state := directory.DetermineDirectoryServiceState(test.Inways)
+			assert.Equal(t, test.ExpectedState, state)
 		})
 	}
 }
@@ -121,7 +121,7 @@ func TestListServices(t *testing.T) {
 			ID:               "161c188cfcea1939",
 			OrganizationName: "test-organization-b",
 			ServiceName:      "test-service-3",
-			Status:           database.AccessRequestCreated,
+			State:            database.AccessRequestCreated,
 			CreatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
 			UpdatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
 		},
@@ -129,7 +129,7 @@ func TestListServices(t *testing.T) {
 			ID:               "161c1bd32da2b400",
 			OrganizationName: "test-organization-a",
 			ServiceName:      "test-service-1",
-			Status:           database.AccessRequestCreated,
+			State:            database.AccessRequestCreated,
 			CreatedAt:        time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
 			UpdatedAt:        time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
 		},
@@ -150,10 +150,10 @@ func TestListServices(t *testing.T) {
 			ServiceName:          "test-service-1",
 			OrganizationName:     "test-organization-a",
 			APISpecificationType: "OpenAPI3",
-			Status:               directory.DirectoryService_unknown,
+			State:                directory.DirectoryService_unknown,
 			LatestAccessRequest: &directory.AccessRequest{
 				Id:        "161c1bd32da2b400",
-				Status:    directory.AccessRequest_CREATED,
+				State:     directory.AccessRequest_CREATED,
 				CreatedAt: timestampProto(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 				UpdatedAt: timestampProto(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 			},
@@ -162,16 +162,16 @@ func TestListServices(t *testing.T) {
 			ServiceName:          "test-service-2",
 			OrganizationName:     "test-organization-a",
 			APISpecificationType: "OpenAPI3",
-			Status:               directory.DirectoryService_unknown,
+			State:                directory.DirectoryService_unknown,
 		},
 		{
 			ServiceName:          "test-service-3",
 			OrganizationName:     "test-organization-b",
 			APISpecificationType: "",
-			Status:               directory.DirectoryService_unknown,
+			State:                directory.DirectoryService_unknown,
 			LatestAccessRequest: &directory.AccessRequest{
 				Id:        "161c188cfcea1939",
-				Status:    directory.AccessRequest_CREATED,
+				State:     directory.AccessRequest_CREATED,
 				CreatedAt: timestampProto(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
 				UpdatedAt: timestampProto(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
 			},

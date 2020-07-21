@@ -21,7 +21,7 @@ type Service struct {
 	configDatabase  database.ConfigDatabase
 }
 
-var inwayStateToDirectoryStatus = map[InwayState]DirectoryService_Status{
+var inwayStateToDirectoryState = map[InwayState]DirectoryService_State{
 	InwayStateUnknown: DirectoryService_unknown,
 	InwayStateUp:      DirectoryService_up,
 	InwayStateDown:    DirectoryService_down,
@@ -154,11 +154,11 @@ func (s Service) RequestAccessToService(ctx context.Context, request *RequestAcc
 	return response, nil
 }
 
-func DetermineDirectoryServiceStatus(inways []*Inway) DirectoryService_Status {
-	serviceStatus := DirectoryService_unknown
+func DetermineDirectoryServiceState(inways []*Inway) DirectoryService_State {
+	serviceState := DirectoryService_unknown
 
 	if len(inways) == 0 {
-		return serviceStatus
+		return serviceState
 	}
 
 	stateMap := map[InwayState]int{}
@@ -172,20 +172,20 @@ func DetermineDirectoryServiceStatus(inways []*Inway) DirectoryService_Status {
 	}
 
 	for state := range stateMap {
-		serviceStatus = inwayStateToDirectoryStatus[state]
+		serviceState = inwayStateToDirectoryState[state]
 	}
 
-	return serviceStatus
+	return serviceState
 }
 
 func convertDirectoryService(s *InspectionAPIService) *DirectoryService {
-	serviceStatus := DetermineDirectoryServiceStatus(s.Inways)
+	serviceState := DetermineDirectoryServiceState(s.Inways)
 
 	return &DirectoryService{
 		ServiceName:          s.Name,
 		OrganizationName:     s.OrganizationName,
 		APISpecificationType: s.APISpecificationType,
-		Status:               serviceStatus,
+		State:                serviceState,
 	}
 }
 
@@ -200,9 +200,9 @@ func convertAccessRequest(a *database.AccessRequest) (*AccessRequest, error) {
 		return nil, err
 	}
 
-	var accessRequestState AccessRequest_Status
+	var accessRequestState AccessRequest_State
 
-	switch a.Status {
+	switch a.State {
 	case database.AccessRequestFailed:
 		accessRequestState = AccessRequest_FAILED
 	case database.AccessRequestCreated:
@@ -213,7 +213,7 @@ func convertAccessRequest(a *database.AccessRequest) (*AccessRequest, error) {
 
 	return &AccessRequest{
 		Id:        a.ID,
-		Status:    accessRequestState,
+		State:     accessRequestState,
 		CreatedAt: createdAt,
 		UpdatedAt: updatedAt,
 	}, nil

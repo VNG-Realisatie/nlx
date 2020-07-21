@@ -113,8 +113,8 @@
         "id": {
           "type": "string"
         },
-        "status": {
-          "$ref": "#/definitions/directoryAccessRequestStatus"
+        "state": {
+          "$ref": "#/definitions/directoryAccessRequestState"
         },
         "createdAt": {
           "type": "string",
@@ -126,7 +126,7 @@
         }
       }
     },
-    "directoryAccessRequestStatus": {
+    "directoryAccessRequestState": {
       "type": "string",
       "enum": [
         "FAILED",
@@ -147,15 +147,15 @@
         "apiSpecificationType": {
           "type": "string"
         },
-        "status": {
-          "$ref": "#/definitions/directoryDirectoryServiceStatus"
+        "state": {
+          "$ref": "#/definitions/directoryDirectoryServiceState"
         },
         "latestAccessRequest": {
           "$ref": "#/definitions/directoryAccessRequest"
         }
       }
     },
-    "directoryDirectoryServiceStatus": {
+    "directoryDirectoryServiceState": {
       "type": "string",
       "enum": [
         "unknown",

@@ -423,7 +423,7 @@
     }
   },
   "definitions": {
-    "AccessRequestStatus": {
+    "AccessRequestState": {
       "type": "string",
       "enum": [
         "FAILED",
@@ -469,8 +469,8 @@
         "serviceName": {
           "type": "string"
         },
-        "status": {
-          "$ref": "#/definitions/AccessRequestStatus"
+        "state": {
+          "$ref": "#/definitions/AccessRequestState"
         },
         "createdAt": {
           "type": "string",

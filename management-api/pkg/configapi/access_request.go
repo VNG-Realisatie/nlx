@@ -12,7 +12,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
-var accessRequestStatus = map[database.AccessRequestStatus]AccessRequest_Status{
+var accessRequestState = map[database.AccessRequestState]AccessRequest_State{
 	database.AccessRequestFailed:   AccessRequest_FAILED,
 	database.AccessRequestCreated:  AccessRequest_CREATED,
 	database.AccessRequestReceived: AccessRequest_RECEIVED,
@@ -73,16 +73,16 @@ func convertAccessRequest(a *database.AccessRequest) (*AccessRequest, error) {
 		return nil, err
 	}
 
-	aStatus, ok := accessRequestStatus[a.Status]
+	aState, ok := accessRequestState[a.State]
 	if !ok {
-		return nil, fmt.Errorf("unsupported status: %s", string(a.Status))
+		return nil, fmt.Errorf("unsupported state: %s", string(a.State))
 	}
 
 	return &AccessRequest{
 		Id:               a.ID,
 		OrganizationName: a.OrganizationName,
 		ServiceName:      a.ServiceName,
-		Status:           aStatus,
+		State:            aState,
 		CreatedAt:        createdAt,
 		UpdatedAt:        updatedAt,
 	}, nil

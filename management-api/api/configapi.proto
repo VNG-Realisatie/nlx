@@ -141,7 +141,7 @@ message InsightConfiguration {
 }
 
 message AccessRequest {
-	enum Status {
+	enum State {
 		FAILED = 0;
 		CREATED = 1;
 		RECEIVED = 2;
@@ -150,7 +150,7 @@ message AccessRequest {
 	string id = 1;
 	string organizationName = 2;
 	string serviceName = 3;
-	Status status = 4;
+	State state = 4;
 	google.protobuf.Timestamp createdAt = 5;
 	google.protobuf.Timestamp updatedAt = 6;
 }

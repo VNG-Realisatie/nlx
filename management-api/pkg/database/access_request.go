@@ -14,18 +14,18 @@ import (
 )
 
 type AccessRequest struct {
-	ID               string              `json:"id,omitempty"`
-	OrganizationName string              `json:"organizationName,omitempty"`
-	ServiceName      string              `json:"serviceName,omitempty"`
-	Status           AccessRequestStatus `json:"status,omitempty"`
-	CreatedAt        time.Time           `json:"createdAt,omitempty"`
-	UpdatedAt        time.Time           `json:"updatedAt,omitempty"`
+	ID               string             `json:"id,omitempty"`
+	OrganizationName string             `json:"organizationName,omitempty"`
+	ServiceName      string             `json:"serviceName,omitempty"`
+	State            AccessRequestState `json:"state,omitempty"`
+	CreatedAt        time.Time          `json:"createdAt,omitempty"`
+	UpdatedAt        time.Time          `json:"updatedAt,omitempty"`
 }
 
-type AccessRequestStatus int
+type AccessRequestState int
 
 const (
-	AccessRequestFailed AccessRequestStatus = iota
+	AccessRequestFailed AccessRequestState = iota
 	AccessRequestCreated
 	AccessRequestReceived
 )
@@ -74,7 +74,7 @@ func (db ETCDConfigDatabase) CreateAccessRequest(ctx context.Context, accessRequ
 	key := path.Join("access-requests", "outgoing", accessRequest.OrganizationName, accessRequest.ServiceName, id)
 
 	accessRequest.ID = id
-	accessRequest.Status = AccessRequestCreated
+	accessRequest.State = AccessRequestCreated
 	accessRequest.CreatedAt = t
 	accessRequest.UpdatedAt = t
 
