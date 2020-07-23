@@ -141,15 +141,12 @@ Also install KubeDB, an operator that manages postgres instances. Follow the [ku
 When Traefik and KubeDB are running, you can start all the NLX components by executing:
 
 ```bash
-docker-compose build --parallel
-kubectl create namespace nlx-dev-directory
-kubectl create namespace nlx-dev-brp
-kubectl create namespace nlx-dev-rdw
-kubectl create namespace nlx-dev-haarlem
-helm upgrade --install nlx-dev-directory ./helm/nlx-directory --namespace nlx-dev-directory --values ./helm/nlx-directory/values-dev.yaml
-helm upgrade --install nlx-dev-brp ./helm/nlx-organization --namespace nlx-dev-brp --values ./helm/nlx-organization/values-dev-brp.yaml
-helm upgrade --install nlx-dev-rdw ./helm/nlx-organization --namespace nlx-dev-rdw --values ./helm/nlx-organization/values-dev-rdw.yaml
-helm upgrade --install nlx-dev-haarlem ./helm/nlx-organization --namespace nlx-dev-haarlem --values ./helm/nlx-organization/values-dev-haarlem.yaml
+helm dependency build ./helm/deploy/rdw
+
+helm upgrade --install shared ./helm/deploy/shared
+helm upgrade --install brp ./helm/deploy/brp
+helm upgrade --install haarlem ./helm/deploy/haarlem
+helm upgrade --install rdw ./helm/deploy/rdw
 ```
 
 Finally, add the minikube hostnames to your machine's resolver so you can reach the services from your browser.
@@ -176,21 +173,19 @@ EOF
 You may now test the following sites:
 
 - https://traefik.minikube/                         Webinterface showing the status of the traefik ingress controller
-- http://docs.nlx-dev-directory.minikube/           Documentation
-- http://certportal.nlx-dev-directory.minikube/     Portal to generate TLS certificates
-- http://directory.nlx-dev-directory.minikube/      Overview of all services in the network
-- http://application.nlx-dev-haarlem.minikube/      Demo application for requesting a parking permit
-- http://outway.nlx-dev-haarlem.minikube/           Outway of the Haarlem example organization
-- http://txlog.nlx-dev-rdw.minikube/                Transaction logs of the RDW example organization
-- http://txlog.nlx-dev-brp.minikube/                Transaction logs of the BRP example organization
-- http://insight.nlx-dev-directory.minikube/        Insight in logs concerning a specific person
+- http://docs.shared.nlx.minikube/                  Documentation
+- http://certportal.shared.nlx.minikube/            Portal to generate TLS certificates
+- http://directory.shared.nlx.minikube/             Overview of all services in the network
+- http://insight.shared.nlx.minikube/               Insight in logs concerning a specific person
+- http://parkeren.haarlem.nlx.minikube/             Demo application for requesting a parking permit
+- http://nlx-management.rdw.nlx.minikube/           NLX management UI for managing NLX within an organization
 
 To test a full request through outway>inway, use the PostmanEcho service through the exampleorg outway: `curl http://outway.nlx-dev-haarlem.minikube/DemoProviderOrganization/PostmanEcho/get?foo1=bar1&foo2=bar2`
 
 If you want to connect over IP instead of using a hostname, the ingress controller cannot route the request properly. Therefore you must setup a port-forward directly to the application you want to expose. This is useful, for example, when testing IRMA using a phone on the same WiFi network as your host machine.
 
 ```bash
-kubectl --namespace nlx-dev-rdw port-forward deployment/irma-api-server 2222:8080
+kubectl port-forward deployment/rdw-irma-server 2222:session
 socat tcp-listen:3333,fork tcp:127.0.0.1:2222
 ```
 
@@ -223,8 +218,8 @@ When a git tag is pushed, GitLab builds and deploys it to the test and staging e
 
 There are multiple live environments for NLX
 
-- `acc`: follows the master branch automatically
-- `demo`, `preprod` and `prod`: updated after manually triggering a release
+- `acceptance`: follows the master branch automatically
+- `demo`, `pre-production` and `production`: updated after manually triggering a release
 
 ## License
 

@@ -267,8 +267,8 @@ When the output is as expected, the real release job is triggered. The job updat
 A new production release is done by trigging the manual release job on the master branch. The release is deployed to the following environments:
 
 * Demo
-* Preprod
-* Prod
+* Pre-production
+* Production
 
 After deployment, a manual check is done to check if everything still works as intended.
 

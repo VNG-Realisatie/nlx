@@ -1,43 +1,54 @@
 # Helm charts for NLX
 
-## Development environment
+This directory contains Helm charts to deploy various NLX components to a Kubernetes cluster.
 
-### Setup dependencies
+- `charts` charts for each individual component
+- `deploy` meta charts used for deployment, uses charts from the `charts` directory
 
-Install the following dependencies:
+The charts `version` and `appVersion` follows the version of this repository.
 
-- `traefik` for web and rest-api requests.
-- `nginx-ingress` for grpc and mutual-tls connections. Latest version is currently(2018-09-06) broken, so needs `--version 0.17.1`
-- `postgres` for directory-db and txlog-db.
 
-```bash
-helm install stable/traefik --name traefik --namespace traefik --values helm/traefik-values.yaml
-helm install stable/nginx-ingress --version 0.17.1 --name nginx-ingress --namespace=nginx-ingress --values helm/nginx-ingress-values.yaml
-helm install stable/postgresql --name postgresql --namespace=postgresql --values helm/postgresql-values.yaml
-```
+## Deploy charts
 
-Traefik does not work nice out of the box with k8s 1.13+.
+| Chart     | Description                                          |
+| --------- | ---------------------------------------------------- |
+| brp       | Demo organization, provides an API                   |
+| directory | Used for deployment to pre-production and production |
+| haarlem   | Demo municipality, consumes APIs from BRP and RDW    |
+| rdw       | Demo organization, provides an API                   |
+| shared    | Shared components that the BRP, Haarlem and RDW use  |
 
-Run the following to attach the traefik pod to the hostNetwork.
+> *Note: The NLX demo simulation is based on fictional communications between Haarlem, RDW and BRP. This is just an example and the organizations themselves are not involved.*
 
-```bash
-kubectl -n traefik get deployment traefik -oyaml | perl -0777 -i.original -pe 's/      volumes:/      hostNetwork: true\n      volumes:/igs' | kubectl -n traefik apply -f -
-```
 
-It may be that after running this command, the deployment cannot find a host to run traefik on. Most likely this is because port 443 on node2 is still in use and the new pod needs port 443 on node2.
-If that is case, manually delete the old pod.
+## Environments
 
-### Execute skaffold
+Charts in the `deploy` directory are used to deploy to different environments. The default values in `values.yaml` are suited for development only. To deploy to other environments use the `values-<environment>.yaml` file.
 
-In a local development environment it's best to use skaffold for building containers and executing helm.
-Execute skaffold in the following way: `skaffold dev`.
 
-### Domains
+### Review environment
 
-The NLX demo simulation (used in environments `test`, `acc` and `demo`) is based on fictional communications between Haarlem, RDW and BRP. This is just an example and the organizations themselves are not involved, so we have dedicated three domains to this simulation.
+Used for testing code changes. No NLX directory or Inway is exposed outside the Kubernetes cluster. Before deployment the variables in the `values-review.yaml.tpl` file are replaced with their actual values. This is because we use dynamic domain names in this environment.
 
-- `voorbeeld-haarlem.nl`
-- `voorbeeld-rdw.nl`
-- `voorbeeld-brp.nl`
+*Charts: brp, haarlem, rdw, shared*
 
-If an update is required to one of these domains, please only modify voorbeeld-haarlem.nl, then copy the changes using TransIP's bulk copy feature to `voorbeeld-rdw.nl` and `voorbeeld-brp.nl`. This means that all three domains have exactly the same subdomains, which makes it easy to maintain them and keep them all in sync. For the simulation, `vorbeeld-haarlem.nl` doesn't run an inway, but it still has that record so it is copied to brp and rdw as well.
+
+### Acceptance environment
+
+All changes pushed to the master branch are deployed to this enviroment. No NLX directory or Inway is exposed outside the Kubernetes cluster.
+
+*Charts: brp, haarlem, rdw, shared*
+
+
+### Demo environment
+
+Used for demonstrating the NLX ecosystem. The NLX directory and Inways are publicly exposed and can be accessed from outside the Kubernetes cluster.
+
+*Charts: brp, haarlem, rdw, shared*
+
+
+### Producion and pre-production environments
+
+Only a NLX directory is deployed. PKIOverheid certificates are used and are already present on the Kubernetes cluster.
+
+*Charts: directory*
