@@ -1,5 +1,0 @@
-apiVersion: "v1"
-name: nlx-organization
-version: v0.0.0
-description: "NLX organization: services for an organization in the NLX network"
-engine: gotpl

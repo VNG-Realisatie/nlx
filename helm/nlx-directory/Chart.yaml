@@ -1,5 +1,0 @@
-apiVersion: "v1"
-name: nlx-directory
-version: v0.0.0
-description: "NLX directory: centralized services in an NLX network"
-engine: gotpl

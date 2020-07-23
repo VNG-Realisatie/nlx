@@ -1,9 +1,0 @@
-# Default values for this chart
-
-imagePullPolicy: IfNotPresent
-storageType: Durable
-
-ca: {}
-
-imagePrefix: ""
-imageTag: latest

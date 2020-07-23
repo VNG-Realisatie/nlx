@@ -1,7 +1,0 @@
-
-postgresqlPassword: postgres
-persistence:
-  size: 40Gi
-
-postgresqlConfiguration:
-  max_connections: 3000
