@@ -18,8 +18,10 @@ services:
     environment:
       - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
       - ETCD_ADVERTISE_CLIENT_URLS=http://localhost:2379
-    volumes:
-      - etcd-data:/default.etcd
+# disabled attaching volume to etcd, see
+# https://gitlab.com/commonground/nlx/nlx/-/issues/990
+#    volumes:
+#      - etcd-data:/default.etcd
     restart: always
 
   # OpenID connect provider
