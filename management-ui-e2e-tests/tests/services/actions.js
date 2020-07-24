@@ -4,9 +4,10 @@
 
 import { t } from 'testcafe'
 
-import { getBaseUrl } from '../../utils'
+import { getBaseUrl, getLocation } from '../../utils'
 import addPage, { AUTHORIZATION_TYPE_NONE } from './page-models/add-service'
 import detailPage from './page-models/service-detail'
+import servicesPage from './page-models/services'
 
 const baseUrl = getBaseUrl()
 
@@ -47,17 +48,10 @@ export async function createService(serviceProperties = {}) {
 export async function removeService() {
   await t.navigateTo(`${baseUrl}/services/${t.ctx.serviceName}`)
 
-  await t
-    .setNativeDialogHandler((type, text, url) => {
-      if (text !== 'Wil je de service verwijderen?') {
-        throw `Unexpected dialog text: ${text}`
-      }
-      return true
-    })
-    .click(detailPage.removeButton)
+  await t.setNativeDialogHandler(() => true)
 
-  await t
-    .expect(detailPage.alert.innerText).contains('De service is verwijderd.')
+  await detailPage.removeService()
+  await t.expect(getLocation()).eql(servicesPage.url)
 
   t.ctx.serviceName = null
 }
