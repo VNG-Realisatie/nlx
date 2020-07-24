@@ -6,13 +6,14 @@ import { getBaseUrl, getLocation } from '../../utils'
 import { adminUser } from '../roles'
 import { createService } from './actions'
 import page from './page-models/service-detail'
-import { Selector } from "testcafe";
+import servicesPage from './page-models/services'
 
 const baseUrl = getBaseUrl()
 
 fixture`ServiceDetails remove`.beforeEach(async (t) => {
   await t.useRole(adminUser)
   const serviceName = await createService()
+  t.ctx.serviceName = serviceName
   await t.navigateTo(`${baseUrl}/services/${serviceName}`)
 })
 
@@ -27,10 +28,13 @@ test('Removing a service', async (t) => {
 
   await page.removeService()
 
-  await t.expect(getLocation()).eql(`${baseUrl}/services`)
+  await t.expect(getLocation()).eql(servicesPage.url)
 
-  const serviceRemovedAlert = Selector('div[role="alert"]')
+  const serviceName = t.ctx.serviceName
+  const serviceRow = await servicesPage.getRowElementForService(serviceName)
+  await t.expect(serviceRow.exists).notOk()
+
+  const serviceRemovedAlert = servicesPage.alert
   await t.expect(serviceRemovedAlert.visible).ok()
-
-  await t.expect(serviceRemovedAlert.withExactText('De service is verwijderd.')).ok()
+  await t.expect(servicesPage.alertContent.withExactText('De service is verwijderd.').exists).ok()
 })
