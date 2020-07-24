@@ -1,24 +1,17 @@
-ssl:
-  enabled: true
-  insecureSkipVerify: true
+globalArguments: []
 
-dashboard:
-  enabled: true
-  domain: traefik.minikube
-  ingress:
-    annotations:
-      kubernetes.io/ingress.class: traefik
-      ingress.kubernetes.io/ssl-redirect: true
-      # Force traefik dashboard to use traefik for ingress, required when there are multiple ingress-controllers active.
+additionalArguments:
+  - "--accessLog"
+  - "--api.insecure"
 
-rbac:
-  enabled: true
+ports:
+  traefik:
+    hostPort: 9000
+    expose: true
+  web:
+    hostPort: 80
+  websecure:
+    hostPort: 443
 
-kubernetes:
-  ingressClass: traefik # Only handle k8s Ingress objects with explicit kubernetes.io/ingress.class="traefik"
-
-deployment:
-  hostPort:
-    httpEnabled: true
-    httpsEnabled: true
-    dashboardEnabled: true
+service:
+  type: NodePort

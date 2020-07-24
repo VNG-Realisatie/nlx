@@ -124,16 +124,14 @@ To let the docker commands make use of Minikube execute the following before pro
 eval $(minikube docker-env)
 ```
 
-Once minikube is running, add the stable repository to Helm:
+Once minikube is running, install Traefik as ingress controller for web and rest-api requests.
 
 ```bash
-helm repo add stable https://kubernetes-charts.storage.googleapis.com/
-```
+helm repo add traefik https://containous.github.io/traefik-helm-chart
+helm repo update
 
-Next, install Traefik as ingress controller for web and rest-api requests.
-
-```bash
-helm install traefik stable/traefik --namespace kube-system --values helm/traefik-values-minikube.yaml
+kubectl create namespace traefik
+helm install traefik traefik/traefik --namespace traefik --values helm/traefik-values-minikube.yaml
 ```
 
 Also install KubeDB, an operator that manages postgres instances. Follow the [kubedb.com instructions for installing using helm](https://kubedb.com/docs/0.12.0/setup/install/#using-helm) and click the 'Helm' tab.
@@ -172,7 +170,7 @@ EOF
 
 You may now test the following sites:
 
-- https://traefik.minikube/                         Webinterface showing the status of the traefik ingress controller
+- http://traefik.minikube:9000/                     Webinterface showing the status of the traefik ingress controller
 - http://docs.shared.nlx.minikube/                  Documentation
 - http://certportal.shared.nlx.minikube/            Portal to generate TLS certificates
 - http://directory.shared.nlx.minikube/             Overview of all services in the network
