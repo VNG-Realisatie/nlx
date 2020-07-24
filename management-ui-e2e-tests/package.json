@@ -4,6 +4,7 @@
   "scripts": {
     "pretest:browserstack": "node outputUrl.js",
     "pretest:local": "node outputUrl.js",
+    "pretest": "rimraf test-results",
     "test": "if test -n \"$CI\"; then npm run test:browserstack; else npm run test:local; fi",
     "test:browserstack": "testcafe 'browserstack:firefox,browserstack:chrome,browserstack:safari,browserstack:ie,browserstack:edge' --reporter 'spec,html:./test-results/index.html'",
     "test:local": "testcafe 'chrome:headless' -c 4 --live --reporter 'spec,html:./test-results/index.html'"
@@ -11,6 +12,7 @@
   "devDependencies": {
     "axe-core": "3.5.5",
     "axe-testcafe": "3.0.0",
+    "rimraf": "3.0.2",
     "testcafe": "1.8.8",
     "testcafe-browser-provider-browserstack": "1.13.0",
     "testcafe-react-selectors": "4.0.0",
