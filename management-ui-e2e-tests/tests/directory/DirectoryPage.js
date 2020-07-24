@@ -52,5 +52,5 @@ test('Directory details are displayed', async (t) => {
   await t.expect(serviceNameCell.textContent).eql(DIRECTORY_SERVICE_NAME)
   await t.expect(statusTitle.textContent).eql(DIRECTORY_STATUS)
   await t.expect(apiSpecificationTypeCell.textContent).eql(DIRECTORY_API_SPECIFICATION_TYPE)
-  await t.expect(accessCell.find('svg[data-testid="request-access"]').exists).ok()
+  await t.expect(accessCell.find('button').withText('Verzoek').exists).ok()
 })
