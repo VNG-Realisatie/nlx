@@ -25,7 +25,7 @@ test('Removing a service', async (t) => {
       return true
     })
 
-  await t.click(page.removeButton)
+  await page.removeService()
 
   await t.expect(getLocation()).eql(`${baseUrl}/services`)
 

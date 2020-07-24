@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 
-import { Selector } from 'testcafe'
+import { Selector, t } from 'testcafe'
 
 class Page {
   constructor() {
@@ -17,6 +17,10 @@ class Page {
     this.inways = Selector('[data-testid="service-inways"]')
     this.alert = Selector('div[role="alert"]')
     this.alertTitle = this.alert.find('[data-testid="title"]')
+  }
+
+  async removeService() {
+    await t.click(this.removeButton)
   }
 }
 
