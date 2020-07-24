@@ -2,10 +2,11 @@
 // Licensed under the EUPL
 //
 
-import { getBaseUrl } from '../../utils'
+import { getBaseUrl, getLocation } from '../../utils'
 import { adminUser } from '../roles'
 import { createService } from './actions'
 import page from './page-models/service-detail'
+import { Selector } from "testcafe";
 
 const baseUrl = getBaseUrl()
 
@@ -23,7 +24,13 @@ test('Removing a service', async (t) => {
       }
       return true
     })
+
   await t.click(page.removeButton).takeScreenshot()
-  
-  await t.expect(page.alert.visible).ok()
+
+  await t.expect(getLocation()).eql(`${baseUrl}/services`)
+
+  const serviceRemovedAlert = Selector('div[role="alert"]')
+  await t.expect(serviceRemovedAlert.visible).ok()
+
+  await t.expect(serviceRemovedAlert.withExactText('De service is verwijderd.')).ok()
 })
