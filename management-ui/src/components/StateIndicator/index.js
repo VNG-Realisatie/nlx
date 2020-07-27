@@ -13,13 +13,13 @@ import {
   StateText,
 } from './index.styles'
 
-export const DIRECTORY_SERVICE_STATE = ['degraded', 'down', 'unknown', 'up']
+export const DIRECTORY_SERVICE_STATES = ['degraded', 'down', 'unknown', 'up']
 
 // Generic component that will handle different kinds of state codes (not only directory service)
 const StateIndicator = ({ state, showText }) => {
   const { t } = useTranslation()
 
-  if (!DIRECTORY_SERVICE_STATE.includes(state)) {
+  if (!DIRECTORY_SERVICE_STATES.includes(state)) {
     console.warn(`Invalid state '${state}'`)
     return null
   }
@@ -60,7 +60,7 @@ const StateIndicator = ({ state, showText }) => {
 }
 
 StateIndicator.propTypes = {
-  state: oneOf(DIRECTORY_SERVICE_STATE),
+  state: oneOf(DIRECTORY_SERVICE_STATES),
   showText: bool,
 }
 

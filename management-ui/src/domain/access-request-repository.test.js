@@ -54,7 +54,7 @@ describe('the AccessRequestRepository', () => {
           serviceName: 'service',
         }),
       ).rejects.toThrowError(
-        /^Request already sent, please refresh the page to see the latest status\.$/,
+        /^Request already sent, please refresh the page to see the latest state\.$/,
       )
     })
   })

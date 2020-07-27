@@ -17,13 +17,13 @@ class OutgoingAccessRequestModel {
   id = ''
   organizationName = ''
   serviceName = ''
-  status = ''
+  state = ''
   createdAt = ''
   updatedAt = ''
 
   get hasUnsuccessfulEndstate() {
     const { CANCELLED, REJECTED } = accessRequestStates
-    return [CANCELLED, REJECTED].includes(this.status)
+    return [CANCELLED, REJECTED].includes(this.state)
   }
 
   constructor({ json, domain = AccessRequestRepository }) {
@@ -53,7 +53,7 @@ class OutgoingAccessRequestModel {
       this.isLoading = true
       this.error = ''
 
-      yield this.update({ status: accessRequestStates.CREATED })
+      yield this.update({ state: accessRequestStates.CREATED })
 
       const result = yield this.domain.requestAccess({
         organizationName: this.organizationName,
@@ -72,7 +72,7 @@ class OutgoingAccessRequestModel {
 }
 
 decorate(OutgoingAccessRequestModel, {
-  status: observable,
+  state: observable,
   hasUnsuccessfulEndstate: computed,
   update: action.bound,
   send: action.bound,

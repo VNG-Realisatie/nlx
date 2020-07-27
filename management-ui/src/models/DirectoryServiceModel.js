@@ -9,7 +9,7 @@ class DirectoryServiceModel {
   id = ''
   organizationName = ''
   serviceName = ''
-  status = ''
+  state = ''
   apiSpecificationType = ''
   latestAccessRequest = null
 
@@ -19,7 +19,7 @@ class DirectoryServiceModel {
     this.id = `${service.organizationName}/${service.serviceName}`
     this.organizationName = service.organizationName
     this.serviceName = service.serviceName
-    this.status = service.status
+    this.state = service.state
     this.apiSpecificationType = service.apiSpecificationType
     this.latestAccessRequest = service.latestAccessRequest
       ? createAccessRequestInstance(service.latestAccessRequest)

@@ -7,7 +7,7 @@ import { observer } from 'mobx-react'
 import { Table } from '@commonground/design-system'
 
 import DirectoryServiceModel from '../../../../../models/DirectoryServiceModel'
-import StateIndicator from '../../../../../components/StatusIndicator'
+import StateIndicator from '../../../../../components/StateIndicator'
 import { AccessRequestContext } from '../../index'
 import QuickAccessButton from '../QuickAccessButton'
 import AccessRequestMessage from '../AccessRequestMessage'

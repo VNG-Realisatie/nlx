@@ -12,7 +12,7 @@ class AccessRequestRepository {
     })
 
     throwOnError(response, {
-      409: 'Request already sent, please refresh the page to see the latest status.',
+      409: 'Request already sent, please refresh the page to see the latest state.',
     })
 
     await delay(2000)
