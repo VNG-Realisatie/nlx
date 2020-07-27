@@ -1,12 +1,13 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React, { useContext } from 'react'
-import { shape, string } from 'prop-types'
+import React from 'react'
+import { instanceOf } from 'prop-types'
+import { observer } from 'mobx-react'
 import { Button, Spinner } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 
-import { AccessRequestContext } from '../../../DirectoryPage'
+import DirectoryServiceModel from '../../../../../models/DirectoryServiceModel'
 import AccessRequestMessage from '../../../DirectoryPage/components/AccessRequestMessage'
 import { SectionGroup } from '../../../../../components/DetailView'
 
@@ -14,22 +15,9 @@ import { IconKey } from '../../../../../icons'
 
 import { StyledAlert, AccessSection, IconItem, StateItem } from './index.styles'
 
-const DirectoryDetailView = ({
-  organizationName,
-  serviceName,
-  latestAccessRequest,
-}) => {
+const DirectoryDetailView = ({ service }) => {
   const { t } = useTranslation()
-  const { handleRequestAccess, requestSentTo } = useContext(
-    AccessRequestContext,
-  )
-
-  const requestAccess = () =>
-    handleRequestAccess({ organizationName, serviceName })
-
-  const isRequestSentForThisService =
-    requestSentTo.organizationName === organizationName &&
-    requestSentTo.serviceName === serviceName
+  const { latestAccessRequest, requestAccess } = service
 
   let icon = Spinner
   if (
@@ -62,12 +50,7 @@ const DirectoryDetailView = ({
             <>
               <IconItem as={IconKey} />
               <StateItem>{t('You have no access')}</StateItem>
-              <Button
-                onClick={requestAccess}
-                disabled={isRequestSentForThisService}
-              >
-                {t('Request Access')}
-              </Button>
+              <Button onClick={requestAccess}>{t('Request Access')}</Button>
             </>
           )}
         </AccessSection>
@@ -77,14 +60,7 @@ const DirectoryDetailView = ({
 }
 
 DirectoryDetailView.propTypes = {
-  organizationName: string,
-  serviceName: string,
-  latestAccessRequest: shape({
-    id: string,
-    state: string,
-    createdAt: string,
-    updatedAt: string,
-  }),
+  service: instanceOf(DirectoryServiceModel),
 }
 
-export default DirectoryDetailView
+export default observer(DirectoryDetailView)

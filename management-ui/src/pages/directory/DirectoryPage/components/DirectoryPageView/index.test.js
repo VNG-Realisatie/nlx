@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { renderWithProviders } from '../../../../test-utils'
+import { renderWithProviders } from '../../../../../test-utils'
 import DirectoryServices from './index'
 
 jest.mock('../DirectoryServiceRow', () => ({ organizationName }) => (

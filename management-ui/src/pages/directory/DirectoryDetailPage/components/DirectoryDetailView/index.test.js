@@ -4,7 +4,7 @@
 import React from 'react'
 import { fireEvent } from '@testing-library/react'
 
-import { renderWithProviders } from '../../../../test-utils'
+import { renderWithProviders } from '../../../../../test-utils'
 import { AccessRequestContext } from '../../../DirectoryPage'
 import DirectoryDetailView from './index'
 

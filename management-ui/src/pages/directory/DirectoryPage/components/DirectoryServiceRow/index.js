@@ -1,20 +1,18 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React, { useContext } from 'react'
+import React from 'react'
 import { instanceOf } from 'prop-types'
 import { observer } from 'mobx-react'
 import { Table } from '@commonground/design-system'
 
 import DirectoryServiceModel from '../../../../../models/DirectoryServiceModel'
 import StateIndicator from '../../../../../components/StateIndicator'
-import { AccessRequestContext } from '../../index'
 import QuickAccessButton from '../QuickAccessButton'
 import AccessRequestMessage from '../AccessRequestMessage'
 import { StyledTdAccess } from './index.styles'
 
 const DirectoryServiceRow = ({ service }) => {
-  const { requestSentTo } = useContext(AccessRequestContext)
   const {
     organizationName,
     serviceName,
@@ -25,13 +23,8 @@ const DirectoryServiceRow = ({ service }) => {
 
   const requestAccess = (evt) => {
     evt.stopPropagation() // Prevent triggering click on table row
-    // handleRequestAccess({ organizationName, serviceName })
     service.requestAccess()
   }
-
-  const isRequestSentForThisService =
-    requestSentTo.organizationName === organizationName &&
-    requestSentTo.serviceName === serviceName
 
   return (
     <Table.Tr
@@ -49,10 +42,7 @@ const DirectoryServiceRow = ({ service }) => {
         {latestAccessRequest ? (
           <AccessRequestMessage latestAccessRequest={latestAccessRequest} />
         ) : (
-          <QuickAccessButton
-            onClick={requestAccess}
-            disabled={isRequestSentForThisService}
-          />
+          <QuickAccessButton onClick={requestAccess} />
         )}
       </StyledTdAccess>
     </Table.Tr>

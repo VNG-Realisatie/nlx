@@ -3,7 +3,7 @@
 //
 import React from 'react'
 import { Drawer } from '@commonground/design-system'
-import { renderWithProviders } from '../../../../test-utils'
+import { renderWithProviders } from '../../../../../test-utils'
 import DrawerHeader from './index'
 
 const service = {

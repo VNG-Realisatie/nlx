@@ -6,7 +6,6 @@ import { node } from 'prop-types'
 import { configure } from 'mobx'
 import 'mobx-react-lite/batchingForReactDom'
 
-import DirectoryRepository from '../domain/directory-repository'
 import { createDirectoryStore } from '../pages/directory/DirectoryStore'
 
 configure({ enforceActions: 'observed' })
@@ -15,7 +14,7 @@ export const storesContext = createContext(null)
 
 class RootStore {
   constructor() {
-    this.directoryStore = createDirectoryStore(this, DirectoryRepository)
+    this.directoryStore = createDirectoryStore({ rootStore: this })
   }
 }
 

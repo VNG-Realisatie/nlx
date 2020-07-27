@@ -1,8 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-
-import React, { createContext, useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { func } from 'prop-types'
 import { observer } from 'mobx-react'
 import { Route } from 'react-router-dom'
@@ -18,41 +17,14 @@ import DirectoryDetailPage from '../DirectoryDetailPage'
 import DirectoryServiceCount from './components/DirectoryServiceCount'
 import DirectoryPageView from './components/DirectoryPageView'
 
-export const AccessRequestContext = createContext()
-
-const DEFAULT_REQUEST_SENT_STATE = {
-  organizationName: '',
-  serviceName: '',
-}
-
 const DirectoryPage = ({ requestAccess }) => {
   const { t } = useTranslation()
-  const { getServices, services, isLoading, error } = useDirectoryStore()
-
-  const [requestSentTo, setRequestSentTo] = useState(DEFAULT_REQUEST_SENT_STATE)
+  const { fetchServices, services, isLoading, error } = useDirectoryStore()
 
   useEffect(() => {
-    getServices()
+    fetchServices()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  const handleRequestAccess = async ({ organizationName, serviceName }) => {
-    const confirmed = window.confirm(
-      t('The request will be sent to', { name: organizationName }),
-    )
-
-    if (confirmed) {
-      setRequestSentTo({ organizationName, serviceName })
-
-      try {
-        await requestAccess({ organizationName, serviceName })
-        setRequestSentTo(DEFAULT_REQUEST_SENT_STATE)
-      } catch (e) {
-        console.error(e)
-        setRequestSentTo(DEFAULT_REQUEST_SENT_STATE)
-      }
-    }
-  }
 
   return (
     <PageTemplate>
@@ -75,17 +47,12 @@ const DirectoryPage = ({ requestAccess }) => {
           {t('Failed to load the directory.')}
         </Alert>
       ) : (
-        <AccessRequestContext.Provider
-          value={{ requestSentTo, handleRequestAccess }}
-        >
-          <DirectoryPageView
-            services={services}
-            handleRequestAccess={handleRequestAccess}
-          />
+        <>
+          <DirectoryPageView services={services} />
           <Route exact path="/directory/:organizationName/:serviceName">
-            <DirectoryDetailPage parentUrl="/directory" />
+            <DirectoryDetailPage />
           </Route>
-        </AccessRequestContext.Provider>
+        </>
       )}
     </PageTemplate>
   )

@@ -3,7 +3,7 @@
 //
 import React from 'react'
 
-import { renderWithProviders } from '../../../../test-utils'
+import { renderWithProviders } from '../../../../../test-utils'
 import AccessRequestMessage from './index'
 
 test('by default should render nothing', () => {

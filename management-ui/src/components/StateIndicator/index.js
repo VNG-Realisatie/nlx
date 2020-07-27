@@ -16,7 +16,7 @@ import {
 export const DIRECTORY_SERVICE_STATES = ['degraded', 'down', 'unknown', 'up']
 
 // Generic component that will handle different kinds of state codes (not only directory service)
-const StateIndicator = ({ state, showText }) => {
+const StateIndicator = ({ state, showText, ...props }) => {
   const { t } = useTranslation()
 
   if (!DIRECTORY_SERVICE_STATES.includes(state)) {
@@ -26,7 +26,7 @@ const StateIndicator = ({ state, showText }) => {
 
   // Make this smarter when refactoring for more states:
   return (
-    <StyledWrapper>
+    <StyledWrapper {...props}>
       {
         {
           degraded: (

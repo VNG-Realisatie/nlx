@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { renderWithProviders, fireEvent } from '../../../../test-utils'
+import { renderWithProviders, fireEvent } from '../../../../../test-utils'
 import { AccessRequestContext } from '../../index'
 import DirectoryServiceRow from './index'
 

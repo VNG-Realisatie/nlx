@@ -1,30 +1,30 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React from 'react'
-import { func, string } from 'prop-types'
+import React, { useEffect } from 'react'
+import { string } from 'prop-types'
+import { observer } from 'mobx-react'
 import { useParams, useHistory } from 'react-router-dom'
 import { Alert, Drawer } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 
-import DirectoryRepository from '../../../domain/directory-repository'
-import usePromise from '../../../hooks/use-promise'
-import LoadingMessage from '../../../components/LoadingMessage'
+import { useDirectoryStore } from '../../../hooks/use-stores'
 import DirectoryDetailView from './components/DirectoryDetailView'
 import DrawerHeader from './components/DrawerHeader'
 
-const DirectoryDetailPage = ({ getService, parentUrl }) => {
+const DirectoryDetailPage = ({ parentUrl }) => {
   const { t } = useTranslation()
   const history = useHistory()
   const { organizationName, serviceName } = useParams()
+  const { selectService } = useDirectoryStore()
 
-  const { isReady, error, result: service } = usePromise(
-    getService,
-    organizationName,
-    serviceName,
-  )
+  const service = selectService({ organizationName, serviceName })
 
   const close = () => history.push(parentUrl)
+
+  useEffect(() => {
+    if (service) service.fetch()
+  }, [service])
 
   return (
     <Drawer noMask closeHandler={close}>
@@ -39,30 +39,26 @@ const DirectoryDetailPage = ({ getService, parentUrl }) => {
       )}
 
       <Drawer.Content>
-        {!isReady || (!error && !service) ? (
-          <LoadingMessage />
-        ) : error ? (
+        {service ? (
+          <DirectoryDetailView service={service} />
+        ) : (
           <Alert variant="error" data-testid="error-message">
             {t('Failed to load the service.', {
               name: `${organizationName}/${serviceName}`,
             })}
           </Alert>
-        ) : service ? (
-          <DirectoryDetailView {...service} />
-        ) : null}
+        )}
       </Drawer.Content>
     </Drawer>
   )
 }
 
 DirectoryDetailPage.propTypes = {
-  getService: func,
   parentUrl: string,
 }
 
 DirectoryDetailPage.defaultProps = {
-  getService: DirectoryRepository.getByName,
   parentUrl: '/directory',
 }
 
-export default DirectoryDetailPage
+export default observer(DirectoryDetailPage)

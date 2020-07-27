@@ -4,9 +4,10 @@
 
 import React from 'react'
 import { MemoryRouter as Router } from 'react-router-dom'
-import { act, renderWithProviders, waitFor } from '../../test-utils'
+
+import { act, renderWithProviders, waitFor } from '../../../test-utils'
+import deferredPromise from '../../../test-utils/deferred-promise'
 import { UserContextProvider } from '../../user-context'
-import deferredPromise from '../../test-utils/deferred-promise'
 import DirectoryPage from './index'
 
 jest.mock('./components/DirectoryPageView', () => ({ services }) => {

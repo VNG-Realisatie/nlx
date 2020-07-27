@@ -3,14 +3,25 @@
 //
 import React from 'react'
 import { shape, string } from 'prop-types'
+import { observer } from 'mobx-react'
 import { useTranslation } from 'react-i18next'
 import { Drawer } from '@commonground/design-system'
 
-import StateIndicator from '../../../../../components/StateIndicator'
-import { SubTitle, Summary } from './index.styles'
+import {
+  SubTitle,
+  Summary,
+  StyledSpinner,
+  StyledStateIndicator,
+} from './index.styles'
 
 const DrawerHeader = ({ service }) => {
-  const { serviceName, organizationName, state, apiSpecificationType } = service
+  const {
+    serviceName,
+    organizationName,
+    state,
+    apiSpecificationType,
+    isLoading,
+  } = service
   const { t } = useTranslation()
 
   return (
@@ -19,7 +30,8 @@ const DrawerHeader = ({ service }) => {
       <SubTitle>{organizationName}</SubTitle>
       <Summary>
         {apiSpecificationType && <span>{apiSpecificationType}</span>}
-        <StateIndicator state={state} showText />
+        <StyledStateIndicator state={state} showText />
+        {isLoading && <StyledSpinner />}
       </Summary>
     </header>
   )
@@ -34,4 +46,4 @@ DrawerHeader.propTypes = {
   }),
 }
 
-export default DrawerHeader
+export default observer(DrawerHeader)

@@ -3,24 +3,25 @@
 //
 import { decorate, observable, flow, action } from 'mobx'
 
+import DirectoryRepository from '../../domain/directory-repository'
 import DirectoryServiceModel from '../../models/DirectoryServiceModel'
 
 class DirectoryStore {
   services = []
 
-  constructor(rootStore, domain) {
+  constructor({ rootStore, domain = DirectoryRepository }) {
     this.rootStore = rootStore
     this.domain = domain
 
     // @TODO:
-    // All stores that do async stuff now have isLoading and error.
+    // All stores/models that do async stuff now have isLoading and error.
     // Consider using a reqres model / state machine
     // See: https://benmccormick.org/2018/05/14/mobx-state-machines-and-flags/
     this.isLoading = false
     this.error = ''
   }
 
-  getServices = flow(function* getServices() {
+  fetchServices = flow(function* fetchServices() {
     this.isLoading = true
     this.error = ''
 
@@ -35,14 +36,21 @@ class DirectoryStore {
       this.isLoading = false
     }
   })
+
+  selectService = ({ organizationName, serviceName }) => {
+    return this.services.find(
+      (service) =>
+        service.organizationName === organizationName &&
+        service.serviceName === serviceName,
+    )
+  }
 }
 
 decorate(DirectoryStore, {
   services: observable,
   isLoading: observable,
   error: observable,
-  // flow'ed functions don't need action. This is so we can destructure it in component:
-  getServices: action.bound,
+  fetchServices: action.bound,
 })
 
 export const createDirectoryStore = (...args) => new DirectoryStore(...args)

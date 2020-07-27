@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { decorate, observable, flow } from 'mobx'
+import { decorate, observable, flow, action } from 'mobx'
 
 import { createAccessRequestInstance } from './OutgoingAccessRequestModel'
 
@@ -12,6 +12,8 @@ class DirectoryServiceModel {
   state = ''
   apiSpecificationType = ''
   latestAccessRequest = null
+
+  isLoading = false
 
   constructor({ store, service }) {
     this.store = store
@@ -25,6 +27,25 @@ class DirectoryServiceModel {
       ? createAccessRequestInstance(service.latestAccessRequest)
       : null
   }
+
+  fetch = flow(function* fetch() {
+    this.isLoading = true
+
+    try {
+      const service = yield this.store.domain.getByName(
+        this.organizationName,
+        this.serviceName,
+      )
+
+      this.state = service.state
+      this.latestAccessRequest = service.latestAccessRequest
+        ? createAccessRequestInstance(service.latestAccessRequest)
+        : null
+    } catch (e) {
+    } finally {
+      this.isLoading = false
+    }
+  })
 
   requestAccess = flow(function* requestAccess() {
     if (
@@ -47,7 +68,11 @@ class DirectoryServiceModel {
 }
 
 decorate(DirectoryServiceModel, {
+  state: observable,
   latestAccessRequest: observable,
+  isLoading: observable,
+  requestAccess: action.bound,
+  fetch: action.bound,
 })
 
 export default DirectoryServiceModel
