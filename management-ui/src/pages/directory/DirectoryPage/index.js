@@ -19,7 +19,13 @@ import DirectoryPageView from './components/DirectoryPageView'
 
 const DirectoryPage = ({ requestAccess }) => {
   const { t } = useTranslation()
-  const { fetchServices, services, isLoading, error } = useDirectoryStore()
+  const {
+    fetchServices,
+    services,
+    selectService,
+    isLoading,
+    error,
+  } = useDirectoryStore()
 
   useEffect(() => {
     fetchServices()
@@ -49,9 +55,17 @@ const DirectoryPage = ({ requestAccess }) => {
       ) : (
         <>
           <DirectoryPageView services={services} />
-          <Route exact path="/directory/:organizationName/:serviceName">
-            <DirectoryDetailPage />
-          </Route>
+          <Route
+            exact
+            path="/directory/:organizationName/:serviceName"
+            render={({ match }) => {
+              return (
+                services.length && (
+                  <DirectoryDetailPage service={selectService(match.params)} />
+                )
+              )
+            }}
+          />
         </>
       )}
     </PageTemplate>

@@ -8,23 +8,19 @@ import { useParams, useHistory } from 'react-router-dom'
 import { Alert, Drawer } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 
-import { useDirectoryStore } from '../../../hooks/use-stores'
 import DirectoryDetailView from './components/DirectoryDetailView'
 import DrawerHeader from './components/DrawerHeader'
 
-const DirectoryDetailPage = ({ parentUrl }) => {
+const DirectoryDetailPage = ({ service, parentUrl }) => {
   const { t } = useTranslation()
   const history = useHistory()
   const { organizationName, serviceName } = useParams()
-  const { selectService } = useDirectoryStore()
-
-  const service = selectService({ organizationName, serviceName })
-
-  const close = () => history.push(parentUrl)
 
   useEffect(() => {
     if (service) service.fetch()
   }, [service])
+
+  const close = () => history.push(parentUrl)
 
   return (
     <Drawer noMask closeHandler={close}>
