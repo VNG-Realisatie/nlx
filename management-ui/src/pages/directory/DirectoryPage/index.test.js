@@ -4,12 +4,17 @@
 
 import React from 'react'
 import { MemoryRouter as Router } from 'react-router-dom'
+import { observable } from 'mobx'
 
-import { act, renderWithProviders, waitFor } from '../../../test-utils'
-import deferredPromise from '../../../test-utils/deferred-promise'
-import { UserContextProvider } from '../../user-context'
+import { act, renderWithProviders } from '../../../test-utils'
+import { StoreProvider } from '../../../stores'
+import { UserContextProvider } from '../../../user-context'
 import DirectoryPage from './index'
 
+// Ignore this deeply nested component which has a separate request flow
+jest.mock('../../../components/OrganizationName', () => () => null)
+
+// Simplify showing of the services. We'll only require the serviceName.
 jest.mock('./components/DirectoryPageView', () => ({ services }) => {
   return (
     <div data-testid="mock-directory-services">
@@ -22,85 +27,78 @@ jest.mock('./components/DirectoryPageView', () => ({ services }) => {
   )
 })
 
-test('listing all services', async () => {
-  const services = deferredPromise()
-  const getDirectoryServices = jest.fn(() => services)
-
-  const { getByRole, getByTestId } = renderWithProviders(
-    <Router>
+const renderDirectory = (store) =>
+  renderWithProviders(
+    <StoreProvider store={store}>
       <UserContextProvider user={{}}>
-        <DirectoryPage getDirectoryServices={getDirectoryServices} />
+        <Router>
+          <DirectoryPage />
+        </Router>
       </UserContextProvider>
-    </Router>,
+    </StoreProvider>,
   )
 
-  expect(getByRole('progressbar')).toBeInTheDocument()
-  expect(() => getByTestId('mock-directory-services')).toThrow()
-  expect(getByTestId('directory-description')).toHaveTextContent(
-    /^List of all available services$/,
-  )
-
-  await act(async () => {
-    services.resolve([{ serviceName: 'Test Service' }])
+test('listing all services', () => {
+  const store = observable({
+    directoryStore: {
+      services: [],
+      isLoading: true,
+      error: '',
+      fetchServices: jest.fn(),
+      selectService: jest.fn(),
+    },
   })
 
-  waitFor(() =>
-    expect(getByTestId('mock-directory-services')).toBeInTheDocument(),
-  )
-  expect(() => getByRole('progressbar')).toThrow()
+  const { getByRole, getByTestId } = renderDirectory(store)
 
+  expect(store.directoryStore.fetchServices).toHaveBeenCalled()
+  expect(getByRole('progressbar')).toBeInTheDocument()
+  expect(() => getByTestId('mock-directory-services')).toThrow()
+
+  act(() => {
+    store.directoryStore.services = [{ serviceName: 'Test Service' }]
+    store.directoryStore.isLoading = false
+  })
+
+  expect(getByTestId('mock-directory-services')).toBeInTheDocument()
+  expect(() => getByRole('progressbar')).toThrow()
   expect(getByTestId('mock-directory-service-0')).toHaveTextContent(
     'Test Service',
   )
-  expect(getByTestId('directory-description')).toHaveTextContent(
-    /^List of all available services \(1\)$/,
-  )
 })
 
-test('no services', async () => {
-  const getDirectoryServices = jest.fn(() => Promise.resolve([]))
-
-  const { findByTestId, getByTestId } = renderWithProviders(
-    <Router>
-      <UserContextProvider user={{}}>
-        <DirectoryPage getDirectoryServices={getDirectoryServices} />
-      </UserContextProvider>
-    </Router>,
-  )
-
-  await act(async () => {
-    expect(await findByTestId('mock-directory-services')).toBeInTheDocument()
-    expect(() => getByTestId('mock-directory-service-0')).toThrow()
-    expect(getByTestId('directory-description')).toHaveTextContent(
-      /^List of all available services \(0\)$/,
-    )
+test('no services', () => {
+  const store = observable({
+    directoryStore: {
+      services: [],
+      isLoading: false,
+      error: '',
+      fetchServices: jest.fn(),
+      selectService: jest.fn(),
+    },
   })
+
+  const { getByTestId } = renderDirectory(store)
+
+  expect(getByTestId('mock-directory-services')).toBeInTheDocument()
+  expect(() => getByTestId('mock-directory-service-0')).toThrow()
 })
 
-test('failed to load services', async () => {
-  jest.spyOn(console, 'error').mockImplementation(() => undefined)
-  const getDirectoryServices = jest.fn(async () => {
-    throw new Error('arbitrary error')
+test('failed to load services', () => {
+  const store = observable({
+    directoryStore: {
+      services: [],
+      isLoading: false,
+      error: 'There is an error',
+      fetchServices: jest.fn(),
+      selectService: jest.fn(),
+    },
   })
 
-  const { findByTestId, getByTestId } = renderWithProviders(
-    <Router>
-      <UserContextProvider user={{}}>
-        <DirectoryPage getDirectoryServices={getDirectoryServices} />
-      </UserContextProvider>
-    </Router>,
+  const { getByTestId } = renderDirectory(store)
+
+  expect(getByTestId('error-message')).toHaveTextContent(
+    /^Failed to load the directory\.$/,
   )
-
-  await act(async () => {
-    expect(await findByTestId('error-message')).toBeInTheDocument()
-
-    expect(getByTestId('directory-description')).toHaveTextContent(
-      /^List of all available services$/,
-    )
-    expect(() => getByTestId('mock-directory-services')).toThrow()
-    expect(getByTestId('error-message')).toHaveTextContent(
-      /^Failed to load the directory\.$/,
-    )
-  })
-  console.error.mockRestore()
+  expect(() => getByTestId('mock-directory-services')).toThrow()
 })

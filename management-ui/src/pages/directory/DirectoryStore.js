@@ -4,7 +4,7 @@
 import { decorate, observable, flow, action } from 'mobx'
 
 import DirectoryRepository from '../../domain/directory-repository'
-import DirectoryServiceModel from '../../models/DirectoryServiceModel'
+import { createDirectoryService } from '../../models/DirectoryServiceModel'
 
 class DirectoryStore {
   services = []
@@ -27,8 +27,8 @@ class DirectoryStore {
 
     try {
       const services = yield this.domain.getAll()
-      this.services = services.map(
-        (service) => new DirectoryServiceModel({ store: this, service }),
+      this.services = services.map((service) =>
+        createDirectoryService({ store: this, service }),
       )
     } catch (e) {
       this.error = e

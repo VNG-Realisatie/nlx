@@ -2,27 +2,37 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { instanceOf } from 'prop-types'
+import { shape } from 'prop-types'
 import { observer } from 'mobx-react'
 import { Button, Spinner } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
+import pick from 'lodash.pick'
 
-import DirectoryServiceModel from '../../../../../models/DirectoryServiceModel'
+import { directoryServicePropTypes } from '../../../../../models/DirectoryServiceModel'
+import { ACCESS_REQUEST_STATES } from '../../../../../models/OutgoingAccessRequestModel'
 import AccessRequestMessage from '../../../DirectoryPage/components/AccessRequestMessage'
 import { SectionGroup } from '../../../../../components/DetailView'
-
 import { IconKey } from '../../../../../icons'
-
 import { StyledAlert, AccessSection, IconItem, StateItem } from './index.styles'
+
+const { FAILED, RECEIVED } = ACCESS_REQUEST_STATES
 
 const DirectoryDetailView = ({ service }) => {
   const { t } = useTranslation()
-  const { latestAccessRequest, requestAccess } = service
+  const { latestAccessRequest } = service
+
+  const requestAccess = () => {
+    const confirmed = window.confirm(
+      t('The request will be sent to', { name: service.organizationName }),
+    )
+
+    if (confirmed) service.requestAccess()
+  }
 
   let icon = Spinner
   if (
     latestAccessRequest &&
-    ['FAILED', 'RECEIVED'].includes(latestAccessRequest.state)
+    [FAILED, RECEIVED].includes(latestAccessRequest.state)
   ) {
     icon = IconKey
   }
@@ -60,7 +70,13 @@ const DirectoryDetailView = ({ service }) => {
 }
 
 DirectoryDetailView.propTypes = {
-  service: instanceOf(DirectoryServiceModel),
+  service: shape(
+    pick(directoryServicePropTypes, [
+      'organizationName',
+      'latestAccessRequest',
+      'requestAccess',
+    ]),
+  ),
 }
 
 export default observer(DirectoryDetailView)

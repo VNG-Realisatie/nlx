@@ -2,15 +2,35 @@
 // Licensed under the EUPL
 //
 import { decorate, observable, computed, action, flow } from 'mobx'
+import { string, func, bool } from 'prop-types'
 
 import AccessRequestRepository from '../domain/access-request-repository'
 
-export const accessRequestStates = {
+export const ACCESS_REQUEST_STATES = {
   CREATED: 'CREATED',
   FAILED: 'FAILED',
   CANCELLED: 'CANCELLED',
   REJECTED: 'REJECTED',
   ACCEPTED: 'ACCEPTED',
+}
+
+export const UNSUCCESSFUL_ACCESS_REQUEST_STATES = [
+  ACCESS_REQUEST_STATES.CANCELLED,
+  ACCESS_REQUEST_STATES.REJECTED,
+]
+
+export const outgoingAccessRequestPropTypes = {
+  id: string,
+  organizationName: string.isRequired,
+  serviceName: string.isRequired,
+  state: string,
+  createdAt: string,
+  updatedAt: string,
+  send: func,
+  isOpen: bool,
+
+  isLoading: bool,
+  error: string,
 }
 
 class OutgoingAccessRequestModel {
@@ -21,25 +41,26 @@ class OutgoingAccessRequestModel {
   createdAt = ''
   updatedAt = ''
 
-  get hasUnsuccessfulEndstate() {
-    const { CANCELLED, REJECTED } = accessRequestStates
-    return [CANCELLED, REJECTED].includes(this.state)
+  get isOpen() {
+    return !UNSUCCESSFUL_ACCESS_REQUEST_STATES.includes(this.state)
   }
 
-  constructor({ json, domain = AccessRequestRepository }) {
+  constructor({ accessRequestData, domain = AccessRequestRepository }) {
     this.domain = domain
-    this.update(json)
+    this.update(accessRequestData)
 
     // Currently not used, but part of pattern
     this.isLoading = false
     this.error = ''
   }
 
-  update(json) {
-    if (json) {
-      Object.keys(json).forEach((key) => {
-        this[key] = json[key]
-      })
+  update(accessRequestData) {
+    if (accessRequestData) {
+      Object.keys(accessRequestData)
+        .filter((key) => key in this)
+        .forEach((key) => {
+          this[key] = accessRequestData[key]
+        })
     }
   }
 
@@ -53,7 +74,7 @@ class OutgoingAccessRequestModel {
       this.isLoading = true
       this.error = ''
 
-      yield this.update({ state: accessRequestStates.CREATED })
+      this.update({ state: ACCESS_REQUEST_STATES.CREATED })
 
       const result = yield this.domain.requestAccess({
         organizationName: this.organizationName,
@@ -61,7 +82,7 @@ class OutgoingAccessRequestModel {
       })
 
       // Hydrate the object with response from server
-      yield this.update(result)
+      this.update(result)
     } catch (e) {
       this.error = e
       throw e
@@ -73,13 +94,13 @@ class OutgoingAccessRequestModel {
 
 decorate(OutgoingAccessRequestModel, {
   state: observable,
-  hasUnsuccessfulEndstate: computed,
+  isOpen: computed,
   update: action.bound,
   send: action.bound,
 })
 
 export const createAccessRequestInstance = (requestData) => {
-  return new OutgoingAccessRequestModel({ json: requestData })
+  return new OutgoingAccessRequestModel({ accessRequestData: requestData })
 }
 
 export default OutgoingAccessRequestModel

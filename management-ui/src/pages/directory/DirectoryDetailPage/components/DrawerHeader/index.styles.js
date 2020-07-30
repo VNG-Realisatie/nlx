@@ -2,7 +2,6 @@
 // Licensed under the EUPL
 //
 import styled from 'styled-components'
-import { Spinner } from '@commonground/design-system'
 
 import StateIndicator from '../../../../../components/StateIndicator'
 
@@ -23,10 +22,4 @@ export const Summary = styled.div`
 
 export const StyledStateIndicator = styled(StateIndicator)`
   flex-grow: 1;
-`
-
-export const StyledSpinner = styled(Spinner)`
-  display: block;
-  align-self: flex-end;
-  margin: 0;
 `

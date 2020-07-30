@@ -2,7 +2,6 @@
 // Licensed under the EUPL
 //
 import { throwOnError } from './fetch-utils'
-const delay = (ms) => new Promise((resolve) => setTimeout(() => resolve(), ms))
 
 class AccessRequestRepository {
   static async requestAccess(payload) {
@@ -15,8 +14,6 @@ class AccessRequestRepository {
       409: 'Request already sent, please refresh the page to see the latest state.',
     })
 
-    await delay(2000)
-    // throw new Error('yada')
     return await response.json()
   }
 }

@@ -33,8 +33,6 @@ test('show a table with rows for every service', () => {
         {
           organizationName: 'Test Organization',
           serviceName: 'Test Service',
-          state: 'degraded',
-          apiSpecificationType: 'API',
         },
       ]}
     />,

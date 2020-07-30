@@ -2,6 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
+import { observable } from 'mobx'
 import { Route, StaticRouter as Router } from 'react-router-dom'
 
 import { renderWithProviders } from '../../../test-utils'
@@ -11,70 +12,72 @@ jest.mock('./components/DirectoryDetailView', () => ({ service }) => (
   <div data-testid="directory-service-details" />
 ))
 
-test('display directory service details', async () => {
-  const getService = jest.fn().mockResolvedValue({
-    organizationName: 'organization',
-    serviceName: 'service',
-    state: 'up',
+let service
+
+beforeEach(() => {
+  service = observable({
+    id: 'Test Organization/Test Service',
+    organizationName: 'Test Organization',
+    serviceName: 'Test Service',
+    state: 'degraded',
+    apiSpecificationType: 'API',
+    latestAccessRequest: null,
+    requestAccess: jest.fn(),
+    fetch: jest.fn(),
+
+    isLoading: false,
   })
-
-  jest.useFakeTimers()
-
-  const { findByTestId, getByText } = renderWithProviders(
-    <Router location="/directory/organization/service">
-      <Route path="/directory/:organizationName/:serviceName">
-        <DirectoryDetailPage getService={getService} />
-      </Route>
-    </Router>,
-  )
-
-  expect(await findByTestId('directory-service-details')).toBeInTheDocument()
-  expect(getByText('organization')).toBeInTheDocument()
-  expect(getService).toHaveBeenCalledWith('organization', 'service')
 })
 
-test('fetching a non-existing component', async () => {
-  const getService = jest
-    .fn()
-    .mockRejectedValue(new Error('invalid user input'))
-
-  const { findByTestId, getByText, queryByText } = renderWithProviders(
+test('display directory service details', () => {
+  const { getByTestId, getByText } = renderWithProviders(
+    // Router & Route still required for hooks
+    // Note not they, but the service data is tested
     <Router location="/directory/organization/service">
       <Route path="/directory/:organizationName/:serviceName">
-        <DirectoryDetailPage getService={getService} />
+        <DirectoryDetailPage service={service} />
       </Route>
     </Router>,
   )
 
-  const message = await findByTestId('error-message')
+  expect(getByText('Test Organization')).toBeInTheDocument()
+  expect(getByText('Test Service')).toBeInTheDocument()
+  expect(getByText('state-degraded.svg')).toBeInTheDocument()
+  expect(getByTestId('directory-service-details')).toBeInTheDocument()
+})
+
+test('fetch latest state on load and display changes', () => {
+  service.fetch = jest.fn(() => (service.state = 'up'))
+
+  const { queryByText } = renderWithProviders(
+    <Router location="/directory/organization/service">
+      <Route path="/directory/:organizationName/:serviceName">
+        <DirectoryDetailPage service={service} />
+      </Route>
+    </Router>,
+  )
+
+  expect(service.fetch).toHaveBeenCalled()
+  expect(queryByText('state-degraded.svg')).not.toBeInTheDocument()
+  expect(queryByText('state-up.svg')).toBeInTheDocument()
+})
+
+test('service does not exist', () => {
+  const { getByTestId, getByText, queryByText } = renderWithProviders(
+    <Router location="/directory/organization/service">
+      <Route path="/directory/:organizationName/:serviceName">
+        <DirectoryDetailPage service={undefined} />
+      </Route>
+    </Router>,
+  )
+
+  const message = getByTestId('error-message')
   expect(message).toBeInTheDocument()
   expect(message.textContent).toBe('Failed to load the service.')
 
   expect(getByText('service')).toBeInTheDocument()
   expect(queryByText('organization')).toBeNull()
 
-  const closeButton = await findByTestId('close-button')
-  expect(closeButton).toBeInTheDocument()
-})
-
-test('fetching service details fails for an unknown reason', async () => {
-  const getService = jest.fn().mockRejectedValue(new Error('arbitrary reason'))
-
-  const { findByTestId, getByText, queryByText } = renderWithProviders(
-    <Router location="/directory/organization/service">
-      <Route path="/directory/:organizationName/:serviceName">
-        <DirectoryDetailPage getService={getService} />
-      </Route>
-    </Router>,
-  )
-
-  const message = await findByTestId('error-message')
-  expect(message).toBeInTheDocument()
-  expect(message.textContent).toBe('Failed to load the service.')
-
-  expect(getByText('service')).toBeInTheDocument()
-  expect(queryByText('organization')).toBeNull()
-
-  const closeButton = await findByTestId('close-button')
+  const closeButton = getByTestId('close-button')
   expect(closeButton).toBeInTheDocument()
 })

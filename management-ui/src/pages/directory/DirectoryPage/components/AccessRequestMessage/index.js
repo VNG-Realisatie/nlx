@@ -2,11 +2,12 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { instanceOf, bool } from 'prop-types'
+import { shape, bool } from 'prop-types'
 import { observer } from 'mobx-react'
 import { useTranslation } from 'react-i18next'
+import pick from 'lodash.pick'
 
-import AccessRequestModel from '../../../../../models/OutgoingAccessRequestModel'
+import { outgoingAccessRequestPropTypes } from '../../../../../models/OutgoingAccessRequestModel'
 import { IconWarningCircleFill } from '../../../../../icons'
 import { FailedDetail, ErrorText, WarnText } from './index.styles'
 
@@ -35,7 +36,7 @@ const AccessRequestMessage = ({ latestAccessRequest, inDetailView }) => {
 }
 
 AccessRequestMessage.propTypes = {
-  latestAccessRequest: instanceOf(AccessRequestModel),
+  latestAccessRequest: shape(pick(outgoingAccessRequestPropTypes, 'state')),
   inDetailView: bool,
 }
 

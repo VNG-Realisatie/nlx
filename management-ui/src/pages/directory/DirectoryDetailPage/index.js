@@ -2,12 +2,13 @@
 // Licensed under the EUPL
 //
 import React, { useEffect } from 'react'
-import { string } from 'prop-types'
+import { shape, string } from 'prop-types'
 import { observer } from 'mobx-react'
 import { useParams, useHistory } from 'react-router-dom'
 import { Alert, Drawer } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 
+import { directoryServicePropTypes } from '../../../models/DirectoryServiceModel'
 import DirectoryDetailView from './components/DirectoryDetailView'
 import DrawerHeader from './components/DrawerHeader'
 
@@ -50,6 +51,7 @@ const DirectoryDetailPage = ({ service, parentUrl }) => {
 }
 
 DirectoryDetailPage.propTypes = {
+  service: shape(directoryServicePropTypes),
   parentUrl: string,
 }
 

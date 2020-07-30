@@ -2,44 +2,39 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { renderWithProviders, fireEvent } from '../../../../../test-utils'
-import { AccessRequestContext } from '../../index'
+import { observable } from 'mobx'
+
+import { renderWithProviders, fireEvent, act } from '../../../../../test-utils'
 import DirectoryServiceRow from './index'
 
-describe('show data from a service we do not have access to', () => {
+jest.mock('../../../../../models/OutgoingAccessRequestModel')
+
+describe('a service we do not have access to', () => {
   let service
-  let requestSentTo
-  let handleRequestAccess
+
+  global.confirm = jest.fn(() => true)
 
   beforeEach(() => {
-    service = {
+    service = observable({
+      id: 'Test Organization/Test Service',
       organizationName: 'Test Organization',
       serviceName: 'Test Service',
       state: 'degraded',
       apiSpecificationType: 'API',
-    }
-    requestSentTo = {
-      organizationName: '',
-      serviceName: '',
-    }
-    handleRequestAccess = jest.fn()
-  })
+      latestAccessRequest: null,
+      requestAccess: jest.fn(),
 
-  afterEach(() => {
-    handleRequestAccess.mockClear()
+      isLoading: false,
+    })
   })
 
   it('shows the data', () => {
     const { getByTestId, getByText } = renderWithProviders(
-      <AccessRequestContext.Provider
-        value={{ requestSentTo, handleRequestAccess }}
-      >
-        <table>
-          <tbody>
-            <DirectoryServiceRow service={service} />
-          </tbody>
-        </table>
-      </AccessRequestContext.Provider>,
+      <table>
+        <tbody>
+          <DirectoryServiceRow service={service} />
+        </tbody>
+      </table>,
     )
 
     const serviceRow = getByTestId('directory-service-row')
@@ -49,64 +44,59 @@ describe('show data from a service we do not have access to', () => {
     expect(serviceRow).toHaveTextContent('API')
 
     const button = getByText('Request')
-    expect(button)
     expect(button).not.toBeVisible()
   })
 
   it('should be possible to request access', () => {
     const { getByText } = renderWithProviders(
-      <AccessRequestContext.Provider
-        value={{ requestSentTo, handleRequestAccess }}
-      >
-        <table>
-          <tbody>
-            <DirectoryServiceRow service={service} />
-          </tbody>
-        </table>
-      </AccessRequestContext.Provider>,
+      <table>
+        <tbody>
+          <DirectoryServiceRow service={service} />
+        </tbody>
+      </table>,
     )
 
     const button = getByText('Request')
     fireEvent.click(button)
 
-    expect(handleRequestAccess).toHaveBeenCalledWith({
-      organizationName: 'Test Organization',
-      serviceName: 'Test Service',
-    })
+    expect(service.requestAccess).toHaveBeenCalled()
   })
-})
 
-test('show the state of the latest access request', () => {
-  const service = {
-    organizationName: 'Test Organization',
-    serviceName: 'Test Service',
-    state: 'degraded',
-    apiSpecificationType: 'API',
-    latestAccessRequest: {
-      id: 'string',
-      state: 'FAILED',
-      createdAt: '2020-06-30T08:31:41.106Z',
-      updatedAt: '2020-06-30T08:31:41.106Z',
-    },
-  }
-  const requestSentTo = {
-    organizationName: 'Test Organization',
-    serviceName: 'Test Service',
-  }
-  const handleRequestAccess = jest.fn()
-
-  const { getByTestId } = renderWithProviders(
-    <AccessRequestContext.Provider
-      value={{ requestSentTo, handleRequestAccess }}
-    >
+  it('should reflect a change of state', () => {
+    const { getByTestId } = renderWithProviders(
       <table>
         <tbody>
           <DirectoryServiceRow service={service} />
         </tbody>
-      </table>
-    </AccessRequestContext.Provider>,
-  )
+      </table>,
+    )
 
-  const serviceRow = getByTestId('directory-service-row')
-  expect(serviceRow.querySelector('button')).not.toBeInTheDocument()
+    act(() => {
+      service.state = 'up'
+    })
+
+    const serviceRow = getByTestId('directory-service-row')
+    expect(serviceRow).not.toHaveTextContent('state-degraded.svg')
+    expect(serviceRow).toHaveTextContent('state-up.svg')
+  })
+
+  it('shows the state of the latest access request', () => {
+    service.latestAccessRequest = {
+      id: 'string',
+      state: 'FAILED',
+      createdAt: '2020-06-30T08:31:41.106Z',
+      updatedAt: '2020-06-30T08:31:41.106Z',
+    }
+
+    const { getByTestId } = renderWithProviders(
+      <table>
+        <tbody>
+          <DirectoryServiceRow service={service} />
+        </tbody>
+      </table>,
+    )
+
+    const serviceRow = getByTestId('directory-service-row')
+    expect(serviceRow.querySelector('button')).not.toBeInTheDocument()
+  })
 })

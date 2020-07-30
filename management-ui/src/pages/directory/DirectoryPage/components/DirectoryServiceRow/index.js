@@ -2,17 +2,20 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { instanceOf } from 'prop-types'
+import { shape } from 'prop-types'
 import { observer } from 'mobx-react'
 import { Table } from '@commonground/design-system'
+import { useTranslation } from 'react-i18next'
+import pick from 'lodash.pick'
 
-import DirectoryServiceModel from '../../../../../models/DirectoryServiceModel'
+import { directoryServicePropTypes } from '../../../../../models/DirectoryServiceModel'
 import StateIndicator from '../../../../../components/StateIndicator'
 import QuickAccessButton from '../QuickAccessButton'
 import AccessRequestMessage from '../AccessRequestMessage'
 import { StyledTdAccess } from './index.styles'
 
 const DirectoryServiceRow = ({ service }) => {
+  const { t } = useTranslation()
   const {
     organizationName,
     serviceName,
@@ -23,7 +26,12 @@ const DirectoryServiceRow = ({ service }) => {
 
   const requestAccess = (evt) => {
     evt.stopPropagation() // Prevent triggering click on table row
-    service.requestAccess()
+
+    const confirmed = window.confirm(
+      t('The request will be sent to', { name: organizationName }),
+    )
+
+    if (confirmed) service.requestAccess()
   }
 
   return (
@@ -50,7 +58,15 @@ const DirectoryServiceRow = ({ service }) => {
 }
 
 DirectoryServiceRow.propTypes = {
-  service: instanceOf(DirectoryServiceModel),
+  service: shape(
+    pick(directoryServicePropTypes, [
+      'organizationName',
+      'serviceName',
+      'state',
+      'apiSpecificationType',
+      'latestAccessRequest',
+    ]),
+  ),
 }
 
 export default observer(DirectoryServiceRow)

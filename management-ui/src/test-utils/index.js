@@ -19,6 +19,7 @@ const AllTheProviders = ({ children }) => (
     </I18nextProvider>
   </ThemeProvider>
 )
+
 AllTheProviders.propTypes = {
   children: node,
 }

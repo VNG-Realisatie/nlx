@@ -2,13 +2,17 @@
 // Licensed under the EUPL
 //
 import React, { createContext } from 'react'
-import { node } from 'prop-types'
+import { node, object } from 'prop-types'
 import { configure } from 'mobx'
 import 'mobx-react-lite/batchingForReactDom'
 
 import { createDirectoryStore } from '../pages/directory/DirectoryStore'
 
-configure({ enforceActions: 'observed' })
+if (process.env.NODE_ENV !== 'test') {
+  // `setupTests` has 'never' set. But some tests include this file,
+  // so make sure we don't override the test setup.
+  configure({ enforceActions: 'observed' })
+}
 
 export const storesContext = createContext(null)
 
@@ -18,14 +22,13 @@ class RootStore {
   }
 }
 
-export const StoreProvider = ({ children }) => {
+export const StoreProvider = ({ children, store = new RootStore() }) => {
   return (
-    <storesContext.Provider value={new RootStore()}>
-      {children}
-    </storesContext.Provider>
+    <storesContext.Provider value={store}>{children}</storesContext.Provider>
   )
 }
 
 StoreProvider.propTypes = {
   children: node,
+  store: object,
 }

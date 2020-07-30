@@ -2,11 +2,12 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { arrayOf, instanceOf } from 'prop-types'
+import { arrayOf, shape } from 'prop-types'
 import { Table } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
+import pick from 'lodash.pick'
 
-import DirectoryServiceModel from '../../../../../models/DirectoryServiceModel'
+import { directoryServicePropTypes } from '../../../../../models/DirectoryServiceModel'
 import EmptyContentMessage from '../../../../../components/EmptyContentMessage'
 import DirectoryServiceRow from '../DirectoryServiceRow'
 
@@ -41,7 +42,9 @@ const DirectoryPageView = ({ services }) => {
 }
 
 DirectoryPageView.propTypes = {
-  services: arrayOf(instanceOf(DirectoryServiceModel)).isRequired,
+  services: arrayOf(
+    shape(pick(directoryServicePropTypes, ['organizationName', 'serviceName'])),
+  ).isRequired,
 }
 
 export default DirectoryPageView

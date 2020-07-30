@@ -2,26 +2,17 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { shape, string } from 'prop-types'
+import { shape } from 'prop-types'
 import { observer } from 'mobx-react'
 import { useTranslation } from 'react-i18next'
 import { Drawer } from '@commonground/design-system'
+import pick from 'lodash.pick'
 
-import {
-  SubTitle,
-  Summary,
-  StyledSpinner,
-  StyledStateIndicator,
-} from './index.styles'
+import { directoryServicePropTypes } from '../../../../../models/DirectoryServiceModel'
+import { SubTitle, Summary, StyledStateIndicator } from './index.styles'
 
 const DrawerHeader = ({ service }) => {
-  const {
-    serviceName,
-    organizationName,
-    state,
-    apiSpecificationType,
-    isLoading,
-  } = service
+  const { serviceName, organizationName, state, apiSpecificationType } = service
   const { t } = useTranslation()
 
   return (
@@ -31,19 +22,20 @@ const DrawerHeader = ({ service }) => {
       <Summary>
         {apiSpecificationType && <span>{apiSpecificationType}</span>}
         <StyledStateIndicator state={state} showText />
-        {isLoading && <StyledSpinner />}
       </Summary>
     </header>
   )
 }
 
 DrawerHeader.propTypes = {
-  service: shape({
-    serviceName: string,
-    organizationName: string,
-    state: string,
-    apiSpecificationType: string,
-  }),
+  service: shape(
+    pick(directoryServicePropTypes, [
+      'serviceName',
+      'organizationName',
+      'state',
+      'apiSpecificationType',
+    ]),
+  ),
 }
 
 export default observer(DrawerHeader)
