@@ -2,5 +2,5 @@ apiVersion: v2
 name: nlx-docs
 description: NLX Documentation
 type: application
-version: 0.1.0
-appVersion: 0.86.0
+version: 0.87.0
+appVersion: 0.87.0
