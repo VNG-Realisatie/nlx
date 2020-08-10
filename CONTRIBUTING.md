@@ -50,20 +50,12 @@ The available scopes are:
 - ca-certportal
 - ca-cfssl-unsafe
 - common
-- config-api
-- design
-- directory-db
-- directory-inspection-api
-- directory-monitor
-- directory-registration-api
-- directory-ui
+- directory
 - docs
 - helm
-- insight-api
-- insight-ui
+- insight
 - inway
-- management-api
-- management-ui
+- management
 - outway
 - txlog-db
 
