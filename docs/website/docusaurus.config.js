@@ -21,7 +21,7 @@ module.exports = {
         alt: 'NLX logo',
         src: 'img/logo.svg',
       },
-      links: [
+      items: [
         {href: 'https://nlx.io/about/', label: 'Over NLX', position: 'right'},
         {to: 'understanding-the-basics/introduction', label: 'Docs', position: 'right'},
         {href: 'https://directory.demo.nlx.io/', label: 'Directory', position: 'right'},
