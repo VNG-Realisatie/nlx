@@ -15,4 +15,4 @@ spec:
       requests:
         storage: {{ required "PostgreSQL storage size is required" .Values.postgresql.storageSize }}
 {{- end }}
-  terminationPolicy: {{ required "PostgreSQL termination policy is required" .values.postgresql.terminationPolicy }}
+  terminationPolicy: {{ required "PostgreSQL termination policy is required" .Values.postgresql.terminationPolicy }}
