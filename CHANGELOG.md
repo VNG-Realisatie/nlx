@@ -1,3 +1,10 @@
+## [0.87.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.87.0...v0.87.1) (2020-08-10)
+
+
+### Bug Fixes
+
+* **helm:** directory nil pointer on terminationPolicy value ([6c95e86](https://gitlab.com/commonground/nlx/nlx/commit/6c95e86be631a80ca4fa13365030ac07b8cc9537))
+
 # [0.87.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.86.0...v0.87.0) (2020-08-10)
 
 
