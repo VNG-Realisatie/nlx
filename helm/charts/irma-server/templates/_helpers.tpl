@@ -61,14 +61,10 @@ Create the name of the service account to use
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
 {{/*
-Return the image name for the insight-api
+Return the image name for the irma-server
 */}}
 {{- define "irma-server.image" -}}
-{{- $registryName := default .Values.image.registry .Values.global.imageRegistry -}}
-{{- $repositoryName := .Values.image.repository -}}
-{{- $tag := default (printf "v%s" .Chart.AppVersion) (default .Values.image.tag .Values.global.imageTag) -}}
-
-{{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
+{{- printf "%s/%s:%s" .Values.image.registry .Values.image.repository .Values.image.tag -}}
 {{- end -}}
-

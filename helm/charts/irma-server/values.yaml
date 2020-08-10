@@ -6,10 +6,10 @@ global:
 replicaCount: 1
 
 image:
-  registry: docker.io
-  repository: nlxio/irma
+  registry: registry.gitlab.com
+  repository: commonground/nlx/irma
   pullPolicy: IfNotPresent
-  tag: ""
+  tag: "0.4.1"
   pullSecrets: []
 
 nameOverride: ""

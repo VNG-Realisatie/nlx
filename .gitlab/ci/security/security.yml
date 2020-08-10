@@ -24,7 +24,6 @@ container_scanning:
       insight-api
       insight-ui
       inway
-      irma
       management-api
       management-ui
       nlxctl

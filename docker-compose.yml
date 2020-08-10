@@ -85,11 +85,6 @@ services:
       args:
         GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
         GIT_TAG_NAME: "${GIT_TAG_NAME}"
-  irma:
-    image: "${IMAGE_PREFIX}nlxio/irma:${IMAGE_TAG}"
-    build:
-      context: .
-      dockerfile: irma/Dockerfile
   management-api:
     image: "${IMAGE_PREFIX}nlxio/management-api:${IMAGE_TAG}"
     build:

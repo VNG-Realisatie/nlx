@@ -3,4 +3,4 @@ name: irma-server
 description: IRMA server is used to verify user credentials when using the insight app
 type: application
 version: 0.87.1
-appVersion: 0.87.1
+appVersion: 0.4.1
