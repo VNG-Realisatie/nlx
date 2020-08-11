@@ -24,7 +24,7 @@ require (
 	github.com/gogo/protobuf v1.3.1
 	github.com/golang-migrate/migrate v3.5.4+incompatible
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
-	github.com/golang/mock v1.4.3
+	github.com/golang/mock v1.4.4
 	github.com/golang/protobuf v1.3.5
 	github.com/google/uuid v1.1.1 // indirect
 	github.com/gorilla/schema v1.1.0
