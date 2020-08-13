@@ -21,7 +21,7 @@ import (
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/directory-db/dbversion"
 	"go.nlx.io/nlx/directory-inspection-api/http"
-	"go.nlx.io/nlx/directory-inspection-api/inspectionservice"
+	"go.nlx.io/nlx/directory-inspection-api/pkg/api"
 	"go.nlx.io/nlx/directory-inspection-api/pkg/database"
 	"go.nlx.io/nlx/directory-inspection-api/statsservice"
 )
@@ -97,7 +97,7 @@ func main() {
 		logger.Fatal("failed to load x509 keypair for directory inspection api", zap.Error(err))
 	}
 
-	directoryService, err := inspectionservice.New(logger, db, options.DemoEnv, options.DemoDomain)
+	directoryService, err := api.New(logger, db, options.DemoEnv, options.DemoDomain)
 	if err != nil {
 		logger.Fatal("failed to create new directory inspection service", zap.Error(err))
 	}
