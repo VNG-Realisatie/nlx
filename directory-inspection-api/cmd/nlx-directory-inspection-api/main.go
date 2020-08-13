@@ -56,7 +56,7 @@ func main() {
 		log.Fatalf("unexpected arguments: %v", args)
 	}
 
-	// Setup new zap loggerv
+	// Setup new zap logger
 	config := options.LogOptions.ZapConfig()
 	logger, err := config.Build()
 	if err != nil {
