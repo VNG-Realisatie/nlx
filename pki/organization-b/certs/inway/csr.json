@@ -1,0 +1,10 @@
+{
+  "CN": "inway.organization-b.nlx.local",
+  "key": {
+    "algo": "rsa",
+    "size": 4096
+  },
+  "hosts": [
+    "inway.organization-b.nlx.local"
+  ]
+}

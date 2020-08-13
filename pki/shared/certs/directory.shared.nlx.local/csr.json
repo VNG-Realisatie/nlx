@@ -1,0 +1,19 @@
+{
+  "CN": "directory.shared.nlx.local",
+  "key": {
+    "algo": "rsa",
+    "size": 4096
+  },
+  "hosts": [
+    "directory-inspection-api.shared.nlx.local",
+    "directory-registration-api.shared.nlx.local",
+    "directory-inspection-api.shared.nlx.minikube",
+    "directory-registration-api.shared.nlx.minikube"
+  ],
+  "names": [
+    {
+      "O": "NLX",
+      "C": "NL"
+    }
+  ]
+}

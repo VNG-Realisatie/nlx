@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	common_tls "go.nlx.io/nlx/common/tls"
 
 	"go.uber.org/zap"
 )
@@ -16,64 +17,21 @@ import (
 const mockorg string = "mockorg"
 const mockservicename string = "mockservicename"
 
-func TestNewRoundRobinLoadBalancerExceptions(t *testing.T) {
-	organizationName := mockorg
-	serviceName := mockservicename
-	inwayAddresses := []string{"mockaddress1", "mockaddress2"}
-	healthyStates := []bool{true, true}
-
-	certFile := filepath.Join("..", "testing", "pki", "org-nlx-test.pem")
-	keyFile := filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem")
-	// Test possible exceptions during RoundRoblinLoadBalancerCreation
-	_, err := NewRoundRobinLoadBalancedHTTPService(
-		zap.NewNop(),
-		nil,
-		certFile,
-		keyFile,
-		organizationName,
-		serviceName,
-		nil,
-		nil,
-	)
-	assert.Equal(t, errNoInwaysAvailable, err)
-
-	_, err = NewRoundRobinLoadBalancedHTTPService(
-		zap.NewNop(),
-		nil,
-		"invalid certfile",
-		keyFile, organizationName, serviceName,
-		inwayAddresses,
-		healthyStates,
-	)
-
-	if err == nil {
-		t.Fatalf("result: err is nil, expected err to be set when providing invalid cert file")
-	}
-	assert.EqualError(t, err, "invalid certificate provided: open invalid certfile: no such file or directory")
-
-	_, err = NewRoundRobinLoadBalancedHTTPService(
-		zap.NewNop(),
-		nil,
-		certFile,
-		"invalid key file",
-		organizationName,
-		serviceName,
-		inwayAddresses,
-		healthyStates,
-	)
-	assert.EqualError(t, err, "invalid certificate provided: open invalid key file: no such file or directory")
-}
-
 func TestNewRoundRobinLoadBalancer(t *testing.T) {
 	organizationName := mockorg
 	serviceName := mockservicename
 
 	inwayAddresses := []string{"mockaddress1", "mockaddress2"}
 	healthyStates := []bool{true, true}
-	certFile := filepath.Join("..", "testing", "pki", "org-nlx-test.pem")
-	keyFile := filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem")
+
+	cert, _ := common_tls.NewBundleFromFiles(
+		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
+		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
+		filepath.Join(pkiDir, "ca-root.pem"),
+	)
+
 	l, err := NewRoundRobinLoadBalancedHTTPService(
-		zap.NewNop(), nil, certFile, keyFile,
+		zap.NewNop(), cert,
 		organizationName, serviceName,
 		inwayAddresses, healthyStates)
 

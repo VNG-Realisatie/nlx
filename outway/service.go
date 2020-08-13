@@ -5,7 +5,6 @@ package outway
 
 import (
 	"crypto/tls"
-	"crypto/x509"
 	"net"
 	"net/http"
 	"net/http/httputil"
@@ -14,9 +13,10 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"go.nlx.io/nlx/common/tlsconfig"
 	"go.uber.org/zap"
 	"golang.org/x/net/http2"
+
+	common_tls "go.nlx.io/nlx/common/tls"
 )
 
 var errNoInwaysAvailable = errors.New("no inways available")
@@ -39,13 +39,11 @@ type RoundRobinLoadBalancedHTTPService struct {
 	count           int
 
 	logger *zap.Logger
-	roots  *x509.CertPool
 
 	proxies []*httputil.ReverseProxy
 }
 
 func newRoundTripHTTPTransport(logger *zap.Logger, tlsConfig *tls.Config) *http.Transport {
-	tlsconfig.ApplyDefaults(tlsConfig)
 	transport := &http.Transport{
 		Proxy: http.ProxyFromEnvironment,
 		DialContext: (&net.Dialer{
@@ -69,9 +67,7 @@ func newRoundTripHTTPTransport(logger *zap.Logger, tlsConfig *tls.Config) *http.
 // NewRoundRobinLoadBalancedHTTPService creates a RoundRobinLoadBalancedHTTPService
 func NewRoundRobinLoadBalancedHTTPService(
 	logger *zap.Logger,
-	roots *x509.CertPool,
-	certFile,
-	keyFile,
+	cert *common_tls.CertificateBundle,
 	organizationName,
 	serviceName string,
 	inwayAddresses []string,
@@ -85,7 +81,6 @@ func NewRoundRobinLoadBalancedHTTPService(
 	s := &RoundRobinLoadBalancedHTTPService{
 		organizationName: organizationName,
 		serviceName:      serviceName,
-		roots:            roots,
 		count:            0,
 		inwayAddresses:   inwayAddresses,
 		healthyStates:    healthyStates,
@@ -93,16 +88,8 @@ func NewRoundRobinLoadBalancedHTTPService(
 	}
 	s.logger = logger.With(zap.String("outway-service-full-name", s.FullName()))
 
-	cert, err := tls.LoadX509KeyPair(certFile, keyFile)
-	if err != nil {
-		return nil, errors.Wrap(err, "invalid certificate provided")
-	}
-	roundTripTransport := newRoundTripHTTPTransport(
-		logger,
-		&tls.Config{
-			RootCAs:      roots,
-			Certificates: []tls.Certificate{cert},
-		})
+	tlsConfig := cert.TLSConfig()
+	roundTripTransport := newRoundTripHTTPTransport(logger, tlsConfig)
 
 	for i, inwayAddress := range inwayAddresses {
 		endpointURL, err := url.Parse("https://" + inwayAddress)

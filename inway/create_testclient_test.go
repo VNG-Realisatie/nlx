@@ -1,27 +1,19 @@
 package inway
 
 import (
-	"crypto/tls"
 	"net/http"
-	"testing"
 
-	"github.com/stretchr/testify/assert"
-
-	"go.nlx.io/nlx/common/orgtls"
+	common_tls "go.nlx.io/nlx/common/tls"
 )
 
 // setupClient create a test client with certificates
-func setupClient(t *testing.T, tlsOptions orgtls.TLSOptions) http.Client {
-	cert, err := tls.LoadX509KeyPair(tlsOptions.OrgCertFile, tlsOptions.OrgKeyFile)
-	assert.Nil(t, err)
-	pool, err := orgtls.LoadRootCert(tlsOptions.NLXRootCert)
-	assert.Nil(t, err)
+func setupClient(cert *common_tls.CertificateBundle) http.Client {
+	config := cert.TLSConfig()
+	config.InsecureSkipVerify = true
 
 	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{
-			InsecureSkipVerify: true, //nolint
-			RootCAs:            pool,
-			Certificates:       []tls.Certificate{cert}}}
+		TLSClientConfig: config,
+	}
 
 	client := http.Client{
 		Transport: tr,

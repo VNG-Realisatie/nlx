@@ -1,32 +1,43 @@
 package api
 
 import (
-	"fmt"
 	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 
-	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/pkg/oidc"
 )
 
+type certFiles struct {
+	certFile, keyFile, rootCertFile string
+}
+
+var pkiDir = filepath.Join("..", "..", "..", "testing", "pki")
+
 var tests = []struct {
 	name                         string
-	tlsOptions                   orgtls.TLSOptions
+	cert                         certFiles
+	orgCert                      certFiles
 	etcdConnectionString         string
 	directoryRegistrationAddress string
 	directoryEndpointURL         string
 	expectedErrorMessage         string
 }{
 	{
-		"1",
-		orgtls.TLSOptions{
-			NLXRootCert: filepath.Join("..", "..", "..", "testing", "pki", "ca-root.pem"),
-			OrgCertFile: filepath.Join("..", "..", "..", "testing", "pki", "org-without-name-chain.pem"),
-			OrgKeyFile:  filepath.Join("..", "..", "..", "testing", "pki", "org-without-name-key.pem"),
+		"certificate_is_missing_organization",
+		certFiles{
+			filepath.Join(pkiDir, "org-without-name-chain.pem"),
+			filepath.Join(pkiDir, "org-without-name-key.pem"),
+			filepath.Join(pkiDir, "ca-root.pem"),
+		},
+		certFiles{
+			filepath.Join(pkiDir, "org-without-name-chain.pem"),
+			filepath.Join(pkiDir, "org-without-name-key.pem"),
+			filepath.Join(pkiDir, "ca-root.pem"),
 		},
 		"",
 		"",
@@ -34,23 +45,16 @@ var tests = []struct {
 		"cannot obtain organization name from self cert",
 	},
 	{
-		"2",
-		orgtls.TLSOptions{
-			NLXRootCert: filepath.Join("..", "..", "..", "testing", "pki", "ca-root.pem"),
-			OrgCertFile: filepath.Join("..", "..", "..", "testing", "pki", "org-nlx-test.pem"),
-			OrgKeyFile:  filepath.Join("..", "..", "..", "testing", "pki", "org-non-existing-key.pem"),
+		"etcd_connection_is_missing",
+		certFiles{
+			filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
+			filepath.Join(pkiDir, "org-nlx-test-key.pem"),
+			filepath.Join(pkiDir, "ca-root.pem"),
 		},
-		"",
-		"",
-		"",
-		"failed to load tls certs: failed to load organization certificate '../../../testing/pki/org-nlx-test.pem: open ../../../testing/pki/org-non-existing-key.pem: no such file or directory",
-	},
-	{
-		"3",
-		orgtls.TLSOptions{
-			NLXRootCert: filepath.Join("..", "..", "..", "testing", "pki", "ca-root.pem"),
-			OrgCertFile: filepath.Join("..", "..", "..", "testing", "pki", "org-nlx-test-chain.pem"),
-			OrgKeyFile:  filepath.Join("..", "..", "..", "testing", "pki", "org-nlx-test-key.pem"),
+		certFiles{
+			filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
+			filepath.Join(pkiDir, "org-nlx-test-key.pem"),
+			filepath.Join(pkiDir, "ca-root.pem"),
 		},
 		"",
 		"",
@@ -58,11 +62,16 @@ var tests = []struct {
 		"etcd connection string is not configured",
 	},
 	{
-		"4",
-		orgtls.TLSOptions{
-			NLXRootCert: filepath.Join("..", "..", "..", "testing", "pki", "ca-root.pem"),
-			OrgCertFile: filepath.Join("..", "..", "..", "testing", "pki", "org-nlx-test-chain.pem"),
-			OrgKeyFile:  filepath.Join("..", "..", "..", "testing", "pki", "org-nlx-test-key.pem"),
+		"directory registration address_is_missing",
+		certFiles{
+			filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
+			filepath.Join(pkiDir, "org-nlx-test-key.pem"),
+			filepath.Join(pkiDir, "ca-root.pem"),
+		},
+		certFiles{
+			filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
+			filepath.Join(pkiDir, "org-nlx-test-key.pem"),
+			filepath.Join(pkiDir, "ca-root.pem"),
 		},
 		"etcd.test:2379",
 		"",
@@ -70,11 +79,16 @@ var tests = []struct {
 		"directory registration address is not configured",
 	},
 	{
-		"5",
-		orgtls.TLSOptions{
-			NLXRootCert: filepath.Join("..", "..", "..", "testing", "pki", "ca-root.pem"),
-			OrgCertFile: filepath.Join("..", "..", "..", "testing", "pki", "org-nlx-test-chain.pem"),
-			OrgKeyFile:  filepath.Join("..", "..", "..", "testing", "pki", "org-nlx-test-key.pem"),
+		"directory_endpoint_url_is_missing",
+		certFiles{
+			filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
+			filepath.Join(pkiDir, "org-nlx-test-key.pem"),
+			filepath.Join(pkiDir, "ca-root.pem"),
+		},
+		certFiles{
+			filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
+			filepath.Join(pkiDir, "org-nlx-test-key.pem"),
+			filepath.Join(pkiDir, "ca-root.pem"),
 		},
 		"etcd.test:2379",
 		"directory-registration.test:8443",
@@ -82,11 +96,16 @@ var tests = []struct {
 		"directory endpoint URL is not configured",
 	},
 	{
-		"6",
-		orgtls.TLSOptions{
-			NLXRootCert: filepath.Join("..", "..", "..", "testing", "pki", "ca-root.pem"),
-			OrgCertFile: filepath.Join("..", "..", "..", "testing", "pki", "org-nlx-test-chain.pem"),
-			OrgKeyFile:  filepath.Join("..", "..", "..", "testing", "pki", "org-nlx-test-key.pem"),
+		"happy_flow",
+		certFiles{
+			filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
+			filepath.Join(pkiDir, "org-nlx-test-key.pem"),
+			filepath.Join(pkiDir, "ca-root.pem"),
+		},
+		certFiles{
+			filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
+			filepath.Join(pkiDir, "org-nlx-test-key.pem"),
+			filepath.Join(pkiDir, "ca-root.pem"),
 		},
 		"etcd.test:2379",
 		"directory-registration.test:8443",
@@ -103,8 +122,13 @@ func TestNewAPI(t *testing.T) {
 	for _, test := range tests {
 		test := test
 		t.Run(test.name, func(t *testing.T) {
-			fmt.Printf("%+v", test.tlsOptions)
-			_, err := NewAPI(logger, testProcess, test.tlsOptions, test.etcdConnectionString, test.directoryRegistrationAddress, test.directoryEndpointURL, &oidc.Authenticator{})
+			cert, err := common_tls.NewBundleFromFiles(test.cert.certFile, test.cert.keyFile, test.cert.rootCertFile)
+			assert.NoError(t, err)
+
+			orgCert, err := common_tls.NewBundleFromFiles(test.orgCert.certFile, test.orgCert.keyFile, test.orgCert.rootCertFile)
+			assert.NoError(t, err)
+
+			_, err = NewAPI(logger, testProcess, cert, orgCert, test.etcdConnectionString, test.directoryRegistrationAddress, test.directoryEndpointURL, &oidc.Authenticator{})
 
 			if test.expectedErrorMessage != "" {
 				assert.EqualError(t, err, test.expectedErrorMessage)

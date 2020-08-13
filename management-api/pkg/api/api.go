@@ -5,8 +5,6 @@ package api
 
 import (
 	"context"
-	"crypto/tls"
-	"crypto/x509"
 	"fmt"
 	"runtime/debug"
 	"strings"
@@ -25,9 +23,8 @@ import (
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/nlxversion"
-	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
-	"go.nlx.io/nlx/common/tlsconfig"
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 	"go.nlx.io/nlx/management-api/pkg/configapi"
 	"go.nlx.io/nlx/management-api/pkg/database"
@@ -41,8 +38,8 @@ import (
 type API struct {
 	logger          *zap.Logger
 	environment     *environment.Environment
-	roots           *x509.CertPool
-	orgCertKeyPair  *tls.Certificate
+	cert            *common_tls.CertificateBundle
+	orgCert         *common_tls.CertificateBundle
 	process         *process.Process
 	mux             *runtime.ServeMux
 	grpcServer      *grpc.Server
@@ -57,23 +54,12 @@ const (
 
 // NewAPI creates and prepares a new API
 //nolint:gocyclo // parameter validation
-func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.TLSOptions, etcdConnectionString, directoryRegistrationAddress, directoryEndpointURL string, authenticator *oidc.Authenticator) (*API, error) {
+func NewAPI(logger *zap.Logger, mainProcess *process.Process, cert, orgCert *common_tls.CertificateBundle, etcdConnectionString, directoryRegistrationAddress, directoryEndpointURL string, authenticator *oidc.Authenticator) (*API, error) {
 	if mainProcess == nil {
 		return nil, errors.New("process argument is nil. needed to close gracefully")
 	}
 
-	roots, orgKeyPair, err := orgtls.Load(tlsOptions)
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to load tls certs")
-	}
-
-	orgCert := orgKeyPair.Leaf
-
-	if len(orgCert.Subject.Organization) != singleElementArrayLength {
-		return nil, errors.New("cannot obtain organization name from self cert")
-	}
-
-	if len(orgCert.Subject.Organization) != singleElementArrayLength {
+	if len(orgCert.Certificate().Subject.Organization) != singleElementArrayLength {
 		return nil, errors.New("cannot obtain organization name from self cert")
 	}
 
@@ -93,7 +79,7 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.
 		return nil, errors.New("authenticator is not configured")
 	}
 
-	directoryRegistrationClient, err := newDirectoryRegistrationClient(roots, orgKeyPair, directoryRegistrationAddress)
+	directoryRegistrationClient, err := newDirectoryRegistrationClient(orgCert, directoryRegistrationAddress)
 	if err != nil {
 		logger.Fatal("failed to setup directory client", zap.Error(err))
 	}
@@ -101,12 +87,12 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.
 	db := newDatabase(logger, mainProcess, etcdConnectionString)
 	configService := configapi.New(logger, mainProcess, directoryRegistrationClient, db)
 
-	grpcServer := newGRPCServer(logger, roots, orgKeyPair)
+	grpcServer := newGRPCServer(logger, cert)
 
 	configapi.RegisterConfigApiServer(grpcServer, configService)
 
 	e := &environment.Environment{
-		OrganizationName: orgCert.Subject.Organization[0],
+		OrganizationName: orgCert.Certificate().Subject.Organization[0],
 	}
 
 	directoryClient, err := directory.NewClient(directoryEndpointURL)
@@ -121,8 +107,8 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.
 	api := &API{
 		logger:          logger.With(zap.String("api-organization-name", e.OrganizationName)),
 		environment:     e,
-		roots:           roots,
-		orgCertKeyPair:  orgKeyPair,
+		cert:            cert,
+		orgCert:         orgCert,
 		grpcServer:      grpcServer,
 		process:         mainProcess,
 		mux:             runtime.NewServeMux(),
@@ -133,19 +119,12 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, tlsOptions orgtls.
 	return api, nil
 }
 
-func newGRPCServer(logger *zap.Logger, roots *x509.CertPool, certKeyPair *tls.Certificate) *grpc.Server {
+func newGRPCServer(logger *zap.Logger, cert *common_tls.CertificateBundle) *grpc.Server {
 	// setup zap connection for global grpc logging
 	grpc_zap.ReplaceGrpcLogger(logger)
 
-	serverTLSConfig := &tls.Config{
-		Certificates: []tls.Certificate{*certKeyPair},
-		ClientCAs:    roots,
-		NextProtos:   []string{"h2"},
-		ClientAuth:   tls.RequireAndVerifyClientCert,
-	}
-	tlsconfig.ApplyDefaults(serverTLSConfig)
-
-	transportCredentials := credentials.NewTLS(serverTLSConfig)
+	tlsConfig := cert.TLSConfig(cert.WithTLSClientAuth())
+	transportCredentials := credentials.NewTLS(tlsConfig)
 
 	recoveryOptions := []grpc_recovery.Option{
 		grpc_recovery.WithRecoveryHandler(func(p interface{}) error {
@@ -182,11 +161,8 @@ func newDatabase(logger *zap.Logger, mainProcess *process.Process, etcdConnectio
 	return db
 }
 
-func newDirectoryRegistrationClient(roots *x509.CertPool, certKeyPair *tls.Certificate, directoryRegistrationAddress string) (registrationapi.DirectoryRegistrationClient, error) {
-	directoryDialCredentials := credentials.NewTLS(&tls.Config{
-		Certificates: []tls.Certificate{*certKeyPair},
-		RootCAs:      roots,
-	})
+func newDirectoryRegistrationClient(cert *common_tls.CertificateBundle, directoryRegistrationAddress string) (registrationapi.DirectoryRegistrationClient, error) {
+	directoryDialCredentials := credentials.NewTLS(cert.TLSConfig())
 	directoryDialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(directoryDialCredentials),
 	}

@@ -4,7 +4,6 @@
 package inway
 
 import (
-	"crypto/tls"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -15,13 +14,12 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 
-	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/inway/config"
 )
 
-func newTestEnv(t *testing.T, tlsOptions orgtls.TLSOptions) (proxy, mock *httptest.Server) {
-
+func newTestEnv(t *testing.T, cert *common_tls.CertificateBundle) (proxy, mock *httptest.Server) {
 	// Mock endpoint (service)
 	mockEndPoint := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -61,7 +59,7 @@ func newTestEnv(t *testing.T, tlsOptions orgtls.TLSOptions) (proxy, mock *httpte
 
 	logger := zap.NewNop()
 	testProcess := process.NewProcess(logger)
-	iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", "localhost:1813", tlsOptions, "localhost:1815")
+	iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", "localhost:1813", cert, "localhost:1815")
 	assert.Nil(t, err)
 
 	endPoints := []ServiceEndpoint{}
@@ -80,10 +78,7 @@ func newTestEnv(t *testing.T, tlsOptions orgtls.TLSOptions) (proxy, mock *httpte
 	assert.Nil(t, err)
 
 	proxyRequestMockServer := httptest.NewUnstartedServer(http.HandlerFunc(iw.handleProxyRequest))
-	proxyRequestMockServer.TLS = &tls.Config{
-		ClientCAs:  iw.roots,
-		ClientAuth: tls.RequireAndVerifyClientCert,
-	}
+	proxyRequestMockServer.TLS = cert.TLSConfig(cert.WithTLSClientAuth())
 
 	return proxyRequestMockServer, mockEndPoint
 
@@ -91,18 +86,18 @@ func newTestEnv(t *testing.T, tlsOptions orgtls.TLSOptions) (proxy, mock *httpte
 
 func TestInwayProxyRequest(t *testing.T) {
 
-	tlsOptions := orgtls.TLSOptions{
-		NLXRootCert: filepath.Join("..", "testing", "pki", "ca-root.pem"),
-		OrgCertFile: filepath.Join("..", "testing", "pki", "org-nlx-test-chain.pem"),
-		OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem"),
-	}
+	cert, _ := common_tls.NewBundleFromFiles(
+		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
+		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
+		filepath.Join(pkiDir, "ca-root.pem"),
+	)
 
-	proxyRequestMockServer, mockEndPoint := newTestEnv(t, tlsOptions)
+	proxyRequestMockServer, mockEndPoint := newTestEnv(t, cert)
 	proxyRequestMockServer.StartTLS()
 	defer proxyRequestMockServer.Close()
 	defer mockEndPoint.Close()
 
-	client := setupClient(t, tlsOptions)
+	client := setupClient(cert)
 
 	//nolint:dupl
 	tests := []struct {
@@ -144,21 +139,21 @@ func TestInwayProxyRequest(t *testing.T) {
 
 func TestInwayNoOrgProxyRequest(t *testing.T) {
 
-	tlsOptions := orgtls.TLSOptions{
-		NLXRootCert: filepath.Join("..", "testing", "pki", "ca-root.pem"),
-		OrgCertFile: filepath.Join("..", "testing", "pki", "org-nlx-test-chain.pem"),
-		OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem"),
-	}
+	cert, _ := common_tls.NewBundleFromFiles(
+		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
+		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
+		filepath.Join(pkiDir, "ca-root.pem"),
+	)
 
-	tlsNoOrgOptions := orgtls.TLSOptions{
-		NLXRootCert: filepath.Join("..", "testing", "pki", "ca-root.pem"),
-		OrgCertFile: filepath.Join("..", "testing", "pki", "org-without-name-chain.pem"),
-		OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-without-name-key.pem"),
-	}
+	certNoOrg, _ := common_tls.NewBundleFromFiles(
+		filepath.Join(pkiDir, "org-without-name-chain.pem"),
+		filepath.Join(pkiDir, "org-without-name-key.pem"),
+		filepath.Join(pkiDir, "ca-root.pem"),
+	)
 
 	// Clients with no organization specified in the certificate
 	// should not be allowed on the nlx network.
-	proxyRequestMockServer, mockEndPoint := newTestEnv(t, tlsOptions)
+	proxyRequestMockServer, mockEndPoint := newTestEnv(t, cert)
 	proxyRequestMockServer.StartTLS()
 	defer proxyRequestMockServer.Close()
 	defer mockEndPoint.Close()
@@ -179,7 +174,7 @@ func TestInwayNoOrgProxyRequest(t *testing.T) {
 		{fmt.Sprintf("%s/mock-service-public/dummy", proxyRequestMockServer.URL), "", http.StatusBadRequest, "nlx-outway: missing logrecord id\n"},
 	}
 
-	noOrgClient := setupClient(t, tlsNoOrgOptions)
+	noOrgClient := setupClient(certNoOrg)
 
 	for _, test := range tests {
 		req, err := http.NewRequest("GET", test.url, nil)

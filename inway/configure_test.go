@@ -18,8 +18,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/inway/config"
 	"go.nlx.io/nlx/management-api/pkg/configapi"
 	configmock "go.nlx.io/nlx/management-api/pkg/configapi/mock"
@@ -29,13 +29,13 @@ func createInway() (*Inway, error) {
 	logger := zap.NewNop()
 	testProcess := process.NewProcess(logger)
 
-	tlsOptions := orgtls.TLSOptions{
-		NLXRootCert: "../testing/pki/ca-root.pem",
-		OrgCertFile: "../testing/pki/org-nlx-test-chain.pem",
-		OrgKeyFile:  "../testing/pki/org-nlx-test-key.pem",
-	}
+	cert, _ := common_tls.NewBundleFromFiles(
+		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
+		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
+		filepath.Join(pkiDir, "ca-root.pem"),
+	)
 
-	return NewInway(logger, nil, testProcess, "mock.inway", "localhost:1812", "localhost:1813", tlsOptions, "localhost:1815")
+	return NewInway(logger, nil, testProcess, "mock.inway", "localhost:1812", "localhost:1813", cert, "localhost:1815")
 }
 
 func createMockService() *configapi.Service {
@@ -111,10 +111,17 @@ func TestConfigApiResponseToEndpoints(t *testing.T) {
 	assert.Equal(t, config.AuthorizationmodelWhitelist, serviceDetails.AuthorizationModel)
 }
 
-func TestSetManagementAPIAddress(t *testing.T) {
+func TestSetupManagementAPI(t *testing.T) {
 	iw, err := createInway()
 	assert.Nil(t, err)
-	err = iw.SetManagementAPIAddress("https://managementapi.mock")
+
+	cert, _ := common_tls.NewBundleFromFiles(
+		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
+		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
+		filepath.Join(pkiDir, "ca-root.pem"),
+	)
+
+	err = iw.SetupManagementAPI("https://managementapi.mock", cert)
 	assert.Nil(t, err)
 	assert.NotNil(t, iw.configAPIClient)
 }
@@ -314,19 +321,19 @@ func TestDeleteServiceEndpoints(t *testing.T) {
 
 func TestNewInwayName(t *testing.T) {
 	logger := zap.NewNop()
-	tlsOptions := orgtls.TLSOptions{
-		NLXRootCert: filepath.Join("..", "testing", "pki", "ca-root.pem"),
-		OrgCertFile: filepath.Join("..", "testing", "pki", "org-nlx-test-chain.pem"),
-		OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem"),
-	}
+	cert, _ := common_tls.NewBundleFromFiles(
+		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
+		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
+		filepath.Join(pkiDir, "ca-root.pem"),
+	)
 
 	testProcess := process.NewProcess(logger)
-	iw, err := NewInway(logger, nil, testProcess, "", "inway.test", "localhost:1813", tlsOptions, "")
+	iw, err := NewInway(logger, nil, testProcess, "", "inway.test", "localhost:1813", cert, "")
 	assert.Nil(t, err)
 
 	assert.Equal(t, "XQpL-03EUOCXDNnc8FCsZXrOp41LkYIJ5U_Udz-1Chk=", iw.name)
 
-	iw, err = NewInway(logger, nil, testProcess, "inway.test", "inway.test", "localhost:1813", tlsOptions, "")
+	iw, err = NewInway(logger, nil, testProcess, "inway.test", "inway.test", "localhost:1813", cert, "")
 	assert.Nil(t, err)
 	assert.Equal(t, "inway.test", iw.name)
 }

@@ -10,16 +10,29 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 
-	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/outway"
 )
 
+var pkiDir = filepath.Join("..", "testing", "pki")
+
 func TestNewOutwayExeception(t *testing.T) {
-	logger := zap.NewNop()
+	certOrg, _ := common_tls.NewBundleFromFiles(
+		filepath.Join(pkiDir, "org-without-name-chain.pem"),
+		filepath.Join(pkiDir, "org-without-name-key.pem"),
+		filepath.Join(pkiDir, "ca-root.pem"),
+	)
+
+	cert, _ := common_tls.NewBundleFromFiles(
+		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
+		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
+		filepath.Join(pkiDir, "ca-root.pem"),
+	)
+
 	tests := []struct {
 		description              string
-		config                   orgtls.TLSOptions
+		cert                     *common_tls.CertificateBundle
 		monitoringServiceAddress string
 		authServiceURL           string
 		authCAPath               string
@@ -27,34 +40,15 @@ func TestNewOutwayExeception(t *testing.T) {
 	}{
 		{
 			"certificate without organization",
-			orgtls.TLSOptions{
-				NLXRootCert: filepath.Join("..", "testing", "pki", "ca-root.pem"),
-				OrgCertFile: filepath.Join("..", "testing", "pki", "org-without-name-chain.pem"),
-				OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-without-name-key.pem"),
-			},
+			certOrg,
 			"localhost:8080",
 			"",
 			"",
 			"cannot obtain organization name from self cert",
 		},
 		{
-			"trying to load a non existing certificate",
-			orgtls.TLSOptions{
-				NLXRootCert: filepath.Join("..", "testing", "pki", "ca-root.pem"),
-				OrgCertFile: filepath.Join("..", "testing", "pki", "org-nlx-test-chain.pem"),
-				OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-non-existing-key.pem"),
-			},
-			"localhost:8080",
-			"",
-			"",
-			"failed to load organization certificate '../testing/pki/org-nlx-test-chain.pem: open ../testing/pki/org-non-existing-key.pem: no such file or directory",
-		}, {
 			"authorization service URL set but no CA for authorization provided",
-			orgtls.TLSOptions{
-				NLXRootCert: filepath.Join("..", "testing", "pki", "ca-root.pem"),
-				OrgCertFile: filepath.Join("..", "testing", "pki", "org-nlx-test-chain.pem"),
-				OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem"),
-			},
+			cert,
 			"localhost:8080",
 			"http://auth.nlx.io",
 			"",
@@ -62,11 +56,7 @@ func TestNewOutwayExeception(t *testing.T) {
 		},
 		{
 			"authorization service URL is not 'https'",
-			orgtls.TLSOptions{
-				NLXRootCert: filepath.Join("..", "testing", "pki", "ca-root.pem"),
-				OrgCertFile: filepath.Join("..", "testing", "pki", "org-nlx-test-chain.pem"),
-				OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem"),
-			},
+			cert,
 			"localhost:8080",
 			"http://auth.nlx.io",
 			"/path/to",
@@ -74,11 +64,7 @@ func TestNewOutwayExeception(t *testing.T) {
 		},
 		{
 			"invalid monitioring service address",
-			orgtls.TLSOptions{
-				NLXRootCert: filepath.Join("..", "testing", "pki", "ca-root.pem"),
-				OrgCertFile: filepath.Join("..", "testing", "pki", "org-nlx-test-chain.pem"),
-				OrgKeyFile:  filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem"),
-			},
+			cert,
 			"",
 			"",
 			"",
@@ -86,10 +72,11 @@ func TestNewOutwayExeception(t *testing.T) {
 		},
 	}
 
+	logger := zap.NewNop()
 	testProcess := process.NewProcess(logger)
 	// Test exceptions during outway creation
 	for _, test := range tests {
-		_, err := outway.NewOutway(logger, nil, testProcess, test.monitoringServiceAddress, test.config, "", test.authServiceURL, test.authCAPath, false)
+		_, err := outway.NewOutway(logger, nil, testProcess, test.monitoringServiceAddress, test.cert, "", test.authServiceURL, test.authCAPath, false)
 		assert.EqualError(t, err, test.expectedErrorMessage)
 	}
 }

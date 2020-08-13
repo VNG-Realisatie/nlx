@@ -6,7 +6,6 @@ package inway
 import (
 	"context"
 	"crypto/sha256"
-	"crypto/tls"
 	"crypto/x509"
 	"encoding/base64"
 	"fmt"
@@ -28,8 +27,8 @@ import (
 
 	"go.nlx.io/nlx/common/monitoring"
 	"go.nlx.io/nlx/common/nlxversion"
-	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 	"go.nlx.io/nlx/management-api/pkg/configapi"
@@ -41,9 +40,8 @@ type Inway struct {
 	logger           *zap.Logger
 	organizationName string
 
-	selfAddress string
-	roots       *x509.CertPool
-	orgKeyPair  *tls.Certificate
+	selfAddress   string
+	orgCertBundle *common_tls.CertificateBundle
 
 	name string
 
@@ -72,21 +70,15 @@ func NewInway(
 	name,
 	selfAddress string,
 	monitoringAddress string,
-	tlsOptions orgtls.TLSOptions,
+	orgCertBundle *common_tls.CertificateBundle,
 	directoryRegistrationAddress string) (*Inway, error) {
-	// parse tls certificate
-	roots, orgKeyPair, err := orgtls.Load(tlsOptions)
-	if err != nil {
-		return nil, err
-	}
-
-	orgCert := orgKeyPair.Leaf
+	orgCert := orgCertBundle.Certificate()
 
 	if len(orgCert.Subject.Organization) != 1 {
 		return nil, errors.New("cannot obtain organization name from self cert")
 	}
 
-	err = selfAddressIsInOrgCert(selfAddress, orgCert)
+	err := selfAddressIsInOrgCert(selfAddress, orgCert)
 	if err != nil {
 		return nil, err
 	}
@@ -101,9 +93,8 @@ func NewInway(
 		logger:           logger.With(zap.String("inway-organization-name", organizationName)),
 		organizationName: organizationName,
 
-		selfAddress: selfAddress,
-		roots:       roots,
-		orgKeyPair:  orgKeyPair,
+		selfAddress:   selfAddress,
+		orgCertBundle: orgCertBundle,
 
 		process: mainProcess,
 
@@ -129,16 +120,10 @@ func NewInway(
 		logger.Info("transaction logger created")
 	}
 
-	// setup directory client
-	orgKeypair, err := tls.LoadX509KeyPair(tlsOptions.OrgCertFile, tlsOptions.OrgKeyFile)
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to read tls keypair")
-	}
-
 	if name != "" {
 		i.name = name
 	} else {
-		i.name = getFingerPrint(orgKeypair.Certificate[0])
+		i.name = getFingerPrint(orgCert.Raw)
 	}
 
 	mainProcess.CloseGracefully(func() error {
@@ -146,10 +131,7 @@ func NewInway(
 		return nil
 	})
 
-	directoryDialCredentials := credentials.NewTLS(&tls.Config{
-		Certificates: []tls.Certificate{orgKeypair},
-		RootCAs:      roots,
-	})
+	directoryDialCredentials := credentials.NewTLS(orgCertBundle.TLSConfig())
 	directoryDialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(directoryDialCredentials),
 	}

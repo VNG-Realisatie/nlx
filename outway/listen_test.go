@@ -21,10 +21,13 @@ import (
 
 	"go.nlx.io/nlx/common/monitoring"
 	"go.nlx.io/nlx/common/process"
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 	mock "go.nlx.io/nlx/outway/mock"
 )
+
+var pkiDir = filepath.Join("..", "testing", "pki")
 
 // testRequests to check for expected reponses.
 func testRequests(t *testing.T, tests []struct {
@@ -409,11 +412,15 @@ func TestFailingTransport(t *testing.T) {
 
 	inwayAddresses := []string{"inway.mockorg"}
 	healthyStates := []bool{true}
-	certFile := filepath.Join("..", "testing", "pki", "org-nlx-test.pem")
-	keyFile := filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem")
+
+	cert, _ := common_tls.NewBundleFromFiles(
+		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
+		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
+		filepath.Join(pkiDir, "ca-root.pem"),
+	)
 
 	l, err := NewRoundRobinLoadBalancedHTTPService(
-		zap.NewNop(), nil, certFile, keyFile,
+		zap.NewNop(), cert,
 		"mockorg", "mockservice",
 		inwayAddresses, healthyStates)
 

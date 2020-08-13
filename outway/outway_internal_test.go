@@ -5,20 +5,17 @@ package outway
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
 	"testing"
-
-	"go.nlx.io/nlx/common/monitoring"
-
-	"go.nlx.io/nlx/common/nlxversion"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap/zaptest"
 
-	"go.nlx.io/nlx/common/orgtls"
+	"go.nlx.io/nlx/common/monitoring"
+	"go.nlx.io/nlx/common/nlxversion"
 	"go.nlx.io/nlx/common/process"
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi/mock"
 )
@@ -32,25 +29,22 @@ func TestUpdateServiceList(t *testing.T) {
 	logger := zaptest.NewLogger(t)
 	mainProcess := process.NewProcess(logger)
 
-	workDir, err := os.Getwd()
-	if err != nil {
-		panic(err)
-	}
-	parent := filepath.Dir(workDir)
+	cert, _ := common_tls.NewBundleFromFiles(
+		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
+		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
+		filepath.Join(pkiDir, "ca-root.pem"),
+	)
 
 	o := &Outway{
 		directoryInspectionClient: client,
 		logger:                    logger,
-		tlsOptions: orgtls.TLSOptions{
-			NLXRootCert: filepath.Join(parent, "testing", "pki", "ca-root.pem"),
-			OrgCertFile: filepath.Join(parent, "testing", "pki", "org-nlx-test.pem"),
-			OrgKeyFile:  filepath.Join(parent, "testing", "pki", "org-nlx-test-key.pem"),
-		},
-		process:           mainProcess,
-		servicesHTTP:      make(map[string]HTTPService),
-		servicesDirectory: make(map[string]*inspectionapi.ListServicesResponse_Service),
+		orgCert:                   cert,
+		process:                   mainProcess,
+		servicesHTTP:              make(map[string]HTTPService),
+		servicesDirectory:         make(map[string]*inspectionapi.ListServicesResponse_Service),
 	}
 
+	var err error
 	o.monitorService, err = monitoring.NewMonitoringService("localhost:8080", logger)
 	assert.Nil(t, err)
 

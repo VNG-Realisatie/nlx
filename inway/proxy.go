@@ -9,7 +9,7 @@ import (
 
 	"go.uber.org/zap"
 
-	"go.nlx.io/nlx/common/orgtls"
+	common_tls "go.nlx.io/nlx/common/tls"
 )
 
 // handleProxyRequest handles requests from an NLX Outway to the Inway.
@@ -76,7 +76,7 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 		zap.String("logrecord-id", logrecordID),
 	)
 
-	publicKeyFingerprint := orgtls.PublicKeyFingerprint(peerCertificate)
+	publicKeyFingerprint := common_tls.PublicKeyFingerprint(peerCertificate)
 
 	reqMD := &RequestMetadata{
 		requesterOrganization:         requesterOrganization,

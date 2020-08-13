@@ -20,8 +20,8 @@ import (
 
 	common_db "go.nlx.io/nlx/common/db"
 	"go.nlx.io/nlx/common/logoptions"
-	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/directory-db/dbversion"
 	"go.nlx.io/nlx/directory-inspection-api/http"
@@ -76,7 +76,7 @@ func main() {
 
 	log.Printf("created the directory database: %v", directoryDatabase)
 
-	caCertPool, err := orgtls.LoadRootCert(options.NLXRootCert)
+	caCertPool, _, err := common_tls.NewCertPoolFromFile(options.NLXRootCert)
 	if err != nil {
 		logger.Fatal("failed to load root cert", zap.Error(err))
 	}

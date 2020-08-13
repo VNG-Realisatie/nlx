@@ -19,6 +19,7 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/status"
 
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/inway/config"
 	"go.nlx.io/nlx/management-api/pkg/configapi"
@@ -26,14 +27,9 @@ import (
 
 var errConfigAPIUnavailable = fmt.Errorf("configAPI unavailable")
 
-// SetManagementAPIAddress configures the inway to use the NLX Management API instead of the config toml
-func (i *Inway) SetManagementAPIAddress(configAPIAddress string) error {
-	tlsConfig := tls.Config{
-		RootCAs:      i.roots,
-		Certificates: []tls.Certificate{*i.orgKeyPair},
-	}
-
-	creds := credentials.NewTLS(&tlsConfig)
+// SetupManagementAPI configures the inway to use the NLX Management API instead of the config toml
+func (i *Inway) SetupManagementAPI(configAPIAddress string, cert *common_tls.CertificateBundle) error {
+	creds := credentials.NewTLS(cert.TLSConfig())
 
 	connCtx, connCtxCancel := context.WithTimeout(context.Background(), 1*time.Minute)
 	defer connCtxCancel()

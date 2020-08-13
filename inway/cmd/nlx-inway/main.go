@@ -15,10 +15,12 @@ import (
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
+	"go.nlx.io/nlx/common/cmd"
 	common_db "go.nlx.io/nlx/common/db"
 	"go.nlx.io/nlx/common/logoptions"
-	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
+	common_tls "go.nlx.io/nlx/common/tls"
+
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/inway"
 	"go.nlx.io/nlx/inway/config"
@@ -45,7 +47,8 @@ var options struct {
 	InwayName string `long:"name" env:"INWAY_NAME" description:"Name of the inway"`
 
 	logoptions.LogOptions
-	orgtls.TLSOptions
+	cmd.TLSOrgOptions
+	cmd.TLSOptions
 }
 
 func main() {
@@ -69,7 +72,12 @@ func main() {
 
 	logDB := setupDatabase(logger, mainProcess)
 
-	iw, err := inway.NewInway(logger, logDB, mainProcess, options.InwayName, options.SelfAddress, options.MonitoringAddress, options.TLSOptions, options.DirectoryRegistrationAddress)
+	orgCert, err := common_tls.NewBundleFromFiles(options.OrgCertFile, options.OrgKeyFile, options.NLXRootCert)
+	if err != nil {
+		logger.Fatal("loading TLS files", zap.Error(err))
+	}
+
+	iw, err := inway.NewInway(logger, logDB, mainProcess, options.InwayName, options.SelfAddress, options.MonitoringAddress, orgCert, options.DirectoryRegistrationAddress)
 	if err != nil {
 		logger.Fatal("cannot setup inway", zap.Error(err))
 	}
@@ -77,7 +85,12 @@ func main() {
 	if len(options.ManagementAPIAddress) > 0 {
 		logger.Info("management-api set")
 
-		err = iw.SetManagementAPIAddress(options.ManagementAPIAddress)
+		cert, mErr := common_tls.NewBundleFromFiles(options.CertFile, options.KeyFile, options.RootCertFile)
+		if mErr != nil {
+			logger.Fatal("loading TLS files", zap.Error(err))
+		}
+
+		err = iw.SetupManagementAPI(options.ManagementAPIAddress, cert)
 		if err != nil {
 			logger.Fatal("cannot configure mangement-api", zap.Error(err))
 		}
@@ -153,15 +166,20 @@ func loadServices(logger *zap.Logger, serviceConfig *config.ServiceConfig, iw *i
 			zap.String("irma-api-url", serviceDetails.IrmaAPIURL), zap.String("insight-api-url", serviceDetails.InsightAPIURL),
 			zap.String("api-spec-url", serviceDetails.APISpecificationDocumentURL), zap.Bool("internal", serviceDetails.Internal),
 			zap.String("public-support-contact", serviceDetails.PublicSupportContact), zap.String("tech-support-contact", serviceDetails.TechSupportContact))
-		var rootCrt *x509.CertPool
+
+		var rootCAs *x509.CertPool
 		var err error
 		if len(serviceDetails.CACertPath) > 0 {
-			rootCrt, err = orgtls.LoadRootCert(serviceDetails.CACertPath)
+			rootCAs, _, err = common_tls.NewCertPoolFromFile(serviceDetails.CACertPath)
 			if err != nil {
 				logger.Fatal("Unable to load ca certificate for inway", zap.Error(err))
 			}
 		}
-		endpoint, errr := iw.NewHTTPServiceEndpoint(serviceName, &serviceDetails, &tls.Config{RootCAs: rootCrt})
+
+		endpoint, errr := iw.NewHTTPServiceEndpoint(serviceName, &serviceDetails, &tls.Config{
+			RootCAs:    rootCAs,
+			MinVersion: tls.VersionTLS12,
+		})
 		if errr != nil {
 			logger.Fatal("failed to create service", zap.Error(err))
 		}

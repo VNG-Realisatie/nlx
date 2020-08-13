@@ -4,26 +4,31 @@
 package inway
 
 import (
-	"crypto/tls"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 
-	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/inway/config"
 )
 
+var pkiDir = filepath.Join("..", "testing", "pki")
+
 func TestInwayApiSpec(t *testing.T) {
-	tlsOptions := orgtls.TLSOptions{
-		NLXRootCert: "../testing/pki/ca-root.pem",
-		OrgCertFile: "../testing/pki/org-nlx-test-chain.pem",
-		OrgKeyFile:  "../testing/pki/org-nlx-test-key.pem"}
+	cert, err := common_tls.NewBundleFromFiles(
+		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
+		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
+		filepath.Join(pkiDir, "ca-root.pem"),
+	)
+
+	assert.NoError(t, err)
 
 	mockAPISpecEndpoint := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -56,14 +61,11 @@ func TestInwayApiSpec(t *testing.T) {
 
 	logger := zap.NewNop()
 	testProcess := process.NewProcess(logger)
-	iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", "localhost:1813", tlsOptions, "localhost:1815")
+	iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", "localhost:1813", cert, "localhost:1815")
 	assert.Nil(t, err)
 
 	apiSpecMockServer := httptest.NewUnstartedServer(http.HandlerFunc(iw.handleAPISpecDocRequest))
-	apiSpecMockServer.TLS = &tls.Config{
-		ClientCAs:  iw.roots,
-		ClientAuth: tls.RequireAndVerifyClientCert,
-	}
+	apiSpecMockServer.TLS = iw.orgCertBundle.TLSConfig(iw.orgCertBundle.WithTLSClientAuth())
 	apiSpecMockServer.StartTLS()
 	defer apiSpecMockServer.Close()
 	endPoints := []ServiceEndpoint{}
@@ -95,7 +97,7 @@ func TestInwayApiSpec(t *testing.T) {
 		{fmt.Sprintf("%s/.nlx/api-spec-doc/mock-service-public-apispec", apiSpecMockServer.URL), "dummy-ID", http.StatusOK, ""},
 	}
 
-	client := setupClient(t, tlsOptions)
+	client := setupClient(cert)
 
 	for _, test := range tests {
 		req, err := http.NewRequest("GET", test.url, nil)

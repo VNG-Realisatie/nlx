@@ -5,7 +5,6 @@ package api
 
 import (
 	"context"
-	"crypto/tls"
 	"log"
 	"net"
 	"net/http"
@@ -37,14 +36,13 @@ func (a *API) ListenAndServe(address, configAddress string) error {
 		return a.grpcServer.Serve(listen)
 	})
 
+	tlsConfig := a.cert.TLSConfig()
+	tlsConfig.InsecureSkipVerify = true //nolint:gosec // this is an internal connection to itself
+
 	// setup client credentials for grpc gateway
 	gatewayDialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(
-			credentials.NewTLS(&tls.Config{
-				Certificates:       []tls.Certificate{*a.orgCertKeyPair},
-				RootCAs:            a.roots,
-				InsecureSkipVerify: true, //nolint:gosec // this is an internal connection to itself
-			}),
+			credentials.NewTLS(tlsConfig),
 		),
 	}
 

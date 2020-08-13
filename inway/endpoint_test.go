@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -17,8 +18,8 @@ import (
 	"go.uber.org/zap/zaptest"
 	"go.uber.org/zap/zaptest/observer"
 
-	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/inway/config"
 )
 
@@ -152,11 +153,11 @@ func getResponseStatusAndBody(t *testing.T, httpRecorder *httptest.ResponseRecor
 func TestInwaySetServiceEndpoints(t *testing.T) {
 
 	// Certificate organization = nlx-test
-	tlsOptions := orgtls.TLSOptions{
-		NLXRootCert: "../testing/pki/ca-root.pem",
-		OrgCertFile: "../testing/pki/org-nlx-test-chain.pem",
-		OrgKeyFile:  "../testing/pki/org-nlx-test-key.pem",
-	}
+	cert, _ := common_tls.NewBundleFromFiles(
+		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
+		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
+		filepath.Join(pkiDir, "ca-root.pem"),
+	)
 
 	type args struct {
 		serviceName    string
@@ -241,7 +242,7 @@ func TestInwaySetServiceEndpoints(t *testing.T) {
 			core, recorded := observer.New(zapcore.InfoLevel)
 			logger := zap.New(core)
 			testProcess := process.NewProcess(logger)
-			iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", "localhost:1813", tlsOptions, "localhost:1815")
+			iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", "localhost:1813", cert, "localhost:1815")
 			assert.NoError(t, err)
 
 			endpoint, err := iw.NewHTTPServiceEndpoint(test.args.serviceName, test.args.serviceDetails, nil)
@@ -258,15 +259,15 @@ func TestInwaySetServiceEndpoints(t *testing.T) {
 }
 
 func TestInwaySetServiceEnpointDuplicateEndpoint(t *testing.T) {
-	tlsOptions := orgtls.TLSOptions{
-		NLXRootCert: "../testing/pki/ca-intermediate.pem",
-		OrgCertFile: "../testing/pki/org-nlx-test.pem",
-		OrgKeyFile:  "../testing/pki/org-nlx-test-key.pem",
-	}
+	cert, _ := common_tls.NewBundleFromFiles(
+		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
+		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
+		filepath.Join(pkiDir, "ca-root.pem"),
+	)
 
 	logger := zaptest.NewLogger(t)
 	testProcess := process.NewProcess(logger)
-	iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", "localhost:1813", tlsOptions, "localhost:1815")
+	iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", "localhost:1813", cert, "localhost:1815")
 	assert.NoError(t, err)
 
 	serviceDetails := &config.ServiceDetails{
@@ -300,13 +301,13 @@ func TestInwayLoggingBadService(t *testing.T) {
 
 	// Certificate organization = nlx-test
 
-	tlsOptions := orgtls.TLSOptions{
-		NLXRootCert: "../testing/pki/ca-root.pem",
-		OrgCertFile: "../testing/pki/org-nlx-test-chain.pem",
-		OrgKeyFile:  "../testing/pki/org-nlx-test-key.pem",
-	}
+	cert, _ := common_tls.NewBundleFromFiles(
+		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
+		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
+		filepath.Join(pkiDir, "ca-root.pem"),
+	)
 
-	iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", "localhost:1813", tlsOptions, "localhost:1815")
+	iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", "localhost:1813", cert, "localhost:1815")
 	assert.Nil(t, err)
 
 	serviceDetails := &config.ServiceDetails{

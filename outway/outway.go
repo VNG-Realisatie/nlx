@@ -6,7 +6,6 @@ package outway
 import (
 	"context"
 	"crypto/tls"
-	"crypto/x509"
 	"fmt"
 	"net/http"
 	"net/http/httputil"
@@ -26,6 +25,7 @@ import (
 	"go.nlx.io/nlx/common/nlxversion"
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 )
@@ -37,8 +37,7 @@ type Outway struct {
 	wg               *sync.WaitGroup
 	organizationName string // the organization running this outway
 
-	tlsOptions orgtls.TLSOptions
-	tlsRoots   *x509.CertPool
+	orgCert *common_tls.CertificateBundle
 
 	logger *zap.Logger
 
@@ -64,27 +63,6 @@ type Outway struct {
 	servicesHTTP map[string]HTTPService
 	// directory listing copy
 	servicesDirectory map[string]*inspectionapi.ListServicesResponse_Service
-}
-
-func loadCertificates(logger *zap.Logger, tlsOptions orgtls.TLSOptions) (*x509.CertPool, string, error) {
-	// load certs and get organization name from cert
-	roots, orgKeyPair, err := orgtls.Load(tlsOptions)
-	if err != nil {
-		return nil, "", err
-	}
-
-	orgCert := orgKeyPair.Leaf
-
-	if len(orgCert.Subject.Organization) != 1 {
-		return nil, "", errors.New("cannot obtain organization name from self cert")
-	}
-
-	organizationName := orgCert.Subject.Organization[0]
-
-	fingerprint := orgtls.PublicKeyFingerprint(orgCert)
-	logger.Info("loaded certificates for outway", zap.String("outway-organization-name", organizationName), zap.String("fingerprint", fingerprint))
-
-	return roots, organizationName, nil
 }
 
 func (o *Outway) validateAuthURL(authCAPath, authServiceURL string) error {
@@ -123,15 +101,7 @@ func (o *Outway) validateAuthURL(authCAPath, authServiceURL string) error {
 }
 
 func (o *Outway) startDirectoryInspector(directoryInspectionAddress string) error {
-	orgKeypair, err := tls.LoadX509KeyPair(o.tlsOptions.OrgCertFile, o.tlsOptions.OrgKeyFile)
-	if err != nil {
-		return errors.Wrap(err, "failed to read tls keypair")
-	}
-
-	directoryDialCredentials := credentials.NewTLS(&tls.Config{
-		Certificates: []tls.Certificate{orgKeypair},
-		RootCAs:      o.tlsRoots,
-	})
+	directoryDialCredentials := credentials.NewTLS(o.orgCert.TLSConfig())
 	directoryDialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(directoryDialCredentials),
 	}
@@ -161,14 +131,18 @@ func NewOutway(
 	logdb *sqlx.DB,
 	mainProcess *process.Process,
 	monitoringAddress string,
-	tlsOptions orgtls.TLSOptions,
+	orgCert *common_tls.CertificateBundle,
 	directoryInspectionAddress,
 	authServiceURL,
 	authCAPath string, useAsHTTPProxy bool) (*Outway, error) {
-	roots, organizationName, err := loadCertificates(logger, tlsOptions)
-	if err != nil {
-		return nil, err
+
+	cert := orgCert.Certificate()
+
+	if len(cert.Subject.Organization) != 1 {
+		return nil, errors.New("cannot obtain organization name from self cert")
 	}
+
+	organizationName := cert.Subject.Organization[0]
 
 	if mainProcess == nil {
 		return nil, errors.New("process argument is nil. needed enable to close gracefully")
@@ -179,9 +153,8 @@ func NewOutway(
 		logger:           logger.With(zap.String("outway-organization-name", organizationName)),
 		organizationName: organizationName,
 
-		tlsOptions: tlsOptions,
-		tlsRoots:   roots,
-		process:    mainProcess,
+		orgCert: orgCert,
+		process: mainProcess,
 
 		servicesHTTP:      make(map[string]HTTPService),
 		servicesDirectory: make(map[string]*inspectionapi.ListServicesResponse_Service),
@@ -194,7 +167,7 @@ func NewOutway(
 		o.requestHTTPHandler = o.handleHTTPRequest
 	}
 
-	err = o.validateAuthURL(authCAPath, authServiceURL)
+	err := o.validateAuthURL(authCAPath, authServiceURL)
 	if err != nil {
 		return nil, err
 	}
@@ -323,9 +296,7 @@ func (o *Outway) createService(
 
 	rrlbService, err := NewRoundRobinLoadBalancedHTTPService(
 		o.logger,
-		o.tlsRoots,
-		o.tlsOptions.OrgCertFile,
-		o.tlsOptions.OrgKeyFile,
+		o.orgCert,
 		serviceToImplement.OrganizationName,
 		serviceToImplement.ServiceName,
 		InwayAddresses,

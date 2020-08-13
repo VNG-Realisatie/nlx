@@ -9,9 +9,10 @@ import (
 	flags "github.com/jessevdk/go-flags"
 	"go.uber.org/zap"
 
+	"go.nlx.io/nlx/common/cmd"
 	"go.nlx.io/nlx/common/logoptions"
-	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/management-api/pkg/api"
 	"go.nlx.io/nlx/management-api/pkg/oidc"
@@ -27,7 +28,8 @@ var options struct {
 	DirectoryEndpointURL         string `long:"directory-endpoint-url" env:"DIRECTORY_ENDPOINT_URL" description:"URL to the directory"`
 
 	logoptions.LogOptions
-	orgtls.TLSOptions
+	cmd.TLSOrgOptions
+	cmd.TLSOptions
 	oidcOptions
 }
 
@@ -65,7 +67,17 @@ func main() {
 
 	authenticator := oidc.NewAuthenticator(logger, &options.oidcOptions)
 
-	a, err := api.NewAPI(logger, mainProcess, options.TLSOptions, options.EtcdConnectionString, options.DirectoryRegistrationAddress, options.DirectoryEndpointURL, authenticator)
+	cert, err := common_tls.NewBundleFromFiles(options.CertFile, options.KeyFile, options.RootCertFile)
+	if err != nil {
+		logger.Fatal("loading internal cert", zap.Error(err))
+	}
+
+	orgCert, err := common_tls.NewBundleFromFiles(options.OrgCertFile, options.OrgKeyFile, options.NLXRootCert)
+	if err != nil {
+		logger.Fatal("loading organization cert", zap.Error(err))
+	}
+
+	a, err := api.NewAPI(logger, mainProcess, cert, orgCert, options.EtcdConnectionString, options.DirectoryRegistrationAddress, options.DirectoryEndpointURL, authenticator)
 	if err != nil {
 		logger.Fatal("cannot setup management api", zap.Error(err))
 	}

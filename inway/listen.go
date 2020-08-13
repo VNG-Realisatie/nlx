@@ -5,14 +5,11 @@ package inway
 
 import (
 	"context"
-	"crypto/tls"
 	"net/http"
 	"time"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
-
-	"go.nlx.io/nlx/common/tlsconfig"
 )
 
 // RunServer is a blocking function that listens on provided tcp address to handle requests.
@@ -23,15 +20,7 @@ func (i *Inway) RunServer(address string) error {
 	serveMux.Handle("/.nlx/", http.NotFoundHandler())
 	serveMux.HandleFunc("/", i.handleProxyRequest)
 
-	config := &tls.Config{
-		// only allow clients that present a cert signed by our root CA
-		ClientCAs:    i.roots,
-		ClientAuth:   tls.RequireAndVerifyClientCert,
-		Certificates: []tls.Certificate{*i.orgKeyPair},
-	}
-
-	tlsconfig.ApplyDefaults(config)
-
+	config := i.orgCertBundle.TLSConfig(i.orgCertBundle.WithTLSClientAuth())
 	i.serverTLS = &http.Server{
 		Addr:      address,
 		Handler:   serveMux,

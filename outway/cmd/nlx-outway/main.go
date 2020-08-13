@@ -13,10 +13,11 @@ import (
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
+	"go.nlx.io/nlx/common/cmd"
 	common_db "go.nlx.io/nlx/common/db"
 	"go.nlx.io/nlx/common/logoptions"
-	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/outway"
 	"go.nlx.io/nlx/txlog-db/dbversion"
@@ -42,7 +43,7 @@ var options struct {
 	ServerKeyFile  string `long:"tls-server-key" env:"TLS_SERVER_KEY" description:"Path the a key .pem, used for the HTTPS server" required:"false"`
 
 	logoptions.LogOptions
-	orgtls.TLSOptions
+	cmd.TLSOrgOptions
 }
 
 func parseOptions() {
@@ -75,6 +76,11 @@ func main() {
 
 	logger.Info("version info", zap.String("version", version.BuildVersion), zap.String("source-hash", version.BuildSourceHash))
 	logger = logger.With(zap.String("version", version.BuildVersion))
+
+	orgCert, err := common_tls.NewBundleFromFiles(options.OrgCertFile, options.OrgKeyFile, options.NLXRootCert)
+	if err != nil {
+		logger.Fatal("loading TLS files", zap.Error(err))
+	}
 
 	mainProcess := process.NewProcess(logger)
 
@@ -116,7 +122,7 @@ func main() {
 		logDB,
 		mainProcess,
 		options.MonitoringAddress,
-		options.TLSOptions,
+		orgCert,
 		options.DirectoryInspectionAddress,
 		options.AuthorizationServiceAddress,
 		options.AuthorizationCA,

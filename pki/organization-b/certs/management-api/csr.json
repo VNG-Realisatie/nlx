@@ -1,0 +1,10 @@
+{
+  "CN": "management-api.organization-b.nlx.local",
+  "key": {
+    "algo": "rsa",
+    "size": 4096
+  },
+  "hosts": [
+    "management-api.organization-b.nlx.local"
+  ]
+}

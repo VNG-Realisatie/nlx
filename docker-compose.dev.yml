@@ -11,17 +11,28 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     restart: always
-  etcd:
+  etcd-a:
     image: gcr.io/etcd-development/etcd:v3.4.11
     ports:
-      - 2379:2379
+      - 127.0.0.1:2379:2379
     environment:
-      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
-      - ETCD_ADVERTISE_CLIENT_URLS=http://localhost:2379
-# disabled attaching volume to etcd, see
-# https://gitlab.com/commonground/nlx/nlx/-/issues/990
-#    volumes:
-#      - etcd-data:/default.etcd
+      ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
+      ETCD_ADVERTISE_CLIENT_URLS: http://127.0.0.1:2379
+      ETCD_DATA_DIR: /default.etcd/a
+    volumes:
+      - etcd-data:/default.etcd
+    restart: always
+
+  etcd-b:
+    image: gcr.io/etcd-development/etcd:v3.4.11
+    ports:
+      - 127.0.0.1:2389:2379
+    environment:
+      ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
+      ETCD_ADVERTISE_CLIENT_URLS: http://127.0.0.1:2389
+      ETCD_DATA_DIR: /default.etcd/b
+    volumes:
+      - etcd-data:/default.etcd
     restart: always
 
   # OpenID connect provider
