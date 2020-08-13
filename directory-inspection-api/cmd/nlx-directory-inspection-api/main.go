@@ -22,6 +22,7 @@ import (
 	"go.nlx.io/nlx/directory-db/dbversion"
 	"go.nlx.io/nlx/directory-inspection-api/http"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionservice"
+	"go.nlx.io/nlx/directory-inspection-api/pkg/database"
 	"go.nlx.io/nlx/directory-inspection-api/statsservice"
 )
 
@@ -67,6 +68,7 @@ func main() {
 
 	mainProcess := process.NewProcess(logger)
 
+	// TODO: remove creation of DB later on, once the directoryDatabase is in use
 	db, err := sqlx.Open("postgres", options.PostgresDSN)
 	if err != nil {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))
@@ -78,6 +80,13 @@ func main() {
 	mainProcess.CloseGracefully(db.Close)
 
 	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
+
+	// TODO: pass directoryDatabase further along instead of db
+	directoryDatabase, err := database.NewPostgreSQLDirectoryDatabase(options.PostgresDSN, mainProcess, logger)
+	if err != nil {
+		logger.Fatal("failed to setup postgresql directory database:", zap.Error(err))
+	}
+	log.Printf("created the directory database: %v", directoryDatabase)
 
 	caCertPool, err := orgtls.LoadRootCert(options.NLXRootCert)
 	if err != nil {

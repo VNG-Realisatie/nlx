@@ -19,7 +19,7 @@ require (
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-chi/chi v4.1.2+incompatible
 	github.com/go-chi/render v1.0.1
-	github.com/go-errors/errors v1.0.1 // indirect
+	github.com/go-errors/errors v1.0.1
 	github.com/go-sql-driver/mysql v1.5.0 // indirect
 	github.com/gogo/protobuf v1.3.1
 	github.com/golang-migrate/migrate v3.5.4+incompatible
