@@ -21,16 +21,15 @@ var _ inspectionapi.DirectoryInspectionServer = &InspectionService{}
 
 // InspectionService handles all requests for a directory inspection api
 type InspectionService struct {
-	*listServicesHandler
 	*listOrganizationsHandler
-	database *database.DirectoryDatabase
+	database database.DirectoryDatabase
 }
 
 // New sets up a new DirectoryService and returns an error when something failed during set.
 func New(
 	logger *zap.Logger,
 	db *sqlx.DB,
-	database *database.DirectoryDatabase,
+	database database.DirectoryDatabase,
 	demoEnv, // TODO: can be removed?
 	demoDomain string,
 ) (*InspectionService, error) {
@@ -40,10 +39,6 @@ func New(
 
 	var err error
 
-	s.listServicesHandler, err = newListServicesHandler(db, logger)
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to setup ListServices handler")
-	}
 	s.listOrganizationsHandler, err = newListOrganizationsHandler(db, logger, demoEnv, demoDomain)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to setup ListOrganizations handler")

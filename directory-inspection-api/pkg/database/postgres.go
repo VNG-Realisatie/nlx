@@ -4,6 +4,7 @@
 package database
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/go-errors/errors"
@@ -20,6 +21,9 @@ import (
 type PostgreSQLDirectoryDatabase struct {
 	logger *zap.Logger
 	db     *sqlx.DB
+
+	selectServicesStatement *sqlx.Stmt
+	registerOutwayStatement *sqlx.NamedStmt
 }
 
 // NewPostgreSQLDirectoryDatabase constructs a new PostgreSQLDirectoryDatabase
@@ -37,8 +41,64 @@ func NewPostgreSQLDirectoryDatabase(DSN string, p *process.Process, logger *zap.
 
 	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
 
+	selectServicesStatement, err := prepareSelectServicesStatement(db)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create select services prepared statement: %s", err)
+	}
+
+	registerOutwayStatement, err := prepareRegisterOutwayStatement(db)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create register outway prepared statement: %s", err)
+	}
+
 	return &PostgreSQLDirectoryDatabase{
-		logger: logger,
-		db:     db,
+		logger:                  logger,
+		db:                      db,
+		selectServicesStatement: selectServicesStatement,
+		registerOutwayStatement: registerOutwayStatement,
 	}, nil
+}
+
+func prepareSelectServicesStatement(db *sqlx.DB) (*sqlx.Stmt, error) {
+	selectServicesStatement, err := db.Preparex(`
+		SELECT
+			o.name AS organization_name,
+			s.name AS service_name,
+			s.internal as service_internal,
+			array_remove(array_agg(i.address), NULL) AS inway_addresses,
+			COALESCE(s.documentation_url, '') AS documentation_url,
+			COALESCE(s.api_specification_type, '') AS api_specification_type,
+			COALESCE(s.public_support_contact, '') AS public_support_contact,
+			array_remove(array_agg(a.healthy), NULL) as healthy_statuses
+		FROM directory.services s
+		INNER JOIN directory.availabilities a ON a.service_id = s.id
+		INNER JOIN directory.organizations o ON o.id = s.organization_id
+		INNER JOIN directory.inways i ON i.id = a.inway_id
+		WHERE (
+			internal = false
+			OR (
+				internal = true
+				AND o.name = $1
+			)
+		)
+		GROUP BY s.id, o.id
+		ORDER BY o.name, s.name
+	`)
+	if err != nil {
+		return nil, err
+	}
+
+	return selectServicesStatement, nil
+}
+
+func prepareRegisterOutwayStatement(db *sqlx.DB) (*sqlx.NamedStmt, error) {
+	registerOutwayStatement, err := db.PrepareNamed(`
+		INSERT INTO directory.outways (version)
+		VALUES (:version)
+	`)
+	if err != nil {
+		return nil, err
+	}
+
+	return registerOutwayStatement, nil
 }

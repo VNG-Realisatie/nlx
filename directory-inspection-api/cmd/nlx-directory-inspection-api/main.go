@@ -97,7 +97,7 @@ func main() {
 		logger.Fatal("failed to load x509 keypair for directory inspection api", zap.Error(err))
 	}
 
-	directoryService, err := inspectionservice.New(logger, db, &directoryDatabase, options.DemoEnv, options.DemoDomain)
+	directoryService, err := inspectionservice.New(logger, db, directoryDatabase, options.DemoEnv, options.DemoDomain)
 	if err != nil {
 		logger.Fatal("failed to create new directory inspection service", zap.Error(err))
 	}
