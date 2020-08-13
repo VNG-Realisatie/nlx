@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2018
 // Licensed under the EUPL
 
-package api
+package inspectionservice
 
 import (
 	"context"
@@ -31,7 +31,7 @@ func New(
 	logger *zap.Logger,
 	db *sqlx.DB,
 	database *database.DirectoryDatabase,
-	demoEnv,
+	demoEnv, // TODO: can be removed?
 	demoDomain string,
 ) (*InspectionService, error) {
 	s := &InspectionService{
