@@ -13,6 +13,7 @@ import (
 	"google.golang.org/grpc/peer"
 
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
+	"go.nlx.io/nlx/directory-inspection-api/pkg/database"
 )
 
 // compile-time interface implementation verification
@@ -22,16 +23,20 @@ var _ inspectionapi.DirectoryInspectionServer = &InspectionService{}
 type InspectionService struct {
 	*listServicesHandler
 	*listOrganizationsHandler
+	database *database.DirectoryDatabase
 }
 
 // New sets up a new DirectoryService and returns an error when something failed during set.
 func New(
 	logger *zap.Logger,
 	db *sqlx.DB,
+	database *database.DirectoryDatabase,
 	demoEnv,
 	demoDomain string,
 ) (*InspectionService, error) {
-	s := &InspectionService{}
+	s := &InspectionService{
+		database: database,
+	}
 
 	var err error
 
