@@ -1,16 +1,27 @@
 version: "3.7"
+
 services:
   postgres:
     image: postgres:11-alpine
     ports:
-      - 5432:5432
+      - 127.0.0.1:5432:5432
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=nlx
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: nlx
     volumes:
       - postgres-data:/var/lib/postgresql/data
     restart: always
+
+  dex:
+    image: quay.io/dexidp/dex:v2.24.0
+    command: serve /config.yaml
+    ports:
+      - 127.0.0.1:5556:5556
+    volumes:
+      - ./dex.dev.yaml:/config.yaml
+    restart: always
+
   etcd-a:
     image: gcr.io/etcd-development/etcd:v3.4.11
     ports:
@@ -33,16 +44,6 @@ services:
       ETCD_DATA_DIR: /default.etcd/b
     volumes:
       - etcd-data:/default.etcd
-    restart: always
-
-  # OpenID connect provider
-  dex:
-    image: quay.io/dexidp/dex:v2.24.0
-    command: serve /config.yaml
-    ports:
-      - 5556:5556
-    volumes:
-      - ./dex.dev.yaml:/config.yaml
     restart: always
 
 volumes:

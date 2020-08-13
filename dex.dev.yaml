@@ -1,4 +1,5 @@
-issuer: http://localhost:5556
+issuer: http://dex.shared.nlx.local:5556
+enablePasswordDB: true
 
 storage:
   type: sqlite3
@@ -9,17 +10,20 @@ web:
   http: 0.0.0.0:5556
 
 staticClients:
-- id: management
-  redirectURIs:
-    - 'http://localhost:3002/oidc/callback'
-  name: 'NLX Management'
-  secret: ZXhhbXBsZS1hcHAtc2VjcmV0
-
-enablePasswordDB: true
+  - id: nlx-management-a
+    name: 'NLX Management (A)'
+    secret: ZXhhbXBsZS1hcHAtc2VjcmV0
+    redirectURIs:
+      - 'http://management.organization-a.nlx.local:3011/oidc/callback'
+  - id: nlx-management-b
+    name: 'NLX Management (B)'
+    secret: 9zARoHZ6xmV4TGYfwd47v67W
+    redirectURIs:
+      - 'http://management.organization-b.nlx.local:3021/oidc/callback'
 
 staticPasswords:
-- email: "admin@example.com"
-  hash: "$2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W"  # hash for: password
-  username: "admin"
-  name: "admin"
-  userID: "23b027bf-b1b1-4a08-b95b-921d4afc38bc"
+  - email: "admin@nlx.local"
+    username: "admin"
+    hash: "$2b$10$ZQSq.0GOPgONI.iuOimr1el5uWT7vm4g/Z3Ahs/LDylufGl4gleWa"  # development
+    name: "admin"
+    userID: "23b027bf-b1b1-4a08-b95b-921d4afc38bc"

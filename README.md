@@ -55,44 +55,77 @@ Start a Postgres and etcd container through Docker Compose with:
 docker-compose -f docker-compose.dev.yml up -d
 ```
 
-Initially create the directory and txlog database with:
+Run directory with:
 
 ```bash
-docker-compose -f docker-compose.dev.yml exec -u postgres postgres createdb directory
-docker-compose -f docker-compose.dev.yml exec -u postgres postgres createdb txlog
+migrate -database "postgres://postgres:postgres@127.0.0.1:5432/nlx?sslmode=disable" -path directory-db/migrations up
 ```
 
-Run directory and txlog migrations with:
+Optionally you can setup the database for the transaction logs:
 
 ```bash
-migrate -database "postgres://postgres:postgres@localhost:5432/directory?sslmode=disable" -path directory-db/migrations up
-migrate -database "postgres://postgres:postgres@localhost:5432/txlog?sslmode=disable" -path txlog-db/migrations up
+docker-compose -f docker-compose.dev.yml exec -u postgres postgres createdb nlx-txlog-a
+migrate -database "postgres://postgres:postgres@127.0.0.1:5432/nlx-txlog-a?sslmode=disable" -path txlog-db/migrations up
+
+docker-compose -f docker-compose.dev.yml exec -u postgres postgres createdb nlx-txlog-b
+migrate -database "postgres://postgres:postgres@127.0.0.1:5432/nlx-txlog-b?sslmode=disable" -path txlog-db/migrations up
 ```
 
 Finally run the project with:
 
 ```bash
 modd
+
+# To run transaction logs enabled for organization A
+TXLOG_A=1 modd
+
+# To run transaction logs enabled for organization B
+TXLOG_B=1 modd
+
+# Or both
+TXLOG_A=1 TXLOG_B=1 modd
 ```
 
 This will start the following services:
 
-- directory-inspection-api (HTTP: 6010, HTTPS: 6011)
-- directory-registration-api (HTTPS: 6012)
-- directory-monitor
-- outway (HTTP: 6014)
-- inway (HTTP: 6015)
-- inway (HTTP: 6016)
-- management-api (HTTP: 6017)
+- [S] directory-inspection-api (gRPC: 7901, HTTP: 7902)
+- [S] directory-registration-api (gRPC: 7903)
+- [S] directory-monitor
+- [A] management-api (gRPC: 7911, HTTP: 7912)
+- [A] inway (gRPC: 7913)
+- [A] outway (HTTP: 7915)
+- [B] management-api  (gRPC: 7921, HTTP: 7922)
+- [B] inway (gRPC: 7923)
+
 
 And the following frontend applications:
 
-- [docs](http://localhost:3000) (HTTP: 3000)
 - [directory-ui](http://localhost:3001) (HTTP: 3001)
-- [management-ui](http://localhost:3002) (HTTP: 3002)
-- [insight-ui](http://localhost:3003) (HTTP: 3003)
+- [docs](http://localhost:3002) (HTTP: 3002)
+- [insight-ui](http://docs.shared.nlx.local:3003) (HTTP: 3003)
+- [management-ui (A)](http://management.organization-a.nlx.local:3011) (HTTP: 3011)
+- [management-ui (B)](http://management.organization-a.nlx.local:3021) (HTTP: 3021)
 
 Services will reload automatically when the code changes.
+
+Update the `/etc/hosts` file:
+
+```
+127.0.0.1     dex.shared.nlx.local
+127.0.0.1     directory-inspection-api.shared.nlx.local
+127.0.0.1     directory-registration-api.shared.nlx.local
+
+127.0.0.1     etcd.organization-a.nlx.local
+127.0.0.1     management-api.organization-a.nlx.local
+127.0.0.1     inway.organization-a.nlx.local
+127.0.0.1     management.organization-a.nlx.local
+
+127.0.0.1     etcd.organization-b.nlx.local
+127.0.0.1     management-api.organization-b.nlx.local
+127.0.0.1     inway.organization-b.nlx.local
+127.0.0.1     management.organization-b.nlx.local
+```
+
 
 ### Running the complete stack using Minikube
 
@@ -139,6 +172,7 @@ Also install KubeDB, an operator that manages postgres instances. Follow the [ku
 When Traefik and KubeDB are running, you can start all the NLX components by executing:
 
 ```bash
+helm repo add stable https://kubernetes-charts.storage.googleapis.com
 helm dependency build ./helm/deploy/rdw
 
 helm upgrade --install shared ./helm/deploy/shared

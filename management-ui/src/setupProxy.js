@@ -5,7 +5,7 @@
 const { createProxyMiddleware } = require('http-proxy-middleware')
 
 const getProxyUrl = (proxy) =>
-  proxy || 'http://management.nlx-dev-directory.minikube/'
+  proxy || 'http://management-api.organization-a.nlx.local:7912'
 
 module.exports = function (app) {
   app.use(

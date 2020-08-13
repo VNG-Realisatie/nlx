@@ -5,16 +5,11 @@
 const { createProxyMiddleware } = require('http-proxy-middleware')
 
 const getProxyUrl = (proxy) =>
-  proxy || 'http://directory.nlx-dev-directory.minikube/'
+  proxy || 'http://directory-inspection-api.shared.nlx.local:7902'
 
 module.exports = function (app) {
   app.use(
     '/api',
-    createProxyMiddleware({
-      pathRewrite: {
-        '^/api': '', // rewrite path
-      },
-      target: getProxyUrl(process.env.PROXY),
-    }),
+    createProxyMiddleware({ target: getProxyUrl(process.env.PROXY) }),
   )
 }
