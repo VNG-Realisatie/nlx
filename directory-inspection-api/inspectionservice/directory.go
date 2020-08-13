@@ -5,8 +5,6 @@ package inspectionservice
 
 import (
 	"context"
-	"crypto/tls"
-	"crypto/x509"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
@@ -29,8 +27,7 @@ type InspectionService struct {
 // New sets up a new DirectoryService and returns an error when something failed during set.
 func New(
 	logger *zap.Logger,
-	db *sqlx.DB, rootCA *x509.CertPool,
-	certKeyPair *tls.Certificate,
+	db *sqlx.DB,
 	demoEnv,
 	demoDomain string,
 ) (*InspectionService, error) {
