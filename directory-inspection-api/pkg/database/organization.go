@@ -14,7 +14,7 @@ type Organization struct {
 	InsightLogEndpoint  string
 }
 
-// ListOrganizations returns a list of organizations
+// ListOrganizations returns a list of all organizations
 func (db PostgreSQLDirectoryDatabase) ListOrganizations(ctx context.Context) ([]*Organization, error) {
 	var result []*Organization
 
@@ -24,18 +24,17 @@ func (db PostgreSQLDirectoryDatabase) ListOrganizations(ctx context.Context) ([]
 	}
 
 	for rows.Next() {
-		// TODO: rename respOrganization to organization
-		var respOrganization = &Organization{}
+		var organization = &Organization{}
 		err = rows.Scan(
-			&respOrganization.Name,
-			&respOrganization.InsightIrmaEndpoint,
-			&respOrganization.InsightLogEndpoint,
+			&organization.Name,
+			&organization.InsightIrmaEndpoint,
+			&organization.InsightLogEndpoint,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan into struct: %v", err)
 		}
 
-		result = append(result, respOrganization)
+		result = append(result, organization)
 	}
 
 	return result, nil

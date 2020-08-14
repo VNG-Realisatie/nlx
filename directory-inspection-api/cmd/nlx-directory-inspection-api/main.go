@@ -65,20 +65,6 @@ func main() {
 
 	mainProcess := process.NewProcess(logger)
 
-	// TODO: remove creation of DB later on, once the directoryDatabase is in use
-	db, err := sqlx.Open("postgres", options.PostgresDSN)
-	if err != nil {
-		logger.Fatal("could not open connection to postgres", zap.Error(err))
-	}
-	db.SetConnMaxLifetime(5 * time.Minute)
-	db.SetMaxIdleConns(2)
-	db.MapperFunc(xstrings.ToSnakeCase)
-
-	mainProcess.CloseGracefully(db.Close)
-
-	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
-
-	// TODO: pass directoryDatabase further along instead of db
 	directoryDatabase, err := database.NewPostgreSQLDirectoryDatabase(options.PostgresDSN, mainProcess, logger)
 	if err != nil {
 		logger.Fatal("failed to setup postgresql directory database:", zap.Error(err))
@@ -98,6 +84,19 @@ func main() {
 	if err != nil {
 		logger.Fatal("failed to create new directory inspection service", zap.Error(err))
 	}
+
+	// TODO: remove creation of DB later on, once the statsservice also uses the directoryDatabase
+	db, err := sqlx.Open("postgres", options.PostgresDSN)
+	if err != nil {
+		logger.Fatal("could not open connection to postgres", zap.Error(err))
+	}
+	db.SetConnMaxLifetime(5 * time.Minute)
+	db.SetMaxIdleConns(2)
+	db.MapperFunc(xstrings.ToSnakeCase)
+
+	mainProcess.CloseGracefully(db.Close)
+
+	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
 
 	statsService, err := statsservice.New(logger, db)
 	if err != nil {
