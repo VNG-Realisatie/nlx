@@ -5,6 +5,7 @@ package inspectionservice_test
 
 import (
 	"context"
+	"errors"
 	"reflect"
 	"testing"
 
@@ -33,6 +34,21 @@ func TestInspectionService_ListOrganizations(t *testing.T) {
 		want    *inspectionapi.ListOrganizationsResponse
 		wantErr bool
 	}{
+		{
+			name: "failed to get organizations from the database",
+			fields: fields{
+				logger: zap.NewNop(),
+				database: func() *mock.MockDirectoryDatabase {
+					db := generateMockDirectoryDatabase(t)
+					db.EXPECT().ListOrganizations(gomock.Any()).Return(nil, errors.New("arbitrary error")).AnyTimes()
+
+					return db
+				}(),
+			},
+			args:    args{},
+			want:    nil,
+			wantErr: true,
+		},
 		{
 			name: "happy flow",
 			fields: fields{
