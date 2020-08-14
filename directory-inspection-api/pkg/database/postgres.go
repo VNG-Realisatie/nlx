@@ -22,8 +22,9 @@ type PostgreSQLDirectoryDatabase struct {
 	logger *zap.Logger
 	db     *sqlx.DB
 
-	selectServicesStatement *sqlx.Stmt
-	registerOutwayStatement *sqlx.NamedStmt
+	selectServicesStatement      *sqlx.Stmt
+	registerOutwayStatement      *sqlx.NamedStmt
+	selectOrganizationsStatement *sqlx.Stmt
 }
 
 // NewPostgreSQLDirectoryDatabase constructs a new PostgreSQLDirectoryDatabase
@@ -51,11 +52,17 @@ func NewPostgreSQLDirectoryDatabase(DSN string, p *process.Process, logger *zap.
 		return nil, fmt.Errorf("failed to create register outway prepared statement: %s", err)
 	}
 
+	selectOrganizationsStatement, err := prepareSelectOrganizationsStatement(db)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create select organizations prepared statement: %s", err)
+	}
+
 	return &PostgreSQLDirectoryDatabase{
-		logger:                  logger,
-		db:                      db,
-		selectServicesStatement: selectServicesStatement,
-		registerOutwayStatement: registerOutwayStatement,
+		logger:                       logger,
+		db:                           db,
+		selectServicesStatement:      selectServicesStatement,
+		registerOutwayStatement:      registerOutwayStatement,
+		selectOrganizationsStatement: selectOrganizationsStatement,
 	}, nil
 }
 
@@ -101,4 +108,20 @@ func prepareRegisterOutwayStatement(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 	}
 
 	return registerOutwayStatement, nil
+}
+
+func prepareSelectOrganizationsStatement(db *sqlx.DB) (*sqlx.Stmt, error) {
+	listOrganizationsStatement, err := db.Preparex(`
+		SELECT
+			name,
+			COALESCE(insight_irma_endpoint, '') AS insight_irma_endpoint,
+			COALESCE(insight_log_endpoint, '') AS insight_log_endpoint
+		FROM directory.organizations
+		ORDER BY name
+	`)
+	if err != nil {
+		return nil, err
+	}
+
+	return listOrganizationsStatement, nil
 }

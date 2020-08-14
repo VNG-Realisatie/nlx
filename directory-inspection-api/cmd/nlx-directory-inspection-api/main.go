@@ -36,9 +36,6 @@ var options struct {
 
 	PostgresDSN string `long:"postgres-dsn" env:"POSTGRES_DSN" default:"postgres://postgres:postgres@postgres/nlx?sslmode=disable" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
 
-	DemoEnv    string `long:"demo-env" env:"DEMO_ENV" required:"true"`
-	DemoDomain string `long:"demo-domain" env:"DEMO_DOMAIN" required:"true"`
-
 	logoptions.LogOptions
 }
 
@@ -97,7 +94,7 @@ func main() {
 		logger.Fatal("failed to load x509 keypair for directory inspection api", zap.Error(err))
 	}
 
-	directoryService, err := inspectionservice.New(logger, db, directoryDatabase, options.DemoEnv, options.DemoDomain)
+	directoryService := inspectionservice.New(logger, directoryDatabase)
 	if err != nil {
 		logger.Fatal("failed to create new directory inspection service", zap.Error(err))
 	}

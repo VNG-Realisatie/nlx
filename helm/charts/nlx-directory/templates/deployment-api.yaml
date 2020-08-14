@@ -81,10 +81,6 @@ spec:
               value: "0.0.0.0:8001"
             - name: LISTEN_ADDRESS_PLAIN
               value: "0.0.0.0:8080"
-            - name: DEMO_ENV
-              value: ""
-            - name: DEMO_DOMAIN
-              value: ""
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:

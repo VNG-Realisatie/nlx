@@ -15,4 +15,5 @@ type DirectoryDatabase interface {
 	ListServices(ctx context.Context, organizationName string) ([]*Service, error)
 	// TODO: replace nlx version with separate version & component properties
 	RegisterOutwayVersion(ctx context.Context, version nlxversion.NlxVersion) error
+	ListOrganizations(ctx context.Context) ([]*Organization, error)
 }
