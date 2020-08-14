@@ -5,6 +5,9 @@ package inspectionservice_test
 
 import (
 	"context"
+	"errors"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -33,6 +36,25 @@ func TestInspectionService_ListServices(t *testing.T) {
 		expectedResponse *inspectionapi.ListServicesResponse
 		expectedError    error
 	}{
+		{
+			name: "failed to get services from the database",
+			fields: fields{
+				logger: zap.NewNop(),
+				database: func() *mock.MockDirectoryDatabase {
+					db := generateMockDirectoryDatabase(t)
+					db.EXPECT().RegisterOutwayVersion(gomock.Any(), gomock.Any()).Return(nil).AnyTimes()
+					db.EXPECT().ListServices(gomock.Any(), "TODO").Return(nil, errors.New("arbitrary error")).AnyTimes()
+
+					return db
+				}(),
+			},
+			args: args{
+				ctx: context.Background(),
+				req: &inspectionapi.ListServicesRequest{},
+			},
+			expectedResponse: nil,
+			expectedError:    status.New(codes.Internal, "database error").Err(),
+		},
 		{
 			name: "happy flow",
 			fields: fields{
