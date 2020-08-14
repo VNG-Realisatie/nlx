@@ -46,15 +46,22 @@ Go tests:
 
 Go linter:
   stage: Tests
-  image: golangci/golangci-lint:v1.26.0
+  image: golangci/golangci-lint:v1.26.0-alpine
   before_script:
    - export PATH=$PATH:/usr/local/go/bin
+   - apk --no-cache add jq
   script:
     - golangci-lint version
-    - golangci-lint run --timeout=5m --new-from-rev $(git rev-parse origin/master) --out-format code-climate > code-climate.json
+    # Command based on https://docs.gitlab.com/ee/development/go_guide/index.html#automatic-linting
+    # Write the code coverage report to gl-code-quality-report.json
+    # and print linting issues to stdout in the format: path/to/file:line description
+    # remove `--issues-exit-code 0` or set to non-zero to fail the job if linting issues are detected
+    - golangci-lint run --timeout=5m --new-from-rev $(git rev-parse origin/master) --out-format code-climate | tee gl-code-quality-report.json | jq -r '.[] | "\(.location.path):\(.location.lines.begin) \(.description)"'
   artifacts:
     reports:
-      codequality: code-climate.json
+      codequality: gl-code-quality-report.json
+    paths:
+      - gl-code-quality-report.json
   tags:
     - docker
     - linux
