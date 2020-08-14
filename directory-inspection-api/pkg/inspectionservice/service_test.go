@@ -5,10 +5,10 @@ package inspectionservice_test
 
 import (
 	"context"
-	"reflect"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
@@ -19,6 +19,7 @@ import (
 
 func TestInspectionService_ListServices(t *testing.T) {
 	type fields struct {
+		logger   *zap.Logger
 		database database.DirectoryDatabase
 	}
 	type args struct {
@@ -26,15 +27,16 @@ func TestInspectionService_ListServices(t *testing.T) {
 		req *inspectionapi.ListServicesRequest
 	}
 	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		want    *inspectionapi.ListServicesResponse
-		wantErr bool
+		name             string
+		fields           fields
+		args             args
+		expectedResponse *inspectionapi.ListServicesResponse
+		expectedError    error
 	}{
 		{
 			name: "happy flow",
 			fields: fields{
+				logger: zap.NewNop(),
 				database: func() *mock.MockDirectoryDatabase {
 					db := generateMockDirectoryDatabase(t)
 					db.EXPECT().RegisterOutwayVersion(gomock.Any(), gomock.Any()).Return(nil).AnyTimes()
@@ -51,28 +53,23 @@ func TestInspectionService_ListServices(t *testing.T) {
 				ctx: context.Background(),
 				req: &inspectionapi.ListServicesRequest{},
 			},
-			want: &inspectionapi.ListServicesResponse{
+			expectedResponse: &inspectionapi.ListServicesResponse{
 				Services: []*inspectionapi.ListServicesResponse_Service{
 					{
 						ServiceName: "Dummy Service Name",
 					},
 				},
 			},
-			wantErr: false,
+			expectedError: nil,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			logger := zap.NewNop()
-			service := inspectionservice.New(logger, tt.fields.database)
-			got, err := service.ListServices(tt.args.ctx, tt.args.req)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("ListServices() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ListServices() got = %v, want %v", got, tt.want)
-			}
+			h := inspectionservice.New(tt.fields.logger, tt.fields.database)
+			got, err := h.ListServices(tt.args.ctx, tt.args.req)
+
+			assert.Equal(t, tt.expectedResponse, got)
+			assert.Equal(t, tt.expectedError, err)
 		})
 	}
 }
