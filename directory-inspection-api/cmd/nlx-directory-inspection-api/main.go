@@ -69,6 +69,7 @@ func main() {
 	if err != nil {
 		logger.Fatal("failed to setup postgresql directory database:", zap.Error(err))
 	}
+
 	log.Printf("created the directory database: %v", directoryDatabase)
 
 	caCertPool, err := orgtls.LoadRootCert(options.NLXRootCert)
@@ -90,8 +91,14 @@ func main() {
 	if err != nil {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))
 	}
-	db.SetConnMaxLifetime(5 * time.Minute)
-	db.SetMaxIdleConns(2)
+
+	const (
+		MaxIdleConnections = 2
+		FiveMinutes        = 5 * time.Minute
+	)
+
+	db.SetConnMaxLifetime(FiveMinutes)
+	db.SetMaxIdleConns(MaxIdleConnections)
 	db.MapperFunc(xstrings.ToSnakeCase)
 
 	mainProcess.CloseGracefully(db.Close)

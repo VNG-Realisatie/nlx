@@ -28,14 +28,19 @@ type PostgreSQLDirectoryDatabase struct {
 }
 
 // NewPostgreSQLDirectoryDatabase constructs a new PostgreSQLDirectoryDatabase
-func NewPostgreSQLDirectoryDatabase(DSN string, p *process.Process, logger *zap.Logger) (DirectoryDatabase, error) {
-	db, err := sqlx.Open("postgres", DSN)
+func NewPostgreSQLDirectoryDatabase(dsn string, p *process.Process, logger *zap.Logger) (DirectoryDatabase, error) {
+	db, err := sqlx.Open("postgres", dsn)
 	if err != nil {
 		return nil, errors.Errorf("could not open connection to postgres: %s", err)
 	}
 
-	db.SetConnMaxLifetime(5 * time.Minute)
-	db.SetMaxIdleConns(2)
+	const (
+		FiveMinutes        = 5 * time.Minute
+		MaxIdleConnections = 2
+	)
+
+	db.SetConnMaxLifetime(FiveMinutes)
+	db.SetMaxIdleConns(MaxIdleConnections)
 	db.MapperFunc(xstrings.ToSnakeCase)
 
 	p.CloseGracefully(db.Close)

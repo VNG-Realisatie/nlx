@@ -6,13 +6,13 @@ package inspectionservice_test
 import (
 	"context"
 	"errors"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 	"go.nlx.io/nlx/directory-inspection-api/pkg/database"
@@ -25,10 +25,12 @@ func TestInspectionService_ListServices(t *testing.T) {
 		logger   *zap.Logger
 		database database.DirectoryDatabase
 	}
+
 	type args struct {
 		ctx context.Context
 		req *inspectionapi.ListServicesRequest
 	}
+
 	tests := []struct {
 		name             string
 		fields           fields
@@ -37,7 +39,7 @@ func TestInspectionService_ListServices(t *testing.T) {
 		expectedError    error
 	}{
 		{
-			name: "failed to get services from the database",
+			name: "failed to get services from the db",
 			fields: fields{
 				logger: zap.NewNop(),
 				database: func() *mock.MockDirectoryDatabase {
@@ -53,7 +55,7 @@ func TestInspectionService_ListServices(t *testing.T) {
 				req: &inspectionapi.ListServicesRequest{},
 			},
 			expectedResponse: nil,
-			expectedError:    status.New(codes.Internal, "database error").Err(),
+			expectedError:    status.New(codes.Internal, "db error").Err(),
 		},
 		{
 			name: "happy flow",
@@ -86,8 +88,8 @@ func TestInspectionService_ListServices(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			tt := tt
 			h := inspectionservice.New(tt.fields.logger, tt.fields.database)
 			got, err := h.ListServices(tt.args.ctx, tt.args.req)
 

@@ -25,10 +25,12 @@ func TestInspectionService_ListOrganizations(t *testing.T) {
 		logger   *zap.Logger
 		database database.DirectoryDatabase
 	}
+
 	type args struct {
 		ctx context.Context
 		req *inspectionapi.ListOrganizationsRequest
 	}
+
 	tests := []struct {
 		name             string
 		fields           fields
@@ -37,7 +39,7 @@ func TestInspectionService_ListOrganizations(t *testing.T) {
 		expectedError    error
 	}{
 		{
-			name: "failed to get organizations from the database",
+			name: "failed to get organizations from the db",
 			fields: fields{
 				logger: zap.NewNop(),
 				database: func() *mock.MockDirectoryDatabase {
@@ -77,9 +79,10 @@ func TestInspectionService_ListOrganizations(t *testing.T) {
 			expectedError: nil,
 		},
 	}
+
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			tt := tt
 			h := inspectionservice.New(tt.fields.logger, tt.fields.database)
 			got, err := h.ListOrganizations(tt.args.ctx, tt.args.req)
 

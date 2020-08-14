@@ -52,9 +52,12 @@ func (db PostgreSQLDirectoryDatabase) ListServices(ctx context.Context, organiza
 	}
 
 	for rows.Next() {
-		var respService = &Service{}
-		var inwayAddresses = pq.StringArray{}
-		var healthyStatuses = pq.BoolArray{}
+		var (
+			respService     = &Service{}
+			inwayAddresses  = pq.StringArray{}
+			healthyStatuses = pq.BoolArray{}
+		)
+
 		err = rows.Scan(
 			&respService.Organization,
 			&respService.Name,
@@ -65,6 +68,7 @@ func (db PostgreSQLDirectoryDatabase) ListServices(ctx context.Context, organiza
 			&respService.PublicSupportContact,
 			&healthyStatuses,
 		)
+
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan into struct: %v", err)
 		}

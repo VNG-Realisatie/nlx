@@ -16,11 +16,12 @@ import (
 
 func (h *InspectionService) ListOrganizations(ctx context.Context, req *inspectionapi.ListOrganizationsRequest) (*inspectionapi.ListOrganizationsResponse, error) {
 	h.logger.Info("rpc request ListOrganizations")
-	resp := &inspectionapi.ListOrganizationsResponse{}
 
-	organizations, err := h.database.ListOrganizations(ctx)
+	resp := &inspectionapi.ListOrganizationsResponse{}
+	organizations, err := h.db.ListOrganizations(ctx)
+
 	if err != nil {
-		h.logger.Error("failed to select organizations from database", zap.Error(err))
+		h.logger.Error("failed to select organizations from db", zap.Error(err))
 		return nil, status.New(codes.Internal, "Database error.").Err()
 	}
 

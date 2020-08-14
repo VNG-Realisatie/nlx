@@ -30,6 +30,7 @@ func (db PostgreSQLDirectoryDatabase) ListOrganizations(ctx context.Context) ([]
 			&organization.InsightIrmaEndpoint,
 			&organization.InsightLogEndpoint,
 		)
+
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan into struct: %v", err)
 		}
