@@ -46,8 +46,9 @@ functional requirements and business context before launch.
 
 Consuming API’s is easier than providing an API. A good place to start is to
 consume an already available API. Such as for example the [BAG
-API](https://zakelijk.kadaster.nl/-/bag-api) of the Dutch Kadaster or the [KVK
-API](https://developers.kvk.nl/) of the Dutch Chamber of Commerce.
+API](https://www.kadaster.nl/web/kadaster.nl/zakelijk/registraties/basisregistraties/bag) 
+of the Dutch Kadaster or the [KVK API](https://developers.kvk.nl/) of the Dutch 
+Chamber of Commerce.
 
 Providing API’s through NLX is quite straightforward when the API’s are already
 available. Suitable API’s to start with as a provider are two examples of API’s
