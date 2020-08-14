@@ -47,7 +47,7 @@ func TestInspectionService_ListServices(t *testing.T) {
 					db.EXPECT().RegisterOutwayVersion(gomock.Any(), gomock.Any()).Return(nil).AnyTimes()
 					db.EXPECT().ListServices(gomock.Any(), "TODO").Return([]*database.Service{
 						{
-							Name: "TODO",
+							Name: "Dummy Service Name",
 						},
 					}, nil).AnyTimes()
 
@@ -61,7 +61,7 @@ func TestInspectionService_ListServices(t *testing.T) {
 			want: &inspectionapi.ListServicesResponse{
 				Services: []*inspectionapi.ListServicesResponse_Service{
 					{
-						ServiceName: "TODO",
+						ServiceName: "Dummy Service Name",
 					},
 				},
 			},
