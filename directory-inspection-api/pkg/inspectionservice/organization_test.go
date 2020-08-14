@@ -17,44 +17,42 @@ import (
 	"go.nlx.io/nlx/directory-inspection-api/pkg/inspectionservice"
 )
 
-func TestInspectionService_ListServices(t *testing.T) {
+func TestInspectionService_ListOrganizations(t *testing.T) {
 	type fields struct {
+		logger   *zap.Logger
 		database database.DirectoryDatabase
 	}
 	type args struct {
 		ctx context.Context
-		req *inspectionapi.ListServicesRequest
+		req *inspectionapi.ListOrganizationsRequest
 	}
 	tests := []struct {
 		name    string
 		fields  fields
 		args    args
-		want    *inspectionapi.ListServicesResponse
+		want    *inspectionapi.ListOrganizationsResponse
 		wantErr bool
 	}{
 		{
 			name: "happy flow",
 			fields: fields{
+				logger: zap.NewNop(),
 				database: func() *mock.MockDirectoryDatabase {
 					db := generateMockDirectoryDatabase(t)
-					db.EXPECT().RegisterOutwayVersion(gomock.Any(), gomock.Any()).Return(nil).AnyTimes()
-					db.EXPECT().ListServices(gomock.Any(), "TODO").Return([]*database.Service{
+					db.EXPECT().ListOrganizations(gomock.Any()).Return([]*database.Organization{
 						{
-							Name: "Dummy Service Name",
+							Name: "Dummy Organization Name",
 						},
 					}, nil).AnyTimes()
 
 					return db
 				}(),
 			},
-			args: args{
-				ctx: context.Background(),
-				req: &inspectionapi.ListServicesRequest{},
-			},
-			want: &inspectionapi.ListServicesResponse{
-				Services: []*inspectionapi.ListServicesResponse_Service{
+			args: args{},
+			want: &inspectionapi.ListOrganizationsResponse{
+				Organizations: []*inspectionapi.ListOrganizationsResponse_Organization{
 					{
-						ServiceName: "Dummy Service Name",
+						Name: "Dummy Organization Name",
 					},
 				},
 			},
@@ -63,15 +61,14 @@ func TestInspectionService_ListServices(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			logger := zap.NewNop()
-			service := inspectionservice.New(logger, tt.fields.database)
-			got, err := service.ListServices(tt.args.ctx, tt.args.req)
+			h := inspectionservice.New(tt.fields.logger, tt.fields.database)
+			got, err := h.ListOrganizations(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("ListServices() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("ListOrganizations() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ListServices() got = %v, want %v", got, tt.want)
+				t.Errorf("ListOrganizations() got = %v, want %v", got, tt.want)
 			}
 		})
 	}
