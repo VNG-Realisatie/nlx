@@ -9,9 +9,9 @@ import (
 )
 
 type Organization struct {
-	Name                string `json:"name,omitempty"`
-	InsightIrmaEndpoint string `json:"insightIrmaEndpoint,omitempty"`
-	InsightLogEndpoint  string `json:"insightLogEndpoint,omitempty"`
+	Name                string
+	InsightIrmaEndpoint string
+	InsightLogEndpoint  string
 }
 
 // ListOrganizations returns a list of organizations
