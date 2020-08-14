@@ -79,6 +79,7 @@ func TestInspectionService_ListOrganizations(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			tt := tt
 			h := inspectionservice.New(tt.fields.logger, tt.fields.database)
 			got, err := h.ListOrganizations(tt.args.ctx, tt.args.req)
 

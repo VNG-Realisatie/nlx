@@ -85,7 +85,7 @@ func main() {
 		logger.Fatal("failed to create new directory inspection service", zap.Error(err))
 	}
 
-	// TODO: remove creation of DB later on, once the statsservice also uses the directoryDatabase
+	// NOTE: remove creation of DB later on, once the statsservice also uses the directoryDatabase
 	db, err := sqlx.Open("postgres", options.PostgresDSN)
 	if err != nil {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))
