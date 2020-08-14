@@ -6,11 +6,13 @@ package inspectionservice_test
 import (
 	"context"
 	"errors"
-	"reflect"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 	"go.nlx.io/nlx/directory-inspection-api/pkg/database"
@@ -28,11 +30,11 @@ func TestInspectionService_ListOrganizations(t *testing.T) {
 		req *inspectionapi.ListOrganizationsRequest
 	}
 	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		want    *inspectionapi.ListOrganizationsResponse
-		wantErr bool
+		name             string
+		fields           fields
+		args             args
+		expectedResponse *inspectionapi.ListOrganizationsResponse
+		expectedError    error
 	}{
 		{
 			name: "failed to get organizations from the database",
@@ -45,9 +47,9 @@ func TestInspectionService_ListOrganizations(t *testing.T) {
 					return db
 				}(),
 			},
-			args:    args{},
-			want:    nil,
-			wantErr: true,
+			args:             args{},
+			expectedResponse: nil,
+			expectedError:    status.New(codes.Internal, "Database error.").Err(),
 		},
 		{
 			name: "happy flow",
@@ -65,27 +67,23 @@ func TestInspectionService_ListOrganizations(t *testing.T) {
 				}(),
 			},
 			args: args{},
-			want: &inspectionapi.ListOrganizationsResponse{
+			expectedResponse: &inspectionapi.ListOrganizationsResponse{
 				Organizations: []*inspectionapi.ListOrganizationsResponse_Organization{
 					{
 						Name: "Dummy Organization Name",
 					},
 				},
 			},
-			wantErr: false,
+			expectedError: nil,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			h := inspectionservice.New(tt.fields.logger, tt.fields.database)
 			got, err := h.ListOrganizations(tt.args.ctx, tt.args.req)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("ListOrganizations() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ListOrganizations() got = %v, want %v", got, tt.want)
-			}
+
+			assert.Equal(t, tt.expectedResponse, got)
+			assert.Equal(t, tt.expectedError, err)
 		})
 	}
 }
