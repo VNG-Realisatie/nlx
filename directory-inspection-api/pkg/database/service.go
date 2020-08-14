@@ -11,24 +11,24 @@ import (
 )
 
 type Service struct {
-	Name                  string                        `json:"name,omitempty"`
-	Organization          string                        `json:"organization,omitempty"`
-	EndpointURL           string                        `json:"endpointURL,omitempty"`
-	DocumentationURL      string                        `json:"documentationURL,omitempty"`
-	APISpecificationURL   string                        `json:"apiSpecificationURL,omitempty"`
-	APISpecificationType  string                        `json:"apiSpecificationType,omitempty"`
-	Internal              bool                          `json:"internal,omitempty"`
-	TechSupportContact    string                        `json:"techSupportContact,omitempty"`
-	PublicSupportContact  string                        `json:"publicSupportContact,omitempty"`
-	AuthorizationSettings *ServiceAuthorizationSettings `json:"authorizationSettings,omitempty"`
-	Inways                []*Inway                      `json:"inways,omitempty"`
-	InwayAddresses        []string                      `json:"inwayAddresses,omitempty"`
-	HealthyStates         []bool                        `json:"healthyStates,omitempty"`
+	Name                  string
+	Organization          string
+	EndpointURL           string
+	DocumentationURL      string
+	APISpecificationURL   string
+	APISpecificationType  string
+	Internal              bool
+	TechSupportContact    string
+	PublicSupportContact  string
+	AuthorizationSettings *ServiceAuthorizationSettings
+	Inways                []*Inway
+	InwayAddresses        []string
+	HealthyStates         []bool
 }
 
 type Inway struct {
-	Address string     `json:"address,omitempty"`
-	State   InwayState `json:"state,omitempty"`
+	Address string
+	State   InwayState
 }
 
 type InwayState string
@@ -39,7 +39,7 @@ const (
 )
 
 type ServiceAuthorizationSettings struct {
-	Mode string `json:"mode,omitempty"`
+	Mode string
 }
 
 // ListServices returns a list of services
