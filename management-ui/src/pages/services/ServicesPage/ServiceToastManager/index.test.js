@@ -4,7 +4,7 @@
 import React from 'react'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
-import { renderWithProviders, act } from '../../../test-utils'
+import { renderWithProviders, act } from '../../../../test-utils'
 import ServiceAddedToastManager from './index'
 
 test('navigating to the new service when it has just been added', async () => {

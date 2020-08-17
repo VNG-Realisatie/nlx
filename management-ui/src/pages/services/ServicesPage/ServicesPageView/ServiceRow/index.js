@@ -8,7 +8,7 @@ import { Table } from '@commonground/design-system'
 import {
   ServiceVisibilityMessage,
   showServiceVisibilityAlert,
-} from '../../../../components/ServiceVisibilityAlert'
+} from '../../../../../components/ServiceVisibilityAlert'
 import AuthorizationMode from './AuthorizationMode'
 import { TdAlignRight } from './index.styles'
 

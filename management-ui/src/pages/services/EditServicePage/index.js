@@ -9,11 +9,11 @@ import { Alert } from '@commonground/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 
 import serviceActions from '../ServicesPage/serviceActions'
-import ServiceForm from '../../components/ServiceForm'
-import ServiceRepository from '../../domain/service-repository'
-import PageTemplate from '../../components/PageTemplate'
-import usePromise from '../../hooks/use-promise'
-import LoadingMessage from '../../components/LoadingMessage'
+import ServiceForm from '../../../components/ServiceForm'
+import ServiceRepository from '../../../domain/service-repository'
+import PageTemplate from '../../../components/PageTemplate'
+import usePromise from '../../../hooks/use-promise'
+import LoadingMessage from '../../../components/LoadingMessage'
 import { StyledUpdatedError } from './index.styles'
 
 const EditServicePage = ({ updateHandler, getServiceByName }) => {

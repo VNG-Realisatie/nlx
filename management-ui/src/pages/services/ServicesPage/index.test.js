@@ -6,9 +6,9 @@ import React from 'react'
 import { MemoryRouter, Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import { act } from '@testing-library/react'
-import { renderWithProviders, waitFor } from '../../test-utils'
-import deferredPromise from '../../test-utils/deferred-promise'
-import { UserContextProvider } from '../../user-context'
+import { renderWithProviders, waitFor } from '../../../test-utils'
+import deferredPromise from '../../../test-utils/deferred-promise'
+import { UserContextProvider } from '../../../user-context'
 import ServicesPage from './index'
 
 jest.mock('./ServicesPageView', () => () => (

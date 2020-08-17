@@ -8,9 +8,9 @@ import { Alert, Drawer } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 
 import serviceActions from '../ServicesPage/serviceActions'
-import ServiceRepository from '../../domain/service-repository'
-import usePromise from '../../hooks/use-promise'
-import LoadingMessage from '../../components/LoadingMessage'
+import ServiceRepository from '../../../domain/service-repository'
+import usePromise from '../../../hooks/use-promise'
+import LoadingMessage from '../../../components/LoadingMessage'
 import ServiceDetailView from './ServiceDetailView'
 
 const ServiceDetailPage = ({

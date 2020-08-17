@@ -10,11 +10,11 @@ import { UserContextProvider } from '../user-context'
 import Routes from '.'
 
 jest.mock('../pages/LoginPage', () => () => <div data-testid="login-page" />)
-jest.mock('../pages/ServicesPage', () => () => (
+jest.mock('../pages/services/ServicesPage', () => () => (
   <div data-testid="services-page" />
 ))
 jest.mock('../pages/InwaysPage', () => () => <div data-testid="inways-page" />)
-jest.mock('../pages/AddServicePage', () => () => (
+jest.mock('../pages/services/AddServicePage', () => () => (
   <div data-testid="add-service-page" />
 ))
 

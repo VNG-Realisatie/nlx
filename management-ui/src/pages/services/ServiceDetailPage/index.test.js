@@ -6,7 +6,7 @@ import { Route, StaticRouter, Router } from 'react-router-dom'
 
 import { act } from '@testing-library/react'
 import { createMemoryHistory } from 'history'
-import { renderWithProviders } from '../../test-utils'
+import { renderWithProviders } from '../../../test-utils'
 import ServiceDetailPage from './index'
 
 jest.mock('./ServiceDetailView', () => ({ removeHandler }) => (

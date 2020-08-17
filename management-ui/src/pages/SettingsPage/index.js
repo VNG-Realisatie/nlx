@@ -9,7 +9,7 @@ import PageTemplate from '../../components/PageTemplate'
 import SettingsForm from '../../components/SettingsForm'
 import usePromise from '../../hooks/use-promise'
 import LoadingMessage from '../../components/LoadingMessage'
-import { StyledUpdatedError } from '../EditServicePage/index.styles'
+import { StyledUpdatedError } from '../services/EditServicePage/index.styles'
 import SettingsRepository from '../../domain/settings-repository'
 
 const SettingsPage = ({ getSettings, updateHandler }) => {

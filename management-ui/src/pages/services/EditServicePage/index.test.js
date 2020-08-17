@@ -6,11 +6,11 @@ import { act, fireEvent } from '@testing-library/react'
 import { Route, StaticRouter, Router } from 'react-router-dom'
 
 import { createMemoryHistory } from 'history'
-import UserContext from '../../user-context'
-import { renderWithProviders } from '../../test-utils'
+import UserContext from '../../../user-context'
+import { renderWithProviders } from '../../../test-utils'
 import EditServicePage from './index'
 
-jest.mock('../../components/ServiceForm', () => ({ onSubmitHandler }) => (
+jest.mock('../../../components/ServiceForm', () => ({ onSubmitHandler }) => (
   <form onSubmit={() => onSubmitHandler({ foo: 'bar' })} data-testid="form">
     <button type="submit" />
   </form>

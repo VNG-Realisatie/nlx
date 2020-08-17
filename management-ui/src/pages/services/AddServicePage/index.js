@@ -8,9 +8,9 @@ import { useHistory } from 'react-router-dom'
 import { Alert } from '@commonground/design-system'
 
 import serviceActions from '../ServicesPage/serviceActions'
-import PageTemplate from '../../components/PageTemplate'
-import ServiceRepository from '../../domain/service-repository'
-import ServiceForm from '../../components/ServiceForm'
+import PageTemplate from '../../../components/PageTemplate'
+import ServiceRepository from '../../../domain/service-repository'
+import ServiceForm from '../../../components/ServiceForm'
 
 const AddServicePage = ({ createHandler }) => {
   const { t } = useTranslation()

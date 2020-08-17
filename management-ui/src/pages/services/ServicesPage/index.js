@@ -7,12 +7,12 @@ import { useTranslation } from 'react-i18next'
 import { Alert, Button } from '@commonground/design-system'
 import { Link, Route } from 'react-router-dom'
 
-import PageTemplate from '../../components/PageTemplate'
-import usePromise from '../../hooks/use-promise'
-import ServiceRepository from '../../domain/service-repository'
+import PageTemplate from '../../../components/PageTemplate'
+import usePromise from '../../../hooks/use-promise'
+import ServiceRepository from '../../../domain/service-repository'
 import ServiceDetailPage from '../ServiceDetailPage'
 
-import LoadingMessage from '../../components/LoadingMessage'
+import LoadingMessage from '../../../components/LoadingMessage'
 
 import ServiceToastManager from './ServiceToastManager'
 import ServiceCount from './ServiceCount'

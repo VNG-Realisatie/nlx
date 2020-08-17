@@ -7,18 +7,18 @@ import { Link, useLocation } from 'react-router-dom'
 import { arrayOf, bool, func, oneOf, shape, string } from 'prop-types'
 import { Table } from '@commonground/design-system'
 
-import Amount from '../../../components/Amount'
-import Collapsible from '../../../components/Collapsible'
-import EditButton from '../../../components/EditButton'
+import Amount from '../../../../components/Amount'
+import Collapsible from '../../../../components/Collapsible'
+import EditButton from '../../../../components/EditButton'
 import {
   DetailHeading,
   DetailHeadingLight,
   SectionGroup,
   StyledCollapsibleBody,
   StyledCollapsibleEmptyBody,
-} from '../../../components/DetailView'
-import { IconHidden, IconInway, IconKey, IconVisible } from '../../../icons'
-import { showServiceVisibilityAlert } from '../../../components/ServiceVisibilityAlert'
+} from '../../../../components/DetailView'
+import { IconHidden, IconInway, IconKey, IconVisible } from '../../../../icons'
+import { showServiceVisibilityAlert } from '../../../../components/ServiceVisibilityAlert'
 import {
   StyledActionsBar,
   StyledInwayName,
