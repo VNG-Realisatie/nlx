@@ -4,7 +4,9 @@
 package main
 
 import (
+	"context"
 	"crypto/tls"
+	"errors"
 	"log"
 	"time"
 
@@ -13,6 +15,8 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"go.uber.org/zap"
+	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/peer"
 
 	common_db "go.nlx.io/nlx/common/db"
 	"go.nlx.io/nlx/common/logoptions"
@@ -81,7 +85,7 @@ func main() {
 		logger.Fatal("failed to load x509 keypair for directory inspection api", zap.Error(err))
 	}
 
-	directoryService := inspectionservice.New(logger, directoryDatabase)
+	directoryService := inspectionservice.New(logger, directoryDatabase, getOrganisationNameFromRequest)
 	if err != nil {
 		logger.Fatal("failed to create new directory inspection service", zap.Error(err))
 	}
@@ -113,4 +117,15 @@ func main() {
 	httpServer := http.NewServer(db, caCertPool, &certKeyPair, logger)
 
 	runServer(mainProcess, logger, options.ListenAddress, options.ListenAddressPlain, caCertPool, &certKeyPair, directoryService, statsService, httpServer)
+}
+
+func getOrganisationNameFromRequest(ctx context.Context) (string, error) {
+	peerContext, ok := peer.FromContext(ctx)
+	if !ok {
+		return "", errors.New("failed to obtain peer from context")
+	}
+
+	tlsInfo := peerContext.AuthInfo.(credentials.TLSInfo)
+
+	return tlsInfo.State.VerifiedChains[0][0].Subject.Organization[0], nil
 }

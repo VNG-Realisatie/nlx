@@ -33,7 +33,7 @@ func (h *InspectionService) ListServices(ctx context.Context, req *inspectionapi
 	}
 
 	resp := &inspectionapi.ListServicesResponse{}
-	organizationName, err := getOrganisationNameFromRequest(ctx)
+	organizationName, err := h.getOrganisationNameFromRequest(ctx)
 
 	if err != nil {
 		return nil, err

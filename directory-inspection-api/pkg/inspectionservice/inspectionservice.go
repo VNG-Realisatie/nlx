@@ -5,6 +5,7 @@ package inspectionservice
 
 import (
 	"context"
+
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
@@ -16,27 +17,18 @@ var _ inspectionapi.DirectoryInspectionServer = &InspectionService{}
 
 // InspectionService handles all requests for a directory inspection api
 type InspectionService struct {
-	logger *zap.Logger
-	db     database.DirectoryDatabase
+	logger                         *zap.Logger
+	db                             database.DirectoryDatabase
+	getOrganisationNameFromRequest func(ctx context.Context) (string, error)
 }
 
 // New sets up a new DirectoryService
-func New(logger *zap.Logger, db database.DirectoryDatabase) *InspectionService {
+func New(logger *zap.Logger, db database.DirectoryDatabase, getOrganisationNameFromRequest func(ctx context.Context) (string, error)) *InspectionService {
 	s := &InspectionService{
-		logger: logger,
-		db:     db,
+		logger:                         logger,
+		db:                             db,
+		getOrganisationNameFromRequest: getOrganisationNameFromRequest,
 	}
 
 	return s
-}
-
-// TODO: best way to enable using peerContext in tests?
-func getOrganisationNameFromRequest(ctx context.Context) (string, error) {
-	// peerContext, ok := peer.FromContext(ctx)
-	// if !ok {
-	// 	return "", errors.New("failed to obtain peer from context")
-	// }
-	// tlsInfo := peerContext.AuthInfo.(credentials.TLSInfo)
-	// return tlsInfo.State.VerifiedChains[0][0].Subject.Organization[0], nil
-	return "TODO", nil
 }

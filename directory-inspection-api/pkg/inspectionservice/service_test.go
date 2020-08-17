@@ -22,8 +22,9 @@ import (
 
 func TestInspectionService_ListServices(t *testing.T) {
 	type fields struct {
-		logger   *zap.Logger
-		database database.DirectoryDatabase
+		logger                         *zap.Logger
+		database                       database.DirectoryDatabase
+		getOrganisationNameFromRequest func(ctx context.Context) (string, error)
 	}
 
 	type args struct {
@@ -45,10 +46,13 @@ func TestInspectionService_ListServices(t *testing.T) {
 				database: func() *mock.MockDirectoryDatabase {
 					db := generateMockDirectoryDatabase(t)
 					db.EXPECT().RegisterOutwayVersion(gomock.Any(), gomock.Any()).Return(nil).AnyTimes()
-					db.EXPECT().ListServices(gomock.Any(), "TODO").Return(nil, errors.New("arbitrary error")).AnyTimes()
+					db.EXPECT().ListServices(gomock.Any(), testOrganizationName).Return(nil, errors.New("arbitrary error")).AnyTimes()
 
 					return db
 				}(),
+				getOrganisationNameFromRequest: func(ctx context.Context) (string, error) {
+					return testOrganizationName, nil
+				},
 			},
 			args: args{
 				ctx: context.Background(),
@@ -64,7 +68,7 @@ func TestInspectionService_ListServices(t *testing.T) {
 				database: func() *mock.MockDirectoryDatabase {
 					db := generateMockDirectoryDatabase(t)
 					db.EXPECT().RegisterOutwayVersion(gomock.Any(), gomock.Any()).Return(nil).AnyTimes()
-					db.EXPECT().ListServices(gomock.Any(), "TODO").Return([]*database.Service{
+					db.EXPECT().ListServices(gomock.Any(), testOrganizationName).Return([]*database.Service{
 						{
 							Name: "Dummy Service Name",
 						},
@@ -72,6 +76,9 @@ func TestInspectionService_ListServices(t *testing.T) {
 
 					return db
 				}(),
+				getOrganisationNameFromRequest: func(ctx context.Context) (string, error) {
+					return testOrganizationName, nil
+				},
 			},
 			args: args{
 				ctx: context.Background(),
@@ -90,7 +97,7 @@ func TestInspectionService_ListServices(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			h := inspectionservice.New(tt.fields.logger, tt.fields.database)
+			h := inspectionservice.New(tt.fields.logger, tt.fields.database, tt.fields.getOrganisationNameFromRequest)
 			got, err := h.ListServices(tt.args.ctx, tt.args.req)
 
 			assert.Equal(t, tt.expectedResponse, got)

@@ -22,8 +22,9 @@ import (
 
 func TestInspectionService_ListOrganizations(t *testing.T) {
 	type fields struct {
-		logger   *zap.Logger
-		database database.DirectoryDatabase
+		logger                         *zap.Logger
+		database                       database.DirectoryDatabase
+		getOrganisationNameFromRequest func(ctx context.Context) (string, error)
 	}
 
 	type args struct {
@@ -48,6 +49,9 @@ func TestInspectionService_ListOrganizations(t *testing.T) {
 
 					return db
 				}(),
+				getOrganisationNameFromRequest: func(ctx context.Context) (string, error) {
+					return testOrganizationName, nil
+				},
 			},
 			args:             args{},
 			expectedResponse: nil,
@@ -67,6 +71,9 @@ func TestInspectionService_ListOrganizations(t *testing.T) {
 
 					return db
 				}(),
+				getOrganisationNameFromRequest: func(ctx context.Context) (string, error) {
+					return testOrganizationName, nil
+				},
 			},
 			args: args{},
 			expectedResponse: &inspectionapi.ListOrganizationsResponse{
@@ -83,7 +90,7 @@ func TestInspectionService_ListOrganizations(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			h := inspectionservice.New(tt.fields.logger, tt.fields.database)
+			h := inspectionservice.New(tt.fields.logger, tt.fields.database, tt.fields.getOrganisationNameFromRequest)
 			got, err := h.ListOrganizations(tt.args.ctx, tt.args.req)
 
 			assert.Equal(t, tt.expectedResponse, got)

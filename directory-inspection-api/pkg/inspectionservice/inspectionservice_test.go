@@ -11,6 +11,8 @@ import (
 	"go.nlx.io/nlx/directory-inspection-api/pkg/database/mock"
 )
 
+const testOrganizationName = "Test Organization Name"
+
 func generateMockDirectoryDatabase(t *testing.T) *mock.MockDirectoryDatabase {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
