@@ -2,9 +2,6 @@
 global:
   imageRegistry: ""
   imageTag: ""
-  unsafeCA:
-    cfsslHostname: ""
-    organizationName: ""
 
 replicaCount: 1
 
@@ -17,26 +14,12 @@ image:
   pullSecrets: []
 
 tls:
-  generateCertificate: false
   certificatePEM: ""
-  certificateKeyPEM: ""
+  keyPEM: ""
+  existingSecret: ""
 
 nameOverride: ""
 fullnameOverride: ""
-
-unsafeCA:
-  image:
-    registry: docker.io
-    repository: nlxio/ca-cfssl-unsafe
-    # Allow to override the tag. When set to null, the AppVersion from the Chart is used
-    tag: latest
-    pullPolicy: IfNotPresent
-  # The hostname of the CFSSL CA, used for generating the certificates
-  cfsslHostname: ""
-  # Name of the organization used for the certificate
-  organizationName: ""
-  # Domain name of the certificate
-  domain: ""
 
 serviceAccount:
   # Specifies whether a service account should be created

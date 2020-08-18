@@ -13,8 +13,6 @@ spec:
     metadata:
       labels:
         {{- include "ca-cfssl-unsafe.selectorLabels" . | nindent 8 }}
-      annotations:
-        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
     spec:
     {{- with .Values.image.pullSecrets }}
       imagePullSecrets:
@@ -30,7 +28,7 @@ spec:
           image: {{ template "ca-cfssl-unsafe.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["cfssl"]
-          args: ["serve", "--address=0.0.0.0", "--ca=/certs/tls.crt", "--ca-key=/certs/tls.key"]
+          args: ["serve", "--address=0.0.0.0", "--ca=/certificate/tls.crt", "--ca-key=/certificate/tls.key"]
           ports:
             - name: http
               containerPort: 8888
@@ -46,13 +44,13 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
-            - name: certificates
-              mountPath: "/certs"
+            - name: certificate
+              mountPath: /certificate
               readOnly: true
       volumes:
-        - name: certificates
+        - name: certificate
           secret:
-            secretName: {{ include "ca-cfssl-unsafe.fullname" . }}-tls
+            secretName: {{ required "Existing secret is required" .Values.config.existingSecret }}
     {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

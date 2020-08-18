@@ -1,8 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "nlx-outway.fullname" . }}
+  name: {{ include "nlx-management.fullname" . }}
   labels:
-    {{- include "nlx-outway.labels" . | nindent 4 }}
+    {{- include "nlx-management.labels" . | nindent 4 }}
 data:
   root-organization.pem: {{ (required "Organization root certificate PEM is required" (default .Values.global.tls.organizationRootCertificatePEM .Values.tls.organizationCertificate.rootCertificatePEM)) | quote }}
+  root.pem: {{ (required "Root certificate PEM is required" (default .Values.global.tls.rootCertificatePEM .Values.tls.certificate.rootCertificatePEM)) | quote }}

@@ -21,29 +21,6 @@ spec:
       serviceAccountName: {{ include "auth-service.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      initContainers:
-        - name: generate-certificate
-          image: {{ template "auth-service.unsafeCA.image" . }}
-          imagePullPolicy: {{ .Values.unsafeCA.image.pullPolicy }}
-          workingDir: /certs
-          command: ["/bin/sh"]
-          args:
-            - "-exc"
-            - |
-                /ca/generate-cert.sh "${DOMAIN_NAME}" "${ORGANIZATION_NAME}" "${CFSSL_HOSTNAME}"
-                mv nlx_root.pem root.pem
-                mv "${DOMAIN_NAME}-key.pem" cert-key.pem
-                mv "${DOMAIN_NAME}.pem" cert.pem
-          env:
-            - name: DOMAIN_NAME
-              value: {{ default (include "auth-service.fullname" .) .Values.unsafeCA.domain | quote }}
-            - name: ORGANIZATION_NAME
-              value: {{ required "Unsafe CA organization name is required" (include "auth-service.unsafeCA.organizationName" .) | quote }}
-            - name: CFSSL_HOSTNAME
-              value: {{ required "Unsafe CA CFSSL hostname is required" (include "auth-service.unsafeCA.cfsslHostname" .) | quote }}
-          volumeMounts:
-            - name: certificates
-              mountPath: /certs
       containers:
         - name: auth-service
           securityContext:
@@ -56,24 +33,20 @@ spec:
               protocol: TCP
           env:
             - name: TLS_CERT
-              value: "/certs/cert.pem"
+              value: "/certificate/tls.crt"
             - name: TLS_KEY
-              value: "/certs/cert-key.pem"
+              value: "/certificate/tls.key"
             - name: CSV_FILE
               value: /users.csv
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
-            - name: certificates
-              mountPath: /certs
+            - name: certificate
+              mountPath: /certificate
       volumes:
-        - name: certificates
-        {{- if .Values.tls.generateCertificate }}
-          emptyDir: {}
-        {{- else }}
+        - name: certificate
           secret:
-            secretName: {{ template "auth-service.fullname" . }}-tls
-        {{- end }}
+            secretName: {{ default (printf "%s-tls" (include "auth-service.fullname" .)) .Values.tls.existingSecret }}
     {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

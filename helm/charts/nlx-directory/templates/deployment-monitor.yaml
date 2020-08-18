@@ -17,8 +17,9 @@ spec:
         {{- include "nlx-directory.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: monitor
       annotations:
+        checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         checksum/secret-postgresql: {{ include (print $.Template.BasePath "/secret-postgresql.yaml") . | sha256sum }}
-        checksum/secret-tls: {{ include (print $.Template.BasePath "/secret-tls-monitor.yaml") . | sha256sum }}
+        checksum/secret-tls: {{ include (print $.Template.BasePath "/secret-tls.yaml") . | sha256sum }}
     spec:
     {{- with .Values.image.pullSecrets }}
       imagePullSecrets:
@@ -27,31 +28,6 @@ spec:
       serviceAccountName: {{ include "nlx-directory.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-    {{- if .Values.tls.generateCertificate }}
-      initContainers:
-        - name: generate-certificate
-          image: {{ template "nlx-directory.unsafeCA.image" . }}
-          imagePullPolicy: {{ .Values.unsafeCA.image.pullPolicy }}
-          workingDir: /certs
-          command: ["/bin/ash"]
-          args:
-            - "-exc"
-            - |
-                /ca/generate-cert.sh "${DOMAIN_NAME}" "${ORGANIZATION_NAME}" "${CFSSL_HOSTNAME}"
-                mv nlx_root.pem root.pem
-                mv "${DOMAIN_NAME}-key.pem" cert-key.pem
-                mv "${DOMAIN_NAME}.pem" cert.pem
-          env:
-            - name: DOMAIN_NAME
-              value: {{ default (print (include "nlx-directory.fullname" .) "-monitor") .Values.unsafeCA.monitorDomain | quote }}
-            - name: ORGANIZATION_NAME
-              value: {{ required "Unsafe CA organization name is required" (include "nlx-directory.unsafeCA.organizationName" .) | quote }}
-            - name: CFSSL_HOSTNAME
-              value: {{ required "Unsafe CA CFSSL hostname is required" (include "nlx-directory.unsafeCA.cfsslHostname" .) | quote }}
-          volumeMounts:
-            - name: certificates
-              mountPath: /certs
-    {{- end }}
       containers:
         - name: nlx-directory-monitor
           securityContext:
@@ -74,11 +50,11 @@ spec:
             - name: POSTGRES_DSN
               value: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@{{ .Values.postgresql.hostname }}/{{ .Values.postgresql.database }}?sslmode=disable&connect_timeout=10
             - name: TLS_NLX_ROOT_CERT
-              value: "/certs/root.pem"
+              value: /config/root.pem
             - name: TLS_MONITOR_CERT
-              value: "/certs/cert.pem"
+              value: /certificate/tls.crt
             - name: TLS_MONITOR_KEY
-              value: "/certs/cert-key.pem"
+              value: /certificate/tls.key
             - name: LOG_TYPE
               value: {{ .Values.config.logType }}
             - name: LOG_LEVEL
@@ -86,16 +62,18 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
-            - name: certificates
-              mountPath: /certs
+            - name: certificate
+              mountPath: /certificate
+            - name: config
+              mountPath: /config
+              readOnly: true
       volumes:
-        - name: certificates
-        {{- if .Values.tls.generateCertificate }}
-          emptyDir: {}
-        {{- else }}
+        - name: certificate
           secret:
-            secretName: {{ default (printf "%s-tls-monitor" (include "nlx-directory.fullname" .)) .Values.tls.monitor.existingSecret }}
-        {{- end }}
+            secretName: {{ default (printf "%s-tls" (include "nlx-directory.fullname" .)) .Values.tls.existingSecret }}
+        - name: config
+          configMap:
+            name: {{ include "nlx-directory.fullname" . }}
     {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

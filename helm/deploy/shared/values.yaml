@@ -1,9 +1,41 @@
 ############
 ## Global ##
 ############
-global: {}
-  # imageRegistry:
-  # imageTag:
+global:
+  tls:
+    rootCertificatePEM: |
+      # Subject: C=NL, O=NLX, CN=NLX Root CA
+      # Issuer: C=NL, O=NLX, CN=NLX Root CA
+      -----BEGIN CERTIFICATE-----
+      MIIFMjCCAxqgAwIBAgIUf3G4wZe35lBs2/wGBi9LirQVa64wDQYJKoZIhvcNAQEN
+      BQAwMTELMAkGA1UEBhMCTkwxDDAKBgNVBAoTA05MWDEUMBIGA1UEAxMLTkxYIFJv
+      b3QgQ0EwHhcNMjAwODAzMTU1NjAwWhcNMzUwNzMxMTU1NjAwWjAxMQswCQYDVQQG
+      EwJOTDEMMAoGA1UEChMDTkxYMRQwEgYDVQQDEwtOTFggUm9vdCBDQTCCAiIwDQYJ
+      KoZIhvcNAQEBBQADggIPADCCAgoCggIBAK+nsTl5Y5dlgt6gb8NANG6xTSPgJrzo
+      FnPH+El+9GW7oGQQqH1N4XARSfsDvUe8ESOB6wPce6BXUif44+XmakJQe/NiU5HL
+      JTV6LWnqzMjgO1SiT6qfa1P+vpKMKEGKEyUB61wPmpm64P7C/ErIRArsihVay/uj
+      lIN1rHzv8qzOFfRGzi+WTXD1klXPjKQlkjOeb3KcWX3+v81K/Ot5WWwEkB/nxb6f
+      UbKCM8TebuKwHsm1Sp1z8KRiC3Tqu7vnUkD6vWmmIRJUGWigheUyPlBuBUOQmbqv
+      tdykLptOEd0uIKtVJNRIv5EyBvueOzK6ZWZEDHsv9nsGoCH/3h9eh88TXojGTrDf
+      Ja2In2Th0ECQLtk+QGYyNrBgCPlbBiZF9hyMwAHWgAi5HdPAWYreDNlYxPgFr/gp
+      wB8gZ625d5y6o7J5NyjdI+XwsEieAmz58aH04qY43qVlZWn0MuRuMp33WVBAfRUQ
+      uvtNkKXcjzeDoTtEpA5FKOkLi2b1JSEdNS5Lnl5tNHWrQkPrKe14TlqME3XRuIZ6
+      tFGj7c7yVWDheBxKVkvBjHoG6ORq3zoNIc0SR+KkYfjUn1G3yO3dQ8MO4AxsFNbG
+      su7efIR2aRNDajlZPTrNTT82nRE9NN9X7jdMsplCqra+tPQMocsu2dIpklPSFoId
+      AKKA46GqxBwzAgMBAAGjQjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTAD
+      AQH/MB0GA1UdDgQWBBQ+Pern0OE84DTMWWBXUccN3KwQ6TANBgkqhkiG9w0BAQ0F
+      AAOCAgEApLumRZj0bu4zJkGO6fHYITa5EYzMPs0LPq/a7qLsM3BGK+4wukhjQVn8
+      ka1KFDJIzOLLr5/xIZCGus0LRedm0ZtndX+QmbnRbJVeSEBmrPOw/Ri5QKZWKXrB
+      BcTy/E6LtvBXCY2GPrXLQQrmbEkUFL9q08xdA8pdKsPKohssQaCdyA8Sy/qnVSZJ
+      USw3YiedRMpE1ccy7mZG4q9i3xXAl6kDf0AAj8HOdl4vqDP9jr1rZs/k4XSyzN3q
+      eCI0kTiEJvF9UXaujpZWQcP//gFxLHeTKY9S1ODICFMGhVGI+tuIuXpGHp+yKONF
+      iFNYEY+GUyfjBNbSt8yJ6ky0gYE1jbBoPinuaCy+yiBTEhi5wJ0ChsOXUBj7RcE7
+      ghIp9J22J/5dKrvElszvw5XF5cqeWCREXTSCjwNdfR9fgBVBe/h3os8G4nf/zHPb
+      niBAvS339i75evlWOM2p6gzrAiVCXsRQxBXZkT3Jd6VVCh5ZjqFKFIE+Hl4AXD+g
+      PPcuTXprffmXHrUHp6ufBeyppyUgxOmFX+E+c6rmyDWM+/Oy9HsFNhjIMkUStWsR
+      OG+OQsCbQbISHXb9Won4S27z3NklmSmje3Ls+teidfeCIRbxc9/2DFQS2SZRZeH8
+      W0Kbud2Kq3mOWOIeXqZ0008uk90KzXZ1zekXDO2/hIERtDhYgKg=
+      -----END CERTIFICATE-----
 
 ###########
 ## Chart ##
@@ -16,6 +48,108 @@ postgresql:
   storageType: Durable
   storageSize: 8Gi
 
+ca:
+  issuer:
+    # pki/shared/ca/intermediate.pem
+    certificatePEM: |
+      # Subject: C=NL, O=NLX, CN=NLX Intermediate CA
+      # Issuer: C=NL, O=NLX, CN=NLX Root CA
+      -----BEGIN CERTIFICATE-----
+      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
+      -----END CERTIFICATE-----
+    # pki/shared/ca/intermediate-key.pem
+    keyPEM: |
+      -----BEGIN RSA PRIVATE KEY-----
+      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
+      -----END RSA PRIVATE KEY-----
+  certificates:
+    directory-api:
+      subject:
+        organizations:
+          - NLX Directory
+      commonName: shared-nlx-directory
+      dnsNames:
+        - shared-nlx-directory-inspection
+        - shared-nlx-directory-registration
+      issuerRef:
+        name: shared
+
 ################
 ## Sub-charts ##
 ################
@@ -27,13 +161,7 @@ nlx-directory:
     database: postgres
     existingSecret: shared-postgresql-auth
   tls:
-    generateCertificate: true
-  unsafeCA:
-    cfsslHostname: shared-ca-cfssl-unsafe
-    organizationName: NLX Directory
-    inspectionDomain: shared-nlx-directory-inspection
-    registrationDomain: shared-nlx-directory-registration
-    monitorDomain: shared-nlx-directory-monitor
+    existingSecret: shared-directory-api-tls
   ui:
     ingress:
       enabled: true
@@ -45,6 +173,10 @@ nlx-docs:
     enabled: true
     hosts:
       - "docs.shared.nlx.minikube"
+
+ca-cfssl-unsafe:
+  config:
+    existingSecret: shared-ca-issuer
 
 ca-certportal:
   config:

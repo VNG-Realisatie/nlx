@@ -17,7 +17,9 @@ spec:
         {{- include "nlx-management.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: api
       annotations:
+        checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        checksum/secret-tls: {{ include (print $.Template.BasePath "/secret-tls.yaml") . | sha256sum }}
     spec:
     {{- with .Values.image.pullSecrets }}
       imagePullSecrets:
@@ -26,29 +28,6 @@ spec:
       serviceAccountName: {{ include "nlx-management.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      initContainers:
-        - name: generate-certificate
-          image: {{ template "nlx-management.unsafeCA.image" . }}
-          imagePullPolicy: {{ .Values.unsafeCA.image.pullPolicy }}
-          workingDir: /certs
-          command: ["/bin/sh"]
-          args:
-            - "-exc"
-            - |
-                /ca/generate-cert.sh "${DOMAIN_NAME}" "${ORGANIZATION_NAME}" "${CFSSL_HOSTNAME}"
-                mv nlx_root.pem root.pem
-                mv "${DOMAIN_NAME}-key.pem" cert-key.pem
-                mv "${DOMAIN_NAME}.pem" cert.pem
-          env:
-            - name: DOMAIN_NAME
-              value: {{ default (print (include "nlx-management.fullname" .) "-api") .Values.unsafeCA.domain | quote }}
-            - name: ORGANIZATION_NAME
-              value: {{ required "Unsafe CA organization name is required" (include "nlx-management.unsafeCA.organizationName" .) | quote }}
-            - name: CFSSL_HOSTNAME
-              value: {{ required "Unsafe CA CFSSL hostname is required" (include "nlx-management.unsafeCA.cfsslHostname" .) | quote }}
-          volumeMounts:
-            - name: certificates
-              mountPath: /certs
       containers:
         - name: nlx-management-api
           securityContext:
@@ -97,24 +76,43 @@ spec:
             - name: SESSION_COOKIE_SECURE
               value: {{ if .Values.config.sessionCookieSecure }}"1"{{ else }}"0"{{ end }}
             - name: TLS_NLX_ROOT_CERT
-              value: /certs/root.pem
+              value: /config/root-organization.pem
             - name: TLS_ORG_CERT
-              value: /certs/cert.pem
+              value: /certificate-organization/tls.crt
             - name: TLS_ORG_KEY
-              value: /certs/cert-key.pem
+              value: /certificate-organization/tls.key
+            - name: TLS_ROOT_CERT
+              value: /config/root.pem
+            - name: TLS_CERT
+              value: /certificate/tls.crt
+            - name: TLS_KEY
+              value: /certificate/tls.key
             - name: LOG_TYPE
               value: {{ .Values.config.logType }}
             - name: LOG_LEVEL
               value: {{ .Values.config.logLevel }}
           volumeMounts:
-            - name: certificates
-              mountPath: /certs
+            - name: certificate-organization
+              mountPath: /certificate-organization
+              readOnly: true
+            - name: certificate
+              mountPath: /certificate
+              readOnly: true
+            - name: config
+              mountPath: /config
               readOnly: true
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
-        - name: certificates
-          emptyDir: {}
+        - name: certificate-organization
+          secret:
+            secretName: {{ default (printf "%s-organization-tls" (include  "nlx-management.fullname" .)) .Values.tls.organizationCertificate.existingSecret }}
+        - name: certificate
+          secret:
+            secretName: {{ default (printf "%s-tls" (include  "nlx-management.fullname" .)) .Values.tls.certificate.existingSecret }}
+        - name: config
+          configMap:
+            name: {{ template "nlx-management.fullname" . }}
     {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

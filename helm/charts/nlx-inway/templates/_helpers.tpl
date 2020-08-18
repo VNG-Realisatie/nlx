@@ -90,28 +90,3 @@ Return the self address of the inway
   {{- printf "%s:%d" (include "nlx-inway.fullname" .) (.Values.service.port | int) -}}
 {{- end -}}
 {{- end -}}
-
-{{/*
-Return the image name for the unsafe ca
-*/}}
-{{- define "nlx-inway.unsafeCA.image" -}}
-{{- $registryName := default .Values.unsafeCA.image.registry .Values.global.imageRegistry -}}
-{{- $repositoryName := .Values.unsafeCA.image.repository -}}
-{{- $tag := default (printf "v%s" .Chart.AppVersion) (default .Values.unsafeCA.image.tag .Values.global.imageTag) -}}
-
-{{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
-{{- end -}}
-
-{{/*
-Return the address of the CFSSL unsafe CA
-*/}}
-{{- define "nlx-inway.unsafeCA.cfsslHostname" -}}
-{{- default .Values.unsafeCA.cfsslHostname .Values.global.unsafeCA.cfsslHostname -}}
-{{- end -}}
-
-{{/*
-Return the organization name for the certificated to be genereate by the CFSSL unsafe CA
-*/}}
-{{- define "nlx-inway.unsafeCA.organizationName" -}}
-{{- default .Values.unsafeCA.organizationName .Values.global.unsafeCA.organizationName -}}
-{{- end -}}

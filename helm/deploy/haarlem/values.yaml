@@ -2,11 +2,43 @@
 ## Global ##
 ############
 global:
-  unsafeCA:
-    cfsslHostname: shared-ca-cfssl-unsafe
-    organizationName: "Gemeente Haarlem"
   imageRegistry: ""
   imageTag: ""
+  tls:
+    # pki/shared/ca/root.pem
+    organizationRootCertificatePEM: |
+      # Subject: C=NL, O=NLX, CN=NLX Root CA
+      # Issuer: C=NL, O=NLX, CN=NLX Root CA
+      -----BEGIN CERTIFICATE-----
+      MIIFMjCCAxqgAwIBAgIUf3G4wZe35lBs2/wGBi9LirQVa64wDQYJKoZIhvcNAQEN
+      BQAwMTELMAkGA1UEBhMCTkwxDDAKBgNVBAoTA05MWDEUMBIGA1UEAxMLTkxYIFJv
+      b3QgQ0EwHhcNMjAwODAzMTU1NjAwWhcNMzUwNzMxMTU1NjAwWjAxMQswCQYDVQQG
+      EwJOTDEMMAoGA1UEChMDTkxYMRQwEgYDVQQDEwtOTFggUm9vdCBDQTCCAiIwDQYJ
+      KoZIhvcNAQEBBQADggIPADCCAgoCggIBAK+nsTl5Y5dlgt6gb8NANG6xTSPgJrzo
+      FnPH+El+9GW7oGQQqH1N4XARSfsDvUe8ESOB6wPce6BXUif44+XmakJQe/NiU5HL
+      JTV6LWnqzMjgO1SiT6qfa1P+vpKMKEGKEyUB61wPmpm64P7C/ErIRArsihVay/uj
+      lIN1rHzv8qzOFfRGzi+WTXD1klXPjKQlkjOeb3KcWX3+v81K/Ot5WWwEkB/nxb6f
+      UbKCM8TebuKwHsm1Sp1z8KRiC3Tqu7vnUkD6vWmmIRJUGWigheUyPlBuBUOQmbqv
+      tdykLptOEd0uIKtVJNRIv5EyBvueOzK6ZWZEDHsv9nsGoCH/3h9eh88TXojGTrDf
+      Ja2In2Th0ECQLtk+QGYyNrBgCPlbBiZF9hyMwAHWgAi5HdPAWYreDNlYxPgFr/gp
+      wB8gZ625d5y6o7J5NyjdI+XwsEieAmz58aH04qY43qVlZWn0MuRuMp33WVBAfRUQ
+      uvtNkKXcjzeDoTtEpA5FKOkLi2b1JSEdNS5Lnl5tNHWrQkPrKe14TlqME3XRuIZ6
+      tFGj7c7yVWDheBxKVkvBjHoG6ORq3zoNIc0SR+KkYfjUn1G3yO3dQ8MO4AxsFNbG
+      su7efIR2aRNDajlZPTrNTT82nRE9NN9X7jdMsplCqra+tPQMocsu2dIpklPSFoId
+      AKKA46GqxBwzAgMBAAGjQjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTAD
+      AQH/MB0GA1UdDgQWBBQ+Pern0OE84DTMWWBXUccN3KwQ6TANBgkqhkiG9w0BAQ0F
+      AAOCAgEApLumRZj0bu4zJkGO6fHYITa5EYzMPs0LPq/a7qLsM3BGK+4wukhjQVn8
+      ka1KFDJIzOLLr5/xIZCGus0LRedm0ZtndX+QmbnRbJVeSEBmrPOw/Ri5QKZWKXrB
+      BcTy/E6LtvBXCY2GPrXLQQrmbEkUFL9q08xdA8pdKsPKohssQaCdyA8Sy/qnVSZJ
+      USw3YiedRMpE1ccy7mZG4q9i3xXAl6kDf0AAj8HOdl4vqDP9jr1rZs/k4XSyzN3q
+      eCI0kTiEJvF9UXaujpZWQcP//gFxLHeTKY9S1ODICFMGhVGI+tuIuXpGHp+yKONF
+      iFNYEY+GUyfjBNbSt8yJ6ky0gYE1jbBoPinuaCy+yiBTEhi5wJ0ChsOXUBj7RcE7
+      ghIp9J22J/5dKrvElszvw5XF5cqeWCREXTSCjwNdfR9fgBVBe/h3os8G4nf/zHPb
+      niBAvS339i75evlWOM2p6gzrAiVCXsRQxBXZkT3Jd6VVCh5ZjqFKFIE+Hl4AXD+g
+      PPcuTXprffmXHrUHp6ufBeyppyUgxOmFX+E+c6rmyDWM+/Oy9HsFNhjIMkUStWsR
+      OG+OQsCbQbISHXb9Won4S27z3NklmSmje3Ls+teidfeCIRbxc9/2DFQS2SZRZeH8
+      W0Kbud2Kq3mOWOIeXqZ0008uk90KzXZ1zekXDO2/hIERtDhYgKg=
+      -----END CERTIFICATE-----
 
 ###########
 ## Chart ##
@@ -30,6 +62,19 @@ transactionLog:
   existingSecret: haarlem-postgresql-auth
   resetDatabase: false
 
+ca:
+  certificates:
+    organization:
+      subject:
+        organizations:
+          - Gemeente Haarlem
+      commonName: haarlem-nlx-inway
+      dnsNames:
+        - haarlem-nlx-inway
+        - haarlem-auth-service
+      issuerRef:
+        name: shared
+
 ################
 ## Sub-charts ##
 ################
@@ -45,13 +90,13 @@ nlx-inway:
           authorization-model: none
           insight-api-url: https://insight-api.haarlem.nlx.minikube
           irma-api-url: https://irma.haarlem.nlx.minikube
-
   transactionLog:
     hostname: haarlem-postgresql
     database: haarlem-transaction-log
     existingSecret: haarlem-postgresql-auth
   tls:
-    generateCertificate: true
+    organizationCertificate:
+      existingSecret: haarlem-organization-tls
 
 nlx-outway:
   config:
@@ -64,7 +109,8 @@ nlx-outway:
     database: haarlem-transaction-log
     existingSecret: haarlem-postgresql-auth
   tls:
-    generateCertificate: true
+    organizationCertificate:
+      existingSecret: haarlem-organization-tls
 
 insight-api:
   config:
@@ -180,7 +226,7 @@ irma-server:
 
 auth-service:
   tls:
-    generateCertificate: true
+    existingSecret: haarlem-organization-tls
 
 parkeervergunning-application:
   config:

@@ -1,10 +1,9 @@
 # Global settings
 global:
-  unsafeCA:
-    cfsslHostname: ""
-    organizationName: ""
   imageRegistry: ""
   imageTag: ""
+  tls:
+    rootCertificatePEM: ""
 
 replicaCount: 1
 
@@ -38,33 +37,10 @@ postgresql:
   existingSecret: ""
 
 tls:
-  generateCertificate: false
-  api:
-    rootCertificatePEM: ""
-    certificatePEM: ""
-    certificateKeyPEM: ""
-    existingSecret: ""
-  monitor:
-    rootCertificatePEM: ""
-    certificatePEM: ""
-    certificateKeyPEM: ""
-    existingSecret: ""
-
-unsafeCA:
-  image:
-    registry: docker.io
-    repository: nlxio/ca-cfssl-unsafe
-    # Allow to override the tag. When set to null, the AppVersion from the Chart is used
-    tag: ""
-    pullPolicy: IfNotPresent
-  # The hostname of the CFSSL CA, used for generating the certificates
-  cfsslHostname: ca-cfssl-unsafe
-  # Name of the organization used for the certificate
-  organizationName: NLX Directory
-  # Domain name of the certificate
-  inspectionDomain: ""
-  registrationDomain: ""
-  monitorDomain: ""
+  rootCertificatePEM: ""
+  certificatePEM: ""
+  keyPEM: ""
+  existingSecret: ""
 
 ui:
   enabled: true

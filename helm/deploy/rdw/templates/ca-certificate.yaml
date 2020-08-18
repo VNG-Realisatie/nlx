@@ -1,0 +1,21 @@
+{{- $fullName := include "rdw.fullname" . -}}
+{{- $labels := include "rdw.labels" . -}}
+
+{{- range $name, $spec := .Values.ca.certificates }}
+{{- if $spec -}}
+apiVersion: cert-manager.io/v1beta1
+kind: Certificate
+metadata:
+  name: {{ $fullName }}-{{ $name }}
+  labels:
+    {{- $labels | nindent 4 }}
+spec:
+  {{- toYaml $spec | nindent 2 }}
+  duration: 8760h  # 1 year
+  renewBefore: 720h  # 30 days
+  secretName: {{ $fullName }}-{{ $name }}-tls
+  privateKey:
+    size: 4096
+---
+{{- end }}
+{{- end }}

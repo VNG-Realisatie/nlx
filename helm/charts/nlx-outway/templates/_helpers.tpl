@@ -79,28 +79,3 @@ Return the secret name of the PostgreSQL username/password
 {{- define "nlx-outway.transactionLog.secret" -}}
 {{- default (printf "%s-postgresql" (include "nlx-outway.fullname" .)) .Values.transactionLog.existingSecret -}}
 {{- end -}}
-
-{{/*
-Return the image name for the unsafe ca
-*/}}
-{{- define "nlx-outway.unsafeCA.image" -}}
-{{- $registryName := default .Values.unsafeCA.image.registry .Values.global.imageRegistry -}}
-{{- $repositoryName := .Values.unsafeCA.image.repository -}}
-{{- $tag := default (printf "v%s" .Chart.AppVersion) (default .Values.unsafeCA.image.tag .Values.global.imageTag) -}}
-
-{{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
-{{- end -}}
-
-{{/*
-Return the address of the CFSSL unsafe CA
-*/}}
-{{- define "nlx-outway.unsafeCA.cfsslHostname" -}}
-{{- default .Values.unsafeCA.cfsslHostname .Values.global.unsafeCA.cfsslHostname -}}
-{{- end -}}
-
-{{/*
-Return the organization name for the certificated to be genereate by the CFSSL unsafe CA
-*/}}
-{{- define "nlx-outway.unsafeCA.organizationName" -}}
-{{- default .Values.unsafeCA.organizationName .Values.global.unsafeCA.organizationName -}}
-{{- end -}}

@@ -18,26 +18,7 @@ fullnameOverride: ""
 
 # Unsafe CA specific settings
 config:
-  generateCertificate: true
-  cfsslCSR:
-    key:
-      algo: rsa
-      size: 4096
-    names:
-      - O: "Common Ground NLX CA"
-        OU: "NLX"
-  certPEM: ""
-  keyPEM: ""
-
-kubectl:
-  image:
-    repository: docker.io/bitnami/kubectl
-    tag: "1.18.8"
-    pullPolicy: IfNotPresent
-
-rbac:
-  # Specifies whether RBAC resources should be created
-  create: true
+  existingSecret: ""
 
 serviceAccount:
   # Specifies whether a service account should be created

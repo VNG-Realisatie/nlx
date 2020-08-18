@@ -15,29 +15,6 @@ spec:
         {{- include "rdw.selectorLabels" . | nindent 8 }}
     spec:
       restartPolicy: OnFailure
-      initContainers:
-        - name: generate-certificate
-          image: {{ template "rdw.unsafeCA.image" . }}
-          imagePullPolicy: {{ .Values.unsafeCA.image.pullPolicy }}
-          workingDir: /certs
-          command: ["/bin/sh"]
-          args:
-            - "-exc"
-            - |
-                /ca/generate-cert.sh "${DOMAIN_NAME}" "${ORGANIZATION_NAME}" "${CFSSL_HOSTNAME}"
-                mv nlx_root.pem root.pem
-                mv "${DOMAIN_NAME}-key.pem" cert-key.pem
-                mv "${DOMAIN_NAME}.pem" cert.pem
-          env:
-            - name: DOMAIN_NAME
-              value: {{ include "rdw.fullname" . | quote }}
-            - name: ORGANIZATION_NAME
-              value: RDW
-            - name: CFSSL_HOSTNAME
-              value: {{ .Values.unsafeCA.cfsslHostname | quote }}
-          volumeMounts:
-            - name: certificates
-              mountPath: /certs
       containers:
         - name: nlxctl
           image: {{ template "rdw.nlxctl.image" . }}
@@ -46,7 +23,7 @@ spec:
           args:
             - "-exc"
             - |
-                nlxctl init --address "${MANAGEMENT_API_ADDRESS}" --cert /certs/cert.pem --key /certs/cert-key.pem --ca /certs/root.pem
+                nlxctl init --address "${MANAGEMENT_API_ADDRESS}" --cert /certificate/tls.crt --key /certificate/tls.key --ca /config/root.pem
                 echo "${SERVICE_JSON}" > /tmp/service.json
                 nlxctl service create --config /tmp/service.json
                 nlxctl service list
@@ -65,8 +42,14 @@ spec:
               value: {{ required "IRMA server URL is required" .Values.managementAPI.insight.irmaServerURL | quote }}
           {{- end }}
           volumeMounts:
-            - name: certificates
-              mountPath: /certs
+            - name: certificate
+              mountPath: /certificate
+            - name: config
+              mountPath: /config
       volumes:
-        - name: certificates
-          emptyDir: {}
+        - name: certificate
+          secret:
+            secretName: {{ .Values.nlxctl.tls.existingSecret }}
+        - name: config
+          configMap:
+            name: {{ template "rdw.fullname" . }}-nlxctl

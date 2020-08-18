@@ -1,10 +1,10 @@
 # Global settings
 global:
-  unsafeCA:
-    cfsslHostname: ""
-    organizationName: ""
   imageRegistry: ""
   imageTag: ""
+  tls:
+    organizationRootCertificatePEM: ""
+    rootCertificatePEM: ""
 
 replicaCount: 1
 
@@ -37,17 +37,17 @@ config:
     redirectURL: ""
     sessionSignKey: ""
 
-unsafeCA:
-  image:
-    registry: docker.io
-    repository: nlxio/ca-cfssl-unsafe
-    # Allow to override the tag. When set to null, the AppVersion from the Chart is used
-    tag: ""
-    pullPolicy: IfNotPresent
-  # The hostname of the CFSSL CA, used for generating the certificates
-  cfsslHostname: ""
-  organizationName: NLX Mangement
-  domain: ""
+tls:
+  organizationCertificate:
+    rootCertificatePEM: ""
+    certificatePEM: ""
+    keyPEM: ""
+    existingSecret: ""
+  certificate:
+    rootCertificatePEM: ""
+    certificatePEM: ""
+    keyPEM: ""
+    existingSecret: ""
 
 serviceAccount:
   # Specifies whether a service account should be created

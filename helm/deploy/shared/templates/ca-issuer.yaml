@@ -1,0 +1,9 @@
+apiVersion: cert-manager.io/v1beta1
+kind: Issuer
+metadata:
+  name: {{ include "shared.fullname" . }}
+  labels:
+    {{- include "shared.labels" . | nindent 4 }}
+spec:
+  ca:
+    secretName: {{ include "shared.fullname" . }}-ca-issuer

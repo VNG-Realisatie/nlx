@@ -31,32 +31,6 @@ spec:
       serviceAccountName: {{ include "nlx-outway.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-    {{- if .Values.tls.generateCertificate }}
-      initContainers:
-        - name: generate-certificate
-          image: {{ template "nlx-outway.unsafeCA.image" . }}
-          imagePullPolicy: {{ .Values.unsafeCA.image.pullPolicy }}
-          workingDir: /tmp
-          command: ["/bin/sh"]
-          args:
-            - "-exc"
-            - |
-                /ca/generate-cert.sh "${DOMAIN_NAME}" "${ORGANIZATION_NAME}" "${CFSSL_HOSTNAME}"
-                mkdir /certs/root /certs/organization
-                mv nlx_root.pem /certs/root/root.crt
-                mv "${DOMAIN_NAME}-key.pem" /certs/organization/tls.key
-                mv "${DOMAIN_NAME}.pem" /certs/organization/tls.crt
-          env:
-            - name: DOMAIN_NAME
-              value: {{ default (include "nlx-outway.fullname" .) .Values.unsafeCA.domain | quote }}
-            - name: ORGANIZATION_NAME
-              value: {{ required "Unsafe CA organization name is required" (include "nlx-outway.unsafeCA.organizationName" .) | quote }}
-            - name: CFSSL_HOSTNAME
-              value: {{ required "Unsafe CA CFSSL hostname is required" (include "nlx-outway.unsafeCA.cfsslHostname" .) | quote }}
-          volumeMounts:
-            - name: certificates
-              mountPath: /certs
-    {{- end }}
       containers:
         - name: nlx-outway
           securityContext:
@@ -95,9 +69,9 @@ spec:
             - name: LISTEN_HTTPS
               value: "1"
             - name: TLS_SERVER_CERT
-              value: /certs/server/tls.crt
+              value: /certificate-server/tls.crt
             - name: TLS_SERVER_KEY
-              value: /certs/server/tls.key
+              value: /certificate-server/tls.key
           {{- else }}
             - name: LISTEN_ADDRESS
               value: 0.0.0.0:8080
@@ -108,14 +82,14 @@ spec:
             - name: AUTHORIZATION_SERVICE_ADDRESS
               value: {{ .Values.config.authorizationService.url }}
             - name: AUTHORIZATION_ROOT_CA
-              value: /certs/root/root.crt
+              value: /config/root-organization.pem
           {{- end }}
             - name: TLS_NLX_ROOT_CERT
-              value: /certs/root/root.crt
+              value: /config/root-organization.pem
             - name: TLS_ORG_CERT
-              value: /certs/organization/tls.crt
+              value: /certificate-organization/tls.crt
             - name: TLS_ORG_KEY
-              value: /certs/organization/tls.key
+              value: /certificate-organization/tls.key
           {{- if .Values.transactionLog.enabled }}
             - name: POSTGRES_USER
               valueFrom:
@@ -142,34 +116,26 @@ spec:
             - name: LOG_LEVEL
               value: {{ .Values.config.logLevel }}
           volumeMounts:
-          {{- if .Values.tls.generateCertificate }}
-            - name: certificates
-              mountPath: /certs
-          {{- else }}
-            - name: certificates-root
-              mountPath: /certs/root/root.crt
-              subPath: root.crt
-            - name: certificates-organization
-              mountPath: /certs/organization
-          {{- end }}
+            - name: certificate-organization
+              mountPath: /certificate-organization
+              readOnly: true
           {{- if .Values.https.enabled }}
-            - name: certificates-server
-              mountPath: /certs/server
+            - name: certificate-server
+              mountPath: /certificate-server
+              readOnly: true
           {{- end }}
+            - name: config
+              mountPath: /config
+              readOnly: true
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
-      {{- if .Values.tls.generateCertificate }}
-        - name: certificates
-          emptyDir: {}
-      {{- else }}
-        - name: certificates-root
+        - name: certificate-organization
+          secret:
+            secretName: {{ default (printf "%s-organization-tls" (include  "nlx-outway.fullname" .)) .Values.tls.organizationCertificate.existingSecret }}
+        - name: config
           configMap:
             name: {{ template "nlx-outway.fullname" . }}
-        - name: certificates-organization
-          secret:
-            secretName: {{ template "nlx-outway.fullname" . }}-tls
-      {{- end }}
       {{- if .Values.https.enabled }}
         - name: certificates-server
           secret:

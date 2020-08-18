@@ -1,10 +1,9 @@
 # Global settings
 global:
-  unsafeCA:
-    cfsslHostname: ""
-    organizationName: ""
   imageRegistry: ""
   imageTag: ""
+  tls:
+    organizationRootCertificatePEM: ""
 
 replicaCount: 1
 
@@ -35,28 +34,16 @@ transactionLog:
   existingSecret: ""
 
 tls:
-  generateCertificate: false
-  rootCertificatePEM: ""
-  keyPEM: ""
-  certificatePEM: ""
+  organizationCertificate:
+    rootCertificatePEM: ""
+    certificatePEM: ""
+    keyPEM: ""
+    existingSecret: ""
 
 https:
   enabled: false
   keyPEM: ""
   certificatePEM: ""
-
-unsafeCA:
-  image:
-    registry: docker.io
-    repository: nlxio/ca-cfssl-unsafe
-    tag: ""
-    pullPolicy: IfNotPresent
-  # The hostname of the CFSSL CA, used for generating the certificates
-  cfsslHostname: ""
-  # Name of the organization used for the certificate
-  organizationName: ""
-  # Domain name of the certificate
-  domain: ""
 
 serviceAccount:
   # Specifies whether a service account should be created

@@ -83,28 +83,3 @@ Return the image name for the UI
 
 {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
 {{- end -}}
-
-{{/*
-Return the image name for the unsafe ca
-*/}}
-{{- define "nlx-management.unsafeCA.image" -}}
-{{- $registryName := default .Values.unsafeCA.image.registry .Values.global.imageRegistry -}}
-{{- $repositoryName := .Values.unsafeCA.image.repository -}}
-{{- $tag := default (printf "v%s" .Chart.AppVersion) (default .Values.unsafeCA.image.tag .Values.global.imageTag) -}}
-
-{{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
-{{- end -}}
-
-{{/*
-Return the address of the CFSSL unsafe CA
-*/}}
-{{- define "nlx-management.unsafeCA.cfsslHostname" -}}
-{{- default .Values.unsafeCA.cfsslHostname .Values.global.unsafeCA.cfsslHostname -}}
-{{- end -}}
-
-{{/*
-Return the organization name for the certificated to be genereate by the CFSSL unsafe CA
-*/}}
-{{- define "nlx-management.unsafeCA.organizationName" -}}
-{{- default .Values.unsafeCA.organizationName .Values.global.unsafeCA.organizationName -}}
-{{- end -}}
