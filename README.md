@@ -151,6 +151,26 @@ Configure the vm driver for minikube:
 For developers, it's advised to setup minikube with 4 cores, 8GB RAM and at least 100G storage.
 e.g.: `minikube start --cpus 4 --memory 8192 --disk-size=100G`
 
+
+Add the minikube hostnames to your machine's resolver so you can reach the services from your browser.
+
+> see https://github.com/kubernetes/minikube/tree/master/deploy/addons/ingress-dns
+
+```bash
+minikube addons enable ingress-dns
+```
+
+On MacOS:
+
+```bash
+sudo mkdir -p /etc/resolver
+sudo tee /etc/resolver/minikube <<EOF
+nameserver $(minikube ip)
+search_order 1
+timeout 5
+EOF
+```
+
 To let the docker commands make use of Minikube execute the following before proceeding or add it to your shell profile:
 
 ```bash
@@ -194,27 +214,6 @@ helm upgrade --install shared ./helm/deploy/shared
 helm upgrade --install brp ./helm/deploy/brp
 helm upgrade --install haarlem ./helm/deploy/haarlem
 helm upgrade --install rdw ./helm/deploy/rdw
-```
-
-Finally, add the minikube hostnames to your machine's resolver so you can reach the services from your browser.
-
-> see https://github.com/kubernetes/minikube/tree/master/deploy/addons/ingress-dns
-
-```bash
-minikube addons enable ingress-dns
-```
-
-for Mac:
-```bash
-MINIKUBE_PROFILENAME=$(minikube profile)
-MINIKUBE_IP=$(minikube ip)
-MINIKUBE_DOMAIN=minikube
-sudo tee /etc/resolver/${MINIKUBE_PROFILENAME}-${MINIKUBE_DOMAIN} <<EOF
-domain ${MINIKUBE_DOMAIN}
-nameserver ${MINIKUBE_IP}
-search_order 1
-timeout 5
-EOF
 ```
 
 You may now test the following sites:
