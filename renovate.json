@@ -8,16 +8,16 @@
   ],
   "automerge": true,
   "automergeType": "pr",
+  "dependencyDashboard": true,
   "postUpdateOptions": [
     "gomodTidy"
   ],
   "ignoreDeps": [
     "github.com/coreos/etcd"
   ],
-  "masterIssue": true,
   "gomod": {
     "major": {
-      "masterIssueApproval": true
+      "dependencyDashboardApproval": true
     }
   },
   "packageRules": [
