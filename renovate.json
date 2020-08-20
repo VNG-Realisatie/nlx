@@ -12,14 +12,19 @@
   "postUpdateOptions": [
     "gomodTidy"
   ],
-  "ignoreDeps": [
-    "github.com/coreos/etcd"
-  ],
+  "gitlabci": {
+    "fileMatch": [
+      "^\\.gitlab/ci/.*\\.yml$"
+    ]
+  },
   "gomod": {
     "major": {
       "dependencyDashboardApproval": true
     }
   },
+  "ignoreDeps": [
+    "github.com/coreos/etcd"
+  ],
   "packageRules": [
     {
       "packageNames": ["history"],
