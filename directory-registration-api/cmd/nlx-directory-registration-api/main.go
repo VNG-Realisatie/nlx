@@ -27,8 +27,8 @@ import (
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/directory-db/dbversion"
+	"go.nlx.io/nlx/directory-registration-api/pkg/registrationservice"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
-	"go.nlx.io/nlx/directory-registration-api/registrationservice"
 )
 
 var options struct {
