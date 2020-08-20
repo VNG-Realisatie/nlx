@@ -3,7 +3,7 @@
 ############
 global:
   tls:
-    rootCertificatePEM: |
+    organizationRootCertificatePEM: |
       # Subject: O=Common Ground NLX CA, OU=NLX
       # Issuer: O=Common Ground NLX CA, OU=NLX
       -----BEGIN CERTIFICATE-----

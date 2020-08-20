@@ -3,7 +3,7 @@
 ############
 global:
   tls:
-    rootCertificatePEM: |
+    organizationRootCertificatePEM: |
       # Subject: C=NL, ST=Noord-Holland, L=Amsterdam, O=Common Ground, OU=NLX
       # Issuer: C=NL, ST=Noord-Holland, L=Amsterdam, O=Common Ground, OU=NLX
       -----BEGIN CERTIFICATE-----
