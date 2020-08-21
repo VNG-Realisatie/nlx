@@ -25,8 +25,6 @@ type DirectoryRegistrationService struct {
 	getOrganisationNameFromRequest func(ctx context.Context) (string, error)
 }
 
-var regExpOrgName = regexp.MustCompile(`^[a-zA-Z0-9-\.\s]{1,100}$`)
-
 // New sets up a new DirectoryRegistrationService
 func New(logger *zap.Logger, db database.DirectoryDatabase, httpClient *http.Client, getOrganisationNameFromRequest func(ctx context.Context) (string, error)) *DirectoryRegistrationService {
 	s := &DirectoryRegistrationService{
@@ -39,10 +37,14 @@ func New(logger *zap.Logger, db database.DirectoryDatabase, httpClient *http.Cli
 	return s
 }
 
+var regExpOrganizationName = regexp.MustCompile(`^[a-zA-Z0-9-\.\s]{1,100}$`)
+
 func isValidOrganizationName(name string) bool {
-	return regExpOrgName.MatchString(name)
+	return regExpOrganizationName.MatchString(name)
 }
 
+var regExpServiceName = regexp.MustCompile(`^[a-zA-Z0-9-\.\s]{1,100}$`)
+
 func isValidServiceName(name string) bool {
-	return regExpOrgName.MatchString(name)
+	return regExpServiceName.MatchString(name)
 }
