@@ -75,7 +75,7 @@ func convertAccessRequest(a *database.AccessRequest) (*AccessRequest, error) {
 
 	aState, ok := accessRequestState[a.State]
 	if !ok {
-		return nil, fmt.Errorf("unsupported state: %s", string(a.State))
+		return nil, fmt.Errorf("unsupported state: %v", a.State)
 	}
 
 	return &AccessRequest{
