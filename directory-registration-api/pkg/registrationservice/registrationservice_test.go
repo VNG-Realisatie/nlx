@@ -14,6 +14,7 @@ import (
 )
 
 const testOrganizationName = "Test Organization Name"
+const testInvalidOrganizationName = ""
 
 func generateMockDirectoryDatabase(t *testing.T) *mock.MockDirectoryDatabase {
 	mockCtrl := gomock.NewController(t)

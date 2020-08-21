@@ -42,6 +42,28 @@ func TestDirectoryRegistrationService_SetInsightConfiguration(t *testing.T) {
 		expectedError    error
 	}{
 		{
+			name: "with an invalid organization name in the request",
+			fields: fields{
+				logger: zap.NewNop(),
+				db: func() *mock.MockDirectoryDatabase {
+					db := generateMockDirectoryDatabase(t)
+					return db
+				}(),
+				getOrganisationNameFromRequest: func(ctx context.Context) (string, error) {
+					return testInvalidOrganizationName, nil
+				},
+			},
+			args: args{
+				ctx: context.Background(),
+				req: &registrationapi.SetInsightConfigurationRequest{
+					InsightAPIURL: "https://insight-api.url",
+					IrmaServerURL: "https://irma-server-url",
+				},
+			},
+			expectedResponse: nil,
+			expectedError:    status.New(codes.InvalidArgument, "Invalid organization name").Err(),
+		},
+		{
 			name: "failed to communicate with the database",
 			fields: fields{
 				logger: zap.NewNop(),
