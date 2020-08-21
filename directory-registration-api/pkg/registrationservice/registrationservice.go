@@ -39,12 +39,12 @@ func New(logger *zap.Logger, db database.DirectoryDatabase, httpClient *http.Cli
 
 var regExpOrganizationName = regexp.MustCompile(`^[a-zA-Z0-9-\.\s]{1,100}$`)
 
-func isValidOrganizationName(name string) bool {
+func IsValidOrganizationName(name string) bool {
 	return regExpOrganizationName.MatchString(name)
 }
 
 var regExpServiceName = regexp.MustCompile(`^[a-zA-Z0-9-\.\s]{1,100}$`)
 
-func isValidServiceName(name string) bool {
+func IsValidServiceName(name string) bool {
 	return regExpServiceName.MatchString(name)
 }

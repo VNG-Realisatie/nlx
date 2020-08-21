@@ -29,7 +29,7 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 		return nil, fmt.Errorf("failed to get organization name from request: %v", err)
 	}
 
-	if !isValidOrganizationName(organizationName) {
+	if !IsValidOrganizationName(organizationName) {
 		logger.Info("invalid organization name", zap.String("organization name", organizationName))
 		return nil, status.New(codes.InvalidArgument, "Invalid organization name").Err()
 	}
@@ -37,7 +37,7 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 	for _, service := range req.Services {
 		service := service
 
-		if !isValidServiceName(service.Name) {
+		if !IsValidServiceName(service.Name) {
 			logger.Info("invalid service name", zap.String("service name", service.Name))
 			return nil, status.New(codes.InvalidArgument, "Invalid service name").Err()
 		}

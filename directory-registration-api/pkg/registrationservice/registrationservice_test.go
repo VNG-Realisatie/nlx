@@ -1,13 +1,26 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 
-package registrationservice
+package registrationservice_test
 
 import (
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+
+	"go.nlx.io/nlx/directory-registration-api/pkg/database/mock"
+	"go.nlx.io/nlx/directory-registration-api/pkg/registrationservice"
 )
+
+const testOrganizationName = "Test Organization Name"
+
+func generateMockDirectoryDatabase(t *testing.T) *mock.MockDirectoryDatabase {
+	mockCtrl := gomock.NewController(t)
+	defer mockCtrl.Finish()
+
+	return mock.NewMockDirectoryDatabase(mockCtrl)
+}
 
 func Test_IsValidOrganizationName(t *testing.T) {
 	tests := []struct {
@@ -36,7 +49,7 @@ func Test_IsValidOrganizationName(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		assert.Equal(t, isValidOrganizationName(test.organisationName), test.expectedReturn)
+		assert.Equal(t, registrationservice.IsValidOrganizationName(test.organisationName), test.expectedReturn)
 	}
 }
 
@@ -67,6 +80,6 @@ func Test_IsValidServiceName(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		assert.Equal(t, isValidServiceName(test.serviceName), test.expectedReturn)
+		assert.Equal(t, registrationservice.IsValidServiceName(test.serviceName), test.expectedReturn)
 	}
 }

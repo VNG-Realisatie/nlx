@@ -26,7 +26,7 @@ func (h *DirectoryRegistrationService) SetInsightConfiguration(ctx context.Conte
 		return nil, fmt.Errorf("failed to get organization name from request: %v", err)
 	}
 
-	if !isValidOrganizationName(organizationName) {
+	if !IsValidOrganizationName(organizationName) {
 		logger.Error("invalid organization name", zap.String("organization name", organizationName))
 		return nil, status.New(codes.InvalidArgument, "Invalid organization name").Err()
 	}
