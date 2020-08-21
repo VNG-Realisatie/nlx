@@ -3,41 +3,34 @@
 //
 
 import React, { useState } from 'react'
-import { func } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { Alert } from '@commonground/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 
+import { observer } from 'mobx-react'
 import serviceActions from '../ServicesPage/serviceActions'
 import ServiceForm from '../../../components/ServiceForm'
-import ServiceRepository from '../../../domain/service-repository'
 import PageTemplate from '../../../components/PageTemplate'
-import usePromise from '../../../hooks/use-promise'
 import LoadingMessage from '../../../components/LoadingMessage'
+import useService from '../use-service'
 import { StyledUpdatedError } from './index.styles'
 
-const EditServicePage = ({ updateHandler, getServiceByName }) => {
+const EditServicePage = () => {
   const { name } = useParams()
   const { t } = useTranslation()
-  const [isUpdated, setisUpdated] = useState(false)
+  const [service, error, isReady] = useService(name)
   const [updateError, setUpdatedError] = useState(null)
-  const { isReady, error, result } = usePromise(getServiceByName, name)
   const history = useHistory()
 
-  const submitService = async (service) => {
-    // placeholder until we've implemented adding authorizations in the form
-    service.authorizationSettings = service.authorizationSettings || {}
-    service.authorizationSettings.authorizations =
-      service.authorizationSettings.authorizations || []
-
+  const submitService = async (values) => {
     try {
-      const updatedService = await updateHandler(name, service)
+      setUpdatedError(null)
+      const updatedService = await service.update(values)
       history.push(
         `/services/${updatedService.name}?lastAction=${serviceActions.EDITED}`,
       )
     } catch (err) {
       setUpdatedError(err.message)
-      setisUpdated(false)
     }
   }
 
@@ -48,13 +41,13 @@ const EditServicePage = ({ updateHandler, getServiceByName }) => {
         title={t('Edit service')}
       />
 
-      {!isReady || (!error && !result) ? (
+      {!isReady || (!error && !service) ? (
         <LoadingMessage />
       ) : error ? (
         <Alert variant="error" data-testid="error-message">
           {t('Failed to load the service.', { name })}
         </Alert>
-      ) : result ? (
+      ) : service ? (
         <>
           {updateError ? (
             <StyledUpdatedError
@@ -66,28 +59,16 @@ const EditServicePage = ({ updateHandler, getServiceByName }) => {
             </StyledUpdatedError>
           ) : null}
 
-          {!isUpdated ? (
-            <ServiceForm
-              initialValues={result}
-              onSubmitHandler={(values) => submitService(values)}
-              disableName
-              submitButtonText={t('Update service')}
-            />
-          ) : null}
+          <ServiceForm
+            initialValues={service}
+            onSubmitHandler={(values) => submitService(values)}
+            disableName
+            submitButtonText={t('Update service')}
+          />
         </>
       ) : null}
     </PageTemplate>
   )
 }
 
-EditServicePage.propTypes = {
-  updateHandler: func,
-  getServiceByName: func,
-}
-
-EditServicePage.defaultProps = {
-  updateHandler: ServiceRepository.update,
-  getServiceByName: ServiceRepository.getByName,
-}
-
-export default EditServicePage
+export default observer(EditServicePage)

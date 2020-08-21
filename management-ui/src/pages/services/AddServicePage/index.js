@@ -2,37 +2,35 @@
 // Licensed under the EUPL
 //
 import React, { useState } from 'react'
-import { func } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
 import { Alert } from '@commonground/design-system'
 
 import serviceActions from '../ServicesPage/serviceActions'
 import PageTemplate from '../../../components/PageTemplate'
-import ServiceRepository from '../../../domain/service-repository'
 import ServiceForm from '../../../components/ServiceForm'
+import { useServicesStore } from '../../../hooks/use-stores'
 
-const AddServicePage = ({ createHandler }) => {
+const AddServicePage = () => {
   const { t } = useTranslation()
-  const [isAdded, setIsAdded] = useState(false)
   const [error, setError] = useState(null)
   const history = useHistory()
 
-  const submitService = (service) => {
+  const { addService } = useServicesStore()
+
+  const submitService = async (service) => {
     // placeholder until we've implemented adding authorizations in the form
     service.authorizationSettings = service.authorizationSettings || {}
     service.authorizationSettings.authorizations = []
 
-    createHandler(service)
-      .then((service) => {
-        history.push(
-          `/services/${service.name}?lastAction=${serviceActions.ADDED}`,
-        )
-      })
-      .catch((err) => {
-        setIsAdded(false)
-        setError(err.message)
-      })
+    try {
+      const addedService = await addService(service)
+      history.push(
+        `/services/${addedService.name}?lastAction=${serviceActions.ADDED}`,
+      )
+    } catch (err) {
+      setError(err.message)
+    }
   }
 
   return (
@@ -52,22 +50,12 @@ const AddServicePage = ({ createHandler }) => {
         </Alert>
       ) : null}
 
-      {!isAdded ? (
-        <ServiceForm
-          onSubmitHandler={(values) => submitService(values)}
-          submitButtonText={t('Add service')}
-        />
-      ) : null}
+      <ServiceForm
+        onSubmitHandler={(values) => submitService(values)}
+        submitButtonText={t('Add service')}
+      />
     </PageTemplate>
   )
-}
-
-AddServicePage.propTypes = {
-  createHandler: func,
-}
-
-AddServicePage.defaultProps = {
-  createHandler: ServiceRepository.create,
 }
 
 export default AddServicePage

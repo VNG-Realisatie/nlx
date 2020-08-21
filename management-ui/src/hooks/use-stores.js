@@ -12,4 +12,9 @@ export const useDirectoryStore = () => {
   return directoryStore
 }
 
+export const useServicesStore = () => {
+  const { servicesStore } = useStores()
+  return servicesStore
+}
+
 export default useStores

@@ -7,6 +7,7 @@ import { configure } from 'mobx'
 import 'mobx-react-lite/batchingForReactDom'
 
 import { createDirectoryStore } from '../pages/directory/DirectoryStore'
+import { createServicesStore } from '../pages/services/ServicesStore'
 
 if (process.env.NODE_ENV !== 'test') {
   // `setupTests` has 'never' set. But some tests include this file,
@@ -19,6 +20,7 @@ export const storesContext = createContext(null)
 class RootStore {
   constructor() {
     this.directoryStore = createDirectoryStore({ rootStore: this })
+    this.servicesStore = createServicesStore({ rootStore: this })
   }
 }
 

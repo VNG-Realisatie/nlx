@@ -3,11 +3,13 @@
 //
 import React from 'react'
 import { act, fireEvent } from '@testing-library/react'
-import { Route, StaticRouter, Router } from 'react-router-dom'
+import { Route, Router, StaticRouter } from 'react-router-dom'
 
 import { createMemoryHistory } from 'history'
 import UserContext from '../../../user-context'
 import { renderWithProviders } from '../../../test-utils'
+import { StoreProvider } from '../../../stores'
+import { mockServicesStore } from '../use-service.test'
 import EditServicePage from './index'
 
 jest.mock('../../../components/ServiceForm', () => ({ onSubmitHandler }) => (
@@ -23,15 +25,15 @@ describe('the EditServicePage', () => {
 
   it('before the service has been loaded', async () => {
     jest.useFakeTimers()
-    const getServiceByName = jest.fn().mockResolvedValue({
-      name: 'mock-service',
-    })
+    const store = mockServicesStore({ isReady: false })
     const userContext = { user: { id: '42' } }
     const { findByRole, getByLabelText } = renderWithProviders(
       <StaticRouter location="/services/mock-service/edit-service">
         <Route path="/services/:name/edit-service">
           <UserContext.Provider value={userContext}>
-            <EditServicePage getServiceByName={getServiceByName} />
+            <StoreProvider store={store}>
+              <EditServicePage />
+            </StoreProvider>
           </UserContext.Provider>
         </Route>
       </StaticRouter>,
@@ -43,14 +45,14 @@ describe('the EditServicePage', () => {
   })
 
   it('when fetching the services fails', async () => {
-    const getServiceByName = jest
-      .fn()
-      .mockRejectedValue(new Error('arbitrary error'))
+    const store = mockServicesStore({ error: 'arbitrary error' })
     const userContext = { user: { id: '42' } }
     const { findByRole, queryByRole } = renderWithProviders(
       <StaticRouter>
         <UserContext.Provider value={userContext}>
-          <EditServicePage getServiceByName={getServiceByName} />
+          <StoreProvider store={store}>
+            <EditServicePage />
+          </StoreProvider>
         </UserContext.Provider>
       </StaticRouter>,
     )
@@ -60,14 +62,18 @@ describe('the EditServicePage', () => {
   })
 
   it('after the service has been fetched', async () => {
-    const getServiceByName = jest.fn().mockResolvedValue({
+    const selectService = jest.fn().mockReturnValue({
       name: 'mock-service',
+      fetch: jest.fn(),
     })
+    const store = mockServicesStore({ selectService })
     const userContext = { user: { id: '42' } }
     const { findByTestId } = renderWithProviders(
       <StaticRouter>
         <UserContext.Provider value={userContext}>
-          <EditServicePage getServiceByName={getServiceByName} />
+          <StoreProvider store={store}>
+            <EditServicePage />
+          </StoreProvider>
         </UserContext.Provider>
       </StaticRouter>,
     )
@@ -77,18 +83,20 @@ describe('the EditServicePage', () => {
 
   it('successfully submitting the form', async () => {
     const history = createMemoryHistory()
-    const getServiceByNameSpy = jest.fn().mockResolvedValue({
-      name: 'mock-service',
-    })
     const updateHandler = jest.fn().mockResolvedValue({
       name: 'mock-service',
     })
+    const selectService = jest.fn().mockReturnValue({
+      name: 'mock-service',
+      fetch: jest.fn(),
+      update: updateHandler,
+    })
+    const store = mockServicesStore({ selectService })
     const { findByTestId } = renderWithProviders(
       <Router history={history}>
-        <EditServicePage
-          updateHandler={updateHandler}
-          getServiceByName={getServiceByNameSpy}
-        />
+        <StoreProvider store={store}>
+          <EditServicePage />
+        </StoreProvider>
       </Router>,
     )
 
@@ -103,22 +111,24 @@ describe('the EditServicePage', () => {
 
   it('re-submitting the form when the previous submission went wrong', async () => {
     const history = createMemoryHistory()
-    const getServiceByNameSpy = jest.fn().mockResolvedValue({
-      name: 'mock-service',
-    })
-    const updateHandler = jest
+    const update = jest
       .fn()
       .mockResolvedValue({
         name: 'mock-service',
       })
       .mockRejectedValueOnce(new Error('arbitrary error'))
+    const selectService = jest.fn().mockReturnValue({
+      name: 'mock-service',
+      fetch: jest.fn(),
+      update,
+    })
 
+    const store = mockServicesStore({ selectService })
     const { findByTestId, queryByRole } = renderWithProviders(
       <Router history={history}>
-        <EditServicePage
-          updateHandler={updateHandler}
-          getServiceByName={getServiceByNameSpy}
-        />
+        <StoreProvider store={store}>
+          <EditServicePage />
+        </StoreProvider>
       </Router>,
     )
 
@@ -128,7 +138,7 @@ describe('the EditServicePage', () => {
       await fireEvent.submit(editServiceForm)
     })
 
-    expect(updateHandler).toHaveBeenCalledTimes(1)
+    expect(update).toHaveBeenCalledTimes(1)
     expect(queryByRole('alert')).toBeTruthy()
     expect(queryByRole('alert').textContent).toBe(
       'Failed to update the service.arbitrary error',
@@ -138,26 +148,26 @@ describe('the EditServicePage', () => {
       await fireEvent.submit(editServiceForm)
     })
 
-    expect(updateHandler).toHaveBeenCalledTimes(2)
+    expect(update).toHaveBeenCalledTimes(2)
 
     expect(history.location.pathname).toEqual('/services/mock-service')
     expect(history.location.search).toEqual('?lastAction=edited')
   })
 
   it('submitting when the HTTP response is not ok', async () => {
-    const getServiceByNameSpy = jest.fn().mockResolvedValue({
+    const update = jest.fn().mockRejectedValue(new Error('arbitrary error'))
+    const selectService = jest.fn().mockReturnValue({
       name: 'mock-service',
+      fetch: jest.fn(),
+      update,
     })
-    const updateHandler = jest
-      .fn()
-      .mockRejectedValue(new Error('arbitrary error'))
+    const store = mockServicesStore({ selectService })
 
     const { findByTestId, queryByRole } = renderWithProviders(
       <StaticRouter>
-        <EditServicePage
-          updateHandler={updateHandler}
-          getServiceByName={getServiceByNameSpy}
-        />
+        <StoreProvider store={store}>
+          <EditServicePage />
+        </StoreProvider>
       </StaticRouter>,
     )
 

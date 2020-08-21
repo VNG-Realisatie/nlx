@@ -7,8 +7,9 @@ import { MemoryRouter, Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import { act } from '@testing-library/react'
 import { renderWithProviders, waitFor } from '../../../test-utils'
-import deferredPromise from '../../../test-utils/deferred-promise'
 import { UserContextProvider } from '../../../user-context'
+import { StoreProvider } from '../../../stores'
+import { mockServicesStore } from '../use-service.test'
 import ServicesPage from './index'
 
 jest.mock('./ServicesPageView', () => () => (
@@ -18,13 +19,13 @@ jest.mock('./ServicesPageView', () => () => (
 test('fetching all services', async () => {
   const history = createMemoryHistory({ initialEntries: ['/services'] })
 
-  const fetchServicesPromise = deferredPromise()
-  const fetchServicesHandler = jest.fn(() => fetchServicesPromise)
-
+  const store = mockServicesStore({ services: null, isReady: false })
   const { getByRole, getByTestId, getByLabelText } = renderWithProviders(
     <Router history={history}>
       <UserContextProvider user={{}}>
-        <ServicesPage getServices={fetchServicesHandler} />
+        <StoreProvider store={store}>
+          <ServicesPage />
+        </StoreProvider>
       </UserContextProvider>
     </Router>,
   )
@@ -33,7 +34,7 @@ test('fetching all services', async () => {
   expect(() => getByTestId('services-list')).toThrow()
 
   await act(async () => {
-    fetchServicesPromise.resolve([
+    store.servicesStore.services = [
       {
         name: 'my-first-service',
         authorizationSettings: {
@@ -43,7 +44,8 @@ test('fetching all services', async () => {
         inways: [],
         internal: false,
       },
-    ])
+    ]
+    store.servicesStore.isReady = true
   })
 
   waitFor(() =>
@@ -56,14 +58,14 @@ test('fetching all services', async () => {
 })
 
 test('failed to load services', async () => {
-  const fetchServicesHandler = jest
-    .fn()
-    .mockRejectedValue(new Error('arbitrary error'))
+  const store = mockServicesStore({ services: null, error: 'arbitrary error' })
 
   const { findByText, getByTestId } = renderWithProviders(
     <MemoryRouter>
       <UserContextProvider user={{}}>
-        <ServicesPage getServices={fetchServicesHandler} />
+        <StoreProvider store={store}>
+          <ServicesPage />
+        </StoreProvider>
       </UserContextProvider>
     </MemoryRouter>,
   )

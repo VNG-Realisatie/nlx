@@ -1,27 +1,30 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React from 'react'
-import { func } from 'prop-types'
+import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, Button } from '@commonground/design-system'
 import { Link, Route } from 'react-router-dom'
 
+import { observer } from 'mobx-react'
 import PageTemplate from '../../../components/PageTemplate'
-import usePromise from '../../../hooks/use-promise'
-import ServiceRepository from '../../../domain/service-repository'
 import ServiceDetailPage from '../ServiceDetailPage'
 
 import LoadingMessage from '../../../components/LoadingMessage'
 
+import { useServicesStore } from '../../../hooks/use-stores'
 import ServiceToastManager from './ServiceToastManager'
 import ServiceCount from './ServiceCount'
 import ServicesPageView from './ServicesPageView'
 import { StyledActionsBar, StyledIconPlus } from './index.styles'
 
-const ServicesPage = ({ getServices }) => {
+const ServicesPage = () => {
   const { t } = useTranslation()
-  const { isReady, error, result: services, reload } = usePromise(getServices)
+  const { isReady, services, error, fetchServices } = useServicesStore()
+
+  useEffect(() => {
+    fetchServices()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <PageTemplate>
@@ -55,18 +58,10 @@ const ServicesPage = ({ getServices }) => {
       )}
 
       <Route path="/services/:name">
-        <ServiceDetailPage parentUrl="/services" refreshHandler={reload} />
+        <ServiceDetailPage parentUrl="/services" />
       </Route>
     </PageTemplate>
   )
 }
 
-ServicesPage.propTypes = {
-  getServices: func,
-}
-
-ServicesPage.defaultProps = {
-  getServices: ServiceRepository.getAll,
-}
-
-export default ServicesPage
+export default observer(ServicesPage)

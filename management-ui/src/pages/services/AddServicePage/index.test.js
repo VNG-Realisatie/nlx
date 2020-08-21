@@ -2,12 +2,13 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { fireEvent, act } from '@testing-library/react'
-import { MemoryRouter, Router } from 'react-router-dom'
+import { act, fireEvent } from '@testing-library/react'
+import { Router } from 'react-router-dom'
 
 import { createMemoryHistory } from 'history'
-import UserContext from '../../../user-context'
 import { renderWithProviders } from '../../../test-utils'
+import { StoreProvider } from '../../../stores'
+import { mockServicesStore } from '../use-service.test'
 import AddServicePage from './index'
 
 jest.mock('../../../components/ServiceForm', () => ({ onSubmitHandler }) => (
@@ -22,13 +23,13 @@ describe('the AddServicePage', () => {
   })
 
   it('on initialization', () => {
-    const userContext = { user: { id: '42' } }
+    const store = mockServicesStore({})
     const { getByTestId, queryByRole, getByLabelText } = renderWithProviders(
-      <MemoryRouter>
-        <UserContext.Provider value={userContext}>
-          <AddServicePage createHandler={() => {}} />
-        </UserContext.Provider>
-      </MemoryRouter>,
+      <Router history={createMemoryHistory()}>
+        <StoreProvider store={store}>
+          <AddServicePage />
+        </StoreProvider>
+      </Router>,
     )
 
     const linkBack = getByLabelText(/Back/)
@@ -42,9 +43,12 @@ describe('the AddServicePage', () => {
     const createHandler = jest.fn().mockResolvedValue({
       name: 'my-service',
     })
+    const store = mockServicesStore({ addService: createHandler })
     const { findByTestId } = renderWithProviders(
       <Router history={history}>
-        <AddServicePage createHandler={createHandler} />
+        <StoreProvider store={store}>
+          <AddServicePage />
+        </StoreProvider>
       </Router>,
     )
 
@@ -53,6 +57,7 @@ describe('the AddServicePage', () => {
       fireEvent.submit(addComponentForm)
     })
 
+    expect(createHandler).toHaveBeenCalledTimes(1)
     expect(history.location.pathname).toEqual('/services/my-service')
     expect(history.location.search).toEqual('?lastAction=added')
   })
@@ -64,9 +69,12 @@ describe('the AddServicePage', () => {
       .mockRejectedValueOnce(new Error('arbitrary error'))
 
     const history = createMemoryHistory()
+    const store = mockServicesStore({ addService: createHandler })
     const { findByTestId, queryByRole } = renderWithProviders(
       <Router history={history}>
-        <AddServicePage createHandler={createHandler} />
+        <StoreProvider store={store}>
+          <AddServicePage />
+        </StoreProvider>
       </Router>,
     )
 
@@ -97,11 +105,14 @@ describe('the AddServicePage', () => {
     const createHandler = jest
       .fn()
       .mockRejectedValue(new Error('arbitrary error'))
-
+    const history = createMemoryHistory()
+    const store = mockServicesStore({ addService: createHandler })
     const { findByTestId, queryByRole } = renderWithProviders(
-      <MemoryRouter>
-        <AddServicePage createHandler={createHandler} />
-      </MemoryRouter>,
+      <Router history={history}>
+        <StoreProvider store={store}>
+          <AddServicePage />
+        </StoreProvider>
+      </Router>,
     )
 
     const addComponentForm = await findByTestId('form')

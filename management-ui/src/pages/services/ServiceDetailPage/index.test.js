@@ -6,7 +6,9 @@ import { Route, StaticRouter, Router } from 'react-router-dom'
 
 import { act } from '@testing-library/react'
 import { createMemoryHistory } from 'history'
+import { observable } from 'mobx'
 import { renderWithProviders } from '../../../test-utils'
+import { StoreProvider } from '../../../stores'
 import ServiceDetailPage from './index'
 
 jest.mock('./ServiceDetailView', () => ({ removeHandler }) => (
@@ -16,35 +18,58 @@ jest.mock('./ServiceDetailView', () => ({ removeHandler }) => (
     </button>
   </div>
 ))
+const storeTemplate = ({
+  fetchServices = jest.fn(),
+  removeService = jest.fn(),
+  selectService = jest.fn(),
+}) =>
+  observable({
+    servicesStore: {
+      services: [{ name: 'forty-two' }],
+      isReady: true,
+      error: '',
+      fetchServices,
+      selectService,
+      removeService,
+      addService: jest.fn(),
+    },
+  })
 
 test('display service details', async () => {
-  const getServiceByName = jest.fn().mockResolvedValue({ name: 'forty-two' })
+  const selectService = jest
+    .fn()
+    .mockReturnValue({ name: 'forty-two', fetch: jest.fn() })
+  const store = storeTemplate({ selectService })
+  const { findByTestId, getByText } = renderWithProviders(
+    <StaticRouter location="/services/forty-two">
+      <Route path="/services/:name">
+        <StoreProvider store={store}>
+          <ServiceDetailPage />
+        </StoreProvider>
+      </Route>
+    </StaticRouter>,
+  )
 
   jest.useFakeTimers()
 
-  const { findByTestId, getByText } = renderWithProviders(
-    <StaticRouter location="/services/forty-two">
-      <Route path="/services/:name">
-        <ServiceDetailPage getServiceByName={getServiceByName} />
-      </Route>
-    </StaticRouter>,
-  )
   expect(await findByTestId('service-details')).toBeInTheDocument()
   expect(getByText('forty-two')).toBeInTheDocument()
-  expect(getServiceByName).toHaveBeenCalledWith('forty-two')
+  expect(selectService).toHaveBeenCalledWith('forty-two')
 })
 
 test('fetching a non-existing component', async () => {
-  const getServiceByName = jest.fn().mockRejectedValue(new Error('not found'))
+  const selectService = jest.fn()
+  const store = storeTemplate({ selectService })
 
   const { findByTestId, getByText } = renderWithProviders(
     <StaticRouter location="/services/forty-two">
       <Route path="/services/:name">
-        <ServiceDetailPage getServiceByName={getServiceByName} />
+        <StoreProvider store={store}>
+          <ServiceDetailPage />
+        </StoreProvider>
       </Route>
     </StaticRouter>,
   )
-
   const message = await findByTestId('error-message')
   expect(message).toBeTruthy()
   expect(message.textContent).toBe('Failed to load the service.')
@@ -56,14 +81,18 @@ test('fetching a non-existing component', async () => {
 })
 
 test('fetching service details fails for an unknown reason', async () => {
-  const getServiceByName = jest
+  const fetchServices = jest
     .fn()
     .mockRejectedValue(new Error('arbitrary reason'))
+
+  const store = storeTemplate({ fetchServices })
 
   const { findByTestId, getByText } = renderWithProviders(
     <StaticRouter location="/services/42">
       <Route path="/services/:name">
-        <ServiceDetailPage getServiceByName={getServiceByName} />
+        <StoreProvider store={store}>
+          <ServiceDetailPage />
+        </StoreProvider>
       </Route>
     </StaticRouter>,
   )
@@ -79,20 +108,22 @@ test('fetching service details fails for an unknown reason', async () => {
 })
 
 test('removing the service', async () => {
-  const history = createMemoryHistory()
-  const getServiceByName = jest
+  const history = createMemoryHistory({
+    initialEntries: ['/services/dummy-service'],
+  })
+  const selectService = jest
     .fn()
-    .mockResolvedValue({ name: 'dummy-service' })
-  const refreshHandler = jest.fn()
-  const removeService = jest.fn().mockResolvedValue()
+    .mockReturnValue({ name: 'dummy-service', fetch: jest.fn() })
+  const removeService = jest.fn()
+  const store = storeTemplate({ selectService, removeService })
 
   const { findByText } = renderWithProviders(
     <Router history={history}>
-      <ServiceDetailPage
-        getServiceByName={getServiceByName}
-        refreshHandler={refreshHandler}
-        removeService={removeService}
-      />
+      <Route path="/services/:name">
+        <StoreProvider store={store}>
+          <ServiceDetailPage />
+        </StoreProvider>
+      </Route>
     </Router>,
   )
 
@@ -105,5 +136,4 @@ test('removing the service', async () => {
   await act(async () => {})
   expect(history.location.pathname).toEqual('/services/dummy-service')
   expect(history.location.search).toEqual('?lastAction=removed')
-  expect(refreshHandler).toHaveBeenCalledTimes(1)
 })
