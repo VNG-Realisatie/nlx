@@ -60,7 +60,6 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 		}
 
 		params := &database.InsertAvailabilityParams{
-			Ctx:                         ctx,
 			OrganizationName:            organizationName,
 			ServiceName:                 service.Name,
 			ServiceInternal:             service.Internal,
@@ -86,7 +85,7 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 				}
 			}
 
-			return nil, status.New(codes.Internal, "Database error.").Err()
+			return nil, status.New(codes.Internal, "database error").Err()
 		}
 	}
 

@@ -7,6 +7,7 @@ import (
 	"context"
 	"errors"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -21,7 +22,9 @@ import (
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
 
-func TestDirectoryRegistrationService_SetInsightConfiguration(t *testing.T) {
+const testServiceName = "Test Service Name"
+
+func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 	type fields struct {
 		logger                         *zap.Logger
 		db                             database.DirectoryDatabase
@@ -31,47 +34,30 @@ func TestDirectoryRegistrationService_SetInsightConfiguration(t *testing.T) {
 
 	type args struct {
 		ctx context.Context
-		req *registrationapi.SetInsightConfigurationRequest
+		req *registrationapi.RegisterInwayRequest
 	}
 
 	tests := []struct {
 		name             string
 		fields           fields
 		args             args
-		expectedResponse *registrationapi.Empty
+		expectedResponse *registrationapi.RegisterInwayResponse
 		expectedError    error
 	}{
-		{
-			name: "with an invalid organization name in the request",
-			fields: fields{
-				logger: zap.NewNop(),
-				db:     generateMockDirectoryDatabase(t),
-				getOrganisationNameFromRequest: func(ctx context.Context) (string, error) {
-					return testInvalidOrganizationName, nil
-				},
-			},
-			args: args{
-				ctx: context.Background(),
-				req: &registrationapi.SetInsightConfigurationRequest{
-					InsightAPIURL: "https://insight-api.url",
-					IrmaServerURL: "https://irma-server-url",
-				},
-			},
-			expectedResponse: nil,
-			expectedError:    status.New(codes.InvalidArgument, "Invalid organization name").Err(),
-		},
 		{
 			name: "failed to communicate with the database",
 			fields: fields{
 				logger: zap.NewNop(),
+				httpClient: func() *http.Client {
+					httpServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+					}))
+					defer httpServer.Close()
+					return httpServer.Client()
+				}(),
 				db: func() *mock.MockDirectoryDatabase {
 					db := generateMockDirectoryDatabase(t)
-					db.EXPECT().SetInsightConfiguration(
-						gomock.Any(),
-						testOrganizationName,
-						"https://insight-api.url",
-						"https://irma-server-url",
-					).Return(errors.New("arbitrary  error")).AnyTimes()
+					db.EXPECT().InsertAvailability(gomock.Any()).Return(errors.New("arbitrary error")).AnyTimes()
 
 					return db
 				}(),
@@ -79,9 +65,13 @@ func TestDirectoryRegistrationService_SetInsightConfiguration(t *testing.T) {
 			},
 			args: args{
 				ctx: context.Background(),
-				req: &registrationapi.SetInsightConfigurationRequest{
-					InsightAPIURL: "https://insight-api.url",
-					IrmaServerURL: "https://irma-server-url",
+				req: &registrationapi.RegisterInwayRequest{
+					InwayAddress: "",
+					Services: []*registrationapi.RegisterInwayRequest_RegisterService{
+						{
+							Name: testServiceName,
+						},
+					},
 				},
 			},
 			expectedResponse: nil,
@@ -91,14 +81,21 @@ func TestDirectoryRegistrationService_SetInsightConfiguration(t *testing.T) {
 			name: "happy flow",
 			fields: fields{
 				logger: zap.NewNop(),
+				httpClient: func() *http.Client {
+					httpServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+					}))
+					defer httpServer.Close()
+					return httpServer.Client()
+				}(),
 				db: func() *mock.MockDirectoryDatabase {
 					db := generateMockDirectoryDatabase(t)
-					db.EXPECT().SetInsightConfiguration(
-						gomock.Any(),
-						testOrganizationName,
-						"https://insight-api.url",
-						"https://irma-server-url",
-					)
+					db.EXPECT().InsertAvailability(gomock.Eq(&database.InsertAvailabilityParams{
+						OrganizationName: testOrganizationName,
+						ServiceName:      testServiceName,
+						ServiceInternal:  false,
+						NlxVersion:       "unknown",
+					})).Return(nil).AnyTimes()
 
 					return db
 				}(),
@@ -106,12 +103,16 @@ func TestDirectoryRegistrationService_SetInsightConfiguration(t *testing.T) {
 			},
 			args: args{
 				ctx: context.Background(),
-				req: &registrationapi.SetInsightConfigurationRequest{
-					InsightAPIURL: "https://insight-api.url",
-					IrmaServerURL: "https://irma-server-url",
+				req: &registrationapi.RegisterInwayRequest{
+					InwayAddress: "",
+					Services: []*registrationapi.RegisterInwayRequest_RegisterService{
+						{
+							Name: testServiceName,
+						},
+					},
 				},
 			},
-			expectedResponse: &registrationapi.Empty{},
+			expectedResponse: &registrationapi.RegisterInwayResponse{},
 			expectedError:    nil,
 		},
 	}
@@ -121,7 +122,7 @@ func TestDirectoryRegistrationService_SetInsightConfiguration(t *testing.T) {
 
 		t.Run(tt.name, func(t *testing.T) {
 			h := registrationservice.New(tt.fields.logger, tt.fields.db, tt.fields.httpClient, tt.fields.getOrganisationNameFromRequest)
-			got, err := h.SetInsightConfiguration(tt.args.ctx, tt.args.req)
+			got, err := h.RegisterInway(tt.args.ctx, tt.args.req)
 
 			assert.Equal(t, tt.expectedResponse, got)
 			assert.Equal(t, tt.expectedError, err)

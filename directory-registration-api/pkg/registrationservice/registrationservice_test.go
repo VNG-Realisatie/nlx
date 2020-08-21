@@ -4,6 +4,7 @@
 package registrationservice_test
 
 import (
+	"context"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -21,6 +22,10 @@ func generateMockDirectoryDatabase(t *testing.T) *mock.MockDirectoryDatabase {
 	defer mockCtrl.Finish()
 
 	return mock.NewMockDirectoryDatabase(mockCtrl)
+}
+
+func testGetOrganizationNameFromRequest(ctx context.Context) (string, error) {
+	return testOrganizationName, nil
 }
 
 func Test_IsValidOrganizationName(t *testing.T) {

@@ -4,12 +4,10 @@
 package database
 
 import (
-	"context"
 	"fmt"
 )
 
 type InsertAvailabilityParams struct {
-	Ctx                         context.Context
 	OrganizationName            string
 	ServiceName                 string
 	ServiceInternal             bool
