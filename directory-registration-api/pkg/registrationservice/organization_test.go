@@ -5,6 +5,9 @@ package registrationservice_test
 
 import (
 	"context"
+	"errors"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"net/http"
 	"testing"
 
@@ -38,6 +41,35 @@ func TestDirectoryRegistrationService_SetInsightConfiguration(t *testing.T) {
 		expectedResponse *registrationapi.Empty
 		expectedError    error
 	}{
+		{
+			name: "failed to communicate with the database",
+			fields: fields{
+				logger: zap.NewNop(),
+				db: func() *mock.MockDirectoryDatabase {
+					db := generateMockDirectoryDatabase(t)
+					db.EXPECT().SetInsightConfiguration(
+						gomock.Any(),
+						testOrganizationName,
+						"https://insight-api.url",
+						"https://irma-server-url",
+					).Return(errors.New("arbitrary  error")).AnyTimes()
+
+					return db
+				}(),
+				getOrganisationNameFromRequest: func(ctx context.Context) (string, error) {
+					return testOrganizationName, nil
+				},
+			},
+			args: args{
+				ctx: context.Background(),
+				req: &registrationapi.SetInsightConfigurationRequest{
+					InsightAPIURL: "https://insight-api.url",
+					IrmaServerURL: "https://irma-server-url",
+				},
+			},
+			expectedResponse: nil,
+			expectedError:    status.New(codes.Internal, "database error").Err(),
+		},
 		{
 			name: "happy flow",
 			fields: fields{
