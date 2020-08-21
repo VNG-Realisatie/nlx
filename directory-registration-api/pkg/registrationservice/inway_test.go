@@ -24,6 +24,7 @@ import (
 
 const testServiceName = "Test Service Name"
 
+//nolint:funlen // adding the tests was the first step to make the functionality testable. making it less complex is out of scope for now.
 func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 	type fields struct {
 		logger                         *zap.Logger

@@ -35,6 +35,7 @@ func getInwayAPISpecsType(httpClient *http.Client, inwayAddress, serviceName str
 
 	versionCheck := &openAPIVersion{}
 	err = json.Unmarshal(jsonBytes, versionCheck)
+
 	if err != nil {
 		return "", err
 	}
@@ -62,10 +63,12 @@ func getInwayAPISpecs(h *http.Client, inwayAddress, serviceName string) ([]byte,
 		Host:   inwayAddress,
 		Path:   path.Join("/.nlx/api-spec-doc/", serviceName),
 	}
+
 	res, err := h.Get(inwayURL.String())
 	if err != nil {
 		return nil, err
 	}
+
 	defer res.Body.Close()
 
 	return ioutil.ReadAll(res.Body)

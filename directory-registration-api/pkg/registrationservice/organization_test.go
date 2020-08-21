@@ -21,6 +21,7 @@ import (
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
 
+//nolint:funlen // adding the tests was the first step to make the functionality testable. making it less complex is out of scope for now.
 func TestDirectoryRegistrationService_SetInsightConfiguration(t *testing.T) {
 	type fields struct {
 		logger                         *zap.Logger
