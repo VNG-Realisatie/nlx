@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestValidateName(t *testing.T) {
+func Test_IsValidOrganizationName(t *testing.T) {
 	tests := []struct {
 		organisationName string
 		expectedReturn   bool
@@ -36,6 +36,37 @@ func TestValidateName(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		assert.Equal(t, validateName(test.organisationName), test.expectedReturn)
+		assert.Equal(t, isValidOrganizationName(test.organisationName), test.expectedReturn)
+	}
+}
+
+func Test_IsValidServiceName(t *testing.T) {
+	tests := []struct {
+		serviceName    string
+		expectedReturn bool
+	}{
+		{
+			"gemeente-turfbrug",
+			true,
+		},
+		{
+			"Gemeente Turfbrug",
+			true,
+		}, {
+			"VNG Realisatie B.V.",
+			true,
+		},
+		{
+			"VNG Réalisatie B.V.",
+			false,
+		},
+		{
+			"gemeente/turfburg",
+			false,
+		},
+	}
+
+	for _, test := range tests {
+		assert.Equal(t, isValidServiceName(test.serviceName), test.expectedReturn)
 	}
 }

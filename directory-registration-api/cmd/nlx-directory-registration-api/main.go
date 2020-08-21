@@ -4,7 +4,9 @@
 package main
 
 import (
+	"context"
 	"crypto/tls"
+	"errors"
 	"log"
 	"net"
 	"net/http"
@@ -20,13 +22,16 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/peer"
 
 	common_db "go.nlx.io/nlx/common/db"
+	nlxhttp "go.nlx.io/nlx/common/http"
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/directory-db/dbversion"
+	"go.nlx.io/nlx/directory-registration-api/pkg/database"
 	"go.nlx.io/nlx/directory-registration-api/pkg/registrationservice"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
@@ -61,7 +66,6 @@ func parseArgs() error {
 }
 
 func setupDB(logger *zap.Logger) *sqlx.DB {
-
 	db, err := sqlx.Open("postgres", options.PostgresDSN)
 	if err != nil {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))
@@ -108,10 +112,13 @@ func main() {
 		logger.Fatal("failed to load x509 keypair for directory registration api", zap.Error(err))
 	}
 
-	registrationService, err := registrationservice.New(logger, db, caCertPool, &certKeyPair)
+	directoryDatabase, err := database.NewPostgreSQLDirectoryDatabase(options.PostgresDSN, mainProcess, logger)
 	if err != nil {
-		logger.Fatal("failed to create new directory registration service", zap.Error(err))
+		logger.Fatal("failed to setup postgresql directory database:", zap.Error(err))
 	}
+
+	httpClient := nlxhttp.NewHTTPClient(caCertPool, &certKeyPair)
+	registrationService := registrationservice.New(logger, directoryDatabase, httpClient, getOrganisationNameFromRequest)
 
 	// setup zap connection for global grpc logging
 	grpc_zap.ReplaceGrpcLogger(logger)
@@ -143,4 +150,18 @@ func main() {
 			log.Fatal("error serving", zap.Error(err))
 		}
 	}
+}
+
+func getOrganisationNameFromRequest(ctx context.Context) (string, error) {
+	orgPeer, ok := peer.FromContext(ctx)
+	if !ok {
+		return "", errors.New("failed to obtain peer from context")
+	}
+
+	tlsInfo := orgPeer.AuthInfo.(credentials.TLSInfo)
+	if len(tlsInfo.State.VerifiedChains) == 0 {
+		return "", errors.New("no valid TLS certificate chain found")
+	}
+
+	return tlsInfo.State.VerifiedChains[0][0].Subject.Organization[0], nil
 }
