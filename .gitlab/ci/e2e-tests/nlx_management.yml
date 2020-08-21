@@ -23,4 +23,4 @@ NLX Management - E2E-tests:
     paths:
       - management-ui-e2e-tests/test-results/
   rules:
-    - if: '$CI_COMMIT_BRANCH =~ /^feature\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
+    - if: '$CI_COMMIT_BRANCH =~ /^review\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'

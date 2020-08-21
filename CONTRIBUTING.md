@@ -237,7 +237,7 @@ While an issue is in 'Review', it remains assigned to the developer who is worki
 
 As we want to deliver value to the customer as soon as possible, stories shouldn't stay in Review too long. The author of the story should actively reach out to the team members to get the work reviewed.
 
-When a branch begins with `feature/` a review app is created for that branch. This app can be used to inspect UI changes of the Merge Request.
+When a branch begins with `review/` a review app is created for that branch. This app can be used to inspect UI changes of the Merge Request.
 
 
 #### 3.2.5. Deploy to acceptance environment

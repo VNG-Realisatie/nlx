@@ -19,7 +19,7 @@ Build review:
       - ci_build_image_tag.txt
       - ci_build_image_version.txt
   rules:
-    - if: '$CI_COMMIT_BRANCH =~ /^feature\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
+    - if: '$CI_COMMIT_BRANCH =~ /^review\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
   tags:
     - cg
     - shell

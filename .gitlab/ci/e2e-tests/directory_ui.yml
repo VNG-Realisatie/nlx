@@ -13,4 +13,4 @@ Directory UI - E2E Tests:
     - stop_section test
   rules:
     - if: '$CI_COMMIT_BRANCH == "master" && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
-    - if: '$CI_COMMIT_BRANCH =~ /^feature\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
+    - if: '$CI_COMMIT_BRANCH =~ /^review\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'

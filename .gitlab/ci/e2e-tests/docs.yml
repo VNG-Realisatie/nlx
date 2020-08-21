@@ -18,7 +18,7 @@ Documentation link checker:
     - if: '$CI_COMMIT_BRANCH == "master" && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
       when: manual
       allow_failure: true
-    - if: '$CI_COMMIT_BRANCH =~ /^feature\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
+    - if: '$CI_COMMIT_BRANCH =~ /^review\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
       when: manual
       allow_failure: true
   tags:

@@ -1,4 +1,4 @@
-Deploy Review App:
+Deploy review:
   stage: Deploy
   image: registry.gitlab.com/commonground/core/review-app-deployer:latest
   variables:
@@ -89,10 +89,10 @@ Deploy Review App:
   environment:
     name: $CI_COMMIT_REF_NAME
     url: https://nlx-${CI_ENVIRONMENT_SLUG}.${REVIEW_BASE_DOMAIN}
-    on_stop: Remove Review App
+    on_stop: Remove review
     auto_stop_in: 1 week
   rules:
-    - if: '$CI_COMMIT_BRANCH =~ /^feature\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
+    - if: '$CI_COMMIT_BRANCH =~ /^review\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
   dependencies:
     - Build review
   artifacts:
@@ -103,7 +103,7 @@ Deploy Review App:
     - cg
     - docker
 
-Remove Review App:
+Remove review:
   stage: Deploy
   image: registry.gitlab.com/commonground/core/review-app-deployer:latest
   variables:
@@ -126,7 +126,7 @@ Remove Review App:
     name: $CI_COMMIT_REF_NAME
     action: stop
   rules:
-    - if: '$CI_COMMIT_BRANCH =~ /^feature\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
+    - if: '$CI_COMMIT_BRANCH =~ /^review\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
       when: manual
       allow_failure: true
       # The combination `when: manual` and `allow_failure: true` allow this step to be manual without blocking
