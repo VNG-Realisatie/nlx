@@ -55,10 +55,7 @@ func local_request_Management_ListServices_0(ctx context.Context, marshaler runt
 	var protoReq ListServicesRequest
 	var metadata runtime.ServerMetadata
 
-	if err := req.ParseForm(); err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Management_ListServices_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.URL.Query(), filter_Management_ListServices_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -533,10 +530,7 @@ func local_request_Management_PutInsightConfiguration_0(ctx context.Context, mar
 	var protoReq InsightConfiguration
 	var metadata runtime.ServerMetadata
 
-	if err := req.ParseForm(); err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Management_PutInsightConfiguration_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.URL.Query(), filter_Management_PutInsightConfiguration_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -669,6 +663,58 @@ func local_request_Management_CreateAccessRequest_0(ctx context.Context, marshal
 	}
 
 	msg, err := server.CreateAccessRequest(ctx, &protoReq)
+	return msg, metadata, err
+
+}
+
+func request_Management_GetSettings_0(ctx context.Context, marshaler runtime.Marshaler, client ManagementClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetSettingsRequest
+	var metadata runtime.ServerMetadata
+
+	msg, err := client.GetSettings(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+
+}
+
+func local_request_Management_GetSettings_0(ctx context.Context, marshaler runtime.Marshaler, server ManagementServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetSettingsRequest
+	var metadata runtime.ServerMetadata
+
+	msg, err := server.GetSettings(ctx, &protoReq)
+	return msg, metadata, err
+
+}
+
+func request_Management_UpdateSettings_0(ctx context.Context, marshaler runtime.Marshaler, client ManagementClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq UpdateSettingsRequest
+	var metadata runtime.ServerMetadata
+
+	newReader, berr := utilities.IOReaderFactory(req.Body)
+	if berr != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
+	}
+	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	msg, err := client.UpdateSettings(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+
+}
+
+func local_request_Management_UpdateSettings_0(ctx context.Context, marshaler runtime.Marshaler, server ManagementServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq UpdateSettingsRequest
+	var metadata runtime.ServerMetadata
+
+	newReader, berr := utilities.IOReaderFactory(req.Body)
+	if berr != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
+	}
+	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	msg, err := server.UpdateSettings(ctx, &protoReq)
 	return msg, metadata, err
 
 }
@@ -846,7 +892,6 @@ func local_request_Directory_RequestAccessToService_0(ctx context.Context, marsh
 // RegisterManagementHandlerServer registers the http handlers for service Management to "mux".
 // UnaryRPC     :call ManagementServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features (such as grpc.SendHeader, etc) to stop working. Consider using RegisterManagementHandlerFromEndpoint instead.
 func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux, server ManagementServer) error {
 
 	mux.Handle("GET", pattern_Management_ListServices_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
@@ -1129,13 +1174,52 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 
 	})
 
+	mux.Handle("GET", pattern_Management_GetSettings_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_Management_GetSettings_0(rctx, inboundMarshaler, server, req, pathParams)
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_Management_GetSettings_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("PUT", pattern_Management_UpdateSettings_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_Management_UpdateSettings_0(rctx, inboundMarshaler, server, req, pathParams)
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_Management_UpdateSettings_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
 	return nil
 }
 
 // RegisterDirectoryHandlerServer registers the http handlers for service Directory to "mux".
 // UnaryRPC     :call DirectoryServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features (such as grpc.SendHeader, etc) to stop working. Consider using RegisterDirectoryHandlerFromEndpoint instead.
 func RegisterDirectoryHandlerServer(ctx context.Context, mux *runtime.ServeMux, server DirectoryServer) error {
 
 	mux.Handle("GET", pattern_Directory_ListServices_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
@@ -1519,6 +1603,46 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 
 	})
 
+	mux.Handle("GET", pattern_Management_GetSettings_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateContext(ctx, mux, req)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_Management_GetSettings_0(rctx, inboundMarshaler, client, req, pathParams)
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_Management_GetSettings_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("PUT", pattern_Management_UpdateSettings_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateContext(ctx, mux, req)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_Management_UpdateSettings_0(rctx, inboundMarshaler, client, req, pathParams)
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_Management_UpdateSettings_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
 	return nil
 }
 
@@ -1550,6 +1674,10 @@ var (
 	pattern_Management_ListOutgoingAccessRequests_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"api", "v1", "access-requests", "outgoing", "organizations", "organizationName", "services", "serviceName"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_Management_CreateAccessRequest_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "access-requests"}, "", runtime.AssumeColonVerbOpt(true)))
+
+	pattern_Management_GetSettings_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "settings"}, "", runtime.AssumeColonVerbOpt(true)))
+
+	pattern_Management_UpdateSettings_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "settings"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (
@@ -1580,6 +1708,10 @@ var (
 	forward_Management_ListOutgoingAccessRequests_0 = runtime.ForwardResponseMessage
 
 	forward_Management_CreateAccessRequest_0 = runtime.ForwardResponseMessage
+
+	forward_Management_GetSettings_0 = runtime.ForwardResponseMessage
+
+	forward_Management_UpdateSettings_0 = runtime.ForwardResponseMessage
 )
 
 // RegisterDirectoryHandlerFromEndpoint is same as RegisterDirectoryHandler but

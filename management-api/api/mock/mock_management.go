@@ -315,6 +315,46 @@ func (mr *MockManagementClientMockRecorder) CreateAccessRequest(ctx, in interfac
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccessRequest", reflect.TypeOf((*MockManagementClient)(nil).CreateAccessRequest), varargs...)
 }
 
+// GetSettings mocks base method
+func (m *MockManagementClient) GetSettings(ctx context.Context, in *api.GetSettingsRequest, opts ...grpc.CallOption) (*api.Settings, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetSettings", varargs...)
+	ret0, _ := ret[0].(*api.Settings)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetSettings indicates an expected call of GetSettings
+func (mr *MockManagementClientMockRecorder) GetSettings(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSettings", reflect.TypeOf((*MockManagementClient)(nil).GetSettings), varargs...)
+}
+
+// UpdateSettings mocks base method
+func (m *MockManagementClient) UpdateSettings(ctx context.Context, in *api.UpdateSettingsRequest, opts ...grpc.CallOption) (*api.Empty, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "UpdateSettings", varargs...)
+	ret0, _ := ret[0].(*api.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateSettings indicates an expected call of UpdateSettings
+func (mr *MockManagementClientMockRecorder) UpdateSettings(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateSettings", reflect.TypeOf((*MockManagementClient)(nil).UpdateSettings), varargs...)
+}
+
 // MockManagementServer is a mock of ManagementServer interface
 type MockManagementServer struct {
 	ctrl     *gomock.Controller
@@ -546,6 +586,36 @@ func (m *MockManagementServer) CreateAccessRequest(arg0 context.Context, arg1 *a
 func (mr *MockManagementServerMockRecorder) CreateAccessRequest(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccessRequest", reflect.TypeOf((*MockManagementServer)(nil).CreateAccessRequest), arg0, arg1)
+}
+
+// GetSettings mocks base method
+func (m *MockManagementServer) GetSettings(arg0 context.Context, arg1 *api.GetSettingsRequest) (*api.Settings, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetSettings", arg0, arg1)
+	ret0, _ := ret[0].(*api.Settings)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetSettings indicates an expected call of GetSettings
+func (mr *MockManagementServerMockRecorder) GetSettings(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSettings", reflect.TypeOf((*MockManagementServer)(nil).GetSettings), arg0, arg1)
+}
+
+// UpdateSettings mocks base method
+func (m *MockManagementServer) UpdateSettings(arg0 context.Context, arg1 *api.UpdateSettingsRequest) (*api.Empty, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateSettings", arg0, arg1)
+	ret0, _ := ret[0].(*api.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateSettings indicates an expected call of UpdateSettings
+func (mr *MockManagementServerMockRecorder) UpdateSettings(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateSettings", reflect.TypeOf((*MockManagementServer)(nil).UpdateSettings), arg0, arg1)
 }
 
 // MockDirectoryClient is a mock of DirectoryClient interface

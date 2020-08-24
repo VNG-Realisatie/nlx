@@ -58,6 +58,13 @@ service Management {
 	rpc CreateAccessRequest (CreateAccessRequestRequest) returns (AccessRequest) {
 		option (google.api.http) = { post: "/api/v1/access-requests" body: "*" };
 	}
+
+	rpc GetSettings (GetSettingsRequest) returns (Settings) {
+		option (google.api.http) = { get: "/api/v1/settings" };
+	}
+	rpc UpdateSettings(UpdateSettingsRequest) returns (Empty) {
+		option (google.api.http) = { put: "/api/v1/settings", body: "*" };
+	}
 }
 
 message Service {
@@ -219,4 +226,14 @@ message DirectoryService {
 message RequestAccessToServiceRequest {
     string organizationName = 1;
     string serviceName = 2;
+}
+
+message GetSettingsRequest {}
+
+message Settings {
+	string inwayNameForManagementApiTraffic = 1;
+}
+
+message UpdateSettingsRequest{
+	string inwayNameForManagementApiTraffic = 1;
 }

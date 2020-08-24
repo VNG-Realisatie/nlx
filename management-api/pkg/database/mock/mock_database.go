@@ -281,3 +281,32 @@ func (mr *MockConfigDatabaseMockRecorder) CreateAccessRequest(ctx, accessRequest
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccessRequest", reflect.TypeOf((*MockConfigDatabase)(nil).CreateAccessRequest), ctx, accessRequest)
 }
+
+// GetSettings mocks base method
+func (m *MockConfigDatabase) GetSettings(ctx context.Context) (*database.Settings, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetSettings", ctx)
+	ret0, _ := ret[0].(*database.Settings)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetSettings indicates an expected call of GetSettings
+func (mr *MockConfigDatabaseMockRecorder) GetSettings(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSettings", reflect.TypeOf((*MockConfigDatabase)(nil).GetSettings), ctx)
+}
+
+// UpdateSettings mocks base method
+func (m *MockConfigDatabase) UpdateSettings(ctx context.Context, settings *database.Settings) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateSettings", ctx, settings)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateSettings indicates an expected call of UpdateSettings
+func (mr *MockConfigDatabaseMockRecorder) UpdateSettings(ctx, settings interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateSettings", reflect.TypeOf((*MockConfigDatabase)(nil).UpdateSettings), ctx, settings)
+}

@@ -514,6 +514,58 @@
           "Management"
         ]
       }
+    },
+    "/api/v1/settings": {
+      "get": {
+        "operationId": "Management_GetSettings",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/managementSettings"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "Management"
+        ]
+      },
+      "put": {
+        "operationId": "Management_UpdateSettings",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/managementEmpty"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/managementUpdateSettingsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Management"
+        ]
+      }
     }
   },
   "definitions": {
@@ -706,6 +758,22 @@
           "items": {
             "$ref": "#/definitions/nlxmanagementService"
           }
+        }
+      }
+    },
+    "managementSettings": {
+      "type": "object",
+      "properties": {
+        "inwayNameForManagementApiTraffic": {
+          "type": "string"
+        }
+      }
+    },
+    "managementUpdateSettingsRequest": {
+      "type": "object",
+      "properties": {
+        "inwayNameForManagementApiTraffic": {
+          "type": "string"
         }
       }
     },

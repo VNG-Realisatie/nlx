@@ -4,13 +4,18 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { IconArrowLeftRight, IconServices, IconDirectory } from '../../icons'
 import {
+  IconArrowLeftRight,
+  IconDirectory,
+  IconServices,
+  IconSettings,
+} from '../../icons'
+import {
+  StyledHomeLink,
   StyledIcon,
   StyledLink,
-  StyledHomeLink,
-  StyledNLXManagementLogo,
   StyledNav,
+  StyledNLXManagementLogo,
 } from './index.styles'
 
 const PrimaryNavigation = () => {
@@ -38,6 +43,11 @@ const PrimaryNavigation = () => {
       <StyledLink to="/directory" aria-label={t('Directory page')}>
         <StyledIcon as={IconDirectory} />
         {t('Directory')}
+      </StyledLink>
+
+      <StyledLink to="/settings" aria-label={t('Settings page')}>
+        <StyledIcon as={IconSettings} />
+        {t('Settings')}
       </StyledLink>
     </StyledNav>
   )

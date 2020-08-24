@@ -27,4 +27,7 @@ type ConfigDatabase interface {
 	GetLatestOutgoingAccessRequest(ctx context.Context, organizationName, serviceName string) (*AccessRequest, error)
 	ListAllLatestOutgoingAccessRequests(ctx context.Context) (map[string]*AccessRequest, error)
 	CreateAccessRequest(ctx context.Context, accessRequest *AccessRequest) (*AccessRequest, error)
+
+	GetSettings(ctx context.Context) (*Settings, error)
+	UpdateSettings(ctx context.Context, settings *Settings) error
 }

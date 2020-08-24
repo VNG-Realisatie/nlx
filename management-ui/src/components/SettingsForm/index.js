@@ -1,0 +1,94 @@
+// Copyright © VNG Realisatie 2020
+// Licensed under the EUPL
+//
+import React from 'react'
+import { func, shape, string } from 'prop-types'
+import { Formik, Field } from 'formik'
+import * as Yup from 'yup'
+import { useTranslation } from 'react-i18next'
+import { Button, Fieldset, Label } from '@commonground/design-system'
+import FormikFocusError from '../FormikFocusError'
+import usePromise from '../../hooks/use-promise'
+import InwayRepository from '../../domain/inway-repository'
+import { Form, InwaysLoadingMessage, InwaysEmptyMessage } from './index.styles'
+
+const DEFAULT_INITIAL_VALUES = {
+  inwayNameForManagementApiTraffic: '',
+}
+
+const SettingsForm = ({
+  initialValues,
+  onSubmitHandler,
+  getInways,
+  ...props
+}) => {
+  const { t } = useTranslation()
+  const { isReady: inwaysIsReady, result: inways } = usePromise(getInways)
+
+  const validationSchema = Yup.object().shape({
+    inwayNameForManagementApiTraffic: Yup.string(),
+  })
+
+  return (
+    <Formik
+      initialValues={{
+        ...DEFAULT_INITIAL_VALUES,
+        ...initialValues,
+      }}
+      validationSchema={validationSchema}
+      onSubmit={(values) => onSubmitHandler(values)}
+    >
+      {({ handleSubmit }) => (
+        <Form onSubmit={handleSubmit} data-testid="form" {...props}>
+          <Fieldset>
+            <Label htmlFor="inwayNameForManagementApiTraffic">
+              {t('Inway for Management API traffic')}
+            </Label>
+
+            {!inwaysIsReady ? (
+              <InwaysLoadingMessage />
+            ) : !inways || inways.length === 0 ? (
+              <InwaysEmptyMessage data-testid="no-inways-available">
+                {t('There are no inways available.')}
+              </InwaysEmptyMessage>
+            ) : (
+              <Field
+                id="inwayNameForManagementApiTraffic"
+                name="inwayNameForManagementApiTraffic"
+                data-testid="inwayNameForManagementApiTraffic"
+                as="select"
+              >
+                <option value="">{t('None')}</option>
+                {inways.map((inway) => (
+                  <option value={inway.address} key={inway.name}>
+                    {inway.name}
+                  </option>
+                ))}
+              </Field>
+            )}
+          </Fieldset>
+
+          <Button type="submit">{t('Save settings')}</Button>
+
+          <FormikFocusError />
+        </Form>
+      )}
+    </Formik>
+  )
+}
+
+SettingsForm.propTypes = {
+  onSubmitHandler: func,
+  initialValues: shape({
+    inwayNameForManagementApiTraffic: string,
+  }),
+  getInways: func,
+}
+
+SettingsForm.defaultProps = {
+  onSubmitHandler: () => {},
+  initialValues: DEFAULT_INITIAL_VALUES,
+  getInways: InwayRepository.getAll,
+}
+
+export default SettingsForm
