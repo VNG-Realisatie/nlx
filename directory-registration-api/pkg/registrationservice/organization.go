@@ -19,8 +19,6 @@ func (h *DirectoryRegistrationService) SetInsightConfiguration(ctx context.Conte
 
 	logger.Info("rpc request SetInsightConfiguration", zap.String("insight api url", req.InsightAPIURL), zap.String("irma server url", req.IrmaServerURL))
 
-	resp := &registrationapi.Empty{}
-
 	organizationName, err := h.getOrganisationNameFromRequest(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get organization name from request: %v", err)
@@ -37,5 +35,5 @@ func (h *DirectoryRegistrationService) SetInsightConfiguration(ctx context.Conte
 		return nil, status.New(codes.Internal, "database error").Err()
 	}
 
-	return resp, nil
+	return &registrationapi.Empty{}, nil
 }
