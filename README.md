@@ -104,26 +104,18 @@ And the following frontend applications:
 - [docs](http://localhost:3002) (HTTP: 3002)
 - [insight-ui](http://docs.shared.nlx.local:3003) (HTTP: 3003)
 - [management-ui (A)](http://management.organization-a.nlx.local:3011) (HTTP: 3011)
-- [management-ui (B)](http://management.organization-a.nlx.local:3021) (HTTP: 3021)
+- [management-ui (B)](http://management.organization-b.nlx.local:3021) (HTTP: 3021)
 
 Services will reload automatically when the code changes.
 
 Update the `/etc/hosts` file:
 
 ```
-127.0.0.1     dex.shared.nlx.local
-127.0.0.1     directory-inspection-api.shared.nlx.local
-127.0.0.1     directory-registration-api.shared.nlx.local
+# NLX
+127.0.0.1 dex.shared.nlx.local directory-inspection-api.shared.nlx.local directory-registration-api.shared.nlx.local etcd.organization-a.nlx.local management-api.organization-a.nlx.local inway.organization-a.nlx.local management.organization-a.nlx.local etcd.organization-b.nlx.local
+management-api.organization-b.nlx.local inway.organization-b.nlx.local management.organization-b.nlx.local
 
-127.0.0.1     etcd.organization-a.nlx.local
-127.0.0.1     management-api.organization-a.nlx.local
-127.0.0.1     inway.organization-a.nlx.local
-127.0.0.1     management.organization-a.nlx.local
-
-127.0.0.1     etcd.organization-b.nlx.local
-127.0.0.1     management-api.organization-b.nlx.local
-127.0.0.1     inway.organization-b.nlx.local
-127.0.0.1     management.organization-b.nlx.local
+::1 dex.shared.nlx.local directory-inspection-api.shared.nlx.local directory-registration-api.shared.nlx.local etcd.organization-a.nlx.local management-api.organization-a.nlx.local inway.organization-a.nlx.local management.organization-a.nlx.local etcd.organization-b.nlx.local management-api.organization-b.nlx.local inway.organization-b.nlx.local management.organization-b.nlx.local
 ```
 
 
