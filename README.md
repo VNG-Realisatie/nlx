@@ -118,6 +118,7 @@ management-api.organization-b.nlx.local inway.organization-b.nlx.local managemen
 ::1 dex.shared.nlx.local directory-inspection-api.shared.nlx.local directory-registration-api.shared.nlx.local etcd.organization-a.nlx.local management-api.organization-a.nlx.local inway.organization-a.nlx.local management.organization-a.nlx.local etcd.organization-b.nlx.local management-api.organization-b.nlx.local inway.organization-b.nlx.local management.organization-b.nlx.local
 ```
 
+To log in locally, see credentials in `dex.dev.yaml`
 
 ### Running the complete stack using Minikube
 
