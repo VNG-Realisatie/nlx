@@ -8,7 +8,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"go.nlx.io/nlx/management-api/pkg/configapi"
+	"go.nlx.io/nlx/management-api/api"
 )
 
 func init() { //nolint:gochecknoinits
@@ -42,7 +42,7 @@ var putInsightCommand = &cobra.Command{
 	Use:   "put",
 	Short: "Set the insight API url and the Irma server url",
 	Run: func(cmd *cobra.Command, args []string) {
-		response, err := getConfigClient().PutInsightConfiguration(context.Background(), &configapi.InsightConfiguration{
+		response, err := getManagementClient().PutInsightConfiguration(context.Background(), &api.InsightConfiguration{
 			InsightAPIURL: insightOptions.insightAPIURL,
 			IrmaServerURL: insightOptions.irmaServerURL,
 		})
@@ -60,7 +60,7 @@ var getInsightCommand = &cobra.Command{
 	Short: "Returns the current insight configuration",
 	Run: func(cmd *cobra.Command, arg []string) {
 
-		response, err := getConfigClient().GetInsightConfiguration(context.Background(), &configapi.Empty{})
+		response, err := getManagementClient().GetInsightConfiguration(context.Background(), &api.Empty{})
 		if err != nil {
 			log.Fatal(err)
 		}

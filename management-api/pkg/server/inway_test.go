@@ -1,5 +1,5 @@
 //nolint:dupl // test package
-package configapi_test
+package server_test
 
 import (
 	"context"
@@ -16,29 +16,30 @@ import (
 
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
-	"go.nlx.io/nlx/management-api/pkg/configapi"
+	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
+	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
 type args struct {
 	peer     *peer.Peer
 	database *database.Inway
-	request  *configapi.Inway
+	request  *api.Inway
 }
 
 var createInwayTests = []struct {
 	name string
 	args args
-	want *configapi.Inway
+	want *api.Inway
 }{
 	{
 		name: "ip address from context",
 		args: args{
 			database: &database.Inway{Name: "inway42.basic", IPAddress: "127.1.1.1"},
-			request:  &configapi.Inway{Name: "inway42.basic"},
+			request:  &api.Inway{Name: "inway42.basic"},
 			peer:     &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv4(127, 1, 1, 1)}}},
-		want: &configapi.Inway{
+		want: &api.Inway{
 			Name:      "inway42.basic",
 			IpAddress: "127.1.1.1",
 		},
@@ -47,9 +48,9 @@ var createInwayTests = []struct {
 		name: "ip address from request is ignored",
 		args: args{
 			database: &database.Inway{Name: "inway42.ignore_ip", IPAddress: "127.1.1.1"},
-			request:  &configapi.Inway{Name: "inway42.ignore_ip", IpAddress: "127.2.2.2"},
+			request:  &api.Inway{Name: "inway42.ignore_ip", IpAddress: "127.2.2.2"},
 			peer:     &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv4(127, 1, 1, 1)}}},
-		want: &configapi.Inway{
+		want: &api.Inway{
 			Name:      "inway42.ignore_ip",
 			IpAddress: "127.1.1.1",
 		},
@@ -58,16 +59,16 @@ var createInwayTests = []struct {
 		name: "the connection context must contain an address",
 		args: args{
 			database: &database.Inway{Name: "inway42.ip_context_required"},
-			request:  &configapi.Inway{Name: "inway42.ip_context_required"},
+			request:  &api.Inway{Name: "inway42.ip_context_required"},
 			peer:     &peer.Peer{Addr: nil}},
 	},
 	{
 		name: "ipv6",
 		args: args{
 			database: &database.Inway{Name: "inway42.ipv6", IPAddress: "::1"},
-			request:  &configapi.Inway{Name: "inway42.ipv6"},
+			request:  &api.Inway{Name: "inway42.ipv6"},
 			peer:     &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv6loopback}}},
-		want: &configapi.Inway{
+		want: &api.Inway{
 			Name:      "inway42.ipv6",
 			IpAddress: "::1",
 		},
@@ -89,7 +90,7 @@ func TestCreateInway(t *testing.T) {
 			if tt.want != nil {
 				mockDatabase.EXPECT().CreateInway(ctx, tt.args.database)
 			}
-			service := configapi.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+			service := server.NewManagementService(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
 
 			response, err := service.CreateInway(ctx, tt.args.request)
 			if tt.want != nil {
@@ -111,9 +112,9 @@ func TestGetInway(t *testing.T) {
 	defer mockCtrl.Finish()
 
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-	service := configapi.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+	service := server.NewManagementService(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
 
-	getInwayRequest := &configapi.GetInwayRequest{
+	getInwayRequest := &api.GetInwayRequest{
 		Name: "inway42.test",
 	}
 
@@ -141,9 +142,9 @@ func TestGetInway(t *testing.T) {
 	getInwayResponse, err := service.GetInway(ctx, getInwayRequest)
 	assert.NoError(t, err)
 
-	expectedResponse := &configapi.Inway{
+	expectedResponse := &api.Inway{
 		Name:     "inway42.test",
-		Services: []*configapi.Inway_Service{{Name: "forty-two"}},
+		Services: []*api.Inway_Service{{Name: "forty-two"}},
 	}
 
 	assert.Equal(t, expectedResponse, getInwayResponse)
@@ -164,11 +165,11 @@ func TestUpdateInway(t *testing.T) {
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
 	mockDatabase.EXPECT().UpdateInway(ctx, "inway42.test", mockInway)
 
-	service := configapi.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+	service := server.NewManagementService(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
 
-	updateInwayRequest := &configapi.UpdateInwayRequest{
+	updateInwayRequest := &api.UpdateInwayRequest{
 		Name: "inway42.test",
-		Inway: &configapi.Inway{
+		Inway: &api.Inway{
 			Name: "inway42.test",
 		},
 	}
@@ -176,7 +177,7 @@ func TestUpdateInway(t *testing.T) {
 	updateInwayResponse, err := service.UpdateInway(ctx, updateInwayRequest)
 	assert.NoError(t, err)
 
-	expectedResponse := &configapi.Inway{
+	expectedResponse := &api.Inway{
 		Name: "inway42.test",
 	}
 
@@ -194,9 +195,9 @@ func TestDeleteInway(t *testing.T) {
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
 	mockDatabase.EXPECT().DeleteInway(ctx, "inway42.test")
 
-	service := configapi.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+	service := server.NewManagementService(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
 
-	deleteRequest := &configapi.DeleteInwayRequest{
+	deleteRequest := &api.DeleteInwayRequest{
 		Name: "inway42.test",
 	}
 
@@ -238,21 +239,21 @@ func TestListInways(t *testing.T) {
 
 	mockDatabase.EXPECT().ListInways(ctx).Return(mockListInways, nil)
 
-	service := configapi.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
-	actualResponse, err := service.ListInways(ctx, &configapi.ListInwaysRequest{})
+	service := server.NewManagementService(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+	actualResponse, err := service.ListInways(ctx, &api.ListInwaysRequest{})
 
 	if err != nil {
 		t.Fatal("could not get list of inways", err)
 	}
 
-	expectedResponse := &configapi.ListInwaysResponse{
-		Inways: []*configapi.Inway{
+	expectedResponse := &api.ListInwaysResponse{
+		Inways: []*api.Inway{
 			{
 				Name: "inway42.test",
 			},
 			{
 				Name: "inway43.test",
-				Services: []*configapi.Inway_Service{
+				Services: []*api.Inway_Service{
 					{
 						Name: "mock-service",
 					},

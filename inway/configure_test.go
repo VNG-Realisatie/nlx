@@ -21,8 +21,8 @@ import (
 	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/inway/config"
-	"go.nlx.io/nlx/management-api/pkg/configapi"
-	configmock "go.nlx.io/nlx/management-api/pkg/configapi/mock"
+	"go.nlx.io/nlx/management-api/api"
+	api_mock "go.nlx.io/nlx/management-api/api/mock"
 )
 
 func createInway() (*Inway, error) {
@@ -38,8 +38,8 @@ func createInway() (*Inway, error) {
 	return NewInway(logger, nil, testProcess, "mock.inway", "localhost:1812", "localhost:1813", cert, "localhost:1815")
 }
 
-func createMockService() *configapi.Service {
-	return &configapi.Service{
+func createMockService() *api.Service {
+	return &api.Service{
 		Name:                 "my-service",
 		ApiSpecificationURL:  "https://api.spec.com",
 		DocumentationURL:     "https://documentation.com",
@@ -47,9 +47,9 @@ func createMockService() *configapi.Service {
 		PublicSupportContact: "publicsupport@email.com",
 		TechSupportContact:   "techsupport@email.com",
 		Internal:             true,
-		AuthorizationSettings: &configapi.Service_AuthorizationSettings{
+		AuthorizationSettings: &api.Service_AuthorizationSettings{
 			Mode: "whitelist",
-			Authorizations: []*configapi.Service_AuthorizationSettings_Authorization{
+			Authorizations: []*api.Service_AuthorizationSettings_Authorization{
 				{OrganizationName: "demo-org1"},
 				{OrganizationName: "demo-org2"},
 				{PublicKeyHash: "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
@@ -72,10 +72,10 @@ func TestServiceToServiceDetails(t *testing.T) {
 	assert.Equal(t, service.AuthorizationSettings.Authorizations[2].PublicKeyHash, serviceDetails.AuthorizationWhitelist[2].PublicKeyHash)
 }
 
-func TestConfigApiResponseToEndpoints(t *testing.T) {
+func TestManagementAPIResponseToEndpoints(t *testing.T) {
 	serviceConfig := createMockService()
-	response := &configapi.ListServicesResponse{
-		Services: []*configapi.Service{
+	response := &api.ListServicesResponse{
+		Services: []*api.Service{
 			serviceConfig,
 		},
 	}
@@ -123,47 +123,48 @@ func TestSetupManagementAPI(t *testing.T) {
 
 	err = iw.SetupManagementAPI("https://managementapi.mock", cert)
 	assert.Nil(t, err)
-	assert.NotNil(t, iw.configAPIClient)
+	assert.NotNil(t, iw.managementClient)
 }
 
-func TestGetServicesFromConfigAPI(t *testing.T) {
-	i, err := createInway()
+func TestGetServicesFromManagementAPI(t *testing.T) {
+	iw, err := createInway()
 	assert.Nil(t, err)
 	service := createMockService()
-	mockResponse := &configapi.ListServicesResponse{
-		Services: []*configapi.Service{
+	mockResponse := &api.ListServicesResponse{
+		Services: []*api.Service{
 			service,
 		},
 	}
 
-	expectedRequest := &configapi.ListServicesRequest{
+	expectedRequest := &api.ListServicesRequest{
 		InwayName: "mock.inway",
 	}
 	controller := gomock.NewController(t)
-	configAPIMockClient := configmock.NewMockConfigApiClient(controller)
-	configAPIMockClient.EXPECT().ListServices(context.Background(), expectedRequest).Return(mockResponse, nil)
 
-	i.configAPIClient = configAPIMockClient
-	services, err := i.getServicesFromConfigAPI()
+	managementClient := api_mock.NewMockManagementClient(controller)
+	managementClient.EXPECT().ListServices(context.Background(), expectedRequest).Return(mockResponse, nil)
+
+	iw.managementClient = managementClient
+	services, err := iw.getServicesFromManagementAPI()
 	assert.Nil(t, err)
 	assert.NotNil(t, services)
 	assert.Len(t, services, 1)
 	assert.Equal(t, service.Name, services[0].ServiceName())
 
-	configAPIMockClient.EXPECT().ListServices(context.Background(), expectedRequest).Return(nil, fmt.Errorf("error"))
+	managementClient.EXPECT().ListServices(context.Background(), expectedRequest).Return(nil, fmt.Errorf("error"))
 
-	services, err = i.getServicesFromConfigAPI()
+	services, err = iw.getServicesFromManagementAPI()
 	assert.NotNil(t, err)
 	assert.Nil(t, services)
 	assert.Equal(t, err.Error(), "error")
 
-	configAPIMockClient.EXPECT().ListServices(context.Background(), expectedRequest).
+	managementClient.EXPECT().ListServices(context.Background(), expectedRequest).
 		Return(nil, status.New(codes.Unavailable, "unavailable").Err())
 
-	services, err = i.getServicesFromConfigAPI()
+	services, err = iw.getServicesFromManagementAPI()
 	assert.NotNil(t, err)
 	assert.Nil(t, services)
-	assert.Equal(t, err, errConfigAPIUnavailable)
+	assert.Equal(t, err, errManagementAPIUnavailable)
 }
 
 func TestStartConfigurationPolling(t *testing.T) {
@@ -174,29 +175,30 @@ func TestStartConfigurationPolling(t *testing.T) {
 	assert.Nil(t, err)
 
 	controller := gomock.NewController(t)
-	configAPIMockClient := configmock.NewMockConfigApiClient(controller)
-	configAPIMockClient.EXPECT().CreateInway(context.Background(), &configapi.Inway{
+	managementClient := api_mock.NewMockManagementClient(controller)
+	managementClient.EXPECT().CreateInway(context.Background(), &api.Inway{
 		Name:        "mock.inway",
 		Version:     "unknown",
 		Hostname:    hostname,
 		SelfAddress: "localhost:1812",
 	}).Return(nil, fmt.Errorf("error create inway"))
 
-	configAPIMockClient.EXPECT().ListServices(context.Background(), &configapi.ListServicesRequest{
+	managementClient.EXPECT().ListServices(context.Background(), &api.ListServicesRequest{
 		InwayName: iw.name,
 	}).Return(nil, fmt.Errorf("error list services"))
-	iw.configAPIClient = configAPIMockClient
+
+	iw.managementClient = managementClient
 
 	err = iw.StartConfigurationPolling()
 	assert.NotNil(t, err)
 	assert.Equal(t, "error create inway", err.Error())
 
-	configAPIMockClient.EXPECT().CreateInway(context.Background(), &configapi.Inway{
+	managementClient.EXPECT().CreateInway(context.Background(), &api.Inway{
 		Name:        "mock.inway",
 		Version:     "unknown",
 		Hostname:    hostname,
 		SelfAddress: "localhost:1812",
-	}).Return(&configapi.Inway{
+	}).Return(&api.Inway{
 		Name:        "mock.inway",
 		Version:     "unknown",
 		Hostname:    hostname,
@@ -217,35 +219,35 @@ func TestUpdateConfig(t *testing.T) {
 
 	sleepDuration := 10 * time.Second
 	service := createMockService()
-	mockResponse := &configapi.ListServicesResponse{
-		Services: []*configapi.Service{
+	mockResponse := &api.ListServicesResponse{
+		Services: []*api.Service{
 			service,
 		},
 	}
 
-	expectedRequest := &configapi.ListServicesRequest{
+	expectedRequest := &api.ListServicesRequest{
 		InwayName: "mock.inway",
 	}
 
 	controller := gomock.NewController(t)
-	configAPIMockClient := configmock.NewMockConfigApiClient(controller)
-	configAPIMockClient.EXPECT().ListServices(context.Background(), expectedRequest).Return(mockResponse, nil)
+	managementClient := api_mock.NewMockManagementClient(controller)
+	managementClient.EXPECT().ListServices(context.Background(), expectedRequest).Return(mockResponse, nil)
 
 	iw, err := createInway()
 	assert.Nil(t, err)
 
-	iw.configAPIClient = configAPIMockClient
+	iw.managementClient = managementClient
 
 	newSleepDuration := iw.updateConfig(expBackOff, sleepDuration)
 	assert.Equal(t, sleepDuration, newSleepDuration)
 
-	configAPIMockClient.EXPECT().ListServices(context.Background(), expectedRequest).
+	managementClient.EXPECT().ListServices(context.Background(), expectedRequest).
 		Return(nil, status.New(codes.Unavailable, "unavailable").Err())
 
 	newSleepDuration = iw.updateConfig(expBackOff, sleepDuration)
 	assert.Equal(t, expBackOff.Min, newSleepDuration)
 
-	configAPIMockClient.EXPECT().ListServices(context.Background(), expectedRequest).
+	managementClient.EXPECT().ListServices(context.Background(), expectedRequest).
 		Return(nil, fmt.Errorf("error"))
 
 	newSleepDuration = iw.updateConfig(expBackOff, sleepDuration)
@@ -255,8 +257,9 @@ func TestUpdateConfig(t *testing.T) {
 func TestCreateServiceEndpoints(t *testing.T) {
 	iw, err := createInway()
 	assert.Nil(t, err)
-	mockResponse := &configapi.ListServicesResponse{
-		Services: []*configapi.Service{
+
+	mockResponse := &api.ListServicesResponse{
+		Services: []*api.Service{
 			createMockService(),
 		},
 	}
@@ -295,8 +298,8 @@ func TestDeleteServiceEndpoints(t *testing.T) {
 	err = iw.SetServiceEndpoints(initEndpoints)
 	assert.Nil(t, err)
 
-	mockResponse := &configapi.ListServicesResponse{
-		Services: []*configapi.Service{
+	mockResponse := &api.ListServicesResponse{
+		Services: []*api.Service{
 			{
 				Name:                "service-a",
 				ApiSpecificationURL: "https://api-a.test",
@@ -305,11 +308,11 @@ func TestDeleteServiceEndpoints(t *testing.T) {
 	}
 
 	controller := gomock.NewController(t)
-	configAPIMockClient := configmock.NewMockConfigApiClient(controller)
-	configAPIMockClient.EXPECT().CreateInway(gomock.Any(), gomock.Any()).Return(nil, nil)
-	configAPIMockClient.EXPECT().ListServices(gomock.Any(), gomock.Any()).Return(mockResponse, nil)
+	managementClient := api_mock.NewMockManagementClient(controller)
+	managementClient.EXPECT().CreateInway(gomock.Any(), gomock.Any()).Return(nil, nil)
+	managementClient.EXPECT().ListServices(gomock.Any(), gomock.Any()).Return(mockResponse, nil)
 
-	iw.configAPIClient = configAPIMockClient
+	iw.managementClient = managementClient
 
 	assert.Len(t, initEndpoints, 2)
 

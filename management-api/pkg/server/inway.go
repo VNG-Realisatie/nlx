@@ -1,5 +1,5 @@
 //nolint:dupl // service and inway structs look the same
-package configapi
+package server
 
 import (
 	"context"
@@ -11,11 +11,12 @@ import (
 	"google.golang.org/grpc/peer"
 	"google.golang.org/grpc/status"
 
+	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
 // CreateInway creates a new inway
-func (s *ConfigService) CreateInway(ctx context.Context, inway *Inway) (*Inway, error) {
+func (s *ManagementService) CreateInway(ctx context.Context, inway *api.Inway) (*api.Inway, error) {
 	logger := s.logger.With(zap.String("name", inway.Name))
 
 	logger.Info("rpc request CreateInway")
@@ -58,7 +59,7 @@ func (s *ConfigService) CreateInway(ctx context.Context, inway *Inway) (*Inway, 
 }
 
 // GetInway returns a specific inway
-func (s *ConfigService) GetInway(ctx context.Context, req *GetInwayRequest) (*Inway, error) {
+func (s *ManagementService) GetInway(ctx context.Context, req *api.GetInwayRequest) (*api.Inway, error) {
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request GetInway")
 
@@ -83,7 +84,7 @@ func (s *ConfigService) GetInway(ctx context.Context, req *GetInwayRequest) (*In
 		services = database.FilterServices(services, inway)
 	}
 
-	response := &Inway{
+	response := &api.Inway{
 		Name:        inway.Name,
 		Version:     inway.Version,
 		Hostname:    inway.Hostname,
@@ -91,10 +92,10 @@ func (s *ConfigService) GetInway(ctx context.Context, req *GetInwayRequest) (*In
 		IpAddress:   inway.IPAddress,
 	}
 
-	response.Services = make([]*Inway_Service, len(services))
+	response.Services = make([]*api.Inway_Service, len(services))
 
 	for i, service := range services {
-		servicesResponse := &Inway_Service{
+		servicesResponse := &api.Inway_Service{
 			Name: service.Name,
 		}
 
@@ -105,7 +106,7 @@ func (s *ConfigService) GetInway(ctx context.Context, req *GetInwayRequest) (*In
 }
 
 // UpdateInway updates an existing inway
-func (s *ConfigService) UpdateInway(ctx context.Context, req *UpdateInwayRequest) (*Inway, error) {
+func (s *ManagementService) UpdateInway(ctx context.Context, req *api.UpdateInwayRequest) (*api.Inway, error) {
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request UpdateInway")
 
@@ -132,7 +133,7 @@ func (s *ConfigService) UpdateInway(ctx context.Context, req *UpdateInwayRequest
 }
 
 // DeleteInway deletes a specific inway
-func (s *ConfigService) DeleteInway(ctx context.Context, req *DeleteInwayRequest) (*Empty, error) {
+func (s *ManagementService) DeleteInway(ctx context.Context, req *api.DeleteInwayRequest) (*api.Empty, error) {
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request DeleteInway")
 
@@ -140,14 +141,14 @@ func (s *ConfigService) DeleteInway(ctx context.Context, req *DeleteInwayRequest
 
 	if err != nil {
 		logger.Error("error deleting inway in DB", zap.Error(err))
-		return &Empty{}, status.Error(codes.Internal, "database error")
+		return &api.Empty{}, status.Error(codes.Internal, "database error")
 	}
 
-	return &Empty{}, nil
+	return &api.Empty{}, nil
 }
 
 // ListInways returns a list of inways
-func (s *ConfigService) ListInways(ctx context.Context, req *ListInwaysRequest) (*ListInwaysResponse, error) {
+func (s *ManagementService) ListInways(ctx context.Context, req *api.ListInwaysRequest) (*api.ListInwaysResponse, error) {
 	s.logger.Info("rpc request ListInways")
 
 	inways, err := s.configDatabase.ListInways(ctx)
@@ -162,8 +163,8 @@ func (s *ConfigService) ListInways(ctx context.Context, req *ListInwaysRequest) 
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	response := &ListInwaysResponse{}
-	response.Inways = make([]*Inway, len(inways))
+	response := &api.ListInwaysResponse{}
+	response.Inways = make([]*api.Inway, len(inways))
 
 	for i, inway := range inways {
 		inwayServices := database.FilterServices(services, inway)
@@ -173,8 +174,8 @@ func (s *ConfigService) ListInways(ctx context.Context, req *ListInwaysRequest) 
 	return response, nil
 }
 
-func convertFromDatabaseInway(model *database.Inway, services []*database.Service) *Inway {
-	inway := &Inway{
+func convertFromDatabaseInway(model *database.Inway, services []*database.Service) *api.Inway {
+	inway := &api.Inway{
 		Name:        model.Name,
 		Version:     model.Version,
 		Hostname:    model.Hostname,
@@ -183,10 +184,10 @@ func convertFromDatabaseInway(model *database.Inway, services []*database.Servic
 	}
 
 	if length := len(services); length > 0 {
-		inway.Services = make([]*Inway_Service, length)
+		inway.Services = make([]*api.Inway_Service, length)
 
 		for i, service := range services {
-			inwayService := &Inway_Service{
+			inwayService := &api.Inway_Service{
 				Name: service.Name,
 			}
 

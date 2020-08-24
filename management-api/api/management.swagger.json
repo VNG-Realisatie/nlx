@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "configapi.proto",
+    "title": "management.proto",
     "version": "version not set"
   },
   "consumes": [
@@ -13,12 +13,12 @@
   "paths": {
     "/api/v1/access-requests": {
       "post": {
-        "operationId": "ConfigApi_CreateAccessRequest",
+        "operationId": "Management_CreateAccessRequest",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/configapiAccessRequest"
+              "$ref": "#/definitions/managementAccessRequest"
             }
           },
           "default": {
@@ -34,23 +34,23 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/configapiCreateAccessRequestRequest"
+              "$ref": "#/definitions/managementCreateAccessRequestRequest"
             }
           }
         ],
         "tags": [
-          "ConfigApi"
+          "Management"
         ]
       }
     },
     "/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}": {
       "get": {
-        "operationId": "ConfigApi_ListOutgoingAccessRequests",
+        "operationId": "Management_ListOutgoingAccessRequests",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/configapiListOutgoingAccessRequestsResponse"
+              "$ref": "#/definitions/managementListOutgoingAccessRequestsResponse"
             }
           },
           "default": {
@@ -75,18 +75,112 @@
           }
         ],
         "tags": [
-          "ConfigApi"
+          "Management"
+        ]
+      }
+    },
+    "/api/v1/directory/organizations/{organizationName}/services/{serviceName}": {
+      "get": {
+        "operationId": "Directory_GetOrganizationService",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/managementDirectoryService"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "organizationName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "serviceName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Directory"
+        ]
+      }
+    },
+    "/api/v1/directory/organizations/{organizationName}/services/{serviceName}/access-requests": {
+      "post": {
+        "operationId": "Directory_RequestAccessToService",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/managementAccessRequest"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "organizationName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "serviceName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Directory"
+        ]
+      }
+    },
+    "/api/v1/directory/services": {
+      "get": {
+        "operationId": "Directory_ListServices",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/managementDirectoryListServicesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "Directory"
         ]
       }
     },
     "/api/v1/insight-configuration": {
       "get": {
-        "operationId": "ConfigApi_GetInsightConfiguration",
+        "operationId": "Management_GetInsightConfiguration",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/configapiInsightConfiguration"
+              "$ref": "#/definitions/managementInsightConfiguration"
             }
           },
           "default": {
@@ -97,16 +191,16 @@
           }
         },
         "tags": [
-          "ConfigApi"
+          "Management"
         ]
       },
       "put": {
-        "operationId": "ConfigApi_PutInsightConfiguration",
+        "operationId": "Management_PutInsightConfiguration",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/configapiInsightConfiguration"
+              "$ref": "#/definitions/managementInsightConfiguration"
             }
           },
           "default": {
@@ -117,18 +211,18 @@
           }
         },
         "tags": [
-          "ConfigApi"
+          "Management"
         ]
       }
     },
     "/api/v1/inways": {
       "get": {
-        "operationId": "ConfigApi_ListInways",
+        "operationId": "Management_ListInways",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/configapiListInwaysResponse"
+              "$ref": "#/definitions/managementListInwaysResponse"
             }
           },
           "default": {
@@ -139,16 +233,16 @@
           }
         },
         "tags": [
-          "ConfigApi"
+          "Management"
         ]
       },
       "post": {
-        "operationId": "ConfigApi_CreateInway",
+        "operationId": "Management_CreateInway",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/configapiInway"
+              "$ref": "#/definitions/managementInway"
             }
           },
           "default": {
@@ -164,23 +258,23 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/configapiInway"
+              "$ref": "#/definitions/managementInway"
             }
           }
         ],
         "tags": [
-          "ConfigApi"
+          "Management"
         ]
       }
     },
     "/api/v1/inways/{name}": {
       "get": {
-        "operationId": "ConfigApi_GetInway",
+        "operationId": "Management_GetInway",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/configapiInway"
+              "$ref": "#/definitions/managementInway"
             }
           },
           "default": {
@@ -199,16 +293,16 @@
           }
         ],
         "tags": [
-          "ConfigApi"
+          "Management"
         ]
       },
       "delete": {
-        "operationId": "ConfigApi_DeleteInway",
+        "operationId": "Management_DeleteInway",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/configapiEmpty"
+              "$ref": "#/definitions/managementEmpty"
             }
           },
           "default": {
@@ -227,16 +321,16 @@
           }
         ],
         "tags": [
-          "ConfigApi"
+          "Management"
         ]
       },
       "put": {
-        "operationId": "ConfigApi_UpdateInway",
+        "operationId": "Management_UpdateInway",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/configapiInway"
+              "$ref": "#/definitions/managementInway"
             }
           },
           "default": {
@@ -258,23 +352,23 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/configapiInway"
+              "$ref": "#/definitions/managementInway"
             }
           }
         ],
         "tags": [
-          "ConfigApi"
+          "Management"
         ]
       }
     },
     "/api/v1/services": {
       "get": {
-        "operationId": "ConfigApi_ListServices",
+        "operationId": "Management_ListServices",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/configapiListServicesResponse"
+              "$ref": "#/definitions/managementListServicesResponse"
             }
           },
           "default": {
@@ -293,16 +387,16 @@
           }
         ],
         "tags": [
-          "ConfigApi"
+          "Management"
         ]
       },
       "post": {
-        "operationId": "ConfigApi_CreateService",
+        "operationId": "Management_CreateService",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/configapiService"
+              "$ref": "#/definitions/nlxmanagementService"
             }
           },
           "default": {
@@ -318,23 +412,23 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/configapiService"
+              "$ref": "#/definitions/nlxmanagementService"
             }
           }
         ],
         "tags": [
-          "ConfigApi"
+          "Management"
         ]
       }
     },
     "/api/v1/services/{name}": {
       "get": {
-        "operationId": "ConfigApi_GetService",
+        "operationId": "Management_GetService",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/configapiService"
+              "$ref": "#/definitions/nlxmanagementService"
             }
           },
           "default": {
@@ -353,16 +447,16 @@
           }
         ],
         "tags": [
-          "ConfigApi"
+          "Management"
         ]
       },
       "delete": {
-        "operationId": "ConfigApi_DeleteService",
+        "operationId": "Management_DeleteService",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/configapiEmpty"
+              "$ref": "#/definitions/managementEmpty"
             }
           },
           "default": {
@@ -381,16 +475,16 @@
           }
         ],
         "tags": [
-          "ConfigApi"
+          "Management"
         ]
       },
       "put": {
-        "operationId": "ConfigApi_UpdateService",
+        "operationId": "Management_UpdateService",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/configapiService"
+              "$ref": "#/definitions/nlxmanagementService"
             }
           },
           "default": {
@@ -412,26 +506,17 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/configapiService"
+              "$ref": "#/definitions/nlxmanagementService"
             }
           }
         ],
         "tags": [
-          "ConfigApi"
+          "Management"
         ]
       }
     }
   },
   "definitions": {
-    "AccessRequestState": {
-      "type": "string",
-      "enum": [
-        "FAILED",
-        "CREATED",
-        "RECEIVED"
-      ],
-      "default": "FAILED"
-    },
     "AuthorizationSettingsAuthorization": {
       "type": "object",
       "properties": {
@@ -442,6 +527,16 @@
           "type": "string"
         }
       }
+    },
+    "DirectoryServiceState": {
+      "type": "string",
+      "enum": [
+        "unknown",
+        "up",
+        "down",
+        "degraded"
+      ],
+      "default": "unknown"
     },
     "ServiceAuthorizationSettings": {
       "type": "object",
@@ -457,7 +552,7 @@
         }
       }
     },
-    "configapiAccessRequest": {
+    "managementAccessRequest": {
       "type": "object",
       "properties": {
         "id": {
@@ -470,7 +565,7 @@
           "type": "string"
         },
         "state": {
-          "$ref": "#/definitions/AccessRequestState"
+          "$ref": "#/definitions/managementAccessRequestState"
         },
         "createdAt": {
           "type": "string",
@@ -482,7 +577,16 @@
         }
       }
     },
-    "configapiCreateAccessRequestRequest": {
+    "managementAccessRequestState": {
+      "type": "string",
+      "enum": [
+        "FAILED",
+        "CREATED",
+        "RECEIVED"
+      ],
+      "default": "FAILED"
+    },
+    "managementCreateAccessRequestRequest": {
       "type": "object",
       "properties": {
         "organizationName": {
@@ -493,10 +597,41 @@
         }
       }
     },
-    "configapiEmpty": {
+    "managementDirectoryListServicesResponse": {
+      "type": "object",
+      "properties": {
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/managementDirectoryService"
+          }
+        }
+      }
+    },
+    "managementDirectoryService": {
+      "type": "object",
+      "properties": {
+        "serviceName": {
+          "type": "string"
+        },
+        "organizationName": {
+          "type": "string"
+        },
+        "apiSpecificationType": {
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/definitions/DirectoryServiceState"
+        },
+        "latestAccessRequest": {
+          "$ref": "#/definitions/managementAccessRequest"
+        }
+      }
+    },
+    "managementEmpty": {
       "type": "object"
     },
-    "configapiInsightConfiguration": {
+    "managementInsightConfiguration": {
       "type": "object",
       "properties": {
         "irmaServerURL": {
@@ -507,7 +642,7 @@
         }
       }
     },
-    "configapiInway": {
+    "managementInway": {
       "type": "object",
       "properties": {
         "name": {
@@ -525,7 +660,7 @@
         "services": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/configapiInwayService"
+            "$ref": "#/definitions/managementInwayService"
           }
         },
         "ipAddress": {
@@ -533,7 +668,7 @@
         }
       }
     },
-    "configapiInwayService": {
+    "managementInwayService": {
       "type": "object",
       "properties": {
         "name": {
@@ -541,40 +676,40 @@
         }
       }
     },
-    "configapiListInwaysResponse": {
+    "managementListInwaysResponse": {
       "type": "object",
       "properties": {
         "inways": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/configapiInway"
+            "$ref": "#/definitions/managementInway"
           }
         }
       }
     },
-    "configapiListOutgoingAccessRequestsResponse": {
+    "managementListOutgoingAccessRequestsResponse": {
       "type": "object",
       "properties": {
         "accessRequests": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/configapiAccessRequest"
+            "$ref": "#/definitions/managementAccessRequest"
           }
         }
       }
     },
-    "configapiListServicesResponse": {
+    "managementListServicesResponse": {
       "type": "object",
       "properties": {
         "services": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/configapiService"
+            "$ref": "#/definitions/nlxmanagementService"
           }
         }
       }
     },
-    "configapiService": {
+    "nlxmanagementService": {
       "type": "object",
       "properties": {
         "name": {

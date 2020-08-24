@@ -1,4 +1,4 @@
-package directory
+package server
 
 import (
 	"context"
@@ -9,26 +9,28 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
+	"go.nlx.io/nlx/management-api/pkg/directory"
 	"go.nlx.io/nlx/management-api/pkg/environment"
 )
 
-type Service struct {
+type DirectoryService struct {
 	logger      *zap.Logger
 	environment *environment.Environment
 
-	directoryClient Client
+	directoryClient directory.Client
 	configDatabase  database.ConfigDatabase
 }
 
-var inwayStateToDirectoryState = map[InwayState]DirectoryService_State{
-	InwayStateUnknown: DirectoryService_unknown,
-	InwayStateUp:      DirectoryService_up,
-	InwayStateDown:    DirectoryService_down,
+var inwayStateToDirectoryState = map[directory.InwayState]api.DirectoryService_State{
+	directory.InwayStateUnknown: api.DirectoryService_unknown,
+	directory.InwayStateUp:      api.DirectoryService_up,
+	directory.InwayStateDown:    api.DirectoryService_down,
 }
 
-func NewDirectoryService(logger *zap.Logger, e *environment.Environment, directoryClient Client, configDatabase database.ConfigDatabase) *Service {
-	return &Service{
+func NewDirectoryService(logger *zap.Logger, e *environment.Environment, directoryClient directory.Client, configDatabase database.ConfigDatabase) *DirectoryService {
+	return &DirectoryService{
 		logger:          logger,
 		environment:     e,
 		directoryClient: directoryClient,
@@ -37,7 +39,7 @@ func NewDirectoryService(logger *zap.Logger, e *environment.Environment, directo
 }
 
 // ListServices returns all services known to the directory except those with the same organization
-func (s Service) ListServices(ctx context.Context, _ *Empty) (*ListServicesResponse, error) {
+func (s DirectoryService) ListServices(ctx context.Context, _ *api.Empty) (*api.DirectoryListServicesResponse, error) {
 	s.logger.Info("rpc request ListServices")
 
 	listServices, err := s.directoryClient.ListServices()
@@ -52,7 +54,7 @@ func (s Service) ListServices(ctx context.Context, _ *Empty) (*ListServicesRespo
 		return nil, status.Errorf(codes.Internal, "database error")
 	}
 
-	services := make([]*DirectoryService, len(listServices))
+	services := make([]*api.DirectoryService, len(listServices))
 
 	for i, service := range listServices {
 		services[i] = convertDirectoryService(service)
@@ -71,11 +73,11 @@ func (s Service) ListServices(ctx context.Context, _ *Empty) (*ListServicesRespo
 		}
 	}
 
-	return &ListServicesResponse{Services: services}, nil
+	return &api.DirectoryListServicesResponse{Services: services}, nil
 }
 
 // GetOrganizationService returns a specific service of and organization
-func (s Service) GetOrganizationService(ctx context.Context, request *GetOrganizationServiceRequest) (*DirectoryService, error) {
+func (s DirectoryService) GetOrganizationService(ctx context.Context, request *api.GetOrganizationServiceRequest) (*api.DirectoryService, error) {
 	logger := s.logger.With(zap.String("organizationName", request.OrganizationName), zap.String("serviceName", request.ServiceName))
 	logger.Info("rpc request GetOrganizationService")
 
@@ -105,7 +107,7 @@ func (s Service) GetOrganizationService(ctx context.Context, request *GetOrganiz
 	return directoryService, nil
 }
 
-func (s Service) getService(logger *zap.Logger, organizationName, serviceName string) (*InspectionAPIService, error) {
+func (s DirectoryService) getService(logger *zap.Logger, organizationName, serviceName string) (*directory.InspectionAPIService, error) {
 	services, err := s.directoryClient.ListServices()
 	if err != nil {
 		return nil, status.Error(codes.Internal, "directory not available")
@@ -123,7 +125,7 @@ func (s Service) getService(logger *zap.Logger, organizationName, serviceName st
 }
 
 // RequestAccessToService records an access request and sends it to the organization
-func (s Service) RequestAccessToService(ctx context.Context, request *RequestAccessToServiceRequest) (*AccessRequest, error) {
+func (s DirectoryService) RequestAccessToService(ctx context.Context, request *api.RequestAccessToServiceRequest) (*api.AccessRequest, error) {
 	logger := s.logger.With(zap.String("organizationName", request.OrganizationName), zap.String("serviceName", request.ServiceName))
 	logger.Info("rpc request RequestAccessToService")
 
@@ -137,7 +139,7 @@ func (s Service) RequestAccessToService(ctx context.Context, request *RequestAcc
 		return nil, err
 	}
 
-	response, err := convertAccessRequest(a)
+	response, err := convertDirectoryAccessRequest(a)
 	if err != nil {
 		return nil, err
 	}
@@ -154,21 +156,21 @@ func (s Service) RequestAccessToService(ctx context.Context, request *RequestAcc
 	return response, nil
 }
 
-func DetermineDirectoryServiceState(inways []*Inway) DirectoryService_State {
-	serviceState := DirectoryService_unknown
+func DetermineDirectoryServiceState(inways []*directory.Inway) api.DirectoryService_State {
+	serviceState := api.DirectoryService_unknown
 
 	if len(inways) == 0 {
 		return serviceState
 	}
 
-	stateMap := map[InwayState]int{}
+	stateMap := map[directory.InwayState]int{}
 
 	for _, i := range inways {
 		stateMap[i.State]++
 	}
 
 	if len(stateMap) > 1 {
-		return DirectoryService_degraded
+		return api.DirectoryService_degraded
 	}
 
 	for state := range stateMap {
@@ -178,10 +180,10 @@ func DetermineDirectoryServiceState(inways []*Inway) DirectoryService_State {
 	return serviceState
 }
 
-func convertDirectoryService(s *InspectionAPIService) *DirectoryService {
+func convertDirectoryService(s *directory.InspectionAPIService) *api.DirectoryService {
 	serviceState := DetermineDirectoryServiceState(s.Inways)
 
-	return &DirectoryService{
+	return &api.DirectoryService{
 		ServiceName:          s.Name,
 		OrganizationName:     s.OrganizationName,
 		APISpecificationType: s.APISpecificationType,
@@ -189,7 +191,7 @@ func convertDirectoryService(s *InspectionAPIService) *DirectoryService {
 	}
 }
 
-func convertAccessRequest(a *database.AccessRequest) (*AccessRequest, error) {
+func convertDirectoryAccessRequest(a *database.AccessRequest) (*api.AccessRequest, error) {
 	createdAt, err := types.TimestampProto(a.CreatedAt)
 	if err != nil {
 		return nil, err
@@ -200,18 +202,18 @@ func convertAccessRequest(a *database.AccessRequest) (*AccessRequest, error) {
 		return nil, err
 	}
 
-	var accessRequestState AccessRequest_State
+	var accessRequestState api.AccessRequestState
 
 	switch a.State {
 	case database.AccessRequestFailed:
-		accessRequestState = AccessRequest_FAILED
+		accessRequestState = api.AccessRequestState_FAILED
 	case database.AccessRequestCreated:
-		accessRequestState = AccessRequest_CREATED
+		accessRequestState = api.AccessRequestState_CREATED
 	case database.AccessRequestReceived:
-		accessRequestState = AccessRequest_RECEIVED
+		accessRequestState = api.AccessRequestState_RECEIVED
 	}
 
-	return &AccessRequest{
+	return &api.AccessRequest{
 		Id:        a.ID,
 		State:     accessRequestState,
 		CreatedAt: createdAt,

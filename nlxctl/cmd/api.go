@@ -9,10 +9,10 @@ import (
 	"google.golang.org/grpc/credentials"
 
 	"go.nlx.io/nlx/common/orgtls"
-	"go.nlx.io/nlx/management-api/pkg/configapi"
+	"go.nlx.io/nlx/management-api/api"
 )
 
-func getConfigClient() configapi.ConfigApiClient {
+func getManagementClient() api.ManagementClient {
 	ca, err := orgtls.LoadRootCert(viper.GetString("ca-path"))
 	if err != nil {
 		log.Fatal(err)
@@ -32,5 +32,5 @@ func getConfigClient() configapi.ConfigApiClient {
 		log.Fatal(err)
 	}
 
-	return configapi.NewConfigApiClient(c)
+	return api.NewManagementClient(c)
 }

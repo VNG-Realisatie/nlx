@@ -1,6 +1,8 @@
 syntax = "proto3";
 
-package configapi;
+package nlx.management;
+
+option go_package = "api";
 
 import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
@@ -11,7 +13,7 @@ option (gogoproto.sizer_all) = true;
 option (gogoproto.unmarshaler_all) = true;
 option (gogoproto.goproto_getters_all) = false;
 
-service ConfigApi {
+service Management {
 	rpc ListServices (ListServicesRequest) returns (ListServicesResponse) {
 		option (google.api.http) = { get: "/api/v1/services" };
 	}
@@ -140,17 +142,17 @@ message InsightConfiguration {
 	string insightAPIURL = 2;
 }
 
-message AccessRequest {
-	enum State {
-		FAILED = 0;
-		CREATED = 1;
-		RECEIVED = 2;
-	}
+enum AccessRequestState {
+	FAILED = 0;
+	CREATED = 1;
+	RECEIVED = 2;
+}
 
+message AccessRequest {
 	string id = 1;
 	string organizationName = 2;
 	string serviceName = 3;
-	State state = 4;
+	AccessRequestState state = 4;
 	google.protobuf.Timestamp createdAt = 5;
 	google.protobuf.Timestamp updatedAt = 6;
 }
@@ -167,4 +169,54 @@ message ListOutgoingAccessRequestsResponse {
 message CreateAccessRequestRequest {
 	string organizationName = 1;
 	string serviceName = 2;
+}
+
+
+service Directory {
+    rpc ListServices (Empty) returns (DirectoryListServicesResponse) {
+        option (google.api.http) = { get: "/api/v1/directory/services" };
+    }
+    rpc GetOrganizationService (GetOrganizationServiceRequest) returns (DirectoryService) {
+        option (google.api.http) = { get: "/api/v1/directory/organizations/{organizationName}/services/{serviceName}" };
+    }
+    rpc RequestAccessToService (RequestAccessToServiceRequest) returns (AccessRequest) {
+        option (google.api.http) = { post: "/api/v1/directory/organizations/{organizationName}/services/{serviceName}/access-requests" };
+    }
+}
+
+message DirectoryListServicesResponse {
+    repeated DirectoryService services = 1;
+}
+
+message GetOrganizationServiceRequest {
+    string organizationName = 1;
+    string serviceName = 2;
+}
+
+message DirectoryAccessRequest {
+    string id = 1;
+    AccessRequestState state = 2;
+    google.protobuf.Timestamp createdAt = 3;
+    google.protobuf.Timestamp updatedAt = 4;
+}
+
+message DirectoryService {
+    enum State {
+        unknown = 0;
+        up = 1;
+        down = 2;
+        degraded = 3;
+    }
+
+    string serviceName = 1;
+    string organizationName = 2;
+    string apiSpecificationType = 3 [(gogoproto.customname)="APISpecificationType"];
+    State state = 4;
+    AccessRequest latestAccessRequest = 5;
+
+}
+
+message RequestAccessToServiceRequest {
+    string organizationName = 1;
+    string serviceName = 2;
 }

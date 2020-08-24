@@ -1,4 +1,4 @@
-package configapi
+package server
 
 import (
 	"go.uber.org/zap"
@@ -9,17 +9,17 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
-// ConfigService handles all requests for the config api
-type ConfigService struct {
+// ManagementService handles all requests for the config api
+type ManagementService struct {
 	logger                      *zap.Logger
 	configDatabase              database.ConfigDatabase
 	mainProcess                 *process.Process
 	directoryRegistrationClient registrationapi.DirectoryRegistrationClient
 }
 
-// New creates new ConfigService
-func New(logger *zap.Logger, mainProcess *process.Process, directoryRegistrationClient registrationapi.DirectoryRegistrationClient, configDatabase database.ConfigDatabase) *ConfigService {
-	return &ConfigService{
+// NewManagementService creates new ManagementService
+func NewManagementService(logger *zap.Logger, mainProcess *process.Process, directoryRegistrationClient registrationapi.DirectoryRegistrationClient, configDatabase database.ConfigDatabase) *ManagementService {
+	return &ManagementService{
 		configDatabase:              configDatabase,
 		logger:                      logger,
 		mainProcess:                 mainProcess,

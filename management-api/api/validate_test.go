@@ -1,4 +1,4 @@
-package configapi_test
+package api_test
 
 import (
 	"errors"
@@ -6,19 +6,19 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"go.nlx.io/nlx/management-api/pkg/configapi"
+	"go.nlx.io/nlx/management-api/api"
 )
 
 func TestServiceValidate(t *testing.T) {
-	testService := configapi.Service{
+	testService := api.Service{
 		Name:                  "my-service",
-		AuthorizationSettings: &configapi.Service_AuthorizationSettings{Mode: "none"},
+		AuthorizationSettings: &api.Service_AuthorizationSettings{Mode: "none"},
 	}
 
 	err := testService.Validate()
 	assert.Equal(t, errors.New("invalid endpoint URL for service my-service"), err)
 
-	testService = configapi.Service{
+	testService = api.Service{
 		Name:        "my-service",
 		EndpointURL: "my-service.test",
 	}
@@ -26,28 +26,28 @@ func TestServiceValidate(t *testing.T) {
 	err = testService.Validate()
 	assert.Equal(t, errors.New("invalid authorization settings for service my-service"), err)
 
-	testService = configapi.Service{
+	testService = api.Service{
 		Name:                  "my-service",
 		EndpointURL:           "my-service.test",
-		AuthorizationSettings: &configapi.Service_AuthorizationSettings{Mode: "nonexisting"},
+		AuthorizationSettings: &api.Service_AuthorizationSettings{Mode: "nonexisting"},
 	}
 
 	err = testService.Validate()
 	assert.Equal(t, errors.New("invalid authorization mode for service my-service, expected whitelist or none, got nonexisting"), err)
 
-	testService = configapi.Service{
+	testService = api.Service{
 		Name:                  "my-service",
 		EndpointURL:           "my-service.test",
-		AuthorizationSettings: &configapi.Service_AuthorizationSettings{Mode: "whitelist"},
+		AuthorizationSettings: &api.Service_AuthorizationSettings{Mode: "whitelist"},
 	}
 
 	err = testService.Validate()
 	assert.Equal(t, nil, err)
 
-	testService = configapi.Service{
+	testService = api.Service{
 		Name:                  "my-service",
 		EndpointURL:           "my-service.test",
-		AuthorizationSettings: &configapi.Service_AuthorizationSettings{Mode: "whitelist", Authorizations: []*configapi.Service_AuthorizationSettings_Authorization{}},
+		AuthorizationSettings: &api.Service_AuthorizationSettings{Mode: "whitelist", Authorizations: []*api.Service_AuthorizationSettings_Authorization{}},
 	}
 
 	err = testService.Validate()
@@ -55,12 +55,12 @@ func TestServiceValidate(t *testing.T) {
 }
 
 func TestInwayValidate(t *testing.T) {
-	testInway := configapi.Inway{}
+	testInway := api.Inway{}
 
 	err := testInway.Validate()
 	assert.Equal(t, errors.New("invalid inway name"), err)
 
-	testInway = configapi.Inway{
+	testInway = api.Inway{
 		Name: "inway42.test",
 	}
 

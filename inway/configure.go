@@ -22,32 +22,32 @@ import (
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/inway/config"
-	"go.nlx.io/nlx/management-api/pkg/configapi"
+	"go.nlx.io/nlx/management-api/api"
 )
 
-var errConfigAPIUnavailable = fmt.Errorf("configAPI unavailable")
+var errManagementAPIUnavailable = fmt.Errorf("managementAPI unavailable")
 
 // SetupManagementAPI configures the inway to use the NLX Management API instead of the config toml
-func (i *Inway) SetupManagementAPI(configAPIAddress string, cert *common_tls.CertificateBundle) error {
+func (i *Inway) SetupManagementAPI(managementAPIAddress string, cert *common_tls.CertificateBundle) error {
 	creds := credentials.NewTLS(cert.TLSConfig())
 
 	connCtx, connCtxCancel := context.WithTimeout(context.Background(), 1*time.Minute)
 	defer connCtxCancel()
 
-	i.logger.Info("creating management api connection", zap.String("management api address", configAPIAddress))
-	configAPIConn, err := grpc.DialContext(connCtx, configAPIAddress, grpc.WithTransportCredentials(creds))
+	i.logger.Info("creating management api connection", zap.String("management api address", managementAPIAddress))
+	conn, err := grpc.DialContext(connCtx, managementAPIAddress, grpc.WithTransportCredentials(creds))
 	if err != nil {
 		return err
 	}
 
-	i.configAPIClient = configapi.NewConfigApiClient(configAPIConn)
+	i.managementClient = api.NewManagementClient(conn)
 
 	return nil
 }
 
 // StartConfigurationPolling will make the inway retrieve its configuration periodically
 func (i *Inway) StartConfigurationPolling() error {
-	_, err := i.configAPIClient.CreateInway(context.Background(), &configapi.Inway{
+	_, err := i.managementClient.CreateInway(context.Background(), &api.Inway{
 		Name:        i.name,
 		Version:     version.BuildVersion,
 		Hostname:    i.hostname(),
@@ -57,8 +57,8 @@ func (i *Inway) StartConfigurationPolling() error {
 		return err
 	}
 
-	services, err := i.getServicesFromConfigAPI()
-	if err != nil && err != errConfigAPIUnavailable {
+	services, err := i.getServicesFromManagementAPI()
+	if err != nil && err != errManagementAPIUnavailable {
 		return err
 	}
 
@@ -117,9 +117,9 @@ func (i *Inway) SetServiceEndpoints(endpoints []ServiceEndpoint) error {
 
 func (i *Inway) updateConfig(expBackOff *backoff.Backoff, defaultInterval time.Duration) time.Duration {
 	i.logger.Info("retrieving config from the management-api", zap.String("inwayname", i.name))
-	services, err := i.getServicesFromConfigAPI()
+	services, err := i.getServicesFromManagementAPI()
 	if err != nil {
-		if err == errConfigAPIUnavailable {
+		if err == errManagementAPIUnavailable {
 			i.logger.Info("waiting for management-api...", zap.Error(err))
 			return expBackOff.Duration()
 		}
@@ -167,7 +167,7 @@ func (i *Inway) isServiceConfigDifferent(services []ServiceEndpoint) bool {
 	return matches != serviceCount
 }
 
-func serviceConfigToServiceDetails(service *configapi.Service) *config.ServiceDetails {
+func serviceConfigToServiceDetails(service *api.Service) *config.ServiceDetails {
 	serviceDetails := &config.ServiceDetails{
 		ServiceDetailsBase: config.ServiceDetailsBase{
 			APISpecificationDocumentURL: service.ApiSpecificationURL,
@@ -194,7 +194,7 @@ func serviceConfigToServiceDetails(service *configapi.Service) *config.ServiceDe
 	return serviceDetails
 }
 
-func (i *Inway) createServiceEndpoints(response *configapi.ListServicesResponse) []ServiceEndpoint {
+func (i *Inway) createServiceEndpoints(response *api.ListServicesResponse) []ServiceEndpoint {
 	endPoints := make([]ServiceEndpoint, len(response.Services))
 	c := 0
 	for _, service := range response.Services {
@@ -211,14 +211,14 @@ func (i *Inway) createServiceEndpoints(response *configapi.ListServicesResponse)
 	return endPoints
 }
 
-func (i *Inway) getServicesFromConfigAPI() ([]ServiceEndpoint, error) {
-	response, err := i.configAPIClient.ListServices(context.Background(), &configapi.ListServicesRequest{
+func (i *Inway) getServicesFromManagementAPI() ([]ServiceEndpoint, error) {
+	response, err := i.managementClient.ListServices(context.Background(), &api.ListServicesRequest{
 		InwayName: i.name,
 	})
 
 	if err != nil {
 		if errStatus, ok := status.FromError(err); ok && errStatus.Code() == codes.Unavailable {
-			return nil, errConfigAPIUnavailable
+			return nil, errManagementAPIUnavailable
 		}
 
 		return nil, err

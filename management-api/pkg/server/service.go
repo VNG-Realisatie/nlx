@@ -1,5 +1,5 @@
 //nolint:dupl // service and inway structs look the same
-package configapi
+package server
 
 import (
 	"context"
@@ -10,11 +10,12 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
 // CreateService creates a new service
-func (s *ConfigService) CreateService(ctx context.Context, service *Service) (*Service, error) {
+func (s *ManagementService) CreateService(ctx context.Context, service *api.Service) (*api.Service, error) {
 	logger := s.logger.With(zap.String("name", service.Name))
 	logger.Info("rpc request CreateService")
 
@@ -51,7 +52,7 @@ func (s *ConfigService) CreateService(ctx context.Context, service *Service) (*S
 }
 
 // GetService returns a specific service
-func (s *ConfigService) GetService(ctx context.Context, req *GetServiceRequest) (*Service, error) {
+func (s *ManagementService) GetService(ctx context.Context, req *api.GetServiceRequest) (*api.Service, error) {
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request GetService")
 
@@ -72,7 +73,7 @@ func (s *ConfigService) GetService(ctx context.Context, req *GetServiceRequest) 
 }
 
 // UpdateService updates an existing service
-func (s *ConfigService) UpdateService(ctx context.Context, req *UpdateServiceRequest) (*Service, error) {
+func (s *ManagementService) UpdateService(ctx context.Context, req *api.UpdateServiceRequest) (*api.Service, error) {
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request UpdateService")
 
@@ -113,7 +114,7 @@ func (s *ConfigService) UpdateService(ctx context.Context, req *UpdateServiceReq
 }
 
 // DeleteService deletes a specific service
-func (s *ConfigService) DeleteService(ctx context.Context, req *DeleteServiceRequest) (*Empty, error) {
+func (s *ManagementService) DeleteService(ctx context.Context, req *api.DeleteServiceRequest) (*api.Empty, error) {
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request DeleteService")
 
@@ -121,14 +122,14 @@ func (s *ConfigService) DeleteService(ctx context.Context, req *DeleteServiceReq
 
 	if err != nil {
 		logger.Error("error deleting service in DB", zap.Error(err))
-		return &Empty{}, status.Error(codes.Internal, "database error")
+		return &api.Empty{}, status.Error(codes.Internal, "database error")
 	}
 
-	return &Empty{}, nil
+	return &api.Empty{}, nil
 }
 
 // ListServices returns a list of services
-func (s *ConfigService) ListServices(ctx context.Context, req *ListServicesRequest) (*ListServicesResponse, error) {
+func (s *ManagementService) ListServices(ctx context.Context, req *api.ListServicesRequest) (*api.ListServicesResponse, error) {
 	s.logger.Info("rpc request ListServices")
 
 	services, err := s.configDatabase.ListServices(ctx)
@@ -137,7 +138,7 @@ func (s *ConfigService) ListServices(ctx context.Context, req *ListServicesReque
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	response := &ListServicesResponse{}
+	response := &api.ListServicesResponse{}
 
 	var filteredServices []*database.Service
 
@@ -155,7 +156,7 @@ func (s *ConfigService) ListServices(ctx context.Context, req *ListServicesReque
 	}
 
 	if length := len(filteredServices); length > 0 {
-		response.Services = make([]*Service, length)
+		response.Services = make([]*api.Service, length)
 
 		for i, service := range filteredServices {
 			response.Services[i] = convertFromDatabaseService(service)
@@ -165,8 +166,8 @@ func (s *ConfigService) ListServices(ctx context.Context, req *ListServicesReque
 	return response, nil
 }
 
-func convertFromDatabaseService(model *database.Service) *Service {
-	service := &Service{
+func convertFromDatabaseService(model *database.Service) *api.Service {
+	service := &api.Service{
 		Name:                 model.Name,
 		EndpointURL:          model.EndpointURL,
 		DocumentationURL:     model.DocumentationURL,
@@ -178,7 +179,7 @@ func convertFromDatabaseService(model *database.Service) *Service {
 	}
 
 	if model.AuthorizationSettings != nil {
-		service.AuthorizationSettings = &Service_AuthorizationSettings{
+		service.AuthorizationSettings = &api.Service_AuthorizationSettings{
 			Mode: model.AuthorizationSettings.Mode,
 		}
 	}

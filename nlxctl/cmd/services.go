@@ -10,7 +10,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"go.nlx.io/nlx/management-api/pkg/configapi"
+	"go.nlx.io/nlx/management-api/api"
 )
 
 func init() { //nolint:gochecknoinits
@@ -64,7 +64,7 @@ var listServicesCommand = &cobra.Command{
 	Use:   "list",
 	Short: "List services",
 	Run: func(cmd *cobra.Command, args []string) {
-		response, err := getConfigClient().ListServices(context.Background(), &configapi.ListServicesRequest{})
+		response, err := getManagementClient().ListServices(context.Background(), &api.ListServicesRequest{})
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -86,14 +86,14 @@ var createServiceCommand = &cobra.Command{
 
 		serviceConfigs := splitConfigString(string(configBytes))
 		for _, configString := range serviceConfigs {
-			service := &configapi.Service{}
+			service := &api.Service{}
 			err = json.Unmarshal([]byte(configString), service)
 			if err != nil {
 				panic(err)
 			}
 
 			ctx := context.Background()
-			_, err = getConfigClient().CreateService(ctx, service)
+			_, err = getManagementClient().CreateService(ctx, service)
 			if err != nil {
 				panic(err)
 			}
@@ -113,19 +113,19 @@ var updateServiceCommand = &cobra.Command{
 			panic(err)
 		}
 
-		service := &configapi.Service{}
+		service := &api.Service{}
 		err = json.Unmarshal(configBytes, service)
 		if err != nil {
 			panic(err)
 		}
 
-		updateServiceRequest := &configapi.UpdateServiceRequest{
+		updateServiceRequest := &api.UpdateServiceRequest{
 			Name:    serviceOptions.name,
 			Service: service,
 		}
 
 		ctx := context.Background()
-		_, err = getConfigClient().UpdateService(ctx, updateServiceRequest)
+		_, err = getManagementClient().UpdateService(ctx, updateServiceRequest)
 		if err != nil {
 			panic(err)
 		}
@@ -140,11 +140,11 @@ var deleteServiceCommand = &cobra.Command{
 	Run: func(cmd *cobra.Command, arg []string) {
 		ctx := context.Background()
 
-		deleteServiceRequest := &configapi.DeleteServiceRequest{
+		deleteServiceRequest := &api.DeleteServiceRequest{
 			Name: serviceOptions.name,
 		}
 
-		_, err := getConfigClient().DeleteService(ctx, deleteServiceRequest)
+		_, err := getManagementClient().DeleteService(ctx, deleteServiceRequest)
 		if err != nil {
 			panic(err)
 		}

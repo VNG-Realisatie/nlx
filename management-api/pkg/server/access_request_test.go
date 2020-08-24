@@ -1,4 +1,4 @@
-package configapi_test
+package server_test
 
 import (
 	"context"
@@ -14,19 +14,20 @@ import (
 
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
-	"go.nlx.io/nlx/management-api/pkg/configapi"
+	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
+	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
-func newService(t *testing.T) (s *configapi.ConfigService, ctrl *gomock.Controller, db *mock_database.MockConfigDatabase) {
+func newService(t *testing.T) (s *server.ManagementService, ctrl *gomock.Controller, db *mock_database.MockConfigDatabase) {
 	logger := zaptest.Logger(t)
 	proc := process.NewProcess(logger)
 
 	ctrl = gomock.NewController(t)
 
 	db = mock_database.NewMockConfigDatabase(ctrl)
-	s = configapi.New(logger, proc, registrationapi.NewDirectoryRegistrationClient(nil), db)
+	s = server.NewManagementService(logger, proc, registrationapi.NewDirectoryRegistrationClient(nil), db)
 
 	return
 }
@@ -46,16 +47,16 @@ func TestCreateAccessRequest(t *testing.T) {
 
 	tests := []struct {
 		name        string
-		req         *configapi.CreateAccessRequestRequest
+		req         *api.CreateAccessRequestRequest
 		ar          *database.AccessRequest
 		returnReq   *database.AccessRequest
 		returnErr   error
-		expectedReq *configapi.AccessRequest
+		expectedReq *api.AccessRequest
 		expectedErr error
 	}{
 		{
 			"without active access request",
-			&configapi.CreateAccessRequestRequest{
+			&api.CreateAccessRequestRequest{
 				OrganizationName: "test-organization",
 				ServiceName:      "test-service",
 			},
@@ -72,11 +73,11 @@ func TestCreateAccessRequest(t *testing.T) {
 				UpdatedAt:        time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
 			},
 			nil,
-			&configapi.AccessRequest{
+			&api.AccessRequest{
 				Id:               "12345abcde",
 				OrganizationName: "test-organization",
 				ServiceName:      "test-service",
-				State:            configapi.AccessRequest_CREATED,
+				State:            api.AccessRequestState_CREATED,
 				CreatedAt:        createTimestamp(time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC)),
 				UpdatedAt:        createTimestamp(time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC)),
 			},
@@ -84,7 +85,7 @@ func TestCreateAccessRequest(t *testing.T) {
 		},
 		{
 			"with active access request",
-			&configapi.CreateAccessRequestRequest{
+			&api.CreateAccessRequestRequest{
 				OrganizationName: "test-organization",
 				ServiceName:      "test-service",
 			},

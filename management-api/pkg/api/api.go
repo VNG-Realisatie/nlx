@@ -26,11 +26,12 @@ import (
 	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
-	"go.nlx.io/nlx/management-api/pkg/configapi"
+	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/directory"
 	"go.nlx.io/nlx/management-api/pkg/environment"
 	"go.nlx.io/nlx/management-api/pkg/oidc"
+	"go.nlx.io/nlx/management-api/pkg/server"
 	"go.nlx.io/nlx/management-api/pkg/util/clock"
 )
 
@@ -85,12 +86,11 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, cert, orgCert *com
 	}
 
 	db := newDatabase(logger, mainProcess, etcdConnectionString)
-	configService := configapi.New(logger, mainProcess, directoryRegistrationClient, db)
+	managementService := server.NewManagementService(logger, mainProcess, directoryRegistrationClient, db)
 
 	grpcServer := newGRPCServer(logger, cert)
 
-	configapi.RegisterConfigApiServer(grpcServer, configService)
-
+	api.RegisterManagementServer(grpcServer, managementService)
 	e := &environment.Environment{
 		OrganizationName: orgCert.Certificate().Subject.Organization[0],
 	}
@@ -100,9 +100,9 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, cert, orgCert *com
 		return nil, err
 	}
 
-	directoryService := directory.NewDirectoryService(logger, e, directoryClient, db)
+	directoryService := server.NewDirectoryService(logger, e, directoryClient, db)
 
-	directory.RegisterDirectoryServer(grpcServer, directoryService)
+	api.RegisterDirectoryServer(grpcServer, directoryService)
 
 	api := &API{
 		logger:          logger.With(zap.String("api-organization-name", e.OrganizationName)),

@@ -1,4 +1,4 @@
-package configapi
+package api
 
 import (
 	"errors"

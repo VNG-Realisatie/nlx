@@ -10,7 +10,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"go.nlx.io/nlx/management-api/pkg/configapi"
+	"go.nlx.io/nlx/management-api/api"
 )
 
 func init() { //nolint:gochecknoinits
@@ -58,7 +58,7 @@ var listInwaysCommand = &cobra.Command{
 	Use:   "list",
 	Short: "List inways",
 	Run: func(cmd *cobra.Command, args []string) {
-		response, err := getConfigClient().ListInways(context.Background(), &configapi.ListInwaysRequest{})
+		response, err := getManagementClient().ListInways(context.Background(), &api.ListInwaysRequest{})
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -80,14 +80,14 @@ var createInwayCommand = &cobra.Command{
 
 		inwayConfig := splitConfigString(string(configBytes))
 		for _, configString := range inwayConfig {
-			inway := &configapi.Inway{}
+			inway := &api.Inway{}
 			err = json.Unmarshal([]byte(configString), inway)
 			if err != nil {
 				panic(err)
 			}
 
 			ctx := context.Background()
-			_, err = getConfigClient().CreateInway(ctx, inway)
+			_, err = getManagementClient().CreateInway(ctx, inway)
 			if err != nil {
 				panic(err)
 			}
@@ -107,19 +107,19 @@ var updateInwayCommand = &cobra.Command{
 			panic(err)
 		}
 
-		inway := &configapi.Inway{}
+		inway := &api.Inway{}
 		err = json.Unmarshal(configBytes, inway)
 		if err != nil {
 			panic(err)
 		}
 
-		updateInwayRequest := &configapi.UpdateInwayRequest{
+		updateInwayRequest := &api.UpdateInwayRequest{
 			Name:  inwayOptions.name,
 			Inway: inway,
 		}
 
 		ctx := context.Background()
-		_, err = getConfigClient().UpdateInway(ctx, updateInwayRequest)
+		_, err = getManagementClient().UpdateInway(ctx, updateInwayRequest)
 		if err != nil {
 			panic(err)
 		}
@@ -134,11 +134,11 @@ var deleteInwayCommand = &cobra.Command{
 	Run: func(cmd *cobra.Command, arg []string) {
 		ctx := context.Background()
 
-		deleteInwayRequest := &configapi.DeleteInwayRequest{
+		deleteInwayRequest := &api.DeleteInwayRequest{
 			Name: inwayOptions.name,
 		}
 
-		_, err := getConfigClient().DeleteInway(ctx, deleteInwayRequest)
+		_, err := getManagementClient().DeleteInway(ctx, deleteInwayRequest)
 		if err != nil {
 			panic(err)
 		}

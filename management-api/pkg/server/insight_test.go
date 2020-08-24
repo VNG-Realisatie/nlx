@@ -1,5 +1,5 @@
 //notlint:dupl // test function
-package configapi_test
+package server_test
 
 import (
 	"context"
@@ -14,9 +14,10 @@ import (
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 	mock_registrationapi "go.nlx.io/nlx/directory-registration-api/registrationapi/mock"
-	"go.nlx.io/nlx/management-api/pkg/configapi"
+	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
+	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
 func TestGetInsight(t *testing.T) {
@@ -28,9 +29,9 @@ func TestGetInsight(t *testing.T) {
 	defer mockCtrl.Finish()
 
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-	service := configapi.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+	service := server.NewManagementService(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
 
-	emptyRequest := &configapi.Empty{}
+	emptyRequest := &api.Empty{}
 
 	mockDatabase.EXPECT().GetInsightConfiguration(ctx)
 
@@ -49,7 +50,7 @@ func TestGetInsight(t *testing.T) {
 	actualResponse, err := service.GetInsightConfiguration(ctx, emptyRequest)
 	assert.Nil(t, err)
 
-	expectedResponse := &configapi.InsightConfiguration{
+	expectedResponse := &api.InsightConfiguration{
 		InsightAPIURL: "http://insight-api-url",
 		IrmaServerURL: "http://irma-server-url",
 	}
@@ -82,9 +83,9 @@ func TestPutInsight(t *testing.T) {
 		IrmaServerURL: "http://irma-url.com",
 	}).Return(&registrationapi.Empty{}, nil)
 
-	service := configapi.New(logger, testProcess, mockDirectoryRegistrationClient, mockDatabase)
+	service := server.NewManagementService(logger, testProcess, mockDirectoryRegistrationClient, mockDatabase)
 
-	request := &configapi.InsightConfiguration{
+	request := &api.InsightConfiguration{
 		IrmaServerURL: "http://irma-url.com",
 		InsightAPIURL: "http://insight-url.com",
 	}
@@ -92,7 +93,7 @@ func TestPutInsight(t *testing.T) {
 	putInsightResponse, err := service.PutInsightConfiguration(ctx, request)
 	assert.NoError(t, err)
 
-	expectedResponse := &configapi.InsightConfiguration{
+	expectedResponse := &api.InsightConfiguration{
 		InsightAPIURL: "http://insight-url.com",
 		IrmaServerURL: "http://irma-url.com",
 	}

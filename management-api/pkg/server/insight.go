@@ -1,4 +1,4 @@
-package configapi
+package server
 
 import (
 	"context"
@@ -8,11 +8,12 @@ import (
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
+	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
 // GetInsight returns the insight configuration of a organization
-func (s *ConfigService) GetInsightConfiguration(ctx context.Context, req *Empty) (*InsightConfiguration, error) {
+func (s *ManagementService) GetInsightConfiguration(ctx context.Context, req *api.Empty) (*api.InsightConfiguration, error) {
 	s.logger.Info("rpc request GetInsightConfiguration")
 
 	insightConfig, err := s.configDatabase.GetInsightConfiguration(ctx)
@@ -26,7 +27,7 @@ func (s *ConfigService) GetInsightConfiguration(ctx context.Context, req *Empty)
 		return nil, status.Error(codes.NotFound, "insight configuration not found")
 	}
 
-	response := &InsightConfiguration{
+	response := &api.InsightConfiguration{
 		IrmaServerURL: insightConfig.IrmaServerURL,
 		InsightAPIURL: insightConfig.InsightAPIURL,
 	}
@@ -35,7 +36,7 @@ func (s *ConfigService) GetInsightConfiguration(ctx context.Context, req *Empty)
 }
 
 // PutInsight sets the insight configuration of a organization
-func (s *ConfigService) PutInsightConfiguration(ctx context.Context, req *InsightConfiguration) (*InsightConfiguration, error) {
+func (s *ManagementService) PutInsightConfiguration(ctx context.Context, req *api.InsightConfiguration) (*api.InsightConfiguration, error) {
 	s.logger.Info("rpc request PutInsight")
 
 	_, err := s.directoryRegistrationClient.SetInsightConfiguration(ctx, &registrationapi.SetInsightConfigurationRequest{

@@ -31,7 +31,7 @@ import (
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
-	"go.nlx.io/nlx/management-api/pkg/configapi"
+	"go.nlx.io/nlx/management-api/api"
 )
 
 // Inway handles incoming requests and holds a list of registered ServiceEndpoints.
@@ -57,7 +57,7 @@ type Inway struct {
 
 	txlogger transactionlog.TransactionLogger
 
-	configAPIClient configapi.ConfigApiClient
+	managementClient api.ManagementClient
 
 	directoryRegistrationClient registrationapi.DirectoryRegistrationClient
 }
@@ -181,7 +181,7 @@ func getFingerPrint(rawCert []byte) string {
 	return base64.URLEncoding.EncodeToString(bytes)
 }
 
-// stop will stop the announcement of services and the config retrieval process (if a configAPI is configured)
+// stop will stop the announcement of services and the config retrieval process (if a managementAPI is configured)
 func (i *Inway) stop() {
 	i.monitoringService.SetNotReady()
 	close(i.stopInwayChannel)

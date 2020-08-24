@@ -1,5 +1,5 @@
 //nolint:dupl // test package
-package configapi_test
+package server_test
 
 import (
 	"context"
@@ -13,9 +13,10 @@ import (
 
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
-	"go.nlx.io/nlx/management-api/pkg/configapi"
+	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
+	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
 func TestCreateService(t *testing.T) {
@@ -35,12 +36,12 @@ func TestCreateService(t *testing.T) {
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
 	mockDatabase.EXPECT().CreateService(ctx, databaseService)
 
-	service := configapi.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+	service := server.NewManagementService(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
 
-	requestService := &configapi.Service{
+	requestService := &api.Service{
 		Name:                  "my-service",
 		EndpointURL:           "my-service.test",
-		AuthorizationSettings: &configapi.Service_AuthorizationSettings{Mode: "none"},
+		AuthorizationSettings: &api.Service_AuthorizationSettings{Mode: "none"},
 	}
 
 	responseService, err := service.CreateService(ctx, requestService)
@@ -60,9 +61,9 @@ func TestGetService(t *testing.T) {
 	defer mockCtrl.Finish()
 
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-	service := configapi.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+	service := server.NewManagementService(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
 
-	getServiceRequest := &configapi.GetServiceRequest{
+	getServiceRequest := &api.GetServiceRequest{
 		Name: "my-service",
 	}
 
@@ -82,7 +83,7 @@ func TestGetService(t *testing.T) {
 	getServiceResponse, err := service.GetService(ctx, getServiceRequest)
 	assert.NoError(t, err)
 
-	expectedResponse := &configapi.Service{
+	expectedResponse := &api.Service{
 		Name: "my-service",
 	}
 
@@ -106,24 +107,24 @@ func TestUpdateService(t *testing.T) {
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
 	mockDatabase.EXPECT().UpdateService(ctx, "my-service", databseService)
 
-	service := configapi.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+	service := server.NewManagementService(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
 
-	updateServiceRequest := &configapi.UpdateServiceRequest{
+	updateServiceRequest := &api.UpdateServiceRequest{
 		Name: "my-service",
-		Service: &configapi.Service{
+		Service: &api.Service{
 			Name:                  "my-service",
 			EndpointURL:           "my-service.test",
-			AuthorizationSettings: &configapi.Service_AuthorizationSettings{Mode: "none"},
+			AuthorizationSettings: &api.Service_AuthorizationSettings{Mode: "none"},
 		},
 	}
 
 	updateServiceResponse, err := service.UpdateService(ctx, updateServiceRequest)
 	assert.NoError(t, err)
 
-	expectedResponse := &configapi.Service{
+	expectedResponse := &api.Service{
 		Name:                  "my-service",
 		EndpointURL:           "my-service.test",
-		AuthorizationSettings: &configapi.Service_AuthorizationSettings{Mode: "none"},
+		AuthorizationSettings: &api.Service_AuthorizationSettings{Mode: "none"},
 	}
 
 	assert.Equal(t, expectedResponse, updateServiceResponse)
@@ -145,9 +146,9 @@ func TestDeleteService(t *testing.T) {
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
 	mockDatabase.EXPECT().DeleteService(ctx, "my-service")
 
-	service := configapi.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+	service := server.NewManagementService(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
 
-	deleteRequest := &configapi.DeleteServiceRequest{
+	deleteRequest := &api.DeleteServiceRequest{
 		Name: "my-service",
 	}
 
@@ -166,7 +167,7 @@ func TestListServices(t *testing.T) {
 	defer mockCtrl.Finish()
 
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-	service := configapi.New(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+	service := server.NewManagementService(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
 
 	databaseServices := []*database.Service{
 		{
@@ -183,15 +184,15 @@ func TestListServices(t *testing.T) {
 	}
 
 	tests := []struct {
-		request          *configapi.ListServicesRequest
-		expectedResponse *configapi.ListServicesResponse
+		request          *api.ListServicesRequest
+		expectedResponse *api.ListServicesResponse
 	}{
 		{
-			request: &configapi.ListServicesRequest{
+			request: &api.ListServicesRequest{
 				InwayName: "inway.mock",
 			},
-			expectedResponse: &configapi.ListServicesResponse{
-				Services: []*configapi.Service{
+			expectedResponse: &api.ListServicesResponse{
+				Services: []*api.Service{
 					{
 						Name:   "my-service",
 						Inways: []string{"inway.mock"},
@@ -200,11 +201,11 @@ func TestListServices(t *testing.T) {
 			},
 		},
 		{
-			request: &configapi.ListServicesRequest{
+			request: &api.ListServicesRequest{
 				InwayName: "another-inway.mock",
 			},
-			expectedResponse: &configapi.ListServicesResponse{
-				Services: []*configapi.Service{
+			expectedResponse: &api.ListServicesResponse{
+				Services: []*api.Service{
 					{
 						Name:   "another-service",
 						Inways: []string{"another-inway.mock"},
@@ -213,9 +214,9 @@ func TestListServices(t *testing.T) {
 			},
 		},
 		{
-			request: &configapi.ListServicesRequest{},
-			expectedResponse: &configapi.ListServicesResponse{
-				Services: []*configapi.Service{
+			request: &api.ListServicesRequest{},
+			expectedResponse: &api.ListServicesResponse{
+				Services: []*api.Service{
 					{
 						Name:   "my-service",
 						Inways: []string{"inway.mock"},

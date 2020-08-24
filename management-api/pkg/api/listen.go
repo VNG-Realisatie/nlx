@@ -19,8 +19,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
-	"go.nlx.io/nlx/management-api/pkg/configapi"
-	"go.nlx.io/nlx/management-api/pkg/directory"
+	"go.nlx.io/nlx/management-api/api"
 )
 
 // ListenAndServe is a blocking function that listens on provided tcp address to handle requests.
@@ -46,12 +45,12 @@ func (a *API) ListenAndServe(address, configAddress string) error {
 		),
 	}
 
-	err = configapi.RegisterConfigApiHandlerFromEndpoint(ctx, a.mux, configAddress, gatewayDialOptions)
+	err = api.RegisterManagementHandlerFromEndpoint(ctx, a.mux, configAddress, gatewayDialOptions)
 	if err != nil {
 		return err
 	}
 
-	err = directory.RegisterDirectoryHandlerFromEndpoint(ctx, a.mux, configAddress, gatewayDialOptions)
+	err = api.RegisterDirectoryHandlerFromEndpoint(ctx, a.mux, configAddress, gatewayDialOptions)
 	if err != nil {
 		return err
 	}

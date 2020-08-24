@@ -1,4 +1,4 @@
-package configapi
+package server
 
 import (
 	context "context"
@@ -9,23 +9,24 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
-var accessRequestState = map[database.AccessRequestState]AccessRequest_State{
-	database.AccessRequestFailed:   AccessRequest_FAILED,
-	database.AccessRequestCreated:  AccessRequest_CREATED,
-	database.AccessRequestReceived: AccessRequest_RECEIVED,
+var accessRequestState = map[database.AccessRequestState]api.AccessRequestState{
+	database.AccessRequestFailed:   api.AccessRequestState_FAILED,
+	database.AccessRequestCreated:  api.AccessRequestState_CREATED,
+	database.AccessRequestReceived: api.AccessRequestState_RECEIVED,
 }
 
-func (s *ConfigService) ListOutgoingAccessRequests(ctx context.Context, req *ListOutgoingAccessRequestsRequest) (*ListOutgoingAccessRequestsResponse, error) {
+func (s *ManagementService) ListOutgoingAccessRequests(ctx context.Context, req *api.ListOutgoingAccessRequestsRequest) (*api.ListOutgoingAccessRequestsResponse, error) {
 	l, err := s.configDatabase.ListOutgoingAccessRequests(ctx, req.OrganizationName, req.ServiceName)
 	if err != nil {
 		return nil, err
 	}
 
-	response := &ListOutgoingAccessRequestsResponse{}
-	response.AccessRequests = make([]*AccessRequest, len(l))
+	response := &api.ListOutgoingAccessRequestsResponse{}
+	response.AccessRequests = make([]*api.AccessRequest, len(l))
 
 	for i, a := range l {
 		ra, err := convertAccessRequest(a)
@@ -39,7 +40,7 @@ func (s *ConfigService) ListOutgoingAccessRequests(ctx context.Context, req *Lis
 	return response, nil
 }
 
-func (s *ConfigService) CreateAccessRequest(ctx context.Context, req *CreateAccessRequestRequest) (*AccessRequest, error) {
+func (s *ManagementService) CreateAccessRequest(ctx context.Context, req *api.CreateAccessRequestRequest) (*api.AccessRequest, error) {
 	ar := &database.AccessRequest{
 		OrganizationName: req.OrganizationName,
 		ServiceName:      req.ServiceName,
@@ -62,7 +63,7 @@ func (s *ConfigService) CreateAccessRequest(ctx context.Context, req *CreateAcce
 	return response, nil
 }
 
-func convertAccessRequest(a *database.AccessRequest) (*AccessRequest, error) {
+func convertAccessRequest(a *database.AccessRequest) (*api.AccessRequest, error) {
 	createdAt, err := types.TimestampProto(a.CreatedAt)
 	if err != nil {
 		return nil, err
@@ -78,7 +79,7 @@ func convertAccessRequest(a *database.AccessRequest) (*AccessRequest, error) {
 		return nil, fmt.Errorf("unsupported state: %v", a.State)
 	}
 
-	return &AccessRequest{
+	return &api.AccessRequest{
 		Id:               a.ID,
 		OrganizationName: a.OrganizationName,
 		ServiceName:      a.ServiceName,
