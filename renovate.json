@@ -9,6 +9,8 @@
   "automerge": true,
   "automergeType": "pr",
   "dependencyDashboard": true,
+  "prCreation": "not-pending",
+  "stabilityDays": 7,
   "postUpdateOptions": [
     "gomodTidy"
   ],
