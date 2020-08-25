@@ -135,7 +135,9 @@ func NewInway(
 	directoryDialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(directoryDialCredentials),
 	}
-	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(nlxversion.NewContext("inway"), 1*time.Minute)
+
+	ctx := context.TODO()
+	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(nlxversion.NewGRPCContext(ctx, "inway"), 1*time.Minute)
 	directoryConn, err := grpc.DialContext(directoryConnCtx, directoryRegistrationAddress, directoryDialOptions...)
 	defer directoryConnCtxCancel()
 	if err != nil {
@@ -202,8 +204,9 @@ func (i *Inway) announceToDirectory(s ServiceEndpoint) {
 				i.logger.Info("stopping directory announcement", zap.String("service-name", s.ServiceName()))
 				return
 			case <-time.After(sleepDuration):
+				ctx := context.TODO()
 				serviceDetails := s.ServiceDetails()
-				resp, err := i.directoryRegistrationClient.RegisterInway(nlxversion.NewContext("inway"), &registrationapi.RegisterInwayRequest{
+				resp, err := i.directoryRegistrationClient.RegisterInway(nlxversion.NewGRPCContext(ctx, "inway"), &registrationapi.RegisterInwayRequest{
 					InwayAddress: i.selfAddress,
 					Services: []*registrationapi.RegisterInwayRequest_RegisterService{
 						{

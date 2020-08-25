@@ -5,43 +5,43 @@ import (
 
 	"google.golang.org/grpc/metadata"
 
-	"go.nlx.io/nlx/common/version"
+	common_version "go.nlx.io/nlx/common/version"
 )
 
-// NlxVersion contains the version for a component
-type NlxVersion struct {
+// Version contains the version for a component
+type Version struct {
 	Version   string `db:"version"`
 	Component string `db:"component"`
 }
 
-// GetNlxVersionFromContext reads the NLX version from the context metadata and returns it in a struct
-func GetNlxVersionFromContext(ctx context.Context) NlxVersion {
-	nlxVersion := NlxVersion{
+// NewFromGRPCContext reads the NLX version from the incomming gRPC context metadata and returns it in a struct
+func NewFromGRPCContext(ctx context.Context) Version {
+	v := Version{
 		Version:   "unknown",
 		Component: "unknown",
 	}
 
 	md, ok := metadata.FromIncomingContext(ctx)
 	if ok {
-		contextNlxVersion, ok := firstString(md.Get("nlx-version"))
-		if ok && len(contextNlxVersion) > 0 {
-			nlxVersion.Version = contextNlxVersion
+		version, ok := firstString(md.Get("nlx-version"))
+		if ok && len(version) > 0 {
+			v.Version = version
 		}
 
-		contextNlxComponent, ok := firstString(md.Get("nlx-component"))
-		if ok && len(contextNlxComponent) > 0 {
-			nlxVersion.Component = contextNlxComponent
+		component, ok := firstString(md.Get("nlx-component"))
+		if ok && len(component) > 0 {
+			v.Component = component
 		}
 	}
 
-	return nlxVersion
+	return v
 }
 
-// NewContext returns a context with the NLX version metadata set
-func NewContext(nlxComponent string) context.Context {
-	return metadata.NewOutgoingContext(context.Background(), metadata.New(map[string]string{
-		"NLX-Component": nlxComponent,
-		"NLX-Version":   version.BuildVersion,
+// NewGRPCContext returns a outgoing gRPC context with the NLX version metadata set
+func NewGRPCContext(ctx context.Context, component string) context.Context {
+	return metadata.NewOutgoingContext(ctx, metadata.New(map[string]string{
+		"NLX-Component": component,
+		"NLX-Version":   common_version.BuildVersion,
 	}))
 }
 

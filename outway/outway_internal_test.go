@@ -4,6 +4,7 @@
 package outway
 
 import (
+	"context"
 	"fmt"
 	"path/filepath"
 	"testing"
@@ -48,9 +49,11 @@ func TestUpdateServiceList(t *testing.T) {
 	o.monitorService, err = monitoring.NewMonitoringService("localhost:8080", logger)
 	assert.Nil(t, err)
 
+	ctx := context.Background()
+
 	// Make the mock directory client return an error when calling ListServices
 	client.EXPECT().ListServices(
-		nlxversion.NewContext("outway"),
+		nlxversion.NewGRPCContext(ctx, "outway"),
 		&inspectionapi.ListServicesRequest{}).Return(nil, fmt.Errorf("mock error"))
 
 	// Test of updateServiceList generates the correct error
@@ -63,7 +66,7 @@ func TestUpdateServiceList(t *testing.T) {
 	healthyStatesB := []bool{true, true}
 
 	// Make the mock directory client provide a list of services when calling ListServices
-	client.EXPECT().ListServices(nlxversion.NewContext("outway"), &inspectionapi.ListServicesRequest{}).Return(
+	client.EXPECT().ListServices(nlxversion.NewGRPCContext(ctx, "outway"), &inspectionapi.ListServicesRequest{}).Return(
 		&inspectionapi.ListServicesResponse{
 			Services: []*inspectionapi.ListServicesResponse_Service{
 				{

@@ -11,7 +11,7 @@ import (
 )
 
 // RegisterOutwayVersion registers an outway
-func (db PostgreSQLDirectoryDatabase) RegisterOutwayVersion(ctx context.Context, version nlxversion.NlxVersion) error {
+func (db PostgreSQLDirectoryDatabase) RegisterOutwayVersion(ctx context.Context, version nlxversion.Version) error {
 	_, err := db.registerOutwayStatement.Exec(version)
 	if err != nil {
 		return fmt.Errorf("failed to log the outway version: %v", err)

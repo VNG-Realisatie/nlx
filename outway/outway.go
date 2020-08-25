@@ -106,7 +106,8 @@ func (o *Outway) startDirectoryInspector(directoryInspectionAddress string) erro
 		grpc.WithTransportCredentials(directoryDialCredentials),
 	}
 
-	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(nlxversion.NewContext("outway"), 1*time.Minute) //nolint:gomnd // This is clearer then specifying a constant
+	ctx := context.TODO()
+	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(nlxversion.NewGRPCContext(ctx, "outway"), 1*time.Minute) //nolint:gomnd // This is clearer then specifying a constant
 	defer directoryConnCtxCancel()
 
 	directoryConn, err := grpc.DialContext(
@@ -340,7 +341,8 @@ func (o *Outway) updateServiceList() error {
 		o.servicesHTTP = make(map[string]HTTPService)
 	}
 
-	resp, err := o.directoryInspectionClient.ListServices(nlxversion.NewContext("outway"), &inspectionapi.ListServicesRequest{})
+	ctx := context.TODO()
+	resp, err := o.directoryInspectionClient.ListServices(nlxversion.NewGRPCContext(ctx, "outway"), &inspectionapi.ListServicesRequest{})
 	if err != nil {
 		return errors.Wrap(err, "failed to fetch services from directory")
 	}

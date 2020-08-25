@@ -70,7 +70,7 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 			ServiceIrmaAPIURL:           service.IrmaApiUrl,
 			ServicePublicSupportContact: service.PublicSupportContact,
 			ServiceTechSupportContact:   service.TechSupportContact,
-			NlxVersion:                  nlxversion.GetNlxVersionFromContext(ctx).Version,
+			NlxVersion:                  nlxversion.NewFromGRPCContext(ctx).Version,
 		}
 
 		err := h.db.InsertAvailability(params)

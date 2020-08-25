@@ -16,7 +16,7 @@ import (
 	"go.nlx.io/nlx/directory-inspection-api/pkg/database"
 )
 
-func registerOutwayVersion(ctx context.Context, db database.DirectoryDatabase, version nlxversion.NlxVersion) {
+func registerOutwayVersion(ctx context.Context, db database.DirectoryDatabase, version nlxversion.Version) {
 	_ = db.RegisterOutwayVersion(ctx, version)
 }
 
@@ -27,7 +27,7 @@ func (h *InspectionService) ListServices(ctx context.Context, req *inspectionapi
 	md, ok := metadata.FromIncomingContext(ctx)
 	if ok {
 		if _, ok := md["grpcgateway-internal"]; !ok {
-			version := nlxversion.GetNlxVersionFromContext(ctx)
+			version := nlxversion.NewFromGRPCContext(ctx)
 			go registerOutwayVersion(ctx, h.db, version)
 		}
 	}

@@ -51,7 +51,7 @@ func (mr *MockDirectoryDatabaseMockRecorder) ListServices(ctx, organizationName 
 }
 
 // RegisterOutwayVersion mocks base method
-func (m *MockDirectoryDatabase) RegisterOutwayVersion(ctx context.Context, version nlxversion.NlxVersion) error {
+func (m *MockDirectoryDatabase) RegisterOutwayVersion(ctx context.Context, version nlxversion.Version) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RegisterOutwayVersion", ctx, version)
 	ret0, _ := ret[0].(error)
