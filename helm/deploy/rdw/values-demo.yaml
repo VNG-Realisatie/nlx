@@ -64,6 +64,10 @@ nlx-inway:
   service:
     type: LoadBalancer
 
+nlx-outway:
+  config:
+    directoryInspectionHostname: directory-inspection-api.demo.nlx.io
+
 nlx-management:
   config:
     directoryRegistrationHostname: directory-registration-api.demo.nlx.io
