@@ -28,7 +28,7 @@ require (
 	github.com/golang/protobuf v1.3.5
 	github.com/google/uuid v1.1.1 // indirect
 	github.com/gorilla/schema v1.2.0
-	github.com/gorilla/sessions v1.2.0
+	github.com/gorilla/sessions v1.2.1
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.0
 	github.com/grpc-ecosystem/grpc-gateway v1.14.5
 	github.com/hashicorp/go-retryablehttp v0.6.4 // indirect
