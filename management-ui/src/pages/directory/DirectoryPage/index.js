@@ -21,7 +21,7 @@ const DirectoryPage = () => {
     fetchServices,
     services,
     selectService,
-    isLoading,
+    isReady,
     error,
   } = useDirectoryStore()
 
@@ -37,14 +37,14 @@ const DirectoryPage = () => {
         description={
           <span data-testid="directory-description">
             {t('List of all available services')}
-            {!isLoading && !error ? (
+            {isReady && !error ? (
               <DirectoryServiceCount services={services} />
             ) : null}
           </span>
         }
       />
 
-      {isLoading ? (
+      {!isReady ? (
         <LoadingMessage />
       ) : error ? (
         <Alert variant="error" data-testid="error-message">

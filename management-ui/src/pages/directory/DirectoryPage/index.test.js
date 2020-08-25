@@ -42,7 +42,7 @@ test('listing all services', () => {
   const store = observable({
     directoryStore: {
       services: [],
-      isLoading: true,
+      isReady: false,
       error: '',
       fetchServices: jest.fn(),
       selectService: jest.fn(),
@@ -57,7 +57,7 @@ test('listing all services', () => {
 
   act(() => {
     store.directoryStore.services = [{ serviceName: 'Test Service' }]
-    store.directoryStore.isLoading = false
+    store.directoryStore.isReady = false
   })
 
   expect(getByTestId('mock-directory-services')).toBeInTheDocument()
@@ -71,7 +71,7 @@ test('no services', () => {
   const store = observable({
     directoryStore: {
       services: [],
-      isLoading: false,
+      isReady: true,
       error: '',
       fetchServices: jest.fn(),
       selectService: jest.fn(),
@@ -88,7 +88,7 @@ test('failed to load services', () => {
   const store = observable({
     directoryStore: {
       services: [],
-      isLoading: false,
+      isReady: true,
       error: 'There is an error',
       fetchServices: jest.fn(),
       selectService: jest.fn(),

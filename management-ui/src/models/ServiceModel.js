@@ -50,14 +50,7 @@ class ServiceModel {
     this.store = store
 
     this.name = service.name
-    this.endpointURL = service.endpointURL
-    this.documentationURL = service.documentationURL
-    this.apiSpecificationURL = service.apiSpecificationURL
-    this.internal = service.internal
-    this.techSupportContact = service.techSupportContact
-    this.publicSupportContact = service.publicSupportContact
-    this.authorizationSettings = service.authorizationSettings
-    this.inways = service.inways
+    this.with(service)
 
     this.isReady = true
   }
@@ -81,12 +74,15 @@ class ServiceModel {
     this.internal = service.internal
     this.techSupportContact = service.techSupportContact
     this.publicSupportContact = service.publicSupportContact
-    this.authorizationSettings = service.authorizationSettings
-    this.inways = service.inways
+    this.authorizationSettings = service.authorizationSettings || {}
+    this.authorizationSettings.authorizations =
+      service.authorizationSettings.authorizations || []
+    this.inways = service.inways || []
   }
 
   update = flow(function* update(values) {
     this.isReady = false
+
     this.with(values)
     try {
       yield this.store.domain.update(this.name, serialize(this))

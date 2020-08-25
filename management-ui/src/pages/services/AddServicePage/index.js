@@ -19,10 +19,6 @@ const AddServicePage = () => {
   const { addService } = useServicesStore()
 
   const submitService = async (service) => {
-    // placeholder until we've implemented adding authorizations in the form
-    service.authorizationSettings = service.authorizationSettings || {}
-    service.authorizationSettings.authorizations = []
-
     try {
       const addedService = await addService(service)
       history.push(

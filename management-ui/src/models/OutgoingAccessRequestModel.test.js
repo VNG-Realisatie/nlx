@@ -72,13 +72,11 @@ test('sending a request', async () => {
 
   accessRequest.send()
 
-  expect(accessRequest.isLoading).toBe(true)
   expect(accessRequest.state).toBe('CREATED')
   expect(domain.requestAccess).toHaveBeenCalled()
 
   await request.resolve(accessRequestJson)
 
-  expect(accessRequest.isLoading).toBe(false)
   expect(accessRequest.id).toBe('abcd')
 })
 

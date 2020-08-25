@@ -24,8 +24,6 @@ beforeEach(() => {
     latestAccessRequest: null,
     requestAccess: jest.fn(),
     fetch: jest.fn(),
-
-    isLoading: false,
   })
 })
 

@@ -23,8 +23,6 @@ describe('a service we do not have access to', () => {
       apiSpecificationType: 'API',
       latestAccessRequest: null,
       requestAccess: jest.fn(),
-
-      isLoading: false,
     })
   })
 

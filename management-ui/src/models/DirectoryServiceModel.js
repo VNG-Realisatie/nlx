@@ -16,8 +16,6 @@ export const directoryServicePropTypes = {
   fetch: func.isRequired,
   requestAccess: func.isRequired,
   isOpen: bool,
-
-  isLoading: bool.isRequired,
 }
 
 class DirectoryServiceModel {
@@ -39,28 +37,19 @@ class DirectoryServiceModel {
     this.latestAccessRequest = service.latestAccessRequest
       ? createAccessRequestInstance(service.latestAccessRequest)
       : null
-
-    this.isLoading = false
   }
 
   fetch = flow(function* fetch() {
-    this.isLoading = true
+    const service = yield this.store.domain.getByName(
+      this.organizationName,
+      this.serviceName,
+    )
 
-    try {
-      const service = yield this.store.domain.getByName(
-        this.organizationName,
-        this.serviceName,
-      )
-
-      // state and latestAccessRequest are the only ones that are likely to be changed
-      this.state = service.state
-      this.latestAccessRequest = service.latestAccessRequest
-        ? createAccessRequestInstance(service.latestAccessRequest)
-        : null
-    } catch (e) {
-    } finally {
-      this.isLoading = false
-    }
+    // state and latestAccessRequest are the only ones that are likely to be changed
+    this.state = service.state
+    this.latestAccessRequest = service.latestAccessRequest
+      ? createAccessRequestInstance(service.latestAccessRequest)
+      : null
   })
 
   requestAccess = flow(function* requestAccess() {
@@ -84,7 +73,6 @@ class DirectoryServiceModel {
 decorate(DirectoryServiceModel, {
   state: observable,
   latestAccessRequest: observable,
-  isLoading: observable,
   requestAccess: action.bound,
   fetch: action.bound,
 })

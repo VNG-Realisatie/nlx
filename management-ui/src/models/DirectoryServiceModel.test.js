@@ -67,7 +67,6 @@ test('fetches data', async () => {
 
   directoryService.fetch()
 
-  expect(directoryService.isLoading).toBe(true)
   expect(store.domain.getByName).toHaveBeenCalled()
 
   await request.resolve({
@@ -75,7 +74,6 @@ test('fetches data', async () => {
     latestAccessRequest: {},
   })
 
-  expect(directoryService.isLoading).toBe(false)
   expect(directoryService.state).toBe('down')
   expect(directoryService.latestAccessRequest).toEqual({})
 })

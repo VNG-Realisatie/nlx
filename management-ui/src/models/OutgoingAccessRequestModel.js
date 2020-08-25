@@ -29,7 +29,6 @@ export const outgoingAccessRequestPropTypes = {
   send: func,
   isOpen: bool,
 
-  isLoading: bool,
   error: string,
 }
 
@@ -50,7 +49,6 @@ class OutgoingAccessRequestModel {
     this.update(accessRequestData)
 
     // Currently not used, but part of pattern
-    this.isLoading = false
     this.error = ''
   }
 
@@ -71,7 +69,6 @@ class OutgoingAccessRequestModel {
     }
 
     try {
-      this.isLoading = true
       this.error = ''
 
       this.update({ state: ACCESS_REQUEST_STATES.CREATED })
@@ -86,8 +83,6 @@ class OutgoingAccessRequestModel {
     } catch (e) {
       this.error = e
       throw e
-    } finally {
-      this.isLoading = false
     }
   })
 }

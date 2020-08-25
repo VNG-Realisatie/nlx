@@ -7,6 +7,7 @@ import { createService } from '../../models/ServiceModel'
 
 class ServicesStore {
   services = []
+  isLoading = false
   isReady = false
   error = ''
 
@@ -14,12 +15,17 @@ class ServicesStore {
     this.rootStore = rootStore
     this.domain = domain
 
+    this.isLoading = false
     this.isReady = false
     this.error = ''
   }
 
   fetchServices = flow(function* fetchServices() {
-    this.isReady = false
+    if (this.isLoading) {
+      return
+    }
+    this.isLoading = true
+
     this.error = ''
 
     try {
@@ -31,6 +37,7 @@ class ServicesStore {
       this.error = e
     } finally {
       this.isReady = true
+      this.isLoading = false
     }
   })
 
@@ -56,7 +63,7 @@ class ServicesStore {
 
 decorate(ServicesStore, {
   services: observable,
-  isLoading: observable,
+  isReady: observable,
   error: observable,
   fetchServices: action.bound,
   removeService: action.bound,

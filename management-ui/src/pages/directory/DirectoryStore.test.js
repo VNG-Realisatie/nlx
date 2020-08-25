@@ -38,13 +38,13 @@ test('fetching services', async () => {
 
   directoryStore.fetchServices()
 
-  expect(directoryStore.isLoading).toBe(true)
+  expect(directoryStore.isReady).toBe(false)
   expect(domain.getAll).toHaveBeenCalled()
 
   await request.resolve(serviceList)
 
   expect(directoryStore.services).toEqual(serviceList)
-  expect(directoryStore.isLoading).toBe(false)
+  expect(directoryStore.isReady).toBe(true)
 })
 
 test('handle error while fetching services', async () => {
@@ -59,14 +59,14 @@ test('handle error while fetching services', async () => {
 
   directoryStore.fetchServices()
 
-  expect(directoryStore.isLoading).toBe(true)
+  expect(directoryStore.isReady).toBe(false)
   expect(domain.getAll).toHaveBeenCalled()
 
   await request.reject('some error')
 
   expect(directoryStore.error).toEqual('some error')
   expect(directoryStore.services).toEqual([])
-  expect(directoryStore.isLoading).toBe(false)
+  expect(directoryStore.isReady).toBe(true)
 })
 
 test('selecting a service', () => {
