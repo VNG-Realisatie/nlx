@@ -12,10 +12,10 @@ import (
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/process"
-	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
+	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
 	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
@@ -36,7 +36,7 @@ func TestCreateService(t *testing.T) {
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
 	mockDatabase.EXPECT().CreateService(ctx, databaseService)
 
-	service := server.NewManagementService(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), mockDatabase)
 
 	requestService := &api.Service{
 		Name:                  "my-service",
@@ -61,7 +61,7 @@ func TestGetService(t *testing.T) {
 	defer mockCtrl.Finish()
 
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-	service := server.NewManagementService(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), mockDatabase)
 
 	getServiceRequest := &api.GetServiceRequest{
 		Name: "my-service",
@@ -107,7 +107,7 @@ func TestUpdateService(t *testing.T) {
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
 	mockDatabase.EXPECT().UpdateService(ctx, "my-service", databseService)
 
-	service := server.NewManagementService(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), mockDatabase)
 
 	updateServiceRequest := &api.UpdateServiceRequest{
 		Name: "my-service",
@@ -146,7 +146,7 @@ func TestDeleteService(t *testing.T) {
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
 	mockDatabase.EXPECT().DeleteService(ctx, "my-service")
 
-	service := server.NewManagementService(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), mockDatabase)
 
 	deleteRequest := &api.DeleteServiceRequest{
 		Name: "my-service",
@@ -167,7 +167,7 @@ func TestListServices(t *testing.T) {
 	defer mockCtrl.Finish()
 
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-	service := server.NewManagementService(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), mockDatabase)
 
 	databaseServices := []*database.Service{
 		{

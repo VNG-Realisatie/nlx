@@ -266,8 +266,8 @@ nlx-outway:
 
 nlx-management:
   config:
+    directoryInspectionHostname: shared-nlx-directory-inspection
     directoryRegistrationHostname: shared-nlx-directory-registration
-    directoryEndpointURL: http://directory.shared.nlx.minikube/api
     oidc:
       clientSecret: ZXhhbXBsZS1hcHAtc2VjcmV0
       discoveryURL: http://dex.rdw.nlx.minikube

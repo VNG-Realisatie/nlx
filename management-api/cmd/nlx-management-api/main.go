@@ -24,8 +24,8 @@ var options struct {
 	ListenAddress                string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:8080" description:"Address for the api to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 	ConfigListenAddress          string `long:"config-listen-address" env:"CONFIG_LISTEN_ADDRESS" default:"0.0.0.0:8443" description:"Address for the configapi to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 	EtcdConnectionString         string `long:"etcd-connection-string" env:"ETCD_CONNECTION_STRING" description:"A comma separated list of etcd backends." required:"true"`
-	DirectoryRegistrationAddress string `long:"directory-registration-address" env:"DIRECTORY_REGISTRATION_ADDRESS" description:"Address for the directory" required:"true"`
-	DirectoryEndpointURL         string `long:"directory-endpoint-url" env:"DIRECTORY_ENDPOINT_URL" description:"URL to the directory"`
+	DirectoryInspectionAddress   string `long:"directory-inspection-address" env:"DIRECTORY_INSPECTION_ADDRESS" description:"Address of the directory inspection API" required:"true"`
+	DirectoryRegistrationAddress string `long:"directory-registration-address" env:"DIRECTORY_REGISTRATION_ADDRESS" description:"Address of the directory registration API" required:"true"`
 
 	logoptions.LogOptions
 	cmd.TLSOrgOptions
@@ -77,7 +77,7 @@ func main() {
 		logger.Fatal("loading organization cert", zap.Error(err))
 	}
 
-	a, err := api.NewAPI(logger, mainProcess, cert, orgCert, options.EtcdConnectionString, options.DirectoryRegistrationAddress, options.DirectoryEndpointURL, authenticator)
+	a, err := api.NewAPI(logger, mainProcess, cert, orgCert, options.EtcdConnectionString, options.DirectoryInspectionAddress, options.DirectoryRegistrationAddress, authenticator)
 	if err != nil {
 		logger.Fatal("cannot setup management api", zap.Error(err))
 	}

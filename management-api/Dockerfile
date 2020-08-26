@@ -12,6 +12,7 @@ WORKDIR /go/src/go.nlx.io/nlx
 RUN go mod download
 
 # Only add code that we use for building directory
+COPY directory-inspection-api  /go/src/go.nlx.io/nlx/directory-inspection-api
 COPY directory-registration-api  /go/src/go.nlx.io/nlx/directory-registration-api
 COPY management-api     /go/src/go.nlx.io/nlx/management-api
 COPY common             /go/src/go.nlx.io/nlx/common

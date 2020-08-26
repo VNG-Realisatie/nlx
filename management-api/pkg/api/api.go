@@ -22,10 +22,8 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/status"
 
-	"go.nlx.io/nlx/common/nlxversion"
 	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
-	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/directory"
@@ -55,7 +53,7 @@ const (
 
 // NewAPI creates and prepares a new API
 //nolint:gocyclo // parameter validation
-func NewAPI(logger *zap.Logger, mainProcess *process.Process, cert, orgCert *common_tls.CertificateBundle, etcdConnectionString, directoryRegistrationAddress, directoryEndpointURL string, authenticator *oidc.Authenticator) (*API, error) {
+func NewAPI(logger *zap.Logger, mainProcess *process.Process, cert, orgCert *common_tls.CertificateBundle, etcdConnectionString, directoryInspectionAddress, directoryRegistrationAddress string, authenticator *oidc.Authenticator) (*API, error) {
 	if mainProcess == nil {
 		return nil, errors.New("process argument is nil. needed to close gracefully")
 	}
@@ -68,36 +66,31 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, cert, orgCert *com
 		return nil, errors.New("etcd connection string is not configured")
 	}
 
-	if directoryRegistrationAddress == "" {
-		return nil, errors.New("directory registration address is not configured")
+	if directoryInspectionAddress == "" {
+		return nil, errors.New("directory inspection address is not configured")
 	}
 
-	if directoryEndpointURL == "" {
-		return nil, errors.New("directory endpoint URL is not configured")
+	if directoryRegistrationAddress == "" {
+		return nil, errors.New("directory registration address is not configured")
 	}
 
 	if authenticator == nil {
 		return nil, errors.New("authenticator is not configured")
 	}
 
-	directoryRegistrationClient, err := newDirectoryRegistrationClient(orgCert, directoryRegistrationAddress)
+	directoryClient, err := directory.NewClient(context.TODO(), directoryInspectionAddress, directoryRegistrationAddress, orgCert)
 	if err != nil {
 		logger.Fatal("failed to setup directory client", zap.Error(err))
 	}
 
 	db := newDatabase(logger, mainProcess, etcdConnectionString)
-	managementService := server.NewManagementService(logger, mainProcess, directoryRegistrationClient, db)
+	managementService := server.NewManagementService(logger, mainProcess, directoryClient, db)
 
 	grpcServer := newGRPCServer(logger, cert)
 
 	api.RegisterManagementServer(grpcServer, managementService)
 	e := &environment.Environment{
 		OrganizationName: orgCert.Certificate().Subject.Organization[0],
-	}
-
-	directoryClient, err := directory.NewClient(directoryEndpointURL)
-	if err != nil {
-		return nil, err
 	}
 
 	directoryService := server.NewDirectoryService(logger, e, directoryClient, db)
@@ -159,23 +152,4 @@ func newDatabase(logger *zap.Logger, mainProcess *process.Process, etcdConnectio
 	}
 
 	return db
-}
-
-func newDirectoryRegistrationClient(cert *common_tls.CertificateBundle, directoryRegistrationAddress string) (registrationapi.DirectoryRegistrationClient, error) {
-	directoryDialCredentials := credentials.NewTLS(cert.TLSConfig())
-	directoryDialOptions := []grpc.DialOption{
-		grpc.WithTransportCredentials(directoryDialCredentials),
-	}
-	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(nlxversion.NewContext("management-api"), directoryClientDialTimeout)
-	directoryConn, err := grpc.DialContext(directoryConnCtx, directoryRegistrationAddress, directoryDialOptions...)
-
-	defer directoryConnCtxCancel()
-
-	if err != nil {
-		return nil, err
-	}
-
-	directoryRegistrationClient := registrationapi.NewDirectoryRegistrationClient(directoryConn)
-
-	return directoryRegistrationClient, nil
 }

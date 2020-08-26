@@ -56,10 +56,10 @@ spec:
               value: "0.0.0.0:8443"
             - name: ETCD_CONNECTION_STRING
               value: http://{{ .Release.Name }}-etcd:2379
+            - name: DIRECTORY_INSPECTION_ADDRESS
+              value: {{ required "Directory inspection hostname is required" .Values.config.directoryInspectionHostname }}:443
             - name: DIRECTORY_REGISTRATION_ADDRESS
               value: {{ required "Directory registration hostname is required" .Values.config.directoryRegistrationHostname }}:443
-            - name: DIRECTORY_ENDPOINT_URL
-              value: {{ required "Directory endpoint URL is required" .Values.config.directoryEndpointURL }}
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:

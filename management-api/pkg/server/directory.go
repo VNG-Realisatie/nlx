@@ -9,6 +9,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/directory"
@@ -23,10 +24,10 @@ type DirectoryService struct {
 	configDatabase  database.ConfigDatabase
 }
 
-var inwayStateToDirectoryState = map[directory.InwayState]api.DirectoryService_State{
-	directory.InwayStateUnknown: api.DirectoryService_unknown,
-	directory.InwayStateUp:      api.DirectoryService_up,
-	directory.InwayStateDown:    api.DirectoryService_down,
+var inwayStateToDirectoryState = map[inspectionapi.Inway_State]api.DirectoryService_State{
+	inspectionapi.Inway_UNKNOWN: api.DirectoryService_unknown,
+	inspectionapi.Inway_UP:      api.DirectoryService_up,
+	inspectionapi.Inway_DOWN:    api.DirectoryService_down,
 }
 
 func NewDirectoryService(logger *zap.Logger, e *environment.Environment, directoryClient directory.Client, configDatabase database.ConfigDatabase) *DirectoryService {
@@ -42,7 +43,7 @@ func NewDirectoryService(logger *zap.Logger, e *environment.Environment, directo
 func (s DirectoryService) ListServices(ctx context.Context, _ *api.Empty) (*api.DirectoryListServicesResponse, error) {
 	s.logger.Info("rpc request ListServices")
 
-	listServices, err := s.directoryClient.ListServices()
+	resp, err := s.directoryClient.ListServices(ctx, &inspectionapi.ListServicesRequest{})
 	if err != nil {
 		s.logger.Error("error getting services list from directory", zap.Error(err))
 		return nil, status.Errorf(codes.Internal, "directory error")
@@ -54,12 +55,12 @@ func (s DirectoryService) ListServices(ctx context.Context, _ *api.Empty) (*api.
 		return nil, status.Errorf(codes.Internal, "database error")
 	}
 
-	services := make([]*api.DirectoryService, len(listServices))
+	services := make([]*api.DirectoryService, len(resp.Services))
 
-	for i, service := range listServices {
+	for i, service := range resp.Services {
 		services[i] = convertDirectoryService(service)
 
-		key := path.Join(service.OrganizationName, service.Name)
+		key := path.Join(service.OrganizationName, service.ServiceName)
 		if a, ok := latestRequests[key]; ok {
 			latestAccessRequest, err := convertAccessRequest(a)
 			if err != nil {
@@ -81,7 +82,7 @@ func (s DirectoryService) GetOrganizationService(ctx context.Context, request *a
 	logger := s.logger.With(zap.String("organizationName", request.OrganizationName), zap.String("serviceName", request.ServiceName))
 	logger.Info("rpc request GetOrganizationService")
 
-	service, err := s.getService(logger, request.OrganizationName, request.ServiceName)
+	service, err := s.getService(ctx, logger, request.OrganizationName, request.ServiceName)
 	if err != nil {
 		return nil, err
 	}
@@ -107,14 +108,14 @@ func (s DirectoryService) GetOrganizationService(ctx context.Context, request *a
 	return directoryService, nil
 }
 
-func (s DirectoryService) getService(logger *zap.Logger, organizationName, serviceName string) (*directory.InspectionAPIService, error) {
-	services, err := s.directoryClient.ListServices()
+func (s DirectoryService) getService(ctx context.Context, logger *zap.Logger, organizationName, serviceName string) (*inspectionapi.ListServicesResponse_Service, error) {
+	resp, err := s.directoryClient.ListServices(ctx, &inspectionapi.ListServicesRequest{})
 	if err != nil {
 		return nil, status.Error(codes.Internal, "directory not available")
 	}
 
-	for _, s := range services {
-		if s.OrganizationName == organizationName && s.Name == serviceName {
+	for _, s := range resp.Services {
+		if s.OrganizationName == organizationName && s.ServiceName == serviceName {
 			return s, nil
 		}
 	}
@@ -144,7 +145,7 @@ func (s DirectoryService) RequestAccessToService(ctx context.Context, request *a
 		return nil, err
 	}
 
-	service, err := s.getService(logger, request.OrganizationName, request.ServiceName)
+	service, err := s.getService(ctx, logger, request.OrganizationName, request.ServiceName)
 	if err != nil {
 		return nil, err
 	}
@@ -156,14 +157,14 @@ func (s DirectoryService) RequestAccessToService(ctx context.Context, request *a
 	return response, nil
 }
 
-func DetermineDirectoryServiceState(inways []*directory.Inway) api.DirectoryService_State {
+func DetermineDirectoryServiceState(inways []*inspectionapi.Inway) api.DirectoryService_State {
 	serviceState := api.DirectoryService_unknown
 
 	if len(inways) == 0 {
 		return serviceState
 	}
 
-	stateMap := map[directory.InwayState]int{}
+	stateMap := map[inspectionapi.Inway_State]int{}
 
 	for _, i := range inways {
 		stateMap[i.State]++
@@ -180,13 +181,13 @@ func DetermineDirectoryServiceState(inways []*directory.Inway) api.DirectoryServ
 	return serviceState
 }
 
-func convertDirectoryService(s *directory.InspectionAPIService) *api.DirectoryService {
+func convertDirectoryService(s *inspectionapi.ListServicesResponse_Service) *api.DirectoryService {
 	serviceState := DetermineDirectoryServiceState(s.Inways)
 
 	return &api.DirectoryService{
-		ServiceName:          s.Name,
+		ServiceName:          s.ServiceName,
 		OrganizationName:     s.OrganizationName,
-		APISpecificationType: s.APISpecificationType,
+		APISpecificationType: s.ApiSpecificationType,
 		State:                serviceState,
 	}
 }

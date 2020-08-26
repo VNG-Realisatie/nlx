@@ -14,10 +14,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 
+	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
-	"go.nlx.io/nlx/management-api/pkg/directory"
 	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
 	"go.nlx.io/nlx/management-api/pkg/environment"
 	"go.nlx.io/nlx/management-api/pkg/server"
@@ -25,7 +25,7 @@ import (
 
 var directoryServiceStateTests = []struct {
 	ExpectedState api.DirectoryService_State
-	Inways        []*directory.Inway
+	Inways        []*inspectionapi.Inway
 }{
 	{
 		api.DirectoryService_unknown,
@@ -33,49 +33,49 @@ var directoryServiceStateTests = []struct {
 	},
 	{
 		api.DirectoryService_unknown,
-		[]*directory.Inway{
-			{State: directory.InwayStateUnknown},
+		[]*inspectionapi.Inway{
+			{State: inspectionapi.Inway_UNKNOWN},
 		},
 	},
 	{
 		api.DirectoryService_up,
-		[]*directory.Inway{
-			{State: directory.InwayStateUp},
+		[]*inspectionapi.Inway{
+			{State: inspectionapi.Inway_UP},
 		},
 	},
 	{
 		api.DirectoryService_up,
-		[]*directory.Inway{
-			{State: directory.InwayStateUp},
-			{State: directory.InwayStateUp},
-			{State: directory.InwayStateUp},
+		[]*inspectionapi.Inway{
+			{State: inspectionapi.Inway_UP},
+			{State: inspectionapi.Inway_UP},
+			{State: inspectionapi.Inway_UP},
 		},
 	},
 	{
 		api.DirectoryService_down,
-		[]*directory.Inway{
-			{State: directory.InwayStateDown},
+		[]*inspectionapi.Inway{
+			{State: inspectionapi.Inway_DOWN},
 		},
 	},
 	{
 		api.DirectoryService_down,
-		[]*directory.Inway{
-			{State: directory.InwayStateDown},
-			{State: directory.InwayStateDown},
+		[]*inspectionapi.Inway{
+			{State: inspectionapi.Inway_DOWN},
+			{State: inspectionapi.Inway_DOWN},
 		},
 	},
 	{
 		api.DirectoryService_degraded,
-		[]*directory.Inway{
-			{State: directory.InwayStateUp},
-			{State: directory.InwayStateDown},
+		[]*inspectionapi.Inway{
+			{State: inspectionapi.Inway_UP},
+			{State: inspectionapi.Inway_DOWN},
 		},
 	},
 	{
 		api.DirectoryService_degraded,
-		[]*directory.Inway{
-			{State: directory.InwayStateDown},
-			{State: directory.InwayStateUnknown},
+		[]*inspectionapi.Inway{
+			{State: inspectionapi.Inway_DOWN},
+			{State: inspectionapi.Inway_UNKNOWN},
 		},
 	},
 }
@@ -100,21 +100,21 @@ func TestListDirectoryServices(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
-	clientServices := []*directory.InspectionAPIService{
+	clientServices := []*inspectionapi.ListServicesResponse_Service{
 		{
-			Name:                 "test-service-1",
+			ServiceName:          "test-service-1",
 			OrganizationName:     "test-organization-a",
-			APISpecificationType: "OpenAPI3",
+			ApiSpecificationType: "OpenAPI3",
 		},
 		{
-			Name:                 "test-service-2",
+			ServiceName:          "test-service-2",
 			OrganizationName:     "test-organization-a",
-			APISpecificationType: "OpenAPI3",
+			ApiSpecificationType: "OpenAPI3",
 		},
 		{
-			Name:                 "test-service-3",
+			ServiceName:          "test-service-3",
 			OrganizationName:     "test-organization-b",
-			APISpecificationType: "",
+			ApiSpecificationType: "",
 		},
 	}
 
@@ -138,7 +138,7 @@ func TestListDirectoryServices(t *testing.T) {
 	}
 
 	client := mock_directory.NewMockClient(mockCtrl)
-	client.EXPECT().ListServices().Return(clientServices, nil)
+	client.EXPECT().ListServices(ctx, &inspectionapi.ListServicesRequest{}).Return(&inspectionapi.ListServicesResponse{Services: clientServices}, nil)
 
 	db := mock_database.NewMockConfigDatabase(mockCtrl)
 	db.EXPECT().ListAllLatestOutgoingAccessRequests(ctx).Return(databaseAccessRequests, nil)

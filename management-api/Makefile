@@ -54,4 +54,4 @@ pkg/database/mock/mock_database.go: pkg/database/database.go
 
 pkg/directory/mock/mock_client.go: pkg/directory/client.go
 	@# Generate mock file
-	mockgen -source $< -destination $@
+	mockgen -destination $@ go.nlx.io/nlx/management-api/pkg/directory Client

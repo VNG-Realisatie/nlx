@@ -13,10 +13,10 @@ import (
 
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
-	mock_registrationapi "go.nlx.io/nlx/directory-registration-api/registrationapi/mock"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
+	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
 	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
@@ -29,7 +29,7 @@ func TestGetInsight(t *testing.T) {
 	defer mockCtrl.Finish()
 
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-	service := server.NewManagementService(logger, testProcess, registrationapi.NewDirectoryRegistrationClient(nil), mockDatabase)
+	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), mockDatabase)
 
 	emptyRequest := &api.Empty{}
 
@@ -74,16 +74,13 @@ func TestPutInsight(t *testing.T) {
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
 	mockDatabase.EXPECT().PutInsightConfiguration(ctx, mockInsightConfig)
 
-	mockCtrlDirectoryRegistrationAPI := gomock.NewController(t)
-	defer mockCtrlDirectoryRegistrationAPI.Finish()
-
-	mockDirectoryRegistrationClient := mock_registrationapi.NewMockDirectoryRegistrationClient(mockCtrlDirectoryRegistrationAPI)
-	mockDirectoryRegistrationClient.EXPECT().SetInsightConfiguration(ctx, &registrationapi.SetInsightConfigurationRequest{
+	mockDirectoryClient := mock_directory.NewMockClient(mockCtrl)
+	mockDirectoryClient.EXPECT().SetInsightConfiguration(ctx, &registrationapi.SetInsightConfigurationRequest{
 		InsightAPIURL: "http://insight-url.com",
 		IrmaServerURL: "http://irma-url.com",
 	}).Return(&registrationapi.Empty{}, nil)
 
-	service := server.NewManagementService(logger, testProcess, mockDirectoryRegistrationClient, mockDatabase)
+	service := server.NewManagementService(logger, testProcess, mockDirectoryClient, mockDatabase)
 
 	request := &api.InsightConfiguration{
 		IrmaServerURL: "http://irma-url.com",

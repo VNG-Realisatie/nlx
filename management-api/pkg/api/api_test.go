@@ -23,8 +23,8 @@ var tests = []struct {
 	cert                         certFiles
 	orgCert                      certFiles
 	etcdConnectionString         string
+	directoryInspectionAddress   string
 	directoryRegistrationAddress string
-	directoryEndpointURL         string
 	expectedErrorMessage         string
 }{
 	{
@@ -62,7 +62,7 @@ var tests = []struct {
 		"etcd connection string is not configured",
 	},
 	{
-		"directory registration address_is_missing",
+		"directory_inspection_address_is_missing",
 		certFiles{
 			filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
 			filepath.Join(pkiDir, "org-nlx-test-key.pem"),
@@ -76,10 +76,10 @@ var tests = []struct {
 		"etcd.test:2379",
 		"",
 		"",
-		"directory registration address is not configured",
+		"directory inspection address is not configured",
 	},
 	{
-		"directory_endpoint_url_is_missing",
+		"directory_registration_address_is_missing",
 		certFiles{
 			filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
 			filepath.Join(pkiDir, "org-nlx-test-key.pem"),
@@ -91,9 +91,9 @@ var tests = []struct {
 			filepath.Join(pkiDir, "ca-root.pem"),
 		},
 		"etcd.test:2379",
-		"directory-registration.test:8443",
+		"directory-inspection.test:8443",
 		"",
-		"directory endpoint URL is not configured",
+		"directory registration address is not configured",
 	},
 	{
 		"happy_flow",
@@ -108,8 +108,8 @@ var tests = []struct {
 			filepath.Join(pkiDir, "ca-root.pem"),
 		},
 		"etcd.test:2379",
+		"directory-inspection.test:8443",
 		"directory-registration.test:8443",
-		"https://directory.test/",
 		"",
 	},
 }
@@ -128,7 +128,7 @@ func TestNewAPI(t *testing.T) {
 			orgCert, err := common_tls.NewBundleFromFiles(test.orgCert.certFile, test.orgCert.keyFile, test.orgCert.rootCertFile)
 			assert.NoError(t, err)
 
-			_, err = NewAPI(logger, testProcess, cert, orgCert, test.etcdConnectionString, test.directoryRegistrationAddress, test.directoryEndpointURL, &oidc.Authenticator{})
+			_, err = NewAPI(logger, testProcess, cert, orgCert, test.etcdConnectionString, test.directoryInspectionAddress, test.directoryRegistrationAddress, &oidc.Authenticator{})
 
 			if test.expectedErrorMessage != "" {
 				assert.EqualError(t, err, test.expectedErrorMessage)

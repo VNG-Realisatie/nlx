@@ -4,76 +4,61 @@
 package directory
 
 import (
-	"encoding/json"
-	"errors"
-	"net/http"
-	"net/url"
+	"context"
+	"time"
+
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
+
+	common_tls "go.nlx.io/nlx/common/tls"
+	"go.nlx.io/nlx/common/version"
+	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
+	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
 
-const (
-	userAgent = "nlx-management"
+var (
+	userAgent   = "nlx-management/" + version.BuildVersion
+	dialTimeout = 10 * time.Second
 )
 
 type Client interface {
-	ListServices() ([]*InspectionAPIService, error)
+	inspectionapi.DirectoryInspectionClient
+	registrationapi.DirectoryRegistrationClient
 }
 
-type HTTPClient struct {
-	client    *http.Client
-	baseURL   *url.URL
-	userAgent string
+type client struct {
+	inspectionapi.DirectoryInspectionClient
+	registrationapi.DirectoryRegistrationClient
 }
 
-func NewClient(endpointURL string) (Client, error) {
-	httpClient := &http.Client{}
+func NewClient(ctx context.Context, inspectionAddress, registrationAddress string, cert *common_tls.CertificateBundle) (Client, error) {
+	dialCredentials := credentials.NewTLS(cert.TLSConfig())
+	dialOptions := []grpc.DialOption{
+		grpc.WithTransportCredentials(dialCredentials),
+		grpc.WithUserAgent(userAgent),
+		grpc.WithUnaryInterceptor(timeoutUnaryInterceptor),
+	}
 
-	baseURL, err := url.Parse(endpointURL)
+	inspectionConn, err := grpc.DialContext(ctx, inspectionAddress, dialOptions...)
 	if err != nil {
 		return nil, err
 	}
 
-	baseURL.Path += "/directory/"
+	registrationConn, err := grpc.DialContext(ctx, registrationAddress, dialOptions...)
+	if err != nil {
+		return nil, err
+	}
 
-	c := &HTTPClient{
-		client:    httpClient,
-		baseURL:   baseURL,
-		userAgent: userAgent,
+	c := client{
+		inspectionapi.NewDirectoryInspectionClient(inspectionConn),
+		registrationapi.NewDirectoryRegistrationClient(registrationConn),
 	}
 
 	return c, nil
 }
 
-func (d *HTTPClient) newRequest(method, pathStr string) (*http.Request, error) {
-	u, err := d.baseURL.Parse(pathStr)
-	if err != nil {
-		return nil, err
-	}
+func timeoutUnaryInterceptor(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
+	ctx, _ = context.WithTimeout(ctx, dialTimeout) // nolint:govet // cancel function is used by the invoker
 
-	req, err := http.NewRequest(method, u.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Set("Accept", "application/json")
-	req.Header.Set("User-Agent", d.userAgent)
-
-	return req, nil
-}
-
-func (d *HTTPClient) sendRequest(req *http.Request, v interface{}) (*http.Response, error) {
-	resp, err := d.client.Do(req)
-
-	if err != nil {
-		return nil, err
-	}
-
-	if c := resp.StatusCode; c < 200 || c > 299 {
-		return nil, errors.New("request failed")
-	}
-
-	defer resp.Body.Close()
-
-	err = json.NewDecoder(resp.Body).Decode(v)
-
-	return resp, err
+	return invoker(ctx, method, req, reply, cc, opts...)
 }

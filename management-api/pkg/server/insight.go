@@ -39,7 +39,7 @@ func (s *ManagementService) GetInsightConfiguration(ctx context.Context, req *ap
 func (s *ManagementService) PutInsightConfiguration(ctx context.Context, req *api.InsightConfiguration) (*api.InsightConfiguration, error) {
 	s.logger.Info("rpc request PutInsight")
 
-	_, err := s.directoryRegistrationClient.SetInsightConfiguration(ctx, &registrationapi.SetInsightConfigurationRequest{
+	_, err := s.directoryClient.SetInsightConfiguration(ctx, &registrationapi.SetInsightConfigurationRequest{
 		InsightAPIURL: req.InsightAPIURL,
 		IrmaServerURL: req.IrmaServerURL,
 	})

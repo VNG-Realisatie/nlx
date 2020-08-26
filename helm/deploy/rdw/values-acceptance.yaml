@@ -50,7 +50,6 @@ managementAPI:
 ################
 nlx-management:
   config:
-    directoryEndpointURL: https://directory.acc.nlx.io/api
     oidc:
       clientSecret: gKV1nhAtGx2fJLMbx0ao
       discoveryURL: https://dex.acc.voorbeeld-rdw.nl

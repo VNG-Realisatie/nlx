@@ -13,10 +13,10 @@ import (
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/process"
-	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
+	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
 	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
@@ -27,7 +27,7 @@ func newService(t *testing.T) (s *server.ManagementService, ctrl *gomock.Control
 	ctrl = gomock.NewController(t)
 
 	db = mock_database.NewMockConfigDatabase(ctrl)
-	s = server.NewManagementService(logger, proc, registrationapi.NewDirectoryRegistrationClient(nil), db)
+	s = server.NewManagementService(logger, proc, mock_directory.NewMockClient(ctrl), db)
 
 	return
 }
