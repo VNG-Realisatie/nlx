@@ -120,7 +120,7 @@ test('the form values of the onSubmitHandler', async () => {
   })
 
   expect(
-    container.querySelectorAll('p[class*="FieldValidationMessage"'),
+    container.querySelectorAll('p[class*="FieldValidationMessage"]'),
   ).toHaveLength(0)
 
   waitFor(() =>
