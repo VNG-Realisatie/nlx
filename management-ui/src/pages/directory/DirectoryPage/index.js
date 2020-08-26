@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React, { useEffect } from 'react'
+import React from 'react'
 import { observer } from 'mobx-react'
 import { Route } from 'react-router-dom'
 import { Alert } from '@commonground/design-system'
@@ -18,17 +18,11 @@ import DirectoryPageView from './components/DirectoryPageView'
 const DirectoryPage = () => {
   const { t } = useTranslation()
   const {
-    fetchServices,
     services,
     selectService,
-    isReady,
+    isInitiallyFetched,
     error,
   } = useDirectoryStore()
-
-  useEffect(() => {
-    fetchServices()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   return (
     <PageTemplate>
@@ -37,14 +31,14 @@ const DirectoryPage = () => {
         description={
           <span data-testid="directory-description">
             {t('List of all available services')}
-            {isReady && !error ? (
+            {isInitiallyFetched && !error ? (
               <DirectoryServiceCount services={services} />
             ) : null}
           </span>
         }
       />
 
-      {!isReady ? (
+      {!isInitiallyFetched ? (
         <LoadingMessage />
       ) : error ? (
         <Alert variant="error" data-testid="error-message">

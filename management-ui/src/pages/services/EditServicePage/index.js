@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from '@commonground/design-system'
 import { useHistory, useParams } from 'react-router-dom'
@@ -12,15 +12,22 @@ import serviceActions from '../ServicesPage/serviceActions'
 import ServiceForm from '../../../components/ServiceForm'
 import PageTemplate from '../../../components/PageTemplate'
 import LoadingMessage from '../../../components/LoadingMessage'
-import useService from '../use-service'
+import { useServicesStore } from '../../../hooks/use-stores'
 import { StyledUpdatedError } from './index.styles'
 
 const EditServicePage = () => {
   const { name } = useParams()
   const { t } = useTranslation()
-  const [service, error, isReady] = useService(name)
+  const { error, isInitiallyFetched, selectService } = useServicesStore()
   const [updateError, setUpdatedError] = useState(null)
   const history = useHistory()
+  const [service, setService] = useState(null)
+
+  useEffect(() => {
+    if (isInitiallyFetched) {
+      setService(selectService(name))
+    }
+  }, [isInitiallyFetched]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const submitService = async (values) => {
     try {
@@ -41,7 +48,7 @@ const EditServicePage = () => {
         title={t('Edit service')}
       />
 
-      {!isReady || (!error && !service) ? (
+      {!isInitiallyFetched ? (
         <LoadingMessage />
       ) : error ? (
         <Alert variant="error" data-testid="error-message">

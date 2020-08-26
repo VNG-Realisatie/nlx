@@ -9,7 +9,7 @@ import { createMemoryHistory } from 'history'
 import UserContext from '../../../user-context'
 import { renderWithProviders } from '../../../test-utils'
 import { StoreProvider } from '../../../stores'
-import { mockServicesStore } from '../use-service.test'
+import { mockServicesStore } from '../ServicesStore.mock'
 import EditServicePage from './index'
 
 jest.mock('../../../components/ServiceForm', () => ({ onSubmitHandler }) => (
@@ -25,7 +25,7 @@ describe('the EditServicePage', () => {
 
   it('before the service has been loaded', async () => {
     jest.useFakeTimers()
-    const store = mockServicesStore({ isReady: false })
+    const store = mockServicesStore({ isInitiallyFetched: false })
     const userContext = { user: { id: '42' } }
     const { findByRole, getByLabelText } = renderWithProviders(
       <StaticRouter location="/services/mock-service/edit-service">

@@ -8,28 +8,31 @@ import { createDirectoryService } from '../../models/DirectoryServiceModel'
 
 class DirectoryStore {
   services = []
-  isLoading = false
-  isReady = false
+  error = ''
+  // This is set to true after the first call has been made. Regardless of success.
+  isInitiallyFetched = false
+  // This is internal state to prevent concurrent fetchServices calls being in flight.
+  isFetching = false
 
   constructor({ rootStore, domain = DirectoryRepository }) {
     this.rootStore = rootStore
     this.domain = domain
 
+    this.services = []
     // @TODO:
-    // All stores that do async stuff have isReady and error.
+    // All stores that do async stuff have isInitiallyFetched and error.
     // Consider using a reqres model / state machine
     // See: https://benmccormick.org/2018/05/14/mobx-state-machines-and-flags/
-    this.isLoading = false
-    this.isReady = false
     this.error = ''
+    this.isInitiallyFetched = false
+    this.isFetching = false
   }
 
   fetchServices = flow(function* fetchServices() {
-    // This prevents making concurrent fetch calls being triggered by rerendering
-    if (this.isLoading) {
+    if (this.isFetching) {
       return
     }
-    this.isLoading = true
+    this.isFetching = true
     this.error = ''
 
     try {
@@ -40,23 +43,27 @@ class DirectoryStore {
     } catch (e) {
       this.error = e
     } finally {
-      this.isReady = true
-      this.isLoading = false
+      this.isInitiallyFetched = true
+      this.isFetching = false
     }
   })
 
   selectService = ({ organizationName, serviceName }) => {
-    return this.services.find(
+    const directoryServiceModel = this.services.find(
       (service) =>
         service.organizationName === organizationName &&
         service.serviceName === serviceName,
     )
+    if (directoryServiceModel) {
+      directoryServiceModel.fetch()
+    }
+    return directoryServiceModel
   }
 }
 
 decorate(DirectoryStore, {
   services: observable,
-  isReady: observable,
+  isInitiallyFetched: observable,
   error: observable,
   fetchServices: action.bound,
 })

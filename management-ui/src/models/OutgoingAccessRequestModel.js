@@ -48,7 +48,6 @@ class OutgoingAccessRequestModel {
     this.domain = domain
     this.update(accessRequestData)
 
-    // Currently not used, but part of pattern
     this.error = ''
   }
 

@@ -34,8 +34,6 @@ export const serviceModelPropTypes = {
 
 // TODO test
 class ServiceModel {
-  isReady = false
-
   name = ''
   endpointURL = ''
   documentationURL = ''
@@ -51,20 +49,12 @@ class ServiceModel {
 
     this.name = service.name
     this.with(service)
-
-    this.isReady = true
   }
 
   fetch = flow(function* fetch() {
-    this.isReady = false
+    const service = yield this.store.domain.getByName(this.name)
 
-    try {
-      const service = yield this.store.domain.getByName(this.name)
-
-      this.with(service)
-    } finally {
-      this.isReady = true
-    }
+    this.with(service)
   })
 
   with = function (service) {
@@ -81,16 +71,11 @@ class ServiceModel {
   }
 
   update = flow(function* update(values) {
-    this.isReady = false
-
     this.with(values)
-    try {
-      yield this.store.domain.update(this.name, serialize(this))
 
-      return this
-    } finally {
-      this.isReady = true
-    }
+    yield this.store.domain.update(this.name, serialize(this))
+
+    return this
   })
 }
 
@@ -128,7 +113,6 @@ decorate(ServiceModel, {
   publicSupportContact: observable,
   authorizationSettings: observable,
   inways: observable,
-  isReady: observable,
   fetch: action.bound,
   update: action.bound,
 })

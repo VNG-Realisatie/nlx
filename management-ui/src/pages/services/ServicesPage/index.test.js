@@ -9,7 +9,7 @@ import { act } from '@testing-library/react'
 import { renderWithProviders, waitFor } from '../../../test-utils'
 import { UserContextProvider } from '../../../user-context'
 import { StoreProvider } from '../../../stores'
-import { mockServicesStore } from '../use-service.test'
+import { mockServicesStore } from '../ServicesStore.mock'
 import ServicesPage from './index'
 
 jest.mock('./ServicesPageView', () => () => (
@@ -19,7 +19,7 @@ jest.mock('./ServicesPageView', () => () => (
 test('fetching all services', async () => {
   const history = createMemoryHistory({ initialEntries: ['/services'] })
 
-  const store = mockServicesStore({ services: null, isReady: false })
+  const store = mockServicesStore({ services: null, isInitiallyFetched: false })
   const { getByRole, getByTestId, getByLabelText } = renderWithProviders(
     <Router history={history}>
       <UserContextProvider user={{}}>

@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, Button } from '@commonground/design-system'
 import { Link, Route } from 'react-router-dom'
@@ -20,11 +20,12 @@ import { StyledActionsBar, StyledIconPlus } from './index.styles'
 
 const ServicesPage = () => {
   const { t } = useTranslation()
-  const { isReady, services, error, fetchServices } = useServicesStore()
-
-  useEffect(() => {
-    fetchServices()
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  const {
+    isInitiallyFetched,
+    services,
+    error,
+    selectService,
+  } = useServicesStore()
 
   return (
     <PageTemplate>
@@ -47,7 +48,7 @@ const ServicesPage = () => {
         </Button>
       </StyledActionsBar>
 
-      {!isReady ? (
+      {!isInitiallyFetched ? (
         <LoadingMessage />
       ) : error ? (
         <Alert variant="error" data-testid="error-message">
@@ -57,9 +58,15 @@ const ServicesPage = () => {
         <ServicesPageView services={services} />
       )}
 
-      <Route path="/services/:name">
-        <ServiceDetailPage parentUrl="/services" />
-      </Route>
+      <Route
+        path="/services/:name"
+        render={({ match }) => (
+          <ServiceDetailPage
+            parentUrl="/services"
+            service={selectService(match.params.name)}
+          />
+        )}
+      />
     </PageTemplate>
   )
 }
