@@ -1,10 +1,10 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-
 import React from 'react'
 import { oneOf, array } from 'prop-types'
 import { useTranslation } from 'react-i18next'
+
 import Amount from '../../../../../../components/Amount'
 
 const AuthorizationMode = ({ mode, authorizations }) => {

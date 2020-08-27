@@ -15,7 +15,6 @@ const AddServicePage = () => {
   const { t } = useTranslation()
   const [error, setError] = useState(null)
   const history = useHistory()
-
   const { addService } = useServicesStore()
 
   const submitService = async (service) => {
@@ -47,7 +46,7 @@ const AddServicePage = () => {
       ) : null}
 
       <ServiceForm
-        onSubmitHandler={(values) => submitService(values)}
+        onSubmitHandler={submitService}
         submitButtonText={t('Add service')}
       />
     </PageTemplate>

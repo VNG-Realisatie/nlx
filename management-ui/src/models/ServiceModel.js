@@ -46,14 +46,12 @@ class ServiceModel {
 
   constructor({ store, service }) {
     this.store = store
-
     this.name = service.name
     this.with(service)
   }
 
   fetch = flow(function* fetch() {
     const service = yield this.store.domain.getByName(this.name)
-
     this.with(service)
   })
 
@@ -72,9 +70,7 @@ class ServiceModel {
 
   update = flow(function* update(values) {
     this.with(values)
-
     yield this.store.domain.update(this.name, serialize(this))
-
     return this
   })
 }

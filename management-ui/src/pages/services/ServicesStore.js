@@ -27,8 +27,8 @@ class ServicesStore {
     if (this.isFetching) {
       return
     }
-    this.isFetching = true
 
+    this.isFetching = true
     this.error = ''
 
     try {
@@ -48,9 +48,11 @@ class ServicesStore {
     const serviceModel = this.services.find(
       (service) => service.name === serviceName,
     )
+
     if (serviceModel) {
       serviceModel.fetch()
     }
+
     return serviceModel
   }
 
@@ -65,6 +67,7 @@ class ServicesStore {
   addService = flow(function* addService(service) {
     const newService = yield this.domain.create(service)
     const serviceModel = createService({ store: this, service: newService })
+
     this.services.push(serviceModel)
     return serviceModel
   })
