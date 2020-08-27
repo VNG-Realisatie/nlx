@@ -10,14 +10,17 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
+	"go.nlx.io/nlx/common/nlxversion"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
 
+const component = "nlx-management"
+
 var (
-	userAgent   = "nlx-management/" + version.BuildVersion
+	userAgent   = component + "/" + version.BuildVersion
 	dialTimeout = 10 * time.Second
 )
 
@@ -38,6 +41,8 @@ func NewClient(ctx context.Context, inspectionAddress, registrationAddress strin
 		grpc.WithUserAgent(userAgent),
 		grpc.WithUnaryInterceptor(timeoutUnaryInterceptor),
 	}
+
+	ctx = nlxversion.NewGRPCContext(ctx, component)
 
 	inspectionConn, err := grpc.DialContext(ctx, inspectionAddress, dialOptions...)
 	if err != nil {
