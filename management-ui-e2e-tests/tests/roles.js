@@ -5,6 +5,7 @@
 import { Selector, Role } from 'testcafe'
 
 import { getBaseUrl } from '../utils'
+import { LOGIN_USERNAME, LOGIN_PASSWORD } from '../environment'
 import loginPage from './authentication/page-models/login'
 
 const baseUrl = getBaseUrl()
@@ -21,8 +22,8 @@ export const adminUser = Role(
     await t
       .setTestSpeed(0.5)
       .click(managementLoginButton)
-      .typeText(dexLoginText, 'admin@example.com')
-      .typeText(dexPasswordText, 'password')
+      .typeText(dexLoginText, LOGIN_USERNAME)
+      .typeText(dexPasswordText, LOGIN_PASSWORD)
       .click(dexSubmitLoginButton)
       .click(dexGrantAccessButton)
   },
