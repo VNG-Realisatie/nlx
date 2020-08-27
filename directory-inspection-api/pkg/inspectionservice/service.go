@@ -33,11 +33,10 @@ func (h *InspectionService) ListServices(ctx context.Context, _ *types.Empty) (*
 		}
 	}
 
-	resp := &inspectionapi.ListServicesResponse{}
 	organizationName, err := h.getOrganisationNameFromRequest(ctx)
-
 	if err != nil {
-		return nil, err
+		h.logger.Error("determining organization name from request", zap.Error(err))
+		return nil, status.Error(codes.Unknown, "determine organization name")
 	}
 
 	h.logger.Debug("querying services", zap.String("organizationName", organizationName))
@@ -47,6 +46,8 @@ func (h *InspectionService) ListServices(ctx context.Context, _ *types.Empty) (*
 		h.logger.Error("failed to fetch services from db", zap.Error(err))
 		return nil, status.Error(codes.Internal, "db error")
 	}
+
+	resp := &inspectionapi.ListServicesResponse{}
 
 	for _, service := range services {
 		resp.Services = append(resp.Services, convertFromDatabaseService(service))

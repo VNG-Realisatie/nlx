@@ -16,6 +16,8 @@ service DirectoryRegistration {
 	// RegisterInway registers an inway for a given service
 	rpc RegisterInway (RegisterInwayRequest) returns (RegisterInwayResponse) {}
 	rpc SetInsightConfiguration (SetInsightConfigurationRequest) returns (google.protobuf.Empty) {}
+	rpc SetOrganizationInway (SetOrganizationInwayRequest) returns (google.protobuf.Empty) {}
+	rpc ClearOrganizationInway (google.protobuf.Empty) returns (google.protobuf.Empty) {}
 }
 
 message RegisterInwayRequest {
@@ -42,4 +44,8 @@ message RegisterInwayResponse {
 message SetInsightConfigurationRequest {
 	string IrmaServerURL = 1;
 	string InsightAPIURL = 2;
+}
+
+message SetOrganizationInwayRequest {
+	string address = 1;
 }

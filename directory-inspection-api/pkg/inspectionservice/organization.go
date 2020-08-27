@@ -5,6 +5,7 @@ package inspectionservice
 
 import (
 	"context"
+	"errors"
 
 	"github.com/gogo/protobuf/types"
 	"go.uber.org/zap"
@@ -28,6 +29,32 @@ func (h *InspectionService) ListOrganizations(ctx context.Context, _ *types.Empt
 
 	for _, organization := range organizations {
 		resp.Organizations = append(resp.Organizations, convertFromDatabaseOrganization(organization))
+	}
+
+	return resp, nil
+}
+
+func (h *InspectionService) GetOrganizationInway(ctx context.Context, req *inspectionapi.GetOrganizationInwayRequest) (*inspectionapi.GetOrganizationInwayResponse, error) {
+	h.logger.Info("rpc request GetOrganizationInwayAddress")
+
+	name := req.OrganizationName
+	if name == "" {
+		return nil, status.New(codes.InvalidArgument, "organization name is empty").Err()
+	}
+
+	address, err := h.db.GetOrganizationInwayAddress(ctx, name)
+	if err != nil {
+		if errors.Is(err, database.ErrNoOrganization) {
+			return nil, status.New(codes.NotFound, "organization has no inway").Err()
+		}
+
+		h.logger.Error("failed to select organization inway address from db", zap.Error(err))
+
+		return nil, status.New(codes.Internal, "Database error.").Err()
+	}
+
+	resp := &inspectionapi.GetOrganizationInwayResponse{
+		Address: address,
 	}
 
 	return resp, nil

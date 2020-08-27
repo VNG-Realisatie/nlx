@@ -76,6 +76,26 @@ func (mr *MockDirectoryInspectionClientMockRecorder) ListOrganizations(ctx, in i
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOrganizations", reflect.TypeOf((*MockDirectoryInspectionClient)(nil).ListOrganizations), varargs...)
 }
 
+// GetOrganizationInway mocks base method
+func (m *MockDirectoryInspectionClient) GetOrganizationInway(ctx context.Context, in *inspectionapi.GetOrganizationInwayRequest, opts ...grpc.CallOption) (*inspectionapi.GetOrganizationInwayResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetOrganizationInway", varargs...)
+	ret0, _ := ret[0].(*inspectionapi.GetOrganizationInwayResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrganizationInway indicates an expected call of GetOrganizationInway
+func (mr *MockDirectoryInspectionClientMockRecorder) GetOrganizationInway(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationInway", reflect.TypeOf((*MockDirectoryInspectionClient)(nil).GetOrganizationInway), varargs...)
+}
+
 // MockDirectoryInspectionServer is a mock of DirectoryInspectionServer interface
 type MockDirectoryInspectionServer struct {
 	ctrl     *gomock.Controller
@@ -127,4 +147,19 @@ func (m *MockDirectoryInspectionServer) ListOrganizations(arg0 context.Context, 
 func (mr *MockDirectoryInspectionServerMockRecorder) ListOrganizations(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOrganizations", reflect.TypeOf((*MockDirectoryInspectionServer)(nil).ListOrganizations), arg0, arg1)
+}
+
+// GetOrganizationInway mocks base method
+func (m *MockDirectoryInspectionServer) GetOrganizationInway(arg0 context.Context, arg1 *inspectionapi.GetOrganizationInwayRequest) (*inspectionapi.GetOrganizationInwayResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOrganizationInway", arg0, arg1)
+	ret0, _ := ret[0].(*inspectionapi.GetOrganizationInwayResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrganizationInway indicates an expected call of GetOrganizationInway
+func (mr *MockDirectoryInspectionServerMockRecorder) GetOrganizationInway(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationInway", reflect.TypeOf((*MockDirectoryInspectionServer)(nil).GetOrganizationInway), arg0, arg1)
 }

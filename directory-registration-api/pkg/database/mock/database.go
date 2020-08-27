@@ -61,3 +61,31 @@ func (mr *MockDirectoryDatabaseMockRecorder) InsertAvailability(params interface
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InsertAvailability", reflect.TypeOf((*MockDirectoryDatabase)(nil).InsertAvailability), params)
 }
+
+// SetOrganizationInway mocks base method
+func (m *MockDirectoryDatabase) SetOrganizationInway(ctx context.Context, organizationName, inwayAddress string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetOrganizationInway", ctx, organizationName, inwayAddress)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SetOrganizationInway indicates an expected call of SetOrganizationInway
+func (mr *MockDirectoryDatabaseMockRecorder) SetOrganizationInway(ctx, organizationName, inwayAddress interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetOrganizationInway", reflect.TypeOf((*MockDirectoryDatabase)(nil).SetOrganizationInway), ctx, organizationName, inwayAddress)
+}
+
+// ClearOrganizationInway mocks base method
+func (m *MockDirectoryDatabase) ClearOrganizationInway(ctx context.Context, organizationName string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ClearOrganizationInway", ctx, organizationName)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ClearOrganizationInway indicates an expected call of ClearOrganizationInway
+func (mr *MockDirectoryDatabaseMockRecorder) ClearOrganizationInway(ctx, organizationName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClearOrganizationInway", reflect.TypeOf((*MockDirectoryDatabase)(nil).ClearOrganizationInway), ctx, organizationName)
+}

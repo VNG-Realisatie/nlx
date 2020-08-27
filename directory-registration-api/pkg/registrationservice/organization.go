@@ -5,6 +5,7 @@ package registrationservice
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/gogo/protobuf/types"
@@ -12,6 +13,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	"go.nlx.io/nlx/directory-registration-api/pkg/database"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
 
@@ -33,6 +35,54 @@ func (h *DirectoryRegistrationService) SetInsightConfiguration(ctx context.Conte
 	err = h.db.SetInsightConfiguration(ctx, organizationName, req.InsightAPIURL, req.IrmaServerURL)
 	if err != nil {
 		logger.Error("failed to execute SetInsightConfiguration", zap.Error(err))
+		return nil, status.New(codes.Internal, "database error").Err()
+	}
+
+	return &types.Empty{}, nil
+}
+
+func (h *DirectoryRegistrationService) SetOrganizationInway(ctx context.Context, req *registrationapi.SetOrganizationInwayRequest) (*types.Empty, error) {
+	logger := h.logger.With(zap.String("handler", "SetOrganizationInway"))
+
+	organizationName, err := h.getOrganisationNameFromRequest(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Unknown, "determine organization name")
+	}
+
+	if req.Address == "" {
+		return nil, status.New(codes.InvalidArgument, "address is empty").Err()
+	}
+
+	err = h.db.SetOrganizationInway(ctx, organizationName, req.Address)
+	if err != nil {
+		if errors.Is(err, database.ErrNoInwayWithAddress) {
+			return nil, status.New(codes.NotFound, "inway with address not found").Err()
+		}
+
+		logger.Error("failed to set inway for organiation", zap.Error(err))
+
+		return nil, status.New(codes.Internal, "database error").Err()
+	}
+
+	return &types.Empty{}, nil
+}
+
+func (h *DirectoryRegistrationService) ClearOrganizationInway(ctx context.Context, _ *types.Empty) (*types.Empty, error) {
+	logger := h.logger.With(zap.String("handler", "ClearOrganizationInway"))
+
+	organizationName, err := h.getOrganisationNameFromRequest(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Unknown, "determine organization name")
+	}
+
+	err = h.db.ClearOrganizationInway(ctx, organizationName)
+	if err != nil {
+		if errors.Is(err, database.ErrNoOrganization) {
+			return nil, status.New(codes.NotFound, "organization not found").Err()
+		}
+
+		logger.Error("failed to clear inway for organiation", zap.Error(err))
+
 		return nil, status.New(codes.Internal, "database error").Err()
 	}
 

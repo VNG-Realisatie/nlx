@@ -129,6 +129,14 @@ SwaggerJSONDirectoryInspection = `
         }
       }
     },
+    "inspectionapiGetOrganizationInwayResponse": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        }
+      }
+    },
     "inspectionapiInway": {
       "type": "object",
       "properties": {

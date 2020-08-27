@@ -82,3 +82,72 @@ func TestInspectionService_ListOrganizations(t *testing.T) {
 		})
 	}
 }
+
+func TestInspectionService_GetOrganizationInway(t *testing.T) {
+	tests := []struct {
+		name             string
+		db               func(ctrl *gomock.Controller) database.DirectoryDatabase
+		req              *inspectionapi.GetOrganizationInwayRequest
+		expectedResponse *inspectionapi.GetOrganizationInwayResponse
+		expectedError    error
+	}{
+		{
+			name: "organization_not_found",
+			db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
+				db := mock.NewMockDirectoryDatabase(ctrl)
+				db.EXPECT().
+					GetOrganizationInwayAddress(gomock.Any(), testOrganizationName).
+					Return("", database.ErrNoOrganization)
+
+				return db
+			},
+			req:              &inspectionapi.GetOrganizationInwayRequest{OrganizationName: testOrganizationName},
+			expectedResponse: nil,
+			expectedError:    status.New(codes.NotFound, "organization has no inway").Err(),
+		},
+		{
+			name: "organization_is_empty",
+			db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
+				db := mock.NewMockDirectoryDatabase(ctrl)
+				db.EXPECT().
+					GetOrganizationInwayAddress(gomock.Any(), testOrganizationName).
+					Times(0)
+
+				return db
+			},
+			req:              &inspectionapi.GetOrganizationInwayRequest{OrganizationName: ""},
+			expectedResponse: nil,
+			expectedError:    status.New(codes.InvalidArgument, "organization name is empty").Err(),
+		},
+		{
+			name: "happy_flow",
+			db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
+				db := mock.NewMockDirectoryDatabase(ctrl)
+				db.EXPECT().
+					GetOrganizationInwayAddress(gomock.Any(), testOrganizationName).
+					Return("inway.nlx.local", nil)
+
+				return db
+			},
+			req: &inspectionapi.GetOrganizationInwayRequest{OrganizationName: testOrganizationName},
+			expectedResponse: &inspectionapi.GetOrganizationInwayResponse{
+				Address: "inway.nlx.local",
+			},
+			expectedError: nil,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			h := inspectionservice.New(zap.NewNop(), tt.db(ctrl), testGetOrganizationNameFromRequest)
+			got, err := h.GetOrganizationInway(context.Background(), tt.req)
+
+			assert.Equal(t, tt.expectedResponse, got)
+			assert.Equal(t, tt.expectedError, err)
+		})
+	}
+}

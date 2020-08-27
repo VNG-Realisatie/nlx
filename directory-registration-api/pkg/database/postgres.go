@@ -24,6 +24,10 @@ type PostgreSQLDirectoryDatabase struct {
 
 	setInsightConfigurationStatement *sqlx.Stmt
 	insertAvailabilityStatement      *sqlx.Stmt
+
+	selectInwayByAddressStatement   *sqlx.NamedStmt
+	setOrganizationInwayStatement   *sqlx.NamedStmt
+	clearOrganizationInwayStatement *sqlx.Stmt
 }
 
 // NewPostgreSQLDirectoryDatabase constructs a new PostgreSQLDirectoryDatabase
@@ -56,11 +60,29 @@ func NewPostgreSQLDirectoryDatabase(dsn string, p *process.Process, logger *zap.
 		return nil, fmt.Errorf("failed to prepare insert availability statement: %s", err)
 	}
 
+	selectInwayByAddressStatement, err := prepareSelectInwayByAddressStatement(db)
+	if err != nil {
+		return nil, fmt.Errorf("failed to prepare select inway statement: %s", err)
+	}
+
+	setOrganizationInwayStatement, err := prepareSetOrganizationInwayStatement(db)
+	if err != nil {
+		return nil, fmt.Errorf("failed to prepare select inway statement: %s", err)
+	}
+
+	clearOrganizationInwayStatement, err := prepareClearOrganizationInwayStatement(db)
+	if err != nil {
+		return nil, fmt.Errorf("failed to prepare select inway statement: %s", err)
+	}
+
 	return &PostgreSQLDirectoryDatabase{
 		logger:                           logger,
 		db:                               db,
 		setInsightConfigurationStatement: setInsightConfigurationStatement,
 		insertAvailabilityStatement:      insertAvailabilityStatement,
+		selectInwayByAddressStatement:    selectInwayByAddressStatement,
+		setOrganizationInwayStatement:    setOrganizationInwayStatement,
+		clearOrganizationInwayStatement:  clearOrganizationInwayStatement,
 	}, nil
 }
 

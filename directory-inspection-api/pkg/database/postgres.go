@@ -22,9 +22,10 @@ type PostgreSQLDirectoryDatabase struct {
 	logger *zap.Logger
 	db     *sqlx.DB
 
-	selectServicesStatement      *sqlx.Stmt
-	registerOutwayStatement      *sqlx.NamedStmt
-	selectOrganizationsStatement *sqlx.Stmt
+	selectServicesStatement                 *sqlx.Stmt
+	registerOutwayStatement                 *sqlx.NamedStmt
+	selectOrganizationsStatement            *sqlx.Stmt
+	selectOrganizationInwayAddressStatement *sqlx.NamedStmt
 }
 
 // NewPostgreSQLDirectoryDatabase constructs a new PostgreSQLDirectoryDatabase
@@ -62,12 +63,18 @@ func NewPostgreSQLDirectoryDatabase(dsn string, p *process.Process, logger *zap.
 		return nil, fmt.Errorf("failed to create select organizations prepared statement: %s", err)
 	}
 
+	selectOrganizationInwayAddressStatement, err := prepareSelectOrganizationInwayAddressStatement(db)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create select organization inway prepared statement: %s", err)
+	}
+
 	return &PostgreSQLDirectoryDatabase{
-		logger:                       logger,
-		db:                           db,
-		selectServicesStatement:      selectServicesStatement,
-		registerOutwayStatement:      registerOutwayStatement,
-		selectOrganizationsStatement: selectOrganizationsStatement,
+		logger:                                  logger,
+		db:                                      db,
+		selectServicesStatement:                 selectServicesStatement,
+		registerOutwayStatement:                 registerOutwayStatement,
+		selectOrganizationsStatement:            selectOrganizationsStatement,
+		selectOrganizationInwayAddressStatement: selectOrganizationInwayAddressStatement,
 	}, nil
 }
 
