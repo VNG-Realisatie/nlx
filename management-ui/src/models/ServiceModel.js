@@ -58,12 +58,12 @@ class ServiceModel {
   })
 
   with = function (service) {
-    this.endpointURL = service.endpointURL
-    this.documentationURL = service.documentationURL
-    this.apiSpecificationURL = service.apiSpecificationURL
-    this.internal = service.internal
-    this.techSupportContact = service.techSupportContact
-    this.publicSupportContact = service.publicSupportContact
+    this.endpointURL = service.endpointURL || ''
+    this.documentationURL = service.documentationURL || ''
+    this.apiSpecificationURL = service.apiSpecificationURL || ''
+    this.internal = service.internal || false
+    this.techSupportContact = service.techSupportContact || ''
+    this.publicSupportContact = service.publicSupportContact || ''
     this.authorizationSettings = service.authorizationSettings || {}
     this.authorizationSettings.authorizations =
       service.authorizationSettings.authorizations || []
