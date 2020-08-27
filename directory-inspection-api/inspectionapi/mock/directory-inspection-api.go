@@ -5,9 +5,10 @@
 package mock
 
 import (
+	context "context"
+	types "github.com/gogo/protobuf/types"
 	gomock "github.com/golang/mock/gomock"
 	inspectionapi "go.nlx.io/nlx/directory-inspection-api/inspectionapi"
-	context "golang.org/x/net/context"
 	grpc "google.golang.org/grpc"
 	reflect "reflect"
 )
@@ -36,7 +37,7 @@ func (m *MockDirectoryInspectionClient) EXPECT() *MockDirectoryInspectionClientM
 }
 
 // ListServices mocks base method
-func (m *MockDirectoryInspectionClient) ListServices(ctx context.Context, in *inspectionapi.ListServicesRequest, opts ...grpc.CallOption) (*inspectionapi.ListServicesResponse, error) {
+func (m *MockDirectoryInspectionClient) ListServices(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*inspectionapi.ListServicesResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -56,7 +57,7 @@ func (mr *MockDirectoryInspectionClientMockRecorder) ListServices(ctx, in interf
 }
 
 // ListOrganizations mocks base method
-func (m *MockDirectoryInspectionClient) ListOrganizations(ctx context.Context, in *inspectionapi.ListOrganizationsRequest, opts ...grpc.CallOption) (*inspectionapi.ListOrganizationsResponse, error) {
+func (m *MockDirectoryInspectionClient) ListOrganizations(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*inspectionapi.ListOrganizationsResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -99,7 +100,7 @@ func (m *MockDirectoryInspectionServer) EXPECT() *MockDirectoryInspectionServerM
 }
 
 // ListServices mocks base method
-func (m *MockDirectoryInspectionServer) ListServices(arg0 context.Context, arg1 *inspectionapi.ListServicesRequest) (*inspectionapi.ListServicesResponse, error) {
+func (m *MockDirectoryInspectionServer) ListServices(arg0 context.Context, arg1 *types.Empty) (*inspectionapi.ListServicesResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListServices", arg0, arg1)
 	ret0, _ := ret[0].(*inspectionapi.ListServicesResponse)
@@ -114,7 +115,7 @@ func (mr *MockDirectoryInspectionServerMockRecorder) ListServices(arg0, arg1 int
 }
 
 // ListOrganizations mocks base method
-func (m *MockDirectoryInspectionServer) ListOrganizations(arg0 context.Context, arg1 *inspectionapi.ListOrganizationsRequest) (*inspectionapi.ListOrganizationsResponse, error) {
+func (m *MockDirectoryInspectionServer) ListOrganizations(arg0 context.Context, arg1 *types.Empty) (*inspectionapi.ListOrganizationsResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListOrganizations", arg0, arg1)
 	ret0, _ := ret[0].(*inspectionapi.ListOrganizationsResponse)

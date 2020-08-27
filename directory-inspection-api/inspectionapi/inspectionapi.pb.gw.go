@@ -13,6 +13,7 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/gogo/protobuf/types"
 	"github.com/golang/protobuf/descriptor"
 	"github.com/golang/protobuf/proto"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
@@ -32,7 +33,7 @@ var _ = utilities.NewDoubleArray
 var _ = descriptor.ForMessage
 
 func request_DirectoryInspection_ListServices_0(ctx context.Context, marshaler runtime.Marshaler, client DirectoryInspectionClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq ListServicesRequest
+	var protoReq types.Empty
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.ListServices(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -41,7 +42,7 @@ func request_DirectoryInspection_ListServices_0(ctx context.Context, marshaler r
 }
 
 func local_request_DirectoryInspection_ListServices_0(ctx context.Context, marshaler runtime.Marshaler, server DirectoryInspectionServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq ListServicesRequest
+	var protoReq types.Empty
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.ListServices(ctx, &protoReq)
@@ -50,7 +51,7 @@ func local_request_DirectoryInspection_ListServices_0(ctx context.Context, marsh
 }
 
 func request_DirectoryInspection_ListOrganizations_0(ctx context.Context, marshaler runtime.Marshaler, client DirectoryInspectionClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq ListOrganizationsRequest
+	var protoReq types.Empty
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.ListOrganizations(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -59,7 +60,7 @@ func request_DirectoryInspection_ListOrganizations_0(ctx context.Context, marsha
 }
 
 func local_request_DirectoryInspection_ListOrganizations_0(ctx context.Context, marshaler runtime.Marshaler, server DirectoryInspectionServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq ListOrganizationsRequest
+	var protoReq types.Empty
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.ListOrganizations(ctx, &protoReq)

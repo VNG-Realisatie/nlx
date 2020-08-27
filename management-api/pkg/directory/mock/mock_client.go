@@ -6,6 +6,7 @@ package mock_directory
 
 import (
 	context "context"
+	types "github.com/gogo/protobuf/types"
 	gomock "github.com/golang/mock/gomock"
 	inspectionapi "go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 	registrationapi "go.nlx.io/nlx/directory-registration-api/registrationapi"
@@ -37,7 +38,7 @@ func (m *MockClient) EXPECT() *MockClientMockRecorder {
 }
 
 // ListOrganizations mocks base method
-func (m *MockClient) ListOrganizations(arg0 context.Context, arg1 *inspectionapi.ListOrganizationsRequest, arg2 ...grpc.CallOption) (*inspectionapi.ListOrganizationsResponse, error) {
+func (m *MockClient) ListOrganizations(arg0 context.Context, arg1 *types.Empty, arg2 ...grpc.CallOption) (*inspectionapi.ListOrganizationsResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
@@ -57,7 +58,7 @@ func (mr *MockClientMockRecorder) ListOrganizations(arg0, arg1 interface{}, arg2
 }
 
 // ListServices mocks base method
-func (m *MockClient) ListServices(arg0 context.Context, arg1 *inspectionapi.ListServicesRequest, arg2 ...grpc.CallOption) (*inspectionapi.ListServicesResponse, error) {
+func (m *MockClient) ListServices(arg0 context.Context, arg1 *types.Empty, arg2 ...grpc.CallOption) (*inspectionapi.ListServicesResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
@@ -97,14 +98,14 @@ func (mr *MockClientMockRecorder) RegisterInway(arg0, arg1 interface{}, arg2 ...
 }
 
 // SetInsightConfiguration mocks base method
-func (m *MockClient) SetInsightConfiguration(arg0 context.Context, arg1 *registrationapi.SetInsightConfigurationRequest, arg2 ...grpc.CallOption) (*registrationapi.Empty, error) {
+func (m *MockClient) SetInsightConfiguration(arg0 context.Context, arg1 *registrationapi.SetInsightConfigurationRequest, arg2 ...grpc.CallOption) (*types.Empty, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "SetInsightConfiguration", varargs...)
-	ret0, _ := ret[0].(*registrationapi.Empty)
+	ret0, _ := ret[0].(*types.Empty)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

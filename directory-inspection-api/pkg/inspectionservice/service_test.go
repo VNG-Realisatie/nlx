@@ -8,6 +8,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/gogo/protobuf/types"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
@@ -69,7 +70,7 @@ func TestInspectionService_ListServices(t *testing.T) {
 			defer ctrl.Finish()
 
 			h := inspectionservice.New(zap.NewNop(), tt.db(ctrl), testGetOrganizationNameFromRequest)
-			got, err := h.ListServices(context.Background(), &inspectionapi.ListServicesRequest{})
+			got, err := h.ListServices(context.Background(), &types.Empty{})
 
 			assert.Equal(t, tt.expectedResponse, got)
 			assert.Equal(t, tt.expectedError, err)

@@ -5,6 +5,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/gogo/protobuf/types"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
@@ -31,7 +32,7 @@ func TestGetInsight(t *testing.T) {
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
 	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), mockDatabase)
 
-	emptyRequest := &api.Empty{}
+	emptyRequest := &types.Empty{}
 
 	mockDatabase.EXPECT().GetInsightConfiguration(ctx)
 
@@ -78,7 +79,7 @@ func TestPutInsight(t *testing.T) {
 	mockDirectoryClient.EXPECT().SetInsightConfiguration(ctx, &registrationapi.SetInsightConfigurationRequest{
 		InsightAPIURL: "http://insight-url.com",
 		IrmaServerURL: "http://irma-url.com",
-	}).Return(&registrationapi.Empty{}, nil)
+	}).Return(&types.Empty{}, nil)
 
 	service := server.NewManagementService(logger, testProcess, mockDirectoryClient, mockDatabase)
 

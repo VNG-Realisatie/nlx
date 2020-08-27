@@ -6,6 +6,7 @@ package inspectionservice
 import (
 	"context"
 
+	"github.com/gogo/protobuf/types"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -14,7 +15,7 @@ import (
 	"go.nlx.io/nlx/directory-inspection-api/pkg/database"
 )
 
-func (h *InspectionService) ListOrganizations(ctx context.Context, req *inspectionapi.ListOrganizationsRequest) (*inspectionapi.ListOrganizationsResponse, error) {
+func (h *InspectionService) ListOrganizations(ctx context.Context, _ *types.Empty) (*inspectionapi.ListOrganizationsResponse, error) {
 	h.logger.Info("rpc request ListOrganizations")
 
 	resp := &inspectionapi.ListOrganizationsResponse{}

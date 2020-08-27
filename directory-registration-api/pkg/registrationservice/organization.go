@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/gogo/protobuf/types"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -14,7 +15,7 @@ import (
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
 
-func (h *DirectoryRegistrationService) SetInsightConfiguration(ctx context.Context, req *registrationapi.SetInsightConfigurationRequest) (*registrationapi.Empty, error) {
+func (h *DirectoryRegistrationService) SetInsightConfiguration(ctx context.Context, req *registrationapi.SetInsightConfigurationRequest) (*types.Empty, error) {
 	logger := h.logger.With(zap.String("handler", "set-insight-configuration"))
 
 	logger.Info("rpc request SetInsightConfiguration", zap.String("insight api url", req.InsightAPIURL), zap.String("irma server url", req.IrmaServerURL))
@@ -35,5 +36,5 @@ func (h *DirectoryRegistrationService) SetInsightConfiguration(ctx context.Conte
 		return nil, status.New(codes.Internal, "database error").Err()
 	}
 
-	return &registrationapi.Empty{}, nil
+	return &types.Empty{}, nil
 }

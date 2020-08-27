@@ -138,13 +138,13 @@ func TestListDirectoryServices(t *testing.T) {
 	}
 
 	client := mock_directory.NewMockClient(mockCtrl)
-	client.EXPECT().ListServices(ctx, &inspectionapi.ListServicesRequest{}).Return(&inspectionapi.ListServicesResponse{Services: clientServices}, nil)
+	client.EXPECT().ListServices(ctx, &types.Empty{}).Return(&inspectionapi.ListServicesResponse{Services: clientServices}, nil)
 
 	db := mock_database.NewMockConfigDatabase(mockCtrl)
 	db.EXPECT().ListAllLatestOutgoingAccessRequests(ctx).Return(databaseAccessRequests, nil)
 
 	service := server.NewDirectoryService(logger, env, client, db)
-	response, err := service.ListServices(ctx, &api.Empty{})
+	response, err := service.ListServices(ctx, &types.Empty{})
 	assert.NoError(t, err)
 
 	expected := []*api.DirectoryService{

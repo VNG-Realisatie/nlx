@@ -14,6 +14,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/gogo/protobuf/types"
 	"github.com/jmoiron/sqlx"
 	"github.com/jpillora/backoff"
 	"github.com/pkg/errors"
@@ -342,7 +343,7 @@ func (o *Outway) updateServiceList() error {
 	}
 
 	ctx := context.TODO()
-	resp, err := o.directoryInspectionClient.ListServices(nlxversion.NewGRPCContext(ctx, "outway"), &inspectionapi.ListServicesRequest{})
+	resp, err := o.directoryInspectionClient.ListServices(nlxversion.NewGRPCContext(ctx, "outway"), &types.Empty{})
 	if err != nil {
 		return errors.Wrap(err, "failed to fetch services from directory")
 	}

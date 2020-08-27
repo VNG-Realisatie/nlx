@@ -27,7 +27,7 @@ service Management {
 	rpc UpdateService (UpdateServiceRequest) returns (Service) {
 		option (google.api.http) = { put: "/api/v1/services/{name}" body: "service" };
 	}
-	rpc DeleteService (DeleteServiceRequest) returns (Empty) {
+	rpc DeleteService (DeleteServiceRequest) returns (google.protobuf.Empty) {
 		option (google.api.http) = { delete: "/api/v1/services/{name}" };
 	}
 	rpc ListInways (ListInwaysRequest) returns (ListInwaysResponse) {
@@ -42,13 +42,13 @@ service Management {
 	rpc UpdateInway (UpdateInwayRequest) returns (Inway) {
 		option (google.api.http) = { put: "/api/v1/inways/{name}" body: "inway" };
 	}
-	rpc DeleteInway (DeleteInwayRequest) returns (Empty) {
+	rpc DeleteInway (DeleteInwayRequest) returns (google.protobuf.Empty) {
 		option (google.api.http) = { delete: "/api/v1/inways/{name}" };
 	}
 	rpc PutInsightConfiguration(InsightConfiguration) returns (InsightConfiguration) {
 		option (google.api.http) = { put: "/api/v1/insight-configuration" };
 	}
-	rpc GetInsightConfiguration (Empty) returns (InsightConfiguration) {
+	rpc GetInsightConfiguration (google.protobuf.Empty) returns (InsightConfiguration) {
 		option (google.api.http) = { get: "/api/v1/insight-configuration"};
 	}
 
@@ -89,8 +89,6 @@ message Service {
 		}
 	}
 }
-
-message Empty {}
 
 message Inway {
 	message Service {
@@ -181,7 +179,7 @@ message CreateAccessRequestRequest {
 
 
 service Directory {
-    rpc ListServices (Empty) returns (DirectoryListServicesResponse) {
+    rpc ListServices (google.protobuf.Empty) returns (DirectoryListServicesResponse) {
         option (google.api.http) = { get: "/api/v1/directory/services" };
     }
     rpc GetOrganizationService (GetOrganizationServiceRequest) returns (DirectoryService) {

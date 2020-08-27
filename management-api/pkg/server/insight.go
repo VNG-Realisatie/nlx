@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 
+	"github.com/gogo/protobuf/types"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -13,7 +14,7 @@ import (
 )
 
 // GetInsight returns the insight configuration of a organization
-func (s *ManagementService) GetInsightConfiguration(ctx context.Context, req *api.Empty) (*api.InsightConfiguration, error) {
+func (s *ManagementService) GetInsightConfiguration(ctx context.Context, _ *types.Empty) (*api.InsightConfiguration, error) {
 	s.logger.Info("rpc request GetInsightConfiguration")
 
 	insightConfig, err := s.configDatabase.GetInsightConfiguration(ctx)

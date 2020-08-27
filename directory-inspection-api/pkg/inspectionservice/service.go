@@ -6,6 +6,7 @@ package inspectionservice
 import (
 	"context"
 
+	"github.com/gogo/protobuf/types"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -20,7 +21,7 @@ func registerOutwayVersion(ctx context.Context, db database.DirectoryDatabase, v
 	_ = db.RegisterOutwayVersion(ctx, version)
 }
 
-func (h *InspectionService) ListServices(ctx context.Context, req *inspectionapi.ListServicesRequest) (*inspectionapi.ListServicesResponse, error) {
+func (h *InspectionService) ListServices(ctx context.Context, _ *types.Empty) (*inspectionapi.ListServicesResponse, error) {
 	h.logger.Info("rpc request ListServices()")
 
 	// do not log requests coming from grpc-gateway

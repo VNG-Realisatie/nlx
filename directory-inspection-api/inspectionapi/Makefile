@@ -24,11 +24,14 @@ results = $(protos:.proto=.pb.go) $(protos:.proto=.pb.gw.go) $(protos:.proto=.sw
 		--gogofast_out=\
 Mgoogle/protobuf/any.proto=github.com/gogo/protobuf/types,\
 Mgoogle/protobuf/duration.proto=github.com/gogo/protobuf/types,\
+Mgoogle/protobuf/empty.proto=github.com/gogo/protobuf/types,\
 Mgoogle/protobuf/struct.proto=github.com/gogo/protobuf/types,\
 Mgoogle/protobuf/timestamp.proto=github.com/gogo/protobuf/types,\
 Mgoogle/protobuf/wrappers.proto=github.com/gogo/protobuf/types,\
 plugins=grpc:. \
-		--grpc-gateway_out=logtostderr=true:. \
+		--grpc-gateway_out=\
+Mgoogle/protobuf/empty.proto=github.com/gogo/protobuf/types,\
+logtostderr=true:.\
 		$<
 
 %.swagger.json: %.proto

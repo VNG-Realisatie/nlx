@@ -4,6 +4,7 @@ syntax = "proto3";
 package inspectionapi;
 
 import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 
 option (gogoproto.marshaler_all) = true;
@@ -14,11 +15,11 @@ option (gogoproto.goproto_getters_all) = false;
 // The DirectoryInspection service definition.
 service DirectoryInspection {
 	// ListServices lists all services and their gateways.
-	rpc ListServices (ListServicesRequest) returns (ListServicesResponse) {
+	rpc ListServices (google.protobuf.Empty) returns (ListServicesResponse) {
 		option (google.api.http).get = "/api/directory/list-services";
 	}
 	// ListOrganizations lists all organizations and their details.
-	rpc ListOrganizations (ListOrganizationsRequest) returns (ListOrganizationsResponse) {
+	rpc ListOrganizations (google.protobuf.Empty) returns (ListOrganizationsResponse) {
 		option (google.api.http).get = "/api/directory/list-organizations";
 	}
 }
@@ -32,8 +33,6 @@ message Inway {
 	string address = 1;
 	State state = 2 ;
 }
-
-message ListServicesRequest {}
 
 message ListServicesResponse {
 	message Service {
@@ -50,9 +49,6 @@ message ListServicesResponse {
 
 	repeated Service services = 2;
 }
-
-
-message ListOrganizationsRequest {}
 
 message ListOrganizationsResponse {
 	message Organization {

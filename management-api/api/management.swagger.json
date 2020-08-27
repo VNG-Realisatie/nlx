@@ -302,7 +302,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/nlxmanagementEmpty"
+              "properties": {}
             }
           },
           "default": {
@@ -456,7 +456,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/nlxmanagementEmpty"
+              "properties": {}
             }
           },
           "default": {
@@ -773,9 +773,6 @@
           "type": "string"
         }
       }
-    },
-    "nlxmanagementEmpty": {
-      "type": "object"
     },
     "nlxmanagementService": {
       "type": "object",

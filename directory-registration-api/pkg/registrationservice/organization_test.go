@@ -8,6 +8,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/gogo/protobuf/types"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
@@ -37,7 +38,7 @@ func TestDirectoryRegistrationService_SetInsightConfiguration(t *testing.T) {
 		name             string
 		fields           fields
 		args             args
-		expectedResponse *registrationapi.Empty
+		expectedResponse *types.Empty
 		expectedError    error
 	}{
 		{
@@ -112,7 +113,7 @@ func TestDirectoryRegistrationService_SetInsightConfiguration(t *testing.T) {
 					IrmaServerURL: "https://irma-server-url",
 				},
 			},
-			expectedResponse: &registrationapi.Empty{},
+			expectedResponse: &types.Empty{},
 			expectedError:    nil,
 		},
 	}

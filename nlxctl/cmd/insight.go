@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/gogo/protobuf/types"
 	"github.com/spf13/cobra"
 
 	"go.nlx.io/nlx/management-api/api"
@@ -60,7 +61,7 @@ var getInsightCommand = &cobra.Command{
 	Short: "Returns the current insight configuration",
 	Run: func(cmd *cobra.Command, arg []string) {
 
-		response, err := getManagementClient().GetInsightConfiguration(context.Background(), &api.Empty{})
+		response, err := getManagementClient().GetInsightConfiguration(context.Background(), &types.Empty{})
 		if err != nil {
 			log.Fatal(err)
 		}
