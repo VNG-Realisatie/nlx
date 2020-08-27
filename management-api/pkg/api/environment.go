@@ -16,6 +16,6 @@ func environmentRoutes(a *API) chi.Router {
 	return r
 }
 
-func (a API) environmentHandler(w http.ResponseWriter, r *http.Request) {
+func (a *API) environmentHandler(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, a.environment)
 }

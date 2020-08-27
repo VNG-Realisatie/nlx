@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"runtime/debug"
 	"strings"
-	"time"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
@@ -46,11 +45,6 @@ type API struct {
 	directoryClient directory.Client
 }
 
-const (
-	directoryClientDialTimeout = 1 * time.Minute
-	singleElementArrayLength   = 1
-)
-
 // NewAPI creates and prepares a new API
 //nolint:gocyclo // parameter validation
 func NewAPI(logger *zap.Logger, mainProcess *process.Process, cert, orgCert *common_tls.CertificateBundle, etcdConnectionString, directoryInspectionAddress, directoryRegistrationAddress string, authenticator *oidc.Authenticator) (*API, error) {
@@ -58,7 +52,7 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, cert, orgCert *com
 		return nil, errors.New("process argument is nil. needed to close gracefully")
 	}
 
-	if len(orgCert.Certificate().Subject.Organization) != singleElementArrayLength {
+	if len(orgCert.Certificate().Subject.Organization) != 1 {
 		return nil, errors.New("cannot obtain organization name from self cert")
 	}
 
@@ -89,6 +83,7 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, cert, orgCert *com
 	grpcServer := newGRPCServer(logger, cert)
 
 	api.RegisterManagementServer(grpcServer, managementService)
+
 	e := &environment.Environment{
 		OrganizationName: orgCert.Certificate().Subject.Organization[0],
 	}
@@ -97,7 +92,7 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, cert, orgCert *com
 
 	api.RegisterDirectoryServer(grpcServer, directoryService)
 
-	api := &API{
+	a := &API{
 		logger:          logger.With(zap.String("api-organization-name", e.OrganizationName)),
 		environment:     e,
 		cert:            cert,
@@ -109,7 +104,7 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, cert, orgCert *com
 		directoryClient: directoryClient,
 	}
 
-	return api, nil
+	return a, nil
 }
 
 func newGRPCServer(logger *zap.Logger, cert *common_tls.CertificateBundle) *grpc.Server {
