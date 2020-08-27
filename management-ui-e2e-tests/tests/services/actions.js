@@ -4,7 +4,7 @@
 
 import { t } from 'testcafe'
 
-import { getBaseUrl, getLocation } from '../../utils'
+import {getBaseUrl} from '../../utils'
 import addPage, { AUTHORIZATION_TYPE_NONE } from './page-models/add-service'
 import detailPage from './page-models/service-detail'
 import servicesPage from './page-models/services'
@@ -46,12 +46,16 @@ export async function createService(serviceProperties = {}) {
 }
 
 export async function removeService() {
-  await t.navigateTo(`${baseUrl}/services/${t.ctx.serviceName}`)
+  try {
+    await t.navigateTo(`${baseUrl}/services/${t.ctx.serviceName}`)
+    await t.setNativeDialogHandler(() => true)
+    await detailPage.removeService()
 
-  await t.setNativeDialogHandler(() => true)
-
-  await detailPage.removeService()
-  await t.expect(getLocation()).eql(servicesPage.url)
-
-  t.ctx.serviceName = null
+    t.ctx.serviceName = null
+  } catch (err) {
+    console.log({
+      message: 'failed to remove service',
+      url: `${baseUrl}/services/${t.ctx.serviceName}`,
+      err})
+  }
 }

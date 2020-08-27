@@ -1,11 +1,11 @@
 import fs from 'fs'
 import path from 'path'
 
-export { default as getBaseUrl } from './getBaseUrl'
-export { default as getLocation } from './getLocation'
-
 import saveBrowserConsoleMessages from './save-browser-console-messages'
 import saveRequests from './save-requests'
+
+export { default as getBaseUrl } from './getBaseUrl'
+export { default as getLocation } from './getLocation'
 
 export const saveBrowserConsoleAndRequests = async (testController, requests) => {
   const userAgent = testController.testRun.browserConnection.browserInfo.parsedUserAgent.prettyUserAgent

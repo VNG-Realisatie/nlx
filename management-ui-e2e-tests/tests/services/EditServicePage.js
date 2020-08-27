@@ -7,7 +7,7 @@ import { waitForReact } from 'testcafe-react-selectors'
 import { axeCheck, createReport } from 'axe-testcafe'
 
 import { INWAY_NAME } from '../../environment'
-import { getBaseUrl, saveBrowserConsoleAndRequests } from '../../utils';
+import { getBaseUrl, getLocation, saveBrowserConsoleAndRequests } from '../../utils';
 import { adminUser } from '../roles'
 import { createService, removeService } from './actions'
 import addPage from './page-models/add-service'
@@ -23,7 +23,8 @@ const logger = RequestLogger(/api/, {
 
 fixture`Edit Service page`
   .beforeEach(async (t) => {
-    await t.useRole(adminUser).navigateTo(`${baseUrl}/services`)
+    await t.useRole(adminUser)
+    await t.navigateTo(`${baseUrl}/services`)
     await createService()
     await waitForReact()
   })
@@ -48,24 +49,24 @@ test('Page title is visible', async (t) => {
 })
 
 test('Updating the service', async (t) => {
-  await t
-    .navigateTo(`${baseUrl}/services/${t.ctx.serviceName}`)
-    .click(detailPage.editButton)
+  await t.navigateTo(`${baseUrl}/services/${t.ctx.serviceName}`)
+  await t.click(detailPage.editButton)
   
   await addPage.fillAndSubmitForm({
     publishToCentralDirectory: false,
     inways: [INWAY_NAME],
   })
 
-  await t.navigateTo(`${baseUrl}/services/${t.ctx.serviceName}`)
+  // TODO: Test... submitting form should navigate to detail page automatically
+  // await t.navigateTo(`${baseUrl}/services/${t.ctx.serviceName}`)
+  await t.expect(getLocation()).eql(`${baseUrl}/services/${t.ctx.serviceName}`)
   await t.expect(detailPage.published.innerText).contains('Niet zichtbaar in centrale directory')
   await t.expect(detailPage.inways.innerText).eql('Inways1')
 })
 
 test('Show the missing inways warning', async (t) => {
-  await t
-    .navigateTo(`${baseUrl}/services/${t.ctx.serviceName}`)
-    .click(detailPage.editButton)
+  await t.navigateTo(`${baseUrl}/services/${t.ctx.serviceName}`)
+  await t.click(detailPage.editButton)
 
   await addPage.fillAndSubmitForm({
     publishToCentralDirectory: true,
