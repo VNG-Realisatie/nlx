@@ -13,6 +13,7 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/gogo/protobuf/types"
 	"github.com/golang/protobuf/descriptor"
 	"github.com/golang/protobuf/proto"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
@@ -668,7 +669,7 @@ func local_request_Management_CreateAccessRequest_0(ctx context.Context, marshal
 }
 
 func request_Management_GetSettings_0(ctx context.Context, marshaler runtime.Marshaler, client ManagementClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetSettingsRequest
+	var protoReq types.Empty
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.GetSettings(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -677,7 +678,7 @@ func request_Management_GetSettings_0(ctx context.Context, marshaler runtime.Mar
 }
 
 func local_request_Management_GetSettings_0(ctx context.Context, marshaler runtime.Marshaler, server ManagementServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetSettingsRequest
+	var protoReq types.Empty
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.GetSettings(ctx, &protoReq)

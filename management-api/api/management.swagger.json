@@ -302,7 +302,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/managementEmpty"
+              "$ref": "#/definitions/nlxmanagementEmpty"
             }
           },
           "default": {
@@ -456,7 +456,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/managementEmpty"
+              "$ref": "#/definitions/nlxmanagementEmpty"
             }
           },
           "default": {
@@ -542,7 +542,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/managementEmpty"
+              "properties": {}
             }
           },
           "default": {
@@ -680,9 +680,6 @@
         }
       }
     },
-    "managementEmpty": {
-      "type": "object"
-    },
     "managementInsightConfiguration": {
       "type": "object",
       "properties": {
@@ -776,6 +773,9 @@
           "type": "string"
         }
       }
+    },
+    "nlxmanagementEmpty": {
+      "type": "object"
     },
     "nlxmanagementService": {
       "type": "object",

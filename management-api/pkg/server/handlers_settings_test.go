@@ -7,6 +7,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/gogo/protobuf/types"
 	"github.com/golang/mock/gomock"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
@@ -128,7 +129,7 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 		name             string
 		fields           fields
 		args             args
-		expectedResponse *api.Empty
+		expectedResponse *types.Empty
 		expectedError    error
 	}{
 		{
@@ -180,7 +181,7 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 					InwayNameForManagementApiTraffic: "inway-name",
 				},
 			},
-			expectedResponse: &api.Empty{},
+			expectedResponse: &types.Empty{},
 			expectedError:    nil,
 		},
 	}

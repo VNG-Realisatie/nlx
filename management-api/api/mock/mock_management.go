@@ -6,6 +6,7 @@ package mock_api
 
 import (
 	context "context"
+	types "github.com/gogo/protobuf/types"
 	gomock "github.com/golang/mock/gomock"
 	api "go.nlx.io/nlx/management-api/api"
 	grpc "google.golang.org/grpc"
@@ -316,7 +317,7 @@ func (mr *MockManagementClientMockRecorder) CreateAccessRequest(ctx, in interfac
 }
 
 // GetSettings mocks base method
-func (m *MockManagementClient) GetSettings(ctx context.Context, in *api.GetSettingsRequest, opts ...grpc.CallOption) (*api.Settings, error) {
+func (m *MockManagementClient) GetSettings(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*api.Settings, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -336,14 +337,14 @@ func (mr *MockManagementClientMockRecorder) GetSettings(ctx, in interface{}, opt
 }
 
 // UpdateSettings mocks base method
-func (m *MockManagementClient) UpdateSettings(ctx context.Context, in *api.UpdateSettingsRequest, opts ...grpc.CallOption) (*api.Empty, error) {
+func (m *MockManagementClient) UpdateSettings(ctx context.Context, in *api.UpdateSettingsRequest, opts ...grpc.CallOption) (*types.Empty, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "UpdateSettings", varargs...)
-	ret0, _ := ret[0].(*api.Empty)
+	ret0, _ := ret[0].(*types.Empty)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -589,7 +590,7 @@ func (mr *MockManagementServerMockRecorder) CreateAccessRequest(arg0, arg1 inter
 }
 
 // GetSettings mocks base method
-func (m *MockManagementServer) GetSettings(arg0 context.Context, arg1 *api.GetSettingsRequest) (*api.Settings, error) {
+func (m *MockManagementServer) GetSettings(arg0 context.Context, arg1 *types.Empty) (*api.Settings, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetSettings", arg0, arg1)
 	ret0, _ := ret[0].(*api.Settings)
@@ -604,10 +605,10 @@ func (mr *MockManagementServerMockRecorder) GetSettings(arg0, arg1 interface{}) 
 }
 
 // UpdateSettings mocks base method
-func (m *MockManagementServer) UpdateSettings(arg0 context.Context, arg1 *api.UpdateSettingsRequest) (*api.Empty, error) {
+func (m *MockManagementServer) UpdateSettings(arg0 context.Context, arg1 *api.UpdateSettingsRequest) (*types.Empty, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateSettings", arg0, arg1)
-	ret0, _ := ret[0].(*api.Empty)
+	ret0, _ := ret[0].(*types.Empty)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

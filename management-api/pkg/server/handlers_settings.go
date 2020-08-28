@@ -6,6 +6,7 @@ package server
 import (
 	"context"
 
+	"github.com/gogo/protobuf/types"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -15,7 +16,7 @@ import (
 )
 
 // GetSettings returns the settings for the organization
-func (s *ManagementService) GetSettings(ctx context.Context, req *api.GetSettingsRequest) (*api.Settings, error) {
+func (s *ManagementService) GetSettings(ctx context.Context, _ *types.Empty) (*api.Settings, error) {
 	logger := s.logger.With(zap.String("handler", "get-settings"))
 
 	settings, err := s.configDatabase.GetSettings(ctx)
@@ -30,7 +31,7 @@ func (s *ManagementService) GetSettings(ctx context.Context, req *api.GetSetting
 }
 
 // UpdateSettings updates the settings for the organization
-func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateSettingsRequest) (*api.Empty, error) {
+func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateSettingsRequest) (*types.Empty, error) {
 	logger := s.logger.With(zap.String("handler", "update-settings"))
 
 	settings := database.Settings{
@@ -43,7 +44,7 @@ func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateS
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	return &api.Empty{}, nil
+	return &types.Empty{}, nil
 }
 
 func convertFromDatabaseSettings(model *database.Settings) *api.Settings {

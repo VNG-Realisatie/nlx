@@ -34,12 +34,15 @@ api/management.pb.go api/management.pb.gw.go api/management.swagger.json: api/ma
 		-I$(GOPATH)/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
 		--gogofast_out=\
 Mgoogle/protobuf/any.proto=github.com/gogo/protobuf/types,\
+Mgoogle/protobuf/empty.proto=github.com/gogo/protobuf/types,\
 Mgoogle/protobuf/duration.proto=github.com/gogo/protobuf/types,\
 Mgoogle/protobuf/struct.proto=github.com/gogo/protobuf/types,\
 Mgoogle/protobuf/timestamp.proto=github.com/gogo/protobuf/types,\
 Mgoogle/protobuf/wrappers.proto=github.com/gogo/protobuf/types,\
 plugins=grpc:. \
-		--grpc-gateway_out=logtostderr=true:. \
+		--grpc-gateway_out=\
+Mgoogle/protobuf/empty.proto=github.com/gogo/protobuf/types,\
+logtostderr=true:.\
 		--swagger_out=logtostderr=true:. \
 		$(<F)
 
