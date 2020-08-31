@@ -21,13 +21,13 @@ class SettingsRepository {
   }
 
   static async update(settings) {
+    settings = settings || {}
+
     if (typeof settings.organizationInway === 'undefined') {
-      throw new Error(
-        'The setting organizationInway must be specified',
-      )
+      throw new Error('The setting organizationInway must be specified')
     }
 
-    const response = await fetch(`/api/v1/settings`, {
+    const response = await fetchWithoutCaching(`/api/v1/settings`, {
       method: 'PUT',
       body: JSON.stringify(settings),
     })
