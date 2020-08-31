@@ -1,14 +1,16 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 
+const defaultUrl = 'http://management.organization-a.nlx.local:3011'
+
 const constructBaseUrl = () => {
   const url = process.env.URL
 
   if (!url) {
-    console.warn(`Warning: Environment variable 'URL' not set. using the default 'http://localhost:3002'.`)
+    console.warn(`Warning: Environment variable 'URL' not set. using the default '${defaultUrl}'.`)
   }
 
-  return url || 'http://localhost:3002'
+  return url || defaultUrl
 }
 
 let baseUrl = ''

@@ -1,8 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-
-import { Selector } from 'testcafe'
+import { RequestLogger, Selector } from 'testcafe'
 import { waitForReact } from 'testcafe-react-selectors'
 import { axeCheck, createReport } from 'axe-testcafe'
 
@@ -11,15 +10,24 @@ import {
   INWAY_SELF_ADDRESS,
   INWAY_VERSION,
 } from '../../environment'
-import { getBaseUrl } from '../../utils'
+import { getBaseUrl, saveBrowserConsoleAndRequests } from '../../utils'
 import { adminUser } from '../roles'
 
 const baseUrl = getBaseUrl()
+
+const logger = RequestLogger(/api/, {
+  logResponseHeaders:    false,
+  logResponseBody:       true,
+  stringifyResponseBody: true,
+})
 
 fixture`Inways page`.beforeEach(async (t) => {
   await t.useRole(adminUser).navigateTo(`${baseUrl}/inways`)
   await waitForReact()
 })
+  .afterEach(async (t) =>
+    saveBrowserConsoleAndRequests(t, logger.requests)
+  ).requestHooks(logger)
 
 test('Automated accessibility testing', async (t) => {
   const { violations } = await axeCheck(t)

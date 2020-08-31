@@ -1,19 +1,28 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { Selector } from 'testcafe'
+import { RequestLogger, Selector } from 'testcafe'
 import { waitForReact } from 'testcafe-react-selectors'
 
-import { getBaseUrl } from '../../utils'
+import { getBaseUrl, saveBrowserConsoleAndRequests } from '../../utils'
 import { adminUser } from '../roles'
 import loginPage from './page-models/login'
 
 const baseUrl = getBaseUrl()
 
+const logger = RequestLogger(/api/, {
+  logResponseHeaders:    false,
+  logResponseBody:       true,
+  stringifyResponseBody: true,
+})
+
 fixture`Logout`.beforeEach(async (t) => {
   await t.useRole(adminUser).navigateTo(`${baseUrl}/`)
   await waitForReact()
 })
+  .afterEach(async (t) =>
+    saveBrowserConsoleAndRequests(t, logger.requests)
+  ).requestHooks(logger)
 
 test('Logging out should navigate to the login page', async (t) => {
   const userMenuButton = Selector('[aria-label="Account menu"]')

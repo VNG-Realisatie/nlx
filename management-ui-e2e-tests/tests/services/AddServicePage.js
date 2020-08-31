@@ -2,16 +2,23 @@
 // Licensed under the EUPL
 //
 
+import { RequestLogger } from 'testcafe'
 import { waitForReact } from 'testcafe-react-selectors'
 import { axeCheck, createReport } from 'axe-testcafe'
 
 import { INWAY_NAME } from '../../environment'
-import { getBaseUrl } from '../../utils'
+import { getBaseUrl, saveBrowserConsoleAndRequests } from '../../utils'
 import { adminUser } from '../roles'
 import { generateServiceName, removeService } from './actions'
 import page, { AUTHORIZATION_TYPE_NONE } from './page-models/add-service'
 
 const baseUrl = getBaseUrl()
+
+const logger = RequestLogger(/api/, {
+  logResponseHeaders:    false,
+  logResponseBody:       true,
+  stringifyResponseBody: true,
+})
 
 fixture`Add Service page`
   .beforeEach(async (t) => {
@@ -22,7 +29,10 @@ fixture`Add Service page`
     if (t.ctx.serviceName) {
       await removeService()
     }
+
+    await saveBrowserConsoleAndRequests(t, logger.requests)
   })
+  .requestHooks(logger)
 
 test('Automated accessibility testing', async (t) => {
   const { violations } = await axeCheck(t)
