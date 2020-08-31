@@ -3,14 +3,14 @@
 //
 import React from 'react'
 import { func, shape, string } from 'prop-types'
-import { Formik, Field } from 'formik'
+import { Field, Formik } from 'formik'
 import * as Yup from 'yup'
 import { useTranslation } from 'react-i18next'
 import { Button, Fieldset, Label } from '@commonground/design-system'
 import FormikFocusError from '../FormikFocusError'
 import usePromise from '../../hooks/use-promise'
 import InwayRepository from '../../domain/inway-repository'
-import { Form, InwaysLoadingMessage, InwaysEmptyMessage } from './index.styles'
+import { Form, InwaysEmptyMessage, InwaysLoadingMessage } from './index.styles'
 
 const DEFAULT_INITIAL_VALUES = {
   organizationInway: '',
@@ -41,9 +41,13 @@ const SettingsForm = ({
       {({ handleSubmit }) => (
         <Form onSubmit={handleSubmit} data-testid="form" {...props}>
           <Fieldset>
-            <Label htmlFor="organizationInway">
-              {t('Inway for Management API traffic')}
-            </Label>
+            <Label htmlFor="organizationInway">{t('Organization inway')}</Label>
+
+            <p>
+              {t(
+                'This inway is used to be able to retrieve & confirm access requests from other organizations.',
+              )}
+            </p>
 
             {!inwaysIsReady ? (
               <InwaysLoadingMessage />
