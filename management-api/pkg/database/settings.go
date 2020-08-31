@@ -8,7 +8,7 @@ import (
 )
 
 type Settings struct {
-	InwayNameForManagementAPITraffic string `json:"inwayNameForManagementAPITraffic"`
+	OrganizationInway string `json:"organizationInway"`
 }
 
 const settingsKey = "settings"

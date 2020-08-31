@@ -761,7 +761,7 @@
     "managementSettings": {
       "type": "object",
       "properties": {
-        "inwayNameForManagementApiTraffic": {
+        "organizationInway": {
           "type": "string"
         }
       }
@@ -769,7 +769,7 @@
     "managementUpdateSettingsRequest": {
       "type": "object",
       "properties": {
-        "inwayNameForManagementApiTraffic": {
+        "organizationInway": {
           "type": "string"
         }
       }

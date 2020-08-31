@@ -13,17 +13,17 @@ class SettingsRepository {
     let result = await response.json()
     result = result || {}
 
-    if (typeof result.inwayNameForManagementApiTraffic === 'undefined') {
-      result.inwayNameForManagementApiTraffic = ''
+    if (typeof result.organizationInway === 'undefined') {
+      result.organizationInway = ''
     }
 
     return result
   }
 
   static async update(settings) {
-    if (typeof settings.inwayNameForManagementApiTraffic === 'undefined') {
+    if (typeof settings.organizationInway === 'undefined') {
       throw new Error(
-        'The setting inwayNameForManagementApiTraffic must be specified',
+        'The setting organizationInway must be specified',
       )
     }
 

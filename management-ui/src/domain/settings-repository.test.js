@@ -14,14 +14,14 @@ describe('the SettingsRepository', () => {
         status: 200,
         json: () =>
           Promise.resolve({
-            inwayNameForManagementApiTraffic: 'inway-name',
+            organizationInway: 'inway-name',
           }),
       })
 
       const result = await SettingsRepository.get()
 
       expect(result).toEqual({
-        inwayNameForManagementApiTraffic: 'inway-name',
+        organizationInway: 'inway-name',
       })
     })
   })
@@ -35,7 +35,7 @@ describe('the SettingsRepository', () => {
       })
 
       const updatedSettings = {
-        inwayNameForManagementApiTraffic: 'another-inway-name',
+        organizationInway: 'another-inway-name',
       }
 
       const result = await SettingsRepository.update(updatedSettings)

@@ -230,9 +230,9 @@ message RequestAccessToServiceRequest {
 }
 
 message Settings {
-	string inwayNameForManagementApiTraffic = 1;
+	string organizationInway = 1;
 }
 
 message UpdateSettingsRequest{
-	string inwayNameForManagementApiTraffic = 1;
+	string organizationInway = 1;
 }

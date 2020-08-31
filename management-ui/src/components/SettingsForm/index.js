@@ -13,7 +13,7 @@ import InwayRepository from '../../domain/inway-repository'
 import { Form, InwaysLoadingMessage, InwaysEmptyMessage } from './index.styles'
 
 const DEFAULT_INITIAL_VALUES = {
-  inwayNameForManagementApiTraffic: '',
+  organizationInway: '',
 }
 
 const SettingsForm = ({
@@ -26,7 +26,7 @@ const SettingsForm = ({
   const { isReady: inwaysIsReady, result: inways } = usePromise(getInways)
 
   const validationSchema = Yup.object().shape({
-    inwayNameForManagementApiTraffic: Yup.string(),
+    organizationInway: Yup.string(),
   })
 
   return (
@@ -41,7 +41,7 @@ const SettingsForm = ({
       {({ handleSubmit }) => (
         <Form onSubmit={handleSubmit} data-testid="form" {...props}>
           <Fieldset>
-            <Label htmlFor="inwayNameForManagementApiTraffic">
+            <Label htmlFor="organizationInway">
               {t('Inway for Management API traffic')}
             </Label>
 
@@ -53,9 +53,9 @@ const SettingsForm = ({
               </InwaysEmptyMessage>
             ) : (
               <Field
-                id="inwayNameForManagementApiTraffic"
-                name="inwayNameForManagementApiTraffic"
-                data-testid="inwayNameForManagementApiTraffic"
+                id="organizationInway"
+                name="organizationInway"
+                data-testid="organizationInway"
                 as="select"
               >
                 <option value="">{t('None')}</option>
@@ -80,7 +80,7 @@ const SettingsForm = ({
 SettingsForm.propTypes = {
   onSubmitHandler: func,
   initialValues: shape({
-    inwayNameForManagementApiTraffic: string,
+    organizationInway: string,
   }),
   getInways: func,
 }

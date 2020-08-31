@@ -21,7 +21,7 @@ test('SettingsForm', async () => {
 
   const formElement = await findByTestId('form')
 
-  const inwayField = getByLabelText('Inway for Management API traffic')
+  const inwayField = getByLabelText('Organization inway')
   fireEvent.change(inwayField, {
     target: { value: 'inway-a' },
   })
@@ -31,6 +31,6 @@ test('SettingsForm', async () => {
   })
 
   expect(onSubmitHandlerSpy).toHaveBeenCalledWith({
-    inwayNameForManagementApiTraffic: 'inway-a',
+    organizationInway: 'inway-a',
   })
 })

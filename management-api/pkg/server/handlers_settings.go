@@ -35,7 +35,7 @@ func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateS
 	logger := s.logger.With(zap.String("handler", "update-settings"))
 
 	settings := database.Settings{
-		InwayNameForManagementAPITraffic: req.InwayNameForManagementApiTraffic,
+		OrganizationInway: req.OrganizationInway,
 	}
 
 	err := s.configDatabase.UpdateSettings(ctx, &settings)
@@ -49,7 +49,7 @@ func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateS
 
 func convertFromDatabaseSettings(model *database.Settings) *api.Settings {
 	settings := &api.Settings{
-		InwayNameForManagementApiTraffic: model.InwayNameForManagementAPITraffic,
+		OrganizationInway: model.OrganizationInway,
 	}
 
 	return settings

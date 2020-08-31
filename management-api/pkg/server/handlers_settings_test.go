@@ -48,7 +48,7 @@ func TestManagementService_GetSettings(t *testing.T) {
 
 	type args struct {
 		ctx context.Context
-		req *api.GetSettingsRequest
+		req *types.Empty
 	}
 
 	tests := []struct {
@@ -83,7 +83,7 @@ func TestManagementService_GetSettings(t *testing.T) {
 
 				configDatabase := generateMockConfigDatabase(t)
 				configDatabase.EXPECT().GetSettings(gomock.Any()).Return(&database.Settings{
-					InwayNameForManagementAPITraffic: "inway-name",
+					OrganizationInway: "inway-name",
 				}, nil).AnyTimes()
 
 				return fields{
@@ -94,7 +94,7 @@ func TestManagementService_GetSettings(t *testing.T) {
 				}
 			}(),
 			expectedResponse: &api.Settings{
-				InwayNameForManagementApiTraffic: "inway-name",
+				OrganizationInway: "inway-name",
 			},
 			expectedError: nil,
 		},
@@ -152,7 +152,7 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 				req: &api.UpdateSettingsRequest{
-					InwayNameForManagementApiTraffic: "inway-name",
+					OrganizationInway: "inway-name",
 				},
 			},
 			expectedResponse: nil,
@@ -165,7 +165,7 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 
 				configDatabase := generateMockConfigDatabase(t)
 				configDatabase.EXPECT().UpdateSettings(gomock.Any(), &database.Settings{
-					InwayNameForManagementAPITraffic: "inway-name",
+					OrganizationInway: "inway-name",
 				}).Return(nil).AnyTimes()
 
 				return fields{
@@ -178,7 +178,7 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 				req: &api.UpdateSettingsRequest{
-					InwayNameForManagementApiTraffic: "inway-name",
+					OrganizationInway: "inway-name",
 				},
 			},
 			expectedResponse: &types.Empty{},
