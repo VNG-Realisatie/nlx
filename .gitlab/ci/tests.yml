@@ -13,7 +13,7 @@ Lint commit messages:
 
 Go go.mod tidy test:
   stage: Tests
-  image: golang:1.15.0
+  image: golang:1.15.1
   script:
     - cp go.mod go.mod.orig
     - /usr/local/go/bin/go mod download
@@ -25,7 +25,7 @@ Go go.mod tidy test:
 
 Go tests:
   stage: Tests
-  image: golang:1.15.0
+  image: golang:1.15.1
   before_script:
     - mkdir -p tmp-coverage-reports/
   script:
