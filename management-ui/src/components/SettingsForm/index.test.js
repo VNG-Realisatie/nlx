@@ -22,6 +22,15 @@ test('SettingsForm', async () => {
   const formElement = await findByTestId('form')
 
   const inwayField = getByLabelText('Organization inway')
+
+  await act(async () => {
+    fireEvent.submit(formElement)
+  })
+
+  expect(onSubmitHandlerSpy).toHaveBeenCalledWith({
+    organizationInway: '',
+  })
+
   fireEvent.change(inwayField, {
     target: { value: 'inway-a' },
   })

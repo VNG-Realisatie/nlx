@@ -64,7 +64,7 @@ const SettingsForm = ({
               >
                 <option value="">{t('None')}</option>
                 {inways.map((inway) => (
-                  <option value={inway.address} key={inway.name}>
+                  <option value={inway.name} key={inway.name}>
                     {inway.name}
                   </option>
                 ))}
