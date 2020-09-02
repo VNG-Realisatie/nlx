@@ -143,6 +143,7 @@ class Page {
 
     if (typeof performSubmit === 'undefined' || performSubmit === true) {
       await t.click(this.submitButton)
+      await t.wait(3000)
     }
   }
 }

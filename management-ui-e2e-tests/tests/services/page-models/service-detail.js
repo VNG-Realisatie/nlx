@@ -21,6 +21,7 @@ class Page {
 
   async removeService() {
     await t.click(this.removeButton)
+    await t.wait(3000)
   }
 }
 
