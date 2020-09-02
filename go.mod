@@ -56,7 +56,7 @@ require (
 	github.com/stretchr/testify v1.6.1
 	github.com/weppos/publicsuffix-go v0.13.0 // indirect
 	github.com/zmap/zlint v1.1.0 // indirect
-	go.uber.org/zap v1.15.0
+	go.uber.org/zap v1.16.0
 	golang.org/x/net v0.0.0-20200822124328-c89045814202
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 	golang.org/x/sync v0.0.0-20200625203802-6e8e738ad208
