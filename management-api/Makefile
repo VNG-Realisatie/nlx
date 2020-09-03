@@ -2,18 +2,19 @@ ifeq ($(GOPATH),)
 	GOPATH := $(shell go env GOPATH)
 endif
 
-FILES=api/management.pb.go api/management.pb.gw.go api/management.swagger.json api/mock/mock_management.go pkg/database/mock/mock_database.go pkg/directory/mock/mock_client.go
+API_FILES=api/management.pb.go api/management.pb.gw.go api/management.swagger.json api/mock/mock_management.go api/external/external.pb.go api/external/mock/mock_external.go
+PKG_FILES=pkg/database/mock/mock_database.go pkg/directory/mock/mock_client.go
 
 .PHONY: all
 all: generate
 
 .PHONY: generate
-generate: ${FILES}
+generate: ${API_FILES} ${PKG_FILES}
 
 .PHONY: clean
 clean:
 	@# Remove old generated files
-	rm -f ${FILES}
+	rm -f ${API_FILES} ${PKG_FILES}
 
 .PHONY: dependencies
 dependencies:
@@ -27,6 +28,7 @@ dependencies:
 
 api/management.pb.go api/management.pb.gw.go api/management.swagger.json: api/management.proto
 	@# Generate go, gateway
+	echo $(<D)
 	cd $(<D) && protoc \
 		-I. \
 		-I$(GOPATH)/src \
@@ -48,6 +50,29 @@ logtostderr=true:.\
 
 
 api/mock/mock_management.go: api/management.pb.go
+	@# Generate mock file
+	mockgen -source $< -destination $@
+
+api/external/external.pb.go: api/external/external.proto
+	@# Generate go, gateway
+	cd $(<D) && protoc \
+		-I. \
+		-I.. \
+		-I$(GOPATH)/src \
+		-I$(GOPATH)/src/github.com/gogo/protobuf/protobuf \
+		-I$(GOPATH)/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+		--gogofast_out=\
+Mgoogle/protobuf/any.proto=github.com/gogo/protobuf/types,\
+Mgoogle/protobuf/empty.proto=github.com/gogo/protobuf/types,\
+Mgoogle/protobuf/duration.proto=github.com/gogo/protobuf/types,\
+Mgoogle/protobuf/struct.proto=github.com/gogo/protobuf/types,\
+Mgoogle/protobuf/timestamp.proto=github.com/gogo/protobuf/types,\
+Mgoogle/protobuf/wrappers.proto=github.com/gogo/protobuf/types,\
+Mmanagement.proto=go.nlx.io/nlx/management-api/api,\
+plugins=grpc:. \
+		$(<F)
+
+api/external/mock/mock_external.go: api/external/external.pb.go
 	@# Generate mock file
 	mockgen -source $< -destination $@
 

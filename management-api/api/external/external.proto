@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package nlx.management.external;
+
+import "google/protobuf/empty.proto";
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+import "management.proto";
+
+option go_package = "external";
+
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.sizer_all) = true;
+option (gogoproto.unmarshaler_all) = true;
+option (gogoproto.goproto_getters_all) = false;
+
+service AccessRequestService {
+  rpc RequestAccess (RequestAccessRequest) returns (google.protobuf.Empty) {}
+  rpc GetAccessRequestState (GetAccessRequestStateRequest) returns (GetAccessRequestStateResponse) {}
+}
+
+message RequestAccessRequest {
+  string service_name = 1;
+}
+
+message GetAccessRequestStateRequest {
+  string service_name = 1;
+}
+
+message GetAccessRequestStateResponse {
+  nlx.management.AccessRequestState state = 1;
+}
