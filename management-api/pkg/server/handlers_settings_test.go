@@ -19,80 +19,38 @@ import (
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
-	"go.nlx.io/nlx/management-api/pkg/directory"
 	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
 	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
-func generateMockConfigDatabase(t *testing.T) *mock_database.MockConfigDatabase {
-	mockCtrl := gomock.NewController(t)
-	defer mockCtrl.Finish()
-
-	return mock_database.NewMockConfigDatabase(mockCtrl)
-}
-
-func generateMockDirectoryClient(t *testing.T) directory.Client {
-	mockCtrl := gomock.NewController(t)
-	defer mockCtrl.Finish()
-
-	return mock_directory.NewMockClient(mockCtrl)
-}
-
 func TestManagementService_GetSettings(t *testing.T) {
-	type fields struct {
-		logger          *zap.Logger
-		configDatabase  database.ConfigDatabase
-		mainProcess     *process.Process
-		directoryClient directory.Client
-	}
-
-	type args struct {
-		ctx context.Context
-		req *types.Empty
-	}
-
 	tests := []struct {
 		name             string
-		fields           fields
-		args             args
+		db               func(ctrl *gomock.Controller) database.ConfigDatabase
 		expectedResponse *api.Settings
 		expectedError    error
 	}{
 		{
 			name: "when the database call fails",
-			fields: func() fields {
-				logger := zap.NewNop()
+			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
+				db := mock_database.NewMockConfigDatabase(ctrl)
+				db.EXPECT().GetSettings(gomock.Any()).Return(nil, errors.New("arbitrary error"))
 
-				configDatabase := generateMockConfigDatabase(t)
-				configDatabase.EXPECT().GetSettings(gomock.Any()).Return(nil, errors.New("arbitrary error")).AnyTimes()
-
-				return fields{
-					logger:          logger,
-					mainProcess:     process.NewProcess(logger),
-					configDatabase:  configDatabase,
-					directoryClient: generateMockDirectoryClient(t),
-				}
-			}(),
+				return db
+			},
 			expectedResponse: nil,
 			expectedError:    status.Error(codes.Internal, "database error"),
 		},
 		{
 			name: "happy flow",
-			fields: func() fields {
-				logger := zap.NewNop()
-
-				configDatabase := generateMockConfigDatabase(t)
-				configDatabase.EXPECT().GetSettings(gomock.Any()).Return(&database.Settings{
+			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
+				db := mock_database.NewMockConfigDatabase(ctrl)
+				db.EXPECT().GetSettings(gomock.Any()).Return(&database.Settings{
 					OrganizationInway: "inway-name",
-				}, nil).AnyTimes()
+				}, nil)
 
-				return fields{
-					logger:          logger,
-					mainProcess:     process.NewProcess(logger),
-					configDatabase:  configDatabase,
-					directoryClient: generateMockDirectoryClient(t),
-				}
-			}(),
+				return db
+			},
 			expectedResponse: &api.Settings{
 				OrganizationInway: "inway-name",
 			},
@@ -103,8 +61,15 @@ func TestManagementService_GetSettings(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			h := server.NewManagementService(tt.fields.logger, tt.fields.mainProcess, tt.fields.directoryClient, tt.fields.configDatabase)
-			got, err := h.GetSettings(tt.args.ctx, tt.args.req)
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			l := zap.NewNop()
+			p := process.NewProcess(l)
+			d := mock_directory.NewMockClient(ctrl)
+
+			h := server.NewManagementService(l, p, d, tt.db(ctrl))
+			got, err := h.GetSettings(context.Background(), &types.Empty{})
 
 			assert.Equal(t, tt.expectedResponse, got)
 			assert.Equal(t, tt.expectedError, err)
@@ -113,73 +78,41 @@ func TestManagementService_GetSettings(t *testing.T) {
 }
 
 func TestManagementService_UpdateSettings(t *testing.T) {
-	type fields struct {
-		logger          *zap.Logger
-		configDatabase  database.ConfigDatabase
-		mainProcess     *process.Process
-		directoryClient directory.Client
-	}
-
-	type args struct {
-		ctx context.Context
-		req *api.UpdateSettingsRequest
-	}
-
 	tests := []struct {
 		name             string
-		fields           fields
-		args             args
+		db               func(ctrl *gomock.Controller) database.ConfigDatabase
+		req              *api.UpdateSettingsRequest
 		expectedResponse *types.Empty
 		expectedError    error
 	}{
 		{
 			name: "when the database call fails",
-			fields: func() fields {
-				logger := zap.NewNop()
-
-				configDatabase := generateMockConfigDatabase(t)
-				configDatabase.EXPECT().UpdateSettings(
+			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
+				db := mock_database.NewMockConfigDatabase(ctrl)
+				db.EXPECT().UpdateSettings(
 					gomock.Any(), gomock.Any(),
-				).Return(errors.New("arbitrary error")).AnyTimes()
+				).Return(errors.New("arbitrary error"))
 
-				return fields{
-					logger:          logger,
-					mainProcess:     process.NewProcess(logger),
-					configDatabase:  configDatabase,
-					directoryClient: generateMockDirectoryClient(t),
-				}
-			}(),
-			args: args{
-				ctx: context.Background(),
-				req: &api.UpdateSettingsRequest{
-					OrganizationInway: "inway-name",
-				},
+				return db
+			},
+			req: &api.UpdateSettingsRequest{
+				OrganizationInway: "inway-name",
 			},
 			expectedResponse: nil,
 			expectedError:    status.Error(codes.Internal, "database error"),
 		},
 		{
 			name: "happy flow",
-			fields: func() fields {
-				logger := zap.NewNop()
-
-				configDatabase := generateMockConfigDatabase(t)
-				configDatabase.EXPECT().UpdateSettings(gomock.Any(), &database.Settings{
+			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
+				db := mock_database.NewMockConfigDatabase(ctrl)
+				db.EXPECT().UpdateSettings(gomock.Any(), &database.Settings{
 					OrganizationInway: "inway-name",
-				}).Return(nil).AnyTimes()
+				}).Return(nil)
 
-				return fields{
-					logger:          logger,
-					mainProcess:     process.NewProcess(logger),
-					configDatabase:  configDatabase,
-					directoryClient: generateMockDirectoryClient(t),
-				}
-			}(),
-			args: args{
-				ctx: context.Background(),
-				req: &api.UpdateSettingsRequest{
-					OrganizationInway: "inway-name",
-				},
+				return db
+			},
+			req: &api.UpdateSettingsRequest{
+				OrganizationInway: "inway-name",
 			},
 			expectedResponse: &types.Empty{},
 			expectedError:    nil,
@@ -189,8 +122,15 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			h := server.NewManagementService(tt.fields.logger, tt.fields.mainProcess, tt.fields.directoryClient, tt.fields.configDatabase)
-			got, err := h.UpdateSettings(tt.args.ctx, tt.args.req)
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			l := zap.NewNop()
+			p := process.NewProcess(l)
+			d := mock_directory.NewMockClient(ctrl)
+
+			h := server.NewManagementService(l, p, d, tt.db(ctrl))
+			got, err := h.UpdateSettings(context.Background(), tt.req)
 
 			assert.Equal(t, tt.expectedResponse, got)
 			assert.Equal(t, tt.expectedError, err)
