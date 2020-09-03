@@ -20,62 +20,42 @@ import (
 	"go.nlx.io/nlx/directory-inspection-api/pkg/inspectionservice"
 )
 
+const testOrganizationName = "Test Organization Name"
+
+func testGetOrganizationNameFromRequest(ctx context.Context) (string, error) {
+	return testOrganizationName, nil
+}
+
 func TestInspectionService_ListOrganizations(t *testing.T) {
-	type fields struct {
-		logger                         *zap.Logger
-		db                             func(ctrl *gomock.Controller) database.DirectoryDatabase
-		getOrganisationNameFromRequest func(ctx context.Context) (string, error)
-	}
-
-	type args struct {
-		ctx context.Context
-		req *inspectionapi.ListOrganizationsRequest
-	}
-
 	tests := []struct {
 		name             string
-		fields           fields
-		args             args
+		db               func(ctrl *gomock.Controller) database.DirectoryDatabase
 		expectedResponse *inspectionapi.ListOrganizationsResponse
 		expectedError    error
 	}{
 		{
 			name: "failed to get organizations from the db",
-			fields: fields{
-				logger: zap.NewNop(),
-				db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
-					db := mock.NewMockDirectoryDatabase(ctrl)
-					db.EXPECT().ListOrganizations(gomock.Any()).Return(nil, errors.New("arbitrary error"))
+			db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
+				db := mock.NewMockDirectoryDatabase(ctrl)
+				db.EXPECT().ListOrganizations(gomock.Any()).Return(nil, errors.New("arbitrary error"))
 
-					return db
-				},
-				getOrganisationNameFromRequest: func(ctx context.Context) (string, error) {
-					return testOrganizationName, nil
-				},
+				return db
 			},
-			args:             args{},
 			expectedResponse: nil,
 			expectedError:    status.New(codes.Internal, "Database error.").Err(),
 		},
 		{
 			name: "happy flow",
-			fields: fields{
-				logger: zap.NewNop(),
-				db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
-					db := mock.NewMockDirectoryDatabase(ctrl)
-					db.EXPECT().ListOrganizations(gomock.Any()).Return([]*database.Organization{
-						{
-							Name: "Dummy Organization Name",
-						},
-					}, nil)
+			db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
+				db := mock.NewMockDirectoryDatabase(ctrl)
+				db.EXPECT().ListOrganizations(gomock.Any()).Return([]*database.Organization{
+					{
+						Name: "Dummy Organization Name",
+					},
+				}, nil)
 
-					return db
-				},
-				getOrganisationNameFromRequest: func(ctx context.Context) (string, error) {
-					return testOrganizationName, nil
-				},
+				return db
 			},
-			args: args{},
 			expectedResponse: &inspectionapi.ListOrganizationsResponse{
 				Organizations: []*inspectionapi.ListOrganizationsResponse_Organization{
 					{
@@ -93,8 +73,8 @@ func TestInspectionService_ListOrganizations(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			h := inspectionservice.New(tt.fields.logger, tt.fields.db(ctrl), tt.fields.getOrganisationNameFromRequest)
-			got, err := h.ListOrganizations(tt.args.ctx, tt.args.req)
+			h := inspectionservice.New(zap.NewNop(), tt.db(ctrl), testGetOrganizationNameFromRequest)
+			got, err := h.ListOrganizations(context.Background(), &inspectionapi.ListOrganizationsRequest{})
 
 			assert.Equal(t, tt.expectedResponse, got)
 			assert.Equal(t, tt.expectedError, err)

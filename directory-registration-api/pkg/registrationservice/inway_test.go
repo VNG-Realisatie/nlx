@@ -6,8 +6,6 @@ package registrationservice_test
 import (
 	"context"
 	"errors"
-	"net/http"
-	"net/http/httptest"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -26,52 +24,26 @@ const testServiceName = "Test Service Name"
 
 //nolint:funlen // adding the tests was the first step to make the functionality testable. making it less complex is out of scope for now.
 func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
-	type fields struct {
-		logger                         *zap.Logger
-		db                             func(ctrl *gomock.Controller) database.DirectoryDatabase
-		httpClient                     *http.Client
-		getOrganisationNameFromRequest func(ctx context.Context) (string, error)
-	}
-
-	type args struct {
-		ctx context.Context
-		req *registrationapi.RegisterInwayRequest
-	}
-
 	tests := []struct {
 		name             string
-		fields           fields
-		args             args
+		db               func(ctrl *gomock.Controller) database.DirectoryDatabase
+		req              *registrationapi.RegisterInwayRequest
 		expectedResponse *registrationapi.RegisterInwayResponse
 		expectedError    error
 	}{
 		{
 			name: "failed to communicate with the database",
-			fields: fields{
-				logger: zap.NewNop(),
-				httpClient: func() *http.Client {
-					httpServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
+				db := mock.NewMockDirectoryDatabase(ctrl)
+				db.EXPECT().InsertAvailability(gomock.Any()).Return(errors.New("arbitrary error"))
 
-					}))
-					defer httpServer.Close()
-					return httpServer.Client()
-				}(),
-				db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
-					db := mock.NewMockDirectoryDatabase(ctrl)
-					db.EXPECT().InsertAvailability(gomock.Any()).Return(errors.New("arbitrary error"))
-
-					return db
-				},
-				getOrganisationNameFromRequest: testGetOrganizationNameFromRequest,
+				return db
 			},
-			args: args{
-				ctx: context.Background(),
-				req: &registrationapi.RegisterInwayRequest{
-					InwayAddress: "",
-					Services: []*registrationapi.RegisterInwayRequest_RegisterService{
-						{
-							Name: testServiceName,
-						},
+			req: &registrationapi.RegisterInwayRequest{
+				InwayAddress: "",
+				Services: []*registrationapi.RegisterInwayRequest_RegisterService{
+					{
+						Name: testServiceName,
 					},
 				},
 			},
@@ -80,36 +52,22 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 		},
 		{
 			name: "happy flow",
-			fields: fields{
-				logger: zap.NewNop(),
-				httpClient: func() *http.Client {
-					httpServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
+				db := mock.NewMockDirectoryDatabase(ctrl)
+				db.EXPECT().InsertAvailability(gomock.Eq(&database.InsertAvailabilityParams{
+					OrganizationName: testOrganizationName,
+					ServiceName:      testServiceName,
+					ServiceInternal:  false,
+					NlxVersion:       "unknown",
+				})).Return(nil)
 
-					}))
-					defer httpServer.Close()
-					return httpServer.Client()
-				}(),
-				db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
-					db := mock.NewMockDirectoryDatabase(ctrl)
-					db.EXPECT().InsertAvailability(gomock.Eq(&database.InsertAvailabilityParams{
-						OrganizationName: testOrganizationName,
-						ServiceName:      testServiceName,
-						ServiceInternal:  false,
-						NlxVersion:       "unknown",
-					})).Return(nil)
-
-					return db
-				},
-				getOrganisationNameFromRequest: testGetOrganizationNameFromRequest,
+				return db
 			},
-			args: args{
-				ctx: context.Background(),
-				req: &registrationapi.RegisterInwayRequest{
-					InwayAddress: "",
-					Services: []*registrationapi.RegisterInwayRequest_RegisterService{
-						{
-							Name: testServiceName,
-						},
+			req: &registrationapi.RegisterInwayRequest{
+				InwayAddress: "",
+				Services: []*registrationapi.RegisterInwayRequest_RegisterService{
+					{
+						Name: testServiceName,
 					},
 				},
 			},
@@ -125,8 +83,8 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			h := registrationservice.New(tt.fields.logger, tt.fields.db(ctrl), tt.fields.httpClient, tt.fields.getOrganisationNameFromRequest)
-			got, err := h.RegisterInway(tt.args.ctx, tt.args.req)
+			h := registrationservice.New(zap.NewNop(), tt.db(ctrl), nil, testGetOrganizationNameFromRequest)
+			got, err := h.RegisterInway(context.Background(), tt.req)
 
 			assert.Equal(t, tt.expectedResponse, got)
 			assert.Equal(t, tt.expectedError, err)
