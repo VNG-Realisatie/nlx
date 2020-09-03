@@ -23,7 +23,7 @@ import (
 func TestInspectionService_ListServices(t *testing.T) {
 	type fields struct {
 		logger                         *zap.Logger
-		database                       database.DirectoryDatabase
+		db                             func(ctrl *gomock.Controller) database.DirectoryDatabase
 		getOrganisationNameFromRequest func(ctx context.Context) (string, error)
 	}
 
@@ -43,13 +43,13 @@ func TestInspectionService_ListServices(t *testing.T) {
 			name: "failed to get services from the db",
 			fields: fields{
 				logger: zap.NewNop(),
-				database: func() *mock.MockDirectoryDatabase {
-					db := generateMockDirectoryDatabase(t)
-					db.EXPECT().RegisterOutwayVersion(gomock.Any(), gomock.Any()).Return(nil).AnyTimes()
-					db.EXPECT().ListServices(gomock.Any(), testOrganizationName).Return(nil, errors.New("arbitrary error")).AnyTimes()
+				db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
+					db := mock.NewMockDirectoryDatabase(ctrl)
+					db.EXPECT().RegisterOutwayVersion(gomock.Any(), gomock.Any()).Times(0)
+					db.EXPECT().ListServices(gomock.Any(), testOrganizationName).Return(nil, errors.New("arbitrary error"))
 
 					return db
-				}(),
+				},
 				getOrganisationNameFromRequest: func(ctx context.Context) (string, error) {
 					return testOrganizationName, nil
 				},
@@ -65,17 +65,17 @@ func TestInspectionService_ListServices(t *testing.T) {
 			name: "happy flow",
 			fields: fields{
 				logger: zap.NewNop(),
-				database: func() *mock.MockDirectoryDatabase {
-					db := generateMockDirectoryDatabase(t)
-					db.EXPECT().RegisterOutwayVersion(gomock.Any(), gomock.Any()).Return(nil).AnyTimes()
+				db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
+					db := mock.NewMockDirectoryDatabase(ctrl)
+					db.EXPECT().RegisterOutwayVersion(gomock.Any(), gomock.Any()).Times(0)
 					db.EXPECT().ListServices(gomock.Any(), testOrganizationName).Return([]*database.Service{
 						{
 							Name: "Dummy Service Name",
 						},
-					}, nil).AnyTimes()
+					}, nil)
 
 					return db
-				}(),
+				},
 				getOrganisationNameFromRequest: func(ctx context.Context) (string, error) {
 					return testOrganizationName, nil
 				},
@@ -97,7 +97,10 @@ func TestInspectionService_ListServices(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			h := inspectionservice.New(tt.fields.logger, tt.fields.database, tt.fields.getOrganisationNameFromRequest)
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			h := inspectionservice.New(tt.fields.logger, tt.fields.db(ctrl), tt.fields.getOrganisationNameFromRequest)
 			got, err := h.ListServices(tt.args.ctx, tt.args.req)
 
 			assert.Equal(t, tt.expectedResponse, got)

@@ -25,7 +25,7 @@ import (
 func TestDirectoryRegistrationService_SetInsightConfiguration(t *testing.T) {
 	type fields struct {
 		logger                         *zap.Logger
-		db                             database.DirectoryDatabase
+		db                             func(ctrl *gomock.Controller) database.DirectoryDatabase
 		httpClient                     *http.Client
 		getOrganisationNameFromRequest func(ctx context.Context) (string, error)
 	}
@@ -46,7 +46,9 @@ func TestDirectoryRegistrationService_SetInsightConfiguration(t *testing.T) {
 			name: "with an invalid organization name in the request",
 			fields: fields{
 				logger: zap.NewNop(),
-				db:     generateMockDirectoryDatabase(t),
+				db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
+					return mock.NewMockDirectoryDatabase(ctrl)
+				},
 				getOrganisationNameFromRequest: func(ctx context.Context) (string, error) {
 					return testInvalidOrganizationName, nil
 				},
@@ -65,8 +67,8 @@ func TestDirectoryRegistrationService_SetInsightConfiguration(t *testing.T) {
 			name: "failed to communicate with the database",
 			fields: fields{
 				logger: zap.NewNop(),
-				db: func() *mock.MockDirectoryDatabase {
-					db := generateMockDirectoryDatabase(t)
+				db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
+					db := mock.NewMockDirectoryDatabase(ctrl)
 					db.EXPECT().SetInsightConfiguration(
 						gomock.Any(),
 						testOrganizationName,
@@ -75,7 +77,7 @@ func TestDirectoryRegistrationService_SetInsightConfiguration(t *testing.T) {
 					).Return(errors.New("arbitrary  error")).AnyTimes()
 
 					return db
-				}(),
+				},
 				getOrganisationNameFromRequest: testGetOrganizationNameFromRequest,
 			},
 			args: args{
@@ -92,8 +94,8 @@ func TestDirectoryRegistrationService_SetInsightConfiguration(t *testing.T) {
 			name: "happy flow",
 			fields: fields{
 				logger: zap.NewNop(),
-				db: func() *mock.MockDirectoryDatabase {
-					db := generateMockDirectoryDatabase(t)
+				db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
+					db := mock.NewMockDirectoryDatabase(ctrl)
 					db.EXPECT().SetInsightConfiguration(
 						gomock.Any(),
 						testOrganizationName,
@@ -102,7 +104,7 @@ func TestDirectoryRegistrationService_SetInsightConfiguration(t *testing.T) {
 					)
 
 					return db
-				}(),
+				},
 				getOrganisationNameFromRequest: testGetOrganizationNameFromRequest,
 			},
 			args: args{
@@ -121,7 +123,10 @@ func TestDirectoryRegistrationService_SetInsightConfiguration(t *testing.T) {
 		tt := tt
 
 		t.Run(tt.name, func(t *testing.T) {
-			h := registrationservice.New(tt.fields.logger, tt.fields.db, tt.fields.httpClient, tt.fields.getOrganisationNameFromRequest)
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			h := registrationservice.New(tt.fields.logger, tt.fields.db(ctrl), tt.fields.httpClient, tt.fields.getOrganisationNameFromRequest)
 			got, err := h.SetInsightConfiguration(tt.args.ctx, tt.args.req)
 
 			assert.Equal(t, tt.expectedResponse, got)

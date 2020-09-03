@@ -7,22 +7,13 @@ import (
 	"context"
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 
-	"go.nlx.io/nlx/directory-registration-api/pkg/database/mock"
 	"go.nlx.io/nlx/directory-registration-api/pkg/registrationservice"
 )
 
 const testOrganizationName = "Test Organization Name"
 const testInvalidOrganizationName = ""
-
-func generateMockDirectoryDatabase(t *testing.T) *mock.MockDirectoryDatabase {
-	mockCtrl := gomock.NewController(t)
-	defer mockCtrl.Finish()
-
-	return mock.NewMockDirectoryDatabase(mockCtrl)
-}
 
 func testGetOrganizationNameFromRequest(ctx context.Context) (string, error) {
 	return testOrganizationName, nil

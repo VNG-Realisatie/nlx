@@ -28,7 +28,7 @@ const testServiceName = "Test Service Name"
 func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 	type fields struct {
 		logger                         *zap.Logger
-		db                             database.DirectoryDatabase
+		db                             func(ctrl *gomock.Controller) database.DirectoryDatabase
 		httpClient                     *http.Client
 		getOrganisationNameFromRequest func(ctx context.Context) (string, error)
 	}
@@ -56,12 +56,12 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 					defer httpServer.Close()
 					return httpServer.Client()
 				}(),
-				db: func() *mock.MockDirectoryDatabase {
-					db := generateMockDirectoryDatabase(t)
-					db.EXPECT().InsertAvailability(gomock.Any()).Return(errors.New("arbitrary error")).AnyTimes()
+				db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
+					db := mock.NewMockDirectoryDatabase(ctrl)
+					db.EXPECT().InsertAvailability(gomock.Any()).Return(errors.New("arbitrary error"))
 
 					return db
-				}(),
+				},
 				getOrganisationNameFromRequest: testGetOrganizationNameFromRequest,
 			},
 			args: args{
@@ -89,17 +89,17 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 					defer httpServer.Close()
 					return httpServer.Client()
 				}(),
-				db: func() *mock.MockDirectoryDatabase {
-					db := generateMockDirectoryDatabase(t)
+				db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
+					db := mock.NewMockDirectoryDatabase(ctrl)
 					db.EXPECT().InsertAvailability(gomock.Eq(&database.InsertAvailabilityParams{
 						OrganizationName: testOrganizationName,
 						ServiceName:      testServiceName,
 						ServiceInternal:  false,
 						NlxVersion:       "unknown",
-					})).Return(nil).AnyTimes()
+					})).Return(nil)
 
 					return db
-				}(),
+				},
 				getOrganisationNameFromRequest: testGetOrganizationNameFromRequest,
 			},
 			args: args{
@@ -122,7 +122,10 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 		tt := tt
 
 		t.Run(tt.name, func(t *testing.T) {
-			h := registrationservice.New(tt.fields.logger, tt.fields.db, tt.fields.httpClient, tt.fields.getOrganisationNameFromRequest)
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			h := registrationservice.New(tt.fields.logger, tt.fields.db(ctrl), tt.fields.httpClient, tt.fields.getOrganisationNameFromRequest)
 			got, err := h.RegisterInway(tt.args.ctx, tt.args.req)
 
 			assert.Equal(t, tt.expectedResponse, got)
