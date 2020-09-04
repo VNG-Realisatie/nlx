@@ -3,23 +3,20 @@
 //
 
 import React from 'react'
-import { func } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { Alert } from '@commonground/design-system'
 import { Route } from 'react-router-dom'
 
+import { observer } from 'mobx-react'
 import PageTemplate from '../../../components/PageTemplate'
-import usePromise from '../../../hooks/use-promise'
-import InwayRepository from '../../../domain/inway-repository'
 import InwayDetailPage from '../../InwayDetailPage'
-
 import LoadingMessage from '../../../components/LoadingMessage'
-
+import { useInwaysStore } from '../../../hooks/use-stores'
 import InwaysPageView from './InwaysPageView'
 
-const InwaysPage = ({ getInways }) => {
+const InwaysPage = () => {
   const { t } = useTranslation()
-  const { isReady, error, result: inways } = usePromise(getInways)
+  const { isInitiallyFetched, inways, error, selectInway } = useInwaysStore()
 
   return (
     <PageTemplate>
@@ -28,7 +25,7 @@ const InwaysPage = ({ getInways }) => {
         description={t('Gateways to provide services.')}
       />
 
-      {!isReady ? (
+      {!isInitiallyFetched ? (
         <LoadingMessage />
       ) : error ? (
         <Alert variant="error" data-testid="error-message">
@@ -38,19 +35,17 @@ const InwaysPage = ({ getInways }) => {
         <InwaysPageView inways={inways} />
       )}
 
-      <Route exact path="/inways/:name">
-        <InwayDetailPage parentUrl="/inways" />
-      </Route>
+      <Route
+        path="/inways/:name"
+        render={({ match }) => (
+          <InwayDetailPage
+            parentUrl="/inways"
+            service={selectInway(match.params.name)}
+          />
+        )}
+      />
     </PageTemplate>
   )
 }
 
-InwaysPage.propTypes = {
-  getInways: func,
-}
-
-InwaysPage.defaultProps = {
-  getInways: InwayRepository.getAll,
-}
-
-export default InwaysPage
+export default observer(InwaysPage)

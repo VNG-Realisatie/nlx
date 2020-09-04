@@ -33,9 +33,7 @@ class InwaysStore {
 
     try {
       const inways = yield this.domain.getAll()
-      this.inways = inways.map((inway) =>
-        createInway({ store: this, inway: inway }),
-      )
+      this.inways = inways.map((inway) => createInway({ store: this, inway }))
     } catch (e) {
       this.error = e
     } finally {

@@ -23,4 +23,12 @@ export const useServicesStore = () => {
   return servicesStore
 }
 
+export const useInwaysStore = () => {
+  const { inwaysStore } = useStores()
+  if (!inwaysStore.isInitiallyFetched) {
+    inwaysStore.fetchInways()
+  }
+  return inwaysStore
+}
+
 export default useStores

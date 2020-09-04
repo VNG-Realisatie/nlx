@@ -7,6 +7,7 @@ import { configure } from 'mobx'
 
 import { createDirectoryStore } from '../pages/directory/DirectoryStore'
 import { createServicesStore } from '../pages/services/ServicesStore'
+import { createInwaysStore } from '../pages/inways/InwaysStore'
 
 if (process.env.NODE_ENV !== 'test') {
   // `setupTests` has 'never' set. But some tests include this file,
@@ -20,6 +21,7 @@ class RootStore {
   constructor() {
     this.directoryStore = createDirectoryStore({ rootStore: this })
     this.servicesStore = createServicesStore({ rootStore: this })
+    this.inwaysStore = createInwaysStore({ rootStore: this })
   }
 }
 
