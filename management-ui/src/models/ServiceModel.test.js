@@ -4,7 +4,10 @@
 import { checkPropTypes } from 'prop-types'
 
 import deferredPromise from '../test-utils/deferred-promise'
-import ServiceModel, { servicePropTypes, createService } from './ServiceModel'
+import ServiceModel, {
+  serviceModelPropTypes,
+  createService,
+} from './ServiceModel'
 
 let store
 let service
@@ -36,7 +39,7 @@ test('model implements proptypes', () => {
   const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
   const serviceModel = new ServiceModel({ store, service })
 
-  checkPropTypes(servicePropTypes, serviceModel, 'prop', 'ServiceModel')
+  checkPropTypes(serviceModelPropTypes, serviceModel, 'prop', 'ServiceModel')
 
   expect(errorSpy).not.toHaveBeenCalled()
   errorSpy.mockRestore()

@@ -22,10 +22,12 @@ export const serviceModelPropTypes = {
   publicSupportContact: string.isRequired,
   authorizationSettings: shape({
     mode: string.isRequired,
-    authorizations: arrayOf({
-      organizationName: string.isRequired,
-      publicKeyHash: string.isRequired,
-    }),
+    authorizations: arrayOf(
+      shape({
+        organizationName: string.isRequired,
+        publicKeyHash: string.isRequired,
+      }),
+    ),
   }),
   inways: arrayOf(string),
   fetch: func.isRequired,
