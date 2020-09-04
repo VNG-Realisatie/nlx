@@ -5,9 +5,9 @@
 import React from 'react'
 import { MemoryRouter as Router } from 'react-router-dom'
 import { act } from '@testing-library/react'
-import { renderWithProviders } from '../../test-utils'
-import { UserContextProvider } from '../../user-context'
-import deferredPromise from '../../test-utils/deferred-promise'
+import { renderWithProviders } from '../../../test-utils'
+import { UserContextProvider } from '../../../user-context'
+import deferredPromise from '../../../test-utils/deferred-promise'
 import InwaysPage from './index'
 
 jest.mock('./InwaysPageView', () => () => (

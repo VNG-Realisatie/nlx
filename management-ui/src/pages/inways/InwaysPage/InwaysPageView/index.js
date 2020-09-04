@@ -6,7 +6,7 @@ import { array } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { Table } from '@commonground/design-system'
 
-import EmptyContentMessage from '../../../components/EmptyContentMessage'
+import EmptyContentMessage from '../../../../components/EmptyContentMessage'
 import InwayRow from './InwayRow'
 
 const InwaysPageView = ({ inways }) => {

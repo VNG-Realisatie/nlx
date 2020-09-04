@@ -8,12 +8,12 @@ import { useTranslation } from 'react-i18next'
 import { Alert } from '@commonground/design-system'
 import { Route } from 'react-router-dom'
 
-import PageTemplate from '../../components/PageTemplate'
-import usePromise from '../../hooks/use-promise'
-import InwayRepository from '../../domain/inway-repository'
-import InwayDetailPage from '../InwayDetailPage'
+import PageTemplate from '../../../components/PageTemplate'
+import usePromise from '../../../hooks/use-promise'
+import InwayRepository from '../../../domain/inway-repository'
+import InwayDetailPage from '../../InwayDetailPage'
 
-import LoadingMessage from '../../components/LoadingMessage'
+import LoadingMessage from '../../../components/LoadingMessage'
 
 import InwaysPageView from './InwaysPageView'
 

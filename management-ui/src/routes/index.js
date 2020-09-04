@@ -6,7 +6,7 @@ import { Redirect, Route, Switch } from 'react-router-dom'
 
 import LoginPage from '../pages/LoginPage/index'
 import ServicesPage from '../pages/services/ServicesPage'
-import InwaysPage from '../pages/InwaysPage'
+import InwaysPage from '../pages/inways/InwaysPage'
 import AddServicePage from '../pages/services/AddServicePage'
 import DirectoryPage from '../pages/directory/DirectoryPage'
 import EditServicePage from '../pages/services/EditServicePage'

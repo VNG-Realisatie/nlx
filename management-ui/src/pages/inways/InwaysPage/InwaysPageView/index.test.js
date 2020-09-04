@@ -3,7 +3,7 @@
 //
 import React from 'react'
 
-import { renderWithProviders } from '../../../test-utils'
+import { renderWithProviders } from '../../../../test-utils'
 import InwaysPageView from './index'
 
 jest.mock('./InwayRow', () => () => (

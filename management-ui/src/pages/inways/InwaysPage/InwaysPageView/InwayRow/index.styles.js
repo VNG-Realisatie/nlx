@@ -4,7 +4,7 @@
 
 import styled from 'styled-components'
 import { Table } from '@commonground/design-system'
-import { IconInway } from '../../../../icons'
+import { IconInway } from '../../../../../icons'
 
 export const StyledIconTd = styled(Table.Td)`
   width: 3rem;
