@@ -21,8 +21,7 @@ include:
 
   - '/.gitlab/ci/e2e-tests/directory_ui.yml'
   - '/.gitlab/ci/e2e-tests/docs.yml'
-  - '/.gitlab/ci/e2e-tests/nlx_management_quick.yml'
-  - '/.gitlab/ci/e2e-tests/nlx_management_complete.yml'
+  - '/.gitlab/ci/e2e-tests/nlx_management.yml'
 
   - '/.gitlab/ci/security.yml'
   - '/.gitlab/ci/tests.yml'
