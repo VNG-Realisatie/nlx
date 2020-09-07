@@ -64,5 +64,4 @@ test('Directory details are displayed', async (t) => {
   await t
     .expect(apiSpecificationTypeCell.textContent)
     .eql(DIRECTORY_API_SPECIFICATION_TYPE)
-  await t.expect(accessCell.find('button').withText('Verzoek').exists).ok()
 })
