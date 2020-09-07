@@ -9,6 +9,7 @@ Build acceptance:
   script:
     - echo -n "${CI_REGISTRY_IMAGE}" > ci_build_image_registry.txt
     - echo -n "${IMAGE_TAG}" > ci_build_image_tag.txt
+    - echo -n "${IMAGE_TAG}" > ci_build_image_version.txt
     - docker-compose version
     - time docker-compose build --parallel
     - time docker-compose push
@@ -19,6 +20,7 @@ Build acceptance:
     paths:
       - ci_build_image_registry.txt
       - ci_build_image_tag.txt
+      - ci_build_image_version.txt
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never

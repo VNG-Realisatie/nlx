@@ -13,6 +13,8 @@ Deploy acceptance:
     - |
       export IMAGE_REGISTRY=$(cat ci_build_image_registry.txt)
       export IMAGE_TAG=$(cat ci_build_image_tag.txt)
+      export IMAGE_VERSION=$(cat ci_build_image_version.txt)
+      echo -e -n "" > ci_environment_url.txt
     - |
       start_section helm_repo "Update Helm repositories"
       helm repo add stable "https://kubernetes-charts.storage.googleapis.com"
@@ -37,8 +39,22 @@ Deploy acceptance:
           --values ${CHART_DIRECTORY}/values-acceptance.yaml
         stop_section deploy_${CHART}
       done
+    - |
+      echo "export E2E_MANAGEMENT_UI_INWAY_VERSION=${IMAGE_VERSION}" > e2e_environment.sh
+      echo "export E2E_MANAGEMENT_UI_INWAY_NAME=rdw-nlx-inway" >> e2e_environment.sh
+      echo "export E2E_MANAGEMENT_UI_INWAY_SELF_ADDRESS=rdw-nlx-inway:443" >> e2e_environment.sh
+      echo "export E2E_MANAGEMENT_UI_DIRECTORY_ORGANIZATION_NAME=BRP" >> e2e_environment.sh
+      echo "export E2E_MANAGEMENT_UI_DIRECTORY_SERVICE_NAME=basisregistratie" >> e2e_environment.sh
+      echo "export E2E_MANAGEMENT_UI_DIRECTORY_STATUS=Beschikbaar" >> e2e_environment.sh
+      echo "export E2E_MANAGEMENT_UI_DIRECTORY_API_SPECIFICATION_TYPE=OpenAPI3" >> e2e_environment.sh
+      echo "export E2E_MANAGEMENT_UI_LOGIN_ORGANIZATION_NAME=RDW" >> e2e_environment.sh
+      echo "export E2E_MANAGEMENT_UI_LOGIN_USERNAME=admin@example.com" >> e2e_environment.sh
+      echo "export E2E_MANAGEMENT_UI_LOGIN_PASSWORD=password" >> e2e_environment.sh
   dependencies:
     - Build acceptance
+  artifacts:
+    paths:
+      - e2e_environment.sh
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never

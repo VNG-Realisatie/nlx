@@ -10,7 +10,7 @@ NLX Management - E2E-tests (complete):
   script:
     - source e2e_environment.sh
     - export CI_ENV_URL=$([ -f ci_environment_url.txt ] && cat ci_environment_url.txt)
-    - export URL="https://nlx-management-rdw-$CI_ENV_URL"
+    - export URL=$([ -z "$CI_ENV_URL" ] && echo "https://management.acc.voorbeeld-rdw.nl" || echo "https://nlx-management-rdw-$CI_ENV_URL")
     - cd management-ui-e2e-tests/
     - install_npm_dependencies
     - wait_for_http "${URL}"
