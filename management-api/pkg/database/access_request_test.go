@@ -99,6 +99,45 @@ func TestCreateAccessRequest(t *testing.T) {
 	assert.Len(t, response.Kvs, 1)
 }
 
+func TestUpdateAccessRequestState(t *testing.T) {
+	cluster := newTestCluster(t)
+	defer cluster.Terminate(t)
+
+	cluster.Clock.SetTime(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC))
+
+	ctx := context.Background()
+	client := cluster.GetClient(t)
+
+	a := &database.AccessRequest{
+		OrganizationName: "test-organization-a",
+		ServiceName:      "test-service-1",
+		State:            database.AccessRequestCreated,
+	}
+
+	actual, err := cluster.DB.CreateAccessRequest(ctx, a)
+	assert.NoError(t, err)
+
+	cluster.Clock.SetTime(time.Date(2020, time.June, 26, 12, 42, 43, 1337, time.UTC))
+
+	err = cluster.DB.UpdateAccessRequestState(ctx, a, database.AccessRequestFailed)
+	assert.NoError(t, err)
+
+	expected := &database.AccessRequest{
+		ID:               "161c188cfcea1939",
+		OrganizationName: "test-organization-a",
+		ServiceName:      "test-service-1",
+		State:            database.AccessRequestFailed,
+		CreatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
+		UpdatedAt:        time.Date(2020, time.June, 26, 12, 42, 43, 1337, time.UTC),
+	}
+
+	assert.Equal(t, expected, actual)
+
+	response, err := client.Get(ctx, "/nlx/access-requests/outgoing/test-organization-a/test-service-1/161c188cfcea1939")
+	assert.NoError(t, err)
+	assert.Len(t, response.Kvs, 1)
+}
+
 func TestGetLatestOutgoingAccessRequest(t *testing.T) {
 	cluster := newTestCluster(t)
 	defer cluster.Terminate(t)

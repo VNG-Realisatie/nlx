@@ -17,7 +17,7 @@ type AccessRequest struct {
 	ID               string             `json:"id,omitempty"`
 	OrganizationName string             `json:"organizationName,omitempty"`
 	ServiceName      string             `json:"serviceName,omitempty"`
-	State            AccessRequestState `json:"state,omitempty"`
+	State            AccessRequestState `json:"state"`
 	CreatedAt        time.Time          `json:"createdAt,omitempty"`
 	UpdatedAt        time.Time          `json:"updatedAt,omitempty"`
 }
@@ -86,13 +86,38 @@ func (db ETCDConfigDatabase) CreateAccessRequest(ctx context.Context, accessRequ
 	return accessRequest, nil
 }
 
+func (db ETCDConfigDatabase) UpdateAccessRequestState(ctx context.Context, accessRequest *AccessRequest, state AccessRequestState) error {
+	key := path.Join("access-requests", "outgoing", accessRequest.OrganizationName, accessRequest.ServiceName, accessRequest.ID)
+
+	request := &*accessRequest
+	request.State = state
+	request.UpdatedAt = db.clock.Now()
+
+	response, err := db.etcdCli.Get(ctx, db.key(key))
+	if err != nil {
+		return err
+	}
+
+	if response.Count == 0 {
+		return fmt.Errorf("no such access request: %s", accessRequest.ID)
+	}
+
+	if err := db.put(ctx, key, request); err != nil {
+		return err
+	}
+
+	accessRequest.State = request.State
+	accessRequest.UpdatedAt = request.UpdatedAt
+
+	return nil
+}
+
 func (db ETCDConfigDatabase) GetLatestOutgoingAccessRequest(ctx context.Context, organizationName, serviceName string) (*AccessRequest, error) {
 	var r *AccessRequest
 
 	key := path.Join("access-requests", "outgoing", organizationName, serviceName)
 
 	err := db.get(ctx, key, &r, clientv3.WithLastKey()...)
-
 	if err != nil {
 		return nil, err
 	}
