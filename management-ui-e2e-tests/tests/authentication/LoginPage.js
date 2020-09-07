@@ -7,25 +7,29 @@ import { waitForReact } from 'testcafe-react-selectors'
 import { axeCheck, createReport } from 'axe-testcafe'
 
 import { LOGIN_ORGANIZATION_NAME } from '../../environment'
-import { getBaseUrl, getLocation, saveBrowserConsoleAndRequests } from '../../utils'
+import {
+  getBaseUrl,
+  getLocation,
+  saveBrowserConsoleAndRequests,
+} from '../../utils'
 import { adminUser } from '../roles'
 import page from './page-models/login'
 
 const baseUrl = getBaseUrl()
 
 const logger = RequestLogger(/api/, {
-  logResponseHeaders:    false,
-  logResponseBody:       true,
+  logResponseHeaders: false,
+  logResponseBody: true,
   stringifyResponseBody: true,
-});
-
-fixture`Login page`.beforeEach(async (t) => {
-  await t.navigateTo(`${baseUrl}/login`)
-  await waitForReact()
 })
-  .afterEach(async (t) =>
-    saveBrowserConsoleAndRequests(t, logger.requests)
-  ).requestHooks(logger);
+
+fixture`Login page`
+  .beforeEach(async (t) => {
+    await t.navigateTo(`${baseUrl}/login`)
+    await waitForReact()
+  })
+  .afterEach(async (t) => saveBrowserConsoleAndRequests(t, logger.requests))
+  .requestHooks(logger)
 
 test('Automated accessibility testing', async (t) => {
   const { violations } = await axeCheck(t)

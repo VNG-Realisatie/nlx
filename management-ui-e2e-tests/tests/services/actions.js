@@ -4,10 +4,9 @@
 
 import { t } from 'testcafe'
 
-import {getBaseUrl} from '../../utils'
+import { getBaseUrl } from '../../utils'
 import addPage, { AUTHORIZATION_TYPE_NONE } from './page-models/add-service'
 import detailPage from './page-models/service-detail'
-import servicesPage from './page-models/services'
 
 const baseUrl = getBaseUrl()
 
@@ -53,9 +52,11 @@ export async function removeService() {
 
     t.ctx.serviceName = null
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.log({
       message: 'failed to remove service',
       url: `${baseUrl}/services/${t.ctx.serviceName}`,
-      err})
+      err,
+    })
   }
 }

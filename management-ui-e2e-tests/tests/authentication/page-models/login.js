@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 
-import { Selector, t } from 'testcafe'
+import { Selector } from 'testcafe'
 
 class Page {
   constructor() {

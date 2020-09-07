@@ -17,18 +17,18 @@ import { adminUser } from '../roles'
 const baseUrl = getBaseUrl()
 
 const logger = RequestLogger(/api/, {
-  logResponseHeaders:    false,
-  logResponseBody:       true,
+  logResponseHeaders: false,
+  logResponseBody: true,
   stringifyResponseBody: true,
 })
 
-fixture`Directory page`.beforeEach(async (t) => {
-  await t.useRole(adminUser).navigateTo(`${baseUrl}/directory`)
-  await waitForReact()
-})
-  .afterEach(async (t) =>
-    saveBrowserConsoleAndRequests(t, logger.requests)
-  ).requestHooks(logger)
+fixture`Directory page`
+  .beforeEach(async (t) => {
+    await t.useRole(adminUser).navigateTo(`${baseUrl}/directory`)
+    await waitForReact()
+  })
+  .afterEach(async (t) => saveBrowserConsoleAndRequests(t, logger.requests))
+  .requestHooks(logger)
 
 test('Automated accessibility testing', async (t) => {
   const { violations } = await axeCheck(t)
@@ -56,9 +56,13 @@ test('Directory details are displayed', async (t) => {
   await t.expect(directoryList.visible).ok()
   await t.expect(directoryList.find('tbody tr').count).gte(2)
 
-  await t.expect(organizationNameCell.textContent).eql(DIRECTORY_ORGANIZATION_NAME)
+  await t
+    .expect(organizationNameCell.textContent)
+    .eql(DIRECTORY_ORGANIZATION_NAME)
   await t.expect(serviceNameCell.textContent).eql(DIRECTORY_SERVICE_NAME)
   await t.expect(statusTitle.textContent).eql(DIRECTORY_STATUS)
-  await t.expect(apiSpecificationTypeCell.textContent).eql(DIRECTORY_API_SPECIFICATION_TYPE)
+  await t
+    .expect(apiSpecificationTypeCell.textContent)
+    .eql(DIRECTORY_API_SPECIFICATION_TYPE)
   await t.expect(accessCell.find('button').withText('Verzoek').exists).ok()
 })

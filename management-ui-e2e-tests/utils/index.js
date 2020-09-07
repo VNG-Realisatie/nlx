@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2020
+// Licensed under the EUPL
+//
 import fs from 'fs'
 import path from 'path'
 
@@ -7,11 +10,22 @@ import saveRequests from './save-requests'
 export { default as getBaseUrl } from './getBaseUrl'
 export { default as getLocation } from './getLocation'
 
-export const saveBrowserConsoleAndRequests = async (testController, requests) => {
-  const userAgent = testController.testRun.browserConnection.browserInfo.parsedUserAgent.prettyUserAgent
+export const saveBrowserConsoleAndRequests = async (
+  testController,
+  requests,
+) => {
+  const userAgent =
+    testController.testRun.browserConnection.browserInfo.parsedUserAgent
+      .prettyUserAgent
   const fixtureName = testController.testRun.test.testFile.currentFixture.name
 
-  const directory = path.join(process.cwd(), 'test-results', 'extra', userAgent.replace('/', '-'), fixtureName)
+  const directory = path.join(
+    process.cwd(),
+    'test-results',
+    'extra',
+    userAgent.replace('/', '-'),
+    fixtureName,
+  )
   const fileNameBase = `${testController.testRun.test.name}`
 
   await fs.promises.mkdir(directory, { recursive: true })
@@ -19,13 +33,13 @@ export const saveBrowserConsoleAndRequests = async (testController, requests) =>
   await saveBrowserConsoleMessages({
     testController,
     directory,
-    fileName: `${fileNameBase} - browser console.json`
+    fileName: `${fileNameBase} - browser console.json`,
   })
 
   await saveRequests({
     testController,
     requests,
     directory,
-    fileName: `${fileNameBase} - requests.json`
+    fileName: `${fileNameBase} - requests.json`,
   })
 }

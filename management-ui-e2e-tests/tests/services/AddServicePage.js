@@ -15,8 +15,8 @@ import page, { AUTHORIZATION_TYPE_NONE } from './page-models/add-service'
 const baseUrl = getBaseUrl()
 
 const logger = RequestLogger(/api/, {
-  logResponseHeaders:    false,
-  logResponseBody:       true,
+  logResponseHeaders: false,
+  logResponseBody: true,
   stringifyResponseBody: true,
 })
 

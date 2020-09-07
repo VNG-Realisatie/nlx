@@ -49,7 +49,9 @@ class Page {
     this.publishToCentralDirectory = new Checkbox(
       'Publiceren in de centrale directory',
     )
-    this.publishedInDirectoryWarning = Selector('[data-testid="publishedInDirectory-warning"]')
+    this.publishedInDirectoryWarning = Selector(
+      '[data-testid="publishedInDirectory-warning"]',
+    )
     this.techSupportContactInput = Selector(
       '[data-testid="techSupportContact"]',
     )

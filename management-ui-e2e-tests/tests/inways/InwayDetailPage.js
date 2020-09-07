@@ -10,7 +10,11 @@ import {
   INWAY_SELF_ADDRESS,
   INWAY_VERSION,
 } from '../../environment'
-import { getBaseUrl, getLocation, saveBrowserConsoleAndRequests } from '../../utils'
+import {
+  getBaseUrl,
+  getLocation,
+  saveBrowserConsoleAndRequests,
+} from '../../utils'
 import { adminUser } from '../roles'
 import { createService, removeService } from '../services/actions'
 import page from './page-models/inway-detail'
@@ -18,18 +22,18 @@ import page from './page-models/inway-detail'
 const baseUrl = getBaseUrl()
 
 const logger = RequestLogger(/api/, {
-  logResponseHeaders:    false,
-  logResponseBody:       true,
+  logResponseHeaders: false,
+  logResponseBody: true,
   stringifyResponseBody: true,
 })
 
-fixture`InwayDetails page`.beforeEach(async (t) => {
-  await t.useRole(adminUser).navigateTo(`${baseUrl}/inways/${INWAY_NAME}`)
-  await waitForReact()
-})
-  .afterEach(async (t) =>
-    saveBrowserConsoleAndRequests(t, logger.requests)
-  ).requestHooks(logger)
+fixture`InwayDetails page`
+  .beforeEach(async (t) => {
+    await t.useRole(adminUser).navigateTo(`${baseUrl}/inways/${INWAY_NAME}`)
+    await waitForReact()
+  })
+  .afterEach(async (t) => saveBrowserConsoleAndRequests(t, logger.requests))
+  .requestHooks(logger)
 
 test('Automated accessibility testing', async (t) => {
   const { violations } = await axeCheck(t)
@@ -63,15 +67,13 @@ test
 
 // In IE11 the transition doesn't always complete when directly navigating to detail
 // So X may not be visible/clickable
-test
-  .before(async (t) => {
-    await t.useRole(adminUser).navigateTo(`${baseUrl}/inways`)
-  })
-  ('Opens and closes details view', async (t) => {
-    const inwayRow = Selector('tr').withText(INWAY_NAME)
+test.before(async (t) => {
+  await t.useRole(adminUser).navigateTo(`${baseUrl}/inways`)
+})('Opens and closes details view', async (t) => {
+  const inwayRow = Selector('tr').withText(INWAY_NAME)
 
-    await t.click(inwayRow)
-    await t.expect(page.closeButton.exists).ok()
-    await t.click(page.closeButton)
-    await t.expect(getLocation()).contains(`${baseUrl}/inways`)
-  })
+  await t.click(inwayRow)
+  await t.expect(page.closeButton.exists).ok()
+  await t.click(page.closeButton)
+  await t.expect(getLocation()).contains(`${baseUrl}/inways`)
+})

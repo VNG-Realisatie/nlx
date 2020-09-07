@@ -1,5 +1,6 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
+//
 
 import { RequestLogger, Selector } from 'testcafe'
 import { waitForReact } from 'testcafe-react-selectors'
@@ -11,37 +12,42 @@ import {
   DIRECTORY_STATUS,
   DIRECTORY_API_SPECIFICATION_TYPE,
 } from '../../environment'
-import { getBaseUrl, getLocation, saveBrowserConsoleAndRequests } from '../../utils'
+import {
+  getBaseUrl,
+  getLocation,
+  saveBrowserConsoleAndRequests,
+} from '../../utils'
 import { adminUser } from '../roles'
 import page from './page-models/directory-detail'
 
 const baseUrl = getBaseUrl()
 
 const logger = RequestLogger(/api/, {
-  logResponseHeaders:    false,
-  logResponseBody:       true,
+  logResponseHeaders: false,
+  logResponseBody: true,
   stringifyResponseBody: true,
 })
 
-fixture `DirectoryDetails page`
+fixture`DirectoryDetails page`
   .beforeEach(async (t) => {
     await t
       .useRole(adminUser)
-      .navigateTo(`${baseUrl}/directory/${DIRECTORY_ORGANIZATION_NAME}/${DIRECTORY_SERVICE_NAME}`)
+      .navigateTo(
+        `${baseUrl}/directory/${DIRECTORY_ORGANIZATION_NAME}/${DIRECTORY_SERVICE_NAME}`,
+      )
     await waitForReact()
   })
-  .afterEach(async (t) =>
-    saveBrowserConsoleAndRequests(t, logger.requests)
-  ).requestHooks(logger)
+  .afterEach(async (t) => saveBrowserConsoleAndRequests(t, logger.requests))
+  .requestHooks(logger)
 
-test('Automated accessibility testing', async t => {
+test('Automated accessibility testing', async (t) => {
   const { violations } = await axeCheck(t)
   await t.expect(violations.length === 0).ok(createReport(violations))
 })
 
-test('Directory service details are visible', async t => {
+test('Directory service details are visible', async (t) => {
   const detailHeaderContent = page.detailHeader.textContent
-  
+
   await t.expect(detailHeaderContent).contains(DIRECTORY_SERVICE_NAME)
   await t.expect(detailHeaderContent).contains(DIRECTORY_ORGANIZATION_NAME)
   await t.expect(detailHeaderContent).contains(DIRECTORY_API_SPECIFICATION_TYPE)
@@ -59,7 +65,7 @@ test('Directory service details are visible', async t => {
 //   await t.setNativeDialogHandler((type) => {
 //     if (type === 'confirm') return false
 //   })
-    
+
 //   await t.click(button)
 //   await t.expect(Object.keys(button.attributes)).notContains('disabled')
 // })
@@ -70,7 +76,7 @@ test('Directory service details are visible', async t => {
 //   await t.setNativeDialogHandler((type) => {
 //     if (type === 'confirm') return true
 //   })
-  
+
 //   await t.click(button)
 //   await t.expect(button.exists).notOk()
 //   await t.expect(Selector('[data-testid="access-message"]').textContent).eql('Toegang aangevraagd')
@@ -78,18 +84,19 @@ test('Directory service details are visible', async t => {
 
 // In IE11 the transition doesn't always complete when directly navigating to detail
 // So X may not be visible/clickable
-test.before( async t => {
-    await t
-      .useRole(adminUser)
-      .navigateTo(`${baseUrl}/directory`)
-  })
-  ('Opens and closes detail view', async t => {
-    const row = Selector('tr').withText(DIRECTORY_SERVICE_NAME)
+test.before(async (t) => {
+  await t.useRole(adminUser).navigateTo(`${baseUrl}/directory`)
+})('Opens and closes detail view', async (t) => {
+  const row = Selector('tr').withText(DIRECTORY_SERVICE_NAME)
 
-    await t.click(row)
-    await t.expect(getLocation()).contains(`${baseUrl}/directory/${DIRECTORY_ORGANIZATION_NAME}/${DIRECTORY_SERVICE_NAME}`)
-    await t.expect(page.closeButton.exists).ok()
-    
-    await t.click(page.closeButton)
-    await t.expect(getLocation()).contains(`${baseUrl}/directory`)
-  })
+  await t.click(row)
+  await t
+    .expect(getLocation())
+    .contains(
+      `${baseUrl}/directory/${DIRECTORY_ORGANIZATION_NAME}/${DIRECTORY_SERVICE_NAME}`,
+    )
+  await t.expect(page.closeButton.exists).ok()
+
+  await t.click(page.closeButton)
+  await t.expect(getLocation()).contains(`${baseUrl}/directory`)
+})

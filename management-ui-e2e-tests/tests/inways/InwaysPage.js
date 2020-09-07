@@ -16,18 +16,18 @@ import { adminUser } from '../roles'
 const baseUrl = getBaseUrl()
 
 const logger = RequestLogger(/api/, {
-  logResponseHeaders:    false,
-  logResponseBody:       true,
+  logResponseHeaders: false,
+  logResponseBody: true,
   stringifyResponseBody: true,
 })
 
-fixture`Inways page`.beforeEach(async (t) => {
-  await t.useRole(adminUser).navigateTo(`${baseUrl}/inways`)
-  await waitForReact()
-})
-  .afterEach(async (t) =>
-    saveBrowserConsoleAndRequests(t, logger.requests)
-  ).requestHooks(logger)
+fixture`Inways page`
+  .beforeEach(async (t) => {
+    await t.useRole(adminUser).navigateTo(`${baseUrl}/inways`)
+    await waitForReact()
+  })
+  .afterEach(async (t) => saveBrowserConsoleAndRequests(t, logger.requests))
+  .requestHooks(logger)
 
 test('Automated accessibility testing', async (t) => {
   const { violations } = await axeCheck(t)
@@ -54,7 +54,7 @@ test('Inway details are displayed', async (t) => {
 
   await t.expect(inwaysList.visible).ok()
   await t.expect(inwaysList.find('tbody tr').count).gte(1) // until we have the delete option, we can't assert the exact amount of services
-  
+
   await t.expect(nameCell.textContent).eql(INWAY_NAME)
   await t.expect(hostnameCell.textContent).notEql('') // we only check for not empty, because the hostname is nondeterministic
   await t.expect(selfAddressCell.textContent).eql(INWAY_SELF_ADDRESS)

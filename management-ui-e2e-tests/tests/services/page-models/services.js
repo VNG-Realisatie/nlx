@@ -2,8 +2,8 @@
 // Licensed under the EUPL
 //
 
-import { Selector, t } from 'testcafe'
-import { getBaseUrl } from "../../../utils";
+import { Selector } from 'testcafe'
+import { getBaseUrl } from '../../../utils'
 
 const baseUrl = getBaseUrl()
 
