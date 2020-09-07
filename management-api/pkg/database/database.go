@@ -26,9 +26,12 @@ type ConfigDatabase interface {
 	ListOutgoingAccessRequests(ctx context.Context, organizationName, serviceName string) ([]*AccessRequest, error)
 	GetLatestOutgoingAccessRequest(ctx context.Context, organizationName, serviceName string) (*AccessRequest, error)
 	ListAllLatestOutgoingAccessRequests(ctx context.Context) (map[string]*AccessRequest, error)
+	LockOutgoingAccessRequest(ctx context.Context, accessRequest *AccessRequest) error
+	UnlockOutgoingAccessRequest(ctx context.Context, accessRequest *AccessRequest) error
 
 	CreateAccessRequest(ctx context.Context, accessRequest *AccessRequest) (*AccessRequest, error)
 	UpdateAccessRequestState(ctx context.Context, accessRequest *AccessRequest, state AccessRequestState) error
+	WatchOutgoingAccessRequests(ctx context.Context, output chan *AccessRequest) error
 
 	GetSettings(ctx context.Context) (*Settings, error)
 	UpdateSettings(ctx context.Context, settings *Settings) error

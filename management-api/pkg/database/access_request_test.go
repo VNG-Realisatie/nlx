@@ -138,6 +138,60 @@ func TestUpdateAccessRequestState(t *testing.T) {
 	assert.Len(t, response.Kvs, 1)
 }
 
+func TestLockOutgoingAccessRequest(t *testing.T) {
+	cluster := newTestCluster(t)
+	defer cluster.Terminate(t)
+
+	cluster.Clock.SetTime(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC))
+
+	ctx := context.Background()
+
+	a := &database.AccessRequest{
+		OrganizationName: "test-organization-a",
+		ServiceName:      "test-service-1",
+	}
+
+	_, err := cluster.DB.CreateAccessRequest(ctx, a)
+	assert.NoError(t, err)
+
+	err = cluster.DB.LockOutgoingAccessRequest(ctx, a)
+	assert.NoError(t, err)
+
+	err = cluster.DB.LockOutgoingAccessRequest(ctx, a)
+	assert.Error(t, err)
+	assert.Equal(t, database.ErrAccessRequestLocked, err)
+}
+
+func TestUnlockOutgoingAccessRequest(t *testing.T) {
+	cluster := newTestCluster(t)
+	defer cluster.Terminate(t)
+
+	cluster.Clock.SetTime(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC))
+
+	ctx := context.Background()
+
+	a := &database.AccessRequest{
+		OrganizationName: "test-organization-a",
+		ServiceName:      "test-service-1",
+	}
+
+	_, err := cluster.DB.CreateAccessRequest(ctx, a)
+	assert.NoError(t, err)
+
+	err = cluster.DB.LockOutgoingAccessRequest(ctx, a)
+	assert.NoError(t, err)
+
+	err = cluster.DB.LockOutgoingAccessRequest(ctx, a)
+	assert.Error(t, err)
+	assert.Equal(t, database.ErrAccessRequestLocked, err)
+
+	err = cluster.DB.UnlockOutgoingAccessRequest(ctx, a)
+	assert.NoError(t, err)
+
+	err = cluster.DB.LockOutgoingAccessRequest(ctx, a)
+	assert.NoError(t, err)
+}
+
 func TestGetLatestOutgoingAccessRequest(t *testing.T) {
 	cluster := newTestCluster(t)
 	defer cluster.Terminate(t)
