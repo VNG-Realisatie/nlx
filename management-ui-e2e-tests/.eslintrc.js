@@ -1,5 +1,4 @@
 module.exports = {
-  // All except jest
   extends: [
     'standard',
     'plugin:prettier/recommended',
