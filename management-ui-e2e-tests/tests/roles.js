@@ -2,30 +2,26 @@
 // Licensed under the EUPL
 //
 
-import { Selector, Role } from 'testcafe'
+import { Role } from 'testcafe'
 
 import { getBaseUrl } from '../utils'
 import { LOGIN_USERNAME, LOGIN_PASSWORD } from '../environment'
 import loginPage from './authentication/page-models/login'
+import dexPage from './authentication/page-models/dex'
 
 const baseUrl = getBaseUrl()
 
 export const adminUser = Role(
   `${baseUrl}/login`,
   async (t) => {
-    const managementLoginButton = loginPage.loginButton
-    const dexLoginText = Selector('#login')
-    const dexPasswordText = Selector('#password')
-    const dexSubmitLoginButton = Selector('#submit-login')
-    const dexGrantAccessButton = Selector('button[type="submit"]')
-
     await t
       .setTestSpeed(0.5)
-      .click(managementLoginButton)
-      .typeText(dexLoginText, LOGIN_USERNAME)
-      .typeText(dexPasswordText, LOGIN_PASSWORD)
-      .click(dexSubmitLoginButton)
-      .click(dexGrantAccessButton)
+      .click(loginPage.loginButton)
+      .typeText(dexPage.loginText, LOGIN_USERNAME)
+      .typeText(dexPage.passwordText, LOGIN_PASSWORD)
+      .click(dexPage.submitLoginButton)
+      .click(dexPage.grantAccessButton)
+      .setTestSpeed(1)
   },
   { preserveUrl: true },
 )
