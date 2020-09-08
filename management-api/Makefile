@@ -3,7 +3,7 @@ ifeq ($(GOPATH),)
 endif
 
 API_FILES=api/management.pb.go api/management.pb.gw.go api/management.swagger.json api/mock/mock_management.go api/external/external.pb.go api/external/mock/mock_external.go
-PKG_FILES=pkg/database/mock/mock_database.go pkg/directory/mock/mock_client.go
+PKG_FILES=pkg/database/mock/mock_database.go pkg/directory/mock/mock_client.go pkg/management/mock/mock_client.go
 
 .PHONY: all
 all: generate
@@ -83,3 +83,7 @@ pkg/database/mock/mock_database.go: pkg/database/database.go
 pkg/directory/mock/mock_client.go: pkg/directory/client.go
 	@# Generate mock file
 	mockgen -destination $@ go.nlx.io/nlx/management-api/pkg/directory Client
+
+pkg/management/mock/mock_client.go: pkg/management/client.go
+	@# Generate mock file
+	mockgen -destination $@ go.nlx.io/nlx/management-api/pkg/management Client
