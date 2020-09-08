@@ -30,8 +30,7 @@ NLX Management - E2E-tests (all):
       when: never
     - if: '$CI_COMMIT_BRANCH == "master" && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
     - if: '$CI_COMMIT_BRANCH =~ /^review\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
-      when: manual
-      allow_failure: true
+      when: never
 
 NLX Management - E2E-tests (edge only):
   extends: .management-e2e-tests-base
@@ -74,3 +73,5 @@ NLX Management - E2E-tests (all, except edge):
     - if: '$CI_COMMIT_BRANCH == "master" && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
       when: never
     - if: '$CI_COMMIT_BRANCH =~ /^review\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
+      when: manual
+      allow_failure: true
