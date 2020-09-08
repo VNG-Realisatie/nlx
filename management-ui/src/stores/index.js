@@ -4,7 +4,6 @@
 import React, { createContext } from 'react'
 import { node, object } from 'prop-types'
 import { configure } from 'mobx'
-import 'mobx-react-lite/batchingForReactDom'
 
 import { createDirectoryStore } from '../pages/directory/DirectoryStore'
 import { createServicesStore } from '../pages/services/ServicesStore'

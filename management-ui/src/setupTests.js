@@ -2,7 +2,6 @@
 // Licensed under the EUPL
 //
 import '@testing-library/jest-dom/extend-expect'
-import 'mobx-react-lite/batchingForReactDom'
 import { configure } from 'mobx'
 
 // the MutationObserver shim is added because CRA does not yet support Jest v25.
