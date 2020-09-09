@@ -24,6 +24,18 @@ import (
 
 // ListenAndServe is a blocking function that listens on provided tcp address to handle requests.
 func (a *API) ListenAndServe(address, configAddress string) error {
+	// start the status-loop
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	statusLoop := newAccessRequestStatusLoop(
+		a.logger,
+		a.directoryClient,
+		a.configDatabase,
+		a.orgCert,
+	)
+	go statusLoop.Run(ctx)
+
 	g, ctx := errgroup.WithContext(context.Background())
 
 	listen, err := net.Listen("tcp", configAddress)

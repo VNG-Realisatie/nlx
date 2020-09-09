@@ -5,6 +5,7 @@ package database
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"path"
@@ -198,8 +199,8 @@ func (db ETCDConfigDatabase) WatchOutgoingAccessRequests(ctx context.Context, ou
 			if event.IsCreate() {
 				request := &AccessRequest{}
 
-				if err := db.get(ctx, string(event.Kv.Key), request); err != nil {
-					db.logger.Error("failed to get request", zap.Error(err))
+				if err := json.Unmarshal(event.Kv.Value, request); err != nil {
+					db.logger.Error("failed to unmarshal created AccessRequest", zap.Error(err))
 					continue
 				}
 

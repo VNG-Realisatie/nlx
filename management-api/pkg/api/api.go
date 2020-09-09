@@ -43,6 +43,7 @@ type API struct {
 	grpcServer      *grpc.Server
 	authenticator   *oidc.Authenticator
 	directoryClient directory.Client
+	configDatabase  database.ConfigDatabase
 }
 
 // NewAPI creates and prepares a new API
@@ -102,6 +103,7 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, cert, orgCert *com
 		mux:             runtime.NewServeMux(),
 		authenticator:   authenticator,
 		directoryClient: directoryClient,
+		configDatabase:  db,
 	}
 
 	return a, nil
