@@ -1,12 +1,14 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-
 import { RequestLogger, Selector } from 'testcafe'
 import { waitForReact } from 'testcafe-react-selectors'
-import { axeCheck, createReport } from 'axe-testcafe'
 
-import { getBaseUrl, saveBrowserConsoleAndRequests } from '../../utils'
+import {
+  getBaseUrl,
+  doAccessibilityTest,
+  saveBrowserConsoleAndRequests,
+} from '../../utils'
 const baseUrl = getBaseUrl()
 
 const logger = RequestLogger(/api/, {
@@ -23,11 +25,7 @@ fixture`Not Found (404) page`
   .afterEach(async (t) => saveBrowserConsoleAndRequests(t, logger.requests))
   .requestHooks(logger)
 
-test('Automated accessibility testing', async (t) => {
-  const { violations } = await axeCheck(t)
-  await t.expect(violations.length === 0).ok(createReport(violations))
-})
-
-test('Page not found message is present', async (t) => {
+test('404 page exists and is accessible', async (t) => {
+  await doAccessibilityTest(t)
   await t.expect(Selector('h1').innerText).eql('Pagina niet gevonden')
 })
