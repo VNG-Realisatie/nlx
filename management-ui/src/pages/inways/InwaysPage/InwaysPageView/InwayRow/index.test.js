@@ -11,7 +11,14 @@ test('row shows expected data', () => {
     name: 'inway',
     hostname: 'hostname',
     selfAddress: 'selfie',
-    services: ['service1', 'service2'],
+    services: [
+      {
+        name: 'service1',
+      },
+      {
+        name: 'service2',
+      },
+    ],
     version: 'test',
   }
   const { getByText, getByTestId } = renderWithProviders(
