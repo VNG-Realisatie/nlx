@@ -9,6 +9,8 @@ import saveRequests from './save-requests'
 
 export { default as getBaseUrl } from './getBaseUrl'
 export { default as getLocation } from './getLocation'
+export { default as doAccessibilityTest } from './doAccessibilityTest'
+export { default as dismissAlertWithText } from './dismissAlertWithText'
 
 export const saveBrowserConsoleAndRequests = async (
   testController,

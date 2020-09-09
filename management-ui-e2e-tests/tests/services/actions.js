@@ -1,11 +1,12 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-
 import { t } from 'testcafe'
 
 import { getBaseUrl } from '../../utils'
-import addPage, { AUTHORIZATION_TYPE_NONE } from './page-models/add-service'
+import addEditPage, {
+  AUTHORIZATION_TYPE_NONE,
+} from './page-models/add-edit-service'
 import detailPage from './page-models/service-detail'
 
 const baseUrl = getBaseUrl()
@@ -29,7 +30,7 @@ export async function createService(serviceProperties = {}) {
 
   await t.navigateTo(`${baseUrl}/services/add-service`)
 
-  await addPage.fillAndSubmitForm({
+  await addEditPage.fillAndSubmitForm({
     name: t.ctx.serviceName,
     endpointUrl: 'my-service.test:8000',
     documentationUrl: 'my-service.test:8000/docs',

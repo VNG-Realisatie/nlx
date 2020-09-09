@@ -39,6 +39,7 @@ class AuthorizationType {
 class Page {
   constructor() {
     this.title = Selector('h1')
+    this.backButton = Selector('[aria-label="Terug"]')
 
     this.nameInput = Selector('[data-testid="name"]')
     this.endpointUrlInput = Selector('[data-testid="endpointURL"]')

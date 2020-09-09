@@ -16,7 +16,7 @@ class Page {
   }
 
   async getRowElementForService(serviceName) {
-    return this.servicesList.find('tr').withText(serviceName)
+    return Selector('tr').withText(serviceName)
   }
 }
 
