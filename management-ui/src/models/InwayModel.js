@@ -3,7 +3,13 @@
 //
 import { decorate, flow, observable } from 'mobx'
 
-import { createModelSchema, primitive } from 'serializr'
+import {
+  createModelSchema,
+  createSimpleSchema,
+  list,
+  object,
+  primitive,
+} from 'serializr'
 import { string } from 'prop-types'
 
 export const inwayModelPropTypes = {
@@ -15,7 +21,13 @@ class InwayModel {
 
   constructor({ store, inway }) {
     this.store = store
+
     this.name = inway.name
+    this.hostname = inway.hostname
+    this.selfAddress = inway.selfAddress
+    this.services = inway.services
+    this.version = inway.version
+
     this.with(inway)
   }
 
@@ -26,11 +38,25 @@ class InwayModel {
 
   with = function (inway) {
     this.name = inway.name || ''
+    this.hostname = inway.hostname || ''
+    this.selfAddress = inway.selfAddress || ''
+    this.services = inway.services || []
+    this.version = inway.version || ''
   }
 }
 
 createModelSchema(InwayModel, {
   name: primitive(),
+  hostname: primitive(),
+  selfAddress: primitive(),
+  services: list(
+    object(
+      createSimpleSchema({
+        name: primitive(),
+      }),
+    ),
+  ),
+  version: primitive(),
 })
 
 decorate(InwayModel, {
