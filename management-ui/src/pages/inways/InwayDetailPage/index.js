@@ -2,21 +2,18 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { func, string } from 'prop-types'
+import { shape, string } from 'prop-types'
 import { useParams, useHistory } from 'react-router-dom'
 import { Alert, Drawer } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 
-import InwayRepository from '../../../domain/inway-repository'
-import usePromise from '../../../hooks/use-promise'
-import LoadingMessage from '../../../components/LoadingMessage'
+import { inwayModelPropTypes } from '../../../models/InwayModel'
 import InwayDetailPageView from './InwayDetailPageView'
 
-const InwayDetailPage = ({ getInwayByName, parentUrl }) => {
+const InwayDetailPage = ({ parentUrl, inway }) => {
   const { name } = useParams()
   const { t } = useTranslation()
   const history = useHistory()
-  const { isReady, error, result: inway } = usePromise(getInwayByName, name)
   const close = () => history.push(parentUrl)
 
   return (
@@ -29,14 +26,12 @@ const InwayDetailPage = ({ getInwayByName, parentUrl }) => {
       />
 
       <Drawer.Content>
-        {!isReady || (!error && !inway) ? (
-          <LoadingMessage />
-        ) : error ? (
+        {inway ? (
+          <InwayDetailPageView inway={inway} />
+        ) : (
           <Alert variant="error" data-testid="error-message">
             {t('Failed to load the details for this inway.', { name })}
           </Alert>
-        ) : (
-          <InwayDetailPageView inway={inway} />
         )}
       </Drawer.Content>
     </Drawer>
@@ -44,12 +39,11 @@ const InwayDetailPage = ({ getInwayByName, parentUrl }) => {
 }
 
 InwayDetailPage.propTypes = {
-  getInwayByName: func,
   parentUrl: string,
+  inway: shape(inwayModelPropTypes),
 }
 
 InwayDetailPage.defaultProps = {
-  getInwayByName: InwayRepository.getByName,
   parentUrl: '/inways',
 }
 

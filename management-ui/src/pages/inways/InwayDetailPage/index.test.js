@@ -5,34 +5,40 @@ import React from 'react'
 import { StaticRouter as Router, Route } from 'react-router-dom'
 
 import { renderWithProviders } from '../../../test-utils'
+import { mockServicesStore } from '../../services/ServicesStore.mock'
+import { mockInwaysStore } from '../InwaysStore.mock'
+import { StoreProvider } from '../../../stores'
 import InwayDetailPage from './index'
 
 jest.mock('./InwayDetailPageView', () => ({ inway }) => (
   <div data-testid="inway-details">{inway.name}</div>
 ))
 
-test('display inway details', async () => {
-  const getInwayByName = jest.fn().mockResolvedValue({ name: 'forty-two' })
-
-  const { findByTestId } = renderWithProviders(
+test('display inway details', () => {
+  const store = mockInwaysStore({})
+  const { getByTestId } = renderWithProviders(
     <Router location="/inways/forty-two">
       <Route path="/inways/:name">
-        <InwayDetailPage getInwayByName={getInwayByName} />
+        <StoreProvider store={store}>
+          <InwayDetailPage inway={{ name: 'forty-two' }} />
+        </StoreProvider>
       </Route>
     </Router>,
   )
 
-  expect(await findByTestId('inway-details')).toHaveTextContent('forty-two')
-  expect(getInwayByName).toHaveBeenCalledWith('forty-two')
+  expect(getByTestId('inway-details')).toHaveTextContent('forty-two')
 })
 
 test('fetching a non-existing component', async () => {
-  const getInwayByName = jest.fn().mockRejectedValue(new Error('not found'))
+  const selectInway = jest.fn()
+  const store = mockInwaysStore({ selectInway })
 
   const { findByTestId } = renderWithProviders(
     <Router location="/inways/forty-two">
       <Route path="/inways/:name">
-        <InwayDetailPage getInwayByName={getInwayByName} />
+        <StoreProvider store={store}>
+          <InwayDetailPage />
+        </StoreProvider>
       </Route>
     </Router>,
   )
@@ -40,17 +46,20 @@ test('fetching a non-existing component', async () => {
   const message = await findByTestId('error-message')
   expect(message).toBeTruthy()
   expect(message.textContent).toBe('Failed to load the details for this inway.')
+
+  const closeButton = await findByTestId('close-button')
+  expect(closeButton).toBeTruthy()
 })
 
 test('fetching inway details fails for an unknown reason', async () => {
-  const getInwayByName = jest
-    .fn()
-    .mockRejectedValue(new Error('arbitrary reason'))
+  const store = mockServicesStore({ error: 'arbitrary reason' })
 
   const { findByTestId } = renderWithProviders(
     <Router location="/inways/42">
       <Route path="/inways/:name">
-        <InwayDetailPage getInwayByName={getInwayByName} />
+        <StoreProvider store={store}>
+          <InwayDetailPage />
+        </StoreProvider>
       </Route>
     </Router>,
   )
@@ -58,4 +67,7 @@ test('fetching inway details fails for an unknown reason', async () => {
   const message = await findByTestId('error-message')
   expect(message).toBeTruthy()
   expect(message.textContent).toBe('Failed to load the details for this inway.')
+
+  const closeButton = await findByTestId('close-button')
+  expect(closeButton).toBeTruthy()
 })

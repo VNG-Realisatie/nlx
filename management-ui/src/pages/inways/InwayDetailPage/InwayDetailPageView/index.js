@@ -6,6 +6,7 @@ import { shape, string, arrayOf } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { Table } from '@commonground/design-system'
 
+import { observer } from 'mobx-react'
 import Amount from '../../../../components/Amount'
 import Collapsible from '../../../../components/Collapsible'
 import {
@@ -91,4 +92,4 @@ InwayDetails.propTypes = {
 
 InwayDetails.defaultProps = {}
 
-export default InwayDetails
+export default observer(InwayDetails)

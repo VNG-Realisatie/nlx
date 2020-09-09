@@ -40,7 +40,7 @@ const InwaysPage = () => {
         render={({ match }) => (
           <InwayDetailPage
             parentUrl="/inways"
-            service={selectInway(match.params.name)}
+            inway={selectInway(match.params.name)}
           />
         )}
       />
