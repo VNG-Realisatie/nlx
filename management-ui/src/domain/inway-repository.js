@@ -10,7 +10,15 @@ class InwayRepository {
     throwOnError(response)
 
     const result = await response.json()
-    return result.inways ? result.inways : []
+    const inways = result.inways ? result.inways : []
+    return inways.map((inway) => {
+      inway.name = inway.name || ''
+      inway.hostname = inway.hostname || ''
+      inway.selfAddress = inway.selfAddress || ''
+      inway.services = inway.services || []
+      inway.version = inway.version || ''
+      return inway
+    })
   }
 
   static async getByName(name) {
@@ -19,7 +27,11 @@ class InwayRepository {
     throwOnError(response)
 
     const inway = await response.json()
+    inway.name = inway.name || ''
+    inway.hostname = inway.hostname || ''
+    inway.selfAddress = inway.selfAddress || ''
     inway.services = inway.services || []
+    inway.version = inway.version || ''
 
     return inway
   }
