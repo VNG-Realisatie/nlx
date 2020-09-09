@@ -26,16 +26,14 @@ export const inwayModelPropTypes = {
 
 class InwayModel {
   name = ''
+  hostname = ''
+  selfAddress = ''
+  services = []
+  version = ''
 
   constructor({ store, inway }) {
     this.store = store
-
     this.name = inway.name
-    this.hostname = inway.hostname
-    this.selfAddress = inway.selfAddress
-    this.services = inway.services
-    this.version = inway.version
-
     this.with(inway)
   }
 
