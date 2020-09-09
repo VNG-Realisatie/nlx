@@ -2,9 +2,9 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { shape, string, array } from 'prop-types'
+import { shape } from 'prop-types'
 import { Table } from '@commonground/design-system'
-
+import { inwayModelPropTypes } from '../../../../../models/InwayModel'
 import { StyledInwayIcon, StyledIconTd } from './index.styles'
 
 const InwayRow = ({ inway, ...props }) => {
@@ -31,13 +31,7 @@ const InwayRow = ({ inway, ...props }) => {
 }
 
 InwayRow.propTypes = {
-  inway: shape({
-    name: string,
-    hostname: string,
-    selfAddress: string,
-    services: array,
-    version: string,
-  }),
+  inway: shape(inwayModelPropTypes),
 }
 
 export default InwayRow

@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { decorate, flow, observable } from 'mobx'
+import { action, decorate, flow, observable } from 'mobx'
 
 import {
   createModelSchema,
@@ -10,10 +10,18 @@ import {
   object,
   primitive,
 } from 'serializr'
-import { string } from 'prop-types'
+import { arrayOf, shape, string } from 'prop-types'
 
 export const inwayModelPropTypes = {
   name: string.isRequired,
+  hostname: string.isRequired,
+  selfAddress: string.isRequired,
+  services: arrayOf(
+    shape({
+      name: string.isRequired,
+    }),
+  ).isRequired,
+  version: string.isRequired,
 }
 
 class InwayModel {
@@ -61,6 +69,11 @@ createModelSchema(InwayModel, {
 
 decorate(InwayModel, {
   name: observable,
+  hostname: observable,
+  selfAddress: observable,
+  services: observable,
+  version: observable,
+  fetch: action.bound,
 })
 
 export const createInway = (...args) => new InwayModel(...args)
