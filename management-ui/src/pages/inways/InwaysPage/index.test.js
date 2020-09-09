@@ -3,25 +3,30 @@
 //
 
 import React from 'react'
-import { MemoryRouter as Router } from 'react-router-dom'
+import { MemoryRouter, Router } from 'react-router-dom'
 import { act } from '@testing-library/react'
-import { renderWithProviders } from '../../../test-utils'
+import { createMemoryHistory } from 'history'
+import { renderWithProviders, waitFor } from '../../../test-utils'
 import { UserContextProvider } from '../../../user-context'
-import deferredPromise from '../../../test-utils/deferred-promise'
+import { mockInwaysStore } from '../InwaysStore.mock'
+import { StoreProvider } from '../../../stores'
 import InwaysPage from './index'
 
 jest.mock('./InwaysPageView', () => () => (
   <p data-testid="inways-list">mock inways</p>
 ))
 
-test('listing all inways', async () => {
-  const fetchInwaysPromise = deferredPromise()
-  const fetchInwaysHandler = jest.fn(() => fetchInwaysPromise)
+test('fetching all inways', async () => {
+  const history = createMemoryHistory({ initialEntries: ['/inways'] })
 
-  const { getByRole, getByTestId, findByTestId } = renderWithProviders(
-    <Router>
+  const store = mockInwaysStore({ inways: null, isInitiallyFetched: false })
+
+  const { getByRole, getByTestId } = renderWithProviders(
+    <Router history={history}>
       <UserContextProvider user={{}}>
-        <InwaysPage getInways={fetchInwaysHandler} />
+        <StoreProvider store={store}>
+          <InwaysPage />
+        </StoreProvider>
       </UserContextProvider>
     </Router>,
   )
@@ -30,7 +35,7 @@ test('listing all inways', async () => {
   expect(() => getByTestId('inways-list')).toThrow()
 
   await act(async () => {
-    fetchInwaysPromise.resolve([
+    store.inwaysStore.inways = [
       {
         name: 'name',
         version: 'version',
@@ -42,23 +47,26 @@ test('listing all inways', async () => {
           },
         ],
       },
-    ])
+    ]
+    store.inwaysStore.isReady = true
   })
 
-  expect(await findByTestId('inways-list')).toHaveTextContent('mock inways')
+  waitFor(() =>
+    expect(getByTestId('inways-list')).toHaveTextContent('mock-inways'),
+  )
 })
 
 test('failed to load inways', async () => {
-  const fetchInwaysHandler = jest
-    .fn()
-    .mockRejectedValue(new Error('arbitrary error'))
+  const store = mockInwaysStore({ inways: null, error: 'arbitrary error' })
 
   const { findByText, getByTestId } = renderWithProviders(
-    <Router>
+    <MemoryRouter>
       <UserContextProvider user={{}}>
-        <InwaysPage getInways={fetchInwaysHandler} />
+        <StoreProvider store={store}>
+          <InwaysPage />
+        </StoreProvider>
       </UserContextProvider>
-    </Router>,
+    </MemoryRouter>,
   )
 
   expect(() => getByTestId('inways-list')).toThrow()
