@@ -14,6 +14,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/tls"
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
@@ -27,22 +28,24 @@ const maxRetries = 3
 var ErrMaxRetries = errors.New("unable to retry more than 3 times")
 
 type accessRequestStatusLoop struct {
-	clock           clock.Clock
-	logger          *zap.Logger
-	directoryClient directory.Client
-	configDatabase  database.ConfigDatabase
-	orgCert         *tls.CertificateBundle
-	requests        chan *database.AccessRequest
+	clock                      clock.Clock
+	logger                     *zap.Logger
+	directoryClient            directory.Client
+	configDatabase             database.ConfigDatabase
+	orgCert                    *tls.CertificateBundle
+	requests                   chan *database.AccessRequest
+	createManagementClientFunc func(context.Context, string, *common_tls.CertificateBundle) (management.Client, error)
 }
 
 func newAccessRequestStatusLoop(logger *zap.Logger, directoryClient directory.Client, configDatabase database.ConfigDatabase, orgCert *tls.CertificateBundle) *accessRequestStatusLoop {
 	return &accessRequestStatusLoop{
-		clock:           clock.RealClock{},
-		logger:          logger,
-		orgCert:         orgCert,
-		directoryClient: directoryClient,
-		configDatabase:  configDatabase,
-		requests:        make(chan *database.AccessRequest),
+		clock:                      clock.RealClock{},
+		logger:                     logger,
+		orgCert:                    orgCert,
+		directoryClient:            directoryClient,
+		configDatabase:             configDatabase,
+		requests:                   make(chan *database.AccessRequest),
+		createManagementClientFunc: management.NewClient,
 	}
 }
 
@@ -64,7 +67,7 @@ func (loop *accessRequestStatusLoop) streamOutgoingAccessRequests(ctx context.Co
 func (loop *accessRequestStatusLoop) Run(ctx context.Context) {
 	go loop.streamOutgoingAccessRequests(ctx)
 
-	wc := &sync.WaitGroup{}
+	wg := &sync.WaitGroup{}
 
 statusLoop:
 	for {
@@ -73,31 +76,32 @@ statusLoop:
 			break statusLoop
 		case request := <-loop.requests:
 			requestCtx := context.Background()
-			err := loop.configDatabase.LockOutgoingAccessRequest(requestCtx, request)
+			wg.Add(1)
 
-			switch err {
-			case nil:
-				wc.Add(1)
+			go func(c context.Context, r *database.AccessRequest) {
+				if err := loop.handleRequest(c, r); err != nil {
+					loop.logger.Error("failed to handle request", zap.Error(err))
+				}
 
-				go func(c context.Context, r *database.AccessRequest) {
-					if err := loop.handleRequest(c, r); err != nil {
-						loop.logger.Error("failed to handle request", zap.Error(err))
-					}
-
-					wc.Done()
-				}(requestCtx, request)
-			case database.ErrAccessRequestLocked:
-				continue statusLoop
-			default:
-				loop.logger.Warn("failed to lock access request", zap.Error(err))
-			}
+				wg.Done()
+			}(requestCtx, request)
 		}
 	}
 
-	wc.Wait()
+	wg.Wait()
 }
 
 func (loop *accessRequestStatusLoop) handleRequest(ctx context.Context, request *database.AccessRequest) error {
+	err := loop.configDatabase.LockOutgoingAccessRequest(ctx, request)
+	switch err {
+	case nil:
+		break
+	case database.ErrAccessRequestLocked:
+		return nil
+	default:
+		return err
+	}
+
 	defer loop.configDatabase.UnlockOutgoingAccessRequest(ctx, request)
 
 	response, err := loop.directoryClient.GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
@@ -107,7 +111,7 @@ func (loop *accessRequestStatusLoop) handleRequest(ctx context.Context, request 
 		return err
 	}
 
-	client, err := management.NewClient(ctx, response.Address, loop.orgCert)
+	client, err := loop.createManagementClientFunc(ctx, response.Address, loop.orgCert)
 	if err != nil {
 		return err
 	}
