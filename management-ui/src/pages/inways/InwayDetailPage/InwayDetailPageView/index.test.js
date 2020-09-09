@@ -3,7 +3,7 @@
 //
 import React from 'react'
 import { MemoryRouter as Router } from 'react-router-dom'
-import { renderWithProviders } from '../../../test-utils'
+import { renderWithProviders } from '../../../../test-utils'
 import InwayDetails from './index'
 
 const inway = {

@@ -4,7 +4,7 @@
 import React from 'react'
 import { StaticRouter as Router, Route } from 'react-router-dom'
 
-import { renderWithProviders } from '../../test-utils'
+import { renderWithProviders } from '../../../test-utils'
 import InwayDetailPage from './index'
 
 jest.mock('./InwayDetailPageView', () => ({ inway }) => (

@@ -9,7 +9,7 @@ import { Route } from 'react-router-dom'
 
 import { observer } from 'mobx-react'
 import PageTemplate from '../../../components/PageTemplate'
-import InwayDetailPage from '../../InwayDetailPage'
+import InwayDetailPage from '../InwayDetailPage'
 import LoadingMessage from '../../../components/LoadingMessage'
 import { useInwaysStore } from '../../../hooks/use-stores'
 import InwaysPageView from './InwaysPageView'

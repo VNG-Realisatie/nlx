@@ -7,9 +7,9 @@ import { useParams, useHistory } from 'react-router-dom'
 import { Alert, Drawer } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 
-import InwayRepository from '../../domain/inway-repository'
-import usePromise from '../../hooks/use-promise'
-import LoadingMessage from '../../components/LoadingMessage'
+import InwayRepository from '../../../domain/inway-repository'
+import usePromise from '../../../hooks/use-promise'
+import LoadingMessage from '../../../components/LoadingMessage'
 import InwayDetailPageView from './InwayDetailPageView'
 
 const InwayDetailPage = ({ getInwayByName, parentUrl }) => {

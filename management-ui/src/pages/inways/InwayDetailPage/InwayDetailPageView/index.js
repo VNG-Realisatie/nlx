@@ -6,16 +6,16 @@ import { shape, string, arrayOf } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { Table } from '@commonground/design-system'
 
-import Amount from '../../../components/Amount'
-import Collapsible from '../../../components/Collapsible'
+import Amount from '../../../../components/Amount'
+import Collapsible from '../../../../components/Collapsible'
 import {
   DetailHeading,
   StyledCollapsibleBody,
   StyledCollapsibleEmptyBody,
   SectionGroup,
-} from '../../../components/DetailView'
+} from '../../../../components/DetailView'
 
-import { IconServices } from '../../../icons'
+import { IconServices } from '../../../../icons'
 import { SubHeader, StyledIconInway, StyledSpecList } from './index.styles'
 
 // Note: if inway- & outway details are interchangable, we can rename this to GatewayDetails
