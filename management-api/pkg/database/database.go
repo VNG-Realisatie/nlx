@@ -31,7 +31,7 @@ type ConfigDatabase interface {
 
 	CreateAccessRequest(ctx context.Context, accessRequest *AccessRequest) (*AccessRequest, error)
 	UpdateAccessRequestState(ctx context.Context, accessRequest *AccessRequest, state AccessRequestState) error
-	WatchOutgoingAccessRequests(ctx context.Context, output chan *AccessRequest) error
+	WatchOutgoingAccessRequests(ctx context.Context, output chan *AccessRequest)
 
 	GetSettings(ctx context.Context) (*Settings, error)
 	UpdateSettings(ctx context.Context, settings *Settings) error

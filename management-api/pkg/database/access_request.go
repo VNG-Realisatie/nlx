@@ -187,10 +187,11 @@ func (db ETCDConfigDatabase) UnlockOutgoingAccessRequest(ctx context.Context, ac
 	)
 
 	_, err := db.etcdCli.Put(ctx, key, "false")
+
 	return err
 }
 
-func (db ETCDConfigDatabase) WatchOutgoingAccessRequests(ctx context.Context, output chan *AccessRequest) error {
+func (db ETCDConfigDatabase) WatchOutgoingAccessRequests(ctx context.Context, output chan *AccessRequest) {
 	key := path.Join("access-requests", "outgoing")
 	watchChannel := db.etcdCli.Watch(ctx, key)
 
@@ -208,6 +209,4 @@ func (db ETCDConfigDatabase) WatchOutgoingAccessRequests(ctx context.Context, ou
 			}
 		}
 	}
-
-	return nil
 }

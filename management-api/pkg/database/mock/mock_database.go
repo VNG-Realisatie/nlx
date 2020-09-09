@@ -267,6 +267,34 @@ func (mr *MockConfigDatabaseMockRecorder) ListAllLatestOutgoingAccessRequests(ct
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAllLatestOutgoingAccessRequests", reflect.TypeOf((*MockConfigDatabase)(nil).ListAllLatestOutgoingAccessRequests), ctx)
 }
 
+// LockOutgoingAccessRequest mocks base method
+func (m *MockConfigDatabase) LockOutgoingAccessRequest(ctx context.Context, accessRequest *database.AccessRequest) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "LockOutgoingAccessRequest", ctx, accessRequest)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// LockOutgoingAccessRequest indicates an expected call of LockOutgoingAccessRequest
+func (mr *MockConfigDatabaseMockRecorder) LockOutgoingAccessRequest(ctx, accessRequest interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LockOutgoingAccessRequest", reflect.TypeOf((*MockConfigDatabase)(nil).LockOutgoingAccessRequest), ctx, accessRequest)
+}
+
+// UnlockOutgoingAccessRequest mocks base method
+func (m *MockConfigDatabase) UnlockOutgoingAccessRequest(ctx context.Context, accessRequest *database.AccessRequest) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UnlockOutgoingAccessRequest", ctx, accessRequest)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UnlockOutgoingAccessRequest indicates an expected call of UnlockOutgoingAccessRequest
+func (mr *MockConfigDatabaseMockRecorder) UnlockOutgoingAccessRequest(ctx, accessRequest interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UnlockOutgoingAccessRequest", reflect.TypeOf((*MockConfigDatabase)(nil).UnlockOutgoingAccessRequest), ctx, accessRequest)
+}
+
 // CreateAccessRequest mocks base method
 func (m *MockConfigDatabase) CreateAccessRequest(ctx context.Context, accessRequest *database.AccessRequest) (*database.AccessRequest, error) {
 	m.ctrl.T.Helper()
@@ -294,6 +322,18 @@ func (m *MockConfigDatabase) UpdateAccessRequestState(ctx context.Context, acces
 func (mr *MockConfigDatabaseMockRecorder) UpdateAccessRequestState(ctx, accessRequest, state interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAccessRequestState", reflect.TypeOf((*MockConfigDatabase)(nil).UpdateAccessRequestState), ctx, accessRequest, state)
+}
+
+// WatchOutgoingAccessRequests mocks base method
+func (m *MockConfigDatabase) WatchOutgoingAccessRequests(ctx context.Context, output chan *database.AccessRequest) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "WatchOutgoingAccessRequests", ctx, output)
+}
+
+// WatchOutgoingAccessRequests indicates an expected call of WatchOutgoingAccessRequests
+func (mr *MockConfigDatabaseMockRecorder) WatchOutgoingAccessRequests(ctx, output interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WatchOutgoingAccessRequests", reflect.TypeOf((*MockConfigDatabase)(nil).WatchOutgoingAccessRequests), ctx, output)
 }
 
 // GetSettings mocks base method

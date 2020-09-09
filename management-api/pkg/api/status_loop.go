@@ -13,7 +13,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"go.nlx.io/nlx/common/tls"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 	"go.nlx.io/nlx/management-api/api/external"
@@ -32,12 +31,12 @@ type accessRequestStatusLoop struct {
 	logger                     *zap.Logger
 	directoryClient            directory.Client
 	configDatabase             database.ConfigDatabase
-	orgCert                    *tls.CertificateBundle
+	orgCert                    *common_tls.CertificateBundle
 	requests                   chan *database.AccessRequest
 	createManagementClientFunc func(context.Context, string, *common_tls.CertificateBundle) (management.Client, error)
 }
 
-func newAccessRequestStatusLoop(logger *zap.Logger, directoryClient directory.Client, configDatabase database.ConfigDatabase, orgCert *tls.CertificateBundle) *accessRequestStatusLoop {
+func newAccessRequestStatusLoop(logger *zap.Logger, directoryClient directory.Client, configDatabase database.ConfigDatabase, orgCert *common_tls.CertificateBundle) *accessRequestStatusLoop {
 	return &accessRequestStatusLoop{
 		clock:                      clock.RealClock{},
 		logger:                     logger,
@@ -49,7 +48,7 @@ func newAccessRequestStatusLoop(logger *zap.Logger, directoryClient directory.Cl
 	}
 }
 
-func (loop *accessRequestStatusLoop) streamOutgoingAccessRequests(ctx context.Context) error {
+func (loop *accessRequestStatusLoop) listCurrentAccessRequests(ctx context.Context) error {
 	requests, err := loop.configDatabase.ListAllOutgoingAccessRequests(ctx)
 	if err != nil {
 		return err
@@ -61,11 +60,15 @@ func (loop *accessRequestStatusLoop) streamOutgoingAccessRequests(ctx context.Co
 		}
 	}
 
-	return loop.configDatabase.WatchOutgoingAccessRequests(ctx, loop.requests)
+	return nil
 }
 
 func (loop *accessRequestStatusLoop) Run(ctx context.Context) {
-	go loop.streamOutgoingAccessRequests(ctx)
+	if err := loop.listCurrentAccessRequests(ctx); err != nil {
+		loop.logger.Error("failed to list current access requests", zap.Error(err))
+	}
+
+	go loop.configDatabase.WatchOutgoingAccessRequests(ctx, loop.requests)
 
 	wg := &sync.WaitGroup{}
 
@@ -91,6 +94,7 @@ statusLoop:
 	wg.Wait()
 }
 
+//nolint:gocyclo high complexity because of the state machine
 func (loop *accessRequestStatusLoop) handleRequest(ctx context.Context, request *database.AccessRequest) error {
 	err := loop.configDatabase.LockOutgoingAccessRequest(ctx, request)
 	switch err {
@@ -102,7 +106,11 @@ func (loop *accessRequestStatusLoop) handleRequest(ctx context.Context, request 
 		return err
 	}
 
-	defer loop.configDatabase.UnlockOutgoingAccessRequest(ctx, request)
+	defer func() {
+		if unlockErr := loop.configDatabase.UnlockOutgoingAccessRequest(ctx, request); unlockErr != nil {
+			loop.logger.Error("failed to unlock outgoing access request", zap.Error(unlockErr))
+		}
+	}()
 
 	response, err := loop.directoryClient.GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
 		OrganizationName: request.OrganizationName,

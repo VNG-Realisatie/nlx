@@ -34,7 +34,7 @@ type statusLoopMocks struct {
 func newTestAccessRequestStatusLoop(t *testing.T) (statusLoopMocks, *accessRequestStatusLoop) {
 	ctrl := gomock.NewController(t)
 
-	requests := make(chan *database.AccessRequest)
+	requests := make(chan *database.AccessRequest, 10)
 	mocks := statusLoopMocks{
 		ctrl:       ctrl,
 		db:         mock_database.NewMockConfigDatabase(ctrl),
@@ -56,7 +56,7 @@ func newTestAccessRequestStatusLoop(t *testing.T) (statusLoopMocks, *accessReque
 	return mocks, statusLoop
 }
 
-func TestStreamOutgoingAccessRequests(t *testing.T) {
+func TestListCurrentAccessRequests(t *testing.T) {
 	mocks, statusLoop := newTestAccessRequestStatusLoop(t)
 	defer mocks.ctrl.Finish()
 
@@ -98,23 +98,10 @@ func TestStreamOutgoingAccessRequests(t *testing.T) {
 	mocks.db.
 		EXPECT().
 		ListAllOutgoingAccessRequests(ctx).
-		Return(requests[:2], nil)
+		Return(requests, nil)
 
-	mocks.db.
-		EXPECT().
-		WatchOutgoingAccessRequests(ctx, statusLoop.requests).
-		DoAndReturn(func(_ context.Context, channel chan *database.AccessRequest) error {
-			for _, request := range requests[2:] {
-				channel <- request
-			}
-
-			return nil
-		})
-
-	go func() {
-		err := statusLoop.streamOutgoingAccessRequests(ctx)
-		assert.NoError(t, err)
-	}()
+	err := statusLoop.listCurrentAccessRequests(ctx)
+	assert.NoError(t, err)
 
 	actual := []*database.AccessRequest{}
 
@@ -127,6 +114,7 @@ func TestStreamOutgoingAccessRequests(t *testing.T) {
 	assert.Equal(t, expected, actual)
 }
 
+//nolint:funlen lot's of mocks
 func TestHandleRequest(t *testing.T) {
 	ctx := context.Background()
 
