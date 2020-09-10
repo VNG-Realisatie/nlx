@@ -22,7 +22,9 @@ import (
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/inway/config"
+	"go.nlx.io/nlx/inway/grpcproxy"
 	"go.nlx.io/nlx/management-api/api"
+	external_api "go.nlx.io/nlx/management-api/api/external"
 )
 
 var errManagementAPIUnavailable = fmt.Errorf("managementAPI unavailable")
@@ -41,6 +43,15 @@ func (i *Inway) SetupManagementAPI(managementAPIAddress string, cert *common_tls
 	}
 
 	i.managementClient = api.NewManagementClient(conn)
+
+	p, err := grpcproxy.New(context.TODO(), i.logger, managementAPIAddress, i.orgCertBundle, cert)
+	if err != nil {
+		return err
+	}
+
+	p.RegisterService(external_api.GetAccessRequestServiceDesc())
+
+	i.managementProxy = p
 
 	return nil
 }

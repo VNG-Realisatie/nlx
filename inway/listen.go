@@ -5,6 +5,7 @@ package inway
 
 import (
 	"context"
+	"net"
 	"net/http"
 	"time"
 
@@ -13,7 +14,7 @@ import (
 )
 
 // RunServer is a blocking function that listens on provided tcp address to handle requests.
-func (i *Inway) RunServer(address string) error {
+func (i *Inway) RunServer(address, managementAddress string) error {
 	serveMux := http.NewServeMux()
 	serveMux.HandleFunc("/.nlx/api-spec-doc/", i.handleAPISpecDocRequest)
 	serveMux.HandleFunc("/.nlx/health/", i.handleHealthRequest)
@@ -43,6 +44,23 @@ func (i *Inway) RunServer(address string) error {
 		}
 	}()
 
+	if i.managementProxy != nil {
+		i.logger.Info("mangement proxy: starting")
+
+		go func() {
+			i.logger.Info("mangement proxy: listening on %v", zap.String("management-address", managementAddress))
+
+			l, err := net.Listen("tcp", managementAddress)
+			if err != nil {
+				errorChannel <- errors.Wrap(err, "listen on management-address")
+			}
+
+			if err := i.managementProxy.Serve(l); err != nil {
+				errorChannel <- errors.Wrap(err, "management proxy")
+			}
+		}()
+	}
+
 	i.process.CloseGracefully(func() error {
 		i.shutDown()
 		return nil
@@ -64,6 +82,10 @@ func (i *Inway) shutDown() {
 	err := i.serverTLS.Shutdown(localCtx)
 	if err != nil {
 		i.logger.Error("error shutting down server tls", zap.Error(err))
+	}
+
+	if i.managementProxy != nil {
+		i.managementProxy.Stop()
 	}
 
 	err = i.monitoringService.Stop()

@@ -13,3 +13,9 @@ spec:
       protocol: TCP
       port: {{ .Values.service.port }}
       targetPort: https
+  {{- if .Values.config.managementAPI.enabled }}
+    - name: management
+      protocol: TCP
+      port: {{ add1 .Values.service.port }}
+      targetPort: management
+  {{- end }}

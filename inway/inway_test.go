@@ -41,7 +41,7 @@ func TestNewInwayException(t *testing.T) {
 	testInway, err := inway.NewInway(logger, nil, testProcess, "", "inway.test", "localhost:8080", cert, "")
 	assert.Nil(t, err)
 
-	err = testInway.RunServer("invalidlistenaddress")
+	err = testInway.RunServer("invalidlistenaddress", "managementAddress")
 	assert.EqualError(t, err, "error listening on TLS server: listen tcp: address invalidlistenaddress: missing port in address")
 }
 

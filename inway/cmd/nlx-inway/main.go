@@ -8,6 +8,8 @@ import (
 	"crypto/x509"
 	"fmt"
 	"log"
+	"net"
+	"strconv"
 	"time"
 
 	"github.com/huandu/xstrings"
@@ -28,7 +30,8 @@ import (
 )
 
 var options struct {
-	ListenAddress string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:8443" description:"Address for the inway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	ListenAddress           string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:8443" description:"Address for the inway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	ListenManagementAddress string `long:"listen-management-address" env:"LISTEN_MANAGEMENT_ADDRESS" description:"Address for the inway to listen on for management requests. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 
 	MonitoringAddress string `long:"monitoring-address" env:"MONITORING_ADDRESS" default:"0.0.0.0:8081" description:"Address for the inway monitoring endpoints to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 
@@ -110,11 +113,33 @@ func main() {
 		loadServices(logger, serviceConfig, iw)
 	}
 
+	managementAddress := options.ListenManagementAddress
+	if managementAddress == "" {
+		managementAddress, err = defaultManagementAddress(options.ListenAddress)
+		if err != nil {
+			logger.Fatal("unable to crete default management address", zap.Error(err))
+		}
+	}
+
 	// Listen on the address provided in the options
-	err = iw.RunServer(options.ListenAddress)
+	err = iw.RunServer(options.ListenAddress, managementAddress)
 	if err != nil {
 		logger.Fatal("failed to run server", zap.Error(err))
 	}
+}
+
+func defaultManagementAddress(address string) (string, error) {
+	host, port, err := net.SplitHostPort(address)
+	if err != nil {
+		return "", err
+	}
+
+	intPort, err := strconv.Atoi(port)
+	if err != nil {
+		return "", nil
+	}
+
+	return fmt.Sprintf("%v:%v", host, (intPort + 1)), nil
 }
 
 func setupLogger() *zap.Logger {

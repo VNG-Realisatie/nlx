@@ -31,6 +31,7 @@ import (
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
+	"go.nlx.io/nlx/inway/grpcproxy"
 	"go.nlx.io/nlx/management-api/api"
 )
 
@@ -58,6 +59,7 @@ type Inway struct {
 	txlogger transactionlog.TransactionLogger
 
 	managementClient api.ManagementClient
+	managementProxy  *grpcproxy.Proxy
 
 	directoryRegistrationClient registrationapi.DirectoryRegistrationClient
 }

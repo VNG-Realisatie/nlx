@@ -257,7 +257,6 @@ func TestUpdateConfig(t *testing.T) {
 func TestCreateServiceEndpoints(t *testing.T) {
 	iw, err := createInway()
 	assert.Nil(t, err)
-
 	mockResponse := &api.ListServicesResponse{
 		Services: []*api.Service{
 			createMockService(),

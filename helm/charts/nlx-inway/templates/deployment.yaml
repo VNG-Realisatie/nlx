@@ -40,6 +40,9 @@ spec:
             - name: https
               containerPort: 8443
               protocol: TCP
+            - name: management
+              containerPort: 8444
+              protocol: TCP
             - name: monitoring
               containerPort: 8081
               protocol: TCP
