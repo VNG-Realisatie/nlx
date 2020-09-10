@@ -3,10 +3,9 @@
 //
 import fs from 'fs'
 import path from 'path'
-import { t } from 'testcafe'
 
 export default async function ({ testController, directory, fileName }) {
-  const browserConsoleMessages = await t.getBrowserConsoleMessages()
+  const browserConsoleMessages = await testController.getBrowserConsoleMessages()
   const filePath = path.join(directory, fileName)
 
   const result = {

@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 
-import { RequestLogger, Selector } from 'testcafe'
+import { RequestLogger } from 'testcafe'
 import { waitForReact } from 'testcafe-react-selectors'
 
 import { LOGIN_ORGANIZATION_NAME } from '../../environment'
@@ -14,7 +14,7 @@ import {
 } from '../../utils'
 import { adminUser } from '../roles'
 import loginPage from './page-models/login'
-import dexPage from './authentication/page-models/dex'
+import dexPage from './page-models/dex'
 
 const baseUrl = getBaseUrl()
 
