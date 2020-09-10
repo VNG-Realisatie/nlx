@@ -50,7 +50,7 @@ test('Successful login redirects to Inways page', async (t) => {
   await t.expect(getLocation()).contains('/inways')
 })
 
-test('Unsuccessful login shows error', async (t) => {
+test('Login attempt with invalid credentials shows error', async (t) => {
   await t.setTestSpeed(0.5).click(loginPage.loginButton)
 
   await t
