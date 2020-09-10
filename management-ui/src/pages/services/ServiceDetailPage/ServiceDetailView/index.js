@@ -2,9 +2,10 @@
 // Licensed under the EUPL
 //
 import React from 'react'
+import { arrayOf, bool, func, oneOf, shape, string } from 'prop-types'
+import { observer } from 'mobx-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
-import { arrayOf, bool, func, oneOf, shape, string } from 'prop-types'
 import { Table } from '@commonground/design-system'
 
 import Amount from '../../../../components/Amount'
@@ -175,4 +176,4 @@ ServiceDetailView.defaultProps = {
   removeHandler: () => {},
 }
 
-export default ServiceDetailView
+export default observer(ServiceDetailView)

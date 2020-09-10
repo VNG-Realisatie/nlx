@@ -3,10 +3,10 @@
 //
 import React from 'react'
 import { shape, string, arrayOf } from 'prop-types'
+import { observer } from 'mobx-react'
 import { useTranslation } from 'react-i18next'
 import { Table } from '@commonground/design-system'
 
-import { observer } from 'mobx-react'
 import Amount from '../../../../components/Amount'
 import Collapsible from '../../../../components/Collapsible'
 import {
