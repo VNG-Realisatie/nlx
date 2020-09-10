@@ -33,7 +33,6 @@ func (tc TestCluster) GetClient(t *testing.T) *clientv3.Client {
 		Endpoints:   tc.Addrs,
 		DialTimeout: time.Second,
 	})
-
 	if err != nil {
 		t.Fatal("could not construct etcd client", err)
 	}

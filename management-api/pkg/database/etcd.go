@@ -121,6 +121,6 @@ func (db ETCDConfigDatabase) list(ctx context.Context, key string, dest interfac
 	return nil
 }
 
-func (db ETCDConfigDatabase) key(k string) string {
-	return path.Join(db.pathPrefix, k)
+func (db ETCDConfigDatabase) key(components ...string) string {
+	return path.Join(append([]string{db.pathPrefix}, components...)...)
 }

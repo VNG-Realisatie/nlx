@@ -64,11 +64,13 @@ func (loop *accessRequestStatusLoop) listCurrentAccessRequests(ctx context.Conte
 }
 
 func (loop *accessRequestStatusLoop) Run(ctx context.Context) {
-	if err := loop.listCurrentAccessRequests(ctx); err != nil {
-		loop.logger.Error("failed to list current access requests", zap.Error(err))
-	}
+	go func() {
+		if err := loop.listCurrentAccessRequests(ctx); err != nil {
+			loop.logger.Error("failed to list current access requests", zap.Error(err))
+		}
 
-	go loop.configDatabase.WatchOutgoingAccessRequests(ctx, loop.requests)
+		loop.configDatabase.WatchOutgoingAccessRequests(ctx, loop.requests)
+	}()
 
 	wg := &sync.WaitGroup{}
 

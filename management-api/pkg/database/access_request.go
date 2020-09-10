@@ -87,10 +87,6 @@ func (db ETCDConfigDatabase) CreateAccessRequest(ctx context.Context, accessRequ
 		return nil, err
 	}
 
-	if _, err := db.etcdCli.Put(ctx, path.Join(key, "locked"), "false"); err != nil {
-		return nil, err
-	}
-
 	return accessRequest, nil
 }
 
@@ -152,18 +148,18 @@ func (db ETCDConfigDatabase) ListAllLatestOutgoingAccessRequests(ctx context.Con
 }
 
 func (db ETCDConfigDatabase) LockOutgoingAccessRequest(ctx context.Context, accessRequest *AccessRequest) error {
-	key := path.Join(
+	key := db.key(
+		"locks",
 		"access-requests",
 		"outgoing",
 		accessRequest.OrganizationName,
 		accessRequest.ServiceName,
 		accessRequest.ID,
-		"locked",
 	)
 
 	response, err := db.etcdCli.Txn(ctx).
-		If(clientv3.Compare(clientv3.Value(key), "=", "false")).
-		Then(clientv3.OpPut(key, "true")).
+		If(clientv3.Compare(clientv3.CreateRevision(key), "=", 0)).
+		Then(clientv3.OpPut(key, "")).
 		Commit()
 	if err != nil {
 		return err
@@ -177,23 +173,23 @@ func (db ETCDConfigDatabase) LockOutgoingAccessRequest(ctx context.Context, acce
 }
 
 func (db ETCDConfigDatabase) UnlockOutgoingAccessRequest(ctx context.Context, accessRequest *AccessRequest) error {
-	key := path.Join(
+	key := db.key(
+		"locks",
 		"access-requests",
 		"outgoing",
 		accessRequest.OrganizationName,
 		accessRequest.ServiceName,
 		accessRequest.ID,
-		"locked",
 	)
 
-	_, err := db.etcdCli.Put(ctx, key, "false")
+	_, err := db.etcdCli.Delete(ctx, key)
 
 	return err
 }
 
 func (db ETCDConfigDatabase) WatchOutgoingAccessRequests(ctx context.Context, output chan *AccessRequest) {
-	key := path.Join("access-requests", "outgoing")
-	watchChannel := db.etcdCli.Watch(ctx, key)
+	leaderCtx := clientv3.WithRequireLeader(ctx)
+	watchChannel := db.etcdCli.Watch(leaderCtx, db.key("access-requests", "outgoing"), clientv3.WithPrefix())
 
 	for response := range watchChannel {
 		for _, event := range response.Events {
