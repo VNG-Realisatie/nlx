@@ -27,7 +27,7 @@ const logger = RequestLogger(/api/, {
   stringifyResponseBody: true,
 })
 
-fixture`Services`
+fixture.only`Services`
   .beforeEach(async (t) => {
     await t.useRole(adminUser)
     await waitForReact()
@@ -52,8 +52,6 @@ test('Add and remove service', async (t) => {
   const service = await getRowElementForService(t.ctx.serviceName)
 
   await t.expect(getLocation()).eql(`${baseUrl}/services/${t.ctx.serviceName}`)
-  await t.expect(alert.exists).ok
-  await t.expect(alertContent.innerText).contains('service is toegevoegd')
   await t.expect(servicesList.visible).ok()
   await t.expect(service.exists).ok()
 
