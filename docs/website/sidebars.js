@@ -24,6 +24,9 @@ module.exports = {
             "use-nlx/setup-authorization",
             "use-nlx/new-releases",
         ],
+        "NLX Management": [
+            "nlx-management/introduction",
+        ],
         "Reference information": [
             "reference-information/service-configuration",
             "reference-information/transaction-log-headers",
