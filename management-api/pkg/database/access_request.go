@@ -30,11 +30,17 @@ const (
 	AccessRequestFailed AccessRequestState = iota
 	AccessRequestCreated
 	AccessRequestReceived
+
+	locksPrefix = "/nlx/locks/"
 )
 
 var (
 	ErrActiveAccessRequest = errors.New("already active access request")
 	ErrAccessRequestLocked = errors.New("access request is already locked")
+
+	AccessRequestLockTTL = func() int64 {
+		return 60 * 5
+	}
 )
 
 func (db ETCDConfigDatabase) ListAllOutgoingAccessRequests(ctx context.Context) ([]*AccessRequest, error) {
@@ -157,9 +163,14 @@ func (db ETCDConfigDatabase) LockOutgoingAccessRequest(ctx context.Context, acce
 		accessRequest.ID,
 	)
 
+	leaseResponse, err := db.etcdCli.Grant(ctx, AccessRequestLockTTL())
+	if err != nil {
+		return err
+	}
+
 	response, err := db.etcdCli.Txn(ctx).
 		If(clientv3.Compare(clientv3.CreateRevision(key), "=", 0)).
-		Then(clientv3.OpPut(key, "")).
+		Then(clientv3.OpPut(key, "", clientv3.WithLease(leaseResponse.ID))).
 		Commit()
 	if err != nil {
 		return err
@@ -187,13 +198,68 @@ func (db ETCDConfigDatabase) UnlockOutgoingAccessRequest(ctx context.Context, ac
 	return err
 }
 
+func (db ETCDConfigDatabase) isDeleteLeaseEvent(ctx context.Context, event *clientv3.Event) bool {
+	if event.Kv == nil {
+		return false
+	}
+
+	leaseID := clientv3.LeaseID(event.Kv.Lease)
+
+	if leaseID != clientv3.NoLease {
+		ttlResponse, err := db.etcdCli.TimeToLive(ctx, leaseID)
+		if err != nil {
+			db.logger.Error("failed to get TTL for lease", zap.Error(err))
+			return false
+		}
+
+		if ttlResponse.TTL <= 0 {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (db ETCDConfigDatabase) WatchOutgoingAccessRequests(ctx context.Context, output chan *AccessRequest) {
 	leaderCtx := clientv3.WithRequireLeader(ctx)
-	watchChannel := db.etcdCli.Watch(leaderCtx, db.key("access-requests", "outgoing"), clientv3.WithPrefix())
 
-	for response := range watchChannel {
-		for _, event := range response.Events {
-			if event.IsCreate() {
+	accessRequestsChannel := db.etcdCli.Watch(
+		leaderCtx,
+		db.key("access-requests", "outgoing"),
+		clientv3.WithPrefix(),
+	)
+	locksChannel := db.etcdCli.Watch(
+		leaderCtx,
+		db.key("locks", "access-requests", "outgoing"),
+		clientv3.WithPrefix(),
+	)
+
+	for {
+		select {
+		// re-schedule dead-locked AccessRequests due to a system failure
+		case response := <-locksChannel:
+			for _, event := range response.Events {
+				if !db.isDeleteLeaseEvent(ctx, event) {
+					continue
+				}
+
+				accessRequestKey := string(event.Kv.Key)[len(locksPrefix):]
+
+				request := &AccessRequest{}
+				if err := db.get(ctx, accessRequestKey, request); err != nil {
+					db.logger.Error("failed to get AccessRequest", zap.Error(err))
+					continue
+				}
+
+				output <- request
+			}
+			// filter AccessRequests on create and send to the output channel
+		case response := <-accessRequestsChannel:
+			for _, event := range response.Events {
+				if !event.IsCreate() {
+					continue
+				}
+
 				request := &AccessRequest{}
 
 				if err := json.Unmarshal(event.Kv.Value, request); err != nil {

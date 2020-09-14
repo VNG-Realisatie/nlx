@@ -285,3 +285,75 @@ func TestListAllLatestOutgoingAccessRequests(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, expected, actual)
 }
+
+func TestWatchOutgoingAccessRequests(t *testing.T) {
+	cluster := newTestCluster(t)
+	defer cluster.Terminate(t)
+
+	cluster.Clock.SetTime(time.Date(2020, time.July, 10, 10, 11, 40, 0, time.UTC))
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	request1 := &database.AccessRequest{
+		ID:               "id-1",
+		OrganizationName: "organization-a",
+		ServiceName:      "service-x",
+		State:            database.AccessRequestCreated,
+		CreatedAt:        time.Date(2020, time.July, 10, 10, 11, 40, 0, time.UTC),
+		UpdatedAt:        time.Date(2020, time.July, 10, 10, 11, 40, 0, time.UTC),
+	}
+	request2 := &database.AccessRequest{
+		ID:               "id-2",
+		OrganizationName: "organization-b",
+		ServiceName:      "service-y",
+		State:            database.AccessRequestCreated,
+		CreatedAt:        time.Date(2020, time.July, 10, 10, 11, 45, 0, time.UTC),
+		UpdatedAt:        time.Date(2020, time.July, 10, 10, 11, 45, 0, time.UTC),
+	}
+	expected := []*database.AccessRequest{request1, request2, nil}
+
+	database.AccessRequestLockTTL = func() int64 {
+		return 0
+	}
+
+	_, err := cluster.DB.CreateAccessRequest(ctx, request1)
+	assert.NoError(t, err)
+
+	requests := make(chan *database.AccessRequest, 3)
+
+	go func() {
+		<-ctx.Done()
+		close(requests)
+	}()
+
+	go func() {
+		cluster.DB.WatchOutgoingAccessRequests(ctx, requests)
+	}()
+
+	err = cluster.DB.LockOutgoingAccessRequest(ctx, request1)
+	assert.NoError(t, err)
+
+	cluster.Clock.Step(5 * time.Second)
+
+	database.AccessRequestLockTTL = func() int64 {
+		return 300
+	}
+
+	_, err = cluster.DB.CreateAccessRequest(ctx, request2)
+	assert.NoError(t, err)
+
+	err = cluster.DB.LockOutgoingAccessRequest(ctx, request2)
+	assert.NoError(t, err)
+
+	err = cluster.DB.UnlockOutgoingAccessRequest(ctx, request2)
+	assert.NoError(t, err)
+
+	actual := []*database.AccessRequest{}
+
+	for i := 0; i < len(expected); i++ {
+		actual = append(actual, <-requests)
+	}
+
+	assert.Equal(t, expected, actual)
+}
