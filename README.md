@@ -94,7 +94,7 @@ This will start the following services:
 - [A] management-api (gRPC: 7911, HTTP: 7912)
 - [A] inway (gRPC: 7913)
 - [A] outway (HTTP: 7915)
-- [B] management-api  (gRPC: 7921, HTTP: 7922)
+- [B] management-api (gRPC: 7921, HTTP: 7922)
 - [B] inway (gRPC: 7923)
 
 
