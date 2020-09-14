@@ -30,17 +30,23 @@ RUN jq -ncM --arg tag $GIT_TAG_NAME --arg commit $GIT_COMMIT_HASH  '{tag: $tag, 
 # Copy static docs to alpine-based nginx container.
 FROM nginx:alpine
 
-# Copy nginx configuration
-COPY docker/nginx.conf /etc/nginx/nginx.conf
-COPY docker/default.conf /etc/nginx/conf.d/default.conf
-
 # Add non-privileged user
 RUN adduser -D -u 1001 appuser
 
-# Set ownership nginx.pid and cache folder in order to run nginx as non-root user
+# Set ownership to run nginx as non-root user
 RUN touch /var/run/nginx.pid && \
+    touch /etc/nginx/conf.d/default.conf && \
+    touch /usr/share/nginx/html/env.js && \
+    chown -R appuser /var/cache/nginx && \
     chown -R appuser /var/run/nginx.pid && \
-    chown -R appuser /var/cache/nginx
+    chown -R appuser /etc/nginx/conf.d/default.conf && \
+    chown -R appuser /usr/share/nginx/html/env.js
+
+# Copy nginx configuration
+COPY docker/nginx.conf /etc/nginx/nginx.conf
+COPY docker/default.conf /etc/nginx/conf.d/default.conf.template
+COPY docker/startup.sh .
+CMD ["./startup.sh"]
 
 COPY --from=build /go/src/go.nlx.io/nlx/management-ui/build /usr/share/nginx/html
 COPY --from=version /version.json /usr/share/nginx/html

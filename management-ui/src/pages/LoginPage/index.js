@@ -4,6 +4,7 @@
 import React, { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@commonground/design-system'
+import env from '../../env'
 import UserContext from '../../user-context'
 import OrganizationName from '../../components/OrganizationName'
 import {
@@ -41,7 +42,7 @@ const LoginPage = () => {
             </Button>
           </>
         ) : (
-          <form method="POST" action="/oidc/logout">
+          <form method="POST" action={`${env.oidcBaseUrl}/logout`}>
             <Button data-testid="logout" type="submit">
               {t('Log out')}
             </Button>

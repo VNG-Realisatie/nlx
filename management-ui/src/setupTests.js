@@ -13,3 +13,6 @@ configure({ enforceActions: 'never' })
 
 // Prevent fetch from going out to the network during test
 global.fetch = require('jest-fetch-mock')
+
+// Global variable which allows setting base URLs to OIDC and the Management API
+global._env = {}

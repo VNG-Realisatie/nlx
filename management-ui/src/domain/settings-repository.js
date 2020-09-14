@@ -1,12 +1,14 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-
+import env from '../env'
 import { fetchWithoutCaching, throwOnError } from './fetch-utils'
 
 class SettingsRepository {
   static async get() {
-    const response = await fetchWithoutCaching(`/api/v1/settings`)
+    const response = await fetchWithoutCaching(
+      `${env.managementApiBaseUrl}/v1/settings`,
+    )
 
     throwOnError(response)
 
@@ -27,10 +29,13 @@ class SettingsRepository {
       throw new Error('The setting organizationInway must be specified')
     }
 
-    const response = await fetchWithoutCaching(`/api/v1/settings`, {
-      method: 'PUT',
-      body: JSON.stringify(settings),
-    })
+    const response = await fetchWithoutCaching(
+      `${env.managementApiBaseUrl}/v1/settings`,
+      {
+        method: 'PUT',
+        body: JSON.stringify(settings),
+      },
+    )
 
     throwOnError(response)
 

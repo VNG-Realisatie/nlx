@@ -1,11 +1,14 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
+import env from '../env'
 import { fetchWithCaching, throwOnError } from './fetch-utils'
 
 class EnvironmentRepository {
   static async getCurrent() {
-    const response = await fetchWithCaching('/api/v1/environment')
+    const response = await fetchWithCaching(
+      `${env.managementApiBaseUrl}/v1/environment`,
+    )
 
     throwOnError(response)
 

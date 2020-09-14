@@ -6,7 +6,7 @@ import React, { useContext, useRef, useState } from 'react'
 import Cookies from 'js-cookie'
 import { CSSTransition } from 'react-transition-group'
 import { useTranslation } from 'react-i18next'
-
+import env from '../../env'
 import UserContext from '../../user-context'
 import useClickOutside from '../../hooks/use-click-outside'
 import {
@@ -75,7 +75,7 @@ const UserNavigation = ({ ...props }) => {
       >
         <StyledUserMenu id="user-menu-options" data-testid="user-menu-options">
           <StyledUserMenuItem>
-            <form method="POST" action="/oidc/logout">
+            <form method="POST" action={`${env.oidcBaseUrl}/logout`}>
               <input
                 type="hidden"
                 name="csrfmiddlewaretoken"
