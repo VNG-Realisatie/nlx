@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@commonground/eslint-config": "2.0.0",
-    "axe-core": "3.5.5",
+    "axe-core": "4.0.2",
     "axe-testcafe": "3.0.0",
     "babel-eslint": "10.1.0",
     "eslint": "7.8.1",
