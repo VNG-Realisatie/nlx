@@ -1,3 +1,40 @@
+# [0.88.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.87.1...v0.88.0) (2020-09-17)
+
+
+### Bug Fixes
+
+* **insight:** close HTML-elements correctly ([40f1424](https://gitlab.com/commonground/nlx/nlx/commit/40f1424e48a66d579b96f9ae00fbcab3dd0fbaf7))
+* **management:** linting ([5811a71](https://gitlab.com/commonground/nlx/nlx/commit/5811a71205bebb77f2d18ec70aa8a412751a5e54)), closes [#1002](https://gitlab.com/commonground/nlx/nlx/issues/1002)
+* console warning mobx-react-lite ([c48143a](https://gitlab.com/commonground/nlx/nlx/commit/c48143ace47d4337b2bdb9669edb8eb5f4ebaee7))
+* **directory:** linting issues ([2dd865f](https://gitlab.com/commonground/nlx/nlx/commit/2dd865fe1e8e449bd4cdff52d2174a2e417bdee5)), closes [#973](https://gitlab.com/commonground/nlx/nlx/issues/973)
+* **docs:** update broken link for BAG API ([a679887](https://gitlab.com/commonground/nlx/nlx/commit/a679887d2fede1c472c705a700db0d6ded88a8b6))
+* **helm:** regenerate Chart.lock ([09dab6b](https://gitlab.com/commonground/nlx/nlx/commit/09dab6b53b2806eec50edb9f3e3136070aa65924))
+* **helm:** regenerate invalid digest for Chart.lock ([08c5aeb](https://gitlab.com/commonground/nlx/nlx/commit/08c5aeb9c5ba5d2ac8b37d8f7d5ab4b710018a2e))
+* **management:** local e2e tests need to work with modd again ([750e5ad](https://gitlab.com/commonground/nlx/nlx/commit/750e5ad1c3acebe34dbef94fd81aaf6625e4775b))
+* **management:** provide service model defaults ([cab1397](https://gitlab.com/commonground/nlx/nlx/commit/cab139711c8c92b1856352751df969cecccb25ef))
+* **management:** resolve typo ([f82ea69](https://gitlab.com/commonground/nlx/nlx/commit/f82ea6951e82b5e1c1cc061d180bd80e66605fb4)), closes [#973](https://gitlab.com/commonground/nlx/nlx/issues/973)
+* **management:** set nlxversion on directory client ([ce96f09](https://gitlab.com/commonground/nlx/nlx/commit/ce96f0947e570caf94ba85d13f88243d84cf04b2))
+* **management:** type-o in settings ([eb7ecab](https://gitlab.com/commonground/nlx/nlx/commit/eb7ecab421bfeaeb63eafd0c617a9b1222761059))
+
+
+### Features
+
+* **common:** remove non-Linux OS warning ([657635e](https://gitlab.com/commonground/nlx/nlx/commit/657635e8aedcdeb22e4355b2f96fa600667866f3))
+* **directory:** set inway for an organization ([eb5ac76](https://gitlab.com/commonground/nlx/nlx/commit/eb5ac769048bddf950f406b4496d1dcfd1498b3a))
+* **helm:** remove option to generate certificates ([366a019](https://gitlab.com/commonground/nlx/nlx/commit/366a019f4f0b236a27cd7e349f7e141b47ca3a42))
+* **helm:** use prebuild Docker image for the IRMA server ([b54eb15](https://gitlab.com/commonground/nlx/nlx/commit/b54eb150f593c25e2293e61c7f78b122263f4c87))
+* **management:** add all inway properties to store ([e2e4c38](https://gitlab.com/commonground/nlx/nlx/commit/e2e4c38d82a0112847b9e7e2dda06ccb71d0de35)), closes [#1002](https://gitlab.com/commonground/nlx/nlx/issues/1002)
+* **management:** add description for the organisation outway field ([1dde860](https://gitlab.com/commonground/nlx/nlx/commit/1dde860ef8f27517b1ce121a18562f876118177d))
+* **management:** add mobx store to services ([b3e2377](https://gitlab.com/commonground/nlx/nlx/commit/b3e2377969401a8a00beb7c4d398910c70ae6cc2))
+* **management:** enable setting the inway for the management api traffic ([329f6d4](https://gitlab.com/commonground/nlx/nlx/commit/329f6d45f289479ad2e57e99ec3b310c28bcaf49)), closes [#973](https://gitlab.com/commonground/nlx/nlx/issues/973)
+* **management:** enable specifying OIDC & Management API base URLs ([26f1f90](https://gitlab.com/commonground/nlx/nlx/commit/26f1f9083b9aed138fc54bd0b5526a915fa44300))
+* **management:** external API for access requests ([c349b1e](https://gitlab.com/commonground/nlx/nlx/commit/c349b1e81cd92c9ab6a3b3ccf27c6c4baf7908d5))
+* **management:** implement inway model ([d24f919](https://gitlab.com/commonground/nlx/nlx/commit/d24f9193b6922ff444532c0d5add74487f766329))
+* **management:** introduce InwaysStore ([d9c7f3c](https://gitlab.com/commonground/nlx/nlx/commit/d9c7f3c16a255fc1330164adba1ee0aad67f913d)), closes [#1002](https://gitlab.com/commonground/nlx/nlx/issues/1002)
+* **management:** replace http client with gRPC client ([3c2e1fe](https://gitlab.com/commonground/nlx/nlx/commit/3c2e1fef05c5c2b084654ecd20e44c13a55fc545))
+* rename ConfigAPI service to Management service ([8d3f264](https://gitlab.com/commonground/nlx/nlx/commit/8d3f2640eeadb6e4a86fb9a75a20b58a0a8a1e02))
+* use different certificate for mangement-api ([582e4d2](https://gitlab.com/commonground/nlx/nlx/commit/582e4d2fae89f536099aca9f738e41fbf31eebc8))
+
 ## [0.87.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.87.0...v0.87.1) (2020-08-10)
 
 
