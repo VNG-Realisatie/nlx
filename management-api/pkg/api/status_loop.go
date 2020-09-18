@@ -6,6 +6,9 @@ package api
 import (
 	"context"
 	"errors"
+	"fmt"
+	"net"
+	"strconv"
 	"sync"
 
 	grpc_retry "github.com/grpc-ecosystem/go-grpc-middleware/retry"
@@ -96,6 +99,40 @@ statusLoop:
 	wg.Wait()
 }
 
+func (loop *accessRequestStatusLoop) sendRequest(ctx context.Context, request *database.AccessRequest) error {
+	response, err := loop.directoryClient.GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
+		OrganizationName: request.OrganizationName,
+	})
+	if err != nil {
+		return err
+	}
+
+	host, port, err := net.SplitHostPort(response.Address)
+	if err != nil {
+		return fmt.Errorf("invalid format for inway address: %w", err)
+	}
+
+	portNum, err := strconv.Atoi(port)
+	if err != nil {
+		return fmt.Errorf("invalid format for inway address port: %w", err)
+	}
+
+	address := fmt.Sprintf("%s:%d", host, portNum+1)
+
+	client, err := loop.createManagementClientFunc(ctx, address, loop.orgCert)
+	if err != nil {
+		return err
+	}
+
+	defer client.Close()
+
+	_, err = client.RequestAccess(ctx, &external.RequestAccessRequest{
+		ServiceName: request.ServiceName,
+	}, grpc_retry.WithMax(maxRetries))
+
+	return err
+}
+
 //nolint:gocyclo high complexity because of the state machine
 func (loop *accessRequestStatusLoop) handleRequest(ctx context.Context, request *database.AccessRequest) error {
 	err := loop.configDatabase.LockOutgoingAccessRequest(ctx, request)
@@ -114,34 +151,21 @@ func (loop *accessRequestStatusLoop) handleRequest(ctx context.Context, request 
 		}
 	}()
 
-	response, err := loop.directoryClient.GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-		OrganizationName: request.OrganizationName,
-	})
-	if err != nil {
+	sendErr := loop.sendRequest(ctx, request)
+	st, isStatusErr := status.FromError(sendErr)
+	var state database.AccessRequestState
+
+	if sendErr == nil {
+		state = database.AccessRequestReceived
+	} else if isStatusErr && st.Code() == codes.AlreadyExists {
+		state = database.AccessRequestFailed
+	} else {
+		state = database.AccessRequestFailed
+	}
+
+	if err := loop.configDatabase.UpdateAccessRequestState(ctx, request, state); err != nil {
 		return err
 	}
 
-	client, err := loop.createManagementClientFunc(ctx, response.Address, loop.orgCert)
-	if err != nil {
-		return err
-	}
-
-	defer client.Close()
-
-	_, err = client.RequestAccess(ctx, &external.RequestAccessRequest{
-		ServiceName: request.ServiceName,
-	}, grpc_retry.WithMax(maxRetries))
-	st, isStatusErr := status.FromError(err)
-
-	if isStatusErr && st.Code() == codes.AlreadyExists {
-		panic("sync not implemented yet")
-	} else if err != nil {
-		return err
-	}
-
-	if err := loop.configDatabase.UpdateAccessRequestState(ctx, request, database.AccessRequestReceived); err != nil {
-		return err
-	}
-
-	return nil
+	return sendErr
 }

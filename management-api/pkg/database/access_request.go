@@ -99,10 +99,6 @@ func (db ETCDConfigDatabase) CreateAccessRequest(ctx context.Context, accessRequ
 func (db ETCDConfigDatabase) UpdateAccessRequestState(ctx context.Context, accessRequest *AccessRequest, state AccessRequestState) error {
 	key := path.Join("access-requests", "outgoing", accessRequest.OrganizationName, accessRequest.ServiceName, accessRequest.ID)
 
-	request := &*accessRequest
-	request.State = state
-	request.UpdatedAt = db.clock.Now()
-
 	response, err := db.etcdCli.Get(ctx, db.key(key))
 	if err != nil {
 		return err
@@ -112,12 +108,12 @@ func (db ETCDConfigDatabase) UpdateAccessRequestState(ctx context.Context, acces
 		return fmt.Errorf("no such access request: %s", accessRequest.ID)
 	}
 
-	if err := db.put(ctx, key, request); err != nil {
+	accessRequest.State = state
+	accessRequest.UpdatedAt = db.clock.Now()
+
+	if err := db.put(ctx, key, accessRequest); err != nil {
 		return err
 	}
-
-	accessRequest.State = request.State
-	accessRequest.UpdatedAt = request.UpdatedAt
 
 	return nil
 }
@@ -198,9 +194,9 @@ func (db ETCDConfigDatabase) UnlockOutgoingAccessRequest(ctx context.Context, ac
 	return err
 }
 
-func (db ETCDConfigDatabase) isDeleteLeaseEvent(ctx context.Context, event *clientv3.Event) bool {
+func (db ETCDConfigDatabase) parseDeleteAccessRequestLeaseEvent(ctx context.Context, event *clientv3.Event) (*AccessRequest, error) {
 	if event.Kv == nil {
-		return false
+		return nil, nil
 	}
 
 	leaseID := clientv3.LeaseID(event.Kv.Lease)
@@ -208,16 +204,40 @@ func (db ETCDConfigDatabase) isDeleteLeaseEvent(ctx context.Context, event *clie
 	if leaseID != clientv3.NoLease {
 		ttlResponse, err := db.etcdCli.TimeToLive(ctx, leaseID)
 		if err != nil {
-			db.logger.Error("failed to get TTL for lease", zap.Error(err))
-			return false
+			return nil, err
 		}
 
 		if ttlResponse.TTL <= 0 {
-			return true
+			accessRequestKey := string(event.Kv.Key)[len(locksPrefix):]
+
+			request := &AccessRequest{}
+			if err := db.get(ctx, accessRequestKey, request); err != nil {
+				return nil, err
+			}
+
+			if request.ID == "" {
+				return nil, nil
+			}
+
+			return request, nil
 		}
 	}
 
-	return false
+	return nil, nil
+}
+
+func (db ETCDConfigDatabase) parseCreateAccessRequestEvent(event *clientv3.Event) (*AccessRequest, error) {
+	if !event.IsCreate() {
+		return nil, nil
+	}
+
+	request := &AccessRequest{}
+
+	if err := json.Unmarshal(event.Kv.Value, request); err != nil {
+		return nil, err
+	}
+
+	return request, nil
 }
 
 func (db ETCDConfigDatabase) WatchOutgoingAccessRequests(ctx context.Context, output chan *AccessRequest) {
@@ -239,35 +259,28 @@ func (db ETCDConfigDatabase) WatchOutgoingAccessRequests(ctx context.Context, ou
 		// re-schedule dead-locked AccessRequests due to a system failure
 		case response := <-locksChannel:
 			for _, event := range response.Events {
-				if !db.isDeleteLeaseEvent(ctx, event) {
+				request, err := db.parseDeleteAccessRequestLeaseEvent(ctx, event)
+				if err != nil {
+					db.logger.Error("failed to parse delete lease event", zap.Error(err))
 					continue
 				}
 
-				accessRequestKey := string(event.Kv.Key)[len(locksPrefix):]
-
-				request := &AccessRequest{}
-				if err := db.get(ctx, accessRequestKey, request); err != nil {
-					db.logger.Error("failed to get AccessRequest", zap.Error(err))
-					continue
+				if request != nil {
+					output <- request
 				}
-
-				output <- request
 			}
 			// filter AccessRequests on create and send to the output channel
 		case response := <-accessRequestsChannel:
 			for _, event := range response.Events {
-				if !event.IsCreate() {
+				request, err := db.parseCreateAccessRequestEvent(event)
+				if err != nil {
+					db.logger.Error("failed to parse create access request event", zap.Error(err))
 					continue
 				}
 
-				request := &AccessRequest{}
-
-				if err := json.Unmarshal(event.Kv.Value, request); err != nil {
-					db.logger.Error("failed to unmarshal created AccessRequest", zap.Error(err))
-					continue
+				if request != nil {
+					output <- request
 				}
-
-				output <- request
 			}
 		}
 	}

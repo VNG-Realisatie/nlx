@@ -121,7 +121,6 @@ func TestHandleRequest(t *testing.T) {
 	tests := map[string]struct {
 		setupMock func(statusLoopMocks)
 		request   *database.AccessRequest
-		wantState database.AccessRequestState
 		wantErr   bool
 	}{
 		"handling_a_locked_request_returns_nil": {
@@ -131,7 +130,6 @@ func TestHandleRequest(t *testing.T) {
 				ServiceName:      "service",
 				State:            database.AccessRequestCreated,
 			},
-			wantState: database.AccessRequestCreated,
 			setupMock: func(mocks statusLoopMocks) {
 				mocks.db.
 					EXPECT().
@@ -147,8 +145,7 @@ func TestHandleRequest(t *testing.T) {
 				ServiceName:      "service",
 				State:            database.AccessRequestCreated,
 			},
-			wantErr:   true,
-			wantState: database.AccessRequestCreated,
+			wantErr: true,
 			setupMock: func(mocks statusLoopMocks) {
 				mocks.db.
 					EXPECT().
@@ -164,8 +161,7 @@ func TestHandleRequest(t *testing.T) {
 				ServiceName:      "service",
 				State:            database.AccessRequestCreated,
 			},
-			wantErr:   true,
-			wantState: database.AccessRequestCreated,
+			wantErr: true,
 			setupMock: func(mocks statusLoopMocks) {
 				mocks.db.
 					EXPECT().
@@ -181,20 +177,24 @@ func TestHandleRequest(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
+					UpdateAccessRequestState(ctx, gomock.Any(), database.AccessRequestFailed).
+					Return(nil)
+
+				mocks.db.
+					EXPECT().
 					UnlockOutgoingAccessRequest(ctx, gomock.Any()).
 					Return(nil)
 			},
 		},
 
-		"returns_an_error_when_requestaccess_returns_an_error": {
+		"returns_err_when_inway_address_is_invalid": {
 			request: &database.AccessRequest{
 				ID:               "id-1",
 				OrganizationName: "organization-a",
 				ServiceName:      "service",
 				State:            database.AccessRequestCreated,
 			},
-			wantErr:   true,
-			wantState: database.AccessRequestCreated,
+			wantErr: true,
 			setupMock: func(mocks statusLoopMocks) {
 				mocks.db.
 					EXPECT().
@@ -207,7 +207,41 @@ func TestHandleRequest(t *testing.T) {
 						OrganizationName: "organization-a",
 					}).
 					Return(&inspectionapi.GetOrganizationInwayResponse{
-						Address: "inwayAddress",
+						Address: "hostname",
+					}, nil)
+
+				mocks.db.
+					EXPECT().
+					UpdateAccessRequestState(ctx, gomock.Any(), database.AccessRequestFailed).
+					Return(nil)
+
+				mocks.db.
+					EXPECT().
+					UnlockOutgoingAccessRequest(ctx, gomock.Any())
+			},
+		},
+
+		"returns_an_error_when_requestaccess_returns_an_error": {
+			request: &database.AccessRequest{
+				ID:               "id-1",
+				OrganizationName: "organization-a",
+				ServiceName:      "service",
+				State:            database.AccessRequestCreated,
+			},
+			wantErr: true,
+			setupMock: func(mocks statusLoopMocks) {
+				mocks.db.
+					EXPECT().
+					LockOutgoingAccessRequest(ctx, gomock.Any()).
+					Return(nil)
+
+				mocks.directory.
+					EXPECT().
+					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
+						OrganizationName: "organization-a",
+					}).
+					Return(&inspectionapi.GetOrganizationInwayResponse{
+						Address: "hostname:7200",
 					}, nil)
 
 				mocks.management.
@@ -216,6 +250,11 @@ func TestHandleRequest(t *testing.T) {
 						ServiceName: "service",
 					}, gomock.Any()).
 					Return(nil, errors.New("error"))
+
+				mocks.db.
+					EXPECT().
+					UpdateAccessRequestState(ctx, gomock.Any(), database.AccessRequestFailed).
+					Return(nil)
 
 				mocks.db.
 					EXPECT().
@@ -236,8 +275,7 @@ func TestHandleRequest(t *testing.T) {
 				ServiceName:      "service",
 				State:            database.AccessRequestCreated,
 			},
-			wantErr:   true,
-			wantState: database.AccessRequestCreated,
+			wantErr: true,
 			setupMock: func(mocks statusLoopMocks) {
 				mocks.db.
 					EXPECT().
@@ -250,7 +288,7 @@ func TestHandleRequest(t *testing.T) {
 						OrganizationName: "organization-a",
 					}).
 					Return(&inspectionapi.GetOrganizationInwayResponse{
-						Address: "inwayAddress",
+						Address: "hostname:7200",
 					}, nil)
 
 				mocks.management.
@@ -262,7 +300,7 @@ func TestHandleRequest(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					UpdateAccessRequest(ctx, gomock.Any()).
+					UpdateAccessRequestState(ctx, gomock.Any(), database.AccessRequestReceived).
 					Return(errors.New("error"))
 
 				mocks.db.
@@ -284,7 +322,6 @@ func TestHandleRequest(t *testing.T) {
 				ServiceName:      "service",
 				State:            database.AccessRequestCreated,
 			},
-			wantState: database.AccessRequestReceived,
 			setupMock: func(mocks statusLoopMocks) {
 				mocks.db.
 					EXPECT().
@@ -297,7 +334,7 @@ func TestHandleRequest(t *testing.T) {
 						OrganizationName: "organization-a",
 					}).
 					Return(&inspectionapi.GetOrganizationInwayResponse{
-						Address: "inwayAddress",
+						Address: "hostname:7200",
 					}, nil)
 
 				mocks.management.
@@ -309,7 +346,7 @@ func TestHandleRequest(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					UpdateAccessRequest(ctx, gomock.Any()).
+					UpdateAccessRequestState(ctx, gomock.Any(), database.AccessRequestReceived).
 					Return(nil)
 
 				mocks.db.
@@ -337,8 +374,6 @@ func TestHandleRequest(t *testing.T) {
 			} else {
 				assert.NoError(t, err, "handleRequest shouldn't error")
 			}
-
-			assert.Equal(t, tt.wantState, tt.request.State, "AccessRequest state is invalid")
 		})
 	}
 }
