@@ -20,7 +20,6 @@ require (
 	github.com/go-chi/chi v4.1.2+incompatible
 	github.com/go-chi/render v1.0.1
 	github.com/go-errors/errors v1.1.1
-	github.com/go-sql-driver/mysql v1.5.0 // indirect
 	github.com/gogo/protobuf v1.3.1
 	github.com/golang-migrate/migrate v3.5.4+incompatible
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
@@ -39,14 +38,12 @@ require (
 	github.com/jpillora/backoff v1.0.0
 	github.com/ktr0731/toml v0.3.0
 	github.com/lib/pq v1.8.0
-	github.com/mattn/go-sqlite3 v1.11.0 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect
 	github.com/pelletier/go-toml v1.6.0 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/pquerna/cachecontrol v0.0.0-20180517163645-1555304b9b35 // indirect
-	github.com/privacybydesign/gabi v0.0.0-20190503104928-ce779395f4c9 // indirect
-	github.com/privacybydesign/irmago v0.4.1
+	github.com/privacybydesign/irmago v0.5.1
 	github.com/prometheus/client_golang v1.5.1 // indirect
 	github.com/spf13/afero v1.2.2 // indirect
 	github.com/spf13/cobra v0.0.7
