@@ -1,10 +1,10 @@
 Documentation link checker:
   stage: E2E tests
-  image: docker:19.03.12
+  image: docker:19.03.13
   variables:
     DOCKER_TLS_CERTDIR: "/certs"
   services:
-    - docker:19.03.12-dind
+    - docker:19.03.13-dind
   before_script:
     - export CI_ENV_URL=$([ -f ci_environment_url.txt ] && cat ci_environment_url.txt)
     - export DOCS_URL=$([ -z "$CI_ENV_URL" ] && echo "https://docs.acc.nlx.io" || echo "https://docs-$CI_ENV_URL")
