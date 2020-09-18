@@ -1,12 +1,11 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import env from '../env'
 import { throwOnError } from './fetch-utils'
 
 class InwayRepository {
   static async getAll() {
-    const response = await fetch(`${env.managementApiBaseUrl}/v1/inways`)
+    const response = await fetch(`/api/v1/inways`)
 
     throwOnError(response)
 
@@ -23,9 +22,7 @@ class InwayRepository {
   }
 
   static async getByName(name) {
-    const response = await fetch(
-      `${env.managementApiBaseUrl}/v1/inways/${name}`,
-    )
+    const response = await fetch(`/api/v1/inways/${name}`)
 
     throwOnError(response)
 

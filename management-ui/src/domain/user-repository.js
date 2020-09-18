@@ -2,12 +2,11 @@
 // Licensed under the EUPL
 //
 
-import env from '../env'
 import { fetchWithoutCaching, throwOnError } from './fetch-utils'
 
 class UserRepository {
   static async getAuthenticatedUser() {
-    const response = await fetchWithoutCaching(`${env.oidcBaseUrl}/me`)
+    const response = await fetchWithoutCaching('/oidc/me')
 
     throwOnError(response)
 

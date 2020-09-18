@@ -1,7 +1,6 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import env from '../env'
 import { fetchWithoutCaching, throwOnError } from './fetch-utils'
 
 function ensureLatestAccessRequest(service) {
@@ -11,9 +10,7 @@ function ensureLatestAccessRequest(service) {
 
 class DirectoryRepository {
   static async getAll() {
-    const response = await fetchWithoutCaching(
-      `${env.managementApiBaseUrl}/v1/directory/services`,
-    )
+    const response = await fetchWithoutCaching(`/api/v1/directory/services`)
 
     throwOnError(response)
 
@@ -23,7 +20,7 @@ class DirectoryRepository {
 
   static async getByName(organizationName, serviceName) {
     const response = await fetchWithoutCaching(
-      `${env.managementApiBaseUrl}/v1/directory/organizations/${organizationName}/services/${serviceName}`,
+      `/api/v1/directory/organizations/${organizationName}/services/${serviceName}`,
     )
 
     throwOnError(response)
