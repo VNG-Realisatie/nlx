@@ -18,7 +18,7 @@
     "yup": "0.29.3"
   },
   "devDependencies": {
-    "@commonground/eslint-config-cra-standard-prettier": "2.0.0",
+    "@commonground/eslint-config-cra-standard-prettier": "3.0.0",
     "@testing-library/react": "10.4.9",
     "enzyme": "3.11.0",
     "enzyme-adapter-react-16": "1.15.4",
@@ -29,7 +29,7 @@
     "eslint-config-standard-react": "9.2.0",
     "eslint-plugin-header": "3.1.0",
     "eslint-plugin-import": "2.22.0",
-    "eslint-plugin-jest": "23.20.0",
+    "eslint-plugin-jest": "24.0.2",
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-prettier": "3.1.4",
     "eslint-plugin-promise": "4.2.1",
