@@ -99,6 +99,20 @@ statusLoop:
 	wg.Wait()
 }
 
+func (loop *accessRequestStatusLoop) computeInwayProxyAddress(address string) (string, error) {
+	host, port, err := net.SplitHostPort(address)
+	if err != nil {
+		return "", fmt.Errorf("invalid format for inway address: %w", err)
+	}
+
+	portNum, err := strconv.Atoi(port)
+	if err != nil {
+		return "", fmt.Errorf("invalid format for inway address port: %w", err)
+	}
+
+	return fmt.Sprintf("%s:%d", host, portNum+1), nil
+}
+
 func (loop *accessRequestStatusLoop) sendRequest(ctx context.Context, request *database.AccessRequest) error {
 	response, err := loop.directoryClient.GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
 		OrganizationName: request.OrganizationName,
@@ -107,17 +121,10 @@ func (loop *accessRequestStatusLoop) sendRequest(ctx context.Context, request *d
 		return err
 	}
 
-	host, port, err := net.SplitHostPort(response.Address)
+	address, err := loop.computeInwayProxyAddress(response.Address)
 	if err != nil {
-		return fmt.Errorf("invalid format for inway address: %w", err)
+		return err
 	}
-
-	portNum, err := strconv.Atoi(port)
-	if err != nil {
-		return fmt.Errorf("invalid format for inway address port: %w", err)
-	}
-
-	address := fmt.Sprintf("%s:%d", host, portNum+1)
 
 	client, err := loop.createManagementClientFunc(ctx, address, loop.orgCert)
 	if err != nil {
