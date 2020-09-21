@@ -5,6 +5,7 @@ stages:
   - Security
   - E2E tests
   - Tools
+  - external
 
 include:
   - '/.gitlab/ci/.templates.yml'
