@@ -2,6 +2,7 @@
 # Opt-out of non-DinD solution based on https://gitlab.com/gitlab-org/gitlab/-/issues/37278
 variables:
   SAST_DISABLE_DIND: "false"
+  SAST_DISABLE_BABEL: "true"
 
 include:
   - template: Container-Scanning.gitlab-ci.yml
