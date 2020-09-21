@@ -34,6 +34,12 @@
       "allowedVersions": "<5.0.0"
     },
     {
+      "groupName": "styled-components@5.2.0 introduced breaking behaviour https://github.com/styled-components/styled-components/issues/3273",
+      "packageNames": ["styled-components"],
+      "managers": ["npm"],
+      "allowedVersions": "<5.2.0"
+    },
+    {
       "groupName": "etcd fails with grpc > 1.26.0",
       "managers": ["gomod"],
       "packageNames": ["google.golang.org/grpc"],
