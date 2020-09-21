@@ -15,222 +15,223 @@ option (gogoproto.unmarshaler_all) = true;
 option (gogoproto.goproto_getters_all) = false;
 
 service Management {
-	rpc ListServices (ListServicesRequest) returns (ListServicesResponse) {
-		option (google.api.http) = { get: "/api/v1/services" };
-	}
-	rpc GetService (GetServiceRequest) returns (Service) {
-		option (google.api.http) = { get: "/api/v1/services/{name}" };
-	}
-	rpc CreateService (Service) returns (Service) {
-		option (google.api.http) = { post: "/api/v1/services" body: "*" };
-	}
-	rpc UpdateService (UpdateServiceRequest) returns (Service) {
-		option (google.api.http) = { put: "/api/v1/services/{name}" body: "service" };
-	}
-	rpc DeleteService (DeleteServiceRequest) returns (google.protobuf.Empty) {
-		option (google.api.http) = { delete: "/api/v1/services/{name}" };
-	}
-	rpc ListInways (ListInwaysRequest) returns (ListInwaysResponse) {
-		option (google.api.http) = { get: "/api/v1/inways" };
-	}
-	rpc GetInway (GetInwayRequest) returns (Inway) {
-		option (google.api.http) = { get: "/api/v1/inways/{name}" };
-	}
-	rpc CreateInway (Inway) returns (Inway) {
-		option (google.api.http) = { post: "/api/v1/inways" body: "*" };
-	}
-	rpc UpdateInway (UpdateInwayRequest) returns (Inway) {
-		option (google.api.http) = { put: "/api/v1/inways/{name}" body: "inway" };
-	}
-	rpc DeleteInway (DeleteInwayRequest) returns (google.protobuf.Empty) {
-		option (google.api.http) = { delete: "/api/v1/inways/{name}" };
-	}
-	rpc PutInsightConfiguration(InsightConfiguration) returns (InsightConfiguration) {
-		option (google.api.http) = { put: "/api/v1/insight-configuration" };
-	}
-	rpc GetInsightConfiguration (google.protobuf.Empty) returns (InsightConfiguration) {
-		option (google.api.http) = { get: "/api/v1/insight-configuration"};
-	}
+  rpc ListServices (ListServicesRequest) returns (ListServicesResponse) {
+    option (google.api.http) = { get: "/api/v1/services" };
+  }
+  rpc GetService (GetServiceRequest) returns (Service) {
+    option (google.api.http) = { get: "/api/v1/services/{name}" };
+  }
+  rpc CreateService (Service) returns (Service) {
+    option (google.api.http) = { post: "/api/v1/services" body: "*" };
+  }
+  rpc UpdateService (UpdateServiceRequest) returns (Service) {
+    option (google.api.http) = { put: "/api/v1/services/{name}" body: "service" };
+  }
+  rpc DeleteService (DeleteServiceRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { delete: "/api/v1/services/{name}" };
+  }
+  rpc ListInways (ListInwaysRequest) returns (ListInwaysResponse) {
+    option (google.api.http) = { get: "/api/v1/inways" };
+  }
+  rpc GetInway (GetInwayRequest) returns (Inway) {
+    option (google.api.http) = { get: "/api/v1/inways/{name}" };
+  }
+  rpc CreateInway (Inway) returns (Inway) {
+    option (google.api.http) = { post: "/api/v1/inways" body: "*" };
+  }
+  rpc UpdateInway (UpdateInwayRequest) returns (Inway) {
+    option (google.api.http) = { put: "/api/v1/inways/{name}" body: "inway" };
+  }
+  rpc DeleteInway (DeleteInwayRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { delete: "/api/v1/inways/{name}" };
+  }
+  rpc PutInsightConfiguration(InsightConfiguration) returns (InsightConfiguration) {
+    option (google.api.http) = { put: "/api/v1/insight-configuration" };
+  }
+  rpc GetInsightConfiguration (google.protobuf.Empty) returns (InsightConfiguration) {
+    option (google.api.http) = { get: "/api/v1/insight-configuration"};
+  }
 
-	rpc ListOutgoingAccessRequests (ListOutgoingAccessRequestsRequest) returns (ListOutgoingAccessRequestsResponse) {
-		option (google.api.http) = { get: "/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}"};
-	}
+  rpc ListOutgoingAccessRequests (ListOutgoingAccessRequestsRequest) returns (ListOutgoingAccessRequestsResponse) {
+    option (google.api.http) = { get: "/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}"};
+  }
 
-	rpc CreateAccessRequest (CreateAccessRequestRequest) returns (AccessRequest) {
-		option (google.api.http) = { post: "/api/v1/access-requests" body: "*" };
-	}
+  rpc CreateAccessRequest (CreateAccessRequestRequest) returns (AccessRequest) {
+    option (google.api.http) = { post: "/api/v1/access-requests" body: "*" };
+  }
 
-	rpc GetSettings (google.protobuf.Empty) returns (Settings) {
-		option (google.api.http) = { get: "/api/v1/settings" };
-	}
-	rpc UpdateSettings(UpdateSettingsRequest) returns (google.protobuf.Empty) {
-		option (google.api.http) = { put: "/api/v1/settings", body: "*" };
-	}
+  rpc GetSettings (google.protobuf.Empty) returns (Settings) {
+    option (google.api.http) = { get: "/api/v1/settings" };
+  }
+  rpc UpdateSettings(UpdateSettingsRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { put: "/api/v1/settings", body: "*" };
+  }
 }
 
 message Service {
-	string name = 1;
-	string endpointURL = 2;
-	string documentationURL = 3;
-	string apiSpecificationURL = 4;
-	bool internal = 5;
-	string techSupportContact = 6;
-	string publicSupportContact = 7;
-	AuthorizationSettings authorizationSettings = 8;
-	repeated string inways = 9;
+  string name = 1;
+  string endpointURL = 2;
+  string documentationURL = 3;
+  string apiSpecificationURL = 4;
+  bool internal = 5;
+  string techSupportContact = 6;
+  string publicSupportContact = 7;
+  AuthorizationSettings authorizationSettings = 8;
+  repeated string inways = 9;
 
-	message AuthorizationSettings {
-		string mode = 1;
-		repeated Authorization authorizations = 2;
+  message AuthorizationSettings {
+    string mode = 1;
+    repeated Authorization authorizations = 2;
 
-		message Authorization  {
-			string organizationName = 1;
-			string publicKeyHash = 2;
-		}
-	}
+    message Authorization  {
+      string organizationName = 1;
+      string publicKeyHash = 2;
+    }
+  }
 }
 
 message Inway {
-	message Service {
-		string name = 1;
-	}
+  message Service {
+    string name = 1;
+  }
 
-	string name = 1;
-	string version = 2;
-	string hostname = 3;
-	string selfAddress = 4;
-	repeated Service services = 5;
-	string ipAddress = 6;
+  string name = 1;
+  string version = 2;
+  string hostname = 3;
+  string selfAddress = 4;
+  repeated Service services = 5;
+  string ipAddress = 6;
 }
 
 message ListServicesRequest {
-	string inwayName = 1;
+  string inwayName = 1;
 }
 
 message ListServicesResponse {
-	repeated Service services = 1;
+  repeated Service services = 1;
 }
 
 message GetServiceRequest {
-	string name = 1;
+  string name = 1;
 }
 
 message UpdateServiceRequest {
-	string name = 1;
-	Service service = 2;
+  string name = 1;
+  Service service = 2;
 }
 
 message DeleteServiceRequest {
-	string name = 1;
+  string name = 1;
 }
 
 message ListInwaysRequest {}
 
 message ListInwaysResponse {
-	repeated Inway inways = 1;
+  repeated Inway inways = 1;
 }
 
 message GetInwayRequest {
-	string name = 1;
+  string name = 1;
 }
 
 message UpdateInwayRequest {
-	string name = 1;
-	Inway inway = 2;
+  string name = 1;
+  Inway inway = 2;
 }
 
 message DeleteInwayRequest {
-	string name = 1;
+  string name = 1;
 }
 
 message InsightConfiguration {
-	string irmaServerURL = 1;
-	string insightAPIURL = 2;
+  string irmaServerURL = 1;
+  string insightAPIURL = 2;
 }
 
 enum AccessRequestState {
-	FAILED = 0;
-	CREATED = 1;
-	RECEIVED = 2;
+  UNSPECIFIED = 0;
+  FAILED = 1;
+  CREATED = 2;
+  RECEIVED = 3;
 }
 
 message AccessRequest {
-	string id = 1;
-	string organizationName = 2;
-	string serviceName = 3;
-	AccessRequestState state = 4;
-	google.protobuf.Timestamp createdAt = 5;
-	google.protobuf.Timestamp updatedAt = 6;
+  string id = 1;
+  string organizationName = 2;
+  string serviceName = 3;
+  AccessRequestState state = 4;
+  google.protobuf.Timestamp createdAt = 5;
+  google.protobuf.Timestamp updatedAt = 6;
 }
 
 message ListOutgoingAccessRequestsRequest {
-	string organizationName = 1;
-	string serviceName = 2;
+  string organizationName = 1;
+  string serviceName = 2;
 }
 
 message ListOutgoingAccessRequestsResponse {
-	repeated AccessRequest accessRequests = 1;
+  repeated AccessRequest accessRequests = 1;
 }
 
 message CreateAccessRequestRequest {
-	string organizationName = 1;
-	string serviceName = 2;
+  string organizationName = 1;
+  string serviceName = 2;
 }
 
 
 service Directory {
-    rpc ListServices (google.protobuf.Empty) returns (DirectoryListServicesResponse) {
-        option (google.api.http) = { get: "/api/v1/directory/services" };
-    }
-    rpc GetOrganizationService (GetOrganizationServiceRequest) returns (DirectoryService) {
-        option (google.api.http) = { get: "/api/v1/directory/organizations/{organizationName}/services/{serviceName}" };
-    }
-    rpc RequestAccessToService (RequestAccessToServiceRequest) returns (AccessRequest) {
-        option (google.api.http) = { post: "/api/v1/directory/organizations/{organizationName}/services/{serviceName}/access-requests" };
-    }
+  rpc ListServices (google.protobuf.Empty) returns (DirectoryListServicesResponse) {
+    option (google.api.http) = { get: "/api/v1/directory/services" };
+  }
+  rpc GetOrganizationService (GetOrganizationServiceRequest) returns (DirectoryService) {
+    option (google.api.http) = { get: "/api/v1/directory/organizations/{organizationName}/services/{serviceName}" };
+  }
+  rpc RequestAccessToService (RequestAccessToServiceRequest) returns (AccessRequest) {
+    option (google.api.http) = { post: "/api/v1/directory/organizations/{organizationName}/services/{serviceName}/access-requests" };
+  }
 }
 
 message DirectoryListServicesResponse {
-    repeated DirectoryService services = 1;
+  repeated DirectoryService services = 1;
 }
 
 message GetOrganizationServiceRequest {
-    string organizationName = 1;
-    string serviceName = 2;
+  string organizationName = 1;
+  string serviceName = 2;
 }
 
 message DirectoryAccessRequest {
-    string id = 1;
-    AccessRequestState state = 2;
-    google.protobuf.Timestamp createdAt = 3;
-    google.protobuf.Timestamp updatedAt = 4;
+  string id = 1;
+  AccessRequestState state = 2;
+  google.protobuf.Timestamp createdAt = 3;
+  google.protobuf.Timestamp updatedAt = 4;
 }
 
 message DirectoryService {
-    enum State {
-        unknown = 0;
-        up = 1;
-        down = 2;
-        degraded = 3;
-    }
+  enum State {
+    unknown = 0;
+    up = 1;
+    down = 2;
+    degraded = 3;
+  }
 
-    string serviceName = 1;
-    string organizationName = 2;
-    string apiSpecificationType = 3 [(gogoproto.customname)="APISpecificationType"];
-    State state = 4;
-    AccessRequest latestAccessRequest = 5;
+  string serviceName = 1;
+  string organizationName = 2;
+  string apiSpecificationType = 3 [(gogoproto.customname)="APISpecificationType"];
+  State state = 4;
+  AccessRequest latestAccessRequest = 5;
 
 }
 
 message RequestAccessToServiceRequest {
-    string organizationName = 1;
-    string serviceName = 2;
+  string organizationName = 1;
+  string serviceName = 2;
 }
 
 message Settings {
-	string organizationInway = 1;
+  string organizationInway = 1;
 }
 
 message UpdateSettingsRequest{
-	string organizationInway = 1;
+  string organizationInway = 1;
 }

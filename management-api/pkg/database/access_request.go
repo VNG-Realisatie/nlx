@@ -27,7 +27,8 @@ type AccessRequest struct {
 type AccessRequestState int
 
 const (
-	AccessRequestFailed AccessRequestState = iota
+	AccessRequestUnspecified AccessRequestState = iota
+	AccessRequestFailed
 	AccessRequestCreated
 	AccessRequestReceived
 

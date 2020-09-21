@@ -14,9 +14,10 @@ import (
 )
 
 var accessRequestState = map[database.AccessRequestState]api.AccessRequestState{
-	database.AccessRequestFailed:   api.AccessRequestState_FAILED,
-	database.AccessRequestCreated:  api.AccessRequestState_CREATED,
-	database.AccessRequestReceived: api.AccessRequestState_RECEIVED,
+	database.AccessRequestUnspecified: api.AccessRequestState_UNSPECIFIED,
+	database.AccessRequestFailed:      api.AccessRequestState_FAILED,
+	database.AccessRequestCreated:     api.AccessRequestState_CREATED,
+	database.AccessRequestReceived:    api.AccessRequestState_RECEIVED,
 }
 
 func (s *ManagementService) ListOutgoingAccessRequests(ctx context.Context, req *api.ListOutgoingAccessRequestsRequest) (*api.ListOutgoingAccessRequestsResponse, error) {

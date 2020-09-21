@@ -632,11 +632,12 @@
     "managementAccessRequestState": {
       "type": "string",
       "enum": [
+        "UNSPECIFIED",
         "FAILED",
         "CREATED",
         "RECEIVED"
       ],
-      "default": "FAILED"
+      "default": "UNSPECIFIED"
     },
     "managementCreateAccessRequestRequest": {
       "type": "object",
