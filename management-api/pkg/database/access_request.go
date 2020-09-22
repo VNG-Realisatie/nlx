@@ -16,12 +16,13 @@ import (
 )
 
 type AccessRequest struct {
-	ID               string             `json:"id,omitempty"`
-	OrganizationName string             `json:"organizationName,omitempty"`
-	ServiceName      string             `json:"serviceName,omitempty"`
-	State            AccessRequestState `json:"state"`
-	CreatedAt        time.Time          `json:"createdAt,omitempty"`
-	UpdatedAt        time.Time          `json:"updatedAt,omitempty"`
+	ID                   string             `json:"id,omitempty"`
+	OrganizationName     string             `json:"organizationName,omitempty"`
+	ServiceName          string             `json:"serviceName,omitempty"`
+	State                AccessRequestState `json:"state"`
+	PublicKeyFingerprint string             `json:"publicKeyFingerprint"`
+	CreatedAt            time.Time          `json:"createdAt,omitempty"`
+	UpdatedAt            time.Time          `json:"updatedAt,omitempty"`
 }
 
 type IncomingAccessRequest struct {

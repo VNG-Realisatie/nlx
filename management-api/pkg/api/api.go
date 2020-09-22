@@ -24,6 +24,7 @@ import (
 	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/directory"
 	"go.nlx.io/nlx/management-api/pkg/environment"
@@ -84,6 +85,7 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, cert, orgCert *com
 	grpcServer := newGRPCServer(logger, cert)
 
 	api.RegisterManagementServer(grpcServer, managementService)
+	external.RegisterAccessRequestServiceServer(grpcServer, managementService)
 
 	e := &environment.Environment{
 		OrganizationName: orgCert.Certificate().Subject.Organization[0],
