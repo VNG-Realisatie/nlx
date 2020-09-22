@@ -81,7 +81,7 @@ func TestManagementService_GetSettings(t *testing.T) {
 	}
 }
 
-//nolint:funlen alot of scenario's to test
+//nolint:funlen // alot of scenario's to test
 func TestManagementService_UpdateSettings(t *testing.T) {
 	tests := []struct {
 		name             string
