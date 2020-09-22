@@ -19,13 +19,13 @@ import {matchPath} from '@docusaurus/router';
 import styles from './styles.module.css';
 
 function DocPage(props) {
-  const {route: baseRoute, docsMetadata, location} = props;
+  const {route: baseRoute, versionMetadata, location} = props;
   // case-sensitive route such as it is defined in the sidebar
   const currentRoute =
     baseRoute.routes.find((route) => {
       return matchPath(location.pathname, route);
     }) || {};
-  const {permalinkToSidebar, docsSidebars, version} = docsMetadata;
+  const {permalinkToSidebar, docsSidebars, version} = versionMetadata;
   const sidebar = permalinkToSidebar[currentRoute.path];
   const {
     siteConfig: {themeConfig = {}} = {},

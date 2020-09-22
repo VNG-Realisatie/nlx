@@ -48,7 +48,7 @@ module.exports = {
       {
         docs: {
           path: '../docs',
-          routeBasePath: '',
+          routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl: 'https://gitlab.com/commonground/nlx/nlx/tree/master/docs/docs/',
         },
