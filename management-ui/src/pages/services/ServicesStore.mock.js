@@ -23,6 +23,7 @@ export const mockServicesStore = ({
       addService,
     },
   })
+
 export const mockServiceModel = (service, fetch = jest.fn()) => ({
   ...service,
   fetch,

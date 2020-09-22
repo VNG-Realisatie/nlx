@@ -6,23 +6,17 @@ import { arrayOf, bool, func, shape, string } from 'prop-types'
 import { observer } from 'mobx-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
-import { Table } from '@commonground/design-system'
 
-import Amount from '../../../../components/Amount'
-import Collapsible from '../../../../components/Collapsible'
 import EditButton from '../../../../components/EditButton'
 import {
-  DetailHeading,
   DetailHeadingLight,
   SectionGroup,
-  StyledCollapsibleBody,
-  StyledCollapsibleEmptyBody,
 } from '../../../../components/DetailView'
-import { IconHidden, IconInway, IconVisible } from '../../../../icons'
+import { IconHidden, IconVisible } from '../../../../icons'
 import { showServiceVisibilityAlert } from '../../../../components/ServiceVisibilityAlert'
+import InwaysSection from './InwaysSection'
 import {
   StyledActionsBar,
-  StyledInwayName,
   StyledRemoveButton,
   StyledServiceVisibilityAlert,
 } from './index.styles'
@@ -37,6 +31,7 @@ const ServiceDetailView = ({ service, removeHandler }) => {
       removeHandler()
     }
   }
+
   return (
     <>
       {showServiceVisibilityAlert({ internal, inways }) ? (
@@ -70,44 +65,7 @@ const ServiceDetailView = ({ service, removeHandler }) => {
           )}
         </DetailHeadingLight>
 
-        <Collapsible
-          title={
-            <DetailHeading data-testid="service-inways">
-              <IconInway />
-              {t('Inways')}
-              <Amount value={inways.length} />
-            </DetailHeading>
-          }
-          ariaLabel={t('Inways')}
-        >
-          <StyledCollapsibleBody>
-            <Table data-testid="service-inways-list" role="grid" withLinks>
-              <tbody>
-                {inways.length ? (
-                  inways.map((inway, i) => (
-                    <Table.Tr
-                      key={i}
-                      data-testid={`service-inway-${i}`}
-                      to={`/inways/${inway}`}
-                    >
-                      <Table.Td>
-                        <StyledInwayName>{inway}</StyledInwayName>
-                      </Table.Td>
-                    </Table.Tr>
-                  ))
-                ) : (
-                  <Table.Tr data-testid="service-no-inways">
-                    <Table.Td>
-                      <StyledCollapsibleEmptyBody>
-                        {t('No inways have been added')}
-                      </StyledCollapsibleEmptyBody>
-                    </Table.Td>
-                  </Table.Tr>
-                )}
-              </tbody>
-            </Table>
-          </StyledCollapsibleBody>
-        </Collapsible>
+        <InwaysSection />
       </SectionGroup>
     </>
   )

@@ -14,14 +14,14 @@ import { arrayOf, shape, string } from 'prop-types'
 
 export const inwayModelPropTypes = {
   name: string.isRequired,
-  hostname: string.isRequired,
-  selfAddress: string.isRequired,
+  hostname: string,
+  selfAddress: string,
   services: arrayOf(
     shape({
       name: string.isRequired,
     }),
-  ).isRequired,
-  version: string.isRequired,
+  ),
+  version: string,
 }
 
 class InwayModel {

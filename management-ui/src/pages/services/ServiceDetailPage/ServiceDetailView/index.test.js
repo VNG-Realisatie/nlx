@@ -14,10 +14,6 @@ const service = {
 }
 
 describe('ServiceDetails', () => {
-  beforeEach(() => {
-    jest.useFakeTimers()
-  })
-
   it('should display', () => {
     const { getByTestId } = renderWithProviders(
       <Router>
@@ -28,6 +24,7 @@ describe('ServiceDetails', () => {
     expect(getByTestId('service-published')).toHaveTextContent(
       'visible.svg' + 'Published in central directory', // eslint-disable-line no-useless-concat
     )
+
     expect(getByTestId('service-inways')).toHaveTextContent(
       'inway.svg' + 'Inways' + '0', // eslint-disable-line no-useless-concat
     )
@@ -47,39 +44,6 @@ describe('ServiceDetails', () => {
     expect(getByTestId('service-published')).toHaveTextContent(
       'hidden.svg' + 'Not visible in central directory', // eslint-disable-line no-useless-concat
     )
-  })
-
-  it('should show an inway', async () => {
-    const { getByTestId, queryByTestId } = renderWithProviders(
-      <Router>
-        <ServiceDetails
-          service={{
-            ...service,
-            inways: ['inway 1'],
-          }}
-        />
-      </Router>,
-    )
-    expect(getByTestId('service-inways')).toHaveTextContent(
-      'inway.svg' + 'Inways' + '1', // eslint-disable-line no-useless-concat
-    )
-    expect(queryByTestId('service-inways-list')).toBeNull()
-
-    fireEvent.click(getByTestId('service-inways'))
-    jest.runAllTimers()
-    expect(getByTestId('service-inways-list')).toBeTruthy()
-    expect(getByTestId('service-inway-0')).toHaveTextContent('inway 1')
-  })
-
-  it('should show a block for an empty list of inways', async () => {
-    const { getByTestId } = renderWithProviders(
-      <Router>
-        <ServiceDetails service={service} />
-      </Router>,
-    )
-    fireEvent.click(getByTestId('service-inways'))
-
-    expect(getByTestId('service-no-inways')).toBeTruthy()
   })
 
   it('should call the removeHandler on remove', () => {
