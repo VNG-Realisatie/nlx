@@ -4,6 +4,10 @@
 import { action, decorate, flow, observable } from 'mobx'
 import { arrayOf, bool, func, string } from 'prop-types'
 import { createModelSchema, list, primitive, serialize } from 'serializr'
+import {
+  ACCESS_REQUEST_STATES,
+  createIncomingAccessRequest,
+} from './IncomingAccessRequestModel'
 
 export const serviceModelPropTypes = {
   name: string.isRequired,
@@ -28,6 +32,7 @@ class ServiceModel {
   techSupportContact = ''
   publicSupportContact = ''
   inways = []
+  incomingAccessRequests = []
 
   constructor({ store, service }) {
     this.store = store
@@ -36,7 +41,7 @@ class ServiceModel {
   }
 
   fetch = flow(function* fetch() {
-    const service = yield this.store.domain.getByName(this.name)
+    const service = yield this.store.serviceRepository.getByName(this.name)
     this.with(service)
   })
 
@@ -52,9 +57,33 @@ class ServiceModel {
 
   update = flow(function* update(values) {
     this.with(values)
-    yield this.store.domain.update(this.name, serialize(this))
+    yield this.store.serviceRepository.update(this.name, serialize(this))
     return this
   })
+
+  fetchIncomingAccessRequests = flow(function* fetchIncomingAccessRequests() {
+    const accessRequests = yield this.store.accessRequestRepository.getIncomingAccessRequests(
+      this.name,
+    )
+
+    this.incomingAccessRequests = accessRequests
+      .filter(
+        (accessRequest) =>
+          accessRequest.state === ACCESS_REQUEST_STATES.RECEIVED,
+      )
+      .map((accessRequest) =>
+        createIncomingAccessRequest({
+          store: this,
+          accessRequestData: accessRequest,
+        }),
+      )
+  })
+
+  removeIncomingAccessRequest = function (removeWithId) {
+    this.incomingAccessRequests = this.incomingAccessRequests.filter(
+      ({ id }) => id !== removeWithId,
+    )
+  }
 }
 
 createModelSchema(ServiceModel, {
@@ -77,8 +106,11 @@ decorate(ServiceModel, {
   techSupportContact: observable,
   publicSupportContact: observable,
   inways: observable,
+  incomingAccessRequests: observable,
   fetch: action.bound,
   update: action.bound,
+  fetchIncomingAccessRequests: action.bound,
+  tempRemoveFromList: action,
 })
 
 export const createService = (...args) => new ServiceModel(...args)

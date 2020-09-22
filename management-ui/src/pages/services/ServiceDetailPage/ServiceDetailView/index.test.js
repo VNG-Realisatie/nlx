@@ -5,7 +5,7 @@ import React from 'react'
 import { MemoryRouter as Router } from 'react-router-dom'
 import { fireEvent } from '@testing-library/react'
 import { renderWithProviders } from '../../../../test-utils'
-import ServiceDetails from './index'
+import ServiceDetailView from './index'
 
 const service = {
   name: 'name',
@@ -17,7 +17,7 @@ describe('ServiceDetails', () => {
   it('should display', () => {
     const { getByTestId } = renderWithProviders(
       <Router>
-        <ServiceDetails service={service} />
+        <ServiceDetailView service={service} removeHandler={jest.fn()} />
       </Router>,
     )
 
@@ -33,11 +33,12 @@ describe('ServiceDetails', () => {
   it('should show hidden icon', () => {
     const { getByTestId } = renderWithProviders(
       <Router>
-        <ServiceDetails
+        <ServiceDetailView
           service={{
             ...service,
             internal: true,
           }}
+          removeHandler={jest.fn()}
         />
       </Router>,
     )
@@ -51,7 +52,7 @@ describe('ServiceDetails', () => {
     jest.spyOn(window, 'confirm').mockResolvedValue(true)
     const { getByTestId } = renderWithProviders(
       <Router>
-        <ServiceDetails removeHandler={handleRemove} service={service} />
+        <ServiceDetailView service={service} removeHandler={handleRemove} />
       </Router>,
     )
 

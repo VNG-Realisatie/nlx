@@ -3,6 +3,7 @@
 //
 import { action, decorate, flow, observable } from 'mobx'
 import ServiceRepository from '../../domain/service-repository'
+import AccessRequestRepository from '../../domain/access-request-repository'
 import { createService } from '../../models/ServiceModel'
 
 class ServicesStore {
@@ -13,9 +14,14 @@ class ServicesStore {
   // This is internal state to prevent concurrent fetchServices calls being in flight.
   isFetching = false
 
-  constructor({ rootStore, domain = ServiceRepository }) {
+  constructor({
+    rootStore,
+    serviceRepository = ServiceRepository,
+    accessRequestRepository = AccessRequestRepository,
+  }) {
     this.rootStore = rootStore
-    this.domain = domain
+    this.serviceRepository = serviceRepository
+    this.accessRequestRepository = accessRequestRepository
 
     this.services = []
     this.error = ''
@@ -32,7 +38,7 @@ class ServicesStore {
     this.error = ''
 
     try {
-      const services = yield this.domain.getAll()
+      const services = yield this.serviceRepository.getAll()
       this.services = services.map((service) =>
         createService({ store: this, service }),
       )
@@ -57,7 +63,7 @@ class ServicesStore {
   }
 
   removeService = flow(function* removeService(service) {
-    yield this.domain.remove(service)
+    yield this.serviceRepository.remove(service)
     const removed = this.services.remove(service)
     if (!removed) {
       this.fetchServices()
@@ -65,7 +71,7 @@ class ServicesStore {
   })
 
   addService = flow(function* addService(service) {
-    const newService = yield this.domain.create(service)
+    const newService = yield this.serviceRepository.create(service)
     const serviceModel = createService({ store: this, service: newService })
 
     this.services.push(serviceModel)

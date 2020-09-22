@@ -2,14 +2,27 @@
 // Licensed under the EUPL
 //
 
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
-export const StyledAmount = styled.span`
+const normalStyle = css`
   color: ${(p) => p.theme.colorTextLabel};
-  font-weight: ${(p) => p.theme.tokens.fontWeightRegular};
 
   &:before {
     content: '·';
     padding: 0 ${(p) => p.theme.tokens.spacing03};
   }
+`
+
+const accentedStyle = css`
+  padding: 0 ${(p) => p.theme.tokens.spacing04};
+  margin-left: ${(p) => p.theme.tokens.spacing04};
+  color: ${(p) => p.theme.tokens.colorBackgroundAlt};
+  background-color: ${(p) => p.theme.colorTextLabel};
+  border-radius: ${(p) => p.theme.tokens.fontSizeMedium};
+`
+
+export const StyledAmount = styled.span`
+  font-weight: ${(p) => p.theme.tokens.fontWeightRegular};
+
+  ${(p) => (p.isAccented ? accentedStyle : normalStyle)};
 `

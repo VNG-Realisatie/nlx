@@ -14,9 +14,9 @@ class DirectoryStore {
   // This is internal state to prevent concurrent fetchServices calls being in flight.
   isFetching = false
 
-  constructor({ rootStore, domain = DirectoryRepository }) {
+  constructor({ rootStore, directoryRepository = DirectoryRepository }) {
     this.rootStore = rootStore
-    this.domain = domain
+    this.directoryRepository = directoryRepository
 
     this.services = []
     // @TODO:
@@ -36,7 +36,7 @@ class DirectoryStore {
     this.error = ''
 
     try {
-      const services = yield this.domain.getAll()
+      const services = yield this.directoryRepository.getAll()
       this.services = services.map((service) =>
         createDirectoryService({ store: this, service }),
       )

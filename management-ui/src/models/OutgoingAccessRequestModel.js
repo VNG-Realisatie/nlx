@@ -9,9 +9,10 @@ import AccessRequestRepository from '../domain/access-request-repository'
 export const ACCESS_REQUEST_STATES = {
   CREATED: 'CREATED',
   FAILED: 'FAILED',
+  RECEIVED: 'RECEIVED',
   CANCELLED: 'CANCELLED',
   REJECTED: 'REJECTED',
-  ACCEPTED: 'ACCEPTED',
+  APPROVED: 'APPROVED',
 }
 
 export const UNSUCCESSFUL_ACCESS_REQUEST_STATES = [
@@ -26,9 +27,9 @@ export const outgoingAccessRequestPropTypes = {
   state: string,
   createdAt: string,
   updatedAt: string,
+
   send: func,
   isOpen: bool,
-
   error: string,
 }
 
@@ -44,8 +45,11 @@ class OutgoingAccessRequestModel {
     return !UNSUCCESSFUL_ACCESS_REQUEST_STATES.includes(this.state)
   }
 
-  constructor({ accessRequestData, domain = AccessRequestRepository }) {
-    this.domain = domain
+  constructor({
+    accessRequestData,
+    accessRequestRepository = AccessRequestRepository,
+  }) {
+    this.accessRequestRepository = accessRequestRepository
     this.update(accessRequestData)
 
     this.error = ''
@@ -72,7 +76,7 @@ class OutgoingAccessRequestModel {
 
       this.update({ state: ACCESS_REQUEST_STATES.CREATED })
 
-      const result = yield this.domain.requestAccess({
+      const result = yield this.accessRequestRepository.requestAccess({
         organizationName: this.organizationName,
         serviceName: this.serviceName,
       })
@@ -81,7 +85,7 @@ class OutgoingAccessRequestModel {
       this.update(result)
     } catch (e) {
       this.error = e
-      throw e
+      console.error(e)
     }
   })
 }
@@ -91,6 +95,7 @@ decorate(OutgoingAccessRequestModel, {
   isOpen: computed,
   update: action.bound,
   send: action.bound,
+  error: observable,
 })
 
 export const createAccessRequestInstance = (requestData) => {

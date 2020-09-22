@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React from 'react'
+import React, { useEffect } from 'react'
 import { string, shape } from 'prop-types'
 import { useParams, useHistory } from 'react-router-dom'
 import { Alert, Drawer } from '@commonground/design-system'
@@ -18,6 +18,11 @@ const ServiceDetailPage = ({ parentUrl, service }) => {
   const { t } = useTranslation()
   const history = useHistory()
   const { removeService } = useServicesStore()
+
+  useEffect(() => {
+    service && service.fetchIncomingAccessRequests()
+    // TODO: cancel request on unmount?
+  }, [service])
 
   const close = () => history.push(parentUrl)
   const handleRemove = async () => {

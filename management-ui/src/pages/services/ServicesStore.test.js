@@ -10,27 +10,37 @@ jest.mock('../../models/ServiceModel', () => ({
 }))
 
 let rootStore
-let domain
+let serviceRepository
+let accessRequestRepository
 
 beforeEach(() => {
   rootStore = {}
-  domain = {}
+  serviceRepository = {}
+  accessRequestRepository = {}
 })
 
 test('createServicesStore returns an instance', () => {
-  const directoryStore = createServicesStore({ rootStore, domain })
+  const directoryStore = createServicesStore({
+    rootStore,
+    serviceRepository,
+    accessRequestRepository,
+  })
   expect(directoryStore).toBeInstanceOf(ServicesStore)
 })
 
 test('fetching services', async () => {
   const request = deferredPromise()
-  domain = {
+  serviceRepository = {
     getAll: jest.fn(() => request),
   }
 
   const serviceList = [{ name: 'Service A' }, { name: 'Service B' }]
 
-  const servicesStore = new ServicesStore({ rootStore, domain })
+  const servicesStore = new ServicesStore({
+    rootStore,
+    serviceRepository,
+    accessRequestRepository,
+  })
 
   expect(servicesStore.isInitiallyFetched).toBe(false)
   expect(servicesStore.services).toEqual([])
@@ -38,7 +48,7 @@ test('fetching services', async () => {
   servicesStore.fetchServices()
 
   expect(servicesStore.isInitiallyFetched).toBe(false)
-  expect(domain.getAll).toHaveBeenCalled()
+  expect(serviceRepository.getAll).toHaveBeenCalled()
 
   await request.resolve(serviceList)
 
@@ -49,18 +59,22 @@ test('fetching services', async () => {
 
 test('handle error while fetching services', async () => {
   const request = deferredPromise()
-  domain = {
+  serviceRepository = {
     getAll: jest.fn(() => request),
   }
 
-  const servicesStore = new ServicesStore({ rootStore, domain })
+  const servicesStore = new ServicesStore({
+    rootStore,
+    serviceRepository,
+    accessRequestRepository,
+  })
 
   expect(servicesStore.services).toEqual([])
 
   servicesStore.fetchServices()
 
   expect(servicesStore.isInitiallyFetched).toBe(false)
-  expect(domain.getAll).toHaveBeenCalled()
+  expect(serviceRepository.getAll).toHaveBeenCalled()
 
   await request.reject('some error')
 
@@ -74,7 +88,11 @@ test('selecting a service', () => {
   const mockServiceModelB = mockServiceModel({ name: 'Service B' })
   const serviceList = [mockServiceModelA, mockServiceModelB]
 
-  const servicesStore = new ServicesStore({ rootStore, domain })
+  const servicesStore = new ServicesStore({
+    rootStore,
+    serviceRepository,
+    accessRequestRepository,
+  })
   servicesStore.services = serviceList
 
   const selectedService = servicesStore.selectService('Service A')
@@ -89,31 +107,39 @@ test('removing a service', async () => {
     mockServiceModel({ name: 'Service A' }),
     mockServiceModel({ name: 'Service B' }),
   ]
-  domain = { remove: jest.fn() }
+  serviceRepository = { remove: jest.fn() }
 
-  const servicesStore = new ServicesStore({ rootStore, domain })
+  const servicesStore = new ServicesStore({
+    rootStore,
+    serviceRepository,
+    accessRequestRepository,
+  })
   servicesStore.services = serviceList
 
   const selectedService = servicesStore.selectService('Service A')
 
   await servicesStore.removeService(selectedService)
 
-  expect(domain.remove).toHaveBeenCalled()
+  expect(serviceRepository.remove).toHaveBeenCalled()
   expect(servicesStore.services).not.toContain(selectedService)
 })
 
 test('adding a service', async () => {
   const serviceList = [{ name: 'Service A' }, { name: 'Service B' }]
-  domain = {
+  serviceRepository = {
     create: jest.fn((service) => ({ ...service })),
   }
 
-  const servicesStore = new ServicesStore({ rootStore, domain })
+  const servicesStore = new ServicesStore({
+    rootStore,
+    serviceRepository,
+    accessRequestRepository,
+  })
   servicesStore.services = serviceList
 
   const newService = { name: 'Service C' }
   await servicesStore.addService(newService)
 
-  expect(domain.create).toHaveBeenCalled()
+  expect(serviceRepository.create).toHaveBeenCalled()
   expect(servicesStore.services).toContainEqual(newService)
 })

@@ -10,27 +10,28 @@ jest.mock('../../models/InwayModel', () => ({
 }))
 
 let rootStore
-let domain
+let inwayRepository
 
 beforeEach(() => {
   rootStore = {}
-  domain = {}
+  inwayRepository = {}
 })
 
 test('createInwaysStore returns an instance', () => {
-  const store = createInwaysStore({ rootStore, domain })
+  const store = createInwaysStore({ rootStore, inwayRepository })
   expect(store).toBeInstanceOf(InwaysStore)
 })
 
 test('fetching inways', async () => {
   const request = deferredPromise()
-  domain = {
+  inwayRepository = {
     getAll: jest.fn(() => request),
   }
 
-  const inwaysList = [{ name: 'Inway A' }, { name: 'Inway B' }]
-
-  const inwaysStore = new InwaysStore({ rootStore, domain })
+  const inwaysStore = new InwaysStore({
+    rootStore,
+    inwayRepository,
+  })
 
   expect(inwaysStore.isInitiallyFetched).toBe(false)
   expect(inwaysStore.inways).toEqual([])
@@ -38,29 +39,33 @@ test('fetching inways', async () => {
   inwaysStore.fetchInways()
 
   expect(inwaysStore.isInitiallyFetched).toBe(false)
-  expect(domain.getAll).toHaveBeenCalled()
+  expect(inwayRepository.getAll).toHaveBeenCalled()
 
+  const inwaysList = [{ name: 'Inway A' }, { name: 'Inway B' }]
   await request.resolve(inwaysList)
 
-  await expect(inwaysStore.isInitiallyFetched).toBe(true)
+  expect(inwaysStore.isInitiallyFetched).toBe(true)
   expect(inwaysStore.inways).toHaveLength(2)
   expect(inwaysStore.inways).not.toBe([])
 })
 
 test('handle error while fetching inways', async () => {
   const request = deferredPromise()
-  domain = {
+  inwayRepository = {
     getAll: jest.fn(() => request),
   }
 
-  const inwaysStore = new InwaysStore({ rootStore, domain })
+  const inwaysStore = new InwaysStore({
+    rootStore,
+    inwayRepository,
+  })
 
   expect(inwaysStore.inways).toEqual([])
 
   inwaysStore.fetchInways()
 
   expect(inwaysStore.isInitiallyFetched).toBe(false)
-  expect(domain.getAll).toHaveBeenCalled()
+  expect(inwayRepository.getAll).toHaveBeenCalled()
 
   await request.reject('some error')
 
@@ -69,17 +74,47 @@ test('handle error while fetching inways', async () => {
   expect(inwaysStore.isInitiallyFetched).toBe(true)
 })
 
-test('selecting a service', () => {
+test('selecting an inway', async () => {
   const mockInwayModelA = mockInwayModel({ name: 'Inway A' })
   const mockInwayModelB = mockInwayModel({ name: 'Inway B' })
-  const inwayList = [mockInwayModelA, mockInwayModelB]
+  const mockInwayModelC = mockInwayModel({ name: 'Inway C' })
 
-  const inwaysStore = new InwaysStore({ rootStore, domain })
-  inwaysStore.inways = inwayList
+  inwayRepository = {
+    getAll: jest
+      .fn()
+      .mockResolvedValue([mockInwayModelA, mockInwayModelB, mockInwayModelC]),
+  }
 
-  const selectedService = inwaysStore.selectInway('Inway A')
+  const inwaysStore = new InwaysStore({ rootStore, inwayRepository })
+  await inwaysStore.fetchInways()
 
-  expect(selectedService).toEqual(inwayList[0])
-  expect(mockInwayModelA.fetch).toHaveBeenCalled()
+  const selectedInway = inwaysStore.selectInway('Inway B')
+
+  expect(selectedInway.name).toEqual('Inway B')
+  expect(mockInwayModelB.fetch).toHaveBeenCalled()
+
+  expect(mockInwayModelA.fetch).not.toHaveBeenCalled()
+  expect(mockInwayModelC.fetch).not.toHaveBeenCalled()
+})
+
+test('selecting an inway that is not present in the store', async () => {
+  const mockInwayModelA = mockInwayModel({ name: 'Inway A' })
+  const mockInwayModelB = mockInwayModel({ name: 'Inway B' })
+  const mockInwayModelC = mockInwayModel({ name: 'Inway C' })
+
+  inwayRepository = {
+    getAll: jest
+      .fn()
+      .mockResolvedValue([mockInwayModelA, mockInwayModelB, mockInwayModelC]),
+  }
+
+  const inwaysStore = new InwaysStore({ rootStore, inwayRepository })
+  await inwaysStore.fetchInways()
+
+  const selectedInway = inwaysStore.selectInway('arbitrary inway name')
+  expect(selectedInway).toBeUndefined()
+
+  expect(mockInwayModelA.fetch).not.toHaveBeenCalled()
   expect(mockInwayModelB.fetch).not.toHaveBeenCalled()
+  expect(mockInwayModelC.fetch).not.toHaveBeenCalled()
 })

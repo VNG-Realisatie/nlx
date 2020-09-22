@@ -1,9 +1,8 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-
 import React from 'react'
-import { number } from 'prop-types'
+import { number, bool } from 'prop-types'
 import { StyledAmount } from './index.styles'
 
 const Amount = ({ value, ...props }) => (
@@ -12,6 +11,11 @@ const Amount = ({ value, ...props }) => (
 
 Amount.propTypes = {
   value: number.isRequired,
+  isAccented: bool,
+}
+
+Amount.defaultProps = {
+  isAccented: false,
 }
 
 export default Amount

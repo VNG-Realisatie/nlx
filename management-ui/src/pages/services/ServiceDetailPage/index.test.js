@@ -18,13 +18,22 @@ jest.mock('./ServiceDetailView', () => ({ removeHandler }) => (
     </button>
   </div>
 ))
+
+let fetchIncomingAccessRequests
+
+beforeEach(() => {
+  fetchIncomingAccessRequests = jest.fn()
+})
+
 test('display service details', () => {
   const store = mockServicesStore({})
   const { getByTestId, getByText } = renderWithProviders(
     <StaticRouter location="/services/forty-two">
       <Route path="/services/:name">
         <StoreProvider store={store}>
-          <ServiceDetailPage service={{ name: 'forty-two' }} />
+          <ServiceDetailPage
+            service={{ name: 'forty-two', fetchIncomingAccessRequests }}
+          />
         </StoreProvider>
       </Route>
     </StaticRouter>,
@@ -91,7 +100,9 @@ test('removing the service', async () => {
     <Router history={history}>
       <Route path="/services/:name">
         <StoreProvider store={store}>
-          <ServiceDetailPage service={{ name: 'dummy-service' }} />
+          <ServiceDetailPage
+            service={{ name: 'dummy-service', fetchIncomingAccessRequests }}
+          />
         </StoreProvider>
       </Route>
     </Router>,

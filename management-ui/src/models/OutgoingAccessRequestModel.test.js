@@ -13,7 +13,7 @@ jest.mock('../domain/access-request-repository', (obj) => obj)
 
 let serviceData
 let accessRequestJson
-let domain
+let accessRequestRepository
 
 beforeEach(() => {
   serviceData = {
@@ -28,7 +28,7 @@ beforeEach(() => {
     updatedAt: 'datetime2',
   }
 
-  domain = {
+  accessRequestRepository = {
     requestAccess: jest.fn(),
   }
 })
@@ -37,7 +37,7 @@ test('model implements proptypes', () => {
   const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
   const accessRequest = new OutgoingAccessRequestModel({
     json: accessRequestJson,
-    domain,
+    accessRequestRepository,
   })
 
   checkPropTypes(
@@ -59,13 +59,13 @@ test('createAccessRequestInstance creates an instance', () => {
 
 test('sending a request', async () => {
   const request = deferredPromise()
-  domain = {
+  accessRequestRepository = {
     requestAccess: jest.fn(() => request),
   }
 
   const accessRequest = new OutgoingAccessRequestModel({
     json: serviceData,
-    domain,
+    accessRequestRepository,
   })
 
   expect(accessRequest.state).toBe('')
@@ -73,7 +73,7 @@ test('sending a request', async () => {
   accessRequest.send()
 
   expect(accessRequest.state).toBe('CREATED')
-  expect(domain.requestAccess).toHaveBeenCalled()
+  expect(accessRequestRepository.requestAccess).toHaveBeenCalled()
 
   await request.resolve(accessRequestJson)
 
@@ -83,7 +83,7 @@ test('sending a request', async () => {
 test('update should ignore properties that do not belong on object', () => {
   const accessRequest = new OutgoingAccessRequestModel({
     json: accessRequestJson,
-    domain,
+    accessRequestRepository,
   })
 
   accessRequest.update({ yada: 'blada' })

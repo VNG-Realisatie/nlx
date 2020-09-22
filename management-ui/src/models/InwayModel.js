@@ -38,7 +38,7 @@ class InwayModel {
   }
 
   fetch = flow(function* fetch() {
-    const inway = yield this.store.domain.getByName(this.name)
+    const inway = yield this.store.inwayRepository.getByName(this.name)
     this.with(inway)
   })
 

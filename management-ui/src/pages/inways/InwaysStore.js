@@ -13,9 +13,9 @@ class InwaysStore {
   // This is internal state to prevent concurrent fetchInways calls being in flight.
   isFetching = false
 
-  constructor({ rootStore, domain = InwayRepository }) {
+  constructor({ rootStore, inwayRepository = InwayRepository }) {
     this.rootStore = rootStore
-    this.domain = domain
+    this.inwayRepository = inwayRepository
 
     this.inways = []
     this.error = ''
@@ -32,7 +32,7 @@ class InwaysStore {
     this.error = ''
 
     try {
-      const inways = yield this.domain.getAll()
+      const inways = yield this.inwayRepository.getAll()
       this.inways = inways.map((inway) => createInway({ store: this, inway }))
     } catch (e) {
       this.error = e

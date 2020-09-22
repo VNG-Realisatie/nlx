@@ -40,7 +40,7 @@ class DirectoryServiceModel {
   }
 
   fetch = flow(function* fetch() {
-    const service = yield this.store.domain.getByName(
+    const service = yield this.store.directoryRepository.getByName(
       this.organizationName,
       this.serviceName,
     )

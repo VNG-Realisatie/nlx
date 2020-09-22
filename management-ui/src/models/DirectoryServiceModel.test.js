@@ -56,7 +56,7 @@ test('model implements proptypes', () => {
 test('fetches data', async () => {
   const request = deferredPromise()
   store = {
-    domain: {
+    directoryRepository: {
       getByName: jest.fn(() => request),
     },
   }
@@ -67,7 +67,7 @@ test('fetches data', async () => {
 
   directoryService.fetch()
 
-  expect(store.domain.getByName).toHaveBeenCalled()
+  expect(store.directoryRepository.getByName).toHaveBeenCalled()
 
   await request.resolve({
     state: 'down',

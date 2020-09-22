@@ -44,7 +44,7 @@ test('model implements proptypes', () => {
 test('fetches data', async () => {
   const request = deferredPromise()
   store = {
-    domain: {
+    serviceRepository: {
       getByName: jest.fn(() => request),
     },
   }
@@ -53,7 +53,7 @@ test('fetches data', async () => {
 
   serviceModel.fetch()
 
-  expect(store.domain.getByName).toHaveBeenCalled()
+  expect(store.serviceRepository.getByName).toHaveBeenCalled()
 
   await request.resolve({
     ...service,
@@ -65,14 +65,14 @@ test('fetches data', async () => {
 
 test('updates service', async () => {
   store = {
-    domain: {
+    serviceRepository: {
       update: jest.fn(async (name, service) => ({ ...service })),
     },
   }
   const serviceModel = new ServiceModel({ store, service })
 
   await serviceModel.update({ ...service, internal: true })
-  await expect(store.domain.update).toHaveBeenCalledWith(
+  await expect(store.serviceRepository.update).toHaveBeenCalledWith(
     service.name,
     expect.objectContaining({ name: service.name, internal: true }),
   )

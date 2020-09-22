@@ -34,7 +34,7 @@ test('model implements proptypes', () => {
 test('fetches data', async () => {
   const request = deferredPromise()
   store = {
-    domain: {
+    inwayRepository: {
       getByName: jest.fn(() => request),
     },
   }
@@ -43,7 +43,7 @@ test('fetches data', async () => {
 
   inwayModel.fetch()
 
-  expect(store.domain.getByName).toHaveBeenCalled()
+  expect(store.inwayRepository.getByName).toHaveBeenCalled()
 
   await request.resolve(inway)
 

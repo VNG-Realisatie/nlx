@@ -24,14 +24,19 @@ const DirectoryServiceRow = ({ service }) => {
     latestAccessRequest,
   } = service
 
-  const requestAccess = (evt) => {
-    evt.stopPropagation() // Prevent triggering click on table row
+  const handleQuickAccessButtonClick = (event) => {
+    event.stopPropagation()
+    requestAccess()
+  }
 
+  const requestAccess = () => {
     const confirmed = window.confirm(
       t('The request will be sent to', { name: organizationName }),
     )
 
-    if (confirmed) service.requestAccess()
+    if (confirmed) {
+      service.requestAccess()
+    }
   }
 
   return (
@@ -50,7 +55,7 @@ const DirectoryServiceRow = ({ service }) => {
         {latestAccessRequest ? (
           <AccessRequestMessage latestAccessRequest={latestAccessRequest} />
         ) : (
-          <QuickAccessButton onClick={requestAccess} />
+          <QuickAccessButton onClick={handleQuickAccessButtonClick} />
         )}
       </StyledTdAccess>
     </Table.Tr>

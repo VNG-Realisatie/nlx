@@ -19,14 +19,21 @@ const { FAILED, RECEIVED } = ACCESS_REQUEST_STATES
 
 const DirectoryDetailView = ({ service }) => {
   const { t } = useTranslation()
-  const { latestAccessRequest } = service
+  const { organizationName, latestAccessRequest } = service
+
+  const onRequestAccessButtonClick = (event) => {
+    event.stopPropagation()
+    requestAccess()
+  }
 
   const requestAccess = () => {
     const confirmed = window.confirm(
-      t('The request will be sent to', { name: service.organizationName }),
+      t('The request will be sent to', { name: organizationName }),
     )
 
-    if (confirmed) service.requestAccess()
+    if (confirmed) {
+      service.requestAccess()
+    }
   }
 
   let icon = Spinner
@@ -60,7 +67,9 @@ const DirectoryDetailView = ({ service }) => {
             <>
               <IconItem as={IconKey} />
               <StateItem>{t('You have no access')}</StateItem>
-              <Button onClick={requestAccess}>{t('Request Access')}</Button>
+              <Button onClick={onRequestAccessButtonClick}>
+                {t('Request Access')}
+              </Button>
             </>
           )}
         </AccessSection>

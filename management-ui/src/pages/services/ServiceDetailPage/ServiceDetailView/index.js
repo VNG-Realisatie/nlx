@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { arrayOf, bool, func, shape, string } from 'prop-types'
+import { arrayOf, array, bool, func, shape, string } from 'prop-types'
 import { observer } from 'mobx-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
@@ -15,6 +15,7 @@ import {
 import { IconHidden, IconVisible } from '../../../../icons'
 import { showServiceVisibilityAlert } from '../../../../components/ServiceVisibilityAlert'
 import InwaysSection from './InwaysSection'
+import AccessRequestsSection from './AccessRequestsSection'
 import {
   StyledActionsBar,
   StyledRemoveButton,
@@ -65,7 +66,11 @@ const ServiceDetailView = ({ service, removeHandler }) => {
           )}
         </DetailHeadingLight>
 
-        <InwaysSection />
+        <InwaysSection inways={inways} />
+
+        <AccessRequestsSection
+          accessRequests={service.incomingAccessRequests}
+        />
       </SectionGroup>
     </>
   )
@@ -80,12 +85,11 @@ ServiceDetailView.propTypes = {
     techSupportContact: string,
     publicSupportContact: string,
     inways: arrayOf(string),
+    incomingAccessRequests: array,
   }).isRequired,
   removeHandler: func.isRequired,
 }
 
-ServiceDetailView.defaultProps = {
-  removeHandler: () => {},
-}
+ServiceDetailView.defaultProps = {}
 
 export default observer(ServiceDetailView)

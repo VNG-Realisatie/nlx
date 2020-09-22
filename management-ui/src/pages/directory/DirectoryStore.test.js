@@ -10,21 +10,24 @@ jest.mock('../../models/DirectoryServiceModel', () => ({
 }))
 
 let rootStore
-let domain
+let directoryRepository
 
 beforeEach(() => {
   rootStore = {}
-  domain = {}
+  directoryRepository = {}
 })
 
 test('createDirectoryStore returns an instance', () => {
-  const directoryStore = createDirectoryStore({ rootStore, domain })
+  const directoryStore = createDirectoryStore({
+    rootStore,
+    directoryRepository,
+  })
   expect(directoryStore).toBeInstanceOf(DirectoryStore)
 })
 
 test('fetching directory services', async () => {
   const request = deferredPromise()
-  domain = {
+  directoryRepository = {
     getAll: jest.fn().mockReturnValue(request),
   }
 
@@ -33,7 +36,10 @@ test('fetching directory services', async () => {
     { organizationName: 'Org B', serviceName: 'Service B' },
   ]
 
-  const directoryStore = new DirectoryStore({ rootStore, domain })
+  const directoryStore = new DirectoryStore({
+    rootStore,
+    directoryRepository,
+  })
 
   expect(directoryStore.services).toEqual([])
   expect(directoryStore.isInitiallyFetched).toBe(false)
@@ -41,7 +47,7 @@ test('fetching directory services', async () => {
   directoryStore.fetchServices()
 
   expect(directoryStore.isInitiallyFetched).toBe(false)
-  expect(domain.getAll).toHaveBeenCalled()
+  expect(directoryRepository.getAll).toHaveBeenCalled()
 
   await request.resolve(serviceList)
 
@@ -52,18 +58,21 @@ test('fetching directory services', async () => {
 
 test('handle error while fetching directory services', async () => {
   const request = deferredPromise()
-  domain = {
+  directoryRepository = {
     getAll: jest.fn(() => request),
   }
 
-  const directoryStore = new DirectoryStore({ rootStore, domain })
+  const directoryStore = new DirectoryStore({
+    rootStore,
+    directoryRepository,
+  })
 
   expect(directoryStore.services).toEqual([])
 
   directoryStore.fetchServices()
 
   expect(directoryStore.isInitiallyFetched).toBe(false)
-  expect(domain.getAll).toHaveBeenCalled()
+  expect(directoryRepository.getAll).toHaveBeenCalled()
 
   await request.reject('some error')
 
@@ -85,7 +94,10 @@ test('selecting a directory service', () => {
   })
   const serviceList = [mockDirectoryServiceModelA, mockDirectoryServiceModelB]
 
-  const directoryStore = new DirectoryStore({ rootStore, domain })
+  const directoryStore = new DirectoryStore({
+    rootStore,
+    directoryRepository,
+  })
   directoryStore.services = serviceList
 
   const selectedService = directoryStore.selectService({
