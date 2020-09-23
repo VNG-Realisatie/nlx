@@ -118,30 +118,38 @@ func TestListDirectoryServices(t *testing.T) {
 		},
 	}
 
-	databaseAccessRequests := map[string]*database.AccessRequest{
+	databaseAccessRequests := map[string]*database.OutgoingAccessRequest{
 		"test-organization-b/test-service-3": {
-			ID:               "161c188cfcea1939",
-			OrganizationName: "test-organization-b",
-			ServiceName:      "test-service-3",
-			State:            database.AccessRequestCreated,
-			CreatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
-			UpdatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
+			AccessRequest: database.AccessRequest{
+				ID:               "161c188cfcea1939",
+				OrganizationName: "test-organization-b",
+				ServiceName:      "test-service-3",
+				State:            database.AccessRequestCreated,
+				CreatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
+				UpdatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
+			},
 		},
 		"test-organization-a/test-service-1": {
-			ID:               "161c1bd32da2b400",
-			OrganizationName: "test-organization-a",
-			ServiceName:      "test-service-1",
-			State:            database.AccessRequestCreated,
-			CreatedAt:        time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
-			UpdatedAt:        time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
+			AccessRequest: database.AccessRequest{
+				ID:               "161c1bd32da2b400",
+				OrganizationName: "test-organization-a",
+				ServiceName:      "test-service-1",
+				State:            database.AccessRequestCreated,
+				CreatedAt:        time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
+				UpdatedAt:        time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
+			},
 		},
 	}
 
 	client := mock_directory.NewMockClient(mockCtrl)
-	client.EXPECT().ListServices(ctx, &types.Empty{}).Return(&inspectionapi.ListServicesResponse{Services: clientServices}, nil)
+	client.EXPECT().
+		ListServices(ctx, &types.Empty{}).
+		Return(&inspectionapi.ListServicesResponse{Services: clientServices}, nil)
 
 	db := mock_database.NewMockConfigDatabase(mockCtrl)
-	db.EXPECT().ListAllLatestOutgoingAccessRequests(ctx).Return(databaseAccessRequests, nil)
+	db.EXPECT().
+		ListAllLatestOutgoingAccessRequests(ctx).
+		Return(databaseAccessRequests, nil)
 
 	service := server.NewDirectoryService(logger, env, client, db)
 	response, err := service.ListServices(ctx, &types.Empty{})
@@ -153,7 +161,7 @@ func TestListDirectoryServices(t *testing.T) {
 			OrganizationName:     "test-organization-a",
 			APISpecificationType: "OpenAPI3",
 			State:                api.DirectoryService_unknown,
-			LatestAccessRequest: &api.AccessRequest{
+			LatestAccessRequest: &api.OutgoingAccessRequest{
 				Id:               "161c1bd32da2b400",
 				OrganizationName: "test-organization-a",
 				ServiceName:      "test-service-1",
@@ -173,7 +181,7 @@ func TestListDirectoryServices(t *testing.T) {
 			OrganizationName:     "test-organization-b",
 			APISpecificationType: "",
 			State:                api.DirectoryService_unknown,
-			LatestAccessRequest: &api.AccessRequest{
+			LatestAccessRequest: &api.OutgoingAccessRequest{
 				Id:               "161c188cfcea1939",
 				OrganizationName: "test-organization-b",
 				ServiceName:      "test-service-3",

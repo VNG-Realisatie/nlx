@@ -61,8 +61,8 @@ func (s DirectoryService) ListServices(ctx context.Context, _ *types.Empty) (*ap
 		services[i] = convertDirectoryService(service)
 
 		key := path.Join(service.OrganizationName, service.ServiceName)
-		if a, ok := latestRequests[key]; ok {
-			latestAccessRequest, err := convertAccessRequest(a)
+		if request, ok := latestRequests[key]; ok {
+			latestAccessRequest, err := convertOutgoingAccessRequest(request)
 			if err != nil {
 				s.logger.Error("error getting latest access request", zap.Error(err))
 				return nil, status.Errorf(codes.Internal, "database error")
@@ -96,7 +96,7 @@ func (s DirectoryService) GetOrganizationService(ctx context.Context, request *a
 	}
 
 	if latestAccessRequest != nil {
-		accessRequest, err := convertAccessRequest(latestAccessRequest)
+		accessRequest, err := convertOutgoingAccessRequest(latestAccessRequest)
 		if err != nil {
 			s.logger.Error("error converting access request", zap.Error(err))
 			return nil, status.Errorf(codes.Internal, "database error")
@@ -126,21 +126,23 @@ func (s DirectoryService) getService(ctx context.Context, logger *zap.Logger, or
 }
 
 // RequestAccessToService records an access request and sends it to the organization
-func (s DirectoryService) RequestAccessToService(ctx context.Context, request *api.RequestAccessToServiceRequest) (*api.AccessRequest, error) {
+func (s DirectoryService) RequestAccessToService(ctx context.Context, request *api.RequestAccessToServiceRequest) (*api.OutgoingAccessRequest, error) {
 	logger := s.logger.With(zap.String("organizationName", request.OrganizationName), zap.String("serviceName", request.ServiceName))
 	logger.Info("rpc request RequestAccessToService")
 
-	ar := &database.AccessRequest{
-		OrganizationName: request.OrganizationName,
-		ServiceName:      request.ServiceName,
+	ar := &database.OutgoingAccessRequest{
+		AccessRequest: database.AccessRequest{
+			OrganizationName: request.OrganizationName,
+			ServiceName:      request.ServiceName,
+		},
 	}
 
-	a, err := s.configDatabase.CreateAccessRequest(ctx, ar)
+	accessRequest, err := s.configDatabase.CreateOutgoingAccessRequest(ctx, ar)
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := convertDirectoryAccessRequest(a)
+	response, err := convertDirectoryAccessRequest(accessRequest)
 	if err != nil {
 		return nil, err
 	}
@@ -192,7 +194,7 @@ func convertDirectoryService(s *inspectionapi.ListServicesResponse_Service) *api
 	}
 }
 
-func convertDirectoryAccessRequest(a *database.AccessRequest) (*api.AccessRequest, error) {
+func convertDirectoryAccessRequest(a *database.OutgoingAccessRequest) (*api.OutgoingAccessRequest, error) {
 	createdAt, err := types.TimestampProto(a.CreatedAt)
 	if err != nil {
 		return nil, err
@@ -214,7 +216,7 @@ func convertDirectoryAccessRequest(a *database.AccessRequest) (*api.AccessReques
 		accessRequestState = api.AccessRequestState_RECEIVED
 	}
 
-	return &api.AccessRequest{
+	return &api.OutgoingAccessRequest{
 		Id:        a.ID,
 		State:     accessRequestState,
 		CreatedAt: createdAt,

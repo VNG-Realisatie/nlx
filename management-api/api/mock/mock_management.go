@@ -297,14 +297,14 @@ func (mr *MockManagementClientMockRecorder) ListOutgoingAccessRequests(ctx, in i
 }
 
 // CreateAccessRequest mocks base method
-func (m *MockManagementClient) CreateAccessRequest(ctx context.Context, in *api.CreateAccessRequestRequest, opts ...grpc.CallOption) (*api.AccessRequest, error) {
+func (m *MockManagementClient) CreateAccessRequest(ctx context.Context, in *api.CreateAccessRequestRequest, opts ...grpc.CallOption) (*api.OutgoingAccessRequest, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "CreateAccessRequest", varargs...)
-	ret0, _ := ret[0].(*api.AccessRequest)
+	ret0, _ := ret[0].(*api.OutgoingAccessRequest)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -575,10 +575,10 @@ func (mr *MockManagementServerMockRecorder) ListOutgoingAccessRequests(arg0, arg
 }
 
 // CreateAccessRequest mocks base method
-func (m *MockManagementServer) CreateAccessRequest(arg0 context.Context, arg1 *api.CreateAccessRequestRequest) (*api.AccessRequest, error) {
+func (m *MockManagementServer) CreateAccessRequest(arg0 context.Context, arg1 *api.CreateAccessRequestRequest) (*api.OutgoingAccessRequest, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateAccessRequest", arg0, arg1)
-	ret0, _ := ret[0].(*api.AccessRequest)
+	ret0, _ := ret[0].(*api.OutgoingAccessRequest)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -683,14 +683,14 @@ func (mr *MockDirectoryClientMockRecorder) GetOrganizationService(ctx, in interf
 }
 
 // RequestAccessToService mocks base method
-func (m *MockDirectoryClient) RequestAccessToService(ctx context.Context, in *api.RequestAccessToServiceRequest, opts ...grpc.CallOption) (*api.AccessRequest, error) {
+func (m *MockDirectoryClient) RequestAccessToService(ctx context.Context, in *api.RequestAccessToServiceRequest, opts ...grpc.CallOption) (*api.OutgoingAccessRequest, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "RequestAccessToService", varargs...)
-	ret0, _ := ret[0].(*api.AccessRequest)
+	ret0, _ := ret[0].(*api.OutgoingAccessRequest)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -756,10 +756,10 @@ func (mr *MockDirectoryServerMockRecorder) GetOrganizationService(arg0, arg1 int
 }
 
 // RequestAccessToService mocks base method
-func (m *MockDirectoryServer) RequestAccessToService(arg0 context.Context, arg1 *api.RequestAccessToServiceRequest) (*api.AccessRequest, error) {
+func (m *MockDirectoryServer) RequestAccessToService(arg0 context.Context, arg1 *api.RequestAccessToServiceRequest) (*api.OutgoingAccessRequest, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RequestAccessToService", arg0, arg1)
-	ret0, _ := ret[0].(*api.AccessRequest)
+	ret0, _ := ret[0].(*api.OutgoingAccessRequest)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

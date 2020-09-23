@@ -22,16 +22,22 @@ type ConfigDatabase interface {
 	PutInsightConfiguration(ctx context.Context, configuration *InsightConfiguration) error
 	GetInsightConfiguration(ctx context.Context) (*InsightConfiguration, error)
 
-	ListAllOutgoingAccessRequests(ctx context.Context) ([]*AccessRequest, error)
-	ListOutgoingAccessRequests(ctx context.Context, organizationName, serviceName string) ([]*AccessRequest, error)
-	GetLatestOutgoingAccessRequest(ctx context.Context, organizationName, serviceName string) (*AccessRequest, error)
-	ListAllLatestOutgoingAccessRequests(ctx context.Context) (map[string]*AccessRequest, error)
-	LockOutgoingAccessRequest(ctx context.Context, accessRequest *AccessRequest) error
-	UnlockOutgoingAccessRequest(ctx context.Context, accessRequest *AccessRequest) error
+	ListAllOutgoingAccessRequests(ctx context.Context) ([]*OutgoingAccessRequest, error)
+	ListOutgoingAccessRequests(ctx context.Context, organizationName, serviceName string) ([]*OutgoingAccessRequest, error)
+	GetLatestOutgoingAccessRequest(ctx context.Context, organizationName, serviceName string) (*OutgoingAccessRequest, error)
+	ListAllLatestOutgoingAccessRequests(ctx context.Context) (map[string]*OutgoingAccessRequest, error)
+	LockOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) error
+	UnlockOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) error
+	CreateOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) (*OutgoingAccessRequest, error)
+	UpdateOutgoingAccessRequestState(ctx context.Context, accessRequest *OutgoingAccessRequest, state AccessRequestState) error
+	WatchOutgoingAccessRequests(ctx context.Context, output chan *OutgoingAccessRequest)
 
-	CreateAccessRequest(ctx context.Context, accessRequest *AccessRequest) (*AccessRequest, error)
-	UpdateAccessRequestState(ctx context.Context, accessRequest *AccessRequest, state AccessRequestState) error
-	WatchOutgoingAccessRequests(ctx context.Context, output chan *AccessRequest)
+	ListAllIncomingAccessRequests(ctx context.Context) ([]*IncomingAccessRequest, error)
+	ListIncomingAccessRequests(ctx context.Context, organizationName, serviceName string) ([]*IncomingAccessRequest, error)
+	GetLatestIncomingAccessRequest(ctx context.Context, organizationName, serviceName string) (*IncomingAccessRequest, error)
+	ListAllLatestIncomingAccessRequests(ctx context.Context) (map[string]*IncomingAccessRequest, error)
+	CreateIncomingAccessRequest(ctx context.Context, accessRequest *IncomingAccessRequest) (*IncomingAccessRequest, error)
+	UpdateIncomingAccessRequestState(ctx context.Context, accessRequest *IncomingAccessRequest, state AccessRequestState) error
 
 	CreateAccessGrant(ctx context.Context, accessGrant *AccessGrant) (*AccessGrant, error)
 	ListAccessGrantsForService(ctx context.Context, serviceName string) ([]*AccessGrant, error)

@@ -24,6 +24,14 @@ type AccessRequest struct {
 	UpdatedAt        time.Time          `json:"updatedAt,omitempty"`
 }
 
+type IncomingAccessRequest struct {
+	AccessRequest
+}
+
+type OutgoingAccessRequest struct {
+	AccessRequest
+}
+
 type AccessRequestState int
 
 const (
@@ -44,46 +52,79 @@ var (
 	}
 )
 
-func (db ETCDConfigDatabase) ListAllOutgoingAccessRequests(ctx context.Context) ([]*AccessRequest, error) {
-	key := path.Join("access-requests", "outgoing")
-
-	r := []*AccessRequest{}
-
-	err := db.list(ctx, key, &r, clientv3.WithSort(clientv3.SortByKey, clientv3.SortDescend))
-	if err != nil {
-		return nil, err
+func (db ETCDConfigDatabase) parseDeleteAccessRequestLeaseEvent(ctx context.Context, event *clientv3.Event) (*OutgoingAccessRequest, error) {
+	if event.Kv == nil {
+		return nil, nil
 	}
 
-	return r, nil
+	leaseID := clientv3.LeaseID(event.Kv.Lease)
+
+	if leaseID != clientv3.NoLease {
+		ttlResponse, err := db.etcdCli.TimeToLive(ctx, leaseID)
+		if err != nil {
+			return nil, err
+		}
+
+		if ttlResponse.TTL <= 0 {
+			accessRequestKey := string(event.Kv.Key)[len(locksPrefix):]
+
+			request := &OutgoingAccessRequest{}
+			if err := db.get(ctx, accessRequestKey, request); err != nil {
+				return nil, err
+			}
+
+			if request.ID == "" {
+				return nil, nil
+			}
+
+			return request, nil
+		}
+	}
+
+	return nil, nil
 }
 
-func (db ETCDConfigDatabase) ListOutgoingAccessRequests(ctx context.Context, organizationName, serviceName string) ([]*AccessRequest, error) {
-	key := path.Join("access-requests", "outgoing", organizationName, serviceName)
+func (db ETCDConfigDatabase) parseCreateAccessRequestEvent(event *clientv3.Event) (*OutgoingAccessRequest, error) {
+	if !event.IsCreate() {
+		return nil, nil
+	}
 
-	r := []*AccessRequest{}
+	request := &OutgoingAccessRequest{}
 
-	err := db.list(ctx, key, &r)
-	if err != nil {
+	if err := json.Unmarshal(event.Kv.Value, request); err != nil {
 		return nil, err
 	}
 
-	return r, nil
+	return request, nil
 }
 
-func (db ETCDConfigDatabase) CreateAccessRequest(ctx context.Context, accessRequest *AccessRequest) (*AccessRequest, error) {
-	existing, err := db.GetLatestOutgoingAccessRequest(ctx, accessRequest.OrganizationName, accessRequest.ServiceName)
+func (db ETCDConfigDatabase) listAccessRequests(ctx context.Context, prefix string, requests interface{}) error {
+	key := path.Join("access-requests", prefix)
+
+	err := db.list(ctx, key, requests, clientv3.WithSort(clientv3.SortByKey, clientv3.SortDescend))
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	if existing != nil {
-		return nil, ErrActiveAccessRequest
+	return nil
+}
+
+func (db ETCDConfigDatabase) getLatestAccessRequest(ctx context.Context, prefix, organizationName, serviceName string, request interface{}) error {
+	key := path.Join("access-requests", prefix, organizationName, serviceName)
+
+	err := db.get(ctx, key, request, clientv3.WithLastKey()...)
+	if err != nil {
+		return err
 	}
 
+	return nil
+}
+
+func (db ETCDConfigDatabase) createAccessRequest(ctx context.Context, prefix string, accessRequest *AccessRequest) error {
 	t := db.clock.Now()
 	id := fmt.Sprintf("%x", t.UnixNano())
 
-	key := path.Join("access-requests", "outgoing", accessRequest.OrganizationName, accessRequest.ServiceName, id)
+	key := path.Join("access-requests", prefix, accessRequest.OrganizationName, accessRequest.ServiceName, id)
 
 	accessRequest.ID = id
 	accessRequest.State = AccessRequestCreated
@@ -91,14 +132,14 @@ func (db ETCDConfigDatabase) CreateAccessRequest(ctx context.Context, accessRequ
 	accessRequest.UpdatedAt = t
 
 	if err := db.put(ctx, key, accessRequest); err != nil {
-		return nil, err
+		return err
 	}
 
-	return accessRequest, nil
+	return nil
 }
 
-func (db ETCDConfigDatabase) UpdateAccessRequestState(ctx context.Context, accessRequest *AccessRequest, state AccessRequestState) error {
-	key := path.Join("access-requests", "outgoing", accessRequest.OrganizationName, accessRequest.ServiceName, accessRequest.ID)
+func (db ETCDConfigDatabase) updateAccessRequestState(ctx context.Context, prefix string, accessRequest *AccessRequest, state AccessRequestState) error {
+	key := path.Join("access-requests", prefix, accessRequest.OrganizationName, accessRequest.ServiceName, accessRequest.ID)
 
 	response, err := db.etcdCli.Get(ctx, db.key(key))
 	if err != nil {
@@ -119,26 +160,28 @@ func (db ETCDConfigDatabase) UpdateAccessRequestState(ctx context.Context, acces
 	return nil
 }
 
-func (db ETCDConfigDatabase) GetLatestOutgoingAccessRequest(ctx context.Context, organizationName, serviceName string) (*AccessRequest, error) {
-	var r *AccessRequest
-
-	key := path.Join("access-requests", "outgoing", organizationName, serviceName)
-
-	err := db.get(ctx, key, &r, clientv3.WithLastKey()...)
-	if err != nil {
-		return nil, err
-	}
-
-	return r, nil
+func (db ETCDConfigDatabase) ListAllOutgoingAccessRequests(ctx context.Context) (requests []*OutgoingAccessRequest, err error) {
+	err = db.listAccessRequests(ctx, "outgoing", &requests)
+	return
 }
 
-func (db ETCDConfigDatabase) ListAllLatestOutgoingAccessRequests(ctx context.Context) (map[string]*AccessRequest, error) {
+func (db ETCDConfigDatabase) ListOutgoingAccessRequests(ctx context.Context, organizationName, serviceName string) (requests []*OutgoingAccessRequest, err error) {
+	err = db.listAccessRequests(ctx, path.Join("outgoing", organizationName, serviceName), &requests)
+	return
+}
+
+func (db ETCDConfigDatabase) GetLatestOutgoingAccessRequest(ctx context.Context, organizationName, serviceName string) (request *OutgoingAccessRequest, err error) {
+	err = db.getLatestAccessRequest(ctx, "outgoing", organizationName, serviceName, &request)
+	return
+}
+
+func (db ETCDConfigDatabase) ListAllLatestOutgoingAccessRequests(ctx context.Context) (map[string]*OutgoingAccessRequest, error) {
 	accessRequests, err := db.ListAllOutgoingAccessRequests(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	latestAccessRequests := make(map[string]*AccessRequest)
+	latestAccessRequests := make(map[string]*OutgoingAccessRequest)
 
 	for _, a := range accessRequests {
 		key := path.Join(a.OrganizationName, a.ServiceName)
@@ -150,7 +193,7 @@ func (db ETCDConfigDatabase) ListAllLatestOutgoingAccessRequests(ctx context.Con
 	return latestAccessRequests, nil
 }
 
-func (db ETCDConfigDatabase) LockOutgoingAccessRequest(ctx context.Context, accessRequest *AccessRequest) error {
+func (db ETCDConfigDatabase) LockOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) error {
 	key := db.key(
 		"locks",
 		"access-requests",
@@ -180,7 +223,7 @@ func (db ETCDConfigDatabase) LockOutgoingAccessRequest(ctx context.Context, acce
 	return nil
 }
 
-func (db ETCDConfigDatabase) UnlockOutgoingAccessRequest(ctx context.Context, accessRequest *AccessRequest) error {
+func (db ETCDConfigDatabase) UnlockOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) error {
 	key := db.key(
 		"locks",
 		"access-requests",
@@ -195,53 +238,28 @@ func (db ETCDConfigDatabase) UnlockOutgoingAccessRequest(ctx context.Context, ac
 	return err
 }
 
-func (db ETCDConfigDatabase) parseDeleteAccessRequestLeaseEvent(ctx context.Context, event *clientv3.Event) (*AccessRequest, error) {
-	if event.Kv == nil {
-		return nil, nil
-	}
-
-	leaseID := clientv3.LeaseID(event.Kv.Lease)
-
-	if leaseID != clientv3.NoLease {
-		ttlResponse, err := db.etcdCli.TimeToLive(ctx, leaseID)
-		if err != nil {
-			return nil, err
-		}
-
-		if ttlResponse.TTL <= 0 {
-			accessRequestKey := string(event.Kv.Key)[len(locksPrefix):]
-
-			request := &AccessRequest{}
-			if err := db.get(ctx, accessRequestKey, request); err != nil {
-				return nil, err
-			}
-
-			if request.ID == "" {
-				return nil, nil
-			}
-
-			return request, nil
-		}
-	}
-
-	return nil, nil
-}
-
-func (db ETCDConfigDatabase) parseCreateAccessRequestEvent(event *clientv3.Event) (*AccessRequest, error) {
-	if !event.IsCreate() {
-		return nil, nil
-	}
-
-	request := &AccessRequest{}
-
-	if err := json.Unmarshal(event.Kv.Value, request); err != nil {
+func (db ETCDConfigDatabase) CreateOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) (*OutgoingAccessRequest, error) {
+	existing, err := db.GetLatestOutgoingAccessRequest(ctx, accessRequest.OrganizationName, accessRequest.ServiceName)
+	if err != nil {
 		return nil, err
 	}
 
-	return request, nil
+	if existing != nil {
+		return nil, ErrActiveAccessRequest
+	}
+
+	if err := db.createAccessRequest(ctx, "outgoing", &accessRequest.AccessRequest); err != nil {
+		return nil, err
+	}
+
+	return accessRequest, nil
 }
 
-func (db ETCDConfigDatabase) WatchOutgoingAccessRequests(ctx context.Context, output chan *AccessRequest) {
+func (db ETCDConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.Context, accessRequest *OutgoingAccessRequest, state AccessRequestState) error {
+	return db.updateAccessRequestState(ctx, "outgoing", &accessRequest.AccessRequest, state)
+}
+
+func (db ETCDConfigDatabase) WatchOutgoingAccessRequests(ctx context.Context, output chan *OutgoingAccessRequest) {
 	leaderCtx := clientv3.WithRequireLeader(ctx)
 
 	accessRequestsChannel := db.etcdCli.Watch(
@@ -285,4 +303,58 @@ func (db ETCDConfigDatabase) WatchOutgoingAccessRequests(ctx context.Context, ou
 			}
 		}
 	}
+}
+
+func (db ETCDConfigDatabase) ListAllIncomingAccessRequests(ctx context.Context) (requests []*IncomingAccessRequest, err error) {
+	err = db.listAccessRequests(ctx, "incoming", &requests)
+	return
+}
+
+func (db ETCDConfigDatabase) ListIncomingAccessRequests(ctx context.Context, organizationName, serviceName string) (requests []*IncomingAccessRequest, err error) {
+	err = db.listAccessRequests(ctx, path.Join("incoming", organizationName, serviceName), &requests)
+	return
+}
+
+func (db ETCDConfigDatabase) GetLatestIncomingAccessRequest(ctx context.Context, organizationName, serviceName string) (request *IncomingAccessRequest, err error) {
+	err = db.getLatestAccessRequest(ctx, "incoming", organizationName, serviceName, request)
+	return
+}
+
+func (db ETCDConfigDatabase) ListAllLatestIncomingAccessRequests(ctx context.Context) (map[string]*IncomingAccessRequest, error) {
+	accessRequests, err := db.ListAllIncomingAccessRequests(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	latestAccessRequests := make(map[string]*IncomingAccessRequest)
+
+	for _, a := range accessRequests {
+		key := path.Join(a.OrganizationName, a.ServiceName)
+		if _, ok := latestAccessRequests[key]; !ok {
+			latestAccessRequests[key] = a
+		}
+	}
+
+	return latestAccessRequests, nil
+}
+
+func (db ETCDConfigDatabase) CreateIncomingAccessRequest(ctx context.Context, accessRequest *IncomingAccessRequest) (*IncomingAccessRequest, error) {
+	existing, err := db.GetLatestIncomingAccessRequest(ctx, accessRequest.OrganizationName, accessRequest.ServiceName)
+	if err != nil {
+		return nil, err
+	}
+
+	if existing != nil {
+		return nil, ErrActiveAccessRequest
+	}
+
+	if err := db.createAccessRequest(ctx, "incoming", &accessRequest.AccessRequest); err != nil {
+		return nil, err
+	}
+
+	return accessRequest, nil
+}
+
+func (db ETCDConfigDatabase) UpdateIncomingAccessRequestState(ctx context.Context, accessRequest *IncomingAccessRequest, state AccessRequestState) error {
+	return db.updateAccessRequestState(ctx, "incoming", &accessRequest.AccessRequest, state)
 }

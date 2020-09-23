@@ -51,10 +51,10 @@ func TestCreateAccessRequest(t *testing.T) {
 	tests := []struct {
 		name        string
 		req         *api.CreateAccessRequestRequest
-		ar          *database.AccessRequest
-		returnReq   *database.AccessRequest
+		ar          *database.OutgoingAccessRequest
+		returnReq   *database.OutgoingAccessRequest
 		returnErr   error
-		expectedReq *api.AccessRequest
+		expectedReq *api.OutgoingAccessRequest
 		expectedErr error
 	}{
 		{
@@ -63,20 +63,24 @@ func TestCreateAccessRequest(t *testing.T) {
 				OrganizationName: "test-organization",
 				ServiceName:      "test-service",
 			},
-			&database.AccessRequest{
-				OrganizationName: "test-organization",
-				ServiceName:      "test-service",
+			&database.OutgoingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					OrganizationName: "test-organization",
+					ServiceName:      "test-service",
+				},
 			},
-			&database.AccessRequest{
-				ID:               "12345abcde",
-				OrganizationName: "test-organization",
-				ServiceName:      "test-service",
-				State:            database.AccessRequestCreated,
-				CreatedAt:        time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
-				UpdatedAt:        time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
+			&database.OutgoingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					ID:               "12345abcde",
+					OrganizationName: "test-organization",
+					ServiceName:      "test-service",
+					State:            database.AccessRequestCreated,
+					CreatedAt:        time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
+					UpdatedAt:        time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
+				},
 			},
 			nil,
-			&api.AccessRequest{
+			&api.OutgoingAccessRequest{
 				Id:               "12345abcde",
 				OrganizationName: "test-organization",
 				ServiceName:      "test-service",
@@ -92,9 +96,11 @@ func TestCreateAccessRequest(t *testing.T) {
 				OrganizationName: "test-organization",
 				ServiceName:      "test-service",
 			},
-			&database.AccessRequest{
-				OrganizationName: "test-organization",
-				ServiceName:      "test-service",
+			&database.OutgoingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					OrganizationName: "test-organization",
+					ServiceName:      "test-service",
+				},
 			},
 			nil,
 			database.ErrActiveAccessRequest,
@@ -106,7 +112,8 @@ func TestCreateAccessRequest(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			db.EXPECT().CreateAccessRequest(ctx, tt.ar).Return(tt.returnReq, tt.returnErr)
+			db.EXPECT().CreateOutgoingAccessRequest(ctx, tt.ar).
+				Return(tt.returnReq, tt.returnErr)
 			actual, err := service.CreateAccessRequest(ctx, tt.req)
 
 			assert.Equal(t, tt.expectedReq, actual)

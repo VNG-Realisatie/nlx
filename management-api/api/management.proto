@@ -56,7 +56,7 @@ service Management {
     option (google.api.http) = { get: "/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}"};
   }
 
-  rpc CreateAccessRequest (CreateAccessRequestRequest) returns (AccessRequest) {
+  rpc CreateAccessRequest (CreateAccessRequestRequest) returns (OutgoingAccessRequest) {
     option (google.api.http) = { post: "/api/v1/access-requests" body: "*" };
   }
 
@@ -155,7 +155,16 @@ enum AccessRequestState {
   RECEIVED = 3;
 }
 
-message AccessRequest {
+message OutgoingAccessRequest {
+  string id = 1;
+  string organizationName = 2;
+  string serviceName = 3;
+  AccessRequestState state = 4;
+  google.protobuf.Timestamp createdAt = 5;
+  google.protobuf.Timestamp updatedAt = 6;
+}
+
+message IncomingAccessRequest {
   string id = 1;
   string organizationName = 2;
   string serviceName = 3;
@@ -170,7 +179,7 @@ message ListOutgoingAccessRequestsRequest {
 }
 
 message ListOutgoingAccessRequestsResponse {
-  repeated AccessRequest accessRequests = 1;
+  repeated OutgoingAccessRequest accessRequests = 1;
 }
 
 message CreateAccessRequestRequest {
@@ -186,7 +195,7 @@ service Directory {
   rpc GetOrganizationService (GetOrganizationServiceRequest) returns (DirectoryService) {
     option (google.api.http) = { get: "/api/v1/directory/organizations/{organizationName}/services/{serviceName}" };
   }
-  rpc RequestAccessToService (RequestAccessToServiceRequest) returns (AccessRequest) {
+  rpc RequestAccessToService (RequestAccessToServiceRequest) returns (OutgoingAccessRequest) {
     option (google.api.http) = { post: "/api/v1/directory/organizations/{organizationName}/services/{serviceName}/access-requests" };
   }
 }
@@ -219,8 +228,7 @@ message DirectoryService {
   string organizationName = 2;
   string apiSpecificationType = 3 [(gogoproto.customname)="APISpecificationType"];
   State state = 4;
-  AccessRequest latestAccessRequest = 5;
-
+  OutgoingAccessRequest latestAccessRequest = 5;
 }
 
 message RequestAccessToServiceRequest {

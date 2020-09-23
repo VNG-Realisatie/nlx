@@ -18,7 +18,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/managementAccessRequest"
+              "$ref": "#/definitions/managementOutgoingAccessRequest"
             }
           },
           "default": {
@@ -122,7 +122,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/managementAccessRequest"
+              "$ref": "#/definitions/managementOutgoingAccessRequest"
             }
           },
           "default": {
@@ -604,31 +604,6 @@
         }
       }
     },
-    "managementAccessRequest": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "organizationName": {
-          "type": "string"
-        },
-        "serviceName": {
-          "type": "string"
-        },
-        "state": {
-          "$ref": "#/definitions/managementAccessRequestState"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
     "managementAccessRequestState": {
       "type": "string",
       "enum": [
@@ -677,7 +652,7 @@
           "$ref": "#/definitions/DirectoryServiceState"
         },
         "latestAccessRequest": {
-          "$ref": "#/definitions/managementAccessRequest"
+          "$ref": "#/definitions/managementOutgoingAccessRequest"
         }
       }
     },
@@ -743,7 +718,7 @@
         "accessRequests": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/managementAccessRequest"
+            "$ref": "#/definitions/managementOutgoingAccessRequest"
           }
         }
       }
@@ -756,6 +731,31 @@
           "items": {
             "$ref": "#/definitions/nlxmanagementService"
           }
+        }
+      }
+    },
+    "managementOutgoingAccessRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "organizationName": {
+          "type": "string"
+        },
+        "serviceName": {
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/definitions/managementAccessRequestState"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     },

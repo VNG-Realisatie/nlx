@@ -34,7 +34,7 @@ type statusLoopMocks struct {
 func newTestAccessRequestStatusLoop(t *testing.T) (statusLoopMocks, *accessRequestStatusLoop) {
 	ctrl := gomock.NewController(t)
 
-	requests := make(chan *database.AccessRequest, 10)
+	requests := make(chan *database.OutgoingAccessRequest, 10)
 	mocks := statusLoopMocks{
 		ctrl:       ctrl,
 		db:         mock_database.NewMockConfigDatabase(ctrl),
@@ -62,36 +62,46 @@ func TestListCurrentAccessRequests(t *testing.T) {
 
 	ctx := context.Background()
 
-	requests := []*database.AccessRequest{
+	requests := []*database.OutgoingAccessRequest{
 		{
-			ID:               "id-1",
-			OrganizationName: "organization-a",
-			ServiceName:      "service",
-			State:            database.AccessRequestCreated,
+			AccessRequest: database.AccessRequest{
+				ID:               "id-1",
+				OrganizationName: "organization-a",
+				ServiceName:      "service",
+				State:            database.AccessRequestCreated,
+			},
 		},
 		{
-			ID:               "id-2",
-			OrganizationName: "organization-b",
-			ServiceName:      "service",
-			State:            database.AccessRequestFailed,
+			AccessRequest: database.AccessRequest{
+				ID:               "id-2",
+				OrganizationName: "organization-b",
+				ServiceName:      "service",
+				State:            database.AccessRequestFailed,
+			},
 		},
 		{
-			ID:               "id-3",
-			OrganizationName: "organization-c",
-			ServiceName:      "service",
-			State:            database.AccessRequestCreated,
+			AccessRequest: database.AccessRequest{
+				ID:               "id-3",
+				OrganizationName: "organization-c",
+				ServiceName:      "service",
+				State:            database.AccessRequestCreated,
+			},
 		},
 		{
-			ID:               "id-4",
-			OrganizationName: "organization-d",
-			ServiceName:      "service",
-			State:            database.AccessRequestCreated,
+			AccessRequest: database.AccessRequest{
+				ID:               "id-4",
+				OrganizationName: "organization-d",
+				ServiceName:      "service",
+				State:            database.AccessRequestCreated,
+			},
 		},
 		{
-			ID:               "id-5",
-			OrganizationName: "organization-e",
-			ServiceName:      "service",
-			State:            database.AccessRequestCreated,
+			AccessRequest: database.AccessRequest{
+				ID:               "id-5",
+				OrganizationName: "organization-e",
+				ServiceName:      "service",
+				State:            database.AccessRequestCreated,
+			},
 		},
 	}
 
@@ -103,7 +113,7 @@ func TestListCurrentAccessRequests(t *testing.T) {
 	err := statusLoop.listCurrentAccessRequests(ctx)
 	assert.NoError(t, err)
 
-	actual := []*database.AccessRequest{}
+	actual := []*database.OutgoingAccessRequest{}
 
 	for i := 0; i < 4; i++ {
 		actual = append(actual, <-statusLoop.requests)
@@ -120,15 +130,17 @@ func TestHandleRequest(t *testing.T) {
 
 	tests := map[string]struct {
 		setupMock func(statusLoopMocks)
-		request   *database.AccessRequest
+		request   *database.OutgoingAccessRequest
 		wantErr   bool
 	}{
 		"handling_a_locked_request_returns_nil": {
-			request: &database.AccessRequest{
-				ID:               "id-1",
-				OrganizationName: "organization-a",
-				ServiceName:      "service",
-				State:            database.AccessRequestCreated,
+			request: &database.OutgoingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					ID:               "id-1",
+					OrganizationName: "organization-a",
+					ServiceName:      "service",
+					State:            database.AccessRequestCreated,
+				},
 			},
 			setupMock: func(mocks statusLoopMocks) {
 				mocks.db.
@@ -139,11 +151,13 @@ func TestHandleRequest(t *testing.T) {
 		},
 
 		"returns_an_error_when_locking_fails": {
-			request: &database.AccessRequest{
-				ID:               "id-1",
-				OrganizationName: "organization-a",
-				ServiceName:      "service",
-				State:            database.AccessRequestCreated,
+			request: &database.OutgoingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					ID:               "id-1",
+					OrganizationName: "organization-a",
+					ServiceName:      "service",
+					State:            database.AccessRequestCreated,
+				},
 			},
 			wantErr: true,
 			setupMock: func(mocks statusLoopMocks) {
@@ -155,11 +169,13 @@ func TestHandleRequest(t *testing.T) {
 		},
 
 		"returns_an_error_when_get_organization_inway_returns_an_error": {
-			request: &database.AccessRequest{
-				ID:               "id-1",
-				OrganizationName: "organization-a",
-				ServiceName:      "service",
-				State:            database.AccessRequestCreated,
+			request: &database.OutgoingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					ID:               "id-1",
+					OrganizationName: "organization-a",
+					ServiceName:      "service",
+					State:            database.AccessRequestCreated,
+				},
 			},
 			wantErr: true,
 			setupMock: func(mocks statusLoopMocks) {
@@ -177,7 +193,7 @@ func TestHandleRequest(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					UpdateAccessRequestState(ctx, gomock.Any(), database.AccessRequestFailed).
+					UpdateOutgoingAccessRequestState(ctx, gomock.Any(), database.AccessRequestFailed).
 					Return(nil)
 
 				mocks.db.
@@ -188,11 +204,13 @@ func TestHandleRequest(t *testing.T) {
 		},
 
 		"returns_err_when_inway_address_is_invalid": {
-			request: &database.AccessRequest{
-				ID:               "id-1",
-				OrganizationName: "organization-a",
-				ServiceName:      "service",
-				State:            database.AccessRequestCreated,
+			request: &database.OutgoingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					ID:               "id-1",
+					OrganizationName: "organization-a",
+					ServiceName:      "service",
+					State:            database.AccessRequestCreated,
+				},
 			},
 			wantErr: true,
 			setupMock: func(mocks statusLoopMocks) {
@@ -212,7 +230,7 @@ func TestHandleRequest(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					UpdateAccessRequestState(ctx, gomock.Any(), database.AccessRequestFailed).
+					UpdateOutgoingAccessRequestState(ctx, gomock.Any(), database.AccessRequestFailed).
 					Return(nil)
 
 				mocks.db.
@@ -222,11 +240,13 @@ func TestHandleRequest(t *testing.T) {
 		},
 
 		"returns_an_error_when_requestaccess_returns_an_error": {
-			request: &database.AccessRequest{
-				ID:               "id-1",
-				OrganizationName: "organization-a",
-				ServiceName:      "service",
-				State:            database.AccessRequestCreated,
+			request: &database.OutgoingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					ID:               "id-1",
+					OrganizationName: "organization-a",
+					ServiceName:      "service",
+					State:            database.AccessRequestCreated,
+				},
 			},
 			wantErr: true,
 			setupMock: func(mocks statusLoopMocks) {
@@ -253,7 +273,7 @@ func TestHandleRequest(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					UpdateAccessRequestState(ctx, gomock.Any(), database.AccessRequestFailed).
+					UpdateOutgoingAccessRequestState(ctx, gomock.Any(), database.AccessRequestFailed).
 					Return(nil)
 
 				mocks.db.
@@ -269,11 +289,13 @@ func TestHandleRequest(t *testing.T) {
 		},
 
 		"returns_an_error_when_update_access_request_returns_an_error": {
-			request: &database.AccessRequest{
-				ID:               "id-1",
-				OrganizationName: "organization-a",
-				ServiceName:      "service",
-				State:            database.AccessRequestCreated,
+			request: &database.OutgoingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					ID:               "id-1",
+					OrganizationName: "organization-a",
+					ServiceName:      "service",
+					State:            database.AccessRequestCreated,
+				},
 			},
 			wantErr: true,
 			setupMock: func(mocks statusLoopMocks) {
@@ -300,7 +322,7 @@ func TestHandleRequest(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					UpdateAccessRequestState(ctx, gomock.Any(), database.AccessRequestReceived).
+					UpdateOutgoingAccessRequestState(ctx, gomock.Any(), database.AccessRequestReceived).
 					Return(errors.New("error"))
 
 				mocks.db.
@@ -316,11 +338,13 @@ func TestHandleRequest(t *testing.T) {
 		},
 
 		"handling_a_valid_access_requests_succeeds": {
-			request: &database.AccessRequest{
-				ID:               "id-1",
-				OrganizationName: "organization-a",
-				ServiceName:      "service",
-				State:            database.AccessRequestCreated,
+			request: &database.OutgoingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					ID:               "id-1",
+					OrganizationName: "organization-a",
+					ServiceName:      "service",
+					State:            database.AccessRequestCreated,
+				},
 			},
 			setupMock: func(mocks statusLoopMocks) {
 				mocks.db.
@@ -346,7 +370,7 @@ func TestHandleRequest(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					UpdateAccessRequestState(ctx, gomock.Any(), database.AccessRequestReceived).
+					UpdateOutgoingAccessRequestState(ctx, gomock.Any(), database.AccessRequestReceived).
 					Return(nil)
 
 				mocks.db.

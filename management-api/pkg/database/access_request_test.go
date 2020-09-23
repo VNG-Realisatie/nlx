@@ -13,7 +13,6 @@ package database_test
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"path"
 	"testing"
 	"time"
@@ -23,7 +22,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
-func TestAccessRequest(t *testing.T) {
+func TestListAccessRequests(t *testing.T) {
 	cluster := newTestCluster(t)
 	defer cluster.Terminate(t)
 
@@ -52,14 +51,18 @@ func TestAccessRequest(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Len(t, actual, 2)
 
-	expected := []*database.AccessRequest{
+	expected := []*database.OutgoingAccessRequest{
 		{
-			OrganizationName: "test-organization-a",
-			ServiceName:      "test-service-1",
+			AccessRequest: database.AccessRequest{
+				OrganizationName: "test-organization-a",
+				ServiceName:      "test-service-1",
+			},
 		},
 		{
-			OrganizationName: "test-organization-a",
-			ServiceName:      "test-service-1",
+			AccessRequest: database.AccessRequest{
+				OrganizationName: "test-organization-a",
+				ServiceName:      "test-service-1",
+			},
 		},
 	}
 
@@ -75,21 +78,25 @@ func TestCreateAccessRequest(t *testing.T) {
 	ctx := context.Background()
 	client := cluster.GetClient(t)
 
-	a := &database.AccessRequest{
-		OrganizationName: "test-organization-a",
-		ServiceName:      "test-service-1",
+	a := &database.OutgoingAccessRequest{
+		AccessRequest: database.AccessRequest{
+			OrganizationName: "test-organization-a",
+			ServiceName:      "test-service-1",
+		},
 	}
 
-	actual, err := cluster.DB.CreateAccessRequest(ctx, a)
+	actual, err := cluster.DB.CreateOutgoingAccessRequest(ctx, a)
 	assert.NoError(t, err)
 
-	expected := &database.AccessRequest{
-		ID:               "161c188cfcea1939",
-		OrganizationName: "test-organization-a",
-		ServiceName:      "test-service-1",
-		State:            database.AccessRequestCreated,
-		CreatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
-		UpdatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
+	expected := &database.OutgoingAccessRequest{
+		AccessRequest: database.AccessRequest{
+			ID:               "161c188cfcea1939",
+			OrganizationName: "test-organization-a",
+			ServiceName:      "test-service-1",
+			State:            database.AccessRequestCreated,
+			CreatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
+			UpdatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
+		},
 	}
 
 	assert.Equal(t, expected, actual)
@@ -108,27 +115,31 @@ func TestUpdateAccessRequestState(t *testing.T) {
 	ctx := context.Background()
 	client := cluster.GetClient(t)
 
-	a := &database.AccessRequest{
-		OrganizationName: "test-organization-a",
-		ServiceName:      "test-service-1",
-		State:            database.AccessRequestCreated,
+	a := &database.OutgoingAccessRequest{
+		AccessRequest: database.AccessRequest{
+			OrganizationName: "test-organization-a",
+			ServiceName:      "test-service-1",
+			State:            database.AccessRequestCreated,
+		},
 	}
 
-	actual, err := cluster.DB.CreateAccessRequest(ctx, a)
+	actual, err := cluster.DB.CreateOutgoingAccessRequest(ctx, a)
 	assert.NoError(t, err)
 
 	cluster.Clock.SetTime(time.Date(2020, time.June, 26, 12, 42, 43, 1337, time.UTC))
 
-	err = cluster.DB.UpdateAccessRequestState(ctx, a, database.AccessRequestFailed)
+	err = cluster.DB.UpdateOutgoingAccessRequestState(ctx, a, database.AccessRequestFailed)
 	assert.NoError(t, err)
 
-	expected := &database.AccessRequest{
-		ID:               "161c188cfcea1939",
-		OrganizationName: "test-organization-a",
-		ServiceName:      "test-service-1",
-		State:            database.AccessRequestFailed,
-		CreatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
-		UpdatedAt:        time.Date(2020, time.June, 26, 12, 42, 43, 1337, time.UTC),
+	expected := &database.OutgoingAccessRequest{
+		AccessRequest: database.AccessRequest{
+			ID:               "161c188cfcea1939",
+			OrganizationName: "test-organization-a",
+			ServiceName:      "test-service-1",
+			State:            database.AccessRequestFailed,
+			CreatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
+			UpdatedAt:        time.Date(2020, time.June, 26, 12, 42, 43, 1337, time.UTC),
+		},
 	}
 
 	assert.Equal(t, expected, actual)
@@ -146,12 +157,14 @@ func TestLockOutgoingAccessRequest(t *testing.T) {
 
 	ctx := context.Background()
 
-	a := &database.AccessRequest{
-		OrganizationName: "test-organization-a",
-		ServiceName:      "test-service-1",
+	a := &database.OutgoingAccessRequest{
+		AccessRequest: database.AccessRequest{
+			OrganizationName: "test-organization-a",
+			ServiceName:      "test-service-1",
+		},
 	}
 
-	_, err := cluster.DB.CreateAccessRequest(ctx, a)
+	_, err := cluster.DB.CreateOutgoingAccessRequest(ctx, a)
 	assert.NoError(t, err)
 
 	err = cluster.DB.LockOutgoingAccessRequest(ctx, a)
@@ -170,12 +183,14 @@ func TestUnlockOutgoingAccessRequest(t *testing.T) {
 
 	ctx := context.Background()
 
-	a := &database.AccessRequest{
-		OrganizationName: "test-organization-a",
-		ServiceName:      "test-service-1",
+	a := &database.OutgoingAccessRequest{
+		AccessRequest: database.AccessRequest{
+			OrganizationName: "test-organization-a",
+			ServiceName:      "test-service-1",
+		},
 	}
 
-	_, err := cluster.DB.CreateAccessRequest(ctx, a)
+	_, err := cluster.DB.CreateOutgoingAccessRequest(ctx, a)
 	assert.NoError(t, err)
 
 	err = cluster.DB.LockOutgoingAccessRequest(ctx, a)
@@ -203,9 +218,11 @@ func TestGetLatestOutgoingAccessRequest(t *testing.T) {
 	create := func(o, s string) {
 		cluster.Clock.Step(5 * time.Second)
 
-		_, err := cluster.DB.CreateAccessRequest(ctx, &database.AccessRequest{
-			OrganizationName: o,
-			ServiceName:      s,
+		_, err := cluster.DB.CreateOutgoingAccessRequest(ctx, &database.OutgoingAccessRequest{
+			AccessRequest: database.AccessRequest{
+				OrganizationName: o,
+				ServiceName:      s,
+			},
 		})
 
 		assert.NoError(t, err)
@@ -213,13 +230,15 @@ func TestGetLatestOutgoingAccessRequest(t *testing.T) {
 
 	create("test-organization-a", "test-service-1") // 14:45:00
 
-	expected := &database.AccessRequest{
-		ID:               "16201cc4e0cf3800",
-		OrganizationName: "test-organization-a",
-		ServiceName:      "test-service-1",
-		State:            database.AccessRequestCreated,
-		CreatedAt:        time.Date(2020, time.July, 9, 14, 45, 0, 0, time.UTC),
-		UpdatedAt:        time.Date(2020, time.July, 9, 14, 45, 0, 0, time.UTC),
+	expected := &database.OutgoingAccessRequest{
+		AccessRequest: database.AccessRequest{
+			ID:               "16201cc4e0cf3800",
+			OrganizationName: "test-organization-a",
+			ServiceName:      "test-service-1",
+			State:            database.AccessRequestCreated,
+			CreatedAt:        time.Date(2020, time.July, 9, 14, 45, 0, 0, time.UTC),
+			UpdatedAt:        time.Date(2020, time.July, 9, 14, 45, 0, 0, time.UTC),
+		},
 	}
 
 	actual, err := cluster.DB.GetLatestOutgoingAccessRequest(ctx, "test-organization-a", "test-service-1")
@@ -239,12 +258,12 @@ func TestListAllLatestOutgoingAccessRequests(t *testing.T) {
 	create := func(o, s string) {
 		cluster.Clock.Step(5 * time.Second)
 
-		r, err := cluster.DB.CreateAccessRequest(ctx, &database.AccessRequest{
-			OrganizationName: o,
-			ServiceName:      s,
+		_, err := cluster.DB.CreateOutgoingAccessRequest(ctx, &database.OutgoingAccessRequest{
+			AccessRequest: database.AccessRequest{
+				OrganizationName: o,
+				ServiceName:      s,
+			},
 		})
-
-		fmt.Println(r)
 
 		assert.NoError(t, err)
 	}
@@ -253,30 +272,36 @@ func TestListAllLatestOutgoingAccessRequests(t *testing.T) {
 	create("test-organization-c", "test-service-1") // 10:11:50
 	create("test-organization-a", "test-service-2") // 10:12:55
 
-	expected := map[string]*database.AccessRequest{
+	expected := map[string]*database.OutgoingAccessRequest{
 		"test-organization-a/test-service-2": {
-			ID:               "16205c7284036e00",
-			OrganizationName: "test-organization-a",
-			ServiceName:      "test-service-2",
-			State:            database.AccessRequestCreated,
-			CreatedAt:        time.Date(2020, time.July, 10, 10, 11, 55, 0, time.UTC),
-			UpdatedAt:        time.Date(2020, time.July, 10, 10, 11, 55, 0, time.UTC),
+			AccessRequest: database.AccessRequest{
+				ID:               "16205c7284036e00",
+				OrganizationName: "test-organization-a",
+				ServiceName:      "test-service-2",
+				State:            database.AccessRequestCreated,
+				CreatedAt:        time.Date(2020, time.July, 10, 10, 11, 55, 0, time.UTC),
+				UpdatedAt:        time.Date(2020, time.July, 10, 10, 11, 55, 0, time.UTC),
+			},
 		},
 		"test-organization-b/test-service-1": {
-			ID:               "16205c702ff78a00",
-			OrganizationName: "test-organization-b",
-			ServiceName:      "test-service-1",
-			State:            database.AccessRequestCreated,
-			CreatedAt:        time.Date(2020, time.July, 10, 10, 11, 45, 0, time.UTC),
-			UpdatedAt:        time.Date(2020, time.July, 10, 10, 11, 45, 0, time.UTC),
+			AccessRequest: database.AccessRequest{
+				ID:               "16205c702ff78a00",
+				OrganizationName: "test-organization-b",
+				ServiceName:      "test-service-1",
+				State:            database.AccessRequestCreated,
+				CreatedAt:        time.Date(2020, time.July, 10, 10, 11, 45, 0, time.UTC),
+				UpdatedAt:        time.Date(2020, time.July, 10, 10, 11, 45, 0, time.UTC),
+			},
 		},
 		"test-organization-c/test-service-1": {
-			ID:               "16205c7159fd7c00",
-			OrganizationName: "test-organization-c",
-			ServiceName:      "test-service-1",
-			State:            database.AccessRequestCreated,
-			CreatedAt:        time.Date(2020, time.July, 10, 10, 11, 50, 0, time.UTC),
-			UpdatedAt:        time.Date(2020, time.July, 10, 10, 11, 50, 0, time.UTC),
+			AccessRequest: database.AccessRequest{
+				ID:               "16205c7159fd7c00",
+				OrganizationName: "test-organization-c",
+				ServiceName:      "test-service-1",
+				State:            database.AccessRequestCreated,
+				CreatedAt:        time.Date(2020, time.July, 10, 10, 11, 50, 0, time.UTC),
+				UpdatedAt:        time.Date(2020, time.July, 10, 10, 11, 50, 0, time.UTC),
+			},
 		},
 	}
 

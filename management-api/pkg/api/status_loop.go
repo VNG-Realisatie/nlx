@@ -35,7 +35,7 @@ type accessRequestStatusLoop struct {
 	directoryClient            directory.Client
 	configDatabase             database.ConfigDatabase
 	orgCert                    *common_tls.CertificateBundle
-	requests                   chan *database.AccessRequest
+	requests                   chan *database.OutgoingAccessRequest
 	createManagementClientFunc func(context.Context, string, *common_tls.CertificateBundle) (management.Client, error)
 }
 
@@ -46,7 +46,7 @@ func newAccessRequestStatusLoop(logger *zap.Logger, directoryClient directory.Cl
 		orgCert:                    orgCert,
 		directoryClient:            directoryClient,
 		configDatabase:             configDatabase,
-		requests:                   make(chan *database.AccessRequest),
+		requests:                   make(chan *database.OutgoingAccessRequest),
 		createManagementClientFunc: management.NewClient,
 	}
 }
@@ -86,7 +86,7 @@ statusLoop:
 			requestCtx := context.Background()
 			wg.Add(1)
 
-			go func(c context.Context, r *database.AccessRequest) {
+			go func(c context.Context, r *database.OutgoingAccessRequest) {
 				if err := loop.handleRequest(c, r); err != nil {
 					loop.logger.Error("failed to handle request", zap.Error(err))
 				}
@@ -113,7 +113,7 @@ func (loop *accessRequestStatusLoop) computeInwayProxyAddress(address string) (s
 	return fmt.Sprintf("%s:%d", host, portNum+1), nil
 }
 
-func (loop *accessRequestStatusLoop) sendRequest(ctx context.Context, request *database.AccessRequest) error {
+func (loop *accessRequestStatusLoop) sendRequest(ctx context.Context, request *database.OutgoingAccessRequest) error {
 	response, err := loop.directoryClient.GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
 		OrganizationName: request.OrganizationName,
 	})
@@ -141,7 +141,7 @@ func (loop *accessRequestStatusLoop) sendRequest(ctx context.Context, request *d
 }
 
 //nolint:gocyclo high complexity because of the state machine
-func (loop *accessRequestStatusLoop) handleRequest(ctx context.Context, request *database.AccessRequest) error {
+func (loop *accessRequestStatusLoop) handleRequest(ctx context.Context, request *database.OutgoingAccessRequest) error {
 	err := loop.configDatabase.LockOutgoingAccessRequest(ctx, request)
 	switch err {
 	case nil:
@@ -170,7 +170,7 @@ func (loop *accessRequestStatusLoop) handleRequest(ctx context.Context, request 
 		state = database.AccessRequestFailed
 	}
 
-	if err := loop.configDatabase.UpdateAccessRequestState(ctx, request, state); err != nil {
+	if err := loop.configDatabase.UpdateOutgoingAccessRequestState(ctx, request, state); err != nil {
 		return err
 	}
 

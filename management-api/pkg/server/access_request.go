@@ -21,16 +21,16 @@ var accessRequestState = map[database.AccessRequestState]api.AccessRequestState{
 }
 
 func (s *ManagementService) ListOutgoingAccessRequests(ctx context.Context, req *api.ListOutgoingAccessRequestsRequest) (*api.ListOutgoingAccessRequestsResponse, error) {
-	l, err := s.configDatabase.ListOutgoingAccessRequests(ctx, req.OrganizationName, req.ServiceName)
+	requests, err := s.configDatabase.ListOutgoingAccessRequests(ctx, req.OrganizationName, req.ServiceName)
 	if err != nil {
 		return nil, err
 	}
 
 	response := &api.ListOutgoingAccessRequestsResponse{}
-	response.AccessRequests = make([]*api.AccessRequest, len(l))
+	response.AccessRequests = make([]*api.OutgoingAccessRequest, len(requests))
 
-	for i, a := range l {
-		ra, err := convertAccessRequest(a)
+	for i, request := range requests {
+		ra, err := convertOutgoingAccessRequest(request)
 		if err != nil {
 			return nil, err
 		}
@@ -41,13 +41,15 @@ func (s *ManagementService) ListOutgoingAccessRequests(ctx context.Context, req 
 	return response, nil
 }
 
-func (s *ManagementService) CreateAccessRequest(ctx context.Context, req *api.CreateAccessRequestRequest) (*api.AccessRequest, error) {
-	ar := &database.AccessRequest{
-		OrganizationName: req.OrganizationName,
-		ServiceName:      req.ServiceName,
+func (s *ManagementService) CreateAccessRequest(ctx context.Context, req *api.CreateAccessRequestRequest) (*api.OutgoingAccessRequest, error) {
+	ar := &database.OutgoingAccessRequest{
+		AccessRequest: database.AccessRequest{
+			OrganizationName: req.OrganizationName,
+			ServiceName:      req.ServiceName,
+		},
 	}
 
-	a, err := s.configDatabase.CreateAccessRequest(ctx, ar)
+	request, err := s.configDatabase.CreateOutgoingAccessRequest(ctx, ar)
 	if err != nil {
 		if errors.Is(err, database.ErrActiveAccessRequest) {
 			return nil, status.Errorf(codes.AlreadyExists, "there is already an active access request")
@@ -56,7 +58,7 @@ func (s *ManagementService) CreateAccessRequest(ctx context.Context, req *api.Cr
 		return nil, err
 	}
 
-	response, err := convertAccessRequest(a)
+	response, err := convertOutgoingAccessRequest(request)
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +66,7 @@ func (s *ManagementService) CreateAccessRequest(ctx context.Context, req *api.Cr
 	return response, nil
 }
 
-func convertAccessRequest(a *database.AccessRequest) (*api.AccessRequest, error) {
+func convertOutgoingAccessRequest(a *database.OutgoingAccessRequest) (*api.OutgoingAccessRequest, error) {
 	createdAt, err := types.TimestampProto(a.CreatedAt)
 	if err != nil {
 		return nil, err
@@ -80,7 +82,7 @@ func convertAccessRequest(a *database.AccessRequest) (*api.AccessRequest, error)
 		return nil, fmt.Errorf("unsupported state: %v", a.State)
 	}
 
-	return &api.AccessRequest{
+	return &api.OutgoingAccessRequest{
 		Id:               a.ID,
 		OrganizationName: a.OrganizationName,
 		ServiceName:      a.ServiceName,
