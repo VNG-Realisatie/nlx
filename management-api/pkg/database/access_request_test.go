@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 
-// Snippet for generating an id for an AccessRuquest:
+// Snippet for generating an id for an AccessRequest:
 //
 //  func TestId(t *testing.T) {
 //  	fmt.Printf("%x\n", time.Date(2020, time.July, 9, 14, 45, 0, 0, time.UTC).UnixNano())

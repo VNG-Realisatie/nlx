@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2020
+// Licensed under the EUPL
+
 //nolint:dupl // test package
 package server_test
 

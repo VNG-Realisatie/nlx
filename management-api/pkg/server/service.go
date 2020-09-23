@@ -145,14 +145,34 @@ func (s *ManagementService) ListServices(ctx context.Context, req *api.ListServi
 	}
 
 	if length := len(filteredServices); length > 0 {
-		response.Services = make([]*api.Service, length)
+		response.Services = []*api.Service{}
 
-		for i, service := range filteredServices {
-			response.Services[i] = convertFromDatabaseService(service)
+		for _, service := range filteredServices {
+			convertedService := convertFromDatabaseService(service)
+
+			accessGrants, err := s.configDatabase.ListAccessGrantsForService(ctx, service.Name)
+			if err != nil {
+				s.logger.Error("error getting access grants for service from database", zap.String("servicename", service.Name), zap.Error(err))
+				continue
+			}
+
+			convertedService.AuthorizationSettings.Authorizations = make([]*api.Service_AuthorizationSettings_Authorization, len(accessGrants))
+			for i, accessGrant := range accessGrants {
+				convertedService.AuthorizationSettings.Authorizations[i] = convertAccessGrantToAuthorizationSetting(accessGrant)
+			}
+
+			response.Services = append(response.Services, convertedService)
 		}
 	}
 
 	return response, nil
+}
+
+func convertAccessGrantToAuthorizationSetting(accessGrant *database.AccessGrant) *api.Service_AuthorizationSettings_Authorization {
+	return &api.Service_AuthorizationSettings_Authorization{
+		OrganizationName: accessGrant.OrganizationName,
+		PublicKeyHash:    accessGrant.PublicKeyFingerprint,
+	}
 }
 
 func convertFromDatabaseService(model *database.Service) *api.Service {
@@ -165,6 +185,9 @@ func convertFromDatabaseService(model *database.Service) *api.Service {
 		TechSupportContact:   model.TechSupportContact,
 		PublicSupportContact: model.PublicSupportContact,
 		Inways:               model.Inways,
+		AuthorizationSettings: &api.Service_AuthorizationSettings{
+			Mode: "whitelist",
+		},
 	}
 
 	return service

@@ -1,8 +1,12 @@
+// Copyright © VNG Realisatie 2020
+// Licensed under the EUPL
+
 //nolint:dupl // test package
 package server_test
 
 import (
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -84,6 +88,10 @@ func TestGetService(t *testing.T) {
 
 	expectedResponse := &api.Service{
 		Name: "my-service",
+		AuthorizationSettings: &api.Service_AuthorizationSettings{
+			Mode:           "whitelist",
+			Authorizations: nil,
+		},
 	}
 
 	assert.Equal(t, expectedResponse, getServiceResponse)
@@ -156,6 +164,7 @@ func TestDeleteService(t *testing.T) {
 	}
 }
 
+//nolint:funlen // alot of scenario's to test
 func TestListServices(t *testing.T) {
 	logger := zap.NewNop()
 	testProcess := process.NewProcess(logger)
@@ -163,9 +172,6 @@ func TestListServices(t *testing.T) {
 
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
-
-	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), mockDatabase)
 
 	databaseServices := []*database.Service{
 		{
@@ -182,63 +188,150 @@ func TestListServices(t *testing.T) {
 	}
 
 	tests := []struct {
+		name             string
 		request          *api.ListServicesRequest
+		db               func(ctrl *gomock.Controller) database.ConfigDatabase
 		expectedResponse *api.ListServicesResponse
+		expectedError    error
 	}{
 		{
+			name: "happy flow for a specific inway",
 			request: &api.ListServicesRequest{
 				InwayName: "inway.mock",
 			},
+			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
+				db := mock_database.NewMockConfigDatabase(ctrl)
+				db.EXPECT().ListServices(gomock.Any()).Return(databaseServices, nil)
+
+				db.EXPECT().ListAccessGrantsForService(gomock.Any(), "my-service").Return([]*database.AccessGrant{{
+					ID:                   "mock-id",
+					AccessRequestID:      "mock-access-request-id",
+					OrganizationName:     "mock-organization-name",
+					ServiceName:          "my-service",
+					PublicKeyFingerprint: "mock-publickey-fingerprint"},
+				}, nil)
+				return db
+			},
 			expectedResponse: &api.ListServicesResponse{
 				Services: []*api.Service{
 					{
 						Name:   "my-service",
 						Inways: []string{"inway.mock"},
+						AuthorizationSettings: &api.Service_AuthorizationSettings{
+							Mode: "whitelist",
+							Authorizations: []*api.Service_AuthorizationSettings_Authorization{
+								{
+									OrganizationName: "mock-organization-name",
+									PublicKeyHash:    "mock-publickey-fingerprint",
+								},
+							},
+						},
 					},
 				},
 			},
+			expectedError: nil,
 		},
 		{
+			name: "happy flow for another specific inway",
 			request: &api.ListServicesRequest{
 				InwayName: "another-inway.mock",
 			},
+			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
+				db := mock_database.NewMockConfigDatabase(ctrl)
+				db.EXPECT().ListServices(gomock.Any()).Return(databaseServices, nil)
+
+				db.EXPECT().ListAccessGrantsForService(gomock.Any(), "another-service").Return([]*database.AccessGrant{}, nil)
+				return db
+			},
 			expectedResponse: &api.ListServicesResponse{
 				Services: []*api.Service{
 					{
 						Name:   "another-service",
 						Inways: []string{"another-inway.mock"},
+						AuthorizationSettings: &api.Service_AuthorizationSettings{
+							Mode:           "whitelist",
+							Authorizations: []*api.Service_AuthorizationSettings_Authorization{},
+						},
 					},
 				},
 			},
+			expectedError: nil,
 		},
 		{
+			name:    "happy flow without inway filter",
 			request: &api.ListServicesRequest{},
+			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
+				db := mock_database.NewMockConfigDatabase(ctrl)
+				db.EXPECT().ListServices(gomock.Any()).Return(databaseServices, nil)
+
+				db.EXPECT().ListAccessGrantsForService(gomock.Any(), "my-service").Return([]*database.AccessGrant{}, nil)
+				db.EXPECT().ListAccessGrantsForService(gomock.Any(), "another-service").Return([]*database.AccessGrant{}, nil)
+				db.EXPECT().ListAccessGrantsForService(gomock.Any(), "third-service").Return([]*database.AccessGrant{}, nil)
+				return db
+			},
 			expectedResponse: &api.ListServicesResponse{
 				Services: []*api.Service{
 					{
 						Name:   "my-service",
 						Inways: []string{"inway.mock"},
+						AuthorizationSettings: &api.Service_AuthorizationSettings{
+							Mode:           "whitelist",
+							Authorizations: []*api.Service_AuthorizationSettings_Authorization{},
+						},
 					},
 					{
 						Name:   "another-service",
 						Inways: []string{"another-inway.mock"},
+						AuthorizationSettings: &api.Service_AuthorizationSettings{
+							Mode:           "whitelist",
+							Authorizations: []*api.Service_AuthorizationSettings_Authorization{},
+						},
 					},
 					{
 						Name: "third-service",
+						AuthorizationSettings: &api.Service_AuthorizationSettings{
+							Mode:           "whitelist",
+							Authorizations: []*api.Service_AuthorizationSettings_Authorization{},
+						},
 					},
 				},
 			},
+			expectedError: nil,
+		},
+		{
+			name:    "when database call for service fails",
+			request: &api.ListServicesRequest{},
+			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
+				db := mock_database.NewMockConfigDatabase(ctrl)
+				db.EXPECT().ListServices(gomock.Any()).Return(nil, errors.New("arbitrary error"))
+				return db
+			},
+			expectedResponse: nil,
+			expectedError:    status.Error(codes.Internal, "database error"),
+		},
+		{
+			name: "when database for access grants fails",
+			request: &api.ListServicesRequest{
+				InwayName: "inway.mock",
+			},
+			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
+				db := mock_database.NewMockConfigDatabase(ctrl)
+				db.EXPECT().ListServices(gomock.Any()).Return(databaseServices, nil)
+
+				db.EXPECT().ListAccessGrantsForService(gomock.Any(), "my-service").Return(nil, errors.New("arbitrary error"))
+				return db
+			},
+			expectedResponse: &api.ListServicesResponse{
+				Services: []*api.Service{}},
+			expectedError: nil,
 		},
 	}
 
 	for _, test := range tests {
-		mockDatabase.EXPECT().ListServices(ctx).Return(databaseServices, nil)
+		service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), test.db(mockCtrl))
 		actualResponse, err := service.ListServices(ctx, test.request)
 
-		if err != nil {
-			t.Fatal("could not get list of services", err)
-		}
-
+		assert.Equal(t, test.expectedError, err)
 		assert.Equal(t, test.expectedResponse, actualResponse)
 	}
 }

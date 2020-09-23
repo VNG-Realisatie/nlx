@@ -33,6 +33,9 @@ type ConfigDatabase interface {
 	UpdateAccessRequestState(ctx context.Context, accessRequest *AccessRequest, state AccessRequestState) error
 	WatchOutgoingAccessRequests(ctx context.Context, output chan *AccessRequest)
 
+	CreateAccessGrant(ctx context.Context, accessGrant *AccessGrant) (*AccessGrant, error)
+	ListAccessGrantsForService(ctx context.Context, serviceName string) ([]*AccessGrant, error)
+
 	GetSettings(ctx context.Context) (*Settings, error)
 	UpdateSettings(ctx context.Context, settings *Settings) error
 }
