@@ -95,11 +95,11 @@ func main() {
 
 		err = iw.SetupManagementAPI(options.ManagementAPIAddress, cert)
 		if err != nil {
-			logger.Fatal("cannot configure mangement-api", zap.Error(err))
+			logger.Fatal("cannot configure management-api", zap.Error(err))
 		}
 		err = iw.StartConfigurationPolling()
 		if err != nil {
-			logger.Fatal("cannot retrieving inway configuration from the mangement-api", zap.Error(err))
+			logger.Fatal("cannot retrieving inway configuration from the management-api", zap.Error(err))
 		}
 	} else {
 		serviceConfig, err2 := config.LoadServiceConfig(options.ServiceConfig)

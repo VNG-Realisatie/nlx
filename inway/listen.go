@@ -45,10 +45,10 @@ func (i *Inway) RunServer(address, managementAddress string) error {
 	}()
 
 	if i.managementProxy != nil {
-		i.logger.Info("mangement proxy: starting")
+		i.logger.Info("management proxy: starting")
 
 		go func() {
-			i.logger.Info("mangement proxy: listening on %v", zap.String("management-address", managementAddress))
+			i.logger.Info("management proxy: listening on %v", zap.String("management-address", managementAddress))
 
 			l, err := net.Listen("tcp", managementAddress)
 			if err != nil {
