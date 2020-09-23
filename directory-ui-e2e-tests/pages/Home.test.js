@@ -2,7 +2,11 @@ const { getBaseUrl, isDebugging } = require('../environment')
 const baseUrl = getBaseUrl(isDebugging())
 
 describe('Home', () => {
+    let page
+
     beforeAll(async () => {
+        page = await global.__BROWSER__.newPage();
+
         await page.setBypassCSP(true)
 
         // page should be loaded
