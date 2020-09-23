@@ -37,12 +37,6 @@ func (s *ManagementService) CreateService(ctx context.Context, service *api.Serv
 		Inways:               service.Inways,
 	}
 
-	if service.AuthorizationSettings != nil {
-		model.AuthorizationSettings = &database.ServiceAuthorizationSettings{
-			Mode: service.AuthorizationSettings.Mode,
-		}
-	}
-
 	err = s.configDatabase.CreateService(ctx, model)
 	if err != nil {
 		logger.Error("error creating service in DB", zap.Error(err))
@@ -97,12 +91,6 @@ func (s *ManagementService) UpdateService(ctx context.Context, req *api.UpdateSe
 		TechSupportContact:   req.Service.TechSupportContact,
 		PublicSupportContact: req.Service.PublicSupportContact,
 		Inways:               req.Service.Inways,
-	}
-
-	if req.Service.AuthorizationSettings != nil {
-		service.AuthorizationSettings = &database.ServiceAuthorizationSettings{
-			Mode: req.Service.AuthorizationSettings.Mode,
-		}
 	}
 
 	err = s.configDatabase.UpdateService(ctx, req.Name, service)
@@ -177,12 +165,6 @@ func convertFromDatabaseService(model *database.Service) *api.Service {
 		TechSupportContact:   model.TechSupportContact,
 		PublicSupportContact: model.PublicSupportContact,
 		Inways:               model.Inways,
-	}
-
-	if model.AuthorizationSettings != nil {
-		service.AuthorizationSettings = &api.Service_AuthorizationSettings{
-			Mode: model.AuthorizationSettings.Mode,
-		}
 	}
 
 	return service

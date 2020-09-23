@@ -4,9 +4,7 @@
 import { t } from 'testcafe'
 
 import { getBaseUrl } from '../../utils'
-import addEditPage, {
-  AUTHORIZATION_TYPE_NONE,
-} from './page-models/add-edit-service'
+import addEditPage from './page-models/add-edit-service'
 import detailPage from './page-models/service-detail'
 
 const baseUrl = getBaseUrl()
@@ -37,7 +35,6 @@ export async function createService(serviceProperties = {}) {
     apiSpecificationUrl: 'my-service.test:8000/openapi.json',
     techSupportContact: 'tech@organization.test',
     publicSupportContact: 'public@organization.test',
-    authorizationType: AUTHORIZATION_TYPE_NONE,
     publishToCentralDirectory: false,
     ...serviceProperties,
   })

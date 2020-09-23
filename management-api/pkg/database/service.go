@@ -14,19 +14,14 @@ import (
 )
 
 type Service struct {
-	Name                  string                        `json:"name,omitempty"`
-	EndpointURL           string                        `json:"endpointURL,omitempty"`
-	DocumentationURL      string                        `json:"documentationURL,omitempty"`
-	APISpecificationURL   string                        `json:"apiSpecificationURL,omitempty"`
-	Internal              bool                          `json:"internal,omitempty"`
-	TechSupportContact    string                        `json:"techSupportContact,omitempty"`
-	PublicSupportContact  string                        `json:"publicSupportContact,omitempty"`
-	AuthorizationSettings *ServiceAuthorizationSettings `json:"authorizationSettings,omitempty"`
-	Inways                []string                      `json:"inways,omitempty"`
-}
-
-type ServiceAuthorizationSettings struct {
-	Mode string `json:"mode,omitempty"`
+	Name                 string   `json:"name,omitempty"`
+	EndpointURL          string   `json:"endpointURL,omitempty"`
+	DocumentationURL     string   `json:"documentationURL,omitempty"`
+	APISpecificationURL  string   `json:"apiSpecificationURL,omitempty"`
+	Internal             bool     `json:"internal,omitempty"`
+	TechSupportContact   string   `json:"techSupportContact,omitempty"`
+	PublicSupportContact string   `json:"publicSupportContact,omitempty"`
+	Inways               []string `json:"inways,omitempty"`
 }
 
 // ListServices returns a list of services

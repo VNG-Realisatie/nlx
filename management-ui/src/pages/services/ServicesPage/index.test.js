@@ -36,10 +36,6 @@ test('fetching all services', async () => {
     store.servicesStore.services = [
       {
         name: 'my-first-service',
-        authorizationSettings: {
-          mode: 'none',
-          authorizations: [],
-        },
         inways: [],
         internal: false,
       },

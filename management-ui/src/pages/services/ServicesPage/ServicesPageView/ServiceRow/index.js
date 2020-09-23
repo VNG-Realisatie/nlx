@@ -9,12 +9,10 @@ import {
   ServiceVisibilityMessage,
   showServiceVisibilityAlert,
 } from '../../../../../components/ServiceVisibilityAlert'
-import AuthorizationMode from './AuthorizationMode'
 import { TdAlignRight } from './index.styles'
 
 const ServiceRow = ({ service, ...props }) => {
-  const { name, authorizationSettings, internal, inways } = service
-  const { authorizations, mode } = authorizationSettings
+  const { name, internal, inways } = service
 
   return (
     <Table.Tr
@@ -24,9 +22,6 @@ const ServiceRow = ({ service, ...props }) => {
       {...props}
     >
       <Table.Td>{name}</Table.Td>
-      <Table.Td>
-        <AuthorizationMode authorizations={authorizations} mode={mode} />
-      </Table.Td>
       <TdAlignRight data-testid="warning-cell">
         {showServiceVisibilityAlert({ internal, inways }) ? (
           <ServiceVisibilityMessage />
@@ -39,10 +34,6 @@ const ServiceRow = ({ service, ...props }) => {
 ServiceRow.propTypes = {
   service: shape({
     name: string.isRequired,
-    authorizationSettings: shape({
-      mode: string,
-      authorizations: array,
-    }),
     internal: bool.isRequired,
     inways: array.isRequired,
   }),

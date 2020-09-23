@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { arrayOf, bool, func, oneOf, shape, string } from 'prop-types'
+import { arrayOf, bool, func, shape, string } from 'prop-types'
 import { observer } from 'mobx-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
@@ -18,7 +18,7 @@ import {
   StyledCollapsibleBody,
   StyledCollapsibleEmptyBody,
 } from '../../../../components/DetailView'
-import { IconHidden, IconInway, IconKey, IconVisible } from '../../../../icons'
+import { IconHidden, IconInway, IconVisible } from '../../../../icons'
 import { showServiceVisibilityAlert } from '../../../../components/ServiceVisibilityAlert'
 import {
   StyledActionsBar,
@@ -28,7 +28,7 @@ import {
 } from './index.styles'
 
 const ServiceDetailView = ({ service, removeHandler }) => {
-  const { internal, authorizationSettings, inways } = service
+  const { internal, inways } = service
   const { t } = useTranslation()
   const location = useLocation()
 
@@ -108,46 +108,6 @@ const ServiceDetailView = ({ service, removeHandler }) => {
             </Table>
           </StyledCollapsibleBody>
         </Collapsible>
-
-        {authorizationSettings.mode === 'whitelist' ? (
-          <Collapsible
-            title={
-              <DetailHeading data-testid="service-authorizations">
-                <IconKey />
-                {t('Whitelisted organizations')}
-                <Amount value={authorizationSettings.authorizations.length} />
-              </DetailHeading>
-            }
-            ariaLabel={t('Whitelisted organizations')}
-          >
-            <StyledCollapsibleBody>
-              <Table data-testid="service-authorizations-list">
-                <tbody>
-                  {authorizationSettings.authorizations.length ? (
-                    authorizationSettings.authorizations.map(
-                      ({ organizationName }, i) => (
-                        <Table.Tr
-                          key={i}
-                          data-testid={`service-authorization-${i}`}
-                        >
-                          <Table.Td>{organizationName}</Table.Td>
-                        </Table.Tr>
-                      ),
-                    )
-                  ) : (
-                    <Table.Tr data-testid="service-no-authorizations">
-                      <Table.Td>
-                        <StyledCollapsibleEmptyBody>
-                          {t('No organizations have been added')}
-                        </StyledCollapsibleEmptyBody>
-                      </Table.Td>
-                    </Table.Tr>
-                  )}
-                </tbody>
-              </Table>
-            </StyledCollapsibleBody>
-          </Collapsible>
-        ) : null}
       </SectionGroup>
     </>
   )
@@ -161,12 +121,6 @@ ServiceDetailView.propTypes = {
     internal: bool.isRequired,
     techSupportContact: string,
     publicSupportContact: string,
-    authorizationSettings: shape({
-      mode: oneOf(['whitelist', 'none']),
-      authorizations: arrayOf(
-        shape({ organizationName: string, publicKeyHash: string }),
-      ),
-    }).isRequired,
     inways: arrayOf(string),
   }).isRequired,
   removeHandler: func.isRequired,

@@ -25,9 +25,8 @@ func TestCreateService(t *testing.T) {
 	ctx := context.Background()
 
 	databaseService := &database.Service{
-		Name:                  "my-service",
-		EndpointURL:           "my-service.test",
-		AuthorizationSettings: &database.ServiceAuthorizationSettings{Mode: "none"},
+		Name:        "my-service",
+		EndpointURL: "my-service.test",
 	}
 
 	mockCtrl := gomock.NewController(t)
@@ -96,9 +95,8 @@ func TestUpdateService(t *testing.T) {
 	ctx := context.Background()
 
 	databseService := &database.Service{
-		Name:                  "my-service",
-		EndpointURL:           "my-service.test",
-		AuthorizationSettings: &database.ServiceAuthorizationSettings{Mode: "none"},
+		Name:        "my-service",
+		EndpointURL: "my-service.test",
 	}
 
 	mockCtrl := gomock.NewController(t)

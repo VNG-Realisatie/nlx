@@ -16,9 +16,6 @@ class ServiceRepository {
     return services.map((service) => {
       service.internal = !!service.internal
       service.inways = service.inways || []
-      service.authorizationSettings = service.authorizationSettings || {}
-      service.authorizationSettings.authorizations =
-        service.authorizationSettings.authorizations || []
       return service
     })
   }
@@ -67,8 +64,6 @@ class ServiceRepository {
     const service = await response.json()
     service.internal = !!service.internal
     service.inways = service.inways || []
-    service.authorizationSettings.authorizations =
-      service.authorizationSettings.authorizations || []
 
     return service
   }

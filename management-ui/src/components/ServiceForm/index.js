@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { arrayOf, bool, func, oneOf, shape, string } from 'prop-types'
+import { arrayOf, bool, func, shape, string } from 'prop-types'
 import { FieldArray, Formik } from 'formik'
 import * as Yup from 'yup'
 import { useTranslation } from 'react-i18next'
@@ -12,14 +12,9 @@ import {
   Fieldset,
   Label,
   Legend,
-  Radio,
   TextInput,
 } from '@commonground/design-system'
 
-import {
-  AUTHORIZATION_TYPE_NONE,
-  AUTHORIZATION_TYPE_WHITELIST,
-} from '../../vocabulary'
 import FormikFocusError from '../FormikFocusError'
 import InwayRepository from '../../domain/inway-repository'
 import usePromise from '../../hooks/use-promise'
@@ -41,9 +36,6 @@ const DEFAULT_INITIAL_VALUES = {
   publishedInDirectory: true,
   techSupportContact: '',
   publicSupportContact: '',
-  authorizationSettings: {
-    mode: AUTHORIZATION_TYPE_WHITELIST,
-  },
   inways: [],
 }
 
@@ -66,12 +58,6 @@ const ServiceForm = ({
     publishedInDirectory: Yup.boolean(),
     techSupportContact: Yup.string(),
     publicSupportContact: Yup.string(),
-    authorizationSettings: Yup.object().shape({
-      mode: Yup.mixed().oneOf([
-        AUTHORIZATION_TYPE_WHITELIST,
-        AUTHORIZATION_TYPE_NONE,
-      ]),
-    }),
     inways: Yup.array().of(Yup.string()),
   })
 
@@ -191,26 +177,6 @@ const ServiceForm = ({
           </Fieldset>
 
           <Fieldset>
-            <Legend>{t('Access')}</Legend>
-
-            <Radio.Group label={t('Type of authorization')}>
-              <Radio
-                name="authorizationSettings.mode"
-                value={AUTHORIZATION_TYPE_WHITELIST}
-              >
-                {t('Whitelist for authorized organizations')}
-              </Radio>
-
-              <Radio
-                name="authorizationSettings.mode"
-                value={AUTHORIZATION_TYPE_NONE}
-              >
-                {t('Allow all organizations')}
-              </Radio>
-            </Radio.Group>
-          </Fieldset>
-
-          <Fieldset>
             <Legend>{t('Visibility')}</Legend>
 
             <Checkbox name="publishedInDirectory">
@@ -244,9 +210,6 @@ ServiceForm.propTypes = {
     internal: bool,
     techSupportContact: string,
     publicSupportContact: string,
-    authorizationSettings: shape({
-      mode: oneOf([AUTHORIZATION_TYPE_WHITELIST, AUTHORIZATION_TYPE_NONE]),
-    }),
     inways: arrayOf(string),
   }),
   submitButtonText: string.isRequired,

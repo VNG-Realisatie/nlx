@@ -22,10 +22,6 @@ beforeEach(() => {
     internal: false,
     techSupportContact: '',
     publicSupportContact: '',
-    authorizationSettings: {
-      mode: 'none',
-      authorizations: [],
-    },
     inways: [],
   }
 })

@@ -19,7 +19,6 @@ const ServicesPageView = ({ services }) => {
       <thead>
         <Table.TrHead>
           <Table.Th>{t('Name')}</Table.Th>
-          <Table.Th>{t('Access')}</Table.Th>
           <Table.Th />
         </Table.TrHead>
       </thead>

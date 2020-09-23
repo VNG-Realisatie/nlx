@@ -27,9 +27,6 @@ describe('the ServiceRepository', () => {
       expect(result).toEqual([
         {
           name: 'A Service',
-          authorizationSettings: {
-            authorizations: [],
-          },
           inways: [],
           internal: false,
         },
@@ -145,7 +142,6 @@ describe('the ServiceRepository', () => {
         status: 200,
         json: async () => ({
           name: 'Service',
-          authorizationSettings: { mode: 'none' },
         }),
       })
     })
@@ -158,10 +154,6 @@ describe('the ServiceRepository', () => {
       expect(result).toEqual(
         expect.objectContaining({
           name: 'Service',
-          authorizationSettings: {
-            authorizations: [],
-            mode: expect.anything(),
-          },
         }),
       )
 
@@ -180,10 +172,6 @@ describe('the ServiceRepository', () => {
       expect(result).toEqual(
         expect.objectContaining({
           inways: [],
-          authorizationSettings: {
-            authorizations: [],
-            mode: expect.anything(),
-          },
           internal: false,
         }),
       )
@@ -198,10 +186,6 @@ describe('the ServiceRepository', () => {
             name: 'Service',
             internal: true,
             inways: ['Inway1'],
-            authorizationSettings: {
-              mode: 'whitelist',
-              authorizations: ['Outway1'],
-            },
           }),
         })
 
@@ -211,34 +195,6 @@ describe('the ServiceRepository', () => {
           expect.objectContaining({
             internal: true,
             inways: ['Inway1'],
-            authorizationSettings: {
-              mode: 'whitelist',
-              authorizations: ['Outway1'],
-            },
-          }),
-        )
-      })
-
-      it('should add missing whitelist', async () => {
-        jest.spyOn(global, 'fetch').mockResolvedValue({
-          ok: true,
-          status: 200,
-          json: async () => ({
-            name: 'Service',
-            authorizationSettings: {
-              mode: 'whitelist',
-            },
-          }),
-        })
-
-        const result = await ServiceRepository.getByName('Service')
-
-        expect(result).toEqual(
-          expect.objectContaining({
-            authorizationSettings: {
-              mode: 'whitelist',
-              authorizations: [],
-            },
           }),
         )
       })

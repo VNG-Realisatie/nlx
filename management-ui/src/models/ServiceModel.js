@@ -2,15 +2,8 @@
 // Licensed under the EUPL
 //
 import { action, decorate, flow, observable } from 'mobx'
-import { arrayOf, bool, func, shape, string } from 'prop-types'
-import {
-  createModelSchema,
-  createSimpleSchema,
-  list,
-  object,
-  primitive,
-  serialize,
-} from 'serializr'
+import { arrayOf, bool, func, string } from 'prop-types'
+import { createModelSchema, list, primitive, serialize } from 'serializr'
 
 export const serviceModelPropTypes = {
   name: string.isRequired,
@@ -20,15 +13,6 @@ export const serviceModelPropTypes = {
   internal: bool.isRequired,
   techSupportContact: string.isRequired,
   publicSupportContact: string.isRequired,
-  authorizationSettings: shape({
-    mode: string.isRequired,
-    authorizations: arrayOf(
-      shape({
-        organizationName: string.isRequired,
-        publicKeyHash: string.isRequired,
-      }),
-    ),
-  }),
   inways: arrayOf(string),
   fetch: func.isRequired,
   update: func.isRequired,
@@ -43,7 +27,6 @@ class ServiceModel {
   internal = false
   techSupportContact = ''
   publicSupportContact = ''
-  authorizationSettings = { authorizations: [] }
   inways = []
 
   constructor({ store, service }) {
@@ -64,9 +47,6 @@ class ServiceModel {
     this.internal = service.internal || false
     this.techSupportContact = service.techSupportContact || ''
     this.publicSupportContact = service.publicSupportContact || ''
-    this.authorizationSettings = service.authorizationSettings || {}
-    this.authorizationSettings.authorizations =
-      service.authorizationSettings.authorizations || []
     this.inways = service.inways || []
   }
 
@@ -85,19 +65,6 @@ createModelSchema(ServiceModel, {
   internal: primitive(),
   techSupportContact: primitive(),
   publicSupportContact: primitive(),
-  authorizationSettings: object(
-    createSimpleSchema({
-      mode: primitive(),
-      authorizations: list(
-        object(
-          createSimpleSchema({
-            organizationName: primitive(),
-            publicKeyHash: primitive(),
-          }),
-        ),
-      ),
-    }),
-  ),
   inways: list(primitive()),
 })
 
@@ -109,7 +76,6 @@ decorate(ServiceModel, {
   internal: observable,
   techSupportContact: observable,
   publicSupportContact: observable,
-  authorizationSettings: observable,
   inways: observable,
   fetch: action.bound,
   update: action.bound,

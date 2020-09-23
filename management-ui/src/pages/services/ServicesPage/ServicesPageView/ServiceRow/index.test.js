@@ -9,10 +9,6 @@ import ServiceRow from './index'
 test('service row should render expected data', () => {
   const service = {
     name: 'service',
-    authorizationSettings: {
-      mode: 'none',
-      authorizations: [],
-    },
     internal: true,
     inways: ['inway2'],
   }

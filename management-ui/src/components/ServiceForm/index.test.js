@@ -3,7 +3,6 @@
 //
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
-import { AUTHORIZATION_TYPE_WHITELIST } from '../../vocabulary'
 import { renderWithProviders, act, fireEvent, waitFor } from '../../test-utils'
 import ServiceForm from './index'
 
@@ -14,7 +13,6 @@ describe('with initial values', () => {
     const { getByLabelText, findByLabelText } = renderWithProviders(
       <ServiceForm
         initialValues={{
-          // values copied from management-api/config/service.json
           name: 'my-service',
           endpointURL: 'my-service.test:8000',
           documentationURL: 'my-service.test:8000/docs',
@@ -22,9 +20,6 @@ describe('with initial values', () => {
           internal: false,
           techSupportContact: 'tech@organization.test',
           publicSupportContact: 'public@organization.test',
-          authorizationSettings: {
-            mode: AUTHORIZATION_TYPE_WHITELIST,
-          },
           inways: ['inway1'],
         }}
         submitButtonText="Submit"
@@ -52,11 +47,6 @@ describe('with initial values', () => {
       'public@organization.test',
     )
 
-    expect(
-      getByLabelText('Whitelist for authorized organizations').checked,
-    ).toBe(true)
-    expect(getByLabelText('Allow all organizations').checked).toBe(false)
-
     expect(await findByLabelText('inway1')).toHaveAttribute('checked')
     expect(await findByLabelText('inway2')).not.toHaveAttribute('checked')
   })
@@ -82,7 +72,6 @@ test('the form values of the onSubmitHandler', async () => {
       submitButtonText="Submit"
       onSubmitHandler={onSubmitHandlerSpy}
       initialValues={{
-        // values copied from management-api/config/service.json
         name: '',
         endpointURL: 'my-service.test:8000',
         documentationURL: 'my-service.test:8000/docs',
@@ -90,9 +79,6 @@ test('the form values of the onSubmitHandler', async () => {
         internal: false,
         techSupportContact: 'tech@organization.test',
         publicSupportContact: 'public@organization.test',
-        authorizationSettings: {
-          mode: AUTHORIZATION_TYPE_WHITELIST,
-        },
       }}
       getInways={() => []}
     />,
@@ -133,16 +119,12 @@ test('the form values of the onSubmitHandler', async () => {
       inways: [],
       techSupportContact: 'tech@organization.test',
       publicSupportContact: 'public@organization.test',
-      authorizationSettings: {
-        mode: AUTHORIZATION_TYPE_WHITELIST,
-      },
     }),
   )
 })
 
 describe('when showing inways', () => {
   const initialValues = {
-    // values copied from config-api/config/service.json
     name: 'my-service',
     endpointURL: 'my-service.test:8000',
     documentationURL: 'my-service.test:8000/docs',
@@ -150,9 +132,6 @@ describe('when showing inways', () => {
     internal: false,
     techSupportContact: 'tech@organization.test',
     publicSupportContact: 'public@organization.test',
-    authorizationSettings: {
-      mode: AUTHORIZATION_TYPE_WHITELIST,
-    },
     inways: [],
   }
 

@@ -5,9 +5,6 @@
 import { Selector, t } from 'testcafe'
 const label = Selector('label')
 
-export const AUTHORIZATION_TYPE_NONE = 'none'
-export const AUTHORIZATION_TYPE_WHITELIST = 'whitelist'
-
 class Checkbox {
   constructor(text) {
     this.label = label.withText(text)
@@ -26,13 +23,6 @@ class Checkbox {
     if (checked) {
       await t.click(this.checkbox)
     }
-  }
-}
-
-class AuthorizationType {
-  constructor(text) {
-    this.label = label.withText(text)
-    this.radioButton = this.label.find('input[type=radio]')
   }
 }
 
@@ -59,12 +49,6 @@ class Page {
     this.publicSupportContactInput = Selector(
       '[data-testid="publicSupportContact"]',
     )
-    this.authorizationModes = {
-      whitelist: new AuthorizationType(
-        'Whitelist voor geauthorizeerde organisaties',
-      ),
-      none: new AuthorizationType('Alle organisaties toestaan'),
-    }
     this.inway = (name) => Selector(`[name="inways"][value=${name}]`)
 
     this.submitButton = Selector('button[type="submit"]')
@@ -80,7 +64,6 @@ class Page {
     publishToCentralDirectory,
     techSupportContact,
     publicSupportContact,
-    authorizationType,
     inways,
     performSubmit,
   }) {
@@ -126,21 +109,6 @@ class Page {
     if (typeof inways !== 'undefined') {
       for (const inway in inways) {
         await t.click(this.inway(inways[inway]))
-      }
-    }
-
-    if (typeof authorizationType !== 'undefined') {
-      switch (authorizationType) {
-        case AUTHORIZATION_TYPE_NONE:
-          await t.click(this.authorizationModes.none.radioButton)
-          break
-
-        case AUTHORIZATION_TYPE_WHITELIST:
-          await t.click(this.authorizationModes.whitelist.radioButton)
-          break
-
-        default:
-          throw new Error(`invalid authorization type '${authorizationType}'`)
       }
     }
 

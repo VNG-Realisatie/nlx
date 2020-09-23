@@ -11,8 +11,7 @@ import (
 
 func TestServiceValidate(t *testing.T) {
 	testService := api.Service{
-		Name:                  "my-service",
-		AuthorizationSettings: &api.Service_AuthorizationSettings{Mode: "none"},
+		Name: "my-service",
 	}
 
 	err := testService.Validate()
@@ -21,33 +20,6 @@ func TestServiceValidate(t *testing.T) {
 	testService = api.Service{
 		Name:        "my-service",
 		EndpointURL: "my-service.test",
-	}
-
-	err = testService.Validate()
-	assert.Equal(t, errors.New("invalid authorization settings for service my-service"), err)
-
-	testService = api.Service{
-		Name:                  "my-service",
-		EndpointURL:           "my-service.test",
-		AuthorizationSettings: &api.Service_AuthorizationSettings{Mode: "nonexisting"},
-	}
-
-	err = testService.Validate()
-	assert.Equal(t, errors.New("invalid authorization mode for service my-service, expected whitelist or none, got nonexisting"), err)
-
-	testService = api.Service{
-		Name:                  "my-service",
-		EndpointURL:           "my-service.test",
-		AuthorizationSettings: &api.Service_AuthorizationSettings{Mode: "whitelist"},
-	}
-
-	err = testService.Validate()
-	assert.Equal(t, nil, err)
-
-	testService = api.Service{
-		Name:                  "my-service",
-		EndpointURL:           "my-service.test",
-		AuthorizationSettings: &api.Service_AuthorizationSettings{Mode: "whitelist", Authorizations: []*api.Service_AuthorizationSettings_Authorization{}},
 	}
 
 	err = testService.Validate()
