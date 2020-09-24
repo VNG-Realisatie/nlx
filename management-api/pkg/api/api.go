@@ -93,6 +93,12 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, cert, orgCert *com
 
 	api.RegisterDirectoryServer(grpcServer, directoryService)
 
+	mux := runtime.NewServeMux(
+		// Change the default behavior of marshaling to JSON
+		// Emit empty fields by default
+		runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.JSONPb{OrigName: true, EmitDefaults: true}),
+	)
+
 	a := &API{
 		logger:          logger.With(zap.String("api-organization-name", e.OrganizationName)),
 		environment:     e,
@@ -100,7 +106,7 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, cert, orgCert *com
 		orgCert:         orgCert,
 		grpcServer:      grpcServer,
 		process:         mainProcess,
-		mux:             runtime.NewServeMux(),
+		mux:             mux,
 		authenticator:   authenticator,
 		directoryClient: directoryClient,
 		configDatabase:  db,
