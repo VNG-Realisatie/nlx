@@ -16,8 +16,10 @@ const usePromise = (getPromise, ...args) => {
   }
 
   useEffect(() => {
+    let isCancelled = false
+
     const resolvePromise = async () => {
-      if (isReady) {
+      if (isReady && !isCancelled) {
         // Clear any previous calls from same component
         // Not clearing result, as you may want to keep it as long as there's nothing new
         setIsReady(false)
@@ -25,16 +27,26 @@ const usePromise = (getPromise, ...args) => {
 
       try {
         const res = await getPromise(...args)
-        setResult(res)
-        setError(null)
+        if (!isCancelled) {
+          setResult(res)
+          setError(null)
+        }
       } catch (error) {
-        setError(error)
+        if (!isCancelled) {
+          setError(error)
+        }
       }
 
-      setIsReady(true)
+      if (!isCancelled) {
+        setIsReady(true)
+      }
     }
 
     resolvePromise()
+
+    return () => {
+      isCancelled = true
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [...(args || []), reloadCounter])
 
