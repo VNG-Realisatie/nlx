@@ -26,6 +26,104 @@ var accessRequestState = map[database.AccessRequestState]api.AccessRequestState{
 	database.AccessRequestFailed:      api.AccessRequestState_FAILED,
 	database.AccessRequestCreated:     api.AccessRequestState_CREATED,
 	database.AccessRequestReceived:    api.AccessRequestState_RECEIVED,
+	database.AccessRequestApproved:    api.AccessRequestState_APPROVED,
+}
+
+func (s *ManagementService) ListIncomingAccessRequest(ctx context.Context, req *api.ListIncomingAccessRequestsRequests) (*api.ListIncomingAccessRequestsResponse, error) {
+	service, err := s.configDatabase.GetService(ctx, req.ServiceName)
+	if service == nil && err == nil {
+		return nil, status.Error(codes.NotFound, "service not found")
+	}
+
+	if err != nil {
+		s.logger.Error("fetching service", zap.String("name", req.ServiceName), zap.Error(err))
+		return nil, status.Error(codes.Internal, "database error")
+	}
+
+	accessRequests, err := s.configDatabase.ListAllIncomingAccessRequests(ctx)
+	if err != nil {
+		s.logger.Error("fetching incoming access requests", zap.String("service name", req.ServiceName), zap.Error(err))
+		return nil, status.Error(codes.Internal, "database error")
+	}
+
+	filtered := []*api.IncomingAccessRequest{}
+
+	for _, accessRequest := range accessRequests {
+		if accessRequest.ServiceName == req.ServiceName {
+			responseAccessRequest, err := convertIncomingAccessRequest(accessRequest)
+
+			if err != nil {
+				s.logger.Error(
+					"converting incoming access request",
+					zap.String("id", accessRequest.ID),
+					zap.String("service", accessRequest.ServiceName),
+					zap.Error(err),
+				)
+
+				return nil, status.Error(codes.Internal, "converting incoming access request")
+			}
+
+			filtered = append(filtered, responseAccessRequest)
+		}
+	}
+
+	response := &api.ListIncomingAccessRequestsResponse{
+		AccessRequests: filtered,
+	}
+
+	return response, nil
+}
+
+func (s *ManagementService) ApproveIncomingAccessRequest(ctx context.Context, req *api.ApproveIncomingAccessRequestRequest) (*types.Empty, error) {
+	accessRequest, err := s.newIncomingAccessRequestFromRequest(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if _, err := s.configDatabase.CreateAccessGrant(ctx, accessRequest); err != nil {
+		if errors.Is(err, database.ErrAccessRequestModified) {
+			s.logger.Warn("creating access grant", zap.Error(err))
+			return nil, status.Error(codes.Aborted, "access request modified")
+		}
+
+		s.logger.Error("creating access grant", zap.Error(err))
+
+		return nil, status.Error(codes.Internal, "creating access grant")
+	}
+
+	return &types.Empty{}, nil
+}
+
+func (s *ManagementService) newIncomingAccessRequestFromRequest(ctx context.Context, req *api.ApproveIncomingAccessRequestRequest) (*database.IncomingAccessRequest, error) {
+	service, err := s.configDatabase.GetService(ctx, req.ServiceName)
+	if service == nil && err == nil {
+		return nil, status.Error(codes.NotFound, "service not found")
+	}
+
+	if err != nil {
+		s.logger.Error("fetching service", zap.String("serviceName", req.ServiceName), zap.Error(err))
+		return nil, status.Error(codes.Internal, "database error")
+	}
+
+	accessRequest, err := s.configDatabase.GetIncomingAccessRequest(ctx, req.AccessRequestID)
+	if accessRequest == nil && err == nil {
+		return nil, status.Error(codes.NotFound, "access request not found")
+	}
+
+	if err != nil {
+		s.logger.Error("fetching access request", zap.String("id", req.AccessRequestID), zap.Error(err))
+		return nil, status.Error(codes.Internal, "database error")
+	}
+
+	if accessRequest.ServiceName != req.ServiceName {
+		return nil, status.Error(codes.InvalidArgument, "service name does not match the one from access request")
+	}
+
+	if accessRequest.State == database.AccessRequestApproved {
+		return nil, status.Error(codes.AlreadyExists, "access request is already approved")
+	}
+
+	return accessRequest, nil
 }
 
 func (s *ManagementService) ListOutgoingAccessRequests(ctx context.Context, req *api.ListOutgoingAccessRequestsRequest) (*api.ListOutgoingAccessRequestsResponse, error) {
@@ -143,6 +241,34 @@ func (s *ManagementService) GetAccessRequestState(ctx context.Context, req *exte
 	}, nil
 }
 
+// nolint:dupl // incoming access request looks like outgoing access request
+func convertIncomingAccessRequest(accessRequest *database.IncomingAccessRequest) (*api.IncomingAccessRequest, error) {
+	createdAt, err := types.TimestampProto(accessRequest.CreatedAt)
+	if err != nil {
+		return nil, err
+	}
+
+	updatedAt, err := types.TimestampProto(accessRequest.UpdatedAt)
+	if err != nil {
+		return nil, err
+	}
+
+	state, ok := accessRequestState[accessRequest.State]
+	if !ok {
+		return nil, fmt.Errorf("unsupported state: %v", accessRequest.State)
+	}
+
+	return &api.IncomingAccessRequest{
+		Id:               accessRequest.ID,
+		OrganizationName: accessRequest.OrganizationName,
+		ServiceName:      accessRequest.ServiceName,
+		State:            state,
+		CreatedAt:        createdAt,
+		UpdatedAt:        updatedAt,
+	}, nil
+}
+
+// nolint:dupl // outgoing access request looks like incoming access request
 func convertOutgoingAccessRequest(a *database.OutgoingAccessRequest) (*api.OutgoingAccessRequest, error) {
 	createdAt, err := types.TimestampProto(a.CreatedAt)
 	if err != nil {

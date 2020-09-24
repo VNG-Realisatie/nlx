@@ -75,27 +75,65 @@ func TestCreateAccessGrant(t *testing.T) {
 	ctx := context.Background()
 	client := cluster.GetClient(t)
 
-	a := &database.AccessGrant{
-		OrganizationName:     "test-organization-a",
-		ServiceName:          "test-service-1",
-		PublicKeyFingerprint: "test-fingerprint-a",
+	accessRequest := &database.IncomingAccessRequest{
+		AccessRequest: database.AccessRequest{
+			ID:                   "access-request-id-1",
+			OrganizationName:     "test-organization-a",
+			ServiceName:          "test-service-1",
+			PublicKeyFingerprint: "test-public-key-fingerprint",
+		},
 	}
 
-	actual, err := cluster.DB.CreateAccessGrant(ctx, a)
+	data, _ := json.Marshal(accessRequest)
+
+	_, err := client.Put(ctx, path.Join("/nlx/access-requests/incoming", accessRequest.OrganizationName, accessRequest.ServiceName, "access-request-id-1"), string(data))
+	assert.NoError(t, err)
+
+	actual, err := cluster.DB.CreateAccessGrant(ctx, accessRequest)
 	assert.NoError(t, err)
 
 	expected := &database.AccessGrant{
 		ID:                   "161c188cfcea1939",
+		AccessRequestID:      "access-request-id-1",
 		OrganizationName:     "test-organization-a",
 		ServiceName:          "test-service-1",
-		PublicKeyFingerprint: "test-fingerprint-a",
-
-		CreatedAt: time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
+		PublicKeyFingerprint: "test-public-key-fingerprint",
+		CreatedAt:            time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
 	}
 
 	assert.Equal(t, expected, actual)
+}
 
-	response, err := client.Get(ctx, "/nlx/access-grants/test-service-1/test-organization-a/161c188cfcea1939")
+func TestCreateAccessGrantModified(t *testing.T) {
+	cluster := newTestCluster(t)
+	defer cluster.Terminate(t)
+
+	cluster.Clock.SetTime(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC))
+
+	ctx := context.Background()
+	client := cluster.GetClient(t)
+
+	accessRequest := &database.IncomingAccessRequest{
+		AccessRequest: database.AccessRequest{
+			ID:               "access-request-id-1",
+			OrganizationName: "test-organization-a",
+			ServiceName:      "test-service-1",
+			State:            database.AccessRequestReceived,
+		},
+	}
+
+	data, _ := json.Marshal(accessRequest)
+
+	_, err := client.Put(ctx, path.Join("/nlx/access-requests/incoming", accessRequest.OrganizationName, accessRequest.ServiceName, "access-request-id-1"), string(data))
 	assert.NoError(t, err)
-	assert.Len(t, response.Kvs, 1)
+
+	// Simulate that the access request is changed during the creation of the access grant
+	// Possibility is that the access request is already approved.
+	accessRequest.State = database.AccessRequestApproved
+	accessRequest.UpdatedAt = time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)
+
+	actual, err := cluster.DB.CreateAccessGrant(ctx, accessRequest)
+
+	assert.Equal(t, err, database.ErrAccessRequestModified)
+	assert.Nil(t, actual)
 }

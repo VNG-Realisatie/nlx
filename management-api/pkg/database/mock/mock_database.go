@@ -396,6 +396,21 @@ func (mr *MockConfigDatabaseMockRecorder) ListAllLatestIncomingAccessRequests(ct
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAllLatestIncomingAccessRequests", reflect.TypeOf((*MockConfigDatabase)(nil).ListAllLatestIncomingAccessRequests), ctx)
 }
 
+// GetIncomingAccessRequest mocks base method
+func (m *MockConfigDatabase) GetIncomingAccessRequest(ctx context.Context, id string) (*database.IncomingAccessRequest, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetIncomingAccessRequest", ctx, id)
+	ret0, _ := ret[0].(*database.IncomingAccessRequest)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetIncomingAccessRequest indicates an expected call of GetIncomingAccessRequest
+func (mr *MockConfigDatabaseMockRecorder) GetIncomingAccessRequest(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetIncomingAccessRequest", reflect.TypeOf((*MockConfigDatabase)(nil).GetIncomingAccessRequest), ctx, id)
+}
+
 // CreateIncomingAccessRequest mocks base method
 func (m *MockConfigDatabase) CreateIncomingAccessRequest(ctx context.Context, accessRequest *database.IncomingAccessRequest) (*database.IncomingAccessRequest, error) {
 	m.ctrl.T.Helper()
@@ -426,18 +441,18 @@ func (mr *MockConfigDatabaseMockRecorder) UpdateIncomingAccessRequestState(ctx, 
 }
 
 // CreateAccessGrant mocks base method
-func (m *MockConfigDatabase) CreateAccessGrant(ctx context.Context, accessGrant *database.AccessGrant) (*database.AccessGrant, error) {
+func (m *MockConfigDatabase) CreateAccessGrant(ctx context.Context, accessRequest *database.IncomingAccessRequest) (*database.AccessGrant, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateAccessGrant", ctx, accessGrant)
+	ret := m.ctrl.Call(m, "CreateAccessGrant", ctx, accessRequest)
 	ret0, _ := ret[0].(*database.AccessGrant)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // CreateAccessGrant indicates an expected call of CreateAccessGrant
-func (mr *MockConfigDatabaseMockRecorder) CreateAccessGrant(ctx, accessGrant interface{}) *gomock.Call {
+func (mr *MockConfigDatabaseMockRecorder) CreateAccessGrant(ctx, accessRequest interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccessGrant", reflect.TypeOf((*MockConfigDatabase)(nil).CreateAccessGrant), ctx, accessGrant)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccessGrant", reflect.TypeOf((*MockConfigDatabase)(nil).CreateAccessGrant), ctx, accessRequest)
 }
 
 // ListAccessGrantsForService mocks base method

@@ -36,10 +36,11 @@ type ConfigDatabase interface {
 	ListIncomingAccessRequests(ctx context.Context, organizationName, serviceName string) ([]*IncomingAccessRequest, error)
 	GetLatestIncomingAccessRequest(ctx context.Context, organizationName, serviceName string) (*IncomingAccessRequest, error)
 	ListAllLatestIncomingAccessRequests(ctx context.Context) (map[string]*IncomingAccessRequest, error)
+	GetIncomingAccessRequest(ctx context.Context, id string) (*IncomingAccessRequest, error)
 	CreateIncomingAccessRequest(ctx context.Context, accessRequest *IncomingAccessRequest) (*IncomingAccessRequest, error)
 	UpdateIncomingAccessRequestState(ctx context.Context, accessRequest *IncomingAccessRequest, state AccessRequestState) error
 
-	CreateAccessGrant(ctx context.Context, accessGrant *AccessGrant) (*AccessGrant, error)
+	CreateAccessGrant(ctx context.Context, accessRequest *IncomingAccessRequest) (*AccessGrant, error)
 	ListAccessGrantsForService(ctx context.Context, serviceName string) ([]*AccessGrant, error)
 
 	GetSettings(ctx context.Context) (*Settings, error)

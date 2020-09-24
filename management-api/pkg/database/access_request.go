@@ -40,9 +40,10 @@ const (
 	AccessRequestFailed
 	AccessRequestCreated
 	AccessRequestReceived
-
-	locksPrefix = "/nlx/locks/"
+	AccessRequestApproved
 )
+
+const locksPrefix = "/nlx/locks/"
 
 var (
 	ErrActiveAccessRequest = errors.New("already active access request")
@@ -360,6 +361,28 @@ func (db ETCDConfigDatabase) ListAllLatestIncomingAccessRequests(ctx context.Con
 	}
 
 	return latestAccessRequests, nil
+}
+
+func (db ETCDConfigDatabase) GetIncomingAccessRequest(ctx context.Context, id string) (*IncomingAccessRequest, error) {
+	key := path.Join("access-requests", "incoming")
+
+	var result []*IncomingAccessRequest
+
+	err := db.list(ctx, key, &result)
+	if err != nil {
+		return nil, err
+	}
+
+	var accessRequest *IncomingAccessRequest
+
+	for _, item := range result {
+		if item.ID == id {
+			accessRequest = item
+			break
+		}
+	}
+
+	return accessRequest, nil
 }
 
 func (db ETCDConfigDatabase) CreateIncomingAccessRequest(ctx context.Context, accessRequest *IncomingAccessRequest) (*IncomingAccessRequest, error) {

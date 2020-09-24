@@ -52,6 +52,14 @@ service Management {
     option (google.api.http) = { get: "/api/v1/insight-configuration"};
   }
 
+  rpc ListIncomingAccessRequest (ListIncomingAccessRequestsRequests) returns (ListIncomingAccessRequestsResponse) {
+    option (google.api.http) = { get: "/api/v1/access-requests/incoming/services/{serviceName}"};
+  }
+
+  rpc ApproveIncomingAccessRequest (ApproveIncomingAccessRequestRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { post: "/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/approve"};
+  }
+
   rpc ListOutgoingAccessRequests (ListOutgoingAccessRequestsRequest) returns (ListOutgoingAccessRequestsResponse) {
     option (google.api.http) = { get: "/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}"};
   }
@@ -153,6 +161,7 @@ enum AccessRequestState {
   FAILED = 1;
   CREATED = 2;
   RECEIVED = 3;
+  APPROVED = 4;
 }
 
 message OutgoingAccessRequest {
@@ -171,6 +180,19 @@ message IncomingAccessRequest {
   AccessRequestState state = 4;
   google.protobuf.Timestamp createdAt = 5;
   google.protobuf.Timestamp updatedAt = 6;
+}
+
+message ListIncomingAccessRequestsRequests {
+  string serviceName = 1;
+}
+
+message ListIncomingAccessRequestsResponse {
+  repeated IncomingAccessRequest accessRequests = 1;
+}
+
+message ApproveIncomingAccessRequestRequest {
+  string serviceName = 1;
+  string accessRequestID = 2;
 }
 
 message ListOutgoingAccessRequestsRequest {

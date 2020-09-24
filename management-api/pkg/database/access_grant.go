@@ -5,10 +5,17 @@ package database
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"path"
 	"time"
+
+	"github.com/pkg/errors"
+
+	"github.com/coreos/etcd/clientv3"
 )
+
+var ErrAccessRequestModified = errors.New("access request modified")
 
 type AccessGrant struct {
 	ID                   string    `json:"id,omitempty"`
@@ -19,17 +26,60 @@ type AccessGrant struct {
 	CreatedAt            time.Time `json:"createdAt,omitempty"`
 }
 
-func (db ETCDConfigDatabase) CreateAccessGrant(ctx context.Context, accessGrant *AccessGrant) (*AccessGrant, error) {
-	t := db.clock.Now()
-	id := fmt.Sprintf("%x", t.UnixNano())
+func (db ETCDConfigDatabase) CreateAccessGrant(ctx context.Context, accessRequest *IncomingAccessRequest) (*AccessGrant, error) {
+	data, err := json.Marshal(accessRequest)
+	if err != nil {
+		return nil, errors.Wrap(err, "marshaling access request")
+	}
 
-	key := path.Join("access-grants", accessGrant.ServiceName, accessGrant.OrganizationName, id)
+	key := db.key("access-requests", "incoming", accessRequest.OrganizationName, accessRequest.ServiceName, accessRequest.ID)
 
-	accessGrant.ID = id
-	accessGrant.CreatedAt = t
+	accessRequestCompare := clientv3.Compare(
+		clientv3.Value(key), "=", string(data),
+	)
 
-	if err := db.put(ctx, key, accessGrant); err != nil {
-		return nil, err
+	accessRequest.State = AccessRequestApproved
+	accessRequest.UpdatedAt = db.clock.Now()
+
+	data, err = json.Marshal(accessRequest)
+	if err != nil {
+		return nil, errors.Wrap(err, "marshaling approved access request")
+	}
+
+	accessRequestOp := clientv3.OpPut(key, string(data))
+
+	now := db.clock.Now()
+	id := fmt.Sprintf("%x", now.UnixNano())
+
+	accessGrant := &AccessGrant{
+		ID:                   id,
+		AccessRequestID:      accessRequest.ID,
+		OrganizationName:     accessRequest.OrganizationName,
+		ServiceName:          accessRequest.ServiceName,
+		PublicKeyFingerprint: accessRequest.PublicKeyFingerprint,
+		CreatedAt:            now,
+	}
+
+	key = db.key("access-grants", accessGrant.ServiceName, accessGrant.OrganizationName, id)
+
+	data, err = json.Marshal(accessGrant)
+	if err != nil {
+		return nil, errors.Wrap(err, "marshaling access grant")
+	}
+
+	accessGrantOp := clientv3.OpPut(key, string(data))
+
+	transaction := db.etcdCli.KV.Txn(ctx).
+		If(accessRequestCompare).
+		Then(accessRequestOp, accessGrantOp)
+
+	response, err := transaction.Commit()
+	if err != nil {
+		return nil, errors.Wrap(err, "committing transaction")
+	}
+
+	if !response.Succeeded {
+		return nil, ErrAccessRequestModified
 	}
 
 	return accessGrant, nil

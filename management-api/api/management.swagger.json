@@ -43,6 +43,72 @@
         ]
       }
     },
+    "/api/v1/access-requests/incoming/services/{serviceName}": {
+      "get": {
+        "operationId": "Management_ListIncomingAccessRequest",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/managementListIncomingAccessRequestsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "serviceName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Management"
+        ]
+      }
+    },
+    "/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/approve": {
+      "post": {
+        "operationId": "Management_ApproveIncomingAccessRequest",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "serviceName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "accessRequestID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Management"
+        ]
+      }
+    },
     "/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}": {
       "get": {
         "operationId": "Management_ListOutgoingAccessRequests",
@@ -610,7 +676,8 @@
         "UNSPECIFIED",
         "FAILED",
         "CREATED",
-        "RECEIVED"
+        "RECEIVED",
+        "APPROVED"
       ],
       "default": "UNSPECIFIED"
     },
@@ -656,6 +723,31 @@
         }
       }
     },
+    "managementIncomingAccessRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "organizationName": {
+          "type": "string"
+        },
+        "serviceName": {
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/definitions/managementAccessRequestState"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
     "managementInsightConfiguration": {
       "type": "object",
       "properties": {
@@ -698,6 +790,17 @@
       "properties": {
         "name": {
           "type": "string"
+        }
+      }
+    },
+    "managementListIncomingAccessRequestsResponse": {
+      "type": "object",
+      "properties": {
+        "accessRequests": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/managementIncomingAccessRequest"
+          }
         }
       }
     },

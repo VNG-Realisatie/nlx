@@ -325,3 +325,73 @@ func TestListAllLatestOutgoingAccessRequests(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, expected, actual)
 }
+
+func TestGetIncomingAccessRequest(t *testing.T) {
+	cluster := newTestCluster(t)
+	defer cluster.Terminate(t)
+
+	ctx := context.Background()
+	client := cluster.GetClient(t)
+
+	// Test with no incoming access requests
+	actual, err := cluster.DB.GetIncomingAccessRequest(ctx, "1")
+	assert.Nil(t, actual)
+	assert.Nil(t, err)
+
+	createAccessRequest := func(id, organization, service string) {
+		bytes, _ := json.Marshal(
+			&database.IncomingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					ID:               id,
+					OrganizationName: organization,
+					ServiceName:      service,
+				},
+			},
+		)
+
+		_, err := client.Put(ctx, path.Join("/nlx/access-requests/incoming", organization, service, id), string(bytes))
+		assert.NoError(t, err)
+	}
+
+	createAccessRequest("1", "test-organization-a", "test-service-1")
+	createAccessRequest("2", "test-organization-a", "test-service-1")
+	createAccessRequest("3", "test-organization-a", "test-service-2")
+	createAccessRequest("4", "test-organization-b", "test-service-1")
+
+	tests := []struct {
+		name     string
+		id       string
+		expected *database.IncomingAccessRequest
+		err      error
+	}{
+		{
+			"existing_access_request",
+			"1",
+			&database.IncomingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					ID:               "1",
+					OrganizationName: "test-organization-a",
+					ServiceName:      "test-service-1",
+				},
+			},
+			nil,
+		},
+		{
+			"non_existing_access_request",
+			"5",
+			nil,
+			nil,
+		},
+	}
+
+	for _, test := range tests {
+		test := test
+
+		t.Run(test.name, func(t *testing.T) {
+			actual, err := cluster.DB.GetIncomingAccessRequest(ctx, test.id)
+
+			assert.Equal(t, test.expected, actual)
+			assert.Equal(t, test.err, err)
+		})
+	}
+}

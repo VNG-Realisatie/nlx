@@ -143,6 +143,148 @@ func TestCreateAccessRequest(t *testing.T) {
 	}
 }
 
+//nolint:funlen // this is a test method
+func TestApproveIncomingAccessRequest(t *testing.T) {
+	tests := []struct {
+		name          string
+		request       *api.ApproveIncomingAccessRequestRequest
+		service       *database.Service
+		accessRequest *database.IncomingAccessRequest
+		response      *types.Empty
+		err           error
+	}{
+		{
+			"unknown_service",
+			&api.ApproveIncomingAccessRequestRequest{
+				ServiceName:     "test-service",
+				AccessRequestID: "1",
+			},
+			nil,
+			nil,
+			nil,
+			status.Error(codes.NotFound, "service not found"),
+		},
+		{
+			"unknown_access_request",
+			&api.ApproveIncomingAccessRequestRequest{
+				ServiceName:     "test-service",
+				AccessRequestID: "1",
+			},
+			&database.Service{
+				Name: "test-service",
+			},
+			nil,
+			nil,
+			status.Error(codes.NotFound, "access request not found"),
+		},
+		{
+			"service_mismatch_access_request",
+			&api.ApproveIncomingAccessRequestRequest{
+				ServiceName:     "test-service",
+				AccessRequestID: "1",
+			},
+			&database.Service{
+				Name: "test-service",
+			},
+			&database.IncomingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					ServiceName: "other-service",
+				},
+			},
+			nil,
+			status.Error(codes.InvalidArgument, "service name does not match the one from access request"),
+		},
+		{
+			"access_request_already_approved",
+			&api.ApproveIncomingAccessRequestRequest{
+				ServiceName:     "test-service",
+				AccessRequestID: "1",
+			},
+			&database.Service{
+				Name: "test-service",
+			},
+			&database.IncomingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					ServiceName: "test-service",
+					State:       database.AccessRequestApproved,
+				},
+			},
+			nil,
+			status.Error(codes.AlreadyExists, "access request is already approved"),
+		},
+		{
+			"happy_flow",
+			&api.ApproveIncomingAccessRequestRequest{
+				ServiceName:     "test-service",
+				AccessRequestID: "1",
+			},
+			&database.Service{
+				Name: "test-service",
+			},
+			&database.IncomingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					ServiceName: "test-service",
+				},
+			},
+			&types.Empty{},
+			nil,
+		},
+	}
+
+	for _, test := range tests {
+		test := test
+		t.Run(test.name, func(t *testing.T) {
+			service, ctrl, db := newService(t)
+			ctrl.Finish()
+
+			ctx := context.Background()
+
+			db.EXPECT().GetService(ctx, test.request.ServiceName).Return(test.service, nil)
+			db.EXPECT().GetIncomingAccessRequest(ctx, test.request.AccessRequestID).Return(test.accessRequest, nil)
+
+			if test.response != nil {
+				db.EXPECT().CreateAccessGrant(ctx, test.accessRequest)
+			}
+
+			actual, err := service.ApproveIncomingAccessRequest(ctx, test.request)
+
+			assert.Equal(t, test.response, actual)
+			assert.Equal(t, test.err, err)
+		})
+	}
+}
+
+func TestApproveIncomingAccessRequestModified(t *testing.T) {
+	serverService, ctrl, db := newService(t)
+	ctrl.Finish()
+
+	ctx := context.Background()
+
+	service := &database.Service{
+		Name: "test-service",
+	}
+
+	accessRequest := &database.IncomingAccessRequest{
+		AccessRequest: database.AccessRequest{
+			ServiceName: "test-service",
+		},
+	}
+
+	db.EXPECT().GetService(ctx, "test-service").Return(service, nil)
+	db.EXPECT().GetIncomingAccessRequest(ctx, "1").Return(accessRequest, nil)
+	db.EXPECT().CreateAccessGrant(ctx, accessRequest).Return(nil, database.ErrAccessRequestModified)
+
+	request := &api.ApproveIncomingAccessRequestRequest{
+		ServiceName:     "test-service",
+		AccessRequestID: "1",
+	}
+
+	accessGrant, err := serverService.ApproveIncomingAccessRequest(ctx, request)
+
+	assert.Nil(t, accessGrant)
+	assert.Equal(t, status.Error(codes.Aborted, "access request modified"), err)
+}
+
 func setProxyMetadata(ctx context.Context) context.Context {
 	md := metadata.Pairs(
 		"nlx-organization", "organization-a",
