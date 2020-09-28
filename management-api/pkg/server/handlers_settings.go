@@ -36,17 +36,23 @@ func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateS
 	logger := s.logger.With(zap.String("handler", "update-settings"))
 
 	if req.OrganizationInway != "" {
-		setOrganizationInwayRequest := &registrationapi.SetOrganizationInwayRequest{
-			Address: req.OrganizationInway,
+		inway, err := s.configDatabase.GetInway(ctx, req.OrganizationInway)
+		if err != nil {
+			logger.Error("could not get the inway from the database", zap.Error(err))
+			return nil, status.Error(codes.Internal, "database error")
 		}
 
-		_, err := s.directoryClient.SetOrganizationInway(ctx, setOrganizationInwayRequest)
+		setOrganizationInwayRequest := &registrationapi.SetOrganizationInwayRequest{
+			Address: inway.SelfAddress,
+		}
+
+		_, err = s.directoryClient.SetOrganizationInway(ctx, setOrganizationInwayRequest)
 		if err != nil {
 			logger.Error("could not update the settings in the directory", zap.Error(err))
 			return nil, status.Error(codes.Internal, "database error")
 		}
 	} else {
-		_, err := s.directoryClient.ClearOrganizationInway(ctx, nil)
+		_, err := s.directoryClient.ClearOrganizationInway(ctx, &types.Empty{})
 		if err != nil {
 			logger.Error("could not clear organization inway in the directory", zap.Error(err))
 			return nil, status.Error(codes.Internal, "database error")

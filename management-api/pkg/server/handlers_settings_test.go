@@ -92,16 +92,44 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 		expectedError    error
 	}{
 		{
-			name: "when the directory call fails",
+			name: "when_the_getinway_database_call_fails",
 			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
 				db := mock_database.NewMockConfigDatabase(ctrl)
+
+				db.EXPECT().
+					GetInway(gomock.Any(), "inway-name").
+					Return(nil, errors.New("random error"))
+
+				return db
+			},
+			directoryClient: func(ctrl *gomock.Controller) directory.Client {
+				directoryClient := mock_directory.NewMockClient(ctrl)
+
+				return directoryClient
+			},
+			req: &api.UpdateSettingsRequest{
+				OrganizationInway: "inway-name",
+			},
+			expectedResponse: nil,
+			expectedError:    status.Error(codes.Internal, "database error"),
+		},
+		{
+			name: "when_the_directory_call_fails",
+			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
+				db := mock_database.NewMockConfigDatabase(ctrl)
+
+				db.EXPECT().
+					GetInway(gomock.Any(), "inway-name").
+					Return(&database.Inway{
+						SelfAddress: "inway.localhost",
+					}, nil)
 
 				return db
 			},
 			directoryClient: func(ctrl *gomock.Controller) directory.Client {
 				directoryClient := mock_directory.NewMockClient(ctrl)
 				directoryClient.EXPECT().SetOrganizationInway(gomock.Any(), &registrationapi.SetOrganizationInwayRequest{
-					Address: "inway-name",
+					Address: "inway.localhost",
 				}).Return(nil, errors.New("arbitrary error"))
 
 				return directoryClient
@@ -113,7 +141,7 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			expectedError:    status.Error(codes.Internal, "database error"),
 		},
 		{
-			name: "when the inway is empty and the directory call fails",
+			name: "when_the_inway_is_empty_and_the_directory_call_fails",
 			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
 				db := mock_database.NewMockConfigDatabase(ctrl)
 
@@ -121,7 +149,9 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			},
 			directoryClient: func(ctrl *gomock.Controller) directory.Client {
 				directoryClient := mock_directory.NewMockClient(ctrl)
-				directoryClient.EXPECT().ClearOrganizationInway(gomock.Any(), gomock.Any()).Return(nil, errors.New("arbitrary error"))
+				directoryClient.EXPECT().
+					ClearOrganizationInway(gomock.Any(), gomock.Any()).
+					Return(nil, errors.New("arbitrary error"))
 
 				return directoryClient
 			},
@@ -132,9 +162,16 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			expectedError:    status.Error(codes.Internal, "database error"),
 		},
 		{
-			name: "when the database call fails",
+			name: "when_the_updatesettings_database_call_fails",
 			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
 				db := mock_database.NewMockConfigDatabase(ctrl)
+
+				db.EXPECT().
+					GetInway(gomock.Any(), "inway-name").
+					Return(&database.Inway{
+						SelfAddress: "inway.localhost",
+					}, nil)
+
 				db.EXPECT().UpdateSettings(
 					gomock.Any(), gomock.Any(),
 				).Return(errors.New("arbitrary error"))
@@ -143,9 +180,12 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			},
 			directoryClient: func(ctrl *gomock.Controller) directory.Client {
 				directoryClient := mock_directory.NewMockClient(ctrl)
-				directoryClient.EXPECT().SetOrganizationInway(gomock.Any(), &registrationapi.SetOrganizationInwayRequest{
-					Address: "inway-name",
-				}).Return(&types.Empty{}, nil)
+
+				directoryClient.EXPECT().
+					SetOrganizationInway(gomock.Any(), &registrationapi.SetOrganizationInwayRequest{
+						Address: "inway.localhost",
+					}).
+					Return(&types.Empty{}, nil)
 
 				return directoryClient
 			},
@@ -156,9 +196,16 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			expectedError:    status.Error(codes.Internal, "database error"),
 		},
 		{
-			name: "happy flow",
+			name: "happy_flow",
 			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
 				db := mock_database.NewMockConfigDatabase(ctrl)
+
+				db.EXPECT().
+					GetInway(gomock.Any(), "inway-name").
+					Return(&database.Inway{
+						SelfAddress: "inway.localhost",
+					}, nil)
+
 				db.EXPECT().UpdateSettings(gomock.Any(), &database.Settings{
 					OrganizationInway: "inway-name",
 				}).Return(nil)
@@ -168,7 +215,7 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			directoryClient: func(ctrl *gomock.Controller) directory.Client {
 				directoryClient := mock_directory.NewMockClient(ctrl)
 				directoryClient.EXPECT().SetOrganizationInway(gomock.Any(), &registrationapi.SetOrganizationInwayRequest{
-					Address: "inway-name",
+					Address: "inway.localhost",
 				}).Return(&types.Empty{}, nil)
 
 				return directoryClient
