@@ -80,8 +80,9 @@ func TestCreateAccessRequest(t *testing.T) {
 
 	a := &database.OutgoingAccessRequest{
 		AccessRequest: database.AccessRequest{
-			OrganizationName: "test-organization-a",
-			ServiceName:      "test-service-1",
+			OrganizationName:     "test-organization-a",
+			ServiceName:          "test-service-1",
+			PublicKeyFingerprint: "public_key",
 		},
 	}
 
@@ -90,12 +91,13 @@ func TestCreateAccessRequest(t *testing.T) {
 
 	expected := &database.OutgoingAccessRequest{
 		AccessRequest: database.AccessRequest{
-			ID:               "161c188cfcea1939",
-			OrganizationName: "test-organization-a",
-			ServiceName:      "test-service-1",
-			State:            database.AccessRequestCreated,
-			CreatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
-			UpdatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
+			ID:                   "161c188cfcea1939",
+			OrganizationName:     "test-organization-a",
+			ServiceName:          "test-service-1",
+			PublicKeyFingerprint: "public_key",
+			State:                database.AccessRequestCreated,
+			CreatedAt:            time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
+			UpdatedAt:            time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
 		},
 	}
 
@@ -104,6 +106,19 @@ func TestCreateAccessRequest(t *testing.T) {
 	response, err := client.Get(ctx, "/nlx/access-requests/outgoing/test-organization-a/test-service-1/161c188cfcea1939")
 	assert.NoError(t, err)
 	assert.Len(t, response.Kvs, 1)
+
+	a = &database.OutgoingAccessRequest{
+		AccessRequest: database.AccessRequest{
+			OrganizationName:     "test-organization-a",
+			ServiceName:          "test-service-1",
+			PublicKeyFingerprint: "public_key",
+		},
+	}
+
+	_, err = cluster.DB.CreateOutgoingAccessRequest(ctx, a)
+
+	assert.Error(t, err)
+	assert.Equal(t, err, database.ErrActiveAccessRequest)
 }
 
 func TestUpdateAccessRequestState(t *testing.T) {

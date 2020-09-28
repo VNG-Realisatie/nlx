@@ -239,14 +239,37 @@ func (db ETCDConfigDatabase) UnlockOutgoingAccessRequest(ctx context.Context, ac
 	return err
 }
 
-func (db ETCDConfigDatabase) CreateOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) (*OutgoingAccessRequest, error) {
-	existing, err := db.GetLatestOutgoingAccessRequest(ctx, accessRequest.OrganizationName, accessRequest.ServiceName)
-	if err != nil {
-		return nil, err
+func (db ETCDConfigDatabase) verifyAccessRequestUniqueConstraint(
+	ctx context.Context,
+	prefix,
+	organizationName,
+	serviceName,
+	publicKeyFingerprint string,
+) error {
+	requests := []*AccessRequest{}
+
+	if err := db.listAccessRequests(ctx, path.Join(prefix, organizationName, serviceName), &requests); err != nil {
+		return err
 	}
 
-	if existing != nil {
-		return nil, ErrActiveAccessRequest
+	for _, request := range requests {
+		if request.PublicKeyFingerprint == publicKeyFingerprint {
+			return ErrActiveAccessRequest
+		}
+	}
+
+	return nil
+}
+
+func (db ETCDConfigDatabase) CreateOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) (*OutgoingAccessRequest, error) {
+	if err := db.verifyAccessRequestUniqueConstraint(
+		ctx,
+		"outgoing",
+		accessRequest.OrganizationName,
+		accessRequest.ServiceName,
+		accessRequest.PublicKeyFingerprint,
+	); err != nil {
+		return nil, err
 	}
 
 	if err := db.createAccessRequest(ctx, "outgoing", &accessRequest.AccessRequest); err != nil {
@@ -340,13 +363,14 @@ func (db ETCDConfigDatabase) ListAllLatestIncomingAccessRequests(ctx context.Con
 }
 
 func (db ETCDConfigDatabase) CreateIncomingAccessRequest(ctx context.Context, accessRequest *IncomingAccessRequest) (*IncomingAccessRequest, error) {
-	existing, err := db.GetLatestIncomingAccessRequest(ctx, accessRequest.OrganizationName, accessRequest.ServiceName)
-	if err != nil {
+	if err := db.verifyAccessRequestUniqueConstraint(
+		ctx,
+		"incoming",
+		accessRequest.OrganizationName,
+		accessRequest.ServiceName,
+		accessRequest.PublicKeyFingerprint,
+	); err != nil {
 		return nil, err
-	}
-
-	if existing != nil {
-		return nil, ErrActiveAccessRequest
 	}
 
 	if err := db.createAccessRequest(ctx, "incoming", &accessRequest.AccessRequest); err != nil {
