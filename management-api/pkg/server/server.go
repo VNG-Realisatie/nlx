@@ -4,6 +4,7 @@ import (
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/process"
+	"go.nlx.io/nlx/common/tls"
 
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/directory"
@@ -15,13 +16,15 @@ type ManagementService struct {
 	configDatabase  database.ConfigDatabase
 	mainProcess     *process.Process
 	directoryClient directory.Client
+	orgCert         *tls.CertificateBundle
 }
 
 // New creates new ManagementService
-func NewManagementService(logger *zap.Logger, mainProcess *process.Process, directoryClient directory.Client, configDatabase database.ConfigDatabase) *ManagementService {
+func NewManagementService(logger *zap.Logger, mainProcess *process.Process, directoryClient directory.Client, orgCert *tls.CertificateBundle, configDatabase database.ConfigDatabase) *ManagementService {
 	return &ManagementService{
 		configDatabase:  configDatabase,
 		logger:          logger,
+		orgCert:         orgCert,
 		mainProcess:     mainProcess,
 		directoryClient: directoryClient,
 	}

@@ -52,8 +52,9 @@ func (s *ManagementService) ListOutgoingAccessRequests(ctx context.Context, req 
 func (s *ManagementService) CreateAccessRequest(ctx context.Context, req *api.CreateAccessRequestRequest) (*api.OutgoingAccessRequest, error) {
 	ar := &database.OutgoingAccessRequest{
 		AccessRequest: database.AccessRequest{
-			OrganizationName: req.OrganizationName,
-			ServiceName:      req.ServiceName,
+			OrganizationName:     req.OrganizationName,
+			ServiceName:          req.ServiceName,
+			PublicKeyFingerprint: s.orgCert.PublicKeyFingerprint(),
 		},
 	}
 

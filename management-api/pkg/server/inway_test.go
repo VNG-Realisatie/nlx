@@ -93,7 +93,7 @@ func TestCreateInway(t *testing.T) {
 			if tt.want != nil {
 				mockDatabase.EXPECT().CreateInway(ctx, tt.args.database)
 			}
-			service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), mockDatabase)
+			service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase)
 
 			response, err := service.CreateInway(ctx, tt.args.request)
 			if tt.want != nil {
@@ -115,7 +115,7 @@ func TestGetInway(t *testing.T) {
 	defer mockCtrl.Finish()
 
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), mockDatabase)
+	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase)
 
 	getInwayRequest := &api.GetInwayRequest{
 		Name: "inway42.test",
@@ -168,7 +168,7 @@ func TestUpdateInway(t *testing.T) {
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
 	mockDatabase.EXPECT().UpdateInway(ctx, "inway42.test", mockInway)
 
-	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), mockDatabase)
+	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase)
 
 	updateInwayRequest := &api.UpdateInwayRequest{
 		Name: "inway42.test",
@@ -198,7 +198,7 @@ func TestDeleteInway(t *testing.T) {
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
 	mockDatabase.EXPECT().DeleteInway(ctx, "inway42.test")
 
-	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), mockDatabase)
+	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase)
 
 	deleteRequest := &api.DeleteInwayRequest{
 		Name: "inway42.test",
@@ -242,7 +242,7 @@ func TestListInways(t *testing.T) {
 
 	mockDatabase.EXPECT().ListInways(ctx).Return(mockListInways, nil)
 
-	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), mockDatabase)
+	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase)
 	actualResponse, err := service.ListInways(ctx, &api.ListInwaysRequest{})
 
 	if err != nil {

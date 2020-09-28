@@ -80,7 +80,7 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, cert, orgCert *com
 	}
 
 	db := newDatabase(logger, mainProcess, etcdConnectionString)
-	managementService := server.NewManagementService(logger, mainProcess, directoryClient, db)
+	managementService := server.NewManagementService(logger, mainProcess, directoryClient, orgCert, db)
 
 	grpcServer := newGRPCServer(logger, cert)
 

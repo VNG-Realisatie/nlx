@@ -39,7 +39,7 @@ func TestCreateService(t *testing.T) {
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
 	mockDatabase.EXPECT().CreateService(ctx, databaseService)
 
-	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), mockDatabase)
+	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase)
 
 	requestService := &api.Service{
 		Name:                  "my-service",
@@ -64,7 +64,7 @@ func TestGetService(t *testing.T) {
 	defer mockCtrl.Finish()
 
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), mockDatabase)
+	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase)
 
 	getServiceRequest := &api.GetServiceRequest{
 		Name: "my-service",
@@ -113,7 +113,7 @@ func TestUpdateService(t *testing.T) {
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
 	mockDatabase.EXPECT().UpdateService(ctx, "my-service", databseService)
 
-	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), mockDatabase)
+	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase)
 
 	updateServiceRequest := &api.UpdateServiceRequest{
 		Name: "my-service",
@@ -152,7 +152,7 @@ func TestDeleteService(t *testing.T) {
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
 	mockDatabase.EXPECT().DeleteService(ctx, "my-service")
 
-	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), mockDatabase)
+	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase)
 
 	deleteRequest := &api.DeleteServiceRequest{
 		Name: "my-service",
@@ -328,7 +328,7 @@ func TestListServices(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), test.db(mockCtrl))
+		service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, test.db(mockCtrl))
 		actualResponse, err := service.ListServices(ctx, test.request)
 
 		assert.Equal(t, test.expectedError, err)

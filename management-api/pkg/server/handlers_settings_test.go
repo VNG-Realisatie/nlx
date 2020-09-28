@@ -72,7 +72,7 @@ func TestManagementService_GetSettings(t *testing.T) {
 			p := process.NewProcess(l)
 			d := mock_directory.NewMockClient(ctrl)
 
-			h := server.NewManagementService(l, p, d, tt.db(ctrl))
+			h := server.NewManagementService(l, p, d, nil, tt.db(ctrl))
 			got, err := h.GetSettings(context.Background(), &types.Empty{})
 
 			assert.Equal(t, tt.expectedResponse, got)
@@ -258,7 +258,7 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			l := zap.NewNop()
 			p := process.NewProcess(l)
 
-			h := server.NewManagementService(l, p, tt.directoryClient(ctrl), tt.db(ctrl))
+			h := server.NewManagementService(l, p, tt.directoryClient(ctrl), nil, tt.db(ctrl))
 			got, err := h.UpdateSettings(context.Background(), tt.req)
 
 			assert.Equal(t, tt.expectedResponse, got)

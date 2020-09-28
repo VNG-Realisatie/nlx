@@ -33,7 +33,7 @@ func TestGetInsight(t *testing.T) {
 	defer mockCtrl.Finish()
 
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), mockDatabase)
+	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase)
 
 	emptyRequest := &types.Empty{}
 
@@ -84,7 +84,7 @@ func TestPutInsight(t *testing.T) {
 		IrmaServerURL: "http://irma-url.com",
 	}).Return(&types.Empty{}, nil)
 
-	service := server.NewManagementService(logger, testProcess, mockDirectoryClient, mockDatabase)
+	service := server.NewManagementService(logger, testProcess, mockDirectoryClient, nil, mockDatabase)
 
 	request := &api.InsightConfiguration{
 		IrmaServerURL: "http://irma-url.com",

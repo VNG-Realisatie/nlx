@@ -6,6 +6,7 @@ package server_test
 import (
 	"context"
 	"errors"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -24,6 +25,8 @@ import (
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
 	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
 	"go.nlx.io/nlx/management-api/pkg/server"
+
+	common_tls "go.nlx.io/nlx/common/tls"
 )
 
 func newService(t *testing.T) (s *server.ManagementService, ctrl *gomock.Controller, db *mock_database.MockConfigDatabase) {
@@ -33,7 +36,18 @@ func newService(t *testing.T) (s *server.ManagementService, ctrl *gomock.Control
 	ctrl = gomock.NewController(t)
 
 	db = mock_database.NewMockConfigDatabase(ctrl)
-	s = server.NewManagementService(logger, proc, mock_directory.NewMockClient(ctrl), db)
+	pkiDir := filepath.Join("..", "..", "..", "testing", "pki")
+	bundle, err := common_tls.NewBundleFromFiles(
+		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
+		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
+		filepath.Join(pkiDir, "ca-root.pem"),
+	)
+
+	if err != nil {
+		t.Fatal("cannot load certificate bundle")
+	}
+
+	s = server.NewManagementService(logger, proc, mock_directory.NewMockClient(ctrl), bundle, db)
 
 	return
 }
@@ -68,18 +82,20 @@ func TestCreateAccessRequest(t *testing.T) {
 			},
 			&database.OutgoingAccessRequest{
 				AccessRequest: database.AccessRequest{
-					OrganizationName: "test-organization",
-					ServiceName:      "test-service",
+					OrganizationName:     "test-organization",
+					ServiceName:          "test-service",
+					PublicKeyFingerprint: "60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=",
 				},
 			},
 			&database.OutgoingAccessRequest{
 				AccessRequest: database.AccessRequest{
-					ID:               "12345abcde",
-					OrganizationName: "test-organization",
-					ServiceName:      "test-service",
-					State:            database.AccessRequestCreated,
-					CreatedAt:        time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
-					UpdatedAt:        time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
+					ID:                   "12345abcde",
+					OrganizationName:     "test-organization",
+					ServiceName:          "test-service",
+					PublicKeyFingerprint: "60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=",
+					State:                database.AccessRequestCreated,
+					CreatedAt:            time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
+					UpdatedAt:            time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
 				},
 			},
 			nil,
@@ -101,8 +117,9 @@ func TestCreateAccessRequest(t *testing.T) {
 			},
 			&database.OutgoingAccessRequest{
 				AccessRequest: database.AccessRequest{
-					OrganizationName: "test-organization",
-					ServiceName:      "test-service",
+					OrganizationName:     "test-organization",
+					ServiceName:          "test-service",
+					PublicKeyFingerprint: "60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=",
 				},
 			},
 			nil,
