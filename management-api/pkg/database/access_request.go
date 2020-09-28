@@ -129,7 +129,6 @@ func (db ETCDConfigDatabase) createAccessRequest(ctx context.Context, prefix str
 	key := path.Join("access-requests", prefix, accessRequest.OrganizationName, accessRequest.ServiceName, id)
 
 	accessRequest.ID = id
-	accessRequest.State = AccessRequestCreated
 	accessRequest.CreatedAt = t
 	accessRequest.UpdatedAt = t
 
@@ -273,6 +272,8 @@ func (db ETCDConfigDatabase) CreateOutgoingAccessRequest(ctx context.Context, ac
 		return nil, err
 	}
 
+	accessRequest.State = AccessRequestCreated
+
 	if err := db.createAccessRequest(ctx, "outgoing", &accessRequest.AccessRequest); err != nil {
 		return nil, err
 	}
@@ -395,6 +396,8 @@ func (db ETCDConfigDatabase) CreateIncomingAccessRequest(ctx context.Context, ac
 	); err != nil {
 		return nil, err
 	}
+
+	accessRequest.State = AccessRequestReceived
 
 	if err := db.createAccessRequest(ctx, "incoming", &accessRequest.AccessRequest); err != nil {
 		return nil, err
