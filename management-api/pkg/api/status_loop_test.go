@@ -124,7 +124,7 @@ func TestListCurrentAccessRequests(t *testing.T) {
 	assert.Equal(t, expected, actual)
 }
 
-//nolint:funlen lot's of mocks
+//nolint:funlen // lot's of mocks
 func TestHandleRequest(t *testing.T) {
 	ctx := context.Background()
 

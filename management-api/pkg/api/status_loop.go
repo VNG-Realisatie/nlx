@@ -140,7 +140,7 @@ func (loop *accessRequestStatusLoop) sendRequest(ctx context.Context, request *d
 	return err
 }
 
-//nolint:gocyclo high complexity because of the state machine
+//nolint:gocyclo // high complexity because of the state machine
 func (loop *accessRequestStatusLoop) handleRequest(ctx context.Context, request *database.OutgoingAccessRequest) error {
 	err := loop.configDatabase.LockOutgoingAccessRequest(ctx, request)
 	switch err {
