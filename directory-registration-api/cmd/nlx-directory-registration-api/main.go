@@ -5,14 +5,11 @@ package main
 
 import (
 	"context"
-	"crypto/tls"
 	"errors"
 	"log"
 	"net"
 	"net/http"
 	"time"
-
-	"go.nlx.io/nlx/common/tlsconfig"
 
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	"github.com/huandu/xstrings"
@@ -27,8 +24,8 @@ import (
 	common_db "go.nlx.io/nlx/common/db"
 	nlxhttp "go.nlx.io/nlx/common/http"
 	"go.nlx.io/nlx/common/logoptions"
-	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/directory-db/dbversion"
 	"go.nlx.io/nlx/directory-registration-api/pkg/database"
@@ -113,13 +110,9 @@ func main() {
 
 	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
 
-	caCertPool, err := orgtls.LoadRootCert(options.NLXRootCert)
+	certificate, err := common_tls.NewBundleFromFiles(options.DirectoryCertFile, options.DirectoryKeyFile, options.NLXRootCert)
 	if err != nil {
-		logger.Fatal("failed to load root cert", zap.Error(err))
-	}
-	certKeyPair, err := tls.LoadX509KeyPair(options.DirectoryCertFile, options.DirectoryKeyFile)
-	if err != nil {
-		logger.Fatal("failed to load x509 keypair for directory registration api", zap.Error(err))
+		logger.Fatal("loading certificate", zap.Error(err))
 	}
 
 	directoryDatabase, err := database.NewPostgreSQLDirectoryDatabase(options.PostgresDSN, mainProcess, logger)
@@ -127,19 +120,15 @@ func main() {
 		logger.Fatal("failed to setup postgresql directory database:", zap.Error(err))
 	}
 
-	httpClient := nlxhttp.NewHTTPClient(caCertPool, &certKeyPair)
+	httpClient := nlxhttp.NewHTTPClient(certificate)
 	registrationService := registrationservice.New(logger, directoryDatabase, httpClient, getOrganisationNameFromRequest)
 
 	// setup zap connection for global grpc logging
 	grpc_zap.ReplaceGrpcLogger(logger)
 	// prepare grpc server options
-	serverTLSConfig := &tls.Config{
-		Certificates: []tls.Certificate{certKeyPair}, // using the grpc server's own cert to connect to it, perhaps find a way for the http/json gateway to bypass TLS locally
-		ClientCAs:    caCertPool,
-		NextProtos:   []string{"h2"},
-		ClientAuth:   tls.RequireAndVerifyClientCert,
-	}
-	tlsconfig.ApplyDefaults(serverTLSConfig)
+	serverTLSConfig := certificate.TLSConfig(certificate.WithTLSClientAuth())
+	serverTLSConfig.NextProtos = []string{"h2"}
+
 	opts := []grpc.ServerOption{
 		grpc.Creds(credentials.NewTLS(serverTLSConfig)),
 	}

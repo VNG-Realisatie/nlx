@@ -4,8 +4,6 @@
 package http
 
 import (
-	"crypto/tls"
-	"crypto/x509"
 	"net/http"
 
 	"github.com/go-chi/chi"
@@ -13,6 +11,7 @@ import (
 	"go.uber.org/zap"
 
 	nlxhttp "go.nlx.io/nlx/common/http"
+	common_tls "go.nlx.io/nlx/common/tls"
 )
 
 type Server struct {
@@ -22,10 +21,10 @@ type Server struct {
 	logger     *zap.Logger
 }
 
-func NewServer(db *sqlx.DB, caCertPool *x509.CertPool, certKeyPair *tls.Certificate, logger *zap.Logger) *Server {
+func NewServer(db *sqlx.DB, certificate *common_tls.CertificateBundle, logger *zap.Logger) *Server {
 	h := &Server{
 		db:         db,
-		httpClient: nlxhttp.NewHTTPClient(caCertPool, certKeyPair),
+		httpClient: nlxhttp.NewHTTPClient(certificate),
 		logger:     logger,
 	}
 

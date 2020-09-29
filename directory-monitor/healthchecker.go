@@ -4,8 +4,6 @@
 package monitor
 
 import (
-	"crypto/tls"
-	"crypto/x509"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -18,6 +16,7 @@ import (
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/process"
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/directory-monitor/health"
 )
 
@@ -66,18 +65,14 @@ func RunHealthChecker(
 	logger *zap.Logger,
 	db *sqlx.DB,
 	postgresDNS string,
-	caCertPool *x509.CertPool,
-	certKeyPair *tls.Certificate,
+	certificate *common_tls.CertificateBundle,
 	ttlOfflineService int,
 ) error {
 	h := &healthChecker{
 		logger:         logger,
 		availabilities: make(map[uint64]*availability),
 		httpClient: &http.Client{Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{
-				RootCAs:      caCertPool,
-				Certificates: []tls.Certificate{*certKeyPair},
-			},
+			TLSClientConfig: certificate.TLSConfig(),
 		}},
 	}
 

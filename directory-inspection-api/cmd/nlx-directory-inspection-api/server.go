@@ -4,8 +4,6 @@
 package main
 
 import (
-	"crypto/tls"
-	"crypto/x509"
 	"fmt"
 	"net/http"
 	"runtime/debug"
@@ -27,7 +25,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/process"
-	"go.nlx.io/nlx/common/tlsconfig"
+	common_tls "go.nlx.io/nlx/common/tls"
 	directory_http "go.nlx.io/nlx/directory-inspection-api/http"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 	"go.nlx.io/nlx/directory-inspection-api/stats"
@@ -55,8 +53,7 @@ func runServer(
 	log *zap.Logger,
 	address,
 	addressPlain string,
-	caCertPool *x509.CertPool,
-	certKeyPair *tls.Certificate,
+	certificate *common_tls.CertificateBundle,
 	inspectionService inspectionapi.DirectoryInspectionServer,
 	statsService stats.StatsServer,
 	httpServer *directory_http.Server,
@@ -91,16 +88,13 @@ func runServer(
 
 	stats.RegisterStatsServer(grpcServer, statsService)
 
+	tlsConfig := certificate.TLSConfig()
+	tlsConfig.InsecureSkipVerify = true //nolint:gosec // local connection; hostname won't match
+
 	// setup client credentials for grpc gateway
 	gatewayDialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(
-			/* #nosec G402 */
-			credentials.NewTLS(&tls.Config{
-				Certificates: []tls.Certificate{*certKeyPair}, // using the grpc server's own cert to connect to it, perhaps find a way for the http/json gateway to bypass TLS locally
-				RootCAs:      caCertPool,
-				// This is a local connection; hostname won't match
-				InsecureSkipVerify: true,
-			}),
+			credentials.NewTLS(tlsConfig),
 		),
 	}
 
@@ -139,17 +133,14 @@ func runServer(
 
 	// Start HTTPS server
 	// let server handle connections on the TLS Listener
+	tlsConfig = certificate.TLSConfig(certificate.WithTLSClientAuth())
+	tlsConfig.NextProtos = []string{"h2"}
+
 	HTTPSHandler := &http.Server{
-		Addr: address,
-		TLSConfig: &tls.Config{
-			Certificates: []tls.Certificate{*certKeyPair},
-			NextProtos:   []string{"h2"},
-			ClientCAs:    caCertPool,
-			ClientAuth:   tls.RequireAndVerifyClientCert,
-		},
-		Handler: newGRPCSplitterHandlerFunc(grpcServer, httpServer),
+		Addr:      address,
+		TLSConfig: tlsConfig,
+		Handler:   newGRPCSplitterHandlerFunc(grpcServer, httpServer),
 	}
-	tlsconfig.ApplyDefaults(HTTPSHandler.TLSConfig)
 
 	go func() {
 		err = HTTPSHandler.ListenAndServeTLS("", "") // Key and Cert is empty because we provided them in TLSConfig

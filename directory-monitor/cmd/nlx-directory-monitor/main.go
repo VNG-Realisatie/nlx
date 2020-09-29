@@ -5,7 +5,6 @@ package main
 
 import (
 	"context"
-	"crypto/tls"
 	"log"
 
 	_ "github.com/lib/pq"
@@ -15,8 +14,8 @@ import (
 
 	common_db "go.nlx.io/nlx/common/db"
 	"go.nlx.io/nlx/common/logoptions"
-	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/directory-db/dbversion"
 	monitor "go.nlx.io/nlx/directory-monitor"
@@ -46,18 +45,14 @@ func main() {
 	proc.CloseGracefully(db.Close)
 	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
 
-	caCertPool, err := orgtls.LoadRootCert(options.NLXRootCert)
+	certificate, err := common_tls.NewBundleFromFiles(options.MonitorCertFile, options.MonitorKeyFile, options.NLXRootCert)
 	if err != nil {
-		logger.Fatal("failed to load root cert", zap.Error(err))
-	}
-	certKeyPair, err := tls.LoadX509KeyPair(options.MonitorCertFile, options.MonitorKeyFile)
-	if err != nil {
-		logger.Fatal("failed to load x509 keypair for monitor", zap.Error(err))
+		logger.Fatal("loading certificate", zap.Error(err))
 	}
 
 	logger.Debug("starting health checker", zap.Int("ttlOfflineService", options.TTLOfflineService))
 
-	err = monitor.RunHealthChecker(proc, logger, db, options.PostgresDSN, caCertPool, &certKeyPair, options.TTLOfflineService)
+	err = monitor.RunHealthChecker(proc, logger, db, options.PostgresDSN, certificate, options.TTLOfflineService)
 	if err != nil && err != context.DeadlineExceeded {
 		logger.Fatal("failed to run monitor healthchecker", zap.Error(err))
 	}

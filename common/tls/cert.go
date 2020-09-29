@@ -38,17 +38,15 @@ func (c *CertificateBundle) PublicKeyFingerprint() string {
 
 // TLSConfig returns a new tls.Config with the certifcate and root ca
 func (c *CertificateBundle) TLSConfig(options ...ConfigOption) *tls.Config {
-	t := &tls.Config{
-		Certificates: []tls.Certificate{*c.keyPair},
-		RootCAs:      c.rootCAs,
-		MinVersion:   tls.VersionTLS12,
-	}
+	config := NewConfig()
+	config.Certificates = []tls.Certificate{*c.keyPair}
+	config.RootCAs = c.rootCAs
 
 	for _, option := range options {
-		option(t)
+		option(config)
 	}
 
-	return t
+	return config
 }
 
 func NewBundleFromFiles(certFile, keyFile, rootCertFile string) (*CertificateBundle, error) {
@@ -114,6 +112,13 @@ func PublicKeyFingerprint(certificate *x509.Certificate) string {
 	sum := sha256.Sum256(certificate.RawSubjectPublicKeyInfo)
 
 	return base64.StdEncoding.EncodeToString(sum[:])
+}
+
+// NewConfig returns a new tls.Config with sane defaults
+func NewConfig() *tls.Config {
+	return &tls.Config{
+		MinVersion: tls.VersionTLS12,
+	}
 }
 
 func parseCertificate(certPEM []byte) (*x509.Certificate, error) {

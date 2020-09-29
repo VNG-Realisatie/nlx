@@ -5,7 +5,6 @@ package main
 
 import (
 	"context"
-	"crypto/tls"
 	"errors"
 	"log"
 	"time"
@@ -80,13 +79,9 @@ func main() {
 
 	log.Printf("created the directory database: %v", directoryDatabase)
 
-	caCertPool, _, err := common_tls.NewCertPoolFromFile(options.NLXRootCert)
+	certificate, err := common_tls.NewBundleFromFiles(options.DirectoryCertFile, options.DirectoryKeyFile, options.NLXRootCert)
 	if err != nil {
-		logger.Fatal("failed to load root cert", zap.Error(err))
-	}
-	certKeyPair, err := tls.LoadX509KeyPair(options.DirectoryCertFile, options.DirectoryKeyFile)
-	if err != nil {
-		logger.Fatal("failed to load x509 keypair for directory inspection api", zap.Error(err))
+		logger.Fatal("loading certificate", zap.Error(err))
 	}
 
 	directoryService := inspectionservice.New(logger, directoryDatabase, getOrganisationNameFromRequest)
@@ -115,9 +110,9 @@ func main() {
 		logger.Fatal("failed to create new stats service", zap.Error(err))
 	}
 
-	httpServer := http.NewServer(db, caCertPool, &certKeyPair, logger)
+	httpServer := http.NewServer(db, certificate, logger)
 
-	runServer(mainProcess, logger, options.ListenAddress, options.ListenAddressPlain, caCertPool, &certKeyPair, directoryService, statsService, httpServer)
+	runServer(mainProcess, logger, options.ListenAddress, options.ListenAddressPlain, certificate, directoryService, statsService, httpServer)
 }
 
 func getOrganisationNameFromRequest(ctx context.Context) (string, error) {

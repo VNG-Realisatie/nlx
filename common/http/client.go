@@ -1,14 +1,14 @@
 package http
 
 import (
-	"crypto/tls"
-	"crypto/x509"
 	"net"
 	"net/http"
 	"time"
+
+	common_tls "go.nlx.io/nlx/common/tls"
 )
 
-func NewHTTPClient(rootCA *x509.CertPool, certKeyPair *tls.Certificate) *http.Client {
+func NewHTTPClient(certificate *common_tls.CertificateBundle) *http.Client {
 	transport := &http.Transport{
 		Proxy: http.ProxyFromEnvironment,
 		DialContext: (&net.Dialer{
@@ -20,10 +20,7 @@ func NewHTTPClient(rootCA *x509.CertPool, certKeyPair *tls.Certificate) *http.Cl
 		IdleConnTimeout:       90 * time.Second,
 		TLSHandshakeTimeout:   10 * time.Second,
 		ExpectContinueTimeout: 1 * time.Second,
-		TLSClientConfig: &tls.Config{
-			RootCAs:      rootCA,
-			Certificates: []tls.Certificate{*certKeyPair},
-		},
+		TLSClientConfig:       certificate.TLSConfig(),
 	}
 	return &http.Client{
 		Transport: transport,
