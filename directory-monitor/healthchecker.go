@@ -50,8 +50,15 @@ type databaseAction struct {
 
 var RunningHealthChecker *healthChecker
 
-const dbNotificationChannel = "availabilities"
-const cleanupInterval = 90 * time.Second
+const (
+	dbNotificationChannel = "availabilities"
+	cleanupInterval       = 90 * time.Second
+
+	healthCheckInterval = 5 * time.Second
+
+	postgresListenerReconnectTimeoutMin = 10 * time.Second
+	postgresListenerReconnectTimeoutMax = 1 * time.Minute
+)
 
 // RunHealthChecker starts a healthchecker process
 func RunHealthChecker(
@@ -140,23 +147,28 @@ func (h *healthChecker) run(proc *process.Process, postgressDNS string) error {
 			h.logger.Error("error listening for db events", zap.Error(err))
 		}
 	}
-	listener := pq.NewListener(postgressDNS, 10*time.Second, time.Minute, listenerErrorCallback)
+	listener := pq.NewListener(postgressDNS, postgresListenerReconnectTimeoutMin, postgresListenerReconnectTimeoutMax, listenerErrorCallback)
+
 	err := listener.Listen(dbNotificationChannel)
 	if err != nil {
 		panic(err)
 	}
+
 	proc.CloseGracefully(listener.Close)
 
 	RunningHealthChecker = h
 
 	shutDownNotificationListener := make(chan struct{})
+
 	proc.CloseGracefully(func() error {
 		close(shutDownNotificationListener)
 		return nil
 	})
+
 	go h.waitForNotification(listener, shutDownNotificationListener)
 
 	newAvailabilities := []*availability{}
+
 	err = h.stmtSelectAvailabilities.Select(&newAvailabilities)
 	if err != nil {
 		return err
@@ -169,6 +181,7 @@ func (h *healthChecker) run(proc *process.Process, postgressDNS string) error {
 	h.availabilitiesLock.Unlock()
 
 	shutDown := make(chan struct{})
+
 	proc.CloseGracefully(func() error {
 		close(shutDown)
 		return nil
@@ -176,6 +189,7 @@ func (h *healthChecker) run(proc *process.Process, postgressDNS string) error {
 
 	go h.runCleanUpServices(shutDown)
 	h.runHealthChecker(shutDown)
+
 	return nil
 }
 
@@ -238,6 +252,7 @@ func (h *healthChecker) waitForNotification(l *pq.Listener, c <-chan struct{}) {
 
 func (h *healthChecker) onDatabaseNotification(payload string) {
 	dbAction := &databaseAction{}
+
 	err := json.Unmarshal([]byte(payload), dbAction)
 	if err != nil {
 		h.logger.Error("Error processing JSON", zap.Error(err))
@@ -245,6 +260,7 @@ func (h *healthChecker) onDatabaseNotification(payload string) {
 	}
 
 	h.logger.Debug("received DB action", zap.String("action", dbAction.Action))
+
 	switch dbAction.Action {
 	case "INSERT", "UPDATE":
 		h.addAvailability(dbAction.Availability)
@@ -270,7 +286,7 @@ func (h *healthChecker) removeAvailability(id uint64) {
 func (h *healthChecker) runHealthChecker(shutDown chan struct{}) {
 	for {
 		select {
-		case <-time.After(5 * time.Second):
+		case <-time.After(healthCheckInterval):
 			h.availabilitiesLock.RLock()
 			for _, av := range h.availabilities {
 				go h.checkInwayStatus(*av)
@@ -289,20 +305,25 @@ func (h *healthChecker) checkInwayStatus(av availability) {
 	if err != nil {
 		logger.Error("failed to check health", zap.Error(err))
 		h.updateAvailabilityHealth(av, false)
+
 		return
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
+	if resp.StatusCode != http.StatusOK {
 		logger.Info(fmt.Sprintf("inway /health endpoint returned non-200 http status: %d", resp.StatusCode))
 		h.updateAvailabilityHealth(av, false)
+
 		return
 	}
+
 	status := &health.Status{}
+
 	err = json.NewDecoder(resp.Body).Decode(&status)
 	if err != nil {
 		logger.Info("failed to parse json returned by the inway", zap.Error(err))
 		h.updateAvailabilityHealth(av, false)
+
 		return
 	}
 
@@ -321,6 +342,7 @@ func (h *healthChecker) updateAvailabilityHealth(av availability, newHealth bool
 		h.logger.Error("failed to get rows affected update health in db", zap.Error(err))
 		return
 	}
+
 	if rowsAffected == 1 {
 		if !newHealth {
 			h.logger.Info(fmt.Sprintf("inway %s.%s>%s became unhealthy", av.OrganizationName, av.ServiceName, av.Address))

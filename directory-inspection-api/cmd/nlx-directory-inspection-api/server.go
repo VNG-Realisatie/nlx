@@ -47,7 +47,6 @@ func newGRPCSplitterHandlerFunc(
 			otherHandler.ServeHTTP(w, r)
 		}
 	})
-
 }
 
 // runServer is a blocking function which sets up the grpc and http/json server and runs them on a single address/port.
@@ -62,7 +61,6 @@ func runServer(
 	statsService stats.StatsServer,
 	httpServer *directory_http.Server,
 ) {
-
 	// setup zap connection for global grpc logging
 	grpc_zap.ReplaceGrpcLogger(log)
 
@@ -170,7 +168,7 @@ func runServer(
 			httpServer.ServeHTTP(w, r)
 		}),
 	}
-	// TODO: #206 When directory has a separate storage/backing, the inspection API should actually become a separate process.
+
 	go func() {
 		if err := HTTPHandler.ListenAndServe(); err != nil {
 			if err != http.ErrServerClosed {
@@ -178,8 +176,10 @@ func runServer(
 			}
 		}
 	}()
+
 	wg := sync.WaitGroup{}
 	wg.Add(2)
+
 	p.CloseGracefully(func() error {
 		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
 		defer cancel() // do not remove. Otherwise it could cause implicit goroutine leak

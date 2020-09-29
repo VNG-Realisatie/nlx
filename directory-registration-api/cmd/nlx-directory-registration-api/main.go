@@ -56,22 +56,30 @@ func parseArgs() error {
 				return err
 			}
 		}
+
 		log.Fatalf("error parsing flags: %v", err)
 	}
+
 	if len(args) > 0 {
 		log.Fatalf("unexpected arguments: %v", args)
 	}
-	return nil
 
+	return nil
 }
+
+const (
+	dbConnectionMaxLifetime = 5 * time.Minute
+	dbMaxIdleConnections    = 2
+)
 
 func setupDB(logger *zap.Logger) *sqlx.DB {
 	db, err := sqlx.Open("postgres", options.PostgresDSN)
 	if err != nil {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))
 	}
-	db.SetConnMaxLifetime(5 * time.Minute)
-	db.SetMaxIdleConns(2)
+
+	db.SetConnMaxLifetime(dbConnectionMaxLifetime)
+	db.SetMaxIdleConns(dbMaxIdleConnections)
 	db.MapperFunc(xstrings.ToSnakeCase)
 
 	return db
@@ -79,10 +87,12 @@ func setupDB(logger *zap.Logger) *sqlx.DB {
 
 func newZapLogger() *zap.Logger {
 	config := options.LogOptions.ZapConfig()
+
 	logger, err := config.Build()
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
+
 	logger.Info("version info", zap.String("version", version.BuildVersion), zap.String("source-hash", version.BuildSourceHash))
 	logger = logger.With(zap.String("version", version.BuildVersion))
 
@@ -137,14 +147,17 @@ func main() {
 	// start grpc server and attach directory service
 	grpcServer := grpc.NewServer(opts...)
 	registrationapi.RegisterDirectoryRegistrationServer(grpcServer, registrationService)
+
 	listen, err := net.Listen("tcp", options.ListenAddress)
 	if err != nil {
 		log.Fatal("failed to create listener", zap.Error(err))
 	}
+
 	mainProcess.CloseGracefully(func() error {
 		grpcServer.GracefulStop()
 		return nil
 	})
+
 	if err := grpcServer.Serve(listen); err != nil {
 		if err != http.ErrServerClosed {
 			log.Fatal("error serving", zap.Error(err))

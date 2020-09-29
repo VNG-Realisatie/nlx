@@ -8,8 +8,10 @@ import (
 	"crypto/tls"
 	"log"
 
-	"github.com/jessevdk/go-flags"
 	_ "github.com/lib/pq"
+
+	"github.com/jessevdk/go-flags"
+	"go.uber.org/zap"
 
 	common_db "go.nlx.io/nlx/common/db"
 	"go.nlx.io/nlx/common/logoptions"
@@ -18,7 +20,6 @@ import (
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/directory-db/dbversion"
 	monitor "go.nlx.io/nlx/directory-monitor"
-	"go.uber.org/zap"
 )
 
 var options struct {
@@ -55,6 +56,7 @@ func main() {
 	}
 
 	logger.Debug("starting health checker", zap.Int("ttlOfflineService", options.TTLOfflineService))
+
 	err = monitor.RunHealthChecker(proc, logger, db, options.PostgresDSN, caCertPool, &certKeyPair, options.TTLOfflineService)
 	if err != nil && err != context.DeadlineExceeded {
 		logger.Fatal("failed to run monitor healthchecker", zap.Error(err))
@@ -69,8 +71,10 @@ func parseOptions() {
 				return
 			}
 		}
+
 		log.Fatalf("error parsing flags: %v", err)
 	}
+
 	if len(args) > 0 {
 		log.Fatalf("unexpected arguments: %v", args)
 	}
@@ -78,10 +82,12 @@ func parseOptions() {
 
 func initLogger() *zap.Logger {
 	config := options.LogOptions.ZapConfig()
+
 	logger, err := config.Build()
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
+
 	logger.Info("version info", zap.String("version", version.BuildVersion), zap.String("source-hash", version.BuildSourceHash))
 	logger = logger.With(zap.String("version", version.BuildVersion))
 

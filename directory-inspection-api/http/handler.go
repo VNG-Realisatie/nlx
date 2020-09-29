@@ -35,7 +35,7 @@ func newAPISpecHandler(httpClient *http.Client, db *sqlx.DB, logger *zap.Logger)
 			INNER JOIN directory.availabilities a ON a.inway_id = i.id
 		WHERE a.service_id = $1
 		AND a.healthy = true
-        LIMIT 1
+		LIMIT 1
 	`)
 
 	if err != nil {
@@ -65,7 +65,9 @@ func (h *apiSpecHandler) handleFunc() http.HandlerFunc {
 			default:
 				h.logger.Error("Failed to query inway address", zap.Error(err))
 			}
+
 			http.Error(w, http.StatusText(http.StatusServiceUnavailable), http.StatusServiceUnavailable)
+
 			return
 		}
 
@@ -93,6 +95,7 @@ func (h *apiSpecHandler) getInwayAPISpec(inwayAddress, serviceName string) (*htt
 		Host:   inwayAddress,
 		Path:   path.Join("/.nlx/api-spec-doc/", serviceName),
 	}
+
 	r, err := h.httpClient.Get(inwayURL.String())
 	if err != nil {
 		return nil, err
