@@ -5,12 +5,13 @@ package tls
 import (
 	"crypto/x509"
 	"io/ioutil"
+	"path/filepath"
 
 	"github.com/pkg/errors"
 )
 
 func NewCertPoolFromFile(file string) (*x509.CertPool, *x509.Certificate, error) {
-	pem, err := ioutil.ReadFile(file)
+	pem, err := ioutil.ReadFile(filepath.Clean(file))
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "failed to read certificate file")
 	}

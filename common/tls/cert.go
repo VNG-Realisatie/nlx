@@ -10,6 +10,7 @@ import (
 	"encoding/pem"
 	"fmt"
 	"io/ioutil"
+	"path/filepath"
 
 	"github.com/pkg/errors"
 )
@@ -51,17 +52,17 @@ func (c *CertificateBundle) TLSConfig(options ...ConfigOption) *tls.Config {
 }
 
 func NewBundleFromFiles(certFile, keyFile, rootCertFile string) (*CertificateBundle, error) {
-	certPEM, err := ioutil.ReadFile(certFile)
+	certPEM, err := ioutil.ReadFile(filepath.Clean(certFile))
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to read certificate file")
 	}
 
-	keyPEM, err := ioutil.ReadFile(keyFile)
+	keyPEM, err := ioutil.ReadFile(filepath.Clean(keyFile))
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to read private key file")
 	}
 
-	caRootPEM, err := ioutil.ReadFile(rootCertFile)
+	caRootPEM, err := ioutil.ReadFile(filepath.Clean(rootCertFile))
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to read root certificate file")
 	}
