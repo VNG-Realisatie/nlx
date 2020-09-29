@@ -6,16 +6,22 @@ import (
 	"strings"
 )
 
+const maxSuggestions = 10
+
 // createList create max 10 unique sorted suggestions.
 func createList(options []string) string {
 	suggestion := ""
 	unique := make(map[string]bool)
+
 	sort.Strings(options)
+
 	for i := range options {
 		option := options[i]
 		_, exists := unique[option]
+
 		if !exists {
 			unique[option] = true
+
 			if suggestion == "" {
 				suggestion = option
 			} else {
@@ -23,16 +29,18 @@ func createList(options []string) string {
 			}
 		}
 		// limit suggestions
-		if i > 10 {
+		if i > maxSuggestions {
 			break
 		}
 	}
+
 	return suggestion
 }
 
 // HelpUserOrg suggest organizations for input
 func (o *Outway) helpUserOrg(w http.ResponseWriter, organization string) {
 	suggestion := make([]string, 0)
+
 	if organization != "" {
 		for k := range o.servicesDirectory {
 			if strings.HasPrefix(k, organization) {
@@ -41,6 +49,7 @@ func (o *Outway) helpUserOrg(w http.ResponseWriter, organization string) {
 			}
 		}
 	}
+
 	if len(suggestion) == 0 {
 		// list all organizations.
 		for k := range o.servicesDirectory {
@@ -61,6 +70,7 @@ func (o *Outway) helpUserService(
 	// check if organization exists.
 	org := ""
 	services := make([]string, 0)
+
 	for k := range o.servicesDirectory {
 		matchorg := strings.Split(k, ".")
 		if matchorg[0] == organization {
@@ -77,13 +87,16 @@ func (o *Outway) helpUserService(
 
 	// suggest service(s)
 	serviceOptions := make([]string, 0)
+
 	for i := range services {
 		s := services[i]
 		if strings.HasPrefix(s, service) {
 			serviceOptions = append(serviceOptions, s)
 		}
 	}
-	msg := ""
+
+	var msg string
+
 	if len(serviceOptions) > 0 {
 		// suggest matching services
 		msg = createList(serviceOptions)
@@ -91,6 +104,7 @@ func (o *Outway) helpUserService(
 		// suggest all services
 		msg = createList(services)
 	}
+
 	http.Error(
 		w,
 		"nlx outway: invalid organization/service path: valid services : ["+msg+"]",
@@ -98,7 +112,6 @@ func (o *Outway) helpUserService(
 }
 
 func (o *Outway) helpUser(w http.ResponseWriter, msg string, dest *destination, urlPath string) {
-
 	// we did not get a complete 3 part url path. help user create one.
 	if dest == nil {
 		pathParts := strings.SplitN(strings.TrimPrefix(urlPath, "/"), "/", 3)
@@ -120,9 +133,9 @@ func (o *Outway) helpUser(w http.ResponseWriter, msg string, dest *destination, 
 			o.helpUserService(w, pathParts[0], pathParts[1])
 			return
 		}
+	} else {
 		// users gave a 'complete' path, but still failing
 		// do suggestions
-	} else {
 		o.helpUserService(w, dest.Organization, dest.Service)
 		return
 	}

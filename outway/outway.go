@@ -101,13 +101,14 @@ func (o *Outway) validateAuthURL(authCAPath, authServiceURL string) error {
 	return nil
 }
 
-func (o *Outway) startDirectoryInspector(directoryInspectionAddress string) error {
+func (o *Outway) startDirectoryInspector(directoryInspectionAddress string) {
 	directoryDialCredentials := credentials.NewTLS(o.orgCert.TLSConfig())
 	directoryDialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(directoryDialCredentials),
 	}
 
 	ctx := context.TODO()
+
 	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(nlxversion.NewGRPCContext(ctx, "outway"), 1*time.Minute) //nolint:gomnd // This is clearer then specifying a constant
 	defer directoryConnCtxCancel()
 
@@ -123,8 +124,6 @@ func (o *Outway) startDirectoryInspector(directoryInspectionAddress string) erro
 		zap.String("directory-inspection-address", directoryInspectionAddress))
 
 	go o.keepServiceListUpToDate()
-
-	return nil
 }
 
 // NewOutway creates a new Outway and sets it up to handle requests.
@@ -136,8 +135,8 @@ func NewOutway(
 	orgCert *common_tls.CertificateBundle,
 	directoryInspectionAddress,
 	authServiceURL,
-	authCAPath string, useAsHTTPProxy bool) (*Outway, error) {
-
+	authCAPath string,
+	useAsHTTPProxy bool) (*Outway, error) {
 	cert := orgCert.Certificate()
 
 	if len(cert.Subject.Organization) != 1 {
@@ -192,10 +191,8 @@ func NewOutway(
 		logger.Info("transaction logger created")
 	}
 
-	err = o.startDirectoryInspector(directoryInspectionAddress)
-	if err != nil {
-		return nil, err
-	}
+	o.startDirectoryInspector(directoryInspectionAddress)
+
 	return o, nil
 }
 
@@ -222,6 +219,7 @@ func (o *Outway) keepServiceListUpToDate() {
 	if err != nil {
 		o.logger.Error("failed to update the service list from directory on startup.", zap.Error(err))
 		o.process.ExitGracefully()
+
 		return
 	}
 
@@ -233,7 +231,9 @@ func (o *Outway) keepServiceListUpToDate() {
 	}
 
 	const baseInterval = 30 * time.Second
+
 	interval := baseInterval
+
 	for {
 		select {
 		case <-o.process.ShutdownRequested:
@@ -259,7 +259,6 @@ func serviceKey(s *inspectionapi.ListServicesResponse_Service) string {
 func (o *Outway) createService(
 	serviceToImplement *inspectionapi.ListServicesResponse_Service,
 ) {
-
 	// Look for healthy inwayaddresses unless it there is only one
 	// known address.
 	moreEndpoints := len(serviceToImplement.HealthyStates) > 1
@@ -268,6 +267,7 @@ func (o *Outway) createService(
 
 	for i, healthy := range serviceToImplement.HealthyStates {
 		inwayAddress := serviceToImplement.InwayAddresses[i]
+
 		if healthy {
 			// we want to use only healthy endpoints.
 			// if there is only one unhealthy endpoint then
@@ -275,6 +275,7 @@ func (o *Outway) createService(
 			// for testing / setup purposes.
 			InwayAddresses = append(InwayAddresses, inwayAddress)
 			HealthyStates = append(HealthyStates, healthy)
+
 			continue
 		}
 
@@ -290,8 +291,10 @@ func (o *Outway) createService(
 				zap.String("service-name", serviceToImplement.ServiceName),
 				zap.String("inway address", inwayAddress),
 			)
+
 			InwayAddresses = append(InwayAddresses, inwayAddress)
 			HealthyStates = append(HealthyStates, healthy)
+
 			continue
 		}
 	}
@@ -304,23 +307,28 @@ func (o *Outway) createService(
 		InwayAddresses,
 		HealthyStates,
 	)
+
 	if err != nil {
 		if err == errNoInwaysAvailable {
 			o.logger.Debug(
 				"service exists but there are no inwayaddresses available",
 				zap.String("service-organization-name", serviceToImplement.OrganizationName),
 				zap.String("service-name", serviceToImplement.ServiceName))
+
 			return
 		}
+
 		o.logger.Error(
 			"failed to create new service",
 			zap.String("service-organization-name", serviceToImplement.OrganizationName),
 			zap.String("service-name", serviceToImplement.ServiceName),
 			zap.Error(err))
+
 		return
 	}
 
 	service := rrlbService
+
 	o.logger.Debug(
 		"implemented service",
 		zap.String("service-name", serviceToImplement.ServiceName),
@@ -330,7 +338,6 @@ func (o *Outway) createService(
 	o.servicesLock.Lock()
 	o.servicesHTTP[service.FullName()] = service
 	o.servicesLock.Unlock()
-
 }
 
 func (o *Outway) updateServiceList() error {
@@ -343,6 +350,7 @@ func (o *Outway) updateServiceList() error {
 	}
 
 	ctx := context.TODO()
+
 	resp, err := o.directoryInspectionClient.ListServices(nlxversion.NewGRPCContext(ctx, "outway"), &types.Empty{})
 	if err != nil {
 		return errors.Wrap(err, "failed to fetch services from directory")
@@ -352,7 +360,6 @@ func (o *Outway) updateServiceList() error {
 	servicesToKeep := make(map[string]bool)
 
 	for _, serviceToImplement := range resp.Services {
-
 		o.logger.Debug(
 			"directory listed service",
 			zap.String("service-name", serviceToImplement.ServiceName),
@@ -364,6 +371,7 @@ func (o *Outway) updateServiceList() error {
 				zap.String("service-name", serviceToImplement.ServiceName),
 				zap.String("service-organization-name", serviceToImplement.OrganizationName),
 			)
+
 			continue
 		}
 
@@ -392,7 +400,6 @@ func (o *Outway) updateServiceList() error {
 		o.servicesLock.Unlock()
 
 		servicesToKeep[serviceKey] = true
-
 	}
 
 	o.cleanUpservices(servicesToKeep)
@@ -404,7 +411,6 @@ func (o *Outway) updateServiceList() error {
 
 // cleanUpservices removes no longer advertised services
 func (o *Outway) cleanUpservices(servicesToKeep map[string]bool) {
-
 	for serviceKey := range o.servicesDirectory {
 		_, exists := servicesToKeep[serviceKey]
 		if !exists {
@@ -415,7 +421,6 @@ func (o *Outway) cleanUpservices(servicesToKeep map[string]bool) {
 			// remove HttpService if present.
 			if exists {
 				// remove http service.
-				// TODO maybe leave it as cache?
 				delete(o.servicesHTTP, serviceKey)
 			}
 			o.servicesLock.Unlock()
@@ -425,6 +430,7 @@ func (o *Outway) cleanUpservices(servicesToKeep map[string]bool) {
 
 func (o *Outway) getService(organization, service string) HTTPService {
 	serviceKey := organization + "." + service
+
 	o.servicesLock.RLock()
 	httpService := o.servicesHTTP[serviceKey]
 	o.servicesLock.RUnlock()
@@ -439,5 +445,6 @@ func (o *Outway) getService(organization, service string) HTTPService {
 			o.servicesLock.RUnlock()
 		}
 	}
+
 	return httpService
 }

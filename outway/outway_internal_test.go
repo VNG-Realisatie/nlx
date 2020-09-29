@@ -22,6 +22,7 @@ import (
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi/mock"
 )
 
+//nolint:funlen // it is a test
 func TestUpdateServiceList(t *testing.T) {
 	// Create mock directory client
 	ctrl := gomock.NewController(t)

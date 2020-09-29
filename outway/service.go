@@ -73,7 +73,6 @@ func NewRoundRobinLoadBalancedHTTPService(
 	inwayAddresses []string,
 	healthyStates []bool,
 ) (*RoundRobinLoadBalancedHTTPService, error) {
-
 	if len(inwayAddresses) == 0 {
 		return nil, errNoInwaysAvailable
 	}
@@ -96,7 +95,9 @@ func NewRoundRobinLoadBalancedHTTPService(
 		if err != nil {
 			return nil, errors.Wrap(err, "inway address:"+inwayAddress+" is not a valid url")
 		}
+
 		endpointURL.Path = "/" + serviceName
+
 		proxy := httputil.NewSingleHostReverseProxy(endpointURL)
 		proxy.Transport = roundTripTransport
 		proxy.ErrorHandler = s.LogServiceErrors
@@ -141,9 +142,11 @@ func (s *RoundRobinLoadBalancedHTTPService) getProxy() *httputil.ReverseProxy {
 	if len(s.proxies) == 0 {
 		return nil
 	}
+
 	s.loadBalanceLock.Lock()
 	proxy := s.proxies[s.count]
 	s.count = (s.count + 1) % len(s.proxies)
 	s.loadBalanceLock.Unlock()
+
 	return proxy
 }

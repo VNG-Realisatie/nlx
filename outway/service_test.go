@@ -9,13 +9,15 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	common_tls "go.nlx.io/nlx/common/tls"
-
 	"go.uber.org/zap"
+
+	common_tls "go.nlx.io/nlx/common/tls"
 )
 
-const mockorg string = "mockorg"
-const mockservicename string = "mockservicename"
+const (
+	mockorg         string = "mockorg"
+	mockservicename string = "mockservicename"
+)
 
 func TestNewRoundRobinLoadBalancer(t *testing.T) {
 	organizationName := mockorg

@@ -51,6 +51,7 @@ func testRequests(t *testing.T, tests []struct {
 
 		assert.Equal(t, test.statusCode, resp.StatusCode)
 		bytes, err := ioutil.ReadAll(resp.Body)
+
 		if err != nil {
 			t.Fatal("error parsing result.body", err)
 		}
@@ -425,6 +426,7 @@ func TestFailingTransport(t *testing.T) {
 		inwayAddresses, healthyStates)
 
 	assert.Nil(t, err)
+
 	outway.servicesHTTP["mockorg.mockservice"] = l
 	// set transports to fail.
 	outway.setFailingTransport()
