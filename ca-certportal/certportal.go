@@ -48,10 +48,12 @@ func NewCertPortal(l *zap.Logger, createSigner createSignerFunc) *CertPortal {
 	if err != nil {
 		l.Fatal("failed to get working directory")
 	}
+
 	filesDir := filepath.Join(workDir, "public")
 	r.Get("/*", http.HandlerFunc(http.FileServer(http.Dir(filesDir)).ServeHTTP))
 
 	i.router = r
+
 	return i
 }
 

@@ -34,14 +34,17 @@ func main() {
 				return
 			}
 		}
+
 		log.Fatalf("error parsing flags: %v", err)
 	}
+
 	if len(args) > 0 {
 		log.Fatalf("unexpected arguments: %v", args)
 	}
 
 	// Setup new zap logger
 	config := options.LogOptions.ZapConfig()
+
 	logger, err := config.Build()
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)

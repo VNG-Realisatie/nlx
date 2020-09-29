@@ -27,6 +27,7 @@ func TestRouteRequestCertificate(t *testing.T) {
 		return mockSigner, nil
 	})
 	assert.NotNil(t, certPortal)
+
 	srv := httptest.NewServer(certPortal.GetRouter())
 	defer srv.Close()
 
@@ -90,6 +91,7 @@ func TestRouteRoot(t *testing.T) {
 		return mockSigner, nil
 	})
 	assert.NotNil(t, certPortal)
+
 	srv := httptest.NewServer(certPortal.GetRouter())
 	defer srv.Close()
 
@@ -119,12 +121,15 @@ func TestRouteRoot(t *testing.T) {
 
 	for _, test := range tests {
 		test.setupMock()
+
 		resp, err := http.Get(fmt.Sprintf("%s/root.crt", srv.URL))
 		assert.NoError(t, err)
 		assert.Equal(t, test.expectedStatusCode, resp.StatusCode)
+
 		responseBody, err := ioutil.ReadAll(resp.Body)
 		assert.NoError(t, err)
 		assert.Equal(t, test.expectedBody, string(responseBody))
+
 		resp.Body.Close()
 	}
 }
@@ -134,8 +139,10 @@ func TestRoutesInvalidSigner(t *testing.T) {
 		return nil, fmt.Errorf("unable to create certificate signer")
 	})
 	assert.NotNil(t, certPortal)
+
 	srv := httptest.NewServer(certPortal.GetRouter())
 	defer srv.Close()
+
 	jsonBytesCertificateRequest, err := json.Marshal(&certportal.CertificateRequest{
 		Csr: "csr",
 	})
