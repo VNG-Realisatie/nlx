@@ -5,7 +5,6 @@ package outway
 
 import (
 	"context"
-	"crypto/tls"
 	"fmt"
 	"net/http"
 	"net/http/httputil"
@@ -93,9 +92,11 @@ func (o *Outway) validateAuthURL(authCAPath, authServiceURL string) error {
 		return err
 	}
 
+	tlsConfig := common_tls.NewConfig()
+	tlsConfig.RootCAs = o.authorizationSettings.ca
+
 	o.authorizationClient = http.Client{
-		Transport: createHTTPTransport(&tls.Config{
-			RootCAs: o.authorizationSettings.ca}),
+		Transport: createHTTPTransport(tlsConfig),
 	}
 
 	return nil

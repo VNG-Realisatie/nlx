@@ -15,7 +15,7 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
-	"go.nlx.io/nlx/common/tlsconfig"
+	common_tls "go.nlx.io/nlx/common/tls"
 )
 
 const timeOut = 30 * time.Second
@@ -46,10 +46,9 @@ func (o *Outway) RunServer(listenAddress string, serverCertificate *tls.Certific
 			errorChannel <- o.httpServer.ListenAndServe()
 		}()
 	} else {
-		tlsConfig := &tls.Config{
-			Certificates: []tls.Certificate{*serverCertificate},
-		}
-		tlsconfig.ApplyDefaults(tlsConfig)
+		tlsConfig := common_tls.NewConfig()
+		tlsConfig.Certificates = []tls.Certificate{*serverCertificate}
+
 		o.httpServer.TLSConfig = tlsConfig
 
 		go func() {
