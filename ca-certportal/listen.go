@@ -4,6 +4,10 @@
 package certportal
 
 import (
+	"crypto/x509"
+	"encoding/asn1"
+	"encoding/pem"
+	"errors"
 	"io"
 	"net/http"
 
@@ -12,6 +16,8 @@ import (
 	"github.com/go-chi/render"
 	"go.uber.org/zap"
 )
+
+var sanOID = asn1.ObjectIdentifier{2, 5, 29, 17} // subjectAltName
 
 // function type to enable mocking of the signer
 type createSignerFunc func() (signer.Signer, error)
@@ -26,8 +32,20 @@ func requestCertificateHandler(logger *zap.Logger, createSigner createSignerFunc
 			return
 		}
 
+		csr, err := parseCertificateRequest(data)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			logger.Error("parse certificate request", zap.Error(err))
+
+			return
+		}
+
 		signReq := signer.SignRequest{
 			Request: data.Csr,
+		}
+
+		if !hasSAN(csr) {
+			signReq.Hosts = []string{csr.Subject.CommonName}
 		}
 
 		s, err := createSigner()
@@ -56,6 +74,30 @@ func requestCertificateHandler(logger *zap.Logger, createSigner createSignerFunc
 			logger.Error("error rendering response", zap.Error(err))
 		}
 	}
+}
+
+func parseCertificateRequest(request *CertificateRequest) (*x509.CertificateRequest, error) {
+	block, _ := pem.Decode([]byte(request.Csr))
+
+	if block == nil {
+		return nil, errors.New("decoding certificate request as PEM")
+	}
+
+	return x509.ParseCertificateRequest(block.Bytes)
+}
+
+func hasSAN(csr *x509.CertificateRequest) bool {
+	if len(csr.DNSNames) > 0 {
+		return true
+	}
+
+	for _, extension := range csr.Extensions {
+		if extension.Id.Equal(sanOID) {
+			return true
+		}
+	}
+
+	return false
 }
 
 // CertificateRequest contains the csr

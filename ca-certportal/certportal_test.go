@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2020
+// Licensed under the EUPL
+
 package certportal_test
 
 import (
@@ -7,6 +10,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"path/filepath"
 	"testing"
 
 	"github.com/cloudflare/cfssl/info"
@@ -18,6 +22,21 @@ import (
 	certportal "go.nlx.io/nlx/ca-certportal"
 	mock "go.nlx.io/nlx/ca-certportal/mock"
 )
+
+var pkiDir = filepath.Join("..", "testing", "pki")
+
+const csrWithoutSAN = `
+-----BEGIN CERTIFICATE REQUEST-----
+MIIBXTCBxwIBADAeMRwwGgYDVQQDDBNob3N0bmFtZS50ZXN0LmxvY2FsMIGfMA0G
+CSqGSIb3DQEBAQUAA4GNADCBiQKBgQCh0Fi/xEALsOBvWTpCtMtmS5UP2pqBFPx8
+O0DWaIRNyCi3JyerL9qhjxvrIWJyD3/Aam3fbe17Y6/1hnBBpkJ0WzFdWvdYsXCA
+I+vT8GUk8iYL09xwnzxL2Bx1rGG9URSWLBtYuD2lT4sntBACwyag6QQVMT7lbvB/
+MbW/pGdziwIDAQABoAAwDQYJKoZIhvcNAQELBQADgYEAVMYCP6vJQbLSSce7LX6A
+7YO98Hrvzc7/wZuWmG3EYyM7Sw3dEb8pLxKGiTiZl2rBZZs/rDOB5xz8iGNwHIfl
+rPmL0grTgE4AW8cEJqzRNeDs52RR6MnYTdCfUMkNNc54OWsCH8ZgT8PpWpc6dyqH
+2B9XFNelZbfv3GHt27eIKYI=
+-----END CERTIFICATE REQUEST-----
+`
 
 func TestRouteRequestCertificate(t *testing.T) {
 	ctrl := gomock.NewController(t)
@@ -31,8 +50,18 @@ func TestRouteRequestCertificate(t *testing.T) {
 	srv := httptest.NewServer(certPortal.GetRouter())
 	defer srv.Close()
 
-	jsonBytesCertificateRequest, err := json.Marshal(&certportal.CertificateRequest{
-		Csr: "csr",
+	csrData, err := ioutil.ReadFile(filepath.Join(pkiDir, "org-nlx-test.csr"))
+	assert.NoError(t, err)
+
+	csr := string(csrData)
+
+	certificateRequest, err := json.Marshal(&certportal.CertificateRequest{
+		Csr: csr,
+	})
+	assert.NoError(t, err)
+
+	certificateRequestWithoutSAN, err := json.Marshal(&certportal.CertificateRequest{
+		Csr: csrWithoutSAN,
 	})
 	assert.NoError(t, err)
 
@@ -43,10 +72,21 @@ func TestRouteRequestCertificate(t *testing.T) {
 		expectedBody       string
 	}{
 		{
-			jsonBytesCertificateRequest,
+			certificateRequest,
 			func() {
 				mockSigner.EXPECT().Sign(signer.SignRequest{
-					Request: "csr",
+					Request: csr,
+				}).Return([]byte("test_cert"), nil)
+			},
+			http.StatusCreated,
+			`{"certificate":"test_cert"}` + "\n",
+		},
+		{
+			certificateRequestWithoutSAN,
+			func() {
+				mockSigner.EXPECT().Sign(signer.SignRequest{
+					Request: csrWithoutSAN,
+					Hosts:   []string{"hostname.test.local"},
 				}).Return([]byte("test_cert"), nil)
 			},
 			http.StatusCreated,
@@ -60,10 +100,10 @@ func TestRouteRequestCertificate(t *testing.T) {
 			"",
 		},
 		{
-			jsonBytesCertificateRequest,
+			certificateRequest,
 			func() {
 				mockSigner.EXPECT().Sign(signer.SignRequest{
-					Request: "csr",
+					Request: csr,
 				}).Return(nil, fmt.Errorf("error signing request"))
 			},
 			http.StatusInternalServerError,
@@ -149,7 +189,7 @@ func TestRoutesInvalidSigner(t *testing.T) {
 	assert.NoError(t, err)
 	resp, err := http.Post(fmt.Sprintf("%s/api/request_certificate", srv.URL), "application/json", bytes.NewReader(jsonBytesCertificateRequest))
 	assert.NoError(t, err)
-	assert.Equal(t, http.StatusInternalServerError, resp.StatusCode)
+	assert.Equal(t, http.StatusBadRequest, resp.StatusCode)
 	resp.Body.Close()
 
 	resp, err = http.Get(fmt.Sprintf("%s/root.crt", srv.URL))
