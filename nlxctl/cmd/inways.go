@@ -1,4 +1,3 @@
-// nolint:dupl
 package cmd
 
 import (
@@ -13,7 +12,8 @@ import (
 	"go.nlx.io/nlx/management-api/api"
 )
 
-func init() { //nolint:gochecknoinits
+//nolint:gochecknoinits // recommended way to use Cobra
+func init() {
 	rootCmd.AddCommand(inwayCommand)
 	inwayCommand.AddCommand(listInwaysCommand)
 	inwayCommand.AddCommand(createInwayCommand)
@@ -21,23 +21,28 @@ func init() { //nolint:gochecknoinits
 	inwayCommand.AddCommand(deleteInwayCommand)
 
 	createInwayCommand.Flags().StringVarP(&inwayOptions.configPath, "config", "c", "", "config of inway")
+
 	err := createInwayCommand.MarkFlagRequired("config")
 	if err != nil {
 		panic(err)
 	}
 
 	updateInwayCommand.Flags().StringVarP(&inwayOptions.name, "name", "n", "", "name of inway")
+
 	err = updateInwayCommand.MarkFlagRequired("name")
 	if err != nil {
 		panic(err)
 	}
+
 	updateInwayCommand.Flags().StringVarP(&inwayOptions.configPath, "config", "c", "", "config of inway")
+
 	err = updateInwayCommand.MarkFlagRequired("config")
 	if err != nil {
 		panic(err)
 	}
 
 	deleteInwayCommand.Flags().StringVarP(&inwayOptions.name, "name", "n", "", "name of inway")
+
 	err = deleteInwayCommand.MarkFlagRequired("name")
 	if err != nil {
 		panic(err)
@@ -69,6 +74,7 @@ var listInwaysCommand = &cobra.Command{
 	},
 }
 
+//nolint:dupl // inway command looks like service command
 var createInwayCommand = &cobra.Command{
 	Use:   "create",
 	Short: "Create an inway",

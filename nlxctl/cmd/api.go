@@ -17,6 +17,7 @@ func getManagementClient() api.ManagementClient {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	keyPair, err := tls.LoadX509KeyPair(viper.GetString("cert-path"), viper.GetString("key-path"))
 	if err != nil {
 		log.Fatal(err)

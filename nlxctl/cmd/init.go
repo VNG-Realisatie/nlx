@@ -17,7 +17,8 @@ var initOptions struct {
 	ca      string
 }
 
-func init() { //nolint:gochecknoinits
+//nolint:gochecknoinits // recommended way to use Cobra
+func init() {
 	rootCmd.AddCommand(initCommand)
 	initCommand.Flags().StringVarP(&initOptions.address, "address", "a", "", "address of the management-api")
 	initCommand.Flags().StringVarP(&initOptions.cert, "cert", "c", "", "path to certificate")
@@ -28,10 +29,12 @@ func init() { //nolint:gochecknoinits
 	if err != nil {
 		panic(err)
 	}
+
 	err = initCommand.MarkFlagRequired("cert")
 	if err != nil {
 		panic(err)
 	}
+
 	err = initCommand.MarkFlagRequired("address")
 	if err != nil {
 		panic(err)

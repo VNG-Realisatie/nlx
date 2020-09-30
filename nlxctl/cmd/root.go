@@ -17,7 +17,8 @@ var rootCmd = &cobra.Command{
 	Long:  `nlxctl is a command line tool to communicate with the config API`,
 }
 
-func init() { //nolint:gochecknoinits
+//nolint:gochecknoinits // recommended way to use Cobra
+func init() {
 	cobra.OnInitialize(initConfig)
 }
 

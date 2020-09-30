@@ -1,4 +1,3 @@
-// nolint:dupl
 package cmd
 
 import (
@@ -12,17 +11,20 @@ import (
 	"go.nlx.io/nlx/management-api/api"
 )
 
-func init() { //nolint:gochecknoinits
+//nolint:gochecknoinits // recommended way to use Cobra
+func init() {
 	rootCmd.AddCommand(insightCommand)
 	insightCommand.AddCommand(putInsightCommand)
 	insightCommand.AddCommand(getInsightCommand)
 
 	putInsightCommand.Flags().StringVarP(&insightOptions.insightAPIURL, "insight-api-url", "i", "insight", "URL of the insight api")
 	putInsightCommand.Flags().StringVarP(&insightOptions.irmaServerURL, "irma-server-url", "r", "irma", "URL of the irma server")
+
 	err := putInsightCommand.MarkFlagRequired("insight-api-url")
 	if err != nil {
 		panic(err)
 	}
+
 	err = putInsightCommand.MarkFlagRequired("irma-server-url")
 	if err != nil {
 		panic(err)
