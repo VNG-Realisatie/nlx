@@ -35,6 +35,8 @@ spec:
           image: {{ template "nlx-directory.monitorImage" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
+            - name: GODEBUG
+              value: x509ignoreCN=0
             - name: TTL_OFFLINE_SERVICE
               value: {{ .Values.config.monitorOfflineServiceTTL | quote }}
             - name: POSTGRES_USER

@@ -48,6 +48,8 @@ spec:
             tcpSocket:
               port: inspectionplain
           env:
+            - name: GODEBUG
+              value: x509ignoreCN=0
             - name: LISTEN_ADDRESS
               value: "0.0.0.0:8001"
             - name: LISTEN_ADDRESS_PLAIN
@@ -99,6 +101,8 @@ spec:
             tcpSocket:
               port: registration
           env:
+            - name: GODEBUG
+              value: x509ignoreCN=0
             - name: LISTEN_ADDRESS
               value: "0.0.0.0:8002"
             - name: POSTGRES_USER
