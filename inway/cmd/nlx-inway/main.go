@@ -4,7 +4,6 @@
 package main
 
 import (
-	"crypto/tls"
 	"crypto/x509"
 	"fmt"
 	"log"
@@ -213,10 +212,10 @@ func loadServices(logger *zap.Logger, serviceConfig *config.ServiceConfig, iw *i
 			}
 		}
 
-		endpoint, errr := iw.NewHTTPServiceEndpoint(serviceName, &serviceDetails, &tls.Config{
-			RootCAs:    rootCAs,
-			MinVersion: tls.VersionTLS12,
-		})
+		tlsConfig := common_tls.NewConfig()
+		tlsConfig.RootCAs = rootCAs
+
+		endpoint, errr := iw.NewHTTPServiceEndpoint(serviceName, &serviceDetails, tlsConfig)
 		if errr != nil {
 			logger.Fatal("failed to create service", zap.Error(err))
 		}

@@ -4,7 +4,6 @@ package inway
 
 import (
 	"context"
-	"crypto/tls"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -284,13 +283,13 @@ func TestDeleteServiceEndpoints(t *testing.T) {
 		ServiceDetailsBase: config.ServiceDetailsBase{
 			EndpointURL: "https://api-a.test",
 		},
-	}, &tls.Config{})
+	}, common_tls.NewConfig())
 
 	endpointB, _ := iw.NewHTTPServiceEndpoint("service-b", &config.ServiceDetails{
 		ServiceDetailsBase: config.ServiceDetailsBase{
 			EndpointURL: "https://api-b.test",
 		},
-	}, &tls.Config{})
+	}, common_tls.NewConfig())
 
 	initEndpoints := []ServiceEndpoint{endpointA, endpointB}
 

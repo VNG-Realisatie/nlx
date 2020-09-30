@@ -5,7 +5,6 @@ package inway
 
 import (
 	"context"
-	"crypto/tls"
 	"fmt"
 	"reflect"
 	"strings"
@@ -212,7 +211,7 @@ func (i *Inway) createServiceEndpoints(response *api.ListServicesResponse) []Ser
 	c := 0
 
 	for _, service := range response.Services {
-		endpoint, err := i.NewHTTPServiceEndpoint(service.Name, serviceConfigToServiceDetails(service), &tls.Config{})
+		endpoint, err := i.NewHTTPServiceEndpoint(service.Name, serviceConfigToServiceDetails(service), common_tls.NewConfig())
 		if err != nil {
 			i.logger.Error("cannot create HTTPServiceEndpoint from service configuration", zap.Error(err))
 			continue
