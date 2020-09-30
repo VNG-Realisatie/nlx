@@ -63,8 +63,10 @@ func main() {
 				return
 			}
 		}
+
 		log.Fatalf("error parsing flags: %v", err)
 	}
+
 	if len(args) > 0 {
 		log.Fatalf("unexpected arguments: %v", args)
 	}
@@ -97,7 +99,9 @@ func main() {
 		if err != nil {
 			logger.Fatal("cannot configure management-api", zap.Error(err))
 		}
+
 		err = iw.StartConfigurationPolling()
+
 		if err != nil {
 			logger.Fatal("cannot retrieving inway configuration from the management-api", zap.Error(err))
 		}
@@ -144,25 +148,31 @@ func defaultManagementAddress(address string) (string, error) {
 
 func setupLogger() *zap.Logger {
 	zapConfig := options.LogOptions.ZapConfig()
+
 	logger, err := zapConfig.Build()
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
+
 	logger.Info("version info", zap.String("version", version.BuildVersion), zap.String("source-hash", version.BuildSourceHash))
 	logger = logger.With(zap.String("version", version.BuildVersion))
 
 	logger.Info("starting inway", zap.String("directory-registration-address", options.DirectoryRegistrationAddress))
+
 	return logger
 }
 
 func setupDatabase(logger *zap.Logger, mainProcess *process.Process) *sqlx.DB {
 	var logDB *sqlx.DB
+
 	if !options.DisableLogdb {
 		var err error
+
 		logDB, err = sqlx.Open("postgres", options.PostgresDSN)
 		if err != nil {
 			logger.Fatal("could not open connection to postgres", zap.Error(err))
 		}
+
 		logDB.SetConnMaxLifetime(5 * time.Minute)
 		logDB.SetMaxOpenConns(100)
 		logDB.SetMaxIdleConns(100)
@@ -180,9 +190,9 @@ func loadServices(logger *zap.Logger, serviceConfig *config.ServiceConfig, iw *i
 		logger.Warn("inway has 0 configured services")
 	}
 
-	// TODO: Issue #403
 	serviceEndpoints := make([]inway.ServiceEndpoint, len(serviceConfig.Services))
 	i := 0
+
 	for serviceName := range serviceConfig.Services {
 		serviceDetails := serviceConfig.Services[serviceName]
 		logger.Info("loaded service from service-config.toml", zap.String("service-name", serviceName))
@@ -193,7 +203,9 @@ func loadServices(logger *zap.Logger, serviceConfig *config.ServiceConfig, iw *i
 			zap.String("public-support-contact", serviceDetails.PublicSupportContact), zap.String("tech-support-contact", serviceDetails.TechSupportContact))
 
 		var rootCAs *x509.CertPool
+
 		var err error
+
 		if len(serviceDetails.CACertPath) > 0 {
 			rootCAs, _, err = common_tls.NewCertPoolFromFile(serviceDetails.CACertPath)
 			if err != nil {

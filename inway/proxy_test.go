@@ -81,11 +81,9 @@ func newTestEnv(t *testing.T, cert *common_tls.CertificateBundle) (proxy, mock *
 	proxyRequestMockServer.TLS = cert.TLSConfig(cert.WithTLSClientAuth())
 
 	return proxyRequestMockServer, mockEndPoint
-
 }
 
 func TestInwayProxyRequest(t *testing.T) {
-
 	cert, _ := common_tls.NewBundleFromFiles(
 		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
 		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
@@ -94,12 +92,13 @@ func TestInwayProxyRequest(t *testing.T) {
 
 	proxyRequestMockServer, mockEndPoint := newTestEnv(t, cert)
 	proxyRequestMockServer.StartTLS()
+
 	defer proxyRequestMockServer.Close()
 	defer mockEndPoint.Close()
 
 	client := setupClient(cert)
 
-	//nolint:dupl
+	//nolint:dupl // this is a test
 	tests := []struct {
 		url          string
 		logRecordID  string
@@ -138,7 +137,6 @@ func TestInwayProxyRequest(t *testing.T) {
 }
 
 func TestInwayNoOrgProxyRequest(t *testing.T) {
-
 	cert, _ := common_tls.NewBundleFromFiles(
 		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
 		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
@@ -155,10 +153,11 @@ func TestInwayNoOrgProxyRequest(t *testing.T) {
 	// should not be allowed on the nlx network.
 	proxyRequestMockServer, mockEndPoint := newTestEnv(t, cert)
 	proxyRequestMockServer.StartTLS()
+
 	defer proxyRequestMockServer.Close()
 	defer mockEndPoint.Close()
 
-	//nolint:dupl
+	//nolint:dupl // this is atest
 	tests := []struct {
 		url          string
 		logRecordID  string
@@ -183,6 +182,7 @@ func TestInwayNoOrgProxyRequest(t *testing.T) {
 		req.Header.Add("X-NLX-Logrecord-Id", test.logRecordID)
 		resp, err := noOrgClient.Do(req)
 		assert.Nil(t, err)
+
 		defer resp.Body.Close()
 
 		if resp.StatusCode != 400 {

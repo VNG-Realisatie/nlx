@@ -79,6 +79,7 @@ func (i *Inway) StartConfigurationPolling() error {
 	}
 
 	configRetrievalInterval := 1 * time.Minute
+
 	go func() {
 		expBackOff := &backoff.Backoff{
 			Min:    100 * time.Millisecond,
@@ -86,6 +87,7 @@ func (i *Inway) StartConfigurationPolling() error {
 			Max:    20 * time.Second,
 		}
 		sleepDuration := configRetrievalInterval
+
 		for {
 			select {
 			case <-i.stopInwayChannel:
@@ -208,6 +210,7 @@ func serviceConfigToServiceDetails(service *api.Service) *config.ServiceDetails 
 func (i *Inway) createServiceEndpoints(response *api.ListServicesResponse) []ServiceEndpoint {
 	endPoints := make([]ServiceEndpoint, len(response.Services))
 	c := 0
+
 	for _, service := range response.Services {
 		endpoint, err := i.NewHTTPServiceEndpoint(service.Name, serviceConfigToServiceDetails(service), &tls.Config{})
 		if err != nil {

@@ -21,6 +21,7 @@ import (
 
 var pkiDir = filepath.Join("..", "testing", "pki")
 
+//nolint:funlen // this is a test
 func TestInwayApiSpec(t *testing.T) {
 	cert, err := common_tls.NewBundleFromFiles(
 		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
@@ -66,13 +67,17 @@ func TestInwayApiSpec(t *testing.T) {
 
 	apiSpecMockServer := httptest.NewUnstartedServer(http.HandlerFunc(iw.handleAPISpecDocRequest))
 	apiSpecMockServer.TLS = iw.orgCertBundle.TLSConfig(iw.orgCertBundle.WithTLSClientAuth())
+
 	apiSpecMockServer.StartTLS()
 	defer apiSpecMockServer.Close()
+
 	endPoints := []ServiceEndpoint{}
+
 	for serviceName := range serviceConfig.Services {
 		serviceDetails := serviceConfig.Services[serviceName]
-		endpoint, err := iw.NewHTTPServiceEndpoint(serviceName, &serviceDetails, nil)
-		assert.Nil(t, err)
+
+		endpoint, errEndpoint := iw.NewHTTPServiceEndpoint(serviceName, &serviceDetails, nil)
+		assert.Nil(t, errEndpoint)
 
 		endPoints = append(endPoints, endpoint)
 	}

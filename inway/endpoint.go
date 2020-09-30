@@ -64,12 +64,12 @@ func newRoundTripHTTPTransport(tlsConfig *tls.Config) *http.Transport {
 var _ ServiceEndpoint = &HTTPServiceEndpoint{} // compile-time interface validation
 
 // NewHTTPServiceEndpoint creates a new ServiceEndpoint using a simple HTTP reverse proxy backend.
-func (iw *Inway) NewHTTPServiceEndpoint(serviceName string, serviceDetails *config.ServiceDetails, tlsConfig *tls.Config) (*HTTPServiceEndpoint, error) {
+func (i *Inway) NewHTTPServiceEndpoint(serviceName string, serviceDetails *config.ServiceDetails, tlsConfig *tls.Config) (*HTTPServiceEndpoint, error) {
 	h := &HTTPServiceEndpoint{
-		inway:          iw,
+		inway:          i,
 		serviceName:    serviceName,
 		serviceDetails: serviceDetails,
-		logger:         iw.logger.With(zap.String("inway-service-name", serviceName)),
+		logger:         i.logger.With(zap.String("inway-service-name", serviceName)),
 		httpClient:     &http.Client{Transport: newRoundTripHTTPTransport(tlsConfig)},
 	}
 
@@ -77,10 +77,11 @@ func (iw *Inway) NewHTTPServiceEndpoint(serviceName string, serviceDetails *conf
 	if err != nil {
 		return nil, errors.Wrap(err, "invalid endpoint provided")
 	}
+
 	h.host = endpointURL.Host
 	h.proxy = httputil.NewSingleHostReverseProxy(endpointURL)
 	h.proxy.Transport = newRoundTripHTTPTransport(tlsConfig)
-	h.proxy.ErrorHandler = iw.LogAPIErrors
+	h.proxy.ErrorHandler = i.LogAPIErrors
 
 	switch serviceDetails.AuthorizationModel {
 	case "whitelist", "":
@@ -88,20 +89,19 @@ func (iw *Inway) NewHTTPServiceEndpoint(serviceName string, serviceDetails *conf
 	case "none":
 		h.SetAuthorizationPublic()
 	default:
-		iw.logger.Error(fmt.Sprintf(`invalid authorization model "%s" for service "%s"`, serviceDetails.AuthorizationModel, serviceName))
+		i.logger.Error(fmt.Sprintf(`invalid authorization model "%s" for service "%s"`, serviceDetails.AuthorizationModel, serviceName))
 	}
 
 	return h, nil
 }
 
-func (iw *Inway) LogAPIErrors(w http.ResponseWriter, r *http.Request, e error) {
+func (i *Inway) LogAPIErrors(w http.ResponseWriter, r *http.Request, e error) {
 	msg := ("nlx-inway: failed internal API request to " +
 		r.URL.String() +
 		" try again later / service api down/unreachable." +
 		" check A1 error at https://docs.nlx.io/support/common-errors/")
-	iw.logger.Error(msg)
+	i.logger.Error(msg)
 	http.Error(w, msg, http.StatusServiceUnavailable)
-
 }
 
 // SetAuthorizationPublic makes the service publicly available.
@@ -132,10 +132,10 @@ func (h *HTTPServiceEndpoint) GetAPISpec() (*http.Response, error) {
 
 func (h *HTTPServiceEndpoint) handleRequest(reqMD *RequestMetadata, w http.ResponseWriter, r *http.Request) {
 	if !h.public {
-
 		if reqMD.requesterOrganization == "" {
 			http.Error(w, "nlx-inway: could not handle your request, missing requesterOrganization header.", http.StatusBadRequest)
 			h.logger.Info("request blocked, missing requesterOrganization header")
+
 			return
 		}
 
@@ -144,6 +144,7 @@ func (h *HTTPServiceEndpoint) handleRequest(reqMD *RequestMetadata, w http.Respo
 		h.logger.Debug("check against whitelist",
 			zap.String("requesterOrganization", reqMD.requesterOrganization),
 			zap.String("requesterPublicKeyHash", reqMD.requesterPublicKeyFingerprint))
+
 		for _, whitelistedOrg := range h.whitelistedOrganizations {
 			h.logger.Debug("whitelistitem",
 				zap.String("OrganizationName", whitelistedOrg.OrganizationName),
@@ -191,6 +192,7 @@ func (h *HTTPServiceEndpoint) handleRequest(reqMD *RequestMetadata, w http.Respo
 	if logrecordID == "" {
 		http.Error(w, "nlx-inway: missing logrecord id", http.StatusBadRequest)
 		h.logger.Warn("Received request with missing logrecord id from " + reqMD.requesterOrganization)
+
 		return
 	}
 
@@ -205,8 +207,10 @@ func (h *HTTPServiceEndpoint) handleRequest(reqMD *RequestMetadata, w http.Respo
 	if err != nil {
 		http.Error(w, "nlx-inway: server error", http.StatusInternalServerError)
 		h.logger.Error("failed to store transactionlog record", zap.Error(err))
+
 		return
 	}
+
 	h.proxy.ServeHTTP(w, r)
 }
 
@@ -215,6 +219,7 @@ func (h *HTTPServiceEndpoint) createRecordData(requestPath string, header http.H
 	if processID := header.Get("X-NLX-Request-Process-Id"); processID != "" {
 		recordData["doelbinding-process-id"] = processID
 	}
+
 	if dataElements := header.Get("X-NLX-Request-Data-Elements"); dataElements != "" {
 		recordData["doelbinding-data-elements"] = dataElements
 	}
@@ -226,6 +231,7 @@ func (h *HTTPServiceEndpoint) createRecordData(requestPath string, header http.H
 	if claims := header.Get("X-NLX-Requester-Claims"); claims != "" {
 		recordData["doelbinding-claims"] = claims
 	}
+
 	recordData["request-path"] = requestPath
 
 	return recordData

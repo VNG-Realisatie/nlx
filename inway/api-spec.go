@@ -26,14 +26,17 @@ func (i *Inway) handleAPISpecDocRequest(w http.ResponseWriter, r *http.Request) 
 		http.Error(w, "api specification not found for service", http.StatusNotFound)
 		return
 	}
+
 	i.logger.Info("fetching api spec doc", zap.String("api-spec-doc-url", serviceDetails.APISpecificationDocumentURL))
 
 	resp, err := serviceEndpoint.GetAPISpec()
 	if err != nil {
 		http.Error(w, "server error", http.StatusInternalServerError)
 		i.logger.Error("failed to fetch api specification document", zap.Error(err))
+
 		return
 	}
+
 	defer resp.Body.Close()
 
 	w.Header().Set("Content-Type", resp.Header.Get("Content-Type"))
@@ -42,6 +45,7 @@ func (i *Inway) handleAPISpecDocRequest(w http.ResponseWriter, r *http.Request) 
 	if err != nil {
 		http.Error(w, "server error", http.StatusInternalServerError)
 		i.logger.Error("copy response body failed", zap.Error(err))
+
 		return
 	}
 }

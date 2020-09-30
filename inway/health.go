@@ -28,6 +28,7 @@ func (i *Inway) handleHealthRequest(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		i.logger.Error("failed to encode health status json", zap.Error(err))
 		http.Error(w, "internal server error", http.StatusInternalServerError)
+
 		return
 	}
 }

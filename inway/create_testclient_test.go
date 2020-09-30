@@ -18,5 +18,6 @@ func setupClient(cert *common_tls.CertificateBundle) http.Client {
 	client := http.Client{
 		Transport: tr,
 	}
+
 	return client
 }

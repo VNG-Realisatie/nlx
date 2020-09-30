@@ -150,8 +150,8 @@ func getResponseStatusAndBody(t *testing.T, httpRecorder *httptest.ResponseRecor
 	return result.StatusCode, string(bytes)
 }
 
+//nolint:funlen // this is a test
 func TestInwaySetServiceEndpoints(t *testing.T) {
-
 	// Certificate organization = nlx-test
 	cert, _ := common_tls.NewBundleFromFiles(
 		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
@@ -358,6 +358,7 @@ func TestHTTPServiceEndpointCreateRecordData(t *testing.T) {
 	header := http.Header{}
 	processID := "123456"
 	dataElement := "mock-element"
+
 	header.Add("X-NLX-Request-Process-Id", processID)
 	header.Add("X-NLX-Request-Data-Elements", dataElement)
 	endpoint := HTTPServiceEndpoint{}

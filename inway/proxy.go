@@ -26,6 +26,7 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 	if len(peerCertificates) == 0 {
 		http.Error(w, "nlx-inway: invalid connection: missing peer certificates", http.StatusBadRequest)
 		logger.Warn("received request no certificates")
+
 		return
 	}
 
@@ -36,14 +37,17 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 		msg := "invalid certificate provided: missing organizations attribute in subject"
 		http.Error(w, "nlx-inway: "+msg, http.StatusBadRequest)
 		logger.Warn(msg)
+
 		return
 	}
+
 	requesterOrganization := organizations[0]
 
 	if requesterOrganization == "" {
 		msg := "invalid certificate provided: missing value for organization in subject"
 		http.Error(w, "nlx-inway: "+msg, http.StatusBadRequest)
 		logger.Warn(msg)
+
 		return
 	}
 
@@ -51,6 +55,7 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 		msg := "invalid certificate provided: missing value for issuer organization in issuer"
 		http.Error(w, "nlx-inway: "+msg, http.StatusBadRequest)
 		logger.Warn(msg)
+
 		return
 	}
 
@@ -65,8 +70,10 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 	if len(urlparts) != 2 {
 		http.Error(w, "nlx-inway: invalid path in url", http.StatusBadRequest)
 		logger.Warn("received request with invalid path")
+
 		return
 	}
+
 	serviceName := urlparts[0]
 	logrecordID := r.Header.Get("X-NLX-Logrecord-Id")
 	logger.Info(
@@ -88,9 +95,11 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 	i.serviceEndpointsLock.RLock()
 	serviceEndpoint := i.serviceEndpoints[serviceName]
 	i.serviceEndpointsLock.RUnlock()
+
 	if serviceEndpoint == nil {
 		http.Error(w, "nlx-inway: no endpoint for service", http.StatusBadRequest)
 		logger.Warn("received request for service with no known endpoint")
+
 		return
 	}
 

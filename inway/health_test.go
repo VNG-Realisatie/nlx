@@ -31,6 +31,7 @@ func TestHealth(t *testing.T) {
 		{url: "http://localhost:8080/.nlx/health/mockservice1", expected: false},
 	}
 	inway.logger = zap.NewNop()
+
 	for _, test := range tests {
 		recorder := httptest.NewRecorder()
 		request := httptest.NewRequest("GET", test.url, nil)

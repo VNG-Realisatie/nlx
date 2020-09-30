@@ -91,6 +91,7 @@ func NewInway(
 
 	organizationName := orgCert.Subject.Organization[0]
 	logger.Info("loaded certificates for inway", zap.String("inway-organization-name", organizationName))
+
 	i := &Inway{
 		logger:           logger.With(zap.String("inway-organization-name", organizationName)),
 		organizationName: organizationName,
@@ -113,6 +114,7 @@ func NewInway(
 	// setup transactionlog
 	if logDB == nil {
 		logger.Info("logging to transaction-log disabled")
+
 		i.txlogger = transactionlog.NewDiscardTransactionLogger()
 	} else {
 		i.txlogger, err = transactionlog.NewPostgresTransactionLogger(logger, logDB, transactionlog.DirectionIn)
@@ -141,12 +143,17 @@ func NewInway(
 	ctx := context.TODO()
 	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(nlxversion.NewGRPCContext(ctx, "inway"), 1*time.Minute)
 	directoryConn, err := grpc.DialContext(directoryConnCtx, directoryRegistrationAddress, directoryDialOptions...)
+
 	defer directoryConnCtxCancel()
+
 	if err != nil {
 		logger.Fatal("failed to setup connection to directory service", zap.Error(err))
 	}
+
 	i.directoryRegistrationClient = registrationapi.NewDirectoryRegistrationClient(directoryConn)
+
 	logger.Info("directory registration client setup complete", zap.String("directory-address", directoryRegistrationAddress))
+
 	return i, nil
 }
 
@@ -178,6 +185,7 @@ func selfAddressIsInOrgCert(selfAddress string, orgCert *x509.Certificate) error
 func getFingerPrint(rawCert []byte) string {
 	rawSum := sha256.Sum256(rawCert)
 	bytes := make([]byte, sha256.Size)
+
 	for i, b := range rawSum {
 		bytes[i] = b
 	}
@@ -200,6 +208,7 @@ func (i *Inway) announceToDirectory(s ServiceEndpoint) {
 		}
 
 		sleepDuration := 10 * time.Second
+
 		for {
 			select {
 			case <-i.stopInwayChannel:
@@ -226,19 +235,25 @@ func (i *Inway) announceToDirectory(s ServiceEndpoint) {
 				if err != nil {
 					if errStatus, ok := status.FromError(err); ok && errStatus.Code() == codes.Unavailable {
 						i.logger.Info("waiting for directory...", zap.Error(err))
+
 						sleepDuration = expBackOff.Duration()
+
 						continue
 					}
+
 					i.logger.Error("failed to register to directory", zap.Error(err))
 				}
+
 				if resp != nil && resp.Error != "" {
 					i.logger.Error(fmt.Sprintf("failed to register to directory: %s", resp.Error))
 				}
+
 				i.logger.Info("directory registration successful")
+
 				sleepDuration = 10 * time.Second
+
 				expBackOff.Reset()
 			}
-
 		}
 	}()
 }
