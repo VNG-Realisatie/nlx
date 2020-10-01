@@ -23,7 +23,6 @@ import (
 
 	"go.nlx.io/nlx/common/monitoring"
 	"go.nlx.io/nlx/common/nlxversion"
-	"go.nlx.io/nlx/common/orgtls"
 	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
@@ -87,7 +86,7 @@ func (o *Outway) validateAuthURL(authCAPath, authServiceURL string) error {
 		serviceURL: fmt.Sprintf("%s/auth", authServiceURL),
 	}
 
-	o.authorizationSettings.ca, err = orgtls.LoadRootCert(authCAPath)
+	o.authorizationSettings.ca, _, err = common_tls.NewCertPoolFromFile(authCAPath)
 	if err != nil {
 		return err
 	}
