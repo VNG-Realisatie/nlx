@@ -8,16 +8,18 @@ replicaCount: 1
 image:
   registry: docker.io
   repository: nlxio/ca-certportal
+  # Allow to override the tag. When set to null, the AppVersion from the Chart is used
+  tag: ""
   pullPolicy: IfNotPresent
-  tag: latest
+  pullSecrets: []
 
-#ca-certportal specific config
+
+# CA Certportal specific sttingd
 config:
   logType: live
   logLevel: info
-  caAPIAddress: ""
+  caHost: ""
 
-imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 

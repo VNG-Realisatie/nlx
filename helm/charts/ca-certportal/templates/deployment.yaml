@@ -14,7 +14,7 @@ spec:
       labels:
         {{- include "ca-certportal.selectorLabels" . | nindent 8 }}
     spec:
-    {{- with .Values.imagePullSecrets }}
+    {{- with .Values.image.pullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
@@ -22,7 +22,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: "nlx-ca-certportal"
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ template "ca-certportal.image" . }}
@@ -33,7 +33,7 @@ spec:
             - name: LOG_LEVEL
               value: {{ .Values.config.logLevel }}
             - name: CA_HOST
-              value: {{.Values.config.caAPIAddress}}
+              value: {{ .Values.config.caHost }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
