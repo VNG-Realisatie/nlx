@@ -5,37 +5,28 @@ package registrationservice
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"path"
 
-	"github.com/ghodss/yaml"
+	"gopkg.in/yaml.v3"
 )
 
 type openAPIVersion struct {
-	OpenAPI string `json:"openapi"`
-	Swagger string `json:"swagger"`
+	OpenAPI string `json:"openapi" yaml:"openapi"`
+	Swagger string `json:"swagger" yaml:"swagger"`
 }
 
-const openAPI2 = "OpenAPI2"
-const openAPI3 = "OpenAPI3"
+const (
+	openAPI2 = "OpenAPI2"
+	openAPI3 = "OpenAPI3"
+)
 
-func getInwayAPISpecsType(httpClient *http.Client, inwayAddress, serviceName string) (string, error) {
-	data, err := getInwayAPISpecs(httpClient, inwayAddress, serviceName)
-	if err != nil {
-		return "", err
-	}
-
-	jsonBytes, err := yaml.YAMLToJSON(data)
-	if err != nil {
-		return "", err
-	}
-
-	versionCheck := &openAPIVersion{}
-	err = json.Unmarshal(jsonBytes, versionCheck)
-
+func ParseAPISpectType(data []byte) (string, error) {
+	versionCheck, err := parseVersion(data)
 	if err != nil {
 		return "", err
 	}
@@ -55,6 +46,39 @@ func getInwayAPISpecsType(httpClient *http.Client, inwayAddress, serviceName str
 	}
 
 	return "", fmt.Errorf("documentation format is neither openAPI2 or openAPI3")
+}
+
+func parseVersion(data []byte) (*openAPIVersion, error) {
+	if len(data) == 0 {
+		return nil, errors.New("empty input")
+	}
+
+	version := &openAPIVersion{}
+
+	// If it looks like JSON, try to parse it as
+	if data[0] == '{' {
+		err := json.Unmarshal(data, version)
+		if err == nil {
+			return version, nil
+		}
+	}
+
+	// JSON failed, try it as YAML
+	err := yaml.Unmarshal(data, version)
+	if err == nil {
+		return version, nil
+	}
+
+	return nil, errors.New("unable to parse version")
+}
+
+func getInwayAPISpecsType(httpClient *http.Client, inwayAddress, serviceName string) (string, error) {
+	data, err := getInwayAPISpecs(httpClient, inwayAddress, serviceName)
+	if err != nil {
+		return "", err
+	}
+
+	return ParseAPISpectType(data)
 }
 
 func getInwayAPISpecs(h *http.Client, inwayAddress, serviceName string) ([]byte, error) {
