@@ -150,7 +150,7 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			directoryClient: func(ctrl *gomock.Controller) directory.Client {
 				directoryClient := mock_directory.NewMockClient(ctrl)
 				directoryClient.EXPECT().
-					ClearOrganizationInway(gomock.Any(), gomock.Any()).
+					ClearOrganizationInway(gomock.Any(), &types.Empty{}).
 					Return(nil, errors.New("arbitrary error"))
 
 				return directoryClient
