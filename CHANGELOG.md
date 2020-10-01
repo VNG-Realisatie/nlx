@@ -1,3 +1,48 @@
+# [0.89.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.88.0...v0.89.0) (2020-10-01)
+
+
+### Bug Fixes
+
+* **common:** gosec G304 file inclusion ([ec63674](https://gitlab.com/commonground/nlx/nlx/commit/ec636741bc9d4ab2f0f4919e5cee03d8f555facf))
+* **directory:** gosec G402 TLS MinVersion ([16d7754](https://gitlab.com/commonground/nlx/nlx/commit/16d7754cc0c7a1a721d3bba1e6805a77d3bf3c42))
+* **directory:** resolve vulnerable YAML parsing dependency ([9268d56](https://gitlab.com/commonground/nlx/nlx/commit/9268d56d951d2fb000775d56068bf853c58ca468))
+* **docs:** fix build failure for docusaurus after upgrade ([7cd3552](https://gitlab.com/commonground/nlx/nlx/commit/7cd355258751591c900b2f86be61308d5dda5878))
+* **inway:** gosec G402 TLS MinVersion ([f37cfde](https://gitlab.com/commonground/nlx/nlx/commit/f37cfdecfc6d89a15666595a64f4803211434230))
+* **management:** add unspecified state to fix default value issue ([1a2a590](https://gitlab.com/commonground/nlx/nlx/commit/1a2a59087d53e79a2c69303086c39bf2b0b5f246))
+* **management:** apply receive state for incoming access requests ([9074cde](https://gitlab.com/commonground/nlx/nlx/commit/9074cde4a7c36dfa12e844344b282217cddd14aa))
+* **management:** fix issue with updating settings in the management UI ([180a883](https://gitlab.com/commonground/nlx/nlx/commit/180a883916b661a57883b1e8719fa680834dcf7e))
+* **management:** fix issues with locking, etcd watch and concurrency ([3894e5d](https://gitlab.com/commonground/nlx/nlx/commit/3894e5d4393df89f1e883ce639f38b82bc1e561b))
+* **management:** gosec G402 TLS MinVersion ([6a603bb](https://gitlab.com/commonground/nlx/nlx/commit/6a603bb24ff701645facb4f7bf3f3c62dcf0d2f3))
+* **management:** implement a fallback for dead-locked AccessRequests ([2f33ce7](https://gitlab.com/commonground/nlx/nlx/commit/2f33ce7fb30c5cbb5cdf32c2174d3383520cab01))
+* **management:** resolve potential memory leak for usePromise hook ([ccf7fc2](https://gitlab.com/commonground/nlx/nlx/commit/ccf7fc2679ec4b5a9bc1221deffe2b5cebbda6f2)), closes [core/team#75](https://gitlab.com/core/team/issues/75)
+* **outway:** gosec G402 TLS MinVersion ([8fa420e](https://gitlab.com/commonground/nlx/nlx/commit/8fa420e4b789e3c3733fac99993f0449cb72a5c7))
+* temporary ignore CommonName deprecation in Go 1.15 ([b6339a3](https://gitlab.com/commonground/nlx/nlx/commit/b6339a38990731ddc782ffa3d6a6e2c0d84797d1))
+
+
+### Features
+
+* **ca-certportal:** add SAN to csr when missing ([d2dfb6a](https://gitlab.com/commonground/nlx/nlx/commit/d2dfb6ade661f96e7cc0d7ead53df8549d4b59d3))
+* **inway:** proxy management-api requests ([9c3de64](https://gitlab.com/commonground/nlx/nlx/commit/9c3de64d9c13649ae31abbfef24ffa8f5c751b4c))
+* **management:** add access grants ([d5344f6](https://gitlab.com/commonground/nlx/nlx/commit/d5344f6c06e885c74025b09162d35deeca13e6cc))
+* **management:** add public key fingerprint to outgoing access-request ([c465414](https://gitlab.com/commonground/nlx/nlx/commit/c46541457ed27c70a0114da8f47694905fbf4cdf))
+* **management:** add update access request to the database ([918ad7b](https://gitlab.com/commonground/nlx/nlx/commit/918ad7bca8558fadb204060a4e4c3a290116bf94))
+* **management:** emit empty fields in JSON responses ([24ab50e](https://gitlab.com/commonground/nlx/nlx/commit/24ab50efbceef9746f5daa72eb8b317b630040ec))
+* **management:** implement access request status loop ([8343712](https://gitlab.com/commonground/nlx/nlx/commit/834371240ebb2502ad3546f7143860d0a200f17b))
+* **management:** implement locking for access requests ([6147c52](https://gitlab.com/commonground/nlx/nlx/commit/6147c5252af318d70d7f0987a6e22bde2af873be))
+* **management:** implement management external API ([339be14](https://gitlab.com/commonground/nlx/nlx/commit/339be14013341b0d14a42d34fb3bf7a3f3ab302a))
+* **management:** implement management gRPC client ([410c001](https://gitlab.com/commonground/nlx/nlx/commit/410c00146af3dbf6a7099cb49ba7a385042d8b71))
+* **management:** re-implement unique constraint for access-request ([b07da55](https://gitlab.com/commonground/nlx/nlx/commit/b07da553b8a625b3b29a6cc5046947393541dd38))
+* **management:** remove whitelist configuration ([662008a](https://gitlab.com/commonground/nlx/nlx/commit/662008ac1dda87f46f01988cc08edc5b663ab747)), closes [#1008](https://gitlab.com/commonground/nlx/nlx/issues/1008)
+* **management:** return incomming access requests ([c3bab34](https://gitlab.com/commonground/nlx/nlx/commit/c3bab34b07f1ffe11886dc5b16557d401e3388a6))
+* **management:** save organization inway address in the directory ([6775c62](https://gitlab.com/commonground/nlx/nlx/commit/6775c622f851c0464ef6b1c48369fad0d4a8abe7))
+* **management:** services show if there are no access requests ([5a5679e](https://gitlab.com/commonground/nlx/nlx/commit/5a5679e0cfa07042ac29ff678f6d712fcc7aea17))
+
+
+### Reverts
+
+* update dependency styled-components to v5.2.0 ([e749b37](https://gitlab.com/commonground/nlx/nlx/commit/e749b372c2207e458c1545b57aec04afd6a83d71))
+* **management:** enable specifying OIDC & Management API base URLs ([a37f0a1](https://gitlab.com/commonground/nlx/nlx/commit/a37f0a1dfcd49d7f5ceb0960a2d4263f01e2bc88))
+
 # [0.88.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.87.1...v0.88.0) (2020-09-17)
 
 
