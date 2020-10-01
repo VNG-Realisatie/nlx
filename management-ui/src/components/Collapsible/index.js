@@ -49,8 +49,8 @@ const Collapsible = ({ title, ariaLabel, children }) => {
 
 Collapsible.propTypes = {
   title: node.isRequired,
-  ariaLabel: (props, propName, componentName) => {
-    if (typeof props.title !== 'string' && !props[propName]) {
+  ariaLabel: (props) => {
+    if (typeof props.title !== 'string' && !props.ariaLabel) {
       return new Error(
         'If Collapsible title is not a string, please provide an ariaLabel',
       )

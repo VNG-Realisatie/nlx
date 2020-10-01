@@ -56,12 +56,32 @@ class OutgoingAccessRequestModel {
   }
 
   update(accessRequestData) {
-    if (accessRequestData) {
-      Object.keys(accessRequestData)
-        .filter((key) => key in this)
-        .forEach((key) => {
-          this[key] = accessRequestData[key]
-        })
+    if (!accessRequestData) {
+      return
+    }
+
+    if (accessRequestData.id) {
+      this.id = accessRequestData.id
+    }
+
+    if (accessRequestData.organizationName) {
+      this.organizationName = accessRequestData.organizationName
+    }
+
+    if (accessRequestData.serviceName) {
+      this.serviceName = accessRequestData.serviceName
+    }
+
+    if (accessRequestData.state) {
+      this.state = accessRequestData.state
+    }
+
+    if (accessRequestData.createdAt) {
+      this.createdAt = accessRequestData.createdAt
+    }
+
+    if (accessRequestData.updatedAt) {
+      this.updatedAt = accessRequestData.updatedAt
     }
   }
 

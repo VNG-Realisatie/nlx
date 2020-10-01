@@ -11,28 +11,41 @@ import { outgoingAccessRequestPropTypes } from '../../../../../models/OutgoingAc
 import { IconWarningCircleFill } from '../../../../../icons'
 import { FailedDetail, ErrorText, WarnText } from './index.styles'
 
-const stateMessage = {
-  FAILED: (t, inDetailView) =>
-    inDetailView ? (
-      <FailedDetail>
-        <span>{t('Access request')}</span>
-        <ErrorText>
-          <IconWarningCircleFill title={t('Error')} />
-          {t('Request could not be sent')}
-        </ErrorText>
-      </FailedDetail>
-    ) : (
-      <WarnText>{t('Request could not be sent')}</WarnText>
-    ),
-  CREATED: (t) => <span>{t('Sending request')}</span>,
-  RECEIVED: (t) => <span>{t('Requested')}</span>,
+const STATE_FAILED = 'FAILED'
+const STATE_CREATED = 'CREATED'
+const STATE_RECEIVED = 'RECEIVED'
+
+const getMessageForState = (state, t, inDetailView) => {
+  switch (state) {
+    case STATE_FAILED:
+      return inDetailView ? (
+        <FailedDetail>
+          <span>{t('Access request')}</span>
+          <ErrorText>
+            <IconWarningCircleFill title={t('Error')} />
+            {t('Request could not be sent')}
+          </ErrorText>
+        </FailedDetail>
+      ) : (
+        <WarnText>{t('Request could not be sent')}</WarnText>
+      )
+
+    case STATE_CREATED:
+      return <span>{t('Sending request')}</span>
+
+    case STATE_RECEIVED:
+      return <span>{t('Requested')}</span>
+
+    default:
+      console.warn(`can not determine message for unknown state '${state}'`)
+      return null
+  }
 }
 
 const AccessRequestMessage = ({ latestAccessRequest, inDetailView }) => {
   const { t } = useTranslation()
   const state = latestAccessRequest ? latestAccessRequest.state : null
-
-  return state ? stateMessage[state](t, inDetailView) : null
+  return getMessageForState(state, t, inDetailView)
 }
 
 AccessRequestMessage.propTypes = {

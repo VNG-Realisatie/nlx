@@ -13,10 +13,8 @@ test('store should be provided by useStore hook', () => {
 
     return (
       <>
-        {Object.keys(stores).map((store) => {
-          const mockValue = stores[store]
-          return <p key={mockValue}>{mockValue}</p>
-        })}
+        <p data-testid="store-a">{stores.subStoreA}</p>
+        <p data-testid="store-b">{stores.subStoreB}</p>
       </>
     )
   }
@@ -26,12 +24,12 @@ test('store should be provided by useStore hook', () => {
     subStoreB: 'store b',
   }
 
-  const { getByText } = render(
+  const { getByTestId } = render(
     <StoreProvider store={store}>
       <Consumer />
     </StoreProvider>,
   )
 
-  expect(getByText('store a')).toBeInTheDocument()
-  expect(getByText('store b')).toBeInTheDocument()
+  expect(getByTestId('store-a')).toHaveTextContent('store a')
+  expect(getByTestId('store-b')).toHaveTextContent('store b')
 })

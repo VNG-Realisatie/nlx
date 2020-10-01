@@ -30,17 +30,19 @@ test('renders an icon', () => {
 })
 
 test('does not render when state is invalid', () => {
-  // Suppress console output during test
-  global.console.warn = jest.fn()
   global.console.error = jest.fn()
 
   const { container, rerender } = renderWithProviders(
     <StateIndicator state={null} />,
   )
-  expect(container).toBeEmptyDOMElement()
 
-  rerender(<StateIndicator state="invalid" />)
-  expect(container).toBeEmptyDOMElement()
+  expect(container).toHaveTextContent('state-unknown.svg')
+  expect(container.querySelector('svg')).toHaveAttribute('title', 'Unknown')
+
+  rerender(<StateIndicator state="unknown-state" />)
+
+  expect(container).toHaveTextContent('state-unknown.svg')
+  expect(container.querySelector('svg')).toHaveAttribute('title', 'Unknown')
 })
 
 describe('state text', () => {

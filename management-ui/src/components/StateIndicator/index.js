@@ -13,54 +13,65 @@ import {
   StateText,
 } from './index.styles'
 
-export const DIRECTORY_SERVICE_STATES = ['degraded', 'down', 'unknown', 'up']
+const SERVICE_STATE_DEGRADED = 'degraded'
+const SERVICE_STATE_DOWN = 'down'
+const SERVICE_STATE_UNKNOWN = 'unknown'
+const SERVICE_STATE_UP = 'up'
 
-// Generic component that will handle different kinds of state codes (not only directory service)
+const GetStateIndicatorForState = (state, showText, t) => {
+  switch (state) {
+    case SERVICE_STATE_DEGRADED:
+      return (
+        <>
+          <StyledIconStateDegraded title={t('Degraded')} />
+          {showText && <StateText>{t('Degraded')}</StateText>}
+        </>
+      )
+
+    case SERVICE_STATE_DOWN:
+      return (
+        <>
+          <IconStateDown title={t('Down')} />
+          {showText && <StateText>{t('Down')}</StateText>}
+        </>
+      )
+
+    case SERVICE_STATE_UP:
+      return (
+        <>
+          <IconStateUp title={t('Up')} />
+          {showText && <StateText>{t('Up')}</StateText>}
+        </>
+      )
+
+    case SERVICE_STATE_UNKNOWN:
+    default:
+      return (
+        <>
+          <IconStateUnknown title={t('Unknown')} />
+          {showText && <StateText>{t('Unknown')}</StateText>}
+        </>
+      )
+  }
+}
+
 const StateIndicator = ({ state, showText, ...props }) => {
   const { t } = useTranslation()
 
-  if (!DIRECTORY_SERVICE_STATES.includes(state)) {
-    console.warn(`Invalid state '${state}'`)
-    return null
-  }
-
-  // Make this smarter when refactoring for more states:
   return (
     <StyledWrapper {...props}>
-      {
-        {
-          degraded: (
-            <>
-              <StyledIconStateDegraded title={t('Degraded')} />
-              {showText && <StateText>{t('Degraded')}</StateText>}
-            </>
-          ),
-          down: (
-            <>
-              <IconStateDown title={t('Down')} />
-              {showText && <StateText>{t('Down')}</StateText>}
-            </>
-          ),
-          up: (
-            <>
-              <IconStateUp title={t('Up')} />
-              {showText && <StateText>{t('Up')}</StateText>}
-            </>
-          ),
-          unknown: (
-            <>
-              <IconStateUnknown title={t('Unknown')} />
-              {showText && <StateText>{t('Unknown')}</StateText>}
-            </>
-          ),
-        }[state]
-      }
+      {GetStateIndicatorForState(state, showText, t)}
     </StyledWrapper>
   )
 }
 
 StateIndicator.propTypes = {
-  state: oneOf(DIRECTORY_SERVICE_STATES),
+  state: oneOf([
+    SERVICE_STATE_DOWN,
+    SERVICE_STATE_DEGRADED,
+    SERVICE_STATE_UNKNOWN,
+    SERVICE_STATE_UP,
+  ]),
   showText: bool,
 }
 

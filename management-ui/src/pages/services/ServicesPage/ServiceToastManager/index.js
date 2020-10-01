@@ -8,10 +8,20 @@ import { useHistory, useLocation, useRouteMatch } from 'react-router-dom'
 
 import serviceActions from '../serviceActions'
 
-const toastMessages = {
-  [serviceActions.ADDED]: (t) => t('The service has been added.'),
-  [serviceActions.EDITED]: (t) => t('The service has been updated.'),
-  [serviceActions.REMOVED]: (t) => t('The service has been removed.'),
+const getToastMessageForAction = (action, t) => {
+  switch (action) {
+    case serviceActions.ADDED:
+      return t('The service has been added.')
+    case serviceActions.EDITED:
+      return t('The service has been updated.')
+    case serviceActions.REMOVED:
+      return t('The service has been removed.')
+    default:
+      console.warn(
+        `can not determine toast message, unknown action '${action}'`,
+      )
+      return ''
+  }
 }
 
 const ServiceToastManager = () => {
@@ -32,7 +42,7 @@ const ServiceToastManager = () => {
 
     showToast({
       title: serviceName,
-      body: toastMessages[lastAction](t),
+      body: getToastMessageForAction(lastAction, t),
       variant: 'success',
     })
 
