@@ -55,7 +55,7 @@ require (
 	go.uber.org/zap v1.16.0
 	golang.org/x/net v0.0.0-20200930145003-4acb6c075d10
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
-	golang.org/x/sync v0.0.0-20200625203802-6e8e738ad208
+	golang.org/x/sync v0.0.0-20200930132711-30421366ff76
 	google.golang.org/genproto v0.0.0-20200115191322-ca5a22157cba
 	google.golang.org/grpc v1.26.0
 	gopkg.in/square/go-jose.v2 v2.4.1 // indirect
