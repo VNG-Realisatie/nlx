@@ -9,7 +9,7 @@ import UserContext from '../../user-context'
 import { renderWithProviders } from '../../test-utils'
 import SettingsPage from './index'
 
-jest.mock('../../components/SettingsForm', () => ({ onSubmitHandler }) => (
+jest.mock('./SettingsForm', () => ({ onSubmitHandler }) => (
   <form onSubmit={() => onSubmitHandler({ foo: 'bar' })} data-testid="form">
     <button type="submit" />
   </form>

@@ -6,11 +6,11 @@ import { useTranslation } from 'react-i18next'
 import { Alert, ToasterContext } from '@commonground/design-system'
 import { func } from 'prop-types'
 import PageTemplate from '../../components/PageTemplate'
-import SettingsForm from '../../components/SettingsForm'
 import usePromise from '../../hooks/use-promise'
 import LoadingMessage from '../../components/LoadingMessage'
 import { StyledUpdatedError } from '../services/EditServicePage/index.styles'
 import SettingsRepository from '../../domain/settings-repository'
+import SettingsForm from './SettingsForm'
 
 const SettingsPage = ({ getSettings, updateHandler }) => {
   const { t } = useTranslation()

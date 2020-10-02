@@ -7,9 +7,9 @@ import { Field, Formik } from 'formik'
 import * as Yup from 'yup'
 import { useTranslation } from 'react-i18next'
 import { Button, Fieldset, Label } from '@commonground/design-system'
-import FormikFocusError from '../FormikFocusError'
-import usePromise from '../../hooks/use-promise'
-import InwayRepository from '../../domain/inway-repository'
+import FormikFocusError from '../../../components/FormikFocusError'
+import usePromise from '../../../hooks/use-promise'
+import InwayRepository from '../../../domain/inway-repository'
 import { Form, InwaysEmptyMessage, InwaysLoadingMessage } from './index.styles'
 
 const DEFAULT_INITIAL_VALUES = {
