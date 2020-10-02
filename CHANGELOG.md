@@ -1,3 +1,10 @@
+## [0.89.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.89.0...v0.89.1) (2020-10-02)
+
+
+### Bug Fixes
+
+* **helm:** sync ca-certportal chart with the rest ([7b21e6b](https://gitlab.com/commonground/nlx/nlx/commit/7b21e6b358c659ff161f8eb46bb3d3f8edb0ec4c))
+
 # [0.89.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.88.0...v0.89.0) (2020-10-01)
 
 
