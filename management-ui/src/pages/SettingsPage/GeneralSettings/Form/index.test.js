@@ -6,7 +6,7 @@ import '@testing-library/jest-dom/extend-expect'
 import { act, fireEvent, renderWithProviders } from '../../../../test-utils'
 import SettingsForm from './index'
 
-jest.mock('../../../components/FormikFocusError', () => () => <></>)
+jest.mock('../../../../components/FormikFocusError', () => () => <></>)
 
 test('SettingsForm', async () => {
   const onSubmitHandlerSpy = jest.fn()

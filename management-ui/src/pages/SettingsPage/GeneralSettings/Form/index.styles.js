@@ -5,7 +5,7 @@ import styled, { css } from 'styled-components'
 import EmptyContentMessage from '../../../../components/EmptyContentMessage'
 import LoadingMessage from '../../../../components/LoadingMessage'
 
-export const Form = styled.form`
+export const StyledForm = styled.form`
   margin-bottom: ${(p) => p.theme.tokens.spacing10};
 `
 

@@ -9,7 +9,7 @@ import usePromise from '../../../hooks/use-promise'
 import LoadingMessage from '../../../components/LoadingMessage'
 import { StyledUpdatedError } from '../../services/EditServicePage/index.styles'
 import SettingsRepository from '../../../domain/settings-repository'
-import SettingsForm from './SettingsForm'
+import Form from './Form'
 
 const GeneralSettings = ({ getSettings, updateHandler }) => {
   const { t } = useTranslation()
@@ -52,7 +52,7 @@ const GeneralSettings = ({ getSettings, updateHandler }) => {
             </StyledUpdatedError>
           ) : null}
 
-          <SettingsForm
+          <Form
             initialValues={settings}
             onSubmitHandler={(values) => updateSettings(values)}
           />

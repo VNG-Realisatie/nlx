@@ -10,18 +10,17 @@ import { Button, Fieldset, Label } from '@commonground/design-system'
 import FormikFocusError from '../../../../components/FormikFocusError'
 import usePromise from '../../../../hooks/use-promise'
 import InwayRepository from '../../../../domain/inway-repository'
-import { Form, InwaysEmptyMessage, InwaysLoadingMessage } from './index.styles'
+import {
+  StyledForm,
+  InwaysEmptyMessage,
+  InwaysLoadingMessage,
+} from './index.styles'
 
 const DEFAULT_INITIAL_VALUES = {
   organizationInway: '',
 }
 
-const SettingsForm = ({
-  initialValues,
-  onSubmitHandler,
-  getInways,
-  ...props
-}) => {
+const Form = ({ initialValues, onSubmitHandler, getInways, ...props }) => {
   const { t } = useTranslation()
   const { isReady: inwaysIsReady, result: inways } = usePromise(getInways)
 
@@ -39,7 +38,7 @@ const SettingsForm = ({
       onSubmit={(values) => onSubmitHandler(values)}
     >
       {({ handleSubmit }) => (
-        <Form onSubmit={handleSubmit} data-testid="form" {...props}>
+        <StyledForm onSubmit={handleSubmit} data-testid="form" {...props}>
           <Fieldset>
             <Label htmlFor="organizationInway">{t('Organization inway')}</Label>
 
@@ -75,13 +74,13 @@ const SettingsForm = ({
           <Button type="submit">{t('Save settings')}</Button>
 
           <FormikFocusError />
-        </Form>
+        </StyledForm>
       )}
     </Formik>
   )
 }
 
-SettingsForm.propTypes = {
+Form.propTypes = {
   onSubmitHandler: func,
   initialValues: shape({
     organizationInway: string,
@@ -89,10 +88,10 @@ SettingsForm.propTypes = {
   getInways: func,
 }
 
-SettingsForm.defaultProps = {
+Form.defaultProps = {
   onSubmitHandler: () => {},
   initialValues: DEFAULT_INITIAL_VALUES,
   getInways: InwayRepository.getAll,
 }
 
-export default SettingsForm
+export default Form
