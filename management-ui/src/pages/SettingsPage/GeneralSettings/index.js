@@ -9,7 +9,7 @@ import usePromise from '../../../hooks/use-promise'
 import LoadingMessage from '../../../components/LoadingMessage'
 import { StyledUpdatedError } from '../../services/EditServicePage/index.styles'
 import SettingsRepository from '../../../domain/settings-repository'
-import SettingsForm from '../SettingsForm'
+import SettingsForm from './SettingsForm'
 
 const GeneralSettings = ({ getSettings, updateHandler }) => {
   const { t } = useTranslation()
