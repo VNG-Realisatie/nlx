@@ -2,136 +2,37 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { fireEvent, act } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
+import { Router } from 'react-router-dom'
+import { createMemoryHistory } from 'history'
 
-import UserContext from '../../user-context'
 import { renderWithProviders } from '../../test-utils'
+import { UserContextProvider } from '../../user-context'
 import SettingsPage from './index'
 
-jest.mock('./SettingsForm', () => ({ onSubmitHandler }) => (
-  <form onSubmit={() => onSubmitHandler({ foo: 'bar' })} data-testid="form">
-    <button type="submit" />
-  </form>
+jest.mock('./GeneralSettings', () => () => (
+  <div data-testid="general-settings" />
 ))
 
-describe('the SettingsPage', () => {
-  afterEach(() => {
-    jest.resetModules()
-  })
+test('redirects to /settings/general when navigating to /settings', async () => {
+  const history = createMemoryHistory({ initialEntries: ['/settings'] })
+  renderWithProviders(
+    <Router history={history}>
+      <UserContextProvider user={{ id: '42' }}>
+        <SettingsPage />
+      </UserContextProvider>
+    </Router>,
+  )
+  expect(history.location.pathname).toEqual('/settings/general')
+})
 
-  it('on initialization', async () => {
-    const getSettingsHandler = jest.fn().mockResolvedValue({})
-    const userContext = { user: { id: '42' } }
-    const { findByTestId, queryByTestId } = renderWithProviders(
-      <MemoryRouter>
-        <UserContext.Provider value={userContext}>
-          <SettingsPage
-            getSettings={getSettingsHandler}
-            updateHandler={() => {}}
-          />
-        </UserContext.Provider>
-      </MemoryRouter>,
-    )
-
-    const formElement = await findByTestId('form')
-
-    expect(formElement).toBeTruthy()
-    expect(queryByTestId('error-message')).toBeNull()
-  })
-
-  it('successfully submitting the form', async () => {
-    const updateHandler = jest.fn().mockResolvedValue(null)
-    const getSettingsHandler = jest.fn().mockResolvedValue({})
-    const userContext = { user: { id: '42' } }
-    const { findByTestId } = renderWithProviders(
-      <MemoryRouter>
-        <UserContext.Provider value={userContext}>
-          <SettingsPage
-            updateHandler={updateHandler}
-            getSettings={getSettingsHandler}
-          />
-        </UserContext.Provider>
-      </MemoryRouter>,
-    )
-
-    const settingsForm = await findByTestId('form')
-    await act(async () => {
-      fireEvent.submit(settingsForm)
-    })
-
-    expect(updateHandler).toHaveBeenCalledWith({
-      foo: 'bar',
-    })
-  })
-
-  it('re-submitting the form when the previous submission went wrong', async () => {
-    const updateHandler = jest
-      .fn()
-      .mockResolvedValue(null)
-      .mockRejectedValueOnce(new Error('arbitrary error'))
-
-    const getSettingsHandler = jest.fn().mockResolvedValue({})
-    const userContext = { user: { id: '42' } }
-
-    const { findByTestId, getByTestId } = renderWithProviders(
-      <MemoryRouter>
-        <UserContext.Provider value={userContext}>
-          <SettingsPage
-            updateHandler={updateHandler}
-            getSettings={getSettingsHandler}
-          />
-        </UserContext.Provider>
-      </MemoryRouter>,
-    )
-
-    const settingsForm = await findByTestId('form')
-
-    await act(async () => {
-      await fireEvent.submit(settingsForm)
-    })
-
-    expect(updateHandler).toHaveBeenCalledTimes(1)
-    expect(getByTestId('error-message')).toBeTruthy()
-    expect(getByTestId('error-message').textContent).toBe(
-      'Failed to update the settings.arbitrary error',
-    )
-
-    await act(async () => {
-      await fireEvent.submit(settingsForm)
-    })
-
-    expect(updateHandler).toHaveBeenCalledTimes(2)
-  })
-
-  it('submitting when the HTTP response is not ok', async () => {
-    const getSettingsHandler = jest.fn().mockResolvedValue({})
-    const updateHandler = jest
-      .fn()
-      .mockRejectedValue(new Error('arbitrary error'))
-
-    const userContext = { user: { id: '42' } }
-
-    const { findByTestId, getByTestId } = renderWithProviders(
-      <MemoryRouter>
-        <UserContext.Provider value={userContext}>
-          <SettingsPage
-            updateHandler={updateHandler}
-            getSettings={getSettingsHandler}
-          />
-        </UserContext.Provider>
-      </MemoryRouter>,
-    )
-
-    const settingsForm = await findByTestId('form')
-
-    await act(async () => {
-      await fireEvent.submit(settingsForm)
-    })
-
-    expect(getByTestId('error-message')).toBeTruthy()
-    expect(getByTestId('error-message').textContent).toBe(
-      'Failed to update the settings.arbitrary error',
-    )
-  })
+test('the /settings/general route renders the General settings', () => {
+  const history = createMemoryHistory({ initialEntries: ['/settings'] })
+  const { getByTestId } = renderWithProviders(
+    <Router history={history}>
+      <UserContextProvider user={{ id: '42' }}>
+        <SettingsPage />
+      </UserContextProvider>
+    </Router>,
+  )
+  expect(getByTestId('general-settings')).toBeInTheDocument()
 })
