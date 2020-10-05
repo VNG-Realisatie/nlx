@@ -180,7 +180,7 @@ ca-cfssl-unsafe:
 
 ca-certportal:
   config:
-    caAPIAddress: shared-ca-cfssl-unsafe
+    caHost: shared-ca-cfssl-unsafe
   ingress:
     enabled: true
     hosts:

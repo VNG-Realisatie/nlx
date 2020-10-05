@@ -42,6 +42,10 @@ func main() {
 		log.Fatalf("unexpected arguments: %v", args)
 	}
 
+	if options.CAHost == "" {
+		log.Fatal("CA host option is empty")
+	}
+
 	// Setup new zap logger
 	config := options.LogOptions.ZapConfig()
 
