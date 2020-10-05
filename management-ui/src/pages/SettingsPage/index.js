@@ -8,6 +8,7 @@ import PageTemplate from '../../components/PageTemplate'
 import GeneralSettings from './GeneralSettings'
 import { StyledContent, StyledMain, StyledSidebar } from './index.styles'
 import Navigation from './Navigation'
+import InsightSettings from './InsightSettings'
 
 const SettingsPage = () => {
   const { t } = useTranslation()
@@ -26,6 +27,7 @@ const SettingsPage = () => {
             <Redirect exact path={path} to={`${path}/general`} />
 
             <Route path={`${path}/general`} component={GeneralSettings} />
+            <Route path={`${path}/insight`} component={InsightSettings} />
           </Switch>
         </StyledContent>
       </StyledMain>

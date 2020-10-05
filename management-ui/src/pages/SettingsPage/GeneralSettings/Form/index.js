@@ -6,7 +6,7 @@ import { func, shape, string } from 'prop-types'
 import { Field, Formik } from 'formik'
 import * as Yup from 'yup'
 import { useTranslation } from 'react-i18next'
-import { Button, Fieldset, Label } from '@commonground/design-system'
+import { Button, Fieldset, Label, Legend } from '@commonground/design-system'
 import FormikFocusError from '../../../../components/FormikFocusError'
 import usePromise from '../../../../hooks/use-promise'
 import InwayRepository from '../../../../domain/inway-repository'
@@ -40,6 +40,8 @@ const Form = ({ initialValues, onSubmitHandler, getInways, ...props }) => {
       {({ handleSubmit }) => (
         <StyledForm onSubmit={handleSubmit} data-testid="form" {...props}>
           <Fieldset>
+            <Legend>{t('General settings')}</Legend>
+
             <Label htmlFor="organizationInway">{t('Organization inway')}</Label>
 
             <p>
