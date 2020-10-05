@@ -46,7 +46,7 @@ service Management {
     option (google.api.http) = { delete: "/api/v1/inways/{name}" };
   }
   rpc PutInsightConfiguration(InsightConfiguration) returns (InsightConfiguration) {
-    option (google.api.http) = { put: "/api/v1/insight-configuration" };
+    option (google.api.http) = { put: "/api/v1/insight-configuration" body: "*" };
   }
   rpc GetInsightConfiguration (google.protobuf.Empty) returns (InsightConfiguration) {
     option (google.api.http) = { get: "/api/v1/insight-configuration"};
