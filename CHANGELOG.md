@@ -1,3 +1,10 @@
+## [0.89.2](https://gitlab.com/commonground/nlx/nlx/compare/v0.89.1...v0.89.2) (2020-10-05)
+
+
+### Bug Fixes
+
+* **ca-certportal:** caHost config value ([91a98c5](https://gitlab.com/commonground/nlx/nlx/commit/91a98c5f3216b3b0ba002a918061bfcc10e29475))
+
 ## [0.89.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.89.0...v0.89.1) (2020-10-02)
 
 
