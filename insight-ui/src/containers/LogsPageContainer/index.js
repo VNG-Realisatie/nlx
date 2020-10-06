@@ -95,7 +95,7 @@ export class LogsPageContainer extends Component {
     history.push(`${url}/${log.id}${search}`)
   }
 
-  onPageChangedHandler(page) {
+  handleOnPageChanged(page) {
     const {
       location: { search, pathname },
       history,
@@ -124,7 +124,7 @@ export class LogsPageContainer extends Component {
           currentPage={currentPage}
           rowCount={rowCount}
           rowsPerPage={rowsPerPage}
-          onPageChangedHandler={(page) => this.onPageChangedHandler(page)}
+          onPageChangedHandler={(page) => this.handleOnPageChanged(page)}
           organizationName={organization.name}
           activeLogId={activeLogId}
           logClickedHandler={(log) => this.logClickedHandler(log)}
