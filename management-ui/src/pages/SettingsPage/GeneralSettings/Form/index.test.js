@@ -4,19 +4,16 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
 import { act, fireEvent, renderWithProviders } from '../../../../test-utils'
-import SettingsForm from './index'
+import Form from './index'
 
 jest.mock('../../../../components/FormikFocusError', () => () => <></>)
 
-test('SettingsForm', async () => {
+test('Form', async () => {
   const onSubmitHandlerSpy = jest.fn()
   const getInwaysHandler = jest.fn().mockResolvedValue([{ name: 'inway-a' }])
 
   const { getByLabelText, findByTestId } = renderWithProviders(
-    <SettingsForm
-      getInways={getInwaysHandler}
-      onSubmitHandler={onSubmitHandlerSpy}
-    />,
+    <Form getInways={getInwaysHandler} onSubmitHandler={onSubmitHandlerSpy} />,
   )
 
   const formElement = await findByTestId('form')
