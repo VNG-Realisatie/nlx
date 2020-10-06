@@ -4,10 +4,9 @@
 import React, { useContext } from 'react'
 import { observer } from 'mobx-react'
 import { array } from 'prop-types'
-import { Table, ToasterContext } from '@commonground/design-system'
+import { Table, ToasterContext, Collapsible } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 
-import Collapsible from '../../../../../components/Collapsible'
 import {
   DetailHeading,
   StyledCollapsibleBody,
