@@ -2,10 +2,10 @@
 // Licensed under the EUPL
 //
 import styled from 'styled-components/macro'
-import FlippingChevron from '../FlippingChevron'
+import { IconFlippingChevron } from '@commonground/design-system'
 import Avatar from '../Avatar'
 
-export const UserNavigationChevron = styled(FlippingChevron)`
+export const UserNavigationChevron = styled(IconFlippingChevron)`
   width: ${(p) => p.theme.tokens.spacing06};
   height: ${(p) => p.theme.tokens.spacing06};
   margin-left: ${(p) => p.theme.tokens.spacing04};
