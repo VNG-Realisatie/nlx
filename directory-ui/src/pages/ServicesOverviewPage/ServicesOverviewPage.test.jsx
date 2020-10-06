@@ -137,7 +137,7 @@ describe('ServicesOverviewPage', () => {
         selectedService: null,
       })
 
-      wrapper.instance().onServiceClickedHandler({ foo: 'bar' })
+      wrapper.instance().handleOnServiceClicked({ foo: 'bar' })
 
       expect(wrapper.state('selectedService')).toEqual({ foo: 'bar' })
     })

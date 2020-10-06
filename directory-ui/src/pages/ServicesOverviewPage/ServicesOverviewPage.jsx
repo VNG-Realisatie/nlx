@@ -37,10 +37,10 @@ class ServicesOverviewPage extends Component {
       selectedService: null,
     }
 
-    this.searchOnChange = this.handleSearchOnChange.bind(this)
-    this.switchOnChange = this.handleSwitchOnChange.bind(this)
+    this.handleSearchOnChange = this.handleSearchOnChange.bind(this)
+    this.handleSwitchOnChange = this.handleSwitchOnChange.bind(this)
     this.escFunction = this.escFunction.bind(this)
-    this.onServiceClickedHandler = this.handleOnServiceClicked.bind(this)
+    this.handleOnServiceClicked = this.handleOnServiceClicked.bind(this)
     this.detailPaneCloseHandler = this.detailPaneCloseHandler.bind(this)
 
     this.searchOnChangeDebouncable = (query) => {
