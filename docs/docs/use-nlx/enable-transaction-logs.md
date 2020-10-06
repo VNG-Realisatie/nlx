@@ -44,9 +44,8 @@ docker-compose up -d
 With a SQL command we are able to view the logs in the database:
 
 ```bash
-docker-compose exec postgres psql -d txlog-db -c "SELECT * FROM transactionlog.records ORDER BY id DESC;"
- id | direction | created | src_organization | dest_organization | service_name | logrecord_id | data
-----+-----------+---------+------------------+-------------------+--------------+--------------+------
+docker-compose exec postgres psql -d txlog-db -x -c "SELECT * FROM transactionlog.records ORDER BY id DESC;"
+
 (0 rows)
 ```
 
@@ -98,39 +97,82 @@ Let's make a request through our outway and check if the log records are being w
 execute
 
 ```bash
-curl http://localhost/haarlem/demo-api/get?foo1=bar1
+curl http://localhost/BRP/basisregistratie/natuurlijke_personen/da02a3ac-4412-11e9-b210-d663bd873d93
 ```
 
 If successful the response should be
 
 ```json
 {
-	"args": {
-	  "foo1": "bar1"
-	},
-	"headers": {
-	  "x-forwarded-proto": "https",
-	  "host": "postman-echo.com",
-	  "accept": "*/*",
-	  "accept-encoding": "gzip",
-	  "user-agent": "curl/7.54.0",
-	  "x-nlx-logrecord-id": "<arbitrary-logrecord-id>",
-	  "x-nlx-request-organization": "my-organization",
-	  "x-forwarded-port": "443"
-	},
-	"url": "https://postman-echo.com/get?foo1=bar1"
+  "aanduiding_naamsgebruik": "V",
+  "aanschrijving": {
+    "adelijke_titel": "",
+    "geslachtsnaam": "Vlasman",
+    "voorletters": "S.",
+    "voornamen": "Sanne",
+    "voorvoegsel_geslachtsnaam": ""
+  },
+  "burgerservicenummer": "663678651",
+  "emailadres": "SanneVlasman@gmail.com",
+  "geboorte": {
+    "datum": "05/07/1970",
+    "land": "Nederland",
+    "stad": "Utrecht"
+  },
+  "identificatie": "da02a3ac-4412-11e9-b210-d663bd873d93",
+  "kinderen": [
+    {
+      "url": "/natuurlijke_personen/da02f050-4412-11e9-b210-d663bd873d93"
+    },
+    {
+      "url": "/natuurlijke_personen/da02f1ae-4412-11e9-b210-d663bd873d93"
+    }
+  ],
+  "naam": {
+    "adelijke_titel": "",
+    "geslachtsnaam": "Vlasman",
+    "voorletters": "S.",
+    "voornamen": "Sanne",
+    "voorvoegsel_geslachtsnaam": ""
+  },
+  "ouders": [],
+  "overlijden": {
+    "datum": "",
+    "land": "",
+    "stad": ""
+  },
+  "partner": {},
+  "postadres": {
+    "huisnummer": 21,
+    "postcode": "3512JC",
+    "straatnaam": "Domplein",
+    "woonplaats": "Utrecht"
+  },
+  "telefoonnummer": "(06)594-38-045",
+  "url": "/natuurlijke_personen/da02a3ac-4412-11e9-b210-d663bd873d93",
+  "verblijfadres": {
+    "huisnummer": 21,
+    "postcode": "3512JC",
+    "straatnaam": "Domplein",
+    "woonplaats": "Utrecht"
+  }
 }
 ```
 
 Now the outway should have written records to the transaction log database. Let's query the transaction log API, to verify the log records were written.
 
 ```bash
-docker-compose exec postgres psql -d txlog-db -c "SELECT * FROM transactionlog.records ORDER BY id DESC;"
+docker-compose exec postgres psql -d txlog-db -x -a -c "SELECT * FROM transactionlog.records ORDER BY id DESC;"
 
-id | direction |            created            | src_organization | dest_organization | service_name | logrecord_id  |          data
----+-----------+-------------------------------+------------------+-------------------+--------------+---------------+-------------------------
- 3 | out       | 2019-06-28 10:58:50.63158+00  | barttest         | haarlem           | demo-api     | dmv593btpr9rh | {"request-path": "get"}
-(1 row)
+-[ RECORD 1 ]-----+-------------------------------------------------------------------------------
+id                | 6
+direction         | out
+created           | 2020-10-05 14:00:17.415985+00
+src_organization  | nlx-test
+dest_organization | BRP
+service_name      | basisregistratie
+logrecord_id      | 3929112adcf36aa8eed3049adea3ba79
+data              | {"request-path": "natuurlijke_personen/da02a3ac-4412-11e9-b210-d663bd873d93"}
 ```
 
 Congratulations, you've connected your outway to the transaction log!

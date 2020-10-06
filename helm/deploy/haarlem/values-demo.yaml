@@ -42,6 +42,10 @@ global:
 ###########
 ## Chart ##
 ###########
+managementAPI:
+  insight:
+    insightAPIURL: https://insight-api.demo.voorbeeld-haarlem.nl
+    irmaServerURL: https://irma-api.demo.voorbeeld-haarlem.nl
 ca:
   certificates:
     organization:
@@ -52,18 +56,6 @@ ca:
 ################
 ## Sub-charts ##
 ################
-nlx-inway:
-  config:
-    selfAddress: inway.demo.voorbeeld-haarlem.nl:443
-    directoryRegistrationHostname: directory-registration-api.demo.nlx.io
-    serviceConfig:
-      services:
-        demo-api:
-          insight-api-url: https://insight-api.demo.voorbeeld-haarlem.nl
-          irma-api-url: https://irma-api.demo.voorbeeld-haarlem.nl
-  service:
-    type: LoadBalancer
-
 insight-api:
   ingress:
     annotations:
@@ -74,6 +66,44 @@ insight-api:
       - secretName: haarlem-insight-api-ingress-tls
         hosts:
           - insight-api.demo.voorbeeld-haarlem.nl
+          
+nlx-management:
+  config:
+    directoryInspectionHostname: directory-inspection-api.demo.nlx.io
+    directoryRegistrationHostname: directory-registration-api.demo.nlx.io
+    oidc:
+      clientSecret: J7VLST6DqlhFnrzKcpjKnfqr
+      discoveryURL: https://dex.demo.voorbeeld-haarlem.nl
+      redirectURL: https://management.demo.voorbeeld-haarlem.nl/oidc/callback
+      sessionSignKey: wXDSJYQjSLCsigtnRCbBMWjnvEhHFdu4
+  ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - management.demo.voorbeeld-haarlem.nl
+    tls:
+      - secretName: haarlem-nlx-management-ingress-tls
+        hosts:
+          - management.demo.voorbeeld-haarlem.nl
+
+dex:
+  config:
+    issuer: https://dex.demo.voorbeeld-haarlem.nl
+    staticClients:
+      - id: nlx-management
+        name: NLX Management
+        secret: J7VLST6DqlhFnrzKcpjKnfqr
+        redirectURIs:
+          - https://management.demo.voorbeeld-haarlem.nl/oidc/callback
+  ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - dex.demo.voorbeeld-haarlem.nl
+    tls:
+      - secretName: haarlem-dex-ingress-tls
+        hosts:
+          - dex.demo.voorbeeld-haarlem.nl
 
 irma-server:
   ingress:

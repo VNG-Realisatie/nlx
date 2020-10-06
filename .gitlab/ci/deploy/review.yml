@@ -58,6 +58,7 @@ Deploy review:
     - |
       start_section deploy_haarlem "Deploy Haarlem chart"
       sed -e "s|{{DOMAIN_SUFFIX}}|${DOMAIN_SUFFIX}|g" ./helm/deploy/haarlem/values-review.yaml.tpl > haarlem-values-review.yaml
+      helm dependency build ./helm/deploy/haarlem
       helm upgrade haarlem ./helm/deploy/haarlem \
         --install \
         --namespace ${K8S_NAMESPACE} \

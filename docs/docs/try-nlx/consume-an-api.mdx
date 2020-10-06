@@ -50,7 +50,7 @@ docker run --rm \
   --env TLS_ORG_KEY=/certs/org.key \
   --env DISABLE_LOGDB=1 \
   --publish 80:8080 \
-  nlxio/outway:latest  
+  nlxio/outway:latest
 ```
 
 </TabItem>
@@ -68,7 +68,7 @@ docker run --rm `
 --env TLS_ORG_KEY=/certs/org.key `
 --env DISABLE_LOGDB=1 `
 --publish 80:8080 `
-nlxio/outway:latest  
+nlxio/outway:latest
 ```
 
 </TabItem>
@@ -109,14 +109,14 @@ To do so, we have to use the following structure:
 curl http://localhost/{organization-name}/{service-name}/{api-specific-path}
 ```
 
-For example, to query the Haarlem demo API application use:
+For example, to query the BRP demo API use:
 
 ```bash
-curl http://localhost/Gemeente%20Haarlem/demo-api/get
+curl http://localhost/BRP/basisregistratie/natuurlijke_personen/da02ca58-4412-11e9-b210-d663bd873d93
 ```
 
 You can also run the outway as a HTTP proxy. This allows applications to call services on NLX by using `http://service-name.organization-name.services.nlx.local`.
-For more information read [the reference information](../reference-information/proxy.md) 
+For more information read [the reference information](../reference-information/proxy.md)
 
 ### Verification
 
@@ -124,18 +124,51 @@ The response of the `curl` command should look similar to the following output.
 
 ```json
 {
-  "args": {},
-  "headers": {
-    "x-forwarded-proto":"https",
-    "host":"postman-echo.com",
-    "accept":"*/*",
-    "accept-encoding":"gzip",
-    "user-agent":"curl/7.61.0",
-    "x-nlx-logrecord-id":"<log-record-id>",
-    "x-nlx-request-organization":"<your-organization-name>",
-    "x-forwarded-port":"443"
+  "aanduiding_naamsgebruik": "V",
+  "aanschrijving": {
+    "adelijke_titel": "",
+    "geslachtsnaam": "Poll",
+    "voorletters": "L.",
+    "voornamen": "Linneke",
+    "voorvoegsel_geslachtsnaam": ""
   },
-  "url":"https://postman-echo.com/get"
+  "burgerservicenummer": "58249163",
+  "emailadres": "LinnekePoll@gmail.com",
+  "geboorte": {
+    "datum": "25/11/1984",
+    "land": "Nederland",
+    "stad": "Utrecht"
+  },
+  "identificatie": "da02ca58-4412-11e9-b210-d663bd873d93",
+  "kinderen": [],
+  "naam": {
+    "adelijke_titel": "",
+    "geslachtsnaam": "Poll",
+    "voorletters": "L.",
+    "voornamen": "Linneke",
+    "voorvoegsel_geslachtsnaam": ""
+  },
+  "ouders": [],
+  "overlijden": {
+    "datum": "",
+    "land": "",
+    "stad": ""
+  },
+  "partner": {},
+  "postadres": {
+    "huisnummer": 11,
+    "postcode": "3521AZ",
+    "straatnaam": "Stadsplateau",
+    "woonplaats": "Utrecht"
+  },
+  "telefoonnummer": "(06)432-51-968",
+  "url": "/natuurlijke_personen/da02ca58-4412-11e9-b210-d663bd873d93",
+  "verblijfadres": {
+    "huisnummer": 11,
+    "postcode": "3521AZ",
+    "straatnaam": "Stadsplateau",
+    "woonplaats": "Utrecht"
+  }
 }
 ```
 

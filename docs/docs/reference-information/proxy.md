@@ -50,12 +50,12 @@ export http_proxy=http://{outway-ip}
 
 ## Using the outway as a proxy.
 
-To address a service on the NLX network the URL should have to following structure: `http://service.organization.services.nlx.local` 
+To address a service on the NLX network the URL should have to following structure: `http://service.organization.services.nlx.local`
 
-For example, to query the Haarlem demo API use:
+For example, to query the BRP demo API use:
 
 ```bash
-curl http://demo-api.haarlem.service.nlx.local/get
+curl http://basisregistratie.brp.service.nlx.local/natuurlijke_personen/da02ca58-4412-11e9-b210-d663bd873d93
 ```
 
 If the URL does not contain `service.nlx.local`, the request will not be routed through the NLX network but through the public internet.

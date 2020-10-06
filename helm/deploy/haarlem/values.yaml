@@ -39,12 +39,160 @@ global:
       OG+OQsCbQbISHXb9Won4S27z3NklmSmje3Ls+teidfeCIRbxc9/2DFQS2SZRZeH8
       W0Kbud2Kq3mOWOIeXqZ0008uk90KzXZ1zekXDO2/hIERtDhYgKg=
       -----END CERTIFICATE-----
+    # pki/organization-b/ca/root.pem
+    rootCertificatePEM: |
+      # Subject: C=NL, O=Organization-B, CN=Organization-B Root CA
+      # Issuer: C=NL, O=Organization-B, CN=Organization-B Root CA
+      -----BEGIN CERTIFICATE-----
+      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
+      -----END CERTIFICATE-----  
 
 ###########
 ## Chart ##
 ###########
 nameOverride: ""
 fullnameOverride: ""
+
+ca:
+  issuer: 
+    # pki/organization-b/ca/intermediate.pem
+    certificatePEM: |
+      # Subject: C=NL, O=Organization-B, CN=Organization-B Intermediate CA
+      # Issuer: C=NL, O=Organization-B, CN=Organization-B Root CA
+      -----BEGIN CERTIFICATE-----
+      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
+      -----END CERTIFICATE-----
+    # pki/organization-b/ca/intermediate-key.pem
+    keyPEM: |
+      -----BEGIN RSA PRIVATE KEY-----
+      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
+      -----END RSA PRIVATE KEY-----
+  certificates:
+    organization:
+      subject:
+        organizations:
+          - Gemeente Haarlem
+      commonName: haarlem-nlx-inway
+      dnsNames:
+        - haarlem-nlx-inway
+        - haarlem-auth-service
+      issuerRef:
+        name: shared
+    management-api:
+      commonName: haarlem-nlx-management-api
+      dnsNames:
+        - haarlem-nlx-management-api
+      issuerRef:
+        name: haarlem
+    nlxctl:
+      commonName: nlxctl
+      issuerRef:
+        name: haarlem
 
 postgresql:
   version: "11.1"
@@ -62,41 +210,24 @@ transactionLog:
   existingSecret: haarlem-postgresql-auth
   resetDatabase: false
 
-ca:
-  certificates:
-    organization:
-      subject:
-        organizations:
-          - Gemeente Haarlem
-      commonName: haarlem-nlx-inway
-      dnsNames:
-        - haarlem-nlx-inway
-        - haarlem-auth-service
-      issuerRef:
-        name: shared
+nlxctl:
+  image:
+    registry: docker.io
+    repository: nlxio/nlxctl
+    tag: ""
+    pullPolicy: IfNotPresent
+  tls:
+    existingSecret: haarlem-nlxctl-tls
+
+managementAPI:
+  address: haarlem-nlx-management-api:443
+  insight:
+    insightAPIURL: https://insight-api.haarlem.nlx.minikube
+    irmaServerURL: https://irma.haarlem.nlx.minikube
 
 ################
 ## Sub-charts ##
 ################
-nlx-inway:
-  config:
-    directoryRegistrationHostname: shared-nlx-directory-registration
-    serviceConfig:
-      services:
-        demo-api:
-          endpoint-url: https://postman-echo.com
-          public-support-contact: public-support@nlx.io
-          tech-support-contact: tech-support@nlx.io
-          authorization-model: none
-          insight-api-url: https://insight-api.haarlem.nlx.minikube
-          irma-api-url: https://irma.haarlem.nlx.minikube
-  transactionLog:
-    hostname: haarlem-postgresql
-    database: haarlem-transaction-log
-    existingSecret: haarlem-postgresql-auth
-  tls:
-    organizationCertificate:
-      existingSecret: haarlem-organization-tls
 
 nlx-outway:
   config:
@@ -111,6 +242,65 @@ nlx-outway:
   tls:
     organizationCertificate:
       existingSecret: haarlem-organization-tls
+
+nlx-management:
+  config:
+    directoryInspectionHostname: shared-nlx-directory-inspection
+    directoryRegistrationHostname: shared-nlx-directory-registration
+    oidc:
+      clientSecret: grGSl5W5HcKRETBr3OhmU6Tm
+      discoveryURL: http://dex.haarlem.nlx.minikube
+      redirectURL: http://nlx-management.haarlem.nlx.minikube/oidc/callback
+      sessionSignKey: 0Xn2DBfb4L4hwN3XosbwoKZalLBU68UU
+  tls:
+    organizationCertificate:
+      existingSecret: haarlem-organization-tls
+    certificate:
+      existingSecret: haarlem-management-api-tls
+  ingress:
+    enabled: true
+    hosts:
+      - nlx-management.haarlem.nlx.minikube
+
+dex:
+  config:
+    storage:
+      type: sqlite3
+      config:
+        file: ":memory:"
+    logger:
+      level: info
+    issuer: http://dex.haarlem.nlx.minikube
+    staticClients:
+      - id: nlx-management
+        name: NLX Management
+        secret: grGSl5W5HcKRETBr3OhmU6Tm
+        redirectURIs:
+          - http://nlx-management.haarlem.nlx.minikube/oidc/callback
+    enablePasswordDB: true
+    staticPasswords:
+      - username: admin
+        userID: 23b027bf-b1b1-4a08-b95b-921d4afc38bc
+        hash: $2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W  # password
+        name: Admin User
+        email: admin@example.com
+    oauth2:
+      skipApprovalScreen: false
+  ingress:
+    enabled: true
+    hosts:
+      - dex.haarlem.nlx.minikube
+  ports:
+    web:
+      servicePort: 80
+  grpc: false
+  certs:
+    web:
+      create: false
+    grpc:
+      create: false
+  rbac:
+    create: false
 
 insight-api:
   config:

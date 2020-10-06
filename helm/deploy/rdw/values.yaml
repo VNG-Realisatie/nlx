@@ -2,6 +2,8 @@
 ## Global ##
 ############
 global:
+  imageRegistry: ""
+  imageTag: ""
   tls:
     # pki/shared/ca/root.pem
     organizationRootCertificatePEM: |
@@ -37,7 +39,7 @@ global:
       OG+OQsCbQbISHXb9Won4S27z3NklmSmje3Ls+teidfeCIRbxc9/2DFQS2SZRZeH8
       W0Kbud2Kq3mOWOIeXqZ0008uk90KzXZ1zekXDO2/hIERtDhYgKg=
       -----END CERTIFICATE-----
-    # pki/shared/organization-a/root.pem
+    # pki/organization-a/ca/root.pem
     rootCertificatePEM: |
       # Subject: C=NL, O=Organization-A, CN=Organization-A Root CA
       # Issuer: C=NL, O=Organization-A, CN=Organization-A Root CA
@@ -228,6 +230,7 @@ managementAPI:
     name: kentekenregister
     endpointURL: http://rdw-mock-service
     apiSpecificationURL: http://rdw-mock-service/openapi.yaml
+    publicSupportContact: public-support@nlx.io
     authorizationSettings:
       mode: none
     inways:

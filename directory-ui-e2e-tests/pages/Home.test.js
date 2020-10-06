@@ -18,7 +18,7 @@ describe('Home', () => {
 
     describe('clicking a service with a public_support_contact email address', () => {
         beforeAll(async () => {
-            await page.goto(`${baseUrl}/?q=haarlem`, { waitUntil: 'load' })
+            await page.goto(`${baseUrl}/?q=rdw`, { waitUntil: 'load' })
 
             // services table should be rendered
             await page.waitForSelector('[data-test="services-table"]')

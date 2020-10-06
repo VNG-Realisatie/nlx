@@ -36,17 +36,53 @@ global:
       oLYyKZLN9KDmOmv5+ctPGGgKA+IdjnWay+kXXCLKISpWjj8C/y7+9xH9gN5RRIbk
       fW8ljrrTdfPZShlgVPSJAjXDMgq/EMSHmuumLjfV
       -----END CERTIFICATE-----
+        
+###########
+## Chart ##
+###########
+managementAPI:
+  insight:
+    insightAPIURL: https://insight-api.acc.voorbeeld-haarlem.nl
+    irmaServerURL: https://irma-api.acc.voorbeeld-haarlem.nl
 
 ################
 ## Sub-charts ##
 ################
-nlx-inway:
+nlx-management:
   config:
-    serviceConfig:
-      services:
-        demo-api:
-          insight-api-url: https://insight-api.acc.voorbeeld-haarlem.nl
-          irma-api-url: https://irma-api.acc.voorbeeld-haarlem.nl
+    oidc:
+      clientSecret: J7VLST6DqlhFnrzKcpjKnfqr
+      discoveryURL: https://dex.acc.voorbeeld-haarlem.nl
+      redirectURL: https://management.acc.voorbeeld-haarlem.nl/oidc/callback
+      sessionSignKey: wXDSJYQjSLCsigtnRCbBMWjnvEhHFdu4
+  ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - management.acc.voorbeeld-haarlem.nl
+    tls:
+      - secretName: haarlem-nlx-management-ingress-tls
+        hosts:
+          - management.acc.voorbeeld-haarlem.nl
+
+dex:
+  config:
+    issuer: https://dex.acc.voorbeeld-haarlem.nl
+    staticClients:
+      - id: nlx-management
+        name: NLX Management
+        secret: J7VLST6DqlhFnrzKcpjKnfqr
+        redirectURIs:
+          - https://management.acc.voorbeeld-haarlem.nl/oidc/callback
+  ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - dex.acc.voorbeeld-haarlem.nl
+    tls:
+      - secretName: haarlem-dex-ingress-tls
+        hosts:
+          - dex.acc.voorbeeld-haarlem.nl
 
 insight-api:
   ingress:

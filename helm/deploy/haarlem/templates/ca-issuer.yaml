@@ -1,0 +1,9 @@
+apiVersion: cert-manager.io/v1beta1
+kind: Issuer
+metadata:
+  name: {{ include "haarlem.fullname" . }}
+  labels:
+    {{- include "haarlem.labels" . | nindent 4 }}
+spec:
+  ca:
+    secretName: {{ include "haarlem.fullname" . }}-ca-issuer

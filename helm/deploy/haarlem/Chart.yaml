@@ -5,7 +5,7 @@ type: application
 version: 0.89.2
 appVersion: 0.89.2
 
-# dependencies:
-#   - name: dex
-#     version: ~2.10.0
-#     repository: "https://kubernetes-charts.storage.googleapis.com"
+dependencies:
+  - name: dex
+    version: 2.13.0
+    repository: "@stable"
