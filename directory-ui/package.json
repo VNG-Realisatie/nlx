@@ -23,7 +23,7 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "@commonground/eslint-config-cra-standard-prettier": "3.0.0",
+    "@commonground/eslint-config-cra-standard-prettier": "4.0.0",
     "@testing-library/react": "11.0.4",
     "enzyme": "3.11.0",
     "enzyme-adapter-react-16": "1.15.5",
