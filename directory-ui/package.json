@@ -53,6 +53,8 @@
     "not op_mini all"
   ],
   "eslintConfig": {
-    "extends": ["@commonground/eslint-config-cra-standard-prettier"]
+    "extends": [
+      "@commonground/eslint-config-cra-standard-prettier"
+    ]
   }
 }
