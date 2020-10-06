@@ -5,10 +5,10 @@
 import SettingsRepository from './settings-repository'
 import { PREVENT_CACHING_HEADERS } from './fetch-utils'
 
-describe('the SettingsRepository', () => {
+describe('the general settings', () => {
   afterEach(() => global.fetch.mockRestore())
 
-  describe('getting the settings', () => {
+  describe('retrieving the settings', () => {
     it('should return the settings', async () => {
       jest.spyOn(global, 'fetch').mockResolvedValue({
         ok: true,
@@ -19,7 +19,7 @@ describe('the SettingsRepository', () => {
           }),
       })
 
-      const result = await SettingsRepository.get()
+      const result = await SettingsRepository.getGeneralSettings()
 
       expect(global.fetch).toHaveBeenCalledWith(
         '/api/v1/settings',
@@ -42,7 +42,7 @@ describe('the SettingsRepository', () => {
           }),
         )
 
-        await expect(SettingsRepository.get()).rejects.toEqual(
+        await expect(SettingsRepository.getGeneralSettings()).rejects.toEqual(
           new Error('unable to handle the request'),
         )
 
@@ -68,7 +68,9 @@ describe('the SettingsRepository', () => {
         organizationInway: 'another-inway-name',
       }
 
-      const result = await SettingsRepository.update(updatedSettings)
+      const result = await SettingsRepository.updateGeneralSettings(
+        updatedSettings,
+      )
 
       expect(global.fetch).toHaveBeenCalledWith(
         '/api/v1/settings',
@@ -91,7 +93,7 @@ describe('the SettingsRepository', () => {
         )
 
         await expect(
-          SettingsRepository.update({
+          SettingsRepository.updateGeneralSettings({
             organizationInway: '',
           }),
         ).rejects.toEqual(new Error('unable to handle the request'))
@@ -105,8 +107,12 @@ describe('the SettingsRepository', () => {
       })
     })
   })
+})
 
-  describe('getting the insight settings', () => {
+describe('the insight settings', () => {
+  afterEach(() => global.fetch.mockRestore())
+
+  describe('retrieving the settings', () => {
     it('should return the settings', async () => {
       jest.spyOn(global, 'fetch').mockResolvedValue({
         ok: true,
@@ -181,7 +187,7 @@ describe('the SettingsRepository', () => {
     })
   })
 
-  describe('updating the insight settings', () => {
+  describe('updating the settings', () => {
     it('should return an empty promise', async () => {
       jest.spyOn(global, 'fetch').mockResolvedValue({
         ok: true,

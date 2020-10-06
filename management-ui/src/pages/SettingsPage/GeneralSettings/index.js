@@ -68,8 +68,8 @@ GeneralSettings.propTypes = {
 }
 
 GeneralSettings.defaultProps = {
-  updateHandler: SettingsRepository.update,
-  getSettings: SettingsRepository.get,
+  updateHandler: SettingsRepository.updateGeneralSettings,
+  getSettings: SettingsRepository.getGeneralSettings,
 }
 
 export default GeneralSettings

@@ -5,7 +5,7 @@
 import { fetchWithoutCaching, throwOnError } from './fetch-utils'
 
 class SettingsRepository {
-  static async get() {
+  static async getGeneralSettings() {
     const response = await fetchWithoutCaching(`/api/v1/settings`)
 
     throwOnError(response)
@@ -20,7 +20,7 @@ class SettingsRepository {
     return result
   }
 
-  static async update(settings) {
+  static async updateGeneralSettings(settings) {
     settings = settings || {}
 
     if (typeof settings.organizationInway === 'undefined') {
