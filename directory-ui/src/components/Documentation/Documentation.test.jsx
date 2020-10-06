@@ -1,13 +1,19 @@
 // Copyright © VNG Realisatie 2019
 // Licensed under the EUPL
+//
 
 import React from 'react'
 import { shallow } from 'enzyme'
 import Documentation from './Documentation'
 
-it('renders without crashing', () => {
+test('renders without crashing', () => {
   expect(() => {
-    shallow(<Documentation serviceName="test-service" organizationName="test-organization" />)
+    shallow(
+      <Documentation
+        serviceName="test-service"
+        organizationName="test-organization"
+      />,
+    )
   }).not.toThrow()
 })
 

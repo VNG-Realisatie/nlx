@@ -1,5 +1,6 @@
 // Copyright © VNG Realisatie 2019
 // Licensed under the EUPL
+//
 
 import React from 'react'
 import { string } from 'prop-types'
@@ -14,26 +15,26 @@ const Documentation = ({ organizationName, serviceName }) => {
     throw new Error('no service name specified')
   }
 
-  const urlSafeOrganization = encodeURIComponent(organizationName);
-  const urlSafeName = encodeURIComponent(serviceName);
-  const specUrl = `/api/organizations/${urlSafeOrganization}/services/${urlSafeName}/api-spec`;
+  const urlSafeOrganization = encodeURIComponent(organizationName)
+  const urlSafeName = encodeURIComponent(serviceName)
+  const specUrl = `/api/organizations/${urlSafeOrganization}/services/${urlSafeName}/api-spec`
 
   return (
-    <div style={({ background: '#ffffff' })}>
+    <div style={{ background: '#ffffff' }}>
       <RedocStandalone
         specUrl={specUrl}
         options={{
           hideDownloadButton: false,
-          hideLoading: true
+          hideLoading: true,
         }}
       />
     </div>
-  );
-};
+  )
+}
 
 Documentation.propTypes = {
   organizationName: string.isRequired,
-  serviceName: string.isRequired
-};
+  serviceName: string.isRequired,
+}
 
-export default Documentation;
+export default Documentation

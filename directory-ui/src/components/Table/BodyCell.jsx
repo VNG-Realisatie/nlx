@@ -1,32 +1,37 @@
-// Copyright © VNG Realisatie 2018
+// Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
+//
 
 import { node, oneOf } from 'prop-types'
-import styled, {css} from 'styled-components'
+import styled, { css } from 'styled-components'
 
 const BodyCell = styled.td`
-    display: table-cell;
-    padding: ${p => p.padding === 'none' ? 0 : '9px 16px 10px 0'};
+  display: table-cell;
+  padding: ${(p) => (p.padding === 'none' ? 0 : '9px 16px 10px 0')};
 
-    font-size: 14px;
-    line-height: 22px;
-    font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
 
-    text-align: ${p => p.align};
+  text-align: ${(p) => p.align};
 
-    ${(p) => p.border === 'left' && css`
-      border-left: 1px solid #F0F2F7;
+  ${(p) =>
+    p.border === 'left' &&
+    css`
+      border-left: 1px solid #f0f2f7;
     `}
 
-    ${(p) => p.border === 'right' && css`
-      border-right: 1px solid #F0F2F7;
+  ${(p) =>
+    p.border === 'right' &&
+    css`
+      border-right: 1px solid #f0f2f7;
     `}
 `
 
 BodyCell.propTypes = {
   children: node,
   align: oneOf(['left', 'center', 'right']),
-  border: oneOf(['left', 'right'])
+  border: oneOf(['left', 'right']),
 }
 
 BodyCell.defaultProps = {

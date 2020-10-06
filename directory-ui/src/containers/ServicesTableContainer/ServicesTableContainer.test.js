@@ -27,11 +27,11 @@ describe('ServicesTableContainer', () => {
       it('should have the sorting state set to those values', () => {
         wrapper = shallow(
           <ServicesTableContainer
-            sortBy="test-column"
+            sortBy="organization"
             sortOrder="test-order"
           />,
         )
-        expect(wrapper.state('sortBy')).toEqual('test-column')
+        expect(wrapper.state('sortBy')).toEqual('organization')
         expect(wrapper.state('sortOrder')).toEqual('test-order')
       })
     })
@@ -63,7 +63,7 @@ describe('ServicesTableContainer', () => {
     describe('toggle the sorting', () => {
       describe('when no sorting was active before', () => {
         it('should sort ascending', () => {
-          instance.onToggleSorting('organization')
+          instance.handleOnToggleSorting('organization')
           expect(wrapper.state('sortBy')).toBe('organization')
           expect(wrapper.state('sortOrder')).toBe('asc')
         })
@@ -71,13 +71,13 @@ describe('ServicesTableContainer', () => {
 
       describe('when the column was already sorted on', () => {
         it('should reverse the sorting', () => {
-          instance.onToggleSorting('organization')
+          instance.handleOnToggleSorting('organization')
           expect(wrapper.state('sortOrder')).toBe('asc')
 
-          instance.onToggleSorting('organization')
+          instance.handleOnToggleSorting('organization')
           expect(wrapper.state('sortOrder')).toBe('desc')
 
-          instance.onToggleSorting('organization')
+          instance.handleOnToggleSorting('organization')
           expect(wrapper.state('sortOrder')).toBe('asc')
         })
       })

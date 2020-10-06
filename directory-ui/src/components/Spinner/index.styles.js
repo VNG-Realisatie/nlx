@@ -8,16 +8,18 @@ const leftValues = [50, 45, 39, 32, 25, 19, 14, 10]
 
 const generateAnimations = () =>
   Array.from({ length: 8 }).map(
+    /* eslint-disable security/detect-object-injection */
     (value, i) => `
       &:nth-child(${i + 1}) {
         animation-delay: ${-0.036 * (i + 1)}s;
       }
-  
+
       &:nth-child(${i + 1}):after {
         top: ${topValues[i]}px;
         left: ${leftValues[i]}px;
       }
     `,
+    /* eslint-enable security/detect-object-injection */
   )
 
 const rotate = keyframes`

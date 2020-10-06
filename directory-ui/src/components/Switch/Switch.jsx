@@ -1,5 +1,6 @@
-// Copyright © VNG Realisatie 2018
+// Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
+//
 
 import React, { PureComponent } from 'react'
 import { string, bool } from 'prop-types'
@@ -11,12 +12,7 @@ class Switch extends PureComponent {
 
     return (
       <Wrapper {...props}>
-        <Input
-          type="checkbox"
-          id={id}
-          disabled={disabled}
-          defaultChecked
-        />
+        <Input type="checkbox" id={id} disabled={disabled} defaultChecked />
         <Label htmlFor={id} title={label}>
           {label}
           {required && ' *'}

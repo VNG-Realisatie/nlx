@@ -1,9 +1,10 @@
 // Copyright © VNG Realisatie 2018
 // Licensed under the EUPL
+//
 
 import React from 'react'
 import { mount } from 'enzyme'
-import Filters from "./Filters";
+import Filters from './Filters'
 
 describe('Filters', () => {
   describe('changing the text input value', () => {
@@ -11,7 +12,9 @@ describe('Filters', () => {
       const onQueryChangedSpy = jest.fn()
       const wrapper = mount(<Filters onQueryChanged={onQueryChangedSpy} />)
 
-      wrapper.find('[dataTest="query"] input').simulate('change', {target: {value: 'abc'}})
+      wrapper
+        .find('[dataTest="query"] input')
+        .simulate('change', { target: { value: 'abc' } })
       expect(onQueryChangedSpy).toHaveBeenCalledWith('abc')
     })
   })
@@ -19,8 +22,10 @@ describe('Filters', () => {
   describe('toggling the offline filter', () => {
     it('should call the onStatusFilterChanged handler with the checked state', () => {
       const onStatusFilterChangedSpy = jest.fn()
-      const wrapper = mount(<Filters onStatusFilterChanged={onStatusFilterChangedSpy} />)
-      wrapper.find('Switch').simulate('change', {target: {checked: false}});
+      const wrapper = mount(
+        <Filters onStatusFilterChanged={onStatusFilterChangedSpy} />,
+      )
+      wrapper.find('Switch').simulate('change', { target: { checked: false } })
       expect(onStatusFilterChangedSpy).toHaveBeenCalledWith(false)
     })
   })

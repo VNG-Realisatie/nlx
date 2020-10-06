@@ -1,10 +1,11 @@
 // Copyright © VNG Realisatie 2018
 // Licensed under the EUPL
+//
 
 import styled from 'styled-components'
-import Card from '../Card/Card';
-import SearchIcon from './SearchIcon';
-import Switch from '../Switch/Switch';
+import Card from '../Card/Card'
+import Switch from '../Switch/Switch'
+import SearchIcon from './SearchIcon'
 
 export const StyledFilters = styled(Card)`
   display: flex;
@@ -29,7 +30,7 @@ export const StyledInput = styled.input`
   height: 48px;
 
   &::placeholder {
-    color: #CAD0E0;
+    color: #cad0e0;
   }
 `
 

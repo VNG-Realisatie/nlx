@@ -1,13 +1,14 @@
-// Copyright © VNG Realisatie 2018
+// Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
+//
 
 import styled from 'styled-components'
 import HeadCell from './HeadCell'
 
 export const StyledSortableTableHeadCell = styled(HeadCell)`
-    cursor: pointer;
+  cursor: pointer;
 
-    color: ${p => p.isSorting && '#2D3240'}
+  color: ${(p) => p.isSorting && '#2D3240'};
 `
 
 export const StyledArrow = styled.svg`

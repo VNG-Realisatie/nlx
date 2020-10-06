@@ -1,12 +1,13 @@
-// Copyright © VNG Realisatie 2018
+// Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
+//
 
 import styled from 'styled-components'
 
 const Body = styled.tbody`
-    display: table-row-group;
-    border-radius: 3px;
-    box-shadow: 0 0 0 1px rgba(45,50,64,.05), 0 1px 8px rgba(45,50,64,.05);
+  display: table-row-group;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgba(45, 50, 64, 0.05), 0 1px 8px rgba(45, 50, 64, 0.05);
 `
 
 export default Body

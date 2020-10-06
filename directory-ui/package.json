@@ -16,10 +16,10 @@
     "styled-components": "5.1.1"
   },
   "scripts": {
-    "start": "BROWSER=none PORT=3001 react-scripts start",
-    "build": "react-scripts build",
+    "start": "EXTEND_ESLINT=true BROWSER=none PORT=3001 react-scripts start",
+    "build": "EXTEND_ESLINT=true react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "lint": "eslint src/**",
+    "lint": "eslint --ext js,jsx src/**",
     "eject": "react-scripts eject"
   },
   "devDependencies": {
@@ -53,6 +53,6 @@
     "not op_mini all"
   ],
   "eslintConfig": {
-    "extends": "@commonground/eslint-config-cra-standard-prettier"
+    "extends": ["@commonground/eslint-config-cra-standard-prettier"]
   }
 }

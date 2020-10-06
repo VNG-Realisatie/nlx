@@ -1,16 +1,17 @@
 // Copyright © VNG Realisatie 2018
 // Licensed under the EUPL
+//
 
 import styled from 'styled-components'
 
 export default styled.header`
-    position: fixed;
-    background: #ffffff;
-    box-shadow: 0 0 0 1px rgba(45,50,64,.05), 0 1px 8px rgba(45,50,64,.05);
-    z-index: 2;
-    left: 0;
-    right: 0;
-    top: 0;
+  position: fixed;
+  background: #ffffff;
+  box-shadow: 0 0 0 1px rgba(45, 50, 64, 0.05), 0 1px 8px rgba(45, 50, 64, 0.05);
+  z-index: 2;
+  left: 0;
+  right: 0;
+  top: 0;
 
   .navbar-logo {
     margin-right: 24px;
@@ -34,7 +35,7 @@ export default styled.header`
     margin: 0;
 
     &:not(:last-of-type) {
-      border-right: 1px solid #F0F2F7;
+      border-right: 1px solid #f0f2f7;
       padding-right: 10px;
       margin-right: 14px;
     }
@@ -53,22 +54,22 @@ export default styled.header`
       }
 
       &:not(.active) a {
-        color: #A3AABF;
+        color: #a3aabf;
 
         &:hover,
         &:focus {
-          background-color: #F7F9FC;
-          color: #676D80;
+          background-color: #f7f9fc;
+          color: #676d80;
         }
 
         &:active {
-          background-color: #F0F2F7;
+          background-color: #f0f2f7;
         }
       }
 
       &.active a {
-        background-color: #F1F5FF;
-        color: #517FFF;
+        background-color: #f1f5ff;
+        color: #517fff;
       }
     }
   }

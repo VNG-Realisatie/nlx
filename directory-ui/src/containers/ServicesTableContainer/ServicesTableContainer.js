@@ -3,9 +3,12 @@
 //
 
 import React, { PureComponent } from 'react'
-import { bool, string, array, func } from 'prop-types'
+import { bool, string, array, func, oneOf } from 'prop-types'
 import ServicesTable from '../../components/ServicesTable/ServicesTable'
 import { ASCENDING, DESCENDING } from '../../components/Table/SortableHeadCell'
+
+const SORT_KEY_ORGANIZATION = 'organization'
+const SORT_KEY_NAME = 'name'
 
 class ServicesTableContainer extends PureComponent {
   constructor(props) {
@@ -17,7 +20,7 @@ class ServicesTableContainer extends PureComponent {
     }
   }
 
-  onToggleSorting(property) {
+  handleOnToggleSorting(property) {
     const { sortOrder } = this.state
 
     const direction =
@@ -63,8 +66,10 @@ class ServicesTableContainer extends PureComponent {
     }
 
     const result = services.sort((a, b) => {
+      /* eslint-disable security/detect-object-injection */
       const aValue = a[sortBy].toLowerCase()
       const bValue = b[sortBy].toLowerCase()
+      /* eslint-enable security/detect-object-injection */
       return aValue > bValue ? 1 : aValue < bValue ? -1 : 0
     })
 
@@ -99,7 +104,7 @@ class ServicesTableContainer extends PureComponent {
         services={sortedFilteredServices}
         sortBy={sortBy}
         sortOrder={sortOrder}
-        onToggleSorting={(property) => this.onToggleSorting(property)}
+        onToggleSorting={(property) => this.handleOnToggleSorting(property)}
         onServiceClickedHandler={onServiceClickedHandler}
         data-test="services-table"
       />
@@ -111,7 +116,7 @@ ServicesTableContainer.propTypes = {
   filterQuery: string,
   filterByOnlineServices: bool,
   services: array,
-  sortBy: string,
+  sortBy: oneOf([SORT_KEY_ORGANIZATION, SORT_KEY_NAME]),
   sortOrder: string,
   onServiceClickedHandler: func,
 }

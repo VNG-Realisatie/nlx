@@ -1,19 +1,20 @@
 // Copyright © VNG Realisatie 2018
 // Licensed under the EUPL
+//
 
 import React from 'react'
 import { shallow } from 'enzyme'
+
 import Spinner from '../../components/Spinner'
-import ServicesOverviewPage from './ServicesOverviewPage';
-import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
-import ServiceDetailPane from "../../components/ServiceDetailPane";
+import ErrorMessage from '../../components/ErrorMessage/ErrorMessage'
+import ServicesOverviewPage from './ServicesOverviewPage'
 
 describe('ServicesOverviewPage', () => {
   let wrapper
   let instance
 
   beforeEach(() => {
-    wrapper = shallow(<ServicesOverviewPage/>)
+    wrapper = shallow(<ServicesOverviewPage />)
     instance = wrapper.instance()
   })
 
@@ -21,13 +22,13 @@ describe('ServicesOverviewPage', () => {
     it('should have no filters applied', () => {
       expect(wrapper.state()).toMatchObject({
         query: '',
-        displayOfflineServices: true
+        displayOfflineServices: true,
       })
     })
 
     it('should have no service selected', () => {
       expect(wrapper.state()).toMatchObject({
-        selectedService: null
+        selectedService: null,
       })
     })
   })
@@ -35,7 +36,7 @@ describe('ServicesOverviewPage', () => {
   describe('loading the services', () => {
     it('should show a spinner', () => {
       wrapper.setState({
-        loading: true
+        loading: true,
       })
 
       expect(wrapper.contains(<Spinner />)).toBe(true)
@@ -46,7 +47,7 @@ describe('ServicesOverviewPage', () => {
     it('should show an error message', () => {
       wrapper.setState({
         loading: false,
-        error: true
+        error: true,
       })
 
       expect(wrapper.contains(<ErrorMessage />)).toBe(true)
@@ -58,7 +59,7 @@ describe('ServicesOverviewPage', () => {
       wrapper.setState({
         loading: false,
         error: false,
-        services: []
+        services: [],
       })
     })
 
@@ -69,7 +70,7 @@ describe('ServicesOverviewPage', () => {
     describe('when no service is selected', () => {
       it('should not show the service detail pane', () => {
         wrapper.setState({
-          selectedService: null
+          selectedService: null,
         })
         expect(wrapper.exists('ServiceDetailPane')).toBe(false)
       })
@@ -91,9 +92,11 @@ describe('ServicesOverviewPage', () => {
 
       wrapper.setState({ query: 'foo' })
 
-      global.document.dispatchEvent(new KeyboardEvent('keydown', {
-        keyCode: ESCAPE_KEY_CODE
-      }))
+      global.document.dispatchEvent(
+        new KeyboardEvent('keydown', {
+          keyCode: ESCAPE_KEY_CODE,
+        }),
+      )
 
       expect(wrapper.state('query')).toBe('')
     })
@@ -101,7 +104,7 @@ describe('ServicesOverviewPage', () => {
 
   describe('when a query parameter is set', () => {
     beforeEach(() => {
-      const mockLocation = { search: '?q=test'}
+      const mockLocation = { search: '?q=test' }
       wrapper = shallow(<ServicesOverviewPage location={mockLocation} />)
     })
 
@@ -131,7 +134,7 @@ describe('ServicesOverviewPage', () => {
   describe('the service clicked handler', () => {
     it('should store the service as local state', () => {
       wrapper.setState({
-        selectedService: null
+        selectedService: null,
       })
 
       wrapper.instance().onServiceClickedHandler({ foo: 'bar' })
@@ -143,12 +146,12 @@ describe('ServicesOverviewPage', () => {
   describe('the service detail pane close handler', () => {
     it('should clear the selectedService', () => {
       wrapper.setState({
-        selectedService: {}
+        selectedService: {},
       })
 
       wrapper.instance().detailPaneCloseHandler()
 
-      expect(wrapper.state('selectedService')).toBe(null)
+      expect(wrapper.state('selectedService')).toBeNull()
     })
   })
 })
