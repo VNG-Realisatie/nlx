@@ -74,7 +74,7 @@ describe('the Insight settings section', () => {
     const getSettingsHandler = jest.fn().mockResolvedValue({})
     const userContext = { user: { id: '42' } }
 
-    const { findByTestId, getByTestId } = renderWithProviders(
+    const { findByTestId, getByRole } = renderWithProviders(
       <MemoryRouter>
         <UserContext.Provider value={userContext}>
           <InsightSettings
@@ -92,9 +92,9 @@ describe('the Insight settings section', () => {
     })
 
     expect(updateHandler).toHaveBeenCalledTimes(1)
-    expect(getByTestId('error-message')).toBeTruthy()
-    expect(getByTestId('error-message').textContent).toBe(
-      'Failed to update the settings.arbitrary error',
+    expect(getByRole('alert')).toBeTruthy()
+    expect(getByRole('alert').textContent).toBe(
+      'Failed to update the settings.',
     )
 
     await act(async () => {
@@ -112,7 +112,7 @@ describe('the Insight settings section', () => {
 
     const userContext = { user: { id: '42' } }
 
-    const { findByTestId, getByTestId } = renderWithProviders(
+    const { findByTestId, getByRole } = renderWithProviders(
       <MemoryRouter>
         <UserContext.Provider value={userContext}>
           <InsightSettings
@@ -129,9 +129,9 @@ describe('the Insight settings section', () => {
       await fireEvent.submit(settingsForm)
     })
 
-    expect(getByTestId('error-message')).toBeTruthy()
-    expect(getByTestId('error-message').textContent).toBe(
-      'Failed to update the settings.arbitrary error',
+    expect(getByRole('alert')).toBeTruthy()
+    expect(getByRole('alert').textContent).toBe(
+      'Failed to update the settings.',
     )
   })
 })
