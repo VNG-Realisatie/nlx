@@ -45,7 +45,7 @@ func TestListAccessGrantsForService(t *testing.T) {
 				ServiceName: "test-service",
 			},
 			[]*database.AccessGrant{
-				&database.AccessGrant{
+				{
 					ID:                   "12345abcde",
 					OrganizationName:     "test-organization",
 					ServiceName:          "test-service",
@@ -56,7 +56,7 @@ func TestListAccessGrantsForService(t *testing.T) {
 			nil,
 			&api.ListAccessGrantsForServiceResponse{
 				AccessGrants: []*api.AccessGrant{
-					&api.AccessGrant{
+					{
 						Id:                   "12345abcde",
 						OrganizationName:     "test-organization",
 						ServiceName:          "test-service",
