@@ -33,6 +33,7 @@ class ServiceModel {
   publicSupportContact = ''
   inways = []
   incomingAccessRequests = []
+  accessGrants = []
 
   constructor({ store, service }) {
     this.store = store
@@ -84,6 +85,12 @@ class ServiceModel {
       ({ id }) => id !== removeWithId,
     )
   }
+
+  fetchAccessGrants = flow(function* fetchAccessGrants() {
+    this.accessGrants = yield this.store.accessGrantRepository.getByService(
+      this.name,
+    )
+  })
 }
 
 createModelSchema(ServiceModel, {
@@ -107,9 +114,11 @@ decorate(ServiceModel, {
   publicSupportContact: observable,
   inways: observable,
   incomingAccessRequests: observable,
+  accessGrants: observable,
   fetch: action.bound,
   update: action.bound,
   fetchIncomingAccessRequests: action.bound,
+  fetchAccessGrants: action.bound,
   tempRemoveFromList: action,
 })
 

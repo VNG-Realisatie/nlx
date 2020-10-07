@@ -4,6 +4,7 @@
 import { action, decorate, flow, observable } from 'mobx'
 import ServiceRepository from '../../domain/service-repository'
 import AccessRequestRepository from '../../domain/access-request-repository'
+import AccessGrantRepository from '../../domain/access-grant-repository'
 import { createService } from '../../models/ServiceModel'
 
 class ServicesStore {
@@ -18,10 +19,12 @@ class ServicesStore {
     rootStore,
     serviceRepository = ServiceRepository,
     accessRequestRepository = AccessRequestRepository,
+    accessGrantRepository = AccessGrantRepository,
   }) {
     this.rootStore = rootStore
     this.serviceRepository = serviceRepository
     this.accessRequestRepository = accessRequestRepository
+    this.accessGrantRepository = accessGrantRepository
 
     this.services = []
     this.error = ''

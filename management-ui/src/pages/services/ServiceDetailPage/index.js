@@ -20,8 +20,10 @@ const ServiceDetailPage = ({ parentUrl, service }) => {
   const { removeService } = useServicesStore()
 
   useEffect(() => {
-    service && service.fetchIncomingAccessRequests()
-    // TODO: cancel request on unmount?
+    if (service) {
+      service.fetchIncomingAccessRequests()
+      service.fetchAccessGrants()
+    }
   }, [service])
 
   const close = () => history.push(parentUrl)

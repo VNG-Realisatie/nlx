@@ -16,6 +16,7 @@ import { IconHidden, IconVisible } from '../../../../icons'
 import { showServiceVisibilityAlert } from '../../../../components/ServiceVisibilityAlert'
 import InwaysSection from './InwaysSection'
 import AccessRequestsSection from './AccessRequestsSection'
+import AccessGrantSection from './AccessGrantSection'
 import {
   StyledActionsBar,
   StyledRemoveButton,
@@ -71,6 +72,8 @@ const ServiceDetailView = ({ service, removeHandler }) => {
         <AccessRequestsSection
           accessRequests={service.incomingAccessRequests}
         />
+
+        <AccessGrantSection accessGrants={service.accessGrants} />
       </SectionGroup>
     </>
   )
