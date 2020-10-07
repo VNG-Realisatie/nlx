@@ -40,10 +40,7 @@ const InsightSettings = ({ getSettings, updateHandler }) => {
           {t('Failed to load the settings.')}
         </Alert>
       ) : settings ? (
-        <Form
-          initialValues={settings}
-          onSubmitHandler={(values) => updateSettings(values)}
-        />
+        <Form initialValues={settings} onSubmitHandler={updateSettings} />
       ) : null}
     </>
   )
