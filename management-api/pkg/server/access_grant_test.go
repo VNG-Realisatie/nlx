@@ -19,11 +19,6 @@ import (
 )
 
 func TestListAccessGrantsForService(t *testing.T) {
-	service, ctrl, db := newService(t)
-	ctrl.Finish()
-
-	ctx := context.Background()
-
 	createTimestamp := func(ti time.Time) *types.Timestamp {
 		return &types.Timestamp{
 			Seconds: ti.Unix(),
@@ -69,6 +64,24 @@ func TestListAccessGrantsForService(t *testing.T) {
 			nil,
 		},
 		{
+			"convert_access_grant_error",
+			&api.ListAccessGrantsForServiceRequest{
+				ServiceName: "test-service",
+			},
+			[]*database.AccessGrant{
+				{
+					ID:                   "12345abcde",
+					OrganizationName:     "test-organization",
+					ServiceName:          "test-service",
+					PublicKeyFingerprint: "test-finger-print",
+					CreatedAt:            time.Date(0, time.January, 0, 0, 0, 0, 0, time.UTC),
+				},
+			},
+			nil,
+			nil,
+			status.Error(codes.Internal, "error converting access grant"),
+		},
+		{
 			"database_error",
 			&api.ListAccessGrantsForServiceRequest{
 				ServiceName: "test-service",
@@ -84,6 +97,11 @@ func TestListAccessGrantsForService(t *testing.T) {
 		tt := tt
 
 		t.Run(tt.name, func(t *testing.T) {
+			service, ctrl, db := newService(t)
+			defer ctrl.Finish()
+
+			ctx := context.Background()
+
 			db.EXPECT().ListAccessGrantsForService(ctx, tt.req.ServiceName).
 				Return(tt.returnReq, tt.returnErr)
 			actual, err := service.ListAccessGrantsForService(ctx, tt.req)

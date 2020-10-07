@@ -37,7 +37,7 @@ func (s *ManagementService) ListAccessGrantsForService(ctx context.Context, req 
 				zap.Error(err),
 			)
 
-			return nil, status.Error(codes.Internal, "converting access grant")
+			return nil, status.Error(codes.Internal, "error converting access grant")
 		}
 
 		response.AccessGrants[i] = responseAccessGrant
