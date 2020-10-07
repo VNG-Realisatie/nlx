@@ -91,7 +91,7 @@ func (x DirectoryService_State) String() string {
 }
 
 func (DirectoryService_State) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_edc174f991dc0a25, []int{24, 0}
+	return fileDescriptor_edc174f991dc0a25, []int{27, 0}
 }
 
 type Service struct {
@@ -1088,6 +1088,130 @@ func (m *CreateAccessRequestRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_CreateAccessRequestRequest proto.InternalMessageInfo
 
+type ListAccessGrantsForServiceRequest struct {
+	ServiceName          string   `protobuf:"bytes,1,opt,name=serviceName,proto3" json:"serviceName,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ListAccessGrantsForServiceRequest) Reset()         { *m = ListAccessGrantsForServiceRequest{} }
+func (m *ListAccessGrantsForServiceRequest) String() string { return proto.CompactTextString(m) }
+func (*ListAccessGrantsForServiceRequest) ProtoMessage()    {}
+func (*ListAccessGrantsForServiceRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_edc174f991dc0a25, []int{21}
+}
+func (m *ListAccessGrantsForServiceRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ListAccessGrantsForServiceRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ListAccessGrantsForServiceRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *ListAccessGrantsForServiceRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListAccessGrantsForServiceRequest.Merge(m, src)
+}
+func (m *ListAccessGrantsForServiceRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *ListAccessGrantsForServiceRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListAccessGrantsForServiceRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListAccessGrantsForServiceRequest proto.InternalMessageInfo
+
+type ListAccessGrantsForServiceResponse struct {
+	AccessGrants         []*AccessGrant `protobuf:"bytes,1,rep,name=accessGrants,proto3" json:"accessGrants,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
+	XXX_unrecognized     []byte         `json:"-"`
+	XXX_sizecache        int32          `json:"-"`
+}
+
+func (m *ListAccessGrantsForServiceResponse) Reset()         { *m = ListAccessGrantsForServiceResponse{} }
+func (m *ListAccessGrantsForServiceResponse) String() string { return proto.CompactTextString(m) }
+func (*ListAccessGrantsForServiceResponse) ProtoMessage()    {}
+func (*ListAccessGrantsForServiceResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_edc174f991dc0a25, []int{22}
+}
+func (m *ListAccessGrantsForServiceResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ListAccessGrantsForServiceResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ListAccessGrantsForServiceResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *ListAccessGrantsForServiceResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListAccessGrantsForServiceResponse.Merge(m, src)
+}
+func (m *ListAccessGrantsForServiceResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *ListAccessGrantsForServiceResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListAccessGrantsForServiceResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListAccessGrantsForServiceResponse proto.InternalMessageInfo
+
+type AccessGrant struct {
+	Id                   string           `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	OrganizationName     string           `protobuf:"bytes,2,opt,name=organizationName,proto3" json:"organizationName,omitempty"`
+	ServiceName          string           `protobuf:"bytes,3,opt,name=serviceName,proto3" json:"serviceName,omitempty"`
+	PublicKeyFingerprint string           `protobuf:"bytes,4,opt,name=publicKeyFingerprint,proto3" json:"publicKeyFingerprint,omitempty"`
+	CreatedAt            *types.Timestamp `protobuf:"bytes,5,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
+	XXX_unrecognized     []byte           `json:"-"`
+	XXX_sizecache        int32            `json:"-"`
+}
+
+func (m *AccessGrant) Reset()         { *m = AccessGrant{} }
+func (m *AccessGrant) String() string { return proto.CompactTextString(m) }
+func (*AccessGrant) ProtoMessage()    {}
+func (*AccessGrant) Descriptor() ([]byte, []int) {
+	return fileDescriptor_edc174f991dc0a25, []int{23}
+}
+func (m *AccessGrant) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *AccessGrant) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_AccessGrant.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *AccessGrant) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AccessGrant.Merge(m, src)
+}
+func (m *AccessGrant) XXX_Size() int {
+	return m.Size()
+}
+func (m *AccessGrant) XXX_DiscardUnknown() {
+	xxx_messageInfo_AccessGrant.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AccessGrant proto.InternalMessageInfo
+
 type DirectoryListServicesResponse struct {
 	Services             []*DirectoryService `protobuf:"bytes,1,rep,name=services,proto3" json:"services,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}            `json:"-"`
@@ -1099,7 +1223,7 @@ func (m *DirectoryListServicesResponse) Reset()         { *m = DirectoryListServ
 func (m *DirectoryListServicesResponse) String() string { return proto.CompactTextString(m) }
 func (*DirectoryListServicesResponse) ProtoMessage()    {}
 func (*DirectoryListServicesResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_edc174f991dc0a25, []int{21}
+	return fileDescriptor_edc174f991dc0a25, []int{24}
 }
 func (m *DirectoryListServicesResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1140,7 +1264,7 @@ func (m *GetOrganizationServiceRequest) Reset()         { *m = GetOrganizationSe
 func (m *GetOrganizationServiceRequest) String() string { return proto.CompactTextString(m) }
 func (*GetOrganizationServiceRequest) ProtoMessage()    {}
 func (*GetOrganizationServiceRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_edc174f991dc0a25, []int{22}
+	return fileDescriptor_edc174f991dc0a25, []int{25}
 }
 func (m *GetOrganizationServiceRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1183,7 +1307,7 @@ func (m *DirectoryAccessRequest) Reset()         { *m = DirectoryAccessRequest{}
 func (m *DirectoryAccessRequest) String() string { return proto.CompactTextString(m) }
 func (*DirectoryAccessRequest) ProtoMessage()    {}
 func (*DirectoryAccessRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_edc174f991dc0a25, []int{23}
+	return fileDescriptor_edc174f991dc0a25, []int{26}
 }
 func (m *DirectoryAccessRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1227,7 +1351,7 @@ func (m *DirectoryService) Reset()         { *m = DirectoryService{} }
 func (m *DirectoryService) String() string { return proto.CompactTextString(m) }
 func (*DirectoryService) ProtoMessage()    {}
 func (*DirectoryService) Descriptor() ([]byte, []int) {
-	return fileDescriptor_edc174f991dc0a25, []int{24}
+	return fileDescriptor_edc174f991dc0a25, []int{27}
 }
 func (m *DirectoryService) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1268,7 +1392,7 @@ func (m *RequestAccessToServiceRequest) Reset()         { *m = RequestAccessToSe
 func (m *RequestAccessToServiceRequest) String() string { return proto.CompactTextString(m) }
 func (*RequestAccessToServiceRequest) ProtoMessage()    {}
 func (*RequestAccessToServiceRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_edc174f991dc0a25, []int{25}
+	return fileDescriptor_edc174f991dc0a25, []int{28}
 }
 func (m *RequestAccessToServiceRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1308,7 +1432,7 @@ func (m *Settings) Reset()         { *m = Settings{} }
 func (m *Settings) String() string { return proto.CompactTextString(m) }
 func (*Settings) ProtoMessage()    {}
 func (*Settings) Descriptor() ([]byte, []int) {
-	return fileDescriptor_edc174f991dc0a25, []int{26}
+	return fileDescriptor_edc174f991dc0a25, []int{29}
 }
 func (m *Settings) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1348,7 +1472,7 @@ func (m *UpdateSettingsRequest) Reset()         { *m = UpdateSettingsRequest{} }
 func (m *UpdateSettingsRequest) String() string { return proto.CompactTextString(m) }
 func (*UpdateSettingsRequest) ProtoMessage()    {}
 func (*UpdateSettingsRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_edc174f991dc0a25, []int{27}
+	return fileDescriptor_edc174f991dc0a25, []int{30}
 }
 func (m *UpdateSettingsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1404,6 +1528,9 @@ func init() {
 	proto.RegisterType((*ListOutgoingAccessRequestsRequest)(nil), "nlx.management.ListOutgoingAccessRequestsRequest")
 	proto.RegisterType((*ListOutgoingAccessRequestsResponse)(nil), "nlx.management.ListOutgoingAccessRequestsResponse")
 	proto.RegisterType((*CreateAccessRequestRequest)(nil), "nlx.management.CreateAccessRequestRequest")
+	proto.RegisterType((*ListAccessGrantsForServiceRequest)(nil), "nlx.management.ListAccessGrantsForServiceRequest")
+	proto.RegisterType((*ListAccessGrantsForServiceResponse)(nil), "nlx.management.ListAccessGrantsForServiceResponse")
+	proto.RegisterType((*AccessGrant)(nil), "nlx.management.AccessGrant")
 	proto.RegisterType((*DirectoryListServicesResponse)(nil), "nlx.management.DirectoryListServicesResponse")
 	proto.RegisterType((*GetOrganizationServiceRequest)(nil), "nlx.management.GetOrganizationServiceRequest")
 	proto.RegisterType((*DirectoryAccessRequest)(nil), "nlx.management.DirectoryAccessRequest")
@@ -1562,6 +1689,7 @@ type ManagementClient interface {
 	CreateAccessRequest(ctx context.Context, in *CreateAccessRequestRequest, opts ...grpc.CallOption) (*OutgoingAccessRequest, error)
 	GetSettings(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*Settings, error)
 	UpdateSettings(ctx context.Context, in *UpdateSettingsRequest, opts ...grpc.CallOption) (*types.Empty, error)
+	ListAccessGrantsForService(ctx context.Context, in *ListAccessGrantsForServiceRequest, opts ...grpc.CallOption) (*ListAccessGrantsForServiceResponse, error)
 }
 
 type managementClient struct {
@@ -1734,6 +1862,15 @@ func (c *managementClient) UpdateSettings(ctx context.Context, in *UpdateSetting
 	return out, nil
 }
 
+func (c *managementClient) ListAccessGrantsForService(ctx context.Context, in *ListAccessGrantsForServiceRequest, opts ...grpc.CallOption) (*ListAccessGrantsForServiceResponse, error) {
+	out := new(ListAccessGrantsForServiceResponse)
+	err := c.cc.Invoke(ctx, "/nlx.management.Management/ListAccessGrantsForService", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ManagementServer is the server API for Management service.
 type ManagementServer interface {
 	ListServices(context.Context, *ListServicesRequest) (*ListServicesResponse, error)
@@ -1754,6 +1891,7 @@ type ManagementServer interface {
 	CreateAccessRequest(context.Context, *CreateAccessRequestRequest) (*OutgoingAccessRequest, error)
 	GetSettings(context.Context, *types.Empty) (*Settings, error)
 	UpdateSettings(context.Context, *UpdateSettingsRequest) (*types.Empty, error)
+	ListAccessGrantsForService(context.Context, *ListAccessGrantsForServiceRequest) (*ListAccessGrantsForServiceResponse, error)
 }
 
 // UnimplementedManagementServer can be embedded to have forward compatible implementations.
@@ -1813,6 +1951,9 @@ func (*UnimplementedManagementServer) GetSettings(ctx context.Context, req *type
 }
 func (*UnimplementedManagementServer) UpdateSettings(ctx context.Context, req *UpdateSettingsRequest) (*types.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateSettings not implemented")
+}
+func (*UnimplementedManagementServer) ListAccessGrantsForService(ctx context.Context, req *ListAccessGrantsForServiceRequest) (*ListAccessGrantsForServiceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListAccessGrantsForService not implemented")
 }
 
 func RegisterManagementServer(s *grpc.Server, srv ManagementServer) {
@@ -2143,6 +2284,24 @@ func _Management_UpdateSettings_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Management_ListAccessGrantsForService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAccessGrantsForServiceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServer).ListAccessGrantsForService(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/nlx.management.Management/ListAccessGrantsForService",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServer).ListAccessGrantsForService(ctx, req.(*ListAccessGrantsForServiceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Management_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "nlx.management.Management",
 	HandlerType: (*ManagementServer)(nil),
@@ -2218,6 +2377,10 @@ var _Management_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateSettings",
 			Handler:    _Management_UpdateSettings_Handler,
+		},
+		{
+			MethodName: "ListAccessGrantsForService",
+			Handler:    _Management_ListAccessGrantsForService_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -3472,6 +3635,148 @@ func (m *CreateAccessRequestRequest) MarshalToSizedBuffer(dAtA []byte) (int, err
 	return len(dAtA) - i, nil
 }
 
+func (m *ListAccessGrantsForServiceRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ListAccessGrantsForServiceRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *ListAccessGrantsForServiceRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.XXX_unrecognized != nil {
+		i -= len(m.XXX_unrecognized)
+		copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	if len(m.ServiceName) > 0 {
+		i -= len(m.ServiceName)
+		copy(dAtA[i:], m.ServiceName)
+		i = encodeVarintManagement(dAtA, i, uint64(len(m.ServiceName)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *ListAccessGrantsForServiceResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ListAccessGrantsForServiceResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *ListAccessGrantsForServiceResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.XXX_unrecognized != nil {
+		i -= len(m.XXX_unrecognized)
+		copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	if len(m.AccessGrants) > 0 {
+		for iNdEx := len(m.AccessGrants) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.AccessGrants[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintManagement(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *AccessGrant) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *AccessGrant) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *AccessGrant) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.XXX_unrecognized != nil {
+		i -= len(m.XXX_unrecognized)
+		copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	if m.CreatedAt != nil {
+		{
+			size, err := m.CreatedAt.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintManagement(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x2a
+	}
+	if len(m.PublicKeyFingerprint) > 0 {
+		i -= len(m.PublicKeyFingerprint)
+		copy(dAtA[i:], m.PublicKeyFingerprint)
+		i = encodeVarintManagement(dAtA, i, uint64(len(m.PublicKeyFingerprint)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.ServiceName) > 0 {
+		i -= len(m.ServiceName)
+		copy(dAtA[i:], m.ServiceName)
+		i = encodeVarintManagement(dAtA, i, uint64(len(m.ServiceName)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.OrganizationName) > 0 {
+		i -= len(m.OrganizationName)
+		copy(dAtA[i:], m.OrganizationName)
+		i = encodeVarintManagement(dAtA, i, uint64(len(m.OrganizationName)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Id) > 0 {
+		i -= len(m.Id)
+		copy(dAtA[i:], m.Id)
+		i = encodeVarintManagement(dAtA, i, uint64(len(m.Id)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
 func (m *DirectoryListServicesResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -4309,6 +4614,72 @@ func (m *CreateAccessRequestRequest) Size() (n int) {
 	}
 	l = len(m.ServiceName)
 	if l > 0 {
+		n += 1 + l + sovManagement(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *ListAccessGrantsForServiceRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ServiceName)
+	if l > 0 {
+		n += 1 + l + sovManagement(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *ListAccessGrantsForServiceResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.AccessGrants) > 0 {
+		for _, e := range m.AccessGrants {
+			l = e.Size()
+			n += 1 + l + sovManagement(uint64(l))
+		}
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *AccessGrant) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Id)
+	if l > 0 {
+		n += 1 + l + sovManagement(uint64(l))
+	}
+	l = len(m.OrganizationName)
+	if l > 0 {
+		n += 1 + l + sovManagement(uint64(l))
+	}
+	l = len(m.ServiceName)
+	if l > 0 {
+		n += 1 + l + sovManagement(uint64(l))
+	}
+	l = len(m.PublicKeyFingerprint)
+	if l > 0 {
+		n += 1 + l + sovManagement(uint64(l))
+	}
+	if m.CreatedAt != nil {
+		l = m.CreatedAt.Size()
 		n += 1 + l + sovManagement(uint64(l))
 	}
 	if m.XXX_unrecognized != nil {
@@ -7471,6 +7842,398 @@ func (m *CreateAccessRequestRequest) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			m.ServiceName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipManagement(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthManagement
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthManagement
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ListAccessGrantsForServiceRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowManagement
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ListAccessGrantsForServiceRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ListAccessGrantsForServiceRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ServiceName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowManagement
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthManagement
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthManagement
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ServiceName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipManagement(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthManagement
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthManagement
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ListAccessGrantsForServiceResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowManagement
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ListAccessGrantsForServiceResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ListAccessGrantsForServiceResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field AccessGrants", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowManagement
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthManagement
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthManagement
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.AccessGrants = append(m.AccessGrants, &AccessGrant{})
+			if err := m.AccessGrants[len(m.AccessGrants)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipManagement(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthManagement
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthManagement
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *AccessGrant) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowManagement
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: AccessGrant: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: AccessGrant: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowManagement
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthManagement
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthManagement
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Id = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OrganizationName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowManagement
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthManagement
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthManagement
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.OrganizationName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ServiceName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowManagement
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthManagement
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthManagement
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ServiceName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PublicKeyFingerprint", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowManagement
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthManagement
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthManagement
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.PublicKeyFingerprint = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CreatedAt", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowManagement
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthManagement
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthManagement
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.CreatedAt == nil {
+				m.CreatedAt = &types.Timestamp{}
+			}
+			if err := m.CreatedAt.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

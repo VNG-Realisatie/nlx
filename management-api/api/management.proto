@@ -74,6 +74,11 @@ service Management {
   rpc UpdateSettings(UpdateSettingsRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = { put: "/api/v1/settings", body: "*" };
   }
+
+  rpc ListAccessGrantsForService(ListAccessGrantsForServiceRequest) returns(ListAccessGrantsForServiceResponse) {
+    option (google.api.http) = { get: "/api/v1/access-grants/services/{serviceName}"};
+  }
+
 }
 
 message Service {
@@ -208,6 +213,23 @@ message CreateAccessRequestRequest {
   string organizationName = 1;
   string serviceName = 2;
 }
+
+message ListAccessGrantsForServiceRequest {
+  string serviceName = 1;
+}
+
+message ListAccessGrantsForServiceResponse {
+  repeated AccessGrant accessGrants = 1;
+}
+
+message AccessGrant {
+  string id = 1;
+  string organizationName = 2;
+  string serviceName = 3;
+  string publicKeyFingerprint = 4;
+  google.protobuf.Timestamp createdAt = 5;
+}
+
 
 
 service Directory {

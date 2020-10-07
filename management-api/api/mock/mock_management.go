@@ -396,6 +396,26 @@ func (mr *MockManagementClientMockRecorder) UpdateSettings(ctx, in interface{}, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateSettings", reflect.TypeOf((*MockManagementClient)(nil).UpdateSettings), varargs...)
 }
 
+// ListAccessGrantsForService mocks base method
+func (m *MockManagementClient) ListAccessGrantsForService(ctx context.Context, in *api.ListAccessGrantsForServiceRequest, opts ...grpc.CallOption) (*api.ListAccessGrantsForServiceResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListAccessGrantsForService", varargs...)
+	ret0, _ := ret[0].(*api.ListAccessGrantsForServiceResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListAccessGrantsForService indicates an expected call of ListAccessGrantsForService
+func (mr *MockManagementClientMockRecorder) ListAccessGrantsForService(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAccessGrantsForService", reflect.TypeOf((*MockManagementClient)(nil).ListAccessGrantsForService), varargs...)
+}
+
 // MockManagementServer is a mock of ManagementServer interface
 type MockManagementServer struct {
 	ctrl     *gomock.Controller
@@ -687,6 +707,21 @@ func (m *MockManagementServer) UpdateSettings(arg0 context.Context, arg1 *api.Up
 func (mr *MockManagementServerMockRecorder) UpdateSettings(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateSettings", reflect.TypeOf((*MockManagementServer)(nil).UpdateSettings), arg0, arg1)
+}
+
+// ListAccessGrantsForService mocks base method
+func (m *MockManagementServer) ListAccessGrantsForService(arg0 context.Context, arg1 *api.ListAccessGrantsForServiceRequest) (*api.ListAccessGrantsForServiceResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListAccessGrantsForService", arg0, arg1)
+	ret0, _ := ret[0].(*api.ListAccessGrantsForServiceResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListAccessGrantsForService indicates an expected call of ListAccessGrantsForService
+func (mr *MockManagementServerMockRecorder) ListAccessGrantsForService(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAccessGrantsForService", reflect.TypeOf((*MockManagementServer)(nil).ListAccessGrantsForService), arg0, arg1)
 }
 
 // MockDirectoryClient is a mock of DirectoryClient interface
