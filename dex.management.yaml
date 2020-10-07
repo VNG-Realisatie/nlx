@@ -1,0 +1,24 @@
+issuer: http://dex.nlx.localhost:5556
+enablePasswordDB: true
+
+storage:
+  type: sqlite3
+  config:
+    file: /tmp/dex.db
+
+web:
+  http: 0.0.0.0:5556
+
+staticClients:
+  - id: nlx-management
+    name: 'NLX Management'
+    secret: ZXhhbXBsZS1hcHAtc2VjcmV0
+    redirectURIs:
+      - 'http://localhost:8080/oidc/callback'
+
+staticPasswords:
+  - email: "admin@nlx.local"
+    username: "admin"
+    hash: "$2b$10$ZQSq.0GOPgONI.iuOimr1el5uWT7vm4g/Z3Ahs/LDylufGl4gleWa"  # login password: development
+    name: "admin"
+    userID: "23b027bf-b1b1-4a08-b95b-921d4afc38bc"
