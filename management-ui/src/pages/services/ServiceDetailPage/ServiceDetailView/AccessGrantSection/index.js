@@ -23,11 +23,11 @@ const AccessGrantSection = ({ accessGrants }) => {
       title={
         <DetailHeading data-testid="service-accessgrants">
           <IconCheckboxMultiple />
-          {t('Access grants')}
+          {t('Organizations with access')}
           <Amount value={accessGrants.length} />
         </DetailHeading>
       }
-      ariaLabel={t('Access grants')}
+      ariaLabel={t('Organizations with access')}
     >
       <StyledCollapsibleBody>
         <Table data-testid="service-accessgrant-list">
@@ -42,7 +42,7 @@ const AccessGrantSection = ({ accessGrants }) => {
               <Table.Tr data-testid="service-no-accessgrants">
                 <Table.Td>
                   <StyledCollapsibleEmptyBody>
-                    {t('There are no access grants')}
+                    {t('There are no organizations with access')}
                   </StyledCollapsibleEmptyBody>
                 </Table.Td>
               </Table.Tr>
