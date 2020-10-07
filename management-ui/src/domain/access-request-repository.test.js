@@ -58,4 +58,31 @@ describe('the AccessRequestRepository', () => {
       )
     })
   })
+
+  describe('sending an access request', () => {
+    it('should return an empty promise', async () => {
+      jest.spyOn(global, 'fetch').mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: async () => null,
+      })
+
+      const parameters = {
+        organizationName: 'organization-name',
+        serviceName: 'service-name',
+        id: 'access-request-id',
+      }
+
+      const result = await AccessRequestRepository.sendAccessRequest(parameters)
+
+      expect(global.fetch).toHaveBeenCalledWith(
+        '/api/v1/access-requests/outgoing/organizations/organization-name/services/service-name/access-request-id/send',
+        expect.objectContaining({
+          method: 'POST',
+        }),
+      )
+
+      expect(result).toBeNull()
+    })
+  })
 })

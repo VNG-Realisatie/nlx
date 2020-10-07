@@ -2,9 +2,9 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { shape } from 'prop-types'
+import { shape, func } from 'prop-types'
 import { observer } from 'mobx-react'
-import { Button, Spinner } from '@commonground/design-system'
+import { Alert, Button, Spinner } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import pick from 'lodash.pick'
 
@@ -13,11 +13,12 @@ import { ACCESS_REQUEST_STATES } from '../../../../../models/OutgoingAccessReque
 import AccessRequestMessage from '../../../DirectoryPage/components/AccessRequestMessage'
 import { SectionGroup } from '../../../../../components/DetailView'
 import { IconKey } from '../../../../../icons'
+import AccessRequestRepository from '../../../../../domain/access-request-repository'
 import { StyledAlert, AccessSection, IconItem, StateItem } from './index.styles'
 
 const { FAILED, RECEIVED } = ACCESS_REQUEST_STATES
 
-const DirectoryDetailView = ({ service }) => {
+const DirectoryDetailView = ({ service, sendAccessRequest }) => {
   const { t } = useTranslation()
   const { organizationName, latestAccessRequest } = service
 
@@ -36,6 +37,14 @@ const DirectoryDetailView = ({ service }) => {
     }
   }
 
+  const sendRequestAccessRequest = () => {
+    sendAccessRequest({
+      organizationName: service.organizationName,
+      serviceName: service.serviceName,
+      id: service.latestAccessRequest.id,
+    })
+  }
+
   let icon = Spinner
   if (
     latestAccessRequest &&
@@ -46,8 +55,19 @@ const DirectoryDetailView = ({ service }) => {
 
   return (
     <>
-      {latestAccessRequest && latestAccessRequest.state === 'FAILED' && (
-        <StyledAlert variant="error" title={t('Request could not be sent')} />
+      {latestAccessRequest && latestAccessRequest.state === FAILED && (
+        <StyledAlert
+          variant="error"
+          title={t('Request could not be sent')}
+          actions={[
+            <Alert.ButtonAction
+              key="send-request-access-action-button"
+              onClick={sendRequestAccessRequest}
+            >
+              {t('Retry')}
+            </Alert.ButtonAction>,
+          ]}
+        />
       )}
 
       <SectionGroup>
@@ -86,6 +106,11 @@ DirectoryDetailView.propTypes = {
       'requestAccess',
     ]),
   ),
+  sendAccessRequest: func,
+}
+
+DirectoryDetailView.defaultProps = {
+  sendAccessRequest: AccessRequestRepository.sendAccessRequest,
 }
 
 export default observer(DirectoryDetailView)

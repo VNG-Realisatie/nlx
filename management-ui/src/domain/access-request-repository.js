@@ -43,6 +43,17 @@ class AccessRequestRepository {
 
     return await response.json()
   }
+
+  static async sendAccessRequest({ organizationName, serviceName, id }) {
+    const response = await fetch(
+      `/api/v1/access-requests/outgoing/organizations/${organizationName}/services/${serviceName}/${id}/send`,
+      { method: 'POST' },
+    )
+
+    throwOnError(response)
+
+    return null
+  }
 }
 
 export default AccessRequestRepository
