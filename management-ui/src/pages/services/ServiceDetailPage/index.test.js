@@ -20,9 +20,33 @@ jest.mock('./ServiceDetailView', () => ({ removeHandler }) => (
 ))
 
 let fetchIncomingAccessRequests
+let fetchAccessGrants
 
 beforeEach(() => {
   fetchIncomingAccessRequests = jest.fn()
+  fetchAccessGrants = jest.fn()
+})
+
+test('calls required data fetching methods', () => {
+  const store = mockServicesStore({})
+  renderWithProviders(
+    <StaticRouter location="/services/forty-two">
+      <Route path="/services/:name">
+        <StoreProvider store={store}>
+          <ServiceDetailPage
+            service={{
+              name: 'forty-two',
+              fetchIncomingAccessRequests,
+              fetchAccessGrants,
+            }}
+          />
+        </StoreProvider>
+      </Route>
+    </StaticRouter>,
+  )
+
+  expect(fetchIncomingAccessRequests).toHaveBeenCalledTimes(1)
+  expect(fetchAccessGrants).toHaveBeenCalledTimes(1)
 })
 
 test('display service details', () => {
@@ -32,7 +56,11 @@ test('display service details', () => {
       <Route path="/services/:name">
         <StoreProvider store={store}>
           <ServiceDetailPage
-            service={{ name: 'forty-two', fetchIncomingAccessRequests }}
+            service={{
+              name: 'forty-two',
+              fetchIncomingAccessRequests,
+              fetchAccessGrants,
+            }}
           />
         </StoreProvider>
       </Route>
@@ -101,7 +129,11 @@ test('removing the service', async () => {
       <Route path="/services/:name">
         <StoreProvider store={store}>
           <ServiceDetailPage
-            service={{ name: 'dummy-service', fetchIncomingAccessRequests }}
+            service={{
+              name: 'dummy-service',
+              fetchIncomingAccessRequests,
+              fetchAccessGrants,
+            }}
           />
         </StoreProvider>
       </Route>

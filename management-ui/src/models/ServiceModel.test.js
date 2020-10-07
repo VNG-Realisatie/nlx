@@ -50,16 +50,14 @@ test('fetches data', async () => {
   }
 
   const serviceModel = new ServiceModel({ store, service })
-
   serviceModel.fetch()
-
-  expect(store.serviceRepository.getByName).toHaveBeenCalled()
 
   await request.resolve({
     ...service,
     internal: true,
   })
 
+  expect(store.serviceRepository.getByName).toHaveBeenCalled()
   expect(serviceModel.internal).toBe(true)
 })
 
@@ -78,4 +76,21 @@ test('updates service', async () => {
   )
 
   expect(serviceModel.internal).toBe(true)
+})
+
+test('fetching access grants', async () => {
+  const request = deferredPromise()
+  store = {
+    accessGrantRepository: {
+      getByServiceName: jest.fn(() => request),
+    },
+  }
+
+  const serviceModel = new ServiceModel({ store, service })
+  serviceModel.fetchAccessGrants()
+
+  await request.resolve([{ id: 'somegrant' }])
+
+  expect(store.accessGrantRepository.getByServiceName).toHaveBeenCalled()
+  expect(serviceModel.accessGrants).toEqual([{ id: 'somegrant' }])
 })

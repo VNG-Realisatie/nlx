@@ -87,7 +87,7 @@ class ServiceModel {
   }
 
   fetchAccessGrants = flow(function* fetchAccessGrants() {
-    this.accessGrants = yield this.store.accessGrantRepository.getByService(
+    this.accessGrants = yield this.store.accessGrantRepository.getByServiceName(
       this.name,
     )
   })

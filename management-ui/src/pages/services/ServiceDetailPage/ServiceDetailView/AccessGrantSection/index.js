@@ -34,7 +34,7 @@ const AccessGrantSection = ({ accessGrants }) => {
           <tbody>
             {accessGrants.length ? (
               accessGrants.map(({ id, organizationName }) => (
-                <Table.Tr data-testid="service-no-accessgrants" key={id}>
+                <Table.Tr data-testid="service-accessgrants" key={id}>
                   <Table.Td>{organizationName}</Table.Td>
                 </Table.Tr>
               ))
@@ -57,6 +57,8 @@ const AccessGrantSection = ({ accessGrants }) => {
 AccessGrantSection.propTypes = {
   accessGrants: array,
 }
-AccessGrantSection.defaultProps = {}
+AccessGrantSection.defaultProps = {
+  accessGrants: [],
+}
 
 export default AccessGrantSection

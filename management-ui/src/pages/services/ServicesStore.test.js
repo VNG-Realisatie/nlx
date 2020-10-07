@@ -12,11 +12,13 @@ jest.mock('../../models/ServiceModel', () => ({
 let rootStore
 let serviceRepository
 let accessRequestRepository
+let accessGrantRepository
 
 beforeEach(() => {
   rootStore = {}
   serviceRepository = {}
   accessRequestRepository = {}
+  accessGrantRepository = {}
 })
 
 test('createServicesStore returns an instance', () => {
@@ -24,6 +26,7 @@ test('createServicesStore returns an instance', () => {
     rootStore,
     serviceRepository,
     accessRequestRepository,
+    accessGrantRepository,
   })
   expect(directoryStore).toBeInstanceOf(ServicesStore)
 })
@@ -40,6 +43,7 @@ test('fetching services', async () => {
     rootStore,
     serviceRepository,
     accessRequestRepository,
+    accessGrantRepository,
   })
 
   expect(servicesStore.isInitiallyFetched).toBe(false)
@@ -67,6 +71,7 @@ test('handle error while fetching services', async () => {
     rootStore,
     serviceRepository,
     accessRequestRepository,
+    accessGrantRepository,
   })
 
   expect(servicesStore.services).toEqual([])
@@ -92,6 +97,7 @@ test('selecting a service', () => {
     rootStore,
     serviceRepository,
     accessRequestRepository,
+    accessGrantRepository,
   })
   servicesStore.services = serviceList
 
@@ -113,6 +119,7 @@ test('removing a service', async () => {
     rootStore,
     serviceRepository,
     accessRequestRepository,
+    accessGrantRepository,
   })
   servicesStore.services = serviceList
 
@@ -134,6 +141,7 @@ test('adding a service', async () => {
     rootStore,
     serviceRepository,
     accessRequestRepository,
+    accessGrantRepository,
   })
   servicesStore.services = serviceList
 

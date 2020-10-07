@@ -7,6 +7,11 @@ import { fireEvent } from '@testing-library/react'
 import { renderWithProviders } from '../../../../test-utils'
 import ServiceDetailView from './index'
 
+// These all have their own tests
+jest.mock('./InwaysSection', () => () => <div />)
+jest.mock('./AccessRequestsSection', () => () => <div />)
+jest.mock('./AccessGrantSection', () => () => <div />)
+
 const service = {
   name: 'name',
   internal: false,
@@ -23,10 +28,6 @@ describe('ServiceDetails', () => {
 
     expect(getByTestId('service-published')).toHaveTextContent(
       'visible.svg' + 'Published in central directory', // eslint-disable-line no-useless-concat
-    )
-
-    expect(getByTestId('service-inways')).toHaveTextContent(
-      'inway.svg' + 'Inways' + '0', // eslint-disable-line no-useless-concat
     )
   })
 

@@ -16,18 +16,16 @@ test('should show if there are no incoming access requests', async () => {
   )
 
   const toggler = getByTestId('service-incoming-accessrequests')
+  fireEvent.click(toggler)
 
   expect(toggler).toHaveTextContent(
     'key.svg' + 'Access requests' + '0', // eslint-disable-line no-useless-concat
   )
-
-  fireEvent.click(toggler)
-
   expect(getByTestId('service-no-incoming-accessrequests')).toBeTruthy()
 })
 
 test('should list access requests', async () => {
-  const { getByTestId } = renderWithProviders(
+  const { getByTestId, getByText } = renderWithProviders(
     <AccessRequestsSection
       accessRequests={[
         {
@@ -44,15 +42,12 @@ test('should list access requests', async () => {
 
   const toggler = getByTestId('service-incoming-accessrequests')
 
-  expect(toggler).toHaveTextContent(
-    'key.svg' + 'Access requests' + '1', // eslint-disable-line no-useless-concat
-  )
-
   fireEvent.click(toggler)
   jest.runAllTimers()
 
-  expect(getByTestId('service-incoming-accessrequests-list')).toBeTruthy()
-  expect(getByTestId('service-incoming-accessrequest-1a2B')).toHaveTextContent(
-    'Organization A',
+  expect(toggler).toHaveTextContent(
+    'key.svg' + 'Access requests' + '1', // eslint-disable-line no-useless-concat
   )
+  expect(getByTestId('service-incoming-accessrequests-list')).toBeTruthy()
+  expect(getByText('Organization A')).toBeInTheDocument()
 })
