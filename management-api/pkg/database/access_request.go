@@ -33,6 +33,12 @@ type OutgoingAccessRequest struct {
 	AccessRequest
 }
 
+// Sendable returns if the access request can be send to the other organization
+func (a *OutgoingAccessRequest) Sendable() bool {
+	return a.State == AccessRequestCreated ||
+		a.State == AccessRequestFailed
+}
+
 type AccessRequestState int
 
 const (
@@ -87,10 +93,6 @@ func (db ETCDConfigDatabase) parseDeleteAccessRequestLeaseEvent(ctx context.Cont
 }
 
 func (db ETCDConfigDatabase) parseCreateAccessRequestEvent(event *clientv3.Event) (*OutgoingAccessRequest, error) {
-	if !event.IsCreate() {
-		return nil, nil
-	}
-
 	request := &OutgoingAccessRequest{}
 
 	if err := json.Unmarshal(event.Kv.Value, request); err != nil {
@@ -169,6 +171,28 @@ func (db ETCDConfigDatabase) ListAllOutgoingAccessRequests(ctx context.Context) 
 func (db ETCDConfigDatabase) ListOutgoingAccessRequests(ctx context.Context, organizationName, serviceName string) (requests []*OutgoingAccessRequest, err error) {
 	err = db.listAccessRequests(ctx, path.Join("outgoing", organizationName, serviceName), &requests)
 	return
+}
+
+func (db ETCDConfigDatabase) GetOutgoingAccessRequest(ctx context.Context, id string) (*OutgoingAccessRequest, error) {
+	key := path.Join("access-requests", "outgoing")
+
+	var result []*OutgoingAccessRequest
+
+	err := db.list(ctx, key, &result)
+	if err != nil {
+		return nil, err
+	}
+
+	var accessRequest *OutgoingAccessRequest
+
+	for _, item := range result {
+		if item.ID == id {
+			accessRequest = item
+			break
+		}
+	}
+
+	return accessRequest, nil
 }
 
 func (db ETCDConfigDatabase) GetLatestOutgoingAccessRequest(ctx context.Context, organizationName, serviceName string) (request *OutgoingAccessRequest, err error) {
@@ -323,7 +347,7 @@ func (db ETCDConfigDatabase) WatchOutgoingAccessRequests(ctx context.Context, ou
 					continue
 				}
 
-				if request != nil {
+				if request.State == AccessRequestCreated {
 					output <- request
 				}
 			}

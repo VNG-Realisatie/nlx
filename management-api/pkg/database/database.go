@@ -24,6 +24,7 @@ type ConfigDatabase interface {
 
 	ListAllOutgoingAccessRequests(ctx context.Context) ([]*OutgoingAccessRequest, error)
 	ListOutgoingAccessRequests(ctx context.Context, organizationName, serviceName string) ([]*OutgoingAccessRequest, error)
+	GetOutgoingAccessRequest(ctx context.Context, id string) (*OutgoingAccessRequest, error)
 	GetLatestOutgoingAccessRequest(ctx context.Context, organizationName, serviceName string) (*OutgoingAccessRequest, error)
 	ListAllLatestOutgoingAccessRequests(ctx context.Context) (map[string]*OutgoingAccessRequest, error)
 	LockOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) error

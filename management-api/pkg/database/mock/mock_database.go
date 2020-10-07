@@ -237,6 +237,21 @@ func (mr *MockConfigDatabaseMockRecorder) ListOutgoingAccessRequests(ctx, organi
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOutgoingAccessRequests", reflect.TypeOf((*MockConfigDatabase)(nil).ListOutgoingAccessRequests), ctx, organizationName, serviceName)
 }
 
+// GetOutgoingAccessRequest mocks base method
+func (m *MockConfigDatabase) GetOutgoingAccessRequest(ctx context.Context, id string) (*database.OutgoingAccessRequest, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOutgoingAccessRequest", ctx, id)
+	ret0, _ := ret[0].(*database.OutgoingAccessRequest)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOutgoingAccessRequest indicates an expected call of GetOutgoingAccessRequest
+func (mr *MockConfigDatabaseMockRecorder) GetOutgoingAccessRequest(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOutgoingAccessRequest", reflect.TypeOf((*MockConfigDatabase)(nil).GetOutgoingAccessRequest), ctx, id)
+}
+
 // GetLatestOutgoingAccessRequest mocks base method
 func (m *MockConfigDatabase) GetLatestOutgoingAccessRequest(ctx context.Context, organizationName, serviceName string) (*database.OutgoingAccessRequest, error) {
 	m.ctrl.T.Helper()

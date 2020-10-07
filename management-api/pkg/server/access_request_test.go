@@ -54,14 +54,14 @@ func newService(t *testing.T) (s *server.ManagementService, db *mock_database.Mo
 	return
 }
 
-func TestCreateAccessRequest(t *testing.T) {
-	createTimestamp := func(ti time.Time) *types.Timestamp {
-		return &types.Timestamp{
-			Seconds: ti.Unix(),
-			Nanos:   int32(ti.Nanosecond()),
-		}
+func createTimestamp(ti time.Time) *types.Timestamp {
+	return &types.Timestamp{
+		Seconds: ti.Unix(),
+		Nanos:   int32(ti.Nanosecond()),
 	}
+}
 
+func TestCreateAccessRequest(t *testing.T) {
 	tests := []struct {
 		name        string
 		req         *api.CreateAccessRequestRequest
@@ -139,6 +139,196 @@ func TestCreateAccessRequest(t *testing.T) {
 
 			assert.Equal(t, tt.expectedReq, actual)
 			assert.Equal(t, tt.expectedErr, err)
+		})
+	}
+}
+
+//nolint:funlen // this is a test
+func TestSendAccessRequest(t *testing.T) {
+	tests := []struct {
+		name             string
+		request          *api.SendAccessRequestRequest
+		accessRequest    *database.OutgoingAccessRequest
+		accessRequestErr error
+		updateMock       func(mock *gomock.Call)
+		response         *api.OutgoingAccessRequest
+		responseErr      error
+	}{
+		{
+			"non_existing",
+			&api.SendAccessRequestRequest{
+				OrganizationName: "test-organization",
+				ServiceName:      "test-service",
+				AccessRequestID:  "1",
+			},
+			nil,
+			database.ErrNotFound,
+			func(mock *gomock.Call) {
+				mock.MaxTimes(0)
+			},
+			nil,
+			status.New(codes.NotFound, "access request not found").Err(),
+		},
+		{
+			"database_error",
+			&api.SendAccessRequestRequest{
+				OrganizationName: "test-organization",
+				ServiceName:      "test-service",
+				AccessRequestID:  "1",
+			},
+			nil,
+			errors.New("an error"),
+			func(mock *gomock.Call) {
+				mock.MaxTimes(0)
+			},
+			nil,
+			status.New(codes.Internal, "database error").Err(),
+		},
+		{
+			"organiation_mismatch",
+			&api.SendAccessRequestRequest{
+				OrganizationName: "test-organization",
+				ServiceName:      "test-service",
+				AccessRequestID:  "1",
+			},
+			&database.OutgoingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					ID:               "1",
+					OrganizationName: "other-organization",
+					ServiceName:      "test-service",
+				},
+			},
+			nil,
+			func(mock *gomock.Call) {
+				mock.MaxTimes(0)
+			},
+			nil,
+			status.New(codes.NotFound, "organization not found").Err(),
+		},
+		{
+			"service_mismatch",
+			&api.SendAccessRequestRequest{
+				OrganizationName: "test-organization",
+				ServiceName:      "test-service",
+				AccessRequestID:  "1",
+			},
+			&database.OutgoingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					ID:               "1",
+					OrganizationName: "test-organization",
+					ServiceName:      "other-service",
+				},
+			},
+			nil,
+			func(mock *gomock.Call) {
+				mock.MaxTimes(0)
+			},
+			nil,
+			status.New(codes.NotFound, "service not found").Err(),
+		},
+		{
+			"update_failed",
+			&api.SendAccessRequestRequest{
+				OrganizationName: "test-organization",
+				ServiceName:      "test-service",
+				AccessRequestID:  "1",
+			},
+			&database.OutgoingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					ID:               "1",
+					OrganizationName: "test-organization",
+					ServiceName:      "test-service",
+					State:            database.AccessRequestCreated,
+				},
+			},
+			nil,
+			func(mock *gomock.Call) {
+				mock.Return(errors.New("an error"))
+			},
+			nil,
+			status.New(codes.Internal, "database error").Err(),
+		},
+		{
+			"created_state",
+			&api.SendAccessRequestRequest{
+				OrganizationName: "test-organization",
+				ServiceName:      "test-service",
+				AccessRequestID:  "1",
+			},
+			&database.OutgoingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					ID:               "1",
+					OrganizationName: "test-organization",
+					ServiceName:      "test-service",
+					State:            database.AccessRequestCreated,
+				},
+			},
+			nil,
+			func(mock *gomock.Call) {
+				mock.Return(nil)
+			},
+			&api.OutgoingAccessRequest{
+				Id:               "1",
+				OrganizationName: "test-organization",
+				ServiceName:      "test-service",
+				State:            api.AccessRequestState_CREATED,
+				CreatedAt:        createTimestamp(time.Time{}),
+				UpdatedAt:        createTimestamp(time.Time{}),
+			},
+			nil,
+		},
+		{
+			"failed_state",
+			&api.SendAccessRequestRequest{
+				OrganizationName: "test-organization",
+				ServiceName:      "test-service",
+				AccessRequestID:  "1",
+			},
+			&database.OutgoingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					ID:               "1",
+					OrganizationName: "test-organization",
+					ServiceName:      "test-service",
+					State:            database.AccessRequestFailed,
+				},
+			},
+			nil,
+			func(mock *gomock.Call) {
+				mock.Return(nil)
+			},
+			&api.OutgoingAccessRequest{
+				Id:               "1",
+				OrganizationName: "test-organization",
+				ServiceName:      "test-service",
+				State:            api.AccessRequestState_CREATED,
+				CreatedAt:        createTimestamp(time.Time{}),
+				UpdatedAt:        createTimestamp(time.Time{}),
+			},
+			nil,
+		},
+	}
+
+	for _, test := range tests {
+		test := test
+
+		t.Run(test.name, func(t *testing.T) {
+			service, db := newService(t)
+			ctx := context.Background()
+
+			db.EXPECT().GetOutgoingAccessRequest(ctx, test.request.AccessRequestID).
+				Return(test.accessRequest, test.accessRequestErr)
+
+			updateMock := db.EXPECT().UpdateOutgoingAccessRequestState(ctx, test.accessRequest, database.AccessRequestCreated).
+				Do(func(_ context.Context, accessRequest *database.OutgoingAccessRequest, state database.AccessRequestState) error {
+					accessRequest.State = state
+					return nil
+				})
+			test.updateMock(updateMock)
+
+			response, err := service.SendAccessRequest(ctx, test.request)
+
+			assert.Equal(t, test.response, response)
+			assert.Equal(t, test.responseErr, err)
 		})
 	}
 }

@@ -356,6 +356,26 @@ func (mr *MockManagementClientMockRecorder) CreateAccessRequest(ctx, in interfac
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccessRequest", reflect.TypeOf((*MockManagementClient)(nil).CreateAccessRequest), varargs...)
 }
 
+// SendAccessRequest mocks base method
+func (m *MockManagementClient) SendAccessRequest(ctx context.Context, in *api.SendAccessRequestRequest, opts ...grpc.CallOption) (*api.OutgoingAccessRequest, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "SendAccessRequest", varargs...)
+	ret0, _ := ret[0].(*api.OutgoingAccessRequest)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SendAccessRequest indicates an expected call of SendAccessRequest
+func (mr *MockManagementClientMockRecorder) SendAccessRequest(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendAccessRequest", reflect.TypeOf((*MockManagementClient)(nil).SendAccessRequest), varargs...)
+}
+
 // GetSettings mocks base method
 func (m *MockManagementClient) GetSettings(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*api.Settings, error) {
 	m.ctrl.T.Helper()
@@ -677,6 +697,21 @@ func (m *MockManagementServer) CreateAccessRequest(arg0 context.Context, arg1 *a
 func (mr *MockManagementServerMockRecorder) CreateAccessRequest(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccessRequest", reflect.TypeOf((*MockManagementServer)(nil).CreateAccessRequest), arg0, arg1)
+}
+
+// SendAccessRequest mocks base method
+func (m *MockManagementServer) SendAccessRequest(arg0 context.Context, arg1 *api.SendAccessRequestRequest) (*api.OutgoingAccessRequest, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SendAccessRequest", arg0, arg1)
+	ret0, _ := ret[0].(*api.OutgoingAccessRequest)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SendAccessRequest indicates an expected call of SendAccessRequest
+func (mr *MockManagementServerMockRecorder) SendAccessRequest(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendAccessRequest", reflect.TypeOf((*MockManagementServer)(nil).SendAccessRequest), arg0, arg1)
 }
 
 // GetSettings mocks base method

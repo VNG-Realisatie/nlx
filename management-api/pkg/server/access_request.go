@@ -176,6 +176,55 @@ func (s *ManagementService) CreateAccessRequest(ctx context.Context, req *api.Cr
 	return response, nil
 }
 
+func (s *ManagementService) SendAccessRequest(ctx context.Context, req *api.SendAccessRequestRequest) (*api.OutgoingAccessRequest, error) {
+	accessRequest, err := s.configDatabase.GetOutgoingAccessRequest(ctx, req.AccessRequestID)
+
+	if err != nil {
+		if errIsNotFound(err) {
+			return nil, status.Error(codes.NotFound, "access request not found")
+		}
+
+		s.logger.Error("fetching access request", zap.String("id", req.AccessRequestID), zap.Error(err))
+
+		return nil, status.Error(codes.Internal, "database error")
+	}
+
+	if accessRequest.OrganizationName != req.OrganizationName {
+		s.logger.Error("organization mismatch", zap.String("organization", req.OrganizationName))
+		return nil, status.Error(codes.NotFound, "organization not found")
+	}
+
+	if accessRequest.ServiceName != req.ServiceName {
+		s.logger.Error("service mismatch", zap.String("service", req.ServiceName))
+		return nil, status.Error(codes.NotFound, "service not found")
+	}
+
+	if !accessRequest.Sendable() {
+		return nil, status.Error(codes.AlreadyExists, "access request is not in a sendable state")
+	}
+
+	err = s.configDatabase.UpdateOutgoingAccessRequestState(ctx, accessRequest, database.AccessRequestCreated)
+	if err != nil {
+		s.logger.Error("access request cannot be updated", zap.String("id", accessRequest.ID), zap.Error(err))
+		return nil, status.Error(codes.Internal, "database error")
+	}
+
+	response, err := convertOutgoingAccessRequest(accessRequest)
+	if err != nil {
+		s.logger.Error(
+			"converting outgoing access request",
+			zap.String("id", accessRequest.ID),
+			zap.String("organization", accessRequest.OrganizationName),
+			zap.String("service", accessRequest.ServiceName),
+			zap.Error(err),
+		)
+
+		return nil, status.Error(codes.Internal, "converting outgoing access request")
+	}
+
+	return response, nil
+}
+
 func (s *ManagementService) parseProxyMetadata(ctx context.Context) (*proxyMetadata, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
