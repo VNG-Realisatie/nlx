@@ -44,7 +44,7 @@ describe('the General settings section', () => {
     const updateHandler = jest.fn().mockResolvedValue(null)
     const getSettingsHandler = jest.fn().mockResolvedValue({})
     const userContext = { user: { id: '42' } }
-    const { findByTestId } = renderWithProviders(
+    const { findByTestId, getByRole } = renderWithProviders(
       <MemoryRouter>
         <UserContext.Provider value={userContext}>
           <GeneralSettings
@@ -63,6 +63,11 @@ describe('the General settings section', () => {
     expect(updateHandler).toHaveBeenCalledWith({
       foo: 'bar',
     })
+
+    expect(getByRole('alert')).toBeTruthy()
+    expect(getByRole('alert').textContent).toBe(
+      'Successfully updated the settings.',
+    )
   })
 
   it('re-submitting the form when the previous submission went wrong', async () => {
@@ -74,7 +79,7 @@ describe('the General settings section', () => {
     const getSettingsHandler = jest.fn().mockResolvedValue({})
     const userContext = { user: { id: '42' } }
 
-    const { findByTestId, getByTestId } = renderWithProviders(
+    const { findByTestId, getByRole } = renderWithProviders(
       <MemoryRouter>
         <UserContext.Provider value={userContext}>
           <GeneralSettings
@@ -92,9 +97,9 @@ describe('the General settings section', () => {
     })
 
     expect(updateHandler).toHaveBeenCalledTimes(1)
-    expect(getByTestId('error-message')).toBeTruthy()
-    expect(getByTestId('error-message').textContent).toBe(
-      'Failed to update the settings.arbitrary error',
+    expect(getByRole('alert')).toBeTruthy()
+    expect(getByRole('alert').textContent).toBe(
+      'Failed to update the settings.',
     )
 
     await act(async () => {
@@ -112,7 +117,7 @@ describe('the General settings section', () => {
 
     const userContext = { user: { id: '42' } }
 
-    const { findByTestId, getByTestId } = renderWithProviders(
+    const { findByTestId, getByRole } = renderWithProviders(
       <MemoryRouter>
         <UserContext.Provider value={userContext}>
           <GeneralSettings
@@ -129,9 +134,9 @@ describe('the General settings section', () => {
       await fireEvent.submit(settingsForm)
     })
 
-    expect(getByTestId('error-message')).toBeTruthy()
-    expect(getByTestId('error-message').textContent).toBe(
-      'Failed to update the settings.arbitrary error',
+    expect(getByRole('alert')).toBeTruthy()
+    expect(getByRole('alert').textContent).toBe(
+      'Failed to update the settings.',
     )
   })
 })
