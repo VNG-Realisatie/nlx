@@ -7,7 +7,7 @@ import { createMemoryHistory } from 'history'
 import { renderWithProviders } from '../../../test-utils'
 import Navigation from './index'
 
-test('Navigation', () => {
+test('Settings Navigation', () => {
   const history = createMemoryHistory({ initialEntries: ['/settings'] })
   const { getByLabelText } = renderWithProviders(
     <Router history={history}>
