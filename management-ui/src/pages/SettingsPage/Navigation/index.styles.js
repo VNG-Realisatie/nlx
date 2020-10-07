@@ -12,8 +12,7 @@ export const StyledNav = styled.nav`
 `
 
 export const StyledLink = styled(NavLink)`
-  padding: ${(p) => p.theme.tokens.spacing03} 0;
-  padding-left: ${(p) => p.theme.tokens.spacing05};
+  padding: ${(p) => p.theme.tokens.spacing03} ${(p) => p.theme.tokens.spacing05};
   text-decoration: none;
   color: ${(p) => p.theme.colorText};
   display: block;
