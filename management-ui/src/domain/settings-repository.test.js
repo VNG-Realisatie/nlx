@@ -140,7 +140,7 @@ describe('the insight settings', () => {
     })
 
     describe('when the insight configuration has not been set before', () => {
-      it('should return empty values', async () => {
+      it('should return an empty object', async () => {
         jest.spyOn(global, 'fetch').mockImplementation(() =>
           Promise.resolve({
             ok: false,
@@ -157,10 +157,7 @@ describe('the insight settings', () => {
           }),
         )
 
-        expect(result).toEqual({
-          irmaServerURL: '',
-          insightAPIURL: '',
-        })
+        expect(result).toEqual({})
       })
     })
 

@@ -41,10 +41,7 @@ class SettingsRepository {
     const response = await fetchWithoutCaching(`/api/v1/insight-configuration`)
 
     if (response && response.status === 404) {
-      return {
-        irmaServerURL: '',
-        insightAPIURL: '',
-      }
+      return {}
     }
 
     throwOnError(response)
