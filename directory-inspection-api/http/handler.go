@@ -72,10 +72,13 @@ func (h *apiSpecHandler) handleFunc() http.HandlerFunc {
 		}
 
 		resp, err := h.getInwayAPISpec(inwayAddress, service.Name)
-
 		if err != nil {
 			h.logger.Info("failed to read api spec doc from remote inway", zap.Error(err))
+			http.Error(w, http.StatusText(http.StatusServiceUnavailable), http.StatusServiceUnavailable)
+
+			return
 		}
+
 		defer resp.Body.Close()
 
 		w.Header().Set("Content-Type", resp.Header.Get("Content-Type"))
