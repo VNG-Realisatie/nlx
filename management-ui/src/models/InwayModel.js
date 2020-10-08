@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { action, decorate, flow, observable } from 'mobx'
+import { makeAutoObservable, flow } from 'mobx'
 
 import {
   createModelSchema,
@@ -34,6 +34,8 @@ class InwayModel {
   version = ''
 
   constructor({ store, inway }) {
+    makeAutoObservable(this)
+
     this.store = store
     this.name = inway.name
     this.with(inway)
@@ -67,16 +69,6 @@ createModelSchema(InwayModel, {
     ),
   ),
   version: primitive(),
-})
-
-decorate(InwayModel, {
-  name: observable,
-  ipAddress: observable,
-  hostname: observable,
-  selfAddress: observable,
-  services: observable,
-  version: observable,
-  fetch: action.bound,
 })
 
 export const createInway = (...args) => new InwayModel(...args)

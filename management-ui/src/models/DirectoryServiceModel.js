@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { decorate, observable, flow, action } from 'mobx'
+import { makeAutoObservable, flow } from 'mobx'
 import { string, object, func, bool } from 'prop-types'
 
 import { createAccessRequestInstance } from './OutgoingAccessRequestModel'
@@ -27,6 +27,8 @@ class DirectoryServiceModel {
   latestAccessRequest = null
 
   constructor({ store, service }) {
+    makeAutoObservable(this)
+
     this.store = store
 
     this.id = `${service.organizationName}/${service.serviceName}`
@@ -69,13 +71,6 @@ class DirectoryServiceModel {
     }
   })
 }
-
-decorate(DirectoryServiceModel, {
-  state: observable,
-  latestAccessRequest: observable,
-  requestAccess: action.bound,
-  fetch: action.bound,
-})
 
 export const createDirectoryService = (...args) =>
   new DirectoryServiceModel(...args)

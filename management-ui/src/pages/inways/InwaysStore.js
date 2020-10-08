@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { action, decorate, flow, observable } from 'mobx'
+import { makeAutoObservable, flow } from 'mobx'
 import InwayRepository from '../../domain/inway-repository'
 import { createInway } from '../../models/InwayModel'
 
@@ -14,6 +14,8 @@ class InwaysStore {
   isFetching = false
 
   constructor({ rootStore, inwayRepository = InwayRepository }) {
+    makeAutoObservable(this)
+
     this.rootStore = rootStore
     this.inwayRepository = inwayRepository
 
@@ -52,13 +54,6 @@ class InwaysStore {
     return inwayModel
   }
 }
-
-decorate(InwaysStore, {
-  inways: observable,
-  isInitiallyFetched: observable,
-  error: observable,
-  fetchInways: action.bound,
-})
 
 export const createInwaysStore = (...args) => new InwaysStore(...args)
 

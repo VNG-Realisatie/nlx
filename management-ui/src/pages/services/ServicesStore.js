@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { action, decorate, flow, observable } from 'mobx'
+import { makeAutoObservable, flow } from 'mobx'
 import ServiceRepository from '../../domain/service-repository'
 import AccessRequestRepository from '../../domain/access-request-repository'
 import AccessGrantRepository from '../../domain/access-grant-repository'
@@ -21,6 +21,8 @@ class ServicesStore {
     accessRequestRepository = AccessRequestRepository,
     accessGrantRepository = AccessGrantRepository,
   }) {
+    makeAutoObservable(this)
+
     this.rootStore = rootStore
     this.serviceRepository = serviceRepository
     this.accessRequestRepository = accessRequestRepository
@@ -47,6 +49,7 @@ class ServicesStore {
       )
     } catch (e) {
       this.error = e
+      console.error(e)
     } finally {
       this.isInitiallyFetched = true
       this.isFetching = false
@@ -81,15 +84,6 @@ class ServicesStore {
     return serviceModel
   })
 }
-
-decorate(ServicesStore, {
-  services: observable,
-  isInitiallyFetched: observable,
-  error: observable,
-  fetchServices: action.bound,
-  removeService: action.bound,
-  addService: action.bound,
-})
 
 export const createServicesStore = (...args) => new ServicesStore(...args)
 

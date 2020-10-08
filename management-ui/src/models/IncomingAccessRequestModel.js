@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { decorate, observable, action, flow } from 'mobx'
+import { makeAutoObservable, flow } from 'mobx'
 import { string, func } from 'prop-types'
 
 import AccessRequestRepository from '../domain/access-request-repository'
@@ -34,16 +34,17 @@ class IncomingAccessRequestModel {
   state = ''
   createdAt = ''
   updatedAt = ''
+  error = ''
 
   constructor({
     store,
     accessRequestData,
     accessRequestRepository = AccessRequestRepository,
   }) {
+    makeAutoObservable(this)
+
     this.store = store || undefined
     this.accessRequestRepository = accessRequestRepository
-    this.error = ''
-
     this.update(accessRequestData)
   }
 
@@ -93,13 +94,6 @@ class IncomingAccessRequestModel {
     }
   })
 }
-
-decorate(IncomingAccessRequestModel, {
-  state: observable,
-  update: action.bound,
-  approve: action.bound,
-  error: observable,
-})
 
 export const createIncomingAccessRequest = (...args) =>
   new IncomingAccessRequestModel(...args)

@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { decorate, observable, computed, action, flow } from 'mobx'
+import { makeAutoObservable, flow } from 'mobx'
 import { string, func, bool } from 'prop-types'
 
 import AccessRequestRepository from '../domain/access-request-repository'
@@ -40,6 +40,7 @@ class OutgoingAccessRequestModel {
   state = ''
   createdAt = ''
   updatedAt = ''
+  error = ''
 
   get isOpen() {
     return !UNSUCCESSFUL_ACCESS_REQUEST_STATES.includes(this.state)
@@ -49,10 +50,10 @@ class OutgoingAccessRequestModel {
     accessRequestData,
     accessRequestRepository = AccessRequestRepository,
   }) {
+    makeAutoObservable(this)
+
     this.accessRequestRepository = accessRequestRepository
     this.update(accessRequestData)
-
-    this.error = ''
   }
 
   update(accessRequestData) {
@@ -109,14 +110,6 @@ class OutgoingAccessRequestModel {
     }
   })
 }
-
-decorate(OutgoingAccessRequestModel, {
-  state: observable,
-  isOpen: computed,
-  update: action.bound,
-  send: action.bound,
-  error: observable,
-})
 
 export const createAccessRequestInstance = (requestData) => {
   return new OutgoingAccessRequestModel({ accessRequestData: requestData })

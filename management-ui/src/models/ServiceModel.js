@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { action, decorate, flow, observable } from 'mobx'
+import { makeAutoObservable, flow } from 'mobx'
 import { arrayOf, bool, func, string } from 'prop-types'
 import { createModelSchema, list, primitive, serialize } from 'serializr'
 import {
@@ -36,6 +36,8 @@ class ServiceModel {
   accessGrants = []
 
   constructor({ store, service }) {
+    makeAutoObservable(this)
+
     this.store = store
     this.name = service.name
     this.with(service)
@@ -102,24 +104,6 @@ createModelSchema(ServiceModel, {
   techSupportContact: primitive(),
   publicSupportContact: primitive(),
   inways: list(primitive()),
-})
-
-decorate(ServiceModel, {
-  name: observable,
-  endpointURL: observable,
-  documentationURL: observable,
-  apiSpecificationURL: observable,
-  internal: observable,
-  techSupportContact: observable,
-  publicSupportContact: observable,
-  inways: observable,
-  incomingAccessRequests: observable,
-  accessGrants: observable,
-  fetch: action.bound,
-  update: action.bound,
-  fetchIncomingAccessRequests: action.bound,
-  fetchAccessGrants: action.bound,
-  tempRemoveFromList: action,
 })
 
 export const createService = (...args) => new ServiceModel(...args)

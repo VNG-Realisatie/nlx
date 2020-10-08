@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { decorate, observable, flow, action } from 'mobx'
+import { makeAutoObservable, flow } from 'mobx'
 
 import DirectoryRepository from '../../domain/directory-repository'
 import { createDirectoryService } from '../../models/DirectoryServiceModel'
@@ -15,17 +15,10 @@ class DirectoryStore {
   isFetching = false
 
   constructor({ rootStore, directoryRepository = DirectoryRepository }) {
+    makeAutoObservable(this)
+
     this.rootStore = rootStore
     this.directoryRepository = directoryRepository
-
-    this.services = []
-    // @TODO:
-    // All stores that do async stuff have isInitiallyFetched and error.
-    // Consider using a reqres model / state machine
-    // See: https://benmccormick.org/2018/05/14/mobx-state-machines-and-flags/
-    this.error = ''
-    this.isInitiallyFetched = false
-    this.isFetching = false
   }
 
   fetchServices = flow(function* fetchServices() {
@@ -42,6 +35,7 @@ class DirectoryStore {
       )
     } catch (e) {
       this.error = e
+      console.error(e)
     } finally {
       this.isInitiallyFetched = true
       this.isFetching = false
@@ -60,13 +54,6 @@ class DirectoryStore {
     return directoryServiceModel
   }
 }
-
-decorate(DirectoryStore, {
-  services: observable,
-  isInitiallyFetched: observable,
-  error: observable,
-  fetchServices: action.bound,
-})
 
 export const createDirectoryStore = (...args) => new DirectoryStore(...args)
 
