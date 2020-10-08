@@ -14,6 +14,7 @@ import { arrayOf, shape, string } from 'prop-types'
 
 export const inwayModelPropTypes = {
   name: string.isRequired,
+  ipAddress: string,
   hostname: string,
   selfAddress: string,
   services: arrayOf(
@@ -26,6 +27,7 @@ export const inwayModelPropTypes = {
 
 class InwayModel {
   name = ''
+  ipAddress = ''
   hostname = ''
   selfAddress = ''
   services = []
@@ -44,6 +46,7 @@ class InwayModel {
 
   with = function (inway) {
     this.name = inway.name || ''
+    this.ipAddress = inway.ipAddress || ''
     this.hostname = inway.hostname || ''
     this.selfAddress = inway.selfAddress || ''
     this.services = inway.services || []
@@ -53,6 +56,7 @@ class InwayModel {
 
 createModelSchema(InwayModel, {
   name: primitive(),
+  ipAddress: primitive(),
   hostname: primitive(),
   selfAddress: primitive(),
   services: list(
@@ -67,6 +71,7 @@ createModelSchema(InwayModel, {
 
 decorate(InwayModel, {
   name: observable,
+  ipAddress: observable,
   hostname: observable,
   selfAddress: observable,
   services: observable,

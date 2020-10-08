@@ -8,6 +8,7 @@ import InwayDetails from './index'
 
 const inway = {
   name: 'name',
+  ipAddress: '127.0.0.1',
   hostname: 'host.name',
   selfAddress: 'self.address',
   services: [],
@@ -26,6 +27,7 @@ describe('InwayDetails', () => {
     )
 
     expect(getByTestId('gateway-type')).toHaveTextContent('inway')
+    expect(getByText('127.0.0.1')).toBeInTheDocument()
     expect(getByText('host.name')).toBeInTheDocument()
     expect(getByText('self.address')).toBeInTheDocument()
   })
