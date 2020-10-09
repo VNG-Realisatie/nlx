@@ -18,14 +18,19 @@ module.exports = {
             "try-nlx/consume-an-api",
             "try-nlx/provide-an-api",
         ],
+        "Try NLX Management": [
+            "try-nlx-management/introduction",
+            "try-nlx-management/setup-your-environment",
+            "try-nlx-management/retrieve-a-demo-certificate",
+            "try-nlx-management/getting-up-and-running",
+            "try-nlx-management/consume-an-api",
+            "try-nlx-management/provide-an-api"
+        ],
         "Use NLX": [
             "use-nlx/request-a-production-cert",
             "use-nlx/enable-transaction-logs",
             "use-nlx/setup-authorization",
             "use-nlx/new-releases",
-        ],
-        "NLX Management": [
-            "nlx-management/introduction",
         ],
         "Reference information": [
             "reference-information/service-configuration",
