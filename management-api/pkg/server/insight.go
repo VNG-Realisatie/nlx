@@ -19,13 +19,14 @@ func (s *ManagementService) GetInsightConfiguration(ctx context.Context, _ *type
 
 	insightConfig, err := s.configDatabase.GetInsightConfiguration(ctx)
 	if err != nil {
-		s.logger.Error("error getting insight from DB", zap.Error(err))
-		return nil, status.Error(codes.Internal, "database error")
-	}
+		if errIsNotFound(err) {
+			s.logger.Warn("insight configuration not found")
+			return nil, status.Error(codes.NotFound, "insight configuration not found")
+		}
 
-	if insightConfig == nil {
-		s.logger.Warn("insight configuration not found")
-		return nil, status.Error(codes.NotFound, "insight configuration not found")
+		s.logger.Error("error getting insight from DB", zap.Error(err))
+
+		return nil, status.Error(codes.Internal, "database error")
 	}
 
 	response := &api.InsightConfiguration{

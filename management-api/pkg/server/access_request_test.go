@@ -146,12 +146,14 @@ func TestCreateAccessRequest(t *testing.T) {
 //nolint:funlen // this is a test method
 func TestApproveIncomingAccessRequest(t *testing.T) {
 	tests := []struct {
-		name          string
-		request       *api.ApproveIncomingAccessRequestRequest
-		service       *database.Service
-		accessRequest *database.IncomingAccessRequest
-		response      *types.Empty
-		err           error
+		name             string
+		request          *api.ApproveIncomingAccessRequestRequest
+		service          *database.Service
+		serviceErr       error
+		accessRequest    *database.IncomingAccessRequest
+		accessRequestErr error
+		response         *types.Empty
+		err              error
 	}{
 		{
 			"unknown_service",
@@ -159,6 +161,8 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 				ServiceName:     "test-service",
 				AccessRequestID: "1",
 			},
+			nil,
+			database.ErrNotFound,
 			nil,
 			nil,
 			nil,
@@ -175,6 +179,8 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 			},
 			nil,
 			nil,
+			database.ErrNotFound,
+			nil,
 			status.Error(codes.NotFound, "access request not found"),
 		},
 		{
@@ -186,11 +192,13 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 			&database.Service{
 				Name: "test-service",
 			},
+			nil,
 			&database.IncomingAccessRequest{
 				AccessRequest: database.AccessRequest{
 					ServiceName: "other-service",
 				},
 			},
+			nil,
 			nil,
 			status.Error(codes.InvalidArgument, "service name does not match the one from access request"),
 		},
@@ -203,12 +211,14 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 			&database.Service{
 				Name: "test-service",
 			},
+			nil,
 			&database.IncomingAccessRequest{
 				AccessRequest: database.AccessRequest{
 					ServiceName: "test-service",
 					State:       database.AccessRequestApproved,
 				},
 			},
+			nil,
 			nil,
 			status.Error(codes.AlreadyExists, "access request is already approved"),
 		},
@@ -221,11 +231,13 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 			&database.Service{
 				Name: "test-service",
 			},
+			nil,
 			&database.IncomingAccessRequest{
 				AccessRequest: database.AccessRequest{
 					ServiceName: "test-service",
 				},
 			},
+			nil,
 			&types.Empty{},
 			nil,
 		},
@@ -237,10 +249,10 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 			service, db := newService(t)
 			ctx := context.Background()
 
-			db.EXPECT().GetService(ctx, test.request.ServiceName).Return(test.service, nil)
+			db.EXPECT().GetService(ctx, test.request.ServiceName).Return(test.service, test.serviceErr)
 
 			if test.service != nil {
-				db.EXPECT().GetIncomingAccessRequest(ctx, test.request.AccessRequestID).Return(test.accessRequest, nil)
+				db.EXPECT().GetIncomingAccessRequest(ctx, test.request.AccessRequestID).Return(test.accessRequest, test.accessRequestErr)
 			}
 
 			if test.response != nil {

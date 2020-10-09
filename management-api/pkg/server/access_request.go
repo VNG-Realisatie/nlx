@@ -30,13 +30,14 @@ var accessRequestState = map[database.AccessRequestState]api.AccessRequestState{
 }
 
 func (s *ManagementService) ListIncomingAccessRequest(ctx context.Context, req *api.ListIncomingAccessRequestsRequests) (*api.ListIncomingAccessRequestsResponse, error) {
-	service, err := s.configDatabase.GetService(ctx, req.ServiceName)
-	if service == nil && err == nil {
-		return nil, status.Error(codes.NotFound, "service not found")
-	}
-
+	_, err := s.configDatabase.GetService(ctx, req.ServiceName)
 	if err != nil {
+		if errIsNotFound(err) {
+			return nil, status.Error(codes.NotFound, "service not found")
+		}
+
 		s.logger.Error("fetching service", zap.String("name", req.ServiceName), zap.Error(err))
+
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
@@ -95,23 +96,25 @@ func (s *ManagementService) ApproveIncomingAccessRequest(ctx context.Context, re
 }
 
 func (s *ManagementService) newIncomingAccessRequestFromRequest(ctx context.Context, req *api.ApproveIncomingAccessRequestRequest) (*database.IncomingAccessRequest, error) {
-	service, err := s.configDatabase.GetService(ctx, req.ServiceName)
-	if service == nil && err == nil {
-		return nil, status.Error(codes.NotFound, "service not found")
-	}
-
+	_, err := s.configDatabase.GetService(ctx, req.ServiceName)
 	if err != nil {
+		if errIsNotFound(err) {
+			return nil, status.Error(codes.NotFound, "service not found")
+		}
+
 		s.logger.Error("fetching service", zap.String("serviceName", req.ServiceName), zap.Error(err))
+
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
 	accessRequest, err := s.configDatabase.GetIncomingAccessRequest(ctx, req.AccessRequestID)
-	if accessRequest == nil && err == nil {
-		return nil, status.Error(codes.NotFound, "access request not found")
-	}
-
 	if err != nil {
+		if errIsNotFound(err) {
+			return nil, status.Error(codes.NotFound, "access request not found")
+		}
+
 		s.logger.Error("fetching access request", zap.String("id", req.AccessRequestID), zap.Error(err))
+
 		return nil, status.Error(codes.Internal, "database error")
 	}
 

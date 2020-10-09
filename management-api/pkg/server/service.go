@@ -53,13 +53,14 @@ func (s *ManagementService) GetService(ctx context.Context, req *api.GetServiceR
 
 	service, err := s.configDatabase.GetService(ctx, req.Name)
 	if err != nil {
-		logger.Error("error getting service from DB", zap.Error(err))
-		return nil, status.Error(codes.Internal, "database error")
-	}
+		if errIsNotFound(err) {
+			logger.Warn("service not found")
+			return nil, status.Error(codes.NotFound, "service not found")
+		}
 
-	if service == nil {
-		logger.Warn("service not found")
-		return nil, status.Error(codes.NotFound, "service not found")
+		logger.Error("error getting service from DB", zap.Error(err))
+
+		return nil, status.Error(codes.Internal, "database error")
 	}
 
 	response := convertFromDatabaseService(service)
@@ -95,7 +96,13 @@ func (s *ManagementService) UpdateService(ctx context.Context, req *api.UpdateSe
 
 	err = s.configDatabase.UpdateService(ctx, req.Name, service)
 	if err != nil {
+		if errIsNotFound(err) {
+			logger.Warn("service not found")
+			return nil, status.Error(codes.NotFound, "service not found")
+		}
+
 		logger.Error("error updating service in DB", zap.Error(err))
+
 		return nil, status.Error(codes.Internal, "database error")
 	}
 

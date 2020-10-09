@@ -1,6 +1,8 @@
 package server
 
 import (
+	"errors"
+
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/process"
@@ -28,4 +30,8 @@ func NewManagementService(logger *zap.Logger, mainProcess *process.Process, dire
 		mainProcess:     mainProcess,
 		directoryClient: directoryClient,
 	}
+}
+
+func errIsNotFound(err error) bool {
+	return errors.Is(err, database.ErrNotFound)
 }

@@ -66,13 +66,14 @@ func (s *ManagementService) GetInway(ctx context.Context, req *api.GetInwayReque
 
 	inway, err := s.configDatabase.GetInway(ctx, req.Name)
 	if err != nil {
-		logger.Error("error getting inway from DB", zap.Error(err))
-		return nil, status.Error(codes.Internal, "database error")
-	}
+		if errIsNotFound(err) {
+			logger.Warn("inway not found")
+			return nil, status.Error(codes.NotFound, "inway not found")
+		}
 
-	if inway == nil {
-		logger.Warn("inway not found")
-		return nil, status.Error(codes.NotFound, "inway not found")
+		logger.Error("error getting inway from DB", zap.Error(err))
+
+		return nil, status.Error(codes.Internal, "database error")
 	}
 
 	services, err := s.configDatabase.ListServices(ctx)
@@ -126,7 +127,13 @@ func (s *ManagementService) UpdateInway(ctx context.Context, req *api.UpdateInwa
 
 	err = s.configDatabase.UpdateInway(ctx, req.Name, inway)
 	if err != nil {
+		if errIsNotFound(err) {
+			logger.Warn("inway not found")
+			return nil, status.Error(codes.NotFound, "inway not found")
+		}
+
 		logger.Error("error updating inway in DB", zap.Error(err))
+
 		return nil, status.Error(codes.Internal, "database error")
 	}
 

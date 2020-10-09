@@ -8,6 +8,10 @@ class SettingsRepository {
   static async getGeneralSettings() {
     const response = await fetchWithoutCaching(`/api/v1/settings`)
 
+    if (response && response.status === 404) {
+      return {}
+    }
+
     throwOnError(response)
 
     let result = await response.json()

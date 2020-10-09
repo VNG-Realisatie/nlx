@@ -70,7 +70,7 @@ func TestGetService(t *testing.T) {
 		Name: "my-service",
 	}
 
-	mockDatabase.EXPECT().GetService(ctx, "my-service")
+	mockDatabase.EXPECT().GetService(ctx, "my-service").Return(nil, database.ErrNotFound)
 
 	_, actualError := service.GetService(ctx, getServiceRequest)
 	expectedError := status.Error(codes.NotFound, "service not found")

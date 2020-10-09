@@ -121,7 +121,7 @@ func TestGetInway(t *testing.T) {
 		Name: "inway42.test",
 	}
 
-	mockDatabase.EXPECT().GetInway(ctx, "inway42.test")
+	mockDatabase.EXPECT().GetInway(ctx, "inway42.test").Return(nil, database.ErrNotFound)
 
 	_, actualError := service.GetInway(ctx, getInwayRequest)
 	expectedError := status.Error(codes.NotFound, "inway not found")

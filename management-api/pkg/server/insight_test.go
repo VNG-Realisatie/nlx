@@ -37,7 +37,7 @@ func TestGetInsight(t *testing.T) {
 
 	emptyRequest := &types.Empty{}
 
-	mockDatabase.EXPECT().GetInsightConfiguration(ctx)
+	mockDatabase.EXPECT().GetInsightConfiguration(ctx).Return(nil, database.ErrNotFound)
 
 	_, actualError := service.GetInsightConfiguration(ctx, emptyRequest)
 	expectedError := status.Error(codes.NotFound, "insight configuration not found")

@@ -22,7 +22,12 @@ func (s *ManagementService) GetSettings(ctx context.Context, _ *types.Empty) (*a
 
 	settings, err := s.configDatabase.GetSettings(ctx)
 	if err != nil {
+		if errIsNotFound(err) {
+			return nil, status.Error(codes.NotFound, "settings not found")
+		}
+
 		logger.Error("could not get the settings from the database", zap.Error(err))
+
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
@@ -38,7 +43,13 @@ func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateS
 	if req.OrganizationInway != "" {
 		inway, err := s.configDatabase.GetInway(ctx, req.OrganizationInway)
 		if err != nil {
+			if errIsNotFound(err) {
+				logger.Warn("inway not found", zap.String("inway", req.OrganizationInway))
+				return nil, status.Error(codes.InvalidArgument, "inway not found")
+			}
+
 			logger.Error("could not get the inway from the database", zap.Error(err))
+
 			return nil, status.Error(codes.Internal, "database error")
 		}
 
