@@ -127,9 +127,6 @@ func TestDeleteInway(t *testing.T) {
 	}
 
 	inway, err = cluster.DB.GetInway(ctx, "my-inway")
-	if err != nil {
-		t.Fatal("error getting inway", err)
-	}
-
+	assert.Error(t, err, database.ErrNotFound)
 	assert.Nil(t, inway)
 }

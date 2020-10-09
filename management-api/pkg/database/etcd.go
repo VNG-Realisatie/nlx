@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/coreos/etcd/clientv3"
+	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/process"
@@ -19,6 +20,8 @@ import (
 )
 
 const PREFIX = "nlx"
+
+var ErrNotFound = errors.New("database: value not found")
 
 // ETCDConfigDatabase is the etcd implementation of ConfigDatabase
 type ETCDConfigDatabase struct {
@@ -75,7 +78,7 @@ func (db ETCDConfigDatabase) get(ctx context.Context, key string, dest interface
 	}
 
 	if response.Count == 0 {
-		return nil
+		return ErrNotFound
 	}
 
 	err = json.Unmarshal(response.Kvs[0].Value, dest)

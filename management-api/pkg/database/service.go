@@ -5,12 +5,7 @@ package database
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 	"path"
-	"strings"
-
-	"github.com/coreos/etcd/clientv3"
 )
 
 type Service struct {
@@ -24,29 +19,14 @@ type Service struct {
 	Inways               []string `json:"inways,omitempty"`
 }
 
+const servicesKey = "services"
+
 // ListServices returns a list of services
 func (db ETCDConfigDatabase) ListServices(ctx context.Context) ([]*Service, error) {
-	key := path.Join(db.pathPrefix, "services")
-	if !strings.HasSuffix(key, "/") {
-		key += "/"
-	}
-
-	getResponse, err := db.etcdCli.Get(ctx, key, clientv3.WithPrefix())
-	if err != nil {
-		return nil, err
-	}
-
 	services := []*Service{}
 
-	for _, kv := range getResponse.Kvs {
-		service := &Service{}
-		err := json.Unmarshal(kv.Value, service)
-
-		if err != nil {
-			return nil, err
-		}
-
-		services = append(services, service)
+	if err := db.list(ctx, servicesKey, &services); err != nil {
+		return nil, err
 	}
 
 	return services, nil
@@ -54,21 +34,10 @@ func (db ETCDConfigDatabase) ListServices(ctx context.Context) ([]*Service, erro
 
 // GetService returns a specific service by name
 func (db ETCDConfigDatabase) GetService(ctx context.Context, name string) (*Service, error) {
-	key := path.Join(db.pathPrefix, "services", name)
-
-	values, err := db.etcdCli.Get(ctx, key)
-	if err != nil {
-		return nil, err
-	}
-
-	if values.Count == 0 {
-		return nil, nil
-	}
-
+	key := path.Join(servicesKey, name)
 	service := &Service{}
-	err = json.Unmarshal(values.Kvs[0].Value, service)
 
-	if err != nil {
+	if err := db.get(ctx, key, service); err != nil {
 		return nil, err
 	}
 
@@ -77,15 +46,9 @@ func (db ETCDConfigDatabase) GetService(ctx context.Context, name string) (*Serv
 
 // CreateService creates a new service
 func (db ETCDConfigDatabase) CreateService(ctx context.Context, service *Service) error {
-	key := path.Join(db.pathPrefix, "services", service.Name)
+	key := path.Join("services", service.Name)
 
-	data, err := json.Marshal(&service)
-	if err != nil {
-		return err
-	}
-
-	_, err = db.etcdCli.Put(ctx, key, string(data))
-	if err != nil {
+	if err := db.put(ctx, key, service); err != nil {
 		return err
 	}
 
@@ -93,26 +56,14 @@ func (db ETCDConfigDatabase) CreateService(ctx context.Context, service *Service
 }
 
 // UpdateService updates an existing service
-//nolint:dupl // test method
 func (db ETCDConfigDatabase) UpdateService(ctx context.Context, name string, service *Service) error {
-	key := path.Join(db.pathPrefix, "services", name)
-
-	value, err := db.etcdCli.Get(ctx, key)
-	if err != nil {
+	if _, err := db.GetService(ctx, name); err != nil {
 		return err
 	}
 
-	if value.Count == 0 {
-		return fmt.Errorf("not found")
-	}
+	key := path.Join(servicesKey, name)
 
-	data, err := json.Marshal(&service)
-	if err != nil {
-		return err
-	}
-
-	_, err = db.etcdCli.Put(ctx, key, string(data))
-	if err != nil {
+	if err := db.put(ctx, key, service); err != nil {
 		return err
 	}
 
@@ -121,7 +72,7 @@ func (db ETCDConfigDatabase) UpdateService(ctx context.Context, name string, ser
 
 // DeleteService deletes a specific service
 func (db ETCDConfigDatabase) DeleteService(ctx context.Context, name string) error {
-	key := path.Join(db.pathPrefix, "services", name)
+	key := path.Join(db.pathPrefix, servicesKey, name)
 
 	_, err := db.etcdCli.Delete(ctx, key)
 	if err != nil {

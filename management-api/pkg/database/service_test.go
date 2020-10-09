@@ -130,10 +130,7 @@ func TestDeleteService(t *testing.T) {
 	}
 
 	service, err = cluster.DB.GetService(ctx, "my-service")
-	if err != nil {
-		t.Fatal("error getting service", err)
-	}
-
+	assert.Error(t, err, database.ErrNotFound)
 	assert.Nil(t, service)
 }
 

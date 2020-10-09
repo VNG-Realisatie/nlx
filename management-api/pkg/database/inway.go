@@ -5,12 +5,7 @@ package database
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 	"path"
-	"strings"
-
-	"github.com/coreos/etcd/clientv3"
 )
 
 type Inway struct {
@@ -22,29 +17,14 @@ type Inway struct {
 	Services    []string `json:"services,omitempty"`
 }
 
+const inwaysKey = "inways"
+
 // ListInways returns a list of inways
 func (db ETCDConfigDatabase) ListInways(ctx context.Context) ([]*Inway, error) {
-	key := path.Join(db.pathPrefix, "inways")
-	if !strings.HasSuffix(key, "/") {
-		key += "/"
-	}
-
-	getResponse, err := db.etcdCli.Get(ctx, key, clientv3.WithPrefix())
-	if err != nil {
-		return nil, err
-	}
-
 	inways := []*Inway{}
 
-	for _, kv := range getResponse.Kvs {
-		inway := &Inway{}
-		err := json.Unmarshal(kv.Value, inway)
-
-		if err != nil {
-			return nil, err
-		}
-
-		inways = append(inways, inway)
+	if err := db.list(ctx, inwaysKey, &inways); err != nil {
+		return nil, err
 	}
 
 	return inways, nil
@@ -52,21 +32,10 @@ func (db ETCDConfigDatabase) ListInways(ctx context.Context) ([]*Inway, error) {
 
 // GetInway returns a specific inway by name
 func (db ETCDConfigDatabase) GetInway(ctx context.Context, name string) (*Inway, error) {
-	key := path.Join(db.pathPrefix, "inways", name)
-
-	values, err := db.etcdCli.Get(ctx, key)
-	if err != nil {
-		return nil, err
-	}
-
-	if values.Count == 0 {
-		return nil, nil
-	}
-
+	key := path.Join(inwaysKey, name)
 	inway := &Inway{}
-	err = json.Unmarshal(values.Kvs[0].Value, inway)
 
-	if err != nil {
+	if err := db.get(ctx, key, inway); err != nil {
 		return nil, err
 	}
 
@@ -75,15 +44,9 @@ func (db ETCDConfigDatabase) GetInway(ctx context.Context, name string) (*Inway,
 
 // CreateInway creates a new inway
 func (db ETCDConfigDatabase) CreateInway(ctx context.Context, inway *Inway) error {
-	key := path.Join(db.pathPrefix, "inways", inway.Name)
+	key := path.Join(inwaysKey, inway.Name)
 
-	data, err := json.Marshal(&inway)
-	if err != nil {
-		return err
-	}
-
-	_, err = db.etcdCli.Put(ctx, key, string(data))
-	if err != nil {
+	if err := db.put(ctx, key, inway); err != nil {
 		return err
 	}
 
@@ -91,26 +54,14 @@ func (db ETCDConfigDatabase) CreateInway(ctx context.Context, inway *Inway) erro
 }
 
 // UpdateInway updates an existing inway
-//nolint:dupl // TODO
 func (db ETCDConfigDatabase) UpdateInway(ctx context.Context, name string, inway *Inway) error {
-	key := path.Join(db.pathPrefix, "inways", name)
-
-	value, err := db.etcdCli.Get(ctx, key)
-	if err != nil {
+	if _, err := db.GetInway(ctx, name); err != nil {
 		return err
 	}
 
-	if value.Count == 0 {
-		return fmt.Errorf("not found")
-	}
+	key := path.Join(inwaysKey, name)
 
-	data, err := json.Marshal(&inway)
-	if err != nil {
-		return err
-	}
-
-	_, err = db.etcdCli.Put(ctx, key, string(data))
-	if err != nil {
+	if err := db.put(ctx, key, inway); err != nil {
 		return err
 	}
 
@@ -119,7 +70,7 @@ func (db ETCDConfigDatabase) UpdateInway(ctx context.Context, name string, inway
 
 // DeleteInway deletes a specific inway
 func (db ETCDConfigDatabase) DeleteInway(ctx context.Context, name string) error {
-	key := path.Join(db.pathPrefix, "inways", name)
+	key := path.Join(db.pathPrefix, inwaysKey, name)
 
 	_, err := db.etcdCli.Delete(ctx, key)
 	if err != nil {
