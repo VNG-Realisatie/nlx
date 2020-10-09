@@ -15,8 +15,6 @@ import (
 
 func TestListInways(t *testing.T) {
 	cluster := newTestCluster(t)
-	defer cluster.Terminate(t)
-
 	ctx := context.Background()
 
 	mockInway := &database.Inway{
@@ -47,8 +45,6 @@ func TestListInways(t *testing.T) {
 
 func TestCreateGetInway(t *testing.T) {
 	cluster := newTestCluster(t)
-	defer cluster.Terminate(t)
-
 	ctx := context.Background()
 
 	mockInway := &database.Inway{
@@ -70,8 +66,6 @@ func TestCreateGetInway(t *testing.T) {
 
 func TestUpdateInway(t *testing.T) {
 	cluster := newTestCluster(t)
-	defer cluster.Terminate(t)
-
 	ctx := context.Background()
 
 	mockInway := &database.Inway{
@@ -109,8 +103,6 @@ func TestUpdateInway(t *testing.T) {
 
 func TestDeleteInway(t *testing.T) {
 	cluster := newTestCluster(t)
-	defer cluster.Terminate(t)
-
 	ctx := context.Background()
 
 	mockInway := &database.Inway{

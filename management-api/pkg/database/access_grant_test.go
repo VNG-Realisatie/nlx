@@ -17,8 +17,6 @@ import (
 
 func TestAccessGrantRequest(t *testing.T) {
 	cluster := newTestCluster(t)
-	defer cluster.Terminate(t)
-
 	ctx := context.Background()
 	client := cluster.GetClient(t)
 
@@ -68,8 +66,6 @@ func TestAccessGrantRequest(t *testing.T) {
 
 func TestCreateAccessGrant(t *testing.T) {
 	cluster := newTestCluster(t)
-	defer cluster.Terminate(t)
-
 	cluster.Clock.SetTime(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC))
 
 	ctx := context.Background()
@@ -106,8 +102,6 @@ func TestCreateAccessGrant(t *testing.T) {
 
 func TestCreateAccessGrantModified(t *testing.T) {
 	cluster := newTestCluster(t)
-	defer cluster.Terminate(t)
-
 	cluster.Clock.SetTime(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC))
 
 	ctx := context.Background()

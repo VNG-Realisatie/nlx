@@ -14,8 +14,6 @@ import (
 
 func TestPutGetInsight(t *testing.T) {
 	cluster := newTestCluster(t)
-	defer cluster.Terminate(t)
-
 	ctx := context.Background()
 
 	mockInsightConfiguration := &database.InsightConfiguration{

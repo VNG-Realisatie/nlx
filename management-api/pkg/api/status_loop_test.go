@@ -34,6 +34,11 @@ type statusLoopMocks struct {
 func newTestAccessRequestStatusLoop(t *testing.T) (statusLoopMocks, *accessRequestStatusLoop) {
 	ctrl := gomock.NewController(t)
 
+	t.Cleanup(func() {
+		t.Helper()
+		ctrl.Finish()
+	})
+
 	requests := make(chan *database.OutgoingAccessRequest, 10)
 	mocks := statusLoopMocks{
 		ctrl:       ctrl,
@@ -58,8 +63,6 @@ func newTestAccessRequestStatusLoop(t *testing.T) (statusLoopMocks, *accessReque
 
 func TestListCurrentAccessRequests(t *testing.T) {
 	mocks, statusLoop := newTestAccessRequestStatusLoop(t)
-	defer mocks.ctrl.Finish()
-
 	ctx := context.Background()
 
 	requests := []*database.OutgoingAccessRequest{
@@ -388,7 +391,6 @@ func TestHandleRequest(t *testing.T) {
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
 			mocks, statusLoop := newTestAccessRequestStatusLoop(t)
-			defer mocks.ctrl.Finish()
 
 			tt.setupMock(mocks)
 

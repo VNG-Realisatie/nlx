@@ -29,11 +29,15 @@ import (
 	common_tls "go.nlx.io/nlx/common/tls"
 )
 
-func newService(t *testing.T) (s *server.ManagementService, ctrl *gomock.Controller, db *mock_database.MockConfigDatabase) {
+func newService(t *testing.T) (s *server.ManagementService, db *mock_database.MockConfigDatabase) {
 	logger := zaptest.Logger(t)
 	proc := process.NewProcess(logger)
 
-	ctrl = gomock.NewController(t)
+	ctrl := gomock.NewController(t)
+
+	t.Cleanup(func() {
+		ctrl.Finish()
+	})
 
 	db = mock_database.NewMockConfigDatabase(ctrl)
 	pkiDir := filepath.Join("..", "..", "..", "testing", "pki")
@@ -53,11 +57,6 @@ func newService(t *testing.T) (s *server.ManagementService, ctrl *gomock.Control
 }
 
 func TestCreateAccessRequest(t *testing.T) {
-	service, ctrl, db := newService(t)
-	ctrl.Finish()
-
-	ctx := context.Background()
-
 	createTimestamp := func(ti time.Time) *types.Timestamp {
 		return &types.Timestamp{
 			Seconds: ti.Unix(),
@@ -133,6 +132,9 @@ func TestCreateAccessRequest(t *testing.T) {
 		tt := tt
 
 		t.Run(tt.name, func(t *testing.T) {
+			service, db := newService(t)
+			ctx := context.Background()
+
 			db.EXPECT().CreateOutgoingAccessRequest(ctx, tt.ar).
 				Return(tt.returnReq, tt.returnErr)
 			actual, err := service.CreateAccessRequest(ctx, tt.req)
@@ -234,13 +236,14 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 	for _, test := range tests {
 		test := test
 		t.Run(test.name, func(t *testing.T) {
-			service, ctrl, db := newService(t)
-			ctrl.Finish()
-
+			service, db := newService(t)
 			ctx := context.Background()
 
 			db.EXPECT().GetService(ctx, test.request.ServiceName).Return(test.service, nil)
-			db.EXPECT().GetIncomingAccessRequest(ctx, test.request.AccessRequestID).Return(test.accessRequest, nil)
+
+			if test.service != nil {
+				db.EXPECT().GetIncomingAccessRequest(ctx, test.request.AccessRequestID).Return(test.accessRequest, nil)
+			}
 
 			if test.response != nil {
 				db.EXPECT().CreateAccessGrant(ctx, test.accessRequest)
@@ -255,9 +258,7 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 }
 
 func TestApproveIncomingAccessRequestModified(t *testing.T) {
-	serverService, ctrl, db := newService(t)
-	ctrl.Finish()
-
+	serverService, db := newService(t)
 	ctx := context.Background()
 
 	service := &database.Service{
@@ -338,10 +339,7 @@ func TestExternalRequestAccess(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, ctrl, db := newService(t)
-
-			defer ctrl.Finish()
-
+			service, db := newService(t)
 			ctx := tt.setup(db)
 
 			_, err := service.RequestAccess(ctx, &external.RequestAccessRequest{
@@ -412,9 +410,7 @@ func TestExternalGetAccessRequestState(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, ctrl, db := newService(t)
-			defer ctrl.Finish()
-
+			service, db := newService(t)
 			ctx := tt.setup(db)
 
 			response, err := service.GetAccessRequestState(ctx, &external.GetAccessRequestStateRequest{

@@ -166,13 +166,6 @@ func TestDeleteService(t *testing.T) {
 
 //nolint:funlen // alot of scenario's to test
 func TestListServices(t *testing.T) {
-	logger := zap.NewNop()
-	testProcess := process.NewProcess(logger)
-	ctx := context.Background()
-
-	mockCtrl := gomock.NewController(t)
-	defer mockCtrl.Finish()
-
 	databaseServices := []*database.Service{
 		{
 			Name:   "my-service",
@@ -328,7 +321,12 @@ func TestListServices(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, test.db(mockCtrl))
+		logger := zap.NewNop()
+		testProcess := process.NewProcess(logger)
+		ctrl := gomock.NewController(t)
+		ctx := context.Background()
+
+		service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(ctrl), nil, test.db(ctrl))
 		actualResponse, err := service.ListServices(ctx, test.request)
 
 		assert.Equal(t, test.expectedError, err)

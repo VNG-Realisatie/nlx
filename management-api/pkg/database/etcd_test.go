@@ -24,10 +24,6 @@ type TestCluster struct {
 	Clock   *clock.FakeClock
 }
 
-func (tc TestCluster) Terminate(t *testing.T) {
-	tc.cluster.Terminate(t)
-}
-
 func (tc TestCluster) GetClient(t *testing.T) *clientv3.Client {
 	cli, err := clientv3.New(clientv3.Config{
 		Endpoints:   tc.Addrs,
@@ -54,17 +50,23 @@ func newTestCluster(t *testing.T) TestCluster {
 		t.Fatal("error constructing etcd config database", err)
 	}
 
-	return TestCluster{
+	testCluster := TestCluster{
 		cluster: cluster,
 		DB:      db,
 		Addrs:   addrs,
 		Clock:   c,
 	}
+
+	t.Cleanup(func() {
+		t.Helper()
+		testCluster.cluster.Terminate(t)
+	})
+
+	return testCluster
 }
 
 func TestNewEtcdConfigDatabase(t *testing.T) {
 	cluster := newTestCluster(t)
-	defer cluster.Terminate(t)
 
 	assert.NotNil(t, cluster.DB)
 }

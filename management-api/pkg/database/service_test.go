@@ -15,8 +15,6 @@ import (
 
 func TestListServices(t *testing.T) {
 	cluster := newTestCluster(t)
-	defer cluster.Terminate(t)
-
 	ctx := context.Background()
 
 	mockService := &database.Service{
@@ -47,8 +45,6 @@ func TestListServices(t *testing.T) {
 
 func TestCreateGetService(t *testing.T) {
 	cluster := newTestCluster(t)
-	defer cluster.Terminate(t)
-
 	ctx := context.Background()
 
 	mockService := &database.Service{
@@ -70,8 +66,6 @@ func TestCreateGetService(t *testing.T) {
 
 func TestUpdateService(t *testing.T) {
 	cluster := newTestCluster(t)
-	defer cluster.Terminate(t)
-
 	ctx := context.Background()
 
 	mockService := &database.Service{
@@ -111,8 +105,6 @@ func TestUpdateService(t *testing.T) {
 
 func TestDeleteService(t *testing.T) {
 	cluster := newTestCluster(t)
-	defer cluster.Terminate(t)
-
 	ctx := context.Background()
 
 	mockService := &database.Service{

@@ -24,8 +24,6 @@ import (
 
 func TestListAccessRequests(t *testing.T) {
 	cluster := newTestCluster(t)
-	defer cluster.Terminate(t)
-
 	ctx := context.Background()
 	client := cluster.GetClient(t)
 
@@ -71,8 +69,6 @@ func TestListAccessRequests(t *testing.T) {
 
 func TestCreateAccessRequest(t *testing.T) {
 	cluster := newTestCluster(t)
-	defer cluster.Terminate(t)
-
 	cluster.Clock.SetTime(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC))
 
 	ctx := context.Background()
@@ -123,8 +119,6 @@ func TestCreateAccessRequest(t *testing.T) {
 
 func TestUpdateAccessRequestState(t *testing.T) {
 	cluster := newTestCluster(t)
-	defer cluster.Terminate(t)
-
 	cluster.Clock.SetTime(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC))
 
 	ctx := context.Background()
@@ -166,8 +160,6 @@ func TestUpdateAccessRequestState(t *testing.T) {
 
 func TestLockOutgoingAccessRequest(t *testing.T) {
 	cluster := newTestCluster(t)
-	defer cluster.Terminate(t)
-
 	cluster.Clock.SetTime(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC))
 
 	ctx := context.Background()
@@ -192,8 +184,6 @@ func TestLockOutgoingAccessRequest(t *testing.T) {
 
 func TestUnlockOutgoingAccessRequest(t *testing.T) {
 	cluster := newTestCluster(t)
-	defer cluster.Terminate(t)
-
 	cluster.Clock.SetTime(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC))
 
 	ctx := context.Background()
@@ -224,8 +214,6 @@ func TestUnlockOutgoingAccessRequest(t *testing.T) {
 
 func TestGetLatestOutgoingAccessRequest(t *testing.T) {
 	cluster := newTestCluster(t)
-	defer cluster.Terminate(t)
-
 	cluster.Clock.SetTime(time.Date(2020, time.July, 9, 14, 44, 55, 0, time.UTC))
 
 	ctx := context.Background()
@@ -264,8 +252,6 @@ func TestGetLatestOutgoingAccessRequest(t *testing.T) {
 
 func TestListAllLatestOutgoingAccessRequests(t *testing.T) {
 	cluster := newTestCluster(t)
-	defer cluster.Terminate(t)
-
 	cluster.Clock.SetTime(time.Date(2020, time.July, 10, 10, 11, 40, 0, time.UTC))
 
 	ctx := context.Background()
@@ -328,8 +314,6 @@ func TestListAllLatestOutgoingAccessRequests(t *testing.T) {
 
 func TestGetIncomingAccessRequest(t *testing.T) {
 	cluster := newTestCluster(t)
-	defer cluster.Terminate(t)
-
 	ctx := context.Background()
 	client := cluster.GetClient(t)
 
