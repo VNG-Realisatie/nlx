@@ -29,8 +29,8 @@ func (tc TestCluster) GetClient(t *testing.T) *clientv3.Client {
 		Endpoints:   tc.Addrs,
 		DialTimeout: time.Second,
 	})
-	if err != nil {
-		t.Fatal("could not construct etcd client", err)
+	if !assert.NoError(t, err) {
+		assert.FailNow(t, "could not construct etcd client")
 	}
 
 	return cli
@@ -46,8 +46,8 @@ func newTestCluster(t *testing.T) TestCluster {
 	c := clock.NewFakeClock(time.Now())
 
 	db, err := database.NewEtcdConfigDatabase(logger, testProcess, addrs, c)
-	if err != nil {
-		t.Fatal("error constructing etcd config database", err)
+	if !assert.NoError(t, err) {
+		assert.FailNow(t, "could not construct etcd config database")
 	}
 
 	testCluster := TestCluster{

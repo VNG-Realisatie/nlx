@@ -244,10 +244,7 @@ func TestListInways(t *testing.T) {
 
 	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase)
 	actualResponse, err := service.ListInways(ctx, &api.ListInwaysRequest{})
-
-	if err != nil {
-		t.Fatal("could not get list of inways", err)
-	}
+	assert.NoError(t, err)
 
 	expectedResponse := &api.ListInwaysResponse{
 		Inways: []*api.Inway{

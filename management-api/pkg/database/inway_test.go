@@ -26,19 +26,13 @@ func TestListInways(t *testing.T) {
 	}
 
 	err := cluster.DB.CreateInway(ctx, mockInway)
-	if err != nil {
-		t.Fatal("error creating inway", err)
-	}
+	assert.NoError(t, err)
 
 	err = cluster.DB.CreateInway(ctx, anotherMockInway)
-	if err != nil {
-		t.Fatal("error creating inway", err)
-	}
+	assert.NoError(t, err)
 
 	inways, err := cluster.DB.ListInways(ctx)
-	if err != nil {
-		t.Fatal("error listing inways", err)
-	}
+	assert.NoError(t, err)
 
 	assert.Equal(t, []*database.Inway{mockInway, anotherMockInway}, inways)
 }
@@ -52,15 +46,10 @@ func TestCreateGetInway(t *testing.T) {
 	}
 
 	err := cluster.DB.CreateInway(ctx, mockInway)
-	if err != nil {
-		t.Fatal("error creating inway", err)
-	}
+	assert.NoError(t, err)
 
 	service, err := cluster.DB.GetInway(ctx, "my-inway")
-	if err != nil {
-		t.Fatal("error getting inway", err)
-	}
-
+	assert.NoError(t, err)
 	assert.Equal(t, service, mockInway)
 }
 
@@ -77,27 +66,17 @@ func TestUpdateInway(t *testing.T) {
 	}
 
 	err := cluster.DB.CreateInway(ctx, mockInway)
-	if err != nil {
-		t.Fatal("error creating inway", err)
-	}
+	assert.NoError(t, err)
 
 	inway, err := cluster.DB.GetInway(ctx, "my-inway")
-	if err != nil {
-		t.Fatal("error getting inway", err)
-	}
-
+	assert.NoError(t, err)
 	assert.Equal(t, mockInway, inway)
 
 	err = cluster.DB.UpdateInway(ctx, "my-inway", mockUpdatedInway)
-	if err != nil {
-		t.Fatal("error updating inway", err)
-	}
+	assert.NoError(t, err)
 
 	inway, err = cluster.DB.GetInway(ctx, "my-inway")
-	if err != nil {
-		t.Fatal("error getting inway", err)
-	}
-
+	assert.NoError(t, err)
 	assert.Equal(t, inway, mockUpdatedInway)
 }
 
@@ -110,21 +89,14 @@ func TestDeleteInway(t *testing.T) {
 	}
 
 	err := cluster.DB.CreateInway(ctx, mockInway)
-	if err != nil {
-		t.Fatal("error creating inway", err)
-	}
+	assert.NoError(t, err)
 
 	inway, err := cluster.DB.GetInway(ctx, "my-inway")
-	if err != nil {
-		t.Fatal("error getting inway", err)
-	}
-
+	assert.NoError(t, err)
 	assert.Equal(t, inway, mockInway)
 
 	err = cluster.DB.DeleteInway(ctx, "my-inway")
-	if err != nil {
-		t.Fatal("error deleting inway", err)
-	}
+	assert.NoError(t, err)
 
 	inway, err = cluster.DB.GetInway(ctx, "my-inway")
 	assert.Error(t, err, database.ErrNotFound)

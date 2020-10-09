@@ -26,20 +26,13 @@ func TestListServices(t *testing.T) {
 	}
 
 	err := cluster.DB.CreateService(ctx, mockService)
-	if err != nil {
-		t.Fatal("error creating service", err)
-	}
+	assert.NoError(t, err)
 
 	err = cluster.DB.CreateService(ctx, anotherMockService)
-	if err != nil {
-		t.Fatal("error creating service", err)
-	}
+	assert.NoError(t, err)
 
 	services, err := cluster.DB.ListServices(ctx)
-	if err != nil {
-		t.Fatal("error listing services", err)
-	}
-
+	assert.NoError(t, err)
 	assert.Equal(t, []*database.Service{anotherMockService, mockService}, services)
 }
 
@@ -52,15 +45,10 @@ func TestCreateGetService(t *testing.T) {
 	}
 
 	err := cluster.DB.CreateService(ctx, mockService)
-	if err != nil {
-		t.Fatal("error creating service", err)
-	}
+	assert.NoError(t, err)
 
 	service, err := cluster.DB.GetService(ctx, "my-service")
-	if err != nil {
-		t.Fatal("error getting service", err)
-	}
-
+	assert.NoError(t, err)
 	assert.Equal(t, service, mockService)
 }
 
@@ -79,27 +67,17 @@ func TestUpdateService(t *testing.T) {
 	}
 
 	err := cluster.DB.CreateService(ctx, mockService)
-	if err != nil {
-		t.Fatal("error creating service", err)
-	}
+	assert.NoError(t, err)
 
 	service, err := cluster.DB.GetService(ctx, "my-service")
-	if err != nil {
-		t.Fatal("error getting service", err)
-	}
-
+	assert.NoError(t, err)
 	assert.Equal(t, service.EndpointURL, mockService.EndpointURL)
 
 	err = cluster.DB.UpdateService(ctx, "my-service", updatedMockService)
-	if err != nil {
-		t.Fatal("error updating service", err)
-	}
+	assert.NoError(t, err)
 
 	service, err = cluster.DB.GetService(ctx, "my-service")
-	if err != nil {
-		t.Fatal("error getting service", err)
-	}
-
+	assert.NoError(t, err)
 	assert.Equal(t, service.EndpointURL, updatedMockService.EndpointURL)
 }
 
@@ -113,21 +91,14 @@ func TestDeleteService(t *testing.T) {
 	}
 
 	err := cluster.DB.CreateService(ctx, mockService)
-	if err != nil {
-		t.Fatal("error creating service", err)
-	}
+	assert.NoError(t, err)
 
 	service, err := cluster.DB.GetService(ctx, "my-service")
-	if err != nil {
-		t.Fatal("error getting service", err)
-	}
-
+	assert.NoError(t, err)
 	assert.Equal(t, service, mockService)
 
 	err = cluster.DB.DeleteService(ctx, "my-service")
-	if err != nil {
-		t.Fatal("error deleting service", err)
-	}
+	assert.NoError(t, err)
 
 	service, err = cluster.DB.GetService(ctx, "my-service")
 	assert.Error(t, err, database.ErrNotFound)

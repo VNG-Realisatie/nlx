@@ -22,14 +22,9 @@ func TestPutGetInsight(t *testing.T) {
 	}
 
 	err := cluster.DB.PutInsightConfiguration(ctx, mockInsightConfiguration)
-	if err != nil {
-		t.Fatal("error putting insight configuration", err)
-	}
+	assert.NoError(t, err)
 
 	insightConfig, err := cluster.DB.GetInsightConfiguration(ctx)
-	if err != nil {
-		t.Fatal("error getting insight configuration", err)
-	}
-
+	assert.NoError(t, err)
 	assert.Equal(t, mockInsightConfiguration, insightConfig)
 }

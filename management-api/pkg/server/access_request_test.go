@@ -47,9 +47,7 @@ func newService(t *testing.T) (s *server.ManagementService, db *mock_database.Mo
 		filepath.Join(pkiDir, "ca-root.pem"),
 	)
 
-	if err != nil {
-		t.Fatal("cannot load certificate bundle")
-	}
+	assert.NoError(t, err)
 
 	s = server.NewManagementService(logger, proc, mock_directory.NewMockClient(ctrl), bundle, db)
 
