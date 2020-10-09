@@ -8,6 +8,7 @@ include:
   - template: Container-Scanning.gitlab-ci.yml
   - template: Dependency-Scanning.gitlab-ci.yml
   - template: SAST.gitlab-ci.yml
+  - template: Secret-Detection.gitlab-ci.yml
 
 container_scanning:
   stage: Security
@@ -65,3 +66,11 @@ dependency_scanning:
 
 sast:
   stage: Security
+
+# Override the template from 'Secret-Detection.gitlab-ci.yml'
+.secret-analyzer:
+  stage: Security
+
+secret_detection:
+  variables:
+    SECRET_DETECTION_EXCLUDED_PATHS: "pki/,testing/"
