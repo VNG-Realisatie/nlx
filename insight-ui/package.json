@@ -36,7 +36,7 @@
     "eslint-plugin-react": "7.21.4",
     "eslint-plugin-security": "1.4.0",
     "eslint-plugin-standard": "4.0.1",
-    "http-proxy-middleware": "1.0.5",
+    "http-proxy-middleware": "1.0.6",
     "prettier": "2.1.2",
     "react-scripts": "3.4.3",
     "redux-devtools-extension": "2.13.8",
