@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "axe-core": "4.0.2",
-    "jest": "26.5.2",
+    "jest": "26.5.3",
     "puppeteer": "5.3.1",
     "jest-environment-node": "26.5.2",
     "mkdirp": "1.0.4"
