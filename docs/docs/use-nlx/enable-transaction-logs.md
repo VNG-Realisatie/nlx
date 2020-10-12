@@ -15,14 +15,14 @@ The inway and the outway are able to log metadata of the requests they process. 
 
 ## Docker compose
 
-To make the setup of the transaction logs as easy as possible, we have provided a `docker-compose.yml` file in the [nlx-compose repository](https://gitlab.com/commonground/nlx-compose). It contains configuration for a PostgreSQL container and executes the migrations necessary for the txlog-db.
+To make the setup of the transaction logs as easy as possible, we have provided a `docker-compose.yml` file in the [nlx-compose repository](https://gitlab.com/commonground/nlx/nlx-compose). It contains configuration for a PostgreSQL container and executes the migrations necessary for the txlog-db.
 
 ## Installation
 
-Start by cloning the [nlx-compose repository](https://gitlab.com/commonground/nlx-compose).
+Start by cloning the [nlx-compose repository](https://gitlab.com/commonground/nlx/nlx-compose).
 
 ```bash
-git clone https://gitlab.com/commonground/nlx-compose
+git clone https://gitlab.com/commonground/nlx/nlx-compose.git
 ```
 
 After pulling the repository lets navigate to the correct directory
