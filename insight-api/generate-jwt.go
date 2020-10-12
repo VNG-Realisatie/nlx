@@ -23,10 +23,13 @@ func (i *InsightAPI) generateJWT(serviceProviderName string, rsaSignPrivateKey *
 	return func(w http.ResponseWriter, r *http.Request) {
 		requestedDataSubjects := &GenerateJWTRequest{}
 		err := json.NewDecoder(r.Body).Decode(requestedDataSubjects)
+
 		defer r.Body.Close()
+
 		if err != nil {
 			i.logger.Error("failed to decode requested data subjects", zap.Error(err))
 			http.Error(w, "incorrect request data", http.StatusBadRequest)
+
 			return
 		}
 
@@ -37,6 +40,7 @@ func (i *InsightAPI) generateJWT(serviceProviderName string, rsaSignPrivateKey *
 			if !ok {
 				i.logger.Error("unknown dataSubject")
 				http.Error(w, "incorrect dataSubject requested", http.StatusBadRequest)
+
 				return
 			}
 
@@ -54,6 +58,7 @@ func (i *InsightAPI) generateJWT(serviceProviderName string, rsaSignPrivateKey *
 		if err != nil {
 			i.logger.Error("failed to generate JWT", zap.Error(err))
 			http.Error(w, "failed to generate JWT", http.StatusInternalServerError)
+
 			return
 		}
 

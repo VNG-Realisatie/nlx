@@ -31,7 +31,9 @@ func NewInsightDatabase(logger *zap.Logger, db *sqlx.DB) (*InsightDatabase, erro
 		db:     db,
 		logger: logger,
 	}
+
 	var err error
+
 	i.stmtCreateMatchDataSubjects, err = db.Preparex(`
 		CREATE TEMPORARY TABLE matchDataSubjects(
 			key varchar(100),
@@ -39,6 +41,7 @@ func NewInsightDatabase(logger *zap.Logger, db *sqlx.DB) (*InsightDatabase, erro
 		)
 		ON COMMIT DROP
 	`)
+
 	if err != nil {
 		return nil, err
 	}
@@ -87,22 +90,28 @@ func NewInsightDatabase(logger *zap.Logger, db *sqlx.DB) (*InsightDatabase, erro
 }
 
 func (i *InsightDatabase) GetLogRecords(rowsPerPage, page int, dataSubjectsByIrmaAttribute map[string][]string, claims *irma.VerificationResultClaims) (*GetLogRecordsResponse, error) {
-	var tx *sqlx.Tx
-	var err error
+	var (
+		tx  *sqlx.Tx
+		err error
+	)
+
 	for retry := 0; retry < 3; retry++ {
 		tx, err = i.db.Beginx()
 		if err == nil {
 			break
 		}
 	}
+
 	if err != nil {
 		return nil, err
 	}
+
 	defer func() {
 		errRollback := tx.Rollback()
 		if errRollback == sql.ErrTxDone {
 			return // tx was already committed
 		}
+
 		if errRollback != nil {
 			i.logger.Error("error rolling back transaction", zap.Error(errRollback))
 		}
@@ -127,7 +136,6 @@ func (i *InsightDatabase) GetLogRecords(rowsPerPage, page int, dataSubjectsByIrm
 }
 
 func (i *InsightDatabase) matchDataSubjects(tx *sqlx.Tx, dataSubjectsByIrmaAttribute map[string][]string, claims *irma.VerificationResultClaims) error {
-	// TODO: #345 investigate possible other solutions or optimizations for this crazy exercise
 	_, err := tx.Stmtx(i.stmtCreateMatchDataSubjects).Exec()
 	if err != nil {
 		return fmt.Errorf("error executing stmtCreateMatchDataSubjects: %s", err)
@@ -157,6 +165,7 @@ func (i *InsightDatabase) fetchRecords(tx *sqlx.Tx, page, rowsPerPage int) (*Get
 		return nil, fmt.Errorf("error preparing stmtFetchLogs: %s", err)
 	}
 	defer stmtFetchLogs.Close()
+
 	res, err := stmtFetchLogs.Queryx(rowsPerPage, page)
 	if err != nil {
 		return nil, fmt.Errorf("error executing stmtFetchLogs: %s", err)
@@ -170,14 +179,17 @@ func (i *InsightDatabase) fetchRecords(tx *sqlx.Tx, page, rowsPerPage int) (*Get
 
 	for res.Next() {
 		rec := &Record{}
+
 		err = res.StructScan(rec)
 		if err != nil {
 			return nil, fmt.Errorf("error preforming struct scan: %s", err)
 		}
+
 		err = rec.DataJSON.Unmarshal(&rec.Record.Data)
 		if err != nil {
 			return nil, fmt.Errorf("error unmarshalling record data: %s", err)
 		}
+
 		out.Records = append(out.Records, rec)
 	}
 
@@ -187,6 +199,7 @@ func (i *InsightDatabase) fetchRecords(tx *sqlx.Tx, page, rowsPerPage int) (*Get
 	}
 
 	resRowCount := stmtGetRowCount.QueryRowx()
+
 	err = resRowCount.Scan(&out.RowCount)
 	if err != nil {
 		return nil, fmt.Errorf("error scanning rowcount: %s", err)

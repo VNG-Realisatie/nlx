@@ -41,6 +41,11 @@ var options struct {
 	KeyFile  string `long:"tls-key" env:"TLS_KEY" description:"Absolute or relative path to the key .pem"`
 }
 
+const (
+	dbConnectionMaxLifetime = 5 * time.Minute
+	dbMaxIdleConnections    = 2
+)
+
 func main() {
 	if args := parseArgs(); args == nil {
 		return
@@ -48,6 +53,7 @@ func main() {
 
 	// Setup new zap logger
 	zapConfig := options.LogOptions.ZapConfig()
+
 	logger, err := zapConfig.Build()
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
@@ -68,8 +74,8 @@ func main() {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))
 	}
 
-	db.SetConnMaxLifetime(5 * time.Minute)
-	db.SetMaxIdleConns(2)
+	db.SetConnMaxLifetime(dbConnectionMaxLifetime)
+	db.SetMaxIdleConns(dbMaxIdleConnections)
 	db.MapperFunc(xstrings.ToSnakeCase)
 
 	proc.CloseGracefully(db.Close)
@@ -118,7 +124,6 @@ func main() {
 	if err != http.ErrServerClosed {
 		logger.Fatal("error listen and serverinsightAPI", zap.Error(err))
 	}
-
 }
 
 func parseArgs() []string {
@@ -130,8 +135,10 @@ func parseArgs() []string {
 				return nil
 			}
 		}
+
 		log.Fatalf("error parsing flags: %v", err)
 	}
+
 	if len(args) > 0 {
 		log.Fatalf("unexpected arguments: %v", args)
 	}

@@ -52,13 +52,16 @@ func jwtVerifyKeyFunc(rsaVerifyPublicKey *rsa.PublicKey) jwt.Keyfunc {
 // VerifyIRMAVerificationResult unpacks and validates IRMA Vericicaiotn Result JWT and returns the token and claims or an error.
 func (j *JWTGenerator) VerifyIRMAVerificationResult(jwtBytes []byte, rsaVerifyPublicKey *rsa.PublicKey) (*jwt.Token, *VerificationResultClaims, error) {
 	claims := &VerificationResultClaims{}
+
 	token, err := jwt.ParseWithClaims(string(jwtBytes), claims, jwtVerifyKeyFunc(rsaVerifyPublicKey))
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "failed to parse JWT received from irma-api-server")
 	}
+
 	if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
 		return nil, nil, errors.Errorf("JWT received from irma-api-server uses unexpected signing method %v", token.Header["alg"])
 	}
+
 	if !token.Valid {
 		return nil, nil, errors.New("JWT received from irma-api-server is invalid")
 	}

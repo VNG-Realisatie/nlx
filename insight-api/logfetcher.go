@@ -10,11 +10,11 @@ import (
 	"time"
 
 	"github.com/go-chi/render"
-
 	"github.com/gorilla/schema"
 	"github.com/jmoiron/sqlx/types"
-	"go.nlx.io/nlx/common/transactionlog"
 	"go.uber.org/zap"
+
+	"go.nlx.io/nlx/common/transactionlog"
 )
 
 type GetLogsRequest struct {
@@ -39,9 +39,11 @@ func (i *InsightAPI) newTxlogFetcher(rsaVerifyPublicKey *rsa.PublicKey) http.Han
 	return func(w http.ResponseWriter, r *http.Request) {
 		jwtBytes, err := ioutil.ReadAll(r.Body)
 		defer r.Body.Close()
+
 		if err != nil {
 			i.logger.Error("could not read http request body", zap.Error(err))
 			http.Error(w, "could not read http request body", http.StatusBadRequest)
+
 			return
 		}
 
@@ -49,14 +51,17 @@ func (i *InsightAPI) newTxlogFetcher(rsaVerifyPublicKey *rsa.PublicKey) http.Han
 		if err != nil {
 			i.logger.Error("failed to verify irma jwt", zap.Error(err))
 			http.Error(w, "invalid irma jwt", http.StatusBadRequest)
+
 			return
 		}
 
 		requestParams := &GetLogsRequest{}
+
 		err = schema.NewDecoder().Decode(requestParams, r.URL.Query())
 		if err != nil {
 			i.logger.Error("error parsing URL values", zap.Error(err))
 			http.Error(w, "failed to parse URL values", http.StatusBadRequest)
+
 			return
 		}
 
@@ -64,6 +69,7 @@ func (i *InsightAPI) newTxlogFetcher(rsaVerifyPublicKey *rsa.PublicKey) http.Han
 		if err != nil {
 			i.logger.Error("error getting log records", zap.Error(err))
 			http.Error(w, "failed to retrieve log records", http.StatusBadRequest)
+
 			return
 		}
 

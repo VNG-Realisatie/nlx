@@ -41,7 +41,6 @@ func TestNewInsightAPI(t *testing.T) {
 	insightAPI, err := insightapi.NewInsightAPI(logger, config, mockIrmaHandler, mockInsightLogFetcher, privateKey, publicKey)
 	assert.Nil(t, err)
 	assert.NotNil(t, insightAPI)
-
 }
 
 func TestListDataSubjectHandler(t *testing.T) {
@@ -161,12 +160,14 @@ func TestGenerateJWTHandler(t *testing.T) {
 		assert.Nil(t, err)
 
 		assert.Equal(t, test.response, string(bodyBytes))
+
 		if resp.StatusCode == http.StatusOK {
 			assert.Equal(t, "text/plain; charset=utf-8", resp.Header.Get("content-type"))
 		}
 	}
 }
 
+//nolint:funlen // this is a test
 func TestLogFetcherHandler(t *testing.T) {
 	logger := zap.NewNop()
 
@@ -179,6 +180,7 @@ func TestLogFetcherHandler(t *testing.T) {
 	assert.Nil(t, err)
 
 	expectedDataSubjects := make(map[string][]string)
+
 	for dataSubjectKey, dataSubjectProperties := range config.DataSubjects {
 		for _, irmaAttribute := range dataSubjectProperties.IrmaAttributes {
 			expectedDataSubjects[string(irmaAttribute)] = append(expectedDataSubjects[string(irmaAttribute)], dataSubjectKey)
@@ -203,6 +205,7 @@ func TestLogFetcherHandler(t *testing.T) {
 
 	jsonBytes, err := json.Marshal(expectedGetLogsResponse)
 	assert.Nil(t, err)
+
 	expectedGetLogsResponseString := fmt.Sprintf("%s\n", string(jsonBytes))
 
 	jwt := "dummyjwt"
@@ -332,6 +335,7 @@ func TestHappyOptionsHandler(t *testing.T) {
 	expectedHeaders.Set("Access-Control-Allow-Origin", "*")
 	expectedHeaders.Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	expectedHeaders.Set("X-Content-Type-Options", "nosniff")
+
 	for _, test := range tests {
 		req, err := http.NewRequest("OPTIONS", fmt.Sprintf("%s%s", mockServer.URL, test.path), nil)
 		assert.Nil(t, err)
@@ -343,7 +347,7 @@ func TestHappyOptionsHandler(t *testing.T) {
 			actualValue := resp.Header[key]
 			assert.Equal(t, expectedValue, actualValue)
 		}
+
 		resp.Body.Close()
 	}
-
 }
