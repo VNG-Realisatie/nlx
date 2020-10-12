@@ -30,7 +30,7 @@ var options struct {
 
 	ListenAddress string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:8080" description:"Address for the api to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 
-	PostgresDSN string `long:"postgres-dsn" env:"POSTGRES_DSN" default:"postgres://postgres:postgres@postgres/nlx_logdb?sslmode=disable" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
+	PostgresDSN string `long:"postgres-dsn" env:"POSTGRES_DSN" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
 
 	IRMASignPrivateKeyFile  string `long:"irma-sign-private-key-file" env:"IRMA_SIGN_PRIVATE_KEY_FILE" required:"true" description:"PEM RSA private key to sign requests for IRMA server"`
 	IRMAVerifyPublicKeyFile string `long:"irma-verify-public-key-file" env:"IRMA_VERIFY_PUBLIC_KEY_FILE" required:"true" description:"PEM RSA public key to verify results from IRMA server"`
