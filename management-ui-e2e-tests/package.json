@@ -17,7 +17,7 @@
     "axe-core": "4.0.2",
     "axe-testcafe": "3.0.0",
     "babel-eslint": "10.1.0",
-    "eslint": "7.10.0",
+    "eslint": "7.11.0",
     "eslint-config-prettier": "6.12.0",
     "eslint-config-standard": "14.1.1",
     "eslint-plugin-header": "3.1.0",
