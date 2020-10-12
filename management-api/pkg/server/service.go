@@ -163,10 +163,15 @@ func (s *ManagementService) ListServices(ctx context.Context, req *api.ListServi
 				continue
 			}
 
-			convertedService.AuthorizationSettings.Authorizations = make([]*api.Service_AuthorizationSettings_Authorization, len(accessGrants))
-			for i, accessGrant := range accessGrants {
-				convertedService.AuthorizationSettings.Authorizations[i] = convertAccessGrantToAuthorizationSetting(accessGrant)
+			authorizations := make([]*api.Service_AuthorizationSettings_Authorization, 0)
+
+			for _, accessGrant := range accessGrants {
+				if !accessGrant.Revoked() {
+					authorizations = append(authorizations, convertAccessGrantToAuthorizationSetting(accessGrant))
+				}
 			}
+
+			convertedService.AuthorizationSettings.Authorizations = authorizations
 
 			response.Services = append(response.Services, convertedService)
 		}

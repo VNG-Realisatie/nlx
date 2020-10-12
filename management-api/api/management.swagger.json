@@ -11,6 +11,48 @@
     "application/json"
   ],
   "paths": {
+    "/api/v1/access-grants/service/{serviceName}/organizations/{organizationName}/{accessGrantID}/revoke": {
+      "post": {
+        "operationId": "Management_RevokeAccessGrant",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/managementAccessGrant"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "serviceName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "organizationName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "accessGrantID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Management"
+        ]
+      }
+    },
     "/api/v1/access-grants/services/{serviceName}": {
       "get": {
         "operationId": "Management_ListAccessGrantsForService",
@@ -768,6 +810,10 @@
           "type": "string"
         },
         "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "revokedAt": {
           "type": "string",
           "format": "date-time"
         }

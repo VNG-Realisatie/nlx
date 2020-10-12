@@ -56,7 +56,10 @@ func local_request_Management_ListServices_0(ctx context.Context, marshaler runt
 	var protoReq ListServicesRequest
 	var metadata runtime.ServerMetadata
 
-	if err := runtime.PopulateQueryParameters(&protoReq, req.URL.Query(), filter_Management_ListServices_0); err != nil {
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Management_ListServices_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -1003,6 +1006,104 @@ func local_request_Management_ListAccessGrantsForService_0(ctx context.Context, 
 
 }
 
+func request_Management_RevokeAccessGrant_0(ctx context.Context, marshaler runtime.Marshaler, client ManagementClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq RevokeAccessGrantRequest
+	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["serviceName"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "serviceName")
+	}
+
+	protoReq.ServiceName, err = runtime.String(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "serviceName", err)
+	}
+
+	val, ok = pathParams["organizationName"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organizationName")
+	}
+
+	protoReq.OrganizationName, err = runtime.String(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organizationName", err)
+	}
+
+	val, ok = pathParams["accessGrantID"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "accessGrantID")
+	}
+
+	protoReq.AccessGrantID, err = runtime.String(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "accessGrantID", err)
+	}
+
+	msg, err := client.RevokeAccessGrant(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+
+}
+
+func local_request_Management_RevokeAccessGrant_0(ctx context.Context, marshaler runtime.Marshaler, server ManagementServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq RevokeAccessGrantRequest
+	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["serviceName"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "serviceName")
+	}
+
+	protoReq.ServiceName, err = runtime.String(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "serviceName", err)
+	}
+
+	val, ok = pathParams["organizationName"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organizationName")
+	}
+
+	protoReq.OrganizationName, err = runtime.String(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organizationName", err)
+	}
+
+	val, ok = pathParams["accessGrantID"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "accessGrantID")
+	}
+
+	protoReq.AccessGrantID, err = runtime.String(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "accessGrantID", err)
+	}
+
+	msg, err := server.RevokeAccessGrant(ctx, &protoReq)
+	return msg, metadata, err
+
+}
+
 func request_Directory_ListServices_0(ctx context.Context, marshaler runtime.Marshaler, client DirectoryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq types.Empty
 	var metadata runtime.ServerMetadata
@@ -1176,6 +1277,7 @@ func local_request_Directory_RequestAccessToService_0(ctx context.Context, marsh
 // RegisterManagementHandlerServer registers the http handlers for service Management to "mux".
 // UnaryRPC     :call ManagementServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
+// Note that using this registration option will cause many gRPC library features (such as grpc.SendHeader, etc) to stop working. Consider using RegisterManagementHandlerFromEndpoint instead.
 func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux, server ManagementServer) error {
 
 	mux.Handle("GET", pattern_Management_ListServices_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
@@ -1578,12 +1680,33 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 
 	})
 
+	mux.Handle("POST", pattern_Management_RevokeAccessGrant_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_Management_RevokeAccessGrant_0(rctx, inboundMarshaler, server, req, pathParams)
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_Management_RevokeAccessGrant_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
 	return nil
 }
 
 // RegisterDirectoryHandlerServer registers the http handlers for service Directory to "mux".
 // UnaryRPC     :call DirectoryServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
+// Note that using this registration option will cause many gRPC library features (such as grpc.SendHeader, etc) to stop working. Consider using RegisterDirectoryHandlerFromEndpoint instead.
 func RegisterDirectoryHandlerServer(ctx context.Context, mux *runtime.ServeMux, server DirectoryServer) error {
 
 	mux.Handle("GET", pattern_Directory_ListServices_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
@@ -2087,6 +2210,26 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 
 	})
 
+	mux.Handle("POST", pattern_Management_RevokeAccessGrant_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateContext(ctx, mux, req)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_Management_RevokeAccessGrant_0(rctx, inboundMarshaler, client, req, pathParams)
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_Management_RevokeAccessGrant_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
 	return nil
 }
 
@@ -2130,6 +2273,8 @@ var (
 	pattern_Management_UpdateSettings_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "settings"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_Management_ListAccessGrantsForService_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "access-grants", "services", "serviceName"}, "", runtime.AssumeColonVerbOpt(true)))
+
+	pattern_Management_RevokeAccessGrant_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6, 1, 0, 4, 1, 5, 7, 2, 8}, []string{"api", "v1", "access-grants", "service", "serviceName", "organizations", "organizationName", "accessGrantID", "revoke"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (
@@ -2172,6 +2317,8 @@ var (
 	forward_Management_UpdateSettings_0 = runtime.ForwardResponseMessage
 
 	forward_Management_ListAccessGrantsForService_0 = runtime.ForwardResponseMessage
+
+	forward_Management_RevokeAccessGrant_0 = runtime.ForwardResponseMessage
 )
 
 // RegisterDirectoryHandlerFromEndpoint is same as RegisterDirectoryHandler but

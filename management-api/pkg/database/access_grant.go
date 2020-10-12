@@ -15,7 +15,10 @@ import (
 	"github.com/coreos/etcd/clientv3"
 )
 
-var ErrAccessRequestModified = errors.New("access request modified")
+var (
+	ErrAccessRequestModified     = errors.New("access request modified")
+	ErrAccessGrantAlreadyRevoked = errors.New("access grant is already revoked")
+)
 
 type AccessGrant struct {
 	ID                   string    `json:"id,omitempty"`
@@ -24,6 +27,11 @@ type AccessGrant struct {
 	ServiceName          string    `json:"serviceName,omitempty"`
 	PublicKeyFingerprint string    `json:"publicKeyFingerprint,omitempty"`
 	CreatedAt            time.Time `json:"createdAt,omitempty"`
+	RevokedAt            time.Time `json:"revokedAt,omitempty"`
+}
+
+func (a *AccessGrant) Revoked() bool {
+	return !a.RevokedAt.IsZero()
 }
 
 func (db ETCDConfigDatabase) CreateAccessGrant(ctx context.Context, accessRequest *IncomingAccessRequest) (*AccessGrant, error) {
@@ -80,6 +88,30 @@ func (db ETCDConfigDatabase) CreateAccessGrant(ctx context.Context, accessReques
 
 	if !response.Succeeded {
 		return nil, ErrAccessRequestModified
+	}
+
+	return accessGrant, nil
+}
+
+func (db ETCDConfigDatabase) RevokeAccessGrant(ctx context.Context, serviceName, organizationName, id string) (*AccessGrant, error) {
+	key := path.Join("access-grants", serviceName, organizationName, id)
+
+	accessGrant := &AccessGrant{}
+
+	err := db.get(ctx, key, accessGrant)
+	if err != nil {
+		return nil, err
+	}
+
+	if accessGrant.Revoked() {
+		return nil, ErrAccessGrantAlreadyRevoked
+	}
+
+	accessGrant.RevokedAt = db.clock.Now()
+
+	err = db.put(ctx, key, accessGrant)
+	if err != nil {
+		return nil, err
 	}
 
 	return accessGrant, nil

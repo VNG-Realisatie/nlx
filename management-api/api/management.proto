@@ -83,6 +83,9 @@ service Management {
     option (google.api.http) = { get: "/api/v1/access-grants/services/{serviceName}"};
   }
 
+  rpc RevokeAccessGrant(RevokeAccessGrantRequest) returns (AccessGrant) {
+    option (google.api.http) = { post: "/api/v1/access-grants/service/{serviceName}/organizations/{organizationName}/{accessGrantID}/revoke"};
+  }
 }
 
 message Service {
@@ -232,14 +235,20 @@ message ListAccessGrantsForServiceResponse {
   repeated AccessGrant accessGrants = 1;
 }
 
+message RevokeAccessGrantRequest {
+  string organizationName = 1;
+  string serviceName = 2;
+  string accessGrantID = 3;
+}
+
 message AccessGrant {
   string id = 1;
   string organizationName = 2;
   string serviceName = 3;
   string publicKeyFingerprint = 4;
   google.protobuf.Timestamp createdAt = 5;
+  google.protobuf.Timestamp revokedAt = 6;
 }
-
 
 
 service Directory {

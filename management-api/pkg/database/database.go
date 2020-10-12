@@ -42,6 +42,7 @@ type ConfigDatabase interface {
 	UpdateIncomingAccessRequestState(ctx context.Context, accessRequest *IncomingAccessRequest, state AccessRequestState) error
 
 	CreateAccessGrant(ctx context.Context, accessRequest *IncomingAccessRequest) (*AccessGrant, error)
+	RevokeAccessGrant(ctx context.Context, serviceName, organizationName, id string) (*AccessGrant, error)
 	ListAccessGrantsForService(ctx context.Context, serviceName string) ([]*AccessGrant, error)
 
 	GetSettings(ctx context.Context) (*Settings, error)

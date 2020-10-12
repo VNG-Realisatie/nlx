@@ -436,6 +436,26 @@ func (mr *MockManagementClientMockRecorder) ListAccessGrantsForService(ctx, in i
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAccessGrantsForService", reflect.TypeOf((*MockManagementClient)(nil).ListAccessGrantsForService), varargs...)
 }
 
+// RevokeAccessGrant mocks base method
+func (m *MockManagementClient) RevokeAccessGrant(ctx context.Context, in *api.RevokeAccessGrantRequest, opts ...grpc.CallOption) (*api.AccessGrant, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "RevokeAccessGrant", varargs...)
+	ret0, _ := ret[0].(*api.AccessGrant)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RevokeAccessGrant indicates an expected call of RevokeAccessGrant
+func (mr *MockManagementClientMockRecorder) RevokeAccessGrant(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RevokeAccessGrant", reflect.TypeOf((*MockManagementClient)(nil).RevokeAccessGrant), varargs...)
+}
+
 // MockManagementServer is a mock of ManagementServer interface
 type MockManagementServer struct {
 	ctrl     *gomock.Controller
@@ -757,6 +777,21 @@ func (m *MockManagementServer) ListAccessGrantsForService(arg0 context.Context, 
 func (mr *MockManagementServerMockRecorder) ListAccessGrantsForService(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAccessGrantsForService", reflect.TypeOf((*MockManagementServer)(nil).ListAccessGrantsForService), arg0, arg1)
+}
+
+// RevokeAccessGrant mocks base method
+func (m *MockManagementServer) RevokeAccessGrant(arg0 context.Context, arg1 *api.RevokeAccessGrantRequest) (*api.AccessGrant, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RevokeAccessGrant", arg0, arg1)
+	ret0, _ := ret[0].(*api.AccessGrant)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RevokeAccessGrant indicates an expected call of RevokeAccessGrant
+func (mr *MockManagementServerMockRecorder) RevokeAccessGrant(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RevokeAccessGrant", reflect.TypeOf((*MockManagementServer)(nil).RevokeAccessGrant), arg0, arg1)
 }
 
 // MockDirectoryClient is a mock of DirectoryClient interface

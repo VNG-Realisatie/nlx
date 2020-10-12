@@ -470,6 +470,21 @@ func (mr *MockConfigDatabaseMockRecorder) CreateAccessGrant(ctx, accessRequest i
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccessGrant", reflect.TypeOf((*MockConfigDatabase)(nil).CreateAccessGrant), ctx, accessRequest)
 }
 
+// RevokeAccessGrant mocks base method
+func (m *MockConfigDatabase) RevokeAccessGrant(ctx context.Context, serviceName, organizationName, id string) (*database.AccessGrant, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RevokeAccessGrant", ctx, serviceName, organizationName, id)
+	ret0, _ := ret[0].(*database.AccessGrant)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RevokeAccessGrant indicates an expected call of RevokeAccessGrant
+func (mr *MockConfigDatabaseMockRecorder) RevokeAccessGrant(ctx, serviceName, organizationName, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RevokeAccessGrant", reflect.TypeOf((*MockConfigDatabase)(nil).RevokeAccessGrant), ctx, serviceName, organizationName, id)
+}
+
 // ListAccessGrantsForService mocks base method
 func (m *MockConfigDatabase) ListAccessGrantsForService(ctx context.Context, serviceName string) ([]*database.AccessGrant, error) {
 	m.ctrl.T.Helper()
