@@ -6,7 +6,7 @@ title: Enable transaction logs
 ## Before you start
 
 - Make sure you read our [try NLX](../try-nlx/setup-your-environment.md) guide.
-- Make sure you have installed a recent version of [Docker-Compose](https://docs.docker.com/compose/install/).
+- Make sure you have installed a recent version of [Docker Compose](https://docs.docker.com/compose/install/).
 - Make sure you have installed a recent version of [Git](https://git-scm.com/downloads).
 
 ## Introduction
