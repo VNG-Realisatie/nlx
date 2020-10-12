@@ -5,14 +5,18 @@ package server_test
 
 import (
 	context "context"
+	"errors"
 	"strconv"
 	"testing"
 	"time"
 
+	"github.com/fgrosse/zaptest"
 	"github.com/gogo/protobuf/types"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 	"go.nlx.io/nlx/management-api/api"
@@ -22,6 +26,24 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/environment"
 	"go.nlx.io/nlx/management-api/pkg/server"
 )
+
+func newDirectoryService(t *testing.T) (s *server.DirectoryService, m *mock_directory.MockClient, db *mock_database.MockConfigDatabase) {
+	logger := zaptest.Logger(t)
+
+	ctrl := gomock.NewController(t)
+
+	t.Cleanup(func() {
+		ctrl.Finish()
+	})
+
+	db = mock_database.NewMockConfigDatabase(ctrl)
+
+	m = mock_directory.NewMockClient(ctrl)
+
+	s = server.NewDirectoryService(logger, &environment.Environment{}, m, db)
+
+	return
+}
 
 var directoryServiceStateTests = []struct {
 	ExpectedState api.DirectoryService_State
@@ -198,4 +220,124 @@ func TestListDirectoryServices(t *testing.T) {
 func timestampProto(t time.Time) *types.Timestamp {
 	tp, _ := types.TimestampProto(t)
 	return tp
+}
+
+//nolint:funlen // this is a test method
+func TestGetOrganizationService(t *testing.T) {
+	ctx := context.Background()
+
+	tests := []struct {
+		name            string
+		req             *api.GetOrganizationServiceRequest
+		db              func(db *mock_database.MockConfigDatabase)
+		directoryClient func(directoryClient *mock_directory.MockClient)
+		expectedReq     *api.DirectoryService
+		expectedErr     error
+	}{
+		{
+			"happy_flow",
+			&api.GetOrganizationServiceRequest{
+				OrganizationName: "test-organization",
+				ServiceName:      "test-service",
+			},
+			func(db *mock_database.MockConfigDatabase) {
+				db.EXPECT().GetLatestOutgoingAccessRequest(gomock.Any(), "test-organization", "test-service").Return(&database.OutgoingAccessRequest{
+					AccessRequest: database.AccessRequest{
+						ID:               "161c188cfcea1939",
+						ServiceName:      "test-service",
+						OrganizationName: "test-organization",
+						State:            database.AccessRequestCreated,
+						CreatedAt:        time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
+						UpdatedAt:        time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
+					},
+				}, nil)
+			},
+			func(directoryClient *mock_directory.MockClient) {
+				directoryClient.EXPECT().ListServices(gomock.Any(), gomock.Any()).Return(&inspectionapi.ListServicesResponse{
+					Services: []*inspectionapi.ListServicesResponse_Service{{
+						ServiceName:      "test-service",
+						OrganizationName: "test-organization",
+					}}}, nil)
+			},
+			&api.DirectoryService{
+				OrganizationName: "test-organization",
+				ServiceName:      "test-service",
+				LatestAccessRequest: &api.OutgoingAccessRequest{
+					Id:               "161c188cfcea1939",
+					OrganizationName: "test-organization",
+					ServiceName:      "test-service",
+					State:            api.AccessRequestState_CREATED,
+					CreatedAt:        timestampProto(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
+					UpdatedAt:        timestampProto(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
+				},
+			},
+			nil,
+		},
+		{
+			"happy_flow_without_latest_access_request",
+			&api.GetOrganizationServiceRequest{
+				OrganizationName: "test-organization",
+				ServiceName:      "test-service",
+			},
+			func(db *mock_database.MockConfigDatabase) {
+				db.EXPECT().GetLatestOutgoingAccessRequest(gomock.Any(), "test-organization", "test-service").Return(nil, database.ErrNotFound)
+			},
+			func(directoryClient *mock_directory.MockClient) {
+				directoryClient.EXPECT().ListServices(gomock.Any(), gomock.Any()).Return(&inspectionapi.ListServicesResponse{
+					Services: []*inspectionapi.ListServicesResponse_Service{{
+						ServiceName:      "test-service",
+						OrganizationName: "test-organization",
+					}}}, nil)
+			},
+			&api.DirectoryService{
+				OrganizationName: "test-organization",
+				ServiceName:      "test-service",
+			},
+			nil,
+		},
+		{
+			"directory_call_fails",
+			&api.GetOrganizationServiceRequest{
+				OrganizationName: "test-organization",
+				ServiceName:      "test-service",
+			},
+			func(db *mock_database.MockConfigDatabase) {
+
+			},
+			func(directoryClient *mock_directory.MockClient) {
+				directoryClient.EXPECT().ListServices(gomock.Any(), gomock.Any()).Return(nil, errors.New("arbitrary error"))
+			},
+			nil,
+			status.Error(codes.Internal, "directory not available"),
+		},
+		{
+			"database_call_fail",
+			&api.GetOrganizationServiceRequest{
+				OrganizationName: "test-organization",
+				ServiceName:      "test-service",
+			},
+			func(db *mock_database.MockConfigDatabase) {
+				db.EXPECT().GetLatestOutgoingAccessRequest(gomock.Any(), "test-organization", "test-service").Return(nil, errors.New("arbitrary error"))
+			},
+
+			func(directoryClient *mock_directory.MockClient) {
+				directoryClient.EXPECT().ListServices(gomock.Any(), gomock.Any()).Return(&inspectionapi.ListServicesResponse{
+					Services: []*inspectionapi.ListServicesResponse_Service{{
+						ServiceName:      "test-service",
+						OrganizationName: "test-organization",
+					}}}, nil)
+			},
+			nil,
+			status.Error(codes.Internal, "database error"),
+		},
+	}
+	for _, tt := range tests {
+		service, mockDirectoryClient, db := newDirectoryService(t)
+		tt.db(db)
+		tt.directoryClient(mockDirectoryClient)
+
+		returnedService, err := service.GetOrganizationService(ctx, tt.req)
+		assert.Equal(t, tt.expectedReq, returnedService)
+		assert.Equal(t, tt.expectedErr, err)
+	}
 }

@@ -91,8 +91,10 @@ func (s DirectoryService) GetOrganizationService(ctx context.Context, request *a
 
 	latestAccessRequest, err := s.configDatabase.GetLatestOutgoingAccessRequest(ctx, request.OrganizationName, request.ServiceName)
 	if err != nil {
-		s.logger.Error("error getting access requests", zap.Error(err))
-		return nil, status.Errorf(codes.Internal, "database error")
+		if !errIsNotFound(err) {
+			s.logger.Error("error getting access requests", zap.Error(err))
+			return nil, status.Errorf(codes.Internal, "database error")
+		}
 	}
 
 	if latestAccessRequest != nil {
