@@ -26,6 +26,8 @@ import (
 	external_api "go.nlx.io/nlx/management-api/api/external"
 )
 
+const configRetrievalInterval = 10 * time.Second
+
 var errManagementAPIUnavailable = fmt.Errorf("managementAPI unavailable")
 
 // SetupManagementAPI configures the inway to use the NLX Management API instead of the config toml
@@ -76,8 +78,6 @@ func (i *Inway) StartConfigurationPolling() error {
 	if err != nil {
 		return err
 	}
-
-	configRetrievalInterval := 1 * time.Minute
 
 	go func() {
 		expBackOff := &backoff.Backoff{
