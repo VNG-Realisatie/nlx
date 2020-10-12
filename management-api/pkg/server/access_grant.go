@@ -16,6 +16,17 @@ import (
 )
 
 func (s *ManagementService) ListAccessGrantsForService(ctx context.Context, req *api.ListAccessGrantsForServiceRequest) (*api.ListAccessGrantsForServiceResponse, error) {
+	_, err := s.configDatabase.GetService(ctx, req.ServiceName)
+	if err != nil {
+		if errIsNotFound(err) {
+			return nil, status.Error(codes.NotFound, "service not found")
+		}
+
+		s.logger.Error("error fetching service", zap.String("name", req.ServiceName), zap.Error(err))
+
+		return nil, status.Error(codes.Internal, "database error")
+	}
+
 	accessRequests, err := s.configDatabase.ListAccessGrantsForService(ctx, req.ServiceName)
 	if err != nil {
 		s.logger.Error("fetching access grants", zap.String("service name", req.ServiceName), zap.Error(err))

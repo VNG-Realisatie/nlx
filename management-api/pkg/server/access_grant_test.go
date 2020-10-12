@@ -16,8 +16,10 @@ import (
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
+	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
 )
 
+//nolint:funlen // this is a test method
 func TestListAccessGrantsForService(t *testing.T) {
 	createTimestamp := func(ti time.Time) *types.Timestamp {
 		return &types.Timestamp{
@@ -29,8 +31,7 @@ func TestListAccessGrantsForService(t *testing.T) {
 	tests := []struct {
 		name             string
 		req              *api.ListAccessGrantsForServiceRequest
-		returnReq        []*database.AccessGrant
-		returnErr        error
+		db               func(ctx context.Context, db *mock_database.MockConfigDatabase)
 		expectedResponse *api.ListAccessGrantsForServiceResponse
 		expectedErr      error
 	}{
@@ -39,16 +40,21 @@ func TestListAccessGrantsForService(t *testing.T) {
 			&api.ListAccessGrantsForServiceRequest{
 				ServiceName: "test-service",
 			},
-			[]*database.AccessGrant{
-				{
-					ID:                   "12345abcde",
-					OrganizationName:     "test-organization",
-					ServiceName:          "test-service",
-					PublicKeyFingerprint: "test-finger-print",
-					CreatedAt:            time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
-				},
+			func(ctx context.Context, db *mock_database.MockConfigDatabase) {
+				db.EXPECT().GetService(ctx, "test-service").Return(&database.Service{
+					Name: "test-service",
+				}, nil)
+
+				db.EXPECT().ListAccessGrantsForService(ctx, "test-service").Return([]*database.AccessGrant{
+					{
+						ID:                   "12345abcde",
+						OrganizationName:     "test-organization",
+						ServiceName:          "test-service",
+						PublicKeyFingerprint: "test-finger-print",
+						CreatedAt:            time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
+					},
+				}, nil)
 			},
-			nil,
 			&api.ListAccessGrantsForServiceResponse{
 				AccessGrants: []*api.AccessGrant{
 					{
@@ -64,30 +70,62 @@ func TestListAccessGrantsForService(t *testing.T) {
 			nil,
 		},
 		{
+			"service_not_found",
+			&api.ListAccessGrantsForServiceRequest{
+				ServiceName: "test-service",
+			},
+			func(ctx context.Context, db *mock_database.MockConfigDatabase) {
+				db.EXPECT().GetService(ctx, "test-service").Return(nil, database.ErrNotFound)
+			},
+			nil,
+			status.Error(codes.NotFound, "service not found"),
+		},
+		{
 			"convert_access_grant_error",
 			&api.ListAccessGrantsForServiceRequest{
 				ServiceName: "test-service",
 			},
-			[]*database.AccessGrant{
-				{
-					ID:                   "12345abcde",
-					OrganizationName:     "test-organization",
-					ServiceName:          "test-service",
-					PublicKeyFingerprint: "test-finger-print",
-					CreatedAt:            time.Date(0, time.January, 0, 0, 0, 0, 0, time.UTC),
-				},
+			func(ctx context.Context, db *mock_database.MockConfigDatabase) {
+				db.EXPECT().GetService(ctx, "test-service").Return(&database.Service{
+					Name: "test-service",
+				}, nil)
+
+				db.EXPECT().ListAccessGrantsForService(ctx, "test-service").Return([]*database.AccessGrant{
+					{
+						ID:                   "12345abcde",
+						OrganizationName:     "test-organization",
+						ServiceName:          "test-service",
+						PublicKeyFingerprint: "test-finger-print",
+						CreatedAt:            time.Date(0, time.January, 0, 0, 0, 0, 0, time.UTC),
+					},
+				}, nil)
 			},
-			nil,
 			nil,
 			status.Error(codes.Internal, "error converting access grant"),
 		},
 		{
-			"database_error",
+			"list_grants_database_error",
 			&api.ListAccessGrantsForServiceRequest{
 				ServiceName: "test-service",
 			},
+			func(ctx context.Context, db *mock_database.MockConfigDatabase) {
+				db.EXPECT().GetService(ctx, "test-service").Return(&database.Service{
+					Name: "test-service",
+				}, nil)
+
+				db.EXPECT().ListAccessGrantsForService(ctx, "test-service").Return(nil, errors.New("arbitrary error"))
+			},
 			nil,
-			errors.New("arbitrary error"),
+			status.Error(codes.Internal, "database error"),
+		},
+		{
+			"get_service_database_error",
+			&api.ListAccessGrantsForServiceRequest{
+				ServiceName: "test-service",
+			},
+			func(ctx context.Context, db *mock_database.MockConfigDatabase) {
+				db.EXPECT().GetService(ctx, "test-service").Return(nil, errors.New("arbitrary error"))
+			},
 			nil,
 			status.Error(codes.Internal, "database error"),
 		},
@@ -97,13 +135,11 @@ func TestListAccessGrantsForService(t *testing.T) {
 		tt := tt
 
 		t.Run(tt.name, func(t *testing.T) {
-			service, ctrl, db := newService(t)
-			defer ctrl.Finish()
+			service, db := newService(t)
 
 			ctx := context.Background()
+			tt.db(ctx, db)
 
-			db.EXPECT().ListAccessGrantsForService(ctx, tt.req.ServiceName).
-				Return(tt.returnReq, tt.returnErr)
 			actual, err := service.ListAccessGrantsForService(ctx, tt.req)
 
 			assert.Equal(t, tt.expectedResponse, actual)
