@@ -63,7 +63,7 @@ class ServiceModel {
   })
 
   fetchIncomingAccessRequests = flow(function* fetchIncomingAccessRequests() {
-    const accessRequests = yield this.store.accessRequestRepository.getIncomingAccessRequests(
+    const accessRequests = yield this.store.accessRequestRepository.listIncomingAccessRequests(
       this.name,
     )
 

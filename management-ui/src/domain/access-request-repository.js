@@ -4,10 +4,13 @@
 import { throwOnError } from './fetch-utils'
 
 class AccessRequestRepository {
-  static async requestAccess(payload) {
+  static async createAccessRequest({ organizationName, serviceName }) {
     const response = await fetch(`/api/v1/access-requests`, {
       method: 'POST',
-      body: JSON.stringify(payload),
+      body: JSON.stringify({
+        organizationName: organizationName,
+        serviceName: serviceName,
+      }),
     })
 
     throwOnError(response, {
@@ -17,7 +20,7 @@ class AccessRequestRepository {
     return await response.json()
   }
 
-  static async getIncomingAccessRequests(serviceName) {
+  static async listIncomingAccessRequests(serviceName) {
     const response = await fetch(
       `/api/v1/access-requests/incoming/services/${serviceName}`,
     )
@@ -30,7 +33,7 @@ class AccessRequestRepository {
     return result.accessRequests || []
   }
 
-  static async approveAccessRequest({ serviceName, id }) {
+  static async approveIncomingAccessRequest({ serviceName, id }) {
     const response = await fetch(
       `/api/v1/access-requests/incoming/services/${serviceName}/${id}/approve`,
       { method: 'POST' },
@@ -41,7 +44,7 @@ class AccessRequestRepository {
       409: 'Request already approved, please refresh the page to see the latest state.',
     })
 
-    return await response.json()
+    return null
   }
 
   static async sendAccessRequest({ organizationName, serviceName, id }) {

@@ -29,7 +29,7 @@ beforeEach(() => {
   }
 
   accessRequestRepository = {
-    requestAccess: jest.fn(),
+    createAccessRequest: jest.fn(),
   }
 })
 
@@ -60,7 +60,7 @@ test('createAccessRequestInstance creates an instance', () => {
 test('sending a request', async () => {
   const request = deferredPromise()
   accessRequestRepository = {
-    requestAccess: jest.fn(() => request),
+    createAccessRequest: jest.fn(() => request),
   }
 
   const accessRequest = new OutgoingAccessRequestModel({
@@ -73,7 +73,7 @@ test('sending a request', async () => {
   accessRequest.send()
 
   expect(accessRequest.state).toBe('CREATED')
-  expect(accessRequestRepository.requestAccess).toHaveBeenCalled()
+  expect(accessRequestRepository.createAccessRequest).toHaveBeenCalled()
 
   await request.resolve(accessRequestJson)
 

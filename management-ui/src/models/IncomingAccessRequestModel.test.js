@@ -28,7 +28,7 @@ beforeEach(() => {
   }
 
   accessRequestRepository = {
-    approveAccessRequest: jest.fn(),
+    approveIncomingAccessRequest: jest.fn(),
   }
 })
 
@@ -63,7 +63,7 @@ test('model implements proptypes', () => {
 test('approving request handles as expected', async () => {
   const request = deferredPromise()
   accessRequestRepository = {
-    approveAccessRequest: jest.fn(() => request),
+    approveIncomingAccessRequest: jest.fn(() => request),
   }
 
   const accessRequest = new IncomingAccessRequestModel({
@@ -80,7 +80,7 @@ test('approving request handles as expected', async () => {
 
 test('on error it will reset state to RECEIVED', async () => {
   accessRequestRepository = {
-    approveAccessRequest: jest
+    approveIncomingAccessRequest: jest
       .fn()
       .mockRejectedValue(new Error('arbitrary error')),
   }

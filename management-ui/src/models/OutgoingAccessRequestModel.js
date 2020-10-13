@@ -96,7 +96,7 @@ class OutgoingAccessRequestModel {
 
       this.update({ state: ACCESS_REQUEST_STATES.CREATED })
 
-      const result = yield this.accessRequestRepository.requestAccess({
+      const result = yield this.accessRequestRepository.createAccessRequest({
         organizationName: this.organizationName,
         serviceName: this.serviceName,
       })

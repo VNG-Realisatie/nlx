@@ -82,7 +82,7 @@ class IncomingAccessRequestModel {
       this.error = ''
 
       const { serviceName, id } = this
-      yield this.accessRequestRepository.approveAccessRequest({
+      yield this.accessRequestRepository.approveIncomingAccessRequest({
         serviceName,
         id,
       })
