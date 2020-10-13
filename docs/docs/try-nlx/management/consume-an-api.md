@@ -6,12 +6,12 @@ title: Consume an API
 ## Introduction
 
 To use an API that is provided via NLX, you need to route traffic through an **outway** onto the network.
-We will use the certificate which we've setup in [part 2](./retrieve-a-demo-certificate.md), to make sure traffic is encrypted between your and other nodes.
+We will use the certificate which we've setup in [Retrieve a demo certificate ](../retrieve-a-demo-certificate.md), to make sure traffic is encrypted between your and other nodes.
 
 
 ### Verification
 
-Assuming you followed [part 3](./getting-up-and-running.md) the outway should be already running.
+Assuming you followed [Getting up and running](./getting-up-and-running.md) the outway should already be running.
 You can confirm that by checking the outway logs:
 
 ```
@@ -35,7 +35,7 @@ curl http://localhost/BRP/basisregistratie/natuurlijke_personen/da02ca58-4412-11
 ```
 
 You can also run the outway as a HTTP proxy. This allows applications to call services on NLX by using `http://service-name.organization-name.services.nlx.local`.
-For more information read [the reference information](../reference-information/proxy.md)
+For more information read [the reference information](../../reference-information/proxy.md)
 
 The response of the `curl` command should look similar to the following output.
 

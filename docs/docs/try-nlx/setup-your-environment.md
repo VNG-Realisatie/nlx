@@ -26,6 +26,11 @@ You can download Docker for Windows [here](https://hub.docker.com?overlay=onboar
 Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
 ```
 
+## Docker-compose (required for NLX Management only)
+
+For setting up the testing environment locally we'll use docker-compose.
+You can install docker-compose by following the [installation steps](https://docs.docker.com/compose/install/#install-compose) on the docker website.
+
 ### OpenSSL
 
 You will need `OpenSSL` to create the TLS certificates you will need to run NLX. We advise you to install [Chocolatey](https://chocolatey.org/install), a package manager for Windows which will install `OpenSSL` for you. 

@@ -6,12 +6,12 @@ title: Provide an API
 ## Introduction
 
 To provide an API to the NLX network, you need to route traffic through an **inway** service.
-To make sure traffic is encrypted between your and other nodes, we will use the certificate which we've setup in [part 2](./retrieve-a-demo-certificate.md).
+To make sure traffic is encrypted between your and other nodes, we will use the certificate which we've setup in [Retrieve a demo certificate ](../retrieve-a-demo-certificate.md).
 
 Please note that:
 
 * You need a domain name to provide an inway (an IP address will not work).
-* The domain should be the same as the domain you used to generate the certificates (that was in [part 2](./retrieve-a-demo-certificate.md)).
+* The domain should be the same as the domain you used to generate the certificates (that was in [Retrieve a demo certificate](../retrieve-a-demo-certificate.md)).
 
 It is not recommended to follow this guide when you're working from your home network.
 Preferably, you are able to start the inway service on a machine which is publicly available. Make sure and the port of the inway (we recommend using port 443) is open to the public.
@@ -19,7 +19,7 @@ Preferably, you are able to start the inway service on a machine which is public
 
 ## Verification
 
-Assuming you followed [part 3](./getting-up-and-running.md) the inway and management-api should be already running.
+Assuming you followed [Getting up and running](./getting-up-and-running.md) the inway and management-api should be already running.
 You can confirm that by first checking the Management API logs:
 
 ```
@@ -39,8 +39,11 @@ In the following example we will use [Swagger Petstore](https://petstore.swagger
 
 To provide our API in the NLX network we have to create a service in the Management UI.
 You can do that by going to the services page where you click on the "Add service" button.
-Note that for demo purposes you can omit most fields and only fill in the "Servicename" and "API Endpoint URL" field.
-Next to that you also have to select the inway to be used by this service.
+Note that for demo purposes you can omit most fields only fill in the "Servicename" and "API Endpoint URL" field.
+For the "ServiceName" use `SwaggerPetStore` and for the "API Endpoint URL" use `https://petstore.swagger.io/v2`
+
+
+Next to that you also have to select the inway `Demo Inway` to be used by this service.
 
 ![Add service screen](/img/nlx-management-add-service-screen.png "Add service screen")
 
@@ -64,6 +67,23 @@ curl http://localhost/my-organization/SwaggerPetstore/v2/pet/20002085
 
 The response of the `curl` command should look similar to the following output.
 
+```
+nlx-inway: permission denied, organization "Your organization name" or public key "Your public key fingerprint" is not allowed access.
+```
+
+We are denied access because we first need to request access before we can use the service. This is one of the key features of NLX Management 
+
+To request access, navigate to the "Directory" in NLX Management, select the service `SwaggerPetstore` from the list and click on "Toegang aanvragen". Now navigate to the "Services" page and again select the service `SwaggerPetstore`. You should see one access request under the section "Toegansverzoeken". Expand the section and click on "Accepteren" to accept the access request. You now have an access grant for the service.
+
+Try fetching the data again
+
+
+```bash
+curl http://localhost/my-organization/SwaggerPetstore/v2/pet/20002085
+```
+
+The response of the `curl` command should look similar to the following output.
+
 ```json
 {
   "args": {},
@@ -80,6 +100,7 @@ The response of the `curl` command should look similar to the following output.
   "url": "https://petstore.swagger.io/v2/pet/20002085"
 }
 ```
+
 
 Congratulations, you can now consider yourself a member of the NLX club!
 

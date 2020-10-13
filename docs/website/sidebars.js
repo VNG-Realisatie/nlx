@@ -6,47 +6,49 @@
  */
 
 module.exports = {
-    docs: {
-        "Understanding the basics": [
-            "understanding-the-basics/introduction",
-            "understanding-the-basics/security",
-            "understanding-the-basics/product-vision",
+  docs: {
+    "Understanding the basics": [
+      "understanding-the-basics/introduction",
+      "understanding-the-basics/security",
+      "understanding-the-basics/product-vision",
+    ],
+    "Try NLX": [
+      "try-nlx/introduction",
+      "try-nlx/setup-your-environment",
+      "try-nlx/retrieve-a-demo-certificate",
+      {
+        "With NLX Management": [
+          "try-nlx/management/introduction",
+          "try-nlx/management/getting-up-and-running",
+          "try-nlx/management/consume-an-api",
+          "try-nlx/management/provide-an-api",
         ],
-        "Try NLX": [
-            "try-nlx/setup-your-environment",
-            "try-nlx/retrieve-a-demo-certificate",
-            "try-nlx/consume-an-api",
-            "try-nlx/provide-an-api",
+      },
+      {
+        "With config file (deprecated)": [
+          "try-nlx/config-file/consume-an-api",
+          "try-nlx/config-file/provide-an-api",
         ],
-        "Try NLX Management": [
-            "try-nlx-management/introduction",
-            "try-nlx-management/setup-your-environment",
-            "try-nlx-management/retrieve-a-demo-certificate",
-            "try-nlx-management/getting-up-and-running",
-            "try-nlx-management/consume-an-api",
-            "try-nlx-management/provide-an-api"
-        ],
-        "Use NLX": [
-            "use-nlx/request-a-production-cert",
-            "use-nlx/enable-transaction-logs",
-            "use-nlx/setup-authorization",
-            "use-nlx/new-releases",
-        ],
-        "Reference information": [
-            "reference-information/service-configuration",
-            "reference-information/transaction-log-headers",
-            "reference-information/monitoring",
-            "reference-information/outway-as-proxy"
-        ],
-        "Support": [
-            "support/contact",
-            "support/common-errors",
-        ],
-        "Compliancy": [
-            "compliancy/eif",
-            "compliancy/eidas",
-            "compliancy/accessibility",
-            "compliancy/gdpr",
-        ],
-    },
-}
+      },
+    ],
+    "Use NLX": [
+      "use-nlx/request-a-production-cert",
+      "use-nlx/enable-transaction-logs",
+      "use-nlx/setup-authorization",
+      "use-nlx/new-releases",
+    ],
+    "Reference information": [
+      "reference-information/service-configuration",
+      "reference-information/transaction-log-headers",
+      "reference-information/monitoring",
+      "reference-information/outway-as-proxy",
+    ],
+    Support: ["support/contact", "support/common-errors"],
+    Compliancy: [
+      "compliancy/eif",
+      "compliancy/eidas",
+      "compliancy/accessibility",
+      "compliancy/gdpr",
+    ],
+  },
+};
