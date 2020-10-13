@@ -7,11 +7,11 @@ import { Table } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 
 import { incomingAccessRequestPropTypes } from '../../../../../../models/IncomingAccessRequestModel'
-import LinkButton from '../../../../../../components/LinkButton'
+import ButtonWithIcon from '../../../../../../components/ButtonWithIcon'
 import { IconCheck } from '../../../../../../icons'
 import { TdActions } from './index.styles'
 
-const IncomingAccessRequest = ({ accessRequest, approveHandler }) => {
+const IncomingAccessRequestRow = ({ accessRequest, approveHandler }) => {
   const { t } = useTranslation()
   const { id, organizationName, serviceName } = accessRequest
 
@@ -40,18 +40,22 @@ const IncomingAccessRequest = ({ accessRequest, approveHandler }) => {
     <Table.Tr data-testid={`service-incoming-accessrequest-${id}`}>
       <Table.Td>{organizationName}</Table.Td>
       <TdActions>
-        <LinkButton onClick={handleApproveButtonClick}>
+        <ButtonWithIcon
+          size="small"
+          variant="link"
+          onClick={handleApproveButtonClick}
+        >
           <IconCheck />
           {t('Approve')}
-        </LinkButton>
+        </ButtonWithIcon>
       </TdActions>
     </Table.Tr>
   )
 }
 
-IncomingAccessRequest.propTypes = {
+IncomingAccessRequestRow.propTypes = {
   accessRequest: shape(incomingAccessRequestPropTypes).isRequired,
   approveHandler: func.isRequired,
 }
 
-export default IncomingAccessRequest
+export default IncomingAccessRequestRow

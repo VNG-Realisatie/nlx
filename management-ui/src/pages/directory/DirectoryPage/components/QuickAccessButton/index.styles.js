@@ -3,9 +3,9 @@
 //
 import styled from 'styled-components'
 
-import LinkButton from '../../../../../components/LinkButton'
+import ButtonWithIcon from '../../../../../components/ButtonWithIcon'
 
-export const AccessButton = styled(LinkButton)`
+export const StyledButtonWithIcon = styled(ButtonWithIcon)`
   float: right;
   visibility: hidden;
 
