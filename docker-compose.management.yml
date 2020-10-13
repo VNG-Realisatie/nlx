@@ -21,8 +21,7 @@ x-certs: &certs
 
 services:
   ui:
-    #image: registry.gitlab.com/commonground/nlx/nlx/nlxio/management-ui:v0.89.2
-    build: ./management-ui
+    image: nlxio/management-ui:latest
     ports:
       - 8080:8080
     restart: always
