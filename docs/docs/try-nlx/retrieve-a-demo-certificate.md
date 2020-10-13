@@ -115,3 +115,5 @@ All required certificates are available now. So far, we have:
 - generated our own certificate, so we are allowed to communicate with the API's on the NLX network.
 
 Now let's see if we can consume an API from the NLX network.
+
+You can continue this guide for [NLX Management (recommended)](./management/introduction.md) or [using a config.toml file](./config-file/provide-an-api.mdx)

@@ -14,19 +14,22 @@ Please note that:
 * The domain should be the same as the domain you used to generate the certificates (that was in [Retrieve a demo certificate](../retrieve-a-demo-certificate.md)).
 
 It is not recommended to follow this guide when you're working from your home network.
-Preferably, you are able to start the inway service on a machine which is publicly available. Make sure and the port of the inway (we recommend using port 443) is open to the public.
+
+Preferably, you are able to start the inway service on a machine which is publicly available. 
+Make sure the port of the inway (we recommend using port `443`) is open to the public.
 
 
 ## Verification
 
-Assuming you followed [Getting up and running](./getting-up-and-running.md) the inway and management-api should be already running.
-You can confirm that by first checking the Management API logs:
+Assuming you followed [Getting up and running](./getting-up-and-running.md) the inway and Management API should be already running.
+
+You can confirm that by inspecting the Management API logs:
 
 ```
 docker-compose -f docker-compose.management.yml logs -f api
 ```
 
-Then checking the inway logs:
+Next, let's take a look at the logs of our inway:
 
 ```
 docker-compose -f docker-compose.management.yml logs -f inway
@@ -38,21 +41,21 @@ docker-compose -f docker-compose.management.yml logs -f inway
 In the following example we will use [Swagger Petstore](https://petstore.swagger.io) as an example API.
 
 To provide our API in the NLX network we have to create a service in the Management UI.
-You can do that by going to the services page where you click on the "Add service" button.
-Note that for demo purposes you can omit most fields only fill in the "Servicename" and "API Endpoint URL" field.
-For the "ServiceName" use `SwaggerPetStore` and for the "API Endpoint URL" use `https://petstore.swagger.io/v2`
+You can do that by going to the services page where you click on the 'Add service' button.
 
+Note that for demo purposes you can omit most fields only fill in the 'Servicename' and 'API Endpoint URL' field.
+For the 'ServiceName' use `SwaggerPetStore` and for the 'API Endpoint URL' use `https://petstore.swagger.io/v2`
 
 Next to that you also have to select the inway `Demo Inway` to be used by this service.
 
 ![Add service screen](/img/nlx-management-add-service-screen.png "Add service screen")
 
-Whenever you're ready click on "Add service" to save the details and register the service in the demo directory.
+Whenever you're ready, click 'Add service' to save the details and register the service in the demo directory.
 
-> If you're specifying you own API, please note that `localhost` won't work. If your API is running on the same machine as
+> If you're specifying you own API, please note that `localhost` will not work. If your API is running on the same machine as
 your inway, the endpoint URL should be your network IP and not `localhost`.
 
-After adding the service you should see the service in the services page and in the directory.
+After adding the service, you should see the service in the services page and in the directory.
 
 > The directory will remove stale services automatically. A service will be marked stale when it is not announced for more than 24 hours.
 
@@ -71,12 +74,18 @@ The response of the `curl` command should look similar to the following output.
 nlx-inway: permission denied, organization "Your organization name" or public key "Your public key fingerprint" is not allowed access.
 ```
 
-We are denied access because we first need to request access before we can use the service. This is one of the key features of NLX Management 
+We are denied access because we first need to request access. This is one of the key features of NLX Management!
 
-To request access, navigate to the "Directory" in NLX Management, select the service `SwaggerPetstore` from the list and click on "Toegang aanvragen". Now navigate to the "Services" page and again select the service `SwaggerPetstore`. You should see one access request under the section "Toegansverzoeken". Expand the section and click on "Accepteren" to accept the access request. You now have an access grant for the service.
+In order to request access, follow these steps:
 
-Try fetching the data again
+1. Navigate to the 'Directory' in NLX Management. 
+1. Select the service `SwaggerPetstore` from the list and click on 'Toegang aanvragen'.
+1. Now navigate to the 'Services' page and again select the service `SwaggerPetstore`.
+1. You should see one access request under the section 'Toegansverzoeken'. 
+1. Expand the section and click on 'Accepteren' to accept the access request. 
+1. You now have an access grant for the service.
 
+Let's try to fetch the data again.
 
 ```bash
 curl http://localhost/my-organization/SwaggerPetstore/v2/pet/20002085

@@ -6,23 +6,23 @@ title: Getting up and running
 
 ## Start NLX using docker-compose
 
-Now that we prepared all the requirements to run NLX we can start all components with docker-compose.
+Now we have prepared all the requirements to run NLX, we can start all components using Docker Compose.
 
 > Next to the certificates you created in [retrieve a demo certificate](../retrieve-a-demo-certificate.md) you also need certificates from internal PKI to encrypt traffic between NLX components (such as the Management API and the Inway). The demo already has a working PKI so you don't have to set this up yourself.
 
-First, let's clone the NLX project which contains the docker-compose file and it's dependencies:
+First, let's clone the NLX project. It contains the Docker Compose file and its dependencies.
 
 ```bash
 git clone --depth 1 https://gitlab.com/commonground/nlx/nlx.git nlx
 ```
 
-After the repository is cloned move into it:
+After the repository is cloned, move into it:
 
 ```bash
 cd nlx
 ```
 
-And set the hostname of the Inway (where `my-organization.nl:443` should be replaced with your own hostname).
+Set the hostname of the Inway (where `my-organization.nl:443` should be replaced with your own hostname).
 
 ```bash
 echo "INWAY_SELF_ADDRESS=my-organization.nl:443" > .env
@@ -34,11 +34,11 @@ Then, start all components by running:
 docker-compose -f docker-compose.management.yml up
 ```
 
-This will start Dex (Identity Provider), ETCD and the required NLX components
+This will start [Dex](https://github.com/dexidp/dex) (Identity Provider), ETCD and the required NLX components.
 
 The NLX components are configured using environment variables which in this guide are set in  `docker-compose.management.yml`
 
-Below you will find an overview of the environment variables per NLX component:
+Below you is an overview of the environment variables per NLX component:
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
@@ -124,8 +124,10 @@ If after a while one or more components aren't running you can inspect the logs 
 ## Dex <small>(Identity Provider)</small>
 
 The Management UI supports the OpenID Connect protocol for authentication and authorization.
-In the demo we provide Dex which is a configurable Identity Provider.
-On Linux based operating systems this works out-of-the-box but if you're using MacOS or Windows you will need to add the hostname for Dex to the known hosts.
+In the demo we provide Dex, which is a configurable Identity Provider.
+
+On Linux based operating systems this works out-of-the-box.
+If you're using MacOS or Windows you will need to add the hostname for Dex to the known hosts.
 
 <Tabs
   defaultValue="mac_os"
@@ -152,7 +154,7 @@ Add-Content -Path C:\Windows\System32\drivers\etc\hosts -Value "127.0.0.1`tdex.n
 </TabItem>
 </Tabs>
 
-Now let's briefly verify that the local hostname for Dex points to the host:
+Now let's verify that the local hostname for Dex points to the host:
 
 ```bash
 ping dex.nlx.localhost -4 -c 1

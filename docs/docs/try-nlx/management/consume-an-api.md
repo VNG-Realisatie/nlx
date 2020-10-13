@@ -19,7 +19,7 @@ docker-compose -f docker-compose.management.yml logs -f outway
 ```
 
 
-## Querying API's
+## Querying APIs
 
 Now let's try to fetch some data from an API in the NLX network!
 To do so, we have to use the following structure:
@@ -89,10 +89,10 @@ The response of the `curl` command should look similar to the following output.
 }
 ```
 
-Congratulations, you now made your first query on the NLX network!
+Congratulations!, You have made your first query on the NLX network!
 
-API's provided on the NLX network are published in the NLX directory. You can use this directory to see which other API's are available.
-Take a look at the [directory](https://directory.nlx.io).
+APIs provided on the NLX network are published in the NLX directory.
+Take a look at the [directory](https://directory.nlx.io) to see which APIs are available.
 
 ## In sum
 
@@ -101,4 +101,4 @@ In this part, we have:
 - Setup a local NLX outway, which we can use to get data from the network.
 - Made a real request to the VNG Realisatie Demo API.
 
-Now let's see if we can provide our own API's to the network.
+Now let's see if we can provide our own APIs to the network.
