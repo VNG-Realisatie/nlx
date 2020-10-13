@@ -34,6 +34,11 @@ const ServiceDetailView = ({ service, removeHandler }) => {
     }
   }
 
+  const unrevokedAccessGrants = (accessGrants) =>
+    accessGrants
+      ? accessGrants.filter((accessGrant) => accessGrant.revokedAt === null)
+      : []
+
   return (
     <>
       {showServiceVisibilityAlert({ internal, inways }) ? (
@@ -73,7 +78,9 @@ const ServiceDetailView = ({ service, removeHandler }) => {
           accessRequests={service.incomingAccessRequests}
         />
 
-        <AccessGrantSection accessGrants={service.accessGrants} />
+        <AccessGrantSection
+          accessGrants={unrevokedAccessGrants(service.accessGrants)}
+        />
       </SectionGroup>
     </>
   )

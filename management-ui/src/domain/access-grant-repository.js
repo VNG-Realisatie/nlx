@@ -14,6 +14,26 @@ class AccessGrantRepository {
     const result = await response.json()
     return result.accessGrants || []
   }
+
+  static async revokeAccessGrant({
+    organizationName,
+    serviceName,
+    accessGrantId,
+  }) {
+    await fetch(
+      `/api/v1/access-grants/service/${serviceName}/organizations/${organizationName}/${accessGrantId}/revoke`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          organizationName: organizationName,
+          serviceName: serviceName,
+          accessGrantID: accessGrantId,
+        }),
+      },
+    )
+
+    return null
+  }
 }
 
 export default AccessGrantRepository

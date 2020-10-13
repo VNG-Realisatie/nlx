@@ -3,6 +3,7 @@
 //
 import React from 'react'
 
+import { act } from '@testing-library/react'
 import { renderWithProviders, fireEvent } from '../../../../../test-utils'
 import AccessGrantSection from './index'
 
@@ -49,4 +50,45 @@ test('should list access grants', async () => {
   )
   expect(getByTestId('service-accessgrant-list')).toBeTruthy()
   expect(getByText('Organization-B')).toBeInTheDocument()
+})
+
+test('revoking access grants', async () => {
+  global.confirm = jest.fn(() => true)
+
+  const revokeAccessGrantHandler = jest.fn()
+
+  const { getByTestId, getByText, getByRole } = renderWithProviders(
+    <AccessGrantSection
+      accessGrants={[
+        {
+          id: '1234abcd',
+          serviceName: 'service',
+          organizationName: 'Organization-B',
+          publicKeyFingerprint: 'printFinger=',
+          createdAt: '2020-10-07T13:01:11.288349Z',
+        },
+      ]}
+      revokeAccessGrantHandler={revokeAccessGrantHandler}
+    />,
+  )
+
+  const toggler = getByTestId('service-accessgrants')
+  fireEvent.click(toggler)
+  jest.runAllTimers()
+
+  const revokeAccessButton = getByText('Revoke')
+  expect(revokeAccessButton).toBeInTheDocument()
+
+  await act(async () => fireEvent.click(revokeAccessButton))
+
+  expect(revokeAccessGrantHandler).toHaveBeenCalledWith({
+    organizationName: 'Organization-B',
+    serviceName: 'service',
+    accessGrantId: '1234abcd',
+  })
+
+  expect(getByRole('alert')).toBeTruthy()
+  expect(getByRole('alert').textContent).toBe('Access revoked')
+
+  global.confirm.mockRestore()
 })
