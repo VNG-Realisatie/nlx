@@ -73,4 +73,31 @@ describe('revoking an access grant', () => {
 
     expect(result).toBeNull()
   })
+
+  it('should throw when the grant has already been revoked', async () => {
+    jest.spyOn(global, 'fetch').mockResolvedValue({
+      ok: false,
+      status: 409,
+    })
+
+    await expect(
+      AccessGrantRepository.revokeAccessGrant({
+        organizationName: 'organization-name',
+        serviceName: 'service-name',
+        accessGrantId: 'access-grant-id',
+      }),
+    ).rejects.toThrowError(/^Access has already been revoked\.$/)
+
+    await expect(global.fetch).toHaveBeenCalledWith(
+      '/api/v1/access-grants/service/service-name/organizations/organization-name/access-grant-id/revoke',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          organizationName: 'organization-name',
+          serviceName: 'service-name',
+          accessGrantID: 'access-grant-id',
+        }),
+      },
+    )
+  })
 })

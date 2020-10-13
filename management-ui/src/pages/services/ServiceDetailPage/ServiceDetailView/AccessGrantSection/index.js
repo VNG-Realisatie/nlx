@@ -20,7 +20,7 @@ const AccessGrantSection = ({ accessGrants, revokeAccessGrantHandler }) => {
   const { t } = useTranslation()
   const { showToast } = useContext(ToasterContext)
 
-  const handleRevokeGrantOnClick = (event, accessGrant) => {
+  const handleRevokeGrantOnClick = async (event, accessGrant) => {
     event.preventDefault()
 
     const confirmed = window.confirm(
@@ -37,7 +37,16 @@ const AccessGrantSection = ({ accessGrants, revokeAccessGrantHandler }) => {
       return
     }
 
-    revokeAccessGrant(accessGrant)
+    try {
+      await revokeAccessGrant(accessGrant)
+    } catch (error) {
+      showToast({
+        title: t(
+          'Access has already been revoked, please refresh the page to see the latest state',
+        ),
+        variant: 'error',
+      })
+    }
   }
 
   const revokeAccessGrant = async (accessGrant) => {

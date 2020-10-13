@@ -20,7 +20,7 @@ class AccessGrantRepository {
     serviceName,
     accessGrantId,
   }) {
-    await fetch(
+    const response = await fetch(
       `/api/v1/access-grants/service/${serviceName}/organizations/${organizationName}/${accessGrantId}/revoke`,
       {
         method: 'POST',
@@ -31,6 +31,10 @@ class AccessGrantRepository {
         }),
       },
     )
+
+    throwOnError(response, {
+      409: 'Access has already been revoked.',
+    })
 
     return null
   }
