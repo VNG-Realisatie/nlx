@@ -4,11 +4,11 @@ title: Getting up and running
 ---
 
 
-## Start NLX using docker-compose
+## Start NLX using Docker Compose
 
 Now we have prepared all the requirements to run NLX, we can start all components using Docker Compose.
 
-> Next to the certificates you created in [retrieve a demo certificate](../retrieve-a-demo-certificate.md) you also need certificates from internal PKI to encrypt traffic between NLX components (such as the Management API and the Inway). The demo already has a working PKI so you don't have to set this up yourself.
+> Next to the certificates you created in [retrieve a demo certificate](../retrieve-a-demo-certificate.md) you also need certificates from an internal PKI to encrypt traffic between NLX components (such as the Management API and the Inway). The demo already has a working PKI so you don't have to set this up yourself.
 
 First, let's clone the NLX project. It contains the Docker Compose file and its dependencies.
 
@@ -36,7 +36,7 @@ docker-compose -f docker-compose.management.yml up
 
 This will start [Dex](https://github.com/dexidp/dex) (Identity Provider), ETCD and the required NLX components.
 
-The NLX components are configured using environment variables which in this guide are set in  `docker-compose.management.yml`
+The NLX components are configured using environment variables which in this guide are set in `docker-compose.management.yml`
 
 Below you is an overview of the environment variables per NLX component:
 
@@ -216,4 +216,4 @@ So far we have:
 - Granted access to the Management UI
 - Set a default organization inway
 
-Next up, let's consume an API.
+Next up, let's [consume an API](./consume-an-api.md).

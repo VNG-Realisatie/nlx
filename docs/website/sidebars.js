@@ -17,7 +17,7 @@ module.exports = {
       "try-nlx/setup-your-environment",
       "try-nlx/retrieve-a-demo-certificate",
       {
-        "With NLX Management": [
+        "With NLX Management (new)": [
           "try-nlx/management/introduction",
           "try-nlx/management/getting-up-and-running",
           "try-nlx/management/consume-an-api",
@@ -25,7 +25,7 @@ module.exports = {
         ],
       },
       {
-        "With config file (deprecated)": [
+        "With config file": [
           "try-nlx/config-file/consume-an-api",
           "try-nlx/config-file/provide-an-api",
         ],

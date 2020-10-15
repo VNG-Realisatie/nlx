@@ -101,4 +101,4 @@ In this part, we have:
 - Setup a local NLX outway, which we can use to get data from the network.
 - Made a real request to the VNG Realisatie Demo API.
 
-Now let's see if we can provide our own APIs to the network.
+Now let's see if we can [provide our own APIs](./provide-an-api.md) to the network.

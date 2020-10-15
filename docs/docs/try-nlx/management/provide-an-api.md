@@ -68,10 +68,10 @@ Now let's try to fetch some data from our inway using our outway using `curl`:
 curl http://localhost/my-organization/SwaggerPetstore/v2/pet/20002085
 ```
 
-The response of the `curl` command should look similar to the following output.
+The response of the `curl` command should look similar to the following output (where `ORGANIZATION_NAME`/`PUBLIC_KEY_FINGERPRINT` are derived from the certificate generated in [step 3](../retrieve-a-demo-certificate.md)).
 
 ```
-nlx-inway: permission denied, organization "Your organization name" or public key "Your public key fingerprint" is not allowed access.
+nlx-inway: permission denied, organization "ORGANIZATION_NAME" or public key "PUBLIC_KEY_FINGERPRINT" is not allowed access.
 ```
 
 We are denied access because we first need to request access. This is one of the key features of NLX Management!
@@ -111,7 +111,7 @@ The response of the `curl` command should look similar to the following output.
 ```
 
 
-Congratulations, you can now consider yourself a member of the NLX club!
+Congratulations, you can now consider yourself a member of the NLX club! 🎉
 
 ## In sum
 
