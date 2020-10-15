@@ -4,7 +4,7 @@
 import React, { createContext } from 'react'
 import { configure } from 'mobx'
 import { node, object } from 'prop-types'
-import { createInwaysStore } from '../pages/inways/InwaysStore'
+import { createInwaysStore } from './InwaysStore'
 import { createServicesStore } from './ServicesStore'
 import { createDirectoryStore } from './DirectoryStore'
 

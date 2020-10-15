@@ -1,11 +1,11 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import deferredPromise from '../../test-utils/deferred-promise'
+import deferredPromise from '../test-utils/deferred-promise'
 import InwaysStore, { createInwaysStore } from './InwaysStore'
 import { mockInwayModel } from './InwaysStore.mock'
 
-jest.mock('../../models/InwayModel', () => ({
+jest.mock('../models/InwayModel', () => ({
   createInway: ({ inway }) => ({ ...inway }),
 }))
 

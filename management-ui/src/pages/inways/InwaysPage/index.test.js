@@ -8,7 +8,7 @@ import { act } from '@testing-library/react'
 import { createMemoryHistory } from 'history'
 import { renderWithProviders, waitFor } from '../../../test-utils'
 import { UserContextProvider } from '../../../user-context'
-import { mockInwaysStore } from '../InwaysStore.mock'
+import { mockInwaysStore } from '../../../stores/InwaysStore.mock'
 import { StoreProvider } from '../../../stores'
 import InwaysPage from './index'
 

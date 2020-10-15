@@ -2,8 +2,8 @@
 // Licensed under the EUPL
 //
 import { makeAutoObservable, flow, action } from 'mobx'
-import InwayRepository from '../../domain/inway-repository'
-import { createInway } from '../../models/InwayModel'
+import InwayRepository from '../domain/inway-repository'
+import { createInway } from '../models/InwayModel'
 
 class InwaysStore {
   inways = []
