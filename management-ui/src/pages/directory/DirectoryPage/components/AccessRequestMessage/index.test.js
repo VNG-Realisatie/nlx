@@ -6,9 +6,13 @@ import React from 'react'
 import { renderWithProviders } from '../../../../../test-utils'
 import AccessRequestMessage from './index'
 
-test('by default should render nothing', () => {
+test('by default should render nothing but write a console warning', () => {
+  const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {})
+
   const { container } = renderWithProviders(<AccessRequestMessage />)
   expect(container).toHaveTextContent('')
+
+  warnSpy.mockRestore()
 })
 
 describe('render correct message', () => {

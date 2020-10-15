@@ -57,6 +57,8 @@ test('fetching directory services', async () => {
 })
 
 test('handle error while fetching directory services', async () => {
+  const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+
   const request = deferredPromise()
   directoryRepository = {
     getAll: jest.fn(() => request),
@@ -79,6 +81,8 @@ test('handle error while fetching directory services', async () => {
   expect(directoryStore.error).toEqual('some error')
   expect(directoryStore.services).toEqual([])
   expect(directoryStore.isInitiallyFetched).toBe(true)
+
+  errorSpy.mockRestore()
 })
 
 test('selecting a directory service', () => {

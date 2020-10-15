@@ -42,10 +42,11 @@ test('listing all services', async () => {
   const store = mockDirectoryStore({
     isInitiallyFetched: false,
   })
+  const fetchServicesSpy = jest.spyOn(store.directoryStore, 'fetchServices')
 
   const { getByRole, getByTestId, findByTestId } = renderDirectory(store)
 
-  expect(store.directoryStore.fetchServices).toHaveBeenCalled()
+  expect(fetchServicesSpy).toHaveBeenCalled()
   expect(getByRole('progressbar')).toBeInTheDocument()
   expect(() => getByTestId('mock-directory-services')).toThrow()
 

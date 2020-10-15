@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { observable } from 'mobx'
+import { makeAutoObservable } from 'mobx'
 
 import { renderWithProviders, fireEvent, act } from '../../../../../test-utils'
 import DirectoryServiceRow from './index'
@@ -15,7 +15,7 @@ describe('a service we do not have access to', () => {
   global.confirm = jest.fn(() => true)
 
   beforeEach(() => {
-    service = observable({
+    service = makeAutoObservable({
       id: 'Test Organization/Test Service',
       organizationName: 'Test Organization',
       serviceName: 'Test Service',
@@ -46,6 +46,7 @@ describe('a service we do not have access to', () => {
   })
 
   it('should be possible to request access', () => {
+    const spy = jest.spyOn(service, 'requestAccess')
     const { getByText } = renderWithProviders(
       <table>
         <tbody>
@@ -57,7 +58,7 @@ describe('a service we do not have access to', () => {
     const button = getByText('Request')
     fireEvent.click(button)
 
-    expect(service.requestAccess).toHaveBeenCalled()
+    expect(spy).toHaveBeenCalled()
   })
 
   it('should reflect a change of state', () => {

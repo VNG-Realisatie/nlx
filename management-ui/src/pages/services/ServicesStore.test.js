@@ -62,6 +62,8 @@ test('fetching services', async () => {
 })
 
 test('handle error while fetching services', async () => {
+  const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+
   const request = deferredPromise()
   serviceRepository = {
     getAll: jest.fn(() => request),
@@ -86,6 +88,8 @@ test('handle error while fetching services', async () => {
   expect(servicesStore.error).toEqual('some error')
   expect(servicesStore.services).toEqual([])
   expect(servicesStore.isInitiallyFetched).toBe(true)
+
+  errorSpy.mockRestore()
 })
 
 test('selecting a service', () => {
@@ -103,7 +107,7 @@ test('selecting a service', () => {
 
   const selectedService = servicesStore.selectService('Service A')
 
-  expect(selectedService).toEqual(serviceList[0])
+  expect(selectedService.name).toEqual(serviceList[0].name)
   expect(mockServiceModelA.fetch).toHaveBeenCalled()
   expect(mockServiceModelB.fetch).not.toHaveBeenCalled()
 })
