@@ -10,6 +10,7 @@ import DirectoryServiceModel, {
   directoryServicePropTypes,
   createDirectoryService,
 } from './DirectoryServiceModel'
+import { ACCESS_REQUEST_STATES } from './OutgoingAccessRequestModel'
 
 let store
 let service
@@ -79,9 +80,9 @@ test('fetches data', async () => {
 })
 
 describe('creating access request', () => {
-  it('should fail silently when an access request is already open', () => {
+  it('should not create a new access request an access request is already created', () => {
     service.latestAccessRequest = {
-      isOpen: true,
+      state: ACCESS_REQUEST_STATES.CREATED,
     }
 
     const directoryService = new DirectoryServiceModel({ store, service })
@@ -93,9 +94,29 @@ describe('creating access request', () => {
     expect(createAccessRequestInstanceMock).not.toHaveBeenCalled()
   })
 
-  it('should send access request', async () => {
+  it('should create access request if it was cancelled before', async () => {
     service.latestAccessRequest = {
-      isOpen: false,
+      state: ACCESS_REQUEST_STATES.CANCELLED,
+    }
+
+    const directoryService = new DirectoryServiceModel({ store, service })
+
+    const send = jest.fn()
+    // Rebuild implmentation to add `send`
+    // Note: send is yielded, so we need to await `requestAccess`
+    createAccessRequestInstanceMock.mockImplementation((obj) => ({
+      ...obj,
+      send,
+    }))
+
+    await directoryService.requestAccess()
+
+    expect(send).toHaveBeenCalled()
+  })
+
+  it('should create access request if it was rejected before', async () => {
+    service.latestAccessRequest = {
+      state: ACCESS_REQUEST_STATES.REJECTED,
     }
 
     const directoryService = new DirectoryServiceModel({ store, service })

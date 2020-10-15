@@ -4,7 +4,15 @@
 import { makeAutoObservable, flow } from 'mobx'
 import { string, object, func, bool } from 'prop-types'
 
-import { createAccessRequestInstance } from './OutgoingAccessRequestModel'
+import {
+  ACCESS_REQUEST_STATES,
+  createAccessRequestInstance,
+} from './OutgoingAccessRequestModel'
+
+const accessRequestIsCancelledOrRejected = (accessRequest) =>
+  accessRequest &&
+  (accessRequest.state === ACCESS_REQUEST_STATES.CANCELLED ||
+    accessRequest.state === ACCESS_REQUEST_STATES.REJECTED)
 
 export const directoryServicePropTypes = {
   id: string.isRequired,
@@ -54,8 +62,12 @@ class DirectoryServiceModel {
   })
 
   requestAccess = flow(function* requestAccess() {
-    if (this.latestAccessRequest && this.latestAccessRequest.isOpen)
+    if (
+      this.latestAccessRequest &&
+      !accessRequestIsCancelledOrRejected(this.latestAccessRequest)
+    ) {
       return false
+    }
 
     this.latestAccessRequest = yield createAccessRequestInstance({
       organizationName: this.organizationName,

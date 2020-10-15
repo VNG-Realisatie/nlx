@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import { makeAutoObservable, flow } from 'mobx'
-import { string, func, bool } from 'prop-types'
+import { string, func } from 'prop-types'
 
 import AccessRequestRepository from '../domain/access-request-repository'
 
@@ -29,7 +29,6 @@ export const outgoingAccessRequestPropTypes = {
   updatedAt: string,
 
   send: func,
-  isOpen: bool,
   error: string,
 }
 
@@ -41,10 +40,6 @@ class OutgoingAccessRequestModel {
   createdAt = ''
   updatedAt = ''
   error = ''
-
-  get isOpen() {
-    return !UNSUCCESSFUL_ACCESS_REQUEST_STATES.includes(this.state)
-  }
 
   constructor({
     accessRequestData,
