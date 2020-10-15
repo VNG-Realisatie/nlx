@@ -47,7 +47,6 @@ class DirectoryServiceModel {
       this.serviceName,
     )
 
-    // state and latestAccessRequest are the only ones that are likely to be changed
     this.state = service.state
     this.latestAccessRequest = service.latestAccessRequest
       ? createAccessRequestInstance(service.latestAccessRequest)
