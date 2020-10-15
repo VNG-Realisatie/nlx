@@ -8,7 +8,7 @@ import { MemoryRouter as Router } from 'react-router-dom'
 import { act, renderWithProviders } from '../../../test-utils'
 import { StoreProvider } from '../../../stores'
 import { UserContextProvider } from '../../../user-context'
-import { mockDirectoryStore } from '../DirectoryStore.mock'
+import { mockDirectoryStore } from '../../../stores/DirectoryStore.mock'
 import DirectoryPage from './index'
 
 // Ignore this deeply nested component which has a separate request flow

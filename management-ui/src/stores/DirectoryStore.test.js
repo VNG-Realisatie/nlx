@@ -1,11 +1,11 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import deferredPromise from '../../test-utils/deferred-promise'
+import deferredPromise from '../test-utils/deferred-promise'
 import DirectoryStore, { createDirectoryStore } from './DirectoryStore'
 import { mockDirectoryServiceModel } from './DirectoryStore.mock'
 
-jest.mock('../../models/DirectoryServiceModel', () => ({
+jest.mock('../models/DirectoryServiceModel', () => ({
   createDirectoryService: (...args) => mockDirectoryServiceModel(...args),
 }))
 

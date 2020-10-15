@@ -2,12 +2,11 @@
 // Licensed under the EUPL
 //
 import React, { createContext } from 'react'
-import { node, object } from 'prop-types'
 import { configure } from 'mobx'
-
-import { createDirectoryStore } from '../pages/directory/DirectoryStore'
+import { node, object } from 'prop-types'
 import { createServicesStore } from '../pages/services/ServicesStore'
 import { createInwaysStore } from '../pages/inways/InwaysStore'
+import { createDirectoryStore } from './DirectoryStore'
 
 if (process.env.NODE_ENV !== 'test') {
   // `setupTests` has 'never' set. But some tests include this file,
