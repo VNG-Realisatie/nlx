@@ -8,7 +8,7 @@ import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import { renderWithProviders } from '../../../test-utils'
 import { StoreProvider } from '../../../stores'
-import { mockServicesStore } from '../ServicesStore.mock'
+import { mockServicesStore } from '../../../stores/ServicesStore.mock'
 import AddServicePage from './index'
 
 jest.mock('../../../components/ServiceForm', () => ({ onSubmitHandler }) => (

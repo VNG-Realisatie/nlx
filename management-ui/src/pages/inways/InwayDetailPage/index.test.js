@@ -5,7 +5,7 @@ import React from 'react'
 import { StaticRouter as Router, Route } from 'react-router-dom'
 
 import { renderWithProviders } from '../../../test-utils'
-import { mockServicesStore } from '../../services/ServicesStore.mock'
+import { mockServicesStore } from '../../../stores/ServicesStore.mock'
 import { mockInwaysStore } from '../InwaysStore.mock'
 import { StoreProvider } from '../../../stores'
 import InwayDetailPage from './index'

@@ -1,11 +1,11 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import deferredPromise from '../../test-utils/deferred-promise'
+import deferredPromise from '../test-utils/deferred-promise'
 import ServicesStore, { createServicesStore } from './ServicesStore'
 import { mockServiceModel } from './ServicesStore.mock'
 
-jest.mock('../../models/ServiceModel', () => ({
+jest.mock('../models/ServiceModel', () => ({
   createService: ({ service }) => ({ ...service }),
 }))
 

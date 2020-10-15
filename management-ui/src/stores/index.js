@@ -4,8 +4,8 @@
 import React, { createContext } from 'react'
 import { configure } from 'mobx'
 import { node, object } from 'prop-types'
-import { createServicesStore } from '../pages/services/ServicesStore'
 import { createInwaysStore } from '../pages/inways/InwaysStore'
+import { createServicesStore } from './ServicesStore'
 import { createDirectoryStore } from './DirectoryStore'
 
 if (process.env.NODE_ENV !== 'test') {

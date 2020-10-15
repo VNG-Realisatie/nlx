@@ -8,7 +8,7 @@ import { act } from '@testing-library/react'
 import { createMemoryHistory } from 'history'
 import { renderWithProviders } from '../../../test-utils'
 import { StoreProvider } from '../../../stores'
-import { mockServicesStore } from '../ServicesStore.mock'
+import { mockServicesStore } from '../../../stores/ServicesStore.mock'
 import ServiceDetailPage from './index'
 
 jest.mock('./ServiceDetailView', () => ({ removeHandler }) => (

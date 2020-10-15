@@ -2,10 +2,10 @@
 // Licensed under the EUPL
 //
 import { makeAutoObservable, flow, action } from 'mobx'
-import ServiceRepository from '../../domain/service-repository'
-import AccessRequestRepository from '../../domain/access-request-repository'
-import AccessGrantRepository from '../../domain/access-grant-repository'
-import { createService } from '../../models/ServiceModel'
+import ServiceRepository from '../domain/service-repository'
+import AccessRequestRepository from '../domain/access-request-repository'
+import AccessGrantRepository from '../domain/access-grant-repository'
+import { createService } from '../models/ServiceModel'
 
 class ServicesStore {
   services = []

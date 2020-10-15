@@ -9,7 +9,7 @@ import { createMemoryHistory } from 'history'
 import UserContext from '../../../user-context'
 import { renderWithProviders } from '../../../test-utils'
 import { StoreProvider } from '../../../stores'
-import { mockServicesStore } from '../ServicesStore.mock'
+import { mockServicesStore } from '../../../stores/ServicesStore.mock'
 import EditServicePage from './index'
 
 jest.mock('../../../components/ServiceForm', () => ({ onSubmitHandler }) => (

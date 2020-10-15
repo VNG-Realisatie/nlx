@@ -8,7 +8,7 @@ import { act } from '@testing-library/react'
 import { renderWithProviders, waitFor } from '../../../test-utils'
 import { UserContextProvider } from '../../../user-context'
 import { StoreProvider } from '../../../stores'
-import { mockServicesStore } from '../ServicesStore.mock'
+import { mockServicesStore } from '../../../stores/ServicesStore.mock'
 import ServicesPage from './index'
 
 jest.mock('./ServicesPageView', () => () => (
