@@ -87,6 +87,4 @@ class ServicesStore {
   }).bind(this)
 }
 
-export const createServicesStore = (...args) => new ServicesStore(...args)
-
 export default ServicesStore

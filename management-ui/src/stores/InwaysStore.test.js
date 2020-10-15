@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import deferredPromise from '../test-utils/deferred-promise'
-import InwaysStore, { createInwaysStore } from './InwaysStore'
+import InwaysStore from './InwaysStore'
 import { mockInwayModel } from './InwaysStore.mock'
 
 jest.mock('../models/InwayModel', () => ({
@@ -15,11 +15,6 @@ let inwayRepository
 beforeEach(() => {
   rootStore = {}
   inwayRepository = {}
-})
-
-test('createInwaysStore returns an instance', () => {
-  const store = createInwaysStore({ rootStore, inwayRepository })
-  expect(store).toBeInstanceOf(InwaysStore)
 })
 
 test('fetching inways', async () => {

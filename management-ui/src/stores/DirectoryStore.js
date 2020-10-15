@@ -56,6 +56,4 @@ class DirectoryStore {
   }
 }
 
-export const createDirectoryStore = (...args) => new DirectoryStore(...args)
-
 export default DirectoryStore

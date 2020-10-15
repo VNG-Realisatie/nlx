@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import deferredPromise from '../test-utils/deferred-promise'
-import ServicesStore, { createServicesStore } from './ServicesStore'
+import ServicesStore from './ServicesStore'
 import { mockServiceModel } from './ServicesStore.mock'
 
 jest.mock('../models/ServiceModel', () => ({
@@ -19,16 +19,6 @@ beforeEach(() => {
   serviceRepository = {}
   accessRequestRepository = {}
   accessGrantRepository = {}
-})
-
-test('createServicesStore returns an instance', () => {
-  const directoryStore = createServicesStore({
-    rootStore,
-    serviceRepository,
-    accessRequestRepository,
-    accessGrantRepository,
-  })
-  expect(directoryStore).toBeInstanceOf(ServicesStore)
 })
 
 test('fetching services', async () => {

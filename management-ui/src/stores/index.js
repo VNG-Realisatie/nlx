@@ -4,9 +4,9 @@
 import React, { createContext } from 'react'
 import { configure } from 'mobx'
 import { node, object } from 'prop-types'
-import { createInwaysStore } from './InwaysStore'
-import { createServicesStore } from './ServicesStore'
-import { createDirectoryStore } from './DirectoryStore'
+import InwaysStore from './InwaysStore'
+import ServicesStore from './ServicesStore'
+import DirectoryStore from './DirectoryStore'
 
 if (process.env.NODE_ENV !== 'test') {
   // `setupTests` has 'never' set. But some tests include this file,
@@ -18,9 +18,9 @@ export const storesContext = createContext(null)
 
 class RootStore {
   constructor() {
-    this.directoryStore = createDirectoryStore({ rootStore: this })
-    this.servicesStore = createServicesStore({ rootStore: this })
-    this.inwaysStore = createInwaysStore({ rootStore: this })
+    this.directoryStore = new DirectoryStore({ rootStore: this })
+    this.servicesStore = new ServicesStore({ rootStore: this })
+    this.inwaysStore = new InwaysStore({ rootStore: this })
   }
 }
 

@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import deferredPromise from '../test-utils/deferred-promise'
-import DirectoryStore, { createDirectoryStore } from './DirectoryStore'
+import DirectoryStore from './DirectoryStore'
 import { mockDirectoryServiceModel } from './DirectoryStore.mock'
 
 jest.mock('../models/DirectoryServiceModel', () => ({
@@ -15,14 +15,6 @@ let directoryRepository
 beforeEach(() => {
   rootStore = {}
   directoryRepository = {}
-})
-
-test('createDirectoryStore returns an instance', () => {
-  const directoryStore = createDirectoryStore({
-    rootStore,
-    directoryRepository,
-  })
-  expect(directoryStore).toBeInstanceOf(DirectoryStore)
 })
 
 test('fetching directory services', async () => {

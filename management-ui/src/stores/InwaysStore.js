@@ -57,6 +57,4 @@ class InwaysStore {
   }
 }
 
-export const createInwaysStore = (...args) => new InwaysStore(...args)
-
 export default InwaysStore
