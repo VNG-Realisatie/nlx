@@ -6,6 +6,7 @@ import { darkTheme } from '@commonground/design-system'
 
 const tokens = {
   ...darkTheme.tokens,
+  colorError: 'rgb(255, 100, 110)',
 }
 
 const theme = {

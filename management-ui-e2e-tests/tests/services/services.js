@@ -27,7 +27,7 @@ const logger = RequestLogger(/api/, {
   stringifyResponseBody: true,
 })
 
-fixture.only`Services`
+fixture`Services`
   .beforeEach(async (t) => {
     await t.useRole(adminUser)
     await waitForReact()
