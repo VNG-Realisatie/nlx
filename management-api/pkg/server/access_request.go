@@ -53,7 +53,6 @@ func (s *ManagementService) ListIncomingAccessRequest(ctx context.Context, req *
 	for _, accessRequest := range accessRequests {
 		if accessRequest.ServiceName == req.ServiceName {
 			responseAccessRequest, err := convertIncomingAccessRequest(accessRequest)
-
 			if err != nil {
 				s.logger.Error(
 					"converting incoming access request",
@@ -195,7 +194,6 @@ func (s *ManagementService) CreateAccessRequest(ctx context.Context, req *api.Cr
 
 func (s *ManagementService) SendAccessRequest(ctx context.Context, req *api.SendAccessRequestRequest) (*api.OutgoingAccessRequest, error) {
 	accessRequest, err := s.configDatabase.GetOutgoingAccessRequest(ctx, req.AccessRequestID)
-
 	if err != nil {
 		if errIsNotFound(err) {
 			return nil, status.Error(codes.NotFound, "access request not found")
@@ -299,7 +297,7 @@ func (s *ManagementService) GetAccessRequestState(ctx context.Context, req *exte
 		return nil, err
 	}
 
-	request, err := s.configDatabase.GetLatestOutgoingAccessRequest(ctx, md.OrganizationName, req.ServiceName)
+	request, err := s.configDatabase.GetLatestIncomingAccessRequest(ctx, md.OrganizationName, req.ServiceName)
 	if err != nil {
 		s.logger.Error("failed to retrieve latest outgoing access request", zap.Error(err))
 		return nil, status.Error(codes.Internal, "failed to retrieve access request")

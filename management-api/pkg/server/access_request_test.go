@@ -715,7 +715,7 @@ func TestExternalGetAccessRequestState(t *testing.T) {
 
 				db.
 					EXPECT().
-					GetLatestOutgoingAccessRequest(ctx, "organization-a", "service").
+					GetLatestIncomingAccessRequest(ctx, "organization-a", "service").
 					Return(nil, errors.New("error"))
 
 				return ctx
@@ -729,8 +729,8 @@ func TestExternalGetAccessRequestState(t *testing.T) {
 
 				db.
 					EXPECT().
-					GetLatestOutgoingAccessRequest(ctx, "organization-a", "service").
-					Return(&database.OutgoingAccessRequest{
+					GetLatestIncomingAccessRequest(ctx, "organization-a", "service").
+					Return(&database.IncomingAccessRequest{
 						AccessRequest: database.AccessRequest{
 							State: database.AccessRequestReceived,
 						},

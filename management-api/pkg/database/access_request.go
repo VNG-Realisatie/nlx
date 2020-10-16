@@ -50,6 +50,23 @@ const (
 	AccessRequestRejected
 )
 
+func (state AccessRequestState) String() string {
+	switch state {
+	case AccessRequestFailed:
+		return "Failed"
+	case AccessRequestCreated:
+		return "Created"
+	case AccessRequestReceived:
+		return "Received"
+	case AccessRequestApproved:
+		return "Approved"
+	case AccessRequestRejected:
+		return "Rejected"
+	}
+
+	return "Unspecified"
+}
+
 const locksPrefix = "/nlx/locks/"
 
 var (
@@ -371,7 +388,7 @@ func (db ETCDConfigDatabase) ListIncomingAccessRequests(ctx context.Context, org
 }
 
 func (db ETCDConfigDatabase) GetLatestIncomingAccessRequest(ctx context.Context, organizationName, serviceName string) (request *IncomingAccessRequest, err error) {
-	err = db.getLatestAccessRequest(ctx, "incoming", organizationName, serviceName, request)
+	err = db.getLatestAccessRequest(ctx, "incoming", organizationName, serviceName, &request)
 	return
 }
 
