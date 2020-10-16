@@ -112,6 +112,11 @@ Management-ui linter and tests:
   extends: .node-base
   stage: Tests
   script:
+    - >
+      if grep -Rin "\.only" management-ui/src/ management-ui-e2e-tests/tests/; then
+        echo "Found `.only` in management-ui, please remove to run all tests"
+        exit 1
+      fi
     - cd management-ui/
     - install_npm_dependencies
     - start_section lint "Running linter"
