@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { makeAutoObservable, flow } from 'mobx'
+import { makeAutoObservable, flow, action } from 'mobx'
 import InwayRepository from '../../domain/inway-repository'
 import { createInway } from '../../models/InwayModel'
 
@@ -14,7 +14,9 @@ class InwaysStore {
   isFetching = false
 
   constructor({ rootStore, inwayRepository = InwayRepository }) {
-    makeAutoObservable(this)
+    makeAutoObservable(this, {
+      selectInway: action.bound,
+    })
 
     this.rootStore = rootStore
     this.inwayRepository = inwayRepository
@@ -42,9 +44,9 @@ class InwaysStore {
       this.isInitiallyFetched = true
       this.isFetching = false
     }
-  })
+  }).bind(this)
 
-  selectInway = (inwayName) => {
+  selectInway(inwayName) {
     const inwayModel = this.inways.find((inway) => inway.name === inwayName)
 
     if (inwayModel) {

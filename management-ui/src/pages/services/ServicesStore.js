@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { makeAutoObservable, flow } from 'mobx'
+import { makeAutoObservable, flow, action } from 'mobx'
 import ServiceRepository from '../../domain/service-repository'
 import AccessRequestRepository from '../../domain/access-request-repository'
 import AccessGrantRepository from '../../domain/access-grant-repository'
@@ -21,7 +21,9 @@ class ServicesStore {
     accessRequestRepository = AccessRequestRepository,
     accessGrantRepository = AccessGrantRepository,
   }) {
-    makeAutoObservable(this)
+    makeAutoObservable(this, {
+      selectService: action.bound,
+    })
 
     this.rootStore = rootStore
     this.serviceRepository = serviceRepository
@@ -56,7 +58,7 @@ class ServicesStore {
     }
   })
 
-  selectService = (serviceName) => {
+  selectService(serviceName) {
     const serviceModel = this.services.find(
       (service) => service.name === serviceName,
     )
@@ -74,7 +76,7 @@ class ServicesStore {
     if (!removed) {
       this.fetchServices()
     }
-  })
+  }).bind(this)
 
   addService = flow(function* addService(service) {
     const newService = yield this.serviceRepository.create(service)
@@ -82,7 +84,7 @@ class ServicesStore {
 
     this.services.push(serviceModel)
     return serviceModel
-  })
+  }).bind(this)
 }
 
 export const createServicesStore = (...args) => new ServicesStore(...args)

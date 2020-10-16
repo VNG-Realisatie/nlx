@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { makeAutoObservable, flow } from 'mobx'
+import { makeAutoObservable, flow, action } from 'mobx'
 
 import DirectoryRepository from '../../domain/directory-repository'
 import { createDirectoryService } from '../../models/DirectoryServiceModel'
@@ -15,7 +15,9 @@ class DirectoryStore {
   isFetching = false
 
   constructor({ rootStore, directoryRepository = DirectoryRepository }) {
-    makeAutoObservable(this)
+    makeAutoObservable(this, {
+      selectService: action.bound,
+    })
 
     this.rootStore = rootStore
     this.directoryRepository = directoryRepository
@@ -42,7 +44,7 @@ class DirectoryStore {
     }
   })
 
-  selectService = ({ organizationName, serviceName }) => {
+  selectService({ organizationName, serviceName }) {
     const directoryServiceModel = this.services.find(
       (service) =>
         service.organizationName === organizationName &&
