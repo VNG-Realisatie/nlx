@@ -7,6 +7,7 @@ import { node, object } from 'prop-types'
 import InwaysStore from './InwaysStore'
 import ServicesStore from './ServicesStore'
 import DirectoryStore from './DirectoryStore'
+import OutgoingAccessRequestStore from './OutgoingAccessRequestStore'
 
 if (process.env.NODE_ENV !== 'test') {
   // `setupTests` has 'never' set. But some tests include this file,
@@ -21,6 +22,9 @@ class RootStore {
     this.directoryStore = new DirectoryStore({ rootStore: this })
     this.servicesStore = new ServicesStore({ rootStore: this })
     this.inwaysStore = new InwaysStore({ rootStore: this })
+    this.outgoingAccessRequestsStore = new OutgoingAccessRequestStore({
+      rootStore: this,
+    })
   }
 }
 
