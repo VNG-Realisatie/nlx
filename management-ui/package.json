@@ -31,7 +31,7 @@
     "start:a": "BROWSER=none PROXY=http://management-api.organization-a.nlx.local:7912 HOST=management.organization-a.nlx.local PORT=3011 react-scripts start",
     "start:b": "BROWSER=none PROXY=http://management-api.organization-b.nlx.local:7922 HOST=management.organization-b.nlx.local PORT=3021 react-scripts start",
     "build": "react-scripts build",
-    "lint": "eslint src/**",
+    "lint": "eslint src/",
     "validate-translations": "i18next",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
