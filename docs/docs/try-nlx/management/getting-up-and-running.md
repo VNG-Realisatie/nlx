@@ -204,7 +204,7 @@ On the left you will find the main navigation which separates the UI in several 
 ## Set the organization inway
 
 In order to receive access requests you have to set a default inway for your organization.
-You can do that by going to the settings page, selecting the "Demo Inway" and clicking on "Save settings".
+You can do that by going to the settings page, selecting the "Inway-01" and clicking on "Save settings".
 
 ![Settings screen](/img/nlx-management-settings-screen.png "Settings screen")
 

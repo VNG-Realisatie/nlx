@@ -70,7 +70,7 @@ services:
       - 443:8443
     environment:
       <<: *env
-      INWAY_NAME: Demo Inway
+      INWAY_NAME: Inway-01
       SELF_ADDRESS: "${INWAY_SELF_ADDRESS}"
       MANAGEMENT_API_ADDRESS: management-api.organization-a.nlx.local:8443
     volumes: *certs

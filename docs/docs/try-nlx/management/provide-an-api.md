@@ -46,7 +46,7 @@ You can do that by going to the services page where you click on the 'Add servic
 Note that for demo purposes you can omit most fields only fill in the 'Servicename' and 'API Endpoint URL' field.
 For the 'ServiceName' use `SwaggerPetStore` and for the 'API Endpoint URL' use `https://petstore.swagger.io/v2`
 
-Next to that you also have to select the inway `Demo Inway` to be used by this service.
+Next to that you also have to select the inway `Inway-01` to be used by this service.
 
 ![Add service screen](/img/nlx-management-add-service-screen.png "Add service screen")
 
