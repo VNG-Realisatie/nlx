@@ -46,7 +46,7 @@ class ServiceModel {
   fetch = flow(function* fetch() {
     const service = yield this.store.serviceRepository.getByName(this.name)
     this.with(service)
-  })
+  }).bind(this)
 
   with = function (service) {
     this.endpointURL = service.endpointURL || ''
@@ -62,7 +62,7 @@ class ServiceModel {
     this.with(values)
     yield this.store.serviceRepository.update(this.name, serialize(this))
     return this
-  })
+  }).bind(this)
 
   fetchIncomingAccessRequests = flow(function* fetchIncomingAccessRequests() {
     const accessRequests = yield this.store.accessRequestRepository.listIncomingAccessRequests(
@@ -80,7 +80,7 @@ class ServiceModel {
           accessRequestData: accessRequest,
         }),
       )
-  })
+  }).bind(this)
 
   removeIncomingAccessRequest = function (removeWithId) {
     this.incomingAccessRequests = this.incomingAccessRequests.filter(
@@ -92,7 +92,7 @@ class ServiceModel {
     this.accessGrants = yield this.store.accessGrantRepository.getByServiceName(
       this.name,
     )
-  })
+  }).bind(this)
 }
 
 createModelSchema(ServiceModel, {

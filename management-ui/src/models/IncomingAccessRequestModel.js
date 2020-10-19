@@ -92,7 +92,7 @@ class IncomingAccessRequestModel {
     } catch (e) {
       this.error = e.message
     }
-  })
+  }).bind(this)
 }
 
 export const createIncomingAccessRequest = (...args) =>

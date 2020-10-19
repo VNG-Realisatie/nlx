@@ -41,7 +41,7 @@ class DirectoryStore {
       this.isInitiallyFetched = true
       this.isFetching = false
     }
-  })
+  }).bind(this)
 
   selectService({ organizationName, serviceName }) {
     const directoryServiceModel = this.services.find(

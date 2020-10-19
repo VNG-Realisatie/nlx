@@ -56,7 +56,7 @@ class ServicesStore {
       this.isInitiallyFetched = true
       this.isFetching = false
     }
-  })
+  }).bind(this)
 
   selectService(serviceName) {
     const serviceModel = this.services.find(

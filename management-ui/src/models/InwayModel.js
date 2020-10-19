@@ -44,7 +44,7 @@ class InwayModel {
   fetch = flow(function* fetch() {
     const inway = yield this.store.inwayRepository.getByName(this.name)
     this.with(inway)
-  })
+  }).bind(this)
 
   with = function (inway) {
     this.name = inway.name || ''

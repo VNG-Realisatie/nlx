@@ -103,7 +103,7 @@ class OutgoingAccessRequestModel {
       this.error = e
       console.error(e)
     }
-  })
+  }).bind(this)
 
   get isCancelledOrRejected() {
     return (

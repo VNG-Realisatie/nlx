@@ -51,7 +51,7 @@ class DirectoryServiceModel {
     this.latestAccessRequest = service.latestAccessRequest
       ? createAccessRequestInstance(service.latestAccessRequest)
       : null
-  })
+  }).bind(this)
 
   requestAccess = flow(function* requestAccess() {
     if (
@@ -72,7 +72,7 @@ class DirectoryServiceModel {
       console.error(e)
       this.latestAccessRequest = null
     }
-  })
+  }).bind(this)
 }
 
 export const createDirectoryService = (...args) =>
