@@ -4,7 +4,8 @@
 import { flow, makeAutoObservable } from 'mobx'
 import { bool, func, object, string } from 'prop-types'
 
-import { createAccessRequestInstance } from './OutgoingAccessRequestModel'
+import AccessRequestRepository from '../domain/access-request-repository'
+import OutgoingAccessRequestModel from './OutgoingAccessRequestModel'
 
 export const directoryServicePropTypes = {
   id: string.isRequired,
@@ -26,10 +27,15 @@ class DirectoryServiceModel {
   apiSpecificationType = ''
   latestAccessRequest = null
 
-  constructor({ store, service }) {
+  constructor({
+    store,
+    service,
+    accessRequestRepository = AccessRequestRepository,
+  }) {
     makeAutoObservable(this)
 
     this.store = store
+    this.accessRequestRepository = accessRequestRepository
 
     this.id = `${service.organizationName}/${service.serviceName}`
     this.organizationName = service.organizationName
@@ -37,7 +43,10 @@ class DirectoryServiceModel {
     this.state = service.state
     this.apiSpecificationType = service.apiSpecificationType
     this.latestAccessRequest = service.latestAccessRequest
-      ? createAccessRequestInstance(service.latestAccessRequest)
+      ? new OutgoingAccessRequestModel({
+          accessRequestData: service.latestAccessRequest,
+          accessRequestRepository: accessRequestRepository,
+        })
       : null
   }
 
@@ -49,7 +58,9 @@ class DirectoryServiceModel {
 
     this.state = service.state
     this.latestAccessRequest = service.latestAccessRequest
-      ? createAccessRequestInstance(service.latestAccessRequest)
+      ? new OutgoingAccessRequestModel({
+          accessRequestData: service.latestAccessRequest,
+        })
       : null
   }).bind(this)
 
@@ -61,9 +72,12 @@ class DirectoryServiceModel {
       return false
     }
 
-    this.latestAccessRequest = yield createAccessRequestInstance({
-      organizationName: this.organizationName,
-      serviceName: this.serviceName,
+    this.latestAccessRequest = yield new OutgoingAccessRequestModel({
+      accessRequestData: {
+        organizationName: this.organizationName,
+        serviceName: this.serviceName,
+      },
+      accessRequestRepository: this.accessRequestRepository,
     })
 
     try {

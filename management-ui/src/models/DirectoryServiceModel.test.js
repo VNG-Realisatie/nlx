@@ -3,7 +3,6 @@
 //
 import { act } from '@testing-library/react'
 import { checkPropTypes } from 'prop-types'
-import * as outgoingAccessRequestLib from './OutgoingAccessRequestModel'
 import OutgoingAccessRequestModel, {
   ACCESS_REQUEST_STATES,
 } from './OutgoingAccessRequestModel'
@@ -11,18 +10,6 @@ import DirectoryServiceModel, {
   createDirectoryService,
   directoryServicePropTypes,
 } from './DirectoryServiceModel'
-
-let createAccessRequestInstanceMock
-
-beforeEach(() => {
-  createAccessRequestInstanceMock = jest
-    .spyOn(outgoingAccessRequestLib, 'createAccessRequestInstance')
-    .mockImplementation((obj) => obj)
-})
-
-afterEach(() => {
-  createAccessRequestInstanceMock.mockReset()
-})
 
 test('createDirectoryService returns an instance', () => {
   const directoryService = createDirectoryService({
@@ -109,41 +96,52 @@ test('(re-)fetching the model', async () => {
   )
 
   expect(directoryService.state).toBe('down')
-  expect(directoryService.latestAccessRequest).toEqual({
-    id: '42',
-  })
+  expect(directoryService.latestAccessRequest).toEqual(
+    new OutgoingAccessRequestModel({
+      accessRequestData: {
+        id: '42',
+      },
+    }),
+  )
 })
 
 describe('requesting access to a service', () => {
-  it('should not create a new access request an access request is already created', () => {
+  it('should not create a new access request an access request is already created', async () => {
+    const accessRequestRepository = {
+      createAccessRequest: jest.fn().mockResolvedValue({}),
+    }
+
     const service = {
       organizationName: 'Organization',
       serviceName: 'Service',
       state: 'up',
       apiSpecificationType: 'API',
-      latestAccessRequest: {
-        state: ACCESS_REQUEST_STATES.CREATED,
-        send: jest.fn(),
-      },
+      latestAccessRequest: new OutgoingAccessRequestModel({
+        accessRequestData: {
+          state: ACCESS_REQUEST_STATES.CREATED,
+        },
+        accessRequestRepository: accessRequestRepository,
+      }),
     }
 
     const directoryService = new DirectoryServiceModel({
       store: {},
       service: service,
+      accessRequestRepository: accessRequestRepository,
     })
 
-    const sendHandlerSpy = jest.fn()
-    createAccessRequestInstanceMock.mockImplementation((obj) => ({
-      ...obj,
-      send: sendHandlerSpy,
-    }))
+    await directoryService.requestAccess()
 
-    directoryService.requestAccess()
-
-    expect(sendHandlerSpy).not.toHaveBeenCalled()
+    expect(
+      accessRequestRepository.createAccessRequest,
+    ).not.toHaveBeenCalledWith()
   })
 
   it('should create access request if it was cancelled before', async () => {
+    const accessRequestRepository = {
+      createAccessRequest: jest.fn().mockResolvedValue({}),
+    }
+
     const service = {
       organizationName: 'Organization',
       serviceName: 'Service',
@@ -153,26 +151,28 @@ describe('requesting access to a service', () => {
         accessRequestData: {
           state: ACCESS_REQUEST_STATES.CANCELLED,
         },
+        accessRequestRepository: accessRequestRepository,
       }),
     }
 
     const directoryService = new DirectoryServiceModel({
       store: {},
       service: service,
+      accessRequestRepository: accessRequestRepository,
     })
 
-    const sendHandlerSpy = jest.fn()
-    createAccessRequestInstanceMock.mockImplementation((obj) => ({
-      ...obj,
-      send: sendHandlerSpy,
-    }))
+    await directoryService.requestAccess()
 
-    directoryService.requestAccess()
-
-    expect(sendHandlerSpy).not.toHaveBeenCalled()
+    expect(
+      accessRequestRepository.createAccessRequest,
+    ).not.toHaveBeenCalledWith()
   })
 
   it('should create access request if it was rejected before', async () => {
+    const accessRequestRepository = {
+      createAccessRequest: jest.fn().mockResolvedValue({}),
+    }
+
     const service = {
       organizationName: 'Organization',
       serviceName: 'Service',
@@ -182,22 +182,21 @@ describe('requesting access to a service', () => {
         accessRequestData: {
           state: ACCESS_REQUEST_STATES.REJECTED,
         },
+        accessRequestRepository: accessRequestRepository,
       }),
     }
 
     const directoryService = new DirectoryServiceModel({
       store: {},
       service: service,
+      accessRequestRepository: accessRequestRepository,
     })
-
-    const sendHandlerSpy = jest.fn()
-    createAccessRequestInstanceMock.mockImplementation((obj) => ({
-      ...obj,
-      send: sendHandlerSpy,
-    }))
 
     await directoryService.requestAccess()
 
-    expect(sendHandlerSpy).toHaveBeenCalled()
+    expect(accessRequestRepository.createAccessRequest).toHaveBeenCalledWith({
+      organizationName: 'Organization',
+      serviceName: 'Service',
+    })
   })
 })

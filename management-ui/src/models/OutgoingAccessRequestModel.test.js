@@ -6,7 +6,6 @@ import { checkPropTypes } from 'prop-types'
 import deferredPromise from '../test-utils/deferred-promise'
 import OutgoingAccessRequestModel, {
   ACCESS_REQUEST_STATES,
-  createAccessRequestInstance,
   outgoingAccessRequestPropTypes,
 } from './OutgoingAccessRequestModel'
 
@@ -50,12 +49,6 @@ test('model implements proptypes', () => {
 
   expect(errorSpy).not.toHaveBeenCalled()
   errorSpy.mockRestore()
-})
-
-test('createAccessRequestInstance creates an instance', () => {
-  expect(createAccessRequestInstance(serviceData)).toBeInstanceOf(
-    OutgoingAccessRequestModel,
-  )
 })
 
 test('sending a request', async () => {
