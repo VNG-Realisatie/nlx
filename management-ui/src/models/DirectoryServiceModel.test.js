@@ -4,11 +4,13 @@
 import { act } from '@testing-library/react'
 import { checkPropTypes } from 'prop-types'
 import * as outgoingAccessRequestLib from './OutgoingAccessRequestModel'
+import OutgoingAccessRequestModel, {
+  ACCESS_REQUEST_STATES,
+} from './OutgoingAccessRequestModel'
 import DirectoryServiceModel, {
-  directoryServicePropTypes,
   createDirectoryService,
+  directoryServicePropTypes,
 } from './DirectoryServiceModel'
-import { ACCESS_REQUEST_STATES } from './OutgoingAccessRequestModel'
 
 let createAccessRequestInstanceMock
 
@@ -147,9 +149,11 @@ describe('requesting access to a service', () => {
       serviceName: 'Service',
       state: 'up',
       apiSpecificationType: 'API',
-      latestAccessRequest: {
-        state: ACCESS_REQUEST_STATES.CANCELLED,
-      },
+      latestAccessRequest: new OutgoingAccessRequestModel({
+        accessRequestData: {
+          state: ACCESS_REQUEST_STATES.CANCELLED,
+        },
+      }),
     }
 
     const directoryService = new DirectoryServiceModel({
@@ -174,9 +178,11 @@ describe('requesting access to a service', () => {
       serviceName: 'Service',
       state: 'up',
       apiSpecificationType: 'API',
-      latestAccessRequest: {
-        state: ACCESS_REQUEST_STATES.REJECTED,
-      },
+      latestAccessRequest: new OutgoingAccessRequestModel({
+        accessRequestData: {
+          state: ACCESS_REQUEST_STATES.REJECTED,
+        },
+      }),
     }
 
     const directoryService = new DirectoryServiceModel({

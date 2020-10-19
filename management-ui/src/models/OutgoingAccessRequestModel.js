@@ -1,8 +1,8 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { makeAutoObservable, flow } from 'mobx'
-import { string, func } from 'prop-types'
+import { flow, makeAutoObservable } from 'mobx'
+import { func, string } from 'prop-types'
 
 import AccessRequestRepository from '../domain/access-request-repository'
 
@@ -104,6 +104,13 @@ class OutgoingAccessRequestModel {
       console.error(e)
     }
   })
+
+  get isCancelledOrRejected() {
+    return (
+      this.state === ACCESS_REQUEST_STATES.CANCELLED ||
+      this.state === ACCESS_REQUEST_STATES.REJECTED
+    )
+  }
 }
 
 export const createAccessRequestInstance = (requestData) => {

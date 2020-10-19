@@ -1,18 +1,10 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { makeAutoObservable, flow } from 'mobx'
-import { string, object, func, bool } from 'prop-types'
+import { flow, makeAutoObservable } from 'mobx'
+import { bool, func, object, string } from 'prop-types'
 
-import {
-  ACCESS_REQUEST_STATES,
-  createAccessRequestInstance,
-} from './OutgoingAccessRequestModel'
-
-const accessRequestIsCancelledOrRejected = (accessRequest) =>
-  accessRequest &&
-  (accessRequest.state === ACCESS_REQUEST_STATES.CANCELLED ||
-    accessRequest.state === ACCESS_REQUEST_STATES.REJECTED)
+import { createAccessRequestInstance } from './OutgoingAccessRequestModel'
 
 export const directoryServicePropTypes = {
   id: string.isRequired,
@@ -64,7 +56,7 @@ class DirectoryServiceModel {
   requestAccess = flow(function* requestAccess() {
     if (
       this.latestAccessRequest &&
-      !accessRequestIsCancelledOrRejected(this.latestAccessRequest)
+      !this.latestAccessRequest.isCancelledOrRejected
     ) {
       return false
     }

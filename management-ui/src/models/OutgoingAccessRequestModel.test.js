@@ -5,6 +5,7 @@ import { checkPropTypes } from 'prop-types'
 
 import deferredPromise from '../test-utils/deferred-promise'
 import OutgoingAccessRequestModel, {
+  ACCESS_REQUEST_STATES,
   createAccessRequestInstance,
   outgoingAccessRequestPropTypes,
 } from './OutgoingAccessRequestModel'
@@ -89,4 +90,24 @@ test('update should ignore properties that do not belong on object', () => {
   accessRequest.update({ yada: 'blada' })
 
   expect('yada' in accessRequest).toBe(false)
+})
+
+test('detect if current state is cancelled or rejected', () => {
+  const accessRequest = new OutgoingAccessRequestModel({
+    accessRequestRepository: accessRequestRepository,
+  })
+
+  expect(accessRequest.isCancelledOrRejected).toBe(false)
+
+  accessRequest.update({
+    state: ACCESS_REQUEST_STATES.CANCELLED,
+  })
+
+  expect(accessRequest.isCancelledOrRejected).toBe(true)
+
+  accessRequest.update({
+    state: ACCESS_REQUEST_STATES.REJECTED,
+  })
+
+  expect(accessRequest.isCancelledOrRejected).toBe(true)
 })
