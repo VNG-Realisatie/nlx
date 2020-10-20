@@ -60,6 +60,10 @@ service Management {
     option (google.api.http) = { post: "/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/approve"};
   }
 
+  rpc RejectIncomingAccessRequest (RejectIncomingAccessRequestRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { post: "/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/reject"};
+  }
+
   rpc ListOutgoingAccessRequests (ListOutgoingAccessRequestsRequest) returns (ListOutgoingAccessRequestsResponse) {
     option (google.api.http) = { get: "/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}"};
   }
@@ -174,6 +178,7 @@ enum AccessRequestState {
   CREATED = 2;
   RECEIVED = 3;
   APPROVED = 4;
+  REJECTED = 5;
 }
 
 message OutgoingAccessRequest {
@@ -204,6 +209,11 @@ message ListIncomingAccessRequestsResponse {
 
 message ApproveIncomingAccessRequestRequest {
   string serviceName = 1;
+  string accessRequestID = 2;
+}
+
+message RejectIncomingAccessRequestRequest {
+  string serviceName =1;
   string accessRequestID = 2;
 }
 

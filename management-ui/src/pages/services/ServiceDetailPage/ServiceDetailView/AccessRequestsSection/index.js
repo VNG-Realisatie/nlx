@@ -41,6 +41,27 @@ const AccessRequestsSection = ({ accessRequests }) => {
     }
   }
 
+  const rejectHandler = async (accessRequest) => {
+    await accessRequest.reject()
+
+    if (!accessRequest.error) {
+      showToast({
+        title: t('Access request rejected'),
+        body: t('Organization has been denied access to service', {
+          organizationName: accessRequest.organizationName,
+          serviceName: accessRequest.serviceName,
+        }),
+        variant: 'success',
+      })
+    } else {
+      showToast({
+        title: t('Failed to reject access request'),
+        body: t('Please try again'),
+        variant: 'error',
+      })
+    }
+  }
+
   return (
     <Collapsible
       title={
@@ -61,6 +82,7 @@ const AccessRequestsSection = ({ accessRequests }) => {
                   key={accessRequest.id}
                   accessRequest={accessRequest}
                   approveHandler={approveHandler}
+                  rejectHandler={rejectHandler}
                 />
               ))
             ) : (

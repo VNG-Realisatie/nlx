@@ -99,6 +99,30 @@ describe('approve an incoming access requests', () => {
   })
 })
 
+describe('reject an incoming access requests', () => {
+  it('should return an empty promise', async () => {
+    jest.spyOn(global, 'fetch').mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve([]),
+    })
+
+    const result = await AccessRequestRepository.rejectIncomingAccessRequest({
+      serviceName: 'service-name',
+      id: '42',
+    })
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      '/api/v1/access-requests/incoming/services/service-name/42/reject',
+      expect.objectContaining({
+        method: 'POST',
+      }),
+    )
+
+    expect(result).toBeNull()
+  })
+})
+
 describe('sending an access request', () => {
   it('should return an empty promise', async () => {
     jest.spyOn(global, 'fetch').mockResolvedValue({

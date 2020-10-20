@@ -77,7 +77,7 @@ func TestGetOutgoingAccessRequest(t *testing.T) {
 	// Test with no outgoing access requests
 	actual, err := cluster.DB.GetOutgoingAccessRequest(ctx, "1")
 	assert.Nil(t, actual)
-	assert.Nil(t, err)
+	assert.Equal(t, err, database.ErrNotFound)
 
 	createAccessRequest := func(id, organization, service string) {
 		bytes, _ := json.Marshal(
@@ -121,7 +121,7 @@ func TestGetOutgoingAccessRequest(t *testing.T) {
 			"non_existing_access_request",
 			"5",
 			nil,
-			nil,
+			database.ErrNotFound,
 		},
 	}
 
@@ -391,7 +391,7 @@ func TestGetIncomingAccessRequest(t *testing.T) {
 	// Test with no incoming access requests
 	actual, err := cluster.DB.GetIncomingAccessRequest(ctx, "1")
 	assert.Nil(t, actual)
-	assert.Nil(t, err)
+	assert.Equal(t, err, database.ErrNotFound)
 
 	createAccessRequest := func(id, organization, service string) {
 		bytes, _ := json.Marshal(
@@ -435,7 +435,7 @@ func TestGetIncomingAccessRequest(t *testing.T) {
 			"non_existing_access_request",
 			"5",
 			nil,
-			nil,
+			database.ErrNotFound,
 		},
 	}
 

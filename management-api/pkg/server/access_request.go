@@ -27,6 +27,7 @@ var accessRequestState = map[database.AccessRequestState]api.AccessRequestState{
 	database.AccessRequestCreated:     api.AccessRequestState_CREATED,
 	database.AccessRequestReceived:    api.AccessRequestState_RECEIVED,
 	database.AccessRequestApproved:    api.AccessRequestState_APPROVED,
+	database.AccessRequestRejected:    api.AccessRequestState_REJECTED,
 }
 
 func (s *ManagementService) ListIncomingAccessRequest(ctx context.Context, req *api.ListIncomingAccessRequestsRequests) (*api.ListIncomingAccessRequestsResponse, error) {
@@ -76,9 +77,13 @@ func (s *ManagementService) ListIncomingAccessRequest(ctx context.Context, req *
 }
 
 func (s *ManagementService) ApproveIncomingAccessRequest(ctx context.Context, req *api.ApproveIncomingAccessRequestRequest) (*types.Empty, error) {
-	accessRequest, err := s.newIncomingAccessRequestFromRequest(ctx, req)
+	accessRequest, err := s.newIncomingAccessRequestFromRequest(ctx, req.ServiceName, req.AccessRequestID)
 	if err != nil {
 		return nil, err
+	}
+
+	if accessRequest.State == database.AccessRequestApproved {
+		return nil, status.Error(codes.AlreadyExists, "access request is already approved")
 	}
 
 	if _, err := s.configDatabase.CreateAccessGrant(ctx, accessRequest); err != nil {
@@ -95,35 +100,47 @@ func (s *ManagementService) ApproveIncomingAccessRequest(ctx context.Context, re
 	return &types.Empty{}, nil
 }
 
-func (s *ManagementService) newIncomingAccessRequestFromRequest(ctx context.Context, req *api.ApproveIncomingAccessRequestRequest) (*database.IncomingAccessRequest, error) {
-	_, err := s.configDatabase.GetService(ctx, req.ServiceName)
+func (s *ManagementService) RejectIncomingAccessRequest(ctx context.Context, req *api.RejectIncomingAccessRequestRequest) (*types.Empty, error) {
+	accessRequest, err := s.newIncomingAccessRequestFromRequest(ctx, req.ServiceName, req.AccessRequestID)
+	if err != nil {
+		s.logger.Error("getting incoming access request of request", zap.String("serviceName", req.ServiceName), zap.String("accessRequestID", req.AccessRequestID), zap.Error(err))
+		return nil, err
+	}
+
+	err = s.configDatabase.UpdateIncomingAccessRequestState(ctx, accessRequest, database.AccessRequestRejected)
+	if err != nil {
+		s.logger.Error("error updating incoming access request to rejected", zap.Error(err))
+		return nil, status.Error(codes.Internal, "database error")
+	}
+
+	return &types.Empty{}, nil
+}
+
+func (s *ManagementService) newIncomingAccessRequestFromRequest(ctx context.Context, serviceName, accessRequestID string) (*database.IncomingAccessRequest, error) {
+	_, err := s.configDatabase.GetService(ctx, serviceName)
 	if err != nil {
 		if errIsNotFound(err) {
 			return nil, status.Error(codes.NotFound, "service not found")
 		}
 
-		s.logger.Error("fetching service", zap.String("serviceName", req.ServiceName), zap.Error(err))
+		s.logger.Error("error fetching service", zap.String("serviceName", serviceName), zap.Error(err))
 
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	accessRequest, err := s.configDatabase.GetIncomingAccessRequest(ctx, req.AccessRequestID)
+	accessRequest, err := s.configDatabase.GetIncomingAccessRequest(ctx, accessRequestID)
 	if err != nil {
 		if errIsNotFound(err) {
 			return nil, status.Error(codes.NotFound, "access request not found")
 		}
 
-		s.logger.Error("fetching access request", zap.String("id", req.AccessRequestID), zap.Error(err))
+		s.logger.Error("error fetching access request", zap.String("id", accessRequestID), zap.Error(err))
 
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	if accessRequest.ServiceName != req.ServiceName {
+	if accessRequest.ServiceName != serviceName {
 		return nil, status.Error(codes.InvalidArgument, "service name does not match the one from access request")
-	}
-
-	if accessRequest.State == database.AccessRequestApproved {
-		return nil, status.Error(codes.AlreadyExists, "access request is already approved")
 	}
 
 	return accessRequest, nil

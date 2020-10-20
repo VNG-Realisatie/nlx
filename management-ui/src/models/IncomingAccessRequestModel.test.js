@@ -78,6 +78,24 @@ test('approving request handles as expected', async () => {
   expect(store.fetchIncomingAccessRequests).toHaveBeenCalled()
 })
 
+test('rejecting request handles as expected', async () => {
+  const request = deferredPromise()
+  accessRequestRepository = {
+    rejectIncomingAccessRequest: jest.fn(() => request),
+  }
+
+  const accessRequest = new IncomingAccessRequestModel({
+    store,
+    accessRequestData,
+    accessRequestRepository,
+  })
+
+  accessRequest.reject()
+  await request.resolve()
+
+  expect(store.fetchIncomingAccessRequests).toHaveBeenCalled()
+})
+
 test('on error it will reset state to RECEIVED', async () => {
   accessRequestRepository = {
     approveIncomingAccessRequest: jest

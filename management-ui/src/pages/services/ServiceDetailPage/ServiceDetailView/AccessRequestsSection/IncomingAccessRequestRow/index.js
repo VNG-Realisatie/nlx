@@ -7,11 +7,14 @@ import { Table } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 
 import { incomingAccessRequestPropTypes } from '../../../../../../models/IncomingAccessRequestModel'
-import ButtonWithIcon from '../../../../../../components/ButtonWithIcon'
-import { IconCheck } from '../../../../../../icons'
-import { TdActions } from './index.styles'
+import { IconCheck, IconClose } from '../../../../../../icons'
+import { TdActions, StyledButtonWithIcon } from './index.styles'
 
-const IncomingAccessRequestRow = ({ accessRequest, approveHandler }) => {
+const IncomingAccessRequestRow = ({
+  accessRequest,
+  approveHandler,
+  rejectHandler,
+}) => {
   const { t } = useTranslation()
   const { id, organizationName, serviceName } = accessRequest
 
@@ -20,10 +23,15 @@ const IncomingAccessRequestRow = ({ accessRequest, approveHandler }) => {
     approve()
   }
 
+  const handleRejectButtonClick = (event) => {
+    event.stopPropagation()
+    reject()
+  }
+
   const approve = () => {
     const confirmed = window.confirm(
       t(
-        'Approving this access request will grant {{organizationName}} access to {{serviceName}}. Are you sure?',
+        'Approving this access request will grant organizationName access to serviceName. Are you sure?',
         {
           organizationName,
           serviceName,
@@ -36,18 +44,42 @@ const IncomingAccessRequestRow = ({ accessRequest, approveHandler }) => {
     }
   }
 
+  const reject = () => {
+    const confirmed = window.confirm(
+      t(
+        'Rejecting this access request will refuse organizationName access to serviceName. Are you sure?',
+        {
+          organizationName,
+          serviceName,
+        },
+      ),
+    )
+
+    if (confirmed) {
+      rejectHandler(accessRequest)
+    }
+  }
+
   return (
     <Table.Tr data-testid={`service-incoming-accessrequest-${id}`}>
       <Table.Td>{organizationName}</Table.Td>
       <TdActions>
-        <ButtonWithIcon
+        <StyledButtonWithIcon
+          data-testid="button-approve"
           size="small"
           variant="link"
           onClick={handleApproveButtonClick}
         >
           <IconCheck />
-          {t('Approve')}
-        </ButtonWithIcon>
+        </StyledButtonWithIcon>
+        <StyledButtonWithIcon
+          data-testid="button-reject"
+          size="small"
+          variant="link"
+          onClick={handleRejectButtonClick}
+        >
+          <IconClose />
+        </StyledButtonWithIcon>
       </TdActions>
     </Table.Tr>
   )
@@ -56,6 +88,7 @@ const IncomingAccessRequestRow = ({ accessRequest, approveHandler }) => {
 IncomingAccessRequestRow.propTypes = {
   accessRequest: shape(incomingAccessRequestPropTypes).isRequired,
   approveHandler: func.isRequired,
+  rejectHandler: func.isRequired,
 }
 
 export default IncomingAccessRequestRow

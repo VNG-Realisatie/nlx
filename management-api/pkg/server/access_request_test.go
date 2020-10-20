@@ -457,6 +457,141 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 	}
 }
 
+//nolint:funlen // this is a test
+func TestRejectIncomingAccessRequest(t *testing.T) {
+	tests := []struct {
+		name             string
+		request          *api.RejectIncomingAccessRequestRequest
+		service          *database.Service
+		serviceErr       error
+		accessRequest    *database.IncomingAccessRequest
+		accessRequestErr error
+		expectUpdateCall bool
+		updateErr        error
+		response         *types.Empty
+		err              error
+	}{
+		{
+			"unknown_service",
+			&api.RejectIncomingAccessRequestRequest{
+				ServiceName:     "test-service",
+				AccessRequestID: "1",
+			},
+			nil,
+			database.ErrNotFound,
+			nil,
+			nil,
+			false,
+			nil,
+			nil,
+			status.Error(codes.NotFound, "service not found"),
+		},
+		{
+			"unknown_access_request",
+			&api.RejectIncomingAccessRequestRequest{
+				ServiceName:     "test-service",
+				AccessRequestID: "1",
+			},
+			&database.Service{
+				Name: "test-service",
+			},
+			nil,
+			nil,
+			database.ErrNotFound,
+			false,
+			nil,
+			nil,
+			status.Error(codes.NotFound, "access request not found"),
+		},
+		{
+			"service_mismatch_access_request",
+			&api.RejectIncomingAccessRequestRequest{
+				ServiceName:     "test-service",
+				AccessRequestID: "1",
+			},
+			&database.Service{
+				Name: "test-service",
+			},
+			nil,
+			&database.IncomingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					ServiceName: "other-service",
+				},
+			},
+			nil,
+			false,
+			nil,
+			nil,
+			status.Error(codes.InvalidArgument, "service name does not match the one from access request"),
+		},
+		{
+			"update_state_fails",
+			&api.RejectIncomingAccessRequestRequest{
+				ServiceName:     "test-service",
+				AccessRequestID: "1",
+			},
+			&database.Service{
+				Name: "test-service",
+			},
+			nil,
+			&database.IncomingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					ServiceName: "test-service",
+				},
+			},
+			nil,
+			true,
+			errors.New("arbitrary error"),
+			nil,
+			status.Error(codes.Internal, "database error"),
+		},
+		{
+			"happy_flow",
+			&api.RejectIncomingAccessRequestRequest{
+				ServiceName:     "test-service",
+				AccessRequestID: "1",
+			},
+			&database.Service{
+				Name: "test-service",
+			},
+			nil,
+			&database.IncomingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					ServiceName: "test-service",
+				},
+			},
+			nil,
+			true,
+			nil,
+			&types.Empty{},
+			nil,
+		},
+	}
+
+	for _, test := range tests {
+		test := test
+		t.Run(test.name, func(t *testing.T) {
+			service, db := newService(t)
+			ctx := context.Background()
+
+			db.EXPECT().GetService(ctx, test.request.ServiceName).Return(test.service, test.serviceErr)
+
+			if test.service != nil {
+				db.EXPECT().GetIncomingAccessRequest(ctx, test.request.AccessRequestID).Return(test.accessRequest, test.accessRequestErr)
+			}
+
+			if test.expectUpdateCall {
+				db.EXPECT().UpdateIncomingAccessRequestState(ctx, test.accessRequest, database.AccessRequestRejected).Return(test.updateErr)
+			}
+
+			actual, err := service.RejectIncomingAccessRequest(ctx, test.request)
+
+			assert.Equal(t, test.response, actual)
+			assert.Equal(t, test.err, err)
+		})
+	}
+}
+
 func TestApproveIncomingAccessRequestModified(t *testing.T) {
 	serverService, db := newService(t)
 	ctx := context.Background()

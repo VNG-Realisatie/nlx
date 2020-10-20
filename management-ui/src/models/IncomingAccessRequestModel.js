@@ -24,6 +24,7 @@ export const incomingAccessRequestPropTypes = {
   updatedAt: string,
 
   approve: func,
+  reject: func,
   error: string,
 }
 
@@ -84,6 +85,22 @@ class IncomingAccessRequestModel {
 
       const { serviceName, id } = this
       yield this.accessRequestRepository.approveIncomingAccessRequest({
+        serviceName,
+        id,
+      })
+
+      this.store.fetchIncomingAccessRequests()
+    } catch (e) {
+      this.error = e.message
+    }
+  }).bind(this)
+
+  reject = flow(function* send() {
+    try {
+      this.error = ''
+
+      const { serviceName, id } = this
+      yield this.accessRequestRepository.rejectIncomingAccessRequest({
         serviceName,
         id,
       })

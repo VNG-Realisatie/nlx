@@ -47,6 +47,7 @@ const (
 	AccessRequestCreated
 	AccessRequestReceived
 	AccessRequestApproved
+	AccessRequestRejected
 )
 
 const locksPrefix = "/nlx/locks/"
@@ -190,6 +191,10 @@ func (db ETCDConfigDatabase) GetOutgoingAccessRequest(ctx context.Context, id st
 			accessRequest = item
 			break
 		}
+	}
+
+	if accessRequest == nil {
+		return nil, ErrNotFound
 	}
 
 	return accessRequest, nil
@@ -405,6 +410,10 @@ func (db ETCDConfigDatabase) GetIncomingAccessRequest(ctx context.Context, id st
 			accessRequest = item
 			break
 		}
+	}
+
+	if accessRequest == nil {
+		return nil, ErrNotFound
 	}
 
 	return accessRequest, nil

@@ -181,6 +181,42 @@
         ]
       }
     },
+    "/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/reject": {
+      "post": {
+        "operationId": "Management_RejectIncomingAccessRequest",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "serviceName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "accessRequestID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Management"
+        ]
+      }
+    },
     "/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}": {
       "get": {
         "operationId": "Management_ListOutgoingAccessRequests",
@@ -848,7 +884,8 @@
         "FAILED",
         "CREATED",
         "RECEIVED",
-        "APPROVED"
+        "APPROVED",
+        "REJECTED"
       ],
       "default": "UNSPECIFIED"
     },

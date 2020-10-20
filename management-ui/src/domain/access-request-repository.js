@@ -47,6 +47,19 @@ class AccessRequestRepository {
     return null
   }
 
+  static async rejectIncomingAccessRequest({ serviceName, id }) {
+    const response = await fetch(
+      `/api/v1/access-requests/incoming/services/${serviceName}/${id}/reject`,
+      { method: 'POST' },
+    )
+
+    throwOnError(response, {
+      404: 'Request not found, please refresh the page to see the latest state.',
+    })
+
+    return null
+  }
+
   static async sendAccessRequest({ organizationName, serviceName, id }) {
     const response = await fetch(
       `/api/v1/access-requests/outgoing/organizations/${organizationName}/services/${serviceName}/${id}/send`,
