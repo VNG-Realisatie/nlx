@@ -72,16 +72,10 @@ class DirectoryServiceModel {
       return false
     }
 
-    this.latestAccessRequest = yield new OutgoingAccessRequestModel({
-      accessRequestData: {
-        organizationName: this.organizationName,
-        serviceName: this.serviceName,
-      },
-      accessRequestRepository: this.accessRequestRepository,
-    })
-
     try {
-      yield this.latestAccessRequest.send()
+      this.latestAccessRequest = yield this.directoryServiceStore.requestAccess(
+        this,
+      )
     } catch (e) {
       console.error(e)
       this.latestAccessRequest = null

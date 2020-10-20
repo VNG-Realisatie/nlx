@@ -13,12 +13,15 @@ class DirectoryStore {
   // This is internal state to prevent concurrent fetchServices calls being in flight.
   isFetching = false
 
-  constructor({ rootStore, directoryRepository = DirectoryRepository }) {
+  constructor({
+    outgoingAccessRequestsStore,
+    directoryRepository = DirectoryRepository,
+  }) {
     makeAutoObservable(this, {
       selectService: action.bound,
     })
 
-    this.rootStore = rootStore
+    this.outgoingAccessRequestsStore = outgoingAccessRequestsStore
     this.directoryRepository = directoryRepository
   }
 
@@ -56,7 +59,7 @@ class DirectoryStore {
   }
 
   async requestAccess(directoryService) {
-    return this.rootStore.outgoingAccessRequestsStore.create({
+    return this.outgoingAccessRequestsStore.create({
       organizationName: directoryService.organizationName,
       serviceName: directoryService.serviceName,
     })

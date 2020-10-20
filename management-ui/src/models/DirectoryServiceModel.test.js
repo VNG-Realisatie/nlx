@@ -3,6 +3,8 @@
 //
 import { act } from '@testing-library/react'
 import { checkPropTypes } from 'prop-types'
+import DirectoryStore from '../stores/DirectoryStore'
+import OutgoingAccessRequestStore from '../stores/OutgoingAccessRequestStore'
 import OutgoingAccessRequestModel, {
   ACCESS_REQUEST_STATES,
 } from './OutgoingAccessRequestModel'
@@ -185,8 +187,17 @@ describe('requesting access to a service', () => {
       }),
     }
 
+    const outgoingAccessRequestsStore = new OutgoingAccessRequestStore({
+      rootStore: {},
+      accessRequestRepository: accessRequestRepository,
+    })
+
+    const directoryServiceStore = new DirectoryStore({
+      outgoingAccessRequestsStore: outgoingAccessRequestsStore,
+    })
+
     const directoryService = new DirectoryServiceModel({
-      directoryServiceStore: {},
+      directoryServiceStore: directoryServiceStore,
       service: service,
       accessRequestRepository: accessRequestRepository,
     })
