@@ -19,12 +19,16 @@ export const storesContext = createContext(null)
 
 class RootStore {
   constructor() {
-    this.directoryStore = new DirectoryStore({ rootStore: this })
-    this.servicesStore = new ServicesStore({ rootStore: this })
-    this.inwaysStore = new InwaysStore({ rootStore: this })
-    this.outgoingAccessRequestsStore = new OutgoingAccessRequestStore({
+    const outgoingAccessRequestsStore = new OutgoingAccessRequestStore({
       rootStore: this,
     })
+
+    this.outgoingAccessRequestsStore = outgoingAccessRequestsStore
+    this.directoryStore = new DirectoryStore({
+      outgoingAccessRequestsStore: outgoingAccessRequestsStore,
+    })
+    this.servicesStore = new ServicesStore({ rootStore: this })
+    this.inwaysStore = new InwaysStore({ rootStore: this })
   }
 }
 
