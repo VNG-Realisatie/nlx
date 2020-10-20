@@ -46,7 +46,7 @@ func (o *Outway) RunServer(listenAddress string, serverCertificate *tls.Certific
 			errorChannel <- o.httpServer.ListenAndServe()
 		}()
 	} else {
-		tlsConfig := common_tls.NewConfig()
+		tlsConfig := common_tls.NewConfig(common_tls.WithTLS12())
 		tlsConfig.Certificates = []tls.Certificate{*serverCertificate}
 
 		o.httpServer.TLSConfig = tlsConfig

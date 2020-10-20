@@ -91,7 +91,7 @@ func (o *Outway) validateAuthURL(authCAPath, authServiceURL string) error {
 		return err
 	}
 
-	tlsConfig := common_tls.NewConfig()
+	tlsConfig := common_tls.NewConfig(common_tls.WithTLS12())
 	tlsConfig.RootCAs = o.authorizationSettings.ca
 
 	o.authorizationClient = http.Client{

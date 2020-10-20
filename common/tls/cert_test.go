@@ -121,5 +121,5 @@ func TestBundle(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.Equal(t, "60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=", c.PublicKeyFingerprint())
-	assert.Equal(t, uint16(tls.VersionTLS12), c.TLSConfig().MinVersion)
+	assert.Equal(t, uint16(tls.VersionTLS13), c.TLSConfig().MinVersion)
 }

@@ -212,7 +212,7 @@ func loadServices(logger *zap.Logger, serviceConfig *config.ServiceConfig, iw *i
 			}
 		}
 
-		tlsConfig := common_tls.NewConfig()
+		tlsConfig := common_tls.NewConfig(common_tls.WithTLS12())
 		tlsConfig.RootCAs = rootCAs
 
 		endpoint, errr := iw.NewHTTPServiceEndpoint(serviceName, &serviceDetails, tlsConfig)

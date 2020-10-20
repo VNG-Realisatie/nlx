@@ -38,13 +38,9 @@ func (c *CertificateBundle) PublicKeyFingerprint() string {
 
 // TLSConfig returns a new tls.Config with the certifcate and root ca
 func (c *CertificateBundle) TLSConfig(options ...ConfigOption) *tls.Config {
-	config := NewConfig()
+	config := NewConfig(options...)
 	config.Certificates = []tls.Certificate{*c.keyPair}
 	config.RootCAs = c.rootCAs
-
-	for _, option := range options {
-		option(config)
-	}
 
 	return config
 }
@@ -115,10 +111,17 @@ func PublicKeyFingerprint(certificate *x509.Certificate) string {
 }
 
 // NewConfig returns a new tls.Config with sane defaults
-func NewConfig() *tls.Config {
-	return &tls.Config{
-		MinVersion: tls.VersionTLS12,
+func NewConfig(options ...ConfigOption) *tls.Config {
+	config := &tls.Config{
+		MinVersion:               tls.VersionTLS13,
+		PreferServerCipherSuites: true,
 	}
+
+	for _, option := range options {
+		option(config)
+	}
+
+	return config
 }
 
 func parseCertificate(certPEM []byte) (*x509.Certificate, error) {
