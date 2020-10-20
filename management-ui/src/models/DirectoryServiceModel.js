@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { flow, makeAutoObservable } from 'mobx'
+import { action, flow, makeAutoObservable } from 'mobx'
 import { func, object, string } from 'prop-types'
 
 import AccessRequestRepository from '../domain/access-request-repository'
@@ -31,7 +31,9 @@ class DirectoryServiceModel {
     service,
     accessRequestRepository = AccessRequestRepository,
   }) {
-    makeAutoObservable(this)
+    makeAutoObservable(this, {
+      update: action,
+    })
 
     this.directoryServiceStore = directoryServiceStore
     this.accessRequestRepository = accessRequestRepository
@@ -54,18 +56,27 @@ class DirectoryServiceModel {
     this.latestAccessRequest = service.latestAccessRequest || null
   }
 
-  fetch = flow(function* fetch() {
-    const service = yield this.directoryServiceStore.directoryRepository.getByName(
-      this.organizationName,
-      this.serviceName,
-    )
+  update(directoryServiceData) {
+    this.state = directoryServiceData.state
+    this.apiSpecificationType = directoryServiceData.apiSpecificationType
 
-    this.state = service.state
-    this.latestAccessRequest = service.latestAccessRequest
-      ? new OutgoingAccessRequestModel({
-          accessRequestData: service.latestAccessRequest,
-        })
-      : null
+    if (
+      directoryServiceData.latestAccessRequest &&
+      !(
+        directoryServiceData.latestAccessRequest instanceof
+        OutgoingAccessRequestModel
+      )
+    ) {
+      throw new Error(
+        'the latestAccessRequest should be an instance of the OutgoingAccessRequestModel',
+      )
+    }
+
+    this.latestAccessRequest = directoryServiceData.latestAccessRequest || null
+  }
+
+  fetch = flow(function* fetch() {
+    yield this.directoryServiceStore.fetch(this)
   }).bind(this)
 
   requestAccess = flow(function* requestAccess() {

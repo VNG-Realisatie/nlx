@@ -38,7 +38,8 @@ class OutgoingAccessRequestStore {
     )
 
     if (cachedOutgoingAccessRequest) {
-      yield outgoingAccessRequestData.update(outgoingAccessRequestData)
+      cachedOutgoingAccessRequest.update(outgoingAccessRequestData)
+      return yield cachedOutgoingAccessRequest
     } else {
       const outgoingAccessRequest = new OutgoingAccessRequestModel({
         accessRequestData: {
@@ -57,7 +58,7 @@ class OutgoingAccessRequestStore {
         outgoingAccessRequest,
       )
 
-      yield outgoingAccessRequest
+      return yield outgoingAccessRequest
     }
   }).bind(this)
 

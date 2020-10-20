@@ -1,6 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
+import { act } from '@testing-library/react'
 import deferredPromise from '../test-utils/deferred-promise'
 import DirectoryServiceModel from '../models/DirectoryServiceModel'
 import OutgoingAccessRequestModel from '../models/OutgoingAccessRequestModel'
@@ -40,7 +41,9 @@ test('fetching directory services', async () => {
   expect(directoryStore.isInitiallyFetched).toBe(false)
   expect(directoryRepository.getAll).toHaveBeenCalled()
 
-  await request.resolve(serviceList)
+  await act(async () => {
+    await request.resolve(serviceList)
+  })
 
   await expect(directoryStore.isInitiallyFetched).toBe(true)
   expect(directoryStore.services).toHaveLength(2)

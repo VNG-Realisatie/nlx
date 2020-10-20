@@ -4,6 +4,7 @@
 import { act } from '@testing-library/react'
 import { checkPropTypes } from 'prop-types'
 import OutgoingAccessRequestStore from '../stores/OutgoingAccessRequestStore'
+import { RootStore } from '../stores'
 import OutgoingAccessRequestModel, {
   ACCESS_REQUEST_STATES,
 } from './OutgoingAccessRequestModel'
@@ -75,7 +76,7 @@ test('initializing the model with an invalid latest access request', () => {
 })
 
 test('(re-)fetching the model', async () => {
-  const directoryServiceStore = {
+  const rootStore = new RootStore({
     directoryRepository: {
       getByName: jest.fn().mockResolvedValue({
         state: 'down',
@@ -84,10 +85,10 @@ test('(re-)fetching the model', async () => {
         },
       }),
     },
-  }
+  })
 
   const directoryService = new DirectoryServiceModel({
-    directoryServiceStore: directoryServiceStore,
+    directoryServiceStore: rootStore.directoryStore,
     service: {
       organizationName: 'Organization',
       serviceName: 'Service',
@@ -99,22 +100,13 @@ test('(re-)fetching the model', async () => {
   expect(directoryService.state).toBe('up')
   expect(directoryService.latestAccessRequest).toBeNull()
 
+  const directoryStoreFetchSpy = jest.spyOn(rootStore.directoryStore, 'fetch')
+
   await act(async () => {
     await directoryService.fetch()
   })
 
-  expect(
-    directoryServiceStore.directoryRepository.getByName,
-  ).toHaveBeenCalledWith('Organization', 'Service')
-
-  expect(directoryService.state).toBe('down')
-  expect(directoryService.latestAccessRequest).toEqual(
-    new OutgoingAccessRequestModel({
-      accessRequestData: {
-        id: '42',
-      },
-    }),
-  )
+  expect(directoryStoreFetchSpy).toHaveBeenCalledWith(directoryService)
 })
 
 describe('requesting access to a service', () => {

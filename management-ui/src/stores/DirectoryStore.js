@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { makeAutoObservable, flow, action } from 'mobx'
+import { action, flow, makeAutoObservable } from 'mobx'
 import DirectoryRepository from '../domain/directory-repository'
 import DirectoryServiceModel from '../models/DirectoryServiceModel'
 import AccessRequestRepository from '../domain/access-request-repository'
@@ -28,6 +28,25 @@ class DirectoryStore {
     this.accessRequestRepository = accessRequestRepository
   }
 
+  fetch = flow(function* fetchService(directoryServiceModel) {
+    const response = yield this.directoryRepository.getByName(
+      directoryServiceModel.organizationName,
+      directoryServiceModel.serviceName,
+    )
+
+    let outgoingAccessRequestModel = null
+    if (response.latestAccessRequest) {
+      outgoingAccessRequestModel = yield this.rootStore.outgoingAccessRequestsStore.loadOutgoingAccessRequest(
+        response.latestAccessRequest,
+      )
+    }
+
+    directoryServiceModel.update({
+      ...response,
+      latestAccessRequest: outgoingAccessRequestModel,
+    })
+  })
+
   fetchServices = flow(function* fetchServices() {
     if (this.isFetching) {
       return
@@ -37,13 +56,18 @@ class DirectoryStore {
 
     try {
       const services = yield this.directoryRepository.getAll()
-      this.services = services.map((service) =>
-        mapDirectoryServiceFromApiToModel(
-          this.rootStore,
-          this.accessRequestRepository,
-          service,
-        ),
+      const loadServiceModels = services.map(
+        async (service) =>
+          await mapDirectoryServiceFromApiToModel(
+            this.rootStore,
+            this.accessRequestRepository,
+            service,
+          ),
       )
+
+      const serviceModels = yield Promise.all(loadServiceModels)
+
+      this.services = serviceModels
     } catch (e) {
       this.error = e
       console.error(e)
@@ -73,19 +97,19 @@ class DirectoryStore {
   }
 }
 
-function mapDirectoryServiceFromApiToModel(
+async function mapDirectoryServiceFromApiToModel(
   rootStore,
   accessRequestRepository,
   service,
 ) {
   const latestAccessRequest = service.latestAccessRequest
-    ? rootStore.outgoingAccessRequestsStore.loadOutgoingAccessRequest(
+    ? await rootStore.outgoingAccessRequestsStore.loadOutgoingAccessRequest(
         service.latestAccessRequest,
       )
     : null
 
   return new DirectoryServiceModel({
-    rootStore: rootStore.directoryServiceStore,
+    directoryServiceStore: rootStore.directoryStore,
     accessRequestRepository,
     service: {
       id: service.id,
