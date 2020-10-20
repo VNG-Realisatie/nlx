@@ -15,6 +15,7 @@
   "API specification URL": "API specification URL",
   "API Type": "API Type",
   "Approve": "Approve",
+  "Approved": "Approved",
   "Approving this access request will grant {{organizationName}} access to {{serviceName}}. Are you sure?": "Approving this access request will grant {{organizationName}} access to {{serviceName}}. Are you sure?",
   "Avatar": "Avatar",
   "Back": "Back",
@@ -74,6 +75,7 @@
   "Public support email": "Public support email",
   "Publish to central directory": "Publish to central directory",
   "Published in central directory": "Published in central directory",
+  "Rejected": "Rejected",
   "Remove": "Remove",
   "Request": "Request",
   "Request Access": "Request Access",
@@ -116,5 +118,6 @@
   "Visibility": "Visibility",
   "We could not find what you were looking for.": "We could not find what you were looking for.",
   "Welcome": "Welcome",
+  "You have access": "You have access",
   "You have no access": "You have no access"
 }

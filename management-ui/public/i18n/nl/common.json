@@ -15,6 +15,7 @@
   "API specification URL": "API specificatie URL",
   "API Type": "API Type",
   "Approve": "Goedkeuren",
+  "Approved": "Goedgekeurd",
   "Approving this access request will grant {{organizationName}} access to {{serviceName}}. Are you sure?": "Het accepteren van dit toegangsverzoek geeft {{organizationName}} toegang tot {{serviceName}}. Weet je het zeker?",
   "Avatar": "Avatar",
   "Back": "Terug",
@@ -74,6 +75,7 @@
   "Public support email": "Publiek support e-mailadres",
   "Publish to central directory": "Publiceren in de centrale directory",
   "Published in central directory": "Gepubliceerd in centrale directory",
+  "Rejected": "Afgewezen",
   "Remove": "Verwijderen",
   "Request": "Verzoek",
   "Request Access": "Toegang aanvragen",
@@ -116,5 +118,6 @@
   "Visibility": "Zichtbaarheid",
   "We could not find what you were looking for.": "We konden de opgevraagde pagina niet vinden.",
   "Welcome": "Welkom",
+  "You have access": "Je hebt toegang",
   "You have no access": "Je hebt geen toegang"
 }

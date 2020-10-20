@@ -3,15 +3,42 @@
 //
 import React from 'react'
 
-import { renderWithProviders } from '../../../../../test-utils'
-import AccessRequestMessage from './index'
+import { renderWithProviders, fireEvent } from '../../../../../../test-utils'
+import AccessRequestSection from './index'
 
 test('Should throw error when state is unknown', () => {
   const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
 
-  expect(() => renderWithProviders(<AccessRequestMessage />)).toThrow()
+  const latestAccessRequest = {
+    id: 'id',
+    state: '?',
+    createdAt: '2020-10-01T12:00:00Z',
+    updatedAt: '2020-10-01T12:00:21Z',
+  }
+  expect(() =>
+    renderWithProviders(
+      <AccessRequestSection latestAccessRequest={latestAccessRequest} />,
+    ),
+  ).toThrow()
 
   errorSpy.mockRestore()
+})
+
+test('Correctly renders when there is no access request', () => {
+  const requestAccessSpy = jest.fn()
+  const { getByText } = renderWithProviders(
+    <AccessRequestSection
+      latestAccessRequest={undefined}
+      requestAccess={requestAccessSpy}
+    />,
+  )
+
+  expect(getByText('You have no access')).toBeInTheDocument()
+
+  const button = getByText('Request Access')
+  fireEvent.click(button)
+
+  expect(requestAccessSpy).toHaveBeenCalled()
 })
 
 test('Correctly renders FAILED state', () => {
@@ -22,7 +49,7 @@ test('Correctly renders FAILED state', () => {
     updatedAt: '2020-10-01T12:00:21Z',
   }
   const { getByText } = renderWithProviders(
-    <AccessRequestMessage latestAccessRequest={latestAccessRequest} />,
+    <AccessRequestSection latestAccessRequest={latestAccessRequest} />,
   )
 
   expect(getByText('Request could not be sent')).toBeInTheDocument()
@@ -36,10 +63,10 @@ test('Correctly renders CREATED state', () => {
     updatedAt: '2020-10-01T12:00:21Z',
   }
   const { getByText } = renderWithProviders(
-    <AccessRequestMessage latestAccessRequest={latestAccessRequest} />,
+    <AccessRequestSection latestAccessRequest={latestAccessRequest} />,
   )
 
-  expect(getByText('Sending request')).toBeInTheDocument()
+  expect(getByText('Sending request...')).toBeInTheDocument()
 })
 
 test('Correctly renders RECEIVED state', () => {
@@ -50,7 +77,7 @@ test('Correctly renders RECEIVED state', () => {
     updatedAt: '2020-10-01T12:00:21Z',
   }
   const { getByText } = renderWithProviders(
-    <AccessRequestMessage latestAccessRequest={latestAccessRequest} />,
+    <AccessRequestSection latestAccessRequest={latestAccessRequest} />,
   )
 
   expect(getByText('Requested')).toBeInTheDocument()
@@ -63,12 +90,11 @@ test('Correctly renders APPROVED state', () => {
     createdAt: '2020-10-01T12:00:00Z',
     updatedAt: '2020-10-01T12:00:21Z',
   }
-  const { getByText, getByTitle } = renderWithProviders(
-    <AccessRequestMessage latestAccessRequest={latestAccessRequest} />,
+  const { getByText } = renderWithProviders(
+    <AccessRequestSection latestAccessRequest={latestAccessRequest} />,
   )
 
-  expect(getByText('check.svg')).toBeInTheDocument()
-  expect(getByTitle('Approved')).toBeInTheDocument()
+  expect(getByText('You have access')).toBeInTheDocument()
 })
 
 test('Correctly renders REJECTED state', () => {
@@ -79,7 +105,7 @@ test('Correctly renders REJECTED state', () => {
     updatedAt: '2020-10-01T12:00:21Z',
   }
   const { getByText } = renderWithProviders(
-    <AccessRequestMessage latestAccessRequest={latestAccessRequest} />,
+    <AccessRequestSection latestAccessRequest={latestAccessRequest} />,
   )
 
   expect(getByText('Rejected')).toBeInTheDocument()

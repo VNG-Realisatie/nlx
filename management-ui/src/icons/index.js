@@ -1,6 +1,14 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
+import styled from 'styled-components'
+
+// Removes spurious margins on svg element
+// Use like so: <InlineIcon as={IconCheck} title="ok" />
+export const InlineIcon = styled.span`
+  vertical-align: top;
+`
+
 export { ReactComponent as IconArrowLeftRight } from './arrow-left-right.svg'
 export { ReactComponent as IconBin } from './bin.svg'
 export { ReactComponent as IconCheck } from './check.svg'

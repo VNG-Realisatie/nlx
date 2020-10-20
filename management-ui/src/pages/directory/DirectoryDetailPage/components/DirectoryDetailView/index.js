@@ -4,28 +4,23 @@
 import React from 'react'
 import { shape, func } from 'prop-types'
 import { observer } from 'mobx-react'
-import { Alert, Button, Spinner } from '@commonground/design-system'
+import { Alert } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import pick from 'lodash.pick'
 
 import { directoryServicePropTypes } from '../../../../../models/DirectoryServiceModel'
 import { ACCESS_REQUEST_STATES } from '../../../../../models/OutgoingAccessRequestModel'
-import AccessRequestMessage from '../../../DirectoryPage/components/AccessRequestMessage'
 import { SectionGroup } from '../../../../../components/DetailView'
-import { IconKey } from '../../../../../icons'
-import AccessRequestRepository from '../../../../../domain/access-request-repository'
-import { StyledAlert, AccessSection, IconItem, StateItem } from './index.styles'
 
-const { FAILED, RECEIVED } = ACCESS_REQUEST_STATES
+import AccessRequestRepository from '../../../../../domain/access-request-repository'
+import AccessRequestSection from './AccessRequestSection'
+import { StyledAlert } from './index.styles'
+
+const { FAILED } = ACCESS_REQUEST_STATES
 
 const DirectoryDetailView = ({ service, sendAccessRequest }) => {
   const { t } = useTranslation()
   const { organizationName, latestAccessRequest } = service
-
-  const onRequestAccessButtonClick = (event) => {
-    event.stopPropagation()
-    requestAccess()
-  }
 
   const requestAccess = () => {
     const confirmed = window.confirm(
@@ -39,14 +34,6 @@ const DirectoryDetailView = ({ service, sendAccessRequest }) => {
 
   const retryRequestAccess = () => {
     service.retryRequestAccess()
-  }
-
-  let icon = Spinner
-  if (
-    latestAccessRequest &&
-    [FAILED, RECEIVED].includes(latestAccessRequest.state)
-  ) {
-    icon = IconKey
   }
 
   return (
@@ -67,28 +54,10 @@ const DirectoryDetailView = ({ service, sendAccessRequest }) => {
       )}
 
       <SectionGroup>
-        <AccessSection data-testid="request-access-section">
-          {latestAccessRequest ? (
-            <>
-              <IconItem as={icon} />
-              <StateItem>
-                <AccessRequestMessage
-                  latestAccessRequest={latestAccessRequest}
-                  inDetailView
-                />
-                {icon === Spinner && '...'}
-              </StateItem>
-            </>
-          ) : (
-            <>
-              <IconItem as={IconKey} />
-              <StateItem>{t('You have no access')}</StateItem>
-              <Button onClick={onRequestAccessButtonClick}>
-                {t('Request Access')}
-              </Button>
-            </>
-          )}
-        </AccessSection>
+        <AccessRequestSection
+          latestAccessRequest={latestAccessRequest}
+          requestAccess={requestAccess}
+        />
       </SectionGroup>
     </>
   )
