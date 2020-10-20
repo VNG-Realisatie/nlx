@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { action, flow, makeAutoObservable } from 'mobx'
+import { flow, makeAutoObservable } from 'mobx'
 import DirectoryRepository from '../domain/directory-repository'
 import DirectoryServiceModel from '../models/DirectoryServiceModel'
 import AccessRequestRepository from '../domain/access-request-repository'
@@ -19,9 +19,7 @@ class DirectoryServicesStore {
     directoryRepository = DirectoryRepository,
     accessRequestRepository = AccessRequestRepository,
   }) {
-    makeAutoObservable(this, {
-      selectService: action.bound,
-    })
+    makeAutoObservable(this)
 
     this.rootStore = rootStore
     this.directoryRepository = directoryRepository
@@ -77,7 +75,7 @@ class DirectoryServicesStore {
     }
   }).bind(this)
 
-  selectService({ organizationName, serviceName }) {
+  selectService = ({ organizationName, serviceName }) => {
     const directoryServiceModel = this.services.find(
       (service) =>
         service.organizationName === organizationName &&
