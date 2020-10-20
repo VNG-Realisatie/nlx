@@ -87,7 +87,4 @@ class DirectoryServiceModel {
   }).bind(this)
 }
 
-export const createDirectoryService = (...args) =>
-  new DirectoryServiceModel(...args)
-
 export default DirectoryServiceModel

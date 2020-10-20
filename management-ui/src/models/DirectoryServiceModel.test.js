@@ -8,12 +8,11 @@ import OutgoingAccessRequestModel, {
   ACCESS_REQUEST_STATES,
 } from './OutgoingAccessRequestModel'
 import DirectoryServiceModel, {
-  createDirectoryService,
   directoryServicePropTypes,
 } from './DirectoryServiceModel'
 
 test('createDirectoryService returns an instance', () => {
-  const directoryService = createDirectoryService({
+  const directoryService = new DirectoryServiceModel({
     directoryServiceStore: {},
     service: {
       organizationName: 'Organization',
@@ -27,7 +26,7 @@ test('createDirectoryService returns an instance', () => {
 
 test('model implements proptypes', () => {
   const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
-  const directoryService = createDirectoryService({
+  const directoryService = new DirectoryServiceModel({
     directoryServiceStore: {},
     service: {
       organizationName: 'Organization',
