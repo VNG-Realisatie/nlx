@@ -1,8 +1,8 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { makeAutoObservable } from 'mobx'
-import { string } from 'prop-types'
+import { flow, makeAutoObservable } from 'mobx'
+import { func, string } from 'prop-types'
 
 export const ACCESS_REQUEST_STATES = {
   CREATED: 'CREATED',
@@ -21,6 +21,8 @@ export const outgoingAccessRequestPropTypes = {
   createdAt: string,
   updatedAt: string,
   error: string,
+
+  retry: func,
 }
 
 class OutgoingAccessRequestModel {
@@ -32,12 +34,15 @@ class OutgoingAccessRequestModel {
   updatedAt = ''
   error = ''
 
-  constructor({ accessRequestData }) {
+  constructor({ accessRequestData, outgoingAccessRequestStore }) {
     makeAutoObservable(this)
+
+    this.outgoingAccessRequestStore = outgoingAccessRequestStore
+
     this.update(accessRequestData)
   }
 
-  update(accessRequestData) {
+  update = (accessRequestData) => {
     if (!accessRequestData) {
       return
     }
@@ -66,6 +71,10 @@ class OutgoingAccessRequestModel {
       this.updatedAt = accessRequestData.updatedAt
     }
   }
+
+  retry = flow(function* retry() {
+    yield this.outgoingAccessRequestStore.retry(this)
+  }).bind(this)
 
   get isCancelledOrRejected() {
     return (

@@ -37,12 +37,8 @@ const DirectoryDetailView = ({ service, sendAccessRequest }) => {
     }
   }
 
-  const sendRequestAccessRequest = () => {
-    sendAccessRequest({
-      organizationName: service.organizationName,
-      serviceName: service.serviceName,
-      id: service.latestAccessRequest.id,
-    })
+  const retryRequestAccess = () => {
+    service.retryRequestAccess()
   }
 
   let icon = Spinner
@@ -62,7 +58,7 @@ const DirectoryDetailView = ({ service, sendAccessRequest }) => {
           actions={[
             <Alert.ButtonAction
               key="send-request-access-action-button"
-              onClick={sendRequestAccessRequest}
+              onClick={retryRequestAccess}
             >
               {t('Retry')}
             </Alert.ButtonAction>,

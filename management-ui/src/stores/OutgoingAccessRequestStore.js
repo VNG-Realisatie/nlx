@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { action, flow, makeAutoObservable, observable } from 'mobx'
+import { flow, makeAutoObservable, observable } from 'mobx'
 import AccessRequestRepository from '../domain/access-request-repository'
 import OutgoingAccessRequestModel from '../models/OutgoingAccessRequestModel'
 
@@ -12,9 +12,7 @@ class OutgoingAccessRequestStore {
     rootStore,
     accessRequestRepository = AccessRequestRepository,
   }) {
-    makeAutoObservable(this, {
-      create: action.bound,
-    })
+    makeAutoObservable(this)
 
     this.rootStore = rootStore
     this.accessRequestRepository = accessRequestRepository
@@ -24,7 +22,7 @@ class OutgoingAccessRequestStore {
     return this.outgoingAccessRequests.get(id)
   }
 
-  setOutgoingAccessRequest(id, model) {
+  setOutgoingAccessRequest = (id, model) => {
     return this.outgoingAccessRequests.set(id, model)
   }
 
@@ -78,6 +76,16 @@ class OutgoingAccessRequestStore {
         updatedAt: null,
       },
     })
+  }).bind(this)
+
+  retry = flow(function* (outgoingAccessRequestModel) {
+    const response = yield this.accessRequestRepository.sendAccessRequest({
+      organizationName: outgoingAccessRequestModel.organizationName,
+      serviceName: outgoingAccessRequestModel.serviceName,
+      id: outgoingAccessRequestModel.id,
+    })
+
+    yield this.loadOutgoingAccessRequest(response)
   }).bind(this)
 }
 

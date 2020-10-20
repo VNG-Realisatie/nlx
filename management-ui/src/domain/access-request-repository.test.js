@@ -104,7 +104,9 @@ describe('sending an access request', () => {
     jest.spyOn(global, 'fetch').mockResolvedValue({
       ok: true,
       status: 200,
-      json: async () => null,
+      json: async () => ({
+        id: '42',
+      }),
     })
 
     const parameters = {
@@ -122,6 +124,6 @@ describe('sending an access request', () => {
       }),
     )
 
-    expect(result).toBeNull()
+    expect(result).toEqual({ id: '42' })
   })
 })

@@ -15,7 +15,9 @@ export const directoryServicePropTypes = {
   apiSpecificationType: string,
   latestAccessRequest: object,
   fetch: func.isRequired,
+
   requestAccess: func.isRequired,
+  retryRequestAccess: func.isRequired,
 }
 
 class DirectoryServiceModel {
@@ -95,6 +97,14 @@ class DirectoryServiceModel {
       console.error(e)
       this.latestAccessRequest = null
     }
+  }).bind(this)
+
+  retryRequestAccess = flow(function* retryRequestAccess() {
+    if (!this.latestAccessRequest) {
+      return false
+    }
+
+    yield this.latestAccessRequest.retry()
   }).bind(this)
 }
 

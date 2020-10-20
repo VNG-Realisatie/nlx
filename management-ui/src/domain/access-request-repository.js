@@ -55,7 +55,8 @@ class AccessRequestRepository {
 
     throwOnError(response)
 
-    return null
+    const result = await response.json()
+    return result || {}
   }
 }
 

@@ -4,7 +4,6 @@
 import React from 'react'
 import { observable } from 'mobx'
 import { Route, StaticRouter as Router } from 'react-router-dom'
-
 import { renderWithProviders } from '../../../test-utils'
 import DirectoryDetailPage from './index'
 
@@ -22,8 +21,9 @@ beforeEach(() => {
     state: 'degraded',
     apiSpecificationType: 'API',
     latestAccessRequest: null,
-    requestAccess: jest.fn(),
     fetch: jest.fn(),
+    requestAccess: jest.fn(),
+    retryRequestAccess: jest.fn(),
   })
 })
 
