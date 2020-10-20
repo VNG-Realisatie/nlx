@@ -79,7 +79,7 @@ function mapDirectoryServiceFromApiToModel(
   service,
 ) {
   const latestAccessRequest = service.latestAccessRequest
-    ? this.rootStore.outgoingAccessRequestsStore.loadOutgoingAccessRequest(
+    ? rootStore.outgoingAccessRequestsStore.loadOutgoingAccessRequest(
         service.latestAccessRequest,
       )
     : null
