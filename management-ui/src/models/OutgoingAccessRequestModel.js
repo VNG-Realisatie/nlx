@@ -1,10 +1,8 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { flow, makeAutoObservable } from 'mobx'
-import { func, string } from 'prop-types'
-
-import AccessRequestRepository from '../domain/access-request-repository'
+import { makeAutoObservable } from 'mobx'
+import { string } from 'prop-types'
 
 export const ACCESS_REQUEST_STATES = {
   CREATED: 'CREATED',
@@ -15,11 +13,6 @@ export const ACCESS_REQUEST_STATES = {
   APPROVED: 'APPROVED',
 }
 
-export const UNSUCCESSFUL_ACCESS_REQUEST_STATES = [
-  ACCESS_REQUEST_STATES.CANCELLED,
-  ACCESS_REQUEST_STATES.REJECTED,
-]
-
 export const outgoingAccessRequestPropTypes = {
   id: string,
   organizationName: string.isRequired,
@@ -27,8 +20,6 @@ export const outgoingAccessRequestPropTypes = {
   state: string,
   createdAt: string,
   updatedAt: string,
-
-  send: func,
   error: string,
 }
 
@@ -41,13 +32,8 @@ class OutgoingAccessRequestModel {
   updatedAt = ''
   error = ''
 
-  constructor({
-    accessRequestData,
-    accessRequestRepository = AccessRequestRepository,
-  }) {
+  constructor({ accessRequestData }) {
     makeAutoObservable(this)
-
-    this.accessRequestRepository = accessRequestRepository
     this.update(accessRequestData)
   }
 
@@ -80,30 +66,6 @@ class OutgoingAccessRequestModel {
       this.updatedAt = accessRequestData.updatedAt
     }
   }
-
-  send = flow(function* send() {
-    if (this.id) {
-      console.error('Request was already sent, ignoring request')
-      return
-    }
-
-    try {
-      this.error = ''
-
-      this.update({ state: ACCESS_REQUEST_STATES.CREATED })
-
-      const result = yield this.accessRequestRepository.createAccessRequest({
-        organizationName: this.organizationName,
-        serviceName: this.serviceName,
-      })
-
-      // Hydrate the object with response from server
-      this.update(result)
-    } catch (e) {
-      this.error = e
-      console.error(e)
-    }
-  }).bind(this)
 
   get isCancelledOrRejected() {
     return (

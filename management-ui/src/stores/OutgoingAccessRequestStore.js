@@ -50,7 +50,6 @@ class OutgoingAccessRequestStore {
           updatedAt: outgoingAccessRequestData.updatedAt,
         },
         outgoingAccessRequestStore: this,
-        accessRequestRepository: this.accessRequestRepository,
       })
 
       this.setOutgoingAccessRequest(

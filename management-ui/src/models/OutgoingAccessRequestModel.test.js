@@ -3,7 +3,6 @@
 //
 import { checkPropTypes } from 'prop-types'
 
-import deferredPromise from '../test-utils/deferred-promise'
 import OutgoingAccessRequestModel, {
   ACCESS_REQUEST_STATES,
   outgoingAccessRequestPropTypes,
@@ -49,29 +48,6 @@ test('model implements proptypes', () => {
 
   expect(errorSpy).not.toHaveBeenCalled()
   errorSpy.mockRestore()
-})
-
-test('sending a request', async () => {
-  const request = deferredPromise()
-  accessRequestRepository = {
-    createAccessRequest: jest.fn(() => request),
-  }
-
-  const accessRequest = new OutgoingAccessRequestModel({
-    json: serviceData,
-    accessRequestRepository,
-  })
-
-  expect(accessRequest.state).toBe('')
-
-  accessRequest.send()
-
-  expect(accessRequest.state).toBe('CREATED')
-  expect(accessRequestRepository.createAccessRequest).toHaveBeenCalled()
-
-  await request.resolve(accessRequestJson)
-
-  expect(accessRequest.id).toBe('abcd')
 })
 
 test('update should ignore properties that do not belong on object', () => {
