@@ -5,7 +5,6 @@ import React from 'react'
 import { shape } from 'prop-types'
 import { observer } from 'mobx-react'
 import { useTranslation } from 'react-i18next'
-import pick from 'lodash.pick'
 
 import {
   outgoingAccessRequestPropTypes,
@@ -45,7 +44,7 @@ const AccessRequestMessage = ({ latestAccessRequest }) => {
 }
 
 AccessRequestMessage.propTypes = {
-  latestAccessRequest: shape(pick(outgoingAccessRequestPropTypes, 'state')),
+  latestAccessRequest: shape(outgoingAccessRequestPropTypes),
 }
 
 export default observer(AccessRequestMessage)

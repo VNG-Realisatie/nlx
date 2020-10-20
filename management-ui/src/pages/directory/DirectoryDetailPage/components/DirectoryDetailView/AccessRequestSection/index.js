@@ -6,7 +6,6 @@ import { shape, func } from 'prop-types'
 import { observer } from 'mobx-react'
 import { Spinner, Button } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
-import pick from 'lodash.pick'
 
 import {
   outgoingAccessRequestPropTypes,
@@ -42,7 +41,7 @@ const getStateUI = (latestAccessRequest, t) => {
         <>
           <IconItem as={Spinner} />
           <StateDetail>
-            <span>{t('Sending request')}...</span>
+            <span>{t('Sending request')}…</span>
           </StateDetail>
         </>
       )
@@ -123,7 +122,7 @@ const AccessRequestSection = ({ latestAccessRequest, requestAccess }) => {
 }
 
 AccessRequestSection.propTypes = {
-  latestAccessRequest: shape(pick(outgoingAccessRequestPropTypes, 'state')),
+  latestAccessRequest: shape(outgoingAccessRequestPropTypes),
   requestAccess: func,
 }
 

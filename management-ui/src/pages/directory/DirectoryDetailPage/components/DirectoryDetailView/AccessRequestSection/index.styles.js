@@ -18,6 +18,7 @@ export const StateDetail = styled.div`
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
+  justify-content: center;
 `
 
 export const ErrorText = styled.span`

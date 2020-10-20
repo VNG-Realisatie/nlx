@@ -14,73 +14,47 @@ test('Should throw error when state is unknown', () => {
   errorSpy.mockRestore()
 })
 
-test('Correctly renders FAILED state', () => {
+test('Correctly renders the access request states', () => {
   const latestAccessRequest = {
     id: 'id',
+    organizationName: 'organization',
+    serviceName: 'service',
     state: 'FAILED',
     createdAt: '2020-10-01T12:00:00Z',
     updatedAt: '2020-10-01T12:00:21Z',
   }
-  const { getByText } = renderWithProviders(
+
+  const { getByText, getByTitle, rerender } = renderWithProviders(
     <AccessRequestMessage latestAccessRequest={latestAccessRequest} />,
   )
-
   expect(getByText('Request could not be sent')).toBeInTheDocument()
-})
 
-test('Correctly renders CREATED state', () => {
-  const latestAccessRequest = {
-    id: 'id',
-    state: 'CREATED',
-    createdAt: '2020-10-01T12:00:00Z',
-    updatedAt: '2020-10-01T12:00:21Z',
-  }
-  const { getByText } = renderWithProviders(
-    <AccessRequestMessage latestAccessRequest={latestAccessRequest} />,
+  rerender(
+    <AccessRequestMessage
+      latestAccessRequest={{ ...latestAccessRequest, state: 'CREATED' }}
+    />,
   )
-
   expect(getByText('Sending request')).toBeInTheDocument()
-})
 
-test('Correctly renders RECEIVED state', () => {
-  const latestAccessRequest = {
-    id: 'id',
-    state: 'RECEIVED',
-    createdAt: '2020-10-01T12:00:00Z',
-    updatedAt: '2020-10-01T12:00:21Z',
-  }
-  const { getByText } = renderWithProviders(
-    <AccessRequestMessage latestAccessRequest={latestAccessRequest} />,
+  rerender(
+    <AccessRequestMessage
+      latestAccessRequest={{ ...latestAccessRequest, state: 'RECEIVED' }}
+    />,
   )
-
   expect(getByText('Requested')).toBeInTheDocument()
-})
 
-test('Correctly renders APPROVED state', () => {
-  const latestAccessRequest = {
-    id: 'id',
-    state: 'APPROVED',
-    createdAt: '2020-10-01T12:00:00Z',
-    updatedAt: '2020-10-01T12:00:21Z',
-  }
-  const { getByText, getByTitle } = renderWithProviders(
-    <AccessRequestMessage latestAccessRequest={latestAccessRequest} />,
+  rerender(
+    <AccessRequestMessage
+      latestAccessRequest={{ ...latestAccessRequest, state: 'APPROVED' }}
+    />,
   )
-
   expect(getByText('check.svg')).toBeInTheDocument()
   expect(getByTitle('Approved')).toBeInTheDocument()
-})
 
-test('Correctly renders REJECTED state', () => {
-  const latestAccessRequest = {
-    id: 'id',
-    state: 'REJECTED',
-    createdAt: '2020-10-01T12:00:00Z',
-    updatedAt: '2020-10-01T12:00:21Z',
-  }
-  const { getByText } = renderWithProviders(
-    <AccessRequestMessage latestAccessRequest={latestAccessRequest} />,
+  rerender(
+    <AccessRequestMessage
+      latestAccessRequest={{ ...latestAccessRequest, state: 'REJECTED' }}
+    />,
   )
-
   expect(getByText('Rejected')).toBeInTheDocument()
 })
