@@ -13,7 +13,7 @@ import DirectoryServiceModel, {
 
 test('createDirectoryService returns an instance', () => {
   const directoryService = createDirectoryService({
-    store: {},
+    directoryServiceStore: {},
     service: {
       organizationName: 'Organization',
       serviceName: 'Service',
@@ -27,7 +27,7 @@ test('createDirectoryService returns an instance', () => {
 test('model implements proptypes', () => {
   const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
   const directoryService = createDirectoryService({
-    store: {},
+    directoryServiceStore: {},
     service: {
       organizationName: 'Organization',
       serviceName: 'Service',
@@ -49,7 +49,7 @@ test('model implements proptypes', () => {
 
 test('initializing the model', async () => {
   const directoryService = new DirectoryServiceModel({
-    store: {},
+    directoryServiceStore: {},
     service: {
       organizationName: 'Organization',
       serviceName: 'Service',
@@ -62,7 +62,7 @@ test('initializing the model', async () => {
 })
 
 test('(re-)fetching the model', async () => {
-  const store = {
+  const directoryServiceStore = {
     directoryRepository: {
       getByName: jest.fn().mockResolvedValue({
         state: 'down',
@@ -74,7 +74,7 @@ test('(re-)fetching the model', async () => {
   }
 
   const directoryService = new DirectoryServiceModel({
-    store,
+    directoryServiceStore: directoryServiceStore,
     service: {
       organizationName: 'Organization',
       serviceName: 'Service',
@@ -90,10 +90,9 @@ test('(re-)fetching the model', async () => {
     await directoryService.fetch()
   })
 
-  expect(store.directoryRepository.getByName).toHaveBeenCalledWith(
-    'Organization',
-    'Service',
-  )
+  expect(
+    directoryServiceStore.directoryRepository.getByName,
+  ).toHaveBeenCalledWith('Organization', 'Service')
 
   expect(directoryService.state).toBe('down')
   expect(directoryService.latestAccessRequest).toEqual(
@@ -125,7 +124,7 @@ describe('requesting access to a service', () => {
     }
 
     const directoryService = new DirectoryServiceModel({
-      store: {},
+      directoryServiceStore: {},
       service: service,
       accessRequestRepository: accessRequestRepository,
     })
@@ -156,7 +155,7 @@ describe('requesting access to a service', () => {
     }
 
     const directoryService = new DirectoryServiceModel({
-      store: {},
+      directoryServiceStore: {},
       service: service,
       accessRequestRepository: accessRequestRepository,
     })
@@ -187,7 +186,7 @@ describe('requesting access to a service', () => {
     }
 
     const directoryService = new DirectoryServiceModel({
-      store: {},
+      directoryServiceStore: {},
       service: service,
       accessRequestRepository: accessRequestRepository,
     })

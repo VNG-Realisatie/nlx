@@ -32,7 +32,7 @@ class DirectoryStore {
     try {
       const services = yield this.directoryRepository.getAll()
       this.services = services.map((service) =>
-        createDirectoryService({ store: this, service }),
+        createDirectoryService({ directoryServiceStore: this, service }),
       )
     } catch (e) {
       this.error = e

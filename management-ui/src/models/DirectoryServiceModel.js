@@ -28,13 +28,13 @@ class DirectoryServiceModel {
   latestAccessRequest = null
 
   constructor({
-    store,
+    directoryServiceStore,
     service,
     accessRequestRepository = AccessRequestRepository,
   }) {
     makeAutoObservable(this)
 
-    this.store = store
+    this.directoryServiceStore = directoryServiceStore
     this.accessRequestRepository = accessRequestRepository
 
     this.id = `${service.organizationName}/${service.serviceName}`
@@ -51,7 +51,7 @@ class DirectoryServiceModel {
   }
 
   fetch = flow(function* fetch() {
-    const service = yield this.store.directoryRepository.getByName(
+    const service = yield this.directoryServiceStore.directoryRepository.getByName(
       this.organizationName,
       this.serviceName,
     )
