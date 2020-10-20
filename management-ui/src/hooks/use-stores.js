@@ -7,12 +7,12 @@ import { storesContext } from '../stores'
 // Tested in `src/stores/index.test.js`
 const useStores = () => useContext(storesContext)
 
-export const useDirectoryStore = () => {
-  const { directoryStore } = useStores()
-  if (!directoryStore.isInitiallyFetched) {
-    directoryStore.fetchServices()
+export const useDirectoryServiceStore = () => {
+  const { directoryServicesStore } = useStores()
+  if (!directoryServicesStore.isInitiallyFetched) {
+    directoryServicesStore.fetchServices()
   }
-  return directoryStore
+  return directoryServicesStore
 }
 
 export const useServicesStore = () => {

@@ -5,8 +5,8 @@ import { act } from '@testing-library/react'
 import deferredPromise from '../test-utils/deferred-promise'
 import DirectoryServiceModel from '../models/DirectoryServiceModel'
 import OutgoingAccessRequestModel from '../models/OutgoingAccessRequestModel'
-import DirectoryStore from './DirectoryStore'
-import { mockDirectoryServiceModel } from './DirectoryStore.mock'
+import DirectoryServicesStore from './DirectoryServicesStore'
+import { mockDirectoryServiceModel } from './DirectoryServicesStore.mock'
 import OutgoingAccessRequestStore from './OutgoingAccessRequestStore'
 
 let rootStore
@@ -28,26 +28,26 @@ test('fetching directory services', async () => {
     { organizationName: 'Org B', serviceName: 'Service B' },
   ]
 
-  const directoryStore = new DirectoryStore({
+  const directoryServicesStore = new DirectoryServicesStore({
     rootStore,
     directoryRepository,
   })
 
-  expect(directoryStore.services).toEqual([])
-  expect(directoryStore.isInitiallyFetched).toBe(false)
+  expect(directoryServicesStore.services).toEqual([])
+  expect(directoryServicesStore.isInitiallyFetched).toBe(false)
 
-  directoryStore.fetchServices()
+  directoryServicesStore.fetchServices()
 
-  expect(directoryStore.isInitiallyFetched).toBe(false)
+  expect(directoryServicesStore.isInitiallyFetched).toBe(false)
   expect(directoryRepository.getAll).toHaveBeenCalled()
 
   await act(async () => {
     await request.resolve(serviceList)
   })
 
-  await expect(directoryStore.isInitiallyFetched).toBe(true)
-  expect(directoryStore.services).toHaveLength(2)
-  expect(directoryStore.services).not.toBe([])
+  await expect(directoryServicesStore.isInitiallyFetched).toBe(true)
+  expect(directoryServicesStore.services).toHaveLength(2)
+  expect(directoryServicesStore.services).not.toBe([])
 })
 
 test('handle error while fetching directory services', async () => {
@@ -58,23 +58,23 @@ test('handle error while fetching directory services', async () => {
     getAll: jest.fn(() => request),
   }
 
-  const directoryStore = new DirectoryStore({
+  const directoryServicesStore = new DirectoryServicesStore({
     rootStore,
     directoryRepository,
   })
 
-  expect(directoryStore.services).toEqual([])
+  expect(directoryServicesStore.services).toEqual([])
 
-  directoryStore.fetchServices()
+  directoryServicesStore.fetchServices()
 
-  expect(directoryStore.isInitiallyFetched).toBe(false)
+  expect(directoryServicesStore.isInitiallyFetched).toBe(false)
   expect(directoryRepository.getAll).toHaveBeenCalled()
 
   await request.reject('some error')
 
-  expect(directoryStore.error).toEqual('some error')
-  expect(directoryStore.services).toEqual([])
-  expect(directoryStore.isInitiallyFetched).toBe(true)
+  expect(directoryServicesStore.error).toEqual('some error')
+  expect(directoryServicesStore.services).toEqual([])
+  expect(directoryServicesStore.isInitiallyFetched).toBe(true)
 
   errorSpy.mockRestore()
 })
@@ -92,13 +92,13 @@ test('selecting a directory service', () => {
   })
   const serviceList = [mockDirectoryServiceModelA, mockDirectoryServiceModelB]
 
-  const directoryStore = new DirectoryStore({
+  const directoryServicesStore = new DirectoryServicesStore({
     rootStore,
     directoryRepository,
   })
-  directoryStore.services = serviceList
+  directoryServicesStore.services = serviceList
 
-  const selectedService = directoryStore.selectService({
+  const selectedService = directoryServicesStore.selectService({
     organizationName: 'Org A',
     serviceName: 'Service A',
   })
@@ -124,7 +124,7 @@ test('requesting access to a service in the directory', async () => {
     'create',
   )
 
-  const directoryStore = new DirectoryStore({
+  const directoryServicesStore = new DirectoryServicesStore({
     rootStore: {
       outgoingAccessRequestsStore: outgoingAccessRequestStore,
     },
@@ -137,7 +137,7 @@ test('requesting access to a service in the directory', async () => {
       serviceName: 'service',
     },
   })
-  const outgoingAccessRequest = await directoryStore.requestAccess(
+  const outgoingAccessRequest = await directoryServicesStore.requestAccess(
     directoryService,
   )
 

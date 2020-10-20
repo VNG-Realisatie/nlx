@@ -8,7 +8,7 @@ import { MemoryRouter as Router } from 'react-router-dom'
 import { act, renderWithProviders } from '../../../test-utils'
 import { StoreProvider } from '../../../stores'
 import { UserContextProvider } from '../../../user-context'
-import { mockDirectoryStore } from '../../../stores/DirectoryStore.mock'
+import { mockDirectoryServicesStore } from '../../../stores/DirectoryServicesStore.mock'
 import DirectoryPage from './index'
 
 // Ignore this deeply nested component which has a separate request flow
@@ -39,10 +39,13 @@ const renderDirectory = (store) =>
   )
 
 test('listing all services', async () => {
-  const store = mockDirectoryStore({
+  const store = mockDirectoryServicesStore({
     isInitiallyFetched: false,
   })
-  const fetchServicesSpy = jest.spyOn(store.directoryStore, 'fetchServices')
+  const fetchServicesSpy = jest.spyOn(
+    store.directoryServicesStore,
+    'fetchServices',
+  )
 
   const { getByRole, getByTestId, findByTestId } = renderDirectory(store)
 
@@ -51,8 +54,8 @@ test('listing all services', async () => {
   expect(() => getByTestId('mock-directory-services')).toThrow()
 
   act(() => {
-    store.directoryStore.services = [{ serviceName: 'Test Service' }]
-    store.directoryStore.isInitiallyFetched = true
+    store.directoryServicesStore.services = [{ serviceName: 'Test Service' }]
+    store.directoryServicesStore.isInitiallyFetched = true
   })
 
   expect(await findByTestId('mock-directory-services')).toBeInTheDocument()
@@ -63,7 +66,7 @@ test('listing all services', async () => {
 })
 
 test('no services', async () => {
-  const store = mockDirectoryStore({})
+  const store = mockDirectoryServicesStore({})
 
   const { findByTestId, getByTestId } = renderDirectory(store)
 
@@ -72,7 +75,7 @@ test('no services', async () => {
 })
 
 test('failed to load services', async () => {
-  const store = mockDirectoryStore({
+  const store = mockDirectoryServicesStore({
     error: 'There is an error',
   })
 

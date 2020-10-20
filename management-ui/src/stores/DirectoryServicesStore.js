@@ -6,7 +6,7 @@ import DirectoryRepository from '../domain/directory-repository'
 import DirectoryServiceModel from '../models/DirectoryServiceModel'
 import AccessRequestRepository from '../domain/access-request-repository'
 
-class DirectoryStore {
+class DirectoryServicesStore {
   services = []
   error = ''
   // This is set to true after the first call has been made. Regardless of success.
@@ -109,7 +109,7 @@ async function mapDirectoryServiceFromApiToModel(
     : null
 
   return new DirectoryServiceModel({
-    directoryServiceStore: rootStore.directoryStore,
+    directoryServiceStore: rootStore.directoryServicesStore,
     accessRequestRepository,
     service: {
       id: service.id,
@@ -122,4 +122,4 @@ async function mapDirectoryServiceFromApiToModel(
   })
 }
 
-export default DirectoryStore
+export default DirectoryServicesStore

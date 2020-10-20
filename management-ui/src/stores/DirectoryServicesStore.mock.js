@@ -11,7 +11,7 @@ export const mockDirectoryServiceModel = ({
   fetch,
 })
 
-export const mockDirectoryStore = ({
+export const mockDirectoryServicesStore = ({
   services = [],
   isInitiallyFetched = true,
   error = '',
@@ -19,7 +19,7 @@ export const mockDirectoryStore = ({
   selectService = jest.fn(),
 }) =>
   observable({
-    directoryStore: {
+    directoryServicesStore: {
       services,
       isInitiallyFetched,
       error,

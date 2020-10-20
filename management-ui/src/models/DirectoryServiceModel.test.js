@@ -88,7 +88,7 @@ test('(re-)fetching the model', async () => {
   })
 
   const directoryService = new DirectoryServiceModel({
-    directoryServiceStore: rootStore.directoryStore,
+    directoryServiceStore: rootStore.directoryServicesStore,
     service: {
       organizationName: 'Organization',
       serviceName: 'Service',
@@ -100,13 +100,16 @@ test('(re-)fetching the model', async () => {
   expect(directoryService.state).toBe('up')
   expect(directoryService.latestAccessRequest).toBeNull()
 
-  const directoryStoreFetchSpy = jest.spyOn(rootStore.directoryStore, 'fetch')
+  const directoryServiceStoreFetchSpy = jest.spyOn(
+    rootStore.directoryServicesStore,
+    'fetch',
+  )
 
   await act(async () => {
     await directoryService.fetch()
   })
 
-  expect(directoryStoreFetchSpy).toHaveBeenCalledWith(directoryService)
+  expect(directoryServiceStoreFetchSpy).toHaveBeenCalledWith(directoryService)
 })
 
 describe('requesting access to a service', () => {

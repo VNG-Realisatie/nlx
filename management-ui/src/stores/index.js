@@ -8,7 +8,7 @@ import AccessRequestRepository from '../domain/access-request-repository'
 import DirectoryRepository from '../domain/directory-repository'
 import InwaysStore from './InwaysStore'
 import ServicesStore from './ServicesStore'
-import DirectoryStore from './DirectoryStore'
+import DirectoryServicesStore from './DirectoryServicesStore'
 import OutgoingAccessRequestStore from './OutgoingAccessRequestStore'
 
 if (process.env.NODE_ENV !== 'test') {
@@ -28,7 +28,7 @@ export class RootStore {
       rootStore: this,
       accessRequestRepository,
     })
-    this.directoryStore = new DirectoryStore({
+    this.directoryServicesStore = new DirectoryServicesStore({
       rootStore: this,
       directoryRepository,
     })
