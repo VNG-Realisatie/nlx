@@ -3,7 +3,8 @@
 //
 import { makeAutoObservable, flow, action } from 'mobx'
 import DirectoryRepository from '../domain/directory-repository'
-import { createDirectoryService } from '../models/DirectoryServiceModel'
+import DirectoryServiceModel from '../models/DirectoryServiceModel'
+import AccessRequestRepository from '../domain/access-request-repository'
 
 class DirectoryStore {
   services = []
@@ -16,6 +17,7 @@ class DirectoryStore {
   constructor({
     outgoingAccessRequestsStore,
     directoryRepository = DirectoryRepository,
+    accessRequestRepository = AccessRequestRepository,
   }) {
     makeAutoObservable(this, {
       selectService: action.bound,
@@ -23,6 +25,7 @@ class DirectoryStore {
 
     this.outgoingAccessRequestsStore = outgoingAccessRequestsStore
     this.directoryRepository = directoryRepository
+    this.accessRequestRepository = accessRequestRepository
   }
 
   fetchServices = flow(function* fetchServices() {
@@ -35,7 +38,11 @@ class DirectoryStore {
     try {
       const services = yield this.directoryRepository.getAll()
       this.services = services.map((service) =>
-        createDirectoryService({ directoryServiceStore: this, service }),
+        mapDirectoryServiceFromApiToModel(
+          this.directoryServiceStore,
+          this.accessRequestRepository,
+          service,
+        ),
       )
     } catch (e) {
       this.error = e
@@ -64,6 +71,31 @@ class DirectoryStore {
       serviceName: directoryService.serviceName,
     })
   }
+}
+
+function mapDirectoryServiceFromApiToModel(
+  directoryServiceStore,
+  accessRequestRepository,
+  service,
+) {
+  const latestAccessRequest = service.latestAccessRequest
+    ? this.outgoingAccessRequestsStore.loadOutgoingAccessRequest(
+        service.latestAccessRequest,
+      )
+    : null
+
+  return new DirectoryServiceModel({
+    directoryServiceStore,
+    accessRequestRepository,
+    service: {
+      id: service.id,
+      organizationName: service.organizationName,
+      serviceName: service.serviceName,
+      state: service.state,
+      apiSpecificationType: service.apiSpecificationType,
+      latestAccessRequest: latestAccessRequest,
+    },
+  })
 }
 
 export default DirectoryStore

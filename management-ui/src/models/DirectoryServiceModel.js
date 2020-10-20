@@ -16,6 +16,7 @@ export const directoryServicePropTypes = {
   latestAccessRequest: object,
   fetch: func.isRequired,
   requestAccess: func.isRequired,
+  // TODO: remove oudje
   isOpen: bool,
 }
 
@@ -42,12 +43,17 @@ class DirectoryServiceModel {
     this.serviceName = service.serviceName
     this.state = service.state
     this.apiSpecificationType = service.apiSpecificationType
-    this.latestAccessRequest = service.latestAccessRequest
-      ? new OutgoingAccessRequestModel({
-          accessRequestData: service.latestAccessRequest,
-          accessRequestRepository: accessRequestRepository,
-        })
-      : null
+
+    if (
+      service.latestAccessRequest &&
+      !(service.latestAccessRequest instanceof OutgoingAccessRequestModel)
+    ) {
+      throw new Error(
+        'the latestAccessRequest should be an instance of the OutgoingAccessRequestModel',
+      )
+    }
+
+    this.latestAccessRequest = service.latestAccessRequest || null
   }
 
   fetch = flow(function* fetch() {

@@ -1,11 +1,13 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { action, flow, makeAutoObservable } from 'mobx'
+import { action, flow, makeAutoObservable, observable } from 'mobx'
 import AccessRequestRepository from '../domain/access-request-repository'
 import OutgoingAccessRequestModel from '../models/OutgoingAccessRequestModel'
 
 class OutgoingAccessRequestStore {
+  outgoingAccessRequests = observable.map()
+
   constructor({
     rootStore,
     accessRequestRepository = AccessRequestRepository,
@@ -17,6 +19,48 @@ class OutgoingAccessRequestStore {
     this.rootStore = rootStore
     this.accessRequestRepository = accessRequestRepository
   }
+
+  getOutgoingAccessRequest(id) {
+    return this.outgoingAccessRequests.get(id)
+  }
+
+  setOutgoingAccessRequest(id, model) {
+    return this.outgoingAccessRequests.set(id, model)
+  }
+
+  // TODO: reconsider this method name
+  // the method is created so we can create / update OutgoingAccessRequest instances
+  // with data that has been loaded from other resources (eg. a directoryService resource
+  // which includes the data for an OutgoingAccessRequest).
+  loadOutgoingAccessRequest = flow(function* (outgoingAccessRequestData) {
+    const cachedOutgoingAccessRequest = this.getOutgoingAccessRequest(
+      outgoingAccessRequestData.id,
+    )
+
+    if (cachedOutgoingAccessRequest) {
+      yield outgoingAccessRequestData.update(outgoingAccessRequestData)
+    } else {
+      const outgoingAccessRequest = new OutgoingAccessRequestModel({
+        accessRequestData: {
+          id: outgoingAccessRequestData.id,
+          organizationName: outgoingAccessRequestData.organizationName,
+          serviceName: outgoingAccessRequestData.serviceName,
+          state: outgoingAccessRequestData.state,
+          createdAt: outgoingAccessRequestData.createdAt,
+          updatedAt: outgoingAccessRequestData.updatedAt,
+        },
+        outgoingAccessRequestStore: this,
+        accessRequestRepository: this.accessRequestRepository,
+      })
+
+      this.setOutgoingAccessRequest(
+        outgoingAccessRequest.id,
+        outgoingAccessRequest,
+      )
+
+      yield outgoingAccessRequest
+    }
+  }).bind(this)
 
   create = flow(function* ({ organizationName, serviceName }) {
     const response = yield this.accessRequestRepository.createAccessRequest({

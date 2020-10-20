@@ -3,7 +3,6 @@
 //
 import { act } from '@testing-library/react'
 import { checkPropTypes } from 'prop-types'
-import DirectoryStore from '../stores/DirectoryStore'
 import OutgoingAccessRequestStore from '../stores/OutgoingAccessRequestStore'
 import OutgoingAccessRequestModel, {
   ACCESS_REQUEST_STATES,
@@ -61,6 +60,19 @@ test('initializing the model', async () => {
   })
 
   expect(directoryService.latestAccessRequest).toBeNull()
+})
+
+test('initializing the model with an invalid latest access request', () => {
+  expect(() => {
+    return new DirectoryServiceModel({
+      directoryServiceStore: {},
+      service: {
+        latestAccessRequest: 'invalid',
+      },
+    })
+  }).toThrowError(
+    'the latestAccessRequest should be an instance of the OutgoingAccessRequestModel',
+  )
 })
 
 test('(re-)fetching the model', async () => {
@@ -138,75 +150,73 @@ describe('requesting access to a service', () => {
     ).not.toHaveBeenCalledWith()
   })
 
-  it('should create access request if it was cancelled before', async () => {
-    const accessRequestRepository = {
-      createAccessRequest: jest.fn().mockResolvedValue({}),
+  it('should create an access request if it was cancelled before', async () => {
+    const directoryServiceStore = {
+      requestAccess: jest.fn().mockResolvedValue(),
     }
 
-    const service = {
-      organizationName: 'Organization',
-      serviceName: 'Service',
-      state: 'up',
-      apiSpecificationType: 'API',
-      latestAccessRequest: new OutgoingAccessRequestModel({
-        accessRequestData: {
-          state: ACCESS_REQUEST_STATES.CANCELLED,
-        },
-        accessRequestRepository: accessRequestRepository,
-      }),
-    }
-
-    const directoryService = new DirectoryServiceModel({
-      directoryServiceStore: {},
-      service: service,
-      accessRequestRepository: accessRequestRepository,
-    })
-
-    await directoryService.requestAccess()
-
-    expect(
-      accessRequestRepository.createAccessRequest,
-    ).not.toHaveBeenCalledWith()
-  })
-
-  it('should create access request if it was rejected before', async () => {
-    const accessRequestRepository = {
-      createAccessRequest: jest.fn().mockResolvedValue({}),
-    }
-
-    const service = {
-      organizationName: 'Organization',
-      serviceName: 'Service',
-      state: 'up',
-      apiSpecificationType: 'API',
-      latestAccessRequest: new OutgoingAccessRequestModel({
-        accessRequestData: {
-          state: ACCESS_REQUEST_STATES.REJECTED,
-        },
-        accessRequestRepository: accessRequestRepository,
-      }),
-    }
-
-    const outgoingAccessRequestsStore = new OutgoingAccessRequestStore({
+    const outgoingAccessRequestStore = new OutgoingAccessRequestStore({
       rootStore: {},
-      accessRequestRepository: accessRequestRepository,
     })
 
-    const directoryServiceStore = new DirectoryStore({
-      outgoingAccessRequestsStore: outgoingAccessRequestsStore,
-    })
+    const latestAccessRequest = await outgoingAccessRequestStore.loadOutgoingAccessRequest(
+      {
+        id: '42',
+        state: ACCESS_REQUEST_STATES.CANCELLED,
+      },
+    )
+
+    const service = {
+      organizationName: 'Organization',
+      serviceName: 'Service',
+      state: 'up',
+      apiSpecificationType: 'API',
+      latestAccessRequest: latestAccessRequest,
+    }
 
     const directoryService = new DirectoryServiceModel({
       directoryServiceStore: directoryServiceStore,
       service: service,
-      accessRequestRepository: accessRequestRepository,
     })
 
     await directoryService.requestAccess()
+    expect(directoryServiceStore.requestAccess).toHaveBeenCalledWith(
+      directoryService,
+    )
+  })
 
-    expect(accessRequestRepository.createAccessRequest).toHaveBeenCalledWith({
+  it('should create access request if it was rejected before', async () => {
+    const directoryServiceStore = {
+      requestAccess: jest.fn().mockResolvedValue(),
+    }
+
+    const outgoingAccessRequestsStore = new OutgoingAccessRequestStore({
+      rootStore: {},
+    })
+
+    const latestAccessRequest = await outgoingAccessRequestsStore.loadOutgoingAccessRequest(
+      {
+        id: '42',
+        state: ACCESS_REQUEST_STATES.REJECTED,
+      },
+    )
+
+    const service = {
       organizationName: 'Organization',
       serviceName: 'Service',
+      state: 'up',
+      apiSpecificationType: 'API',
+      latestAccessRequest: latestAccessRequest,
+    }
+
+    const directoryService = new DirectoryServiceModel({
+      directoryServiceStore: directoryServiceStore,
+      service: service,
     })
+
+    await directoryService.requestAccess()
+    expect(directoryServiceStore.requestAccess).toHaveBeenCalledWith(
+      directoryService,
+    )
   })
 })
