@@ -12,7 +12,6 @@ managementAPI:
 ################
 ## Sub-charts ##
 ################
-
 nlx-management:
   config:
     oidc:

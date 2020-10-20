@@ -56,17 +56,10 @@ ca:
 ################
 ## Sub-charts ##
 ################
-insight-api:
-  ingress:
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
-    hosts:
-      - insight-api.demo.voorbeeld-haarlem.nl
-    tls:
-      - secretName: haarlem-insight-api-ingress-tls
-        hosts:
-          - insight-api.demo.voorbeeld-haarlem.nl
-          
+nlx-outway:
+  config:
+    directoryInspectionHostname: directory-inspection-api.demo.nlx.io
+
 nlx-management:
   config:
     directoryInspectionHostname: directory-inspection-api.demo.nlx.io
@@ -104,6 +97,17 @@ dex:
       - secretName: haarlem-dex-ingress-tls
         hosts:
           - dex.demo.voorbeeld-haarlem.nl
+
+insight-api:
+  ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - insight-api.demo.voorbeeld-haarlem.nl
+    tls:
+      - secretName: haarlem-insight-api-ingress-tls
+        hosts:
+          - insight-api.demo.voorbeeld-haarlem.nl
 
 irma-server:
   ingress:

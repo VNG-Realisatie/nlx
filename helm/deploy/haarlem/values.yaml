@@ -73,7 +73,7 @@ global:
       JJmWiasz2kVoK4YokQc74JH9382ScM48YK4fgoQHIuprjYovow8TWM23gC5b42kh
       wxEj3TTlHQ08t8jAddNjvNUJZ12pC1T96v53vgx+Oy1D6Xpgp6sNNfMhbSvLDjGT
       /K31rlz8PnmxbsiSvW4480huGyPPHxUXm+b45k5e3rQ9Wg==
-      -----END CERTIFICATE-----  
+      -----END CERTIFICATE-----
 
 ###########
 ## Chart ##
@@ -82,7 +82,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 ca:
-  issuer: 
+  issuer:
     # pki/organization-b/ca/intermediate.pem
     certificatePEM: |
       # Subject: C=NL, O=Organization-B, CN=Organization-B Intermediate CA
@@ -228,7 +228,6 @@ managementAPI:
 ################
 ## Sub-charts ##
 ################
-
 nlx-outway:
   config:
     directoryInspectionHostname: shared-nlx-directory-inspection
