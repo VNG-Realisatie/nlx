@@ -1,5 +1,5 @@
 # Use go 1.x based on alpine image.
-FROM golang:1.15.2-alpine AS build
+FROM golang:1.15.3-alpine AS build
 
 WORKDIR /go/src/go.nlx.io/nlx
 
