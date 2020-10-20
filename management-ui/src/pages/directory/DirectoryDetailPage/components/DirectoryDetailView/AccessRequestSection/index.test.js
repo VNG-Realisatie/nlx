@@ -80,7 +80,7 @@ test('Correctly renders RECEIVED state', () => {
     <AccessRequestSection latestAccessRequest={latestAccessRequest} />,
   )
 
-  expect(getByText('Requested')).toBeInTheDocument()
+  expect(getByText('Access requested')).toBeInTheDocument()
 })
 
 test('Correctly renders APPROVED state', () => {
@@ -108,5 +108,5 @@ test('Correctly renders REJECTED state', () => {
     <AccessRequestSection latestAccessRequest={latestAccessRequest} />,
   )
 
-  expect(getByText('Rejected')).toBeInTheDocument()
+  expect(getByText('Access request rejected')).toBeInTheDocument()
 })

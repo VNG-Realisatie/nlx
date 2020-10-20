@@ -4,11 +4,21 @@
 import i18n from 'i18next'
 import XHR from 'i18next-xhr-backend'
 import { initReactI18next } from 'react-i18next'
+import dayjs from 'dayjs'
+
 import options from './i18n.options'
 
 i18n
   .use(XHR)
   .use(initReactI18next) // passes i18n down to react-i18next
+  .on('languageChanged', async (lng) => {
+    try {
+      const localeData = await import(`dayjs/locale/${lng}.js`)
+      dayjs.locale(localeData.default)
+    } catch (e) {
+      console.error(`Can't find locale for language ${lng}`)
+    }
+  })
   .init(options)
 
 export default i18n

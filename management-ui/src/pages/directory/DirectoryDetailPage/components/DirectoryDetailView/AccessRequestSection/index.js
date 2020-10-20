@@ -52,7 +52,10 @@ const getStateUI = (latestAccessRequest, t) => {
         <>
           <IconItem as={IconKey} />
           <StateDetail>
-            <span>{t('Requested')}</span>
+            <span>{t('Access requested')}</span>
+            <small>
+              {t('On date', { date: new Date(latestAccessRequest.updatedAt) })}
+            </small>
           </StateDetail>
         </>
       )
@@ -63,12 +66,29 @@ const getStateUI = (latestAccessRequest, t) => {
           <IconItem as={IconCheck} />
           <StateDetail>
             <span>{t('You have access')}</span>
+            <small>
+              {t('Since date', {
+                date: new Date(latestAccessRequest.updatedAt),
+              })}
+            </small>
           </StateDetail>
         </>
       )
 
     case REJECTED:
-      return <span>{t('Rejected')}</span>
+      return (
+        <>
+          <IconItem as={IconKey} />
+          <StateDetail>
+            <span>{t('Access request rejected')}</span>
+            <small>
+              {t('On date', {
+                date: new Date(latestAccessRequest.updatedAt),
+              })}
+            </small>
+          </StateDetail>
+        </>
+      )
 
     default:
       throw new Error(
