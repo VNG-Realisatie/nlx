@@ -122,7 +122,9 @@ test('requesting access to a service in the directory', async () => {
   )
 
   const directoryStore = new DirectoryStore({
-    outgoingAccessRequestsStore: outgoingAccessRequestStore,
+    rootStore: {
+      outgoingAccessRequestsStore: outgoingAccessRequestStore,
+    },
     directoryRepository,
   })
 

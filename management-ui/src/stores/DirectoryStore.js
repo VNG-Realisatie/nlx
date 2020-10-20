@@ -15,7 +15,7 @@ class DirectoryStore {
   isFetching = false
 
   constructor({
-    outgoingAccessRequestsStore,
+    rootStore,
     directoryRepository = DirectoryRepository,
     accessRequestRepository = AccessRequestRepository,
   }) {
@@ -23,7 +23,7 @@ class DirectoryStore {
       selectService: action.bound,
     })
 
-    this.outgoingAccessRequestsStore = outgoingAccessRequestsStore
+    this.rootStore = rootStore
     this.directoryRepository = directoryRepository
     this.accessRequestRepository = accessRequestRepository
   }
@@ -39,7 +39,7 @@ class DirectoryStore {
       const services = yield this.directoryRepository.getAll()
       this.services = services.map((service) =>
         mapDirectoryServiceFromApiToModel(
-          this.directoryServiceStore,
+          this.rootStore,
           this.accessRequestRepository,
           service,
         ),
@@ -66,7 +66,7 @@ class DirectoryStore {
   }
 
   async requestAccess(directoryService) {
-    return this.outgoingAccessRequestsStore.create({
+    return this.rootStore.outgoingAccessRequestsStore.create({
       organizationName: directoryService.organizationName,
       serviceName: directoryService.serviceName,
     })
@@ -74,18 +74,18 @@ class DirectoryStore {
 }
 
 function mapDirectoryServiceFromApiToModel(
-  directoryServiceStore,
+  rootStore,
   accessRequestRepository,
   service,
 ) {
   const latestAccessRequest = service.latestAccessRequest
-    ? this.outgoingAccessRequestsStore.loadOutgoingAccessRequest(
+    ? this.rootStore.outgoingAccessRequestsStore.loadOutgoingAccessRequest(
         service.latestAccessRequest,
       )
     : null
 
   return new DirectoryServiceModel({
-    directoryServiceStore,
+    rootStore: rootStore.directoryServiceStore,
     accessRequestRepository,
     service: {
       id: service.id,

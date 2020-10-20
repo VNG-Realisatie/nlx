@@ -4,6 +4,7 @@
 import React, { createContext } from 'react'
 import { configure } from 'mobx'
 import { node, object } from 'prop-types'
+import AccessRequestRepository from '../domain/access-request-repository'
 import InwaysStore from './InwaysStore'
 import ServicesStore from './ServicesStore'
 import DirectoryStore from './DirectoryStore'
@@ -18,15 +19,12 @@ if (process.env.NODE_ENV !== 'test') {
 export const storesContext = createContext(null)
 
 class RootStore {
-  constructor() {
-    const outgoingAccessRequestsStore = new OutgoingAccessRequestStore({
+  constructor({ accessRequestRepository = AccessRequestRepository } = {}) {
+    this.outgoingAccessRequestsStore = new OutgoingAccessRequestStore({
       rootStore: this,
+      accessRequestRepository,
     })
-
-    this.outgoingAccessRequestsStore = outgoingAccessRequestsStore
-    this.directoryStore = new DirectoryStore({
-      outgoingAccessRequestsStore: outgoingAccessRequestsStore,
-    })
+    this.directoryStore = new DirectoryStore({ rootStore: this })
     this.servicesStore = new ServicesStore({ rootStore: this })
     this.inwaysStore = new InwaysStore({ rootStore: this })
   }
