@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import { flow, makeAutoObservable } from 'mobx'
-import { bool, func, object, string } from 'prop-types'
+import { func, object, string } from 'prop-types'
 
 import AccessRequestRepository from '../domain/access-request-repository'
 import OutgoingAccessRequestModel from './OutgoingAccessRequestModel'
@@ -16,8 +16,6 @@ export const directoryServicePropTypes = {
   latestAccessRequest: object,
   fetch: func.isRequired,
   requestAccess: func.isRequired,
-  // TODO: remove oudje
-  isOpen: bool,
 }
 
 class DirectoryServiceModel {
