@@ -54,6 +54,13 @@ class DirectoryStore {
     }
     return directoryServiceModel
   }
+
+  async requestAccess(directoryService) {
+    return this.rootStore.outgoingAccessRequestsStore.create({
+      organizationName: directoryService.organizationName,
+      serviceName: directoryService.serviceName,
+    })
+  }
 }
 
 export default DirectoryStore

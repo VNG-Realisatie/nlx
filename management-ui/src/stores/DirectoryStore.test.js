@@ -2,12 +2,11 @@
 // Licensed under the EUPL
 //
 import deferredPromise from '../test-utils/deferred-promise'
+import DirectoryServiceModel from '../models/DirectoryServiceModel'
+import OutgoingAccessRequestModel from '../models/OutgoingAccessRequestModel'
 import DirectoryStore from './DirectoryStore'
 import { mockDirectoryServiceModel } from './DirectoryStore.mock'
-
-jest.mock('../models/DirectoryServiceModel', () => ({
-  createDirectoryService: (...args) => mockDirectoryServiceModel(...args),
-}))
+import OutgoingAccessRequestStore from './OutgoingAccessRequestStore'
 
 let rootStore
 let directoryRepository
@@ -104,4 +103,51 @@ test('selecting a directory service', () => {
   expect(mockDirectoryServiceModelA.fetch).toHaveBeenCalled()
   expect(mockDirectoryServiceModelB.fetch).not.toHaveBeenCalled()
   expect(selectedService.state).toBe('state-a')
+})
+
+test('requesting access to a service in the directory', async () => {
+  const accessRequestRepository = {
+    createAccessRequest: jest.fn().mockResolvedValue({
+      id: '42',
+    }),
+  }
+
+  const outgoingAccessRequestStore = new OutgoingAccessRequestStore({
+    accessRequestRepository: accessRequestRepository,
+  })
+
+  const outgoingAccessRequestStoreCreateSpy = jest.spyOn(
+    outgoingAccessRequestStore,
+    'create',
+  )
+
+  const directoryStore = new DirectoryStore({
+    rootStore: {
+      outgoingAccessRequestsStore: outgoingAccessRequestStore,
+    },
+    directoryRepository,
+  })
+
+  const directoryService = new DirectoryServiceModel({
+    service: {
+      organizationName: 'organization',
+      serviceName: 'service',
+    },
+  })
+  const outgoingAccessRequest = await directoryStore.requestAccess(
+    directoryService,
+  )
+
+  expect(outgoingAccessRequestStoreCreateSpy).toHaveBeenCalledWith({
+    organizationName: 'organization',
+    serviceName: 'service',
+  })
+
+  expect(outgoingAccessRequest).toEqual(
+    new OutgoingAccessRequestModel({
+      accessRequestData: {
+        id: '42',
+      },
+    }),
+  )
 })
