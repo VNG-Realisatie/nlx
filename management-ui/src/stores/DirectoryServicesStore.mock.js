@@ -15,7 +15,7 @@ export const mockDirectoryServicesStore = ({
   services = [],
   isInitiallyFetched = true,
   error = '',
-  fetchServices = jest.fn(),
+  fetchAll = jest.fn(),
   selectService = jest.fn(),
 }) =>
   observable({
@@ -23,7 +23,7 @@ export const mockDirectoryServicesStore = ({
       services,
       isInitiallyFetched,
       error,
-      fetchServices,
+      fetchAll,
       selectService,
     },
   })

@@ -9,7 +9,7 @@ const useStores = () => useContext(storesContext)
 export const useDirectoryServicesStore = () => {
   const { directoryServicesStore } = useStores()
   if (!directoryServicesStore.isInitiallyFetched) {
-    directoryServicesStore.fetchServices()
+    directoryServicesStore.fetchAll()
   }
   return directoryServicesStore
 }
@@ -17,7 +17,7 @@ export const useDirectoryServicesStore = () => {
 export const useServicesStore = () => {
   const { servicesStore } = useStores()
   if (!servicesStore.isInitiallyFetched) {
-    servicesStore.fetchServices()
+    servicesStore.fetchAll()
   }
   return servicesStore
 }

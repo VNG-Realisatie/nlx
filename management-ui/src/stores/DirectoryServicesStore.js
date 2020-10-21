@@ -10,7 +10,7 @@ class DirectoryServicesStore {
   error = ''
   // This is set to true after the first call has been made. Regardless of success.
   isInitiallyFetched = false
-  // This is internal state to prevent concurrent fetchServices calls being in flight.
+  // This is internal state to prevent concurrent fetchAll calls being in flight.
   isFetching = false
 
   constructor({ rootStore, directoryRepository = DirectoryRepository }) {
@@ -39,7 +39,7 @@ class DirectoryServicesStore {
     })
   })
 
-  fetchServices = flow(function* fetchServices() {
+  fetchAll = flow(function* fetchAll() {
     if (this.isFetching) {
       return
     }

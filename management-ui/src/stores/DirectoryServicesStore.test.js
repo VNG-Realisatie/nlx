@@ -36,7 +36,7 @@ test('fetching directory services', async () => {
   expect(directoryServicesStore.services).toEqual([])
   expect(directoryServicesStore.isInitiallyFetched).toBe(false)
 
-  directoryServicesStore.fetchServices()
+  directoryServicesStore.fetchAll()
 
   expect(directoryServicesStore.isInitiallyFetched).toBe(false)
   expect(directoryRepository.getAll).toHaveBeenCalled()
@@ -65,7 +65,7 @@ test('handle error while fetching directory services', async () => {
 
   expect(directoryServicesStore.services).toEqual([])
 
-  directoryServicesStore.fetchServices()
+  directoryServicesStore.fetchAll()
 
   expect(directoryServicesStore.isInitiallyFetched).toBe(false)
   expect(directoryRepository.getAll).toHaveBeenCalled()

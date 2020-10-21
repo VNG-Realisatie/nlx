@@ -39,7 +39,7 @@ test('fetching services', async () => {
   expect(servicesStore.isInitiallyFetched).toBe(false)
   expect(servicesStore.services).toEqual([])
 
-  servicesStore.fetchServices()
+  servicesStore.fetchAll()
 
   expect(servicesStore.isInitiallyFetched).toBe(false)
   expect(serviceRepository.getAll).toHaveBeenCalled()
@@ -68,7 +68,7 @@ test('handle error while fetching services', async () => {
 
   expect(servicesStore.services).toEqual([])
 
-  servicesStore.fetchServices()
+  servicesStore.fetchAll()
 
   expect(servicesStore.isInitiallyFetched).toBe(false)
   expect(serviceRepository.getAll).toHaveBeenCalled()

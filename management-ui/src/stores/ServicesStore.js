@@ -12,7 +12,7 @@ class ServicesStore {
   error = ''
   // This is set to true after the first call has been made. Regardless of success.
   isInitiallyFetched = false
-  // This is internal state to prevent concurrent fetchServices calls being in flight.
+  // This is internal state to prevent concurrent fetchAll calls being in flight.
   isFetching = false
 
   constructor({
@@ -36,7 +36,7 @@ class ServicesStore {
     this.isFetching = false
   }
 
-  fetchServices = flow(function* fetchServices() {
+  fetchAll = flow(function* fetchAll() {
     if (this.isFetching) {
       return
     }
@@ -74,7 +74,7 @@ class ServicesStore {
     yield this.serviceRepository.remove(service)
     const removed = this.services.remove(service)
     if (!removed) {
-      this.fetchServices()
+      this.fetchAll()
     }
   }).bind(this)
 
