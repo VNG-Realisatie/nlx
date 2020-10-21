@@ -107,6 +107,8 @@ github.com/docker/go-units v0.4.0/go.mod h1:fgPhTUdO+D/Jk86RDLlptpiXQzgHJF7gydDD
 github.com/dustin/go-humanize v1.0.0/go.mod h1:HtrtbFcZ19U5GC7JDqmcUSB87Iq5E25KnS6fMYU6eOk=
 github.com/edsrzf/mmap-go v1.0.0 h1:CEBF7HpRnUCSJgGUb5h1Gm7e3VkmVDrR8lvWVLtrOFw=
 github.com/edsrzf/mmap-go v1.0.0/go.mod h1:YO35OhQPt3KJa3ryjFM5Bs14WD66h8eGKpfaBNrHW5M=
+github.com/eknkc/basex v1.0.0 h1:R2zGRGJAcqEES03GqHU9leUF5n4Pg6ahazPbSTQWCWc=
+github.com/eknkc/basex v1.0.0/go.mod h1:k/F/exNEHFdbs3ZHuasoP2E7zeWwZblG84Y7Z59vQRo=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7+kN2VEUnK/pcBlmesArF7c=
 github.com/erikstmartin/go-testdb v0.0.0-20160219214506-8d10e4a1bae5 h1:Yzb9+7DPaBjB8zlTR87/ElzFsnQfuHnVUVqpZZIcV5Y=
@@ -381,10 +383,10 @@ github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZN
 github.com/posener/complete v1.1.1/go.mod h1:em0nMJCgc9GFtwrmVmEMR/ZL6WyhyjMBndrE9hABlRI=
 github.com/pquerna/cachecontrol v0.0.0-20180517163645-1555304b9b35 h1:J9b7z+QKAmPf4YLrFg6oQUotqHQeUNWwkvo7jZp1GLU=
 github.com/pquerna/cachecontrol v0.0.0-20180517163645-1555304b9b35/go.mod h1:prYjPmNq4d1NPVmpShWobRqXY3q7Vp+80DqgxxUrUIA=
-github.com/privacybydesign/gabi v0.0.0-20200729124802-5828bcd24dfd h1:xIEl8VRtINfx0QkrQSTBSwpvk4GVcpYn8YK25Wv9iYs=
-github.com/privacybydesign/gabi v0.0.0-20200729124802-5828bcd24dfd/go.mod h1:XJRlG8/PARHx6Fbv0nVIIhmLFCXwp2gG2h8ZqqeW8x0=
-github.com/privacybydesign/irmago v0.5.1 h1:v6A08EEId3HVwvxZzJKDxKJ0lLUeNb6/581icChV2xg=
-github.com/privacybydesign/irmago v0.5.1/go.mod h1:ESsOWiBetZKX52J3bKlr1Zf+sqZut8QEsXL6UIJ2TCQ=
+github.com/privacybydesign/gabi v0.0.0-20200823153621-467696543652 h1:cglj/IsZVPAWPf90gZ6N9uFo+Wc7h0bmC6k/6bgAKuw=
+github.com/privacybydesign/gabi v0.0.0-20200823153621-467696543652/go.mod h1:HQ6L5rKBY7qaqcheK6zpaVf7fhGWD0PvUAXJTDws+0M=
+github.com/privacybydesign/irmago v0.6.0 h1:DbaJWtSEVsULKnZaADusSTLdjODSBouQzWC2Lj9Y9lU=
+github.com/privacybydesign/irmago v0.6.0/go.mod h1:S5eKWg1bk0y8x3UBzDPqUNx3wweU/V6RG1JzK742kAc=
 github.com/prometheus/client_golang v0.9.1/go.mod h1:7SWBe2y4D6OKWSNQJUaRYU/AaXPKyh/dDVn+NZz0KFw=
 github.com/prometheus/client_golang v0.9.3/go.mod h1:/TN21ttK/J9q6uSwhBd54HahCDft0ttaMvbicHlPoso=
 github.com/prometheus/client_golang v1.0.0 h1:vrDKnkGzuGvhNAL56c7DBz29ZL+KxnoR0x7enabFceM=
