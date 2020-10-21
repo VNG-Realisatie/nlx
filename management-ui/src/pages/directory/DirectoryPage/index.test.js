@@ -116,7 +116,10 @@ test('navigating to the detail page should re-fetch the directory model', async 
     )
   })
 
-  const serviceModel = rootStore.directoryServicesStore.getService('foo', 'bar')
+  const serviceModel = rootStore.directoryServicesStore.getService({
+    organizationName: 'foo',
+    serviceName: 'bar',
+  })
   jest.spyOn(serviceModel, 'fetch').mockResolvedValue({})
 
   history.push('/directory/foo/bar')

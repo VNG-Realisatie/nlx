@@ -67,7 +67,7 @@ class DirectoryServicesStore {
     }
   }).bind(this)
 
-  getService = (organizationName, serviceName) => {
+  getService = ({ organizationName, serviceName }) => {
     return this.services.find(
       (service) =>
         service.organizationName === organizationName &&

@@ -49,8 +49,7 @@ const DirectoryPage = () => {
             exact
             path="/directory/:organizationName/:serviceName"
             render={({ match }) => {
-              const { organizationName, serviceName } = match.params
-              const service = getService(organizationName, serviceName)
+              const service = getService(match.params)
               service.fetch()
 
               return (
