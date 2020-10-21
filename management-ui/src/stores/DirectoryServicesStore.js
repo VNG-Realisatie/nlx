@@ -28,7 +28,7 @@ class DirectoryServicesStore {
 
     let outgoingAccessRequestModel = null
     if (response.latestAccessRequest) {
-      outgoingAccessRequestModel = yield this.rootStore.outgoingAccessRequestsStore.loadOutgoingAccessRequest(
+      outgoingAccessRequestModel = yield this.rootStore.outgoingAccessRequestsStore.updateFromServer(
         response.latestAccessRequest,
       )
     }
@@ -85,7 +85,7 @@ class DirectoryServicesStore {
 
 async function mapDirectoryServiceFromApiToModel(rootStore, service) {
   const latestAccessRequest = service.latestAccessRequest
-    ? await rootStore.outgoingAccessRequestsStore.loadOutgoingAccessRequest(
+    ? await rootStore.outgoingAccessRequestsStore.updateFromServer(
         service.latestAccessRequest,
       )
     : null

@@ -154,7 +154,7 @@ describe('requesting access to a service', () => {
       rootStore,
     })
 
-    const latestAccessRequest = await outgoingAccessRequestStore.loadOutgoingAccessRequest(
+    const latestAccessRequest = await outgoingAccessRequestStore.updateFromServer(
       {
         id: '42',
         state: ACCESS_REQUEST_STATES.CANCELLED,
@@ -194,7 +194,7 @@ describe('requesting access to a service', () => {
       rootStore,
     })
 
-    const latestAccessRequest = await outgoingAccessRequestStore.loadOutgoingAccessRequest(
+    const latestAccessRequest = await outgoingAccessRequestStore.updateFromServer(
       {
         id: '42',
         state: ACCESS_REQUEST_STATES.REJECTED,

@@ -18,8 +18,7 @@ class OutgoingAccessRequestStore {
     this.accessRequestRepository = accessRequestRepository
   }
 
-  // TODO: apply rename to updateFromServer
-  loadOutgoingAccessRequest = flow(function* (outgoingAccessRequestData) {
+  updateFromServer = flow(function* (outgoingAccessRequestData) {
     const cachedOutgoingAccessRequest = this.outgoingAccessRequests.get(
       outgoingAccessRequestData.id,
     )
@@ -60,7 +59,7 @@ class OutgoingAccessRequestStore {
       id: outgoingAccessRequestModel.id,
     })
 
-    yield this.loadOutgoingAccessRequest(response)
+    yield this.updateFromServer(response)
   }).bind(this)
 }
 
