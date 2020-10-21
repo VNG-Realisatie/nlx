@@ -85,46 +85,41 @@ test('failed to load services', async () => {
   expect(() => getByTestId('mock-directory-services')).toThrow()
 })
 
-describe('navigating to the detail page', () => {
-  it('should re-fetch the directory model', async () => {
-    // NOTE: we open the overview page before navigating to
-    // the detail page this allows us to first put a spy on
-    // the fetch-method of the ServiceDirectory model
+test('navigating to the detail page should re-fetch the directory model', async () => {
+  // NOTE: we open the overview page before navigating to
+  // the detail page this allows us to first put a spy on
+  // the fetch-method of the ServiceDirectory model
 
-    const rootStore = new RootStore({
-      directoryRepository: {
-        getAll: jest.fn().mockResolvedValue([
-          {
-            organizationName: 'foo',
-            serviceName: 'bar',
-            state: 'up',
-          },
-        ]),
-      },
-    })
-
-    const history = createMemoryHistory({ initialEntries: ['/directory'] })
-
-    await act(async () => {
-      renderWithProviders(
-        <StoreProvider store={rootStore}>
-          <UserContextProvider user={{}}>
-            <Router history={history}>
-              <DirectoryPage />
-            </Router>
-          </UserContextProvider>
-        </StoreProvider>,
-      )
-    })
-
-    const serviceModel = rootStore.directoryServicesStore.getService(
-      'foo',
-      'bar',
-    )
-    jest.spyOn(serviceModel, 'fetch').mockResolvedValue({})
-
-    history.push('/directory/foo/bar')
-
-    expect(serviceModel.fetch).toHaveBeenCalledTimes(1)
+  const rootStore = new RootStore({
+    directoryRepository: {
+      getAll: jest.fn().mockResolvedValue([
+        {
+          organizationName: 'foo',
+          serviceName: 'bar',
+          state: 'up',
+        },
+      ]),
+    },
   })
+
+  const history = createMemoryHistory({ initialEntries: ['/directory'] })
+
+  await act(async () => {
+    renderWithProviders(
+      <StoreProvider store={rootStore}>
+        <UserContextProvider user={{}}>
+          <Router history={history}>
+            <DirectoryPage />
+          </Router>
+        </UserContextProvider>
+      </StoreProvider>,
+    )
+  })
+
+  const serviceModel = rootStore.directoryServicesStore.getService('foo', 'bar')
+  jest.spyOn(serviceModel, 'fetch').mockResolvedValue({})
+
+  history.push('/directory/foo/bar')
+
+  expect(serviceModel.fetch).toHaveBeenCalledTimes(1)
 })
