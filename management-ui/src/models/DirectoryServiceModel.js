@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { action, flow, makeAutoObservable } from 'mobx'
+import { flow, makeAutoObservable } from 'mobx'
 import { func, object, string } from 'prop-types'
 import OutgoingAccessRequestModel from './OutgoingAccessRequestModel'
 
@@ -27,9 +27,7 @@ class DirectoryServiceModel {
   latestAccessRequest = null
 
   constructor({ directoryServicesStore, service }) {
-    makeAutoObservable(this, {
-      update: action,
-    })
+    makeAutoObservable(this)
 
     this.directoryServicesStore = directoryServicesStore
 
@@ -52,7 +50,7 @@ class DirectoryServiceModel {
     this.latestAccessRequest = service.latestAccessRequest || null
   }
 
-  update(directoryServiceData) {
+  update = (directoryServiceData) => {
     this.state = directoryServiceData.state
     this.apiSpecificationType = directoryServiceData.apiSpecificationType
 
