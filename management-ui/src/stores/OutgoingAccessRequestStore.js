@@ -18,7 +18,9 @@ class OutgoingAccessRequestStore {
     this.accessRequestRepository = accessRequestRepository
   }
 
-  updateFromServer = flow(function* updateFromServer(outgoingAccessRequestData) {
+  updateFromServer = flow(function* updateFromServer(
+    outgoingAccessRequestData,
+  ) {
     const cachedOutgoingAccessRequest = this.outgoingAccessRequests.get(
       outgoingAccessRequestData.id,
     )
