@@ -40,14 +40,7 @@ class OutgoingAccessRequestStore {
       return yield cachedOutgoingAccessRequest
     } else {
       const outgoingAccessRequest = new OutgoingAccessRequestModel({
-        accessRequestData: {
-          id: outgoingAccessRequestData.id,
-          organizationName: outgoingAccessRequestData.organizationName,
-          serviceName: outgoingAccessRequestData.serviceName,
-          state: outgoingAccessRequestData.state,
-          createdAt: outgoingAccessRequestData.createdAt,
-          updatedAt: outgoingAccessRequestData.updatedAt,
-        },
+        accessRequestData: outgoingAccessRequestData,
         outgoingAccessRequestStore: this,
       })
 
@@ -67,14 +60,7 @@ class OutgoingAccessRequestStore {
     })
 
     return new OutgoingAccessRequestModel({
-      accessRequestData: {
-        id: response.id,
-        organizationName: response.organizationName,
-        serviceName: response.serviceName,
-        state: response.state,
-        createdAt: response.createdAt,
-        updatedAt: null,
-      },
+      accessRequestData: response,
     })
   }).bind(this)
 
