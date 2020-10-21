@@ -29,24 +29,12 @@ class DirectoryServiceModel {
 
     this.directoryServicesStore = directoryServicesStore
 
-    this.organizationName = service.organizationName
-    this.serviceName = service.serviceName
-    this.state = service.state
-    this.apiSpecificationType = service.apiSpecificationType
-
-    if (
-      service.latestAccessRequest &&
-      !(service.latestAccessRequest instanceof OutgoingAccessRequestModel)
-    ) {
-      throw new Error(
-        'the latestAccessRequest should be an instance of the OutgoingAccessRequestModel',
-      )
-    }
-
-    this.latestAccessRequest = service.latestAccessRequest || null
+    this.update(service)
   }
 
   update = (directoryServiceData) => {
+    this.organizationName = directoryServiceData.organizationName
+    this.serviceName = directoryServiceData.serviceName
     this.state = directoryServiceData.state
     this.apiSpecificationType = directoryServiceData.apiSpecificationType
 
