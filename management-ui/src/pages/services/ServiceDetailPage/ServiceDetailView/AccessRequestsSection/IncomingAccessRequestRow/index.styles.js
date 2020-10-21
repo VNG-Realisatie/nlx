@@ -7,8 +7,21 @@ import ButtonWithIcon from '../../../../../../components/ButtonWithIcon'
 
 export const TdActions = styled(Table.Td)`
   width: 140px;
+  vertical-algin: top;
 `
 
 export const StyledButtonWithIcon = styled(ButtonWithIcon)`
-  margin-left: 1rem;
+  min-width: 44px;
+  min-height: 44px;
+  justify-content: center;
+
+  &:not(:first-child) {
+    margin-left: 1rem;
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+    margin-right: 0;
+  }
 `

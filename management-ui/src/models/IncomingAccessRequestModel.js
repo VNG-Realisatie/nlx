@@ -95,7 +95,7 @@ class IncomingAccessRequestModel {
     }
   }).bind(this)
 
-  reject = flow(function* send() {
+  reject = flow(function* flow() {
     try {
       this.error = ''
 
