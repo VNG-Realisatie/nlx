@@ -6,11 +6,9 @@ import { observer } from 'mobx-react'
 import { Route } from 'react-router-dom'
 import { Alert } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
-
-import PageTemplate from '../../../components/PageTemplate'
-import { useDirectoryServiceStore } from '../../../hooks/use-stores'
 import LoadingMessage from '../../../components/LoadingMessage'
-
+import PageTemplate from '../../../components/PageTemplate'
+import { useDirectoryServicesStore } from '../../../hooks/use-stores'
 import DirectoryDetailPage from '../DirectoryDetailPage'
 import DirectoryServiceCount from './components/DirectoryServiceCount'
 import DirectoryPageView from './components/DirectoryPageView'
@@ -22,7 +20,7 @@ const DirectoryPage = () => {
     selectService,
     isInitiallyFetched,
     error,
-  } = useDirectoryServiceStore()
+  } = useDirectoryServicesStore()
 
   return (
     <PageTemplate>

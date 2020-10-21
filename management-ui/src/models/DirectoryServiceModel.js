@@ -3,8 +3,6 @@
 //
 import { action, flow, makeAutoObservable } from 'mobx'
 import { func, object, string } from 'prop-types'
-
-import AccessRequestRepository from '../domain/access-request-repository'
 import OutgoingAccessRequestModel from './OutgoingAccessRequestModel'
 
 export const directoryServicePropTypes = {
@@ -28,17 +26,12 @@ class DirectoryServiceModel {
   apiSpecificationType = ''
   latestAccessRequest = null
 
-  constructor({
-    directoryServiceStore,
-    service,
-    accessRequestRepository = AccessRequestRepository,
-  }) {
+  constructor({ directoryServicesStore, service }) {
     makeAutoObservable(this, {
       update: action,
     })
 
-    this.directoryServiceStore = directoryServiceStore
-    this.accessRequestRepository = accessRequestRepository
+    this.directoryServicesStore = directoryServicesStore
 
     this.id = `${service.organizationName}/${service.serviceName}`
     this.organizationName = service.organizationName
@@ -78,7 +71,7 @@ class DirectoryServiceModel {
   }
 
   fetch = flow(function* fetch() {
-    yield this.directoryServiceStore.fetch(this)
+    yield this.directoryServicesStore.fetch(this)
   }).bind(this)
 
   requestAccess = flow(function* requestAccess() {
@@ -90,7 +83,7 @@ class DirectoryServiceModel {
     }
 
     try {
-      this.latestAccessRequest = yield this.directoryServiceStore.requestAccess(
+      this.latestAccessRequest = yield this.directoryServicesStore.requestAccess(
         this,
       )
     } catch (e) {

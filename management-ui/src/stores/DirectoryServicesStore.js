@@ -4,7 +4,6 @@
 import { flow, makeAutoObservable } from 'mobx'
 import DirectoryRepository from '../domain/directory-repository'
 import DirectoryServiceModel from '../models/DirectoryServiceModel'
-import AccessRequestRepository from '../domain/access-request-repository'
 
 class DirectoryServicesStore {
   services = []
@@ -14,16 +13,11 @@ class DirectoryServicesStore {
   // This is internal state to prevent concurrent fetchServices calls being in flight.
   isFetching = false
 
-  constructor({
-    rootStore,
-    directoryRepository = DirectoryRepository,
-    accessRequestRepository = AccessRequestRepository,
-  }) {
+  constructor({ rootStore, directoryRepository = DirectoryRepository }) {
     makeAutoObservable(this)
 
     this.rootStore = rootStore
     this.directoryRepository = directoryRepository
-    this.accessRequestRepository = accessRequestRepository
   }
 
   fetch = flow(function* fetchService(directoryServiceModel) {
@@ -56,11 +50,7 @@ class DirectoryServicesStore {
       const services = yield this.directoryRepository.getAll()
       const loadServiceModels = services.map(
         async (service) =>
-          await mapDirectoryServiceFromApiToModel(
-            this.rootStore,
-            this.accessRequestRepository,
-            service,
-          ),
+          await mapDirectoryServiceFromApiToModel(this.rootStore, service),
       )
 
       const serviceModels = yield Promise.all(loadServiceModels)
@@ -95,11 +85,7 @@ class DirectoryServicesStore {
   }
 }
 
-async function mapDirectoryServiceFromApiToModel(
-  rootStore,
-  accessRequestRepository,
-  service,
-) {
+async function mapDirectoryServiceFromApiToModel(rootStore, service) {
   const latestAccessRequest = service.latestAccessRequest
     ? await rootStore.outgoingAccessRequestsStore.loadOutgoingAccessRequest(
         service.latestAccessRequest,
@@ -107,8 +93,7 @@ async function mapDirectoryServiceFromApiToModel(
     : null
 
   return new DirectoryServiceModel({
-    directoryServiceStore: rootStore.directoryServicesStore,
-    accessRequestRepository,
+    directoryServicesStore: rootStore.directoryServicesStore,
     service: {
       id: service.id,
       organizationName: service.organizationName,

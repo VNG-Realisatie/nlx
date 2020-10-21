@@ -4,10 +4,9 @@
 import { useContext } from 'react'
 import { storesContext } from '../stores'
 
-// Tested in `src/stores/index.test.js`
 const useStores = () => useContext(storesContext)
 
-export const useDirectoryServiceStore = () => {
+export const useDirectoryServicesStore = () => {
   const { directoryServicesStore } = useStores()
   if (!directoryServicesStore.isInitiallyFetched) {
     directoryServicesStore.fetchServices()
