@@ -20,7 +20,7 @@ class DirectoryServicesStore {
     this.directoryRepository = directoryRepository
   }
 
-  fetch = flow(function* fetchService(directoryServiceModel) {
+  fetch = flow(function* fetch(directoryServiceModel) {
     const response = yield this.directoryRepository.getByName(
       directoryServiceModel.organizationName,
       directoryServiceModel.serviceName,

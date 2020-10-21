@@ -18,7 +18,7 @@ class OutgoingAccessRequestStore {
     this.accessRequestRepository = accessRequestRepository
   }
 
-  updateFromServer = flow(function* (outgoingAccessRequestData) {
+  updateFromServer = flow(function* updateFromServer(outgoingAccessRequestData) {
     const cachedOutgoingAccessRequest = this.outgoingAccessRequests.get(
       outgoingAccessRequestData.id,
     )
@@ -41,7 +41,7 @@ class OutgoingAccessRequestStore {
     }
   }).bind(this)
 
-  create = flow(function* ({ organizationName, serviceName }) {
+  create = flow(function* create({ organizationName, serviceName }) {
     const response = yield this.accessRequestRepository.createAccessRequest({
       organizationName,
       serviceName,
@@ -52,7 +52,7 @@ class OutgoingAccessRequestStore {
     })
   }).bind(this)
 
-  retry = flow(function* (outgoingAccessRequestModel) {
+  retry = flow(function* retry(outgoingAccessRequestModel) {
     const response = yield this.accessRequestRepository.sendAccessRequest({
       organizationName: outgoingAccessRequestModel.organizationName,
       serviceName: outgoingAccessRequestModel.serviceName,
