@@ -6,7 +6,6 @@ import { func, object, string } from 'prop-types'
 import OutgoingAccessRequestModel from './OutgoingAccessRequestModel'
 
 export const directoryServicePropTypes = {
-  id: string.isRequired,
   organizationName: string.isRequired,
   serviceName: string.isRequired,
   state: string.isRequired,
@@ -19,7 +18,6 @@ export const directoryServicePropTypes = {
 }
 
 class DirectoryServiceModel {
-  id = ''
   organizationName = ''
   serviceName = ''
   state = ''
@@ -31,8 +29,6 @@ class DirectoryServiceModel {
 
     this.directoryServicesStore = directoryServicesStore
 
-    // TODO: remove id
-    this.id = `${service.organizationName}/${service.serviceName}`
     this.organizationName = service.organizationName
     this.serviceName = service.serviceName
     this.state = service.state
