@@ -50,6 +50,11 @@
       "allowedVersions": "0.0.0-20200128133413-58ce757ed39b"
     },
     {
+      "groupName": "docusaurus v2.x is still unstable",
+      "packageNames": ["@docusaurus/core@2.0.0-alpha.65", "@docusaurus/preset-classic@2.0.0-alpha.65"],
+      "enabled": false
+    },
+    {
       "groupName": "support for updating Helms Chart.lock files is missing https://github.com/renovatebot/renovate/issues/6877",
       "datasources": ["helm"],
       "enabled": false
