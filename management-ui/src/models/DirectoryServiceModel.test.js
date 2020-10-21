@@ -1,7 +1,6 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { act } from '@testing-library/react'
 import { checkPropTypes } from 'prop-types'
 import OutgoingAccessRequestStore from '../stores/OutgoingAccessRequestStore'
 import { RootStore } from '../stores'
@@ -105,9 +104,7 @@ test('(re-)fetching the model', async () => {
     'fetch',
   )
 
-  await act(async () => {
-    await directoryService.fetch()
-  })
+  await directoryService.fetch()
 
   expect(directoryServicesStoreFetchSpy).toHaveBeenCalledWith(directoryService)
 })
@@ -176,9 +173,7 @@ describe('requesting access to a service', () => {
 
     const spy = jest.spyOn(rootStore.directoryServicesStore, 'requestAccess')
 
-    await act(async () => {
-      await directoryService.requestAccess()
-    })
+    await directoryService.requestAccess()
 
     expect(spy).toHaveBeenCalledWith(directoryService)
   })
@@ -216,9 +211,7 @@ describe('requesting access to a service', () => {
 
     const spy = jest.spyOn(rootStore.directoryServicesStore, 'requestAccess')
 
-    await act(async () => {
-      await directoryService.requestAccess()
-    })
+    await directoryService.requestAccess()
 
     expect(spy).toHaveBeenCalledWith(directoryService)
   })
