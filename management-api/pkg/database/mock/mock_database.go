@@ -9,6 +9,7 @@ import (
 	gomock "github.com/golang/mock/gomock"
 	database "go.nlx.io/nlx/management-api/pkg/database"
 	reflect "reflect"
+	time "time"
 )
 
 // MockConfigDatabase is a mock of ConfigDatabase interface
@@ -498,6 +499,51 @@ func (m *MockConfigDatabase) ListAccessGrantsForService(ctx context.Context, ser
 func (mr *MockConfigDatabaseMockRecorder) ListAccessGrantsForService(ctx, serviceName interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAccessGrantsForService", reflect.TypeOf((*MockConfigDatabase)(nil).ListAccessGrantsForService), ctx, serviceName)
+}
+
+// CreateAccessProof mocks base method
+func (m *MockConfigDatabase) CreateAccessProof(ctx context.Context, accessProof *database.AccessProof) (*database.AccessProof, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateAccessProof", ctx, accessProof)
+	ret0, _ := ret[0].(*database.AccessProof)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateAccessProof indicates an expected call of CreateAccessProof
+func (mr *MockConfigDatabaseMockRecorder) CreateAccessProof(ctx, accessProof interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccessProof", reflect.TypeOf((*MockConfigDatabase)(nil).CreateAccessProof), ctx, accessProof)
+}
+
+// RevokeAccessProof mocks base method
+func (m *MockConfigDatabase) RevokeAccessProof(ctx context.Context, organizationName, serviceName, id string, revokedAt time.Time) (*database.AccessProof, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RevokeAccessProof", ctx, organizationName, serviceName, id, revokedAt)
+	ret0, _ := ret[0].(*database.AccessProof)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RevokeAccessProof indicates an expected call of RevokeAccessProof
+func (mr *MockConfigDatabaseMockRecorder) RevokeAccessProof(ctx, organizationName, serviceName, id, revokedAt interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RevokeAccessProof", reflect.TypeOf((*MockConfigDatabase)(nil).RevokeAccessProof), ctx, organizationName, serviceName, id, revokedAt)
+}
+
+// GetLatestAccessProofForService mocks base method
+func (m *MockConfigDatabase) GetLatestAccessProofForService(ctx context.Context, organizationName, serviceName string) (*database.AccessProof, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetLatestAccessProofForService", ctx, organizationName, serviceName)
+	ret0, _ := ret[0].(*database.AccessProof)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetLatestAccessProofForService indicates an expected call of GetLatestAccessProofForService
+func (mr *MockConfigDatabaseMockRecorder) GetLatestAccessProofForService(ctx, organizationName, serviceName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLatestAccessProofForService", reflect.TypeOf((*MockConfigDatabase)(nil).GetLatestAccessProofForService), ctx, organizationName, serviceName)
 }
 
 // GetSettings mocks base method

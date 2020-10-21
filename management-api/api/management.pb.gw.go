@@ -1277,7 +1277,6 @@ func local_request_Directory_RequestAccessToService_0(ctx context.Context, marsh
 // RegisterManagementHandlerServer registers the http handlers for service Management to "mux".
 // UnaryRPC     :call ManagementServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features (such as grpc.SendHeader, etc) to stop working. Consider using RegisterManagementHandlerFromEndpoint instead.
 func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux, server ManagementServer) error {
 
 	mux.Handle("GET", pattern_Management_ListServices_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
@@ -1706,7 +1705,6 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 // RegisterDirectoryHandlerServer registers the http handlers for service Directory to "mux".
 // UnaryRPC     :call DirectoryServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features (such as grpc.SendHeader, etc) to stop working. Consider using RegisterDirectoryHandlerFromEndpoint instead.
 func RegisterDirectoryHandlerServer(ctx context.Context, mux *runtime.ServeMux, server DirectoryServer) error {
 
 	mux.Handle("GET", pattern_Directory_ListServices_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {

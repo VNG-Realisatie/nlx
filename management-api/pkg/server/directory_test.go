@@ -128,39 +128,6 @@ func TestListDirectoryServices(t *testing.T) {
 			OrganizationName:     "test-organization-a",
 			ApiSpecificationType: "OpenAPI3",
 		},
-		{
-			ServiceName:          "test-service-2",
-			OrganizationName:     "test-organization-a",
-			ApiSpecificationType: "OpenAPI3",
-		},
-		{
-			ServiceName:          "test-service-3",
-			OrganizationName:     "test-organization-b",
-			ApiSpecificationType: "",
-		},
-	}
-
-	databaseAccessRequests := map[string]*database.OutgoingAccessRequest{
-		"test-organization-b/test-service-3": {
-			AccessRequest: database.AccessRequest{
-				ID:               "161c188cfcea1939",
-				OrganizationName: "test-organization-b",
-				ServiceName:      "test-service-3",
-				State:            database.AccessRequestCreated,
-				CreatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
-				UpdatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
-			},
-		},
-		"test-organization-a/test-service-1": {
-			AccessRequest: database.AccessRequest{
-				ID:               "161c1bd32da2b400",
-				OrganizationName: "test-organization-a",
-				ServiceName:      "test-service-1",
-				State:            database.AccessRequestCreated,
-				CreatedAt:        time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
-				UpdatedAt:        time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
-			},
-		},
 	}
 
 	client := mock_directory.NewMockClient(mockCtrl)
@@ -169,12 +136,32 @@ func TestListDirectoryServices(t *testing.T) {
 		Return(&inspectionapi.ListServicesResponse{Services: clientServices}, nil)
 
 	db := mock_database.NewMockConfigDatabase(mockCtrl)
-	db.EXPECT().
-		ListAllLatestOutgoingAccessRequests(ctx).
-		Return(databaseAccessRequests, nil)
+	service := clientServices[0]
 
-	service := server.NewDirectoryService(logger, env, client, db)
-	response, err := service.ListServices(ctx, &types.Empty{})
+	db.EXPECT().
+		GetLatestOutgoingAccessRequest(ctx, service.OrganizationName, service.ServiceName).
+		Return(&database.OutgoingAccessRequest{
+			AccessRequest: database.AccessRequest{
+				ID:               "161c188cfcea1939",
+				OrganizationName: "test-organization-a",
+				ServiceName:      "test-service-1",
+				State:            database.AccessRequestCreated,
+				CreatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
+				UpdatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
+			},
+		}, nil)
+
+	db.EXPECT().
+		GetLatestAccessProofForService(ctx, service.OrganizationName, service.ServiceName).
+		Return(&database.AccessProof{
+			ID:               "161c188cfcea1939",
+			OrganizationName: "test-organization-a",
+			ServiceName:      "test-service-1",
+			CreatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
+		}, nil)
+
+	directoryService := server.NewDirectoryService(logger, env, client, db)
+	response, err := directoryService.ListServices(ctx, &types.Empty{})
 	assert.NoError(t, err)
 
 	expected := []*api.DirectoryService{
@@ -183,30 +170,16 @@ func TestListDirectoryServices(t *testing.T) {
 			OrganizationName:     "test-organization-a",
 			APISpecificationType: "OpenAPI3",
 			State:                api.DirectoryService_unknown,
-			LatestAccessRequest: &api.OutgoingAccessRequest{
-				Id:               "161c1bd32da2b400",
+			LatestAccessProof: &api.AccessProof{
+				Id:               "161c188cfcea1939",
 				OrganizationName: "test-organization-a",
 				ServiceName:      "test-service-1",
-				State:            api.AccessRequestState_CREATED,
-				CreatedAt:        timestampProto(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
-				UpdatedAt:        timestampProto(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
+				CreatedAt:        timestampProto(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
 			},
-		},
-		{
-			ServiceName:          "test-service-2",
-			OrganizationName:     "test-organization-a",
-			APISpecificationType: "OpenAPI3",
-			State:                api.DirectoryService_unknown,
-		},
-		{
-			ServiceName:          "test-service-3",
-			OrganizationName:     "test-organization-b",
-			APISpecificationType: "",
-			State:                api.DirectoryService_unknown,
 			LatestAccessRequest: &api.OutgoingAccessRequest{
 				Id:               "161c188cfcea1939",
-				OrganizationName: "test-organization-b",
-				ServiceName:      "test-service-3",
+				OrganizationName: "test-organization-a",
+				ServiceName:      "test-service-1",
 				State:            api.AccessRequestState_CREATED,
 				CreatedAt:        timestampProto(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
 				UpdatedAt:        timestampProto(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
@@ -251,6 +224,13 @@ func TestGetOrganizationService(t *testing.T) {
 						UpdatedAt:        time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
 					},
 				}, nil)
+
+				db.EXPECT().GetLatestAccessProofForService(gomock.Any(), "test-organization", "test-service").Return(&database.AccessProof{
+					ID:               "161c188cfcea1939",
+					ServiceName:      "test-service",
+					OrganizationName: "test-organization",
+					CreatedAt:        time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
+				}, nil)
 			},
 			func(directoryClient *mock_directory.MockClient) {
 				directoryClient.EXPECT().ListServices(gomock.Any(), gomock.Any()).Return(&inspectionapi.ListServicesResponse{
@@ -270,17 +250,24 @@ func TestGetOrganizationService(t *testing.T) {
 					CreatedAt:        timestampProto(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 					UpdatedAt:        timestampProto(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 				},
+				LatestAccessProof: &api.AccessProof{
+					Id:               "161c188cfcea1939",
+					ServiceName:      "test-service",
+					OrganizationName: "test-organization",
+					CreatedAt:        timestampProto(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
+				},
 			},
 			nil,
 		},
 		{
-			"happy_flow_without_latest_access_request",
+			"happy_flow_without_latest_access_request_and_grant",
 			&api.GetOrganizationServiceRequest{
 				OrganizationName: "test-organization",
 				ServiceName:      "test-service",
 			},
 			func(db *mock_database.MockConfigDatabase) {
 				db.EXPECT().GetLatestOutgoingAccessRequest(gomock.Any(), "test-organization", "test-service").Return(nil, database.ErrNotFound)
+				db.EXPECT().GetLatestAccessProofForService(gomock.Any(), "test-organization", "test-service").Return(nil, database.ErrNotFound)
 			},
 			func(directoryClient *mock_directory.MockClient) {
 				directoryClient.EXPECT().ListServices(gomock.Any(), gomock.Any()).Return(&inspectionapi.ListServicesResponse{
@@ -311,13 +298,34 @@ func TestGetOrganizationService(t *testing.T) {
 			status.Error(codes.Internal, "directory not available"),
 		},
 		{
-			"database_call_fail",
+			"database_call_fail_get_latest_outgoing_access_request",
 			&api.GetOrganizationServiceRequest{
 				OrganizationName: "test-organization",
 				ServiceName:      "test-service",
 			},
 			func(db *mock_database.MockConfigDatabase) {
 				db.EXPECT().GetLatestOutgoingAccessRequest(gomock.Any(), "test-organization", "test-service").Return(nil, errors.New("arbitrary error"))
+			},
+
+			func(directoryClient *mock_directory.MockClient) {
+				directoryClient.EXPECT().ListServices(gomock.Any(), gomock.Any()).Return(&inspectionapi.ListServicesResponse{
+					Services: []*inspectionapi.ListServicesResponse_Service{{
+						ServiceName:      "test-service",
+						OrganizationName: "test-organization",
+					}}}, nil)
+			},
+			nil,
+			status.Error(codes.Internal, "database error"),
+		},
+		{
+			"database_call_fail_get_latest_access_proof",
+			&api.GetOrganizationServiceRequest{
+				OrganizationName: "test-organization",
+				ServiceName:      "test-service",
+			},
+			func(db *mock_database.MockConfigDatabase) {
+				db.EXPECT().GetLatestOutgoingAccessRequest(gomock.Any(), "test-organization", "test-service").Return(nil, database.ErrNotFound)
+				db.EXPECT().GetLatestAccessProofForService(gomock.Any(), "test-organization", "test-service").Return(nil, errors.New("arbitrary error"))
 			},
 
 			func(directoryClient *mock_directory.MockClient) {
@@ -337,7 +345,7 @@ func TestGetOrganizationService(t *testing.T) {
 		tt.directoryClient(mockDirectoryClient)
 
 		returnedService, err := service.GetOrganizationService(ctx, tt.req)
-		assert.Equal(t, tt.expectedReq, returnedService)
-		assert.Equal(t, tt.expectedErr, err)
+		assert.Equal(t, tt.expectedReq, returnedService, tt.name)
+		assert.Equal(t, tt.expectedErr, err, tt.name)
 	}
 }

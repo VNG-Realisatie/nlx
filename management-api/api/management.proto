@@ -250,6 +250,13 @@ message AccessGrant {
   google.protobuf.Timestamp revokedAt = 6;
 }
 
+message AccessProof {
+  string id = 1;
+  string organizationName = 2;
+  string serviceName = 3;
+  google.protobuf.Timestamp createdAt = 4;
+  google.protobuf.Timestamp revokedAt = 5;
+}
 
 service Directory {
   rpc ListServices (google.protobuf.Empty) returns (DirectoryListServicesResponse) {
@@ -292,6 +299,7 @@ message DirectoryService {
   string apiSpecificationType = 3 [(gogoproto.customname)="APISpecificationType"];
   State state = 4;
   OutgoingAccessRequest latestAccessRequest = 5;
+  AccessProof latestAccessProof = 6;
 }
 
 message RequestAccessToServiceRequest {
