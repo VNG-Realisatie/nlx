@@ -98,10 +98,10 @@ test('selecting a directory service', () => {
   })
   directoryServicesStore.services = serviceList
 
-  const selectedService = directoryServicesStore.selectService({
-    organizationName: 'Org A',
-    serviceName: 'Service A',
-  })
+  const selectedService = directoryServicesStore.getService(
+    'Org A',
+    'Service A',
+  )
 
   expect(selectedService.state).toBe('state-a')
 })

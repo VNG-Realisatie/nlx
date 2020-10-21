@@ -17,7 +17,7 @@ const DirectoryPage = () => {
   const { t } = useTranslation()
   const {
     services,
-    selectService,
+    getService,
     isInitiallyFetched,
     error,
   } = useDirectoryServicesStore()
@@ -49,7 +49,8 @@ const DirectoryPage = () => {
             exact
             path="/directory/:organizationName/:serviceName"
             render={({ match }) => {
-              const service = selectService(match.params)
+              const { organizationName, serviceName } = match.params
+              const service = getService(organizationName, serviceName)
               service.fetch()
 
               return (

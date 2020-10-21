@@ -18,10 +18,7 @@ class OutgoingAccessRequestStore {
     this.accessRequestRepository = accessRequestRepository
   }
 
-  // TODO: reconsider this method name
-  // the method is created so we can create / update OutgoingAccessRequest instances
-  // with data that has been loaded from other resources (eg. a directoryService resource
-  // which includes the data for an OutgoingAccessRequest).
+  // TODO: apply rename to updateFromServer
   loadOutgoingAccessRequest = flow(function* (outgoingAccessRequestData) {
     const cachedOutgoingAccessRequest = this.outgoingAccessRequests.get(
       outgoingAccessRequestData.id,

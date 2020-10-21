@@ -75,11 +75,6 @@ class DirectoryServicesStore {
     )
   }
 
-  // TODO: replace with getService method
-  selectService = ({ organizationName, serviceName }) => {
-    return this.getService(organizationName, serviceName)
-  }
-
   async requestAccess(directoryService) {
     return this.rootStore.outgoingAccessRequestsStore.create({
       organizationName: directoryService.organizationName,
