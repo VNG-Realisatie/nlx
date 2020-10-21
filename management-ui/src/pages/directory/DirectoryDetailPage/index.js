@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React, { useEffect } from 'react'
+import React from 'react'
 import { shape, string } from 'prop-types'
 import { observer } from 'mobx-react'
 import { useParams, useHistory } from 'react-router-dom'
@@ -16,10 +16,6 @@ const DirectoryDetailPage = ({ service, parentUrl }) => {
   const { t } = useTranslation()
   const history = useHistory()
   const { organizationName, serviceName } = useParams()
-
-  useEffect(() => {
-    if (service) service.fetch()
-  }, [service])
 
   const close = () => history.push(parentUrl)
 

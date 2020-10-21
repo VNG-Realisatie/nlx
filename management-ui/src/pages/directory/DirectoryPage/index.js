@@ -49,10 +49,11 @@ const DirectoryPage = () => {
             exact
             path="/directory/:organizationName/:serviceName"
             render={({ match }) => {
+              const service = selectService(match.params)
+              service.fetch()
+
               return (
-                services.length && (
-                  <DirectoryDetailPage service={selectService(match.params)} />
-                )
+                services.length && <DirectoryDetailPage service={service} />
               )
             }}
           />

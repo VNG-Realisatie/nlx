@@ -33,6 +33,7 @@ class DirectoryServiceModel {
 
     this.directoryServicesStore = directoryServicesStore
 
+    // TODO: remove id
     this.id = `${service.organizationName}/${service.serviceName}`
     this.organizationName = service.organizationName
     this.serviceName = service.serviceName

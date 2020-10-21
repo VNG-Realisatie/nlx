@@ -44,22 +44,6 @@ test('display directory service details', () => {
   expect(getByTestId('directory-service-details')).toBeInTheDocument()
 })
 
-test('fetch latest state on load and display changes', () => {
-  service.fetch = jest.fn(() => (service.state = 'up'))
-
-  const { queryByText } = renderWithProviders(
-    <Router location="/directory/organization/service">
-      <Route path="/directory/:organizationName/:serviceName">
-        <DirectoryDetailPage service={service} />
-      </Route>
-    </Router>,
-  )
-
-  expect(service.fetch).toHaveBeenCalled()
-  expect(queryByText('state-degraded.svg')).not.toBeInTheDocument()
-  expect(queryByText('state-up.svg')).toBeInTheDocument()
-})
-
 test('service does not exist', () => {
   const { getByTestId, getByText, queryByText } = renderWithProviders(
     <Router location="/directory/organization/service">

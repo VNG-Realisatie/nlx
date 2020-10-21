@@ -8,6 +8,7 @@ const useStores = () => useContext(storesContext)
 
 export const useDirectoryServicesStore = () => {
   const { directoryServicesStore } = useStores()
+
   if (!directoryServicesStore.isInitiallyFetched) {
     directoryServicesStore.fetchAll()
   }

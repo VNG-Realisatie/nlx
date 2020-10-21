@@ -103,8 +103,6 @@ test('selecting a directory service', () => {
     serviceName: 'Service A',
   })
 
-  expect(mockDirectoryServiceModelA.fetch).toHaveBeenCalled()
-  expect(mockDirectoryServiceModelB.fetch).not.toHaveBeenCalled()
   expect(selectedService.state).toBe('state-a')
 })
 

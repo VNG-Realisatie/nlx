@@ -46,6 +46,7 @@ class InwaysStore {
     }
   }).bind(this)
 
+  // TODO: rename to getInway
   selectInway(inwayName) {
     const inwayModel = this.inways.find((inway) => inway.name === inwayName)
 

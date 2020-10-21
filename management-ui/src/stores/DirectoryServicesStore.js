@@ -37,6 +37,8 @@ class DirectoryServicesStore {
       ...response,
       latestAccessRequest: outgoingAccessRequestModel,
     })
+
+    yield directoryServiceModel
   })
 
   fetchAll = flow(function* fetchAll() {
@@ -65,16 +67,17 @@ class DirectoryServicesStore {
     }
   }).bind(this)
 
-  selectService = ({ organizationName, serviceName }) => {
-    const directoryServiceModel = this.services.find(
+  getService = (organizationName, serviceName) => {
+    return this.services.find(
       (service) =>
         service.organizationName === organizationName &&
         service.serviceName === serviceName,
     )
-    if (directoryServiceModel) {
-      directoryServiceModel.fetch()
-    }
-    return directoryServiceModel
+  }
+
+  // TODO: replace with getService method
+  selectService = ({ organizationName, serviceName }) => {
+    return this.getService(organizationName, serviceName)
   }
 
   async requestAccess(directoryService) {
