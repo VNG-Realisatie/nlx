@@ -18,20 +18,12 @@ class OutgoingAccessRequestStore {
     this.accessRequestRepository = accessRequestRepository
   }
 
-  getOutgoingAccessRequest(id) {
-    return this.outgoingAccessRequests.get(id)
-  }
-
-  setOutgoingAccessRequest = (id, model) => {
-    return this.outgoingAccessRequests.set(id, model)
-  }
-
   // TODO: reconsider this method name
   // the method is created so we can create / update OutgoingAccessRequest instances
   // with data that has been loaded from other resources (eg. a directoryService resource
   // which includes the data for an OutgoingAccessRequest).
   loadOutgoingAccessRequest = flow(function* (outgoingAccessRequestData) {
-    const cachedOutgoingAccessRequest = this.getOutgoingAccessRequest(
+    const cachedOutgoingAccessRequest = this.outgoingAccessRequests.get(
       outgoingAccessRequestData.id,
     )
 
@@ -44,7 +36,7 @@ class OutgoingAccessRequestStore {
         outgoingAccessRequestStore: this,
       })
 
-      this.setOutgoingAccessRequest(
+      this.outgoingAccessRequests.set(
         outgoingAccessRequest.id,
         outgoingAccessRequest,
       )
