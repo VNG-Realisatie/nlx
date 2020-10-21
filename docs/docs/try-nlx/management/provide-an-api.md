@@ -111,7 +111,7 @@ The response of the `curl` command should look similar to the following output.
 ```
 
 
-Congratulations, you can now consider yourself a member of the NLX club! 🎉
+Congratulations, you have successfully provided an API on the NLX network! 🎉
 
 ## In sum
 
