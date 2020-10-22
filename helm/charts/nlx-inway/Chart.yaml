@@ -2,5 +2,5 @@ apiVersion: v2
 name: nlx-inway
 description: NLX inway
 type: application
-version: 0.89.2
-appVersion: 0.89.2
+version: 0.90.0
+appVersion: 0.90.0

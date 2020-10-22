@@ -1,3 +1,60 @@
+# [0.90.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.89.2...v0.90.0) (2020-10-22)
+
+
+### Bug Fixes
+
+* **directory:** panic retieving API spec ([7bcbadf](https://gitlab.com/commonground/nlx/nlx/commit/7bcbadfae11fd92034edb549dec8e97727644ba2))
+* **directory:** rename remaining instances of handlers ([7db4d8f](https://gitlab.com/commonground/nlx/nlx/commit/7db4d8f05697972198c4dccbaca470a82313f848))
+* **management:** check not found error GetLastOutgoingAccesRequest ([795f572](https://gitlab.com/commonground/nlx/nlx/commit/795f572b5e849ab9212fb5328bdb1cf5dde2dd36))
+* **management:** correctly pass required stores when setting up stores in the rootstore ([6650fe8](https://gitlab.com/commonground/nlx/nlx/commit/6650fe8e982dc62c40168a4278862e3ebc1d3b87)), closes [#1023](https://gitlab.com/commonground/nlx/nlx/issues/1023)
+* **management:** fix english text strings ([dc3f7e2](https://gitlab.com/commonground/nlx/nlx/commit/dc3f7e2f0f7075a3abd5ef34d80e0ba416ed2e6c))
+* **management:** fix tests after upgrade mobx ([04c3dbe](https://gitlab.com/commonground/nlx/nlx/commit/04c3dbeb1d0fb9795cc959dadc1cdc9b1fa36522))
+* **management:** ip address in inway detail view ([4956372](https://gitlab.com/commonground/nlx/nlx/commit/49563722afb6d4406d1221dcb553c255005ebbe1))
+* **management:** linting errors ([17febd6](https://gitlab.com/commonground/nlx/nlx/commit/17febd60e7312de1fa723a817519f1c7dc364529))
+* **management:** mobx this bindings ([10b8045](https://gitlab.com/commonground/nlx/nlx/commit/10b8045094bf78536c9eb1e8560c4d11eb845a3a))
+* **management:** read request body when updating insight configuration over HTTP ([8f2d0c1](https://gitlab.com/commonground/nlx/nlx/commit/8f2d0c106867ed3c92f09b17d2f01206a4510a1a)), closes [#1026](https://gitlab.com/commonground/nlx/nlx/issues/1026)
+* **management:** reference rootStore directly instead of via 'this' ([e8f2988](https://gitlab.com/commonground/nlx/nlx/commit/e8f29885247349f0a736323d88f4f564115128aa)), closes [#1023](https://gitlab.com/commonground/nlx/nlx/issues/1023)
+* **management:** resolve issues with fetching directoryServices ([b488970](https://gitlab.com/commonground/nlx/nlx/commit/b488970b4124a74abe6a539ac4674c3c2f97badb)), closes [#1023](https://gitlab.com/commonground/nlx/nlx/issues/1023)
+* **management:** use latest image of the  management ui in docker compose ([3ccbdcd](https://gitlab.com/commonground/nlx/nlx/commit/3ccbdcd6ad47f5136a41fe4914d7c73eef1bfad9))
+* add translations ([9fa4b15](https://gitlab.com/commonground/nlx/nlx/commit/9fa4b15adc0d1f74cc8185767cefa945a36bc3cf))
+* **management:** resolve security issues reported by ESLint ([93b3f63](https://gitlab.com/commonground/nlx/nlx/commit/93b3f63da2cb2c757cf5d362e4ba8e7ecbc66009))
+
+
+### Features
+
+* inter-NLX components TLS 1.3 only ([c11b172](https://gitlab.com/commonground/nlx/nlx/commit/c11b172dacce31da2f5bbeabcaaf9f19a793e888))
+* **directory:** no default value for Postgres DSN ([41b2123](https://gitlab.com/commonground/nlx/nlx/commit/41b21232b5a24751794323edec914702ddcd4cbe))
+* **docs:** add try nlx management docs ([9ba0ff5](https://gitlab.com/commonground/nlx/nlx/commit/9ba0ff5c7321030d29ecef2cd223e73527765983))
+* **insight:** no default value for Postgres DSN ([3c5645b](https://gitlab.com/commonground/nlx/nlx/commit/3c5645b5e4bb1e27b2e1c66fee0a3d00156aa8cc))
+* **inway:** change config retrieval interval to 10 seconds ([07bdb1a](https://gitlab.com/commonground/nlx/nlx/commit/07bdb1a4e8e796c76ee9fd9c435b6cdb86cb6f38))
+* **inway:** no default value for Postgres DSN ([cbde5d5](https://gitlab.com/commonground/nlx/nlx/commit/cbde5d5f91c545d928d4453b0cd750cb74d978c6))
+* **management:** add OutgoingAccessRequest store with create method ([b957cc9](https://gitlab.com/commonground/nlx/nlx/commit/b957cc9ec823b3be2d8239da818013aa6097ffec)), closes [#1023](https://gitlab.com/commonground/nlx/nlx/issues/1023)
+* **management:** add retry button for a failing Access Request ([3ecd391](https://gitlab.com/commonground/nlx/nlx/commit/3ecd391f76cb9704683abe466a8c2179433799a9)), closes [#1023](https://gitlab.com/commonground/nlx/nlx/issues/1023)
+* **management:** add reverse proxy for the management-api in nginx ([e3afda1](https://gitlab.com/commonground/nlx/nlx/commit/e3afda19f52d7af90f45f8f9ee11b3517444ba35))
+* **management:** add RPC to send access request ([1cb85c0](https://gitlab.com/commonground/nlx/nlx/commit/1cb85c0736d0b299a948747d26bd5aa9d16194e1))
+* **management:** add sub navigation to the settings page ([fc0887b](https://gitlab.com/commonground/nlx/nlx/commit/fc0887b8404780d535ec235f4ac80946be5b26a4)), closes [#1026](https://gitlab.com/commonground/nlx/nlx/issues/1026)
+* **management:** display error toast when revoking access fails ([98f875b](https://gitlab.com/commonground/nlx/nlx/commit/98f875bb350d300943282d38323bb39c3dca7f8a))
+* **management:** display loading status when retrying to request access ([ab45ebe](https://gitlab.com/commonground/nlx/nlx/commit/ab45ebe8cd9c638c1f29744f0e7cb2bee15dbc5e)), closes [#1023](https://gitlab.com/commonground/nlx/nlx/issues/1023)
+* **management:** enable updating insight settings via NLX Management ([1547ac8](https://gitlab.com/commonground/nlx/nlx/commit/1547ac8deeeefdeac83f08b09ca0475b0a0025f0))
+* **management:** implement create access request for the DirectoryStore ([3ef4aa5](https://gitlab.com/commonground/nlx/nlx/commit/3ef4aa5af06a24b4dad32fdbf436115629f2e8e9)), closes [#1023](https://gitlab.com/commonground/nlx/nlx/issues/1023)
+* **management:** implement revoke access action in UI ([e165965](https://gitlab.com/commonground/nlx/nlx/commit/e165965a62feaa2967e9b1d1899230a25f503853)), closes [#1020](https://gitlab.com/commonground/nlx/nlx/issues/1020)
+* **management:** rename settings navigation items ([46ed704](https://gitlab.com/commonground/nlx/nlx/commit/46ed70408367b6445e60d711911fb7313b4cb550))
+* **management:** set padding right for settings navigation items ([898f1d2](https://gitlab.com/commonground/nlx/nlx/commit/898f1d2a3e82f12167624ab06cce372fd68a6a39)), closes [#1026](https://gitlab.com/commonground/nlx/nlx/issues/1026)
+* **management:** show dates for access request state ([4473359](https://gitlab.com/commonground/nlx/nlx/commit/447335983c560502d9086a6df960c6affc3ea851))
+* show outgoing access request states ([c2f7486](https://gitlab.com/commonground/nlx/nlx/commit/c2f748681a7e44088e587cdd7e572eb10f404d4b))
+* **management:** move re-fetching DirectoryModel from DetailPage to the router ([5224d4c](https://gitlab.com/commonground/nlx/nlx/commit/5224d4c2f8643f12038b3028da555aab2a94e7c6)), closes [#1023](https://gitlab.com/commonground/nlx/nlx/issues/1023)
+* **management:** return latest access proof in directory service list ([5497719](https://gitlab.com/commonground/nlx/nlx/commit/5497719212961791522ebe24bf33806da38cc1d4))
+* add access grants to service detail page ([ddc75d2](https://gitlab.com/commonground/nlx/nlx/commit/ddc75d25b64d1292e7435ca3caa1909c42966e19))
+* add docker-compose setup for NLX with management ([6113b0a](https://gitlab.com/commonground/nlx/nlx/commit/6113b0a471d55b243c150be4803543fb71ad4f17))
+* implement access request tasks in nlxctl ([7b3f6b6](https://gitlab.com/commonground/nlx/nlx/commit/7b3f6b68abff0ea664450443ba9f514a92ccd778))
+* **management:** replace inline Alert with Toaster when updating the insight settings fails ([6aea13d](https://gitlab.com/commonground/nlx/nlx/commit/6aea13d00305c436df4a4a2f54264add32bd1c77)), closes [#1026](https://gitlab.com/commonground/nlx/nlx/issues/1026)
+* **management:** replace inline Alert with Toaster when updating the settings fails ([3b576fd](https://gitlab.com/commonground/nlx/nlx/commit/3b576fd8a7bb2f1afbcc8d0c4abb8f6ae86aa334)), closes [#1026](https://gitlab.com/commonground/nlx/nlx/issues/1026)
+* **management:** return not found error ([7cc7c42](https://gitlab.com/commonground/nlx/nlx/commit/7cc7c42c4b0fdda62b7df37131812af400323743))
+* **management:** revoke access request ([a4a6abe](https://gitlab.com/commonground/nlx/nlx/commit/a4a6abedd287f1f83fbb19c100b43b741cd93495))
+* **management:** view access grants for a service ([0f88a21](https://gitlab.com/commonground/nlx/nlx/commit/0f88a217a67f8daddf534322ecf37b0347fca6ea))
+* **management:** when getting accesgrants return a 404 if the service does not exits ([8653571](https://gitlab.com/commonground/nlx/nlx/commit/86535712eb47407f04a7edb1f6113a7f265b233e))
+* **outway:** no default value for Postgres DSN ([a369bff](https://gitlab.com/commonground/nlx/nlx/commit/a369bff74603335b08d86c88eba19499696eedf4))
+
 ## [0.89.2](https://gitlab.com/commonground/nlx/nlx/compare/v0.89.1...v0.89.2) (2020-10-05)
 
 
