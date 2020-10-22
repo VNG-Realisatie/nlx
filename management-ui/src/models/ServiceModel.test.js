@@ -4,10 +4,8 @@
 import { checkPropTypes } from 'prop-types'
 
 import deferredPromise from '../test-utils/deferred-promise'
-import ServiceModel, {
-  serviceModelPropTypes,
-  createService,
-} from './ServiceModel'
+import ServicesStore from '../stores/ServicesStore'
+import ServiceModel, { serviceModelPropTypes } from './ServiceModel'
 
 let store
 let service
@@ -36,24 +34,32 @@ test('model implements proptypes', () => {
   errorSpy.mockRestore()
 })
 
-test('fetches data', async () => {
-  const request = deferredPromise()
-  store = {
+test('(re-)fetching the model', async () => {
+  const serviceStore = new ServicesStore({
     serviceRepository: {
-      getByName: jest.fn(() => request),
+      getByName: jest.fn().mockResolvedValue({
+        name: 'Service',
+      }),
     },
-  }
-
-  const serviceModel = new ServiceModel({ store, service })
-  serviceModel.fetch()
-
-  await request.resolve({
-    ...service,
-    internal: true,
   })
 
-  expect(store.serviceRepository.getByName).toHaveBeenCalled()
+  const serviceModel = new ServiceModel({
+    store: serviceStore,
+    service: {
+      name: 'Service',
+      internal: true,
+    },
+  })
+
+  expect(serviceModel.name).toBe('Service')
   expect(serviceModel.internal).toBe(true)
+
+  const servicesStoreFetchSpy = jest
+    .spyOn(serviceStore, 'fetch')
+    .mockResolvedValue()
+  await serviceModel.fetch()
+
+  expect(servicesStoreFetchSpy).toHaveBeenCalledWith(serviceModel)
 })
 
 test('updates service', async () => {

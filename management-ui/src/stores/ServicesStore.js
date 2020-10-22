@@ -36,6 +36,12 @@ class ServicesStore {
     this.isFetching = false
   }
 
+  fetch = flow(function* fetch(serviceModel) {
+    const response = yield this.serviceRepository.getByName(serviceModel.name)
+    serviceModel.with(response)
+    yield serviceModel
+  }).bind(this)
+
   fetchAll = flow(function* fetchAll() {
     if (this.isFetching) {
       return

@@ -44,8 +44,7 @@ class ServiceModel {
   }
 
   fetch = flow(function* fetch() {
-    const service = yield this.store.serviceRepository.getByName(this.name)
-    this.with(service)
+    yield this.store.fetch(this)
   }).bind(this)
 
   with = function (service) {
