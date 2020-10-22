@@ -2,12 +2,9 @@
 // Licensed under the EUPL
 //
 import deferredPromise from '../test-utils/deferred-promise'
+import ServiceModel from '../models/ServiceModel'
 import ServicesStore from './ServicesStore'
 import { mockServiceModel } from './ServicesStore.mock'
-
-jest.mock('../models/ServiceModel', () => ({
-  createService: ({ service }) => ({ ...service }),
-}))
 
 let rootStore
 let serviceRepository
@@ -126,7 +123,6 @@ test('removing a service', async () => {
 })
 
 test('creating a service', async () => {
-  const serviceList = [{ name: 'Service A' }, { name: 'Service B' }]
   serviceRepository = {
     create: jest.fn((service) => ({ ...service })),
   }
@@ -137,11 +133,19 @@ test('creating a service', async () => {
     accessRequestRepository,
     accessGrantRepository,
   })
-  servicesStore.services = serviceList
 
-  const newService = { name: 'Service C' }
+  expect(servicesStore.services).toHaveLength(0)
+
+  const newService = { name: 'Service A' }
   await servicesStore.create(newService)
 
   expect(serviceRepository.create).toHaveBeenCalled()
-  expect(servicesStore.services).toContainEqual(newService)
+  expect(servicesStore.services[0]).toEqual(
+    new ServiceModel({
+      store: servicesStore,
+      service: {
+        name: 'Service A',
+      },
+    }),
+  )
 })

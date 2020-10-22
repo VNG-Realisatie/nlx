@@ -5,7 +5,7 @@ import { makeAutoObservable, flow, action } from 'mobx'
 import ServiceRepository from '../domain/service-repository'
 import AccessRequestRepository from '../domain/access-request-repository'
 import AccessGrantRepository from '../domain/access-grant-repository'
-import { createService } from '../models/ServiceModel'
+import ServiceModel from '../models/ServiceModel'
 
 class ServicesStore {
   services = []
@@ -46,8 +46,8 @@ class ServicesStore {
 
     try {
       const services = yield this.serviceRepository.getAll()
-      this.services = services.map((service) =>
-        createService({ store: this, service }),
+      this.services = services.map(
+        (service) => new ServiceModel({ store: this, service }),
       )
     } catch (e) {
       this.error = e
@@ -79,8 +79,8 @@ class ServicesStore {
   }).bind(this)
 
   create = flow(function* create(service) {
-    const newService = yield this.serviceRepository.create(service)
-    const serviceModel = createService({ store: this, service: newService })
+    const response = yield this.serviceRepository.create(service)
+    const serviceModel = new ServiceModel({ store: this, service: response })
 
     this.services.push(serviceModel)
     return serviceModel

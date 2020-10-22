@@ -26,11 +26,6 @@ beforeEach(() => {
   }
 })
 
-test('createService returns an instance', () => {
-  const serviceModel = createService({ store, service })
-  expect(serviceModel).toBeInstanceOf(ServiceModel)
-})
-
 test('model implements proptypes', () => {
   const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
   const serviceModel = new ServiceModel({ store, service })

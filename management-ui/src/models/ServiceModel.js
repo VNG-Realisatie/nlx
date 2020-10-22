@@ -106,6 +106,4 @@ createModelSchema(ServiceModel, {
   inways: list(primitive()),
 })
 
-export const createService = (...args) => new ServiceModel(...args)
-
 export default ServiceModel
