@@ -78,7 +78,7 @@ class ServicesStore {
     }
   }).bind(this)
 
-  addService = flow(function* addService(service) {
+  create = flow(function* create(service) {
     const newService = yield this.serviceRepository.create(service)
     const serviceModel = createService({ store: this, service: newService })
 

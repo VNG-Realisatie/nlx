@@ -125,7 +125,7 @@ test('removing a service', async () => {
   expect(servicesStore.services).not.toContain(selectedService)
 })
 
-test('adding a service', async () => {
+test('creating a service', async () => {
   const serviceList = [{ name: 'Service A' }, { name: 'Service B' }]
   serviceRepository = {
     create: jest.fn((service) => ({ ...service })),
@@ -140,7 +140,7 @@ test('adding a service', async () => {
   servicesStore.services = serviceList
 
   const newService = { name: 'Service C' }
-  await servicesStore.addService(newService)
+  await servicesStore.create(newService)
 
   expect(serviceRepository.create).toHaveBeenCalled()
   expect(servicesStore.services).toContainEqual(newService)

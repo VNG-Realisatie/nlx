@@ -9,7 +9,7 @@ export const mockServicesStore = ({
   error = '',
   fetchAll = jest.fn(),
   selectService = jest.fn(),
-  addService = jest.fn(),
+  create = jest.fn(),
   removeService = jest.fn(),
 }) =>
   observable({
@@ -20,7 +20,7 @@ export const mockServicesStore = ({
       fetchAll,
       selectService,
       removeService,
-      addService,
+      create,
     },
   })
 

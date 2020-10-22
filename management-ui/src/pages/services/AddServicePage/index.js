@@ -15,11 +15,11 @@ const AddServicePage = () => {
   const { t } = useTranslation()
   const [error, setError] = useState(null)
   const history = useHistory()
-  const { addService } = useServicesStore()
+  const { create } = useServicesStore()
 
   const submitService = async (service) => {
     try {
-      const addedService = await addService(service)
+      const addedService = await create(service)
       history.push(
         `/services/${addedService.name}?lastAction=${serviceActions.ADDED}`,
       )

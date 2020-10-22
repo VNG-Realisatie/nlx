@@ -43,7 +43,7 @@ describe('the AddServicePage', () => {
     const createHandler = jest.fn().mockResolvedValue({
       name: 'my-service',
     })
-    const store = mockServicesStore({ addService: createHandler })
+    const store = mockServicesStore({ create: createHandler })
     const { findByTestId } = renderWithProviders(
       <Router history={history}>
         <StoreProvider store={store}>
@@ -69,7 +69,7 @@ describe('the AddServicePage', () => {
       .mockRejectedValueOnce(new Error('arbitrary error'))
 
     const history = createMemoryHistory()
-    const store = mockServicesStore({ addService: createHandler })
+    const store = mockServicesStore({ create: createHandler })
     const { findByTestId, queryByRole } = renderWithProviders(
       <Router history={history}>
         <StoreProvider store={store}>
@@ -106,7 +106,7 @@ describe('the AddServicePage', () => {
       .fn()
       .mockRejectedValue(new Error('arbitrary error'))
     const history = createMemoryHistory()
-    const store = mockServicesStore({ addService: createHandler })
+    const store = mockServicesStore({ create: createHandler })
     const { findByTestId, queryByRole } = renderWithProviders(
       <Router history={history}>
         <StoreProvider store={store}>
