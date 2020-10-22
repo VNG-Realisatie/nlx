@@ -2,8 +2,10 @@
 // Licensed under the EUPL
 //
 import { makeAutoObservable, flow } from 'mobx'
+import { serialize } from 'serializr'
+
 import ServiceRepository from '../domain/service-repository'
-import ServiceModel from '../models/ServiceModel'
+import ServiceModel, { ServiceModelSchema } from '../models/ServiceModel'
 
 class ServicesStore {
   services = []
@@ -25,10 +27,20 @@ class ServicesStore {
     this.isFetching = false
   }
 
-  fetch = flow(function* fetch(serviceModel) {
-    const response = yield this.serviceRepository.getByName(serviceModel.name)
-    serviceModel.with(response)
-    yield serviceModel
+  fetch = flow(function* fetch({ name }) {
+    const serviceData = yield this.serviceRepository.getByName(name)
+
+    let service = this.getService(name)
+    if (!service) {
+      service = new ServiceModel({
+        servicesStore: this,
+        serviceData,
+      })
+    } else {
+      service.update(serviceData)
+    }
+
+    yield this.rootStore.incomingAccessRequestsStore.fetchForService(service)
   }).bind(this)
 
   fetchAll = flow(function* fetchAll() {
@@ -40,9 +52,13 @@ class ServicesStore {
     this.error = ''
 
     try {
-      const services = yield this.serviceRepository.getAll()
-      this.services = services.map(
-        (service) => new ServiceModel({ store: this, service }),
+      const servicesData = yield this.serviceRepository.getAll()
+      this.services = servicesData.map(
+        (serviceData) =>
+          new ServiceModel({
+            servicesStore: this,
+            serviceData,
+          }),
       )
     } catch (e) {
       this.error = e
@@ -53,17 +69,41 @@ class ServicesStore {
     }
   }).bind(this)
 
-  selectService = (serviceName) => {
-    const serviceModel = this.services.find(
-      (service) => service.name === serviceName,
-    )
+  getService = (serviceName) => {
+    return this.services.find((service) => service.name === serviceName)
+  }
 
-    if (serviceModel) {
-      serviceModel.fetch()
+  create = flow(function* create(formData) {
+    const serviceData = yield this.serviceRepository.create(formData)
+    const service = new ServiceModel({
+      servicesStore: this,
+      serviceData,
+    })
+
+    this.services.push(service)
+    return service
+  }).bind(this)
+
+  update = flow(function* update(formData) {
+    if (!formData.name) {
+      throw new Error('Name required to update service')
     }
 
-    return serviceModel
-  }
+    const service = this.getService(formData.name)
+
+    if (!service) {
+      throw new Error('Can not edit a service that does not exist')
+    }
+
+    const serviceData = yield this.serviceRepository.update(
+      formData.name,
+      serialize(ServiceModelSchema, formData),
+    )
+
+    service.update(serviceData)
+
+    return service
+  }).bind(this)
 
   removeService = flow(function* removeService(service) {
     yield this.serviceRepository.remove(service)
@@ -71,14 +111,6 @@ class ServicesStore {
     if (!removed) {
       this.fetchAll()
     }
-  }).bind(this)
-
-  create = flow(function* create(service) {
-    const response = yield this.serviceRepository.create(service)
-    const serviceModel = new ServiceModel({ store: this, service: response })
-
-    this.services.push(serviceModel)
-    return serviceModel
   }).bind(this)
 }
 

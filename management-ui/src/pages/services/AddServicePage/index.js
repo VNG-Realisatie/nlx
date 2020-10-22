@@ -17,9 +17,9 @@ const AddServicePage = () => {
   const history = useHistory()
   const { create } = useServicesStore()
 
-  const submitService = async (service) => {
+  const submitService = async (formData) => {
     try {
-      const addedService = await create(service)
+      const addedService = await create(formData)
       history.push(
         `/services/${addedService.name}?lastAction=${serviceActions.ADDED}`,
       )

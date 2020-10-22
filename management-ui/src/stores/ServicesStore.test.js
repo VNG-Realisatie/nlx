@@ -4,18 +4,43 @@
 import deferredPromise from '../test-utils/deferred-promise'
 import ServiceModel from '../models/ServiceModel'
 import ServicesStore from './ServicesStore'
-import { mockServiceModel } from './ServicesStore.mock'
 
 let rootStore
 let serviceRepository
-let accessRequestRepository
-let accessGrantRepository
 
 beforeEach(() => {
   rootStore = {}
   serviceRepository = {}
-  accessRequestRepository = {}
-  accessGrantRepository = {}
+})
+
+test('fetch a single service', async () => {
+  rootStore = {
+    incomingAccessRequestsStore: {
+      fetchForService: jest.fn(),
+    },
+    // accessGrantRepository: {},
+  }
+
+  serviceRepository = {
+    getByName: jest.fn().mockResolvedValue({ name: 'Service A' }),
+  }
+
+  const servicesStore = new ServicesStore({
+    rootStore,
+    serviceRepository,
+  })
+
+  servicesStore.services = [
+    new ServiceModel({ servicesStore, serviceData: { name: 'Service A' } }),
+    new ServiceModel({ servicesStore, serviceData: { name: 'Serivce B' } }),
+  ]
+
+  await servicesStore.fetch({ name: 'Service A' })
+
+  expect(serviceRepository.getByName).toHaveBeenCalled()
+  expect(
+    rootStore.incomingAccessRequestsStore.fetchForService,
+  ).toHaveBeenCalled()
 })
 
 test('fetching services', async () => {
@@ -25,12 +50,9 @@ test('fetching services', async () => {
   }
 
   const serviceList = [{ name: 'Service A' }, { name: 'Service B' }]
-
   const servicesStore = new ServicesStore({
     rootStore,
     serviceRepository,
-    accessRequestRepository,
-    accessGrantRepository,
   })
 
   expect(servicesStore.isInitiallyFetched).toBe(false)
@@ -45,7 +67,6 @@ test('fetching services', async () => {
 
   await expect(servicesStore.isInitiallyFetched).toBe(true)
   expect(servicesStore.services).toHaveLength(2)
-  expect(servicesStore.services).not.toBe([])
 })
 
 test('handle error while fetching services', async () => {
@@ -59,8 +80,6 @@ test('handle error while fetching services', async () => {
   const servicesStore = new ServicesStore({
     rootStore,
     serviceRepository,
-    accessRequestRepository,
-    accessGrantRepository,
   })
 
   expect(servicesStore.services).toEqual([])
@@ -79,73 +98,52 @@ test('handle error while fetching services', async () => {
   errorSpy.mockRestore()
 })
 
-test('selecting a service', () => {
-  const mockServiceModelA = mockServiceModel({ name: 'Service A' })
-  const mockServiceModelB = mockServiceModel({ name: 'Service B' })
-  const serviceList = [mockServiceModelA, mockServiceModelB]
+test('getting a service', () => {
+  const serviceList = [{ name: 'Service A' }, { name: 'Service B' }]
 
   const servicesStore = new ServicesStore({
     rootStore,
     serviceRepository,
-    accessRequestRepository,
-    accessGrantRepository,
   })
   servicesStore.services = serviceList
 
-  const selectedService = servicesStore.selectService('Service A')
+  const service = servicesStore.getService('Service A')
+  expect(service.name).toEqual(serviceList[0].name)
+})
 
-  expect(selectedService.name).toEqual(serviceList[0].name)
-  expect(mockServiceModelA.fetch).toHaveBeenCalled()
-  expect(mockServiceModelB.fetch).not.toHaveBeenCalled()
+test('creating a service', async () => {
+  const formData = {
+    name: 'New service',
+    endpointURL: 'api.io',
+  }
+
+  serviceRepository = { create: jest.fn().mockResolvedValue(formData) }
+
+  const servicesStore = new ServicesStore({
+    rootStore,
+    serviceRepository,
+  })
+
+  await servicesStore.create(formData)
+
+  expect(serviceRepository.create).toHaveBeenCalled()
+  expect(servicesStore.services).toHaveLength(1)
+  expect(servicesStore.services[0]).toBeInstanceOf(ServiceModel)
 })
 
 test('removing a service', async () => {
-  const serviceList = [
-    mockServiceModel({ name: 'Service A' }),
-    mockServiceModel({ name: 'Service B' }),
-  ]
+  const serviceList = [{ name: 'Service A' }, { name: 'Service B' }]
   serviceRepository = { remove: jest.fn() }
 
   const servicesStore = new ServicesStore({
     rootStore,
     serviceRepository,
-    accessRequestRepository,
-    accessGrantRepository,
   })
   servicesStore.services = serviceList
 
-  const selectedService = servicesStore.selectService('Service A')
-
-  await servicesStore.removeService(selectedService)
+  const service = servicesStore.getService('Service A')
+  await servicesStore.removeService(service)
 
   expect(serviceRepository.remove).toHaveBeenCalled()
-  expect(servicesStore.services).not.toContain(selectedService)
-})
-
-test('creating a service', async () => {
-  serviceRepository = {
-    create: jest.fn((service) => ({ ...service })),
-  }
-
-  const servicesStore = new ServicesStore({
-    rootStore,
-    serviceRepository,
-    accessRequestRepository,
-    accessGrantRepository,
-  })
-
-  expect(servicesStore.services).toHaveLength(0)
-
-  const newService = { name: 'Service A' }
-  await servicesStore.create(newService)
-
-  expect(serviceRepository.create).toHaveBeenCalled()
-  expect(servicesStore.services[0]).toEqual(
-    new ServiceModel({
-      store: servicesStore,
-      service: {
-        name: 'Service A',
-      },
-    }),
-  )
+  expect(servicesStore.services).not.toContain(service)
 })

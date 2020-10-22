@@ -18,12 +18,7 @@ import { StyledActionsBar, StyledIconPlus } from './index.styles'
 
 const ServicesPage = () => {
   const { t } = useTranslation()
-  const {
-    isInitiallyFetched,
-    services,
-    error,
-    selectService,
-  } = useServicesStore()
+  const { isInitiallyFetched, services, error, getService } = useServicesStore()
 
   return (
     <PageTemplate>
@@ -53,18 +48,24 @@ const ServicesPage = () => {
           {t('Failed to load the services.')}
         </Alert>
       ) : (
-        <ServicesPageView services={services} />
-      )}
+        <>
+          <ServicesPageView services={services} />
+          <Route
+            path="/services/:name"
+            render={({ match }) => {
+              const service = getService(match.params.name)
+              if (!service) return null
+              service.fetch()
 
-      <Route
-        path="/services/:name"
-        render={({ match }) => (
-          <ServiceDetailPage
-            parentUrl="/services"
-            service={selectService(match.params.name)}
+              return (
+                services.length && (
+                  <ServiceDetailPage parentUrl="/services" service={service} />
+                )
+              )
+            }}
           />
-        )}
-      />
+        </>
+      )}
     </PageTemplate>
   )
 }

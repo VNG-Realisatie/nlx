@@ -89,6 +89,7 @@ class IncomingAccessRequestModel {
         id,
       })
 
+      // TODO: make sure we reimplement this behaviour
       this.store.fetchIncomingAccessRequests()
     } catch (e) {
       this.error = e.message

@@ -7,9 +7,11 @@ export const mockServicesStore = ({
   services = [],
   isInitiallyFetched = true,
   error = '',
+  fetch = jest.fn(),
   fetchAll = jest.fn(),
-  selectService = jest.fn(),
+  getService = jest.fn(),
   create = jest.fn(),
+  update = jest.fn(),
   removeService = jest.fn(),
 }) =>
   observable({
@@ -17,14 +19,11 @@ export const mockServicesStore = ({
       services,
       isInitiallyFetched,
       error,
+      fetch,
       fetchAll,
-      selectService,
-      removeService,
+      getService,
       create,
+      update,
+      removeService,
     },
   })
-
-export const mockServiceModel = (service, fetch = jest.fn()) => ({
-  ...service,
-  fetch,
-})

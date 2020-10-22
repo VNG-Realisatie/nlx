@@ -18,21 +18,21 @@ import { StyledUpdatedError } from './index.styles'
 const EditServicePage = () => {
   const { name } = useParams()
   const { t } = useTranslation()
-  const { error, isInitiallyFetched, selectService } = useServicesStore()
+  const { error, isInitiallyFetched, getService, update } = useServicesStore()
   const [updateError, setUpdatedError] = useState(null)
   const history = useHistory()
   const [service, setService] = useState(null)
 
   useEffect(() => {
     if (isInitiallyFetched) {
-      setService(selectService(name))
+      setService(getService(name))
     }
   }, [isInitiallyFetched]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const submitService = async (values) => {
+  const submitService = async (formData) => {
     try {
       setUpdatedError(null)
-      const updatedService = await service.update(values)
+      const updatedService = await update(formData)
       history.push(
         `/services/${updatedService.name}?lastAction=${serviceActions.EDITED}`,
       )

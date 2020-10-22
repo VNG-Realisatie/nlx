@@ -3,16 +3,15 @@
 //
 import { checkPropTypes } from 'prop-types'
 
-import deferredPromise from '../test-utils/deferred-promise'
 import ServicesStore from '../stores/ServicesStore'
 import ServiceModel, { serviceModelPropTypes } from './ServiceModel'
 
 let store
-let service
+let serviceData
 
 beforeEach(() => {
   store = {}
-  service = {
+  serviceData = {
     name: 'Service',
     endpointURL: '',
     documentationURL: '',
@@ -26,7 +25,7 @@ beforeEach(() => {
 
 test('model implements proptypes', () => {
   const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
-  const serviceModel = new ServiceModel({ store, service })
+  const serviceModel = new ServiceModel({ store, serviceData })
 
   checkPropTypes(serviceModelPropTypes, serviceModel, 'prop', 'ServiceModel')
 
@@ -34,64 +33,74 @@ test('model implements proptypes', () => {
   errorSpy.mockRestore()
 })
 
-test('(re-)fetching the model', async () => {
-  const serviceStore = new ServicesStore({
+test('initialize and update the service', async () => {
+  const serviceModel = new ServiceModel({
+    servicesStore: {},
+    serviceData,
+  })
+
+  serviceModel.update({ ...serviceData, internal: true })
+
+  expect(serviceModel.internal).toBe(true)
+})
+
+test('(re-)fetching the model should call fetch on store', async () => {
+  const servicesStore = new ServicesStore({
     serviceRepository: {
       getByName: jest.fn().mockResolvedValue({
         name: 'Service',
       }),
     },
+    rootStore: {},
   })
 
   const serviceModel = new ServiceModel({
-    store: serviceStore,
-    service: {
-      name: 'Service',
-      internal: true,
-    },
+    servicesStore,
+    serviceData,
   })
 
-  expect(serviceModel.name).toBe('Service')
-  expect(serviceModel.internal).toBe(true)
-
   const servicesStoreFetchSpy = jest
-    .spyOn(serviceStore, 'fetch')
+    .spyOn(servicesStore, 'fetch')
     .mockResolvedValue()
   await serviceModel.fetch()
 
   expect(servicesStoreFetchSpy).toHaveBeenCalledWith(serviceModel)
 })
 
-test('updates service', async () => {
-  store = {
-    serviceRepository: {
-      update: jest.fn(async (name, service) => ({ ...service })),
+test('fetching incoming access requests', () => {
+  const mockGetForService = jest.fn(() => [])
+
+  const servicesStore = new ServicesStore({
+    serviceRepository: {},
+    rootStore: {
+      incomingAccessRequestsStore: {
+        getForService: mockGetForService,
+      },
     },
-  }
-  const serviceModel = new ServiceModel({ store, service })
+  })
 
-  await serviceModel.update({ ...service, internal: true })
-  await expect(store.serviceRepository.update).toHaveBeenCalledWith(
-    service.name,
-    expect.objectContaining({ name: service.name, internal: true }),
-  )
+  const serviceModel = new ServiceModel({
+    servicesStore,
+    serviceData,
+  })
 
-  expect(serviceModel.internal).toBe(true)
+  expect(serviceModel.incomingAccessRequests).toEqual([])
+  expect(mockGetForService).toHaveBeenCalledWith(serviceModel)
 })
 
-test('fetching access grants', async () => {
-  const request = deferredPromise()
-  store = {
-    accessGrantRepository: {
-      getByServiceName: jest.fn(() => request),
-    },
-  }
+// test.only('fetching access grants', async () => {
+//   const request = deferredPromise()
+//   store = {
+//     accessGrantRepository: {
+//       getByServiceName: jest.fn(() => request),
+//     },
+//   }
 
-  const serviceModel = new ServiceModel({ store, service })
-  serviceModel.fetchAccessGrants()
+//   const serviceModel = new ServiceModel({ store, serviceData })
+//   serviceModel.fetchAccessGrants()
 
-  await request.resolve([{ id: 'somegrant' }])
+//   await request.resolve([{ id: 'somegrant' }])
 
-  expect(store.accessGrantRepository.getByServiceName).toHaveBeenCalled()
-  expect(serviceModel.accessGrants).toEqual([{ id: 'somegrant' }])
-})
+//   expect(store.accessGrantRepository.getByServiceName).toHaveBeenCalled()
+//   expect(serviceModel.accessGrants).toEqual([{ id: 'somegrant' }])
+// })

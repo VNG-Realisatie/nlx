@@ -3,11 +3,7 @@
 //
 import { makeAutoObservable, flow } from 'mobx'
 import { arrayOf, bool, func, string } from 'prop-types'
-import { createModelSchema, list, primitive, serialize } from 'serializr'
-import {
-  ACCESS_REQUEST_STATES,
-  createIncomingAccessRequest,
-} from './IncomingAccessRequestModel'
+import { createModelSchema, list, primitive } from 'serializr'
 
 export const serviceModelPropTypes = {
   name: string.isRequired,
@@ -19,10 +15,8 @@ export const serviceModelPropTypes = {
   publicSupportContact: string.isRequired,
   inways: arrayOf(string),
   fetch: func.isRequired,
-  update: func.isRequired,
 }
 
-// TODO test
 class ServiceModel {
   name = ''
   endpointURL = ''
@@ -32,69 +26,66 @@ class ServiceModel {
   techSupportContact = ''
   publicSupportContact = ''
   inways = []
-  incomingAccessRequests = []
   accessGrants = []
 
-  constructor({ store, service }) {
+  constructor({ servicesStore, serviceData }) {
     makeAutoObservable(this)
 
-    this.store = store
-    this.name = service.name
-    this.with(service)
+    this.servicesStore = servicesStore
+    this.name = serviceData.name
+    this.update(serviceData)
   }
 
-  fetch = flow(function* fetch() {
-    yield this.store.fetch(this)
-  }).bind(this)
-
-  with = function (service) {
-    this.endpointURL = service.endpointURL || ''
-    this.documentationURL = service.documentationURL || ''
-    this.apiSpecificationURL = service.apiSpecificationURL || ''
-    this.internal = service.internal || false
-    this.techSupportContact = service.techSupportContact || ''
-    this.publicSupportContact = service.publicSupportContact || ''
-    this.inways = service.inways || []
-  }
-
-  update = flow(function* update(values) {
-    this.with(values)
-    yield this.store.serviceRepository.update(this.name, serialize(this))
-    return this
-  }).bind(this)
-
-  fetchIncomingAccessRequests = flow(function* fetchIncomingAccessRequests() {
-    const accessRequests = yield this.store.accessRequestRepository.listIncomingAccessRequests(
-      this.name,
-    )
-
-    this.incomingAccessRequests = accessRequests
-      .filter(
-        (accessRequest) =>
-          accessRequest.state === ACCESS_REQUEST_STATES.RECEIVED,
-      )
-      .map((accessRequest) =>
-        createIncomingAccessRequest({
-          store: this,
-          accessRequestData: accessRequest,
-        }),
-      )
-  }).bind(this)
-
-  removeIncomingAccessRequest = function (removeWithId) {
-    this.incomingAccessRequests = this.incomingAccessRequests.filter(
-      ({ id }) => id !== removeWithId,
+  get incomingAccessRequests() {
+    return this.servicesStore.rootStore.incomingAccessRequestsStore.getForService(
+      this,
     )
   }
 
+  fetch = async () => {
+    await this.servicesStore.fetch(this)
+  }
+
+  update = (service) => {
+    if (service.endpointURL) {
+      this.endpointURL = service.endpointURL
+    }
+
+    if (service.documentationURL) {
+      this.documentationURL = service.documentationURL
+    }
+
+    if (service.apiSpecificationURL) {
+      this.apiSpecificationURL = service.apiSpecificationURL
+    }
+
+    if (service.internal) {
+      this.internal = service.internal
+    }
+
+    if (service.techSupportContact) {
+      this.techSupportContact = service.techSupportContact
+    }
+
+    if (service.publicSupportContact) {
+      this.publicSupportContact = service.publicSupportContact
+    }
+
+    if (service.inways) {
+      this.inways = service.inways
+    }
+  }
+
+  // TODO: implement accessGrantStore & update this method to use the accessGrantStore
   fetchAccessGrants = flow(function* fetchAccessGrants() {
-    this.accessGrants = yield this.store.accessGrantRepository.getByServiceName(
-      this.name,
-    )
+    return yield []
+    // this.accessGrants = yield this.servicesStore.accessGrantRepository.getByServiceName(
+    //   this.name,
+    // )
   }).bind(this)
 }
 
-createModelSchema(ServiceModel, {
+export const ServiceModelSchema = createModelSchema(ServiceModel, {
   name: primitive(),
   endpointURL: primitive(),
   documentationURL: primitive(),

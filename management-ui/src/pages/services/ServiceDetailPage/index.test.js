@@ -27,28 +27,6 @@ beforeEach(() => {
   fetchAccessGrants = jest.fn()
 })
 
-test('calls required data fetching methods', () => {
-  const store = mockServicesStore({})
-  renderWithProviders(
-    <StaticRouter location="/services/forty-two">
-      <Route path="/services/:name">
-        <StoreProvider store={store}>
-          <ServiceDetailPage
-            service={{
-              name: 'forty-two',
-              fetchIncomingAccessRequests,
-              fetchAccessGrants,
-            }}
-          />
-        </StoreProvider>
-      </Route>
-    </StaticRouter>,
-  )
-
-  expect(fetchIncomingAccessRequests).toHaveBeenCalledTimes(1)
-  expect(fetchAccessGrants).toHaveBeenCalledTimes(1)
-})
-
 test('display service details', () => {
   const store = mockServicesStore({})
   const { getByTestId, getByText } = renderWithProviders(
@@ -72,8 +50,8 @@ test('display service details', () => {
 })
 
 test('fetching a non-existing component', async () => {
-  const selectService = jest.fn()
-  const store = mockServicesStore({ selectService })
+  const getService = jest.fn()
+  const store = mockServicesStore({ getService })
 
   const { findByTestId, getByText } = renderWithProviders(
     <StaticRouter location="/services/forty-two">
