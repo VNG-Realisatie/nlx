@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { shape, func } from 'prop-types'
+import { shape } from 'prop-types'
 import { observer } from 'mobx-react'
 import { Alert } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
@@ -12,13 +12,12 @@ import { directoryServicePropTypes } from '../../../../../models/DirectoryServic
 import { ACCESS_REQUEST_STATES } from '../../../../../models/OutgoingAccessRequestModel'
 import { SectionGroup } from '../../../../../components/DetailView'
 
-import AccessRequestRepository from '../../../../../domain/access-request-repository'
 import AccessRequestSection from './AccessRequestSection'
 import { StyledAlert } from './index.styles'
 
 const { FAILED } = ACCESS_REQUEST_STATES
 
-const DirectoryDetailView = ({ service, sendAccessRequest }) => {
+const DirectoryDetailView = ({ service }) => {
   const { t } = useTranslation()
   const { organizationName, latestAccessRequest } = service
 
@@ -71,11 +70,6 @@ DirectoryDetailView.propTypes = {
       'requestAccess',
     ]),
   ),
-  sendAccessRequest: func,
-}
-
-DirectoryDetailView.defaultProps = {
-  sendAccessRequest: AccessRequestRepository.sendAccessRequest,
 }
 
 export default observer(DirectoryDetailView)

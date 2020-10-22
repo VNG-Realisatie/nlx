@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import { flow, makeAutoObservable } from 'mobx'
-import { func, string } from 'prop-types'
+import { func, string, instanceOf } from 'prop-types'
 
 export const ACCESS_REQUEST_STATES = {
   CREATED: 'CREATED',
@@ -18,8 +18,8 @@ export const outgoingAccessRequestPropTypes = {
   organizationName: string.isRequired,
   serviceName: string.isRequired,
   state: string,
-  createdAt: string,
-  updatedAt: string,
+  createdAt: instanceOf(Date),
+  updatedAt: instanceOf(Date),
   error: string,
 
   retry: func,
@@ -30,14 +30,15 @@ class OutgoingAccessRequestModel {
   organizationName = ''
   serviceName = ''
   state = ''
-  createdAt = ''
-  updatedAt = ''
+  createdAt = null
+  updatedAt = null
+
   error = ''
 
   static verifyInstance(object, objectName = 'given object') {
     if (object && !(object instanceof OutgoingAccessRequestModel)) {
       throw new Error(
-        `The ${objectName} should be an instance of the OutgoingAccessRequestModel`,
+        `The ${objectName} should be an instance of OutgoingAccessRequestModel`,
       )
     }
   }
@@ -72,11 +73,11 @@ class OutgoingAccessRequestModel {
     }
 
     if (accessRequestData.createdAt) {
-      this.createdAt = accessRequestData.createdAt
+      this.createdAt = new Date(accessRequestData.createdAt)
     }
 
     if (accessRequestData.updatedAt) {
-      this.updatedAt = accessRequestData.updatedAt
+      this.updatedAt = new Date(accessRequestData.updatedAt)
     }
   }
 

@@ -26,8 +26,8 @@ describe('detail view of directory service we do not have access to', () => {
       organizationName: 'organization',
       serviceName: 'service',
       state: 'FAILED',
-      createdAt: '2020-06-30T08:31:41.106Z',
-      updatedAt: '2020-06-30T08:31:41.106Z',
+      createdAt: new Date('2020-06-30T08:31:41.106Z'),
+      updatedAt: new Date('2020-06-30T08:31:41.106Z'),
     }
 
     const { getAllByText } = renderWithProviders(

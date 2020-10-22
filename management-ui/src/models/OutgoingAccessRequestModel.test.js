@@ -23,8 +23,8 @@ beforeEach(() => {
   accessRequestJson = {
     ...serviceData,
     id: 'abcd',
-    createdAt: 'datetime1',
-    updatedAt: 'datetime2',
+    createdAt: '2020-10-01',
+    updatedAt: '2020-10-02',
   }
 
   accessRequestRepository = {

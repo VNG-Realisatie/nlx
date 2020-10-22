@@ -53,7 +53,7 @@ const getStateUI = (latestAccessRequest, t) => {
           <StateDetail>
             <span>{t('Access requested')}</span>
             <small>
-              {t('On date', { date: new Date(latestAccessRequest.updatedAt) })}
+              {t('On date', { date: latestAccessRequest.updatedAt })}
             </small>
           </StateDetail>
         </>
@@ -67,7 +67,7 @@ const getStateUI = (latestAccessRequest, t) => {
             <span>{t('You have access')}</span>
             <small>
               {t('Since date', {
-                date: new Date(latestAccessRequest.updatedAt),
+                date: latestAccessRequest.updatedAt,
               })}
             </small>
           </StateDetail>
@@ -82,7 +82,7 @@ const getStateUI = (latestAccessRequest, t) => {
             <span>{t('Access request rejected')}</span>
             <small>
               {t('On date', {
-                date: new Date(latestAccessRequest.updatedAt),
+                date: latestAccessRequest.updatedAt,
               })}
             </small>
           </StateDetail>
