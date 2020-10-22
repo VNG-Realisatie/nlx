@@ -1,10 +1,8 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { makeAutoObservable, flow, action } from 'mobx'
+import { makeAutoObservable, flow } from 'mobx'
 import ServiceRepository from '../domain/service-repository'
-import AccessRequestRepository from '../domain/access-request-repository'
-import AccessGrantRepository from '../domain/access-grant-repository'
 import ServiceModel from '../models/ServiceModel'
 
 class ServicesStore {
@@ -15,20 +13,11 @@ class ServicesStore {
   // This is internal state to prevent concurrent fetchAll calls being in flight.
   isFetching = false
 
-  constructor({
-    rootStore,
-    serviceRepository = ServiceRepository,
-    accessRequestRepository = AccessRequestRepository,
-    accessGrantRepository = AccessGrantRepository,
-  }) {
-    makeAutoObservable(this, {
-      selectService: action.bound,
-    })
+  constructor({ rootStore, serviceRepository = ServiceRepository }) {
+    makeAutoObservable(this)
 
     this.rootStore = rootStore
     this.serviceRepository = serviceRepository
-    this.accessRequestRepository = accessRequestRepository
-    this.accessGrantRepository = accessGrantRepository
 
     this.services = []
     this.error = ''
@@ -64,7 +53,7 @@ class ServicesStore {
     }
   }).bind(this)
 
-  selectService(serviceName) {
+  selectService = (serviceName) => {
     const serviceModel = this.services.find(
       (service) => service.name === serviceName,
     )
