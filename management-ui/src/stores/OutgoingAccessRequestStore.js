@@ -18,16 +18,14 @@ class OutgoingAccessRequestStore {
     this.accessRequestRepository = accessRequestRepository
   }
 
-  updateFromServer = flow(function* updateFromServer(
-    outgoingAccessRequestData,
-  ) {
+  updateFromServer = (outgoingAccessRequestData) => {
     const cachedOutgoingAccessRequest = this.outgoingAccessRequests.get(
       outgoingAccessRequestData.id,
     )
 
     if (cachedOutgoingAccessRequest) {
       cachedOutgoingAccessRequest.update(outgoingAccessRequestData)
-      return yield cachedOutgoingAccessRequest
+      return cachedOutgoingAccessRequest
     } else {
       const outgoingAccessRequest = new OutgoingAccessRequestModel({
         accessRequestData: outgoingAccessRequestData,
@@ -39,9 +37,9 @@ class OutgoingAccessRequestStore {
         outgoingAccessRequest,
       )
 
-      return yield outgoingAccessRequest
+      return outgoingAccessRequest
     }
-  }).bind(this)
+  }
 
   create = flow(function* create({ organizationName, serviceName }) {
     const response = yield this.accessRequestRepository.createAccessRequest({

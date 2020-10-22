@@ -38,17 +38,10 @@ class DirectoryServiceModel {
     this.state = directoryServiceData.state
     this.apiSpecificationType = directoryServiceData.apiSpecificationType
 
-    if (
-      directoryServiceData.latestAccessRequest &&
-      !(
-        directoryServiceData.latestAccessRequest instanceof
-        OutgoingAccessRequestModel
-      )
-    ) {
-      throw new Error(
-        'the latestAccessRequest should be an instance of the OutgoingAccessRequestModel',
-      )
-    }
+    OutgoingAccessRequestModel.verifyInstance(
+      directoryServiceData.latestAccessRequest,
+      'latestAccessRequest',
+    )
 
     this.latestAccessRequest = directoryServiceData.latestAccessRequest || null
   }
