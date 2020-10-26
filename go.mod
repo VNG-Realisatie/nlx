@@ -5,7 +5,7 @@ go 1.15
 require (
 	github.com/Microsoft/go-winio v0.4.14 // indirect
 	github.com/bwesterb/go-atum v1.0.3 // indirect
-	github.com/cloudflare/cfssl v1.4.1
+	github.com/cloudflare/cfssl v1.5.0
 	github.com/coreos/bbolt v1.3.3 // indirect
 	github.com/coreos/etcd v3.3.19+incompatible
 	github.com/coreos/go-oidc v2.2.1+incompatible
@@ -50,8 +50,6 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.6.1
-	github.com/weppos/publicsuffix-go v0.13.0 // indirect
-	github.com/zmap/zlint v1.1.0 // indirect
 	go.uber.org/zap v1.16.0
 	golang.org/x/net v0.0.0-20201021035429-f5854403a974
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
