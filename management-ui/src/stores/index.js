@@ -4,12 +4,14 @@
 import React, { createContext } from 'react'
 import { configure } from 'mobx'
 import { node, object } from 'prop-types'
+
 import AccessRequestRepository from '../domain/access-request-repository'
 import DirectoryRepository from '../domain/directory-repository'
-import InwaysStore from './InwaysStore'
-import ServicesStore from './ServicesStore'
-import DirectoryServicesStore from './DirectoryServicesStore'
 import OutgoingAccessRequestStore from './OutgoingAccessRequestStore'
+import AccessProofStore from './AccessProofStore'
+import DirectoryServicesStore from './DirectoryServicesStore'
+import ServicesStore from './ServicesStore'
+import InwaysStore from './InwaysStore'
 
 if (process.env.NODE_ENV !== 'test') {
   // `setupTests` has 'never' set. But some tests include this file,
@@ -27,6 +29,9 @@ export class RootStore {
     this.outgoingAccessRequestsStore = new OutgoingAccessRequestStore({
       rootStore: this,
       accessRequestRepository,
+    })
+    this.accessProofStore = new AccessProofStore({
+      rootStore: this,
     })
     this.directoryServicesStore = new DirectoryServicesStore({
       rootStore: this,

@@ -19,6 +19,8 @@ class OutgoingAccessRequestStore {
   }
 
   updateFromServer = (outgoingAccessRequestData) => {
+    if (!outgoingAccessRequestData) return null
+
     const cachedOutgoingAccessRequest = this.outgoingAccessRequests.get(
       outgoingAccessRequestData.id,
     )

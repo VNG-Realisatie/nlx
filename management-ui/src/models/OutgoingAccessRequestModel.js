@@ -51,9 +51,16 @@ class OutgoingAccessRequestModel {
     this.update(accessRequestData)
   }
 
+  get isCancelledOrRejected() {
+    return (
+      this.state === ACCESS_REQUEST_STATES.CANCELLED ||
+      this.state === ACCESS_REQUEST_STATES.REJECTED
+    )
+  }
+
   update = (accessRequestData) => {
     if (!accessRequestData) {
-      return
+      throw Error('Data required to update outgoingAccessRequest')
     }
 
     if (accessRequestData.id) {
@@ -84,13 +91,6 @@ class OutgoingAccessRequestModel {
   retry = flow(function* retry() {
     yield this.outgoingAccessRequestStore.retry(this)
   }).bind(this)
-
-  get isCancelledOrRejected() {
-    return (
-      this.state === ACCESS_REQUEST_STATES.CANCELLED ||
-      this.state === ACCESS_REQUEST_STATES.REJECTED
-    )
-  }
 }
 
 export const createAccessRequestInstance = (requestData) => {

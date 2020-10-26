@@ -52,6 +52,7 @@ test('updating from server', async () => {
   })
 
   expect(outgoingAccessRequestStore.outgoingAccessRequests.size).toEqual(0)
+  expect(outgoingAccessRequestStore.updateFromServer()).toBeNull()
 
   let outgoingAccessRequestModel = await outgoingAccessRequestStore.updateFromServer(
     {

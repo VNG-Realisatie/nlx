@@ -3,7 +3,9 @@
 //
 import { flow, makeAutoObservable } from 'mobx'
 import { func, object, string } from 'prop-types'
+
 import OutgoingAccessRequestModel from './OutgoingAccessRequestModel'
+import AccessProofModel from './AccessProofModel'
 
 export const directoryServicePropTypes = {
   organizationName: string.isRequired,
@@ -11,8 +13,8 @@ export const directoryServicePropTypes = {
   state: string.isRequired,
   apiSpecificationType: string,
   latestAccessRequest: object,
+  latestAccessProof: object,
   fetch: func.isRequired,
-
   requestAccess: func.isRequired,
   retryRequestAccess: func.isRequired,
 }
@@ -23,6 +25,7 @@ class DirectoryServiceModel {
   state = ''
   apiSpecificationType = ''
   latestAccessRequest = null
+  latestAccessProof = null
 
   constructor({ directoryServicesStore, service }) {
     makeAutoObservable(this)
@@ -43,7 +46,13 @@ class DirectoryServiceModel {
       'latestAccessRequest',
     )
 
+    AccessProofModel.verifyInstance(
+      directoryServiceData.latestAccessProof,
+      'latestAccessProof',
+    )
+
     this.latestAccessRequest = directoryServiceData.latestAccessRequest || null
+    this.latestAccessProof = directoryServiceData.latestAccessProof || null
   }
 
   fetch = flow(function* fetch() {

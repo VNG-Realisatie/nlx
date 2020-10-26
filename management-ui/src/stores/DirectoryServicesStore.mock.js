@@ -3,14 +3,6 @@
 //
 import { observable } from 'mobx'
 
-export const mockDirectoryServiceModel = ({
-  fetch = jest.fn(),
-  ...service
-}) => ({
-  ...service,
-  fetch,
-})
-
 export const mockDirectoryServicesStore = ({
   services = [],
   isInitiallyFetched = true,

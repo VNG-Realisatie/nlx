@@ -21,24 +21,13 @@ class DirectoryServicesStore {
   }
 
   fetch = flow(function* fetch(directoryServiceModel) {
-    const response = yield this.directoryRepository.getByName(
+    const serviceData = yield this.directoryRepository.getByName(
       directoryServiceModel.organizationName,
       directoryServiceModel.serviceName,
     )
 
-    let outgoingAccessRequestModel = null
-    if (response.latestAccessRequest) {
-      outgoingAccessRequestModel = yield this.rootStore.outgoingAccessRequestsStore.updateFromServer(
-        response.latestAccessRequest,
-      )
-    }
-
-    directoryServiceModel.update({
-      ...response,
-      latestAccessRequest: outgoingAccessRequestModel,
-    })
-
-    yield directoryServiceModel
+    const service = yield this.syncServiceDataWithStores(serviceData)
+    directoryServiceModel.update(service)
   })
 
   fetchAll = flow(function* fetchAll() {
@@ -50,14 +39,17 @@ class DirectoryServicesStore {
 
     try {
       const services = yield this.directoryRepository.getAll()
-      const loadServiceModels = services.map(
-        async (service) =>
-          await mapDirectoryServiceFromApiToModel(this.rootStore, service),
-      )
 
-      const serviceModels = yield Promise.all(loadServiceModels)
+      const serviceModelsLoaded = services.map(async (serviceData) => {
+        const service = await this.syncServiceDataWithStores(serviceData)
 
-      this.services = serviceModels
+        return new DirectoryServiceModel({
+          directoryServicesStore: this.rootStore.directoryServicesStore,
+          service,
+        })
+      })
+
+      this.services = yield Promise.all(serviceModelsLoaded)
     } catch (e) {
       this.error = e
       console.error(e)
@@ -81,26 +73,21 @@ class DirectoryServicesStore {
       serviceName: directoryService.serviceName,
     })
   }
-}
 
-async function mapDirectoryServiceFromApiToModel(rootStore, service) {
-  const latestAccessRequest = service.latestAccessRequest
-    ? await rootStore.outgoingAccessRequestsStore.updateFromServer(
-        service.latestAccessRequest,
-      )
-    : null
+  async syncServiceDataWithStores(serviceData) {
+    const latestAccessRequest = await this.rootStore.outgoingAccessRequestsStore.updateFromServer(
+      serviceData.latestAccessRequest,
+    )
+    const latestAccessProof = await this.rootStore.accessProofStore.updateFromServer(
+      serviceData.latestAccessProof,
+    )
 
-  return new DirectoryServiceModel({
-    directoryServicesStore: rootStore.directoryServicesStore,
-    service: {
-      id: service.id,
-      organizationName: service.organizationName,
-      serviceName: service.serviceName,
-      state: service.state,
-      apiSpecificationType: service.apiSpecificationType,
-      latestAccessRequest: latestAccessRequest,
-    },
-  })
+    return {
+      ...serviceData,
+      latestAccessRequest,
+      latestAccessProof,
+    }
+  }
 }
 
 export default DirectoryServicesStore

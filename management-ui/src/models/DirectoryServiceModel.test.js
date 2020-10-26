@@ -59,6 +59,7 @@ test('initializing the model', async () => {
   })
 
   expect(directoryService.latestAccessRequest).toBeNull()
+  expect(directoryService.latestAccessProof).toBeNull()
 })
 
 test('initializing the model with an invalid latest access request', () => {
@@ -69,9 +70,18 @@ test('initializing the model with an invalid latest access request', () => {
         latestAccessRequest: 'invalid',
       },
     })
-  }).toThrowError(
-    'the latestAccessRequest should be an instance of the OutgoingAccessRequestModel',
-  )
+  }).toThrow()
+})
+
+test('initializing the model with an invalid access proof', () => {
+  expect(() => {
+    return new DirectoryServiceModel({
+      directoryServicesStore: {},
+      service: {
+        latestAccessProof: 'invalid',
+      },
+    })
+  }).toThrow()
 })
 
 test('(re-)fetching the model', async () => {
@@ -131,7 +141,7 @@ describe('requesting access to a service', () => {
 
     const directoryService = new DirectoryServiceModel({
       directoryServicesStore: rootStore.directoryServicesStore,
-      service: service,
+      service,
     })
 
     const spy = jest.spyOn(rootStore.directoryServicesStore, 'requestAccess')
