@@ -3,7 +3,7 @@
 //
 import styled from 'styled-components'
 
-export const AccessSection = styled.section`
+export const Section = styled.section`
   display: flex;
   align-items: center;
   justify-content: space-between;

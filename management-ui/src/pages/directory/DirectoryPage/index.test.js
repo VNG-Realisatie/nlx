@@ -28,6 +28,10 @@ jest.mock('./components/DirectoryPageView', () => ({ services }) => {
   )
 })
 
+jest.mock('../DirectoryDetailPage', () => ({ service }) => (
+  <div data-testid="mock-directory-service">{service.serviceName}</div>
+))
+
 const renderDirectory = (store) =>
   renderWithProviders(
     <StoreProvider store={store}>

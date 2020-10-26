@@ -5,5 +5,5 @@ import styled from 'styled-components'
 import { Table } from '@commonground/design-system'
 
 export const StyledTdAccess = styled(Table.Td)`
-  max-width: 8rem;
+  width: 18rem;
 `

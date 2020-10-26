@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React from 'react'
+import React, { useMemo } from 'react'
 import { shape } from 'prop-types'
 import { observer } from 'mobx-react'
 import { Table } from '@commonground/design-system'
@@ -9,9 +9,12 @@ import { useTranslation } from 'react-i18next'
 import pick from 'lodash.pick'
 
 import { directoryServicePropTypes } from '../../../../../models/DirectoryServiceModel'
+import getDirectoryServiceAccessUIState, {
+  SHOW_REQUEST_ACCESS,
+} from '../../../directoryServiceAccessState'
 import StateIndicator from '../../../../../components/StateIndicator'
 import QuickAccessButton from '../QuickAccessButton'
-import AccessRequestMessage from '../AccessRequestMessage'
+import AccessMessage from '../AccessMessage'
 import { StyledTdAccess } from './index.styles'
 
 const DirectoryServiceRow = ({ service }) => {
@@ -22,6 +25,7 @@ const DirectoryServiceRow = ({ service }) => {
     state,
     apiSpecificationType,
     latestAccessRequest,
+    latestAccessProof,
   } = service
 
   const handleQuickAccessButtonClick = (event) => {
@@ -39,6 +43,12 @@ const DirectoryServiceRow = ({ service }) => {
     }
   }
 
+  const displayState = useMemo(
+    () =>
+      getDirectoryServiceAccessUIState(latestAccessRequest, latestAccessProof),
+    [latestAccessRequest, latestAccessProof],
+  )
+
   return (
     <Table.Tr
       to={`/directory/${organizationName}/${serviceName}`}
@@ -52,10 +62,10 @@ const DirectoryServiceRow = ({ service }) => {
       </Table.Td>
       <Table.Td>{apiSpecificationType}</Table.Td>
       <StyledTdAccess>
-        {latestAccessRequest ? (
-          <AccessRequestMessage latestAccessRequest={latestAccessRequest} />
-        ) : (
+        {displayState === SHOW_REQUEST_ACCESS ? (
           <QuickAccessButton onClick={handleQuickAccessButtonClick} />
+        ) : (
+          <AccessMessage displayState={displayState} />
         )}
       </StyledTdAccess>
     </Table.Tr>
