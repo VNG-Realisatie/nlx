@@ -17,6 +17,7 @@ option (gogoproto.goproto_getters_all) = false;
 service AccessRequestService {
   rpc RequestAccess (RequestAccessRequest) returns (google.protobuf.Empty) {}
   rpc GetAccessRequestState (GetAccessRequestStateRequest) returns (GetAccessRequestStateResponse) {}
+  rpc GetAccessProof (GetAccessProofRequest) returns (AccessProof) {}
 }
 
 message RequestAccessRequest {
@@ -29,4 +30,8 @@ message GetAccessRequestStateRequest {
 
 message GetAccessRequestStateResponse {
   nlx.management.AccessRequestState state = 1;
+}
+
+message GetAccessProofRequest {
+    string service_name = 1;
 }

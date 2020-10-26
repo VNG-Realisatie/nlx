@@ -8,6 +8,7 @@ import (
 	context "context"
 	types "github.com/gogo/protobuf/types"
 	gomock "github.com/golang/mock/gomock"
+	api "go.nlx.io/nlx/management-api/api"
 	external "go.nlx.io/nlx/management-api/api/external"
 	grpc "google.golang.org/grpc"
 	reflect "reflect"
@@ -48,6 +49,26 @@ func (m *MockClient) Close() error {
 func (mr *MockClientMockRecorder) Close() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Close", reflect.TypeOf((*MockClient)(nil).Close))
+}
+
+// GetAccessProof mocks base method
+func (m *MockClient) GetAccessProof(arg0 context.Context, arg1 *external.GetAccessProofRequest, arg2 ...grpc.CallOption) (*api.AccessProof, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetAccessProof", varargs...)
+	ret0, _ := ret[0].(*api.AccessProof)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAccessProof indicates an expected call of GetAccessProof
+func (mr *MockClientMockRecorder) GetAccessProof(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccessProof", reflect.TypeOf((*MockClient)(nil).GetAccessProof), varargs...)
 }
 
 // GetAccessRequestState mocks base method

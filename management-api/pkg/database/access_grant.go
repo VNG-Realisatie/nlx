@@ -129,3 +129,15 @@ func (db ETCDConfigDatabase) ListAccessGrantsForService(ctx context.Context, ser
 
 	return r, nil
 }
+
+func (db ETCDConfigDatabase) GetLatestAccessGrantForService(ctx context.Context, organizationName, serviceName string) (*AccessGrant, error) {
+	key := path.Join("access-grants", serviceName, organizationName)
+	grant := &AccessGrant{}
+
+	err := db.get(ctx, key, grant, clientv3.WithLastKey()...)
+	if err != nil {
+		return nil, err
+	}
+
+	return grant, nil
+}

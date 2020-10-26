@@ -7,8 +7,8 @@ import (
 	context "context"
 	fmt "fmt"
 	_ "github.com/gogo/protobuf/gogoproto"
-	proto "github.com/gogo/protobuf/proto"
 	types "github.com/gogo/protobuf/types"
+	proto "github.com/golang/protobuf/proto"
 	api "go.nlx.io/nlx/management-api/api"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -27,7 +27,7 @@ var _ = math.Inf
 // is compatible with the proto package it is being compiled against.
 // A compilation error at this line likely means your copy of the
 // proto package needs to be updated.
-const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
+const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 type RequestAccessRequest struct {
 	ServiceName          string   `protobuf:"bytes,1,opt,name=service_name,json=serviceName,proto3" json:"service_name,omitempty"`
@@ -149,16 +149,57 @@ func (m *GetAccessRequestStateResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_GetAccessRequestStateResponse proto.InternalMessageInfo
 
+type GetAccessProofRequest struct {
+	ServiceName          string   `protobuf:"bytes,1,opt,name=service_name,json=serviceName,proto3" json:"service_name,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetAccessProofRequest) Reset()         { *m = GetAccessProofRequest{} }
+func (m *GetAccessProofRequest) String() string { return proto.CompactTextString(m) }
+func (*GetAccessProofRequest) ProtoMessage()    {}
+func (*GetAccessProofRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2b7268f56e161ef5, []int{3}
+}
+func (m *GetAccessProofRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetAccessProofRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetAccessProofRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetAccessProofRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetAccessProofRequest.Merge(m, src)
+}
+func (m *GetAccessProofRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetAccessProofRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetAccessProofRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetAccessProofRequest proto.InternalMessageInfo
+
 func init() {
 	proto.RegisterType((*RequestAccessRequest)(nil), "nlx.management.external.RequestAccessRequest")
 	proto.RegisterType((*GetAccessRequestStateRequest)(nil), "nlx.management.external.GetAccessRequestStateRequest")
 	proto.RegisterType((*GetAccessRequestStateResponse)(nil), "nlx.management.external.GetAccessRequestStateResponse")
+	proto.RegisterType((*GetAccessProofRequest)(nil), "nlx.management.external.GetAccessProofRequest")
 }
 
 func init() { proto.RegisterFile("external.proto", fileDescriptor_2b7268f56e161ef5) }
 
 var fileDescriptor_2b7268f56e161ef5 = []byte{
-	// 299 bytes of a gzipped FileDescriptorProto
+	// 340 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x4b, 0xad, 0x28, 0x49,
 	0x2d, 0xca, 0x4b, 0xcc, 0xd1, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x12, 0xcf, 0xcb, 0xa9, 0xd0,
 	0xcb, 0x4d, 0xcc, 0x4b, 0x4c, 0x4f, 0xcd, 0x4d, 0xcd, 0x2b, 0xd1, 0x83, 0x49, 0x4b, 0x49, 0xa7,
@@ -171,13 +212,16 @@ var fileDescriptor_2b7268f56e161ef5 = []byte{
 	0x25, 0xe6, 0xa6, 0x2a, 0x39, 0x72, 0xc9, 0xb8, 0xa7, 0xa2, 0x6a, 0x0b, 0x2e, 0x49, 0x2c, 0x49,
 	0x25, 0xc1, 0x88, 0x48, 0x2e, 0x59, 0x1c, 0x46, 0x14, 0x17, 0xe4, 0xe7, 0x15, 0xa7, 0x0a, 0x59,
 	0x70, 0xb1, 0x16, 0x83, 0x04, 0xc0, 0x9a, 0xf9, 0x8c, 0x94, 0xf4, 0xd0, 0x42, 0x09, 0x8b, 0x56,
-	0x88, 0x06, 0xa3, 0xdf, 0x8c, 0x5c, 0x22, 0xa8, 0xb2, 0x10, 0x7b, 0x85, 0x22, 0xb8, 0x78, 0x51,
-	0x7c, 0x2c, 0xa4, 0xab, 0x87, 0x23, 0xe8, 0xf5, 0xb0, 0x85, 0x8c, 0x94, 0x98, 0x1e, 0x24, 0x42,
-	0xf4, 0x60, 0x41, 0xad, 0xe7, 0x0a, 0x8a, 0x10, 0x25, 0x06, 0xa1, 0x0e, 0x46, 0x2e, 0x51, 0xac,
-	0xde, 0x11, 0x32, 0xc5, 0x69, 0x05, 0xbe, 0x10, 0x94, 0x32, 0x23, 0x55, 0x1b, 0x24, 0xd4, 0x94,
-	0x18, 0x9c, 0xa4, 0x4e, 0x3c, 0x94, 0x63, 0x38, 0xf1, 0x48, 0x8e, 0xf1, 0xc2, 0x23, 0x39, 0xc6,
-	0x07, 0x8f, 0xe4, 0x18, 0xa3, 0x38, 0x60, 0x7a, 0x93, 0xd8, 0xc0, 0x0e, 0x37, 0x06, 0x04, 0x00,
-	0x00, 0xff, 0xff, 0x70, 0xb6, 0xba, 0x4b, 0x82, 0x02, 0x00, 0x00,
+	0x88, 0x06, 0x25, 0x2b, 0x2e, 0x51, 0xb8, 0xd1, 0x01, 0x45, 0xf9, 0xf9, 0x69, 0xc4, 0x3b, 0xcb,
+	0xe8, 0x0e, 0x13, 0x97, 0x08, 0xaa, 0xc9, 0x10, 0x49, 0xa1, 0x08, 0x2e, 0x5e, 0x94, 0xd0, 0x12,
+	0xd2, 0xd5, 0xc3, 0x11, 0x6d, 0x7a, 0xd8, 0x42, 0x55, 0x4a, 0x4c, 0x0f, 0x12, 0x99, 0x7a, 0xb0,
+	0x68, 0xd2, 0x73, 0x05, 0x45, 0xa6, 0x12, 0x83, 0x50, 0x07, 0x23, 0x92, 0x7b, 0x91, 0xfd, 0x23,
+	0x64, 0x8a, 0xd3, 0x0a, 0x7c, 0xa1, 0x2f, 0x65, 0x46, 0xaa, 0x36, 0x48, 0x88, 0x2b, 0x31, 0x08,
+	0xc5, 0x73, 0xf1, 0xa1, 0x86, 0x9c, 0x90, 0x1e, 0x61, 0xb3, 0x90, 0x83, 0x58, 0x4a, 0x1a, 0x7b,
+	0x34, 0x81, 0xd5, 0x28, 0x31, 0x38, 0xc9, 0x9d, 0x78, 0x28, 0xc7, 0x70, 0xe2, 0x91, 0x1c, 0xe3,
+	0x85, 0x47, 0x72, 0x8c, 0x0f, 0x1e, 0xc9, 0x31, 0xce, 0x78, 0x2c, 0xc7, 0x10, 0xc5, 0x01, 0x33,
+	0x34, 0x89, 0x0d, 0x1c, 0x3a, 0xc6, 0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0x3d, 0x3c, 0xc8, 0x58,
+	0x23, 0x03, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -194,6 +238,7 @@ const _ = grpc.SupportPackageIsVersion4
 type AccessRequestServiceClient interface {
 	RequestAccess(ctx context.Context, in *RequestAccessRequest, opts ...grpc.CallOption) (*types.Empty, error)
 	GetAccessRequestState(ctx context.Context, in *GetAccessRequestStateRequest, opts ...grpc.CallOption) (*GetAccessRequestStateResponse, error)
+	GetAccessProof(ctx context.Context, in *GetAccessProofRequest, opts ...grpc.CallOption) (*api.AccessProof, error)
 }
 
 type accessRequestServiceClient struct {
@@ -222,10 +267,20 @@ func (c *accessRequestServiceClient) GetAccessRequestState(ctx context.Context, 
 	return out, nil
 }
 
+func (c *accessRequestServiceClient) GetAccessProof(ctx context.Context, in *GetAccessProofRequest, opts ...grpc.CallOption) (*api.AccessProof, error) {
+	out := new(api.AccessProof)
+	err := c.cc.Invoke(ctx, "/nlx.management.external.AccessRequestService/GetAccessProof", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AccessRequestServiceServer is the server API for AccessRequestService service.
 type AccessRequestServiceServer interface {
 	RequestAccess(context.Context, *RequestAccessRequest) (*types.Empty, error)
 	GetAccessRequestState(context.Context, *GetAccessRequestStateRequest) (*GetAccessRequestStateResponse, error)
+	GetAccessProof(context.Context, *GetAccessProofRequest) (*api.AccessProof, error)
 }
 
 // UnimplementedAccessRequestServiceServer can be embedded to have forward compatible implementations.
@@ -237,6 +292,9 @@ func (*UnimplementedAccessRequestServiceServer) RequestAccess(ctx context.Contex
 }
 func (*UnimplementedAccessRequestServiceServer) GetAccessRequestState(ctx context.Context, req *GetAccessRequestStateRequest) (*GetAccessRequestStateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAccessRequestState not implemented")
+}
+func (*UnimplementedAccessRequestServiceServer) GetAccessProof(ctx context.Context, req *GetAccessProofRequest) (*api.AccessProof, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAccessProof not implemented")
 }
 
 func RegisterAccessRequestServiceServer(s *grpc.Server, srv AccessRequestServiceServer) {
@@ -279,6 +337,24 @@ func _AccessRequestService_GetAccessRequestState_Handler(srv interface{}, ctx co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AccessRequestService_GetAccessProof_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAccessProofRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccessRequestServiceServer).GetAccessProof(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/nlx.management.external.AccessRequestService/GetAccessProof",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccessRequestServiceServer).GetAccessProof(ctx, req.(*GetAccessProofRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _AccessRequestService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "nlx.management.external.AccessRequestService",
 	HandlerType: (*AccessRequestServiceServer)(nil),
@@ -290,6 +366,10 @@ var _AccessRequestService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAccessRequestState",
 			Handler:    _AccessRequestService_GetAccessRequestState_Handler,
+		},
+		{
+			MethodName: "GetAccessProof",
+			Handler:    _AccessRequestService_GetAccessProof_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -396,6 +476,40 @@ func (m *GetAccessRequestStateResponse) MarshalToSizedBuffer(dAtA []byte) (int, 
 	return len(dAtA) - i, nil
 }
 
+func (m *GetAccessProofRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetAccessProofRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetAccessProofRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.XXX_unrecognized != nil {
+		i -= len(m.XXX_unrecognized)
+		copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	if len(m.ServiceName) > 0 {
+		i -= len(m.ServiceName)
+		copy(dAtA[i:], m.ServiceName)
+		i = encodeVarintExternal(dAtA, i, uint64(len(m.ServiceName)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintExternal(dAtA []byte, offset int, v uint64) int {
 	offset -= sovExternal(v)
 	base := offset
@@ -447,6 +561,22 @@ func (m *GetAccessRequestStateResponse) Size() (n int) {
 	_ = l
 	if m.State != 0 {
 		n += 1 + sovExternal(uint64(m.State))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *GetAccessProofRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ServiceName)
+	if l > 0 {
+		n += 1 + l + sovExternal(uint64(l))
 	}
 	if m.XXX_unrecognized != nil {
 		n += len(m.XXX_unrecognized)
@@ -680,6 +810,92 @@ func (m *GetAccessRequestStateResponse) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipExternal(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthExternal
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthExternal
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GetAccessProofRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowExternal
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetAccessProofRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetAccessProofRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ServiceName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowExternal
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthExternal
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthExternal
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ServiceName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipExternal(dAtA[iNdEx:])

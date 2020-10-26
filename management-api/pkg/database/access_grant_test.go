@@ -240,3 +240,43 @@ func TestRevokeAccessRequest(t *testing.T) {
 		})
 	}
 }
+
+func TestGetLatestAccessGrantForService(t *testing.T) {
+	cluster := newTestCluster(t)
+	cluster.Clock.SetTime(time.Date(2020, time.July, 9, 14, 44, 55, 0, time.UTC))
+
+	ctx := context.Background()
+
+	create := func(organizationName, service string) {
+		cluster.Clock.Step(5 * time.Second)
+
+		request, err := cluster.DB.CreateIncomingAccessRequest(ctx, &database.IncomingAccessRequest{
+			AccessRequest: database.AccessRequest{
+				ID:               "16201cc4e0cf3800",
+				OrganizationName: organizationName,
+				ServiceName:      service,
+			},
+		})
+
+		assert.NoError(t, err)
+
+		_, err = cluster.DB.CreateAccessGrant(ctx, request)
+
+		assert.NoError(t, err)
+	}
+
+	create("test-organization-a", "test-service-1") // 14:45:00
+
+	expected := &database.AccessGrant{
+		ID:               "16201cc4e0cf3800",
+		AccessRequestID:  "16201cc4e0cf3800",
+		OrganizationName: "test-organization-a",
+		ServiceName:      "test-service-1",
+		CreatedAt:        time.Date(2020, time.July, 9, 14, 45, 0, 0, time.UTC),
+	}
+
+	actual, err := cluster.DB.GetLatestAccessGrantForService(ctx, "test-organization-a", "test-service-1")
+
+	assert.NoError(t, err)
+	assert.Equal(t, expected, actual)
+}

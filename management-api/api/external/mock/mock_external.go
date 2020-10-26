@@ -8,6 +8,7 @@ import (
 	context "context"
 	types "github.com/gogo/protobuf/types"
 	gomock "github.com/golang/mock/gomock"
+	api "go.nlx.io/nlx/management-api/api"
 	external "go.nlx.io/nlx/management-api/api/external"
 	grpc "google.golang.org/grpc"
 	reflect "reflect"
@@ -76,6 +77,26 @@ func (mr *MockAccessRequestServiceClientMockRecorder) GetAccessRequestState(ctx,
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccessRequestState", reflect.TypeOf((*MockAccessRequestServiceClient)(nil).GetAccessRequestState), varargs...)
 }
 
+// GetAccessProof mocks base method
+func (m *MockAccessRequestServiceClient) GetAccessProof(ctx context.Context, in *external.GetAccessProofRequest, opts ...grpc.CallOption) (*api.AccessProof, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetAccessProof", varargs...)
+	ret0, _ := ret[0].(*api.AccessProof)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAccessProof indicates an expected call of GetAccessProof
+func (mr *MockAccessRequestServiceClientMockRecorder) GetAccessProof(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccessProof", reflect.TypeOf((*MockAccessRequestServiceClient)(nil).GetAccessProof), varargs...)
+}
+
 // MockAccessRequestServiceServer is a mock of AccessRequestServiceServer interface
 type MockAccessRequestServiceServer struct {
 	ctrl     *gomock.Controller
@@ -127,4 +148,19 @@ func (m *MockAccessRequestServiceServer) GetAccessRequestState(arg0 context.Cont
 func (mr *MockAccessRequestServiceServerMockRecorder) GetAccessRequestState(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccessRequestState", reflect.TypeOf((*MockAccessRequestServiceServer)(nil).GetAccessRequestState), arg0, arg1)
+}
+
+// GetAccessProof mocks base method
+func (m *MockAccessRequestServiceServer) GetAccessProof(arg0 context.Context, arg1 *external.GetAccessProofRequest) (*api.AccessProof, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAccessProof", arg0, arg1)
+	ret0, _ := ret[0].(*api.AccessProof)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAccessProof indicates an expected call of GetAccessProof
+func (mr *MockAccessRequestServiceServerMockRecorder) GetAccessProof(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccessProof", reflect.TypeOf((*MockAccessRequestServiceServer)(nil).GetAccessProof), arg0, arg1)
 }

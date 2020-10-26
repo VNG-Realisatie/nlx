@@ -40,7 +40,6 @@ func (s *ManagementService) ListAccessGrantsForService(ctx context.Context, req 
 
 	for i, accessGrant := range accessRequests {
 		responseAccessGrant, err := convertAccessGrant(accessGrant)
-
 		if err != nil {
 			s.logger.Error(
 				"converting access grant",
