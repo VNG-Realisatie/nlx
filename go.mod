@@ -2,6 +2,10 @@ module go.nlx.io/nlx
 
 go 1.15
 
+// Override the golang.org/x/text dependency, in version v0.3.3 a vulnerability is fixed.
+// See: https://nvd.nist.gov/vuln/detail/CVE-2020-14040.
+replace golang.org/x/text => golang.org/x/text v0.3.3
+
 require (
 	github.com/Microsoft/go-winio v0.4.14 // indirect
 	github.com/bwesterb/go-atum v1.0.3 // indirect
