@@ -12,6 +12,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/gogo/protobuf/types"
 	grpc_retry "github.com/grpc-ecosystem/go-grpc-middleware/retry"
 	"go.uber.org/zap"
 
@@ -112,6 +113,16 @@ schedulingLoop:
 					scheduler.logger.Error("failed to schedule pending requests", zap.Error(err))
 				}
 			}()
+
+			wg.Add(1)
+
+			go func() {
+				defer wg.Done()
+
+				if err := scheduler.syncAccessProofs(context.TODO()); err != nil {
+					scheduler.logger.Error("failed to sync access proofs", zap.Error(err))
+				}
+			}()
 		case request := <-scheduler.requests:
 			wg.Add(1)
 
@@ -204,6 +215,8 @@ func (scheduler *accessRequestScheduler) getAccessRequestState(ctx context.Conte
 		state = database.AccessRequestCreated
 	case api.AccessRequestState_APPROVED:
 		state = database.AccessRequestApproved
+	case api.AccessRequestState_REJECTED:
+		state = database.AccessRequestRejected
 	case api.AccessRequestState_RECEIVED:
 		state = database.AccessRequestReceived
 	case api.AccessRequestState_FAILED:
@@ -254,4 +267,95 @@ func (scheduler *accessRequestScheduler) schedule(ctx context.Context, request *
 	}
 
 	return taskErr
+}
+
+func (scheduler *accessRequestScheduler) parseAccessProof(accessProof *api.AccessProof) (*database.AccessProof, error) {
+	createdAt, err := types.TimestampFromProto(accessProof.CreatedAt)
+	if err != nil {
+		return nil, err
+	}
+
+	revokedAt, err := types.TimestampFromProto(accessProof.RevokedAt)
+	if err != nil {
+		revokedAt = time.Time{}
+	}
+
+	return &database.AccessProof{
+		ID:               accessProof.Id,
+		CreatedAt:        createdAt,
+		RevokedAt:        revokedAt,
+		OrganizationName: accessProof.OrganizationName,
+		ServiceName:      accessProof.ServiceName,
+	}, nil
+}
+
+func (scheduler *accessRequestScheduler) syncAccessProof(ctx context.Context, request *database.OutgoingAccessRequest) error {
+	client, err := scheduler.getOrganizationManagementClient(ctx, request.OrganizationName)
+	if err != nil {
+		return err
+	}
+
+	response, err := client.GetAccessProof(ctx, &external.GetAccessProofRequest{
+		ServiceName: request.ServiceName,
+	})
+	if err != nil {
+		return err
+	}
+
+	remoteProof, err := scheduler.parseAccessProof(response)
+	if err != nil {
+		return err
+	}
+
+	localProof, err := scheduler.configDatabase.GetLatestAccessProofForService(ctx, request.OrganizationName, request.ServiceName)
+
+	switch err {
+	case nil:
+	case database.ErrNotFound:
+		_, err = scheduler.configDatabase.CreateAccessProof(ctx, &database.AccessProof{
+			OrganizationName: remoteProof.OrganizationName,
+			ServiceName:      remoteProof.ServiceName,
+			CreatedAt:        remoteProof.CreatedAt,
+			RevokedAt:        remoteProof.RevokedAt,
+		})
+
+		return err
+	default:
+		return err
+	}
+
+	if !remoteProof.RevokedAt.IsZero() &&
+		localProof.RevokedAt != remoteProof.RevokedAt {
+		if _, err := scheduler.configDatabase.RevokeAccessProof(
+			ctx,
+			localProof.OrganizationName,
+			localProof.ServiceName,
+			localProof.ID,
+			remoteProof.RevokedAt,
+		); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (scheduler *accessRequestScheduler) syncAccessProofs(ctx context.Context) error {
+	requests, err := scheduler.configDatabase.ListAllOutgoingAccessRequests(ctx)
+	if err != nil {
+		return err
+	}
+
+	for _, request := range requests {
+		// only sync approved access requests
+		if request.State != database.AccessRequestApproved {
+			continue
+		}
+
+		if err := scheduler.syncAccessProof(ctx, request); err != nil {
+			scheduler.logger.Error("failed to sync access proof", zap.Error(err))
+		}
+	}
+
+	return nil
 }

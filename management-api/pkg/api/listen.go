@@ -37,15 +37,6 @@ func (a *API) ListenAndServe(address, configAddress string) error {
 
 	go scheduler.Run(ctx)
 
-	poller := newAccessProofPoller(
-		a.logger,
-		a.directoryClient,
-		a.configDatabase,
-		a.orgCert,
-	)
-
-	go poller.Poll(ctx)
-
 	g, ctx := errgroup.WithContext(context.Background())
 
 	listen, err := net.Listen("tcp", configAddress)
