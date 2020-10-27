@@ -16,6 +16,7 @@ import {
   SHOW_REQUEST_FAILED,
   SHOW_REQUEST_RECEIVED,
   SHOW_REQUEST_REJECTED,
+  SHOW_ACCESS_REVOKED,
 } from '../../../../directoryServiceAccessState'
 import {
   IconWarningCircleFill,
@@ -119,6 +120,22 @@ const AccessSection = ({
                   {t('On date', {
                     date: latestAccessRequest.updatedAt,
                   })}
+                </small>
+              </StateDetail>
+            </>
+          )}
+        </Switch.Case>
+
+        <Switch.Case value={SHOW_ACCESS_REVOKED}>
+          {() => (
+            <>
+              <IconItem as={IconKey} />
+              <StateDetail>
+                <span>{t('Your access was revoked')}</span>
+                <small>
+                  {t(
+                    'Due to a technical limitation you are not yet able to request access again',
+                  )}
                 </small>
               </StateDetail>
             </>

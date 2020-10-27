@@ -12,13 +12,16 @@ const {
   APPROVED,
 } = ACCESS_REQUEST_STATES
 
-const SHOW_REQUEST_ACCESS = 0
-const SHOW_HAS_ACCESS = 1
-const SHOW_REQUEST_CREATED = 2
-const SHOW_REQUEST_FAILED = 3
-const SHOW_REQUEST_RECEIVED = 4
-const SHOW_REQUEST_CANCELLED = 5
-const SHOW_REQUEST_REJECTED = 6
+export const SHOW_REQUEST_ACCESS = 0
+export const SHOW_HAS_ACCESS = 1
+export const SHOW_REQUEST_CREATED = 2
+export const SHOW_REQUEST_FAILED = 3
+export const SHOW_REQUEST_RECEIVED = 4
+export const SHOW_REQUEST_CANCELLED = 5
+export const SHOW_REQUEST_REJECTED = 6
+// Used until we can match accessProof with accessRequest
+// We can't use date/time because timestamps are generated from different "clocks"
+export const SHOW_ACCESS_REVOKED = 7
 
 export default function getDirectoryServiceAccessUIState(
   outgoingAccessRequest,
@@ -33,11 +36,11 @@ export default function getDirectoryServiceAccessUIState(
     return SHOW_REQUEST_ACCESS
   }
 
-  if (accessProof && accessProof.revokedAt > outgoingAccessRequest.createdAt) {
-    return SHOW_REQUEST_ACCESS
+  if (accessProof && accessProof.revokedAt) {
+    return SHOW_ACCESS_REVOKED
   }
 
-  if (!accessProof || accessProof.revokedAt < outgoingAccessRequest.createdAt) {
+  if (!accessProof) {
     if (outgoingAccessRequest.state === CREATED) return SHOW_REQUEST_CREATED
     if (outgoingAccessRequest.state === FAILED) return SHOW_REQUEST_FAILED
     if (outgoingAccessRequest.state === RECEIVED) return SHOW_REQUEST_RECEIVED
@@ -51,14 +54,4 @@ export default function getDirectoryServiceAccessUIState(
     outgoingAccessRequest,
     accessProof,
   )
-}
-
-export {
-  SHOW_REQUEST_ACCESS,
-  SHOW_HAS_ACCESS,
-  SHOW_REQUEST_CREATED,
-  SHOW_REQUEST_FAILED,
-  SHOW_REQUEST_RECEIVED,
-  SHOW_REQUEST_CANCELLED,
-  SHOW_REQUEST_REJECTED,
 }

@@ -14,6 +14,7 @@ import getDirectoryServiceAccessState, {
   SHOW_REQUEST_RECEIVED,
   SHOW_REQUEST_CANCELLED,
   SHOW_REQUEST_REJECTED,
+  SHOW_ACCESS_REVOKED,
 } from './directoryServiceAccessState'
 
 const {
@@ -40,8 +41,10 @@ describe('Return SHOW_REQUEST_ACCESS when', () => {
   it('latestAccessRequest does not exist', () => {
     expect(getDirectoryServiceAccessState(null, null)).toBe(SHOW_REQUEST_ACCESS)
   })
+})
 
-  it('latestAccessProof is revoked and no new access request has been created', () => {
+describe('Return SHOW_ACCESS_REVOKED when', () => {
+  it('latestAccessProof is revoked', () => {
     expect(
       getDirectoryServiceAccessState(
         createOutgoingAccessRequestInstance({
@@ -50,7 +53,7 @@ describe('Return SHOW_REQUEST_ACCESS when', () => {
         }),
         createAccessProofInstance({ revokedAt: '2020-10-02' }),
       ),
-    ).toBe(SHOW_REQUEST_ACCESS)
+    ).toBe(SHOW_ACCESS_REVOKED)
   })
 })
 
@@ -80,18 +83,6 @@ describe('Return SHOW_REQUEST_CREATED when', () => {
       ),
     ).toBe(SHOW_REQUEST_CREATED)
   })
-
-  it('latestAccessRequest is created and latestAccessProof is revoked before', () => {
-    expect(
-      getDirectoryServiceAccessState(
-        createOutgoingAccessRequestInstance({
-          state: CREATED,
-          createdAt: '2020-10-03',
-        }),
-        createAccessProofInstance({ revokedAt: '2020-10-02' }),
-      ),
-    ).toBe(SHOW_REQUEST_CREATED)
-  })
 })
 
 describe('Return SHOW_REQUEST_FAILED when', () => {
@@ -106,18 +97,6 @@ describe('Return SHOW_REQUEST_FAILED when', () => {
       ),
     ).toBe(SHOW_REQUEST_FAILED)
   })
-
-  it('latestAccessRequest is failed and latestAccessProof is revoked before', () => {
-    expect(
-      getDirectoryServiceAccessState(
-        createOutgoingAccessRequestInstance({
-          state: FAILED,
-          createdAt: '2020-10-03',
-        }),
-        createAccessProofInstance({ revokedAt: '2020-10-02' }),
-      ),
-    ).toBe(SHOW_REQUEST_FAILED)
-  })
 })
 
 describe('Return SHOW_REQUEST_RECEIVED when', () => {
@@ -129,18 +108,6 @@ describe('Return SHOW_REQUEST_RECEIVED when', () => {
           createdAt: '2020-10-01',
         }),
         null,
-      ),
-    ).toBe(SHOW_REQUEST_RECEIVED)
-  })
-
-  it('latestAccessRequest is received and latestAccessProof is revoked before', () => {
-    expect(
-      getDirectoryServiceAccessState(
-        createOutgoingAccessRequestInstance({
-          state: RECEIVED,
-          createdAt: '2020-10-03',
-        }),
-        createAccessProofInstance({ revokedAt: '2020-10-02' }),
       ),
     ).toBe(SHOW_REQUEST_RECEIVED)
   })
@@ -170,18 +137,6 @@ describe('Return SHOW_REQUEST_CANCELLED when', () => {
       ),
     ).toBe(SHOW_REQUEST_CANCELLED)
   })
-
-  it('latestAccessRequest is cancelled and latestAccessProof is revoked before', () => {
-    expect(
-      getDirectoryServiceAccessState(
-        createOutgoingAccessRequestInstance({
-          state: CANCELLED,
-          createdAt: '2020-10-03',
-        }),
-        createAccessProofInstance({ revokedAt: '2020-10-02' }),
-      ),
-    ).toBe(SHOW_REQUEST_CANCELLED)
-  })
 })
 
 describe('Return SHOW_REQUEST_REJECTED when', () => {
@@ -193,18 +148,6 @@ describe('Return SHOW_REQUEST_REJECTED when', () => {
           createdAt: '2020-10-01',
         }),
         null,
-      ),
-    ).toBe(SHOW_REQUEST_REJECTED)
-  })
-
-  it('latestAccessRequest is received and latestAccessProof is revoked before', () => {
-    expect(
-      getDirectoryServiceAccessState(
-        createOutgoingAccessRequestInstance({
-          state: REJECTED,
-          createdAt: '2020-10-03',
-        }),
-        createAccessProofInstance({ revokedAt: '2020-10-02' }),
       ),
     ).toBe(SHOW_REQUEST_REJECTED)
   })

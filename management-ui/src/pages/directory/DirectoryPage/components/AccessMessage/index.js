@@ -37,6 +37,8 @@ const AccessMessage = ({ displayState }) => {
       <Switch.Case value={SHOW_HAS_ACCESS}>
         {() => <InlineIcon as={IconCheck} title={t('Approved')} />}
       </Switch.Case>
+      {/* Purposely displaying nothing in any other case */}
+      <Switch.Default>{() => null}</Switch.Default>
     </Switch>
   )
 }

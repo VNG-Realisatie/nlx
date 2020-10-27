@@ -11,6 +11,7 @@ import {
   SHOW_REQUEST_FAILED,
   SHOW_REQUEST_RECEIVED,
   SHOW_REQUEST_REJECTED,
+  SHOW_ACCESS_REVOKED,
 } from '../../../../directoryServiceAccessState'
 import AccessSection from './index'
 
@@ -88,4 +89,19 @@ test('Correctly renders the other states of access', () => {
     />,
   )
   expect(getByText('You have access')).toBeInTheDocument()
+
+  rerender(
+    <AccessSection
+      displayState={SHOW_ACCESS_REVOKED}
+      latestAccessRequest={latestAccessRequest}
+      latestAccessProof={{
+        id: 'id',
+        organizationName: 'foo',
+        serviceName: 'bar',
+        createdAt: new Date('2020-10-02T12:01:00Z'),
+        revokedAt: new Date('2020-10-03T12:01:00Z'),
+      }}
+    />,
+  )
+  expect(getByText('Your access was revoked')).toBeInTheDocument()
 })
