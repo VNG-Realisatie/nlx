@@ -26,7 +26,7 @@ export class RootStore {
     accessRequestRepository = AccessRequestRepository,
     directoryRepository = DirectoryRepository,
   } = {}) {
-    this.outgoingAccessRequestsStore = new OutgoingAccessRequestStore({
+    this.outgoingAccessRequestStore = new OutgoingAccessRequestStore({
       rootStore: this,
       accessRequestRepository,
     })

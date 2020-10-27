@@ -17,7 +17,7 @@ test('fetching all directory services', async () => {
 
   const directoryServicesStore = new DirectoryServicesStore({
     rootStore: {
-      outgoingAccessRequestsStore: new OutgoingAccessRequestStore({
+      outgoingAccessRequestStore: new OutgoingAccessRequestStore({
         accessRequestRepository: {},
       }),
       accessProofStore: new AccessProofStore(),
@@ -65,7 +65,7 @@ test('selecting and updating a single service', async () => {
 
   const directoryServicesStore = new DirectoryServicesStore({
     rootStore: {
-      outgoingAccessRequestsStore: new OutgoingAccessRequestStore({
+      outgoingAccessRequestStore: new OutgoingAccessRequestStore({
         accessRequestRepository: {},
       }),
       accessProofStore: new AccessProofStore(),
@@ -136,7 +136,7 @@ test('requesting access to a service in the directory', async () => {
 
   const directoryServicesStore = new DirectoryServicesStore({
     rootStore: {
-      outgoingAccessRequestsStore: outgoingAccessRequestStore,
+      outgoingAccessRequestStore: outgoingAccessRequestStore,
     },
     directoryRepository: {},
   })

@@ -88,14 +88,14 @@ class DirectoryServicesStore {
   }
 
   async requestAccess(directoryService) {
-    return this.rootStore.outgoingAccessRequestsStore.create({
+    return this.rootStore.outgoingAccessRequestStore.create({
       organizationName: directoryService.organizationName,
       serviceName: directoryService.serviceName,
     })
   }
 
   async syncStoresWithServiceData(serviceData) {
-    const latestAccessRequest = await this.rootStore.outgoingAccessRequestsStore.updateFromServer(
+    const latestAccessRequest = await this.rootStore.outgoingAccessRequestStore.updateFromServer(
       serviceData.latestAccessRequest,
     )
     const latestAccessProof = await this.rootStore.accessProofStore.updateFromServer(
