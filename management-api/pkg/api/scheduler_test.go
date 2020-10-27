@@ -615,6 +615,10 @@ func TestSyncAccessProof(t *testing.T) {
 						ServiceName: "service",
 					}).
 					Return(nil, errors.New("random error"))
+
+				mocks.management.
+					EXPECT().
+					Close()
 			},
 		},
 
@@ -642,6 +646,10 @@ func TestSyncAccessProof(t *testing.T) {
 						ServiceName: "service",
 					}).
 					Return(&api.AccessProof{}, nil)
+
+				mocks.management.
+					EXPECT().
+					Close()
 			},
 		},
 
@@ -677,6 +685,10 @@ func TestSyncAccessProof(t *testing.T) {
 					EXPECT().
 					GetLatestAccessProofForService(ctx, "organization-a", "service").
 					Return(nil, errors.New("random error"))
+
+				mocks.management.
+					EXPECT().
+					Close()
 			},
 		},
 
@@ -726,6 +738,10 @@ func TestSyncAccessProof(t *testing.T) {
 						CreatedAt:        t,
 					}).
 					Return(nil, errors.New("random error"))
+
+				mocks.management.
+					EXPECT().
+					Close()
 			},
 		},
 
@@ -783,6 +799,10 @@ func TestSyncAccessProof(t *testing.T) {
 						t,
 					).
 					Return(nil, errors.New("random error"))
+
+				mocks.management.
+					EXPECT().
+					Close()
 			},
 		},
 
@@ -839,6 +859,10 @@ func TestSyncAccessProof(t *testing.T) {
 						t,
 					).
 					Return(nil, nil)
+
+				mocks.management.
+					EXPECT().
+					Close()
 			},
 		},
 
@@ -888,6 +912,10 @@ func TestSyncAccessProof(t *testing.T) {
 						CreatedAt:        t,
 					}).
 					Return(nil, nil)
+
+				mocks.management.
+					EXPECT().
+					Close()
 			},
 		},
 	}

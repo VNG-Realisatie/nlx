@@ -295,6 +295,8 @@ func (scheduler *accessRequestScheduler) syncAccessProof(ctx context.Context, re
 		return err
 	}
 
+	defer client.Close()
+
 	response, err := client.GetAccessProof(ctx, &external.GetAccessProofRequest{
 		ServiceName: request.ServiceName,
 	})
