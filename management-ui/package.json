@@ -77,6 +77,6 @@
     "i18next-parser": "3.3.0",
     "jest-fetch-mock": "3.0.3",
     "prettier": "2.1.2",
-    "typescript": "4.0.3"
+    "typescript": "4.0.5"
   }
 }
