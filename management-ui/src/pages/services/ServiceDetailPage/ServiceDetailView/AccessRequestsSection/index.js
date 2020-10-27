@@ -68,7 +68,18 @@ const AccessRequestsSection = ({ accessRequests }) => {
         <DetailHeading data-testid="service-incoming-accessrequests">
           <IconKey />
           {t('Access requests')}
-          <Amount value={accessRequests.length} isAccented />
+          {accessRequests.length > 0 ? (
+            <Amount
+              data-testid="service-incoming-accessrequests-amount-accented"
+              value={accessRequests.length}
+              isAccented
+            />
+          ) : (
+            <Amount
+              data-testid="service-incoming-accessrequests-amount"
+              value={accessRequests.length}
+            />
+          )}
         </DetailHeading>
       }
       ariaLabel={t('Access requests')}

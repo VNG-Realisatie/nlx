@@ -21,6 +21,8 @@ test('should show if there are no incoming access requests', async () => {
   expect(toggler).toHaveTextContent(
     'key.svg' + 'Access requests' + '0', // eslint-disable-line no-useless-concat
   )
+
+  expect(getByTestId('service-incoming-accessrequests-amount')).toBeTruthy()
   expect(getByTestId('service-no-incoming-accessrequests')).toBeTruthy()
 })
 
@@ -48,6 +50,10 @@ test('should list access requests', async () => {
   expect(toggler).toHaveTextContent(
     'key.svg' + 'Access requests' + '1', // eslint-disable-line no-useless-concat
   )
+
+  expect(
+    getByTestId('service-incoming-accessrequests-amount-accented'),
+  ).toBeTruthy()
   expect(getByTestId('service-incoming-accessrequests-list')).toBeTruthy()
   expect(getByText('Organization A')).toBeInTheDocument()
 })
