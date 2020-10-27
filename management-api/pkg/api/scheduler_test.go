@@ -559,14 +559,14 @@ func TestSyncAccessProof(t *testing.T) {
 			wantErr: true,
 			request: &database.OutgoingAccessRequest{
 				AccessRequest: database.AccessRequest{
-					OrganizationName: "organization-a",
+					OrganizationName: "organization-b",
 				},
 			},
 			setupMocks: func(mocks schedulerMocks) {
 				mocks.directory.
 					EXPECT().
 					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-						OrganizationName: "organization-a",
+						OrganizationName: "organization-b",
 					}).
 					Return(nil, errors.New("random error"))
 			},
@@ -576,14 +576,14 @@ func TestSyncAccessProof(t *testing.T) {
 			wantErr: true,
 			request: &database.OutgoingAccessRequest{
 				AccessRequest: database.AccessRequest{
-					OrganizationName: "organization-a",
+					OrganizationName: "organization-b",
 				},
 			},
 			setupMocks: func(mocks schedulerMocks) {
 				mocks.directory.
 					EXPECT().
 					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-						OrganizationName: "organization-a",
+						OrganizationName: "organization-b",
 					}).
 					Return(&inspectionapi.GetOrganizationInwayResponse{
 						Address: "invalid",
@@ -595,7 +595,7 @@ func TestSyncAccessProof(t *testing.T) {
 			wantErr: true,
 			request: &database.OutgoingAccessRequest{
 				AccessRequest: database.AccessRequest{
-					OrganizationName: "organization-a",
+					OrganizationName: "organization-b",
 					ServiceName:      "service",
 				},
 			},
@@ -603,7 +603,7 @@ func TestSyncAccessProof(t *testing.T) {
 				mocks.directory.
 					EXPECT().
 					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-						OrganizationName: "organization-a",
+						OrganizationName: "organization-b",
 					}).
 					Return(&inspectionapi.GetOrganizationInwayResponse{
 						Address: "localhost:8000",
@@ -626,7 +626,7 @@ func TestSyncAccessProof(t *testing.T) {
 			wantErr: true,
 			request: &database.OutgoingAccessRequest{
 				AccessRequest: database.AccessRequest{
-					OrganizationName: "organization-a",
+					OrganizationName: "organization-b",
 					ServiceName:      "service",
 				},
 			},
@@ -634,7 +634,7 @@ func TestSyncAccessProof(t *testing.T) {
 				mocks.directory.
 					EXPECT().
 					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-						OrganizationName: "organization-a",
+						OrganizationName: "organization-b",
 					}).
 					Return(&inspectionapi.GetOrganizationInwayResponse{
 						Address: "localhost:8000",
@@ -657,7 +657,7 @@ func TestSyncAccessProof(t *testing.T) {
 			wantErr: true,
 			request: &database.OutgoingAccessRequest{
 				AccessRequest: database.AccessRequest{
-					OrganizationName: "organization-a",
+					OrganizationName: "organization-b",
 					ServiceName:      "service",
 				},
 			},
@@ -665,7 +665,7 @@ func TestSyncAccessProof(t *testing.T) {
 				mocks.directory.
 					EXPECT().
 					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-						OrganizationName: "organization-a",
+						OrganizationName: "organization-b",
 					}).
 					Return(&inspectionapi.GetOrganizationInwayResponse{
 						Address: "localhost:8000",
@@ -683,7 +683,7 @@ func TestSyncAccessProof(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					GetLatestAccessProofForService(ctx, "organization-a", "service").
+					GetLatestAccessProofForService(ctx, "organization-b", "service").
 					Return(nil, errors.New("random error"))
 
 				mocks.management.
@@ -696,7 +696,7 @@ func TestSyncAccessProof(t *testing.T) {
 			wantErr: true,
 			request: &database.OutgoingAccessRequest{
 				AccessRequest: database.AccessRequest{
-					OrganizationName: "organization-a",
+					OrganizationName: "organization-b",
 					ServiceName:      "service",
 				},
 			},
@@ -707,7 +707,7 @@ func TestSyncAccessProof(t *testing.T) {
 				mocks.directory.
 					EXPECT().
 					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-						OrganizationName: "organization-a",
+						OrganizationName: "organization-b",
 					}).
 					Return(&inspectionapi.GetOrganizationInwayResponse{
 						Address: "localhost:8000",
@@ -727,13 +727,13 @@ func TestSyncAccessProof(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					GetLatestAccessProofForService(ctx, "organization-a", "service").
+					GetLatestAccessProofForService(ctx, "organization-b", "service").
 					Return(nil, database.ErrNotFound)
 
 				mocks.db.
 					EXPECT().
 					CreateAccessProof(ctx, &database.AccessProof{
-						OrganizationName: "organization-a",
+						OrganizationName: "organization-b",
 						ServiceName:      "service",
 						CreatedAt:        t,
 					}).
@@ -749,7 +749,7 @@ func TestSyncAccessProof(t *testing.T) {
 			wantErr: true,
 			request: &database.OutgoingAccessRequest{
 				AccessRequest: database.AccessRequest{
-					OrganizationName: "organization-a",
+					OrganizationName: "organization-b",
 					ServiceName:      "service",
 				},
 			},
@@ -760,7 +760,7 @@ func TestSyncAccessProof(t *testing.T) {
 				mocks.directory.
 					EXPECT().
 					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-						OrganizationName: "organization-a",
+						OrganizationName: "organization-b",
 					}).
 					Return(&inspectionapi.GetOrganizationInwayResponse{
 						Address: "localhost:8000",
@@ -780,10 +780,10 @@ func TestSyncAccessProof(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					GetLatestAccessProofForService(ctx, "organization-a", "service").
+					GetLatestAccessProofForService(ctx, "organization-b", "service").
 					Return(&database.AccessProof{
 						ID:               "1",
-						OrganizationName: "organization-a",
+						OrganizationName: "organization-b",
 						ServiceName:      "service",
 						CreatedAt:        t,
 						RevokedAt:        time.Time{},
@@ -793,7 +793,7 @@ func TestSyncAccessProof(t *testing.T) {
 					EXPECT().
 					RevokeAccessProof(
 						ctx,
-						"organization-a",
+						"organization-b",
 						"service",
 						"1",
 						t,
@@ -809,7 +809,7 @@ func TestSyncAccessProof(t *testing.T) {
 		"successfully_revokes_an_access_grant_when_its_revoked": {
 			request: &database.OutgoingAccessRequest{
 				AccessRequest: database.AccessRequest{
-					OrganizationName: "organization-a",
+					OrganizationName: "organization-b",
 					ServiceName:      "service",
 				},
 			},
@@ -820,7 +820,7 @@ func TestSyncAccessProof(t *testing.T) {
 				mocks.directory.
 					EXPECT().
 					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-						OrganizationName: "organization-a",
+						OrganizationName: "organization-b",
 					}).
 					Return(&inspectionapi.GetOrganizationInwayResponse{
 						Address: "localhost:8000",
@@ -840,10 +840,10 @@ func TestSyncAccessProof(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					GetLatestAccessProofForService(ctx, "organization-a", "service").
+					GetLatestAccessProofForService(ctx, "organization-b", "service").
 					Return(&database.AccessProof{
 						ID:               "1",
-						OrganizationName: "organization-a",
+						OrganizationName: "organization-b",
 						ServiceName:      "service",
 						CreatedAt:        t,
 						RevokedAt:        time.Time{},
@@ -853,7 +853,7 @@ func TestSyncAccessProof(t *testing.T) {
 					EXPECT().
 					RevokeAccessProof(
 						ctx,
-						"organization-a",
+						"organization-b",
 						"service",
 						"1",
 						t,
@@ -870,7 +870,7 @@ func TestSyncAccessProof(t *testing.T) {
 			wantErr: false,
 			request: &database.OutgoingAccessRequest{
 				AccessRequest: database.AccessRequest{
-					OrganizationName: "organization-a",
+					OrganizationName: "organization-b",
 					ServiceName:      "service",
 				},
 			},
@@ -881,7 +881,7 @@ func TestSyncAccessProof(t *testing.T) {
 				mocks.directory.
 					EXPECT().
 					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-						OrganizationName: "organization-a",
+						OrganizationName: "organization-b",
 					}).
 					Return(&inspectionapi.GetOrganizationInwayResponse{
 						Address: "localhost:8000",
@@ -901,13 +901,13 @@ func TestSyncAccessProof(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					GetLatestAccessProofForService(ctx, "organization-a", "service").
+					GetLatestAccessProofForService(ctx, "organization-b", "service").
 					Return(nil, database.ErrNotFound)
 
 				mocks.db.
 					EXPECT().
 					CreateAccessProof(ctx, &database.AccessProof{
-						OrganizationName: "organization-a",
+						OrganizationName: "organization-b",
 						ServiceName:      "service",
 						CreatedAt:        t,
 					}).

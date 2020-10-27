@@ -315,7 +315,7 @@ func (scheduler *accessRequestScheduler) syncAccessProof(ctx context.Context, re
 	case nil:
 	case database.ErrNotFound:
 		_, err = scheduler.configDatabase.CreateAccessProof(ctx, &database.AccessProof{
-			OrganizationName: remoteProof.OrganizationName,
+			OrganizationName: request.OrganizationName,
 			ServiceName:      remoteProof.ServiceName,
 			CreatedAt:        remoteProof.CreatedAt,
 			RevokedAt:        remoteProof.RevokedAt,
