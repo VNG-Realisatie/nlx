@@ -19,6 +19,14 @@ export const directoryServicePropTypes = {
   retryRequestAccess: func.isRequired,
 }
 
+function throwErrorWhenNotInstanceOf(object, model) {
+  if (object && !(object instanceof model)) {
+    throw new Error(
+      `Object should be an instance of OutgoingAccessRequestModel`,
+    )
+  }
+}
+
 class DirectoryServiceModel {
   organizationName = ''
   serviceName = ''
@@ -41,15 +49,8 @@ class DirectoryServiceModel {
     this.state = directoryServiceData.state
     this.apiSpecificationType = directoryServiceData.apiSpecificationType
 
-    OutgoingAccessRequestModel.verifyInstance(
-      directoryServiceData.latestAccessRequest,
-      'latestAccessRequest',
-    )
-
-    AccessProofModel.verifyInstance(
-      directoryServiceData.latestAccessProof,
-      'latestAccessProof',
-    )
+    throwErrorWhenNotInstanceOf(latestAccessRequest, OutgoingAccessRequestModel)
+    throwErrorWhenNotInstanceOf(latestAccessProof, AccessProofModel)
 
     this.latestAccessRequest = directoryServiceData.latestAccessRequest || null
     this.latestAccessProof = directoryServiceData.latestAccessProof || null

@@ -1,7 +1,6 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import AccessProofStore from '../stores/AccessProofStore'
 import AccessProofModel from './AccessProofModel'
 
 let accessProofData
@@ -16,21 +15,8 @@ beforeEach(() => {
   }
 })
 
-test('verifies object as instance', () => {
-  const instance = new AccessProofModel({
-    accessProofData,
-    accessProofStore: new AccessProofStore(),
-  })
-
-  expect(() => AccessProofModel.verifyInstance(accessProofData)).toThrow()
-  expect(() => AccessProofModel.verifyInstance(instance)).not.toThrow()
-})
-
 test('should properly construct object', () => {
-  const accessProof = new AccessProofModel({
-    accessProofData,
-    accessProofStore: {},
-  })
+  const accessProof = new AccessProofModel({ accessProofData })
 
   expect(accessProof.id).toBe(accessProofData.id)
   expect(accessProof.organizationName).toBe(accessProofData.organizationName)

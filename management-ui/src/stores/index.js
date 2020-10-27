@@ -30,9 +30,7 @@ export class RootStore {
       rootStore: this,
       accessRequestRepository,
     })
-    this.accessProofStore = new AccessProofStore({
-      rootStore: this,
-    })
+    this.accessProofStore = new AccessProofStore()
     this.directoryServicesStore = new DirectoryServicesStore({
       rootStore: this,
       directoryRepository,

@@ -19,18 +19,8 @@ class AccessProofModel {
   createdAt = null
   revokedAt = null
 
-  static verifyInstance(object, objectName = 'given object') {
-    if (object && !(object instanceof AccessProofModel)) {
-      throw new Error(
-        `The ${objectName} should be an instance of the AccessProofModel`,
-      )
-    }
-  }
-
-  constructor({ accessProofData, accessProofStore }) {
+  constructor({ accessProofData }) {
     makeAutoObservable(this)
-
-    this.accessProofStore = accessProofStore
 
     this.update(accessProofData)
   }

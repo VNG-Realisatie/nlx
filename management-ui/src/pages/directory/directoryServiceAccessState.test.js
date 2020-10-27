@@ -34,7 +34,7 @@ const createOutgoingAccessRequestInstance = (accessRequestData) => {
 }
 
 const createAccessProofInstance = (accessProofData) => {
-  return new AccessProofModel({ accessProofData, accessProofStore: {} })
+  return new AccessProofModel({ accessProofData })
 }
 
 describe('Return SHOW_REQUEST_ACCESS when', () => {

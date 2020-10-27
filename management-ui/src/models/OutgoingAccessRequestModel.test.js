@@ -20,19 +20,6 @@ beforeEach(() => {
   }
 })
 
-test('verifies object as instance', () => {
-  const data = { id: 'accessProof' }
-  const instance = new OutgoingAccessRequestModel({
-    accessRequestData: data,
-    outgoingAccessRequestStore: {},
-  })
-
-  expect(() => OutgoingAccessRequestModel.verifyInstance(data)).toThrow()
-  expect(() =>
-    OutgoingAccessRequestModel.verifyInstance(instance),
-  ).not.toThrow()
-})
-
 test('should properly construct object', () => {
   const accessRequest = new OutgoingAccessRequestModel({
     accessRequestData,

@@ -20,16 +20,13 @@ class AccessProofStore {
     if (cachedAccessProof) {
       cachedAccessProof.update(accessProofData)
       return cachedAccessProof
-    } else {
-      const accessProof = new AccessProofModel({
-        accessProofStore: this,
-        accessProofData,
-      })
-
-      this.accessProofs.set(accessProof.id, accessProof)
-
-      return accessProof
     }
+
+    const accessProof = new AccessProofModel({ accessProofData })
+
+    this.accessProofs.set(accessProof.id, accessProof)
+
+    return accessProof
   }
 }
 

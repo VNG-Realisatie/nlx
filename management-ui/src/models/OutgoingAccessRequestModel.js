@@ -35,14 +35,6 @@ class OutgoingAccessRequestModel {
 
   error = ''
 
-  static verifyInstance(object, objectName = 'given object') {
-    if (object && !(object instanceof OutgoingAccessRequestModel)) {
-      throw new Error(
-        `The ${objectName} should be an instance of OutgoingAccessRequestModel`,
-      )
-    }
-  }
-
   constructor({ accessRequestData, outgoingAccessRequestStore }) {
     makeAutoObservable(this)
 

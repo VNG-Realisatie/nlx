@@ -28,19 +28,19 @@ class OutgoingAccessRequestStore {
     if (cachedOutgoingAccessRequest) {
       cachedOutgoingAccessRequest.update(outgoingAccessRequestData)
       return cachedOutgoingAccessRequest
-    } else {
-      const outgoingAccessRequest = new OutgoingAccessRequestModel({
-        accessRequestData: outgoingAccessRequestData,
-        outgoingAccessRequestStore: this,
-      })
-
-      this.outgoingAccessRequests.set(
-        outgoingAccessRequest.id,
-        outgoingAccessRequest,
-      )
-
-      return outgoingAccessRequest
     }
+
+    const outgoingAccessRequest = new OutgoingAccessRequestModel({
+      accessRequestData: outgoingAccessRequestData,
+      outgoingAccessRequestStore: this,
+    })
+
+    this.outgoingAccessRequests.set(
+      outgoingAccessRequest.id,
+      outgoingAccessRequest,
+    )
+
+    return outgoingAccessRequest
   }
 
   create = flow(function* create({ organizationName, serviceName }) {
