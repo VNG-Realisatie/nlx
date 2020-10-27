@@ -28,6 +28,7 @@ test('requesting access will fire approve handler', async () => {
         <IncomingAccessRequestRow
           accessRequest={accessRequest}
           approveHandler={mockHandler}
+          rejectHandler={jest.fn()}
         />
       </tbody>
     </table>,
@@ -47,6 +48,7 @@ test('rejecting access will fire reject handler', async () => {
       <tbody>
         <IncomingAccessRequestRow
           accessRequest={accessRequest}
+          approveHandler={jest.fn()}
           rejectHandler={mockHandler}
         />
       </tbody>
@@ -68,6 +70,7 @@ test('clicking cancel will not fire handler', async () => {
         <IncomingAccessRequestRow
           accessRequest={accessRequest}
           approveHandler={mockHandler}
+          rejectHandler={jest.fn()}
         />
       </tbody>
     </table>,

@@ -142,11 +142,12 @@ test('requesting access to a service in the directory', async () => {
   })
 
   const directoryService = new DirectoryServiceModel({
-    service: {
+    serviceData: {
       organizationName: 'organization',
       serviceName: 'service',
     },
   })
+
   const outgoingAccessRequest = await directoryServicesStore.requestAccess(
     directoryService,
   )

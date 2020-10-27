@@ -20,33 +20,53 @@ class DirectoryServicesStore {
     this.directoryRepository = directoryRepository
   }
 
-  fetch = flow(function* fetch(directoryServiceModel) {
+  fetch = flow(function* fetch({ organizationName, serviceName }) {
     const serviceData = yield this.directoryRepository.getByName(
-      directoryServiceModel.organizationName,
-      directoryServiceModel.serviceName,
+      organizationName,
+      serviceName,
     )
 
-    const service = yield this.syncServiceDataWithStores(serviceData)
-    directoryServiceModel.update(service)
+    let directoryService = this.getService({ organizationName, serviceName })
+    if (!directoryService) {
+      directoryService = new DirectoryServiceModel({
+        directoryServicesStore: this,
+        serviceData,
+      })
+      this.services.push(directoryService)
+    }
+
+    const {
+      latestAccessRequest,
+      latestAccessProof,
+    } = yield this.syncStoresWithServiceData(serviceData)
+
+    directoryService.update(serviceData, latestAccessRequest, latestAccessProof)
   })
 
   fetchAll = flow(function* fetchAll() {
     if (this.isFetching) {
       return
     }
+
     this.isFetching = true
     this.error = ''
 
     try {
-      const services = yield this.directoryRepository.getAll()
+      const servicesData = yield this.directoryRepository.getAll()
 
-      const serviceModelsLoaded = services.map(async (serviceData) => {
-        const service = await this.syncServiceDataWithStores(serviceData)
+      const serviceModelsLoaded = servicesData.map(async (serviceData) => {
+        const {
+          latestAccessRequest,
+          latestAccessProof,
+        } = await this.syncStoresWithServiceData(serviceData)
 
-        return new DirectoryServiceModel({
-          directoryServicesStore: this.rootStore.directoryServicesStore,
-          service,
+        const directoryService = new DirectoryServiceModel({
+          directoryServicesStore: this,
+          serviceData,
         })
+
+        directoryService.update({}, latestAccessRequest, latestAccessProof)
+        return directoryService
       })
 
       this.services = yield Promise.all(serviceModelsLoaded)
@@ -74,7 +94,7 @@ class DirectoryServicesStore {
     })
   }
 
-  async syncServiceDataWithStores(serviceData) {
+  async syncStoresWithServiceData(serviceData) {
     const latestAccessRequest = await this.rootStore.outgoingAccessRequestsStore.updateFromServer(
       serviceData.latestAccessRequest,
     )
@@ -83,7 +103,6 @@ class DirectoryServicesStore {
     )
 
     return {
-      ...serviceData,
       latestAccessRequest,
       latestAccessProof,
     }

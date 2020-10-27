@@ -10,11 +10,12 @@ import OutgoingAccessRequestModel, {
 import DirectoryServiceModel, {
   directoryServicePropTypes,
 } from './DirectoryServiceModel'
+import AccessProofModel from './AccessProofModel'
 
 test('createDirectoryService returns an instance', () => {
   const directoryService = new DirectoryServiceModel({
     directoryServicesStore: {},
-    service: {
+    serviceData: {
       organizationName: 'Organization',
       serviceName: 'Service',
       state: 'up',
@@ -28,7 +29,7 @@ test('model implements proptypes', () => {
   const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
   const directoryService = new DirectoryServiceModel({
     directoryServicesStore: {},
-    service: {
+    serviceData: {
       organizationName: 'Organization',
       serviceName: 'Service',
       state: 'up',
@@ -47,10 +48,54 @@ test('model implements proptypes', () => {
   errorSpy.mockRestore()
 })
 
-test('initializing the model', async () => {
+test('initializing and updating the model', () => {
+  const serviceData = {
+    organizationName: 'Organization',
+    serviceName: 'Service',
+    state: 'up',
+    apiSpecificationType: 'API',
+    latestAccessRequest: {
+      state: ACCESS_REQUEST_STATES.CREATED,
+    },
+    latestAccessProof: {
+      id: 'abc',
+    },
+  }
+
   const directoryService = new DirectoryServiceModel({
     directoryServicesStore: {},
-    service: {
+    serviceData,
+  })
+
+  expect(directoryService.latestAccessRequest).toBeNull()
+  expect(directoryService.latestAccessProof).toBeNull()
+
+  const latestAccessRequest = new OutgoingAccessRequestModel({
+    outgoingAccessRequestStore: {},
+    accessRequestData: serviceData.latestAccessRequest,
+  })
+
+  const latestAccessProof = new AccessProofModel({
+    accessProofData: serviceData.latestAccessProof,
+  })
+
+  directoryService.update(
+    { state: 'down' },
+    latestAccessRequest,
+    latestAccessProof,
+  )
+
+  expect(directoryService.state).toBe('down')
+  expect(directoryService.latestAccessRequest).toBeInstanceOf(
+    OutgoingAccessRequestModel,
+  )
+  expect(directoryService.latestAccessProof).toBeInstanceOf(AccessProofModel)
+})
+
+test('updating the model with an invalid latest access request', () => {
+  const directoryService = new DirectoryServiceModel({
+    directoryServicesStore: {},
+    serviceData: {
       organizationName: 'Organization',
       serviceName: 'Service',
       state: 'up',
@@ -58,33 +103,24 @@ test('initializing the model', async () => {
     },
   })
 
-  expect(directoryService.latestAccessRequest).toBeNull()
-  expect(directoryService.latestAccessProof).toBeNull()
-})
-
-test('initializing the model with an invalid latest access request', () => {
-  expect(() => {
-    return new DirectoryServiceModel({
-      directoryServicesStore: {},
-      service: {
-        latestAccessRequest: 'invalid',
-      },
-    })
-  }).toThrow()
+  expect(() => directoryService.update({}, 'invalid')).toThrow()
 })
 
 test('initializing the model with an invalid access proof', () => {
-  expect(() => {
-    return new DirectoryServiceModel({
-      directoryServicesStore: {},
-      service: {
-        latestAccessProof: 'invalid',
-      },
-    })
-  }).toThrow()
+  const directoryService = new DirectoryServiceModel({
+    directoryServicesStore: {},
+    serviceData: {
+      organizationName: 'Organization',
+      serviceName: 'Service',
+      state: 'up',
+      apiSpecificationType: 'API',
+    },
+  })
+
+  expect(() => directoryService.update({}, null, 'invalid')).toThrow()
 })
 
-test('(re-)fetching the model', async () => {
+test('(re-)fetching the model (integration test)', async () => {
   const rootStore = new RootStore({
     directoryRepository: {
       getByName: jest.fn().mockResolvedValue({
@@ -98,7 +134,7 @@ test('(re-)fetching the model', async () => {
 
   const directoryService = new DirectoryServiceModel({
     directoryServicesStore: rootStore.directoryServicesStore,
-    service: {
+    serviceData: {
       organizationName: 'Organization',
       serviceName: 'Service',
       state: 'up',
@@ -119,7 +155,7 @@ test('(re-)fetching the model', async () => {
   expect(directoryServicesStoreFetchSpy).toHaveBeenCalledWith(directoryService)
 })
 
-describe('requesting access to a service', () => {
+describe('requesting access to a service (integration tests)', () => {
   it('should not create a new access request an access request is already created', async () => {
     const rootStore = new RootStore({
       accessRequestRepository: {
@@ -127,22 +163,26 @@ describe('requesting access to a service', () => {
       },
     })
 
-    const service = {
+    const serviceData = {
       organizationName: 'Organization',
       serviceName: 'Service',
       state: 'up',
       apiSpecificationType: 'API',
-      latestAccessRequest: new OutgoingAccessRequestModel({
-        accessRequestData: {
-          state: ACCESS_REQUEST_STATES.CREATED,
-        },
-      }),
+      latestAccessRequest: {
+        state: ACCESS_REQUEST_STATES.CREATED,
+      },
     }
+
+    const outgoingAccessRequest = new OutgoingAccessRequestModel({
+      accessRequestData: serviceData.latestAccessRequest,
+    })
 
     const directoryService = new DirectoryServiceModel({
       directoryServicesStore: rootStore.directoryServicesStore,
-      service,
+      serviceData,
     })
+
+    directoryService.update({}, outgoingAccessRequest)
 
     const spy = jest.spyOn(rootStore.directoryServicesStore, 'requestAccess')
     await directoryService.requestAccess()
@@ -168,7 +208,7 @@ describe('requesting access to a service', () => {
       },
     )
 
-    const service = {
+    const serviceData = {
       organizationName: 'Organization',
       serviceName: 'Service',
       state: 'up',
@@ -178,7 +218,7 @@ describe('requesting access to a service', () => {
 
     const directoryService = new DirectoryServiceModel({
       directoryServicesStore: rootStore.directoryServicesStore,
-      service: service,
+      serviceData,
     })
 
     const spy = jest.spyOn(rootStore.directoryServicesStore, 'requestAccess')
@@ -206,7 +246,7 @@ describe('requesting access to a service', () => {
       },
     )
 
-    const service = {
+    const serviceData = {
       organizationName: 'Organization',
       serviceName: 'Service',
       state: 'up',
@@ -216,7 +256,7 @@ describe('requesting access to a service', () => {
 
     const directoryService = new DirectoryServiceModel({
       directoryServicesStore: rootStore.directoryServicesStore,
-      service: service,
+      serviceData,
     })
 
     const spy = jest.spyOn(rootStore.directoryServicesStore, 'requestAccess')

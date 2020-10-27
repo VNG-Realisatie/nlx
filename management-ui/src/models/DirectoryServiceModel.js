@@ -35,30 +35,45 @@ class DirectoryServiceModel {
   latestAccessRequest = null
   latestAccessProof = null
 
-  constructor({ directoryServicesStore, service }) {
+  constructor({ directoryServicesStore, serviceData }) {
     makeAutoObservable(this)
 
     this.directoryServicesStore = directoryServicesStore
 
-    this.update(service)
+    this.update(serviceData)
   }
 
-  update = (directoryServiceData) => {
-    this.organizationName = directoryServiceData.organizationName
-    this.serviceName = directoryServiceData.serviceName
-    this.state = directoryServiceData.state
-    this.apiSpecificationType = directoryServiceData.apiSpecificationType
+  update = (
+    directoryServiceData,
+    latestAccessRequest = null,
+    latestAccessProof = null,
+  ) => {
+    if (directoryServiceData.organizationName) {
+      this.organizationName = directoryServiceData.organizationName
+    }
+
+    if (directoryServiceData.serviceName) {
+      this.serviceName = directoryServiceData.serviceName
+    }
+
+    if (directoryServiceData.state) {
+      this.state = directoryServiceData.state
+    }
+
+    if (directoryServiceData.apiSpecificationType) {
+      this.apiSpecificationType = directoryServiceData.apiSpecificationType
+    }
 
     throwErrorWhenNotInstanceOf(latestAccessRequest, OutgoingAccessRequestModel)
     throwErrorWhenNotInstanceOf(latestAccessProof, AccessProofModel)
 
-    this.latestAccessRequest = directoryServiceData.latestAccessRequest || null
-    this.latestAccessProof = directoryServiceData.latestAccessProof || null
+    this.latestAccessRequest = latestAccessRequest
+    this.latestAccessProof = latestAccessProof
   }
 
-  fetch = flow(function* fetch() {
-    yield this.directoryServicesStore.fetch(this)
-  }).bind(this)
+  fetch = async () => {
+    await this.directoryServicesStore.fetch(this)
+  }
 
   requestAccess = flow(function* requestAccess() {
     if (
