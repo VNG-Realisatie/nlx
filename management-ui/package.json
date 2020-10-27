@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@commonground/design-system": "13.5.0",
-    "dayjs": "1.9.3",
+    "dayjs": "1.9.4",
     "fetch-defaults": "1.0.0",
     "formik": "2.2.1",
     "i18next": "19.8.2",
