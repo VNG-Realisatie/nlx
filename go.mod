@@ -6,6 +6,9 @@ go 1.15
 // See: https://nvd.nist.gov/vuln/detail/CVE-2020-14040.
 replace golang.org/x/text => golang.org/x/text v0.3.3
 
+// Override the gopkg.in/yaml.v2 dependency. Versions before v2.2.3 are vulnerable to a Billion Laughs Attack.
+replace gopkg.in/yaml.v2 => gopkg.in/yaml.v2 v2.2.8
+
 require (
 	github.com/Microsoft/go-winio v0.4.14 // indirect
 	github.com/bwesterb/go-atum v1.0.3 // indirect
