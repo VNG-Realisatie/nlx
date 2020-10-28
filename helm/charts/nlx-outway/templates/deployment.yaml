@@ -76,6 +76,8 @@ spec:
             - name: LISTEN_ADDRESS
               value: 0.0.0.0:8080
           {{- end }}
+            - name: MONITORING_ADDRESS
+              value: 0.0.0.0:8081
             - name: DIRECTORY_INSPECTION_ADDRESS
               value: {{ .Values.config.directoryInspectionHostname }}:443
           {{- if .Values.config.authorizationService.enabled }}

@@ -41,6 +41,8 @@ spec:
             tcpSocket:
               port: http
           env:
+            - name: LISTEN_ADDRESS
+              value: 0.0.0.0:8080
             - name: IRMA_SIGN_PRIVATE_KEY_FILE
               value: /etc/insight-api/jwt/sign-key.pem
             - name: IRMA_VERIFY_PUBLIC_KEY_FILE

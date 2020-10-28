@@ -30,7 +30,7 @@ type authResponse struct {
 }
 
 var options struct {
-	ListenAddress string `long:"listen-address" env:"LISTEN_ADDRESS" default:"0.0.0.0:8443" description:"Address for the api to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	ListenAddress string `long:"listen-address" env:"LISTEN_ADDRESS" default:"127.0.0.1:8443" description:"Address for the api to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 	CVSFile       string `long:"csv-file" env:"CSV_FILE" description:"absolute path to csv file to expose" required:"true"`
 	CertFile      string `long:"tls-cert" env:"TLS_CERT" description:"Absolute or relative path to the Organization cert .pem"`
 	KeyFile       string `long:"tls-key" env:"TLS_KEY" description:"Absolute or relative path to the Organization key .pem"`

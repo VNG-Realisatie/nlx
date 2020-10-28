@@ -59,6 +59,12 @@ spec:
             initialDelaySeconds: 3
             periodSeconds: 10
           env:
+            - name: LISTEN_ADDRESS
+              value: 0.0.0.0:8443
+            - name: LISTEN_MANAGEMENT_ADDRESS
+              value: 0.0.0.0:8444
+            - name: MONITORING_ADDRESS
+              value: 0.0.0.0:8081
             - name: INWAY_NAME
               value: {{ default (include "nlx-inway.fullname" .) .Values.config.name }}
             - name: SELF_ADDRESS

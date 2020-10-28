@@ -23,7 +23,7 @@ services:
   ui:
     image: nlxio/management-ui:latest
     ports:
-      - 8080:8080
+      - 127.0.0.1:8080:8080
     restart: always
     links:
       - api:management-api.organization-a.nlx.local
@@ -34,7 +34,7 @@ services:
   dex:
     image: quay.io/dexidp/dex:v2.25.0
     ports:
-      - 5556:5556
+      - 127.0.0.1:5556:5556
     command: serve /config.yaml
     volumes:
       - ./dex.management.yaml:/config.yaml
@@ -43,7 +43,7 @@ services:
   etcd:
     image: gcr.io/etcd-development/etcd:v3.4.13
     ports:
-      - 2379:2379
+      - 127.0.0.1:2379:2379
     environment:
       ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
       ETCD_ADVERTISE_CLIENT_URLS: http://127.0.0.1:2379
@@ -56,9 +56,10 @@ services:
     image: nlxio/outway:latest
     restart: always
     ports:
-      - 80:8080
+      - 127.0.0.1:80:8080
     environment:
       <<: *env
+      LISTEN_ADDRESS: 0.0.0.0:8080
     volumes: *certs
 
   inway:
@@ -67,9 +68,10 @@ services:
     links:
       - api:management-api.organization-a.nlx.local
     ports:
-      - 443:8443
+      - 127.0.0.1:443:8443
     environment:
       <<: *env
+      LISTEN_ADDRESS: 0.0.0.0:8443
       INWAY_NAME: Inway-01
       SELF_ADDRESS: "${INWAY_SELF_ADDRESS}"
       MANAGEMENT_API_ADDRESS: management-api.organization-a.nlx.local:8443
@@ -83,6 +85,8 @@ services:
     volumes: *certs
     environment:
       <<: *env
+      LISTEN_ADDRESS: 0.0.0.0:8080
+      CONFIG_LISTEN_ADDRESS: 0.0.0.0:8443
       ETCD_CONNECTION_STRING: http://etcd:2379
       SECRET_KEY: Ct6HZ5bQMLm2ytKvU6Yc
       OIDC_CLIENT_ID: nlx-management
