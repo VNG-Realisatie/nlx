@@ -7,6 +7,7 @@ package mock_database
 import (
 	context "context"
 	gomock "github.com/golang/mock/gomock"
+	diagnostics "go.nlx.io/nlx/common/diagnostics"
 	database "go.nlx.io/nlx/management-api/pkg/database"
 	reflect "reflect"
 	time "time"
@@ -327,17 +328,17 @@ func (mr *MockConfigDatabaseMockRecorder) CreateOutgoingAccessRequest(ctx, acces
 }
 
 // UpdateOutgoingAccessRequestState mocks base method
-func (m *MockConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.Context, accessRequest *database.OutgoingAccessRequest, state database.AccessRequestState, referenceID string) error {
+func (m *MockConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.Context, accessRequest *database.OutgoingAccessRequest, state database.AccessRequestState, referenceID string, err *diagnostics.ErrorDetails) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateOutgoingAccessRequestState", ctx, accessRequest, state, referenceID)
+	ret := m.ctrl.Call(m, "UpdateOutgoingAccessRequestState", ctx, accessRequest, state, referenceID, err)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // UpdateOutgoingAccessRequestState indicates an expected call of UpdateOutgoingAccessRequestState
-func (mr *MockConfigDatabaseMockRecorder) UpdateOutgoingAccessRequestState(ctx, accessRequest, state, referenceID interface{}) *gomock.Call {
+func (mr *MockConfigDatabaseMockRecorder) UpdateOutgoingAccessRequestState(ctx, accessRequest, state, referenceID, err interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateOutgoingAccessRequestState", reflect.TypeOf((*MockConfigDatabase)(nil).UpdateOutgoingAccessRequestState), ctx, accessRequest, state, referenceID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateOutgoingAccessRequestState", reflect.TypeOf((*MockConfigDatabase)(nil).UpdateOutgoingAccessRequestState), ctx, accessRequest, state, referenceID, err)
 }
 
 // WatchOutgoingAccessRequests mocks base method

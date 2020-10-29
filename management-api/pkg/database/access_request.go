@@ -13,6 +13,8 @@ import (
 
 	"github.com/coreos/etcd/clientv3"
 	"go.uber.org/zap"
+
+	"go.nlx.io/nlx/common/diagnostics"
 )
 
 type AccessRequest struct {
@@ -31,7 +33,8 @@ type IncomingAccessRequest struct {
 
 type OutgoingAccessRequest struct {
 	AccessRequest
-	ReferenceID string `json:"referenceId"`
+	ErrorDetails *diagnostics.ErrorDetails
+	ReferenceID  string `json:"referenceId"`
 }
 
 // Sendable returns if the access request can be send to the other organization
@@ -375,7 +378,8 @@ func (db ETCDConfigDatabase) CreateOutgoingAccessRequest(ctx context.Context, ac
 	return accessRequest, nil
 }
 
-func (db ETCDConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.Context, accessRequest *OutgoingAccessRequest, state AccessRequestState, referenceID string) error {
+// nolint:gocyclo // it's indeed somewhat complex but we do want to have these sanity checks in place
+func (db ETCDConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.Context, accessRequest *OutgoingAccessRequest, state AccessRequestState, referenceID string, errDetails *diagnostics.ErrorDetails) error {
 	key := path.Join("access-requests", "outgoing", accessRequest.OrganizationName, accessRequest.ServiceName, accessRequest.ID)
 
 	response, err := db.etcdCli.Get(ctx, db.key(key))
@@ -387,17 +391,28 @@ func (db ETCDConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.Contex
 		return fmt.Errorf("no such access request: %s", accessRequest.ID)
 	}
 
-	if referenceID != "" && state != AccessRequestReceived {
-		return fmt.Errorf("unable to set referenceID when state is %s", state.String())
-	} else if referenceID == "" && state == AccessRequestReceived {
-		return fmt.Errorf("unable to update AccessRequest to state received without referenceID")
-	}
-
-	accessRequest.State = state
+	accessRequest.ErrorDetails = errDetails
 	accessRequest.UpdatedAt = db.clock.Now()
 
-	if state == AccessRequestReceived {
+	switch state {
+	case AccessRequestFailed:
+		if errDetails == nil {
+			return errors.New("unable to update AccessRequest state to failed without error details")
+		}
+	case AccessRequestReceived:
+		if referenceID == "" {
+			return fmt.Errorf("unable to update AccessRequest to state received without referenceID")
+		}
+
 		accessRequest.ReferenceID = referenceID
+	default:
+		if referenceID != "" {
+			return fmt.Errorf("unable to set referenceID when state is %s", state.String())
+		}
+
+		if errDetails != nil {
+			return fmt.Errorf("unable to update AccessRequest state to :%s while error details are provided", state.String())
+		}
 	}
 
 	if err := db.put(ctx, key, accessRequest); err != nil {

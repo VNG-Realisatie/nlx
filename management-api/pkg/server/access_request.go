@@ -11,6 +11,7 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
+	"go.nlx.io/nlx/common/diagnostics"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
@@ -218,7 +219,7 @@ func (s *ManagementService) SendAccessRequest(ctx context.Context, req *api.Send
 		return nil, status.Error(codes.AlreadyExists, "access request is not in a sendable state")
 	}
 
-	err = s.configDatabase.UpdateOutgoingAccessRequestState(ctx, accessRequest, database.AccessRequestCreated, "")
+	err = s.configDatabase.UpdateOutgoingAccessRequestState(ctx, accessRequest, database.AccessRequestCreated, "", nil)
 	if err != nil {
 		s.logger.Error("access request cannot be updated", zap.String("id", accessRequest.ID), zap.Error(err))
 		return nil, status.Error(codes.Internal, "database error")
@@ -338,27 +339,44 @@ func convertIncomingAccessRequest(accessRequest *database.IncomingAccessRequest)
 }
 
 // nolint:dupl // outgoing access request looks like incoming access request
-func convertOutgoingAccessRequest(a *database.OutgoingAccessRequest) (*api.OutgoingAccessRequest, error) {
-	createdAt, err := types.TimestampProto(a.CreatedAt)
+func convertOutgoingAccessRequest(request *database.OutgoingAccessRequest) (*api.OutgoingAccessRequest, error) {
+	createdAt, err := types.TimestampProto(request.CreatedAt)
 	if err != nil {
 		return nil, err
 	}
 
-	updatedAt, err := types.TimestampProto(a.UpdatedAt)
+	updatedAt, err := types.TimestampProto(request.UpdatedAt)
 	if err != nil {
 		return nil, err
 	}
 
-	aState, ok := accessRequestState[a.State]
+	aState, ok := accessRequestState[request.State]
 	if !ok {
-		return nil, fmt.Errorf("unsupported state: %v", a.State)
+		return nil, fmt.Errorf("unsupported state: %v", request.State)
+	}
+
+	var details *api.ErrorDetails
+
+	if request.ErrorDetails != nil {
+		code := api.ErrorCode_INTERNAL
+
+		if request.ErrorDetails.Code == diagnostics.NoInwaySelectedError {
+			code = api.ErrorCode_NO_INWAY_SELECTED
+		}
+
+		details = &api.ErrorDetails{
+			Code:       code,
+			Cause:      request.ErrorDetails.Cause,
+			StackTrace: request.ErrorDetails.StackTrace,
+		}
 	}
 
 	return &api.OutgoingAccessRequest{
-		Id:               a.ID,
-		OrganizationName: a.OrganizationName,
-		ServiceName:      a.ServiceName,
+		Id:               request.ID,
+		OrganizationName: request.OrganizationName,
+		ServiceName:      request.ServiceName,
 		State:            aState,
+		ErrorDetails:     details,
 		CreatedAt:        createdAt,
 		UpdatedAt:        updatedAt,
 	}, nil

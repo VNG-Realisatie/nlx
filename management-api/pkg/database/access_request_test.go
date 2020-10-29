@@ -207,7 +207,7 @@ func TestCreateOutgoingAccessRequest(t *testing.T) {
 					return err
 				}
 
-				err = db.DB.UpdateOutgoingAccessRequestState(ctx, request, database.AccessRequestRejected, "")
+				err = db.DB.UpdateOutgoingAccessRequestState(ctx, request, database.AccessRequestRejected, "", nil)
 
 				return err
 			},
@@ -246,7 +246,7 @@ func TestCreateOutgoingAccessRequest(t *testing.T) {
 					return err
 				}
 
-				err = db.DB.UpdateOutgoingAccessRequestState(ctx, request, database.AccessRequestApproved, "")
+				err = db.DB.UpdateOutgoingAccessRequestState(ctx, request, database.AccessRequestApproved, "", nil)
 				if err != nil {
 					return err
 				}
@@ -300,7 +300,7 @@ func TestCreateOutgoingAccessRequest(t *testing.T) {
 					return err
 				}
 
-				err = db.DB.UpdateOutgoingAccessRequestState(ctx, request, database.AccessRequestApproved, "")
+				err = db.DB.UpdateOutgoingAccessRequestState(ctx, request, database.AccessRequestApproved, "", nil)
 				if err != nil {
 					return err
 				}
@@ -341,7 +341,7 @@ func TestCreateOutgoingAccessRequest(t *testing.T) {
 					return err
 				}
 
-				err = db.DB.UpdateOutgoingAccessRequestState(ctx, request, database.AccessRequestApproved, "")
+				err = db.DB.UpdateOutgoingAccessRequestState(ctx, request, database.AccessRequestApproved, "", nil)
 				if err != nil {
 					return err
 				}
@@ -699,7 +699,7 @@ func TestUpdateAccessRequestState(t *testing.T) {
 
 	cluster.Clock.SetTime(time.Date(2020, time.June, 26, 12, 42, 43, 1337, time.UTC))
 
-	err = cluster.DB.UpdateOutgoingAccessRequestState(ctx, a, database.AccessRequestFailed, "")
+	err = cluster.DB.UpdateOutgoingAccessRequestState(ctx, a, database.AccessRequestApproved, "", nil)
 	assert.NoError(t, err)
 
 	expected := &database.OutgoingAccessRequest{
@@ -707,7 +707,7 @@ func TestUpdateAccessRequestState(t *testing.T) {
 			ID:               "161c188cfcea1939",
 			OrganizationName: "test-organization-a",
 			ServiceName:      "test-service-1",
-			State:            database.AccessRequestFailed,
+			State:            database.AccessRequestApproved,
 			CreatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
 			UpdatedAt:        time.Date(2020, time.June, 26, 12, 42, 43, 1337, time.UTC),
 		},

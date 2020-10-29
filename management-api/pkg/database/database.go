@@ -6,6 +6,8 @@ package database
 import (
 	"context"
 	"time"
+
+	"go.nlx.io/nlx/common/diagnostics"
 )
 
 // ConfigDatabase is the interface for a configuration database
@@ -31,7 +33,7 @@ type ConfigDatabase interface {
 	LockOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) error
 	UnlockOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) error
 	CreateOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) (*OutgoingAccessRequest, error)
-	UpdateOutgoingAccessRequestState(ctx context.Context, accessRequest *OutgoingAccessRequest, state AccessRequestState, referenceID string) error
+	UpdateOutgoingAccessRequestState(ctx context.Context, accessRequest *OutgoingAccessRequest, state AccessRequestState, referenceID string, err *diagnostics.ErrorDetails) error
 	WatchOutgoingAccessRequests(ctx context.Context, output chan *OutgoingAccessRequest)
 
 	ListAllIncomingAccessRequests(ctx context.Context) ([]*IncomingAccessRequest, error)

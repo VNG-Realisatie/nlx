@@ -940,6 +940,31 @@
         }
       }
     },
+    "managementErrorCode": {
+      "type": "string",
+      "enum": [
+        "INTERNAL",
+        "NO_INWAY_SELECTED"
+      ],
+      "default": "INTERNAL"
+    },
+    "managementErrorDetails": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "$ref": "#/definitions/managementErrorCode"
+        },
+        "cause": {
+          "type": "string"
+        },
+        "stackTrace": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "managementIncomingAccessRequest": {
       "type": "object",
       "properties": {
@@ -1087,6 +1112,9 @@
         "updatedAt": {
           "type": "string",
           "format": "date-time"
+        },
+        "errorDetails": {
+          "$ref": "#/definitions/managementErrorDetails"
         }
       }
     },

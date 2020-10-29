@@ -254,8 +254,8 @@ func TestSchedule(t *testing.T) {
 					ServiceName:      "service",
 					State:            database.AccessRequestCreated,
 				},
+				ReferenceID: "refid",
 			},
-			wantErr: true,
 			setupMock: func(mocks schedulerMocks) {
 				mocks.db.
 					EXPECT().
@@ -271,7 +271,7 @@ func TestSchedule(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					UpdateOutgoingAccessRequestState(ctx, gomock.Any(), database.AccessRequestFailed, "").
+					UpdateOutgoingAccessRequestState(ctx, gomock.Any(), database.AccessRequestFailed, "", gomock.Any()).
 					Return(nil)
 
 				mocks.db.
@@ -317,7 +317,7 @@ func TestSchedule(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					UpdateOutgoingAccessRequestState(ctx, gomock.Any(), database.AccessRequestApproved, "").
+					UpdateOutgoingAccessRequestState(ctx, gomock.Any(), database.AccessRequestApproved, "", nil).
 					Return(errors.New("error"))
 
 				mocks.db.
@@ -367,7 +367,7 @@ func TestSchedule(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					UpdateOutgoingAccessRequestState(ctx, gomock.Any(), database.AccessRequestReceived, "refid").
+					UpdateOutgoingAccessRequestState(ctx, gomock.Any(), database.AccessRequestReceived, "refid", nil).
 					Return(nil)
 
 				mocks.db.
@@ -416,7 +416,7 @@ func TestSchedule(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					UpdateOutgoingAccessRequestState(ctx, gomock.Any(), database.AccessRequestApproved, "").
+					UpdateOutgoingAccessRequestState(ctx, gomock.Any(), database.AccessRequestApproved, "", nil).
 					Return(nil)
 
 				mocks.db.

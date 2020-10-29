@@ -181,6 +181,17 @@ enum AccessRequestState {
   REJECTED = 5;
 }
 
+enum ErrorCode {
+  INTERNAL = 0;
+  NO_INWAY_SELECTED = 1;
+}
+
+message ErrorDetails {
+  ErrorCode code = 1;
+  string cause = 2;
+  repeated string stackTrace = 3;
+}
+
 message OutgoingAccessRequest {
   string id = 1;
   string organizationName = 2;
@@ -188,6 +199,7 @@ message OutgoingAccessRequest {
   AccessRequestState state = 4;
   google.protobuf.Timestamp createdAt = 5;
   google.protobuf.Timestamp updatedAt = 6;
+  ErrorDetails errorDetails = 7;
 }
 
 message IncomingAccessRequest {

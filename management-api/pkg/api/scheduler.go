@@ -15,7 +15,10 @@ import (
 	"github.com/gogo/protobuf/types"
 	grpc_retry "github.com/grpc-ecosystem/go-grpc-middleware/retry"
 	"go.uber.org/zap"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
+	"go.nlx.io/nlx/common/diagnostics"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 	"go.nlx.io/nlx/management-api/api"
@@ -247,35 +250,53 @@ func (scheduler *accessRequestScheduler) schedule(ctx context.Context, request *
 	}()
 
 	var (
-		syncError   error
 		newState    database.AccessRequestState
 		referenceID string
 	)
 
 	switch request.State {
 	case database.AccessRequestCreated:
-		referenceID, syncError = scheduler.sendRequest(ctx, request)
+		referenceID, err = scheduler.sendRequest(ctx, request)
 		newState = database.AccessRequestReceived
 	case database.AccessRequestReceived:
-		newState, syncError = scheduler.getAccessRequestState(ctx, request)
+		newState, err = scheduler.getAccessRequestState(ctx, request)
 	default:
 		return fmt.Errorf("invalid access request state: %s", request.State.String())
 	}
 
-	if syncError != nil {
-		newState = database.AccessRequestFailed
+	if err == nil {
+		err = scheduler.configDatabase.UpdateOutgoingAccessRequestState(
+			ctx,
+			request,
+			newState,
+			referenceID,
+			nil,
+		)
+	} else {
+		errorDetails := diagnostics.ParseError(err)
+
+		st, ok := status.FromError(err)
+		if ok {
+			if st.Code() == codes.NotFound {
+				errorDetails = errorDetails.WithCode(diagnostics.NoInwaySelectedError)
+			}
+		}
+
+		err = scheduler.configDatabase.UpdateOutgoingAccessRequestState(
+			ctx,
+			request,
+			database.AccessRequestFailed,
+			referenceID,
+			errorDetails,
+		)
 	}
 
 	// don't update the state if the state is already synchronized
 	if newState == request.State {
-		return syncError
-	}
-
-	if err := scheduler.configDatabase.UpdateOutgoingAccessRequestState(ctx, request, newState, referenceID); err != nil {
 		return err
 	}
 
-	return syncError
+	return err
 }
 
 func (scheduler *accessRequestScheduler) parseAccessProof(accessProof *api.AccessProof) (*database.AccessProof, error) {
