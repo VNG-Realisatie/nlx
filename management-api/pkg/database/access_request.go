@@ -391,6 +391,7 @@ func (db ETCDConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.Contex
 		return fmt.Errorf("no such access request: %s", accessRequest.ID)
 	}
 
+	accessRequest.State = state
 	accessRequest.ErrorDetails = errDetails
 	accessRequest.UpdatedAt = db.clock.Now()
 
