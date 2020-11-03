@@ -2,9 +2,7 @@
 // Licensed under the EUPL
 //
 import { makeAutoObservable, flow } from 'mobx'
-import { string, func } from 'prop-types'
-
-import AccessRequestRepository from '../domain/access-request-repository'
+import { string, func, instanceOf } from 'prop-types'
 
 export const ACCESS_REQUEST_STATES = {
   CREATED: 'CREATED',
@@ -20,8 +18,8 @@ export const incomingAccessRequestPropTypes = {
   organizationName: string.isRequired,
   serviceName: string.isRequired,
   state: string,
-  createdAt: string,
-  updatedAt: string,
+  createdAt: instanceOf(Date),
+  updatedAt: instanceOf(Date),
 
   approve: func,
   reject: func,
@@ -35,18 +33,21 @@ class IncomingAccessRequestModel {
   state = ''
   createdAt = ''
   updatedAt = ''
+
   error = ''
 
-  constructor({
-    store,
-    accessRequestData,
-    accessRequestRepository = AccessRequestRepository,
-  }) {
+  constructor({ incomingAccessRequestStore, accessRequestData }) {
     makeAutoObservable(this)
 
-    this.store = store || undefined
-    this.accessRequestRepository = accessRequestRepository
+    this.incomingAccessRequestStore = incomingAccessRequestStore
     this.update(accessRequestData)
+  }
+
+  get isResolved() {
+    return !(
+      this.state === ACCESS_REQUEST_STATES.CREATED ||
+      this.state === ACCESS_REQUEST_STATES.RECEIVED
+    )
   }
 
   update(accessRequestData) {
@@ -71,11 +72,11 @@ class IncomingAccessRequestModel {
     }
 
     if (accessRequestData.createdAt) {
-      this.createdAt = accessRequestData.createdAt
+      this.createdAt = new Date(accessRequestData.createdAt)
     }
 
     if (accessRequestData.updatedAt) {
-      this.updatedAt = accessRequestData.updatedAt
+      this.updatedAt = new Date(accessRequestData.updatedAt)
     }
   }
 
@@ -84,13 +85,14 @@ class IncomingAccessRequestModel {
       this.error = ''
 
       const { serviceName, id } = this
-      yield this.accessRequestRepository.approveIncomingAccessRequest({
-        serviceName,
-        id,
-      })
+      yield this.incomingAccessRequestStore.accessRequestRepository.approveIncomingAccessRequest(
+        {
+          serviceName,
+          id,
+        },
+      )
 
-      // TODO: make sure we reimplement this behaviour
-      this.store.fetchIncomingAccessRequests()
+      this.incomingAccessRequestStore.fetchForService({ name: serviceName })
     } catch (e) {
       this.error = e.message
     }
@@ -101,12 +103,16 @@ class IncomingAccessRequestModel {
       this.error = ''
 
       const { serviceName, id } = this
-      yield this.accessRequestRepository.rejectIncomingAccessRequest({
-        serviceName,
-        id,
-      })
+      yield this.incomingAccessRequestStore.accessRequestRepository.rejectIncomingAccessRequest(
+        {
+          serviceName,
+          id,
+        },
+      )
 
-      this.store.fetchIncomingAccessRequests()
+      this.incomingAccessRequestStore.fetchForService({
+        name: serviceName,
+      })
     } catch (e) {
       this.error = e.message
     }

@@ -20,7 +20,7 @@ class AccessRequestRepository {
     return await response.json()
   }
 
-  static async listIncomingAccessRequests(serviceName) {
+  static async fetchByServiceName(serviceName) {
     const response = await fetch(
       `/api/v1/access-requests/incoming/services/${serviceName}`,
     )

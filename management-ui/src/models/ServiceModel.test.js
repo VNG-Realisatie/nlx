@@ -4,6 +4,7 @@
 import { checkPropTypes } from 'prop-types'
 
 import ServicesStore from '../stores/ServicesStore'
+import IncomingAccessRequestModel from './IncomingAccessRequestModel'
 import ServiceModel, { serviceModelPropTypes } from './ServiceModel'
 
 let store
@@ -67,14 +68,27 @@ test('(re-)fetching the model should call fetch on store', async () => {
   expect(servicesStoreFetchSpy).toHaveBeenCalledWith(serviceModel)
 })
 
-test('fetching incoming access requests', () => {
-  const mockGetForService = jest.fn(() => [])
+test('get related incoming access requests', () => {
+  const getForService = jest.fn(() => [
+    new IncomingAccessRequestModel({
+      accessRequestData: {
+        id: '1',
+        state: 'REJECTED',
+      },
+    }),
+    new IncomingAccessRequestModel({
+      accessRequestData: {
+        id: '2',
+        state: 'RECEIVED',
+      },
+    }),
+  ])
 
   const servicesStore = new ServicesStore({
     serviceRepository: {},
     rootStore: {
       incomingAccessRequestsStore: {
-        getForService: mockGetForService,
+        getForService,
       },
     },
   })
@@ -84,8 +98,16 @@ test('fetching incoming access requests', () => {
     serviceData,
   })
 
-  expect(serviceModel.incomingAccessRequests).toEqual([])
-  expect(mockGetForService).toHaveBeenCalledWith(serviceModel)
+  const incomingAccessRequests = serviceModel.incomingAccessRequests
+
+  expect(getForService).toHaveBeenCalledWith(serviceModel)
+  expect(incomingAccessRequests).toHaveLength(1)
+  expect(incomingAccessRequests[0]).toEqual(
+    expect.objectContaining({
+      id: '2',
+      state: 'RECEIVED',
+    }),
+  )
 })
 
 // test.only('fetching access grants', async () => {

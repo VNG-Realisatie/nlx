@@ -9,34 +9,26 @@ import IncomingAccessRequestModel, {
   incomingAccessRequestPropTypes,
 } from './IncomingAccessRequestModel'
 
-let store
+let incomingAccessRequestStore
 let accessRequestData
-let accessRequestRepository
 
 beforeEach(() => {
-  store = {
-    fetchIncomingAccessRequests: jest.fn(),
-  }
+  incomingAccessRequestStore = {}
 
   accessRequestData = {
     id: '1a2B',
     organizationName: 'Organization A',
     serviceName: 'Servicio',
     state: 'RECEIVED',
-    createdAt: '2020-08-25T13:30:43.480155Z',
-    updatedAt: '2020-08-25T13:30:43.480155Z',
-  }
-
-  accessRequestRepository = {
-    approveIncomingAccessRequest: jest.fn(),
+    createdAt: '2020-10-01T12:00:00Z',
+    updatedAt: '2020-10-01T12:00:01Z',
   }
 })
 
 test('createIncomingAccessRequest returns an instance', () => {
   const directoryService = createIncomingAccessRequest({
-    store,
+    incomingAccessRequestStore,
     accessRequestData,
-    accessRequestRepository,
   })
 
   expect(directoryService).toBeInstanceOf(IncomingAccessRequestModel)
@@ -45,8 +37,7 @@ test('createIncomingAccessRequest returns an instance', () => {
 test('model implements proptypes', () => {
   const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
   const accessRequest = new IncomingAccessRequestModel({
-    json: accessRequestData,
-    accessRequestRepository,
+    accessRequestData,
   })
 
   checkPropTypes(
@@ -62,54 +53,94 @@ test('model implements proptypes', () => {
 
 test('approving request handles as expected', async () => {
   const request = deferredPromise()
-  accessRequestRepository = {
-    approveIncomingAccessRequest: jest.fn(() => request),
+  const approveIncomingAccessRequest = jest.fn(() => request)
+
+  incomingAccessRequestStore = {
+    accessRequestRepository: {
+      approveIncomingAccessRequest,
+    },
+    fetchForService: jest.fn(),
   }
 
   const accessRequest = new IncomingAccessRequestModel({
-    store,
+    incomingAccessRequestStore,
     accessRequestData,
-    accessRequestRepository,
   })
 
   accessRequest.approve()
   await request.resolve()
 
-  expect(store.fetchIncomingAccessRequests).toHaveBeenCalled()
+  expect(approveIncomingAccessRequest).toHaveBeenCalled()
+  expect(incomingAccessRequestStore.fetchForService).toHaveBeenCalled()
 })
 
 test('rejecting request handles as expected', async () => {
   const request = deferredPromise()
-  accessRequestRepository = {
-    rejectIncomingAccessRequest: jest.fn(() => request),
+  const rejectIncomingAccessRequest = jest.fn(() => request)
+
+  incomingAccessRequestStore = {
+    accessRequestRepository: {
+      rejectIncomingAccessRequest,
+    },
+    fetchForService: jest.fn(),
   }
 
   const accessRequest = new IncomingAccessRequestModel({
-    store,
+    incomingAccessRequestStore,
     accessRequestData,
-    accessRequestRepository,
   })
 
   accessRequest.reject()
   await request.resolve()
 
-  expect(store.fetchIncomingAccessRequests).toHaveBeenCalled()
+  expect(rejectIncomingAccessRequest).toHaveBeenCalled()
+  expect(incomingAccessRequestStore.fetchForService).toHaveBeenCalled()
 })
 
-test('on error it will reset state to RECEIVED', async () => {
-  accessRequestRepository = {
-    approveIncomingAccessRequest: jest
-      .fn()
-      .mockRejectedValue(new Error('arbitrary error')),
+test('set an error', async () => {
+  const approveIncomingAccessRequest = jest
+    .fn()
+    .mockRejectedValue(new Error('arbitrary error'))
+  const rejectIncomingAccessRequest = jest
+    .fn()
+    .mockRejectedValue(new Error('arbitrary error'))
+
+  incomingAccessRequestStore = {
+    accessRequestRepository: {
+      approveIncomingAccessRequest,
+      rejectIncomingAccessRequest,
+    },
   }
 
   const accessRequest = new IncomingAccessRequestModel({
-    store,
+    incomingAccessRequestStore,
     accessRequestData,
-    accessRequestRepository,
   })
 
   await accessRequest.approve()
-
   expect(accessRequest.error).toEqual('arbitrary error')
+
+  accessRequest.error = ''
+
+  await accessRequest.reject()
+  expect(accessRequest.error).toEqual('arbitrary error')
+})
+
+test('returns proper isResolved value', () => {
+  const accessRequest = new IncomingAccessRequestModel({
+    accessRequestData,
+  })
+  expect(accessRequest.isResolved).toBe(false)
+
+  accessRequest.update({ state: 'RECEIVED' })
+  expect(accessRequest.isResolved).toBe(false)
+
+  accessRequest.update({ state: 'FAILED' })
+  expect(accessRequest.isResolved).toBe(true)
+
+  accessRequest.update({ state: 'ACCEPTED' })
+  expect(accessRequest.isResolved).toBe(true)
+
+  accessRequest.update({ state: 'REJECTED' })
+  expect(accessRequest.isResolved).toBe(true)
 })

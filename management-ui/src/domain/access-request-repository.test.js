@@ -63,7 +63,7 @@ describe('list incoming access requests', () => {
       json: () => Promise.resolve([]),
     })
 
-    const result = await AccessRequestRepository.listIncomingAccessRequests(
+    const result = await AccessRequestRepository.fetchByServiceName(
       'service-name',
     )
 

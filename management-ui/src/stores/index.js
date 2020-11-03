@@ -38,7 +38,6 @@ export class RootStore {
     this.accessProofStore = new AccessProofStore()
     this.servicesStore = new ServicesStore({ rootStore: this })
     this.incomingAccessRequestsStore = new IncomingAccessRequestsStore({
-      rootStore: this,
       accessRequestRepository,
     })
     this.inwaysStore = new InwaysStore({ rootStore: this })

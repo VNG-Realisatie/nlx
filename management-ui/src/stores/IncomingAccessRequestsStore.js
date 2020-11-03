@@ -8,17 +8,15 @@ import IncomingAccessRequestModel from '../models/IncomingAccessRequestModel'
 class IncomingAccessRequestsStore {
   incomingAccessRequests = observable.map()
 
-  constructor({
-    rootStore,
-    accessRequestRepository = AccessRequestRepository,
-  }) {
+  constructor({ accessRequestRepository = AccessRequestRepository }) {
     makeAutoObservable(this)
 
-    this.rootStore = rootStore
     this.accessRequestRepository = accessRequestRepository
   }
 
   updateFromServer = (incomingAccessRequestData) => {
+    if (!incomingAccessRequestData) return null
+
     const cachedIncomingAccessRequest = this.incomingAccessRequests.get(
       incomingAccessRequestData.id,
     )
@@ -29,6 +27,7 @@ class IncomingAccessRequestsStore {
     }
 
     const incomingAccessRequest = new IncomingAccessRequestModel({
+      incomingAccessRequestStore: this,
       accessRequestData: incomingAccessRequestData,
     })
 
@@ -41,15 +40,11 @@ class IncomingAccessRequestsStore {
   }
 
   fetchForService = flow(function* fetchForService(serviceModel) {
-    const response = yield this.accessRequestRepository.listIncomingAccessRequests(
+    const response = yield this.accessRequestRepository.fetchByServiceName(
       serviceModel.name,
     )
 
-    const incomingAccessRequestModels = response.map((accessRequest) =>
-      this.updateFromServer(accessRequest),
-    )
-
-    yield incomingAccessRequestModels
+    response.map((accessRequest) => this.updateFromServer(accessRequest))
   }).bind(this)
 
   getForService = (serviceModel) => {

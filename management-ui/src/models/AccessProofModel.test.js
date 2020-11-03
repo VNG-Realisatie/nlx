@@ -21,7 +21,6 @@ test('should properly construct object', () => {
   expect(accessProof.id).toBe(accessProofData.id)
   expect(accessProof.organizationName).toBe(accessProofData.organizationName)
   expect(accessProof.serviceName).toBe(accessProofData.serviceName)
-  expect(accessProof.state).toBe(accessProofData.state)
   expect(accessProof.createdAt).toEqual(new Date(accessProofData.createdAt))
   expect(accessProof.revokedAt).toEqual(accessProofData.revokedAt)
 })

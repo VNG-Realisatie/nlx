@@ -37,9 +37,13 @@ class ServiceModel {
   }
 
   get incomingAccessRequests() {
-    return this.servicesStore.rootStore.incomingAccessRequestsStore.getForService(
+    const allIncomingAccessRequests = this.servicesStore.rootStore.incomingAccessRequestsStore.getForService(
       this,
     )
+    return allIncomingAccessRequests.filter(
+      (accessRequest) => !accessRequest.isResolved,
+    )
+  }
   }
 
   fetch = async () => {
