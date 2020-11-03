@@ -11,6 +11,7 @@ import { StoreProvider } from '../../../stores'
 import { mockServicesStore } from '../../../stores/ServicesStore.mock'
 import ServiceDetailPage from './index'
 
+// eslint-disable-next-line react/prop-types
 jest.mock('./ServiceDetailView', () => ({ removeHandler }) => (
   <div data-testid="service-details">
     <button type="button" onClick={removeHandler}>

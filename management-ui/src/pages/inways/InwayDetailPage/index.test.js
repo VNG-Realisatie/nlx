@@ -10,9 +10,11 @@ import { mockInwaysStore } from '../../../stores/InwaysStore.mock'
 import { StoreProvider } from '../../../stores'
 import InwayDetailPage from './index'
 
+/* eslint-disable react/prop-types */
 jest.mock('./InwayDetailPageView', () => ({ inway }) => (
   <div data-testid="inway-details">{inway.name}</div>
 ))
+/* eslint-enable react/prop-types */
 
 test('display inway details', () => {
   const store = mockInwaysStore({})

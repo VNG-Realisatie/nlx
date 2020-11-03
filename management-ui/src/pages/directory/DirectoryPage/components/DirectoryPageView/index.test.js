@@ -5,6 +5,7 @@ import React from 'react'
 import { renderWithProviders } from '../../../../../test-utils'
 import DirectoryServices from './index'
 
+// eslint-disable-next-line react/prop-types
 jest.mock('../DirectoryServiceRow', () => ({ organizationName }) => (
   <tr data-testid="testrow">
     <td>{organizationName}</td>

@@ -7,7 +7,7 @@ import { Route, StaticRouter as Router } from 'react-router-dom'
 import { renderWithProviders } from '../../../test-utils'
 import DirectoryDetailPage from './index'
 
-jest.mock('./components/DirectoryDetailView', () => ({ service }) => (
+jest.mock('./components/DirectoryDetailView', () => () => (
   <div data-testid="directory-service-details" />
 ))
 

@@ -16,6 +16,7 @@ import DirectoryPage from './index'
 jest.mock('../../../components/OrganizationName', () => () => null)
 
 // Simplify showing of the services. We'll only require the serviceName.
+/* eslint-disable react/prop-types */
 jest.mock('./components/DirectoryPageView', () => ({ services }) => {
   return (
     <div data-testid="mock-directory-services">
@@ -27,10 +28,13 @@ jest.mock('./components/DirectoryPageView', () => ({ services }) => {
     </div>
   )
 })
+/* eslint-enable react/prop-types */
 
+/* eslint-disable react/prop-types */
 jest.mock('../DirectoryDetailPage', () => ({ service }) => (
   <div data-testid="mock-directory-service">{service.serviceName}</div>
 ))
+/* eslint-enable react/prop-types */
 
 const renderDirectory = (store) =>
   renderWithProviders(
