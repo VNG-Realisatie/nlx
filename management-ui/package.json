@@ -19,7 +19,7 @@
     "react-dom": "16.14.0",
     "react-i18next": "11.7.3",
     "react-router-dom": "5.2.0",
-    "react-scripts": "3.4.4",
+    "react-scripts": "4.0.0",
     "react-test-renderer": "16.14.0",
     "react-transition-group": "4.4.1",
     "serializr": "2.0.3",
@@ -51,6 +51,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "jest": {
+    "resetMocks": false
   },
   "devDependencies": {
     "@commonground/eslint-config-cra-standard-prettier": "5.0.0",
