@@ -11,3 +11,8 @@ export const StyledAlert = styled(Alert)`
 export const AccessMessage = styled.p`
   font-size: ${(p) => p.theme.tokens.fontSizeSmall};
 `
+
+export const StyledPre = styled.pre`
+  white-space: pre-wrap;
+  font-size: ${(p) => p.theme.tokens.fontSizeSmall};
+`

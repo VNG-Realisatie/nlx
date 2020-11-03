@@ -5,7 +5,10 @@ import React from 'react'
 import { shape, string } from 'prop-types'
 import { observer } from 'mobx-react'
 import { useParams, useHistory } from 'react-router-dom'
-import { Alert, Drawer } from '@commonground/design-system'
+import { Alert } from '@commonground/design-system'
+import Drawer, {
+  withDrawerStackProvider,
+} from '@commonground/design-system/dist/components/Drawer'
 import { useTranslation } from 'react-i18next'
 
 import { directoryServicePropTypes } from '../../../models/DirectoryServiceModel'
@@ -55,4 +58,4 @@ DirectoryDetailPage.defaultProps = {
   parentUrl: '/directory',
 }
 
-export default observer(DirectoryDetailPage)
+export default observer(withDrawerStackProvider(DirectoryDetailPage))

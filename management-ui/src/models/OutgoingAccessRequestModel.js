@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import { flow, makeAutoObservable } from 'mobx'
-import { func, string, instanceOf } from 'prop-types'
+import { func, object, string, instanceOf } from 'prop-types'
 
 export const ACCESS_REQUEST_STATES = {
   CREATED: 'CREATED',
@@ -21,6 +21,7 @@ export const outgoingAccessRequestPropTypes = {
   createdAt: instanceOf(Date),
   updatedAt: instanceOf(Date),
   error: string,
+  errorDetails: object,
 
   retry: func,
 }
@@ -70,6 +71,10 @@ class OutgoingAccessRequestModel {
 
     if (accessRequestData.updatedAt) {
       this.updatedAt = new Date(accessRequestData.updatedAt)
+    }
+
+    if (accessRequestData.errorDetails) {
+      this.errorDetails = accessRequestData.errorDetails
     }
   }
 
