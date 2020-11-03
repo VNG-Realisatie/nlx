@@ -96,7 +96,8 @@ services:
   management-ui:
     image: "${IMAGE_PREFIX}nlxio/management-ui:${IMAGE_TAG}"
     build:
-      context: management-ui
+      context: .
+      dockerfile: management-ui/Dockerfile
       args:
         GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
         GIT_TAG_NAME: "${GIT_TAG_NAME}"

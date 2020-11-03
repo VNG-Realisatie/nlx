@@ -1,3 +1,4 @@
+{{- $fullName := include "nlx-management.fullname" . -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -36,14 +37,21 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
+              host: 127.0.0.1
               path: /
               port: http
           readinessProbe:
             httpGet:
+              host: 127.0.0.1
               path: /
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: LISTEN_ADDRESS
+              value: 127.0.0.1:8080
+            - name: MANAGEMENT_API_ADDRESS
+              value: http://{{ $fullName }}-api
     {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

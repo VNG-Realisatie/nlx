@@ -1,4 +1,4 @@
-FROM node:12.18.3-alpine AS build
+FROM node:12.18.3-alpine AS node-build
 
 RUN apk add --no-cache --update git jq
 RUN apk add --no-cache python3 make g++
@@ -6,50 +6,57 @@ RUN apk add --no-cache python3 make g++
 ENV CI=true
 
 # Only copy package.json and package-lock.json so we can use Docker's caching mechanism.
-COPY package.json \
-    package-lock.json \
+COPY management-ui/package.json \
+    management-ui/package-lock.json \
     /go/src/go.nlx.io/nlx/management-ui/
 
 WORKDIR /go/src/go.nlx.io/nlx/management-ui
+
 RUN npm ci --no-progress --color=false --quiet
 
 # Now copy the whole workdir for the build step.
-COPY . /go/src/go.nlx.io/nlx/management-ui
+COPY management-ui /go/src/go.nlx.io/nlx/management-ui
 
 RUN npm run build
 
-# Create version.json
-FROM alpine:3.12 AS version
+# Use go 1.x based on alpine image.
+FROM golang:1.15.3-alpine AS go-build
 
-RUN apk add --update jq
+# Install build tools.
+RUN apk add --update git gcc musl-dev
+
+# Cache dependencies
+COPY go.mod /go/src/go.nlx.io/nlx/go.mod
+COPY go.sum /go/src/go.nlx.io/nlx/go.sum
+ENV GO111MODULE on
+WORKDIR /go/src/go.nlx.io/nlx
+RUN go mod download
+
+# Only add code that we use for building directory
+COPY management-ui  /go/src/go.nlx.io/nlx/management-ui
+COPY common  /go/src/go.nlx.io/nlx/common
+
+WORKDIR /go/src/go.nlx.io/nlx/management-ui
 
 ARG GIT_TAG_NAME=undefined
 ARG GIT_COMMIT_HASH=undefined
-RUN jq -ncM --arg tag $GIT_TAG_NAME --arg commit $GIT_COMMIT_HASH  '{tag: $tag, commit: $commit}' | tee /version.json
 
-# Copy static docs to alpine-based nginx container.
-FROM nginx:alpine
+RUN go build \
+        -ldflags="-X 'go.nlx.io/nlx/common/version.BuildSourceHash=$GIT_COMMIT_HASH' -X 'go.nlx.io/nlx/common/version.BuildVersion=$GIT_TAG_NAME'" \
+        -o dist/bin/nlx-management-ui ./cmd/nlx-management-ui
 
-# Copy nginx configuration
-COPY docker/nginx.conf /etc/nginx/nginx.conf
-COPY docker/*.template /etc/nginx/templates/
-COPY docker/entrypoint.sh /entrypoint.sh
+# Release binary on latest alpine image.
+FROM alpine:3.12.1
+
+COPY --from=go-build /go/src/go.nlx.io/nlx/management-ui/dist/bin/nlx-management-ui /usr/local/bin/nlx-management-ui
+COPY --from=node-build /go/src/go.nlx.io/nlx/management-ui/build /app/public
+
+WORKDIR /app
 
 # Add non-privileged user
-RUN adduser -D -u 1001 appuser
-
-# Set ownership nginx.pid and cache folder in order to run nginx as non-root user
-RUN touch /var/run/nginx.pid && \
-    touch /etc/nginx/conf.d/default.conf && \
-    chown -R appuser /var/run/nginx.pid && \
-    chown -R appuser /var/cache/nginx && \
-    chown -R appuser /usr/share/nginx/html && \
-    chown -R appuser /etc/nginx/conf.d/ && \
-    chmod +x /entrypoint.sh
-
-COPY --from=build /go/src/go.nlx.io/nlx/management-ui/build /usr/share/nginx/html
-COPY --from=version /version.json /usr/share/nginx/html
+RUN adduser -D -u 1001 appuser && \
+    chown -R 1001 /app
 
 USER appuser
 
-ENTRYPOINT /entrypoint.sh
+CMD ["/usr/local/bin/nlx-management-ui"]

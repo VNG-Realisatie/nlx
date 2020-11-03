@@ -66,7 +66,7 @@ service:
   type: ClusterIP
   apiPort: 80
   apiConfigPort: 443
-  uiPort: 80
+  uiPort: 8080
 
 ingress:
   enabled: false

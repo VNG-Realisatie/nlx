@@ -28,8 +28,8 @@ services:
     links:
       - api:management-api.organization-a.nlx.local
     environment:
-      OIDC_BASE_URL: http://localhost:8080/oidc
-      MANAGEMENT_API_BASE_URL: http://management-api.organization-a.nlx.local:8080
+      LISTEN_ADDRESS: 0.0.0.0:8080
+      MANAGEMENT_API_ADDRESS: http://management-api.organization-a.nlx.local:8080
 
   dex:
     image: quay.io/dexidp/dex:v2.25.0

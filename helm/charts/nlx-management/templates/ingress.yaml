@@ -35,13 +35,5 @@ spec:
             backend:
               serviceName: {{ $fullName }}-ui
               servicePort: http
-          - path: /api
-            backend:
-              serviceName: {{ $fullName }}-api
-              servicePort: http
-          - path: /oidc
-            backend:
-              serviceName: {{ $fullName }}-api
-              servicePort: http
   {{- end }}
 {{- end -}}

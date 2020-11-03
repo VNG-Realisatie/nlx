@@ -106,7 +106,7 @@ import TabItem from '@theme/TabItem';
 
 #### Environment variables
 
-- `MANAGEMENT_API_BASE_URL` Address of the Management API.
+- `MANAGEMENT_API_ADDRESS` Address of the Management API.
 
 </TabItem>
 </Tabs>
@@ -156,10 +156,32 @@ Add-Content -Path C:\Windows\System32\drivers\etc\hosts -Value "127.0.0.1`tdex.n
 
 Now let's verify that the local hostname for Dex points to the host:
 
+<Tabs
+  defaultValue="mac_os"
+  values={[
+    { label: 'MacOS', value: 'mac_os', },
+    { label: 'Linx/Windows', value: 'linux_windows', },
+  ]}
+>
+<TabItem value="linux_windows">
+
 ```bash
 ping dex.nlx.localhost -4 -c 1
+```
 
-# Successfull output:
+</TabItem>
+
+<TabItem value="mac_os">
+
+```bash
+ping dex.nlx.localhost -c 1
+```
+
+</TabItem>
+</Tabs>
+
+The output should be:
+```bash
 #
 # PING dex.nlx.localhost (127.0.0.1) 56(84) bytes of data.
 # 64 bytes from localhost (127.0.0.1): icmp_seq=1 ttl=64 time=0.026 ms
@@ -168,7 +190,6 @@ ping dex.nlx.localhost -4 -c 1
 # 1 packets transmitted, 1 received, 0% packet loss, time 0ms
 # rtt min/avg/max/mdev = 0.026/0.026/0.026/0.000 ms
 ```
-
 
 ## Access the Management UI
 
