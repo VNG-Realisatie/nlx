@@ -23,7 +23,7 @@ describe('getting access grants per service', () => {
       json: () => Promise.resolve({ accessGrants }),
     })
 
-    const result = await AccessGrantRepository.getByServiceName('service')
+    const result = await AccessGrantRepository.fetchByServiceName('service')
 
     expect(result).toEqual(accessGrants)
     expect(global.fetch).toHaveBeenCalledWith(
@@ -38,7 +38,7 @@ describe('getting access grants per service', () => {
       json: () => Promise.resolve({}),
     })
 
-    const result = await AccessGrantRepository.getByServiceName('service')
+    const result = await AccessGrantRepository.fetchByServiceName('service')
 
     expect(result).toEqual([])
   })

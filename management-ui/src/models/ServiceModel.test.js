@@ -5,6 +5,7 @@ import { checkPropTypes } from 'prop-types'
 
 import ServicesStore from '../stores/ServicesStore'
 import IncomingAccessRequestModel from './IncomingAccessRequestModel'
+import AccessGrantModel from './AccessGrantModel'
 import ServiceModel, { serviceModelPropTypes } from './ServiceModel'
 
 let store
@@ -110,19 +111,46 @@ test('get related incoming access requests', () => {
   )
 })
 
-// test.only('fetching access grants', async () => {
-//   const request = deferredPromise()
-//   store = {
-//     accessGrantRepository: {
-//       getByServiceName: jest.fn(() => request),
-//     },
-//   }
+test('get related access grants', async () => {
+  const getForService = jest.fn(() => [
+    new AccessGrantModel({
+      accessGrantData: {
+        id: '1',
+        createdAt: '2020-10-01',
+        revokedAt: null,
+      },
+    }),
+    new AccessGrantModel({
+      accessGrantData: {
+        id: '2',
+        createdAt: '2020-10-01',
+        revokedAt: '2020-10-02',
+      },
+    }),
+  ])
 
-//   const serviceModel = new ServiceModel({ store, serviceData })
-//   serviceModel.fetchAccessGrants()
+  const servicesStore = new ServicesStore({
+    serviceRepository: {},
+    rootStore: {
+      accessGrantStore: {
+        getForService,
+      },
+    },
+  })
 
-//   await request.resolve([{ id: 'somegrant' }])
+  const serviceModel = new ServiceModel({
+    servicesStore,
+    serviceData,
+  })
 
-//   expect(store.accessGrantRepository.getByServiceName).toHaveBeenCalled()
-//   expect(serviceModel.accessGrants).toEqual([{ id: 'somegrant' }])
-// })
+  const accessGrants = serviceModel.accessGrants
+
+  expect(getForService).toHaveBeenCalledWith(serviceModel)
+  expect(accessGrants).toHaveLength(1)
+  expect(accessGrants[0]).toEqual(
+    expect.objectContaining({
+      id: '1',
+      revokedAt: null,
+    }),
+  )
+})

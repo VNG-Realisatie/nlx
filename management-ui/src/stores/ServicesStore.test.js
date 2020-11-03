@@ -18,7 +18,9 @@ test('fetch a single service', async () => {
     incomingAccessRequestsStore: {
       fetchForService: jest.fn(),
     },
-    // accessGrantRepository: {},
+    accessGrantStore: {
+      fetchForService: jest.fn(),
+    },
   }
 
   serviceRepository = {
@@ -41,6 +43,7 @@ test('fetch a single service', async () => {
   expect(
     rootStore.incomingAccessRequestsStore.fetchForService,
   ).toHaveBeenCalled()
+  expect(rootStore.accessGrantStore.fetchForService).toHaveBeenCalled()
 })
 
 test('fetching services', async () => {

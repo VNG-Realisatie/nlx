@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { makeAutoObservable, flow } from 'mobx'
+import { makeAutoObservable } from 'mobx'
 import { arrayOf, bool, func, string } from 'prop-types'
 import { createModelSchema, list, primitive } from 'serializr'
 
@@ -26,7 +26,6 @@ class ServiceModel {
   techSupportContact = ''
   publicSupportContact = ''
   inways = []
-  accessGrants = []
 
   constructor({ servicesStore, serviceData }) {
     makeAutoObservable(this)
@@ -44,6 +43,14 @@ class ServiceModel {
       (accessRequest) => !accessRequest.isResolved,
     )
   }
+
+  get accessGrants() {
+    const allAccessGrants = this.servicesStore.rootStore.accessGrantStore.getForService(
+      this,
+    )
+    return allAccessGrants.filter(
+      (accessGrant) => accessGrant.revokedAt === null,
+    )
   }
 
   fetch = async () => {
@@ -79,14 +86,6 @@ class ServiceModel {
       this.inways = service.inways
     }
   }
-
-  // TODO: implement accessGrantStore & update this method to use the accessGrantStore
-  fetchAccessGrants = flow(function* fetchAccessGrants() {
-    return yield []
-    // this.accessGrants = yield this.servicesStore.accessGrantRepository.getByServiceName(
-    //   this.name,
-    // )
-  }).bind(this)
 }
 
 export const ServiceModelSchema = createModelSchema(ServiceModel, {

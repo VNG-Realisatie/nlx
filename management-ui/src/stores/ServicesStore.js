@@ -41,6 +41,7 @@ class ServicesStore {
     }
 
     yield this.rootStore.incomingAccessRequestsStore.fetchForService(service)
+    yield this.rootStore.accessGrantStore.fetchForService(service)
   }).bind(this)
 
   fetchAll = flow(function* fetchAll() {

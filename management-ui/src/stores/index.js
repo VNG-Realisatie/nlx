@@ -6,9 +6,11 @@ import { configure } from 'mobx'
 import { node, object } from 'prop-types'
 
 import AccessRequestRepository from '../domain/access-request-repository'
+import AccessGrantRepository from '../domain/access-grant-repository'
 import DirectoryRepository from '../domain/directory-repository'
 import DirectoryServicesStore from './DirectoryServicesStore'
 import OutgoingAccessRequestStore from './OutgoingAccessRequestStore'
+import AccessGrantStore from './AccessGrantStore'
 import AccessProofStore from './AccessProofStore'
 import ServicesStore from './ServicesStore'
 import IncomingAccessRequestsStore from './IncomingAccessRequestsStore'
@@ -25,6 +27,7 @@ export const storesContext = createContext(null)
 export class RootStore {
   constructor({
     accessRequestRepository = AccessRequestRepository,
+    accessGrantRepository = AccessGrantRepository,
     directoryRepository = DirectoryRepository,
   } = {}) {
     this.directoryServicesStore = new DirectoryServicesStore({
@@ -35,6 +38,7 @@ export class RootStore {
       rootStore: this,
       accessRequestRepository,
     })
+    this.accessGrantStore = new AccessGrantStore({ accessGrantRepository })
     this.accessProofStore = new AccessProofStore()
     this.servicesStore = new ServicesStore({ rootStore: this })
     this.incomingAccessRequestsStore = new IncomingAccessRequestsStore({

@@ -4,7 +4,7 @@
 import { throwOnError } from './fetch-utils'
 
 class AccessGrantRepository {
-  static async getByServiceName(serviceName) {
+  static async fetchByServiceName(serviceName) {
     const response = await fetch(
       `/api/v1/access-grants/services/${serviceName}`,
     )
