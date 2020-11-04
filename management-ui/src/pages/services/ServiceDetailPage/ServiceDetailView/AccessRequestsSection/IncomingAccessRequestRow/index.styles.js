@@ -9,7 +9,6 @@ export const TdActions = styled(Table.Td)`
   text-align: right;
   vertical-align: top;
   width: 140px;
-  vertical-algin: top;
 `
 
 export const StyledButtonWithIcon = styled(ButtonWithIcon)`
