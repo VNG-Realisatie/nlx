@@ -3,9 +3,11 @@
 //
 import AccessGrantModel from './AccessGrantModel'
 
+let accessGrantStore
 let accessGrantData
 
 beforeEach(() => {
+  accessGrantStore = {}
   accessGrantData = {
     id: 'abcd',
     organizationName: 'Organization',
@@ -17,7 +19,10 @@ beforeEach(() => {
 })
 
 test('should properly construct object', () => {
-  const accessProof = new AccessGrantModel({ accessGrantData })
+  const accessProof = new AccessGrantModel({
+    accessGrantStore,
+    accessGrantData,
+  })
 
   expect(accessProof.id).toBe(accessGrantData.id)
   expect(accessProof.organizationName).toBe(accessGrantData.organizationName)
@@ -27,4 +32,22 @@ test('should properly construct object', () => {
   )
   expect(accessProof.createdAt).toEqual(new Date(accessGrantData.createdAt))
   expect(accessProof.revokedAt).toEqual(accessGrantData.revokedAt)
+})
+
+test('rejecting request handles as expected', async () => {
+  const revokeAccessGrant = jest.fn().mockResolvedValue(null)
+
+  accessGrantStore = {
+    revokeAccessGrant,
+    fetchForService: jest.fn(),
+  }
+
+  const accessGrant = new AccessGrantModel({
+    accessGrantStore,
+    accessGrantData,
+  })
+
+  accessGrant.revoke()
+
+  expect(revokeAccessGrant).toHaveBeenCalled()
 })

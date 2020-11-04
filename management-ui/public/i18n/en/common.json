@@ -1,6 +1,5 @@
 {
   "Access": "Access",
-  "Access has already been revoked, please refresh the page to see the latest state": "Access has already been revoked, please refresh the page to see the latest state.",
   "Access request": "Access request",
   "Access request approved": "Access request approved",
   "Access request rejected": "Access request rejected",
@@ -42,6 +41,7 @@
   "Failed to load the services.": "Failed to load the services.",
   "Failed to load the settings.": "Failed to load the settings.",
   "Failed to reject access request": "Failed to reject access request",
+  "Failed to revoke access grant": "Failed to revoke access grant",
   "Failed to update the service.": "Failed to update the service.",
   "Failed to update the settings.": "Failed to update the settings.",
   "Gateways to provide services.": "Gateways to provide services.",

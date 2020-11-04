@@ -120,7 +120,7 @@ test('initializing the model with an invalid access proof', () => {
   expect(() => directoryService.update({}, null, 'invalid')).toThrow()
 })
 
-test('(re-)fetching the model (integration test)', async () => {
+test('(re-)fetching the model', async () => {
   const rootStore = new RootStore({
     directoryRepository: {
       getByName: jest.fn().mockResolvedValue({
@@ -155,7 +155,7 @@ test('(re-)fetching the model (integration test)', async () => {
   expect(directoryServicesStoreFetchSpy).toHaveBeenCalledWith(directoryService)
 })
 
-describe('requesting access to a service (integration tests)', () => {
+describe('requesting access to a service', () => {
   it('should not create a new access request an access request is already created', async () => {
     const rootStore = new RootStore({
       accessRequestRepository: {

@@ -56,7 +56,7 @@ describe('revoking an access grant', () => {
     const result = await AccessGrantRepository.revokeAccessGrant({
       organizationName: 'organization-name',
       serviceName: 'service-name',
-      accessGrantId: 'access-grant-id',
+      id: 'access-grant-id',
     })
 
     expect(global.fetch).toHaveBeenCalledWith(
@@ -84,7 +84,7 @@ describe('revoking an access grant', () => {
       AccessGrantRepository.revokeAccessGrant({
         organizationName: 'organization-name',
         serviceName: 'service-name',
-        accessGrantId: 'access-grant-id',
+        id: 'access-grant-id',
       }),
     ).rejects.toThrowError(/^Access has already been revoked\.$/)
 

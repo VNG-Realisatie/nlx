@@ -1,6 +1,5 @@
 {
   "Access": "Toegang",
-  "Access has already been revoked, please refresh the page to see the latest state": "Het toegangsverzoek is reeds ingetrokken. Ververs de pagina om de laatste status te zien.",
   "Access request": "Verzoek tot toegang",
   "Access request approved": "Toegangsverzoek goedgekeurd",
   "Access request rejected": "Toegangsverzoek afgewezen",
@@ -42,6 +41,7 @@
   "Failed to load the services.": "De services konden niet worden opgehaald.",
   "Failed to load the settings.": "De instellingen konden niet worden opgehaald.",
   "Failed to reject access request": "Fout bij het weigeren van het toegangsverzoek",
+  "Failed to revoke access grant": "Fout bij het intrekken van toegang",
   "Failed to update the service.": "De service kan niet worden bijgewerkt.",
   "Failed to update the settings.": "De instellingen konden niet worden bijgewerkt.",
   "Gateways to provide services.": "Gateways om services aan te bieden.",

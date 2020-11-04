@@ -2,64 +2,39 @@
 // Licensed under the EUPL
 //
 import React, { useContext } from 'react'
-import { array, func } from 'prop-types'
+import { array } from 'prop-types'
 import { Collapsible, Table, ToasterContext } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
-import ButtonWithIcon from '../../../../../components/ButtonWithIcon'
+
 import {
   DetailHeading,
   StyledCollapsibleBody,
   StyledCollapsibleEmptyBody,
 } from '../../../../../components/DetailView'
 import Amount from '../../../../../components/Amount'
-import { IconCheckboxMultiple, IconRevoke } from '../../../../../icons'
-import AccessGrantRepository from '../../../../../domain/access-grant-repository'
-import { TdActions } from './index.styles'
+import { IconCheckboxMultiple } from '../../../../../icons'
+import AccessGrantRow from './AccessGrantRow'
 
-const AccessGrantSection = ({ accessGrants, revokeAccessGrantHandler }) => {
+const AccessGrantSection = ({ accessGrants }) => {
   const { t } = useTranslation()
   const { showToast } = useContext(ToasterContext)
 
-  const handleRevokeGrantOnClick = async (event, accessGrant) => {
-    event.preventDefault()
+  const revokeHandler = async (accessGrant) => {
+    await accessGrant.revoke()
 
-    const confirmed = window.confirm(
-      t(
-        'Access will be revoked for the serviceName service from organizationName',
-        {
-          organizationName: accessGrant.organizationName,
-          serviceName: accessGrant.serviceName,
-        },
-      ),
-    )
-
-    if (!confirmed) {
-      return
-    }
-
-    try {
-      await revokeAccessGrant(accessGrant)
-    } catch (error) {
+    if (!accessGrant.error) {
       showToast({
-        title: t(
-          'Access has already been revoked, please refresh the page to see the latest state',
-        ),
+        title: t('Access revoked'),
+        variant: 'success',
+      })
+    } else {
+      showToast({
+        title: t('Failed to revoke access grant'),
+        body: t('Please try again'),
         variant: 'error',
       })
+      console.error(accessGrant.error)
     }
-  }
-
-  const revokeAccessGrant = async (accessGrant) => {
-    await revokeAccessGrantHandler({
-      organizationName: accessGrant.organizationName,
-      serviceName: accessGrant.serviceName,
-      accessGrantId: accessGrant.id,
-    })
-
-    showToast({
-      title: t('Access revoked'),
-      variant: 'success',
-    })
   }
 
   return (
@@ -78,22 +53,11 @@ const AccessGrantSection = ({ accessGrants, revokeAccessGrantHandler }) => {
           <tbody>
             {accessGrants.length ? (
               accessGrants.map((accessGrant) => (
-                <Table.Tr
-                  data-testid="service-accessgrants"
+                <AccessGrantRow
                   key={accessGrant.id}
-                >
-                  <Table.Td>{accessGrant.organizationName}</Table.Td>
-                  <TdActions>
-                    <ButtonWithIcon
-                      size="small"
-                      variant="link"
-                      onClick={(e) => handleRevokeGrantOnClick(e, accessGrant)}
-                    >
-                      <IconRevoke />
-                      {t('Revoke')}
-                    </ButtonWithIcon>
-                  </TdActions>
-                </Table.Tr>
+                  accessGrant={accessGrant}
+                  revokeHandler={revokeHandler}
+                />
               ))
             ) : (
               <Table.Tr data-testid="service-no-accessgrants">
@@ -113,11 +77,9 @@ const AccessGrantSection = ({ accessGrants, revokeAccessGrantHandler }) => {
 
 AccessGrantSection.propTypes = {
   accessGrants: array,
-  revokeAccessGrantHandler: func,
 }
 AccessGrantSection.defaultProps = {
   accessGrants: [],
-  revokeAccessGrantHandler: AccessGrantRepository.revokeAccessGrant,
 }
 
 export default AccessGrantSection

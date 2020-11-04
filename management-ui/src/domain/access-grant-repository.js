@@ -15,19 +15,15 @@ class AccessGrantRepository {
     return result.accessGrants || []
   }
 
-  static async revokeAccessGrant({
-    organizationName,
-    serviceName,
-    accessGrantId,
-  }) {
+  static async revokeAccessGrant({ organizationName, serviceName, id }) {
     const response = await fetch(
-      `/api/v1/access-grants/service/${serviceName}/organizations/${organizationName}/${accessGrantId}/revoke`,
+      `/api/v1/access-grants/service/${serviceName}/organizations/${organizationName}/${id}/revoke`,
       {
         method: 'POST',
         body: JSON.stringify({
           organizationName: organizationName,
           serviceName: serviceName,
-          accessGrantID: accessGrantId,
+          accessGrantID: id,
         }),
       },
     )

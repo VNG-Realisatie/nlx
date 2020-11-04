@@ -24,7 +24,10 @@ class AccessGrantStore {
       return cachedAccessGrant
     }
 
-    const accessGrant = new AccessGrantModel({ accessGrantData })
+    const accessGrant = new AccessGrantModel({
+      accessGrantStore: this,
+      accessGrantData,
+    })
 
     this.accessGrants.set(accessGrant.id, accessGrant)
 
@@ -43,6 +46,16 @@ class AccessGrantStore {
     return arrayOfModels.filter(
       (accessGrantModel) => accessGrantModel.serviceName === name,
     )
+  }
+
+  revokeAccessGrant = async ({ organizationName, serviceName, id }) => {
+    await this.accessGrantRepository.revokeAccessGrant({
+      organizationName,
+      serviceName,
+      id,
+    })
+
+    this.fetchForService({ name: serviceName })
   }
 }
 

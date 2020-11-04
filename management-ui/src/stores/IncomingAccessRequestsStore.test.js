@@ -5,7 +5,7 @@ import ServiceModel from '../models/ServiceModel'
 import IncomingAccessRequestModel from '../models/IncomingAccessRequestModel'
 import IncomingAccessRequestsStore from './IncomingAccessRequestsStore'
 
-test('fetching, getting and updating from server (integration test)', async () => {
+test('fetching, getting and updating from server', async () => {
   const service = new ServiceModel({ serviceData: { name: 'Service' } })
 
   const incomingAccessRequestData = {

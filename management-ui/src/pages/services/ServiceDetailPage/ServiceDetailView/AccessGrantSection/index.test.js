@@ -3,8 +3,7 @@
 //
 import React from 'react'
 
-import { act } from '@testing-library/react'
-import { renderWithProviders, fireEvent } from '../../../../../test-utils'
+import { renderWithProviders, fireEvent, act } from '../../../../../test-utils'
 import AccessGrantSection from './index'
 
 beforeEach(() => {
@@ -27,7 +26,7 @@ test('should show if there are no access grants', async () => {
 })
 
 test('should list access grants', async () => {
-  const { getByTestId, getByText } = renderWithProviders(
+  const { getByTestId } = renderWithProviders(
     <AccessGrantSection
       accessGrants={[
         {
@@ -49,15 +48,11 @@ test('should list access grants', async () => {
     'checkbox-multiple.svg' + 'Organizations with access' + '1', // eslint-disable-line no-useless-concat
   )
   expect(getByTestId('service-accessgrant-list')).toBeTruthy()
-  expect(getByText('Organization-B')).toBeInTheDocument()
 })
 
-test('revoking access grants', async () => {
-  global.confirm = jest.fn(() => true)
-
-  const revokeAccessGrantHandler = jest.fn()
-
-  const { getByTestId, getByText, getByRole } = renderWithProviders(
+test('revoking access', async () => {
+  const mockRevoke = jest.fn().mockResolvedValue()
+  const { getByTestId, getByText, queryByRole } = renderWithProviders(
     <AccessGrantSection
       accessGrants={[
         {
@@ -65,10 +60,12 @@ test('revoking access grants', async () => {
           serviceName: 'service',
           organizationName: 'Organization-B',
           publicKeyFingerprint: 'printFinger=',
-          createdAt: '2020-10-07T13:01:11.288349Z',
+          createdAt: new Date('2020-10-01T12:00:00Z'),
+          revokedAt: null,
+          revoke: mockRevoke,
+          error: '',
         },
       ]}
-      revokeAccessGrantHandler={revokeAccessGrantHandler}
     />,
   )
 
@@ -76,19 +73,13 @@ test('revoking access grants', async () => {
   fireEvent.click(toggler)
   jest.runAllTimers()
 
-  const revokeAccessButton = getByText('Revoke')
-  expect(revokeAccessButton).toBeInTheDocument()
+  global.confirm = jest.fn(() => true)
 
-  await act(async () => fireEvent.click(revokeAccessButton))
+  const revokeButton = getByText('Revoke')
 
-  expect(revokeAccessGrantHandler).toHaveBeenCalledWith({
-    organizationName: 'Organization-B',
-    serviceName: 'service',
-    accessGrantId: '1234abcd',
+  await act(async () => {
+    await fireEvent.click(revokeButton)
   })
 
-  expect(getByRole('alert')).toBeTruthy()
-  expect(getByRole('alert').textContent).toBe('Access revoked')
-
-  global.confirm.mockRestore()
+  expect(queryByRole('alert')).toHaveTextContent('Access revoked')
 })

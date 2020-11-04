@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { makeAutoObservable } from 'mobx'
+import { flow, makeAutoObservable } from 'mobx'
 
 class AccessGrantModel {
   id = ''
@@ -11,9 +11,12 @@ class AccessGrantModel {
   createdAt = null
   revokedAt = null
 
-  constructor({ accessGrantData }) {
+  error = ''
+
+  constructor({ accessGrantStore, accessGrantData }) {
     makeAutoObservable(this)
 
+    this.accessGrantStore = accessGrantStore
     this.update(accessGrantData)
   }
 
@@ -46,6 +49,15 @@ class AccessGrantModel {
       this.revokedAt = new Date(accessProofData.revokedAt)
     }
   }
+
+  revoke = flow(function* revoke() {
+    try {
+      this.error = ''
+      yield this.accessGrantStore.revokeAccessGrant(this)
+    } catch (e) {
+      this.error = e.message
+    }
+  }).bind(this)
 }
 
 export default AccessGrantModel
