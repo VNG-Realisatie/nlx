@@ -74,7 +74,11 @@ const UserNavigation = ({ ...props }) => {
         classNames="user-menu-slide"
         unmountOnExit
       >
-        <StyledUserMenu id="user-menu-options" data-testid="user-menu-options">
+        <StyledUserMenu
+          id="user-menu-options"
+          animationDuration={ANIMATION_DURATION}
+          data-testid="user-menu-options"
+        >
           <StyledUserMenuItem>
             <form method="POST" action="/oidc/logout">
               <input

@@ -48,12 +48,13 @@ export const StyledUserMenu = styled.ul`
   transform-origin: top center;
   transition: transform ${(p) => p.animationDuration}ms ease-in-out;
 
-  &.user-menu-slide-enter,
-  &.user-menu-slide-enter-done {
+  &.user-menu-slide-enter-active,
+  &.user-menu-slide-enter-done,
+  &.user-menu-slide-exit {
     transform: scaleY(1);
   }
-  &.user-menu-slide-exit,
-  &.user-menu-slide-exit-done {
+
+  &.user-menu-slide-exit-active {
     transform: scaleY(0);
   }
 
