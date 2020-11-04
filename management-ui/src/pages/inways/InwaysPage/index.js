@@ -22,14 +22,14 @@ const InwaysPage = () => {
     <PageTemplate>
       <PageTemplate.Header
         title={t('Inways')}
-        description={t('Gateways to provide services.')}
+        description={t('Gateways to provide services')}
       />
 
       {!isInitiallyFetched ? (
         <LoadingMessage />
       ) : error ? (
         <Alert variant="error" data-testid="error-message">
-          {t('Failed to load the inways.')}
+          {t('Failed to load the inways')}
         </Alert>
       ) : (
         <InwaysPageView inways={inways} />

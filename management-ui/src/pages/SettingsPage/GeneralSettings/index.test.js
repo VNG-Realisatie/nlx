@@ -67,7 +67,7 @@ describe('the General settings section', () => {
 
     expect(getByRole('alert')).toBeTruthy()
     expect(getByRole('alert').textContent).toBe(
-      'Successfully updated the settings.',
+      'Successfully updated the settings',
     )
   })
 
@@ -99,9 +99,7 @@ describe('the General settings section', () => {
 
     expect(updateHandler).toHaveBeenCalledTimes(1)
     expect(getByRole('alert')).toBeTruthy()
-    expect(getByRole('alert').textContent).toBe(
-      'Failed to update the settings.',
-    )
+    expect(getByRole('alert').textContent).toBe('Failed to update the settings')
 
     await act(async () => {
       await fireEvent.submit(settingsForm)
@@ -136,8 +134,6 @@ describe('the General settings section', () => {
     })
 
     expect(getByRole('alert')).toBeTruthy()
-    expect(getByRole('alert').textContent).toBe(
-      'Failed to update the settings.',
-    )
+    expect(getByRole('alert').textContent).toBe('Failed to update the settings')
   })
 })

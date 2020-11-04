@@ -39,7 +39,7 @@ const ServiceDetailPage = ({ parentUrl, service }) => {
           <ServiceDetailView service={service} removeHandler={handleRemove} />
         ) : (
           <Alert variant="error" data-testid="error-message">
-            {t('Failed to load the service.', { name })}
+            {t('Failed to load the service', { name })}
           </Alert>
         )}
       </Drawer.Content>

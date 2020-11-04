@@ -94,9 +94,7 @@ describe('the Insight settings section', () => {
 
     expect(updateHandler).toHaveBeenCalledTimes(1)
     expect(getByRole('alert')).toBeTruthy()
-    expect(getByRole('alert').textContent).toBe(
-      'Failed to update the settings.',
-    )
+    expect(getByRole('alert').textContent).toBe('Failed to update the settings')
 
     await act(async () => {
       await fireEvent.submit(settingsForm)
@@ -131,8 +129,6 @@ describe('the Insight settings section', () => {
     })
 
     expect(getByRole('alert')).toBeTruthy()
-    expect(getByRole('alert').textContent).toBe(
-      'Failed to update the settings.',
-    )
+    expect(getByRole('alert').textContent).toBe('Failed to update the settings')
   })
 })

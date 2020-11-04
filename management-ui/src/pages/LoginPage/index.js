@@ -29,7 +29,7 @@ const LoginPage = () => {
         <h1>{t('Welcome')}</h1>
         {!user ? (
           <>
-            <p>{t('Log in to continue.')}</p>
+            <p>{t('Log in to continue')}</p>
 
             <StyledOrganization>
               <StyledIconOrganization />

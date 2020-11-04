@@ -88,7 +88,7 @@ test('failed to load services', async () => {
   const { findByTestId, getByTestId } = renderDirectory(store)
 
   expect(await findByTestId('error-message')).toHaveTextContent(
-    /^Failed to load the directory\.$/,
+    /^Failed to load the directory$/,
   )
   expect(() => getByTestId('mock-directory-services')).toThrow()
 })

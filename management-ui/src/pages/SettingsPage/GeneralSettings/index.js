@@ -20,12 +20,12 @@ const GeneralSettings = ({ getSettings, updateHandler }) => {
       await updateHandler(values)
 
       showToast({
-        body: t('Successfully updated the settings.'),
+        body: t('Successfully updated the settings'),
         variant: 'success',
       })
     } catch (err) {
       showToast({
-        body: t('Failed to update the settings.'),
+        body: t('Failed to update the settings'),
         variant: 'error',
       })
     }
@@ -37,7 +37,7 @@ const GeneralSettings = ({ getSettings, updateHandler }) => {
         <LoadingMessage />
       ) : error ? (
         <Alert variant="error" data-testid="error-message">
-          {t('Failed to load the settings.')}
+          {t('Failed to load the settings')}
         </Alert>
       ) : settings ? (
         <Form initialValues={settings} onSubmitHandler={updateSettings} />

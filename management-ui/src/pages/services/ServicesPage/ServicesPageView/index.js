@@ -13,7 +13,7 @@ const ServicesPageView = ({ services }) => {
   const { t } = useTranslation()
 
   return services.length === 0 ? (
-    <EmptyContentMessage>{t('There are no services yet.')}</EmptyContentMessage>
+    <EmptyContentMessage>{t('There are no services yet')}</EmptyContentMessage>
   ) : (
     <Table withLinks data-testid="services-list" role="grid">
       <thead>

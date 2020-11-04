@@ -51,8 +51,8 @@ const ServiceForm = ({
 
   const { isReady: allInwaysIsReady, result: allInways } = usePromise(getInways)
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required(t('This field is required.')),
-    endpointURL: Yup.string().required(t('Invalid endpoint URL.')),
+    name: Yup.string().required(t('This field is required')),
+    endpointURL: Yup.string().required(t('Invalid endpoint URL')),
     documentationURL: Yup.string(),
     apiSpecificationURL: Yup.string(),
     publishedInDirectory: Yup.boolean(),
@@ -140,7 +140,7 @@ const ServiceForm = ({
               <InwaysLoadingMessage />
             ) : !allInways || allInways.length === 0 ? (
               <InwaysEmptyMessage data-testid="inways-empty">
-                {t('There are no inways registered to be connected.')}
+                {t('There are no inways registered to be connected')}
               </InwaysEmptyMessage>
             ) : (
               <CheckboxGroup>

@@ -23,7 +23,7 @@ test('show a empty services message', () => {
     <DirectoryServices services={[]} />,
   )
   expect(getByTestId('directory-no-services')).toHaveTextContent(
-    'There are no services yet.',
+    'There are no services yet',
   )
 })
 

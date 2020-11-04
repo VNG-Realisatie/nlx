@@ -30,7 +30,7 @@ const InwayDetailPage = ({ parentUrl, inway }) => {
           <InwayDetailPageView inway={inway} />
         ) : (
           <Alert variant="error" data-testid="error-message">
-            {t('Failed to load the details for this inway.', { name })}
+            {t('Failed to load the details for this inway', { name })}
           </Alert>
         )}
       </Drawer.Content>

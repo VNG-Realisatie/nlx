@@ -52,13 +52,13 @@ const EditServicePage = () => {
         <LoadingMessage />
       ) : error ? (
         <Alert variant="error" data-testid="error-message">
-          {t('Failed to load the service.', { name })}
+          {t('Failed to load the service', { name })}
         </Alert>
       ) : service ? (
         <>
           {updateError ? (
             <StyledUpdatedError
-              title={t('Failed to update the service.')}
+              title={t('Failed to update the service')}
               variant="error"
               data-testid="error-message"
             >

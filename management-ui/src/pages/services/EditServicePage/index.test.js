@@ -59,7 +59,7 @@ describe('the EditServicePage', () => {
     )
 
     expect(await findByRole('alert')).toBeTruthy()
-    expect(queryByRole('alert').textContent).toBe('Failed to load the service.')
+    expect(queryByRole('alert').textContent).toBe('Failed to load the service')
   })
 
   it('after the service has been fetched', async () => {
@@ -141,8 +141,8 @@ describe('the EditServicePage', () => {
 
     expect(update).toHaveBeenCalledTimes(1)
     expect(queryByRole('alert')).toBeTruthy()
-    expect(queryByRole('alert').textContent).toBe(
-      'Failed to update the service.arbitrary error',
+    expect(queryByRole('alert')).toHaveTextContent(
+      'Failed to update the service',
     )
 
     await act(async () => {
@@ -178,8 +178,8 @@ describe('the EditServicePage', () => {
     })
 
     expect(queryByRole('alert')).toBeTruthy()
-    expect(queryByRole('alert').textContent).toBe(
-      'Failed to update the service.arbitrary error',
+    expect(queryByRole('alert')).toHaveTextContent(
+      'Failed to update the service',
     )
   })
 })

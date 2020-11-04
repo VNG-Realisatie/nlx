@@ -36,7 +36,7 @@ const DirectoryDetailPage = ({ service, parentUrl }) => {
           <DirectoryDetailView service={service} />
         ) : (
           <Alert variant="error" data-testid="error-message">
-            {t('Failed to load the service.', {
+            {t('Failed to load the service', {
               name: `${organizationName}/${serviceName}`,
             })}
           </Alert>

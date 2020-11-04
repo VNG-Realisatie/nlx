@@ -55,7 +55,7 @@ test('service does not exist', () => {
 
   const message = getByTestId('error-message')
   expect(message).toBeInTheDocument()
-  expect(message.textContent).toBe('Failed to load the service.')
+  expect(message.textContent).toBe('Failed to load the service')
 
   expect(getByText('service')).toBeInTheDocument()
   expect(queryByText('organization')).toBeNull()

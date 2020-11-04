@@ -65,7 +65,7 @@ test('fetching a non-existing component', async () => {
   )
   const message = await findByTestId('error-message')
   expect(message).toBeTruthy()
-  expect(message.textContent).toBe('Failed to load the service.')
+  expect(message.textContent).toBe('Failed to load the service')
 
   expect(getByText('forty-two')).toBeInTheDocument()
 
@@ -88,7 +88,7 @@ test('fetching service details fails for an unknown reason', async () => {
 
   const message = await findByTestId('error-message')
   expect(message).toBeTruthy()
-  expect(message.textContent).toBe('Failed to load the service.')
+  expect(message.textContent).toBe('Failed to load the service')
 
   expect(getByText('42')).toBeInTheDocument()
 

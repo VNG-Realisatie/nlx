@@ -14,9 +14,7 @@ jest.mock('./InwayRow', () => () => (
 
 test('no inways', () => {
   const { getByText } = renderWithProviders(<InwaysPageView inways={[]} />)
-  expect(
-    getByText(/^There are no inways registered yet\.$/),
-  ).toBeInTheDocument()
+  expect(getByText(/^There are no inways registered yet$/)).toBeInTheDocument()
 })
 
 test('service list', () => {

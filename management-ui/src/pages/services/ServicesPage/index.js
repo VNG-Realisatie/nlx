@@ -45,7 +45,7 @@ const ServicesPage = () => {
         <LoadingMessage />
       ) : error ? (
         <Alert variant="error" data-testid="error-message">
-          {t('Failed to load the services.')}
+          {t('Failed to load the services')}
         </Alert>
       ) : (
         <>

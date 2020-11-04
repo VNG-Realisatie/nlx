@@ -11,11 +11,11 @@ import serviceActions from '../serviceActions'
 const getToastMessageForAction = (action, t) => {
   switch (action) {
     case serviceActions.ADDED:
-      return t('The service has been added.')
+      return t('The service has been added')
     case serviceActions.EDITED:
-      return t('The service has been updated.')
+      return t('The service has been updated')
     case serviceActions.REMOVED:
-      return t('The service has been removed.')
+      return t('The service has been removed')
     default:
       console.warn(
         `can not determine toast message, unknown action '${action}'`,

@@ -40,7 +40,7 @@ const DirectoryPage = () => {
         <LoadingMessage />
       ) : error ? (
         <Alert variant="error" data-testid="error-message">
-          {t('Failed to load the directory.')}
+          {t('Failed to load the directory')}
         </Alert>
       ) : (
         <>

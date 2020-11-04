@@ -47,7 +47,7 @@ test('fetching a non-existing component', async () => {
 
   const message = await findByTestId('error-message')
   expect(message).toBeTruthy()
-  expect(message.textContent).toBe('Failed to load the details for this inway.')
+  expect(message.textContent).toBe('Failed to load the details for this inway')
 
   const closeButton = await findByTestId('close-button')
   expect(closeButton).toBeTruthy()
@@ -68,7 +68,7 @@ test('fetching inway details fails for an unknown reason', async () => {
 
   const message = await findByTestId('error-message')
   expect(message).toBeTruthy()
-  expect(message.textContent).toBe('Failed to load the details for this inway.')
+  expect(message.textContent).toBe('Failed to load the details for this inway')
 
   const closeButton = await findByTestId('close-button')
   expect(closeButton).toBeTruthy()

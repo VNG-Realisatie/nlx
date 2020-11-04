@@ -70,5 +70,5 @@ test('failed to load inways', async () => {
   )
 
   expect(() => getByTestId('inways-list')).toThrow()
-  expect(await findByText(/^Failed to load the inways\.$/)).toBeInTheDocument()
+  expect(await findByText(/^Failed to load the inways$/)).toBeInTheDocument()
 })

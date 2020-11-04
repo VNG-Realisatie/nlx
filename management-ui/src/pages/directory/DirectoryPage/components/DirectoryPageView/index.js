@@ -16,7 +16,7 @@ const DirectoryPageView = ({ services }) => {
 
   return services.length === 0 ? (
     <EmptyContentMessage data-testid="directory-no-services">
-      {t('There are no services yet.')}
+      {t('There are no services yet')}
     </EmptyContentMessage>
   ) : (
     <Table withLinks role="grid" data-testid="directory-services">

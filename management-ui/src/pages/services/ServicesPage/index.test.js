@@ -66,8 +66,6 @@ test('failed to load services', async () => {
   )
 
   expect(() => getByTestId('services-list')).toThrow()
-  expect(
-    await findByText(/^Failed to load the services\.$/),
-  ).toBeInTheDocument()
+  expect(await findByText(/^Failed to load the services$/)).toBeInTheDocument()
   expect(getByTestId('service-count')).toHaveTextContent('0Services')
 })

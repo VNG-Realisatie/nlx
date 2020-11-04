@@ -54,7 +54,7 @@ const Form = ({ initialValues, onSubmitHandler, getInways, ...props }) => {
               <InwaysLoadingMessage />
             ) : !inways || inways.length === 0 ? (
               <InwaysEmptyMessage data-testid="no-inways-available">
-                {t('There are no inways available.')}
+                {t('There are no inways available')}
               </InwaysEmptyMessage>
             ) : (
               <Field

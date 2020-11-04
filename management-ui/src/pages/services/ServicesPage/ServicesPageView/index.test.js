@@ -14,7 +14,7 @@ jest.mock('./ServiceRow', () => () => (
 
 test('no services', () => {
   const { getByText } = renderWithProviders(<ServicesPageView services={[]} />)
-  expect(getByText(/^There are no services yet\.$/)).toBeInTheDocument()
+  expect(getByText(/^There are no services yet$/)).toBeInTheDocument()
 })
 
 test('service list', () => {

@@ -14,7 +14,7 @@ const InwaysPageView = ({ inways }) => {
 
   return inways != null && inways.length === 0 ? (
     <EmptyContentMessage>
-      {t('There are no inways registered yet.')}
+      {t('There are no inways registered yet')}
     </EmptyContentMessage>
   ) : (
     <Table withLinks data-testid="inways-list" role="grid">
