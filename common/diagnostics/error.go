@@ -3,6 +3,8 @@ package diagnostics
 import (
 	"runtime/debug"
 	"strings"
+
+	"google.golang.org/grpc/status"
 )
 
 type ErrorCode int
@@ -23,13 +25,17 @@ func ParseError(err error) *ErrorDetails {
 		return nil
 	}
 
-	code := InternalError
-	stackTrace := strings.Split(string(debug.Stack()), "\n")
+	cause := err.Error()
+
+	st, ok := status.FromError(err)
+	if ok {
+		cause = fmt.Sprintf("%s (%s)", st.Message(), st.Code().String())
+	}
 
 	return &ErrorDetails{
 		Cause:      err.Error(),
-		Code:       code,
-		StackTrace: stackTrace,
+		Code:       InternalError,
+		StackTrace: strings.Split(string(debug.Stack()), "\n"),
 	}
 }
 
