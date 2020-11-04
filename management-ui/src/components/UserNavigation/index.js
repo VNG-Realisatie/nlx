@@ -72,6 +72,7 @@ const UserNavigation = ({ ...props }) => {
         in={menuIsOpen}
         timeout={ANIMATION_DURATION}
         classNames="user-menu-slide"
+        unmountOnExit
       >
         <StyledUserMenu id="user-menu-options" data-testid="user-menu-options">
           <StyledUserMenuItem>
