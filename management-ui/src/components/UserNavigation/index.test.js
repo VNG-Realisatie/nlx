@@ -3,7 +3,6 @@
 //
 import React from 'react'
 import { MemoryRouter as Router } from 'react-router-dom'
-
 import { renderWithProviders, waitFor } from '../../test-utils'
 import { UserContextProvider } from '../../user-context'
 import UserNavigation from './index'
@@ -83,7 +82,7 @@ describe('the UserNavigation', () => {
 
         it('should hide the user menu', async () => {
           const { queryByTestId } = result
-          waitFor(() => {
+          await waitFor(() => {
             expect(queryByTestId('user-menu-options')).toBeNull()
           })
         })
