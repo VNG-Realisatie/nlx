@@ -12,5 +12,5 @@ test('renders a welcome message', async () => {
       <LoginPage />
     </UserContextProvider>,
   )
-  waitFor(() => expect(getByText(/^Welcome$/)).toBeInTheDocument())
+  await waitFor(() => expect(getByText(/^Welcome$/)).toBeInTheDocument())
 })
