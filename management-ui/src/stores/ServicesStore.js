@@ -102,8 +102,6 @@ class ServicesStore {
     )
 
     service.update(serviceData)
-
-    return service
   }).bind(this)
 
   removeService = flow(function* removeService(service) {

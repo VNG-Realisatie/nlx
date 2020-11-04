@@ -35,8 +35,8 @@ test('should list access requests', async () => {
           organizationName: 'Organization A',
           serviceName: 'Servicio',
           state: 'RECEIVED',
-          createdAt: '2020-08-25T13:30:43.480155Z',
-          updatedAt: '2020-08-25T13:30:43.480155Z',
+          createdAt: new Date('2020-10-01T12:00:00Z'),
+          updatedAt: new Date('2020-10-01T12:00:01Z'),
         },
       ]}
     />,

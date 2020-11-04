@@ -54,3 +54,45 @@ test('fetching, getting and updating from server (integration test)', async () =
   expect(updatedAccessRequest).toBeInstanceOf(IncomingAccessRequestModel)
   expect(updatedAccessRequest.state).toBe('RECEIVED')
 })
+
+test('approving an access request', async () => {
+  const approveIncomingAccessRequest = jest.fn()
+  const incomingAccessRequestStore = new IncomingAccessRequestsStore({
+    accessRequestRepository: {
+      approveIncomingAccessRequest,
+    },
+  })
+
+  const fetchForServiceSpy = jest
+    .spyOn(incomingAccessRequestStore, 'fetchForService')
+    .mockImplementationOnce(() => null)
+
+  await incomingAccessRequestStore.approveAccessRequest({
+    serviceName: 'Service',
+    id: 's1',
+  })
+
+  expect(approveIncomingAccessRequest).toHaveBeenCalled()
+  expect(fetchForServiceSpy).toHaveBeenCalledWith({ name: 'Service' })
+})
+
+test('rejecting an access request', async () => {
+  const rejectIncomingAccessRequest = jest.fn()
+  const incomingAccessRequestStore = new IncomingAccessRequestsStore({
+    accessRequestRepository: {
+      rejectIncomingAccessRequest,
+    },
+  })
+
+  const fetchForServiceSpy = jest
+    .spyOn(incomingAccessRequestStore, 'fetchForService')
+    .mockImplementationOnce(() => null)
+
+  await incomingAccessRequestStore.rejectAccessRequest({
+    serviceName: 'Service',
+    id: 's1',
+  })
+
+  expect(rejectIncomingAccessRequest).toHaveBeenCalled()
+  expect(fetchForServiceSpy).toHaveBeenCalledWith({ name: 'Service' })
+})

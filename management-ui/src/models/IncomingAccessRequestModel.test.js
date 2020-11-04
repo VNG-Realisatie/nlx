@@ -3,7 +3,6 @@
 //
 import { checkPropTypes } from 'prop-types'
 
-import deferredPromise from '../test-utils/deferred-promise'
 import IncomingAccessRequestModel, {
   createIncomingAccessRequest,
   incomingAccessRequestPropTypes,
@@ -52,14 +51,10 @@ test('model implements proptypes', () => {
 })
 
 test('approving request handles as expected', async () => {
-  const request = deferredPromise()
-  const approveIncomingAccessRequest = jest.fn(() => request)
+  const approveAccessRequest = jest.fn().mockResolvedValue(null)
 
   incomingAccessRequestStore = {
-    accessRequestRepository: {
-      approveIncomingAccessRequest,
-    },
-    fetchForService: jest.fn(),
+    approveAccessRequest,
   }
 
   const accessRequest = new IncomingAccessRequestModel({
@@ -68,20 +63,15 @@ test('approving request handles as expected', async () => {
   })
 
   accessRequest.approve()
-  await request.resolve()
 
-  expect(approveIncomingAccessRequest).toHaveBeenCalled()
-  expect(incomingAccessRequestStore.fetchForService).toHaveBeenCalled()
+  expect(approveAccessRequest).toHaveBeenCalled()
 })
 
 test('rejecting request handles as expected', async () => {
-  const request = deferredPromise()
-  const rejectIncomingAccessRequest = jest.fn(() => request)
+  const rejectAccessRequest = jest.fn().mockResolvedValue(null)
 
   incomingAccessRequestStore = {
-    accessRequestRepository: {
-      rejectIncomingAccessRequest,
-    },
+    rejectAccessRequest,
     fetchForService: jest.fn(),
   }
 
@@ -91,25 +81,21 @@ test('rejecting request handles as expected', async () => {
   })
 
   accessRequest.reject()
-  await request.resolve()
 
-  expect(rejectIncomingAccessRequest).toHaveBeenCalled()
-  expect(incomingAccessRequestStore.fetchForService).toHaveBeenCalled()
+  expect(rejectAccessRequest).toHaveBeenCalled()
 })
 
-test('set an error', async () => {
-  const approveIncomingAccessRequest = jest
+test('when approving or rejecting fails', async () => {
+  const approveAccessRequest = jest
     .fn()
     .mockRejectedValue(new Error('arbitrary error'))
-  const rejectIncomingAccessRequest = jest
+  const rejectAccessRequest = jest
     .fn()
     .mockRejectedValue(new Error('arbitrary error'))
 
   incomingAccessRequestStore = {
-    accessRequestRepository: {
-      approveIncomingAccessRequest,
-      rejectIncomingAccessRequest,
-    },
+    approveAccessRequest,
+    rejectAccessRequest,
   }
 
   const accessRequest = new IncomingAccessRequestModel({

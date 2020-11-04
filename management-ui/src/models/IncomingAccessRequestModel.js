@@ -80,39 +80,19 @@ class IncomingAccessRequestModel {
     }
   }
 
-  approve = flow(function* send() {
+  approve = flow(function* approve() {
     try {
       this.error = ''
-
-      const { serviceName, id } = this
-      yield this.incomingAccessRequestStore.accessRequestRepository.approveIncomingAccessRequest(
-        {
-          serviceName,
-          id,
-        },
-      )
-
-      this.incomingAccessRequestStore.fetchForService({ name: serviceName })
+      yield this.incomingAccessRequestStore.approveAccessRequest(this)
     } catch (e) {
       this.error = e.message
     }
   }).bind(this)
 
-  reject = flow(function* flow() {
+  reject = flow(function* reject() {
     try {
       this.error = ''
-
-      const { serviceName, id } = this
-      yield this.incomingAccessRequestStore.accessRequestRepository.rejectIncomingAccessRequest(
-        {
-          serviceName,
-          id,
-        },
-      )
-
-      this.incomingAccessRequestStore.fetchForService({
-        name: serviceName,
-      })
+      yield this.incomingAccessRequestStore.rejectAccessRequest(this)
     } catch (e) {
       this.error = e.message
     }

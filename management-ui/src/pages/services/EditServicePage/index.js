@@ -32,9 +32,9 @@ const EditServicePage = () => {
   const submitService = async (formData) => {
     try {
       setUpdatedError(null)
-      const updatedService = await update(formData)
+      await update(formData)
       history.push(
-        `/services/${updatedService.name}?lastAction=${serviceActions.EDITED}`,
+        `/services/${service.name}?lastAction=${serviceActions.EDITED}`,
       )
     } catch (err) {
       setUpdatedError(err.message)

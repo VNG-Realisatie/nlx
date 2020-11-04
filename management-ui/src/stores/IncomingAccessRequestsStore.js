@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { flow, makeAutoObservable, observable } from 'mobx'
+import { makeAutoObservable, observable } from 'mobx'
 import AccessRequestRepository from '../domain/access-request-repository'
 import IncomingAccessRequestModel from '../models/IncomingAccessRequestModel'
 
@@ -39,13 +39,12 @@ class IncomingAccessRequestsStore {
     return incomingAccessRequest
   }
 
-  fetchForService = flow(function* fetchForService(serviceModel) {
-    const response = yield this.accessRequestRepository.fetchByServiceName(
-      serviceModel.name,
+  fetchForService = async ({ name }) => {
+    const accessRequests = await this.accessRequestRepository.fetchByServiceName(
+      name,
     )
-
-    response.map((accessRequest) => this.updateFromServer(accessRequest))
-  }).bind(this)
+    accessRequests.map((accessRequest) => this.updateFromServer(accessRequest))
+  }
 
   getForService = (serviceModel) => {
     const arrayOfModels = [...this.incomingAccessRequests.values()]
@@ -54,6 +53,24 @@ class IncomingAccessRequestsStore {
       (incomingAccessRequestModel) =>
         incomingAccessRequestModel.serviceName === serviceModel.name,
     )
+  }
+
+  approveAccessRequest = async ({ serviceName, id }) => {
+    await this.accessRequestRepository.approveIncomingAccessRequest({
+      serviceName,
+      id,
+    })
+
+    this.fetchForService({ name: serviceName })
+  }
+
+  rejectAccessRequest = async ({ serviceName, id }) => {
+    await this.accessRequestRepository.rejectIncomingAccessRequest({
+      serviceName,
+      id,
+    })
+
+    this.fetchForService({ name: serviceName })
   }
 }
 

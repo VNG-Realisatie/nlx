@@ -31,19 +31,17 @@ class AccessGrantStore {
     return accessGrant
   }
 
-  fetchForService = flow(function* fetchForService(serviceModel) {
-    const response = yield this.accessGrantRepository.fetchByServiceName(
-      serviceModel.name,
-    )
+  fetchForService = flow(function* fetchForService({ name }) {
+    const response = yield this.accessGrantRepository.fetchByServiceName(name)
 
     response.map((accessGrantData) => this.updateFromServer(accessGrantData))
   }).bind(this)
 
-  getForService = (serviceModel) => {
+  getForService = ({ name }) => {
     const arrayOfModels = [...this.accessGrants.values()]
 
     return arrayOfModels.filter(
-      (accessGrantModel) => accessGrantModel.serviceName === serviceModel.name,
+      (accessGrantModel) => accessGrantModel.serviceName === name,
     )
   }
 }

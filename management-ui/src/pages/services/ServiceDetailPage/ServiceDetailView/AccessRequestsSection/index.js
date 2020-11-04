@@ -38,6 +38,7 @@ const AccessRequestsSection = ({ accessRequests }) => {
         body: t('Please try again'),
         variant: 'error',
       })
+      console.error(accessRequest.error)
     }
   }
 
@@ -88,7 +89,7 @@ const AccessRequestsSection = ({ accessRequests }) => {
         <Table data-testid="service-incoming-accessrequests-list">
           <tbody>
             {accessRequests.length ? (
-              accessRequests.map((accessRequest, i) => (
+              accessRequests.map((accessRequest) => (
                 <IncomingAccessRequestRow
                   key={accessRequest.id}
                   accessRequest={accessRequest}
