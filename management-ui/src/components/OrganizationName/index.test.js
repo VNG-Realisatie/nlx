@@ -3,13 +3,14 @@
 //
 
 import React from 'react'
+import { screen, act, waitFor } from '@testing-library/react'
 import deferredPromise from '../../test-utils/deferred-promise'
-import { act, renderWithProviders } from '../../test-utils'
+import { renderWithProviders } from '../../test-utils'
 import OrganizationName from './index'
 
 test('show the organizationName', async () => {
   const environment = deferredPromise()
-  const getEnvironment = jest.fn(() => environment)
+  const getEnvironment = jest.fn().mockResolvedValue(environment)
 
   const { container, getByTitle } = renderWithProviders(
     <OrganizationName getEnvironment={getEnvironment} />,
@@ -26,11 +27,15 @@ test('show the organizationName', async () => {
 })
 
 test('adding a title when used in the header', async () => {
-  const getEnvironment = jest.fn(() => ({ organizationName: 'test' }))
+  const getEnvironment = jest
+    .fn()
+    .mockResolvedValue({ organizationName: 'test' })
 
-  const { findByTitle } = renderWithProviders(
+  renderWithProviders(
     <OrganizationName getEnvironment={getEnvironment} isHeader />,
   )
 
-  expect(await findByTitle('test')).toHaveTextContent('test')
+  await waitFor(() => screen.findByTitle('test'))
+
+  expect(screen.getByTitle('test')).toHaveTextContent('test')
 })
