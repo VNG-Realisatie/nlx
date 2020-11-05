@@ -7,7 +7,7 @@ go 1.15
 replace golang.org/x/text => golang.org/x/text v0.3.4
 
 // Override the gopkg.in/yaml.v2 dependency. Versions before v2.2.3 are vulnerable to a Billion Laughs Attack.
-replace gopkg.in/yaml.v2 => gopkg.in/yaml.v2 v2.2.8
+replace gopkg.in/yaml.v2 => gopkg.in/yaml.v2 v2.3.0
 
 require (
 	github.com/Microsoft/go-winio v0.4.14 // indirect
