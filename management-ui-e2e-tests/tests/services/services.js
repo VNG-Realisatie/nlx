@@ -49,16 +49,16 @@ test('Add and remove service', async (t) => {
     alert,
     alertContent,
   } = servicesPage
-  const service = await getRowElementForService(t.ctx.serviceName)
+  const serviceRow = await getRowElementForService(t.ctx.serviceName)
 
   await t.expect(getLocation()).eql(`${baseUrl}/services/${t.ctx.serviceName}`)
   await t.expect(servicesList.visible).ok()
-  await t.expect(service.exists).ok()
+  await t.expect(serviceRow.exists).ok()
 
   // Detail page
   const { editButton, closeButton, removeButton } = serviceDetailPage
 
-  await t.click(service)
+  await t.click(serviceRow)
   await t.expect(editButton.visible).ok()
   await t.expect(closeButton.visible).ok()
   await t.expect(removeButton.visible).ok()
@@ -67,7 +67,7 @@ test('Add and remove service', async (t) => {
   // Remove
   await removeService()
   await t.expect(getLocation()).eql(`${baseUrl}/services`)
-  await t.expect(service.exists).notOk('', { timeout: 500 })
+  await t.expect(serviceRow.exists).notOk('', { timeout: 100 })
   await t.expect(alert.exists).ok
   await t.expect(alertContent.innerText).contains('service is verwijderd')
 })
