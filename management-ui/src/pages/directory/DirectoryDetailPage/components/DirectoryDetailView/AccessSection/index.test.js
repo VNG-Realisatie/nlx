@@ -73,6 +73,7 @@ test('Correctly renders the other states of access', () => {
     />,
   )
   expect(getByText('Access request rejected')).toBeInTheDocument()
+  expect(getByText('Request Access')).toBeInTheDocument()
 
   // accessProof.createdAt required in this displayState
   rerender(

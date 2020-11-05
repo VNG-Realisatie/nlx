@@ -122,6 +122,9 @@ const AccessSection = ({
                   })}
                 </small>
               </StateDetail>
+              <Button onClick={onRequestAccessButtonClick}>
+                {t('Request Access')}
+              </Button>
             </>
           )}
         </Switch.Case>
