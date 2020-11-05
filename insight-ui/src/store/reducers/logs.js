@@ -20,7 +20,8 @@ const defaultState = {
   rowCount: 0,
 }
 
-export default (state = defaultState, action) => {
+// eslint-disable-next-line default-param-last
+const logsReducer = (state = defaultState, action) => {
   switch (action.type) {
     case TYPES.FETCH_ORGANIZATION_LOGS_SUCCESS: {
       const { rowCount, rowsPerPage, records } = action.data
@@ -36,3 +37,5 @@ export default (state = defaultState, action) => {
       return state
   }
 }
+
+export default logsReducer

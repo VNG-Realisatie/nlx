@@ -11,7 +11,8 @@ const defaultState = {
   response: null,
 }
 
-export default (state = defaultState, action) => {
+// eslint-disable-next-line default-param-last
+const proofReducer = (state = defaultState, action) => {
   switch (action.type) {
     case TYPES.FETCH_PROOF_SUCCESS:
       return {
@@ -33,3 +34,5 @@ export default (state = defaultState, action) => {
       return state
   }
 }
+
+export default proofReducer

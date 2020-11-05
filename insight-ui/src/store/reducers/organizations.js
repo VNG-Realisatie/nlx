@@ -10,7 +10,8 @@ const filterOutInvalidOrganizations = (organizations) =>
       organization.insight_irma_endpoint && organization.insight_log_endpoint,
   )
 
-export default (state = [], action) => {
+// eslint-disable-next-line default-param-last
+const organizationsReducer = (state = [], action) => {
   switch (action.type) {
     case TYPES.FETCH_ORGANIZATIONS_SUCCESS:
       return filterOutInvalidOrganizations(action.data)
@@ -18,3 +19,5 @@ export default (state = [], action) => {
       return state
   }
 }
+
+export default organizationsReducer

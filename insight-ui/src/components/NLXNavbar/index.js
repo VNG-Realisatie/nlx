@@ -40,7 +40,7 @@ const NLXNavbar = ({
         </StyledNavigation>
 
         {Children.count(children) > 0 ? (
-          <StyledNavigation children={children} />
+          <StyledNavigation>{children}</StyledNavigation>
         ) : null}
 
         <IconButton

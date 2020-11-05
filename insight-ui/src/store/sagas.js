@@ -19,7 +19,7 @@ function* fetchProofOnLoginSuccess(action) {
   )
 }
 
-export default function* () {
+const sagas = function* () {
   yield takeLatest(TYPES.FETCH_ORGANIZATIONS_REQUEST, fetchOrganizations)
   yield takeLatest(TYPES.FETCH_ORGANIZATION_LOGS_REQUEST, (action) =>
     fetchOrganizationLogs(action.data),
@@ -35,3 +35,5 @@ export default function* () {
     fetchProofOnLoginSuccess,
   )
 }
+
+export default sagas

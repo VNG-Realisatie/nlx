@@ -6,7 +6,8 @@ import * as TYPES from '../types'
 
 const initialState = {}
 
-export default (state = initialState, action) => {
+// eslint-disable-next-line default-param-last
+const loginRequestInfo = (state = initialState, action) => {
   switch (action.type) {
     case TYPES.FETCH_IRMA_LOGIN_INFORMATION_SUCCESS:
       return action.data
@@ -16,3 +17,5 @@ export default (state = initialState, action) => {
       return state
   }
 }
+
+export default loginRequestInfo
