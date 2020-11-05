@@ -72,7 +72,7 @@ func TestCreateAccessRequest(t *testing.T) {
 		expectedErr error
 	}{
 		{
-			"without active access request",
+			"without an active access request",
 			&api.CreateAccessRequestRequest{
 				OrganizationName: "test-organization",
 				ServiceName:      "test-service",
@@ -107,7 +107,7 @@ func TestCreateAccessRequest(t *testing.T) {
 			nil,
 		},
 		{
-			"with active access request",
+			"with an active access request",
 			&api.CreateAccessRequestRequest{
 				OrganizationName: "test-organization",
 				ServiceName:      "test-service",
@@ -123,6 +123,41 @@ func TestCreateAccessRequest(t *testing.T) {
 			database.ErrActiveAccessRequest,
 			nil,
 			status.New(codes.AlreadyExists, "there is already an active access request").Err(),
+		},
+		{
+			"with a rejected active access request",
+			&api.CreateAccessRequestRequest{
+				OrganizationName: "test-organization",
+				ServiceName:      "test-service",
+			},
+			&database.OutgoingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					OrganizationName:     "test-organization",
+					ServiceName:          "test-service",
+					PublicKeyFingerprint: "60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=",
+				},
+			},
+			&database.OutgoingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					ID:                   "12345abcde",
+					OrganizationName:     "test-organization",
+					ServiceName:          "test-service",
+					PublicKeyFingerprint: "60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=",
+					State:                database.AccessRequestCreated,
+					CreatedAt:            time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
+					UpdatedAt:            time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
+				},
+			},
+			nil,
+			&api.OutgoingAccessRequest{
+				Id:               "12345abcde",
+				OrganizationName: "test-organization",
+				ServiceName:      "test-service",
+				State:            api.AccessRequestState_CREATED,
+				CreatedAt:        createTimestamp(time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC)),
+				UpdatedAt:        createTimestamp(time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC)),
+			},
+			nil,
 		},
 	}
 
