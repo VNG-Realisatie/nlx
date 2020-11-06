@@ -13,6 +13,7 @@ package database_test
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"path"
 	"testing"
 	"time"
@@ -138,53 +139,128 @@ func TestGetOutgoingAccessRequest(t *testing.T) {
 }
 
 func TestCreateAccessRequest(t *testing.T) {
-	cluster := newTestCluster(t)
-	cluster.Clock.SetTime(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC))
-
 	ctx := context.Background()
-	client := cluster.GetClient(t)
 
-	a := &database.OutgoingAccessRequest{
-		AccessRequest: database.AccessRequest{
-			OrganizationName:     "test-organization-a",
-			ServiceName:          "test-service-1",
-			PublicKeyFingerprint: "public_key",
+	tests := map[string]struct {
+		wantErr error
+		want    *database.OutgoingAccessRequest
+		request *database.OutgoingAccessRequest
+		setup   func(db database.ConfigDatabase) error
+	}{
+		"valid_access_request_should_be_created": {
+			request: &database.OutgoingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					OrganizationName:     "test-organization-a",
+					ServiceName:          "test-service-1",
+					PublicKeyFingerprint: "public_key",
+				},
+			},
+			want: &database.OutgoingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					ID:                   "161c188cfcea1939",
+					OrganizationName:     "test-organization-a",
+					ServiceName:          "test-service-1",
+					PublicKeyFingerprint: "public_key",
+					State:                database.AccessRequestCreated,
+					CreatedAt:            time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
+					UpdatedAt:            time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
+				},
+			},
+		},
+
+		"creating_a_secondary_access_request_returns_an_error": {
+			setup: func(db database.ConfigDatabase) error {
+				_, err := db.CreateOutgoingAccessRequest(ctx, &database.OutgoingAccessRequest{
+					AccessRequest: database.AccessRequest{
+						OrganizationName:     "test-organization-a",
+						ServiceName:          "test-service-1",
+						PublicKeyFingerprint: "public_key",
+					},
+				})
+
+				return err
+			},
+			request: &database.OutgoingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					OrganizationName:     "test-organization-a",
+					ServiceName:          "test-service-1",
+					PublicKeyFingerprint: "public_key",
+				},
+			},
+			want:    nil,
+			wantErr: database.ErrActiveAccessRequest,
+		},
+
+		"creating_a_secondary_access_request_after_the_first_one_was_rejected_should_work": {
+			setup: func(db database.ConfigDatabase) error {
+				request := &database.OutgoingAccessRequest{
+					AccessRequest: database.AccessRequest{
+						OrganizationName:     "test-organization-a",
+						ServiceName:          "test-service-1",
+						PublicKeyFingerprint: "public_key",
+					},
+				}
+
+				_, err := db.CreateOutgoingAccessRequest(ctx, request)
+				if err != nil {
+					return err
+				}
+
+				err = db.UpdateOutgoingAccessRequestState(ctx, request, database.AccessRequestRejected)
+
+				return err
+			},
+			request: &database.OutgoingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					OrganizationName:     "test-organization-a",
+					ServiceName:          "test-service-1",
+					PublicKeyFingerprint: "public_key",
+				},
+			},
+			want: &database.OutgoingAccessRequest{
+				AccessRequest: database.AccessRequest{
+					ID:                   "161c188cfcea1939",
+					OrganizationName:     "test-organization-a",
+					ServiceName:          "test-service-1",
+					PublicKeyFingerprint: "public_key",
+					State:                database.AccessRequestCreated,
+					CreatedAt:            time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
+					UpdatedAt:            time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
+				},
+			},
 		},
 	}
 
-	actual, err := cluster.DB.CreateOutgoingAccessRequest(ctx, a)
-	assert.NoError(t, err)
+	for name, tt := range tests {
+		tt := tt
 
-	expected := &database.OutgoingAccessRequest{
-		AccessRequest: database.AccessRequest{
-			ID:                   "161c188cfcea1939",
-			OrganizationName:     "test-organization-a",
-			ServiceName:          "test-service-1",
-			PublicKeyFingerprint: "public_key",
-			State:                database.AccessRequestCreated,
-			CreatedAt:            time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
-			UpdatedAt:            time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
-		},
+		t.Run(name, func(t *testing.T) {
+			cluster := newTestCluster(t)
+			cluster.Clock.SetTime(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC))
+
+			client := cluster.GetClient(t)
+
+			if tt.setup != nil {
+				if err := tt.setup(cluster.DB); err != nil {
+					t.Fatal(err)
+				}
+			}
+
+			actual, err := cluster.DB.CreateOutgoingAccessRequest(ctx, tt.request)
+
+			if tt.wantErr != nil {
+				assert.Error(t, err)
+				assert.True(t, errors.Is(err, tt.wantErr))
+			} else {
+				response, _ := client.Get(ctx, "/nlx/access-requests/outgoing/test-organization-a/test-service-1/161c188cfcea1939")
+
+				assert.NoError(t, err)
+				assert.Len(t, response.Kvs, 1)
+			}
+
+			assert.Equal(t, tt.want, actual)
+		})
 	}
-
-	assert.Equal(t, expected, actual)
-
-	response, err := client.Get(ctx, "/nlx/access-requests/outgoing/test-organization-a/test-service-1/161c188cfcea1939")
-	assert.NoError(t, err)
-	assert.Len(t, response.Kvs, 1)
-
-	a = &database.OutgoingAccessRequest{
-		AccessRequest: database.AccessRequest{
-			OrganizationName:     "test-organization-a",
-			ServiceName:          "test-service-1",
-			PublicKeyFingerprint: "public_key",
-		},
-	}
-
-	_, err = cluster.DB.CreateOutgoingAccessRequest(ctx, a)
-
-	assert.Error(t, err)
-	assert.Equal(t, err, database.ErrActiveAccessRequest)
 }
 
 func TestUpdateAccessRequestState(t *testing.T) {

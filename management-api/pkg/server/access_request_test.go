@@ -62,8 +62,7 @@ func createTimestamp(ti time.Time) *types.Timestamp {
 }
 
 func TestCreateAccessRequest(t *testing.T) {
-	tests := []struct {
-		name        string
+	tests := map[string]struct {
 		req         *api.CreateAccessRequestRequest
 		ar          *database.OutgoingAccessRequest
 		returnReq   *database.OutgoingAccessRequest
@@ -71,8 +70,7 @@ func TestCreateAccessRequest(t *testing.T) {
 		expectedReq *api.OutgoingAccessRequest
 		expectedErr error
 	}{
-		{
-			"without an active access request",
+		"without_an_active_access_request": {
 			&api.CreateAccessRequestRequest{
 				OrganizationName: "test-organization",
 				ServiceName:      "test-service",
@@ -106,8 +104,8 @@ func TestCreateAccessRequest(t *testing.T) {
 			},
 			nil,
 		},
-		{
-			"with an active access request",
+
+		"with_an_activeaccess_request": {
 			&api.CreateAccessRequestRequest{
 				OrganizationName: "test-organization",
 				ServiceName:      "test-service",
@@ -124,47 +122,12 @@ func TestCreateAccessRequest(t *testing.T) {
 			nil,
 			status.New(codes.AlreadyExists, "there is already an active access request").Err(),
 		},
-		{
-			"with a rejected active access request",
-			&api.CreateAccessRequestRequest{
-				OrganizationName: "test-organization",
-				ServiceName:      "test-service",
-			},
-			&database.OutgoingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					OrganizationName:     "test-organization",
-					ServiceName:          "test-service",
-					PublicKeyFingerprint: "60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=",
-				},
-			},
-			&database.OutgoingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ID:                   "12345abcde",
-					OrganizationName:     "test-organization",
-					ServiceName:          "test-service",
-					PublicKeyFingerprint: "60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=",
-					State:                database.AccessRequestCreated,
-					CreatedAt:            time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
-					UpdatedAt:            time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
-				},
-			},
-			nil,
-			&api.OutgoingAccessRequest{
-				Id:               "12345abcde",
-				OrganizationName: "test-organization",
-				ServiceName:      "test-service",
-				State:            api.AccessRequestState_CREATED,
-				CreatedAt:        createTimestamp(time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC)),
-				UpdatedAt:        createTimestamp(time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC)),
-			},
-			nil,
-		},
 	}
 
-	for _, tt := range tests {
+	for name, tt := range tests {
 		tt := tt
 
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			service, db := newService(t)
 			ctx := context.Background()
 

@@ -299,7 +299,8 @@ func (db ETCDConfigDatabase) verifyAccessRequestUniqueConstraint(
 	}
 
 	for _, request := range requests {
-		if request.PublicKeyFingerprint == publicKeyFingerprint && request.State != AccessRequestRejected {
+		if request.PublicKeyFingerprint == publicKeyFingerprint &&
+			request.State != AccessRequestRejected {
 			return ErrActiveAccessRequest
 		}
 	}
