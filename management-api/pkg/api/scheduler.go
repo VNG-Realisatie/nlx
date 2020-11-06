@@ -286,6 +286,7 @@ func (scheduler *accessRequestScheduler) parseAccessProof(accessProof *api.Acces
 		RevokedAt:        revokedAt,
 		OrganizationName: accessProof.OrganizationName,
 		ServiceName:      accessProof.ServiceName,
+		AccessRequestID:  accessProof.AccessRequestId,
 	}, nil
 }
 
@@ -318,6 +319,7 @@ func (scheduler *accessRequestScheduler) syncAccessProof(ctx context.Context, re
 			OrganizationName: request.OrganizationName,
 			ServiceName:      remoteProof.ServiceName,
 			CreatedAt:        remoteProof.CreatedAt,
+			AccessRequestID:  request.ID,
 			RevokedAt:        remoteProof.RevokedAt,
 		})
 

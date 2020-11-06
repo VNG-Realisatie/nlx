@@ -9,6 +9,12 @@ replace golang.org/x/text => golang.org/x/text v0.3.4
 // Override the gopkg.in/yaml.v2 dependency. Versions before v2.2.3 are vulnerable to a Billion Laughs Attack.
 replace gopkg.in/yaml.v2 => gopkg.in/yaml.v2 v2.3.0
 
+// Override the google.golang.org/grpc dependency. One of the package has `@latest` which doesn't work.
+replace google.golang.org/grpc => google.golang.org/grpc v1.26.0
+
+// Override the github.com/golang/protobuf dependency. ETCD doesn't work with `v1.4.2`
+replace github.com/golang/protobuf => github.com/golang/protobuf v1.3.5
+
 require (
 	github.com/Microsoft/go-winio v0.4.14 // indirect
 	github.com/bwesterb/go-atum v1.0.3 // indirect
@@ -35,7 +41,7 @@ require (
 	github.com/gorilla/schema v1.2.0
 	github.com/gorilla/sessions v1.2.1
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.0
-	github.com/grpc-ecosystem/grpc-gateway v1.14.5
+	github.com/grpc-ecosystem/grpc-gateway v1.14.8
 	github.com/hashicorp/go-retryablehttp v0.6.4 // indirect
 	github.com/huandu/xstrings v1.3.2
 	github.com/jasonlvhit/gocron v0.0.0-20200319232826-9b00bf4b9ebc // indirect
@@ -61,8 +67,8 @@ require (
 	golang.org/x/net v0.0.0-20201110031124-69a78807bb2b
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 	golang.org/x/sync v0.0.0-20201020160332-67f06af15bc9
-	google.golang.org/genproto v0.0.0-20200115191322-ca5a22157cba
-	google.golang.org/grpc v1.26.0
+	google.golang.org/genproto v0.0.0-20200513103714-09dca8ec2884
+	google.golang.org/grpc v1.31.1
 	gopkg.in/square/go-jose.v2 v2.4.1 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776
 	sigs.k8s.io/yaml v1.2.0 // indirect

@@ -266,5 +266,6 @@ func convertAccessProof(accessProof *database.AccessProof) (*api.AccessProof, er
 		ServiceName:      accessProof.ServiceName,
 		CreatedAt:        createdAt,
 		RevokedAt:        revokedAt,
+		AccessRequestId:  accessProof.AccessRequestID,
 	}, nil
 }

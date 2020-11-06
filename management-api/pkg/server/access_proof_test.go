@@ -105,6 +105,7 @@ func TestGetAccessProof(t *testing.T) {
 				Id:               "id",
 				CreatedAt:        ts,
 				RevokedAt:        ts,
+				AccessRequestId:  "request-1",
 				OrganizationName: "organization-a",
 				ServiceName:      "service",
 			},
@@ -117,6 +118,7 @@ func TestGetAccessProof(t *testing.T) {
 					Return(&database.AccessGrant{
 						CreatedAt:        now,
 						RevokedAt:        now,
+						AccessRequestID:  "request-1",
 						ID:               "id",
 						OrganizationName: "organization-a",
 						ServiceName:      "service",

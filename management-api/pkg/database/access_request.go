@@ -285,33 +285,95 @@ func (db ETCDConfigDatabase) UnlockOutgoingAccessRequest(ctx context.Context, ac
 	return err
 }
 
-func (db ETCDConfigDatabase) verifyAccessRequestUniqueConstraint(
+func (db ETCDConfigDatabase) verifyOutgoingAccessRequestUniqueConstraint(
 	ctx context.Context,
-	prefix,
 	organizationName,
 	serviceName,
 	publicKeyFingerprint string,
 ) error {
-	requests := []*AccessRequest{}
+	proof, err := db.GetLatestAccessProofForService(ctx, organizationName, serviceName)
 
-	if err := db.listAccessRequests(ctx, path.Join(prefix, organizationName, serviceName), &requests); err != nil {
+	if errors.Is(err, ErrNotFound) {
+		requests := []*AccessRequest{}
+
+		if err := db.listAccessRequests(ctx, path.Join("outgoing", organizationName, serviceName), &requests); err != nil {
+			return err
+		}
+
+		for _, request := range requests {
+			if request.PublicKeyFingerprint == publicKeyFingerprint &&
+				request.State != AccessRequestRejected {
+				return ErrActiveAccessRequest
+			}
+		}
+
+		return nil
+	}
+
+	if err != nil {
 		return err
 	}
 
-	for _, request := range requests {
-		if request.PublicKeyFingerprint == publicKeyFingerprint &&
-			request.State != AccessRequestRejected {
-			return ErrActiveAccessRequest
+	if !proof.RevokedAt.IsZero() {
+		request, err := db.GetLatestOutgoingAccessRequest(ctx, organizationName, serviceName)
+		if err != nil {
+			return err
+		}
+
+		if request.ID == proof.AccessRequestID {
+			return nil
 		}
 	}
 
-	return nil
+	return ErrActiveAccessRequest
+}
+
+func (db ETCDConfigDatabase) verifyIncomingAccessRequestUniqueConstraint(
+	ctx context.Context,
+	organizationName,
+	serviceName,
+	publicKeyFingerprint string,
+) error {
+	grant, err := db.GetLatestAccessGrantForService(ctx, organizationName, serviceName)
+
+	if errors.Is(err, ErrNotFound) {
+		requests := []*AccessRequest{}
+
+		if err := db.listAccessRequests(ctx, path.Join("incoming", organizationName, serviceName), &requests); err != nil {
+			return err
+		}
+
+		for _, request := range requests {
+			if request.PublicKeyFingerprint == publicKeyFingerprint &&
+				request.State != AccessRequestRejected {
+				return ErrActiveAccessRequest
+			}
+		}
+
+		return nil
+	}
+
+	if err != nil {
+		return err
+	}
+
+	if !grant.RevokedAt.IsZero() {
+		request, err := db.GetLatestIncomingAccessRequest(ctx, organizationName, serviceName)
+		if err != nil {
+			return err
+		}
+
+		if request.ID == grant.AccessRequestID {
+			return nil
+		}
+	}
+
+	return ErrActiveAccessRequest
 }
 
 func (db ETCDConfigDatabase) CreateOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) (*OutgoingAccessRequest, error) {
-	if err := db.verifyAccessRequestUniqueConstraint(
+	if err := db.verifyOutgoingAccessRequestUniqueConstraint(
 		ctx,
-		"outgoing",
 		accessRequest.OrganizationName,
 		accessRequest.ServiceName,
 		accessRequest.PublicKeyFingerprint,
@@ -438,9 +500,8 @@ func (db ETCDConfigDatabase) GetIncomingAccessRequest(ctx context.Context, id st
 }
 
 func (db ETCDConfigDatabase) CreateIncomingAccessRequest(ctx context.Context, accessRequest *IncomingAccessRequest) (*IncomingAccessRequest, error) {
-	if err := db.verifyAccessRequestUniqueConstraint(
+	if err := db.verifyIncomingAccessRequestUniqueConstraint(
 		ctx,
-		"incoming",
 		accessRequest.OrganizationName,
 		accessRequest.ServiceName,
 		accessRequest.PublicKeyFingerprint,

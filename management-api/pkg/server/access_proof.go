@@ -49,6 +49,7 @@ func (s *ManagementService) GetAccessProof(ctx context.Context, req *external.Ge
 
 	return &api.AccessProof{
 		Id:               grant.ID,
+		AccessRequestId:  grant.AccessRequestID,
 		OrganizationName: grant.OrganizationName,
 		ServiceName:      grant.ServiceName,
 		CreatedAt:        createdAt,

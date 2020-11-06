@@ -27,20 +27,25 @@ export default function getDirectoryServiceAccessUIState(
   outgoingAccessRequest,
   accessProof,
 ) {
-  if (accessProof && !accessProof.revokedAt) {
-    return SHOW_HAS_ACCESS
-  }
-
   // It should not be possible to have accessProof and no access request
   if (!outgoingAccessRequest && !accessProof) {
     return SHOW_REQUEST_ACCESS
   }
 
-  if (accessProof && accessProof.revokedAt) {
-    return SHOW_ACCESS_REVOKED
-  }
+  const hasNewerAccessRequest =
+    outgoingAccessRequest &&
+    accessProof &&
+    accessProof.accessRequestId !== outgoingAccessRequest.id
 
-  if (!accessProof) {
+  if (!hasNewerAccessRequest) {
+    if (!accessProof.revokedAt) {
+      return SHOW_HAS_ACCESS
+    }
+
+    if (accessProof.revokedAt) {
+      return SHOW_ACCESS_REVOKED
+    }
+  } else {
     if (outgoingAccessRequest.state === CREATED) return SHOW_REQUEST_CREATED
     if (outgoingAccessRequest.state === FAILED) return SHOW_REQUEST_FAILED
     if (outgoingAccessRequest.state === RECEIVED) return SHOW_REQUEST_RECEIVED

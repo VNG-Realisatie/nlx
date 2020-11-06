@@ -258,6 +258,7 @@ message AccessGrant {
   string publicKeyFingerprint = 4;
   google.protobuf.Timestamp createdAt = 5;
   google.protobuf.Timestamp revokedAt = 6;
+  string accessRequestId = 7;
 }
 
 message AccessProof {
@@ -266,6 +267,7 @@ message AccessProof {
   string serviceName = 3;
   google.protobuf.Timestamp createdAt = 4;
   google.protobuf.Timestamp revokedAt = 5;
+  string accessRequestId = 6;
 }
 
 service Directory {

@@ -14,12 +14,11 @@ import (
 	"github.com/coreos/etcd/clientv3"
 )
 
-var (
-	ErrAccessProofAlreadyRevoked = errors.New("access proof is already revoked")
-)
+var ErrAccessProofAlreadyRevoked = errors.New("access proof is already revoked")
 
 type AccessProof struct {
 	ID               string    `json:"id,omitempty"`
+	AccessRequestID  string    `json:"accessRequestId,omitempty"`
 	OrganizationName string    `json:"organizationName,omitempty"`
 	ServiceName      string    `json:"serviceName,omitempty"`
 	CreatedAt        time.Time `json:"createdAt,omitempty"`
@@ -36,6 +35,7 @@ func (db ETCDConfigDatabase) CreateAccessProof(ctx context.Context, accessProof 
 
 	accessProof = &AccessProof{
 		ID:               id,
+		AccessRequestID:  accessProof.AccessRequestID,
 		OrganizationName: accessProof.OrganizationName,
 		ServiceName:      accessProof.ServiceName,
 		CreatedAt:        now,

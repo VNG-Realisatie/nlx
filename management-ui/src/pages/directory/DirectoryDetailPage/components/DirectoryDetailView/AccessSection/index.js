@@ -137,9 +137,12 @@ const AccessSection = ({
                 <span>{t('Your access was revoked')}</span>
                 <small>
                   {t(
-                    'Due to a technical limitation you are not yet able to request access again',
+                    'You no longer have access to this service. Request access to regain access.',
                   )}
                 </small>
+                <Button onClick={onRequestAccessButtonClick}>
+                  {t('Request Access')}
+                </Button>
               </StateDetail>
             </>
           )}
