@@ -14,7 +14,7 @@ services:
     restart: always
 
   dex:
-    image: quay.io/dexidp/dex:v2.25.0
+    image: quay.io/dexidp/dex:v2.26.0
     command: serve /config.yaml
     ports:
       - 127.0.0.1:5556:5556

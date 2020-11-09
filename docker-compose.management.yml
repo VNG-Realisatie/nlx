@@ -32,7 +32,7 @@ services:
       MANAGEMENT_API_ADDRESS: http://management-api.organization-a.nlx.local:8080
 
   dex:
-    image: quay.io/dexidp/dex:v2.25.0
+    image: quay.io/dexidp/dex:v2.26.0
     ports:
       - 127.0.0.1:5556:5556
     command: serve /config.yaml
