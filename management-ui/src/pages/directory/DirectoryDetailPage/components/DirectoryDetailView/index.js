@@ -7,7 +7,6 @@ import { observer } from 'mobx-react'
 import { Alert } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import pick from 'lodash.pick'
-
 import { directoryServicePropTypes } from '../../../../../models/DirectoryServiceModel'
 import { ACCESS_REQUEST_STATES } from '../../../../../models/OutgoingAccessRequestModel'
 import getDirectoryServiceAccessUIState from '../../../directoryServiceAccessState'
@@ -26,9 +25,11 @@ const DirectoryDetailView = ({ service }) => {
       t('The request will be sent to', { name: organizationName }),
     )
 
-    if (confirmed) {
-      service.requestAccess()
+    if (!confirmed) {
+      return
     }
+
+    service.requestAccess()
   }
 
   const retryRequestAccess = () => {

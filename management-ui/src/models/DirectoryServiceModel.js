@@ -76,20 +76,13 @@ class DirectoryServiceModel {
   }
 
   requestAccess = flow(function* requestAccess() {
-    if (
-      this.latestAccessRequest &&
-      !this.latestAccessRequest.isCancelledOrRejected
-    ) {
-      return false
-    }
-
     try {
       this.latestAccessRequest = yield this.directoryServicesStore.requestAccess(
         this,
       )
-    } catch (e) {
-      console.error(e)
+    } catch (error) {
       this.latestAccessRequest = null
+      throw error
     }
   }).bind(this)
 

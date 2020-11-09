@@ -18,6 +18,7 @@ class AccessProofModel {
   serviceName = ''
   createdAt = null
   revokedAt = null
+  accessRequestId = null
 
   constructor({ accessProofData }) {
     makeAutoObservable(this)
@@ -48,6 +49,10 @@ class AccessProofModel {
 
     if (accessProofData.revokedAt) {
       this.revokedAt = new Date(accessProofData.revokedAt)
+    }
+
+    if (accessProofData.accessRequestId) {
+      this.accessRequestId = accessProofData.accessRequestId
     }
   }
 }

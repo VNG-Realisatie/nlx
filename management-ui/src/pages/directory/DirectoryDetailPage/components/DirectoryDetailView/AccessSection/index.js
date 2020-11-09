@@ -136,14 +136,14 @@ const AccessSection = ({
               <StateDetail>
                 <span>{t('Your access was revoked')}</span>
                 <small>
-                  {t(
-                    'You no longer have access to this service. Request access to regain access.',
-                  )}
+                  {t('On date', {
+                    date: latestAccessProof.revokedAt,
+                  })}
                 </small>
-                <Button onClick={onRequestAccessButtonClick}>
-                  {t('Request Access')}
-                </Button>
               </StateDetail>
+              <Button onClick={onRequestAccessButtonClick}>
+                {t('Request Access')}
+              </Button>
             </>
           )}
         </Switch.Case>

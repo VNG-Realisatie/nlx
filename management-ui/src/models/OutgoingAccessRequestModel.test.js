@@ -36,27 +36,6 @@ test('should properly construct object', () => {
   expect(accessRequest.updatedAt).toEqual(new Date(accessRequestData.updatedAt))
 })
 
-test('detect if current state is cancelled or rejected', () => {
-  const accessRequest = new OutgoingAccessRequestModel({
-    accessRequestData,
-    outgoingAccessRequestStore: {},
-  })
-
-  expect(accessRequest.isCancelledOrRejected).toBe(false)
-
-  accessRequest.update({
-    state: ACCESS_REQUEST_STATES.CANCELLED,
-  })
-
-  expect(accessRequest.isCancelledOrRejected).toBe(true)
-
-  accessRequest.update({
-    state: ACCESS_REQUEST_STATES.REJECTED,
-  })
-
-  expect(accessRequest.isCancelledOrRejected).toBe(true)
-})
-
 test('calling retry should pass instance to store', () => {
   const storeRetryMock = jest.fn()
   const accessRequest = new OutgoingAccessRequestModel({

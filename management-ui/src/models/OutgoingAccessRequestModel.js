@@ -43,13 +43,6 @@ class OutgoingAccessRequestModel {
     this.update(accessRequestData)
   }
 
-  get isCancelledOrRejected() {
-    return (
-      this.state === ACCESS_REQUEST_STATES.CANCELLED ||
-      this.state === ACCESS_REQUEST_STATES.REJECTED
-    )
-  }
-
   update = (accessRequestData) => {
     if (!accessRequestData) {
       throw Error('Data required to update outgoingAccessRequest')

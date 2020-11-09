@@ -2,7 +2,6 @@
 // Licensed under the EUPL
 //
 import { checkPropTypes } from 'prop-types'
-import OutgoingAccessRequestStore from '../stores/OutgoingAccessRequestStore'
 import { RootStore } from '../stores'
 import OutgoingAccessRequestModel, {
   ACCESS_REQUEST_STATES,
@@ -156,110 +155,17 @@ test('(re-)fetching the model', async () => {
 })
 
 describe('requesting access to a service', () => {
-  it('should not create a new access request an access request is already created', async () => {
-    const rootStore = new RootStore({
-      accessRequestRepository: {
-        createAccessRequest: jest.fn().mockResolvedValue({}),
-      },
-    })
-
-    const serviceData = {
-      organizationName: 'Organization',
-      serviceName: 'Service',
-      state: 'up',
-      apiSpecificationType: 'API',
-      latestAccessRequest: {
-        state: ACCESS_REQUEST_STATES.CREATED,
-      },
-    }
-
-    const outgoingAccessRequest = new OutgoingAccessRequestModel({
-      accessRequestData: serviceData.latestAccessRequest,
-    })
+  it('should request access via the directory service store', async () => {
+    const rootStore = new RootStore({})
 
     const directoryService = new DirectoryServiceModel({
       directoryServicesStore: rootStore.directoryServicesStore,
-      serviceData,
+      serviceData: {},
     })
 
-    directoryService.update({}, outgoingAccessRequest)
-
-    const spy = jest.spyOn(rootStore.directoryServicesStore, 'requestAccess')
-    await directoryService.requestAccess()
-
-    expect(spy).not.toHaveBeenCalled()
-  })
-
-  it('should create an access request if it was cancelled before', async () => {
-    const rootStore = new RootStore({
-      accessRequestRepository: {
-        createAccessRequest: jest.fn().mockResolvedValue({}),
-      },
-    })
-
-    const outgoingAccessRequestStore = new OutgoingAccessRequestStore({
-      rootStore,
-    })
-
-    const latestAccessRequest = await outgoingAccessRequestStore.updateFromServer(
-      {
-        id: '42',
-        state: ACCESS_REQUEST_STATES.CANCELLED,
-      },
-    )
-
-    const serviceData = {
-      organizationName: 'Organization',
-      serviceName: 'Service',
-      state: 'up',
-      apiSpecificationType: 'API',
-      latestAccessRequest: latestAccessRequest,
-    }
-
-    const directoryService = new DirectoryServiceModel({
-      directoryServicesStore: rootStore.directoryServicesStore,
-      serviceData,
-    })
-
-    const spy = jest.spyOn(rootStore.directoryServicesStore, 'requestAccess')
-
-    await directoryService.requestAccess()
-
-    expect(spy).toHaveBeenCalledWith(directoryService)
-  })
-
-  it('should create access request if it was rejected before', async () => {
-    const rootStore = new RootStore({
-      accessRequestRepository: {
-        createAccessRequest: jest.fn().mockResolvedValue({}),
-      },
-    })
-
-    const outgoingAccessRequestStore = new OutgoingAccessRequestStore({
-      rootStore,
-    })
-
-    const latestAccessRequest = await outgoingAccessRequestStore.updateFromServer(
-      {
-        id: '42',
-        state: ACCESS_REQUEST_STATES.REJECTED,
-      },
-    )
-
-    const serviceData = {
-      organizationName: 'Organization',
-      serviceName: 'Service',
-      state: 'up',
-      apiSpecificationType: 'API',
-      latestAccessRequest: latestAccessRequest,
-    }
-
-    const directoryService = new DirectoryServiceModel({
-      directoryServicesStore: rootStore.directoryServicesStore,
-      serviceData,
-    })
-
-    const spy = jest.spyOn(rootStore.directoryServicesStore, 'requestAccess')
+    const spy = jest
+      .spyOn(rootStore.directoryServicesStore, 'requestAccess')
+      .mockResolvedValue(null)
 
     await directoryService.requestAccess()
 
