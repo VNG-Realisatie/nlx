@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "copy-text-to-clipboard": "2.2.0",
-    "core-js": "3.6.5",
+    "core-js": "3.7.0",
     "debounce": "1.2.0",
     "mobx": "6.0.3",
     "react": "17.0.1",
