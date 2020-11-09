@@ -15,12 +15,10 @@ import ScanQRCodePage from '../../components/ScanQRCodePage'
 import ErrorPage from '../../components/ErrorPage'
 
 export class LoginPageContainer extends Component {
-  UNSAFE_componentWillMount() {
-    this.props.resetLoginInformation()
-  }
-
   componentDidMount() {
     const { organization } = this.props
+
+    this.props.resetLoginInformation()
 
     if (!organization) {
       return

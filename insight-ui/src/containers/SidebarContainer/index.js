@@ -20,7 +20,7 @@ export class SidebarContainer extends Component {
     this.handleSearchQueryChanged = this.handleSearchQueryChanged.bind(this)
   }
 
-  UNSAFE_componentWillMount() {
+  componentDidMount() {
     this.props.fetchOrganizationsRequest()
   }
 
