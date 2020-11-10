@@ -6,7 +6,7 @@
     "@commonground/design-system": "13.6.1",
     "dayjs": "1.9.5",
     "fetch-defaults": "1.0.0",
-    "formik": "2.2.2",
+    "formik": "2.2.3",
     "i18next": "19.8.3",
     "i18next-xhr-backend": "3.2.2",
     "js-cookie": "2.2.1",
