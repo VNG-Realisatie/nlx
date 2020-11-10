@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@commonground/design-system": "13.6.1",
+    "@commonground/design-system": "13.8.0",
     "dayjs": "1.9.5",
     "fetch-defaults": "1.0.0",
     "formik": "2.2.3",
