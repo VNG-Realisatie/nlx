@@ -82,7 +82,6 @@ class DirectoryServiceModel {
       )
     } catch (error) {
       this.latestAccessRequest = null
-      throw error
     }
   }).bind(this)
 
