@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@commonground/design-system": "13.8.0",
+    "@commonground/design-system": "13.8.1",
     "formik": "2.2.4",
     "prop-types": "15.7.2",
     "react": "17.0.1",
