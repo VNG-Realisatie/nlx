@@ -285,6 +285,7 @@ func (db ETCDConfigDatabase) UnlockOutgoingAccessRequest(ctx context.Context, ac
 	return err
 }
 
+// nolint:dupl // verification is very similar for outgoing and incoming access requests
 func (db ETCDConfigDatabase) verifyOutgoingAccessRequestUniqueConstraint(
 	ctx context.Context,
 	organizationName,
@@ -296,7 +297,8 @@ func (db ETCDConfigDatabase) verifyOutgoingAccessRequestUniqueConstraint(
 	if errors.Is(err, ErrNotFound) {
 		requests := []*AccessRequest{}
 
-		if err := db.listAccessRequests(ctx, path.Join("outgoing", organizationName, serviceName), &requests); err != nil {
+		err = db.listAccessRequests(ctx, path.Join("outgoing", organizationName, serviceName), &requests)
+		if err != nil {
 			return err
 		}
 
@@ -328,6 +330,7 @@ func (db ETCDConfigDatabase) verifyOutgoingAccessRequestUniqueConstraint(
 	return ErrActiveAccessRequest
 }
 
+//nolint:dupl // incoming and outgoing logic is very similar - but not the same
 func (db ETCDConfigDatabase) verifyIncomingAccessRequestUniqueConstraint(
 	ctx context.Context,
 	organizationName,
@@ -339,7 +342,8 @@ func (db ETCDConfigDatabase) verifyIncomingAccessRequestUniqueConstraint(
 	if errors.Is(err, ErrNotFound) {
 		requests := []*AccessRequest{}
 
-		if err := db.listAccessRequests(ctx, path.Join("incoming", organizationName, serviceName), &requests); err != nil {
+		err = db.listAccessRequests(ctx, path.Join("incoming", organizationName, serviceName), &requests)
+		if err != nil {
 			return err
 		}
 

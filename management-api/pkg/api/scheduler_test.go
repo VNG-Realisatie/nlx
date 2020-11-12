@@ -559,6 +559,7 @@ func TestSyncAccessProof(t *testing.T) {
 			wantErr: true,
 			request: &database.OutgoingAccessRequest{
 				AccessRequest: database.AccessRequest{
+					ID:               "id",
 					OrganizationName: "organization-b",
 				},
 			},
@@ -576,6 +577,7 @@ func TestSyncAccessProof(t *testing.T) {
 			wantErr: true,
 			request: &database.OutgoingAccessRequest{
 				AccessRequest: database.AccessRequest{
+					ID:               "id",
 					OrganizationName: "organization-b",
 				},
 			},
@@ -595,6 +597,7 @@ func TestSyncAccessProof(t *testing.T) {
 			wantErr: true,
 			request: &database.OutgoingAccessRequest{
 				AccessRequest: database.AccessRequest{
+					ID:               "id",
 					OrganizationName: "organization-b",
 					ServiceName:      "service",
 				},
@@ -626,6 +629,7 @@ func TestSyncAccessProof(t *testing.T) {
 			wantErr: true,
 			request: &database.OutgoingAccessRequest{
 				AccessRequest: database.AccessRequest{
+					ID:               "id",
 					OrganizationName: "organization-b",
 					ServiceName:      "service",
 				},
@@ -653,10 +657,11 @@ func TestSyncAccessProof(t *testing.T) {
 			},
 		},
 
-		"returns_an_error_when_database_getting_latest_access_proof_for_service_errors": {
+		"returns_an_error_when_database_getting_access_proof_for_outgoing_access_request_errors": {
 			wantErr: true,
 			request: &database.OutgoingAccessRequest{
 				AccessRequest: database.AccessRequest{
+					ID:               "id",
 					OrganizationName: "organization-b",
 					ServiceName:      "service",
 				},
@@ -683,7 +688,7 @@ func TestSyncAccessProof(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					GetLatestAccessProofForService(ctx, "organization-b", "service").
+					GetAccessProofForOutgoingAccessRequest(ctx, "organization-b", "service", "id").
 					Return(nil, errors.New("random error"))
 
 				mocks.management.
@@ -696,6 +701,7 @@ func TestSyncAccessProof(t *testing.T) {
 			wantErr: true,
 			request: &database.OutgoingAccessRequest{
 				AccessRequest: database.AccessRequest{
+					ID:               "id",
 					OrganizationName: "organization-b",
 					ServiceName:      "service",
 				},
@@ -727,12 +733,13 @@ func TestSyncAccessProof(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					GetLatestAccessProofForService(ctx, "organization-b", "service").
+					GetAccessProofForOutgoingAccessRequest(ctx, "organization-b", "service", "id").
 					Return(nil, database.ErrNotFound)
 
 				mocks.db.
 					EXPECT().
 					CreateAccessProof(ctx, &database.AccessProof{
+						AccessRequestID:  "id",
 						OrganizationName: "organization-b",
 						ServiceName:      "service",
 						CreatedAt:        t,
@@ -749,6 +756,7 @@ func TestSyncAccessProof(t *testing.T) {
 			wantErr: true,
 			request: &database.OutgoingAccessRequest{
 				AccessRequest: database.AccessRequest{
+					ID:               "id",
 					OrganizationName: "organization-b",
 					ServiceName:      "service",
 				},
@@ -780,7 +788,7 @@ func TestSyncAccessProof(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					GetLatestAccessProofForService(ctx, "organization-b", "service").
+					GetAccessProofForOutgoingAccessRequest(ctx, "organization-b", "service", "id").
 					Return(&database.AccessProof{
 						ID:               "1",
 						OrganizationName: "organization-b",
@@ -809,6 +817,7 @@ func TestSyncAccessProof(t *testing.T) {
 		"successfully_revokes_an_access_grant_when_its_revoked": {
 			request: &database.OutgoingAccessRequest{
 				AccessRequest: database.AccessRequest{
+					ID:               "id",
 					OrganizationName: "organization-b",
 					ServiceName:      "service",
 				},
@@ -840,7 +849,7 @@ func TestSyncAccessProof(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					GetLatestAccessProofForService(ctx, "organization-b", "service").
+					GetAccessProofForOutgoingAccessRequest(ctx, "organization-b", "service", "id").
 					Return(&database.AccessProof{
 						ID:               "1",
 						OrganizationName: "organization-b",
@@ -870,6 +879,7 @@ func TestSyncAccessProof(t *testing.T) {
 			wantErr: false,
 			request: &database.OutgoingAccessRequest{
 				AccessRequest: database.AccessRequest{
+					ID:               "id",
 					OrganizationName: "organization-b",
 					ServiceName:      "service",
 				},
@@ -901,12 +911,13 @@ func TestSyncAccessProof(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					GetLatestAccessProofForService(ctx, "organization-b", "service").
+					GetAccessProofForOutgoingAccessRequest(ctx, "organization-b", "service", "id").
 					Return(nil, database.ErrNotFound)
 
 				mocks.db.
 					EXPECT().
 					CreateAccessProof(ctx, &database.AccessProof{
+						AccessRequestID:  "id",
 						OrganizationName: "organization-b",
 						ServiceName:      "service",
 						CreatedAt:        t,

@@ -138,6 +138,7 @@ func TestGetOutgoingAccessRequest(t *testing.T) {
 	}
 }
 
+// nolint:funlen,gocognit,gocyclo // this is a test method
 func TestCreateOutgoingAccessRequest(t *testing.T) {
 	ctx := context.Background()
 
@@ -409,9 +410,11 @@ func TestCreateOutgoingAccessRequest(t *testing.T) {
 	}
 }
 
+// nolint:funlen,gocognit,dupl,gocyclo // this is a test method
 func TestCreateIncomingAccessRequest(t *testing.T) {
 	ctx := context.Background()
 
+	// nolint:dupl // this is a test method
 	tests := map[string]struct {
 		wantErr error
 		want    *database.IncomingAccessRequest

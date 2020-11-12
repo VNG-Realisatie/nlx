@@ -310,7 +310,12 @@ func (scheduler *accessRequestScheduler) syncAccessProof(ctx context.Context, re
 		return err
 	}
 
-	localProof, err := scheduler.configDatabase.GetLatestAccessProofForService(ctx, request.OrganizationName, request.ServiceName)
+	localProof, err := scheduler.configDatabase.GetAccessProofForOutgoingAccessRequest(
+		ctx,
+		request.OrganizationName,
+		request.ServiceName,
+		request.ID,
+	)
 
 	switch err {
 	case nil:
@@ -329,7 +334,7 @@ func (scheduler *accessRequestScheduler) syncAccessProof(ctx context.Context, re
 	}
 
 	if !remoteProof.RevokedAt.IsZero() &&
-		localProof.RevokedAt != remoteProof.RevokedAt {
+		localProof.RevokedAt.IsZero() {
 		if _, err := scheduler.configDatabase.RevokeAccessProof(
 			ctx,
 			localProof.OrganizationName,

@@ -122,12 +122,109 @@ func TestRevokeAccessProof(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			ctx := context.Background()
 
-			accessProof, err := cluster.DB.RevokeAccessProof(ctx, test.organizationName, test.serviceName, test.accessProofID, test.revokeDate)
+			accessProof, err := cluster.DB.RevokeAccessProof(
+				ctx,
+				test.organizationName,
+				test.serviceName,
+				test.accessProofID,
+				test.revokeDate,
+			)
 
 			assert.Equal(t, test.accessProof, accessProof)
 
 			if test.err != nil {
 				assert.EqualError(t, err, test.err.Error())
+			}
+		})
+	}
+}
+
+func TestGetAccessProofForOutgoingAccessRequest(t *testing.T) {
+	clusterTime := time.Date(2020, time.October, 12, 13, 24, 16, 1337, time.UTC)
+	cluster := newTestCluster(t)
+	cluster.Clock.SetTime(clusterTime)
+
+	ctx := context.Background()
+
+	createdAccessProof, err := cluster.DB.CreateAccessProof(ctx, &database.AccessProof{
+		ID:               "19239129038123jd",
+		AccessRequestID:  "163d417ef83a0539",
+		OrganizationName: "test-organization",
+		ServiceName:      "test-service",
+	})
+
+	assert.NoError(t, err)
+
+	cluster.Clock.Step(5 * time.Second)
+
+	_, err = cluster.DB.CreateAccessProof(ctx, &database.AccessProof{
+		ID:               "29239129038123je",
+		AccessRequestID:  "ar-2",
+		OrganizationName: "test-organization",
+		ServiceName:      "test-service",
+	})
+
+	assert.NoError(t, err)
+
+	tests := []struct {
+		name             string
+		serviceName      string
+		organizationName string
+		accessRequestID  string
+		accessProof      *database.AccessProof
+		err              error
+	}{
+		{
+			"unknown_access_proof",
+			"test-service",
+			"test-organization",
+			"unknown-id",
+			nil,
+			database.ErrNotFound,
+		},
+		{
+			"service_argument_mismatch",
+			"other-service",
+			"test-organization",
+			"163d417ef83a0539",
+			nil,
+			database.ErrNotFound,
+		},
+		{
+			"organization_argument_mismatch",
+			"test-service",
+			"other-organization",
+			"163d417ef83a0539",
+			nil,
+			database.ErrNotFound,
+		},
+		{
+			"successful_query_returns_access_proof",
+			"test-service",
+			"test-organization",
+			"163d417ef83a0539",
+			createdAccessProof,
+			nil,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+
+		t.Run(tt.name, func(t *testing.T) {
+			ctx := context.Background()
+
+			accessProof, err := cluster.DB.GetAccessProofForOutgoingAccessRequest(
+				ctx,
+				tt.organizationName,
+				tt.serviceName,
+				tt.accessRequestID,
+			)
+
+			assert.Equal(t, tt.accessProof, accessProof)
+
+			if tt.err != nil {
+				assert.EqualError(t, err, tt.err.Error())
 			}
 		})
 	}

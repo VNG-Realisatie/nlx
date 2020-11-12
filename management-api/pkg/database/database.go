@@ -50,6 +50,7 @@ type ConfigDatabase interface {
 	CreateAccessProof(ctx context.Context, accessProof *AccessProof) (*AccessProof, error)
 	RevokeAccessProof(ctx context.Context, organizationName, serviceName, id string, revokedAt time.Time) (*AccessProof, error)
 	GetLatestAccessProofForService(ctx context.Context, organizationName, serviceName string) (*AccessProof, error)
+	GetAccessProofForOutgoingAccessRequest(ctx context.Context, organizationName, serviceName, accessRequestID string) (*AccessProof, error)
 
 	GetSettings(ctx context.Context) (*Settings, error)
 	UpdateSettings(ctx context.Context, settings *Settings) error

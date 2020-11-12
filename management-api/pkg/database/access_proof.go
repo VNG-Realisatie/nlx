@@ -87,3 +87,21 @@ func (db ETCDConfigDatabase) GetLatestAccessProofForService(ctx context.Context,
 
 	return accessProof, nil
 }
+
+func (db ETCDConfigDatabase) GetAccessProofForOutgoingAccessRequest(ctx context.Context, organizationName, serviceName, accessRequestID string) (*AccessProof, error) {
+	key := path.Join("access-proofs", organizationName, serviceName)
+
+	accessProofs := []*AccessProof{}
+
+	if err := db.list(ctx, key, &accessProofs); err != nil {
+		return nil, err
+	}
+
+	for _, accessProof := range accessProofs {
+		if accessProof.AccessRequestID == accessRequestID {
+			return accessProof, nil
+		}
+	}
+
+	return nil, ErrNotFound
+}
