@@ -7,3 +7,4 @@ node_modules/
 tmp-scanning-reports
 tmp-coverage-reports
 gl-container-scanning-report.json
+.eslintcache
