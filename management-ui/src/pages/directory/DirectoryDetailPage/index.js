@@ -1,14 +1,17 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React from 'react'
+import React, { useEffect } from 'react'
 import { shape, string } from 'prop-types'
 import { observer } from 'mobx-react'
 import { useParams, useHistory } from 'react-router-dom'
-import { Alert } from '@commonground/design-system'
-import Drawer, {
-  withDrawerStackProvider,
-} from '@commonground/design-system/dist/components/Drawer'
+import {
+  Alert,
+  Drawer,
+  StackedDrawer,
+  withDrawerStack,
+  useDrawerStack,
+} from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 
 import { directoryServicePropTypes } from '../../../models/DirectoryServiceModel'
@@ -19,11 +22,18 @@ const DirectoryDetailPage = ({ service, parentUrl }) => {
   const { t } = useTranslation()
   const history = useHistory()
   const { organizationName, serviceName } = useParams()
+  const { showDrawer } = useDrawerStack()
 
-  const close = () => history.push(parentUrl)
+  const afterHideHandler = () => {
+    history.push(parentUrl)
+  }
+
+  useEffect(() => {
+    showDrawer('directoryDetail')
+  }, [service]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <Drawer noMask closeHandler={close}>
+    <StackedDrawer id="directoryDetail" noMask afterHide={afterHideHandler}>
       {service ? (
         <DrawerHeader service={service} />
       ) : (
@@ -45,7 +55,7 @@ const DirectoryDetailPage = ({ service, parentUrl }) => {
           </Alert>
         )}
       </Drawer.Content>
-    </Drawer>
+    </StackedDrawer>
   )
 }
 
@@ -58,4 +68,4 @@ DirectoryDetailPage.defaultProps = {
   parentUrl: '/directory',
 }
 
-export default observer(withDrawerStackProvider(DirectoryDetailPage))
+export default observer(withDrawerStack(DirectoryDetailPage))

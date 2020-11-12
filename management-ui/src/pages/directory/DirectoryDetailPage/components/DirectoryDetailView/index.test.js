@@ -3,71 +3,59 @@
 //
 import React from 'react'
 import { makeAutoObservable } from 'mobx'
+import { Route, StaticRouter as Router } from 'react-router-dom'
 
 import { fireEvent, renderWithProviders } from '../../../../../test-utils'
-import DirectoryDetailView from './index'
+import DirectoryDetailPage from '../../index'
 
-describe('detail view of directory service we do not have access to', () => {
-  let service
+let service
 
-  global.confirm = jest.fn(() => true)
+global.confirm = jest.fn(() => true)
 
-  beforeEach(() => {
-    service = makeAutoObservable({
-      organizationName: 'Organization',
-      latestAccessRequest: null,
-      requestAccess: jest.fn(),
-    })
+beforeEach(() => {
+  service = makeAutoObservable({
+    id: 'Test Organization/Test Service',
+    organizationName: 'Test Organization',
+    serviceName: 'Test Service',
+    state: 'degraded',
+    apiSpecificationType: 'API',
+    latestAccessRequest: null,
+    fetch: jest.fn(),
+    requestAccess: jest.fn(),
+    retryRequestAccess: jest.fn(),
   })
+})
 
-  it('should show a failed message', () => {
-    service.latestAccessRequest = {
-      id: 'string',
-      organizationName: 'organization',
-      serviceName: 'service',
-      state: 'FAILED',
-      createdAt: new Date('2020-06-30T08:31:41.106Z'),
-      updatedAt: new Date('2020-06-30T08:31:41.106Z'),
-      errorDetails: {
-        cause: 'Something went wrong',
-        stackTrace: ['Go main panic'],
-      },
-    }
+test('A service with failed latestAccessRequest', () => {
+  service.latestAccessRequest = {
+    id: 'string',
+    organizationName: 'organization',
+    serviceName: 'service',
+    state: 'FAILED',
+    createdAt: new Date('2020-06-30T08:31:41.106Z'),
+    updatedAt: new Date('2020-06-30T08:31:41.106Z'),
+    errorDetails: {
+      cause: 'Something went wrong',
+      stackTrace: ['Go main panic'],
+    },
+  }
 
-    const { getAllByText } = renderWithProviders(
-      <DirectoryDetailView service={service} />,
-    )
+  // Note: it's a bit of work to mock a Drawerstack, so just using parent component
+  const { getAllByText, getByText, getByTestId } = renderWithProviders(
+    <Router location="/directory/organization/service">
+      <Route path="/directory/:organizationName/:serviceName">
+        <DirectoryDetailPage service={service} />
+      </Route>
+    </Router>,
+  )
 
-    const failedMessages = getAllByText('Request could not be sent')
+  const failedMessages = getAllByText('Request could not be sent')
+  const stacktraceButton = getByText('Show stacktrace')
 
-    expect(failedMessages).toHaveLength(2)
-  })
+  expect(failedMessages).toHaveLength(2)
 
-  it('should show show-trace button', () => {
-    service.latestAccessRequest = {
-      id: 'string',
-      organizationName: 'organization',
-      serviceName: 'service',
-      state: 'FAILED',
-      createdAt: new Date('2020-06-30T08:31:41.106Z'),
-      updatedAt: new Date('2020-06-30T08:31:41.106Z'),
-      errorDetails: {
-        cause: 'Something went wrong',
-        stackTrace: ['Go main panic', 'main.go:10'],
-      },
-    }
+  fireEvent.click(stacktraceButton)
 
-    const { getByText, getByTestId } = renderWithProviders(
-      <DirectoryDetailView service={service} />,
-    )
-
-    const button = getByText('Show stacktrace')
-    fireEvent.click(button)
-
-    const drawer = getByTestId('stacktrace')
-    const pre = getByTestId('stacktrace-content')
-
-    expect(drawer).toBeVisible()
-    expect(pre.innerHTML).toContain('Go main panic<br>main.go:10')
-  })
+  expect(getByTestId('stacktrace')).toBeVisible()
+  expect(getByText('Go main panic')).toBeInTheDocument()
 })

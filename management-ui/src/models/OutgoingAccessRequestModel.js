@@ -20,7 +20,6 @@ export const outgoingAccessRequestPropTypes = {
   state: string,
   createdAt: instanceOf(Date),
   updatedAt: instanceOf(Date),
-  error: string,
   errorDetails: object,
 
   retry: func,
@@ -33,8 +32,7 @@ class OutgoingAccessRequestModel {
   state = ''
   createdAt = null
   updatedAt = null
-
-  error = ''
+  errorDetails = null
 
   constructor({ accessRequestData, outgoingAccessRequestStore }) {
     makeAutoObservable(this)

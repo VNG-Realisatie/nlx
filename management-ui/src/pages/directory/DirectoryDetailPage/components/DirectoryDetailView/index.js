@@ -4,21 +4,23 @@
 import React from 'react'
 import { shape } from 'prop-types'
 import { observer } from 'mobx-react'
-import { Alert, Drawer } from '@commonground/design-system'
+import { Alert, useDrawerStack } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import pick from 'lodash.pick'
 import { directoryServicePropTypes } from '../../../../../models/DirectoryServiceModel'
 import { ACCESS_REQUEST_STATES } from '../../../../../models/OutgoingAccessRequestModel'
 import getDirectoryServiceAccessUIState from '../../../directoryServiceAccessState'
 import { SectionGroup } from '../../../../../components/DetailView'
+import StacktraceDrawer from './StacktraceDrawer'
 import AccessSection from './AccessSection'
-import { StyledAlert, StyledPre } from './index.styles'
+import { StyledAlert } from './index.styles'
 
 const { FAILED } = ACCESS_REQUEST_STATES
+const stackTraceDrawerId = 'stacktrace'
 
 const DirectoryDetailView = ({ service }) => {
   const { t } = useTranslation()
-  const [traceShown, setTraceShown] = useState(false)
+  const { showDrawer } = useDrawerStack()
   const { organizationName, latestAccessRequest, latestAccessProof } = service
 
   const requestAccess = () => {
@@ -43,11 +45,7 @@ const DirectoryDetailView = ({ service }) => {
   )
 
   const showTrace = () => {
-    setTraceShown(true)
-  }
-
-  const hideTrace = () => {
-    setTraceShown(false)
+    showDrawer(stackTraceDrawerId)
   }
 
   return (
@@ -76,22 +74,12 @@ const DirectoryDetailView = ({ service }) => {
         </StyledAlert>
       )}
 
-      {traceShown && (
-        <Drawer data-testid="stacktrace" closeHandler={hideTrace}>
-          <Drawer.Header as="header" title={t('Stacktrace')} />
-          <Drawer.Content>
-            <code>
-              <StyledPre
-                data-testid="stacktrace-content"
-                dangerouslySetInnerHTML={{
-                  __html: latestAccessRequest.errorDetails.stackTrace.join(
-                    '<br />',
-                  ),
-                }}
-              />
-            </code>
-          </Drawer.Content>
-        </Drawer>
+      {latestAccessRequest && latestAccessRequest.errorDetails && (
+        <StacktraceDrawer
+          id={stackTraceDrawerId}
+          parentId="directoryDetail"
+          stacktrace={latestAccessRequest.errorDetails.stackTrace}
+        />
       )}
 
       <SectionGroup>
