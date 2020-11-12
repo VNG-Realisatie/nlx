@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@commonground/design-system": "13.8.1",
-    "formik": "2.2.4",
+    "formik": "2.2.5",
     "prop-types": "15.7.2",
     "react": "17.0.1",
     "react-app-polyfill": "2.0.0",
