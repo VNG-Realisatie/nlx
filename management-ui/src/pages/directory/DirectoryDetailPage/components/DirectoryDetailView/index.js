@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React, { useMemo } from 'react'
+import React from 'react'
 import { shape } from 'prop-types'
 import { observer } from 'mobx-react'
 import { Alert } from '@commonground/design-system'
@@ -35,10 +35,9 @@ const DirectoryDetailView = ({ service }) => {
     service.retryRequestAccess()
   }
 
-  const displayState = useMemo(
-    () =>
-      getDirectoryServiceAccessUIState(latestAccessRequest, latestAccessProof),
-    [latestAccessRequest, latestAccessProof],
+  const displayState = getDirectoryServiceAccessUIState(
+    latestAccessRequest,
+    latestAccessProof,
   )
 
   return (
