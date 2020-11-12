@@ -47,6 +47,7 @@ spec:
         - name: certificate
           secret:
             secretName: {{ default (printf "%s-tls" (include "auth-service.fullname" .)) .Values.tls.existingSecret }}
+            defaultMode: 0600
     {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

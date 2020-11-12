@@ -73,6 +73,7 @@ spec:
         - name: certificate
           secret:
             secretName: {{ default (printf "%s-tls" (include "nlx-directory.fullname" .)) .Values.tls.existingSecret }}
+            defaultMode: 0600
         - name: config
           configMap:
             name: {{ include "nlx-directory.fullname" . }}

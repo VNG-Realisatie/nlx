@@ -10,9 +10,19 @@ import (
 	"encoding/pem"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	"github.com/pkg/errors"
+)
+
+const (
+	// key file can't be:
+	// - world readable (0o004)
+	// - world writable (0o002)
+	// - group writable (0o020)
+	// - any executable (0o111)
+	invalidPerms = 0o137
 )
 
 // CertificateBundle bundles a certificate, private key and root certificate pool
@@ -45,13 +55,40 @@ func (c *CertificateBundle) TLSConfig(options ...ConfigOption) *tls.Config {
 	return config
 }
 
+func readPrivateKey(unsanitizedPath string) ([]byte, error) {
+	file, err := os.Open(filepath.Clean(unsanitizedPath))
+	if err != nil {
+		return nil, err
+	}
+
+	defer file.Close()
+
+	stat, err := file.Stat()
+	if err != nil {
+		return nil, err
+	}
+
+	perms := stat.Mode().Perm()
+
+	if perms&invalidPerms != 0 {
+		fmt.Fprintf(
+			os.Stderr,
+			"permissions %#o for %s are too open, it's recommended that your private key files are NOT accessible by others",
+			perms,
+			unsanitizedPath,
+		)
+	}
+
+	return ioutil.ReadAll(file)
+}
+
 func NewBundleFromFiles(certFile, keyFile, rootCertFile string) (*CertificateBundle, error) {
 	certPEM, err := ioutil.ReadFile(filepath.Clean(certFile))
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to read certificate file")
 	}
 
-	keyPEM, err := ioutil.ReadFile(filepath.Clean(keyFile))
+	keyPEM, err := readPrivateKey(keyFile)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to read private key file")
 	}

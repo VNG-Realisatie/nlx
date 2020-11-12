@@ -130,10 +130,12 @@ spec:
         - name: certificate-organization
           secret:
             secretName: {{ default (printf "%s-organization-tls" (include  "nlx-inway.fullname" .)) .Values.tls.organizationCertificate.existingSecret }}
+            defaultMode: 0600
       {{- if .Values.config.managementAPI.enabled }}
         - name: certificate
           secret:
             secretName: {{ default (printf "%s-tls" (include "nlx-inway.fullname" .)) .Values.tls.certificate.existingSecret }}
+            defaultMode: 0600
       {{- end }}
         - name: config
           configMap:
