@@ -26,21 +26,18 @@ class DirectoryServicesStore {
       serviceName,
     )
 
-    let directoryService = this.getService({ organizationName, serviceName })
-    if (!directoryService) {
-      directoryService = new DirectoryServiceModel({
-        directoryServicesStore: this,
-        serviceData,
-      })
-      this.services.push(directoryService)
+    let directoryServiceModel = this.getService({
+      organizationName,
+      serviceName,
+    })
+
+    if (!directoryServiceModel) {
+      directoryServiceModel = this._updateFromServer(serviceData)
+      this.services.push(directoryServiceModel)
+      return directoryServiceModel
     }
 
-    const {
-      latestAccessRequest,
-      latestAccessProof,
-    } = yield this.syncStoresWithServiceData(serviceData)
-
-    directoryService.update(serviceData, latestAccessRequest, latestAccessProof)
+    return this._updateFromServer(serviceData)
   })
 
   fetchAll = flow(function* fetchAll() {
@@ -52,24 +49,11 @@ class DirectoryServicesStore {
     this.error = ''
 
     try {
-      const servicesData = yield this.directoryRepository.getAll()
+      const services = yield this.directoryRepository.getAll()
 
-      const serviceModelsLoaded = servicesData.map(async (serviceData) => {
-        const {
-          latestAccessRequest,
-          latestAccessProof,
-        } = await this.syncStoresWithServiceData(serviceData)
-
-        const directoryService = new DirectoryServiceModel({
-          directoryServicesStore: this,
-          serviceData,
-        })
-
-        directoryService.update({}, latestAccessRequest, latestAccessProof)
-        return directoryService
-      })
-
-      this.services = yield Promise.all(serviceModelsLoaded)
+      this.services = services.map((serviceData) =>
+        this._updateFromServer(serviceData),
+      )
     } catch (e) {
       this.error = e
       console.error(e)
@@ -94,18 +78,34 @@ class DirectoryServicesStore {
     })
   }
 
-  async syncStoresWithServiceData(serviceData) {
-    const latestAccessRequest = await this.rootStore.outgoingAccessRequestStore.updateFromServer(
+  _updateFromServer(serviceData) {
+    const latestAccessRequestModel = this.rootStore.outgoingAccessRequestStore.updateFromServer(
       serviceData.latestAccessRequest,
     )
-    const latestAccessProof = await this.rootStore.accessProofStore.updateFromServer(
+    const latestAccessProofModel = this.rootStore.accessProofStore.updateFromServer(
       serviceData.latestAccessProof,
     )
 
-    return {
-      latestAccessRequest,
-      latestAccessProof,
+    const cachedDirectoryService = this.getService({
+      organizationName: serviceData.organizationName,
+      serviceName: serviceData.serviceName,
+    })
+
+    if (cachedDirectoryService) {
+      return cachedDirectoryService.update(
+        serviceData,
+        latestAccessRequestModel,
+        latestAccessProofModel,
+      )
     }
+
+    return new DirectoryServiceModel({
+      directoryServicesStore: this,
+      serviceData: Object.assign({}, serviceData, {
+        latestAccessProof: latestAccessProofModel,
+        latestAccessRequest: latestAccessRequestModel,
+      }),
+    })
   }
 }
 
