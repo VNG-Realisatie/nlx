@@ -1,9 +1,9 @@
 package diagnostics
 
 import (
+	"fmt"
 	"runtime/debug"
 	"strings"
-    "fmt"
 
 	"google.golang.org/grpc/status"
 )
