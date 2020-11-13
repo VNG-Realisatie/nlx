@@ -20,6 +20,8 @@ import (
 	"go.nlx.io/nlx/directory-monitor/health"
 )
 
+const monitorHTTPTimeout = 30 * time.Second
+
 // HealthChecker checks the inways of a StoredService and modifies it's health state directly in the StoredService struct.
 type healthChecker struct {
 	logger     *zap.Logger
@@ -71,9 +73,12 @@ func RunHealthChecker(
 	h := &healthChecker{
 		logger:         logger,
 		availabilities: make(map[uint64]*availability),
-		httpClient: &http.Client{Transport: &http.Transport{
-			TLSClientConfig: certificate.TLSConfig(),
-		}},
+		httpClient: &http.Client{
+			Transport: &http.Transport{
+				TLSClientConfig: certificate.TLSConfig(),
+			},
+			Timeout: monitorHTTPTimeout,
+		},
 	}
 
 	var err error
@@ -191,7 +196,6 @@ func (h *healthChecker) run(proc *process.Process, postgressDNS string) error {
 func (h *healthChecker) runCleanUpServices(shutDown chan struct{}) {
 	h.logger.Debug("initial cleaning up stale services")
 	servicesRemoved, err := h.cleanUpServices()
-
 	if err != nil {
 		h.logger.Error("error cleaning up offline services", zap.Error(err))
 	}
@@ -203,7 +207,6 @@ func (h *healthChecker) runCleanUpServices(shutDown chan struct{}) {
 		case <-time.After(1 * time.Minute):
 			h.logger.Debug("cleaning up offline services")
 			servicesRemoved, err := h.cleanUpServices()
-
 			if err != nil {
 				h.logger.Error("error cleaning up offline services", zap.Error(err))
 				continue
