@@ -3,6 +3,7 @@
 //
 import React from 'react'
 
+import { act } from '@testing-library/react'
 import { renderWithProviders, fireEvent } from '../../../../../test-utils'
 import AccessRequestsSection from './index'
 
@@ -11,6 +12,7 @@ beforeEach(() => {
 })
 
 test('listing the access requests', async () => {
+  global.confirm = jest.fn(() => true)
   const fetchServiceHandler = jest.fn().mockResolvedValue(null)
 
   const { getByTestId, rerender, getByText } = renderWithProviders(
@@ -40,6 +42,8 @@ test('listing the access requests', async () => {
           state: 'RECEIVED',
           createdAt: new Date('2020-10-01T12:00:00Z'),
           updatedAt: new Date('2020-10-01T12:00:01Z'),
+          approve: () => Promise.resolve(),
+          reject: () => Promise.resolve(),
         },
       ]}
       fetchServiceHandler={fetchServiceHandler}
@@ -55,4 +59,16 @@ test('listing the access requests', async () => {
   ).toBeTruthy()
   expect(getByTestId('service-incoming-accessrequests-list')).toBeTruthy()
   expect(getByText('Organization A')).toBeInTheDocument()
+
+  await act(async () => {
+    await fireEvent.click(getByTestId('button-approve'))
+  })
+
+  expect(fetchServiceHandler).toHaveBeenCalledTimes(1)
+
+  await act(async () => {
+    await fireEvent.click(getByTestId('button-reject'))
+  })
+
+  expect(fetchServiceHandler).toHaveBeenCalledTimes(2)
 })
