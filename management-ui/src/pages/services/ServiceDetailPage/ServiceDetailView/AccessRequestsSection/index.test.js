@@ -10,9 +10,14 @@ beforeEach(() => {
   jest.useFakeTimers()
 })
 
-test('should show if there are no incoming access requests', async () => {
-  const { getByTestId } = renderWithProviders(
-    <AccessRequestsSection accessRequests={[]} />,
+test('listing the access requests', async () => {
+  const fetchServiceHandler = jest.fn().mockResolvedValue(null)
+
+  const { getByTestId, rerender, getByText } = renderWithProviders(
+    <AccessRequestsSection
+      accessRequests={[]}
+      fetchServiceHandler={fetchServiceHandler}
+    />,
   )
 
   const toggler = getByTestId('service-incoming-accessrequests')
@@ -24,10 +29,8 @@ test('should show if there are no incoming access requests', async () => {
 
   expect(getByTestId('service-incoming-accessrequests-amount')).toBeTruthy()
   expect(getByTestId('service-no-incoming-accessrequests')).toBeTruthy()
-})
 
-test('should list access requests', async () => {
-  const { getByTestId, getByText } = renderWithProviders(
+  rerender(
     <AccessRequestsSection
       accessRequests={[
         {
@@ -39,13 +42,9 @@ test('should list access requests', async () => {
           updatedAt: new Date('2020-10-01T12:00:01Z'),
         },
       ]}
+      fetchServiceHandler={fetchServiceHandler}
     />,
   )
-
-  const toggler = getByTestId('service-incoming-accessrequests')
-
-  fireEvent.click(toggler)
-  jest.runAllTimers()
 
   expect(toggler).toHaveTextContent(
     'key.svg' + 'Access requests' + '1', // eslint-disable-line no-useless-concat
