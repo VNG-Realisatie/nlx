@@ -152,7 +152,7 @@ func TestListDirectoryServices(t *testing.T) {
 		}, nil)
 
 	db.EXPECT().
-		GetLatestAccessProofForService(ctx, service.OrganizationName, service.ServiceName).
+		GetAccessProofForOutgoingAccessRequest(ctx, service.OrganizationName, service.ServiceName, "161c188cfcea1939").
 		Return(&database.AccessProof{
 			ID:               "161c188cfcea1939",
 			OrganizationName: "test-organization-a",
@@ -214,30 +214,35 @@ func TestGetOrganizationService(t *testing.T) {
 				ServiceName:      "test-service",
 			},
 			func(db *mock_database.MockConfigDatabase) {
-				db.EXPECT().GetLatestOutgoingAccessRequest(gomock.Any(), "test-organization", "test-service").Return(&database.OutgoingAccessRequest{
-					AccessRequest: database.AccessRequest{
+				db.EXPECT().
+					GetLatestOutgoingAccessRequest(gomock.Any(), "test-organization", "test-service").
+					Return(&database.OutgoingAccessRequest{
+						AccessRequest: database.AccessRequest{
+							ID:               "161c188cfcea1939",
+							ServiceName:      "test-service",
+							OrganizationName: "test-organization",
+							State:            database.AccessRequestCreated,
+							CreatedAt:        time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
+							UpdatedAt:        time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
+						},
+					}, nil)
+
+				db.EXPECT().
+					GetAccessProofForOutgoingAccessRequest(gomock.Any(), "test-organization", "test-service", "161c188cfcea1939").
+					Return(&database.AccessProof{
 						ID:               "161c188cfcea1939",
 						ServiceName:      "test-service",
 						OrganizationName: "test-organization",
-						State:            database.AccessRequestCreated,
 						CreatedAt:        time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
-						UpdatedAt:        time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
-					},
-				}, nil)
-
-				db.EXPECT().GetLatestAccessProofForService(gomock.Any(), "test-organization", "test-service").Return(&database.AccessProof{
-					ID:               "161c188cfcea1939",
-					ServiceName:      "test-service",
-					OrganizationName: "test-organization",
-					CreatedAt:        time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
-				}, nil)
+					}, nil)
 			},
 			func(directoryClient *mock_directory.MockClient) {
 				directoryClient.EXPECT().ListServices(gomock.Any(), gomock.Any()).Return(&inspectionapi.ListServicesResponse{
 					Services: []*inspectionapi.ListServicesResponse_Service{{
 						ServiceName:      "test-service",
 						OrganizationName: "test-organization",
-					}}}, nil)
+					}},
+				}, nil)
 			},
 			&api.DirectoryService{
 				OrganizationName: "test-organization",
@@ -266,15 +271,18 @@ func TestGetOrganizationService(t *testing.T) {
 				ServiceName:      "test-service",
 			},
 			func(db *mock_database.MockConfigDatabase) {
-				db.EXPECT().GetLatestOutgoingAccessRequest(gomock.Any(), "test-organization", "test-service").Return(nil, database.ErrNotFound)
-				db.EXPECT().GetLatestAccessProofForService(gomock.Any(), "test-organization", "test-service").Return(nil, database.ErrNotFound)
+				db.
+					EXPECT().
+					GetLatestOutgoingAccessRequest(gomock.Any(), "test-organization", "test-service").
+					Return(nil, database.ErrNotFound)
 			},
 			func(directoryClient *mock_directory.MockClient) {
 				directoryClient.EXPECT().ListServices(gomock.Any(), gomock.Any()).Return(&inspectionapi.ListServicesResponse{
 					Services: []*inspectionapi.ListServicesResponse_Service{{
 						ServiceName:      "test-service",
 						OrganizationName: "test-organization",
-					}}}, nil)
+					}},
+				}, nil)
 			},
 			&api.DirectoryService{
 				OrganizationName: "test-organization",
@@ -289,7 +297,6 @@ func TestGetOrganizationService(t *testing.T) {
 				ServiceName:      "test-service",
 			},
 			func(db *mock_database.MockConfigDatabase) {
-
 			},
 			func(directoryClient *mock_directory.MockClient) {
 				directoryClient.EXPECT().ListServices(gomock.Any(), gomock.Any()).Return(nil, errors.New("arbitrary error"))
@@ -304,7 +311,10 @@ func TestGetOrganizationService(t *testing.T) {
 				ServiceName:      "test-service",
 			},
 			func(db *mock_database.MockConfigDatabase) {
-				db.EXPECT().GetLatestOutgoingAccessRequest(gomock.Any(), "test-organization", "test-service").Return(nil, errors.New("arbitrary error"))
+				db.
+					EXPECT().
+					GetLatestOutgoingAccessRequest(gomock.Any(), "test-organization", "test-service").
+					Return(nil, errors.New("arbitrary error"))
 			},
 
 			func(directoryClient *mock_directory.MockClient) {
@@ -312,7 +322,8 @@ func TestGetOrganizationService(t *testing.T) {
 					Services: []*inspectionapi.ListServicesResponse_Service{{
 						ServiceName:      "test-service",
 						OrganizationName: "test-organization",
-					}}}, nil)
+					}},
+				}, nil)
 			},
 			nil,
 			status.Error(codes.Internal, "database error"),
@@ -324,28 +335,52 @@ func TestGetOrganizationService(t *testing.T) {
 				ServiceName:      "test-service",
 			},
 			func(db *mock_database.MockConfigDatabase) {
-				db.EXPECT().GetLatestOutgoingAccessRequest(gomock.Any(), "test-organization", "test-service").Return(nil, database.ErrNotFound)
-				db.EXPECT().GetLatestAccessProofForService(gomock.Any(), "test-organization", "test-service").Return(nil, errors.New("arbitrary error"))
+				db.
+					EXPECT().
+					GetLatestOutgoingAccessRequest(gomock.Any(), "test-organization", "test-service").
+					Return(&database.OutgoingAccessRequest{
+						AccessRequest: database.AccessRequest{
+							ID:               "id",
+							OrganizationName: "test-organization",
+							ServiceName:      "test-service",
+						},
+					}, nil)
+
+				db.
+					EXPECT().
+					GetAccessProofForOutgoingAccessRequest(gomock.Any(), "test-organization", "test-service", "id").
+					Return(nil, errors.New("arbitrary error"))
 			},
 
 			func(directoryClient *mock_directory.MockClient) {
-				directoryClient.EXPECT().ListServices(gomock.Any(), gomock.Any()).Return(&inspectionapi.ListServicesResponse{
-					Services: []*inspectionapi.ListServicesResponse_Service{{
-						ServiceName:      "test-service",
-						OrganizationName: "test-organization",
-					}}}, nil)
+				directoryClient.
+					EXPECT().
+					ListServices(gomock.Any(), gomock.Any()).
+					Return(&inspectionapi.ListServicesResponse{
+						Services: []*inspectionapi.ListServicesResponse_Service{{
+							ServiceName:      "test-service",
+							OrganizationName: "test-organization",
+						}},
+					}, nil)
 			},
 			nil,
 			status.Error(codes.Internal, "database error"),
 		},
 	}
-	for _, tt := range tests {
-		service, mockDirectoryClient, db := newDirectoryService(t)
-		tt.db(db)
-		tt.directoryClient(mockDirectoryClient)
 
-		returnedService, err := service.GetOrganizationService(ctx, tt.req)
-		assert.Equal(t, tt.expectedReq, returnedService, tt.name)
-		assert.Equal(t, tt.expectedErr, err, tt.name)
+	for _, tt := range tests {
+		tt := tt
+
+		t.Run(tt.name, func(t *testing.T) {
+			service, mockDirectoryClient, db := newDirectoryService(t)
+
+			tt.db(db)
+			tt.directoryClient(mockDirectoryClient)
+
+			returnedService, err := service.GetOrganizationService(ctx, tt.req)
+
+			assert.Equal(t, tt.expectedReq, returnedService)
+			assert.Equal(t, tt.expectedErr, err)
+		})
 	}
 }

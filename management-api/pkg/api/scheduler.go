@@ -160,19 +160,22 @@ func (scheduler *accessRequestScheduler) getOrganizationManagementClient(ctx con
 	return client, nil
 }
 
-func (scheduler *accessRequestScheduler) sendRequest(ctx context.Context, request *database.OutgoingAccessRequest) error {
+func (scheduler *accessRequestScheduler) sendRequest(ctx context.Context, request *database.OutgoingAccessRequest) (string, error) {
 	client, err := scheduler.getOrganizationManagementClient(ctx, request.OrganizationName)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	defer client.Close()
 
-	_, err = client.RequestAccess(ctx, &external.RequestAccessRequest{
+	response, err := client.RequestAccess(ctx, &external.RequestAccessRequest{
 		ServiceName: request.ServiceName,
 	}, grpc_retry.WithMax(maxRetries))
+	if err != nil {
+		return "", err
+	}
 
-	return err
+	return response.ReferenceId, nil
 }
 
 func (scheduler *accessRequestScheduler) schedulePendingRequests(ctx context.Context) error {
@@ -244,29 +247,35 @@ func (scheduler *accessRequestScheduler) schedule(ctx context.Context, request *
 	}()
 
 	var (
-		taskErr  error
-		newState database.AccessRequestState
+		syncError   error
+		newState    database.AccessRequestState
+		referenceID string
 	)
 
 	switch request.State {
 	case database.AccessRequestCreated:
-		taskErr = scheduler.sendRequest(ctx, request)
+		referenceID, syncError = scheduler.sendRequest(ctx, request)
 		newState = database.AccessRequestReceived
 	case database.AccessRequestReceived:
-		newState, taskErr = scheduler.getAccessRequestState(ctx, request)
+		newState, syncError = scheduler.getAccessRequestState(ctx, request)
 	default:
 		return fmt.Errorf("invalid access request state: %s", request.State.String())
 	}
 
-	if taskErr != nil {
+	if syncError != nil {
 		newState = database.AccessRequestFailed
 	}
 
-	if err := scheduler.configDatabase.UpdateOutgoingAccessRequestState(ctx, request, newState); err != nil {
+	// don't update the state if the state is already synchronized
+	if newState == request.State {
+		return syncError
+	}
+
+	if err := scheduler.configDatabase.UpdateOutgoingAccessRequestState(ctx, request, newState, referenceID); err != nil {
 		return err
 	}
 
-	return taskErr
+	return syncError
 }
 
 func (scheduler *accessRequestScheduler) parseAccessProof(accessProof *api.AccessProof) (*database.AccessProof, error) {
@@ -290,8 +299,9 @@ func (scheduler *accessRequestScheduler) parseAccessProof(accessProof *api.Acces
 	}, nil
 }
 
-func (scheduler *accessRequestScheduler) syncAccessProof(ctx context.Context, request *database.OutgoingAccessRequest) error {
-	client, err := scheduler.getOrganizationManagementClient(ctx, request.OrganizationName)
+// nolint:gocyclo // somehow the complexity changed from 10 to 11 by renaming `request` to `outgoingAccessRequest`
+func (scheduler *accessRequestScheduler) syncAccessProof(ctx context.Context, outgoingAccessRequest *database.OutgoingAccessRequest) error {
+	client, err := scheduler.getOrganizationManagementClient(ctx, outgoingAccessRequest.OrganizationName)
 	if err != nil {
 		return err
 	}
@@ -299,7 +309,7 @@ func (scheduler *accessRequestScheduler) syncAccessProof(ctx context.Context, re
 	defer client.Close()
 
 	response, err := client.GetAccessProof(ctx, &external.GetAccessProofRequest{
-		ServiceName: request.ServiceName,
+		ServiceName: outgoingAccessRequest.ServiceName,
 	})
 	if err != nil {
 		return err
@@ -310,21 +320,26 @@ func (scheduler *accessRequestScheduler) syncAccessProof(ctx context.Context, re
 		return err
 	}
 
+	// skip this AccessRequest as it's not the one related to this AccessProof
+	if remoteProof.AccessRequestID != outgoingAccessRequest.ReferenceID {
+		return nil
+	}
+
 	localProof, err := scheduler.configDatabase.GetAccessProofForOutgoingAccessRequest(
 		ctx,
-		request.OrganizationName,
-		request.ServiceName,
-		request.ID,
+		outgoingAccessRequest.OrganizationName,
+		outgoingAccessRequest.ServiceName,
+		outgoingAccessRequest.ID,
 	)
 
 	switch err {
 	case nil:
 	case database.ErrNotFound:
 		_, err = scheduler.configDatabase.CreateAccessProof(ctx, &database.AccessProof{
-			OrganizationName: request.OrganizationName,
+			OrganizationName: outgoingAccessRequest.OrganizationName,
 			ServiceName:      remoteProof.ServiceName,
 			CreatedAt:        remoteProof.CreatedAt,
-			AccessRequestID:  request.ID,
+			AccessRequestID:  outgoingAccessRequest.ID,
 			RevokedAt:        remoteProof.RevokedAt,
 		})
 

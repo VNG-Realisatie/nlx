@@ -6,7 +6,6 @@ package mock_management
 
 import (
 	context "context"
-	types "github.com/gogo/protobuf/types"
 	gomock "github.com/golang/mock/gomock"
 	api "go.nlx.io/nlx/management-api/api"
 	external "go.nlx.io/nlx/management-api/api/external"
@@ -92,14 +91,14 @@ func (mr *MockClientMockRecorder) GetAccessRequestState(arg0, arg1 interface{}, 
 }
 
 // RequestAccess mocks base method
-func (m *MockClient) RequestAccess(arg0 context.Context, arg1 *external.RequestAccessRequest, arg2 ...grpc.CallOption) (*types.Empty, error) {
+func (m *MockClient) RequestAccess(arg0 context.Context, arg1 *external.RequestAccessRequest, arg2 ...grpc.CallOption) (*external.RequestAccessResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "RequestAccess", varargs...)
-	ret0, _ := ret[0].(*types.Empty)
+	ret0, _ := ret[0].(*external.RequestAccessResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

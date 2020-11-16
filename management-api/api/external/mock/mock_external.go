@@ -6,7 +6,6 @@ package mock_external
 
 import (
 	context "context"
-	types "github.com/gogo/protobuf/types"
 	gomock "github.com/golang/mock/gomock"
 	api "go.nlx.io/nlx/management-api/api"
 	external "go.nlx.io/nlx/management-api/api/external"
@@ -38,14 +37,14 @@ func (m *MockAccessRequestServiceClient) EXPECT() *MockAccessRequestServiceClien
 }
 
 // RequestAccess mocks base method
-func (m *MockAccessRequestServiceClient) RequestAccess(ctx context.Context, in *external.RequestAccessRequest, opts ...grpc.CallOption) (*types.Empty, error) {
+func (m *MockAccessRequestServiceClient) RequestAccess(ctx context.Context, in *external.RequestAccessRequest, opts ...grpc.CallOption) (*external.RequestAccessResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "RequestAccess", varargs...)
-	ret0, _ := ret[0].(*types.Empty)
+	ret0, _ := ret[0].(*external.RequestAccessResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -121,10 +120,10 @@ func (m *MockAccessRequestServiceServer) EXPECT() *MockAccessRequestServiceServe
 }
 
 // RequestAccess mocks base method
-func (m *MockAccessRequestServiceServer) RequestAccess(arg0 context.Context, arg1 *external.RequestAccessRequest) (*types.Empty, error) {
+func (m *MockAccessRequestServiceServer) RequestAccess(arg0 context.Context, arg1 *external.RequestAccessRequest) (*external.RequestAccessResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RequestAccess", arg0, arg1)
-	ret0, _ := ret[0].(*types.Empty)
+	ret0, _ := ret[0].(*external.RequestAccessResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

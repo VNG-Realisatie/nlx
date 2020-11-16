@@ -327,17 +327,17 @@ func (mr *MockConfigDatabaseMockRecorder) CreateOutgoingAccessRequest(ctx, acces
 }
 
 // UpdateOutgoingAccessRequestState mocks base method
-func (m *MockConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.Context, accessRequest *database.OutgoingAccessRequest, state database.AccessRequestState) error {
+func (m *MockConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.Context, accessRequest *database.OutgoingAccessRequest, state database.AccessRequestState, referenceID string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateOutgoingAccessRequestState", ctx, accessRequest, state)
+	ret := m.ctrl.Call(m, "UpdateOutgoingAccessRequestState", ctx, accessRequest, state, referenceID)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // UpdateOutgoingAccessRequestState indicates an expected call of UpdateOutgoingAccessRequestState
-func (mr *MockConfigDatabaseMockRecorder) UpdateOutgoingAccessRequestState(ctx, accessRequest, state interface{}) *gomock.Call {
+func (mr *MockConfigDatabaseMockRecorder) UpdateOutgoingAccessRequestState(ctx, accessRequest, state, referenceID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateOutgoingAccessRequestState", reflect.TypeOf((*MockConfigDatabase)(nil).UpdateOutgoingAccessRequestState), ctx, accessRequest, state)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateOutgoingAccessRequestState", reflect.TypeOf((*MockConfigDatabase)(nil).UpdateOutgoingAccessRequestState), ctx, accessRequest, state, referenceID)
 }
 
 // WatchOutgoingAccessRequests mocks base method

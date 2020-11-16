@@ -31,6 +31,7 @@ type IncomingAccessRequest struct {
 
 type OutgoingAccessRequest struct {
 	AccessRequest
+	ReferenceID string `json:"referenceId"`
 }
 
 // Sendable returns if the access request can be send to the other organization
@@ -159,28 +160,6 @@ func (db ETCDConfigDatabase) createAccessRequest(ctx context.Context, prefix str
 	return nil
 }
 
-func (db ETCDConfigDatabase) updateAccessRequestState(ctx context.Context, prefix string, accessRequest *AccessRequest, state AccessRequestState) error {
-	key := path.Join("access-requests", prefix, accessRequest.OrganizationName, accessRequest.ServiceName, accessRequest.ID)
-
-	response, err := db.etcdCli.Get(ctx, db.key(key))
-	if err != nil {
-		return err
-	}
-
-	if response.Count == 0 {
-		return fmt.Errorf("no such access request: %s", accessRequest.ID)
-	}
-
-	accessRequest.State = state
-	accessRequest.UpdatedAt = db.clock.Now()
-
-	if err := db.put(ctx, key, accessRequest); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (db ETCDConfigDatabase) ListAllOutgoingAccessRequests(ctx context.Context) (requests []*OutgoingAccessRequest, err error) {
 	err = db.listAccessRequests(ctx, "outgoing", &requests)
 	return
@@ -285,7 +264,7 @@ func (db ETCDConfigDatabase) UnlockOutgoingAccessRequest(ctx context.Context, ac
 	return err
 }
 
-// nolint:dupl // verification is very similar for outgoing and incoming access requests
+// nolint:dupl,gocyclo // verification is very similar for outgoing and incoming access requests
 func (db ETCDConfigDatabase) verifyOutgoingAccessRequestUniqueConstraint(
 	ctx context.Context,
 	organizationName,
@@ -322,7 +301,8 @@ func (db ETCDConfigDatabase) verifyOutgoingAccessRequestUniqueConstraint(
 			return err
 		}
 
-		if request.ID == proof.AccessRequestID {
+		if request.ID == proof.AccessRequestID ||
+			request.State == AccessRequestRejected {
 			return nil
 		}
 	}
@@ -330,7 +310,7 @@ func (db ETCDConfigDatabase) verifyOutgoingAccessRequestUniqueConstraint(
 	return ErrActiveAccessRequest
 }
 
-//nolint:dupl // incoming and outgoing logic is very similar - but not the same
+//nolint:dupl,gocyclo // incoming and outgoing logic is very similar - but not the same
 func (db ETCDConfigDatabase) verifyIncomingAccessRequestUniqueConstraint(
 	ctx context.Context,
 	organizationName,
@@ -367,7 +347,8 @@ func (db ETCDConfigDatabase) verifyIncomingAccessRequestUniqueConstraint(
 			return err
 		}
 
-		if request.ID == grant.AccessRequestID {
+		if request.ID == grant.AccessRequestID ||
+			request.State == AccessRequestRejected {
 			return nil
 		}
 	}
@@ -394,8 +375,36 @@ func (db ETCDConfigDatabase) CreateOutgoingAccessRequest(ctx context.Context, ac
 	return accessRequest, nil
 }
 
-func (db ETCDConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.Context, accessRequest *OutgoingAccessRequest, state AccessRequestState) error {
-	return db.updateAccessRequestState(ctx, "outgoing", &accessRequest.AccessRequest, state)
+func (db ETCDConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.Context, accessRequest *OutgoingAccessRequest, state AccessRequestState, referenceID string) error {
+	key := path.Join("access-requests", "outgoing", accessRequest.OrganizationName, accessRequest.ServiceName, accessRequest.ID)
+
+	response, err := db.etcdCli.Get(ctx, db.key(key))
+	if err != nil {
+		return err
+	}
+
+	if response.Count == 0 {
+		return fmt.Errorf("no such access request: %s", accessRequest.ID)
+	}
+
+	if referenceID != "" && state != AccessRequestReceived {
+		return fmt.Errorf("unable to set referenceID when state is %s", state.String())
+	} else if referenceID == "" && state == AccessRequestReceived {
+		return fmt.Errorf("unable to update AccessRequest to state received without referenceID")
+	}
+
+	accessRequest.State = state
+	accessRequest.UpdatedAt = db.clock.Now()
+
+	if state == AccessRequestReceived {
+		accessRequest.ReferenceID = referenceID
+	}
+
+	if err := db.put(ctx, key, accessRequest); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (db ETCDConfigDatabase) WatchOutgoingAccessRequests(ctx context.Context, output chan *OutgoingAccessRequest) {
@@ -523,5 +532,23 @@ func (db ETCDConfigDatabase) CreateIncomingAccessRequest(ctx context.Context, ac
 }
 
 func (db ETCDConfigDatabase) UpdateIncomingAccessRequestState(ctx context.Context, accessRequest *IncomingAccessRequest, state AccessRequestState) error {
-	return db.updateAccessRequestState(ctx, "incoming", &accessRequest.AccessRequest, state)
+	key := path.Join("access-requests", "incoming", accessRequest.OrganizationName, accessRequest.ServiceName, accessRequest.ID)
+
+	response, err := db.etcdCli.Get(ctx, db.key(key))
+	if err != nil {
+		return err
+	}
+
+	if response.Count == 0 {
+		return fmt.Errorf("no such access request: %s", accessRequest.ID)
+	}
+
+	accessRequest.State = state
+	accessRequest.UpdatedAt = db.clock.Now()
+
+	if err := db.put(ctx, key, accessRequest); err != nil {
+		return err
+	}
+
+	return nil
 }

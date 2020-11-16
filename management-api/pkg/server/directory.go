@@ -217,7 +217,16 @@ func getLatestAccessRequestAndAccessGrant(ctx context.Context, configDatabase da
 		}
 	}
 
-	latestAccessProof, err := configDatabase.GetLatestAccessProofForService(ctx, organizationName, serviceName)
+	if errIsNotFound(errDatabase) {
+		return nil, nil, nil
+	}
+
+	latestAccessProof, err := configDatabase.GetAccessProofForOutgoingAccessRequest(
+		ctx,
+		organizationName,
+		serviceName,
+		latestAccessRequest.ID,
+	)
 	if err != nil {
 		if !errIsNotFound(err) {
 			return nil, nil, errors.Wrap(err, "error retrieving latest access proof")

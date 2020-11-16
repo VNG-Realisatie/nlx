@@ -218,7 +218,7 @@ func (s *ManagementService) SendAccessRequest(ctx context.Context, req *api.Send
 		return nil, status.Error(codes.AlreadyExists, "access request is not in a sendable state")
 	}
 
-	err = s.configDatabase.UpdateOutgoingAccessRequestState(ctx, accessRequest, database.AccessRequestCreated)
+	err = s.configDatabase.UpdateOutgoingAccessRequestState(ctx, accessRequest, database.AccessRequestCreated, "")
 	if err != nil {
 		s.logger.Error("access request cannot be updated", zap.String("id", accessRequest.ID), zap.Error(err))
 		return nil, status.Error(codes.Internal, "database error")
@@ -262,7 +262,7 @@ func (s *ManagementService) parseProxyMetadata(ctx context.Context) (*proxyMetad
 	}, nil
 }
 
-func (s *ManagementService) RequestAccess(ctx context.Context, req *external.RequestAccessRequest) (*types.Empty, error) {
+func (s *ManagementService) RequestAccess(ctx context.Context, req *external.RequestAccessRequest) (*external.RequestAccessResponse, error) {
 	md, err := s.parseProxyMetadata(ctx)
 	if err != nil {
 		return nil, err
@@ -277,7 +277,7 @@ func (s *ManagementService) RequestAccess(ctx context.Context, req *external.Req
 		},
 	}
 
-	_, err = s.configDatabase.CreateIncomingAccessRequest(ctx, request)
+	createdRequest, err := s.configDatabase.CreateIncomingAccessRequest(ctx, request)
 	if err != nil {
 		if errors.Is(err, database.ErrActiveAccessRequest) {
 			return nil, status.Error(codes.AlreadyExists, "an active access request already exists")
@@ -288,7 +288,9 @@ func (s *ManagementService) RequestAccess(ctx context.Context, req *external.Req
 		return nil, status.Error(codes.Internal, "failed to create access request")
 	}
 
-	return &types.Empty{}, nil
+	return &external.RequestAccessResponse{
+		ReferenceId: createdRequest.ID,
+	}, nil
 }
 
 func (s *ManagementService) GetAccessRequestState(ctx context.Context, req *external.GetAccessRequestStateRequest) (*external.GetAccessRequestStateResponse, error) {

@@ -316,8 +316,8 @@ func TestSendAccessRequest(t *testing.T) {
 			db.EXPECT().GetOutgoingAccessRequest(ctx, test.request.AccessRequestID).
 				Return(test.accessRequest, test.accessRequestErr)
 
-			updateMock := db.EXPECT().UpdateOutgoingAccessRequestState(ctx, test.accessRequest, database.AccessRequestCreated).
-				Do(func(_ context.Context, accessRequest *database.OutgoingAccessRequest, state database.AccessRequestState) error {
+			updateMock := db.EXPECT().UpdateOutgoingAccessRequestState(ctx, test.accessRequest, database.AccessRequestCreated, "").
+				Do(func(_ context.Context, accessRequest *database.OutgoingAccessRequest, state database.AccessRequestState, _ string) error {
 					accessRequest.State = state
 					return nil
 				})
