@@ -42,7 +42,7 @@ export const IconCheckboxMultiple = (props) => (
 export const IconChevron = (props) => <Icon as={SvgChevron} {...props} />
 export const IconDirectory = (props) => <Icon as={SvgDirectory} {...props} />
 export const IconExternalLink = (props) => (
-  <Icon as={SvgExternalLink} {...props} />
+  <Icon as={SvgExternalLink} size="small" {...props} />
 )
 export const IconHidden = (props) => <Icon as={SvgHidden} {...props} />
 export const IconInway = (props) => <Icon as={SvgInway} {...props} />
