@@ -1,35 +1,72 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import styled from 'styled-components'
+import React from 'react'
+import { Icon } from '@commonground/design-system'
 
-// Removes spurious margins on svg element
-// Use like so: <InlineIcon as={IconCheck} title="ok" />
-export const InlineIcon = styled.span`
-  vertical-align: top;
-`
+import { ReactComponent as SvgArrowLeftRight } from './arrow-left-right.svg'
+import { ReactComponent as SvgBin } from './bin.svg'
+import { ReactComponent as SvgClose } from './close.svg'
+import { ReactComponent as SvgCheck } from './check.svg'
+import { ReactComponent as SvgCheckboxMultiple } from './checkbox-multiple.svg'
+import { ReactComponent as SvgChevron } from './chevron.svg'
+import { ReactComponent as SvgDirectory } from './directory.svg'
+import { ReactComponent as SvgExternalLink } from './external-link.svg'
+import { ReactComponent as SvgHidden } from './hidden.svg'
+import { ReactComponent as SvgInway } from './inway.svg'
+import { ReactComponent as SvgKey } from './key.svg'
+import { ReactComponent as SvgOrganization } from './organization.svg'
+import { ReactComponent as SvgPencil } from './pencil.svg'
+import { ReactComponent as SvgPlus } from './plus.svg'
+import { ReactComponent as SvgRevoke } from './revoke.svg'
+import { ReactComponent as SvgServices } from './services.svg'
+import { ReactComponent as SvgSettings } from './cog.svg'
+import { ReactComponent as SvgStateDegraded } from './state-degraded.svg'
+import { ReactComponent as SvgStateDown } from './state-down.svg'
+import { ReactComponent as SvgStateUnknown } from './state-unknown.svg'
+import { ReactComponent as SvgStateUp } from './state-up.svg'
+import { ReactComponent as SvgVisible } from './visible.svg'
+import { ReactComponent as SvgWarningCircle } from './error-warning.svg'
+import { ReactComponent as SvgWarningCircleFill } from './error-warning-fill.svg'
 
-export { ReactComponent as IconArrowLeftRight } from './arrow-left-right.svg'
-export { ReactComponent as IconBin } from './bin.svg'
-export { ReactComponent as IconClose } from './close.svg'
-export { ReactComponent as IconCheck } from './check.svg'
-export { ReactComponent as IconCheckboxMultiple } from './checkbox-multiple.svg'
-export { ReactComponent as IconChevron } from './chevron.svg'
-export { ReactComponent as IconDirectory } from './directory.svg'
-export { ReactComponent as IconExternalLink } from './external-link.svg'
-export { ReactComponent as IconHidden } from './hidden.svg'
-export { ReactComponent as IconInway } from './inway.svg'
-export { ReactComponent as IconKey } from './key.svg'
-export { ReactComponent as IconOrganization } from './organization.svg'
-export { ReactComponent as IconPencil } from './pencil.svg'
-export { ReactComponent as IconPlus } from './plus.svg'
-export { ReactComponent as IconRevoke } from './revoke.svg'
-export { ReactComponent as IconServices } from './services.svg'
-export { ReactComponent as IconSettings } from './cog.svg'
-export { ReactComponent as IconStateDegraded } from './state-degraded.svg'
-export { ReactComponent as IconStateDown } from './state-down.svg'
-export { ReactComponent as IconStateUnknown } from './state-unknown.svg'
-export { ReactComponent as IconStateUp } from './state-up.svg'
-export { ReactComponent as IconVisible } from './visible.svg'
-export { ReactComponent as IconWarningCircle } from './error-warning.svg'
-export { ReactComponent as IconWarningCircleFill } from './error-warning-fill.svg'
+export const IconArrowLeftRight = (props) => (
+  <Icon as={SvgArrowLeftRight} {...props} />
+)
+
+export const IconBin = (props) => <Icon as={SvgBin} {...props} />
+export const IconClose = (props) => <Icon as={SvgClose} {...props} />
+export const IconCheck = (props) => <Icon as={SvgCheck} {...props} />
+export const IconCheckboxMultiple = (props) => (
+  <Icon as={SvgCheckboxMultiple} {...props} />
+)
+export const IconChevron = (props) => <Icon as={SvgChevron} {...props} />
+export const IconDirectory = (props) => <Icon as={SvgDirectory} {...props} />
+export const IconExternalLink = (props) => (
+  <Icon as={SvgExternalLink} {...props} />
+)
+export const IconHidden = (props) => <Icon as={SvgHidden} {...props} />
+export const IconInway = (props) => <Icon as={SvgInway} {...props} />
+export const IconKey = (props) => <Icon as={SvgKey} {...props} />
+export const IconOrganization = (props) => (
+  <Icon as={SvgOrganization} {...props} />
+)
+export const IconPencil = (props) => <Icon as={SvgPencil} {...props} />
+export const IconPlus = (props) => <Icon as={SvgPlus} {...props} />
+export const IconRevoke = (props) => <Icon as={SvgRevoke} {...props} />
+export const IconServices = (props) => <Icon as={SvgServices} {...props} />
+export const IconSettings = (props) => <Icon as={SvgSettings} {...props} />
+export const IconStateDegraded = (props) => (
+  <Icon as={SvgStateDegraded} {...props} />
+)
+export const IconStateDown = (props) => <Icon as={SvgStateDown} {...props} />
+export const IconStateUnknown = (props) => (
+  <Icon as={SvgStateUnknown} {...props} />
+)
+export const IconStateUp = (props) => <Icon as={SvgStateUp} {...props} />
+export const IconVisible = (props) => <Icon as={SvgVisible} {...props} />
+export const IconWarningCircle = (props) => (
+  <Icon as={SvgWarningCircle} {...props} />
+)
+export const IconWarningCircleFill = (props) => (
+  <Icon as={SvgWarningCircleFill} {...props} />
+)

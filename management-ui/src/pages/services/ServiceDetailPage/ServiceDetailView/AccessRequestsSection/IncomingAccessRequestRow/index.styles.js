@@ -2,8 +2,7 @@
 // Licensed under the EUPL
 //
 import styled from 'styled-components'
-import { Table } from '@commonground/design-system'
-import ButtonWithIcon from '../../../../../../components/ButtonWithIcon'
+import { Table, Button } from '@commonground/design-system'
 
 export const TdActions = styled(Table.Td)`
   text-align: right;
@@ -11,18 +10,12 @@ export const TdActions = styled(Table.Td)`
   width: 140px;
 `
 
-export const StyledButtonWithIcon = styled(ButtonWithIcon)`
+export const StyledButton = styled(Button)`
   min-width: 44px;
   min-height: 44px;
   justify-content: center;
 
   &:not(:first-child) {
     margin-left: 1rem;
-  }
-
-  svg {
-    width: 20px;
-    height: 20px;
-    margin-right: 0;
   }
 `

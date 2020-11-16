@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 
 import { incomingAccessRequestPropTypes } from '../../../../../../models/IncomingAccessRequestModel'
 import { IconCheck, IconClose } from '../../../../../../icons'
-import { TdActions, StyledButtonWithIcon } from './index.styles'
+import { TdActions, StyledButton } from './index.styles'
 
 const IncomingAccessRequestRow = ({
   accessRequest,
@@ -64,22 +64,22 @@ const IncomingAccessRequestRow = ({
     <Table.Tr data-testid={`service-incoming-accessrequest-${id}`}>
       <Table.Td>{organizationName}</Table.Td>
       <TdActions>
-        <StyledButtonWithIcon
+        <StyledButton
           size="small"
           variant="link"
           onClick={handleApproveButtonClick}
           title={t('Approve')}
         >
           <IconCheck />
-        </StyledButtonWithIcon>
-        <StyledButtonWithIcon
+        </StyledButton>
+        <StyledButton
           size="small"
           variant="link"
           onClick={handleRejectButtonClick}
           title={t('Reject')}
         >
           <IconClose />
-        </StyledButtonWithIcon>
+        </StyledButton>
       </TdActions>
     </Table.Tr>
   )

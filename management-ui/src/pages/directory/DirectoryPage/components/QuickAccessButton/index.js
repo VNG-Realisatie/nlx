@@ -6,16 +6,16 @@ import { func } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 
 import { IconKey } from '../../../../../icons'
-import { StyledButtonWithIcon } from './index.styles'
+import { StyledButton } from './index.styles'
 
 const QuickAccessButton = (props) => {
   const { t } = useTranslation()
 
   return (
-    <StyledButtonWithIcon size="small" variant="link" {...props}>
-      <IconKey />
+    <StyledButton size="small" variant="link" {...props}>
+      <IconKey inline />
       {t('Request')}
-    </StyledButtonWithIcon>
+    </StyledButton>
   )
 }
 

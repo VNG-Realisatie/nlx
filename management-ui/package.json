@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@commonground/design-system": "14.0.0",
-    "dayjs": "1.9.4",
+    "@commonground/design-system": "14.2.2",
+    "dayjs": "1.9.6",
     "fetch-defaults": "1.0.0",
     "formik": "2.2.5",
     "i18next": "19.8.4",

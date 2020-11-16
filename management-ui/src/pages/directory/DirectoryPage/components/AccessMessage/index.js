@@ -13,7 +13,7 @@ import {
   SHOW_REQUEST_RECEIVED,
   SHOW_REQUEST_REJECTED,
 } from '../../../directoryServiceAccessState'
-import { InlineIcon, IconCheck } from '../../../../../icons'
+import { IconCheck } from '../../../../../icons'
 import Switch from '../../../../../components/Switch'
 import { WarnText } from './index.styles'
 
@@ -35,7 +35,7 @@ const AccessMessage = ({ displayState }) => {
         {() => <span>{t('Rejected')}</span>}
       </Switch.Case>
       <Switch.Case value={SHOW_HAS_ACCESS}>
-        {() => <InlineIcon as={IconCheck} title={t('Approved')} />}
+        {() => <IconCheck title={t('Approved')} inline />}
       </Switch.Case>
       {/* Purposely displaying nothing in any other case */}
       <Switch.Default>{() => null}</Switch.Default>

@@ -3,10 +3,9 @@
 //
 import React from 'react'
 import { object, func } from 'prop-types'
-import { Table } from '@commonground/design-system'
+import { Table, Button } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 
-import ButtonWithIcon from '../../../../../../components/ButtonWithIcon'
 import { IconRevoke } from '../../../../../../icons'
 import { TdActions } from './index.styles'
 
@@ -35,15 +34,15 @@ const AccessGrantRow = ({ accessGrant, revokeHandler }) => {
     <Table.Tr data-testid="service-accessgrants" key={accessGrant.id}>
       <Table.Td>{accessGrant.organizationName}</Table.Td>
       <TdActions>
-        <ButtonWithIcon
+        <Button
           size="small"
           variant="link"
           onClick={handleRevoke}
           title={t('Revoke')}
         >
-          <IconRevoke />
+          <IconRevoke inline />
           {t('Revoke')}
-        </ButtonWithIcon>
+        </Button>
       </TdActions>
     </Table.Tr>
   )
