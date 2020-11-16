@@ -3,7 +3,7 @@
 //
 import React, { useContext } from 'react'
 import { observer } from 'mobx-react'
-import { array } from 'prop-types'
+import { array, func } from 'prop-types'
 import { Table, ToasterContext, Collapsible } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 
@@ -16,7 +16,7 @@ import Amount from '../../../../../components/Amount'
 import { IconKey } from '../../../../../icons'
 import IncomingAccessRequestRow from './IncomingAccessRequestRow'
 
-const AccessRequestsSection = ({ accessRequests }) => {
+const AccessRequestsSection = ({ accessRequests, fetchServiceHandler }) => {
   const { t } = useTranslation()
   const { showToast } = useContext(ToasterContext)
 
@@ -32,6 +32,8 @@ const AccessRequestsSection = ({ accessRequests }) => {
         }),
         variant: 'success',
       })
+
+      await fetchServiceHandler()
     } catch (error) {
       showToast({
         title: t('Failed to approve access request'),
@@ -44,6 +46,7 @@ const AccessRequestsSection = ({ accessRequests }) => {
   const rejectHandler = async (accessRequest) => {
     try {
       await accessRequest.reject()
+
       showToast({
         title: t('Access request rejected'),
         body: t('Organization has been denied access to service', {
@@ -52,6 +55,8 @@ const AccessRequestsSection = ({ accessRequests }) => {
         }),
         variant: 'success',
       })
+
+      await fetchServiceHandler()
     } catch (error) {
       showToast({
         title: t('Failed to reject access request'),
@@ -113,6 +118,7 @@ const AccessRequestsSection = ({ accessRequests }) => {
 
 AccessRequestsSection.propTypes = {
   accessRequests: array,
+  fetchServiceHandler: func.isRequired,
 }
 
 AccessRequestsSection.defaultProps = {
