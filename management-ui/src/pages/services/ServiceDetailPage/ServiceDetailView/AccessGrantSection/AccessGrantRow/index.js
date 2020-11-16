@@ -35,7 +35,12 @@ const AccessGrantRow = ({ accessGrant, revokeHandler }) => {
     <Table.Tr data-testid="service-accessgrants" key={accessGrant.id}>
       <Table.Td>{accessGrant.organizationName}</Table.Td>
       <TdActions>
-        <ButtonWithIcon size="small" variant="link" onClick={handleRevoke}>
+        <ButtonWithIcon
+          size="small"
+          variant="link"
+          onClick={handleRevoke}
+          title={t('Revoke')}
+        >
           <IconRevoke />
           {t('Revoke')}
         </ButtonWithIcon>

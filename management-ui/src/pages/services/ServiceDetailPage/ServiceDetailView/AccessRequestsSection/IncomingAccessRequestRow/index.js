@@ -69,6 +69,7 @@ const IncomingAccessRequestRow = ({
           size="small"
           variant="link"
           onClick={handleApproveButtonClick}
+          title={t('Approve')}
         >
           <IconCheck />
         </StyledButtonWithIcon>
@@ -77,6 +78,7 @@ const IncomingAccessRequestRow = ({
           size="small"
           variant="link"
           onClick={handleRejectButtonClick}
+          title={t('Reject')}
         >
           <IconClose />
         </StyledButtonWithIcon>
