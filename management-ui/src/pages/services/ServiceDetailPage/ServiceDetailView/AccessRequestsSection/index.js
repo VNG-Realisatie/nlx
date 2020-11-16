@@ -21,9 +21,9 @@ const AccessRequestsSection = ({ accessRequests }) => {
   const { showToast } = useContext(ToasterContext)
 
   const approveHandler = async (accessRequest) => {
-    await accessRequest.approve()
+    try {
+      await accessRequest.approve()
 
-    if (!accessRequest.error) {
       showToast({
         title: t('Access request approved'),
         body: t('Organization has access to service', {
@@ -32,20 +32,18 @@ const AccessRequestsSection = ({ accessRequests }) => {
         }),
         variant: 'success',
       })
-    } else {
+    } catch (error) {
       showToast({
         title: t('Failed to approve access request'),
         body: t('Please try again'),
         variant: 'error',
       })
-      console.error(accessRequest.error)
     }
   }
 
   const rejectHandler = async (accessRequest) => {
-    await accessRequest.reject()
-
-    if (!accessRequest.error) {
+    try {
+      await accessRequest.reject()
       showToast({
         title: t('Access request rejected'),
         body: t('Organization has been denied access to service', {
@@ -54,7 +52,7 @@ const AccessRequestsSection = ({ accessRequests }) => {
         }),
         variant: 'success',
       })
-    } else {
+    } catch (error) {
       showToast({
         title: t('Failed to reject access request'),
         body: t('Please try again'),

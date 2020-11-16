@@ -34,8 +34,6 @@ class IncomingAccessRequestModel {
   createdAt = ''
   updatedAt = ''
 
-  error = ''
-
   constructor({ incomingAccessRequestStore, accessRequestData }) {
     makeAutoObservable(this)
 
@@ -82,19 +80,19 @@ class IncomingAccessRequestModel {
 
   approve = flow(function* approve() {
     try {
-      this.error = ''
       yield this.incomingAccessRequestStore.approveAccessRequest(this)
-    } catch (e) {
-      this.error = e.message
+    } catch (error) {
+      console.error('Failed to approve access request: ', error.message)
+      throw error
     }
   }).bind(this)
 
   reject = flow(function* reject() {
     try {
-      this.error = ''
       yield this.incomingAccessRequestStore.rejectAccessRequest(this)
-    } catch (e) {
-      this.error = e.message
+    } catch (error) {
+      console.error('Failed to reject access request: ', error.message)
+      throw error
     }
   }).bind(this)
 }

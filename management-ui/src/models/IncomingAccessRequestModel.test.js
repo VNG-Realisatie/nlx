@@ -86,15 +86,34 @@ test('rejecting request handles as expected', async () => {
 })
 
 test('when approving or rejecting fails', async () => {
+  jest.spyOn(global.console, 'error').mockImplementation(() => {})
+
   const approveAccessRequest = jest
-    .fn()
-    .mockRejectedValue(new Error('arbitrary error'))
-  const rejectAccessRequest = jest
     .fn()
     .mockRejectedValue(new Error('arbitrary error'))
 
   incomingAccessRequestStore = {
     approveAccessRequest,
+  }
+
+  const accessRequest = new IncomingAccessRequestModel({
+    incomingAccessRequestStore,
+    accessRequestData,
+  })
+
+  await expect(accessRequest.approve()).rejects.toThrow('arbitrary error')
+
+  global.console.error.mockRestore()
+})
+
+test('when rejecting fails', async () => {
+  jest.spyOn(global.console, 'error').mockImplementation(() => {})
+
+  const rejectAccessRequest = jest
+    .fn()
+    .mockRejectedValue(new Error('arbitrary error'))
+
+  incomingAccessRequestStore = {
     rejectAccessRequest,
   }
 
@@ -103,13 +122,9 @@ test('when approving or rejecting fails', async () => {
     accessRequestData,
   })
 
-  await accessRequest.approve()
-  expect(accessRequest.error).toEqual('arbitrary error')
+  await expect(accessRequest.reject()).rejects.toThrow('arbitrary error')
 
-  accessRequest.error = ''
-
-  await accessRequest.reject()
-  expect(accessRequest.error).toEqual('arbitrary error')
+  global.console.error.mockRestore()
 })
 
 test('returns proper isResolved value', () => {
