@@ -4,13 +4,14 @@
 import React from 'react'
 import { Button } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
-import { StyledPencil } from './index.styles'
+
+import { IconPencil } from '../../icons'
 
 const EditButton = (props) => {
   const { t } = useTranslation()
   return (
     <Button variant="secondary" {...props}>
-      <StyledPencil />
+      <IconPencil inline />
       {t('Edit')}
     </Button>
   )

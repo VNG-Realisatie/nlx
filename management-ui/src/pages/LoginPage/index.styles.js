@@ -32,9 +32,8 @@ export const StyledContent = styled.div`
   max-width: 70rem;
 `
 
-export const StyledExternalLink = styled(IconExternalLink)`
-  height: 1rem;
-  margin-left: ${(p) => p.theme.tokens.spacing01};
+export const StyledIconExternalLink = styled(IconExternalLink)`
+  margin-left: ${(p) => p.theme.tokens.spacing02};
 `
 
 export const StyledOrganization = styled.p`
@@ -47,6 +46,4 @@ export const StyledOrganization = styled.p`
 
 export const StyledIconOrganization = styled(IconOrganization)`
   fill: ${(p) => p.theme.tokens.colorPaletteGray500};
-  margin-right: ${(p) => p.theme.tokens.spacing03};
-  vertical-align: text-bottom;
 `

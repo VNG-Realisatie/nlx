@@ -20,19 +20,17 @@ const service = {
 
 describe('ServiceDetails', () => {
   it('should display', () => {
-    const { getByTestId } = renderWithProviders(
+    const { queryByText } = renderWithProviders(
       <Router>
         <ServiceDetailView service={service} removeHandler={jest.fn()} />
       </Router>,
     )
 
-    expect(getByTestId('service-published')).toHaveTextContent(
-      'visible.svg' + 'Published in central directory', // eslint-disable-line no-useless-concat
-    )
+    expect(queryByText('Published in central directory')).toBeInTheDocument()
   })
 
   it('should show hidden icon', () => {
-    const { getByTestId } = renderWithProviders(
+    const { queryByText } = renderWithProviders(
       <Router>
         <ServiceDetailView
           service={{
@@ -43,21 +41,19 @@ describe('ServiceDetails', () => {
         />
       </Router>,
     )
-    expect(getByTestId('service-published')).toHaveTextContent(
-      'hidden.svg' + 'Not visible in central directory', // eslint-disable-line no-useless-concat
-    )
+    expect(queryByText('Not visible in central directory')).toBeInTheDocument()
   })
 
   it('should call the removeHandler on remove', () => {
     const handleRemove = jest.fn()
     jest.spyOn(window, 'confirm').mockResolvedValue(true)
-    const { getByTestId } = renderWithProviders(
+    const { getByTitle } = renderWithProviders(
       <Router>
         <ServiceDetailView service={service} removeHandler={handleRemove} />
       </Router>,
     )
 
-    fireEvent.click(getByTestId('remove-service'))
+    fireEvent.click(getByTitle('Remove service'))
     expect(window.confirm).toHaveBeenCalled()
     expect(handleRemove).toBeCalled()
   })

@@ -6,8 +6,6 @@ import { IconFlippingChevron } from '@commonground/design-system'
 import Avatar from '../Avatar'
 
 export const UserNavigationChevron = styled(IconFlippingChevron)`
-  width: ${(p) => p.theme.tokens.spacing06};
-  height: ${(p) => p.theme.tokens.spacing06};
   margin-left: ${(p) => p.theme.tokens.spacing04};
 `
 

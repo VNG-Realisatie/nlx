@@ -11,9 +11,9 @@ class Page {
       visibilityCheck: true,
     })
     this.published = Selector('[data-testid="service-published"]')
-    this.editButton = Selector('[data-testid="edit-button"]')
+    this.editButton = Selector('a[title="Service aanpassen"]')
+    this.removeButton = Selector('button[title="Service verwijderen"]')
     this.closeButton = Selector('[data-testid="close-button"]')
-    this.removeButton = Selector('[data-testid="remove-service"]')
     this.inways = Selector('[data-testid="service-inways"]')
     this.alert = Selector('div[role="alert"]')
     this.alertTitle = this.alert.find('[data-testid="title"]')

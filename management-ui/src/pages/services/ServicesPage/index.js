@@ -11,10 +11,11 @@ import PageTemplate from '../../../components/PageTemplate'
 import ServiceDetailPage from '../ServiceDetailPage'
 import LoadingMessage from '../../../components/LoadingMessage'
 import { useServicesStore } from '../../../hooks/use-stores'
+import { IconPlus } from '../../../icons'
 import ServiceToastManager from './ServiceToastManager'
 import ServiceCount from './ServiceCount'
 import ServicesPageView from './ServicesPageView'
-import { StyledActionsBar, StyledIconPlus } from './index.styles'
+import { StyledActionsBar } from './index.styles'
 
 const ServicesPage = () => {
   const { t } = useTranslation()
@@ -36,7 +37,7 @@ const ServicesPage = () => {
           to="/services/add-service"
           aria-label={t('Add service')}
         >
-          <StyledIconPlus />
+          <IconPlus inline />
           {t('Add service')}
         </Button>
       </StyledActionsBar>

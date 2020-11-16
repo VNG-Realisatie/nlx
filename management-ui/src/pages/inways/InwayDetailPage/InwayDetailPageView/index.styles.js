@@ -14,9 +14,6 @@ export const SubHeader = styled.div`
 `
 
 export const StyledIconInway = styled(IconInway)`
-  width: ${(p) => p.theme.tokens.spacing05};
-  height: ${(p) => p.theme.tokens.spacing05};
-  margin-right: ${(p) => p.theme.tokens.spacing03};
   fill: ${(p) => p.theme.tokens.colorPaletteGray50};
 `
 

@@ -4,13 +4,13 @@
 import React from 'react'
 import { Button } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
-import { StyledBin } from './index.styles'
+import { IconBin } from '../../icons'
 
 const RemoveButton = (props) => {
   const { t } = useTranslation()
   return (
     <Button variant="danger" {...props}>
-      <StyledBin />
+      <IconBin inline />
       {t('Remove')}
     </Button>
   )

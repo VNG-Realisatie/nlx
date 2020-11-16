@@ -11,8 +11,5 @@ export const StyledIconTd = styled(Table.Td)`
 `
 
 export const StyledInwayIcon = styled(IconInway)`
-  display: block;
-  width: 1rem;
-  height: 1rem;
   fill: ${(p) => p.theme.tokens.colorPaletteGray50};
 `

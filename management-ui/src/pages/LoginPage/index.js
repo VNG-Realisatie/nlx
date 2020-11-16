@@ -9,7 +9,7 @@ import OrganizationName from '../../components/OrganizationName'
 import {
   StyledContainer,
   StyledContent,
-  StyledExternalLink,
+  StyledIconExternalLink,
   StyledNLXManagementLogo,
   StyledOrganization,
   StyledIconOrganization,
@@ -32,12 +32,12 @@ const LoginPage = () => {
             <p>{t('Log in to continue')}</p>
 
             <StyledOrganization>
-              <StyledIconOrganization />
+              <StyledIconOrganization inline />
               <OrganizationName data-testid="organizationName" />
             </StyledOrganization>
 
             <Button data-testid="login" as="a" href="/oidc/authenticate">
-              {t('Log in with organization account')} <StyledExternalLink />
+              {t('Log in with organization account')} <StyledIconExternalLink />
             </Button>
           </>
         ) : (

@@ -44,16 +44,13 @@ const ServiceDetailView = ({ service, removeHandler }) => {
         <EditButton
           as={Link}
           to={`${location.pathname}/edit-service`}
-          data-testid="edit-button"
+          title="edit-button"
         />
-        <StyledRemoveButton
-          data-testid="remove-service"
-          onClick={handleRemove}
-        />
+        <StyledRemoveButton title="remove-service" onClick={handleRemove} />
       </StyledActionsBar>
 
       <SectionGroup>
-        <DetailHeadingLight data-testid="service-published">
+        <DetailHeadingLight>
           {internal ? (
             <>
               <IconHidden />

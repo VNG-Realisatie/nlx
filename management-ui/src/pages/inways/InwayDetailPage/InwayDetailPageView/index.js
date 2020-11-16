@@ -26,7 +26,8 @@ const InwayDetails = ({ inway }) => {
   return (
     <>
       <SubHeader data-testid="gateway-type">
-        <StyledIconInway /> inway
+        <StyledIconInway inline />
+        inway
       </SubHeader>
 
       <StyledSpecList data-testid="inway-specs" alignValuesRight>

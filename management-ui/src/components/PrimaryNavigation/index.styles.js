@@ -3,6 +3,8 @@
 //
 import styled from 'styled-components'
 import { Link, NavLink } from 'react-router-dom'
+import { Icon } from '@commonground/design-system'
+
 import NLXManagementLogo from '../NLXManagementLogo'
 
 export const StyledNLXManagementLogo = styled(NLXManagementLogo)`
@@ -64,9 +66,7 @@ export const StyledLink = styled(NavLink)`
   }
 `
 
-export const StyledIcon = styled.svg`
-  width: ${(p) => p.theme.tokens.spacing07};
-  height: ${(p) => p.theme.tokens.spacing07};
+export const StyledIcon = styled(Icon)`
   display: block;
   margin: 0 auto;
 `
