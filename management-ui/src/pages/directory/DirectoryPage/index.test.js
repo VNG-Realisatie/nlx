@@ -10,10 +10,8 @@ import { RootStore, StoreProvider } from '../../../stores'
 import { UserContextProvider } from '../../../user-context'
 import DirectoryPage from './index'
 
-// Ignore this deeply nested component which has a separate request flow
 jest.mock('../../../components/OrganizationName', () => () => null)
 
-// Simplify showing of the services. We'll only require the serviceName.
 /* eslint-disable react/prop-types */
 jest.mock('./components/DirectoryPageView', () => ({ services }) => {
   return (
