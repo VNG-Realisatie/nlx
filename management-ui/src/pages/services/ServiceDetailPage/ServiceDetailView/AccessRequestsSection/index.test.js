@@ -32,20 +32,20 @@ test('listing the access requests', async () => {
   expect(getByTestId('service-incoming-accessrequests-amount')).toBeTruthy()
   expect(getByTestId('service-no-incoming-accessrequests')).toBeTruthy()
 
+  const accessRequest = {
+    id: '1a2B',
+    organizationName: 'Organization A',
+    serviceName: 'Servicio',
+    state: 'RECEIVED',
+    createdAt: new Date('2020-10-01T12:00:00Z'),
+    updatedAt: new Date('2020-10-01T12:00:01Z'),
+    approve: jest.fn().mockResolvedValue(null),
+    reject: jest.fn().mockResolvedValue(null),
+  }
+
   rerender(
     <AccessRequestsSection
-      accessRequests={[
-        {
-          id: '1a2B',
-          organizationName: 'Organization A',
-          serviceName: 'Servicio',
-          state: 'RECEIVED',
-          createdAt: new Date('2020-10-01T12:00:00Z'),
-          updatedAt: new Date('2020-10-01T12:00:01Z'),
-          approve: () => Promise.resolve(),
-          reject: () => Promise.resolve(),
-        },
-      ]}
+      accessRequests={[accessRequest]}
       fetchServiceHandler={fetchServiceHandler}
     />,
   )
@@ -64,11 +64,13 @@ test('listing the access requests', async () => {
     await fireEvent.click(getByTitle('Approve'))
   })
 
+  expect(accessRequest.approve).toHaveBeenCalledTimes(1)
   expect(fetchServiceHandler).toHaveBeenCalledTimes(1)
 
   await act(async () => {
     await fireEvent.click(getByTitle('Reject'))
   })
 
+  expect(accessRequest.reject).toHaveBeenCalledTimes(1)
   expect(fetchServiceHandler).toHaveBeenCalledTimes(2)
 })
