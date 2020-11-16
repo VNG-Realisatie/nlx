@@ -15,7 +15,7 @@ test('listing the access requests', async () => {
   global.confirm = jest.fn(() => true)
   const fetchServiceHandler = jest.fn().mockResolvedValue(null)
 
-  const { getByTestId, rerender, getByText } = renderWithProviders(
+  const { getByTestId, rerender, getByText, getByTitle } = renderWithProviders(
     <AccessRequestsSection
       accessRequests={[]}
       fetchServiceHandler={fetchServiceHandler}
@@ -61,13 +61,13 @@ test('listing the access requests', async () => {
   expect(getByText('Organization A')).toBeInTheDocument()
 
   await act(async () => {
-    await fireEvent.click(getByTestId('button-approve'))
+    await fireEvent.click(getByTitle('Approve'))
   })
 
   expect(fetchServiceHandler).toHaveBeenCalledTimes(1)
 
   await act(async () => {
-    await fireEvent.click(getByTestId('button-reject'))
+    await fireEvent.click(getByTitle('Reject'))
   })
 
   expect(fetchServiceHandler).toHaveBeenCalledTimes(2)

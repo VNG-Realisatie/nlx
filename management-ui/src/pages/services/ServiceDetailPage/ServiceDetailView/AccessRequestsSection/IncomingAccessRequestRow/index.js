@@ -65,7 +65,6 @@ const IncomingAccessRequestRow = ({
       <Table.Td>{organizationName}</Table.Td>
       <TdActions>
         <StyledButtonWithIcon
-          data-testid="button-approve"
           size="small"
           variant="link"
           onClick={handleApproveButtonClick}
@@ -74,7 +73,6 @@ const IncomingAccessRequestRow = ({
           <IconCheck />
         </StyledButtonWithIcon>
         <StyledButtonWithIcon
-          data-testid="button-reject"
           size="small"
           variant="link"
           onClick={handleRejectButtonClick}

@@ -22,7 +22,7 @@ beforeEach(() => {
 })
 
 test('requesting access will fire approve handler', async () => {
-  const { getByTestId } = renderWithProviders(
+  const { getByTitle } = renderWithProviders(
     <table>
       <tbody>
         <IncomingAccessRequestRow
@@ -36,14 +36,14 @@ test('requesting access will fire approve handler', async () => {
 
   global.confirm = jest.fn(() => true)
 
-  const approveButton = getByTestId('button-approve')
+  const approveButton = getByTitle('Approve')
   fireEvent.click(approveButton)
 
   expect(mockHandler).toHaveBeenCalledWith(accessRequest)
 })
 
 test('rejecting access will fire reject handler', async () => {
-  const { getByTestId } = renderWithProviders(
+  const { getByTitle } = renderWithProviders(
     <table>
       <tbody>
         <IncomingAccessRequestRow
@@ -57,14 +57,14 @@ test('rejecting access will fire reject handler', async () => {
 
   global.confirm = jest.fn(() => true)
 
-  const rejectButton = getByTestId('button-reject')
+  const rejectButton = getByTitle('Reject')
   fireEvent.click(rejectButton)
 
   expect(mockHandler).toHaveBeenCalledWith(accessRequest)
 })
 
 test('clicking cancel will not fire handler', async () => {
-  const { getByTestId } = renderWithProviders(
+  const { getByTitle } = renderWithProviders(
     <table>
       <tbody>
         <IncomingAccessRequestRow
@@ -78,7 +78,7 @@ test('clicking cancel will not fire handler', async () => {
 
   global.confirm = jest.fn(() => false)
 
-  const approveButton = getByTestId('button-approve')
+  const approveButton = getByTitle('Approve')
   fireEvent.click(approveButton)
 
   expect(mockHandler).not.toHaveBeenCalled()
