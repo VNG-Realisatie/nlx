@@ -4,12 +4,10 @@
 
 import React from 'react'
 import { MemoryRouter, Router } from 'react-router-dom'
-
 import { createMemoryHistory } from 'history'
 import { act, renderWithProviders } from '../../../test-utils'
 import { RootStore, StoreProvider } from '../../../stores'
 import { UserContextProvider } from '../../../user-context'
-import { mockDirectoryServicesStore } from '../../../stores/DirectoryServicesStore.mock'
 import DirectoryPage from './index'
 
 // Ignore this deeply nested component which has a separate request flow
@@ -48,44 +46,58 @@ const renderDirectory = (store) =>
   )
 
 test('listing all services', async () => {
-  const store = mockDirectoryServicesStore({
-    isInitiallyFetched: false,
+  const rootStore = new RootStore({
+    directoryRepository: {
+      getAll: jest.fn().mockResolvedValue([
+        {
+          serviceName: 'Test Service',
+        },
+      ]),
+    },
   })
-  const fetchAllSpy = jest.spyOn(store.directoryServicesStore, 'fetchAll')
+  const fetchAllSpy = jest.spyOn(rootStore.directoryServicesStore, 'fetchAll')
 
-  const { getByRole, getByTestId, findByTestId } = renderDirectory(store)
+  const {
+    getByRole,
+    getByTestId,
+    findByTestId,
+    queryByTestId,
+    queryByRole,
+  } = renderDirectory(rootStore)
 
   expect(fetchAllSpy).toHaveBeenCalled()
   expect(getByRole('progressbar')).toBeInTheDocument()
-  expect(() => getByTestId('mock-directory-services')).toThrow()
-
-  act(() => {
-    store.directoryServicesStore.services = [{ serviceName: 'Test Service' }]
-    store.directoryServicesStore.isInitiallyFetched = true
-  })
+  expect(queryByTestId('mock-directory-services')).not.toBeInTheDocument()
 
   expect(await findByTestId('mock-directory-services')).toBeInTheDocument()
-  expect(() => getByRole('progressbar')).toThrow()
+  expect(queryByRole('progressbar')).not.toBeInTheDocument()
+  expect(rootStore.directoryServicesStore.isInitiallyFetched).toEqual(true)
   expect(getByTestId('mock-directory-service-0')).toHaveTextContent(
     'Test Service',
   )
 })
 
 test('no services', async () => {
-  const store = mockDirectoryServicesStore({})
+  const rootStore = new RootStore({
+    directoryRepository: {
+      getAll: jest.fn().mockResolvedValue([]),
+    },
+  })
 
-  const { findByTestId, getByTestId } = renderDirectory(store)
+  const { findByTestId, getByTestId } = renderDirectory(rootStore)
 
   expect(await findByTestId('mock-directory-services')).toBeInTheDocument()
   expect(() => getByTestId('mock-directory-service-0')).toThrow()
 })
 
 test('failed to load services', async () => {
-  const store = mockDirectoryServicesStore({
-    error: 'There is an error',
+  const rootStore = new RootStore({
+    directoryRepository: {
+      getAll: jest.fn().mockRejectedValue('There is an error'),
+    },
   })
 
-  const { findByTestId, getByTestId } = renderDirectory(store)
+  const { findByTestId, getByTestId } = renderDirectory(rootStore)
 
   expect(await findByTestId('error-message')).toHaveTextContent(
     /^Failed to load the directory$/,
