@@ -26,15 +26,15 @@ class DirectoryServicesStore {
       serviceName,
     )
 
-    let directoryServiceModel = this.getService({
+    let directoryService = this.getService({
       organizationName,
       serviceName,
     })
 
-    if (!directoryServiceModel) {
-      directoryServiceModel = this._updateFromServer(serviceData)
-      this.services.push(directoryServiceModel)
-      return directoryServiceModel
+    if (!directoryService) {
+      directoryService = this._updateFromServer(serviceData)
+      this.services.push(directoryService)
+      return directoryService
     }
 
     return this._updateFromServer(serviceData)
@@ -49,9 +49,9 @@ class DirectoryServicesStore {
     this.error = ''
 
     try {
-      const services = yield this.directoryRepository.getAll()
+      const servicesData = yield this.directoryRepository.getAll()
 
-      this.services = services.map((serviceData) =>
+      this.services = servicesData.map((serviceData) =>
         this._updateFromServer(serviceData),
       )
     } catch (e) {
@@ -79,10 +79,10 @@ class DirectoryServicesStore {
   }
 
   _updateFromServer(serviceData) {
-    const latestAccessRequestModel = this.rootStore.outgoingAccessRequestStore.updateFromServer(
+    const latestAccessRequest = this.rootStore.outgoingAccessRequestStore.updateFromServer(
       serviceData.latestAccessRequest,
     )
-    const latestAccessProofModel = this.rootStore.accessProofStore.updateFromServer(
+    const latestAccessProof = this.rootStore.accessProofStore.updateFromServer(
       serviceData.latestAccessProof,
     )
 
@@ -94,16 +94,16 @@ class DirectoryServicesStore {
     if (cachedDirectoryService) {
       return cachedDirectoryService.update(
         serviceData,
-        latestAccessRequestModel,
-        latestAccessProofModel,
+        latestAccessRequest,
+        latestAccessProof,
       )
     }
 
     return new DirectoryServiceModel({
       directoryServicesStore: this,
       serviceData: Object.assign({}, serviceData, {
-        latestAccessProof: latestAccessProofModel,
-        latestAccessRequest: latestAccessRequestModel,
+        latestAccessProof: latestAccessProof,
+        latestAccessRequest: latestAccessRequest,
       }),
     })
   }
