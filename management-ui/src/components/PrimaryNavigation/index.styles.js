@@ -9,16 +9,18 @@ export const StyledNLXManagementLogo = styled(NLXManagementLogo)`
   width: 4rem;
 `
 
-export const StyledNav = styled.nav`
-  background: #313131;
+export const Nav = styled.nav`
   flex: 0 0 6.5rem;
-  text-align: center;
-  padding-top: ${(p) => p.theme.tokens.spacing06};
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   height: 100%;
-  color: ${(p) => p.theme.tokens.colorPaletteGray500};
-  list-style-type: none;
+  padding: ${(p) => p.theme.tokens.spacing06} 0;
   font-size: ${(p) => p.theme.tokens.spacing04};
   text-align: center;
+  list-style-type: none;
+  color: ${(p) => p.theme.tokens.colorPaletteGray500};
+  background: #313131;
 `
 
 export const StyledHomeLink = styled(Link)`
@@ -27,11 +29,11 @@ export const StyledHomeLink = styled(Link)`
 `
 
 export const StyledLink = styled(NavLink)`
+  display: block;
   padding: ${(p) => p.theme.tokens.spacing05} 0;
+  line-height: ${(p) => p.theme.tokens.spacing05};
   text-decoration: none;
   color: ${(p) => p.theme.tokens.colorPaletteGray500};
-  display: block;
-  line-height: ${(p) => p.theme.tokens.spacing05};
 
   svg path {
     fill: ${(p) => p.theme.tokens.colorPaletteGray500};
