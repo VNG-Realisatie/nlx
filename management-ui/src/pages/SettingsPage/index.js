@@ -4,11 +4,12 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Redirect, Switch, Route, useRouteMatch } from 'react-router-dom'
+
 import PageTemplate from '../../components/PageTemplate'
 import GeneralSettings from './GeneralSettings'
-import { StyledContent, StyledMain, StyledSidebar } from './index.styles'
-import Navigation from './Navigation'
 import InsightSettings from './InsightSettings'
+import Navigation from './Navigation'
+import { StyledContent, StyledMain, StyledSidebar } from './index.styles'
 
 const SettingsPage = () => {
   const { t } = useTranslation()

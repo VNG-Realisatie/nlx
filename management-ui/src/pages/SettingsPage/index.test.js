@@ -9,6 +9,8 @@ import { renderWithProviders } from '../../test-utils'
 import { UserContextProvider } from '../../user-context'
 import SettingsPage from './index'
 
+jest.mock('../../components/OrganizationName', () => () => 'organization')
+
 jest.mock('./GeneralSettings', () => () => (
   <div data-testid="general-settings" />
 ))
@@ -19,6 +21,7 @@ jest.mock('./InsightSettings', () => () => (
 
 test('redirects to /settings/general when navigating to /settings', async () => {
   const history = createMemoryHistory({ initialEntries: ['/settings'] })
+
   renderWithProviders(
     <Router history={history}>
       <UserContextProvider user={{ id: '42' }}>
@@ -26,11 +29,13 @@ test('redirects to /settings/general when navigating to /settings', async () => 
       </UserContextProvider>
     </Router>,
   )
+
   expect(history.location.pathname).toEqual('/settings/general')
 })
 
 test('the /settings/general route renders the General settings', () => {
   const history = createMemoryHistory({ initialEntries: ['/settings/general'] })
+
   const { getByTestId } = renderWithProviders(
     <Router history={history}>
       <UserContextProvider user={{ id: '42' }}>
@@ -43,6 +48,7 @@ test('the /settings/general route renders the General settings', () => {
 
 test('the /settings/insight route renders the Insight settings', () => {
   const history = createMemoryHistory({ initialEntries: ['/settings/insight'] })
+
   const { getByTestId } = renderWithProviders(
     <Router history={history}>
       <UserContextProvider user={{ id: '42' }}>
