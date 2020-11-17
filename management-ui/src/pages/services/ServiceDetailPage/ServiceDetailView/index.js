@@ -44,9 +44,12 @@ const ServiceDetailView = ({ service, removeHandler }) => {
         <EditButton
           as={Link}
           to={`${location.pathname}/edit-service`}
-          title="edit-button"
+          title={t('Edit service')}
         />
-        <StyledRemoveButton title="remove-service" onClick={handleRemove} />
+        <StyledRemoveButton
+          title={t('Remove service')}
+          onClick={handleRemove}
+        />
       </StyledActionsBar>
 
       <SectionGroup>

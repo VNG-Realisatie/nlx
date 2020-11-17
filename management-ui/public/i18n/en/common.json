@@ -84,6 +84,7 @@
   "Rejected": "Rejected",
   "Rejecting this access request will refuse organizationName access to serviceName. Are you sure?": "Rejecting this access request will refuse {{organizationName}} access to {{serviceName}}. Are you sure?",
   "Remove": "Remove",
+  "Remove service": "Remove service",
   "Request": "Request",
   "Request Access": "Request Access",
   "Request could not be sent": "Request could not be sent",
