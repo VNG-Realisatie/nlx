@@ -16,79 +16,79 @@ option (gogoproto.goproto_getters_all) = false;
 
 service Management {
   rpc ListServices (ListServicesRequest) returns (ListServicesResponse) {
-    option (google.api.http) = { get: "/api/v1/services" };
+    option (google.api.http) = {get: "/api/v1/services"};
   }
   rpc GetService (GetServiceRequest) returns (GetServiceResponse) {
-    option (google.api.http) = { get: "/api/v1/services/{name}" };
+    option (google.api.http) = {get: "/api/v1/services/{name}"};
   }
-  rpc CreateService (Service) returns (Service) {
-    option (google.api.http) = { post: "/api/v1/services" body: "*" };
+  rpc CreateService (CreateServiceRequest) returns (CreateServiceResponse) {
+    option (google.api.http) = {post: "/api/v1/services" body: "*"};
   }
   rpc UpdateService (UpdateServiceRequest) returns (Service) {
-    option (google.api.http) = { put: "/api/v1/services/{name}" body: "service" };
+    option (google.api.http) = {put: "/api/v1/services/{name}" body: "service"};
   }
   rpc DeleteService (DeleteServiceRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = { delete: "/api/v1/services/{name}" };
+    option (google.api.http) = {delete: "/api/v1/services/{name}"};
   }
   rpc ListInways (ListInwaysRequest) returns (ListInwaysResponse) {
-    option (google.api.http) = { get: "/api/v1/inways" };
+    option (google.api.http) = {get: "/api/v1/inways"};
   }
   rpc GetInway (GetInwayRequest) returns (Inway) {
-    option (google.api.http) = { get: "/api/v1/inways/{name}" };
+    option (google.api.http) = {get: "/api/v1/inways/{name}"};
   }
   rpc CreateInway (Inway) returns (Inway) {
-    option (google.api.http) = { post: "/api/v1/inways" body: "*" };
+    option (google.api.http) = {post: "/api/v1/inways" body: "*"};
   }
   rpc UpdateInway (UpdateInwayRequest) returns (Inway) {
-    option (google.api.http) = { put: "/api/v1/inways/{name}" body: "inway" };
+    option (google.api.http) = {put: "/api/v1/inways/{name}" body: "inway"};
   }
   rpc DeleteInway (DeleteInwayRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = { delete: "/api/v1/inways/{name}" };
+    option (google.api.http) = {delete: "/api/v1/inways/{name}"};
   }
   rpc PutInsightConfiguration(InsightConfiguration) returns (InsightConfiguration) {
-    option (google.api.http) = { put: "/api/v1/insight-configuration" body: "*" };
+    option (google.api.http) = {put: "/api/v1/insight-configuration" body: "*"};
   }
   rpc GetInsightConfiguration (google.protobuf.Empty) returns (InsightConfiguration) {
-    option (google.api.http) = { get: "/api/v1/insight-configuration"};
+    option (google.api.http) = {get: "/api/v1/insight-configuration"};
   }
 
   rpc ListIncomingAccessRequest (ListIncomingAccessRequestsRequests) returns (ListIncomingAccessRequestsResponse) {
-    option (google.api.http) = { get: "/api/v1/access-requests/incoming/services/{serviceName}"};
+    option (google.api.http) = {get: "/api/v1/access-requests/incoming/services/{serviceName}"};
   }
 
   rpc ApproveIncomingAccessRequest (ApproveIncomingAccessRequestRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = { post: "/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/approve"};
+    option (google.api.http) = {post: "/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/approve"};
   }
 
   rpc RejectIncomingAccessRequest (RejectIncomingAccessRequestRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = { post: "/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/reject"};
+    option (google.api.http) = {post: "/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/reject"};
   }
 
   rpc ListOutgoingAccessRequests (ListOutgoingAccessRequestsRequest) returns (ListOutgoingAccessRequestsResponse) {
-    option (google.api.http) = { get: "/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}"};
+    option (google.api.http) = {get: "/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}"};
   }
 
   rpc CreateAccessRequest (CreateAccessRequestRequest) returns (OutgoingAccessRequest) {
-    option (google.api.http) = { post: "/api/v1/access-requests" body: "*" };
+    option (google.api.http) = {post: "/api/v1/access-requests" body: "*"};
   }
 
   rpc SendAccessRequest (SendAccessRequestRequest) returns (OutgoingAccessRequest) {
-    option (google.api.http) = { post: "/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}/{accessRequestID}/send"};
+    option (google.api.http) = {post: "/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}/{accessRequestID}/send"};
   }
 
   rpc GetSettings (google.protobuf.Empty) returns (Settings) {
-    option (google.api.http) = { get: "/api/v1/settings" };
+    option (google.api.http) = {get: "/api/v1/settings"};
   }
   rpc UpdateSettings(UpdateSettingsRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = { put: "/api/v1/settings", body: "*" };
+    option (google.api.http) = {put: "/api/v1/settings", body: "*"};
   }
 
   rpc ListAccessGrantsForService(ListAccessGrantsForServiceRequest) returns(ListAccessGrantsForServiceResponse) {
-    option (google.api.http) = { get: "/api/v1/access-grants/services/{serviceName}"};
+    option (google.api.http) = {get: "/api/v1/access-grants/services/{serviceName}"};
   }
 
   rpc RevokeAccessGrant(RevokeAccessGrantRequest) returns (AccessGrant) {
-    option (google.api.http) = { post: "/api/v1/access-grants/service/{serviceName}/organizations/{organizationName}/{accessGrantID}/revoke"};
+    option (google.api.http) = {post: "/api/v1/access-grants/service/{serviceName}/organizations/{organizationName}/{accessGrantID}/revoke"};
   }
 }
 
@@ -115,6 +115,50 @@ message Service {
 }
 
 message GetServiceResponse {
+  string name = 1;
+  string endpointURL = 2;
+  string documentationURL = 3;
+  string apiSpecificationURL = 4;
+  bool internal = 5;
+  string techSupportContact = 6;
+  string publicSupportContact = 7;
+  AuthorizationSettings authorizationSettings = 8;
+  repeated string inways = 9;
+
+  message AuthorizationSettings {
+    string mode = 1;
+    repeated Authorization authorizations = 2;
+
+    message Authorization  {
+      string organizationName = 1;
+      string publicKeyHash = 2;
+    }
+  }
+}
+
+message CreateServiceRequest {
+  string name = 1;
+  string endpointURL = 2;
+  string documentationURL = 3;
+  string apiSpecificationURL = 4;
+  bool internal = 5;
+  string techSupportContact = 6;
+  string publicSupportContact = 7;
+  AuthorizationSettings authorizationSettings = 8;
+  repeated string inways = 9;
+
+  message AuthorizationSettings {
+    string mode = 1;
+    repeated Authorization authorizations = 2;
+
+    message Authorization  {
+      string organizationName = 1;
+      string publicKeyHash = 2;
+    }
+  }
+}
+
+message CreateServiceResponse {
   string name = 1;
   string endpointURL = 2;
   string documentationURL = 3;
@@ -247,7 +291,7 @@ message ApproveIncomingAccessRequestRequest {
 }
 
 message RejectIncomingAccessRequestRequest {
-  string serviceName =1;
+  string serviceName = 1;
   string accessRequestID = 2;
 }
 
@@ -306,13 +350,13 @@ message AccessProof {
 
 service Directory {
   rpc ListServices (google.protobuf.Empty) returns (DirectoryListServicesResponse) {
-    option (google.api.http) = { get: "/api/v1/directory/services" };
+    option (google.api.http) = {get: "/api/v1/directory/services"};
   }
   rpc GetOrganizationService (GetOrganizationServiceRequest) returns (DirectoryService) {
-    option (google.api.http) = { get: "/api/v1/directory/organizations/{organizationName}/services/{serviceName}" };
+    option (google.api.http) = {get: "/api/v1/directory/organizations/{organizationName}/services/{serviceName}"};
   }
   rpc RequestAccessToService (RequestAccessToServiceRequest) returns (OutgoingAccessRequest) {
-    option (google.api.http) = { post: "/api/v1/directory/organizations/{organizationName}/services/{serviceName}/access-requests" };
+    option (google.api.http) = {post: "/api/v1/directory/organizations/{organizationName}/services/{serviceName}/access-requests"};
   }
 }
 
@@ -342,7 +386,7 @@ message DirectoryService {
 
   string serviceName = 1;
   string organizationName = 2;
-  string apiSpecificationType = 3 [(gogoproto.customname)="APISpecificationType"];
+  string apiSpecificationType = 3 [(gogoproto.customname) = "APISpecificationType"];
   State state = 4;
   OutgoingAccessRequest latestAccessRequest = 5;
   AccessProof latestAccessProof = 6;

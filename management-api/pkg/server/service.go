@@ -16,7 +16,7 @@ import (
 )
 
 // CreateService creates a new service
-func (s *ManagementService) CreateService(ctx context.Context, service *api.Service) (*api.Service, error) {
+func (s *ManagementService) CreateService(ctx context.Context, service *api.CreateServiceRequest) (*api.CreateServiceResponse, error) {
 	logger := s.logger.With(zap.String("name", service.Name))
 	logger.Info("rpc request CreateService")
 
@@ -43,7 +43,7 @@ func (s *ManagementService) CreateService(ctx context.Context, service *api.Serv
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	return service, nil
+	return convertToCreateServiceResponseFromCreateServiceRequest(service), nil
 }
 
 // GetService returns a specific service
@@ -217,6 +217,24 @@ func convertToGetServiceResponseFromDatabaseService(model *database.Service) *ap
 		Inways:               model.Inways,
 		AuthorizationSettings: &api.GetServiceResponse_AuthorizationSettings{
 			Mode: "whitelist",
+		},
+	}
+
+	return service
+}
+
+func convertToCreateServiceResponseFromCreateServiceRequest(model *api.CreateServiceRequest) *api.CreateServiceResponse {
+	service := &api.CreateServiceResponse{
+		Name:                 model.Name,
+		EndpointURL:          model.EndpointURL,
+		DocumentationURL:     model.DocumentationURL,
+		ApiSpecificationURL:  model.ApiSpecificationURL,
+		Internal:             model.Internal,
+		TechSupportContact:   model.TechSupportContact,
+		PublicSupportContact: model.PublicSupportContact,
+		Inways:               model.Inways,
+		AuthorizationSettings: &api.CreateServiceResponse_AuthorizationSettings{
+			Mode: model.AuthorizationSettings.Mode,
 		},
 	}
 

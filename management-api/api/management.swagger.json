@@ -622,7 +622,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/nlxmanagementService"
+              "$ref": "#/definitions/managementCreateServiceResponse"
             }
           },
           "default": {
@@ -638,7 +638,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/nlxmanagementService"
+              "$ref": "#/definitions/managementCreateServiceRequest"
             }
           }
         ],
@@ -877,6 +877,128 @@
           "type": "string"
         },
         "serviceName": {
+          "type": "string"
+        }
+      }
+    },
+    "managementCreateServiceRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "endpointURL": {
+          "type": "string"
+        },
+        "documentationURL": {
+          "type": "string"
+        },
+        "apiSpecificationURL": {
+          "type": "string"
+        },
+        "internal": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "techSupportContact": {
+          "type": "string"
+        },
+        "publicSupportContact": {
+          "type": "string"
+        },
+        "authorizationSettings": {
+          "$ref": "#/definitions/managementCreateServiceRequestAuthorizationSettings"
+        },
+        "inways": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "managementCreateServiceRequestAuthorizationSettings": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string"
+        },
+        "authorizations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/managementCreateServiceRequestAuthorizationSettingsAuthorization"
+          }
+        }
+      }
+    },
+    "managementCreateServiceRequestAuthorizationSettingsAuthorization": {
+      "type": "object",
+      "properties": {
+        "organizationName": {
+          "type": "string"
+        },
+        "publicKeyHash": {
+          "type": "string"
+        }
+      }
+    },
+    "managementCreateServiceResponse": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "endpointURL": {
+          "type": "string"
+        },
+        "documentationURL": {
+          "type": "string"
+        },
+        "apiSpecificationURL": {
+          "type": "string"
+        },
+        "internal": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "techSupportContact": {
+          "type": "string"
+        },
+        "publicSupportContact": {
+          "type": "string"
+        },
+        "authorizationSettings": {
+          "$ref": "#/definitions/managementCreateServiceResponseAuthorizationSettings"
+        },
+        "inways": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "managementCreateServiceResponseAuthorizationSettings": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string"
+        },
+        "authorizations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/managementCreateServiceResponseAuthorizationSettingsAuthorization"
+          }
+        }
+      }
+    },
+    "managementCreateServiceResponseAuthorizationSettingsAuthorization": {
+      "type": "object",
+      "properties": {
+        "organizationName": {
+          "type": "string"
+        },
+        "publicKeyHash": {
           "type": "string"
         }
       }

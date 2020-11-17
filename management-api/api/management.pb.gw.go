@@ -120,7 +120,7 @@ func local_request_Management_GetService_0(ctx context.Context, marshaler runtim
 }
 
 func request_Management_CreateService_0(ctx context.Context, marshaler runtime.Marshaler, client ManagementClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq Service
+	var protoReq CreateServiceRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -137,7 +137,7 @@ func request_Management_CreateService_0(ctx context.Context, marshaler runtime.M
 }
 
 func local_request_Management_CreateService_0(ctx context.Context, marshaler runtime.Marshaler, server ManagementServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq Service
+	var protoReq CreateServiceRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)

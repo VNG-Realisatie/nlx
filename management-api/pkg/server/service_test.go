@@ -41,10 +41,10 @@ func TestCreateService(t *testing.T) {
 
 	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase)
 
-	requestService := &api.Service{
+	requestService := &api.CreateServiceRequest{
 		Name:                  "my-service",
 		EndpointURL:           "my-service.test",
-		AuthorizationSettings: &api.Service_AuthorizationSettings{Mode: "none"},
+		AuthorizationSettings: &api.CreateServiceRequest_AuthorizationSettings{Mode: "none"},
 	}
 
 	responseService, err := service.CreateService(ctx, requestService)
@@ -52,7 +52,11 @@ func TestCreateService(t *testing.T) {
 		t.Error("could not create service", err)
 	}
 
-	assert.Equal(t, requestService, responseService)
+	assert.Equal(t, &api.CreateServiceResponse{
+		Name:                  "my-service",
+		EndpointURL:           "my-service.test",
+		AuthorizationSettings: &api.CreateServiceResponse_AuthorizationSettings{Mode: "none"},
+	}, responseService)
 }
 
 func TestGetService(t *testing.T) {

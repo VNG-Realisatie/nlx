@@ -26,3 +26,16 @@ func (s *Service) Validate() error {
 
 	return nil
 }
+
+// Validate the service when creating a new one, check if all fields are valid
+func (s *CreateServiceRequest) Validate() error {
+	if s.Name == "" {
+		return errors.New("invalid service name")
+	}
+
+	if s.EndpointURL == "" {
+		return fmt.Errorf("invalid endpoint URL for service %s", s.Name)
+	}
+
+	return nil
+}
