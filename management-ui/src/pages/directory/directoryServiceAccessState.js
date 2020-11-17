@@ -29,15 +29,16 @@ export default function getDirectoryServiceAccessUIState(
     return SHOW_REQUEST_ACCESS
   }
 
-  if (accessProof && accessProof.accessRequestId !== outgoingAccessRequest.id) {
-    accessProof = null
-  }
+  const relatedAccessProof =
+    accessProof && accessProof.accessRequestId !== outgoingAccessRequest.id
+      ? null
+      : accessProof
 
-  if (accessProof && !accessProof.revokedAt) {
+  if (relatedAccessProof && !relatedAccessProof.revokedAt) {
     return SHOW_HAS_ACCESS
   }
 
-  if (accessProof && accessProof.revokedAt) {
+  if (relatedAccessProof && relatedAccessProof.revokedAt) {
     return SHOW_ACCESS_REVOKED
   }
 
@@ -60,7 +61,7 @@ export default function getDirectoryServiceAccessUIState(
 
     default:
       throw new Error(
-        'unexpected combination of outgoingAccessRequest and accessProof',
+        'Unexpected combination of outgoingAccessRequest and accessProof',
       )
   }
 }
