@@ -8,8 +8,9 @@ import { useTranslation } from 'react-i18next'
 import { Drawer } from '@commonground/design-system'
 import pick from 'lodash.pick'
 
+import StateIndicator from '../../../../../components/StateIndicator'
 import { directoryServicePropTypes } from '../../../../../models/DirectoryServiceModel'
-import { SubTitle, Summary, StyledStateIndicator } from './index.styles'
+import { SubTitle, Summary } from './index.styles'
 
 const DrawerHeader = ({ service }) => {
   const { serviceName, organizationName, state, apiSpecificationType } = service
@@ -20,8 +21,8 @@ const DrawerHeader = ({ service }) => {
       <Drawer.Header title={serviceName} closeButtonLabel={t('Close')} />
       <SubTitle>{organizationName}</SubTitle>
       <Summary>
+        <StateIndicator state={state} showText />
         {apiSpecificationType && <span>{apiSpecificationType}</span>}
-        <StyledStateIndicator state={state} showText />
       </Summary>
     </header>
   )

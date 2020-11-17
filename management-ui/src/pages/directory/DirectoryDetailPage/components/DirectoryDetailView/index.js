@@ -4,7 +4,7 @@
 import React from 'react'
 import { shape } from 'prop-types'
 import { observer } from 'mobx-react'
-import { Alert, useDrawerStack } from '@commonground/design-system'
+import { Alert, Button, useDrawerStack } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import pick from 'lodash.pick'
 import { directoryServicePropTypes } from '../../../../../models/DirectoryServiceModel'
@@ -13,12 +13,17 @@ import getDirectoryServiceAccessUIState from '../../../directoryServiceAccessSta
 import { SectionGroup } from '../../../../../components/DetailView'
 import StacktraceDrawer from './StacktraceDrawer'
 import AccessSection from './AccessSection'
-import { StyledAlert } from './index.styles'
+import {
+  StyledAlert,
+  ExternalLinkSection,
+  StyledIconExternalLink,
+} from './index.styles'
 
 const { FAILED } = ACCESS_REQUEST_STATES
 const stackTraceDrawerId = 'stacktrace'
 
 const DirectoryDetailView = ({ service }) => {
+  console.log(service)
   const { t } = useTranslation()
   const { showDrawer } = useDrawerStack()
   const { organizationName, latestAccessRequest, latestAccessProof } = service
@@ -81,6 +86,27 @@ const DirectoryDetailView = ({ service }) => {
           stacktrace={latestAccessRequest.errorDetails.stackTrace}
         />
       )}
+
+      <ExternalLinkSection>
+        <Button
+          variant="secondary"
+          as="a"
+          href={service.documentationURL}
+          disabled={!service.documentationURL}
+        >
+          Documentatie
+          <StyledIconExternalLink />
+        </Button>
+        <Button
+          variant="secondary"
+          as="a"
+          href={service.apiSpecificationURL}
+          disabled={!service.apiSpecificationURL}
+        >
+          Specificatie
+          <StyledIconExternalLink />
+        </Button>
+      </ExternalLinkSection>
 
       <SectionGroup>
         <AccessSection
