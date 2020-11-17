@@ -69,29 +69,25 @@ func (s *ManagementService) GetService(ctx context.Context, req *api.GetServiceR
 }
 
 // UpdateService updates an existing service
-func (s *ManagementService) UpdateService(ctx context.Context, req *api.UpdateServiceRequest) (*api.Service, error) {
+func (s *ManagementService) UpdateService(ctx context.Context, req *api.UpdateServiceRequest) (*api.UpdateServiceResponse, error) {
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request UpdateService")
 
-	err := req.Service.Validate()
+	err := req.Validate()
 	if err != nil {
 		logger.Error("invalid service", zap.Error(err))
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid service: %s", err))
 	}
 
-	if req.Name != req.Service.Name {
-		return nil, status.Error(codes.InvalidArgument, "changing the service name is not allowed")
-	}
-
 	service := &database.Service{
-		Name:                 req.Service.Name,
-		EndpointURL:          req.Service.EndpointURL,
-		DocumentationURL:     req.Service.DocumentationURL,
-		APISpecificationURL:  req.Service.ApiSpecificationURL,
-		Internal:             req.Service.Internal,
-		TechSupportContact:   req.Service.TechSupportContact,
-		PublicSupportContact: req.Service.PublicSupportContact,
-		Inways:               req.Service.Inways,
+		Name:                 req.Name,
+		EndpointURL:          req.EndpointURL,
+		DocumentationURL:     req.DocumentationURL,
+		APISpecificationURL:  req.ApiSpecificationURL,
+		Internal:             req.Internal,
+		TechSupportContact:   req.TechSupportContact,
+		PublicSupportContact: req.PublicSupportContact,
+		Inways:               req.Inways,
 	}
 
 	err = s.configDatabase.UpdateService(ctx, req.Name, service)
@@ -106,7 +102,7 @@ func (s *ManagementService) UpdateService(ctx context.Context, req *api.UpdateSe
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	return req.Service, nil
+	return convertToUpdateServiceResponseFromUpdateServiceRequest(req), nil
 }
 
 // DeleteService deletes a specific service
@@ -236,6 +232,21 @@ func convertToCreateServiceResponseFromCreateServiceRequest(model *api.CreateSer
 		AuthorizationSettings: &api.CreateServiceResponse_AuthorizationSettings{
 			Mode: model.AuthorizationSettings.Mode,
 		},
+	}
+
+	return service
+}
+
+func convertToUpdateServiceResponseFromUpdateServiceRequest(model *api.UpdateServiceRequest) *api.UpdateServiceResponse {
+	service := &api.UpdateServiceResponse{
+		Name:                 model.Name,
+		EndpointURL:          model.EndpointURL,
+		DocumentationURL:     model.DocumentationURL,
+		ApiSpecificationURL:  model.ApiSpecificationURL,
+		Internal:             model.Internal,
+		TechSupportContact:   model.TechSupportContact,
+		PublicSupportContact: model.PublicSupportContact,
+		Inways:               model.Inways,
 	}
 
 	return service

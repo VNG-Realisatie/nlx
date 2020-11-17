@@ -106,7 +106,7 @@ func TestUpdateService(t *testing.T) {
 	testProcess := process.NewProcess(logger)
 	ctx := context.Background()
 
-	databseService := &database.Service{
+	databaseService := &database.Service{
 		Name:        "my-service",
 		EndpointURL: "my-service.test",
 	}
@@ -115,26 +115,22 @@ func TestUpdateService(t *testing.T) {
 	defer mockCtrl.Finish()
 
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-	mockDatabase.EXPECT().UpdateService(ctx, "my-service", databseService)
+	mockDatabase.EXPECT().UpdateService(ctx, "my-service", databaseService)
+	mockDatabase.EXPECT().UpdateService(ctx, "other-name", gomock.Any()).Return(database.ErrNotFound)
 
 	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase)
 
 	updateServiceRequest := &api.UpdateServiceRequest{
-		Name: "my-service",
-		Service: &api.Service{
-			Name:                  "my-service",
-			EndpointURL:           "my-service.test",
-			AuthorizationSettings: &api.Service_AuthorizationSettings{Mode: "none"},
-		},
+		Name:        "my-service",
+		EndpointURL: "my-service.test",
 	}
 
 	updateServiceResponse, err := service.UpdateService(ctx, updateServiceRequest)
 	assert.NoError(t, err)
 
-	expectedResponse := &api.Service{
-		Name:                  "my-service",
-		EndpointURL:           "my-service.test",
-		AuthorizationSettings: &api.Service_AuthorizationSettings{Mode: "none"},
+	expectedResponse := &api.UpdateServiceResponse{
+		Name:        "my-service",
+		EndpointURL: "my-service.test",
 	}
 
 	assert.Equal(t, expectedResponse, updateServiceResponse)
@@ -142,7 +138,7 @@ func TestUpdateService(t *testing.T) {
 	updateServiceRequest.Name = "other-name"
 
 	_, err = service.UpdateService(ctx, updateServiceRequest)
-	assert.Errorf(t, err, "changing the service name is not allowed")
+	assert.EqualError(t, err, "rpc error: code = NotFound desc = service not found")
 }
 
 func TestDeleteService(t *testing.T) {

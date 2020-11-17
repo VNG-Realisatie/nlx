@@ -24,8 +24,8 @@ service Management {
   rpc CreateService (CreateServiceRequest) returns (CreateServiceResponse) {
     option (google.api.http) = {post: "/api/v1/services" body: "*"};
   }
-  rpc UpdateService (UpdateServiceRequest) returns (Service) {
-    option (google.api.http) = {put: "/api/v1/services/{name}" body: "service"};
+  rpc UpdateService (UpdateServiceRequest) returns (UpdateServiceResponse) {
+    option (google.api.http) = {put: "/api/v1/services/{name}" body: "*"};
   }
   rpc DeleteService (DeleteServiceRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {delete: "/api/v1/services/{name}"};
@@ -180,6 +180,50 @@ message CreateServiceResponse {
   }
 }
 
+message UpdateServiceRequest {
+  string name = 1;
+  string endpointURL = 2;
+  string documentationURL = 3;
+  string apiSpecificationURL = 4;
+  bool internal = 5;
+  string techSupportContact = 6;
+  string publicSupportContact = 7;
+  AuthorizationSettings authorizationSettings = 8;
+  repeated string inways = 9;
+
+  message AuthorizationSettings {
+    string mode = 1;
+    repeated Authorization authorizations = 2;
+
+    message Authorization  {
+      string organizationName = 1;
+      string publicKeyHash = 2;
+    }
+  }
+}
+
+message UpdateServiceResponse {
+  string name = 1;
+  string endpointURL = 2;
+  string documentationURL = 3;
+  string apiSpecificationURL = 4;
+  bool internal = 5;
+  string techSupportContact = 6;
+  string publicSupportContact = 7;
+  AuthorizationSettings authorizationSettings = 8;
+  repeated string inways = 9;
+
+  message AuthorizationSettings {
+    string mode = 1;
+    repeated Authorization authorizations = 2;
+
+    message Authorization  {
+      string organizationName = 1;
+      string publicKeyHash = 2;
+    }
+  }
+}
+
 message Inway {
   message Service {
     string name = 1;
@@ -203,11 +247,6 @@ message ListServicesResponse {
 
 message GetServiceRequest {
   string name = 1;
-}
-
-message UpdateServiceRequest {
-  string name = 1;
-  Service service = 2;
 }
 
 message DeleteServiceRequest {

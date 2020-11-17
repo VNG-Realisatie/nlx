@@ -710,7 +710,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/nlxmanagementService"
+              "$ref": "#/definitions/managementUpdateServiceResponse"
             }
           },
           "default": {
@@ -732,7 +732,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/nlxmanagementService"
+              "$ref": "#/definitions/managementUpdateServiceRequest"
             }
           }
         ],
@@ -1305,6 +1305,128 @@
       "type": "object",
       "properties": {
         "organizationInway": {
+          "type": "string"
+        }
+      }
+    },
+    "managementUpdateServiceRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "endpointURL": {
+          "type": "string"
+        },
+        "documentationURL": {
+          "type": "string"
+        },
+        "apiSpecificationURL": {
+          "type": "string"
+        },
+        "internal": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "techSupportContact": {
+          "type": "string"
+        },
+        "publicSupportContact": {
+          "type": "string"
+        },
+        "authorizationSettings": {
+          "$ref": "#/definitions/managementUpdateServiceRequestAuthorizationSettings"
+        },
+        "inways": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "managementUpdateServiceRequestAuthorizationSettings": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string"
+        },
+        "authorizations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/managementUpdateServiceRequestAuthorizationSettingsAuthorization"
+          }
+        }
+      }
+    },
+    "managementUpdateServiceRequestAuthorizationSettingsAuthorization": {
+      "type": "object",
+      "properties": {
+        "organizationName": {
+          "type": "string"
+        },
+        "publicKeyHash": {
+          "type": "string"
+        }
+      }
+    },
+    "managementUpdateServiceResponse": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "endpointURL": {
+          "type": "string"
+        },
+        "documentationURL": {
+          "type": "string"
+        },
+        "apiSpecificationURL": {
+          "type": "string"
+        },
+        "internal": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "techSupportContact": {
+          "type": "string"
+        },
+        "publicSupportContact": {
+          "type": "string"
+        },
+        "authorizationSettings": {
+          "$ref": "#/definitions/managementUpdateServiceResponseAuthorizationSettings"
+        },
+        "inways": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "managementUpdateServiceResponseAuthorizationSettings": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string"
+        },
+        "authorizations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/managementUpdateServiceResponseAuthorizationSettingsAuthorization"
+          }
+        }
+      }
+    },
+    "managementUpdateServiceResponseAuthorizationSettingsAuthorization": {
+      "type": "object",
+      "properties": {
+        "organizationName": {
+          "type": "string"
+        },
+        "publicKeyHash": {
           "type": "string"
         }
       }

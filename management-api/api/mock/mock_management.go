@@ -97,14 +97,14 @@ func (mr *MockManagementClientMockRecorder) CreateService(ctx, in interface{}, o
 }
 
 // UpdateService mocks base method
-func (m *MockManagementClient) UpdateService(ctx context.Context, in *api.UpdateServiceRequest, opts ...grpc.CallOption) (*api.Service, error) {
+func (m *MockManagementClient) UpdateService(ctx context.Context, in *api.UpdateServiceRequest, opts ...grpc.CallOption) (*api.UpdateServiceResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "UpdateService", varargs...)
-	ret0, _ := ret[0].(*api.Service)
+	ret0, _ := ret[0].(*api.UpdateServiceResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -545,10 +545,10 @@ func (mr *MockManagementServerMockRecorder) CreateService(arg0, arg1 interface{}
 }
 
 // UpdateService mocks base method
-func (m *MockManagementServer) UpdateService(arg0 context.Context, arg1 *api.UpdateServiceRequest) (*api.Service, error) {
+func (m *MockManagementServer) UpdateService(arg0 context.Context, arg1 *api.UpdateServiceRequest) (*api.UpdateServiceResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateService", arg0, arg1)
-	ret0, _ := ret[0].(*api.Service)
+	ret0, _ := ret[0].(*api.UpdateServiceResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
