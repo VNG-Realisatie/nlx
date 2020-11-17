@@ -40,7 +40,6 @@ test('A service with failed latestAccessRequest', () => {
     },
   }
 
-  // Note: it's a bit of work to mock a Drawerstack, so just using parent component
   const { getAllByText, getByText, getByTestId } = renderWithProviders(
     <Router location="/directory/organization/service">
       <Route path="/directory/:organizationName/:serviceName">

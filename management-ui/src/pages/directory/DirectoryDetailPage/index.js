@@ -24,7 +24,7 @@ const DirectoryDetailPage = ({ service, parentUrl }) => {
   const { organizationName, serviceName } = useParams()
   const { showDrawer } = useDrawerStack()
 
-  const afterHideHandler = () => {
+  const navigateToParentUrl = () => {
     history.push(parentUrl)
   }
 
@@ -33,7 +33,7 @@ const DirectoryDetailPage = ({ service, parentUrl }) => {
   }, [service]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <StackedDrawer id="directoryDetail" noMask afterHide={afterHideHandler}>
+    <StackedDrawer id="directoryDetail" noMask afterHide={navigateToParentUrl}>
       {service ? (
         <DrawerHeader service={service} />
       ) : (
