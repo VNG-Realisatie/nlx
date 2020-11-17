@@ -47,7 +47,7 @@ func (s *ManagementService) CreateService(ctx context.Context, service *api.Serv
 }
 
 // GetService returns a specific service
-func (s *ManagementService) GetService(ctx context.Context, req *api.GetServiceRequest) (*api.Service, error) {
+func (s *ManagementService) GetService(ctx context.Context, req *api.GetServiceRequest) (*api.GetServiceResponse, error) {
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request GetService")
 
@@ -63,7 +63,7 @@ func (s *ManagementService) GetService(ctx context.Context, req *api.GetServiceR
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	response := convertFromDatabaseService(service)
+	response := convertToGetServiceResponseFromDatabaseService(service)
 
 	return response, nil
 }
@@ -198,6 +198,24 @@ func convertFromDatabaseService(model *database.Service) *api.Service {
 		PublicSupportContact: model.PublicSupportContact,
 		Inways:               model.Inways,
 		AuthorizationSettings: &api.Service_AuthorizationSettings{
+			Mode: "whitelist",
+		},
+	}
+
+	return service
+}
+
+func convertToGetServiceResponseFromDatabaseService(model *database.Service) *api.GetServiceResponse {
+	service := &api.GetServiceResponse{
+		Name:                 model.Name,
+		EndpointURL:          model.EndpointURL,
+		DocumentationURL:     model.DocumentationURL,
+		ApiSpecificationURL:  model.APISpecificationURL,
+		Internal:             model.Internal,
+		TechSupportContact:   model.TechSupportContact,
+		PublicSupportContact: model.PublicSupportContact,
+		Inways:               model.Inways,
+		AuthorizationSettings: &api.GetServiceResponse_AuthorizationSettings{
 			Mode: "whitelist",
 		},
 	}

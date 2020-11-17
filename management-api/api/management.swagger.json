@@ -22,7 +22,7 @@
             }
           },
           "default": {
-            "description": "An unexpected error response.",
+            "description": "An unexpected error response",
             "schema": {
               "$ref": "#/definitions/runtimeError"
             }
@@ -64,7 +64,7 @@
             }
           },
           "default": {
-            "description": "An unexpected error response.",
+            "description": "An unexpected error response",
             "schema": {
               "$ref": "#/definitions/runtimeError"
             }
@@ -94,7 +94,7 @@
             }
           },
           "default": {
-            "description": "An unexpected error response.",
+            "description": "An unexpected error response",
             "schema": {
               "$ref": "#/definitions/runtimeError"
             }
@@ -126,7 +126,7 @@
             }
           },
           "default": {
-            "description": "An unexpected error response.",
+            "description": "An unexpected error response",
             "schema": {
               "$ref": "#/definitions/runtimeError"
             }
@@ -156,7 +156,7 @@
             }
           },
           "default": {
-            "description": "An unexpected error response.",
+            "description": "An unexpected error response",
             "schema": {
               "$ref": "#/definitions/runtimeError"
             }
@@ -192,7 +192,7 @@
             }
           },
           "default": {
-            "description": "An unexpected error response.",
+            "description": "An unexpected error response",
             "schema": {
               "$ref": "#/definitions/runtimeError"
             }
@@ -228,7 +228,7 @@
             }
           },
           "default": {
-            "description": "An unexpected error response.",
+            "description": "An unexpected error response",
             "schema": {
               "$ref": "#/definitions/runtimeError"
             }
@@ -264,7 +264,7 @@
             }
           },
           "default": {
-            "description": "An unexpected error response.",
+            "description": "An unexpected error response",
             "schema": {
               "$ref": "#/definitions/runtimeError"
             }
@@ -306,7 +306,7 @@
             }
           },
           "default": {
-            "description": "An unexpected error response.",
+            "description": "An unexpected error response",
             "schema": {
               "$ref": "#/definitions/runtimeError"
             }
@@ -342,7 +342,7 @@
             }
           },
           "default": {
-            "description": "An unexpected error response.",
+            "description": "An unexpected error response",
             "schema": {
               "$ref": "#/definitions/runtimeError"
             }
@@ -378,7 +378,7 @@
             }
           },
           "default": {
-            "description": "An unexpected error response.",
+            "description": "An unexpected error response",
             "schema": {
               "$ref": "#/definitions/runtimeError"
             }
@@ -400,7 +400,7 @@
             }
           },
           "default": {
-            "description": "An unexpected error response.",
+            "description": "An unexpected error response",
             "schema": {
               "$ref": "#/definitions/runtimeError"
             }
@@ -420,7 +420,7 @@
             }
           },
           "default": {
-            "description": "An unexpected error response.",
+            "description": "An unexpected error response",
             "schema": {
               "$ref": "#/definitions/runtimeError"
             }
@@ -452,7 +452,7 @@
             }
           },
           "default": {
-            "description": "An unexpected error response.",
+            "description": "An unexpected error response",
             "schema": {
               "$ref": "#/definitions/runtimeError"
             }
@@ -472,7 +472,7 @@
             }
           },
           "default": {
-            "description": "An unexpected error response.",
+            "description": "An unexpected error response",
             "schema": {
               "$ref": "#/definitions/runtimeError"
             }
@@ -504,7 +504,7 @@
             }
           },
           "default": {
-            "description": "An unexpected error response.",
+            "description": "An unexpected error response",
             "schema": {
               "$ref": "#/definitions/runtimeError"
             }
@@ -532,7 +532,7 @@
             }
           },
           "default": {
-            "description": "An unexpected error response.",
+            "description": "An unexpected error response",
             "schema": {
               "$ref": "#/definitions/runtimeError"
             }
@@ -560,7 +560,7 @@
             }
           },
           "default": {
-            "description": "An unexpected error response.",
+            "description": "An unexpected error response",
             "schema": {
               "$ref": "#/definitions/runtimeError"
             }
@@ -598,7 +598,7 @@
             }
           },
           "default": {
-            "description": "An unexpected error response.",
+            "description": "An unexpected error response",
             "schema": {
               "$ref": "#/definitions/runtimeError"
             }
@@ -626,7 +626,7 @@
             }
           },
           "default": {
-            "description": "An unexpected error response.",
+            "description": "An unexpected error response",
             "schema": {
               "$ref": "#/definitions/runtimeError"
             }
@@ -654,11 +654,11 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/nlxmanagementService"
+              "$ref": "#/definitions/managementGetServiceResponse"
             }
           },
           "default": {
-            "description": "An unexpected error response.",
+            "description": "An unexpected error response",
             "schema": {
               "$ref": "#/definitions/runtimeError"
             }
@@ -686,7 +686,7 @@
             }
           },
           "default": {
-            "description": "An unexpected error response.",
+            "description": "An unexpected error response",
             "schema": {
               "$ref": "#/definitions/runtimeError"
             }
@@ -714,7 +714,7 @@
             }
           },
           "default": {
-            "description": "An unexpected error response.",
+            "description": "An unexpected error response",
             "schema": {
               "$ref": "#/definitions/runtimeError"
             }
@@ -752,7 +752,7 @@
             }
           },
           "default": {
-            "description": "An unexpected error response.",
+            "description": "An unexpected error response",
             "schema": {
               "$ref": "#/definitions/runtimeError"
             }
@@ -772,7 +772,7 @@
             }
           },
           "default": {
-            "description": "An unexpected error response.",
+            "description": "An unexpected error response",
             "schema": {
               "$ref": "#/definitions/runtimeError"
             }
@@ -795,17 +795,6 @@
     }
   },
   "definitions": {
-    "AuthorizationSettingsAuthorization": {
-      "type": "object",
-      "properties": {
-        "organizationName": {
-          "type": "string"
-        },
-        "publicKeyHash": {
-          "type": "string"
-        }
-      }
-    },
     "DirectoryServiceState": {
       "type": "string",
       "enum": [
@@ -815,20 +804,6 @@
         "degraded"
       ],
       "default": "unknown"
-    },
-    "ServiceAuthorizationSettings": {
-      "type": "object",
-      "properties": {
-        "mode": {
-          "type": "string"
-        },
-        "authorizations": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/AuthorizationSettingsAuthorization"
-          }
-        }
-      }
     },
     "managementAccessGrant": {
       "type": "object",
@@ -962,6 +937,67 @@
           "items": {
             "type": "string"
           }
+        }
+      }
+    },
+    "managementGetServiceResponse": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "endpointURL": {
+          "type": "string"
+        },
+        "documentationURL": {
+          "type": "string"
+        },
+        "apiSpecificationURL": {
+          "type": "string"
+        },
+        "internal": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "techSupportContact": {
+          "type": "string"
+        },
+        "publicSupportContact": {
+          "type": "string"
+        },
+        "authorizationSettings": {
+          "$ref": "#/definitions/managementGetServiceResponseAuthorizationSettings"
+        },
+        "inways": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "managementGetServiceResponseAuthorizationSettings": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string"
+        },
+        "authorizations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/managementGetServiceResponseAuthorizationSettingsAuthorization"
+          }
+        }
+      }
+    },
+    "managementGetServiceResponseAuthorizationSettingsAuthorization": {
+      "type": "object",
+      "properties": {
+        "organizationName": {
+          "type": "string"
+        },
+        "publicKeyHash": {
+          "type": "string"
         }
       }
     },
@@ -1118,6 +1154,31 @@
         }
       }
     },
+    "managementServiceAuthorizationSettings": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string"
+        },
+        "authorizations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/managementServiceAuthorizationSettingsAuthorization"
+          }
+        }
+      }
+    },
+    "managementServiceAuthorizationSettingsAuthorization": {
+      "type": "object",
+      "properties": {
+        "organizationName": {
+          "type": "string"
+        },
+        "publicKeyHash": {
+          "type": "string"
+        }
+      }
+    },
     "managementSettings": {
       "type": "object",
       "properties": {
@@ -1150,7 +1211,8 @@
           "type": "string"
         },
         "internal": {
-          "type": "boolean"
+          "type": "boolean",
+          "format": "boolean"
         },
         "techSupportContact": {
           "type": "string"
@@ -1159,7 +1221,7 @@
           "type": "string"
         },
         "authorizationSettings": {
-          "$ref": "#/definitions/ServiceAuthorizationSettings"
+          "$ref": "#/definitions/managementServiceAuthorizationSettings"
         },
         "inways": {
           "type": "array",

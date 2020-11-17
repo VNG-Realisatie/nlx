@@ -86,9 +86,9 @@ func TestGetService(t *testing.T) {
 	getServiceResponse, err := service.GetService(ctx, getServiceRequest)
 	assert.NoError(t, err)
 
-	expectedResponse := &api.Service{
+	expectedResponse := &api.GetServiceResponse{
 		Name: "my-service",
-		AuthorizationSettings: &api.Service_AuthorizationSettings{
+		AuthorizationSettings: &api.GetServiceResponse_AuthorizationSettings{
 			Mode:           "whitelist",
 			Authorizations: nil,
 		},

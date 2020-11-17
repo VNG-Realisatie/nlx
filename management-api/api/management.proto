@@ -18,7 +18,7 @@ service Management {
   rpc ListServices (ListServicesRequest) returns (ListServicesResponse) {
     option (google.api.http) = { get: "/api/v1/services" };
   }
-  rpc GetService (GetServiceRequest) returns (Service) {
+  rpc GetService (GetServiceRequest) returns (GetServiceResponse) {
     option (google.api.http) = { get: "/api/v1/services/{name}" };
   }
   rpc CreateService (Service) returns (Service) {
@@ -93,6 +93,28 @@ service Management {
 }
 
 message Service {
+  string name = 1;
+  string endpointURL = 2;
+  string documentationURL = 3;
+  string apiSpecificationURL = 4;
+  bool internal = 5;
+  string techSupportContact = 6;
+  string publicSupportContact = 7;
+  AuthorizationSettings authorizationSettings = 8;
+  repeated string inways = 9;
+
+  message AuthorizationSettings {
+    string mode = 1;
+    repeated Authorization authorizations = 2;
+
+    message Authorization  {
+      string organizationName = 1;
+      string publicKeyHash = 2;
+    }
+  }
+}
+
+message GetServiceResponse {
   string name = 1;
   string endpointURL = 2;
   string documentationURL = 3;

@@ -57,14 +57,14 @@ func (mr *MockManagementClientMockRecorder) ListServices(ctx, in interface{}, op
 }
 
 // GetService mocks base method
-func (m *MockManagementClient) GetService(ctx context.Context, in *api.GetServiceRequest, opts ...grpc.CallOption) (*api.Service, error) {
+func (m *MockManagementClient) GetService(ctx context.Context, in *api.GetServiceRequest, opts ...grpc.CallOption) (*api.GetServiceResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "GetService", varargs...)
-	ret0, _ := ret[0].(*api.Service)
+	ret0, _ := ret[0].(*api.GetServiceResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -515,10 +515,10 @@ func (mr *MockManagementServerMockRecorder) ListServices(arg0, arg1 interface{})
 }
 
 // GetService mocks base method
-func (m *MockManagementServer) GetService(arg0 context.Context, arg1 *api.GetServiceRequest) (*api.Service, error) {
+func (m *MockManagementServer) GetService(arg0 context.Context, arg1 *api.GetServiceRequest) (*api.GetServiceResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetService", arg0, arg1)
-	ret0, _ := ret[0].(*api.Service)
+	ret0, _ := ret[0].(*api.GetServiceResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
