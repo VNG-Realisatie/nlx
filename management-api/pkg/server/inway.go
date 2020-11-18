@@ -36,8 +36,7 @@ func (s *ManagementService) CreateInway(ctx context.Context, inway *api.Inway) (
 
 	inway.IpAddress = addr.IP.String()
 
-	err := inway.Validate()
-	if err != nil {
+	if err := inway.Validate(); err != nil {
 		logger.Error("invalid inway", zap.Error(err))
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid inway: %s", err))
 	}
@@ -50,8 +49,7 @@ func (s *ManagementService) CreateInway(ctx context.Context, inway *api.Inway) (
 		IPAddress:   inway.IpAddress,
 	}
 
-	err = s.configDatabase.CreateInway(ctx, model)
-	if err != nil {
+	if err := s.configDatabase.CreateInway(ctx, model); err != nil {
 		logger.Error("error creating inway in DB", zap.Error(err))
 		return nil, status.Error(codes.Internal, "database error")
 	}
@@ -146,7 +144,6 @@ func (s *ManagementService) DeleteInway(ctx context.Context, req *api.DeleteInwa
 	logger.Info("rpc request DeleteInway")
 
 	err := s.configDatabase.DeleteInway(ctx, req.Name)
-
 	if err != nil {
 		logger.Error("error deleting inway in DB", zap.Error(err))
 		return &types.Empty{}, status.Error(codes.Internal, "database error")

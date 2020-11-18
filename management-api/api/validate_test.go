@@ -1,7 +1,6 @@
 package api_test
 
 import (
-	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -15,11 +14,15 @@ func TestServiceValidate(t *testing.T) {
 	}
 
 	err := testService.Validate()
-	assert.Equal(t, errors.New("invalid endpoint URL for service my-service"), err)
+	assert.Equal(
+		t,
+		"endpointURL: cannot be blank.",
+		err.Error(),
+	)
 
 	testService = api.Service{
 		Name:        "my-service",
-		EndpointURL: "my-service.test",
+		EndpointURL: "https://my-service.test",
 	}
 
 	err = testService.Validate()
@@ -30,7 +33,7 @@ func TestInwayValidate(t *testing.T) {
 	testInway := api.Inway{}
 
 	err := testInway.Validate()
-	assert.Equal(t, errors.New("invalid inway name"), err)
+	assert.Equal(t, "name: cannot be blank.", err.Error())
 
 	testInway = api.Inway{
 		Name: "inway42.test",

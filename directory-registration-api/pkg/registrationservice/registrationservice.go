@@ -6,7 +6,6 @@ package registrationservice
 import (
 	"context"
 	"net/http"
-	"regexp"
 
 	"go.uber.org/zap"
 
@@ -35,17 +34,4 @@ func New(logger *zap.Logger, db database.DirectoryDatabase, httpClient *http.Cli
 	}
 
 	return s
-}
-
-var (
-	regExpOrganizationName = regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`)
-	regExpServiceName      = regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`)
-)
-
-func IsValidOrganizationName(name string) bool {
-	return regExpOrganizationName.MatchString(name)
-}
-
-func IsValidServiceName(name string) bool {
-	return regExpServiceName.MatchString(name)
 }

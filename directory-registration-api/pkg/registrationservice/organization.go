@@ -7,6 +7,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"regexp"
 
 	"github.com/gogo/protobuf/types"
 	"go.uber.org/zap"
@@ -16,6 +17,13 @@ import (
 	"go.nlx.io/nlx/directory-registration-api/pkg/database"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
+
+// nolint:gocritic // these are valid regex patterns
+var organizationNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-. _\s]{1,100}$`)
+
+func IsValidOrganizationName(name string) bool {
+	return organizationNameRegex.MatchString(name)
+}
 
 func (h *DirectoryRegistrationService) SetInsightConfiguration(ctx context.Context, req *registrationapi.SetInsightConfigurationRequest) (*types.Empty, error) {
 	logger := h.logger.With(zap.String("handler", "set-insight-configuration"))

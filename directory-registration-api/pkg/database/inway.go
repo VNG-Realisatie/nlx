@@ -5,7 +5,18 @@ package database
 
 import (
 	"fmt"
+	"regexp"
+	"strings"
+
+	validation "github.com/go-ozzo/ozzo-validation/v4"
+	"github.com/go-ozzo/ozzo-validation/v4/is"
 )
+
+// nolint:gocritic // these are valid regex patterns
+var organizationNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-. _\s]{1,100}$`)
+
+// nolint:gocritic // these are valid regex patterns
+var serviceNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`)
 
 type InsertAvailabilityParams struct {
 	OrganizationName            string
@@ -19,6 +30,23 @@ type InsertAvailabilityParams struct {
 	ServicePublicSupportContact string
 	ServiceTechSupportContact   string
 	NlxVersion                  string
+}
+
+func (params *InsertAvailabilityParams) Validate() error {
+	return validation.ValidateStruct(
+		params,
+		validation.Field(&params.OrganizationName, validation.Required, validation.Match(organizationNameRegex)),
+		validation.Field(&params.ServiceName, validation.Required, validation.Match(serviceNameRegex)),
+		validation.Field(
+			&params.RequestInwayAddress,
+			validation.Required,
+			validation.When(strings.Contains(params.RequestInwayAddress, ":"), is.DialString),
+			validation.When(!strings.Contains(params.RequestInwayAddress, ":"), is.DNSName),
+		),
+		validation.Field(&params.ServiceInsightAPIURL, is.URL),
+		validation.Field(&params.ServiceIrmaAPIURL, is.URL),
+		validation.Field(&params.NlxVersion, validation.When(params.NlxVersion != "unknown", is.Semver)),
+	)
 }
 
 // InsertAvailability updates the availability

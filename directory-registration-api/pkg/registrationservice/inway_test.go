@@ -40,7 +40,7 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 				return db
 			},
 			req: &registrationapi.RegisterInwayRequest{
-				InwayAddress: "",
+				InwayAddress: "localhost",
 				Services: []*registrationapi.RegisterInwayRequest_RegisterService{
 					{
 						Name: testServiceName,
@@ -51,20 +51,39 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 			expectedError:    status.New(codes.Internal, "database error").Err(),
 		},
 		{
+			name: "invalid params",
+			db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
+				db := mock.NewMockDirectoryDatabase(ctrl)
+
+				return db
+			},
+			req: &registrationapi.RegisterInwayRequest{
+				InwayAddress: "localhost",
+				Services: []*registrationapi.RegisterInwayRequest_RegisterService{
+					{
+						Name: "../../test",
+					},
+				},
+			},
+			expectedResponse: nil,
+			expectedError:    status.New(codes.InvalidArgument, "validation failed: ServiceName: must be in a valid format.").Err(),
+		},
+		{
 			name: "happy flow",
 			db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
 				db := mock.NewMockDirectoryDatabase(ctrl)
 				db.EXPECT().InsertAvailability(gomock.Eq(&database.InsertAvailabilityParams{
-					OrganizationName: testOrganizationName,
-					ServiceName:      testServiceName,
-					ServiceInternal:  false,
-					NlxVersion:       "unknown",
+					OrganizationName:    testOrganizationName,
+					ServiceName:         testServiceName,
+					ServiceInternal:     false,
+					RequestInwayAddress: "localhost",
+					NlxVersion:          "unknown",
 				})).Return(nil)
 
 				return db
 			},
 			req: &registrationapi.RegisterInwayRequest{
-				InwayAddress: "",
+				InwayAddress: "localhost",
 				Services: []*registrationapi.RegisterInwayRequest_RegisterService{
 					{
 						Name: testServiceName,

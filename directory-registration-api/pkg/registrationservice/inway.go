@@ -29,20 +29,10 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 		return nil, fmt.Errorf("failed to get organization name from request: %v", err)
 	}
 
-	if !IsValidOrganizationName(organizationName) {
-		logger.Info("invalid organization name", zap.String("organization name", organizationName))
-		return nil, status.New(codes.InvalidArgument, "Invalid organization name").Err()
-	}
-
 	for _, service := range req.Services {
 		service := service
 
-		if !IsValidServiceName(service.Name) {
-			logger.Info("invalid service name", zap.String("service name", service.Name))
-			return nil, status.New(codes.InvalidArgument, "Invalid service name").Err()
-		}
-
-		// NOTE: we get the documentation spec doc via the inway, not directly. This field could probably be dropped form the communication to hte directory.
+		// NOTE: we get the documentation spec doc via the inway, not directly. This field could probably be dropped form the communication to the directory.
 		logger.Info("service documentation url", zap.String("documentation url", service.ApiSpecificationDocumentUrl))
 
 		var inwayAPISpecificationType string
@@ -71,6 +61,10 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 			ServicePublicSupportContact: service.PublicSupportContact,
 			ServiceTechSupportContact:   service.TechSupportContact,
 			NlxVersion:                  nlxversion.NewFromGRPCContext(ctx).Version,
+		}
+
+		if err := params.Validate(); err != nil {
+			return nil, status.New(codes.InvalidArgument, fmt.Sprintf("validation failed: %s", err.Error())).Err()
 		}
 
 		err := h.db.InsertAvailability(params)

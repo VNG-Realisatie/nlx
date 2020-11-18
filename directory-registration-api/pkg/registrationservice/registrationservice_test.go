@@ -49,34 +49,3 @@ func Test_IsValidOrganizationName(t *testing.T) {
 		assert.Equal(t, registrationservice.IsValidOrganizationName(test.organisationName), test.expectedReturn)
 	}
 }
-
-func Test_IsValidServiceName(t *testing.T) {
-	tests := []struct {
-		serviceName    string
-		expectedReturn bool
-	}{
-		{
-			"gemeente-turfbrug",
-			true,
-		},
-		{
-			"Gemeente Turfbrug",
-			true,
-		}, {
-			"VNG Realisatie B.V.",
-			true,
-		},
-		{
-			"VNG Réalisatie B.V.",
-			false,
-		},
-		{
-			"gemeente/turfburg",
-			false,
-		},
-	}
-
-	for _, test := range tests {
-		assert.Equal(t, registrationservice.IsValidServiceName(test.serviceName), test.expectedReturn)
-	}
-}

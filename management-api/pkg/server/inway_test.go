@@ -50,19 +50,19 @@ var createInwayTests = []struct {
 	{
 		name: "ip address from request is ignored",
 		args: args{
-			database: &database.Inway{Name: "inway42.ignore_ip", IPAddress: "127.1.1.1"},
-			request:  &api.Inway{Name: "inway42.ignore_ip", IpAddress: "127.2.2.2"},
+			database: &database.Inway{Name: "inway42.ignore-ip", IPAddress: "127.1.1.1"},
+			request:  &api.Inway{Name: "inway42.ignore-ip", IpAddress: "127.2.2.2"},
 			peer:     &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv4(127, 1, 1, 1)}}},
 		want: &api.Inway{
-			Name:      "inway42.ignore_ip",
+			Name:      "inway42.ignore-ip",
 			IpAddress: "127.1.1.1",
 		},
 	},
 	{
 		name: "the connection context must contain an address",
 		args: args{
-			database: &database.Inway{Name: "inway42.ip_context_required"},
-			request:  &api.Inway{Name: "inway42.ip_context_required"},
+			database: &database.Inway{Name: "inway42.ip-context-required"},
+			request:  &api.Inway{Name: "inway42.ip-context-required"},
 			peer:     &peer.Peer{Addr: nil}},
 	},
 	{
