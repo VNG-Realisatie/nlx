@@ -226,9 +226,6 @@ func convertToCreateServiceResponseFromCreateServiceRequest(model *api.CreateSer
 		TechSupportContact:   model.TechSupportContact,
 		PublicSupportContact: model.PublicSupportContact,
 		Inways:               model.Inways,
-		AuthorizationSettings: &api.CreateServiceResponse_AuthorizationSettings{
-			Mode: model.AuthorizationSettings.Mode,
-		},
 	}
 
 	return service

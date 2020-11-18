@@ -906,39 +906,11 @@
         "publicSupportContact": {
           "type": "string"
         },
-        "authorizationSettings": {
-          "$ref": "#/definitions/managementCreateServiceRequestAuthorizationSettings"
-        },
         "inways": {
           "type": "array",
           "items": {
             "type": "string"
           }
-        }
-      }
-    },
-    "managementCreateServiceRequestAuthorizationSettings": {
-      "type": "object",
-      "properties": {
-        "mode": {
-          "type": "string"
-        },
-        "authorizations": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementCreateServiceRequestAuthorizationSettingsAuthorization"
-          }
-        }
-      }
-    },
-    "managementCreateServiceRequestAuthorizationSettingsAuthorization": {
-      "type": "object",
-      "properties": {
-        "organizationName": {
-          "type": "string"
-        },
-        "publicKeyHash": {
-          "type": "string"
         }
       }
     },
@@ -967,39 +939,11 @@
         "publicSupportContact": {
           "type": "string"
         },
-        "authorizationSettings": {
-          "$ref": "#/definitions/managementCreateServiceResponseAuthorizationSettings"
-        },
         "inways": {
           "type": "array",
           "items": {
             "type": "string"
           }
-        }
-      }
-    },
-    "managementCreateServiceResponseAuthorizationSettings": {
-      "type": "object",
-      "properties": {
-        "mode": {
-          "type": "string"
-        },
-        "authorizations": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementCreateServiceResponseAuthorizationSettingsAuthorization"
-          }
-        }
-      }
-    },
-    "managementCreateServiceResponseAuthorizationSettingsAuthorization": {
-      "type": "object",
-      "properties": {
-        "organizationName": {
-          "type": "string"
-        },
-        "publicKeyHash": {
-          "type": "string"
         }
       }
     },
