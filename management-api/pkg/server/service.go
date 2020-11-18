@@ -211,9 +211,6 @@ func convertToGetServiceResponseFromDatabaseService(model *database.Service) *ap
 		TechSupportContact:   model.TechSupportContact,
 		PublicSupportContact: model.PublicSupportContact,
 		Inways:               model.Inways,
-		AuthorizationSettings: &api.GetServiceResponse_AuthorizationSettings{
-			Mode: "whitelist",
-		},
 	}
 
 	return service

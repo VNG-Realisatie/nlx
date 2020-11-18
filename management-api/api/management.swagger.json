@@ -1087,39 +1087,11 @@
         "publicSupportContact": {
           "type": "string"
         },
-        "authorizationSettings": {
-          "$ref": "#/definitions/managementGetServiceResponseAuthorizationSettings"
-        },
         "inways": {
           "type": "array",
           "items": {
             "type": "string"
           }
-        }
-      }
-    },
-    "managementGetServiceResponseAuthorizationSettings": {
-      "type": "object",
-      "properties": {
-        "mode": {
-          "type": "string"
-        },
-        "authorizations": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementGetServiceResponseAuthorizationSettingsAuthorization"
-          }
-        }
-      }
-    },
-    "managementGetServiceResponseAuthorizationSettingsAuthorization": {
-      "type": "object",
-      "properties": {
-        "organizationName": {
-          "type": "string"
-        },
-        "publicKeyHash": {
-          "type": "string"
         }
       }
     },
