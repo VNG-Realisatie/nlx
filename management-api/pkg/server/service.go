@@ -150,8 +150,22 @@ func (s *ManagementService) ListServices(ctx context.Context, req *api.ListServi
 	if length := len(filteredServices); length > 0 {
 		response.Services = []*api.ListServicesResponse_Service{}
 
+		allIncomingAccessRequests, err := s.configDatabase.ListAllLatestIncomingAccessRequests(ctx)
+		if err != nil {
+			s.logger.Error("error getting all incoming access requests from database", zap.Error(err))
+			return nil, status.Error(codes.Internal, "database error")
+		}
+
 		for _, service := range filteredServices {
 			convertedService := convertFromDatabaseService(service)
+
+			for _, incomingAccessRequest := range allIncomingAccessRequests {
+				ar := incomingAccessRequest
+
+				if ar.State == database.AccessRequestReceived && ar.ServiceName == service.Name {
+					convertedService.IncomingAccessRequestsCount += 1
+				}
+			}
 
 			accessGrants, err := s.configDatabase.ListAccessGrantsForService(ctx, service.Name)
 			if err != nil {

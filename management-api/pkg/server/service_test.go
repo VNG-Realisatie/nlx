@@ -190,6 +190,8 @@ func TestListServices(t *testing.T) {
 				db := mock_database.NewMockConfigDatabase(ctrl)
 				db.EXPECT().ListServices(gomock.Any()).Return(databaseServices, nil)
 
+				db.EXPECT().ListAllLatestIncomingAccessRequests(gomock.Any()).Return(map[string]*database.IncomingAccessRequest{}, nil)
+
 				db.EXPECT().ListAccessGrantsForService(gomock.Any(), "my-service").Return([]*database.AccessGrant{{
 					ID:                   "mock-id",
 					AccessRequestID:      "mock-access-request-id",
@@ -227,6 +229,8 @@ func TestListServices(t *testing.T) {
 				db := mock_database.NewMockConfigDatabase(ctrl)
 				db.EXPECT().ListServices(gomock.Any()).Return(databaseServices, nil)
 
+				db.EXPECT().ListAllLatestIncomingAccessRequests(gomock.Any()).Return(map[string]*database.IncomingAccessRequest{}, nil)
+
 				db.EXPECT().ListAccessGrantsForService(gomock.Any(), "another-service").Return([]*database.AccessGrant{}, nil)
 				return db
 			},
@@ -250,6 +254,8 @@ func TestListServices(t *testing.T) {
 			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
 				db := mock_database.NewMockConfigDatabase(ctrl)
 				db.EXPECT().ListServices(gomock.Any()).Return(databaseServices, nil)
+
+				db.EXPECT().ListAllLatestIncomingAccessRequests(gomock.Any()).Return(map[string]*database.IncomingAccessRequest{}, nil)
 
 				db.EXPECT().ListAccessGrantsForService(gomock.Any(), "my-service").Return([]*database.AccessGrant{}, nil)
 				db.EXPECT().ListAccessGrantsForService(gomock.Any(), "another-service").Return([]*database.AccessGrant{}, nil)
@@ -286,6 +292,71 @@ func TestListServices(t *testing.T) {
 			expectedError: nil,
 		},
 		{
+			name:    "happy flow with incoming access requests",
+			request: &api.ListServicesRequest{},
+			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
+				db := mock_database.NewMockConfigDatabase(ctrl)
+				db.EXPECT().ListServices(gomock.Any()).Return(databaseServices, nil)
+
+				db.EXPECT().ListAllLatestIncomingAccessRequests(gomock.Any()).Return(map[string]*database.IncomingAccessRequest{
+					"arbitrary-key-1": {
+						AccessRequest: database.AccessRequest{
+							ServiceName: "my-service",
+							State:       database.AccessRequestFailed,
+						},
+					},
+					"arbitrary-key-2": {
+						AccessRequest: database.AccessRequest{
+							ServiceName: "my-service",
+							State:       database.AccessRequestReceived,
+						},
+					},
+					"arbitrary-key-3": {
+						AccessRequest: database.AccessRequest{
+							ServiceName: "arbitrary-other-service-name",
+							State:       database.AccessRequestReceived,
+						},
+					},
+				}, nil)
+
+				db.EXPECT().ListAccessGrantsForService(gomock.Any(), "my-service").Return([]*database.AccessGrant{}, nil)
+				db.EXPECT().ListAccessGrantsForService(gomock.Any(), "another-service").Return([]*database.AccessGrant{}, nil)
+				db.EXPECT().ListAccessGrantsForService(gomock.Any(), "third-service").Return([]*database.AccessGrant{}, nil)
+				return db
+			},
+			expectedResponse: &api.ListServicesResponse{
+				Services: []*api.ListServicesResponse_Service{
+					{
+						Name:   "my-service",
+						Inways: []string{"inway.mock"},
+						AuthorizationSettings: &api.ListServicesResponse_Service_AuthorizationSettings{
+							Mode:           "whitelist",
+							Authorizations: []*api.ListServicesResponse_Service_AuthorizationSettings_Authorization{},
+						},
+						IncomingAccessRequestsCount: 1,
+					},
+					{
+						Name:   "another-service",
+						Inways: []string{"another-inway.mock"},
+						AuthorizationSettings: &api.ListServicesResponse_Service_AuthorizationSettings{
+							Mode:           "whitelist",
+							Authorizations: []*api.ListServicesResponse_Service_AuthorizationSettings_Authorization{},
+						},
+						IncomingAccessRequestsCount: 0,
+					},
+					{
+						Name: "third-service",
+						AuthorizationSettings: &api.ListServicesResponse_Service_AuthorizationSettings{
+							Mode:           "whitelist",
+							Authorizations: []*api.ListServicesResponse_Service_AuthorizationSettings_Authorization{},
+						},
+						IncomingAccessRequestsCount: 0,
+					},
+				},
+			},
+			expectedError: nil,
+		},
+		{
 			name:    "when database call for service fails",
 			request: &api.ListServicesRequest{},
 			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
@@ -305,6 +376,8 @@ func TestListServices(t *testing.T) {
 				db := mock_database.NewMockConfigDatabase(ctrl)
 				db.EXPECT().ListServices(gomock.Any()).Return(databaseServices, nil)
 
+				db.EXPECT().ListAllLatestIncomingAccessRequests(gomock.Any()).Return(map[string]*database.IncomingAccessRequest{}, nil)
+
 				db.EXPECT().ListAccessGrantsForService(gomock.Any(), "my-service").Return(nil, errors.New("arbitrary error"))
 				return db
 			},
@@ -315,15 +388,23 @@ func TestListServices(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		logger := zap.NewNop()
-		testProcess := process.NewProcess(logger)
-		ctrl := gomock.NewController(t)
-		ctx := context.Background()
+		test := test
 
-		service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(ctrl), nil, test.db(ctrl))
-		actualResponse, err := service.ListServices(ctx, test.request)
+		//if test.name != "happy flow with incoming access requests" {
+		//	continue
+		//}
 
-		assert.Equal(t, test.expectedError, err)
-		assert.Equal(t, test.expectedResponse, actualResponse)
+		t.Run(test.name, func(t *testing.T) {
+			logger := zap.NewNop()
+			testProcess := process.NewProcess(logger)
+			ctrl := gomock.NewController(t)
+			ctx := context.Background()
+
+			service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(ctrl), nil, test.db(ctrl))
+			actualResponse, err := service.ListServices(ctx, test.request)
+
+			assert.Equal(t, test.expectedError, err)
+			assert.Equal(t, test.expectedResponse, actualResponse)
+		})
 	}
 }

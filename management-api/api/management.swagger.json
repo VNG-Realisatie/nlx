@@ -1197,6 +1197,10 @@
           "items": {
             "type": "string"
           }
+        },
+        "incomingAccessRequestsCount": {
+          "type": "integer",
+          "format": "int64"
         }
       }
     },

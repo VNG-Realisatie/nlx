@@ -199,6 +199,7 @@ message ListServicesResponse {
     string publicSupportContact = 7;
     AuthorizationSettings authorizationSettings = 8;
     repeated string inways = 9;
+    uint32 incomingAccessRequestsCount = 10;
 
     message AuthorizationSettings {
       string mode = 1;

@@ -179,7 +179,7 @@ func (i *Inway) isServiceConfigDifferent(services []ServiceEndpoint) bool {
 	return matches != serviceCount
 }
 
-func serviceConfigToServiceDetails(service *api.Service) *config.ServiceDetails {
+func serviceConfigToServiceDetails(service *api.ListServicesResponse_Service) *config.ServiceDetails {
 	serviceDetails := &config.ServiceDetails{
 		ServiceDetailsBase: config.ServiceDetailsBase{
 			APISpecificationDocumentURL: service.ApiSpecificationURL,

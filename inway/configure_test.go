@@ -37,8 +37,8 @@ func createInway() (*Inway, error) {
 	return NewInway(logger, nil, testProcess, "mock.inway", "localhost:1812", "localhost:1813", cert, "localhost:1815")
 }
 
-func createMockService() *api.Service {
-	return &api.Service{
+func createMockService() *api.ListServicesResponse_Service {
+	return &api.ListServicesResponse_Service{
 		Name:                 "my-service",
 		ApiSpecificationURL:  "https://api.spec.com",
 		DocumentationURL:     "https://documentation.com",
@@ -46,9 +46,9 @@ func createMockService() *api.Service {
 		PublicSupportContact: "publicsupport@email.com",
 		TechSupportContact:   "techsupport@email.com",
 		Internal:             true,
-		AuthorizationSettings: &api.Service_AuthorizationSettings{
+		AuthorizationSettings: &api.ListServicesResponse_Service_AuthorizationSettings{
 			Mode: "whitelist",
-			Authorizations: []*api.Service_AuthorizationSettings_Authorization{
+			Authorizations: []*api.ListServicesResponse_Service_AuthorizationSettings_Authorization{
 				{OrganizationName: "demo-org1"},
 				{OrganizationName: "demo-org2"},
 				{PublicKeyHash: "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
@@ -74,7 +74,7 @@ func TestServiceToServiceDetails(t *testing.T) {
 func TestManagementAPIResponseToEndpoints(t *testing.T) {
 	serviceConfig := createMockService()
 	response := &api.ListServicesResponse{
-		Services: []*api.Service{
+		Services: []*api.ListServicesResponse_Service{
 			serviceConfig,
 		},
 	}
@@ -130,7 +130,7 @@ func TestGetServicesFromManagementAPI(t *testing.T) {
 	assert.Nil(t, err)
 	service := createMockService()
 	mockResponse := &api.ListServicesResponse{
-		Services: []*api.Service{
+		Services: []*api.ListServicesResponse_Service{
 			service,
 		},
 	}
@@ -219,7 +219,7 @@ func TestUpdateConfig(t *testing.T) {
 	sleepDuration := 10 * time.Second
 	service := createMockService()
 	mockResponse := &api.ListServicesResponse{
-		Services: []*api.Service{
+		Services: []*api.ListServicesResponse_Service{
 			service,
 		},
 	}
@@ -257,7 +257,7 @@ func TestCreateServiceEndpoints(t *testing.T) {
 	iw, err := createInway()
 	assert.Nil(t, err)
 	mockResponse := &api.ListServicesResponse{
-		Services: []*api.Service{
+		Services: []*api.ListServicesResponse_Service{
 			createMockService(),
 		},
 	}
@@ -297,7 +297,7 @@ func TestDeleteServiceEndpoints(t *testing.T) {
 	assert.Nil(t, err)
 
 	mockResponse := &api.ListServicesResponse{
-		Services: []*api.Service{
+		Services: []*api.ListServicesResponse_Service{
 			{
 				Name:                "service-a",
 				ApiSpecificationURL: "https://api-a.test",
