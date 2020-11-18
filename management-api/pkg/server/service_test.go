@@ -42,9 +42,8 @@ func TestCreateService(t *testing.T) {
 	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase)
 
 	requestService := &api.CreateServiceRequest{
-		Name:                  "my-service",
-		EndpointURL:           "my-service.test",
-		AuthorizationSettings: &api.CreateServiceRequest_AuthorizationSettings{Mode: "none"},
+		Name:        "my-service",
+		EndpointURL: "my-service.test",
 	}
 
 	responseService, err := service.CreateService(ctx, requestService)
@@ -53,9 +52,8 @@ func TestCreateService(t *testing.T) {
 	}
 
 	assert.Equal(t, &api.CreateServiceResponse{
-		Name:                  "my-service",
-		EndpointURL:           "my-service.test",
-		AuthorizationSettings: &api.CreateServiceResponse_AuthorizationSettings{Mode: "none"},
+		Name:        "my-service",
+		EndpointURL: "my-service.test",
 	}, responseService)
 }
 
@@ -202,13 +200,13 @@ func TestListServices(t *testing.T) {
 				return db
 			},
 			expectedResponse: &api.ListServicesResponse{
-				Services: []*api.Service{
+				Services: []*api.ListServicesResponse_Service{
 					{
 						Name:   "my-service",
 						Inways: []string{"inway.mock"},
-						AuthorizationSettings: &api.Service_AuthorizationSettings{
+						AuthorizationSettings: &api.ListServicesResponse_Service_AuthorizationSettings{
 							Mode: "whitelist",
-							Authorizations: []*api.Service_AuthorizationSettings_Authorization{
+							Authorizations: []*api.ListServicesResponse_Service_AuthorizationSettings_Authorization{
 								{
 									OrganizationName: "mock-organization-name",
 									PublicKeyHash:    "mock-publickey-fingerprint",
@@ -233,13 +231,13 @@ func TestListServices(t *testing.T) {
 				return db
 			},
 			expectedResponse: &api.ListServicesResponse{
-				Services: []*api.Service{
+				Services: []*api.ListServicesResponse_Service{
 					{
 						Name:   "another-service",
 						Inways: []string{"another-inway.mock"},
-						AuthorizationSettings: &api.Service_AuthorizationSettings{
+						AuthorizationSettings: &api.ListServicesResponse_Service_AuthorizationSettings{
 							Mode:           "whitelist",
-							Authorizations: []*api.Service_AuthorizationSettings_Authorization{},
+							Authorizations: []*api.ListServicesResponse_Service_AuthorizationSettings_Authorization{},
 						},
 					},
 				},
@@ -259,28 +257,28 @@ func TestListServices(t *testing.T) {
 				return db
 			},
 			expectedResponse: &api.ListServicesResponse{
-				Services: []*api.Service{
+				Services: []*api.ListServicesResponse_Service{
 					{
 						Name:   "my-service",
 						Inways: []string{"inway.mock"},
-						AuthorizationSettings: &api.Service_AuthorizationSettings{
+						AuthorizationSettings: &api.ListServicesResponse_Service_AuthorizationSettings{
 							Mode:           "whitelist",
-							Authorizations: []*api.Service_AuthorizationSettings_Authorization{},
+							Authorizations: []*api.ListServicesResponse_Service_AuthorizationSettings_Authorization{},
 						},
 					},
 					{
 						Name:   "another-service",
 						Inways: []string{"another-inway.mock"},
-						AuthorizationSettings: &api.Service_AuthorizationSettings{
+						AuthorizationSettings: &api.ListServicesResponse_Service_AuthorizationSettings{
 							Mode:           "whitelist",
-							Authorizations: []*api.Service_AuthorizationSettings_Authorization{},
+							Authorizations: []*api.ListServicesResponse_Service_AuthorizationSettings_Authorization{},
 						},
 					},
 					{
 						Name: "third-service",
-						AuthorizationSettings: &api.Service_AuthorizationSettings{
+						AuthorizationSettings: &api.ListServicesResponse_Service_AuthorizationSettings{
 							Mode:           "whitelist",
-							Authorizations: []*api.Service_AuthorizationSettings_Authorization{},
+							Authorizations: []*api.ListServicesResponse_Service_AuthorizationSettings_Authorization{},
 						},
 					},
 				},
@@ -311,7 +309,7 @@ func TestListServices(t *testing.T) {
 				return db
 			},
 			expectedResponse: &api.ListServicesResponse{
-				Services: []*api.Service{}},
+				Services: []*api.ListServicesResponse_Service{}},
 			expectedError: nil,
 		},
 	}

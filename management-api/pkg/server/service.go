@@ -148,7 +148,7 @@ func (s *ManagementService) ListServices(ctx context.Context, req *api.ListServi
 	}
 
 	if length := len(filteredServices); length > 0 {
-		response.Services = []*api.Service{}
+		response.Services = []*api.ListServicesResponse_Service{}
 
 		for _, service := range filteredServices {
 			convertedService := convertFromDatabaseService(service)
@@ -159,7 +159,7 @@ func (s *ManagementService) ListServices(ctx context.Context, req *api.ListServi
 				continue
 			}
 
-			authorizations := make([]*api.Service_AuthorizationSettings_Authorization, 0)
+			authorizations := make([]*api.ListServicesResponse_Service_AuthorizationSettings_Authorization, 0)
 
 			for _, accessGrant := range accessGrants {
 				if !accessGrant.Revoked() {
@@ -176,15 +176,15 @@ func (s *ManagementService) ListServices(ctx context.Context, req *api.ListServi
 	return response, nil
 }
 
-func convertAccessGrantToAuthorizationSetting(accessGrant *database.AccessGrant) *api.Service_AuthorizationSettings_Authorization {
-	return &api.Service_AuthorizationSettings_Authorization{
+func convertAccessGrantToAuthorizationSetting(accessGrant *database.AccessGrant) *api.ListServicesResponse_Service_AuthorizationSettings_Authorization {
+	return &api.ListServicesResponse_Service_AuthorizationSettings_Authorization{
 		OrganizationName: accessGrant.OrganizationName,
 		PublicKeyHash:    accessGrant.PublicKeyFingerprint,
 	}
 }
 
-func convertFromDatabaseService(model *database.Service) *api.Service {
-	service := &api.Service{
+func convertFromDatabaseService(model *database.Service) *api.ListServicesResponse_Service {
+	service := &api.ListServicesResponse_Service{
 		Name:                 model.Name,
 		EndpointURL:          model.EndpointURL,
 		DocumentationURL:     model.DocumentationURL,
@@ -193,7 +193,7 @@ func convertFromDatabaseService(model *database.Service) *api.Service {
 		TechSupportContact:   model.TechSupportContact,
 		PublicSupportContact: model.PublicSupportContact,
 		Inways:               model.Inways,
-		AuthorizationSettings: &api.Service_AuthorizationSettings{
+		AuthorizationSettings: &api.ListServicesResponse_Service_AuthorizationSettings{
 			Mode: "whitelist",
 		},
 	}

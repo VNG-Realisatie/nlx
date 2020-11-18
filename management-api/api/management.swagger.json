@@ -795,17 +795,6 @@
     }
   },
   "definitions": {
-    "AuthorizationSettingsAuthorization": {
-      "type": "object",
-      "properties": {
-        "organizationName": {
-          "type": "string"
-        },
-        "publicKeyHash": {
-          "type": "string"
-        }
-      }
-    },
     "DirectoryServiceState": {
       "type": "string",
       "enum": [
@@ -815,20 +804,6 @@
         "degraded"
       ],
       "default": "unknown"
-    },
-    "ServiceAuthorizationSettings": {
-      "type": "object",
-      "properties": {
-        "mode": {
-          "type": "string"
-        },
-        "authorizations": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/AuthorizationSettingsAuthorization"
-          }
-        }
-      }
     },
     "managementAccessGrant": {
       "type": "object",
@@ -1184,8 +1159,69 @@
         "services": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/nlxmanagementService"
+            "$ref": "#/definitions/managementListServicesResponseService"
           }
+        }
+      }
+    },
+    "managementListServicesResponseService": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "endpointURL": {
+          "type": "string"
+        },
+        "documentationURL": {
+          "type": "string"
+        },
+        "apiSpecificationURL": {
+          "type": "string"
+        },
+        "internal": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "techSupportContact": {
+          "type": "string"
+        },
+        "publicSupportContact": {
+          "type": "string"
+        },
+        "authorizationSettings": {
+          "$ref": "#/definitions/managementListServicesResponseServiceAuthorizationSettings"
+        },
+        "inways": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "managementListServicesResponseServiceAuthorizationSettings": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string"
+        },
+        "authorizations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/managementListServicesResponseServiceAuthorizationSettingsAuthorization"
+          }
+        }
+      }
+    },
+    "managementListServicesResponseServiceAuthorizationSettingsAuthorization": {
+      "type": "object",
+      "properties": {
+        "organizationName": {
+          "type": "string"
+        },
+        "publicKeyHash": {
+          "type": "string"
         }
       }
     },
@@ -1296,42 +1332,6 @@
       "properties": {
         "organizationInway": {
           "type": "string"
-        }
-      }
-    },
-    "nlxmanagementService": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "endpointURL": {
-          "type": "string"
-        },
-        "documentationURL": {
-          "type": "string"
-        },
-        "apiSpecificationURL": {
-          "type": "string"
-        },
-        "internal": {
-          "type": "boolean",
-          "format": "boolean"
-        },
-        "techSupportContact": {
-          "type": "string"
-        },
-        "publicSupportContact": {
-          "type": "string"
-        },
-        "authorizationSettings": {
-          "$ref": "#/definitions/ServiceAuthorizationSettings"
-        },
-        "inways": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
         }
       }
     },

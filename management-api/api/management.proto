@@ -188,6 +188,28 @@ message ListServicesRequest {
 
 message ListServicesResponse {
   repeated Service services = 1;
+
+  message Service {
+    string name = 1;
+    string endpointURL = 2;
+    string documentationURL = 3;
+    string apiSpecificationURL = 4;
+    bool internal = 5;
+    string techSupportContact = 6;
+    string publicSupportContact = 7;
+    AuthorizationSettings authorizationSettings = 8;
+    repeated string inways = 9;
+
+    message AuthorizationSettings {
+      string mode = 1;
+      repeated Authorization authorizations = 2;
+
+      message Authorization  {
+        string organizationName = 1;
+        string publicKeyHash = 2;
+      }
+    }
+  }
 }
 
 message GetServiceRequest {
