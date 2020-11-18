@@ -86,6 +86,8 @@
   "Remove": "Verwijderen",
   "Remove service": "Service verwijderen",
   "Request": "Verzoek",
+  "requestWithCount": "{{count}} verzoek",
+  "requestWithCount_plural": "{{count}} verzoeken",
   "Request Access": "Toegang aanvragen",
   "Request could not be sent": "Verzoek kon niet worden verstuurd",
   "Requested": "Aangevraagd",

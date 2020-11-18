@@ -8,11 +8,12 @@ import ServiceRow from './index'
 
 test('service row should render expected data', () => {
   const service = {
-    name: 'service',
+    name: 'Service name',
     internal: true,
     inways: ['inway2'],
+    incomingAccessRequestsCount: 0,
   }
-  const { getByText, queryByTestId } = renderWithProviders(
+  const { queryByTestId, queryByText, rerender } = renderWithProviders(
     <table>
       <tbody>
         <ServiceRow service={service} />
@@ -20,6 +21,21 @@ test('service row should render expected data', () => {
     </table>,
   )
 
-  expect(getByText('service')).toBeInTheDocument()
+  expect(queryByText('Service name')).toBeInTheDocument()
   expect(queryByTestId('warning-cell')).toBeEmptyDOMElement()
+  expect(queryByText('requestWithCount')).not.toBeInTheDocument()
+
+  const serviceWithIncomingAccessRequest = Object.assign({}, service, {
+    incomingAccessRequestsCount: 1,
+  })
+
+  rerender(
+    <table>
+      <tbody>
+        <ServiceRow service={serviceWithIncomingAccessRequest} />
+      </tbody>
+    </table>,
+  )
+
+  expect(queryByText('requestWithCount')).toBeInTheDocument()
 })

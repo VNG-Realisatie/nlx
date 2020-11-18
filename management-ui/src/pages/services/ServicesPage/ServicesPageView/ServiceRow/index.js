@@ -2,13 +2,14 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { shape, array, string, bool } from 'prop-types'
+import { array, bool, shape, string } from 'prop-types'
 import { Table } from '@commonground/design-system'
 
 import {
   ServiceVisibilityMessage,
   showServiceVisibilityAlert,
 } from '../../../../../components/ServiceVisibilityAlert'
+import AmountOfIncomingRequestsLabel from '../../AmountOfIncomingRequestsLabel'
 import { TdAlignRight } from './index.styles'
 
 const ServiceRow = ({ service, ...props }) => {
@@ -27,6 +28,13 @@ const ServiceRow = ({ service, ...props }) => {
           <ServiceVisibilityMessage />
         ) : null}
       </TdAlignRight>
+      <Table.Td>
+        {service.incomingAccessRequestsCount > 0 ? (
+          <AmountOfIncomingRequestsLabel
+            count={service.incomingAccessRequestsCount}
+          />
+        ) : null}
+      </Table.Td>
     </Table.Tr>
   )
 }

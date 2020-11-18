@@ -26,6 +26,7 @@ class ServiceModel {
   techSupportContact = ''
   publicSupportContact = ''
   inways = []
+  incomingAccessRequestsCount = 0
 
   constructor({ servicesStore, serviceData }) {
     makeAutoObservable(this)
@@ -85,6 +86,10 @@ class ServiceModel {
     if (service.inways) {
       this.inways = service.inways
     }
+
+    if (service.incomingAccessRequestsCount) {
+      this.incomingAccessRequestsCount = service.incomingAccessRequestsCount
+    }
   }
 }
 
@@ -97,6 +102,7 @@ export const ServiceModelSchema = createModelSchema(ServiceModel, {
   techSupportContact: primitive(),
   publicSupportContact: primitive(),
   inways: list(primitive()),
+  incomingAccessRequestsCount: primitive(),
 })
 
 export default ServiceModel

@@ -86,6 +86,8 @@
   "Remove": "Remove",
   "Remove service": "Remove service",
   "Request": "Request",
+  "requestWithCount": "{{count}} request",
+  "requestWithCount_plural": "{{count}} requests",
   "Request Access": "Request Access",
   "Request could not be sent": "Request could not be sent",
   "Requested": "Requested",
