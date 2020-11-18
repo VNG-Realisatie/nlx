@@ -795,6 +795,17 @@
     }
   },
   "definitions": {
+    "AuthorizationSettingsAuthorization": {
+      "type": "object",
+      "properties": {
+        "organizationName": {
+          "type": "string"
+        },
+        "publicKeyHash": {
+          "type": "string"
+        }
+      }
+    },
     "DirectoryServiceState": {
       "type": "string",
       "enum": [
@@ -804,6 +815,20 @@
         "degraded"
       ],
       "default": "unknown"
+    },
+    "ServiceAuthorizationSettings": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string"
+        },
+        "authorizations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AuthorizationSettingsAuthorization"
+          }
+        }
+      }
     },
     "managementAccessGrant": {
       "type": "object",
@@ -1192,31 +1217,6 @@
         }
       }
     },
-    "managementServiceAuthorizationSettings": {
-      "type": "object",
-      "properties": {
-        "mode": {
-          "type": "string"
-        },
-        "authorizations": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementServiceAuthorizationSettingsAuthorization"
-          }
-        }
-      }
-    },
-    "managementServiceAuthorizationSettingsAuthorization": {
-      "type": "object",
-      "properties": {
-        "organizationName": {
-          "type": "string"
-        },
-        "publicKeyHash": {
-          "type": "string"
-        }
-      }
-    },
     "managementSettings": {
       "type": "object",
       "properties": {
@@ -1250,39 +1250,11 @@
         "publicSupportContact": {
           "type": "string"
         },
-        "authorizationSettings": {
-          "$ref": "#/definitions/managementUpdateServiceRequestAuthorizationSettings"
-        },
         "inways": {
           "type": "array",
           "items": {
             "type": "string"
           }
-        }
-      }
-    },
-    "managementUpdateServiceRequestAuthorizationSettings": {
-      "type": "object",
-      "properties": {
-        "mode": {
-          "type": "string"
-        },
-        "authorizations": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementUpdateServiceRequestAuthorizationSettingsAuthorization"
-          }
-        }
-      }
-    },
-    "managementUpdateServiceRequestAuthorizationSettingsAuthorization": {
-      "type": "object",
-      "properties": {
-        "organizationName": {
-          "type": "string"
-        },
-        "publicKeyHash": {
-          "type": "string"
         }
       }
     },
@@ -1311,39 +1283,11 @@
         "publicSupportContact": {
           "type": "string"
         },
-        "authorizationSettings": {
-          "$ref": "#/definitions/managementUpdateServiceResponseAuthorizationSettings"
-        },
         "inways": {
           "type": "array",
           "items": {
             "type": "string"
           }
-        }
-      }
-    },
-    "managementUpdateServiceResponseAuthorizationSettings": {
-      "type": "object",
-      "properties": {
-        "mode": {
-          "type": "string"
-        },
-        "authorizations": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementUpdateServiceResponseAuthorizationSettingsAuthorization"
-          }
-        }
-      }
-    },
-    "managementUpdateServiceResponseAuthorizationSettingsAuthorization": {
-      "type": "object",
-      "properties": {
-        "organizationName": {
-          "type": "string"
-        },
-        "publicKeyHash": {
-          "type": "string"
         }
       }
     },
@@ -1381,7 +1325,7 @@
           "type": "string"
         },
         "authorizationSettings": {
-          "$ref": "#/definitions/managementServiceAuthorizationSettings"
+          "$ref": "#/definitions/ServiceAuthorizationSettings"
         },
         "inways": {
           "type": "array",
