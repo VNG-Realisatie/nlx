@@ -163,7 +163,7 @@ func (s *ManagementService) ListServices(ctx context.Context, req *api.ListServi
 				ar := incomingAccessRequest
 
 				if ar.State == database.AccessRequestReceived && ar.ServiceName == service.Name {
-					convertedService.IncomingAccessRequestsCount += 1
+					convertedService.IncomingAccessRequestsCount++
 				}
 			}
 

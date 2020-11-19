@@ -390,10 +390,6 @@ func TestListServices(t *testing.T) {
 	for _, test := range tests {
 		test := test
 
-		//if test.name != "happy flow with incoming access requests" {
-		//	continue
-		//}
-
 		t.Run(test.name, func(t *testing.T) {
 			logger := zap.NewNop()
 			testProcess := process.NewProcess(logger)
