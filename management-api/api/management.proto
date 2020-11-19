@@ -393,10 +393,11 @@ message DirectoryService {
 
   string serviceName = 1;
   string organizationName = 2;
-  string apiSpecificationType = 3 [(gogoproto.customname) = "APISpecificationType"];
-  State state = 4;
-  OutgoingAccessRequest latestAccessRequest = 5;
-  AccessProof latestAccessProof = 6;
+  string apiSpecificationType = 3 [(gogoproto.customname)="APISpecificationType"];
+  string publicSupportContact = 4;
+  State state = 5;
+  OutgoingAccessRequest latestAccessRequest = 6;
+  AccessProof latestAccessProof = 7;
 }
 
 message RequestAccessToServiceRequest {

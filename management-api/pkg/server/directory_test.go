@@ -127,6 +127,7 @@ func TestListDirectoryServices(t *testing.T) {
 			ServiceName:          "test-service-1",
 			OrganizationName:     "test-organization-a",
 			ApiSpecificationType: "OpenAPI3",
+			PublicSupportContact: "test@example.com",
 		},
 	}
 
@@ -169,6 +170,7 @@ func TestListDirectoryServices(t *testing.T) {
 			ServiceName:          "test-service-1",
 			OrganizationName:     "test-organization-a",
 			APISpecificationType: "OpenAPI3",
+			PublicSupportContact: "test@example.com",
 			State:                api.DirectoryService_unknown,
 			LatestAccessProof: &api.AccessProof{
 				Id:               "161c188cfcea1939",

@@ -970,6 +970,9 @@
         "apiSpecificationType": {
           "type": "string"
         },
+        "publicSupportContact": {
+          "type": "string"
+        },
         "state": {
           "$ref": "#/definitions/DirectoryServiceState"
         },
