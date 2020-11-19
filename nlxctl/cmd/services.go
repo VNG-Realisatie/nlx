@@ -92,7 +92,7 @@ var createServiceCommand = &cobra.Command{
 
 		serviceConfigs := splitConfigString(string(configBytes))
 		for _, configString := range serviceConfigs {
-			service := &api.Service{}
+			service := &api.CreateServiceRequest{}
 			err = json.Unmarshal([]byte(configString), service)
 			if err != nil {
 				panic(err)
@@ -119,15 +119,21 @@ var updateServiceCommand = &cobra.Command{
 			panic(err)
 		}
 
-		service := &api.Service{}
+		service := &api.UpdateServiceRequest{}
 		err = json.Unmarshal(configBytes, service)
 		if err != nil {
 			panic(err)
 		}
 
 		updateServiceRequest := &api.UpdateServiceRequest{
-			Name:    serviceOptions.name,
-			Service: service,
+			Name:                 serviceOptions.name,
+			EndpointURL:          service.EndpointURL,
+			DocumentationURL:     service.DocumentationURL,
+			ApiSpecificationURL:  service.ApiSpecificationURL,
+			Internal:             service.Internal,
+			TechSupportContact:   service.TechSupportContact,
+			PublicSupportContact: service.PublicSupportContact,
+			Inways:               service.Inways,
 		}
 
 		ctx := context.Background()
