@@ -99,13 +99,13 @@ class DirectoryServicesStore {
       )
     }
 
-    return new DirectoryServiceModel({
+    const directoryService = new DirectoryServiceModel({
       directoryServicesStore: this,
-      serviceData: Object.assign({}, serviceData, {
-        latestAccessProof: latestAccessProof,
-        latestAccessRequest: latestAccessRequest,
-      }),
+      serviceData,
     })
+
+    directoryService.update({}, latestAccessRequest, latestAccessProof)
+    return directoryService
   }
 }
 
