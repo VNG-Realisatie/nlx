@@ -23,7 +23,6 @@ const { FAILED } = ACCESS_REQUEST_STATES
 const stackTraceDrawerId = 'stacktrace'
 
 const DirectoryDetailView = ({ service }) => {
-  console.log(service)
   const { t } = useTranslation()
   const { showDrawer } = useDrawerStack()
   const { organizationName, latestAccessRequest, latestAccessProof } = service

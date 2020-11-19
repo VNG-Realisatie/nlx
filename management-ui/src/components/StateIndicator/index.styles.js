@@ -8,8 +8,6 @@ import { IconStateDegraded } from '../../icons'
 export const StyledWrapper = styled.span`
   display: flex;
   align-items: center;
-  line-height: 0;
-  vertical-align: bottom;
 `
 
 export const StyledIconStateDegraded = styled(IconStateDegraded)`
