@@ -45,7 +45,6 @@ class InwayModel {
     this.with(inway)
   }).bind(this)
 
-  // TODO: rename to update to be consistent with other models
   with = function (inway) {
     this.name = inway.name || ''
     this.ipAddress = inway.ipAddress || ''
