@@ -7,6 +7,7 @@ import { Button } from '@commonground/design-system'
 export const StyledButton = styled(Button)`
   float: right;
   color: ${(p) => p.theme.tokens.colorBrand1};
+  font-weight: normal;
 
   &:hover {
     color: ${(p) => p.theme.tokens.colorBrand1};
