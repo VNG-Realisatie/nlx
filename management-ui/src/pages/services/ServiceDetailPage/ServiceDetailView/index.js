@@ -71,7 +71,10 @@ const ServiceDetailView = ({ service, removeHandler }) => {
 
         <AccessRequestsSection
           accessRequests={service.incomingAccessRequests}
-          fetchServiceHandler={service.fetch}
+          fetchServiceHandler={() => {
+            service.servicesStore.fetchAll()
+            service.fetch()
+          }}
         />
 
         <AccessGrantSection accessGrants={service.accessGrants} />
