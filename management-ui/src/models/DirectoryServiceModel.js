@@ -35,33 +35,38 @@ class DirectoryServiceModel {
   latestAccessRequest = null
   latestAccessProof = null
 
-  constructor({ directoryServicesStore, serviceData }) {
+  constructor({
+    directoryServicesStore,
+    serviceData,
+    latestAccessRequest,
+    latestAccessProof,
+  }) {
     makeAutoObservable(this)
 
     this.directoryServicesStore = directoryServicesStore
 
-    this.update(serviceData)
+    this.update({ serviceData, latestAccessRequest, latestAccessProof })
   }
 
-  update = (
-    directoryServiceData,
+  update = ({
+    serviceData,
     latestAccessRequest = null,
     latestAccessProof = null,
-  ) => {
-    if (directoryServiceData.organizationName) {
-      this.organizationName = directoryServiceData.organizationName
+  }) => {
+    if (serviceData.organizationName) {
+      this.organizationName = serviceData.organizationName
     }
 
-    if (directoryServiceData.serviceName) {
-      this.serviceName = directoryServiceData.serviceName
+    if (serviceData.serviceName) {
+      this.serviceName = serviceData.serviceName
     }
 
-    if (directoryServiceData.state) {
-      this.state = directoryServiceData.state
+    if (serviceData.state) {
+      this.state = serviceData.state
     }
 
-    if (directoryServiceData.apiSpecificationType) {
-      this.apiSpecificationType = directoryServiceData.apiSpecificationType
+    if (serviceData.apiSpecificationType) {
+      this.apiSpecificationType = serviceData.apiSpecificationType
     }
 
     throwErrorWhenNotInstanceOf(latestAccessRequest, OutgoingAccessRequestModel)
@@ -69,6 +74,8 @@ class DirectoryServiceModel {
 
     this.latestAccessRequest = latestAccessRequest
     this.latestAccessProof = latestAccessProof
+
+    return this
   }
 
   fetch = async () => {

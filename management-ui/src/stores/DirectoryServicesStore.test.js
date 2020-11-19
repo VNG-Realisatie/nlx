@@ -1,145 +1,116 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { act } from '@testing-library/react'
-import deferredPromise from '../test-utils/deferred-promise'
 import OutgoingAccessRequestModel from '../models/OutgoingAccessRequestModel'
 import DirectoryServiceModel from '../models/DirectoryServiceModel'
-import OutgoingAccessRequestStore from './OutgoingAccessRequestStore'
-import AccessProofStore from './AccessProofStore'
+import AccessProofModel from '../models/AccessProofModel'
 import DirectoryServicesStore from './DirectoryServicesStore'
+import { RootStore } from './index'
 
-test('fetching all directory services', async () => {
-  const mockGetAll = deferredPromise()
-  const directoryRepository = {
-    getAll: jest.fn().mockReturnValue(mockGetAll),
-  }
-
+test('initializing the store', async () => {
   const directoryServicesStore = new DirectoryServicesStore({
-    rootStore: {
-      outgoingAccessRequestStore: new OutgoingAccessRequestStore({
-        accessRequestRepository: {},
-      }),
-      accessProofStore: new AccessProofStore(),
-    },
-    directoryRepository,
+    rootStore: {},
   })
 
   expect(directoryServicesStore.services).toEqual([])
   expect(directoryServicesStore.isInitiallyFetched).toBe(false)
+})
 
-  directoryServicesStore.fetchAll()
-
-  expect(directoryServicesStore.isInitiallyFetched).toBe(false)
-  expect(directoryRepository.getAll).toHaveBeenCalled()
-
-  await act(async () => {
-    await mockGetAll.resolve([
-      {
-        organizationName: 'Org A',
-        serviceName: 'Service A',
-        latestAccessRequest: { id: 'abc' },
-      },
-      { organizationName: 'Org B', serviceName: 'Service B' },
-    ])
+test('fetching all directory services', async () => {
+  const rootStore = new RootStore({
+    directoryRepository: {
+      getAll: jest.fn().mockResolvedValue([
+        {
+          organizationName: 'Org A',
+          serviceName: 'Service A',
+        },
+        {
+          organizationName: 'Org B',
+          serviceName: 'Service B',
+        },
+      ]),
+    },
   })
+
+  const directoryServicesStore = rootStore.directoryServicesStore
+  await directoryServicesStore.fetchAll()
+
+  expect(directoryServicesStore.directoryRepository.getAll).toHaveBeenCalled()
 
   await expect(directoryServicesStore.isInitiallyFetched).toBe(true)
   expect(directoryServicesStore.services).toHaveLength(2)
 })
 
-test('selecting and updating a single service', async () => {
-  const directoryRepository = {
-    getAll: jest
-      .fn()
-      .mockReturnValue([
-        { organizationName: 'Org A', serviceName: 'Service A' },
-      ]),
+test('handle error while fetching all directory services', async () => {
+  global.console.error = jest.fn()
 
-    getByName: jest.fn().mockReturnValue({
-      organizationName: 'Org A',
-      serviceName: 'Service A',
-      latestAccessRequest: { id: 'abc', state: 'CREATED' },
-    }),
-  }
-
-  const directoryServicesStore = new DirectoryServicesStore({
-    rootStore: {
-      outgoingAccessRequestStore: new OutgoingAccessRequestStore({
-        accessRequestRepository: {},
-      }),
-      accessProofStore: new AccessProofStore(),
+  const rootStore = new RootStore({
+    directoryRepository: {
+      getAll: jest.fn().mockRejectedValue(new Error('arbitrary error')),
     },
-    directoryRepository,
   })
 
+  const directoryServicesStore = rootStore.directoryServicesStore
   await directoryServicesStore.fetchAll()
 
-  expect(directoryServicesStore.services).toHaveLength(1)
+  expect(directoryServicesStore.directoryRepository.getAll).toHaveBeenCalled()
 
-  const service = directoryServicesStore.getService({
+  expect(directoryServicesStore.error).toEqual(new Error('arbitrary error'))
+  expect(directoryServicesStore.services).toEqual([])
+  expect(directoryServicesStore.isInitiallyFetched).toBe(true)
+})
+
+test('fetching a single service', async () => {
+  const rootStore = new RootStore({
+    directoryRepository: {
+      getByName: jest
+        .fn()
+        .mockResolvedValueOnce({
+          organizationName: 'Org A',
+          serviceName: 'Service A',
+        })
+        .mockReturnValue({
+          organizationName: 'Org A',
+          serviceName: 'Service A',
+          latestAccessRequest: { id: 'abc', state: 'CREATED' },
+          latestAccessProof: { id: 'abc' },
+        }),
+    },
+  })
+
+  const directoryServicesStore = rootStore.directoryServicesStore
+  expect(directoryServicesStore.services).toHaveLength(0)
+
+  let service = await directoryServicesStore.fetch({
     organizationName: 'Org A',
     serviceName: 'Service A',
   })
 
+  expect(directoryServicesStore.services).toHaveLength(1)
+  expect(service).toBeInstanceOf(DirectoryServiceModel)
   expect(service.latestAccessRequest).toBeNull()
+  expect(service.latestAccessProof).toBeNull()
 
-  await directoryServicesStore.fetch(service)
-
-  expect(service.latestAccessRequest).not.toBeNull()
-})
-
-test('handle error while fetching directory services', async () => {
-  const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
-
-  const mockGetAll = deferredPromise()
-  const directoryRepository = {
-    getAll: jest.fn(() => mockGetAll),
-  }
-
-  const directoryServicesStore = new DirectoryServicesStore({
-    rootStore: {},
-    directoryRepository,
+  service = await directoryServicesStore.fetch({
+    organizationName: 'Org A',
+    serviceName: 'Service A',
   })
 
-  expect(directoryServicesStore.services).toEqual([])
-
-  directoryServicesStore.fetchAll()
-
-  expect(directoryServicesStore.isInitiallyFetched).toBe(false)
-  expect(directoryRepository.getAll).toHaveBeenCalled()
-
-  await mockGetAll.reject('some error')
-
-  expect(directoryServicesStore.error).toEqual('some error')
-  expect(directoryServicesStore.services).toEqual([])
-  expect(directoryServicesStore.isInitiallyFetched).toBe(true)
-
-  errorSpy.mockRestore()
+  expect(service).toBeInstanceOf(DirectoryServiceModel)
+  expect(service.latestAccessRequest).toBeInstanceOf(OutgoingAccessRequestModel)
+  expect(service.latestAccessProof).toBeInstanceOf(AccessProofModel)
 })
 
 test('requesting access to a service in the directory', async () => {
-  const accessRequestRepository = {
-    createAccessRequest: jest.fn().mockResolvedValue({
-      id: '42',
-    }),
-  }
-
-  const outgoingAccessRequestStore = new OutgoingAccessRequestStore({
-    accessRequestRepository,
-  })
-
-  const outgoingAccessRequestStoreCreateSpy = jest.spyOn(
-    outgoingAccessRequestStore,
-    'create',
-  )
-
-  const directoryServicesStore = new DirectoryServicesStore({
-    rootStore: {
-      outgoingAccessRequestStore: outgoingAccessRequestStore,
+  const { outgoingAccessRequestStore, directoryServicesStore } = new RootStore({
+    accessRequestRepository: {
+      createAccessRequest: jest.fn().mockResolvedValue({
+        id: '42',
+      }),
     },
-    directoryRepository: {},
   })
+
+  jest.spyOn(outgoingAccessRequestStore, 'create')
 
   const directoryService = new DirectoryServiceModel({
     serviceData: {
@@ -152,7 +123,7 @@ test('requesting access to a service in the directory', async () => {
     directoryService,
   )
 
-  expect(outgoingAccessRequestStoreCreateSpy).toHaveBeenCalledWith({
+  expect(outgoingAccessRequestStore.create).toHaveBeenCalledWith({
     organizationName: 'organization',
     serviceName: 'service',
   })

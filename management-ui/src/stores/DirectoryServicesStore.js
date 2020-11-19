@@ -92,20 +92,19 @@ class DirectoryServicesStore {
     })
 
     if (cachedDirectoryService) {
-      return cachedDirectoryService.update(
+      return cachedDirectoryService.update({
         serviceData,
         latestAccessRequest,
         latestAccessProof,
-      )
+      })
     }
 
-    const directoryService = new DirectoryServiceModel({
+    return new DirectoryServiceModel({
       directoryServicesStore: this,
       serviceData,
+      latestAccessProof,
+      latestAccessRequest,
     })
-
-    directoryService.update({}, latestAccessRequest, latestAccessProof)
-    return directoryService
   }
 }
 
