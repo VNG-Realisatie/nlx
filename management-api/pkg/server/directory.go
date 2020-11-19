@@ -175,6 +175,7 @@ func convertDirectoryService(s *inspectionapi.ListServicesResponse_Service) *api
 		ServiceName:          s.ServiceName,
 		OrganizationName:     s.OrganizationName,
 		APISpecificationType: s.ApiSpecificationType,
+		DocumentationURL:     s.DocumentationUrl,
 		PublicSupportContact: s.PublicSupportContact,
 		State:                serviceState,
 	}

@@ -970,6 +970,9 @@
         "apiSpecificationType": {
           "type": "string"
         },
+        "documentationURL": {
+          "type": "string"
+        },
         "publicSupportContact": {
           "type": "string"
         },
