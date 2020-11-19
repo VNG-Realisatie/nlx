@@ -2,7 +2,6 @@
 // Licensed under the EUPL
 //
 import { makeAutoObservable, flow } from 'mobx'
-
 import {
   createModelSchema,
   createSimpleSchema,
@@ -70,7 +69,5 @@ createModelSchema(InwayModel, {
   ),
   version: primitive(),
 })
-
-export const createInway = (...args) => new InwayModel(...args)
 
 export default InwayModel

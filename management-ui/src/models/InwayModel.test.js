@@ -4,7 +4,7 @@
 import { checkPropTypes } from 'prop-types'
 
 import deferredPromise from '../test-utils/deferred-promise'
-import InwayModel, { createInway, inwayModelPropTypes } from './InwayModel'
+import InwayModel, { inwayModelPropTypes } from './InwayModel'
 
 let store
 let inway
@@ -14,11 +14,6 @@ beforeEach(() => {
   inway = {
     name: 'Service',
   }
-})
-
-test('createInway returns an instance', () => {
-  const inwayModel = createInway({ store, inway })
-  expect(inwayModel).toBeInstanceOf(InwayModel)
 })
 
 test('model implements proptypes', () => {

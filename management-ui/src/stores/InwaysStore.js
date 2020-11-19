@@ -3,7 +3,7 @@
 //
 import { makeAutoObservable, flow, action } from 'mobx'
 import InwayRepository from '../domain/inway-repository'
-import { createInway } from '../models/InwayModel'
+import InwayModel from '../models/InwayModel'
 
 class InwaysStore {
   inways = []
@@ -37,7 +37,9 @@ class InwaysStore {
 
     try {
       const inways = yield this.inwayRepository.getAll()
-      this.inways = inways.map((inway) => createInway({ store: this, inway }))
+      this.inways = inways.map(
+        (inway) => new InwayModel({ store: this, inway }),
+      )
     } catch (e) {
       this.error = e
     } finally {

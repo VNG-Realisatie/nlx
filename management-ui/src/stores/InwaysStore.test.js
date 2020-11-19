@@ -3,11 +3,6 @@
 //
 import deferredPromise from '../test-utils/deferred-promise'
 import InwaysStore from './InwaysStore'
-import { mockInwayModel } from './InwaysStore.mock'
-
-jest.mock('../models/InwayModel', () => ({
-  createInway: ({ inway }) => ({ ...inway }),
-}))
 
 let rootStore
 let inwayRepository
@@ -70,46 +65,33 @@ test('handle error while fetching inways', async () => {
 })
 
 test('selecting an inway', async () => {
-  const mockInwayModelA = mockInwayModel({ name: 'Inway A' })
-  const mockInwayModelB = mockInwayModel({ name: 'Inway B' })
-  const mockInwayModelC = mockInwayModel({ name: 'Inway C' })
+  const inwaysStore = new InwaysStore({
+    rootStore,
+    inwayRepository: {
+      getAll: jest.fn().mockResolvedValue([
+        {
+          name: 'Inway A',
+        },
+        {
+          name: 'Inway B',
+        },
+      ]),
+    },
+  })
 
-  inwayRepository = {
-    getAll: jest
-      .fn()
-      .mockResolvedValue([mockInwayModelA, mockInwayModelB, mockInwayModelC]),
-  }
-
-  const inwaysStore = new InwaysStore({ rootStore, inwayRepository })
   await inwaysStore.fetchInways()
 
-  const selectedInway = inwaysStore.selectInway('Inway B')
+  const inwayA = inwaysStore.inways.find((inway) => inway.name === 'Inway A')
+  const inwayB = inwaysStore.inways.find((inway) => inway.name === 'Inway B')
 
-  expect(selectedInway.name).toEqual('Inway B')
-  expect(mockInwayModelB.fetch).toHaveBeenCalled()
+  jest.spyOn(inwayA, 'fetch').mockResolvedValue(null)
+  jest.spyOn(inwayB, 'fetch').mockResolvedValue(null)
 
-  expect(mockInwayModelA.fetch).not.toHaveBeenCalled()
-  expect(mockInwayModelC.fetch).not.toHaveBeenCalled()
-})
-
-test('selecting an inway that is not present in the store', async () => {
-  const mockInwayModelA = mockInwayModel({ name: 'Inway A' })
-  const mockInwayModelB = mockInwayModel({ name: 'Inway B' })
-  const mockInwayModelC = mockInwayModel({ name: 'Inway C' })
-
-  inwayRepository = {
-    getAll: jest
-      .fn()
-      .mockResolvedValue([mockInwayModelA, mockInwayModelB, mockInwayModelC]),
-  }
-
-  const inwaysStore = new InwaysStore({ rootStore, inwayRepository })
-  await inwaysStore.fetchInways()
-
-  const selectedInway = inwaysStore.selectInway('arbitrary inway name')
+  let selectedInway = inwaysStore.selectInway('non-existing-inway-name')
   expect(selectedInway).toBeUndefined()
 
-  expect(mockInwayModelA.fetch).not.toHaveBeenCalled()
-  expect(mockInwayModelB.fetch).not.toHaveBeenCalled()
-  expect(mockInwayModelC.fetch).not.toHaveBeenCalled()
+  selectedInway = inwaysStore.selectInway('Inway B')
+  expect(selectedInway.name).toEqual('Inway B')
+  expect(inwayB.fetch).toHaveBeenCalled()
+  expect(inwayA.fetch).not.toHaveBeenCalled()
 })

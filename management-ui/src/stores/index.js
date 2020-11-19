@@ -8,6 +8,7 @@ import { node, object } from 'prop-types'
 import AccessRequestRepository from '../domain/access-request-repository'
 import AccessGrantRepository from '../domain/access-grant-repository'
 import DirectoryRepository from '../domain/directory-repository'
+import InwayRepository from '../domain/inway-repository'
 import DirectoryServicesStore from './DirectoryServicesStore'
 import OutgoingAccessRequestStore from './OutgoingAccessRequestStore'
 import AccessGrantStore from './AccessGrantStore'
@@ -29,6 +30,7 @@ export class RootStore {
     accessRequestRepository = AccessRequestRepository,
     accessGrantRepository = AccessGrantRepository,
     directoryRepository = DirectoryRepository,
+    inwayRepository = InwayRepository,
   } = {}) {
     this.directoryServicesStore = new DirectoryServicesStore({
       rootStore: this,
@@ -44,7 +46,7 @@ export class RootStore {
     this.incomingAccessRequestsStore = new IncomingAccessRequestsStore({
       accessRequestRepository,
     })
-    this.inwaysStore = new InwaysStore({ rootStore: this })
+    this.inwaysStore = new InwaysStore({ rootStore: this, inwayRepository })
   }
 }
 
