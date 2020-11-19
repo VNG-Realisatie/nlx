@@ -2,10 +2,9 @@
 // Licensed under the EUPL
 //
 import styled from 'styled-components'
+import { Button } from '@commonground/design-system'
 
-import ButtonWithIcon from '../../../../components/ButtonWithIcon'
-
-export const StyledButtonWithIcon = styled(ButtonWithIcon)`
+export const StyledButton = styled(Button)`
   float: right;
   color: ${(p) => p.theme.tokens.colorBrand1};
 `

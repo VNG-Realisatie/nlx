@@ -3,7 +3,6 @@
 //
 import React from 'react'
 import { renderWithProviders } from '../../../../../test-utils'
-
 import ServiceRow from './index'
 
 test('service row should render expected data', () => {

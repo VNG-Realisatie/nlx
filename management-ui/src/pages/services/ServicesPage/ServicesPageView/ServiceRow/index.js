@@ -4,13 +4,12 @@
 import React from 'react'
 import { array, bool, shape, string } from 'prop-types'
 import { Table } from '@commonground/design-system'
-
 import {
   ServiceVisibilityMessage,
   showServiceVisibilityAlert,
 } from '../../../../../components/ServiceVisibilityAlert'
-import AmountOfIncomingRequestsLabel from '../../AmountOfIncomingRequestsLabel'
-import { TdAlignRight } from './index.styles'
+import AmountOfIncomingRequestsLabel from './AmountOfIncomingRequestsLabel'
+import { TdAlignRight, StyledTdIncomingRequests } from './index.styles'
 
 const ServiceRow = ({ service, ...props }) => {
   const { name, internal, inways } = service
@@ -28,13 +27,13 @@ const ServiceRow = ({ service, ...props }) => {
           <ServiceVisibilityMessage />
         ) : null}
       </TdAlignRight>
-      <Table.Td>
+      <StyledTdIncomingRequests>
         {service.incomingAccessRequestsCount > 0 ? (
           <AmountOfIncomingRequestsLabel
             count={service.incomingAccessRequestsCount}
           />
         ) : null}
-      </Table.Td>
+      </StyledTdIncomingRequests>
     </Table.Tr>
   )
 }
