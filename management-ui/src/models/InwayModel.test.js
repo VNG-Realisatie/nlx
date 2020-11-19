@@ -2,23 +2,12 @@
 // Licensed under the EUPL
 //
 import { checkPropTypes } from 'prop-types'
-
-import deferredPromise from '../test-utils/deferred-promise'
+import { RootStore } from '../stores'
 import InwayModel, { inwayModelPropTypes } from './InwayModel'
-
-let store
-let inway
-
-beforeEach(() => {
-  store = {}
-  inway = {
-    name: 'Service',
-  }
-})
 
 test('model implements proptypes', () => {
   const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
-  const inwayModel = new InwayModel({ store, inway })
+  const inwayModel = new InwayModel({ store: {}, inway: { name: 'service-a' } })
 
   checkPropTypes(inwayModelPropTypes, inwayModel, 'prop', 'InwayModel')
 
@@ -26,21 +15,25 @@ test('model implements proptypes', () => {
   errorSpy.mockRestore()
 })
 
-test('fetches data', async () => {
-  const request = deferredPromise()
-  store = {
+test('fetch should reload the model via the store', async () => {
+  const rootStore = new RootStore({
     inwayRepository: {
-      getByName: jest.fn(() => request),
+      getByName: jest.fn().mockResolvedValue({ name: 'service-a' }),
     },
-  }
+  })
 
-  const inwayModel = new InwayModel({ store, inway })
+  const inwayModel = new InwayModel({
+    store: rootStore.inwaysStore,
+    inway: {
+      name: 'service-a',
+    },
+  })
 
-  inwayModel.fetch()
+  jest.spyOn(rootStore.inwaysStore, 'fetch')
 
-  expect(store.inwayRepository.getByName).toHaveBeenCalled()
+  await inwayModel.fetch()
 
-  await request.resolve(inway)
-
-  expect(inwayModel).toBeInstanceOf(InwayModel)
+  expect(rootStore.inwaysStore.fetch).toHaveBeenCalledWith({
+    name: 'service-a',
+  })
 })

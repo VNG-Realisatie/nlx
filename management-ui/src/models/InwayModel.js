@@ -41,10 +41,11 @@ class InwayModel {
   }
 
   fetch = flow(function* fetch() {
-    const inway = yield this.store.inwayRepository.getByName(this.name)
+    const inway = yield this.store.fetch({ name: this.name })
     this.with(inway)
   }).bind(this)
 
+  // TODO: rename to update to be consistent with other models
   with = function (inway) {
     this.name = inway.name || ''
     this.ipAddress = inway.ipAddress || ''

@@ -48,6 +48,23 @@ class InwaysStore {
     }
   }).bind(this)
 
+  fetch = flow(function* fetch({ name }) {
+    const inwayData = yield this.inwayRepository.getByName(name)
+    let inway = this.getInway({ name })
+
+    if (!inway) {
+      inway = this._updateFromServer(inwayData)
+      this.inways.push(inway)
+      return inway
+    }
+
+    return this._updateFromServer(inwayData)
+  }).bind(this)
+
+  getInway = ({ name }) => {
+    return this.inways.find((inway) => inway.name === name)
+  }
+
   // TODO: rename to getInway
   selectInway(inwayName) {
     const inwayModel = this.inways.find((inway) => inway.name === inwayName)
@@ -57,6 +74,22 @@ class InwaysStore {
     }
 
     return inwayModel
+  }
+
+  _updateFromServer(inwayData) {
+    const cachedInway = this.getInway({
+      name: inwayData.name,
+    })
+
+    if (cachedInway) {
+      cachedInway.with(inwayData)
+      return cachedInway
+    }
+
+    return new InwayModel({
+      store: this,
+      inway: inwayData,
+    })
   }
 }
 
