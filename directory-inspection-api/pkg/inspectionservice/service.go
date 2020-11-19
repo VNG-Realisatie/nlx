@@ -64,6 +64,7 @@ func convertFromDatabaseService(model *database.Service) *inspectionapi.ListServ
 		InwayAddresses:       model.InwayAddresses,
 		ApiSpecificationType: model.APISpecificationType,
 		HealthyStates:        model.HealthyStates,
+		DocumentationUrl:     model.DocumentationURL,
 		PublicSupportContact: model.PublicSupportContact,
 	}
 
