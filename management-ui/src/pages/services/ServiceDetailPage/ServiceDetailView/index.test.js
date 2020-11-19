@@ -26,7 +26,9 @@ describe('ServiceDetails', () => {
       </Router>,
     )
 
-    expect(queryByText('Published in central directory')).toBeInTheDocument()
+    const heading = queryByText('Published in central directory')
+    expect(heading).toBeInTheDocument()
+    expect(heading).toHaveTextContent('visible.svg')
   })
 
   it('should show hidden icon', () => {
@@ -41,7 +43,10 @@ describe('ServiceDetails', () => {
         />
       </Router>,
     )
-    expect(queryByText('Not visible in central directory')).toBeInTheDocument()
+
+    const heading = queryByText('Not visible in central directory')
+    expect(heading).toBeInTheDocument()
+    expect(heading).toHaveTextContent('hidden.svg')
   })
 
   it('should call the removeHandler on remove', () => {
