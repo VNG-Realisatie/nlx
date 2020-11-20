@@ -14,12 +14,7 @@ export const DetailHeading = styled.div`
   margin: 0;
 
   svg {
-    position: relative;
-    top: -${(p) => p.theme.tokens.spacing01};
-    width: 1.25rem;
-    height: 1.25rem;
     margin-right: ${(p) => p.theme.tokens.spacing03};
-    vertical-align: text-bottom;
     fill: ${(p) => p.theme.colorTextLabel};
   }
 `
@@ -29,9 +24,6 @@ export const DetailHeadingLight = styled(DetailHeading)`
   font-weight: ${(p) => p.theme.tokens.fontWeightRegular};
   font-size: ${(p) => p.theme.tokens.fontSizeMedium};
 
-  svg {
-    vertical-align: middle;
-  }
 `
 
 export const StyledCollapsibleBody = styled.div`
