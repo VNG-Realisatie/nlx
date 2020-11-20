@@ -23,7 +23,11 @@ export const DetailHeadingLight = styled(DetailHeading)`
   line-height: ${(p) => p.theme.tokens.lineHeightText};
   font-weight: ${(p) => p.theme.tokens.fontWeightRegular};
   font-size: ${(p) => p.theme.tokens.fontSizeMedium};
+`
 
+export const DetailBody = styled.div`
+  margin-top: ${(p) => p.theme.tokens.spacing05};
+  margin-left: calc(1.25rem + ${(p) => p.theme.tokens.spacing03});
 `
 
 export const StyledCollapsibleBody = styled.div`

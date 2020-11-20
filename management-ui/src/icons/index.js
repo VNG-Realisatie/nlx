@@ -15,6 +15,7 @@ import { ReactComponent as SvgExternalLink } from './external-link.svg'
 import { ReactComponent as SvgHidden } from './hidden.svg'
 import { ReactComponent as SvgInway } from './inway.svg'
 import { ReactComponent as SvgKey } from './key.svg'
+import { ReactComponent as SvgMail } from './mail.svg'
 import { ReactComponent as SvgOrganization } from './organization.svg'
 import { ReactComponent as SvgPencil } from './pencil.svg'
 import { ReactComponent as SvgPlus } from './plus.svg'
@@ -47,6 +48,7 @@ export const IconExternalLink = (props) => (
 export const IconHidden = (props) => <Icon as={SvgHidden} {...props} />
 export const IconInway = (props) => <Icon as={SvgInway} {...props} />
 export const IconKey = (props) => <Icon as={SvgKey} {...props} />
+export const IconMail = (props) => <Icon as={SvgMail} {...props} />
 export const IconOrganization = (props) => (
   <Icon as={SvgOrganization} {...props} />
 )

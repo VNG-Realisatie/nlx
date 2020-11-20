@@ -12,8 +12,11 @@ export const directoryServicePropTypes = {
   serviceName: string.isRequired,
   state: string.isRequired,
   apiSpecificationType: string,
+  documentationURL: string,
+  publicSupportContact: string,
   latestAccessRequest: object,
   latestAccessProof: object,
+
   fetch: func.isRequired,
   requestAccess: func.isRequired,
   retryRequestAccess: func.isRequired,
@@ -32,6 +35,8 @@ class DirectoryServiceModel {
   serviceName = ''
   state = ''
   apiSpecificationType = ''
+  documentationURL = ''
+  publicSupportContact = ''
   latestAccessRequest = null
   latestAccessProof = null
 
@@ -67,6 +72,14 @@ class DirectoryServiceModel {
 
     if (serviceData.apiSpecificationType) {
       this.apiSpecificationType = serviceData.apiSpecificationType
+    }
+
+    if (serviceData.documentationURL) {
+      this.documentationURL = serviceData.documentationURL
+    }
+
+    if (serviceData.publicSupportContact) {
+      this.publicSupportContact = serviceData.publicSupportContact
     }
 
     throwErrorWhenNotInstanceOf(latestAccessRequest, OutgoingAccessRequestModel)

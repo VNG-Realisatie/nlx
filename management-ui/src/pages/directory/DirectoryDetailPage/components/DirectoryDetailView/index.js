@@ -4,20 +4,19 @@
 import React from 'react'
 import { shape } from 'prop-types'
 import { observer } from 'mobx-react'
-import { Alert, Button, useDrawerStack } from '@commonground/design-system'
+import { Alert, useDrawerStack } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import pick from 'lodash.pick'
+
 import { directoryServicePropTypes } from '../../../../../models/DirectoryServiceModel'
 import { ACCESS_REQUEST_STATES } from '../../../../../models/OutgoingAccessRequestModel'
 import getDirectoryServiceAccessUIState from '../../../directoryServiceAccessState'
 import { SectionGroup } from '../../../../../components/DetailView'
 import StacktraceDrawer from './StacktraceDrawer'
+import ExternalLinkSection from './ExternalLinkSection'
 import AccessSection from './AccessSection'
-import {
-  StyledAlert,
-  ExternalLinkSection,
-  StyledIconExternalLink,
-} from './index.styles'
+import ContactSection from './ContactSection'
+import { StyledAlert } from './index.styles'
 
 const { FAILED } = ACCESS_REQUEST_STATES
 const stackTraceDrawerId = 'stacktrace'
@@ -86,26 +85,7 @@ const DirectoryDetailView = ({ service }) => {
         />
       )}
 
-      <ExternalLinkSection>
-        <Button
-          variant="secondary"
-          as="a"
-          href={service.documentationURL}
-          disabled={!service.documentationURL}
-        >
-          Documentatie
-          <StyledIconExternalLink />
-        </Button>
-        <Button
-          variant="secondary"
-          as="a"
-          href={service.apiSpecificationURL}
-          disabled={!service.apiSpecificationURL}
-        >
-          Specificatie
-          <StyledIconExternalLink />
-        </Button>
-      </ExternalLinkSection>
+      <ExternalLinkSection service={service} />
 
       <SectionGroup>
         <AccessSection
@@ -114,6 +94,8 @@ const DirectoryDetailView = ({ service }) => {
           latestAccessProof={latestAccessProof}
           requestAccess={requestAccess}
         />
+
+        <ContactSection service={service} />
       </SectionGroup>
     </>
   )
