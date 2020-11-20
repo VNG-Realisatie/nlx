@@ -11,7 +11,7 @@ beforeEach(() => {
 })
 
 test('should show if there are no access grants', async () => {
-  const { getByTestId } = renderWithProviders(
+  const { getByTestId, getByText } = renderWithProviders(
     <AccessGrantSection accessGrants={[]} />,
   )
 
@@ -22,7 +22,9 @@ test('should show if there are no access grants', async () => {
   expect(toggler).toHaveTextContent(
     'checkbox-multiple.svg' + 'Organizations with access' + '0', // eslint-disable-line no-useless-concat
   )
-  expect(getByTestId('service-no-accessgrants')).toBeTruthy()
+  expect(
+    getByText('There are no organizations with access'),
+  ).toBeInTheDocument()
 })
 
 test('should list access grants', async () => {
@@ -47,7 +49,7 @@ test('should list access grants', async () => {
   expect(toggler).toHaveTextContent(
     'checkbox-multiple.svg' + 'Organizations with access' + '1', // eslint-disable-line no-useless-concat
   )
-  expect(getByTestId('service-accessgrant-list')).toBeTruthy()
+  expect(getByTestId('service-accessgrant-list')).toBeInTheDocument()
 })
 
 test('revoking access', async () => {

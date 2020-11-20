@@ -31,7 +31,7 @@ test('should show inways', async () => {
 })
 
 test('alternate rendering when not having inways', () => {
-  const { getByTestId } = renderWithProviders(
+  const { getByTestId, getByText } = renderWithProviders(
     <Router>
       <InwaysSection inways={[]} />
     </Router>,
@@ -44,5 +44,5 @@ test('alternate rendering when not having inways', () => {
   fireEvent.click(getByTestId('service-inways'))
   jest.runAllTimers()
 
-  expect(getByTestId('service-no-inways')).toBeTruthy()
+  expect(getByText('No inways have been added')).toBeTruthy()
 })

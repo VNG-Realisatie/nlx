@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next'
 import {
   DetailHeading,
   StyledCollapsibleBody,
-  StyledCollapsibleEmptyBody,
 } from '../../../../../components/DetailView'
 import Amount from '../../../../../components/Amount'
 import { IconInway } from '../../../../../icons'
@@ -30,10 +29,10 @@ const InwaysSection = ({ inways }) => {
       ariaLabel={t('Inways')}
     >
       <StyledCollapsibleBody>
-        <Table data-testid="service-inways-list" role="grid" withLinks>
-          <tbody>
-            {inways.length ? (
-              inways.map((inway, i) => (
+        {inways.length ? (
+          <Table data-testid="service-inways-list" role="grid" withLinks>
+            <tbody>
+              {inways.map((inway, i) => (
                 <Table.Tr
                   key={i}
                   data-testid={`service-inway-${i}`}
@@ -43,18 +42,12 @@ const InwaysSection = ({ inways }) => {
                     <StyledInwayName>{inway}</StyledInwayName>
                   </Table.Td>
                 </Table.Tr>
-              ))
-            ) : (
-              <Table.Tr data-testid="service-no-inways">
-                <Table.Td>
-                  <StyledCollapsibleEmptyBody>
-                    {t('No inways have been added')}
-                  </StyledCollapsibleEmptyBody>
-                </Table.Td>
-              </Table.Tr>
-            )}
-          </tbody>
-        </Table>
+              ))}
+            </tbody>
+          </Table>
+        ) : (
+          <small>{t('No inways have been added')}</small>
+        )}
       </StyledCollapsibleBody>
     </Collapsible>
   )

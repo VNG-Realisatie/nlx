@@ -10,7 +10,6 @@ import { useTranslation } from 'react-i18next'
 import {
   DetailHeading,
   StyledCollapsibleBody,
-  StyledCollapsibleEmptyBody,
 } from '../../../../../components/DetailView'
 import Amount from '../../../../../components/Amount'
 import { IconKey } from '../../../../../icons'
@@ -89,28 +88,22 @@ const AccessRequestsSection = ({ accessRequests, fetchServiceHandler }) => {
       ariaLabel={t('Access requests')}
     >
       <StyledCollapsibleBody>
-        <Table data-testid="service-incoming-accessrequests-list">
-          <tbody>
-            {accessRequests.length ? (
-              accessRequests.map((accessRequest) => (
+        {accessRequests.length ? (
+          <Table data-testid="service-incoming-accessrequests-list">
+            <tbody>
+              {accessRequests.map((accessRequest) => (
                 <IncomingAccessRequestRow
                   key={accessRequest.id}
                   accessRequest={accessRequest}
                   approveHandler={approveHandler}
                   rejectHandler={rejectHandler}
                 />
-              ))
-            ) : (
-              <Table.Tr data-testid="service-no-incoming-accessrequests">
-                <Table.Td>
-                  <StyledCollapsibleEmptyBody>
-                    {t('There are no access requests')}
-                  </StyledCollapsibleEmptyBody>
-                </Table.Td>
-              </Table.Tr>
-            )}
-          </tbody>
-        </Table>
+              ))}
+            </tbody>
+          </Table>
+        ) : (
+          <small>{t('There are no access requests')}</small>
+        )}
       </StyledCollapsibleBody>
     </Collapsible>
   )

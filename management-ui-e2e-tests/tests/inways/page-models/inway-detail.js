@@ -14,7 +14,7 @@ class Page {
     this.gatewayType = Selector('[data-testid="gateway-type"]')
     this.inwaySpecs = Selector('[data-testid="inway-specs"]')
     this.services = Selector('[data-testid="inway-services"]')
-    this.servicesList = Selector('[data-testid="service-inways-list"]')
+    this.servicesList = Selector('[data-testid="inway-services-list"]')
   }
 }
 

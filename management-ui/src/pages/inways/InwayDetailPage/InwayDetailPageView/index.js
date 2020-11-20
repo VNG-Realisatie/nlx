@@ -11,7 +11,6 @@ import Amount from '../../../../components/Amount'
 import {
   DetailHeading,
   StyledCollapsibleBody,
-  StyledCollapsibleEmptyBody,
   SectionGroup,
 } from '../../../../components/DetailView'
 
@@ -49,25 +48,19 @@ const InwayDetails = ({ inway }) => {
           ariaLabel={t('Connected services')}
         >
           <StyledCollapsibleBody>
-            <Table data-testid="service-inways-list" role="grid" withLinks>
-              <tbody>
-                {services.length ? (
-                  services.map(({ name }) => (
+            {services.length ? (
+              <Table data-testid="inway-services-list" role="grid" withLinks>
+                <tbody>
+                  {services.map(({ name }) => (
                     <Table.Tr key={name} to={`/services/${name}`}>
                       <Table.Td>{name}</Table.Td>
                     </Table.Tr>
-                  ))
-                ) : (
-                  <Table.Tr data-testid="service-no-inways">
-                    <Table.Td>
-                      <StyledCollapsibleEmptyBody>
-                        {t('No services have been connected')}
-                      </StyledCollapsibleEmptyBody>
-                    </Table.Td>
-                  </Table.Tr>
-                )}
-              </tbody>
-            </Table>
+                  ))}
+                </tbody>
+              </Table>
+            ) : (
+              <small>{t('No services have been connected')}</small>
+            )}
           </StyledCollapsibleBody>
         </Collapsible>
       </SectionGroup>

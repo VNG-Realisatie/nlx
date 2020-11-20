@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next'
 import {
   DetailHeading,
   StyledCollapsibleBody,
-  StyledCollapsibleEmptyBody,
 } from '../../../../../components/DetailView'
 import Amount from '../../../../../components/Amount'
 import { IconCheckboxMultiple } from '../../../../../icons'
@@ -49,27 +48,21 @@ const AccessGrantSection = ({ accessGrants }) => {
       ariaLabel={t('Organizations with access')}
     >
       <StyledCollapsibleBody>
-        <Table data-testid="service-accessgrant-list">
-          <tbody>
-            {accessGrants.length ? (
-              accessGrants.map((accessGrant) => (
+        {accessGrants.length ? (
+          <Table data-testid="service-accessgrant-list">
+            <tbody>
+              {accessGrants.map((accessGrant) => (
                 <AccessGrantRow
                   key={accessGrant.id}
                   accessGrant={accessGrant}
                   revokeHandler={revokeHandler}
                 />
-              ))
-            ) : (
-              <Table.Tr data-testid="service-no-accessgrants">
-                <Table.Td>
-                  <StyledCollapsibleEmptyBody>
-                    {t('There are no organizations with access')}
-                  </StyledCollapsibleEmptyBody>
-                </Table.Td>
-              </Table.Tr>
-            )}
-          </tbody>
-        </Table>
+              ))}
+            </tbody>
+          </Table>
+        ) : (
+          <small>{t('There are no organizations with access')}</small>
+        )}
       </StyledCollapsibleBody>
     </Collapsible>
   )

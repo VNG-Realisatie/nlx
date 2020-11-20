@@ -29,8 +29,10 @@ test('listing the access requests', async () => {
     'key.svg' + 'Access requests' + '0', // eslint-disable-line no-useless-concat
   )
 
-  expect(getByTestId('service-incoming-accessrequests-amount')).toBeTruthy()
-  expect(getByTestId('service-no-incoming-accessrequests')).toBeTruthy()
+  expect(
+    getByTestId('service-incoming-accessrequests-amount'),
+  ).toBeInTheDocument()
+  expect(getByText('There are no access requests')).toBeInTheDocument()
 
   const accessRequest = {
     id: '1a2B',
@@ -57,7 +59,9 @@ test('listing the access requests', async () => {
   expect(
     getByTestId('service-incoming-accessrequests-amount-accented'),
   ).toBeTruthy()
-  expect(getByTestId('service-incoming-accessrequests-list')).toBeTruthy()
+  expect(
+    getByTestId('service-incoming-accessrequests-list'),
+  ).toBeInTheDocument()
   expect(getByText('Organization A')).toBeInTheDocument()
 
   await act(async () => {
