@@ -71,9 +71,13 @@ const ServiceDetailView = ({ service, removeHandler }) => {
 
         <AccessRequestsSection
           accessRequests={service.incomingAccessRequests}
-          fetchServiceHandler={() => {
-            service.servicesStore.fetchAll()
+          onApproveOrRejectCallbackHandler={() => {
             service.fetch()
+
+            service.update({
+              incomingAccessRequestsCount:
+                service.incomingAccessRequestsCount - 1,
+            })
           }}
         />
 

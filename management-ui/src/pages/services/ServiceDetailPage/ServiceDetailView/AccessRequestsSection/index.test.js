@@ -13,12 +13,12 @@ beforeEach(() => {
 
 test('listing the access requests', async () => {
   global.confirm = jest.fn(() => true)
-  const fetchServiceHandler = jest.fn().mockResolvedValue(null)
+  const onApproveOrRejectCallbackHandler = jest.fn().mockResolvedValue(null)
 
   const { getByTestId, rerender, getByText, getByTitle } = renderWithProviders(
     <AccessRequestsSection
       accessRequests={[]}
-      fetchServiceHandler={fetchServiceHandler}
+      onApproveOrRejectCallbackHandler={onApproveOrRejectCallbackHandler}
     />,
   )
 
@@ -48,7 +48,7 @@ test('listing the access requests', async () => {
   rerender(
     <AccessRequestsSection
       accessRequests={[accessRequest]}
-      fetchServiceHandler={fetchServiceHandler}
+      onApproveOrRejectCallbackHandler={onApproveOrRejectCallbackHandler}
     />,
   )
 
@@ -69,12 +69,12 @@ test('listing the access requests', async () => {
   })
 
   expect(accessRequest.approve).toHaveBeenCalledTimes(1)
-  expect(fetchServiceHandler).toHaveBeenCalledTimes(1)
+  expect(onApproveOrRejectCallbackHandler).toHaveBeenCalledTimes(1)
 
   await act(async () => {
     await fireEvent.click(getByTitle('Reject'))
   })
 
   expect(accessRequest.reject).toHaveBeenCalledTimes(1)
-  expect(fetchServiceHandler).toHaveBeenCalledTimes(2)
+  expect(onApproveOrRejectCallbackHandler).toHaveBeenCalledTimes(2)
 })

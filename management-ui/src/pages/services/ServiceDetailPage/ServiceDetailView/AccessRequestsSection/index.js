@@ -15,7 +15,10 @@ import Amount from '../../../../../components/Amount'
 import { IconKey } from '../../../../../icons'
 import IncomingAccessRequestRow from './IncomingAccessRequestRow'
 
-const AccessRequestsSection = ({ accessRequests, fetchServiceHandler }) => {
+const AccessRequestsSection = ({
+  accessRequests,
+  onApproveOrRejectCallbackHandler,
+}) => {
   const { t } = useTranslation()
   const { showToast } = useContext(ToasterContext)
 
@@ -32,7 +35,7 @@ const AccessRequestsSection = ({ accessRequests, fetchServiceHandler }) => {
         variant: 'success',
       })
 
-      await fetchServiceHandler()
+      await onApproveOrRejectCallbackHandler()
     } catch (error) {
       showToast({
         title: t('Failed to approve access request'),
@@ -55,7 +58,7 @@ const AccessRequestsSection = ({ accessRequests, fetchServiceHandler }) => {
         variant: 'success',
       })
 
-      await fetchServiceHandler()
+      await onApproveOrRejectCallbackHandler()
     } catch (error) {
       showToast({
         title: t('Failed to reject access request'),
@@ -111,7 +114,7 @@ const AccessRequestsSection = ({ accessRequests, fetchServiceHandler }) => {
 
 AccessRequestsSection.propTypes = {
   accessRequests: array,
-  fetchServiceHandler: func.isRequired,
+  onApproveOrRejectCallbackHandler: func.isRequired,
 }
 
 AccessRequestsSection.defaultProps = {
