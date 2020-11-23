@@ -7,6 +7,15 @@ import { createMemoryHistory } from 'history'
 import { renderWithProviders, act } from '../../../../test-utils'
 import ServiceAddedToastManager from './index'
 
+beforeEach(() => {
+  jest.useFakeTimers()
+})
+
+afterEach(() => {
+  jest.runOnlyPendingTimers()
+  jest.useRealTimers()
+})
+
 test('navigating to the new service when it has just been added', async () => {
   const history = createMemoryHistory()
   const { queryByRole } = renderWithProviders(
@@ -19,6 +28,7 @@ test('navigating to the new service when it has just been added', async () => {
 
   act(() => {
     history.push('/services/my-new-service?lastAction=added')
+    jest.advanceTimersByTime(250)
   })
 
   const alert = queryByRole('alert')
@@ -40,6 +50,7 @@ test('navigating to the new service when it has just been edited', async () => {
 
   act(() => {
     history.push('/services/my-new-service?lastAction=edited')
+    jest.advanceTimersByTime(250)
   })
 
   const alert = queryByRole('alert')
@@ -61,6 +72,7 @@ test('navigating to the new service when it has just been removed', async () => 
 
   act(() => {
     history.push('/services/my-new-service?lastAction=removed')
+    jest.advanceTimersByTime(250)
   })
 
   const alert = queryByRole('alert')

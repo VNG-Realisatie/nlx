@@ -44,6 +44,7 @@ const ServiceToastManager = () => {
       title: serviceName,
       body: getToastMessageForAction(lastAction, t),
       variant: 'success',
+      delay: lastAction === serviceActions.REMOVED ? 0 : 250,
     })
 
     history.replace(lastAction === serviceActions.REMOVED ? '/services' : url)
