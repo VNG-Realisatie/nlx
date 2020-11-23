@@ -120,6 +120,20 @@ func (s *ManagementService) DeleteService(ctx context.Context, req *api.DeleteSe
 	return &types.Empty{}, nil
 }
 
+func getAmountOfIncomingAccessRequestsForService(incomingAccessRequests map[string]*database.IncomingAccessRequest, serviceName string) uint32 {
+	var result uint32
+
+	for _, incomingAccessRequest := range incomingAccessRequests {
+		ar := incomingAccessRequest
+
+		if ar.State == database.AccessRequestReceived && ar.ServiceName == serviceName {
+			result++
+		}
+	}
+
+	return result
+}
+
 // ListServices returns a list of services
 func (s *ManagementService) ListServices(ctx context.Context, req *api.ListServicesRequest) (*api.ListServicesResponse, error) {
 	s.logger.Info("rpc request ListServices")
@@ -158,14 +172,7 @@ func (s *ManagementService) ListServices(ctx context.Context, req *api.ListServi
 
 		for _, service := range filteredServices {
 			convertedService := convertFromDatabaseService(service)
-
-			for _, incomingAccessRequest := range allIncomingAccessRequests {
-				ar := incomingAccessRequest
-
-				if ar.State == database.AccessRequestReceived && ar.ServiceName == service.Name {
-					convertedService.IncomingAccessRequestsCount++
-				}
-			}
+			convertedService.IncomingAccessRequestsCount = getAmountOfIncomingAccessRequestsForService(allIncomingAccessRequests, service.Name)
 
 			accessGrants, err := s.configDatabase.ListAccessGrantsForService(ctx, service.Name)
 			if err != nil {
