@@ -89,6 +89,8 @@ test('no services', async () => {
 })
 
 test('failed to load services', async () => {
+  global.console.error = jest.fn()
+
   const rootStore = new RootStore({
     directoryRepository: {
       getAll: jest.fn().mockRejectedValue('There is an error'),
@@ -101,6 +103,8 @@ test('failed to load services', async () => {
     /^Failed to load the directory$/,
   )
   expect(() => getByTestId('mock-directory-services')).toThrow()
+
+  global.console.error.mockRestore()
 })
 
 test('navigating to the detail page should re-fetch the directory model', async () => {
