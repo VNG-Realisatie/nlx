@@ -11,9 +11,11 @@ const VersionLogger = ({ logger }) => {
   useEffect(
     () => {
       const load = async () => {
-        const result = await fetch('/version.json')
-        const { tag } = await result.json()
-        setVersionTag(tag)
+        try {
+          const result = await fetch('/version.json')
+          const { tag } = await result.json()
+          setVersionTag(tag)
+        } catch (e) {}
       }
       load()
     },
