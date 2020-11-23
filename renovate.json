@@ -58,6 +58,12 @@
       "groupName": "support for updating Helms Chart.lock files is missing https://github.com/renovatebot/renovate/issues/6877",
       "datasources": ["helm"],
       "enabled": false
+    },
+    {
+      "groupName": "redoc and peers - wait for full release of v2.0",
+      "paths": ["directory-ui/**"],
+      "packageNames": ["redoc", "mobx", "core-js"],
+      "enabled": false
     }
   ]
 }
