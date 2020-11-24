@@ -77,14 +77,6 @@ const DirectoryDetailView = ({ service }) => {
         </StyledAlert>
       )}
 
-      {latestAccessRequest && latestAccessRequest.errorDetails && (
-        <StacktraceDrawer
-          id={stackTraceDrawerId}
-          parentId="directoryDetail"
-          stacktrace={latestAccessRequest.errorDetails.stackTrace}
-        />
-      )}
-
       <ExternalLinkSection service={service} />
 
       <SectionGroup>
@@ -97,6 +89,14 @@ const DirectoryDetailView = ({ service }) => {
 
         <ContactSection service={service} />
       </SectionGroup>
+
+      {latestAccessRequest && latestAccessRequest.errorDetails && (
+        <StacktraceDrawer
+          id={stackTraceDrawerId}
+          parentId="directoryDetail"
+          stacktrace={latestAccessRequest.errorDetails.stackTrace}
+        />
+      )}
     </>
   )
 }
