@@ -34,7 +34,7 @@ container_scanning:
       review-page
     REPORTS_DIRECTORY: /reports
   before_script:
-    - apk --no-cache add jq git
+    - yum install -y jq
     - export IMAGE_REGISTRY=$(cat ci_build_image_registry.txt)
     - export CI_APPLICATION_TAG=$(cat ci_build_image_tag.txt)
   script:
