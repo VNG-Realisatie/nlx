@@ -19,6 +19,7 @@ import (
 	common_db "go.nlx.io/nlx/common/db"
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/process"
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	insightapi "go.nlx.io/nlx/insight-api"
 	"go.nlx.io/nlx/insight-api/config"
@@ -94,6 +95,10 @@ func main() {
 		logger.Fatal("error decoding private key", zap.Error(err))
 	}
 
+	if errValidate := common_tls.VerifyPrivateKeyPermissions(options.KeyFile); errValidate != nil {
+		logger.Warn("invalid irma sign private key permissions", zap.Error(errValidate), zap.String("file-path", options.KeyFile))
+	}
+
 	rsaVerifyPublicKey, err := parseRSAPublicKeyFile(options.IRMAVerifyPublicKeyFile)
 	if err != nil {
 		logger.Fatal("error decoding public key", zap.Error(err))
@@ -116,6 +121,10 @@ func main() {
 	})
 
 	if len(options.KeyFile) > 0 {
+		if errValidate := common_tls.VerifyPrivateKeyPermissions(options.KeyFile); errValidate != nil {
+			logger.Warn("invalid private key permissions", zap.Error(errValidate), zap.String("file-path", options.KeyFile))
+		}
+
 		err = server.ListenAndServeTLS(options.CertFile, options.KeyFile)
 	} else {
 		err = server.ListenAndServe()

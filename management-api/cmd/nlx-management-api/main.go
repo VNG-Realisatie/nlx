@@ -67,6 +67,14 @@ func main() {
 
 	authenticator := oidc.NewAuthenticator(logger, &options.oidcOptions)
 
+	if errValidate := common_tls.VerifyPrivateKeyPermissions(options.OrgKeyFile); errValidate != nil {
+		logger.Warn("invalid organization key permissions", zap.Error(errValidate), zap.String("file-path", options.OrgKeyFile))
+	}
+
+	if errValidate := common_tls.VerifyPrivateKeyPermissions(options.KeyFile); errValidate != nil {
+		logger.Warn("invalid internal PKI key permissions", zap.Error(errValidate), zap.String("file-path", options.KeyFile))
+	}
+
 	cert, err := common_tls.NewBundleFromFiles(options.CertFile, options.KeyFile, options.RootCertFile)
 	if err != nil {
 		logger.Fatal("loading internal cert", zap.Error(err))

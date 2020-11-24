@@ -20,9 +20,8 @@ const (
 	// key file can't be:
 	// - world readable (0o004)
 	// - world writable (0o002)
-	// - group writable (0o020)
 	// - any executable (0o111)
-	invalidPerms = 0o137
+	invalidPermissions = 0o117
 )
 
 // CertificateBundle bundles a certificate, private key and root certificate pool
@@ -55,31 +54,33 @@ func (c *CertificateBundle) TLSConfig(options ...ConfigOption) *tls.Config {
 	return config
 }
 
-func readPrivateKey(unsanitizedPath string) ([]byte, error) {
+// VerifyPrivateKeyPermissions verifies if a file has its permissions configured in way we
+// deem as safe.
+func VerifyPrivateKeyPermissions(unsanitizedPath string) error {
 	file, err := os.Open(filepath.Clean(unsanitizedPath))
 	if err != nil {
-		return nil, err
+		return err
 	}
-
-	defer file.Close()
 
 	stat, err := file.Stat()
 	if err != nil {
-		return nil, err
+		return err
+	}
+
+	err = file.Close()
+	if err != nil {
+		return err
 	}
 
 	perms := stat.Mode().Perm()
 
-	if perms&invalidPerms != 0 {
-		fmt.Fprintf(
-			os.Stderr,
-			"permissions %#o for %s are too open, it's recommended that your private key files are NOT accessible by others",
-			perms,
-			unsanitizedPath,
+	if perms&invalidPermissions != 0 {
+		return fmt.Errorf(
+			"file permissions too open. the file should not allow execution or be readable and writeable for everybody",
 		)
 	}
 
-	return ioutil.ReadAll(file)
+	return nil
 }
 
 func NewBundleFromFiles(certFile, keyFile, rootCertFile string) (*CertificateBundle, error) {
@@ -88,7 +89,7 @@ func NewBundleFromFiles(certFile, keyFile, rootCertFile string) (*CertificateBun
 		return nil, errors.Wrap(err, "failed to read certificate file")
 	}
 
-	keyPEM, err := readPrivateKey(keyFile)
+	keyPEM, err := ioutil.ReadFile(filepath.Clean(keyFile))
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to read private key file")
 	}

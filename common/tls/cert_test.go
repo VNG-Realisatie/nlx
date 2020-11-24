@@ -5,6 +5,8 @@ package tls_test
 import (
 	"crypto/tls"
 	"errors"
+	"os"
+	"path"
 	"path/filepath"
 	"testing"
 
@@ -123,4 +125,53 @@ func TestBundle(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, "60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=", c.PublicKeyFingerprint())
 	assert.Equal(t, uint16(tls.VersionTLS13), c.TLSConfig().MinVersion)
+}
+
+func TestVerifyPrivateKeyPermissions(t *testing.T) {
+	tests := []struct {
+		name          string
+		permissions   os.FileMode
+		expectedError error
+	}{
+		{
+			"execute",
+			0700,
+			errors.New("file permissions too open. the file should not allow execution or be readable and writeable for everybody"),
+		},
+		{
+			"write_for_all",
+			0604,
+			errors.New("file permissions too open. the file should not allow execution or be readable and writeable for everybody"),
+		},
+		{
+			"read_for_all",
+			0602,
+			errors.New("file permissions too open. the file should not allow execution or be readable and writeable for everybody"),
+		},
+		{
+			"write_and_read_for_group",
+			0660,
+			nil,
+		},
+	}
+
+	for _, test := range tests {
+		tc := test
+
+		t.Run(tc.name, func(t *testing.T) {
+			tempDir := t.TempDir()
+			filePath := path.Join(tempDir, "file.permission")
+
+			newFile, err := os.Create(filePath)
+			assert.NoError(t, err)
+
+			defer newFile.Close()
+
+			err = os.Chmod(filePath, tc.permissions)
+			assert.NoError(t, err)
+
+			err = common_tls.VerifyPrivateKeyPermissions(filePath)
+			assert.Equal(t, tc.expectedError, err)
+		})
+	}
 }

@@ -12,7 +12,12 @@ import (
 )
 
 func getManagementClient() api.ManagementClient {
-	certificate, err := common_tls.NewBundleFromFiles(viper.GetString("cert-path"), viper.GetString("key-path"), viper.GetString("ca-path"))
+	privateKeyPath := viper.GetString("key-path")
+	if errValidate := common_tls.VerifyPrivateKeyPermissions(privateKeyPath); errValidate != nil {
+		log.Printf("invalid private key permissions file: %s err: %s", privateKeyPath, errValidate)
+	}
+
+	certificate, err := common_tls.NewBundleFromFiles(viper.GetString("cert-path"), privateKeyPath, viper.GetString("ca-path"))
 	if err != nil {
 		log.Fatal(err)
 	}

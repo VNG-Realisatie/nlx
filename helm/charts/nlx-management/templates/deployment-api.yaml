@@ -107,9 +107,11 @@ spec:
         - name: certificate-organization
           secret:
             secretName: {{ default (printf "%s-organization-tls" (include  "nlx-management.fullname" .)) .Values.tls.organizationCertificate.existingSecret }}
+            defaultMode: 0640
         - name: certificate
           secret:
             secretName: {{ default (printf "%s-tls" (include  "nlx-management.fullname" .)) .Values.tls.certificate.existingSecret }}
+            defaultMode: 0640
         - name: config
           configMap:
             name: {{ template "nlx-management.fullname" . }}

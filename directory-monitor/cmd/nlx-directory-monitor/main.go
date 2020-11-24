@@ -45,6 +45,10 @@ func main() {
 	proc.CloseGracefully(db.Close)
 	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
 
+	if errValidate := common_tls.VerifyPrivateKeyPermissions(options.MonitorKeyFile); errValidate != nil {
+		logger.Warn("invalid private key permissions", zap.Error(errValidate), zap.String("file-path", options.MonitorKeyFile))
+	}
+
 	certificate, err := common_tls.NewBundleFromFiles(options.MonitorCertFile, options.MonitorKeyFile, options.NLXRootCert)
 	if err != nil {
 		logger.Fatal("loading certificate", zap.Error(err))

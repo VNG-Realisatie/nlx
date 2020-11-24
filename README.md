@@ -71,6 +71,11 @@ docker-compose -f docker-compose.dev.yml exec -u postgres postgres createdb nlx-
 migrate -database "postgres://postgres:postgres@127.0.0.1:5432/nlx-txlog-b?sslmode=disable" -path txlog-db/migrations up
 ```
 
+Make sure the TLS key files have the correct permissions to run the NLX components
+```bash
+./pki/fix-permissions.sh
+```
+
 Finally run the project with:
 
 ```bash
