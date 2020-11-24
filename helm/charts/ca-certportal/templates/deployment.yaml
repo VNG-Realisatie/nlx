@@ -28,12 +28,14 @@ spec:
           image: {{ template "ca-certportal.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
+            - name: LISTEN_ADDRESS
+              value: "0.0.0.0:8080"
+            - name: CA_HOST
+              value: {{ .Values.config.caHost }}
             - name: LOG_TYPE
               value: {{ .Values.config.logType }}
             - name: LOG_LEVEL
               value: {{ .Values.config.logLevel }}
-            - name: CA_HOST
-              value: {{ .Values.config.caHost }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
