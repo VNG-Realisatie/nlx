@@ -1,3 +1,26 @@
+# [0.92.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.91.0...v0.92.0) (2020-11-25)
+
+
+### Bug Fixes
+
+* **directory:** back to styled-components@5.1 ([8ae37eb](https://gitlab.com/commonground/nlx/nlx/commit/8ae37eb680c5f3d4d2a80c7efb6bd7da42aade8c))
+* **directory:** prevent hard fail on versionLogger ([730deae](https://gitlab.com/commonground/nlx/nlx/commit/730deaefbef0c2ab05bfed3692cd99437f87ff6c))
+* **directory:** redoc ([6c93652](https://gitlab.com/commonground/nlx/nlx/commit/6c936523934e4e4cdee47acff6cb14f0fbbc4a9c))
+* **directory:** return documentation url ([b118359](https://gitlab.com/commonground/nlx/nlx/commit/b118359f202143daefb6f2858af26850be4e28e3))
+* **helm:** certportal listen address ([8bf727c](https://gitlab.com/commonground/nlx/nlx/commit/8bf727c20e4b9cc1c31559ab55239461b36a6154))
+* **management:** align detailview header icons ([cb77a2d](https://gitlab.com/commonground/nlx/nlx/commit/cb77a2d252333aa17537914724b77451e43d41d4))
+* **management:** align state & api type ([133b5bf](https://gitlab.com/commonground/nlx/nlx/commit/133b5bfb9306414996600e99a253f9d6a8d30616))
+* **management:** buttons visible in sub-drawer ([77ada96](https://gitlab.com/commonground/nlx/nlx/commit/77ada968875526d49d1a887c13a9cd89dd3af20f))
+* **management:** make toaster animation visible ([0870240](https://gitlab.com/commonground/nlx/nlx/commit/087024017dc3dd62e4b3b6fd58e08e144e925dd9))
+
+
+### Features
+
+* **management:** add contact section and documentation links ([c4a9dbc](https://gitlab.com/commonground/nlx/nlx/commit/c4a9dbc450c42e825fe2aab5c92992ce36c43efe))
+* **management:** add details to directory detail drawer (wip) ([58a9194](https://gitlab.com/commonground/nlx/nlx/commit/58a91940e1a72a5abefb409e49beb9f5f68442f8))
+* **management:** return documentation url in directory service ([97c616f](https://gitlab.com/commonground/nlx/nlx/commit/97c616f6ee5e6bb4d68cc966a855148939f7f16e))
+* **management:** return public contact email in directory service ([19a6fe1](https://gitlab.com/commonground/nlx/nlx/commit/19a6fe160904792fe755e6970a85252b303b854d))
+
 # [0.91.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.90.0...v0.91.0) (2020-11-24)
 
 
