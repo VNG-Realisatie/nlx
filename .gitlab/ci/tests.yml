@@ -46,7 +46,7 @@ Go tests:
 
 Go linter:
   stage: Tests
-  image: golangci/golangci-lint:v1.32.2-alpine
+  image: golangci/golangci-lint:v1.33.0-alpine
   before_script:
    - export PATH=$PATH:/usr/local/go/bin
    - apk --no-cache add jq
