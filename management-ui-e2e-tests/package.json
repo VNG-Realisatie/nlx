@@ -31,7 +31,7 @@
     "rimraf": "3.0.2",
     "testcafe": "1.9.4",
     "testcafe-browser-provider-browserstack": "1.13.1",
-    "testcafe-react-selectors": "4.1.0",
+    "testcafe-react-selectors": "4.1.1",
     "testcafe-reporter-html": "1.4.6"
   }
 }
