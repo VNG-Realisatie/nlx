@@ -57,7 +57,7 @@
   },
   "devDependencies": {
     "@commonground/eslint-config-cra-standard-prettier": "5.0.0",
-    "@openapitools/openapi-generator-cli": "2.1.4",
+    "@openapitools/openapi-generator-cli": "2.1.7",
     "@sheerun/mutationobserver-shim": "0.3.3",
     "@testing-library/jest-dom": "5.11.6",
     "@testing-library/react": "11.2.2",
