@@ -13,13 +13,13 @@ Now we have prepared all the requirements to run NLX, we can start all component
 First, let's clone the NLX project. It contains the Docker Compose file and its dependencies.
 
 ```bash
-git clone --depth 1 https://gitlab.com/commonground/nlx/nlx.git nlx
+git clone --depth 1 https://gitlab.com/commonground/nlx/nlx-try-me.git nlx-try-me
 ```
 
 After the repository is cloned, move into it:
 
 ```bash
-cd nlx
+cd nlx-try-me
 ```
 
 Set the hostname of the Inway (where `my-organization.nl:443` should be replaced with your own hostname).
@@ -31,12 +31,12 @@ echo "INWAY_SELF_ADDRESS=my-organization.nl:443" > .env
 Then, start all components by running:
 
 ```bash
-docker-compose -f docker-compose.management.yml up
+docker-compose up
 ```
 
 This will start [Dex](https://github.com/dexidp/dex) (Identity Provider), ETCD and the required NLX components.
 
-The NLX components are configured using environment variables which in this guide are set in `docker-compose.management.yml`
+The NLX components are configured using environment variables which in this guide are set in `docker-compose.yml`
 
 Below you is an overview of the environment variables per NLX component:
 
@@ -117,7 +117,7 @@ import TabItem from '@theme/TabItem';
 At last, let's verify if all the components are up and running:
 
 ```
-docker-compose -f docker-compose.management.yml ps
+docker-compose ps
 ```
 
 It might take a while for all components to become healthy.

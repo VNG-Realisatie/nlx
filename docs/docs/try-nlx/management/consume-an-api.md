@@ -15,7 +15,7 @@ Assuming you followed [Getting up and running](./getting-up-and-running.md) the 
 You can confirm that by checking the outway logs:
 
 ```
-docker-compose -f docker-compose.management.yml logs -f outway
+docker-compose logs -f outway
 ```
 
 

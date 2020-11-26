@@ -26,13 +26,13 @@ Assuming you followed [Getting up and running](./getting-up-and-running.md) the 
 You can confirm that by inspecting the Management API logs:
 
 ```
-docker-compose -f docker-compose.management.yml logs -f api
+docker-compose logs -f api
 ```
 
 Next, let's take a look at the logs of our inway:
 
 ```
-docker-compose -f docker-compose.management.yml logs -f inway
+docker-compose logs -f inway
 ```
 
 
