@@ -13,7 +13,7 @@ Lint commit messages:
 
 Go go.mod tidy test:
   stage: Tests
-  image: golang:1.15.5
+  image: ${CI_DEPENDENCY_PROXY_GROUP_URL}/golang:1.15.5
   script:
     - cp go.mod go.mod.orig
     - /usr/local/go/bin/go mod download
@@ -25,7 +25,7 @@ Go go.mod tidy test:
 
 Go tests:
   stage: Tests
-  image: golang:1.15.5
+  image: ${CI_DEPENDENCY_PROXY_GROUP_URL}/golang:1.15.5
   before_script:
     - mkdir -p tmp-coverage-reports/
   script:
@@ -46,7 +46,7 @@ Go tests:
 
 Go linter:
   stage: Tests
-  image: golangci/golangci-lint:v1.33.0-alpine
+  image: ${CI_DEPENDENCY_PROXY_GROUP_URL}/golangci/golangci-lint:v1.33.0-alpine
   before_script:
    - export PATH=$PATH:/usr/local/go/bin
    - apk --no-cache add jq

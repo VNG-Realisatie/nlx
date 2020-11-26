@@ -7,6 +7,10 @@ stages:
   - Tools
   - external
 
+variables:
+  # https://gitlab.com/gitlab-org/gitlab/-/issues/280582
+  CI_DEPENDENCY_PROXY_GROUP_URL: gitlab.com/commonground/dependency_proxy/containers
+
 include:
   - '/.gitlab/ci/.templates.yml'
 

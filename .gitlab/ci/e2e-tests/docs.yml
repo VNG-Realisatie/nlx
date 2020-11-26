@@ -1,6 +1,6 @@
 Documentation link checker:
   stage: E2E tests
-  image: docker:19.03.13
+  image: ${CI_DEPENDENCY_PROXY_GROUP_URL}/docker:19.03.13
   variables:
     DOCKER_TLS_CERTDIR: "/certs"
   services:
