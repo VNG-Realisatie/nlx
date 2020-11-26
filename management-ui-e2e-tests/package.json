@@ -13,7 +13,7 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "@commonground/eslint-config": "4.0.2",
+    "@commonground/eslint-config": "4.1.0",
     "axe-core": "4.1.1",
     "axe-testcafe": "3.0.0",
     "babel-eslint": "10.1.0",
