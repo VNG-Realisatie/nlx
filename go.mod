@@ -7,7 +7,7 @@ go 1.15
 replace golang.org/x/text => golang.org/x/text v0.3.4
 
 // Override the gopkg.in/yaml.v2 dependency. Versions before v2.2.3 are vulnerable to a Billion Laughs Attack.
-replace gopkg.in/yaml.v2 => gopkg.in/yaml.v2 v2.3.0
+replace gopkg.in/yaml.v2 => gopkg.in/yaml.v2 v2.4.0
 
 // Override the google.golang.org/grpc dependency. One of the package has `@latest` which doesn't work.
 replace google.golang.org/grpc => google.golang.org/grpc v1.26.0
