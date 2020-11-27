@@ -17,6 +17,8 @@ import (
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
 
+const maxServiceCount = 250
+
 func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *registrationapi.RegisterInwayRequest) (*registrationapi.RegisterInwayResponse, error) {
 	logger := h.logger.With(zap.String("handler", "register-inway"))
 
@@ -27,6 +29,10 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 	organizationName, err := h.getOrganisationNameFromRequest(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get organization name from request: %v", err)
+	}
+
+	if len(req.Services) > maxServiceCount {
+		return nil, status.New(codes.ResourceExhausted, "inway registers more services than allowed").Err()
 	}
 
 	for _, service := range req.Services {
