@@ -13,7 +13,7 @@ Now we have prepared all the requirements to run NLX, we can start all component
 First, let's clone the NLX project. It contains the Docker Compose file and its dependencies.
 
 ```bash
-git clone --depth 1 https://gitlab.com/commonground/nlx/nlx-try-me.git nlx-try-me
+git clone https://gitlab.com/commonground/nlx/nlx-try-me.git
 ```
 
 After the repository is cloned, move into it:

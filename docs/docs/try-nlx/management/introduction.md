@@ -3,6 +3,8 @@ id: introduction
 title: Introduction
 ---
 
+> Note that this tutorial can be used to setup a fully functional test environment to try NLX. It is not meant for production environments.
+
 This is an introduction to NLX Management targeted at **system operators**. NLX Management provides you with a web interface for working with NLX.
 
 ![Screenshot of the NLX Management web interface](/img/nlx-management-web-interface-screenshot.png)
