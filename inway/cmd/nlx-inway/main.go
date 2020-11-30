@@ -105,12 +105,12 @@ func main() {
 			logger.Fatal("cannot retrieving inway configuration from the management-api", zap.Error(err))
 		}
 	} else {
-		serviceConfig, err2 := config.LoadServiceConfig(options.ServiceConfig)
-		if err2 != nil {
+		serviceConfig, errConfig := config.LoadServiceConfig(options.ServiceConfig)
+		if errConfig != nil {
 			if serviceConfig == nil {
-				logger.Fatal("failed to load service config", zap.Error(err2))
+				logger.Fatal("failed to load service config", zap.Error(errConfig))
 			} else {
-				logger.Warn("warning while loading service config", zap.Error(err))
+				logger.Warn("warning while loading service config", zap.Error(errConfig))
 			}
 		}
 		loadServices(logger, serviceConfig, iw)
@@ -120,7 +120,7 @@ func main() {
 	if managementAddress == "" {
 		managementAddress, err = defaultManagementAddress(options.ListenAddress)
 		if err != nil {
-			logger.Fatal("unable to crete default management address", zap.Error(err))
+			logger.Fatal("unable to create default management address", zap.Error(err))
 		}
 	}
 
