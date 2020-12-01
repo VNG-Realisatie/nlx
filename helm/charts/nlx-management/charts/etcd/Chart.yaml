@@ -1,6 +1,0 @@
-apiVersion: v2
-name: etcd
-description: For a single node etcd cluster
-type: application
-version: 0.1.0
-appVersion: 3.4.7

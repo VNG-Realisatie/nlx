@@ -15,45 +15,44 @@ type ConfigDatabase interface {
 	ListServices(ctx context.Context) ([]*Service, error)
 	GetService(ctx context.Context, name string) (*Service, error)
 	CreateService(ctx context.Context, service *Service) error
-	UpdateService(ctx context.Context, name string, service *Service) error
+	CreateServiceWithInways(ctx context.Context, service *Service, inwayNames []string) error
+	UpdateServiceWithInways(ctx context.Context, service *Service, inwayNames []string) error
+	UpdateService(ctx context.Context, service *Service) error
 	DeleteService(ctx context.Context, name string) error
+
 	ListInways(ctx context.Context) ([]*Inway, error)
 	GetInway(ctx context.Context, name string) (*Inway, error)
 	CreateInway(ctx context.Context, inway *Inway) error
-	UpdateInway(ctx context.Context, name string, inway *Inway) error
+	UpdateInway(ctx context.Context, inway *Inway) error
 	DeleteInway(ctx context.Context, name string) error
-	PutInsightConfiguration(ctx context.Context, configuration *InsightConfiguration) error
-	GetInsightConfiguration(ctx context.Context) (*InsightConfiguration, error)
 
 	ListAllOutgoingAccessRequests(ctx context.Context) ([]*OutgoingAccessRequest, error)
 	ListOutgoingAccessRequests(ctx context.Context, organizationName, serviceName string) ([]*OutgoingAccessRequest, error)
-	GetOutgoingAccessRequest(ctx context.Context, id string) (*OutgoingAccessRequest, error)
+	GetOutgoingAccessRequest(ctx context.Context, id uint) (*OutgoingAccessRequest, error)
 	GetLatestOutgoingAccessRequest(ctx context.Context, organizationName, serviceName string) (*OutgoingAccessRequest, error)
-	ListAllLatestOutgoingAccessRequests(ctx context.Context) (map[string]*OutgoingAccessRequest, error)
-	LockOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) error
-	UnlockOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) error
 	CreateOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) (*OutgoingAccessRequest, error)
-	UpdateOutgoingAccessRequestState(ctx context.Context, accessRequest *OutgoingAccessRequest, state AccessRequestState, referenceID string, err *diagnostics.ErrorDetails) error
-	WatchOutgoingAccessRequests(ctx context.Context, output chan *OutgoingAccessRequest)
+	UpdateOutgoingAccessRequestState(ctx context.Context, id uint, state OutgoingAccessRequestState, referenceID uint, err *diagnostics.ErrorDetails) error
+	TakePendingOutgoingAccessRequest(ctx context.Context) (*OutgoingAccessRequest, error)
 
 	ListAllIncomingAccessRequests(ctx context.Context) ([]*IncomingAccessRequest, error)
 	ListIncomingAccessRequests(ctx context.Context, organizationName, serviceName string) ([]*IncomingAccessRequest, error)
 	GetLatestIncomingAccessRequest(ctx context.Context, organizationName, serviceName string) (*IncomingAccessRequest, error)
-	ListAllLatestIncomingAccessRequests(ctx context.Context) (map[string]*IncomingAccessRequest, error)
-	GetIncomingAccessRequest(ctx context.Context, id string) (*IncomingAccessRequest, error)
+	GetIncomingAccessRequestCountByService(ctx context.Context) (map[string]int, error)
+	GetIncomingAccessRequest(ctx context.Context, id uint) (*IncomingAccessRequest, error)
 	CreateIncomingAccessRequest(ctx context.Context, accessRequest *IncomingAccessRequest) (*IncomingAccessRequest, error)
-	UpdateIncomingAccessRequestState(ctx context.Context, accessRequest *IncomingAccessRequest, state AccessRequestState) error
+	UpdateIncomingAccessRequestState(ctx context.Context, id uint, state IncomingAccessRequestState) error
 
 	CreateAccessGrant(ctx context.Context, accessRequest *IncomingAccessRequest) (*AccessGrant, error)
-	RevokeAccessGrant(ctx context.Context, serviceName, organizationName, id string) (*AccessGrant, error)
+	RevokeAccessGrant(ctx context.Context, id uint, revokedAt time.Time) (*AccessGrant, error)
 	ListAccessGrantsForService(ctx context.Context, serviceName string) ([]*AccessGrant, error)
 	GetLatestAccessGrantForService(ctx context.Context, organizationName, serviceName string) (*AccessGrant, error)
 
-	CreateAccessProof(ctx context.Context, accessProof *AccessProof) (*AccessProof, error)
-	RevokeAccessProof(ctx context.Context, organizationName, serviceName, id string, revokedAt time.Time) (*AccessProof, error)
+	CreateAccessProof(ctx context.Context, accessRequest *OutgoingAccessRequest) (*AccessProof, error)
+	RevokeAccessProof(ctx context.Context, id uint, revokedAt time.Time) (*AccessProof, error)
 	GetLatestAccessProofForService(ctx context.Context, organizationName, serviceName string) (*AccessProof, error)
-	GetAccessProofForOutgoingAccessRequest(ctx context.Context, organizationName, serviceName, accessRequestID string) (*AccessProof, error)
+	GetAccessProofForOutgoingAccessRequest(ctx context.Context, accessRequestID uint) (*AccessProof, error)
 
 	GetSettings(ctx context.Context) (*Settings, error)
-	UpdateSettings(ctx context.Context, settings *Settings) error
+	UpdateSettings(ctx context.Context, irmaServerURL, insightAPIURL string, inwayID *uint) (*Settings, error)
+	PutInsightConfiguration(ctx context.Context, irmaServerURL, insightAPIURL string) (*Settings, error)
 }

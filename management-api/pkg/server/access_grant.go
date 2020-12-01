@@ -6,6 +6,7 @@ package server
 import (
 	context "context"
 	"errors"
+	"time"
 
 	"github.com/gogo/protobuf/types"
 	"go.uber.org/zap"
@@ -43,8 +44,8 @@ func (s *ManagementService) ListAccessGrantsForService(ctx context.Context, req 
 		if err != nil {
 			s.logger.Error(
 				"converting access grant",
-				zap.String("id", accessGrant.ID),
-				zap.String("service", accessGrant.ServiceName),
+				zap.Uint("id", accessGrant.ID),
+				zap.String("service", accessGrant.IncomingAccessRequest.Service.Name),
 				zap.Error(err),
 			)
 
@@ -58,7 +59,7 @@ func (s *ManagementService) ListAccessGrantsForService(ctx context.Context, req 
 }
 
 func (s *ManagementService) RevokeAccessGrant(ctx context.Context, req *api.RevokeAccessGrantRequest) (*api.AccessGrant, error) {
-	accessGrant, err := s.configDatabase.RevokeAccessGrant(ctx, req.ServiceName, req.OrganizationName, req.AccessGrantID)
+	accessGrant, err := s.configDatabase.RevokeAccessGrant(ctx, uint(req.AccessGrantID), time.Now())
 	if err != nil {
 		if errors.Is(err, database.ErrAccessGrantAlreadyRevoked) {
 			s.logger.Warn("access grant is already revoked")
@@ -79,8 +80,8 @@ func (s *ManagementService) RevokeAccessGrant(ctx context.Context, req *api.Revo
 	if err != nil {
 		s.logger.Error(
 			"converting access grant",
-			zap.String("id", accessGrant.ID),
-			zap.String("service", accessGrant.ServiceName),
+			zap.Uint("id", accessGrant.ID),
+			zap.String("service", accessGrant.IncomingAccessRequest.Service.Name),
 			zap.Error(err),
 		)
 
@@ -98,18 +99,18 @@ func convertAccessGrant(accessGrant *database.AccessGrant) (*api.AccessGrant, er
 
 	var revokedAt *types.Timestamp
 
-	if accessGrant.Revoked() {
-		revokedAt, err = types.TimestampProto(accessGrant.RevokedAt)
+	if accessGrant.RevokedAt.Valid {
+		revokedAt, err = types.TimestampProto(accessGrant.RevokedAt.Time)
 		if err != nil {
 			return nil, err
 		}
 	}
 
 	return &api.AccessGrant{
-		Id:                   accessGrant.ID,
-		OrganizationName:     accessGrant.OrganizationName,
-		ServiceName:          accessGrant.ServiceName,
-		PublicKeyFingerprint: accessGrant.PublicKeyFingerprint,
+		Id:                   uint64(accessGrant.ID),
+		OrganizationName:     accessGrant.IncomingAccessRequest.OrganizationName,
+		ServiceName:          accessGrant.IncomingAccessRequest.Service.Name,
+		PublicKeyFingerprint: accessGrant.IncomingAccessRequest.PublicKeyFingerprint,
 		CreatedAt:            createdAt,
 		RevokedAt:            revokedAt,
 	}, nil

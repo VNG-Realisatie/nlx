@@ -11,6 +11,7 @@ services:
       POSTGRES_DB: nlx
     volumes:
       - postgres-data:/var/lib/postgresql/data
+      - ./scripts/postgres-setup.sh:/docker-entrypoint-initdb.d/postgres-setup.sh
     restart: always
 
   dex:
@@ -22,30 +23,5 @@ services:
       - ./dex.dev.yaml:/config.yaml
     restart: always
 
-  etcd-a:
-    image: gcr.io/etcd-development/etcd:v3.4.13
-    ports:
-      - 127.0.0.1:2379:2379
-    environment:
-      ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
-      ETCD_ADVERTISE_CLIENT_URLS: http://127.0.0.1:2379
-      ETCD_DATA_DIR: /default.etcd/a
-    volumes:
-      - etcd-data:/default.etcd
-    restart: always
-
-  etcd-b:
-    image: gcr.io/etcd-development/etcd:v3.4.13
-    ports:
-      - 127.0.0.1:2389:2379
-    environment:
-      ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
-      ETCD_ADVERTISE_CLIENT_URLS: http://127.0.0.1:2389
-      ETCD_DATA_DIR: /default.etcd/b
-    volumes:
-      - etcd-data:/default.etcd
-    restart: always
-
 volumes:
   postgres-data:
-  etcd-data:

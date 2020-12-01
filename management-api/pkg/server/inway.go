@@ -74,16 +74,6 @@ func (s *ManagementService) GetInway(ctx context.Context, req *api.GetInwayReque
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	services, err := s.configDatabase.ListServices(ctx)
-	if err != nil {
-		s.logger.Error("error getting services  from database", zap.Error(err))
-		return nil, status.Error(codes.Internal, "database error")
-	}
-
-	if len(services) > 0 {
-		services = database.FilterServices(services, inway)
-	}
-
 	response := &api.Inway{
 		Name:        inway.Name,
 		Version:     inway.Version,
@@ -92,9 +82,9 @@ func (s *ManagementService) GetInway(ctx context.Context, req *api.GetInwayReque
 		IpAddress:   inway.IPAddress,
 	}
 
-	response.Services = make([]*api.Inway_Service, len(services))
+	response.Services = make([]*api.Inway_Service, len(inway.Services))
 
-	for i, service := range services {
+	for i, service := range inway.Services {
 		servicesResponse := &api.Inway_Service{
 			Name: service.Name,
 		}
@@ -116,22 +106,29 @@ func (s *ManagementService) UpdateInway(ctx context.Context, req *api.UpdateInwa
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid inway: %s", err))
 	}
 
+	inwayInDB, err := s.configDatabase.GetInway(ctx, req.Inway.Name)
+	if err != nil {
+		if errIsNotFound(err) {
+			logger.Error("inway does not exist")
+			return nil, status.Error(codes.NotFound, fmt.Sprintf("inway with the name %s does not exist", req.Name))
+		}
+
+		logger.Error("error getting inway from database", zap.Error(err))
+
+		return nil, status.Error(codes.Internal, "database error")
+	}
+
 	inway := &database.Inway{
+		ID:          inwayInDB.ID,
 		Name:        req.Inway.Name,
 		Version:     req.Inway.Version,
 		Hostname:    req.Inway.Hostname,
 		SelfAddress: req.Inway.SelfAddress,
 	}
 
-	err = s.configDatabase.UpdateInway(ctx, req.Name, inway)
+	err = s.configDatabase.UpdateInway(ctx, inway)
 	if err != nil {
-		if errIsNotFound(err) {
-			logger.Warn("inway not found")
-			return nil, status.Error(codes.NotFound, "inway not found")
-		}
-
 		logger.Error("error updating inway in DB", zap.Error(err))
-
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
@@ -162,24 +159,17 @@ func (s *ManagementService) ListInways(ctx context.Context, req *api.ListInwaysR
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	services, err := s.configDatabase.ListServices(ctx)
-	if err != nil {
-		s.logger.Error("error getting services  from database", zap.Error(err))
-		return nil, status.Error(codes.Internal, "database error")
-	}
-
 	response := &api.ListInwaysResponse{}
 	response.Inways = make([]*api.Inway, len(inways))
 
 	for i, inway := range inways {
-		inwayServices := database.FilterServices(services, inway)
-		response.Inways[i] = convertFromDatabaseInway(inway, inwayServices)
+		response.Inways[i] = convertFromDatabaseInway(inway)
 	}
 
 	return response, nil
 }
 
-func convertFromDatabaseInway(model *database.Inway, services []*database.Service) *api.Inway {
+func convertFromDatabaseInway(model *database.Inway) *api.Inway {
 	inway := &api.Inway{
 		Name:        model.Name,
 		Version:     model.Version,
@@ -188,15 +178,13 @@ func convertFromDatabaseInway(model *database.Inway, services []*database.Servic
 		IpAddress:   model.IPAddress,
 	}
 
-	if length := len(services); length > 0 {
-		inway.Services = make([]*api.Inway_Service, length)
+	if len(model.Services) > 0 {
+		inway.Services = make([]*api.Inway_Service, len(model.Services))
 
-		for i, service := range services {
-			inwayService := &api.Inway_Service{
+		for i, service := range model.Services {
+			inway.Services[i] = &api.Inway_Service{
 				Name: service.Name,
 			}
-
-			inway.Services[i] = inwayService
 		}
 	}
 

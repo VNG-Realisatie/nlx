@@ -69,6 +69,12 @@ service:
   apiConfigPort: 443
   uiPort: 8080
 
+postgresql:
+  hostname: postgresql
+  username: ""
+  password: ""
+  existingSecret: ""
+
 ingress:
   enabled: false
   class: ""

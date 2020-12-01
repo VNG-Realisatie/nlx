@@ -266,7 +266,7 @@ message ErrorDetails {
 }
 
 message OutgoingAccessRequest {
-  string id = 1;
+  uint64 id = 1;
   string organizationName = 2;
   string serviceName = 3;
   AccessRequestState state = 4;
@@ -276,7 +276,7 @@ message OutgoingAccessRequest {
 }
 
 message IncomingAccessRequest {
-  string id = 1;
+  uint64 id = 1;
   string organizationName = 2;
   string serviceName = 3;
   AccessRequestState state = 4;
@@ -294,12 +294,12 @@ message ListIncomingAccessRequestsResponse {
 
 message ApproveIncomingAccessRequestRequest {
   string serviceName = 1;
-  string accessRequestID = 2;
+  uint64 accessRequestID = 2;
 }
 
 message RejectIncomingAccessRequestRequest {
   string serviceName = 1;
-  string accessRequestID = 2;
+  uint64 accessRequestID = 2;
 }
 
 message ListOutgoingAccessRequestsRequest {
@@ -319,7 +319,7 @@ message CreateAccessRequestRequest {
 message SendAccessRequestRequest {
   string organizationName = 1;
   string serviceName = 2;
-  string accessRequestID = 3;
+  uint64 accessRequestID = 3;
 }
 
 message ListAccessGrantsForServiceRequest {
@@ -333,26 +333,26 @@ message ListAccessGrantsForServiceResponse {
 message RevokeAccessGrantRequest {
   string organizationName = 1;
   string serviceName = 2;
-  string accessGrantID = 3;
+  uint64 accessGrantID = 3;
 }
 
 message AccessGrant {
-  string id = 1;
+  uint64 id = 1;
   string organizationName = 2;
   string serviceName = 3;
   string publicKeyFingerprint = 4;
   google.protobuf.Timestamp createdAt = 5;
   google.protobuf.Timestamp revokedAt = 6;
-  string accessRequestId = 7;
+  uint64 accessRequestId = 7;
 }
 
 message AccessProof {
-  string id = 1;
+  uint64 id = 1;
   string organizationName = 2;
   string serviceName = 3;
   google.protobuf.Timestamp createdAt = 4;
   google.protobuf.Timestamp revokedAt = 5;
-  string accessRequestId = 6;
+  uint64 accessRequestId = 6;
 }
 
 service Directory {

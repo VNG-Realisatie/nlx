@@ -116,10 +116,8 @@ func (s DirectoryService) RequestAccessToService(ctx context.Context, request *a
 	logger.Info("rpc request RequestAccessToService")
 
 	ar := &database.OutgoingAccessRequest{
-		AccessRequest: database.AccessRequest{
-			OrganizationName: request.OrganizationName,
-			ServiceName:      request.ServiceName,
-		},
+		OrganizationName: request.OrganizationName,
+		ServiceName:      request.ServiceName,
 	}
 
 	accessRequest, err := s.configDatabase.CreateOutgoingAccessRequest(ctx, ar)
@@ -195,16 +193,16 @@ func convertDirectoryAccessRequest(a *database.OutgoingAccessRequest) (*api.Outg
 	var accessRequestState api.AccessRequestState
 
 	switch a.State {
-	case database.AccessRequestFailed:
+	case database.OutgoingAccessRequestFailed:
 		accessRequestState = api.AccessRequestState_FAILED
-	case database.AccessRequestCreated:
+	case database.OutgoingAccessRequestCreated:
 		accessRequestState = api.AccessRequestState_CREATED
-	case database.AccessRequestReceived:
+	case database.OutgoingAccessRequestReceived:
 		accessRequestState = api.AccessRequestState_RECEIVED
 	}
 
 	return &api.OutgoingAccessRequest{
-		Id:        a.ID,
+		Id:        uint64(a.ID),
 		State:     accessRequestState,
 		CreatedAt: createdAt,
 		UpdatedAt: updatedAt,
@@ -223,12 +221,7 @@ func getLatestAccessRequestAndAccessGrant(ctx context.Context, configDatabase da
 		return nil, nil, nil
 	}
 
-	latestAccessProof, err := configDatabase.GetAccessProofForOutgoingAccessRequest(
-		ctx,
-		organizationName,
-		serviceName,
-		latestAccessRequest.ID,
-	)
+	latestAccessProof, err := configDatabase.GetAccessProofForOutgoingAccessRequest(ctx, latestAccessRequest.ID)
 	if err != nil {
 		if !errIsNotFound(err) {
 			return nil, nil, errors.Wrap(err, "error retrieving latest access proof")
@@ -264,19 +257,19 @@ func convertAccessProof(accessProof *database.AccessProof) (*api.AccessProof, er
 
 	var revokedAt *types.Timestamp
 
-	if accessProof.Revoked() {
-		revokedAt, err = types.TimestampProto(accessProof.RevokedAt)
+	if accessProof.RevokedAt.Valid {
+		revokedAt, err = types.TimestampProto(accessProof.RevokedAt.Time)
 		if err != nil {
 			return nil, err
 		}
 	}
 
 	return &api.AccessProof{
-		Id:               accessProof.ID,
-		OrganizationName: accessProof.OrganizationName,
-		ServiceName:      accessProof.ServiceName,
+		Id:               uint64(accessProof.ID),
+		OrganizationName: accessProof.OutgoingAccessRequest.OrganizationName,
+		ServiceName:      accessProof.OutgoingAccessRequest.ServiceName,
 		CreatedAt:        createdAt,
 		RevokedAt:        revokedAt,
-		AccessRequestId:  accessProof.AccessRequestID,
+		AccessRequestId:  uint64(accessProof.OutgoingAccessRequest.ID),
 	}, nil
 }

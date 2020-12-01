@@ -37,13 +37,14 @@ func TestCreateService(t *testing.T) {
 	defer mockCtrl.Finish()
 
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-	mockDatabase.EXPECT().CreateService(ctx, databaseService)
+	mockDatabase.EXPECT().CreateServiceWithInways(ctx, databaseService, []string{})
 
 	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase)
 
 	requestService := &api.CreateServiceRequest{
 		Name:        "my-service",
 		EndpointURL: "my-service.test",
+		Inways:      []string{},
 	}
 
 	responseService, err := service.CreateService(ctx, requestService)
@@ -54,6 +55,7 @@ func TestCreateService(t *testing.T) {
 	assert.Equal(t, &api.CreateServiceResponse{
 		Name:        "my-service",
 		EndpointURL: "my-service.test",
+		Inways:      []string{},
 	}, responseService)
 }
 
@@ -80,7 +82,8 @@ func TestGetService(t *testing.T) {
 	assert.Equal(t, expectedError, actualError)
 
 	databaseService := &database.Service{
-		Name: "my-service",
+		Name:   "my-service",
+		Inways: []*database.Inway{},
 	}
 
 	mockDatabase.EXPECT().GetService(ctx, "my-service").Return(databaseService, nil)
@@ -89,7 +92,8 @@ func TestGetService(t *testing.T) {
 	assert.NoError(t, err)
 
 	expectedResponse := &api.GetServiceResponse{
-		Name: "my-service",
+		Name:   "my-service",
+		Inways: []string{},
 	}
 
 	assert.Equal(t, expectedResponse, getServiceResponse)
@@ -109,14 +113,16 @@ func TestUpdateService(t *testing.T) {
 	defer mockCtrl.Finish()
 
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-	mockDatabase.EXPECT().UpdateService(ctx, "my-service", databaseService)
-	mockDatabase.EXPECT().UpdateService(ctx, "other-name", gomock.Any()).Return(database.ErrNotFound)
+	mockDatabase.EXPECT().GetService(ctx, "my-service").Return(databaseService, nil)
+	mockDatabase.EXPECT().GetService(ctx, "other-service").Return(nil, database.ErrNotFound)
+	mockDatabase.EXPECT().UpdateServiceWithInways(ctx, databaseService, []string{})
 
 	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase)
 
 	updateServiceRequest := &api.UpdateServiceRequest{
 		Name:        "my-service",
 		EndpointURL: "my-service.test",
+		Inways:      []string{},
 	}
 
 	updateServiceResponse, err := service.UpdateService(ctx, updateServiceRequest)
@@ -125,11 +131,12 @@ func TestUpdateService(t *testing.T) {
 	expectedResponse := &api.UpdateServiceResponse{
 		Name:        "my-service",
 		EndpointURL: "my-service.test",
+		Inways:      []string{},
 	}
 
 	assert.Equal(t, expectedResponse, updateServiceResponse)
 
-	updateServiceRequest.Name = "other-name"
+	updateServiceRequest.Name = "other-service"
 
 	_, err = service.UpdateService(ctx, updateServiceRequest)
 	assert.EqualError(t, err, "rpc error: code = NotFound desc = service not found")
@@ -163,11 +170,11 @@ func TestListServices(t *testing.T) {
 	databaseServices := []*database.Service{
 		{
 			Name:   "my-service",
-			Inways: []string{"inway.mock"},
+			Inways: []*database.Inway{{Name: "inway.mock"}},
 		},
 		{
 			Name:   "another-service",
-			Inways: []string{"another-inway.mock"},
+			Inways: []*database.Inway{{Name: "another-inway.mock"}},
 		},
 		{
 			Name: "third-service",
@@ -188,17 +195,37 @@ func TestListServices(t *testing.T) {
 			},
 			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
 				db := mock_database.NewMockConfigDatabase(ctrl)
-				db.EXPECT().ListServices(gomock.Any()).Return(databaseServices, nil)
 
-				db.EXPECT().ListAllLatestIncomingAccessRequests(gomock.Any()).Return(map[string]*database.IncomingAccessRequest{}, nil)
+				db.EXPECT().GetInway(gomock.Any(), "inway.mock").Return(&database.Inway{
+					Name: "inway.mock",
+					Services: []*database.Service{
+						{
+							Name: "my-service",
+							Inways: []*database.Inway{
+								{
+									Name: "inway.mock",
+								},
+							},
+						},
+					},
+				}, nil)
+
+				db.EXPECT().GetIncomingAccessRequestCountByService(gomock.Any()).Return(map[string]int{}, nil)
 
 				db.EXPECT().ListAccessGrantsForService(gomock.Any(), "my-service").Return([]*database.AccessGrant{{
-					ID:                   "mock-id",
-					AccessRequestID:      "mock-access-request-id",
-					OrganizationName:     "mock-organization-name",
-					ServiceName:          "my-service",
-					PublicKeyFingerprint: "mock-publickey-fingerprint"},
-				}, nil)
+					ID:                      1,
+					IncomingAccessRequestID: 1,
+					IncomingAccessRequest: &database.IncomingAccessRequest{
+						ID:               1,
+						OrganizationName: "mock-organization-name",
+						ServiceID:        1,
+						Service: &database.Service{
+							ID:   1,
+							Name: "my-service",
+						},
+						PublicKeyFingerprint: "mock-publickey-fingerprint",
+					},
+				}}, nil)
 				return db
 			},
 			expectedResponse: &api.ListServicesResponse{
@@ -227,9 +254,21 @@ func TestListServices(t *testing.T) {
 			},
 			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
 				db := mock_database.NewMockConfigDatabase(ctrl)
-				db.EXPECT().ListServices(gomock.Any()).Return(databaseServices, nil)
+				db.EXPECT().GetInway(gomock.Any(), "another-inway.mock").Return(&database.Inway{
+					Name: "another-inway.mock",
+					Services: []*database.Service{
+						{
+							Name: "another-service",
+							Inways: []*database.Inway{
+								{
+									Name: "another-inway.mock",
+								},
+							},
+						},
+					},
+				}, nil)
 
-				db.EXPECT().ListAllLatestIncomingAccessRequests(gomock.Any()).Return(map[string]*database.IncomingAccessRequest{}, nil)
+				db.EXPECT().GetIncomingAccessRequestCountByService(gomock.Any()).Return(map[string]int{}, nil)
 
 				db.EXPECT().ListAccessGrantsForService(gomock.Any(), "another-service").Return([]*database.AccessGrant{}, nil)
 				return db
@@ -255,7 +294,7 @@ func TestListServices(t *testing.T) {
 				db := mock_database.NewMockConfigDatabase(ctrl)
 				db.EXPECT().ListServices(gomock.Any()).Return(databaseServices, nil)
 
-				db.EXPECT().ListAllLatestIncomingAccessRequests(gomock.Any()).Return(map[string]*database.IncomingAccessRequest{}, nil)
+				db.EXPECT().GetIncomingAccessRequestCountByService(gomock.Any()).Return(map[string]int{}, nil)
 
 				db.EXPECT().ListAccessGrantsForService(gomock.Any(), "my-service").Return([]*database.AccessGrant{}, nil)
 				db.EXPECT().ListAccessGrantsForService(gomock.Any(), "another-service").Return([]*database.AccessGrant{}, nil)
@@ -281,7 +320,8 @@ func TestListServices(t *testing.T) {
 						},
 					},
 					{
-						Name: "third-service",
+						Name:   "third-service",
+						Inways: []string{},
 						AuthorizationSettings: &api.ListServicesResponse_Service_AuthorizationSettings{
 							Mode:           "whitelist",
 							Authorizations: []*api.ListServicesResponse_Service_AuthorizationSettings_Authorization{},
@@ -298,25 +338,10 @@ func TestListServices(t *testing.T) {
 				db := mock_database.NewMockConfigDatabase(ctrl)
 				db.EXPECT().ListServices(gomock.Any()).Return(databaseServices, nil)
 
-				db.EXPECT().ListAllLatestIncomingAccessRequests(gomock.Any()).Return(map[string]*database.IncomingAccessRequest{
-					"arbitrary-key-1": {
-						AccessRequest: database.AccessRequest{
-							ServiceName: "my-service",
-							State:       database.AccessRequestFailed,
-						},
-					},
-					"arbitrary-key-2": {
-						AccessRequest: database.AccessRequest{
-							ServiceName: "my-service",
-							State:       database.AccessRequestReceived,
-						},
-					},
-					"arbitrary-key-3": {
-						AccessRequest: database.AccessRequest{
-							ServiceName: "arbitrary-other-service-name",
-							State:       database.AccessRequestReceived,
-						},
-					},
+				db.EXPECT().GetIncomingAccessRequestCountByService(gomock.Any()).Return(map[string]int{
+					"my-service":      2,
+					"another-service": 0,
+					"third-service":   0,
 				}, nil)
 
 				db.EXPECT().ListAccessGrantsForService(gomock.Any(), "my-service").Return([]*database.AccessGrant{}, nil)
@@ -333,7 +358,7 @@ func TestListServices(t *testing.T) {
 							Mode:           "whitelist",
 							Authorizations: []*api.ListServicesResponse_Service_AuthorizationSettings_Authorization{},
 						},
-						IncomingAccessRequestsCount: 1,
+						IncomingAccessRequestsCount: 2,
 					},
 					{
 						Name:   "another-service",
@@ -345,7 +370,8 @@ func TestListServices(t *testing.T) {
 						IncomingAccessRequestsCount: 0,
 					},
 					{
-						Name: "third-service",
+						Name:   "third-service",
+						Inways: []string{},
 						AuthorizationSettings: &api.ListServicesResponse_Service_AuthorizationSettings{
 							Mode:           "whitelist",
 							Authorizations: []*api.ListServicesResponse_Service_AuthorizationSettings_Authorization{},
@@ -368,17 +394,17 @@ func TestListServices(t *testing.T) {
 			expectedError:    status.Error(codes.Internal, "database error"),
 		},
 		{
-			name: "when database for access grants fails",
-			request: &api.ListServicesRequest{
-				InwayName: "inway.mock",
-			},
+			name:    "when database for access grants fails",
+			request: &api.ListServicesRequest{},
 			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
 				db := mock_database.NewMockConfigDatabase(ctrl)
 				db.EXPECT().ListServices(gomock.Any()).Return(databaseServices, nil)
 
-				db.EXPECT().ListAllLatestIncomingAccessRequests(gomock.Any()).Return(map[string]*database.IncomingAccessRequest{}, nil)
+				db.EXPECT().GetIncomingAccessRequestCountByService(gomock.Any()).Return(map[string]int{}, nil)
 
 				db.EXPECT().ListAccessGrantsForService(gomock.Any(), "my-service").Return(nil, errors.New("arbitrary error"))
+				db.EXPECT().ListAccessGrantsForService(gomock.Any(), "another-service").Return(nil, errors.New("arbitrary error"))
+				db.EXPECT().ListAccessGrantsForService(gomock.Any(), "third-service").Return(nil, errors.New("arbitrary error"))
 				return db
 			},
 			expectedResponse: &api.ListServicesResponse{

@@ -50,8 +50,14 @@ CREATE TABLE nlx_management.access_requests_outgoing (
   access_request_outgoing_id SERIAL PRIMARY KEY,
   organization_name VARCHAR(100) NOT NULL,
   service_name VARCHAR(250) NOT NULL,
-  state VARCHAR(50) CHECK (state IN ('created', 'received', 'approved', 'rejected', 'revoked')) NOT NULL DEFAULT 'created',
+  state VARCHAR(50) CHECK (state IN ('created', 'failed', 'received', 'approved', 'rejected', 'revoked')) NOT NULL DEFAULT 'created',
   public_key_fingerprint VARCHAR(44) NOT NULL,
+  reference_id           INT NOT NULL DEFAULT 0,
+  error_code             INT NOT NULL DEFAULT 0,
+  error_cause            VARCHAR(500),
+  error_stack_trace      BYTEA,
+  lock_id                uuid UNIQUE,
+  lock_expires_at        timestamp with time zone,  
   created_at timestamp with time zone NOT NULL,
   updated_at timestamp with time zone NOT NULL
   );
@@ -100,6 +106,7 @@ CREATE TABLE nlx_management.inways_services (
 
 
 CREATE TABLE nlx_management.settings (
+  settings_id SERIAL PRIMARY KEY,
   inway_id INT NULL DEFAULT NULL,
   insight_api_url VARCHAR(250) NOT NULL,
   irma_server_url VARCHAR(250) NOT NULL,

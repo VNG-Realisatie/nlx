@@ -260,6 +260,9 @@ nlx-management:
     enabled: true
     hosts:
       - nlx-management.haarlem.nlx.minikube
+  postgresql:
+    hostname: haarlem-postgresql
+    existingSecret: haarlem-postgresql-auth
 
 dex:
   config:

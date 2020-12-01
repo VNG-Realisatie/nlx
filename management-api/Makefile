@@ -6,7 +6,10 @@ API_FILES=api/management.pb.go api/management.pb.gw.go api/management.swagger.js
 PKG_FILES=pkg/database/mock/mock_database.go pkg/directory/mock/mock_client.go pkg/management/mock/mock_client.go
 
 .PHONY: all
-all: generate
+all: generate migrations
+
+.PHONY: migrations
+migrations: db/migrations.go
 
 .PHONY: generate
 generate: ${API_FILES} ${PKG_FILES}
@@ -14,7 +17,7 @@ generate: ${API_FILES} ${PKG_FILES}
 .PHONY: clean
 clean:
 	@# Remove old generated files
-	rm -f ${API_FILES} ${PKG_FILES}
+	rm -f ${API_FILES} ${PKG_FILES} db/migrations.go
 
 .PHONY: dependencies
 dependencies:
@@ -87,3 +90,7 @@ pkg/directory/mock/mock_client.go: pkg/directory/client.go
 pkg/management/mock/mock_client.go: pkg/management/client.go
 	@# Generate mock file
 	mockgen -destination $@ go.nlx.io/nlx/management-api/pkg/management Client
+
+db/migrations.go:
+	@# Generate migrations Go file
+	go-bindata -prefix db/migrations -pkg db -o db/migrations.go db/migrations/...

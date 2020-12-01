@@ -23,7 +23,6 @@
     }
   },
   "ignoreDeps": [
-    "github.com/coreos/etcd"
   ],
   "packageRules": [
     {
@@ -36,12 +35,6 @@
       "packageNames": ["styled-components"],
       "managers": ["npm"],
       "allowedVersions": "<5.2.0"
-    },
-    {
-      "groupName": "etcd fails with grpc > 1.26.0",
-      "managers": ["gomod"],
-      "packageNames": ["google.golang.org/grpc"],
-      "allowedVersions": "<=1.26.0"
     },
     {
       "groupName": "genproto updates grpc > 1.26.0",

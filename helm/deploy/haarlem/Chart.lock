@@ -3,4 +3,4 @@ dependencies:
   repository: https://charts.helm.sh/stable
   version: 2.13.0
 digest: sha256:4e8289f9cf2245294595b0f796ffb1725338e015940062a427483fdc28d7d26b
-generated: "2020-12-17T10:48:48.245545+01:00"
+generated: "2020-12-15T11:31:32.112619202+01:00"

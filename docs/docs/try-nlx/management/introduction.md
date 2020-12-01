@@ -23,7 +23,7 @@ The following components are part of NLX Management:
 
 * Management API
 * Management UI
-* ETCD database
+* PostgreSQL database
 * An [OpenID Connect](https://openid.net/connect/) (OIDC) provider
 * An Inway
 
@@ -40,9 +40,9 @@ The Management API is at the heart of NLX Management. It is used by the Manageme
 The Management UI is a web interface you use to manage your NLX setup. It is designed to be easy to understand and operate.
 
 
-### ETCD Database
+### PostgreSQL Database
 
-The configuration of your Inways, the services you provide and access requests to your services are stored in an ETCD database. ETCD is used as a database because it is safe, reliable and easy to scale.
+The configuration of your Inways, the services you provide and access requests to your services are stored in an PostgreSQL database. PostgreSQL is used as a database because it is safe and reliable.
 
 
 ### OIDC provider

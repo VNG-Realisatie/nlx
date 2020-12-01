@@ -37,19 +37,19 @@ func TestGetInsight(t *testing.T) {
 
 	emptyRequest := &types.Empty{}
 
-	mockDatabase.EXPECT().GetInsightConfiguration(ctx).Return(nil, database.ErrNotFound)
+	mockDatabase.EXPECT().GetSettings(ctx).Return(nil, database.ErrNotFound)
 
 	_, actualError := service.GetInsightConfiguration(ctx, emptyRequest)
 	expectedError := status.Error(codes.NotFound, "insight configuration not found")
 	assert.Error(t, actualError)
 	assert.Equal(t, expectedError, actualError)
 
-	mockInsightResponse := &database.InsightConfiguration{
+	mockInsightResponse := &database.Settings{
 		InsightAPIURL: "http://insight-api-url",
 		IrmaServerURL: "http://irma-server-url",
 	}
 
-	mockDatabase.EXPECT().GetInsightConfiguration(ctx).Return(mockInsightResponse, nil)
+	mockDatabase.EXPECT().GetSettings(ctx).Return(mockInsightResponse, nil)
 
 	actualResponse, err := service.GetInsightConfiguration(ctx, emptyRequest)
 	assert.Nil(t, err)
@@ -67,16 +67,11 @@ func TestPutInsight(t *testing.T) {
 	testProcess := process.NewProcess(logger)
 	ctx := context.Background()
 
-	mockInsightConfig := &database.InsightConfiguration{
-		IrmaServerURL: "http://irma-url.com",
-		InsightAPIURL: "http://insight-url.com",
-	}
-
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-	mockDatabase.EXPECT().PutInsightConfiguration(ctx, mockInsightConfig)
+	mockDatabase.EXPECT().PutInsightConfiguration(ctx, "http://irma-url.com", "http://insight-url.com")
 
 	mockDirectoryClient := mock_directory.NewMockClient(mockCtrl)
 	mockDirectoryClient.EXPECT().SetInsightConfiguration(ctx, &registrationapi.SetInsightConfigurationRequest{

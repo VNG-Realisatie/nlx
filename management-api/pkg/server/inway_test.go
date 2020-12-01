@@ -128,18 +128,14 @@ func TestGetInway(t *testing.T) {
 	assert.Error(t, actualError)
 	assert.Equal(t, expectedError, actualError)
 
-	mockServices := []*database.Service{
-		{
-			Name:   "forty-two",
-			Inways: []string{"inway42.test"},
-		},
-	}
-
 	mockInwayResponse := &database.Inway{
-		Name: "inway42.test",
+		Name:      "inway42.test",
+		IPAddress: "",
+		Services: []*database.Service{{
+			Name: "forty-two",
+		}},
 	}
 
-	mockDatabase.EXPECT().ListServices(ctx).Return(mockServices, nil)
 	mockDatabase.EXPECT().GetInway(ctx, "inway42.test").Return(mockInwayResponse, nil)
 
 	getInwayResponse, err := service.GetInway(ctx, getInwayRequest)
@@ -159,6 +155,7 @@ func TestUpdateInway(t *testing.T) {
 	ctx := context.Background()
 
 	mockInway := &database.Inway{
+		ID:   1,
 		Name: "inway42.test",
 	}
 
@@ -166,7 +163,8 @@ func TestUpdateInway(t *testing.T) {
 	defer mockCtrl.Finish()
 
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-	mockDatabase.EXPECT().UpdateInway(ctx, "inway42.test", mockInway)
+	mockDatabase.EXPECT().UpdateInway(ctx, mockInway)
+	mockDatabase.EXPECT().GetInway(ctx, "inway42.test").Return(mockInway, nil)
 
 	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase)
 
@@ -220,15 +218,6 @@ func TestListInways(t *testing.T) {
 
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
 
-	mockListServices := []*database.Service{
-		{
-			Name:   "mock-service",
-			Inways: []string{"inway43.test"},
-		},
-	}
-
-	mockDatabase.EXPECT().ListServices(ctx).Return(mockListServices, nil)
-
 	mockListInways := []*database.Inway{
 		{Name: "inway42.test"},
 		{Name: "inway43.test"},
@@ -237,6 +226,14 @@ func TestListInways(t *testing.T) {
 			Version:     "1.0.0",
 			Hostname:    "inway.test.local",
 			SelfAddress: "inway.nlx",
+			Services: []*database.Service{
+				{
+					Name: "mock-service",
+					Inways: []*database.Inway{{
+						Name: "inway.test"},
+					},
+				},
+			},
 		},
 	}
 
@@ -253,17 +250,17 @@ func TestListInways(t *testing.T) {
 			},
 			{
 				Name: "inway43.test",
-				Services: []*api.Inway_Service{
-					{
-						Name: "mock-service",
-					},
-				},
 			},
 			{
 				Name:        "inway.test",
 				Version:     "1.0.0",
 				Hostname:    "inway.test.local",
 				SelfAddress: "inway.nlx",
+				Services: []*api.Inway_Service{
+					{
+						Name: "mock-service",
+					},
+				},
 			},
 		},
 	}

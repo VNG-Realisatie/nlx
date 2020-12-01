@@ -77,26 +77,23 @@ func TestCreateAccessRequest(t *testing.T) {
 				ServiceName:      "test-service",
 			},
 			&database.OutgoingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					OrganizationName:     "test-organization",
-					ServiceName:          "test-service",
-					PublicKeyFingerprint: "60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=",
-				},
+				OrganizationName:     "test-organization",
+				ServiceName:          "test-service",
+				PublicKeyFingerprint: "60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=",
+				State:                database.OutgoingAccessRequestCreated,
 			},
 			&database.OutgoingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ID:                   "12345abcde",
-					OrganizationName:     "test-organization",
-					ServiceName:          "test-service",
-					PublicKeyFingerprint: "60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=",
-					State:                database.AccessRequestCreated,
-					CreatedAt:            time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
-					UpdatedAt:            time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
-				},
+				ID:                   1,
+				OrganizationName:     "test-organization",
+				ServiceName:          "test-service",
+				PublicKeyFingerprint: "60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=",
+				State:                database.OutgoingAccessRequestCreated,
+				CreatedAt:            time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
+				UpdatedAt:            time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
 			},
 			nil,
 			&api.OutgoingAccessRequest{
-				Id:               "12345abcde",
+				Id:               1,
 				OrganizationName: "test-organization",
 				ServiceName:      "test-service",
 				State:            api.AccessRequestState_CREATED,
@@ -105,18 +102,16 @@ func TestCreateAccessRequest(t *testing.T) {
 			},
 			nil,
 		},
-
 		"with_an_activeaccess_request": {
 			&api.CreateAccessRequestRequest{
 				OrganizationName: "test-organization",
 				ServiceName:      "test-service",
 			},
 			&database.OutgoingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					OrganizationName:     "test-organization",
-					ServiceName:          "test-service",
-					PublicKeyFingerprint: "60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=",
-				},
+				OrganizationName:     "test-organization",
+				ServiceName:          "test-service",
+				PublicKeyFingerprint: "60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=",
+				State:                database.OutgoingAccessRequestCreated,
 			},
 			nil,
 			database.ErrActiveAccessRequest,
@@ -158,7 +153,7 @@ func TestSendAccessRequest(t *testing.T) {
 			&api.SendAccessRequestRequest{
 				OrganizationName: "test-organization",
 				ServiceName:      "test-service",
-				AccessRequestID:  "1",
+				AccessRequestID:  1,
 			},
 			nil,
 			database.ErrNotFound,
@@ -173,7 +168,7 @@ func TestSendAccessRequest(t *testing.T) {
 			&api.SendAccessRequestRequest{
 				OrganizationName: "test-organization",
 				ServiceName:      "test-service",
-				AccessRequestID:  "1",
+				AccessRequestID:  1,
 			},
 			nil,
 			errors.New("an error"),
@@ -184,61 +179,18 @@ func TestSendAccessRequest(t *testing.T) {
 			status.New(codes.Internal, "database error").Err(),
 		},
 		{
-			"organiation_mismatch",
-			&api.SendAccessRequestRequest{
-				OrganizationName: "test-organization",
-				ServiceName:      "test-service",
-				AccessRequestID:  "1",
-			},
-			&database.OutgoingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ID:               "1",
-					OrganizationName: "other-organization",
-					ServiceName:      "test-service",
-				},
-			},
-			nil,
-			func(mock *gomock.Call) {
-				mock.MaxTimes(0)
-			},
-			nil,
-			status.New(codes.NotFound, "organization not found").Err(),
-		},
-		{
-			"service_mismatch",
-			&api.SendAccessRequestRequest{
-				OrganizationName: "test-organization",
-				ServiceName:      "test-service",
-				AccessRequestID:  "1",
-			},
-			&database.OutgoingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ID:               "1",
-					OrganizationName: "test-organization",
-					ServiceName:      "other-service",
-				},
-			},
-			nil,
-			func(mock *gomock.Call) {
-				mock.MaxTimes(0)
-			},
-			nil,
-			status.New(codes.NotFound, "service not found").Err(),
-		},
-		{
 			"update_failed",
 			&api.SendAccessRequestRequest{
 				OrganizationName: "test-organization",
 				ServiceName:      "test-service",
-				AccessRequestID:  "1",
+				AccessRequestID:  1,
 			},
 			&database.OutgoingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ID:               "1",
-					OrganizationName: "test-organization",
-					ServiceName:      "test-service",
-					State:            database.AccessRequestCreated,
-				},
+
+				ID:               1,
+				OrganizationName: "test-organization",
+				ServiceName:      "test-service",
+				State:            database.OutgoingAccessRequestCreated,
 			},
 			nil,
 			func(mock *gomock.Call) {
@@ -252,22 +204,20 @@ func TestSendAccessRequest(t *testing.T) {
 			&api.SendAccessRequestRequest{
 				OrganizationName: "test-organization",
 				ServiceName:      "test-service",
-				AccessRequestID:  "1",
+				AccessRequestID:  1,
 			},
 			&database.OutgoingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ID:               "1",
-					OrganizationName: "test-organization",
-					ServiceName:      "test-service",
-					State:            database.AccessRequestCreated,
-				},
+				ID:               1,
+				OrganizationName: "test-organization",
+				ServiceName:      "test-service",
+				State:            database.OutgoingAccessRequestCreated,
 			},
 			nil,
 			func(mock *gomock.Call) {
 				mock.Return(nil)
 			},
 			&api.OutgoingAccessRequest{
-				Id:               "1",
+				Id:               1,
 				OrganizationName: "test-organization",
 				ServiceName:      "test-service",
 				State:            api.AccessRequestState_CREATED,
@@ -281,22 +231,20 @@ func TestSendAccessRequest(t *testing.T) {
 			&api.SendAccessRequestRequest{
 				OrganizationName: "test-organization",
 				ServiceName:      "test-service",
-				AccessRequestID:  "1",
+				AccessRequestID:  1,
 			},
 			&database.OutgoingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ID:               "1",
-					OrganizationName: "test-organization",
-					ServiceName:      "test-service",
-					State:            database.AccessRequestFailed,
-				},
+				ID:               1,
+				OrganizationName: "test-organization",
+				ServiceName:      "test-service",
+				State:            database.OutgoingAccessRequestFailed,
 			},
 			nil,
 			func(mock *gomock.Call) {
 				mock.Return(nil)
 			},
 			&api.OutgoingAccessRequest{
-				Id:               "1",
+				Id:               1,
 				OrganizationName: "test-organization",
 				ServiceName:      "test-service",
 				State:            api.AccessRequestState_CREATED,
@@ -314,12 +262,12 @@ func TestSendAccessRequest(t *testing.T) {
 			service, db := newService(t)
 			ctx := context.Background()
 
-			db.EXPECT().GetOutgoingAccessRequest(ctx, test.request.AccessRequestID).
+			db.EXPECT().GetOutgoingAccessRequest(ctx, uint(test.request.AccessRequestID)).
 				Return(test.accessRequest, test.accessRequestErr)
 
-			updateMock := db.EXPECT().UpdateOutgoingAccessRequestState(ctx, test.accessRequest, database.AccessRequestCreated, "", nil).
-				Do(func(_ context.Context, accessRequest *database.OutgoingAccessRequest, state database.AccessRequestState, _ string, errorDetails *diagnostics.ErrorDetails) error {
-					accessRequest.State = state
+			updateMock := db.EXPECT().UpdateOutgoingAccessRequestState(ctx, uint(test.request.AccessRequestID), database.OutgoingAccessRequestCreated, uint(0), nil).
+				Do(func(_ context.Context, _ uint, state database.OutgoingAccessRequestState, _ uint, errorDetails *diagnostics.ErrorDetails) error {
+					test.accessRequest.State = state
 					return nil
 				})
 			test.updateMock(updateMock)
@@ -332,100 +280,80 @@ func TestSendAccessRequest(t *testing.T) {
 	}
 }
 
-//nolint:funlen // this is a test method
 func TestApproveIncomingAccessRequest(t *testing.T) {
 	tests := []struct {
 		name             string
 		request          *api.ApproveIncomingAccessRequestRequest
-		service          *database.Service
-		serviceErr       error
 		accessRequest    *database.IncomingAccessRequest
 		accessRequestErr error
+		expectUpdateCall bool
+		updateErr        error
 		response         *types.Empty
 		err              error
 	}{
 		{
-			"unknown_service",
-			&api.ApproveIncomingAccessRequestRequest{
-				ServiceName:     "test-service",
-				AccessRequestID: "1",
-			},
-			nil,
-			database.ErrNotFound,
-			nil,
-			nil,
-			nil,
-			status.Error(codes.NotFound, "service not found"),
-		},
-		{
 			"unknown_access_request",
 			&api.ApproveIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
-				AccessRequestID: "1",
+				AccessRequestID: 1,
 			},
-			&database.Service{
-				Name: "test-service",
-			},
-			nil,
+
 			nil,
 			database.ErrNotFound,
+			false,
+			nil,
 			nil,
 			status.Error(codes.NotFound, "access request not found"),
-		},
-		{
-			"service_mismatch_access_request",
-			&api.ApproveIncomingAccessRequestRequest{
-				ServiceName:     "test-service",
-				AccessRequestID: "1",
-			},
-			&database.Service{
-				Name: "test-service",
-			},
-			nil,
-			&database.IncomingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ServiceName: "other-service",
-				},
-			},
-			nil,
-			nil,
-			status.Error(codes.InvalidArgument, "service name does not match the one from access request"),
 		},
 		{
 			"access_request_already_approved",
 			&api.ApproveIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
-				AccessRequestID: "1",
+				AccessRequestID: 1,
 			},
-			&database.Service{
-				Name: "test-service",
+			&database.IncomingAccessRequest{
+				ServiceID: 1,
+				Service: &database.Service{
+					Name: "test-service",
+				},
+				State: database.IncomingAccessRequestApproved,
 			},
 			nil,
-			&database.IncomingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ServiceName: "test-service",
-					State:       database.AccessRequestApproved,
-				},
-			},
+			false,
 			nil,
 			nil,
 			status.Error(codes.AlreadyExists, "access request is already approved"),
 		},
 		{
+			"update_state_fails",
+			&api.ApproveIncomingAccessRequestRequest{
+				ServiceName:     "test-service",
+				AccessRequestID: 1,
+			},
+			&database.IncomingAccessRequest{
+				Service: &database.Service{
+					Name: "test-service",
+				},
+			},
+			nil,
+			true,
+			errors.New("arbitrary error"),
+			nil,
+			status.Error(codes.Internal, "database error"),
+		},
+		{
 			"happy_flow",
 			&api.ApproveIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
-				AccessRequestID: "1",
+				AccessRequestID: 1,
 			},
-			&database.Service{
-				Name: "test-service",
-			},
-			nil,
 			&database.IncomingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ServiceName: "test-service",
+				Service: &database.Service{
+					Name: "test-service",
 				},
 			},
+			nil,
+			true,
 			nil,
 			&types.Empty{},
 			nil,
@@ -438,31 +366,27 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 			service, db := newService(t)
 			ctx := context.Background()
 
-			db.EXPECT().GetService(ctx, test.request.ServiceName).Return(test.service, test.serviceErr)
-
-			if test.service != nil {
-				db.EXPECT().GetIncomingAccessRequest(ctx, test.request.AccessRequestID).Return(test.accessRequest, test.accessRequestErr)
-			}
+			db.EXPECT().GetIncomingAccessRequest(ctx, uint(test.request.AccessRequestID)).Return(test.accessRequest, test.accessRequestErr)
 
 			if test.response != nil {
 				db.EXPECT().CreateAccessGrant(ctx, test.accessRequest)
 			}
 
-			actual, err := service.ApproveIncomingAccessRequest(ctx, test.request)
+			if test.expectUpdateCall {
+				db.EXPECT().UpdateIncomingAccessRequestState(ctx, test.accessRequest.ID, database.IncomingAccessRequestApproved).Return(test.updateErr)
+			}
 
+			actual, err := service.ApproveIncomingAccessRequest(ctx, test.request)
 			assert.Equal(t, test.response, actual)
 			assert.Equal(t, test.err, err)
 		})
 	}
 }
 
-//nolint:funlen // this is a test
 func TestRejectIncomingAccessRequest(t *testing.T) {
 	tests := []struct {
 		name             string
 		request          *api.RejectIncomingAccessRequestRequest
-		service          *database.Service
-		serviceErr       error
 		accessRequest    *database.IncomingAccessRequest
 		accessRequestErr error
 		expectUpdateCall bool
@@ -471,30 +395,11 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 		err              error
 	}{
 		{
-			"unknown_service",
-			&api.RejectIncomingAccessRequestRequest{
-				ServiceName:     "test-service",
-				AccessRequestID: "1",
-			},
-			nil,
-			database.ErrNotFound,
-			nil,
-			nil,
-			false,
-			nil,
-			nil,
-			status.Error(codes.NotFound, "service not found"),
-		},
-		{
 			"unknown_access_request",
 			&api.RejectIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
-				AccessRequestID: "1",
+				AccessRequestID: 1,
 			},
-			&database.Service{
-				Name: "test-service",
-			},
-			nil,
 			nil,
 			database.ErrNotFound,
 			false,
@@ -503,39 +408,14 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 			status.Error(codes.NotFound, "access request not found"),
 		},
 		{
-			"service_mismatch_access_request",
-			&api.RejectIncomingAccessRequestRequest{
-				ServiceName:     "test-service",
-				AccessRequestID: "1",
-			},
-			&database.Service{
-				Name: "test-service",
-			},
-			nil,
-			&database.IncomingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ServiceName: "other-service",
-				},
-			},
-			nil,
-			false,
-			nil,
-			nil,
-			status.Error(codes.InvalidArgument, "service name does not match the one from access request"),
-		},
-		{
 			"update_state_fails",
 			&api.RejectIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
-				AccessRequestID: "1",
+				AccessRequestID: 1,
 			},
-			&database.Service{
-				Name: "test-service",
-			},
-			nil,
 			&database.IncomingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ServiceName: "test-service",
+				Service: &database.Service{
+					Name: "other-service",
 				},
 			},
 			nil,
@@ -548,15 +428,11 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 			"happy_flow",
 			&api.RejectIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
-				AccessRequestID: "1",
+				AccessRequestID: 1,
 			},
-			&database.Service{
-				Name: "test-service",
-			},
-			nil,
 			&database.IncomingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ServiceName: "test-service",
+				Service: &database.Service{
+					Name: "other-service",
 				},
 			},
 			nil,
@@ -573,14 +449,10 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 			service, db := newService(t)
 			ctx := context.Background()
 
-			db.EXPECT().GetService(ctx, test.request.ServiceName).Return(test.service, test.serviceErr)
-
-			if test.service != nil {
-				db.EXPECT().GetIncomingAccessRequest(ctx, test.request.AccessRequestID).Return(test.accessRequest, test.accessRequestErr)
-			}
+			db.EXPECT().GetIncomingAccessRequest(ctx, uint(test.request.AccessRequestID)).Return(test.accessRequest, test.accessRequestErr)
 
 			if test.expectUpdateCall {
-				db.EXPECT().UpdateIncomingAccessRequestState(ctx, test.accessRequest, database.AccessRequestRejected).Return(test.updateErr)
+				db.EXPECT().UpdateIncomingAccessRequestState(ctx, test.accessRequest.ID, database.IncomingAccessRequestRejected).Return(test.updateErr)
 			}
 
 			actual, err := service.RejectIncomingAccessRequest(ctx, test.request)
@@ -589,35 +461,6 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 			assert.Equal(t, test.err, err)
 		})
 	}
-}
-
-func TestApproveIncomingAccessRequestModified(t *testing.T) {
-	serverService, db := newService(t)
-	ctx := context.Background()
-
-	service := &database.Service{
-		Name: "test-service",
-	}
-
-	accessRequest := &database.IncomingAccessRequest{
-		AccessRequest: database.AccessRequest{
-			ServiceName: "test-service",
-		},
-	}
-
-	db.EXPECT().GetService(ctx, "test-service").Return(service, nil)
-	db.EXPECT().GetIncomingAccessRequest(ctx, "1").Return(accessRequest, nil)
-	db.EXPECT().CreateAccessGrant(ctx, accessRequest).Return(nil, database.ErrAccessRequestModified)
-
-	request := &api.ApproveIncomingAccessRequestRequest{
-		ServiceName:     "test-service",
-		AccessRequestID: "1",
-	}
-
-	accessGrant, err := serverService.ApproveIncomingAccessRequest(ctx, request)
-
-	assert.Nil(t, accessGrant)
-	assert.Equal(t, status.Error(codes.Aborted, "access request modified"), err)
 }
 
 func setProxyMetadata(ctx context.Context) context.Context {
@@ -640,11 +483,25 @@ func TestExternalRequestAccess(t *testing.T) {
 				return context.Background()
 			},
 		},
+		"service does not exist": {
+			wantCode: codes.NotFound,
+			setup: func(db *mock_database.MockConfigDatabase) context.Context {
+				ctx := setProxyMetadata(context.Background())
+
+				db.EXPECT().GetService(ctx, "service").Return(nil, database.ErrNotFound)
+
+				return ctx
+			},
+		},
 
 		"returns_error_when_creating_access_request_errors": {
 			wantCode: codes.Internal,
 			setup: func(db *mock_database.MockConfigDatabase) context.Context {
 				ctx := setProxyMetadata(context.Background())
+				db.EXPECT().GetService(ctx, "service").Return(&database.Service{
+					ID:   1,
+					Name: "Service",
+				}, nil)
 
 				db.
 					EXPECT().
@@ -658,6 +515,11 @@ func TestExternalRequestAccess(t *testing.T) {
 		"returns_empty_when_creating_the_access_request_succeeds": {
 			setup: func(db *mock_database.MockConfigDatabase) context.Context {
 				ctx := setProxyMetadata(context.Background())
+
+				db.EXPECT().GetService(ctx, "service").Return(&database.Service{
+					ID:   1,
+					Name: "Service",
+				}, nil)
 
 				db.
 					EXPECT().
@@ -730,9 +592,7 @@ func TestExternalGetAccessRequestState(t *testing.T) {
 					EXPECT().
 					GetLatestIncomingAccessRequest(ctx, "organization-a", "service").
 					Return(&database.IncomingAccessRequest{
-						AccessRequest: database.AccessRequest{
-							State: database.AccessRequestReceived,
-						},
+						State: database.IncomingAccessRequestReceived,
 					}, nil)
 
 				return ctx

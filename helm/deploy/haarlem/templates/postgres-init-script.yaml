@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "haarlem.fullname" . }}-postgresql-init-script
+  labels:
+    {{- include "haarlem.labels" . | nindent 4 }}
+data:
+  create-management-database.sql: 'CREATE DATABASE nlx_management;'

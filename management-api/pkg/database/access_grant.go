@@ -5,139 +5,112 @@ package database
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
-	"path"
+	"database/sql"
+	"errors"
 	"time"
 
-	"github.com/pkg/errors"
-
-	"github.com/coreos/etcd/clientv3"
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
-var (
-	ErrAccessRequestModified     = errors.New("access request modified")
-	ErrAccessGrantAlreadyRevoked = errors.New("access grant is already revoked")
-)
+var ErrAccessGrantAlreadyRevoked = errors.New("accessGrant is already revoked")
 
 type AccessGrant struct {
-	ID                   string    `json:"id,omitempty"`
-	AccessRequestID      string    `json:"accessRequestId,omitempty"`
-	OrganizationName     string    `json:"organizationName,omitempty"`
-	ServiceName          string    `json:"serviceName,omitempty"`
-	PublicKeyFingerprint string    `json:"publicKeyFingerprint,omitempty"`
-	CreatedAt            time.Time `json:"createdAt,omitempty"`
-	RevokedAt            time.Time `json:"revokedAt,omitempty"`
+	ID                      uint `gorm:"primarykey;column:access_grant_id;"`
+	IncomingAccessRequestID uint `gorm:"column:access_request_incoming_id;"`
+	IncomingAccessRequest   *IncomingAccessRequest
+	CreatedAt               time.Time
+	RevokedAt               sql.NullTime
 }
 
-func (a *AccessGrant) Revoked() bool {
-	return !a.RevokedAt.IsZero()
+func (a *AccessGrant) TableName() string {
+	return "nlx_management.access_grants"
 }
 
-func (db ETCDConfigDatabase) CreateAccessGrant(ctx context.Context, accessRequest *IncomingAccessRequest) (*AccessGrant, error) {
-	data, err := json.Marshal(accessRequest)
-	if err != nil {
-		return nil, errors.Wrap(err, "marshaling access request")
-	}
-
-	key := db.key("access-requests", "incoming", accessRequest.OrganizationName, accessRequest.ServiceName, accessRequest.ID)
-
-	accessRequestCompare := clientv3.Compare(
-		clientv3.Value(key), "=", string(data),
-	)
-
-	accessRequest.State = AccessRequestApproved
-	accessRequest.UpdatedAt = db.clock.Now()
-
-	data, err = json.Marshal(accessRequest)
-	if err != nil {
-		return nil, errors.Wrap(err, "marshaling approved access request")
-	}
-
-	accessRequestOp := clientv3.OpPut(key, string(data))
-
-	now := db.clock.Now()
-	id := fmt.Sprintf("%x", now.UnixNano())
-
+func (db *PostgresConfigDatabase) CreateAccessGrant(ctx context.Context, accessRequest *IncomingAccessRequest) (*AccessGrant, error) {
 	accessGrant := &AccessGrant{
-		ID:                   id,
-		AccessRequestID:      accessRequest.ID,
-		OrganizationName:     accessRequest.OrganizationName,
-		ServiceName:          accessRequest.ServiceName,
-		PublicKeyFingerprint: accessRequest.PublicKeyFingerprint,
-		CreatedAt:            now,
+		IncomingAccessRequestID: accessRequest.ID,
 	}
 
-	key = db.key("access-grants", accessGrant.ServiceName, accessGrant.OrganizationName, id)
-
-	data, err = json.Marshal(accessGrant)
-	if err != nil {
-		return nil, errors.Wrap(err, "marshaling access grant")
-	}
-
-	accessGrantOp := clientv3.OpPut(key, string(data))
-
-	transaction := db.etcdCli.KV.Txn(ctx).
-		If(accessRequestCompare).
-		Then(accessRequestOp, accessGrantOp)
-
-	response, err := transaction.Commit()
-	if err != nil {
-		return nil, errors.Wrap(err, "committing transaction")
-	}
-
-	if !response.Succeeded {
-		return nil, ErrAccessRequestModified
+	if err := db.DB.Debug().
+		WithContext(ctx).
+		Omit(clause.Associations).
+		Create(accessGrant).Error; err != nil {
+		return nil, err
 	}
 
 	return accessGrant, nil
 }
 
-func (db ETCDConfigDatabase) RevokeAccessGrant(ctx context.Context, serviceName, organizationName, id string) (*AccessGrant, error) {
-	key := path.Join("access-grants", serviceName, organizationName, id)
-
+//nolint:dupl // looks the same as RevokeAccessProof but is different. RevokeAccessGrant is for access grants RevokeAccessProof is for access proofs.
+func (db *PostgresConfigDatabase) RevokeAccessGrant(ctx context.Context, accessGrantID uint, revokedAt time.Time) (*AccessGrant, error) {
 	accessGrant := &AccessGrant{}
 
-	err := db.get(ctx, key, accessGrant)
-	if err != nil {
+	if err := db.DB.
+		WithContext(ctx).
+		Preload("IncomingAccessRequest").
+		Preload("IncomingAccessRequest.Service").
+		First(accessGrant, accessGrantID).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, ErrNotFound
+		}
+
 		return nil, err
 	}
 
-	if accessGrant.Revoked() {
+	if accessGrant.RevokedAt.Valid {
 		return nil, ErrAccessGrantAlreadyRevoked
 	}
 
-	accessGrant.RevokedAt = db.clock.Now()
+	accessGrant.RevokedAt = sql.NullTime{
+		Time:  revokedAt,
+		Valid: true,
+	}
 
-	err = db.put(ctx, key, accessGrant)
-	if err != nil {
+	if err := db.DB.
+		WithContext(ctx).
+		Omit(clause.Associations).
+		Select("revoked_at").
+		Save(accessGrant).Error; err != nil {
 		return nil, err
 	}
 
 	return accessGrant, nil
 }
 
-func (db ETCDConfigDatabase) ListAccessGrantsForService(ctx context.Context, serviceName string) ([]*AccessGrant, error) {
-	key := path.Join("access-grants", serviceName)
+func (db *PostgresConfigDatabase) ListAccessGrantsForService(ctx context.Context, serviceName string) ([]*AccessGrant, error) {
+	accessGrants := []*AccessGrant{}
 
-	r := []*AccessGrant{}
-
-	err := db.list(ctx, key, &r)
-	if err != nil {
+	if err := db.DB.
+		WithContext(ctx).
+		Preload("IncomingAccessRequest").
+		Preload("IncomingAccessRequest.Service").
+		Joins("JOIN nlx_management.access_requests_incoming r ON r.access_request_incoming_id = access_grants.access_request_incoming_id").
+		Joins("JOIN nlx_management.services s ON s.service_id = r.service_id AND s.name = ?", serviceName).
+		Find(&accessGrants).Error; err != nil {
 		return nil, err
 	}
 
-	return r, nil
+	return accessGrants, nil
 }
 
-func (db ETCDConfigDatabase) GetLatestAccessGrantForService(ctx context.Context, organizationName, serviceName string) (*AccessGrant, error) {
-	key := path.Join("access-grants", serviceName, organizationName)
-	grant := &AccessGrant{}
+func (db *PostgresConfigDatabase) GetLatestAccessGrantForService(ctx context.Context, organizationName, serviceName string) (*AccessGrant, error) {
+	accessGrant := &AccessGrant{}
 
-	err := db.get(ctx, key, grant, clientv3.WithLastKey()...)
-	if err != nil {
+	if err := db.DB.
+		WithContext(ctx).
+		Preload("IncomingAccessRequest").
+		Preload("IncomingAccessRequest.Service").
+		Joins("JOIN nlx_management.access_requests_incoming r ON r.access_request_incoming_id = access_grants.access_request_incoming_id AND r.organization_name = ?", organizationName).
+		Joins("JOIN nlx_management.services s ON s.service_id = r.service_id AND s.name = ?", serviceName).
+		Order("created_at DESC").
+		First(accessGrant).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, ErrNotFound
+		}
+
 		return nil, err
 	}
 
-	return grant, nil
+	return accessGrant, nil
 }

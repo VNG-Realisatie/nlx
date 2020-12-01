@@ -49,7 +49,10 @@ func TestManagementService_GetSettings(t *testing.T) {
 			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
 				db := mock_database.NewMockConfigDatabase(ctrl)
 				db.EXPECT().GetSettings(gomock.Any()).Return(&database.Settings{
-					OrganizationInway: "inway-name",
+					Inway: &database.Inway{
+						ID:   1,
+						Name: "inway-name",
+					},
 				}, nil)
 
 				return db
@@ -173,8 +176,8 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 					}, nil)
 
 				db.EXPECT().UpdateSettings(
-					gomock.Any(), gomock.Any(),
-				).Return(errors.New("arbitrary error"))
+					gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any(),
+				).Return(nil, errors.New("arbitrary error"))
 
 				return db
 			},
@@ -203,12 +206,11 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 				db.EXPECT().
 					GetInway(gomock.Any(), "inway-name").
 					Return(&database.Inway{
+						ID:          1,
 						SelfAddress: "inway.localhost",
 					}, nil)
 
-				db.EXPECT().UpdateSettings(gomock.Any(), &database.Settings{
-					OrganizationInway: "inway-name",
-				}).Return(nil)
+				db.EXPECT().UpdateSettings(gomock.Any(), "", "", createUintPointer(1)).Return(&database.Settings{}, nil)
 
 				return db
 			},
@@ -230,9 +232,7 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			name: "happy flow with empty inway name",
 			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
 				db := mock_database.NewMockConfigDatabase(ctrl)
-				db.EXPECT().UpdateSettings(gomock.Any(), &database.Settings{
-					OrganizationInway: "",
-				}).Return(nil)
+				db.EXPECT().UpdateSettings(gomock.Any(), "", "", nil).Return(&database.Settings{}, nil)
 
 				return db
 			},
@@ -265,4 +265,8 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			assert.Equal(t, tt.expectedError, err)
 		})
 	}
+}
+
+func createUintPointer(x uint) *uint {
+	return &x
 }

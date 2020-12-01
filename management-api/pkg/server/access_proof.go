@@ -40,7 +40,7 @@ func (s *ManagementService) GetAccessProof(ctx context.Context, req *external.Ge
 		return nil, status.Error(codes.Internal, "data error")
 	}
 
-	revokedAt, err := types.TimestampProto(grant.RevokedAt)
+	revokedAt, err := types.TimestampProto(grant.RevokedAt.Time)
 	if err != nil {
 		s.logger.Error("failed to parse revoked at time", zap.Error(err))
 
@@ -48,10 +48,10 @@ func (s *ManagementService) GetAccessProof(ctx context.Context, req *external.Ge
 	}
 
 	return &api.AccessProof{
-		Id:               grant.ID,
-		AccessRequestId:  grant.AccessRequestID,
-		OrganizationName: grant.OrganizationName,
-		ServiceName:      grant.ServiceName,
+		Id:               uint64(grant.ID),
+		AccessRequestId:  uint64(grant.IncomingAccessRequest.ID),
+		OrganizationName: grant.IncomingAccessRequest.OrganizationName,
+		ServiceName:      grant.IncomingAccessRequest.Service.Name,
 		CreatedAt:        createdAt,
 		RevokedAt:        revokedAt,
 	}, nil

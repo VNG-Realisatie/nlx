@@ -5,77 +5,86 @@ package database
 
 import (
 	"context"
-	"path"
+	"errors"
+	"time"
+
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type Inway struct {
-	Name        string   `json:"name,omitempty"`
-	Version     string   `json:"version,omitempty"`
-	Hostname    string   `json:"hostname,omitempty"`
-	IPAddress   string   `json:"ipAddress,omitempty"`
-	SelfAddress string   `json:"selfAddress,omitempty"`
-	Services    []string `json:"services,omitempty"`
+	ID          uint `gorm:"primarykey;column:inway_id;"`
+	Name        string
+	Version     string
+	Hostname    string
+	IPAddress   string
+	SelfAddress string
+	Services    []*Service `gorm:"many2many:nlx_management.inways_services"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
-const inwaysKey = "inways"
+func (i *Inway) TableName() string {
+	return "nlx_management.inways"
+}
 
-// ListInways returns a list of inways
-func (db ETCDConfigDatabase) ListInways(ctx context.Context) ([]*Inway, error) {
+func (db *PostgresConfigDatabase) CreateInway(ctx context.Context, inway *Inway) error {
+	return db.DB.
+		WithContext(ctx).
+		Omit(clause.Associations).
+		Clauses(clause.OnConflict{
+			Columns:   []clause.Column{{Name: "name"}},
+			DoUpdates: clause.AssignmentColumns([]string{"version"}),
+		}).
+		Create(inway).Error
+}
+
+func (db *PostgresConfigDatabase) UpdateInway(ctx context.Context, inway *Inway) error {
+	if err := db.DB.
+		WithContext(ctx).
+		Omit(clause.Associations).
+		Save(inway).
+		Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (db *PostgresConfigDatabase) DeleteInway(ctx context.Context, name string) error {
+	return db.DB.
+		WithContext(ctx).
+		Omit(clause.Associations).
+		Where(&Inway{Name: name}).
+		Delete(&Inway{}).Error
+}
+
+func (db *PostgresConfigDatabase) ListInways(ctx context.Context) ([]*Inway, error) {
 	inways := []*Inway{}
 
-	if err := db.list(ctx, inwaysKey, &inways); err != nil {
+	if err := db.DB.
+		WithContext(ctx).
+		Preload("Services").
+		Find(&inways).Error; err != nil {
 		return nil, err
 	}
 
 	return inways, nil
 }
 
-// GetInway returns a specific inway by name
-func (db ETCDConfigDatabase) GetInway(ctx context.Context, name string) (*Inway, error) {
-	key := path.Join(inwaysKey, name)
+func (db *PostgresConfigDatabase) GetInway(ctx context.Context, name string) (*Inway, error) {
 	inway := &Inway{}
 
-	if err := db.get(ctx, key, inway); err != nil {
+	if err := db.DB.
+		WithContext(ctx).
+		Preload("Services").
+		First(inway, Inway{Name: name}).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, ErrNotFound
+		}
+
 		return nil, err
 	}
 
 	return inway, nil
-}
-
-// CreateInway creates a new inway
-func (db ETCDConfigDatabase) CreateInway(ctx context.Context, inway *Inway) error {
-	key := path.Join(inwaysKey, inway.Name)
-
-	if err := db.put(ctx, key, inway); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// UpdateInway updates an existing inway
-func (db ETCDConfigDatabase) UpdateInway(ctx context.Context, name string, inway *Inway) error {
-	if _, err := db.GetInway(ctx, name); err != nil {
-		return err
-	}
-
-	key := path.Join(inwaysKey, name)
-
-	if err := db.put(ctx, key, inway); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// DeleteInway deletes a specific inway
-func (db ETCDConfigDatabase) DeleteInway(ctx context.Context, name string) error {
-	key := path.Join(db.pathPrefix, inwaysKey, name)
-
-	_, err := db.etcdCli.Delete(ctx, key)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }

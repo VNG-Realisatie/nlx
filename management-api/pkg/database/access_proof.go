@@ -5,103 +5,106 @@ package database
 
 import (
 	"context"
-	"fmt"
-	"path"
+	"database/sql"
+	"errors"
 	"time"
 
-	"github.com/pkg/errors"
-
-	"github.com/coreos/etcd/clientv3"
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
-var ErrAccessProofAlreadyRevoked = errors.New("access proof is already revoked")
-
 type AccessProof struct {
-	ID               string    `json:"id,omitempty"`
-	AccessRequestID  string    `json:"accessRequestId,omitempty"`
-	OrganizationName string    `json:"organizationName,omitempty"`
-	ServiceName      string    `json:"serviceName,omitempty"`
-	CreatedAt        time.Time `json:"createdAt,omitempty"`
-	RevokedAt        time.Time `json:"revokedAt,omitempty"`
+	ID                      uint `gorm:"primarykey;column:access_proof_id"`
+	AccessRequestOutgoingID uint
+	OutgoingAccessRequest   *OutgoingAccessRequest `gorm:"foreignKey:access_request_outgoing_id"`
+	CreatedAt               time.Time
+	RevokedAt               sql.NullTime
 }
 
-func (a *AccessProof) Revoked() bool {
-	return !a.RevokedAt.IsZero()
+func (AccessProof) TableName() string {
+	return "nlx_management.access_proofs"
 }
 
-func (db ETCDConfigDatabase) CreateAccessProof(ctx context.Context, accessProof *AccessProof) (*AccessProof, error) {
-	now := db.clock.Now()
-	id := fmt.Sprintf("%x", now.UnixNano())
-
-	accessProof = &AccessProof{
-		ID:               id,
-		AccessRequestID:  accessProof.AccessRequestID,
-		OrganizationName: accessProof.OrganizationName,
-		ServiceName:      accessProof.ServiceName,
-		CreatedAt:        now,
-		RevokedAt:        accessProof.RevokedAt,
+func (db *PostgresConfigDatabase) CreateAccessProof(ctx context.Context, accessRequest *OutgoingAccessRequest) (*AccessProof, error) {
+	accessProof := &AccessProof{
+		AccessRequestOutgoingID: accessRequest.ID,
+		OutgoingAccessRequest:   accessRequest,
 	}
 
-	key := path.Join("access-proofs", accessProof.OrganizationName, accessProof.ServiceName, id)
-
-	if err := db.put(ctx, key, accessProof); err != nil {
-		return nil, err
+	result := db.DB.
+		WithContext(ctx).
+		Omit(clause.Associations).
+		Create(accessProof)
+	if result.Error != nil {
+		return nil, result.Error
 	}
 
 	return accessProof, nil
 }
 
-func (db ETCDConfigDatabase) RevokeAccessProof(ctx context.Context, organizationName, serviceName, id string, revokedAt time.Time) (*AccessProof, error) {
-	key := path.Join("access-proofs", organizationName, serviceName, id)
-
+func (db *PostgresConfigDatabase) GetLatestAccessProofForService(ctx context.Context, organizationName, serviceName string) (*AccessProof, error) {
 	accessProof := &AccessProof{}
 
-	err := db.get(ctx, key, accessProof)
-	if err != nil {
-		return nil, err
-	}
-
-	if accessProof.Revoked() {
-		return nil, ErrAccessProofAlreadyRevoked
-	}
-
-	accessProof.RevokedAt = revokedAt
-
-	err = db.put(ctx, key, accessProof)
-	if err != nil {
-		return nil, err
-	}
-
-	return accessProof, nil
-}
-
-func (db ETCDConfigDatabase) GetLatestAccessProofForService(ctx context.Context, organizationName, serviceName string) (*AccessProof, error) {
-	key := path.Join("access-proofs", organizationName, serviceName)
-
-	accessProof := &AccessProof{}
-
-	err := db.get(ctx, key, accessProof, clientv3.WithLastKey()...)
-	if err != nil {
-		return nil, err
-	}
-
-	return accessProof, nil
-}
-
-func (db ETCDConfigDatabase) GetAccessProofForOutgoingAccessRequest(ctx context.Context, organizationName, serviceName, accessRequestID string) (*AccessProof, error) {
-	key := path.Join("access-proofs", organizationName, serviceName)
-
-	accessProofs := []*AccessProof{}
-
-	if err := db.list(ctx, key, &accessProofs); err != nil {
-		return nil, err
-	}
-
-	for _, accessProof := range accessProofs {
-		if accessProof.AccessRequestID == accessRequestID {
-			return accessProof, nil
+	if err := db.DB.
+		WithContext(ctx).
+		Preload("OutgoingAccessRequest").
+		Joins("JOIN nlx_management.access_requests_outgoing r ON r.organization_name = ? AND r.service_name = ?", organizationName, serviceName).
+		Order("created_at DESC").
+		First(accessProof).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, err
 		}
+
+		return nil, err
 	}
 
-	return nil, ErrNotFound
+	return accessProof, nil
+}
+
+func (db *PostgresConfigDatabase) GetAccessProofForOutgoingAccessRequest(ctx context.Context, accessRequestID uint) (*AccessProof, error) {
+	accessProof := &AccessProof{}
+
+	if err := db.DB.
+		WithContext(ctx).
+		Preload("OutgoingAccessRequest").
+		Where("access_request_outgoing_id = ?", accessRequestID).
+		First(accessProof).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, ErrNotFound
+		}
+
+		return nil, err
+	}
+
+	return accessProof, nil
+}
+
+//nolint:dupl // looks the same as RevokeAccessGrant but is different. RevokeAccessGrant is for access grants RevokeAccessProof is for access proofs.
+func (db *PostgresConfigDatabase) RevokeAccessProof(ctx context.Context, accessProofID uint, revokedAt time.Time) (*AccessProof, error) {
+	accessProof := &AccessProof{}
+
+	if err := db.DB.
+		WithContext(ctx).
+		First(accessProof, accessProofID).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, ErrNotFound
+		}
+
+		return nil, err
+	}
+
+	accessProof.RevokedAt = sql.NullTime{
+		Time:  revokedAt,
+		Valid: true,
+	}
+
+	if err := db.DB.
+		WithContext(ctx).
+		Omit(clause.Associations).
+		Select("revoked_at").
+		Save(accessProof).Error; err != nil {
+		return nil, err
+	}
+
+	return accessProof, nil
 }

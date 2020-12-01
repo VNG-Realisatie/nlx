@@ -45,7 +45,8 @@
             "name": "accessGrantID",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "format": "uint64"
           }
         ],
         "tags": [
@@ -173,7 +174,8 @@
             "name": "accessRequestID",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "format": "uint64"
           }
         ],
         "tags": [
@@ -209,7 +211,8 @@
             "name": "accessRequestID",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "format": "uint64"
           }
         ],
         "tags": [
@@ -287,7 +290,8 @@
             "name": "accessRequestID",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "format": "uint64"
           }
         ],
         "tags": [
@@ -809,7 +813,8 @@
       "type": "object",
       "properties": {
         "id": {
-          "type": "string"
+          "type": "string",
+          "format": "uint64"
         },
         "organizationName": {
           "type": "string"
@@ -829,7 +834,8 @@
           "format": "date-time"
         },
         "accessRequestId": {
-          "type": "string"
+          "type": "string",
+          "format": "uint64"
         }
       }
     },
@@ -837,7 +843,8 @@
       "type": "object",
       "properties": {
         "id": {
-          "type": "string"
+          "type": "string",
+          "format": "uint64"
         },
         "organizationName": {
           "type": "string"
@@ -854,7 +861,8 @@
           "format": "date-time"
         },
         "accessRequestId": {
-          "type": "string"
+          "type": "string",
+          "format": "uint64"
         }
       }
     },
@@ -1046,7 +1054,8 @@
       "type": "object",
       "properties": {
         "id": {
-          "type": "string"
+          "type": "string",
+          "format": "uint64"
         },
         "organizationName": {
           "type": "string"
@@ -1235,7 +1244,8 @@
       "type": "object",
       "properties": {
         "id": {
-          "type": "string"
+          "type": "string",
+          "format": "uint64"
         },
         "organizationName": {
           "type": "string"

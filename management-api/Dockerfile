@@ -34,4 +34,4 @@ COPY --from=build /go/src/go.nlx.io/nlx/management-api/dist/bin/nlx-management-a
 RUN adduser -D -u 1001 appuser
 USER appuser
 
-CMD ["/usr/local/bin/nlx-management-api"]
+CMD ["/usr/local/bin/nlx-management-api", "serve"]

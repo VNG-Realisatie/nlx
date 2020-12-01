@@ -10,17 +10,17 @@ import (
 
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 	"go.nlx.io/nlx/management-api/api"
-	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
 // GetInsight returns the insight configuration of a organization
 func (s *ManagementService) GetInsightConfiguration(ctx context.Context, _ *types.Empty) (*api.InsightConfiguration, error) {
 	s.logger.Info("rpc request GetInsightConfiguration")
 
-	insightConfig, err := s.configDatabase.GetInsightConfiguration(ctx)
+	settings, err := s.configDatabase.GetSettings(ctx)
 	if err != nil {
 		if errIsNotFound(err) {
 			s.logger.Warn("insight configuration not found")
+
 			return nil, status.Error(codes.NotFound, "insight configuration not found")
 		}
 
@@ -29,12 +29,10 @@ func (s *ManagementService) GetInsightConfiguration(ctx context.Context, _ *type
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	response := &api.InsightConfiguration{
-		IrmaServerURL: insightConfig.IrmaServerURL,
-		InsightAPIURL: insightConfig.InsightAPIURL,
-	}
-
-	return response, nil
+	return &api.InsightConfiguration{
+		IrmaServerURL: settings.IrmaServerURL,
+		InsightAPIURL: settings.InsightAPIURL,
+	}, nil
 }
 
 // PutInsight sets the insight configuration of a organization
@@ -45,17 +43,11 @@ func (s *ManagementService) PutInsightConfiguration(ctx context.Context, req *ap
 		InsightAPIURL: req.InsightAPIURL,
 		IrmaServerURL: req.IrmaServerURL,
 	})
-
 	if err != nil {
 		return nil, err
 	}
 
-	config := &database.InsightConfiguration{
-		IrmaServerURL: req.IrmaServerURL,
-		InsightAPIURL: req.InsightAPIURL,
-	}
-
-	err = s.configDatabase.PutInsightConfiguration(ctx, config)
+	_, err = s.configDatabase.PutInsightConfiguration(ctx, req.IrmaServerURL, req.InsightAPIURL)
 	if err != nil {
 		s.logger.Error("error updating inway insight config in DB", zap.Error(err))
 		return nil, status.Error(codes.Internal, "database error")

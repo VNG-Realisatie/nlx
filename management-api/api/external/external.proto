@@ -36,5 +36,5 @@ message GetAccessProofRequest {
 }
 
 message RequestAccessResponse {
-    string reference_id = 1;
+    uint64 reference_id = 1;
 }

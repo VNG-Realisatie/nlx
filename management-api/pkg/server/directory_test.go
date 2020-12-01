@@ -143,23 +143,31 @@ func TestListDirectoryServices(t *testing.T) {
 	db.EXPECT().
 		GetLatestOutgoingAccessRequest(ctx, service.OrganizationName, service.ServiceName).
 		Return(&database.OutgoingAccessRequest{
-			AccessRequest: database.AccessRequest{
-				ID:               "161c188cfcea1939",
-				OrganizationName: "test-organization-a",
-				ServiceName:      "test-service-1",
-				State:            database.AccessRequestCreated,
-				CreatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
-				UpdatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
-			},
+			ID:                   1,
+			OrganizationName:     "test-organization-a",
+			ServiceName:          "test-service-1",
+			State:                database.OutgoingAccessRequestCreated,
+			PublicKeyFingerprint: "test-finger-print",
+			CreatedAt:            time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
+			UpdatedAt:            time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
 		}, nil)
 
 	db.EXPECT().
-		GetAccessProofForOutgoingAccessRequest(ctx, service.OrganizationName, service.ServiceName, "161c188cfcea1939").
+		GetAccessProofForOutgoingAccessRequest(ctx, uint(1)).
 		Return(&database.AccessProof{
-			ID:               "161c188cfcea1939",
-			OrganizationName: "test-organization-a",
-			ServiceName:      "test-service-1",
-			CreatedAt:        time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
+			ID:                      1,
+			AccessRequestOutgoingID: 1,
+			OutgoingAccessRequest: &database.OutgoingAccessRequest{
+				ID:                   1,
+				OrganizationName:     "test-organization-a",
+				ServiceName:          "test-service-1",
+				State:                database.OutgoingAccessRequestCreated,
+				PublicKeyFingerprint: "test-finger-print",
+				CreatedAt:            time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
+				UpdatedAt:            time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
+			},
+
+			CreatedAt: time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
 		}, nil)
 
 	directoryService := server.NewDirectoryService(logger, env, client, db)
@@ -175,13 +183,14 @@ func TestListDirectoryServices(t *testing.T) {
 			PublicSupportContact: "test@example.com",
 			State:                api.DirectoryService_unknown,
 			LatestAccessProof: &api.AccessProof{
-				Id:               "161c188cfcea1939",
+				Id:               1,
 				OrganizationName: "test-organization-a",
 				ServiceName:      "test-service-1",
+				AccessRequestId:  1,
 				CreatedAt:        timestampProto(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
 			},
 			LatestAccessRequest: &api.OutgoingAccessRequest{
-				Id:               "161c188cfcea1939",
+				Id:               1,
 				OrganizationName: "test-organization-a",
 				ServiceName:      "test-service-1",
 				State:            api.AccessRequestState_CREATED,
@@ -221,23 +230,28 @@ func TestGetOrganizationService(t *testing.T) {
 				db.EXPECT().
 					GetLatestOutgoingAccessRequest(gomock.Any(), "test-organization", "test-service").
 					Return(&database.OutgoingAccessRequest{
-						AccessRequest: database.AccessRequest{
-							ID:               "161c188cfcea1939",
-							ServiceName:      "test-service",
-							OrganizationName: "test-organization",
-							State:            database.AccessRequestCreated,
-							CreatedAt:        time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
-							UpdatedAt:        time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
-						},
+						ID:               1,
+						ServiceName:      "test-service",
+						OrganizationName: "test-organization",
+						State:            database.OutgoingAccessRequestCreated,
+						CreatedAt:        time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
+						UpdatedAt:        time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
 					}, nil)
 
 				db.EXPECT().
-					GetAccessProofForOutgoingAccessRequest(gomock.Any(), "test-organization", "test-service", "161c188cfcea1939").
+					GetAccessProofForOutgoingAccessRequest(gomock.Any(), uint(1)).
 					Return(&database.AccessProof{
-						ID:               "161c188cfcea1939",
-						ServiceName:      "test-service",
-						OrganizationName: "test-organization",
-						CreatedAt:        time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
+						ID:                      1,
+						AccessRequestOutgoingID: 1,
+						OutgoingAccessRequest: &database.OutgoingAccessRequest{
+							ID:               1,
+							ServiceName:      "test-service",
+							OrganizationName: "test-organization",
+							State:            database.OutgoingAccessRequestCreated,
+							CreatedAt:        time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
+							UpdatedAt:        time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
+						},
+						CreatedAt: time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
 					}, nil)
 			},
 			func(directoryClient *mock_directory.MockClient) {
@@ -252,7 +266,7 @@ func TestGetOrganizationService(t *testing.T) {
 				OrganizationName: "test-organization",
 				ServiceName:      "test-service",
 				LatestAccessRequest: &api.OutgoingAccessRequest{
-					Id:               "161c188cfcea1939",
+					Id:               1,
 					OrganizationName: "test-organization",
 					ServiceName:      "test-service",
 					State:            api.AccessRequestState_CREATED,
@@ -260,7 +274,8 @@ func TestGetOrganizationService(t *testing.T) {
 					UpdatedAt:        timestampProto(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 				},
 				LatestAccessProof: &api.AccessProof{
-					Id:               "161c188cfcea1939",
+					Id:               1,
+					AccessRequestId:  1,
 					ServiceName:      "test-service",
 					OrganizationName: "test-organization",
 					CreatedAt:        timestampProto(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
@@ -343,16 +358,14 @@ func TestGetOrganizationService(t *testing.T) {
 					EXPECT().
 					GetLatestOutgoingAccessRequest(gomock.Any(), "test-organization", "test-service").
 					Return(&database.OutgoingAccessRequest{
-						AccessRequest: database.AccessRequest{
-							ID:               "id",
-							OrganizationName: "test-organization",
-							ServiceName:      "test-service",
-						},
+						ID:               1,
+						OrganizationName: "test-organization",
+						ServiceName:      "test-service",
 					}, nil)
 
 				db.
 					EXPECT().
-					GetAccessProofForOutgoingAccessRequest(gomock.Any(), "test-organization", "test-service", "id").
+					GetAccessProofForOutgoingAccessRequest(gomock.Any(), uint(1)).
 					Return(nil, errors.New("arbitrary error"))
 			},
 

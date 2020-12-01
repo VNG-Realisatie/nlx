@@ -54,8 +54,20 @@ spec:
               value: "0.0.0.0:8080"
             - name: CONFIG_LISTEN_ADDRESS
               value: "0.0.0.0:8443"
-            - name: ETCD_CONNECTION_STRING
-              value: http://{{ .Release.Name }}-etcd:2379
+            - name: POSTGRES_HOST
+              value: {{ required "PostgreSQL hostname is required" .Values.postgresql.hostname }}
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nlx-management.postgresql.secret" . }}
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nlx-management.postgresql.secret" . }}
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DSN
+              value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):5432/nlx_management?sslmode=disable&connect_timeout=10'
             - name: DIRECTORY_INSPECTION_ADDRESS
               value: {{ required "Directory inspection hostname is required" .Values.config.directoryInspectionHostname }}:443
             - name: DIRECTORY_REGISTRATION_ADDRESS
@@ -101,6 +113,33 @@ spec:
             - name: config
               mountPath: /config
               readOnly: true
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      initContainers:
+        - name: migrations
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ template "nlx-management.apiImage" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - '/usr/local/bin/nlx-management-api'
+            - migrate
+            - up
+          env:
+            - name: POSTGRES_HOST
+              value: {{ required "PostgreSQL hostname is required" .Values.postgresql.hostname }}
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nlx-management.postgresql.secret" . }}
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nlx-management.postgresql.secret" . }}
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DSN
+              value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):5432/nlx_management?sslmode=disable&connect_timeout=10'
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:

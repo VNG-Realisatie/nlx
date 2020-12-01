@@ -34,7 +34,7 @@ Then, start all components by running:
 docker-compose up -d
 ```
 
-This will start [Dex](https://github.com/dexidp/dex) (Identity Provider), ETCD and the required NLX components.
+This will start [Dex](https://github.com/dexidp/dex) (Identity Provider), PostgreSQL and the required NLX components.
 
 The NLX components are configured using environment variables which in this guide are set in `docker-compose.yml`
 
@@ -101,6 +101,7 @@ import TabItem from '@theme/TabItem';
 - `OIDC_DISCOVERY_URL` The OIDC discovery URL
 - `OIDC_REDIRECT_URL` The OIDC redirect URL
 - `SESSION_COOKIE_SECURE` Use 'secure' cookies
+- `POSTGRES_DSN` Connection string for the PostgreSQL database
 - `LOG_LEVEL` Log level of the application. Options: debug, info, warn.
 
 </TabItem>

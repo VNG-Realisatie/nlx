@@ -35,12 +35,12 @@ func init() {
 		panic(err)
 	}
 
-	approveAccessRequestCommand.Flags().StringVarP(&accessRequestOptions.id, "id", "", "", "Access request ID")
+	approveAccessRequestCommand.Flags().Uint64VarP(&accessRequestOptions.id, "id", "", 0, "Access request ID")
 	approveAccessRequestCommand.Flags().StringVarP(&accessRequestOptions.serviceName, "service", "", "", "Name of the service")
 }
 
 type accessRequestDetails struct {
-	ID               string
+	ID               uint64
 	State            api.AccessRequestState
 	OrganizationName string
 	ServiceName      string
@@ -66,7 +66,7 @@ func printAccessRequest(details accessRequestDetails) {
 	}
 
 	fmt.Printf(
-		"ID:%s\tState:%s\tOrganization:%s\tService:%s\tCreatedAt:%s\tUpdatedAt:%s\n",
+		"ID:%d\tState:%s\tOrganization:%s\tService:%s\tCreatedAt:%s\tUpdatedAt:%s\n",
 		details.ID,
 		state,
 		details.OrganizationName,
@@ -82,7 +82,7 @@ var accessRequestCommand = &cobra.Command{
 }
 
 var accessRequestOptions struct {
-	id               string
+	id               uint64
 	organizationName string
 	serviceName      string
 }
@@ -99,7 +99,7 @@ var approveAccessRequestCommand = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		fmt.Printf("Access request ID=%s is approved\n", accessRequestOptions.id)
+		fmt.Printf("Access request ID=%d is approved\n", accessRequestOptions.id)
 	},
 }
 

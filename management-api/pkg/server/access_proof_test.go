@@ -5,6 +5,7 @@ package server_test
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"testing"
 	"time"
@@ -75,7 +76,6 @@ func TestGetAccessProof(t *testing.T) {
 					GetLatestAccessGrantForService(ctx, "organization-a", "service").
 					Return(&database.AccessGrant{
 						CreatedAt: time.Date(0, 0, 0, 0, 0, 0, 0, time.UTC),
-						RevokedAt: time.Now(),
 					}, nil)
 
 				return ctx
@@ -92,7 +92,7 @@ func TestGetAccessProof(t *testing.T) {
 					GetLatestAccessGrantForService(ctx, "organization-a", "service").
 					Return(&database.AccessGrant{
 						CreatedAt: time.Now(),
-						RevokedAt: time.Date(0, 0, 0, 0, 0, 0, 0, time.UTC),
+						RevokedAt: sql.NullTime{Time: time.Date(0, 0, 0, 0, 0, 0, 0, time.UTC)},
 					}, nil)
 
 				return ctx
@@ -102,10 +102,10 @@ func TestGetAccessProof(t *testing.T) {
 		"returns_access_proof_for_successful_request": {
 			wantCode: codes.OK,
 			want: &api.AccessProof{
-				Id:               "id",
+				Id:               1,
 				CreatedAt:        ts,
 				RevokedAt:        ts,
-				AccessRequestId:  "request-1",
+				AccessRequestId:  1,
 				OrganizationName: "organization-a",
 				ServiceName:      "service",
 			},
@@ -116,12 +116,18 @@ func TestGetAccessProof(t *testing.T) {
 					EXPECT().
 					GetLatestAccessGrantForService(ctx, "organization-a", "service").
 					Return(&database.AccessGrant{
-						CreatedAt:        now,
-						RevokedAt:        now,
-						AccessRequestID:  "request-1",
-						ID:               "id",
-						OrganizationName: "organization-a",
-						ServiceName:      "service",
+						CreatedAt:               now,
+						RevokedAt:               sql.NullTime{Time: now},
+						ID:                      1,
+						IncomingAccessRequestID: 1,
+						IncomingAccessRequest: &database.IncomingAccessRequest{
+							ID:               1,
+							OrganizationName: "organization-a",
+							ServiceID:        1,
+							Service: &database.Service{
+								Name: "service",
+							},
+						},
 					}, nil)
 
 				return ctx
@@ -149,7 +155,6 @@ func TestGetAccessProof(t *testing.T) {
 				assert.Equal(t, tt.wantCode, st.Code())
 			} else {
 				assert.NoError(t, err)
-
 				if assert.NotNil(t, response) {
 					assert.Equal(t, tt.want, response)
 				}

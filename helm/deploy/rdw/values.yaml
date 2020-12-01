@@ -239,6 +239,8 @@ managementAPI:
   insight:
     insightAPIURL: https://insight-api.rdw.nlx.minikube
     irmaServerURL: https://irma.rdw.nlx.minikube
+  postgresql:
+    existingSecret: rdw-postgresql-dsn
 
 ################
 ## Sub-charts ##
@@ -286,6 +288,9 @@ nlx-management:
     enabled: true
     hosts:
       - nlx-management.rdw.nlx.minikube
+  postgresql:
+    hostname: rdw-postgresql
+    existingSecret: rdw-postgresql-auth
 
 dex:
   config:

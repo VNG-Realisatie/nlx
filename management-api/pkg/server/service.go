@@ -4,7 +4,6 @@ package server
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/gogo/protobuf/types"
 	"go.uber.org/zap"
@@ -16,34 +15,34 @@ import (
 )
 
 // CreateService creates a new service
-func (s *ManagementService) CreateService(ctx context.Context, service *api.CreateServiceRequest) (*api.CreateServiceResponse, error) {
-	logger := s.logger.With(zap.String("name", service.Name))
-	logger.Info("rpc request CreateService")
+func (s *ManagementService) CreateService(ctx context.Context, request *api.CreateServiceRequest) (*api.CreateServiceResponse, error) {
+	logger := s.logger.With(zap.String("name", request.Name))
+	logger.Info("rpc request Createrequest")
 
-	err := service.Validate()
+	err := request.Validate()
 	if err != nil {
-		logger.Error("invalid service", zap.Error(err))
-		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid service: %s", err))
+		logger.Error("invalid request", zap.Error(err))
+		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid request: %s", err))
 	}
 
-	model := &database.Service{
-		Name:                 service.Name,
-		EndpointURL:          service.EndpointURL,
-		DocumentationURL:     service.DocumentationURL,
-		APISpecificationURL:  service.ApiSpecificationURL,
-		Internal:             service.Internal,
-		TechSupportContact:   service.TechSupportContact,
-		PublicSupportContact: service.PublicSupportContact,
-		Inways:               service.Inways,
+	service := &database.Service{
+		Name:                 request.Name,
+		EndpointURL:          request.EndpointURL,
+		DocumentationURL:     request.DocumentationURL,
+		APISpecificationURL:  request.ApiSpecificationURL,
+		Internal:             request.Internal,
+		TechSupportContact:   request.TechSupportContact,
+		PublicSupportContact: request.PublicSupportContact,
 	}
 
-	err = s.configDatabase.CreateService(ctx, model)
+	err = s.configDatabase.CreateServiceWithInways(ctx, service, request.Inways)
 	if err != nil {
-		logger.Error("error creating service in DB", zap.Error(err))
+		logger.Error("error creating request in DB", zap.Error(err))
+
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	return convertToCreateServiceResponseFromCreateServiceRequest(service), nil
+	return convertToCreateServiceResponseFromCreateServiceRequest(request), nil
 }
 
 // GetService returns a specific service
@@ -76,21 +75,29 @@ func (s *ManagementService) UpdateService(ctx context.Context, req *api.UpdateSe
 	err := req.Validate()
 	if err != nil {
 		logger.Error("invalid service", zap.Error(err))
+
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid service: %s", err))
 	}
 
-	service := &database.Service{
-		Name:                 req.Name,
-		EndpointURL:          req.EndpointURL,
-		DocumentationURL:     req.DocumentationURL,
-		APISpecificationURL:  req.ApiSpecificationURL,
-		Internal:             req.Internal,
-		TechSupportContact:   req.TechSupportContact,
-		PublicSupportContact: req.PublicSupportContact,
-		Inways:               req.Inways,
+	service, err := s.configDatabase.GetService(ctx, req.Name)
+	if err != nil {
+		if errIsNotFound(err) {
+			return nil, status.Error(codes.NotFound, "service not found")
+		}
+
+		logger.Error("failed to get service by name", zap.String("name", req.Name), zap.Error(err))
+
+		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("failed to get service: %s", err))
 	}
 
-	err = s.configDatabase.UpdateService(ctx, req.Name, service)
+	service.EndpointURL = req.EndpointURL
+	service.DocumentationURL = req.DocumentationURL
+	service.APISpecificationURL = req.ApiSpecificationURL
+	service.Internal = req.Internal
+	service.TechSupportContact = req.TechSupportContact
+	service.PublicSupportContact = req.PublicSupportContact
+
+	err = s.configDatabase.UpdateServiceWithInways(ctx, service, req.Inways)
 	if err != nil {
 		if errIsNotFound(err) {
 			logger.Warn("service not found")
@@ -111,7 +118,6 @@ func (s *ManagementService) DeleteService(ctx context.Context, req *api.DeleteSe
 	logger.Info("rpc request DeleteService")
 
 	err := s.configDatabase.DeleteService(ctx, req.Name)
-
 	if err != nil {
 		logger.Error("error deleting service in DB", zap.Error(err))
 		return &types.Empty{}, status.Error(codes.Internal, "database error")
@@ -120,59 +126,51 @@ func (s *ManagementService) DeleteService(ctx context.Context, req *api.DeleteSe
 	return &types.Empty{}, nil
 }
 
-func getAmountOfIncomingAccessRequestsForService(incomingAccessRequests map[string]*database.IncomingAccessRequest, serviceName string) uint32 {
-	var result uint32
-
-	for _, incomingAccessRequest := range incomingAccessRequests {
-		ar := incomingAccessRequest
-
-		if ar.State == database.AccessRequestReceived && ar.ServiceName == serviceName {
-			result++
-		}
-	}
-
-	return result
-}
-
 // ListServices returns a list of services
 func (s *ManagementService) ListServices(ctx context.Context, req *api.ListServicesRequest) (*api.ListServicesResponse, error) {
 	s.logger.Info("rpc request ListServices")
 
-	services, err := s.configDatabase.ListServices(ctx)
-	if err != nil {
-		s.logger.Error("error getting services list from database", zap.Error(err))
-		return nil, status.Error(codes.Internal, "database error")
+	var (
+		err      error
+		services []*database.Service
+	)
+
+	if req.InwayName == "" {
+		services, err = s.configDatabase.ListServices(ctx)
+		if err != nil {
+			s.logger.Error("error getting services list from database", zap.Error(err))
+
+			return nil, status.Error(codes.Internal, "database error")
+		}
+	} else {
+		inway, err := s.configDatabase.GetInway(ctx, req.InwayName)
+		if err != nil {
+			if errIsNotFound(err) {
+				return nil, status.Error(codes.NotFound, "inway not found")
+			}
+
+			s.logger.Error("error getting inway from database", zap.String("name", req.InwayName), zap.Error(err))
+
+			return nil, status.Error(codes.Internal, "database error")
+		}
+
+		services = inway.Services
 	}
 
 	response := &api.ListServicesResponse{}
 
-	var filteredServices []*database.Service
-
-	if len(req.InwayName) > 0 {
-		for _, service := range services {
-			for _, inway := range service.Inways {
-				if strings.Compare(req.InwayName, inway) == 0 {
-					filteredServices = append(filteredServices, service)
-					break
-				}
-			}
-		}
-	} else {
-		filteredServices = services
-	}
-
-	if length := len(filteredServices); length > 0 {
+	if len(services) > 0 {
 		response.Services = []*api.ListServicesResponse_Service{}
 
-		allIncomingAccessRequests, err := s.configDatabase.ListAllLatestIncomingAccessRequests(ctx)
+		counts, err := s.configDatabase.GetIncomingAccessRequestCountByService(ctx)
 		if err != nil {
-			s.logger.Error("error getting all incoming access requests from database", zap.Error(err))
+			s.logger.Error("error getting incoming access requests count from database", zap.Error(err))
 			return nil, status.Error(codes.Internal, "database error")
 		}
 
-		for _, service := range filteredServices {
-			convertedService := convertFromDatabaseService(service)
-			convertedService.IncomingAccessRequestsCount = getAmountOfIncomingAccessRequestsForService(allIncomingAccessRequests, service.Name)
+		for _, service := range services {
+			protoService := convertFromDatabaseService(service)
+			protoService.IncomingAccessRequestsCount = uint32(counts[service.Name])
 
 			accessGrants, err := s.configDatabase.ListAccessGrantsForService(ctx, service.Name)
 			if err != nil {
@@ -183,14 +181,14 @@ func (s *ManagementService) ListServices(ctx context.Context, req *api.ListServi
 			authorizations := make([]*api.ListServicesResponse_Service_AuthorizationSettings_Authorization, 0)
 
 			for _, accessGrant := range accessGrants {
-				if !accessGrant.Revoked() {
+				if !accessGrant.RevokedAt.Valid {
 					authorizations = append(authorizations, convertAccessGrantToAuthorizationSetting(accessGrant))
 				}
 			}
 
-			convertedService.AuthorizationSettings.Authorizations = authorizations
+			protoService.AuthorizationSettings.Authorizations = authorizations
 
-			response.Services = append(response.Services, convertedService)
+			response.Services = append(response.Services, protoService)
 		}
 	}
 
@@ -199,12 +197,18 @@ func (s *ManagementService) ListServices(ctx context.Context, req *api.ListServi
 
 func convertAccessGrantToAuthorizationSetting(accessGrant *database.AccessGrant) *api.ListServicesResponse_Service_AuthorizationSettings_Authorization {
 	return &api.ListServicesResponse_Service_AuthorizationSettings_Authorization{
-		OrganizationName: accessGrant.OrganizationName,
-		PublicKeyHash:    accessGrant.PublicKeyFingerprint,
+		OrganizationName: accessGrant.IncomingAccessRequest.OrganizationName,
+		PublicKeyHash:    accessGrant.IncomingAccessRequest.PublicKeyFingerprint,
 	}
 }
 
 func convertFromDatabaseService(model *database.Service) *api.ListServicesResponse_Service {
+	inwayNames := []string{}
+
+	for _, inway := range model.Inways {
+		inwayNames = append(inwayNames, inway.Name)
+	}
+
 	service := &api.ListServicesResponse_Service{
 		Name:                 model.Name,
 		EndpointURL:          model.EndpointURL,
@@ -213,7 +217,7 @@ func convertFromDatabaseService(model *database.Service) *api.ListServicesRespon
 		Internal:             model.Internal,
 		TechSupportContact:   model.TechSupportContact,
 		PublicSupportContact: model.PublicSupportContact,
-		Inways:               model.Inways,
+		Inways:               inwayNames,
 		AuthorizationSettings: &api.ListServicesResponse_Service_AuthorizationSettings{
 			Mode: "whitelist",
 		},
@@ -223,6 +227,12 @@ func convertFromDatabaseService(model *database.Service) *api.ListServicesRespon
 }
 
 func convertToGetServiceResponseFromDatabaseService(model *database.Service) *api.GetServiceResponse {
+	inwayNames := []string{}
+
+	for _, inway := range model.Inways {
+		inwayNames = append(inwayNames, inway.Name)
+	}
+
 	service := &api.GetServiceResponse{
 		Name:                 model.Name,
 		EndpointURL:          model.EndpointURL,
@@ -231,7 +241,7 @@ func convertToGetServiceResponseFromDatabaseService(model *database.Service) *ap
 		Internal:             model.Internal,
 		TechSupportContact:   model.TechSupportContact,
 		PublicSupportContact: model.PublicSupportContact,
-		Inways:               model.Inways,
+		Inways:               inwayNames,
 	}
 
 	return service

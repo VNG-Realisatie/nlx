@@ -49,7 +49,7 @@ Install the npm dependencies by running:
 (cd insight-ui && npm install)
 ```
 
-Start a Postgres and etcd container through Docker Compose with:
+Start a PostgreSQL container through Docker Compose with:
 
 ```bash
 docker-compose -f docker-compose.dev.yml up -d
@@ -59,6 +59,13 @@ Run directory with:
 
 ```bash
 migrate -database "postgres://postgres:postgres@127.0.0.1:5432/nlx?sslmode=disable" -path directory-db/migrations up
+```
+
+Run management API with:
+
+```bash
+go run ./management-api/cmd/nlx-management-api/ migrate up --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_a?sslmode=disable"
+go run ./management-api/cmd/nlx-management-api/ migrate up --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_b?sslmode=disable"
 ```
 
 Optionally you can setup the database for the transaction logs:

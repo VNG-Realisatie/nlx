@@ -40,6 +40,8 @@ func (s *ManagementService) GetSettings(ctx context.Context, _ *types.Empty) (*a
 func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateSettingsRequest) (*types.Empty, error) {
 	logger := s.logger.With(zap.String("handler", "update-settings"))
 
+	var inwayID *uint
+
 	if req.OrganizationInway != "" {
 		inway, err := s.configDatabase.GetInway(ctx, req.OrganizationInway)
 		if err != nil {
@@ -62,6 +64,8 @@ func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateS
 			logger.Error("could not update the settings in the directory", zap.Error(err))
 			return nil, status.Error(codes.Internal, "database error")
 		}
+
+		inwayID = &inway.ID
 	} else {
 		_, err := s.directoryClient.ClearOrganizationInway(ctx, &types.Empty{})
 		if err != nil {
@@ -70,11 +74,7 @@ func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateS
 		}
 	}
 
-	settings := database.Settings{
-		OrganizationInway: req.OrganizationInway,
-	}
-
-	err := s.configDatabase.UpdateSettings(ctx, &settings)
+	_, err := s.configDatabase.UpdateSettings(ctx, "", "", inwayID)
 	if err != nil {
 		logger.Error("could not update the settings in the database", zap.Error(err))
 		return nil, status.Error(codes.Internal, "database error")
@@ -84,9 +84,11 @@ func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateS
 }
 
 func convertFromDatabaseSettings(model *database.Settings) *api.Settings {
-	settings := &api.Settings{
-		OrganizationInway: model.OrganizationInway,
+	if model.Inway == nil {
+		return &api.Settings{}
 	}
 
-	return settings
+	return &api.Settings{
+		OrganizationInway: model.Inway.Name,
+	}
 }

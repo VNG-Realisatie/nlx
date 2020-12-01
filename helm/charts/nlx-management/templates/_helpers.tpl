@@ -83,3 +83,10 @@ Return the image name for the UI
 
 {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
 {{- end -}}
+
+{{/*
+Return the secret name of the PostgreSQL username/password
+*/}}
+{{- define "nlx-management.postgresql.secret" -}}
+{{- default (printf "%s-postgresql" (include "nlx-management.fullname" .)) .Values.postgresql.existingSecret -}}
+{{- end -}}

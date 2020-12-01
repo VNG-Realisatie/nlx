@@ -5,9 +5,6 @@ package api
 
 import (
 	"context"
-	"fmt"
-	"runtime/debug"
-	"strings"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
@@ -17,9 +14,7 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials"
-	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
@@ -30,7 +25,6 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/environment"
 	"go.nlx.io/nlx/management-api/pkg/oidc"
 	"go.nlx.io/nlx/management-api/pkg/server"
-	"go.nlx.io/nlx/management-api/pkg/util/clock"
 )
 
 // API handles incoming requests and authenticates them
@@ -49,7 +43,7 @@ type API struct {
 
 // NewAPI creates and prepares a new API
 //nolint:gocyclo // parameter validation
-func NewAPI(logger *zap.Logger, mainProcess *process.Process, cert, orgCert *common_tls.CertificateBundle, etcdConnectionString, directoryInspectionAddress, directoryRegistrationAddress string, authenticator *oidc.Authenticator) (*API, error) {
+func NewAPI(logger *zap.Logger, mainProcess *process.Process, cert, orgCert *common_tls.CertificateBundle, postgresDSN, directoryInspectionAddress, directoryRegistrationAddress string, authenticator *oidc.Authenticator) (*API, error) {
 	if mainProcess == nil {
 		return nil, errors.New("process argument is nil. needed to close gracefully")
 	}
@@ -58,7 +52,7 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, cert, orgCert *com
 		return nil, errors.New("cannot obtain organization name from self cert")
 	}
 
-	if etcdConnectionString == "" {
+	if postgresDSN == "" {
 		return nil, errors.New("etcd connection string is not configured")
 	}
 
@@ -79,7 +73,11 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, cert, orgCert *com
 		logger.Fatal("failed to setup directory client", zap.Error(err))
 	}
 
-	db := newDatabase(logger, mainProcess, etcdConnectionString)
+	db, err := database.NewPostgresConfigDatabase(postgresDSN)
+	if err != nil {
+		return nil, err
+	}
+
 	managementService := server.NewManagementService(logger, mainProcess, directoryClient, orgCert, db)
 
 	grpcServer := newGRPCServer(logger, cert)
@@ -125,10 +123,10 @@ func newGRPCServer(logger *zap.Logger, cert *common_tls.CertificateBundle) *grpc
 	transportCredentials := credentials.NewTLS(tlsConfig)
 
 	recoveryOptions := []grpc_recovery.Option{
-		grpc_recovery.WithRecoveryHandler(func(p interface{}) error {
-			logger.Warn("recovered from a panic in a grpc request handler", zap.ByteString("stack", debug.Stack()))
-			return status.Error(codes.Internal, fmt.Sprintf("%s", p))
-		}),
+		// grpc_recovery.WithRecoveryHandler(func(p interface{}) error {
+		// 	//	logger.Warn("recovered from a panic in a grpc request handler", zap.ByteString("stack", debug.Stack()))
+		// 	//	return status.Error(codes.Internal, fmt.Sprintf("%s", p))
+		// }),
 	}
 
 	opts := []grpc.ServerOption{
@@ -146,15 +144,4 @@ func newGRPCServer(logger *zap.Logger, cert *common_tls.CertificateBundle) *grpc
 	}
 
 	return grpc.NewServer(opts...)
-}
-
-func newDatabase(logger *zap.Logger, mainProcess *process.Process, etcdConnectionString string) database.ConfigDatabase {
-	c := clock.RealClock{}
-
-	db, err := database.NewEtcdConfigDatabase(logger, mainProcess, strings.Split(etcdConnectionString, ","), c)
-	if err != nil {
-		logger.Fatal("failed to setup database", zap.Error(err))
-	}
-
-	return db
 }

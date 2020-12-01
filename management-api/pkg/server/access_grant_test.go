@@ -47,18 +47,27 @@ func TestListAccessGrantsForService(t *testing.T) {
 
 				db.EXPECT().ListAccessGrantsForService(ctx, "test-service").Return([]*database.AccessGrant{
 					{
-						ID:                   "12345abcde",
-						OrganizationName:     "test-organization",
-						ServiceName:          "test-service",
-						PublicKeyFingerprint: "test-finger-print",
-						CreatedAt:            time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
+						ID:                      1,
+						IncomingAccessRequestID: 1,
+						IncomingAccessRequest: &database.IncomingAccessRequest{
+							ID:                   1,
+							ServiceID:            1,
+							OrganizationName:     "test-organization",
+							State:                database.IncomingAccessRequestReceived,
+							PublicKeyFingerprint: "test-finger-print",
+							Service: &database.Service{
+								ID:   1,
+								Name: "test-service",
+							},
+						},
+						CreatedAt: time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
 					},
 				}, nil)
 			},
 			&api.ListAccessGrantsForServiceResponse{
 				AccessGrants: []*api.AccessGrant{
 					{
-						Id:                   "12345abcde",
+						Id:                   1,
 						OrganizationName:     "test-organization",
 						ServiceName:          "test-service",
 						PublicKeyFingerprint: "test-finger-print",
@@ -92,11 +101,19 @@ func TestListAccessGrantsForService(t *testing.T) {
 
 				db.EXPECT().ListAccessGrantsForService(ctx, "test-service").Return([]*database.AccessGrant{
 					{
-						ID:                   "12345abcde",
-						OrganizationName:     "test-organization",
-						ServiceName:          "test-service",
-						PublicKeyFingerprint: "test-finger-print",
-						CreatedAt:            time.Date(0, time.January, 0, 0, 0, 0, 0, time.UTC),
+						ID:                      1,
+						IncomingAccessRequestID: 1,
+						IncomingAccessRequest: &database.IncomingAccessRequest{
+							ID:                   1,
+							ServiceID:            1,
+							OrganizationName:     "test-org",
+							State:                database.IncomingAccessRequestReceived,
+							PublicKeyFingerprint: "test-finger-print",
+							Service: &database.Service{
+								ID:   1,
+								Name: "test-service",
+							}},
+						CreatedAt: time.Date(0, time.January, 0, 0, 0, 0, 0, time.UTC),
 					},
 				}, nil)
 			},

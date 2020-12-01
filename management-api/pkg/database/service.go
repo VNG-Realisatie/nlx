@@ -5,102 +5,156 @@ package database
 
 import (
 	"context"
-	"path"
+	"errors"
+	"time"
+
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type Service struct {
-	Name                 string   `json:"name,omitempty"`
-	EndpointURL          string   `json:"endpointURL,omitempty"`
-	DocumentationURL     string   `json:"documentationURL,omitempty"`
-	APISpecificationURL  string   `json:"apiSpecificationURL,omitempty"`
-	Internal             bool     `json:"internal,omitempty"`
-	TechSupportContact   string   `json:"techSupportContact,omitempty"`
-	PublicSupportContact string   `json:"publicSupportContact,omitempty"`
-	Inways               []string `json:"inways,omitempty"`
+	ID                   uint `gorm:"primarykey;column:service_id;"`
+	Name                 string
+	EndpointURL          string
+	DocumentationURL     string
+	APISpecificationURL  string
+	Internal             bool
+	TechSupportContact   string
+	PublicSupportContact string
+	Inways               []*Inway `gorm:"many2many:nlx_management.inways_services;"`
+	CreatedAt            time.Time
+	UpdatedAt            time.Time
 }
 
-const servicesKey = "services"
+func (s *Service) TableName() string {
+	return "nlx_management.services"
+}
 
-// ListServices returns a list of services
-func (db ETCDConfigDatabase) ListServices(ctx context.Context) ([]*Service, error) {
+func (db *PostgresConfigDatabase) ListServices(ctx context.Context) ([]*Service, error) {
 	services := []*Service{}
 
-	if err := db.list(ctx, servicesKey, &services); err != nil {
+	if err := db.DB.
+		WithContext(ctx).
+		Preload("Inways").
+		Find(&services).Error; err != nil {
 		return nil, err
 	}
 
 	return services, nil
 }
 
-// GetService returns a specific service by name
-func (db ETCDConfigDatabase) GetService(ctx context.Context, name string) (*Service, error) {
-	key := path.Join(servicesKey, name)
+func (db *PostgresConfigDatabase) GetService(ctx context.Context, name string) (*Service, error) {
 	service := &Service{}
+	if err := db.DB.
+		WithContext(ctx).
+		Preload("Inways").
+		First(service, Service{Name: name}).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, ErrNotFound
+		}
 
-	if err := db.get(ctx, key, service); err != nil {
 		return nil, err
 	}
 
 	return service, nil
 }
 
-// CreateService creates a new service
-func (db ETCDConfigDatabase) CreateService(ctx context.Context, service *Service) error {
-	key := path.Join("services", service.Name)
-
-	if err := db.put(ctx, key, service); err != nil {
-		return err
-	}
-
-	return nil
+func (db *PostgresConfigDatabase) CreateService(ctx context.Context, service *Service) error {
+	return db.DB.
+		WithContext(ctx).
+		Omit(clause.Associations).
+		Create(service).Error
 }
 
-// UpdateService updates an existing service
-func (db ETCDConfigDatabase) UpdateService(ctx context.Context, name string, service *Service) error {
-	if _, err := db.GetService(ctx, name); err != nil {
-		return err
+func (db *PostgresConfigDatabase) UpdateService(ctx context.Context, service *Service) error {
+	if service.ID == 0 {
+		return errors.New("unable to update service without a primary key")
 	}
 
-	key := path.Join(servicesKey, name)
-
-	if err := db.put(ctx, key, service); err != nil {
-		return err
-	}
-
-	return nil
+	return db.DB.
+		WithContext(ctx).
+		Omit(clause.Associations).
+		Select(
+			"endpoint_url",
+			"documentation_url",
+			"api_specification_url",
+			"internal",
+			"public_support_contact",
+			"tech_support_contact",
+		).
+		Save(service).Error
 }
 
-// DeleteService deletes a specific service
-func (db ETCDConfigDatabase) DeleteService(ctx context.Context, name string) error {
-	key := path.Join(db.pathPrefix, servicesKey, name)
-
-	_, err := db.etcdCli.Delete(ctx, key)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// FilterServices returns an array with only services for the given inway
-func FilterServices(services []*Service, inway *Inway) []*Service {
-	result := []*Service{}
-
-	for _, service := range services {
-		if contains(service.Inways, inway.Name) {
-			result = append(result, service)
+func (db *PostgresConfigDatabase) SetServiceInways(ctx context.Context, serviceID uint, inwayNames []string) error {
+	service := &Service{}
+	if err := db.DB.
+		WithContext(ctx).
+		Where(serviceID).
+		First(service).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return ErrNotFound
 		}
+
+		return err
 	}
 
-	return result
+	inways := []*Inway{}
+	if err := db.DB.
+		WithContext(ctx).
+		Where("name IN ?", inwayNames).
+		Find(&inways).Error; err != nil {
+		return err
+	}
+
+	if len(inways) != len(inwayNames) {
+		return ErrNotFound
+	}
+
+	return db.DB.Model(service).
+		WithContext(ctx).
+		Omit(clause.Associations).
+		Association("Inways").
+		Replace(inways)
 }
 
-func contains(s []string, v string) bool {
-	for _, e := range s {
-		if e == v {
-			return true
-		}
+func (db *PostgresConfigDatabase) DeleteService(ctx context.Context, name string) error {
+	return db.DB.
+		WithContext(ctx).
+		Omit(clause.Associations).
+		Where(Service{Name: name}).
+		Delete(&Service{}).Error
+}
+
+func (db *PostgresConfigDatabase) CreateServiceWithInways(ctx context.Context, service *Service, inwayNames []string) error {
+	tx := db.DB.Begin()
+	defer tx.Rollback()
+
+	dbWithTx := &PostgresConfigDatabase{DB: tx}
+
+	if err := dbWithTx.CreateService(ctx, service); err != nil {
+		return err
 	}
 
-	return false
+	if err := dbWithTx.SetServiceInways(ctx, service.ID, inwayNames); err != nil {
+		return err
+	}
+
+	return tx.Commit().Error
+}
+
+func (db *PostgresConfigDatabase) UpdateServiceWithInways(ctx context.Context, service *Service, inwayNames []string) error {
+	tx := db.DB.Begin()
+	defer tx.Rollback()
+
+	dbWithTx := &PostgresConfigDatabase{DB: tx}
+
+	if err := dbWithTx.UpdateService(ctx, service); err != nil {
+		return err
+	}
+
+	if err := dbWithTx.SetServiceInways(ctx, service.ID, inwayNames); err != nil {
+		return err
+	}
+
+	return tx.Commit().Error
 }

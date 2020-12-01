@@ -5,30 +5,72 @@ package database
 
 import (
 	"context"
+	"errors"
+	"time"
+
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type Settings struct {
-	OrganizationInway string `json:"organizationInway"`
+	ID            uint `gorm:"primarykey;column:settings_id"`
+	IrmaServerURL string
+	InsightAPIURL string
+	InwayID       *uint
+	Inway         *Inway `gorm:"foreignkey:InwayID;references:ID"`
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
 }
 
-const settingsKey = "settings"
+func (s *Settings) TableName() string {
+	return "nlx_management.settings"
+}
 
-func (db ETCDConfigDatabase) GetSettings(ctx context.Context) (*Settings, error) {
-	r := &Settings{}
+func (db *PostgresConfigDatabase) GetSettings(ctx context.Context) (*Settings, error) {
+	organizationSettings := &Settings{}
 
-	err := db.get(ctx, settingsKey, &r)
-	if err != nil {
+	if err := db.DB.
+		WithContext(ctx).
+		Preload("Inway").
+		First(organizationSettings).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, ErrNotFound
+		}
+
 		return nil, err
 	}
 
-	return r, nil
+	return organizationSettings, nil
 }
 
-func (db ETCDConfigDatabase) UpdateSettings(ctx context.Context, settings *Settings) error {
-	err := db.put(ctx, settingsKey, &settings)
-	if err != nil {
-		return err
+func (db *PostgresConfigDatabase) UpdateSettings(ctx context.Context, irmaServerURL, insightAPIURL string, inwayID *uint) (*Settings, error) {
+	settingsInDB := &Settings{}
+	if err := db.DB.
+		WithContext(ctx).
+		Omit(clause.Associations).
+		Where("settings_id IS NOT NULL").
+		Assign(&Settings{
+			InwayID:       inwayID,
+			IrmaServerURL: irmaServerURL,
+			InsightAPIURL: insightAPIURL,
+		}).
+		FirstOrCreate(settingsInDB).Error; err != nil {
+		return nil, err
 	}
 
-	return nil
+	return settingsInDB, nil
+}
+
+func (db *PostgresConfigDatabase) PutInsightConfiguration(ctx context.Context, irmaServerURL, insightAPIURL string) (*Settings, error) {
+	settingsInDB := &Settings{}
+	if err := db.DB.
+		WithContext(ctx).
+		Omit(clause.Associations).
+		Where("settings_id IS NOT NULL").
+		Assign(map[string]interface{}{"insight_api_url": insightAPIURL, "irma_server_url": irmaServerURL}).
+		FirstOrCreate(settingsInDB).Error; err != nil {
+		return nil, err
+	}
+
+	return settingsInDB, nil
 }
