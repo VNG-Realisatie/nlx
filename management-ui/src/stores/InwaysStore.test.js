@@ -64,7 +64,7 @@ test('handle error while fetching inways', async () => {
   expect(inwaysStore.isInitiallyFetched).toBe(true)
 })
 
-test('selecting an inway', async () => {
+test('getting an inway', async () => {
   const inwaysStore = new InwaysStore({
     rootStore,
     inwayRepository: {
@@ -81,17 +81,9 @@ test('selecting an inway', async () => {
 
   await inwaysStore.fetchInways()
 
-  const inwayA = inwaysStore.inways.find((inway) => inway.name === 'Inway A')
-  const inwayB = inwaysStore.inways.find((inway) => inway.name === 'Inway B')
-
-  jest.spyOn(inwayA, 'fetch').mockResolvedValue(null)
-  jest.spyOn(inwayB, 'fetch').mockResolvedValue(null)
-
-  let selectedInway = inwaysStore.selectInway('non-existing-inway-name')
+  let selectedInway = inwaysStore.getInway({ name: 'non-existing-inway-name' })
   expect(selectedInway).toBeUndefined()
 
-  selectedInway = inwaysStore.selectInway('Inway B')
+  selectedInway = inwaysStore.getInway({ name: 'Inway B' })
   expect(selectedInway.name).toEqual('Inway B')
-  expect(inwayB.fetch).toHaveBeenCalled()
-  expect(inwayA.fetch).not.toHaveBeenCalled()
 })

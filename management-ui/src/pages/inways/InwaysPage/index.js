@@ -16,7 +16,7 @@ import InwaysPageView from './InwaysPageView'
 
 const InwaysPage = () => {
   const { t } = useTranslation()
-  const { isInitiallyFetched, inways, error, selectInway } = useInwaysStore()
+  const { isInitiallyFetched, inways, error, getInway } = useInwaysStore()
 
   return (
     <PageTemplate>
@@ -37,12 +37,15 @@ const InwaysPage = () => {
 
       <Route
         path="/inways/:name"
-        render={({ match }) => (
-          <InwayDetailPage
-            parentUrl="/inways"
-            inway={selectInway(match.params.name)}
-          />
-        )}
+        render={({ match }) => {
+          const inway = getInway({ name: match.params.name })
+
+          if (inway) {
+            inway.fetch()
+          }
+
+          return <InwayDetailPage parentUrl="/inways" inway={inway} />
+        }}
       />
     </PageTemplate>
   )
