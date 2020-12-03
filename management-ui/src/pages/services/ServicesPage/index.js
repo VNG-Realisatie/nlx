@@ -4,9 +4,8 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, Button } from '@commonground/design-system'
-import { Link, Route } from 'react-router-dom'
+import { Link, Route, useParams } from 'react-router-dom'
 import { observer } from 'mobx-react'
-
 import PageTemplate from '../../../components/PageTemplate'
 import ServiceDetailPage from '../ServiceDetailPage'
 import LoadingMessage from '../../../components/LoadingMessage'
@@ -20,6 +19,7 @@ import { StyledActionsBar } from './index.styles'
 const ServicesPage = () => {
   const { t } = useTranslation()
   const { isInitiallyFetched, services, error, getService } = useServicesStore()
+  const { name } = useParams()
 
   return (
     <PageTemplate>
@@ -50,7 +50,7 @@ const ServicesPage = () => {
         </Alert>
       ) : (
         <>
-          <ServicesPageView services={services} />
+          <ServicesPageView services={services} selectedServiceName={name} />
           <Route
             path="/services/:name"
             render={({ match }) => {

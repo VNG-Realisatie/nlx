@@ -31,7 +31,7 @@ const Routes = () => {
         path="/services/:name/edit-service"
         component={EditServicePage}
       />
-      <AuthenticatedRoute path="/services" component={ServicesPage} />
+      <AuthenticatedRoute path="/services/:name?" component={ServicesPage} />
       <AuthenticatedRoute path="/directory" component={DirectoryPage} />
       <AuthenticatedRoute path="/settings" component={SettingsPage} />
 

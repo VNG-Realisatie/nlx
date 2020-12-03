@@ -2,14 +2,14 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { array } from 'prop-types'
+import { array, string } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { Table } from '@commonground/design-system'
 
 import EmptyContentMessage from '../../../../components/EmptyContentMessage'
 import ServiceRow from './ServiceRow'
 
-const ServicesPageView = ({ services }) => {
+const ServicesPageView = ({ services, selectedServiceName }) => {
   const { t } = useTranslation()
 
   return services.length === 0 ? (
@@ -25,7 +25,11 @@ const ServicesPageView = ({ services }) => {
       </thead>
       <tbody>
         {services.map((service, i) => (
-          <ServiceRow service={service} key={i} />
+          <ServiceRow
+            service={service}
+            key={i}
+            selected={service.name === selectedServiceName}
+          />
         ))}
       </tbody>
     </Table>
@@ -34,6 +38,7 @@ const ServicesPageView = ({ services }) => {
 
 ServicesPageView.propTypes = {
   services: array,
+  selectedServiceName: string,
 }
 
 export default ServicesPageView
