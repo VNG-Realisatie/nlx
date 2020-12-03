@@ -5,7 +5,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from '@commonground/design-system'
-import { Route } from 'react-router-dom'
+import { Route, useParams } from 'react-router-dom'
 
 import { observer } from 'mobx-react'
 import PageTemplate from '../../../components/PageTemplate'
@@ -17,6 +17,7 @@ import InwaysPageView from './InwaysPageView'
 const InwaysPage = () => {
   const { t } = useTranslation()
   const { isInitiallyFetched, inways, error, getInway } = useInwaysStore()
+  const { name } = useParams()
 
   return (
     <PageTemplate>
@@ -32,7 +33,7 @@ const InwaysPage = () => {
           {t('Failed to load the inways')}
         </Alert>
       ) : (
-        <InwaysPageView inways={inways} />
+        <InwaysPageView inways={inways} selectedInwayName={name} />
       )}
 
       <Route

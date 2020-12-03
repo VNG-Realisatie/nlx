@@ -2,14 +2,13 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { array } from 'prop-types'
+import { array, string } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { Table } from '@commonground/design-system'
-
 import EmptyContentMessage from '../../../../components/EmptyContentMessage'
 import InwayRow from './InwayRow'
 
-const InwaysPageView = ({ inways }) => {
+const InwaysPageView = ({ inways, selectedInwayName }) => {
   const { t } = useTranslation()
 
   return inways != null && inways.length === 0 ? (
@@ -30,7 +29,11 @@ const InwaysPageView = ({ inways }) => {
       </thead>
       <tbody>
         {inways.map((inway, i) => (
-          <InwayRow inway={inway} key={i} />
+          <InwayRow
+            inway={inway}
+            key={i}
+            selected={inway.name === selectedInwayName}
+          />
         ))}
       </tbody>
     </Table>
@@ -39,6 +42,7 @@ const InwaysPageView = ({ inways }) => {
 
 InwaysPageView.propTypes = {
   inways: array,
+  selectedInwayName: string,
 }
 
 export default InwaysPageView
