@@ -3,7 +3,7 @@
 //
 import React from 'react'
 import { observer } from 'mobx-react'
-import { Route } from 'react-router-dom'
+import { Route, useParams } from 'react-router-dom'
 import { Alert } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import LoadingMessage from '../../../components/LoadingMessage'
@@ -21,6 +21,7 @@ const DirectoryPage = () => {
     isInitiallyFetched,
     error,
   } = useDirectoryServicesStore()
+  const { name } = useParams()
 
   return (
     <PageTemplate>
@@ -44,7 +45,7 @@ const DirectoryPage = () => {
         </Alert>
       ) : (
         <>
-          <DirectoryPageView services={services} />
+          <DirectoryPageView services={services} selectedServiceName={name} />
           <Route
             exact
             path="/directory/:organizationName/:serviceName"

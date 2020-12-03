@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { arrayOf, shape } from 'prop-types'
+import { arrayOf, shape, string } from 'prop-types'
 import { Table } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import pick from 'lodash.pick'
@@ -11,7 +11,7 @@ import { directoryServicePropTypes } from '../../../../../models/DirectoryServic
 import EmptyContentMessage from '../../../../../components/EmptyContentMessage'
 import DirectoryServiceRow from '../DirectoryServiceRow'
 
-const DirectoryPageView = ({ services }) => {
+const DirectoryPageView = ({ services, selectedServiceName }) => {
   const { t } = useTranslation()
 
   return services.length === 0 ? (
@@ -34,6 +34,7 @@ const DirectoryPageView = ({ services }) => {
           <DirectoryServiceRow
             key={`${service.organizationName}-${service.serviceName}`}
             service={service}
+            selected={service.serviceName === selectedServiceName}
           />
         ))}
       </tbody>
@@ -45,6 +46,7 @@ DirectoryPageView.propTypes = {
   services: arrayOf(
     shape(pick(directoryServicePropTypes, ['organizationName', 'serviceName'])),
   ).isRequired,
+  selectedServiceName: string,
 }
 
 export default DirectoryPageView

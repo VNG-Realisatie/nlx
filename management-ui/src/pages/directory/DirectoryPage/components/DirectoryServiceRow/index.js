@@ -17,7 +17,7 @@ import QuickAccessButton from '../QuickAccessButton'
 import AccessMessage from '../AccessMessage'
 import { StyledTdAccess } from './index.styles'
 
-const DirectoryServiceRow = ({ service }) => {
+const DirectoryServiceRow = ({ service, ...props }) => {
   const { t } = useTranslation()
   const {
     organizationName,
@@ -54,6 +54,7 @@ const DirectoryServiceRow = ({ service }) => {
       to={`/directory/${organizationName}/${serviceName}`}
       name={`${organizationName} - ${serviceName}`}
       data-testid="directory-service-row"
+      {...props}
     >
       <Table.Td>{organizationName}</Table.Td>
       <Table.Td>{serviceName}</Table.Td>

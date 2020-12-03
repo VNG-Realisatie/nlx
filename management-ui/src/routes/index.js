@@ -32,7 +32,10 @@ const Routes = () => {
         component={EditServicePage}
       />
       <AuthenticatedRoute path="/services/:name?" component={ServicesPage} />
-      <AuthenticatedRoute path="/directory" component={DirectoryPage} />
+      <AuthenticatedRoute
+        path="/directory/:organization?/:name?"
+        component={DirectoryPage}
+      />
       <AuthenticatedRoute path="/settings" component={SettingsPage} />
 
       <Route path="*" component={NotFoundPage} />
