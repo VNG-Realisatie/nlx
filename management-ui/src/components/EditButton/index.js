@@ -4,7 +4,6 @@
 import React from 'react'
 import { Button } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
-
 import { IconPencil } from '../../icons'
 
 const EditButton = (props) => {

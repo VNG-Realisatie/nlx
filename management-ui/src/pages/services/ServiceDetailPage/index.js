@@ -7,7 +7,6 @@ import { useParams, useHistory } from 'react-router-dom'
 import { Alert, Drawer } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import pick from 'lodash.pick'
-
 import { serviceModelPropTypes } from '../../../models/ServiceModel'
 import { useServicesStore } from '../../../hooks/use-stores'
 import serviceActions from '../ServicesPage/serviceActions'
