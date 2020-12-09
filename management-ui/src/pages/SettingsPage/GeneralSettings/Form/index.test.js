@@ -9,6 +9,8 @@ import Form from './index'
 jest.mock('../../../../components/FormikFocusError', () => () => <></>)
 
 test('Form', async () => {
+  global.confirm = jest.fn(() => true)
+
   const onSubmitHandlerSpy = jest.fn()
   const getInwaysHandler = jest.fn().mockResolvedValue([{ name: 'inway-a' }])
 

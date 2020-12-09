@@ -24,6 +24,23 @@ const Form = ({ initialValues, onSubmitHandler, getInways, ...props }) => {
   const { t } = useTranslation()
   const { isReady: inwaysIsReady, result: inways } = usePromise(getInways)
 
+  const validateOrganizationInwayAndSubmit = (values) => {
+    if (values.organizationInway) {
+      onSubmitHandler(values)
+      return
+    }
+
+    if (
+      window.confirm(
+        t(
+          'By removing the organization inway it is no longer possible to process or receive access requests',
+        ),
+      )
+    ) {
+      onSubmitHandler(values)
+    }
+  }
+
   const validationSchema = Yup.object().shape({
     organizationInway: Yup.string(),
   })
@@ -35,7 +52,7 @@ const Form = ({ initialValues, onSubmitHandler, getInways, ...props }) => {
         ...initialValues,
       }}
       validationSchema={validationSchema}
-      onSubmit={(values) => onSubmitHandler(values)}
+      onSubmit={validateOrganizationInwayAndSubmit}
     >
       {({ handleSubmit }) => (
         <StyledForm onSubmit={handleSubmit} data-testid="form" {...props}>
