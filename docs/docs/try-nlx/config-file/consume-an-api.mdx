@@ -49,6 +49,7 @@ docker run --rm \
   --env TLS_ORG_CERT=/certs/org.crt \
   --env TLS_ORG_KEY=/certs/org.key \
   --env DISABLE_LOGDB=1 \
+  --env LOG_LEVEL=debug \
   --publish 80:8080 \
   nlxio/outway:latest
 ```
@@ -67,6 +68,7 @@ docker run --rm `
 --env TLS_ORG_CERT=/certs/org.crt `
 --env TLS_ORG_KEY=/certs/org.key `
 --env DISABLE_LOGDB=1 `
+--env LOG_LEVEL=debug `
 --publish 80:8080 `
 nlxio/outway:latest
 ```

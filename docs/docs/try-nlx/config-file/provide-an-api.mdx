@@ -96,6 +96,7 @@ docker run --rm \
   --env TLS_ORG_CERT=/certs/org.crt \
   --env TLS_ORG_KEY=/certs/org.key \
   --env DISABLE_LOGDB=1 \
+  --env LOG_LEVEL=debug \
   --publish 443:8443 \
   nlxio/inway:latest
 ```
@@ -117,6 +118,7 @@ docker run --rm `
 --env TLS_ORG_CERT=/certs/org.crt `
 --env TLS_ORG_KEY=/certs/org.key `
 --env DISABLE_LOGDB=1 `
+--env LOG_LEVEL=debug `
 --publish 443:8443 `
 nlxio/inway:latest
 ```
@@ -138,6 +140,7 @@ We give Docker several arguments:
 - `--env TLS_ORG_CERT=/certs/org.crt` sets the environment variable `TLS_ORG_CERT` this is the location of the organization certificate.
 - `--env TLS_ORG_KEY=/certs/org.key` sets the environment variable `TLS_ORG_KEY` this is the location of the organization private key.
 - `--env DISABLE_LOGDB=1` sets the environment variable `DISABLE_LOGDB` the value 1 will disable the transaction logs, the value 0 will enable them.
+- `--env LOG_LEVEL=debug` sets the environment variable `LOG_LEVEL` debug is the default value.
 - `--publish 443:8443` connects port 443 on the host machine to port 8443 inside the container. This way, we can send requests to the inway.
 - ` nlxio/inway:latest` is the name of our docker image (`nlxio/inway`) as stored in the docker registry and the version we want to use (`latest`).
 

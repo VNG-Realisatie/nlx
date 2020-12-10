@@ -65,6 +65,7 @@ import TabItem from '@theme/TabItem';
 - `TLS_ORG_KEY` This is the location of the organization private key.
 - `POSTGRES_DSN` Connection-string to the PostgreSQL database.
 - `DISABLE_LOGDB` The value 1 will disable the transaction logs, the value 0 will enable them.
+- `LOG_LEVEL` Log level of the application. Options: debug, info, warn.
 
 </TabItem>
 
@@ -77,6 +78,7 @@ import TabItem from '@theme/TabItem';
 - `TLS_ORG_CERT` This is the location of the organization certificate.
 - `TLS_ORG_KEY` This is the location of the organization private key.
 - `DISABLE_LOGDB` The value 1 will disable the transaction logs, the value 0 will enable them.
+- `LOG_LEVEL` Log level of the application. Options: debug, info, warn.
 
 </TabItem>
 
@@ -99,6 +101,7 @@ import TabItem from '@theme/TabItem';
 - `OIDC_DISCOVERY_URL` The OIDC discovery URL
 - `OIDC_REDIRECT_URL` The OIDC redirect URL
 - `SESSION_COOKIE_SECURE` Use 'secure' cookies
+- `LOG_LEVEL` Log level of the application. Options: debug, info, warn.
 
 </TabItem>
 

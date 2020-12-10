@@ -57,7 +57,7 @@ func (o *LogOptions) ZapConfig() zap.Config {
 	case "":
 		// ignore, use default loglevel for provided type
 	default:
-		// This should never ocur since choices are limited by go-flags
+		// This should never occur since choices are limited by go-flags
 		panic("invalid value " + o.LogLevel + " for option log level")
 	}
 
