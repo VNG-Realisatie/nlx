@@ -25,7 +25,7 @@ cd nlx-try-me
 Set the hostname of the Inway (where `my-organization.nl:443` should be replaced with your own hostname).
 
 ```bash
-echo "INWAY_SELF_ADDRESS=my-organization.nl:443" > .env
+export INWAY_SELF_ADDRESS="my-organization.nl:443"
 ```
 
 Then, start all components by running:
