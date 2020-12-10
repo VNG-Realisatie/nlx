@@ -62,7 +62,12 @@ test('Add and remove service', async (t) => {
   await t.expect(editButton.visible).ok()
   await t.expect(closeButton.visible).ok()
   await t.expect(removeButton.visible).ok()
-  await doAccessibilityTest(t)
+
+  // disable 'tabindex' because the 'focus-lock' dependency
+  // creates an element with tabindex="1"
+  // https://github.com/theKashey/react-focus-lock/blob/2b6ae70f0b15046ee3ac3227c53bb7c21f551ff4/src/Lock.js#L127
+  const axeOptions = { rules: { tabindex: { enabled: false } } }
+  await doAccessibilityTest(t, undefined, axeOptions)
 
   // Remove
   await removeService()
