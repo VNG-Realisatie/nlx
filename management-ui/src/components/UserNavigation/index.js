@@ -6,9 +6,11 @@ import React, { useContext, useRef, useState } from 'react'
 import Cookies from 'js-cookie'
 import { CSSTransition } from 'react-transition-group'
 import { useTranslation } from 'react-i18next'
+import { Icon } from '@commonground/design-system'
 
 import UserContext from '../../user-context'
 import useClickOutside from '../../hooks/use-click-outside'
+import { IconShutdown } from '../../icons'
 import {
   StyledAvatar,
   StyledToggleButton,
@@ -86,7 +88,10 @@ const UserNavigation = ({ ...props }) => {
                 name="csrfmiddlewaretoken"
                 value={Cookies.get('csrftoken')}
               />
-              <button type="submit">{t('Log out')}</button>
+              <button type="submit">
+                <Icon as={IconShutdown} inline />
+                {t('Log out')}
+              </button>
             </form>
           </StyledUserMenuItem>
         </StyledUserMenu>

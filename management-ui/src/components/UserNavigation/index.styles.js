@@ -79,8 +79,12 @@ export const StyledUserMenuItem = styled.li`
     text-decoration: none;
     color: ${(p) => p.theme.tokens.colorText};
     font-size: ${(p) => p.theme.tokens.fontSizeMedium};
-    padding: ${(p) => p.theme.tokens.spacing04}
-      ${(p) => p.theme.tokens.spacing06};
+    padding: ${(p) => `
+      ${p.theme.tokens.spacing04} 
+      ${p.theme.tokens.spacing06} 
+      ${p.theme.tokens.spacing04} 
+      ${p.theme.tokens.spacing05}
+    `};
     border: 2px solid transparent;
   }
 

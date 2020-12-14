@@ -22,6 +22,7 @@ import { ReactComponent as SvgPlus } from './plus.svg'
 import { ReactComponent as SvgRevoke } from './revoke.svg'
 import { ReactComponent as SvgServices } from './services.svg'
 import { ReactComponent as SvgSettings } from './cog.svg'
+import { ReactComponent as SvgShutdown } from './shut-down.svg'
 import { ReactComponent as SvgStateDegraded } from './state-degraded.svg'
 import { ReactComponent as SvgStateDown } from './state-down.svg'
 import { ReactComponent as SvgStateUnknown } from './state-unknown.svg'
@@ -57,6 +58,7 @@ export const IconPlus = (props) => <Icon as={SvgPlus} {...props} />
 export const IconRevoke = (props) => <Icon as={SvgRevoke} {...props} />
 export const IconServices = (props) => <Icon as={SvgServices} {...props} />
 export const IconSettings = (props) => <Icon as={SvgSettings} {...props} />
+export const IconShutdown = (props) => <Icon as={SvgShutdown} {...props} />
 export const IconStateDegraded = (props) => (
   <Icon as={SvgStateDegraded} {...props} />
 )
