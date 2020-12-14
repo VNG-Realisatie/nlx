@@ -231,6 +231,7 @@ managementAPI:
     endpointURL: http://rdw-mock-service
     apiSpecificationURL: http://rdw-mock-service/openapi.yaml
     publicSupportContact: public-support@nlx.io
+    documentationUrl: https://nlx.io
     authorizationSettings:
       mode: none
     inways:
