@@ -12,7 +12,7 @@ import {
   StyledSecondTitle,
   StyledSubtitle,
   StyledDl,
-  StyledEmailAddressLink,
+  StyledLink,
   StyledCloseButton,
 } from './index.styles'
 
@@ -20,6 +20,7 @@ const ServiceDetailPane = ({
   name,
   organizationName,
   contactEmailAddress,
+  documentationUrl,
   closeHandler,
 }) => (
   <StyledServiceDetailPane data-test="service-detail-pane">
@@ -38,12 +39,31 @@ const ServiceDetailPane = ({
         <StyledDl>
           <dt>Email address</dt>
           <dd>
-            <StyledEmailAddressLink
+            <StyledLink
               href={'mailto:' + contactEmailAddress}
               data-test="email-address-link"
             >
               {contactEmailAddress}
-            </StyledEmailAddressLink>
+            </StyledLink>
+          </dd>
+        </StyledDl>
+      </>
+    ) : null}
+
+    {documentationUrl ? (
+      <>
+        <StyledSubtitle>Documentation</StyledSubtitle>
+        <StyledDl>
+          <dt>URL</dt>
+          <dd>
+            <StyledLink
+              href={documentationUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-test="documentation-link"
+            >
+              {documentationUrl}
+            </StyledLink>
           </dd>
         </StyledDl>
       </>
@@ -55,6 +75,7 @@ ServiceDetailPane.propTypes = {
   name: string,
   organizationName: string,
   contactEmailAddress: string,
+  documentationUrl: string,
   closeHandler: func,
 }
 

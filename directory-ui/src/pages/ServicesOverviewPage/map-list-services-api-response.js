@@ -36,6 +36,7 @@ export const mapListServicesAPIResponse = (response) =>
         status: reduceInwayStatesToStatus(service.inways),
         apiType: service.api_specification_type,
         contactEmailAddress: service.public_support_contact,
+        documentationUrl: service.documentation_url,
         /* eslint-enable camelcase */
       }))
     : []

@@ -96,6 +96,7 @@ describe('mapping the API response', () => {
         status: 'down',
         apiType: 'openapi',
         contactEmailAddress: 'foo@bar.baz',
+        documentationUrl: 'https://www.duck.com',
       },
     ])
   })

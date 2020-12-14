@@ -90,7 +90,7 @@ export const StyledDl = styled.dl`
   }
 `
 
-export const StyledEmailAddressLink = styled.a`
+export const StyledLink = styled.a`
   color: #2d3240;
   text-decoration: underline;
 `

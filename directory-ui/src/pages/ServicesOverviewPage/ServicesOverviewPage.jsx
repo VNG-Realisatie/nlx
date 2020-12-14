@@ -144,6 +144,7 @@ class ServicesOverviewPage extends Component {
             organizationName={selectedService.organization}
             contactEmailAddress={selectedService.contactEmailAddress}
             name={selectedService.name}
+            documentationUrl={selectedService.documentationUrl}
             closeHandler={this.detailPaneCloseHandler}
           />
         ) : null}
