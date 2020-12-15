@@ -5,6 +5,8 @@ import React, { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, ToasterContext } from '@commonground/design-system'
 import { func } from 'prop-types'
+
+import { useApplicationStore } from '../../../hooks/use-stores'
 import usePromise from '../../../hooks/use-promise'
 import LoadingMessage from '../../../components/LoadingMessage'
 import SettingsRepository from '../../../domain/settings-repository'
@@ -14,10 +16,14 @@ const GeneralSettings = ({ getSettings, updateHandler }) => {
   const { t } = useTranslation()
   const { showToast } = useContext(ToasterContext)
   const { isReady, error, result: settings } = usePromise(getSettings)
+  const applicationStore = useApplicationStore()
 
   const updateSettings = async (values) => {
     try {
       await updateHandler(values)
+      applicationStore.update({
+        isOrganizationInwaySet: values.organizationInway,
+      })
 
       showToast({
         body: t('Successfully updated the settings'),

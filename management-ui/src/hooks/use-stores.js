@@ -6,6 +6,11 @@ import { storesContext } from '../stores'
 
 const useStores = () => useContext(storesContext)
 
+export const useApplicationStore = () => {
+  const { applicationStore } = useStores()
+  return applicationStore
+}
+
 export const useDirectoryServicesStore = () => {
   const { directoryServicesStore } = useStores()
 

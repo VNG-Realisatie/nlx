@@ -9,6 +9,7 @@ import AccessRequestRepository from '../domain/access-request-repository'
 import AccessGrantRepository from '../domain/access-grant-repository'
 import DirectoryRepository from '../domain/directory-repository'
 import InwayRepository from '../domain/inway-repository'
+import ApplicationStore from './ApplicationStore'
 import DirectoryServicesStore from './DirectoryServicesStore'
 import OutgoingAccessRequestStore from './OutgoingAccessRequestStore'
 import AccessGrantStore from './AccessGrantStore'
@@ -32,6 +33,7 @@ export class RootStore {
     directoryRepository = DirectoryRepository,
     inwayRepository = InwayRepository,
   } = {}) {
+    this.applicationStore = new ApplicationStore({ rootStore: this })
     this.directoryServicesStore = new DirectoryServicesStore({
       rootStore: this,
       directoryRepository,
