@@ -11,6 +11,8 @@ import { StoreProvider } from '../../../stores'
 import { mockServicesStore } from '../../../stores/ServicesStore.mock'
 import AddServicePage from './index'
 
+jest.mock('../../../components/OrganizationInwayCheck', () => () => null)
+
 // eslint-disable-next-line react/prop-types
 jest.mock('../../../components/ServiceForm', () => ({ onSubmitHandler }) => (
   <form onSubmit={() => onSubmitHandler({ foo: 'bar' })} data-testid="form">

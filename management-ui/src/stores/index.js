@@ -33,7 +33,7 @@ export class RootStore {
     directoryRepository = DirectoryRepository,
     inwayRepository = InwayRepository,
   } = {}) {
-    this.applicationStore = new ApplicationStore({ rootStore: this })
+    this.applicationStore = new ApplicationStore()
     this.directoryServicesStore = new DirectoryServicesStore({
       rootStore: this,
       directoryRepository,

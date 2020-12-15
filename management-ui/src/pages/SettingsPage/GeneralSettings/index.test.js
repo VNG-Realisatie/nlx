@@ -6,12 +6,20 @@ import { fireEvent, act } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 
 import UserContext from '../../../user-context'
+import { useApplicationStore } from '../../../hooks/use-stores'
 import { renderWithProviders } from '../../../test-utils'
 import GeneralSettings from './index'
 
+jest.mock('../../../hooks/use-stores', () => ({
+  useApplicationStore: jest.fn(),
+}))
+
 // eslint-disable-next-line react/prop-types
 jest.mock('./Form', () => ({ onSubmitHandler }) => (
-  <form onSubmit={() => onSubmitHandler({ foo: 'bar' })} data-testid="form">
+  <form
+    onSubmit={() => onSubmitHandler({ organizationInway: 'inway' })}
+    data-testid="form"
+  >
     <button type="submit" />
   </form>
 ))
@@ -42,6 +50,11 @@ describe('the General settings section', () => {
   })
 
   it('successfully submitting the form', async () => {
+    const storeUpdateMock = jest.fn()
+    useApplicationStore.mockImplementation(() => ({
+      update: storeUpdateMock,
+    }))
+
     const updateHandler = jest.fn().mockResolvedValue(null)
     const getSettingsHandler = jest.fn().mockResolvedValue({})
     const userContext = { user: { id: '42' } }
@@ -62,7 +75,10 @@ describe('the General settings section', () => {
     })
 
     expect(updateHandler).toHaveBeenCalledWith({
-      foo: 'bar',
+      organizationInway: 'inway',
+    })
+    expect(storeUpdateMock).toHaveBeenCalledWith({
+      isOrganizationInwaySet: 'inway',
     })
 
     expect(getByRole('alert')).toBeTruthy()

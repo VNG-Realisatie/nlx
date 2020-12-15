@@ -7,6 +7,8 @@ import { MemoryRouter as Router } from 'react-router-dom'
 import { renderWithProviders } from '../../test-utils'
 import NotFoundPage from './index'
 
+jest.mock('../../components/OrganizationInwayCheck', () => () => null)
+
 test('renders a 404 page', () => {
   const { getByText } = renderWithProviders(
     <Router>
