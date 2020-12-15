@@ -64,30 +64,16 @@ export const StyledSubtitle = styled.h4`
   font-size: 12px;
   line-height: 20px;
   color: #2d3240;
-  margin-bottom: 8px;
+  margin-bottom: 0;
 `
 
-export const StyledDl = styled.dl`
+export const StyledValue = styled.p`
+  margin-left: 0;
   margin-top: 0;
+  padding-bottom: 8px;
   font-size: 12px;
   line-height: 20px;
-  overflow: hidden;
-
-  dt {
-    color: #a3aabf;
-    width: 90px;
-    float: left;
-    clear: both;
-    padding-bottom: 8px;
-  }
-
-  dd {
-    color: #2d3240;
-    float: right;
-    margin-left: 0;
-    width: calc(100% - 90px);
-    padding-bottom: 8px;
-  }
+  color: #2d3240;
 `
 
 export const StyledLink = styled.a`

@@ -11,9 +11,9 @@ import {
   StyledTitle,
   StyledSecondTitle,
   StyledSubtitle,
-  StyledDl,
   StyledLink,
   StyledCloseButton,
+  StyledValue,
 } from './index.styles'
 
 const ServiceDetailPane = ({
@@ -33,39 +33,33 @@ const ServiceDetailPane = ({
 
     <StyledSecondTitle>{organizationName}</StyledSecondTitle>
 
-    {contactEmailAddress ? (
-      <>
-        <StyledSubtitle>Support</StyledSubtitle>
-        <StyledDl>
-          <dt>Email address</dt>
-          <dd>
-            <StyledLink
-              href={'mailto:' + contactEmailAddress}
-              data-test="email-address-link"
-            >
-              {contactEmailAddress}
-            </StyledLink>
-          </dd>
-        </StyledDl>
-      </>
-    ) : null}
-
     {documentationUrl ? (
       <>
         <StyledSubtitle>Documentation</StyledSubtitle>
-        <StyledDl>
-          <dt>URL</dt>
-          <dd>
-            <StyledLink
-              href={documentationUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-test="documentation-link"
-            >
-              {documentationUrl}
-            </StyledLink>
-          </dd>
-        </StyledDl>
+        <StyledValue>
+          <StyledLink
+            href={documentationUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-test="documentation-link"
+          >
+            {documentationUrl}
+          </StyledLink>
+        </StyledValue>
+      </>
+    ) : null}
+
+    {contactEmailAddress ? (
+      <>
+        <StyledSubtitle>Support</StyledSubtitle>
+        <StyledValue>
+          <StyledLink
+            href={'mailto:' + contactEmailAddress}
+            data-test="email-address-link"
+          >
+            {contactEmailAddress}
+          </StyledLink>
+        </StyledValue>
       </>
     ) : null}
   </StyledServiceDetailPane>
