@@ -1,20 +1,22 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-
 import React from 'react'
 import { node } from 'prop-types'
+
 import PrimaryNavigation from '../PrimaryNavigation'
 import Header from './Header'
 import HeaderWithBackNavigation from './HeaderWithBackNavigation'
-import { StyledMain, StyledContent } from './index.styles'
+import { Page, MainWrapper, Main } from './index.styles'
 
 const PageTemplate = ({ children }) => {
   return (
-    <StyledMain>
+    <Page>
       <PrimaryNavigation />
-      <StyledContent>{children}</StyledContent>
-    </StyledMain>
+      <MainWrapper>
+        <Main>{children}</Main>
+      </MainWrapper>
+    </Page>
   )
 }
 

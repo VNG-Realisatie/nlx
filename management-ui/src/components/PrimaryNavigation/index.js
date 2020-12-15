@@ -21,10 +21,11 @@ import {
 const PrimaryNavigation = () => {
   const { t } = useTranslation()
   return (
-    <Nav>
+    <Nav aria-labelledby="nlx-home">
       <section>
         <StyledHomeLink
           to="/"
+          id="nlx-home"
           title={t('NLX Dashboard homepage')}
           aria-label={t('Homepage')}
         >

@@ -10,13 +10,13 @@ export const StyledNLXManagementLogo = styled(NLXManagementLogo)`
   width: 100px;
 `
 
-export const StyledContainer = styled.main`
+export const Wrapper = styled.div`
   display: flex;
   align-items: center;
   height: 100%;
 `
 
-export const StyledSidebar = styled.div`
+export const StyledSidebar = styled.aside`
   background: ${(p) => p.theme.tokens.colorBackgroundAlt};
   background-image: url(${nlxPattern});
   flex: 0 0 532px;
@@ -26,7 +26,7 @@ export const StyledSidebar = styled.div`
   height: 100%;
 `
 
-export const StyledContent = styled.div`
+export const Content = styled.main`
   flex: 1;
   padding: 0 10rem 10rem 10rem;
   max-width: 70rem;

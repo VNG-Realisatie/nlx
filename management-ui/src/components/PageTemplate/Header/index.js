@@ -13,10 +13,10 @@ import {
   StyledHeaderItems,
 } from './index.styles'
 
-const Header = ({ title, description }) => (
+const Header = ({ title, description, id }) => (
   <>
     <StyledHeader>
-      {title && <StyledPageTitle>{title}</StyledPageTitle>}
+      {title && <StyledPageTitle id={id}>{title}</StyledPageTitle>}
       <StyledHeaderItems>
         <OrganizationName isHeader />
         <UserNavigation />
@@ -29,6 +29,7 @@ const Header = ({ title, description }) => (
 Header.propTypes = {
   title: string,
   description: node,
+  id: string,
 }
 
 Header.defaultProps = {

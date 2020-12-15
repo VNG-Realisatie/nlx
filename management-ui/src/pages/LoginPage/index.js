@@ -7,8 +7,8 @@ import { Button } from '@commonground/design-system'
 import UserContext from '../../user-context'
 import OrganizationName from '../../components/OrganizationName'
 import {
-  StyledContainer,
-  StyledContent,
+  Wrapper,
+  Content,
   StyledIconExternalLink,
   StyledNLXManagementLogo,
   StyledOrganization,
@@ -21,11 +21,11 @@ const LoginPage = () => {
   const { user } = useContext(UserContext)
 
   return (
-    <StyledContainer>
+    <Wrapper>
       <StyledSidebar>
         <StyledNLXManagementLogo />
       </StyledSidebar>
-      <StyledContent>
+      <Content>
         <h1>{t('Welcome')}</h1>
         {!user ? (
           <>
@@ -47,8 +47,8 @@ const LoginPage = () => {
             </Button>
           </form>
         )}
-      </StyledContent>
-    </StyledContainer>
+      </Content>
+    </Wrapper>
   )
 }
 

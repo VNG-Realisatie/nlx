@@ -9,7 +9,7 @@ import PageTemplate from '../../components/PageTemplate'
 import GeneralSettings from './GeneralSettings'
 import InsightSettings from './InsightSettings'
 import Navigation from './Navigation'
-import { StyledContent, StyledMain, StyledSidebar } from './index.styles'
+import { Wrapper, SettingsNav, Content } from './index.styles'
 
 const SettingsPage = () => {
   const { t } = useTranslation()
@@ -17,21 +17,21 @@ const SettingsPage = () => {
 
   return (
     <PageTemplate>
-      <PageTemplate.Header title={t('Settings')} />
+      <PageTemplate.Header title={t('Settings')} id="settings-header" />
 
-      <StyledMain>
-        <StyledSidebar>
+      <Wrapper>
+        <SettingsNav aria-labelledby="settings-header">
           <Navigation />
-        </StyledSidebar>
-        <StyledContent>
+        </SettingsNav>
+        <Content>
           <Switch>
             <Redirect exact path={path} to={`${path}/general`} />
 
             <Route path={`${path}/general`} component={GeneralSettings} />
             <Route path={`${path}/insight`} component={InsightSettings} />
           </Switch>
-        </StyledContent>
-      </StyledMain>
+        </Content>
+      </Wrapper>
     </PageTemplate>
   )
 }
