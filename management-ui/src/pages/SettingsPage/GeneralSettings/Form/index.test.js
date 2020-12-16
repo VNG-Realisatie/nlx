@@ -3,10 +3,9 @@
 //
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
+import selectEvent from 'react-select-event'
 import { act, fireEvent, renderWithProviders } from '../../../../test-utils'
 import Form from './index'
-
-jest.mock('../../../../components/FormikFocusError', () => () => <></>)
 
 test('Form', async () => {
   global.confirm = jest.fn(() => true)
@@ -20,8 +19,6 @@ test('Form', async () => {
 
   const formElement = await findByTestId('form')
 
-  const inwayField = getByLabelText('Organization inway')
-
   await act(async () => {
     fireEvent.submit(formElement)
   })
@@ -30,9 +27,7 @@ test('Form', async () => {
     organizationInway: '',
   })
 
-  fireEvent.change(inwayField, {
-    target: { value: 'inway-a' },
-  })
+  await selectEvent.select(getByLabelText(/Organization inway/), /inway-a/)
 
   await act(async () => {
     fireEvent.submit(formElement)

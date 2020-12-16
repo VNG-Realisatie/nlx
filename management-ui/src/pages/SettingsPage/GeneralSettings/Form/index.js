@@ -3,10 +3,10 @@
 //
 import React from 'react'
 import { func, shape, string } from 'prop-types'
-import { Field, Formik } from 'formik'
+import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { useTranslation } from 'react-i18next'
-import { Button, Fieldset, Label, Legend } from '@commonground/design-system'
+import { Button, Fieldset, Legend, Select } from '@commonground/design-system'
 import FormikFocusError from '../../../../components/FormikFocusError'
 import usePromise from '../../../../hooks/use-promise'
 import InwayRepository from '../../../../domain/inway-repository'
@@ -45,6 +45,16 @@ const Form = ({ initialValues, onSubmitHandler, getInways, ...props }) => {
     organizationInway: Yup.string(),
   })
 
+  const selectInwayOptions = inways
+    ? inways.map((inway) => ({
+        value: inway.name,
+        label: inway.name,
+      }))
+    : []
+
+  const emptyOption = { value: '', label: t('None') }
+  selectInwayOptions.unshift(emptyOption)
+
   return (
     <Formik
       initialValues={{
@@ -58,39 +68,33 @@ const Form = ({ initialValues, onSubmitHandler, getInways, ...props }) => {
         <StyledForm onSubmit={handleSubmit} data-testid="form" {...props}>
           <Fieldset>
             <Legend>{t('General settings')}</Legend>
-
-            <Label htmlFor="organizationInway">{t('Organization inway')}</Label>
-
-            <p>
-              {t(
-                'This inway is used to be able to retrieve & confirm access requests from other organizations.',
-              )}
-            </p>
-
             {!inwaysIsReady ? (
               <InwaysLoadingMessage />
             ) : !inways || inways.length === 0 ? (
-              <InwaysEmptyMessage data-testid="no-inways-available">
+              <InwaysEmptyMessage>
                 {t('There are no inways available')}
               </InwaysEmptyMessage>
             ) : (
-              <Field
-                id="organizationInway"
-                name="organizationInway"
-                data-testid="organizationInway"
-                as="select"
-              >
-                <option value="">{t('None')}</option>
-                {inways.map((inway) => (
-                  <option value={inway.name} key={inway.name}>
-                    {inway.name}
-                  </option>
-                ))}
-              </Field>
+              <>
+                <Select
+                  id="organizationInway"
+                  name="organizationInway"
+                  options={selectInwayOptions}
+                >
+                  {t('Organization inway')}
+                </Select>
+                <small>
+                  {t(
+                    'This inway is used to be able to retrieve & confirm access requests from other organizations.',
+                  )}
+                </small>
+              </>
             )}
           </Fieldset>
 
-          <Button type="submit">{t('Save settings')}</Button>
+          <Fieldset>
+            <Button type="submit">{t('Save settings')}</Button>
+          </Fieldset>
 
           <FormikFocusError />
         </StyledForm>
