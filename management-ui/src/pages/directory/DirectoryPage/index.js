@@ -51,7 +51,10 @@ const DirectoryPage = () => {
             path="/directory/:organizationName/:serviceName"
             render={({ match }) => {
               const service = getService(match.params)
-              service.fetch()
+
+              if (service) {
+                service.fetch()
+              }
 
               return (
                 services.length && <DirectoryDetailPage service={service} />

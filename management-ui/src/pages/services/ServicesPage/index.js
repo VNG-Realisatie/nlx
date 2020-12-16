@@ -55,8 +55,10 @@ const ServicesPage = () => {
             path="/services/:name"
             render={({ match }) => {
               const service = getService(match.params.name)
-              if (!service) return null
-              service.fetch()
+
+              if (service) {
+                service.fetch()
+              }
 
               return (
                 services.length && (
