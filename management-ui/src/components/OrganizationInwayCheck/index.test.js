@@ -3,82 +3,63 @@
 //
 import React from 'react'
 import { StaticRouter as Router } from 'react-router-dom'
-
 import { renderWithProviders } from '../../test-utils'
-import { useApplicationStore, useServicesStore } from '../../hooks/use-stores'
+import { RootStore, StoreProvider } from '../../stores'
 import OrganizationInwayCheck from './index'
-
-jest.mock('../../hooks/use-stores', () => ({
-  useApplicationStore: jest.fn(),
-  useServicesStore: jest.fn(),
-}))
 
 test('fetches settings if not set in store', () => {
   const getSettings = jest
     .fn()
     .mockResolvedValue({ organizationInway: 'inway' })
-  const updateFn = jest.fn()
 
-  useApplicationStore.mockImplementation(() => ({
-    isOrganizationInwaySet: null,
-    update: updateFn,
-  }))
-
-  useServicesStore.mockImplementation(() => ({
-    services: [{ serviceName: 'service' }],
-  }))
+  const rootStore = new RootStore()
+  rootStore.servicesStore.isInitiallyFetched = true
+  rootStore.applicationStore.isOrganizationInwaySet = null
 
   renderWithProviders(
     <Router>
-      <OrganizationInwayCheck getSettings={getSettings} />
+      <StoreProvider store={rootStore}>
+        <OrganizationInwayCheck getSettings={getSettings} />
+      </StoreProvider>
     </Router>,
   )
 
   expect(getSettings).toHaveBeenCalled()
-  // TODO: how to await this?
-  // expect(updateFn).toHaveBeenCalledWith({ isOrganizationInwaySet: 'inway' })
 })
 
-test('shows warning message when inway is not set and there are services', () => {
-  const getSettings = jest.fn()
+test('shows warning message when inway is not set and there are services', async () => {
+  const getSettings = jest.fn().mockResolvedValue({ organizationInway: null })
 
-  useApplicationStore.mockImplementation(() => ({
-    isOrganizationInwaySet: false,
-    update: jest.fn(),
-  }))
+  const rootStore = new RootStore()
+  rootStore.servicesStore.isInitiallyFetched = true
+  rootStore.servicesStore.services.push({ serviceName: 'service' })
 
-  useServicesStore.mockImplementation(() => ({
-    services: [{ serviceName: 'service' }],
-  }))
-
-  const { getByText } = renderWithProviders(
+  const { findByText } = renderWithProviders(
     <Router>
-      <OrganizationInwayCheck getSettings={getSettings} />
+      <StoreProvider store={rootStore}>
+        <OrganizationInwayCheck getSettings={getSettings} />
+      </StoreProvider>
     </Router>,
   )
 
   expect(
-    getByText(
+    await findByText(
       'Access requests can not be received. Set which inway handles access requests.',
     ),
   ).toBeInTheDocument()
 })
 
 test('does not show warning message when inway is not set and services are not set', () => {
-  const getSettings = jest.fn()
+  const getSettings = jest.fn().mockResolvedValue({ organizationInway: null })
 
-  useApplicationStore.mockImplementation(() => ({
-    isOrganizationInwaySet: false,
-    update: jest.fn(),
-  }))
-
-  useServicesStore.mockImplementation(() => ({
-    services: [],
-  }))
+  const rootStore = new RootStore()
+  rootStore.servicesStore.isInitiallyFetched = true
 
   const { queryByText } = renderWithProviders(
     <Router>
-      <OrganizationInwayCheck getSettings={getSettings} />
+      <StoreProvider store={rootStore}>
+        <OrganizationInwayCheck getSettings={getSettings} />
+      </StoreProvider>
     </Router>,
   )
 

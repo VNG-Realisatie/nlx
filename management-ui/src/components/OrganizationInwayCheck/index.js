@@ -5,7 +5,6 @@ import React, { useEffect } from 'react'
 import { observer } from 'mobx-react'
 import { func } from 'prop-types'
 import { useTranslation } from 'react-i18next'
-
 import SettingsRepository from '../../domain/settings-repository'
 import { useApplicationStore, useServicesStore } from '../../hooks/use-stores'
 import GlobalAlert from '../GlobalAlert'
