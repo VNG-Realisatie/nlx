@@ -69,3 +69,27 @@ test('does not show warning message when inway is not set and services are not s
     ),
   ).not.toBeInTheDocument()
 })
+
+test('does not show warning message when inway is set and there are services', () => {
+  const getSettings = jest.fn()
+
+  const rootStore = new RootStore()
+  rootStore.applicationStore.isOrganizationInwaySet = true
+  rootStore.servicesStore.isInitiallyFetched = true
+  rootStore.servicesStore.services.push({ serviceName: 'service' })
+
+  const { queryByText } = renderWithProviders(
+    <Router>
+      <StoreProvider store={rootStore}>
+        <OrganizationInwayCheck getSettings={getSettings} />
+      </StoreProvider>
+    </Router>,
+  )
+
+  expect(getSettings).not.toHaveBeenCalled()
+  expect(
+    queryByText(
+      'Access requests can not be received. Set which inway handles access requests.',
+    ),
+  ).not.toBeInTheDocument()
+})
