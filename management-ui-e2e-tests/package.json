@@ -9,7 +9,7 @@
     "test:browserstack:edge": "testcafe 'browserstack:edge' --reporter 'spec,html:./test-results/index.html'",
     "test:browserstack:all-except-edge": "testcafe 'browserstack:firefox,browserstack:chrome,browserstack:safari' --reporter 'spec,html:./test-results/index.html'",
     "test:browserstack:all": "testcafe 'browserstack:edge,browserstack:firefox,browserstack:chrome,browserstack:safari' --quarantine-mode --reporter 'spec,html:./test-results/index.html'",
-    "test:local": "testcafe 'chrome:headless' -c 4 --live --reporter 'spec,html:./test-results/index.html'",
+    "test:local": "testcafe 'firefox' --live --reporter 'spec,html:./test-results/index.html'",
     "lint": "eslint ."
   },
   "devDependencies": {
