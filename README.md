@@ -228,7 +228,7 @@ helm install cert-manager jetstack/cert-manager --namespace cert-manager --versi
 When Traefik and KubeDB are running, you can start all the NLX components by executing:
 
 ```bash
-helm repo add stable https://kubernetes-charts.storage.googleapis.com
+helm repo add stable https://charts.helm.sh/stable
 helm dependency build ./helm/deploy/haarlem
 helm dependency build ./helm/deploy/rdw
 

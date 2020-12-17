@@ -12,7 +12,7 @@ Deploy demo:
   script:
     - |
       start_section helm_repo "Update Helm repositories"
-      helm repo add stable "https://kubernetes-charts.storage.googleapis.com"
+      helm repo add stable "https://charts.helm.sh/stable"
       helm repo update
       stop_section helm_repo
     - |

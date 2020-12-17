@@ -1,6 +1,6 @@
 dependencies:
 - name: dex
-  repository: https://kubernetes-charts.storage.googleapis.com
+  repository: https://charts.helm.sh/stable
   version: 2.13.0
-digest: sha256:b268dd932d1711281606c4016b87aba6039ba0cc0901fe1d7265539e2aae6c99
-generated: "2020-10-06T16:14:46.317546+02:00"
+digest: sha256:4e8289f9cf2245294595b0f796ffb1725338e015940062a427483fdc28d7d26b
+generated: "2020-12-17T10:48:48.245545+01:00"
