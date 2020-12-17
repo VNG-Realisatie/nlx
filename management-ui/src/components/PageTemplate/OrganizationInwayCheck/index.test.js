@@ -3,9 +3,13 @@
 //
 import React from 'react'
 import { StaticRouter as Router } from 'react-router-dom'
-import { renderWithProviders } from '../../test-utils'
-import { RootStore, StoreProvider } from '../../stores'
+
+import { renderWithProviders } from '../../../test-utils'
+import { RootStore, StoreProvider } from '../../../stores'
 import OrganizationInwayCheck from './index'
+
+const warningTextKey =
+  'Access requests can not be received. Please specify which inway should handle access requests.'
 
 test('fetches settings if not set in store', () => {
   const getSettings = jest
@@ -28,7 +32,7 @@ test('fetches settings if not set in store', () => {
 })
 
 test('shows warning message when inway is not set and there are services', async () => {
-  const getSettings = jest.fn().mockResolvedValue({ organizationInway: null })
+  const getSettings = jest.fn().mockResolvedValue({ organizationInway: false })
 
   const rootStore = new RootStore()
   rootStore.servicesStore.isInitiallyFetched = true
@@ -42,15 +46,11 @@ test('shows warning message when inway is not set and there are services', async
     </Router>,
   )
 
-  expect(
-    await findByText(
-      'Access requests can not be received. Set which inway handles access requests.',
-    ),
-  ).toBeInTheDocument()
+  expect(await findByText(warningTextKey)).toBeInTheDocument()
 })
 
 test('does not show warning message when inway is not set and services are not set', () => {
-  const getSettings = jest.fn().mockResolvedValue({ organizationInway: null })
+  const getSettings = jest.fn().mockResolvedValue({ organizationInway: false })
 
   const rootStore = new RootStore()
   rootStore.servicesStore.isInitiallyFetched = true
@@ -63,11 +63,7 @@ test('does not show warning message when inway is not set and services are not s
     </Router>,
   )
 
-  expect(
-    queryByText(
-      'Access requests can not be received. Set which inway handles access requests.',
-    ),
-  ).not.toBeInTheDocument()
+  expect(queryByText(warningTextKey)).not.toBeInTheDocument()
 })
 
 test('does not show warning message when inway is set and there are services', () => {
@@ -87,9 +83,5 @@ test('does not show warning message when inway is set and there are services', (
   )
 
   expect(getSettings).not.toHaveBeenCalled()
-  expect(
-    queryByText(
-      'Access requests can not be received. Set which inway handles access requests.',
-    ),
-  ).not.toBeInTheDocument()
+  expect(queryByText(warningTextKey)).not.toBeInTheDocument()
 })

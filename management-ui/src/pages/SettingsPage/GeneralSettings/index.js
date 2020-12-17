@@ -22,7 +22,7 @@ const GeneralSettings = ({ getSettings, updateHandler }) => {
     try {
       await updateHandler(values)
       applicationStore.update({
-        isOrganizationInwaySet: values.organizationInway,
+        isOrganizationInwaySet: !!values.organizationInway,
       })
 
       showToast({

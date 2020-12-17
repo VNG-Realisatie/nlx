@@ -5,9 +5,9 @@ import React from 'react'
 import { node } from 'prop-types'
 
 import PrimaryNavigation from '../PrimaryNavigation'
-import OrganizationInwayCheck from '../OrganizationInwayCheck'
 import Header from './Header'
 import HeaderWithBackNavigation from './HeaderWithBackNavigation'
+import OrganizationInwayCheck from './OrganizationInwayCheck'
 import { Page, MainWrapper, Main } from './index.styles'
 
 const PageTemplate = ({ children }) => (

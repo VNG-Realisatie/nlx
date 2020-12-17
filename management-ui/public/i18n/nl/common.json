@@ -6,7 +6,7 @@
   "Access request rejected": "Toegangsverzoek afgewezen",
   "Access requested": "Toegang aangevraagd",
   "Access requests": "Toegangsverzoeken",
-  "Access requests can not be received. Set which inway handles access requests.": "Er kunnen geen toegangsverzoeken ontvangen worden. Stel in welke inway toegangsverzoeken moet afhandelen.",
+  "Access requests can not be received. Please specify which inway should handle access requests.": "Er kunnen geen toegangsverzoeken ontvangen worden. Stel in welke inway toegangsverzoeken moet afhandelen.",
   "Access revoked": "Toegang ingetrokken",
   "Access will be revoked for the serviceName service from organizationName": "Toegang zal worden ingetrokken voor de {{serviceName}} service van {{organizationName}}",
   "Account menu": "Account menu",

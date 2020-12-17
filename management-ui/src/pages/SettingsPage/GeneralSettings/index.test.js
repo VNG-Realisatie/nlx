@@ -78,7 +78,7 @@ describe('the General settings section', () => {
       organizationInway: 'inway',
     })
     expect(storeUpdateMock).toHaveBeenCalledWith({
-      isOrganizationInwaySet: 'inway',
+      isOrganizationInwaySet: true,
     })
 
     expect(getByRole('alert')).toBeTruthy()

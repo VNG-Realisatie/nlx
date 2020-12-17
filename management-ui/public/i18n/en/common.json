@@ -6,7 +6,7 @@
   "Access request rejected": "Access request rejected",
   "Access requested": "Access requested",
   "Access requests": "Access requests",
-  "Access requests can not be received. Set which inway handles access requests.": "Access requests can not be received. Set which inway handles access requests.",
+  "Access requests can not be received. Please specify which inway should handle access requests.": "Access requests can not be received. Set which inway handles access requests.",
   "Access revoked": "Access revoked",
   "Access will be revoked for the serviceName service from organizationName": "Access will be revoked for the {{serviceName}} service from {{organizationName}}",
   "Account menu": "Account menu",

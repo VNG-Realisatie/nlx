@@ -5,9 +5,12 @@ import React, { useEffect } from 'react'
 import { observer } from 'mobx-react'
 import { func } from 'prop-types'
 import { useTranslation } from 'react-i18next'
-import SettingsRepository from '../../domain/settings-repository'
-import { useApplicationStore, useServicesStore } from '../../hooks/use-stores'
-import GlobalAlert from '../GlobalAlert'
+import SettingsRepository from '../../../domain/settings-repository'
+import {
+  useApplicationStore,
+  useServicesStore,
+} from '../../../hooks/use-stores'
+import GlobalAlert from '../../GlobalAlert'
 import { StyledLink } from './index.styles'
 
 const OrganizationInwayCheck = ({ getSettings }) => {
@@ -18,15 +21,15 @@ const OrganizationInwayCheck = ({ getSettings }) => {
 
   useEffect(() => {
     const fetch = async () => {
-      if (applicationStore.isOrganizationInwaySet === null) {
-        try {
-          const settings = await getSettings()
-          applicationStore.update({
-            isOrganizationInwaySet: settings.organizationInway,
-          })
-        } catch (e) {
-          console.error(e)
-        }
+      if (applicationStore.isOrganizationInwaySet !== null) return
+
+      try {
+        const settings = await getSettings()
+        applicationStore.update({
+          isOrganizationInwaySet: settings.organizationInway,
+        })
+      } catch (e) {
+        console.error(e)
       }
     }
 
@@ -39,7 +42,7 @@ const OrganizationInwayCheck = ({ getSettings }) => {
   return render ? (
     <GlobalAlert>
       {t(
-        'Access requests can not be received. Set which inway handles access requests.',
+        'Access requests can not be received. Please specify which inway should handle access requests.',
       )}
       <StyledLink to="/settings/general">{t('Go to settings')}</StyledLink>
     </GlobalAlert>

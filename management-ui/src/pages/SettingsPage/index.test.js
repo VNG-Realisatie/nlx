@@ -10,7 +10,9 @@ import { UserContextProvider } from '../../user-context'
 import SettingsPage from './index'
 
 jest.mock('../../components/OrganizationName', () => () => 'organization')
-jest.mock('../../components/OrganizationInwayCheck', () => () => null)
+jest.mock('../../components/PageTemplate/OrganizationInwayCheck', () => () =>
+  null,
+)
 
 jest.mock('./GeneralSettings', () => () => (
   <div data-testid="general-settings" />

@@ -10,7 +10,7 @@ import { UserContextProvider } from '../../user-context'
 import PageTemplate from './index'
 
 jest.mock('../OrganizationName', () => () => <span>test</span>)
-jest.mock('../OrganizationInwayCheck', () => () => null)
+jest.mock('./OrganizationInwayCheck', () => () => null)
 
 test('PageTemplate', () => {
   const { getByText } = renderWithProviders(

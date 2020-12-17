@@ -11,7 +11,9 @@ import { StoreProvider } from '../../../stores'
 import { mockServicesStore } from '../../../stores/ServicesStore.mock'
 import ServicesPage from './index'
 
-jest.mock('../../../components/OrganizationInwayCheck', () => () => null)
+jest.mock('../../../components/PageTemplate/OrganizationInwayCheck', () => () =>
+  null,
+)
 jest.mock('./ServicesPageView', () => () => (
   <p data-testid="services-list">mock-services</p>
 ))
