@@ -15,7 +15,7 @@ import {
 } from '../../../directoryServiceAccessState'
 import { IconCheck } from '../../../../../icons'
 import Switch from '../../../../../components/Switch'
-import { WarnText } from './index.styles'
+import { Message, WarnMessage } from './index.styles'
 
 const AccessMessage = ({ displayState }) => {
   const { t } = useTranslation()
@@ -23,19 +23,23 @@ const AccessMessage = ({ displayState }) => {
   return (
     <Switch test={displayState}>
       <Switch.Case value={SHOW_REQUEST_CREATED}>
-        {() => <span>{t('Sending request')}</span>}
+        {() => <Message>{t('Sending request')}</Message>}
       </Switch.Case>
       <Switch.Case value={SHOW_REQUEST_FAILED}>
-        {() => <WarnText>{t('Request could not be sent')}</WarnText>}
+        {() => <WarnMessage>{t('Request could not be sent')}</WarnMessage>}
       </Switch.Case>
       <Switch.Case value={SHOW_REQUEST_RECEIVED}>
-        {() => <span>{t('Requested')}</span>}
+        {() => <Message>{t('Requested')}</Message>}
       </Switch.Case>
       <Switch.Case value={SHOW_REQUEST_REJECTED}>
-        {() => <span>{t('Rejected')}</span>}
+        {() => <Message>{t('Rejected')}</Message>}
       </Switch.Case>
       <Switch.Case value={SHOW_HAS_ACCESS}>
-        {() => <IconCheck title={t('Approved')} inline />}
+        {() => (
+          <Message>
+            <IconCheck title={t('Approved')} inline />
+          </Message>
+        )}
       </Switch.Case>
       {/* Purposely displaying nothing in any other case */}
       <Switch.Default>{() => null}</Switch.Default>

@@ -22,6 +22,7 @@ describe('a service we do not have access to', () => {
       state: 'degraded',
       apiSpecificationType: 'API',
       latestAccessRequest: null,
+      latestAccessProof: null,
       requestAccess: jest.fn(),
     })
   })
@@ -79,12 +80,12 @@ describe('a service we do not have access to', () => {
     expect(serviceRow).toHaveTextContent('state-up.svg')
   })
 
-  it('shows the state of the latest access request', () => {
+  it('has request access button in certain states', () => {
     service.latestAccessRequest = {
       id: 'string',
       state: 'FAILED',
-      createdAt: '2020-06-30T08:31:41.106Z',
-      updatedAt: '2020-06-30T08:31:41.106Z',
+      createdAt: '2020-06-30T08:30:00Z',
+      updatedAt: '2020-06-30T08:30:05Z',
     }
 
     const { getByTestId } = renderWithProviders(
@@ -96,6 +97,49 @@ describe('a service we do not have access to', () => {
     )
 
     const serviceRow = getByTestId('directory-service-row')
+    expect(serviceRow.querySelector('button')).toBeInTheDocument()
+
+    service.latestAccessRequest = {
+      id: 'string',
+      state: 'REJECTED',
+      createdAt: '2020-06-30T08:30:00Z',
+      updatedAt: '2020-06-30T08:35:00Z',
+    }
+
+    expect(serviceRow.querySelector('button')).toBeInTheDocument()
+  })
+
+  it('does not have request access button in other states', () => {
+    service.latestAccessRequest = {
+      id: 'string',
+      state: 'CREATED',
+      createdAt: '2020-06-30T08:30:00Z',
+      updatedAt: '2020-06-30T08:30:03Z',
+    }
+
+    const { getByTestId } = renderWithProviders(
+      <table>
+        <tbody>
+          <DirectoryServiceRow service={service} />
+        </tbody>
+      </table>,
+    )
+
+    const serviceRow = getByTestId('directory-service-row')
+    expect(serviceRow.querySelector('button')).not.toBeInTheDocument()
+
+    service.latestAccessRequest = {
+      id: 'string',
+      state: 'APPROVED',
+      createdAt: '2020-06-30T08:30:00Z',
+      updatedAt: '2020-06-30T08:35:00Z',
+    }
+    service.latestAccessProof = {
+      id: 'string',
+      accessRequestId: 'string',
+      createdAt: '2020-06-30T08:35:01Z',
+    }
+
     expect(serviceRow.querySelector('button')).not.toBeInTheDocument()
   })
 })

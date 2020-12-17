@@ -5,10 +5,10 @@ import styled from 'styled-components'
 import { Button } from '@commonground/design-system'
 
 export const StyledButton = styled(Button)`
-  float: right;
-  visibility: hidden;
+  display: none;
+  padding-left: ${(p) => p.theme.tokens.spacing05};
 
   tr:hover & {
-    visibility: visible;
+    display: block;
   }
 `
