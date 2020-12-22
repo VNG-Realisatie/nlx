@@ -1,0 +1,82 @@
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100vh;
+  margin: 0;
+}
+
+html {
+  font-family: sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 150%;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #E0E0E0;
+  background-color: #212121;
+}
+
+h1 {
+  margin: 0 0 1rem 0;
+  font-weight: 700;
+  font-size: 2rem;
+  line-height: 125%;
+}
+
+p {
+  margin: 0 0 1rem 0;
+}
+
+.OldBrowser {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  opacity: 0;
+}
+
+.OldBrowser.show {
+  opacity: 1;
+  transition: opacity 500ms;
+}
+
+.Sidebar {
+  flex: 0 0 532px;
+  height: 100%;
+  padding-top: 10rem;
+  text-align: center;
+  font-size: 14pt;
+  background: #313131;
+  background-image: url("./nlx-pattern.svg");
+}
+
+.Content {
+  flex: 1;
+  padding: 0 10rem 10rem 10rem;
+  max-width: 51rem;
+}
+
+.Browers {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3rem;
+}
+
+.Browser {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Browser svg {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 1rem;
+  fill: #6A6A6A;
+}

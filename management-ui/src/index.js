@@ -1,7 +1,6 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import 'react-app-polyfill/ie11'
 import 'react-app-polyfill/stable'
 
 import React from 'react'
