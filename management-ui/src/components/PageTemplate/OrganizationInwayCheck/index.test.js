@@ -22,7 +22,7 @@ test('fetches settings if not set in store', () => {
 
   renderWithProviders(
     <Router>
-      <StoreProvider store={rootStore}>
+      <StoreProvider rootStore={rootStore}>
         <OrganizationInwayCheck getSettings={getSettings} />
       </StoreProvider>
     </Router>,
@@ -40,7 +40,7 @@ test('shows warning message when inway is not set and there are services', async
 
   const { findByText } = renderWithProviders(
     <Router>
-      <StoreProvider store={rootStore}>
+      <StoreProvider rootStore={rootStore}>
         <OrganizationInwayCheck getSettings={getSettings} />
       </StoreProvider>
     </Router>,
@@ -57,7 +57,7 @@ test('does not show warning message when inway is not set and services are not s
 
   const { queryByText } = renderWithProviders(
     <Router>
-      <StoreProvider store={rootStore}>
+      <StoreProvider rootStore={rootStore}>
         <OrganizationInwayCheck getSettings={getSettings} />
       </StoreProvider>
     </Router>,
@@ -76,7 +76,7 @@ test('does not show warning message when inway is set and there are services', (
 
   const { queryByText } = renderWithProviders(
     <Router>
-      <StoreProvider store={rootStore}>
+      <StoreProvider rootStore={rootStore}>
         <OrganizationInwayCheck getSettings={getSettings} />
       </StoreProvider>
     </Router>,

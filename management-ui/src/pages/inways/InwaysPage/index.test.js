@@ -37,7 +37,7 @@ test('fetching all inways', async () => {
   const { getByRole, getByTestId } = renderWithProviders(
     <Router history={history}>
       <UserContextProvider user={{}}>
-        <StoreProvider store={rootStore}>
+        <StoreProvider rootStore={rootStore}>
           <InwaysPage />
         </StoreProvider>
       </UserContextProvider>
@@ -62,7 +62,7 @@ test('failed to load inways', async () => {
   const { findByText, getByTestId } = renderWithProviders(
     <MemoryRouter>
       <UserContextProvider user={{}}>
-        <StoreProvider store={rootStore}>
+        <StoreProvider rootStore={rootStore}>
           <InwaysPage />
         </StoreProvider>
       </UserContextProvider>

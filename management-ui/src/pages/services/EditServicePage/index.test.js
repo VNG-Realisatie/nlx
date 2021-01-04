@@ -36,7 +36,7 @@ describe('the EditServicePage', () => {
       <StaticRouter location="/services/mock-service/edit-service">
         <Route path="/services/:name/edit-service">
           <UserContext.Provider value={userContext}>
-            <StoreProvider store={store}>
+            <StoreProvider rootStore={store}>
               <EditServicePage />
             </StoreProvider>
           </UserContext.Provider>
@@ -55,7 +55,7 @@ describe('the EditServicePage', () => {
     const { findByRole, queryByRole } = renderWithProviders(
       <StaticRouter>
         <UserContext.Provider value={userContext}>
-          <StoreProvider store={store}>
+          <StoreProvider rootStore={store}>
             <EditServicePage />
           </StoreProvider>
         </UserContext.Provider>
@@ -76,7 +76,7 @@ describe('the EditServicePage', () => {
     const { findByTestId } = renderWithProviders(
       <StaticRouter>
         <UserContext.Provider value={userContext}>
-          <StoreProvider store={store}>
+          <StoreProvider rootStore={store}>
             <EditServicePage />
           </StoreProvider>
         </UserContext.Provider>
@@ -99,7 +99,7 @@ describe('the EditServicePage', () => {
 
     const { findByTestId } = renderWithProviders(
       <Router history={history}>
-        <StoreProvider store={store}>
+        <StoreProvider rootStore={store}>
           <EditServicePage />
         </StoreProvider>
       </Router>,
@@ -131,7 +131,7 @@ describe('the EditServicePage', () => {
     const store = mockServicesStore({ getService, update })
     const { findByTestId, queryByRole } = renderWithProviders(
       <Router history={history}>
-        <StoreProvider store={store}>
+        <StoreProvider rootStore={store}>
           <EditServicePage />
         </StoreProvider>
       </Router>,
@@ -169,7 +169,7 @@ describe('the EditServicePage', () => {
 
     const { findByTestId, queryByRole } = renderWithProviders(
       <StaticRouter>
-        <StoreProvider store={store}>
+        <StoreProvider rootStore={store}>
           <EditServicePage />
         </StoreProvider>
       </StaticRouter>,

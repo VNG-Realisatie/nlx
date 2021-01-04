@@ -52,13 +52,15 @@ export class RootStore {
   }
 }
 
-export const StoreProvider = ({ children, store = new RootStore() }) => {
+export const StoreProvider = ({ children, rootStore = new RootStore() }) => {
   return (
-    <storesContext.Provider value={store}>{children}</storesContext.Provider>
+    <storesContext.Provider value={rootStore}>
+      {children}
+    </storesContext.Provider>
   )
 }
 
 StoreProvider.propTypes = {
   children: node,
-  store: object,
+  rootStore: object,
 }

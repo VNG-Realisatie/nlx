@@ -25,7 +25,7 @@ test('fetching all services', async () => {
   const { getByRole, getByTestId, getByLabelText } = renderWithProviders(
     <Router history={history}>
       <UserContextProvider user={{}}>
-        <StoreProvider store={store}>
+        <StoreProvider rootStore={store}>
           <ServicesPage />
         </StoreProvider>
       </UserContextProvider>
@@ -61,7 +61,7 @@ test('failed to load services', async () => {
   const { findByText, getByTestId } = renderWithProviders(
     <MemoryRouter>
       <UserContextProvider user={{}}>
-        <StoreProvider store={store}>
+        <StoreProvider rootStore={store}>
           <ServicesPage />
         </StoreProvider>
       </UserContextProvider>

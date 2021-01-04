@@ -33,7 +33,7 @@ test('display service details', () => {
   const { getByTestId, getByText } = renderWithProviders(
     <StaticRouter location="/services/forty-two">
       <Route path="/services/:name">
-        <StoreProvider store={store}>
+        <StoreProvider rootStore={store}>
           <ServiceDetailPage
             service={{
               name: 'forty-two',
@@ -57,7 +57,7 @@ test('fetching a non-existing component', async () => {
   const { findByTestId, getByText } = renderWithProviders(
     <StaticRouter location="/services/forty-two">
       <Route path="/services/:name">
-        <StoreProvider store={store}>
+        <StoreProvider rootStore={store}>
           <ServiceDetailPage />
         </StoreProvider>
       </Route>
@@ -79,7 +79,7 @@ test('fetching service details fails for an unknown reason', async () => {
   const { findByTestId, getByText } = renderWithProviders(
     <StaticRouter location="/services/42">
       <Route path="/services/:name">
-        <StoreProvider store={store}>
+        <StoreProvider rootStore={store}>
           <ServiceDetailPage />
         </StoreProvider>
       </Route>
@@ -106,7 +106,7 @@ test('removing the service', async () => {
   const { findByText } = renderWithProviders(
     <Router history={history}>
       <Route path="/services/:name">
-        <StoreProvider store={store}>
+        <StoreProvider rootStore={store}>
           <ServiceDetailPage
             service={{
               name: 'dummy-service',

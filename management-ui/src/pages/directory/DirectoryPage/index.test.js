@@ -34,7 +34,7 @@ jest.mock('../DirectoryDetailPage', () => ({ service }) => (
 
 const renderDirectory = (store) =>
   renderWithProviders(
-    <StoreProvider store={store}>
+    <StoreProvider rootStore={store}>
       <UserContextProvider user={{}}>
         <MemoryRouter>
           <DirectoryPage />
@@ -128,7 +128,7 @@ test('navigating to the detail page should re-fetch the directory model', async 
 
   await act(async () => {
     renderWithProviders(
-      <StoreProvider store={rootStore}>
+      <StoreProvider rootStore={rootStore}>
         <UserContextProvider user={{}}>
           <Router history={history}>
             <DirectoryPage />

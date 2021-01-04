@@ -25,7 +25,7 @@ test('store should be provided by useStore hook', () => {
   }
 
   const { getByTestId } = render(
-    <StoreProvider store={store}>
+    <StoreProvider rootStore={store}>
       <Consumer />
     </StoreProvider>,
   )

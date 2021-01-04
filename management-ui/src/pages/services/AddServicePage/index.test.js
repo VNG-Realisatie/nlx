@@ -31,7 +31,7 @@ describe('the AddServicePage', () => {
     const store = mockServicesStore({})
     const { getByTestId, queryByRole, getByLabelText } = renderWithProviders(
       <Router history={createMemoryHistory()}>
-        <StoreProvider store={store}>
+        <StoreProvider rootStore={store}>
           <AddServicePage />
         </StoreProvider>
       </Router>,
@@ -51,7 +51,7 @@ describe('the AddServicePage', () => {
     const store = mockServicesStore({ create: createHandler })
     const { findByTestId } = renderWithProviders(
       <Router history={history}>
-        <StoreProvider store={store}>
+        <StoreProvider rootStore={store}>
           <AddServicePage />
         </StoreProvider>
       </Router>,
@@ -77,7 +77,7 @@ describe('the AddServicePage', () => {
     const store = mockServicesStore({ create: createHandler })
     const { findByTestId, queryByRole } = renderWithProviders(
       <Router history={history}>
-        <StoreProvider store={store}>
+        <StoreProvider rootStore={store}>
           <AddServicePage />
         </StoreProvider>
       </Router>,
@@ -114,7 +114,7 @@ describe('the AddServicePage', () => {
     const store = mockServicesStore({ create: createHandler })
     const { findByTestId, queryByRole } = renderWithProviders(
       <Router history={history}>
-        <StoreProvider store={store}>
+        <StoreProvider rootStore={store}>
           <AddServicePage />
         </StoreProvider>
       </Router>,
