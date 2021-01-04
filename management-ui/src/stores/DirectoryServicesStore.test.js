@@ -4,6 +4,7 @@
 import OutgoingAccessRequestModel from '../models/OutgoingAccessRequestModel'
 import DirectoryServiceModel from '../models/DirectoryServiceModel'
 import AccessProofModel from '../models/AccessProofModel'
+import { DirectoryApi } from '../api'
 import DirectoryServicesStore from './DirectoryServicesStore'
 import { RootStore } from './index'
 
@@ -61,21 +62,23 @@ test('handle error while fetching all directory services', async () => {
 })
 
 test('fetching a single service', async () => {
+  const directoryApiService = new DirectoryApi()
+
+  directoryApiService.directoryGetOrganizationService = jest
+    .fn()
+    .mockResolvedValueOnce({
+      organizationName: 'Org A',
+      serviceName: 'Service A',
+    })
+    .mockReturnValue({
+      organizationName: 'Org A',
+      serviceName: 'Service A',
+      latestAccessRequest: { id: 'abc', state: 'CREATED' },
+      latestAccessProof: { id: 'abc' },
+    })
+
   const rootStore = new RootStore({
-    directoryRepository: {
-      getByName: jest
-        .fn()
-        .mockResolvedValueOnce({
-          organizationName: 'Org A',
-          serviceName: 'Service A',
-        })
-        .mockReturnValue({
-          organizationName: 'Org A',
-          serviceName: 'Service A',
-          latestAccessRequest: { id: 'abc', state: 'CREATED' },
-          latestAccessProof: { id: 'abc' },
-        }),
-    },
+    directoryApiService,
   })
 
   const directoryServicesStore = rootStore.directoryServicesStore
