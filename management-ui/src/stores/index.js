@@ -4,7 +4,6 @@
 import React, { createContext } from 'react'
 import { configure } from 'mobx'
 import { node, object } from 'prop-types'
-
 import AccessRequestRepository from '../domain/access-request-repository'
 import AccessGrantRepository from '../domain/access-grant-repository'
 import DirectoryRepository from '../domain/directory-repository'
@@ -52,7 +51,7 @@ export class RootStore {
   }
 }
 
-export const StoreProvider = ({ children, rootStore = new RootStore() }) => {
+export const StoreProvider = ({ children, rootStore }) => {
   return (
     <storesContext.Provider value={rootStore}>
       {children}
@@ -62,5 +61,5 @@ export const StoreProvider = ({ children, rootStore = new RootStore() }) => {
 
 StoreProvider.propTypes = {
   children: node,
-  rootStore: object,
+  rootStore: object.isRequired,
 }

@@ -6,15 +6,16 @@ import 'react-app-polyfill/stable'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter as Router } from 'react-router-dom'
-
 import './i18n'
-import { StoreProvider } from './stores'
+import { RootStore, StoreProvider } from './stores'
 import { UserContextProvider } from './user-context'
 import App from './App'
 
+const rootStore = new RootStore()
+
 ReactDOM.render(
   <Router>
-    <StoreProvider>
+    <StoreProvider rootStore={rootStore}>
       <UserContextProvider>
         <App />
       </UserContextProvider>
