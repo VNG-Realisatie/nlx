@@ -2,7 +2,6 @@
 // Licensed under the EUPL
 //
 import { flow, makeAutoObservable } from 'mobx'
-import DirectoryRepository from '../domain/directory-repository'
 import DirectoryServiceModel from '../models/DirectoryServiceModel'
 
 class DirectoryServicesStore {
@@ -13,16 +12,11 @@ class DirectoryServicesStore {
   // This is internal state to prevent concurrent fetchAll calls being in flight.
   isFetching = false
 
-  constructor({
-    rootStore,
-    directoryApiService,
-    directoryRepository = DirectoryRepository,
-  }) {
+  constructor({ rootStore, directoryApiService }) {
     makeAutoObservable(this)
 
     this.rootStore = rootStore
     this.directoryApiService = directoryApiService
-    this.directoryRepository = directoryRepository
   }
 
   fetch = flow(function* fetch({ organizationName, serviceName }) {
@@ -56,9 +50,9 @@ class DirectoryServicesStore {
     this.error = ''
 
     try {
-      const servicesData = yield this.directoryRepository.getAll()
+      const servicesData = yield this.directoryApiService.directoryListServices()
 
-      this.services = servicesData.map((serviceData) =>
+      this.services = servicesData.services.map((serviceData) =>
         this._updateFromServer(serviceData),
       )
     } catch (e) {

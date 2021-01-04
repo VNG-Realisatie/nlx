@@ -6,7 +6,6 @@ import { configure } from 'mobx'
 import { node, object } from 'prop-types'
 import AccessRequestRepository from '../domain/access-request-repository'
 import AccessGrantRepository from '../domain/access-grant-repository'
-import DirectoryRepository from '../domain/directory-repository'
 import InwayRepository from '../domain/inway-repository'
 import ApplicationStore from './ApplicationStore'
 import DirectoryServicesStore from './DirectoryServicesStore'
@@ -30,7 +29,6 @@ export class RootStore {
     directoryApiService,
     accessRequestRepository = AccessRequestRepository,
     accessGrantRepository = AccessGrantRepository,
-    directoryRepository = DirectoryRepository,
     inwayRepository = InwayRepository,
   } = {}) {
     this.directoryApiService = directoryApiService
@@ -39,7 +37,6 @@ export class RootStore {
     this.directoryServicesStore = new DirectoryServicesStore({
       rootStore: this,
       directoryApiService,
-      directoryRepository,
     })
     this.outgoingAccessRequestStore = new OutgoingAccessRequestStore({
       rootStore: this,

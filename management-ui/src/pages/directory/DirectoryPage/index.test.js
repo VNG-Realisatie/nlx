@@ -8,6 +8,7 @@ import { createMemoryHistory } from 'history'
 import { act, renderWithProviders } from '../../../test-utils'
 import { RootStore, StoreProvider } from '../../../stores'
 import { UserContextProvider } from '../../../user-context'
+import { DirectoryApi } from '../../../api'
 import DirectoryPage from './index'
 
 jest.mock('../../../components/OrganizationName', () => () => null)
@@ -44,14 +45,18 @@ const renderDirectory = (store) =>
   )
 
 test('listing all services', async () => {
+  const directoryApiService = new DirectoryApi()
+
+  directoryApiService.directoryListServices = jest.fn().mockResolvedValue({
+    services: [
+      {
+        serviceName: 'Test Service',
+      },
+    ],
+  })
+
   const rootStore = new RootStore({
-    directoryRepository: {
-      getAll: jest.fn().mockResolvedValue([
-        {
-          serviceName: 'Test Service',
-        },
-      ]),
-    },
+    directoryApiService,
   })
   const fetchAllSpy = jest.spyOn(rootStore.directoryServicesStore, 'fetchAll')
 
@@ -76,10 +81,13 @@ test('listing all services', async () => {
 })
 
 test('no services', async () => {
+  const directoryApiService = new DirectoryApi()
+  directoryApiService.directoryListServices = jest.fn().mockResolvedValue({
+    services: [],
+  })
+
   const rootStore = new RootStore({
-    directoryRepository: {
-      getAll: jest.fn().mockResolvedValue([]),
-    },
+    directoryApiService,
   })
 
   const { findByTestId, getByTestId } = renderDirectory(rootStore)
@@ -112,16 +120,20 @@ test('navigating to the detail page should re-fetch the directory model', async 
   // the detail page this allows us to first put a spy on
   // the fetch-method of the ServiceDirectory model
 
+  const directoryApiService = new DirectoryApi()
+
+  directoryApiService.directoryListServices = jest.fn().mockResolvedValue({
+    services: [
+      {
+        organizationName: 'foo',
+        serviceName: 'bar',
+        state: 'up',
+      },
+    ],
+  })
+
   const rootStore = new RootStore({
-    directoryRepository: {
-      getAll: jest.fn().mockResolvedValue([
-        {
-          organizationName: 'foo',
-          serviceName: 'bar',
-          state: 'up',
-        },
-      ]),
-    },
+    directoryApiService,
   })
 
   const history = createMemoryHistory({ initialEntries: ['/directory'] })

@@ -18,25 +18,31 @@ test('initializing the store', async () => {
 })
 
 test('fetching all directory services', async () => {
+  const directoryApiService = new DirectoryApi()
+
+  directoryApiService.directoryListServices = jest.fn().mockResolvedValue({
+    services: [
+      {
+        organizationName: 'Org A',
+        serviceName: 'Service A',
+      },
+      {
+        organizationName: 'Org B',
+        serviceName: 'Service B',
+      },
+    ],
+  })
+
   const rootStore = new RootStore({
-    directoryRepository: {
-      getAll: jest.fn().mockResolvedValue([
-        {
-          organizationName: 'Org A',
-          serviceName: 'Service A',
-        },
-        {
-          organizationName: 'Org B',
-          serviceName: 'Service B',
-        },
-      ]),
-    },
+    directoryApiService,
   })
 
   const directoryServicesStore = rootStore.directoryServicesStore
   await directoryServicesStore.fetchAll()
 
-  expect(directoryServicesStore.directoryRepository.getAll).toHaveBeenCalled()
+  expect(
+    directoryServicesStore.directoryApiService.directoryListServices,
+  ).toHaveBeenCalled()
 
   await expect(directoryServicesStore.isInitiallyFetched).toBe(true)
   expect(directoryServicesStore.services).toHaveLength(2)
@@ -45,16 +51,22 @@ test('fetching all directory services', async () => {
 test('handle error while fetching all directory services', async () => {
   global.console.error = jest.fn()
 
+  const directoryApiService = new DirectoryApi()
+
+  directoryApiService.directoryListServices = jest
+    .fn()
+    .mockRejectedValue(new Error('arbitrary error'))
+
   const rootStore = new RootStore({
-    directoryRepository: {
-      getAll: jest.fn().mockRejectedValue(new Error('arbitrary error')),
-    },
+    directoryApiService,
   })
 
   const directoryServicesStore = rootStore.directoryServicesStore
   await directoryServicesStore.fetchAll()
 
-  expect(directoryServicesStore.directoryRepository.getAll).toHaveBeenCalled()
+  expect(
+    directoryServicesStore.directoryApiService.directoryListServices,
+  ).toHaveBeenCalled()
 
   expect(directoryServicesStore.error).toEqual(new Error('arbitrary error'))
   expect(directoryServicesStore.services).toEqual([])
