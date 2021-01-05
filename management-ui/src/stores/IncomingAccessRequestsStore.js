@@ -2,20 +2,15 @@
 // Licensed under the EUPL
 //
 import { makeAutoObservable, observable } from 'mobx'
-import AccessRequestRepository from '../domain/access-request-repository'
 import IncomingAccessRequestModel from '../models/IncomingAccessRequestModel'
 
 class IncomingAccessRequestsStore {
   incomingAccessRequests = observable.map()
 
-  constructor({
-    managementApiClient,
-    accessRequestRepository = AccessRequestRepository,
-  }) {
+  constructor({ managementApiClient }) {
     makeAutoObservable(this)
 
     this._managementApiClient = managementApiClient
-    this.accessRequestRepository = accessRequestRepository
   }
 
   updateFromServer = (incomingAccessRequestData) => {
@@ -65,18 +60,17 @@ class IncomingAccessRequestsStore {
 
   approveAccessRequest = async ({ serviceName, id }) => {
     await this._managementApiClient.managementApproveIncomingAccessRequest({
-      serviceName: serviceName,
+      serviceName,
       accessRequestID: id,
     })
     this.fetchForService({ name: serviceName })
   }
 
   rejectAccessRequest = async ({ serviceName, id }) => {
-    await this.accessRequestRepository.rejectIncomingAccessRequest({
+    await this._managementApiClient.managementRejectIncomingAccessRequest({
       serviceName,
-      id,
+      accessRequestID: id,
     })
-
     this.fetchForService({ name: serviceName })
   }
 }

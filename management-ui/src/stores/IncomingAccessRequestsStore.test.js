@@ -93,22 +93,26 @@ test('approving an access request', async () => {
 })
 
 test('rejecting an access request', async () => {
-  const rejectIncomingAccessRequest = jest.fn()
+  const managementApiClient = new ManagementApi()
+  managementApiClient.managementRejectIncomingAccessRequest = jest
+    .fn()
+    .mockResolvedValue()
+
   const incomingAccessRequestStore = new IncomingAccessRequestsStore({
-    accessRequestRepository: {
-      rejectIncomingAccessRequest,
-    },
+    managementApiClient,
   })
 
   const fetchForServiceSpy = jest
     .spyOn(incomingAccessRequestStore, 'fetchForService')
-    .mockImplementationOnce(() => null)
+    .mockResolvedValue()
 
   await incomingAccessRequestStore.rejectAccessRequest({
     serviceName: 'Service',
     id: 's1',
   })
 
-  expect(rejectIncomingAccessRequest).toHaveBeenCalled()
+  expect(
+    managementApiClient.managementRejectIncomingAccessRequest,
+  ).toHaveBeenCalled()
   expect(fetchForServiceSpy).toHaveBeenCalledWith({ name: 'Service' })
 })
