@@ -53,7 +53,7 @@ export const CloseButton = styled.button`
 `
 
 export const StyledIconClose = styled(IconClose)`
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   fill: ${(p) => p.theme.tokens.colorPaletteGray400};
 `
