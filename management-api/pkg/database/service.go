@@ -13,17 +13,18 @@ import (
 )
 
 type Service struct {
-	ID                   uint `gorm:"primarykey;column:service_id;"`
-	Name                 string
-	EndpointURL          string
-	DocumentationURL     string
-	APISpecificationURL  string
-	Internal             bool
-	TechSupportContact   string
-	PublicSupportContact string
-	Inways               []*Inway `gorm:"many2many:nlx_management.inways_services;"`
-	CreatedAt            time.Time
-	UpdatedAt            time.Time
+	ID                     uint `gorm:"primarykey;column:service_id;"`
+	Name                   string
+	EndpointURL            string
+	DocumentationURL       string
+	APISpecificationURL    string
+	Internal               bool
+	TechSupportContact     string
+	PublicSupportContact   string
+	Inways                 []*Inway `gorm:"many2many:nlx_management.inways_services;"`
+	IncomingAccessRequests []*IncomingAccessRequest
+	CreatedAt              time.Time
+	UpdatedAt              time.Time
 }
 
 func (s *Service) TableName() string {
@@ -118,11 +119,38 @@ func (db *PostgresConfigDatabase) SetServiceInways(ctx context.Context, serviceI
 }
 
 func (db *PostgresConfigDatabase) DeleteService(ctx context.Context, name string) error {
-	return db.DB.
+	tx := db.DB.Begin()
+	defer tx.Rollback()
+
+	dbWithTx := &PostgresConfigDatabase{DB: tx}
+	service := &Service{}
+
+	err := dbWithTx.
+		Preload("IncomingAccessRequests").
+		Where(&Service{Name: name}).
+		First(service).Error
+	if err != nil {
+		return err
+	}
+
+	err = dbWithTx.DB.
 		WithContext(ctx).
-		Omit(clause.Associations).
-		Where(Service{Name: name}).
-		Delete(&Service{}).Error
+		Select(clause.Associations).
+		Delete(service.IncomingAccessRequests).Error
+
+	if err != nil {
+		return err
+	}
+
+	err = dbWithTx.DB.
+		WithContext(ctx).
+		Select(clause.Associations).
+		Delete(service).Error
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit().Error
 }
 
 func (db *PostgresConfigDatabase) CreateServiceWithInways(ctx context.Context, service *Service, inwayNames []string) error {
