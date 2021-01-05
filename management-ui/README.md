@@ -9,6 +9,15 @@ Dashboard application for monitoring the nlx ecosystem
 
 Installation: check the [README](https://gitlab.com/commonground/nlx/nlx#running-the-complete-stack-using-modd) in nlx root directory on how to install the project locally.
 
+### API clients
+
+We generate API clients based on the  Swagger JSON file from the Management API.
+To re-generate the clients, run the following command:
+
+```shell
+npm run generate-api-client
+```
+
 ### Internationalisation (i18n)
 
 We use [i18next](https://www.i18next.com/) for our multi-lingual needs together with the [react plugin](https://react.i18next.com/).
