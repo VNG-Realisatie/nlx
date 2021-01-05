@@ -37,12 +37,6 @@ test('fetch a single service', async () => {
 
   const rootStore = new RootStore({
     managementApiClient,
-    accessRequestRepository: {
-      fetchByServiceName: jest.fn().mockResolvedValue([]),
-    },
-    accessGrantRepository: {
-      fetchByServiceName: jest.fn().mockResolvedValue([]),
-    },
   })
 
   const servicesStore = new ServicesStore({
@@ -55,8 +49,13 @@ test('fetch a single service', async () => {
     new ServiceModel({ servicesStore, serviceData: { name: 'Service B' } }),
   ]
 
-  jest.spyOn(rootStore.incomingAccessRequestsStore, 'fetchForService')
-  jest.spyOn(rootStore.accessGrantStore, 'fetchForService')
+  jest
+    .spyOn(rootStore.incomingAccessRequestsStore, 'fetchForService')
+    .mockResolvedValue([])
+
+  jest
+    .spyOn(rootStore.accessGrantStore, 'fetchForService')
+    .mockResolvedValue([])
 
   await servicesStore.fetch({ name: 'Service A' })
 

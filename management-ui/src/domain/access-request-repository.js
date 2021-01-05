@@ -20,19 +20,6 @@ class AccessRequestRepository {
     return await response.json()
   }
 
-  static async fetchByServiceName(serviceName) {
-    const response = await fetch(
-      `/api/v1/access-requests/incoming/services/${serviceName}`,
-    )
-
-    throwOnError(response, {
-      500: 'Failed to retrieve incoming access requests.',
-    })
-
-    const result = await response.json()
-    return result.accessRequests || []
-  }
-
   static async approveIncomingAccessRequest({ serviceName, id }) {
     const response = await fetch(
       `/api/v1/access-requests/incoming/services/${serviceName}/${id}/approve`,

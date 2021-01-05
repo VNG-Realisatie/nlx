@@ -3,6 +3,7 @@
 //
 import ServiceModel from '../models/ServiceModel'
 import IncomingAccessRequestModel from '../models/IncomingAccessRequestModel'
+import { ManagementApi } from '../api'
 import IncomingAccessRequestsStore from './IncomingAccessRequestsStore'
 
 test('fetching, getting and updating from server', async () => {
@@ -16,13 +17,15 @@ test('fetching, getting and updating from server', async () => {
     createdAt: '2020-10-01T12:00:00Z',
     updatedAt: '2020-10-01T12:00:01Z',
   }
-  const fetchByServiceName = jest
+  const managementApiClient = new ManagementApi()
+  managementApiClient.managementListIncomingAccessRequest = jest
     .fn()
-    .mockResolvedValue([incomingAccessRequestData])
+    .mockResolvedValue({
+      accessRequests: [incomingAccessRequestData],
+    })
+
   const incomingAccessRequestStore = new IncomingAccessRequestsStore({
-    accessRequestRepository: {
-      fetchByServiceName,
-    },
+    managementApiClient,
   })
 
   expect(incomingAccessRequestStore.incomingAccessRequests.size).toEqual(0)
@@ -30,7 +33,9 @@ test('fetching, getting and updating from server', async () => {
 
   await incomingAccessRequestStore.fetchForService(service)
 
-  expect(fetchByServiceName).toHaveBeenCalledWith(service.name)
+  expect(
+    managementApiClient.managementListIncomingAccessRequest,
+  ).toHaveBeenCalledWith({ serviceName: 'Service' })
   expect(incomingAccessRequestStore.incomingAccessRequests.size).toEqual(1)
 
   const accessRequestsForService = incomingAccessRequestStore.getForService(

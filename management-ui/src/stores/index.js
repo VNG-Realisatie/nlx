@@ -48,6 +48,7 @@ export class RootStore {
       managementApiClient,
     })
     this.incomingAccessRequestsStore = new IncomingAccessRequestsStore({
+      managementApiClient,
       accessRequestRepository,
     })
     this.inwaysStore = new InwaysStore({ rootStore: this, inwayRepository })

@@ -8,9 +8,13 @@ import IncomingAccessRequestModel from '../models/IncomingAccessRequestModel'
 class IncomingAccessRequestsStore {
   incomingAccessRequests = observable.map()
 
-  constructor({ accessRequestRepository = AccessRequestRepository }) {
+  constructor({
+    managementApiClient,
+    accessRequestRepository = AccessRequestRepository,
+  }) {
     makeAutoObservable(this)
 
+    this._managementApiClient = managementApiClient
     this.accessRequestRepository = accessRequestRepository
   }
 
@@ -40,10 +44,14 @@ class IncomingAccessRequestsStore {
   }
 
   fetchForService = async ({ name }) => {
-    const accessRequests = await this.accessRequestRepository.fetchByServiceName(
-      name,
+    const result = await this._managementApiClient.managementListIncomingAccessRequest(
+      {
+        serviceName: name,
+      },
     )
-    accessRequests.map((accessRequest) => this.updateFromServer(accessRequest))
+    result.accessRequests.map((accessRequest) =>
+      this.updateFromServer(accessRequest),
+    )
   }
 
   getForService = (serviceModel) => {

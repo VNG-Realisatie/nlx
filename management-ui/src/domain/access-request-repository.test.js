@@ -55,26 +55,6 @@ describe('creating an access request', () => {
   })
 })
 
-describe('list incoming access requests', () => {
-  it('should return a list of access requests', async () => {
-    jest.spyOn(global, 'fetch').mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve([]),
-    })
-
-    const result = await AccessRequestRepository.fetchByServiceName(
-      'service-name',
-    )
-
-    expect(global.fetch).toHaveBeenCalledWith(
-      '/api/v1/access-requests/incoming/services/service-name',
-    )
-
-    expect(result).toEqual([])
-  })
-})
-
 describe('approve an incoming access requests', () => {
   it('should return an empty promise', async () => {
     jest.spyOn(global, 'fetch').mockResolvedValue({
