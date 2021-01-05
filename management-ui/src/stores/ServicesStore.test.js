@@ -4,6 +4,7 @@
 import deferredPromise from '../test-utils/deferred-promise'
 import ServiceModel from '../models/ServiceModel'
 import ServicesStore from './ServicesStore'
+import { RootStore } from './index'
 
 let rootStore
 let serviceRepository
@@ -11,6 +12,16 @@ let serviceRepository
 beforeEach(() => {
   rootStore = {}
   serviceRepository = {}
+})
+
+test('initializing the store', async () => {
+  const servicesStore = new ServicesStore({
+    rootStore: new RootStore(),
+  })
+
+  expect(servicesStore.services).toEqual([])
+  expect(servicesStore.isInitiallyFetched).toBe(false)
+  expect(servicesStore.isFetching).toBe(false)
 })
 
 test('fetch a single service', async () => {
