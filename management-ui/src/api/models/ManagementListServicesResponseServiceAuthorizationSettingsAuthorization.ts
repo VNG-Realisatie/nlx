@@ -16,28 +16,28 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface AuthorizationSettingsAuthorization
+ * @interface ManagementListServicesResponseServiceAuthorizationSettingsAuthorization
  */
-export interface AuthorizationSettingsAuthorization {
+export interface ManagementListServicesResponseServiceAuthorizationSettingsAuthorization {
     /**
      * 
      * @type {string}
-     * @memberof AuthorizationSettingsAuthorization
+     * @memberof ManagementListServicesResponseServiceAuthorizationSettingsAuthorization
      */
     organizationName?: string;
     /**
      * 
      * @type {string}
-     * @memberof AuthorizationSettingsAuthorization
+     * @memberof ManagementListServicesResponseServiceAuthorizationSettingsAuthorization
      */
     publicKeyHash?: string;
 }
 
-export function AuthorizationSettingsAuthorizationFromJSON(json: any): AuthorizationSettingsAuthorization {
-    return AuthorizationSettingsAuthorizationFromJSONTyped(json, false);
+export function ManagementListServicesResponseServiceAuthorizationSettingsAuthorizationFromJSON(json: any): ManagementListServicesResponseServiceAuthorizationSettingsAuthorization {
+    return ManagementListServicesResponseServiceAuthorizationSettingsAuthorizationFromJSONTyped(json, false);
 }
 
-export function AuthorizationSettingsAuthorizationFromJSONTyped(json: any, ignoreDiscriminator: boolean): AuthorizationSettingsAuthorization {
+export function ManagementListServicesResponseServiceAuthorizationSettingsAuthorizationFromJSONTyped(json: any, ignoreDiscriminator: boolean): ManagementListServicesResponseServiceAuthorizationSettingsAuthorization {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -48,7 +48,7 @@ export function AuthorizationSettingsAuthorizationFromJSONTyped(json: any, ignor
     };
 }
 
-export function AuthorizationSettingsAuthorizationToJSON(value?: AuthorizationSettingsAuthorization | null): any {
+export function ManagementListServicesResponseServiceAuthorizationSettingsAuthorizationToJSON(value?: ManagementListServicesResponseServiceAuthorizationSettingsAuthorization | null): any {
     if (value === undefined) {
         return undefined;
     }

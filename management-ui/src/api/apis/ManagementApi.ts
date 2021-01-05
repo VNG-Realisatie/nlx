@@ -21,6 +21,15 @@ import {
     ManagementCreateAccessRequestRequest,
     ManagementCreateAccessRequestRequestFromJSON,
     ManagementCreateAccessRequestRequestToJSON,
+    ManagementCreateServiceRequest,
+    ManagementCreateServiceRequestFromJSON,
+    ManagementCreateServiceRequestToJSON,
+    ManagementCreateServiceResponse,
+    ManagementCreateServiceResponseFromJSON,
+    ManagementCreateServiceResponseToJSON,
+    ManagementGetServiceResponse,
+    ManagementGetServiceResponseFromJSON,
+    ManagementGetServiceResponseToJSON,
     ManagementInsightConfiguration,
     ManagementInsightConfigurationFromJSON,
     ManagementInsightConfigurationToJSON,
@@ -48,12 +57,15 @@ import {
     ManagementSettings,
     ManagementSettingsFromJSON,
     ManagementSettingsToJSON,
+    ManagementUpdateServiceRequest,
+    ManagementUpdateServiceRequestFromJSON,
+    ManagementUpdateServiceRequestToJSON,
+    ManagementUpdateServiceResponse,
+    ManagementUpdateServiceResponseFromJSON,
+    ManagementUpdateServiceResponseToJSON,
     ManagementUpdateSettingsRequest,
     ManagementUpdateSettingsRequestFromJSON,
     ManagementUpdateSettingsRequestToJSON,
-    NlxmanagementService,
-    NlxmanagementServiceFromJSON,
-    NlxmanagementServiceToJSON,
     RuntimeError,
     RuntimeErrorFromJSON,
     RuntimeErrorToJSON,
@@ -72,8 +84,8 @@ export interface ManagementCreateInwayRequest {
     body: ManagementInway;
 }
 
-export interface ManagementCreateServiceRequest {
-    body: NlxmanagementService;
+export interface ManagementCreateServiceOperationRequest {
+    body: ManagementCreateServiceRequest;
 }
 
 export interface ManagementDeleteInwayRequest {
@@ -113,6 +125,11 @@ export interface ManagementPutInsightConfigurationRequest {
     body: ManagementInsightConfiguration;
 }
 
+export interface ManagementRejectIncomingAccessRequestRequest {
+    serviceName: string;
+    accessRequestID: string;
+}
+
 export interface ManagementRevokeAccessGrantRequest {
     serviceName: string;
     organizationName: string;
@@ -130,9 +147,9 @@ export interface ManagementUpdateInwayRequest {
     body: ManagementInway;
 }
 
-export interface ManagementUpdateServiceRequest {
+export interface ManagementUpdateServiceOperationRequest {
     name: string;
-    body: NlxmanagementService;
+    body: ManagementUpdateServiceRequest;
 }
 
 export interface ManagementUpdateSettingsOperationRequest {
@@ -240,7 +257,7 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementCreateServiceRaw(requestParameters: ManagementCreateServiceRequest): Promise<runtime.ApiResponse<NlxmanagementService>> {
+    async managementCreateServiceRaw(requestParameters: ManagementCreateServiceOperationRequest): Promise<runtime.ApiResponse<ManagementCreateServiceResponse>> {
         if (requestParameters.body === null || requestParameters.body === undefined) {
             throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementCreateService.');
         }
@@ -256,15 +273,15 @@ export class ManagementApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: NlxmanagementServiceToJSON(requestParameters.body),
+            body: ManagementCreateServiceRequestToJSON(requestParameters.body),
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => NlxmanagementServiceFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementCreateServiceResponseFromJSON(jsonValue));
     }
 
     /**
      */
-    async managementCreateService(requestParameters: ManagementCreateServiceRequest): Promise<NlxmanagementService> {
+    async managementCreateService(requestParameters: ManagementCreateServiceOperationRequest): Promise<ManagementCreateServiceResponse> {
         const response = await this.managementCreateServiceRaw(requestParameters);
         return await response.value();
     }
@@ -379,7 +396,7 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementGetServiceRaw(requestParameters: ManagementGetServiceRequest): Promise<runtime.ApiResponse<NlxmanagementService>> {
+    async managementGetServiceRaw(requestParameters: ManagementGetServiceRequest): Promise<runtime.ApiResponse<ManagementGetServiceResponse>> {
         if (requestParameters.name === null || requestParameters.name === undefined) {
             throw new runtime.RequiredError('name','Required parameter requestParameters.name was null or undefined when calling managementGetService.');
         }
@@ -395,12 +412,12 @@ export class ManagementApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => NlxmanagementServiceFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementGetServiceResponseFromJSON(jsonValue));
     }
 
     /**
      */
-    async managementGetService(requestParameters: ManagementGetServiceRequest): Promise<NlxmanagementService> {
+    async managementGetService(requestParameters: ManagementGetServiceRequest): Promise<ManagementGetServiceResponse> {
         const response = await this.managementGetServiceRaw(requestParameters);
         return await response.value();
     }
@@ -602,6 +619,38 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
+    async managementRejectIncomingAccessRequestRaw(requestParameters: ManagementRejectIncomingAccessRequestRequest): Promise<runtime.ApiResponse<object>> {
+        if (requestParameters.serviceName === null || requestParameters.serviceName === undefined) {
+            throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling managementRejectIncomingAccessRequest.');
+        }
+
+        if (requestParameters.accessRequestID === null || requestParameters.accessRequestID === undefined) {
+            throw new runtime.RequiredError('accessRequestID','Required parameter requestParameters.accessRequestID was null or undefined when calling managementRejectIncomingAccessRequest.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/reject`.replace(`{${"serviceName"}}`, encodeURIComponent(String(requestParameters.serviceName))).replace(`{${"accessRequestID"}}`, encodeURIComponent(String(requestParameters.accessRequestID))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     */
+    async managementRejectIncomingAccessRequest(requestParameters: ManagementRejectIncomingAccessRequestRequest): Promise<object> {
+        const response = await this.managementRejectIncomingAccessRequestRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
     async managementRevokeAccessGrantRaw(requestParameters: ManagementRevokeAccessGrantRequest): Promise<runtime.ApiResponse<ManagementAccessGrant>> {
         if (requestParameters.serviceName === null || requestParameters.serviceName === undefined) {
             throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling managementRevokeAccessGrant.');
@@ -709,7 +758,7 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementUpdateServiceRaw(requestParameters: ManagementUpdateServiceRequest): Promise<runtime.ApiResponse<NlxmanagementService>> {
+    async managementUpdateServiceRaw(requestParameters: ManagementUpdateServiceOperationRequest): Promise<runtime.ApiResponse<ManagementUpdateServiceResponse>> {
         if (requestParameters.name === null || requestParameters.name === undefined) {
             throw new runtime.RequiredError('name','Required parameter requestParameters.name was null or undefined when calling managementUpdateService.');
         }
@@ -729,15 +778,15 @@ export class ManagementApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: NlxmanagementServiceToJSON(requestParameters.body),
+            body: ManagementUpdateServiceRequestToJSON(requestParameters.body),
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => NlxmanagementServiceFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementUpdateServiceResponseFromJSON(jsonValue));
     }
 
     /**
      */
-    async managementUpdateService(requestParameters: ManagementUpdateServiceRequest): Promise<NlxmanagementService> {
+    async managementUpdateService(requestParameters: ManagementUpdateServiceOperationRequest): Promise<ManagementUpdateServiceResponse> {
         const response = await this.managementUpdateServiceRaw(requestParameters);
         return await response.value();
     }

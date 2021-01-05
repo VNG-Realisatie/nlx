@@ -22,7 +22,8 @@ export enum ManagementAccessRequestState {
     FAILED = 'FAILED',
     CREATED = 'CREATED',
     RECEIVED = 'RECEIVED',
-    APPROVED = 'APPROVED'
+    APPROVED = 'APPROVED',
+    REJECTED = 'REJECTED'
 }
 
 export function ManagementAccessRequestStateFromJSON(json: any): ManagementAccessRequestState {

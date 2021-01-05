@@ -13,80 +13,67 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import {
-    ServiceAuthorizationSettings,
-    ServiceAuthorizationSettingsFromJSON,
-    ServiceAuthorizationSettingsFromJSONTyped,
-    ServiceAuthorizationSettingsToJSON,
-} from './';
-
 /**
  * 
  * @export
- * @interface NlxmanagementService
+ * @interface ManagementCreateServiceRequest
  */
-export interface NlxmanagementService {
+export interface ManagementCreateServiceRequest {
     /**
      * 
      * @type {string}
-     * @memberof NlxmanagementService
+     * @memberof ManagementCreateServiceRequest
      */
     name?: string;
     /**
      * 
      * @type {string}
-     * @memberof NlxmanagementService
+     * @memberof ManagementCreateServiceRequest
      */
     endpointURL?: string;
     /**
      * 
      * @type {string}
-     * @memberof NlxmanagementService
+     * @memberof ManagementCreateServiceRequest
      */
     documentationURL?: string;
     /**
      * 
      * @type {string}
-     * @memberof NlxmanagementService
+     * @memberof ManagementCreateServiceRequest
      */
     apiSpecificationURL?: string;
     /**
      * 
      * @type {boolean}
-     * @memberof NlxmanagementService
+     * @memberof ManagementCreateServiceRequest
      */
     internal?: boolean;
     /**
      * 
      * @type {string}
-     * @memberof NlxmanagementService
+     * @memberof ManagementCreateServiceRequest
      */
     techSupportContact?: string;
     /**
      * 
      * @type {string}
-     * @memberof NlxmanagementService
+     * @memberof ManagementCreateServiceRequest
      */
     publicSupportContact?: string;
     /**
      * 
-     * @type {ServiceAuthorizationSettings}
-     * @memberof NlxmanagementService
-     */
-    authorizationSettings?: ServiceAuthorizationSettings;
-    /**
-     * 
      * @type {Array<string>}
-     * @memberof NlxmanagementService
+     * @memberof ManagementCreateServiceRequest
      */
     inways?: Array<string>;
 }
 
-export function NlxmanagementServiceFromJSON(json: any): NlxmanagementService {
-    return NlxmanagementServiceFromJSONTyped(json, false);
+export function ManagementCreateServiceRequestFromJSON(json: any): ManagementCreateServiceRequest {
+    return ManagementCreateServiceRequestFromJSONTyped(json, false);
 }
 
-export function NlxmanagementServiceFromJSONTyped(json: any, ignoreDiscriminator: boolean): NlxmanagementService {
+export function ManagementCreateServiceRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): ManagementCreateServiceRequest {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -99,12 +86,11 @@ export function NlxmanagementServiceFromJSONTyped(json: any, ignoreDiscriminator
         'internal': !exists(json, 'internal') ? undefined : json['internal'],
         'techSupportContact': !exists(json, 'techSupportContact') ? undefined : json['techSupportContact'],
         'publicSupportContact': !exists(json, 'publicSupportContact') ? undefined : json['publicSupportContact'],
-        'authorizationSettings': !exists(json, 'authorizationSettings') ? undefined : ServiceAuthorizationSettingsFromJSON(json['authorizationSettings']),
         'inways': !exists(json, 'inways') ? undefined : json['inways'],
     };
 }
 
-export function NlxmanagementServiceToJSON(value?: NlxmanagementService | null): any {
+export function ManagementCreateServiceRequestToJSON(value?: ManagementCreateServiceRequest | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -120,7 +106,6 @@ export function NlxmanagementServiceToJSON(value?: NlxmanagementService | null):
         'internal': value.internal,
         'techSupportContact': value.techSupportContact,
         'publicSupportContact': value.publicSupportContact,
-        'authorizationSettings': ServiceAuthorizationSettingsToJSON(value.authorizationSettings),
         'inways': value.inways,
     };
 }

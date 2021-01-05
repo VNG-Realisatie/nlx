@@ -55,6 +55,12 @@ export interface ManagementAccessGrant {
      * @memberof ManagementAccessGrant
      */
     revokedAt?: Date;
+    /**
+     * 
+     * @type {string}
+     * @memberof ManagementAccessGrant
+     */
+    accessRequestId?: string;
 }
 
 export function ManagementAccessGrantFromJSON(json: any): ManagementAccessGrant {
@@ -73,6 +79,7 @@ export function ManagementAccessGrantFromJSONTyped(json: any, ignoreDiscriminato
         'publicKeyFingerprint': !exists(json, 'publicKeyFingerprint') ? undefined : json['publicKeyFingerprint'],
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
         'revokedAt': !exists(json, 'revokedAt') ? undefined : (new Date(json['revokedAt'])),
+        'accessRequestId': !exists(json, 'accessRequestId') ? undefined : json['accessRequestId'],
     };
 }
 
@@ -91,6 +98,7 @@ export function ManagementAccessGrantToJSON(value?: ManagementAccessGrant | null
         'publicKeyFingerprint': value.publicKeyFingerprint,
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'revokedAt': value.revokedAt === undefined ? undefined : (value.revokedAt.toISOString()),
+        'accessRequestId': value.accessRequestId,
     };
 }
 

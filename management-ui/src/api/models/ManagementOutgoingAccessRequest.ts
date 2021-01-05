@@ -18,6 +18,10 @@ import {
     ManagementAccessRequestStateFromJSON,
     ManagementAccessRequestStateFromJSONTyped,
     ManagementAccessRequestStateToJSON,
+    ManagementErrorDetails,
+    ManagementErrorDetailsFromJSON,
+    ManagementErrorDetailsFromJSONTyped,
+    ManagementErrorDetailsToJSON,
 } from './';
 
 /**
@@ -62,6 +66,12 @@ export interface ManagementOutgoingAccessRequest {
      * @memberof ManagementOutgoingAccessRequest
      */
     updatedAt?: Date;
+    /**
+     * 
+     * @type {ManagementErrorDetails}
+     * @memberof ManagementOutgoingAccessRequest
+     */
+    errorDetails?: ManagementErrorDetails;
 }
 
 export function ManagementOutgoingAccessRequestFromJSON(json: any): ManagementOutgoingAccessRequest {
@@ -80,6 +90,7 @@ export function ManagementOutgoingAccessRequestFromJSONTyped(json: any, ignoreDi
         'state': !exists(json, 'state') ? undefined : ManagementAccessRequestStateFromJSON(json['state']),
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
         'updatedAt': !exists(json, 'updatedAt') ? undefined : (new Date(json['updatedAt'])),
+        'errorDetails': !exists(json, 'errorDetails') ? undefined : ManagementErrorDetailsFromJSON(json['errorDetails']),
     };
 }
 
@@ -98,6 +109,7 @@ export function ManagementOutgoingAccessRequestToJSON(value?: ManagementOutgoing
         'state': ManagementAccessRequestStateToJSON(value.state),
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'updatedAt': value.updatedAt === undefined ? undefined : (value.updatedAt.toISOString()),
+        'errorDetails': ManagementErrorDetailsToJSON(value.errorDetails),
     };
 }
 

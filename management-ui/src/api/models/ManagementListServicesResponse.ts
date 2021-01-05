@@ -14,10 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    NlxmanagementService,
-    NlxmanagementServiceFromJSON,
-    NlxmanagementServiceFromJSONTyped,
-    NlxmanagementServiceToJSON,
+    ManagementListServicesResponseService,
+    ManagementListServicesResponseServiceFromJSON,
+    ManagementListServicesResponseServiceFromJSONTyped,
+    ManagementListServicesResponseServiceToJSON,
 } from './';
 
 /**
@@ -28,10 +28,10 @@ import {
 export interface ManagementListServicesResponse {
     /**
      * 
-     * @type {Array<NlxmanagementService>}
+     * @type {Array<ManagementListServicesResponseService>}
      * @memberof ManagementListServicesResponse
      */
-    services?: Array<NlxmanagementService>;
+    services?: Array<ManagementListServicesResponseService>;
 }
 
 export function ManagementListServicesResponseFromJSON(json: any): ManagementListServicesResponse {
@@ -44,7 +44,7 @@ export function ManagementListServicesResponseFromJSONTyped(json: any, ignoreDis
     }
     return {
         
-        'services': !exists(json, 'services') ? undefined : ((json['services'] as Array<any>).map(NlxmanagementServiceFromJSON)),
+        'services': !exists(json, 'services') ? undefined : ((json['services'] as Array<any>).map(ManagementListServicesResponseServiceFromJSON)),
     };
 }
 
@@ -57,7 +57,7 @@ export function ManagementListServicesResponseToJSON(value?: ManagementListServi
     }
     return {
         
-        'services': value.services === undefined ? undefined : ((value.services as Array<any>).map(NlxmanagementServiceToJSON)),
+        'services': value.services === undefined ? undefined : ((value.services as Array<any>).map(ManagementListServicesResponseServiceToJSON)),
     };
 }
 

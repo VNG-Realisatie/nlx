@@ -54,6 +54,18 @@ export interface ManagementDirectoryService {
     apiSpecificationType?: string;
     /**
      * 
+     * @type {string}
+     * @memberof ManagementDirectoryService
+     */
+    documentationURL?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ManagementDirectoryService
+     */
+    publicSupportContact?: string;
+    /**
+     * 
      * @type {DirectoryServiceState}
      * @memberof ManagementDirectoryService
      */
@@ -85,6 +97,8 @@ export function ManagementDirectoryServiceFromJSONTyped(json: any, ignoreDiscrim
         'serviceName': !exists(json, 'serviceName') ? undefined : json['serviceName'],
         'organizationName': !exists(json, 'organizationName') ? undefined : json['organizationName'],
         'apiSpecificationType': !exists(json, 'apiSpecificationType') ? undefined : json['apiSpecificationType'],
+        'documentationURL': !exists(json, 'documentationURL') ? undefined : json['documentationURL'],
+        'publicSupportContact': !exists(json, 'publicSupportContact') ? undefined : json['publicSupportContact'],
         'state': !exists(json, 'state') ? undefined : DirectoryServiceStateFromJSON(json['state']),
         'latestAccessRequest': !exists(json, 'latestAccessRequest') ? undefined : ManagementOutgoingAccessRequestFromJSON(json['latestAccessRequest']),
         'latestAccessProof': !exists(json, 'latestAccessProof') ? undefined : ManagementAccessProofFromJSON(json['latestAccessProof']),
@@ -103,6 +117,8 @@ export function ManagementDirectoryServiceToJSON(value?: ManagementDirectoryServ
         'serviceName': value.serviceName,
         'organizationName': value.organizationName,
         'apiSpecificationType': value.apiSpecificationType,
+        'documentationURL': value.documentationURL,
+        'publicSupportContact': value.publicSupportContact,
         'state': DirectoryServiceStateToJSON(value.state),
         'latestAccessRequest': ManagementOutgoingAccessRequestToJSON(value.latestAccessRequest),
         'latestAccessProof': ManagementAccessProofToJSON(value.latestAccessProof),

@@ -49,6 +49,12 @@ export interface ManagementAccessProof {
      * @memberof ManagementAccessProof
      */
     revokedAt?: Date;
+    /**
+     * 
+     * @type {string}
+     * @memberof ManagementAccessProof
+     */
+    accessRequestId?: string;
 }
 
 export function ManagementAccessProofFromJSON(json: any): ManagementAccessProof {
@@ -66,6 +72,7 @@ export function ManagementAccessProofFromJSONTyped(json: any, ignoreDiscriminato
         'serviceName': !exists(json, 'serviceName') ? undefined : json['serviceName'],
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
         'revokedAt': !exists(json, 'revokedAt') ? undefined : (new Date(json['revokedAt'])),
+        'accessRequestId': !exists(json, 'accessRequestId') ? undefined : json['accessRequestId'],
     };
 }
 
@@ -83,6 +90,7 @@ export function ManagementAccessProofToJSON(value?: ManagementAccessProof | null
         'serviceName': value.serviceName,
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'revokedAt': value.revokedAt === undefined ? undefined : (value.revokedAt.toISOString()),
+        'accessRequestId': value.accessRequestId,
     };
 }
 
