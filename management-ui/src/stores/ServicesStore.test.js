@@ -38,11 +38,9 @@ test('fetch a single service', async () => {
   const rootStore = new RootStore({
     managementApiClient,
     accessRequestRepository: {
-      fetchForService: jest.fn(),
       fetchByServiceName: jest.fn().mockResolvedValue([]),
     },
     accessGrantRepository: {
-      fetchForService: jest.fn(),
       fetchByServiceName: jest.fn().mockResolvedValue([]),
     },
   })
