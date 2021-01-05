@@ -114,7 +114,7 @@ func _001_initial_schemaUpSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "001_initial_schema.up.sql", size: 4456, mode: os.FileMode(436), modTime: time.Unix(1609754868, 0)}
+	info := bindataFileInfo{name: "001_initial_schema.up.sql", size: 4456, mode: os.FileMode(436), modTime: time.Unix(1609858037, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }

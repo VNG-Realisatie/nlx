@@ -43,17 +43,13 @@ func (db *PostgresConfigDatabase) GetSettings(ctx context.Context) (*Settings, e
 	return organizationSettings, nil
 }
 
-func (db *PostgresConfigDatabase) UpdateSettings(ctx context.Context, irmaServerURL, insightAPIURL string, inwayID *uint) (*Settings, error) {
+func (db *PostgresConfigDatabase) PutOrganizationInway(ctx context.Context, inwayID *uint) (*Settings, error) {
 	settingsInDB := &Settings{}
 	if err := db.DB.
 		WithContext(ctx).
 		Omit(clause.Associations).
 		Where("settings_id IS NOT NULL").
-		Assign(&Settings{
-			InwayID:       inwayID,
-			IrmaServerURL: irmaServerURL,
-			InsightAPIURL: insightAPIURL,
-		}).
+		Assign(map[string]interface{}{"inway_id": inwayID}).
 		FirstOrCreate(settingsInDB).Error; err != nil {
 		return nil, err
 	}
@@ -67,7 +63,10 @@ func (db *PostgresConfigDatabase) PutInsightConfiguration(ctx context.Context, i
 		WithContext(ctx).
 		Omit(clause.Associations).
 		Where("settings_id IS NOT NULL").
-		Assign(map[string]interface{}{"insight_api_url": insightAPIURL, "irma_server_url": irmaServerURL}).
+		Assign(map[string]interface{}{
+			"irma_server_url": irmaServerURL,
+			"insight_api_url": insightAPIURL,
+		}).
 		FirstOrCreate(settingsInDB).Error; err != nil {
 		return nil, err
 	}

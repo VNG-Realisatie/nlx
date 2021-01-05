@@ -74,7 +74,7 @@ func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateS
 		}
 	}
 
-	_, err := s.configDatabase.UpdateSettings(ctx, "", "", inwayID)
+	_, err := s.configDatabase.PutOrganizationInway(ctx, inwayID)
 	if err != nil {
 		logger.Error("could not update the settings in the database", zap.Error(err))
 		return nil, status.Error(codes.Internal, "database error")

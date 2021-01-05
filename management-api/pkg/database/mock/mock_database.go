@@ -551,19 +551,19 @@ func (mr *MockConfigDatabaseMockRecorder) GetSettings(ctx interface{}) *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSettings", reflect.TypeOf((*MockConfigDatabase)(nil).GetSettings), ctx)
 }
 
-// UpdateSettings mocks base method
-func (m *MockConfigDatabase) UpdateSettings(ctx context.Context, irmaServerURL, insightAPIURL string, inwayID *uint) (*database.Settings, error) {
+// PutOrganizationInway mocks base method
+func (m *MockConfigDatabase) PutOrganizationInway(ctx context.Context, inwayID *uint) (*database.Settings, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateSettings", ctx, irmaServerURL, insightAPIURL, inwayID)
+	ret := m.ctrl.Call(m, "PutOrganizationInway", ctx, inwayID)
 	ret0, _ := ret[0].(*database.Settings)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// UpdateSettings indicates an expected call of UpdateSettings
-func (mr *MockConfigDatabaseMockRecorder) UpdateSettings(ctx, irmaServerURL, insightAPIURL, inwayID interface{}) *gomock.Call {
+// PutOrganizationInway indicates an expected call of PutOrganizationInway
+func (mr *MockConfigDatabaseMockRecorder) PutOrganizationInway(ctx, inwayID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateSettings", reflect.TypeOf((*MockConfigDatabase)(nil).UpdateSettings), ctx, irmaServerURL, insightAPIURL, inwayID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PutOrganizationInway", reflect.TypeOf((*MockConfigDatabase)(nil).PutOrganizationInway), ctx, inwayID)
 }
 
 // PutInsightConfiguration mocks base method

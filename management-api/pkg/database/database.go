@@ -53,6 +53,6 @@ type ConfigDatabase interface {
 	GetAccessProofForOutgoingAccessRequest(ctx context.Context, accessRequestID uint) (*AccessProof, error)
 
 	GetSettings(ctx context.Context) (*Settings, error)
-	UpdateSettings(ctx context.Context, irmaServerURL, insightAPIURL string, inwayID *uint) (*Settings, error)
+	PutOrganizationInway(ctx context.Context, inwayID *uint) (*Settings, error)
 	PutInsightConfiguration(ctx context.Context, irmaServerURL, insightAPIURL string) (*Settings, error)
 }

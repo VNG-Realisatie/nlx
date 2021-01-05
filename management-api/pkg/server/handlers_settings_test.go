@@ -175,8 +175,8 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 						SelfAddress: "inway.localhost",
 					}, nil)
 
-				db.EXPECT().UpdateSettings(
-					gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any(),
+				db.EXPECT().PutOrganizationInway(
+					gomock.Any(), gomock.Any(),
 				).Return(nil, errors.New("arbitrary error"))
 
 				return db
@@ -210,7 +210,7 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 						SelfAddress: "inway.localhost",
 					}, nil)
 
-				db.EXPECT().UpdateSettings(gomock.Any(), "", "", createUintPointer(1)).Return(&database.Settings{}, nil)
+				db.EXPECT().PutOrganizationInway(gomock.Any(), createUintPointer(1)).Return(&database.Settings{}, nil)
 
 				return db
 			},
@@ -232,7 +232,7 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			name: "happy flow with empty inway name",
 			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
 				db := mock_database.NewMockConfigDatabase(ctrl)
-				db.EXPECT().UpdateSettings(gomock.Any(), "", "", nil).Return(&database.Settings{}, nil)
+				db.EXPECT().PutOrganizationInway(gomock.Any(), nil).Return(&database.Settings{}, nil)
 
 				return db
 			},
