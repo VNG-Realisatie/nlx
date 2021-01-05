@@ -8,9 +8,10 @@ import AccessGrantModel from '../models/AccessGrantModel'
 class AccessGrantStore {
   accessGrants = observable.map()
 
-  constructor({ accessGrantRepository }) {
+  constructor({ managementApiClient, accessGrantRepository }) {
     makeAutoObservable(this)
 
+    this._managementApiClient = managementApiClient
     this.accessGrantRepository = accessGrantRepository
   }
 
@@ -35,9 +36,15 @@ class AccessGrantStore {
   }
 
   fetchForService = flow(function* fetchForService({ name }) {
-    const response = yield this.accessGrantRepository.fetchByServiceName(name)
+    const response = yield this._managementApiClient.managementListAccessGrantsForService(
+      {
+        serviceName: name,
+      },
+    )
 
-    response.map((accessGrantData) => this.updateFromServer(accessGrantData))
+    response.accessGrants.map((accessGrantData) =>
+      this.updateFromServer(accessGrantData),
+    )
   }).bind(this)
 
   getForService = ({ name }) => {
@@ -49,12 +56,11 @@ class AccessGrantStore {
   }
 
   revokeAccessGrant = async ({ organizationName, serviceName, id }) => {
-    await this.accessGrantRepository.revokeAccessGrant({
-      organizationName,
+    await this._managementApiClient.managementRevokeAccessGrant({
       serviceName,
-      id,
+      organizationName,
+      accessGrantID: id,
     })
-
     this.fetchForService({ name: serviceName })
   }
 }

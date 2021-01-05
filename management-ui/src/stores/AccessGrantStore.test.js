@@ -3,31 +3,47 @@
 //
 import ServiceModel from '../models/ServiceModel'
 import AccessGrantModel from '../models/AccessGrantModel'
+import { ManagementApi } from '../api'
 import AccessGrantStore from './AccessGrantStore'
 
-test('fetching, getting and updating from server', async () => {
-  const service = new ServiceModel({ serviceData: { name: 'Service' } })
-
-  const accessGrantData = {
-    id: 'abcd',
-    organizationName: 'Organization',
-    serviceName: 'Service',
-    createdAt: '2020-10-01',
-    revokedAt: null,
-  }
-  const fetchByServiceName = jest.fn().mockResolvedValue([accessGrantData])
+test('initializing the store', () => {
   const accessGrantStore = new AccessGrantStore({
-    accessGrantRepository: {
-      fetchByServiceName,
-    },
+    managementApiClient: new ManagementApi(),
   })
 
   expect(accessGrantStore.accessGrants.size).toEqual(0)
-  expect(accessGrantStore.updateFromServer()).toBeNull()
+})
 
+test('fetching, getting and updating from server', async () => {
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementListAccessGrantsForService = jest
+    .fn()
+    .mockResolvedValue({
+      accessGrants: [
+        {
+          id: 'abcd',
+          organizationName: 'Organization',
+          serviceName: 'Service',
+          createdAt: '2020-10-01',
+          revokedAt: null,
+        },
+      ],
+    })
+
+  const accessGrantStore = new AccessGrantStore({
+    managementApiClient,
+  })
+
+  const service = new ServiceModel({
+    serviceData: { name: 'Service' },
+  })
   await accessGrantStore.fetchForService(service)
 
-  expect(fetchByServiceName).toHaveBeenCalledWith(service.name)
+  expect(
+    managementApiClient.managementListAccessGrantsForService,
+  ).toHaveBeenCalledWith({ serviceName: 'Service' })
+
   expect(accessGrantStore.accessGrants.size).toEqual(1)
 
   const accessGrantsForService = accessGrantStore.getForService(service)
@@ -48,16 +64,16 @@ test('fetching, getting and updating from server', async () => {
 })
 
 test('revoking an access grant', async () => {
-  const revokeAccessGrant = jest.fn()
+  const managementApiClient = new ManagementApi()
   const accessGrantStore = new AccessGrantStore({
-    accessGrantRepository: {
-      revokeAccessGrant,
-    },
+    managementApiClient,
   })
 
-  const fetchForServiceSpy = jest
-    .spyOn(accessGrantStore, 'fetchForService')
-    .mockImplementationOnce(() => null)
+  managementApiClient.managementRevokeAccessGrant = jest
+    .fn()
+    .mockResolvedValue()
+
+  jest.spyOn(accessGrantStore, 'fetchForService').mockResolvedValue()
 
   await accessGrantStore.revokeAccessGrant({
     organizationName: 'Organization',
@@ -65,6 +81,12 @@ test('revoking an access grant', async () => {
     id: 's1',
   })
 
-  expect(revokeAccessGrant).toHaveBeenCalled()
-  expect(fetchForServiceSpy).toHaveBeenCalledWith({ name: 'Service' })
+  expect(managementApiClient.managementRevokeAccessGrant).toHaveBeenCalledWith({
+    organizationName: 'Organization',
+    serviceName: 'Service',
+    accessGrantID: 's1',
+  })
+  expect(accessGrantStore.fetchForService).toHaveBeenCalledWith({
+    name: 'Service',
+  })
 })
