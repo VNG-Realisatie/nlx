@@ -130,7 +130,8 @@ func (db *PostgresConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.C
 	outgoingAccessRequest := &OutgoingAccessRequest{}
 
 	if err := db.DB.
-		First(outgoingAccessRequest, accessRequestID).Error; err != nil {
+		First(outgoingAccessRequest, accessRequestID).
+		Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return ErrNotFound
 		}
@@ -167,7 +168,7 @@ func (db *PostgresConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.C
 			"lock_expires_at",
 			"error_code",
 			"error_cause",
-			"error_stacktrace",
+			"error_stack_trace",
 		).
 		Save(outgoingAccessRequest).Error
 }
