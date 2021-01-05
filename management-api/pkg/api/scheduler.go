@@ -34,8 +34,7 @@ import (
 const (
 	maxRetries     = 3
 	maxConcurrency = 4
-	// pollInterval   = 2500 @TODO: do not commit this, famous last words..
-	pollInterval = 2500
+	pollInterval   = 1500
 )
 
 var ErrMaxRetries = errors.New("unable to retry more than 3 times")
@@ -180,7 +179,6 @@ func (scheduler *accessRequestScheduler) getAccessRequestState(ctx context.Conte
 		return "", err
 	}
 
-	// @TODO: unspecified state?
 	var state database.OutgoingAccessRequestState
 
 	switch response.State {
@@ -195,7 +193,7 @@ func (scheduler *accessRequestScheduler) getAccessRequestState(ctx context.Conte
 	case api.AccessRequestState_FAILED:
 		state = database.OutgoingAccessRequestFailed
 	default:
-		return "", errors.New("invalid state for outgoing access request")
+		return "", fmt.Errorf("invalid state for outgoing access request: %s", response.State)
 	}
 
 	return state, nil
@@ -219,6 +217,11 @@ func (scheduler *accessRequestScheduler) schedule(ctx context.Context, request *
 	}
 
 	if err == nil {
+		// don't update the state if the state is already synchronized
+		if newState == request.State {
+			return nil
+		}
+
 		err = scheduler.configDatabase.UpdateOutgoingAccessRequestState(
 			ctx,
 			request.ID,
@@ -243,11 +246,6 @@ func (scheduler *accessRequestScheduler) schedule(ctx context.Context, request *
 			referenceID,
 			errorDetails,
 		)
-	}
-
-	// don't update the state if the state is already synchronized
-	if newState == request.State {
-		return err
 	}
 
 	return err
@@ -285,23 +283,8 @@ func (scheduler *accessRequestScheduler) parseAccessProof(accessProof *api.Acces
 	}, nil
 }
 
-// nolint:gocyclo // somehow the complexity changed from 10 to 11 by renaming `request` to `outgoingAccessRequest`
 func (scheduler *accessRequestScheduler) syncAccessProof(ctx context.Context, outgoingAccessRequest *database.OutgoingAccessRequest) error {
-	client, err := scheduler.getOrganizationManagementClient(ctx, outgoingAccessRequest.OrganizationName)
-	if err != nil {
-		return err
-	}
-
-	defer client.Close()
-
-	response, err := client.GetAccessProof(ctx, &external.GetAccessProofRequest{
-		ServiceName: outgoingAccessRequest.ServiceName,
-	})
-	if err != nil {
-		return err
-	}
-
-	remoteProof, err := scheduler.parseAccessProof(response)
+	remoteProof, err := scheduler.retrieveAccessProof(ctx, outgoingAccessRequest.OrganizationName, outgoingAccessRequest.ServiceName)
 	if err != nil {
 		return err
 	}
@@ -338,4 +321,22 @@ func (scheduler *accessRequestScheduler) syncAccessProof(ctx context.Context, ou
 	}
 
 	return nil
+}
+
+func (scheduler *accessRequestScheduler) retrieveAccessProof(ctx context.Context, organizationName, serviceName string) (*database.AccessProof, error) {
+	client, err := scheduler.getOrganizationManagementClient(ctx, organizationName)
+	if err != nil {
+		return nil, err
+	}
+
+	defer client.Close()
+
+	response, err := client.GetAccessProof(ctx, &external.GetAccessProofRequest{
+		ServiceName: serviceName,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return scheduler.parseAccessProof(response)
 }

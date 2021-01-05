@@ -5,6 +5,8 @@ package api
 
 import (
 	"context"
+	"fmt"
+	"runtime/debug"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
@@ -14,7 +16,9 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
@@ -128,10 +132,10 @@ func newGRPCServer(logger *zap.Logger, cert *common_tls.CertificateBundle) *grpc
 	transportCredentials := credentials.NewTLS(tlsConfig)
 
 	recoveryOptions := []grpc_recovery.Option{
-		// grpc_recovery.WithRecoveryHandler(func(p interface{}) error {
-		// 	//	logger.Warn("recovered from a panic in a grpc request handler", zap.ByteString("stack", debug.Stack()))
-		// 	//	return status.Error(codes.Internal, fmt.Sprintf("%s", p))
-		// }),
+		grpc_recovery.WithRecoveryHandler(func(p interface{}) error {
+			logger.Warn("recovered from a panic in a grpc request handler", zap.ByteString("stack", debug.Stack()))
+			return status.Error(codes.Internal, fmt.Sprintf("%s", p))
+		}),
 	}
 
 	opts := []grpc.ServerOption{

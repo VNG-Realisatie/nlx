@@ -55,13 +55,13 @@ Start a PostgreSQL container through Docker Compose with:
 docker-compose -f docker-compose.dev.yml up -d
 ```
 
-Run directory with:
+Run the directory migrations with:
 
 ```bash
 migrate -database "postgres://postgres:postgres@127.0.0.1:5432/nlx?sslmode=disable" -path directory-db/migrations up
 ```
 
-Run management API with:
+Run the management API migrations with:
 
 ```bash
 go run ./management-api/cmd/nlx-management-api/ migrate up --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_a?sslmode=disable"
