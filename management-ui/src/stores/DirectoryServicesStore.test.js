@@ -40,10 +40,6 @@ test('fetching all directory services', async () => {
   const directoryServicesStore = rootStore.directoryServicesStore
   await directoryServicesStore.fetchAll()
 
-  expect(
-    directoryServicesStore.directoryApiService.directoryListServices,
-  ).toHaveBeenCalled()
-
   await expect(directoryServicesStore.isInitiallyFetched).toBe(true)
   expect(directoryServicesStore.services).toHaveLength(2)
 })
@@ -63,10 +59,6 @@ test('handle error while fetching all directory services', async () => {
 
   const directoryServicesStore = rootStore.directoryServicesStore
   await directoryServicesStore.fetchAll()
-
-  expect(
-    directoryServicesStore.directoryApiService.directoryListServices,
-  ).toHaveBeenCalled()
 
   expect(directoryServicesStore.error).toEqual(new Error('arbitrary error'))
   expect(directoryServicesStore.services).toEqual([])

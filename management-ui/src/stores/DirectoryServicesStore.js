@@ -16,11 +16,11 @@ class DirectoryServicesStore {
     makeAutoObservable(this)
 
     this.rootStore = rootStore
-    this.directoryApiService = directoryApiService
+    this._directoryApiService = directoryApiService
   }
 
   fetch = flow(function* fetch({ organizationName, serviceName }) {
-    const serviceData = yield this.directoryApiService.directoryGetOrganizationService(
+    const serviceData = yield this._directoryApiService.directoryGetOrganizationService(
       {
         organizationName,
         serviceName,
@@ -50,7 +50,7 @@ class DirectoryServicesStore {
     this.error = ''
 
     try {
-      const servicesData = yield this.directoryApiService.directoryListServices()
+      const servicesData = yield this._directoryApiService.directoryListServices()
 
       this.services = servicesData.services.map((serviceData) =>
         this._updateFromServer(serviceData),
