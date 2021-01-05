@@ -55,18 +55,6 @@ class ServiceRepository {
 
     return response.json()
   }
-
-  static async getByName(name) {
-    const response = await fetchWithoutCaching(`/api/v1/services/${name}`)
-
-    throwOnError(response)
-
-    const service = await response.json()
-    service.internal = !!service.internal
-    service.inways = service.inways || []
-
-    return service
-  }
 }
 
 export default ServiceRepository
