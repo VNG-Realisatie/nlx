@@ -2,7 +2,6 @@ Deploy review:
   stage: Deploy
   image: registry.gitlab.com/commonground/core/review-app-deployer:latest
   variables:
-    KUBECONFIG: /secrets/kubeconfig/review.conf
     REVIEW_BASE_DOMAIN: nlx.reviews
     K8S_NAMESPACE: "nlx-${CI_ENVIRONMENT_SLUG}"
   before_script:
@@ -95,6 +94,8 @@ Deploy review:
     on_stop: Remove review
     auto_stop_in: 1 week
   rules:
+      # Review jobs are only accepted for environments prefixed with review/*
+      # see: https://gitlab.com/groups/commonground/nlx/-/clusters
     - if: '$CI_COMMIT_BRANCH =~ /^review\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
   dependencies:
     - Build review
@@ -110,7 +111,6 @@ Remove review:
   stage: Deploy
   image: registry.gitlab.com/commonground/core/review-app-deployer:latest
   variables:
-    KUBECONFIG: /secrets/kubeconfig/review.conf
     K8S_NAMESPACE: "nlx-${CI_ENVIRONMENT_SLUG}"
   before_script:
     - source ./.gitlab/ci/functions.sh
@@ -129,6 +129,8 @@ Remove review:
     name: $CI_COMMIT_REF_NAME
     action: stop
   rules:
+      # Review jobs are only accepted for environments prefixed with review/*
+      # see: https://gitlab.com/groups/commonground/nlx/-/clusters
     - if: '$CI_COMMIT_BRANCH =~ /^review\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
       when: manual
       allow_failure: true
