@@ -18,9 +18,9 @@ test('initializing the store', async () => {
 })
 
 test('fetching all directory services', async () => {
-  const directoryApiService = new DirectoryApi()
+  const directoryApiClient = new DirectoryApi()
 
-  directoryApiService.directoryListServices = jest.fn().mockResolvedValue({
+  directoryApiClient.directoryListServices = jest.fn().mockResolvedValue({
     services: [
       {
         organizationName: 'Org A',
@@ -34,7 +34,7 @@ test('fetching all directory services', async () => {
   })
 
   const rootStore = new RootStore({
-    directoryApiService,
+    directoryApiClient,
   })
 
   const directoryServicesStore = rootStore.directoryServicesStore
@@ -47,14 +47,14 @@ test('fetching all directory services', async () => {
 test('handle error while fetching all directory services', async () => {
   global.console.error = jest.fn()
 
-  const directoryApiService = new DirectoryApi()
+  const directoryApiClient = new DirectoryApi()
 
-  directoryApiService.directoryListServices = jest
+  directoryApiClient.directoryListServices = jest
     .fn()
     .mockRejectedValue(new Error('arbitrary error'))
 
   const rootStore = new RootStore({
-    directoryApiService,
+    directoryApiClient,
   })
 
   const directoryServicesStore = rootStore.directoryServicesStore
@@ -66,9 +66,9 @@ test('handle error while fetching all directory services', async () => {
 })
 
 test('fetching a single service', async () => {
-  const directoryApiService = new DirectoryApi()
+  const directoryApiClient = new DirectoryApi()
 
-  directoryApiService.directoryGetOrganizationService = jest
+  directoryApiClient.directoryGetOrganizationService = jest
     .fn()
     .mockResolvedValueOnce({
       organizationName: 'Org A',
@@ -82,7 +82,7 @@ test('fetching a single service', async () => {
     })
 
   const rootStore = new RootStore({
-    directoryApiService,
+    directoryApiClient,
   })
 
   const directoryServicesStore = rootStore.directoryServicesStore

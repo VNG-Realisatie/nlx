@@ -12,15 +12,15 @@ class DirectoryServicesStore {
   // This is internal state to prevent concurrent fetchAll calls being in flight.
   isFetching = false
 
-  constructor({ rootStore, directoryApiService }) {
+  constructor({ rootStore, directoryApiClient }) {
     makeAutoObservable(this)
 
     this._rootStore = rootStore
-    this._directoryApiService = directoryApiService
+    this._directoryApiClient = directoryApiClient
   }
 
   fetch = flow(function* fetch({ organizationName, serviceName }) {
-    const serviceData = yield this._directoryApiService.directoryGetOrganizationService(
+    const serviceData = yield this._directoryApiClient.directoryGetOrganizationService(
       {
         organizationName,
         serviceName,
@@ -50,7 +50,7 @@ class DirectoryServicesStore {
     this.error = ''
 
     try {
-      const servicesData = yield this._directoryApiService.directoryListServices()
+      const servicesData = yield this._directoryApiClient.directoryListServices()
 
       this.services = servicesData.services.map((serviceData) =>
         this._updateFromServer(serviceData),

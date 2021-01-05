@@ -45,9 +45,9 @@ const renderDirectory = (store) =>
   )
 
 test('listing all services', async () => {
-  const directoryApiService = new DirectoryApi()
+  const directoryApiClient = new DirectoryApi()
 
-  directoryApiService.directoryListServices = jest.fn().mockResolvedValue({
+  directoryApiClient.directoryListServices = jest.fn().mockResolvedValue({
     services: [
       {
         serviceName: 'Test Service',
@@ -56,7 +56,7 @@ test('listing all services', async () => {
   })
 
   const rootStore = new RootStore({
-    directoryApiService,
+    directoryApiClient,
   })
   const fetchAllSpy = jest.spyOn(rootStore.directoryServicesStore, 'fetchAll')
 
@@ -81,13 +81,13 @@ test('listing all services', async () => {
 })
 
 test('no services', async () => {
-  const directoryApiService = new DirectoryApi()
-  directoryApiService.directoryListServices = jest.fn().mockResolvedValue({
+  const directoryApiClient = new DirectoryApi()
+  directoryApiClient.directoryListServices = jest.fn().mockResolvedValue({
     services: [],
   })
 
   const rootStore = new RootStore({
-    directoryApiService,
+    directoryApiClient,
   })
 
   const { findByTestId, getByTestId } = renderDirectory(rootStore)
@@ -120,9 +120,9 @@ test('navigating to the detail page should re-fetch the directory model', async 
   // the detail page this allows us to first put a spy on
   // the fetch-method of the ServiceDirectory model
 
-  const directoryApiService = new DirectoryApi()
+  const directoryApiClient = new DirectoryApi()
 
-  directoryApiService.directoryListServices = jest.fn().mockResolvedValue({
+  directoryApiClient.directoryListServices = jest.fn().mockResolvedValue({
     services: [
       {
         organizationName: 'foo',
@@ -133,7 +133,7 @@ test('navigating to the detail page should re-fetch the directory model', async 
   })
 
   const rootStore = new RootStore({
-    directoryApiService,
+    directoryApiClient,
   })
 
   const history = createMemoryHistory({ initialEntries: ['/directory'] })

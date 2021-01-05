@@ -26,8 +26,8 @@ export const storesContext = createContext(null)
 
 export class RootStore {
   constructor({
-    directoryApiService,
-    managementApiService,
+    directoryApiClient,
+    managementApiClient,
     accessRequestRepository = AccessRequestRepository,
     accessGrantRepository = AccessGrantRepository,
     inwayRepository = InwayRepository,
@@ -35,7 +35,7 @@ export class RootStore {
     this.applicationStore = new ApplicationStore()
     this.directoryServicesStore = new DirectoryServicesStore({
       rootStore: this,
-      directoryApiService,
+      directoryApiClient,
     })
     this.outgoingAccessRequestStore = new OutgoingAccessRequestStore({
       rootStore: this,
@@ -45,7 +45,7 @@ export class RootStore {
     this.accessProofStore = new AccessProofStore()
     this.servicesStore = new ServicesStore({
       rootStore: this,
-      managementApiService,
+      managementApiClient,
     })
     this.incomingAccessRequestsStore = new IncomingAccessRequestsStore({
       accessRequestRepository,

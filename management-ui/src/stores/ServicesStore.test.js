@@ -16,11 +16,11 @@ beforeEach(() => {
 })
 
 test('initializing the store', async () => {
-  const managementApiService = new ManagementApi()
+  const managementApiClient = new ManagementApi()
 
   const servicesStore = new ServicesStore({
     rootStore: new RootStore(),
-    managementApiService,
+    managementApiClient,
   })
 
   expect(servicesStore.services).toEqual([])
@@ -29,14 +29,14 @@ test('initializing the store', async () => {
 })
 
 test('fetch a single service', async () => {
-  const managementApiService = new ManagementApi()
+  const managementApiClient = new ManagementApi()
 
-  managementApiService.managementGetService = jest.fn().mockResolvedValue({
+  managementApiClient.managementGetService = jest.fn().mockResolvedValue({
     name: 'Service A',
   })
 
   const rootStore = new RootStore({
-    managementApiService,
+    managementApiClient,
     accessRequestRepository: {
       fetchForService: jest.fn(),
       fetchByServiceName: jest.fn().mockResolvedValue([]),
@@ -49,7 +49,7 @@ test('fetch a single service', async () => {
 
   const servicesStore = new ServicesStore({
     rootStore,
-    managementApiService,
+    managementApiClient,
   })
 
   servicesStore.services = [

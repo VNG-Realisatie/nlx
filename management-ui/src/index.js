@@ -12,20 +12,20 @@ import { UserContextProvider } from './user-context'
 import App from './App'
 import { Configuration, DirectoryApi, ManagementApi } from './api'
 
-const directoryApiService = new DirectoryApi(
+const directoryApiClient = new DirectoryApi(
   new Configuration({
     basePath: '',
   }),
 )
-const managementApiService = new ManagementApi(
+const managementApiClient = new ManagementApi(
   new Configuration({
     basePath: '',
   }),
 )
 
 const rootStore = new RootStore({
-  directoryApiService,
-  managementApiService,
+  directoryApiClient,
+  managementApiClient,
 })
 
 ReactDOM.render(

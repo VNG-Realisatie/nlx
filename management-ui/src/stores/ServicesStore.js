@@ -17,13 +17,13 @@ class ServicesStore {
 
   constructor({
     rootStore,
-    managementApiService,
+    managementApiClient,
     serviceRepository = ServiceRepository,
   }) {
     makeAutoObservable(this)
 
     this.rootStore = rootStore
-    this._managementApiService = managementApiService
+    this._managementApiClient = managementApiClient
     this.serviceRepository = serviceRepository
 
     this.services = []
@@ -33,7 +33,7 @@ class ServicesStore {
   }
 
   fetch = flow(function* fetch({ name }) {
-    const serviceData = yield this._managementApiService.managementGetService({
+    const serviceData = yield this._managementApiClient.managementGetService({
       name,
     })
 
