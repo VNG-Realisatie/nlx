@@ -41,6 +41,11 @@ type API struct {
 	configDatabase  database.ConfigDatabase
 }
 
+//nolint:gocritic // we need this to be able to mock it in the tests
+var newConfigDatabase = func(postgresDSN string) (database.ConfigDatabase, error) {
+	return database.NewPostgresConfigDatabase(postgresDSN)
+}
+
 // NewAPI creates and prepares a new API
 //nolint:gocyclo // parameter validation
 func NewAPI(logger *zap.Logger, mainProcess *process.Process, cert, orgCert *common_tls.CertificateBundle, postgresDSN, directoryInspectionAddress, directoryRegistrationAddress string, authenticator *oidc.Authenticator) (*API, error) {
@@ -53,7 +58,7 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, cert, orgCert *com
 	}
 
 	if postgresDSN == "" {
-		return nil, errors.New("etcd connection string is not configured")
+		return nil, errors.New("postgres connection string is not configured")
 	}
 
 	if directoryInspectionAddress == "" {
@@ -73,7 +78,7 @@ func NewAPI(logger *zap.Logger, mainProcess *process.Process, cert, orgCert *com
 		logger.Fatal("failed to setup directory client", zap.Error(err))
 	}
 
-	db, err := database.NewPostgresConfigDatabase(postgresDSN)
+	db, err := newConfigDatabase(postgresDSN)
 	if err != nil {
 		return nil, err
 	}

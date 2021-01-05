@@ -9,6 +9,7 @@ import (
 
 	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
+	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/oidc"
 )
 
@@ -22,7 +23,7 @@ var tests = []struct {
 	name                         string
 	cert                         certFiles
 	orgCert                      certFiles
-	etcdConnectionString         string
+	postgresDSN                  string
 	directoryInspectionAddress   string
 	directoryRegistrationAddress string
 	expectedErrorMessage         string
@@ -45,7 +46,7 @@ var tests = []struct {
 		"cannot obtain organization name from self cert",
 	},
 	{
-		"etcd_connection_is_missing",
+		"postgres_connection_is_missing",
 		certFiles{
 			filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
 			filepath.Join(pkiDir, "org-nlx-test-key.pem"),
@@ -59,7 +60,7 @@ var tests = []struct {
 		"",
 		"",
 		"",
-		"etcd connection string is not configured",
+		"postgres connection string is not configured",
 	},
 	{
 		"directory_inspection_address_is_missing",
@@ -73,7 +74,7 @@ var tests = []struct {
 			filepath.Join(pkiDir, "org-nlx-test-key.pem"),
 			filepath.Join(pkiDir, "ca-root.pem"),
 		},
-		"etcd.test:2379",
+		"postgres://root:root@localhost:5432",
 		"",
 		"",
 		"directory inspection address is not configured",
@@ -90,7 +91,7 @@ var tests = []struct {
 			filepath.Join(pkiDir, "org-nlx-test-key.pem"),
 			filepath.Join(pkiDir, "ca-root.pem"),
 		},
-		"etcd.test:2379",
+		"postgres://root:root@localhost:5432",
 		"directory-inspection.test:8443",
 		"",
 		"directory registration address is not configured",
@@ -107,7 +108,7 @@ var tests = []struct {
 			filepath.Join(pkiDir, "org-nlx-test-key.pem"),
 			filepath.Join(pkiDir, "ca-root.pem"),
 		},
-		"etcd.test:2379",
+		"postgres://root:root@localhost:5432",
 		"directory-inspection.test:8443",
 		"directory-registration.test:8443",
 		"",
@@ -117,6 +118,10 @@ var tests = []struct {
 func TestNewAPI(t *testing.T) {
 	logger := zap.NewNop()
 	testProcess := process.NewProcess(logger)
+
+	newConfigDatabase = func(dsn string) (database.ConfigDatabase, error) {
+		return &database.PostgresConfigDatabase{}, nil
+	}
 
 	// Test exceptions during management-api creation
 	for _, test := range tests {
@@ -128,7 +133,7 @@ func TestNewAPI(t *testing.T) {
 			orgCert, err := common_tls.NewBundleFromFiles(test.orgCert.certFile, test.orgCert.keyFile, test.orgCert.rootCertFile)
 			assert.NoError(t, err)
 
-			_, err = NewAPI(logger, testProcess, cert, orgCert, test.etcdConnectionString, test.directoryInspectionAddress, test.directoryRegistrationAddress, &oidc.Authenticator{})
+			_, err = NewAPI(logger, testProcess, cert, orgCert, test.postgresDSN, test.directoryInspectionAddress, test.directoryRegistrationAddress, &oidc.Authenticator{})
 
 			if test.expectedErrorMessage != "" {
 				assert.EqualError(t, err, test.expectedErrorMessage)

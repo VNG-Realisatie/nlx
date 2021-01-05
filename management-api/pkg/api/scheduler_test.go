@@ -6,7 +6,6 @@ package api
 import (
 	"context"
 	"testing"
-	"time"
 
 	"github.com/gogo/protobuf/types"
 	"github.com/golang/mock/gomock"
@@ -61,72 +60,6 @@ func newTestScheduler(t *testing.T) (schedulerMocks, *accessRequestScheduler) {
 	}
 
 	return mocks, scheduler
-}
-
-func TestListCurrentAccessRequests(t *testing.T) {
-	mocks, scheduler := newTestScheduler(t)
-	ctx := context.Background()
-
-	requests := []*database.OutgoingAccessRequest{
-		{
-			AccessRequest: database.AccessRequest{
-				ID:               "id-1",
-				OrganizationName: "organization-a",
-				ServiceName:      "service",
-				State:            database.AccessRequestCreated,
-			},
-		},
-		{
-			AccessRequest: database.AccessRequest{
-				ID:               "id-2",
-				OrganizationName: "organization-b",
-				ServiceName:      "service",
-				State:            database.AccessRequestFailed,
-			},
-		},
-		{
-			AccessRequest: database.AccessRequest{
-				ID:               "id-3",
-				OrganizationName: "organization-c",
-				ServiceName:      "service",
-				State:            database.AccessRequestCreated,
-			},
-		},
-		{
-			AccessRequest: database.AccessRequest{
-				ID:               "id-4",
-				OrganizationName: "organization-d",
-				ServiceName:      "service",
-				State:            database.AccessRequestCreated,
-			},
-		},
-		{
-			AccessRequest: database.AccessRequest{
-				ID:               "id-5",
-				OrganizationName: "organization-e",
-				ServiceName:      "service",
-				State:            database.AccessRequestCreated,
-			},
-		},
-	}
-
-	mocks.db.
-		EXPECT().
-		ListAllOutgoingAccessRequests(ctx).
-		Return(requests, nil)
-
-	err := scheduler.listCurrentAccessRequests(ctx)
-	assert.NoError(t, err)
-
-	actual := []*database.OutgoingAccessRequest{}
-
-	for i := 0; i < 4; i++ {
-		actual = append(actual, <-scheduler.requests)
-	}
-
-	expected := append(requests[:1], requests[2:]...)
-
-	assert.Equal(t, expected, actual)
 }
 
 func TestGetOrganizationManagementClient(t *testing.T) {
@@ -209,59 +142,17 @@ func TestSchedule(t *testing.T) {
 		setupMock func(schedulerMocks)
 		request   *database.OutgoingAccessRequest
 		wantErr   bool
-		wantState database.AccessRequestState
+		wantState database.OutgoingAccessRequestState
 	}{
-		"handling_a_locked_request_returns_nil": {
-			request: &database.OutgoingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ID:               "id-1",
-					OrganizationName: "organization-a",
-					ServiceName:      "service",
-					State:            database.AccessRequestCreated,
-				},
-			},
-			setupMock: func(mocks schedulerMocks) {
-				mocks.db.
-					EXPECT().
-					LockOutgoingAccessRequest(ctx, gomock.Any()).
-					Return(database.ErrAccessRequestLocked)
-			},
-		},
-
-		"returns_an_error_when_locking_fails": {
-			request: &database.OutgoingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ID:               "id-1",
-					OrganizationName: "organization-a",
-					ServiceName:      "service",
-					State:            database.AccessRequestCreated,
-				},
-			},
-			wantErr: true,
-			setupMock: func(mocks schedulerMocks) {
-				mocks.db.
-					EXPECT().
-					LockOutgoingAccessRequest(ctx, gomock.Any()).
-					Return(errors.New("error"))
-			},
-		},
-
 		"returns_an_error_when_getting_organization_management_client_fails": {
 			request: &database.OutgoingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ID:               "id-1",
-					OrganizationName: "organization-a",
-					ServiceName:      "service",
-					State:            database.AccessRequestCreated,
-				},
-				ReferenceID: "refid",
+				ID:               1,
+				OrganizationName: "organization-a",
+				ServiceName:      "service",
+				State:            database.OutgoingAccessRequestCreated,
+				ReferenceID:      2,
 			},
 			setupMock: func(mocks schedulerMocks) {
-				mocks.db.
-					EXPECT().
-					LockOutgoingAccessRequest(ctx, gomock.Any()).
-					Return(nil)
-
 				mocks.directory.
 					EXPECT().
 					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
@@ -271,32 +162,20 @@ func TestSchedule(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					UpdateOutgoingAccessRequestState(ctx, gomock.Any(), database.AccessRequestFailed, "", gomock.Any()).
-					Return(nil)
-
-				mocks.db.
-					EXPECT().
-					UnlockOutgoingAccessRequest(ctx, gomock.Any()).
+					UpdateOutgoingAccessRequestState(ctx, uint(1), database.OutgoingAccessRequestFailed, uint(0), gomock.Any()).
 					Return(nil)
 			},
 		},
 
 		"returns_an_error_when_update_access_request_state_returns_an_error": {
 			request: &database.OutgoingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ID:               "id-1",
-					OrganizationName: "organization-a",
-					ServiceName:      "service",
-					State:            database.AccessRequestReceived,
-				},
+				ID:               1,
+				OrganizationName: "organization-a",
+				ServiceName:      "service",
+				State:            database.OutgoingAccessRequestReceived,
 			},
 			wantErr: true,
 			setupMock: func(mocks schedulerMocks) {
-				mocks.db.
-					EXPECT().
-					LockOutgoingAccessRequest(ctx, gomock.Any()).
-					Return(nil)
-
 				mocks.directory.
 					EXPECT().
 					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
@@ -317,13 +196,8 @@ func TestSchedule(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					UpdateOutgoingAccessRequestState(ctx, gomock.Any(), database.AccessRequestApproved, "", nil).
+					UpdateOutgoingAccessRequestState(ctx, uint(1), database.OutgoingAccessRequestApproved, uint(0), nil).
 					Return(errors.New("error"))
-
-				mocks.db.
-					EXPECT().
-					UnlockOutgoingAccessRequest(ctx, gomock.Any()).
-					Return(nil)
 
 				mocks.management.
 					EXPECT().
@@ -334,19 +208,12 @@ func TestSchedule(t *testing.T) {
 
 		"scheduling_a_created_access_request_succeeds": {
 			request: &database.OutgoingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ID:               "id-1",
-					OrganizationName: "organization-a",
-					ServiceName:      "service",
-					State:            database.AccessRequestCreated,
-				},
+				ID:               1,
+				OrganizationName: "organization-a",
+				ServiceName:      "service",
+				State:            database.OutgoingAccessRequestCreated,
 			},
 			setupMock: func(mocks schedulerMocks) {
-				mocks.db.
-					EXPECT().
-					LockOutgoingAccessRequest(ctx, gomock.Any()).
-					Return(nil)
-
 				mocks.directory.
 					EXPECT().
 					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
@@ -362,17 +229,13 @@ func TestSchedule(t *testing.T) {
 						ServiceName: "service",
 					}, gomock.Any()).
 					Return(&external.RequestAccessResponse{
-						ReferenceId: "refid",
+						ReferenceId: 2,
 					}, nil)
 
 				mocks.db.
 					EXPECT().
-					UpdateOutgoingAccessRequestState(ctx, gomock.Any(), database.AccessRequestReceived, "refid", nil).
+					UpdateOutgoingAccessRequestState(ctx, uint(1), database.OutgoingAccessRequestReceived, uint(2), nil).
 					Return(nil)
-
-				mocks.db.
-					EXPECT().
-					UnlockOutgoingAccessRequest(ctx, gomock.Any())
 
 				mocks.management.
 					EXPECT().
@@ -383,19 +246,12 @@ func TestSchedule(t *testing.T) {
 
 		"scheduling_a_pending_access_request_succeeds": {
 			request: &database.OutgoingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ID:               "id-1",
-					OrganizationName: "organization-a",
-					ServiceName:      "service",
-					State:            database.AccessRequestReceived,
-				},
+				ID:               1,
+				OrganizationName: "organization-a",
+				ServiceName:      "service",
+				State:            database.OutgoingAccessRequestReceived,
 			},
 			setupMock: func(mocks schedulerMocks) {
-				mocks.db.
-					EXPECT().
-					LockOutgoingAccessRequest(ctx, gomock.Any()).
-					Return(nil)
-
 				mocks.directory.
 					EXPECT().
 					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
@@ -416,12 +272,8 @@ func TestSchedule(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					UpdateOutgoingAccessRequestState(ctx, gomock.Any(), database.AccessRequestApproved, "", nil).
+					UpdateOutgoingAccessRequestState(ctx, uint(1), database.OutgoingAccessRequestApproved, uint(0), nil).
 					Return(nil)
-
-				mocks.db.
-					EXPECT().
-					UnlockOutgoingAccessRequest(ctx, gomock.Any())
 
 				mocks.management.
 					EXPECT().
@@ -453,69 +305,28 @@ func TestSchedulePendingRequests(t *testing.T) {
 	ctx := context.Background()
 
 	tests := map[string]struct {
-		setupMock    func(schedulerMocks)
-		wantErr      bool
-		wantRequests []*database.OutgoingAccessRequest
+		setupMock func(schedulerMocks)
+		wantErr   bool
 	}{
 		"returns_an_error_when_list_outgoing_access_requests_errors": {
 			wantErr: true,
 			setupMock: func(mocks schedulerMocks) {
 				mocks.db.
 					EXPECT().
-					ListAllOutgoingAccessRequests(ctx).
+					TakePendingOutgoingAccessRequest(ctx).
 					Return(nil, errors.New("random error"))
 			},
 		},
 
 		"schedules_received_requests": {
 			wantErr: false,
-			wantRequests: []*database.OutgoingAccessRequest{
-				{
-					AccessRequest: database.AccessRequest{
-						State: database.AccessRequestReceived,
-					},
-				},
-				{
-					AccessRequest: database.AccessRequest{
-						State: database.AccessRequestReceived,
-					},
-				},
-				{
-					AccessRequest: database.AccessRequest{
-						State: database.AccessRequestReceived,
-					},
-				},
-			},
 			setupMock: func(mocks schedulerMocks) {
 				mocks.db.
 					EXPECT().
-					ListAllOutgoingAccessRequests(ctx).
-					Return([]*database.OutgoingAccessRequest{
-						{
-							AccessRequest: database.AccessRequest{
-								State: database.AccessRequestReceived,
-							},
-						},
-						{
-							AccessRequest: database.AccessRequest{
-								State: database.AccessRequestCreated,
-							},
-						},
-						{
-							AccessRequest: database.AccessRequest{
-								State: database.AccessRequestReceived,
-							},
-						},
-						{
-							AccessRequest: database.AccessRequest{
-								State: database.AccessRequestApproved,
-							},
-						},
-						{
-							AccessRequest: database.AccessRequest{
-								State: database.AccessRequestReceived,
-							},
-						},
+					TakePendingOutgoingAccessRequest(ctx).
+					Return(&database.OutgoingAccessRequest{
+						// Give it an error state so that it won't actually be scheduled
+						State: database.OutgoingAccessRequestFailed,
 					}, nil)
 			},
 		},
@@ -529,20 +340,11 @@ func TestSchedulePendingRequests(t *testing.T) {
 
 			tt.setupMock(mocks)
 
-			err := scheduler.schedulePendingRequests(ctx)
+			err := scheduler.schedulePendingRequest(ctx)
 			if tt.wantErr {
 				assert.Error(t, err, "schedulePendingRequests should error")
 			} else {
 				assert.NoError(t, err, "schedulePendingRequests shouldn't error")
-
-				requests := []*database.OutgoingAccessRequest{}
-
-				for i := 0; i < 3; i++ {
-					request := <-scheduler.requests
-					requests = append(requests, request)
-				}
-
-				assert.Equal(t, tt.wantRequests, requests)
 			}
 		})
 	}
@@ -560,10 +362,8 @@ func TestSyncAccessProof(t *testing.T) {
 		"returns_an_error_when_get_organization_inway_errors": {
 			wantErr: true,
 			request: &database.OutgoingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ID:               "id",
-					OrganizationName: "organization-b",
-				},
+				ID:               1,
+				OrganizationName: "organization-b",
 			},
 			setupMocks: func(mocks schedulerMocks) {
 				mocks.directory.
@@ -578,10 +378,8 @@ func TestSyncAccessProof(t *testing.T) {
 		"returns_an_error_when_inway_address_is_invalid": {
 			wantErr: true,
 			request: &database.OutgoingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ID:               "id",
-					OrganizationName: "organization-b",
-				},
+				ID:               1,
+				OrganizationName: "organization-b",
 			},
 			setupMocks: func(mocks schedulerMocks) {
 				mocks.directory.
@@ -598,11 +396,9 @@ func TestSyncAccessProof(t *testing.T) {
 		"returns_an_error_when_external_get_access_proof_errors": {
 			wantErr: true,
 			request: &database.OutgoingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ID:               "id",
-					OrganizationName: "organization-b",
-					ServiceName:      "service",
-				},
+				ID:               1,
+				OrganizationName: "organization-b",
+				ServiceName:      "service",
 			},
 			setupMocks: func(mocks schedulerMocks) {
 				mocks.directory.
@@ -630,11 +426,9 @@ func TestSyncAccessProof(t *testing.T) {
 		"returns_an_error_when_parsing_access_proof_errors": {
 			wantErr: true,
 			request: &database.OutgoingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ID:               "id",
-					OrganizationName: "organization-b",
-					ServiceName:      "service",
-				},
+				ID:               1,
+				OrganizationName: "organization-b",
+				ServiceName:      "service",
 			},
 			setupMocks: func(mocks schedulerMocks) {
 				mocks.directory.
@@ -651,7 +445,12 @@ func TestSyncAccessProof(t *testing.T) {
 					GetAccessProof(ctx, &external.GetAccessProofRequest{
 						ServiceName: "service",
 					}).
-					Return(&api.AccessProof{}, nil)
+					Return(&api.AccessProof{
+						CreatedAt: &types.Timestamp{
+							// Trigger an invalid timestamp by setting the year to > 10.000
+							Seconds: 553371149436,
+						},
+					}, nil)
 
 				mocks.management.
 					EXPECT().
@@ -662,11 +461,9 @@ func TestSyncAccessProof(t *testing.T) {
 		"returns_an_error_when_database_getting_access_proof_for_outgoing_access_request_errors": {
 			wantErr: true,
 			request: &database.OutgoingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ID:               "id",
-					OrganizationName: "organization-b",
-					ServiceName:      "service",
-				},
+				ID:               1,
+				OrganizationName: "organization-b",
+				ServiceName:      "service",
 			},
 			setupMocks: func(mocks schedulerMocks) {
 				mocks.directory.
@@ -690,7 +487,7 @@ func TestSyncAccessProof(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					GetAccessProofForOutgoingAccessRequest(ctx, "organization-b", "service", "id").
+					GetAccessProofForOutgoingAccessRequest(ctx, uint(1)).
 					Return(nil, errors.New("random error"))
 
 				mocks.management.
@@ -702,16 +499,11 @@ func TestSyncAccessProof(t *testing.T) {
 		"returns_an_error_when_database_create_access_proof_errors": {
 			wantErr: true,
 			request: &database.OutgoingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ID:               "id",
-					OrganizationName: "organization-b",
-					ServiceName:      "service",
-				},
+				ID:               1,
+				OrganizationName: "organization-b",
+				ServiceName:      "service",
 			},
 			setupMocks: func(mocks schedulerMocks) {
-				ts := types.TimestampNow()
-				t, _ := types.TimestampFromProto(ts)
-
 				mocks.directory.
 					EXPECT().
 					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
@@ -727,7 +519,6 @@ func TestSyncAccessProof(t *testing.T) {
 						ServiceName: "service",
 					}).
 					Return(&api.AccessProof{
-						CreatedAt:        ts,
 						OrganizationName: "organization-a",
 						ServiceName:      "service",
 						RevokedAt:        nil,
@@ -735,16 +526,15 @@ func TestSyncAccessProof(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					GetAccessProofForOutgoingAccessRequest(ctx, "organization-b", "service", "id").
+					GetAccessProofForOutgoingAccessRequest(ctx, uint(1)).
 					Return(nil, database.ErrNotFound)
 
 				mocks.db.
 					EXPECT().
-					CreateAccessProof(ctx, &database.AccessProof{
-						AccessRequestID:  "id",
+					CreateAccessProof(ctx, &database.OutgoingAccessRequest{
+						ID:               1,
 						OrganizationName: "organization-b",
 						ServiceName:      "service",
-						CreatedAt:        t,
 					}).
 					Return(nil, errors.New("random error"))
 
@@ -757,11 +547,9 @@ func TestSyncAccessProof(t *testing.T) {
 		"returns_an_error_when_database_revoke_access_proof_errors": {
 			wantErr: true,
 			request: &database.OutgoingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ID:               "id",
-					OrganizationName: "organization-b",
-					ServiceName:      "service",
-				},
+				ID:               1,
+				OrganizationName: "organization-b",
+				ServiceName:      "service",
 			},
 			setupMocks: func(mocks schedulerMocks) {
 				ts := types.TimestampNow()
@@ -790,22 +578,22 @@ func TestSyncAccessProof(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					GetAccessProofForOutgoingAccessRequest(ctx, "organization-b", "service", "id").
+					GetAccessProofForOutgoingAccessRequest(ctx, uint(1)).
 					Return(&database.AccessProof{
-						ID:               "1",
-						OrganizationName: "organization-b",
-						ServiceName:      "service",
-						CreatedAt:        t,
-						RevokedAt:        time.Time{},
+						ID: 2,
+						OutgoingAccessRequest: &database.OutgoingAccessRequest{
+							ID:               1,
+							OrganizationName: "organization-b",
+							ServiceName:      "service",
+						},
+						CreatedAt: t,
 					}, nil)
 
 				mocks.db.
 					EXPECT().
 					RevokeAccessProof(
 						ctx,
-						"organization-b",
-						"service",
-						"1",
+						uint(2),
 						t,
 					).
 					Return(nil, errors.New("random error"))
@@ -818,11 +606,9 @@ func TestSyncAccessProof(t *testing.T) {
 
 		"successfully_revokes_an_access_grant_when_its_revoked": {
 			request: &database.OutgoingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ID:               "id",
-					OrganizationName: "organization-b",
-					ServiceName:      "service",
-				},
+				ID:               1,
+				OrganizationName: "organization-b",
+				ServiceName:      "service",
 			},
 			setupMocks: func(mocks schedulerMocks) {
 				ts := types.TimestampNow()
@@ -851,22 +637,22 @@ func TestSyncAccessProof(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					GetAccessProofForOutgoingAccessRequest(ctx, "organization-b", "service", "id").
+					GetAccessProofForOutgoingAccessRequest(ctx, uint(1)).
 					Return(&database.AccessProof{
-						ID:               "1",
-						OrganizationName: "organization-b",
-						ServiceName:      "service",
-						CreatedAt:        t,
-						RevokedAt:        time.Time{},
+						ID: 2,
+						OutgoingAccessRequest: &database.OutgoingAccessRequest{
+							ID:               1,
+							OrganizationName: "organization-b",
+							ServiceName:      "service",
+						},
+						CreatedAt: t,
 					}, nil)
 
 				mocks.db.
 					EXPECT().
 					RevokeAccessProof(
 						ctx,
-						"organization-b",
-						"service",
-						"1",
+						uint(2),
 						t,
 					).
 					Return(nil, nil)
@@ -880,16 +666,11 @@ func TestSyncAccessProof(t *testing.T) {
 		"successfully_creates_an_access_proof_when_its_found": {
 			wantErr: false,
 			request: &database.OutgoingAccessRequest{
-				AccessRequest: database.AccessRequest{
-					ID:               "id",
-					OrganizationName: "organization-b",
-					ServiceName:      "service",
-				},
+				ID:               1,
+				OrganizationName: "organization-b",
+				ServiceName:      "service",
 			},
 			setupMocks: func(mocks schedulerMocks) {
-				ts := types.TimestampNow()
-				t, _ := types.TimestampFromProto(ts)
-
 				mocks.directory.
 					EXPECT().
 					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
@@ -905,7 +686,6 @@ func TestSyncAccessProof(t *testing.T) {
 						ServiceName: "service",
 					}).
 					Return(&api.AccessProof{
-						CreatedAt:        ts,
 						OrganizationName: "organization-a",
 						ServiceName:      "service",
 						RevokedAt:        nil,
@@ -913,16 +693,15 @@ func TestSyncAccessProof(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					GetAccessProofForOutgoingAccessRequest(ctx, "organization-b", "service", "id").
+					GetAccessProofForOutgoingAccessRequest(ctx, uint(1)).
 					Return(nil, database.ErrNotFound)
 
 				mocks.db.
 					EXPECT().
-					CreateAccessProof(ctx, &database.AccessProof{
-						AccessRequestID:  "id",
+					CreateAccessProof(ctx, &database.OutgoingAccessRequest{
+						ID:               1,
 						OrganizationName: "organization-b",
 						ServiceName:      "service",
-						CreatedAt:        t,
 					}).
 					Return(nil, nil)
 

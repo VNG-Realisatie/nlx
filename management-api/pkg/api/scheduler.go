@@ -254,9 +254,15 @@ func (scheduler *accessRequestScheduler) schedule(ctx context.Context, request *
 }
 
 func (scheduler *accessRequestScheduler) parseAccessProof(accessProof *api.AccessProof) (*database.AccessProof, error) {
-	createdAt, err := types.TimestampFromProto(accessProof.CreatedAt)
-	if err != nil {
-		return nil, err
+	var createdAt time.Time
+
+	if accessProof.CreatedAt != nil {
+		var err error
+
+		createdAt, err = types.TimestampFromProto(accessProof.CreatedAt)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	revokedAt, err := types.TimestampFromProto(accessProof.RevokedAt)
