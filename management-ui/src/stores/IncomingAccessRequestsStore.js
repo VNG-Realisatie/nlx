@@ -64,11 +64,10 @@ class IncomingAccessRequestsStore {
   }
 
   approveAccessRequest = async ({ serviceName, id }) => {
-    await this.accessRequestRepository.approveIncomingAccessRequest({
-      serviceName,
-      id,
+    await this._managementApiClient.managementApproveIncomingAccessRequest({
+      serviceName: serviceName,
+      accessRequestID: id,
     })
-
     this.fetchForService({ name: serviceName })
   }
 

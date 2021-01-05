@@ -68,23 +68,27 @@ test('fetching, getting and updating from server', async () => {
 })
 
 test('approving an access request', async () => {
-  const approveIncomingAccessRequest = jest.fn()
+  const managementApiClient = new ManagementApi()
+  managementApiClient.managementApproveIncomingAccessRequest = jest
+    .fn()
+    .mockResolvedValue()
+
   const incomingAccessRequestStore = new IncomingAccessRequestsStore({
-    accessRequestRepository: {
-      approveIncomingAccessRequest,
-    },
+    managementApiClient,
   })
 
   const fetchForServiceSpy = jest
     .spyOn(incomingAccessRequestStore, 'fetchForService')
-    .mockImplementationOnce(() => null)
+    .mockResolvedValue()
 
   await incomingAccessRequestStore.approveAccessRequest({
     serviceName: 'Service',
     id: 's1',
   })
 
-  expect(approveIncomingAccessRequest).toHaveBeenCalled()
+  expect(
+    managementApiClient.managementApproveIncomingAccessRequest,
+  ).toHaveBeenCalled()
   expect(fetchForServiceSpy).toHaveBeenCalledWith({ name: 'Service' })
 })
 
