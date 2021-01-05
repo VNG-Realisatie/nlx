@@ -4,7 +4,6 @@ Deploy pre-production:
   environment:
     name: pre-production
   variables:
-    KUBECONFIG: /secrets/kubeconfig/dv-core-prod.conf
     K8S_NAMESPACE: nlx-${CI_ENVIRONMENT_NAME}
     CHART_DIRECTORY: ./helm/deploy/directory
   script:

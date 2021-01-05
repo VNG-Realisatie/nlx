@@ -4,7 +4,6 @@ Deploy demo:
   environment:
     name: demo
   variables:
-    KUBECONFIG: /secrets/kubeconfig/dv-core-prod.conf
     K8S_NAMESPACE: nlx-${CI_ENVIRONMENT_NAME}
     HELM_CHARTS_TO_DEPLOY: "shared brp rdw haarlem"
   before_script:
