@@ -6,6 +6,15 @@ import OutgoingAccessRequestModel, {
 } from '../models/OutgoingAccessRequestModel'
 import { ManagementApi } from '../api'
 import OutgoingAccessRequestStore from './OutgoingAccessRequestStore'
+import { RootStore } from './index'
+
+test('initializing the store', () => {
+  const outgoingAccessRequestStore = new OutgoingAccessRequestStore({
+    rootStore: new RootStore(),
+  })
+
+  expect(outgoingAccessRequestStore.outgoingAccessRequests.size).toEqual(0)
+})
 
 test('creating an outgoing access request', async () => {
   const managementApiClient = new ManagementApi()
@@ -54,9 +63,10 @@ test('creating an outgoing access request', async () => {
 })
 
 test('updating from server', async () => {
-  const outgoingAccessRequestStore = new OutgoingAccessRequestStore({})
+  const outgoingAccessRequestStore = new OutgoingAccessRequestStore({
+    rootStore: new RootStore(),
+  })
 
-  expect(outgoingAccessRequestStore.outgoingAccessRequests.size).toEqual(0)
   expect(outgoingAccessRequestStore.updateFromServer()).toBeNull()
 
   let outgoingAccessRequestModel = await outgoingAccessRequestStore.updateFromServer(

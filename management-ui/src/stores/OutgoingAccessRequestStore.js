@@ -7,10 +7,7 @@ import OutgoingAccessRequestModel from '../models/OutgoingAccessRequestModel'
 class OutgoingAccessRequestStore {
   outgoingAccessRequests = observable.map()
 
-  constructor({
-    rootStore,
-    managementApiClient,
-  }) {
+  constructor({ rootStore, managementApiClient }) {
     makeAutoObservable(this)
 
     this.rootStore = rootStore
