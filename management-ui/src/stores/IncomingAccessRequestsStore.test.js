@@ -9,19 +9,32 @@ import IncomingAccessRequestsStore from './IncomingAccessRequestsStore'
 test('fetching, getting and updating from server', async () => {
   const service = new ServiceModel({ serviceData: { name: 'Service' } })
 
-  const incomingAccessRequestData = {
-    id: 'abcd',
-    organizationName: 'Organization',
-    serviceName: 'Service',
-    state: 'CREATED',
-    createdAt: '2020-10-01T12:00:00Z',
-    updatedAt: '2020-10-01T12:00:01Z',
-  }
   const managementApiClient = new ManagementApi()
   managementApiClient.managementListIncomingAccessRequest = jest
     .fn()
     .mockResolvedValue({
-      accessRequests: [incomingAccessRequestData],
+      accessRequests: [
+        {
+          id: 'abcd',
+          organizationName: 'Organization',
+          serviceName: 'Service',
+          state: 'RECEIVED',
+          createdAt: '2020-10-01T12:00:00Z',
+          updatedAt: '2020-10-01T12:00:10Z',
+        },
+      ],
+    })
+    .mockResolvedValueOnce({
+      accessRequests: [
+        {
+          id: 'abcd',
+          organizationName: 'Organization',
+          serviceName: 'Service',
+          state: 'CREATED',
+          createdAt: '2020-10-01T12:00:00Z',
+          updatedAt: '2020-10-01T12:00:01Z',
+        },
+      ],
     })
 
   const incomingAccessRequestStore = new IncomingAccessRequestsStore({
@@ -44,20 +57,14 @@ test('fetching, getting and updating from server', async () => {
   expect(accessRequestsForService).toHaveLength(1)
   expect(accessRequestsForService[0]).toBeInstanceOf(IncomingAccessRequestModel)
 
-  const updatedAccessRequest = await incomingAccessRequestStore.updateFromServer(
-    {
-      id: 'abcd',
-      organizationName: 'Organization',
-      serviceName: 'Service',
-      state: 'RECEIVED',
-      createdAt: '2020-10-01T12:00:00Z',
-      updatedAt: '2020-10-01T12:00:10Z',
-    },
+  await incomingAccessRequestStore.fetchForService(service)
+  const updatedAccessRequests = incomingAccessRequestStore.getForService(
+    service,
   )
 
   expect(incomingAccessRequestStore.incomingAccessRequests.size).toEqual(1)
-  expect(updatedAccessRequest).toBeInstanceOf(IncomingAccessRequestModel)
-  expect(updatedAccessRequest.state).toBe('RECEIVED')
+  expect(updatedAccessRequests[0]).toBeInstanceOf(IncomingAccessRequestModel)
+  expect(updatedAccessRequests[0].state).toBe('RECEIVED')
 })
 
 test('approving an access request', async () => {
