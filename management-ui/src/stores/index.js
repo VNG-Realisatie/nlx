@@ -31,8 +31,6 @@ export class RootStore {
     accessGrantRepository = AccessGrantRepository,
     inwayRepository = InwayRepository,
   } = {}) {
-    this.directoryApiService = directoryApiService
-
     this.applicationStore = new ApplicationStore()
     this.directoryServicesStore = new DirectoryServicesStore({
       rootStore: this,
