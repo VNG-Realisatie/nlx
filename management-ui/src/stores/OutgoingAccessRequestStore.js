@@ -2,7 +2,6 @@
 // Licensed under the EUPL
 //
 import { flow, makeAutoObservable, observable } from 'mobx'
-import AccessRequestRepository from '../domain/access-request-repository'
 import OutgoingAccessRequestModel from '../models/OutgoingAccessRequestModel'
 
 class OutgoingAccessRequestStore {
@@ -10,12 +9,12 @@ class OutgoingAccessRequestStore {
 
   constructor({
     rootStore,
-    accessRequestRepository = AccessRequestRepository,
+    managementApiClient,
   }) {
     makeAutoObservable(this)
 
     this.rootStore = rootStore
-    this.accessRequestRepository = accessRequestRepository
+    this._managementApiClient = managementApiClient
   }
 
   updateFromServer = (outgoingAccessRequestData) => {
@@ -44,10 +43,14 @@ class OutgoingAccessRequestStore {
   }
 
   create = flow(function* create({ organizationName, serviceName }) {
-    const response = yield this.accessRequestRepository.createAccessRequest({
-      organizationName,
-      serviceName,
-    })
+    const response = yield this._managementApiClient.managementCreateAccessRequest(
+      {
+        body: {
+          organizationName,
+          serviceName,
+        },
+      },
+    )
 
     return new OutgoingAccessRequestModel({
       accessRequestData: response,
@@ -55,12 +58,13 @@ class OutgoingAccessRequestStore {
   }).bind(this)
 
   retry = flow(function* retry(outgoingAccessRequestModel) {
-    const response = yield this.accessRequestRepository.sendAccessRequest({
-      organizationName: outgoingAccessRequestModel.organizationName,
-      serviceName: outgoingAccessRequestModel.serviceName,
-      id: outgoingAccessRequestModel.id,
-    })
-
+    const response = yield this._managementApiClient.managementSendAccessRequest(
+      {
+        organizationName: outgoingAccessRequestModel.organizationName,
+        serviceName: outgoingAccessRequestModel.serviceName,
+        accessRequestID: outgoingAccessRequestModel.id,
+      },
+    )
     yield this.updateFromServer(response)
   }).bind(this)
 }

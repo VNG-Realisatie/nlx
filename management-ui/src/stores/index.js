@@ -4,7 +4,6 @@
 import React, { createContext } from 'react'
 import { configure } from 'mobx'
 import { node, object } from 'prop-types'
-import AccessRequestRepository from '../domain/access-request-repository'
 import AccessGrantRepository from '../domain/access-grant-repository'
 import InwayRepository from '../domain/inway-repository'
 import ApplicationStore from './ApplicationStore'
@@ -28,7 +27,6 @@ export class RootStore {
   constructor({
     directoryApiClient,
     managementApiClient,
-    accessRequestRepository = AccessRequestRepository,
     accessGrantRepository = AccessGrantRepository,
     inwayRepository = InwayRepository,
   } = {}) {
@@ -39,7 +37,7 @@ export class RootStore {
     })
     this.outgoingAccessRequestStore = new OutgoingAccessRequestStore({
       rootStore: this,
-      accessRequestRepository,
+      managementApiClient,
     })
     this.accessGrantStore = new AccessGrantStore({ accessGrantRepository })
     this.accessProofStore = new AccessProofStore()

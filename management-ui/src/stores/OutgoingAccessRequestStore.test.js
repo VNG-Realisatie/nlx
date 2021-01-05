@@ -4,22 +4,25 @@
 import OutgoingAccessRequestModel, {
   ACCESS_REQUEST_STATES,
 } from '../models/OutgoingAccessRequestModel'
+import { ManagementApi } from '../api'
 import OutgoingAccessRequestStore from './OutgoingAccessRequestStore'
 
 test('creating an outgoing access request', async () => {
-  const accessRequestRepository = {
-    createAccessRequest: jest.fn().mockResolvedValue({
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementCreateAccessRequest = jest
+    .fn()
+    .mockResolvedValue({
       id: '42',
       organizationName: 'organization-name',
       serviceName: 'service-name',
       state: ACCESS_REQUEST_STATES.CREATED,
       createdAt: '2020-10-07T13:01:11.288349Z',
       updatedAt: null,
-    }),
-  }
+    })
 
   const outgoingAccessRequestStore = new OutgoingAccessRequestStore({
-    accessRequestRepository: accessRequestRepository,
+    managementApiClient,
   })
 
   const outgoingAccessRequest = await outgoingAccessRequestStore.create({
@@ -27,9 +30,13 @@ test('creating an outgoing access request', async () => {
     serviceName: 'service-name',
   })
 
-  expect(accessRequestRepository.createAccessRequest).toHaveBeenCalledWith({
-    organizationName: 'organization-name',
-    serviceName: 'service-name',
+  expect(
+    managementApiClient.managementCreateAccessRequest,
+  ).toHaveBeenCalledWith({
+    body: {
+      organizationName: 'organization-name',
+      serviceName: 'service-name',
+    },
   })
 
   expect(outgoingAccessRequest).toEqual(
@@ -47,9 +54,7 @@ test('creating an outgoing access request', async () => {
 })
 
 test('updating from server', async () => {
-  const outgoingAccessRequestStore = new OutgoingAccessRequestStore({
-    accessRequestRepository: {},
-  })
+  const outgoingAccessRequestStore = new OutgoingAccessRequestStore({})
 
   expect(outgoingAccessRequestStore.outgoingAccessRequests.size).toEqual(0)
   expect(outgoingAccessRequestStore.updateFromServer()).toBeNull()
