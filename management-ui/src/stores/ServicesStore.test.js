@@ -3,6 +3,7 @@
 //
 import deferredPromise from '../test-utils/deferred-promise'
 import ServiceModel from '../models/ServiceModel'
+import { ManagementApi } from '../api'
 import ServicesStore from './ServicesStore'
 import { RootStore } from './index'
 
@@ -15,8 +16,11 @@ beforeEach(() => {
 })
 
 test('initializing the store', async () => {
+  const managementApiService = new ManagementApi()
+
   const servicesStore = new ServicesStore({
     rootStore: new RootStore(),
+    managementApiService,
   })
 
   expect(servicesStore.services).toEqual([])
@@ -25,32 +29,39 @@ test('initializing the store', async () => {
 })
 
 test('fetch a single service', async () => {
-  rootStore = {
-    incomingAccessRequestsStore: {
-      fetchForService: jest.fn(),
-    },
-    accessGrantStore: {
-      fetchForService: jest.fn(),
-    },
-  }
+  const managementApiService = new ManagementApi()
 
-  serviceRepository = {
-    getByName: jest.fn().mockResolvedValue({ name: 'Service A' }),
-  }
+  managementApiService.managementGetService = jest.fn().mockResolvedValue({
+    name: 'Service A',
+  })
+
+  const rootStore = new RootStore({
+    managementApiService,
+    accessRequestRepository: {
+      fetchForService: jest.fn(),
+      fetchByServiceName: jest.fn().mockResolvedValue([]),
+    },
+    accessGrantRepository: {
+      fetchForService: jest.fn(),
+      fetchByServiceName: jest.fn().mockResolvedValue([]),
+    },
+  })
 
   const servicesStore = new ServicesStore({
     rootStore,
-    serviceRepository,
+    managementApiService,
   })
 
   servicesStore.services = [
     new ServiceModel({ servicesStore, serviceData: { name: 'Service A' } }),
-    new ServiceModel({ servicesStore, serviceData: { name: 'Serivce B' } }),
+    new ServiceModel({ servicesStore, serviceData: { name: 'Service B' } }),
   ]
+
+  jest.spyOn(rootStore.incomingAccessRequestsStore, 'fetchForService')
+  jest.spyOn(rootStore.accessGrantStore, 'fetchForService')
 
   await servicesStore.fetch({ name: 'Service A' })
 
-  expect(serviceRepository.getByName).toHaveBeenCalled()
   expect(
     rootStore.incomingAccessRequestsStore.fetchForService,
   ).toHaveBeenCalled()
