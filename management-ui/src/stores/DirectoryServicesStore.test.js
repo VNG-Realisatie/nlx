@@ -4,7 +4,7 @@
 import OutgoingAccessRequestModel from '../models/OutgoingAccessRequestModel'
 import DirectoryServiceModel from '../models/DirectoryServiceModel'
 import AccessProofModel from '../models/AccessProofModel'
-import { DirectoryApi } from '../api'
+import { DirectoryApi, ManagementApi } from '../api'
 import DirectoryServicesStore from './DirectoryServicesStore'
 import { RootStore } from './index'
 
@@ -109,15 +109,12 @@ test('fetching a single service', async () => {
 })
 
 test('requesting access to a service in the directory', async () => {
-  const { outgoingAccessRequestStore, directoryServicesStore } = new RootStore({
-    accessRequestRepository: {
-      createAccessRequest: jest.fn().mockResolvedValue({
-        id: '42',
-      }),
-    },
+  const managementApiClient = new ManagementApi()
+  const rootStore = new RootStore({
+    managementApiClient,
   })
 
-  jest.spyOn(outgoingAccessRequestStore, 'create')
+  jest.spyOn(rootStore.outgoingAccessRequestStore, 'create').mockResolvedValue()
 
   const directoryService = new DirectoryServiceModel({
     serviceData: {
@@ -126,20 +123,10 @@ test('requesting access to a service in the directory', async () => {
     },
   })
 
-  const outgoingAccessRequest = await directoryServicesStore.requestAccess(
-    directoryService,
-  )
+  await rootStore.directoryServicesStore.requestAccess(directoryService)
 
-  expect(outgoingAccessRequestStore.create).toHaveBeenCalledWith({
+  expect(rootStore.outgoingAccessRequestStore.create).toHaveBeenCalledWith({
     organizationName: 'organization',
     serviceName: 'service',
   })
-
-  expect(outgoingAccessRequest).toEqual(
-    new OutgoingAccessRequestModel({
-      accessRequestData: {
-        id: '42',
-      },
-    }),
-  )
 })

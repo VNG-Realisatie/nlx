@@ -6,6 +6,11 @@ import IncomingAccessRequestModel from '../models/IncomingAccessRequestModel'
 import { ManagementApi } from '../api'
 import IncomingAccessRequestsStore from './IncomingAccessRequestsStore'
 
+test('initializing the store', () => {
+  const incomingAccessRequestStore = new IncomingAccessRequestsStore({})
+  expect(incomingAccessRequestStore.incomingAccessRequests.size).toEqual(0)
+})
+
 test('fetching, getting and updating from server', async () => {
   const service = new ServiceModel({ serviceData: { name: 'Service' } })
 
@@ -41,7 +46,6 @@ test('fetching, getting and updating from server', async () => {
     managementApiClient,
   })
 
-  expect(incomingAccessRequestStore.incomingAccessRequests.size).toEqual(0)
   expect(incomingAccessRequestStore.updateFromServer()).toBeNull()
 
   await incomingAccessRequestStore.fetchForService(service)

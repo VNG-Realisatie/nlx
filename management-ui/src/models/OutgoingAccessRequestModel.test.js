@@ -5,8 +5,6 @@ import OutgoingAccessRequestModel, {
   ACCESS_REQUEST_STATES,
 } from './OutgoingAccessRequestModel'
 
-jest.mock('../domain/access-request-repository', (obj) => obj)
-
 let accessRequestData
 
 beforeEach(() => {
