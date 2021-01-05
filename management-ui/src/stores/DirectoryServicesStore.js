@@ -15,7 +15,7 @@ class DirectoryServicesStore {
   constructor({ rootStore, directoryApiService }) {
     makeAutoObservable(this)
 
-    this.rootStore = rootStore
+    this._rootStore = rootStore
     this._directoryApiService = directoryApiService
   }
 
@@ -73,17 +73,17 @@ class DirectoryServicesStore {
   }
 
   async requestAccess(directoryService) {
-    return this.rootStore.outgoingAccessRequestStore.create({
+    return this._rootStore.outgoingAccessRequestStore.create({
       organizationName: directoryService.organizationName,
       serviceName: directoryService.serviceName,
     })
   }
 
   _updateFromServer(serviceData) {
-    const latestAccessRequest = this.rootStore.outgoingAccessRequestStore.updateFromServer(
+    const latestAccessRequest = this._rootStore.outgoingAccessRequestStore.updateFromServer(
       serviceData.latestAccessRequest,
     )
-    const latestAccessProof = this.rootStore.accessProofStore.updateFromServer(
+    const latestAccessProof = this._rootStore.accessProofStore.updateFromServer(
       serviceData.latestAccessProof,
     )
 
