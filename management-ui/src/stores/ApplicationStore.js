@@ -14,7 +14,7 @@ class ApplicationStore {
     if (
       Object.prototype.hasOwnProperty.call(entries, 'isOrganizationInwaySet')
     ) {
-      this.isOrganizationInwaySet = entries.isOrganizationInwaySet
+      this.isOrganizationInwaySet = !!entries.isOrganizationInwaySet
     }
   }
 }

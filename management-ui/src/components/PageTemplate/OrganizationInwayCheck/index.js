@@ -26,7 +26,7 @@ const OrganizationInwayCheck = ({ getSettings }) => {
       try {
         const settings = await getSettings()
         applicationStore.update({
-          isOrganizationInwaySet: settings.organizationInway,
+          isOrganizationInwaySet: !!settings.organizationInway,
         })
       } catch (e) {
         console.error(e)
