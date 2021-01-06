@@ -1,8 +1,10 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
@@ -68,6 +70,12 @@ var migrateUpCommand = &cobra.Command{
 		migrator := setupMigrator()
 
 		if err := migrator.Up(); err != nil {
+			if errors.Is(err, migrate.ErrNoChange) {
+				fmt.Println("migrations are up-to-date")
+
+				os.Exit(0)
+			}
+
 			log.Fatal(err)
 		}
 	},
