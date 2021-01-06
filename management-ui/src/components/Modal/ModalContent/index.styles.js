@@ -16,16 +16,16 @@ export const ModalPosition = styled.div`
   z-index: 2;
 
   ${(p) =>
-    p.maxWidth.match(/(px|rem|%)$/) &&
+    p.width.match(/(px|rem|%)$/) &&
     css`
       width: 100%;
-      max-width: ${p.maxWidth};
+      max-width: ${p.width};
     `}
 
   ${(p) =>
-    p.offsetY.match(/(px|rem|%)$/) &&
+    p.transform.match(/^translateY/) &&
     css`
-      transform: translateY(${p.offsetY});
+      transform: ${p.transform};
     `}
 `
 

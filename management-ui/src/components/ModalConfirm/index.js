@@ -23,7 +23,7 @@ const ModalConfirm = ({
 }) => {
   const { t } = useTranslation()
 
-  const handleChoice = (isConfirmed) => (evt) => {
+  const handleChoice = (isConfirmed) => () => {
     onChoice(isConfirmed)
   }
 
@@ -32,8 +32,11 @@ const ModalConfirm = ({
       isVisible={isVisible}
       handleClose={handleChoice(false)}
       title={titleText || t('Are you sure?')}
-      maxWidth="480px"
-      offsetY="-50%"
+      width="480px"
+      verticalAlign={{
+        from: 'top',
+        offset: '8rem',
+      }}
       autoFocus
     >
       {children}

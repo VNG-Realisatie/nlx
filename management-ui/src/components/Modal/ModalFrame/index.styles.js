@@ -22,7 +22,7 @@ export const Container = styled.div`
 export const HeightLimiter = styled.div`
   position: relative;
   display: flex;
-  align-items: center;
+  align-items: ${(p) => p.alignItems};
   padding: ${(p) => p.theme.tokens.spacing05};
   min-height: 100%;
 `

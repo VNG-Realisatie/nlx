@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React, { useState, useEffect, useCallback } from 'react'
-import { bool, func } from 'prop-types'
+import { bool, func, shape, oneOf } from 'prop-types'
 import { CSSTransition } from 'react-transition-group'
 
 import ModalContent from '../ModalContent'
@@ -54,7 +54,7 @@ const ModalFrame = ({
     <>
       {isVisible && (
         <Container>
-          <HeightLimiter>
+          <HeightLimiter alignItems={passProps.verticalAlignCss.alignItems}>
             <CSSTransition
               in={inProp}
               classNames="mask"
@@ -103,10 +103,16 @@ ModalFrame.propTypes = {
   isVisible: bool.isRequired,
   handleClose: func.isRequired,
   allowUserToClose: bool,
+  verticalAlignCss: shape({
+    alignItems: oneOf(['center', 'flex-start', 'flex-end']).isRequired,
+  }),
 }
 
 ModalFrame.defaultProps = {
   allowUserToClose: true,
+  verticalAlignCss: {
+    alignItems: 'center',
+  },
 }
 
 export default ModalFrame

@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 import { fireEvent } from '@testing-library/react'
 
 import { renderWithProviders } from '../../test-utils'
-import Modal from './index'
+import Modal, { verticalAlignToCssValues } from './index'
 
 beforeEach(() => {
   jest.useFakeTimers()
@@ -45,4 +45,31 @@ test('renders a modal, closes with Escape', async () => {
   jest.runAllTimers()
 
   expect(content).not.toBeInTheDocument()
+})
+
+test.concurrent.each([
+  /* eslint-disable prettier/prettier */
+  [
+    {},
+    { alignItems: 'center', transform: '' },
+  ],
+  [
+    { from: 'top' },
+    { alignItems: 'flex-start', transform: '' },
+  ],
+  [
+    { offset: '-50%' },
+    { alignItems: 'center', transform: 'translateY(-50%)' },
+  ],
+  [
+    { from: 'bottom', offset: '100px' },
+    { alignItems: 'flex-end', transform: 'translateY(-100px)' },
+  ],
+  [
+    { from: 'bottom', offset: '-50%' },
+    { alignItems: 'flex-end', transform: 'translateY(50%)' },
+  ],
+  /* eslint-enable prettier/prettier */
+])('vertical alignment object is created as expected', (config, expected) => {
+  expect(verticalAlignToCssValues(config)).toEqual(expected)
 })

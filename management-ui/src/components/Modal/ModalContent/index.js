@@ -2,21 +2,22 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { bool, node } from 'prop-types'
+import { bool, node, shape, string } from 'prop-types'
 import FocusLock from 'react-focus-lock'
 
+import cssUnitOrEmpty from '../propTypeCssUnitOrEmpty'
 import ModalHeader from './ModalHeader'
 import { ModalPosition, Window, Content } from './index.styles'
 
 const ModalContent = ({
   autoFocus,
-  maxWidth,
-  offsetY,
+  width,
+  verticalAlignCss,
   children,
   ...headerProps
 }) => {
   return (
-    <ModalPosition maxWidth={maxWidth} offsetY={offsetY}>
+    <ModalPosition width={width} transform={verticalAlignCss.transform}>
       <FocusLock autoFocus={autoFocus} returnFocus>
         <Window>
           <Content>{children}</Content>
@@ -30,25 +31,19 @@ const ModalContent = ({
 ModalContent.propTypes = {
   // Set `autoFocus` in combination with `data-autofocus` to focus on a specific element
   autoFocus: bool,
-  maxWidth: cssUnitOrEmpty,
-  // Vertical offset from center of screen (uses translateX, so % is relative to modal height)
-  offsetY: cssUnitOrEmpty,
+  width: cssUnitOrEmpty,
+  verticalAlignCss: shape({
+    transform: string.isRequired,
+  }),
   children: node,
 }
 
 ModalContent.defaultProps = {
   autoFocus: false,
-  maxWidth: '',
-  offsetY: '',
-}
-
-function cssUnitOrEmpty(props, propName) {
-  // eslint-disable-next-line security/detect-object-injection
-  if (!/(^|px|rem|%)$/.test(props[propName])) {
-    return new Error(
-      `Invalid prop \`${propName}\` supplied to \`Modal\`. Use a css value in px, rem or %.`,
-    )
-  }
+  width: '',
+  verticalAlignCss: shape({
+    transform: '',
+  }),
 }
 
 export default ModalContent
