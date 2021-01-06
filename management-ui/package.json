@@ -57,7 +57,7 @@
     "resetMocks": false
   },
   "devDependencies": {
-    "@commonground/eslint-config-cra-standard-prettier": "5.0.0",
+    "@commonground/eslint-config-cra-standard-prettier": "5.0.1",
     "@openapitools/openapi-generator-cli": "2.1.16",
     "@sheerun/mutationobserver-shim": "0.3.3",
     "@testing-library/jest-dom": "5.11.6",
