@@ -22,16 +22,16 @@ After the repository is cloned, move into it:
 cd nlx-try-me
 ```
 
-Set the hostname of the Inway (where `my-organization.nl:443` should be replaced with your own hostname).
+Set the hostname of the Inway (where `my-organization.nl:8443` should be replaced with your own hostname).
 
 ```bash
-export INWAY_SELF_ADDRESS="my-organization.nl:443"
+export INWAY_SELF_ADDRESS="my-organization.nl:8443"
 ```
 
 Then, start all components by running:
 
 ```bash
-docker-compose up
+docker-compose up -d
 ```
 
 This will start [Dex](https://github.com/dexidp/dex) (Identity Provider), ETCD and the required NLX components.
@@ -184,14 +184,13 @@ ping dex.nlx.localhost -c 1
 </Tabs>
 
 The output should be:
-```bash
-#
-# PING dex.nlx.localhost (127.0.0.1) 56(84) bytes of data.
-# 64 bytes from localhost (127.0.0.1): icmp_seq=1 ttl=64 time=0.026 ms
-# 
-# --- dex.nlx.localhost ping statistics ---
-# 1 packets transmitted, 1 received, 0% packet loss, time 0ms
-# rtt min/avg/max/mdev = 0.026/0.026/0.026/0.000 ms
+```
+PING dex.nlx.localhost (127.0.0.1) 56(84) bytes of data.
+64 bytes from localhost (127.0.0.1): icmp_seq=1 ttl=64 time=0.026 ms
+
+--- dex.nlx.localhost ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.026/0.026/0.026/0.000 ms
 ```
 
 ## Access the Management UI
@@ -230,13 +229,17 @@ On the left you will find the main navigation which separates the UI in several 
 In order to receive access requests you have to set a default inway for your organization.
 You can do that by going to the settings page, selecting the "Inway-01" and clicking on "Save settings".
 
+> In the Docker Compose file we have started, access requests can be accepted by the inway 
+on port `8444`. Make sure that port is publicly accessible.
+
+
 ![Settings screen](/img/nlx-management-settings-screen.png "Settings screen")
 
 
 ## In sum
 
 So far we have:
-- Started all components using docker-compose
+- Started all components using Docker Compose
 - Granted access to the Management UI
 - Set a default organization inway
 

@@ -15,7 +15,17 @@ Assuming you followed [Getting up and running](./getting-up-and-running.md) the 
 You can confirm that by checking the outway logs:
 
 ```
-docker-compose logs -f outway
+docker logs nlx-try-me-outway
+```
+
+The output should look similar to:
+
+```
+{"level":"INFO","time":"2021-01-06T13:15:24.180Z","caller":"nlx-outway/main.go:77","message":"version info","version":"v0.92.0","source-hash":"5d5a8afecb1e504d6ea5c865d839720d47fedb24"}
+{"level":"INFO","time":"2021-01-06T13:15:24.196Z","caller":"outway/outway.go:183","message":"logging to transaction log disabled","version":"v0.92.0"}
+{"level":"INFO","time":"2021-01-06T13:15:24.197Z","caller":"outway/outway.go:122","message":"directory inspection client setup complete","version":"v0.92.0","outway-organization-name":"my-organization","directory-inspection-address":"directory-inspection-api.demo.nlx.io:443"}
+{"level":"INFO","time":"2021-01-06T13:15:24.197Z","caller":"monitoring/monitoring.go:50","message":"starting monitoring service","version":"v0.92.0"}
+{"level":"INFO","time":"2021-01-06T13:15:24.198Z","caller":"outway/listen.go:45","message":"starting HTTP server on 0.0.0.0:8080","version":"v0.92.0","outway-organization-name":"my-organization"}
 ```
 
 
@@ -33,9 +43,6 @@ For example, to query the BRP demo API use:
 ```bash
 curl http://localhost/BRP/basisregistratie/natuurlijke_personen/da02ca58-4412-11e9-b210-d663bd873d93
 ```
-
-You can also run the outway as a HTTP proxy. This allows applications to call services on NLX by using `http://service-name.organization-name.services.nlx.local`.
-For more information read [the reference information](../../reference-information/proxy.md)
 
 The response of the `curl` command should look similar to the following output.
 
@@ -89,10 +96,14 @@ The response of the `curl` command should look similar to the following output.
 }
 ```
 
-Congratulations!, You have made your first query on the NLX network!
+Congratulations! You have made your first query on the NLX network!
 
 APIs provided on the NLX network are published in the NLX directory.
 Take a look at the [directory](https://directory.nlx.io) to see which APIs are available.
+
+> You can also run the outway as a HTTP proxy. This allows applications to call services on NLX by using `http://service-name.organization-name.services.nlx.local`.
+For more information read [the reference information](../../reference-information/proxy.md).
+
 
 ## In sum
 
