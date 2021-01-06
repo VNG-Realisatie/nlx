@@ -1,3 +1,39 @@
+# [0.93.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.92.0...v0.93.0) (2021-01-06)
+
+
+### Bug Fixes
+
+* **management:** eslint-config version mismatch ([04c4d5c](https://gitlab.com/commonground/nlx/nlx/commit/04c4d5c08f79ec4cb2b296987ad2c606a2764782))
+* set explicit Gitlab environment in deployments ([bc09726](https://gitlab.com/commonground/nlx/nlx/commit/bc097262197cf7702d99775b38c81549beb00745))
+* **docs:** remove creating env file since that doesn't always work ([563515b](https://gitlab.com/commonground/nlx/nlx/commit/563515b91be71e525790bf7d4313e845ba5e598d))
+* **docs:** update docs to point to the new nlx-try-me repository ([f2c5755](https://gitlab.com/commonground/nlx/nlx/commit/f2c5755ae9a997745e63c2a7429882d059dc5ebd))
+* **inway:** log error on service config warning ([1dbe883](https://gitlab.com/commonground/nlx/nlx/commit/1dbe883c99c79a58c99ccd8d24b0731b0f720a62))
+* **management:** a11y warnings ([b1cfe8b](https://gitlab.com/commonground/nlx/nlx/commit/b1cfe8b2328843ea83644e3b5d6c60f6180b01f4))
+* **management:** collapsible animation ([8dc119f](https://gitlab.com/commonground/nlx/nlx/commit/8dc119f6153642bff5de4bb112a029a153ec9dc3))
+* **management:** proper handling non-existent service ([1f945f0](https://gitlab.com/commonground/nlx/nlx/commit/1f945f02a5dfb78a2da98573838e95b142798c96))
+* move try-me code to it's own repository ([1ff2702](https://gitlab.com/commonground/nlx/nlx/commit/1ff2702a0be588146c6212dca58a55f3b417ce0a))
+
+
+### Features
+
+* **common:** implement safe permissions for private key in tls package ([012696c](https://gitlab.com/commonground/nlx/nlx/commit/012696cdd346446e662b989559070c9de0a43161))
+* **directory:** add example documentation URL to kentekenregister ([1d5af6c](https://gitlab.com/commonground/nlx/nlx/commit/1d5af6c6f5248ebef8b1004a8540bcae2a3cc257)), closes [#627](https://gitlab.com/commonground/nlx/nlx/issues/627)
+* **directory:** rework detail pane UI ([22068ac](https://gitlab.com/commonground/nlx/nlx/commit/22068ac745accae550727347722ae01ea09b4432)), closes [#627](https://gitlab.com/commonground/nlx/nlx/issues/627)
+* **directory:** show documentation URL if available for service ([042a1fd](https://gitlab.com/commonground/nlx/nlx/commit/042a1fd0ae826cd98abe3bd94ea60f6712a1b18d)), closes [#627](https://gitlab.com/commonground/nlx/nlx/issues/627)
+* **management:** add ApplicationStore and update on change setting inway ([2fde4c8](https://gitlab.com/commonground/nlx/nlx/commit/2fde4c8a0f92b5025101b41d7fdf340d4e6b3a10))
+* **management:** add GlobalAlert component ([52b16f4](https://gitlab.com/commonground/nlx/nlx/commit/52b16f424b184b09ac4bdb82cb85464d6984e246))
+* **management:** add logout icon ([e0a52b4](https://gitlab.com/commonground/nlx/nlx/commit/e0a52b467443ed51339dbb406a2eb404ee588c08)), closes [#1049](https://gitlab.com/commonground/nlx/nlx/issues/1049)
+* **management:** add migrations ([0c6d4df](https://gitlab.com/commonground/nlx/nlx/commit/0c6d4df7a40e216c8d0eacfdb69f290a238bf09b))
+* **management:** add warning when removing organization inway ([db99a62](https://gitlab.com/commonground/nlx/nlx/commit/db99a6206db685c4b3b5141cd97250e944e813ff))
+* **management:** deprecated browser page ([796742a](https://gitlab.com/commonground/nlx/nlx/commit/796742aeada75ba7eb6b133eccc42789404784b8))
+* **management:** highlight selected Directory Service on the Directory page ([bafac73](https://gitlab.com/commonground/nlx/nlx/commit/bafac73593f94a139566b0926c16ffd7e8194f35)), closes [#941](https://gitlab.com/commonground/nlx/nlx/issues/941)
+* **management:** highlight selected Inway on the Inways overview page ([0106c43](https://gitlab.com/commonground/nlx/nlx/commit/0106c436bd83fa1af70dcf854cee07965f4298e1)), closes [#941](https://gitlab.com/commonground/nlx/nlx/issues/941)
+* **management:** highlight selected Service on the Services overview page ([35ff6d0](https://gitlab.com/commonground/nlx/nlx/commit/35ff6d06255c07f82231b9d8f326c943223f5cb6)), closes [#941](https://gitlab.com/commonground/nlx/nlx/issues/941)
+* **management:** replace native select with Select from Design System ([c80d180](https://gitlab.com/commonground/nlx/nlx/commit/c80d1800f7c3f24b4646d471140affea2edceee8)), closes [#1071](https://gitlab.com/commonground/nlx/nlx/issues/1071)
+* **management:** show access request button directory ([c0727a9](https://gitlab.com/commonground/nlx/nlx/commit/c0727a92adc7ee5c687449e6ab250d65dd491e91)), closes [#1087](https://gitlab.com/commonground/nlx/nlx/issues/1087)
+* **management:** show warning when no organization inway ([d847da0](https://gitlab.com/commonground/nlx/nlx/commit/d847da0390ea30bd84ed7de6a9f273f51e6820c9)), closes [#1045](https://gitlab.com/commonground/nlx/nlx/issues/1045)
+* improved input validation in directory and management ([d455854](https://gitlab.com/commonground/nlx/nlx/commit/d45585439a8d5a1ab95257ff3239245baf132438))
+
 # [0.92.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.91.0...v0.92.0) (2020-11-25)
 
 
