@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import { checkPropTypes } from 'prop-types'
-import { RootStore } from '../stores'
+import { RootStore } from '../index'
 import OutgoingAccessRequestModel, {
   ACCESS_REQUEST_STATES,
 } from './OutgoingAccessRequestModel'

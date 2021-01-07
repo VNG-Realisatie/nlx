@@ -3,7 +3,7 @@
 //
 import { makeAutoObservable, observable, flow } from 'mobx'
 
-import AccessGrantModel from '../models/AccessGrantModel'
+import AccessGrantModel from './models/AccessGrantModel'
 
 class AccessGrantStore {
   accessGrants = observable.map()

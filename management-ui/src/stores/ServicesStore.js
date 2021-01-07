@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import { makeAutoObservable, flow } from 'mobx'
-import ServiceModel from '../models/ServiceModel'
+import ServiceModel from '../stores/models/ServiceModel'
 
 class ServicesStore {
   services = []

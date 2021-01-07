@@ -2,14 +2,11 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { shape } from 'prop-types'
+import { func, object, shape, string } from 'prop-types'
 import { observer } from 'mobx-react'
 import { Alert, useDrawerStack } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
-import pick from 'lodash.pick'
-
-import { directoryServicePropTypes } from '../../../../../models/DirectoryServiceModel'
-import { ACCESS_REQUEST_STATES } from '../../../../../models/OutgoingAccessRequestModel'
+import { ACCESS_REQUEST_STATES } from '../../../../../stores/models/OutgoingAccessRequestModel'
 import getDirectoryServiceAccessUIState from '../../../directoryServiceAccessState'
 import { SectionGroup } from '../../../../../components/DetailView'
 import StacktraceDrawer from './StacktraceDrawer'
@@ -102,14 +99,12 @@ const DirectoryDetailView = ({ service }) => {
 }
 
 DirectoryDetailView.propTypes = {
-  service: shape(
-    pick(directoryServicePropTypes, [
-      'organizationName',
-      'latestAccessRequest',
-      'latestAccessProof',
-      'requestAccess',
-    ]),
-  ),
+  service: shape({
+    organizationName: string.isRequired,
+    latestAccessRequest: object,
+    latestAccessProof: object,
+    requestAccess: func.isRequired,
+  }),
 }
 
 export default observer(DirectoryDetailView)

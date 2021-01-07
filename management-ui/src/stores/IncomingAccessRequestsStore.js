@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import { makeAutoObservable, observable } from 'mobx'
-import IncomingAccessRequestModel from '../models/IncomingAccessRequestModel'
+import IncomingAccessRequestModel from './models/IncomingAccessRequestModel'
 
 class IncomingAccessRequestsStore {
   incomingAccessRequests = observable.map()

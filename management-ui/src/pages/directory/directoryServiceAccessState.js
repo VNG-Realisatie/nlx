@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { ACCESS_REQUEST_STATES } from '../../models/OutgoingAccessRequestModel'
+import { ACCESS_REQUEST_STATES } from '../../stores/models/OutgoingAccessRequestModel'
 
 const {
   CREATED,

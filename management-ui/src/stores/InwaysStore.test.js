@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import { ManagementApi } from '../api'
-import InwayModel from '../models/InwayModel'
+import InwayModel from '../stores/models/InwayModel'
 import InwaysStore from './InwaysStore'
 import { RootStore } from './index'
 

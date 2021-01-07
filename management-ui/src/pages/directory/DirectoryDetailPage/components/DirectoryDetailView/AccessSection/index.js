@@ -6,9 +6,8 @@ import { number, shape, func } from 'prop-types'
 import { observer } from 'mobx-react'
 import { Spinner, Button } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
-
-import { outgoingAccessRequestPropTypes } from '../../../../../../models/OutgoingAccessRequestModel'
-import { accessProofPropTypes } from '../../../../../../models/AccessProofModel'
+import { outgoingAccessRequestPropTypes } from '../../../../../../stores/models/OutgoingAccessRequestModel'
+import { accessProofPropTypes } from '../../../../../../stores/models/AccessProofModel'
 import {
   SHOW_REQUEST_ACCESS,
   SHOW_HAS_ACCESS,

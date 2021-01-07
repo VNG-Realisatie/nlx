@@ -3,8 +3,8 @@
 //
 import OutgoingAccessRequestModel, {
   ACCESS_REQUEST_STATES,
-} from '../../models/OutgoingAccessRequestModel'
-import AccessProofModel from '../../models/AccessProofModel'
+} from '../../stores/models/OutgoingAccessRequestModel'
+import AccessProofModel from '../../stores/models/AccessProofModel'
 import getDirectoryServiceAccessState, {
   SHOW_REQUEST_ACCESS,
   SHOW_HAS_ACCESS,

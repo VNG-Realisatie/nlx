@@ -5,9 +5,6 @@ import React from 'react'
 import { arrayOf, shape, string } from 'prop-types'
 import { Table } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
-import pick from 'lodash.pick'
-
-import { directoryServicePropTypes } from '../../../../../models/DirectoryServiceModel'
 import EmptyContentMessage from '../../../../../components/EmptyContentMessage'
 import DirectoryServiceRow from '../DirectoryServiceRow'
 
@@ -44,7 +41,10 @@ const DirectoryPageView = ({ services, selectedServiceName }) => {
 
 DirectoryPageView.propTypes = {
   services: arrayOf(
-    shape(pick(directoryServicePropTypes, ['organizationName', 'serviceName'])),
+    shape({
+      organizationName: string.isRequired,
+      serviceName: string.isRequired,
+    }),
   ).isRequired,
   selectedServiceName: string,
 }

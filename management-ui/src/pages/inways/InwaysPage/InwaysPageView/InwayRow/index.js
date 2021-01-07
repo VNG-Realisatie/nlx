@@ -4,7 +4,7 @@
 import React from 'react'
 import { shape } from 'prop-types'
 import { Table } from '@commonground/design-system'
-import { inwayModelPropTypes } from '../../../../../models/InwayModel'
+import { inwayModelPropTypes } from '../../../../../stores/models/InwayModel'
 import { StyledInwayIcon, StyledIconTd } from './index.styles'
 
 const InwayRow = ({ inway, ...props }) => {

@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import { flow, makeAutoObservable } from 'mobx'
-import InwayModel from '../models/InwayModel'
+import InwayModel from './models/InwayModel'
 
 class InwaysStore {
   inways = []

@@ -3,7 +3,7 @@
 //
 import OutgoingAccessRequestModel, {
   ACCESS_REQUEST_STATES,
-} from '../models/OutgoingAccessRequestModel'
+} from '../stores/models/OutgoingAccessRequestModel'
 import { ManagementApi } from '../api'
 import OutgoingAccessRequestStore from './OutgoingAccessRequestStore'
 import { RootStore } from './index'

@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 
-import ServicesStore from '../stores/ServicesStore'
+import ServicesStore from '../ServicesStore'
 import IncomingAccessRequestModel from './IncomingAccessRequestModel'
 import AccessGrantModel from './AccessGrantModel'
 import ServiceModel from './ServiceModel'

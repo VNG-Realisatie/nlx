@@ -2,13 +2,10 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { shape } from 'prop-types'
+import { object, shape, string } from 'prop-types'
 import { observer } from 'mobx-react'
 import { Table } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
-import pick from 'lodash.pick'
-
-import { directoryServicePropTypes } from '../../../../../models/DirectoryServiceModel'
 import getDirectoryServiceAccessUIState, {
   SHOW_REQUEST_ACCESS,
   SHOW_REQUEST_FAILED,
@@ -90,15 +87,13 @@ const DirectoryServiceRow = ({ service, ...props }) => {
 }
 
 DirectoryServiceRow.propTypes = {
-  service: shape(
-    pick(directoryServicePropTypes, [
-      'organizationName',
-      'serviceName',
-      'state',
-      'apiSpecificationType',
-      'latestAccessRequest',
-    ]),
-  ),
+  service: shape({
+    organizationName: string.isRequired,
+    serviceName: string.isRequired,
+    state: string.isRequired,
+    apiSpecificationType: string,
+    latestAccessRequest: object,
+  }),
 }
 
 export default observer(DirectoryServiceRow)

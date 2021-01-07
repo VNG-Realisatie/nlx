@@ -3,7 +3,7 @@
 //
 import { makeAutoObservable, observable } from 'mobx'
 
-import AccessProofModel from '../models/AccessProofModel'
+import AccessProofModel from './models/AccessProofModel'
 
 class AccessProofStore {
   accessProofs = observable.map()

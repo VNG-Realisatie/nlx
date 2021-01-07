@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import AccessProofModel from '../models/AccessProofModel'
+import AccessProofModel from '../stores/models/AccessProofModel'
 import AccessProofStore from './AccessProofStore'
 
 test('updating from server', async () => {

@@ -1,8 +1,8 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import ServiceModel from '../models/ServiceModel'
-import IncomingAccessRequestModel from '../models/IncomingAccessRequestModel'
+import ServiceModel from '../stores/models/ServiceModel'
+import IncomingAccessRequestModel from '../stores/models/IncomingAccessRequestModel'
 import { ManagementApi } from '../api'
 import IncomingAccessRequestsStore from './IncomingAccessRequestsStore'
 

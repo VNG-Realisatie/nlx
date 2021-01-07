@@ -1,8 +1,8 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import ServiceModel from '../models/ServiceModel'
 import { ManagementApi } from '../api'
+import ServiceModel from './models/ServiceModel'
 import ServicesStore from './ServicesStore'
 import { RootStore } from './index'
 

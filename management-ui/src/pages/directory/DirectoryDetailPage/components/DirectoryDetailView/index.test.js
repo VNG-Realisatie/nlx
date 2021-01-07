@@ -4,7 +4,6 @@
 import React from 'react'
 import { makeAutoObservable } from 'mobx'
 import { Route, StaticRouter as Router } from 'react-router-dom'
-
 import { fireEvent, renderWithProviders } from '../../../../../test-utils'
 import DirectoryDetailPage from '../../index'
 

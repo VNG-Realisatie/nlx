@@ -7,7 +7,7 @@ import { makeAutoObservable } from 'mobx'
 import { renderWithProviders, fireEvent, act } from '../../../../../test-utils'
 import DirectoryServiceRow from './index'
 
-jest.mock('../../../../../models/OutgoingAccessRequestModel')
+jest.mock('../../../../../stores/models/OutgoingAccessRequestModel')
 
 describe('a service we do not have access to', () => {
   let service

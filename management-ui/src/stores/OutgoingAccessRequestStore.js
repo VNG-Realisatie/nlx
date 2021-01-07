@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import { flow, makeAutoObservable, observable } from 'mobx'
-import OutgoingAccessRequestModel from '../models/OutgoingAccessRequestModel'
+import OutgoingAccessRequestModel from './models/OutgoingAccessRequestModel'
 
 class OutgoingAccessRequestStore {
   outgoingAccessRequests = observable.map()

@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import { flow, makeAutoObservable } from 'mobx'
-import DirectoryServiceModel from '../models/DirectoryServiceModel'
+import DirectoryServiceModel from '../stores/models/DirectoryServiceModel'
 
 class DirectoryServicesStore {
   services = []

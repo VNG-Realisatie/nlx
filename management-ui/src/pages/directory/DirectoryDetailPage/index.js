@@ -14,7 +14,7 @@ import {
 } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 
-import { directoryServicePropTypes } from '../../../models/DirectoryServiceModel'
+import { directoryServicePropTypes } from '../../../stores/models/DirectoryServiceModel'
 import DirectoryDetailView from './components/DirectoryDetailView'
 import DrawerHeader from './components/DrawerHeader'
 

@@ -1,8 +1,8 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import ServiceModel from '../models/ServiceModel'
-import AccessGrantModel from '../models/AccessGrantModel'
+import ServiceModel from '../stores/models/ServiceModel'
+import AccessGrantModel from '../stores/models/AccessGrantModel'
 import { ManagementApi } from '../api'
 import AccessGrantStore from './AccessGrantStore'
 

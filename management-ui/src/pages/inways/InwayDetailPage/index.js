@@ -6,8 +6,7 @@ import { shape, string } from 'prop-types'
 import { useParams, useHistory } from 'react-router-dom'
 import { Alert, Drawer } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
-
-import { inwayModelPropTypes } from '../../../models/InwayModel'
+import { inwayModelPropTypes } from '../../../stores/models/InwayModel'
 import InwayDetailPageView from './InwayDetailPageView'
 
 const InwayDetailPage = ({ parentUrl, inway }) => {

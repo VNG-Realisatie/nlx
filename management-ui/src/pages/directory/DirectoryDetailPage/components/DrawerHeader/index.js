@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { Drawer } from '@commonground/design-system'
 import pick from 'lodash.pick'
 import StateIndicator from '../../../../../components/StateIndicator'
-import { directoryServicePropTypes } from '../../../../../models/DirectoryServiceModel'
+import { directoryServicePropTypes } from '../../../../../stores/models/DirectoryServiceModel'
 import { SubTitle, Summary } from './index.styles'
 
 const DrawerHeader = ({ service }) => {

@@ -1,9 +1,9 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import OutgoingAccessRequestModel from '../models/OutgoingAccessRequestModel'
-import DirectoryServiceModel from '../models/DirectoryServiceModel'
-import AccessProofModel from '../models/AccessProofModel'
+import OutgoingAccessRequestModel from '../stores/models/OutgoingAccessRequestModel'
+import DirectoryServiceModel from '../stores/models/DirectoryServiceModel'
+import AccessProofModel from '../stores/models/AccessProofModel'
 import { DirectoryApi, ManagementApi } from '../api'
 import DirectoryServicesStore from './DirectoryServicesStore'
 import { RootStore } from './index'
