@@ -6,14 +6,6 @@ import { ManagementApi } from '../api'
 import ServicesStore from './ServicesStore'
 import { RootStore } from './index'
 
-let rootStore
-let serviceRepository
-
-beforeEach(() => {
-  rootStore = {}
-  serviceRepository = {}
-})
-
 test('initializing the store', async () => {
   const managementApiClient = new ManagementApi()
 
@@ -71,7 +63,7 @@ test('fetching services', async () => {
   })
 
   const servicesStore = new ServicesStore({
-    rootStore,
+    rootStore: new RootStore(),
     managementApiClient: managementApi,
   })
 
@@ -89,7 +81,7 @@ test('handle error while fetching services', async () => {
     .mockRejectedValue('arbitrary error')
 
   const servicesStore = new ServicesStore({
-    rootStore,
+    rootStore: new RootStore(),
     managementApiClient: managementApi,
   })
 
@@ -109,7 +101,7 @@ test('creating a service', async () => {
   })
 
   const servicesStore = new ServicesStore({
-    rootStore,
+    rootStore: new RootStore(),
     managementApiClient,
   })
 
@@ -123,18 +115,24 @@ test('creating a service', async () => {
 })
 
 test('removing a service', async () => {
-  const serviceList = [{ name: 'Service A' }, { name: 'Service B' }]
-  serviceRepository = { remove: jest.fn() }
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementListServices = jest.fn().mockResolvedValue({
+    services: [{ name: 'Service A' }],
+  })
+
+  managementApiClient.managementDeleteService = jest.fn().mockResolvedValue()
 
   const servicesStore = new ServicesStore({
-    rootStore,
-    serviceRepository,
+    rootStore: new RootStore(),
+    managementApiClient,
   })
-  servicesStore.services = serviceList
 
-  const service = servicesStore.getService('Service A')
-  await servicesStore.removeService(service)
+  await servicesStore.fetchAll()
+  expect(servicesStore.getService('Service A')).toBeInstanceOf(ServiceModel)
 
-  expect(serviceRepository.remove).toHaveBeenCalled()
-  expect(servicesStore.services).not.toContain(service)
+  await servicesStore.removeService('Service A')
+  expect(managementApiClient.managementDeleteService).toHaveBeenCalledWith({
+    name: 'Service A',
+  })
 })

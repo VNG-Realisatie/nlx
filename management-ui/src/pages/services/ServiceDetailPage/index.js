@@ -20,7 +20,7 @@ const ServiceDetailPage = ({ parentUrl, service }) => {
 
   const close = () => history.push(parentUrl)
   const handleRemove = async () => {
-    await removeService(service)
+    await removeService(service.name)
     history.push(`/services/${name}?lastAction=${serviceActions.REMOVED}`)
   }
 

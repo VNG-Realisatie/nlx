@@ -2,10 +2,7 @@
 // Licensed under the EUPL
 //
 import { makeAutoObservable, flow } from 'mobx'
-import { serialize } from 'serializr'
-
-import ServiceRepository from '../domain/service-repository'
-import ServiceModel, { ServiceModelSchema } from '../models/ServiceModel'
+import ServiceModel from '../models/ServiceModel'
 
 class ServicesStore {
   services = []
@@ -15,16 +12,11 @@ class ServicesStore {
   // This is internal state to prevent concurrent fetchAll calls being in flight.
   isFetching = false
 
-  constructor({
-    rootStore,
-    managementApiClient,
-    serviceRepository = ServiceRepository,
-  }) {
+  constructor({ rootStore, managementApiClient }) {
     makeAutoObservable(this)
 
     this.rootStore = rootStore
     this._managementApiClient = managementApiClient
-    this.serviceRepository = serviceRepository
 
     this.services = []
     this.error = ''
@@ -102,7 +94,7 @@ class ServicesStore {
           endpointURL,
           documentationURL,
           apiSpecificationURL,
-          internal: internal,
+          internal,
           techSupportContact,
           publicSupportContact,
           inways,
@@ -118,31 +110,54 @@ class ServicesStore {
     return service
   }).bind(this)
 
-  update = flow(function* update(formData) {
-    if (!formData.name) {
+  update = flow(function* update({
+    name,
+    endpointURL,
+    documentationURL,
+    apiSpecificationURL,
+    internal,
+    techSupportContact,
+    publicSupportContact,
+    inways,
+  }) {
+    if (!name) {
       throw new Error('Name required to update service')
     }
 
-    const service = this.getService(formData.name)
+    const service = this.getService(name)
 
     if (!service) {
       throw new Error('Can not edit a service that does not exist')
     }
 
-    const serviceData = yield this.serviceRepository.update(
-      formData.name,
-      serialize(ServiceModelSchema, formData),
+    const serviceData = yield this._managementApiClient.managementUpdateService(
+      {
+        name,
+        body: {
+          name,
+          endpointURL,
+          documentationURL,
+          apiSpecificationURL,
+          internal,
+          techSupportContact,
+          publicSupportContact,
+          inways,
+        },
+      },
     )
 
     service.update(serviceData)
   }).bind(this)
 
-  removeService = flow(function* removeService(service) {
-    yield this.serviceRepository.remove(service)
-    const removed = this.services.remove(service)
-    if (!removed) {
-      this.fetchAll()
-    }
+  removeService = flow(function* removeService(name) {
+    const service = this.getService(name)
+    const index = this.services.indexOf(service)
+
+    yield this._managementApiClient.managementDeleteService({
+      name,
+    })
+
+    this.services.splice(index, 1)
   }).bind(this)
 }
 
