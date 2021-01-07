@@ -1,18 +1,15 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { checkPropTypes } from 'prop-types'
 
 import ServicesStore from '../stores/ServicesStore'
 import IncomingAccessRequestModel from './IncomingAccessRequestModel'
 import AccessGrantModel from './AccessGrantModel'
-import ServiceModel, { serviceModelPropTypes } from './ServiceModel'
+import ServiceModel from './ServiceModel'
 
-let store
 let serviceData
 
 beforeEach(() => {
-  store = {}
   serviceData = {
     name: 'Service',
     endpointURL: '',
@@ -23,16 +20,6 @@ beforeEach(() => {
     publicSupportContact: '',
     inways: [],
   }
-})
-
-test('model implements proptypes', () => {
-  const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
-  const serviceModel = new ServiceModel({ store, serviceData })
-
-  checkPropTypes(serviceModelPropTypes, serviceModel, 'prop', 'ServiceModel')
-
-  expect(errorSpy).not.toHaveBeenCalled()
-  errorSpy.mockRestore()
 })
 
 test('initialize and update the service', async () => {

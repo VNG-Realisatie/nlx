@@ -2,20 +2,7 @@
 // Licensed under the EUPL
 //
 import { makeAutoObservable } from 'mobx'
-import { arrayOf, bool, func, string } from 'prop-types'
 import { createModelSchema, list, primitive } from 'serializr'
-
-export const serviceModelPropTypes = {
-  name: string.isRequired,
-  endpointURL: string.isRequired,
-  documentationURL: string.isRequired,
-  apiSpecificationURL: string.isRequired,
-  internal: bool.isRequired,
-  techSupportContact: string.isRequired,
-  publicSupportContact: string.isRequired,
-  inways: arrayOf(string),
-  fetch: func.isRequired,
-}
 
 class ServiceModel {
   name = ''

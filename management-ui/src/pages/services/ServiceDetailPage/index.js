@@ -6,8 +6,6 @@ import { string, shape } from 'prop-types'
 import { useParams, useHistory } from 'react-router-dom'
 import { Alert, Drawer } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
-import pick from 'lodash.pick'
-import { serviceModelPropTypes } from '../../../models/ServiceModel'
 import { useServicesStore } from '../../../hooks/use-stores'
 import serviceActions from '../ServicesPage/serviceActions'
 import ServiceDetailView from './ServiceDetailView'
@@ -48,7 +46,9 @@ const ServiceDetailPage = ({ parentUrl, service }) => {
 
 ServiceDetailPage.propTypes = {
   parentUrl: string,
-  service: shape(pick(serviceModelPropTypes, ['name'])),
+  service: shape({
+    name: string.isRequired,
+  }),
 }
 
 ServiceDetailPage.defaultProps = {
