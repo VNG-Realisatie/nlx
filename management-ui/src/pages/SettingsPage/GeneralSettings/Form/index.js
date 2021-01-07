@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { func, shape, string } from 'prop-types'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { Button, Fieldset, Legend, Select } from '@commonground/design-system'
 
 import FormikFocusError from '../../../../components/FormikFocusError'
-import ModalConfirm from '../../../../components/ModalConfirm'
+import { useModalConfirm } from '../../../../components/ModalConfirm'
 import usePromise from '../../../../hooks/use-promise'
 import InwayRepository from '../../../../domain/inway-repository'
 import {
@@ -23,38 +23,25 @@ const DEFAULT_INITIAL_VALUES = {
 }
 
 const Form = ({ initialValues, onSubmitHandler, getInways, ...props }) => {
-  const [formValues, setFormValues] = useState({})
-  const [showConfirm, setShowConfirm] = useState(false)
-  const [confirmSave, setConfirmSave] = useState(null)
-
-  const { t } = useTranslation()
   const { isReady: inwaysIsReady, result: inways } = usePromise(getInways)
+  const { t } = useTranslation()
+  const [ModalConfirm, confirm] = useModalConfirm({
+    okText: t('Save'),
+    children: t(
+      'By removing the organization inway it is no longer possible to process or receive access requests',
+    ),
+  })
 
-  useEffect(() => {
-    switch (confirmSave) {
-      case true:
-        onSubmitHandler(formValues)
-        break
-
-      case false:
-      default:
-        break
-    }
-  }, [confirmSave, formValues]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  const handleChoice = (isConfirmed) => {
-    setConfirmSave(isConfirmed)
-    setShowConfirm(false)
-  }
-
-  const validateOrganizationInwayAndSubmit = (values) => {
+  const validateOrganizationInwayAndSubmit = async (values) => {
     if (values.organizationInway) {
       onSubmitHandler(values)
       return
     }
 
-    setFormValues(values)
-    setShowConfirm(true)
+    const isConfirmed = await confirm()
+    if (isConfirmed) {
+      onSubmitHandler(values)
+    }
   }
 
   const validationSchema = Yup.object().shape({
@@ -118,21 +105,7 @@ const Form = ({ initialValues, onSubmitHandler, getInways, ...props }) => {
         )}
       </Formik>
 
-      <ModalConfirm
-        isVisible={showConfirm}
-        handleClose={() => {
-          setShowConfirm(false)
-        }}
-        onChoice={handleChoice}
-        okText={t('Save')}
-      >
-        <p>
-          {t(
-            'By removing the organization inway it is no longer possible to process or receive access requests',
-          )}
-          .
-        </p>
-      </ModalConfirm>
+      <ModalConfirm />
     </>
   )
 }

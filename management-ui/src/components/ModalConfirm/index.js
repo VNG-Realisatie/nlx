@@ -1,21 +1,18 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-// TODO: an API like this would be awesome ↓
-// const askConfirmation = useConfirmationWindow('Text or Component')
-// if (await askConfirmation()) {}
-//
-import React from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { func, string, bool, node } from 'prop-types'
 import { Button } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 
+import deferredPromise from '../../test-utils/deferred-promise'
 import Modal from '../Modal'
 import { Footer } from './index.styles'
 
 const ModalConfirm = ({
   isVisible,
-  onChoice,
+  handleChoice,
   children,
   titleText,
   cancelText,
@@ -23,14 +20,12 @@ const ModalConfirm = ({
 }) => {
   const { t } = useTranslation()
 
-  const handleChoice = (isConfirmed) => () => {
-    onChoice(isConfirmed)
-  }
+  const makeChoice = (isConfirmed) => () => handleChoice(isConfirmed)
 
   return (
     <Modal
       isVisible={isVisible}
-      handleClose={handleChoice(false)}
+      handleClose={makeChoice(false)}
       title={titleText || t('Are you sure?')}
       width="480px"
       verticalAlign={{
@@ -41,14 +36,10 @@ const ModalConfirm = ({
     >
       {children}
       <Footer>
-        <Button
-          variant="secondary"
-          onClick={handleChoice(false)}
-          data-autofocus
-        >
+        <Button variant="secondary" onClick={makeChoice(false)} data-autofocus>
           {cancelText || t('Cancel')}
         </Button>
-        <Button onClick={handleChoice(true)}>{okText || t('Ok')}</Button>
+        <Button onClick={makeChoice(true)}>{okText || t('Ok')}</Button>
       </Footer>
     </Modal>
   )
@@ -56,13 +47,39 @@ const ModalConfirm = ({
 
 ModalConfirm.propTypes = {
   isVisible: bool.isRequired,
-  onChoice: func.isRequired,
+  handleChoice: func.isRequired,
   children: node,
   titleText: string,
   cancelText: string,
   okText: string,
 }
 
-ModalConfirm.defaultProps = {}
+export const useModalConfirm = (props) => {
+  const [showModal, setShowModal] = useState(false)
+  const choicePromise = useRef(null)
 
-export default ModalConfirm
+  useEffect(() => {
+    choicePromise.current = showModal ? deferredPromise() : null
+  }, [showModal])
+
+  const handleChoice = (isConfirmed) => {
+    choicePromise.current.resolve(isConfirmed)
+    setShowModal(false)
+  }
+
+  const showModalConfirm = () => {
+    setShowModal(true)
+    return choicePromise.current
+  }
+
+  const confirmProps = {
+    ...props,
+    isVisible: showModal,
+    handleChoice,
+  }
+
+  return [
+    () => React.createElement(ModalConfirm, confirmProps),
+    showModalConfirm,
+  ]
+}
