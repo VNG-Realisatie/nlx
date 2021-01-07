@@ -35,13 +35,13 @@ class InwayModel {
   constructor({ store, inway }) {
     makeAutoObservable(this)
 
-    this.store = store
+    this.inwaysStore = store
     this.name = inway.name
     this.with(inway)
   }
 
   fetch = flow(function* fetch() {
-    const inway = yield this.store.fetch({ name: this.name })
+    const inway = yield this.inwaysStore.fetch({ name: this.name })
     this.with(inway)
   }).bind(this)
 

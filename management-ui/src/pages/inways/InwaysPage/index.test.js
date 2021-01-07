@@ -8,6 +8,7 @@ import { createMemoryHistory } from 'history'
 import { renderWithProviders, waitFor } from '../../../test-utils'
 import { UserContextProvider } from '../../../user-context'
 import { RootStore, StoreProvider } from '../../../stores'
+import { ManagementApi } from '../../../api'
 import InwaysPage from './index'
 
 jest.mock('./InwaysPageView', () => () => (
@@ -15,23 +16,26 @@ jest.mock('./InwaysPageView', () => () => (
 ))
 
 test('fetching all inways', async () => {
+  const managementApiClient = new ManagementApi()
+  managementApiClient.managementListInways = jest.fn().mockResolvedValue({
+    inways: [
+      {
+        name: 'name',
+        version: 'version',
+        hostname: 'hostname',
+        selfAddress: 'self-address',
+        services: [
+          {
+            name: 'service-1',
+          },
+        ],
+      },
+    ],
+  })
+
   const history = createMemoryHistory({ initialEntries: ['/inways'] })
   const rootStore = new RootStore({
-    inwayRepository: {
-      getAll: jest.fn().mockResolvedValue([
-        {
-          name: 'name',
-          version: 'version',
-          hostname: 'hostname',
-          selfAddress: 'self-address',
-          services: [
-            {
-              name: 'service-1',
-            },
-          ],
-        },
-      ]),
-    },
+    managementApiClient,
   })
 
   const { getByRole, getByTestId } = renderWithProviders(

@@ -4,7 +4,6 @@
 import React, { createContext } from 'react'
 import { configure } from 'mobx'
 import { node, object } from 'prop-types'
-import InwayRepository from '../domain/inway-repository'
 import ApplicationStore from './ApplicationStore'
 import DirectoryServicesStore from './DirectoryServicesStore'
 import OutgoingAccessRequestStore from './OutgoingAccessRequestStore'
@@ -23,11 +22,7 @@ if (process.env.NODE_ENV !== 'test') {
 export const storesContext = createContext(null)
 
 export class RootStore {
-  constructor({
-    directoryApiClient,
-    managementApiClient,
-    inwayRepository = InwayRepository,
-  } = {}) {
+  constructor({ directoryApiClient, managementApiClient } = {}) {
     this.applicationStore = new ApplicationStore()
     this.directoryServicesStore = new DirectoryServicesStore({
       rootStore: this,
@@ -48,7 +43,10 @@ export class RootStore {
     this.incomingAccessRequestsStore = new IncomingAccessRequestsStore({
       managementApiClient,
     })
-    this.inwaysStore = new InwaysStore({ rootStore: this, inwayRepository })
+    this.inwaysStore = new InwaysStore({
+      rootStore: this,
+      managementApiClient,
+    })
   }
 }
 

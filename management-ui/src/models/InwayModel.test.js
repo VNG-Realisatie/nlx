@@ -16,11 +16,7 @@ test('model implements proptypes', () => {
 })
 
 test('fetch should reload the model via the store', async () => {
-  const rootStore = new RootStore({
-    inwayRepository: {
-      getByName: jest.fn().mockResolvedValue({ name: 'service-a' }),
-    },
-  })
+  const rootStore = new RootStore({})
 
   const inwayModel = new InwayModel({
     store: rootStore.inwaysStore,
@@ -29,7 +25,9 @@ test('fetch should reload the model via the store', async () => {
     },
   })
 
-  jest.spyOn(rootStore.inwaysStore, 'fetch')
+  jest.spyOn(rootStore.inwaysStore, 'fetch').mockResolvedValue({
+    name: 'service-a',
+  })
 
   await inwayModel.fetch()
 

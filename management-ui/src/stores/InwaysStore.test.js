@@ -1,82 +1,91 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import deferredPromise from '../utils/deferred-promise'
+import { ManagementApi } from '../api'
+import InwayModel from '../models/InwayModel'
 import InwaysStore from './InwaysStore'
+import { RootStore } from './index'
 
-let rootStore
-let inwayRepository
+test('initializing the store', () => {
+  const managementApiClient = new ManagementApi()
 
-beforeEach(() => {
-  rootStore = {}
-  inwayRepository = {}
+  const store = new InwaysStore({
+    rootStore: new RootStore(),
+    managementApiClient,
+  })
+
+  expect(store.isInitiallyFetched).toBe(false)
+  expect(store.inways).toEqual([])
 })
 
 test('fetching inways', async () => {
-  const request = deferredPromise()
-  inwayRepository = {
-    getAll: jest.fn(() => request),
-  }
+  const managementApiClient = new ManagementApi()
 
-  const inwaysStore = new InwaysStore({
-    rootStore,
-    inwayRepository,
+  managementApiClient.managementListInways = jest.fn().mockResolvedValue({
+    inways: [{ name: 'Inway A' }, { name: 'Inway B' }],
   })
 
-  expect(inwaysStore.isInitiallyFetched).toBe(false)
-  expect(inwaysStore.inways).toEqual([])
+  const inwaysStore = new InwaysStore({
+    rootStore: new RootStore(),
+    managementApiClient,
+  })
 
-  inwaysStore.fetchInways()
-
-  expect(inwaysStore.isInitiallyFetched).toBe(false)
-  expect(inwayRepository.getAll).toHaveBeenCalled()
-
-  const inwaysList = [{ name: 'Inway A' }, { name: 'Inway B' }]
-  await request.resolve(inwaysList)
+  await inwaysStore.fetchInways()
 
   expect(inwaysStore.isInitiallyFetched).toBe(true)
   expect(inwaysStore.inways).toHaveLength(2)
-  expect(inwaysStore.inways).not.toBe([])
+})
+
+test('fetching a single inway', async () => {
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementGetInway = jest
+    .fn()
+    .mockResolvedValue({ name: 'Inway A' })
+
+  const inwaysStore = new InwaysStore({
+    rootStore: new RootStore(),
+    managementApiClient,
+  })
+
+  const inway = await inwaysStore.fetch({ name: 'Inway A' })
+
+  expect(managementApiClient.managementGetInway).toHaveBeenCalledWith({
+    name: 'Inway A',
+  })
+  expect(inway).toBeInstanceOf(InwayModel)
+  expect(inway.name).toEqual('Inway A')
 })
 
 test('handle error while fetching inways', async () => {
-  const request = deferredPromise()
-  inwayRepository = {
-    getAll: jest.fn(() => request),
-  }
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementListInways = jest
+    .fn()
+    .mockRejectedValue('arbitrary error')
 
   const inwaysStore = new InwaysStore({
-    rootStore,
-    inwayRepository,
+    rootStore: new RootStore(),
+    managementApiClient,
   })
 
-  expect(inwaysStore.inways).toEqual([])
+  await inwaysStore.fetchInways()
 
-  inwaysStore.fetchInways()
-
-  expect(inwaysStore.isInitiallyFetched).toBe(false)
-  expect(inwayRepository.getAll).toHaveBeenCalled()
-
-  await request.reject('some error')
-
-  expect(inwaysStore.error).toEqual('some error')
-  expect(inwaysStore.inways).toEqual([])
+  expect(inwaysStore.error).toEqual('arbitrary error')
+  expect(inwaysStore.inways).toHaveLength(0)
   expect(inwaysStore.isInitiallyFetched).toBe(true)
 })
 
 test('getting an inway', async () => {
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementListInways = jest.fn().mockResolvedValue({
+    inways: [{ name: 'Inway A' }],
+  })
+
   const inwaysStore = new InwaysStore({
-    rootStore,
-    inwayRepository: {
-      getAll: jest.fn().mockResolvedValue([
-        {
-          name: 'Inway A',
-        },
-        {
-          name: 'Inway B',
-        },
-      ]),
-    },
+    rootStore: new RootStore(),
+    managementApiClient,
   })
 
   await inwaysStore.fetchInways()
@@ -84,6 +93,6 @@ test('getting an inway', async () => {
   let selectedInway = inwaysStore.getInway({ name: 'non-existing-inway-name' })
   expect(selectedInway).toBeUndefined()
 
-  selectedInway = inwaysStore.getInway({ name: 'Inway B' })
-  expect(selectedInway.name).toEqual('Inway B')
+  selectedInway = inwaysStore.getInway({ name: 'Inway A' })
+  expect(selectedInway.name).toEqual('Inway A')
 })

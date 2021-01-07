@@ -1,8 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { makeAutoObservable, flow } from 'mobx'
-import InwayRepository from '../domain/inway-repository'
+import { flow, makeAutoObservable } from 'mobx'
 import InwayModel from '../models/InwayModel'
 
 class InwaysStore {
@@ -13,16 +12,11 @@ class InwaysStore {
   // This is internal state to prevent concurrent fetchInways calls being in flight.
   isFetching = false
 
-  constructor({ rootStore, inwayRepository = InwayRepository }) {
+  constructor({ rootStore, managementApiClient }) {
     makeAutoObservable(this)
 
     this.rootStore = rootStore
-    this.inwayRepository = inwayRepository
-
-    this.inways = []
-    this.error = ''
-    this.isInitiallyFetched = false
-    this.isFetching = false
+    this._managementApiClient = managementApiClient
   }
 
   fetchInways = flow(function* fetchInways() {
@@ -34,8 +28,8 @@ class InwaysStore {
     this.error = ''
 
     try {
-      const inways = yield this.inwayRepository.getAll()
-      this.inways = inways.map(
+      const result = yield this._managementApiClient.managementListInways()
+      this.inways = result.inways.map(
         (inway) => new InwayModel({ store: this, inway }),
       )
     } catch (e) {
@@ -47,7 +41,9 @@ class InwaysStore {
   }).bind(this)
 
   fetch = flow(function* fetch({ name }) {
-    const inwayData = yield this.inwayRepository.getByName(name)
+    const inwayData = yield this._managementApiClient.managementGetInway({
+      name,
+    })
     let inway = this.getInway({ name })
 
     if (!inway) {
