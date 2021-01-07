@@ -62,8 +62,11 @@ class ServicesStore {
     this.error = ''
 
     try {
-      const servicesData = yield this.serviceRepository.getAll()
-      this.services = servicesData.map(
+      const servicesData = yield this._managementApiClient.managementListServices(
+        {},
+      )
+
+      this.services = servicesData.services.map(
         (serviceData) =>
           new ServiceModel({
             servicesStore: this,
@@ -72,7 +75,6 @@ class ServicesStore {
       )
     } catch (e) {
       this.error = e
-      console.error(e)
     } finally {
       this.isInitiallyFetched = true
       this.isFetching = false

@@ -1,25 +1,9 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { fetchWithoutCaching, throwOnError } from './fetch-utils'
+import { throwOnError } from './fetch-utils'
 
 class ServiceRepository {
-  static async getAll() {
-    const response = await fetchWithoutCaching(`/api/v1/services`)
-
-    if (!response.ok) {
-      throw new Error('unable to handle the request')
-    }
-
-    const result = await response.json()
-    const services = result.services ? result.services : []
-    return services.map((service) => {
-      service.internal = !!service.internal
-      service.inways = service.inways || []
-      return service
-    })
-  }
-
   static async create(service) {
     const response = await fetch('/api/v1/services', {
       method: 'POST',

@@ -1,7 +1,6 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import deferredPromise from '../test-utils/deferred-promise'
 import ServiceModel from '../models/ServiceModel'
 import { ManagementApi } from '../api'
 import ServicesStore from './ServicesStore'
@@ -28,7 +27,7 @@ test('initializing the store', async () => {
   expect(servicesStore.isFetching).toBe(false)
 })
 
-test('fetch a single service', async () => {
+test('fetch and getting a single service', async () => {
   const managementApiClient = new ManagementApi()
 
   managementApiClient.managementGetService = jest.fn().mockResolvedValue({
@@ -39,10 +38,7 @@ test('fetch a single service', async () => {
     managementApiClient,
   })
 
-  const servicesStore = new ServicesStore({
-    rootStore,
-    managementApiClient,
-  })
+  const servicesStore = rootStore.servicesStore
 
   servicesStore.services = [
     new ServiceModel({ servicesStore, serviceData: { name: 'Service A' } }),
@@ -63,74 +59,45 @@ test('fetch a single service', async () => {
     rootStore.incomingAccessRequestsStore.fetchForService,
   ).toHaveBeenCalled()
   expect(rootStore.accessGrantStore.fetchForService).toHaveBeenCalled()
+
+  expect(servicesStore.getService('Service A').name).toEqual('Service A')
 })
 
 test('fetching services', async () => {
-  const request = deferredPromise()
-  serviceRepository = {
-    getAll: jest.fn(() => request),
-  }
+  const managementApi = new ManagementApi()
 
-  const serviceList = [{ name: 'Service A' }, { name: 'Service B' }]
-  const servicesStore = new ServicesStore({
-    rootStore,
-    serviceRepository,
+  managementApi.managementListServices = jest.fn().mockResolvedValue({
+    services: [{ name: 'Service A' }, { name: 'Service B' }],
   })
 
-  expect(servicesStore.isInitiallyFetched).toBe(false)
-  expect(servicesStore.services).toEqual([])
+  const servicesStore = new ServicesStore({
+    rootStore,
+    managementApiClient: managementApi,
+  })
 
-  servicesStore.fetchAll()
+  await servicesStore.fetchAll()
 
-  expect(servicesStore.isInitiallyFetched).toBe(false)
-  expect(serviceRepository.getAll).toHaveBeenCalled()
-
-  await request.resolve(serviceList)
-
-  await expect(servicesStore.isInitiallyFetched).toBe(true)
+  expect(servicesStore.isInitiallyFetched).toBe(true)
   expect(servicesStore.services).toHaveLength(2)
 })
 
 test('handle error while fetching services', async () => {
-  const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+  const managementApi = new ManagementApi()
 
-  const request = deferredPromise()
-  serviceRepository = {
-    getAll: jest.fn(() => request),
-  }
+  managementApi.managementListServices = jest
+    .fn()
+    .mockRejectedValue('arbitrary error')
 
   const servicesStore = new ServicesStore({
     rootStore,
-    serviceRepository,
+    managementApiClient: managementApi,
   })
 
-  expect(servicesStore.services).toEqual([])
+  await servicesStore.fetchAll()
 
-  servicesStore.fetchAll()
-
-  expect(servicesStore.isInitiallyFetched).toBe(false)
-  expect(serviceRepository.getAll).toHaveBeenCalled()
-
-  await request.reject('some error')
-
-  expect(servicesStore.error).toEqual('some error')
+  expect(servicesStore.error).toEqual('arbitrary error')
   expect(servicesStore.services).toEqual([])
   expect(servicesStore.isInitiallyFetched).toBe(true)
-
-  errorSpy.mockRestore()
-})
-
-test('getting a service', () => {
-  const serviceList = [{ name: 'Service A' }, { name: 'Service B' }]
-
-  const servicesStore = new ServicesStore({
-    rootStore,
-    serviceRepository,
-  })
-  servicesStore.services = serviceList
-
-  const service = servicesStore.getService('Service A')
-  expect(service.name).toEqual(serviceList[0].name)
 })
 
 test('creating a service', async () => {
