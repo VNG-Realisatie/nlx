@@ -4,16 +4,15 @@
 import React from 'react'
 import { string, func, bool } from 'prop-types'
 import { useTranslation } from 'react-i18next'
-
 import { Header, Title, CloseButton, StyledIconClose } from './index.styles'
 
-const ModalHeader = ({ handleUserClose, title, showCloseButton }) => {
+const ModalHeader = ({ onClose, title, showCloseButton }) => {
   const { t } = useTranslation()
   return (
     <Header hasTitle={!!title} hasCloseButton={showCloseButton}>
       {title && <Title>{title}</Title>}
       {showCloseButton && (
-        <CloseButton onClick={handleUserClose}>
+        <CloseButton onClick={onClose}>
           <StyledIconClose title={t('Close')} />
         </CloseButton>
       )}
@@ -22,13 +21,12 @@ const ModalHeader = ({ handleUserClose, title, showCloseButton }) => {
 }
 
 ModalHeader.propTypes = {
-  handleUserClose: func.isRequired,
+  onClose: func.isRequired,
   title: string,
   showCloseButton: bool,
 }
 
 ModalHeader.defaultProps = {
-  title: '',
   showCloseButton: true,
 }
 

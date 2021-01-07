@@ -4,7 +4,6 @@
 import React from 'react'
 import { bool, node, shape, string } from 'prop-types'
 import FocusLock from 'react-focus-lock'
-
 import cssUnitOrEmpty from '../propTypeCssUnitOrEmpty'
 import ModalHeader from './ModalHeader'
 import { ModalPosition, Window, Content } from './index.styles'

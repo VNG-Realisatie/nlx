@@ -2,7 +2,6 @@
 // Licensed under the EUPL
 //
 import styled, { css } from 'styled-components'
-
 import {
   MODAL_ANIMATION_DELAY_ENTER,
   MODAL_ANIMATION_SPEED_ENTER,

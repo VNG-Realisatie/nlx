@@ -4,7 +4,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { bool, func, shape, oneOf } from 'prop-types'
 import { CSSTransition } from 'react-transition-group'
-
 import ModalContent from '../ModalContent'
 import {
   MASK_ANIMATION_SPEED_ENTER,
@@ -85,11 +84,8 @@ const ModalFrame = ({
             >
               <ModalContent
                 {...passProps}
-                handleUserClose={handleUserClose}
-                showCloseButton={
-                  // Make sure close button is not shown when user isn't allowed to close
-                  allowUserToClose ? passProps.showCloseButton : false
-                }
+                onClose={handleUserClose}
+                showCloseButton={allowUserToClose && passProps.showCloseButton}
               />
             </CSSTransition>
           </HeightLimiter>

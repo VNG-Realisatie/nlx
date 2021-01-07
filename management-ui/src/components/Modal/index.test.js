@@ -3,7 +3,6 @@
 //
 import React, { useState } from 'react'
 import { fireEvent } from '@testing-library/react'
-
 import { renderWithProviders } from '../../test-utils'
 import Modal, { verticalAlignToCssValues } from './index'
 
