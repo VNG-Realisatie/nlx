@@ -2,18 +2,6 @@
 // Licensed under the EUPL
 //
 
-import asyncMemoize from './async-memoize'
-
-const responseClone = (response) => response.clone()
-
-const memoizedFetch = asyncMemoize(fetch)
-
-export const fetchWithCaching = (...args) =>
-  memoizedFetch(...args).then(responseClone)
-
-// Expose the memoize instance for tests to be able to clear it
-fetchWithCaching.memo = memoizedFetch
-
 const statusErrorMessage = {
   400: 'invalid user input',
   401: 'no user is authenticated',

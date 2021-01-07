@@ -12,7 +12,6 @@
     "lodash.pick": "4.4.0",
     "mobx": "6.0.4",
     "mobx-react": "7.0.5",
-    "p-memoize": "4.0.1",
     "react": "17.0.1",
     "react-app-polyfill": "2.0.0",
     "react-dom": "17.0.1",
