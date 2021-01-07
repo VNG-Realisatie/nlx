@@ -3,6 +3,7 @@ package oidc
 import (
 	"context"
 	"encoding/gob"
+	"errors"
 	"net/http"
 
 	"github.com/coreos/go-oidc"
@@ -13,28 +14,26 @@ import (
 	"golang.org/x/oauth2"
 )
 
+var ErrUnauthenticated = errors.New("not authenticated")
+
 const cookieName = "nlx_management_session"
 
-// OAuth2Config provides an interface for oauth2.Config
 type OAuth2Config interface {
 	AuthCodeURL(state string, opts ...oauth2.AuthCodeOption) string
 	Exchange(ctx context.Context, code string, opts ...oauth2.AuthCodeOption) (*oauth2.Token, error)
 }
 
-// Provider provides an interface for oidc.Provider
 type Provider interface {
 	Endpoint() oauth2.Endpoint
 	Verifier(config *oidc.Config) *oidc.IDTokenVerifier
 }
 
-// Store provides an interface for sessions.Store
 type Store interface {
 	Get(r *http.Request, name string) (*sessions.Session, error)
 	New(r *http.Request, name string) (*sessions.Session, error)
 	Save(r *http.Request, w http.ResponseWriter, s *sessions.Session) error
 }
 
-// Authenticator implements the OIDC authentication mechanism
 type Authenticator struct {
 	logger       *zap.Logger
 	oauth2Config OAuth2Config
@@ -43,17 +42,8 @@ type Authenticator struct {
 	store        Store
 }
 
-// User contains all the details of a specific user
-type User struct {
-	ID         string `json:"id"`
-	FullName   string `json:"fullName"`
-	Email      string `json:"email"`
-	PictureURL string `json:"pictureUrl"`
-}
-
-// NewAuthenticator creates a new OIDC authenticator
 func NewAuthenticator(logger *zap.Logger, options *Options) *Authenticator {
-	gob.Register(&User{})
+	gob.Register(&Claims{})
 
 	store := sessions.NewCookieStore([]byte(options.SecretKey))
 	store.Options = &sessions.Options{
@@ -65,7 +55,6 @@ func NewAuthenticator(logger *zap.Logger, options *Options) *Authenticator {
 
 	ctx := context.Background()
 	oidcProvider, err := oidc.NewProvider(ctx, options.DiscoveryURL)
-
 	if err != nil {
 		logger.Fatal("could not initialize OIDC provider", zap.Error(err))
 	}
@@ -91,44 +80,51 @@ func NewAuthenticator(logger *zap.Logger, options *Options) *Authenticator {
 	}
 }
 
-// Routes returns the OIDC routes
 func (a *Authenticator) Routes() chi.Router {
 	r := chi.NewRouter()
 	r.Get("/authenticate", a.authenticate)
 	r.Get("/callback", a.callback)
 	r.Post("/logout", a.logout)
-	r.Get("/me", a.me)
+	r.Get("/me", a.
+		OnlyAuthenticated(http.HandlerFunc(a.me)).
+		ServeHTTP,
+	)
 
 	return r
 }
 
-// OnlyAuthenticated is middleware that only handles authenticated requests
 func (a *Authenticator) OnlyAuthenticated(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if a.GetUser(r) != nil {
-			h.ServeHTTP(w, r)
+		if _, err := a.ParseClaims(r); err != nil {
+			http.Error(w, "unauthorized request", http.StatusUnauthorized)
+
 			return
 		}
 
-		http.Error(w, "unauthorized request", http.StatusUnauthorized)
+		h.ServeHTTP(w, r)
 	})
 }
 
-// GetUser retrieves the User from a session
-func (a *Authenticator) GetUser(r *http.Request) *User {
+func (a *Authenticator) ParseClaims(r *http.Request) (*Claims, error) {
 	session, _ := a.store.Get(r, cookieName)
 
-	user, ok := session.Values["user"].(*User)
+	claims, ok := session.Values["claims"].(*Claims)
 	if !ok {
-		return nil
+		return nil, ErrUnauthenticated
 	}
 
-	return user
+	if err := claims.Verify(); err != nil {
+		return nil, err
+	}
+
+	return claims, nil
 }
 
 func (a *Authenticator) authenticate(w http.ResponseWriter, r *http.Request) {
-	if a.GetUser(r) != nil { // do not try to login again when user is already logged in
+	// Don't login again if the current user is still valid
+	if _, err := a.ParseClaims(r); err == nil {
 		http.Redirect(w, r, "/", http.StatusFound)
+
 		return
 	}
 
@@ -136,20 +132,17 @@ func (a *Authenticator) authenticate(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *Authenticator) me(w http.ResponseWriter, r *http.Request) {
-	if user := a.GetUser(r); user != nil {
-		render.JSON(w, r, user)
+	claims, err := a.ParseClaims(r)
+	if err != nil {
+		http.Error(w, "unauthorized request", http.StatusUnauthorized)
+
 		return
 	}
 
-	http.Error(w, "unauthorized request", http.StatusUnauthorized)
+	render.JSON(w, r, claims.User())
 }
 
 func (a *Authenticator) callback(w http.ResponseWriter, r *http.Request) {
-	if a.GetUser(r) != nil { // do not try to login again when user is already logged in
-		http.Redirect(w, r, "/", http.StatusFound)
-		return
-	}
-
 	ctx := context.Background()
 	session, _ := a.store.Get(r, cookieName)
 
@@ -169,7 +162,6 @@ func (a *Authenticator) callback(w http.ResponseWriter, r *http.Request) {
 
 	verifier := a.oidcProvider.Verifier(a.oidcConfig)
 	idToken, err := verifier.Verify(ctx, rawIDToken)
-
 	if err != nil {
 		a.logger.Info("could not verify id token", zap.Error(err))
 		http.Redirect(w, r, "/", http.StatusFound)
@@ -177,32 +169,19 @@ func (a *Authenticator) callback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var claims struct {
-		Sub     string `json:"sub"`
-		Name    string `json:"name"`
-		Email   string `json:"email"`
-		Picture string `json:"picture"`
-	}
+	claims := &Claims{}
 
-	err = idToken.Claims(&claims)
-
-	if err != nil {
+	if err := idToken.Claims(claims); err != nil {
 		a.logger.Info("could not extract claims", zap.Error(err))
 		http.Redirect(w, r, "/", http.StatusFound)
 
 		return
 	}
 
-	session.Values["user"] = &User{
-		ID:         claims.Sub,
-		FullName:   claims.Name,
-		Email:      claims.Email,
-		PictureURL: claims.Picture,
-	}
+	session.Values["claims"] = claims
 
-	err = session.Save(r, w)
-	if err != nil {
-		http.Error(w, "unable to save session", http.StatusInternalServerError)
+	if err := session.Save(r, w); err != nil {
+		http.Error(w, "failed to save session", http.StatusInternalServerError)
 		return
 	}
 
@@ -211,7 +190,7 @@ func (a *Authenticator) callback(w http.ResponseWriter, r *http.Request) {
 
 func (a *Authenticator) logout(w http.ResponseWriter, r *http.Request) {
 	session, _ := a.store.Get(r, cookieName)
-	delete(session.Values, "user")
+	delete(session.Values, "claims")
 
 	err := session.Save(r, w)
 	if err != nil {

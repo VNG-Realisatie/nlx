@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/fgrosse/zaptest"
 	"github.com/golang/mock/gomock"
@@ -40,44 +41,148 @@ func TestOnlyAuthenticated(t *testing.T) {
 		fmt.Fprintln(w, "This is only visible when authenticated.")
 	})
 
-	mockLoggedInSession := sessions.NewSession(mockStore, "nlx_management_session")
-	mockLoggedInSession.Values["user"] = &User{
-		ID: "42",
-	}
-
 	srv := httptest.NewServer(authenticator.OnlyAuthenticated(mockHandler))
 	defer srv.Close()
 
-	tests := []struct {
-		session        *sessions.Session
+	tests := map[string]struct {
+		session        func() *sessions.Session
 		expectedStatus int
 		expectedBody   string
 	}{
-		{
-			&sessions.Session{},
+		"unauthorized_request_should_fail": {
+			func() *sessions.Session {
+				return &sessions.Session{}
+			},
 			http.StatusUnauthorized,
 			"unauthorized request\n",
 		},
-		{
-			mockLoggedInSession,
+		"should_return_unauthorized_when_expired": {
+			func() *sessions.Session {
+				session := sessions.NewSession(mockStore, "nlx_management_session")
+				session.Values["claims"] = &Claims{
+					Subject:   "arbitrary-user-id",
+					ExpiresAt: time.Now().Add(-10 * time.Second).Unix(),
+				}
+
+				return session
+			},
+			http.StatusUnauthorized,
+			"unauthorized request\n",
+		},
+		"should_return_authorized_when_not_expired": {
+			func() *sessions.Session {
+				session := sessions.NewSession(mockStore, "nlx_management_session")
+				session.Values["claims"] = &Claims{
+					Subject:   "arbitrary-user-id",
+					ExpiresAt: time.Now().Add(10 * time.Second).Unix(),
+				}
+
+				return session
+			},
+			http.StatusOK,
+			"This is only visible when authenticated.\n",
+		},
+		"should_return_unauthorized_when_used_before_not_before": {
+			func() *sessions.Session {
+				session := sessions.NewSession(mockStore, "nlx_management_session")
+				session.Values["claims"] = &Claims{
+					Subject:   "arbitrary-user-id",
+					NotBefore: time.Now().Add(10 * time.Second).Unix(),
+				}
+
+				return session
+			},
+			http.StatusUnauthorized,
+			"unauthorized request\n",
+		},
+		"should_return_authorized_when_used_after_not_before": {
+			func() *sessions.Session {
+				session := sessions.NewSession(mockStore, "nlx_management_session")
+				session.Values["claims"] = &Claims{
+					Subject:   "arbitrary-user-id",
+					NotBefore: time.Now().Add(-10 * time.Second).Unix(),
+				}
+
+				return session
+			},
+			http.StatusOK,
+			"This is only visible when authenticated.\n",
+		},
+		"should_return_unauthorized_when_used_before_issued": {
+			func() *sessions.Session {
+				session := sessions.NewSession(mockStore, "nlx_management_session")
+				session.Values["claims"] = &Claims{
+					Subject:  "arbitrary-user-id",
+					IssuedAt: time.Now().Add(10 * time.Second).Unix(),
+				}
+
+				return session
+			},
+			http.StatusUnauthorized,
+			"unauthorized request\n",
+		},
+		"should_return_authorized_when_used_after_issued": {
+			func() *sessions.Session {
+				session := sessions.NewSession(mockStore, "nlx_management_session")
+				session.Values["claims"] = &Claims{
+					Subject:  "arbitrary-user-id",
+					IssuedAt: time.Now().Add(-10 * time.Second).Unix(),
+				}
+
+				return session
+			},
+			http.StatusOK,
+			"This is only visible when authenticated.\n",
+		},
+		"should_return_authorized_for_successful_request_without_optional_claims": {
+			func() *sessions.Session {
+				session := sessions.NewSession(mockStore, "nlx_management_session")
+				session.Values["claims"] = &Claims{
+					Subject: "arbitrary-user-id",
+				}
+
+				return session
+			},
+			http.StatusOK,
+			"This is only visible when authenticated.\n",
+		},
+		"should_return_authorized_for_successful_request_with_optional_claims": {
+			func() *sessions.Session {
+				session := sessions.NewSession(mockStore, "nlx_management_session")
+				session.Values["claims"] = &Claims{
+					Subject:   "arbitrary-user-id",
+					IssuedAt:  time.Now().Add(-10 * time.Second).Unix(),
+					NotBefore: time.Now().Add(-10 * time.Second).Unix(),
+					ExpiresAt: time.Now().Add(10 * time.Second).Unix(),
+				}
+
+				return session
+			},
 			http.StatusOK,
 			"This is only visible when authenticated.\n",
 		},
 	}
 
-	for _, test := range tests {
-		mockStore.EXPECT().Get(gomock.Any(), "nlx_management_session").Return(test.session, nil)
+	for name, tt := range tests {
+		tt := tt
 
-		resp, err := client.Get(srv.URL)
-		assert.NoError(t, err)
+		t.Run(name, func(t *testing.T) {
+			mockStore.
+				EXPECT().
+				Get(gomock.Any(), "nlx_management_session").
+				Return(tt.session(), nil)
 
-		defer resp.Body.Close()
+			resp, err := client.Get(srv.URL)
+			assert.NoError(t, err)
 
-		assert.Equal(t, test.expectedStatus, resp.StatusCode)
+			defer resp.Body.Close()
 
-		bodyBytes, err := ioutil.ReadAll(resp.Body)
-		assert.NoError(t, err)
-		assert.Equal(t, test.expectedBody, string(bodyBytes))
+			assert.Equal(t, tt.expectedStatus, resp.StatusCode)
+
+			bodyBytes, err := ioutil.ReadAll(resp.Body)
+			assert.NoError(t, err)
+			assert.Equal(t, tt.expectedBody, string(bodyBytes))
+		})
 	}
 }
 
@@ -175,8 +280,8 @@ func TestLogoutEndpoint(t *testing.T) {
 	defer srv.Close()
 
 	mockSession := sessions.NewSession(mockStore, "nlx_management_session")
-	mockSession.Values["user"] = &User{
-		ID: "42",
+	mockSession.Values["claims"] = &Claims{
+		Subject: "42",
 	}
 
 	mockStore.EXPECT().Get(gomock.Any(), "nlx_management_session").Return(mockSession, nil).AnyTimes()
@@ -187,8 +292,8 @@ func TestLogoutEndpoint(t *testing.T) {
 	assert.Equal(t, http.StatusFound, resp.StatusCode)
 	assert.Equal(t, resp.Header.Get("Location"), "/")
 
-	_, userExists := mockSession.Values["user"]
-	assert.False(t, userExists)
+	_, claimsExists := mockSession.Values["claims"]
+	assert.False(t, claimsExists)
 
 	resp.Body.Close()
 }
