@@ -2,11 +2,11 @@
 // Licensed under the EUPL
 //
 
-import { fetchWithoutCaching, throwOnError } from './fetch-utils'
+import { throwOnError } from './fetch-utils'
 
 class UserRepository {
   static async getAuthenticatedUser() {
-    const response = await fetchWithoutCaching('/oidc/me')
+    const response = await fetch('/oidc/me')
 
     throwOnError(response)
 

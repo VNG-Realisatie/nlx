@@ -3,7 +3,6 @@
 //
 
 import UserRepository from './user-repository'
-import { PREVENT_CACHING_HEADERS } from './fetch-utils'
 
 describe('the UserRepository', () => {
   describe('getting the authenticated user', () => {
@@ -76,12 +75,7 @@ describe('the UserRepository', () => {
           new Error('unable to handle the request'),
         )
 
-        expect(global.fetch).toHaveBeenCalledWith(
-          '/oidc/me',
-          expect.objectContaining({
-            headers: expect.objectContaining(PREVENT_CACHING_HEADERS),
-          }),
-        )
+        expect(global.fetch).toHaveBeenCalledWith('/oidc/me')
       })
     })
   })

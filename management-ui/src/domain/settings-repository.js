@@ -2,11 +2,11 @@
 // Licensed under the EUPL
 //
 
-import { fetchWithoutCaching, throwOnError } from './fetch-utils'
+import { throwOnError } from './fetch-utils'
 
 class SettingsRepository {
   static async getGeneralSettings() {
-    const response = await fetchWithoutCaching(`/api/v1/settings`)
+    const response = await fetch(`/api/v1/settings`)
 
     if (response && response.status === 404) {
       return {}
@@ -31,7 +31,7 @@ class SettingsRepository {
       throw new Error('The setting organizationInway must be specified')
     }
 
-    const response = await fetchWithoutCaching(`/api/v1/settings`, {
+    const response = await fetch(`/api/v1/settings`, {
       method: 'PUT',
       body: JSON.stringify(settings),
     })
@@ -42,7 +42,7 @@ class SettingsRepository {
   }
 
   static async getInsightSettings() {
-    const response = await fetchWithoutCaching(`/api/v1/insight-configuration`)
+    const response = await fetch(`/api/v1/insight-configuration`)
 
     if (response && response.status === 404) {
       return {}
@@ -64,13 +64,10 @@ class SettingsRepository {
       throw new Error('The setting insightAPIURL must be specified')
     }
 
-    const response = await fetchWithoutCaching(
-      `/api/v1/insight-configuration`,
-      {
-        method: 'PUT',
-        body: JSON.stringify(settings),
-      },
-    )
+    const response = await fetch(`/api/v1/insight-configuration`, {
+      method: 'PUT',
+      body: JSON.stringify(settings),
+    })
 
     throwOnError(response)
 

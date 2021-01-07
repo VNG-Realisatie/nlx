@@ -2,11 +2,11 @@
 // Licensed under the EUPL
 //
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, createContext } from 'react'
 import { string, func, node, shape } from 'prop-types'
 import UserRepository from '../domain/user-repository'
 
-const UserContext = React.createContext()
+const UserContext = createContext()
 
 const UserContextProvider = ({
   children,

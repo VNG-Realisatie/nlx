@@ -4,7 +4,6 @@
 
 import React from 'react'
 import { act, render } from '@testing-library/react'
-import { PREVENT_CACHING_HEADERS } from '../domain/fetch-utils'
 import UserContext, { UserContextProvider } from './index'
 
 describe('UserContext', () => {
@@ -24,12 +23,7 @@ describe('UserContext', () => {
 
       it('should fetch the current user', async () => {
         await act(async () => render(<UserContextProvider />))
-        expect(global.fetch).toHaveBeenCalledWith(
-          '/oidc/me',
-          expect.objectContaining({
-            headers: expect.objectContaining(PREVENT_CACHING_HEADERS),
-          }),
-        )
+        expect(global.fetch).toHaveBeenCalledWith('/oidc/me')
       })
 
       it('should make the user available to the context consumers', () => {

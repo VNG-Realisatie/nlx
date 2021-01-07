@@ -3,7 +3,6 @@
 //
 
 import SettingsRepository from './settings-repository'
-import { PREVENT_CACHING_HEADERS } from './fetch-utils'
 
 describe('the general settings', () => {
   afterEach(() => global.fetch.mockRestore())
@@ -21,12 +20,7 @@ describe('the general settings', () => {
 
       const result = await SettingsRepository.getGeneralSettings()
 
-      expect(global.fetch).toHaveBeenCalledWith(
-        '/api/v1/settings',
-        expect.objectContaining({
-          headers: expect.objectContaining(PREVENT_CACHING_HEADERS),
-        }),
-      )
+      expect(global.fetch).toHaveBeenCalledWith('/api/v1/settings')
 
       expect(result).toEqual({
         organizationInway: 'inway-name',
@@ -46,12 +40,7 @@ describe('the general settings', () => {
           new Error('unable to handle the request'),
         )
 
-        expect(global.fetch).toHaveBeenCalledWith(
-          '/api/v1/settings',
-          expect.objectContaining({
-            headers: expect.objectContaining(PREVENT_CACHING_HEADERS),
-          }),
-        )
+        expect(global.fetch).toHaveBeenCalledWith('/api/v1/settings')
       })
     })
   })
@@ -75,7 +64,6 @@ describe('the general settings', () => {
       expect(global.fetch).toHaveBeenCalledWith(
         '/api/v1/settings',
         expect.objectContaining({
-          headers: expect.objectContaining(PREVENT_CACHING_HEADERS),
           method: 'PUT',
         }),
       )
@@ -101,7 +89,7 @@ describe('the general settings', () => {
         expect(global.fetch).toHaveBeenCalledWith(
           '/api/v1/settings',
           expect.objectContaining({
-            headers: expect.objectContaining(PREVENT_CACHING_HEADERS),
+            method: 'PUT',
           }),
         )
       })
@@ -126,12 +114,7 @@ describe('the insight settings', () => {
 
       const result = await SettingsRepository.getInsightSettings()
 
-      expect(global.fetch).toHaveBeenCalledWith(
-        '/api/v1/insight-configuration',
-        expect.objectContaining({
-          headers: expect.objectContaining(PREVENT_CACHING_HEADERS),
-        }),
-      )
+      expect(global.fetch).toHaveBeenCalledWith('/api/v1/insight-configuration')
 
       expect(result).toEqual({
         irmaServerURL: 'irma-server-url',
@@ -152,9 +135,6 @@ describe('the insight settings', () => {
 
         expect(global.fetch).toHaveBeenCalledWith(
           '/api/v1/insight-configuration',
-          expect.objectContaining({
-            headers: expect.objectContaining(PREVENT_CACHING_HEADERS),
-          }),
         )
 
         expect(result).toEqual({})
@@ -176,9 +156,6 @@ describe('the insight settings', () => {
 
         expect(global.fetch).toHaveBeenCalledWith(
           '/api/v1/insight-configuration',
-          expect.objectContaining({
-            headers: expect.objectContaining(PREVENT_CACHING_HEADERS),
-          }),
         )
       })
     })
@@ -204,7 +181,6 @@ describe('the insight settings', () => {
       expect(global.fetch).toHaveBeenCalledWith(
         '/api/v1/insight-configuration',
         expect.objectContaining({
-          headers: expect.objectContaining(PREVENT_CACHING_HEADERS),
           method: 'PUT',
           body:
             '{"irmaServerURL":"irma-server-url","insightAPIURL":"insight-api-url"}',
@@ -233,7 +209,6 @@ describe('the insight settings', () => {
         expect(global.fetch).toHaveBeenCalledWith(
           '/api/v1/insight-configuration',
           expect.objectContaining({
-            headers: expect.objectContaining(PREVENT_CACHING_HEADERS),
             body:
               '{"irmaServerURL":"irma-server-url","insightAPIURL":"insight-api-url"}',
           }),
