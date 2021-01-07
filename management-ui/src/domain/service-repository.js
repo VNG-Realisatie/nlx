@@ -4,17 +4,6 @@
 import { throwOnError } from './fetch-utils'
 
 class ServiceRepository {
-  static async create(service) {
-    const response = await fetch('/api/v1/services', {
-      method: 'POST',
-      body: JSON.stringify(service),
-    })
-
-    throwOnError(response)
-
-    return response.json()
-  }
-
   static async update(name, service) {
     if (name !== service.name) {
       throw new Error('Changing the service name is not allowed')

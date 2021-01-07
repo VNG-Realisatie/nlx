@@ -101,23 +101,25 @@ test('handle error while fetching services', async () => {
 })
 
 test('creating a service', async () => {
-  const formData = {
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementCreateService = jest.fn().mockResolvedValue({
     name: 'New service',
     endpointURL: 'api.io',
-  }
-
-  serviceRepository = { create: jest.fn().mockResolvedValue(formData) }
+  })
 
   const servicesStore = new ServicesStore({
     rootStore,
-    serviceRepository,
+    managementApiClient,
   })
 
-  await servicesStore.create(formData)
+  const service = await servicesStore.create({
+    name: 'New service',
+    endpointURL: 'api.io',
+  })
 
-  expect(serviceRepository.create).toHaveBeenCalled()
-  expect(servicesStore.services).toHaveLength(1)
-  expect(servicesStore.services[0]).toBeInstanceOf(ServiceModel)
+  expect(service).toBeInstanceOf(ServiceModel)
+  expect(servicesStore.services[0]).toBe(service)
 })
 
 test('removing a service', async () => {

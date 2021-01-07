@@ -85,8 +85,30 @@ class ServicesStore {
     return this.services.find((service) => service.name === serviceName)
   }
 
-  create = flow(function* create(formData) {
-    const serviceData = yield this.serviceRepository.create(formData)
+  create = flow(function* create({
+    name,
+    endpointURL,
+    documentationURL,
+    apiSpecificationURL,
+    internal,
+    techSupportContact,
+    publicSupportContact,
+    inways,
+  }) {
+    const serviceData = yield this._managementApiClient.managementCreateService(
+      {
+        body: {
+          name,
+          endpointURL,
+          documentationURL,
+          apiSpecificationURL,
+          internal: internal,
+          techSupportContact,
+          publicSupportContact,
+          inways,
+        },
+      },
+    )
     const service = new ServiceModel({
       servicesStore: this,
       serviceData,
