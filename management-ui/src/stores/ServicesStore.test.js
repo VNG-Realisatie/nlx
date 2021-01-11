@@ -3,13 +3,13 @@
 //
 import { ManagementApi } from '../api'
 import ServiceModel from './models/ServiceModel'
-import ServicesStore from './ServicesStore'
+import ServiceStore from './ServiceStore'
 import { RootStore } from './index'
 
 test('initializing the store', async () => {
   const managementApiClient = new ManagementApi()
 
-  const servicesStore = new ServicesStore({
+  const servicesStore = new ServiceStore({
     rootStore: new RootStore(),
     managementApiClient,
   })
@@ -62,7 +62,7 @@ test('fetching services', async () => {
     services: [{ name: 'Service A' }, { name: 'Service B' }],
   })
 
-  const servicesStore = new ServicesStore({
+  const servicesStore = new ServiceStore({
     rootStore: new RootStore(),
     managementApiClient: managementApi,
   })
@@ -80,7 +80,7 @@ test('handle error while fetching services', async () => {
     .fn()
     .mockRejectedValue('arbitrary error')
 
-  const servicesStore = new ServicesStore({
+  const servicesStore = new ServiceStore({
     rootStore: new RootStore(),
     managementApiClient: managementApi,
   })
@@ -100,7 +100,7 @@ test('creating a service', async () => {
     endpointURL: 'api.io',
   })
 
-  const servicesStore = new ServicesStore({
+  const servicesStore = new ServiceStore({
     rootStore: new RootStore(),
     managementApiClient,
   })
@@ -123,7 +123,7 @@ test('removing a service', async () => {
 
   managementApiClient.managementDeleteService = jest.fn().mockResolvedValue()
 
-  const servicesStore = new ServicesStore({
+  const servicesStore = new ServiceStore({
     rootStore: new RootStore(),
     managementApiClient,
   })

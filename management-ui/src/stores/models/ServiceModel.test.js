@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 
-import ServicesStore from '../ServicesStore'
+import ServiceStore from '../ServiceStore'
 import IncomingAccessRequestModel from './IncomingAccessRequestModel'
 import AccessGrantModel from './AccessGrantModel'
 import ServiceModel from './ServiceModel'
@@ -34,7 +34,7 @@ test('initialize and update the service', async () => {
 })
 
 test('(re-)fetching the model should call fetch on store', async () => {
-  const servicesStore = new ServicesStore({
+  const servicesStore = new ServiceStore({
     serviceRepository: {
       getByName: jest.fn().mockResolvedValue({
         name: 'Service',
@@ -72,7 +72,7 @@ test('get related incoming access requests', () => {
     }),
   ])
 
-  const servicesStore = new ServicesStore({
+  const servicesStore = new ServiceStore({
     serviceRepository: {},
     rootStore: {
       incomingAccessRequestsStore: {
@@ -116,7 +116,7 @@ test('get related access grants', async () => {
     }),
   ])
 
-  const servicesStore = new ServicesStore({
+  const servicesStore = new ServiceStore({
     serviceRepository: {},
     rootStore: {
       accessGrantStore: {

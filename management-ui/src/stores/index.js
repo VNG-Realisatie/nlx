@@ -9,7 +9,7 @@ import DirectoryServicesStore from './DirectoryServicesStore'
 import OutgoingAccessRequestStore from './OutgoingAccessRequestStore'
 import AccessGrantStore from './AccessGrantStore'
 import AccessProofStore from './AccessProofStore'
-import ServicesStore from './ServicesStore'
+import ServiceStore from './ServiceStore'
 import IncomingAccessRequestsStore from './IncomingAccessRequestsStore'
 import InwayStore from './InwayStore'
 
@@ -36,7 +36,7 @@ export class RootStore {
       managementApiClient,
     })
     this.accessProofStore = new AccessProofStore()
-    this.servicesStore = new ServicesStore({
+    this.servicesStore = new ServiceStore({
       rootStore: this,
       managementApiClient,
     })

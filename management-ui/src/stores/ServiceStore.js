@@ -4,7 +4,7 @@
 import { makeAutoObservable, flow } from 'mobx'
 import ServiceModel from '../stores/models/ServiceModel'
 
-class ServicesStore {
+class ServiceStore {
   services = []
   error = ''
   // This is set to true after the first call has been made. Regardless of success.
@@ -161,4 +161,4 @@ class ServicesStore {
   }).bind(this)
 }
 
-export default ServicesStore
+export default ServiceStore
