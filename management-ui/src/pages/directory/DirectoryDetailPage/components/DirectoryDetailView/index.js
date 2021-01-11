@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { ACCESS_REQUEST_STATES } from '../../../../../stores/models/OutgoingAccessRequestModel'
 import getDirectoryServiceAccessUIState from '../../../directoryServiceAccessState'
 import { SectionGroup } from '../../../../../components/DetailView'
+import useInterval from '../../../../../hooks/use-interval'
 import StacktraceDrawer from './StacktraceDrawer'
 import ExternalLinkSection from './ExternalLinkSection'
 import AccessSection from './AccessSection'
@@ -22,6 +23,7 @@ const DirectoryDetailView = ({ service }) => {
   const { t } = useTranslation()
   const { showDrawer } = useDrawerStack()
   const { organizationName, latestAccessRequest, latestAccessProof } = service
+  useInterval(service.fetch)
 
   const requestAccess = () => {
     const confirmed = window.confirm(
