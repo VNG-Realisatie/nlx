@@ -1,7 +1,8 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React from 'react'
+import React, { useEffect } from 'react'
+import { observer } from 'mobx-react'
 import { arrayOf, bool, func, shape, string } from 'prop-types'
 import { FieldArray, Formik } from 'formik'
 import * as Yup from 'yup'
@@ -14,11 +15,9 @@ import {
   Legend,
   TextInput,
 } from '@commonground/design-system'
-
 import FormikFocusError from '../FormikFocusError'
-import InwayRepository from '../../domain/inway-repository'
-import usePromise from '../../hooks/use-promise'
 import { showServiceVisibilityAlert } from '../ServiceVisibilityAlert'
+import { useInwayStore } from '../../hooks/use-stores'
 import {
   CheckboxGroup,
   Form,
@@ -44,12 +43,16 @@ const ServiceForm = ({
   onSubmitHandler,
   submitButtonText,
   disableName,
-  getInways,
   ...props
 }) => {
   const { t } = useTranslation()
+  const inwayStore = useInwayStore()
+  const allInways = inwayStore.inways
 
-  const { isReady: allInwaysIsReady, result: allInways } = usePromise(getInways)
+  useEffect(() => {
+    inwayStore.fetchInways()
+  }, [inwayStore])
+
   const validationSchema = Yup.object().shape({
     name: Yup.string().required(t('This field is required')),
     endpointURL: Yup.string().required(t('Invalid endpoint URL')),
@@ -136,7 +139,7 @@ const ServiceForm = ({
           <Fieldset>
             <Legend>{t('Inways')}</Legend>
 
-            {!allInwaysIsReady ? (
+            {inwayStore.isFetching ? (
               <InwaysLoadingMessage />
             ) : !allInways || allInways.length === 0 ? (
               <InwaysEmptyMessage data-testid="inways-empty">
@@ -214,13 +217,11 @@ ServiceForm.propTypes = {
   }),
   submitButtonText: string.isRequired,
   disableName: bool,
-  getInways: func,
 }
 
 ServiceForm.defaultProps = {
   initialValues: DEFAULT_INITIAL_VALUES,
   disableName: false,
-  getInways: InwayRepository.getAll,
 }
 
-export default ServiceForm
+export default observer(ServiceForm)

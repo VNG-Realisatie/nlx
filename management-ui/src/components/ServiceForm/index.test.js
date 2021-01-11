@@ -4,27 +4,39 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
 import { renderWithProviders, act, fireEvent, waitFor } from '../../test-utils'
+import { RootStore, StoreProvider } from '../../stores'
+import { ManagementApi } from '../../api'
 import ServiceForm from './index'
 
 jest.mock('../FormikFocusError', () => () => <></>)
 
 describe('with initial values', () => {
   it('should pre-fill the form fields with the initial values', async () => {
+    const managementApiClient = new ManagementApi()
+    managementApiClient.managementListInways = jest.fn().mockResolvedValue({
+      inways: [{ name: 'inway1' }, { name: 'inway2' }],
+    })
+
+    const rootStore = new RootStore({
+      managementApiClient,
+    })
+
     const { getByLabelText, findByLabelText } = renderWithProviders(
-      <ServiceForm
-        initialValues={{
-          name: 'my-service',
-          endpointURL: 'my-service.test:8000',
-          documentationURL: 'my-service.test:8000/docs',
-          apiSpecificationURL: 'my-service.test:8000/openapi.json',
-          internal: false,
-          techSupportContact: 'tech@organization.test',
-          publicSupportContact: 'public@organization.test',
-          inways: ['inway1'],
-        }}
-        submitButtonText="Submit"
-        getInways={() => [{ name: 'inway1' }, { name: 'inway2' }]}
-      />,
+      <StoreProvider rootStore={rootStore}>
+        <ServiceForm
+          initialValues={{
+            name: 'my-service',
+            endpointURL: 'my-service.test:8000',
+            documentationURL: 'my-service.test:8000/docs',
+            apiSpecificationURL: 'my-service.test:8000/openapi.json',
+            internal: false,
+            techSupportContact: 'tech@organization.test',
+            publicSupportContact: 'public@organization.test',
+            inways: ['inway1'],
+          }}
+          submitButtonText="Submit"
+        />
+      </StoreProvider>,
     )
 
     expect(getByLabelText('Service name').value).toBe('my-service')
@@ -52,8 +64,19 @@ describe('with initial values', () => {
   })
 
   it('should allow configuring the submit button text', async () => {
+    const managementApiClient = new ManagementApi()
+    managementApiClient.managementListInways = jest
+      .fn()
+      .mockResolvedValue({ inways: [] })
+
+    const rootStore = new RootStore({
+      managementApiClient,
+    })
+
     const { findByRole } = renderWithProviders(
-      <ServiceForm submitButtonText="Opslaan" allInways={() => []} />,
+      <StoreProvider rootStore={rootStore}>
+        <ServiceForm submitButtonText="Opslaan" />
+      </StoreProvider>,
     )
     expect(await findByRole('button')).toHaveTextContent('Opslaan')
   })
@@ -62,26 +85,36 @@ describe('with initial values', () => {
 test('the form values of the onSubmitHandler', async () => {
   const onSubmitHandlerSpy = jest.fn()
 
+  const managementApiClient = new ManagementApi()
+  managementApiClient.managementListInways = jest
+    .fn()
+    .mockResolvedValue({ inways: [] })
+
+  const rootStore = new RootStore({
+    managementApiClient,
+  })
+
   const {
     container,
     getByTestId,
     findByTestId,
     getByLabelText,
   } = renderWithProviders(
-    <ServiceForm
-      submitButtonText="Submit"
-      onSubmitHandler={onSubmitHandlerSpy}
-      initialValues={{
-        name: '',
-        endpointURL: 'my-service.test:8000',
-        documentationURL: 'my-service.test:8000/docs',
-        apiSpecificationURL: 'my-service.test:8000/openapi.json',
-        internal: false,
-        techSupportContact: 'tech@organization.test',
-        publicSupportContact: 'public@organization.test',
-      }}
-      getInways={() => []}
-    />,
+    <StoreProvider rootStore={rootStore}>
+      <ServiceForm
+        submitButtonText="Submit"
+        onSubmitHandler={onSubmitHandlerSpy}
+        initialValues={{
+          name: '',
+          endpointURL: 'my-service.test:8000',
+          documentationURL: 'my-service.test:8000/docs',
+          apiSpecificationURL: 'my-service.test:8000/openapi.json',
+          internal: false,
+          techSupportContact: 'tech@organization.test',
+          publicSupportContact: 'public@organization.test',
+        }}
+      />
+    </StoreProvider>,
   )
 
   // invalid form - name is missing
@@ -136,12 +169,22 @@ describe('when showing inways', () => {
   }
 
   it('should show a warning when there are no inways registered', async () => {
+    const managementApiClient = new ManagementApi()
+    managementApiClient.managementListInways = jest
+      .fn()
+      .mockResolvedValue({ inways: [] })
+
+    const rootStore = new RootStore({
+      managementApiClient,
+    })
+
     const { findByTestId } = renderWithProviders(
-      <ServiceForm
-        initialValues={{ ...initialValues, inways: [] }}
-        submitButtonText="Submit"
-        getInways={() => []}
-      />,
+      <StoreProvider rootStore={rootStore}>
+        <ServiceForm
+          initialValues={{ ...initialValues, inways: [] }}
+          submitButtonText="Submit"
+        />
+      </StoreProvider>,
     )
     expect(await findByTestId('inways-empty')).toBeTruthy()
     expect(
@@ -149,12 +192,22 @@ describe('when showing inways', () => {
     ).toHaveTextContent('Service not yet accessible')
   })
   it('should show a warning when the service is published and no inways are selected', async () => {
+    const managementApiClient = new ManagementApi()
+    managementApiClient.managementListInways = jest
+      .fn()
+      .mockResolvedValue({ inways: [{ name: 'inway-one' }] })
+
+    const rootStore = new RootStore({
+      managementApiClient,
+    })
+
     const { findByLabelText, findByTestId } = renderWithProviders(
-      <ServiceForm
-        initialValues={{ ...initialValues, inways: [], internal: false }}
-        submitButtonText="Submit"
-        getInways={() => [{ name: 'inway-one' }]}
-      />,
+      <StoreProvider rootStore={rootStore}>
+        <ServiceForm
+          initialValues={{ ...initialValues, inways: [], internal: false }}
+          submitButtonText="Submit"
+        />
+      </StoreProvider>,
     )
     expect(await findByLabelText('inway-one')).not.toHaveAttribute('checked')
     expect(
@@ -163,30 +216,50 @@ describe('when showing inways', () => {
   })
 
   it('should not show a warning when the service is private and no inways are selected', async () => {
+    const managementApiClient = new ManagementApi()
+    managementApiClient.managementListInways = jest
+      .fn()
+      .mockResolvedValue({ inways: [{ name: 'inway-one' }] })
+
+    const rootStore = new RootStore({
+      managementApiClient,
+    })
+
     const { findByLabelText, queryByTestId } = renderWithProviders(
-      <ServiceForm
-        initialValues={{ ...initialValues, inways: [], internal: true }}
-        submitButtonText="Submit"
-        getInways={() => [{ name: 'inway-one' }]}
-      />,
+      <StoreProvider rootStore={rootStore}>
+        <ServiceForm
+          initialValues={{ ...initialValues, inways: [], internal: true }}
+          submitButtonText="Submit"
+        />
+      </StoreProvider>,
     )
     expect(await findByLabelText('inway-one')).not.toHaveAttribute('checked')
     expect(queryByTestId('publishedInDirectory-warning')).toBeFalsy()
   })
 
   it('should save an inway selection', async () => {
+    const managementApiClient = new ManagementApi()
+    managementApiClient.managementListInways = jest
+      .fn()
+      .mockResolvedValue({ inways: [{ name: 'inway-one' }] })
+
+    const rootStore = new RootStore({
+      managementApiClient,
+    })
+
     const onSubmitHandlerSpy = jest.fn()
     const {
       findByLabelText,
       getByLabelText,
       getByTestId,
     } = renderWithProviders(
-      <ServiceForm
-        onSubmitHandler={onSubmitHandlerSpy}
-        initialValues={{ ...initialValues, inways: [] }}
-        submitButtonText="Submit"
-        getInways={() => [{ name: 'inway-one' }]}
-      />,
+      <StoreProvider rootStore={rootStore}>
+        <ServiceForm
+          onSubmitHandler={onSubmitHandlerSpy}
+          initialValues={{ ...initialValues, inways: [] }}
+          submitButtonText="Submit"
+        />
+      </StoreProvider>,
     )
 
     await findByLabelText('inway-one')
@@ -205,6 +278,15 @@ describe('when showing inways', () => {
   })
 
   it('should be able to remove an inway from the selection', async () => {
+    const managementApiClient = new ManagementApi()
+    managementApiClient.managementListInways = jest.fn().mockResolvedValue({
+      inways: [{ name: 'inway-one' }, { name: 'inway-two' }],
+    })
+
+    const rootStore = new RootStore({
+      managementApiClient,
+    })
+
     const onSubmitHandlerSpy = jest.fn()
 
     const {
@@ -213,12 +295,13 @@ describe('when showing inways', () => {
       getByLabelText,
       getByTestId,
     } = renderWithProviders(
-      <ServiceForm
-        onSubmitHandler={onSubmitHandlerSpy}
-        initialValues={{ ...initialValues, inways: ['inway-one'] }}
-        submitButtonText="Submit"
-        getInways={() => [{ name: 'inway-one' }, { name: 'inway-two' }]}
-      />,
+      <StoreProvider rootStore={rootStore}>
+        <ServiceForm
+          onSubmitHandler={onSubmitHandlerSpy}
+          initialValues={{ ...initialValues, inways: ['inway-one'] }}
+          submitButtonText="Submit"
+        />
+      </StoreProvider>,
     )
 
     await findByLabelText('inway-one')
