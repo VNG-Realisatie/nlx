@@ -8,12 +8,10 @@ import { act, fireEvent, renderWithProviders } from '../../../../test-utils'
 import Form from './index'
 
 test('Form', async () => {
-  global.confirm = jest.fn(() => true)
-
   const onSubmitHandlerSpy = jest.fn()
   const getInwaysHandler = jest.fn().mockResolvedValue([{ name: 'inway-a' }])
 
-  const { getByLabelText, findByTestId } = renderWithProviders(
+  const { findByTestId, getByText, getByLabelText } = renderWithProviders(
     <Form getInways={getInwaysHandler} onSubmitHandler={onSubmitHandlerSpy} />,
   )
 
@@ -21,6 +19,10 @@ test('Form', async () => {
 
   await act(async () => {
     fireEvent.submit(formElement)
+  })
+
+  await act(async () => {
+    fireEvent.click(getByText('Save'))
   })
 
   expect(onSubmitHandlerSpy).toHaveBeenCalledWith({
