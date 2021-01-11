@@ -4,7 +4,7 @@
 import { flow, makeAutoObservable } from 'mobx'
 import InwayModel from './models/InwayModel'
 
-class InwaysStore {
+class InwayStore {
   inways = []
   error = ''
   // This is set to true after the first call has been made. Regardless of success.
@@ -76,4 +76,4 @@ class InwaysStore {
   }
 }
 
-export default InwaysStore
+export default InwayStore

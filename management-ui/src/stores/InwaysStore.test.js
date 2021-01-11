@@ -3,13 +3,13 @@
 //
 import { ManagementApi } from '../api'
 import InwayModel from '../stores/models/InwayModel'
-import InwaysStore from './InwaysStore'
+import InwayStore from './InwayStore'
 import { RootStore } from './index'
 
 test('initializing the store', () => {
   const managementApiClient = new ManagementApi()
 
-  const store = new InwaysStore({
+  const store = new InwayStore({
     rootStore: new RootStore(),
     managementApiClient,
   })
@@ -25,7 +25,7 @@ test('fetching inways', async () => {
     inways: [{ name: 'Inway A' }, { name: 'Inway B' }],
   })
 
-  const inwaysStore = new InwaysStore({
+  const inwaysStore = new InwayStore({
     rootStore: new RootStore(),
     managementApiClient,
   })
@@ -43,7 +43,7 @@ test('fetching a single inway', async () => {
     .fn()
     .mockResolvedValue({ name: 'Inway A' })
 
-  const inwaysStore = new InwaysStore({
+  const inwaysStore = new InwayStore({
     rootStore: new RootStore(),
     managementApiClient,
   })
@@ -64,7 +64,7 @@ test('handle error while fetching inways', async () => {
     .fn()
     .mockRejectedValue('arbitrary error')
 
-  const inwaysStore = new InwaysStore({
+  const inwaysStore = new InwayStore({
     rootStore: new RootStore(),
     managementApiClient,
   })
@@ -83,7 +83,7 @@ test('getting an inway', async () => {
     inways: [{ name: 'Inway A' }],
   })
 
-  const inwaysStore = new InwaysStore({
+  const inwaysStore = new InwayStore({
     rootStore: new RootStore(),
     managementApiClient,
   })

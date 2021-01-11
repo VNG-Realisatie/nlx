@@ -11,7 +11,7 @@ import AccessGrantStore from './AccessGrantStore'
 import AccessProofStore from './AccessProofStore'
 import ServicesStore from './ServicesStore'
 import IncomingAccessRequestsStore from './IncomingAccessRequestsStore'
-import InwaysStore from './InwaysStore'
+import InwayStore from './InwayStore'
 
 if (process.env.NODE_ENV !== 'test') {
   // `setupTests` has 'never' set. But some tests include this file,
@@ -43,7 +43,7 @@ export class RootStore {
     this.incomingAccessRequestsStore = new IncomingAccessRequestsStore({
       managementApiClient,
     })
-    this.inwaysStore = new InwaysStore({
+    this.inwaysStore = new InwayStore({
       rootStore: this,
       managementApiClient,
     })
