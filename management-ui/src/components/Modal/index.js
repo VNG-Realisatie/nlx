@@ -17,15 +17,23 @@ export const MODAL_ANIMATION_SPEED_EXIT = 125
 const createRandomId = () => Math.random().toString(36).slice(8)
 
 export const verticalAlignToCssValues = ({ from, offset }) => {
-  // Results in eg ['100px', '100', 'px']
+  // Results in array, eg: ['100px', '100', 'px']
   const offsetMatch = offset && offset.match(/(-?\d+)([px|%|rem]+)/)
+  const offsetBottom = offsetMatch
+    ? {
+        amount: offsetMatch[1],
+        unit: offsetMatch[2],
+      }
+    : {}
 
   return {
     alignItems:
       from === 'top' ? 'flex-start' : from === 'bottom' ? 'flex-end' : 'center',
     transform: offsetMatch
       ? `translateY(${
-          from === 'bottom' ? offsetMatch[1] * -1 + offsetMatch[2] : offset
+          from === 'bottom'
+            ? offsetBottom.amount * -1 + offsetBottom.unit
+            : offset
         })`
       : '',
   }

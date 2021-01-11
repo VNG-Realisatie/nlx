@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { Button, Fieldset, Legend, Select } from '@commonground/design-system'
 
 import FormikFocusError from '../../../../components/FormikFocusError'
-import { useModalConfirm } from '../../../../components/ModalConfirm'
+import { useConfirmationModal } from '../../../../components/ConfirmationModal'
 import usePromise from '../../../../hooks/use-promise'
 import InwayRepository from '../../../../domain/inway-repository'
 import {
@@ -25,7 +25,7 @@ const DEFAULT_INITIAL_VALUES = {
 const Form = ({ initialValues, onSubmitHandler, getInways, ...props }) => {
   const { isReady: inwaysIsReady, result: inways } = usePromise(getInways)
   const { t } = useTranslation()
-  const [ModalConfirm, confirm] = useModalConfirm({
+  const [ConfirmationModal, confirmModal] = useConfirmationModal({
     okText: t('Save'),
     children: t(
       'By removing the organization inway it is no longer possible to process or receive access requests',
@@ -38,7 +38,7 @@ const Form = ({ initialValues, onSubmitHandler, getInways, ...props }) => {
       return
     }
 
-    if (await confirm()) {
+    if (await confirmModal()) {
       onSubmitHandler(values)
     }
   }
@@ -104,7 +104,7 @@ const Form = ({ initialValues, onSubmitHandler, getInways, ...props }) => {
         )}
       </Formik>
 
-      <ModalConfirm />
+      <ConfirmationModal />
     </>
   )
 }

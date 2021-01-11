@@ -10,7 +10,7 @@ import deferredPromise from '../../utils/deferred-promise'
 import Modal from '../Modal'
 import { Footer } from './index.styles'
 
-const ModalConfirm = ({
+const ConfirmationModal = ({
   isVisible,
   handleChoice,
   children,
@@ -45,7 +45,7 @@ const ModalConfirm = ({
   )
 }
 
-ModalConfirm.propTypes = {
+ConfirmationModal.propTypes = {
   isVisible: bool.isRequired,
   handleChoice: func.isRequired,
   children: node,
@@ -54,19 +54,25 @@ ModalConfirm.propTypes = {
   okText: string,
 }
 
-export const useModalConfirm = (props) => {
+export const useConfirmationModal = (props) => {
   const [showModal, setShowModal] = useState(false)
   const choicePromise = useRef(null)
 
-  const handleChoice = (isConfirmed) => {
-    choicePromise.current.resolve(isConfirmed)
-    setShowModal(false)
-  }
-
-  const showModalConfirm = () => {
+  const show = () => {
     choicePromise.current = deferredPromise()
     setShowModal(true)
     return choicePromise.current
+  }
+
+  const handleChoice = (isConfirmed) => {
+    if (choicePromise === null) {
+      return new Error(
+        "Can't handle choice when ConfirmationModal is not shown",
+      )
+    }
+
+    choicePromise.current.resolve(isConfirmed)
+    setShowModal(false)
   }
 
   const confirmProps = {
@@ -75,8 +81,5 @@ export const useModalConfirm = (props) => {
     handleChoice,
   }
 
-  return [
-    () => React.createElement(ModalConfirm, confirmProps),
-    showModalConfirm,
-  ]
+  return [() => React.createElement(ConfirmationModal, confirmProps), show]
 }

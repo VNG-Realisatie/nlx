@@ -5,23 +5,23 @@ import React from 'react'
 import { fireEvent, act } from '@testing-library/react'
 
 import { renderWithProviders } from '../../test-utils'
-import { useModalConfirm } from './index'
+import { useConfirmationModal } from './index'
 
 // eslint-disable-next-line react/prop-types
 const TestCase = ({ handleChoice }) => {
-  const [ModalConfirm, confirm] = useModalConfirm({
+  const [ConfirmationModal, confirmModal] = useConfirmationModal({
     children: 'Weet je het zeker?',
   })
 
   const showConfirm = async () => {
-    const choice = await confirm()
+    const choice = await confirmModal()
     handleChoice(choice)
   }
 
   return (
     <>
       <button onClick={showConfirm}>show confirm</button>
-      <ModalConfirm />
+      <ConfirmationModal />
     </>
   )
 }

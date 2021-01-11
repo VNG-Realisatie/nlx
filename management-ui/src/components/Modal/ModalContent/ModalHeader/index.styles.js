@@ -23,8 +23,6 @@ export const Title = styled.h1`
   margin: 0 ${(p) => p.theme.tokens.spacing05} 0 0;
 `
 
-// TODO: When moving modal to design-system, make a reusable close button which
-// combines the common styling between the drawer's close button and this one
 export const CloseButton = styled.button`
   display: inline-flex;
   align-items: center;
