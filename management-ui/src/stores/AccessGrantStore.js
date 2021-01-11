@@ -8,11 +8,10 @@ import AccessGrantModel from './models/AccessGrantModel'
 class AccessGrantStore {
   accessGrants = observable.map()
 
-  constructor({ managementApiClient, accessGrantRepository }) {
+  constructor({ managementApiClient }) {
     makeAutoObservable(this)
 
     this._managementApiClient = managementApiClient
-    this.accessGrantRepository = accessGrantRepository
   }
 
   updateFromServer = (accessGrantData) => {
