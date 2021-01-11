@@ -16,5 +16,5 @@ Build production:
   rules:
     - if: '$CI_COMMIT_TAG && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
   tags:
-    - cg-privileged
+    - cg
     - shell
