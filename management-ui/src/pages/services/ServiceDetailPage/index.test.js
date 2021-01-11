@@ -3,12 +3,11 @@
 //
 import React from 'react'
 import { Route, Router, StaticRouter } from 'react-router-dom'
-
-import { act } from '@testing-library/react'
+import { act, fireEvent } from '@testing-library/react'
 import { createMemoryHistory } from 'history'
 import { renderWithProviders } from '../../../test-utils'
-import { StoreProvider } from '../../../stores'
-import { mockServicesStore } from '../../../stores/ServicesStore.mock'
+import { RootStore, StoreProvider } from '../../../stores'
+import { ManagementApi } from '../../../api'
 import ServiceDetailPage from './index'
 
 // eslint-disable-next-line react/prop-types
@@ -29,11 +28,11 @@ beforeEach(() => {
 })
 
 test('display service details', () => {
-  const store = mockServicesStore({})
+  const rootStore = new RootStore()
   const { getByTestId, getByText } = renderWithProviders(
     <StaticRouter location="/services/forty-two">
       <Route path="/services/:name">
-        <StoreProvider rootStore={store}>
+        <StoreProvider rootStore={rootStore}>
           <ServiceDetailPage
             service={{
               name: 'forty-two',
@@ -51,13 +50,12 @@ test('display service details', () => {
 })
 
 test('fetching a non-existing component', async () => {
-  const getService = jest.fn()
-  const store = mockServicesStore({ getService })
+  const rootStore = new RootStore()
 
   const { findByTestId, getByText } = renderWithProviders(
     <StaticRouter location="/services/forty-two">
       <Route path="/services/:name">
-        <StoreProvider rootStore={store}>
+        <StoreProvider rootStore={rootStore}>
           <ServiceDetailPage />
         </StoreProvider>
       </Route>
@@ -73,40 +71,23 @@ test('fetching a non-existing component', async () => {
   expect(closeButton).toBeTruthy()
 })
 
-test('fetching service details fails for an unknown reason', async () => {
-  const store = mockServicesStore({ error: 'arbitrary reason' })
-
-  const { findByTestId, getByText } = renderWithProviders(
-    <StaticRouter location="/services/42">
-      <Route path="/services/:name">
-        <StoreProvider rootStore={store}>
-          <ServiceDetailPage />
-        </StoreProvider>
-      </Route>
-    </StaticRouter>,
-  )
-
-  const message = await findByTestId('error-message')
-  expect(message).toBeTruthy()
-  expect(message.textContent).toBe('Failed to load the service')
-
-  expect(getByText('42')).toBeInTheDocument()
-
-  const closeButton = await findByTestId('close-button')
-  expect(closeButton).toBeTruthy()
-})
-
 test('removing the service', async () => {
+  const managementApiClient = new ManagementApi()
+  managementApiClient.managementDeleteService = jest.fn().mockResolvedValue()
+
+  const rootStore = new RootStore({
+    managementApiClient,
+  })
+  jest.spyOn(rootStore.servicesStore, 'removeService')
+
   const history = createMemoryHistory({
     initialEntries: ['/services/dummy-service'],
   })
-  const removeService = jest.fn()
-  const store = mockServicesStore({ removeService })
 
   const { findByText } = renderWithProviders(
     <Router history={history}>
       <Route path="/services/:name">
-        <StoreProvider rootStore={store}>
+        <StoreProvider rootStore={rootStore}>
           <ServiceDetailPage
             service={{
               name: 'dummy-service',
@@ -120,11 +101,9 @@ test('removing the service', async () => {
   )
 
   const removeButton = await findByText('Remove service')
-  act(() => {
-    removeButton.click()
-  })
+  fireEvent.click(removeButton)
 
-  expect(removeService).toHaveBeenCalledTimes(1)
+  expect(rootStore.servicesStore.removeService).toHaveBeenCalledTimes(1)
   await act(async () => {})
   expect(history.location.pathname).toEqual('/services/dummy-service')
   expect(history.location.search).toEqual('?lastAction=removed')
