@@ -4,11 +4,10 @@
 import React from 'react'
 import { MemoryRouter, Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
-import { act } from '@testing-library/react'
 import { renderWithProviders, waitFor } from '../../../test-utils'
 import { UserContextProvider } from '../../../user-context'
-import { StoreProvider } from '../../../stores'
-import { mockServicesStore } from '../../../stores/ServicesStore.mock'
+import { RootStore, StoreProvider } from '../../../stores'
+import { ManagementApi } from '../../../api'
 import ServicesPage from './index'
 
 jest.mock('../../../components/PageTemplate/OrganizationInwayCheck', () => () =>
@@ -19,9 +18,17 @@ jest.mock('./ServicesPageView', () => () => (
 ))
 
 test('fetching all services', async () => {
-  const history = createMemoryHistory({ initialEntries: ['/services'] })
+  const managementApiClient = new ManagementApi()
 
-  const store = mockServicesStore({ services: null, isInitiallyFetched: false })
+  managementApiClient.managementListServices = jest.fn().mockResolvedValue({
+    services: [{ name: 'my-first-service' }],
+  })
+
+  const history = createMemoryHistory({ initialEntries: ['/services'] })
+  const store = new RootStore({
+    managementApiClient,
+  })
+
   const { getByRole, getByTestId, getByLabelText } = renderWithProviders(
     <Router history={history}>
       <UserContextProvider user={{}}>
@@ -35,18 +42,7 @@ test('fetching all services', async () => {
   expect(getByRole('progressbar')).toBeInTheDocument()
   expect(() => getByTestId('services-list')).toThrow()
 
-  await act(async () => {
-    store.servicesStore.services = [
-      {
-        name: 'my-first-service',
-        inways: [],
-        internal: false,
-      },
-    ]
-    store.servicesStore.isReady = true
-  })
-
-  waitFor(() =>
+  await waitFor(() =>
     expect(getByTestId('services-list')).toHaveTextContent('mock-services'),
   )
   expect(getByTestId('service-count')).toHaveTextContent('1Services')
@@ -56,7 +52,15 @@ test('fetching all services', async () => {
 })
 
 test('failed to load services', async () => {
-  const store = mockServicesStore({ services: null, error: 'arbitrary error' })
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementListServices = jest
+    .fn()
+    .mockRejectedValue('arbitrary error')
+
+  const store = new RootStore({
+    managementApiClient,
+  })
 
   const { findByText, getByTestId } = renderWithProviders(
     <MemoryRouter>

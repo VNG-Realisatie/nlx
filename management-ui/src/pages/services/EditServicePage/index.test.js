@@ -4,12 +4,11 @@
 import React from 'react'
 import { act, fireEvent } from '@testing-library/react'
 import { Route, Router, StaticRouter } from 'react-router-dom'
-
 import { createMemoryHistory } from 'history'
 import UserContext from '../../../user-context'
 import { renderWithProviders } from '../../../test-utils'
-import { StoreProvider } from '../../../stores'
-import { mockServicesStore } from '../../../stores/ServicesStore.mock'
+import { RootStore, StoreProvider } from '../../../stores'
+import { ManagementApi } from '../../../api'
 import EditServicePage from './index'
 
 jest.mock('../../../components/PageTemplate/OrganizationInwayCheck', () => () =>
@@ -18,7 +17,10 @@ jest.mock('../../../components/PageTemplate/OrganizationInwayCheck', () => () =>
 
 // eslint-disable-next-line react/prop-types
 jest.mock('../../../components/ServiceForm', () => ({ onSubmitHandler }) => (
-  <form onSubmit={() => onSubmitHandler({ foo: 'bar' })} data-testid="form">
+  <form
+    onSubmit={() => onSubmitHandler({ name: 'mock-service' })}
+    data-testid="form"
+  >
     <button type="submit" />
   </form>
 ))
@@ -30,13 +32,17 @@ describe('the EditServicePage', () => {
 
   it('before the service has been loaded', async () => {
     jest.useFakeTimers()
-    const store = mockServicesStore({ isInitiallyFetched: false })
+
+    const rootStore = new RootStore({
+      managementApiClient: new ManagementApi(),
+    })
+
     const userContext = { user: { id: '42' } }
     const { findByRole, getByLabelText } = renderWithProviders(
       <StaticRouter location="/services/mock-service/edit-service">
         <Route path="/services/:name/edit-service">
           <UserContext.Provider value={userContext}>
-            <StoreProvider rootStore={store}>
+            <StoreProvider rootStore={rootStore}>
               <EditServicePage />
             </StoreProvider>
           </UserContext.Provider>
@@ -50,12 +56,20 @@ describe('the EditServicePage', () => {
   })
 
   it('when fetching the services fails', async () => {
-    const store = mockServicesStore({ error: 'arbitrary error' })
+    const managementApiClient = new ManagementApi()
+    managementApiClient.managementCreateService = jest
+      .fn()
+      .mockRejectedValue(new Error('arbitrary error'))
+
+    const rootStore = new RootStore({
+      managementApiClient,
+    })
+
     const userContext = { user: { id: '42' } }
     const { findByRole, queryByRole } = renderWithProviders(
       <StaticRouter>
         <UserContext.Provider value={userContext}>
-          <StoreProvider rootStore={store}>
+          <StoreProvider rootStore={rootStore}>
             <EditServicePage />
           </StoreProvider>
         </UserContext.Provider>
@@ -67,19 +81,27 @@ describe('the EditServicePage', () => {
   })
 
   it('after the service has been fetched', async () => {
-    const getService = jest.fn().mockReturnValue({
-      name: 'mock-service',
-      fetch: jest.fn(),
+    const managementApiClient = new ManagementApi()
+    managementApiClient.managementListServices = jest.fn().mockResolvedValue({
+      services: [{ name: 'mock-service' }],
     })
-    const store = mockServicesStore({ getService })
+
+    const rootStore = new RootStore({
+      managementApiClient,
+    })
+
+    await rootStore.servicesStore.fetchAll()
+
     const userContext = { user: { id: '42' } }
     const { findByTestId } = renderWithProviders(
-      <StaticRouter>
-        <UserContext.Provider value={userContext}>
-          <StoreProvider rootStore={store}>
-            <EditServicePage />
-          </StoreProvider>
-        </UserContext.Provider>
+      <StaticRouter location="/services/mock-service/edit-service">
+        <Route path="/services/:name/edit-service">
+          <UserContext.Provider value={userContext}>
+            <StoreProvider rootStore={rootStore}>
+              <EditServicePage />
+            </StoreProvider>
+          </UserContext.Provider>
+        </Route>
       </StaticRouter>,
     )
 
@@ -87,20 +109,30 @@ describe('the EditServicePage', () => {
   })
 
   it('successfully submitting the form', async () => {
-    const history = createMemoryHistory()
-    const update = jest.fn().mockResolvedValue({
+    const managementApiClient = new ManagementApi()
+    managementApiClient.managementUpdateService = jest.fn().mockResolvedValue({
       name: 'mock-service',
     })
-    const getService = jest.fn().mockReturnValue({
-      name: 'mock-service',
-      fetch: jest.fn(),
+    managementApiClient.managementListServices = jest.fn().mockResolvedValue({
+      services: [{ name: 'mock-service' }],
     })
-    const store = mockServicesStore({ getService, update })
+
+    const rootStore = new RootStore({
+      managementApiClient,
+    })
+
+    await rootStore.servicesStore.fetchAll()
+
+    const history = createMemoryHistory({
+      initialEntries: ['/services/mock-service/edit-service'],
+    })
 
     const { findByTestId } = renderWithProviders(
       <Router history={history}>
-        <StoreProvider rootStore={store}>
-          <EditServicePage />
+        <StoreProvider rootStore={rootStore}>
+          <Route path="/services/:name/edit-service">
+            <EditServicePage />
+          </Route>
         </StoreProvider>
       </Router>,
     )
@@ -110,29 +142,39 @@ describe('the EditServicePage', () => {
       fireEvent.submit(editServiceForm)
     })
 
-    expect(update).toHaveBeenCalled()
+    expect(managementApiClient.managementUpdateService).toHaveBeenCalled()
     expect(history.location.pathname).toEqual('/services/mock-service')
     expect(history.location.search).toEqual('?lastAction=edited')
   })
 
   it('re-submitting the form when the previous submission went wrong', async () => {
-    const history = createMemoryHistory()
-    const update = jest
+    const managementApiClient = new ManagementApi()
+    managementApiClient.managementUpdateService = jest
       .fn()
       .mockResolvedValue({
         name: 'mock-service',
       })
       .mockRejectedValueOnce(new Error('arbitrary error'))
-    const getService = jest.fn().mockReturnValue({
-      name: 'mock-service',
-      fetch: jest.fn(),
+    managementApiClient.managementListServices = jest.fn().mockResolvedValue({
+      services: [{ name: 'mock-service' }],
     })
 
-    const store = mockServicesStore({ getService, update })
+    const rootStore = new RootStore({
+      managementApiClient,
+    })
+
+    await rootStore.servicesStore.fetchAll()
+
+    const history = createMemoryHistory({
+      initialEntries: ['/services/mock-service/edit-service'],
+    })
+
     const { findByTestId, queryByRole } = renderWithProviders(
       <Router history={history}>
-        <StoreProvider rootStore={store}>
-          <EditServicePage />
+        <StoreProvider rootStore={rootStore}>
+          <Route path="/services/:name/edit-service">
+            <EditServicePage />
+          </Route>
         </StoreProvider>
       </Router>,
     )
@@ -143,7 +185,7 @@ describe('the EditServicePage', () => {
       await fireEvent.submit(editServiceForm)
     })
 
-    expect(update).toHaveBeenCalledTimes(1)
+    expect(managementApiClient.managementUpdateService).toHaveBeenCalledTimes(1)
     expect(queryByRole('alert')).toBeTruthy()
     expect(queryByRole('alert')).toHaveTextContent(
       'Failed to update the service',
@@ -153,26 +195,40 @@ describe('the EditServicePage', () => {
       await fireEvent.submit(editServiceForm)
     })
 
-    expect(update).toHaveBeenCalledTimes(2)
+    expect(managementApiClient.managementUpdateService).toHaveBeenCalledTimes(2)
 
     expect(history.location.pathname).toEqual('/services/mock-service')
     expect(history.location.search).toEqual('?lastAction=edited')
   })
 
   it('submitting when the HTTP response is not ok', async () => {
-    const update = jest.fn().mockRejectedValue(new Error('arbitrary error'))
-    const getService = jest.fn().mockReturnValue({
-      name: 'mock-service',
-      fetch: jest.fn(),
+    const managementApiClient = new ManagementApi()
+    managementApiClient.managementUpdateService = jest
+      .fn()
+      .mockRejectedValue(new Error('arbitrary error'))
+
+    managementApiClient.managementListServices = jest.fn().mockResolvedValue({
+      services: [{ name: 'mock-service' }],
     })
-    const store = mockServicesStore({ getService, update })
+
+    const rootStore = new RootStore({
+      managementApiClient,
+    })
+
+    await rootStore.servicesStore.fetchAll()
+
+    const history = createMemoryHistory({
+      initialEntries: ['/services/mock-service/edit-service'],
+    })
 
     const { findByTestId, queryByRole } = renderWithProviders(
-      <StaticRouter>
-        <StoreProvider rootStore={store}>
-          <EditServicePage />
+      <Router history={history}>
+        <StoreProvider rootStore={rootStore}>
+          <Route path="/services/:name/edit-service">
+            <EditServicePage />
+          </Route>
         </StoreProvider>
-      </StaticRouter>,
+      </Router>,
     )
 
     const editServiceForm = await findByTestId('form')

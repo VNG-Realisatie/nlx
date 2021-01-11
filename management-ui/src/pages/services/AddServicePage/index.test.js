@@ -4,11 +4,10 @@
 import React from 'react'
 import { act, fireEvent } from '@testing-library/react'
 import { Router } from 'react-router-dom'
-
 import { createMemoryHistory } from 'history'
 import { renderWithProviders } from '../../../test-utils'
-import { StoreProvider } from '../../../stores'
-import { mockServicesStore } from '../../../stores/ServicesStore.mock'
+import { RootStore, StoreProvider } from '../../../stores'
+import { ManagementApi } from '../../../api'
 import AddServicePage from './index'
 
 jest.mock('../../../components/PageTemplate/OrganizationInwayCheck', () => () =>
@@ -28,7 +27,7 @@ describe('the AddServicePage', () => {
   })
 
   it('on initialization', () => {
-    const store = mockServicesStore({})
+    const store = new RootStore()
     const { getByTestId, queryByRole, getByLabelText } = renderWithProviders(
       <Router history={createMemoryHistory()}>
         <StoreProvider rootStore={store}>
@@ -44,14 +43,19 @@ describe('the AddServicePage', () => {
   })
 
   it('successfully submitting the form', async () => {
-    const history = createMemoryHistory()
-    const createHandler = jest.fn().mockResolvedValue({
+    const managementApiClient = new ManagementApi()
+    managementApiClient.managementCreateService = jest.fn().mockResolvedValue({
       name: 'my-service',
     })
-    const store = mockServicesStore({ create: createHandler })
+
+    const rootStore = new RootStore({
+      managementApiClient,
+    })
+
+    const history = createMemoryHistory()
     const { findByTestId } = renderWithProviders(
       <Router history={history}>
-        <StoreProvider rootStore={store}>
+        <StoreProvider rootStore={rootStore}>
           <AddServicePage />
         </StoreProvider>
       </Router>,
@@ -62,22 +66,26 @@ describe('the AddServicePage', () => {
       fireEvent.submit(addComponentForm)
     })
 
-    expect(createHandler).toHaveBeenCalledTimes(1)
+    expect(managementApiClient.managementCreateService).toHaveBeenCalledTimes(1)
     expect(history.location.pathname).toEqual('/services/my-service')
     expect(history.location.search).toEqual('?lastAction=added')
   })
 
   it('re-submitting the form when the previous submission went wrong', async () => {
-    const createHandler = jest
+    const managementApiClient = new ManagementApi()
+    managementApiClient.managementCreateService = jest
       .fn()
       .mockResolvedValue({ name: 'my-service' })
       .mockRejectedValueOnce(new Error('arbitrary error'))
 
+    const rootStore = new RootStore({
+      managementApiClient,
+    })
+
     const history = createMemoryHistory()
-    const store = mockServicesStore({ create: createHandler })
     const { findByTestId, queryByRole } = renderWithProviders(
       <Router history={history}>
-        <StoreProvider rootStore={store}>
+        <StoreProvider rootStore={rootStore}>
           <AddServicePage />
         </StoreProvider>
       </Router>,
@@ -89,7 +97,7 @@ describe('the AddServicePage', () => {
       await fireEvent.submit(addComponentForm)
     })
 
-    expect(createHandler).toHaveBeenCalledTimes(1)
+    expect(managementApiClient.managementCreateService).toHaveBeenCalledTimes(1)
     expect(queryByRole('alert')).toBeTruthy()
     expect(queryByRole('alert').textContent).toBe(
       'Failed adding servicearbitrary error',
@@ -101,20 +109,25 @@ describe('the AddServicePage', () => {
 
     expect(await queryByRole('alert')).toBeTruthy()
 
-    expect(createHandler).toHaveBeenCalledTimes(2)
+    expect(managementApiClient.managementCreateService).toHaveBeenCalledTimes(2)
     expect(history.location.pathname).toEqual('/services/my-service')
     expect(history.location.search).toEqual('?lastAction=added')
   })
 
   it('submitting when the HTTP response is not ok', async () => {
-    const createHandler = jest
+    const managementApiClient = new ManagementApi()
+    managementApiClient.managementCreateService = jest
       .fn()
       .mockRejectedValue(new Error('arbitrary error'))
+
+    const rootStore = new RootStore({
+      managementApiClient,
+    })
+
     const history = createMemoryHistory()
-    const store = mockServicesStore({ create: createHandler })
     const { findByTestId, queryByRole } = renderWithProviders(
       <Router history={history}>
-        <StoreProvider rootStore={store}>
+        <StoreProvider rootStore={rootStore}>
           <AddServicePage />
         </StoreProvider>
       </Router>,
