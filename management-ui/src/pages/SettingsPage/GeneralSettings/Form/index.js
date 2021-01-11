@@ -1,17 +1,16 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React from 'react'
+import React, { useEffect } from 'react'
 import { func, shape, string } from 'prop-types'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { useTranslation } from 'react-i18next'
 import { Button, Fieldset, Legend, Select } from '@commonground/design-system'
-
+import { observer } from 'mobx-react'
 import FormikFocusError from '../../../../components/FormikFocusError'
 import { useConfirmationModal } from '../../../../components/ConfirmationModal'
-import usePromise from '../../../../hooks/use-promise'
-import InwayRepository from '../../../../domain/inway-repository'
+import { useInwayStore } from '../../../../hooks/use-stores'
 import {
   StyledForm,
   InwaysEmptyMessage,
@@ -22,15 +21,19 @@ const DEFAULT_INITIAL_VALUES = {
   organizationInway: '',
 }
 
-const Form = ({ initialValues, onSubmitHandler, getInways, ...props }) => {
-  const { isReady: inwaysIsReady, result: inways } = usePromise(getInways)
+const Form = ({ initialValues, onSubmitHandler, ...props }) => {
   const { t } = useTranslation()
+  const inwayStore = useInwayStore()
   const [ConfirmationModal, confirmModal] = useConfirmationModal({
     okText: t('Save'),
     children: t(
       'By removing the organization inway it is no longer possible to process or receive access requests',
     ),
   })
+
+  useEffect(() => {
+    inwayStore.fetchInways()
+  }, [inwayStore])
 
   const validateOrganizationInwayAndSubmit = async (values) => {
     if (values.organizationInway) {
@@ -47,12 +50,10 @@ const Form = ({ initialValues, onSubmitHandler, getInways, ...props }) => {
     organizationInway: Yup.string(),
   })
 
-  const selectInwayOptions = inways
-    ? inways.map((inway) => ({
-        value: inway.name,
-        label: inway.name,
-      }))
-    : []
+  const selectInwayOptions = inwayStore.inways.map((inway) => ({
+    value: inway.name,
+    label: inway.name,
+  }))
 
   const emptyOption = { value: '', label: t('None') }
   selectInwayOptions.unshift(emptyOption)
@@ -71,9 +72,9 @@ const Form = ({ initialValues, onSubmitHandler, getInways, ...props }) => {
           <StyledForm onSubmit={handleSubmit} data-testid="form" {...props}>
             <Fieldset>
               <Legend>{t('General settings')}</Legend>
-              {!inwaysIsReady ? (
+              {inwayStore.isFetching ? (
                 <InwaysLoadingMessage />
-              ) : !inways || inways.length === 0 ? (
+              ) : inwayStore.inways.length === 0 ? (
                 <InwaysEmptyMessage>
                   {t('There are no inways available')}
                 </InwaysEmptyMessage>
@@ -114,13 +115,11 @@ Form.propTypes = {
   initialValues: shape({
     organizationInway: string,
   }),
-  getInways: func,
 }
 
 Form.defaultProps = {
   onSubmitHandler: () => {},
   initialValues: DEFAULT_INITIAL_VALUES,
-  getInways: InwayRepository.getAll,
 }
 
-export default Form
+export default observer(Form)

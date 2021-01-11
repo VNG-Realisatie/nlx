@@ -5,14 +5,26 @@ import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
 import selectEvent from 'react-select-event'
 import { act, fireEvent, renderWithProviders } from '../../../../test-utils'
+import { RootStore, StoreProvider } from '../../../../stores'
+import { ManagementApi } from '../../../../api'
 import Form from './index'
 
 test('Form', async () => {
+  const managementApiClient = new ManagementApi()
+  managementApiClient.managementListInways = jest.fn().mockResolvedValue({
+    inways: [{ name: 'inway-a' }],
+  })
+
+  const rootStore = new RootStore({
+    managementApiClient,
+  })
+
   const onSubmitHandlerSpy = jest.fn()
-  const getInwaysHandler = jest.fn().mockResolvedValue([{ name: 'inway-a' }])
 
   const { findByTestId, getByText, getByLabelText } = renderWithProviders(
-    <Form getInways={getInwaysHandler} onSubmitHandler={onSubmitHandlerSpy} />,
+    <StoreProvider rootStore={rootStore}>
+      <Form onSubmitHandler={onSubmitHandlerSpy} />
+    </StoreProvider>,
   )
 
   const formElement = await findByTestId('form')
