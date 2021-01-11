@@ -38,8 +38,7 @@ const Form = ({ initialValues, onSubmitHandler, getInways, ...props }) => {
       return
     }
 
-    const isConfirmed = await confirm()
-    if (isConfirmed) {
+    if (await confirm()) {
       onSubmitHandler(values)
     }
   }

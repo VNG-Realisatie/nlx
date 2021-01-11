@@ -1,12 +1,12 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import { func, string, bool, node } from 'prop-types'
 import { Button } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 
-import deferredPromise from '../../test-utils/deferred-promise'
+import deferredPromise from '../../utils/deferred-promise'
 import Modal from '../Modal'
 import { Footer } from './index.styles'
 
@@ -58,16 +58,13 @@ export const useModalConfirm = (props) => {
   const [showModal, setShowModal] = useState(false)
   const choicePromise = useRef(null)
 
-  useEffect(() => {
-    choicePromise.current = showModal ? deferredPromise() : null
-  }, [showModal])
-
   const handleChoice = (isConfirmed) => {
     choicePromise.current.resolve(isConfirmed)
     setShowModal(false)
   }
 
   const showModalConfirm = () => {
+    choicePromise.current = deferredPromise()
     setShowModal(true)
     return choicePromise.current
   }

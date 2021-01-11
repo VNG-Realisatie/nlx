@@ -3,7 +3,7 @@
 //
 
 import { renderHook, act } from '@testing-library/react-hooks'
-import deferredPromise from '../test-utils/deferred-promise'
+import deferredPromise from '../utils/deferred-promise'
 import usePromise from './use-promise'
 
 test('with a resolving promise', async () => {

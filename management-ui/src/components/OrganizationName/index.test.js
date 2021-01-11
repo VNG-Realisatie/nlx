@@ -4,7 +4,7 @@
 
 import React from 'react'
 import { screen, act, waitFor } from '@testing-library/react'
-import deferredPromise from '../../test-utils/deferred-promise'
+import deferredPromise from '../../utils/deferred-promise'
 import { renderWithProviders } from '../../test-utils'
 import OrganizationName from './index'
 

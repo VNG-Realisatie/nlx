@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import deferredPromise from '../test-utils/deferred-promise'
+import deferredPromise from '../utils/deferred-promise'
 import InwaysStore from './InwaysStore'
 
 let rootStore
