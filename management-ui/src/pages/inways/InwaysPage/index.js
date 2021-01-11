@@ -11,12 +11,12 @@ import { observer } from 'mobx-react'
 import PageTemplate from '../../../components/PageTemplate'
 import InwayDetailPage from '../InwayDetailPage'
 import LoadingMessage from '../../../components/LoadingMessage'
-import { useInwaysStore } from '../../../hooks/use-stores'
+import { useInwayStore } from '../../../hooks/use-stores'
 import InwaysPageView from './InwaysPageView'
 
 const InwaysPage = () => {
   const { t } = useTranslation()
-  const { isInitiallyFetched, inways, error, getInway } = useInwaysStore()
+  const { isInitiallyFetched, inways, error, getInway } = useInwayStore()
   const { name } = useParams()
 
   return (

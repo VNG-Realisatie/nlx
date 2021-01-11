@@ -25,15 +25,15 @@ test('fetching inways', async () => {
     inways: [{ name: 'Inway A' }, { name: 'Inway B' }],
   })
 
-  const inwaysStore = new InwayStore({
+  const inwayStore = new InwayStore({
     rootStore: new RootStore(),
     managementApiClient,
   })
 
-  await inwaysStore.fetchInways()
+  await inwayStore.fetchInways()
 
-  expect(inwaysStore.isInitiallyFetched).toBe(true)
-  expect(inwaysStore.inways).toHaveLength(2)
+  expect(inwayStore.isInitiallyFetched).toBe(true)
+  expect(inwayStore.inways).toHaveLength(2)
 })
 
 test('fetching a single inway', async () => {
@@ -43,12 +43,12 @@ test('fetching a single inway', async () => {
     .fn()
     .mockResolvedValue({ name: 'Inway A' })
 
-  const inwaysStore = new InwayStore({
+  const inwayStore = new InwayStore({
     rootStore: new RootStore(),
     managementApiClient,
   })
 
-  const inway = await inwaysStore.fetch({ name: 'Inway A' })
+  const inway = await inwayStore.fetch({ name: 'Inway A' })
 
   expect(managementApiClient.managementGetInway).toHaveBeenCalledWith({
     name: 'Inway A',
@@ -64,16 +64,16 @@ test('handle error while fetching inways', async () => {
     .fn()
     .mockRejectedValue('arbitrary error')
 
-  const inwaysStore = new InwayStore({
+  const inwayStore = new InwayStore({
     rootStore: new RootStore(),
     managementApiClient,
   })
 
-  await inwaysStore.fetchInways()
+  await inwayStore.fetchInways()
 
-  expect(inwaysStore.error).toEqual('arbitrary error')
-  expect(inwaysStore.inways).toHaveLength(0)
-  expect(inwaysStore.isInitiallyFetched).toBe(true)
+  expect(inwayStore.error).toEqual('arbitrary error')
+  expect(inwayStore.inways).toHaveLength(0)
+  expect(inwayStore.isInitiallyFetched).toBe(true)
 })
 
 test('getting an inway', async () => {
@@ -83,16 +83,16 @@ test('getting an inway', async () => {
     inways: [{ name: 'Inway A' }],
   })
 
-  const inwaysStore = new InwayStore({
+  const inwayStore = new InwayStore({
     rootStore: new RootStore(),
     managementApiClient,
   })
 
-  await inwaysStore.fetchInways()
+  await inwayStore.fetchInways()
 
-  let selectedInway = inwaysStore.getInway({ name: 'non-existing-inway-name' })
+  let selectedInway = inwayStore.getInway({ name: 'non-existing-inway-name' })
   expect(selectedInway).toBeUndefined()
 
-  selectedInway = inwaysStore.getInway({ name: 'Inway A' })
+  selectedInway = inwayStore.getInway({ name: 'Inway A' })
   expect(selectedInway.name).toEqual('Inway A')
 })

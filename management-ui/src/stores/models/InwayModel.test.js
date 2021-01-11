@@ -19,19 +19,19 @@ test('fetch should reload the model via the store', async () => {
   const rootStore = new RootStore({})
 
   const inwayModel = new InwayModel({
-    store: rootStore.inwaysStore,
+    store: rootStore.inwayStore,
     inway: {
       name: 'service-a',
     },
   })
 
-  jest.spyOn(rootStore.inwaysStore, 'fetch').mockResolvedValue({
+  jest.spyOn(rootStore.inwayStore, 'fetch').mockResolvedValue({
     name: 'service-a',
   })
 
   await inwayModel.fetch()
 
-  expect(rootStore.inwaysStore.fetch).toHaveBeenCalledWith({
+  expect(rootStore.inwayStore.fetch).toHaveBeenCalledWith({
     name: 'service-a',
   })
 })
