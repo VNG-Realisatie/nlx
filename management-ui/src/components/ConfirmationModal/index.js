@@ -14,34 +14,49 @@ const ConfirmationModal = ({
   isVisible,
   handleChoice,
   children,
-  titleText,
+  title,
   cancelText,
   okText,
 }) => {
+  const [choice, setChoice] = useState(null)
   const { t } = useTranslation()
 
-  const makeChoice = (isConfirmed) => () => handleChoice(isConfirmed)
+  const makeChoice = (isConfirmed, closeModal) => () => {
+    setChoice(isConfirmed)
+    closeModal()
+  }
+
+  const afterModalClose = () => handleChoice(choice)
 
   return (
     <Modal
       isVisible={isVisible}
-      handleClose={makeChoice(false)}
-      title={titleText || t('Are you sure?')}
+      handleClose={afterModalClose}
+      title={title || t('Are you sure?')}
       width="480px"
       verticalAlign={{
         from: 'top',
         offset: '8rem',
       }}
       autoFocus
-    >
-      {children}
-      <Footer>
-        <Button variant="secondary" onClick={makeChoice(false)} data-autofocus>
-          {cancelText || t('Cancel')}
-        </Button>
-        <Button onClick={makeChoice(true)}>{okText || t('Ok')}</Button>
-      </Footer>
-    </Modal>
+      render={({ closeModal }) => (
+        <>
+          {children}
+          <Footer>
+            <Button
+              variant="secondary"
+              onClick={makeChoice(false, closeModal)}
+              data-autofocus
+            >
+              {cancelText || t('Cancel')}
+            </Button>
+            <Button onClick={makeChoice(true, closeModal)}>
+              {okText || t('Ok')}
+            </Button>
+          </Footer>
+        </>
+      )}
+    />
   )
 }
 
@@ -49,7 +64,7 @@ ConfirmationModal.propTypes = {
   isVisible: bool.isRequired,
   handleChoice: func.isRequired,
   children: node,
-  titleText: string,
+  title: string,
   cancelText: string,
   okText: string,
 }
