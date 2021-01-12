@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2021
+// Licensed under the EUPL
+
 package main
 
 import (
@@ -81,6 +84,8 @@ func newSpaHandler(staticPath, indexPath string) *spaHandler {
 }
 
 func (h spaHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Permissions-Policy", "accelerometer=(), ambient-light-sensor=(), autoplay=(), battery=(), camera=(), display-capture=(), document-domain=(), encrypted-media=(), execution-while-not-rendered=(), execution-while-out-of-viewport=(), fullscreen=(), geolocation=(), gyroscope=(), layout-animations=(), legacy-image-formats=(), magnetometer=(), microphone=(), midi=(), navigation-override=(), oversized-images=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), sync-xhr=(), usb=(), vr=(), wake-lock=(), screen-wake-lock=(), web-share=(), xr-spatial-tracking=()")
+
 	fileExists, err := doesFileExistInStaticFolder(r.URL.Path, h.staticPath)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

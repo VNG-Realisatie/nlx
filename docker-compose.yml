@@ -121,7 +121,6 @@ services:
     image: "${IMAGE_PREFIX}nlxio/review-page:${IMAGE_TAG}"
     build:
       context: review-page
-      dockerfile: Dockerfile
   txlog-db:
     image: "${IMAGE_PREFIX}nlxio/txlog-db:${IMAGE_TAG}"
     build:

@@ -13,7 +13,7 @@ helm
 # These have their own docker context
 docs/
 ca-cfssl-unsafe/
-review-page/
 insight-ui/
 directory-ui/
 directory-ui-e2e-tests/
+review-page/
