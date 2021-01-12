@@ -2,7 +2,6 @@
 // Licensed under the EUPL
 //
 import { makeAutoObservable } from 'mobx'
-import { createModelSchema, list, primitive } from 'serializr'
 
 class ServiceModel {
   name = ''
@@ -79,17 +78,5 @@ class ServiceModel {
     }
   }
 }
-
-export const ServiceModelSchema = createModelSchema(ServiceModel, {
-  name: primitive(),
-  endpointURL: primitive(),
-  documentationURL: primitive(),
-  apiSpecificationURL: primitive(),
-  internal: primitive(),
-  techSupportContact: primitive(),
-  publicSupportContact: primitive(),
-  inways: list(primitive()),
-  incomingAccessRequestsCount: primitive(),
-})
 
 export default ServiceModel

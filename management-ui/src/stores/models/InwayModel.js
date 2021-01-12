@@ -2,13 +2,6 @@
 // Licensed under the EUPL
 //
 import { makeAutoObservable, flow } from 'mobx'
-import {
-  createModelSchema,
-  createSimpleSchema,
-  list,
-  object,
-  primitive,
-} from 'serializr'
 import { arrayOf, shape, string } from 'prop-types'
 
 export const inwayModelPropTypes = {
@@ -54,20 +47,5 @@ class InwayModel {
     this.version = inway.version || ''
   }
 }
-
-createModelSchema(InwayModel, {
-  name: primitive(),
-  ipAddress: primitive(),
-  hostname: primitive(),
-  selfAddress: primitive(),
-  services: list(
-    object(
-      createSimpleSchema({
-        name: primitive(),
-      }),
-    ),
-  ),
-  version: primitive(),
-})
 
 export default InwayModel
