@@ -47,7 +47,7 @@ const AccessSection = ({
               <IconItem as={IconKey} />
               <StateDetail>{t('You have no access')}</StateDetail>
               <Button onClick={onRequestAccessButtonClick}>
-                {t('Request Access')}
+                {t('Request access')}
               </Button>
             </>
           )}
@@ -122,7 +122,7 @@ const AccessSection = ({
                 </small>
               </StateDetail>
               <Button onClick={onRequestAccessButtonClick}>
-                {t('Request Access')}
+                {t('Request access')}
               </Button>
             </>
           )}
@@ -141,7 +141,7 @@ const AccessSection = ({
                 </small>
               </StateDetail>
               <Button onClick={onRequestAccessButtonClick}>
-                {t('Request Access')}
+                {t('Request access')}
               </Button>
             </>
           )}

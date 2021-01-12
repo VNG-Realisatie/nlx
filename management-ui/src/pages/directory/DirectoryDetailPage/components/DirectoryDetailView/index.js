@@ -6,6 +6,8 @@ import { func, object, shape, string } from 'prop-types'
 import { observer } from 'mobx-react'
 import { Alert, useDrawerStack } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
+import { useConfirmationModal } from '../../../../../components/ConfirmationModal'
+import RequestConfirmation from '../../../RequestConfirmation'
 import { ACCESS_REQUEST_STATES } from '../../../../../stores/models/OutgoingAccessRequestModel'
 import getDirectoryServiceAccessUIState from '../../../directoryServiceAccessState'
 import { SectionGroup } from '../../../../../components/DetailView'
@@ -22,19 +24,29 @@ const stackTraceDrawerId = 'stacktrace'
 const DirectoryDetailView = ({ service }) => {
   const { t } = useTranslation()
   const { showDrawer } = useDrawerStack()
-  const { organizationName, latestAccessRequest, latestAccessProof } = service
+  const {
+    organizationName,
+    serviceName,
+    latestAccessRequest,
+    latestAccessProof,
+  } = service
+
+  const [RequestConfirmationModal, confirmRequest] = useConfirmationModal({
+    title: t('Request access'),
+    okText: t('Send'),
+    children: (
+      <RequestConfirmation
+        organizationName={organizationName}
+        serviceName={serviceName}
+      />
+    ),
+  })
+
   useInterval(service.fetch)
 
-  const requestAccess = () => {
-    const confirmed = window.confirm(
-      t('The request will be sent to', { name: organizationName }),
-    )
-
-    if (!confirmed) {
-      return
-    }
-
-    service.requestAccess()
+  const requestAccess = async () => {
+    const isConfirmed = await confirmRequest()
+    if (isConfirmed) service.requestAccess()
   }
 
   const retryRequestAccess = () => {
@@ -96,6 +108,8 @@ const DirectoryDetailView = ({ service }) => {
           stacktrace={latestAccessRequest.errorDetails.stackTrace}
         />
       )}
+
+      <RequestConfirmationModal />
     </>
   )
 }

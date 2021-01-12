@@ -4,12 +4,12 @@
 import React from 'react'
 import { makeAutoObservable } from 'mobx'
 import { Route, StaticRouter as Router } from 'react-router-dom'
-import { fireEvent, renderWithProviders } from '../../../../../test-utils'
+import { fireEvent, within } from '@testing-library/react'
+import { renderWithProviders } from '../../../../../test-utils'
+import { clickConfirmButtonAndAssert } from '../../../../../components/ConfirmationModal/testUtils'
 import DirectoryDetailPage from '../../index'
 
 let service
-
-global.confirm = jest.fn(() => true)
 
 beforeEach(() => {
   service = makeAutoObservable({
@@ -56,4 +56,24 @@ test('A service with failed latestAccessRequest', () => {
 
   expect(getByTestId('stacktrace')).toBeVisible()
   expect(getByText('Go main panic')).toBeInTheDocument()
+})
+
+test('can request access', async () => {
+  const requestAccessFn = jest.fn()
+  service.requestAccess = requestAccessFn
+
+  const { getByText, getByRole } = renderWithProviders(
+    <Router location="/directory/organization/service">
+      <Route path="/directory/:organizationName/:serviceName">
+        <DirectoryDetailPage service={service} />
+      </Route>
+    </Router>,
+  )
+
+  fireEvent.click(getByText('Request access'))
+
+  const okButton = within(getByRole('dialog')).getByText('Send')
+  await clickConfirmButtonAndAssert(okButton, () =>
+    expect(requestAccessFn).toHaveBeenCalled(),
+  )
 })

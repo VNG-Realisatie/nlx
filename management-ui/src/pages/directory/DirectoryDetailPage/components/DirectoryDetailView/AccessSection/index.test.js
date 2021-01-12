@@ -28,7 +28,7 @@ test('Correctly renders when there is no access', () => {
 
   expect(getByText('You have no access')).toBeInTheDocument()
 
-  const button = getByText('Request Access')
+  const button = getByText('Request access')
   fireEvent.click(button)
 
   expect(requestAccessSpy).toHaveBeenCalled()
@@ -73,7 +73,7 @@ test('Correctly renders the other states of access', () => {
     />,
   )
   expect(getByText('Access request rejected')).toBeInTheDocument()
-  expect(getByText('Request Access')).toBeInTheDocument()
+  expect(getByText('Request access')).toBeInTheDocument()
 
   // accessProof.createdAt required in this displayState
   rerender(
