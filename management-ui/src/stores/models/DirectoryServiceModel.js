@@ -2,25 +2,9 @@
 // Licensed under the EUPL
 //
 import { flow, makeAutoObservable } from 'mobx'
-import { func, object, string } from 'prop-types'
 
 import OutgoingAccessRequestModel from './OutgoingAccessRequestModel'
 import AccessProofModel from './AccessProofModel'
-
-export const directoryServicePropTypes = {
-  organizationName: string.isRequired,
-  serviceName: string.isRequired,
-  state: string.isRequired,
-  apiSpecificationType: string,
-  documentationURL: string,
-  publicSupportContact: string,
-  latestAccessRequest: object,
-  latestAccessProof: object,
-
-  fetch: func.isRequired,
-  requestAccess: func.isRequired,
-  retryRequestAccess: func.isRequired,
-}
 
 function throwErrorWhenNotInstanceOf(object, model) {
   if (object && !(object instanceof model)) {

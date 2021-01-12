@@ -1,17 +1,14 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { checkPropTypes } from 'prop-types'
 import { RootStore } from '../index'
 import OutgoingAccessRequestModel, {
   ACCESS_REQUEST_STATES,
 } from './OutgoingAccessRequestModel'
-import DirectoryServiceModel, {
-  directoryServicePropTypes,
-} from './DirectoryServiceModel'
+import DirectoryServiceModel from './DirectoryServiceModel'
 import AccessProofModel from './AccessProofModel'
 
-test('model implements proptypes', () => {
+test('initializing the model', () => {
   const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
   const directoryService = new DirectoryServiceModel({
     directoryServicesStore: {},
@@ -23,27 +20,8 @@ test('model implements proptypes', () => {
     },
   })
 
-  checkPropTypes(
-    directoryServicePropTypes,
-    directoryService,
-    'prop',
-    'DirectoryServiceModel',
-  )
-
   expect(errorSpy).not.toHaveBeenCalled()
   errorSpy.mockRestore()
-})
-
-test('initializing the model', () => {
-  const directoryService = new DirectoryServiceModel({
-    directoryServicesStore: {},
-    serviceData: {
-      organizationName: 'Organization',
-      serviceName: 'Service',
-      state: 'up',
-      apiSpecificationType: 'API',
-    },
-  })
 
   expect(directoryService.latestAccessRequest).toBeNull()
   expect(directoryService.latestAccessProof).toBeNull()
