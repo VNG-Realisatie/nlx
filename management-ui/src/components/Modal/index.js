@@ -43,14 +43,18 @@ const Modal = ({ verticalAlign = {}, ...props }) => {
   const [modalRoot] = useState(document.createElement('div'))
 
   useEffect(() => {
-    modalRoot.setAttribute('id', `modal-${createRandomId()}`)
-    const reactRoot = document.querySelector('#root')
-    reactRoot.parentNode.insertBefore(modalRoot, reactRoot.nextSibling)
+    if (props.isVisible) {
+      modalRoot.setAttribute('id', `modal-${createRandomId()}`)
+      const reactRoot = document.querySelector('#root')
+      reactRoot.parentNode.insertBefore(modalRoot, reactRoot.nextSibling)
+    } else {
+      modalRoot.parentNode && modalRoot.parentNode.removeChild(modalRoot)
+    }
 
     return () => {
-      modalRoot.parentNode.removeChild(modalRoot)
+      modalRoot.parentNode && modalRoot.parentNode.removeChild(modalRoot)
     }
-  }, [modalRoot])
+  }, [modalRoot, props.isVisible])
 
   const verticalAlignCss = verticalAlignToCssValues(verticalAlign)
 
@@ -73,6 +77,8 @@ Modal.propTypes = {
     from: oneOf(['center', 'top', 'bottom']),
     offset: cssUnitOrEmpty,
   }),
+  // If children is also defined, render prop will win
+  render: func,
   children: node,
 }
 

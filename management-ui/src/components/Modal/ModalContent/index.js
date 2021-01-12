@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { bool, node, shape, string } from 'prop-types'
+import { bool, node, shape, string, func } from 'prop-types'
 import FocusLock from 'react-focus-lock'
 import cssUnitOrEmpty from '../propTypeCssUnitOrEmpty'
 import ModalHeader from './ModalHeader'
@@ -12,6 +12,7 @@ const ModalContent = ({
   autoFocus,
   width,
   verticalAlignCss,
+  render,
   children,
   ...headerProps
 }) => {
@@ -19,7 +20,9 @@ const ModalContent = ({
     <ModalPosition width={width} transform={verticalAlignCss.transform}>
       <FocusLock autoFocus={autoFocus} returnFocus>
         <Window>
-          <Content>{children}</Content>
+          <Content>
+            {render ? render({ closeModal: headerProps.onClose }) : children}
+          </Content>
           <ModalHeader {...headerProps} />
         </Window>
       </FocusLock>
@@ -34,6 +37,7 @@ ModalContent.propTypes = {
   verticalAlignCss: shape({
     transform: string.isRequired,
   }),
+  render: func,
   children: node,
 }
 

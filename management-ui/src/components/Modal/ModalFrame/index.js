@@ -40,13 +40,15 @@ const ModalFrame = ({
 
   useEffect(() => {
     const keydownHandler = (evt) => {
+      if (!isVisible) return
       if (evt.key === ESCAPE_EVENT_KEY) {
+        evt.stopPropagation()
         handleUserClose(evt)
       }
     }
 
-    document.addEventListener('keydown', keydownHandler)
-    return () => document.removeEventListener('keydown', keydownHandler)
+    document.addEventListener('keydown', keydownHandler, true)
+    return () => document.removeEventListener('keydown', keydownHandler, true)
   }, [isVisible, handleUserClose])
 
   return (
