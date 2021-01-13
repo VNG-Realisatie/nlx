@@ -6,6 +6,8 @@ import { object, shape, string } from 'prop-types'
 import { observer } from 'mobx-react'
 import { Table } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
+import { useConfirmationModal } from '../../../../../components/ConfirmationModal'
+import RequestConfirmation from '../../../RequestConfirmation'
 import getDirectoryServiceAccessUIState, {
   SHOW_REQUEST_ACCESS,
   SHOW_REQUEST_FAILED,
@@ -28,14 +30,20 @@ const DirectoryServiceRow = ({ service, ...props }) => {
     latestAccessProof,
   } = service
 
-  const requestAccess = () => {
-    const confirmed = window.confirm(
-      t('The request will be sent to', { name: organizationName }),
-    )
+  const [RequestConfirmationModal, confirmRequest] = useConfirmationModal({
+    title: t('Request access'),
+    okText: t('Send'),
+    children: (
+      <RequestConfirmation
+        organizationName={organizationName}
+        serviceName={serviceName}
+      />
+    ),
+  })
 
-    if (confirmed) {
-      service.requestAccess()
-    }
+  const requestAccess = async () => {
+    const isConfirmed = await confirmRequest()
+    if (isConfirmed) service.requestAccess()
   }
 
   const displayState = getDirectoryServiceAccessUIState(
@@ -82,6 +90,8 @@ const DirectoryServiceRow = ({ service, ...props }) => {
           )}
         </AccessMessageWrapper>
       </StyledTdAccess>
+
+      <RequestConfirmationModal />
     </Table.Tr>
   )
 }
