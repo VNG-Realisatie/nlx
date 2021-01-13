@@ -6,7 +6,6 @@ import { observer } from 'mobx-react'
 import { array, func } from 'prop-types'
 import { Table, ToasterContext, Collapsible } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
-
 import {
   DetailHeading,
   StyledCollapsibleBody,
@@ -14,6 +13,8 @@ import {
 import Amount from '../../../../../components/Amount'
 import { IconKey } from '../../../../../icons'
 import IncomingAccessRequestRow from './IncomingAccessRequestRow'
+import UpdateUiButton from './UpdateUiButton'
+import { StyledUpdateUiButton } from './index.styles'
 
 const AccessRequestsSection = ({
   accessRequests,
@@ -21,6 +22,15 @@ const AccessRequestsSection = ({
 }) => {
   const { t } = useTranslation()
   const { showToast } = useContext(ToasterContext)
+
+  // start interval
+  // haal incoming access requests op via apiClient (dus niet store)
+  // vergelijk respons met huidige accessRequests property
+  // if verschillend -> toon blauwe pil
+
+  // blauwe pil
+  // onclick -> voeg response van api toe aan store
+  // verwijder BLAUWE KNOP
 
   const approveHandler = async (accessRequest) => {
     try {
@@ -107,6 +117,8 @@ const AccessRequestsSection = ({
         ) : (
           <small>{t('There are no access requests')}</small>
         )}
+
+        <StyledUpdateUiButton>Nieuwe verzoeken</StyledUpdateUiButton>
       </StyledCollapsibleBody>
     </Collapsible>
   )
