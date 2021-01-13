@@ -3,7 +3,7 @@
 //
 import React, { useContext } from 'react'
 import { observer } from 'mobx-react'
-import { array, func } from 'prop-types'
+import { object, func } from 'prop-types'
 import { Table, ToasterContext, Collapsible } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import {
@@ -12,16 +12,24 @@ import {
 } from '../../../../../components/DetailView'
 import Amount from '../../../../../components/Amount'
 import { IconKey } from '../../../../../icons'
+import useStores from '../../../../../hooks/use-stores'
+import useInterval from '../../../../../hooks/use-interval'
 import IncomingAccessRequestRow from './IncomingAccessRequestRow'
-import UpdateUiButton from './UpdateUiButton'
 import { StyledUpdateUiButton } from './index.styles'
 
 const AccessRequestsSection = ({
-  accessRequests,
+  service,
   onApproveOrRejectCallbackHandler,
 }) => {
   const { t } = useTranslation()
   const { showToast } = useContext(ToasterContext)
+  const rootStore = useStores()
+
+  useInterval(async () => {
+    await rootStore.incomingAccessRequestsStore.fetchForService({
+      name: service.name,
+    })
+  }, 3000)
 
   // start interval
   // haal incoming access requests op via apiClient (dus niet store)
@@ -84,16 +92,16 @@ const AccessRequestsSection = ({
         <DetailHeading data-testid="service-incoming-accessrequests">
           <IconKey />
           {t('Access requests')}
-          {accessRequests.length > 0 ? (
+          {service.incomingAccessRequests.length > 0 ? (
             <Amount
               data-testid="service-incoming-accessrequests-amount-accented"
-              value={accessRequests.length}
+              value={service.incomingAccessRequests.length}
               isAccented
             />
           ) : (
             <Amount
               data-testid="service-incoming-accessrequests-amount"
-              value={accessRequests.length}
+              value={service.incomingAccessRequests.length}
             />
           )}
         </DetailHeading>
@@ -101,10 +109,10 @@ const AccessRequestsSection = ({
       ariaLabel={t('Access requests')}
     >
       <StyledCollapsibleBody>
-        {accessRequests.length ? (
+        {service.incomingAccessRequests.length ? (
           <Table data-testid="service-incoming-accessrequests-list">
             <tbody>
-              {accessRequests.map((accessRequest) => (
+              {service.incomingAccessRequests.map((accessRequest) => (
                 <IncomingAccessRequestRow
                   key={accessRequest.id}
                   accessRequest={accessRequest}
@@ -125,12 +133,8 @@ const AccessRequestsSection = ({
 }
 
 AccessRequestsSection.propTypes = {
-  accessRequests: array,
+  service: object,
   onApproveOrRejectCallbackHandler: func.isRequired,
-}
-
-AccessRequestsSection.defaultProps = {
-  accessRequests: [],
 }
 
 export default observer(AccessRequestsSection)

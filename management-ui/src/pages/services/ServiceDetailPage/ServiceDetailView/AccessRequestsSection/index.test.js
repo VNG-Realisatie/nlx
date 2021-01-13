@@ -2,22 +2,45 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-
 import { renderWithProviders, fireEvent } from '../../../../../test-utils'
+import { RootStore, StoreProvider } from '../../../../../stores'
+import { ACCESS_REQUEST_STATES } from '../../../../../stores/models/IncomingAccessRequestModel'
+import { ManagementApi } from '../../../../../api'
 import AccessRequestsSection from './index'
 
 beforeEach(() => {
   jest.useFakeTimers()
 })
 
-test('listing the access requests', async () => {
+test('listing the access requests when no access requests are available', async () => {
   const onApproveOrRejectCallbackHandler = jest.fn().mockResolvedValue(null)
 
-  const { getByTestId, rerender, getByText } = renderWithProviders(
-    <AccessRequestsSection
-      accessRequests={[]}
-      onApproveOrRejectCallbackHandler={onApproveOrRejectCallbackHandler}
-    />,
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementListServices = jest.fn().mockResolvedValue({
+    services: [
+      {
+        name: 'service-a',
+      },
+    ],
+  })
+
+  managementApiClient.managementListIncomingAccessRequest = jest
+    .fn()
+    .mockResolvedValue({
+      accessRequests: [],
+    })
+
+  const rootStore = new RootStore({ managementApiClient })
+  await rootStore.servicesStore.fetchAll()
+
+  const { getByTestId, getByText } = renderWithProviders(
+    <StoreProvider rootStore={rootStore}>
+      <AccessRequestsSection
+        service={rootStore.servicesStore.getService('service-a')}
+        onApproveOrRejectCallbackHandler={onApproveOrRejectCallbackHandler}
+      />
+    </StoreProvider>,
   )
 
   const toggler = getByTestId('service-incoming-accessrequests')
@@ -31,24 +54,71 @@ test('listing the access requests', async () => {
     getByTestId('service-incoming-accessrequests-amount'),
   ).toBeInTheDocument()
   expect(getByText('There are no access requests')).toBeInTheDocument()
+})
 
-  const accessRequest = {
-    id: '1a2B',
-    organizationName: 'Organization A',
-    serviceName: 'Servicio',
-    state: 'RECEIVED',
-    createdAt: new Date('2020-10-01T12:00:00Z'),
-    updatedAt: new Date('2020-10-01T12:00:01Z'),
-    approve: jest.fn().mockResolvedValue(null),
-    reject: jest.fn().mockResolvedValue(null),
-  }
+test('listing the access requests when an access request is available', async () => {
+  global.confirm = jest.fn(() => true)
+  const onApproveOrRejectCallbackHandler = jest.fn().mockResolvedValue(null)
 
-  rerender(
-    <AccessRequestsSection
-      accessRequests={[accessRequest]}
-      onApproveOrRejectCallbackHandler={onApproveOrRejectCallbackHandler}
-    />,
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementListServices = jest.fn().mockResolvedValue({
+    services: [
+      {
+        name: 'service-a',
+      },
+    ],
+  })
+
+  managementApiClient.managementGetService = jest.fn().mockResolvedValue({
+    name: 'service-a',
+  })
+
+  managementApiClient.managementListIncomingAccessRequest = jest
+    .fn()
+    .mockResolvedValue({
+      accessRequests: [
+        {
+          id: '1',
+          serviceName: 'service-a',
+          organizationName: 'organization-a',
+          state: ACCESS_REQUEST_STATES.RECEIVED,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          approve: jest.fn().mockResolvedValue(null),
+          reject: jest.fn().mockResolvedValue(null),
+        },
+      ],
+    })
+
+  managementApiClient.managementListAccessGrantsForService = jest
+    .fn()
+    .mockResolvedValue({
+      accessGrants: [],
+    })
+
+  const rootStore = new RootStore({ managementApiClient })
+  await rootStore.servicesStore.fetchAll()
+
+  const service = rootStore.servicesStore.getService('service-a')
+  await service.fetch()
+
+  const { getByTestId, getByTitle, getByText } = renderWithProviders(
+    <StoreProvider rootStore={rootStore}>
+      <AccessRequestsSection
+        service={service}
+        onApproveOrRejectCallbackHandler={onApproveOrRejectCallbackHandler}
+      />
+    </StoreProvider>,
   )
+
+  const accessRequest = service.incomingAccessRequests[0]
+
+  accessRequest.approve = jest.fn().mockResolvedValue()
+  accessRequest.reject = jest.fn().mockResolvedValue()
+
+  const toggler = getByTestId('service-incoming-accessrequests')
+  fireEvent.click(toggler)
 
   expect(toggler).toHaveTextContent(
     'key.svg' + 'Access requests' + '1', // eslint-disable-line no-useless-concat
@@ -60,5 +130,60 @@ test('listing the access requests', async () => {
   expect(
     getByTestId('service-incoming-accessrequests-list'),
   ).toBeInTheDocument()
-  expect(getByText('Organization A')).toBeInTheDocument()
+  expect(getByText('organization-a')).toBeInTheDocument()
 })
+
+test('polling with access request section collapsed', async () => {
+  jest.useFakeTimers()
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementListServices = jest.fn().mockResolvedValue({
+    services: [
+      {
+        name: 'service-a',
+      },
+    ],
+  })
+
+  managementApiClient.managementListIncomingAccessRequest = jest
+    .fn()
+    .mockResolvedValue({
+      accessRequests: [
+        {
+          id: '1',
+          serviceName: 'service-a',
+          state: ACCESS_REQUEST_STATES.RECEIVED,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ],
+    })
+
+  const rootStore = new RootStore({ managementApiClient })
+  await rootStore.servicesStore.fetchAll()
+
+  const { getByTestId, findByTestId } = renderWithProviders(
+    <StoreProvider rootStore={rootStore}>
+      <AccessRequestsSection
+        service={rootStore.servicesStore.getService('service-a')}
+        onApproveOrRejectCallbackHandler={() => {}}
+      />
+    </StoreProvider>,
+  )
+
+  expect(
+    getByTestId('service-incoming-accessrequests-amount'),
+  ).toHaveTextContent('0')
+
+  jest.advanceTimersByTime(3000)
+
+  const amountAccented = await findByTestId(
+    'service-incoming-accessrequests-amount-accented',
+  )
+
+  expect(amountAccented).toHaveTextContent('1')
+
+  jest.useRealTimers()
+})
+
+// test.todo('polling with access request section expanded', () => {})

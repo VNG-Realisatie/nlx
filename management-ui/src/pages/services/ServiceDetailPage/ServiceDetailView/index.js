@@ -75,7 +75,7 @@ const ServiceDetailView = ({ service, removeHandler }) => {
         <InwaysSection inways={inways} />
 
         <AccessRequestsSection
-          accessRequests={service.incomingAccessRequests}
+          service={service}
           onApproveOrRejectCallbackHandler={() => {
             service.fetch()
 
