@@ -5,6 +5,7 @@ import React from 'react'
 import { Icon } from '@commonground/design-system'
 
 import { ReactComponent as SvgArrowLeftRight } from './arrow-left-right.svg'
+import { ReactComponent as SvgArrowDownLine } from './arrow-down-line.svg'
 import { ReactComponent as SvgBin } from './bin.svg'
 import { ReactComponent as SvgClose } from './close.svg'
 import { ReactComponent as SvgCheck } from './check.svg'
@@ -34,6 +35,9 @@ import { ReactComponent as SvgWarningCircleFill } from './error-warning-fill.svg
 
 export const IconArrowLeftRight = (props) => (
   <Icon as={SvgArrowLeftRight} {...props} />
+)
+export const IconArrowDownLine = (props) => (
+  <Icon as={SvgArrowDownLine} {...props} />
 )
 
 export const IconBin = (props) => <Icon as={SvgBin} {...props} />
