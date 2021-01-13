@@ -2,10 +2,19 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { fireEvent, act } from '@testing-library/react'
+import { fireEvent, waitFor } from '@testing-library/react'
 
 import { renderWithProviders } from '../../test-utils'
 import { useConfirmationModal } from './index'
+
+beforeEach(() => {
+  jest.useFakeTimers()
+})
+
+afterEach(() => {
+  jest.runOnlyPendingTimers()
+  jest.useRealTimers()
+})
 
 // eslint-disable-next-line react/prop-types
 const TestCase = ({ handleChoice }) => {
@@ -36,17 +45,15 @@ test('Interact with confirm window', async () => {
 
   expect(getByText('Weet je het zeker?')).toBeInTheDocument()
 
-  await act(async () => {
-    fireEvent.click(getByText('Cancel'))
-  })
+  fireEvent.click(getByText('Cancel'))
 
-  expect(handleChoice).toHaveBeenCalledWith(false)
+  jest.runAllTimers()
+  await waitFor(() => expect(handleChoice).toHaveBeenCalledWith(false))
 
   fireEvent.click(getByText('show confirm'))
+  fireEvent.click(getByText('Ok'))
 
-  await act(async () => {
-    fireEvent.click(getByText('Ok'))
-  })
-
-  expect(handleChoice).toHaveBeenCalledWith(true)
+  jest.runAllTimers()
+  await waitFor(() => expect(handleChoice).toHaveBeenCalledWith(true))
+  expect(handleChoice).toHaveBeenCalledTimes(2)
 })

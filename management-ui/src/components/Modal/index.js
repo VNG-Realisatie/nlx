@@ -41,10 +41,11 @@ export const verticalAlignToCssValues = ({ from, offset }) => {
 
 const Modal = ({ verticalAlign = {}, ...props }) => {
   const [modalRoot] = useState(document.createElement('div'))
+  const [id] = useState(createRandomId())
 
   useEffect(() => {
     if (props.isVisible) {
-      modalRoot.setAttribute('id', `modal-${createRandomId()}`)
+      modalRoot.setAttribute('id', `modal-${id}`)
       const reactRoot = document.querySelector('#root')
       reactRoot.parentNode.insertBefore(modalRoot, reactRoot.nextSibling)
     } else {
@@ -54,12 +55,12 @@ const Modal = ({ verticalAlign = {}, ...props }) => {
     return () => {
       modalRoot.parentNode && modalRoot.parentNode.removeChild(modalRoot)
     }
-  }, [modalRoot, props.isVisible])
+  }, [modalRoot, id, props.isVisible])
 
   const verticalAlignCss = verticalAlignToCssValues(verticalAlign)
 
   return createPortal(
-    <ModalFrame {...props} verticalAlignCss={verticalAlignCss} />,
+    <ModalFrame {...props} verticalAlignCss={verticalAlignCss} id={id} />,
     modalRoot,
   )
 }

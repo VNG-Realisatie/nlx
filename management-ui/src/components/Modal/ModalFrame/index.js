@@ -25,14 +25,20 @@ const ModalFrame = ({
 }) => {
   const [inProp, setInProp] = useState(false)
 
+  // In case modal is placed within clickable element
+  const stopPropagation = (evt) => evt.stopPropagation()
+
   const startClose = useCallback(() => {
     setInProp(false)
   }, [setInProp])
 
-  const handleUserClose = useCallback(() => {
-    if (!allowUserToClose) return
-    startClose()
-  }, [allowUserToClose, startClose])
+  const handleUserClose = useCallback(
+    (evt) => {
+      if (!allowUserToClose) return
+      startClose(evt)
+    },
+    [allowUserToClose, startClose],
+  )
 
   useEffect(() => {
     setInProp(isVisible)
@@ -54,7 +60,7 @@ const ModalFrame = ({
   return (
     <>
       {isVisible && (
-        <Container>
+        <Container onClick={stopPropagation}>
           <HeightLimiter alignItems={passProps.verticalAlignCss.alignItems}>
             <CSSTransition
               in={inProp}
@@ -86,7 +92,8 @@ const ModalFrame = ({
             >
               <ModalContent
                 {...passProps}
-                onClose={handleUserClose}
+                close={startClose}
+                userClose={handleUserClose}
                 showCloseButton={allowUserToClose && passProps.showCloseButton}
               />
             </CSSTransition>

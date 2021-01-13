@@ -26,7 +26,9 @@ const ConfirmationModal = ({
     closeModal()
   }
 
-  const afterModalClose = () => handleChoice(choice)
+  const afterModalClose = () => {
+    handleChoice(choice)
+  }
 
   return (
     <Modal
