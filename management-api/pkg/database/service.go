@@ -126,9 +126,9 @@ func (db *PostgresConfigDatabase) DeleteService(ctx context.Context, name string
 	service := &Service{}
 
 	err := dbWithTx.
-		Preload("IncomingAccessRequests").
 		Where(&Service{Name: name}).
-		First(service).Error
+		First(service).
+		Error
 	if err != nil {
 		return err
 	}
@@ -136,8 +136,9 @@ func (db *PostgresConfigDatabase) DeleteService(ctx context.Context, name string
 	err = dbWithTx.DB.
 		WithContext(ctx).
 		Select(clause.Associations).
-		Delete(service.IncomingAccessRequests).Error
-
+		Where("service_id = ?", service.ID).
+		Delete(IncomingAccessRequest{}).
+		Error
 	if err != nil {
 		return err
 	}
