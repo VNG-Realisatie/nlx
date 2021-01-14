@@ -219,7 +219,7 @@ func (scheduler *accessRequestScheduler) schedule(ctx context.Context, request *
 	if err == nil {
 		// don't update the state if the state is already synchronized
 		if newState == request.State {
-			return nil
+			return scheduler.configDatabase.UnlockOutgoingAccessRequest(ctx, request)
 		}
 
 		err = scheduler.configDatabase.UpdateOutgoingAccessRequestState(

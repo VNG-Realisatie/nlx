@@ -312,6 +312,20 @@ func (mr *MockConfigDatabaseMockRecorder) TakePendingOutgoingAccessRequest(ctx i
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TakePendingOutgoingAccessRequest", reflect.TypeOf((*MockConfigDatabase)(nil).TakePendingOutgoingAccessRequest), ctx)
 }
 
+// UnlockOutgoingAccessRequest mocks base method
+func (m *MockConfigDatabase) UnlockOutgoingAccessRequest(ctx context.Context, accessRequest *database.OutgoingAccessRequest) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UnlockOutgoingAccessRequest", ctx, accessRequest)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UnlockOutgoingAccessRequest indicates an expected call of UnlockOutgoingAccessRequest
+func (mr *MockConfigDatabaseMockRecorder) UnlockOutgoingAccessRequest(ctx, accessRequest interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UnlockOutgoingAccessRequest", reflect.TypeOf((*MockConfigDatabase)(nil).UnlockOutgoingAccessRequest), ctx, accessRequest)
+}
+
 // ListAllIncomingAccessRequests mocks base method
 func (m *MockConfigDatabase) ListAllIncomingAccessRequests(ctx context.Context) ([]*database.IncomingAccessRequest, error) {
 	m.ctrl.T.Helper()

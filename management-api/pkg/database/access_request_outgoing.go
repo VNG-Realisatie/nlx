@@ -177,6 +177,7 @@ func (db *PostgresConfigDatabase) ListAllOutgoingAccessRequests(ctx context.Cont
 	requests := []*OutgoingAccessRequest{}
 
 	if err := db.DB.
+		WithContext(ctx).
 		Find(&requests).
 		Error; err != nil {
 		return nil, err
@@ -189,6 +190,7 @@ func (db *PostgresConfigDatabase) ListOutgoingAccessRequests(ctx context.Context
 	requests := []*OutgoingAccessRequest{}
 
 	if err := db.DB.
+		WithContext(ctx).
 		Where("organization_name = ? AND service_name = ?", organizationName, serviceName).
 		Find(&requests).
 		Error; err != nil {
@@ -205,6 +207,7 @@ func (db *PostgresConfigDatabase) TakePendingOutgoingAccessRequest(ctx context.C
 	}
 
 	result := db.DB.
+		WithContext(ctx).
 		Table("nlx_management.access_requests_outgoing").
 		Where(
 			"access_request_outgoing_id = (SELECT access_request_outgoing_id FROM nlx_management.access_requests_outgoing WHERE state IN ? AND (lock_expires_at IS NULL OR NOW() > lock_expires_at) LIMIT 1)",
@@ -226,6 +229,7 @@ func (db *PostgresConfigDatabase) TakePendingOutgoingAccessRequest(ctx context.C
 		request := &OutgoingAccessRequest{}
 
 		if err := db.DB.
+			WithContext(ctx).
 			Table("nlx_management.access_requests_outgoing").
 			Where("lock_id = ?", lockID).
 			First(request).
@@ -237,4 +241,11 @@ func (db *PostgresConfigDatabase) TakePendingOutgoingAccessRequest(ctx context.C
 	}
 
 	return nil, nil
+}
+
+func (db *PostgresConfigDatabase) UnlockOutgoingAccessRequest(ctx context.Context, outgoingAccessRequest *OutgoingAccessRequest) error {
+	return db.DB.
+		WithContext(ctx).
+		Model(&outgoingAccessRequest).
+		Updates(map[string]interface{}{"lock_expires_at": nil}).Error
 }
