@@ -2,7 +2,8 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { renderWithProviders, fireEvent } from '../../../../../test-utils'
+import { act, waitForElementToBeRemoved } from '@testing-library/react'
+import { fireEvent, renderWithProviders } from '../../../../../test-utils'
 import { RootStore, StoreProvider } from '../../../../../stores'
 import { ACCESS_REQUEST_STATES } from '../../../../../stores/models/IncomingAccessRequestModel'
 import { ManagementApi } from '../../../../../api'
@@ -103,7 +104,7 @@ test('listing the access requests when an access request is available', async ()
   const service = rootStore.servicesStore.getService('service-a')
   await service.fetch()
 
-  const { getByTestId, getByTitle, getByText } = renderWithProviders(
+  const { getByTestId, getByText } = renderWithProviders(
     <StoreProvider rootStore={rootStore}>
       <AccessRequestsSection
         service={service}
@@ -186,4 +187,78 @@ test('polling with access request section collapsed', async () => {
   jest.useRealTimers()
 })
 
-// test.todo('polling with access request section expanded', () => {})
+test('polling with access request section expanded', async () => {
+  jest.useFakeTimers()
+
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementGetService = jest.fn().mockResolvedValue({
+    name: 'service-a',
+  })
+
+  managementApiClient.managementListIncomingAccessRequest = jest
+    .fn()
+    .mockResolvedValueOnce({
+      accessRequests: [
+        {
+          id: '1',
+          serviceName: 'service-a',
+          organizationName: 'organization-a',
+          state: ACCESS_REQUEST_STATES.RECEIVED,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ],
+    })
+    .mockResolvedValue({
+      accessRequests: [],
+    })
+
+  managementApiClient.managementListAccessGrantsForService = jest
+    .fn()
+    .mockResolvedValue({
+      accessGrants: [],
+    })
+
+  const rootStore = new RootStore({ managementApiClient })
+  await act(async () => {
+    await rootStore.servicesStore.fetch({ name: 'service-a' })
+  })
+  const service = rootStore.servicesStore.getService('service-a')
+
+  const {
+    getByTestId,
+    getByText,
+    queryByText,
+    findByText,
+  } = renderWithProviders(
+    <StoreProvider rootStore={rootStore}>
+      <AccessRequestsSection
+        service={service}
+        onApproveOrRejectCallbackHandler={() => {}}
+      />
+    </StoreProvider>,
+  )
+
+  const toggler = getByTestId('service-incoming-accessrequests')
+
+  fireEvent.click(toggler)
+
+  expect(getByText('organization-a')).toBeInTheDocument()
+  expect(queryByText('Nieuwe verzoeken')).not.toBeInTheDocument()
+
+  act(() => {
+    jest.advanceTimersByTime(3000)
+  })
+
+  expect(await findByText('organization-a')).toBeInTheDocument()
+
+  expect(getByText('Nieuwe verzoeken')).toBeInTheDocument()
+
+  fireEvent.click(getByText('Nieuwe verzoeken'))
+
+  await waitForElementToBeRemoved(() => getByText('organization-a'))
+  expect(queryByText('Nieuwe verzoeken')).not.toBeInTheDocument()
+
+  jest.useRealTimers()
+})

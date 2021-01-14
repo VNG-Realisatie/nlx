@@ -2,9 +2,12 @@
 // Licensed under the EUPL
 //
 import ServiceModel from '../stores/models/ServiceModel'
-import IncomingAccessRequestModel from '../stores/models/IncomingAccessRequestModel'
+import IncomingAccessRequestModel, {
+  ACCESS_REQUEST_STATES,
+} from '../stores/models/IncomingAccessRequestModel'
 import { ManagementApi } from '../api'
 import IncomingAccessRequestsStore from './IncomingAccessRequestsStore'
+import { RootStore } from './index'
 
 test('initializing the store', () => {
   const incomingAccessRequestStore = new IncomingAccessRequestsStore({})
@@ -119,4 +122,91 @@ test('rejecting an access request', async () => {
     managementApiClient.managementRejectIncomingAccessRequest,
   ).toHaveBeenCalled()
   expect(fetchForServiceSpy).toHaveBeenCalledWith({ name: 'Service' })
+})
+
+describe('have the access requests been changed for a service', () => {
+  let managementApiClient
+  let rootStore
+  let servicesStore
+  let incomingAccessRequestStore
+
+  const ACCESS_REQUEST_ONE = {
+    id: 'ar-1',
+    serviceName: 'service-a',
+    organizationName: 'organization-a',
+    state: ACCESS_REQUEST_STATES.CREATED,
+  }
+
+  const ACCESS_REQUEST_TWO = {
+    id: 'ar-2',
+    serviceName: 'service-a',
+    organizationName: 'organization-a',
+    state: ACCESS_REQUEST_STATES.CREATED,
+  }
+
+  beforeEach(async () => {
+    managementApiClient = new ManagementApi()
+
+    managementApiClient.managementGetService = jest.fn().mockResolvedValue({
+      name: 'service-a',
+    })
+
+    rootStore = new RootStore({
+      managementApiClient,
+    })
+
+    rootStore.accessGrantStore.fetchForService = jest.fn().mockResolvedValue()
+
+    incomingAccessRequestStore = rootStore.incomingAccessRequestsStore
+    servicesStore = rootStore.servicesStore
+  })
+
+  it('should indicate changed if the number of access requests have changed', async () => {
+    managementApiClient.managementListIncomingAccessRequest = jest
+      .fn()
+      .mockResolvedValueOnce({ accessRequests: [] })
+      .mockResolvedValue({
+        accessRequests: [ACCESS_REQUEST_ONE],
+      })
+
+    await servicesStore.fetch({ name: 'service-a' })
+    const service = servicesStore.getService('service-a')
+
+    expect(
+      await incomingAccessRequestStore.haveChangedForService(service),
+    ).toEqual(true)
+  })
+
+  it('should indicate changed if the changed access request has a different id', async () => {
+    managementApiClient.managementListIncomingAccessRequest = jest
+      .fn()
+      .mockResolvedValueOnce({
+        accessRequests: [ACCESS_REQUEST_ONE],
+      })
+      .mockResolvedValue({
+        accessRequests: [ACCESS_REQUEST_TWO],
+      })
+
+    await servicesStore.fetch({ name: 'service-a' })
+    const service = servicesStore.getService('service-a')
+
+    expect(
+      await incomingAccessRequestStore.haveChangedForService(service),
+    ).toEqual(true)
+  })
+
+  it('should not indicate changed if the latest access request is the same', async () => {
+    managementApiClient.managementListIncomingAccessRequest = jest
+      .fn()
+      .mockResolvedValue({
+        accessRequests: [ACCESS_REQUEST_ONE],
+      })
+
+    await servicesStore.fetch({ name: 'service-a' })
+    const service = servicesStore.getService('service-a')
+
+    expect(
+      await incomingAccessRequestStore.haveChangedForService(service),
+    ).toEqual(false)
+  })
 })

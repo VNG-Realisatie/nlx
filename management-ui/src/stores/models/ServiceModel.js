@@ -77,6 +77,10 @@ class ServiceModel {
       this.incomingAccessRequestsCount = service.incomingAccessRequestsCount
     }
   }
+
+  hasChangedIncomingAccessRequests = async () => {
+    await this.servicesStore.hasChangedIncomingAccessRequests(this)
+  }
 }
 
 export default ServiceModel

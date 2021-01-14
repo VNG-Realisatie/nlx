@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { observer } from 'mobx-react'
 import { object, func } from 'prop-types'
 import { Table, ToasterContext, Collapsible } from '@commonground/design-system'
@@ -13,7 +13,7 @@ import {
 import Amount from '../../../../../components/Amount'
 import { IconKey } from '../../../../../icons'
 import useStores from '../../../../../hooks/use-stores'
-import useInterval from '../../../../../hooks/use-interval'
+import usePolling from '../../../../../hooks/use-polling'
 import IncomingAccessRequestRow from './IncomingAccessRequestRow'
 import { StyledUpdateUiButton } from './index.styles'
 
@@ -24,21 +24,53 @@ const AccessRequestsSection = ({
   const { t } = useTranslation()
   const { showToast } = useContext(ToasterContext)
   const rootStore = useStores()
-
-  useInterval(async () => {
+  const [isOpen, setIsOpen] = useState(false)
+  const [showUpdateUiButton, setShowUpdateUiButton] = useState(false)
+  const [pausePollingClosed, startPollingClosed] = usePolling(async () => {
     await rootStore.incomingAccessRequestsStore.fetchForService({
       name: service.name,
     })
   }, 3000)
 
-  // start interval
-  // haal incoming access requests op via apiClient (dus niet store)
-  // vergelijk respons met huidige accessRequests property
-  // if verschillend -> toon blauwe pil
+  const [pausePollingOpen, startPollingOpen] = usePolling(async () => {
+    const haveAccessRequestsChanged = await rootStore.incomingAccessRequestsStore.haveChangedForService(
+      service,
+    )
 
-  // blauwe pil
-  // onclick -> voeg response van api toe aan store
-  // verwijder BLAUWE KNOP
+    setShowUpdateUiButton(haveAccessRequestsChanged)
+
+    if (haveAccessRequestsChanged) {
+      pausePollingOpen()
+    }
+  }, 3000)
+
+  const onClickUpdateIncomingData = async () => {
+    setShowUpdateUiButton(false)
+
+    await rootStore.incomingAccessRequestsStore.fetchForService({
+      name: service.name,
+    })
+
+    if (isOpen) {
+      startPollingOpen()
+    }
+  }
+
+  useEffect(() => {
+    if (isOpen) {
+      pausePollingClosed()
+      startPollingOpen()
+    } else {
+      pausePollingOpen()
+      startPollingClosed()
+    }
+  }, [
+    isOpen,
+    pausePollingOpen,
+    pausePollingClosed,
+    startPollingOpen,
+    startPollingClosed,
+  ])
 
   const approveHandler = async (accessRequest) => {
     try {
@@ -88,6 +120,7 @@ const AccessRequestsSection = ({
 
   return (
     <Collapsible
+      onToggle={(isCollapsibleOpen) => setIsOpen(isCollapsibleOpen)}
       title={
         <DetailHeading data-testid="service-incoming-accessrequests">
           <IconKey />
@@ -126,7 +159,11 @@ const AccessRequestsSection = ({
           <small>{t('There are no access requests')}</small>
         )}
 
-        <StyledUpdateUiButton>Nieuwe verzoeken</StyledUpdateUiButton>
+        {showUpdateUiButton ? (
+          <StyledUpdateUiButton onClick={onClickUpdateIncomingData}>
+            Nieuwe verzoeken
+          </StyledUpdateUiButton>
+        ) : null}
       </StyledCollapsibleBody>
     </Collapsible>
   )

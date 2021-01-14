@@ -1,8 +1,10 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { makeAutoObservable, observable } from 'mobx'
-import IncomingAccessRequestModel from './models/IncomingAccessRequestModel'
+import { flow, makeAutoObservable, observable } from 'mobx'
+import IncomingAccessRequestModel, {
+  ACCESS_REQUEST_STATES,
+} from './models/IncomingAccessRequestModel'
 
 class IncomingAccessRequestsStore {
   incomingAccessRequests = observable.map()
@@ -44,17 +46,35 @@ class IncomingAccessRequestsStore {
         serviceName: name,
       },
     )
+
+    // delete current in-memory access requests for service
+    this.getForService({ name })
+      .map((accessRequest) => accessRequest.id)
+      .forEach((id) => {
+        this.incomingAccessRequests.delete(id)
+      })
+
+    // recreate models in-memory
     result.accessRequests.map((accessRequest) =>
       this.updateFromServer(accessRequest),
     )
   }
 
-  getForService = (serviceModel) => {
+  returnForService = async ({ name }) => {
+    const result = await this._managementApiClient.managementListIncomingAccessRequest(
+      {
+        serviceName: name,
+      },
+    )
+    return result.accessRequests
+  }
+
+  getForService = ({ name }) => {
     const arrayOfModels = [...this.incomingAccessRequests.values()]
 
     return arrayOfModels.filter(
       (incomingAccessRequestModel) =>
-        incomingAccessRequestModel.serviceName === serviceModel.name,
+        incomingAccessRequestModel.serviceName === name,
     )
   }
 
@@ -73,6 +93,34 @@ class IncomingAccessRequestsStore {
     })
     this.fetchForService({ name: serviceName })
   }
+
+  haveChangedForService = flow(function* fetch(service) {
+    let latestAccessRequests = yield this.returnForService(service)
+
+    // we are only interested in access request which are not 'resolved'
+    latestAccessRequests = latestAccessRequests.filter(
+      (ar) =>
+        ar.state === ACCESS_REQUEST_STATES.CREATED ||
+        ar.state === ACCESS_REQUEST_STATES.RECEIVED,
+    )
+
+    if (latestAccessRequests.length !== service.incomingAccessRequests.length) {
+      return true
+    }
+
+    // we will compare a list of sorted IDs to determine if the
+    // latest access requests have changed
+    const accessRequestIds = service.incomingAccessRequests.map((ar) => ar.id)
+    accessRequestIds.sort()
+
+    const latestAccessRequestIds = latestAccessRequests.map((ar) => ar.id)
+    latestAccessRequestIds.sort()
+
+    return (
+      JSON.stringify(accessRequestIds) !==
+      JSON.stringify(latestAccessRequestIds)
+    )
+  }).bind(this)
 }
 
 export default IncomingAccessRequestsStore
