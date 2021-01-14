@@ -17,11 +17,16 @@ class Page {
     this.inways = Selector('[data-testid="service-inways"]')
     this.alert = Selector('div[role="alert"]')
     this.alertTitle = this.alert.find('[data-testid="title"]')
+    this.confirmRemoveButton = Selector('[role="dialog"]')
+      .find('button')
+      .withText('Verwijderen')
   }
 
   async removeService() {
     await t.click(this.removeButton)
-    await t.wait(3000)
+    await t.wait(1000)
+    await t.click(this.confirmRemoveButton)
+    await t.wait(1000)
   }
 }
 

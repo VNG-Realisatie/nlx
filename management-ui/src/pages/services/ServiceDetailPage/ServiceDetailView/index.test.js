@@ -3,8 +3,9 @@
 //
 import React from 'react'
 import { MemoryRouter as Router } from 'react-router-dom'
-import { fireEvent } from '@testing-library/react'
+import { fireEvent, within, waitFor } from '@testing-library/react'
 import { renderWithProviders } from '../../../../test-utils'
+import { clickConfirmButtonAndAssert } from '../../../../components/ConfirmationModal/testUtils'
 import ServiceDetailView from './index'
 
 // These all have their own tests
@@ -49,17 +50,23 @@ describe('ServiceDetails', () => {
     expect(heading).toHaveTextContent('hidden.svg')
   })
 
-  it('should call the removeHandler on remove', () => {
+  it('should call the removeHandler on remove', async () => {
+    jest.useFakeTimers()
+
     const handleRemove = jest.fn()
-    jest.spyOn(window, 'confirm').mockResolvedValue(true)
-    const { getByTitle } = renderWithProviders(
+    const { getByTitle, getByRole } = renderWithProviders(
       <Router>
         <ServiceDetailView service={service} removeHandler={handleRemove} />
       </Router>,
     )
 
     fireEvent.click(getByTitle('Remove service'))
-    expect(window.confirm).toHaveBeenCalled()
-    expect(handleRemove).toBeCalled()
+
+    const confirmModal = getByRole('dialog')
+    const okButton = within(confirmModal).getByText('Remove')
+
+    clickConfirmButtonAndAssert(okButton, () =>
+      expect(handleRemove).toHaveBeenCalled(),
+    )
   })
 })

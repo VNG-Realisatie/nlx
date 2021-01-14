@@ -45,7 +45,6 @@ export async function createService(serviceProperties = {}) {
 export async function removeService() {
   try {
     await t.navigateTo(`${baseUrl}/services/${t.ctx.serviceName}`)
-    await t.setNativeDialogHandler(() => true)
     await detailPage.removeService()
 
     t.ctx.serviceName = null

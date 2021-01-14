@@ -6,7 +6,7 @@ import { arrayOf, array, bool, func, shape, string } from 'prop-types'
 import { observer } from 'mobx-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
-
+import { useConfirmationModal } from '../../../../components/ConfirmationModal'
 import EditButton from '../../../../components/EditButton'
 import {
   DetailHeadingLight,
@@ -28,8 +28,13 @@ const ServiceDetailView = ({ service, removeHandler }) => {
   const { t } = useTranslation()
   const location = useLocation()
 
-  const handleRemove = () => {
-    if (window.confirm(t('Do you want to remove the service?'))) {
+  const [ConfirmRemoveModal, confirmRemove] = useConfirmationModal({
+    okText: t('Remove'),
+    children: <p>{t('Do you want to remove the service?')}</p>,
+  })
+
+  const handleRemove = async () => {
+    if (await confirmRemove()) {
       removeHandler()
     }
   }
@@ -83,6 +88,8 @@ const ServiceDetailView = ({ service, removeHandler }) => {
 
         <AccessGrantSection accessGrants={service.accessGrants} />
       </SectionGroup>
+
+      <ConfirmRemoveModal />
     </>
   )
 }
