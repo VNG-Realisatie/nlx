@@ -2,8 +2,9 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-
-import { renderWithProviders, fireEvent } from '../../../../../../test-utils'
+import { fireEvent, within } from '@testing-library/react'
+import { renderWithProviders } from '../../../../../../test-utils'
+import { clickConfirmButtonAndAssert } from '../../../../../../components/ConfirmationModal/testUtils'
 import AccessGrantRow from './index'
 
 let mockHandler
@@ -22,7 +23,7 @@ beforeEach(() => {
 })
 
 test('clicking confirm', async () => {
-  const { getByText } = renderWithProviders(
+  const { getByText, getByRole } = renderWithProviders(
     <table>
       <tbody>
         <AccessGrantRow accessGrant={accessGrant} revokeHandler={mockHandler} />
@@ -30,12 +31,14 @@ test('clicking confirm', async () => {
     </table>,
   )
 
-  global.confirm = jest.fn(() => true)
+  fireEvent.click(getByText('Revoke'))
 
-  const revokeButton = getByText('Revoke')
-  fireEvent.click(revokeButton)
+  const confirmModal = getByRole('dialog')
+  const okButton = within(confirmModal).getByText('Revoke')
 
-  expect(mockHandler).toHaveBeenCalledWith(accessGrant)
+  await clickConfirmButtonAndAssert(okButton, () =>
+    expect(mockHandler).toHaveBeenCalledWith(accessGrant),
+  )
 })
 
 test('clicking confirm cancel', async () => {
@@ -47,10 +50,9 @@ test('clicking confirm cancel', async () => {
     </table>,
   )
 
-  global.confirm = jest.fn(() => false)
+  fireEvent.click(getByText('Revoke'))
 
-  const revokeButton = getByText('Revoke')
-  fireEvent.click(revokeButton)
-
-  expect(mockHandler).not.toHaveBeenCalled()
+  await clickConfirmButtonAndAssert(getByText('Cancel'), () =>
+    expect(mockHandler).not.toHaveBeenCalled(),
+  )
 })

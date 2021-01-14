@@ -3,7 +3,7 @@
 //
 import React from 'react'
 import { MemoryRouter as Router } from 'react-router-dom'
-import { fireEvent, within, waitFor } from '@testing-library/react'
+import { fireEvent, within } from '@testing-library/react'
 import { renderWithProviders } from '../../../../test-utils'
 import { clickConfirmButtonAndAssert } from '../../../../components/ConfirmationModal/testUtils'
 import ServiceDetailView from './index'
