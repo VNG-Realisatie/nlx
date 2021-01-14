@@ -32,6 +32,8 @@ spec:
               containerPort: 8443
               protocol: TCP
           env:
+            - name: LISTEN_ADDRESS
+              value: 0.0.0.0:8443
             - name: TLS_CERT
               value: "/certificate/tls.crt"
             - name: TLS_KEY
