@@ -7,7 +7,7 @@ import { observer } from 'mobx-react'
 import { Alert, useDrawerStack } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import { useConfirmationModal } from '../../../../../components/ConfirmationModal'
-import RequestConfirmation from '../../../RequestConfirmation'
+import RequestAccessDetails from '../../../RequestAccessDetails'
 import { ACCESS_REQUEST_STATES } from '../../../../../stores/models/OutgoingAccessRequestModel'
 import getDirectoryServiceAccessUIState from '../../../directoryServiceAccessState'
 import { SectionGroup } from '../../../../../components/DetailView'
@@ -35,7 +35,7 @@ const DirectoryDetailView = ({ service }) => {
     title: t('Request access'),
     okText: t('Send'),
     children: (
-      <RequestConfirmation
+      <RequestAccessDetails
         organizationName={organizationName}
         serviceName={serviceName}
       />

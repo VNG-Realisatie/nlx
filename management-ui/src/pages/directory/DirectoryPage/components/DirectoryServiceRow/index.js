@@ -7,7 +7,7 @@ import { observer } from 'mobx-react'
 import { Table } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import { useConfirmationModal } from '../../../../../components/ConfirmationModal'
-import RequestConfirmation from '../../../RequestConfirmation'
+import RequestAccessDetails from '../../../RequestAccessDetails'
 import getDirectoryServiceAccessUIState, {
   SHOW_REQUEST_ACCESS,
   SHOW_REQUEST_FAILED,
@@ -34,7 +34,7 @@ const DirectoryServiceRow = ({ service, ...props }) => {
     title: t('Request access'),
     okText: t('Send'),
     children: (
-      <RequestConfirmation
+      <RequestAccessDetails
         organizationName={organizationName}
         serviceName={serviceName}
       />

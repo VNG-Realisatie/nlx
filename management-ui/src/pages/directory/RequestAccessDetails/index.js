@@ -11,7 +11,7 @@ import {
   ServiceData,
 } from './index.styles'
 
-const RequestConfirmation = ({ organizationName, serviceName }) => {
+const RequestAccessDetails = ({ organizationName, serviceName }) => {
   const { t } = useTranslation()
 
   return (
@@ -32,11 +32,9 @@ const RequestConfirmation = ({ organizationName, serviceName }) => {
   )
 }
 
-RequestConfirmation.propTypes = {
+RequestAccessDetails.propTypes = {
   organizationName: string.isRequired,
   serviceName: string.isRequired,
 }
 
-RequestConfirmation.defaultProps = {}
-
-export default RequestConfirmation
+export default RequestAccessDetails

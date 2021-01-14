@@ -7,7 +7,6 @@ export function clickConfirmButton(button) {
   jest.useFakeTimers()
   fireEvent.click(button)
   jest.runAllTimers()
-  jest.runOnlyPendingTimers()
   jest.useRealTimers()
 }
 

@@ -37,12 +37,7 @@ const stop = () => {
   clearTimeout(timer)
 }
 
-/**
- * Repeatedly call functions with a global timer
- *
- * @param   {func}   fn
- * @return  {array}  [pausePolling, continuePolling]
- */
+// Repeatedly call functions with a global timer
 const usePolling = (fn) => {
   useEffect(() => {
     addFunction(fn)
@@ -52,7 +47,9 @@ const usePolling = (fn) => {
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  return [() => removeFunction(fn), () => addFunction(fn)]
+  const pausePolling = () => removeFunction(fn)
+  const continuePolling = () => addFunction(fn)
+  return [pausePolling, continuePolling]
 }
 
 export default usePolling

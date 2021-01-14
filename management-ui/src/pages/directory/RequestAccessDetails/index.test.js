@@ -3,12 +3,12 @@
 //
 import React from 'react'
 import { renderWithProviders } from '../../../test-utils'
-import RequestConfirmation from './index'
+import RequestAccessDetails from './index'
 
 test('renders without crashing', () => {
   expect(() =>
     renderWithProviders(
-      <RequestConfirmation
+      <RequestAccessDetails
         organizationName="organization"
         serviceName="service"
       />,
