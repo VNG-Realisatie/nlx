@@ -5,7 +5,7 @@ import React from 'react'
 import { shape, func } from 'prop-types'
 import { Table } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
-
+import { useConfirmationModal } from '../../../../../../components/ConfirmationModal'
 import { incomingAccessRequestPropTypes } from '../../../../../../stores/models/IncomingAccessRequestModel'
 import { IconCheck, IconClose } from '../../../../../../icons'
 import { TdActions, StyledButton } from './index.styles'
@@ -18,44 +18,48 @@ const IncomingAccessRequestRow = ({
   const { t } = useTranslation()
   const { id, organizationName, serviceName } = accessRequest
 
-  const handleApproveButtonClick = (event) => {
-    event.stopPropagation()
-    approve()
-  }
+  const [ConfirmApproveModal, confirmApprove] = useConfirmationModal({
+    okText: t('Approve'),
+    children: (
+      <p>
+        {t(
+          'Approving this access request will grant organizationName access to serviceName. Are you sure?',
+          {
+            organizationName,
+            serviceName,
+          },
+        )}
+      </p>
+    ),
+  })
 
-  const handleRejectButtonClick = (event) => {
-    event.stopPropagation()
-    reject()
-  }
+  const [ConfirmRejectModal, confirmReject] = useConfirmationModal({
+    okText: t('Reject'),
+    children: (
+      <p>
+        {t(
+          'Rejecting this access request will refuse organizationName access to serviceName. Are you sure?',
+          {
+            organizationName,
+            serviceName,
+          },
+        )}
+      </p>
+    ),
+  })
 
-  const approve = () => {
-    const confirmed = window.confirm(
-      t(
-        'Approving this access request will grant organizationName access to serviceName. Are you sure?',
-        {
-          organizationName,
-          serviceName,
-        },
-      ),
-    )
+  const approve = async (evt) => {
+    evt.stopPropagation()
 
-    if (confirmed) {
+    if (await confirmApprove()) {
       approveHandler(accessRequest)
     }
   }
 
-  const reject = () => {
-    const confirmed = window.confirm(
-      t(
-        'Rejecting this access request will refuse organizationName access to serviceName. Are you sure?',
-        {
-          organizationName,
-          serviceName,
-        },
-      ),
-    )
+  const reject = async (evt) => {
+    evt.stopPropagation()
 
-    if (confirmed) {
+    if (await confirmReject()) {
       rejectHandler(accessRequest)
     }
   }
@@ -67,7 +71,7 @@ const IncomingAccessRequestRow = ({
         <StyledButton
           size="small"
           variant="link"
-          onClick={handleApproveButtonClick}
+          onClick={approve}
           title={t('Approve')}
         >
           <IconCheck />
@@ -75,11 +79,14 @@ const IncomingAccessRequestRow = ({
         <StyledButton
           size="small"
           variant="link"
-          onClick={handleRejectButtonClick}
+          onClick={reject}
           title={t('Reject')}
         >
           <IconClose />
         </StyledButton>
+
+        <ConfirmApproveModal />
+        <ConfirmRejectModal />
       </TdActions>
     </Table.Tr>
   )

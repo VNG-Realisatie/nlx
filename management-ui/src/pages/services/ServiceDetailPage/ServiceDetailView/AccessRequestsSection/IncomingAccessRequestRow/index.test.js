@@ -2,8 +2,9 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-
-import { renderWithProviders, fireEvent } from '../../../../../../test-utils'
+import { fireEvent } from '@testing-library/react'
+import { renderWithProviders } from '../../../../../../test-utils'
+import { clickConfirmButtonAndAssert } from '../../../../../../components/ConfirmationModal/testUtils'
 import IncomingAccessRequestRow from './index'
 
 let mockHandler
@@ -22,7 +23,7 @@ beforeEach(() => {
 })
 
 test('requesting access will fire approve handler', async () => {
-  const { getByTitle } = renderWithProviders(
+  const { getByTitle, getByText } = renderWithProviders(
     <table>
       <tbody>
         <IncomingAccessRequestRow
@@ -34,16 +35,15 @@ test('requesting access will fire approve handler', async () => {
     </table>,
   )
 
-  global.confirm = jest.fn(() => true)
+  fireEvent.click(getByTitle('Approve'))
 
-  const approveButton = getByTitle('Approve')
-  fireEvent.click(approveButton)
-
-  expect(mockHandler).toHaveBeenCalledWith(accessRequest)
+  await clickConfirmButtonAndAssert(getByText('Approve'), () =>
+    expect(mockHandler).toHaveBeenCalled(),
+  )
 })
 
 test('rejecting access will fire reject handler', async () => {
-  const { getByTitle } = renderWithProviders(
+  const { getByTitle, getByText } = renderWithProviders(
     <table>
       <tbody>
         <IncomingAccessRequestRow
@@ -55,12 +55,11 @@ test('rejecting access will fire reject handler', async () => {
     </table>,
   )
 
-  global.confirm = jest.fn(() => true)
+  fireEvent.click(getByTitle('Reject'))
 
-  const rejectButton = getByTitle('Reject')
-  fireEvent.click(rejectButton)
-
-  expect(mockHandler).toHaveBeenCalledWith(accessRequest)
+  await clickConfirmButtonAndAssert(getByText('Reject'), () =>
+    expect(mockHandler).toHaveBeenCalled(),
+  )
 })
 
 test('clicking cancel will not fire handler', async () => {

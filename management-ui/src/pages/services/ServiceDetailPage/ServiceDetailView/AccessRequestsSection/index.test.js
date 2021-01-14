@@ -3,7 +3,6 @@
 //
 import React from 'react'
 
-import { act } from '@testing-library/react'
 import { renderWithProviders, fireEvent } from '../../../../../test-utils'
 import AccessRequestsSection from './index'
 
@@ -12,10 +11,9 @@ beforeEach(() => {
 })
 
 test('listing the access requests', async () => {
-  global.confirm = jest.fn(() => true)
   const onApproveOrRejectCallbackHandler = jest.fn().mockResolvedValue(null)
 
-  const { getByTestId, rerender, getByText, getByTitle } = renderWithProviders(
+  const { getByTestId, rerender, getByText } = renderWithProviders(
     <AccessRequestsSection
       accessRequests={[]}
       onApproveOrRejectCallbackHandler={onApproveOrRejectCallbackHandler}
@@ -63,18 +61,4 @@ test('listing the access requests', async () => {
     getByTestId('service-incoming-accessrequests-list'),
   ).toBeInTheDocument()
   expect(getByText('Organization A')).toBeInTheDocument()
-
-  await act(async () => {
-    await fireEvent.click(getByTitle('Approve'))
-  })
-
-  expect(accessRequest.approve).toHaveBeenCalledTimes(1)
-  expect(onApproveOrRejectCallbackHandler).toHaveBeenCalledTimes(1)
-
-  await act(async () => {
-    await fireEvent.click(getByTitle('Reject'))
-  })
-
-  expect(accessRequest.reject).toHaveBeenCalledTimes(1)
-  expect(onApproveOrRejectCallbackHandler).toHaveBeenCalledTimes(2)
 })
