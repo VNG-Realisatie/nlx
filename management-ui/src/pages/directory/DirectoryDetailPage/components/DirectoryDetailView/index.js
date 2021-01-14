@@ -11,7 +11,7 @@ import RequestConfirmation from '../../../RequestConfirmation'
 import { ACCESS_REQUEST_STATES } from '../../../../../stores/models/OutgoingAccessRequestModel'
 import getDirectoryServiceAccessUIState from '../../../directoryServiceAccessState'
 import { SectionGroup } from '../../../../../components/DetailView'
-import useInterval from '../../../../../hooks/use-interval'
+import usePolling from '../../../../../hooks/use-polling'
 import StacktraceDrawer from './StacktraceDrawer'
 import ExternalLinkSection from './ExternalLinkSection'
 import AccessSection from './AccessSection'
@@ -42,11 +42,16 @@ const DirectoryDetailView = ({ service }) => {
     ),
   })
 
-  useInterval(service.fetch)
+  const [pauseFetchPolling, continueFetchPolling] = usePolling(service.fetch)
 
   const requestAccess = async () => {
-    const isConfirmed = await confirmRequest()
-    if (isConfirmed) service.requestAccess()
+    pauseFetchPolling()
+
+    if (await confirmRequest()) {
+      service.requestAccess()
+    }
+
+    continueFetchPolling()
   }
 
   const retryRequestAccess = () => {
