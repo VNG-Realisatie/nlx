@@ -12,6 +12,9 @@ import (
 
 // ConfigDatabase is the interface for a configuration database
 type ConfigDatabase interface {
+	GetUser(ctx context.Context, email string) (*User, error)
+	CreateUser(ctx context.Context, email string, roleNames []string) (*User, error)
+
 	ListServices(ctx context.Context) ([]*Service, error)
 	GetService(ctx context.Context, name string) (*Service, error)
 	CreateService(ctx context.Context, service *Service) error

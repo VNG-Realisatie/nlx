@@ -4,7 +4,10 @@ import (
 	"context"
 	"encoding/gob"
 	"errors"
+	"fmt"
 	"net/http"
+
+	"go.nlx.io/nlx/management-api/pkg/database"
 
 	"github.com/coreos/go-oidc"
 	"github.com/go-chi/chi"
@@ -35,14 +38,15 @@ type Store interface {
 }
 
 type Authenticator struct {
+	store        Store
+	oidcProvider Provider
 	logger       *zap.Logger
 	oauth2Config OAuth2Config
 	oidcConfig   *oidc.Config
-	oidcProvider Provider
-	store        Store
+	db           database.ConfigDatabase
 }
 
-func NewAuthenticator(logger *zap.Logger, options *Options) *Authenticator {
+func NewAuthenticator(db database.ConfigDatabase, logger *zap.Logger, options *Options) *Authenticator {
 	gob.Register(&Claims{})
 
 	store := sessions.NewCookieStore([]byte(options.SecretKey))
@@ -72,6 +76,7 @@ func NewAuthenticator(logger *zap.Logger, options *Options) *Authenticator {
 	}
 
 	return &Authenticator{
+		db:           db,
 		logger:       logger,
 		store:        store,
 		oauth2Config: oauth2Config,
@@ -96,6 +101,8 @@ func (a *Authenticator) Routes() chi.Router {
 func (a *Authenticator) OnlyAuthenticated(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if _, err := a.ParseClaims(r); err != nil {
+			a.logger.Warn("authorization failed", zap.Error(err))
+
 			http.Error(w, "unauthorized request", http.StatusUnauthorized)
 
 			return
@@ -128,6 +135,19 @@ func (a *Authenticator) authenticate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Remove previous claims from the session
+	session, _ := a.store.Get(r, cookieName)
+
+	if _, ok := session.Values["claims"]; ok {
+		delete(session.Values, "claims")
+
+		err := session.Save(r, w)
+		if err != nil {
+			http.Error(w, "unable to save session", http.StatusInternalServerError)
+			return
+		}
+	}
+
 	http.Redirect(w, r, a.oauth2Config.AuthCodeURL(""), http.StatusFound)
 }
 
@@ -143,45 +163,56 @@ func (a *Authenticator) me(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *Authenticator) callback(w http.ResponseWriter, r *http.Request) {
-	ctx := context.Background()
-	session, _ := a.store.Get(r, cookieName)
+	err := func() error {
+		ctx := r.Context()
+		session, _ := a.store.Get(r, cookieName)
 
-	oauth2Token, err := a.oauth2Config.Exchange(ctx, r.URL.Query().Get("code"))
+		oauth2Token, err := a.oauth2Config.Exchange(ctx, r.URL.Query().Get("code"))
+		if err != nil {
+			return err
+		}
+
+		token, ok := oauth2Token.Extra("id_token").(string)
+		if !ok {
+			return errors.New("could not parse id token")
+		}
+
+		verifier := a.oidcProvider.Verifier(a.oidcConfig)
+
+		idToken, err := verifier.Verify(ctx, token)
+		if err != nil {
+			return errors.New("could not verify id token")
+		}
+
+		// first, load the claims
+		claims := &Claims{}
+
+		if err = idToken.Claims(claims); err != nil {
+			return errors.New("could not extract claims from ID-token")
+		}
+
+		// then, check if the user exists in the NLX Management database
+		user, err := a.db.GetUser(ctx, claims.Email)
+		if err != nil {
+			return fmt.Errorf("failed to get user: %w", err)
+		}
+
+		if !user.HasRole(database.AdminRole) {
+			return fmt.Errorf("user doesn't have the admin role")
+		}
+
+		session.Values["claims"] = claims
+
+		if err := session.Save(r, w); err != nil {
+			return fmt.Errorf("failed to save session: %w", err)
+		}
+
+		return nil
+	}()
 	if err != nil {
-		http.Redirect(w, r, "/", http.StatusFound)
-		return
-	}
+		a.logger.Info("authentication failed", zap.Error(err))
+		http.Redirect(w, r, "/?state=auth_fail", http.StatusFound)
 
-	rawIDToken, ok := oauth2Token.Extra("id_token").(string)
-	if !ok {
-		a.logger.Info("could not parse id token")
-		http.Redirect(w, r, "/", http.StatusFound)
-
-		return
-	}
-
-	verifier := a.oidcProvider.Verifier(a.oidcConfig)
-	idToken, err := verifier.Verify(ctx, rawIDToken)
-	if err != nil {
-		a.logger.Info("could not verify id token", zap.Error(err))
-		http.Redirect(w, r, "/", http.StatusFound)
-
-		return
-	}
-
-	claims := &Claims{}
-
-	if err := idToken.Claims(claims); err != nil {
-		a.logger.Info("could not extract claims", zap.Error(err))
-		http.Redirect(w, r, "/", http.StatusFound)
-
-		return
-	}
-
-	session.Values["claims"] = claims
-
-	if err := session.Save(r, w); err != nil {
-		http.Error(w, "failed to save session", http.StatusInternalServerError)
 		return
 	}
 

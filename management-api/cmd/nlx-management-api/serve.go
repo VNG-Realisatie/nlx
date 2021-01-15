@@ -12,6 +12,7 @@ import (
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/management-api/pkg/api"
+	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/oidc"
 )
 
@@ -116,7 +117,12 @@ var serveCommand = &cobra.Command{
 
 		mainProcess := process.NewProcess(logger)
 
-		authenticator := oidc.NewAuthenticator(logger, &serveOpts.oidcOptions)
+		db, err := database.NewPostgresConfigDatabase(serveOpts.PostgresDSN)
+		if err != nil {
+			log.Fatalf("failed to connect to the database: %v", err)
+		}
+
+		authenticator := oidc.NewAuthenticator(db, logger, &serveOpts.oidcOptions)
 
 		if errValidate := common_tls.VerifyPrivateKeyPermissions(serveOpts.OrgKeyFile); errValidate != nil {
 			logger.Warn("invalid organization key permissions", zap.Error(errValidate), zap.String("file-path", serveOpts.OrgKeyFile))
@@ -136,7 +142,16 @@ var serveCommand = &cobra.Command{
 			logger.Fatal("loading organization cert", zap.Error(err))
 		}
 
-		a, err := api.NewAPI(logger, mainProcess, cert, orgCert, serveOpts.PostgresDSN, serveOpts.DirectoryInspectionAddress, serveOpts.DirectoryRegistrationAddress, authenticator)
+		a, err := api.NewAPI(
+			db,
+			logger,
+			mainProcess,
+			cert,
+			orgCert,
+			serveOpts.DirectoryInspectionAddress,
+			serveOpts.DirectoryRegistrationAddress,
+			authenticator,
+		)
 		if err != nil {
 			logger.Fatal("cannot setup management api", zap.Error(err))
 		}

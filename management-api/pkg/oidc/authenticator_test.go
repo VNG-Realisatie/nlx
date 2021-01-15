@@ -14,6 +14,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/oauth2"
 
+	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
 	"go.nlx.io/nlx/management-api/pkg/oidc/mock"
 )
 
@@ -192,18 +193,34 @@ func TestAuthenticateEndpoint(t *testing.T) {
 
 	mockOAuth2Config := mock.NewMockOAuth2Config(ctrl)
 	mockStore := mock.NewMockStore(ctrl)
+	mockDB := mock_database.NewMockConfigDatabase(ctrl)
+
+	session := &sessions.Session{
+		Values: map[interface{}]interface{}{},
+	}
 
 	authenticator := Authenticator{
 		logger:       zaptest.Logger(t),
 		oauth2Config: mockOAuth2Config,
 		store:        mockStore,
+		db:           mockDB,
 	}
 
 	srv := httptest.NewServer(authenticator.Routes())
 	defer srv.Close()
 
-	mockStore.EXPECT().Get(gomock.Any(), "nlx_management_session").Return(&sessions.Session{}, nil)
-	mockOAuth2Config.EXPECT().AuthCodeURL("").Return("https://example.com/some-redirect-url")
+	mockStore.
+		EXPECT().
+		Get(gomock.Any(), "nlx_management_session").
+		Return(session, nil)
+	mockStore.
+		EXPECT().
+		Get(gomock.Any(), "nlx_management_session").
+		Return(session, nil)
+	mockOAuth2Config.
+		EXPECT().
+		AuthCodeURL("").
+		Return("https://example.com/some-redirect-url")
 
 	resp, err := client.Get(fmt.Sprintf("%s/authenticate", srv.URL))
 	assert.NoError(t, err)
@@ -259,7 +276,7 @@ func TestCallbackEndpoint(t *testing.T) {
 	resp, err := client.Get(fmt.Sprintf("%s/callback?code=1337", srv.URL))
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusFound, resp.StatusCode)
-	assert.Equal(t, resp.Header.Get("Location"), "/")
+	assert.Equal(t, resp.Header.Get("Location"), "/?state=auth_fail")
 	resp.Body.Close()
 }
 

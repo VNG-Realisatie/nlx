@@ -1,0 +1,58 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "rdw.fullname" . }}-create-admin
+  labels:
+    {{- include "rdw.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "2"
+    helm.sh/hook-delete-policy: "before-hook-creation,hook-succeeded"
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "rdw.selectorLabels" . | nindent 8 }}
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: nlxctl
+          image: {{ template "rdw.nlxctl.image" . }}
+          imagePullPolicy: {{ .Values.nlxctl.image.pullPolicy }}
+          command: ["/bin/sh"]
+          args:
+            - "-xc"
+            - |
+                nlx-management-api create-user --email admin@example.com --role admin; \
+                  return_code=$?
+
+                if [ $return_code -eq 128 ]; then
+                  echo "admin use was already created"
+                elif [ $return_code -neq 0 ]; then
+                  exit 1
+                fi
+          env:
+            - name: SERVICE_NAME
+              value: {{ .Values.managementAPI.service.name | quote }}
+            - name: MANAGEMENT_API_ADDRESS
+              value: {{ .Values.managementAPI.address | quote }}
+            - name: SERVICE_JSON
+              value: {{ .Values.managementAPI.service | toJson | quote }}
+          {{- if hasKey .Values.managementAPI "insight" }}
+            - name: INSIGHT_API_URL
+              value: {{ required "Insight API URL is required" .Values.managementAPI.insight.insightAPIURL | quote }}
+            - name: IRMA_SERVER_URL
+              value: {{ required "IRMA server URL is required" .Values.managementAPI.insight.irmaServerURL | quote }}
+          {{- end }}
+          volumeMounts:
+            - name: certificate
+              mountPath: /certificate
+            - name: config
+              mountPath: /config
+      volumes:
+        - name: certificate
+          secret:
+            secretName: {{ .Values.nlxctl.tls.existingSecret }}
+        - name: config
+          configMap:
+            name: {{ template "rdw.fullname" . }}-nlxctl

@@ -36,6 +36,36 @@ func (m *MockConfigDatabase) EXPECT() *MockConfigDatabaseMockRecorder {
 	return m.recorder
 }
 
+// GetUser mocks base method
+func (m *MockConfigDatabase) GetUser(ctx context.Context, email string) (*database.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUser", ctx, email)
+	ret0, _ := ret[0].(*database.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUser indicates an expected call of GetUser
+func (mr *MockConfigDatabaseMockRecorder) GetUser(ctx, email interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUser", reflect.TypeOf((*MockConfigDatabase)(nil).GetUser), ctx, email)
+}
+
+// CreateUser mocks base method
+func (m *MockConfigDatabase) CreateUser(ctx context.Context, email string, roleNames []string) (*database.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateUser", ctx, email, roleNames)
+	ret0, _ := ret[0].(*database.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateUser indicates an expected call of CreateUser
+func (mr *MockConfigDatabaseMockRecorder) CreateUser(ctx, email, roleNames interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockConfigDatabase)(nil).CreateUser), ctx, email, roleNames)
+}
+
 // ListServices mocks base method
 func (m *MockConfigDatabase) ListServices(ctx context.Context) ([]*database.Service, error) {
 	m.ctrl.T.Helper()
