@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import styled from 'styled-components'
-import { StyledUpdateUiButton } from '../../pages/services/ServiceDetailPage/ServiceDetailView/AccessRequestsSection/index.styles'
+import { StyledUpdateUiButton } from '../../pages/services/ServiceDetailPage/ServiceDetailView/AccessRequestsSectionContainer/index.styles'
 
 export { default as SectionGroup } from './SectionGroup'
 
