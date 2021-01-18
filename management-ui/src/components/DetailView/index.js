@@ -35,7 +35,3 @@ export const StyledCollapsibleBody = styled.div`
   padding-bottom: 2px; /* For focus styling in <Table withLinks /> */
   margin-left: calc(1.25rem + ${(p) => p.theme.tokens.spacing03});
 `
-
-export const StyledCollapsibleEmptyBody = styled.p`
-  margin-bottom: 0;
-`
