@@ -2,6 +2,7 @@
 // Licensed under the EUPL
 //
 import styled from 'styled-components'
+import { StyledUpdateUiButton } from '../../pages/services/ServiceDetailPage/ServiceDetailView/AccessRequestsSection/index.styles'
 
 export { default as SectionGroup } from './SectionGroup'
 
@@ -34,4 +35,8 @@ export const StyledCollapsibleBody = styled.div`
   padding-top: ${(p) => p.theme.tokens.spacing05};
   padding-bottom: 2px; /* For focus styling in <Table withLinks /> */
   margin-left: calc(1.25rem + ${(p) => p.theme.tokens.spacing03});
+
+  small + ${StyledUpdateUiButton} {
+    margin-top: 1rem;
+  }
 `
