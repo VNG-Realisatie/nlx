@@ -152,23 +152,21 @@ func (scheduler *accessRequestScheduler) schedulePendingRequest(ctx context.Cont
 		return err
 	}
 
-	defer func() {
-		if request == nil {
-			return
-		}
-
-		if err := scheduler.configDatabase.UnlockOutgoingAccessRequest(ctx, request); err != nil {
-			scheduler.logger.Error("failed to unlock request", zap.Error(err))
-		}
-	}()
-
 	if request != nil {
 		switch request.State {
 		case database.OutgoingAccessRequestCreated, database.OutgoingAccessRequestReceived:
-			return scheduler.schedule(ctx, request)
+			if err := scheduler.schedule(ctx, request); err != nil {
+				return err
+			}
 		case database.OutgoingAccessRequestApproved:
-			return scheduler.syncAccessProof(ctx, request)
+			if err := scheduler.syncAccessProof(ctx, request); err != nil {
+				return err
+			}
+		default:
+			return fmt.Errorf("invalid status %s for pending access request", request.State)
 		}
+
+		return scheduler.configDatabase.UnlockOutgoingAccessRequest(ctx, request)
 	}
 
 	return nil
