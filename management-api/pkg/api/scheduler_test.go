@@ -321,13 +321,20 @@ func TestSchedulePendingRequests(t *testing.T) {
 		"schedules_received_requests": {
 			wantErr: false,
 			setupMock: func(mocks schedulerMocks) {
+				request := &database.OutgoingAccessRequest{
+					// Give it an error state so that it won't actually be scheduled
+					State: database.OutgoingAccessRequestFailed,
+				}
+
 				mocks.db.
 					EXPECT().
 					TakePendingOutgoingAccessRequest(ctx).
-					Return(&database.OutgoingAccessRequest{
-						// Give it an error state so that it won't actually be scheduled
-						State: database.OutgoingAccessRequestFailed,
-					}, nil)
+					Return(request, nil)
+
+				mocks.db.
+					EXPECT().
+					UnlockOutgoingAccessRequest(ctx, request).
+					Return(nil)
 			},
 		},
 	}

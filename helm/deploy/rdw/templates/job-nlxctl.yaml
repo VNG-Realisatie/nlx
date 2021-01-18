@@ -25,12 +25,16 @@ spec:
             - |
                 nlxctl init --address "${MANAGEMENT_API_ADDRESS}" --cert /certificate/tls.crt --key /certificate/tls.key --ca /config/root.pem
                 echo "${SERVICE_JSON}" > /tmp/service.json
-                nlxctl service create --config /tmp/service.json
+                if ! nlxctl service list | grep -q $SERVICE_NAME; then
+                    nlxctl service create --config /tmp/service.json
+                fi
                 nlxctl service list
               {{- if hasKey .Values.managementAPI "insight" }}
                 nlxctl insight put --insight-api-url "${INSIGHT_API_URL}" --irma-server-url "${IRMA_SERVER_URL}"
               {{- end}}
           env:
+            - name: SERVICE_NAME
+              value: {{ .Values.managementAPI.service.name | quote }}
             - name: MANAGEMENT_API_ADDRESS
               value: {{ .Values.managementAPI.address | quote }}
             - name: SERVICE_JSON

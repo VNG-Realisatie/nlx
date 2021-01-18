@@ -152,6 +152,16 @@ func (scheduler *accessRequestScheduler) schedulePendingRequest(ctx context.Cont
 		return err
 	}
 
+	defer func() {
+		if request == nil {
+			return
+		}
+
+		if err := scheduler.configDatabase.UnlockOutgoingAccessRequest(ctx, request); err != nil {
+			scheduler.logger.Error("failed to unlock request", zap.Error(err))
+		}
+	}()
+
 	if request != nil {
 		switch request.State {
 		case database.OutgoingAccessRequestCreated, database.OutgoingAccessRequestReceived:
@@ -217,11 +227,6 @@ func (scheduler *accessRequestScheduler) schedule(ctx context.Context, request *
 	}
 
 	if err == nil {
-		// don't update the state if the state is already synchronized
-		if newState == request.State {
-			return scheduler.configDatabase.UnlockOutgoingAccessRequest(ctx, request)
-		}
-
 		err = scheduler.configDatabase.UpdateOutgoingAccessRequestState(
 			ctx,
 			request.ID,
