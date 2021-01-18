@@ -35,6 +35,7 @@ class ServiceStore {
         servicesStore: this,
         serviceData,
       })
+      this.services.push(service)
     } else {
       service.update(serviceData)
     }

@@ -32,11 +32,6 @@ test('fetch and getting a single service', async () => {
 
   const servicesStore = rootStore.servicesStore
 
-  servicesStore.services = [
-    new ServiceModel({ servicesStore, serviceData: { name: 'Service A' } }),
-    new ServiceModel({ servicesStore, serviceData: { name: 'Service B' } }),
-  ]
-
   jest
     .spyOn(rootStore.incomingAccessRequestsStore, 'fetchForService')
     .mockResolvedValue([])
