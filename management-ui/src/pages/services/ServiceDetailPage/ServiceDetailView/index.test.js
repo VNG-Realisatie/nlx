@@ -68,5 +68,7 @@ describe('ServiceDetails', () => {
     clickConfirmButtonAndAssert(okButton, () =>
       expect(handleRemove).toHaveBeenCalled(),
     )
+
+    jest.useRealTimers()
   })
 })

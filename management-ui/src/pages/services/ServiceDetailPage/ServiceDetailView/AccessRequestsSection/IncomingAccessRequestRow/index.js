@@ -48,17 +48,13 @@ const IncomingAccessRequestRow = ({
     ),
   })
 
-  const approve = async (evt) => {
-    evt.stopPropagation()
-
+  const approve = async () => {
     if (await confirmApprove()) {
       approveHandler(accessRequest)
     }
   }
 
-  const reject = async (evt) => {
-    evt.stopPropagation()
-
+  const reject = async () => {
     if (await confirmReject()) {
       rejectHandler(accessRequest)
     }
