@@ -17,6 +17,8 @@ import usePolling from '../../../../../hooks/use-polling'
 import IncomingAccessRequestRow from './IncomingAccessRequestRow'
 import { StyledUpdateUiButton } from './index.styles'
 
+export const POLLING_INTERVAL = 3000
+
 const AccessRequestsSection = ({
   service,
   onApproveOrRejectCallbackHandler,
@@ -26,11 +28,11 @@ const AccessRequestsSection = ({
   const rootStore = useStores()
   const [isOpen, setIsOpen] = useState(false)
   const [showUpdateUiButton, setShowUpdateUiButton] = useState(false)
-  const [pausePollingClosed, startPollingClosed] = usePolling(async () => {
-    await rootStore.incomingAccessRequestsStore.fetchForService({
+  const [pausePollingClosed, startPollingClosed] = usePolling(() => {
+    rootStore.incomingAccessRequestsStore.fetchForService({
       name: service.name,
     })
-  }, 3000)
+  }, POLLING_INTERVAL)
 
   const [pausePollingOpen, startPollingOpen] = usePolling(async () => {
     const haveAccessRequestsChanged = await rootStore.incomingAccessRequestsStore.haveChangedForService(
@@ -42,7 +44,7 @@ const AccessRequestsSection = ({
     if (haveAccessRequestsChanged) {
       pausePollingOpen()
     }
-  }, 3000)
+  }, POLLING_INTERVAL)
 
   const onClickUpdateIncomingData = async () => {
     setShowUpdateUiButton(false)
