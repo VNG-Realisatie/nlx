@@ -35,7 +35,7 @@ test('listing the access requests when no access requests are available', async 
   const rootStore = new RootStore({ managementApiClient })
   await rootStore.servicesStore.fetchAll()
 
-  const { getByTestId, getByText } = renderWithProviders(
+  const { getByText } = renderWithProviders(
     <StoreProvider rootStore={rootStore}>
       <AccessRequestsSection
         service={rootStore.servicesStore.getService('service-a')}
@@ -44,16 +44,9 @@ test('listing the access requests when no access requests are available', async 
     </StoreProvider>,
   )
 
-  const toggler = getByTestId('service-incoming-accessrequests')
+  const toggler = getByText(/Access requests/i)
   fireEvent.click(toggler)
 
-  expect(toggler).toHaveTextContent(
-    'key.svg' + 'Access requests' + '0', // eslint-disable-line no-useless-concat
-  )
-
-  expect(
-    getByTestId('service-incoming-accessrequests-amount'),
-  ).toBeInTheDocument()
   expect(getByText('There are no access requests')).toBeInTheDocument()
 })
 
@@ -118,16 +111,9 @@ test('listing the access requests when an access request is available', async ()
   accessRequest.approve = jest.fn().mockResolvedValue()
   accessRequest.reject = jest.fn().mockResolvedValue()
 
-  const toggler = getByTestId('service-incoming-accessrequests')
+  const toggler = getByText(/Access requests/i)
   fireEvent.click(toggler)
 
-  expect(toggler).toHaveTextContent(
-    'key.svg' + 'Access requests' + '1', // eslint-disable-line no-useless-concat
-  )
-
-  expect(
-    getByTestId('service-incoming-accessrequests-amount-accented'),
-  ).toBeTruthy()
   expect(
     getByTestId('service-incoming-accessrequests-list'),
   ).toBeInTheDocument()
@@ -172,15 +158,11 @@ test('polling with access request section collapsed', async () => {
     </StoreProvider>,
   )
 
-  expect(
-    getByTestId('service-incoming-accessrequests-amount'),
-  ).toHaveTextContent('0')
+  expect(getByTestId('amount')).toHaveTextContent('0')
 
   jest.advanceTimersByTime(POLLING_INTERVAL)
 
-  const amountAccented = await findByTestId(
-    'service-incoming-accessrequests-amount-accented',
-  )
+  const amountAccented = await findByTestId('amount-accented')
 
   expect(amountAccented).toHaveTextContent('1')
 
@@ -226,12 +208,7 @@ test('polling with access request section expanded', async () => {
   })
   const service = rootStore.servicesStore.getService('service-a')
 
-  const {
-    getByTestId,
-    getByText,
-    queryByText,
-    findByText,
-  } = renderWithProviders(
+  const { getByText, queryByText, findByText } = renderWithProviders(
     <StoreProvider rootStore={rootStore}>
       <AccessRequestsSection
         service={service}
@@ -240,7 +217,7 @@ test('polling with access request section expanded', async () => {
     </StoreProvider>,
   )
 
-  const toggler = getByTestId('service-incoming-accessrequests')
+  const toggler = getByText(/Access requests/i)
 
   fireEvent.click(toggler)
 

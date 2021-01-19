@@ -6,16 +6,12 @@ import { observer } from 'mobx-react'
 import { object, func } from 'prop-types'
 import { Table, ToasterContext, Collapsible } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
-import {
-  DetailHeading,
-  StyledCollapsibleBody,
-} from '../../../../../components/DetailView'
-import Amount from '../../../../../components/Amount'
-import { IconKey } from '../../../../../icons'
+import { StyledCollapsibleBody } from '../../../../../components/DetailView'
 import useStores from '../../../../../hooks/use-stores'
 import usePolling from '../../../../../hooks/use-polling'
 import IncomingAccessRequestRow from './IncomingAccessRequestRow'
 import { StyledUpdateUiButton } from './index.styles'
+import CollapsibleHeader from './CollapsibleHeader'
 
 export const POLLING_INTERVAL = 3000
 
@@ -124,22 +120,7 @@ const AccessRequestsSection = ({
     <Collapsible
       onToggle={(isCollapsibleOpen) => setIsOpen(isCollapsibleOpen)}
       title={
-        <DetailHeading data-testid="service-incoming-accessrequests">
-          <IconKey />
-          {t('Access requests')}
-          {service.incomingAccessRequests.length > 0 ? (
-            <Amount
-              data-testid="service-incoming-accessrequests-amount-accented"
-              value={service.incomingAccessRequests.length}
-              isAccented
-            />
-          ) : (
-            <Amount
-              data-testid="service-incoming-accessrequests-amount"
-              value={service.incomingAccessRequests.length}
-            />
-          )}
-        </DetailHeading>
+        <CollapsibleHeader counter={service.incomingAccessRequests.length} />
       }
       ariaLabel={t('Access requests')}
     >
