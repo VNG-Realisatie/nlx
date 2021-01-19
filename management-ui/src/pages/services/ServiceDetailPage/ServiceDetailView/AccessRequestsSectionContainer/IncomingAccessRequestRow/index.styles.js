@@ -7,6 +7,7 @@ import { Table, Button } from '@commonground/design-system'
 export const TdActions = styled(Table.Td)`
   text-align: right;
   vertical-align: top;
+  padding: 0;
   width: 140px;
 `
 
