@@ -10,7 +10,7 @@ import ServiceDetailView from './index'
 
 // These all have their own tests
 jest.mock('./InwaysSection', () => () => <div />)
-jest.mock('./AccessRequestsSectionContainer', () => () => <div />)
+jest.mock('./AccessRequestSectionContainer', () => () => <div />)
 jest.mock('./AccessGrantSection', () => () => <div />)
 
 const service = {
