@@ -19,9 +19,7 @@ const AccessRequestsSection = ({ service }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [showUpdateUiButton, setShowUpdateUiButton] = useState(false)
   const [pausePollingClosed, startPollingClosed] = usePolling(() => {
-    rootStore.incomingAccessRequestsStore.fetchForService({
-      name: service.name,
-    })
+    rootStore.incomingAccessRequestsStore.fetchForService(service)
   }, POLLING_INTERVAL)
 
   const [pausePollingOpen, startPollingOpen] = usePolling(async () => {
@@ -39,9 +37,7 @@ const AccessRequestsSection = ({ service }) => {
   const onLoadIncomingDataHandler = async () => {
     setShowUpdateUiButton(false)
 
-    await rootStore.incomingAccessRequestsStore.fetchForService({
-      name: service.name,
-    })
+    await rootStore.incomingAccessRequestsStore.fetchForService(service)
 
     if (isOpen) {
       startPollingOpen()
@@ -64,6 +60,14 @@ const AccessRequestsSection = ({ service }) => {
     startPollingClosed,
   ])
 
+  const onAccessRequestApprovedOrRejected = () => {
+    service.fetch()
+
+    service.update({
+      incomingAccessRequestsCount: service.incomingAccessRequestsCount - 1,
+    })
+  }
+
   return (
     <Collapsible
       onToggle={(isCollapsibleOpen) => setIsOpen(isCollapsibleOpen)}
@@ -76,6 +80,7 @@ const AccessRequestsSection = ({ service }) => {
         accessRequests={service.incomingAccessRequests}
         showLoadIncomingDataButton={showUpdateUiButton}
         onClickLoadIncomingDataHandler={onLoadIncomingDataHandler}
+        onApproveOrRejectCallbackHandler={onAccessRequestApprovedOrRejected}
       />
     </Collapsible>
   )

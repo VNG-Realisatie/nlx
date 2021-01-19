@@ -15,7 +15,7 @@ import {
 import { IconHidden, IconVisible } from '../../../../icons'
 import { showServiceVisibilityAlert } from '../../../../components/ServiceVisibilityAlert'
 import InwaysSection from './InwaysSection'
-import AccessRequestsSection from './AccessRequestsSectionContainer'
+import AccessRequestsSectionContainer from './AccessRequestsSectionContainer'
 import AccessGrantSection from './AccessGrantSection'
 import {
   StyledActionsBar,
@@ -74,18 +74,7 @@ const ServiceDetailView = ({ service, removeHandler }) => {
 
         <InwaysSection inways={inways} />
 
-        <AccessRequestsSection
-          service={service}
-          onApproveOrRejectCallbackHandler={() => {
-            // TODO: move this to the AccessRequestSectionContainer
-            service.fetch()
-
-            service.update({
-              incomingAccessRequestsCount:
-                service.incomingAccessRequestsCount - 1,
-            })
-          }}
-        />
+        <AccessRequestsSectionContainer service={service} />
 
         <AccessGrantSection accessGrants={service.accessGrants} />
       </SectionGroup>
