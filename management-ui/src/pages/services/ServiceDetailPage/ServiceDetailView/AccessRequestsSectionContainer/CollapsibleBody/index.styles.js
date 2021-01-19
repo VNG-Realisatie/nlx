@@ -7,5 +7,7 @@ import UpdateUiButton from '../UpdateUiButton'
 
 export const StyledUpdateUiButton = styled(UpdateUiButton)`
   display: block;
-  margin: -1.5rem auto 0 auto;
+  position: relative;
+  margin: -2rem auto 0 auto;
+  top: 6px;
 `
