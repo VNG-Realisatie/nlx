@@ -77,6 +77,7 @@ const ServiceDetailView = ({ service, removeHandler }) => {
         <AccessRequestsSection
           service={service}
           onApproveOrRejectCallbackHandler={() => {
+            // TODO: move this to the AccessRequestSectionContainer
             service.fetch()
 
             service.update({

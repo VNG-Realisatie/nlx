@@ -3,7 +3,7 @@
 //
 
 import styled from 'styled-components'
-import UpdateUiButton from './UpdateUiButton'
+import UpdateUiButton from '../UpdateUiButton'
 
 export const StyledUpdateUiButton = styled(UpdateUiButton)`
   display: block;

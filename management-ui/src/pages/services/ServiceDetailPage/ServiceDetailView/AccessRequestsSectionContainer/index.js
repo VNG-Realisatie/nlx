@@ -1,26 +1,20 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { observer } from 'mobx-react'
-import { object, func } from 'prop-types'
-import { Table, ToasterContext, Collapsible } from '@commonground/design-system'
+import { object } from 'prop-types'
+import { Collapsible } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
-import { StyledCollapsibleBody } from '../../../../../components/DetailView'
 import useStores from '../../../../../hooks/use-stores'
 import usePolling from '../../../../../hooks/use-polling'
-import IncomingAccessRequestRow from './IncomingAccessRequestRow'
-import { StyledUpdateUiButton } from './index.styles'
 import CollapsibleHeader from './CollapsibleHeader'
+import CollapsibleBody from './CollapsibleBody'
 
 export const POLLING_INTERVAL = 3000
 
-const AccessRequestsSection = ({
-  service,
-  onApproveOrRejectCallbackHandler,
-}) => {
+const AccessRequestsSection = ({ service }) => {
   const { t } = useTranslation()
-  const { showToast } = useContext(ToasterContext)
   const rootStore = useStores()
   const [isOpen, setIsOpen] = useState(false)
   const [showUpdateUiButton, setShowUpdateUiButton] = useState(false)
@@ -42,7 +36,7 @@ const AccessRequestsSection = ({
     }
   }, POLLING_INTERVAL)
 
-  const onClickUpdateIncomingData = async () => {
+  const onLoadIncomingDataHandler = async () => {
     setShowUpdateUiButton(false)
 
     await rootStore.incomingAccessRequestsStore.fetchForService({
@@ -70,52 +64,6 @@ const AccessRequestsSection = ({
     startPollingClosed,
   ])
 
-  const approveHandler = async (accessRequest) => {
-    try {
-      await accessRequest.approve()
-
-      showToast({
-        title: t('Access request approved'),
-        body: t('Organization has access to service', {
-          organizationName: accessRequest.organizationName,
-          serviceName: accessRequest.serviceName,
-        }),
-        variant: 'success',
-      })
-
-      await onApproveOrRejectCallbackHandler()
-    } catch (error) {
-      showToast({
-        title: t('Failed to approve access request'),
-        body: t('Please try again'),
-        variant: 'error',
-      })
-    }
-  }
-
-  const rejectHandler = async (accessRequest) => {
-    try {
-      await accessRequest.reject()
-
-      showToast({
-        title: t('Access request rejected'),
-        body: t('Organization has been denied access to service', {
-          organizationName: accessRequest.organizationName,
-          serviceName: accessRequest.serviceName,
-        }),
-        variant: 'success',
-      })
-
-      await onApproveOrRejectCallbackHandler()
-    } catch (error) {
-      showToast({
-        title: t('Failed to reject access request'),
-        body: t('Please try again'),
-        variant: 'error',
-      })
-    }
-  }
-
   return (
     <Collapsible
       onToggle={(isCollapsibleOpen) => setIsOpen(isCollapsibleOpen)}
@@ -124,37 +72,17 @@ const AccessRequestsSection = ({
       }
       ariaLabel={t('Access requests')}
     >
-      <StyledCollapsibleBody>
-        {service.incomingAccessRequests.length ? (
-          <Table data-testid="service-incoming-accessrequests-list">
-            <tbody>
-              {service.incomingAccessRequests.map((accessRequest) => (
-                <IncomingAccessRequestRow
-                  key={accessRequest.id}
-                  accessRequest={accessRequest}
-                  approveHandler={approveHandler}
-                  rejectHandler={rejectHandler}
-                />
-              ))}
-            </tbody>
-          </Table>
-        ) : (
-          <small>{t('There are no access requests')}</small>
-        )}
-
-        {showUpdateUiButton ? (
-          <StyledUpdateUiButton onClick={onClickUpdateIncomingData}>
-            Nieuwe verzoeken
-          </StyledUpdateUiButton>
-        ) : null}
-      </StyledCollapsibleBody>
+      <CollapsibleBody
+        accessRequests={service.incomingAccessRequests}
+        showLoadIncomingDataButton={showUpdateUiButton}
+        onClickLoadIncomingDataHandler={onLoadIncomingDataHandler}
+      />
     </Collapsible>
   )
 }
 
 AccessRequestsSection.propTypes = {
   service: object,
-  onApproveOrRejectCallbackHandler: func.isRequired,
 }
 
 export default observer(AccessRequestsSection)
