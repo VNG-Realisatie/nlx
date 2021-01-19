@@ -18,6 +18,7 @@ const AccessRequestSectionContainer = ({ service }) => {
   const rootStore = useStores()
   const [isOpen, setIsOpen] = useState(false)
   const [showUpdateUiButton, setShowUpdateUiButton] = useState(false)
+
   const [pausePollingClosed, startPollingClosed] = usePolling(() => {
     rootStore.incomingAccessRequestsStore.fetchForService(service)
   }, POLLING_INTERVAL)
@@ -34,7 +35,7 @@ const AccessRequestSectionContainer = ({ service }) => {
     }
   }, POLLING_INTERVAL)
 
-  const onLoadIncomingDataHandler = async () => {
+  const loadIncomingData = async () => {
     setShowUpdateUiButton(false)
 
     await rootStore.incomingAccessRequestsStore.fetchForService(service)
@@ -79,7 +80,7 @@ const AccessRequestSectionContainer = ({ service }) => {
       <CollapsibleBody
         accessRequests={service.incomingAccessRequests}
         showLoadIncomingDataButton={showUpdateUiButton}
-        onClickLoadIncomingDataHandler={onLoadIncomingDataHandler}
+        onClickLoadIncomingDataHandler={loadIncomingData}
         onApproveOrRejectCallbackHandler={onAccessRequestApprovedOrRejected}
       />
     </Collapsible>

@@ -15,11 +15,7 @@ const CollapsibleHeader = ({ counter }) => {
     <DetailHeading>
       <IconKey />
       {t('Access requests')}
-      <Amount
-        value={counter}
-        isAccented={counter > 0}
-        data-testid={counter > 0 ? 'amount-accented' : 'amount'}
-      />
+      <Amount value={counter} isAccented={counter > 0} data-testid="amount" />
     </DetailHeading>
   )
 }

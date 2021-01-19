@@ -6,7 +6,7 @@ import { renderWithProviders } from '../../../../../../test-utils'
 import CollapsibleHeader from './index'
 
 test('the CollapsibleHeader component', async () => {
-  const { rerender, getByText, getByTestId } = renderWithProviders(
+  const { rerender, getByText } = renderWithProviders(
     <CollapsibleHeader counter={0} />,
   )
 
@@ -15,12 +15,10 @@ test('the CollapsibleHeader component', async () => {
   expect(toggler).toHaveTextContent(
     'key.svg' + 'Access requests' + '0', // eslint-disable-line no-useless-concat
   )
-  expect(getByTestId('amount')).toBeInTheDocument()
 
   rerender(<CollapsibleHeader counter={1} />)
 
   expect(toggler).toHaveTextContent(
     'key.svg' + 'Access requests' + '1', // eslint-disable-line no-useless-concat
   )
-  expect(getByTestId('amount-accented')).toBeInTheDocument()
 })

@@ -55,7 +55,7 @@ test('polling with access request section collapsed', async () => {
 
   jest.advanceTimersByTime(POLLING_INTERVAL)
 
-  const amountAccented = await findByTestId('amount-accented')
+  const amountAccented = await findByTestId('amount')
 
   expect(amountAccented).toHaveTextContent('1')
 
