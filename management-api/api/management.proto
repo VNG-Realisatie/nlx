@@ -31,7 +31,7 @@ service Management {
     option (google.api.http) = {delete: "/api/v1/services/{name}"};
   }
   rpc GetStatisticsOfServices (GetStatisticsOfServicesRequest) returns (GetStatisticsOfServicesResponse) {
-    option (google.api.http) = {delete: "/api/v1/services/statistics"};
+    option (google.api.http) = {get: "/api/v1/statistics/services"};
   }
   rpc ListInways (ListInwaysRequest) returns (ListInwaysResponse) {
     option (google.api.http) = {get: "/api/v1/inways"};

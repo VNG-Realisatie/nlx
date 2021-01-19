@@ -30,6 +30,9 @@ import {
     ManagementGetServiceResponse,
     ManagementGetServiceResponseFromJSON,
     ManagementGetServiceResponseToJSON,
+    ManagementGetStatisticsOfServicesResponse,
+    ManagementGetStatisticsOfServicesResponseFromJSON,
+    ManagementGetStatisticsOfServicesResponseToJSON,
     ManagementInsightConfiguration,
     ManagementInsightConfigurationFromJSON,
     ManagementInsightConfigurationToJSON,
@@ -443,6 +446,30 @@ export class ManagementApi extends runtime.BaseAPI {
      */
     async managementGetSettings(): Promise<ManagementSettings> {
         const response = await this.managementGetSettingsRaw();
+        return await response.value();
+    }
+
+    /**
+     */
+    async managementGetStatisticsOfServicesRaw(): Promise<runtime.ApiResponse<ManagementGetStatisticsOfServicesResponse>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v1/statistics/services`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementGetStatisticsOfServicesResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async managementGetStatisticsOfServices(): Promise<ManagementGetStatisticsOfServicesResponse> {
+        const response = await this.managementGetStatisticsOfServicesRaw();
         return await response.value();
     }
 

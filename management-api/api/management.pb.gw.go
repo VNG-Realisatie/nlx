@@ -1473,7 +1473,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 
 	})
 
-	mux.Handle("DELETE", pattern_Management_GetStatisticsOfServices_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Management_GetStatisticsOfServices_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
@@ -2042,7 +2042,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 
 	})
 
-	mux.Handle("DELETE", pattern_Management_GetStatisticsOfServices_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Management_GetStatisticsOfServices_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
@@ -2416,7 +2416,7 @@ var (
 
 	pattern_Management_DeleteService_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "services", "name"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Management_GetStatisticsOfServices_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "services", "statistics"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Management_GetStatisticsOfServices_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "statistics", "services"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_Management_ListInways_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "inways"}, "", runtime.AssumeColonVerbOpt(true)))
 
