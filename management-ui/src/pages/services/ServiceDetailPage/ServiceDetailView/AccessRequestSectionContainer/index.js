@@ -13,7 +13,7 @@ import CollapsibleBody from './CollapsibleBody'
 
 export const POLLING_INTERVAL = 3000
 
-const AccessRequestsSection = ({ service }) => {
+const AccessRequestSectionContainer = ({ service }) => {
   const { t } = useTranslation()
   const rootStore = useStores()
   const [isOpen, setIsOpen] = useState(false)
@@ -86,8 +86,8 @@ const AccessRequestsSection = ({ service }) => {
   )
 }
 
-AccessRequestsSection.propTypes = {
+AccessRequestSectionContainer.propTypes = {
   service: object,
 }
 
-export default observer(AccessRequestsSection)
+export default observer(AccessRequestSectionContainer)
