@@ -30,6 +30,9 @@ service Management {
   rpc DeleteService (DeleteServiceRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {delete: "/api/v1/services/{name}"};
   }
+  rpc GetStatisticsOfServices (GetStatisticsOfServicesRequest) returns (GetStatisticsOfServicesResponse) {
+    option (google.api.http) = {delete: "/api/v1/services/statistics"};
+  }
   rpc ListInways (ListInwaysRequest) returns (ListInwaysResponse) {
     option (google.api.http) = {get: "/api/v1/inways"};
   }
@@ -182,6 +185,17 @@ message Inway {
   string ipAddress = 6;
 }
 
+message GetStatisticsOfServicesRequest {}
+
+message GetStatisticsOfServicesResponse {
+  repeated ServiceStatistics services = 1;
+}
+
+message ServiceStatistics {
+  string name = 1;
+  uint32 incomingAccessRequestCount = 2;
+}
+
 message ListServicesRequest {
   string inwayName = 1;
 }
@@ -212,6 +226,7 @@ message ListServicesResponse {
     }
   }
 }
+
 
 message GetServiceRequest {
   string name = 1;

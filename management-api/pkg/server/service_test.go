@@ -430,3 +430,40 @@ func TestListServices(t *testing.T) {
 		})
 	}
 }
+
+func TestGetStatisticsOfServices(t *testing.T) {
+	logger := zap.NewNop()
+	testProcess := process.NewProcess(logger)
+	ctx := context.Background()
+
+	mockCtrl := gomock.NewController(t)
+	defer mockCtrl.Finish()
+
+	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
+	mockDatabase.EXPECT().GetIncomingAccessRequestCountByService(ctx).Return(map[string]int{
+		"service-a": 3,
+	}, nil)
+
+	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase)
+
+	requestGetStatisticsOfServices := &api.GetStatisticsOfServicesRequest{}
+
+	responseService, err := service.GetStatisticsOfServices(ctx, requestGetStatisticsOfServices)
+	if err != nil {
+		t.Error("could not get stats for services", err)
+	}
+
+	assert.Equal(t, &api.GetStatisticsOfServicesResponse{
+		Services: []*api.ServiceStatistics{
+			{
+				Name:                       "service-a",
+				IncomingAccessRequestCount: 3,
+			},
+		},
+	}, responseService)
+
+	mockDatabase.EXPECT().GetIncomingAccessRequestCountByService(ctx).Return(nil, errors.New("arbitrary error"))
+
+	_, err = service.GetStatisticsOfServices(ctx, requestGetStatisticsOfServices)
+	assert.Error(t, err)
+}

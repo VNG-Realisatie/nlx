@@ -195,6 +195,19 @@ func (s *ManagementService) ListServices(ctx context.Context, req *api.ListServi
 	return response, nil
 }
 
+// GetStatisticsOfServices return statistics per service
+func (s *ManagementService) GetStatisticsOfServices(ctx context.Context, request *api.GetStatisticsOfServicesRequest) (*api.GetStatisticsOfServicesResponse, error) {
+	s.logger.Info("rpc request GetStatsOfServices")
+
+	countPerService, err := s.configDatabase.GetIncomingAccessRequestCountByService(ctx)
+	if err != nil {
+		s.logger.Error("error getting incoming access request count per service from DB", zap.Error(err))
+		return nil, status.Error(codes.Internal, "database error")
+	}
+
+	return convertToGetStatsOfServicesResponse(countPerService), err
+}
+
 func convertAccessGrantToAuthorizationSetting(accessGrant *database.AccessGrant) *api.ListServicesResponse_Service_AuthorizationSettings_Authorization {
 	return &api.ListServicesResponse_Service_AuthorizationSettings_Authorization{
 		OrganizationName: accessGrant.IncomingAccessRequest.OrganizationName,
@@ -275,4 +288,22 @@ func convertToUpdateServiceResponseFromUpdateServiceRequest(model *api.UpdateSer
 	}
 
 	return service
+}
+
+func convertToGetStatsOfServicesResponse(accessRequestCountPerService map[string]int) *api.GetStatisticsOfServicesResponse {
+	response := &api.GetStatisticsOfServicesResponse{
+		Services: make([]*api.ServiceStatistics, len(accessRequestCountPerService)),
+	}
+
+	i := 0
+
+	for serviceName, count := range accessRequestCountPerService {
+		response.Services[i] = &api.ServiceStatistics{
+			Name:                       serviceName,
+			IncomingAccessRequestCount: uint32(count),
+		}
+		i++
+	}
+
+	return response
 }

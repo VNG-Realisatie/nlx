@@ -651,6 +651,28 @@
         ]
       }
     },
+    "/api/v1/services/statistics": {
+      "delete": {
+        "operationId": "Management_GetStatisticsOfServices",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/managementGetStatisticsOfServicesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "Management"
+        ]
+      }
+    },
     "/api/v1/services/{name}": {
       "get": {
         "operationId": "Management_GetService",
@@ -1050,6 +1072,17 @@
         }
       }
     },
+    "managementGetStatisticsOfServicesResponse": {
+      "type": "object",
+      "properties": {
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/managementServiceStatistics"
+          }
+        }
+      }
+    },
     "managementIncomingAccessRequest": {
       "type": "object",
       "properties": {
@@ -1266,6 +1299,18 @@
         },
         "errorDetails": {
           "$ref": "#/definitions/managementErrorDetails"
+        }
+      }
+    },
+    "managementServiceStatistics": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "incomingAccessRequestCount": {
+          "type": "integer",
+          "format": "int64"
         }
       }
     },

@@ -136,6 +136,26 @@ func (mr *MockManagementClientMockRecorder) DeleteService(ctx, in interface{}, o
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteService", reflect.TypeOf((*MockManagementClient)(nil).DeleteService), varargs...)
 }
 
+// GetStatisticsOfServices mocks base method
+func (m *MockManagementClient) GetStatisticsOfServices(ctx context.Context, in *api.GetStatisticsOfServicesRequest, opts ...grpc.CallOption) (*api.GetStatisticsOfServicesResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetStatisticsOfServices", varargs...)
+	ret0, _ := ret[0].(*api.GetStatisticsOfServicesResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetStatisticsOfServices indicates an expected call of GetStatisticsOfServices
+func (mr *MockManagementClientMockRecorder) GetStatisticsOfServices(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStatisticsOfServices", reflect.TypeOf((*MockManagementClient)(nil).GetStatisticsOfServices), varargs...)
+}
+
 // ListInways mocks base method
 func (m *MockManagementClient) ListInways(ctx context.Context, in *api.ListInwaysRequest, opts ...grpc.CallOption) (*api.ListInwaysResponse, error) {
 	m.ctrl.T.Helper()
@@ -572,6 +592,21 @@ func (m *MockManagementServer) DeleteService(arg0 context.Context, arg1 *api.Del
 func (mr *MockManagementServerMockRecorder) DeleteService(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteService", reflect.TypeOf((*MockManagementServer)(nil).DeleteService), arg0, arg1)
+}
+
+// GetStatisticsOfServices mocks base method
+func (m *MockManagementServer) GetStatisticsOfServices(arg0 context.Context, arg1 *api.GetStatisticsOfServicesRequest) (*api.GetStatisticsOfServicesResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetStatisticsOfServices", arg0, arg1)
+	ret0, _ := ret[0].(*api.GetStatisticsOfServicesResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetStatisticsOfServices indicates an expected call of GetStatisticsOfServices
+func (mr *MockManagementServerMockRecorder) GetStatisticsOfServices(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStatisticsOfServices", reflect.TypeOf((*MockManagementServer)(nil).GetStatisticsOfServices), arg0, arg1)
 }
 
 // ListInways mocks base method
