@@ -16,7 +16,3 @@ spec:
         storage: {{ required "PostgreSQL storage size is required" .Values.postgresql.storageSize }}
 {{- end }}
   terminationPolicy: WipeOut
-  init:
-    scriptSource:
-      configMap:
-        name: {{ include "haarlem.fullname" . }}-postgresql-init-script

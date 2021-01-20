@@ -224,6 +224,9 @@ managementAPI:
   insight:
     insightAPIURL: https://insight-api.haarlem.nlx.minikube
     irmaServerURL: https://irma.haarlem.nlx.minikube
+  postgresql:
+    hostname: haarlem-postgresql
+    existingSecret: haarlem-postgresql-auth
 
 ################
 ## Sub-charts ##

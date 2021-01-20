@@ -240,7 +240,8 @@ managementAPI:
     insightAPIURL: https://insight-api.rdw.nlx.minikube
     irmaServerURL: https://irma.rdw.nlx.minikube
   postgresql:
-    existingSecret: rdw-postgresql-dsn
+    hostname: rdw-postgresql
+    existingSecret: rdw-postgresql-auth
 
 ################
 ## Sub-charts ##
