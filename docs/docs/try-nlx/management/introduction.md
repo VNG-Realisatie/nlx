@@ -27,8 +27,7 @@ The following components are part of NLX Management:
 * An [OpenID Connect](https://openid.net/connect/) (OIDC) provider
 * An Inway
 
-![NLX Management Overview](https://gitlab.com/commonground/nlx/draw-io/-/raw/master/published/docs-nlx-management-overview.svg)
-
+![NLX Management Overview](/img/docs-nlx-management-overview.svg)
 
 ### Management API
 
