@@ -3,6 +3,7 @@
 //
 import React from 'react'
 import { array, bool, shape, string } from 'prop-types'
+import { observer } from 'mobx-react'
 import { Table } from '@commonground/design-system'
 import {
   ServiceVisibilityMessage,
@@ -46,4 +47,4 @@ ServiceRow.propTypes = {
   }),
 }
 
-export default ServiceRow
+export default observer(ServiceRow)

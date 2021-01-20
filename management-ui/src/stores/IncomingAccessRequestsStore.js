@@ -40,8 +40,8 @@ class IncomingAccessRequestsStore {
     return incomingAccessRequest
   }
 
-  fetchForService = async ({ name }) => {
-    const result = await this.returnForService({ name })
+  fetchForService = flow(function* fetchForService({ name }) {
+    const result = yield this.returnForService({ name })
 
     // delete current in-memory access requests for service
     this.getForService({ name })
@@ -52,7 +52,7 @@ class IncomingAccessRequestsStore {
 
     // recreate models in-memory
     result.map((accessRequest) => this.updateFromServer(accessRequest))
-  }
+  }).bind(this)
 
   returnForService = async ({ name }) => {
     const result = await this._managementApiClient.managementListIncomingAccessRequest(
