@@ -1,7 +1,6 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-
 import ServiceStore from '../ServiceStore'
 import IncomingAccessRequestModel from './IncomingAccessRequestModel'
 import AccessGrantModel from './AccessGrantModel'
@@ -22,7 +21,15 @@ beforeEach(() => {
   }
 })
 
+afterEach(() => {
+  jest.restoreAllMocks()
+})
+
 test('initialize and update the service', async () => {
+  jest
+    .spyOn(ServiceModel.prototype, 'incomingAccessRequests', 'get')
+    .mockReturnValue([])
+
   const serviceModel = new ServiceModel({
     servicesStore: {},
     serviceData,
@@ -34,6 +41,10 @@ test('initialize and update the service', async () => {
 })
 
 test('(re-)fetching the model should call fetch on store', async () => {
+  jest
+    .spyOn(ServiceModel.prototype, 'incomingAccessRequests', 'get')
+    .mockReturnValue([])
+
   const servicesStore = new ServiceStore({
     serviceRepository: {
       getByName: jest.fn().mockResolvedValue({
@@ -99,6 +110,10 @@ test('get related incoming access requests', () => {
 })
 
 test('get related access grants', async () => {
+  jest
+    .spyOn(ServiceModel.prototype, 'incomingAccessRequests', 'get')
+    .mockReturnValue([])
+
   const getForService = jest.fn(() => [
     new AccessGrantModel({
       accessGrantData: {

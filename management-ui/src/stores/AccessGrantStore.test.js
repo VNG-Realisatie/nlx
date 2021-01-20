@@ -1,7 +1,6 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import ServiceModel from '../stores/models/ServiceModel'
 import AccessGrantModel from '../stores/models/AccessGrantModel'
 import { ManagementApi } from '../api'
 import AccessGrantStore from './AccessGrantStore'
@@ -35,9 +34,7 @@ test('fetching, getting and updating from server', async () => {
     managementApiClient,
   })
 
-  const service = new ServiceModel({
-    serviceData: { name: 'Service' },
-  })
+  const service = { name: 'Service' }
   await accessGrantStore.fetchForService(service)
 
   expect(

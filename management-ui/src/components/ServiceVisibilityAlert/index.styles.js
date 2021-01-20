@@ -8,6 +8,6 @@ import { Alert } from '@commonground/design-system'
 export const StyledAlert = styled(Alert)``
 
 export const WarningMessage = styled.p`
-  margin: 0;
+  margin: ${(p) => p.theme.tokens.spacing04} 0;
   color: ${(p) => p.theme.tokens.colorWarning};
 `

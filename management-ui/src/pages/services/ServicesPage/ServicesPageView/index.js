@@ -20,7 +20,6 @@ const ServicesPageView = ({ services, selectedServiceName }) => {
         <Table.TrHead>
           <Table.Th>{t('Name')}</Table.Th>
           <Table.Th />
-          <Table.Th />
         </Table.TrHead>
       </thead>
       <tbody>

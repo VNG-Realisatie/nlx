@@ -10,7 +10,7 @@ import {
   showServiceVisibilityAlert,
 } from '../../../../../components/ServiceVisibilityAlert'
 import AmountOfIncomingRequestsLabel from './AmountOfIncomingRequestsLabel'
-import { TdAlignRight, StyledTdIncomingRequests } from './index.styles'
+import { WarningCell } from './index.styles'
 
 const ServiceRow = ({ service, ...props }) => {
   const { name, internal, inways } = service
@@ -23,18 +23,15 @@ const ServiceRow = ({ service, ...props }) => {
       {...props}
     >
       <Table.Td>{name}</Table.Td>
-      <TdAlignRight data-testid="warning-cell">
+      <WarningCell data-testid="warning-cell">
         {showServiceVisibilityAlert({ internal, inways }) ? (
           <ServiceVisibilityMessage />
-        ) : null}
-      </TdAlignRight>
-      <StyledTdIncomingRequests>
-        {service.incomingAccessRequestsCount > 0 ? (
+        ) : service.incomingAccessRequestsCount > 0 ? (
           <AmountOfIncomingRequestsLabel
             count={service.incomingAccessRequestsCount}
           />
         ) : null}
-      </StyledTdIncomingRequests>
+      </WarningCell>
     </Table.Tr>
   )
 }

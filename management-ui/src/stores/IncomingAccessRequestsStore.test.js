@@ -1,7 +1,6 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import ServiceModel from '../stores/models/ServiceModel'
 import IncomingAccessRequestModel, {
   ACCESS_REQUEST_STATES,
 } from '../stores/models/IncomingAccessRequestModel'
@@ -15,7 +14,7 @@ test('initializing the store', () => {
 })
 
 test('fetching, getting and updating from server', async () => {
-  const service = new ServiceModel({ serviceData: { name: 'Service' } })
+  const service = { name: 'Service' }
 
   const managementApiClient = new ManagementApi()
   managementApiClient.managementListIncomingAccessRequest = jest
