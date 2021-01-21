@@ -15,7 +15,7 @@ import {
 import { IconHidden, IconVisible } from '../../../../icons'
 import { showServiceVisibilityAlert } from '../../../../components/ServiceVisibilityAlert'
 import InwaysSection from './InwaysSection'
-import AccessRequestSectionContainer from './AccessRequestSectionContainer'
+import AccessRequestSectionContainer from './AccessRequestSection'
 import AccessGrantSection from './AccessGrantSection'
 import {
   StyledActionsBar,

@@ -8,9 +8,8 @@ import { renderWithProviders } from '../../../../test-utils'
 import { clickConfirmButtonAndAssert } from '../../../../components/ConfirmationModal/testUtils'
 import ServiceDetailView from './index'
 
-// These all have their own tests
 jest.mock('./InwaysSection', () => () => <div />)
-jest.mock('./AccessRequestSectionContainer', () => () => <div />)
+jest.mock('./AccessRequestSection', () => () => <div />)
 jest.mock('./AccessGrantSection', () => () => <div />)
 
 const service = {
