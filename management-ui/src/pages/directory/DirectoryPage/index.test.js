@@ -11,6 +11,7 @@ import { UserContextProvider } from '../../../user-context'
 import { DirectoryApi } from '../../../api'
 import DirectoryPage from './index'
 
+jest.mock('../../../components/PageTemplate')
 jest.mock('../../../components/OrganizationName', () => () => null)
 
 /* eslint-disable react/prop-types */

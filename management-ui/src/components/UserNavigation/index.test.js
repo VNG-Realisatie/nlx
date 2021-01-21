@@ -57,9 +57,7 @@ describe('the UserNavigation', () => {
     it('hides the user menu by default', () => {
       const { queryByTestId } = result
 
-      waitFor(() => {
-        expect(queryByTestId('user-menu-options')).toBeNull()
-      })
+      expect(queryByTestId('user-menu-options')).not.toBeInTheDocument()
     })
 
     describe('and toggled the menu', () => {

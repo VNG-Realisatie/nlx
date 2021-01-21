@@ -3,7 +3,9 @@
 //
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
-import { renderWithProviders, act, fireEvent, waitFor } from '../../test-utils'
+import { fireEvent, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { renderWithProviders } from '../../test-utils'
 import { RootStore, StoreProvider } from '../../stores'
 import { ManagementApi } from '../../api'
 import ServiceForm from './index'
@@ -94,12 +96,7 @@ test('the form values of the onSubmitHandler', async () => {
     managementApiClient,
   })
 
-  const {
-    container,
-    getByTestId,
-    findByTestId,
-    getByLabelText,
-  } = renderWithProviders(
+  const { findByTestId, getByLabelText, getByText } = renderWithProviders(
     <StoreProvider rootStore={rootStore}>
       <ServiceForm
         submitButtonText="Submit"
@@ -118,31 +115,17 @@ test('the form values of the onSubmitHandler', async () => {
   )
 
   // invalid form - name is missing
-  const formElement = getByTestId('form')
-  await act(async () => {
-    fireEvent.submit(formElement)
-  })
+  userEvent.click(getByText('Submit'))
 
-  // assert the validation feedback is shown
   const nameError = await findByTestId('error-name')
   expect(nameError).not.toBeNull()
+  expect(onSubmitHandlerSpy).not.toHaveBeenCalled()
 
   // fill-in required fields
-  const nameField = getByLabelText('Service name')
-  fireEvent.change(nameField, {
-    target: { value: 'my-service' },
-  })
+  userEvent.type(getByLabelText('Service name'), 'my-service')
+  userEvent.click(getByText('Submit'))
 
-  // re-submit the valid form
-  await act(async () => {
-    fireEvent.submit(formElement)
-  })
-
-  expect(
-    container.querySelectorAll('p[class*="FieldValidationMessage"]'),
-  ).toHaveLength(0)
-
-  waitFor(() =>
+  await waitFor(() =>
     expect(onSubmitHandlerSpy).toHaveBeenCalledWith({
       name: 'my-service',
       endpointURL: 'my-service.test:8000',
@@ -191,6 +174,7 @@ describe('when showing inways', () => {
       await findByTestId('publishedInDirectory-warning'),
     ).toHaveTextContent('Service not yet accessible')
   })
+
   it('should show a warning when the service is published and no inways are selected', async () => {
     const managementApiClient = new ManagementApi()
     managementApiClient.managementListInways = jest
