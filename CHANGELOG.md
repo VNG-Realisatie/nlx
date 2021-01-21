@@ -1,3 +1,57 @@
+# [0.94.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.93.0...v0.94.0) (2021-01-21)
+
+
+### Bug Fixes
+
+* replace postgres init script with job ([84aa60c](https://gitlab.com/commonground/nlx/nlx/commit/84aa60c9cb634e1208fe427ec0450e5af953ba59))
+* **docs:** fix docs for TOML config ([5fa244d](https://gitlab.com/commonground/nlx/nlx/commit/5fa244df66eb44691867085041dfcade57bcb59d))
+* **docs:** replace external image with local version to prevent CSP issues ([ddabd7d](https://gitlab.com/commonground/nlx/nlx/commit/ddabd7da534f94aa4fc123b01de8be08ad753a8c))
+* **docs:** update image to use PostgreSQL instead of ETCD ([a6e5eb2](https://gitlab.com/commonground/nlx/nlx/commit/a6e5eb2e0be0e830cde63d0518d40c35c7f2ef87))
+* **helm:** changed listen address of auth-service so it can be reached ([d1e887d](https://gitlab.com/commonground/nlx/nlx/commit/d1e887d62dd5d0fece1526c6ae1e73ea4f5f4d47))
+* **management:** confirmationModal improvements ([add1183](https://gitlab.com/commonground/nlx/nlx/commit/add118393cc45a6032f1378cf822446655c3fb45))
+* **management:** convert value too boolean when setting the property isOrganizationInway ([85906cc](https://gitlab.com/commonground/nlx/nlx/commit/85906cce5b46c6b3991efc5a8e037df90817836b))
+* **management:** decrease table row height for incoming access requests ([f493db9](https://gitlab.com/commonground/nlx/nlx/commit/f493db966dc71a25de623c835c8500d51759f899)), closes [#1114](https://gitlab.com/commonground/nlx/nlx/issues/1114)
+* **management:** fix scheduler and api tests after moving to PostgreSQL ([dd5bcaa](https://gitlab.com/commonground/nlx/nlx/commit/dd5bcaa512bf73d4084f3aeb4b129e5283f979c8))
+* **management:** make sure clearing organization inway works ([2410c87](https://gitlab.com/commonground/nlx/nlx/commit/2410c876faed89b0de3febb303c478e73d81e109))
+* **management:** make sure valid pending requests are picked up by the scheduler ([8107178](https://gitlab.com/commonground/nlx/nlx/commit/810717894dbed7a4b0da638b7f7612ad59d01c92))
+* **management:** make sure we can delete services without accessrequests ([82b0b9f](https://gitlab.com/commonground/nlx/nlx/commit/82b0b9fbc80a4185efd929d5cbc51529d81961ee))
+* **management:** modal & confirm vertical positioning ([980c805](https://gitlab.com/commonground/nlx/nlx/commit/980c805c8f22f04ef8bf5cbcadee0c4d682049e4))
+* **management:** modal close scenarios & aria support ([03ccdb1](https://gitlab.com/commonground/nlx/nlx/commit/03ccdb1fe1c5de571867063e203b3017868dad3e))
+* **management:** modal fixes and feedback ([4cd8b39](https://gitlab.com/commonground/nlx/nlx/commit/4cd8b3916d8ff9c01a1dfa41413c5deaf036b2dd))
+* **management:** modal improvements ([47b63d2](https://gitlab.com/commonground/nlx/nlx/commit/47b63d213174fd907be05f70eec5d945c0f16085))
+* **management:** only create service in deployment if does not exists ([9a0bddf](https://gitlab.com/commonground/nlx/nlx/commit/9a0bddf26fd23a674eb7e02f83a8f09565ff2bcc))
+* **management:** prevent collapsible content from jumping when showing updated content button ([e6a7cb7](https://gitlab.com/commonground/nlx/nlx/commit/e6a7cb7f95fff96aa51e918ad5c92b504e4cb789)), closes [#1114](https://gitlab.com/commonground/nlx/nlx/issues/1114)
+* **management:** processed feedback ([8489ba5](https://gitlab.com/commonground/nlx/nlx/commit/8489ba5a83a475f20b9860f7baea30163c8a7484))
+* **management:** return exit 0 when migrations are up-to-date ([b156298](https://gitlab.com/commonground/nlx/nlx/commit/b156298b958ea6f24f13ab2f3158fdad09c973f8))
+* **management:** services can be removed again ([0ba6aad](https://gitlab.com/commonground/nlx/nlx/commit/0ba6aad4c494a91dd833b1e4f96d30e25e8eb917))
+* **management:** store the stacktrace when an access request fails ([0591789](https://gitlab.com/commonground/nlx/nlx/commit/05917893c687b649d37dfcfb25fe6ad5ee425e2c))
+* **management:** unlock outgoing access requests after schedule loop is done ([2837260](https://gitlab.com/commonground/nlx/nlx/commit/2837260477bc21d2fe98f642a8cf232d632a9733))
+* **management:** useInterval -> usePolling with pause & continue ([814fd55](https://gitlab.com/commonground/nlx/nlx/commit/814fd55ea061d4a498ca6a4edcc3ba21a4b3a648))
+* deprecate privileged runners ([e9c06e1](https://gitlab.com/commonground/nlx/nlx/commit/e9c06e1d9db2303c135cd24f235c9d029f0e66ea))
+
+
+### Features
+
+* **directory:** limit max number of services per inway ([a949e41](https://gitlab.com/commonground/nlx/nlx/commit/a949e413387962bc8a0636a64b315d092736b816))
+* **management:** add polling for IncomingAccessRequests when section is expanded ([b0d14ff](https://gitlab.com/commonground/nlx/nlx/commit/b0d14ff06b00029aef3488b0d1d4e16a63902372)), closes [#1114](https://gitlab.com/commonground/nlx/nlx/issues/1114)
+* **management:** add statistics of services endpoint ([0a6cf9d](https://gitlab.com/commonground/nlx/nlx/commit/0a6cf9d7a7134ee3d972df763eb9bbe1fca34b28))
+* **management:** add update incoming access requests button ([5ec6bac](https://gitlab.com/commonground/nlx/nlx/commit/5ec6bac6151d90406ad7416aa679f9efd1185ed3)), closes [#1114](https://gitlab.com/commonground/nlx/nlx/issues/1114)
+* **management:** automatically poll changes for the DirectoryDetail page ([c6693c3](https://gitlab.com/commonground/nlx/nlx/commit/c6693c3393e461048526eeb75be54df16b802007)), closes [#1131](https://gitlab.com/commonground/nlx/nlx/issues/1131)
+* **management:** automatically update count incoming access requests for service detail ([a1dd9f8](https://gitlab.com/commonground/nlx/nlx/commit/a1dd9f8f66475d308cba252de5d1dc3362d8390c)), closes [#1114](https://gitlab.com/commonground/nlx/nlx/issues/1114)
+* **management:** confirmationModal @ directory detail ([d1a556c](https://gitlab.com/commonground/nlx/nlx/commit/d1a556c6f9f25701db6df1ffbed3d5fb43fced93))
+* **management:** confirmationModal @ incoming access requests ([80fa84a](https://gitlab.com/commonground/nlx/nlx/commit/80fa84a0a17d307fc84e4354afef737303e87ee0))
+* **management:** confirmationModal @ remove service ([c841e91](https://gitlab.com/commonground/nlx/nlx/commit/c841e91c087621f57846fa4e186e9ef84d2dba0a))
+* **management:** confirmationModal @ revoke grants ([84a77ac](https://gitlab.com/commonground/nlx/nlx/commit/84a77acd1a134e94fd744b55532d81ce8dfb0b5e))
+* **management:** confirmModal @ directory list ([57d7a84](https://gitlab.com/commonground/nlx/nlx/commit/57d7a8437725adf77518a817ea865d64b43ad87e))
+* **management:** fetching a single service should add the model to the store ([6fb0596](https://gitlab.com/commonground/nlx/nlx/commit/6fb0596e61c77fb46e63cf1444c1a2cbb4623b16)), closes [#1114](https://gitlab.com/commonground/nlx/nlx/issues/1114)
+* **management:** implement button to trigger updating the UI ([4341392](https://gitlab.com/commonground/nlx/nlx/commit/4341392007097df8ebd78a13d67947073900ecb4)), closes [#1114](https://gitlab.com/commonground/nlx/nlx/issues/1114)
+* **management:** modal component ([1a9b547](https://gitlab.com/commonground/nlx/nlx/commit/1a9b54760f44389b8532b192d8a8caba63249ac0))
+* **management:** modalConfirm component in general settings ([6c6c236](https://gitlab.com/commonground/nlx/nlx/commit/6c6c2366a1172ed80ba05b1ca614ae9080a3a70f))
+* **management:** position update UI button when currently no access requests are listed ([515c11f](https://gitlab.com/commonground/nlx/nlx/commit/515c11f2e0c41d7660a9344c826c4506ee1a8a48)), closes [#1114](https://gitlab.com/commonground/nlx/nlx/issues/1114)
+* **management:** replace ETCD with PostgreSQL ([7b282a6](https://gitlab.com/commonground/nlx/nlx/commit/7b282a6483351825d4c2a290b47e31c5b449432f))
+* **management:** validate OIDC claims in authentication middleware ([5d2cd69](https://gitlab.com/commonground/nlx/nlx/commit/5d2cd69d4f4284e6d2bafafda7b0c15cfe8a1f54))
+* add Permission-Policy header to front ends ([d8ce7a9](https://gitlab.com/commonground/nlx/nlx/commit/d8ce7a9039ed5451430f33d1829e627474a9495e))
+
 # [0.93.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.92.0...v0.93.0) (2021-01-06)
 
 
