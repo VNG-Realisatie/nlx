@@ -1,3 +1,10 @@
+## [0.94.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.94.0...v0.94.1) (2021-01-21)
+
+
+### Bug Fixes
+
+* **docs:** resolve typos ([1e769e1](https://gitlab.com/commonground/nlx/nlx/commit/1e769e1fd9d7d96679e4298ebf55f967fe5a9d81))
+
 # [0.94.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.93.0...v0.94.0) (2021-01-21)
 
 

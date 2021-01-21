@@ -2,8 +2,8 @@ apiVersion: v2
 name: haarlem
 description: Metachart for the Haarlem demo organization
 type: application
-version: 0.94.0
-appVersion: 0.94.0
+version: 0.94.1
+appVersion: 0.94.1
 
 dependencies:
   - name: dex
