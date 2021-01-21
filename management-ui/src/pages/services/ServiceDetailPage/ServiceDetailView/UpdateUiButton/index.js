@@ -5,7 +5,7 @@
 import React from 'react'
 import { node } from 'prop-types'
 import { Icon } from '@commonground/design-system'
-import { IconArrowDownLine } from '../../../../../../icons'
+import { IconArrowDownLine } from '../../../../../icons'
 import Button from './index.styles'
 
 const UpdateUiButton = ({ children, ...props }) => (

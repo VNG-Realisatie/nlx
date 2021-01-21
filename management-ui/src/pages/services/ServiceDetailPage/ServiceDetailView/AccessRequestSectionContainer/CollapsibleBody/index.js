@@ -8,7 +8,7 @@ import { Table, ToasterContext } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import { StyledCollapsibleBody } from '../../../../../../components/DetailView'
 import IncomingAccessRequestRow from '../IncomingAccessRequestRow'
-import { StyledUpdateUiButton } from './index.styles'
+import UpdateUiButton from '../../UpdateUiButton'
 
 const CollapsibleBody = ({
   accessRequests,
@@ -85,9 +85,9 @@ const CollapsibleBody = ({
       )}
 
       {showLoadIncomingDataButton ? (
-        <StyledUpdateUiButton onClick={onClickLoadIncomingDataHandler}>
+        <UpdateUiButton onClick={onClickLoadIncomingDataHandler}>
           Nieuwe verzoeken
-        </StyledUpdateUiButton>
+        </UpdateUiButton>
       ) : null}
     </StyledCollapsibleBody>
   )

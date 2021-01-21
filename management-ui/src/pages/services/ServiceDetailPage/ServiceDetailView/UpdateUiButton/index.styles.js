@@ -11,6 +11,10 @@ const Button = styled.button`
   height: 2rem;
   padding: 0 1rem;
   cursor: pointer;
+  display: block;
+  position: relative;
+  margin: -2rem auto 0 auto;
+  top: 6px;
 `
 
 export default Button
