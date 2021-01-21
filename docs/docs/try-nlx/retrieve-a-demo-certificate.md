@@ -92,7 +92,7 @@ You can either copy paste your certificate and store it in a file or you can cli
 
 Rename the file from `certificate.crt` to `org.crt` and store the file next to your private key.
 
->  If you are using Windows make sure that you select `All files` as file type when saving your certificate. If you do not do this Windows will add the extenstion `txt` to the file.
+>  If you are using Windows, make sure that you select `All files` as file type when saving your certificate. If you do not do this, Windows will add the extension `txt` to the file.
 
 ### Verification
 
