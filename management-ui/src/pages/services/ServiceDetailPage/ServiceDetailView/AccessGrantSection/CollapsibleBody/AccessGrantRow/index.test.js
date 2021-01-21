@@ -3,8 +3,8 @@
 //
 import React from 'react'
 import { fireEvent, within } from '@testing-library/react'
-import { renderWithProviders } from '../../../../../../test-utils'
-import { clickConfirmButtonAndAssert } from '../../../../../../components/ConfirmationModal/testUtils'
+import { renderWithProviders } from '../../../../../../../test-utils'
+import { clickConfirmButtonAndAssert } from '../../../../../../../components/ConfirmationModal/testUtils'
 import AccessGrantRow from './index'
 
 let mockHandler

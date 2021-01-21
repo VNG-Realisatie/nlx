@@ -6,9 +6,9 @@ import React, { useContext } from 'react'
 import { Table, ToasterContext } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import { array, bool, func } from 'prop-types'
-import AccessGrantRow from '../AccessGrantRow'
 import { StyledCollapsibleBody } from '../../../../../../components/DetailView'
 import UpdateUiButton from '../../UpdateUiButton'
+import AccessGrantRow from './AccessGrantRow'
 
 const CollapsibleBody = ({
   accessGrants,
