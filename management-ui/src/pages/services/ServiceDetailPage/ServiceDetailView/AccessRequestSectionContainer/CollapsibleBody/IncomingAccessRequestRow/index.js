@@ -5,9 +5,9 @@ import React from 'react'
 import { shape, func } from 'prop-types'
 import { Table } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
-import { useConfirmationModal } from '../../../../../../components/ConfirmationModal'
-import { incomingAccessRequestPropTypes } from '../../../../../../stores/models/IncomingAccessRequestModel'
-import { IconCheck, IconClose } from '../../../../../../icons'
+import { useConfirmationModal } from '../../../../../../../components/ConfirmationModal'
+import { incomingAccessRequestPropTypes } from '../../../../../../../stores/models/IncomingAccessRequestModel'
+import { IconCheck, IconClose } from '../../../../../../../icons'
 import { TdActions, StyledButton } from './index.styles'
 
 const IncomingAccessRequestRow = ({

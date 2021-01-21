@@ -7,8 +7,8 @@ import { array, bool, func } from 'prop-types'
 import { Table, ToasterContext } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import { StyledCollapsibleBody } from '../../../../../../components/DetailView'
-import IncomingAccessRequestRow from '../IncomingAccessRequestRow'
 import UpdateUiButton from '../../UpdateUiButton'
+import IncomingAccessRequestRow from './IncomingAccessRequestRow'
 
 const CollapsibleBody = ({
   accessRequests,
