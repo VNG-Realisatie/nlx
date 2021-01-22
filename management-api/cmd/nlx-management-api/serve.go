@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/spf13/cobra"
@@ -116,8 +115,6 @@ var serveCommand = &cobra.Command{
 		logger.Info("starting management api", zap.String("listen-address", serveOpts.ListenAddress))
 
 		mainProcess := process.NewProcess(logger)
-		serveOpts.oidcOptions.SessionCookieSecure = false
-		fmt.Printf("%#v\n", serveOpts.oidcOptions)
 
 		authenticator := oidc.NewAuthenticator(logger, &serveOpts.oidcOptions)
 
