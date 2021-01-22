@@ -1,3 +1,10 @@
+## [0.94.2](https://gitlab.com/commonground/nlx/nlx/compare/v0.94.1...v0.94.2) (2021-01-22)
+
+
+### Bug Fixes
+
+* **management:** remove debug code that leads to logging OIDC options and disabling secure cookies ([5cf2c08](https://gitlab.com/commonground/nlx/nlx/commit/5cf2c08bc1237b314b50d58921139eef0078df73))
+
 ## [0.94.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.94.0...v0.94.1) (2021-01-21)
 
 
