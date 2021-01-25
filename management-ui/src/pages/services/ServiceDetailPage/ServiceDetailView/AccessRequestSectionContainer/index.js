@@ -63,10 +63,6 @@ const AccessRequestSectionContainer = ({ service }) => {
 
   const onAccessRequestApprovedOrRejected = () => {
     service.fetch()
-
-    service.update({
-      incomingAccessRequestsCount: service.incomingAccessRequestsCount - 1,
-    })
   }
 
   return (
