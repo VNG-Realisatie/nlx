@@ -2,7 +2,12 @@
 // Licensed under the EUPL
 //
 import ServiceStore from '../ServiceStore'
-import IncomingAccessRequestModel from './IncomingAccessRequestModel'
+import { RootStore } from '../index'
+import { ManagementApi } from '../../api'
+import IncomingAccessRequestModel, {
+  ACCESS_REQUEST_STATES,
+} from '../../stores/models/IncomingAccessRequestModel'
+
 import AccessGrantModel from './AccessGrantModel'
 import ServiceModel from './ServiceModel'
 
@@ -107,6 +112,55 @@ test('get related incoming access requests', () => {
       state: 'RECEIVED',
     }),
   )
+})
+
+test('automatically update incomingAccessRequestCount when related incoming access requests changes', async () => {
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementListServices = jest.fn().mockResolvedValue({
+    services: [
+      {
+        name: 'service-a',
+        incomingAccessRequestsCount: 1,
+      },
+    ],
+  })
+
+  managementApiClient.managementListIncomingAccessRequest = jest
+    .fn()
+    .mockResolvedValueOnce({
+      accessRequests: [
+        {
+          id: '1',
+          serviceName: 'service-a',
+          organizationName: 'X',
+          state: ACCESS_REQUEST_STATES.RECEIVED,
+        },
+        {
+          id: '2',
+          serviceName: 'service-a',
+          organizationName: 'Y',
+          state: ACCESS_REQUEST_STATES.RECEIVED,
+        },
+      ],
+    })
+
+  const rootStore = new RootStore({ managementApiClient })
+  await rootStore.servicesStore.fetchAll()
+  const serviceModel = rootStore.servicesStore.getService('service-a')
+
+  expect(serviceModel.incomingAccessRequests).toHaveLength(0)
+  expect(serviceModel.incomingAccessRequestsCount).toBe(1)
+
+  await rootStore.incomingAccessRequestsStore.fetchForService({
+    name: 'service-a',
+  })
+
+  expect(
+    managementApiClient.managementListIncomingAccessRequest,
+  ).toHaveBeenCalled()
+  expect(serviceModel.incomingAccessRequests).toHaveLength(2)
+  expect(serviceModel.incomingAccessRequestsCount).toBe(2)
 })
 
 test('get related access grants', async () => {

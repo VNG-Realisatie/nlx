@@ -68,6 +68,7 @@ class ServiceStore {
       )
     } catch (e) {
       this.error = e
+      console.error(e)
     } finally {
       this.isInitiallyFetched = true
       this.isFetching = false

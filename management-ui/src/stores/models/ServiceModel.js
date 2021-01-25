@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { makeAutoObservable, reaction, runInAction } from 'mobx'
+import { makeAutoObservable, reaction } from 'mobx'
 
 class ServiceModel {
   name = ''
@@ -23,12 +23,9 @@ class ServiceModel {
 
     reaction(
       () => this.incomingAccessRequests.length,
-      (nrOfIncomingAccessRequests) =>
-        runInAction(() => {
-          if (nrOfIncomingAccessRequests !== this.incomingAccessRequestsCount) {
-            this.incomingAccessRequestsCount = nrOfIncomingAccessRequests
-          }
-        }),
+      (incomingAccessRequestsCount) => {
+        this.update({ incomingAccessRequestsCount })
+      },
     )
   }
 
