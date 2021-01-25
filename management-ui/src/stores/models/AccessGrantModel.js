@@ -3,8 +3,6 @@
 //
 import { flow, makeAutoObservable } from 'mobx'
 
-// TODO: move `models` directory inside `stores`
-
 class AccessGrantModel {
   id = ''
   organizationName = ''
