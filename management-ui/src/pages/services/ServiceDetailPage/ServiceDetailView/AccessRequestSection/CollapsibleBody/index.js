@@ -3,6 +3,7 @@
 //
 
 import React, { useContext } from 'react'
+import { observer } from 'mobx-react'
 import { array, bool, func } from 'prop-types'
 import { Table, ToasterContext } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
@@ -108,4 +109,4 @@ CollapsibleBody.defaultProps = {
   onApproveOrRejectCallbackHandler: noop,
 }
 
-export default CollapsibleBody
+export default observer(CollapsibleBody)

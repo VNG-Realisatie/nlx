@@ -2,7 +2,6 @@
 // Licensed under the EUPL
 //
 import { makeAutoObservable, observable, flow } from 'mobx'
-
 import AccessGrantModel from './models/AccessGrantModel'
 
 class AccessGrantStore {
@@ -35,16 +34,28 @@ class AccessGrantStore {
   }
 
   fetchForService = flow(function* fetchForService({ name }) {
-    const response = yield this._managementApiClient.managementListAccessGrantsForService(
+    const result = yield this.returnForService({ name })
+
+    // delete current in-memory access requests for service
+    this.getForService({ name })
+      .map((accessGrant) => accessGrant.id)
+      .forEach((id) => {
+        this.accessGrants.delete(id)
+      })
+
+    // recreate models in-memory
+    result.map((accessGrantData) => this.updateFromServer(accessGrantData))
+  }).bind(this)
+
+  returnForService = async ({ name }) => {
+    const result = await this._managementApiClient.managementListAccessGrantsForService(
       {
         serviceName: name,
       },
     )
 
-    response.accessGrants.map((accessGrantData) =>
-      this.updateFromServer(accessGrantData),
-    )
-  }).bind(this)
+    return result.accessGrants
+  }
 
   getForService = ({ name }) => {
     const arrayOfModels = [...this.accessGrants.values()]
@@ -62,6 +73,31 @@ class AccessGrantStore {
     })
     this.fetchForService({ name: serviceName })
   }
+
+  haveChangedForService = flow(function* fetch(service) {
+    let latestAccessGrants = yield this.returnForService(service)
+
+    // we are only interested in access grants which have not been revoked
+    latestAccessGrants = latestAccessGrants.filter(
+      (ag) => ag.revokedAt === null || ag.revokedAt === undefined,
+    )
+
+    if (latestAccessGrants.length !== service.accessGrants.length) {
+      return true
+    }
+
+    // we will compare a list of sorted IDs to determine if the
+    // latest access grants have changed
+    const accessGrantIds = service.accessGrants.map((ag) => ag.id)
+    accessGrantIds.sort()
+
+    const latestAccessGrantIds = latestAccessGrants.map((ar) => ar.id)
+    latestAccessGrantIds.sort()
+
+    return (
+      JSON.stringify(accessGrantIds) !== JSON.stringify(latestAccessGrantIds)
+    )
+  }).bind(this)
 }
 
 export default AccessGrantStore

@@ -4,6 +4,7 @@
 import AccessGrantModel from '../stores/models/AccessGrantModel'
 import { ManagementApi } from '../api'
 import AccessGrantStore from './AccessGrantStore'
+import { RootStore } from './index'
 
 test('initializing the store', () => {
   const accessGrantStore = new AccessGrantStore({
@@ -85,5 +86,88 @@ test('revoking an access grant', async () => {
   })
   expect(accessGrantStore.fetchForService).toHaveBeenCalledWith({
     name: 'Service',
+  })
+})
+
+describe('have the access grants been changed for a service', () => {
+  let managementApiClient
+  let rootStore
+  let servicesStore
+  let accessGrantStore
+
+  const ACCESS_GRANT_ONE = {
+    id: 'ar-1',
+    serviceName: 'service-a',
+    organizationName: 'organization-a',
+    revokedAt: null,
+  }
+
+  const ACCESS_GRANT_TWO = {
+    id: 'ar-2',
+    serviceName: 'service-a',
+    organizationName: 'organization-a',
+    revokedAt: undefined,
+  }
+
+  beforeEach(async () => {
+    managementApiClient = new ManagementApi()
+
+    managementApiClient.managementGetService = jest.fn().mockResolvedValue({
+      name: 'service-a',
+    })
+
+    rootStore = new RootStore({
+      managementApiClient,
+    })
+
+    rootStore.incomingAccessRequestsStore.fetchForService = jest
+      .fn()
+      .mockResolvedValue()
+
+    accessGrantStore = rootStore.accessGrantStore
+    servicesStore = rootStore.servicesStore
+  })
+
+  it('should indicate changed if the number of access grants have changed', async () => {
+    managementApiClient.managementListAccessGrantsForService = jest
+      .fn()
+      .mockResolvedValueOnce({ accessGrants: [] })
+      .mockResolvedValue({
+        accessGrants: [ACCESS_GRANT_ONE],
+      })
+
+    await servicesStore.fetch({ name: 'service-a' })
+    const service = servicesStore.getService('service-a')
+
+    expect(await accessGrantStore.haveChangedForService(service)).toEqual(true)
+  })
+
+  it('should indicate changed if the changed access request has a different id', async () => {
+    managementApiClient.managementListAccessGrantsForService = jest
+      .fn()
+      .mockResolvedValueOnce({
+        accessGrants: [ACCESS_GRANT_ONE],
+      })
+      .mockResolvedValue({
+        accessGrants: [ACCESS_GRANT_TWO],
+      })
+
+    await servicesStore.fetch({ name: 'service-a' })
+    const service = servicesStore.getService('service-a')
+
+    expect(await accessGrantStore.haveChangedForService(service)).toEqual(true)
+  })
+
+  it('should not indicate changed if the latest access request is the same', async () => {
+    managementApiClient.managementListAccessGrantsForService = jest
+      .fn()
+      .mockResolvedValue({
+        accessGrants: [ACCESS_GRANT_ONE],
+      })
+
+    await servicesStore.fetch({ name: 'service-a' })
+    const service = servicesStore.getService('service-a')
+
+    expect(await accessGrantStore.haveChangedForService(service)).toEqual(false)
   })
 })

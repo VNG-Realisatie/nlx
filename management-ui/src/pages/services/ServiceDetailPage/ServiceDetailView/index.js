@@ -73,10 +73,8 @@ const ServiceDetailView = ({ service, removeHandler }) => {
         </DetailHeadingLight>
 
         <InwaysSection inways={inways} />
-
         <AccessRequestSectionContainer service={service} />
-
-        <AccessGrantSection accessGrants={service.accessGrants} />
+        <AccessGrantSection service={service} />
       </SectionGroup>
 
       <ConfirmRemoveModal />

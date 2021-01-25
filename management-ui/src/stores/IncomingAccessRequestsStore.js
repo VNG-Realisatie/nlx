@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { flow, makeAutoObservable, observable } from 'mobx'
+import { makeAutoObservable, observable } from 'mobx'
 import IncomingAccessRequestModel, {
   ACCESS_REQUEST_STATES,
 } from './models/IncomingAccessRequestModel'
@@ -88,8 +88,8 @@ class IncomingAccessRequestsStore {
     this.fetchForService({ name: serviceName })
   }
 
-  haveChangedForService = flow(function* fetch(service) {
-    let latestAccessRequests = yield this.returnForService(service)
+  haveChangedForService = async (service) => {
+    let latestAccessRequests = await this.returnForService(service)
 
     // we are only interested in access request which are not 'resolved'
     latestAccessRequests = latestAccessRequests.filter(
@@ -114,7 +114,7 @@ class IncomingAccessRequestsStore {
       JSON.stringify(accessRequestIds) !==
       JSON.stringify(latestAccessRequestIds)
     )
-  }).bind(this)
+  }
 }
 
 export default IncomingAccessRequestsStore
