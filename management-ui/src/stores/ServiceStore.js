@@ -68,11 +68,28 @@ class ServiceStore {
       )
     } catch (e) {
       this.error = e
-      console.error(e)
     } finally {
       this.isInitiallyFetched = true
       this.isFetching = false
     }
+  }).bind(this)
+
+  fetchStats = flow(function* fetchStats() {
+    const result = yield this._managementApiClient.managementGetStatisticsOfServices()
+    const stats = result.services
+    if (stats.length < 1) return
+
+    stats.forEach((statistic) => {
+      const service = this.getService(statistic.name)
+      if (
+        service.incomingAccessRequestsCount !==
+        statistic.incomingAccessRequestCount
+      ) {
+        service.update({
+          incomingAccessRequestsCount: statistic.incomingAccessRequestCount,
+        })
+      }
+    })
   }).bind(this)
 
   getService = (serviceName) => {

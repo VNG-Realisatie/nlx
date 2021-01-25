@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { Alert, Button } from '@commonground/design-system'
 import { Link, Route, useParams } from 'react-router-dom'
 import { observer } from 'mobx-react'
+import usePolling from '../../../hooks/use-polling'
 import PageTemplate from '../../../components/PageTemplate'
 import ServiceDetailPage from '../ServiceDetailPage'
 import LoadingMessage from '../../../components/LoadingMessage'
@@ -18,8 +19,16 @@ import { StyledActionsBar } from './index.styles'
 
 const ServicesPage = () => {
   const { t } = useTranslation()
-  const { isInitiallyFetched, services, error, getService } = useServicesStore()
+  const {
+    isInitiallyFetched,
+    services,
+    error,
+    getService,
+    fetchStats,
+  } = useServicesStore()
   const { name } = useParams()
+
+  usePolling(fetchStats)
 
   return (
     <PageTemplate>

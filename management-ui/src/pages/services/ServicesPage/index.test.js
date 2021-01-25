@@ -5,6 +5,7 @@ import React from 'react'
 import { MemoryRouter, Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import { renderWithProviders, waitFor } from '../../../test-utils'
+import { INTERVAL } from '../../../hooks/use-polling'
 import { UserContextProvider } from '../../../user-context'
 import { RootStore, StoreProvider } from '../../../stores'
 import { ManagementApi } from '../../../api'
@@ -16,6 +17,7 @@ jest.mock('../../../components/PageTemplate/OrganizationInwayCheck', () => () =>
 jest.mock('./ServicesPageView', () => () => (
   <p data-testid="services-list">mock-services</p>
 ))
+jest.mock('../../../components/OrganizationName', () => () => <span>test</span>)
 
 test('fetching all services', async () => {
   const managementApiClient = new ManagementApi()
@@ -75,4 +77,42 @@ test('failed to load services', async () => {
   expect(() => getByTestId('services-list')).toThrow()
   expect(await findByText(/^Failed to load the services$/)).toBeInTheDocument()
   expect(getByTestId('service-count')).toHaveTextContent('0Services')
+})
+
+test('service statistics should be polled', () => {
+  jest.useFakeTimers()
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementListServices = jest.fn().mockResolvedValue({
+    services: [{ name: 'my-first-service' }],
+  })
+
+  managementApiClient.managementGetStatisticsOfServices = jest
+    .fn()
+    .mockResolvedValue({
+      services: [],
+    })
+
+  const history = createMemoryHistory({ initialEntries: ['/services'] })
+  const rootStore = new RootStore({
+    managementApiClient,
+  })
+
+  renderWithProviders(
+    <Router history={history}>
+      <UserContextProvider user={{}}>
+        <StoreProvider rootStore={rootStore}>
+          <ServicesPage />
+        </StoreProvider>
+      </UserContextProvider>
+    </Router>,
+  )
+
+  jest.advanceTimersByTime(INTERVAL * 2)
+
+  expect(
+    managementApiClient.managementGetStatisticsOfServices,
+  ).toHaveBeenCalledTimes(2)
+
+  jest.useRealTimers()
 })

@@ -3,20 +3,18 @@
 //
 import { ManagementApi } from '../api'
 import ServiceModel from './models/ServiceModel'
-import ServiceStore from './ServiceStore'
 import { RootStore } from './index'
 
 test('initializing the store', async () => {
   const managementApiClient = new ManagementApi()
-
-  const servicesStore = new ServiceStore({
-    rootStore: new RootStore(),
+  const rootStore = new RootStore({
     managementApiClient,
   })
+  const serviceStore = rootStore.servicesStore
 
-  expect(servicesStore.services).toEqual([])
-  expect(servicesStore.isInitiallyFetched).toBe(false)
-  expect(servicesStore.isFetching).toBe(false)
+  expect(serviceStore.services).toEqual([])
+  expect(serviceStore.isInitiallyFetched).toBe(false)
+  expect(serviceStore.isFetching).toBe(false)
 })
 
 test('fetch and getting a single service', async () => {
@@ -29,8 +27,7 @@ test('fetch and getting a single service', async () => {
   const rootStore = new RootStore({
     managementApiClient,
   })
-
-  const servicesStore = rootStore.servicesStore
+  const serviceStore = rootStore.servicesStore
 
   jest
     .spyOn(rootStore.incomingAccessRequestsStore, 'fetchForService')
@@ -40,51 +37,51 @@ test('fetch and getting a single service', async () => {
     .spyOn(rootStore.accessGrantStore, 'fetchForService')
     .mockResolvedValue([])
 
-  await servicesStore.fetch({ name: 'Service A' })
+  await serviceStore.fetch({ name: 'Service A' })
 
   expect(
     rootStore.incomingAccessRequestsStore.fetchForService,
   ).toHaveBeenCalled()
   expect(rootStore.accessGrantStore.fetchForService).toHaveBeenCalled()
 
-  expect(servicesStore.getService('Service A').name).toEqual('Service A')
+  expect(serviceStore.getService('Service A').name).toEqual('Service A')
 })
 
 test('fetching services', async () => {
-  const managementApi = new ManagementApi()
+  const managementApiClient = new ManagementApi()
 
-  managementApi.managementListServices = jest.fn().mockResolvedValue({
+  managementApiClient.managementListServices = jest.fn().mockResolvedValue({
     services: [{ name: 'Service A' }, { name: 'Service B' }],
   })
 
-  const servicesStore = new ServiceStore({
-    rootStore: new RootStore(),
-    managementApiClient: managementApi,
+  const rootStore = new RootStore({
+    managementApiClient,
   })
+  const serviceStore = rootStore.servicesStore
 
-  await servicesStore.fetchAll()
+  await serviceStore.fetchAll()
 
-  expect(servicesStore.isInitiallyFetched).toBe(true)
-  expect(servicesStore.services).toHaveLength(2)
+  expect(serviceStore.isInitiallyFetched).toBe(true)
+  expect(serviceStore.services).toHaveLength(2)
 })
 
 test('handle error while fetching services', async () => {
-  const managementApi = new ManagementApi()
+  const managementApiClient = new ManagementApi()
 
-  managementApi.managementListServices = jest
+  managementApiClient.managementListServices = jest
     .fn()
     .mockRejectedValue('arbitrary error')
 
-  const servicesStore = new ServiceStore({
-    rootStore: new RootStore(),
-    managementApiClient: managementApi,
+  const rootStore = new RootStore({
+    managementApiClient,
   })
+  const serviceStore = rootStore.servicesStore
 
-  await servicesStore.fetchAll()
+  await serviceStore.fetchAll()
 
-  expect(servicesStore.error).toEqual('arbitrary error')
-  expect(servicesStore.services).toEqual([])
-  expect(servicesStore.isInitiallyFetched).toBe(true)
+  expect(serviceStore.error).toEqual('arbitrary error')
+  expect(serviceStore.services).toEqual([])
+  expect(serviceStore.isInitiallyFetched).toBe(true)
 })
 
 test('creating a service', async () => {
@@ -95,18 +92,18 @@ test('creating a service', async () => {
     endpointURL: 'api.io',
   })
 
-  const servicesStore = new ServiceStore({
-    rootStore: new RootStore(),
+  const rootStore = new RootStore({
     managementApiClient,
   })
+  const serviceStore = rootStore.servicesStore
 
-  const service = await servicesStore.create({
+  const service = await serviceStore.create({
     name: 'New service',
     endpointURL: 'api.io',
   })
 
   expect(service).toBeInstanceOf(ServiceModel)
-  expect(servicesStore.services[0]).toBe(service)
+  expect(serviceStore.services[0]).toBe(service)
 })
 
 test('removing a service', async () => {
@@ -118,16 +115,46 @@ test('removing a service', async () => {
 
   managementApiClient.managementDeleteService = jest.fn().mockResolvedValue()
 
-  const servicesStore = new ServiceStore({
-    rootStore: new RootStore(),
+  const rootStore = new RootStore({
     managementApiClient,
   })
+  const serviceStore = rootStore.servicesStore
 
-  await servicesStore.fetchAll()
-  expect(servicesStore.getService('Service A')).toBeInstanceOf(ServiceModel)
+  await serviceStore.fetchAll()
+  expect(serviceStore.getService('Service A')).toBeInstanceOf(ServiceModel)
 
-  await servicesStore.removeService('Service A')
+  await serviceStore.removeService('Service A')
   expect(managementApiClient.managementDeleteService).toHaveBeenCalledWith({
     name: 'Service A',
   })
+})
+
+test('fetching statistics', async () => {
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementListServices = jest.fn().mockResolvedValue({
+    services: [{ name: 'Service', incomingAccessRequestsCount: 0 }],
+  })
+
+  managementApiClient.managementGetStatisticsOfServices = jest
+    .fn()
+    .mockResolvedValue({
+      services: [{ name: 'Service', incomingAccessRequestCount: 1 }],
+    })
+
+  const rootStore = new RootStore({
+    managementApiClient,
+  })
+  const serviceStore = rootStore.servicesStore
+
+  await serviceStore.fetchAll()
+
+  expect(serviceStore.getService('Service').incomingAccessRequestsCount).toBe(0)
+
+  await serviceStore.fetchStats()
+
+  expect(
+    managementApiClient.managementGetStatisticsOfServices,
+  ).toHaveBeenCalledTimes(1)
+  expect(serviceStore.getService('Service').incomingAccessRequestsCount).toBe(1)
 })

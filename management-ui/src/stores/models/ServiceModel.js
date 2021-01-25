@@ -80,7 +80,7 @@ class ServiceModel {
       this.inways = service.inways
     }
 
-    if (service.incomingAccessRequestsCount) {
+    if (service.incomingAccessRequestsCount !== undefined) {
       this.incomingAccessRequestsCount = service.incomingAccessRequestsCount
     }
   }
