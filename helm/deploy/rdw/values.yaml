@@ -226,6 +226,11 @@ transactionLog:
 
 managementAPI:
   address: rdw-nlx-management-api:443
+  image:
+    registry: docker.io
+    repository: nlxio/management-api
+    tag: ""
+    pullPolicy: IfNotPresent
   service:
     name: kentekenregister
     endpointURL: http://rdw-mock-service

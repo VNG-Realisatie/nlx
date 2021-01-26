@@ -1,18 +1,18 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "haarlem.fullname" . }}-nlx-management-api
+  name: {{ include "rdw.fullname" . }}-setup-management-api-db
   labels:
-    {{- include "haarlem.labels" . | nindent 4 }}
+    {{- include "rdw.labels" . | nindent 4 }}
   annotations:
     helm.sh/hook: post-install,post-upgrade
-    helm.sh/hook-weight: "2"
+    helm.sh/hook-weight: "1"
     helm.sh/hook-delete-policy: "before-hook-creation,hook-succeeded"
 spec:
   template:
     metadata:
       labels:
-        {{- include "haarlem.selectorLabels" . | nindent 8 }}
+        {{- include "rdw.selectorLabels" . | nindent 8 }}
     spec:
       restartPolicy: OnFailure
       containers:

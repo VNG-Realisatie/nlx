@@ -1,9 +1,9 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "rdw.fullname" . }}-create-admin
+  name: {{ include "haarlem.fullname" . }}-create-admin
   labels:
-    {{- include "rdw.labels" . | nindent 4 }}
+    {{- include "haarlem.labels" . | nindent 4 }}
   annotations:
     helm.sh/hook: post-install,post-upgrade
     helm.sh/hook-weight: "2"
@@ -13,12 +13,12 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "rdw.selectorLabels" . | nindent 8 }}
+        {{- include "haarlem.selectorLabels" . | nindent 8 }}
     spec:
       restartPolicy: OnFailure
       containers:
         - name: management-api-create-user
-          image: {{ template "rdw.managementAPI.image" . }}
+          image: {{ template "haarlem.managementAPI.image" . }}
           imagePullPolicy: {{ .Values.managementAPI.image.pullPolicy }}
           command: ["/bin/sh"]
           args:

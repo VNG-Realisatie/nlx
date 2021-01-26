@@ -221,6 +221,11 @@ nlxctl:
 
 managementAPI:
   address: haarlem-nlx-management-api:443
+  image:
+    registry: docker.io
+    repository: nlxio/management-api
+    tag: ""
+    pullPolicy: IfNotPresent
   insight:
     insightAPIURL: https://insight-api.haarlem.nlx.minikube
     irmaServerURL: https://irma.haarlem.nlx.minikube
