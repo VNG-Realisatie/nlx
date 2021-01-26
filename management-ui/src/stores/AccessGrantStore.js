@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { makeAutoObservable, observable, flow } from 'mobx'
+import { flow, makeAutoObservable, observable } from 'mobx'
 import AccessGrantModel from './models/AccessGrantModel'
 
 class AccessGrantStore {
@@ -36,12 +36,15 @@ class AccessGrantStore {
   fetchForService = flow(function* fetchForService({ name }) {
     const result = yield this.returnForService({ name })
 
-    // delete current in-memory access requests for service
-    this.getForService({ name })
-      .map((accessGrant) => accessGrant.id)
-      .forEach((id) => {
-        this.accessGrants.delete(id)
-      })
+    // delete access grants which do not exist anymore
+    const newIds = result.map((ar) => ar.id)
+    this.getForService({ name }).forEach((ar) => {
+      if (newIds.includes(ar.id)) {
+        return
+      }
+
+      this.accessGrants.delete(ar.id)
+    })
 
     // recreate models in-memory
     result.map((accessGrantData) => this.updateFromServer(accessGrantData))

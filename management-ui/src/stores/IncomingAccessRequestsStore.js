@@ -43,7 +43,7 @@ class IncomingAccessRequestsStore {
   fetchForService = flow(function* fetchForService({ name }) {
     const result = yield this.returnForService({ name })
 
-    // delete services which do not exist anymore
+    // delete access requests which do not exist anymore
     const newIds = result.map((ar) => ar.id)
     this.getForService({ name }).forEach((ar) => {
       if (newIds.includes(ar.id)) {

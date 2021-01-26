@@ -89,6 +89,56 @@ test('revoking an access grant', async () => {
   })
 })
 
+test('fetching for a service should update existing in-memory models instead of recreating them', async () => {
+  const managementApiClient = new ManagementApi()
+
+  const accessGrantStore = new AccessGrantStore({
+    managementApiClient,
+  })
+
+  accessGrantStore.updateFromServer([
+    {
+      id: 'ag-1',
+      serviceName: 'service-a',
+      organizationName: 'organization-a',
+    },
+    {
+      id: 'ag-2',
+      serviceName: 'service-a',
+      organizationName: 'organization-b',
+    },
+  ])
+
+  managementApiClient.managementListAccessGrantsForService = jest
+    .fn()
+    .mockResolvedValue({
+      accessGrants: [
+        {
+          id: 'ag-1',
+          serviceName: 'service-a',
+          organizationName: 'organization-a',
+        },
+        {
+          id: 'ag-2',
+          serviceName: 'service-a',
+          organizationName: 'organization-b',
+        },
+      ],
+    })
+
+  await accessGrantStore.fetchForService({ name: 'service-a' })
+  const initialAccessGrants = accessGrantStore.getForService({
+    name: 'service-a',
+  })
+
+  await accessGrantStore.fetchForService({ name: 'service-a' })
+  const newAccessGrants = accessGrantStore.getForService({
+    name: 'service-a',
+  })
+
+  expect(initialAccessGrants[0]).toBe(newAccessGrants[0])
+})
+
 describe('have the access grants been changed for a service', () => {
   let managementApiClient
   let rootStore

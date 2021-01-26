@@ -130,8 +130,8 @@ test('fetching for a service should update existing in-memory models instead of 
     managementApiClient,
   })
 
-  jest
-    .spyOn(managementApiClient, 'managementListIncomingAccessRequest')
+  managementApiClient.managementListIncomingAccessRequest = jest
+    .fn()
     .mockResolvedValueOnce({
       accessRequests: [
         {
