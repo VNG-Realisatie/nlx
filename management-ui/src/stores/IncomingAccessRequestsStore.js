@@ -43,14 +43,17 @@ class IncomingAccessRequestsStore {
   fetchForService = flow(function* fetchForService({ name }) {
     const result = yield this.returnForService({ name })
 
-    // delete current in-memory access requests for service
-    this.getForService({ name })
-      .map((accessRequest) => accessRequest.id)
-      .forEach((id) => {
-        this.incomingAccessRequests.delete(id)
-      })
+    // delete services which do not exist anymore
+    const newIds = result.map((ar) => ar.id)
+    this.getForService({ name }).forEach((ar) => {
+      if (newIds.includes(ar.id)) {
+        return
+      }
 
-    // recreate models in-memory
+      this.incomingAccessRequests.delete(ar.id)
+    })
+
+    // create and update other existing requests
     result.map((accessRequest) => this.updateFromServer(accessRequest))
   }).bind(this)
 

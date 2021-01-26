@@ -123,6 +123,61 @@ test('rejecting an access request', async () => {
   expect(fetchForServiceSpy).toHaveBeenCalledWith({ name: 'Service' })
 })
 
+test('fetching for a service should update existing in-memory models instead of recreating them', async () => {
+  const managementApiClient = new ManagementApi()
+
+  const incomingAccessRequestStore = new IncomingAccessRequestsStore({
+    managementApiClient,
+  })
+
+  jest
+    .spyOn(managementApiClient, 'managementListIncomingAccessRequest')
+    .mockResolvedValueOnce({
+      accessRequests: [
+        {
+          id: 'ar-1',
+          serviceName: 'service-a',
+          organizationName: 'organization-a',
+          state: ACCESS_REQUEST_STATES.CREATED,
+        },
+        {
+          id: 'ar-2',
+          serviceName: 'service-a',
+          organizationName: 'organization-b',
+          state: ACCESS_REQUEST_STATES.CREATED,
+        },
+      ],
+    })
+    .mockResolvedValue({
+      accessRequests: [
+        {
+          id: 'ar-1',
+          serviceName: 'service-a',
+          organizationName: 'organization-a',
+          state: ACCESS_REQUEST_STATES.CREATED,
+        },
+        {
+          id: 'ar-2',
+          serviceName: 'service-a',
+          organizationName: 'organization-b',
+          state: ACCESS_REQUEST_STATES.CREATED,
+        },
+      ],
+    })
+
+  await incomingAccessRequestStore.fetchForService({ name: 'service-a' })
+  const initialAccessRequests = incomingAccessRequestStore.getForService({
+    name: 'service-a',
+  })
+
+  await incomingAccessRequestStore.fetchForService({ name: 'service-a' })
+  const newAccessRequests = incomingAccessRequestStore.getForService({
+    name: 'service-a',
+  })
+
+  expect(initialAccessRequests[0]).toBe(newAccessRequests[0])
+})
+
 describe('have the access requests been changed for a service', () => {
   let managementApiClient
   let rootStore
