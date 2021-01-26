@@ -2,6 +2,7 @@ node_modules
 /*/dist
 node_modules/
 /vendor
+/.pre-commit.json
 .DS_Store
 .idea
 tmp-scanning-reports
