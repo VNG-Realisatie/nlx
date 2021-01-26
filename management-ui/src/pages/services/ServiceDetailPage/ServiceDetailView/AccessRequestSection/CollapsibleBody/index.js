@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { StyledCollapsibleBody } from '../../../../../../components/DetailView'
 import UpdateUiButton from '../../UpdateUiButton'
 import IncomingAccessRequestRow from './IncomingAccessRequestRow'
+import { StyledSmall } from './index.styles'
 
 const CollapsibleBody = ({
   accessRequests,
@@ -82,7 +83,7 @@ const CollapsibleBody = ({
           </tbody>
         </Table>
       ) : (
-        <small>{t('There are no access requests')}</small>
+        <StyledSmall>{t('There are no access requests')}</StyledSmall>
       )}
 
       {showLoadIncomingDataButton ? (

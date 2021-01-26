@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { makeAutoObservable, observable } from 'mobx'
+import { makeAutoObservable, observable, flow } from 'mobx'
 import IncomingAccessRequestModel, {
   ACCESS_REQUEST_STATES,
 } from './models/IncomingAccessRequestModel'

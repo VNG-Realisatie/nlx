@@ -9,6 +9,7 @@ import { array, bool, func } from 'prop-types'
 import { StyledCollapsibleBody } from '../../../../../../components/DetailView'
 import UpdateUiButton from '../../UpdateUiButton'
 import AccessGrantRow from './AccessGrantRow'
+import { StyledSmall } from './index.styles'
 
 const CollapsibleBody = ({
   accessGrants,
@@ -51,7 +52,7 @@ const CollapsibleBody = ({
           </tbody>
         </Table>
       ) : (
-        <small>{t('There are no organizations with access')}</small>
+        <StyledSmall>{t('There are no organizations with access')}</StyledSmall>
       )}
 
       {showLoadIncomingDataButton ? (
