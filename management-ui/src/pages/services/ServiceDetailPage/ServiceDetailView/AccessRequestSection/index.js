@@ -11,8 +11,6 @@ import usePolling from '../../../../../hooks/use-polling'
 import CollapsibleHeader from './CollapsibleHeader'
 import CollapsibleBody from './CollapsibleBody'
 
-export const POLLING_INTERVAL = 3000
-
 const AccessRequestSectionContainer = ({ service }) => {
   const { t } = useTranslation()
   const rootStore = useStores()
@@ -21,7 +19,7 @@ const AccessRequestSectionContainer = ({ service }) => {
 
   const [pausePollingClosed, startPollingClosed] = usePolling(() => {
     rootStore.incomingAccessRequestsStore.fetchForService(service)
-  }, POLLING_INTERVAL)
+  })
 
   const [pausePollingOpen, startPollingOpen] = usePolling(async () => {
     const haveAccessRequestsChanged = await rootStore.incomingAccessRequestsStore.haveChangedForService(
@@ -33,7 +31,7 @@ const AccessRequestSectionContainer = ({ service }) => {
     if (haveAccessRequestsChanged) {
       pausePollingOpen()
     }
-  }, POLLING_INTERVAL)
+  })
 
   const loadIncomingData = async () => {
     setShowUpdateUiButton(false)

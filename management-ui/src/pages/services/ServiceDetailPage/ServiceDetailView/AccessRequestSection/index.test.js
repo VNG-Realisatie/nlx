@@ -7,7 +7,8 @@ import { fireEvent, renderWithProviders } from '../../../../../test-utils'
 import { RootStore, StoreProvider } from '../../../../../stores'
 import { ACCESS_REQUEST_STATES } from '../../../../../stores/models/IncomingAccessRequestModel'
 import { ManagementApi } from '../../../../../api'
-import AccessRequestsSection, { POLLING_INTERVAL } from './index'
+import { INTERVAL } from '../../../../../hooks/use-polling'
+import AccessRequestsSection from './index'
 
 beforeEach(() => {
   jest.useFakeTimers()
@@ -53,7 +54,7 @@ test('polling with access request section collapsed', async () => {
 
   expect(getByTestId('amount')).toHaveTextContent('0')
 
-  jest.advanceTimersByTime(POLLING_INTERVAL)
+  jest.advanceTimersByTime(INTERVAL)
 
   const amountAccented = await findByTestId('amount')
 
@@ -118,7 +119,7 @@ test('polling with access request section expanded', async () => {
   expect(queryByText('Nieuwe verzoeken')).not.toBeInTheDocument()
 
   act(() => {
-    jest.advanceTimersByTime(POLLING_INTERVAL)
+    jest.advanceTimersByTime(INTERVAL)
   })
 
   expect(await findByText('organization-a')).toBeInTheDocument()

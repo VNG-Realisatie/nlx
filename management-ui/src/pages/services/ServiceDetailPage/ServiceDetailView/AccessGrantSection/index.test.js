@@ -6,7 +6,8 @@ import { act, waitForElementToBeRemoved } from '@testing-library/react'
 import { fireEvent, renderWithProviders } from '../../../../../test-utils'
 import { RootStore, StoreProvider } from '../../../../../stores'
 import { ManagementApi } from '../../../../../api'
-import AccessGrantSection, { POLLING_INTERVAL } from './index'
+import { INTERVAL } from '../../../../../hooks/use-polling'
+import AccessGrantSection from './index'
 
 beforeEach(() => {
   jest.useFakeTimers()
@@ -54,7 +55,7 @@ test('polling with access grant section collapsed', async () => {
 
   expect(getByTestId('amount')).toHaveTextContent('0')
 
-  jest.advanceTimersByTime(POLLING_INTERVAL)
+  jest.advanceTimersByTime(INTERVAL)
 
   const amountAccented = await findByTestId('amount')
 
@@ -112,7 +113,7 @@ test('polling with access grant section expanded', async () => {
   expect(queryByText('New organizations')).not.toBeInTheDocument()
 
   act(() => {
-    jest.advanceTimersByTime(POLLING_INTERVAL)
+    jest.advanceTimersByTime(INTERVAL)
   })
 
   expect(await findByText('organization-a')).toBeInTheDocument()
