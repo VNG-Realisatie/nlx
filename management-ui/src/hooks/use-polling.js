@@ -19,7 +19,10 @@ const addFunction = (fn) => {
 }
 
 const removeFunction = (fn) => {
-  functions.splice(functions.indexOf(fn), 1)
+  const id = functions.indexOf(fn)
+  if (id < 0) return
+
+  functions.splice(id, 1)
 
   if (functions.length < 1) {
     stop()
@@ -45,7 +48,7 @@ const usePolling = (fn) => {
     return () => {
       removeFunction(fn)
     }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [fn])
 
   const pausePolling = () => removeFunction(fn)
   const continuePolling = () => addFunction(fn)
