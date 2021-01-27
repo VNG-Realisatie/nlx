@@ -62,7 +62,7 @@ test('can request access', async () => {
   const requestAccessFn = jest.fn()
   service.requestAccess = requestAccessFn
 
-  const { findByText, getByRole } = renderWithProviders(
+  const { findByText, findByRole } = renderWithProviders(
     <Router location="/directory/organization/service">
       <Route path="/directory/:organizationName/:serviceName">
         <DirectoryDetailPage service={service} />
@@ -73,7 +73,8 @@ test('can request access', async () => {
   const requestAccessButton = await findByText('Request access')
   fireEvent.click(requestAccessButton)
 
-  const okButton = within(getByRole('dialog')).getByText('Send')
+  const dialog = await findByRole('dialog')
+  const okButton = within(dialog).getByText('Send')
   await clickConfirmButtonAndAssert(okButton, () =>
     expect(requestAccessFn).toHaveBeenCalled(),
   )
