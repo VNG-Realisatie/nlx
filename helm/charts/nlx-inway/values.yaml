@@ -6,8 +6,6 @@ global:
     organizationRootCertificatePEM: ""
     rootCertificatePEM: ""
 
-replicaCount: 1
-
 image:
   registry: docker.io
   repository: nlxio/inway
@@ -15,6 +13,8 @@ image:
   tag: ""
   pullPolicy: IfNotPresent
   pullSecrets: []
+
+replicaCount: 1
 
 nameOverride: ""
 fullnameOverride: ""
