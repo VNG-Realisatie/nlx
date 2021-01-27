@@ -30,7 +30,7 @@ config:
   serviceConfig: {}
 
   managementAPI:
-    enabled: false
+    enabled: true
     address: ""
 
 transactionLog:
