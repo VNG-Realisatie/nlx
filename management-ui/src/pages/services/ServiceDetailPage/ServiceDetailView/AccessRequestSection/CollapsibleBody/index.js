@@ -88,7 +88,7 @@ const CollapsibleBody = ({
 
       {showLoadIncomingDataButton ? (
         <UpdateUiButton onClick={onClickLoadIncomingDataHandler}>
-          Nieuwe verzoeken
+          {t('Show updates')}
         </UpdateUiButton>
       ) : null}
     </StyledCollapsibleBody>

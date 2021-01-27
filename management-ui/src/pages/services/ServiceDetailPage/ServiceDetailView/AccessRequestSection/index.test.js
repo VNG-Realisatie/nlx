@@ -116,7 +116,7 @@ test('polling with access request section expanded', async () => {
   fireEvent.click(toggler)
 
   expect(getByText('organization-a')).toBeInTheDocument()
-  expect(queryByText('Nieuwe verzoeken')).not.toBeInTheDocument()
+  expect(queryByText('Show updates')).not.toBeInTheDocument()
 
   act(() => {
     jest.advanceTimersByTime(INTERVAL)
@@ -124,12 +124,12 @@ test('polling with access request section expanded', async () => {
 
   expect(await findByText('organization-a')).toBeInTheDocument()
 
-  expect(getByText('Nieuwe verzoeken')).toBeInTheDocument()
+  expect(getByText('Show updates')).toBeInTheDocument()
 
-  fireEvent.click(getByText('Nieuwe verzoeken'))
+  fireEvent.click(getByText('Show updates'))
 
   await waitForElementToBeRemoved(() => getByText('organization-a'))
-  expect(queryByText('Nieuwe verzoeken')).not.toBeInTheDocument()
+  expect(queryByText('Show updates')).not.toBeInTheDocument()
 
   jest.useRealTimers()
 })

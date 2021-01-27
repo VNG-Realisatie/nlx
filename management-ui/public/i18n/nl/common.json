@@ -70,7 +70,6 @@
   "Log in with organization account": "Inloggen met organisatieaccount",
   "Log out": "Uitloggen",
   "Name": "Naam",
-  "New organizations": "New organizations",
   "NLX Dashboard homepage": "NLX Dashboard homepage",
   "No contact details available": "Geen contactgegevens beschikbaar",
   "No inways have been added": "Nog geen inways toegevoegd",
@@ -115,6 +114,7 @@
   "Settings": "Instellingen",
   "Settings page": "Instellingenpagina",
   "Show stacktrace": "Toon stacktrace",
+  "Show updates": "Toon updates",
   "Since date": "Sinds {{date, DD-MM-YYYY[, ]HH:mm:ss}}",
   "Specification": "Specificatie",
   "Stacktrace": "Stacktrace",
@@ -144,5 +144,6 @@
   "You are requesting access to a service": "Je vraagt toegang tot een service",
   "You have access": "Je hebt toegang",
   "You have no access": "Je hebt geen toegang",
-  "Your access was revoked": "Je toegang is ingetrokken"
+  "Your access was revoked": "Je toegang is ingetrokken",
+  "New organizations": "New organizations"
 }

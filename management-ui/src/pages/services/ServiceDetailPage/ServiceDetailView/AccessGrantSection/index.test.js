@@ -45,7 +45,7 @@ test('polling with access grant section collapsed', async () => {
   const rootStore = new RootStore({ managementApiClient })
   await rootStore.servicesStore.fetchAll()
 
-  const { getByTestId, findByTestId, debug } = renderWithProviders(
+  const { getByTestId, findByTestId } = renderWithProviders(
     <StoreProvider rootStore={rootStore}>
       <AccessGrantSection
         service={rootStore.servicesStore.getService('service-a')}
@@ -59,7 +59,6 @@ test('polling with access grant section collapsed', async () => {
 
   const amountAccented = await findByTestId('amount')
 
-  debug()
   expect(amountAccented).toHaveTextContent('1')
 })
 
@@ -110,7 +109,7 @@ test('polling with access grant section expanded', async () => {
   fireEvent.click(toggler)
 
   expect(getByText('organization-a')).toBeInTheDocument()
-  expect(queryByText('New organizations')).not.toBeInTheDocument()
+  expect(queryByText('Show updates')).not.toBeInTheDocument()
 
   act(() => {
     jest.advanceTimersByTime(INTERVAL)
@@ -118,10 +117,10 @@ test('polling with access grant section expanded', async () => {
 
   expect(await findByText('organization-a')).toBeInTheDocument()
 
-  expect(getByText('New organizations')).toBeInTheDocument()
+  expect(getByText('Show updates')).toBeInTheDocument()
 
-  fireEvent.click(getByText('New organizations'))
+  fireEvent.click(getByText('Show updates'))
 
   await waitForElementToBeRemoved(() => getByText('organization-a'))
-  expect(queryByText('New organizations')).not.toBeInTheDocument()
+  expect(queryByText('Show updates')).not.toBeInTheDocument()
 })
