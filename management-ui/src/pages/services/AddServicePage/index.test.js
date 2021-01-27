@@ -27,7 +27,8 @@ describe('the AddServicePage', () => {
   })
 
   it('on initialization', () => {
-    const store = new RootStore()
+    const managementApiClient = new ManagementApi()
+    const store = new RootStore({ managementApiClient })
     const { getByTestId, queryByRole, getByLabelText } = renderWithProviders(
       <Router history={createMemoryHistory()}>
         <StoreProvider rootStore={store}>

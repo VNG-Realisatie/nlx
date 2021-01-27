@@ -28,7 +28,8 @@ beforeEach(() => {
 })
 
 test('display service details', () => {
-  const rootStore = new RootStore()
+  const managementApiClient = new ManagementApi()
+  const rootStore = new RootStore({ managementApiClient })
   const { getByTestId, getByText } = renderWithProviders(
     <StaticRouter location="/services/forty-two">
       <Route path="/services/:name">
@@ -50,7 +51,8 @@ test('display service details', () => {
 })
 
 test('fetching a non-existing component', async () => {
-  const rootStore = new RootStore()
+  const managementApiClient = new ManagementApi()
+  const rootStore = new RootStore({ managementApiClient })
 
   const { findByTestId, getByText } = renderWithProviders(
     <StaticRouter location="/services/forty-two">
