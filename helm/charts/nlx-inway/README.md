@@ -22,11 +22,13 @@ $ helm install --name my-inway nlx/nlx-inway
 
 ## Upgrading the Chart
 
-Currently, our Helm charts use the same release version as the NLX release version. To know what has changed for the Helm charts, look at the changes in our [CHANGELOG](https://gitlab.com/commonground/nlx/nlx/-/blob/master/CHANGELOG.md) that are prefixed with 'Helm'.
+Currently, our Helm charts use the same release version as the NLX release version. 
+To know what has changed for the Helm charts, look at the changes in our [CHANGELOG](https://gitlab.com/commonground/nlx/nlx/-/blob/master/CHANGELOG.md) 
+that are prefixed with 'Helm'.
 
 ## Uninstalling the Chart
 
-To uninstall/delete the `my-inway` deployment:
+To uninstall or delete the `my-inway` deployment:
 
 ```console
 $ helm delete my-inway
@@ -34,7 +36,7 @@ $ helm delete my-inway
 
 ## Configuration
 
-The following table lists the configurable parameters of the nlx-inway chart and their default values.
+The following table lists the configurable parameters of the nlx-inway Chart and its default values.
 
 | Parameter | Description | Default |
 | --------- | ----------- | ------- |
@@ -86,8 +88,6 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. 
 
 ```console
-$ helm install --name my-release -f values.yaml .
+$ helm install --name my-inway -f values.yaml .
 ```
 > **Tip**: You can use the default [values.yaml](https://gitlab.com/commonground/nlx/nlx/blob/master/helm/charts/nlx-inway/values.yaml)
-
-
