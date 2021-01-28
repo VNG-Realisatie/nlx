@@ -43,10 +43,10 @@ The following table lists the configurable parameters of the nlx-inway Chart and
 | `global.imageRegistry` | Image registry to be used by all NLX charts | `""` |
 | `global.imageTag` | Image tag to be used by all NLX charts | `true` |
 | `global.tls.organizationRootCertificatePEM`| NLX root certificate to be used by all NLX charts. If not set the value of `tls.organizationCertificate.rootCertificatePEM` is used | `""` |
-| `global.tls.rootCertificatePEM` | Root certificate of your interal PKI to be used by all NLX charts. If not set the value of `tls.certificate.rootCertificatePEM` is used | `""` |
+| `global.tls.rootCertificatePEM` | Root certificate of your internal PKI to be used by all NLX charts. If not set the value of `tls.certificate.rootCertificatePEM` is used | `""` |
 | `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` |
 | `image.repository` | Image repository (ignored if `global.imageTag` is set) | `nlx.io/inway` |
-| `image.tag` | Image tag | `The appVersion from the chart` |
+| `image.tag` | Image tag. When set to null, the AppVersion from the Chart is used | `The appVersion from the chart` |
 | `image.pullPolicy` | Image pull policy | `IfNotPresent` |
 | `image.pullSecrets` | Secrets for the image repository | `[]` |
 | `replicaCount` | Number of inway replicas | `1` |
@@ -63,17 +63,17 @@ The following table lists the configurable parameters of the nlx-inway Chart and
 | `transactionLog.enabled` | If `true` the inway will write log records into the transaction log | `true` |
 | `transactionLog.hostname` | Hostname of the transaction log database | `""` |
 | `transactionLog.database` | Database name of the transaction log | `""` |
-| `transactionLog.username` | Username of the postgres user for the transaction log database. Will be stored in a kubernetes secret | `""` |
-| `transactionLog.password` | Password of the postgres user for the transaction log database. Will be stored in a kubernetes secret | `""` |
-| `transactionLog.existingSecret` | If you have an existing secret with postgres credentials you can use it instead of `transactionLog.username` and `transaction.password` | `""` |
+| `transactionLog.username` | Username of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret | `""` |
+| `transactionLog.password` | Password of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret | `""` |
+| `transactionLog.existingSecret` | If you have an existing secret with PostgreSQL credentials you can use it instead of `transactionLog.username` and `transaction.password` | `""` |
 | `tls.organizationCertificate.rootCertificatePEM` | The NLX root certificate | `""` |
 | `tls.organizationCertificate.certificatePEM` | Your NLX certificate | `""` |
 | `tls.organizationCertificate.keyPEM` | The private key of `tls.organizationCertificate.certificatePEM` | `""` |
-| `tls.organizationCertificate.existingSecret` | If you have an exisisting secret with your NLX keypair you can use it instead of `tls.organizationCertificate.certificatePEM` and `tls.organizationCertificate.keyPEM` | `""` |
+| `tls.organizationCertificate.existingSecret` | If you have an existing secret with your NLX keypair you can use it instead of `tls.organizationCertificate.certificatePEM` and `tls.organizationCertificate.keyPEM` | `""` |
 | `tls.certificate.rootCertificatePEM` | The root certificate of your internal PKI | `""` |
 | `tls.certificate.certificatePEM` | The certificate signed by your internal PKI | `""` |
 | `tls.certificate.keyPEM` | The private key of `tls.certificate.certificatePEM` | `""` |
-| `tls.certificate.existingSecret` | If you have an exisisting secret with your NLX keypair you can use it instead of `tls.organizationCertificate.certificatePEM` and `tls.organizationCertificate.keyPEM` | `""` |
+| `tls.certificate.existingSecret` | If you have an existing secret with your NLX keypair you can use it instead of `tls.organizationCertificate.certificatePEM` and `tls.organizationCertificate.keyPEM` | `""` |
 | `serviceAccount.create` | If `true`, create a new service account | `true` |
 | `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` |
 | `serviceAccount.annotations` | Annotations to add to the service account |  
