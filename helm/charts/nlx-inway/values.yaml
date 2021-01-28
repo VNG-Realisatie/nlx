@@ -62,10 +62,10 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
-podSecurityContext: 
-  fsGroup: 1001
-
 securityContext: {}
+
+podSecurityContext:
+  fsGroup: 1001
 
 service:
   type: ClusterIP
@@ -75,6 +75,7 @@ resources: {}
 
 nodeSelector: {}
 
+affinity: {}
+
 tolerations: []
 
-affinity: {}

@@ -49,9 +49,9 @@ The following table lists the configurable parameters of the nlx-inway Chart and
 | `image.tag` | Image tag | `The appVersion from the chart` |
 | `image.pullPolicy` | Image pull policy | `IfNotPresent` |
 | `image.pullSecrets` | Secrets for the image repository | `[]` |
-| `replicaCount`  | Number of inway replicas  | `1` |
-| `nameOverride`  | Override deployment name| `""` |
-| `fullnameOverride`  | Override full deployment name | `""` | #TODO fullname -> fullName
+| `replicaCount` | Number of inway replicas | `1` |
+| `nameOverride` | Override deployment name | `""` |
+| `fullnameOverride` | Override full deployment name | `""` | #TODO fullname -> fullName
 | `config.logType` | Possible values: **live**, **local**. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger. | live |
 | `config.logLevel` | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType` | `""` | 
 | `config.name` | Unique identifier of this inway. | `""` |
