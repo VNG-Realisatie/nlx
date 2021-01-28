@@ -82,8 +82,9 @@ class ServiceStore {
     stats.forEach((statistic) => {
       const service = this.getService(statistic.name)
       if (
+        service &&
         service.incomingAccessRequestsCount !==
-        statistic.incomingAccessRequestCount
+          statistic.incomingAccessRequestCount
       ) {
         service.update({
           incomingAccessRequestsCount: statistic.incomingAccessRequestCount,
