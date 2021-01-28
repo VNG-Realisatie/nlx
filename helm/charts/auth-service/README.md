@@ -44,7 +44,7 @@ The following table lists the configurable parameters of the nlx-auth-service Ch
 | `global.imageRegistry` | Image registry to be used by all NLX charts | `""` |
 | `global.imageTag` | Image tag to be used by all NLX charts | `true` |
 | `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` |
-| `image.repository` | Image repository (ignored if `global.imageTag` is set) | `nlx.io/inway` |
+| `image.repository` | Image repository (ignored if `global.imageTag` is set) | `nlxio/inway` |
 | `image.tag` | Image tag | `The appVersion from the chart` |
 | `image.pullPolicy` | Image pull policy | `IfNotPresent` |
 | `image.pullSecrets` | Secrets for the image repository | `[]` |

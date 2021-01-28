@@ -44,7 +44,7 @@ The following table lists the configurable parameters of the ca-certportal Chart
 | `global.imageRegistry` | Image registry to be used by all NLX charts | `""` |
 | `global.imageTag` | Image tag to be used by all NLX charts | `""` |
 | `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` |
-| `image.repository` | Image repository (ignored if `global.imageTag` is set) | `nlx.io/ca-certportal` |
+| `image.repository` | Image repository (ignored if `global.imageTag` is set) | `nlxio/ca-certportal` |
 | `image.tag` | Image tag | `The appVersion from the chart` |
 | `image.pullPolicy` | Image pull policy | `IfNotPresent` |
 | `image.pullSecrets` | Secrets for the image repository | `[]` |
