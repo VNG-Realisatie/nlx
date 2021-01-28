@@ -1,20 +1,16 @@
-# Global settings
 global:
   imageRegistry: ""
   imageTag: ""
 
-replicaCount: 1
-
 image:
   registry: docker.io
   repository: nlxio/ca-certportal
-  # Allow to override the tag. When set to null, the AppVersion from the Chart is used
   tag: ""
   pullPolicy: IfNotPresent
   pullSecrets: []
 
+replicaCount: 1
 
-# CA Certportal specific sttingd
 config:
   logType: live
   logLevel: info
@@ -24,24 +20,13 @@ nameOverride: ""
 fullnameOverride: ""
 
 serviceAccount:
-  # Specifies whether a service account should be created
   create: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
   name: ""
+  annotations: {}
 
 podSecurityContext: {}
-  # fsGroup: 2000
 
 securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
 
 service:
   type: ClusterIP
@@ -74,6 +59,6 @@ resources: {}
 
 nodeSelector: {}
 
-tolerations: []
-
 affinity: {}
+
+tolerations: []
