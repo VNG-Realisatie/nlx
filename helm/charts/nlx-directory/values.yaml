@@ -1,11 +1,8 @@
-# Global settings
 global:
   imageRegistry: ""
   imageTag: ""
   tls:
     rootCertificatePEM: ""
-
-replicaCount: 1
 
 image:
   registry: docker.io
@@ -14,11 +11,11 @@ image:
   registrationRepository: nlxio/directory-registration-api
   monitorRepository: nlxio/directory-monitor
   uiRepository: nlxio/directory-ui
-
-  # Allow to override the tag. When set to null, the AppVersion from the Chart is used
   tag: ""
   pullPolicy: IfNotPresent
   pullSecrets: []
+
+replicaCount: 1
 
 nameOverride: ""
 fullnameOverride: ""
@@ -50,25 +47,12 @@ ui:
     class: ""
     annotations: {}
     hosts: []
-      # - chart-example.local
     tls: []
-      # - secretName: chart-example-tls
-      #   hosts:
-      #     - chart-example.local
 
 serviceAccount:
-  # Specifies whether a service account should be created
   create: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
   name: ""
-
-podSecurityContext: 
-  fsGroup: 1001
-
-securityContext: {}
+  annotations: {}
 
 service:
   type: ClusterIP
@@ -76,10 +60,15 @@ service:
   inspectionPlainPort: 80
   registrationPort: 443
 
+podSecurityContext:
+  fsGroup: 1001
+
+securityContext: {}
+
 resources: {}
 
 nodeSelector: {}
 
-tolerations: []
-
 affinity: {}
+
+tolerations: []
