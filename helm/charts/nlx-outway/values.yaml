@@ -5,14 +5,14 @@ global:
   tls:
     organizationRootCertificatePEM: ""
 
-replicaCount: 1
-
 image:
   registry: docker.io
   repository: nlxio/outway
   tag: ""
   pullPolicy: IfNotPresent
   pullSecrets: []
+
+replicaCount: 1
 
 nameOverride: ""
 fullnameOverride: ""
@@ -54,10 +54,10 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
-podSecurityContext: 
-  fsGroup: 1001
-
 securityContext: {}
+
+podSecurityContext:
+  fsGroup: 1001
 
 service:
   type: ClusterIP
@@ -81,6 +81,6 @@ resources: {}
 
 nodeSelector: {}
 
-tolerations: []
-
 affinity: {}
+
+tolerations: []
