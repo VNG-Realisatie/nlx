@@ -146,6 +146,7 @@ const AccessSection = ({
             </>
           )}
         </Switch.Case>
+        <Switch.Default>{() => null}</Switch.Default>
       </Switch>
     </Section>
   )
