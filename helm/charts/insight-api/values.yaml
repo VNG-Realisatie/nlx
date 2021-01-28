@@ -1,9 +1,6 @@
-# Global settings
 global:
   imageRegistry: ""
   imageTag: ""
-
-replicaCount: 1
 
 image:
   registry: docker.io
@@ -12,10 +9,11 @@ image:
   tag: ""
   pullSecrets: []
 
+replicaCount: 1
+
 nameOverride: ""
 fullnameOverride: ""
 
-# insight-api specific config
 config:
   logType: live
   logLevel: info
@@ -32,18 +30,14 @@ transactionLog:
   existingSecret: ""
 
 serviceAccount:
-  # Specifies whether a service account should be created
   create: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
   name: ""
-
-podSecurityContext: 
-  fsGroup: 1001
+  annotations: {}
 
 securityContext: {}
+
+podSecurityContext:
+  fsGroup: 1001
 
 service:
   type: ClusterIP
@@ -65,6 +59,6 @@ resources: {}
 
 nodeSelector: {}
 
-tolerations: []
-
 affinity: {}
+
+tolerations: []
