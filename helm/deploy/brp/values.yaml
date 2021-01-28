@@ -88,8 +88,6 @@ nlx-inway:
           authorization-model: none
           insight-api-url: https://insight-api.brp.nlx.minikube
           irma-api-url: https://irma.brp.nlx.minikube
-    management-api:
-      enabled: true
   transactionLog:
     hostname: brp-postgresql
     database: brp-transaction-log
