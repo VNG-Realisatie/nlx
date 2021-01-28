@@ -6,25 +6,22 @@ global:
     organizationRootCertificatePEM: ""
     rootCertificatePEM: ""
 
-replicaCount: 1
-
 image:
   registry: docker.io
   apiRepository: nlxio/management-api
   uiRepository: nlxio/management-ui
-  # tag allows to override the tag. When set to null, the AppVersion from the Chart is used
   tag: ""
   pullPolicy: IfNotPresent
   pullSecrets: []
 
+replicaCount: 1
+
 nameOverride: ""
 fullnameOverride: ""
 
-# Management specific settings
 config:
   logType: live
   logLevel: info
-
   directoryInspectionHostname: ""
   directoryRegistrationHostname: ""
   sessionCookieSecure: false
@@ -58,10 +55,10 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
-podSecurityContext: 
-  fsGroup: 1001
-
 securityContext: {}
+
+podSecurityContext:
+  fsGroup: 1001
 
 service:
   type: ClusterIP
@@ -89,6 +86,6 @@ resources: {}
 
 nodeSelector: {}
 
-tolerations: []
-
 affinity: {}
+
+tolerations: []
