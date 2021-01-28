@@ -1,7 +1,10 @@
-# ca-certportal 
+# ca-cfssl-unsafe 
 
-This is the Chart for the NLX ca-certportal. It provides a 
-web interface that allows requesting a testing certificate easily.
+This is the Chart for the NLX ca-cfssl-unsafe. It is used in 
+non-production environments to generate certificates on the fly from 
+a central root CA.
+
+Unsafe-ca is based on [cfssl](https://github.com/cloudflare/cfssl).
 
 ## Prerequisites
 
@@ -9,14 +12,14 @@ web interface that allows requesting a testing certificate easily.
 
 ## Installing the Chart
 
-To install the Chart with the release name `my-ca-certportal`:
+To install the Chart with the release name `my-ca-cfssl-unsafe`:
 
 ```console
 ## Add the NLX Helm repository
 $ helm repo add nlx https://charts.nlx.io
 
-## Install the nlx-ca-certportal helm Chart
-$ helm install --name my-ca-certportal nlx/nlx-ca-certportal
+## Install the nlx-ca-cfssl-unsafe helm Chart
+$ helm install --name my-ca-cfssl-unsafe nlx/nlx-ca-cfssl-unsafe
 ```
 
 > **Tip**: List all releases using `helm list`
@@ -29,29 +32,27 @@ that are prefixed with 'Helm'.
 
 ## Uninstalling the Chart
 
-To uninstall or delete the `my-ca-certportal` deployment:
+To uninstall or delete the `my-ca-cfssl-unsafe` deployment:
 
 ```console
-$ helm delete my-ca-certportal
+$ helm delete my-ca-cfssl-unsafe
 ```
 
 ## Configuration
 
-The following table lists the configurable parameters of the ca-certportal Chart and its default values.
+The following table lists the configurable parameters of the ca-cfssl-unsafe Chart and its default values.
 
 | Parameter | Description | Default |
 | --------- | ----------- | ------- |
 | `global.imageRegistry` | Image registry to be used by all NLX charts | `""` |
 | `global.imageTag` | Image tag to be used by all NLX charts | `""` |
 | `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` |
-| `image.repository` | Image repository (ignored if `global.imageTag` is set) | `nlx.io/ca-certportal` |
+| `image.repository` | Image repository (ignored if `global.imageTag` is set) | `nlxio/ca-cfssl-unsafe` |
 | `image.tag` | Image tag | `The appVersion from the chart` |
 | `image.pullPolicy` | Image pull policy | `IfNotPresent` |
 | `image.pullSecrets` | Secrets for the image repository | `[]` |
-| `replicaCount` | Number of ca-certportal replicas  | `1` |
-| `config.logType` | Possible values: **live**, **local**. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger. | live |
-| `config.logLevel` | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType` | `""` | 
-| `config.caHost` | The host of the Certificate Authority. | `""` |
+| `replicaCount` | Number of ca-cfssl-unsafe replicas  | `1` |
+| `config.existingSecret` | TODO | `""` |
 | `nameOverride`  | Override deployment name | `""` |
 | `fullnameOverride` | Override full deployment name | `""` | #TODO fullname -> fullName
 | `serviceAccount.create` | If `true`, create a new service account | `true` |
@@ -60,12 +61,7 @@ The following table lists the configurable parameters of the ca-certportal Chart
 | `podSecuritiyContext` | TODO | `{}` |
 | `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` |
 | `service.type` | TODO | `ClusterIP` |
-| `service.httpPort` | TODO | `8090` |
-| `ingress.enabled` | TODO | `false` |
-| `ingress.class` | TODO | `""` |
-| `ingress.annotations` | TODO | `{}` |
-| `ingress.hosts` | TODO | `[]` |
-| `ingress.tls` | TODO | `[]` |
+| `service.httpPort` | TODO | `8888` |
 | `resources` | TODO | `{}` |
 | `nodeSelector` | Node labels for pod assignment | `{}` |
 | `affinity` | Node affinity for pod assignment | `{}` |
@@ -76,6 +72,6 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. 
 
 ```console
-$ helm install --name my-ca-certportal -f values.yaml .
+$ helm install --name my-ca-cfssl-unsafe -f values.yaml .
 ```
-> **Tip**: You can use the default [values.yaml](https://gitlab.com/commonground/nlx/nlx/blob/master/helm/charts/ca-certportal/values.yaml)
+> **Tip**: You can use the default [values.yaml](https://gitlab.com/commonground/nlx/nlx/blob/master/helm/charts/ca-cfssl-unsafe/values.yaml)
