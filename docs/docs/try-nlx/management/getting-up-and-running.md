@@ -110,7 +110,7 @@ import TabItem from '@theme/TabItem';
 
 #### Environment variables
 
-- `MANAGEMENT_API_ADDRESS` Address of the Management API.
+- `MANAGEMENT_API_URL` URL of the Management API.
 
 </TabItem>
 </Tabs>
@@ -230,7 +230,7 @@ On the left you will find the main navigation which separates the UI in several 
 In order to receive access requests you have to set a default inway for your organization.
 You can do that by going to the settings page, selecting the "Inway-01" and clicking on "Save settings".
 
-> In the Docker Compose file we have started, access requests can be accepted by the inway 
+> In the Docker Compose file we have started, access requests can be accepted by the inway
 on port `8444`. Make sure that port is publicly accessible.
 
 

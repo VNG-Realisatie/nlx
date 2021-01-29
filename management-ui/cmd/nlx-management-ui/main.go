@@ -19,8 +19,8 @@ import (
 )
 
 var options struct {
-	ListenAddress        string `long:"listen-address" env:"LISTEN_ADDRESS" default:"127.0.0.1:8080" description:"Address for the UI to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
-	ManagementAPIAddress string `long:"management-api-address" env:"MANAGEMENT_API_ADDRESS" required:"true" description:"Address for the Management API endpoint to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	ListenAddress    string `long:"listen-address" env:"LISTEN_ADDRESS" default:"127.0.0.1:8080" description:"Address for the UI to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	ManagementAPIURL string `long:"management-api-url" env:"MANAGEMENT_API_URL" required:"true" description:"URL to the Management API"`
 
 	logoptions.LogOptions
 }
@@ -43,12 +43,12 @@ func main() {
 
 	log.Printf("starting http server on %s", options.ListenAddress)
 
-	managementAPIUrl, err := url.Parse(options.ManagementAPIAddress)
+	managementAPIURL, err := url.Parse(options.ManagementAPIURL)
 	if err != nil {
 		log.Fatalf("invalid format for Management API URL: %s", err.Error())
 	}
 
-	proxy := httputil.NewSingleHostReverseProxy(managementAPIUrl)
+	proxy := httputil.NewSingleHostReverseProxy(managementAPIURL)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)

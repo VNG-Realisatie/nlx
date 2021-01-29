@@ -48,7 +48,7 @@ spec:
           env:
             - name: LISTEN_ADDRESS
               value: 0.0.0.0:8080
-            - name: MANAGEMENT_API_ADDRESS
+            - name: MANAGEMENT_API_URL
               value: http://{{ $fullName }}-api
     {{- with .Values.nodeSelector }}
       nodeSelector:
