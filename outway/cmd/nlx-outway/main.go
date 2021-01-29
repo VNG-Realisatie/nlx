@@ -46,7 +46,8 @@ var options struct {
 	cmd.TLSOrgOptions
 }
 
-func parseOptions() {
+// nolint:funlen,gocyclo // this is the main function
+func main() {
 	args, err := flags.Parse(&options)
 	if err != nil {
 		if et, ok := err.(*flags.Error); ok {
@@ -61,10 +62,6 @@ func parseOptions() {
 	if len(args) > 0 {
 		log.Fatalf("unexpected arguments: %v", args)
 	}
-}
-
-func main() {
-	parseOptions()
 
 	// Setup new zap logger
 	config := options.LogOptions.ZapConfig()
