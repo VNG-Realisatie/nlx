@@ -80,10 +80,6 @@ func main() {
 		logger.Warn("invalid organization key permissions", zap.Error(errValidate), zap.String("file-path", options.OrgKeyFile))
 	}
 
-	if errValidate := common_tls.VerifyPrivateKeyPermissions(options.KeyFile); errValidate != nil {
-		logger.Warn("invalid internal PKI key permissions", zap.Error(errValidate), zap.String("file-path", options.KeyFile))
-	}
-
 	orgCert, err := common_tls.NewBundleFromFiles(options.OrgCertFile, options.OrgKeyFile, options.NLXRootCert)
 	if err != nil {
 		logger.Fatal("loading TLS files", zap.Error(err))
@@ -96,6 +92,10 @@ func main() {
 
 	if len(options.ManagementAPIAddress) > 0 {
 		logger.Info("management-api set")
+
+		if errValidate := common_tls.VerifyPrivateKeyPermissions(options.KeyFile); errValidate != nil {
+			logger.Warn("invalid internal PKI key permissions", zap.Error(errValidate), zap.String("file-path", options.KeyFile))
+		}
 
 		cert, mErr := common_tls.NewBundleFromFiles(options.CertFile, options.KeyFile, options.RootCertFile)
 		if mErr != nil {
