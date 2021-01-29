@@ -6,7 +6,7 @@
     "@commonground/design-system": "17.2.0",
     "dayjs": "1.10.3",
     "formik": "2.2.6",
-    "i18next": "19.8.4",
+    "i18next": "19.8.5",
     "i18next-xhr-backend": "3.2.2",
     "js-cookie": "2.2.1",
     "mobx": "6.0.4",
