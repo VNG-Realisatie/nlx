@@ -3,12 +3,21 @@ package database
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"gorm.io/gorm"
 )
 
 var ErrUserAlreadyExists = errors.New("user already exists")
+
+type RoleNotFoundError struct {
+	RoleName string
+}
+
+func (err *RoleNotFoundError) Error() string {
+	return fmt.Sprintf("role '%s' not found", err.RoleName)
+}
 
 const AdminRole = "admin"
 
@@ -71,6 +80,12 @@ func (db *PostgresConfigDatabase) CreateUser(ctx context.Context, email string, 
 			Where("code = ?", roleName).
 			First(role).
 			Error; err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return nil, &RoleNotFoundError{
+					RoleName: roleName,
+				}
+			}
+
 			return nil, err
 		}
 
