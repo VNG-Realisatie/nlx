@@ -77,16 +77,16 @@ The following table lists the configurable parameters of the nlx-management Char
 | `serviceAccount.annotations` | Annotations to add to the service account |  
 | `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` |
 | `podSecuritiyContext.fsGroup` | Group ID under which the pod should be started | `1001` |
-| `service.type` | TODO | `ClusterIP` |
-| `service.apiPort` | TODO | `80` |
-| `service.apiConfigPort` | TODO | `443` |
-| `service.uiPort` | TODO | `8080` |
-| `ingress.enabled` | TODO | `false` |
-| `ingress.annotations` | TODO | `{}` |
-| `ingress.hosts.host` | TODO | `chart-example.local` |
-| `ingress.hosts.paths` | TODO | `[]` |
-| `ingress.tls` | TODO | `[]` |
-| `resources` | TODO | `{}` |
+| `service.type` | Service type (ClusterIP, NodePort or LoadBalancer) | `ClusterIP` |
+| `service.apiPort` | Port exposed by the management API service | `80` |
+| `service.apiConfigPort` | Port exposed by the management API service for the config endpoints | `443` |
+| `service.uiPort` | Port exposed by the management UI service | `8080` |
+| `ingress.enabled` | Enable Ingress | `false` |
+| `ingress.annotations` | Ingress annotations | `{}` |
+| `ingress.hosts.host` | Ingress accepted hostname | `chart-example.local` |
+| `ingress.hosts.paths` | Ingress accepted paths | `[]` |
+| `ingress.tls` | Ingress TLS configuration | `[]` |
+| `resources` | Pod resource requests & limits | `{}` |
 | `nodeSelector` | Node labels for pod assignment | `{}` |
 | `affinity` | Node affinity for pod assignment | `{}` |
 | `tolerations` | Node tolerations for pod assignment | `[]` |
