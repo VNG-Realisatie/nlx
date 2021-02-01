@@ -66,14 +66,14 @@ The following table lists the configurable parameters of the insight-api Chart a
 | `serviceAccount.annotations` | Annotations to add to the service account |  
 | `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` |
 | `podSecuritiyContext.fsGroup` | Group ID under which the pod should be started | `1001` |
-| `service.type` | TODO | `ClusterIP` |
-| `service.port` | TODO | `8080` |
-| `ingress.enabled` | TODO | `false` |
-| `ingress.annotations` | TODO | `{}` |
-| `ingress.hosts.host` | TODO | `chart-example.local` |
-| `ingress.hosts.paths` | TODO | `[]` |
-| `ingress.tls` | TODO | `[]` |
-| `resources` | TODO | `{}` |
+| `service.type` | Service type (ClusterIP, NodePort or LoadBalancer) | `ClusterIP` |
+| `service.port` | Port exposed by service | `8080` |
+| `ingress.enabled` | Enable Ingress | `false` |
+| `ingress.annotations` | Ingress annotations | `{}` |
+| `ingress.hosts.host` | Ingress accepted hostnames | `chart-example.local` |
+| `ingress.hosts.paths` | Ingress paths | `[]` |
+| `ingress.tls` | Ingress TLS configuration | `[]` |
+| `resources` | Pod resource requests & limits | `{}` |
 | `nodeSelector` | Node labels for pod assignment | `{}` |
 | `affinity` | Node affinity for pod assignment | `{}` |
 | `tolerations` | Node tolerations for pod assignment | `[]` |
