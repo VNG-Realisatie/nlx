@@ -58,25 +58,25 @@ The following table lists the configurable parameters of the nlx-directory Chart
 | `config.logType` | Possible values: **live**, **local**. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger. | live |
 | `config.logLevel` | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType` | `""` |
 | `config.monitorOfflineServiceTTL` | Time, in seconds, a service can be offline before being removed from the directory | `86400` |
-| `config.resetDatabase` | TODO | `false` |
-| `tls.rootCertificatePEM` | TODO | `""` |
-| `tls.certificatePEM` | TODO | `""` |
-| `tls.keyPEM` | TODO | `""` |
-| `tls.existingSecret` | TODO | `""` |
+| `config.resetDatabase` | If `true` the database will be cleared after installing or upgrading | `false` |
+| `tls.rootCertificatePEM` | The NLX root certificate | `""` |
+| `tls.certificatePEM` | Organization certificate | `""` |
+| `tls.keyPEM` | Private key of `tls.certificatePEM` | `""` |
+| `tls.existingSecret` | TIf you have an existing secret with your NLX keypair you can use it instead of `tls.certificatePEM` and `tls.keyPEM` | `""` |
 | `ui.enabled` | Enable the Directory UI | `true` |
-| `ui.port` | TODO | `80` |
-| `ui.ingress.enabled` | TODO | `false` |
-| `ui.ingress.class` | TODO | `""` |
-| `ui.ingress.annotations` | TODO | `{}` |
-| `ui.ingress.hosts` | TODO | `[]` |
-| `ui.ingress.tls` | TODO | `[]` |
+| `ui.port` | Port exposed by the directory UI service | `80` |
+| `ui.ingress.enabled` | Enable Ingress | `false` |
+| `ui.ingress.class` | Ingress class | `""` |
+| `ui.ingress.annotations` | Ingress annotations | `{}` 
+| `ui.ingress.hosts` | Ingress accepted hostname | `chart-example.local` |
+| `ui.ingress.tls` | Ingress TLS configuration | `[]` |
 | `serviceAccount.create` | If `true`, create a new service account | `true` |
 | `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` |
 | `serviceAccount.annotations` | Annotations to add to the service account |
-| `service.type` | TODO | `ClusterIP` |
-| `service.inspectionPort` | TODO | `443` |
-| `service.inspectionPlainPort` | TODO | `80` |
-| `service.registrationPort` | TODO | `443` |
+| `service.type` | Service type (ClusterIP, NodePort or LoadBalancer) | `ClusterIP` |
+| `service.inspectionPort` | Port exposed by the service for the inspection API | `443` |
+| `service.inspectionPlainPort` | Port exposed by the plain service for inspection API | `80` |
+| `service.registrationPort` | Port exposed by the service for directory registration API | `443` |
 | `podSecuritiyContext.fsGroup` | Group ID under which the pod should be started | `1001` |
 | `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` |
 | `nodeSelector` | Node labels for pod assignment | `{}` |
