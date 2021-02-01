@@ -7,6 +7,10 @@ Lint commit messages:
     - start_section lint "Linting commit messages"
     - npx commitlint --from $(git rev-parse origin/master)
     - stop_section lint
+  rules:
+    - if: '$CI_COMMIT_TAG && $CI_PROJECT_PATH == "commonground/nlx/nlx"' # do not run for tags
+      when: never
+    - when: always
   tags:
     - docker
     - linux
@@ -19,6 +23,10 @@ Go go.mod tidy test:
     - /usr/local/go/bin/go mod download
     - /usr/local/go/bin/go mod tidy
     - diff go.mod.orig go.mod
+  rules:
+    - if: '$CI_COMMIT_TAG && $CI_PROJECT_PATH == "commonground/nlx/nlx"' # do not run for tags
+      when: never
+    - when: always
   tags:
     - docker
     - linux
@@ -41,6 +49,10 @@ Go tests:
     expire_in: 1 month
     paths:
       - tmp-coverage-reports/coverage.html
+  rules:
+    - if: '$CI_COMMIT_TAG && $CI_PROJECT_PATH == "commonground/nlx/nlx"' # do not run for tags
+      when: never
+    - when: always
   tags:
     - docker
     - linux
@@ -63,6 +75,10 @@ Go linter:
       codequality: gl-code-quality-report.json
     paths:
       - gl-code-quality-report.json
+  rules:
+    - if: '$CI_COMMIT_TAG && $CI_PROJECT_PATH == "commonground/nlx/nlx"' # do not run for tags
+      when: never
+    - when: always
   tags:
     - docker
     - linux
@@ -84,6 +100,10 @@ Directory-ui linter and tests:
     expire_in: 1 month
     paths:
       - directory-ui/coverage
+  rules:
+    - if: '$CI_COMMIT_TAG && $CI_PROJECT_PATH == "commonground/nlx/nlx"' # do not run for tags
+      when: never
+    - when: always
   tags:
     - docker
     - linux
@@ -105,6 +125,10 @@ Insight-ui tests:
     expire_in: 1 month
     paths:
       - insight-ui/coverage
+  rules:
+    - if: '$CI_COMMIT_TAG && $CI_PROJECT_PATH == "commonground/nlx/nlx"' # do not run for tags
+      when: never
+    - when: always
   tags:
     - docker
     - linux
@@ -138,6 +162,10 @@ Management-ui linter and tests:
     expire_in: 1 month
     paths:
       - management-ui/coverage
+  rules:
+    - if: '$CI_COMMIT_TAG && $CI_PROJECT_PATH == "commonground/nlx/nlx"' # do not run for tags
+      when: never
+    - when: always
   tags:
     - docker
     - linux
@@ -154,6 +182,10 @@ Helm lint:
         helm lint --strict ${CHART}
         stop_section lint
       done
+  rules:
+    - if: '$CI_COMMIT_TAG && $CI_PROJECT_PATH == "commonground/nlx/nlx"' # do not run for tags
+      when: never
+    - when: always
   tags:
     - docker
     - linux
