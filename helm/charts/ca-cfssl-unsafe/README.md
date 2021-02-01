@@ -52,17 +52,17 @@ The following table lists the configurable parameters of the ca-cfssl-unsafe Cha
 | `image.pullPolicy` | Image pull policy | `IfNotPresent` |
 | `image.pullSecrets` | Secrets for the image repository | `[]` |
 | `replicaCount` | Number of ca-cfssl-unsafe replicas  | `1` |
-| `config.existingSecret` | TODO | `""` |
+| `config.existingSecret` | Secret containing the root certificate and key of the CA | `""` |
 | `nameOverride`  | Override deployment name | `""` |
 | `fullnameOverride` | Override full deployment name | `""` | #TODO fullname -> fullName
 | `serviceAccount.create` | If `true`, create a new service account | `true` |
 | `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` |
 | `serviceAccount.annotations` | Annotations to add to the service account |  
-| `podSecuritiyContext` | TODO | `{}` |
+| `podSecuritiyContext` | SecurityContext holds pod-level security attributes and common container settings. Optional: Defaults to empty. See type description for default values of each field. | `{}` |
 | `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` |
-| `service.type` | TODO | `ClusterIP` |
-| `service.httpPort` | TODO | `8888` |
-| `resources` | TODO | `{}` |
+| `service.type` | Service type (ClusterIP, NodePort or LoadBalancer) | `ClusterIP` |
+| `service.port` | Port exposed by service | `8888` |
+| `resources` | Pod resource requests & limits | `{}` |
 | `nodeSelector` | Node labels for pod assignment | `{}` |
 | `affinity` | Node affinity for pod assignment | `{}` |
 | `tolerations` | Node tolerations for pod assignment | `[]` |
