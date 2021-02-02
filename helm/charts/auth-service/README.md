@@ -49,8 +49,8 @@ The following table lists the configurable parameters of the nlx-auth-service Ch
 | `image.pullPolicy` | Image pull policy | `IfNotPresent` |
 | `image.pullSecrets` | Secrets for the image repository | `[]` |
 | `replicaCount`  | Number of inway replicas  | `1` |
-| `tls.certificatePEM` | Absolute or relative path to the Organization cert .pem | `""` |
-| `tls.keyPEM` | Absolute or relative path to the Organization key .pem | `""` |
+| `tls.certificatePEM` | Organization certificate | `""` |
+| `tls.keyPEM` | The private key of `tls.certificatePEM` | `""` |
 | `tls.existingSecret` | If you have an exisisting secret with your keypair you can use it instead of `tls.certificatePEM` and `tls.keyPEM` | `""` |
 | `nameOverride`  | Override deployment name | `""` |
 | `fullnameOverride` | Override full deployment name | `""` | #TODO fullname -> fullName
@@ -59,6 +59,9 @@ The following table lists the configurable parameters of the nlx-auth-service Ch
 | `serviceAccount.annotations` | Annotations to add to the service account |  
 | `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` |
 | `podSecuritiyContext.fsGroup` | Group ID under which the pod should be started | `1001` |
+| `service.type` | Service type (ClusterIP, NodePort or LoadBalancer) | `ClusterIP` |
+| `service.port` | Port exposed by the inway service | `443` |
+| `resources` | Pod resource requests & limits | `{}` |
 | `nodeSelector` | Node labels for pod assignment | `{}` |
 | `affinity` | Node affinity for pod assignment | `{}` |
 | `tolerations` | Node tolerations for pod assignment | `[]` |

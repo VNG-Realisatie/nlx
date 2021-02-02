@@ -57,16 +57,16 @@ The following table lists the configurable parameters of the ca-certportal Chart
 | `serviceAccount.create` | If `true`, create a new service account | `true` |
 | `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` |
 | `serviceAccount.annotations` | Annotations to add to the service account |  
-| `podSecuritiyContext` | TODO | `{}` |
+| `podSecuritiyContext` | SecurityContext holds pod-level security attributes and common container settings. Optional: Defaults to empty. | `{}` |
 | `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` |
-| `service.type` | TODO | `ClusterIP` |
-| `service.httpPort` | TODO | `8090` |
-| `ingress.enabled` | TODO | `false` |
-| `ingress.class` | TODO | `""` |
-| `ingress.annotations` | TODO | `{}` |
-| `ingress.hosts` | TODO | `[]` |
-| `ingress.tls` | TODO | `[]` |
-| `resources` | TODO | `{}` |
+| `service.type` | Service type (ClusterIP, NodePort or LoadBalancer) | `ClusterIP` |
+| `service.httpPort` | Port exposed by the service | `8090` |
+| `ingress.enabled` | Enable Ingress | `false` |
+| `ingress.class` | Ingress class | `""` |
+| `ingress.annotations` | Ingress annotations | `{}` |
+| `ingress.hosts` | Ingress accepted hostnames | `[]` |
+| `ingress.tls` | Ingres TLS configuration | `[]` |
+| `resources` | Pod resource requests & limits | `{}` |
 | `nodeSelector` | Node labels for pod assignment | `{}` |
 | `affinity` | Node affinity for pod assignment | `{}` |
 | `tolerations` | Node tolerations for pod assignment | `[]` |

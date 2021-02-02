@@ -79,6 +79,7 @@ The following table lists the configurable parameters of the nlx-directory Chart
 | `service.registrationPort` | Port exposed by the service for directory registration API | `443` |
 | `podSecuritiyContext.fsGroup` | Group ID under which the pod should be started | `1001` |
 | `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` |
+| `resources` | Pod resource requests & limits | `{}` |
 | `nodeSelector` | Node labels for pod assignment | `{}` |
 | `affinity` | Node affinity for pod assignment | `{}` |
 | `tolerations` | Node tolerations for pod assignment | `[]` |

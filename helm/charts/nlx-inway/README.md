@@ -80,7 +80,7 @@ The following table lists the configurable parameters of the nlx-inway Chart and
 | `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` |
 | `podSecuritiyContext.fsGroup` | Group ID under which the pod should be started | `1001` |
 | `service.type` | Service type (ClusterIP, NodePort or LoadBalancer) | `ClusterIP` |
-| `service.apiPort` | Port exposed by the inway service | `443` |
+| `service.port` | Port exposed by the inway service | `443` |
 | `resources` | Pod resource requests & limits | `{}` |
 | `nodeSelector` | Node labels for pod assignment | `{}` |
 | `affinity` | Node affinity for pod assignment | `{}` |
