@@ -46,13 +46,14 @@ const ConfirmationModal = ({
           {children}
           <Footer>
             <Button
+              type="button"
               variant="secondary"
               onClick={makeChoice(false, closeModal)}
               data-autofocus
             >
               {cancelText || t('Cancel')}
             </Button>
-            <Button onClick={makeChoice(true, closeModal)}>
+            <Button type="button" onClick={makeChoice(true, closeModal)}>
               {okText || t('Ok')}
             </Button>
           </Footer>

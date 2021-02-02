@@ -4,12 +4,14 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
 import selectEvent from 'react-select-event'
-import { act, fireEvent, renderWithProviders } from '../../../../test-utils'
+import { waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { renderWithProviders } from '../../../../test-utils'
 import { RootStore, StoreProvider } from '../../../../stores'
 import { ManagementApi } from '../../../../api'
 import Form from './index'
 
-test('Form', async () => {
+test('Changing organization inway', async () => {
   const managementApiClient = new ManagementApi()
   managementApiClient.managementListInways = jest.fn().mockResolvedValue({
     inways: [{ name: 'inway-a' }],
@@ -21,33 +23,32 @@ test('Form', async () => {
 
   const onSubmitHandlerSpy = jest.fn()
 
-  const { findByTestId, getByText, getByLabelText } = renderWithProviders(
+  const { getByText, getByLabelText, findByText } = renderWithProviders(
     <StoreProvider rootStore={rootStore}>
       <Form onSubmitHandler={onSubmitHandlerSpy} />
     </StoreProvider>,
   )
 
-  const formElement = await findByTestId('form')
+  const submitButton = getByText('Save settings')
 
-  await act(async () => {
-    fireEvent.submit(formElement)
-  })
+  userEvent.click(submitButton)
 
-  await act(async () => {
-    fireEvent.click(getByText('Save'))
-  })
+  // Shows modal
+  expect(await findByText('Are you sure?')).toBeInTheDocument()
+  userEvent.click(getByText('Save'))
 
-  expect(onSubmitHandlerSpy).toHaveBeenCalledWith({
-    organizationInway: '',
-  })
+  await waitFor(() =>
+    expect(onSubmitHandlerSpy).toHaveBeenCalledWith({
+      organizationInway: '',
+    }),
+  )
 
   await selectEvent.select(getByLabelText(/Organization inway/), /inway-a/)
+  userEvent.click(submitButton)
 
-  await act(async () => {
-    fireEvent.submit(formElement)
-  })
-
-  expect(onSubmitHandlerSpy).toHaveBeenCalledWith({
-    organizationInway: 'inway-a',
-  })
+  await waitFor(() =>
+    expect(onSubmitHandlerSpy).toHaveBeenCalledWith({
+      organizationInway: 'inway-a',
+    }),
+  )
 })
