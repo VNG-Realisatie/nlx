@@ -69,23 +69,23 @@ The following table lists the configurable parameters of the nlx-outway Chart an
 | `tls.organizationCertificate.certificatePEM` | Your NLX certificate | `""` |
 | `tls.organizationCertificate.keyPEM` | The private key of `tls.organizationCertificate.certificatePEM` | `""` |
 | `tls.organizationCertificate.existingSecret` | If you have an existing secret with your NLX keypair you can use it instead of `tls.organizationCertificate.certificatePEM` and `tls.organizationCertificate.keyPEM` | `""` |
-| `https.enabled` | If `true`, HTTP will be enabled | `false` |
-| `https.keyPEM` | TODO | `""` |
-| `https.certificatePEM` | TODO | `"` |
+| `https.enabled` | If `true`, HTTPs will be enabled | `false` |
+| `https.keyPEM` | Private key of `https.certificatePEM` as PEM. Required if `https.enabled` is `true` | `""` |
+| `https.certificatePEM` | TLS certificate as PEM. Required if `https.enabled` is `true` | `""` |
 | `serviceAccount.create` | If `true`, create a new service account | `true` |
 | `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` |
 | `serviceAccount.annotations` | Annotations to add to the service account |  
 | `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` |
 | `podSecuritiyContext.fsGroup` | Group ID under which the pod should be started | `1001` |
-| `service.type` | TODO | `ClusterIP` |
-| `service.httpPort` | TODO | `80` |
-| `service.httpsPort` | TODO | `443` |
-| `ingress.enabled` | TODO | `false` |
-| `ingress.annotations` | TODO | `{}` |
-| `ingress.hosts.host` | TODO | `chart-example.local` |
-| `ingress.hosts.paths` | TODO | `[]` |
-| `ingress.tls` | TODO | `[]` |
-| `resources` | TODO | `{}` |
+| `service.type` | Service type (ClusterIP, NodePort or LoadBalancer) | `ClusterIP` |
+| `service.httpPort` | Port exposed by the outway service when `https.enabled` is `false` | `80` |
+| `service.httpsPort` | Port exposed by the outway service when `https.enabled` is `true`  | `443` |
+| `ingress.enabled` | Enable Ingress | `false` |
+| `ingress.annotations` | Ingress annotations | `{}` |
+| `ingress.hosts.host` | Ingress accepted hostname | `chart-example.local` |
+| `ingress.hosts.paths` | Ingress accepted paths | `[]` |
+| `ingress.tls` | Ingress TLS configuration | `[]` |
+| `resources` | Pod resource requests & limits | `{}` |
 | `nodeSelector` | Node labels for pod assignment | `{}` |
 | `affinity` | Node affinity for pod assignment | `{}` |
 | `tolerations` | Node tolerations for pod assignment | `[]` |
