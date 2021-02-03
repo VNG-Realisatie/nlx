@@ -53,7 +53,7 @@ The following table lists the configurable parameters of the nlx-auth-service Ch
 | `tls.keyPEM` | The private key of `tls.certificatePEM` | `""` |
 | `tls.existingSecret` | If you have an exisisting secret with your keypair you can use it instead of `tls.certificatePEM` and `tls.keyPEM` | `""` |
 | `nameOverride`  | Override deployment name | `""` |
-| `fullnameOverride` | Override full deployment name | `""` | #TODO fullname -> fullName
+| `fullnameOverride` | Override full deployment name | `""` |
 | `serviceAccount.create` | If `true`, create a new service account | `true` |
 | `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` |
 | `serviceAccount.annotations` | Annotations to add to the service account |  

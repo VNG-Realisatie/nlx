@@ -54,7 +54,7 @@ The following table lists the configurable parameters of the ca-cfssl-unsafe Cha
 | `replicaCount` | Number of ca-cfssl-unsafe replicas  | `1` |
 | `config.existingSecret` | Secret containing the root certificate and key of the CA | `""` |
 | `nameOverride`  | Override deployment name | `""` |
-| `fullnameOverride` | Override full deployment name | `""` | #TODO fullname -> fullName
+| `fullnameOverride` | Override full deployment name | `""` |
 | `serviceAccount.create` | If `true`, create a new service account | `true` |
 | `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` |
 | `serviceAccount.annotations` | Annotations to add to the service account |  
