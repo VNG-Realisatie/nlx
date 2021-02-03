@@ -13,12 +13,16 @@ class Page {
     })
     this.published = Selector('[data-testid="service-published"]')
     this.editButton = Selector('a[title="Service aanpassen"]')
-    this.removeButton = Selector('button[title="Service verwijderen"]')
+    this.removeButton = Selector('button[title="Service verwijderen"]', {
+      visibilityCheck: true,
+    })
     this.closeButton = Selector('[data-testid="close-button"]')
     this.inways = Selector('[data-testid="service-inways"]')
     this.alert = Selector('div[role="alert"]')
     this.alertTitle = this.alert.find('[data-testid="title"]')
-    this.confirmRemoveButton = Selector('[role="dialog"]')
+    this.confirmRemoveButton = Selector('[role="dialog"]', {
+      visibilityCheck: true,
+    })
       .find('button')
       .withText('Verwijderen')
   }
@@ -26,7 +30,6 @@ class Page {
   async removeService() {
     await t.click(this.removeButton)
     await t.click(this.confirmRemoveButton)
-    await dismissAlertWithText(t, 'De service is verwijderd')
   }
 }
 

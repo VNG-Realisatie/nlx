@@ -3,7 +3,7 @@
 //
 import { t } from 'testcafe'
 
-import { getBaseUrl } from '../../utils'
+import { getBaseUrl, getLocation } from '../../utils'
 import addEditPage from './page-models/add-edit-service'
 import detailPage from './page-models/service-detail'
 
