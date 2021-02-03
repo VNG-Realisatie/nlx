@@ -43,16 +43,26 @@ export async function createService(serviceProperties = {}) {
 }
 
 export async function removeService() {
+  const serviceDetailPageUrl = `${baseUrl}/services/${t.ctx.serviceName}`
   try {
-    await t.navigateTo(`${baseUrl}/services/${t.ctx.serviceName}`)
-    await detailPage.removeService()
+    await t.navigateTo(serviceDetailPageUrl)
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.log({
+      message: 'failed to navigate to service detail page',
+      url: serviceDetailPageUrl,
+      err,
+    })
+  }
 
+  try {
+    await detailPage.removeService()
     t.ctx.serviceName = null
   } catch (err) {
     // eslint-disable-next-line no-console
     console.log({
       message: 'failed to remove service',
-      url: `${baseUrl}/services/${t.ctx.serviceName}`,
+      url: serviceDetailPageUrl,
       err,
     })
   }
