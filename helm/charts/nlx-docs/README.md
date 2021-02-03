@@ -43,8 +43,8 @@ The following table lists the configurable parameters of the nlx-docs Chart and 
 | `global.imageRegistry` | Image registry to be used by all NLX charts | `""` |
 | `global.imageTag` | Image tag to be used by all NLX charts | `true` |
 | `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` |
-| `image.repository` | Image repository (ignored if `global.imageTag` is set) | `nlxio/docs` |
-| `image.tag` | Image tag. When set to null, the AppVersion from the Chart is used | `The appVersion from the chart` |
+| `image.repository` | Image repository | `nlxio/docs` |
+| `image.tag` | Image tag (ignored if `global.imageTag` is set). When set to null, the AppVersion from the Chart is used | `The appVersion from the chart` |
 | `image.pullPolicy` | Image pull policy | `IfNotPresent` |
 | `image.pullSecrets` | Secrets for the image repository | `[]` |
 | `replicaCount` | Number of directory replicas | `1` |

@@ -44,13 +44,13 @@ The following table lists the configurable parameters of the nlx-outway Chart an
 | `global.imageTag` | Image tag to be used by all NLX charts | `true` |
 | `global.tls.organizationRootCertificatePEM`| NLX root certificate to be used by all NLX charts. If not set the value of `tls.organizationCertificate.rootCertificatePEM` is used | `""` |
 | `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` |
-| `image.repository` | Image repository (ignored if `global.imageTag` is set) | `nlxio/outway` |
-| `image.tag` | Image tag. When set to null, the AppVersion from the Chart is used | `The appVersion from the chart` |
+| `image.repository` | Image repository | `nlxio/outway` |
+| `image.tag` | Image tag (ignored if `global.imageTag` is set). When set to null, the AppVersion from the Chart is used | `The appVersion from the chart` |
 | `image.pullPolicy` | Image pull policy | `IfNotPresent` |
 | `image.pullSecrets` | Secrets for the image repository | `[]` |
 | `replicaCount` | Number of outway replicas | `1` |
 | `nameOverride` | Override deployment name | `""` |
-| `fullnameOverride` | Override full deployment name | `""` | #TODO fullname -> fullName
+| `fullnameOverride` | Override full deployment name | `""` |
 | `config.logType` | Possible values: **live**, **local**. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger. | live |
 | `config.logLevel` | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType` | `info` | 
 | `config.name` | Unique identifier of this outway. | `""` |

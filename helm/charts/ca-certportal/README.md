@@ -44,8 +44,8 @@ The following table lists the configurable parameters of the ca-certportal Chart
 | `global.imageRegistry` | Image registry to be used by all NLX charts | `""` |
 | `global.imageTag` | Image tag to be used by all NLX charts | `""` |
 | `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` |
-| `image.repository` | Image repository (ignored if `global.imageTag` is set) | `nlxio/ca-certportal` |
-| `image.tag` | Image tag | `The appVersion from the chart` |
+| `image.repository` | Image repository | `nlxio/ca-certportal` |
+| `image.tag` | Image tag (ignored if `global.imageTag` is set). When set to null, the AppVersion from the Chart is used | `The appVersion from the chart` |
 | `image.pullPolicy` | Image pull policy | `IfNotPresent` |
 | `image.pullSecrets` | Secrets for the image repository | `[]` |
 | `replicaCount` | Number of ca-certportal replicas  | `1` |
@@ -53,7 +53,7 @@ The following table lists the configurable parameters of the ca-certportal Chart
 | `config.logLevel` | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType` | `""` | 
 | `config.caHost` | The host of the Certificate Authority. | `""` |
 | `nameOverride`  | Override deployment name | `""` |
-| `fullnameOverride` | Override full deployment name | `""` | #TODO fullname -> fullName
+| `fullnameOverride` | Override full deployment name | `""` | 
 | `serviceAccount.create` | If `true`, create a new service account | `true` |
 | `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` |
 | `serviceAccount.annotations` | Annotations to add to the service account |  

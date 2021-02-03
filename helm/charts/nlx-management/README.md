@@ -45,14 +45,14 @@ The following table lists the configurable parameters of the nlx-management Char
 | `global.tls.organizationRootCertificatePEM`| NLX root certificate to be used by all NLX charts. If not set the value of `tls.organizationCertificate.rootCertificatePEM` is used | `""` |
 | `global.tls.rootCertificatePEM` | Root certificate of your internal PKI to be used by all NLX charts. If not set the value of `tls.certificate.rootCertificatePEM` is used | `""` |
 | `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` |
-| `image.apiRepository` | Image repository for the management API (ignored if `global.imageTag` is set) | `nlxio/management-api` |
-| `image.uiRepository` | Image repository for the management UI (ignored if `global.imageTag` is set) | `nlxio/management-ui` |
-| `image.tag` | Image tag. When set to null, the AppVersion from the Chart is used | `The appVersion from the chart` |
+| `image.apiRepository` | Image repository for the management API | `nlxio/management-api` |
+| `image.uiRepository` | Image repository for the management UI | `nlxio/management-ui` |
+| `image.tag` | Image tag (ignored if `global.imageTag` is set). When set to null, the AppVersion from the Chart is used | `The appVersion from the chart` |
 | `image.pullPolicy` | Image pull policy | `IfNotPresent` |
 | `image.pullSecrets` | Secrets for the image repository | `[]` |
 | `replicaCount` | Number of management replicas | `1` |
 | `nameOverride` | Override deployment name | `""` |
-| `fullnameOverride` | Override full deployment name | `""` | #TODO fullname -> fullName
+| `fullnameOverride` | Override full deployment name | `""` |
 | `config.logType` | Possible values: **live**, **local**. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger. | live |
 | `config.logLevel` | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType` | `info` |
 | `config.directoryInspectionHostname` | Used to retrieve information about services from the directory. | `""` |

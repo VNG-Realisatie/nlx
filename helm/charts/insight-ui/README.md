@@ -43,13 +43,13 @@ The following table lists the configurable parameters of the insight-ui Chart an
 | `global.imageRegistry` | Image registry to be used by all NLX charts | `""` |
 | `global.imageTag` | Image tag to be used by all NLX charts | `true` |
 | `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` |
-| `image.repository` | Image repository (ignored if `global.imageTag` is set) | `nlxio/insight-ui` |
-| `image.tag` | Image tag. When set to null, the AppVersion from the Chart is used | `The appVersion from the chart` |
+| `image.repository` | Image repository | `nlxio/insight-ui` |
+| `image.tag` | Image tag (ignored if `global.imageTag` is set). When set to null, the AppVersion from the Chart is used | `The appVersion from the chart` |
 | `image.pullPolicy` | Image pull policy | `IfNotPresent` |
 | `image.pullSecrets` | Secrets for the image repository | `[]` |
 | `replicaCount` | Number of directory replicas | `1` |
 | `nameOverride` | Override deployment name | `""` |
-| `fullnameOverride` | Override full deployment name | `""` | #TODO fullname -> fullName
+| `fullnameOverride` | Override full deployment name | `""` | 
 | `config.directoryInspectionAPIURL` | URL of the NLX directory inspection API | `""` |
 | `config.navbarHomePageURL` | URL of the NLX homepage. Used by the menu for navigation | `""` |
 | `config.navbarAboutPageURL` | URL of the about page on the NLX homepage. Used by the menu for navigation | `""` |

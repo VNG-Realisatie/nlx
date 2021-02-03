@@ -44,17 +44,17 @@ The following table lists the configurable parameters of the nlx-directory Chart
 | `global.imageTag` | Image tag to be used by all NLX charts | `true` |
 | `global.tls.rootCertificatePEM` | Root certificate of your internal PKI to be used by all NLX charts. If not set the value of `tls.certificate.rootCertificatePEM` is used | `""` |
 | `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` |
-| `image.databaseRepository` | Image repository (ignored if `global.imageTag` is set) | `nlxio/directory-db` |
-| `image.inspectionRepository` | Image repository (ignored if `global.imageTag` is set) | `nlxio/directory-inspection-api` |
-| `image.registrationRepository` | Image repository (ignored if `global.imageTag` is set) | `nlxio/directory-registration-api` |
-| `image.monitorRepository` | Image repository (ignored if `global.imageTag` is set) | `nlxio/directory-monitor` |
-| `image.uiRepository` | Image repository (ignored if `global.imageTag` is set) | `nlxio/directory-ui` |
-| `image.tag` | Image tag. When set to null, the AppVersion from the Chart is used | `The appVersion from the chart` |
+| `image.databaseRepository` | Image repository | `nlxio/directory-db` |
+| `image.inspectionRepository` | Image repository | `nlxio/directory-inspection-api` |
+| `image.registrationRepository` | Image repository | `nlxio/directory-registration-api` |
+| `image.monitorRepository` | Image repository | `nlxio/directory-monitor` |
+| `image.uiRepository` | Image repository | `nlxio/directory-ui` |
+| `image.tag` | Image tag (ignored if `global.imageTag` is set). When set to null, the AppVersion from the Chart is used | `The appVersion from the chart` |
 | `image.pullPolicy` | Image pull policy | `IfNotPresent` |
 | `image.pullSecrets` | Secrets for the image repository | `[]` |
 | `replicaCount` | Number of directory replicas | `1` |
 | `nameOverride` | Override deployment name | `""` |
-| `fullnameOverride` | Override full deployment name | `""` | #TODO fullname -> fullName
+| `fullnameOverride` | Override full deployment name | `""` |
 | `config.logType` | Possible values: **live**, **local**. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger. | live |
 | `config.logLevel` | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType` | `""` |
 | `config.monitorOfflineServiceTTL` | Time, in seconds, a service can be offline before being removed from the directory | `86400` |

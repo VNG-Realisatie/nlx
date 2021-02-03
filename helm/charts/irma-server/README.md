@@ -43,13 +43,13 @@ The following table lists the configurable parameters of the irma-server Chart a
 | `global.imageRegistry` | Image registry to be used by all NLX charts | `""` |
 | `global.imageTag` | Image tag to be used by all NLX charts | `true` |
 | `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `registry.gitlab.com` |
-| `image.repository` | Image repository (ignored if `global.imageTag` is set) | `commonground/nlx/irma` |
-| `image.tag` | Image tag. When set to null, the AppVersion from the Chart is used | `0.4.1` |
+| `image.repository` | Image repository | `commonground/nlx/irma` |
+| `image.tag` | Image tag (ignored if `global.imageTag` is set). | `0.4.1` |
 | `image.pullPolicy` | Image pull policy | `IfNotPresent` |
 | `image.pullSecrets` | Secrets for the image repository | `[]` |
 | `replicaCount` | Number of directory replicas | `1` |
 | `nameOverride` | Override deployment name | `""` |
-| `fullnameOverride` | Override full deployment name | `""` | #TODO fullname -> fullName
+| `fullnameOverride` | Override full deployment name | `""` | 
 | `config.verbosity` | Set verbosity of logs (`1` include `DEBUG` messages, `2` include `TRACE` messages) | `""` |
 | `config.emailAddress` | Email address that will receive notifications about changes in the IRMA software or ecosystem | `""` |
 | `config.jwtKeyPEM` | Key which is used to sign IRMA sessions | `""` |

@@ -47,8 +47,8 @@ The following table lists the configurable parameters of the ca-cfssl-unsafe Cha
 | `global.imageRegistry` | Image registry to be used by all NLX charts | `""` |
 | `global.imageTag` | Image tag to be used by all NLX charts | `""` |
 | `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` |
-| `image.repository` | Image repository (ignored if `global.imageTag` is set) | `nlxio/ca-cfssl-unsafe` |
-| `image.tag` | Image tag | `The appVersion from the chart` |
+| `image.repository` | Image repository | `nlxio/ca-cfssl-unsafe` |
+| `image.tag` | Image tag (ignored if `global.imageTag` is set). When set to null, the AppVersion from the Chart is used | `The appVersion from the chart` |
 | `image.pullPolicy` | Image pull policy | `IfNotPresent` |
 | `image.pullSecrets` | Secrets for the image repository | `[]` |
 | `replicaCount` | Number of ca-cfssl-unsafe replicas  | `1` |
