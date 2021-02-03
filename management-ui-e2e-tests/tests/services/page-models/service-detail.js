@@ -3,6 +3,7 @@
 //
 
 import { Selector, t } from 'testcafe'
+import { dismissAlertWithText } from '../../../utils'
 
 class Page {
   constructor() {
@@ -25,7 +26,7 @@ class Page {
   async removeService() {
     await t.click(this.removeButton)
     await t.click(this.confirmRemoveButton)
-    await t.wait(2000)
+    await dismissAlertWithText(t, 'De service is verwijderd')
   }
 }
 
