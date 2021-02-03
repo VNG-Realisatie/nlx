@@ -4,10 +4,11 @@
 import React from 'react'
 import { makeAutoObservable, configure } from 'mobx'
 import { Route, StaticRouter as Router } from 'react-router-dom'
-import { fireEvent, within } from '@testing-library/react'
+import { fireEvent, within, waitFor } from '@testing-library/react'
 import { renderWithProviders } from '../../../../../test-utils'
-import { clickConfirmButtonAndAssert } from '../../../../../components/ConfirmationModal/testUtils'
 import DirectoryDetailPage from '../../index'
+
+jest.mock('../../../../../components/Modal')
 
 let service
 
@@ -76,7 +77,7 @@ test('can request access', async () => {
 
   const dialog = await findByRole('dialog')
   const okButton = within(dialog).getByText('Send')
-  await clickConfirmButtonAndAssert(okButton, () =>
-    expect(requestAccessFn).toHaveBeenCalled(),
-  )
+
+  fireEvent.click(okButton)
+  await waitFor(() => expect(requestAccessFn).toHaveBeenCalled())
 })

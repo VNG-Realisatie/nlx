@@ -42,8 +42,9 @@ const DirectoryServiceRow = ({ service, ...props }) => {
   })
 
   const requestAccess = async () => {
-    const isConfirmed = await confirmRequest()
-    if (isConfirmed) service.requestAccess()
+    if (await confirmRequest()) {
+      service.requestAccess()
+    }
   }
 
   const displayState = getDirectoryServiceAccessUIState(

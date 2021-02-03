@@ -1,9 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-
 import React from 'react'
-import { fireEvent, waitForElementToBeRemoved } from '@testing-library/react'
 import { configure } from 'mobx'
 import { renderWithProviders } from '../../../../../../test-utils'
 import IncomingAccessRequestModel, {
@@ -36,12 +34,7 @@ test('listing the access requests', async () => {
 
   const onApproveOrRejectHandler = jest.fn().mockResolvedValue()
 
-  const {
-    getByTestId,
-    getByText,
-    getByTitle,
-    findByText,
-  } = renderWithProviders(
+  const { getByTestId, getByText } = renderWithProviders(
     <CollapsibleBody
       accessRequests={[accessRequest]}
       onApproveOrRejectCallbackHandler={onApproveOrRejectHandler}
@@ -52,13 +45,4 @@ test('listing the access requests', async () => {
     getByTestId('service-incoming-accessrequests-list'),
   ).toBeInTheDocument()
   expect(getByText('organization-a')).toBeInTheDocument()
-
-  fireEvent.click(getByTitle('Reject'))
-
-  // confirm rejection
-  const confirmButton = await findByText('Reject')
-  fireEvent.click(confirmButton)
-  await waitForElementToBeRemoved(confirmButton)
-
-  expect(onApproveOrRejectHandler).toHaveBeenCalledTimes(1)
 })

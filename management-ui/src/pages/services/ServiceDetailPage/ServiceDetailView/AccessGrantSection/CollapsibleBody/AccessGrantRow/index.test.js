@@ -2,9 +2,8 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { fireEvent, within } from '@testing-library/react'
+import { fireEvent, within, waitFor } from '@testing-library/react'
 import { renderWithProviders } from '../../../../../../../test-utils'
-import { clickConfirmButtonAndAssert } from '../../../../../../../components/ConfirmationModal/testUtils'
 import AccessGrantRow from './index'
 
 let mockHandler
@@ -36,9 +35,8 @@ test('clicking confirm', async () => {
   const confirmModal = getByRole('dialog')
   const okButton = within(confirmModal).getByText('Revoke')
 
-  await clickConfirmButtonAndAssert(okButton, () =>
-    expect(mockHandler).toHaveBeenCalledWith(accessGrant),
-  )
+  fireEvent.click(okButton)
+  await waitFor(() => expect(mockHandler).toHaveBeenCalledWith(accessGrant))
 })
 
 test('clicking confirm cancel', async () => {
@@ -51,8 +49,6 @@ test('clicking confirm cancel', async () => {
   )
 
   fireEvent.click(getByText('Revoke'))
-
-  await clickConfirmButtonAndAssert(getByText('Cancel'), () =>
-    expect(mockHandler).not.toHaveBeenCalled(),
-  )
+  fireEvent.click(getByText('Cancel'))
+  await waitFor(() => expect(mockHandler).not.toHaveBeenCalled())
 })

@@ -2,10 +2,11 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { fireEvent } from '@testing-library/react'
+import { fireEvent, waitFor } from '@testing-library/react'
 import { renderWithProviders } from '../../../../../../../test-utils'
-import { clickConfirmButtonAndAssert } from '../../../../../../../components/ConfirmationModal/testUtils'
 import IncomingAccessRequestRow from './index'
+
+jest.mock('../../../../../../../components/Modal')
 
 let mockHandler
 let accessRequest
@@ -36,10 +37,8 @@ test('requesting access will fire approve handler', async () => {
   )
 
   fireEvent.click(getByTitle('Approve'))
-
-  await clickConfirmButtonAndAssert(getByText('Approve'), () =>
-    expect(mockHandler).toHaveBeenCalled(),
-  )
+  fireEvent.click(getByText('Approve'))
+  await waitFor(() => expect(mockHandler).toHaveBeenCalled())
 })
 
 test('rejecting access will fire reject handler', async () => {
@@ -57,9 +56,8 @@ test('rejecting access will fire reject handler', async () => {
 
   fireEvent.click(getByTitle('Reject'))
 
-  await clickConfirmButtonAndAssert(getByText('Reject'), () =>
-    expect(mockHandler).toHaveBeenCalled(),
-  )
+  fireEvent.click(getByText('Reject'))
+  await waitFor(() => expect(mockHandler).toHaveBeenCalled())
 })
 
 test('clicking cancel will not fire handler', async () => {

@@ -2,10 +2,11 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { fireEvent } from '@testing-library/react'
+import { fireEvent, waitFor } from '@testing-library/react'
 import { renderWithProviders } from '../../test-utils'
-import { clickConfirmButtonAndAssert } from './testUtils'
 import { useConfirmationModal } from './index'
+
+jest.mock('../Modal')
 
 beforeEach(() => {
   jest.useFakeTimers()
@@ -44,15 +45,13 @@ test('Interact with confirm window', async () => {
 
   expect(getByText('Weet je het zeker?')).toBeInTheDocument()
 
-  await clickConfirmButtonAndAssert(getByText('Cancel'), () =>
-    expect(handleChoice).toHaveBeenCalledWith(false),
-  )
+  fireEvent.click(getByText('Cancel'))
+  await waitFor(() => expect(handleChoice).toHaveBeenCalledWith(false))
 
   fireEvent.click(getByText('show confirm'))
 
-  await clickConfirmButtonAndAssert(getByText('Ok'), () =>
-    expect(handleChoice).toHaveBeenCalledWith(true),
-  )
+  fireEvent.click(getByText('Ok'))
+  await waitFor(() => expect(handleChoice).toHaveBeenCalledWith(true))
 
   expect(handleChoice).toHaveBeenCalledTimes(2)
 })

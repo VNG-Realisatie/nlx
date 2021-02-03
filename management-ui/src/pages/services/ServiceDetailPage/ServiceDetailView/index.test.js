@@ -3,9 +3,8 @@
 //
 import React from 'react'
 import { MemoryRouter as Router } from 'react-router-dom'
-import { fireEvent, within } from '@testing-library/react'
+import { fireEvent, within, waitFor } from '@testing-library/react'
 import { renderWithProviders } from '../../../../test-utils'
-import { clickConfirmButtonAndAssert } from '../../../../components/ConfirmationModal/testUtils'
 import ServiceDetailView from './index'
 
 jest.mock('./InwaysSection', () => () => <div />)
@@ -50,8 +49,6 @@ describe('ServiceDetails', () => {
   })
 
   it('should call the removeHandler on remove', async () => {
-    jest.useFakeTimers()
-
     const handleRemove = jest.fn()
     const { getByTitle, getByRole } = renderWithProviders(
       <Router>
@@ -64,10 +61,7 @@ describe('ServiceDetails', () => {
     const confirmModal = getByRole('dialog')
     const okButton = within(confirmModal).getByText('Remove')
 
-    clickConfirmButtonAndAssert(okButton, () =>
-      expect(handleRemove).toHaveBeenCalled(),
-    )
-
-    jest.useRealTimers()
+    fireEvent.click(okButton)
+    await waitFor(() => expect(handleRemove).toHaveBeenCalled())
   })
 })

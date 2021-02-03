@@ -3,12 +3,12 @@
 //
 import React from 'react'
 import { makeAutoObservable, configure } from 'mobx'
-import { fireEvent, act } from '@testing-library/react'
+import { fireEvent, act, waitFor } from '@testing-library/react'
 import { renderWithProviders } from '../../../../../test-utils'
-import { clickConfirmButtonAndAssert } from '../../../../../components/ConfirmationModal/testUtils'
 import DirectoryServiceRow from './index'
 
 jest.mock('../../../../../stores/models/OutgoingAccessRequestModel')
+jest.mock('../../../../../components/Modal')
 
 describe('a service we do not have access to', () => {
   let service
@@ -47,8 +47,6 @@ describe('a service we do not have access to', () => {
   })
 
   it('should be possible to request access', async () => {
-    jest.useFakeTimers()
-
     const spy = jest.spyOn(service, 'requestAccess')
     const { getByText } = renderWithProviders(
       <table>
@@ -59,10 +57,9 @@ describe('a service we do not have access to', () => {
     )
 
     fireEvent.click(getByText('Request'))
+    fireEvent.click(getByText('Send'))
 
-    await clickConfirmButtonAndAssert(getByText('Send'), () =>
-      expect(spy).toHaveBeenCalled(),
-    )
+    await waitFor(() => expect(spy).toHaveBeenCalled())
   })
 
   it('should reflect a change of state', () => {

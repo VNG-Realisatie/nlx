@@ -11,6 +11,8 @@ import { RootStore, StoreProvider } from '../../../../stores'
 import { ManagementApi } from '../../../../api'
 import Form from './index'
 
+jest.mock('../../../../components/Modal')
+
 test('Changing organization inway', async () => {
   const managementApiClient = new ManagementApi()
   managementApiClient.managementListInways = jest.fn().mockResolvedValue({
@@ -30,9 +32,7 @@ test('Changing organization inway', async () => {
   )
 
   const submitButton = getByText('Save settings')
-
   userEvent.click(submitButton)
-
   // Shows modal
   expect(await findByText('Are you sure?')).toBeInTheDocument()
   userEvent.click(getByText('Save'))
