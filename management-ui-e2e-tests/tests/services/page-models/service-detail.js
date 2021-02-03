@@ -3,7 +3,6 @@
 //
 
 import { Selector, t } from 'testcafe'
-import { dismissAlertWithText } from '../../../utils'
 
 class Page {
   constructor() {

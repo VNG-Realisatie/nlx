@@ -47,6 +47,7 @@
   "Failed to load the services": "De services kunnen niet worden opgehaald",
   "Failed to load the settings": "De instellingen kunnen niet worden opgehaald",
   "Failed to reject access request": "Fout bij het weigeren van het toegangsverzoek",
+  "Failed to remove the service": "Fout bij het verwijderen van de service",
   "Failed to revoke access grant": "Fout bij het intrekken van toegang",
   "Failed to update the service": "De service kan niet worden bijgewerkt",
   "Failed to update the settings": "De instellingen kunnen niet worden bijgewerkt",
