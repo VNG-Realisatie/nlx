@@ -55,7 +55,7 @@ require (
 	golang.org/x/net v0.0.0-20201110031124-69a78807bb2b
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 	golang.org/x/sync v0.0.0-20201020160332-67f06af15bc9
-	google.golang.org/genproto v0.0.0-20201030142918-24207fddd1c3
+	google.golang.org/genproto v0.0.0-20210202153253-cf70463f6119
 	google.golang.org/grpc v1.33.1
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/square/go-jose.v2 v2.4.1 // indirect
