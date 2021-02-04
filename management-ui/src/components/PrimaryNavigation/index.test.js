@@ -25,6 +25,9 @@ test('PrimaryNavigation', () => {
   const linkDirectory = getByLabelText('Directory page')
   expect(linkDirectory.getAttribute('href')).toBe('/directory')
 
+  const linkAuditLog = getByLabelText('Audit log page')
+  expect(linkAuditLog.getAttribute('href')).toBe('/audit-log')
+
   const linkSettings = getByLabelText('Settings page')
   expect(linkSettings.getAttribute('href')).toBe('/settings')
 })

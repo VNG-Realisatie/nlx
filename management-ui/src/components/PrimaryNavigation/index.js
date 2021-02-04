@@ -46,6 +46,11 @@ const PrimaryNavigation = () => {
           <StyledIcon as={IconDirectory} size="x-large" />
           {t('Directory')}
         </StyledLink>
+
+        <StyledLink to="/audit-log" aria-label={t('Audit log page')}>
+          <StyledIcon as={IconDirectory} size="x-large" />
+          {t('Logs')}
+        </StyledLink>
       </section>
 
       <section>
