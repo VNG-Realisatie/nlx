@@ -8,7 +8,7 @@ import { Alert } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import LoadingMessage from '../../../components/LoadingMessage'
 import PageTemplate from '../../../components/PageTemplate'
-import { useDirectoryServicesStore } from '../../../hooks/use-stores'
+import { useDirectoryServiceStore } from '../../../hooks/use-stores'
 import DirectoryDetailPage from '../DirectoryDetailPage'
 import DirectoryServiceCount from './components/DirectoryServiceCount'
 import DirectoryPageView from './components/DirectoryPageView'
@@ -20,7 +20,7 @@ const DirectoryPage = () => {
     getService,
     isInitiallyFetched,
     error,
-  } = useDirectoryServicesStore()
+  } = useDirectoryServiceStore()
   const { name } = useParams()
 
   return (

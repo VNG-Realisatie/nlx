@@ -10,7 +10,7 @@ import usePolling from '../../../hooks/use-polling'
 import PageTemplate from '../../../components/PageTemplate'
 import ServiceDetailPage from '../ServiceDetailPage'
 import LoadingMessage from '../../../components/LoadingMessage'
-import { useServicesStore } from '../../../hooks/use-stores'
+import { useServiceStore } from '../../../hooks/use-stores'
 import { IconPlus } from '../../../icons'
 import ServiceToastManager from './ServiceToastManager'
 import ServiceCount from './ServiceCount'
@@ -25,7 +25,7 @@ const ServicesPage = () => {
     error,
     getService,
     fetchStats,
-  } = useServicesStore()
+  } = useServiceStore()
   const { name } = useParams()
 
   usePolling(fetchStats)

@@ -11,7 +11,7 @@ export const useApplicationStore = () => {
   return applicationStore
 }
 
-export const useDirectoryServicesStore = () => {
+export const useDirectoryServiceStore = () => {
   const { directoryServicesStore } = useStores()
 
   if (!directoryServicesStore.isInitiallyFetched) {
@@ -20,7 +20,7 @@ export const useDirectoryServicesStore = () => {
   return directoryServicesStore
 }
 
-export const useServicesStore = () => {
+export const useServiceStore = () => {
   const { servicesStore } = useStores()
   if (!servicesStore.isInitiallyFetched) {
     servicesStore.fetchAll()

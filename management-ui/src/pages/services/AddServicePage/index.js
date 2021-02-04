@@ -9,13 +9,13 @@ import { Alert } from '@commonground/design-system'
 import serviceActions from '../ServicesPage/serviceActions'
 import PageTemplate from '../../../components/PageTemplate'
 import ServiceForm from '../../../components/ServiceForm'
-import { useServicesStore } from '../../../hooks/use-stores'
+import { useServiceStore } from '../../../hooks/use-stores'
 
 const AddServicePage = () => {
   const { t } = useTranslation()
   const [error, setError] = useState(null)
   const history = useHistory()
-  const { create } = useServicesStore()
+  const { create } = useServiceStore()
 
   const submitService = async (formData) => {
     try {

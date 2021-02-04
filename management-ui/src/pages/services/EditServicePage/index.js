@@ -12,13 +12,13 @@ import serviceActions from '../ServicesPage/serviceActions'
 import ServiceForm from '../../../components/ServiceForm'
 import PageTemplate from '../../../components/PageTemplate'
 import LoadingMessage from '../../../components/LoadingMessage'
-import { useServicesStore } from '../../../hooks/use-stores'
+import { useServiceStore } from '../../../hooks/use-stores'
 import { StyledUpdatedError } from './index.styles'
 
 const EditServicePage = () => {
   const { name } = useParams()
   const { t } = useTranslation()
-  const { error, isInitiallyFetched, getService, update } = useServicesStore()
+  const { error, isInitiallyFetched, getService, update } = useServiceStore()
   const [updateError, setUpdatedError] = useState(null)
   const history = useHistory()
   const [service, setService] = useState(null)

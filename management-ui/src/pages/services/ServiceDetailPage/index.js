@@ -6,7 +6,7 @@ import { string, shape } from 'prop-types'
 import { useParams, useHistory } from 'react-router-dom'
 import { Alert, Drawer, ToasterContext } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
-import { useServicesStore } from '../../../hooks/use-stores'
+import { useServiceStore } from '../../../hooks/use-stores'
 import serviceActions from '../ServicesPage/serviceActions'
 import ServiceDetailView from './ServiceDetailView'
 
@@ -15,7 +15,7 @@ const ServiceDetailPage = ({ parentUrl, service }) => {
   const { t } = useTranslation()
   const { showToast } = useContext(ToasterContext)
   const history = useHistory()
-  const { removeService } = useServicesStore()
+  const { removeService } = useServiceStore()
 
   const close = () => history.push(parentUrl)
   const handleRemove = async () => {
