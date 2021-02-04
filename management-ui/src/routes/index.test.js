@@ -19,6 +19,9 @@ jest.mock('../pages/inways/InwaysPage', () => () => (
 jest.mock('../pages/services/AddServicePage', () => () => (
   <div data-testid="add-service-page" />
 ))
+jest.mock('../pages/AuditLogPage', () => () => (
+  <div data-testid="audit-log-page" />
+))
 
 test('when not authenticated it redirects to /login when navigating to /', async () => {
   const history = createMemoryHistory()
@@ -95,4 +98,16 @@ test('the /inways route renders the InwaysPage', () => {
     </Router>,
   )
   expect(getByTestId('inways-page')).toBeInTheDocument()
+})
+
+test('the /audit-log route renders the AuditLogPage', () => {
+  const history = createMemoryHistory({ initialEntries: ['/audit-log'] })
+  const { getByTestId } = renderWithProviders(
+    <Router history={history}>
+      <UserContextProvider user={{ id: '42' }}>
+        <Routes />
+      </UserContextProvider>
+    </Router>,
+  )
+  expect(getByTestId('audit-log-page')).toBeInTheDocument()
 })

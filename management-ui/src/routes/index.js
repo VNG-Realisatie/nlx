@@ -3,7 +3,6 @@
 //
 import React from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
-
 import LoginPage from '../pages/LoginPage/index'
 import ServicesPage from '../pages/services/ServicesPage'
 import InwaysPage from '../pages/inways/InwaysPage'
@@ -11,8 +10,8 @@ import AddServicePage from '../pages/services/AddServicePage'
 import DirectoryPage from '../pages/directory/DirectoryPage'
 import EditServicePage from '../pages/services/EditServicePage'
 import NotFoundPage from '../pages/NotFoundPage'
-
 import SettingsPage from '../pages/SettingsPage'
+import AuditLogPage from '../pages/AuditLogPage'
 import AuthenticatedRoute, { LoginRoutePath } from './authenticated-route'
 
 const Routes = () => {
@@ -37,6 +36,8 @@ const Routes = () => {
         component={DirectoryPage}
       />
       <AuthenticatedRoute path="/settings" component={SettingsPage} />
+
+      <AuthenticatedRoute path="/audit-log" component={AuditLogPage} />
 
       <Route path="*" component={NotFoundPage} />
     </Switch>
