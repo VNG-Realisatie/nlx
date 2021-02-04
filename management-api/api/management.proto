@@ -444,7 +444,7 @@ message AuditLogRecord {
   ActionType action = 2;
   string user = 3;
   google.protobuf.Timestamp createdAt = 4;
-  string organization = 5;
+  string organization = 5; // TODO: move organization to 'extra' field, since its not required for every audit log
 }
 
 message ListAuditLogsResponse {

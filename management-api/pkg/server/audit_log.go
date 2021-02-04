@@ -13,16 +13,19 @@ func (s *ManagementService) ListAuditLogs(ctx context.Context, _ *types.Empty) (
 	response := &api.ListAuditLogsResponse{
 		AuditLogs: []*api.AuditLogRecord{
 			{
+				Id:        42,
 				Action:    api.AuditLogRecord_login,
 				CreatedAt: types.TimestampNow(),
 				User:      "Dummy User",
 			},
 			{
+				Id:        100,
 				Action:    api.AuditLogRecord_logout,
 				CreatedAt: types.TimestampNow(),
 				User:      "Dummy User",
 			},
 			{
+				Id:           1,
 				Action:       api.AuditLogRecord_rejectIncomingAccessRequest,
 				CreatedAt:    types.TimestampNow(),
 				User:         "Dummy User",
