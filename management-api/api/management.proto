@@ -93,6 +93,10 @@ service Management {
   rpc RevokeAccessGrant(RevokeAccessGrantRequest) returns (AccessGrant) {
     option (google.api.http) = {post: "/api/v1/access-grants/service/{serviceName}/organizations/{organizationName}/{accessGrantID}/revoke"};
   }
+
+  rpc ListAuditLogs (google.protobuf.Empty) returns (ListAuditLogsResponse) {
+    option (google.api.http) = {get: "/api/v1/audit-logs"};
+  }
 }
 
 message Service {
@@ -427,4 +431,22 @@ message Settings {
 
 message UpdateSettingsRequest{
   string organizationInway = 1;
+}
+
+message AuditLogRecord {
+  enum ActionType {
+    login = 0;
+    logout = 1;
+    rejectIncomingAccessRequest = 2;
+  }
+
+  uint64 id = 1;
+  ActionType action = 2;
+  string user = 3;
+  google.protobuf.Timestamp createdAt = 4;
+  string organization = 5;
+}
+
+message ListAuditLogsResponse {
+  repeated AuditLogRecord auditLogs = 1;
 }

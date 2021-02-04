@@ -496,6 +496,26 @@ func (mr *MockManagementClientMockRecorder) RevokeAccessGrant(ctx, in interface{
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RevokeAccessGrant", reflect.TypeOf((*MockManagementClient)(nil).RevokeAccessGrant), varargs...)
 }
 
+// ListAuditLogs mocks base method
+func (m *MockManagementClient) ListAuditLogs(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*api.ListAuditLogsResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListAuditLogs", varargs...)
+	ret0, _ := ret[0].(*api.ListAuditLogsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListAuditLogs indicates an expected call of ListAuditLogs
+func (mr *MockManagementClientMockRecorder) ListAuditLogs(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAuditLogs", reflect.TypeOf((*MockManagementClient)(nil).ListAuditLogs), varargs...)
+}
+
 // MockManagementServer is a mock of ManagementServer interface
 type MockManagementServer struct {
 	ctrl     *gomock.Controller
@@ -862,6 +882,21 @@ func (m *MockManagementServer) RevokeAccessGrant(arg0 context.Context, arg1 *api
 func (mr *MockManagementServerMockRecorder) RevokeAccessGrant(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RevokeAccessGrant", reflect.TypeOf((*MockManagementServer)(nil).RevokeAccessGrant), arg0, arg1)
+}
+
+// ListAuditLogs mocks base method
+func (m *MockManagementServer) ListAuditLogs(arg0 context.Context, arg1 *types.Empty) (*api.ListAuditLogsResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListAuditLogs", arg0, arg1)
+	ret0, _ := ret[0].(*api.ListAuditLogsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListAuditLogs indicates an expected call of ListAuditLogs
+func (mr *MockManagementServerMockRecorder) ListAuditLogs(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAuditLogs", reflect.TypeOf((*MockManagementServer)(nil).ListAuditLogs), arg0, arg1)
 }
 
 // MockDirectoryClient is a mock of DirectoryClient interface
