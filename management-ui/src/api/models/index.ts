@@ -1,7 +1,9 @@
+export * from './AuditLogRecordActionType';
 export * from './DirectoryServiceState';
 export * from './ManagementAccessGrant';
 export * from './ManagementAccessProof';
 export * from './ManagementAccessRequestState';
+export * from './ManagementAuditLogRecord';
 export * from './ManagementCreateAccessRequestRequest';
 export * from './ManagementCreateServiceRequest';
 export * from './ManagementCreateServiceResponse';
@@ -16,6 +18,7 @@ export * from './ManagementInsightConfiguration';
 export * from './ManagementInway';
 export * from './ManagementInwayService';
 export * from './ManagementListAccessGrantsForServiceResponse';
+export * from './ManagementListAuditLogsResponse';
 export * from './ManagementListIncomingAccessRequestsResponse';
 export * from './ManagementListInwaysResponse';
 export * from './ManagementListOutgoingAccessRequestsResponse';

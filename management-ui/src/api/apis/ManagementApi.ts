@@ -42,6 +42,9 @@ import {
     ManagementListAccessGrantsForServiceResponse,
     ManagementListAccessGrantsForServiceResponseFromJSON,
     ManagementListAccessGrantsForServiceResponseToJSON,
+    ManagementListAuditLogsResponse,
+    ManagementListAuditLogsResponseFromJSON,
+    ManagementListAuditLogsResponseToJSON,
     ManagementListIncomingAccessRequestsResponse,
     ManagementListIncomingAccessRequestsResponseFromJSON,
     ManagementListIncomingAccessRequestsResponseToJSON,
@@ -498,6 +501,30 @@ export class ManagementApi extends runtime.BaseAPI {
      */
     async managementListAccessGrantsForService(requestParameters: ManagementListAccessGrantsForServiceRequest): Promise<ManagementListAccessGrantsForServiceResponse> {
         const response = await this.managementListAccessGrantsForServiceRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async managementListAuditLogsRaw(): Promise<runtime.ApiResponse<ManagementListAuditLogsResponse>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v1/audit-logs`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementListAuditLogsResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async managementListAuditLogs(): Promise<ManagementListAuditLogsResponse> {
+        const response = await this.managementListAuditLogsRaw();
         return await response.value();
     }
 
