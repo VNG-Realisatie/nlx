@@ -9,6 +9,7 @@ import {
   IconDirectory,
   IconServices,
   IconSettings,
+  IconTimeLine,
 } from '../../icons'
 import {
   Nav,
@@ -48,7 +49,7 @@ const PrimaryNavigation = () => {
         </StyledLink>
 
         <StyledLink to="/audit-log" aria-label={t('Audit log page')}>
-          <StyledIcon as={IconDirectory} size="x-large" />
+          <StyledIcon as={IconTimeLine} size="x-large" />
           {t('Logs')}
         </StyledLink>
       </section>

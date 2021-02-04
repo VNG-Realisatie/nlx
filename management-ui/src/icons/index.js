@@ -28,6 +28,7 @@ import { ReactComponent as SvgStateDegraded } from './state-degraded.svg'
 import { ReactComponent as SvgStateDown } from './state-down.svg'
 import { ReactComponent as SvgStateUnknown } from './state-unknown.svg'
 import { ReactComponent as SvgStateUp } from './state-up.svg'
+import { ReactComponent as SvgTimeLine } from './time-line.svg'
 import { ReactComponent as SvgVisible } from './visible.svg'
 import { ReactComponent as SvgWarning } from './warning.svg'
 import { ReactComponent as SvgWarningCircle } from './error-warning.svg'
@@ -72,6 +73,7 @@ export const IconStateUnknown = (props) => (
   <Icon as={SvgStateUnknown} {...props} />
 )
 export const IconStateUp = (props) => <Icon as={SvgStateUp} {...props} />
+export const IconTimeLine = (props) => <Icon as={SvgTimeLine} {...props} />
 export const IconVisible = (props) => <Icon as={SvgVisible} {...props} />
 export const IconWarning = (props) => <Icon as={SvgWarning} {...props} />
 export const IconWarningCircle = (props) => (
