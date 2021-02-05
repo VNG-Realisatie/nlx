@@ -9,14 +9,14 @@ web interface that allows requesting a testing certificate easily.
 
 ## Installing the Chart
 
-To install the Chart with the release name `my-ca-certportal`:
+To install the Chart with the release name `ca-certportal`:
 
 ```console
 ## Add the NLX Helm repository
 $ helm repo add nlx https://charts.nlx.io
 
 ## Install the nlx-ca-certportal helm Chart
-$ helm install --name my-ca-certportal nlx/nlx-ca-certportal
+$ helm install ca-certportal nlx/nlx-ca-certportal
 ```
 
 > **Tip**: List all releases using `helm list`
@@ -29,10 +29,10 @@ that are prefixed with 'Helm'.
 
 ## Uninstalling the Chart
 
-To uninstall or delete the `my-ca-certportal` deployment:
+To uninstall or delete the `ca-certportal` deployment:
 
 ```console
-$ helm delete my-ca-certportal
+$ helm delete ca-certportal
 ```
 
 ## Configuration
@@ -76,6 +76,6 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. 
 
 ```console
-$ helm install --name my-ca-certportal -f values.yaml .
+$ helm install ca-certportal -f values.yaml .
 ```
 > **Tip**: You can use the default [values.yaml](https://gitlab.com/commonground/nlx/nlx/blob/master/helm/charts/ca-certportal/values.yaml)

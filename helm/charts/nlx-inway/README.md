@@ -8,14 +8,14 @@ This is the Chart for the NLX inway. An inway is needed to offer an API on the N
 
 ## Installing the Chart
 
-To install the Chart with the release name `my-inway`:
+To install the Chart with the release name `inway`:
 
 ```console
 ## Add the NLX Helm repository
 $ helm repo add nlx https://charts.nlx.io
 
 ## Install the nlx-inway helm Chart
-$ helm install --name my-inway nlx/nlx-inway
+$ helm install inway nlx/nlx-inway
 ```
 
 > **Tip**: List all releases using `helm list`
@@ -28,10 +28,10 @@ that are prefixed with 'Helm'.
 
 ## Uninstalling the Chart
 
-To uninstall or delete the `my-inway` deployment:
+To uninstall or delete the `inway` deployment:
 
 ```console
-$ helm delete my-inway
+$ helm delete inway
 ```
 
 ## Configuration
@@ -91,6 +91,6 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. 
 
 ```console
-$ helm install --name my-inway -f values.yaml .
+$ helm install inway -f values.yaml .
 ```
 > **Tip**: You can use the default [values.yaml](https://gitlab.com/commonground/nlx/nlx/blob/master/helm/charts/nlx-inway/values.yaml)

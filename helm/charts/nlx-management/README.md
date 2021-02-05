@@ -8,14 +8,14 @@ This is the Chart for the NLX Management. NLX Management can be used to configur
 
 ## Installing the Chart
 
-To install the Chart with the release name `my-management`:
+To install the Chart with the release name `management`:
 
 ```console
 ## Add the NLX Helm repository
 $ helm repo add nlx https://charts.nlx.io
 
 ## Install the nlx-management helm Chart
-$ helm install --name my-management nlx/nlx-management
+$ helm install management nlx/nlx-management
 ```
 
 > **Tip**: List all releases using `helm list`
@@ -28,10 +28,10 @@ that are prefixed with 'Helm'.
 
 ## Uninstalling the Chart
 
-To uninstall or delete the `my-management` deployment:
+To uninstall or delete the `management` deployment:
 
 ```console
-$ helm delete my-management
+$ helm delete management
 ```
 
 ## Configuration
@@ -96,6 +96,6 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. 
 
 ```console
-$ helm install --name my-management -f values.yaml .
+$ helm install management -f values.yaml .
 ```
 > **Tip**: You can use the default [values.yaml](https://gitlab.com/commonground/nlx/nlx/blob/master/helm/charts/nlx-management/values.yaml)

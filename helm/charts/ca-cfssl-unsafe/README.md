@@ -12,14 +12,14 @@ Unsafe-ca is based on [cfssl](https://github.com/cloudflare/cfssl).
 
 ## Installing the Chart
 
-To install the Chart with the release name `my-ca-cfssl-unsafe`:
+To install the Chart with the release name `ca-cfssl-unsafe`:
 
 ```console
 ## Add the NLX Helm repository
 $ helm repo add nlx https://charts.nlx.io
 
 ## Install the nlx-ca-cfssl-unsafe helm Chart
-$ helm install --name my-ca-cfssl-unsafe nlx/nlx-ca-cfssl-unsafe
+$ helm install ca-cfssl-unsafe nlx/nlx-ca-cfssl-unsafe
 ```
 
 > **Tip**: List all releases using `helm list`
@@ -32,10 +32,10 @@ that are prefixed with 'Helm'.
 
 ## Uninstalling the Chart
 
-To uninstall or delete the `my-ca-cfssl-unsafe` deployment:
+To uninstall or delete the `ca-cfssl-unsafe` deployment:
 
 ```console
-$ helm delete my-ca-cfssl-unsafe
+$ helm delete ca-cfssl-unsafe
 ```
 
 ## Configuration
@@ -72,6 +72,6 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. 
 
 ```console
-$ helm install --name my-ca-cfssl-unsafe -f values.yaml .
+$ helm install ca-cfssl-unsafe -f values.yaml .
 ```
 > **Tip**: You can use the default [values.yaml](https://gitlab.com/commonground/nlx/nlx/blob/master/helm/charts/ca-cfssl-unsafe/values.yaml)

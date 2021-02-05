@@ -8,14 +8,14 @@ This is the Chart for the irma server.
 
 ## Installing the Chart
 
-To install the Chart with the release name `my-irma-server`:
+To install the Chart with the release name `irma-server`:
 
 ```console
 ## Add the NLX Helm repository
 $ helm repo add nlx https://charts.nlx.io
 
 ## Install the irma-server Chart
-$ helm install --name my-irma-server nlx/irma-server
+$ helm install irma-server nlx/irma-server
 ```
 
 > **Tip**: List all releases using `helm list`
@@ -28,10 +28,10 @@ that are prefixed with 'Helm'.
 
 ## Uninstalling the Chart
 
-To uninstall or delete the `my-irma-server` deployment:
+To uninstall or delete the `irma-server` deployment:
 
 ```console
-$ helm delete my-irma-server
+$ helm delete irma-server
 ```
 
 ## Configuration
@@ -79,6 +79,6 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. 
 
 ```console
-$ helm install --name my-irma-server -f values.yaml .
+$ helm install irma-server -f values.yaml .
 ```
 > **Tip**: You can use the default [values.yaml](https://gitlab.com/commonground/nlx/nlx/blob/master/helm/charts/irma-server/values.yaml)

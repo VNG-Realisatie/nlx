@@ -8,14 +8,14 @@ This is the Chart for the NLX documentation page.
 
 ## Installing the Chart
 
-To install the Chart with the release name `my-nlx-docs`:
+To install the Chart with the release name `nlx-docs`:
 
 ```console
 ## Add the NLX Helm repository
 $ helm repo add nlx https://charts.nlx.io
 
 ## Install the nlx-docs Chart
-$ helm install --name my-nlx-docs nlx/nlx-docs
+$ helm install nlx-docs nlx/nlx-docs
 ```
 
 > **Tip**: List all releases using `helm list`
@@ -28,10 +28,10 @@ that are prefixed with 'Helm'.
 
 ## Uninstalling the Chart
 
-To uninstall or delete the `my-nlx-docs` deployment:
+To uninstall or delete the `nlx-docs` deployment:
 
 ```console
-$ helm delete my-nlx-docs
+$ helm delete nlx-docs
 ```
 
 ## Configuration
@@ -73,6 +73,6 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. 
 
 ```console
-$ helm install --name my-nlx-docs -f values.yaml .
+$ helm install nlx-docs -f values.yaml .
 ```
 > **Tip**: You can use the default [values.yaml](https://gitlab.com/commonground/nlx/nlx/blob/master/helm/charts/nlx-docs/values.yaml)

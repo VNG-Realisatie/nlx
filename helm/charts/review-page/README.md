@@ -8,14 +8,14 @@ This is the Chart for the review page.
 
 ## Installing the Chart
 
-To install the Chart with the release name `my-review-page`:
+To install the Chart with the release name `review-page`:
 
 ```console
 ## Add the NLX Helm repository
 $ helm repo add nlx https://charts.nlx.io
 
 ## Install the nlx-docs Chart
-$ helm install --name my-review-page nlx/review-page
+$ helm install review-page nlx/review-page
 ```
 
 > **Tip**: List all releases using `helm list`
@@ -28,10 +28,10 @@ that are prefixed with 'Helm'.
 
 ## Uninstalling the Chart
 
-To uninstall or delete the `my-review-page` deployment:
+To uninstall or delete the `review-page` deployment:
 
 ```console
-$ helm delete my-review-page
+$ helm delete review-page
 ```
 
 ## Configuration
@@ -74,6 +74,6 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. 
 
 ```console
-$ helm install --name my-review-page -f values.yaml .
+$ helm install review-page -f values.yaml .
 ```
 > **Tip**: You can use the default [values.yaml](https://gitlab.com/commonground/nlx/nlx/blob/master/helm/charts/review-page/values.yaml)

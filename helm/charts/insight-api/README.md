@@ -8,14 +8,14 @@ This is the Chart for the NLX insight-api. An insight-api is needed to offer an 
 
 ## Installing the Chart
 
-To install the Chart with the release name `my-insight-api`:
+To install the Chart with the release name `insight-api`:
 
 ```console
 ## Add the NLX Helm repository
 $ helm repo add nlx https://charts.nlx.io
 
 ## Install the nlx-insight-api helm Chart
-$ helm install --name my-insight-api nlx/nlx-insight-api
+$ helm install insight-api nlx/nlx-insight-api
 ```
 
 > **Tip**: List all releases using `helm list`
@@ -28,10 +28,10 @@ that are prefixed with 'Helm'.
 
 ## Uninstalling the Chart
 
-To uninstall or delete the `my-insight-api` deployment:
+To uninstall or delete the `insight-api` deployment:
 
 ```console
-$ helm delete my-insight-api
+$ helm delete insight-api
 ```
 
 ## Configuration
@@ -83,6 +83,6 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. 
 
 ```console
-$ helm install --name my-insight-api -f values.yaml .
+$ helm install insight-api -f values.yaml .
 ```
 > **Tip**: You can use the default [values.yaml](https://gitlab.com/commonground/nlx/nlx/blob/master/helm/charts/insight-api/values.yaml)

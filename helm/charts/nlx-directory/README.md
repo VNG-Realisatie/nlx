@@ -8,14 +8,14 @@ This is the Chart for the NLX Directory.
 
 ## Installing the Chart
 
-To install the Chart with the release name `my-nlx-directory`:
+To install the Chart with the release name `nlx-directory`:
 
 ```console
 ## Add the NLX Helm repository
 $ helm repo add nlx https://charts.nlx.io
 
 ## Install the nlx-nlx-directory helm Chart
-$ helm install --name my-nlx-directory nlx/nlx-nlx-directory
+$ helm install nlx-directory nlx/nlx-nlx-directory
 ```
 
 > **Tip**: List all releases using `helm list`
@@ -28,10 +28,10 @@ that are prefixed with 'Helm'.
 
 ## Uninstalling the Chart
 
-To uninstall or delete the `my-nlx-directory` deployment:
+To uninstall or delete the `nlx-directory` deployment:
 
 ```console
-$ helm delete my-nlx-directory
+$ helm delete nlx-directory
 ```
 
 ## Configuration
@@ -89,6 +89,6 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. 
 
 ```console
-$ helm install --name my-nlx-directory -f values.yaml .
+$ helm install nlx-directory -f values.yaml .
 ```
 > **Tip**: You can use the default [values.yaml](https://gitlab.com/commonground/nlx/nlx/blob/master/helm/charts/nlx-directory/values.yaml)
