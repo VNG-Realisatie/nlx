@@ -59,7 +59,7 @@ The following table lists the configurable parameters of the nlx-inway Chart and
 | `config.directoryRegistrationHostname` | Address of the NLX directory where this inway can register its services | `""` |
 | `config.serviceConfig` |**deprecated** The services this inway will offer to the NLX network. For more info see: https://docs.nlx.io/reference-information/service-configuration | `{}` |
 | `config.managementAPI.enabled` | If `true` the inway will use a management API to retrieve the service it will offer to the NLX network instead of using `config.ServiceConfig` | true |
-| `config.managementAPI.address` | The address of the management API | `""` |
+| `config.managementAPI.address` | The config address of the management API. Normally this would be: `hostname:443` where `hostname` is the hostname of the Management API | `""` |
 | `transactionLog.enabled` | If `true` the inway will write log records into the transaction log | `true` |
 | `transactionLog.hostname` | Hostname of the transaction log database | `""` |
 | `transactionLog.database` | Database name of the transaction log | `""` |

@@ -58,7 +58,7 @@ The following table lists the configurable parameters of the nlx-outway Chart an
 | `config.authorizationService.enabled` | If `true`, the outway will use the authorization service | `false` |
 | `config.authorizationService.url` | URL of the authorization service to use | `""` |
 | `config.managementAPI.enabled` | If `true` the outway will use a management API to retrieve the service it will offer to the NLX network instead of using `config.ServiceConfig` | true |
-| `config.managementAPI.address` | The address of the management API | `""` |
+| `config.managementAPI.address` | The config address of the management API. Normally this would be: `hostname:443` where `hostname` is the hostname of the Management API | `""` |
 | `transactionLog.enabled` | If `true` the outway will write log records into the transaction log | `true` |
 | `transactionLog.hostname` | Hostname of the transaction log database | `""` |
 | `transactionLog.database` | Database name of the transaction log | `""` |
