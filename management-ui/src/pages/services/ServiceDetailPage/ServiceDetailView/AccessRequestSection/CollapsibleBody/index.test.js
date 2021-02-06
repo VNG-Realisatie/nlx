@@ -4,6 +4,7 @@
 
 import React from 'react'
 import { fireEvent, waitForElementToBeRemoved } from '@testing-library/react'
+import { configure } from 'mobx'
 import { renderWithProviders } from '../../../../../../test-utils'
 import IncomingAccessRequestModel, {
   ACCESS_REQUEST_STATES,
@@ -18,6 +19,7 @@ test('when no access requests are available', async () => {
 })
 
 test('listing the access requests', async () => {
+  configure({ safeDescriptors: false })
   const accessRequest = new IncomingAccessRequestModel({
     accessRequestData: {
       id: '1',

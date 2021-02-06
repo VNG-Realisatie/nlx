@@ -1,6 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
+import { configure } from 'mobx'
 import { checkPropTypes } from 'prop-types'
 import { RootStore } from '../index'
 import InwayModel, { inwayModelPropTypes } from './InwayModel'
@@ -16,6 +17,7 @@ test('model implements proptypes', () => {
 })
 
 test('fetch should reload the model via the store', async () => {
+  configure({ safeDescriptors: false })
   const rootStore = new RootStore({})
 
   const inwayModel = new InwayModel({

@@ -5,6 +5,7 @@ import React from 'react'
 import { Route, Router, StaticRouter } from 'react-router-dom'
 import { act, fireEvent } from '@testing-library/react'
 import { createMemoryHistory } from 'history'
+import { configure } from 'mobx'
 import { renderWithProviders } from '../../../test-utils'
 import { RootStore, StoreProvider } from '../../../stores'
 import { ManagementApi } from '../../../api'
@@ -74,6 +75,7 @@ test('fetching a non-existing component', async () => {
 })
 
 test('removing the service', async () => {
+  configure({ safeDescriptors: false })
   const managementApiClient = new ManagementApi()
   managementApiClient.managementDeleteService = jest.fn().mockResolvedValue()
 

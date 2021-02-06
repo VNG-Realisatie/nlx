@@ -1,6 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
+import { configure } from 'mobx'
 import { ManagementApi } from '../api'
 import ServiceModel from './models/ServiceModel'
 import { RootStore } from './index'
@@ -18,6 +19,7 @@ test('initializing the store', async () => {
 })
 
 test('fetch and getting a single service', async () => {
+  configure({ safeDescriptors: false })
   const managementApiClient = new ManagementApi()
 
   managementApiClient.managementGetService = jest.fn().mockResolvedValue({

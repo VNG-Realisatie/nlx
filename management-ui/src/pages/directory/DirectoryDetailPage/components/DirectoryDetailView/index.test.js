@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { makeAutoObservable } from 'mobx'
+import { makeAutoObservable, configure } from 'mobx'
 import { Route, StaticRouter as Router } from 'react-router-dom'
 import { fireEvent, within } from '@testing-library/react'
 import { renderWithProviders } from '../../../../../test-utils'
@@ -12,6 +12,7 @@ import DirectoryDetailPage from '../../index'
 let service
 
 beforeEach(() => {
+  configure({ safeDescriptors: false })
   service = makeAutoObservable({
     id: 'Test Organization/Test Service',
     organizationName: 'Test Organization',

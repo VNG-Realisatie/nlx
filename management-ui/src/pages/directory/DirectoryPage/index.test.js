@@ -5,6 +5,7 @@
 import React from 'react'
 import { MemoryRouter, Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
+import { configure } from 'mobx'
 import { act, renderWithProviders } from '../../../test-utils'
 import { RootStore, StoreProvider } from '../../../stores'
 import { UserContextProvider } from '../../../user-context'
@@ -46,6 +47,7 @@ const renderDirectory = (store) =>
   )
 
 test('listing all services', async () => {
+  configure({ safeDescriptors: false })
   const directoryApiClient = new DirectoryApi()
 
   directoryApiClient.directoryListServices = jest.fn().mockResolvedValue({

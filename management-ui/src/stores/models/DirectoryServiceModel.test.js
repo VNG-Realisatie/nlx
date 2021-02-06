@@ -1,6 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
+import { configure } from 'mobx'
 import { RootStore } from '../index'
 import OutgoingAccessRequestModel, {
   ACCESS_REQUEST_STATES,
@@ -75,6 +76,7 @@ test('updating the model with an invalid latest access request and access proof'
 })
 
 test('(re-)fetching the model', async () => {
+  configure({ safeDescriptors: false })
   const rootStore = new RootStore({})
 
   jest.spyOn(rootStore.directoryServicesStore, 'fetch').mockResolvedValue({})
@@ -97,6 +99,7 @@ test('(re-)fetching the model', async () => {
 })
 
 describe('requesting access to a service', () => {
+  configure({ safeDescriptors: false })
   it('should request access via the directory service store', async () => {
     const rootStore = new RootStore({})
 

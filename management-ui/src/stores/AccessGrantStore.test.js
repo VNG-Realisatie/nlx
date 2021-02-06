@@ -1,6 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
+import { configure } from 'mobx'
 import AccessGrantModel from '../stores/models/AccessGrantModel'
 import { ManagementApi } from '../api'
 import AccessGrantStore from './AccessGrantStore'
@@ -62,6 +63,7 @@ test('fetching, getting and updating from server', async () => {
 })
 
 test('revoking an access grant', async () => {
+  configure({ safeDescriptors: false })
   const managementApiClient = new ManagementApi()
   const accessGrantStore = new AccessGrantStore({
     managementApiClient,

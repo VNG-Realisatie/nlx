@@ -1,6 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
+import { configure } from 'mobx'
 import IncomingAccessRequestModel, {
   ACCESS_REQUEST_STATES,
 } from '../stores/models/IncomingAccessRequestModel'
@@ -74,6 +75,7 @@ test('fetching, getting and updating from server', async () => {
 })
 
 test('approving an access request', async () => {
+  configure({ safeDescriptors: false })
   const managementApiClient = new ManagementApi()
   managementApiClient.managementApproveIncomingAccessRequest = jest
     .fn()

@@ -1,6 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
+import { configure } from 'mobx'
 import OutgoingAccessRequestModel from '../stores/models/OutgoingAccessRequestModel'
 import DirectoryServiceModel from '../stores/models/DirectoryServiceModel'
 import AccessProofModel from '../stores/models/AccessProofModel'
@@ -109,6 +110,7 @@ test('fetching a single service', async () => {
 })
 
 test('requesting access to a service in the directory', async () => {
+  configure({ safeDescriptors: false })
   const managementApiClient = new ManagementApi()
   const rootStore = new RootStore({
     managementApiClient,

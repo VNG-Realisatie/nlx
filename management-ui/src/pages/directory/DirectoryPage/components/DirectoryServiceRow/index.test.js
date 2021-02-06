@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { makeAutoObservable } from 'mobx'
+import { makeAutoObservable, configure } from 'mobx'
 import { fireEvent, act } from '@testing-library/react'
 import { renderWithProviders } from '../../../../../test-utils'
 import { clickConfirmButtonAndAssert } from '../../../../../components/ConfirmationModal/testUtils'
@@ -14,6 +14,7 @@ describe('a service we do not have access to', () => {
   let service
 
   beforeEach(() => {
+    configure({ safeDescriptors: false })
     service = makeAutoObservable({
       id: 'Test Organization/Test Service',
       organizationName: 'Test Organization',

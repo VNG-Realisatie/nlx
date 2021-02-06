@@ -1,6 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
+import { configure } from 'mobx'
 import ServiceStore from '../ServiceStore'
 import { RootStore } from '../index'
 import { ManagementApi } from '../../api'
@@ -46,6 +47,7 @@ test('initialize and update the service', async () => {
 })
 
 test('(re-)fetching the model should call fetch on store', async () => {
+  configure({ safeDescriptors: false })
   jest
     .spyOn(ServiceModel.prototype, 'incomingAccessRequests', 'get')
     .mockReturnValue([])

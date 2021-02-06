@@ -1,13 +1,13 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-
 import React from 'react'
 import {
   fireEvent,
   waitForElementToBeRemoved,
   within,
 } from '@testing-library/react'
+import { configure } from 'mobx'
 import { renderWithProviders } from '../../../../../../test-utils'
 import AccessGrantModel from '../../../../../../stores/models/AccessGrantModel'
 import CollapsibleBody from './index'
@@ -22,6 +22,7 @@ test('when no access grants are available', async () => {
 })
 
 test('listing the access grants', async () => {
+  configure({ safeDescriptors: false })
   const accessGrant = new AccessGrantModel({
     accessGrantData: {
       id: '1',
