@@ -6,82 +6,123 @@ import { StaticRouter as Router } from 'react-router-dom'
 
 import { renderWithProviders } from '../../../test-utils'
 import { RootStore, StoreProvider } from '../../../stores'
+import { ManagementApi } from '../../../api'
 import OrganizationInwayCheck from './index'
 
-const warningTextKey =
-  'Access requests can not be received. Please specify which inway should handle access requests.'
-
-test('fetches settings if not set in store', () => {
-  const getSettings = jest
-    .fn()
-    .mockResolvedValue({ organizationInway: 'inway' })
-
-  const rootStore = new RootStore()
-  rootStore.servicesStore.isInitiallyFetched = true
-  rootStore.applicationStore.isOrganizationInwaySet = null
-
-  renderWithProviders(
-    <Router>
-      <StoreProvider rootStore={rootStore}>
-        <OrganizationInwayCheck getSettings={getSettings} />
-      </StoreProvider>
-    </Router>,
-  )
-
-  expect(getSettings).toHaveBeenCalled()
-})
-
 test('shows warning message when inway is not set and there are services', async () => {
-  const getSettings = jest.fn().mockResolvedValue({ organizationInway: false })
+  const managementApiClient = new ManagementApi()
 
-  const rootStore = new RootStore()
-  rootStore.servicesStore.isInitiallyFetched = true
-  rootStore.servicesStore.services.push({ serviceName: 'service' })
+  managementApiClient.managementGetService = jest.fn().mockResolvedValue({
+    name: 'service',
+  })
+
+  managementApiClient.managementListAccessGrantsForService = jest
+    .fn()
+    .mockResolvedValue({
+      accessGrants: [],
+    })
+
+  managementApiClient.managementListIncomingAccessRequest = jest
+    .fn()
+    .mockResolvedValue({
+      accessRequests: [],
+    })
+
+  const rootStore = new RootStore({
+    managementApiClient,
+  })
+  const applicationStore = rootStore.applicationStore
+  const servicesStore = rootStore.servicesStore
+
+  applicationStore.update({
+    isOrganizationInwaySet: false,
+  })
+
+  servicesStore.fetch({ name: 'service ' })
 
   const { findByText } = renderWithProviders(
     <Router>
       <StoreProvider rootStore={rootStore}>
-        <OrganizationInwayCheck getSettings={getSettings} />
+        <OrganizationInwayCheck />
       </StoreProvider>
     </Router>,
   )
 
-  expect(await findByText(warningTextKey)).toBeInTheDocument()
+  expect(
+    await findByText(
+      'Access requests can not be received. Please specify which inway should handle access requests.',
+    ),
+  ).toBeInTheDocument()
 })
 
 test('does not show warning message when inway is not set and services are not set', () => {
-  const getSettings = jest.fn().mockResolvedValue({ organizationInway: false })
+  const managementApiClient = new ManagementApi()
 
-  const rootStore = new RootStore()
-  rootStore.servicesStore.isInitiallyFetched = true
+  const rootStore = new RootStore({
+    managementApiClient,
+  })
+
+  rootStore.applicationStore.update({
+    isOrganizationInwaySet: false,
+  })
 
   const { queryByText } = renderWithProviders(
     <Router>
       <StoreProvider rootStore={rootStore}>
-        <OrganizationInwayCheck getSettings={getSettings} />
+        <OrganizationInwayCheck />
       </StoreProvider>
     </Router>,
   )
 
-  expect(queryByText(warningTextKey)).not.toBeInTheDocument()
+  expect(
+    queryByText(
+      'Access requests can not be received. Please specify which inway should handle access requests.',
+    ),
+  ).not.toBeInTheDocument()
 })
 
 test('does not show warning message when inway is set and there are services', () => {
-  const getSettings = jest.fn()
+  const managementApiClient = new ManagementApi()
 
-  const rootStore = new RootStore()
-  rootStore.applicationStore.isOrganizationInwaySet = true
-  rootStore.servicesStore.isInitiallyFetched = true
-  rootStore.servicesStore.services.push({ serviceName: 'service' })
+  managementApiClient.managementGetService = jest.fn().mockResolvedValue({
+    name: 'service',
+  })
+
+  managementApiClient.managementListAccessGrantsForService = jest
+    .fn()
+    .mockResolvedValue({
+      accessGrants: [],
+    })
+
+  managementApiClient.managementListIncomingAccessRequest = jest
+    .fn()
+    .mockResolvedValue({
+      accessRequests: [],
+    })
+
+  const rootStore = new RootStore({
+    managementApiClient,
+  })
+  const applicationStore = rootStore.applicationStore
+  const servicesStore = rootStore.servicesStore
+
+  applicationStore.update({
+    isOrganizationInwaySet: true,
+  })
+
+  servicesStore.fetch({ name: 'service ' })
 
   const { queryByText } = renderWithProviders(
     <Router>
       <StoreProvider rootStore={rootStore}>
-        <OrganizationInwayCheck getSettings={getSettings} />
+        <OrganizationInwayCheck />
       </StoreProvider>
     </Router>,
   )
 
-  expect(getSettings).not.toHaveBeenCalled()
-  expect(queryByText(warningTextKey)).not.toBeInTheDocument()
+  expect(
+    queryByText(
+      'Access requests can not be received. Please specify which inway should handle access requests.',
+    ),
+  ).not.toBeInTheDocument()
 })

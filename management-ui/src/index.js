@@ -11,6 +11,7 @@ import { RootStore, StoreProvider } from './stores'
 import { UserContextProvider } from './user-context'
 import App from './App'
 import { Configuration, DirectoryApi, ManagementApi } from './api'
+import Routes from './routes'
 
 const directoryApiClient = new DirectoryApi(
   new Configuration({
@@ -32,7 +33,9 @@ ReactDOM.render(
   <Router>
     <StoreProvider rootStore={rootStore}>
       <UserContextProvider>
-        <App />
+        <App>
+          <Routes />
+        </App>
       </UserContextProvider>
     </StoreProvider>
   </Router>,

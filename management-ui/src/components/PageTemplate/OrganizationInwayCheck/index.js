@@ -1,11 +1,9 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React, { useEffect } from 'react'
+import React from 'react'
 import { observer } from 'mobx-react'
-import { func } from 'prop-types'
 import { useTranslation } from 'react-i18next'
-import SettingsRepository from '../../../domain/settings-repository'
 import {
   useApplicationStore,
   useServicesStore,
@@ -13,33 +11,16 @@ import {
 import GlobalAlert from '../../GlobalAlert'
 import { StyledLink } from './index.styles'
 
-const OrganizationInwayCheck = ({ getSettings }) => {
+const OrganizationInwayCheck = () => {
   // Destructuring `applicationStore` breaks mobx reactivity
   const applicationStore = useApplicationStore()
   const { services } = useServicesStore()
   const { t } = useTranslation()
 
-  useEffect(() => {
-    const fetch = async () => {
-      if (applicationStore.isOrganizationInwaySet !== null) return
-
-      try {
-        const settings = await getSettings()
-        applicationStore.update({
-          isOrganizationInwaySet: !!settings.organizationInway,
-        })
-      } catch (e) {
-        console.error(e)
-      }
-    }
-
-    fetch()
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-  const render =
+  const displayMessage =
     applicationStore.isOrganizationInwaySet === false && services.length
 
-  return render ? (
+  return displayMessage ? (
     <GlobalAlert>
       {t(
         'Access requests can not be received. Please specify which inway should handle access requests.',
@@ -47,14 +28,6 @@ const OrganizationInwayCheck = ({ getSettings }) => {
       <StyledLink to="/settings/general">{t('Go to settings')}</StyledLink>
     </GlobalAlert>
   ) : null
-}
-
-OrganizationInwayCheck.propTypes = {
-  getSettings: func,
-}
-
-OrganizationInwayCheck.defaultProps = {
-  getSettings: SettingsRepository.getGeneralSettings,
 }
 
 export default observer(OrganizationInwayCheck)
