@@ -3,12 +3,14 @@
 //
 import React, { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useLocation } from 'react-router-dom'
 import { Button } from '@commonground/design-system'
 import UserContext from '../../user-context'
 import OrganizationName from '../../components/OrganizationName'
 import {
   Wrapper,
   Content,
+  StyledAlert,
   StyledIconExternalLink,
   StyledNLXManagementLogo,
   StyledOrganization,
@@ -16,9 +18,32 @@ import {
   StyledSidebar,
 } from './index.styles'
 
+function useLoginErrorMessage() {
+  const { t } = useTranslation()
+  const loc = useLocation()
+
+  const match = loc.hash.match(/#auth-(.*)/)
+
+  if (match === null) {
+    return null
+  }
+
+  switch (match[1]) {
+    case 'fail':
+      return t('Something went wrong when logging in. Please try again.')
+
+    case 'missing-user':
+      return t("User doesn't exist in NLX Management.")
+
+    default:
+      return null
+  }
+}
+
 const LoginPage = () => {
   const { t } = useTranslation()
   const { user } = useContext(UserContext)
+  const loginError = useLoginErrorMessage()
 
   return (
     <Wrapper>
@@ -27,9 +52,18 @@ const LoginPage = () => {
       </StyledSidebar>
       <Content>
         <h1>{t('Welcome')}</h1>
+
         {!user ? (
           <>
             <p>{t('Log in to continue')}</p>
+
+            {loginError !== null && (
+              <StyledAlert
+                data-testid="login-error-message"
+                variant="error"
+                title={loginError}
+              />
+            )}
 
             <StyledOrganization>
               <StyledIconOrganization inline />

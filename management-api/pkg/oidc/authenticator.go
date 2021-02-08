@@ -211,7 +211,14 @@ func (a *Authenticator) callback(w http.ResponseWriter, r *http.Request) {
 	}()
 	if err != nil {
 		a.logger.Info("authentication failed", zap.Error(err))
-		http.Redirect(w, r, "/?state=auth_fail", http.StatusFound)
+
+		if errors.Is(err, database.ErrNotFound) {
+			http.Redirect(w, r, "/login#auth-missing-user", http.StatusFound)
+
+			return
+		}
+
+		http.Redirect(w, r, "/login#auth-fail", http.StatusFound)
 
 		return
 	}

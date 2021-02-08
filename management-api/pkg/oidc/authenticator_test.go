@@ -276,7 +276,7 @@ func TestCallbackEndpoint(t *testing.T) {
 	resp, err := client.Get(fmt.Sprintf("%s/callback?code=1337", srv.URL))
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusFound, resp.StatusCode)
-	assert.Equal(t, resp.Header.Get("Location"), "/?state=auth_fail")
+	assert.Equal(t, resp.Header.Get("Location"), "/login#auth-fail")
 	resp.Body.Close()
 }
 
