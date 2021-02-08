@@ -11,8 +11,6 @@ class AccessGrantModel {
   createdAt = null
   revokedAt = null
 
-  error = ''
-
   constructor({ accessGrantStore, accessGrantData }) {
     makeAutoObservable(this)
 
@@ -52,10 +50,10 @@ class AccessGrantModel {
 
   revoke = flow(function* revoke() {
     try {
-      this.error = ''
       yield this.accessGrantStore.revokeAccessGrant(this)
-    } catch (e) {
-      this.error = e.message
+    } catch (err) {
+      console.error(err)
+      throw err
     }
   }).bind(this)
 }

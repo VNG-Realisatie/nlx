@@ -20,20 +20,19 @@ const CollapsibleBody = ({
   const { showToast } = useContext(ToasterContext)
 
   const revokeHandler = async (accessGrant) => {
-    await accessGrant.revoke()
+    try {
+      await accessGrant.revoke()
 
-    if (!accessGrant.error) {
       showToast({
         title: t('Access revoked'),
         variant: 'success',
       })
-    } else {
+    } catch (e) {
       showToast({
         title: t('Failed to revoke access grant'),
         body: t('Please try again'),
         variant: 'error',
       })
-      console.error(accessGrant.error)
     }
   }
 

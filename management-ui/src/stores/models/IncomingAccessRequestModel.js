@@ -23,7 +23,6 @@ export const incomingAccessRequestPropTypes = {
 
   approve: func,
   reject: func,
-  error: string,
 }
 
 class IncomingAccessRequestModel {

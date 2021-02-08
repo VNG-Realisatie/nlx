@@ -24,7 +24,6 @@ const CollapsibleBody = ({
   const approveHandler = async (accessRequest) => {
     try {
       await accessRequest.approve()
-
       showToast({
         title: t('Access request approved'),
         body: t('Organization has access to service', {

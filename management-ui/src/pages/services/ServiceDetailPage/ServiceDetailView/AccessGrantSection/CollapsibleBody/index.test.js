@@ -2,15 +2,13 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import {
-  fireEvent,
-  waitForElementToBeRemoved,
-  within,
-} from '@testing-library/react'
+import { waitFor, fireEvent, within } from '@testing-library/react'
 import { configure } from 'mobx'
 import { renderWithProviders } from '../../../../../../test-utils'
 import AccessGrantModel from '../../../../../../stores/models/AccessGrantModel'
 import CollapsibleBody from './index'
+
+jest.mock('../../../../../../components/Modal')
 
 test('when no access grants are available', async () => {
   const { getByText } = renderWithProviders(
@@ -21,8 +19,9 @@ test('when no access grants are available', async () => {
   ).toBeInTheDocument()
 })
 
-test('listing the access grants', async () => {
+test('revoke access grant', async () => {
   configure({ safeDescriptors: false })
+
   const accessGrant = new AccessGrantModel({
     accessGrantData: {
       id: '1',
@@ -33,21 +32,27 @@ test('listing the access grants', async () => {
     },
   })
 
-  accessGrant.revoke = jest.fn().mockResolvedValue()
-
-  const { getByTestId, getByText, getByTitle, getByRole } = renderWithProviders(
+  const { getByText, findByText, getByRole } = renderWithProviders(
     <CollapsibleBody accessGrants={[accessGrant]} />,
   )
 
-  expect(getByTestId('service-accessgrant-list')).toBeInTheDocument()
-  expect(getByText('organization-a')).toBeInTheDocument()
+  const revokeSpy = jest.spyOn(accessGrant, 'revoke').mockResolvedValue()
+  fireEvent.click(getByText('Revoke'))
 
-  fireEvent.click(getByTitle('Revoke'))
+  let confirmModal = getByRole('dialog')
+  const cancelButton = within(confirmModal).getByText('Cancel')
+  fireEvent.click(cancelButton)
 
-  // confirm revoke
-  const confirmButton = await within(getByRole('dialog')).findByText('Revoke')
-  fireEvent.click(confirmButton)
-  await waitForElementToBeRemoved(confirmButton)
+  await waitFor(() => expect(revokeSpy).not.toHaveBeenCalled())
 
-  expect(accessGrant.revoke).toHaveBeenCalledTimes(1)
+  fireEvent.click(getByText('Revoke'))
+
+  confirmModal = getByRole('dialog')
+  const okButton = within(confirmModal).getByText('Revoke')
+  fireEvent.click(okButton)
+
+  await waitFor(() => expect(revokeSpy).toHaveBeenCalled())
+
+  // toast
+  expect(await findByText('Access revoked')).toBeInTheDocument()
 })
