@@ -3,8 +3,20 @@
 //
 import { makeAutoObservable } from 'mobx'
 
-export const AUDIT_LOG_ACTION_LOGIN = 'login'
-export const AUDIT_LOG_ACTION_LOGOUT = 'logout'
+export const AUDIT_LOG_ACTION_LOGIN_SUCCESS = 'login_success'
+export const AUDIT_LOG_ACTION_LOGOUT_SUCCESS = 'logout_success'
+
+//  listen_test.go     │ 23     OR action_type = 'login_fail'
+//            scheduler.go       │ 24     OR action_type = 'logout_success'
+//            scheduler_test.go  │ 25     OR action_type = 'incoming_access_request_accept'
+//     ▾   database/            │ 26     OR action_type = 'incoming_access_request_reject'
+//       ▸   mock/              │ 27     OR action_type = 'access_grant_revoke'
+//            127.0.0.1:210010401│ 28     OR action_type = 'outgoing_access_request_create'
+//            127.0.0.1:210020401│ 29     OR action_type = 'service_create'
+//            127.0.0.1:210250448│ 30     OR action_type = 'service_update'
+//            127.0.0.1:210260448│ 31     OR action_type = 'service_delete'
+//            access_grant.go    │ 32     OR action_type = 'organization_settings_update'
+//            access_proof.go    │ 33     OR action_type = 'organization_insight_configuration_update'
 
 class AuditLogModel {
   _id = null

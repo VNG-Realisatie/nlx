@@ -6,16 +6,16 @@ import React from 'react'
 import { string, node, instanceOf } from 'prop-types'
 import { useTranslation, Trans } from 'react-i18next'
 import {
-  AUDIT_LOG_ACTION_LOGIN,
-  AUDIT_LOG_ACTION_LOGOUT,
+  AUDIT_LOG_ACTION_LOGIN_SUCCESS,
+  AUDIT_LOG_ACTION_LOGOUT_SUCCESS,
 } from '../../../../stores/models/AuditLogModel'
 import { IconWarningCircle, IconShutdown } from '../../../../icons'
 import { Container, IconContainer, Description, IconItem } from './index.styles'
 
 const actionToIcon = (action) => {
   switch (action) {
-    case AUDIT_LOG_ACTION_LOGIN:
-    case AUDIT_LOG_ACTION_LOGOUT:
+    case AUDIT_LOG_ACTION_LOGIN_SUCCESS:
+    case AUDIT_LOG_ACTION_LOGOUT_SUCCESS:
       return IconShutdown
 
     default:
@@ -48,11 +48,11 @@ const AuditLogRecord = ({ action, user, createdAt }) => {
 
   return (
     <Template action={action} dateTime={dateTimeString}>
-      {action === AUDIT_LOG_ACTION_LOGIN ? (
+      {action === AUDIT_LOG_ACTION_LOGIN_SUCCESS ? (
         <Trans values={{ user }}>
           <strong>{{ user }}</strong> has logged in
         </Trans>
-      ) : action === AUDIT_LOG_ACTION_LOGOUT ? (
+      ) : action === AUDIT_LOG_ACTION_LOGOUT_SUCCESS ? (
         <Trans values={{ user }}>
           <strong>{{ user }}</strong> has logged out
         </Trans>
