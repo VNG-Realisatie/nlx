@@ -58,8 +58,8 @@ const AuditLogRecord = ({ action, user, createdAt }) => {
         </Trans>
       ) : (
         <Trans values={{ user, action }}>
-          <strong>{{ user }}</strong> has performed unknown action '
-          <strong>{{ action }}</strong>'
+          <strong>{{ user }}</strong> has performed unknown action{' '}
+          <strong>'{{ action }}'</strong>
         </Trans>
       )}
     </Template>
