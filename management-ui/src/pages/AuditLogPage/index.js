@@ -31,7 +31,7 @@ const AuditLogPage = () => {
     <PageTemplate>
       <PageTemplate.Header
         title={t('Audit log')}
-        description={t('History of all mutations within your NLX setup.')}
+        description={t('History of all mutations within your NLX setup')}
       />
 
       {auditLogStore.isLoading ? (
