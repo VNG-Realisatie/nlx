@@ -4,6 +4,7 @@
 import { makeAutoObservable } from 'mobx'
 
 export const AUDIT_LOG_ACTION_LOGIN = 'login'
+export const AUDIT_LOG_ACTION_LOGOUT = 'logout'
 
 class AuditLogModel {
   _id = null

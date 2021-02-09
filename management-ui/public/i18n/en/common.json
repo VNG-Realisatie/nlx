@@ -1,4 +1,6 @@
 {
+  "<0>{{user}}</0> has logged in": "<0>{{user}}</0> has logged in",
+  "<0>{{user}}</0> has logged out": "<0>{{user}}</0> has logged out",
   "404 body": "We could not find what you were looking for.<br /><br />Please contact the person or organisation that linked you here and let them know their link is broken",
   "Access": "Access",
   "Access request": "Access request",
@@ -12,6 +14,7 @@
   "Account menu": "Account menu",
   "Add new service": "Add new service",
   "Add service": "Add service",
+  "Audit log created at": "{{date, D MMMM YYYY [om] HH:mm}}",
   "API details": "API details",
   "API documentation URL": "API documentatie URL",
   "API endpoint URL": "API endpoint URL",
@@ -56,6 +59,7 @@
   "General": "General",
   "General settings": "General settings",
   "Go to settings": "Go to settings",
+  "has performed unknown action '{{action}}'": "has performed unknown action '{{action}}'",
   "Homepage": "Homepage",
   "Hostname": "Hostname",
   "History of all mutations within your NLX setup.": "History of all mutations within your NLX setup.",

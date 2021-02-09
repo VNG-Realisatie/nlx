@@ -1,4 +1,6 @@
 {
+  "<0>{{user}}</0> has logged in": "<0>{{user}}</0> heeft ingelogd",
+  "<0>{{user}}</0> has logged out": "<0>{{user}}</0> heeft uitgelogd",
   "404 body": "We kunnen de opgevraagde pagina niet vinden.<br /><br />Neem a.u.b. contact op met degene die naar deze pagina linkt om te laten weten dat deze link niet meer werkt.",
   "Access": "Toegang",
   "Access request": "Verzoek tot toegang",
