@@ -55,6 +55,7 @@
   "Failed to revoke access grant": "Failed to revoke access grant",
   "Failed to update the service": "Failed to update the service",
   "Failed to update the settings": "Failed to update the settings",
+  "Failed login attempt": "Failed login attempt",
   "Gateways to provide services": "Gateways to provide services",
   "General": "General",
   "General settings": "General settings",

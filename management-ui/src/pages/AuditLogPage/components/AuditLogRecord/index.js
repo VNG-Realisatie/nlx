@@ -6,6 +6,7 @@ import React from 'react'
 import { string, node, instanceOf } from 'prop-types'
 import { useTranslation, Trans } from 'react-i18next'
 import {
+  AUDIT_LOG_ACTION_LOGIN_FAIL,
   AUDIT_LOG_ACTION_LOGIN_SUCCESS,
   AUDIT_LOG_ACTION_LOGOUT_SUCCESS,
 } from '../../../../stores/models/AuditLogModel'
@@ -56,6 +57,8 @@ const AuditLogRecord = ({ action, user, createdAt }) => {
         <Trans values={{ user }}>
           <strong>{{ user }}</strong> has logged out
         </Trans>
+      ) : action === AUDIT_LOG_ACTION_LOGIN_FAIL ? (
+        <Trans>Failed login attempt</Trans>
       ) : (
         <Trans values={{ user, action }}>
           <strong>{{ user }}</strong> has performed unknown action{' '}
