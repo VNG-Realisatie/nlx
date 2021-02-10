@@ -18,7 +18,7 @@
     "yup": "0.31.0"
   },
   "devDependencies": {
-    "@commonground/eslint-config-cra-standard-prettier": "5.0.0",
+    "@commonground/eslint-config-cra-standard-prettier": "5.0.1",
     "@testing-library/react": "11.2.2",
     "@wojtekmaj/enzyme-adapter-react-17": "0.3.1",
     "enzyme": "3.11.0",
