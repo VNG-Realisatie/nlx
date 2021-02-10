@@ -435,16 +435,29 @@ message UpdateSettingsRequest{
 
 message AuditLogRecord {
   enum ActionType {
-    login = 0;
-    logout = 1;
-    rejectIncomingAccessRequest = 2;
+    loginSuccess = 0;
+    loginFail = 1;
+    logout = 2;
+    incomingAccessRequestAccept = 3;
+    incomingAccessRequestReject = 4;
+    accessGrantRevoke = 5;
+    outgoingAccessRequestCreate = 6;
+    outgoingAccessRequestFail = 7;
+    serviceCreate = 8;
+    serviceUpdate = 9;
+    serviceDelete = 10;
+    organizationSetttingsUpdate = 11;
+    organizationInsightConfigurationUpdate = 12;
   }
 
   uint64 id = 1;
   ActionType action = 2;
-  string user = 3;
-  google.protobuf.Timestamp createdAt = 4;
-  string organization = 5; // TODO: move organization to 'extra' field, since its not required for every audit log
+  string userAgent = 3;
+  string user = 4;
+  string organization = 5;
+  string service = 6;
+  google.protobuf.Timestamp createdAt = 7;
+  string data = 8; 
 }
 
 message ListAuditLogsResponse {

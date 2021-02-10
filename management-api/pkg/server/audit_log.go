@@ -4,35 +4,71 @@
 package server
 
 import (
-	context "context"
+	"context"
+	"fmt"
+	"strings"
+
 	"github.com/gogo/protobuf/types"
+	"go.uber.org/zap"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
 	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
 func (s *ManagementService) ListAuditLogs(ctx context.Context, _ *types.Empty) (*api.ListAuditLogsResponse, error) {
-	response := &api.ListAuditLogsResponse{
-		AuditLogs: []*api.AuditLogRecord{
-			{
-				Id:        42,
-				Action:    api.AuditLogRecord_login,
-				CreatedAt: types.TimestampNow(),
-				User:      "Dummy User",
-			},
-			{
-				Id:        100,
-				Action:    api.AuditLogRecord_logout,
-				CreatedAt: types.TimestampNow(),
-				User:      "Dummy User",
-			},
-			{
-				Id:           1,
-				Action:       api.AuditLogRecord_rejectIncomingAccessRequest,
-				CreatedAt:    types.TimestampNow(),
-				User:         "Dummy User",
-				Organization: "Dummy Organization",
-			},
-		},
+	auditLogRecords, err := s.configDatabase.ListAuditLogRecords(ctx)
+	if err != nil {
+		s.logger.Error("error retrieving audit log records from database", zap.Error(err))
+		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	return response, nil
+	convertedAuditLogRecords, err := convertFromDatabaseAuditLogRecords(auditLogRecords)
+	if err != nil {
+		s.logger.Error("error converting audit log records from database", zap.Error(err))
+		return nil, status.Error(codes.Internal, "error converting audit log records")
+	}
+
+	return &api.ListAuditLogsResponse{
+		AuditLogs: convertedAuditLogRecords,
+	}, nil
+}
+
+func convertFromDatabaseAuditLogRecords(models []*database.AuditLogRecord) ([]*api.AuditLogRecord, error) {
+	convertedRecords := make([]*api.AuditLogRecord, len(models))
+
+	for i, databaseModel := range models {
+		createdAt, err := types.TimestampProto(databaseModel.CreatedAt)
+		if err != nil {
+			return nil, err
+		}
+
+		actionType, err := auditLogActionTypeToProto(databaseModel.ActionType)
+		if err != nil {
+			return nil, err
+		}
+
+		convertedRecords[i] = &api.AuditLogRecord{
+			Id:           databaseModel.ID,
+			Action:       actionType,
+			User:         string(databaseModel.UserID),
+			UserAgent:    databaseModel.UserAgent,
+			Organization: databaseModel.Organization,
+			Service:      databaseModel.Service,
+			CreatedAt:    createdAt,
+		}
+	}
+	return convertedRecords, nil
+}
+
+func auditLogActionTypeToProto(actionType database.AuditLogActionType) (api.AuditLogRecord_ActionType, error) {
+	name := strings.ToUpper(string(actionType))
+
+	protoState, ok := api.AuditLogRecord_ActionType_value[name]
+	if ok {
+		return api.AuditLogRecord_ActionType(protoState), nil
+	}
+
+	return 0, fmt.Errorf("unable to convert database audit log action type '%s' to api audit log action type", actionType)
 }

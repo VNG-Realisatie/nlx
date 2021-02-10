@@ -624,3 +624,33 @@ func (mr *MockConfigDatabaseMockRecorder) PutInsightConfiguration(ctx, irmaServe
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PutInsightConfiguration", reflect.TypeOf((*MockConfigDatabase)(nil).PutInsightConfiguration), ctx, irmaServerURL, insightAPIURL)
 }
+
+// CreateAuditLogRecord mocks base method
+func (m *MockConfigDatabase) CreateAuditLogRecord(ctx context.Context, auditLogRecord *database.AuditLogRecord) (*database.AuditLogRecord, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateAuditLogRecord", ctx, auditLogRecord)
+	ret0, _ := ret[0].(*database.AuditLogRecord)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateAuditLogRecord indicates an expected call of CreateAuditLogRecord
+func (mr *MockConfigDatabaseMockRecorder) CreateAuditLogRecord(ctx, auditLogRecord interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAuditLogRecord", reflect.TypeOf((*MockConfigDatabase)(nil).CreateAuditLogRecord), ctx, auditLogRecord)
+}
+
+// ListAuditLogRecords mocks base method
+func (m *MockConfigDatabase) ListAuditLogRecords(ctx context.Context) ([]*database.AuditLogRecord, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListAuditLogRecords", ctx)
+	ret0, _ := ret[0].([]*database.AuditLogRecord)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListAuditLogRecords indicates an expected call of ListAuditLogRecords
+func (mr *MockConfigDatabaseMockRecorder) ListAuditLogRecords(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAuditLogRecords", reflect.TypeOf((*MockConfigDatabase)(nil).ListAuditLogRecords), ctx)
+}
