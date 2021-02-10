@@ -11,8 +11,15 @@ import {
   ACTION_LOGOUT_SUCCESS,
   ACTION_INCOMING_ACCESS_REQUEST_ACCEPT,
   ACTION_INCOMING_ACCESS_REQUEST_REJECT,
+  ACTION_ACCESS_GRANT_REVOKE,
 } from '../../../../stores/models/AuditLogModel'
-import { IconWarningCircle, IconShutdown, IconCheck } from '../../../../icons'
+import {
+  IconWarningCircle,
+  IconShutdown,
+  IconCheck,
+  IconRevoke,
+  IconClose,
+} from '../../../../icons'
 import { Container, IconContainer, Description, IconItem } from './index.styles'
 
 const actionToIcon = (action) => {
@@ -23,6 +30,12 @@ const actionToIcon = (action) => {
 
     case ACTION_INCOMING_ACCESS_REQUEST_ACCEPT:
       return IconCheck
+
+    case ACTION_INCOMING_ACCESS_REQUEST_REJECT:
+      return IconClose
+
+    case ACTION_ACCESS_GRANT_REVOKE:
+      return IconRevoke
 
     default:
       return IconWarningCircle
@@ -73,6 +86,11 @@ const AuditLogRecord = ({ action, user, createdAt, organization, service }) => {
         <Trans values={{ user, action, organization, service }}>
           <strong>{{ user }}</strong> has rejected the access request from{' '}
           <strong>{{ organization }}</strong> for <strong>{{ service }}</strong>
+        </Trans>
+      ) : action === ACTION_ACCESS_GRANT_REVOKE ? (
+        <Trans values={{ user, action, organization, service }}>
+          <strong>{{ user }}</strong> has revoked acces for{' '}
+          <strong>{{ service }}</strong> from <strong>{{ service }}</strong>
         </Trans>
       ) : (
         <Trans values={{ user, action }}>
