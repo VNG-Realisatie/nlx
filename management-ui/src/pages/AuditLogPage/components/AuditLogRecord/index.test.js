@@ -5,13 +5,15 @@
 import React from 'react'
 import { renderWithProviders } from '../../../../test-utils'
 import {
+  ACTION_ACCESS_GRANT_REVOKE,
+  ACTION_INCOMING_ACCESS_REQUEST_ACCEPT,
+  ACTION_INCOMING_ACCESS_REQUEST_REJECT,
   ACTION_LOGIN_FAIL,
   ACTION_LOGIN_SUCCESS,
   ACTION_LOGOUT_SUCCESS,
-  ACTION_INCOMING_ACCESS_REQUEST_ACCEPT,
-  ACTION_INCOMING_ACCESS_REQUEST_REJECT,
-  ACTION_ACCESS_GRANT_REVOKE, ACTION_OUTGOING_ACCESS_REQUEST_CREATE
-} from "../../../../stores/models/AuditLogModel";
+  ACTION_OUTGOING_ACCESS_REQUEST_CREATE,
+  ACTION_SERVICE_CREATE,
+} from '../../../../stores/models/AuditLogModel'
 import AuditLogRecord from './index'
 
 test.concurrent.each([
@@ -49,6 +51,13 @@ test.concurrent.each([
       service: 'Kadaster',
     },
     'John Doe has requested access for Kadaster from Gemeente Haarlem',
+  ],
+  [
+    {
+      action: ACTION_SERVICE_CREATE,
+      service: 'Kadaster',
+    },
+    'John Doe has created the service Kadaster',
   ],
   [
     { action: 'unknown action' },

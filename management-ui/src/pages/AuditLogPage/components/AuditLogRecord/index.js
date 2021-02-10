@@ -13,6 +13,7 @@ import {
   ACTION_INCOMING_ACCESS_REQUEST_REJECT,
   ACTION_ACCESS_GRANT_REVOKE,
   ACTION_OUTGOING_ACCESS_REQUEST_CREATE,
+  ACTION_SERVICE_CREATE,
 } from '../../../../stores/models/AuditLogModel'
 import {
   IconWarningCircle,
@@ -21,6 +22,7 @@ import {
   IconRevoke,
   IconClose,
   IconKey,
+  IconServices,
 } from '../../../../icons'
 import { Container, IconContainer, Description, IconItem } from './index.styles'
 
@@ -41,6 +43,9 @@ const actionToIcon = (action) => {
 
     case ACTION_OUTGOING_ACCESS_REQUEST_CREATE:
       return IconKey
+
+    case ACTION_SERVICE_CREATE:
+      return IconServices
 
     default:
       return IconWarningCircle
@@ -102,6 +107,11 @@ const AuditLogRecord = ({ action, user, createdAt, organization, service }) => {
           <strong>{{ user }}</strong> requested access to{' '}
           <strong>{{ service }}</strong> from{' '}
           <strong>{{ organization }}</strong>
+        </Trans>
+      ) : action === ACTION_SERVICE_CREATE ? (
+        <Trans values={{ user, action, service }}>
+          <strong>{{ user }}</strong> has created the service{' '}
+          <strong>{{ service }}</strong>
         </Trans>
       ) : (
         <Trans values={{ user, action }}>
