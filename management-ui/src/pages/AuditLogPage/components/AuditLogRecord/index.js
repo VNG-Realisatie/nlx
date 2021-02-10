@@ -106,44 +106,44 @@ const AuditLogRecord = ({
       ) : action === ACTION_LOGIN_FAIL ? (
         <Trans>Failed login attempt</Trans>
       ) : action === ACTION_INCOMING_ACCESS_REQUEST_ACCEPT ? (
-        <Trans values={{ user, action, organization, service }}>
+        <Trans values={{ user, organization, service }}>
           <strong>{{ user }}</strong> has approved the access request from{' '}
           <strong>{{ organization }}</strong> for <strong>{{ service }}</strong>
         </Trans>
       ) : action === ACTION_INCOMING_ACCESS_REQUEST_REJECT ? (
-        <Trans values={{ user, action, organization, service }}>
+        <Trans values={{ user, organization, service }}>
           <strong>{{ user }}</strong> has rejected the access request from{' '}
           <strong>{{ organization }}</strong> for <strong>{{ service }}</strong>
         </Trans>
       ) : action === ACTION_ACCESS_GRANT_REVOKE ? (
-        <Trans values={{ user, action, organization, service }}>
+        <Trans values={{ user, organization, service }}>
           <strong>{{ user }}</strong> has revoked access for{' '}
           <strong>{{ service }}</strong> from{' '}
           <strong>{{ organization }}</strong>
         </Trans>
       ) : action === ACTION_OUTGOING_ACCESS_REQUEST_CREATE ? (
-        <Trans values={{ user, action, organization, service }}>
+        <Trans values={{ user, organization, service }}>
           <strong>{{ user }}</strong> has requested access to{' '}
           <strong>{{ service }}</strong> from{' '}
           <strong>{{ organization }}</strong>
         </Trans>
       ) : action === ACTION_SERVICE_CREATE ? (
-        <Trans values={{ user, action, service }}>
+        <Trans values={{ user, service }}>
           <strong>{{ user }}</strong> has created the service{' '}
           <strong>{{ service }}</strong>
         </Trans>
       ) : action === ACTION_SERVICE_UPDATE ? (
-        <Trans values={{ user, action, service }}>
+        <Trans values={{ user, service }}>
           <strong>{{ user }}</strong> has updated the service{' '}
           <strong>{{ service }}</strong>
         </Trans>
       ) : action === ACTION_SERVICE_UPDATE ? (
-        <Trans values={{ user, action, service }}>
+        <Trans values={{ user, service }}>
           <strong>{{ user }}</strong> has updated the service{' '}
           <strong>{{ service }}</strong>
         </Trans>
       ) : action === ACTION_SERVICE_DELETE ? (
-        <Trans values={{ user, action, service }}>
+        <Trans values={{ user, service }}>
           <strong>{{ user }}</strong> has removed the service{' '}
           <strong>{{ service }}</strong>
         </Trans>
