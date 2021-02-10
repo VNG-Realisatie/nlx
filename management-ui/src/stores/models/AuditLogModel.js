@@ -16,6 +16,8 @@ export const ACTION_OUTGOING_ACCESS_REQUEST_CREATE =
 export const ACTION_SERVICE_CREATE = 'service_create'
 export const ACTION_SERVICE_UPDATE = 'service_update'
 export const ACTION_SERVICE_DELETE = 'service_delete'
+export const ACTION_ORGANIZATION_SETTINGS_UPDATE =
+  'organization_settings_update'
 
 //            access_grant.go    │ 32     OR action_type = 'organization_settings_update'
 //            access_proof.go    │ 33     OR action_type = 'organization_insight_configuration_update'
