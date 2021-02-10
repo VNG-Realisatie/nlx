@@ -8,7 +8,7 @@ import { ManagementApi } from '../../api'
 import { RootStore, StoreProvider } from '../../stores'
 import { renderWithProviders, waitFor } from '../../test-utils'
 import { UserContextProvider } from '../../user-context'
-import { AUDIT_LOG_ACTION_LOGIN_SUCCESS } from '../../stores/models/AuditLogModel'
+import { ACTION_LOGIN_SUCCESS } from '../../stores/models/AuditLogModel'
 import AuditLogPage from './index'
 
 test('fetching the audit logs', async () => {
@@ -18,7 +18,7 @@ test('fetching the audit logs', async () => {
     auditLogs: [
       {
         id: 42,
-        action: AUDIT_LOG_ACTION_LOGIN_SUCCESS,
+        action: ACTION_LOGIN_SUCCESS,
       },
     ],
   })
