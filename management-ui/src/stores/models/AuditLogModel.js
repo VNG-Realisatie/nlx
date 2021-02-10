@@ -3,23 +3,22 @@
 //
 import { makeAutoObservable } from 'mobx'
 
-export const ACTION_LOGIN_SUCCESS = 'login_success'
-export const ACTION_LOGIN_FAIL = 'login_fail'
-export const ACTION_LOGOUT_SUCCESS = 'logout_success'
+export const ACTION_LOGIN_SUCCESS = 'loginSuccess'
+export const ACTION_LOGIN_FAIL = 'loginFail'
+export const ACTION_LOGOUT_SUCCESS = 'logoutSuccess'
 export const ACTION_INCOMING_ACCESS_REQUEST_ACCEPT =
-  'incoming_access_request_accept'
+  'incomingAccessRequestAccept'
 export const ACTION_INCOMING_ACCESS_REQUEST_REJECT =
-  'incoming_access_request_reject'
+  'incomingAccessRequestReject'
 export const ACTION_ACCESS_GRANT_REVOKE = 'access_grant_revoke'
 export const ACTION_OUTGOING_ACCESS_REQUEST_CREATE =
-  'outgoing_access_request_create'
-export const ACTION_SERVICE_CREATE = 'service_create'
-export const ACTION_SERVICE_UPDATE = 'service_update'
-export const ACTION_SERVICE_DELETE = 'service_delete'
-export const ACTION_ORGANIZATION_SETTINGS_UPDATE =
-  'organization_settings_update'
+  'outgoingAccessRequestCreate'
+export const ACTION_SERVICE_CREATE = 'serviceCreate'
+export const ACTION_SERVICE_UPDATE = 'serviceUpdate'
+export const ACTION_SERVICE_DELETE = 'serviceDelete'
+export const ACTION_ORGANIZATION_SETTINGS_UPDATE = 'organizationSettingsUpdate'
 export const ACTION_INSIGHT_CONFIGURATION_UPDATE =
-  'organization_insight_configuration_update'
+  'organizationInsightConfiguration_update'
 
 class AuditLogModel {
   _id = null
