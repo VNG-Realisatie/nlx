@@ -30,7 +30,7 @@ test.concurrent.each([
       organization: 'Gemeente Haarlem',
       service: 'Kadaster',
     },
-    'John Doe has accepted the access request from Gemeente Haarlem for Kadaster',
+    'John Doe has approved the access request from Gemeente Haarlem for Kadaster',
   ],
   [
     {
@@ -54,7 +54,7 @@ test.concurrent.each([
       organization: 'Gemeente Haarlem',
       service: 'Kadaster',
     },
-    'John Doe has requested access for Kadaster from Gemeente Haarlem',
+    'John Doe has requested access to Kadaster from Gemeente Haarlem',
   ],
   [
     {
@@ -93,7 +93,7 @@ test.concurrent.each([
     { action: 'unknown action' },
     "John Doe has performed unknown action 'unknown action'",
   ],
-])('AuditLogRecord message for audit log %s', (auditLog, expectedMessage) => {
+])('AuditLogRecord message for audit log %', (auditLog, expectedMessage) => {
   const { getByTestId } = renderWithProviders(
     <AuditLogRecord {...auditLog} user="John Doe" />,
   )

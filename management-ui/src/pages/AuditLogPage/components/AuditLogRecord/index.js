@@ -82,12 +82,19 @@ Template.propTypes = {
   children: node,
 }
 
-const AuditLogRecord = ({ action, user, createdAt, organization, service }) => {
+const AuditLogRecord = ({
+  action,
+  user,
+  createdAt,
+  organization,
+  service,
+  ...props
+}) => {
   const { t } = useTranslation()
   const dateTimeString = t('Audit log created at', { date: createdAt })
 
   return (
-    <Template action={action} dateTime={dateTimeString}>
+    <Template action={action} dateTime={dateTimeString} {...props}>
       {action === ACTION_LOGIN_SUCCESS ? (
         <Trans values={{ user }}>
           <strong>{{ user }}</strong> has logged in
@@ -110,12 +117,13 @@ const AuditLogRecord = ({ action, user, createdAt, organization, service }) => {
         </Trans>
       ) : action === ACTION_ACCESS_GRANT_REVOKE ? (
         <Trans values={{ user, action, organization, service }}>
-          <strong>{{ user }}</strong> has revoked acces for{' '}
-          <strong>{{ service }}</strong> from <strong>{{ service }}</strong>
+          <strong>{{ user }}</strong> has revoked access for{' '}
+          <strong>{{ service }}</strong> from{' '}
+          <strong>{{ organization }}</strong>
         </Trans>
       ) : action === ACTION_OUTGOING_ACCESS_REQUEST_CREATE ? (
         <Trans values={{ user, action, organization, service }}>
-          <strong>{{ user }}</strong> requested access to{' '}
+          <strong>{{ user }}</strong> has requested access to{' '}
           <strong>{{ service }}</strong> from{' '}
           <strong>{{ organization }}</strong>
         </Trans>
