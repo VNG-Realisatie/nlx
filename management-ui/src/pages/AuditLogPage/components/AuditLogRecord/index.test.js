@@ -12,8 +12,8 @@ import {
   ACTION_LOGIN_SUCCESS,
   ACTION_LOGOUT_SUCCESS,
   ACTION_OUTGOING_ACCESS_REQUEST_CREATE,
-  ACTION_SERVICE_CREATE,
-} from '../../../../stores/models/AuditLogModel'
+  ACTION_SERVICE_CREATE, ACTION_SERVICE_UPDATE
+} from "../../../../stores/models/AuditLogModel";
 import AuditLogRecord from './index'
 
 test.concurrent.each([
@@ -58,6 +58,13 @@ test.concurrent.each([
       service: 'Kadaster',
     },
     'John Doe has created the service Kadaster',
+  ],
+  [
+    {
+      action: ACTION_SERVICE_UPDATE,
+      service: 'Kadaster',
+    },
+    'John Doe has updated the service Kadaster',
   ],
   [
     { action: 'unknown action' },

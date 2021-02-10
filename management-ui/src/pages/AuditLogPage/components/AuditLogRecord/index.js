@@ -14,6 +14,7 @@ import {
   ACTION_ACCESS_GRANT_REVOKE,
   ACTION_OUTGOING_ACCESS_REQUEST_CREATE,
   ACTION_SERVICE_CREATE,
+  ACTION_SERVICE_UPDATE,
 } from '../../../../stores/models/AuditLogModel'
 import {
   IconWarningCircle,
@@ -111,6 +112,11 @@ const AuditLogRecord = ({ action, user, createdAt, organization, service }) => {
       ) : action === ACTION_SERVICE_CREATE ? (
         <Trans values={{ user, action, service }}>
           <strong>{{ user }}</strong> has created the service{' '}
+          <strong>{{ service }}</strong>
+        </Trans>
+      ) : action === ACTION_SERVICE_UPDATE ? (
+        <Trans values={{ user, action, service }}>
+          <strong>{{ user }}</strong> has updated the service{' '}
           <strong>{{ service }}</strong>
         </Trans>
       ) : (
