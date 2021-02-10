@@ -8,6 +8,8 @@ export const ACTION_LOGIN_FAIL = 'login_fail'
 export const ACTION_LOGOUT_SUCCESS = 'logout_success'
 export const ACTION_INCOMING_ACCESS_REQUEST_ACCEPT =
   'incoming_access_request_accept'
+export const ACTION_INCOMING_ACCESS_REQUEST_REJECT =
+  'incoming_access_request_reject'
 
 //            scheduler_test.go  │ 25     OR action_type = 'incoming_access_request_accept'
 //     ▾   database/            │ 26     OR action_type = 'incoming_access_request_reject'

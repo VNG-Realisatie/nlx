@@ -46,15 +46,19 @@ const AuditLogPage = () => {
         </Alert>
       ) : (
         <>
-          {auditLogStore.auditLogs.map(({ id, action, user, createdAt }) => (
-            <AuditLogRecord
-              data-testid="audit-log-record"
-              key={id}
-              action={action}
-              user={user}
-              createdAt={createdAt}
-            />
-          ))}
+          {auditLogStore.auditLogs.map(
+            ({ id, action, user, createdAt, organization, service }) => (
+              <AuditLogRecord
+                data-testid="audit-log-record"
+                key={id}
+                action={action}
+                user={user}
+                createdAt={createdAt}
+                organization={organization}
+                service={service}
+              />
+            ),
+          )}
         </>
       )}
     </PageTemplate>

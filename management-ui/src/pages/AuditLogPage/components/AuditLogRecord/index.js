@@ -10,6 +10,7 @@ import {
   ACTION_LOGIN_SUCCESS,
   ACTION_LOGOUT_SUCCESS,
   ACTION_INCOMING_ACCESS_REQUEST_ACCEPT,
+  ACTION_INCOMING_ACCESS_REQUEST_REJECT,
 } from '../../../../stores/models/AuditLogModel'
 import { IconWarningCircle, IconShutdown, IconCheck } from '../../../../icons'
 import { Container, IconContainer, Description, IconItem } from './index.styles'
@@ -64,8 +65,13 @@ const AuditLogRecord = ({ action, user, createdAt, organization, service }) => {
       ) : action === ACTION_LOGIN_FAIL ? (
         <Trans>Failed login attempt</Trans>
       ) : action === ACTION_INCOMING_ACCESS_REQUEST_ACCEPT ? (
-        <Trans values={{ user, action }}>
-          <strong>{{ user }}</strong> has approved access request from{' '}
+        <Trans values={{ user, action, organization, service }}>
+          <strong>{{ user }}</strong> has approved the access request from{' '}
+          <strong>{{ organization }}</strong> for <strong>{{ service }}</strong>
+        </Trans>
+      ) : action === ACTION_INCOMING_ACCESS_REQUEST_REJECT ? (
+        <Trans values={{ user, action, organization, service }}>
+          <strong>{{ user }}</strong> has rejected the access request from{' '}
           <strong>{{ organization }}</strong> for <strong>{{ service }}</strong>
         </Trans>
       ) : (
