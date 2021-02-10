@@ -10,8 +10,8 @@ import {
   ACTION_LOGOUT_SUCCESS,
   ACTION_INCOMING_ACCESS_REQUEST_ACCEPT,
   ACTION_INCOMING_ACCESS_REQUEST_REJECT,
-  ACTION_ACCESS_GRANT_REVOKE,
-} from '../../../../stores/models/AuditLogModel'
+  ACTION_ACCESS_GRANT_REVOKE, ACTION_OUTGOING_ACCESS_REQUEST_CREATE
+} from "../../../../stores/models/AuditLogModel";
 import AuditLogRecord from './index'
 
 test.concurrent.each([
@@ -41,6 +41,14 @@ test.concurrent.each([
       service: 'Kadaster',
     },
     'John Doe has revoked access for Kadaster from Gemeente Haarlem',
+  ],
+  [
+    {
+      action: ACTION_OUTGOING_ACCESS_REQUEST_CREATE,
+      organization: 'Gemeente Haarlem',
+      service: 'Kadaster',
+    },
+    'John Doe has requested access for Kadaster from Gemeente Haarlem',
   ],
   [
     { action: 'unknown action' },

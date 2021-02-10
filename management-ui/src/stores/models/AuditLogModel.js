@@ -11,8 +11,9 @@ export const ACTION_INCOMING_ACCESS_REQUEST_ACCEPT =
 export const ACTION_INCOMING_ACCESS_REQUEST_REJECT =
   'incoming_access_request_reject'
 export const ACTION_ACCESS_GRANT_REVOKE = 'access_grant_revoke'
+export const ACTION_OUTGOING_ACCESS_REQUEST_CREATE =
+  'outgoing_access_request_create'
 
-//            127.0.0.1:210010401│ 28     OR action_type = 'outgoing_access_request_create'
 //            127.0.0.1:210020401│ 29     OR action_type = 'service_create'
 //            127.0.0.1:210250448│ 30     OR action_type = 'service_update'
 //            127.0.0.1:210260448│ 31     OR action_type = 'service_delete'
