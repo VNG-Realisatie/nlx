@@ -6,7 +6,6 @@ package server
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/gogo/protobuf/types"
 	"go.uber.org/zap"
@@ -52,7 +51,7 @@ func convertFromDatabaseAuditLogRecords(models []*database.AuditLogRecord) ([]*a
 		convertedRecords[i] = &api.AuditLogRecord{
 			Id:           databaseModel.ID,
 			Action:       actionType,
-			User:         string(databaseModel.UserID),
+			User:         fmt.Sprintf("%d", databaseModel.UserID),
 			UserAgent:    databaseModel.UserAgent,
 			Organization: databaseModel.Organization,
 			Service:      databaseModel.Service,
@@ -63,12 +62,11 @@ func convertFromDatabaseAuditLogRecords(models []*database.AuditLogRecord) ([]*a
 }
 
 func auditLogActionTypeToProto(actionType database.AuditLogActionType) (api.AuditLogRecord_ActionType, error) {
-	name := strings.ToUpper(string(actionType))
-
-	protoState, ok := api.AuditLogRecord_ActionType_value[name]
-	if ok {
-		return api.AuditLogRecord_ActionType(protoState), nil
+    switch(actionType) {
+	case database.LoginSuccess:
+		return api.AuditLogRecord_loginSuccess, nil 
+    default:		
+		return 0, fmt.Errorf("unable to convert database audit log action type '%s' to api audit log action type", actionType)
 	}
 
-	return 0, fmt.Errorf("unable to convert database audit log action type '%s' to api audit log action type", actionType)
 }

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"go.nlx.io/nlx/management-api/pkg/audit-log"
 	"go.nlx.io/nlx/management-api/pkg/database"
 
 	"github.com/coreos/go-oidc"
@@ -40,13 +41,14 @@ type Store interface {
 type Authenticator struct {
 	store        Store
 	oidcProvider Provider
+	auditLogger  auditlog.AuditLog
 	logger       *zap.Logger
 	oauth2Config OAuth2Config
 	oidcConfig   *oidc.Config
 	db           database.ConfigDatabase
 }
 
-func NewAuthenticator(db database.ConfigDatabase, logger *zap.Logger, options *Options) *Authenticator {
+func NewAuthenticator(db database.ConfigDatabase, auditLogger auditlog.AuditLog, logger *zap.Logger, options *Options) *Authenticator {
 	gob.Register(&Claims{})
 
 	store := sessions.NewCookieStore([]byte(options.SecretKey))
@@ -77,6 +79,7 @@ func NewAuthenticator(db database.ConfigDatabase, logger *zap.Logger, options *O
 
 	return &Authenticator{
 		db:           db,
+		auditLogger:  auditLogger,
 		logger:       logger,
 		store:        store,
 		oauth2Config: oauth2Config,
@@ -205,6 +208,11 @@ func (a *Authenticator) callback(w http.ResponseWriter, r *http.Request) {
 
 		if err := session.Save(r, w); err != nil {
 			return fmt.Errorf("failed to save session: %w", err)
+		}
+
+		err = a.auditLogger.LoginSuccess(ctx, user.ID, r.Header.Get("User-Agent"))
+		if err != nil {
+			a.logger.Error("error writing to audit log", zap.Error(err))
 		}
 
 		return nil

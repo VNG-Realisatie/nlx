@@ -12,6 +12,7 @@ import (
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/management-api/pkg/api"
+	auditlog "go.nlx.io/nlx/management-api/pkg/audit-log"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/oidc"
 )
@@ -122,7 +123,9 @@ var serveCommand = &cobra.Command{
 			log.Fatalf("failed to connect to the database: %v", err)
 		}
 
-		authenticator := oidc.NewAuthenticator(db, logger, &serveOpts.oidcOptions)
+		auditLogger := auditlog.NewPostgressAuditLog(db)
+
+		authenticator := oidc.NewAuthenticator(db, auditLogger, logger, &serveOpts.oidcOptions)
 
 		if errValidate := common_tls.VerifyPrivateKeyPermissions(serveOpts.OrgKeyFile); errValidate != nil {
 			logger.Warn("invalid organization key permissions", zap.Error(errValidate), zap.String("file-path", serveOpts.OrgKeyFile))
