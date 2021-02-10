@@ -9,8 +9,9 @@ import {
   AUDIT_LOG_ACTION_LOGIN_FAIL,
   AUDIT_LOG_ACTION_LOGIN_SUCCESS,
   AUDIT_LOG_ACTION_LOGOUT_SUCCESS,
+  AUDIT_LOG_ACTION_INCOMING_ACCESS_REQUEST_ACCEPT,
 } from '../../../../stores/models/AuditLogModel'
-import { IconWarningCircle, IconShutdown } from '../../../../icons'
+import { IconWarningCircle, IconShutdown, IconCheck } from '../../../../icons'
 import { Container, IconContainer, Description, IconItem } from './index.styles'
 
 const actionToIcon = (action) => {
@@ -18,6 +19,9 @@ const actionToIcon = (action) => {
     case AUDIT_LOG_ACTION_LOGIN_SUCCESS:
     case AUDIT_LOG_ACTION_LOGOUT_SUCCESS:
       return IconShutdown
+
+    case AUDIT_LOG_ACTION_INCOMING_ACCESS_REQUEST_ACCEPT:
+      return IconCheck
 
     default:
       return IconWarningCircle
@@ -43,7 +47,7 @@ Template.propTypes = {
   children: node,
 }
 
-const AuditLogRecord = ({ action, user, createdAt }) => {
+const AuditLogRecord = ({ action, user, createdAt, organization, service }) => {
   const { t } = useTranslation()
   const dateTimeString = t('Audit log created at', { date: createdAt })
 
@@ -59,6 +63,11 @@ const AuditLogRecord = ({ action, user, createdAt }) => {
         </Trans>
       ) : action === AUDIT_LOG_ACTION_LOGIN_FAIL ? (
         <Trans>Failed login attempt</Trans>
+      ) : action === AUDIT_LOG_ACTION_INCOMING_ACCESS_REQUEST_ACCEPT ? (
+        <Trans values={{ user, action }}>
+          <strong>{{ user }}</strong> has approved access request from{' '}
+          <strong>{{ organization }}</strong> for <strong>{{ service }}</strong>
+        </Trans>
       ) : (
         <Trans values={{ user, action }}>
           <strong>{{ user }}</strong> has performed unknown action{' '}
@@ -73,6 +82,8 @@ AuditLogRecord.propTypes = {
   action: string,
   user: string,
   createdAt: instanceOf(Date),
+  organization: string,
+  service: string,
 }
 
 export default AuditLogRecord

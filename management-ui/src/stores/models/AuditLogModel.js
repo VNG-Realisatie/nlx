@@ -6,6 +6,8 @@ import { makeAutoObservable } from 'mobx'
 export const AUDIT_LOG_ACTION_LOGIN_SUCCESS = 'login_success'
 export const AUDIT_LOG_ACTION_LOGIN_FAIL = 'login_fail'
 export const AUDIT_LOG_ACTION_LOGOUT_SUCCESS = 'logout_success'
+export const AUDIT_LOG_ACTION_INCOMING_ACCESS_REQUEST_ACCEPT =
+  'incoming_access_request_accept'
 
 //            scheduler_test.go  │ 25     OR action_type = 'incoming_access_request_accept'
 //     ▾   database/            │ 26     OR action_type = 'incoming_access_request_reject'
