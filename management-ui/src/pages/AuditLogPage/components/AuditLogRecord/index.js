@@ -15,6 +15,7 @@ import {
   ACTION_OUTGOING_ACCESS_REQUEST_CREATE,
   ACTION_SERVICE_CREATE,
   ACTION_SERVICE_UPDATE,
+  ACTION_SERVICE_DELETE,
 } from '../../../../stores/models/AuditLogModel'
 import {
   IconWarningCircle,
@@ -46,6 +47,8 @@ const actionToIcon = (action) => {
       return IconKey
 
     case ACTION_SERVICE_CREATE:
+    case ACTION_SERVICE_UPDATE:
+    case ACTION_SERVICE_DELETE:
       return IconServices
 
     default:
@@ -117,6 +120,16 @@ const AuditLogRecord = ({ action, user, createdAt, organization, service }) => {
       ) : action === ACTION_SERVICE_UPDATE ? (
         <Trans values={{ user, action, service }}>
           <strong>{{ user }}</strong> has updated the service{' '}
+          <strong>{{ service }}</strong>
+        </Trans>
+      ) : action === ACTION_SERVICE_UPDATE ? (
+        <Trans values={{ user, action, service }}>
+          <strong>{{ user }}</strong> has updated the service{' '}
+          <strong>{{ service }}</strong>
+        </Trans>
+      ) : action === ACTION_SERVICE_DELETE ? (
+        <Trans values={{ user, action, service }}>
+          <strong>{{ user }}</strong> has removed the service{' '}
           <strong>{{ service }}</strong>
         </Trans>
       ) : (

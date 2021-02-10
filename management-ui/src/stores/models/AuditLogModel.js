@@ -15,8 +15,8 @@ export const ACTION_OUTGOING_ACCESS_REQUEST_CREATE =
   'outgoing_access_request_create'
 export const ACTION_SERVICE_CREATE = 'service_create'
 export const ACTION_SERVICE_UPDATE = 'service_update'
+export const ACTION_SERVICE_DELETE = 'service_delete'
 
-//            127.0.0.1:210260448│ 31     OR action_type = 'service_delete'
 //            access_grant.go    │ 32     OR action_type = 'organization_settings_update'
 //            access_proof.go    │ 33     OR action_type = 'organization_insight_configuration_update'
 
