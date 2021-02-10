@@ -18,9 +18,8 @@ export const ACTION_SERVICE_UPDATE = 'service_update'
 export const ACTION_SERVICE_DELETE = 'service_delete'
 export const ACTION_ORGANIZATION_SETTINGS_UPDATE =
   'organization_settings_update'
-
-//            access_grant.go    │ 32     OR action_type = 'organization_settings_update'
-//            access_proof.go    │ 33     OR action_type = 'organization_insight_configuration_update'
+export const ACTION_INSIGHT_CONFIGURATION_UPDATE =
+  'organization_insight_configuration_update'
 
 class AuditLogModel {
   _id = null

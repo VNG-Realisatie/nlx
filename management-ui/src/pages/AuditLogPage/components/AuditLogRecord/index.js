@@ -17,6 +17,7 @@ import {
   ACTION_SERVICE_UPDATE,
   ACTION_SERVICE_DELETE,
   ACTION_ORGANIZATION_SETTINGS_UPDATE,
+  ACTION_INSIGHT_CONFIGURATION_UPDATE,
 } from '../../../../stores/models/AuditLogModel'
 import {
   IconWarningCircle,
@@ -54,6 +55,7 @@ const actionToIcon = (action) => {
       return IconServices
 
     case ACTION_ORGANIZATION_SETTINGS_UPDATE:
+    case ACTION_INSIGHT_CONFIGURATION_UPDATE:
       return IconSettings
 
     default:
@@ -140,6 +142,10 @@ const AuditLogRecord = ({ action, user, createdAt, organization, service }) => {
       ) : action === ACTION_ORGANIZATION_SETTINGS_UPDATE ? (
         <Trans values={{ user, action }}>
           <strong>{{ user }}</strong> updated the organization settings
+        </Trans>
+      ) : action === ACTION_INSIGHT_CONFIGURATION_UPDATE ? (
+        <Trans values={{ user, action }}>
+          <strong>{{ user }}</strong> updated the insight configuration settings
         </Trans>
       ) : (
         <Trans values={{ user, action }}>
