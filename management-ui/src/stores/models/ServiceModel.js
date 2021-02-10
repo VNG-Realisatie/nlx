@@ -12,7 +12,7 @@ class ServiceModel {
   techSupportContact = ''
   publicSupportContact = ''
   inways = []
-  incomingAccessRequestsCount = 0
+  incomingAccessRequestCount = 0
 
   constructor({ servicesStore, serviceData }) {
     makeAutoObservable(this)
@@ -23,8 +23,8 @@ class ServiceModel {
 
     reaction(
       () => this.incomingAccessRequests.length,
-      (incomingAccessRequestsCount) => {
-        this.update({ incomingAccessRequestsCount })
+      (incomingAccessRequestCount) => {
+        this.update({ incomingAccessRequestCount })
       },
     )
   }
@@ -80,8 +80,8 @@ class ServiceModel {
       this.inways = service.inways
     }
 
-    if (service.incomingAccessRequestsCount !== undefined) {
-      this.incomingAccessRequestsCount = service.incomingAccessRequestsCount
+    if (service.incomingAccessRequestCount !== undefined) {
+      this.incomingAccessRequestCount = service.incomingAccessRequestCount
     }
   }
 }

@@ -358,7 +358,7 @@ func TestListServices(t *testing.T) {
 							Mode:           "whitelist",
 							Authorizations: []*api.ListServicesResponse_Service_AuthorizationSettings_Authorization{},
 						},
-						IncomingAccessRequestsCount: 2,
+						IncomingAccessRequestCount: 2,
 					},
 					{
 						Name:   "another-service",
@@ -367,7 +367,7 @@ func TestListServices(t *testing.T) {
 							Mode:           "whitelist",
 							Authorizations: []*api.ListServicesResponse_Service_AuthorizationSettings_Authorization{},
 						},
-						IncomingAccessRequestsCount: 0,
+						IncomingAccessRequestCount: 0,
 					},
 					{
 						Name:   "third-service",
@@ -376,7 +376,7 @@ func TestListServices(t *testing.T) {
 							Mode:           "whitelist",
 							Authorizations: []*api.ListServicesResponse_Service_AuthorizationSettings_Authorization{},
 						},
-						IncomingAccessRequestsCount: 0,
+						IncomingAccessRequestCount: 0,
 					},
 				},
 			},
@@ -408,7 +408,8 @@ func TestListServices(t *testing.T) {
 				return db
 			},
 			expectedResponse: &api.ListServicesResponse{
-				Services: []*api.ListServicesResponse_Service{}},
+				Services: []*api.ListServicesResponse_Service{},
+			},
 			expectedError: nil,
 		},
 	}

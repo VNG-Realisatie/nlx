@@ -136,7 +136,7 @@ func _002_authorizationDownSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "002_authorization.down.sql", size: 219, mode: os.FileMode(436), modTime: time.Unix(1611321712, 0)}
+	info := bindataFileInfo{name: "002_authorization.down.sql", size: 219, mode: os.FileMode(436), modTime: time.Unix(1612521981, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -156,7 +156,7 @@ func _002_authorizationUpSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "002_authorization.up.sql", size: 1846, mode: os.FileMode(436), modTime: time.Unix(1611323185, 0)}
+	info := bindataFileInfo{name: "002_authorization.up.sql", size: 1846, mode: os.FileMode(436), modTime: time.Unix(1612521981, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -260,10 +260,10 @@ type bintree struct {
 }
 
 var _bintree = &bintree{nil, map[string]*bintree{
-	"001_initial_schema.down.sql": &bintree{_001_initial_schemaDownSql, map[string]*bintree{}},
-	"001_initial_schema.up.sql":   &bintree{_001_initial_schemaUpSql, map[string]*bintree{}},
-	"002_authorization.down.sql":  &bintree{_002_authorizationDownSql, map[string]*bintree{}},
-	"002_authorization.up.sql":    &bintree{_002_authorizationUpSql, map[string]*bintree{}},
+	"001_initial_schema.down.sql": {_001_initial_schemaDownSql, map[string]*bintree{}},
+	"001_initial_schema.up.sql":   {_001_initial_schemaUpSql, map[string]*bintree{}},
+	"002_authorization.down.sql":  {_002_authorizationDownSql, map[string]*bintree{}},
+	"002_authorization.up.sql":    {_002_authorizationUpSql, map[string]*bintree{}},
 }}
 
 // RestoreAsset restores an asset under the given directory
@@ -276,7 +276,7 @@ func RestoreAsset(dir, name string) error {
 	if err != nil {
 		return err
 	}
-	err = os.MkdirAll(_filePath(dir, filepath.Dir(name)), os.FileMode(0755))
+	err = os.MkdirAll(_filePath(dir, filepath.Dir(name)), os.FileMode(0o755))
 	if err != nil {
 		return err
 	}

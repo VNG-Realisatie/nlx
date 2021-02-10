@@ -1242,7 +1242,7 @@
             "type": "string"
           }
         },
-        "incomingAccessRequestsCount": {
+        "incomingAccessRequestCount": {
           "type": "integer",
           "format": "int64"
         }

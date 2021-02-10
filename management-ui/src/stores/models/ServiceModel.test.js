@@ -123,7 +123,7 @@ test('automatically update incomingAccessRequestCount when related incoming acce
     services: [
       {
         name: 'service-a',
-        incomingAccessRequestsCount: 1,
+        incomingAccessRequestCount: 1,
       },
     ],
   })
@@ -152,7 +152,7 @@ test('automatically update incomingAccessRequestCount when related incoming acce
   const serviceModel = rootStore.servicesStore.getService('service-a')
 
   expect(serviceModel.incomingAccessRequests).toHaveLength(0)
-  expect(serviceModel.incomingAccessRequestsCount).toBe(1)
+  expect(serviceModel.incomingAccessRequestCount).toBe(1)
 
   await rootStore.incomingAccessRequestsStore.fetchForService({
     name: 'service-a',
@@ -162,7 +162,7 @@ test('automatically update incomingAccessRequestCount when related incoming acce
     managementApiClient.managementListIncomingAccessRequest,
   ).toHaveBeenCalled()
   expect(serviceModel.incomingAccessRequests).toHaveLength(2)
-  expect(serviceModel.incomingAccessRequestsCount).toBe(2)
+  expect(serviceModel.incomingAccessRequestCount).toBe(2)
 })
 
 test('get related access grants', async () => {

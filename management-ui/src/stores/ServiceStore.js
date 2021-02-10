@@ -83,11 +83,11 @@ class ServiceStore {
       const service = this.getService(statistic.name)
       if (
         service &&
-        service.incomingAccessRequestsCount !==
+        service.incomingAccessRequestCount !==
           statistic.incomingAccessRequestCount
       ) {
         service.update({
-          incomingAccessRequestsCount: statistic.incomingAccessRequestCount,
+          incomingAccessRequestCount: statistic.incomingAccessRequestCount,
         })
       }
     })

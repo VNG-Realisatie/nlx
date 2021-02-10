@@ -170,7 +170,7 @@ func (s *ManagementService) ListServices(ctx context.Context, req *api.ListServi
 
 		for _, service := range services {
 			protoService := convertFromDatabaseService(service)
-			protoService.IncomingAccessRequestsCount = uint32(counts[service.Name])
+			protoService.IncomingAccessRequestCount = uint32(counts[service.Name])
 
 			accessGrants, err := s.configDatabase.ListAccessGrantsForService(ctx, service.Name)
 			if err != nil {

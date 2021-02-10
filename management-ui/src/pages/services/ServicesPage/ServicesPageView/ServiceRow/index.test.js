@@ -10,7 +10,7 @@ test('service row should render expected data', () => {
     name: 'Service name',
     internal: true,
     inways: ['inway2'],
-    incomingAccessRequestsCount: 0,
+    incomingAccessRequestCount: 0,
   }
   const { queryByTestId, queryByText, rerender } = renderWithProviders(
     <table>
@@ -25,7 +25,7 @@ test('service row should render expected data', () => {
   expect(queryByText('requestWithCount')).not.toBeInTheDocument()
 
   const serviceWithIncomingAccessRequest = Object.assign({}, service, {
-    incomingAccessRequestsCount: 1,
+    incomingAccessRequestCount: 1,
   })
 
   rerender(

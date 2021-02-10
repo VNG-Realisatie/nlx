@@ -135,7 +135,7 @@ test('fetching statistics', async () => {
   const managementApiClient = new ManagementApi()
 
   managementApiClient.managementListServices = jest.fn().mockResolvedValue({
-    services: [{ name: 'Service', incomingAccessRequestsCount: 0 }],
+    services: [{ name: 'Service', incomingAccessRequestCount: 0 }],
   })
 
   managementApiClient.managementGetStatisticsOfServices = jest
@@ -151,12 +151,12 @@ test('fetching statistics', async () => {
 
   await serviceStore.fetchAll()
 
-  expect(serviceStore.getService('Service').incomingAccessRequestsCount).toBe(0)
+  expect(serviceStore.getService('Service').incomingAccessRequestCount).toBe(0)
 
   await serviceStore.fetchStats()
 
   expect(
     managementApiClient.managementGetStatisticsOfServices,
   ).toHaveBeenCalledTimes(1)
-  expect(serviceStore.getService('Service').incomingAccessRequestsCount).toBe(1)
+  expect(serviceStore.getService('Service').incomingAccessRequestCount).toBe(1)
 })

@@ -85,7 +85,7 @@ export interface ManagementListServicesResponseService {
      * @type {number}
      * @memberof ManagementListServicesResponseService
      */
-    incomingAccessRequestsCount?: number;
+    incomingAccessRequestCount?: number;
 }
 
 export function ManagementListServicesResponseServiceFromJSON(json: any): ManagementListServicesResponseService {
@@ -107,7 +107,7 @@ export function ManagementListServicesResponseServiceFromJSONTyped(json: any, ig
         'publicSupportContact': !exists(json, 'publicSupportContact') ? undefined : json['publicSupportContact'],
         'authorizationSettings': !exists(json, 'authorizationSettings') ? undefined : ManagementListServicesResponseServiceAuthorizationSettingsFromJSON(json['authorizationSettings']),
         'inways': !exists(json, 'inways') ? undefined : json['inways'],
-        'incomingAccessRequestsCount': !exists(json, 'incomingAccessRequestsCount') ? undefined : json['incomingAccessRequestsCount'],
+        'incomingAccessRequestCount': !exists(json, 'incomingAccessRequestCount') ? undefined : json['incomingAccessRequestCount'],
     };
 }
 
@@ -129,7 +129,7 @@ export function ManagementListServicesResponseServiceToJSON(value?: ManagementLi
         'publicSupportContact': value.publicSupportContact,
         'authorizationSettings': ManagementListServicesResponseServiceAuthorizationSettingsToJSON(value.authorizationSettings),
         'inways': value.inways,
-        'incomingAccessRequestsCount': value.incomingAccessRequestsCount,
+        'incomingAccessRequestCount': value.incomingAccessRequestCount,
     };
 }
 

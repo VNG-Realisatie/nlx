@@ -26,9 +26,9 @@ const ServiceRow = ({ service, ...props }) => {
       <WarningCell data-testid="warning-cell">
         {showServiceVisibilityAlert({ internal, inways }) ? (
           <ServiceVisibilityMessage />
-        ) : service.incomingAccessRequestsCount > 0 ? (
+        ) : service.incomingAccessRequestCount > 0 ? (
           <AmountOfIncomingRequestsLabel
-            count={service.incomingAccessRequestsCount}
+            count={service.incomingAccessRequestCount}
           />
         ) : null}
       </WarningCell>
