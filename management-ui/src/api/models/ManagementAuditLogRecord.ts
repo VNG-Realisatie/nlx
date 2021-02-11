@@ -43,7 +43,25 @@ export interface ManagementAuditLogRecord {
      * @type {string}
      * @memberof ManagementAuditLogRecord
      */
+    userAgent?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ManagementAuditLogRecord
+     */
     user?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ManagementAuditLogRecord
+     */
+    organization?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ManagementAuditLogRecord
+     */
+    service?: string;
     /**
      * 
      * @type {Date}
@@ -55,7 +73,7 @@ export interface ManagementAuditLogRecord {
      * @type {string}
      * @memberof ManagementAuditLogRecord
      */
-    organization?: string;
+    data?: string;
 }
 
 export function ManagementAuditLogRecordFromJSON(json: any): ManagementAuditLogRecord {
@@ -70,9 +88,12 @@ export function ManagementAuditLogRecordFromJSONTyped(json: any, ignoreDiscrimin
         
         'id': !exists(json, 'id') ? undefined : json['id'],
         'action': !exists(json, 'action') ? undefined : AuditLogRecordActionTypeFromJSON(json['action']),
+        'userAgent': !exists(json, 'userAgent') ? undefined : json['userAgent'],
         'user': !exists(json, 'user') ? undefined : json['user'],
-        'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
         'organization': !exists(json, 'organization') ? undefined : json['organization'],
+        'service': !exists(json, 'service') ? undefined : json['service'],
+        'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
+        'data': !exists(json, 'data') ? undefined : json['data'],
     };
 }
 
@@ -87,9 +108,12 @@ export function ManagementAuditLogRecordToJSON(value?: ManagementAuditLogRecord 
         
         'id': value.id,
         'action': AuditLogRecordActionTypeToJSON(value.action),
+        'userAgent': value.userAgent,
         'user': value.user,
-        'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'organization': value.organization,
+        'service': value.service,
+        'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
+        'data': value.data,
     };
 }
 

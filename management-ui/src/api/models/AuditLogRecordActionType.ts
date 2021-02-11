@@ -18,9 +18,19 @@
  * @enum {string}
  */
 export enum AuditLogRecordActionType {
-    LOGIN = 'login',
+    LOGINSUCCESS = 'loginSuccess',
+    LOGINFAIL = 'loginFail',
     LOGOUT = 'logout',
-    REJECTINCOMINGACCESSREQUEST = 'rejectIncomingAccessRequest'
+    INCOMINGACCESSREQUESTACCEPT = 'incomingAccessRequestAccept',
+    INCOMINGACCESSREQUESTREJECT = 'incomingAccessRequestReject',
+    ACCESSGRANTREVOKE = 'accessGrantRevoke',
+    OUTGOINGACCESSREQUESTCREATE = 'outgoingAccessRequestCreate',
+    OUTGOINGACCESSREQUESTFAIL = 'outgoingAccessRequestFail',
+    SERVICECREATE = 'serviceCreate',
+    SERVICEUPDATE = 'serviceUpdate',
+    SERVICEDELETE = 'serviceDelete',
+    ORGANIZATIONSETTTINGSUPDATE = 'organizationSetttingsUpdate',
+    ORGANIZATIONINSIGHTCONFIGURATIONUPDATE = 'organizationInsightConfigurationUpdate'
 }
 
 export function AuditLogRecordActionTypeFromJSON(json: any): AuditLogRecordActionType {
