@@ -67,6 +67,7 @@ func convertAuditLogRecordsFromDatabase(models []*database.AuditLogRecord) ([]*a
 			CreatedAt:    createdAt,
 		}
 	}
+
 	return convertedRecords, nil
 }
 
@@ -77,7 +78,6 @@ func convertActionTypeFromDatabaseToModel(actionType database.AuditLogActionType
 	default:
 		return 0, fmt.Errorf("unable to convert database audit log action type '%s' to api audit log action type", actionType)
 	}
-
 }
 
 func (a *PostgresLogger) LoginSuccess(ctx context.Context, userID uint, userAgent string) error {
@@ -100,6 +100,7 @@ func (a *PostgresLogger) LoginFail(ctx context.Context, userID uint, userAgent s
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
+
 	return err
 }
 
@@ -111,6 +112,7 @@ func (a *PostgresLogger) LogoutSuccess(ctx context.Context, userID uint, userAge
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
+
 	return err
 }
 
@@ -124,6 +126,7 @@ func (a *PostgresLogger) IncomingAccessRequestAccept(ctx context.Context, userID
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
+
 	return err
 }
 
@@ -137,6 +140,7 @@ func (a *PostgresLogger) IncomingAccessRequestReject(ctx context.Context, userID
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
+
 	return err
 }
 
@@ -150,6 +154,7 @@ func (a *PostgresLogger) AccessGrantRevoke(ctx context.Context, userID uint, use
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
+
 	return err
 }
 
@@ -163,6 +168,7 @@ func (a *PostgresLogger) OutgoingAccessRequestCreate(ctx context.Context, userID
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
+
 	return err
 }
 
@@ -174,6 +180,7 @@ func (a *PostgresLogger) ServiceCreate(ctx context.Context, userID uint, userAge
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
+
 	return err
 }
 
@@ -185,6 +192,7 @@ func (a *PostgresLogger) ServiceUpdate(ctx context.Context, userID uint, userAge
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
+
 	return err
 }
 
@@ -196,6 +204,7 @@ func (a *PostgresLogger) ServiceDelete(ctx context.Context, userID uint, userAge
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
+
 	return err
 }
 
@@ -207,6 +216,7 @@ func (a *PostgresLogger) OrganizationSettingsUpdate(ctx context.Context, userID 
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
+
 	return err
 }
 
@@ -218,5 +228,6 @@ func (a *PostgresLogger) OrganizationInsightConfigurationUpdate(ctx context.Cont
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
+
 	return err
 }

@@ -6,7 +6,6 @@ package server_test
 import (
 	"context"
 	"errors"
-	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	"path/filepath"
 	"testing"
 	"time"
@@ -23,6 +22,7 @@ import (
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
+	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
 	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"

@@ -59,7 +59,7 @@ type ConfigDatabase interface {
 	GetSettings(ctx context.Context) (*Settings, error)
 	PutOrganizationInway(ctx context.Context, inwayID *uint) (*Settings, error)
 	PutInsightConfiguration(ctx context.Context, irmaServerURL, insightAPIURL string) (*Settings, error)
-	
+
 	CreateAuditLogRecord(ctx context.Context, auditLogRecord *AuditLogRecord) (*AuditLogRecord, error)
 	ListAuditLogRecords(ctx context.Context) ([]*AuditLogRecord, error)
 }

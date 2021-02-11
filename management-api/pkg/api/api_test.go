@@ -1,10 +1,10 @@
 package api
 
 import (
-	"github.com/golang/mock/gomock"
 	"path/filepath"
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 
