@@ -29,7 +29,7 @@
     "eslint-plugin-standard": "4.1.0",
     "prettier": "2.2.1",
     "rimraf": "3.0.2",
-    "testcafe": "1.9.4",
+    "testcafe": "1.10.1",
     "testcafe-browser-provider-browserstack": "1.13.1",
     "testcafe-react-selectors": "4.1.4",
     "testcafe-reporter-html": "1.4.6"
