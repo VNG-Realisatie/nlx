@@ -3,7 +3,7 @@ ifeq ($(GOPATH),)
 endif
 
 API_FILES=api/management.pb.go api/management.pb.gw.go api/management.swagger.json api/mock/mock_management.go api/external/external.pb.go api/external/mock/mock_external.go
-PKG_FILES=pkg/database/mock/mock_database.go pkg/directory/mock/mock_client.go pkg/management/mock/mock_client.go
+PKG_FILES=pkg/database/mock/mock_database.go pkg/directory/mock/mock_client.go pkg/management/mock/mock_client.go pkg/auditlog/mock/mock_auditlog.go
 
 .PHONY: all
 all: generate migrations
@@ -90,6 +90,11 @@ pkg/directory/mock/mock_client.go: pkg/directory/client.go
 pkg/management/mock/mock_client.go: pkg/management/client.go
 	@# Generate mock file
 	mockgen -destination $@ go.nlx.io/nlx/management-api/pkg/management Client
+
+pkg/auditlog/mock/mock_auditlog.go: pkg/auditlog/logger.go
+	@# Generate mock file
+	mockgen -source $< -destination $@
+
 
 db/migrations.go:
 	@# Generate migrations Go file

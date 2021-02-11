@@ -6,6 +6,7 @@ package server_test
 import (
 	"context"
 	"errors"
+	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	"path/filepath"
 	"testing"
 	"time"
@@ -50,7 +51,7 @@ func newService(t *testing.T) (s *server.ManagementService, db *mock_database.Mo
 
 	assert.NoError(t, err)
 
-	s = server.NewManagementService(logger, proc, mock_directory.NewMockClient(ctrl), bundle, db)
+	s = server.NewManagementService(logger, proc, mock_directory.NewMockClient(ctrl), bundle, db, mock_auditlog.NewMockLogger(ctrl))
 
 	return
 }

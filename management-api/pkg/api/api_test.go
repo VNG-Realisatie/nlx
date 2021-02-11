@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/golang/mock/gomock"
 	"path/filepath"
 	"testing"
 
@@ -9,6 +10,7 @@ import (
 
 	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
+	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
 	"go.nlx.io/nlx/management-api/pkg/oidc"
@@ -124,13 +126,26 @@ func TestNewAPI(t *testing.T) {
 	for _, test := range tests {
 		test := test
 		t.Run(test.name, func(t *testing.T) {
+			mockCtrl := gomock.NewController(t)
+			defer mockCtrl.Finish()
+
 			cert, err := common_tls.NewBundleFromFiles(test.cert.certFile, test.cert.keyFile, test.cert.rootCertFile)
 			assert.NoError(t, err)
 
 			orgCert, err := common_tls.NewBundleFromFiles(test.orgCert.certFile, test.orgCert.keyFile, test.orgCert.rootCertFile)
 			assert.NoError(t, err)
 
-			_, err = NewAPI(test.db, logger, testProcess, cert, orgCert, test.directoryInspectionAddress, test.directoryRegistrationAddress, &oidc.Authenticator{})
+			_, err = NewAPI(
+				test.db,
+				logger,
+				testProcess,
+				cert,
+				orgCert,
+				test.directoryInspectionAddress,
+				test.directoryRegistrationAddress,
+				&oidc.Authenticator{},
+				mock_auditlog.NewMockLogger(mockCtrl),
+			)
 
 			if test.expectedErrorMessage != "" {
 				assert.EqualError(t, err, test.expectedErrorMessage)
