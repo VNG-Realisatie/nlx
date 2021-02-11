@@ -21,15 +21,20 @@ import {
 import AuditLogRecord from './index'
 
 test.concurrent.each([
-  [{ action: ACTION_LOGIN_SUCCESS }, 'John Doe has logged in'],
-  [{ action: ACTION_LOGIN_FAIL }, 'Failed login attempt'],
-  [{ action: ACTION_LOGOUT_SUCCESS }, 'John Doe has logged out'],
+  [{ action: ACTION_LOGIN_SUCCESS }, 'shut-down.svg', 'John Doe has logged in'],
+  [{ action: ACTION_LOGIN_FAIL }, 'shut-down.svg', 'Failed login attempt'],
+  [
+    { action: ACTION_LOGOUT_SUCCESS },
+    'shut-down.svg',
+    'John Doe has logged out',
+  ],
   [
     {
       action: ACTION_INCOMING_ACCESS_REQUEST_ACCEPT,
       organization: 'Gemeente Haarlem',
       service: 'Kadaster',
     },
+    'check.svg',
     'John Doe has approved the access request from Gemeente Haarlem for Kadaster',
   ],
   [
@@ -38,6 +43,7 @@ test.concurrent.each([
       organization: 'Gemeente Haarlem',
       service: 'Kadaster',
     },
+    'close.svg',
     'John Doe has rejected the access request from Gemeente Haarlem for Kadaster',
   ],
   [
@@ -46,6 +52,7 @@ test.concurrent.each([
       organization: 'Gemeente Haarlem',
       service: 'Kadaster',
     },
+    'revoke.svg',
     'John Doe has revoked access for Kadaster from Gemeente Haarlem',
   ],
   [
@@ -54,6 +61,7 @@ test.concurrent.each([
       organization: 'Gemeente Haarlem',
       service: 'Kadaster',
     },
+    'key.svg',
     'John Doe has requested access to Kadaster from Gemeente Haarlem',
   ],
   [
@@ -61,6 +69,7 @@ test.concurrent.each([
       action: ACTION_SERVICE_CREATE,
       service: 'Kadaster',
     },
+    'services.svg',
     'John Doe has created the service Kadaster',
   ],
   [
@@ -68,6 +77,7 @@ test.concurrent.each([
       action: ACTION_SERVICE_UPDATE,
       service: 'Kadaster',
     },
+    'services.svg',
     'John Doe has updated the service Kadaster',
   ],
   [
@@ -75,27 +85,35 @@ test.concurrent.each([
       action: ACTION_SERVICE_DELETE,
       service: 'Kadaster',
     },
+    'services.svg',
     'John Doe has removed the service Kadaster',
   ],
   [
     {
       action: ACTION_ORGANIZATION_SETTINGS_UPDATE,
     },
+    'cog.svg',
     'John Doe updated the organization settings',
   ],
   [
     {
       action: ACTION_INSIGHT_CONFIGURATION_UPDATE,
     },
+    'cog.svg',
     'John Doe updated the insight configuration settings',
   ],
   [
     { action: 'unknown action' },
+    'error-warning.svg',
     "John Doe has performed unknown action 'unknown action'",
   ],
-])('AuditLogRecord message for audit log %', (auditLog, expectedMessage) => {
-  const { getByTestId } = renderWithProviders(
-    <AuditLogRecord {...auditLog} user="John Doe" />,
-  )
-  expect(getByTestId('message')).toHaveTextContent(expectedMessage)
-})
+])(
+  'AuditLogRecord message for %j',
+  (auditLog, expectedIcon, expectedMessage) => {
+    const { getByTestId, getByRole } = renderWithProviders(
+      <AuditLogRecord {...auditLog} user="John Doe" />,
+    )
+    expect(getByRole('img')).toHaveTextContent(expectedIcon)
+    expect(getByTestId('message')).toHaveTextContent(expectedMessage)
+  },
+)

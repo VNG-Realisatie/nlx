@@ -21,35 +21,17 @@ export const ACTION_INSIGHT_CONFIGURATION_UPDATE =
   'organizationInsightConfiguration_update'
 
 class AuditLogModel {
-  _id = null
-  _action = null
-  _user = null
-  _createdAt = null
-  _organization = null
+  id = null
+  action = null
+  user = null
+  createdAt = null
+  organization = null
+  service = null
+  userAgent = null
 
   constructor({ auditLogData }) {
     makeAutoObservable(this)
     this.update(auditLogData)
-  }
-
-  get id() {
-    return this._id
-  }
-
-  get action() {
-    return this._action
-  }
-
-  get user() {
-    return this._user
-  }
-
-  get createdAt() {
-    return this._createdAt
-  }
-
-  get organization() {
-    return this._organization
   }
 
   update = (auditLogData) => {
@@ -58,23 +40,31 @@ class AuditLogModel {
     }
 
     if (auditLogData.id) {
-      this._id = auditLogData.id
+      this.id = auditLogData.id
     }
 
     if (auditLogData.action) {
-      this._action = auditLogData.action
+      this.action = auditLogData.action
     }
 
     if (auditLogData.user) {
-      this._user = auditLogData.user
+      this.user = auditLogData.user
     }
 
     if (auditLogData.createdAt) {
-      this._createdAt = new Date(auditLogData.createdAt)
+      this.createdAt = new Date(auditLogData.createdAt)
     }
 
     if (auditLogData.organization) {
-      this._organization = auditLogData.organization
+      this.organization = auditLogData.organization
+    }
+
+    if (auditLogData.service) {
+      this.service = auditLogData.service
+    }
+
+    if (auditLogData.userAgent) {
+      this.userAgent = auditLogData.userAgent
     }
   }
 }

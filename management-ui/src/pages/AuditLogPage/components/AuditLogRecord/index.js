@@ -19,59 +19,22 @@ import {
   ACTION_ORGANIZATION_SETTINGS_UPDATE,
   ACTION_INSIGHT_CONFIGURATION_UPDATE,
 } from '../../../../stores/models/AuditLogModel'
-import {
-  IconWarningCircle,
-  IconShutdown,
-  IconCheck,
-  IconRevoke,
-  IconClose,
-  IconKey,
-  IconServices,
-  IconSettings,
-} from '../../../../icons'
+import iconForActionType from './icon-for-action-type'
 import { Container, IconContainer, Description, IconItem } from './index.styles'
 
-const actionToIcon = (action) => {
-  switch (action) {
-    case ACTION_LOGIN_SUCCESS:
-    case ACTION_LOGOUT_SUCCESS:
-      return IconShutdown
-
-    case ACTION_INCOMING_ACCESS_REQUEST_ACCEPT:
-      return IconCheck
-
-    case ACTION_INCOMING_ACCESS_REQUEST_REJECT:
-      return IconClose
-
-    case ACTION_ACCESS_GRANT_REVOKE:
-      return IconRevoke
-
-    case ACTION_OUTGOING_ACCESS_REQUEST_CREATE:
-      return IconKey
-
-    case ACTION_SERVICE_CREATE:
-    case ACTION_SERVICE_UPDATE:
-    case ACTION_SERVICE_DELETE:
-      return IconServices
-
-    case ACTION_ORGANIZATION_SETTINGS_UPDATE:
-    case ACTION_INSIGHT_CONFIGURATION_UPDATE:
-      return IconSettings
-
-    default:
-      return IconWarningCircle
-  }
-}
-
-const Template = ({ action, dateTime, children, ...props }) => (
+const Template = ({ action, dateTime, userAgent, children, ...props }) => (
   <Container {...props}>
-    <IconContainer>
-      <IconItem as={actionToIcon(action)} />
+    <IconContainer data-testid="icon">
+      <IconItem as={iconForActionType(action)} role="img" />
     </IconContainer>
     <Description>
       <span data-testid="message">{children}</span>
       <br />
-      <small>{dateTime}</small>
+      <small>
+        {dateTime}
+        {'  '}●{'  '}
+        {userAgent}
+      </small>
     </Description>
   </Container>
 )
@@ -80,6 +43,7 @@ Template.propTypes = {
   action: string,
   dateTime: string,
   children: node,
+  userAgent: string,
 }
 
 const AuditLogRecord = ({
@@ -88,13 +52,19 @@ const AuditLogRecord = ({
   createdAt,
   organization,
   service,
+  userAgent,
   ...props
 }) => {
   const { t } = useTranslation()
   const dateTimeString = t('Audit log created at', { date: createdAt })
 
   return (
-    <Template action={action} dateTime={dateTimeString} {...props}>
+    <Template
+      action={action}
+      dateTime={dateTimeString}
+      userAgent={userAgent}
+      {...props}
+    >
       {action === ACTION_LOGIN_SUCCESS ? (
         <Trans values={{ user }}>
           <strong>{{ user }}</strong> has logged in
@@ -171,6 +141,7 @@ AuditLogRecord.propTypes = {
   createdAt: instanceOf(Date),
   organization: string,
   service: string,
+  userAgent: string,
 }
 
 export default AuditLogRecord
