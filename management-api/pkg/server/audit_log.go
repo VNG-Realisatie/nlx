@@ -23,7 +23,7 @@ func (s *ManagementService) ListAuditLogs(ctx context.Context, _ *types.Empty) (
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	convertedAuditLogRecords, err := convertFromDatabaseAuditLogRecords(auditLogRecords)
+	convertedAuditLogRecords, err := convertAuditLogRecordsFromDatabase(auditLogRecords)
 	if err != nil {
 		s.logger.Error("error converting audit log records from database", zap.Error(err))
 		return nil, status.Error(codes.Internal, "error converting audit log records")
@@ -34,7 +34,7 @@ func (s *ManagementService) ListAuditLogs(ctx context.Context, _ *types.Empty) (
 	}, nil
 }
 
-func convertFromDatabaseAuditLogRecords(models []*database.AuditLogRecord) ([]*api.AuditLogRecord, error) {
+func convertAuditLogRecordsFromDatabase(models []*database.AuditLogRecord) ([]*api.AuditLogRecord, error) {
 	convertedRecords := make([]*api.AuditLogRecord, len(models))
 
 	for i, databaseModel := range models {
@@ -43,7 +43,7 @@ func convertFromDatabaseAuditLogRecords(models []*database.AuditLogRecord) ([]*a
 			return nil, err
 		}
 
-		actionType, err := auditLogActionTypeToProto(databaseModel.ActionType)
+		actionType, err := convertActionTypeFromDatabaseToModel(databaseModel.ActionType)
 		if err != nil {
 			return nil, err
 		}
@@ -61,11 +61,11 @@ func convertFromDatabaseAuditLogRecords(models []*database.AuditLogRecord) ([]*a
 	return convertedRecords, nil
 }
 
-func auditLogActionTypeToProto(actionType database.AuditLogActionType) (api.AuditLogRecord_ActionType, error) {
-    switch(actionType) {
+func convertActionTypeFromDatabaseToModel(actionType database.AuditLogActionType) (api.AuditLogRecord_ActionType, error) {
+	switch actionType {
 	case database.LoginSuccess:
-		return api.AuditLogRecord_loginSuccess, nil 
-    default:		
+		return api.AuditLogRecord_loginSuccess, nil
+	default:
 		return 0, fmt.Errorf("unable to convert database audit log action type '%s' to api audit log action type", actionType)
 	}
 

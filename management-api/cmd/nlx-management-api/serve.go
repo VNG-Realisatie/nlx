@@ -123,7 +123,7 @@ var serveCommand = &cobra.Command{
 			log.Fatalf("failed to connect to the database: %v", err)
 		}
 
-		auditLogger := auditlog.NewPostgressAuditLog(db)
+		auditLogger := auditlog.NewPostgresAuditLog(db)
 
 		authenticator := oidc.NewAuthenticator(db, auditLogger, logger, &serveOpts.oidcOptions)
 

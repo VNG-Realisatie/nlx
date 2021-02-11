@@ -28,7 +28,7 @@ type PostgresAuditLog struct {
 	database database.ConfigDatabase
 }
 
-func NewPostgressAuditLog(configDatabase database.ConfigDatabase) AuditLog {
+func NewPostgresAuditLog(configDatabase database.ConfigDatabase) AuditLog {
 	return &PostgresAuditLog{
 		database: configDatabase,
 	}
@@ -70,11 +70,11 @@ func (a *PostgresAuditLog) LogoutSuccess(ctx context.Context, userID uint, userA
 
 func (a *PostgresAuditLog) IncomingAccessRequestAccept(ctx context.Context, userID uint, userAgent, organization, service string) error {
 	record := &database.AuditLogRecord{
-		UserAgent:  userAgent,
-		UserID:     userID,
+		UserAgent:    userAgent,
+		UserID:       userID,
 		Organization: organization,
-		Service: service,
-		ActionType: database.IncomingAccesRequestAccept,
+		Service:      service,
+		ActionType:   database.IncomingAccesRequestAccept,
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
@@ -83,11 +83,11 @@ func (a *PostgresAuditLog) IncomingAccessRequestAccept(ctx context.Context, user
 
 func (a *PostgresAuditLog) IncomingAccessRequestReject(ctx context.Context, userID uint, userAgent, organization, service string) error {
 	record := &database.AuditLogRecord{
-		UserAgent:  userAgent,
-		UserID:     userID,
+		UserAgent:    userAgent,
+		UserID:       userID,
 		Organization: organization,
-		Service: service,
-		ActionType: database.IncomingAccesRequestReject,
+		Service:      service,
+		ActionType:   database.IncomingAccesRequestReject,
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
@@ -96,33 +96,31 @@ func (a *PostgresAuditLog) IncomingAccessRequestReject(ctx context.Context, user
 
 func (a *PostgresAuditLog) AccessGrantRevoke(ctx context.Context, userID uint, userAgent, organization, service string) error {
 	record := &database.AuditLogRecord{
-		UserAgent:  userAgent,
-		UserID:     userID,
+		UserAgent:    userAgent,
+		UserID:       userID,
 		Organization: organization,
-		Service: service,
-		ActionType: database.AccessGrantRevoke,
+		Service:      service,
+		ActionType:   database.AccessGrantRevoke,
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
 	return err
 }
 
-
-func (a *PostgresAuditLog) OutgoingAccessRequestCreate(ctx context.Context, userID uint, userAgent, organization, service string) error{
+func (a *PostgresAuditLog) OutgoingAccessRequestCreate(ctx context.Context, userID uint, userAgent, organization, service string) error {
 	record := &database.AuditLogRecord{
-		UserAgent:  userAgent,
-		UserID:     userID,
+		UserAgent:    userAgent,
+		UserID:       userID,
 		Organization: organization,
-		Service: service,
-		ActionType: database.OutgoingAccessRequestCreate,
+		Service:      service,
+		ActionType:   database.OutgoingAccessRequestCreate,
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
 	return err
 }
 
-
-func (a *PostgresAuditLog) ServiceCreate(ctx context.Context, userID uint, userAgent string) error{
+func (a *PostgresAuditLog) ServiceCreate(ctx context.Context, userID uint, userAgent string) error {
 	record := &database.AuditLogRecord{
 		UserAgent:  userAgent,
 		UserID:     userID,
@@ -133,8 +131,7 @@ func (a *PostgresAuditLog) ServiceCreate(ctx context.Context, userID uint, userA
 	return err
 }
 
-
-func (a *PostgresAuditLog) ServiceUpdate(ctx context.Context, userID uint, userAgent string) error{
+func (a *PostgresAuditLog) ServiceUpdate(ctx context.Context, userID uint, userAgent string) error {
 	record := &database.AuditLogRecord{
 		UserAgent:  userAgent,
 		UserID:     userID,
@@ -145,8 +142,7 @@ func (a *PostgresAuditLog) ServiceUpdate(ctx context.Context, userID uint, userA
 	return err
 }
 
-
-func (a *PostgresAuditLog) ServiceDelete(ctx context.Context, userID uint, userAgent string) error{
+func (a *PostgresAuditLog) ServiceDelete(ctx context.Context, userID uint, userAgent string) error {
 	record := &database.AuditLogRecord{
 		UserAgent:  userAgent,
 		UserID:     userID,
@@ -157,7 +153,7 @@ func (a *PostgresAuditLog) ServiceDelete(ctx context.Context, userID uint, userA
 	return err
 }
 
-func (a *PostgresAuditLog) OrganizationSettingsUpdate(ctx context.Context, userID uint, userAgent string) error{
+func (a *PostgresAuditLog) OrganizationSettingsUpdate(ctx context.Context, userID uint, userAgent string) error {
 	record := &database.AuditLogRecord{
 		UserAgent:  userAgent,
 		UserID:     userID,
@@ -168,7 +164,7 @@ func (a *PostgresAuditLog) OrganizationSettingsUpdate(ctx context.Context, userI
 	return err
 }
 
-func (a *PostgresAuditLog) OrganizationInsightConfigurationUpdate(ctx context.Context, userID uint, userAgent string) error{
+func (a *PostgresAuditLog) OrganizationInsightConfigurationUpdate(ctx context.Context, userID uint, userAgent string) error {
 	record := &database.AuditLogRecord{
 		UserAgent:  userAgent,
 		UserID:     userID,
@@ -178,4 +174,3 @@ func (a *PostgresAuditLog) OrganizationInsightConfigurationUpdate(ctx context.Co
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
 	return err
 }
-
