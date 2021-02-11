@@ -12,7 +12,7 @@ import (
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/management-api/pkg/api"
-	auditlog "go.nlx.io/nlx/management-api/pkg/audit-log"
+	"go.nlx.io/nlx/management-api/pkg/auditlog"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/oidc"
 )
@@ -123,7 +123,7 @@ var serveCommand = &cobra.Command{
 			log.Fatalf("failed to connect to the database: %v", err)
 		}
 
-		auditLogger := auditlog.NewPostgresAuditLog(db)
+		auditLogger := auditlog.NewPostgresLogger(db, logger)
 
 		authenticator := oidc.NewAuthenticator(db, auditLogger, logger, &serveOpts.oidcOptions)
 
@@ -154,6 +154,7 @@ var serveCommand = &cobra.Command{
 			serveOpts.DirectoryInspectionAddress,
 			serveOpts.DirectoryRegistrationAddress,
 			authenticator,
+			auditLogger,
 		)
 		if err != nil {
 			logger.Fatal("cannot setup management api", zap.Error(err))

@@ -7,15 +7,15 @@ import (
 	"fmt"
 	"net/http"
 
-	"go.nlx.io/nlx/management-api/pkg/audit-log"
-	"go.nlx.io/nlx/management-api/pkg/database"
-
 	"github.com/coreos/go-oidc"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"github.com/gorilla/sessions"
 	"go.uber.org/zap"
 	"golang.org/x/oauth2"
+
+	"go.nlx.io/nlx/management-api/pkg/auditlog"
+	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
 var ErrUnauthenticated = errors.New("not authenticated")
@@ -41,14 +41,14 @@ type Store interface {
 type Authenticator struct {
 	store        Store
 	oidcProvider Provider
-	auditLogger  auditlog.AuditLog
+	auditLogger  auditlog.Logger
 	logger       *zap.Logger
 	oauth2Config OAuth2Config
 	oidcConfig   *oidc.Config
 	db           database.ConfigDatabase
 }
 
-func NewAuthenticator(db database.ConfigDatabase, auditLogger auditlog.AuditLog, logger *zap.Logger, options *Options) *Authenticator {
+func NewAuthenticator(db database.ConfigDatabase, auditLogger auditlog.Logger, logger *zap.Logger, options *Options) *Authenticator {
 	gob.Register(&Claims{})
 
 	store := sessions.NewCookieStore([]byte(options.SecretKey))
