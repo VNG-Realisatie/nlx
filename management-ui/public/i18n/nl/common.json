@@ -34,7 +34,7 @@
   "Approving this access request will grant organizationName access to serviceName. Are you sure?": "Het accepteren van dit toegangsverzoek geeft {{organizationName}} toegang tot {{serviceName}}. Weet je het zeker?",
   "Are you sure?": "Weet je het zeker?",
   "Audit log": "Audit log",
-  "Audit log created at": "Audit log aangemaakt op",
+  "Audit log created at": "{{date, D MMMM YYYY [om] HH:mm}}",
   "Audit log page": "Audit log page",
   "Avatar": "Avatar",
   "Back": "Terug",

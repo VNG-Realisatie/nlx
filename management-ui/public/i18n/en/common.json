@@ -34,7 +34,7 @@
   "Approving this access request will grant organizationName access to serviceName. Are you sure?": "Approving this access request will grant {{organizationName}} access to {{serviceName}}. Are you sure?",
   "Are you sure?": "Are you sure?",
   "Audit log": "Audit log",
-  "Audit log created at": "{{date, D MMMM YYYY [om] HH:mm}}",
+  "Audit log created at": "{{date, D MMMM YYYY [at] HH:mm}}",
   "Audit log page": "Audit log page",
   "Avatar": "Avatar",
   "Back": "Back",
