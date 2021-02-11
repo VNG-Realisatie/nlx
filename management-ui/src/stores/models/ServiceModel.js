@@ -13,6 +13,9 @@ class ServiceModel {
   publicSupportContact = ''
   inways = []
   incomingAccessRequestCount = 0
+  oneTimeCosts = 0
+  monthlyCosts = 0
+  requestCosts = 0
 
   constructor({ servicesStore, serviceData }) {
     makeAutoObservable(this)
@@ -82,6 +85,18 @@ class ServiceModel {
 
     if (service.incomingAccessRequestCount !== undefined) {
       this.incomingAccessRequestCount = service.incomingAccessRequestCount
+    }
+
+    if ('oneTimeCosts' in service) {
+      this.oneTimeCosts = service.oneTimeCosts / 100
+    }
+
+    if ('monthlyCosts' in service) {
+      this.monthlyCosts = service.monthlyCosts / 100
+    }
+
+    if ('requestCosts' in service) {
+      this.requestCosts = service.requestCosts / 100
     }
   }
 }

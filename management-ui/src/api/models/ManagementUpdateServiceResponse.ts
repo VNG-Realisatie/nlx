@@ -67,6 +67,24 @@ export interface ManagementUpdateServiceResponse {
      * @memberof ManagementUpdateServiceResponse
      */
     inways?: Array<string>;
+    /**
+     * 
+     * @type {number}
+     * @memberof ManagementUpdateServiceResponse
+     */
+    oneTimeCosts?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ManagementUpdateServiceResponse
+     */
+    monthlyCosts?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ManagementUpdateServiceResponse
+     */
+    requestCosts?: number;
 }
 
 export function ManagementUpdateServiceResponseFromJSON(json: any): ManagementUpdateServiceResponse {
@@ -87,6 +105,9 @@ export function ManagementUpdateServiceResponseFromJSONTyped(json: any, ignoreDi
         'techSupportContact': !exists(json, 'techSupportContact') ? undefined : json['techSupportContact'],
         'publicSupportContact': !exists(json, 'publicSupportContact') ? undefined : json['publicSupportContact'],
         'inways': !exists(json, 'inways') ? undefined : json['inways'],
+        'oneTimeCosts': !exists(json, 'oneTimeCosts') ? undefined : json['oneTimeCosts'],
+        'monthlyCosts': !exists(json, 'monthlyCosts') ? undefined : json['monthlyCosts'],
+        'requestCosts': !exists(json, 'requestCosts') ? undefined : json['requestCosts'],
     };
 }
 
@@ -107,6 +128,9 @@ export function ManagementUpdateServiceResponseToJSON(value?: ManagementUpdateSe
         'techSupportContact': value.techSupportContact,
         'publicSupportContact': value.publicSupportContact,
         'inways': value.inways,
+        'oneTimeCosts': value.oneTimeCosts,
+        'monthlyCosts': value.monthlyCosts,
+        'requestCosts': value.requestCosts,
     };
 }
 

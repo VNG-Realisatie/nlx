@@ -3,7 +3,7 @@
 //
 import React, { useEffect } from 'react'
 import { observer } from 'mobx-react'
-import { arrayOf, bool, func, shape, string } from 'prop-types'
+import { arrayOf, bool, func, shape, string, number } from 'prop-types'
 import { FieldArray, Formik } from 'formik'
 import * as Yup from 'yup'
 import { useTranslation } from 'react-i18next'
@@ -36,6 +36,9 @@ const DEFAULT_INITIAL_VALUES = {
   techSupportContact: '',
   publicSupportContact: '',
   inways: [],
+  oneTimeCosts: 0,
+  monthlyCosts: 0,
+  requestCosts: 0,
 }
 
 const ServiceForm = ({
@@ -62,6 +65,9 @@ const ServiceForm = ({
     techSupportContact: Yup.string(),
     publicSupportContact: Yup.string(),
     inways: Yup.array().of(Yup.string()),
+    oneTimeCosts: Yup.number().min(0),
+    monthlyCosts: Yup.number().min(0),
+    requestCosts: Yup.number().min(0),
   })
 
   return (
@@ -70,6 +76,10 @@ const ServiceForm = ({
         ...DEFAULT_INITIAL_VALUES,
         ...initialValues,
         publishedInDirectory: !initialValues.internal,
+        isPaidService:
+          initialValues.oneTimeCosts > 0 ||
+          initialValues.monthlyCosts > 0 ||
+          initialValues.requestCosts > 0,
       }}
       validationSchema={validationSchema}
       onSubmit={({ publishedInDirectory, ...values }) => {
@@ -79,7 +89,10 @@ const ServiceForm = ({
         })
       }}
     >
-      {({ handleSubmit, values: { inways, publishedInDirectory } }) => (
+      {({
+        handleSubmit,
+        values: { inways, isPaidService, publishedInDirectory },
+      }) => (
         <Form onSubmit={handleSubmit} data-testid="form" {...props}>
           <ServiceNameWrapper>
             <TextInput
@@ -180,6 +193,43 @@ const ServiceForm = ({
           </Fieldset>
 
           <Fieldset>
+            <Legend>{t('Billing')}</Legend>
+
+            <Checkbox name="isPaidService">
+              {t('This is a paid service')}
+            </Checkbox>
+
+            {isPaidService && (
+              <>
+                <TextInput
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  name="oneTimeCosts"
+                >
+                  {t('One time costs (in Euro)')}
+                </TextInput>
+                <TextInput
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  name="monthlyCosts"
+                >
+                  {t('Monthly costs (in Euro)')}
+                </TextInput>
+                <TextInput
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  name="requestCosts"
+                >
+                  {t('Costs per request (in Euro)')}
+                </TextInput>
+              </>
+            )}
+          </Fieldset>
+
+          <Fieldset>
             <Legend>{t('Visibility')}</Legend>
 
             <Checkbox name="publishedInDirectory">
@@ -214,6 +264,9 @@ ServiceForm.propTypes = {
     techSupportContact: string,
     publicSupportContact: string,
     inways: arrayOf(string),
+    oneTimeCosts: number,
+    monthlyCosts: number,
+    requestCosts: number,
   }),
   submitButtonText: string.isRequired,
   disableName: bool,

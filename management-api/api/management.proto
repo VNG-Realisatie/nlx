@@ -109,6 +109,9 @@ message Service {
   string publicSupportContact = 7;
   AuthorizationSettings authorizationSettings = 8;
   repeated string inways = 9;
+  int32 oneTimeCosts = 10;
+  int32 monthlyCosts = 11;
+  int32 requestCosts = 12;
 
   message AuthorizationSettings {
     string mode = 1;
@@ -130,6 +133,9 @@ message GetServiceResponse {
   string techSupportContact = 6;
   string publicSupportContact = 7;
   repeated string inways = 9;
+  int32 oneTimeCosts = 10;
+  int32 monthlyCosts = 11;
+  int32 requestCosts = 12;
 }
 
 message CreateServiceRequest {
@@ -141,6 +147,9 @@ message CreateServiceRequest {
   string techSupportContact = 6;
   string publicSupportContact = 7;
   repeated string inways = 9;
+  int32 oneTimeCosts = 10;
+  int32 monthlyCosts = 11;
+  int32 requestCosts = 12;
 }
 
 message CreateServiceResponse {
@@ -152,6 +161,9 @@ message CreateServiceResponse {
   string techSupportContact = 6;
   string publicSupportContact = 7;
   repeated string inways = 9;
+  int32 oneTimeCosts = 10;
+  int32 monthlyCosts = 11;
+  int32 requestCosts = 12;
 }
 
 message UpdateServiceRequest {
@@ -163,6 +175,9 @@ message UpdateServiceRequest {
   string techSupportContact = 6;
   string publicSupportContact = 7;
   repeated string inways = 9;
+  int32 oneTimeCosts = 10;
+  int32 monthlyCosts = 11;
+  int32 requestCosts = 12;
 }
 
 message UpdateServiceResponse {
@@ -174,6 +189,9 @@ message UpdateServiceResponse {
   string techSupportContact = 6;
   string publicSupportContact = 7;
   repeated string inways = 9;
+  int32 oneTimeCosts = 10;
+  int32 monthlyCosts = 11;
+  int32 requestCosts = 12;
 }
 
 message Inway {
@@ -218,6 +236,9 @@ message ListServicesResponse {
     AuthorizationSettings authorizationSettings = 8;
     repeated string inways = 9;
     uint32 incomingAccessRequestCount = 10;
+    int32 oneTimeCosts = 11;
+    int32 monthlyCosts = 12;
+    int32 requestCosts = 13;
 
     message AuthorizationSettings {
       string mode = 1;
@@ -230,7 +251,6 @@ message ListServicesResponse {
     }
   }
 }
-
 
 message GetServiceRequest {
   string name = 1;

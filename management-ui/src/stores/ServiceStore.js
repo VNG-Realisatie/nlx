@@ -106,6 +106,9 @@ class ServiceStore {
     techSupportContact,
     publicSupportContact,
     inways,
+    oneTimeCosts,
+    monthlyCosts,
+    requestCosts,
   }) {
     const serviceData = yield this._managementApiClient.managementCreateService(
       {
@@ -118,6 +121,9 @@ class ServiceStore {
           techSupportContact,
           publicSupportContact,
           inways,
+          oneTimeCosts: oneTimeCosts * 100,
+          monthlyCosts: monthlyCosts * 100,
+          requestCosts: requestCosts * 100,
         },
       },
     )
@@ -139,6 +145,9 @@ class ServiceStore {
     techSupportContact,
     publicSupportContact,
     inways,
+    oneTimeCosts,
+    monthlyCosts,
+    requestCosts,
   }) {
     if (!name) {
       throw new Error('Name required to update service')
@@ -162,6 +171,9 @@ class ServiceStore {
           techSupportContact,
           publicSupportContact,
           inways,
+          oneTimeCosts: oneTimeCosts * 100,
+          monthlyCosts: monthlyCosts * 100,
+          requestCosts: requestCosts * 100,
         },
       },
     )

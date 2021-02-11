@@ -86,6 +86,24 @@ export interface ManagementListServicesResponseService {
      * @memberof ManagementListServicesResponseService
      */
     incomingAccessRequestCount?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ManagementListServicesResponseService
+     */
+    oneTimeCosts?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ManagementListServicesResponseService
+     */
+    monthlyCosts?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ManagementListServicesResponseService
+     */
+    requestCosts?: number;
 }
 
 export function ManagementListServicesResponseServiceFromJSON(json: any): ManagementListServicesResponseService {
@@ -108,6 +126,9 @@ export function ManagementListServicesResponseServiceFromJSONTyped(json: any, ig
         'authorizationSettings': !exists(json, 'authorizationSettings') ? undefined : ManagementListServicesResponseServiceAuthorizationSettingsFromJSON(json['authorizationSettings']),
         'inways': !exists(json, 'inways') ? undefined : json['inways'],
         'incomingAccessRequestCount': !exists(json, 'incomingAccessRequestCount') ? undefined : json['incomingAccessRequestCount'],
+        'oneTimeCosts': !exists(json, 'oneTimeCosts') ? undefined : json['oneTimeCosts'],
+        'monthlyCosts': !exists(json, 'monthlyCosts') ? undefined : json['monthlyCosts'],
+        'requestCosts': !exists(json, 'requestCosts') ? undefined : json['requestCosts'],
     };
 }
 
@@ -130,6 +151,9 @@ export function ManagementListServicesResponseServiceToJSON(value?: ManagementLi
         'authorizationSettings': ManagementListServicesResponseServiceAuthorizationSettingsToJSON(value.authorizationSettings),
         'inways': value.inways,
         'incomingAccessRequestCount': value.incomingAccessRequestCount,
+        'oneTimeCosts': value.oneTimeCosts,
+        'monthlyCosts': value.monthlyCosts,
+        'requestCosts': value.requestCosts,
     };
 }
 

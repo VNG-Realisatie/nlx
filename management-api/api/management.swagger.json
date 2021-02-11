@@ -1019,6 +1019,18 @@
           "items": {
             "type": "string"
           }
+        },
+        "oneTimeCosts": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "monthlyCosts": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "requestCosts": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -1052,6 +1064,18 @@
           "items": {
             "type": "string"
           }
+        },
+        "oneTimeCosts": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "monthlyCosts": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "requestCosts": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -1150,6 +1174,18 @@
           "items": {
             "type": "string"
           }
+        },
+        "oneTimeCosts": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "monthlyCosts": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "requestCosts": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -1338,6 +1374,18 @@
         "incomingAccessRequestCount": {
           "type": "integer",
           "format": "int64"
+        },
+        "oneTimeCosts": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "monthlyCosts": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "requestCosts": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -1445,6 +1493,18 @@
           "items": {
             "type": "string"
           }
+        },
+        "oneTimeCosts": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "monthlyCosts": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "requestCosts": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -1478,6 +1538,18 @@
           "items": {
             "type": "string"
           }
+        },
+        "oneTimeCosts": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "monthlyCosts": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "requestCosts": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },

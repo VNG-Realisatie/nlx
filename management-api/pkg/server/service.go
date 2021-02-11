@@ -33,6 +33,9 @@ func (s *ManagementService) CreateService(ctx context.Context, request *api.Crea
 		Internal:             request.Internal,
 		TechSupportContact:   request.TechSupportContact,
 		PublicSupportContact: request.PublicSupportContact,
+		OneTimeCosts:         int(request.OneTimeCosts),
+		MonthlyCosts:         int(request.MonthlyCosts),
+		RequestCosts:         int(request.RequestCosts),
 	}
 
 	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
@@ -107,6 +110,9 @@ func (s *ManagementService) UpdateService(ctx context.Context, req *api.UpdateSe
 	service.Internal = req.Internal
 	service.TechSupportContact = req.TechSupportContact
 	service.PublicSupportContact = req.PublicSupportContact
+	service.OneTimeCosts = int(req.OneTimeCosts)
+	service.MonthlyCosts = int(req.MonthlyCosts)
+	service.RequestCosts = int(req.RequestCosts)
 
 	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
 	if err != nil {
@@ -263,6 +269,9 @@ func convertFromDatabaseService(model *database.Service) *api.ListServicesRespon
 		Internal:             model.Internal,
 		TechSupportContact:   model.TechSupportContact,
 		PublicSupportContact: model.PublicSupportContact,
+		OneTimeCosts:         int32(model.OneTimeCosts),
+		MonthlyCosts:         int32(model.MonthlyCosts),
+		RequestCosts:         int32(model.RequestCosts),
 		Inways:               inwayNames,
 		AuthorizationSettings: &api.ListServicesResponse_Service_AuthorizationSettings{
 			Mode: "whitelist",
@@ -288,6 +297,9 @@ func convertToGetServiceResponseFromDatabaseService(model *database.Service) *ap
 		TechSupportContact:   model.TechSupportContact,
 		PublicSupportContact: model.PublicSupportContact,
 		Inways:               inwayNames,
+		OneTimeCosts:         int32(model.OneTimeCosts),
+		MonthlyCosts:         int32(model.MonthlyCosts),
+		RequestCosts:         int32(model.RequestCosts),
 	}
 
 	return service
@@ -303,6 +315,9 @@ func convertToCreateServiceResponseFromCreateServiceRequest(model *api.CreateSer
 		TechSupportContact:   model.TechSupportContact,
 		PublicSupportContact: model.PublicSupportContact,
 		Inways:               model.Inways,
+		OneTimeCosts:         model.OneTimeCosts,
+		MonthlyCosts:         model.MonthlyCosts,
+		RequestCosts:         model.RequestCosts,
 	}
 
 	return service
@@ -318,6 +333,9 @@ func convertToUpdateServiceResponseFromUpdateServiceRequest(model *api.UpdateSer
 		TechSupportContact:   model.TechSupportContact,
 		PublicSupportContact: model.PublicSupportContact,
 		Inways:               model.Inways,
+		OneTimeCosts:         model.OneTimeCosts,
+		MonthlyCosts:         model.MonthlyCosts,
+		RequestCosts:         model.RequestCosts,
 	}
 
 	return service

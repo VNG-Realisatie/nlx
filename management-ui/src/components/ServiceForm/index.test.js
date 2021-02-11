@@ -35,6 +35,10 @@ describe('with initial values', () => {
             techSupportContact: 'tech@organization.test',
             publicSupportContact: 'public@organization.test',
             inways: ['inway1'],
+            oneTimeCosts: 0,
+            monthlyCosts: 0,
+            requestCosts: 0,
+            isPaidService: false,
           }}
           submitButtonText="Submit"
         />
@@ -109,6 +113,10 @@ test('the form values of the onSubmitHandler', async () => {
           internal: false,
           techSupportContact: 'tech@organization.test',
           publicSupportContact: 'public@organization.test',
+          oneTimeCosts: 0,
+          monthlyCosts: 0,
+          requestCosts: 0,
+          isPaidService: false,
         }}
       />
     </StoreProvider>,
@@ -135,6 +143,10 @@ test('the form values of the onSubmitHandler', async () => {
       inways: [],
       techSupportContact: 'tech@organization.test',
       publicSupportContact: 'public@organization.test',
+      oneTimeCosts: 0,
+      monthlyCosts: 0,
+      requestCosts: 0,
+      isPaidService: false,
     }),
   )
 })
@@ -149,6 +161,10 @@ describe('when showing inways', () => {
     techSupportContact: 'tech@organization.test',
     publicSupportContact: 'public@organization.test',
     inways: [],
+    oneTimeCosts: 0,
+    monthlyCosts: 0,
+    requestCosts: 0,
+    isPaidService: false,
   }
 
   it('should show a warning when there are no inways registered', async () => {

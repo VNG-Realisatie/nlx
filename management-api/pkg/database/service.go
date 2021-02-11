@@ -23,6 +23,9 @@ type Service struct {
 	PublicSupportContact   string
 	Inways                 []*Inway `gorm:"many2many:nlx_management.inways_services;"`
 	IncomingAccessRequests []*IncomingAccessRequest
+	OneTimeCosts           int
+	MonthlyCosts           int
+	RequestCosts           int
 	CreatedAt              time.Time
 	UpdatedAt              time.Time
 }
@@ -82,6 +85,9 @@ func (db *PostgresConfigDatabase) UpdateService(ctx context.Context, service *Se
 			"internal",
 			"public_support_contact",
 			"tech_support_contact",
+			"one_time_costs",
+			"monthly_costs",
+			"request_costs",
 		).
 		Save(service).Error
 }

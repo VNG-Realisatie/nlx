@@ -67,6 +67,24 @@ export interface ManagementCreateServiceRequest {
      * @memberof ManagementCreateServiceRequest
      */
     inways?: Array<string>;
+    /**
+     * 
+     * @type {number}
+     * @memberof ManagementCreateServiceRequest
+     */
+    oneTimeCosts?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ManagementCreateServiceRequest
+     */
+    monthlyCosts?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ManagementCreateServiceRequest
+     */
+    requestCosts?: number;
 }
 
 export function ManagementCreateServiceRequestFromJSON(json: any): ManagementCreateServiceRequest {
@@ -87,6 +105,9 @@ export function ManagementCreateServiceRequestFromJSONTyped(json: any, ignoreDis
         'techSupportContact': !exists(json, 'techSupportContact') ? undefined : json['techSupportContact'],
         'publicSupportContact': !exists(json, 'publicSupportContact') ? undefined : json['publicSupportContact'],
         'inways': !exists(json, 'inways') ? undefined : json['inways'],
+        'oneTimeCosts': !exists(json, 'oneTimeCosts') ? undefined : json['oneTimeCosts'],
+        'monthlyCosts': !exists(json, 'monthlyCosts') ? undefined : json['monthlyCosts'],
+        'requestCosts': !exists(json, 'requestCosts') ? undefined : json['requestCosts'],
     };
 }
 
@@ -107,6 +128,9 @@ export function ManagementCreateServiceRequestToJSON(value?: ManagementCreateSer
         'techSupportContact': value.techSupportContact,
         'publicSupportContact': value.publicSupportContact,
         'inways': value.inways,
+        'oneTimeCosts': value.oneTimeCosts,
+        'monthlyCosts': value.monthlyCosts,
+        'requestCosts': value.requestCosts,
     };
 }
 
