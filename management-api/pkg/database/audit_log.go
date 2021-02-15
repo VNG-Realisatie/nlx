@@ -58,6 +58,7 @@ func (db *PostgresConfigDatabase) ListAuditLogRecords(ctx context.Context) ([]*A
 	if err := db.DB.
 		WithContext(ctx).
 		Omit(clause.Associations).
+		Order("created_at desc").
 		Find(&auditLogs).Error; err != nil {
 		return nil, err
 	}
