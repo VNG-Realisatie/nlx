@@ -75,6 +75,8 @@ func convertActionTypeFromDatabaseToModel(actionType database.AuditLogActionType
 	switch actionType {
 	case database.LoginSuccess:
 		return api.AuditLogRecord_loginSuccess, nil
+	case database.LogoutSuccess:
+		return api.AuditLogRecord_logout, nil
 	default:
 		return 0, fmt.Errorf("unable to convert database audit log action type '%s' to api audit log action type", actionType)
 	}
