@@ -7,7 +7,7 @@ package mock_auditlog
 import (
 	context "context"
 	gomock "github.com/golang/mock/gomock"
-	api "go.nlx.io/nlx/management-api/api"
+	auditlog "go.nlx.io/nlx/management-api/pkg/auditlog"
 	reflect "reflect"
 )
 
@@ -35,10 +35,10 @@ func (m *MockLogger) EXPECT() *MockLoggerMockRecorder {
 }
 
 // ListAll mocks base method
-func (m *MockLogger) ListAll(ctx context.Context) ([]*api.AuditLogRecord, error) {
+func (m *MockLogger) ListAll(ctx context.Context) ([]*auditlog.Record, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListAll", ctx)
-	ret0, _ := ret[0].([]*api.AuditLogRecord)
+	ret0, _ := ret[0].([]*auditlog.Record)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

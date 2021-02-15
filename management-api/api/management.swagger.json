@@ -951,7 +951,13 @@
         "action": {
           "$ref": "#/definitions/AuditLogRecordActionType"
         },
-        "userAgent": {
+        "operatingSystem": {
+          "type": "string"
+        },
+        "browser": {
+          "type": "string"
+        },
+        "client": {
           "type": "string"
         },
         "user": {

@@ -452,12 +452,14 @@ message AuditLogRecord {
 
   uint64 id = 1;
   ActionType action = 2;
-  string userAgent = 3;
-  string user = 4;
-  string organization = 5;
-  string service = 6;
-  google.protobuf.Timestamp createdAt = 7;
-  string data = 8; 
+  string operatingSystem = 3;
+  string browser = 4;
+  string client = 5;
+  string user = 6;
+  string organization = 7;
+  string service = 8;
+  google.protobuf.Timestamp createdAt = 9;
+  string data = 10;
 }
 
 message ListAuditLogsResponse {

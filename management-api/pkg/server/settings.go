@@ -18,7 +18,6 @@ import (
 
 // GetSettings returns the settings for the organization
 func (s *ManagementService) GetSettings(ctx context.Context, _ *types.Empty) (*api.Settings, error) {
-
 	logger := s.logger.With(zap.String("handler", "get-settings"))
 
 	settings, err := s.configDatabase.GetSettings(ctx)

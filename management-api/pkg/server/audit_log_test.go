@@ -6,22 +6,25 @@ package server_test
 import (
 	"context"
 	"errors"
+	"path/filepath"
+	"testing"
+	"time"
+
 	"github.com/fgrosse/zaptest"
 	"github.com/gogo/protobuf/types"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
 	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
+	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/pkg/auditlog"
 	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
 	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
 	"go.nlx.io/nlx/management-api/pkg/server"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-	"path/filepath"
-	"testing"
-
-	"go.nlx.io/nlx/management-api/api"
 )
 
 func newManagementService(t *testing.T) (s *server.ManagementService, auditLogger *mock_auditlog.MockLogger) {
@@ -54,27 +57,34 @@ func newManagementService(t *testing.T) (s *server.ManagementService, auditLogge
 		auditLogger,
 	)
 
-	return
+	return s, auditLogger
 }
 
 //nolint:funlen // its a unittest
 func TestListAuditLogs(t *testing.T) {
+	createTimestamp := func(ti time.Time) *types.Timestamp {
+		return &types.Timestamp{
+			Seconds: ti.Unix(),
+			Nanos:   int32(ti.Nanosecond()),
+		}
+	}
+
 	tests := map[string]struct {
-		auditLogs    []*api.AuditLogRecord
+		auditLogs    []*auditlog.Record
 		auditLogsErr error
 		req          *types.Empty
 		expectedRes  *api.ListAuditLogsResponse
 		expectedErr  error
 	}{
 		"when_error_occurs_while_retrieving_logs": {
-			[]*api.AuditLogRecord{},
+			[]*auditlog.Record{},
 			errors.New("arbitrary error"),
 			&types.Empty{},
 			nil,
 			status.New(codes.Internal, "failed to retrieve audit logs").Err(),
 		},
 		"when_no_logs_are_available": {
-			[]*api.AuditLogRecord{},
+			[]*auditlog.Record{},
 			nil,
 			&types.Empty{},
 			&api.ListAuditLogsResponse{
@@ -83,11 +93,29 @@ func TestListAuditLogs(t *testing.T) {
 			nil,
 		},
 		"with_a_single_log": {
-			[]*api.AuditLogRecord{},
+			[]*auditlog.Record{
+				{
+					ID:         1,
+					UserID:     42,
+					ActionType: auditlog.LoginSuccess,
+					UserAgent:  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15",
+					CreatedAt:  time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
+				},
+			},
 			nil,
 			&types.Empty{},
 			&api.ListAuditLogsResponse{
-				AuditLogs: []*api.AuditLogRecord{},
+				AuditLogs: []*api.AuditLogRecord{
+					{
+						Id:              1,
+						User:            "42",
+						Action:          api.AuditLogRecord_loginSuccess,
+						OperatingSystem: "",
+						Browser:         "",
+						Client:          "",
+						CreatedAt:       createTimestamp(time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC)),
+					},
+				},
 			},
 			nil,
 		},

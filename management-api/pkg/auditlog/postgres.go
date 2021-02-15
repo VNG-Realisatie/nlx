@@ -8,10 +8,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/gogo/protobuf/types"
 	"go.uber.org/zap"
 
-	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
@@ -27,7 +25,7 @@ func NewPostgresLogger(configDatabase database.ConfigDatabase, logger *zap.Logge
 	}
 }
 
-func (a *PostgresLogger) ListAll(ctx context.Context) ([]*api.AuditLogRecord, error) {
+func (a *PostgresLogger) ListAll(ctx context.Context) ([]*Record, error) {
 	auditLogRecords, err := a.database.ListAuditLogRecords(ctx)
 	if err != nil {
 		a.logger.Error("error retrieving audit log records from database", zap.Error(err))
@@ -43,42 +41,37 @@ func (a *PostgresLogger) ListAll(ctx context.Context) ([]*api.AuditLogRecord, er
 	return convertedAuditLogRecords, nil
 }
 
-func convertAuditLogRecordsFromDatabase(models []*database.AuditLogRecord) ([]*api.AuditLogRecord, error) {
-	convertedRecords := make([]*api.AuditLogRecord, len(models))
+func convertAuditLogRecordsFromDatabase(models []*database.AuditLogRecord) ([]*Record, error) {
+	convertedRecords := make([]*Record, len(models))
 
 	for i, databaseModel := range models {
-		createdAt, err := types.TimestampProto(databaseModel.CreatedAt)
+		actionType, err := convertDatabaseRecordActionTypeToModel(databaseModel.ActionType)
 		if err != nil {
 			return nil, err
 		}
 
-		actionType, err := convertActionTypeFromDatabaseToModel(databaseModel.ActionType)
-		if err != nil {
-			return nil, err
-		}
-
-		convertedRecords[i] = &api.AuditLogRecord{
-			Id:           databaseModel.ID,
-			Action:       actionType,
-			User:         fmt.Sprintf("%d", databaseModel.UserID),
+		convertedRecords[i] = &Record{
+			ID:           databaseModel.ID,
+			ActionType:   actionType,
+			UserID:       databaseModel.UserID,
 			UserAgent:    databaseModel.UserAgent,
 			Organization: databaseModel.Organization,
 			Service:      databaseModel.Service,
-			CreatedAt:    createdAt,
+			CreatedAt:    databaseModel.CreatedAt,
 		}
 	}
 
 	return convertedRecords, nil
 }
 
-func convertActionTypeFromDatabaseToModel(actionType database.AuditLogActionType) (api.AuditLogRecord_ActionType, error) {
-	switch actionType {
+func convertDatabaseRecordActionTypeToModel(action database.AuditLogActionType) (ActionType, error) {
+	switch action {
 	case database.LoginSuccess:
-		return api.AuditLogRecord_loginSuccess, nil
+		return LoginSuccess, nil
 	case database.LogoutSuccess:
-		return api.AuditLogRecord_logout, nil
+		return LogoutSuccess, nil
 	default:
-		return 0, fmt.Errorf("unable to convert database audit log action type '%s' to api audit log action type", actionType)
+		return "", fmt.Errorf("failed to convert action type, unknown action '%s'", action)
 	}
 }
 
@@ -86,7 +79,7 @@ func (a *PostgresLogger) LoginSuccess(ctx context.Context, userID uint, userAgen
 	record := &database.AuditLogRecord{
 		UserAgent:  userAgent,
 		UserID:     userID,
-		ActionType: database.LoginSuccess,
+		ActionType: database.LogoutSuccess,
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
