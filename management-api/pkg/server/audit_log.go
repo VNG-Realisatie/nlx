@@ -16,7 +16,7 @@ import (
 func (s *ManagementService) ListAuditLogs(ctx context.Context, _ *types.Empty) (*api.ListAuditLogsResponse, error) {
 	auditLogs, err := s.auditLogger.ListAll(ctx)
 	if err != nil {
-		return nil, status.Error(codes.Internal, "failed to retrieve audit logs error")
+		return nil, status.Error(codes.Internal, "failed to retrieve audit logs")
 	}
 
 	return &api.ListAuditLogsResponse{
