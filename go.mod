@@ -13,6 +13,7 @@ replace gopkg.in/yaml.v2 => gopkg.in/yaml.v2 v2.4.0
 replace google.golang.org/grpc => google.golang.org/grpc v1.26.0
 
 require (
+	github.com/blang/semver v3.5.1+incompatible // indirect
 	github.com/bwesterb/go-atum v1.0.3 // indirect
 	github.com/cloudflare/cfssl v1.5.0
 	github.com/coreos/go-oidc v2.2.1+incompatible
@@ -62,4 +63,5 @@ require (
 	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776
 	gorm.io/driver/postgres v1.0.5
 	gorm.io/gorm v1.20.8
+	xojoc.pw/useragent v0.0.0-20200116211053-1ec61d55e8fe
 )

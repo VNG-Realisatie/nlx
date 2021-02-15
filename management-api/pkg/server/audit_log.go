@@ -6,10 +6,12 @@ package server
 import (
 	"context"
 	"fmt"
+	"regexp"
 
 	"github.com/gogo/protobuf/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"xojoc.pw/useragent"
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/auditlog"
@@ -45,13 +47,35 @@ func convertAuditLogModelToResponseAuditLog(models []*auditlog.Record) ([]*api.A
 			return nil, err
 		}
 
+		parsedUserAgent := useragent.Parse(databaseModel.UserAgent)
+
+		operatingSystem := ""
+		browser := ""
+		client := "nlxctl"
+
+		if parsedUserAgent != nil {
+			operatingSystem = parsedUserAgent.OS
+
+			if parsedUserAgent.Type == useragent.Browser {
+				browser = parsedUserAgent.Name
+				client = "NLX Management"
+			}
+		} else {
+			re := regexp.MustCompile(`.*\(([a-zA-Z ]*)\)$`)
+			match := re.FindStringSubmatch(databaseModel.UserAgent)
+
+			if match != nil {
+				operatingSystem = match[1]
+			}
+		}
+
 		convertedRecords[i] = &api.AuditLogRecord{
 			Id:              databaseModel.ID,
 			Action:          actionType,
 			User:            fmt.Sprintf("%d", databaseModel.UserID),
-			OperatingSystem: "",
-			Browser:         "",
-			Client:          "",
+			OperatingSystem: operatingSystem,
+			Browser:         browser,
+			Client:          client,
 			Organization:    databaseModel.Organization,
 			Service:         databaseModel.Service,
 			CreatedAt:       createdAt,

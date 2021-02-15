@@ -60,7 +60,7 @@ func newManagementService(t *testing.T) (s *server.ManagementService, auditLogge
 	return s, auditLogger
 }
 
-//nolint:funlen // its a unittest
+//nolint:funlen,dupl // its a unittest
 func TestListAuditLogs(t *testing.T) {
 	createTimestamp := func(ti time.Time) *types.Timestamp {
 		return &types.Timestamp{
@@ -92,7 +92,7 @@ func TestListAuditLogs(t *testing.T) {
 			},
 			nil,
 		},
-		"with_a_single_log": {
+		"with_a_single_log_created_via_the_browser": {
 			[]*auditlog.Record{
 				{
 					ID:         1,
@@ -110,9 +110,36 @@ func TestListAuditLogs(t *testing.T) {
 						Id:              1,
 						User:            "42",
 						Action:          api.AuditLogRecord_loginSuccess,
-						OperatingSystem: "",
+						OperatingSystem: "Mac OS X",
+						Browser:         "Safari",
+						Client:          "NLX Management",
+						CreatedAt:       createTimestamp(time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC)),
+					},
+				},
+			},
+			nil,
+		},
+		"with_a_single_log_created_via_nlxctl": {
+			[]*auditlog.Record{
+				{
+					ID:         1,
+					UserID:     42,
+					ActionType: auditlog.LoginSuccess,
+					UserAgent:  "nlxctl/1.x (Mac OS X)",
+					CreatedAt:  time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
+				},
+			},
+			nil,
+			&types.Empty{},
+			&api.ListAuditLogsResponse{
+				AuditLogs: []*api.AuditLogRecord{
+					{
+						Id:              1,
+						User:            "42",
+						Action:          api.AuditLogRecord_loginSuccess,
+						OperatingSystem: "Mac OS X",
 						Browser:         "",
-						Client:          "",
+						Client:          "nlxctl",
 						CreatedAt:       createTimestamp(time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC)),
 					},
 				},
