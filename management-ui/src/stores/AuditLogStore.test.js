@@ -16,14 +16,28 @@ test('initializing the store', () => {
 test('fetching, getting and updating from server', async () => {
   const managementApiClient = new ManagementApi()
 
-  managementApiClient.managementListAuditLogs = jest.fn().mockResolvedValue({
-    auditLogs: [
-      {
-        id: '42',
-        user: 'John Doe',
-      },
-    ],
-  })
+  managementApiClient.managementListAuditLogs = jest
+    .fn()
+    .mockResolvedValueOnce({
+      auditLogs: [
+        {
+          id: '42',
+          user: 'John Doe',
+        },
+      ],
+    })
+    .mockResolvedValue({
+      auditLogs: [
+        {
+          id: '41',
+          user: 'Jane Doe',
+        },
+        {
+          id: '42',
+          user: 'Peter Doe',
+        },
+      ],
+    })
 
   const auditLogStore = new AuditLogStore({
     managementApiClient,
@@ -31,15 +45,13 @@ test('fetching, getting and updating from server', async () => {
 
   await auditLogStore.fetchAll()
   expect(auditLogStore.auditLogs).toHaveLength(1)
-  expect(auditLogStore.auditLogs[0]).toBeInstanceOf(AuditLogModel)
-
   const initialAuditLog = auditLogStore.auditLogs[0]
-  const updatedAuditLog = await auditLogStore.updateFromServer({
-    id: '42',
-    user: 'Jane Doe',
-  })
+  expect(initialAuditLog).toBeInstanceOf(AuditLogModel)
 
+  await auditLogStore.fetchAll()
+
+  expect(auditLogStore.auditLogs).toHaveLength(2)
+  const updatedAuditLog = auditLogStore.auditLogs[1]
   expect(initialAuditLog).toBe(updatedAuditLog)
-  expect(auditLogStore.auditLogs).toHaveLength(1)
-  expect(updatedAuditLog.user).toEqual('Jane Doe')
+  expect(updatedAuditLog.user).toEqual('Peter Doe')
 })

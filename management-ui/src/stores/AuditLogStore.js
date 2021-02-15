@@ -1,12 +1,12 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 //
-import { flow, makeAutoObservable, observable } from 'mobx'
+import { flow, makeAutoObservable } from 'mobx'
 import AuditLogModel from './models/AuditLogModel'
 
 class AuditLogStore {
   _isLoading = false
-  _auditLogs = observable.map()
+  _auditLogs = []
 
   constructor({ managementApiClient }) {
     makeAutoObservable(this)
@@ -18,7 +18,7 @@ class AuditLogStore {
   }
 
   get auditLogs() {
-    return [...this._auditLogs.values()]
+    return this._auditLogs
   }
 
   fetchAll = flow(function* fetchAll() {
@@ -29,16 +29,16 @@ class AuditLogStore {
 
       // delete audit logs which do not exist anymore
       const newIds = auditLogsData.map((al) => al.id)
-      this.auditLogs.forEach((al) => {
+      this._auditLogs.forEach((al, index) => {
         if (newIds.includes(al.id)) {
           return
         }
 
-        this._auditLogs.delete(al.id)
+        this._auditLogs.splice(index, 1)
       })
 
       // recreate models in-memory
-      auditLogsData.map((auditLogData) => this.updateFromServer(auditLogData))
+      this.updateFromServer(auditLogsData)
 
       this._isLoading = false
     } catch (err) {
@@ -47,20 +47,30 @@ class AuditLogStore {
     }
   }).bind(this)
 
-  updateFromServer = (auditLogData) => {
-    if (!auditLogData) return null
+  _getById(id) {
+    return this.auditLogs.find((auditLog) => auditLog.id === id)
+  }
 
-    const cachedAuditLog = this._auditLogs.get(auditLogData.id)
+  updateFromServer = (auditLogsData) => {
+    if (!auditLogsData) return null
 
-    if (cachedAuditLog) {
-      cachedAuditLog.update(auditLogData)
-      return cachedAuditLog
-    }
+    auditLogsData.forEach((auditLogData) => {
+      const cachedAuditLog = this._getById(auditLogData.id)
 
-    const auditLog = new AuditLogModel({ auditLogData })
-    this._auditLogs.set(auditLog.id, auditLog)
+      if (cachedAuditLog) {
+        cachedAuditLog.update(auditLogData)
+        return cachedAuditLog
+      }
 
-    return auditLog
+      const auditLog = new AuditLogModel({ auditLogData })
+      this._auditLogs.push(auditLog)
+    })
+
+    // sort items according to order from server
+    const sortedIds = auditLogsData.map((auditLog) => auditLog.id)
+    this._auditLogs.sort((firstEl, secondEl) =>
+      sortedIds.indexOf(firstEl.id) > sortedIds.indexOf(secondEl.id) ? 1 : -1,
+    )
   }
 }
 
