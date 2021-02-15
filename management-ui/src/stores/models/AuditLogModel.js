@@ -27,7 +27,9 @@ class AuditLogModel {
   createdAt = null
   organization = null
   service = null
-  userAgent = null
+  operatingSystem = null
+  browser = null
+  client = null
 
   constructor({ auditLogData }) {
     makeAutoObservable(this)
@@ -63,8 +65,16 @@ class AuditLogModel {
       this.service = auditLogData.service
     }
 
-    if (auditLogData.userAgent) {
-      this.userAgent = auditLogData.userAgent
+    if (auditLogData.operatingSystem) {
+      this.operatingSystem = auditLogData.operatingSystem
+    }
+
+    if (auditLogData.browser) {
+      this.browser = auditLogData.browser
+    }
+
+    if (auditLogData.client) {
+      this.client = auditLogData.client
     }
   }
 }

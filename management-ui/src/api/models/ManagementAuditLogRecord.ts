@@ -43,7 +43,19 @@ export interface ManagementAuditLogRecord {
      * @type {string}
      * @memberof ManagementAuditLogRecord
      */
-    userAgent?: string;
+    operatingSystem?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ManagementAuditLogRecord
+     */
+    browser?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ManagementAuditLogRecord
+     */
+    client?: string;
     /**
      * 
      * @type {string}
@@ -88,7 +100,9 @@ export function ManagementAuditLogRecordFromJSONTyped(json: any, ignoreDiscrimin
         
         'id': !exists(json, 'id') ? undefined : json['id'],
         'action': !exists(json, 'action') ? undefined : AuditLogRecordActionTypeFromJSON(json['action']),
-        'userAgent': !exists(json, 'userAgent') ? undefined : json['userAgent'],
+        'operatingSystem': !exists(json, 'operatingSystem') ? undefined : json['operatingSystem'],
+        'browser': !exists(json, 'browser') ? undefined : json['browser'],
+        'client': !exists(json, 'client') ? undefined : json['client'],
         'user': !exists(json, 'user') ? undefined : json['user'],
         'organization': !exists(json, 'organization') ? undefined : json['organization'],
         'service': !exists(json, 'service') ? undefined : json['service'],
@@ -108,7 +122,9 @@ export function ManagementAuditLogRecordToJSON(value?: ManagementAuditLogRecord 
         
         'id': value.id,
         'action': AuditLogRecordActionTypeToJSON(value.action),
-        'userAgent': value.userAgent,
+        'operatingSystem': value.operatingSystem,
+        'browser': value.browser,
+        'client': value.client,
         'user': value.user,
         'organization': value.organization,
         'service': value.service,
