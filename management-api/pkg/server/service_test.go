@@ -111,12 +111,16 @@ func TestGetService(t *testing.T) {
 func TestUpdateService(t *testing.T) {
 	logger := zap.NewNop()
 	testProcess := process.NewProcess(logger)
-	ctx := context.Background()
 
 	databaseService := &database.Service{
 		Name:        "my-service",
 		EndpointURL: "my-service.test",
 	}
+
+	ctx := metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
+		"username":               "Jane Doe",
+		"grpcgateway-user-agent": "nlxctl",
+	}))
 
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
@@ -126,7 +130,10 @@ func TestUpdateService(t *testing.T) {
 	mockDatabase.EXPECT().GetService(ctx, "other-service").Return(nil, database.ErrNotFound)
 	mockDatabase.EXPECT().UpdateServiceWithInways(ctx, databaseService, []string{})
 
-	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase, mock_auditlog.NewMockLogger(mockCtrl))
+	auditLogger := mock_auditlog.NewMockLogger(mockCtrl)
+	auditLogger.EXPECT().ServiceUpdate(gomock.Any(), "Jane Doe", "nlxctl")
+
+	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase, auditLogger)
 
 	updateServiceRequest := &api.UpdateServiceRequest{
 		Name:        "my-service",

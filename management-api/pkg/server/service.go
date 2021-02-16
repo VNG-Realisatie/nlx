@@ -108,6 +108,17 @@ func (s *ManagementService) UpdateService(ctx context.Context, req *api.UpdateSe
 	service.TechSupportContact = req.TechSupportContact
 	service.PublicSupportContact = req.PublicSupportContact
 
+	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
+	if err != nil {
+		logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
+		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
+	}
+
+	err = s.auditLogger.ServiceUpdate(ctx, userInfo.username, userInfo.userAgent)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "could not create audit log")
+	}
+
 	err = s.configDatabase.UpdateServiceWithInways(ctx, service, req.Inways)
 	if err != nil {
 		if errIsNotFound(err) {
