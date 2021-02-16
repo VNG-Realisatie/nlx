@@ -292,9 +292,13 @@ func TestLogoutEndpoint(t *testing.T) {
 	mockOAuth2Config := mock.NewMockOAuth2Config(ctrl)
 	mockStore := mock.NewMockStore(ctrl)
 
+	auditLogger := mock_auditlog.NewMockLogger(ctrl)
+	auditLogger.EXPECT().LogoutSuccess(gomock.Any(), "Jane Doe", "Go-http-client/1.1")
+
 	authenticator := Authenticator{
 		logger:       zaptest.Logger(t),
 		oauth2Config: mockOAuth2Config,
+		auditLogger:  auditLogger,
 		store:        mockStore,
 	}
 
@@ -304,6 +308,7 @@ func TestLogoutEndpoint(t *testing.T) {
 	mockSession := sessions.NewSession(mockStore, "nlx_management_session")
 	mockSession.Values["claims"] = &Claims{
 		Subject: "42",
+		Name:    "Jane Doe",
 	}
 
 	mockStore.EXPECT().Get(gomock.Any(), "nlx_management_session").Return(mockSession, nil).AnyTimes()

@@ -246,9 +246,16 @@ func (a *Authenticator) callback(w http.ResponseWriter, r *http.Request) {
 
 func (a *Authenticator) logout(w http.ResponseWriter, r *http.Request) {
 	session, _ := a.store.Get(r, cookieName)
+	claims := session.Values["claims"].(*Claims)
+
+	err := a.auditLogger.LogoutSuccess(r.Context(), claims.User().FullName, r.Header.Get("User-Agent"))
+	if err != nil {
+		a.logger.Error("error writing to audit log", zap.Error(err))
+	}
+
 	delete(session.Values, "claims")
 
-	err := session.Save(r, w)
+	err = session.Save(r, w)
 	if err != nil {
 		http.Error(w, "unable to save session", http.StatusInternalServerError)
 		return
