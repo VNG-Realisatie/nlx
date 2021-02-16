@@ -139,7 +139,18 @@ func (s *ManagementService) DeleteService(ctx context.Context, req *api.DeleteSe
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request DeleteService")
 
-	err := s.configDatabase.DeleteService(ctx, req.Name)
+	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
+	if err != nil {
+		logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
+		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
+	}
+
+	err = s.auditLogger.ServiceDelete(ctx, userInfo.username, userInfo.userAgent)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "could not create audit log")
+	}
+
+	err = s.configDatabase.DeleteService(ctx, req.Name)
 	if err != nil {
 		logger.Error("error deleting service in DB", zap.Error(err))
 		return &types.Empty{}, status.Error(codes.Internal, "database error")

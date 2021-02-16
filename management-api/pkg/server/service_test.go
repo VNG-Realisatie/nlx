@@ -161,7 +161,11 @@ func TestUpdateService(t *testing.T) {
 func TestDeleteService(t *testing.T) {
 	logger := zap.NewNop()
 	testProcess := process.NewProcess(logger)
-	ctx := context.Background()
+
+	ctx := metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
+		"username":               "Jane Doe",
+		"grpcgateway-user-agent": "nlxctl",
+	}))
 
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
@@ -169,7 +173,10 @@ func TestDeleteService(t *testing.T) {
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
 	mockDatabase.EXPECT().DeleteService(ctx, "my-service")
 
-	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase, mock_auditlog.NewMockLogger(mockCtrl))
+	auditLogger := mock_auditlog.NewMockLogger(mockCtrl)
+	auditLogger.EXPECT().ServiceDelete(gomock.Any(), "Jane Doe", "nlxctl")
+
+	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase, auditLogger)
 
 	deleteRequest := &api.DeleteServiceRequest{
 		Name: "my-service",
