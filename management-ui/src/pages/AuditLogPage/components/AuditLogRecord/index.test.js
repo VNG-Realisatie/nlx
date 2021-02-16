@@ -14,6 +14,7 @@ import {
   ACTION_LOGOUT,
   ACTION_ORGANIZATION_SETTINGS_UPDATE,
   ACTION_OUTGOING_ACCESS_REQUEST_CREATE,
+  ACTION_OUTGOING_ACCESS_REQUEST_FAIL,
   ACTION_SERVICE_CREATE,
   ACTION_SERVICE_DELETE,
   ACTION_SERVICE_UPDATE,
@@ -23,11 +24,7 @@ import AuditLogRecord from './index'
 test.concurrent.each([
   [{ action: ACTION_LOGIN_SUCCESS }, 'shut-down.svg', 'John Doe has logged in'],
   [{ action: ACTION_LOGIN_FAIL }, 'shut-down.svg', 'Failed login attempt'],
-  [
-    { action: ACTION_LOGOUT },
-    'shut-down.svg',
-    'John Doe has logged out',
-  ],
+  [{ action: ACTION_LOGOUT }, 'shut-down.svg', 'John Doe has logged out'],
   [
     {
       action: ACTION_INCOMING_ACCESS_REQUEST_ACCEPT,
@@ -63,6 +60,15 @@ test.concurrent.each([
     },
     'key.svg',
     'John Doe has requested access to Kadaster from Gemeente Haarlem',
+  ],
+  [
+    {
+      action: ACTION_OUTGOING_ACCESS_REQUEST_FAIL,
+      organization: 'Gemeente Haarlem',
+      service: 'Kadaster',
+    },
+    'key.svg',
+    'John Doe failed to request access to Kadaster from Gemeente Haarlem',
   ],
   [
     {

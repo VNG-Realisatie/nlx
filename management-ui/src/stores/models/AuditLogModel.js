@@ -13,6 +13,7 @@ export const ACTION_INCOMING_ACCESS_REQUEST_REJECT =
 export const ACTION_ACCESS_GRANT_REVOKE = 'accessGrantRevoke'
 export const ACTION_OUTGOING_ACCESS_REQUEST_CREATE =
   'outgoingAccessRequestCreate'
+export const ACTION_OUTGOING_ACCESS_REQUEST_FAIL = 'outgoingAccessRequestFail'
 export const ACTION_SERVICE_CREATE = 'serviceCreate'
 export const ACTION_SERVICE_UPDATE = 'serviceUpdate'
 export const ACTION_SERVICE_DELETE = 'serviceDelete'
