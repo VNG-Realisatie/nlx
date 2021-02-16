@@ -12,7 +12,7 @@ import {
   ACTION_INSIGHT_CONFIGURATION_UPDATE,
   ACTION_LOGIN_FAIL,
   ACTION_LOGIN_SUCCESS,
-  ACTION_LOGOUT_SUCCESS,
+  ACTION_LOGOUT,
   ACTION_ORGANIZATION_SETTINGS_UPDATE,
   ACTION_OUTGOING_ACCESS_REQUEST_CREATE,
   ACTION_SERVICE_CREATE,
@@ -82,7 +82,7 @@ const AuditLogRecord = ({
         <Trans values={{ user }}>
           <strong>{{ user }}</strong> has logged in
         </Trans>
-      ) : action === ACTION_LOGOUT_SUCCESS ? (
+      ) : action === ACTION_LOGOUT ? (
         <Trans values={{ user }}>
           <strong>{{ user }}</strong> has logged out
         </Trans>

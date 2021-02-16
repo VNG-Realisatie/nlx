@@ -5,7 +5,7 @@ import { makeAutoObservable } from 'mobx'
 
 export const ACTION_LOGIN_SUCCESS = 'loginSuccess'
 export const ACTION_LOGIN_FAIL = 'loginFail'
-export const ACTION_LOGOUT_SUCCESS = 'logout'
+export const ACTION_LOGOUT = 'logout'
 export const ACTION_INCOMING_ACCESS_REQUEST_ACCEPT =
   'incomingAccessRequestAccept'
 export const ACTION_INCOMING_ACCESS_REQUEST_REJECT =

@@ -11,7 +11,7 @@ import {
   ACTION_INSIGHT_CONFIGURATION_UPDATE,
   ACTION_LOGIN_FAIL,
   ACTION_LOGIN_SUCCESS,
-  ACTION_LOGOUT_SUCCESS,
+  ACTION_LOGOUT,
   ACTION_ORGANIZATION_SETTINGS_UPDATE,
   ACTION_OUTGOING_ACCESS_REQUEST_CREATE,
   ACTION_SERVICE_CREATE,
@@ -24,7 +24,7 @@ test.concurrent.each([
   [{ action: ACTION_LOGIN_SUCCESS }, 'shut-down.svg', 'John Doe has logged in'],
   [{ action: ACTION_LOGIN_FAIL }, 'shut-down.svg', 'Failed login attempt'],
   [
-    { action: ACTION_LOGOUT_SUCCESS },
+    { action: ACTION_LOGOUT },
     'shut-down.svg',
     'John Doe has logged out',
   ],
