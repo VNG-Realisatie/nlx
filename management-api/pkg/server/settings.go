@@ -5,6 +5,7 @@ package server
 
 import (
 	"context"
+
 	"github.com/gogo/protobuf/types"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
@@ -40,6 +41,7 @@ func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateS
 	logger := s.logger.With(zap.String("handler", "update-settings"))
 
 	var inwayID *uint
+
 	if req.OrganizationInway != "" {
 		inway, err := s.configDatabase.GetInway(ctx, req.OrganizationInway)
 		if err != nil {

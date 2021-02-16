@@ -13,6 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/process"
@@ -27,12 +28,16 @@ import (
 func TestCreateService(t *testing.T) {
 	logger := zap.NewNop()
 	testProcess := process.NewProcess(logger)
-	ctx := context.Background()
 
 	databaseService := &database.Service{
 		Name:        "my-service",
 		EndpointURL: "my-service.test",
 	}
+
+	ctx := metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
+		"username":               "Jane Doe",
+		"grpcgateway-user-agent": "nlxctl",
+	}))
 
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
@@ -40,7 +45,10 @@ func TestCreateService(t *testing.T) {
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
 	mockDatabase.EXPECT().CreateServiceWithInways(ctx, databaseService, []string{})
 
-	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase, mock_auditlog.NewMockLogger(mockCtrl))
+	auditLogger := mock_auditlog.NewMockLogger(mockCtrl)
+	auditLogger.EXPECT().ServiceCreate(gomock.Any(), "Jane Doe", "nlxctl")
+
+	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase, auditLogger)
 
 	requestService := &api.CreateServiceRequest{
 		Name:        "my-service",
