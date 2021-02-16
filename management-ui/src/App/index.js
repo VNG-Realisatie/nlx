@@ -8,6 +8,7 @@ import {
   GlobalStyles as DSGlobalStyles,
   ToasterProvider,
 } from '@commonground/design-system'
+import '@fontsource/source-sans-pro/latin.css'
 import GlobalStyles from '../components/GlobalStyles'
 import theme from '../theme'
 import SettingsRepository from '../domain/settings-repository'
