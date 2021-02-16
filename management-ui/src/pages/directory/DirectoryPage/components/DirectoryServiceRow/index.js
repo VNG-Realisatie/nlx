@@ -4,8 +4,8 @@
 import React from 'react'
 import { object, shape, string } from 'prop-types'
 import { observer } from 'mobx-react'
-import { Table } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
+import Table from '../../../../../components/Table'
 import { useConfirmationModal } from '../../../../../components/ConfirmationModal'
 import RequestAccessDetails from '../../../RequestAccessDetails'
 import getDirectoryServiceAccessUIState, {

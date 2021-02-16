@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import styled from 'styled-components'
-import { Table } from '@commonground/design-system'
+import Table from '../../../../../components/Table'
 
 export const StyledTdAccess = styled(Table.Td)`
   width: 18rem;

@@ -3,7 +3,7 @@
 //
 
 import styled from 'styled-components'
-import { Table } from '@commonground/design-system'
+import Table from '../../../../../../../components/Table'
 
 export const TdActions = styled(Table.Td)`
   text-align: right;

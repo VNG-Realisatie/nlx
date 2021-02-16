@@ -3,7 +3,7 @@
 //
 import React from 'react'
 import { shape } from 'prop-types'
-import { Table } from '@commonground/design-system'
+import Table from '../../../../../components/Table'
 import { inwayModelPropTypes } from '../../../../../stores/models/InwayModel'
 import { StyledInwayIcon, StyledIconTd } from './index.styles'
 

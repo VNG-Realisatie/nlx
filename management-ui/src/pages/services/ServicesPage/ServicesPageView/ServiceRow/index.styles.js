@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import styled from 'styled-components'
-import { Table } from '@commonground/design-system'
+import Table from '../../../../../components/Table'
 
 export const WarningCell = styled(Table.Td)`
   padding-top: 0;

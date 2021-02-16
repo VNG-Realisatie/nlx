@@ -3,7 +3,7 @@
 //
 
 import styled from 'styled-components'
-import { Table } from '@commonground/design-system'
+import Table from '../../../../../components/Table'
 import { IconInway } from '../../../../../icons'
 
 export const StyledIconTd = styled(Table.Td)`

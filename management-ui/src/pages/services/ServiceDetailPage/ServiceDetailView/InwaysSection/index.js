@@ -3,9 +3,9 @@
 //
 import React from 'react'
 import { arrayOf, string } from 'prop-types'
-import { Collapsible, Table } from '@commonground/design-system'
+import { Collapsible } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
-
+import Table from '../../../../../components/Table'
 import {
   DetailHeading,
   StyledCollapsibleBody,

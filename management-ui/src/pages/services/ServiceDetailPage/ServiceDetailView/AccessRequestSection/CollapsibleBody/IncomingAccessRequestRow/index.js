@@ -3,8 +3,8 @@
 //
 import React from 'react'
 import { shape, func } from 'prop-types'
-import { Table } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
+import Table from '../../../../../../../components/Table'
 import { useConfirmationModal } from '../../../../../../../components/ConfirmationModal'
 import { incomingAccessRequestPropTypes } from '../../../../../../../stores/models/IncomingAccessRequestModel'
 import { IconCheck, IconClose } from '../../../../../../../icons'

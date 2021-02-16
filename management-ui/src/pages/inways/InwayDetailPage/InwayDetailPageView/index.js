@@ -5,8 +5,8 @@ import React from 'react'
 import { shape, string, arrayOf } from 'prop-types'
 import { observer } from 'mobx-react'
 import { useTranslation } from 'react-i18next'
-import { Table, Collapsible } from '@commonground/design-system'
-
+import { Collapsible } from '@commonground/design-system'
+import Table from '../../../../components/Table'
 import Amount from '../../../../components/Amount'
 import {
   DetailHeading,

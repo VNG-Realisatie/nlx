@@ -2,7 +2,8 @@
 // Licensed under the EUPL
 //
 import styled from 'styled-components'
-import { Table, Button } from '@commonground/design-system'
+import { Button } from '@commonground/design-system'
+import Table from '../../../../../../../components/Table'
 
 export const TdActions = styled(Table.Td)`
   text-align: right;

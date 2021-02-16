@@ -3,8 +3,8 @@
 //
 import React from 'react'
 import { arrayOf, shape, string } from 'prop-types'
-import { Table } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
+import Table from '../../../../../components/Table'
 import EmptyContentMessage from '../../../../../components/EmptyContentMessage'
 import DirectoryServiceRow from '../DirectoryServiceRow'
 

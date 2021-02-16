@@ -4,7 +4,7 @@
 import React from 'react'
 import { array, bool, shape, string } from 'prop-types'
 import { observer } from 'mobx-react'
-import { Table } from '@commonground/design-system'
+import Table from '../../../../../components/Table'
 import {
   ServiceVisibilityMessage,
   showServiceVisibilityAlert,

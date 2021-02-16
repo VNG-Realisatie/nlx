@@ -3,8 +3,9 @@
 //
 import React from 'react'
 import { number } from 'prop-types'
-import { Collapsible, Table } from '@commonground/design-system'
+import { Collapsible } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
+import Table from '../../../../../components/Table'
 import { StyledCollapsibleBody } from '../../../../../components/DetailView'
 import CollapsibleHeader from './CollapsibleHeader'
 import { TdPrice } from './index.styles'

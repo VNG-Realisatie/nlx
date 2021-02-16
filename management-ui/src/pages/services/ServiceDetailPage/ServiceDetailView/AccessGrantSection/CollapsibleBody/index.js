@@ -3,9 +3,10 @@
 //
 
 import React, { useContext } from 'react'
-import { Table, ToasterContext } from '@commonground/design-system'
+import { ToasterContext } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import { array, bool, func } from 'prop-types'
+import Table from '../../../../../../components/Table'
 import { StyledCollapsibleBody } from '../../../../../../components/DetailView'
 import UpdateUiButton from '../../UpdateUiButton'
 import AccessGrantRow from './AccessGrantRow'

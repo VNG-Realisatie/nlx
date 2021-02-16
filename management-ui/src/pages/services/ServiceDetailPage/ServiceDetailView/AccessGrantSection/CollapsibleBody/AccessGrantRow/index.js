@@ -3,8 +3,9 @@
 //
 import React from 'react'
 import { object, func } from 'prop-types'
-import { Table, Button } from '@commonground/design-system'
+import { Button } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
+import Table from '../../../../../../../components/Table'
 import { useConfirmationModal } from '../../../../../../../components/ConfirmationModal'
 import { IconRevoke } from '../../../../../../../icons'
 import { TdActions } from './index.styles'

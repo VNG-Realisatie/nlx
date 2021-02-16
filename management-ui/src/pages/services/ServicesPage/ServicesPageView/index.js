@@ -4,8 +4,7 @@
 import React from 'react'
 import { array, string } from 'prop-types'
 import { useTranslation } from 'react-i18next'
-import { Table } from '@commonground/design-system'
-
+import Table from '../../../../components/Table'
 import EmptyContentMessage from '../../../../components/EmptyContentMessage'
 import ServiceRow from './ServiceRow'
 
