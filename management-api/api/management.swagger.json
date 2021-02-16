@@ -857,7 +857,7 @@
         "serviceCreate",
         "serviceUpdate",
         "serviceDelete",
-        "organizationSetttingsUpdate",
+        "organizationSettingsUpdate",
         "organizationInsightConfigurationUpdate"
       ],
       "default": "loginSuccess"

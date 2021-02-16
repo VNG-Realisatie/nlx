@@ -446,7 +446,7 @@ message AuditLogRecord {
     serviceCreate = 8;
     serviceUpdate = 9;
     serviceDelete = 10;
-    organizationSetttingsUpdate = 11;
+    organizationSettingsUpdate = 11;
     organizationInsightConfigurationUpdate = 12;
   }
 

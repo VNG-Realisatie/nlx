@@ -16,7 +16,7 @@ export const ACTION_OUTGOING_ACCESS_REQUEST_CREATE =
 export const ACTION_SERVICE_CREATE = 'serviceCreate'
 export const ACTION_SERVICE_UPDATE = 'serviceUpdate'
 export const ACTION_SERVICE_DELETE = 'serviceDelete'
-export const ACTION_ORGANIZATION_SETTINGS_UPDATE = 'organizationSetttingsUpdate'
+export const ACTION_ORGANIZATION_SETTINGS_UPDATE = 'organizationSettingsUpdate'
 export const ACTION_INSIGHT_CONFIGURATION_UPDATE =
   'organizationInsightConfigurationUpdate'
 

@@ -177,7 +177,7 @@ func _003_audit_logDownSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "003_audit_log.down.sql", size: 101, mode: os.FileMode(420), modTime: time.Unix(1613032447, 0)}
+	info := bindataFileInfo{name: "003_audit_log.down.sql", size: 101, mode: os.FileMode(420), modTime: time.Unix(1613407368, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -197,7 +197,7 @@ func _003_audit_logUpSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "003_audit_log.up.sql", size: 1174, mode: os.FileMode(420), modTime: time.Unix(1613032447, 0)}
+	info := bindataFileInfo{name: "003_audit_log.up.sql", size: 1174, mode: os.FileMode(420), modTime: time.Unix(1613407368, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
