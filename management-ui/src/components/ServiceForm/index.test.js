@@ -8,9 +8,19 @@ import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '../../test-utils'
 import { RootStore, StoreProvider } from '../../stores'
 import { ManagementApi } from '../../api'
-import ServiceForm from './index'
+import ServiceForm, { checkStep } from './index'
 
 jest.mock('../FormikFocusError', () => () => <></>)
+
+describe('checkStep yup test', () => {
+  it('returns expected results', () => {
+    expect(checkStep(0.01, 0.03)).toBe(true)
+    expect(checkStep(0.01, 0.0025)).toBe(false)
+    expect(checkStep(0.25, 5.5)).toBe(true)
+    expect(checkStep(5, 2)).toBe(false)
+    expect(checkStep(5, 5)).toBe(true)
+  })
+})
 
 describe('with initial values', () => {
   it('should pre-fill the form fields with the initial values', async () => {

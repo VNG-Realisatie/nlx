@@ -172,5 +172,6 @@
   "You are requesting access to a service": "You are requesting access to a service",
   "You have access": "You have access",
   "You have no access": "You have no access",
-  "Your access was revoked": "Your access was revoked"
+  "Your access was revoked": "Your access was revoked",
+  "Please enter valid costs": "Please enter valid costs (at least 1 cent)"
 }

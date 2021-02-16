@@ -41,6 +41,14 @@ const DEFAULT_INITIAL_VALUES = {
   requestCosts: 0,
 }
 
+export const checkStep = function (step, value) {
+  return !((value * 100) % (step * 100))
+}
+
+Yup.addMethod(Yup.number, 'step', function (step, message) {
+  return this.test('number-step', message, (value) => checkStep(step, value))
+})
+
 const ServiceForm = ({
   initialValues,
   onSubmitHandler,
@@ -56,6 +64,11 @@ const ServiceForm = ({
     inwayStore.fetchInways()
   }, [inwayStore])
 
+  const costSchema = Yup.number()
+    .min(0, t('Please enter valid costs'))
+    .step(0.01, t('Please enter valid costs'))
+    .required(t('Please enter valid costs'))
+
   const validationSchema = Yup.object().shape({
     name: Yup.string().required(t('This field is required')),
     endpointURL: Yup.string().required(t('Invalid endpoint URL')),
@@ -65,9 +78,9 @@ const ServiceForm = ({
     techSupportContact: Yup.string(),
     publicSupportContact: Yup.string(),
     inways: Yup.array().of(Yup.string()),
-    oneTimeCosts: Yup.number().min(0),
-    monthlyCosts: Yup.number().min(0),
-    requestCosts: Yup.number().min(0),
+    oneTimeCosts: costSchema,
+    monthlyCosts: costSchema,
+    requestCosts: costSchema,
   })
 
   return (
