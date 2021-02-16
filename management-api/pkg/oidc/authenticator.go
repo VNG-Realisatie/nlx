@@ -103,13 +103,18 @@ func (a *Authenticator) Routes() chi.Router {
 
 func (a *Authenticator) OnlyAuthenticated(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if _, err := a.ParseClaims(r); err != nil {
+		claims, err := a.ParseClaims(r)
+
+		if err != nil {
 			a.logger.Warn("authorization failed", zap.Error(err))
 
 			http.Error(w, "unauthorized request", http.StatusUnauthorized)
 
 			return
 		}
+
+		r.Header.Add("username", claims.User().FullName)
+		r.Header.Add("userEmail", claims.User().Email)
 
 		h.ServeHTTP(w, r)
 	})
@@ -210,7 +215,7 @@ func (a *Authenticator) callback(w http.ResponseWriter, r *http.Request) {
 			return fmt.Errorf("failed to save session: %w", err)
 		}
 
-		err = a.auditLogger.LoginSuccess(ctx, user.ID, r.Header.Get("User-Agent"))
+		err = a.auditLogger.LoginSuccess(ctx, claims.User().FullName, r.Header.Get("User-Agent"))
 		if err != nil {
 			a.logger.Error("error writing to audit log", zap.Error(err))
 		}

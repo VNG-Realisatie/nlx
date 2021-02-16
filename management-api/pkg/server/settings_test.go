@@ -13,11 +13,13 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/pkg/auditlog"
 	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
@@ -91,7 +93,9 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 		name             string
 		db               func(ctrl *gomock.Controller) database.ConfigDatabase
 		directoryClient  func(ctrl *gomock.Controller) directory.Client
+		auditLog         func(ctrl *gomock.Controller) auditlog.Logger
 		req              *api.UpdateSettingsRequest
+		ctx              context.Context
 		expectedResponse *types.Empty
 		expectedError    error
 	}{
@@ -110,6 +114,11 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 				directoryClient := mock_directory.NewMockClient(ctrl)
 
 				return directoryClient
+			},
+			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
+				auditLogger := mock_auditlog.NewMockLogger(ctrl)
+
+				return auditLogger
 			},
 			req: &api.UpdateSettingsRequest{
 				OrganizationInway: "inway-name",
@@ -138,6 +147,11 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 
 				return directoryClient
 			},
+			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
+				auditLogger := mock_auditlog.NewMockLogger(ctrl)
+
+				return auditLogger
+			},
 			req: &api.UpdateSettingsRequest{
 				OrganizationInway: "inway-name",
 			},
@@ -158,6 +172,11 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 					Return(nil, errors.New("arbitrary error"))
 
 				return directoryClient
+			},
+			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
+				auditLogger := mock_auditlog.NewMockLogger(ctrl)
+
+				return auditLogger
 			},
 			req: &api.UpdateSettingsRequest{
 				OrganizationInway: "",
@@ -193,9 +212,18 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 
 				return directoryClient
 			},
+			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
+				auditLogger := mock_auditlog.NewMockLogger(ctrl)
+				auditLogger.EXPECT().OrganizationSettingsUpdate(gomock.Any(), "Jane Doe", "nlxctl")
+				return auditLogger
+			},
 			req: &api.UpdateSettingsRequest{
 				OrganizationInway: "inway-name",
 			},
+			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
+				"username":               "Jane Doe",
+				"grpcgateway-user-agent": "nlxctl",
+			})),
 			expectedResponse: nil,
 			expectedError:    status.Error(codes.Internal, "database error"),
 		},
@@ -223,6 +251,15 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 
 				return directoryClient
 			},
+			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
+				auditLogger := mock_auditlog.NewMockLogger(ctrl)
+				auditLogger.EXPECT().OrganizationSettingsUpdate(gomock.Any(), "Jane Doe", "nlxctl")
+				return auditLogger
+			},
+			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
+				"username":               "Jane Doe",
+				"grpcgateway-user-agent": "nlxctl",
+			})),
 			req: &api.UpdateSettingsRequest{
 				OrganizationInway: "inway-name",
 			},
@@ -242,6 +279,15 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 				directoryClient.EXPECT().ClearOrganizationInway(gomock.Any(), gomock.Any()).Return(&types.Empty{}, nil)
 				return directoryClient
 			},
+			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
+				auditLogger := mock_auditlog.NewMockLogger(ctrl)
+				auditLogger.EXPECT().OrganizationSettingsUpdate(gomock.Any(), "Jane Doe", "nlxctl")
+				return auditLogger
+			},
+			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
+				"username":               "Jane Doe",
+				"grpcgateway-user-agent": "nlxctl",
+			})),
 			req: &api.UpdateSettingsRequest{
 				OrganizationInway: "",
 			},
@@ -259,8 +305,8 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			l := zap.NewNop()
 			p := process.NewProcess(l)
 
-			h := server.NewManagementService(l, p, tt.directoryClient(ctrl), nil, tt.db(ctrl), mock_auditlog.NewMockLogger(ctrl))
-			got, err := h.UpdateSettings(context.Background(), tt.req)
+			h := server.NewManagementService(l, p, tt.directoryClient(ctrl), nil, tt.db(ctrl), tt.auditLog(ctrl))
+			got, err := h.UpdateSettings(tt.ctx, tt.req)
 
 			assert.Equal(t, tt.expectedResponse, got)
 			assert.Equal(t, tt.expectedError, err)

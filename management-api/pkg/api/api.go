@@ -97,6 +97,9 @@ func NewAPI(db database.ConfigDatabase, logger *zap.Logger, mainProcess *process
 		// Change the default behavior of marshaling to JSON
 		// Emit empty fields by default
 		runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.JSONPb{OrigName: true, EmitDefaults: true}),
+		// Detect HTTP headers with user information and include the data in the gRPC calls.
+		// This data is needed for auditlogging
+		runtime.WithIncomingHeaderMatcher(UserDataMatcher),
 	)
 
 	a := &API{
@@ -144,4 +147,15 @@ func newGRPCServer(logger *zap.Logger, cert *common_tls.CertificateBundle) *grpc
 	}
 
 	return grpc.NewServer(opts...)
+}
+
+func UserDataMatcher(key string) (string, bool) {
+	switch key {
+	case "Username":
+		return key, true
+	case "Useremail":
+		return key, true
+	default:
+		return runtime.DefaultHeaderMatcher(key)
+	}
 }

@@ -1,7 +1,9 @@
 package server
 
 import (
+	"context"
 	"errors"
+	"google.golang.org/grpc/metadata"
 
 	"go.uber.org/zap"
 
@@ -36,4 +38,31 @@ func NewManagementService(logger *zap.Logger, mainProcess *process.Process, dire
 
 func errIsNotFound(err error) bool {
 	return errors.Is(err, database.ErrNotFound)
+}
+
+type auditLogInfoFromGRPC struct {
+	username  string
+	userAgent string
+}
+
+func retrieveUserInfoFromGRPCContext(ctx context.Context) (*auditLogInfoFromGRPC, error) {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return nil, errors.New("could not extract metadata from context")
+	}
+
+	username := ""
+	if len(md.Get("username")) > 0 {
+		username = md.Get("username")[0]
+	}
+
+	userAgent := ""
+	if len(md.Get("grpcgateway-user-agent")) > 0 {
+		userAgent = md.Get("grpcgateway-user-agent")[0]
+	}
+
+	return &auditLogInfoFromGRPC{
+		username:  username,
+		userAgent: userAgent,
+	}, nil
 }

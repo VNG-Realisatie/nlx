@@ -1,17 +1,12 @@
 CREATE TABLE nlx_management.audit_logs(
   audit_log_id BIGSERIAL PRIMARY KEY,
-  user_id INTEGER NOT NULL,
+  user_name VARCHAR(250),
   action_type VARCHAR(250) NOT NULL,
   user_agent VARCHAR(250) NOT NULL,
   organization VARCHAR(250),
   service VARCHAR(250),
   data JSON,
-  created_at timestamp with time zone NOT NULL,
-  
-  CONSTRAINT fk_user
-    FOREIGN KEY (user_id)
-    REFERENCES nlx_management.users(user_id)
-    ON DELETE RESTRICT
+  created_at timestamp with time zone NOT NULL
 );
 
 CREATE INDEX audit_log_idx_organization ON nlx_management.audit_logs (organization);

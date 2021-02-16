@@ -5,7 +5,6 @@ package server
 
 import (
 	"context"
-
 	"github.com/gogo/protobuf/types"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
@@ -41,7 +40,6 @@ func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateS
 	logger := s.logger.With(zap.String("handler", "update-settings"))
 
 	var inwayID *uint
-
 	if req.OrganizationInway != "" {
 		inway, err := s.configDatabase.GetInway(ctx, req.OrganizationInway)
 		if err != nil {
@@ -74,7 +72,18 @@ func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateS
 		}
 	}
 
-	_, err := s.configDatabase.PutOrganizationInway(ctx, inwayID)
+	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
+	if err != nil {
+		logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
+		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
+	}
+
+	err = s.auditLogger.OrganizationSettingsUpdate(ctx, userInfo.username, userInfo.userAgent)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "could not create audit log")
+	}
+
+	_, err = s.configDatabase.PutOrganizationInway(ctx, inwayID)
 	if err != nil {
 		logger.Error("could not update the settings in the database", zap.Error(err))
 		return nil, status.Error(codes.Internal, "database error")

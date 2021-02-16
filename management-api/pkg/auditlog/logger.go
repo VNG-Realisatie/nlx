@@ -10,7 +10,7 @@ import (
 
 type Record struct {
 	ID           uint64
-	UserID       uint
+	Username     string
 	ActionType   ActionType
 	UserAgent    string
 	Organization string
@@ -38,16 +38,16 @@ const (
 type Logger interface {
 	ListAll(ctx context.Context) ([]*Record, error)
 
-	LoginSuccess(ctx context.Context, userID uint, userAgent string) error
-	LoginFail(ctx context.Context, userID uint, userAgent string) error
-	LogoutSuccess(ctx context.Context, userID uint, userAgent string) error
-	IncomingAccessRequestAccept(ctx context.Context, userID uint, userAgent, organization, service string) error
-	IncomingAccessRequestReject(ctx context.Context, userID uint, userAgent, organization, service string) error
-	AccessGrantRevoke(ctx context.Context, userID uint, userAgent, organization, service string) error
-	OutgoingAccessRequestCreate(ctx context.Context, userID uint, userAgent, organization, service string) error
-	ServiceCreate(ctx context.Context, userID uint, userAgent string) error
-	ServiceUpdate(ctx context.Context, userID uint, userAgent string) error
-	ServiceDelete(ctx context.Context, userID uint, userAgent string) error
-	OrganizationSettingsUpdate(ctx context.Context, userID uint, userAgent string) error
-	OrganizationInsightConfigurationUpdate(ctx context.Context, userID uint, userAgent string) error
+	LoginSuccess(ctx context.Context, userName, userAgent string) error
+	LoginFail(ctx context.Context, userName, userAgent string) error
+	LogoutSuccess(ctx context.Context, userName, userAgent string) error
+	IncomingAccessRequestAccept(ctx context.Context, userName, userAgent, organization, service string) error
+	IncomingAccessRequestReject(ctx context.Context, userName, userAgent, organization, service string) error
+	AccessGrantRevoke(ctx context.Context, userName, userAgent, organization, service string) error
+	OutgoingAccessRequestCreate(ctx context.Context, userName, userAgent, organization, service string) error
+	ServiceCreate(ctx context.Context, userName, userAgent string) error
+	ServiceUpdate(ctx context.Context, userName, userAgent string) error
+	ServiceDelete(ctx context.Context, userName, userAgent string) error
+	OrganizationSettingsUpdate(ctx context.Context, userName, userAgent string) error
+	OrganizationInsightConfigurationUpdate(ctx context.Context, userName, userAgent string) error
 }

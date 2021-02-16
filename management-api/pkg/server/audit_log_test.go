@@ -96,7 +96,7 @@ func TestListAuditLogs(t *testing.T) {
 			[]*auditlog.Record{
 				{
 					ID:         1,
-					UserID:     42,
+					Username:   "Jane Doe",
 					ActionType: auditlog.LoginSuccess,
 					UserAgent:  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15",
 					CreatedAt:  time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
@@ -108,7 +108,7 @@ func TestListAuditLogs(t *testing.T) {
 				AuditLogs: []*api.AuditLogRecord{
 					{
 						Id:              1,
-						User:            "42",
+						User:            "Jane Doe",
 						Action:          api.AuditLogRecord_loginSuccess,
 						OperatingSystem: "Mac OS X",
 						Browser:         "Safari",
@@ -123,7 +123,7 @@ func TestListAuditLogs(t *testing.T) {
 			[]*auditlog.Record{
 				{
 					ID:         1,
-					UserID:     42,
+					Username:   "",
 					ActionType: auditlog.LoginSuccess,
 					UserAgent:  "nlxctl/1.x (Mac OS X)",
 					CreatedAt:  time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
@@ -135,7 +135,7 @@ func TestListAuditLogs(t *testing.T) {
 				AuditLogs: []*api.AuditLogRecord{
 					{
 						Id:              1,
-						User:            "42",
+						User:            "",
 						Action:          api.AuditLogRecord_loginSuccess,
 						OperatingSystem: "Mac OS X",
 						Browser:         "",
