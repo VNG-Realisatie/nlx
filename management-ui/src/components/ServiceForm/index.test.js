@@ -321,4 +321,138 @@ describe('when showing inways', () => {
       )
     })
   })
+
+  it('should clear costs when disabling billing', async () => {
+    const managementApiClient = new ManagementApi()
+    managementApiClient.managementListInways = jest
+      .fn()
+      .mockResolvedValue({ inways: [{ name: 'inway-one' }] })
+
+    const rootStore = new RootStore({
+      managementApiClient,
+    })
+
+    const onSubmitHandlerSpy = jest.fn()
+    const {
+      findByLabelText,
+      getByLabelText,
+      getByTestId,
+    } = renderWithProviders(
+      <StoreProvider rootStore={rootStore}>
+        <ServiceForm
+          onSubmitHandler={onSubmitHandlerSpy}
+          initialValues={{
+            ...initialValues,
+            inways: [],
+            oneTimeCosts: 10.5,
+            monthlyCosts: 5,
+            requestCosts: 1.25,
+          }}
+          submitButtonText="Submit"
+        />
+      </StoreProvider>,
+    )
+
+    await findByLabelText('This is a paid service')
+
+    await fireEvent.click(getByLabelText('This is a paid service'))
+
+    await fireEvent.submit(getByTestId('form'))
+
+    await waitFor(() => {
+      expect(onSubmitHandlerSpy).toHaveBeenCalledTimes(1)
+      expect(onSubmitHandlerSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          oneTimeCosts: 0,
+          monthlyCosts: 0,
+          requestCosts: 0,
+        }),
+      )
+    })
+  })
+
+  it('should save costs when billing was already enabled', async () => {
+    const managementApiClient = new ManagementApi()
+    managementApiClient.managementListInways = jest
+      .fn()
+      .mockResolvedValue({ inways: [{ name: 'inway-one' }] })
+
+    const rootStore = new RootStore({
+      managementApiClient,
+    })
+
+    const onSubmitHandlerSpy = jest.fn()
+    const { getByTestId } = renderWithProviders(
+      <StoreProvider rootStore={rootStore}>
+        <ServiceForm
+          onSubmitHandler={onSubmitHandlerSpy}
+          initialValues={{
+            ...initialValues,
+            inways: [],
+            oneTimeCosts: 10.5,
+            monthlyCosts: 5,
+            requestCosts: 1.25,
+          }}
+          submitButtonText="Submit"
+        />
+      </StoreProvider>,
+    )
+
+    await fireEvent.submit(getByTestId('form'))
+
+    await waitFor(() => {
+      expect(onSubmitHandlerSpy).toHaveBeenCalledTimes(1)
+      expect(onSubmitHandlerSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          oneTimeCosts: 10.5,
+          monthlyCosts: 5,
+          requestCosts: 1.25,
+        }),
+      )
+    })
+  })
+
+  it('should save costs when billing is enabled', async () => {
+    const managementApiClient = new ManagementApi()
+    managementApiClient.managementListInways = jest
+      .fn()
+      .mockResolvedValue({ inways: [{ name: 'inway-one' }] })
+
+    const rootStore = new RootStore({
+      managementApiClient,
+    })
+
+    const onSubmitHandlerSpy = jest.fn()
+    const { getByLabelText, getByTestId } = renderWithProviders(
+      <StoreProvider rootStore={rootStore}>
+        <ServiceForm
+          onSubmitHandler={onSubmitHandlerSpy}
+          initialValues={{
+            ...initialValues,
+            inways: [],
+          }}
+          submitButtonText="Submit"
+        />
+      </StoreProvider>,
+    )
+
+    await fireEvent.click(getByLabelText('This is a paid service'))
+
+    userEvent.type(getByLabelText('One time costs (in Euro)'), '10.5')
+    userEvent.type(getByLabelText('Monthly costs (in Euro)'), '5')
+    userEvent.type(getByLabelText('Costs per request (in Euro)'), '1.25')
+
+    await fireEvent.submit(getByTestId('form'))
+
+    await waitFor(() => {
+      expect(onSubmitHandlerSpy).toHaveBeenCalledTimes(1)
+      expect(onSubmitHandlerSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          oneTimeCosts: 10.5,
+          monthlyCosts: 5,
+          requestCosts: 1.25,
+        }),
+      )
+    })
+  })
 })

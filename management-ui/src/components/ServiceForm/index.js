@@ -83,6 +83,12 @@ const ServiceForm = ({
       }}
       validationSchema={validationSchema}
       onSubmit={({ publishedInDirectory, ...values }) => {
+        if (!values.isPaidService) {
+          values.oneTimeCosts = 0
+          values.monthlyCosts = 0
+          values.requestCosts = 0
+        }
+
         return onSubmitHandler({
           ...values,
           internal: !publishedInDirectory,
