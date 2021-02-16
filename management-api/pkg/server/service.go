@@ -41,7 +41,7 @@ func (s *ManagementService) CreateService(ctx context.Context, request *api.Crea
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	err = s.auditLogger.ServiceCreate(ctx, userInfo.username, userInfo.userAgent)
+	err = s.auditLogger.ServiceCreate(ctx, userInfo.username, userInfo.userAgent, request.Name)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}
@@ -114,7 +114,7 @@ func (s *ManagementService) UpdateService(ctx context.Context, req *api.UpdateSe
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	err = s.auditLogger.ServiceUpdate(ctx, userInfo.username, userInfo.userAgent)
+	err = s.auditLogger.ServiceUpdate(ctx, userInfo.username, userInfo.userAgent, service.Name)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}
@@ -145,7 +145,7 @@ func (s *ManagementService) DeleteService(ctx context.Context, req *api.DeleteSe
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	err = s.auditLogger.ServiceDelete(ctx, userInfo.username, userInfo.userAgent)
+	err = s.auditLogger.ServiceDelete(ctx, userInfo.username, userInfo.userAgent, req.Name)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}

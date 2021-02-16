@@ -46,7 +46,7 @@ func TestCreateService(t *testing.T) {
 	mockDatabase.EXPECT().CreateServiceWithInways(ctx, databaseService, []string{})
 
 	auditLogger := mock_auditlog.NewMockLogger(mockCtrl)
-	auditLogger.EXPECT().ServiceCreate(gomock.Any(), "Jane Doe", "nlxctl")
+	auditLogger.EXPECT().ServiceCreate(gomock.Any(), "Jane Doe", "nlxctl", "my-service")
 
 	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase, auditLogger)
 
@@ -131,7 +131,7 @@ func TestUpdateService(t *testing.T) {
 	mockDatabase.EXPECT().UpdateServiceWithInways(ctx, databaseService, []string{})
 
 	auditLogger := mock_auditlog.NewMockLogger(mockCtrl)
-	auditLogger.EXPECT().ServiceUpdate(gomock.Any(), "Jane Doe", "nlxctl")
+	auditLogger.EXPECT().ServiceUpdate(gomock.Any(), "Jane Doe", "nlxctl", "my-service")
 
 	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase, auditLogger)
 
@@ -174,7 +174,7 @@ func TestDeleteService(t *testing.T) {
 	mockDatabase.EXPECT().DeleteService(ctx, "my-service")
 
 	auditLogger := mock_auditlog.NewMockLogger(mockCtrl)
-	auditLogger.EXPECT().ServiceDelete(gomock.Any(), "Jane Doe", "nlxctl")
+	auditLogger.EXPECT().ServiceDelete(gomock.Any(), "Jane Doe", "nlxctl", "my-service")
 
 	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase, auditLogger)
 

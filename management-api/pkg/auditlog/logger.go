@@ -45,9 +45,9 @@ type Logger interface {
 	IncomingAccessRequestReject(ctx context.Context, userName, userAgent, organization, service string) error
 	AccessGrantRevoke(ctx context.Context, userName, userAgent, organization, service string) error
 	OutgoingAccessRequestCreate(ctx context.Context, userName, userAgent, organization, service string) error
-	ServiceCreate(ctx context.Context, userName, userAgent string) error
-	ServiceUpdate(ctx context.Context, userName, userAgent string) error
-	ServiceDelete(ctx context.Context, userName, userAgent string) error
+	ServiceCreate(ctx context.Context, userName, userAgent, serviceName string) error
+	ServiceUpdate(ctx context.Context, userName, userAgent, serviceName string) error
+	ServiceDelete(ctx context.Context, userName, userAgent, serviceName string) error
 	OrganizationSettingsUpdate(ctx context.Context, userName, userAgent string) error
 	OrganizationInsightConfigurationUpdate(ctx context.Context, userName, userAgent string) error
 }

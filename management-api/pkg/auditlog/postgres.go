@@ -188,10 +188,11 @@ func (a *PostgresLogger) OutgoingAccessRequestCreate(ctx context.Context, userNa
 	return err
 }
 
-func (a *PostgresLogger) ServiceCreate(ctx context.Context, userName, userAgent string) error {
+func (a *PostgresLogger) ServiceCreate(ctx context.Context, userName, userAgent, serviceName string) error {
 	record := &database.AuditLogRecord{
 		UserAgent:  userAgent,
 		UserName:   userName,
+		Service:    serviceName,
 		ActionType: database.ServiceCreate,
 	}
 
@@ -200,10 +201,11 @@ func (a *PostgresLogger) ServiceCreate(ctx context.Context, userName, userAgent 
 	return err
 }
 
-func (a *PostgresLogger) ServiceUpdate(ctx context.Context, userName, userAgent string) error {
+func (a *PostgresLogger) ServiceUpdate(ctx context.Context, userName, userAgent, serviceName string) error {
 	record := &database.AuditLogRecord{
 		UserAgent:  userAgent,
 		UserName:   userName,
+		Service:    serviceName,
 		ActionType: database.ServiceUpdate,
 	}
 
@@ -212,10 +214,11 @@ func (a *PostgresLogger) ServiceUpdate(ctx context.Context, userName, userAgent 
 	return err
 }
 
-func (a *PostgresLogger) ServiceDelete(ctx context.Context, userName, userAgent string) error {
+func (a *PostgresLogger) ServiceDelete(ctx context.Context, userName, userAgent, serviceName string) error {
 	record := &database.AuditLogRecord{
 		UserAgent:  userAgent,
 		UserName:   userName,
+		Service:    serviceName,
 		ActionType: database.ServiceDelete,
 	}
 

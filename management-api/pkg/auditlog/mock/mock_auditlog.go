@@ -148,45 +148,45 @@ func (mr *MockLoggerMockRecorder) OutgoingAccessRequestCreate(ctx, userName, use
 }
 
 // ServiceCreate mocks base method
-func (m *MockLogger) ServiceCreate(ctx context.Context, userName, userAgent string) error {
+func (m *MockLogger) ServiceCreate(ctx context.Context, userName, userAgent, serviceName string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ServiceCreate", ctx, userName, userAgent)
+	ret := m.ctrl.Call(m, "ServiceCreate", ctx, userName, userAgent, serviceName)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // ServiceCreate indicates an expected call of ServiceCreate
-func (mr *MockLoggerMockRecorder) ServiceCreate(ctx, userName, userAgent interface{}) *gomock.Call {
+func (mr *MockLoggerMockRecorder) ServiceCreate(ctx, userName, userAgent, serviceName interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ServiceCreate", reflect.TypeOf((*MockLogger)(nil).ServiceCreate), ctx, userName, userAgent)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ServiceCreate", reflect.TypeOf((*MockLogger)(nil).ServiceCreate), ctx, userName, userAgent, serviceName)
 }
 
 // ServiceUpdate mocks base method
-func (m *MockLogger) ServiceUpdate(ctx context.Context, userName, userAgent string) error {
+func (m *MockLogger) ServiceUpdate(ctx context.Context, userName, userAgent, serviceName string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ServiceUpdate", ctx, userName, userAgent)
+	ret := m.ctrl.Call(m, "ServiceUpdate", ctx, userName, userAgent, serviceName)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // ServiceUpdate indicates an expected call of ServiceUpdate
-func (mr *MockLoggerMockRecorder) ServiceUpdate(ctx, userName, userAgent interface{}) *gomock.Call {
+func (mr *MockLoggerMockRecorder) ServiceUpdate(ctx, userName, userAgent, serviceName interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ServiceUpdate", reflect.TypeOf((*MockLogger)(nil).ServiceUpdate), ctx, userName, userAgent)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ServiceUpdate", reflect.TypeOf((*MockLogger)(nil).ServiceUpdate), ctx, userName, userAgent, serviceName)
 }
 
 // ServiceDelete mocks base method
-func (m *MockLogger) ServiceDelete(ctx context.Context, userName, userAgent string) error {
+func (m *MockLogger) ServiceDelete(ctx context.Context, userName, userAgent, serviceName string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ServiceDelete", ctx, userName, userAgent)
+	ret := m.ctrl.Call(m, "ServiceDelete", ctx, userName, userAgent, serviceName)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // ServiceDelete indicates an expected call of ServiceDelete
-func (mr *MockLoggerMockRecorder) ServiceDelete(ctx, userName, userAgent interface{}) *gomock.Call {
+func (mr *MockLoggerMockRecorder) ServiceDelete(ctx, userName, userAgent, serviceName interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ServiceDelete", reflect.TypeOf((*MockLogger)(nil).ServiceDelete), ctx, userName, userAgent)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ServiceDelete", reflect.TypeOf((*MockLogger)(nil).ServiceDelete), ctx, userName, userAgent, serviceName)
 }
 
 // OrganizationSettingsUpdate mocks base method
