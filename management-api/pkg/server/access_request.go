@@ -200,6 +200,17 @@ func (s *ManagementService) ListOutgoingAccessRequests(ctx context.Context, req 
 }
 
 func (s *ManagementService) CreateAccessRequest(ctx context.Context, req *api.CreateAccessRequestRequest) (*api.OutgoingAccessRequest, error) {
+	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
+	if err != nil {
+		s.logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
+		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
+	}
+
+	err = s.auditLogger.OutgoingAccessRequestCreate(ctx, userInfo.username, userInfo.userAgent, req.OrganizationName, req.ServiceName)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "could not create audit log")
+	}
+
 	ar := &database.OutgoingAccessRequest{
 		OrganizationName:     req.OrganizationName,
 		ServiceName:          req.ServiceName,

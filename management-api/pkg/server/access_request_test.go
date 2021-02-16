@@ -66,6 +66,8 @@ func createTimestamp(ti time.Time) *types.Timestamp {
 
 func TestCreateAccessRequest(t *testing.T) {
 	tests := map[string]struct {
+		auditLog    func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger
+		ctx         context.Context
 		req         *api.CreateAccessRequestRequest
 		ar          *database.OutgoingAccessRequest
 		returnReq   *database.OutgoingAccessRequest
@@ -74,6 +76,14 @@ func TestCreateAccessRequest(t *testing.T) {
 		expectedErr error
 	}{
 		"without_an_active_access_request": {
+			func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
+				auditLogger.EXPECT().OutgoingAccessRequestCreate(gomock.Any(), "Jane Doe", "nlxctl", "test-organization", "test-service")
+				return auditLogger
+			},
+			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
+				"username":               "Jane Doe",
+				"grpcgateway-user-agent": "nlxctl",
+			})),
 			&api.CreateAccessRequestRequest{
 				OrganizationName: "test-organization",
 				ServiceName:      "test-service",
@@ -104,7 +114,15 @@ func TestCreateAccessRequest(t *testing.T) {
 			},
 			nil,
 		},
-		"with_an_activeaccess_request": {
+		"with_an_active_access_request": {
+			func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
+				auditLogger.EXPECT().OutgoingAccessRequestCreate(gomock.Any(), "Jane Doe", "nlxctl", "test-organization", "test-service")
+				return auditLogger
+			},
+			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
+				"username":               "Jane Doe",
+				"grpcgateway-user-agent": "nlxctl",
+			})),
 			&api.CreateAccessRequestRequest{
 				OrganizationName: "test-organization",
 				ServiceName:      "test-service",
@@ -126,12 +144,13 @@ func TestCreateAccessRequest(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, db, _ := newService(t)
-			ctx := context.Background()
+			service, db, auditLogger := newService(t)
 
-			db.EXPECT().CreateOutgoingAccessRequest(ctx, tt.ar).
+			tt.auditLog(*auditLogger)
+
+			db.EXPECT().CreateOutgoingAccessRequest(tt.ctx, tt.ar).
 				Return(tt.returnReq, tt.returnErr)
-			actual, err := service.CreateAccessRequest(ctx, tt.req)
+			actual, err := service.CreateAccessRequest(tt.ctx, tt.req)
 
 			assert.Equal(t, tt.expectedReq, actual)
 			assert.Equal(t, tt.expectedErr, err)
