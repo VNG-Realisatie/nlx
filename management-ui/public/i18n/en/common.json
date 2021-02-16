@@ -1,4 +1,5 @@
 {
+  "<0>{{user}}</0> failed to request access to <3>{{service}}</3> from <6>{{organization}}</6>": "<0>{{user}}</0> failed to request access to <3>{{service}}</3> from <6>{{organization}}</6>",
   "<0>{{user}}</0> has approved the access request from <3>{{organization}}</3> for <5>{{service}}</5>": "<0>{{user}}</0> has approved the access request from <3>{{organization}}</3> for <5>{{service}}</5>",
   "<0>{{user}}</0> has created the service <3>{{service}}</3>": "<0>{{user}}</0> has created the service <3>{{service}}</3>",
   "<0>{{user}}</0> has logged in": "<0>{{user}}</0> has logged in",
