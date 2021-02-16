@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/gogo/protobuf/types"
+	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -158,6 +159,62 @@ func TestListAccessGrantsForService(t *testing.T) {
 			tt.db(ctx, db)
 
 			actual, err := service.ListAccessGrantsForService(ctx, tt.req)
+
+			assert.Equal(t, tt.expectedResponse, actual)
+			assert.Equal(t, tt.expectedErr, err)
+		})
+	}
+}
+
+//nolint:funlen // this is a test method
+func TestRevokeAccessGrant(t *testing.T) {
+	createTimestamp := func(ti time.Time) *types.Timestamp {
+		return &types.Timestamp{
+			Seconds: ti.Unix(),
+			Nanos:   int32(ti.Nanosecond()),
+		}
+	}
+
+	createdAt := time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC)
+
+	tests := []struct {
+		name             string
+		req              *api.RevokeAccessGrantRequest
+		db               func(ctx context.Context, db *mock_database.MockConfigDatabase)
+		expectedResponse *api.AccessGrant
+		expectedErr      error
+	}{
+		{
+			"happy_flow",
+			&api.RevokeAccessGrantRequest{
+				AccessGrantID: 42,
+			},
+			func(ctx context.Context, db *mock_database.MockConfigDatabase) {
+				db.EXPECT().RevokeAccessGrant(ctx, uint(42), gomock.Any()).Return(&database.AccessGrant{
+					CreatedAt: createdAt,
+					IncomingAccessRequest: &database.IncomingAccessRequest{
+						Service: &database.Service{},
+					},
+				}, nil)
+			},
+			&api.AccessGrant{
+				CreatedAt: createTimestamp(createdAt),
+			},
+
+			nil,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+
+		t.Run(tt.name, func(t *testing.T) {
+			service, db, _ := newService(t)
+
+			ctx := context.Background()
+			tt.db(ctx, db)
+
+			actual, err := service.RevokeAccessGrant(ctx, tt.req)
 
 			assert.Equal(t, tt.expectedResponse, actual)
 			assert.Equal(t, tt.expectedErr, err)

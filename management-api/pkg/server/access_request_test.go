@@ -20,6 +20,7 @@ import (
 
 	"go.nlx.io/nlx/common/diagnostics"
 	"go.nlx.io/nlx/common/process"
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
 	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
@@ -27,8 +28,6 @@ import (
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
 	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
 	"go.nlx.io/nlx/management-api/pkg/server"
-
-	common_tls "go.nlx.io/nlx/common/tls"
 )
 
 func newService(t *testing.T) (s *server.ManagementService, db *mock_database.MockConfigDatabase, auditLogger *mock_auditlog.MockLogger) {
@@ -50,6 +49,7 @@ func newService(t *testing.T) (s *server.ManagementService, db *mock_database.Mo
 	)
 
 	assert.NoError(t, err)
+
 	auditLogger = mock_auditlog.NewMockLogger(ctrl)
 
 	s = server.NewManagementService(logger, proc, mock_directory.NewMockClient(ctrl), bundle, db, auditLogger)
