@@ -414,9 +414,12 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 	}
 }
 
+//nolint:funlen // this is a test
 func TestRejectIncomingAccessRequest(t *testing.T) {
 	tests := []struct {
 		name             string
+		auditLog         func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger
+		ctx              context.Context
 		request          *api.RejectIncomingAccessRequestRequest
 		accessRequest    *database.IncomingAccessRequest
 		accessRequestErr error
@@ -427,6 +430,13 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 	}{
 		{
 			"unknown_access_request",
+			func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
+				return auditLogger
+			},
+			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
+				"username":               "Jane Doe",
+				"grpcgateway-user-agent": "nlxctl",
+			})),
 			&api.RejectIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
 				AccessRequestID: 1,
@@ -440,11 +450,20 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 		},
 		{
 			"update_state_fails",
+			func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
+				auditLogger.EXPECT().IncomingAccessRequestReject(gomock.Any(), "Jane Doe", "nlxctl", "test-organization", "test-service")
+				return auditLogger
+			},
+			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
+				"username":               "Jane Doe",
+				"grpcgateway-user-agent": "nlxctl",
+			})),
 			&api.RejectIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
 				AccessRequestID: 1,
 			},
 			&database.IncomingAccessRequest{
+				OrganizationName: "test-organization",
 				Service: &database.Service{
 					Name: "other-service",
 				},
@@ -457,11 +476,20 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 		},
 		{
 			"happy_flow",
+			func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
+				auditLogger.EXPECT().IncomingAccessRequestReject(gomock.Any(), "Jane Doe", "nlxctl", "test-organization", "test-service")
+				return auditLogger
+			},
+			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
+				"username":               "Jane Doe",
+				"grpcgateway-user-agent": "nlxctl",
+			})),
 			&api.RejectIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
 				AccessRequestID: 1,
 			},
 			&database.IncomingAccessRequest{
+				OrganizationName: "test-organization",
 				Service: &database.Service{
 					Name: "other-service",
 				},
@@ -477,16 +505,17 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 	for _, test := range tests {
 		test := test
 		t.Run(test.name, func(t *testing.T) {
-			service, db, _ := newService(t)
-			ctx := context.Background()
+			service, db, auditLogger := newService(t)
 
-			db.EXPECT().GetIncomingAccessRequest(ctx, uint(test.request.AccessRequestID)).Return(test.accessRequest, test.accessRequestErr)
+			test.auditLog(*auditLogger)
+
+			db.EXPECT().GetIncomingAccessRequest(test.ctx, uint(test.request.AccessRequestID)).Return(test.accessRequest, test.accessRequestErr)
 
 			if test.expectUpdateCall {
-				db.EXPECT().UpdateIncomingAccessRequestState(ctx, test.accessRequest.ID, database.IncomingAccessRequestRejected).Return(test.updateErr)
+				db.EXPECT().UpdateIncomingAccessRequestState(test.ctx, test.accessRequest.ID, database.IncomingAccessRequestRejected).Return(test.updateErr)
 			}
 
-			actual, err := service.RejectIncomingAccessRequest(ctx, test.request)
+			actual, err := service.RejectIncomingAccessRequest(test.ctx, test.request)
 
 			assert.Equal(t, test.response, actual)
 			assert.Equal(t, test.err, err)

@@ -139,6 +139,17 @@ func (s *ManagementService) RejectIncomingAccessRequest(ctx context.Context, req
 		return nil, err
 	}
 
+	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
+	if err != nil {
+		s.logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
+		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
+	}
+
+	err = s.auditLogger.IncomingAccessRequestReject(ctx, userInfo.username, userInfo.userAgent, accessRequest.OrganizationName, req.ServiceName)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "could not create audit log")
+	}
+
 	err = s.configDatabase.UpdateIncomingAccessRequestState(ctx, accessRequest.ID, database.IncomingAccessRequestRejected)
 	if err != nil {
 		s.logger.Error("error updating incoming access request to rejected", zap.Error(err))
