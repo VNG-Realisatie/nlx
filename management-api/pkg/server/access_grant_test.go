@@ -13,9 +13,11 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/management-api/api"
+	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
 )
@@ -179,6 +181,8 @@ func TestRevokeAccessGrant(t *testing.T) {
 
 	tests := []struct {
 		name             string
+		auditLog         func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger
+		ctx              context.Context
 		req              *api.RevokeAccessGrantRequest
 		db               func(ctx context.Context, db *mock_database.MockConfigDatabase)
 		expectedResponse *api.AccessGrant
@@ -186,8 +190,18 @@ func TestRevokeAccessGrant(t *testing.T) {
 	}{
 		{
 			"happy_flow",
+			func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
+				auditLogger.EXPECT().AccessGrantRevoke(gomock.Any(), "Jane Doe", "nlxctl", "test-organization", "test-service")
+				return auditLogger
+			},
+			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
+				"username":               "Jane Doe",
+				"grpcgateway-user-agent": "nlxctl",
+			})),
 			&api.RevokeAccessGrantRequest{
-				AccessGrantID: 42,
+				AccessGrantID:    42,
+				OrganizationName: "test-organization",
+				ServiceName:      "test-service",
 			},
 			func(ctx context.Context, db *mock_database.MockConfigDatabase) {
 				db.EXPECT().RevokeAccessGrant(ctx, uint(42), gomock.Any()).Return(&database.AccessGrant{
@@ -209,12 +223,13 @@ func TestRevokeAccessGrant(t *testing.T) {
 		tt := tt
 
 		t.Run(tt.name, func(t *testing.T) {
-			service, db, _ := newService(t)
+			service, db, auditLogger := newService(t)
 
-			ctx := context.Background()
-			tt.db(ctx, db)
+			tt.auditLog(*auditLogger)
 
-			actual, err := service.RevokeAccessGrant(ctx, tt.req)
+			tt.db(tt.ctx, db)
+
+			actual, err := service.RevokeAccessGrant(tt.ctx, tt.req)
 
 			assert.Equal(t, tt.expectedResponse, actual)
 			assert.Equal(t, tt.expectedErr, err)

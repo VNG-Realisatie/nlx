@@ -59,6 +59,17 @@ func (s *ManagementService) ListAccessGrantsForService(ctx context.Context, req 
 }
 
 func (s *ManagementService) RevokeAccessGrant(ctx context.Context, req *api.RevokeAccessGrantRequest) (*api.AccessGrant, error) {
+	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
+	if err != nil {
+		s.logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
+		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
+	}
+
+	err = s.auditLogger.AccessGrantRevoke(ctx, userInfo.username, userInfo.userAgent, req.OrganizationName, req.ServiceName)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "could not create audit log")
+	}
+
 	accessGrant, err := s.configDatabase.RevokeAccessGrant(ctx, uint(req.AccessGrantID), time.Now())
 	if err != nil {
 		if errors.Is(err, database.ErrAccessGrantAlreadyRevoked) {
