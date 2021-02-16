@@ -74,19 +74,19 @@ const DirectoryDetailView = ({ service }) => {
           variant="error"
           title={t('Request could not be sent')}
           actions={[
-            <Alert.ButtonAction
+            <Alert.ActionButton
               key="send-request-access-action-button"
               onClick={retryRequestAccess}
             >
               {t('Retry')}
-            </Alert.ButtonAction>,
+            </Alert.ActionButton>,
 
-            <Alert.ButtonAction
+            <Alert.ActionButton
               key="show-trace-access-action-button"
               onClick={showTrace}
             >
               {t('Show stacktrace')}
-            </Alert.ButtonAction>,
+            </Alert.ActionButton>,
           ]}
         >
           {latestAccessRequest.errorDetails.cause}
