@@ -13,6 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/process"
@@ -66,7 +67,10 @@ func TestGetInsight(t *testing.T) {
 func TestPutInsight(t *testing.T) {
 	logger := zap.NewNop()
 	testProcess := process.NewProcess(logger)
-	ctx := context.Background()
+	ctx := metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
+		"username":               "Jane Doe",
+		"grpcgateway-user-agent": "nlxctl",
+	}))
 
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
@@ -80,7 +84,10 @@ func TestPutInsight(t *testing.T) {
 		IrmaServerURL: "http://irma-url.com",
 	}).Return(&types.Empty{}, nil)
 
-	service := server.NewManagementService(logger, testProcess, mockDirectoryClient, nil, mockDatabase, mock_auditlog.NewMockLogger(mockCtrl))
+	auditLogger := mock_auditlog.NewMockLogger(mockCtrl)
+	auditLogger.EXPECT().OrganizationInsightConfigurationUpdate(ctx, "Jane Doe", "nlxctl")
+
+	service := server.NewManagementService(logger, testProcess, mockDirectoryClient, nil, mockDatabase, auditLogger)
 
 	request := &api.InsightConfiguration{
 		IrmaServerURL: "http://irma-url.com",

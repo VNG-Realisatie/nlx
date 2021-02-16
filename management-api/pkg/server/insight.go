@@ -39,7 +39,18 @@ func (s *ManagementService) GetInsightConfiguration(ctx context.Context, _ *type
 func (s *ManagementService) PutInsightConfiguration(ctx context.Context, req *api.InsightConfiguration) (*api.InsightConfiguration, error) {
 	s.logger.Info("rpc request PutInsight")
 
-	_, err := s.directoryClient.SetInsightConfiguration(ctx, &registrationapi.SetInsightConfigurationRequest{
+	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
+	if err != nil {
+		s.logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
+		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
+	}
+
+	err = s.auditLogger.OrganizationInsightConfigurationUpdate(ctx, userInfo.username, userInfo.userAgent)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "could not create audit log")
+	}
+
+	_, err = s.directoryClient.SetInsightConfiguration(ctx, &registrationapi.SetInsightConfigurationRequest{
 		InsightAPIURL: req.InsightAPIURL,
 		IrmaServerURL: req.IrmaServerURL,
 	})
