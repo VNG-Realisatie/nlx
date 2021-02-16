@@ -117,3 +117,17 @@ test.concurrent.each([
     expect(getByTestId('message')).toHaveTextContent(expectedMessage)
   },
 )
+
+test('meta information', () => {
+  const { getByTestId } = renderWithProviders(
+    <AuditLogRecord
+      createdAt={new Date('2021-02-15T12:59:02.898590Z')}
+      operatingSystem="Mac OS X"
+      browser="Safari"
+      client="NLX Management"
+    />,
+  )
+  expect(getByTestId('meta')).toHaveTextContent(
+    'Audit log created at • Mac OS X • Safari • NLX Management',
+  )
+})

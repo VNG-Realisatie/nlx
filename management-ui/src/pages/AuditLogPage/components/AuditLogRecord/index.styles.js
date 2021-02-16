@@ -45,3 +45,7 @@ export const Description = styled.p`
     font-weight: 600;
   }
 `
+
+export const Meta = styled.small`
+  white-space: pre;
+`

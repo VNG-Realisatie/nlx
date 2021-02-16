@@ -20,7 +20,13 @@ import {
   ACTION_SERVICE_UPDATE,
 } from '../../../../stores/models/AuditLogModel'
 import iconForActionType from './icon-for-action-type'
-import { Container, Description, IconContainer, IconItem } from './index.styles'
+import {
+  Container,
+  Description,
+  IconContainer,
+  IconItem,
+  Meta,
+} from './index.styles'
 
 const Template = ({ action, meta, children, ...props }) => (
   <Container {...props}>
@@ -30,7 +36,7 @@ const Template = ({ action, meta, children, ...props }) => (
     <Description>
       <span data-testid="message">{children}</span>
       <br />
-      <small>{meta.join('   •   ')}</small>
+      <Meta data-testid="meta">{meta.join('   •   ')}</Meta>
     </Description>
   </Container>
 )
