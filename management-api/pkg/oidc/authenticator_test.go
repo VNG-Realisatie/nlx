@@ -14,6 +14,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/oauth2"
 
+	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
 	"go.nlx.io/nlx/management-api/pkg/oidc/mock"
 )
@@ -260,9 +261,13 @@ func TestCallbackEndpoint(t *testing.T) {
 	mockOAuth2Config := mock.NewMockOAuth2Config(ctrl)
 	mockStore := mock.NewMockStore(ctrl)
 
+	auditLogger := mock_auditlog.NewMockLogger(ctrl)
+	auditLogger.EXPECT().LoginFail(gomock.Any(), "Go-http-client/1.1")
+
 	authenticator := Authenticator{
 		logger:       zaptest.Logger(t),
 		oauth2Config: mockOAuth2Config,
+		auditLogger:  auditLogger,
 		store:        mockStore,
 	}
 

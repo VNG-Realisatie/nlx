@@ -64,17 +64,17 @@ func (mr *MockLoggerMockRecorder) LoginSuccess(ctx, userName, userAgent interfac
 }
 
 // LoginFail mocks base method
-func (m *MockLogger) LoginFail(ctx context.Context, userName, userAgent string) error {
+func (m *MockLogger) LoginFail(ctx context.Context, userAgent string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "LoginFail", ctx, userName, userAgent)
+	ret := m.ctrl.Call(m, "LoginFail", ctx, userAgent)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // LoginFail indicates an expected call of LoginFail
-func (mr *MockLoggerMockRecorder) LoginFail(ctx, userName, userAgent interface{}) *gomock.Call {
+func (mr *MockLoggerMockRecorder) LoginFail(ctx, userAgent interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoginFail", reflect.TypeOf((*MockLogger)(nil).LoginFail), ctx, userName, userAgent)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoginFail", reflect.TypeOf((*MockLogger)(nil).LoginFail), ctx, userAgent)
 }
 
 // LogoutSuccess mocks base method

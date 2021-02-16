@@ -39,7 +39,7 @@ type Logger interface {
 	ListAll(ctx context.Context) ([]*Record, error)
 
 	LoginSuccess(ctx context.Context, userName, userAgent string) error
-	LoginFail(ctx context.Context, userName, userAgent string) error
+	LoginFail(ctx context.Context, userAgent string) error
 	LogoutSuccess(ctx context.Context, userName, userAgent string) error
 	IncomingAccessRequestAccept(ctx context.Context, userName, userAgent, organization, service string) error
 	IncomingAccessRequestReject(ctx context.Context, userName, userAgent, organization, service string) error

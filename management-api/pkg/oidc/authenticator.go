@@ -225,6 +225,11 @@ func (a *Authenticator) callback(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		a.logger.Info("authentication failed", zap.Error(err))
 
+		err = a.auditLogger.LoginFail(r.Context(), r.Header.Get("User-Agent"))
+		if err != nil {
+			a.logger.Error("error writing to audit log", zap.Error(err))
+		}
+
 		if errors.Is(err, database.ErrNotFound) {
 			http.Redirect(w, r, "/login#auth-missing-user", http.StatusFound)
 

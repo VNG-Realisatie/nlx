@@ -108,10 +108,9 @@ func (a *PostgresLogger) LoginSuccess(ctx context.Context, userName, userAgent s
 	return err
 }
 
-func (a *PostgresLogger) LoginFail(ctx context.Context, userName, userAgent string) error {
+func (a *PostgresLogger) LoginFail(ctx context.Context, userAgent string) error {
 	record := &database.AuditLogRecord{
 		UserAgent:  userAgent,
-		UserName:   userName,
 		ActionType: database.LoginFail,
 	}
 
