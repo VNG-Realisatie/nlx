@@ -100,6 +100,17 @@ func (s *ManagementService) ApproveIncomingAccessRequest(ctx context.Context, re
 		return nil, status.Error(codes.AlreadyExists, "access request is already approved")
 	}
 
+	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
+	if err != nil {
+		s.logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
+		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
+	}
+
+	err = s.auditLogger.IncomingAccessRequestAccept(ctx, userInfo.username, userInfo.userAgent, accessRequest.OrganizationName, req.ServiceName)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "could not create audit log")
+	}
+
 	err = s.configDatabase.UpdateIncomingAccessRequestState(ctx, accessRequest.ID, database.IncomingAccessRequestApproved)
 	if err != nil {
 		s.logger.Error("error updating incoming access request to aproved", zap.Error(err))

@@ -31,7 +31,7 @@ import (
 	common_tls "go.nlx.io/nlx/common/tls"
 )
 
-func newService(t *testing.T) (s *server.ManagementService, db *mock_database.MockConfigDatabase) {
+func newService(t *testing.T) (s *server.ManagementService, db *mock_database.MockConfigDatabase, auditLogger *mock_auditlog.MockLogger) {
 	logger := zaptest.Logger(t)
 	proc := process.NewProcess(logger)
 
@@ -50,10 +50,11 @@ func newService(t *testing.T) (s *server.ManagementService, db *mock_database.Mo
 	)
 
 	assert.NoError(t, err)
+	auditLogger = mock_auditlog.NewMockLogger(ctrl)
 
-	s = server.NewManagementService(logger, proc, mock_directory.NewMockClient(ctrl), bundle, db, mock_auditlog.NewMockLogger(ctrl))
+	s = server.NewManagementService(logger, proc, mock_directory.NewMockClient(ctrl), bundle, db, auditLogger)
 
-	return
+	return s, db, auditLogger
 }
 
 func createTimestamp(ti time.Time) *types.Timestamp {
@@ -125,7 +126,7 @@ func TestCreateAccessRequest(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, db := newService(t)
+			service, db, _ := newService(t)
 			ctx := context.Background()
 
 			db.EXPECT().CreateOutgoingAccessRequest(ctx, tt.ar).
@@ -260,7 +261,7 @@ func TestSendAccessRequest(t *testing.T) {
 		test := test
 
 		t.Run(test.name, func(t *testing.T) {
-			service, db := newService(t)
+			service, db, _ := newService(t)
 			ctx := context.Background()
 
 			db.EXPECT().GetOutgoingAccessRequest(ctx, uint(test.request.AccessRequestID)).
@@ -281,9 +282,12 @@ func TestSendAccessRequest(t *testing.T) {
 	}
 }
 
+//nolint:funlen // this is a test
 func TestApproveIncomingAccessRequest(t *testing.T) {
 	tests := []struct {
 		name             string
+		auditLog         func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger
+		ctx              context.Context
 		request          *api.ApproveIncomingAccessRequestRequest
 		accessRequest    *database.IncomingAccessRequest
 		accessRequestErr error
@@ -294,6 +298,10 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 	}{
 		{
 			"unknown_access_request",
+			func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
+				return auditLogger
+			},
+			context.Background(),
 			&api.ApproveIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
 				AccessRequestID: 1,
@@ -308,6 +316,10 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 		},
 		{
 			"access_request_already_approved",
+			func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
+				return auditLogger
+			},
+			context.Background(),
 			&api.ApproveIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
 				AccessRequestID: 1,
@@ -327,11 +339,20 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 		},
 		{
 			"update_state_fails",
+			func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
+				auditLogger.EXPECT().IncomingAccessRequestAccept(gomock.Any(), "Jane Doe", "nlxctl", "test-organization", "test-service")
+				return auditLogger
+			},
+			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
+				"username":               "Jane Doe",
+				"grpcgateway-user-agent": "nlxctl",
+			})),
 			&api.ApproveIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
 				AccessRequestID: 1,
 			},
 			&database.IncomingAccessRequest{
+				OrganizationName: "test-organization",
 				Service: &database.Service{
 					Name: "test-service",
 				},
@@ -344,11 +365,20 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 		},
 		{
 			"happy_flow",
+			func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
+				auditLogger.EXPECT().IncomingAccessRequestAccept(gomock.Any(), "Jane Doe", "nlxctl", "test-organization", "test-service")
+				return auditLogger
+			},
+			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
+				"username":               "Jane Doe",
+				"grpcgateway-user-agent": "nlxctl",
+			})),
 			&api.ApproveIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
 				AccessRequestID: 1,
 			},
 			&database.IncomingAccessRequest{
+				OrganizationName: "test-organization",
 				Service: &database.Service{
 					Name: "test-service",
 				},
@@ -364,20 +394,20 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 	for _, test := range tests {
 		test := test
 		t.Run(test.name, func(t *testing.T) {
-			service, db := newService(t)
-			ctx := context.Background()
+			service, db, auditLogger := newService(t)
+			test.auditLog(*auditLogger)
 
-			db.EXPECT().GetIncomingAccessRequest(ctx, uint(test.request.AccessRequestID)).Return(test.accessRequest, test.accessRequestErr)
+			db.EXPECT().GetIncomingAccessRequest(test.ctx, uint(test.request.AccessRequestID)).Return(test.accessRequest, test.accessRequestErr)
 
 			if test.response != nil {
-				db.EXPECT().CreateAccessGrant(ctx, test.accessRequest)
+				db.EXPECT().CreateAccessGrant(test.ctx, test.accessRequest)
 			}
 
 			if test.expectUpdateCall {
-				db.EXPECT().UpdateIncomingAccessRequestState(ctx, test.accessRequest.ID, database.IncomingAccessRequestApproved).Return(test.updateErr)
+				db.EXPECT().UpdateIncomingAccessRequestState(test.ctx, test.accessRequest.ID, database.IncomingAccessRequestApproved).Return(test.updateErr)
 			}
 
-			actual, err := service.ApproveIncomingAccessRequest(ctx, test.request)
+			actual, err := service.ApproveIncomingAccessRequest(test.ctx, test.request)
 			assert.Equal(t, test.response, actual)
 			assert.Equal(t, test.err, err)
 		})
@@ -447,7 +477,7 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 	for _, test := range tests {
 		test := test
 		t.Run(test.name, func(t *testing.T) {
-			service, db := newService(t)
+			service, db, _ := newService(t)
 			ctx := context.Background()
 
 			db.EXPECT().GetIncomingAccessRequest(ctx, uint(test.request.AccessRequestID)).Return(test.accessRequest, test.accessRequestErr)
@@ -536,7 +566,7 @@ func TestExternalRequestAccess(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, db := newService(t)
+			service, db, _ := newService(t)
 			ctx := tt.setup(db)
 
 			_, err := service.RequestAccess(ctx, &external.RequestAccessRequest{
@@ -605,7 +635,7 @@ func TestExternalGetAccessRequestState(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, db := newService(t)
+			service, db, _ := newService(t)
 			ctx := tt.setup(db)
 
 			response, err := service.GetAccessRequestState(ctx, &external.GetAccessRequestStateRequest{

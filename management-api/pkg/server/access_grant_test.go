@@ -152,7 +152,7 @@ func TestListAccessGrantsForService(t *testing.T) {
 		tt := tt
 
 		t.Run(tt.name, func(t *testing.T) {
-			service, db := newService(t)
+			service, db, _ := newService(t)
 
 			ctx := context.Background()
 			tt.db(ctx, db)
