@@ -11,6 +11,7 @@ import { ReactComponent as SvgClose } from './close.svg'
 import { ReactComponent as SvgCheck } from './check.svg'
 import { ReactComponent as SvgCheckboxMultiple } from './checkbox-multiple.svg'
 import { ReactComponent as SvgChevron } from './chevron.svg'
+import { ReactComponent as SvgChevronRight } from './chevron-right.svg'
 import { ReactComponent as SvgDirectory } from './directory.svg'
 import { ReactComponent as SvgExternalLink } from './external-link.svg'
 import { ReactComponent as SvgHidden } from './hidden.svg'
@@ -49,6 +50,9 @@ export const IconCheckboxMultiple = (props) => (
   <Icon as={SvgCheckboxMultiple} {...props} />
 )
 export const IconChevron = (props) => <Icon as={SvgChevron} {...props} />
+export const IconChevronRight = (props) => (
+  <Icon as={SvgChevronRight} {...props} />
+)
 export const IconDirectory = (props) => <Icon as={SvgDirectory} {...props} />
 export const IconExternalLink = (props) => (
   <Icon as={SvgExternalLink} size="small" {...props} />

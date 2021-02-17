@@ -3,7 +3,7 @@
 //
 import styled, { css } from 'styled-components'
 import { Link } from 'react-router-dom'
-import IconChevronRight from './IconChevronRight'
+import { IconChevronRight } from '../../icons'
 
 export const StyledTable = styled.table`
   border-spacing: unset;
