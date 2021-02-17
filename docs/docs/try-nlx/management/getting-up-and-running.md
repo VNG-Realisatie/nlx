@@ -102,13 +102,14 @@ import TabItem from '@theme/TabItem';
 - `TLS_CERT` This is the location of the API certificate from the internal PKI.
 - `TLS_KEY` This is the location of the private key from the internal PKI.
 - `DISABLE_LOGDB` The value 1 will disable the transaction logs, the value 0 will enable them.
-- `SECRET_KEY` Secret key that is used for signing sessions
-- `OIDC_CLIENT_ID` The OIDC client ID
-- `OIDC_CLIENT_SECRET` The OIDC client secret
-- `OIDC_DISCOVERY_URL` The OIDC discovery URL
-- `OIDC_REDIRECT_URL` The OIDC redirect URL
-- `SESSION_COOKIE_SECURE` Use 'secure' cookies
-- `POSTGRES_DSN` Connection string for the PostgreSQL database
+- `SECRET_KEY` Secret key that is used for signing sessions.
+- `OIDC_CLIENT_ID` The OIDC client ID.
+- `OIDC_CLIENT_SECRET` The OIDC client secret.
+- `OIDC_DISCOVERY_URL` The OIDC discovery URL.
+- `OIDC_REDIRECT_URL` The OIDC redirect URL.
+- `SESSION_COOKIE_SECURE` Use 'secure' cookies.
+- `POSTGRES_DSN` Connection string for the PostgreSQL database.
+- `TRANSACTION_LOG_DSN` Connection string to the transaction log database. Only needed if you want add pricing to your services.
 - `LOG_LEVEL` Log level of the application. Options: debug, info, warn.
 
 </TabItem>

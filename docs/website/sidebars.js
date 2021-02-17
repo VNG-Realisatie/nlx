@@ -34,7 +34,7 @@ module.exports = {
     "Use NLX": [
       "use-nlx/request-a-production-cert",
       "use-nlx/enable-transaction-logs",
-      "use-nlx/enable-finance",
+      "use-nlx/enable-pricing",
       "use-nlx/setup-authorization",
       "use-nlx/new-releases",
     ],

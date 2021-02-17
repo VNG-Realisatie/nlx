@@ -212,7 +212,7 @@ const ServiceForm = ({
           </Fieldset>
 
           <Fieldset>
-            <Legend>{t('Billing')}</Legend>
+            <Legend>{t('Pricing')}</Legend>
 
             <Checkbox name="isPaidService">
               {t('This is a paid service')}
