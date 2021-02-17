@@ -109,6 +109,7 @@
   "Organization inway": "Organization inway",
   "Organizations with access": "Organizations with access",
   "Page not found": "Page not found",
+  "Please enter valid costs": "Please enter valid costs (at least 1 cent)",
   "Please try again": "Please try again",
   "Public support email": "Public support email",
   "Publish to central directory": "Publish to central directory",
@@ -172,6 +173,5 @@
   "You are requesting access to a service": "You are requesting access to a service",
   "You have access": "You have access",
   "You have no access": "You have no access",
-  "Your access was revoked": "Your access was revoked",
-  "Please enter valid costs": "Please enter valid costs (at least 1 cent)"
+  "Your access was revoked": "Your access was revoked"
 }

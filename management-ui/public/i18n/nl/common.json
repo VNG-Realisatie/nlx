@@ -109,6 +109,7 @@
   "Organization inway": "Organisatie inway",
   "Organizations with access": "Organisaties met toegang",
   "Page not found": "Pagina niet gevonden",
+  "Please enter valid costs": "Vul geldige kosten in (minimaal 1 cent)",
   "Please try again": "Probeer het opnieuw",
   "Public support email": "Publiek support e-mailadres",
   "Publish to central directory": "Publiceren in de centrale directory",
@@ -173,6 +174,5 @@
   "You have access": "Je hebt toegang",
   "You have no access": "Je hebt geen toegang",
   "Your access was revoked": "Je toegang is ingetrokken",
-  "Please enter valid costs": "Vul geldige kosten in (minimaal 1 cent)",
   "New organizations": "New organizations"
 }
