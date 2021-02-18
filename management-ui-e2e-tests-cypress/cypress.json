@@ -1,0 +1,9 @@
+{
+  "chromeWebSecurity": false,
+  "baseUrl": "http://management.organization-a.nlx.local:3011",
+  "env": {
+    "LOGIN_ORGANIZATION_NAME": "Organization-A",
+    "LOGIN_USERNAME": "admin@nlx.local",
+    "LOGIN_PASSWORD": "development"
+  }
+}

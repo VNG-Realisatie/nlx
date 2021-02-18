@@ -85,9 +85,9 @@ Deploy review:
       echo "export E2E_MANAGEMENT_UI_DIRECTORY_SERVICE_NAME=basisregistratie" >> e2e_environment.sh
       echo "export E2E_MANAGEMENT_UI_DIRECTORY_STATUS=Beschikbaar" >> e2e_environment.sh
       echo "export E2E_MANAGEMENT_UI_DIRECTORY_API_SPECIFICATION_TYPE=OpenAPI3" >> e2e_environment.sh
-      echo "export E2E_MANAGEMENT_UI_LOGIN_ORGANIZATION_NAME=RDW" >> e2e_environment.sh
-      echo "export E2E_MANAGEMENT_UI_LOGIN_USERNAME=admin@example.com" >> e2e_environment.sh
-      echo "export E2E_MANAGEMENT_UI_LOGIN_PASSWORD=password" >> e2e_environment.sh
+      echo "export CYPRESS_LOGIN_ORGANIZATION_NAME=RDW" >> e2e_environment.sh
+      echo "export CYPRESS_LOGIN_USERNAME=admin@example.com" >> e2e_environment.sh
+      echo "export CYPRESS_LOGIN_PASSWORD=password" >> e2e_environment.sh
   environment:
     name: $CI_COMMIT_REF_NAME
     url: https://nlx-${CI_ENVIRONMENT_SLUG}.${REVIEW_BASE_DOMAIN}
