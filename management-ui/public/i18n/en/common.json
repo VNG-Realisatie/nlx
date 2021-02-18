@@ -1,4 +1,4 @@
-{
+
   "<0>{{user}}</0> failed to request access to <3>{{service}}</3> from <6>{{organization}}</6>": "<0>{{user}}</0> failed to request access to <3>{{service}}</3> from <6>{{organization}}</6>",
   "<0>{{user}}</0> has approved the access request from <3>{{organization}}</3> for <5>{{service}}</5>": "<0>{{user}}</0> has approved the access request from <3>{{organization}}</3> for <5>{{service}}</5>",
   "<0>{{user}}</0> has created the service <3>{{service}}</3>": "<0>{{user}}</0> has created the service <3>{{service}}</3>",
@@ -59,6 +59,7 @@
   "Edit": "Edit",
   "Edit service": "Edit service",
   "Error": "Error",
+  "Export report": "Export report",
   "Failed adding service": "Failed adding service",
   "Failed login attempt": "Failed login attempt",
   "Failed to approve access request": "Failed to approve access request",
@@ -74,6 +75,8 @@
   "Failed to revoke access grant": "Failed to revoke access grant",
   "Failed to update the service": "Failed to update the service",
   "Failed to update the settings": "Failed to update the settings",
+  "Finances": "Finances",
+  "Finances page": "Finances page",
   "Free": "Free",
   "Gateways to provide services": "Gateways to provide services",
   "General": "General",
@@ -84,6 +87,7 @@
   "Hostname": "Hostname",
   "Insight": "Insight",
   "Insight API URL": "Insight API URL",
+  "Insight in how often and for what cost other organizations request your services": "Insight in how often and for what cost other organizations request your services",
   "Insight settings": "Insight settings",
   "Invalid endpoint URL": "Invalid endpoint URL",
   "Inways": "Inways",
@@ -170,6 +174,7 @@
   "This field is required": "This field is required",
   "This inway is used to be able to retrieve & confirm access requests from other organizations.": "This inway is used to be able to retrieve & confirm access requests from other organizations.",
   "This is a paid service": "This is a paid service",
+  "This report is only available as CSV file": "This report is only available as CSV file",
   "Type": "Type",
   "Unknown": "Unknown",
   "Up": "Up",

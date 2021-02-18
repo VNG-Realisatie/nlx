@@ -59,6 +59,7 @@
   "Edit": "Aanpassen",
   "Edit service": "Service aanpassen",
   "Error": "Fout",
+  "Export report": "Exporteer rapport",
   "Failed adding service": "Toevoegen mislukt",
   "Failed login attempt": "Mislukte inlogpoging",
   "Failed to approve access request": "Fout bij goedkeuren toegangsverzoek",
@@ -74,6 +75,8 @@
   "Failed to revoke access grant": "Fout bij het intrekken van toegang",
   "Failed to update the service": "De service kan niet worden bijgewerkt",
   "Failed to update the settings": "De instellingen kunnen niet worden bijgewerkt",
+  "Finances": "Financiën",
+  "Finances page": "Financiële pagina",
   "Free": "Geen",
   "Gateways to provide services": "Gateways om services aan te bieden",
   "General": "Algemeen",
@@ -84,6 +87,7 @@
   "Hostname": "Hostname",
   "Insight": "Insight",
   "Insight API URL": "Insight API URL",
+  "Insight in how often and for what cost other organizations request your services": "Inzicht in hoe vaak- en tegen welke kosten, andere organisaties jouw services bevragen",
   "Insight settings": "Insight instellingen",
   "Invalid endpoint URL": "Ongeldige endpoint URL",
   "Inways": "Inways",
@@ -170,6 +174,7 @@
   "This field is required": "Dit veld is verplicht",
   "This inway is used to be able to retrieve & confirm access requests from other organizations.": "Deze inway wordt gebruikt om toegangsverzoeken af te handelen.",
   "This is a paid service": "Dit is een betaalde service",
+  "This report is only available as CSV file": "Dit rapport is alleen als CSV beschikbaar",
   "Type": "Type",
   "Unknown": "Onbekend",
   "Up": "Beschikbaar",
@@ -182,6 +187,5 @@
   "You are requesting access to a service": "Je vraagt toegang tot een service",
   "You have access": "Je hebt toegang",
   "You have no access": "Je hebt geen toegang",
-  "Your access was revoked": "Je toegang is ingetrokken",
-  "New organizations": "New organizations"
+  "Your access was revoked": "Je toegang is ingetrokken"
 }

@@ -8,8 +8,9 @@ import {
   IconArrowLeftRight,
   IconDirectory,
   IconServices,
-  IconSettings,
+  IconBarChart,
   IconTimeLine,
+  IconSettings,
 } from '../../icons'
 import {
   Nav,
@@ -46,6 +47,11 @@ const PrimaryNavigation = () => {
         <StyledLink to="/directory" aria-label={t('Directory page')}>
           <StyledIcon as={IconDirectory} size="x-large" />
           {t('Directory')}
+        </StyledLink>
+
+        <StyledLink to="/finances" aria-label={t('Finances page')}>
+          <StyledIcon as={IconBarChart} size="x-large" />
+          {t('Finances')}
         </StyledLink>
 
         <StyledLink to="/audit-log" aria-label={t('Audit log page')}>

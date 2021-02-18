@@ -12,6 +12,7 @@ import EditServicePage from '../pages/services/EditServicePage'
 import NotFoundPage from '../pages/NotFoundPage'
 import SettingsPage from '../pages/SettingsPage'
 import AuditLogPage from '../pages/AuditLogPage'
+import FinancePage from '../pages/FinancePage'
 import AuthenticatedRoute, { LoginRoutePath } from './authenticated-route'
 
 const Routes = () => {
@@ -21,7 +22,6 @@ const Routes = () => {
       <Route path={LoginRoutePath} component={LoginPage} />
 
       <AuthenticatedRoute path="/inways/:name?" component={InwaysPage} />
-
       <AuthenticatedRoute
         path="/services/add-service"
         component={AddServicePage}
@@ -35,9 +35,9 @@ const Routes = () => {
         path="/directory/:organization?/:name?"
         component={DirectoryPage}
       />
-      <AuthenticatedRoute path="/settings" component={SettingsPage} />
-
+      <AuthenticatedRoute path="/finances" component={FinancePage} />
       <AuthenticatedRoute path="/audit-log" component={AuditLogPage} />
+      <AuthenticatedRoute path="/settings" component={SettingsPage} />
 
       <Route path="*" component={NotFoundPage} />
     </Switch>
