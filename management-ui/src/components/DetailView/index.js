@@ -11,6 +11,7 @@ export const DetailHeading = styled.div`
   font-weight: ${(p) => p.theme.tokens.fontWeightBold};
   font-size: ${(p) => p.theme.tokens.fontSizeLarge};
   margin: 0;
+  align-items: center;
 
   svg {
     margin-right: ${(p) => p.theme.tokens.spacing03};

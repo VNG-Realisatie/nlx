@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { arrayOf, array, bool, func, shape, string } from 'prop-types'
+import { array, arrayOf, bool, func, shape, string, number } from 'prop-types'
 import { observer } from 'mobx-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
@@ -22,6 +22,7 @@ import {
   StyledRemoveButton,
   StyledServiceVisibilityAlert,
 } from './index.styles'
+import CostsSection from './CostsSection'
 
 const ServiceDetailView = ({ service, removeHandler }) => {
   const { internal, inways } = service
@@ -75,6 +76,11 @@ const ServiceDetailView = ({ service, removeHandler }) => {
         <InwaysSection inways={inways} />
         <AccessRequestSectionContainer service={service} />
         <AccessGrantSection service={service} />
+        <CostsSection
+          oneTimeCosts={service.oneTimeCosts}
+          monthlyCosts={service.monthlyCosts}
+          requestCosts={service.requestCosts}
+        />
       </SectionGroup>
 
       <ConfirmRemoveModal />
@@ -92,6 +98,9 @@ ServiceDetailView.propTypes = {
     publicSupportContact: string,
     inways: arrayOf(string),
     incomingAccessRequests: array,
+    oneTimeCosts: number,
+    monthlyCosts: number,
+    requestCosts: number,
   }).isRequired,
   removeHandler: func.isRequired,
 }

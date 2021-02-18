@@ -242,7 +242,7 @@ const ServiceForm = ({
                   min="0"
                   name="requestCosts"
                 >
-                  {t('Costs per request (in Euro)')}
+                  {t('Cost per request (in Euro)')}
                 </TextInput>
               </>
             )}

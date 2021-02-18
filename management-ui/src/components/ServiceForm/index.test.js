@@ -450,7 +450,7 @@ describe('when showing inways', () => {
 
     userEvent.type(getByLabelText('One time costs (in Euro)'), '10.5')
     userEvent.type(getByLabelText('Monthly costs (in Euro)'), '5')
-    userEvent.type(getByLabelText('Costs per request (in Euro)'), '1.25')
+    userEvent.type(getByLabelText('Cost per request (in Euro)'), '1.25')
 
     await fireEvent.submit(getByTestId('form'))
 
