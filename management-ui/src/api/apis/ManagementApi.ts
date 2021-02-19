@@ -27,6 +27,9 @@ import {
     ManagementCreateServiceResponse,
     ManagementCreateServiceResponseFromJSON,
     ManagementCreateServiceResponseToJSON,
+    ManagementDownloadBillingExportResponse,
+    ManagementDownloadBillingExportResponseFromJSON,
+    ManagementDownloadBillingExportResponseToJSON,
     ManagementGetServiceResponse,
     ManagementGetServiceResponseFromJSON,
     ManagementGetServiceResponseToJSON,
@@ -345,6 +348,30 @@ export class ManagementApi extends runtime.BaseAPI {
      */
     async managementDeleteService(requestParameters: ManagementDeleteServiceRequest): Promise<object> {
         const response = await this.managementDeleteServiceRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async managementDownloadBillingExportRaw(): Promise<runtime.ApiResponse<ManagementDownloadBillingExportResponse>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v1/billing/export`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementDownloadBillingExportResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async managementDownloadBillingExport(): Promise<ManagementDownloadBillingExportResponse> {
+        const response = await this.managementDownloadBillingExportRaw();
         return await response.value();
     }
 

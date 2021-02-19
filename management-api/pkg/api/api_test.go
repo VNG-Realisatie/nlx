@@ -137,6 +137,7 @@ func TestNewAPI(t *testing.T) {
 
 			_, err = NewAPI(
 				test.db,
+				nil,
 				logger,
 				testProcess,
 				cert,

@@ -35,7 +35,15 @@ func TestGetInsight(t *testing.T) {
 	defer mockCtrl.Finish()
 
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase, mock_auditlog.NewMockLogger(mockCtrl))
+	service := server.NewManagementService(
+		logger,
+		testProcess,
+		mock_directory.NewMockClient(mockCtrl),
+		nil,
+		mockDatabase,
+		nil,
+		mock_auditlog.NewMockLogger(mockCtrl),
+	)
 
 	emptyRequest := &types.Empty{}
 
@@ -87,7 +95,15 @@ func TestPutInsight(t *testing.T) {
 	auditLogger := mock_auditlog.NewMockLogger(mockCtrl)
 	auditLogger.EXPECT().OrganizationInsightConfigurationUpdate(ctx, "Jane Doe", "nlxctl")
 
-	service := server.NewManagementService(logger, testProcess, mockDirectoryClient, nil, mockDatabase, auditLogger)
+	service := server.NewManagementService(
+		logger,
+		testProcess,
+		mockDirectoryClient,
+		nil,
+		mockDatabase,
+		nil,
+		auditLogger,
+	)
 
 	request := &api.InsightConfiguration{
 		IrmaServerURL: "http://irma-url.com",

@@ -52,7 +52,7 @@ func newService(t *testing.T) (s *server.ManagementService, db *mock_database.Mo
 
 	auditLogger = mock_auditlog.NewMockLogger(ctrl)
 
-	s = server.NewManagementService(logger, proc, mock_directory.NewMockClient(ctrl), bundle, db, auditLogger)
+	s = server.NewManagementService(logger, proc, mock_directory.NewMockClient(ctrl), bundle, db, nil, auditLogger)
 
 	return s, db, auditLogger
 }

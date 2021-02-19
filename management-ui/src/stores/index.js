@@ -12,6 +12,7 @@ import AccessProofStore from './AccessProofStore'
 import ServiceStore from './ServiceStore'
 import IncomingAccessRequestsStore from './IncomingAccessRequestsStore'
 import InwayStore from './InwayStore'
+import FinanceStore from './FinanceStore'
 import AuditLogStore from './AuditLogStore'
 
 if (process.env.NODE_ENV !== 'test') {
@@ -48,8 +49,10 @@ export class RootStore {
       rootStore: this,
       managementApiClient,
     })
-
     this.auditLogStore = new AuditLogStore({
+      managementApiClient,
+    })
+    this.financeStore = new FinanceStore({
       managementApiClient,
     })
   }

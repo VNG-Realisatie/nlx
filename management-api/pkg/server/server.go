@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"errors"
+
 	"google.golang.org/grpc/metadata"
 
 	"go.uber.org/zap"
@@ -12,26 +13,29 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/auditlog"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/directory"
+	"go.nlx.io/nlx/management-api/pkg/txlogdb"
 )
 
 // ManagementService handles all requests for the config api
 type ManagementService struct {
 	logger          *zap.Logger
-	configDatabase  database.ConfigDatabase
 	mainProcess     *process.Process
 	directoryClient directory.Client
 	orgCert         *tls.CertificateBundle
+	configDatabase  database.ConfigDatabase
+	txlogDatabase   txlogdb.TxlogDatabase
 	auditLogger     auditlog.Logger
 }
 
 // New creates new ManagementService
-func NewManagementService(logger *zap.Logger, mainProcess *process.Process, directoryClient directory.Client, orgCert *tls.CertificateBundle, configDatabase database.ConfigDatabase, auditLogger auditlog.Logger) *ManagementService {
+func NewManagementService(logger *zap.Logger, mainProcess *process.Process, directoryClient directory.Client, orgCert *tls.CertificateBundle, configDatabase database.ConfigDatabase, txlogDatabase txlogdb.TxlogDatabase, auditLogger auditlog.Logger) *ManagementService {
 	return &ManagementService{
-		configDatabase:  configDatabase,
 		logger:          logger,
 		orgCert:         orgCert,
 		mainProcess:     mainProcess,
 		directoryClient: directoryClient,
+		configDatabase:  configDatabase,
+		txlogDatabase:   txlogDatabase,
 		auditLogger:     auditLogger,
 	}
 }

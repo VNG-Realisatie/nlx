@@ -15,6 +15,9 @@ option (gogoproto.unmarshaler_all) = true;
 option (gogoproto.goproto_getters_all) = false;
 
 service Management {
+  rpc DownloadBillingExport (google.protobuf.Empty) returns (DownloadBillingExportResponse) {
+    option (google.api.http) = {get: "/api/v1/billing/export"};
+  }
   rpc ListServices (ListServicesRequest) returns (ListServicesResponse) {
     option (google.api.http) = {get: "/api/v1/services"};
   }
@@ -54,38 +57,30 @@ service Management {
   rpc GetInsightConfiguration (google.protobuf.Empty) returns (InsightConfiguration) {
     option (google.api.http) = {get: "/api/v1/insight-configuration"};
   }
-
   rpc ListIncomingAccessRequest (ListIncomingAccessRequestsRequests) returns (ListIncomingAccessRequestsResponse) {
     option (google.api.http) = {get: "/api/v1/access-requests/incoming/services/{serviceName}"};
   }
-
   rpc ApproveIncomingAccessRequest (ApproveIncomingAccessRequestRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {post: "/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/approve"};
   }
-
   rpc RejectIncomingAccessRequest (RejectIncomingAccessRequestRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {post: "/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/reject"};
   }
-
   rpc ListOutgoingAccessRequests (ListOutgoingAccessRequestsRequest) returns (ListOutgoingAccessRequestsResponse) {
     option (google.api.http) = {get: "/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}"};
   }
-
   rpc CreateAccessRequest (CreateAccessRequestRequest) returns (OutgoingAccessRequest) {
     option (google.api.http) = {post: "/api/v1/access-requests" body: "*"};
   }
-
   rpc SendAccessRequest (SendAccessRequestRequest) returns (OutgoingAccessRequest) {
     option (google.api.http) = {post: "/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}/{accessRequestID}/send"};
   }
-
   rpc GetSettings (google.protobuf.Empty) returns (Settings) {
     option (google.api.http) = {get: "/api/v1/settings"};
   }
   rpc UpdateSettings(UpdateSettingsRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {put: "/api/v1/settings", body: "*"};
   }
-
   rpc ListAccessGrantsForService(ListAccessGrantsForServiceRequest) returns(ListAccessGrantsForServiceResponse) {
     option (google.api.http) = {get: "/api/v1/access-grants/services/{serviceName}"};
   }
@@ -93,10 +88,13 @@ service Management {
   rpc RevokeAccessGrant(RevokeAccessGrantRequest) returns (AccessGrant) {
     option (google.api.http) = {post: "/api/v1/access-grants/service/{serviceName}/organizations/{organizationName}/{accessGrantID}/revoke"};
   }
-
   rpc ListAuditLogs (google.protobuf.Empty) returns (ListAuditLogsResponse) {
     option (google.api.http) = {get: "/api/v1/audit-logs"};
   }
+}
+
+message DownloadBillingExportResponse {
+  bytes data = 1;
 }
 
 message Service {

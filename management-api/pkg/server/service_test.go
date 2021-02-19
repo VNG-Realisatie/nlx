@@ -48,7 +48,15 @@ func TestCreateService(t *testing.T) {
 	auditLogger := mock_auditlog.NewMockLogger(mockCtrl)
 	auditLogger.EXPECT().ServiceCreate(gomock.Any(), "Jane Doe", "nlxctl", "my-service")
 
-	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase, auditLogger)
+	service := server.NewManagementService(
+		logger,
+		testProcess,
+		mock_directory.NewMockClient(mockCtrl),
+		nil,
+		mockDatabase,
+		nil,
+		auditLogger,
+	)
 
 	requestService := &api.CreateServiceRequest{
 		Name:        "my-service",
@@ -77,7 +85,15 @@ func TestGetService(t *testing.T) {
 	defer mockCtrl.Finish()
 
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase, mock_auditlog.NewMockLogger(mockCtrl))
+	service := server.NewManagementService(
+		logger,
+		testProcess,
+		mock_directory.NewMockClient(mockCtrl),
+		nil,
+		mockDatabase,
+		nil,
+		mock_auditlog.NewMockLogger(mockCtrl),
+	)
 
 	getServiceRequest := &api.GetServiceRequest{
 		Name: "my-service",
@@ -133,7 +149,15 @@ func TestUpdateService(t *testing.T) {
 	auditLogger := mock_auditlog.NewMockLogger(mockCtrl)
 	auditLogger.EXPECT().ServiceUpdate(gomock.Any(), "Jane Doe", "nlxctl", "my-service")
 
-	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase, auditLogger)
+	service := server.NewManagementService(
+		logger,
+		testProcess,
+		mock_directory.NewMockClient(mockCtrl),
+		nil,
+		mockDatabase,
+		nil,
+		auditLogger,
+	)
 
 	updateServiceRequest := &api.UpdateServiceRequest{
 		Name:        "my-service",
@@ -176,7 +200,15 @@ func TestDeleteService(t *testing.T) {
 	auditLogger := mock_auditlog.NewMockLogger(mockCtrl)
 	auditLogger.EXPECT().ServiceDelete(gomock.Any(), "Jane Doe", "nlxctl", "my-service")
 
-	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase, auditLogger)
+	service := server.NewManagementService(
+		logger,
+		testProcess,
+		mock_directory.NewMockClient(mockCtrl),
+		nil,
+		mockDatabase,
+		nil,
+		auditLogger,
+	)
 
 	deleteRequest := &api.DeleteServiceRequest{
 		Name: "my-service",
@@ -446,7 +478,15 @@ func TestListServices(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			ctx := context.Background()
 
-			service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(ctrl), nil, test.db(ctrl), mock_auditlog.NewMockLogger(ctrl))
+			service := server.NewManagementService(
+				logger,
+				testProcess,
+				mock_directory.NewMockClient(ctrl),
+				nil,
+				test.db(ctrl),
+				nil,
+				mock_auditlog.NewMockLogger(ctrl),
+			)
 			actualResponse, err := service.ListServices(ctx, test.request)
 
 			assert.Equal(t, test.expectedError, err)
@@ -468,7 +508,15 @@ func TestGetStatisticsOfServices(t *testing.T) {
 		"service-a": 3,
 	}, nil)
 
-	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase, mock_auditlog.NewMockLogger(mockCtrl))
+	service := server.NewManagementService(
+		logger,
+		testProcess,
+		mock_directory.NewMockClient(mockCtrl),
+		nil,
+		mockDatabase,
+		nil,
+		mock_auditlog.NewMockLogger(mockCtrl),
+	)
 
 	requestGetStatisticsOfServices := &api.GetStatisticsOfServicesRequest{}
 

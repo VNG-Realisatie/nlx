@@ -5,6 +5,8 @@ import (
 
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 
 	"go.nlx.io/nlx/common/cmd"
 	"go.nlx.io/nlx/common/logoptions"
@@ -15,6 +17,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/auditlog"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/oidc"
+	"go.nlx.io/nlx/management-api/pkg/txlogdb"
 )
 
 type oidcOptions = oidc.Options
@@ -25,6 +28,7 @@ var serveOpts struct {
 	PostgresDSN                  string
 	DirectoryInspectionAddress   string
 	DirectoryRegistrationAddress string
+	TransactionLogDSN            string
 
 	logoptions.LogOptions
 	cmd.TLSOrgOptions
@@ -48,6 +52,7 @@ func init() {
 	serveCommand.Flags().StringVarP(&serveOpts.TLSOrgOptions.NLXRootCert, "tls-nlx-root-cert", "", "", "Absolute or relative path to the NLX CA root cert .pem")
 	serveCommand.Flags().StringVarP(&serveOpts.TLSOrgOptions.OrgCertFile, "tls-org-cert", "", "", "Absolute or relative path to the Organization cert .pem")
 	serveCommand.Flags().StringVarP(&serveOpts.TLSOrgOptions.OrgKeyFile, "tls-org-key", "", "", "Absolute or relative path to the Organization key .pem")
+	serveCommand.Flags().StringVarP(&serveOpts.TransactionLogDSN, "transaction-log-dsn", "", "", "Postgres DSN to the transaction log database")
 	serveCommand.Flags().StringVarP(&serveOpts.oidcOptions.SecretKey, "secret-key", "", "", "Secret key that is used for signing sessions")
 	serveCommand.Flags().StringVarP(&serveOpts.oidcOptions.ClientID, "oidc-client-id", "", "", "The OIDC client ID")
 	serveCommand.Flags().StringVarP(&serveOpts.oidcOptions.ClientSecret, "oidc-client-secret", "", "", "The OIDC client secret")
@@ -123,8 +128,18 @@ var serveCommand = &cobra.Command{
 			log.Fatalf("failed to connect to the database: %v", err)
 		}
 
-		auditLogger := auditlog.NewPostgresLogger(db, logger)
+		var txlogDB txlogdb.TxlogDatabase
 
+		if len(serveOpts.TransactionLogDSN) > 0 {
+			db, txlogErr := gorm.Open(postgres.Open(serveOpts.TransactionLogDSN), &gorm.Config{})
+			if txlogErr != nil {
+				log.Fatalf("failed to connect to the log database: %v", err)
+			}
+
+			txlogDB = &txlogdb.TxlogPostgresDatabase{DB: db}
+		}
+
+		auditLogger := auditlog.NewPostgresLogger(db, logger)
 		authenticator := oidc.NewAuthenticator(db, auditLogger, logger, &serveOpts.oidcOptions)
 
 		if errValidate := common_tls.VerifyPrivateKeyPermissions(serveOpts.OrgKeyFile); errValidate != nil {
@@ -147,6 +162,7 @@ var serveCommand = &cobra.Command{
 
 		a, err := api.NewAPI(
 			db,
+			txlogDB,
 			logger,
 			mainProcess,
 			cert,

@@ -36,6 +36,26 @@ func (m *MockManagementClient) EXPECT() *MockManagementClientMockRecorder {
 	return m.recorder
 }
 
+// DownloadBillingExport mocks base method
+func (m *MockManagementClient) DownloadBillingExport(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*api.DownloadBillingExportResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "DownloadBillingExport", varargs...)
+	ret0, _ := ret[0].(*api.DownloadBillingExportResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DownloadBillingExport indicates an expected call of DownloadBillingExport
+func (mr *MockManagementClientMockRecorder) DownloadBillingExport(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadBillingExport", reflect.TypeOf((*MockManagementClient)(nil).DownloadBillingExport), varargs...)
+}
+
 // ListServices mocks base method
 func (m *MockManagementClient) ListServices(ctx context.Context, in *api.ListServicesRequest, opts ...grpc.CallOption) (*api.ListServicesResponse, error) {
 	m.ctrl.T.Helper()
@@ -537,6 +557,21 @@ func NewMockManagementServer(ctrl *gomock.Controller) *MockManagementServer {
 // EXPECT returns an object that allows the caller to indicate expected use
 func (m *MockManagementServer) EXPECT() *MockManagementServerMockRecorder {
 	return m.recorder
+}
+
+// DownloadBillingExport mocks base method
+func (m *MockManagementServer) DownloadBillingExport(arg0 context.Context, arg1 *types.Empty) (*api.DownloadBillingExportResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DownloadBillingExport", arg0, arg1)
+	ret0, _ := ret[0].(*api.DownloadBillingExportResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DownloadBillingExport indicates an expected call of DownloadBillingExport
+func (mr *MockManagementServerMockRecorder) DownloadBillingExport(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadBillingExport", reflect.TypeOf((*MockManagementServer)(nil).DownloadBillingExport), arg0, arg1)
 }
 
 // ListServices mocks base method

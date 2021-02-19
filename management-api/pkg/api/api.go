@@ -30,6 +30,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/environment"
 	"go.nlx.io/nlx/management-api/pkg/oidc"
 	"go.nlx.io/nlx/management-api/pkg/server"
+	"go.nlx.io/nlx/management-api/pkg/txlogdb"
 )
 
 // API handles incoming requests and authenticates them
@@ -48,7 +49,7 @@ type API struct {
 
 // NewAPI creates and prepares a new API
 //nolint:gocyclo // parameter validation
-func NewAPI(db database.ConfigDatabase, logger *zap.Logger, mainProcess *process.Process, cert, orgCert *common_tls.CertificateBundle, directoryInspectionAddress, directoryRegistrationAddress string, authenticator *oidc.Authenticator, auditLogger auditlog.Logger) (*API, error) {
+func NewAPI(db database.ConfigDatabase, txlogDB txlogdb.TxlogDatabase, logger *zap.Logger, mainProcess *process.Process, cert, orgCert *common_tls.CertificateBundle, directoryInspectionAddress, directoryRegistrationAddress string, authenticator *oidc.Authenticator, auditLogger auditlog.Logger) (*API, error) {
 	if db == nil {
 		return nil, errors.New("database is not configured")
 	}
@@ -78,7 +79,15 @@ func NewAPI(db database.ConfigDatabase, logger *zap.Logger, mainProcess *process
 		logger.Fatal("failed to setup directory client", zap.Error(err))
 	}
 
-	managementService := server.NewManagementService(logger, mainProcess, directoryClient, orgCert, db, auditLogger)
+	managementService := server.NewManagementService(
+		logger,
+		mainProcess,
+		directoryClient,
+		orgCert,
+		db,
+		txlogDB,
+		auditLogger,
+	)
 
 	grpcServer := newGRPCServer(logger, cert)
 

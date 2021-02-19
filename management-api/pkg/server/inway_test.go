@@ -42,7 +42,8 @@ var createInwayTests = []struct {
 		args: args{
 			database: &database.Inway{Name: "inway42.basic", IPAddress: "127.1.1.1"},
 			request:  &api.Inway{Name: "inway42.basic"},
-			peer:     &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv4(127, 1, 1, 1)}}},
+			peer:     &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv4(127, 1, 1, 1)}},
+		},
 		want: &api.Inway{
 			Name:      "inway42.basic",
 			IpAddress: "127.1.1.1",
@@ -53,7 +54,8 @@ var createInwayTests = []struct {
 		args: args{
 			database: &database.Inway{Name: "inway42.ignore-ip", IPAddress: "127.1.1.1"},
 			request:  &api.Inway{Name: "inway42.ignore-ip", IpAddress: "127.2.2.2"},
-			peer:     &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv4(127, 1, 1, 1)}}},
+			peer:     &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv4(127, 1, 1, 1)}},
+		},
 		want: &api.Inway{
 			Name:      "inway42.ignore-ip",
 			IpAddress: "127.1.1.1",
@@ -64,14 +66,16 @@ var createInwayTests = []struct {
 		args: args{
 			database: &database.Inway{Name: "inway42.ip-context-required"},
 			request:  &api.Inway{Name: "inway42.ip-context-required"},
-			peer:     &peer.Peer{Addr: nil}},
+			peer:     &peer.Peer{Addr: nil},
+		},
 	},
 	{
 		name: "ipv6",
 		args: args{
 			database: &database.Inway{Name: "inway42.ipv6", IPAddress: "::1"},
 			request:  &api.Inway{Name: "inway42.ipv6"},
-			peer:     &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv6loopback}}},
+			peer:     &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv6loopback}},
+		},
 		want: &api.Inway{
 			Name:      "inway42.ipv6",
 			IpAddress: "::1",
@@ -94,7 +98,15 @@ func TestCreateInway(t *testing.T) {
 			if tt.want != nil {
 				mockDatabase.EXPECT().CreateInway(ctx, tt.args.database)
 			}
-			service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase, mock_auditlog.NewMockLogger(mockCtrl))
+			service := server.NewManagementService(
+				logger,
+				testProcess,
+				mock_directory.NewMockClient(mockCtrl),
+				nil,
+				mockDatabase,
+				nil,
+				mock_auditlog.NewMockLogger(mockCtrl),
+			)
 
 			response, err := service.CreateInway(ctx, tt.args.request)
 			if tt.want != nil {
@@ -116,7 +128,15 @@ func TestGetInway(t *testing.T) {
 	defer mockCtrl.Finish()
 
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase, mock_auditlog.NewMockLogger(mockCtrl))
+	service := server.NewManagementService(
+		logger,
+		testProcess,
+		mock_directory.NewMockClient(mockCtrl),
+		nil,
+		mockDatabase,
+		nil,
+		mock_auditlog.NewMockLogger(mockCtrl),
+	)
 
 	getInwayRequest := &api.GetInwayRequest{
 		Name: "inway42.test",
@@ -167,7 +187,15 @@ func TestUpdateInway(t *testing.T) {
 	mockDatabase.EXPECT().UpdateInway(ctx, mockInway)
 	mockDatabase.EXPECT().GetInway(ctx, "inway42.test").Return(mockInway, nil)
 
-	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase, mock_auditlog.NewMockLogger(mockCtrl))
+	service := server.NewManagementService(
+		logger,
+		testProcess,
+		mock_directory.NewMockClient(mockCtrl),
+		nil,
+		mockDatabase,
+		nil,
+		mock_auditlog.NewMockLogger(mockCtrl),
+	)
 
 	updateInwayRequest := &api.UpdateInwayRequest{
 		Name: "inway42.test",
@@ -197,7 +225,15 @@ func TestDeleteInway(t *testing.T) {
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
 	mockDatabase.EXPECT().DeleteInway(ctx, "inway42.test")
 
-	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase, mock_auditlog.NewMockLogger(mockCtrl))
+	service := server.NewManagementService(
+		logger,
+		testProcess,
+		mock_directory.NewMockClient(mockCtrl),
+		nil,
+		mockDatabase,
+		nil,
+		mock_auditlog.NewMockLogger(mockCtrl),
+	)
 
 	deleteRequest := &api.DeleteInwayRequest{
 		Name: "inway42.test",
@@ -230,8 +266,10 @@ func TestListInways(t *testing.T) {
 			Services: []*database.Service{
 				{
 					Name: "mock-service",
-					Inways: []*database.Inway{{
-						Name: "inway.test"},
+					Inways: []*database.Inway{
+						{
+							Name: "inway.test",
+						},
 					},
 				},
 			},
@@ -240,7 +278,15 @@ func TestListInways(t *testing.T) {
 
 	mockDatabase.EXPECT().ListInways(ctx).Return(mockListInways, nil)
 
-	service := server.NewManagementService(logger, testProcess, mock_directory.NewMockClient(mockCtrl), nil, mockDatabase, mock_auditlog.NewMockLogger(mockCtrl))
+	service := server.NewManagementService(
+		logger,
+		testProcess,
+		mock_directory.NewMockClient(mockCtrl),
+		nil,
+		mockDatabase,
+		nil,
+		mock_auditlog.NewMockLogger(mockCtrl),
+	)
 	actualResponse, err := service.ListInways(ctx, &api.ListInwaysRequest{})
 	assert.NoError(t, err)
 

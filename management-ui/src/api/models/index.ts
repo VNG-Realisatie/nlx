@@ -9,6 +9,7 @@ export * from './ManagementCreateServiceRequest';
 export * from './ManagementCreateServiceResponse';
 export * from './ManagementDirectoryListServicesResponse';
 export * from './ManagementDirectoryService';
+export * from './ManagementDownloadBillingExportResponse';
 export * from './ManagementErrorCode';
 export * from './ManagementErrorDetails';
 export * from './ManagementGetServiceResponse';
