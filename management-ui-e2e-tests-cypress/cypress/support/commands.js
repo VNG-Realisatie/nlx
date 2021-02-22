@@ -27,3 +27,7 @@ Cypress.Commands.add('dismissToaster', (text) => {
 Cypress.Commands.add('clickModalButton', (text) => {
   cy.findByRole('dialog').findByText(text).click()
 })
+
+Cypress.Commands.add('closeTopDrawer', () => {
+  cy.get('[data-drawer]').last().findByTitle('Sluiten').first().click()
+})
