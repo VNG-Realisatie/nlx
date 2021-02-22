@@ -53,6 +53,10 @@ describe('Services', () => {
     cy.visit('/services')
     cy.injectAxe()
     cy.findByText(serviceName).click()
+
+    // disable 'tabindex' because the 'focus-lock' dependency
+    // creates an element with tabindex="1"
+    // https://github.com/theKashey/react-focus-lock/blob/2b6ae70f0b15046ee3ac3227c53bb7c21f551ff4/src/Lock.js#L127
     cy.checkA11y(
       null,
       {
