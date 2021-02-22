@@ -24,11 +24,6 @@ describe('Login page', () => {
 })
 
 describe('Authenticating', () => {
-  it('Redirects to the Inways page after successful login', () => {
-    cy.loginUsingDex()
-    cy.url().should('contain', '/inways')
-  })
-
   it('Displays error on login with invalid credentials', () => {
     cy.visit('/login')
     cy.get('[data-testid="login"]').click()
@@ -37,5 +32,17 @@ describe('Authenticating', () => {
     cy.findByText('Login').click()
 
     cy.findByText('Invalid Email Address and password.').should('be.visible')
+  })
+
+  it('Redirects to the Inways page after successful login', () => {
+    cy.loginUsingDex()
+    cy.url().should('contain', '/inways')
+  })
+
+  it('Logout redirects to the login page', () => {
+    cy.loginUsingDex()
+    cy.findByLabelText('Account menu').click()
+    cy.findByText('Uitloggen').click()
+    cy.url().should('contain', '/login')
   })
 })
