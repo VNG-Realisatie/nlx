@@ -1,21 +1,8 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 //
-
 import logViolations from '../axe-utilities/log-violations'
-
-function randomNumberString() {
-  return `${Math.floor(Math.random() * 10000)}`
-}
-
-function getTestName() {
-  const testName = Cypress.mocha.getRunner().suite.ctx.test.title
-  return testName.replaceAll(' ', '-')
-}
-
-function generateServiceName() {
-  return `service-e2e-${getTestName()}-${randomNumberString()}`
-}
+import { generateServiceName } from './helpers/services'
 
 describe('Services', () => {
   beforeEach(() => {
