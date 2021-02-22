@@ -1,7 +1,0 @@
-{
-  "src": "./tests/**",
-  "screenshots": {
-    "path": "./test-results/screenshots",
-    "takeOnFails": true
-  }
-}
