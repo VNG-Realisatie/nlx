@@ -29,7 +29,7 @@ describe('Services', () => {
     cy.checkA11y(null, null, logViolations)
   })
 
-  it('Add and remove service', () => {
+  it('Add edit and remove service', () => {
     const serviceName = generateServiceName()
 
     cy.visit('/services/add-service')
@@ -45,14 +45,41 @@ describe('Services', () => {
     cy.findByLabelText('Publiek support e-mailadres').type(
       'public@organization.test',
     )
-    cy.findByLabelText('Publiceren in de centrale directory').uncheck()
 
     cy.findByText('Service toevoegen').click()
     cy.dismissToaster('De service is toegevoegd')
 
+    // Test detail page
     cy.visit('/services')
+    cy.injectAxe()
     cy.findByText(serviceName).click()
+    cy.checkA11y(
+      null,
+      {
+        rules: {
+          tabindex: {
+            enabled: false,
+          },
+        },
+      },
+      logViolations,
+    )
+
+    // Edit via detail view
+    cy.findByText('Aanpassen').click()
+    cy.findByText('Service nog niet benaderbaar').should('exist')
+    cy.checkA11y(null, null, logViolations)
+    cy.findByLabelText(Cypress.env('INWAY_NAME')).check()
+    cy.findByText('Service bijwerken').click()
+    cy.dismissToaster('De service is bijgewerkt')
+
+    // Edit via deeplink
+    cy.visit(`/services/${serviceName}/edit-service`)
+    cy.findByText('Terug').click()
+
+    // Remove
     cy.findByText('Verwijderen').click()
+    cy.findByText('Weet je het zeker?').should('exist')
     cy.clickModalButton('Verwijderen')
 
     cy.dismissToaster('De service is verwijderd')

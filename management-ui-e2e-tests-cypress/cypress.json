@@ -4,6 +4,7 @@
   "env": {
     "LOGIN_ORGANIZATION_NAME": "Organization-A",
     "LOGIN_USERNAME": "admin@nlx.local",
-    "LOGIN_PASSWORD": "development"
+    "LOGIN_PASSWORD": "development",
+    "INWAY_NAME": "Inway-01"
   }
 }

@@ -4,7 +4,6 @@
 
 // The values to be used for testing in the review app environment are set in .gitlab/ci/deploy/review.yml
 
-export const INWAY_NAME = process.env.E2E_MANAGEMENT_UI_INWAY_NAME || 'Inway-01'
 export const INWAY_SELF_ADDRESS =
   process.env.E2E_MANAGEMENT_UI_INWAY_SELF_ADDRESS ||
   'inway.organization-a.nlx.local:7913'
