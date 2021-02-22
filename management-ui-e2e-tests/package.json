@@ -1,5 +1,5 @@
 {
-  "name": "management-ui-e2e-tests-cypress",
+  "name": "management-ui-e2e-tests",
   "scripts": {
     "start": "cypress open",
     "test": "cypress run",

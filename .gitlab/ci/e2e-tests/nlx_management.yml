@@ -6,7 +6,7 @@ NLX Management - E2E-tests:
     - source e2e_environment.sh
     - export CI_ENV_URL=$([ -f ci_environment_url.txt ] && cat ci_environment_url.txt)
     - export CYPRESS_BASE_URL="https://nlx-management-rdw-$CI_ENV_URL"
-    - cd management-ui-e2e-tests-cypress/
+    - cd management-ui-e2e-tests/
     - install_npm_dependencies
     - wait_for_http "${CYPRESS_BASE_URL}"
     - start_section test "Running tests"
@@ -15,8 +15,8 @@ NLX Management - E2E-tests:
   artifacts:
     when: always
     paths:
-      - management-ui-e2e-tests-cypress/cypress/screenshots
-      - management-ui-e2e-tests-cypress/cypress/videos
+      - management-ui-e2e-tests/cypress/screenshots
+      - management-ui-e2e-tests/cypress/videos
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
