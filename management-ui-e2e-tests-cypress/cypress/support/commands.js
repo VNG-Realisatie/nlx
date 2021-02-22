@@ -14,3 +14,16 @@ Cypress.Commands.add('loginUsingDex', () => {
   cy.findByText('Login').click()
   cy.get('button[type="submit"]').findByText('Grant Access').click()
 })
+
+Cypress.Commands.add('dismissToaster', (text) => {
+  cy.get('#toaster-root')
+    .findByText(text)
+    .closest('[role="alert"]')
+    .parent()
+    .findByRole('button')
+    .click()
+})
+
+Cypress.Commands.add('clickModalButton', (text) => {
+  cy.findByRole('dialog').findByText(text).click()
+})

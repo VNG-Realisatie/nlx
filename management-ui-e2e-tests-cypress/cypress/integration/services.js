@@ -48,5 +48,13 @@ describe('Services', () => {
     cy.findByLabelText('Publiceren in de centrale directory').uncheck()
 
     cy.findByText('Service toevoegen').click()
+    cy.dismissToaster('De service is toegevoegd')
+
+    cy.visit('/services')
+    cy.findByText(serviceName).click()
+    cy.findByText('Verwijderen').click()
+    cy.clickModalButton('Verwijderen')
+
+    cy.dismissToaster('De service is verwijderd')
   })
 })
