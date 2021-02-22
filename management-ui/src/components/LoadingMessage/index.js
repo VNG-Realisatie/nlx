@@ -9,7 +9,11 @@ import { StyledLoadingMessage } from './index.styles'
 const LoadingMessage = (props) => {
   const { t } = useTranslation()
   return (
-    <StyledLoadingMessage role="progressbar" {...props}>
+    <StyledLoadingMessage
+      role="progressbar"
+      aria-label={t('Loading…')}
+      {...props}
+    >
       <Spinner /> {t('Loading…')}
     </StyledLoadingMessage>
   )
