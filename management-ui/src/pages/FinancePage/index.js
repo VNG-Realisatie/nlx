@@ -4,11 +4,11 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 import { Button } from '@commonground/design-system'
-import { useTranslation } from 'react-i18next'
+import { useTranslation, Trans } from 'react-i18next'
 import PageTemplate from '../../components/PageTemplate'
 import { useFinanceStore } from '../../hooks/use-stores'
 import { IconDownload } from '../../icons'
-import { CenteredExport } from './index.styles'
+import { Centered, StyledIconExternalLink } from './index.styles'
 
 const FinancePage = () => {
   const financeStore = useFinanceStore()
@@ -39,8 +39,8 @@ const FinancePage = () => {
         )}
       />
 
-      {financeStore.enabled && (
-        <CenteredExport>
+      {financeStore.enabled ? (
+        <Centered>
           <p>
             <small>{t('This report is only available as CSV file')}</small>
           </p>
@@ -49,7 +49,28 @@ const FinancePage = () => {
             <IconDownload inline />
             {t('Export report')}
           </Button>
-        </CenteredExport>
+        </Centered>
+      ) : (
+        <Centered>
+          <h3>
+            <small>{t('Configure the transaction log')}</small>
+          </h3>
+          <p>
+            <small>
+              <Trans i18nKey="finance_configure">
+                To create a financial report, you need to configure the
+                transaction log.
+              </Trans>
+            </small>
+          </p>
+          <Button
+            as="a"
+            variant="link"
+            href="https://docs.nlx.io/use-nlx/enable-finance"
+          >
+            {t('To NLX Docs')} <StyledIconExternalLink />
+          </Button>
+        </Centered>
       )}
     </PageTemplate>
   )
