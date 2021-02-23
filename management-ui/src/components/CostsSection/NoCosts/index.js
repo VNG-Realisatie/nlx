@@ -4,7 +4,7 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { IconMoneyEuroCircleLine } from '../../../../../../icons'
+import { IconMoneyEuroCircleLine } from '../../../icons'
 import { StyledContainer, StyledLabel } from './index.styles'
 
 const NoCosts = () => {

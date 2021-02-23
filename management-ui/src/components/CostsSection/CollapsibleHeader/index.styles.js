@@ -3,7 +3,7 @@
 //
 
 import styled from 'styled-components'
-import { DetailHeading } from '../../../../../../components/DetailView'
+import { DetailHeading } from '../../DetailView'
 
 export const StyledDetailHeading = styled(DetailHeading)`
   display: flex;

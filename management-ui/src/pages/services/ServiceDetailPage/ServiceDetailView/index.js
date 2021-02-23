@@ -14,6 +14,7 @@ import {
 } from '../../../../components/DetailView'
 import { IconHidden, IconVisible } from '../../../../icons'
 import { showServiceVisibilityAlert } from '../../../../components/ServiceVisibilityAlert'
+import CostsSection from '../../../../components/CostsSection'
 import InwaysSection from './InwaysSection'
 import AccessRequestSectionContainer from './AccessRequestSection'
 import AccessGrantSection from './AccessGrantSection'
@@ -22,7 +23,6 @@ import {
   StyledRemoveButton,
   StyledServiceVisibilityAlert,
 } from './index.styles'
-import CostsSection from './CostsSection'
 
 const ServiceDetailView = ({ service, removeHandler }) => {
   const { internal, inways } = service

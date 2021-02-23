@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { fireEvent, renderWithProviders } from '../../../../../test-utils'
+import { fireEvent, renderWithProviders } from '../../test-utils'
 import CostsSection from './index'
 
 test('Costs section', async () => {
