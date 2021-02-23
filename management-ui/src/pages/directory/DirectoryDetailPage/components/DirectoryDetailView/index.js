@@ -30,6 +30,9 @@ const DirectoryDetailView = ({ service }) => {
     serviceName,
     latestAccessRequest,
     latestAccessProof,
+    oneTimeCosts,
+    monthlyCosts,
+    requestCosts,
   } = service
 
   const [RequestConfirmationModal, confirmRequest] = useConfirmationModal({
@@ -39,6 +42,9 @@ const DirectoryDetailView = ({ service }) => {
       <RequestAccessDetails
         organizationName={organizationName}
         serviceName={serviceName}
+        oneTimeCosts={oneTimeCosts}
+        monthlyCosts={monthlyCosts}
+        requestCosts={requestCosts}
       />
     ),
   })

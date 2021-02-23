@@ -2,16 +2,28 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { string } from 'prop-types'
+import { number, string } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import {
   SectionHeader,
+  SectionContentService,
+  SectionContent,
   StyledIconServices,
-  ServiceField,
   ServiceData,
 } from './index.styles'
 
-const RequestAccessDetails = ({ organizationName, serviceName }) => {
+const costFormatter = new Intl.NumberFormat('nl-NL', {
+  style: 'currency',
+  currency: 'EUR',
+})
+
+const RequestAccessDetails = ({
+  organizationName,
+  serviceName,
+  oneTimeCosts,
+  monthlyCosts,
+  requestCosts,
+}) => {
   const { t } = useTranslation()
 
   return (
@@ -20,13 +32,40 @@ const RequestAccessDetails = ({ organizationName, serviceName }) => {
 
       <section>
         <SectionHeader>{t('Service')}</SectionHeader>
-        <ServiceField>
+        <SectionContentService>
           <StyledIconServices />
           <ServiceData>
             <strong>{serviceName}</strong>
             <span>{organizationName}</span>
           </ServiceData>
-        </ServiceField>
+        </SectionContentService>
+
+        {oneTimeCosts ? (
+          <>
+            <SectionHeader>{t('One time costs')}</SectionHeader>
+            <SectionContent>
+              {costFormatter.format(oneTimeCosts)}
+            </SectionContent>
+          </>
+        ) : null}
+
+        {monthlyCosts ? (
+          <>
+            <SectionHeader>{t('Monthly costs')}</SectionHeader>
+            <SectionContent>
+              {costFormatter.format(monthlyCosts)}
+            </SectionContent>
+          </>
+        ) : null}
+
+        {requestCosts ? (
+          <>
+            <SectionHeader>{t('Cost per request')}</SectionHeader>
+            <SectionContent>
+              {costFormatter.format(requestCosts)}
+            </SectionContent>
+          </>
+        ) : null}
       </section>
     </>
   )
@@ -35,6 +74,9 @@ const RequestAccessDetails = ({ organizationName, serviceName }) => {
 RequestAccessDetails.propTypes = {
   organizationName: string.isRequired,
   serviceName: string.isRequired,
+  oneTimeCosts: number,
+  monthlyCosts: number,
+  requestCosts: number,
 }
 
 export default RequestAccessDetails
