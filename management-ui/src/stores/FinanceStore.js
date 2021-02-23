@@ -20,7 +20,7 @@ class FinanceStore {
   fetch = flow(function* fetch() {
     try {
       this._isLoading = true
-      const result = yield this._managementApiClient.managementIsBillingEnabled()
+      const result = yield this._managementApiClient.managementIsFinanceEnabled()
 
       this.enabled = result.enabled
       this._isLoading = false
@@ -35,7 +35,7 @@ class FinanceStore {
 
   async downloadExport() {
     try {
-      const result = await this._managementApiClient.managementDownloadBillingExport()
+      const result = await this._managementApiClient.managementDownloadFinanceExport()
 
       return result
     } catch (err) {

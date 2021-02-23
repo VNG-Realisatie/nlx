@@ -332,7 +332,7 @@ describe('when showing inways', () => {
     })
   })
 
-  it('should clear costs when disabling billing', async () => {
+  it('should clear costs when disabling finance', async () => {
     const managementApiClient = new ManagementApi()
     managementApiClient.managementListInways = jest
       .fn()
@@ -381,7 +381,7 @@ describe('when showing inways', () => {
     })
   })
 
-  it('should save costs when billing was already enabled', async () => {
+  it('should save costs when finance was already enabled', async () => {
     const managementApiClient = new ManagementApi()
     managementApiClient.managementListInways = jest
       .fn()
@@ -422,7 +422,7 @@ describe('when showing inways', () => {
     })
   })
 
-  it('should save costs when billing is enabled', async () => {
+  it('should save costs when finance is enabled', async () => {
     const managementApiClient = new ManagementApi()
     managementApiClient.managementListInways = jest
       .fn()

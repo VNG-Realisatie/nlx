@@ -27,13 +27,13 @@ const (
 	Cents = 100
 )
 
-func (service *ManagementService) IsBillingEnabled(ctx context.Context, request *types.Empty) (*api.IsBillingEnabledResponse, error) {
-	return &api.IsBillingEnabledResponse{
+func (service *ManagementService) IsFinanceEnabled(ctx context.Context, request *types.Empty) (*api.IsFinanceEnabledResponse, error) {
+	return &api.IsFinanceEnabledResponse{
 		Enabled: service.txlogDatabase != nil,
 	}, nil
 }
 
-func (service *ManagementService) DownloadBillingExport(ctx context.Context, request *types.Empty) (*api.DownloadBillingExportResponse, error) {
+func (service *ManagementService) DownloadFinanceExport(ctx context.Context, request *types.Empty) (*api.DownloadFinanceExportResponse, error) {
 	services, err := service.configDatabase.ListServices(ctx)
 	if err != nil {
 		service.logger.Error("failed to list services", zap.Error(err))
@@ -107,7 +107,7 @@ func (service *ManagementService) DownloadBillingExport(ctx context.Context, req
 		return nil, status.Error(codes.Internal, "write error")
 	}
 
-	return &api.DownloadBillingExportResponse{
+	return &api.DownloadFinanceExportResponse{
 		Data: buff.Bytes(),
 	}, nil
 }

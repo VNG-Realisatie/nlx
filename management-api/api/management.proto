@@ -15,11 +15,11 @@ option (gogoproto.unmarshaler_all) = true;
 option (gogoproto.goproto_getters_all) = false;
 
 service Management {
-  rpc IsBillingEnabled (google.protobuf.Empty) returns (IsBillingEnabledResponse) {
-    option (google.api.http) = {get: "/api/v1/billing/enabled"};
+  rpc IsFinanceEnabled (google.protobuf.Empty) returns (IsFinanceEnabledResponse) {
+    option (google.api.http) = {get: "/api/v1/finance/enabled"};
   }
-  rpc DownloadBillingExport (google.protobuf.Empty) returns (DownloadBillingExportResponse) {
-    option (google.api.http) = {get: "/api/v1/billing/export"};
+  rpc DownloadFinanceExport (google.protobuf.Empty) returns (DownloadFinanceExportResponse) {
+    option (google.api.http) = {get: "/api/v1/finance/export"};
   }
   rpc ListServices (ListServicesRequest) returns (ListServicesResponse) {
     option (google.api.http) = {get: "/api/v1/services"};
@@ -96,11 +96,11 @@ service Management {
   }
 }
 
-message IsBillingEnabledResponse {
+message IsFinanceEnabledResponse {
   bool enabled = 1;
 }
 
-message DownloadBillingExportResponse {
+message DownloadFinanceExportResponse {
   bytes data = 1;
 }
 

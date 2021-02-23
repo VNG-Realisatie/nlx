@@ -27,9 +27,9 @@ import {
     ManagementCreateServiceResponse,
     ManagementCreateServiceResponseFromJSON,
     ManagementCreateServiceResponseToJSON,
-    ManagementDownloadBillingExportResponse,
-    ManagementDownloadBillingExportResponseFromJSON,
-    ManagementDownloadBillingExportResponseToJSON,
+    ManagementDownloadFinanceExportResponse,
+    ManagementDownloadFinanceExportResponseFromJSON,
+    ManagementDownloadFinanceExportResponseToJSON,
     ManagementGetServiceResponse,
     ManagementGetServiceResponseFromJSON,
     ManagementGetServiceResponseToJSON,
@@ -42,9 +42,9 @@ import {
     ManagementInway,
     ManagementInwayFromJSON,
     ManagementInwayToJSON,
-    ManagementIsBillingEnabledResponse,
-    ManagementIsBillingEnabledResponseFromJSON,
-    ManagementIsBillingEnabledResponseToJSON,
+    ManagementIsFinanceEnabledResponse,
+    ManagementIsFinanceEnabledResponseFromJSON,
+    ManagementIsFinanceEnabledResponseToJSON,
     ManagementListAccessGrantsForServiceResponse,
     ManagementListAccessGrantsForServiceResponseFromJSON,
     ManagementListAccessGrantsForServiceResponseToJSON,
@@ -356,25 +356,25 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementDownloadBillingExportRaw(): Promise<runtime.ApiResponse<ManagementDownloadBillingExportResponse>> {
+    async managementDownloadFinanceExportRaw(): Promise<runtime.ApiResponse<ManagementDownloadFinanceExportResponse>> {
         const queryParameters: runtime.HTTPQuery = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/billing/export`,
+            path: `/api/v1/finance/export`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementDownloadBillingExportResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementDownloadFinanceExportResponseFromJSON(jsonValue));
     }
 
     /**
      */
-    async managementDownloadBillingExport(): Promise<ManagementDownloadBillingExportResponse> {
-        const response = await this.managementDownloadBillingExportRaw();
+    async managementDownloadFinanceExport(): Promise<ManagementDownloadFinanceExportResponse> {
+        const response = await this.managementDownloadFinanceExportRaw();
         return await response.value();
     }
 
@@ -508,25 +508,25 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementIsBillingEnabledRaw(): Promise<runtime.ApiResponse<ManagementIsBillingEnabledResponse>> {
+    async managementIsFinanceEnabledRaw(): Promise<runtime.ApiResponse<ManagementIsFinanceEnabledResponse>> {
         const queryParameters: runtime.HTTPQuery = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/billing/enabled`,
+            path: `/api/v1/finance/enabled`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementIsBillingEnabledResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementIsFinanceEnabledResponseFromJSON(jsonValue));
     }
 
     /**
      */
-    async managementIsBillingEnabled(): Promise<ManagementIsBillingEnabledResponse> {
-        const response = await this.managementIsBillingEnabledRaw();
+    async managementIsFinanceEnabled(): Promise<ManagementIsFinanceEnabledResponse> {
+        const response = await this.managementIsFinanceEnabledRaw();
         return await response.value();
     }
 

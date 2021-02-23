@@ -36,44 +36,44 @@ func (m *MockManagementClient) EXPECT() *MockManagementClientMockRecorder {
 	return m.recorder
 }
 
-// IsBillingEnabled mocks base method
-func (m *MockManagementClient) IsBillingEnabled(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*api.IsBillingEnabledResponse, error) {
+// IsFinanceEnabled mocks base method
+func (m *MockManagementClient) IsFinanceEnabled(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*api.IsFinanceEnabledResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
-	ret := m.ctrl.Call(m, "IsBillingEnabled", varargs...)
-	ret0, _ := ret[0].(*api.IsBillingEnabledResponse)
+	ret := m.ctrl.Call(m, "IsFinanceEnabled", varargs...)
+	ret0, _ := ret[0].(*api.IsFinanceEnabledResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// IsBillingEnabled indicates an expected call of IsBillingEnabled
-func (mr *MockManagementClientMockRecorder) IsBillingEnabled(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+// IsFinanceEnabled indicates an expected call of IsFinanceEnabled
+func (mr *MockManagementClientMockRecorder) IsFinanceEnabled(ctx, in interface{}, opts ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsBillingEnabled", reflect.TypeOf((*MockManagementClient)(nil).IsBillingEnabled), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsFinanceEnabled", reflect.TypeOf((*MockManagementClient)(nil).IsFinanceEnabled), varargs...)
 }
 
-// DownloadBillingExport mocks base method
-func (m *MockManagementClient) DownloadBillingExport(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*api.DownloadBillingExportResponse, error) {
+// DownloadFinanceExport mocks base method
+func (m *MockManagementClient) DownloadFinanceExport(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*api.DownloadFinanceExportResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
-	ret := m.ctrl.Call(m, "DownloadBillingExport", varargs...)
-	ret0, _ := ret[0].(*api.DownloadBillingExportResponse)
+	ret := m.ctrl.Call(m, "DownloadFinanceExport", varargs...)
+	ret0, _ := ret[0].(*api.DownloadFinanceExportResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// DownloadBillingExport indicates an expected call of DownloadBillingExport
-func (mr *MockManagementClientMockRecorder) DownloadBillingExport(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+// DownloadFinanceExport indicates an expected call of DownloadFinanceExport
+func (mr *MockManagementClientMockRecorder) DownloadFinanceExport(ctx, in interface{}, opts ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadBillingExport", reflect.TypeOf((*MockManagementClient)(nil).DownloadBillingExport), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadFinanceExport", reflect.TypeOf((*MockManagementClient)(nil).DownloadFinanceExport), varargs...)
 }
 
 // ListServices mocks base method
@@ -579,34 +579,34 @@ func (m *MockManagementServer) EXPECT() *MockManagementServerMockRecorder {
 	return m.recorder
 }
 
-// IsBillingEnabled mocks base method
-func (m *MockManagementServer) IsBillingEnabled(arg0 context.Context, arg1 *types.Empty) (*api.IsBillingEnabledResponse, error) {
+// IsFinanceEnabled mocks base method
+func (m *MockManagementServer) IsFinanceEnabled(arg0 context.Context, arg1 *types.Empty) (*api.IsFinanceEnabledResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IsBillingEnabled", arg0, arg1)
-	ret0, _ := ret[0].(*api.IsBillingEnabledResponse)
+	ret := m.ctrl.Call(m, "IsFinanceEnabled", arg0, arg1)
+	ret0, _ := ret[0].(*api.IsFinanceEnabledResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// IsBillingEnabled indicates an expected call of IsBillingEnabled
-func (mr *MockManagementServerMockRecorder) IsBillingEnabled(arg0, arg1 interface{}) *gomock.Call {
+// IsFinanceEnabled indicates an expected call of IsFinanceEnabled
+func (mr *MockManagementServerMockRecorder) IsFinanceEnabled(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsBillingEnabled", reflect.TypeOf((*MockManagementServer)(nil).IsBillingEnabled), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsFinanceEnabled", reflect.TypeOf((*MockManagementServer)(nil).IsFinanceEnabled), arg0, arg1)
 }
 
-// DownloadBillingExport mocks base method
-func (m *MockManagementServer) DownloadBillingExport(arg0 context.Context, arg1 *types.Empty) (*api.DownloadBillingExportResponse, error) {
+// DownloadFinanceExport mocks base method
+func (m *MockManagementServer) DownloadFinanceExport(arg0 context.Context, arg1 *types.Empty) (*api.DownloadFinanceExportResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DownloadBillingExport", arg0, arg1)
-	ret0, _ := ret[0].(*api.DownloadBillingExportResponse)
+	ret := m.ctrl.Call(m, "DownloadFinanceExport", arg0, arg1)
+	ret0, _ := ret[0].(*api.DownloadFinanceExportResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// DownloadBillingExport indicates an expected call of DownloadBillingExport
-func (mr *MockManagementServerMockRecorder) DownloadBillingExport(arg0, arg1 interface{}) *gomock.Call {
+// DownloadFinanceExport indicates an expected call of DownloadFinanceExport
+func (mr *MockManagementServerMockRecorder) DownloadFinanceExport(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadBillingExport", reflect.TypeOf((*MockManagementServer)(nil).DownloadBillingExport), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadFinanceExport", reflect.TypeOf((*MockManagementServer)(nil).DownloadFinanceExport), arg0, arg1)
 }
 
 // ListServices mocks base method

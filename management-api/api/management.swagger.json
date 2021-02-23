@@ -321,50 +321,6 @@
         ]
       }
     },
-    "/api/v1/billing/enabled": {
-      "get": {
-        "operationId": "Management_IsBillingEnabled",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementIsBillingEnabledResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/runtimeError"
-            }
-          }
-        },
-        "tags": [
-          "Management"
-        ]
-      }
-    },
-    "/api/v1/billing/export": {
-      "get": {
-        "operationId": "Management_DownloadBillingExport",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementDownloadBillingExportResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/runtimeError"
-            }
-          }
-        },
-        "tags": [
-          "Management"
-        ]
-      }
-    },
     "/api/v1/directory/organizations/{organizationName}/services/{serviceName}": {
       "get": {
         "operationId": "Directory_GetOrganizationService",
@@ -456,6 +412,50 @@
         },
         "tags": [
           "Directory"
+        ]
+      }
+    },
+    "/api/v1/finance/enabled": {
+      "get": {
+        "operationId": "Management_IsFinanceEnabled",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/managementIsFinanceEnabledResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "Management"
+        ]
+      }
+    },
+    "/api/v1/finance/export": {
+      "get": {
+        "operationId": "Management_DownloadFinanceExport",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/managementDownloadFinanceExportResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "Management"
         ]
       }
     },
@@ -1173,7 +1173,7 @@
         }
       }
     },
-    "managementDownloadBillingExportResponse": {
+    "managementDownloadFinanceExportResponse": {
       "type": "object",
       "properties": {
         "data": {
@@ -1333,7 +1333,7 @@
         }
       }
     },
-    "managementIsBillingEnabledResponse": {
+    "managementIsFinanceEnabledResponse": {
       "type": "object",
       "properties": {
         "enabled": {
