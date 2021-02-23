@@ -12,7 +12,9 @@ import { TdPrice } from './index.styles'
 import NoCosts from './NoCosts'
 
 const isServiceFreeToUse = (oneTimeCosts, monthlyCosts, requestCosts) =>
-  oneTimeCosts === 0 && monthlyCosts === 0 && requestCosts === 0
+  (oneTimeCosts === 0 || oneTimeCosts === undefined) &&
+  (monthlyCosts === 0 || monthlyCosts === undefined) &&
+  (requestCosts === 0 || requestCosts === undefined)
 
 const costFormatter = new Intl.NumberFormat('nl-NL', {
   style: 'currency',

@@ -12,6 +12,9 @@ test('Costs section', async () => {
 
   expect(container).toHaveTextContent(/Free/)
 
+  rerender(<CostsSection />)
+  expect(container).toHaveTextContent(/Free/)
+
   rerender(<CostsSection oneTimeCosts={5} monthlyCosts={0} requestCosts={10} />)
 
   fireEvent.click(getByText(/Costs/i))
