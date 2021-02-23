@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { func, object, shape, string } from 'prop-types'
+import { func, number, object, shape, string } from 'prop-types'
 import { observer } from 'mobx-react'
 import { Alert, useDrawerStack } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
@@ -12,6 +12,7 @@ import { ACCESS_REQUEST_STATES } from '../../../../../stores/models/OutgoingAcce
 import getDirectoryServiceAccessUIState from '../../../directoryServiceAccessState'
 import { SectionGroup } from '../../../../../components/DetailView'
 import usePolling from '../../../../../hooks/use-polling'
+import CostsSection from '../../../../../components/CostsSection'
 import StacktraceDrawer from './StacktraceDrawer'
 import ExternalLinkSection from './ExternalLinkSection'
 import AccessSection from './AccessSection'
@@ -104,6 +105,11 @@ const DirectoryDetailView = ({ service }) => {
         />
 
         <ContactSection service={service} />
+        <CostsSection
+          oneTimeCosts={service.oneTimeCosts}
+          monthlyCosts={service.monthlyCosts}
+          requestCosts={service.requestCosts}
+        />
       </SectionGroup>
 
       {latestAccessRequest && latestAccessRequest.errorDetails && (
@@ -125,6 +131,9 @@ DirectoryDetailView.propTypes = {
     latestAccessRequest: object,
     latestAccessProof: object,
     requestAccess: func.isRequired,
+    oneTimeCosts: number,
+    monthlyCosts: number,
+    requestCosts: number,
   }),
 }
 
