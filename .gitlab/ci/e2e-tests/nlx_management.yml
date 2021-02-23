@@ -1,6 +1,6 @@
 NLX Management - E2E-tests:
   extends: .node-base
-  image: cypress/browsers:node14.10.1-edge88
+  image: cypress/base:14.15.4
   stage: E2E tests
   script:
     - source e2e_environment.sh
@@ -10,7 +10,8 @@ NLX Management - E2E-tests:
     - install_npm_dependencies
     - wait_for_http "${CYPRESS_BASE_URL}"
     - start_section test "Running tests"
-    - $(npm bin)/cypress run --browser edge
+    - $(npm bin)/cypress verify
+    - $(npm bin)/cypress run --browser electron
     - stop_section test
   artifacts:
     when: always
