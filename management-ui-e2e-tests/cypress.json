@@ -1,6 +1,7 @@
 {
   "chromeWebSecurity": false,
   "baseUrl": "http://management.organization-a.nlx.local:3011",
+  "video": false,
   "env": {
     "LOGIN_ORGANIZATION_NAME": "Organization-A",
     "LOGIN_USERNAME": "admin@nlx.local",

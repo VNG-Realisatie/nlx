@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import logViolations from '../axe-utilities/log-violations'
-import { generateServiceName } from './helpers/services'
+import { generateServiceName } from '../helpers/services'
 
 describe('Inways', () => {
   beforeEach(() => {

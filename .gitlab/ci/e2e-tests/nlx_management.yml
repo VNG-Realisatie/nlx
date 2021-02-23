@@ -16,7 +16,6 @@ NLX Management - E2E-tests:
     when: always
     paths:
       - management-ui-e2e-tests/cypress/screenshots
-      - management-ui-e2e-tests/cypress/videos
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
