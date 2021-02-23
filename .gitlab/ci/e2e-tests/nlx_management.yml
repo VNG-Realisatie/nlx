@@ -21,5 +21,4 @@ NLX Management - E2E-tests:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
     - if: '$CI_COMMIT_BRANCH == "master" && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
-      when: never
     - if: '$CI_COMMIT_BRANCH =~ /^review\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
