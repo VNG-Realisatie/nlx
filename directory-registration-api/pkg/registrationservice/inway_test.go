@@ -78,6 +78,9 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 					ServiceInternal:     false,
 					RequestInwayAddress: "localhost",
 					NlxVersion:          "unknown",
+					MonthlyCosts:        500,
+					RequestCosts:        100,
+					OneTimeCosts:        50,
 				})).Return(nil)
 
 				return db
@@ -86,7 +89,10 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 				InwayAddress: "localhost",
 				Services: []*registrationapi.RegisterInwayRequest_RegisterService{
 					{
-						Name: testServiceName,
+						Name:         testServiceName,
+						MonthlyCosts: int32(500),
+						RequestCosts: int32(100),
+						OneTimeCosts: int32(50),
 					},
 				},
 			},
