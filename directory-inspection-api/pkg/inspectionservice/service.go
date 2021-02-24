@@ -66,6 +66,9 @@ func convertFromDatabaseService(model *database.Service) *inspectionapi.ListServ
 		HealthyStates:        model.HealthyStates,
 		DocumentationUrl:     model.DocumentationURL,
 		PublicSupportContact: model.PublicSupportContact,
+		MonthlyCosts:         int32(model.MonthlyCosts),
+		OneTimeCosts:         int32(model.OneTimeCosts),
+		RequestCosts:         int32(model.RequestCosts),
 	}
 
 	for _, inway := range model.Inways {

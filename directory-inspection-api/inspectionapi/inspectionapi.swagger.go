@@ -1,6 +1,7 @@
 package inspectionapi
+
 const (
-SwaggerJSONDirectoryInspection = `
+	SwaggerJSONDirectoryInspection = `
 {
   "swagger": "2.0",
   "info": {
@@ -126,6 +127,18 @@ SwaggerJSONDirectoryInspection = `
           "items": {
             "$ref": "#/definitions/inspectionapiInway"
           }
+        },
+        "oneTimeCosts": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "monthlyCosts": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "requestCosts": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -205,4 +218,5 @@ SwaggerJSONDirectoryInspection = `
     }
   }
 }
-`)
+`
+)

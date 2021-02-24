@@ -123,6 +123,18 @@
           "items": {
             "$ref": "#/definitions/inspectionapiInway"
           }
+        },
+        "oneTimeCosts": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "monthlyCosts": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "requestCosts": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
