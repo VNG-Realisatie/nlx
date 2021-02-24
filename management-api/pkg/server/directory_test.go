@@ -129,6 +129,9 @@ func TestListDirectoryServices(t *testing.T) {
 			ApiSpecificationType: "OpenAPI3",
 			DocumentationUrl:     "https://example.com",
 			PublicSupportContact: "test@example.com",
+			OneTimeCosts:         1,
+			MonthlyCosts:         5,
+			RequestCosts:         250,
 		},
 	}
 
@@ -182,6 +185,9 @@ func TestListDirectoryServices(t *testing.T) {
 			DocumentationURL:     "https://example.com",
 			PublicSupportContact: "test@example.com",
 			State:                api.DirectoryService_unknown,
+			OneTimeCosts:         1,
+			MonthlyCosts:         5,
+			RequestCosts:         250,
 			LatestAccessProof: &api.AccessProof{
 				Id:               1,
 				OrganizationName: "test-organization-a",

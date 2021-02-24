@@ -438,6 +438,9 @@ message DirectoryService {
   State state = 6;
   OutgoingAccessRequest latestAccessRequest = 7;
   AccessProof latestAccessProof = 8;
+  int32 oneTimeCosts = 9;
+  int32 monthlyCosts = 10;
+  int32 requestCosts = 11;
 }
 
 message RequestAccessToServiceRequest {

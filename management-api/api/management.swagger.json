@@ -1116,6 +1116,18 @@
         },
         "latestAccessProof": {
           "$ref": "#/definitions/managementAccessProof"
+        },
+        "oneTimeCosts": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "monthlyCosts": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "requestCosts": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
