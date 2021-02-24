@@ -5,15 +5,10 @@ package server
 
 import (
 	"bytes"
-	"strconv"
 
 	"github.com/gogo/protobuf/types"
 	"go.uber.org/zap"
 	"golang.org/x/net/context"
-	"golang.org/x/text/currency"
-	"golang.org/x/text/language"
-	"golang.org/x/text/message"
-	"golang.org/x/text/number"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -21,10 +16,6 @@ import (
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/txlogdb"
-)
-
-const (
-	Cents = 100
 )
 
 func (service *ManagementService) IsFinanceEnabled(ctx context.Context, request *types.Empty) (*api.IsFinanceEnabledResponse, error) {
@@ -64,17 +55,8 @@ func (service *ManagementService) DownloadFinanceExport(ctx context.Context, req
 		}
 	}
 
-	printer := message.NewPrinter(language.Dutch)
-	scale, _ := currency.Cash.Rounding(currency.EUR)
-
-	formatCurrency := func(amountInCents int) string {
-		amount := number.Decimal(float32(amountInCents)/Cents, number.Scale(scale))
-
-		return printer.Sprintf("%v%v", currency.Symbol(currency.EUR), amount)
-	}
-
 	buff := &bytes.Buffer{}
-	exporter := NewCSVExporter(buff)
+	exporter := NewFinanceCSVExporter(buff)
 
 	for _, record := range records {
 		svc := &database.Service{}
@@ -83,18 +65,16 @@ func (service *ManagementService) DownloadFinanceExport(ctx context.Context, req
 			svc = match
 		}
 
-		row := map[string]interface{}{
-			"Organization":       record.Source,
-			"svc":                record.ServiceName,
-			"Month":              record.CreatedAt.Format("Januari 2006"),
-			"Price per request":  formatCurrency(svc.RequestCosts),
-			"Number of requests": strconv.Itoa(record.RequestCount),
-			"Setup costs":        formatCurrency(svc.OneTimeCosts),
-			"Monthly costs":      formatCurrency(svc.MonthlyCosts),
-			"Transaction costs":  formatCurrency(svc.RequestCosts * record.RequestCount),
-		}
-
-		if err := exporter.Export(row); err != nil {
+		if err := exporter.Export(&FinanceRow{
+			Organization:     record.Source,
+			ServiceName:      record.ServiceName,
+			Month:            record.CreatedAt.Format("Januari 2006"),
+			PricePerRequest:  svc.RequestCosts,
+			NumberOfRequests: record.RequestCount,
+			SetupCosts:       svc.OneTimeCosts,
+			MonthlyCosts:     svc.MonthlyCosts,
+			TransactionCosts: svc.RequestCosts * record.RequestCount,
+		}); err != nil {
 			service.logger.Error("failed to export CSV", zap.Error(err))
 
 			return nil, status.Error(codes.Internal, "write error")
