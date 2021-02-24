@@ -20,9 +20,9 @@ type Service struct {
 	Internal              bool
 	TechSupportContact    string
 	PublicSupportContact  string
-	OneTimeCosts           int
-	MonthlyCosts           int
-	RequestCosts           int
+	OneTimeCosts          int
+	MonthlyCosts          int
+	RequestCosts          int
 	AuthorizationSettings *ServiceAuthorizationSettings
 	Inways                []*Inway
 	InwayAddresses        []string
