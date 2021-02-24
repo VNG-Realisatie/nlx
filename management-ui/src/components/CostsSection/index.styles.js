@@ -3,7 +3,7 @@
 //
 
 import styled from 'styled-components'
-import Table from '../../../../../components/Table'
+import Table from '../Table'
 
 export const TdPrice = styled(Table.Td)`
   text-align: right;
