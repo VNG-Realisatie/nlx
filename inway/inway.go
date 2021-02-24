@@ -229,6 +229,9 @@ func (i *Inway) announceToDirectory(s ServiceEndpoint) {
 							IrmaApiUrl:                  serviceDetails.IrmaAPIURL,
 							PublicSupportContact:        serviceDetails.PublicSupportContact,
 							TechSupportContact:          serviceDetails.TechSupportContact,
+							OneTimeCosts:                serviceDetails.OneTimeCosts,
+							MonthlyCosts:                serviceDetails.MonthlyCosts,
+							RequestCosts:                serviceDetails.RequestCosts,
 						},
 					},
 				})

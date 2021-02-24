@@ -54,6 +54,9 @@ type ServiceDetailsBase struct {
 	PublicSupportContact        string             `toml:"public-support-contact"`
 	TechSupportContact          string             `toml:"tech-support-contact"`
 	Internal                    bool               `toml:"internal"`
+	OneTimeCosts                int32
+	MonthlyCosts                int32
+	RequestCosts                int32
 }
 
 type serviceDetailsV1 struct {

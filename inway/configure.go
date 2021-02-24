@@ -188,6 +188,9 @@ func serviceConfigToServiceDetails(service *api.ListServicesResponse_Service) *c
 			PublicSupportContact:        service.PublicSupportContact,
 			TechSupportContact:          service.TechSupportContact,
 			Internal:                    service.Internal,
+			OneTimeCosts:                service.OneTimeCosts,
+			MonthlyCosts:                service.MonthlyCosts,
+			RequestCosts:                service.RequestCosts,
 		},
 	}
 
