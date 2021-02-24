@@ -86,7 +86,7 @@ func prepareSelectServicesStatement(db *sqlx.DB) (*sqlx.Stmt, error) {
 			s.internal as service_internal,
 			s.one_time_costs as one_time_costs,
 			s.monthly_costs as monthly_costs, 
-			s.requests_costs as request_costs,
+			s.request_costs as request_costs,
 			array_remove(array_agg(i.address), NULL) AS inway_addresses,
 			COALESCE(s.documentation_url, '') AS documentation_url,
 			COALESCE(s.api_specification_type, '') AS api_specification_type,
