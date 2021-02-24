@@ -23,6 +23,9 @@ class DirectoryServiceModel {
   publicSupportContact = ''
   latestAccessRequest = null
   latestAccessProof = null
+  oneTimeCosts = 0
+  monthlyCosts = 0
+  requestCosts = 0
 
   constructor({
     directoryServicesStore,
@@ -64,6 +67,18 @@ class DirectoryServiceModel {
 
     if (serviceData.publicSupportContact) {
       this.publicSupportContact = serviceData.publicSupportContact
+    }
+
+    if (serviceData.oneTimeCosts) {
+      this.oneTimeCosts = serviceData.oneTimeCosts
+    }
+
+    if (serviceData.monthlyCosts) {
+      this.monthlyCosts = serviceData.monthlyCosts
+    }
+
+    if (serviceData.requestCosts) {
+      this.requestCosts = serviceData.requestCosts
     }
 
     throwErrorWhenNotInstanceOf(latestAccessRequest, OutgoingAccessRequestModel)
