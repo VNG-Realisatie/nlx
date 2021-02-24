@@ -82,6 +82,24 @@ export interface ManagementDirectoryService {
      * @memberof ManagementDirectoryService
      */
     latestAccessProof?: ManagementAccessProof;
+    /**
+     * 
+     * @type {number}
+     * @memberof ManagementDirectoryService
+     */
+    oneTimeCosts?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ManagementDirectoryService
+     */
+    monthlyCosts?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ManagementDirectoryService
+     */
+    requestCosts?: number;
 }
 
 export function ManagementDirectoryServiceFromJSON(json: any): ManagementDirectoryService {
@@ -102,6 +120,9 @@ export function ManagementDirectoryServiceFromJSONTyped(json: any, ignoreDiscrim
         'state': !exists(json, 'state') ? undefined : DirectoryServiceStateFromJSON(json['state']),
         'latestAccessRequest': !exists(json, 'latestAccessRequest') ? undefined : ManagementOutgoingAccessRequestFromJSON(json['latestAccessRequest']),
         'latestAccessProof': !exists(json, 'latestAccessProof') ? undefined : ManagementAccessProofFromJSON(json['latestAccessProof']),
+        'oneTimeCosts': !exists(json, 'oneTimeCosts') ? undefined : json['oneTimeCosts'],
+        'monthlyCosts': !exists(json, 'monthlyCosts') ? undefined : json['monthlyCosts'],
+        'requestCosts': !exists(json, 'requestCosts') ? undefined : json['requestCosts'],
     };
 }
 
@@ -122,6 +143,9 @@ export function ManagementDirectoryServiceToJSON(value?: ManagementDirectoryServ
         'state': DirectoryServiceStateToJSON(value.state),
         'latestAccessRequest': ManagementOutgoingAccessRequestToJSON(value.latestAccessRequest),
         'latestAccessProof': ManagementAccessProofToJSON(value.latestAccessProof),
+        'oneTimeCosts': value.oneTimeCosts,
+        'monthlyCosts': value.monthlyCosts,
+        'requestCosts': value.requestCosts,
     };
 }
 

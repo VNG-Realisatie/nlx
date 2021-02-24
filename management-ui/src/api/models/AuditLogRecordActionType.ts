@@ -29,7 +29,7 @@ export enum AuditLogRecordActionType {
     SERVICECREATE = 'serviceCreate',
     SERVICEUPDATE = 'serviceUpdate',
     SERVICEDELETE = 'serviceDelete',
-    ORGANIZATIONSETTTINGSUPDATE = 'organizationSetttingsUpdate',
+    ORGANIZATIONSETTINGSUPDATE = 'organizationSettingsUpdate',
     ORGANIZATIONINSIGHTCONFIGURATIONUPDATE = 'organizationInsightConfigurationUpdate'
 }
 
