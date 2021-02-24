@@ -67,6 +67,9 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 			ServicePublicSupportContact: service.PublicSupportContact,
 			ServiceTechSupportContact:   service.TechSupportContact,
 			NlxVersion:                  nlxversion.NewFromGRPCContext(ctx).Version,
+			OneTimeCosts:                service.OneTimeCosts,
+			MonthlyCosts:                service.MonthlyCosts,
+			RequestCosts:                service.RequestCosts,
 		}
 
 		if err := params.Validate(); err != nil {

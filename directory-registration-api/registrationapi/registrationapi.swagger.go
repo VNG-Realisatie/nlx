@@ -1,6 +1,7 @@
 package registrationapi
+
 const (
-SwaggerJSONDirectory = `
+	SwaggerJSONDirectory = `
 {
   "swagger": "2.0",
   "info": {
@@ -46,6 +47,18 @@ SwaggerJSONDirectory = `
         },
         "tech_support_contact": {
           "type": "string"
+        },
+        "one_time_costs": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "monthly_costs": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "request_costs": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -92,4 +105,5 @@ SwaggerJSONDirectory = `
     }
   }
 }
-`)
+`
+)

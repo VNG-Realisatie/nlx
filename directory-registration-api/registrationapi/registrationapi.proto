@@ -31,6 +31,9 @@ message RegisterInwayRequest {
 		bool internal = 7;
 		string public_support_contact = 8;
 		string tech_support_contact = 9;
+		int32 one_time_costs = 10;
+		int32 monthly_costs = 11;
+		int32 request_costs = 12;
 	}
 
 	string inway_address = 1;

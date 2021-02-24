@@ -116,8 +116,8 @@ func prepareInsertAvailabilityStatement(db *sqlx.DB) (*sqlx.Stmt, error) {
 						insight_irma_endpoint = NULLIF(EXCLUDED.insight_irma_endpoint, '')
 				RETURNING id
 		), service AS (
-			INSERT INTO directory.services (organization_id, name, internal, documentation_url, api_specification_type, public_support_contact, tech_support_contact)
-				SELECT org.id, $2, $3, NULLIF($4, ''), NULLIF($5, ''), NULLIF($9, ''), NULLIF($10, '')
+			INSERT INTO directory.services (organization_id, name, internal, documentation_url, api_specification_type, public_support_contact, tech_support_contact, request_costs, monthly_costs, one_time_costs)
+				SELECT org.id, $2, $3, NULLIF($4, ''), NULLIF($5, ''), NULLIF($9, ''), NULLIF($10, ''), $12, $13, $14
 					FROM org
 				ON CONFLICT ON CONSTRAINT services_uq_name
 					DO UPDATE SET
@@ -125,7 +125,10 @@ func prepareInsertAvailabilityStatement(db *sqlx.DB) (*sqlx.Stmt, error) {
 						documentation_url = EXCLUDED.documentation_url,-- (possibly) no-op update to return id
 						api_specification_type = EXCLUDED.api_specification_type,
 						public_support_contact = EXCLUDED.public_support_contact,
-						tech_support_contact = EXCLUDED.tech_support_contact
+						tech_support_contact = EXCLUDED.tech_support_contact,
+						request_costs = EXCLUDED.request_costs,
+						monthly_costs = EXCLUDED.monthly_costs,
+						one_time_costs = EXCLUDED.one_time_costs
 					RETURNING id
 		), inway AS (
 			INSERT INTO directory.inways (organization_id, address, version)

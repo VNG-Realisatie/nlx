@@ -30,6 +30,9 @@ type InsertAvailabilityParams struct {
 	ServicePublicSupportContact string
 	ServiceTechSupportContact   string
 	NlxVersion                  string
+	OneTimeCosts                int32
+	MonthlyCosts                int32
+	RequestCosts                int32
 }
 
 func (params *InsertAvailabilityParams) Validate() error {
@@ -64,6 +67,9 @@ func (db PostgreSQLDirectoryDatabase) InsertAvailability(params *InsertAvailabil
 		params.ServicePublicSupportContact,
 		params.ServiceTechSupportContact,
 		params.NlxVersion,
+		params.RequestCosts,
+		params.MonthlyCosts,
+		params.OneTimeCosts,
 	)
 	if err != nil {
 		return fmt.Errorf("failed to execute the insert availability statement: %v", err)
