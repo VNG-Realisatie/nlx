@@ -8,7 +8,7 @@ import (
 	rsa "crypto/rsa"
 	reflect "reflect"
 
-	jwt_go "github.com/dgrijalva/jwt-go"
+	jwt_go "github.com/form3tech-oss/jwt-go"
 	gomock "github.com/golang/mock/gomock"
 	irma "go.nlx.io/nlx/insight-api/irma"
 )

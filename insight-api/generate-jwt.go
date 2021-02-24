@@ -11,7 +11,7 @@ import (
 	"github.com/go-chi/render"
 	"go.uber.org/zap"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/form3tech-oss/jwt-go"
 	irma "github.com/privacybydesign/irmago"
 )
 
