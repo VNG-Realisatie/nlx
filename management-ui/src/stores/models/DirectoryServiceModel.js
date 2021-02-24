@@ -70,15 +70,15 @@ class DirectoryServiceModel {
     }
 
     if (serviceData.oneTimeCosts) {
-      this.oneTimeCosts = serviceData.oneTimeCosts
+      this.oneTimeCosts = serviceData.oneTimeCosts / 100
     }
 
     if (serviceData.monthlyCosts) {
-      this.monthlyCosts = serviceData.monthlyCosts
+      this.monthlyCosts = serviceData.monthlyCosts / 100
     }
 
     if (serviceData.requestCosts) {
-      this.requestCosts = serviceData.requestCosts
+      this.requestCosts = serviceData.requestCosts / 100
     }
 
     throwErrorWhenNotInstanceOf(latestAccessRequest, OutgoingAccessRequestModel)
