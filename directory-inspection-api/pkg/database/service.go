@@ -20,6 +20,9 @@ type Service struct {
 	Internal              bool
 	TechSupportContact    string
 	PublicSupportContact  string
+	OneTimeCosts           int
+	MonthlyCosts           int
+	RequestCosts           int
 	AuthorizationSettings *ServiceAuthorizationSettings
 	Inways                []*Inway
 	InwayAddresses        []string
@@ -62,6 +65,9 @@ func (db PostgreSQLDirectoryDatabase) ListServices(ctx context.Context, organiza
 			&respService.Organization,
 			&respService.Name,
 			&respService.Internal,
+			&respService.OneTimeCosts,
+			&respService.MonthlyCosts,
+			&respService.RequestCosts,
 			&inwayAddresses,
 			&respService.DocumentationURL,
 			&respService.APISpecificationType,
