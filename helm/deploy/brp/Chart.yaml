@@ -2,5 +2,5 @@ apiVersion: v2
 name: brp
 description: Metachart for the BRP demo organization
 type: application
-version: 0.94.2
-appVersion: 0.94.2
+version: 0.95.0
+appVersion: 0.95.0

@@ -2,8 +2,8 @@ apiVersion: v2
 name: rdw
 description: Metachart for the RDW demo organization
 type: application
-version: 0.94.2
-appVersion: 0.94.2
+version: 0.95.0
+appVersion: 0.95.0
 
 dependencies:
   - name: dex
