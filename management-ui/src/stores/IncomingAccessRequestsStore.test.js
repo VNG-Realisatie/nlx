@@ -3,7 +3,7 @@
 //
 import { configure } from 'mobx'
 import IncomingAccessRequestModel, {
-  ACCESS_REQUEST_STATES,
+  STATES,
 } from '../stores/models/IncomingAccessRequestModel'
 import { ManagementApi } from '../api'
 import IncomingAccessRequestsStore from './IncomingAccessRequestsStore'
@@ -140,13 +140,13 @@ test('fetching for a service should update existing in-memory models instead of 
           id: 'ar-1',
           serviceName: 'service-a',
           organizationName: 'organization-a',
-          state: ACCESS_REQUEST_STATES.CREATED,
+          state: STATES.CREATED,
         },
         {
           id: 'ar-2',
           serviceName: 'service-a',
           organizationName: 'organization-b',
-          state: ACCESS_REQUEST_STATES.CREATED,
+          state: STATES.CREATED,
         },
       ],
     })
@@ -156,13 +156,13 @@ test('fetching for a service should update existing in-memory models instead of 
           id: 'ar-1',
           serviceName: 'service-a',
           organizationName: 'organization-a',
-          state: ACCESS_REQUEST_STATES.CREATED,
+          state: STATES.CREATED,
         },
         {
           id: 'ar-2',
           serviceName: 'service-a',
           organizationName: 'organization-b',
-          state: ACCESS_REQUEST_STATES.CREATED,
+          state: STATES.CREATED,
         },
       ],
     })
@@ -190,14 +190,14 @@ describe('have the access requests been changed for a service', () => {
     id: 'ar-1',
     serviceName: 'service-a',
     organizationName: 'organization-a',
-    state: ACCESS_REQUEST_STATES.CREATED,
+    state: STATES.CREATED,
   }
 
   const ACCESS_REQUEST_TWO = {
     id: 'ar-2',
     serviceName: 'service-a',
     organizationName: 'organization-a',
-    state: ACCESS_REQUEST_STATES.CREATED,
+    state: STATES.CREATED,
   }
 
   beforeEach(async () => {

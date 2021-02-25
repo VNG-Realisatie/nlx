@@ -3,7 +3,7 @@
 //
 import { makeAutoObservable, observable, flow } from 'mobx'
 import IncomingAccessRequestModel, {
-  ACCESS_REQUEST_STATES,
+  STATES,
 } from './models/IncomingAccessRequestModel'
 
 class IncomingAccessRequestsStore {
@@ -96,9 +96,7 @@ class IncomingAccessRequestsStore {
 
     // we are only interested in access request which are not 'resolved'
     latestAccessRequests = latestAccessRequests.filter(
-      (ar) =>
-        ar.state === ACCESS_REQUEST_STATES.CREATED ||
-        ar.state === ACCESS_REQUEST_STATES.RECEIVED,
+      (ar) => ar.state === STATES.CREATED || ar.state === STATES.RECEIVED,
     )
 
     if (latestAccessRequests.length !== service.incomingAccessRequests.length) {

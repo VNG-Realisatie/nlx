@@ -6,7 +6,7 @@ import ServiceStore from '../ServiceStore'
 import { RootStore } from '../index'
 import { ManagementApi } from '../../api'
 import IncomingAccessRequestModel, {
-  ACCESS_REQUEST_STATES,
+  STATES,
 } from '../../stores/models/IncomingAccessRequestModel'
 
 import AccessGrantModel from './AccessGrantModel'
@@ -136,13 +136,13 @@ test('automatically update incomingAccessRequestCount when related incoming acce
           id: '1',
           serviceName: 'service-a',
           organizationName: 'X',
-          state: ACCESS_REQUEST_STATES.RECEIVED,
+          state: STATES.RECEIVED,
         },
         {
           id: '2',
           serviceName: 'service-a',
           organizationName: 'Y',
-          state: ACCESS_REQUEST_STATES.RECEIVED,
+          state: STATES.RECEIVED,
         },
       ],
     })

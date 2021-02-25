@@ -3,7 +3,7 @@
 //
 import { makeAutoObservable, flow } from 'mobx'
 
-export const ACCESS_REQUEST_STATES = {
+export const STATES = {
   CREATED: 'CREATED',
   FAILED: 'FAILED',
   RECEIVED: 'RECEIVED',
@@ -28,10 +28,7 @@ class IncomingAccessRequestModel {
   }
 
   get isResolved() {
-    return !(
-      this.state === ACCESS_REQUEST_STATES.CREATED ||
-      this.state === ACCESS_REQUEST_STATES.RECEIVED
-    )
+    return !(this.state === STATES.CREATED || this.state === STATES.RECEIVED)
   }
 
   update(accessRequestData) {

@@ -6,7 +6,7 @@ import { fireEvent, within, waitFor } from '@testing-library/react'
 import { configure } from 'mobx'
 import { renderWithProviders } from '../../../../../../test-utils'
 import IncomingAccessRequestModel, {
-  ACCESS_REQUEST_STATES,
+  STATES,
 } from '../../../../../../stores/models/IncomingAccessRequestModel'
 import CollapsibleBody from './index'
 
@@ -27,7 +27,7 @@ test('approving an incoming access request', async () => {
       id: '1',
       serviceName: 'service-a',
       organizationName: 'organization-a',
-      state: ACCESS_REQUEST_STATES.RECEIVED,
+      state: STATES.RECEIVED,
       createdAt: '2020-10-01T12:00:00Z',
       updatedAt: '2020-10-01T12:00:01Z',
     },
@@ -64,7 +64,7 @@ test('rejecting an incoming access request', async () => {
       id: '1',
       serviceName: 'service-a',
       organizationName: 'organization-a',
-      state: ACCESS_REQUEST_STATES.RECEIVED,
+      state: STATES.RECEIVED,
       createdAt: '2020-10-01T12:00:00Z',
       updatedAt: '2020-10-01T12:00:01Z',
     },

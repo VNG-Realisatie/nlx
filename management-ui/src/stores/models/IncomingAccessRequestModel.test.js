@@ -3,7 +3,7 @@
 //
 
 import IncomingAccessRequestModel, {
-  ACCESS_REQUEST_STATES,
+  STATES,
 } from './IncomingAccessRequestModel'
 
 let accessRequestData
@@ -13,7 +13,7 @@ beforeEach(() => {
     id: '1a2B',
     organizationName: 'Organization A',
     serviceName: 'Servicio',
-    state: 'RECEIVED',
+    state: STATES.RECEIVED,
     createdAt: '2020-10-01T12:00:00Z',
     updatedAt: '2020-10-01T12:00:01Z',
   }
@@ -104,15 +104,15 @@ test('returns proper isResolved value', () => {
   })
   expect(accessRequest.isResolved).toBe(false)
 
-  accessRequest.update({ state: ACCESS_REQUEST_STATES.RECEIVED })
+  accessRequest.update({ state: STATES.RECEIVED })
   expect(accessRequest.isResolved).toBe(false)
 
-  accessRequest.update({ state: ACCESS_REQUEST_STATES.FAILED })
+  accessRequest.update({ state: STATES.FAILED })
   expect(accessRequest.isResolved).toBe(true)
 
-  accessRequest.update({ state: ACCESS_REQUEST_STATES.APPROVED })
+  accessRequest.update({ state: STATES.APPROVED })
   expect(accessRequest.isResolved).toBe(true)
 
-  accessRequest.update({ state: ACCESS_REQUEST_STATES.REJECTED })
+  accessRequest.update({ state: STATES.REJECTED })
   expect(accessRequest.isResolved).toBe(true)
 })

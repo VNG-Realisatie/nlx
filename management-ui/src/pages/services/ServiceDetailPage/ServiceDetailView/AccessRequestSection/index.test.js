@@ -5,7 +5,7 @@ import React from 'react'
 import { act, waitForElementToBeRemoved } from '@testing-library/react'
 import { fireEvent, renderWithProviders } from '../../../../../test-utils'
 import { RootStore, StoreProvider } from '../../../../../stores'
-import { ACCESS_REQUEST_STATES } from '../../../../../stores/models/IncomingAccessRequestModel'
+import { STATES } from '../../../../../stores/models/IncomingAccessRequestModel'
 import { ManagementApi } from '../../../../../api'
 import { INTERVAL } from '../../../../../hooks/use-polling'
 import AccessRequestsSection from './index'
@@ -33,7 +33,7 @@ test('polling with access request section collapsed', async () => {
         {
           id: '1',
           serviceName: 'service-a',
-          state: ACCESS_REQUEST_STATES.RECEIVED,
+          state: STATES.RECEIVED,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -80,7 +80,7 @@ test('polling with access request section expanded', async () => {
           id: '1',
           serviceName: 'service-a',
           organizationName: 'organization-a',
-          state: ACCESS_REQUEST_STATES.RECEIVED,
+          state: STATES.RECEIVED,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
