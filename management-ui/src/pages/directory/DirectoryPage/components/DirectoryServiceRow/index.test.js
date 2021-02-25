@@ -70,7 +70,11 @@ test('display changes to the service', () => {
   const { getByTestId } = renderComponent({ service })
 
   act(() => {
-    service.state = SERVICE_STATE_UP
+    service.update({
+      serviceData: {
+        state: SERVICE_STATE_UP,
+      },
+    })
   })
 
   const serviceRow = getByTestId('directory-service-row')
