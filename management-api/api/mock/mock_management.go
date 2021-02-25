@@ -36,6 +36,26 @@ func (m *MockManagementClient) EXPECT() *MockManagementClientMockRecorder {
 	return m.recorder
 }
 
+// IsBillingEnabled mocks base method
+func (m *MockManagementClient) IsBillingEnabled(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*api.IsBillingEnabledResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "IsBillingEnabled", varargs...)
+	ret0, _ := ret[0].(*api.IsBillingEnabledResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// IsBillingEnabled indicates an expected call of IsBillingEnabled
+func (mr *MockManagementClientMockRecorder) IsBillingEnabled(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsBillingEnabled", reflect.TypeOf((*MockManagementClient)(nil).IsBillingEnabled), varargs...)
+}
+
 // DownloadBillingExport mocks base method
 func (m *MockManagementClient) DownloadBillingExport(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*api.DownloadBillingExportResponse, error) {
 	m.ctrl.T.Helper()
@@ -557,6 +577,21 @@ func NewMockManagementServer(ctrl *gomock.Controller) *MockManagementServer {
 // EXPECT returns an object that allows the caller to indicate expected use
 func (m *MockManagementServer) EXPECT() *MockManagementServerMockRecorder {
 	return m.recorder
+}
+
+// IsBillingEnabled mocks base method
+func (m *MockManagementServer) IsBillingEnabled(arg0 context.Context, arg1 *types.Empty) (*api.IsBillingEnabledResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IsBillingEnabled", arg0, arg1)
+	ret0, _ := ret[0].(*api.IsBillingEnabledResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// IsBillingEnabled indicates an expected call of IsBillingEnabled
+func (mr *MockManagementServerMockRecorder) IsBillingEnabled(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsBillingEnabled", reflect.TypeOf((*MockManagementServer)(nil).IsBillingEnabled), arg0, arg1)
 }
 
 // DownloadBillingExport mocks base method

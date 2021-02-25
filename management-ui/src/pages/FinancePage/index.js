@@ -2,15 +2,16 @@
 // Licensed under the EUPL
 //
 import React from 'react'
+import { observer } from 'mobx-react'
 import { Button } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import PageTemplate from '../../components/PageTemplate'
-import useStores from '../../hooks/use-stores'
+import { useFinanceStore } from '../../hooks/use-stores'
 import { IconDownload } from '../../icons'
 import { CenteredExport } from './index.styles'
 
 const FinancePage = () => {
-  const { financeStore } = useStores()
+  const financeStore = useFinanceStore()
   const { t } = useTranslation()
 
   async function download(e) {
@@ -20,7 +21,7 @@ const FinancePage = () => {
     const a = document.createElement('a')
 
     a.download = 'report.csv'
-    a.href = `data:text/csv;base64,${result.data}`
+    a.href = `data:text/csv;base64,${result.data || ''}`
 
     document.body.append(a)
 
@@ -38,18 +39,20 @@ const FinancePage = () => {
         )}
       />
 
-      <CenteredExport>
-        <p>
-          <small>{t('This report is only available as CSV file')}</small>
-        </p>
+      {financeStore.enabled && (
+        <CenteredExport>
+          <p>
+            <small>{t('This report is only available as CSV file')}</small>
+          </p>
 
-        <Button variant="secondary" onClick={download}>
-          <IconDownload inline />
-          {t('Export report')}
-        </Button>
-      </CenteredExport>
+          <Button variant="secondary" onClick={download}>
+            <IconDownload inline />
+            {t('Export report')}
+          </Button>
+        </CenteredExport>
+      )}
     </PageTemplate>
   )
 }
 
-export default FinancePage
+export default observer(FinancePage)

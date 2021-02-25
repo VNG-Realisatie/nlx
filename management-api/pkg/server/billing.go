@@ -27,6 +27,12 @@ const (
 	Cents = 100
 )
 
+func (service *ManagementService) IsBillingEnabled(ctx context.Context, request *types.Empty) (*api.IsBillingEnabledResponse, error) {
+	return &api.IsBillingEnabledResponse{
+		Enabled: service.txlogDatabase != nil,
+	}, nil
+}
+
 func (service *ManagementService) DownloadBillingExport(ctx context.Context, request *types.Empty) (*api.DownloadBillingExportResponse, error) {
 	services, err := service.configDatabase.ListServices(ctx)
 	if err != nil {

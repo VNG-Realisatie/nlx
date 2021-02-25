@@ -321,6 +321,28 @@
         ]
       }
     },
+    "/api/v1/billing/enabled": {
+      "get": {
+        "operationId": "Management_IsBillingEnabled",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/managementIsBillingEnabledResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "Management"
+        ]
+      }
+    },
     "/api/v1/billing/export": {
       "get": {
         "operationId": "Management_DownloadBillingExport",
@@ -1308,6 +1330,14 @@
       "properties": {
         "name": {
           "type": "string"
+        }
+      }
+    },
+    "managementIsBillingEnabledResponse": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
         }
       }
     },

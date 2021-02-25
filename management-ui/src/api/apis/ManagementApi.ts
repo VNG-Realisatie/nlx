@@ -42,6 +42,9 @@ import {
     ManagementInway,
     ManagementInwayFromJSON,
     ManagementInwayToJSON,
+    ManagementIsBillingEnabledResponse,
+    ManagementIsBillingEnabledResponseFromJSON,
+    ManagementIsBillingEnabledResponseToJSON,
     ManagementListAccessGrantsForServiceResponse,
     ManagementListAccessGrantsForServiceResponseFromJSON,
     ManagementListAccessGrantsForServiceResponseToJSON,
@@ -500,6 +503,30 @@ export class ManagementApi extends runtime.BaseAPI {
      */
     async managementGetStatisticsOfServices(): Promise<ManagementGetStatisticsOfServicesResponse> {
         const response = await this.managementGetStatisticsOfServicesRaw();
+        return await response.value();
+    }
+
+    /**
+     */
+    async managementIsBillingEnabledRaw(): Promise<runtime.ApiResponse<ManagementIsBillingEnabledResponse>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v1/billing/enabled`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementIsBillingEnabledResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async managementIsBillingEnabled(): Promise<ManagementIsBillingEnabledResponse> {
+        const response = await this.managementIsBillingEnabledRaw();
         return await response.value();
     }
 

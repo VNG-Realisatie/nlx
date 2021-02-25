@@ -20,6 +20,14 @@ export const useDirectoryServiceStore = () => {
   return directoryServicesStore
 }
 
+export const useFinanceStore = () => {
+  const { financeStore } = useStores()
+  if (!financeStore.isInitiallyFetched) {
+    financeStore.fetch()
+  }
+  return financeStore
+}
+
 export const useServiceStore = () => {
   const { servicesStore } = useStores()
   if (!servicesStore.isInitiallyFetched) {

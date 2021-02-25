@@ -18,6 +18,7 @@ export * from './ManagementIncomingAccessRequest';
 export * from './ManagementInsightConfiguration';
 export * from './ManagementInway';
 export * from './ManagementInwayService';
+export * from './ManagementIsBillingEnabledResponse';
 export * from './ManagementListAccessGrantsForServiceResponse';
 export * from './ManagementListAuditLogsResponse';
 export * from './ManagementListIncomingAccessRequestsResponse';

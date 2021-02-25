@@ -15,6 +15,9 @@ option (gogoproto.unmarshaler_all) = true;
 option (gogoproto.goproto_getters_all) = false;
 
 service Management {
+  rpc IsBillingEnabled (google.protobuf.Empty) returns (IsBillingEnabledResponse) {
+    option (google.api.http) = {get: "/api/v1/billing/enabled"};
+  }
   rpc DownloadBillingExport (google.protobuf.Empty) returns (DownloadBillingExportResponse) {
     option (google.api.http) = {get: "/api/v1/billing/export"};
   }
@@ -91,6 +94,10 @@ service Management {
   rpc ListAuditLogs (google.protobuf.Empty) returns (ListAuditLogsResponse) {
     option (google.api.http) = {get: "/api/v1/audit-logs"};
   }
+}
+
+message IsBillingEnabledResponse {
+  bool enabled = 1;
 }
 
 message DownloadBillingExportResponse {
