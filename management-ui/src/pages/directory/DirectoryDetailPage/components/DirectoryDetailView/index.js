@@ -4,7 +4,11 @@
 import React from 'react'
 import { func, number, object, shape, string } from 'prop-types'
 import { observer } from 'mobx-react'
-import { Alert, useDrawerStack } from '@commonground/design-system'
+import {
+  Alert,
+  useDrawerStack,
+  withDrawerStack,
+} from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import { useConfirmationModal } from '../../../../../components/ConfirmationModal'
 import RequestAccessDetails from '../../../RequestAccessDetails'
@@ -137,10 +141,11 @@ DirectoryDetailView.propTypes = {
     latestAccessRequest: object,
     latestAccessProof: object,
     requestAccess: func.isRequired,
+    retryRequestAccess: func.isRequired,
     oneTimeCosts: number,
     monthlyCosts: number,
     requestCosts: number,
   }),
 }
 
-export default observer(DirectoryDetailView)
+export default observer(withDrawerStack(DirectoryDetailView))

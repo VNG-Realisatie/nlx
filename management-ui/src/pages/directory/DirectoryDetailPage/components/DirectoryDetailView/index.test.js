@@ -2,51 +2,36 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { makeAutoObservable, configure } from 'mobx'
-import { Route, StaticRouter as Router } from 'react-router-dom'
-import { fireEvent, within, waitFor } from '@testing-library/react'
+import { fireEvent, waitFor, within } from '@testing-library/react'
 import { renderWithProviders } from '../../../../../test-utils'
-import DirectoryDetailPage from '../../index'
+import { ACCESS_REQUEST_STATES } from '../../../../../stores/models/OutgoingAccessRequestModel'
+import DirectoryDetailView from './index'
 
 jest.mock('../../../../../components/Modal')
 
-let service
-
-beforeEach(() => {
-  configure({ safeDescriptors: false })
-  service = makeAutoObservable({
-    id: 'Test Organization/Test Service',
+test('display stacktrace when requesting access failed', () => {
+  const service = {
+    id: 'my-service',
     organizationName: 'Test Organization',
     serviceName: 'Test Service',
-    state: 'degraded',
-    apiSpecificationType: 'API',
-    latestAccessRequest: null,
-    fetch: jest.fn(),
-    requestAccess: jest.fn(),
-    retryRequestAccess: jest.fn(),
-  })
-})
-
-test('A service with failed latestAccessRequest', () => {
-  service.latestAccessRequest = {
-    id: 'string',
-    organizationName: 'organization',
-    serviceName: 'service',
-    state: 'FAILED',
-    createdAt: new Date('2020-06-30T08:31:41.106Z'),
-    updatedAt: new Date('2020-06-30T08:31:41.106Z'),
-    errorDetails: {
-      cause: 'Something went wrong',
-      stackTrace: ['Go main panic'],
+    latestAccessRequest: {
+      id: 'my-latest-access-request',
+      organizationName: 'organization',
+      serviceName: 'service',
+      state: ACCESS_REQUEST_STATES.FAILED,
+      createdAt: new Date('2020-06-30T08:31:41.106Z'),
+      updatedAt: new Date('2020-06-30T08:31:41.106Z'),
+      errorDetails: {
+        cause: 'Something went wrong',
+        stackTrace: ['Go main panic'],
+      },
     },
+    requestAccess: () => {},
+    retryRequestAccess: () => {},
   }
 
   const { getAllByText, getByText, getByTestId } = renderWithProviders(
-    <Router location="/directory/organization/service">
-      <Route path="/directory/:organizationName/:serviceName">
-        <DirectoryDetailPage service={service} />
-      </Route>
-    </Router>,
+    <DirectoryDetailView service={service} />,
   )
 
   const failedMessages = getAllByText('Request could not be sent')
@@ -61,15 +46,19 @@ test('A service with failed latestAccessRequest', () => {
 })
 
 test('can request access', async () => {
-  const requestAccessFn = jest.fn()
-  service.requestAccess = requestAccessFn
+  const service = {
+    id: 'Test Organization/Test Service',
+    organizationName: 'Test Organization',
+    serviceName: 'Test Service',
+    state: 'degraded',
+    apiSpecificationType: 'API',
+    latestAccessRequest: null,
+    requestAccess: jest.fn(),
+    retryRequestAccess: () => {},
+  }
 
   const { findByText, findByRole } = renderWithProviders(
-    <Router location="/directory/organization/service">
-      <Route path="/directory/:organizationName/:serviceName">
-        <DirectoryDetailPage service={service} />
-      </Route>
-    </Router>,
+    <DirectoryDetailView service={service} />,
   )
 
   const requestAccessButton = await findByText('Request access')
@@ -79,5 +68,5 @@ test('can request access', async () => {
   const okButton = within(dialog).getByText('Send')
 
   fireEvent.click(okButton)
-  await waitFor(() => expect(requestAccessFn).toHaveBeenCalled())
+  await waitFor(() => expect(service.requestAccess).toHaveBeenCalled())
 })
