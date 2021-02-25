@@ -294,6 +294,11 @@ nlx-management:
     enabled: true
     hosts:
       - nlx-management.rdw.nlx.minikube
+  transactionLog:
+    enabled: true
+    hostname: rdw-postgresql
+    database: rdw-transaction-log
+    existingSecret: rdw-postgresql-auth
   postgresql:
     hostname: rdw-postgresql
     existingSecret: rdw-postgresql-auth

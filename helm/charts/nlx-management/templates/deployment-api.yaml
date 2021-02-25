@@ -68,6 +68,24 @@ spec:
                   key: POSTGRES_PASSWORD
             - name: POSTGRES_DSN
               value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):5432/nlx_management?sslmode=disable&connect_timeout=10'
+          {{- if .Values.transactionLog.enabled }}
+            - name: TRANSACTION_LOG_HOST
+              value: {{ required "PostgreSQL hostname is required" .Values.transactionLog.hostname }}
+            - name: TRANSACTION_LOG_DATABASE
+              value: {{ required "PostgreSQL database name is required" .Values.transactionLog.database }}
+            - name: TRANSACTION_LOG_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nlx-management.transactionLog.secret" . }}
+                  key: POSTGRES_USER
+            - name: TRANSACTION_LOG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nlx-management.transactionLog.secret" . }}
+                  key: POSTGRES_PASSWORD
+            - name: TRANSACTION_LOG_DSN
+              value: 'postgres://$(TRANSACTION_LOG_USER):$(TRANSACTION_LOG_PASSWORD)@$(TRANSACTION_LOG_HOST):5432/$(TRANSACTION_LOG_DATABASE)?sslmode=disable&connect_timeout=10'
+          {{- end}}
             - name: DIRECTORY_INSPECTION_ADDRESS
               value: {{ required "Directory inspection hostname is required" .Values.config.directoryInspectionHostname }}:443
             - name: DIRECTORY_REGISTRATION_ADDRESS

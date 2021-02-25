@@ -85,6 +85,13 @@ Return the image name for the UI
 {{- end -}}
 
 {{/*
+Return the secret name of the Transaction log username/password
+*/}}
+{{- define "nlx-management.transactionLog.secret" -}}
+{{- default (printf "%s-postgresql" (include "nlx-management.fullname" .)) .Values.transactionLog.existingSecret -}}
+{{- end -}}
+
+{{/*
 Return the secret name of the PostgreSQL username/password
 */}}
 {{- define "nlx-management.postgresql.secret" -}}

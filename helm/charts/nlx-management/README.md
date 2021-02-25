@@ -72,6 +72,12 @@ The following table lists the configurable parameters of the nlx-management Char
 | `tls.certificate.certificatePEM` | The certificate signed by your internal PKI | `""` |
 | `tls.certificate.keyPEM` | The private key of `tls.certificate.certificatePEM` | `""` |
 | `tls.certificate.existingSecret` | If you have an existing secret with your NLX keypair you can use it instead of `tls.organizationCertificate.certificatePEM` and `tls.organizationCertificate.keyPEM` | `""` |
+| `transactionLog.enabled` | If `true` the outway will write log records into the transaction log | `true` |
+| `transactionLog.hostname` | Hostname of the transaction log database | `""` |
+| `transactionLog.database` | Database name of the transaction log | `""` |
+| `transactionLog.username` | Username of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret | `""` |
+| `transactionLog.password` | Password of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret | `""` |
+| `transactionLog.existingSecret` | If you have an existing secret with PostgreSQL credentials you can use it instead of `transactionLog.username` and `transaction.password` | `""` |
 | `serviceAccount.create` | If `true`, create a new service account | `true` |
 | `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` |
 | `serviceAccount.annotations` | Annotations to add to the service account |  

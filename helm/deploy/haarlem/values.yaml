@@ -264,6 +264,11 @@ nlx-management:
       existingSecret: haarlem-organization-tls
     certificate:
       existingSecret: haarlem-management-api-tls
+  transactionLog:
+    enabled: true
+    hostname: haarlem-postgresql
+    database: haarlem-transaction-log
+    existingSecret: haarlem-postgresql-auth
   ingress:
     enabled: true
     hosts:
