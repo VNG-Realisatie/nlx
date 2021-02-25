@@ -9,6 +9,32 @@ import DirectoryDetailView from './index'
 
 jest.mock('../../../../../components/Modal')
 
+test('can request access', async () => {
+  const service = {
+    id: 'Test Organization/Test Service',
+    organizationName: 'Test Organization',
+    serviceName: 'Test Service',
+    state: 'degraded',
+    apiSpecificationType: 'API',
+    latestAccessRequest: null,
+    requestAccess: jest.fn(),
+    retryRequestAccess: () => {},
+  }
+
+  const { findByText, findByRole } = renderWithProviders(
+    <DirectoryDetailView service={service} />,
+  )
+
+  const requestAccessButton = await findByText('Request access')
+  fireEvent.click(requestAccessButton)
+
+  const dialog = await findByRole('dialog')
+  const okButton = within(dialog).getByText('Send')
+
+  fireEvent.click(okButton)
+  await waitFor(() => expect(service.requestAccess).toHaveBeenCalled())
+})
+
 test('display stacktrace when requesting access failed', () => {
   const service = {
     id: 'my-service',
@@ -43,30 +69,4 @@ test('display stacktrace when requesting access failed', () => {
 
   expect(getByTestId('stacktrace')).toBeVisible()
   expect(getByText('Go main panic')).toBeInTheDocument()
-})
-
-test('can request access', async () => {
-  const service = {
-    id: 'Test Organization/Test Service',
-    organizationName: 'Test Organization',
-    serviceName: 'Test Service',
-    state: 'degraded',
-    apiSpecificationType: 'API',
-    latestAccessRequest: null,
-    requestAccess: jest.fn(),
-    retryRequestAccess: () => {},
-  }
-
-  const { findByText, findByRole } = renderWithProviders(
-    <DirectoryDetailView service={service} />,
-  )
-
-  const requestAccessButton = await findByText('Request access')
-  fireEvent.click(requestAccessButton)
-
-  const dialog = await findByRole('dialog')
-  const okButton = within(dialog).getByText('Send')
-
-  fireEvent.click(okButton)
-  await waitFor(() => expect(service.requestAccess).toHaveBeenCalled())
 })
