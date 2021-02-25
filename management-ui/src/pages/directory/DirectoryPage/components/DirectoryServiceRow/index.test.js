@@ -2,144 +2,80 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { makeAutoObservable, configure } from 'mobx'
+import { configure } from 'mobx'
 import { fireEvent, act, waitFor } from '@testing-library/react'
 import { renderWithProviders } from '../../../../../test-utils'
+import DirectoryServiceModel from '../../../../../stores/models/DirectoryServiceModel'
+import {
+  SERVICE_STATE_DEGRADED,
+  SERVICE_STATE_UP,
+} from '../../../../../components/StateIndicator'
 import DirectoryServiceRow from './index'
 
 jest.mock('../../../../../stores/models/OutgoingAccessRequestModel')
 jest.mock('../../../../../components/Modal')
 
-describe('a service we do not have access to', () => {
-  let service
-
-  beforeEach(() => {
-    configure({ safeDescriptors: false })
-    service = makeAutoObservable({
+const buildServiceModel = () => {
+  return new DirectoryServiceModel({
+    serviceData: {
       id: 'Test Organization/Test Service',
       organizationName: 'Test Organization',
       serviceName: 'Test Service',
-      state: 'degraded',
+      state: SERVICE_STATE_DEGRADED,
       apiSpecificationType: 'API',
       latestAccessRequest: null,
       latestAccessProof: null,
-      requestAccess: jest.fn(),
-    })
+    },
+  })
+}
+
+const renderComponent = ({ service }) => {
+  return renderWithProviders(
+    <table>
+      <tbody>
+        <DirectoryServiceRow service={service} />
+      </tbody>
+    </table>,
+  )
+}
+
+test('display service information', () => {
+  configure({ safeDescriptors: false })
+  const service = buildServiceModel()
+  const { container, getByText } = renderComponent({ service })
+
+  expect(container).toHaveTextContent('Test Organization')
+  expect(container).toHaveTextContent('Test Service')
+  expect(container).toHaveTextContent('state-degraded.svg')
+  expect(container).toHaveTextContent('API')
+
+  const button = getByText('Request')
+  expect(button).not.toBeVisible()
+})
+
+test('requesting access', async () => {
+  configure({ safeDescriptors: false })
+
+  const service = buildServiceModel()
+  service.requestAccess = jest.fn()
+
+  const { getByText } = renderComponent({ service })
+
+  fireEvent.click(getByText('Request'))
+  fireEvent.click(getByText('Send'))
+
+  await waitFor(() => expect(service.requestAccess).toHaveBeenCalled())
+})
+
+test('display changes to the service', () => {
+  const service = buildServiceModel()
+  const { getByTestId } = renderComponent({ service })
+
+  act(() => {
+    service.state = SERVICE_STATE_UP
   })
 
-  it('shows the data', () => {
-    const { getByTestId, getByText } = renderWithProviders(
-      <table>
-        <tbody>
-          <DirectoryServiceRow service={service} />
-        </tbody>
-      </table>,
-    )
-
-    const serviceRow = getByTestId('directory-service-row')
-    expect(serviceRow).toHaveTextContent('Test Organization')
-    expect(serviceRow).toHaveTextContent('Test Service')
-    expect(serviceRow).toHaveTextContent('state-degraded.svg')
-    expect(serviceRow).toHaveTextContent('API')
-
-    const button = getByText('Request')
-    expect(button).not.toBeVisible()
-  })
-
-  it('should be possible to request access', async () => {
-    const spy = jest.spyOn(service, 'requestAccess')
-    const { getByText } = renderWithProviders(
-      <table>
-        <tbody>
-          <DirectoryServiceRow service={service} />
-        </tbody>
-      </table>,
-    )
-
-    fireEvent.click(getByText('Request'))
-    fireEvent.click(getByText('Send'))
-
-    await waitFor(() => expect(spy).toHaveBeenCalled())
-  })
-
-  it('should reflect a change of state', () => {
-    const { getByTestId } = renderWithProviders(
-      <table>
-        <tbody>
-          <DirectoryServiceRow service={service} />
-        </tbody>
-      </table>,
-    )
-
-    act(() => {
-      service.state = 'up'
-    })
-
-    const serviceRow = getByTestId('directory-service-row')
-    expect(serviceRow).not.toHaveTextContent('state-degraded.svg')
-    expect(serviceRow).toHaveTextContent('state-up.svg')
-  })
-
-  it('has request access button in certain states', () => {
-    service.latestAccessRequest = {
-      id: 'string',
-      state: 'FAILED',
-      createdAt: '2020-06-30T08:30:00Z',
-      updatedAt: '2020-06-30T08:30:05Z',
-    }
-
-    const { getByTestId } = renderWithProviders(
-      <table>
-        <tbody>
-          <DirectoryServiceRow service={service} />
-        </tbody>
-      </table>,
-    )
-
-    const serviceRow = getByTestId('directory-service-row')
-    expect(serviceRow.querySelector('button')).toBeInTheDocument()
-
-    service.latestAccessRequest = {
-      id: 'string',
-      state: 'REJECTED',
-      createdAt: '2020-06-30T08:30:00Z',
-      updatedAt: '2020-06-30T08:35:00Z',
-    }
-
-    expect(serviceRow.querySelector('button')).toBeInTheDocument()
-  })
-
-  it('does not have request access button in other states', () => {
-    service.latestAccessRequest = {
-      id: 'string',
-      state: 'CREATED',
-      createdAt: '2020-06-30T08:30:00Z',
-      updatedAt: '2020-06-30T08:30:03Z',
-    }
-
-    const { getByTestId } = renderWithProviders(
-      <table>
-        <tbody>
-          <DirectoryServiceRow service={service} />
-        </tbody>
-      </table>,
-    )
-
-    const serviceRow = getByTestId('directory-service-row')
-    expect(serviceRow.querySelector('button')).not.toBeInTheDocument()
-
-    service.latestAccessRequest = {
-      id: 'string',
-      state: 'APPROVED',
-      createdAt: '2020-06-30T08:30:00Z',
-      updatedAt: '2020-06-30T08:35:00Z',
-    }
-    service.latestAccessProof = {
-      id: 'string',
-      accessRequestId: 'string',
-      createdAt: '2020-06-30T08:35:01Z',
-    }
-
-    expect(serviceRow.querySelector('button')).not.toBeInTheDocument()
-  })
+  const serviceRow = getByTestId('directory-service-row')
+  expect(serviceRow).not.toHaveTextContent('state-degraded.svg')
+  expect(serviceRow).toHaveTextContent('state-up.svg')
 })

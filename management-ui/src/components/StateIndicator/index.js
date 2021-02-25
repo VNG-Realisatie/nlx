@@ -13,10 +13,10 @@ import {
   StateText,
 } from './index.styles'
 
-const SERVICE_STATE_DEGRADED = 'degraded'
+export const SERVICE_STATE_DEGRADED = 'degraded'
 const SERVICE_STATE_DOWN = 'down'
 const SERVICE_STATE_UNKNOWN = 'unknown'
-const SERVICE_STATE_UP = 'up'
+export const SERVICE_STATE_UP = 'up'
 
 const GetStateIndicatorForState = (state, showText, t) => {
   switch (state) {
