@@ -18,13 +18,11 @@ jest.mock('../../../../../components/Modal')
 const buildServiceModel = () => {
   return new DirectoryServiceModel({
     serviceData: {
-      id: 'Test Organization/Test Service',
+      id: 'my-service',
       organizationName: 'Test Organization',
       serviceName: 'Test Service',
       state: SERVICE_STATE_DEGRADED,
       apiSpecificationType: 'API',
-      latestAccessRequest: null,
-      latestAccessProof: null,
     },
   })
 }
