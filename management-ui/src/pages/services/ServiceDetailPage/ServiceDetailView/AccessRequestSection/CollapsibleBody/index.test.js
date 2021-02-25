@@ -28,12 +28,14 @@ test('approving an incoming access request', async () => {
       serviceName: 'service-a',
       organizationName: 'organization-a',
       state: ACCESS_REQUEST_STATES.RECEIVED,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: '2020-10-01T12:00:00Z',
+      updatedAt: '2020-10-01T12:00:01Z',
     },
   })
 
-  const onApproveOrRejectHandler = jest.fn().mockResolvedValue()
+  accessRequest.approve = jest.fn()
+
+  const onApproveOrRejectHandler = jest.fn()
   const { getByTitle, getByRole, findByText } = renderWithProviders(
     <CollapsibleBody
       accessRequests={[accessRequest]}
@@ -41,22 +43,13 @@ test('approving an incoming access request', async () => {
     />,
   )
 
-  const approveSpy = jest.spyOn(accessRequest, 'approve').mockResolvedValue()
   fireEvent.click(getByTitle('Approve'))
 
-  let confirmModal = getByRole('dialog')
-  const cancelButton = within(confirmModal).getByText('Cancel')
-  fireEvent.click(cancelButton)
-
-  await waitFor(() => expect(approveSpy).not.toHaveBeenCalled())
-
-  fireEvent.click(getByTitle('Approve'))
-
-  confirmModal = getByRole('dialog')
+  const confirmModal = getByRole('dialog')
   const okButton = within(confirmModal).getByText('Approve')
   fireEvent.click(okButton)
 
-  await waitFor(() => expect(approveSpy).toHaveBeenCalled())
+  await waitFor(() => expect(accessRequest.approve).toHaveBeenCalled())
   expect(onApproveOrRejectHandler).toHaveBeenCalledTimes(1)
 
   // toast
@@ -72,12 +65,14 @@ test('rejecting an incoming access request', async () => {
       serviceName: 'service-a',
       organizationName: 'organization-a',
       state: ACCESS_REQUEST_STATES.RECEIVED,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: '2020-10-01T12:00:00Z',
+      updatedAt: '2020-10-01T12:00:01Z',
     },
   })
 
-  const onApproveOrRejectHandler = jest.fn().mockResolvedValue()
+  accessRequest.reject = jest.fn()
+
+  const onApproveOrRejectHandler = jest.fn()
   const { getByTitle, getByRole, findByText } = renderWithProviders(
     <CollapsibleBody
       accessRequests={[accessRequest]}
@@ -85,22 +80,13 @@ test('rejecting an incoming access request', async () => {
     />,
   )
 
-  const rejectSpy = jest.spyOn(accessRequest, 'reject').mockResolvedValue()
   fireEvent.click(getByTitle('Reject'))
 
-  let confirmModal = getByRole('dialog')
-  const cancelButton = within(confirmModal).getByText('Cancel')
-  fireEvent.click(cancelButton)
-
-  await waitFor(() => expect(rejectSpy).not.toHaveBeenCalled())
-
-  fireEvent.click(getByTitle('Reject'))
-
-  confirmModal = getByRole('dialog')
+  const confirmModal = getByRole('dialog')
   const okButton = within(confirmModal).getByText('Reject')
   fireEvent.click(okButton)
 
-  await waitFor(() => expect(rejectSpy).toHaveBeenCalled())
+  await waitFor(() => expect(accessRequest.reject).toHaveBeenCalled())
   expect(onApproveOrRejectHandler).toHaveBeenCalledTimes(1)
 
   // toast
