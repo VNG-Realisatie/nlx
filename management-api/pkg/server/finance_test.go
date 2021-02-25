@@ -23,33 +23,40 @@ import (
 )
 
 func TestIsFinanceEnabled(t *testing.T) {
-	service := NewManagementService(
-		nil,
-		nil,
-		nil,
-		nil,
-		nil,
-		nil,
-		nil,
-	)
+	tests := map[string]struct {
+		db      txlogdb.TxlogDatabase
+		enabled bool
+	}{
+		"returns_false_when_database_is_nil": {
+			db:      nil,
+			enabled: false,
+		},
 
-	response, err := service.IsFinanceEnabled(context.Background(), nil)
-	assert.NoError(t, err)
-	assert.False(t, response.Enabled)
+		"returns_true_when_database_is_not_nil": {
+			db:      mock_txlogdb.NewMockTxlogDatabase(nil),
+			enabled: true,
+		},
+	}
 
-	service = NewManagementService(
-		nil,
-		nil,
-		nil,
-		nil,
-		nil,
-		mock_txlogdb.NewMockTxlogDatabase(nil),
-		nil,
-	)
+	for name, tt := range tests {
+		tt := tt
 
-	response, err = service.IsFinanceEnabled(context.Background(), nil)
-	assert.NoError(t, err)
-	assert.True(t, response.Enabled)
+		t.Run(name, func(t *testing.T) {
+			service := NewManagementService(
+				nil,
+				nil,
+				nil,
+				nil,
+				nil,
+				tt.db,
+				nil,
+			)
+
+			response, err := service.IsFinanceEnabled(context.Background(), nil)
+			assert.NoError(t, err)
+			assert.Equal(t, tt.enabled, response.Enabled)
+		})
+	}
 }
 
 func TestDownloadFinanceExport(t *testing.T) {
