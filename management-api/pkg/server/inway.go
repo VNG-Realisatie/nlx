@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2021
+// Licensed under the EUPL
+
 //nolint:dupl // service and inway structs look the same
 package server
 

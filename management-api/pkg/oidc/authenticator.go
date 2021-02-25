@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2021
+// Licensed under the EUPL
+
 package oidc
 
 import (
@@ -104,7 +107,6 @@ func (a *Authenticator) Routes() chi.Router {
 func (a *Authenticator) OnlyAuthenticated(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		claims, err := a.ParseClaims(r)
-
 		if err != nil {
 			a.logger.Warn("authorization failed", zap.Error(err))
 
