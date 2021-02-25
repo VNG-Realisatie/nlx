@@ -4,7 +4,7 @@ go 1.15
 
 // Override the golang.org/x/text dependency, in version v0.3.3 a vulnerability is fixed.
 // See: https://nvd.nist.gov/vuln/detail/CVE-2020-14040.
-replace golang.org/x/text => golang.org/x/text v0.3.4
+replace golang.org/x/text => golang.org/x/text v0.3.5
 
 // Override the gopkg.in/yaml.v2 dependency. Versions before v2.2.3 are vulnerable to a Billion Laughs Attack.
 replace gopkg.in/yaml.v2 => gopkg.in/yaml.v2 v2.4.0
