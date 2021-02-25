@@ -1,19 +1,14 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { checkPropTypes } from 'prop-types'
 
 import IncomingAccessRequestModel, {
-  createIncomingAccessRequest,
-  incomingAccessRequestPropTypes,
+  ACCESS_REQUEST_STATES,
 } from './IncomingAccessRequestModel'
 
-let incomingAccessRequestStore
 let accessRequestData
 
 beforeEach(() => {
-  incomingAccessRequestStore = {}
-
   accessRequestData = {
     id: '1a2B',
     organizationName: 'Organization A',
@@ -24,37 +19,17 @@ beforeEach(() => {
   }
 })
 
-test('createIncomingAccessRequest returns an instance', () => {
-  const directoryService = createIncomingAccessRequest({
-    incomingAccessRequestStore,
-    accessRequestData,
+test('initialize the model', () => {
+  const model = new IncomingAccessRequestModel({
+    accessRequestData: accessRequestData,
   })
 
-  expect(directoryService).toBeInstanceOf(IncomingAccessRequestModel)
-})
-
-test('model implements proptypes', () => {
-  const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
-  const accessRequest = new IncomingAccessRequestModel({
-    accessRequestData,
-  })
-
-  checkPropTypes(
-    incomingAccessRequestPropTypes,
-    accessRequest,
-    'prop',
-    'IncomingAccessRequestModel',
-  )
-
-  expect(errorSpy).not.toHaveBeenCalled()
-  errorSpy.mockRestore()
+  expect(model).toBeInstanceOf(IncomingAccessRequestModel)
 })
 
 test('approving request handles as expected', async () => {
-  const approveAccessRequest = jest.fn().mockResolvedValue(null)
-
-  incomingAccessRequestStore = {
-    approveAccessRequest,
+  const incomingAccessRequestStore = {
+    approveAccessRequest: jest.fn(),
   }
 
   const accessRequest = new IncomingAccessRequestModel({
@@ -64,14 +39,14 @@ test('approving request handles as expected', async () => {
 
   accessRequest.approve()
 
-  expect(approveAccessRequest).toHaveBeenCalled()
+  expect(incomingAccessRequestStore.approveAccessRequest).toHaveBeenCalledWith(
+    accessRequest,
+  )
 })
 
 test('rejecting request handles as expected', async () => {
-  const rejectAccessRequest = jest.fn().mockResolvedValue(null)
-
-  incomingAccessRequestStore = {
-    rejectAccessRequest,
+  const incomingAccessRequestStore = {
+    rejectAccessRequest: jest.fn(),
     fetchForService: jest.fn(),
   }
 
@@ -82,18 +57,16 @@ test('rejecting request handles as expected', async () => {
 
   accessRequest.reject()
 
-  expect(rejectAccessRequest).toHaveBeenCalled()
+  expect(incomingAccessRequestStore.rejectAccessRequest).toHaveBeenCalled()
 })
 
 test('when approving or rejecting fails', async () => {
   jest.spyOn(global.console, 'error').mockImplementation(() => {})
 
-  const approveAccessRequest = jest
-    .fn()
-    .mockRejectedValue(new Error('arbitrary error'))
-
-  incomingAccessRequestStore = {
-    approveAccessRequest,
+  const incomingAccessRequestStore = {
+    approveAccessRequest: jest
+      .fn()
+      .mockRejectedValue(new Error('arbitrary error')),
   }
 
   const accessRequest = new IncomingAccessRequestModel({
@@ -109,12 +82,10 @@ test('when approving or rejecting fails', async () => {
 test('when rejecting fails', async () => {
   jest.spyOn(global.console, 'error').mockImplementation(() => {})
 
-  const rejectAccessRequest = jest
-    .fn()
-    .mockRejectedValue(new Error('arbitrary error'))
-
-  incomingAccessRequestStore = {
-    rejectAccessRequest,
+  const incomingAccessRequestStore = {
+    rejectAccessRequest: jest
+      .fn()
+      .mockRejectedValue(new Error('arbitrary error')),
   }
 
   const accessRequest = new IncomingAccessRequestModel({
@@ -133,15 +104,15 @@ test('returns proper isResolved value', () => {
   })
   expect(accessRequest.isResolved).toBe(false)
 
-  accessRequest.update({ state: 'RECEIVED' })
+  accessRequest.update({ state: ACCESS_REQUEST_STATES.RECEIVED })
   expect(accessRequest.isResolved).toBe(false)
 
-  accessRequest.update({ state: 'FAILED' })
+  accessRequest.update({ state: ACCESS_REQUEST_STATES.FAILED })
   expect(accessRequest.isResolved).toBe(true)
 
-  accessRequest.update({ state: 'ACCEPTED' })
+  accessRequest.update({ state: ACCESS_REQUEST_STATES.APPROVED })
   expect(accessRequest.isResolved).toBe(true)
 
-  accessRequest.update({ state: 'REJECTED' })
+  accessRequest.update({ state: ACCESS_REQUEST_STATES.REJECTED })
   expect(accessRequest.isResolved).toBe(true)
 })

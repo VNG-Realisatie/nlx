@@ -2,11 +2,10 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { shape, func } from 'prop-types'
+import { shape, func, string } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import Table from '../../../../../../../components/Table'
 import { useConfirmationModal } from '../../../../../../../components/ConfirmationModal'
-import { incomingAccessRequestPropTypes } from '../../../../../../../stores/models/IncomingAccessRequestModel'
 import { IconCheck, IconClose } from '../../../../../../../icons'
 import { TdActions, StyledButton } from './index.styles'
 
@@ -89,7 +88,11 @@ const IncomingAccessRequestRow = ({
 }
 
 IncomingAccessRequestRow.propTypes = {
-  accessRequest: shape(incomingAccessRequestPropTypes).isRequired,
+  accessRequest: shape({
+    id: string,
+    organizationName: string.isRequired,
+    serviceName: string.isRequired,
+  }).isRequired,
   approveHandler: func.isRequired,
   rejectHandler: func.isRequired,
 }
