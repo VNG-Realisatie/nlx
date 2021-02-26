@@ -44,7 +44,7 @@ func (service *ManagementService) DownloadFinanceExport(ctx context.Context, req
 		records, err = service.txlogDatabase.FilterRecords(
 			ctx,
 			&txlogdb.Filters{
-				Destination: service.orgCert.Certificate().Issuer.CommonName,
+				Destination: service.orgCert.Certificate().Subject.Organization[0],
 				Direction:   transactionlog.DirectionIn,
 			},
 		)
