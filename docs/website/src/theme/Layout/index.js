@@ -12,6 +12,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 import ThemeProvider from '@theme/ThemeProvider';
 import UserPreferencesProvider from '@theme/UserPreferencesProvider';
+import {DocsPreferredVersionContextProvider} from '@docusaurus/theme-common';
 import AnnouncementBar from '@theme/AnnouncementBar';
 import Navbar from '@theme/Navbar';
 import Footer from '@theme/Footer';
@@ -44,38 +45,40 @@ function Layout(props) {
   return (
     <ThemeProvider>
       <UserPreferencesProvider>
-        <Head>
-          {/* TODO: Do not assume that it is in english language */}
-          <html lang="en" />
+        <DocsPreferredVersionContextProvider>
+          <Head>
+            {/* TODO: Do not assume that it is in english language */}
+            <html lang="en" />
 
-          {metaTitle && <title>{metaTitle}</title>}
-          {metaTitle && <meta property="og:title" content={metaTitle} />}
-          {favicon && <link rel="shortcut icon" href={faviconUrl} />}
-          {description && <meta name="description" content={description} />}
-          {description && (
-            <meta property="og:description" content={description} />
-          )}
-          {version && <meta name="docsearch:version" content={version} />}
-          {keywords && keywords.length && (
-            <meta name="keywords" content={keywords.join(',')} />
-          )}
-          {metaImage && <meta property="og:image" content={metaImageUrl} />}
-          {metaImage && (
-            <meta property="twitter:image" content={metaImageUrl} />
-          )}
-          {metaImage && (
-            <meta name="twitter:image:alt" content={`Image for ${metaTitle}`} />
-          )}
-          {permalink && (
-            <meta property="og:url" content={siteUrl + permalink} />
-          )}
-          {permalink && <link rel="canonical" href={siteUrl + permalink} />}
-          <meta name="twitter:card" content="summary_large_image" />
-        </Head>
-        <AnnouncementBar />
-        <Navbar />
-        <div className="main-wrapper">{children}</div>
-        {!noFooter && <Footer />}
+            {metaTitle && <title>{metaTitle}</title>}
+            {metaTitle && <meta property="og:title" content={metaTitle} />}
+            {favicon && <link rel="shortcut icon" href={faviconUrl} />}
+            {description && <meta name="description" content={description} />}
+            {description && (
+              <meta property="og:description" content={description} />
+            )}
+            {version && <meta name="docsearch:version" content={version} />}
+            {keywords && keywords.length && (
+              <meta name="keywords" content={keywords.join(',')} />
+            )}
+            {metaImage && <meta property="og:image" content={metaImageUrl} />}
+            {metaImage && (
+              <meta property="twitter:image" content={metaImageUrl} />
+            )}
+            {metaImage && (
+              <meta name="twitter:image:alt" content={`Image for ${metaTitle}`} />
+            )}
+            {permalink && (
+              <meta property="og:url" content={siteUrl + permalink} />
+            )}
+            {permalink && <link rel="canonical" href={siteUrl + permalink} />}
+            <meta name="twitter:card" content="summary_large_image" />
+          </Head>
+          <AnnouncementBar />
+          <Navbar />
+          <div className="main-wrapper">{children}</div>
+          {!noFooter && <Footer />}
+        </DocsPreferredVersionContextProvider>
       </UserPreferencesProvider>
     </ThemeProvider>
   );
