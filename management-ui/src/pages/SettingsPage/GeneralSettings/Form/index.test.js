@@ -11,9 +11,7 @@ import { RootStore, StoreProvider } from '../../../../stores'
 import { ManagementApi } from '../../../../api'
 import Form from './index'
 
-jest.mock('../../../../components/Modal')
-
-const setupComponent = () => {
+test('changing organization inway', async () => {
   const managementApiClient = new ManagementApi()
 
   managementApiClient.managementListInways = jest.fn().mockResolvedValue({
@@ -26,20 +24,11 @@ const setupComponent = () => {
 
   const onSubmitHandlerSpy = jest.fn()
 
-  const helpers = renderWithProviders(
+  const { findByLabelText, getByText } = renderWithProviders(
     <StoreProvider rootStore={rootStore}>
       <Form onSubmitHandler={onSubmitHandlerSpy} />
     </StoreProvider>,
   )
-
-  return {
-    ...helpers,
-    onSubmitHandlerSpy,
-  }
-}
-
-test('changing organization inway', async () => {
-  const { findByLabelText, getByText, onSubmitHandlerSpy } = setupComponent()
 
   const organizationInwayInput = await findByLabelText(/Organization inway/)
   await selectEvent.select(organizationInwayInput, /inway-a/)
@@ -49,22 +38,6 @@ test('changing organization inway', async () => {
   await waitFor(() =>
     expect(onSubmitHandlerSpy).toHaveBeenCalledWith({
       organizationInway: 'inway-a',
-    }),
-  )
-})
-
-test('when not specifying an organization inway, a confirmation should be shown', async () => {
-  const { findByText, getByText, onSubmitHandlerSpy } = setupComponent()
-
-  const submitButton = getByText('Save settings')
-  userEvent.click(submitButton)
-  // Shows modal
-  expect(await findByText('Are you sure?')).toBeInTheDocument()
-  userEvent.click(getByText('Save'))
-
-  await waitFor(() =>
-    expect(onSubmitHandlerSpy).toHaveBeenCalledWith({
-      organizationInway: '',
     }),
   )
 })
