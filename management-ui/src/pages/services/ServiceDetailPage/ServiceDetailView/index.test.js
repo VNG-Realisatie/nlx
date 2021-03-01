@@ -11,6 +11,16 @@ jest.mock('./InwaysSection', () => () => <div />)
 jest.mock('./AccessRequestSection', () => () => <div />)
 jest.mock('./AccessGrantSection', () => () => <div />)
 
+jest.mock('../../../../components/Modal')
+
+beforeEach(() => {
+  jest.useFakeTimers()
+})
+
+afterEach(() => {
+  jest.useRealTimers()
+})
+
 const service = {
   name: 'name',
   internal: false,
