@@ -72,7 +72,6 @@ describe('Services', () => {
     cy.findByText('Verwijderen').click()
     cy.findByText('Weet je het zeker?').should('exist')
     cy.clickModalButton('Verwijderen')
-
     cy.dismissToaster('De service is verwijderd')
   })
 })
