@@ -119,7 +119,6 @@ func (db *PostgresConfigDatabase) SetServiceInways(ctx context.Context, serviceI
 
 	return db.DB.Model(service).
 		WithContext(ctx).
-		Omit(clause.Associations).
 		Association("Inways").
 		Replace(inways)
 }
