@@ -1,5 +1,5 @@
 # Use go 1.x based on alpine image.
-FROM golang:1.15.5-alpine AS build-cfssl
+FROM golang:1.16.0-alpine AS build-cfssl
 
 # Build and install cfssl binaries
 RUN apk add --update git g++

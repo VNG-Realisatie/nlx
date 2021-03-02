@@ -1,5 +1,5 @@
 # Use go 1.x based on alpine image.
-FROM golang:1.15.5-alpine AS build
+FROM golang:1.16.0-alpine AS build
 
 # Install build tools.
 RUN apk add --update git gcc musl-dev
