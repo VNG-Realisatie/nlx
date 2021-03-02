@@ -10,7 +10,7 @@
     "i18next": "19.9.1",
     "i18next-xhr-backend": "3.2.2",
     "js-cookie": "2.2.1",
-    "mobx": "6.1.7",
+    "mobx": "6.1.8",
     "mobx-react": "7.1.0",
     "react": "17.0.1",
     "react-app-polyfill": "2.0.0",
