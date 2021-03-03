@@ -4,7 +4,7 @@ Documentation link checker:
   variables:
     DOCKER_TLS_CERTDIR: "/certs"
   services:
-    - docker:20.10.3-dind
+    - docker:20.10.5-dind
   before_script:
     - export CI_ENV_URL=$([ -f ci_environment_url.txt ] && cat ci_environment_url.txt)
     - export DOCS_URL=$([ -z "$CI_ENV_URL" ] && echo "https://docs.acc.nlx.io" || echo "https://docs-$CI_ENV_URL")
