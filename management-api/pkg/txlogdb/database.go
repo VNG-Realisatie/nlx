@@ -70,7 +70,7 @@ func (db *TxlogPostgresDatabase) FilterRecords(ctx context.Context, filters *Fil
 			"src_organization",
 			"dest_organization",
 			"direction",
-			"MIN(created)",
+			"MIN(created) created",
 			"service_name",
 			"COUNT(*) request_count",
 		).

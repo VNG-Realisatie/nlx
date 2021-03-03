@@ -68,7 +68,7 @@ func (service *ManagementService) DownloadFinanceExport(ctx context.Context, req
 		if err := exporter.Export(&FinanceRow{
 			Organization:     record.Source,
 			ServiceName:      record.ServiceName,
-			Month:            record.CreatedAt.Format("Januari 2006"),
+			Month:            record.CreatedAt.Format("01 2006"),
 			PricePerRequest:  svc.RequestCosts,
 			NumberOfRequests: record.RequestCount,
 			SetupCosts:       svc.OneTimeCosts,
