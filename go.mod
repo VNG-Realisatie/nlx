@@ -10,7 +10,7 @@ replace golang.org/x/text => golang.org/x/text v0.3.5
 replace gopkg.in/yaml.v2 => gopkg.in/yaml.v2 v2.4.0
 
 // Override the google.golang.org/grpc dependency. One of the package has `@latest` which doesn't work.
-replace google.golang.org/grpc => google.golang.org/grpc v1.26.0
+replace google.golang.org/grpc => google.golang.org/grpc v1.36.0
 
 require (
 	github.com/blang/semver v3.5.1+incompatible // indirect
@@ -57,7 +57,7 @@ require (
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	golang.org/x/text v0.3.3
 	google.golang.org/genproto v0.0.0-20210226172003-ab064af71705
-	google.golang.org/grpc v1.33.1
+	google.golang.org/grpc v1.36.0
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/square/go-jose.v2 v2.4.1 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776
