@@ -2,5 +2,5 @@ apiVersion: v2
 name: irma-server
 description: IRMA server is used to verify user credentials when using the insight app
 type: application
-version: 0.95.0
-appVersion: 0.95.0
+version: 0.96.0
+appVersion: 0.96.0

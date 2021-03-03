@@ -1,3 +1,47 @@
+# [0.96.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.95.0...v0.96.0) (2021-03-03)
+
+
+### Bug Fixes
+
+* **docs:** update docusaurus to 2.0.0-alpha.70 ([a559856](https://gitlab.com/commonground/nlx/nlx/commit/a559856f1a98f5466a2d551a8fa7957fa330f4d1))
+* **management:** month is now exported correctly to finance export csv ([55074c9](https://gitlab.com/commonground/nlx/nlx/commit/55074c9caa5e559d4172212658f521b5d733d5d0))
+* **management:** set inway properly including creation ([31bf4b7](https://gitlab.com/commonground/nlx/nlx/commit/31bf4b7979a1d51fe47167d7a05b601f368f4c6f))
+* include new security templates ([f27de30](https://gitlab.com/commonground/nlx/nlx/commit/f27de30e92e41998d0392471146fe3a79cc6f138))
+* partially mitigate CVE-2020-28477 ([48040da](https://gitlab.com/commonground/nlx/nlx/commit/48040da94e876e77b6afbb2a3693b6a6862d0c68))
+* switch jwt-go library because the former one wasn't actively developed anymore ([e728044](https://gitlab.com/commonground/nlx/nlx/commit/e72804487c00e4f7ef65c85e3640b3ec88d44713))
+* update cobra to the latest version ([4095621](https://gitlab.com/commonground/nlx/nlx/commit/4095621a6b80b2b1175e8445fce62af4e8aeb26d))
+* **directory:** correctly format go code ([18d92e5](https://gitlab.com/commonground/nlx/nlx/commit/18d92e59447faf253aefbc7e486a0d7296beb9bb)), closes [#1158](https://gitlab.com/commonground/nlx/nlx/issues/1158)
+* **directory:** typo request costs column name ([27bca47](https://gitlab.com/commonground/nlx/nlx/commit/27bca478d98284847e1586cdefe9821bd1f03b1c)), closes [#1158](https://gitlab.com/commonground/nlx/nlx/issues/1158)
+* **management:** add license ([b2aae1d](https://gitlab.com/commonground/nlx/nlx/commit/b2aae1d5657b68bc233d9e99d07fac3be6334c44))
+* **management:** fix tests after rebase ([5a076e1](https://gitlab.com/commonground/nlx/nlx/commit/5a076e1134483daa539370d296c75bd8ba37bfbf)), closes [#1158](https://gitlab.com/commonground/nlx/nlx/issues/1158)
+* **management:** re-structure finance is enabled unittest ([40f673e](https://gitlab.com/commonground/nlx/nlx/commit/40f673efdd42d6a1254c6ab307bce2c309088448))
+* **management:** remove duplicated test-case ([07e2225](https://gitlab.com/commonground/nlx/nlx/commit/07e22256de30403350681ade281e16cf12c97e5f))
+* **management:** rename billing to finance ([682682e](https://gitlab.com/commonground/nlx/nlx/commit/682682e97949968d03cc677ca5e87957c5f53228))
+* **management:** translation file ([01f6763](https://gitlab.com/commonground/nlx/nlx/commit/01f6763090061c34a3dbd094dc6e510770c58104))
+* **management:** translation file ([ebd8090](https://gitlab.com/commonground/nlx/nlx/commit/ebd8090fa829d605bb2d77d6322bb5c71da2dbbe))
+* **management:** update CostsSection to display Free if the costs are undefined ([77b164c](https://gitlab.com/commonground/nlx/nlx/commit/77b164c2ccd354bf991e39ef55846ac9126faac7)), closes [#1158](https://gitlab.com/commonground/nlx/nlx/issues/1158)
+* **management:** use organization name in finance export instead of common-name ([4ea45b4](https://gitlab.com/commonground/nlx/nlx/commit/4ea45b4c1c6a8b4e4e0c7d6b3510fde60191bf07))
+
+
+### Features
+
+* add transaction log support to helm chart ([f9ef5c1](https://gitlab.com/commonground/nlx/nlx/commit/f9ef5c16e12b09fc4b59df5cef20fa2725953176))
+* **directory:** add pricing ([9b6b95c](https://gitlab.com/commonground/nlx/nlx/commit/9b6b95c986cb50c22c4906b907a505eb258f01ed))
+* **directory:** add service costs when registering an inway ([be66ade](https://gitlab.com/commonground/nlx/nlx/commit/be66ade1e2667ca51756e3d6492f3e5a1d832f2b)), closes [#1158](https://gitlab.com/commonground/nlx/nlx/issues/1158)
+* **directory:** expose service costs in ListServices endpoint ([465bcaa](https://gitlab.com/commonground/nlx/nlx/commit/465bcaac346f87359fcd7a898f15650d1e333a60)), closes [#1158](https://gitlab.com/commonground/nlx/nlx/issues/1158)
+* **docs:** document billing ([241d4bf](https://gitlab.com/commonground/nlx/nlx/commit/241d4bf3c68cdc7a3dc0489b9f17de07d233a497))
+* **inway:** pass service costs when registering an inway ([a29dfd0](https://gitlab.com/commonground/nlx/nlx/commit/a29dfd0aab4366fbbdeddd59e9b113bdec385d88)), closes [#1158](https://gitlab.com/commonground/nlx/nlx/issues/1158)
+* **management:** add unittests for finance export ([9d170d7](https://gitlab.com/commonground/nlx/nlx/commit/9d170d78d901979a2541c649317a218ff1a6ae48))
+* **management:** configure finance page ([5695086](https://gitlab.com/commonground/nlx/nlx/commit/569508686487a0194824de89ceeb0d983b01c038))
+* **management:** detect if finance is enabled ([b38a623](https://gitlab.com/commonground/nlx/nlx/commit/b38a6232a70eb4a530ec6adb9a0dd5d94dbf162b))
+* **management:** display costs before requesting access to a service ([f6258da](https://gitlab.com/commonground/nlx/nlx/commit/f6258da5cb871be6fcda18eb750c6252bf4d06ec)), closes [#1158](https://gitlab.com/commonground/nlx/nlx/issues/1158)
+* **management:** display costs for Directory services ([0d31b39](https://gitlab.com/commonground/nlx/nlx/commit/0d31b39b0613bddc813c1b0c13c45bf59074d528)), closes [#1158](https://gitlab.com/commonground/nlx/nlx/issues/1158)
+* **management:** display service costs for directory ([b8df0a9](https://gitlab.com/commonground/nlx/nlx/commit/b8df0a902a7cc26cbd474033812d489f822b732a)), closes [#1158](https://gitlab.com/commonground/nlx/nlx/issues/1158)
+* **management:** display service costs for directory ([a81fd89](https://gitlab.com/commonground/nlx/nlx/commit/a81fd8928a5e2e611169e8135cb646d856ced08e)), closes [#1158](https://gitlab.com/commonground/nlx/nlx/issues/1158)
+* **management:** export billing overview based on transaction logs ([606d544](https://gitlab.com/commonground/nlx/nlx/commit/606d54436b291bedf06926c4965a79d75c182e02))
+* **management:** expose service costs in ListServices endpoint ([a703430](https://gitlab.com/commonground/nlx/nlx/commit/a703430309dda5e3d0693e6da6ef3a0cd3a4bc37)), closes [#1158](https://gitlab.com/commonground/nlx/nlx/issues/1158)
+* **management:** finance page UI ([6b9cee8](https://gitlab.com/commonground/nlx/nlx/commit/6b9cee8d7aee91b3c1eb142522bcfddde9322c22))
+
 # [0.95.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.94.2...v0.95.0) (2021-02-24)
 
 
