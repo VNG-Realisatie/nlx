@@ -3,6 +3,8 @@ FROM golang:1.16.0-alpine AS build
 
 WORKDIR /go/src/go.nlx.io/nlx
 
+ENV GO111MODULE=off
+
 # Add code that we use for building review-page
 COPY . /go/src/go.nlx.io/nlx/review-page
 
