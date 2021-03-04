@@ -1,16 +1,9 @@
 syntax = "proto3";
 
-// Package inspectionapi defines the directory api.
-package inspectionapi;
-
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
-import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 
-option (gogoproto.marshaler_all) = true;
-option (gogoproto.sizer_all) = true;
-option (gogoproto.unmarshaler_all) = true;
-option (gogoproto.goproto_getters_all) = false;
+option go_package = ".;inspectionapi";
 
 // The DirectoryInspection service definition.
 service DirectoryInspection {

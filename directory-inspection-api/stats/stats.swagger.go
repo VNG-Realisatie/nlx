@@ -9,6 +9,11 @@ const (
     "description": "Package stats defines the stats api.",
     "version": "version not set"
   },
+  "tags": [
+    {
+      "name": "Stats"
+    }
+  ],
   "consumes": [
     "application/json"
   ],
@@ -19,7 +24,7 @@ const (
     "/stats": {
       "get": {
         "summary": "ListStats lists all versions for inways and outways.",
-        "operationId": "ListVersionStatistics",
+        "operationId": "Stats_ListVersionStatistics",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -28,9 +33,9 @@ const (
             }
           },
           "default": {
-            "description": "An unexpected error response",
+            "description": "An unexpected error response.",
             "schema": {
-              "$ref": "#/definitions/runtimeError"
+              "$ref": "#/definitions/rpcStatus"
             }
           }
         },
@@ -59,7 +64,7 @@ const (
     "protobufAny": {
       "type": "object",
       "properties": {
-        "type_url": {
+        "typeUrl": {
           "type": "string"
         },
         "value": {
@@ -68,12 +73,9 @@ const (
         }
       }
     },
-    "runtimeError": {
+    "rpcStatus": {
       "type": "object",
       "properties": {
-        "error": {
-          "type": "string"
-        },
         "code": {
           "type": "integer",
           "format": "int32"

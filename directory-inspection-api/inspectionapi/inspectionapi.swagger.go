@@ -6,9 +6,13 @@ const (
   "swagger": "2.0",
   "info": {
     "title": "inspectionapi.proto",
-    "description": "Package inspectionapi defines the directory api.",
     "version": "version not set"
   },
+  "tags": [
+    {
+      "name": "DirectoryInspection"
+    }
+  ],
   "consumes": [
     "application/json"
   ],
@@ -24,13 +28,13 @@ const (
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/inspectionapiListOrganizationsResponse"
+              "$ref": "#/definitions/ListOrganizationsResponse"
             }
           },
           "default": {
-            "description": "An unexpected error response",
+            "description": "An unexpected error response.",
             "schema": {
-              "$ref": "#/definitions/runtimeError"
+              "$ref": "#/definitions/rpcStatus"
             }
           }
         },
@@ -47,13 +51,13 @@ const (
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/inspectionapiListServicesResponse"
+              "$ref": "#/definitions/ListServicesResponse"
             }
           },
           "default": {
-            "description": "An unexpected error response",
+            "description": "An unexpected error response.",
             "schema": {
-              "$ref": "#/definitions/runtimeError"
+              "$ref": "#/definitions/rpcStatus"
             }
           }
         },
@@ -64,6 +68,25 @@ const (
     }
   },
   "definitions": {
+    "GetOrganizationInwayResponse": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        }
+      }
+    },
+    "Inway": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/definitions/InwayState"
+        }
+      }
+    },
     "InwayState": {
       "type": "string",
       "enum": [
@@ -73,59 +96,79 @@ const (
       ],
       "default": "UNKNOWN"
     },
+    "ListOrganizationsResponse": {
+      "type": "object",
+      "properties": {
+        "organizations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListOrganizationsResponseOrganization"
+          }
+        }
+      }
+    },
     "ListOrganizationsResponseOrganization": {
       "type": "object",
       "properties": {
         "name": {
           "type": "string"
         },
-        "insight_irma_endpoint": {
+        "insightIrmaEndpoint": {
           "type": "string"
         },
-        "insight_log_endpoint": {
+        "insightLogEndpoint": {
           "type": "string"
+        }
+      }
+    },
+    "ListServicesResponse": {
+      "type": "object",
+      "properties": {
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListServicesResponseService"
+          }
         }
       }
     },
     "ListServicesResponseService": {
       "type": "object",
       "properties": {
-        "organization_name": {
+        "organizationName": {
           "type": "string"
         },
-        "service_name": {
+        "serviceName": {
           "type": "string"
         },
-        "inway_addresses": {
+        "inwayAddresses": {
           "type": "array",
           "items": {
             "type": "string"
           }
         },
-        "documentation_url": {
+        "documentationUrl": {
           "type": "string"
         },
-        "api_specification_type": {
+        "apiSpecificationType": {
           "type": "string"
         },
         "internal": {
-          "type": "boolean",
-          "format": "boolean"
+          "type": "boolean"
         },
-        "public_support_contact": {
+        "publicSupportContact": {
           "type": "string"
         },
-        "healthy_states": {
+        "healthyStates": {
           "type": "array",
           "items": {
-            "type": "boolean",
-            "format": "boolean"
+            "type": "boolean"
           }
         },
         "inways": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/inspectionapiInway"
+            "$ref": "#/definitions/Inway"
           }
         },
         "oneTimeCosts": {
@@ -142,51 +185,10 @@ const (
         }
       }
     },
-    "inspectionapiGetOrganizationInwayResponse": {
-      "type": "object",
-      "properties": {
-        "address": {
-          "type": "string"
-        }
-      }
-    },
-    "inspectionapiInway": {
-      "type": "object",
-      "properties": {
-        "address": {
-          "type": "string"
-        },
-        "state": {
-          "$ref": "#/definitions/InwayState"
-        }
-      }
-    },
-    "inspectionapiListOrganizationsResponse": {
-      "type": "object",
-      "properties": {
-        "organizations": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ListOrganizationsResponseOrganization"
-          }
-        }
-      }
-    },
-    "inspectionapiListServicesResponse": {
-      "type": "object",
-      "properties": {
-        "services": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ListServicesResponseService"
-          }
-        }
-      }
-    },
     "protobufAny": {
       "type": "object",
       "properties": {
-        "type_url": {
+        "typeUrl": {
           "type": "string"
         },
         "value": {
@@ -195,12 +197,9 @@ const (
         }
       }
     },
-    "runtimeError": {
+    "rpcStatus": {
       "type": "object",
       "properties": {
-        "error": {
-          "type": "string"
-        },
         "code": {
           "type": "integer",
           "format": "int32"

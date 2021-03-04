@@ -2,14 +2,13 @@ package statsservice
 
 import (
 	"context"
+	"go.nlx.io/nlx/directory-inspection-api/stats"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-
-	"go.nlx.io/nlx/directory-inspection-api/stats"
 )
 
 type StatsService struct {

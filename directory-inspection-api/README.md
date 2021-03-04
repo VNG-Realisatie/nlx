@@ -1,7 +1,45 @@
 # directory
 
-The directory is a centralized service that provides a public API serving a list of organizations and services registered in the NLX network. It also provides outways with connection details for these services.
+The directory is a centralized service that provides a public API serving a list of organizations and services registered in the NLX network. 
+It also provides outways with connection details for these services.
 
 ## API
 
-The directory API is a gRPC API, it's specification resides in the folder `directoryapi`, which also contains the protobuf/grpc generated code (service interface and client implementation) as well as a generated swagger specification and grpc > http/json gateway. The service impementation resides in `directoryservice`.
+The directory API is a gRPC API, it's specification resides in the folder `directoryapi`. 
+This directory also contains the protobuf/grpc generated code (service interface and client implementation) as well as a generated swagger specification and grpc > http/json gateway. 
+
+## Generating gRPC stubs
+
+When changing the protocol buffers for the  directory-inspection service or stats service, 
+the gRPC stubs used to implement te services need to be regenerated.
+
+We use [buf](https://github.com/bufbuild/buf) to generate the stubs. 
+See the [installation guide](https://docs.buf.build/installation) to install buf on your machine.
+
+Most of this setup is based on the [grpc-gateway installation guide](https://github.com/grpc-ecosystem/grpc-gateway#installation).
+
+### inspectionapi
+
+```shell
+cd inspectionapi
+make
+```
+
+### stats
+
+```shell
+cd stats
+make
+```
+
+## TODO: resolve questions
+
+* include these steps in our build pipeline, to 1. detect failures early on 2. prevent broken makefile
+* do we need `tools.go` now we're using buf
+* why do we have a separate .proto-file for stats
+* do we want to hold on to a single go.mod file for all APIs?
+* is the description in this README still correct?
+* `outway.msg` ok to remove?
+* explain from `go.mod`:
+> Override the google.golang.org/grpc dependency. One of the package has `@latest` which doesn't work. 
+> replace google.golang.org/grpc => google.golang.org/grpc v1.33.1
