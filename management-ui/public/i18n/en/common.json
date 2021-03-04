@@ -50,6 +50,7 @@
   "Cost per request": "Cost per request",
   "Cost per request (in Euro)": "Cost per request (in Euro)",
   "Costs": "Costs",
+  "Date notation:": "Date notation:",
   "Degraded": "Degraded",
   "Directory": "Directory",
   "Directory page": "Directory page",
@@ -190,5 +191,7 @@
   "You are requesting access to a service": "You are requesting access to a service",
   "You have access": "You have access",
   "You have no access": "You have no access",
-  "Your access was revoked": "Your access was revoked"
+  "Your access was revoked": "Your access was revoked",
+  "Invalid date": "Invalid date",
+  "yyyy-mm-dd": "yyyy-mm-dd"
 }
