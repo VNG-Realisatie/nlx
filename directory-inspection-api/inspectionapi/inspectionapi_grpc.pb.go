@@ -62,7 +62,7 @@ func (c *directoryInspectionClient) GetOrganizationInway(ctx context.Context, in
 }
 
 // DirectoryInspectionServer is the server API for DirectoryInspection service.
-// All implementations should embed UnimplementedDirectoryInspectionServer
+// All implementations must embed UnimplementedDirectoryInspectionServer
 // for forward compatibility
 type DirectoryInspectionServer interface {
 	// ListServices lists all services and their gateways.
@@ -70,9 +70,10 @@ type DirectoryInspectionServer interface {
 	// ListOrganizations lists all organizations and their details.
 	ListOrganizations(context.Context, *emptypb.Empty) (*ListOrganizationsResponse, error)
 	GetOrganizationInway(context.Context, *GetOrganizationInwayRequest) (*GetOrganizationInwayResponse, error)
+	mustEmbedUnimplementedDirectoryInspectionServer()
 }
 
-// UnimplementedDirectoryInspectionServer should be embedded to have forward compatible implementations.
+// UnimplementedDirectoryInspectionServer must be embedded to have forward compatible implementations.
 type UnimplementedDirectoryInspectionServer struct {
 }
 
@@ -85,6 +86,7 @@ func (UnimplementedDirectoryInspectionServer) ListOrganizations(context.Context,
 func (UnimplementedDirectoryInspectionServer) GetOrganizationInway(context.Context, *GetOrganizationInwayRequest) (*GetOrganizationInwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrganizationInway not implemented")
 }
+func (UnimplementedDirectoryInspectionServer) mustEmbedUnimplementedDirectoryInspectionServer() {}
 
 // UnsafeDirectoryInspectionServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to DirectoryInspectionServer will

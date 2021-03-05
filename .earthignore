@@ -1,0 +1,19 @@
+*/node_modules
+*/dist
+.git
+
+# Skaffold watcher detects changes helm makes, ignore the whole helm directory completely, we don't need it in the build anyway.
+# Also see https://github.com/GoogleContainerTools/skaffold/issues/667
+helm
+
+# The gitlab pipeline does not influence the end-result of the images
+.gitlab-ci.yml
+.gitlab
+
+# These have their own docker context
+docs/
+ca-cfssl-unsafe/
+insight-ui/
+directory-ui/
+directory-ui-e2e-tests/
+review-page/

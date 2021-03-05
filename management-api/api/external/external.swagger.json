@@ -1,0 +1,107 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "external.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "AccessRequestService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {},
+  "definitions": {
+    "externalGetAccessRequestStateResponse": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "$ref": "#/definitions/managementAccessRequestState"
+        }
+      }
+    },
+    "externalRequestAccessResponse": {
+      "type": "object",
+      "properties": {
+        "referenceId": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "managementAccessProof": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "organizationName": {
+          "type": "string"
+        },
+        "serviceName": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "revokedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "accessRequestId": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "managementAccessRequestState": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "FAILED",
+        "CREATED",
+        "RECEIVED",
+        "APPROVED",
+        "REJECTED"
+      ],
+      "default": "UNSPECIFIED"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

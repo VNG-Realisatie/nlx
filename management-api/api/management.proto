@@ -2,17 +2,11 @@ syntax = "proto3";
 
 package nlx.management;
 
-option go_package = "api";
+option go_package = ".;api";
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
-import "github.com/gogo/protobuf/gogoproto/gogo.proto";
-
-option (gogoproto.marshaler_all) = true;
-option (gogoproto.sizer_all) = true;
-option (gogoproto.unmarshaler_all) = true;
-option (gogoproto.goproto_getters_all) = false;
 
 service Management {
   rpc IsFinanceEnabled (google.protobuf.Empty) returns (IsFinanceEnabledResponse) {
@@ -437,7 +431,7 @@ message DirectoryService {
 
   string serviceName = 1;
   string organizationName = 2;
-  string apiSpecificationType = 3 [(gogoproto.customname)="APISpecificationType"];
+  string apiSpecificationType = 3;
   string documentationURL = 4;
   string publicSupportContact = 5;
   State state = 6;

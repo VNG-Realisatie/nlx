@@ -1,23 +1,16 @@
 syntax = "proto3";
 
-// Package directoryapi defines the directory api.
-package registrationapi;
-
 import "google/protobuf/empty.proto";
-import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 
-option (gogoproto.marshaler_all) = true;
-option (gogoproto.sizer_all) = true;
-option (gogoproto.unmarshaler_all) = true;
-option (gogoproto.goproto_getters_all) = false;
+option go_package = ".;registrationapi";
 
 // The Registration service definition.
 service DirectoryRegistration {
 	// RegisterInway registers an inway for a given service
-	rpc RegisterInway (RegisterInwayRequest) returns (RegisterInwayResponse) {}
-	rpc SetInsightConfiguration (SetInsightConfigurationRequest) returns (google.protobuf.Empty) {}
-	rpc SetOrganizationInway (SetOrganizationInwayRequest) returns (google.protobuf.Empty) {}
-	rpc ClearOrganizationInway (google.protobuf.Empty) returns (google.protobuf.Empty) {}
+	rpc RegisterInway (RegisterInwayRequest) returns (RegisterInwayResponse);
+	rpc SetInsightConfiguration (SetInsightConfigurationRequest) returns (google.protobuf.Empty);
+	rpc SetOrganizationInway (SetOrganizationInwayRequest) returns (google.protobuf.Empty);
+	rpc ClearOrganizationInway (google.protobuf.Empty) returns (google.protobuf.Empty);
 }
 
 message RegisterInwayRequest {

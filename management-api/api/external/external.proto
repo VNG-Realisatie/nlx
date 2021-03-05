@@ -2,21 +2,14 @@ syntax = "proto3";
 
 package nlx.management.external;
 
-import "github.com/gogo/protobuf/gogoproto/gogo.proto";
-
 import "management.proto";
 
-option go_package = "external";
-
-option (gogoproto.marshaler_all) = true;
-option (gogoproto.sizer_all) = true;
-option (gogoproto.unmarshaler_all) = true;
-option (gogoproto.goproto_getters_all) = false;
+option go_package = "./external;external";
 
 service AccessRequestService {
-  rpc RequestAccess (RequestAccessRequest) returns (RequestAccessResponse) {}
-  rpc GetAccessRequestState (GetAccessRequestStateRequest) returns (GetAccessRequestStateResponse) {}
-  rpc GetAccessProof (GetAccessProofRequest) returns (AccessProof) {}
+  rpc RequestAccess (RequestAccessRequest) returns (RequestAccessResponse);
+  rpc GetAccessRequestState (GetAccessRequestStateRequest) returns (GetAccessRequestStateResponse);
+  rpc GetAccessProof (GetAccessProofRequest) returns (AccessProof);
 }
 
 message RequestAccessRequest {

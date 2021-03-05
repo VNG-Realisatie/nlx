@@ -1,14 +1,18 @@
 package registrationapi
 
 const (
-	SwaggerJSONDirectory = `
+	SwaggerJSONDirectoryregistration = `
 {
   "swagger": "2.0",
   "info": {
     "title": "registrationapi.proto",
-    "description": "Package directoryapi defines the directory api.",
     "version": "version not set"
   },
+  "tags": [
+    {
+      "name": "DirectoryRegistration"
+    }
+  ],
   "consumes": [
     "application/json"
   ],
@@ -23,49 +27,56 @@ const (
         "name": {
           "type": "string"
         },
-        "documentation_url": {
+        "documentationUrl": {
           "type": "string"
         },
-        "api_specification_type": {
+        "apiSpecificationType": {
           "type": "string"
         },
-        "api_specification_document_url": {
+        "apiSpecificationDocumentUrl": {
           "type": "string"
         },
-        "insight_api_url": {
+        "insightApiUrl": {
           "type": "string"
         },
-        "irma_api_url": {
+        "irmaApiUrl": {
           "type": "string"
         },
         "internal": {
-          "type": "boolean",
-          "format": "boolean"
+          "type": "boolean"
         },
-        "public_support_contact": {
+        "publicSupportContact": {
           "type": "string"
         },
-        "tech_support_contact": {
+        "techSupportContact": {
           "type": "string"
         },
-        "one_time_costs": {
+        "oneTimeCosts": {
           "type": "integer",
           "format": "int32"
         },
-        "monthly_costs": {
+        "monthlyCosts": {
           "type": "integer",
           "format": "int32"
         },
-        "request_costs": {
+        "requestCosts": {
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "RegisterInwayResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
         }
       }
     },
     "protobufAny": {
       "type": "object",
       "properties": {
-        "type_url": {
+        "typeUrl": {
           "type": "string"
         },
         "value": {
@@ -74,20 +85,9 @@ const (
         }
       }
     },
-    "registrationapiRegisterInwayResponse": {
+    "rpcStatus": {
       "type": "object",
       "properties": {
-        "error": {
-          "type": "string"
-        }
-      }
-    },
-    "runtimeError": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "type": "string"
-        },
         "code": {
           "type": "integer",
           "format": "int32"
