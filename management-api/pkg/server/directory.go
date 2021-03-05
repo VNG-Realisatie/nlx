@@ -6,11 +6,11 @@ package server
 import (
 	"context"
 
-	"github.com/gogo/protobuf/types"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 	"go.nlx.io/nlx/management-api/api"
@@ -43,10 +43,10 @@ func NewDirectoryService(logger *zap.Logger, e *environment.Environment, directo
 }
 
 // ListServices returns all services known to the directory except those with the same organization
-func (s DirectoryService) ListServices(ctx context.Context, _ *types.Empty) (*api.DirectoryListServicesResponse, error) {
+func (s DirectoryService) ListServices(ctx context.Context, _ *emptypb.Empty) (*api.DirectoryListServicesResponse, error) {
 	s.logger.Info("rpc request ListServices")
 
-	resp, err := s.directoryClient.ListServices(ctx, &types.Empty{})
+	resp, err := s.directoryClient.ListServices(ctx, &emptypb.Empty{})
 	if err != nil {
 		s.logger.Error("error getting services list from directory", zap.Error(err))
 		return nil, status.Errorf(codes.Internal, "directory error")
@@ -97,7 +97,7 @@ func (s DirectoryService) GetOrganizationService(ctx context.Context, request *a
 }
 
 func (s DirectoryService) getService(ctx context.Context, logger *zap.Logger, organizationName, serviceName string) (*inspectionapi.ListServicesResponse_Service, error) {
-	resp, err := s.directoryClient.ListServices(ctx, &types.Empty{})
+	resp, err := s.directoryClient.ListServices(ctx, &emptypb.Empty{})
 	if err != nil {
 		return nil, status.Error(codes.Internal, "directory not available")
 	}

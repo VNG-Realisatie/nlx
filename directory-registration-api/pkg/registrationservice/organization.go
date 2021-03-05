@@ -9,10 +9,10 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/gogo/protobuf/types"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/directory-registration-api/pkg/database"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
@@ -25,7 +25,7 @@ func IsValidOrganizationName(name string) bool {
 	return organizationNameRegex.MatchString(name)
 }
 
-func (h *DirectoryRegistrationService) SetInsightConfiguration(ctx context.Context, req *registrationapi.SetInsightConfigurationRequest) (*types.Empty, error) {
+func (h *DirectoryRegistrationService) SetInsightConfiguration(ctx context.Context, req *registrationapi.SetInsightConfigurationRequest) (*emptypb.Empty, error) {
 	logger := h.logger.With(zap.String("handler", "set-insight-configuration"))
 
 	logger.Info("rpc request SetInsightConfiguration", zap.String("insight api url", req.InsightAPIURL), zap.String("irma server url", req.IrmaServerURL))
@@ -46,10 +46,10 @@ func (h *DirectoryRegistrationService) SetInsightConfiguration(ctx context.Conte
 		return nil, status.New(codes.Internal, "database error").Err()
 	}
 
-	return &types.Empty{}, nil
+	return &emptypb.Empty{}, nil
 }
 
-func (h *DirectoryRegistrationService) SetOrganizationInway(ctx context.Context, req *registrationapi.SetOrganizationInwayRequest) (*types.Empty, error) {
+func (h *DirectoryRegistrationService) SetOrganizationInway(ctx context.Context, req *registrationapi.SetOrganizationInwayRequest) (*emptypb.Empty, error) {
 	logger := h.logger.With(zap.String("handler", "SetOrganizationInway"))
 
 	organizationName, err := h.getOrganisationNameFromRequest(ctx)
@@ -72,10 +72,10 @@ func (h *DirectoryRegistrationService) SetOrganizationInway(ctx context.Context,
 		return nil, status.New(codes.Internal, "database error").Err()
 	}
 
-	return &types.Empty{}, nil
+	return &emptypb.Empty{}, nil
 }
 
-func (h *DirectoryRegistrationService) ClearOrganizationInway(ctx context.Context, _ *types.Empty) (*types.Empty, error) {
+func (h *DirectoryRegistrationService) ClearOrganizationInway(ctx context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
 	logger := h.logger.With(zap.String("handler", "ClearOrganizationInway"))
 
 	organizationName, err := h.getOrganisationNameFromRequest(ctx)
@@ -94,5 +94,5 @@ func (h *DirectoryRegistrationService) ClearOrganizationInway(ctx context.Contex
 		return nil, status.New(codes.Internal, "database error").Err()
 	}
 
-	return &types.Empty{}, nil
+	return &emptypb.Empty{}, nil
 }

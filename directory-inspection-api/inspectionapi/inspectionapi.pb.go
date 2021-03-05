@@ -7,12 +7,13 @@
 package inspectionapi
 
 import (
+	reflect "reflect"
+	sync "sync"
+
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
-	reflect "reflect"
-	sync "sync"
 )
 
 const (
@@ -624,19 +625,22 @@ func file_inspectionapi_proto_rawDescGZIP() []byte {
 	return file_inspectionapi_proto_rawDescData
 }
 
-var file_inspectionapi_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_inspectionapi_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
-var file_inspectionapi_proto_goTypes = []interface{}{
-	(Inway_State)(0),                               // 0: Inway.State
-	(*Inway)(nil),                                  // 1: Inway
-	(*ListServicesResponse)(nil),                   // 2: ListServicesResponse
-	(*ListOrganizationsResponse)(nil),              // 3: ListOrganizationsResponse
-	(*GetOrganizationInwayRequest)(nil),            // 4: GetOrganizationInwayRequest
-	(*GetOrganizationInwayResponse)(nil),           // 5: GetOrganizationInwayResponse
-	(*ListServicesResponse_Service)(nil),           // 6: ListServicesResponse.Service
-	(*ListOrganizationsResponse_Organization)(nil), // 7: ListOrganizationsResponse.Organization
-	(*emptypb.Empty)(nil),                          // 8: google.protobuf.Empty
-}
+var (
+	file_inspectionapi_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+	file_inspectionapi_proto_msgTypes  = make([]protoimpl.MessageInfo, 7)
+	file_inspectionapi_proto_goTypes   = []interface{}{
+		(Inway_State)(0),                               // 0: Inway.State
+		(*Inway)(nil),                                  // 1: Inway
+		(*ListServicesResponse)(nil),                   // 2: ListServicesResponse
+		(*ListOrganizationsResponse)(nil),              // 3: ListOrganizationsResponse
+		(*GetOrganizationInwayRequest)(nil),            // 4: GetOrganizationInwayRequest
+		(*GetOrganizationInwayResponse)(nil),           // 5: GetOrganizationInwayResponse
+		(*ListServicesResponse_Service)(nil),           // 6: ListServicesResponse.Service
+		(*ListOrganizationsResponse_Organization)(nil), // 7: ListOrganizationsResponse.Organization
+		(*emptypb.Empty)(nil),                          // 8: google.protobuf.Empty
+	}
+)
+
 var file_inspectionapi_proto_depIdxs = []int32{
 	0, // 0: Inway.state:type_name -> Inway.State
 	6, // 1: ListServicesResponse.services:type_name -> ListServicesResponse.Service

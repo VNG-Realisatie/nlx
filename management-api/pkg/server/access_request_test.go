@@ -11,12 +11,12 @@ import (
 	"time"
 
 	"github.com/fgrosse/zaptest"
-	"github.com/gogo/protobuf/types"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/common/diagnostics"
 	"go.nlx.io/nlx/common/process"
@@ -312,7 +312,7 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 		accessRequestErr error
 		expectUpdateCall bool
 		updateErr        error
-		response         *types.Empty
+		response         *emptypb.Empty
 		err              error
 	}{
 		{
@@ -405,7 +405,7 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 			nil,
 			true,
 			nil,
-			&types.Empty{},
+			&emptypb.Empty{},
 			nil,
 		},
 	}
@@ -444,7 +444,7 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 		accessRequestErr error
 		expectUpdateCall bool
 		updateErr        error
-		response         *types.Empty
+		response         *emptypb.Empty
 		err              error
 	}{
 		{
@@ -516,7 +516,7 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 			nil,
 			true,
 			nil,
-			&types.Empty{},
+			&emptypb.Empty{},
 			nil,
 		},
 	}

@@ -6,6 +6,7 @@ package inspectionservice
 import (
 	"context"
 	"errors"
+
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.uber.org/zap"
@@ -21,7 +22,6 @@ func (h *InspectionService) ListOrganizations(ctx context.Context, _ *emptypb.Em
 
 	resp := &inspectionapi.ListOrganizationsResponse{}
 	organizations, err := h.db.ListOrganizations(ctx)
-
 	if err != nil {
 		h.logger.Error("failed to select organizations from db", zap.Error(err))
 		return nil, status.New(codes.Internal, "Database error.").Err()

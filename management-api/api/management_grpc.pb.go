@@ -4,6 +4,7 @@ package api
 
 import (
 	context "context"
+
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -329,78 +330,103 @@ type UnimplementedManagementServer struct {
 func (UnimplementedManagementServer) IsFinanceEnabled(context.Context, *emptypb.Empty) (*IsFinanceEnabledResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IsFinanceEnabled not implemented")
 }
+
 func (UnimplementedManagementServer) DownloadFinanceExport(context.Context, *emptypb.Empty) (*DownloadFinanceExportResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DownloadFinanceExport not implemented")
 }
+
 func (UnimplementedManagementServer) ListServices(context.Context, *ListServicesRequest) (*ListServicesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListServices not implemented")
 }
+
 func (UnimplementedManagementServer) GetService(context.Context, *GetServiceRequest) (*GetServiceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetService not implemented")
 }
+
 func (UnimplementedManagementServer) CreateService(context.Context, *CreateServiceRequest) (*CreateServiceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateService not implemented")
 }
+
 func (UnimplementedManagementServer) UpdateService(context.Context, *UpdateServiceRequest) (*UpdateServiceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateService not implemented")
 }
+
 func (UnimplementedManagementServer) DeleteService(context.Context, *DeleteServiceRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteService not implemented")
 }
+
 func (UnimplementedManagementServer) GetStatisticsOfServices(context.Context, *GetStatisticsOfServicesRequest) (*GetStatisticsOfServicesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetStatisticsOfServices not implemented")
 }
+
 func (UnimplementedManagementServer) ListInways(context.Context, *ListInwaysRequest) (*ListInwaysResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListInways not implemented")
 }
+
 func (UnimplementedManagementServer) GetInway(context.Context, *GetInwayRequest) (*Inway, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetInway not implemented")
 }
+
 func (UnimplementedManagementServer) CreateInway(context.Context, *Inway) (*Inway, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateInway not implemented")
 }
+
 func (UnimplementedManagementServer) UpdateInway(context.Context, *UpdateInwayRequest) (*Inway, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateInway not implemented")
 }
+
 func (UnimplementedManagementServer) DeleteInway(context.Context, *DeleteInwayRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteInway not implemented")
 }
+
 func (UnimplementedManagementServer) PutInsightConfiguration(context.Context, *InsightConfiguration) (*InsightConfiguration, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PutInsightConfiguration not implemented")
 }
+
 func (UnimplementedManagementServer) GetInsightConfiguration(context.Context, *emptypb.Empty) (*InsightConfiguration, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetInsightConfiguration not implemented")
 }
+
 func (UnimplementedManagementServer) ListIncomingAccessRequest(context.Context, *ListIncomingAccessRequestsRequests) (*ListIncomingAccessRequestsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListIncomingAccessRequest not implemented")
 }
+
 func (UnimplementedManagementServer) ApproveIncomingAccessRequest(context.Context, *ApproveIncomingAccessRequestRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ApproveIncomingAccessRequest not implemented")
 }
+
 func (UnimplementedManagementServer) RejectIncomingAccessRequest(context.Context, *RejectIncomingAccessRequestRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RejectIncomingAccessRequest not implemented")
 }
+
 func (UnimplementedManagementServer) ListOutgoingAccessRequests(context.Context, *ListOutgoingAccessRequestsRequest) (*ListOutgoingAccessRequestsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListOutgoingAccessRequests not implemented")
 }
+
 func (UnimplementedManagementServer) CreateAccessRequest(context.Context, *CreateAccessRequestRequest) (*OutgoingAccessRequest, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateAccessRequest not implemented")
 }
+
 func (UnimplementedManagementServer) SendAccessRequest(context.Context, *SendAccessRequestRequest) (*OutgoingAccessRequest, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendAccessRequest not implemented")
 }
+
 func (UnimplementedManagementServer) GetSettings(context.Context, *emptypb.Empty) (*Settings, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSettings not implemented")
 }
+
 func (UnimplementedManagementServer) UpdateSettings(context.Context, *UpdateSettingsRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateSettings not implemented")
 }
+
 func (UnimplementedManagementServer) ListAccessGrantsForService(context.Context, *ListAccessGrantsForServiceRequest) (*ListAccessGrantsForServiceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAccessGrantsForService not implemented")
 }
+
 func (UnimplementedManagementServer) RevokeAccessGrant(context.Context, *RevokeAccessGrantRequest) (*AccessGrant, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RevokeAccessGrant not implemented")
 }
+
 func (UnimplementedManagementServer) ListAuditLogs(context.Context, *emptypb.Empty) (*ListAuditLogsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAuditLogs not implemented")
 }
@@ -1062,9 +1088,11 @@ type UnimplementedDirectoryServer struct {
 func (UnimplementedDirectoryServer) ListServices(context.Context, *emptypb.Empty) (*DirectoryListServicesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListServices not implemented")
 }
+
 func (UnimplementedDirectoryServer) GetOrganizationService(context.Context, *GetOrganizationServiceRequest) (*DirectoryService, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrganizationService not implemented")
 }
+
 func (UnimplementedDirectoryServer) RequestAccessToService(context.Context, *RequestAccessToServiceRequest) (*OutgoingAccessRequest, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RequestAccessToService not implemented")
 }

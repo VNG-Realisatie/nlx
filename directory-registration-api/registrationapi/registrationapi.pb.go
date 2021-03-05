@@ -7,11 +7,12 @@
 package registrationapi
 
 import (
+	reflect "reflect"
+	sync "sync"
+
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
-	reflect "reflect"
-	sync "sync"
 )
 
 const (
@@ -457,15 +458,18 @@ func file_registrationapi_proto_rawDescGZIP() []byte {
 	return file_registrationapi_proto_rawDescData
 }
 
-var file_registrationapi_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
-var file_registrationapi_proto_goTypes = []interface{}{
-	(*RegisterInwayRequest)(nil),                 // 0: RegisterInwayRequest
-	(*RegisterInwayResponse)(nil),                // 1: RegisterInwayResponse
-	(*SetInsightConfigurationRequest)(nil),       // 2: SetInsightConfigurationRequest
-	(*SetOrganizationInwayRequest)(nil),          // 3: SetOrganizationInwayRequest
-	(*RegisterInwayRequest_RegisterService)(nil), // 4: RegisterInwayRequest.RegisterService
-	(*emptypb.Empty)(nil),                        // 5: google.protobuf.Empty
-}
+var (
+	file_registrationapi_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+	file_registrationapi_proto_goTypes  = []interface{}{
+		(*RegisterInwayRequest)(nil),                 // 0: RegisterInwayRequest
+		(*RegisterInwayResponse)(nil),                // 1: RegisterInwayResponse
+		(*SetInsightConfigurationRequest)(nil),       // 2: SetInsightConfigurationRequest
+		(*SetOrganizationInwayRequest)(nil),          // 3: SetOrganizationInwayRequest
+		(*RegisterInwayRequest_RegisterService)(nil), // 4: RegisterInwayRequest.RegisterService
+		(*emptypb.Empty)(nil),                        // 5: google.protobuf.Empty
+	}
+)
+
 var file_registrationapi_proto_depIdxs = []int32{
 	4, // 0: RegisterInwayRequest.services:type_name -> RegisterInwayRequest.RegisterService
 	0, // 1: DirectoryRegistration.RegisterInway:input_type -> RegisterInwayRequest

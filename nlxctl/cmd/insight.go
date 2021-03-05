@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/gogo/protobuf/types"
 	"github.com/spf13/cobra"
+	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/management-api/api"
 )
@@ -54,7 +54,6 @@ var putInsightCommand = &cobra.Command{
 		}
 
 		fmt.Printf("%+v\n\n", response)
-
 	},
 }
 
@@ -62,8 +61,7 @@ var getInsightCommand = &cobra.Command{
 	Use:   "get",
 	Short: "Returns the current insight configuration",
 	Run: func(cmd *cobra.Command, arg []string) {
-
-		response, err := getManagementClient().GetInsightConfiguration(context.Background(), &types.Empty{})
+		response, err := getManagementClient().GetInsightConfiguration(context.Background(), &emptypb.Empty{})
 		if err != nil {
 			log.Fatal(err)
 		}

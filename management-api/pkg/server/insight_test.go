@@ -8,13 +8,13 @@ import (
 	"context"
 	"testing"
 
-	"github.com/gogo/protobuf/types"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
@@ -45,7 +45,7 @@ func TestGetInsight(t *testing.T) {
 		mock_auditlog.NewMockLogger(mockCtrl),
 	)
 
-	emptyRequest := &types.Empty{}
+	emptyRequest := &emptypb.Empty{}
 
 	mockDatabase.EXPECT().GetSettings(ctx).Return(nil, database.ErrNotFound)
 
@@ -90,7 +90,7 @@ func TestPutInsight(t *testing.T) {
 	mockDirectoryClient.EXPECT().SetInsightConfiguration(ctx, &registrationapi.SetInsightConfigurationRequest{
 		InsightAPIURL: "http://insight-url.com",
 		IrmaServerURL: "http://irma-url.com",
-	}).Return(&types.Empty{}, nil)
+	}).Return(&emptypb.Empty{}, nil)
 
 	auditLogger := mock_auditlog.NewMockLogger(mockCtrl)
 	auditLogger.EXPECT().OrganizationInsightConfigurationUpdate(ctx, "Jane Doe", "nlxctl")

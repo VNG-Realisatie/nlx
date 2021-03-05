@@ -8,10 +8,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/gogo/protobuf/types"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
@@ -144,7 +144,7 @@ func (s *ManagementService) UpdateService(ctx context.Context, req *api.UpdateSe
 }
 
 // DeleteService deletes a specific service
-func (s *ManagementService) DeleteService(ctx context.Context, req *api.DeleteServiceRequest) (*types.Empty, error) {
+func (s *ManagementService) DeleteService(ctx context.Context, req *api.DeleteServiceRequest) (*emptypb.Empty, error) {
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request DeleteService")
 
@@ -162,10 +162,10 @@ func (s *ManagementService) DeleteService(ctx context.Context, req *api.DeleteSe
 	err = s.configDatabase.DeleteService(ctx, req.Name)
 	if err != nil {
 		logger.Error("error deleting service in DB", zap.Error(err))
-		return &types.Empty{}, status.Error(codes.Internal, "database error")
+		return &emptypb.Empty{}, status.Error(codes.Internal, "database error")
 	}
 
-	return &types.Empty{}, nil
+	return &emptypb.Empty{}, nil
 }
 
 // ListServices returns a list of services

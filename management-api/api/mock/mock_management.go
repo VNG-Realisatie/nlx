@@ -6,11 +6,12 @@ package mock_api
 
 import (
 	context "context"
-	types "github.com/gogo/protobuf/types"
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	api "go.nlx.io/nlx/management-api/api"
 	grpc "google.golang.org/grpc"
-	reflect "reflect"
+	types "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // MockManagementClient is a mock of ManagementClient interface
@@ -37,7 +38,7 @@ func (m *MockManagementClient) EXPECT() *MockManagementClientMockRecorder {
 }
 
 // IsFinanceEnabled mocks base method
-func (m *MockManagementClient) IsFinanceEnabled(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*api.IsFinanceEnabledResponse, error) {
+func (m *MockManagementClient) IsFinanceEnabled(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.IsFinanceEnabledResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -57,7 +58,7 @@ func (mr *MockManagementClientMockRecorder) IsFinanceEnabled(ctx, in interface{}
 }
 
 // DownloadFinanceExport mocks base method
-func (m *MockManagementClient) DownloadFinanceExport(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*api.DownloadFinanceExportResponse, error) {
+func (m *MockManagementClient) DownloadFinanceExport(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.DownloadFinanceExportResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -157,14 +158,14 @@ func (mr *MockManagementClientMockRecorder) UpdateService(ctx, in interface{}, o
 }
 
 // DeleteService mocks base method
-func (m *MockManagementClient) DeleteService(ctx context.Context, in *api.DeleteServiceRequest, opts ...grpc.CallOption) (*types.Empty, error) {
+func (m *MockManagementClient) DeleteService(ctx context.Context, in *api.DeleteServiceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "DeleteService", varargs...)
-	ret0, _ := ret[0].(*types.Empty)
+	ret0, _ := ret[0].(*emptypb.Empty)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -277,14 +278,14 @@ func (mr *MockManagementClientMockRecorder) UpdateInway(ctx, in interface{}, opt
 }
 
 // DeleteInway mocks base method
-func (m *MockManagementClient) DeleteInway(ctx context.Context, in *api.DeleteInwayRequest, opts ...grpc.CallOption) (*types.Empty, error) {
+func (m *MockManagementClient) DeleteInway(ctx context.Context, in *api.DeleteInwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "DeleteInway", varargs...)
-	ret0, _ := ret[0].(*types.Empty)
+	ret0, _ := ret[0].(*emptypb.Empty)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -317,7 +318,7 @@ func (mr *MockManagementClientMockRecorder) PutInsightConfiguration(ctx, in inte
 }
 
 // GetInsightConfiguration mocks base method
-func (m *MockManagementClient) GetInsightConfiguration(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*api.InsightConfiguration, error) {
+func (m *MockManagementClient) GetInsightConfiguration(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.InsightConfiguration, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -357,14 +358,14 @@ func (mr *MockManagementClientMockRecorder) ListIncomingAccessRequest(ctx, in in
 }
 
 // ApproveIncomingAccessRequest mocks base method
-func (m *MockManagementClient) ApproveIncomingAccessRequest(ctx context.Context, in *api.ApproveIncomingAccessRequestRequest, opts ...grpc.CallOption) (*types.Empty, error) {
+func (m *MockManagementClient) ApproveIncomingAccessRequest(ctx context.Context, in *api.ApproveIncomingAccessRequestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "ApproveIncomingAccessRequest", varargs...)
-	ret0, _ := ret[0].(*types.Empty)
+	ret0, _ := ret[0].(*emptypb.Empty)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -377,14 +378,14 @@ func (mr *MockManagementClientMockRecorder) ApproveIncomingAccessRequest(ctx, in
 }
 
 // RejectIncomingAccessRequest mocks base method
-func (m *MockManagementClient) RejectIncomingAccessRequest(ctx context.Context, in *api.RejectIncomingAccessRequestRequest, opts ...grpc.CallOption) (*types.Empty, error) {
+func (m *MockManagementClient) RejectIncomingAccessRequest(ctx context.Context, in *api.RejectIncomingAccessRequestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "RejectIncomingAccessRequest", varargs...)
-	ret0, _ := ret[0].(*types.Empty)
+	ret0, _ := ret[0].(*emptypb.Empty)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -457,7 +458,7 @@ func (mr *MockManagementClientMockRecorder) SendAccessRequest(ctx, in interface{
 }
 
 // GetSettings mocks base method
-func (m *MockManagementClient) GetSettings(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*api.Settings, error) {
+func (m *MockManagementClient) GetSettings(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.Settings, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -477,14 +478,14 @@ func (mr *MockManagementClientMockRecorder) GetSettings(ctx, in interface{}, opt
 }
 
 // UpdateSettings mocks base method
-func (m *MockManagementClient) UpdateSettings(ctx context.Context, in *api.UpdateSettingsRequest, opts ...grpc.CallOption) (*types.Empty, error) {
+func (m *MockManagementClient) UpdateSettings(ctx context.Context, in *api.UpdateSettingsRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "UpdateSettings", varargs...)
-	ret0, _ := ret[0].(*types.Empty)
+	ret0, _ := ret[0].(*emptypb.Empty)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -537,7 +538,7 @@ func (mr *MockManagementClientMockRecorder) RevokeAccessGrant(ctx, in interface{
 }
 
 // ListAuditLogs mocks base method
-func (m *MockManagementClient) ListAuditLogs(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*api.ListAuditLogsResponse, error) {
+func (m *MockManagementClient) ListAuditLogs(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.ListAuditLogsResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -580,7 +581,7 @@ func (m *MockManagementServer) EXPECT() *MockManagementServerMockRecorder {
 }
 
 // IsFinanceEnabled mocks base method
-func (m *MockManagementServer) IsFinanceEnabled(arg0 context.Context, arg1 *types.Empty) (*api.IsFinanceEnabledResponse, error) {
+func (m *MockManagementServer) IsFinanceEnabled(arg0 context.Context, arg1 *emptypb.Empty) (*api.IsFinanceEnabledResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "IsFinanceEnabled", arg0, arg1)
 	ret0, _ := ret[0].(*api.IsFinanceEnabledResponse)
@@ -595,7 +596,7 @@ func (mr *MockManagementServerMockRecorder) IsFinanceEnabled(arg0, arg1 interfac
 }
 
 // DownloadFinanceExport mocks base method
-func (m *MockManagementServer) DownloadFinanceExport(arg0 context.Context, arg1 *types.Empty) (*api.DownloadFinanceExportResponse, error) {
+func (m *MockManagementServer) DownloadFinanceExport(arg0 context.Context, arg1 *emptypb.Empty) (*api.DownloadFinanceExportResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DownloadFinanceExport", arg0, arg1)
 	ret0, _ := ret[0].(*api.DownloadFinanceExportResponse)
@@ -670,10 +671,10 @@ func (mr *MockManagementServerMockRecorder) UpdateService(arg0, arg1 interface{}
 }
 
 // DeleteService mocks base method
-func (m *MockManagementServer) DeleteService(arg0 context.Context, arg1 *api.DeleteServiceRequest) (*types.Empty, error) {
+func (m *MockManagementServer) DeleteService(arg0 context.Context, arg1 *api.DeleteServiceRequest) (*emptypb.Empty, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteService", arg0, arg1)
-	ret0, _ := ret[0].(*types.Empty)
+	ret0, _ := ret[0].(*emptypb.Empty)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -760,10 +761,10 @@ func (mr *MockManagementServerMockRecorder) UpdateInway(arg0, arg1 interface{}) 
 }
 
 // DeleteInway mocks base method
-func (m *MockManagementServer) DeleteInway(arg0 context.Context, arg1 *api.DeleteInwayRequest) (*types.Empty, error) {
+func (m *MockManagementServer) DeleteInway(arg0 context.Context, arg1 *api.DeleteInwayRequest) (*emptypb.Empty, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteInway", arg0, arg1)
-	ret0, _ := ret[0].(*types.Empty)
+	ret0, _ := ret[0].(*emptypb.Empty)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -790,7 +791,7 @@ func (mr *MockManagementServerMockRecorder) PutInsightConfiguration(arg0, arg1 i
 }
 
 // GetInsightConfiguration mocks base method
-func (m *MockManagementServer) GetInsightConfiguration(arg0 context.Context, arg1 *types.Empty) (*api.InsightConfiguration, error) {
+func (m *MockManagementServer) GetInsightConfiguration(arg0 context.Context, arg1 *emptypb.Empty) (*api.InsightConfiguration, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetInsightConfiguration", arg0, arg1)
 	ret0, _ := ret[0].(*api.InsightConfiguration)
@@ -820,10 +821,10 @@ func (mr *MockManagementServerMockRecorder) ListIncomingAccessRequest(arg0, arg1
 }
 
 // ApproveIncomingAccessRequest mocks base method
-func (m *MockManagementServer) ApproveIncomingAccessRequest(arg0 context.Context, arg1 *api.ApproveIncomingAccessRequestRequest) (*types.Empty, error) {
+func (m *MockManagementServer) ApproveIncomingAccessRequest(arg0 context.Context, arg1 *api.ApproveIncomingAccessRequestRequest) (*emptypb.Empty, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ApproveIncomingAccessRequest", arg0, arg1)
-	ret0, _ := ret[0].(*types.Empty)
+	ret0, _ := ret[0].(*emptypb.Empty)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -835,10 +836,10 @@ func (mr *MockManagementServerMockRecorder) ApproveIncomingAccessRequest(arg0, a
 }
 
 // RejectIncomingAccessRequest mocks base method
-func (m *MockManagementServer) RejectIncomingAccessRequest(arg0 context.Context, arg1 *api.RejectIncomingAccessRequestRequest) (*types.Empty, error) {
+func (m *MockManagementServer) RejectIncomingAccessRequest(arg0 context.Context, arg1 *api.RejectIncomingAccessRequestRequest) (*emptypb.Empty, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RejectIncomingAccessRequest", arg0, arg1)
-	ret0, _ := ret[0].(*types.Empty)
+	ret0, _ := ret[0].(*emptypb.Empty)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -895,7 +896,7 @@ func (mr *MockManagementServerMockRecorder) SendAccessRequest(arg0, arg1 interfa
 }
 
 // GetSettings mocks base method
-func (m *MockManagementServer) GetSettings(arg0 context.Context, arg1 *types.Empty) (*api.Settings, error) {
+func (m *MockManagementServer) GetSettings(arg0 context.Context, arg1 *emptypb.Empty) (*api.Settings, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetSettings", arg0, arg1)
 	ret0, _ := ret[0].(*api.Settings)
@@ -910,10 +911,10 @@ func (mr *MockManagementServerMockRecorder) GetSettings(arg0, arg1 interface{}) 
 }
 
 // UpdateSettings mocks base method
-func (m *MockManagementServer) UpdateSettings(arg0 context.Context, arg1 *api.UpdateSettingsRequest) (*types.Empty, error) {
+func (m *MockManagementServer) UpdateSettings(arg0 context.Context, arg1 *api.UpdateSettingsRequest) (*emptypb.Empty, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateSettings", arg0, arg1)
-	ret0, _ := ret[0].(*types.Empty)
+	ret0, _ := ret[0].(*emptypb.Empty)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -955,7 +956,7 @@ func (mr *MockManagementServerMockRecorder) RevokeAccessGrant(arg0, arg1 interfa
 }
 
 // ListAuditLogs mocks base method
-func (m *MockManagementServer) ListAuditLogs(arg0 context.Context, arg1 *types.Empty) (*api.ListAuditLogsResponse, error) {
+func (m *MockManagementServer) ListAuditLogs(arg0 context.Context, arg1 *emptypb.Empty) (*api.ListAuditLogsResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListAuditLogs", arg0, arg1)
 	ret0, _ := ret[0].(*api.ListAuditLogsResponse)
@@ -993,7 +994,7 @@ func (m *MockDirectoryClient) EXPECT() *MockDirectoryClientMockRecorder {
 }
 
 // ListServices mocks base method
-func (m *MockDirectoryClient) ListServices(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*api.DirectoryListServicesResponse, error) {
+func (m *MockDirectoryClient) ListServices(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.DirectoryListServicesResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -1076,7 +1077,7 @@ func (m *MockDirectoryServer) EXPECT() *MockDirectoryServerMockRecorder {
 }
 
 // ListServices mocks base method
-func (m *MockDirectoryServer) ListServices(arg0 context.Context, arg1 *types.Empty) (*api.DirectoryListServicesResponse, error) {
+func (m *MockDirectoryServer) ListServices(arg0 context.Context, arg1 *emptypb.Empty) (*api.DirectoryListServicesResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListServices", arg0, arg1)
 	ret0, _ := ret[0].(*api.DirectoryListServicesResponse)

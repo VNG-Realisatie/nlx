@@ -9,12 +9,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gogo/protobuf/types"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/management-api/api"
 	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
@@ -115,7 +115,8 @@ func TestListAccessGrantsForService(t *testing.T) {
 							Service: &database.Service{
 								ID:   1,
 								Name: "test-service",
-							}},
+							},
+						},
 						CreatedAt: time.Date(0, time.January, 0, 0, 0, 0, 0, time.UTC),
 					},
 				}, nil)

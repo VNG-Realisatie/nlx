@@ -8,16 +8,16 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/gogo/protobuf/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"xojoc.pw/useragent"
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/auditlog"
 )
 
-func (s *ManagementService) ListAuditLogs(ctx context.Context, _ *types.Empty) (*api.ListAuditLogsResponse, error) {
+func (s *ManagementService) ListAuditLogs(ctx context.Context, _ *emptypb.Empty) (*api.ListAuditLogsResponse, error) {
 	auditLogs, err := s.auditLogger.ListAll(ctx)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "failed to retrieve audit logs")

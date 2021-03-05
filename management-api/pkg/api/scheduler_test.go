@@ -7,11 +7,11 @@ import (
 	"context"
 	"testing"
 
-	"github.com/gogo/protobuf/types"
 	"github.com/golang/mock/gomock"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/types/known/emptypb"
 
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"

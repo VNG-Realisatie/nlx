@@ -8,12 +8,12 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/gogo/protobuf/types"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/directory-registration-api/pkg/database"
 	"go.nlx.io/nlx/directory-registration-api/pkg/database/mock"
@@ -38,7 +38,7 @@ func TestDirectoryRegistrationService_SetInsightConfiguration(t *testing.T) {
 		name             string
 		fields           fields
 		args             args
-		expectedResponse *types.Empty
+		expectedResponse *emptypb.Empty
 		expectedError    error
 	}{
 		{
@@ -113,7 +113,7 @@ func TestDirectoryRegistrationService_SetInsightConfiguration(t *testing.T) {
 					IrmaServerURL: "https://irma-server-url",
 				},
 			},
-			expectedResponse: &types.Empty{},
+			expectedResponse: &emptypb.Empty{},
 			expectedError:    nil,
 		},
 	}
@@ -139,7 +139,7 @@ func TestDirectoryRegistrationService_SetOrganizationInway(t *testing.T) {
 		name             string
 		db               func(ctrl *gomock.Controller) database.DirectoryDatabase
 		address          string
-		expectedResponse *types.Empty
+		expectedResponse *emptypb.Empty
 		expectedError    error
 	}{
 		{
@@ -195,7 +195,7 @@ func TestDirectoryRegistrationService_SetOrganizationInway(t *testing.T) {
 				return db
 			},
 			address:          "inway.nlx.local",
-			expectedResponse: &types.Empty{},
+			expectedResponse: &emptypb.Empty{},
 			expectedError:    nil,
 		},
 	}
@@ -222,7 +222,7 @@ func TestDirectoryRegistrationService_ClearOrganizationInway(t *testing.T) {
 		name             string
 		db               func(ctrl *gomock.Controller) database.DirectoryDatabase
 		address          string
-		expectedResponse *types.Empty
+		expectedResponse *emptypb.Empty
 		expectedError    error
 	}{
 		{
@@ -264,7 +264,7 @@ func TestDirectoryRegistrationService_ClearOrganizationInway(t *testing.T) {
 				return db
 			},
 			address:          "inway.nlx.local",
-			expectedResponse: &types.Empty{},
+			expectedResponse: &emptypb.Empty{},
 			expectedError:    nil,
 		},
 	}
@@ -278,7 +278,7 @@ func TestDirectoryRegistrationService_ClearOrganizationInway(t *testing.T) {
 
 			s := registrationservice.New(zap.NewNop(), tt.db(ctrl), nil, testGetOrganizationNameFromRequest)
 
-			got, err := s.ClearOrganizationInway(context.Background(), &types.Empty{})
+			got, err := s.ClearOrganizationInway(context.Background(), &emptypb.Empty{})
 
 			assert.Equal(t, tt.expectedResponse, got)
 			assert.Equal(t, tt.expectedError, err)

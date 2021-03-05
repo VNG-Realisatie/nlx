@@ -11,12 +11,12 @@ import (
 	"time"
 
 	"github.com/fgrosse/zaptest"
-	"github.com/gogo/protobuf/types"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 	"go.nlx.io/nlx/management-api/api"
@@ -137,7 +137,7 @@ func TestListDirectoryServices(t *testing.T) {
 
 	client := mock_directory.NewMockClient(mockCtrl)
 	client.EXPECT().
-		ListServices(ctx, &types.Empty{}).
+		ListServices(ctx, &emptypb.Empty{}).
 		Return(&inspectionapi.ListServicesResponse{Services: clientServices}, nil)
 
 	db := mock_database.NewMockConfigDatabase(mockCtrl)
@@ -174,7 +174,7 @@ func TestListDirectoryServices(t *testing.T) {
 		}, nil)
 
 	directoryService := server.NewDirectoryService(logger, env, client, db)
-	response, err := directoryService.ListServices(ctx, &types.Empty{})
+	response, err := directoryService.ListServices(ctx, &emptypb.Empty{})
 	assert.NoError(t, err)
 
 	expected := []*api.DirectoryService{

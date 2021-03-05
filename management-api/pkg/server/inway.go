@@ -9,11 +9,11 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/gogo/protobuf/types"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/peer"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
@@ -139,17 +139,17 @@ func (s *ManagementService) UpdateInway(ctx context.Context, req *api.UpdateInwa
 }
 
 // DeleteInway deletes a specific inway
-func (s *ManagementService) DeleteInway(ctx context.Context, req *api.DeleteInwayRequest) (*types.Empty, error) {
+func (s *ManagementService) DeleteInway(ctx context.Context, req *api.DeleteInwayRequest) (*emptypb.Empty, error) {
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request DeleteInway")
 
 	err := s.configDatabase.DeleteInway(ctx, req.Name)
 	if err != nil {
 		logger.Error("error deleting inway in DB", zap.Error(err))
-		return &types.Empty{}, status.Error(codes.Internal, "database error")
+		return &emptypb.Empty{}, status.Error(codes.Internal, "database error")
 	}
 
-	return &types.Empty{}, nil
+	return &emptypb.Empty{}, nil
 }
 
 // ListInways returns a list of inways

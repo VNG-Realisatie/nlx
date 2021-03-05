@@ -6,11 +6,11 @@ package server
 import (
 	"bytes"
 
-	"github.com/gogo/protobuf/types"
 	"go.uber.org/zap"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/management-api/api"
@@ -18,13 +18,13 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/txlogdb"
 )
 
-func (service *ManagementService) IsFinanceEnabled(ctx context.Context, request *types.Empty) (*api.IsFinanceEnabledResponse, error) {
+func (service *ManagementService) IsFinanceEnabled(ctx context.Context, request *emptypb.Empty) (*api.IsFinanceEnabledResponse, error) {
 	return &api.IsFinanceEnabledResponse{
 		Enabled: service.txlogDatabase != nil,
 	}, nil
 }
 
-func (service *ManagementService) DownloadFinanceExport(ctx context.Context, request *types.Empty) (*api.DownloadFinanceExportResponse, error) {
+func (service *ManagementService) DownloadFinanceExport(ctx context.Context, request *emptypb.Empty) (*api.DownloadFinanceExportResponse, error) {
 	services, err := service.configDatabase.ListServices(ctx)
 	if err != nil {
 		service.logger.Error("failed to list services", zap.Error(err))

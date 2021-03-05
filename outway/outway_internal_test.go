@@ -9,10 +9,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/gogo/protobuf/types"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap/zaptest"
+	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/common/monitoring"
 	"go.nlx.io/nlx/common/nlxversion"
@@ -56,7 +56,7 @@ func TestUpdateServiceList(t *testing.T) {
 	// Make the mock directory client return an error when calling ListServices
 	client.EXPECT().ListServices(
 		nlxversion.NewGRPCContext(ctx, "outway"),
-		&types.Empty{}).Return(nil, fmt.Errorf("mock error"))
+		&emptypb.Empty{}).Return(nil, fmt.Errorf("mock error"))
 
 	// Test of updateServiceList generates the correct error
 	err = o.updateServiceList()
@@ -68,7 +68,7 @@ func TestUpdateServiceList(t *testing.T) {
 	healthyStatesB := []bool{true, true}
 
 	// Make the mock directory client provide a list of services when calling ListServices
-	client.EXPECT().ListServices(nlxversion.NewGRPCContext(ctx, "outway"), &types.Empty{}).Return(
+	client.EXPECT().ListServices(nlxversion.NewGRPCContext(ctx, "outway"), &emptypb.Empty{}).Return(
 		&inspectionapi.ListServicesResponse{
 			Services: []*inspectionapi.ListServicesResponse_Service{
 				{

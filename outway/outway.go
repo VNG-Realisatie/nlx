@@ -13,13 +13,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gogo/protobuf/types"
 	"github.com/jmoiron/sqlx"
 	"github.com/jpillora/backoff"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
+	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/common/monitoring"
 	"go.nlx.io/nlx/common/nlxversion"
@@ -307,7 +307,6 @@ func (o *Outway) createService(
 		InwayAddresses,
 		HealthyStates,
 	)
-
 	if err != nil {
 		if err == errNoInwaysAvailable {
 			o.logger.Debug(
@@ -351,7 +350,7 @@ func (o *Outway) updateServiceList() error {
 
 	ctx := context.TODO()
 
-	resp, err := o.directoryInspectionClient.ListServices(nlxversion.NewGRPCContext(ctx, "outway"), &types.Empty{})
+	resp, err := o.directoryInspectionClient.ListServices(nlxversion.NewGRPCContext(ctx, "outway"), &emptypb.Empty{})
 	if err != nil {
 		return errors.Wrap(err, "failed to fetch services from directory")
 	}

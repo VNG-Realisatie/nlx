@@ -13,12 +13,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gogo/protobuf/types"
 	grpc_retry "github.com/grpc-ecosystem/go-grpc-middleware/retry"
 	"go.uber.org/zap"
 	"golang.org/x/sync/semaphore"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/common/diagnostics"
 	common_tls "go.nlx.io/nlx/common/tls"

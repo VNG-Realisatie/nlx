@@ -7,7 +7,6 @@ import (
 	"context"
 	"testing"
 
-	"github.com/gogo/protobuf/types"
 	"github.com/golang/mock/gomock"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
@@ -15,6 +14,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
@@ -79,7 +79,7 @@ func TestManagementService_GetSettings(t *testing.T) {
 			d := mock_directory.NewMockClient(ctrl)
 
 			h := server.NewManagementService(l, p, d, nil, tt.db(ctrl), nil, mock_auditlog.NewMockLogger(ctrl))
-			got, err := h.GetSettings(context.Background(), &types.Empty{})
+			got, err := h.GetSettings(context.Background(), &emptypb.Empty{})
 
 			assert.Equal(t, tt.expectedResponse, got)
 			assert.Equal(t, tt.expectedError, err)
@@ -96,7 +96,7 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 		auditLog         func(ctrl *gomock.Controller) auditlog.Logger
 		req              *api.UpdateSettingsRequest
 		ctx              context.Context
-		expectedResponse *types.Empty
+		expectedResponse *emptypb.Empty
 		expectedError    error
 	}{
 		{
@@ -168,7 +168,7 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			directoryClient: func(ctrl *gomock.Controller) directory.Client {
 				directoryClient := mock_directory.NewMockClient(ctrl)
 				directoryClient.EXPECT().
-					ClearOrganizationInway(gomock.Any(), &types.Empty{}).
+					ClearOrganizationInway(gomock.Any(), &emptypb.Empty{}).
 					Return(nil, errors.New("arbitrary error"))
 
 				return directoryClient
@@ -208,7 +208,7 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 					SetOrganizationInway(gomock.Any(), &registrationapi.SetOrganizationInwayRequest{
 						Address: "inway.localhost",
 					}).
-					Return(&types.Empty{}, nil)
+					Return(&emptypb.Empty{}, nil)
 
 				return directoryClient
 			},
@@ -247,7 +247,7 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 				directoryClient := mock_directory.NewMockClient(ctrl)
 				directoryClient.EXPECT().SetOrganizationInway(gomock.Any(), &registrationapi.SetOrganizationInwayRequest{
 					Address: "inway.localhost",
-				}).Return(&types.Empty{}, nil)
+				}).Return(&emptypb.Empty{}, nil)
 
 				return directoryClient
 			},
@@ -263,7 +263,7 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			req: &api.UpdateSettingsRequest{
 				OrganizationInway: "inway-name",
 			},
-			expectedResponse: &types.Empty{},
+			expectedResponse: &emptypb.Empty{},
 			expectedError:    nil,
 		},
 		{
@@ -276,7 +276,7 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			},
 			directoryClient: func(ctrl *gomock.Controller) directory.Client {
 				directoryClient := mock_directory.NewMockClient(ctrl)
-				directoryClient.EXPECT().ClearOrganizationInway(gomock.Any(), gomock.Any()).Return(&types.Empty{}, nil)
+				directoryClient.EXPECT().ClearOrganizationInway(gomock.Any(), gomock.Any()).Return(&emptypb.Empty{}, nil)
 				return directoryClient
 			},
 			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
@@ -291,7 +291,7 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			req: &api.UpdateSettingsRequest{
 				OrganizationInway: "",
 			},
-			expectedResponse: &types.Empty{},
+			expectedResponse: &emptypb.Empty{},
 			expectedError:    nil,
 		},
 	}

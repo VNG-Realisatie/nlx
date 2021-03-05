@@ -5,6 +5,7 @@ package inspectionservice
 
 import (
 	"context"
+
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.uber.org/zap"

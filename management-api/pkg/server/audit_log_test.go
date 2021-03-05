@@ -11,11 +11,11 @@ import (
 	"time"
 
 	"github.com/fgrosse/zaptest"
-	"github.com/gogo/protobuf/types"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
@@ -73,21 +73,21 @@ func TestListAuditLogs(t *testing.T) {
 	tests := map[string]struct {
 		auditLogs    []*auditlog.Record
 		auditLogsErr error
-		req          *types.Empty
+		req          *emptypb.Empty
 		expectedRes  *api.ListAuditLogsResponse
 		expectedErr  error
 	}{
 		"when_error_occurs_while_retrieving_logs": {
 			[]*auditlog.Record{},
 			errors.New("arbitrary error"),
-			&types.Empty{},
+			&emptypb.Empty{},
 			nil,
 			status.New(codes.Internal, "failed to retrieve audit logs").Err(),
 		},
 		"when_no_logs_are_available": {
 			[]*auditlog.Record{},
 			nil,
-			&types.Empty{},
+			&emptypb.Empty{},
 			&api.ListAuditLogsResponse{
 				AuditLogs: []*api.AuditLogRecord{},
 			},
@@ -104,7 +104,7 @@ func TestListAuditLogs(t *testing.T) {
 				},
 			},
 			nil,
-			&types.Empty{},
+			&emptypb.Empty{},
 			&api.ListAuditLogsResponse{
 				AuditLogs: []*api.AuditLogRecord{
 					{
@@ -131,7 +131,7 @@ func TestListAuditLogs(t *testing.T) {
 				},
 			},
 			nil,
-			&types.Empty{},
+			&emptypb.Empty{},
 			&api.ListAuditLogsResponse{
 				AuditLogs: []*api.AuditLogRecord{
 					{
