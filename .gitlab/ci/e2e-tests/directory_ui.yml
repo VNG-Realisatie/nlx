@@ -5,7 +5,7 @@ Directory UI - E2E Tests:
   script:
     - export CI_ENV_URL=$([ -f ci_environment_url.txt ] && cat ci_environment_url.txt)
     - export CYPRESS_BASE_URL=$([ -z "$CI_ENV_URL" ] && echo "https://directory.acc.nlx.io" || echo "https://directory-$CI_ENV_URL")
-    - cd directory-ui-e2e-tests-cypress/
+    - cd directory-ui-e2e-tests/
     - install_npm_dependencies
     - wait_for_http "${CYPRESS_BASE_URL}"
     - start_section test "Running tests"
@@ -15,7 +15,7 @@ Directory UI - E2E Tests:
   artifacts:
     when: always
     paths:
-      - directory-ui-e2e-tests-cypress/cypress/screenshots
+      - directory-ui-e2e-tests/cypress/screenshots
   rules:
     - if: '$CI_COMMIT_BRANCH == "master" && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
     - if: '$CI_COMMIT_BRANCH =~ /^review\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
