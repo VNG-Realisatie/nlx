@@ -40,7 +40,7 @@ require (
 	github.com/jmoiron/sqlx v1.3.1
 	github.com/jpillora/backoff v1.0.0
 	github.com/ktr0731/toml v0.3.0
-	github.com/lib/pq v1.9.0
+	github.com/lib/pq v1.10.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/pelletier/go-toml v1.6.0 // indirect
 	github.com/pkg/errors v0.9.1
