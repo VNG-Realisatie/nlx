@@ -4,8 +4,9 @@
 package server_test
 
 import (
-	context "context"
+	"context"
 	"errors"
+	"google.golang.org/protobuf/types/known/timestamppb"
 	"testing"
 	"time"
 
@@ -14,7 +15,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/management-api/api"
 	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
@@ -24,8 +24,8 @@ import (
 
 //nolint:funlen // this is a test method
 func TestListAccessGrantsForService(t *testing.T) {
-	createTimestamp := func(ti time.Time) *types.Timestamp {
-		return &types.Timestamp{
+	createTimestamp := func(ti time.Time) *timestamppb.Timestamp {
+		return &timestamppb.Timestamp{
 			Seconds: ti.Unix(),
 			Nanos:   int32(ti.Nanosecond()),
 		}
@@ -171,8 +171,8 @@ func TestListAccessGrantsForService(t *testing.T) {
 
 //nolint:funlen // this is a test method
 func TestRevokeAccessGrant(t *testing.T) {
-	createTimestamp := func(ti time.Time) *types.Timestamp {
-		return &types.Timestamp{
+	createTimestamp := func(ti time.Time) *timestamppb.Timestamp {
+		return &timestamppb.Timestamp{
 			Seconds: ti.Unix(),
 			Nanos:   int32(ti.Nanosecond()),
 		}

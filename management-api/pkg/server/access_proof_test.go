@@ -10,10 +10,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/golang/protobuf/ptypes"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
@@ -24,7 +24,7 @@ import (
 //nolint:funlen // its a unittest
 func TestGetAccessProof(t *testing.T) {
 	now := time.Now()
-	ts, _ := types.TimestampProto(now)
+	ts, _ := ptypes.TimestampProto(now)
 
 	tests := map[string]struct {
 		want     *api.AccessProof

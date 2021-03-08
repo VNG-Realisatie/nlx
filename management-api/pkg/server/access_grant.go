@@ -4,14 +4,15 @@
 package server
 
 import (
-	context "context"
+	"context"
 	"errors"
+	"github.com/golang/protobuf/ptypes"
+	"github.com/golang/protobuf/ptypes/timestamp"
 	"time"
 
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
@@ -103,15 +104,15 @@ func (s *ManagementService) RevokeAccessGrant(ctx context.Context, req *api.Revo
 }
 
 func convertAccessGrant(accessGrant *database.AccessGrant) (*api.AccessGrant, error) {
-	createdAt, err := types.TimestampProto(accessGrant.CreatedAt)
+	createdAt, err := ptypes.TimestampProto(accessGrant.CreatedAt)
 	if err != nil {
 		return nil, err
 	}
 
-	var revokedAt *types.Timestamp
+	var revokedAt *timestamp.Timestamp
 
 	if accessGrant.RevokedAt.Valid {
-		revokedAt, err = types.TimestampProto(accessGrant.RevokedAt.Time)
+		revokedAt, err = ptypes.TimestampProto(accessGrant.RevokedAt.Time)
 		if err != nil {
 			return nil, err
 		}

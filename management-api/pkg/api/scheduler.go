@@ -8,6 +8,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"github.com/golang/protobuf/ptypes"
 	"net"
 	"strconv"
 	"sync"
@@ -259,13 +260,13 @@ func (scheduler *accessRequestScheduler) parseAccessProof(accessProof *api.Acces
 	if accessProof.CreatedAt != nil {
 		var err error
 
-		createdAt, err = ptypes.TimestampFromProto(accessProof.CreatedAt)
+		createdAt, err = ptypes.Timestamp(accessProof.CreatedAt)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	revokedAt, err := ptypes.TimestampFromProto(accessProof.RevokedAt)
+	revokedAt, err := ptypes.Timestamp(accessProof.RevokedAt)
 	if err != nil {
 		revokedAt = time.Time{}
 	}

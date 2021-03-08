@@ -5,13 +5,14 @@ package api
 
 import (
 	"context"
+	"github.com/golang/protobuf/ptypes"
+	"google.golang.org/protobuf/types/known/timestamppb"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
@@ -446,7 +447,7 @@ func TestSyncAccessProof(t *testing.T) {
 						ServiceName: "service",
 					}).
 					Return(&api.AccessProof{
-						CreatedAt: &types.Timestamp{
+						CreatedAt: &timestamppb.Timestamp{
 							// Trigger an invalid timestamp by setting the year to > 10.000
 							Seconds: 553371149436,
 						},
@@ -481,7 +482,7 @@ func TestSyncAccessProof(t *testing.T) {
 						ServiceName: "service",
 					}).
 					Return(&api.AccessProof{
-						CreatedAt: types.TimestampNow(),
+						CreatedAt: ptypes.TimestampNow(),
 						RevokedAt: nil,
 					}, nil)
 
@@ -552,8 +553,8 @@ func TestSyncAccessProof(t *testing.T) {
 				ServiceName:      "service",
 			},
 			setupMocks: func(mocks schedulerMocks) {
-				ts := types.TimestampNow()
-				t, _ := types.TimestampFromProto(ts)
+				ts := ptypes.TimestampNow()
+				t, _ := ptypes.Timestamp(ts)
 
 				mocks.directory.
 					EXPECT().
@@ -611,8 +612,8 @@ func TestSyncAccessProof(t *testing.T) {
 				ServiceName:      "service",
 			},
 			setupMocks: func(mocks schedulerMocks) {
-				ts := types.TimestampNow()
-				t, _ := types.TimestampFromProto(ts)
+				ts := ptypes.TimestampNow()
+				t, _ := ptypes.Timestamp(ts)
 
 				mocks.directory.
 					EXPECT().

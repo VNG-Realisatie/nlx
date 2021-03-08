@@ -6,6 +6,8 @@ package server
 import (
 	"context"
 	"errors"
+	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/api/external"
 
 	"google.golang.org/grpc/metadata"
 
@@ -21,6 +23,10 @@ import (
 
 // ManagementService handles all requests for the config api
 type ManagementService struct {
+	api.UnimplementedDirectoryServer
+	api.UnimplementedManagementServer
+	external.UnimplementedAccessRequestServiceServer
+
 	logger          *zap.Logger
 	mainProcess     *process.Process
 	directoryClient directory.Client

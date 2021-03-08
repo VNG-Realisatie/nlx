@@ -21,81 +21,48 @@ import (
 	"go.nlx.io/nlx/directory-inspection-api/pkg/inspectionservice"
 )
 
-func TestInspectionService_ListVersionStatistics(t *testing.T) {
+func TestInspectionService_List(t *testing.T) {
 	tests := []struct {
 		name             string
 		db               func(ctrl *gomock.Controller) database.DirectoryDatabase
-		expectedResponse *inspectionapi.ListInOutwayStatisticsResponse
+		expectedResponse *inspectionapi.ListServicesResponse
 		expectedError    error
 	}{
 		{
-			name: "failed to get statistics from the db",
+			name: "failed to get services from the db",
 			db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
 				db := mock.NewMockDirectoryDatabase(ctrl)
-				db.EXPECT().ListVersionStatistics(gomock.Any()).Return(nil, errors.New("arbitrary error"))
+				db.EXPECT().RegisterOutwayVersion(gomock.Any(), gomock.Any()).Times(0)
+				db.EXPECT().ListServices(gomock.Any(), testOrganizationName).Return(nil, errors.New("arbitrary error"))
 
 				return db
 			},
 			expectedResponse: nil,
-			expectedError:    status.New(codes.Internal, "Database error.").Err(),
-		},
-		{
-			name: "for an type which is not supported",
-			db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
-				db := mock.NewMockDirectoryDatabase(ctrl)
-				db.EXPECT().ListVersionStatistics(gomock.Any()).Return([]*database.VersionStatistics{
-					{
-						Type:    "arbitrary",
-						Amount:  5,
-						Version: "0.0.1",
-					},
-				}, nil)
-
-				return db
-			},
-			expectedResponse: &inspectionapi.ListInOutwayStatisticsResponse{},
-			expectedError:    nil,
+			expectedError:    status.New(codes.Internal, "db error").Err(),
 		},
 		{
 			name: "happy flow",
 			db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
 				db := mock.NewMockDirectoryDatabase(ctrl)
-				db.EXPECT().ListVersionStatistics(gomock.Any()).Return([]*database.VersionStatistics{
+				db.EXPECT().RegisterOutwayVersion(gomock.Any(), gomock.Any()).Times(0)
+				db.EXPECT().ListServices(gomock.Any(), testOrganizationName).Return([]*database.Service{
 					{
-						Type:    "outway",
-						Amount:  5,
-						Version: "0.0.1",
-					},
-					{
-						Type:    "outway",
-						Amount:  10,
-						Version: "0.0.2",
-					},
-					{
-						Type:    "inway",
-						Amount:  5,
-						Version: "0.0.2",
+						Name:         "Dummy Service Name",
+						MonthlyCosts: 1,
+						RequestCosts: 5,
+						OneTimeCosts: 250,
 					},
 				}, nil)
 
 				return db
 			},
-			expectedResponse: &inspectionapi.ListInOutwayStatisticsResponse{
-				Versions: []*inspectionapi.ListInOutwayStatisticsResponse_Statistics{
+			expectedResponse: &inspectionapi.ListServicesResponse{
+				Services: []*inspectionapi.ListServicesResponse_Service{
 					{
-						Type:    inspectionapi.ListInOutwayStatisticsResponse_Statistics_OUTWAY,
-						Amount:  5,
-						Version: "0.0.1",
-					},
-					{
-						Type:    inspectionapi.ListInOutwayStatisticsResponse_Statistics_OUTWAY,
-						Amount:  10,
-						Version: "0.0.2",
-					},
-					{
-						Type:    inspectionapi.ListInOutwayStatisticsResponse_Statistics_INWAY,
-						Amount:  5,
-						Version: "0.0.2",
+						ServiceName:  "Dummy Service Name",
+						MonthlyCosts: 1,
+						RequestCosts: 5,
+						OneTimeCosts: 250,
 					},
 				},
 			},
@@ -109,7 +76,7 @@ func TestInspectionService_ListVersionStatistics(t *testing.T) {
 			defer ctrl.Finish()
 
 			h := inspectionservice.New(zap.NewNop(), tt.db(ctrl), testGetOrganizationNameFromRequest)
-			got, err := h.ListVersionStatistics(context.Background(), &emptypb.Empty{})
+			got, err := h.ListServices(context.Background(), &emptypb.Empty{})
 
 			assert.Equal(t, tt.expectedResponse, got)
 			assert.Equal(t, tt.expectedError, err)

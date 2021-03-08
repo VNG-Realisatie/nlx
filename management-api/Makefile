@@ -21,8 +21,7 @@ clean:
 
 .PHONY: dependencies
 dependencies:
-	GO111MODULE=off go get \
-		github.com/golang/mock/gomock
+	go install github.com/golang/mock/gomock
 	go install github.com/golang/mock/mockgen
 
 api/mock/mock_management.go:
@@ -37,13 +36,13 @@ pkg/database/mock/mock_database.go:
 	@# Generate mock file
 	mockgen -source pkg/database/database.go -destination $@
 
-pkg/directory/mock/mock_client.go:
+pkg/directory/mock/mock_client.go: pkg/directory/client.go
 	@# Generate mock file
-	mockgen -destination pkg/directory/client.go go.nlx.io/nlx/management-api/pkg/directory Client
+	mockgen -destination $@ go.nlx.io/nlx/management-api/pkg/directory Client
 
-pkg/management/mock/mock_client.go:
+pkg/management/mock/mock_client.go: pkg/management/client.go
 	@# Generate mock file
-	mockgen -destination pkg/management/client.go go.nlx.io/nlx/management-api/pkg/management Client
+	mockgen -destination $@ go.nlx.io/nlx/management-api/pkg/management Client
 
 pkg/auditlog/mock/mock_auditlog.go:
 	@# Generate mock file

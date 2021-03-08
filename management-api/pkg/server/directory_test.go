@@ -6,12 +6,14 @@ package server_test
 import (
 	context "context"
 	"errors"
+	"google.golang.org/protobuf/types/known/timestamppb"
 	"strconv"
 	"testing"
 	"time"
 
 	"github.com/fgrosse/zaptest"
 	"github.com/golang/mock/gomock"
+	"github.com/golang/protobuf/ptypes"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
@@ -181,7 +183,7 @@ func TestListDirectoryServices(t *testing.T) {
 		{
 			ServiceName:          "test-service-1",
 			OrganizationName:     "test-organization-a",
-			APISpecificationType: "OpenAPI3",
+			ApiSpecificationType: "OpenAPI3",
 			DocumentationURL:     "https://example.com",
 			PublicSupportContact: "test@example.com",
 			State:                api.DirectoryService_unknown,
@@ -209,8 +211,8 @@ func TestListDirectoryServices(t *testing.T) {
 	assert.Equal(t, expected, response.Services)
 }
 
-func timestampProto(t time.Time) *types.Timestamp {
-	tp, _ := types.TimestampProto(t)
+func timestampProto(t time.Time) *timestamppb.Timestamp {
+	tp, _ := ptypes.TimestampProto(t)
 	return tp
 }
 

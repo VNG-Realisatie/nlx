@@ -8,6 +8,7 @@ import (
 
 	"github.com/golang/protobuf/ptypes"
 	"github.com/spf13/cobra"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/management-api/api"
 )
@@ -44,17 +45,17 @@ type accessRequestDetails struct {
 	State            api.AccessRequestState
 	OrganizationName string
 	ServiceName      string
-	CreatedAt        *types.Timestamp
-	UpdatedAt        *types.Timestamp
+	CreatedAt        *timestamppb.Timestamp
+	UpdatedAt        *timestamppb.Timestamp
 }
 
 func printAccessRequest(details accessRequestDetails) {
-	createdAt, err := types.TimestampFromProto(details.CreatedAt)
+	createdAt, err := ptypes.Timestamp(details.CreatedAt)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	updatedAt, err := types.TimestampFromProto(details.UpdatedAt)
+	updatedAt, err := ptypes.Timestamp(details.UpdatedAt)
 	if err != nil {
 		log.Fatal(err)
 	}

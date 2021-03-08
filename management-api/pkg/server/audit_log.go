@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"regexp"
 
+	"github.com/golang/protobuf/ptypes"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -42,7 +43,7 @@ func convertAuditLogModelToResponseAuditLog(models []*auditlog.Record) ([]*api.A
 			return nil, err
 		}
 
-		createdAt, err := types.TimestampProto(model.CreatedAt)
+		createdAt, err := ptypes.TimestampProto(model.CreatedAt)
 		if err != nil {
 			return nil, err
 		}

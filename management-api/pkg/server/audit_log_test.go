@@ -6,6 +6,7 @@ package server_test
 import (
 	"context"
 	"errors"
+	"google.golang.org/protobuf/types/known/timestamppb"
 	"path/filepath"
 	"testing"
 	"time"
@@ -63,8 +64,8 @@ func newManagementService(t *testing.T) (s *server.ManagementService, auditLogge
 
 //nolint:funlen,dupl // its a unittest
 func TestListAuditLogs(t *testing.T) {
-	createTimestamp := func(ti time.Time) *types.Timestamp {
-		return &types.Timestamp{
+	createTimestamp := func(ti time.Time) *timestamppb.Timestamp {
+		return &timestamppb.Timestamp{
 			Seconds: ti.Unix(),
 			Nanos:   int32(ti.Nanosecond()),
 		}

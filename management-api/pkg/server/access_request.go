@@ -4,10 +4,11 @@
 package server
 
 import (
-	context "context"
+	"context"
 	"errors"
 	"strings"
 
+	"github.com/golang/protobuf/ptypes"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -358,12 +359,12 @@ func (s *ManagementService) GetAccessRequestState(ctx context.Context, req *exte
 
 // nolint:dupl // incoming access request looks like outgoing access request
 func convertIncomingAccessRequest(accessRequest *database.IncomingAccessRequest) (*api.IncomingAccessRequest, error) {
-	createdAt, err := types.TimestampProto(accessRequest.CreatedAt)
+	createdAt, err := ptypes.TimestampProto(accessRequest.CreatedAt)
 	if err != nil {
 		return nil, err
 	}
 
-	updatedAt, err := types.TimestampProto(accessRequest.UpdatedAt)
+	updatedAt, err := ptypes.TimestampProto(accessRequest.UpdatedAt)
 	if err != nil {
 		return nil, err
 	}
@@ -380,12 +381,12 @@ func convertIncomingAccessRequest(accessRequest *database.IncomingAccessRequest)
 
 // nolint:dupl // outgoing access request looks like incoming access request
 func convertOutgoingAccessRequest(request *database.OutgoingAccessRequest) (*api.OutgoingAccessRequest, error) {
-	createdAt, err := types.TimestampProto(request.CreatedAt)
+	createdAt, err := ptypes.TimestampProto(request.CreatedAt)
 	if err != nil {
 		return nil, err
 	}
 
-	updatedAt, err := types.TimestampProto(request.UpdatedAt)
+	updatedAt, err := ptypes.TimestampProto(request.UpdatedAt)
 	if err != nil {
 		return nil, err
 	}

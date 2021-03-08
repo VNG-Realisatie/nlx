@@ -77,6 +77,26 @@ func (mr *MockClientMockRecorder) GetOrganizationInway(arg0, arg1 interface{}, a
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationInway", reflect.TypeOf((*MockClient)(nil).GetOrganizationInway), varargs...)
 }
 
+// ListInOutwayStatistics mocks base method
+func (m *MockClient) ListInOutwayStatistics(arg0 context.Context, arg1 *emptypb.Empty, arg2 ...grpc.CallOption) (*inspectionapi.ListInOutwayStatisticsResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListInOutwayStatistics", varargs...)
+	ret0, _ := ret[0].(*inspectionapi.ListInOutwayStatisticsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListInOutwayStatistics indicates an expected call of ListInOutwayStatistics
+func (mr *MockClientMockRecorder) ListInOutwayStatistics(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListInOutwayStatistics", reflect.TypeOf((*MockClient)(nil).ListInOutwayStatistics), varargs...)
+}
+
 // ListOrganizations mocks base method
 func (m *MockClient) ListOrganizations(arg0 context.Context, arg1 *emptypb.Empty, arg2 ...grpc.CallOption) (*inspectionapi.ListOrganizationsResponse, error) {
 	m.ctrl.T.Helper()

@@ -17,6 +17,7 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/common/diagnostics"
 	"go.nlx.io/nlx/common/process"
@@ -57,8 +58,8 @@ func newService(t *testing.T) (s *server.ManagementService, db *mock_database.Mo
 	return s, db, auditLogger
 }
 
-func createTimestamp(ti time.Time) *types.Timestamp {
-	return &types.Timestamp{
+func createTimestamp(ti time.Time) *timestamppb.Timestamp {
+	return &timestamppb.Timestamp{
 		Seconds: ti.Unix(),
 		Nanos:   int32(ti.Nanosecond()),
 	}
