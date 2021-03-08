@@ -288,6 +288,12 @@ For the internal interfaces of the NLX system we have a version skew policy for 
   * In case the Sprint Backlog needs to be renegotiated (i.e. the scope of the sprint goal is changed), this is done during the standup
   * Whereby.com is used for one-on-one communication between team members as well
 
+
+## 4. Miscellaneous
+
+### 4.1. Merge Requests
+  * We try not to merge any MRs the day before the sprint review (we agreed upon this during the retrospective of March 3rd 2021).
+
 ---
 
 For more information on how to use and contribute to this project, please read the [`README`](README.md).
