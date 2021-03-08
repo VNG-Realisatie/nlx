@@ -28,7 +28,6 @@ import (
 	common_tls "go.nlx.io/nlx/common/tls"
 	directory_http "go.nlx.io/nlx/directory-inspection-api/http"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
-	"go.nlx.io/nlx/directory-inspection-api/stats"
 )
 
 // newGRPCSplitterHandlerFunc returns an http.Handler that delegates gRPC connections to grpcServer
@@ -55,7 +54,6 @@ func runServer(
 	addressPlain string,
 	certificate *common_tls.CertificateBundle,
 	inspectionService inspectionapi.DirectoryInspectionServer,
-	statsService stats.StatsServer,
 	httpServer *directory_http.Server,
 ) {
 	// setup zap connection for global grpc logging
@@ -86,8 +84,6 @@ func runServer(
 	grpcServer := grpc.NewServer(opts...)
 	inspectionapi.RegisterDirectoryInspectionServer(grpcServer, inspectionService)
 
-	stats.RegisterStatsServer(grpcServer, statsService)
-
 	tlsConfig := certificate.TLSConfig()
 	tlsConfig.InsecureSkipVerify = true //nolint:gosec // local connection; hostname won't match
 
@@ -108,17 +104,6 @@ func runServer(
 	gatewayMux := runtime.NewServeMux(runtime.WithMetadata(gatewayMetadata))
 
 	err := inspectionapi.RegisterDirectoryInspectionHandlerFromEndpoint(
-		context.Background(),
-		gatewayMux,
-		address,
-		gatewayDialOptions,
-	)
-	if err != nil {
-		fmt.Printf("serve: %v\n", err)
-		return
-	}
-
-	err = stats.RegisterStatsHandlerFromEndpoint(
 		context.Background(),
 		gatewayMux,
 		address,

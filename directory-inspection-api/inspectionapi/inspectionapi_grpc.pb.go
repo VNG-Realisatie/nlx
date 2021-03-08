@@ -19,11 +19,10 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DirectoryInspectionClient interface {
-	// ListServices lists all services and their gateways.
 	ListServices(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListServicesResponse, error)
-	// ListOrganizations lists all organizations and their details.
 	ListOrganizations(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListOrganizationsResponse, error)
 	GetOrganizationInway(ctx context.Context, in *GetOrganizationInwayRequest, opts ...grpc.CallOption) (*GetOrganizationInwayResponse, error)
+	ListInOutwayStatistics(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListInOutwayStatisticsResponse, error)
 }
 
 type directoryInspectionClient struct {
@@ -61,15 +60,23 @@ func (c *directoryInspectionClient) GetOrganizationInway(ctx context.Context, in
 	return out, nil
 }
 
+func (c *directoryInspectionClient) ListInOutwayStatistics(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListInOutwayStatisticsResponse, error) {
+	out := new(ListInOutwayStatisticsResponse)
+	err := c.cc.Invoke(ctx, "/DirectoryInspection/ListInOutwayStatistics", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DirectoryInspectionServer is the server API for DirectoryInspection service.
 // All implementations must embed UnimplementedDirectoryInspectionServer
 // for forward compatibility
 type DirectoryInspectionServer interface {
-	// ListServices lists all services and their gateways.
 	ListServices(context.Context, *emptypb.Empty) (*ListServicesResponse, error)
-	// ListOrganizations lists all organizations and their details.
 	ListOrganizations(context.Context, *emptypb.Empty) (*ListOrganizationsResponse, error)
 	GetOrganizationInway(context.Context, *GetOrganizationInwayRequest) (*GetOrganizationInwayResponse, error)
+	ListInOutwayStatistics(context.Context, *emptypb.Empty) (*ListInOutwayStatisticsResponse, error)
 	mustEmbedUnimplementedDirectoryInspectionServer()
 }
 
@@ -85,6 +92,9 @@ func (UnimplementedDirectoryInspectionServer) ListOrganizations(context.Context,
 }
 func (UnimplementedDirectoryInspectionServer) GetOrganizationInway(context.Context, *GetOrganizationInwayRequest) (*GetOrganizationInwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrganizationInway not implemented")
+}
+func (UnimplementedDirectoryInspectionServer) ListInOutwayStatistics(context.Context, *emptypb.Empty) (*ListInOutwayStatisticsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListInOutwayStatistics not implemented")
 }
 func (UnimplementedDirectoryInspectionServer) mustEmbedUnimplementedDirectoryInspectionServer() {}
 
@@ -153,6 +163,24 @@ func _DirectoryInspection_GetOrganizationInway_Handler(srv interface{}, ctx cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _DirectoryInspection_ListInOutwayStatistics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DirectoryInspectionServer).ListInOutwayStatistics(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/DirectoryInspection/ListInOutwayStatistics",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DirectoryInspectionServer).ListInOutwayStatistics(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // DirectoryInspection_ServiceDesc is the grpc.ServiceDesc for DirectoryInspection service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -171,6 +199,10 @@ var DirectoryInspection_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetOrganizationInway",
 			Handler:    _DirectoryInspection_GetOrganizationInway_Handler,
+		},
+		{
+			MethodName: "ListInOutwayStatistics",
+			Handler:    _DirectoryInspection_ListInOutwayStatistics_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

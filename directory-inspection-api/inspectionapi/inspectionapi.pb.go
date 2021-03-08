@@ -76,6 +76,52 @@ func (Inway_State) EnumDescriptor() ([]byte, []int) {
 	return file_inspectionapi_proto_rawDescGZIP(), []int{0, 0}
 }
 
+type ListInOutwayStatisticsResponse_Statistics_Type int32
+
+const (
+	ListInOutwayStatisticsResponse_Statistics_INWAY  ListInOutwayStatisticsResponse_Statistics_Type = 0
+	ListInOutwayStatisticsResponse_Statistics_OUTWAY ListInOutwayStatisticsResponse_Statistics_Type = 1
+)
+
+// Enum value maps for ListInOutwayStatisticsResponse_Statistics_Type.
+var (
+	ListInOutwayStatisticsResponse_Statistics_Type_name = map[int32]string{
+		0: "INWAY",
+		1: "OUTWAY",
+	}
+	ListInOutwayStatisticsResponse_Statistics_Type_value = map[string]int32{
+		"INWAY":  0,
+		"OUTWAY": 1,
+	}
+)
+
+func (x ListInOutwayStatisticsResponse_Statistics_Type) Enum() *ListInOutwayStatisticsResponse_Statistics_Type {
+	p := new(ListInOutwayStatisticsResponse_Statistics_Type)
+	*p = x
+	return p
+}
+
+func (x ListInOutwayStatisticsResponse_Statistics_Type) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ListInOutwayStatisticsResponse_Statistics_Type) Descriptor() protoreflect.EnumDescriptor {
+	return file_inspectionapi_proto_enumTypes[1].Descriptor()
+}
+
+func (ListInOutwayStatisticsResponse_Statistics_Type) Type() protoreflect.EnumType {
+	return &file_inspectionapi_proto_enumTypes[1]
+}
+
+func (x ListInOutwayStatisticsResponse_Statistics_Type) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ListInOutwayStatisticsResponse_Statistics_Type.Descriptor instead.
+func (ListInOutwayStatisticsResponse_Statistics_Type) EnumDescriptor() ([]byte, []int) {
+	return file_inspectionapi_proto_rawDescGZIP(), []int{5, 0, 0}
+}
+
 type Inway struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -319,6 +365,53 @@ func (x *GetOrganizationInwayResponse) GetAddress() string {
 	return ""
 }
 
+type ListInOutwayStatisticsResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Versions []*ListInOutwayStatisticsResponse_Statistics `protobuf:"bytes,2,rep,name=versions,proto3" json:"versions,omitempty"`
+}
+
+func (x *ListInOutwayStatisticsResponse) Reset() {
+	*x = ListInOutwayStatisticsResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_inspectionapi_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ListInOutwayStatisticsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListInOutwayStatisticsResponse) ProtoMessage() {}
+
+func (x *ListInOutwayStatisticsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_inspectionapi_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListInOutwayStatisticsResponse.ProtoReflect.Descriptor instead.
+func (*ListInOutwayStatisticsResponse) Descriptor() ([]byte, []int) {
+	return file_inspectionapi_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *ListInOutwayStatisticsResponse) GetVersions() []*ListInOutwayStatisticsResponse_Statistics {
+	if x != nil {
+		return x.Versions
+	}
+	return nil
+}
+
 type ListServicesResponse_Service struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -341,7 +434,7 @@ type ListServicesResponse_Service struct {
 func (x *ListServicesResponse_Service) Reset() {
 	*x = ListServicesResponse_Service{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_inspectionapi_proto_msgTypes[5]
+		mi := &file_inspectionapi_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -354,7 +447,7 @@ func (x *ListServicesResponse_Service) String() string {
 func (*ListServicesResponse_Service) ProtoMessage() {}
 
 func (x *ListServicesResponse_Service) ProtoReflect() protoreflect.Message {
-	mi := &file_inspectionapi_proto_msgTypes[5]
+	mi := &file_inspectionapi_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -467,7 +560,7 @@ type ListOrganizationsResponse_Organization struct {
 func (x *ListOrganizationsResponse_Organization) Reset() {
 	*x = ListOrganizationsResponse_Organization{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_inspectionapi_proto_msgTypes[6]
+		mi := &file_inspectionapi_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -480,7 +573,7 @@ func (x *ListOrganizationsResponse_Organization) String() string {
 func (*ListOrganizationsResponse_Organization) ProtoMessage() {}
 
 func (x *ListOrganizationsResponse_Organization) ProtoReflect() protoreflect.Message {
-	mi := &file_inspectionapi_proto_msgTypes[6]
+	mi := &file_inspectionapi_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -515,6 +608,69 @@ func (x *ListOrganizationsResponse_Organization) GetInsightLogEndpoint() string 
 		return x.InsightLogEndpoint
 	}
 	return ""
+}
+
+type ListInOutwayStatisticsResponse_Statistics struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Type    ListInOutwayStatisticsResponse_Statistics_Type `protobuf:"varint,1,opt,name=type,proto3,enum=ListInOutwayStatisticsResponse_Statistics_Type" json:"type,omitempty"`
+	Version string                                         `protobuf:"bytes,2,opt,name=version,proto3" json:"version,omitempty"`
+	Amount  uint32                                         `protobuf:"varint,3,opt,name=amount,proto3" json:"amount,omitempty"`
+}
+
+func (x *ListInOutwayStatisticsResponse_Statistics) Reset() {
+	*x = ListInOutwayStatisticsResponse_Statistics{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_inspectionapi_proto_msgTypes[8]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ListInOutwayStatisticsResponse_Statistics) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListInOutwayStatisticsResponse_Statistics) ProtoMessage() {}
+
+func (x *ListInOutwayStatisticsResponse_Statistics) ProtoReflect() protoreflect.Message {
+	mi := &file_inspectionapi_proto_msgTypes[8]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListInOutwayStatisticsResponse_Statistics.ProtoReflect.Descriptor instead.
+func (*ListInOutwayStatisticsResponse_Statistics) Descriptor() ([]byte, []int) {
+	return file_inspectionapi_proto_rawDescGZIP(), []int{5, 0}
+}
+
+func (x *ListInOutwayStatisticsResponse_Statistics) GetType() ListInOutwayStatisticsResponse_Statistics_Type {
+	if x != nil {
+		return x.Type
+	}
+	return ListInOutwayStatisticsResponse_Statistics_INWAY
+}
+
+func (x *ListInOutwayStatisticsResponse_Statistics) GetVersion() string {
+	if x != nil {
+		return x.Version
+	}
+	return ""
+}
+
+func (x *ListInOutwayStatisticsResponse_Statistics) GetAmount() uint32 {
+	if x != nil {
+		return x.Amount
+	}
+	return 0
 }
 
 var File_inspectionapi_proto protoreflect.FileDescriptor
@@ -591,8 +747,25 @@ var file_inspectionapi_proto_rawDesc = []byte{
 	0x4e, 0x61, 0x6d, 0x65, 0x22, 0x38, 0x0a, 0x1c, 0x47, 0x65, 0x74, 0x4f, 0x72, 0x67, 0x61, 0x6e,
 	0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x49, 0x6e, 0x77, 0x61, 0x79, 0x52, 0x65, 0x73, 0x70,
 	0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x18,
-	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x32, 0xc5,
-	0x02, 0x0a, 0x13, 0x44, 0x69, 0x72, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x79, 0x49, 0x6e, 0x73, 0x70,
+	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x22, 0x8d,
+	0x02, 0x0a, 0x1e, 0x4c, 0x69, 0x73, 0x74, 0x49, 0x6e, 0x4f, 0x75, 0x74, 0x77, 0x61, 0x79, 0x53,
+	0x74, 0x61, 0x74, 0x69, 0x73, 0x74, 0x69, 0x63, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x12, 0x46, 0x0a, 0x08, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x18, 0x02, 0x20,
+	0x03, 0x28, 0x0b, 0x32, 0x2a, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x49, 0x6e, 0x4f, 0x75, 0x74, 0x77,
+	0x61, 0x79, 0x53, 0x74, 0x61, 0x74, 0x69, 0x73, 0x74, 0x69, 0x63, 0x73, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x2e, 0x53, 0x74, 0x61, 0x74, 0x69, 0x73, 0x74, 0x69, 0x63, 0x73, 0x52,
+	0x08, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x1a, 0xa2, 0x01, 0x0a, 0x0a, 0x53, 0x74,
+	0x61, 0x74, 0x69, 0x73, 0x74, 0x69, 0x63, 0x73, 0x12, 0x43, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x2f, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x49, 0x6e, 0x4f,
+	0x75, 0x74, 0x77, 0x61, 0x79, 0x53, 0x74, 0x61, 0x74, 0x69, 0x73, 0x74, 0x69, 0x63, 0x73, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x2e, 0x53, 0x74, 0x61, 0x74, 0x69, 0x73, 0x74, 0x69,
+	0x63, 0x73, 0x2e, 0x54, 0x79, 0x70, 0x65, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x18, 0x0a,
+	0x07, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07,
+	0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x12, 0x16, 0x0a, 0x06, 0x61, 0x6d, 0x6f, 0x75, 0x6e,
+	0x74, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x06, 0x61, 0x6d, 0x6f, 0x75, 0x6e, 0x74, 0x22,
+	0x1d, 0x0a, 0x04, 0x54, 0x79, 0x70, 0x65, 0x12, 0x09, 0x0a, 0x05, 0x49, 0x4e, 0x57, 0x41, 0x59,
+	0x10, 0x00, 0x12, 0x0a, 0x0a, 0x06, 0x4f, 0x55, 0x54, 0x57, 0x41, 0x59, 0x10, 0x01, 0x32, 0xa8,
+	0x03, 0x0a, 0x13, 0x44, 0x69, 0x72, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x79, 0x49, 0x6e, 0x73, 0x70,
 	0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x63, 0x0a, 0x0c, 0x4c, 0x69, 0x73, 0x74, 0x53, 0x65,
 	0x72, 0x76, 0x69, 0x63, 0x65, 0x73, 0x12, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e,
 	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x15,
@@ -612,9 +785,15 @@ var file_inspectionapi_proto_rawDesc = []byte{
 	0x61, 0x6e, 0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x49, 0x6e, 0x77, 0x61, 0x79, 0x52, 0x65,
 	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1d, 0x2e, 0x47, 0x65, 0x74, 0x4f, 0x72, 0x67, 0x61, 0x6e,
 	0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x49, 0x6e, 0x77, 0x61, 0x79, 0x52, 0x65, 0x73, 0x70,
-	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x11, 0x5a, 0x0f, 0x2e, 0x3b, 0x69, 0x6e, 0x73, 0x70,
-	0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x61, 0x70, 0x69, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x33,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x61, 0x0a, 0x16, 0x4c, 0x69, 0x73, 0x74, 0x49, 0x6e,
+	0x4f, 0x75, 0x74, 0x77, 0x61, 0x79, 0x53, 0x74, 0x61, 0x74, 0x69, 0x73, 0x74, 0x69, 0x63, 0x73,
+	0x12, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62,
+	0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x1f, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x49,
+	0x6e, 0x4f, 0x75, 0x74, 0x77, 0x61, 0x79, 0x53, 0x74, 0x61, 0x74, 0x69, 0x73, 0x74, 0x69, 0x63,
+	0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x0e, 0x82, 0xd3, 0xe4, 0x93, 0x02,
+	0x08, 0x12, 0x06, 0x2f, 0x73, 0x74, 0x61, 0x74, 0x73, 0x42, 0x11, 0x5a, 0x0f, 0x2e, 0x3b, 0x69,
+	0x6e, 0x73, 0x70, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x61, 0x70, 0x69, 0x62, 0x06, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -629,35 +808,42 @@ func file_inspectionapi_proto_rawDescGZIP() []byte {
 	return file_inspectionapi_proto_rawDescData
 }
 
-var file_inspectionapi_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_inspectionapi_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_inspectionapi_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_inspectionapi_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_inspectionapi_proto_goTypes = []interface{}{
-	(Inway_State)(0),                               // 0: Inway.State
-	(*Inway)(nil),                                  // 1: Inway
-	(*ListServicesResponse)(nil),                   // 2: ListServicesResponse
-	(*ListOrganizationsResponse)(nil),              // 3: ListOrganizationsResponse
-	(*GetOrganizationInwayRequest)(nil),            // 4: GetOrganizationInwayRequest
-	(*GetOrganizationInwayResponse)(nil),           // 5: GetOrganizationInwayResponse
-	(*ListServicesResponse_Service)(nil),           // 6: ListServicesResponse.Service
-	(*ListOrganizationsResponse_Organization)(nil), // 7: ListOrganizationsResponse.Organization
-	(*emptypb.Empty)(nil),                          // 8: google.protobuf.Empty
+	(Inway_State)(0), // 0: Inway.State
+	(ListInOutwayStatisticsResponse_Statistics_Type)(0), // 1: ListInOutwayStatisticsResponse.Statistics.Type
+	(*Inway)(nil),                                     // 2: Inway
+	(*ListServicesResponse)(nil),                      // 3: ListServicesResponse
+	(*ListOrganizationsResponse)(nil),                 // 4: ListOrganizationsResponse
+	(*GetOrganizationInwayRequest)(nil),               // 5: GetOrganizationInwayRequest
+	(*GetOrganizationInwayResponse)(nil),              // 6: GetOrganizationInwayResponse
+	(*ListInOutwayStatisticsResponse)(nil),            // 7: ListInOutwayStatisticsResponse
+	(*ListServicesResponse_Service)(nil),              // 8: ListServicesResponse.Service
+	(*ListOrganizationsResponse_Organization)(nil),    // 9: ListOrganizationsResponse.Organization
+	(*ListInOutwayStatisticsResponse_Statistics)(nil), // 10: ListInOutwayStatisticsResponse.Statistics
+	(*emptypb.Empty)(nil),                             // 11: google.protobuf.Empty
 }
 var file_inspectionapi_proto_depIdxs = []int32{
-	0, // 0: Inway.state:type_name -> Inway.State
-	6, // 1: ListServicesResponse.services:type_name -> ListServicesResponse.Service
-	7, // 2: ListOrganizationsResponse.organizations:type_name -> ListOrganizationsResponse.Organization
-	1, // 3: ListServicesResponse.Service.inways:type_name -> Inway
-	8, // 4: DirectoryInspection.ListServices:input_type -> google.protobuf.Empty
-	8, // 5: DirectoryInspection.ListOrganizations:input_type -> google.protobuf.Empty
-	4, // 6: DirectoryInspection.GetOrganizationInway:input_type -> GetOrganizationInwayRequest
-	2, // 7: DirectoryInspection.ListServices:output_type -> ListServicesResponse
-	3, // 8: DirectoryInspection.ListOrganizations:output_type -> ListOrganizationsResponse
-	5, // 9: DirectoryInspection.GetOrganizationInway:output_type -> GetOrganizationInwayResponse
-	7, // [7:10] is the sub-list for method output_type
-	4, // [4:7] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	0,  // 0: Inway.state:type_name -> Inway.State
+	8,  // 1: ListServicesResponse.services:type_name -> ListServicesResponse.Service
+	9,  // 2: ListOrganizationsResponse.organizations:type_name -> ListOrganizationsResponse.Organization
+	10, // 3: ListInOutwayStatisticsResponse.versions:type_name -> ListInOutwayStatisticsResponse.Statistics
+	2,  // 4: ListServicesResponse.Service.inways:type_name -> Inway
+	1,  // 5: ListInOutwayStatisticsResponse.Statistics.type:type_name -> ListInOutwayStatisticsResponse.Statistics.Type
+	11, // 6: DirectoryInspection.ListServices:input_type -> google.protobuf.Empty
+	11, // 7: DirectoryInspection.ListOrganizations:input_type -> google.protobuf.Empty
+	5,  // 8: DirectoryInspection.GetOrganizationInway:input_type -> GetOrganizationInwayRequest
+	11, // 9: DirectoryInspection.ListInOutwayStatistics:input_type -> google.protobuf.Empty
+	3,  // 10: DirectoryInspection.ListServices:output_type -> ListServicesResponse
+	4,  // 11: DirectoryInspection.ListOrganizations:output_type -> ListOrganizationsResponse
+	6,  // 12: DirectoryInspection.GetOrganizationInway:output_type -> GetOrganizationInwayResponse
+	7,  // 13: DirectoryInspection.ListInOutwayStatistics:output_type -> ListInOutwayStatisticsResponse
+	10, // [10:14] is the sub-list for method output_type
+	6,  // [6:10] is the sub-list for method input_type
+	6,  // [6:6] is the sub-list for extension type_name
+	6,  // [6:6] is the sub-list for extension extendee
+	0,  // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_inspectionapi_proto_init() }
@@ -727,7 +913,7 @@ func file_inspectionapi_proto_init() {
 			}
 		}
 		file_inspectionapi_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListServicesResponse_Service); i {
+			switch v := v.(*ListInOutwayStatisticsResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -739,7 +925,31 @@ func file_inspectionapi_proto_init() {
 			}
 		}
 		file_inspectionapi_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ListServicesResponse_Service); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_inspectionapi_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ListOrganizationsResponse_Organization); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_inspectionapi_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ListInOutwayStatisticsResponse_Statistics); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -756,8 +966,8 @@ func file_inspectionapi_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_inspectionapi_proto_rawDesc,
-			NumEnums:      1,
-			NumMessages:   7,
+			NumEnums:      2,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

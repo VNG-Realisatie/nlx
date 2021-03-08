@@ -22,7 +22,6 @@ const (
   "paths": {
     "/api/directory/list-organizations": {
       "get": {
-        "summary": "ListOrganizations lists all organizations and their details.",
         "operationId": "DirectoryInspection_ListOrganizations",
         "responses": {
           "200": {
@@ -45,13 +44,34 @@ const (
     },
     "/api/directory/list-services": {
       "get": {
-        "summary": "ListServices lists all services and their gateways.",
         "operationId": "DirectoryInspection_ListServices",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/ListServicesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "DirectoryInspection"
+        ]
+      }
+    },
+    "/stats": {
+      "get": {
+        "operationId": "DirectoryInspection_ListInOutwayStatistics",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ListInOutwayStatisticsResponse"
             }
           },
           "default": {
@@ -95,6 +115,40 @@ const (
         "DOWN"
       ],
       "default": "UNKNOWN"
+    },
+    "ListInOutwayStatisticsResponse": {
+      "type": "object",
+      "properties": {
+        "versions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListInOutwayStatisticsResponseStatistics"
+          }
+        }
+      }
+    },
+    "ListInOutwayStatisticsResponseStatistics": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/ListInOutwayStatisticsResponseStatisticsType"
+        },
+        "version": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "ListInOutwayStatisticsResponseStatisticsType": {
+      "type": "string",
+      "enum": [
+        "INWAY",
+        "OUTWAY"
+      ],
+      "default": "INWAY"
     },
     "ListOrganizationsResponse": {
       "type": "object",

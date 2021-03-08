@@ -26,6 +26,7 @@ type PostgreSQLDirectoryDatabase struct {
 	registerOutwayStatement                 *sqlx.NamedStmt
 	selectOrganizationsStatement            *sqlx.Stmt
 	selectOrganizationInwayAddressStatement *sqlx.NamedStmt
+	selectVersionStatisticsStatement        *sqlx.Stmt
 }
 
 // NewPostgreSQLDirectoryDatabase constructs a new PostgreSQLDirectoryDatabase
@@ -68,6 +69,11 @@ func NewPostgreSQLDirectoryDatabase(dsn string, p *process.Process, logger *zap.
 		return nil, fmt.Errorf("failed to create select organization inway prepared statement: %s", err)
 	}
 
+	selectVersionStatisticsStatement, err := prepareSelectVersionStatisticsStatement(db)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create select version statistics prepared statement: %s", err)
+	}
+
 	return &PostgreSQLDirectoryDatabase{
 		logger:                                  logger,
 		db:                                      db,
@@ -75,6 +81,7 @@ func NewPostgreSQLDirectoryDatabase(dsn string, p *process.Process, logger *zap.
 		registerOutwayStatement:                 registerOutwayStatement,
 		selectOrganizationsStatement:            selectOrganizationsStatement,
 		selectOrganizationInwayAddressStatement: selectOrganizationInwayAddressStatement,
+		selectVersionStatisticsStatement:        selectVersionStatisticsStatement,
 	}, nil
 }
 
@@ -139,4 +146,30 @@ func prepareSelectOrganizationsStatement(db *sqlx.DB) (*sqlx.Stmt, error) {
 	}
 
 	return listOrganizationsStatement, nil
+}
+
+func prepareSelectVersionStatisticsStatement(db *sqlx.DB) (*sqlx.Stmt, error) {
+	// All the outways announcements for the last day (24 hours) are fetched and counted per version,
+	// the inways are updated per organization so they have no time constraint.
+	selectVersionStatisticsStatement, err := db.Preparex(`
+		SELECT 'outway' AS type
+		,      version
+		,      COUNT(*) AS amount
+		FROM   directory.outways
+		WHERE  announced > now() - interval '1 days'
+		GROUP BY version
+		UNION
+		SELECT 'inway' AS type
+		,      version
+		,      COUNT(*) AS amount
+		FROM   directory.inways
+		GROUP BY version
+		ORDER BY type, version DESC
+	`)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return selectVersionStatisticsStatement, nil
 }

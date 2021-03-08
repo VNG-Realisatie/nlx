@@ -93,3 +93,18 @@ func (mr *MockDirectoryDatabaseMockRecorder) GetOrganizationInwayAddress(ctx, or
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationInwayAddress", reflect.TypeOf((*MockDirectoryDatabase)(nil).GetOrganizationInwayAddress), ctx, organizationName)
 }
+
+// ListVersionStatistics mocks base method
+func (m *MockDirectoryDatabase) ListVersionStatistics(ctx context.Context) ([]*database.VersionStatistics, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListVersionStatistics", ctx)
+	ret0, _ := ret[0].([]*database.VersionStatistics)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListVersionStatistics indicates an expected call of ListVersionStatistics
+func (mr *MockDirectoryDatabaseMockRecorder) ListVersionStatistics(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListVersionStatistics", reflect.TypeOf((*MockDirectoryDatabase)(nil).ListVersionStatistics), ctx)
+}

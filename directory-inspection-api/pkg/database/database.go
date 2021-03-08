@@ -15,4 +15,5 @@ type DirectoryDatabase interface {
 	RegisterOutwayVersion(ctx context.Context, version nlxversion.Version) error
 	ListOrganizations(ctx context.Context) ([]*Organization, error)
 	GetOrganizationInwayAddress(ctx context.Context, organizationName string) (string, error)
+	ListVersionStatistics(ctx context.Context) ([]*VersionStatistics, error)
 }

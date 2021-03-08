@@ -7,16 +7,20 @@ option go_package = ".;inspectionapi";
 
 // The DirectoryInspection service definition.
 service DirectoryInspection {
-	// ListServices lists all services and their gateways.
+
 	rpc ListServices (google.protobuf.Empty) returns (ListServicesResponse) {
 		option (google.api.http).get = "/api/directory/list-services";
 	}
-	// ListOrganizations lists all organizations and their details.
+
 	rpc ListOrganizations (google.protobuf.Empty) returns (ListOrganizationsResponse) {
 		option (google.api.http).get = "/api/directory/list-organizations";
 	}
 
 	rpc GetOrganizationInway (GetOrganizationInwayRequest) returns (GetOrganizationInwayResponse) {}
+
+	rpc ListInOutwayStatistics (google.protobuf.Empty) returns (ListInOutwayStatisticsResponse) {
+		option (google.api.http).get = "/stats";
+	}
 }
 
 message Inway {
@@ -64,4 +68,19 @@ message GetOrganizationInwayRequest {
 
 message GetOrganizationInwayResponse {
 	string address = 1;
+}
+
+message ListInOutwayStatisticsResponse {
+	message Statistics {
+		enum Type {
+			INWAY = 0;
+			OUTWAY = 1;
+		}
+
+		Type type = 1;
+		string version = 2;
+		uint32 amount = 3;
+	}
+
+	repeated Statistics versions = 2;
 }

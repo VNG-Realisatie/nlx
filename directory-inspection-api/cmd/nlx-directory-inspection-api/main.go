@@ -26,7 +26,6 @@ import (
 	"go.nlx.io/nlx/directory-inspection-api/http"
 	"go.nlx.io/nlx/directory-inspection-api/pkg/database"
 	"go.nlx.io/nlx/directory-inspection-api/pkg/inspectionservice"
-	"go.nlx.io/nlx/directory-inspection-api/statsservice"
 )
 
 var options struct {
@@ -109,14 +108,9 @@ func main() {
 
 	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
 
-	statsService, err := statsservice.New(logger, db)
-	if err != nil {
-		logger.Fatal("failed to create new stats service", zap.Error(err))
-	}
-
 	httpServer := http.NewServer(db, certificate, logger)
 
-	runServer(mainProcess, logger, options.ListenAddress, options.ListenAddressPlain, certificate, directoryService, statsService, httpServer)
+	runServer(mainProcess, logger, options.ListenAddress, options.ListenAddressPlain, certificate, directoryService, httpServer)
 }
 
 func getOrganisationNameFromRequest(ctx context.Context) (string, error) {
