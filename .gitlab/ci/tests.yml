@@ -51,34 +51,6 @@ Go tests:
     - docker
     - linux
 
-Generate gRPC stubs for directory-inspection-api:
-  stage: Tests
-  image: ${CI_DEPENDENCY_PROXY_GROUP_URL}/golang:1.15.5
-  script:
-    # protoc plugins are included in our Golang dependencies
-    - /usr/local/go/bin/go mod download
-    - |
-      go install \
-          github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway \
-          github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2 \
-          google.golang.org/protobuf/cmd/protoc-gen-go \
-          google.golang.org/grpc/cmd/protoc-gen-go-grpc
-    # install buf
-    - |
-      curl -sSL \
-      "https://github.com/bufbuild/buf/releases/download/v0.38.0/buf-Linux-x86_64" \
-      -o "/usr/local/bin/buf"
-    - chmod +x "/usr/local/bin/buf"
-    # inspectionapi
-    - (cd directory-inspection-api/inspectionapi && make clean && make)
-    # stats
-    - (cd directory-inspection-api/stats && make clean && make)
-  rules:
-    - if: '$CI_COMMIT_BRANCH && $CI_PROJECT_PATH == "commonground/nlx/nlx"' # do not run for tags
-  tags:
-    - docker
-    - linux
-
 Go linter:
   stage: Tests
   image: ${CI_DEPENDENCY_PROXY_GROUP_URL}/golangci/golangci-lint:v1.33.0-alpine
