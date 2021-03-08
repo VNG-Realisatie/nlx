@@ -25,11 +25,10 @@ deps:
         mv googleapis-master /protobuf/googleapis && \
         rm master.zip
 
-    RUN go install \
-        github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway \
-        github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2 \
-        google.golang.org/protobuf/cmd/protoc-gen-go \
-        google.golang.org/grpc/cmd/protoc-gen-go-grpc
+    RUN go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@v2.3.0 && \
+        go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@v2.3.0 && \
+        go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.25.0 && \
+        go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.1.0
 
     SAVE IMAGE --cache-hint
 
@@ -43,8 +42,8 @@ directory-inspection-api:
             -I. \
             -I/protobuf/include \
             -I/protobuf/googleapis \
-            --go_out=/dist --go_opt paths=source_relative \
-            --go-grpc_out=/dist --go-grpc_opt paths=source_relative \
+            --go_out=/dist --go_opt=paths=source_relative \
+            --go-grpc_out=/dist --go-grpc_opt=paths=source_relative \
             --grpc-gateway_out=/dist \
             --openapiv2_out=/dist \
             ./inspectionapi.proto
@@ -68,8 +67,8 @@ directory-registration-api:
             -I. \
             -I/protobuf/include \
             -I/protobuf/googleapis \
-            --go_out=/dist --go_opt paths=source_relative \
-            --go-grpc_out=/dist --go-grpc_opt paths=source_relative \
+            --go_out=/dist --go_opt=paths=source_relative \
+            --go-grpc_out=/dist --go-grpc_opt=paths=source_relative \
             --grpc-gateway_out=/dist \
             --openapiv2_out=/dist \
             ./registrationapi.proto
@@ -94,9 +93,9 @@ management-api:
             -I. \
             -I/protobuf/include \
             -I/protobuf/googleapis \
-            --go_out=/dist --go_opt paths=source_relative \
-            --go-grpc_out=/dist --go-grpc_opt paths=source_relative \
-            --grpc-gateway_out=/dist \
+            --go_out=/dist --go_opt=paths=source_relative \
+            --go-grpc_out=/dist --go-grpc_opt=paths=source_relative \
+            --grpc-gateway_out=/dist --grpc-gateway_opt=paths=source_relative \
             --openapiv2_out=/dist \
             ./management.proto && \
         cd external && \
@@ -105,9 +104,9 @@ management-api:
             -I.. \
             -I/protobuf/include \
             -I/protobuf/googleapis \
-            --go_out=/dist/external --go_opt paths=source_relative \
-            --go-grpc_out=/dist/external --go-grpc_opt paths=source_relative \
-            --grpc-gateway_out=/dist/external \
+            --go_out=/dist/external --go_opt=paths=source_relative \
+            --go-grpc_out=/dist/external --go-grpc_opt=paths=source_relative \
+            --grpc-gateway_out=/dist/external --grpc-gateway_opt=paths=source_relative \
             --openapiv2_out=/dist/external \
             ./external.proto
 

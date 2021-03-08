@@ -17,6 +17,7 @@ var _ inspectionapi.DirectoryInspectionServer = &InspectionService{}
 
 // InspectionService handles all requests for a directory inspection api
 type InspectionService struct {
+	inspectionapi.UnimplementedDirectoryInspectionServer
 	logger                         *zap.Logger
 	db                             database.DirectoryDatabase
 	getOrganisationNameFromRequest func(ctx context.Context) (string, error)

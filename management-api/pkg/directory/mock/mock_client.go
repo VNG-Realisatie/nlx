@@ -6,13 +6,12 @@ package mock_directory
 
 import (
 	context "context"
-	reflect "reflect"
-
 	gomock "github.com/golang/mock/gomock"
 	inspectionapi "go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 	registrationapi "go.nlx.io/nlx/directory-registration-api/registrationapi"
 	grpc "google.golang.org/grpc"
-	types "google.golang.org/protobuf/types/known/emptypb"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
+	reflect "reflect"
 )
 
 // MockClient is a mock of Client interface

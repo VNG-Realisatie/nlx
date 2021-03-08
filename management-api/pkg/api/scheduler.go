@@ -18,7 +18,6 @@ import (
 	"golang.org/x/sync/semaphore"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/common/diagnostics"
 	common_tls "go.nlx.io/nlx/common/tls"
@@ -260,13 +259,13 @@ func (scheduler *accessRequestScheduler) parseAccessProof(accessProof *api.Acces
 	if accessProof.CreatedAt != nil {
 		var err error
 
-		createdAt, err = types.TimestampFromProto(accessProof.CreatedAt)
+		createdAt, err = ptypes.TimestampFromProto(accessProof.CreatedAt)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	revokedAt, err := types.TimestampFromProto(accessProof.RevokedAt)
+	revokedAt, err := ptypes.TimestampFromProto(accessProof.RevokedAt)
 	if err != nil {
 		revokedAt = time.Time{}
 	}

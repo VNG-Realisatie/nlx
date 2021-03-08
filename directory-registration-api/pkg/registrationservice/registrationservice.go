@@ -18,6 +18,7 @@ var _ registrationapi.DirectoryRegistrationServer = &DirectoryRegistrationServic
 
 // InspectionService handles all requests for a directory inspection api
 type DirectoryRegistrationService struct {
+	registrationapi.UnimplementedDirectoryRegistrationServer
 	logger                         *zap.Logger
 	db                             database.DirectoryDatabase
 	httpClient                     *http.Client

@@ -4,7 +4,7 @@ package nlx.management.external;
 
 import "management.proto";
 
-option go_package = "./external;external";
+option go_package = "go.nlx.io/nlx/management-api/api/external";
 
 service AccessRequestService {
   rpc RequestAccess (RequestAccessRequest) returns (RequestAccessResponse);

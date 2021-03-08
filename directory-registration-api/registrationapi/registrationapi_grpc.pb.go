@@ -4,7 +4,6 @@ package registrationapi
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -90,15 +89,12 @@ type UnimplementedDirectoryRegistrationServer struct {
 func (UnimplementedDirectoryRegistrationServer) RegisterInway(context.Context, *RegisterInwayRequest) (*RegisterInwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterInway not implemented")
 }
-
 func (UnimplementedDirectoryRegistrationServer) SetInsightConfiguration(context.Context, *SetInsightConfigurationRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetInsightConfiguration not implemented")
 }
-
 func (UnimplementedDirectoryRegistrationServer) SetOrganizationInway(context.Context, *SetOrganizationInwayRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetOrganizationInway not implemented")
 }
-
 func (UnimplementedDirectoryRegistrationServer) ClearOrganizationInway(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ClearOrganizationInway not implemented")
 }

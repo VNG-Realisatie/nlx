@@ -3,8 +3,8 @@
 package external
 
 import (
-	_ "."
 	context "context"
+	api "go.nlx.io/nlx/management-api/api"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -21,7 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 type AccessRequestServiceClient interface {
 	RequestAccess(ctx context.Context, in *RequestAccessRequest, opts ...grpc.CallOption) (*RequestAccessResponse, error)
 	GetAccessRequestState(ctx context.Context, in *GetAccessRequestStateRequest, opts ...grpc.CallOption) (*GetAccessRequestStateResponse, error)
-	GetAccessProof(ctx context.Context, in *GetAccessProofRequest, opts ...grpc.CallOption) (*_.AccessProof, error)
+	GetAccessProof(ctx context.Context, in *GetAccessProofRequest, opts ...grpc.CallOption) (*api.AccessProof, error)
 }
 
 type accessRequestServiceClient struct {
@@ -50,8 +50,8 @@ func (c *accessRequestServiceClient) GetAccessRequestState(ctx context.Context, 
 	return out, nil
 }
 
-func (c *accessRequestServiceClient) GetAccessProof(ctx context.Context, in *GetAccessProofRequest, opts ...grpc.CallOption) (*_.AccessProof, error) {
-	out := new(_.AccessProof)
+func (c *accessRequestServiceClient) GetAccessProof(ctx context.Context, in *GetAccessProofRequest, opts ...grpc.CallOption) (*api.AccessProof, error) {
+	out := new(api.AccessProof)
 	err := c.cc.Invoke(ctx, "/nlx.management.external.AccessRequestService/GetAccessProof", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -65,7 +65,7 @@ func (c *accessRequestServiceClient) GetAccessProof(ctx context.Context, in *Get
 type AccessRequestServiceServer interface {
 	RequestAccess(context.Context, *RequestAccessRequest) (*RequestAccessResponse, error)
 	GetAccessRequestState(context.Context, *GetAccessRequestStateRequest) (*GetAccessRequestStateResponse, error)
-	GetAccessProof(context.Context, *GetAccessProofRequest) (*_.AccessProof, error)
+	GetAccessProof(context.Context, *GetAccessProofRequest) (*api.AccessProof, error)
 	mustEmbedUnimplementedAccessRequestServiceServer()
 }
 
@@ -79,7 +79,7 @@ func (UnimplementedAccessRequestServiceServer) RequestAccess(context.Context, *R
 func (UnimplementedAccessRequestServiceServer) GetAccessRequestState(context.Context, *GetAccessRequestStateRequest) (*GetAccessRequestStateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAccessRequestState not implemented")
 }
-func (UnimplementedAccessRequestServiceServer) GetAccessProof(context.Context, *GetAccessProofRequest) (*_.AccessProof, error) {
+func (UnimplementedAccessRequestServiceServer) GetAccessProof(context.Context, *GetAccessProofRequest) (*api.AccessProof, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAccessProof not implemented")
 }
 func (UnimplementedAccessRequestServiceServer) mustEmbedUnimplementedAccessRequestServiceServer() {}

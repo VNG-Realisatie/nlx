@@ -6,8 +6,8 @@ import (
 	"log"
 	"time"
 
+	"github.com/golang/protobuf/ptypes"
 	"github.com/spf13/cobra"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/management-api/api"
 )

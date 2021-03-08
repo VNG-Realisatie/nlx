@@ -4,7 +4,6 @@ package inspectionapi
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -81,11 +80,9 @@ type UnimplementedDirectoryInspectionServer struct {
 func (UnimplementedDirectoryInspectionServer) ListServices(context.Context, *emptypb.Empty) (*ListServicesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListServices not implemented")
 }
-
 func (UnimplementedDirectoryInspectionServer) ListOrganizations(context.Context, *emptypb.Empty) (*ListOrganizationsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListOrganizations not implemented")
 }
-
 func (UnimplementedDirectoryInspectionServer) GetOrganizationInway(context.Context, *GetOrganizationInwayRequest) (*GetOrganizationInwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrganizationInway not implemented")
 }

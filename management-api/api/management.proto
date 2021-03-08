@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package nlx.management;
 
-option go_package = ".;api";
+option go_package = "go.nlx.io/nlx/management-api/api";
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
