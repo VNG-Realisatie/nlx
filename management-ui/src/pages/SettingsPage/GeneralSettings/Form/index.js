@@ -6,7 +6,13 @@ import { func, shape, string } from 'prop-types'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { useTranslation } from 'react-i18next'
-import { Button, Fieldset, Legend, Select } from '@commonground/design-system'
+import {
+  Button,
+  Fieldset,
+  Legend,
+  Select,
+  FieldLabel,
+} from '@commonground/design-system'
 import { observer } from 'mobx-react'
 import FormikFocusError from '../../../../components/FormikFocusError'
 import { useConfirmationModal } from '../../../../components/ConfirmationModal'
@@ -79,20 +85,18 @@ const Form = ({ initialValues, onSubmitHandler, ...props }) => {
                   {t('There are no inways available')}
                 </InwaysEmptyMessage>
               ) : (
-                <>
-                  <Select
-                    id="organizationInway"
-                    name="organizationInway"
-                    options={selectInwayOptions}
-                  >
-                    {t('Organization inway')}
-                  </Select>
-                  <small>
-                    {t(
+                <Select
+                  id="organizationInway"
+                  name="organizationInway"
+                  options={selectInwayOptions}
+                >
+                  <FieldLabel
+                    label={t('Organization inway')}
+                    small={t(
                       'This inway is used to be able to retrieve & confirm access requests from other organizations.',
                     )}
-                  </small>
-                </>
+                  />
+                </Select>
               )}
             </Fieldset>
 
