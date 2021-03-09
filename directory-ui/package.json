@@ -5,7 +5,7 @@
   "dependencies": {
     "copy-text-to-clipboard": "2.2.0",
     "core-js": "3.8.1",
-    "debounce": "1.2.0",
+    "debounce": "1.2.1",
     "mobx": "6.0.4",
     "react": "17.0.1",
     "react-app-polyfill": "2.0.0",
