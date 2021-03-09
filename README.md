@@ -12,6 +12,11 @@ Please find the latest documentation for using NLX on [docs.nlx.io](https://docs
 
 Read more on how to ask questions, file bugs and contribute code and documentation in [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
+## Compiling gRPC proto files
+
+You will need to install [Earthly](https://earthly.dev/get-earthly) to (re)compile the protobuf files for all services.
+After installing Earthly you can run `earthly +proto` to compile everything.
+
 ## Building and running an NLX network locally
 
 The NLX project consists of multiple components that together make up the entire NLX platform. Some components run as centralized NLX services, others run on-premise at organizations. All components are maintained in a single repository. This means that a developer has all the tools and code to build and test the complete NLX platform in a single repository. It simplifies version and dependency management and allows changes that affect multiple components to be combined in a single feature branch and merge-request.
