@@ -9,9 +9,6 @@ replace golang.org/x/text => golang.org/x/text v0.3.5
 // Override the gopkg.in/yaml.v2 dependency. Versions before v2.2.3 are vulnerable to a Billion Laughs Attack.
 replace gopkg.in/yaml.v2 => gopkg.in/yaml.v2 v2.4.0
 
-// Override the google.golang.org/grpc dependency. One of the package has `@latest` which doesn't work.
-replace google.golang.org/grpc => google.golang.org/grpc v1.36.0
-
 require (
 	github.com/blang/semver v3.5.1+incompatible // indirect
 	github.com/bwesterb/go-atum v1.0.3 // indirect
