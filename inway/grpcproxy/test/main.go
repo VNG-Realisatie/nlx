@@ -1,7 +1,7 @@
 package test
 
-import grpc "google.golang.org/grpc"
+import "google.golang.org/grpc"
 
 func GetTestServiceDesc() *grpc.ServiceDesc {
-	return &_TestService_serviceDesc
+	return &TestService_ServiceDesc
 }

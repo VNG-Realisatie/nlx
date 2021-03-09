@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package grpcproxy.test;
 
-option go_package = "test";
+option go_package = ".;test";
 
 service TestService {
   rpc Test (TestRequest) returns (TestResponse) {}

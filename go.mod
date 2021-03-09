@@ -23,7 +23,6 @@ require (
 	github.com/go-chi/render v1.0.1
 	github.com/go-errors/errors v1.1.1
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
-	github.com/gogo/protobuf v1.3.1
 	github.com/golang-migrate/migrate v3.5.4+incompatible
 	github.com/golang-migrate/migrate/v4 v4.14.1
 	github.com/golang/mock v1.4.4

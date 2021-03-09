@@ -6,6 +6,7 @@ proto:
     BUILD +directory-inspection-api
     BUILD +directory-registration-api
     BUILD +management-api
+    BUILD +inway-test
 
 deps:
     ENV PROTOBUF_VERSION=3.15.5
@@ -112,3 +113,19 @@ management-api:
 
     SAVE ARTIFACT /dist/*.* AS LOCAL ./management-api/api/
     SAVE ARTIFACT /dist/external/*.* AS LOCAL ./management-api/api/external/
+
+inway-test:
+    FROM +deps
+
+    COPY ./inway/grpcproxy/test/*.proto /src
+
+    RUN mkdir -p /dist || true && \
+        protoc \
+            -I. \
+            -I/protobuf/include \
+            -I/protobuf/googleapis \
+            --go_out=/dist --go_opt=paths=source_relative \
+            --go-grpc_out=/dist --go-grpc_opt=paths=source_relative \
+            ./test.proto
+
+    SAVE ARTIFACT /dist/* AS LOCAL ./inway/grpcproxy/test/

@@ -30,6 +30,8 @@ type rpcResponse struct {
 }
 
 type testService struct {
+	test.UnimplementedTestServiceServer
+
 	reqs []*rpcRequest
 	resp *rpcResponse
 }
