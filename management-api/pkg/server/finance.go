@@ -18,16 +18,16 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/txlogdb"
 )
 
-func (service *ManagementService) IsFinanceEnabled(ctx context.Context, request *emptypb.Empty) (*api.IsFinanceEnabledResponse, error) {
+func (s *ManagementService) IsFinanceEnabled(ctx context.Context, request *emptypb.Empty) (*api.IsFinanceEnabledResponse, error) {
 	return &api.IsFinanceEnabledResponse{
-		Enabled: service.txlogDatabase != nil,
+		Enabled: s.txlogDatabase != nil,
 	}, nil
 }
 
-func (service *ManagementService) DownloadFinanceExport(ctx context.Context, request *emptypb.Empty) (*api.DownloadFinanceExportResponse, error) {
-	services, err := service.configDatabase.ListServices(ctx)
+func (s *ManagementService) DownloadFinanceExport(ctx context.Context, request *emptypb.Empty) (*api.DownloadFinanceExportResponse, error) {
+	services, err := s.configDatabase.ListServices(ctx)
 	if err != nil {
-		service.logger.Error("failed to list services", zap.Error(err))
+		s.logger.Error("failed to list services", zap.Error(err))
 
 		return nil, status.Error(codes.Internal, "database error")
 	}
@@ -40,16 +40,16 @@ func (service *ManagementService) DownloadFinanceExport(ctx context.Context, req
 
 	records := []txlogdb.Record{}
 
-	if service.txlogDatabase != nil {
-		records, err = service.txlogDatabase.FilterRecords(
+	if s.txlogDatabase != nil {
+		records, err = s.txlogDatabase.FilterRecords(
 			ctx,
 			&txlogdb.Filters{
-				Destination: service.orgCert.Certificate().Subject.Organization[0],
+				Destination: s.orgCert.Certificate().Subject.Organization[0],
 				Direction:   transactionlog.DirectionIn,
 			},
 		)
 		if err != nil {
-			service.logger.Error("failed to filter records", zap.Error(err))
+			s.logger.Error("failed to filter records", zap.Error(err))
 
 			return nil, status.Error(codes.Internal, "database error")
 		}
@@ -75,14 +75,14 @@ func (service *ManagementService) DownloadFinanceExport(ctx context.Context, req
 			MonthlyCosts:     svc.MonthlyCosts,
 			TransactionCosts: svc.RequestCosts * record.RequestCount,
 		}); err != nil {
-			service.logger.Error("failed to export CSV", zap.Error(err))
+			s.logger.Error("failed to export CSV", zap.Error(err))
 
 			return nil, status.Error(codes.Internal, "write error")
 		}
 	}
 
 	if err := exporter.Close(); err != nil {
-		service.logger.Error("failed to export CSV", zap.Error(err))
+		s.logger.Error("failed to export CSV", zap.Error(err))
 
 		return nil, status.Error(codes.Internal, "write error")
 	}

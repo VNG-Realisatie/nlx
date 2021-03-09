@@ -4,9 +4,8 @@
 package server_test
 
 import (
-	context "context"
+	"context"
 	"errors"
-	"google.golang.org/protobuf/types/known/timestamppb"
 	"strconv"
 	"testing"
 	"time"
@@ -19,6 +18,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 	"go.nlx.io/nlx/management-api/api"

@@ -8,12 +8,12 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"github.com/golang/protobuf/ptypes"
 	"net"
 	"strconv"
 	"sync"
 	"time"
 
+	"github.com/golang/protobuf/ptypes"
 	grpc_retry "github.com/grpc-ecosystem/go-grpc-middleware/retry"
 	"go.uber.org/zap"
 	"golang.org/x/sync/semaphore"

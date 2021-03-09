@@ -6,7 +6,6 @@ package server_test
 import (
 	"context"
 	"errors"
-	"google.golang.org/protobuf/types/known/timestamppb"
 	"testing"
 	"time"
 
@@ -15,6 +14,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/management-api/api"
 	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"

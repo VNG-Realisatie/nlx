@@ -42,11 +42,9 @@ func convertModelToResponse(model []*database.VersionStatistics) *inspectionapi.
 			Version: statistics.Version,
 			Amount:  statistics.Amount,
 		})
-
 	}
 
 	return result
-
 }
 
 func modelTypeToResponseType(statisticsType database.VersionStatisticsType) (inspectionapi.ListInOutwayStatisticsResponse_Statistics_Type, error) {
