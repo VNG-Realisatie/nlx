@@ -21,7 +21,7 @@ service DirectoryInspection {
 	rpc GetOrganizationInway (GetOrganizationInwayRequest) returns (GetOrganizationInwayResponse) {}
 
 	rpc ListInOutwayStatistics (google.protobuf.Empty) returns (ListInOutwayStatisticsResponse) {
-		option (google.api.http).get = "/stats";
+		option (google.api.http).get = "/api/stats";
 	}
 }
 

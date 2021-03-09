@@ -64,7 +64,7 @@ const (
         ]
       }
     },
-    "/stats": {
+    "/api/stats": {
       "get": {
         "operationId": "DirectoryInspection_ListInOutwayStatistics",
         "responses": {

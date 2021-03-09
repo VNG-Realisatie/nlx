@@ -270,7 +270,7 @@ var (
 
 	pattern_DirectoryInspection_ListOrganizations_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "directory", "list-organizations"}, ""))
 
-	pattern_DirectoryInspection_ListInOutwayStatistics_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"stats"}, ""))
+	pattern_DirectoryInspection_ListInOutwayStatistics_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "stats"}, ""))
 )
 
 var (
