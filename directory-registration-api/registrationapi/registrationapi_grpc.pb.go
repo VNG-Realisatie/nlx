@@ -36,7 +36,7 @@ func NewDirectoryRegistrationClient(cc grpc.ClientConnInterface) DirectoryRegist
 
 func (c *directoryRegistrationClient) RegisterInway(ctx context.Context, in *RegisterInwayRequest, opts ...grpc.CallOption) (*RegisterInwayResponse, error) {
 	out := new(RegisterInwayResponse)
-	err := c.cc.Invoke(ctx, "/DirectoryRegistration/RegisterInway", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/registrationapi.DirectoryRegistration/RegisterInway", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ func (c *directoryRegistrationClient) RegisterInway(ctx context.Context, in *Reg
 
 func (c *directoryRegistrationClient) SetInsightConfiguration(ctx context.Context, in *SetInsightConfigurationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/DirectoryRegistration/SetInsightConfiguration", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/registrationapi.DirectoryRegistration/SetInsightConfiguration", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +54,7 @@ func (c *directoryRegistrationClient) SetInsightConfiguration(ctx context.Contex
 
 func (c *directoryRegistrationClient) SetOrganizationInway(ctx context.Context, in *SetOrganizationInwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/DirectoryRegistration/SetOrganizationInway", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/registrationapi.DirectoryRegistration/SetOrganizationInway", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +63,7 @@ func (c *directoryRegistrationClient) SetOrganizationInway(ctx context.Context, 
 
 func (c *directoryRegistrationClient) ClearOrganizationInway(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/DirectoryRegistration/ClearOrganizationInway", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/registrationapi.DirectoryRegistration/ClearOrganizationInway", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -121,7 +121,7 @@ func _DirectoryRegistration_RegisterInway_Handler(srv interface{}, ctx context.C
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/DirectoryRegistration/RegisterInway",
+		FullMethod: "/registrationapi.DirectoryRegistration/RegisterInway",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DirectoryRegistrationServer).RegisterInway(ctx, req.(*RegisterInwayRequest))
@@ -139,7 +139,7 @@ func _DirectoryRegistration_SetInsightConfiguration_Handler(srv interface{}, ctx
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/DirectoryRegistration/SetInsightConfiguration",
+		FullMethod: "/registrationapi.DirectoryRegistration/SetInsightConfiguration",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DirectoryRegistrationServer).SetInsightConfiguration(ctx, req.(*SetInsightConfigurationRequest))
@@ -157,7 +157,7 @@ func _DirectoryRegistration_SetOrganizationInway_Handler(srv interface{}, ctx co
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/DirectoryRegistration/SetOrganizationInway",
+		FullMethod: "/registrationapi.DirectoryRegistration/SetOrganizationInway",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DirectoryRegistrationServer).SetOrganizationInway(ctx, req.(*SetOrganizationInwayRequest))
@@ -175,7 +175,7 @@ func _DirectoryRegistration_ClearOrganizationInway_Handler(srv interface{}, ctx 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/DirectoryRegistration/ClearOrganizationInway",
+		FullMethod: "/registrationapi.DirectoryRegistration/ClearOrganizationInway",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DirectoryRegistrationServer).ClearOrganizationInway(ctx, req.(*emptypb.Empty))
@@ -187,7 +187,7 @@ func _DirectoryRegistration_ClearOrganizationInway_Handler(srv interface{}, ctx 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var DirectoryRegistration_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "DirectoryRegistration",
+	ServiceName: "registrationapi.DirectoryRegistration",
 	HandlerType: (*DirectoryRegistrationServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

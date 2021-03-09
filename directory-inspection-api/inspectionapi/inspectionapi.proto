@@ -3,6 +3,8 @@ syntax = "proto3";
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 
+package inspectionapi;
+
 option go_package = ".;inspectionapi";
 
 // The DirectoryInspection service definition.
@@ -44,9 +46,9 @@ message ListServicesResponse {
 		string public_support_contact = 7;
 		repeated bool healthy_states = 8;
 		repeated Inway inways = 9;
-		int32 oneTimeCosts = 10;
-		int32 monthlyCosts = 11;
-		int32 requestCosts = 12;
+		int32 one_time_costs = 10;
+		int32 monthly_costs = 11;
+		int32 request_costs = 12;
 	}
 
 	repeated Service services = 2;

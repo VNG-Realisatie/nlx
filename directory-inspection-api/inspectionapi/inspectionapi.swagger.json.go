@@ -27,7 +27,7 @@ const (
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/ListOrganizationsResponse"
+              "$ref": "#/definitions/inspectionapiListOrganizationsResponse"
             }
           },
           "default": {
@@ -49,7 +49,7 @@ const (
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/ListServicesResponse"
+              "$ref": "#/definitions/inspectionapiListServicesResponse"
             }
           },
           "default": {
@@ -71,7 +71,7 @@ const (
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/ListInOutwayStatisticsResponse"
+              "$ref": "#/definitions/inspectionapiListInOutwayStatisticsResponse"
             }
           },
           "default": {
@@ -88,25 +88,6 @@ const (
     }
   },
   "definitions": {
-    "GetOrganizationInwayResponse": {
-      "type": "object",
-      "properties": {
-        "address": {
-          "type": "string"
-        }
-      }
-    },
-    "Inway": {
-      "type": "object",
-      "properties": {
-        "address": {
-          "type": "string"
-        },
-        "state": {
-          "$ref": "#/definitions/InwayState"
-        }
-      }
-    },
     "InwayState": {
       "type": "string",
       "enum": [
@@ -115,17 +96,6 @@ const (
         "DOWN"
       ],
       "default": "UNKNOWN"
-    },
-    "ListInOutwayStatisticsResponse": {
-      "type": "object",
-      "properties": {
-        "versions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ListInOutwayStatisticsResponseStatistics"
-          }
-        }
-      }
     },
     "ListInOutwayStatisticsResponseStatistics": {
       "type": "object",
@@ -150,7 +120,104 @@ const (
       ],
       "default": "INWAY"
     },
-    "ListOrganizationsResponse": {
+    "ListOrganizationsResponseOrganization": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "insight_irma_endpoint": {
+          "type": "string"
+        },
+        "insight_log_endpoint": {
+          "type": "string"
+        }
+      }
+    },
+    "ListServicesResponseService": {
+      "type": "object",
+      "properties": {
+        "organization_name": {
+          "type": "string"
+        },
+        "service_name": {
+          "type": "string"
+        },
+        "inway_addresses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "documentation_url": {
+          "type": "string"
+        },
+        "api_specification_type": {
+          "type": "string"
+        },
+        "internal": {
+          "type": "boolean"
+        },
+        "public_support_contact": {
+          "type": "string"
+        },
+        "healthy_states": {
+          "type": "array",
+          "items": {
+            "type": "boolean"
+          }
+        },
+        "inways": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/inspectionapiInway"
+          }
+        },
+        "one_time_costs": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "monthly_costs": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "request_costs": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "inspectionapiGetOrganizationInwayResponse": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        }
+      }
+    },
+    "inspectionapiInway": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/definitions/InwayState"
+        }
+      }
+    },
+    "inspectionapiListInOutwayStatisticsResponse": {
+      "type": "object",
+      "properties": {
+        "versions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListInOutwayStatisticsResponseStatistics"
+          }
+        }
+      }
+    },
+    "inspectionapiListOrganizationsResponse": {
       "type": "object",
       "properties": {
         "organizations": {
@@ -161,21 +228,7 @@ const (
         }
       }
     },
-    "ListOrganizationsResponseOrganization": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "insightIrmaEndpoint": {
-          "type": "string"
-        },
-        "insightLogEndpoint": {
-          "type": "string"
-        }
-      }
-    },
-    "ListServicesResponse": {
+    "inspectionapiListServicesResponse": {
       "type": "object",
       "properties": {
         "services": {
@@ -186,63 +239,10 @@ const (
         }
       }
     },
-    "ListServicesResponseService": {
-      "type": "object",
-      "properties": {
-        "organizationName": {
-          "type": "string"
-        },
-        "serviceName": {
-          "type": "string"
-        },
-        "inwayAddresses": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "documentationUrl": {
-          "type": "string"
-        },
-        "apiSpecificationType": {
-          "type": "string"
-        },
-        "internal": {
-          "type": "boolean"
-        },
-        "publicSupportContact": {
-          "type": "string"
-        },
-        "healthyStates": {
-          "type": "array",
-          "items": {
-            "type": "boolean"
-          }
-        },
-        "inways": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Inway"
-          }
-        },
-        "oneTimeCosts": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "monthlyCosts": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "requestCosts": {
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
     "protobufAny": {
       "type": "object",
       "properties": {
-        "typeUrl": {
+        "type_url": {
           "type": "string"
         },
         "value": {

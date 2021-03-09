@@ -61,14 +61,6 @@
         }
       }
     },
-    "RegisterInwayResponse": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "type": "string"
-        }
-      }
-    },
     "protobufAny": {
       "type": "object",
       "properties": {
@@ -78,6 +70,14 @@
         "value": {
           "type": "string",
           "format": "byte"
+        }
+      }
+    },
+    "registrationapiRegisterInwayResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
         }
       }
     },

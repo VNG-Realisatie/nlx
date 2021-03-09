@@ -35,7 +35,7 @@ func NewDirectoryInspectionClient(cc grpc.ClientConnInterface) DirectoryInspecti
 
 func (c *directoryInspectionClient) ListServices(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListServicesResponse, error) {
 	out := new(ListServicesResponse)
-	err := c.cc.Invoke(ctx, "/DirectoryInspection/ListServices", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/inspectionapi.DirectoryInspection/ListServices", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +44,7 @@ func (c *directoryInspectionClient) ListServices(ctx context.Context, in *emptyp
 
 func (c *directoryInspectionClient) ListOrganizations(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListOrganizationsResponse, error) {
 	out := new(ListOrganizationsResponse)
-	err := c.cc.Invoke(ctx, "/DirectoryInspection/ListOrganizations", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/inspectionapi.DirectoryInspection/ListOrganizations", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +53,7 @@ func (c *directoryInspectionClient) ListOrganizations(ctx context.Context, in *e
 
 func (c *directoryInspectionClient) GetOrganizationInway(ctx context.Context, in *GetOrganizationInwayRequest, opts ...grpc.CallOption) (*GetOrganizationInwayResponse, error) {
 	out := new(GetOrganizationInwayResponse)
-	err := c.cc.Invoke(ctx, "/DirectoryInspection/GetOrganizationInway", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/inspectionapi.DirectoryInspection/GetOrganizationInway", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +62,7 @@ func (c *directoryInspectionClient) GetOrganizationInway(ctx context.Context, in
 
 func (c *directoryInspectionClient) ListInOutwayStatistics(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListInOutwayStatisticsResponse, error) {
 	out := new(ListInOutwayStatisticsResponse)
-	err := c.cc.Invoke(ctx, "/DirectoryInspection/ListInOutwayStatistics", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/inspectionapi.DirectoryInspection/ListInOutwayStatistics", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -119,7 +119,7 @@ func _DirectoryInspection_ListServices_Handler(srv interface{}, ctx context.Cont
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/DirectoryInspection/ListServices",
+		FullMethod: "/inspectionapi.DirectoryInspection/ListServices",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DirectoryInspectionServer).ListServices(ctx, req.(*emptypb.Empty))
@@ -137,7 +137,7 @@ func _DirectoryInspection_ListOrganizations_Handler(srv interface{}, ctx context
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/DirectoryInspection/ListOrganizations",
+		FullMethod: "/inspectionapi.DirectoryInspection/ListOrganizations",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DirectoryInspectionServer).ListOrganizations(ctx, req.(*emptypb.Empty))
@@ -155,7 +155,7 @@ func _DirectoryInspection_GetOrganizationInway_Handler(srv interface{}, ctx cont
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/DirectoryInspection/GetOrganizationInway",
+		FullMethod: "/inspectionapi.DirectoryInspection/GetOrganizationInway",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DirectoryInspectionServer).GetOrganizationInway(ctx, req.(*GetOrganizationInwayRequest))
@@ -173,7 +173,7 @@ func _DirectoryInspection_ListInOutwayStatistics_Handler(srv interface{}, ctx co
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/DirectoryInspection/ListInOutwayStatistics",
+		FullMethod: "/inspectionapi.DirectoryInspection/ListInOutwayStatistics",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DirectoryInspectionServer).ListInOutwayStatistics(ctx, req.(*emptypb.Empty))
@@ -185,7 +185,7 @@ func _DirectoryInspection_ListInOutwayStatistics_Handler(srv interface{}, ctx co
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var DirectoryInspection_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "DirectoryInspection",
+	ServiceName: "inspectionapi.DirectoryInspection",
 	HandlerType: (*DirectoryInspectionServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

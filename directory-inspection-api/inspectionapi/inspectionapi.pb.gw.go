@@ -98,7 +98,7 @@ func RegisterDirectoryInspectionHandlerServer(ctx context.Context, mux *runtime.
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.DirectoryInspection/ListServices")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/inspectionapi.DirectoryInspection/ListServices")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -121,7 +121,7 @@ func RegisterDirectoryInspectionHandlerServer(ctx context.Context, mux *runtime.
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.DirectoryInspection/ListOrganizations")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/inspectionapi.DirectoryInspection/ListOrganizations")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -144,7 +144,7 @@ func RegisterDirectoryInspectionHandlerServer(ctx context.Context, mux *runtime.
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.DirectoryInspection/ListInOutwayStatistics")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/inspectionapi.DirectoryInspection/ListInOutwayStatistics")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -206,7 +206,7 @@ func RegisterDirectoryInspectionHandlerClient(ctx context.Context, mux *runtime.
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/.DirectoryInspection/ListServices")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/inspectionapi.DirectoryInspection/ListServices")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -226,7 +226,7 @@ func RegisterDirectoryInspectionHandlerClient(ctx context.Context, mux *runtime.
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/.DirectoryInspection/ListOrganizations")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/inspectionapi.DirectoryInspection/ListOrganizations")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -246,7 +246,7 @@ func RegisterDirectoryInspectionHandlerClient(ctx context.Context, mux *runtime.
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/.DirectoryInspection/ListInOutwayStatistics")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/inspectionapi.DirectoryInspection/ListInOutwayStatistics")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return

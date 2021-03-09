@@ -45,7 +45,7 @@ directory-inspection-api:
             --go_out=/dist --go_opt=paths=source_relative \
             --go-grpc_out=/dist --go-grpc_opt=paths=source_relative \
             --grpc-gateway_out=/dist \
-            --openapiv2_out=/dist \
+            --openapiv2_out=/dist --openapiv2_opt=json_names_for_fields=false \
             ./inspectionapi.proto
 
     RUN echo "package inspectionapi" > /dist/inspectionapi.swagger.json.go && \

@@ -65,14 +65,6 @@ const (
         }
       }
     },
-    "RegisterInwayResponse": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "type": "string"
-        }
-      }
-    },
     "protobufAny": {
       "type": "object",
       "properties": {
@@ -82,6 +74,14 @@ const (
         "value": {
           "type": "string",
           "format": "byte"
+        }
+      }
+    },
+    "registrationapiRegisterInwayResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
         }
       }
     },

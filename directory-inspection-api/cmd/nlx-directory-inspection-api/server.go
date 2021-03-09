@@ -23,6 +23,7 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/encoding/protojson"
 
 	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
@@ -101,7 +102,19 @@ func runServer(
 		})
 	}
 
-	gatewayMux := runtime.NewServeMux(runtime.WithMetadata(gatewayMetadata))
+	gatewayMux := runtime.NewServeMux(
+		runtime.WithMetadata(gatewayMetadata),
+		// Change the default behavior of marshaling to JSON
+		// Emit empty fields by default
+		runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.HTTPBodyMarshaler{
+			Marshaler: &runtime.JSONPb{
+				MarshalOptions: protojson.MarshalOptions{
+					UseProtoNames: true,
+				},
+				UnmarshalOptions: protojson.UnmarshalOptions{},
+			},
+		}),
+	)
 
 	err := inspectionapi.RegisterDirectoryInspectionHandlerFromEndpoint(
 		context.Background(),
