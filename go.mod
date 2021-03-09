@@ -52,7 +52,7 @@ require (
 	golang.org/x/oauth2 v0.0.0-20210220000619-9bb904979d93
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	golang.org/x/text v0.3.5
-	google.golang.org/genproto v0.0.0-20210303154014-9728d6b83eeb
+	google.golang.org/genproto v0.0.0-20210309190941-1aeedc14537d
 	google.golang.org/grpc v1.36.0
 	google.golang.org/protobuf v1.25.1-0.20201208041424-160c7477e0e8
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
