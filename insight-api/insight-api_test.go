@@ -256,9 +256,7 @@ func TestLogFetcherHandler(t *testing.T) {
 			func() {
 				mockIrmaHandler.EXPECT().VerifyIRMAVerificationResult(expectedJWTBytes, publicKey).Return(nil, &irma.VerificationResultClaims{}, nil)
 			},
-			func() {
-				mockInsightLogFetcher.EXPECT().GetLogRecords(10, 1, expectedDataSubjects, gomock.Any()).Return(nil, fmt.Errorf("error getting log records"))
-			},
+			func() {},
 		},
 	}
 
