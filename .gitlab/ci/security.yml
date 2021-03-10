@@ -33,6 +33,7 @@ container_scanning:
       txlog-db
       review-page
     REPORTS_DIRECTORY: /reports
+    GIT_STRATEGY: clone
   before_script:
     - yum install -y jq
     - export IMAGE_REGISTRY=$CI_REGISTRY_IMAGE
