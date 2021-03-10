@@ -35,28 +35,25 @@ container_scanning:
     REPORTS_DIRECTORY: /reports
   before_script:
     - yum install -y jq
-    - export IMAGE_REGISTRY=$(cat ci_build_image_registry.txt)
-    - export CI_APPLICATION_TAG=$(cat ci_build_image_tag.txt)
+    - export IMAGE_REGISTRY=$CI_REGISTRY_IMAGE
+    - export CI_APPLICATION_TAG=$(git describe --tags)
   script:
     - mkdir ${REPORTS_DIRECTORY}
     - |
-        for IMAGE_SUFFIX in ${IMAGE_SUFFIXES}; do
-          export CI_APPLICATION_REPOSITORY="${IMAGE_REGISTRY}/${IMAGE_REPOSITORY_BASE}/${IMAGE_SUFFIX}"
-          export ANALYZER_ARTIFACT_DIR="${REPORTS_DIRECTORY}/${IMAGE_SUFFIX}"
+      for IMAGE_SUFFIX in ${IMAGE_SUFFIXES}; do
+        export CI_APPLICATION_REPOSITORY="${IMAGE_REGISTRY}/${IMAGE_REPOSITORY_BASE}/${IMAGE_SUFFIX}"
+        export ANALYZER_ARTIFACT_DIR="${REPORTS_DIRECTORY}/${IMAGE_SUFFIX}"
 
-          SECTION_NAME="section_${IMAGE_SUFFIX}"
-          echo -e "start_section:$(date +%s):${SECTION_NAME}\r\e[0KScanning image: ${CI_APPLICATION_REPOSITORY}"
+        SECTION_NAME="section_${IMAGE_SUFFIX}"
+        echo -e "start_section:$(date +%s):${SECTION_NAME}\r\e[0KScanning image: ${CI_APPLICATION_REPOSITORY}"
 
-          mkdir ${ANALYZER_ARTIFACT_DIR}
-          /analyzer run
+        mkdir ${ANALYZER_ARTIFACT_DIR}
+        /analyzer run
 
-          echo -e "section_end:$(date +%s):${SECTION_NAME}\r\e[0K"
-        done
+        echo -e "section_end:$(date +%s):${SECTION_NAME}\r\e[0K"
+      done
     # Merge the per-image reports in to one report
     - jq -s '.[0].version as $version | [.[] | to_entries] | flatten | reduce .[] as $dot ({}; .[$dot.key] += $dot.value) | .version = $version' /reports/*/gl-container-scanning-report.json > gl-container-scanning-report.json
-  dependencies:
-    - Build acceptance
-    - Build review
   rules:
     - if: $CONTAINER_SCANNING_DISABLED
       when: never
