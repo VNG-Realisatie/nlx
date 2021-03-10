@@ -192,6 +192,6 @@
   "You have access": "Je hebt toegang",
   "You have no access": "Je hebt geen toegang",
   "Your access was revoked": "Je toegang is ingetrokken",
-  "Invalid date": "Ongeldige datum",
-  "yyyy-mm-dd": "jjjj-mm-dd"
+  "yyyy-mm-dd": "jjjj-mm-dd",
+  "Invalid date": "Ongeldige datum"
 }
