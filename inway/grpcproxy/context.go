@@ -8,6 +8,7 @@ import "context"
 type streamInfo struct {
 	fullMethod           string
 	organizationName     string
+	publicKeyDER         string
 	publicKeyFingerprint string
 	peerAddr             string
 }

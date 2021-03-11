@@ -50,7 +50,7 @@ func (p *Proxy) proxyStreamToUpstream(serverStream grpc.ServerStream, clientStre
 
 			p.logger.Error("server stream", zap.Error(err))
 
-			return status.Errorf(codes.Internal, "")
+			return err
 		case err := <-clientErrChan:
 			// Our upstream has nothing more to send or returned an error
 			serverStream.SetTrailer(clientStream.Trailer())

@@ -40,6 +40,7 @@ type OutgoingAccessRequest struct {
 	LockID               *uuid.UUID
 	LockExpiresAt        sql.NullTime
 	PublicKeyFingerprint string
+	PublicKeyPEM         string
 	ErrorCode            int
 	ErrorCause           string
 	ErrorStackTrace      pq.StringArray `gorm:"type:text[]"`

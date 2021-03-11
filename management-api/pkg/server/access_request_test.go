@@ -31,6 +31,16 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
+var testPublicKeyPEM = `-----BEGIN RSA PUBLIC KEY-----
+MIIBCgKCAQEArN5xGkM73tJsCpKny59e5lXNRY+eT0sbWyEGsR1qIPRKmLSiRHl3
+xMsovn5mo6jN3eeK/Q4wKd6Ae5XGzP63pTG6U5KVVB74eQxSFfV3UEOrDaJ78X5m
+BZO+Ku21V2QFr44tvMh5IZDX3RbMB/4Kad6sapmSF00HWrqTVMkrEsZ98DTb5nwG
+Lh3kISnct4tLyVSpsl9s1rtkSgGUcs1TIvWxS2D2mOsSL1HRdUNcFQmzchbfG87k
+XPvicoOISAZDJKDqWp3iuH0gJpQ+XMBfmcD90I7Z/cRQjWP3P93B3V06cJkd00cE
+IRcIQqF8N+lE01H88Fi+wePhZRy92NP54wIDAQAB
+-----END RSA PUBLIC KEY-----
+`
+
 func newService(t *testing.T) (s *server.ManagementService, db *mock_database.MockConfigDatabase, auditLogger *mock_auditlog.MockLogger) {
 	logger := zaptest.Logger(t)
 	proc := process.NewProcess(logger)
@@ -92,6 +102,7 @@ func TestCreateAccessRequest(t *testing.T) {
 			&database.OutgoingAccessRequest{
 				OrganizationName:     "test-organization",
 				ServiceName:          "test-service",
+				PublicKeyPEM:         testPublicKeyPEM,
 				PublicKeyFingerprint: "60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=",
 				State:                database.OutgoingAccessRequestCreated,
 			},
@@ -99,6 +110,7 @@ func TestCreateAccessRequest(t *testing.T) {
 				ID:                   1,
 				OrganizationName:     "test-organization",
 				ServiceName:          "test-service",
+				PublicKeyPEM:         testPublicKeyPEM,
 				PublicKeyFingerprint: "60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=",
 				State:                database.OutgoingAccessRequestCreated,
 				CreatedAt:            time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
@@ -131,6 +143,7 @@ func TestCreateAccessRequest(t *testing.T) {
 			&database.OutgoingAccessRequest{
 				OrganizationName:     "test-organization",
 				ServiceName:          "test-service",
+				PublicKeyPEM:         testPublicKeyPEM,
 				PublicKeyFingerprint: "60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=",
 				State:                database.OutgoingAccessRequestCreated,
 			},
@@ -546,6 +559,7 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 func setProxyMetadata(ctx context.Context) context.Context {
 	md := metadata.Pairs(
 		"nlx-organization", "organization-a",
+		"nlx-public-key-der", "ZHVtbXktcHVibGljLWtleQo=",
 		"nlx-public-key-fingerprint", "1655A0AB68576280",
 	)
 

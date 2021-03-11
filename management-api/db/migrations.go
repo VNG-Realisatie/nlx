@@ -9,6 +9,8 @@
 // db/migrations/003_audit_log.up.sql
 // db/migrations/004_finance.down.sql
 // db/migrations/004_finance.up.sql
+// db/migrations/005_public_key.down.sql
+// db/migrations/005_public_key.up.sql
 package db
 
 import (
@@ -245,6 +247,46 @@ func _004_financeUpSql() (*asset, error) {
 	return a, nil
 }
 
+var __005_public_keyDownSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x94\xcc\xd1\x09\xc3\x20\x10\x00\xd0\x7f\xa7\xb8\x09\xba\x80\x5f\x49\x2a\x25\xa0\xb1\x04\xfb\x2d\x56\x0e\x91\xc6\x33\x8d\x27\xb4\xdb\x77\x84\x92\x05\xde\xa8\x6e\xf3\x02\x7c\x04\x6a\x21\x72\xae\x24\x85\x18\xb4\x53\x2b\xb8\x61\xd4\x0a\x68\xfb\xf8\x12\x28\x24\x2c\x48\x7c\x09\x31\x62\x6b\xfe\xc0\x77\xc7\xc6\xcd\x67\x8a\xb5\x64\x4a\x70\x5d\xed\x1d\x26\xab\x1f\x66\x81\xbd\x3f\xb7\x1c\xfd\x0b\xbf\x7e\xc7\x22\xcf\x78\xb5\x73\xaa\xff\x3c\x31\x59\x63\x66\x27\xc5\x2f\x00\x00\xff\xff\xf6\xef\xf9\x22\xbd\x00\x00\x00")
+
+func _005_public_keyDownSqlBytes() ([]byte, error) {
+	return bindataRead(
+		__005_public_keyDownSql,
+		"005_public_key.down.sql",
+	)
+}
+
+func _005_public_keyDownSql() (*asset, error) {
+	bytes, err := _005_public_keyDownSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "005_public_key.down.sql", size: 189, mode: os.FileMode(436), modTime: time.Unix(1615471096, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var __005_public_keyUpSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xa4\xcd\x31\x0a\xc2\x30\x14\x00\xd0\x3d\xa7\xf8\xa3\x2e\xe2\x20\x82\x74\x4a\xdb\xa8\x85\xb4\x85\x92\xba\x86\x18\x3e\x25\xd8\xfc\xd4\x26\x01\xbd\xbd\xe0\x0d\xc4\xf1\x4d\xaf\x14\x97\xa6\x83\xb4\x1a\x8a\xc6\x26\x17\xa8\x60\x8c\x4b\x25\x06\x50\xbc\x94\x02\x68\x7e\x69\x6f\xc8\x4c\xe8\x91\xd2\xce\x58\x8b\x31\xea\x15\x9f\x19\x63\x8a\xda\x91\x0d\xde\xd1\x04\xbc\xae\xa1\xea\xe5\xd8\x76\xb0\xe4\xfb\xec\xac\x7e\xe0\x5b\x2f\xe8\xe1\xc6\x87\xea\xca\x87\xcd\x61\x7f\x3a\x6e\xa1\x1b\xa5\x84\x5a\x9c\xf9\x28\xd5\x17\xc5\x2f\x5d\xc8\x69\x0a\x7f\x76\xac\xea\xdb\xb6\x51\x05\xfb\x04\x00\x00\xff\xff\x59\xbf\x82\x84\xfb\x00\x00\x00")
+
+func _005_public_keyUpSqlBytes() ([]byte, error) {
+	return bindataRead(
+		__005_public_keyUpSql,
+		"005_public_key.up.sql",
+	)
+}
+
+func _005_public_keyUpSql() (*asset, error) {
+	bytes, err := _005_public_keyUpSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "005_public_key.up.sql", size: 251, mode: os.FileMode(436), modTime: time.Unix(1615471084, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -305,6 +347,8 @@ var _bindata = map[string]func() (*asset, error){
 	"003_audit_log.up.sql":        _003_audit_logUpSql,
 	"004_finance.down.sql":        _004_financeDownSql,
 	"004_finance.up.sql":          _004_financeUpSql,
+	"005_public_key.down.sql":     _005_public_keyDownSql,
+	"005_public_key.up.sql":       _005_public_keyUpSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -356,6 +400,8 @@ var _bintree = &bintree{nil, map[string]*bintree{
 	"003_audit_log.up.sql":        &bintree{_003_audit_logUpSql, map[string]*bintree{}},
 	"004_finance.down.sql":        &bintree{_004_financeDownSql, map[string]*bintree{}},
 	"004_finance.up.sql":          &bintree{_004_financeUpSql, map[string]*bintree{}},
+	"005_public_key.down.sql":     &bintree{_005_public_keyDownSql, map[string]*bintree{}},
+	"005_public_key.up.sql":       &bintree{_005_public_keyUpSql, map[string]*bintree{}},
 }}
 
 // RestoreAsset restores an asset under the given directory

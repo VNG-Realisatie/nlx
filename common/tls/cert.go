@@ -3,6 +3,7 @@
 package tls
 
 import (
+	"crypto/rsa"
 	"crypto/sha256"
 	"crypto/tls"
 	"crypto/x509"
@@ -43,6 +44,25 @@ func (c *CertificateBundle) Certificate() *x509.Certificate {
 
 func (c *CertificateBundle) PublicKeyFingerprint() string {
 	return c.publicKeyFingerprint
+}
+
+func (c *CertificateBundle) PublicKeyPEM() (string, error) {
+	publicKey, ok := c.Certificate().PublicKey.(*rsa.PublicKey)
+	if !ok {
+		return "", errors.New("invalid public key")
+	}
+
+	publicKeyDER := x509.MarshalPKCS1PublicKey(publicKey)
+	publicKeyPEM := pem.EncodeToMemory(&pem.Block{
+		Type:  "RSA PUBLIC KEY",
+		Bytes: publicKeyDER,
+	})
+
+	if publicKeyPEM == nil {
+		return "", errors.New("invalid public key")
+	}
+
+	return string(publicKeyPEM), nil
 }
 
 // TLSConfig returns a new tls.Config with the certifcate and root ca

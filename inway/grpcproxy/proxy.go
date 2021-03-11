@@ -5,6 +5,9 @@ package grpcproxy
 
 import (
 	"context"
+	"crypto/rsa"
+	"crypto/x509"
+	"encoding/base64"
 	"fmt"
 	"net"
 
@@ -114,11 +117,24 @@ func (p *Proxy) streamInterceptor(srv interface{}, serverStream grpc.ServerStrea
 		return status.Error(codes.Unauthenticated, "certificate is missing organization")
 	}
 
+	publicKey, ok := peerCert.PublicKey.(*rsa.PublicKey)
+	if !ok {
+		p.logger.Warn("invalid format for public key")
+		return status.Error(codes.Internal, "invalid format for public key")
+	}
+
+	publicKeyDER := x509.MarshalPKCS1PublicKey(publicKey)
+	if publicKeyDER == nil {
+		p.logger.Warn("invalid format for public key")
+		return status.Error(codes.Internal, "invalid format for public key")
+	}
+
 	streamInfo := &streamInfo{
 		fullMethod:           info.FullMethod,
-		organizationName:     peerCert.Subject.Organization[0],
-		publicKeyFingerprint: tls.PublicKeyFingerprint(peerCert),
 		peerAddr:             pr.Addr.String(),
+		organizationName:     peerCert.Subject.Organization[0],
+		publicKeyDER:         base64.StdEncoding.EncodeToString(publicKeyDER),
+		publicKeyFingerprint: tls.PublicKeyFingerprint(peerCert),
 	}
 
 	w := &wrappedServerStream{serverStream, setStreamInfo(ctx, streamInfo)}
@@ -152,6 +168,7 @@ func (p *Proxy) serviceHandler(srv interface{}, serverStream grpc.ServerStream) 
 	clientMD := md.Copy()
 	clientMD.Set("forwarded", forwarded)
 	clientMD.Set("nlx-organization", info.organizationName)
+	clientMD.Set("nlx-public-key-der", info.publicKeyDER)
 	clientMD.Set("nlx-public-key-fingerprint", info.publicKeyFingerprint)
 
 	clientCtx := metadata.NewOutgoingContext(ctx, clientMD)

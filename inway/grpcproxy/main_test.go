@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2020
+// Licensed under the EUPL
+
 package grpcproxy_test
 
 import (
@@ -106,7 +109,12 @@ func newTestClient(t *testing.T, l *bufconn.Listener, cert *tls.CertificateBundl
 
 	ctx := context.Background()
 
-	cc, err := grpc.DialContext(ctx, "inway.test", grpc.WithContextDialer(dialer), grpc.WithTransportCredentials(credentials.NewTLS(cert.TLSConfig())))
+	cc, err := grpc.DialContext(
+		ctx,
+		"inway.test",
+		grpc.WithContextDialer(dialer),
+		grpc.WithTransportCredentials(credentials.NewTLS(cert.TLSConfig())),
+	)
 	assert.NoError(t, err)
 
 	c := &testClient{

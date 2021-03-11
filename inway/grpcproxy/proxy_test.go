@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2020
+// Licensed under the EUPL
+
 package grpcproxy_test
 
 import (
@@ -20,7 +23,10 @@ import (
 	"go.nlx.io/nlx/inway/grpcproxy/test"
 )
 
-var pkiDir = filepath.Join("..", "..", "testing", "pki")
+var (
+	pkiDir           = filepath.Join("..", "..", "testing", "pki")
+	testPublicKeyDER = "MIIBCgKCAQEArN5xGkM73tJsCpKny59e5lXNRY+eT0sbWyEGsR1qIPRKmLSiRHl3xMsovn5mo6jN3eeK/Q4wKd6Ae5XGzP63pTG6U5KVVB74eQxSFfV3UEOrDaJ78X5mBZO+Ku21V2QFr44tvMh5IZDX3RbMB/4Kad6sapmSF00HWrqTVMkrEsZ98DTb5nwGLh3kISnct4tLyVSpsl9s1rtkSgGUcs1TIvWxS2D2mOsSL1HRdUNcFQmzchbfG87kXPvicoOISAZDJKDqWp3iuH0gJpQ+XMBfmcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP54wIDAQAB"
+)
 
 func setup(t *testing.T, clientCert *tls.CertificateBundle) (*grpcproxy.Proxy, *testServer, test.TestServiceClient) {
 	ctx := context.Background()
@@ -36,7 +42,14 @@ func setup(t *testing.T, clientCert *tls.CertificateBundle) (*grpcproxy.Proxy, *
 	s := newTestServer(t, cert)
 	s.start()
 
-	p, err := grpcproxy.New(ctx, logger, s.address(), cert, cert, grpc.WithContextDialer(s.dialer))
+	p, err := grpcproxy.New(
+		ctx,
+		logger,
+		s.address(),
+		cert,
+		cert,
+		grpc.WithContextDialer(s.dialer),
+	)
 	assert.NoError(t, err)
 
 	l := bufconn.Listen(bufferSize)
@@ -97,6 +110,8 @@ func TestMetadata(t *testing.T) {
 		"forwarded", "spoofed-forwarded",
 		"nlx-organization", "spoofed-organization",
 		"nlx-organization", "spoofed-organization",
+		"nlx-public-key-der", "spoofed-public-key",
+		"nlx-public-key-der", "spoofed-public-key",
 		"nlx-public-key-fingerprint", "spoofed-fingerprint",
 		"nlx-public-key-fingerprint", "spoofed-fingerprint",
 		"some-key", "foo",
@@ -111,6 +126,7 @@ func TestMetadata(t *testing.T) {
 
 	assert.Equal(t, []string{"for=bufconn,host=inway.test"}, md.Get("forwarded"))
 	assert.Equal(t, []string{"nlx-test"}, md.Get("nlx-organization"))
+	assert.Equal(t, []string{testPublicKeyDER}, md.Get("nlx-public-key-der"))
 	assert.Equal(t, []string{"60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4="}, md.Get("nlx-public-key-fingerprint"))
 	assert.Equal(t, []string{"foo"}, md.Get("some-key"))
 	assert.Equal(t, []string{"bar", "foobar"}, md.Get("some-other-key"))

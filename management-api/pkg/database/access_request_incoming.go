@@ -27,6 +27,7 @@ type IncomingAccessRequest struct {
 	OrganizationName     string
 	State                IncomingAccessRequestState
 	AccessGrants         []AccessGrant
+	PublicKeyPEM         string
 	PublicKeyFingerprint string
 	Service              *Service
 	CreatedAt            time.Time

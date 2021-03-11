@@ -5,6 +5,8 @@ package server
 
 import (
 	"context"
+	"encoding/base64"
+	"encoding/pem"
 	"errors"
 	"strings"
 
@@ -24,6 +26,7 @@ import (
 type proxyMetadata struct {
 	OrganizationName     string
 	PublicKeyFingerprint string
+	PublicKeyPEM         string
 }
 
 func outgoingAccessRequestStateToProto(state database.OutgoingAccessRequestState) api.AccessRequestState {
@@ -215,9 +218,15 @@ func (s *ManagementService) CreateAccessRequest(ctx context.Context, req *api.Cr
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}
 
+	publicKey, err := s.orgCert.PublicKeyPEM()
+	if err != nil {
+		return nil, status.Error(codes.Internal, "unable to parse public key")
+	}
+
 	ar := &database.OutgoingAccessRequest{
 		OrganizationName:     req.OrganizationName,
 		ServiceName:          req.ServiceName,
+		PublicKeyPEM:         publicKey,
 		PublicKeyFingerprint: s.orgCert.PublicKeyFingerprint(),
 		State:                database.OutgoingAccessRequestCreated,
 	}
@@ -293,8 +302,27 @@ func (s *ManagementService) parseProxyMetadata(ctx context.Context) (*proxyMetad
 		return nil, status.Error(codes.Internal, "invalid metadata: public key fingerprint missing")
 	}
 
+	publicKeyString := md.Get("nlx-public-key-der")
+	if len(publicKeyString) != 1 {
+		return nil, status.Error(codes.Internal, "invalid metadata: public key missing")
+	}
+
+	publicKeyDER, err := base64.StdEncoding.DecodeString(publicKeyString[0])
+	if err != nil {
+		return nil, status.Error(codes.Internal, "invalid metadata: invalid public key")
+	}
+
+	publicKeyPEM := pem.EncodeToMemory(&pem.Block{
+		Type:  "RSA PUBLIC KEY",
+		Bytes: publicKeyDER,
+	})
+	if publicKeyPEM == nil {
+		return nil, status.Error(codes.Internal, "invalid metadata: invalid public key")
+	}
+
 	return &proxyMetadata{
 		OrganizationName:     organizationName[0],
+		PublicKeyPEM:         string(publicKeyPEM),
 		PublicKeyFingerprint: publicKeyFingerprint[0],
 	}, nil
 }
@@ -320,6 +348,7 @@ func (s *ManagementService) RequestAccess(ctx context.Context, req *external.Req
 	request := &database.IncomingAccessRequest{
 		ServiceID:            service.ID,
 		OrganizationName:     md.OrganizationName,
+		PublicKeyPEM:         md.PublicKeyPEM,
 		PublicKeyFingerprint: md.PublicKeyFingerprint,
 		State:                database.IncomingAccessRequestReceived,
 	}
