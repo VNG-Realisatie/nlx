@@ -20,7 +20,7 @@ COPY management-ui /go/src/go.nlx.io/nlx/management-ui
 RUN npm run build
 
 # Use go 1.x based on alpine image.
-FROM golang:1.16.1-alpine AS go-build
+FROM golang:1.16.2-alpine AS go-build
 
 # Install build tools.
 RUN apk add --update git gcc musl-dev
