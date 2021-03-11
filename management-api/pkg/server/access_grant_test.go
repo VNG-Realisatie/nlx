@@ -156,7 +156,7 @@ func TestListAccessGrantsForService(t *testing.T) {
 		tt := tt
 
 		t.Run(tt.name, func(t *testing.T) {
-			service, db, _ := newService(t)
+			service, db, _, _ := newService(t)
 
 			ctx := context.Background()
 			tt.db(ctx, db)
@@ -224,7 +224,7 @@ func TestRevokeAccessGrant(t *testing.T) {
 		tt := tt
 
 		t.Run(tt.name, func(t *testing.T) {
-			service, db, auditLogger := newService(t)
+			service, db, auditLogger, _ := newService(t)
 
 			tt.auditLog(*auditLogger)
 

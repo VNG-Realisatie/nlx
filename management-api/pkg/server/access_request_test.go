@@ -41,7 +41,7 @@ IRcIQqF8N+lE01H88Fi+wePhZRy92NP54wIDAQAB
 -----END RSA PUBLIC KEY-----
 `
 
-func newService(t *testing.T) (s *server.ManagementService, db *mock_database.MockConfigDatabase, auditLogger *mock_auditlog.MockLogger) {
+func newService(t *testing.T) (s *server.ManagementService, db *mock_database.MockConfigDatabase, auditLogger *mock_auditlog.MockLogger, bundle *common_tls.CertificateBundle) {
 	logger := zaptest.Logger(t)
 	proc := process.NewProcess(logger)
 
@@ -65,7 +65,7 @@ func newService(t *testing.T) (s *server.ManagementService, db *mock_database.Mo
 
 	s = server.NewManagementService(logger, proc, mock_directory.NewMockClient(ctrl), bundle, db, nil, auditLogger)
 
-	return s, db, auditLogger
+	return s, db, auditLogger, bundle
 }
 
 func createTimestamp(ti time.Time) *timestamppb.Timestamp {
@@ -158,7 +158,7 @@ func TestCreateAccessRequest(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, db, auditLogger := newService(t)
+			service, db, auditLogger, _ := newService(t)
 
 			tt.auditLog(*auditLogger)
 
@@ -294,7 +294,7 @@ func TestSendAccessRequest(t *testing.T) {
 		test := test
 
 		t.Run(test.name, func(t *testing.T) {
-			service, db, _ := newService(t)
+			service, db, _, _ := newService(t)
 			ctx := context.Background()
 
 			db.EXPECT().GetOutgoingAccessRequest(ctx, uint(test.request.AccessRequestID)).
@@ -427,7 +427,7 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 	for _, test := range tests {
 		test := test
 		t.Run(test.name, func(t *testing.T) {
-			service, db, auditLogger := newService(t)
+			service, db, auditLogger, _ := newService(t)
 			test.auditLog(*auditLogger)
 
 			db.EXPECT().GetIncomingAccessRequest(test.ctx, uint(test.request.AccessRequestID)).Return(test.accessRequest, test.accessRequestErr)
@@ -538,7 +538,7 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 	for _, test := range tests {
 		test := test
 		t.Run(test.name, func(t *testing.T) {
-			service, db, auditLogger := newService(t)
+			service, db, auditLogger, _ := newService(t)
 
 			test.auditLog(*auditLogger)
 
@@ -629,7 +629,7 @@ func TestExternalRequestAccess(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, db, _ := newService(t)
+			service, db, _, _ := newService(t)
 			ctx := tt.setup(db)
 
 			_, err := service.RequestAccess(ctx, &external.RequestAccessRequest{
@@ -698,7 +698,7 @@ func TestExternalGetAccessRequestState(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, db, _ := newService(t)
+			service, db, _, _ := newService(t)
 			ctx := tt.setup(db)
 
 			response, err := service.GetAccessRequestState(ctx, &external.GetAccessRequestStateRequest{

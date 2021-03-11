@@ -10,6 +10,7 @@ service AccessRequestService {
   rpc RequestAccess (RequestAccessRequest) returns (RequestAccessResponse);
   rpc GetAccessRequestState (GetAccessRequestStateRequest) returns (GetAccessRequestStateResponse);
   rpc GetAccessProof (GetAccessProofRequest) returns (AccessProof);
+  rpc RequestClaim (RequestClaimRequest) returns (RequestClaimResponse);
 }
 
 message RequestAccessRequest {
@@ -30,4 +31,12 @@ message GetAccessProofRequest {
 
 message RequestAccessResponse {
     uint64 reference_id = 1;
+}
+
+message RequestClaimRequest {
+  string order_reference = 1;
+}
+
+message RequestClaimResponse {
+  string claim = 1;
 }

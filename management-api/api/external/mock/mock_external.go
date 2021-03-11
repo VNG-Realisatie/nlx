@@ -96,6 +96,26 @@ func (mr *MockAccessRequestServiceClientMockRecorder) GetAccessProof(ctx, in int
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccessProof", reflect.TypeOf((*MockAccessRequestServiceClient)(nil).GetAccessProof), varargs...)
 }
 
+// RequestClaim mocks base method
+func (m *MockAccessRequestServiceClient) RequestClaim(ctx context.Context, in *external.RequestClaimRequest, opts ...grpc.CallOption) (*external.RequestClaimResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "RequestClaim", varargs...)
+	ret0, _ := ret[0].(*external.RequestClaimResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RequestClaim indicates an expected call of RequestClaim
+func (mr *MockAccessRequestServiceClientMockRecorder) RequestClaim(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RequestClaim", reflect.TypeOf((*MockAccessRequestServiceClient)(nil).RequestClaim), varargs...)
+}
+
 // MockAccessRequestServiceServer is a mock of AccessRequestServiceServer interface
 type MockAccessRequestServiceServer struct {
 	ctrl     *gomock.Controller
@@ -162,6 +182,21 @@ func (m *MockAccessRequestServiceServer) GetAccessProof(arg0 context.Context, ar
 func (mr *MockAccessRequestServiceServerMockRecorder) GetAccessProof(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccessProof", reflect.TypeOf((*MockAccessRequestServiceServer)(nil).GetAccessProof), arg0, arg1)
+}
+
+// RequestClaim mocks base method
+func (m *MockAccessRequestServiceServer) RequestClaim(arg0 context.Context, arg1 *external.RequestClaimRequest) (*external.RequestClaimResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RequestClaim", arg0, arg1)
+	ret0, _ := ret[0].(*external.RequestClaimResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RequestClaim indicates an expected call of RequestClaim
+func (mr *MockAccessRequestServiceServerMockRecorder) RequestClaim(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RequestClaim", reflect.TypeOf((*MockAccessRequestServiceServer)(nil).RequestClaim), arg0, arg1)
 }
 
 // mustEmbedUnimplementedAccessRequestServiceServer mocks base method

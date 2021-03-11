@@ -139,7 +139,7 @@ func TestGetAccessProof(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, db, _ := newService(t)
+			service, db, _, _ := newService(t)
 			ctx := tt.setup(db)
 
 			response, err := service.GetAccessProof(ctx, &external.GetAccessProofRequest{

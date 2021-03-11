@@ -3,6 +3,7 @@
 package tls
 
 import (
+	"crypto"
 	"crypto/rsa"
 	"crypto/sha256"
 	"crypto/tls"
@@ -42,8 +43,16 @@ func (c *CertificateBundle) Certificate() *x509.Certificate {
 	return c.keyPair.Leaf
 }
 
+func (c *CertificateBundle) PrivateKey() crypto.PrivateKey {
+	return c.keyPair.PrivateKey
+}
+
 func (c *CertificateBundle) PublicKeyFingerprint() string {
 	return c.publicKeyFingerprint
+}
+
+func (c *CertificateBundle) PublicKey() crypto.PublicKey {
+	return c.Certificate().PublicKey
 }
 
 func (c *CertificateBundle) PublicKeyPEM() (string, error) {
