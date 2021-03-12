@@ -96,26 +96,6 @@ func (mr *MockAccessRequestServiceClientMockRecorder) GetAccessProof(ctx, in int
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccessProof", reflect.TypeOf((*MockAccessRequestServiceClient)(nil).GetAccessProof), varargs...)
 }
 
-// RequestClaim mocks base method
-func (m *MockAccessRequestServiceClient) RequestClaim(ctx context.Context, in *external.RequestClaimRequest, opts ...grpc.CallOption) (*external.RequestClaimResponse, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "RequestClaim", varargs...)
-	ret0, _ := ret[0].(*external.RequestClaimResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// RequestClaim indicates an expected call of RequestClaim
-func (mr *MockAccessRequestServiceClientMockRecorder) RequestClaim(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RequestClaim", reflect.TypeOf((*MockAccessRequestServiceClient)(nil).RequestClaim), varargs...)
-}
-
 // MockAccessRequestServiceServer is a mock of AccessRequestServiceServer interface
 type MockAccessRequestServiceServer struct {
 	ctrl     *gomock.Controller
@@ -184,21 +164,6 @@ func (mr *MockAccessRequestServiceServerMockRecorder) GetAccessProof(arg0, arg1 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccessProof", reflect.TypeOf((*MockAccessRequestServiceServer)(nil).GetAccessProof), arg0, arg1)
 }
 
-// RequestClaim mocks base method
-func (m *MockAccessRequestServiceServer) RequestClaim(arg0 context.Context, arg1 *external.RequestClaimRequest) (*external.RequestClaimResponse, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RequestClaim", arg0, arg1)
-	ret0, _ := ret[0].(*external.RequestClaimResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// RequestClaim indicates an expected call of RequestClaim
-func (mr *MockAccessRequestServiceServerMockRecorder) RequestClaim(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RequestClaim", reflect.TypeOf((*MockAccessRequestServiceServer)(nil).RequestClaim), arg0, arg1)
-}
-
 // mustEmbedUnimplementedAccessRequestServiceServer mocks base method
 func (m *MockAccessRequestServiceServer) mustEmbedUnimplementedAccessRequestServiceServer() {
 	m.ctrl.T.Helper()
@@ -244,4 +209,132 @@ func (m *MockUnsafeAccessRequestServiceServer) mustEmbedUnimplementedAccessReque
 func (mr *MockUnsafeAccessRequestServiceServerMockRecorder) mustEmbedUnimplementedAccessRequestServiceServer() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "mustEmbedUnimplementedAccessRequestServiceServer", reflect.TypeOf((*MockUnsafeAccessRequestServiceServer)(nil).mustEmbedUnimplementedAccessRequestServiceServer))
+}
+
+// MockDelegationServiceClient is a mock of DelegationServiceClient interface
+type MockDelegationServiceClient struct {
+	ctrl     *gomock.Controller
+	recorder *MockDelegationServiceClientMockRecorder
+}
+
+// MockDelegationServiceClientMockRecorder is the mock recorder for MockDelegationServiceClient
+type MockDelegationServiceClientMockRecorder struct {
+	mock *MockDelegationServiceClient
+}
+
+// NewMockDelegationServiceClient creates a new mock instance
+func NewMockDelegationServiceClient(ctrl *gomock.Controller) *MockDelegationServiceClient {
+	mock := &MockDelegationServiceClient{ctrl: ctrl}
+	mock.recorder = &MockDelegationServiceClientMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockDelegationServiceClient) EXPECT() *MockDelegationServiceClientMockRecorder {
+	return m.recorder
+}
+
+// RequestClaim mocks base method
+func (m *MockDelegationServiceClient) RequestClaim(ctx context.Context, in *external.RequestClaimRequest, opts ...grpc.CallOption) (*external.RequestClaimResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "RequestClaim", varargs...)
+	ret0, _ := ret[0].(*external.RequestClaimResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RequestClaim indicates an expected call of RequestClaim
+func (mr *MockDelegationServiceClientMockRecorder) RequestClaim(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RequestClaim", reflect.TypeOf((*MockDelegationServiceClient)(nil).RequestClaim), varargs...)
+}
+
+// MockDelegationServiceServer is a mock of DelegationServiceServer interface
+type MockDelegationServiceServer struct {
+	ctrl     *gomock.Controller
+	recorder *MockDelegationServiceServerMockRecorder
+}
+
+// MockDelegationServiceServerMockRecorder is the mock recorder for MockDelegationServiceServer
+type MockDelegationServiceServerMockRecorder struct {
+	mock *MockDelegationServiceServer
+}
+
+// NewMockDelegationServiceServer creates a new mock instance
+func NewMockDelegationServiceServer(ctrl *gomock.Controller) *MockDelegationServiceServer {
+	mock := &MockDelegationServiceServer{ctrl: ctrl}
+	mock.recorder = &MockDelegationServiceServerMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockDelegationServiceServer) EXPECT() *MockDelegationServiceServerMockRecorder {
+	return m.recorder
+}
+
+// RequestClaim mocks base method
+func (m *MockDelegationServiceServer) RequestClaim(arg0 context.Context, arg1 *external.RequestClaimRequest) (*external.RequestClaimResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RequestClaim", arg0, arg1)
+	ret0, _ := ret[0].(*external.RequestClaimResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RequestClaim indicates an expected call of RequestClaim
+func (mr *MockDelegationServiceServerMockRecorder) RequestClaim(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RequestClaim", reflect.TypeOf((*MockDelegationServiceServer)(nil).RequestClaim), arg0, arg1)
+}
+
+// mustEmbedUnimplementedDelegationServiceServer mocks base method
+func (m *MockDelegationServiceServer) mustEmbedUnimplementedDelegationServiceServer() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "mustEmbedUnimplementedDelegationServiceServer")
+}
+
+// mustEmbedUnimplementedDelegationServiceServer indicates an expected call of mustEmbedUnimplementedDelegationServiceServer
+func (mr *MockDelegationServiceServerMockRecorder) mustEmbedUnimplementedDelegationServiceServer() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "mustEmbedUnimplementedDelegationServiceServer", reflect.TypeOf((*MockDelegationServiceServer)(nil).mustEmbedUnimplementedDelegationServiceServer))
+}
+
+// MockUnsafeDelegationServiceServer is a mock of UnsafeDelegationServiceServer interface
+type MockUnsafeDelegationServiceServer struct {
+	ctrl     *gomock.Controller
+	recorder *MockUnsafeDelegationServiceServerMockRecorder
+}
+
+// MockUnsafeDelegationServiceServerMockRecorder is the mock recorder for MockUnsafeDelegationServiceServer
+type MockUnsafeDelegationServiceServerMockRecorder struct {
+	mock *MockUnsafeDelegationServiceServer
+}
+
+// NewMockUnsafeDelegationServiceServer creates a new mock instance
+func NewMockUnsafeDelegationServiceServer(ctrl *gomock.Controller) *MockUnsafeDelegationServiceServer {
+	mock := &MockUnsafeDelegationServiceServer{ctrl: ctrl}
+	mock.recorder = &MockUnsafeDelegationServiceServerMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockUnsafeDelegationServiceServer) EXPECT() *MockUnsafeDelegationServiceServerMockRecorder {
+	return m.recorder
+}
+
+// mustEmbedUnimplementedDelegationServiceServer mocks base method
+func (m *MockUnsafeDelegationServiceServer) mustEmbedUnimplementedDelegationServiceServer() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "mustEmbedUnimplementedDelegationServiceServer")
+}
+
+// mustEmbedUnimplementedDelegationServiceServer indicates an expected call of mustEmbedUnimplementedDelegationServiceServer
+func (mr *MockUnsafeDelegationServiceServerMockRecorder) mustEmbedUnimplementedDelegationServiceServer() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "mustEmbedUnimplementedDelegationServiceServer", reflect.TypeOf((*MockUnsafeDelegationServiceServer)(nil).mustEmbedUnimplementedDelegationServiceServer))
 }

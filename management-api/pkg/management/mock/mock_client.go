@@ -109,23 +109,3 @@ func (mr *MockClientMockRecorder) RequestAccess(arg0, arg1 interface{}, arg2 ...
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RequestAccess", reflect.TypeOf((*MockClient)(nil).RequestAccess), varargs...)
 }
-
-// RequestClaim mocks base method
-func (m *MockClient) RequestClaim(arg0 context.Context, arg1 *external.RequestClaimRequest, arg2 ...grpc.CallOption) (*external.RequestClaimResponse, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{arg0, arg1}
-	for _, a := range arg2 {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "RequestClaim", varargs...)
-	ret0, _ := ret[0].(*external.RequestClaimResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// RequestClaim indicates an expected call of RequestClaim
-func (mr *MockClientMockRecorder) RequestClaim(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{arg0, arg1}, arg2...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RequestClaim", reflect.TypeOf((*MockClient)(nil).RequestClaim), varargs...)
-}

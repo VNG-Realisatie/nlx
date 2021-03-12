@@ -10,6 +10,9 @@ service AccessRequestService {
   rpc RequestAccess (RequestAccessRequest) returns (RequestAccessResponse);
   rpc GetAccessRequestState (GetAccessRequestStateRequest) returns (GetAccessRequestStateResponse);
   rpc GetAccessProof (GetAccessProofRequest) returns (AccessProof);
+}
+
+service DelegationService {
   rpc RequestClaim (RequestClaimRequest) returns (RequestClaimResponse);
 }
 
