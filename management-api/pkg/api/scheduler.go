@@ -8,8 +8,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"net"
-	"strconv"
 	"sync"
 	"time"
 
@@ -22,7 +20,6 @@ import (
 
 	"go.nlx.io/nlx/common/diagnostics"
 	common_tls "go.nlx.io/nlx/common/tls"
-	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
@@ -38,20 +35,6 @@ const (
 )
 
 var ErrMaxRetries = errors.New("unable to retry more than 3 times")
-
-func computeInwayProxyAddress(address string) (string, error) {
-	host, port, err := net.SplitHostPort(address)
-	if err != nil {
-		return "", fmt.Errorf("invalid format for inway address: %w", err)
-	}
-
-	portNum, err := strconv.Atoi(port)
-	if err != nil {
-		return "", fmt.Errorf("invalid format for inway address port: %w", err)
-	}
-
-	return fmt.Sprintf("%s:%d", host, portNum+1), nil
-}
 
 type accessRequestScheduler struct {
 	clock                      clock.Clock
@@ -108,14 +91,7 @@ schedulingLoop:
 }
 
 func (scheduler *accessRequestScheduler) getOrganizationManagementClient(ctx context.Context, organizationName string) (management.Client, error) {
-	response, err := scheduler.directoryClient.GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-		OrganizationName: organizationName,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	address, err := computeInwayProxyAddress(response.Address)
+	address, err := scheduler.directoryClient.GetOrganizationInwayProxyAddress(ctx, organizationName)
 	if err != nil {
 		return nil, err
 	}

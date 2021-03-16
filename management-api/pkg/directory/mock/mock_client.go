@@ -77,6 +77,21 @@ func (mr *MockClientMockRecorder) GetOrganizationInway(arg0, arg1 interface{}, a
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationInway", reflect.TypeOf((*MockClient)(nil).GetOrganizationInway), varargs...)
 }
 
+// GetOrganizationInwayProxyAddress mocks base method
+func (m *MockClient) GetOrganizationInwayProxyAddress(arg0 context.Context, arg1 string) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOrganizationInwayProxyAddress", arg0, arg1)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrganizationInwayProxyAddress indicates an expected call of GetOrganizationInwayProxyAddress
+func (mr *MockClientMockRecorder) GetOrganizationInwayProxyAddress(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationInwayProxyAddress", reflect.TypeOf((*MockClient)(nil).GetOrganizationInwayProxyAddress), arg0, arg1)
+}
+
 // ListInOutwayStatistics mocks base method
 func (m *MockClient) ListInOutwayStatistics(arg0 context.Context, arg1 *emptypb.Empty, arg2 ...grpc.CallOption) (*inspectionapi.ListInOutwayStatisticsResponse, error) {
 	m.ctrl.T.Helper()

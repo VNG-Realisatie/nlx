@@ -5,6 +5,9 @@ package directory
 
 import (
 	"context"
+	"fmt"
+	"net"
+	"strconv"
 	"time"
 
 	"google.golang.org/grpc"
@@ -27,6 +30,8 @@ var (
 type Client interface {
 	inspectionapi.DirectoryInspectionClient
 	registrationapi.DirectoryRegistrationClient
+
+	GetOrganizationInwayProxyAddress(ctx context.Context, organizationName string) (string, error)
 }
 
 type client struct {
@@ -54,12 +59,37 @@ func NewClient(ctx context.Context, inspectionAddress, registrationAddress strin
 		return nil, err
 	}
 
-	c := client{
+	c := &client{
 		inspectionapi.NewDirectoryInspectionClient(inspectionConn),
 		registrationapi.NewDirectoryRegistrationClient(registrationConn),
 	}
 
 	return c, nil
+}
+
+func (c *client) GetOrganizationInwayProxyAddress(ctx context.Context, organizationName string) (string, error) {
+	response, err := c.GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
+		OrganizationName: organizationName,
+	})
+	if err != nil {
+		return "", err
+	}
+
+	return computeInwayProxyAddress(response.Address)
+}
+
+func computeInwayProxyAddress(address string) (string, error) {
+	host, port, err := net.SplitHostPort(address)
+	if err != nil {
+		return "", fmt.Errorf("invalid format for inway address: %w", err)
+	}
+
+	portNum, err := strconv.Atoi(port)
+	if err != nil {
+		return "", fmt.Errorf("invalid format for inway address port: %w", err)
+	}
+
+	return fmt.Sprintf("%s:%d", host, portNum+1), nil
 }
 
 func timeoutUnaryInterceptor(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {

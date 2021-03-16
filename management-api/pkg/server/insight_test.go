@@ -23,6 +23,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
 	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
+	"go.nlx.io/nlx/management-api/pkg/management"
 	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
@@ -43,6 +44,7 @@ func TestGetInsight(t *testing.T) {
 		mockDatabase,
 		nil,
 		mock_auditlog.NewMockLogger(mockCtrl),
+		management.NewClient,
 	)
 
 	emptyRequest := &emptypb.Empty{}
@@ -103,6 +105,7 @@ func TestPutInsight(t *testing.T) {
 		mockDatabase,
 		nil,
 		auditLogger,
+		management.NewClient,
 	)
 
 	request := &api.InsightConfiguration{

@@ -25,6 +25,7 @@ import (
 	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
 	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
+	"go.nlx.io/nlx/management-api/pkg/management"
 	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
@@ -57,6 +58,7 @@ func newManagementService(t *testing.T) (s *server.ManagementService, auditLogge
 		mock_database.NewMockConfigDatabase(ctrl),
 		nil,
 		auditLogger,
+		management.NewClient,
 	)
 
 	return s, auditLogger

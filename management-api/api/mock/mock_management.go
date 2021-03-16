@@ -556,6 +556,26 @@ func (mr *MockManagementClientMockRecorder) ListAuditLogs(ctx, in interface{}, o
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAuditLogs", reflect.TypeOf((*MockManagementClient)(nil).ListAuditLogs), varargs...)
 }
 
+// RetrieveClaimForOrder mocks base method
+func (m *MockManagementClient) RetrieveClaimForOrder(ctx context.Context, in *api.RetrieveClaimForOrderRequest, opts ...grpc.CallOption) (*api.RetrieveClaimForOrderResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "RetrieveClaimForOrder", varargs...)
+	ret0, _ := ret[0].(*api.RetrieveClaimForOrderResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RetrieveClaimForOrder indicates an expected call of RetrieveClaimForOrder
+func (mr *MockManagementClientMockRecorder) RetrieveClaimForOrder(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RetrieveClaimForOrder", reflect.TypeOf((*MockManagementClient)(nil).RetrieveClaimForOrder), varargs...)
+}
+
 // MockManagementServer is a mock of ManagementServer interface
 type MockManagementServer struct {
 	ctrl     *gomock.Controller
@@ -967,6 +987,21 @@ func (m *MockManagementServer) ListAuditLogs(arg0 context.Context, arg1 *emptypb
 func (mr *MockManagementServerMockRecorder) ListAuditLogs(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAuditLogs", reflect.TypeOf((*MockManagementServer)(nil).ListAuditLogs), arg0, arg1)
+}
+
+// RetrieveClaimForOrder mocks base method
+func (m *MockManagementServer) RetrieveClaimForOrder(arg0 context.Context, arg1 *api.RetrieveClaimForOrderRequest) (*api.RetrieveClaimForOrderResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RetrieveClaimForOrder", arg0, arg1)
+	ret0, _ := ret[0].(*api.RetrieveClaimForOrderResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RetrieveClaimForOrder indicates an expected call of RetrieveClaimForOrder
+func (mr *MockManagementServerMockRecorder) RetrieveClaimForOrder(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RetrieveClaimForOrder", reflect.TypeOf((*MockManagementServer)(nil).RetrieveClaimForOrder), arg0, arg1)
 }
 
 // mustEmbedUnimplementedManagementServer mocks base method

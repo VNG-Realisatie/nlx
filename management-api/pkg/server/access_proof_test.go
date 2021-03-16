@@ -139,8 +139,8 @@ func TestGetAccessProof(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, db, _, _ := newService(t)
-			ctx := tt.setup(db)
+			service, _, mocks := newService(t)
+			ctx := tt.setup(mocks.db)
 
 			response, err := service.GetAccessProof(ctx, &external.GetAccessProofRequest{
 				ServiceName: "service",

@@ -23,6 +23,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
 	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
+	"go.nlx.io/nlx/management-api/pkg/management"
 	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
@@ -106,6 +107,7 @@ func TestCreateInway(t *testing.T) {
 				mockDatabase,
 				nil,
 				mock_auditlog.NewMockLogger(mockCtrl),
+				management.NewClient,
 			)
 
 			response, err := service.CreateInway(ctx, tt.args.request)
@@ -136,6 +138,7 @@ func TestGetInway(t *testing.T) {
 		mockDatabase,
 		nil,
 		mock_auditlog.NewMockLogger(mockCtrl),
+		management.NewClient,
 	)
 
 	getInwayRequest := &api.GetInwayRequest{
@@ -195,6 +198,7 @@ func TestUpdateInway(t *testing.T) {
 		mockDatabase,
 		nil,
 		mock_auditlog.NewMockLogger(mockCtrl),
+		management.NewClient,
 	)
 
 	updateInwayRequest := &api.UpdateInwayRequest{
@@ -233,6 +237,7 @@ func TestDeleteInway(t *testing.T) {
 		mockDatabase,
 		nil,
 		mock_auditlog.NewMockLogger(mockCtrl),
+		management.NewClient,
 	)
 
 	deleteRequest := &api.DeleteInwayRequest{
@@ -286,6 +291,7 @@ func TestListInways(t *testing.T) {
 		mockDatabase,
 		nil,
 		mock_auditlog.NewMockLogger(mockCtrl),
+		management.NewClient,
 	)
 	actualResponse, err := service.ListInways(ctx, &api.ListInwaysRequest{})
 	assert.NoError(t, err)

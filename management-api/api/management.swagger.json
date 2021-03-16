@@ -665,6 +665,42 @@
         ]
       }
     },
+    "/api/v1/retrieve-claim": {
+      "get": {
+        "operationId": "Management_RetrieveClaimForOrder",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/managementRetrieveClaimForOrderResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "orderReference",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "orderOrganizationName",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Management"
+        ]
+      }
+    },
     "/api/v1/services": {
       "get": {
         "operationId": "Management_ListServices",
@@ -1517,6 +1553,14 @@
         },
         "errorDetails": {
           "$ref": "#/definitions/managementErrorDetails"
+        }
+      }
+    },
+    "managementRetrieveClaimForOrderResponse": {
+      "type": "object",
+      "properties": {
+        "claim": {
+          "type": "string"
         }
       }
     },

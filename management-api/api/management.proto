@@ -81,12 +81,14 @@ service Management {
   rpc ListAccessGrantsForService(ListAccessGrantsForServiceRequest) returns(ListAccessGrantsForServiceResponse) {
     option (google.api.http) = {get: "/api/v1/access-grants/services/{serviceName}"};
   }
-
   rpc RevokeAccessGrant(RevokeAccessGrantRequest) returns (AccessGrant) {
     option (google.api.http) = {post: "/api/v1/access-grants/service/{serviceName}/organizations/{organizationName}/{accessGrantID}/revoke"};
   }
   rpc ListAuditLogs (google.protobuf.Empty) returns (ListAuditLogsResponse) {
     option (google.api.http) = {get: "/api/v1/audit-logs"};
+  }
+  rpc RetrieveClaimForOrder (RetrieveClaimForOrderRequest) returns (RetrieveClaimForOrderResponse) {
+    option (google.api.http) = {get: "/api/v1/retrieve-claim"};
   }
 }
 
@@ -486,4 +488,13 @@ message AuditLogRecord {
 
 message ListAuditLogsResponse {
   repeated AuditLogRecord auditLogs = 1;
+}
+
+message RetrieveClaimForOrderRequest {
+  string order_reference = 1;
+  string order_organization_name = 2;
+}
+
+message RetrieveClaimForOrderResponse {
+  string claim = 1;
 }

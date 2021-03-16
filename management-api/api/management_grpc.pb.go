@@ -45,6 +45,7 @@ type ManagementClient interface {
 	ListAccessGrantsForService(ctx context.Context, in *ListAccessGrantsForServiceRequest, opts ...grpc.CallOption) (*ListAccessGrantsForServiceResponse, error)
 	RevokeAccessGrant(ctx context.Context, in *RevokeAccessGrantRequest, opts ...grpc.CallOption) (*AccessGrant, error)
 	ListAuditLogs(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListAuditLogsResponse, error)
+	RetrieveClaimForOrder(ctx context.Context, in *RetrieveClaimForOrderRequest, opts ...grpc.CallOption) (*RetrieveClaimForOrderResponse, error)
 }
 
 type managementClient struct {
@@ -289,6 +290,15 @@ func (c *managementClient) ListAuditLogs(ctx context.Context, in *emptypb.Empty,
 	return out, nil
 }
 
+func (c *managementClient) RetrieveClaimForOrder(ctx context.Context, in *RetrieveClaimForOrderRequest, opts ...grpc.CallOption) (*RetrieveClaimForOrderResponse, error) {
+	out := new(RetrieveClaimForOrderResponse)
+	err := c.cc.Invoke(ctx, "/nlx.management.Management/RetrieveClaimForOrder", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ManagementServer is the server API for Management service.
 // All implementations must embed UnimplementedManagementServer
 // for forward compatibility
@@ -319,6 +329,7 @@ type ManagementServer interface {
 	ListAccessGrantsForService(context.Context, *ListAccessGrantsForServiceRequest) (*ListAccessGrantsForServiceResponse, error)
 	RevokeAccessGrant(context.Context, *RevokeAccessGrantRequest) (*AccessGrant, error)
 	ListAuditLogs(context.Context, *emptypb.Empty) (*ListAuditLogsResponse, error)
+	RetrieveClaimForOrder(context.Context, *RetrieveClaimForOrderRequest) (*RetrieveClaimForOrderResponse, error)
 	mustEmbedUnimplementedManagementServer()
 }
 
@@ -403,6 +414,9 @@ func (UnimplementedManagementServer) RevokeAccessGrant(context.Context, *RevokeA
 }
 func (UnimplementedManagementServer) ListAuditLogs(context.Context, *emptypb.Empty) (*ListAuditLogsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAuditLogs not implemented")
+}
+func (UnimplementedManagementServer) RetrieveClaimForOrder(context.Context, *RetrieveClaimForOrderRequest) (*RetrieveClaimForOrderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RetrieveClaimForOrder not implemented")
 }
 func (UnimplementedManagementServer) mustEmbedUnimplementedManagementServer() {}
 
@@ -885,6 +899,24 @@ func _Management_ListAuditLogs_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Management_RetrieveClaimForOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RetrieveClaimForOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServer).RetrieveClaimForOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/nlx.management.Management/RetrieveClaimForOrder",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServer).RetrieveClaimForOrder(ctx, req.(*RetrieveClaimForOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Management_ServiceDesc is the grpc.ServiceDesc for Management service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -995,6 +1027,10 @@ var Management_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListAuditLogs",
 			Handler:    _Management_ListAuditLogs_Handler,
+		},
+		{
+			MethodName: "RetrieveClaimForOrder",
+			Handler:    _Management_RetrieveClaimForOrder_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

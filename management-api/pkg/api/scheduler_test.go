@@ -15,7 +15,6 @@ import (
 	"go.uber.org/zap"
 
 	common_tls "go.nlx.io/nlx/common/tls"
-	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
@@ -63,78 +62,6 @@ func newTestScheduler(t *testing.T) (schedulerMocks, *accessRequestScheduler) {
 	return mocks, scheduler
 }
 
-func TestGetOrganizationManagementClient(t *testing.T) {
-	ctx := context.Background()
-
-	tests := map[string]struct {
-		setupMock        func(*mock_directory.MockClient)
-		organizationName string
-		wantErr          bool
-	}{
-		"returns_an_error_when_get_organization_inway_returns_an_error": {
-			organizationName: "organization-a",
-			wantErr:          true,
-			setupMock: func(directory *mock_directory.MockClient) {
-				directory.
-					EXPECT().
-					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-						OrganizationName: "organization-a",
-					}).
-					Return(nil, errors.New("error"))
-			},
-		},
-
-		"returns_err_when_inway_address_is_invalid": {
-			organizationName: "organization-a",
-			wantErr:          true,
-			setupMock: func(directory *mock_directory.MockClient) {
-				directory.
-					EXPECT().
-					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-						OrganizationName: "organization-a",
-					}).
-					Return(&inspectionapi.GetOrganizationInwayResponse{
-						Address: "hostname",
-					}, nil)
-			},
-		},
-
-		"returns_the_client_when_everything_is_ok": {
-			organizationName: "organization-a",
-			wantErr:          false,
-			setupMock: func(directory *mock_directory.MockClient) {
-				directory.
-					EXPECT().
-					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-						OrganizationName: "organization-a",
-					}).
-					Return(&inspectionapi.GetOrganizationInwayResponse{
-						Address: "hostname:8000",
-					}, nil)
-			},
-		},
-	}
-
-	for name, tt := range tests {
-		tt := tt
-
-		t.Run(name, func(t *testing.T) {
-			mocks, scheduler := newTestScheduler(t)
-
-			tt.setupMock(mocks.directory)
-
-			client, err := scheduler.getOrganizationManagementClient(ctx, tt.organizationName)
-			if tt.wantErr {
-				assert.Error(t, err, "getOrganizationManagementClient should error")
-				assert.Nil(t, client)
-			} else {
-				assert.NoError(t, err, "getOrganizationManagementClient shouldn't error")
-				assert.NotNil(t, client)
-			}
-		})
-	}
-}
-
 //nolint:funlen,dupl // unittest
 func TestSchedule(t *testing.T) {
 	ctx := context.Background()
@@ -156,10 +83,8 @@ func TestSchedule(t *testing.T) {
 			setupMock: func(mocks schedulerMocks) {
 				mocks.directory.
 					EXPECT().
-					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-						OrganizationName: "organization-a",
-					}).
-					Return(nil, errors.New("random error"))
+					GetOrganizationInwayProxyAddress(ctx, "organization-a").
+					Return("", errors.New("arbitrary error"))
 
 				mocks.db.
 					EXPECT().
@@ -179,12 +104,8 @@ func TestSchedule(t *testing.T) {
 			setupMock: func(mocks schedulerMocks) {
 				mocks.directory.
 					EXPECT().
-					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-						OrganizationName: "organization-a",
-					}).
-					Return(&inspectionapi.GetOrganizationInwayResponse{
-						Address: "hostname:7200",
-					}, nil)
+					GetOrganizationInwayProxyAddress(ctx, "organization-a").
+					Return("hostname:7200", nil)
 
 				mocks.management.
 					EXPECT().
@@ -217,12 +138,8 @@ func TestSchedule(t *testing.T) {
 			setupMock: func(mocks schedulerMocks) {
 				mocks.directory.
 					EXPECT().
-					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-						OrganizationName: "organization-a",
-					}).
-					Return(&inspectionapi.GetOrganizationInwayResponse{
-						Address: "hostname:7200",
-					}, nil)
+					GetOrganizationInwayProxyAddress(ctx, "organization-a").
+					Return("hostname:7200", nil)
 
 				mocks.management.
 					EXPECT().
@@ -255,12 +172,8 @@ func TestSchedule(t *testing.T) {
 			setupMock: func(mocks schedulerMocks) {
 				mocks.directory.
 					EXPECT().
-					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-						OrganizationName: "organization-a",
-					}).
-					Return(&inspectionapi.GetOrganizationInwayResponse{
-						Address: "hostname:7200",
-					}, nil)
+					GetOrganizationInwayProxyAddress(ctx, "organization-a").
+					Return("hostname:7200", nil)
 
 				mocks.management.
 					EXPECT().
@@ -296,7 +209,7 @@ func TestSchedule(t *testing.T) {
 			if tt.wantErr {
 				assert.Error(t, err, "schedule should error")
 			} else {
-				assert.NoError(t, err, "schedule shouldn't error")
+				assert.NoError(t, err, "schedule should not error")
 			}
 		})
 	}
@@ -369,28 +282,8 @@ func TestSyncAccessProof(t *testing.T) {
 			setupMocks: func(mocks schedulerMocks) {
 				mocks.directory.
 					EXPECT().
-					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-						OrganizationName: "organization-b",
-					}).
-					Return(nil, errors.New("random error"))
-			},
-		},
-
-		"returns_an_error_when_inway_address_is_invalid": {
-			wantErr: true,
-			request: &database.OutgoingAccessRequest{
-				ID:               1,
-				OrganizationName: "organization-b",
-			},
-			setupMocks: func(mocks schedulerMocks) {
-				mocks.directory.
-					EXPECT().
-					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-						OrganizationName: "organization-b",
-					}).
-					Return(&inspectionapi.GetOrganizationInwayResponse{
-						Address: "invalid",
-					}, nil)
+					GetOrganizationInwayProxyAddress(ctx, "organization-b").
+					Return("", errors.New("arbitrary error"))
 			},
 		},
 
@@ -404,12 +297,8 @@ func TestSyncAccessProof(t *testing.T) {
 			setupMocks: func(mocks schedulerMocks) {
 				mocks.directory.
 					EXPECT().
-					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-						OrganizationName: "organization-b",
-					}).
-					Return(&inspectionapi.GetOrganizationInwayResponse{
-						Address: "localhost:8000",
-					}, nil)
+					GetOrganizationInwayProxyAddress(ctx, "organization-b").
+					Return("localhost:8000", nil)
 
 				mocks.management.
 					EXPECT().
@@ -434,12 +323,8 @@ func TestSyncAccessProof(t *testing.T) {
 			setupMocks: func(mocks schedulerMocks) {
 				mocks.directory.
 					EXPECT().
-					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-						OrganizationName: "organization-b",
-					}).
-					Return(&inspectionapi.GetOrganizationInwayResponse{
-						Address: "localhost:8000",
-					}, nil)
+					GetOrganizationInwayProxyAddress(ctx, "organization-b").
+					Return("localhost:8000", nil)
 
 				mocks.management.
 					EXPECT().
@@ -469,12 +354,8 @@ func TestSyncAccessProof(t *testing.T) {
 			setupMocks: func(mocks schedulerMocks) {
 				mocks.directory.
 					EXPECT().
-					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-						OrganizationName: "organization-b",
-					}).
-					Return(&inspectionapi.GetOrganizationInwayResponse{
-						Address: "localhost:8000",
-					}, nil)
+					GetOrganizationInwayProxyAddress(ctx, "organization-b").
+					Return("localhost:8000", nil)
 
 				mocks.management.
 					EXPECT().
@@ -507,12 +388,8 @@ func TestSyncAccessProof(t *testing.T) {
 			setupMocks: func(mocks schedulerMocks) {
 				mocks.directory.
 					EXPECT().
-					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-						OrganizationName: "organization-b",
-					}).
-					Return(&inspectionapi.GetOrganizationInwayResponse{
-						Address: "localhost:8000",
-					}, nil)
+					GetOrganizationInwayProxyAddress(ctx, "organization-b").
+					Return("localhost:8000", nil)
 
 				mocks.management.
 					EXPECT().
@@ -558,12 +435,8 @@ func TestSyncAccessProof(t *testing.T) {
 
 				mocks.directory.
 					EXPECT().
-					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-						OrganizationName: "organization-b",
-					}).
-					Return(&inspectionapi.GetOrganizationInwayResponse{
-						Address: "localhost:8000",
-					}, nil)
+					GetOrganizationInwayProxyAddress(ctx, "organization-b").
+					Return("localhost:8000", nil)
 
 				mocks.management.
 					EXPECT().
@@ -617,12 +490,8 @@ func TestSyncAccessProof(t *testing.T) {
 
 				mocks.directory.
 					EXPECT().
-					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-						OrganizationName: "organization-b",
-					}).
-					Return(&inspectionapi.GetOrganizationInwayResponse{
-						Address: "localhost:8000",
-					}, nil)
+					GetOrganizationInwayProxyAddress(ctx, "organization-b").
+					Return("localhost:8000", nil)
 
 				mocks.management.
 					EXPECT().
@@ -674,12 +543,8 @@ func TestSyncAccessProof(t *testing.T) {
 			setupMocks: func(mocks schedulerMocks) {
 				mocks.directory.
 					EXPECT().
-					GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-						OrganizationName: "organization-b",
-					}).
-					Return(&inspectionapi.GetOrganizationInwayResponse{
-						Address: "localhost:8000",
-					}, nil)
+					GetOrganizationInwayProxyAddress(ctx, "organization-b").
+					Return("localhost:8000", nil)
 
 				mocks.management.
 					EXPECT().

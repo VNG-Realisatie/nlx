@@ -18,6 +18,7 @@ import (
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
+	"go.nlx.io/nlx/management-api/pkg/management"
 	"go.nlx.io/nlx/management-api/pkg/txlogdb"
 	mock_txlogdb "go.nlx.io/nlx/management-api/pkg/txlogdb/mock"
 )
@@ -50,6 +51,7 @@ func TestIsFinanceEnabled(t *testing.T) {
 				nil,
 				tt.db,
 				nil,
+				management.NewClient,
 			)
 
 			response, err := service.IsFinanceEnabled(context.Background(), nil)
@@ -144,6 +146,7 @@ func TestDownloadFinanceExport(t *testing.T) {
 				db,
 				txlogDB,
 				nil,
+				management.NewClient,
 			)
 
 			tt.setupMock(db, txlogDB)

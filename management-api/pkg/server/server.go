@@ -6,18 +6,18 @@ package server
 import (
 	"context"
 	"errors"
-	"go.nlx.io/nlx/management-api/api"
-	"go.nlx.io/nlx/management-api/api/external"
-
-	"google.golang.org/grpc/metadata"
 
 	"go.uber.org/zap"
+	"google.golang.org/grpc/metadata"
 
 	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/tls"
+	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/auditlog"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/directory"
+	"go.nlx.io/nlx/management-api/pkg/management"
 	"go.nlx.io/nlx/management-api/pkg/txlogdb"
 )
 
@@ -27,25 +27,27 @@ type ManagementService struct {
 	api.UnimplementedManagementServer
 	external.UnimplementedAccessRequestServiceServer
 
-	logger          *zap.Logger
-	mainProcess     *process.Process
-	directoryClient directory.Client
-	orgCert         *tls.CertificateBundle
-	configDatabase  database.ConfigDatabase
-	txlogDatabase   txlogdb.TxlogDatabase
-	auditLogger     auditlog.Logger
+	logger                     *zap.Logger
+	mainProcess                *process.Process
+	directoryClient            directory.Client
+	orgCert                    *tls.CertificateBundle
+	configDatabase             database.ConfigDatabase
+	txlogDatabase              txlogdb.TxlogDatabase
+	auditLogger                auditlog.Logger
+	createManagementClientFunc func(context.Context, string, *tls.CertificateBundle) (management.Client, error)
 }
 
 // New creates new ManagementService
-func NewManagementService(logger *zap.Logger, mainProcess *process.Process, directoryClient directory.Client, orgCert *tls.CertificateBundle, configDatabase database.ConfigDatabase, txlogDatabase txlogdb.TxlogDatabase, auditLogger auditlog.Logger) *ManagementService {
+func NewManagementService(logger *zap.Logger, mainProcess *process.Process, directoryClient directory.Client, orgCert *tls.CertificateBundle, configDatabase database.ConfigDatabase, txlogDatabase txlogdb.TxlogDatabase, auditLogger auditlog.Logger, createManagementClientFunc func(context.Context, string, *tls.CertificateBundle) (management.Client, error)) *ManagementService {
 	return &ManagementService{
-		logger:          logger,
-		orgCert:         orgCert,
-		mainProcess:     mainProcess,
-		directoryClient: directoryClient,
-		configDatabase:  configDatabase,
-		txlogDatabase:   txlogDatabase,
-		auditLogger:     auditLogger,
+		logger:                     logger,
+		orgCert:                    orgCert,
+		mainProcess:                mainProcess,
+		directoryClient:            directoryClient,
+		configDatabase:             configDatabase,
+		txlogDatabase:              txlogDatabase,
+		auditLogger:                auditLogger,
+		createManagementClientFunc: createManagementClientFunc,
 	}
 }
 

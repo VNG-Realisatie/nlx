@@ -25,11 +25,13 @@ var (
 
 type Client interface {
 	external.AccessRequestServiceClient
+	external.DelegationServiceClient
 	Close() error
 }
 
 type client struct {
 	external.AccessRequestServiceClient
+	external.DelegationServiceClient
 	conn *grpc.ClientConn
 }
 

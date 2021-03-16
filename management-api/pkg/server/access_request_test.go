@@ -6,11 +6,9 @@ package server_test
 import (
 	"context"
 	"errors"
-	"path/filepath"
 	"testing"
 	"time"
 
-	"github.com/fgrosse/zaptest"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
@@ -20,53 +18,12 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/common/diagnostics"
-	"go.nlx.io/nlx/common/process"
-	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
 	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
-	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
-	"go.nlx.io/nlx/management-api/pkg/server"
 )
-
-var testPublicKeyPEM = `-----BEGIN RSA PUBLIC KEY-----
-MIIBCgKCAQEArN5xGkM73tJsCpKny59e5lXNRY+eT0sbWyEGsR1qIPRKmLSiRHl3
-xMsovn5mo6jN3eeK/Q4wKd6Ae5XGzP63pTG6U5KVVB74eQxSFfV3UEOrDaJ78X5m
-BZO+Ku21V2QFr44tvMh5IZDX3RbMB/4Kad6sapmSF00HWrqTVMkrEsZ98DTb5nwG
-Lh3kISnct4tLyVSpsl9s1rtkSgGUcs1TIvWxS2D2mOsSL1HRdUNcFQmzchbfG87k
-XPvicoOISAZDJKDqWp3iuH0gJpQ+XMBfmcD90I7Z/cRQjWP3P93B3V06cJkd00cE
-IRcIQqF8N+lE01H88Fi+wePhZRy92NP54wIDAQAB
------END RSA PUBLIC KEY-----
-`
-
-func newService(t *testing.T) (s *server.ManagementService, db *mock_database.MockConfigDatabase, auditLogger *mock_auditlog.MockLogger, bundle *common_tls.CertificateBundle) {
-	logger := zaptest.Logger(t)
-	proc := process.NewProcess(logger)
-
-	ctrl := gomock.NewController(t)
-
-	t.Cleanup(func() {
-		ctrl.Finish()
-	})
-
-	db = mock_database.NewMockConfigDatabase(ctrl)
-	pkiDir := filepath.Join("..", "..", "..", "testing", "pki")
-	bundle, err := common_tls.NewBundleFromFiles(
-		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-		filepath.Join(pkiDir, "ca-root.pem"),
-	)
-
-	assert.NoError(t, err)
-
-	auditLogger = mock_auditlog.NewMockLogger(ctrl)
-
-	s = server.NewManagementService(logger, proc, mock_directory.NewMockClient(ctrl), bundle, db, nil, auditLogger)
-
-	return s, db, auditLogger, bundle
-}
 
 func createTimestamp(ti time.Time) *timestamppb.Timestamp {
 	return &timestamppb.Timestamp{
@@ -158,11 +115,12 @@ func TestCreateAccessRequest(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, db, auditLogger, _ := newService(t)
+			service, _, mocks := newService(t)
 
-			tt.auditLog(*auditLogger)
+			tt.auditLog(*mocks.al)
 
-			db.EXPECT().CreateOutgoingAccessRequest(tt.ctx, tt.ar).
+			mocks.db.EXPECT().
+				CreateOutgoingAccessRequest(tt.ctx, tt.ar).
 				Return(tt.returnReq, tt.returnErr)
 			actual, err := service.CreateAccessRequest(tt.ctx, tt.req)
 
@@ -294,13 +252,17 @@ func TestSendAccessRequest(t *testing.T) {
 		test := test
 
 		t.Run(test.name, func(t *testing.T) {
-			service, db, _, _ := newService(t)
+			service, _, mocks := newService(t)
 			ctx := context.Background()
 
-			db.EXPECT().GetOutgoingAccessRequest(ctx, uint(test.request.AccessRequestID)).
+			mocks.db.
+				EXPECT().
+				GetOutgoingAccessRequest(ctx, uint(test.request.AccessRequestID)).
 				Return(test.accessRequest, test.accessRequestErr)
 
-			updateMock := db.EXPECT().UpdateOutgoingAccessRequestState(ctx, uint(test.request.AccessRequestID), database.OutgoingAccessRequestCreated, uint(0), nil).
+			updateMock := mocks.db.
+				EXPECT().
+				UpdateOutgoingAccessRequestState(ctx, uint(test.request.AccessRequestID), database.OutgoingAccessRequestCreated, uint(0), nil).
 				Do(func(_ context.Context, _ uint, state database.OutgoingAccessRequestState, _ uint, errorDetails *diagnostics.ErrorDetails) error {
 					test.accessRequest.State = state
 					return nil
@@ -427,17 +389,17 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 	for _, test := range tests {
 		test := test
 		t.Run(test.name, func(t *testing.T) {
-			service, db, auditLogger, _ := newService(t)
-			test.auditLog(*auditLogger)
+			service, _, mocks := newService(t)
+			test.auditLog(*mocks.al)
 
-			db.EXPECT().GetIncomingAccessRequest(test.ctx, uint(test.request.AccessRequestID)).Return(test.accessRequest, test.accessRequestErr)
+			mocks.db.EXPECT().GetIncomingAccessRequest(test.ctx, uint(test.request.AccessRequestID)).Return(test.accessRequest, test.accessRequestErr)
 
 			if test.response != nil {
-				db.EXPECT().CreateAccessGrant(test.ctx, test.accessRequest)
+				mocks.db.EXPECT().CreateAccessGrant(test.ctx, test.accessRequest)
 			}
 
 			if test.expectUpdateCall {
-				db.EXPECT().UpdateIncomingAccessRequestState(test.ctx, test.accessRequest.ID, database.IncomingAccessRequestApproved).Return(test.updateErr)
+				mocks.db.EXPECT().UpdateIncomingAccessRequestState(test.ctx, test.accessRequest.ID, database.IncomingAccessRequestApproved).Return(test.updateErr)
 			}
 
 			actual, err := service.ApproveIncomingAccessRequest(test.ctx, test.request)
@@ -538,14 +500,14 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 	for _, test := range tests {
 		test := test
 		t.Run(test.name, func(t *testing.T) {
-			service, db, auditLogger, _ := newService(t)
+			service, _, mocks := newService(t)
 
-			test.auditLog(*auditLogger)
+			test.auditLog(*mocks.al)
 
-			db.EXPECT().GetIncomingAccessRequest(test.ctx, uint(test.request.AccessRequestID)).Return(test.accessRequest, test.accessRequestErr)
+			mocks.db.EXPECT().GetIncomingAccessRequest(test.ctx, uint(test.request.AccessRequestID)).Return(test.accessRequest, test.accessRequestErr)
 
 			if test.expectUpdateCall {
-				db.EXPECT().UpdateIncomingAccessRequestState(test.ctx, test.accessRequest.ID, database.IncomingAccessRequestRejected).Return(test.updateErr)
+				mocks.db.EXPECT().UpdateIncomingAccessRequestState(test.ctx, test.accessRequest.ID, database.IncomingAccessRequestRejected).Return(test.updateErr)
 			}
 
 			actual, err := service.RejectIncomingAccessRequest(test.ctx, test.request)
@@ -554,16 +516,6 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 			assert.Equal(t, test.err, err)
 		})
 	}
-}
-
-func setProxyMetadata(ctx context.Context) context.Context {
-	md := metadata.Pairs(
-		"nlx-organization", "organization-a",
-		"nlx-public-key-der", "ZHVtbXktcHVibGljLWtleQo=",
-		"nlx-public-key-fingerprint", "1655A0AB68576280",
-	)
-
-	return metadata.NewIncomingContext(ctx, md)
 }
 
 func TestExternalRequestAccess(t *testing.T) {
@@ -629,8 +581,8 @@ func TestExternalRequestAccess(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, db, _, _ := newService(t)
-			ctx := tt.setup(db)
+			service, _, mocks := newService(t)
+			ctx := tt.setup(mocks.db)
 
 			_, err := service.RequestAccess(ctx, &external.RequestAccessRequest{
 				ServiceName: "service",
@@ -698,8 +650,8 @@ func TestExternalGetAccessRequestState(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, db, _, _ := newService(t)
-			ctx := tt.setup(db)
+			service, _, mocks := newService(t)
+			ctx := tt.setup(mocks.db)
 
 			response, err := service.GetAccessRequestState(ctx, &external.GetAccessRequestStateRequest{
 				ServiceName: "service",

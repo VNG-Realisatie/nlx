@@ -22,6 +22,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
 	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
+	"go.nlx.io/nlx/management-api/pkg/management"
 	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
@@ -56,6 +57,7 @@ func TestCreateService(t *testing.T) {
 		mockDatabase,
 		nil,
 		auditLogger,
+		management.NewClient,
 	)
 
 	requestService := &api.CreateServiceRequest{
@@ -93,6 +95,7 @@ func TestGetService(t *testing.T) {
 		mockDatabase,
 		nil,
 		mock_auditlog.NewMockLogger(mockCtrl),
+		management.NewClient,
 	)
 
 	getServiceRequest := &api.GetServiceRequest{
@@ -157,6 +160,7 @@ func TestUpdateService(t *testing.T) {
 		mockDatabase,
 		nil,
 		auditLogger,
+		management.NewClient,
 	)
 
 	updateServiceRequest := &api.UpdateServiceRequest{
@@ -208,6 +212,7 @@ func TestDeleteService(t *testing.T) {
 		mockDatabase,
 		nil,
 		auditLogger,
+		management.NewClient,
 	)
 
 	deleteRequest := &api.DeleteServiceRequest{
@@ -486,6 +491,7 @@ func TestListServices(t *testing.T) {
 				test.db(ctrl),
 				nil,
 				mock_auditlog.NewMockLogger(ctrl),
+				management.NewClient,
 			)
 			actualResponse, err := service.ListServices(ctx, test.request)
 
@@ -516,6 +522,7 @@ func TestGetStatisticsOfServices(t *testing.T) {
 		mockDatabase,
 		nil,
 		mock_auditlog.NewMockLogger(mockCtrl),
+		management.NewClient,
 	)
 
 	requestGetStatisticsOfServices := &api.GetStatisticsOfServicesRequest{}
