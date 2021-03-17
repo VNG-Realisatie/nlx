@@ -10,5 +10,7 @@ type Record struct {
 	ServiceName      string                 `json:"service_name"`
 	LogrecordID      string                 `json:"logrecord-id"`
 	Data             map[string]interface{} `json:"data"`
-	DataSubjects     map[string]string      `json:"dataSubjects"`
+	Delegator        string                 `json:"delegator"`
+	DataSubjects     map[string]string      `json:"data_subjects"`
+	OrderReference   string                 `json:"order_reference"`
 }

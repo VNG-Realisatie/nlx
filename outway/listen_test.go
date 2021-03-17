@@ -25,6 +25,7 @@ import (
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 	mock "go.nlx.io/nlx/outway/mock"
+	"go.nlx.io/nlx/outway/plugins"
 )
 
 var pkiDir = filepath.Join("..", "testing", "pki")
@@ -290,57 +291,74 @@ func TestHandleOnNLXExceptions(t *testing.T) {
 	mockService := mock.NewMockHTTPService(ctrl)
 	outway.servicesHTTP["mockorg.mockservice"] = mockService
 
-	tests := []struct {
-		description          string
-		authSettings         *authSettings
+	tests := map[string]struct {
+		authEnabled          bool
 		txLogger             transactionlog.TransactionLogger
 		dataSubjectHeader    string
 		expectedStatusCode   int
 		exectpedErrorMessage string
 	}{
-		{"With failing auth settings",
-			&authSettings{},
+		"with failing auth settings": {
+			true,
 			&transactionlog.DiscardTransactionLogger{},
 			"",
 			http.StatusInternalServerError,
 			"nlx outway: error authorizing request\n",
 		},
-		{"With failing transactionlogger",
-			nil,
+		"with failing transactionlogger": {
+			false,
 			&failingTransactionLogger{},
 			"",
 			http.StatusInternalServerError,
 			"nlx outway: server error\n",
 		},
-		{"With invalid datasubject header",
-			nil,
+		"with invalid datasubject header": {
+			false,
 			&transactionlog.DiscardTransactionLogger{},
 			"invalid",
 			http.StatusInternalServerError,
 			"nlx outway: invalid data subject header\n",
 		},
 	}
+
 	recorder := httptest.NewRecorder()
 
-	for _, test := range tests {
-		outway.authorizationSettings = test.authSettings
-		outway.txlogger = test.txLogger
-		req := httptest.NewRequest("GET", "http://mockservice.mockorg.services.nlx.local", nil)
-		req.Header.Add("X-NLX-Request-Data-Subject", test.dataSubjectHeader)
-		outway.handleOnNLX(outway.logger, &destination{
-			Organization: "mockorg",
-			Service:      "mockservice",
-			Path:         "/",
-		}, recorder, req)
+	for name, tt := range tests {
+		tt := tt
 
-		assert.Equal(t, test.expectedStatusCode, recorder.Code)
+		t.Run(name, func(t *testing.T) {
+			outway.plugins = []plugins.Plugin{
+				plugins.NewDelegationPlugin(),
+				plugins.NewLogRecordPlugin("TestOrg", tt.txLogger),
+				plugins.NewStripHeadersPlugin("TestOrg"),
+			}
 
-		bytes, err := ioutil.ReadAll(recorder.Body)
-		if err != nil {
-			t.Fatal("error parsing result.body", err)
-		}
+			if tt.authEnabled {
+				outway.plugins = append([]plugins.Plugin{
+					plugins.NewAuthorizationPlugin(nil, "", http.Client{}),
+				}, outway.plugins...)
+			}
 
-		assert.Equal(t, test.exectpedErrorMessage, string(bytes))
+			outway.txlogger = tt.txLogger
+
+			req := httptest.NewRequest("GET", "http://mockservice.mockorg.services.nlx.local", nil)
+			req.Header.Add("X-NLX-Request-Data-Subject", tt.dataSubjectHeader)
+
+			outway.handleOnNLX(outway.logger, &plugins.Destination{
+				Organization: "mockorg",
+				Service:      "mockservice",
+				Path:         "/",
+			}, recorder, req)
+
+			assert.Equal(t, tt.expectedStatusCode, recorder.Code)
+
+			bytes, err := ioutil.ReadAll(recorder.Body)
+			if err != nil {
+				t.Fatal("error parsing result.body", err)
+			}
+
+			assert.Equal(t, tt.exectpedErrorMessage, string(bytes))
+		})
 	}
 }
 
@@ -431,27 +449,6 @@ func TestFailingTransport(t *testing.T) {
 	// set transports to fail.
 	outway.setFailingTransport()
 	testRequests(t, tests)
-}
-
-func TestCreateRecordData(t *testing.T) {
-	headers := http.Header{}
-	headers.Add("X-NLX-Request-Process-Id", "process-id")
-	headers.Add("X-NLX-Request-Data-Elements", "data-elements")
-	headers.Add("X-NLX-Requester-User", "user")
-	headers.Add("X-NLX-Requester-Claims", "claims")
-	headers.Add("X-NLX-Request-User-Id", "user-id")
-	headers.Add("X-NLX-Request-Application-Id", "application-id")
-	headers.Add("X-NLX-Request-Subject-Identifier", "subject-identifier")
-	recordData := createRecordData(headers, "/path")
-
-	assert.Equal(t, "process-id", recordData["doelbinding-process-id"])
-	assert.Equal(t, "data-elements", recordData["doelbinding-data-elements"])
-	assert.Equal(t, "user", recordData["doelbinding-user"])
-	assert.Equal(t, "claims", recordData["doelbinding-claims"])
-	assert.Equal(t, "user-id", recordData["doelbinding-user-id"])
-	assert.Equal(t, "application-id", recordData["doelbinding-application-id"])
-	assert.Equal(t, "subject-identifier", recordData["doelbinding-subject-identifier"])
-	assert.Equal(t, "/path", recordData["request-path"])
 }
 
 func TestRunServer(t *testing.T) {

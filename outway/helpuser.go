@@ -1,9 +1,14 @@
+// Copyright © VNG Realisatie 2018
+// Licensed under the EUPL
+
 package outway
 
 import (
 	"net/http"
 	"sort"
 	"strings"
+
+	"go.nlx.io/nlx/outway/plugins"
 )
 
 const maxSuggestions = 10
@@ -111,7 +116,7 @@ func (o *Outway) helpUserService(
 		http.StatusBadRequest)
 }
 
-func (o *Outway) helpUser(w http.ResponseWriter, msg string, dest *destination, urlPath string) {
+func (o *Outway) helpUser(w http.ResponseWriter, msg string, dest *plugins.Destination, urlPath string) {
 	// we did not get a complete 3 part url path. help user create one.
 	if dest == nil {
 		pathParts := strings.SplitN(strings.TrimPrefix(urlPath, "/"), "/", 3)

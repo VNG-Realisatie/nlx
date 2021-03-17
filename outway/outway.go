@@ -27,6 +27,7 @@ import (
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
+	"go.nlx.io/nlx/outway/plugins"
 )
 
 type loggerHTTPHandler func(logger *zap.Logger, w http.ResponseWriter, r *http.Request)
@@ -53,18 +54,17 @@ type Outway struct {
 
 	forwardingHTTPProxy *httputil.ReverseProxy
 
-	authorizationSettings *authSettings
-	authorizationClient   http.Client
-
 	servicesLock sync.RWMutex
 	// services mapped by <organizationName>.<serviceName>
 	// httpService
 	servicesHTTP map[string]HTTPService
 	// directory listing copy
 	servicesDirectory map[string]*inspectionapi.ListServicesResponse_Service
+
+	plugins []plugins.Plugin
 }
 
-func (o *Outway) validateAuthURL(authCAPath, authServiceURL string) error {
+func (o *Outway) configureAuthorizationPlugin(authCAPath, authServiceURL string) error {
 	if authServiceURL == "" {
 		return nil
 	}
@@ -82,21 +82,23 @@ func (o *Outway) validateAuthURL(authCAPath, authServiceURL string) error {
 		return errors.New("scheme of authorization service URL is not 'https'")
 	}
 
-	o.authorizationSettings = &authSettings{
-		serviceURL: fmt.Sprintf("%s/auth", authServiceURL),
-	}
-
-	o.authorizationSettings.ca, _, err = common_tls.NewCertPoolFromFile(authCAPath)
+	ca, _, err := common_tls.NewCertPoolFromFile(authCAPath)
 	if err != nil {
 		return err
 	}
 
 	tlsConfig := common_tls.NewConfig(common_tls.WithTLS12())
-	tlsConfig.RootCAs = o.authorizationSettings.ca
+	tlsConfig.RootCAs = ca
 
-	o.authorizationClient = http.Client{
-		Transport: createHTTPTransport(tlsConfig),
-	}
+	o.plugins = append([]plugins.Plugin{
+		plugins.NewAuthorizationPlugin(
+			ca,
+			fmt.Sprintf("%s/auth", authServiceURL),
+			http.Client{
+				Transport: createHTTPTransport(tlsConfig),
+			},
+		),
+	}, o.plugins...)
 
 	return nil
 }
@@ -168,7 +170,7 @@ func NewOutway(
 		o.requestHTTPHandler = o.handleHTTPRequest
 	}
 
-	err := o.validateAuthURL(authCAPath, authServiceURL)
+	err := o.configureAuthorizationPlugin(authCAPath, authServiceURL)
 	if err != nil {
 		return nil, err
 	}
@@ -189,6 +191,12 @@ func NewOutway(
 			return nil, errors.Wrap(err, "failed to setup transactionlog")
 		}
 		logger.Info("transaction logger created")
+	}
+
+	o.plugins = []plugins.Plugin{
+		plugins.NewDelegationPlugin(),
+		plugins.NewLogRecordPlugin(o.organizationName, o.txlogger),
+		plugins.NewStripHeadersPlugin(o.organizationName),
 	}
 
 	o.startDirectoryInspector(directoryInspectionAddress)

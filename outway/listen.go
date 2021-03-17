@@ -9,27 +9,23 @@ import (
 	"fmt"
 	"net"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
 	common_tls "go.nlx.io/nlx/common/tls"
+	"go.nlx.io/nlx/outway/plugins"
 )
 
-const timeOut = 30 * time.Second
-const keepAlive = 30 * time.Second
-const maxIdelCons = 100
-const IdleConnTimeout = 20 * time.Second
-const TLSHandshakeTimeout = 10 * time.Second
-const ExpectConinueTimeout = 1 * time.Second
-
-type destination struct {
-	Organization string
-	Service      string
-	Path         string
-}
+const (
+	timeOut              = 30 * time.Second
+	keepAlive            = 30 * time.Second
+	maxIdelCons          = 100
+	IdleConnTimeout      = 20 * time.Second
+	TLSHandshakeTimeout  = 10 * time.Second
+	ExpectConinueTimeout = 1 * time.Second
+)
 
 // RunServer is a blocking function that listens on provided tcp address to handle requests.
 func (o *Outway) RunServer(listenAddress string, serverCertificate *tls.Certificate) error {
@@ -89,7 +85,6 @@ func (o *Outway) shutDown() {
 	defer cancel()
 
 	err := o.httpServer.Shutdown(localCtx)
-
 	if err != nil {
 		o.logger.Error("error shutting down server", zap.Error(err))
 	}
@@ -170,55 +165,46 @@ func (o *Outway) handleHTTPRequestAsProxy(logger *zap.Logger, w http.ResponseWri
 	o.handleOnNLX(logger, destination, w, r)
 }
 
-func (o *Outway) handleOnNLX(logger *zap.Logger, destination *destination, w http.ResponseWriter, r *http.Request) {
+func buildChain(serve plugins.ServeFunc, pluginList ...plugins.Plugin) plugins.ServeFunc {
+	if len(pluginList) == 0 {
+		return serve
+	}
+
+	return pluginList[0].Serve(buildChain(serve, pluginList[1:]...))
+}
+
+func (o *Outway) handleOnNLX(logger *zap.Logger, destination *plugins.Destination, w http.ResponseWriter, r *http.Request) {
 	service := o.getService(destination.Organization, destination.Service)
 	if service == nil {
 		logger.Warn("received request for unknown service")
 
-		msg := "nlx outway: unknown service"
-		o.helpUser(w, msg, destination, r.URL.Path)
+		o.helpUser(w, "nlx outway: unknown service", destination, r.URL.Path)
 
 		return
 	}
 
-	// Authorize request with plugged authorization service if authorization settings are set.
-	if o.authorizationSettings != nil {
-		authResponse, authErr := o.authorizeRequest(r.Header, destination)
-		if authErr != nil {
-			logger.Error("error authorizing request", zap.Error(authErr))
-			http.Error(w, "nlx outway: error authorizing request", http.StatusInternalServerError)
+	chain := buildChain(func(context plugins.Context) error {
+		context.Request.URL.Path = destination.Path
 
-			return
-		}
+		service.ProxyHTTPRequest(context.Response, context.Request)
+		return nil
+	}, o.plugins...)
 
-		logger.Info("authorization result", zap.Bool("authorized", authResponse.Authorized), zap.String("reason", authResponse.Reason))
-
-		if !authResponse.Authorized {
-			http.Error(w, fmt.Sprintf("nlx outway: authorization failed. reason: %s", authResponse.Reason), http.StatusUnauthorized)
-			return
-		}
+	ctx := plugins.Context{
+		Response:    w,
+		Request:     r,
+		Logger:      o.logger,
+		Destination: destination,
+		LogData:     map[string]string{},
 	}
 
-	logRecordID, err := o.createLogRecord(r, destination)
-	if err != nil {
-		logger.Error("failed to store transactionlog record", zap.Error(err))
+	logger.Info(
+		"forwarding API request",
+		zap.String("service", destination.Service),
+		zap.String("destination-organization", destination.Organization),
+	)
 
-		if strings.Contains(err.Error(), "invalid data subject header") {
-			http.Error(w, "nlx outway: invalid data subject header", http.StatusBadRequest)
-		} else {
-			http.Error(w, "nlx outway: server error", http.StatusInternalServerError)
-		}
-
-		return
+	if err := chain(ctx); err != nil {
+		logger.Error("error while handling API request", zap.Error(err))
 	}
-
-	addLogRecordIDToRequest(r, logRecordID)
-
-	o.stripHeaders(r, destination.Organization)
-
-	logger.Info("forwarding API request", zap.String("destination-organization", destination.Organization), zap.String("service", destination.Service), zap.String("logrecord-id", logRecordID.String()))
-
-	r.URL.Path = destination.Path
-
-	service.ProxyHTTPRequest(w, r)
 }

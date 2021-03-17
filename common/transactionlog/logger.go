@@ -78,6 +78,8 @@ func NewPostgresTransactionLogger(zapLogger *zap.Logger, logdb *sqlx.DB, directi
 			dest_organization,
 			service_name,
 			logrecord_id,
+			delegator,
+			order_reference,
 			data
 		) VALUES (
 			:direction,
@@ -85,6 +87,8 @@ func NewPostgresTransactionLogger(zapLogger *zap.Logger, logdb *sqlx.DB, directi
 			:dest_organization,
 			:service_name,
 			:logrecord_id,
+			:delegator,
+			:order_reference,
 			:data_json
 		)
 		RETURNING id
