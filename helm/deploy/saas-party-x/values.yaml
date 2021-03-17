@@ -1,0 +1,301 @@
+############
+## Global ##
+############
+global:
+  imageRegistry: ""
+  imageTag: ""
+  tls:
+    # pki/shared/ca/root.pem
+    organizationRootCertificatePEM: |
+      # Subject: C=NL, O=NLX, CN=NLX Root CA
+      # Issuer: C=NL, O=NLX, CN=NLX Root CA
+      -----BEGIN CERTIFICATE-----
+      MIIFMjCCAxqgAwIBAgIUf3G4wZe35lBs2/wGBi9LirQVa64wDQYJKoZIhvcNAQEN
+      BQAwMTELMAkGA1UEBhMCTkwxDDAKBgNVBAoTA05MWDEUMBIGA1UEAxMLTkxYIFJv
+      b3QgQ0EwHhcNMjAwODAzMTU1NjAwWhcNMzUwNzMxMTU1NjAwWjAxMQswCQYDVQQG
+      EwJOTDEMMAoGA1UEChMDTkxYMRQwEgYDVQQDEwtOTFggUm9vdCBDQTCCAiIwDQYJ
+      KoZIhvcNAQEBBQADggIPADCCAgoCggIBAK+nsTl5Y5dlgt6gb8NANG6xTSPgJrzo
+      FnPH+El+9GW7oGQQqH1N4XARSfsDvUe8ESOB6wPce6BXUif44+XmakJQe/NiU5HL
+      JTV6LWnqzMjgO1SiT6qfa1P+vpKMKEGKEyUB61wPmpm64P7C/ErIRArsihVay/uj
+      lIN1rHzv8qzOFfRGzi+WTXD1klXPjKQlkjOeb3KcWX3+v81K/Ot5WWwEkB/nxb6f
+      UbKCM8TebuKwHsm1Sp1z8KRiC3Tqu7vnUkD6vWmmIRJUGWigheUyPlBuBUOQmbqv
+      tdykLptOEd0uIKtVJNRIv5EyBvueOzK6ZWZEDHsv9nsGoCH/3h9eh88TXojGTrDf
+      Ja2In2Th0ECQLtk+QGYyNrBgCPlbBiZF9hyMwAHWgAi5HdPAWYreDNlYxPgFr/gp
+      wB8gZ625d5y6o7J5NyjdI+XwsEieAmz58aH04qY43qVlZWn0MuRuMp33WVBAfRUQ
+      uvtNkKXcjzeDoTtEpA5FKOkLi2b1JSEdNS5Lnl5tNHWrQkPrKe14TlqME3XRuIZ6
+      tFGj7c7yVWDheBxKVkvBjHoG6ORq3zoNIc0SR+KkYfjUn1G3yO3dQ8MO4AxsFNbG
+      su7efIR2aRNDajlZPTrNTT82nRE9NN9X7jdMsplCqra+tPQMocsu2dIpklPSFoId
+      AKKA46GqxBwzAgMBAAGjQjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTAD
+      AQH/MB0GA1UdDgQWBBQ+Pern0OE84DTMWWBXUccN3KwQ6TANBgkqhkiG9w0BAQ0F
+      AAOCAgEApLumRZj0bu4zJkGO6fHYITa5EYzMPs0LPq/a7qLsM3BGK+4wukhjQVn8
+      ka1KFDJIzOLLr5/xIZCGus0LRedm0ZtndX+QmbnRbJVeSEBmrPOw/Ri5QKZWKXrB
+      BcTy/E6LtvBXCY2GPrXLQQrmbEkUFL9q08xdA8pdKsPKohssQaCdyA8Sy/qnVSZJ
+      USw3YiedRMpE1ccy7mZG4q9i3xXAl6kDf0AAj8HOdl4vqDP9jr1rZs/k4XSyzN3q
+      eCI0kTiEJvF9UXaujpZWQcP//gFxLHeTKY9S1ODICFMGhVGI+tuIuXpGHp+yKONF
+      iFNYEY+GUyfjBNbSt8yJ6ky0gYE1jbBoPinuaCy+yiBTEhi5wJ0ChsOXUBj7RcE7
+      ghIp9J22J/5dKrvElszvw5XF5cqeWCREXTSCjwNdfR9fgBVBe/h3os8G4nf/zHPb
+      niBAvS339i75evlWOM2p6gzrAiVCXsRQxBXZkT3Jd6VVCh5ZjqFKFIE+Hl4AXD+g
+      PPcuTXprffmXHrUHp6ufBeyppyUgxOmFX+E+c6rmyDWM+/Oy9HsFNhjIMkUStWsR
+      OG+OQsCbQbISHXb9Won4S27z3NklmSmje3Ls+teidfeCIRbxc9/2DFQS2SZRZeH8
+      W0Kbud2Kq3mOWOIeXqZ0008uk90KzXZ1zekXDO2/hIERtDhYgKg=
+      -----END CERTIFICATE-----
+    # pki/organization-c/ca/root.pem
+    rootCertificatePEM: |
+      # Subject: C=NL, O=Organization-C, CN=Organization-C Root CA
+      # Issuer: C=NL, O=Organization-C, CN=Organization-C Root CA
+      -----BEGIN CERTIFICATE-----
+      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
+      -----END CERTIFICATE-----
+
+###########
+## Chart ##
+###########
+nameOverride: ""
+fullnameOverride: ""
+
+ca:
+  issuer:
+    # pki/organization-c/ca/intermediate.pem
+    certificatePEM: |
+      # Subject: C=NL, O=Organization-C, CN=Organization-C Intermediate CA
+      # Issuer: C=NL, O=Organization-C, CN=Organization-C Root CA
+      -----BEGIN CERTIFICATE-----
+      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
+      -----END CERTIFICATE-----
+    # pki/organization-c/ca/intermediate-key.pem
+    keyPEM: |
+      -----BEGIN RSA PRIVATE KEY-----
+      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
+      -----END RSA PRIVATE KEY-----
+
+  certificates:
+    organization:
+      subject:
+        organizations:
+          - Saas Party X
+      commonName: saas-party-x-nlx-inway
+      dnsNames:
+        - saas-party-x-nlx-inway
+      issuerRef:
+        name: shared
+    management-api:
+      commonName: saas-party-x-nlx-management-api
+      dnsNames:
+        - saas-party-x-nlx-management-api
+      issuerRef:
+        name: saas-party-x
+    nlxctl:
+      commonName: nlxctl
+      issuerRef:
+        name: saas-party-x
+
+postgresql:
+  version: "11.1"
+  storageType: Durable
+  storageSize: 8Gi
+
+transactionLog:
+  image:
+    registry: docker.io
+    repository: nlxio/txlog-db
+    tag: ""
+    pullPolicy: IfNotPresent
+  hostname: saas-party-x-postgresql
+  databaseName: saas-party-x-transaction-log
+  existingSecret: saas-party-x-postgresql-auth
+  resetDatabase: false
+
+managementAPI:
+  address: saas-party-x-nlx-management-api:443
+  image:
+    registry: docker.io
+    repository: nlxio/management-api
+    tag: ""
+    pullPolicy: IfNotPresent
+  postgresql:
+    hostname: saas-party-x-postgresql
+    existingSecret: saas-party-x-postgresql-auth
+
+################
+## Sub-charts ##
+################
+nlx-outway:
+  config:
+    directoryInspectionHostname: shared-nlx-directory-inspection
+  transactionLog:
+    enabled: false
+  tls:
+    organizationCertificate:
+      existingSecret: saas-party-x-organization-tls
+
+nlx-management:
+  config:
+    directoryInspectionHostname: shared-nlx-directory-inspection
+    directoryRegistrationHostname: shared-nlx-directory-registration
+    oidc:
+      clientSecret: ZXhhbXBsZS1hcHAtc2VjcmV0
+      discoveryURL: http://dex.saas-party-x.nlx.minikube
+      redirectURL: http://nlx-management.saas-party-x.nlx.minikube/oidc/callback
+      sessionSignKey: 0Xn2DBfb4L4hwN3XosbwoKZalLBU68UU
+  tls:
+    organizationCertificate:
+      existingSecret: saas-party-x-organization-tls
+    certificate:
+      existingSecret: saas-party-x-management-api-tls
+  ingress:
+    enabled: true
+    hosts:
+      - nlx-management.saas-party-x.nlx.minikube
+  transactionLog:
+    enabled: true
+    hostname: saas-party-x-postgresql
+    database: saas-party-x-transaction-log
+    existingSecret: saas-party-x-postgresql-auth
+  postgresql:
+    hostname: saas-party-x-postgresql
+    existingSecret: saas-party-x-postgresql-auth
+
+dex:
+  config:
+    storage:
+      type: sqlite3
+      config:
+        file: ":memory:"
+    logger:
+      level: info
+    issuer: http://dex.saas-party-x.nlx.minikube
+    staticClients:
+      - id: nlx-management
+        name: NLX Management
+        secret: ZXhhbXBsZS1hcHAtc2VjcmV0
+        redirectURIs:
+          - http://nlx-management.saas-party-x.nlx.minikube/oidc/callback
+    enablePasswordDB: true
+    staticPasswords:
+      - username: admin
+        userID: 23b027bf-b1b1-4a08-b95b-921d4afc38bc
+        hash: $2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W  # password
+        name: Admin User
+        email: admin@example.com
+    oauth2:
+      skipApprovalScreen: false
+  ingress:
+    enabled: true
+    hosts:
+      - dex.saas-party-x.nlx.minikube
+  ports:
+    web:
+      servicePort: 80
+  grpc: false
+  certs:
+    web:
+      create: false
+    grpc:
+      create: false
+  rbac:
+    create: false

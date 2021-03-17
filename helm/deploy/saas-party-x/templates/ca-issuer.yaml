@@ -1,0 +1,9 @@
+apiVersion: cert-manager.io/v1beta1
+kind: Issuer
+metadata:
+  name: {{ include "saas-party-x.fullname" . }}
+  labels:
+    {{- include "saas-party-x.labels" . | nindent 4 }}
+spec:
+  ca:
+    secretName: {{ include "saas-party-x.fullname" . }}-ca-issuer

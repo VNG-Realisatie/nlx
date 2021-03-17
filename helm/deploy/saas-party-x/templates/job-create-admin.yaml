@@ -1,0 +1,49 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "saas-party-x.fullname" . }}-create-admin
+  labels:
+    {{- include "saas-party-x.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "2"
+    helm.sh/hook-delete-policy: "before-hook-creation,hook-succeeded"
+spec:
+  backoffLimit: 50
+  template:
+    metadata:
+      labels:
+        {{- include "saas-party-x.selectorLabels" . | nindent 8 }}
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: management-api-create-user
+          image: {{ template "saas-party-x.managementAPI.image" . }}
+          imagePullPolicy: {{ .Values.managementAPI.image.pullPolicy }}
+          command: ["/bin/sh"]
+          args:
+            - "-xc"
+            - |
+                nlx-management-api create-user --email admin@example.com --role admin; \
+                  return_code=$?
+
+                if [ $return_code -eq 128 ]; then
+                  echo "admin use was already created"
+                elif [ ! $return_code -eq 0 ]; then
+                  exit 1
+                fi
+          env:
+            - name: POSTGRES_HOST
+              value: {{ required "PostgreSQL hostname is required" .Values.managementAPI.postgresql.hostname }}
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.managementAPI.postgresql.existingSecret }}
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.managementAPI.postgresql.existingSecret }}
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DSN
+              value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):5432/nlx_management?sslmode=disable&connect_timeout=10'

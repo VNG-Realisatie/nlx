@@ -1,0 +1,12 @@
+apiVersion: v2
+name: saas-party-x
+description: Metachart for the Saas Party X demo organization
+type: application
+version: 0.96.0
+appVersion: 0.96.0
+
+dependencies:
+  - name: dex
+    version: 2.13.0
+    repository: "@stable"
+

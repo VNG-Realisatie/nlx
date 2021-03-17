@@ -1,0 +1,18 @@
+apiVersion: kubedb.com/v1alpha1
+kind: Postgres
+metadata:
+  name: {{ include "saas-party-x.fullname" . }}-postgresql
+  labels:
+    {{- include "saas-party-x.labels" . | nindent 4 }}
+spec:
+  version: {{ (required "PostgreSQL version is required" .Values.postgresql.version) | toString }}
+  storageType: {{ required "PostgreSQL storage type is required" .Values.postgresql.storageType }}
+{{- if not (eq .Values.postgresql.storageType "Ephemeral") }}
+  storage:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: {{ required "PostgreSQL storage size is required" .Values.postgresql.storageSize }}
+{{- end }}
+  terminationPolicy: WipeOut

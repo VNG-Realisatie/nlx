@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-PKIS="shared organization-a organization-b"
+PKIS="shared organization-a organization-b organization c"
 
 for PKI in ${PKIS}; do
   PKI_DIR="${BASE_DIR}/${PKI}"
