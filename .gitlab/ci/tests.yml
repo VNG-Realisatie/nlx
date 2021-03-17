@@ -15,7 +15,7 @@ Lint commit messages:
 
 Go go.mod tidy test:
   stage: Tests
-  image: ${CI_DEPENDENCY_PROXY_GROUP_URL}/golang:1.15.5
+  image: ${CI_DEPENDENCY_PROXY_GROUP_URL}/golang:1.16.2
   script:
     - cp go.mod go.mod.orig
     - /usr/local/go/bin/go mod download
@@ -29,7 +29,7 @@ Go go.mod tidy test:
 
 Go tests:
   stage: Tests
-  image: ${CI_DEPENDENCY_PROXY_GROUP_URL}/golang:1.15.5
+  image: ${CI_DEPENDENCY_PROXY_GROUP_URL}/golang:1.16.2
   before_script:
     - mkdir -p tmp-coverage-reports/
   script:
