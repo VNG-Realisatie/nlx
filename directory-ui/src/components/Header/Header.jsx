@@ -17,32 +17,20 @@ const Header = () => (
   <StyledHeader>
     <Container>
       <StyledNavigation>
-        <a className="navbar-logo" href="https://www.nlx.io">
+        <a className="navbar-logo" href="https://nlx.io">
           <img src={logo} alt="NLX logo" />
         </a>
-        <ul className="navbar-nav">
-          <li className="nav-item">
-            <a className="nav-link" href="https://nlx.io/about/">
-              Over NLX
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link" href="https://docs.nlx.io">
-              Docs
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link" href="https://docs.nlx.io/support">
-              Support
-            </a>
-          </li>
-        </ul>
 
         <ul className="navbar-nav">
           <li className="nav-item active">
             <Link className="nav-link" to="/">
               Directory
             </Link>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link" href="https://docs.nlx.io">
+              Docs
+            </a>
           </li>
         </ul>
 
