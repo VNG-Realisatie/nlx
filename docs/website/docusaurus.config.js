@@ -22,10 +22,9 @@ module.exports = {
         src: 'img/logo.svg',
       },
       items: [
-        {href: 'https://nlx.io/about/', label: 'Over NLX', position: 'right'},
         {to: 'understanding-the-basics/introduction', label: 'Docs', position: 'right'},
         {href: 'https://directory.demo.nlx.io/', label: 'Directory', position: 'right'},
-        {to: 'support/contact', label: 'Support', position: 'right'},
+        {to: 'https://nlx.io/contact', label: 'Support', position: 'right'},
       ],
     },
     footer: {
