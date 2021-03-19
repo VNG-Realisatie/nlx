@@ -54,7 +54,7 @@ func NewLogRecordPlugin(organizationName string, txLogger transactionlog.Transac
 }
 
 func (plugin *LogRecordPlugin) Serve(next ServeFunc) ServeFunc {
-	return func(context Context) error {
+	return func(context *Context) error {
 		logRecordID, err := plugin.createLogRecord(context)
 		if err != nil {
 			context.Logger.Error("failed to store transactionlog record", zap.Error(err))
@@ -109,7 +109,7 @@ func createRecordData(h http.Header, p string) map[string]interface{} {
 	return recordData
 }
 
-func (plugin *LogRecordPlugin) createLogRecord(context Context) (*LogRecordID, error) {
+func (plugin *LogRecordPlugin) createLogRecord(context *Context) (*LogRecordID, error) {
 	logRecordID, err := NewLogRecordID()
 	if err != nil {
 		return nil, errors.Wrap(err, "could not get new request ID")

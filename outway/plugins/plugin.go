@@ -23,7 +23,7 @@ type Context struct {
 	LogData     map[string]string
 }
 
-type ServeFunc func(context Context) error
+type ServeFunc func(context *Context) error
 
 type Plugin interface {
 	Serve(next ServeFunc) ServeFunc

@@ -10,11 +10,11 @@ import (
 	"go.uber.org/zap"
 )
 
-func fakeContext(dest *Destination) Context {
+func fakeContext(dest *Destination) *Context {
 	recorder := httptest.NewRecorder()
 	request, _ := http.NewRequest("GET", "/test", nil)
 
-	return Context{
+	return &Context{
 		Destination: dest,
 		Request:     request,
 		Response:    recorder,
@@ -23,6 +23,6 @@ func fakeContext(dest *Destination) Context {
 	}
 }
 
-func nopServeFunc(context Context) error {
+func nopServeFunc(context *Context) error {
 	return nil
 }

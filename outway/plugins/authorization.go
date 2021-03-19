@@ -40,7 +40,7 @@ func NewAuthorizationPlugin(ca *x509.CertPool, serviceURL string, authorizationC
 }
 
 func (plugin *AuthorizationPlugin) Serve(next ServeFunc) ServeFunc {
-	return func(context Context) error {
+	return func(context *Context) error {
 		authResponse, authErr := plugin.authorizeRequest(context.Request.Header, context.Destination)
 		if authErr != nil {
 			context.Logger.Error("error authorizing request", zap.Error(authErr))

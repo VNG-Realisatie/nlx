@@ -59,6 +59,8 @@ func TestDelegationPlugin(t *testing.T) {
 				assert.Equal(t, http.StatusInternalServerError, response.StatusCode)
 			} else {
 				assert.Equal(t, http.StatusOK, response.StatusCode)
+				assert.Equal(t, "TestOrg", context.LogData["delegator"])
+				assert.Equal(t, "test-ref-123", context.LogData["orderReference"])
 			}
 		})
 	}

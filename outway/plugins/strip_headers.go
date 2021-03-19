@@ -14,7 +14,7 @@ func NewStripHeadersPlugin(organizationName string) *StripHeadersPlugin {
 }
 
 func (plugin *StripHeadersPlugin) Serve(next ServeFunc) ServeFunc {
-	return func(context Context) error {
+	return func(context *Context) error {
 		if plugin.organizationName != context.Destination.Organization {
 			context.Request.Header.Del("X-NLX-Requester-User")
 			context.Request.Header.Del("X-NLX-Requester-Claims")

@@ -183,14 +183,14 @@ func (o *Outway) handleOnNLX(logger *zap.Logger, destination *plugins.Destinatio
 		return
 	}
 
-	chain := buildChain(func(context plugins.Context) error {
+	chain := buildChain(func(context *plugins.Context) error {
 		context.Request.URL.Path = destination.Path
 
 		service.ProxyHTTPRequest(context.Response, context.Request)
 		return nil
 	}, o.plugins...)
 
-	ctx := plugins.Context{
+	ctx := &plugins.Context{
 		Response:    w,
 		Request:     r,
 		Logger:      o.logger,

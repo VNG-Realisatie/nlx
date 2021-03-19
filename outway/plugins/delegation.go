@@ -37,7 +37,7 @@ func parseRequestMetadata(r *http.Request) (name, orderReference string, err err
 }
 
 func (plugin *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
-	return func(context Context) error {
+	return func(context *Context) error {
 		if !isDelegatedRequest(context.Request) {
 			return next(context)
 		}
@@ -52,7 +52,7 @@ func (plugin *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 			return nil
 		}
 
-		context.LogData["delegation"] = name
+		context.LogData["delegator"] = name
 		context.LogData["orderReference"] = orderRef
 
 		return next(context)
