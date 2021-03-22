@@ -36,7 +36,7 @@ Used for testing code changes. No NLX directory or Inway is exposed outside the 
 
 ### Acceptance environment
 
-All changes pushed to the master branch are deployed to this enviroment. No NLX directory or Inway is exposed outside the Kubernetes cluster.
+All changes pushed to the master branch are deployed to this environment. No NLX directory or Inway is exposed outside the Kubernetes cluster.
 
 *Charts: brp, haarlem, rdw, saas-org-x, shared*
 

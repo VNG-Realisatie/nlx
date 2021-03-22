@@ -6,7 +6,7 @@ if [ "${1}" = "-f" ]; then
   FORCE=1
 fi
 
-PKIS="shared organization-a organization-b organization-c"
+PKIS="shared organization-a organization-b"
 
 for PKI in ${PKIS}; do
   PKI_DIR="${BASE_DIR}/${PKI}"

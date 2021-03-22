@@ -39,7 +39,6 @@ global:
       OG+OQsCbQbISHXb9Won4S27z3NklmSmje3Ls+teidfeCIRbxc9/2DFQS2SZRZeH8
       W0Kbud2Kq3mOWOIeXqZ0008uk90KzXZ1zekXDO2/hIERtDhYgKg=
       -----END CERTIFICATE-----
-    # pki/organization-c/ca/root.pem
     rootCertificatePEM: |
       # Subject: C=NL, O=Organization-C, CN=Organization-C Root CA
       # Issuer: C=NL, O=Organization-C, CN=Organization-C Root CA
@@ -83,7 +82,6 @@ fullnameOverride: ""
 
 ca:
   issuer:
-    # pki/organization-c/ca/intermediate.pem
     certificatePEM: |
       # Subject: C=NL, O=Organization-C, CN=Organization-C Intermediate CA
       # Issuer: C=NL, O=Organization-C, CN=Organization-C Root CA
@@ -119,7 +117,6 @@ ca:
       pB0YdBP9fLXZFFAD5wdi0xf/kxCHmWWhWgGCBLMk3M0ohTseHVBfsTeCOTgSia3T
       Q/SeCH1Rc9pILIF7PPE2Q7Gr3Mu2al77bYnsa5nD
       -----END CERTIFICATE-----
-    # pki/organization-c/ca/intermediate-key.pem
     keyPEM: |
       -----BEGIN RSA PRIVATE KEY-----
       MIIJKQIBAAKCAgEAqRXhIqmPpOcfqY0BwmzgplKZFcInsOKqGqYXfojGrHv0xefs
@@ -178,9 +175,9 @@ ca:
       subject:
         organizations:
           - Saas Org X
-      commonName: saas-org-x-nlx-inway
+      commonName: saas-org-x-nlx-outway
       dnsNames:
-        - saas-org-x-nlx-inway
+        - saas-org-x-nlx-outway
       issuerRef:
         name: shared
     management-api:
