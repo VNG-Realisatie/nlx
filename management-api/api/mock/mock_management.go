@@ -6,357 +6,38 @@ package mock_api
 
 import (
 	context "context"
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	api "go.nlx.io/nlx/management-api/api"
 	grpc "google.golang.org/grpc"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
-	reflect "reflect"
 )
 
-// MockManagementClient is a mock of ManagementClient interface
+// MockManagementClient is a mock of ManagementClient interface.
 type MockManagementClient struct {
 	ctrl     *gomock.Controller
 	recorder *MockManagementClientMockRecorder
 }
 
-// MockManagementClientMockRecorder is the mock recorder for MockManagementClient
+// MockManagementClientMockRecorder is the mock recorder for MockManagementClient.
 type MockManagementClientMockRecorder struct {
 	mock *MockManagementClient
 }
 
-// NewMockManagementClient creates a new mock instance
+// NewMockManagementClient creates a new mock instance.
 func NewMockManagementClient(ctrl *gomock.Controller) *MockManagementClient {
 	mock := &MockManagementClient{ctrl: ctrl}
 	mock.recorder = &MockManagementClientMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockManagementClient) EXPECT() *MockManagementClientMockRecorder {
 	return m.recorder
 }
 
-// IsFinanceEnabled mocks base method
-func (m *MockManagementClient) IsFinanceEnabled(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.IsFinanceEnabledResponse, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "IsFinanceEnabled", varargs...)
-	ret0, _ := ret[0].(*api.IsFinanceEnabledResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// IsFinanceEnabled indicates an expected call of IsFinanceEnabled
-func (mr *MockManagementClientMockRecorder) IsFinanceEnabled(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsFinanceEnabled", reflect.TypeOf((*MockManagementClient)(nil).IsFinanceEnabled), varargs...)
-}
-
-// DownloadFinanceExport mocks base method
-func (m *MockManagementClient) DownloadFinanceExport(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.DownloadFinanceExportResponse, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "DownloadFinanceExport", varargs...)
-	ret0, _ := ret[0].(*api.DownloadFinanceExportResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// DownloadFinanceExport indicates an expected call of DownloadFinanceExport
-func (mr *MockManagementClientMockRecorder) DownloadFinanceExport(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadFinanceExport", reflect.TypeOf((*MockManagementClient)(nil).DownloadFinanceExport), varargs...)
-}
-
-// ListServices mocks base method
-func (m *MockManagementClient) ListServices(ctx context.Context, in *api.ListServicesRequest, opts ...grpc.CallOption) (*api.ListServicesResponse, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "ListServices", varargs...)
-	ret0, _ := ret[0].(*api.ListServicesResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListServices indicates an expected call of ListServices
-func (mr *MockManagementClientMockRecorder) ListServices(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListServices", reflect.TypeOf((*MockManagementClient)(nil).ListServices), varargs...)
-}
-
-// GetService mocks base method
-func (m *MockManagementClient) GetService(ctx context.Context, in *api.GetServiceRequest, opts ...grpc.CallOption) (*api.GetServiceResponse, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "GetService", varargs...)
-	ret0, _ := ret[0].(*api.GetServiceResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetService indicates an expected call of GetService
-func (mr *MockManagementClientMockRecorder) GetService(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetService", reflect.TypeOf((*MockManagementClient)(nil).GetService), varargs...)
-}
-
-// CreateService mocks base method
-func (m *MockManagementClient) CreateService(ctx context.Context, in *api.CreateServiceRequest, opts ...grpc.CallOption) (*api.CreateServiceResponse, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "CreateService", varargs...)
-	ret0, _ := ret[0].(*api.CreateServiceResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// CreateService indicates an expected call of CreateService
-func (mr *MockManagementClientMockRecorder) CreateService(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateService", reflect.TypeOf((*MockManagementClient)(nil).CreateService), varargs...)
-}
-
-// UpdateService mocks base method
-func (m *MockManagementClient) UpdateService(ctx context.Context, in *api.UpdateServiceRequest, opts ...grpc.CallOption) (*api.UpdateServiceResponse, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "UpdateService", varargs...)
-	ret0, _ := ret[0].(*api.UpdateServiceResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// UpdateService indicates an expected call of UpdateService
-func (mr *MockManagementClientMockRecorder) UpdateService(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateService", reflect.TypeOf((*MockManagementClient)(nil).UpdateService), varargs...)
-}
-
-// DeleteService mocks base method
-func (m *MockManagementClient) DeleteService(ctx context.Context, in *api.DeleteServiceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "DeleteService", varargs...)
-	ret0, _ := ret[0].(*emptypb.Empty)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// DeleteService indicates an expected call of DeleteService
-func (mr *MockManagementClientMockRecorder) DeleteService(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteService", reflect.TypeOf((*MockManagementClient)(nil).DeleteService), varargs...)
-}
-
-// GetStatisticsOfServices mocks base method
-func (m *MockManagementClient) GetStatisticsOfServices(ctx context.Context, in *api.GetStatisticsOfServicesRequest, opts ...grpc.CallOption) (*api.GetStatisticsOfServicesResponse, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "GetStatisticsOfServices", varargs...)
-	ret0, _ := ret[0].(*api.GetStatisticsOfServicesResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetStatisticsOfServices indicates an expected call of GetStatisticsOfServices
-func (mr *MockManagementClientMockRecorder) GetStatisticsOfServices(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStatisticsOfServices", reflect.TypeOf((*MockManagementClient)(nil).GetStatisticsOfServices), varargs...)
-}
-
-// ListInways mocks base method
-func (m *MockManagementClient) ListInways(ctx context.Context, in *api.ListInwaysRequest, opts ...grpc.CallOption) (*api.ListInwaysResponse, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "ListInways", varargs...)
-	ret0, _ := ret[0].(*api.ListInwaysResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListInways indicates an expected call of ListInways
-func (mr *MockManagementClientMockRecorder) ListInways(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListInways", reflect.TypeOf((*MockManagementClient)(nil).ListInways), varargs...)
-}
-
-// GetInway mocks base method
-func (m *MockManagementClient) GetInway(ctx context.Context, in *api.GetInwayRequest, opts ...grpc.CallOption) (*api.Inway, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "GetInway", varargs...)
-	ret0, _ := ret[0].(*api.Inway)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetInway indicates an expected call of GetInway
-func (mr *MockManagementClientMockRecorder) GetInway(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInway", reflect.TypeOf((*MockManagementClient)(nil).GetInway), varargs...)
-}
-
-// CreateInway mocks base method
-func (m *MockManagementClient) CreateInway(ctx context.Context, in *api.Inway, opts ...grpc.CallOption) (*api.Inway, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "CreateInway", varargs...)
-	ret0, _ := ret[0].(*api.Inway)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// CreateInway indicates an expected call of CreateInway
-func (mr *MockManagementClientMockRecorder) CreateInway(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateInway", reflect.TypeOf((*MockManagementClient)(nil).CreateInway), varargs...)
-}
-
-// UpdateInway mocks base method
-func (m *MockManagementClient) UpdateInway(ctx context.Context, in *api.UpdateInwayRequest, opts ...grpc.CallOption) (*api.Inway, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "UpdateInway", varargs...)
-	ret0, _ := ret[0].(*api.Inway)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// UpdateInway indicates an expected call of UpdateInway
-func (mr *MockManagementClientMockRecorder) UpdateInway(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateInway", reflect.TypeOf((*MockManagementClient)(nil).UpdateInway), varargs...)
-}
-
-// DeleteInway mocks base method
-func (m *MockManagementClient) DeleteInway(ctx context.Context, in *api.DeleteInwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "DeleteInway", varargs...)
-	ret0, _ := ret[0].(*emptypb.Empty)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// DeleteInway indicates an expected call of DeleteInway
-func (mr *MockManagementClientMockRecorder) DeleteInway(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteInway", reflect.TypeOf((*MockManagementClient)(nil).DeleteInway), varargs...)
-}
-
-// PutInsightConfiguration mocks base method
-func (m *MockManagementClient) PutInsightConfiguration(ctx context.Context, in *api.InsightConfiguration, opts ...grpc.CallOption) (*api.InsightConfiguration, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "PutInsightConfiguration", varargs...)
-	ret0, _ := ret[0].(*api.InsightConfiguration)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// PutInsightConfiguration indicates an expected call of PutInsightConfiguration
-func (mr *MockManagementClientMockRecorder) PutInsightConfiguration(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PutInsightConfiguration", reflect.TypeOf((*MockManagementClient)(nil).PutInsightConfiguration), varargs...)
-}
-
-// GetInsightConfiguration mocks base method
-func (m *MockManagementClient) GetInsightConfiguration(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.InsightConfiguration, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "GetInsightConfiguration", varargs...)
-	ret0, _ := ret[0].(*api.InsightConfiguration)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetInsightConfiguration indicates an expected call of GetInsightConfiguration
-func (mr *MockManagementClientMockRecorder) GetInsightConfiguration(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInsightConfiguration", reflect.TypeOf((*MockManagementClient)(nil).GetInsightConfiguration), varargs...)
-}
-
-// ListIncomingAccessRequest mocks base method
-func (m *MockManagementClient) ListIncomingAccessRequest(ctx context.Context, in *api.ListIncomingAccessRequestsRequests, opts ...grpc.CallOption) (*api.ListIncomingAccessRequestsResponse, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "ListIncomingAccessRequest", varargs...)
-	ret0, _ := ret[0].(*api.ListIncomingAccessRequestsResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListIncomingAccessRequest indicates an expected call of ListIncomingAccessRequest
-func (mr *MockManagementClientMockRecorder) ListIncomingAccessRequest(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListIncomingAccessRequest", reflect.TypeOf((*MockManagementClient)(nil).ListIncomingAccessRequest), varargs...)
-}
-
-// ApproveIncomingAccessRequest mocks base method
+// ApproveIncomingAccessRequest mocks base method.
 func (m *MockManagementClient) ApproveIncomingAccessRequest(ctx context.Context, in *api.ApproveIncomingAccessRequestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
@@ -369,54 +50,14 @@ func (m *MockManagementClient) ApproveIncomingAccessRequest(ctx context.Context,
 	return ret0, ret1
 }
 
-// ApproveIncomingAccessRequest indicates an expected call of ApproveIncomingAccessRequest
+// ApproveIncomingAccessRequest indicates an expected call of ApproveIncomingAccessRequest.
 func (mr *MockManagementClientMockRecorder) ApproveIncomingAccessRequest(ctx, in interface{}, opts ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, in}, opts...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ApproveIncomingAccessRequest", reflect.TypeOf((*MockManagementClient)(nil).ApproveIncomingAccessRequest), varargs...)
 }
 
-// RejectIncomingAccessRequest mocks base method
-func (m *MockManagementClient) RejectIncomingAccessRequest(ctx context.Context, in *api.RejectIncomingAccessRequestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "RejectIncomingAccessRequest", varargs...)
-	ret0, _ := ret[0].(*emptypb.Empty)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// RejectIncomingAccessRequest indicates an expected call of RejectIncomingAccessRequest
-func (mr *MockManagementClientMockRecorder) RejectIncomingAccessRequest(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RejectIncomingAccessRequest", reflect.TypeOf((*MockManagementClient)(nil).RejectIncomingAccessRequest), varargs...)
-}
-
-// ListOutgoingAccessRequests mocks base method
-func (m *MockManagementClient) ListOutgoingAccessRequests(ctx context.Context, in *api.ListOutgoingAccessRequestsRequest, opts ...grpc.CallOption) (*api.ListOutgoingAccessRequestsResponse, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "ListOutgoingAccessRequests", varargs...)
-	ret0, _ := ret[0].(*api.ListOutgoingAccessRequestsResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListOutgoingAccessRequests indicates an expected call of ListOutgoingAccessRequests
-func (mr *MockManagementClientMockRecorder) ListOutgoingAccessRequests(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOutgoingAccessRequests", reflect.TypeOf((*MockManagementClient)(nil).ListOutgoingAccessRequests), varargs...)
-}
-
-// CreateAccessRequest mocks base method
+// CreateAccessRequest mocks base method.
 func (m *MockManagementClient) CreateAccessRequest(ctx context.Context, in *api.CreateAccessRequestRequest, opts ...grpc.CallOption) (*api.OutgoingAccessRequest, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
@@ -429,34 +70,174 @@ func (m *MockManagementClient) CreateAccessRequest(ctx context.Context, in *api.
 	return ret0, ret1
 }
 
-// CreateAccessRequest indicates an expected call of CreateAccessRequest
+// CreateAccessRequest indicates an expected call of CreateAccessRequest.
 func (mr *MockManagementClientMockRecorder) CreateAccessRequest(ctx, in interface{}, opts ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, in}, opts...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccessRequest", reflect.TypeOf((*MockManagementClient)(nil).CreateAccessRequest), varargs...)
 }
 
-// SendAccessRequest mocks base method
-func (m *MockManagementClient) SendAccessRequest(ctx context.Context, in *api.SendAccessRequestRequest, opts ...grpc.CallOption) (*api.OutgoingAccessRequest, error) {
+// CreateInway mocks base method.
+func (m *MockManagementClient) CreateInway(ctx context.Context, in *api.Inway, opts ...grpc.CallOption) (*api.Inway, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
-	ret := m.ctrl.Call(m, "SendAccessRequest", varargs...)
-	ret0, _ := ret[0].(*api.OutgoingAccessRequest)
+	ret := m.ctrl.Call(m, "CreateInway", varargs...)
+	ret0, _ := ret[0].(*api.Inway)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// SendAccessRequest indicates an expected call of SendAccessRequest
-func (mr *MockManagementClientMockRecorder) SendAccessRequest(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+// CreateInway indicates an expected call of CreateInway.
+func (mr *MockManagementClientMockRecorder) CreateInway(ctx, in interface{}, opts ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendAccessRequest", reflect.TypeOf((*MockManagementClient)(nil).SendAccessRequest), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateInway", reflect.TypeOf((*MockManagementClient)(nil).CreateInway), varargs...)
 }
 
-// GetSettings mocks base method
+// CreateService mocks base method.
+func (m *MockManagementClient) CreateService(ctx context.Context, in *api.CreateServiceRequest, opts ...grpc.CallOption) (*api.CreateServiceResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "CreateService", varargs...)
+	ret0, _ := ret[0].(*api.CreateServiceResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateService indicates an expected call of CreateService.
+func (mr *MockManagementClientMockRecorder) CreateService(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateService", reflect.TypeOf((*MockManagementClient)(nil).CreateService), varargs...)
+}
+
+// DeleteInway mocks base method.
+func (m *MockManagementClient) DeleteInway(ctx context.Context, in *api.DeleteInwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "DeleteInway", varargs...)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteInway indicates an expected call of DeleteInway.
+func (mr *MockManagementClientMockRecorder) DeleteInway(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteInway", reflect.TypeOf((*MockManagementClient)(nil).DeleteInway), varargs...)
+}
+
+// DeleteService mocks base method.
+func (m *MockManagementClient) DeleteService(ctx context.Context, in *api.DeleteServiceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "DeleteService", varargs...)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteService indicates an expected call of DeleteService.
+func (mr *MockManagementClientMockRecorder) DeleteService(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteService", reflect.TypeOf((*MockManagementClient)(nil).DeleteService), varargs...)
+}
+
+// DownloadFinanceExport mocks base method.
+func (m *MockManagementClient) DownloadFinanceExport(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.DownloadFinanceExportResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "DownloadFinanceExport", varargs...)
+	ret0, _ := ret[0].(*api.DownloadFinanceExportResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DownloadFinanceExport indicates an expected call of DownloadFinanceExport.
+func (mr *MockManagementClientMockRecorder) DownloadFinanceExport(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadFinanceExport", reflect.TypeOf((*MockManagementClient)(nil).DownloadFinanceExport), varargs...)
+}
+
+// GetInsightConfiguration mocks base method.
+func (m *MockManagementClient) GetInsightConfiguration(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.InsightConfiguration, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetInsightConfiguration", varargs...)
+	ret0, _ := ret[0].(*api.InsightConfiguration)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetInsightConfiguration indicates an expected call of GetInsightConfiguration.
+func (mr *MockManagementClientMockRecorder) GetInsightConfiguration(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInsightConfiguration", reflect.TypeOf((*MockManagementClient)(nil).GetInsightConfiguration), varargs...)
+}
+
+// GetInway mocks base method.
+func (m *MockManagementClient) GetInway(ctx context.Context, in *api.GetInwayRequest, opts ...grpc.CallOption) (*api.Inway, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetInway", varargs...)
+	ret0, _ := ret[0].(*api.Inway)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetInway indicates an expected call of GetInway.
+func (mr *MockManagementClientMockRecorder) GetInway(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInway", reflect.TypeOf((*MockManagementClient)(nil).GetInway), varargs...)
+}
+
+// GetService mocks base method.
+func (m *MockManagementClient) GetService(ctx context.Context, in *api.GetServiceRequest, opts ...grpc.CallOption) (*api.GetServiceResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetService", varargs...)
+	ret0, _ := ret[0].(*api.GetServiceResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetService indicates an expected call of GetService.
+func (mr *MockManagementClientMockRecorder) GetService(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetService", reflect.TypeOf((*MockManagementClient)(nil).GetService), varargs...)
+}
+
+// GetSettings mocks base method.
 func (m *MockManagementClient) GetSettings(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.Settings, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
@@ -469,34 +250,54 @@ func (m *MockManagementClient) GetSettings(ctx context.Context, in *emptypb.Empt
 	return ret0, ret1
 }
 
-// GetSettings indicates an expected call of GetSettings
+// GetSettings indicates an expected call of GetSettings.
 func (mr *MockManagementClientMockRecorder) GetSettings(ctx, in interface{}, opts ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, in}, opts...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSettings", reflect.TypeOf((*MockManagementClient)(nil).GetSettings), varargs...)
 }
 
-// UpdateSettings mocks base method
-func (m *MockManagementClient) UpdateSettings(ctx context.Context, in *api.UpdateSettingsRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+// GetStatisticsOfServices mocks base method.
+func (m *MockManagementClient) GetStatisticsOfServices(ctx context.Context, in *api.GetStatisticsOfServicesRequest, opts ...grpc.CallOption) (*api.GetStatisticsOfServicesResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
-	ret := m.ctrl.Call(m, "UpdateSettings", varargs...)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret := m.ctrl.Call(m, "GetStatisticsOfServices", varargs...)
+	ret0, _ := ret[0].(*api.GetStatisticsOfServicesResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// UpdateSettings indicates an expected call of UpdateSettings
-func (mr *MockManagementClientMockRecorder) UpdateSettings(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+// GetStatisticsOfServices indicates an expected call of GetStatisticsOfServices.
+func (mr *MockManagementClientMockRecorder) GetStatisticsOfServices(ctx, in interface{}, opts ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateSettings", reflect.TypeOf((*MockManagementClient)(nil).UpdateSettings), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStatisticsOfServices", reflect.TypeOf((*MockManagementClient)(nil).GetStatisticsOfServices), varargs...)
 }
 
-// ListAccessGrantsForService mocks base method
+// IsFinanceEnabled mocks base method.
+func (m *MockManagementClient) IsFinanceEnabled(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.IsFinanceEnabledResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "IsFinanceEnabled", varargs...)
+	ret0, _ := ret[0].(*api.IsFinanceEnabledResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// IsFinanceEnabled indicates an expected call of IsFinanceEnabled.
+func (mr *MockManagementClientMockRecorder) IsFinanceEnabled(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsFinanceEnabled", reflect.TypeOf((*MockManagementClient)(nil).IsFinanceEnabled), varargs...)
+}
+
+// ListAccessGrantsForService mocks base method.
 func (m *MockManagementClient) ListAccessGrantsForService(ctx context.Context, in *api.ListAccessGrantsForServiceRequest, opts ...grpc.CallOption) (*api.ListAccessGrantsForServiceResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
@@ -509,34 +310,14 @@ func (m *MockManagementClient) ListAccessGrantsForService(ctx context.Context, i
 	return ret0, ret1
 }
 
-// ListAccessGrantsForService indicates an expected call of ListAccessGrantsForService
+// ListAccessGrantsForService indicates an expected call of ListAccessGrantsForService.
 func (mr *MockManagementClientMockRecorder) ListAccessGrantsForService(ctx, in interface{}, opts ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, in}, opts...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAccessGrantsForService", reflect.TypeOf((*MockManagementClient)(nil).ListAccessGrantsForService), varargs...)
 }
 
-// RevokeAccessGrant mocks base method
-func (m *MockManagementClient) RevokeAccessGrant(ctx context.Context, in *api.RevokeAccessGrantRequest, opts ...grpc.CallOption) (*api.AccessGrant, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "RevokeAccessGrant", varargs...)
-	ret0, _ := ret[0].(*api.AccessGrant)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// RevokeAccessGrant indicates an expected call of RevokeAccessGrant
-func (mr *MockManagementClientMockRecorder) RevokeAccessGrant(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RevokeAccessGrant", reflect.TypeOf((*MockManagementClient)(nil).RevokeAccessGrant), varargs...)
-}
-
-// ListAuditLogs mocks base method
+// ListAuditLogs mocks base method.
 func (m *MockManagementClient) ListAuditLogs(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.ListAuditLogsResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
@@ -549,14 +330,134 @@ func (m *MockManagementClient) ListAuditLogs(ctx context.Context, in *emptypb.Em
 	return ret0, ret1
 }
 
-// ListAuditLogs indicates an expected call of ListAuditLogs
+// ListAuditLogs indicates an expected call of ListAuditLogs.
 func (mr *MockManagementClientMockRecorder) ListAuditLogs(ctx, in interface{}, opts ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, in}, opts...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAuditLogs", reflect.TypeOf((*MockManagementClient)(nil).ListAuditLogs), varargs...)
 }
 
-// RetrieveClaimForOrder mocks base method
+// ListIncomingAccessRequest mocks base method.
+func (m *MockManagementClient) ListIncomingAccessRequest(ctx context.Context, in *api.ListIncomingAccessRequestsRequests, opts ...grpc.CallOption) (*api.ListIncomingAccessRequestsResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListIncomingAccessRequest", varargs...)
+	ret0, _ := ret[0].(*api.ListIncomingAccessRequestsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListIncomingAccessRequest indicates an expected call of ListIncomingAccessRequest.
+func (mr *MockManagementClientMockRecorder) ListIncomingAccessRequest(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListIncomingAccessRequest", reflect.TypeOf((*MockManagementClient)(nil).ListIncomingAccessRequest), varargs...)
+}
+
+// ListInways mocks base method.
+func (m *MockManagementClient) ListInways(ctx context.Context, in *api.ListInwaysRequest, opts ...grpc.CallOption) (*api.ListInwaysResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListInways", varargs...)
+	ret0, _ := ret[0].(*api.ListInwaysResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListInways indicates an expected call of ListInways.
+func (mr *MockManagementClientMockRecorder) ListInways(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListInways", reflect.TypeOf((*MockManagementClient)(nil).ListInways), varargs...)
+}
+
+// ListOutgoingAccessRequests mocks base method.
+func (m *MockManagementClient) ListOutgoingAccessRequests(ctx context.Context, in *api.ListOutgoingAccessRequestsRequest, opts ...grpc.CallOption) (*api.ListOutgoingAccessRequestsResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListOutgoingAccessRequests", varargs...)
+	ret0, _ := ret[0].(*api.ListOutgoingAccessRequestsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListOutgoingAccessRequests indicates an expected call of ListOutgoingAccessRequests.
+func (mr *MockManagementClientMockRecorder) ListOutgoingAccessRequests(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOutgoingAccessRequests", reflect.TypeOf((*MockManagementClient)(nil).ListOutgoingAccessRequests), varargs...)
+}
+
+// ListServices mocks base method.
+func (m *MockManagementClient) ListServices(ctx context.Context, in *api.ListServicesRequest, opts ...grpc.CallOption) (*api.ListServicesResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListServices", varargs...)
+	ret0, _ := ret[0].(*api.ListServicesResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListServices indicates an expected call of ListServices.
+func (mr *MockManagementClientMockRecorder) ListServices(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListServices", reflect.TypeOf((*MockManagementClient)(nil).ListServices), varargs...)
+}
+
+// PutInsightConfiguration mocks base method.
+func (m *MockManagementClient) PutInsightConfiguration(ctx context.Context, in *api.InsightConfiguration, opts ...grpc.CallOption) (*api.InsightConfiguration, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "PutInsightConfiguration", varargs...)
+	ret0, _ := ret[0].(*api.InsightConfiguration)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// PutInsightConfiguration indicates an expected call of PutInsightConfiguration.
+func (mr *MockManagementClientMockRecorder) PutInsightConfiguration(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PutInsightConfiguration", reflect.TypeOf((*MockManagementClient)(nil).PutInsightConfiguration), varargs...)
+}
+
+// RejectIncomingAccessRequest mocks base method.
+func (m *MockManagementClient) RejectIncomingAccessRequest(ctx context.Context, in *api.RejectIncomingAccessRequestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "RejectIncomingAccessRequest", varargs...)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RejectIncomingAccessRequest indicates an expected call of RejectIncomingAccessRequest.
+func (mr *MockManagementClientMockRecorder) RejectIncomingAccessRequest(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RejectIncomingAccessRequest", reflect.TypeOf((*MockManagementClient)(nil).RejectIncomingAccessRequest), varargs...)
+}
+
+// RetrieveClaimForOrder mocks base method.
 func (m *MockManagementClient) RetrieveClaimForOrder(ctx context.Context, in *api.RetrieveClaimForOrderRequest, opts ...grpc.CallOption) (*api.RetrieveClaimForOrderResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
@@ -569,277 +470,137 @@ func (m *MockManagementClient) RetrieveClaimForOrder(ctx context.Context, in *ap
 	return ret0, ret1
 }
 
-// RetrieveClaimForOrder indicates an expected call of RetrieveClaimForOrder
+// RetrieveClaimForOrder indicates an expected call of RetrieveClaimForOrder.
 func (mr *MockManagementClientMockRecorder) RetrieveClaimForOrder(ctx, in interface{}, opts ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, in}, opts...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RetrieveClaimForOrder", reflect.TypeOf((*MockManagementClient)(nil).RetrieveClaimForOrder), varargs...)
 }
 
-// MockManagementServer is a mock of ManagementServer interface
+// RevokeAccessGrant mocks base method.
+func (m *MockManagementClient) RevokeAccessGrant(ctx context.Context, in *api.RevokeAccessGrantRequest, opts ...grpc.CallOption) (*api.AccessGrant, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "RevokeAccessGrant", varargs...)
+	ret0, _ := ret[0].(*api.AccessGrant)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RevokeAccessGrant indicates an expected call of RevokeAccessGrant.
+func (mr *MockManagementClientMockRecorder) RevokeAccessGrant(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RevokeAccessGrant", reflect.TypeOf((*MockManagementClient)(nil).RevokeAccessGrant), varargs...)
+}
+
+// SendAccessRequest mocks base method.
+func (m *MockManagementClient) SendAccessRequest(ctx context.Context, in *api.SendAccessRequestRequest, opts ...grpc.CallOption) (*api.OutgoingAccessRequest, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "SendAccessRequest", varargs...)
+	ret0, _ := ret[0].(*api.OutgoingAccessRequest)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SendAccessRequest indicates an expected call of SendAccessRequest.
+func (mr *MockManagementClientMockRecorder) SendAccessRequest(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendAccessRequest", reflect.TypeOf((*MockManagementClient)(nil).SendAccessRequest), varargs...)
+}
+
+// UpdateInway mocks base method.
+func (m *MockManagementClient) UpdateInway(ctx context.Context, in *api.UpdateInwayRequest, opts ...grpc.CallOption) (*api.Inway, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "UpdateInway", varargs...)
+	ret0, _ := ret[0].(*api.Inway)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateInway indicates an expected call of UpdateInway.
+func (mr *MockManagementClientMockRecorder) UpdateInway(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateInway", reflect.TypeOf((*MockManagementClient)(nil).UpdateInway), varargs...)
+}
+
+// UpdateService mocks base method.
+func (m *MockManagementClient) UpdateService(ctx context.Context, in *api.UpdateServiceRequest, opts ...grpc.CallOption) (*api.UpdateServiceResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "UpdateService", varargs...)
+	ret0, _ := ret[0].(*api.UpdateServiceResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateService indicates an expected call of UpdateService.
+func (mr *MockManagementClientMockRecorder) UpdateService(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateService", reflect.TypeOf((*MockManagementClient)(nil).UpdateService), varargs...)
+}
+
+// UpdateSettings mocks base method.
+func (m *MockManagementClient) UpdateSettings(ctx context.Context, in *api.UpdateSettingsRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "UpdateSettings", varargs...)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateSettings indicates an expected call of UpdateSettings.
+func (mr *MockManagementClientMockRecorder) UpdateSettings(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateSettings", reflect.TypeOf((*MockManagementClient)(nil).UpdateSettings), varargs...)
+}
+
+// MockManagementServer is a mock of ManagementServer interface.
 type MockManagementServer struct {
 	ctrl     *gomock.Controller
 	recorder *MockManagementServerMockRecorder
 }
 
-// MockManagementServerMockRecorder is the mock recorder for MockManagementServer
+// MockManagementServerMockRecorder is the mock recorder for MockManagementServer.
 type MockManagementServerMockRecorder struct {
 	mock *MockManagementServer
 }
 
-// NewMockManagementServer creates a new mock instance
+// NewMockManagementServer creates a new mock instance.
 func NewMockManagementServer(ctrl *gomock.Controller) *MockManagementServer {
 	mock := &MockManagementServer{ctrl: ctrl}
 	mock.recorder = &MockManagementServerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockManagementServer) EXPECT() *MockManagementServerMockRecorder {
 	return m.recorder
 }
 
-// IsFinanceEnabled mocks base method
-func (m *MockManagementServer) IsFinanceEnabled(arg0 context.Context, arg1 *emptypb.Empty) (*api.IsFinanceEnabledResponse, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IsFinanceEnabled", arg0, arg1)
-	ret0, _ := ret[0].(*api.IsFinanceEnabledResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// IsFinanceEnabled indicates an expected call of IsFinanceEnabled
-func (mr *MockManagementServerMockRecorder) IsFinanceEnabled(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsFinanceEnabled", reflect.TypeOf((*MockManagementServer)(nil).IsFinanceEnabled), arg0, arg1)
-}
-
-// DownloadFinanceExport mocks base method
-func (m *MockManagementServer) DownloadFinanceExport(arg0 context.Context, arg1 *emptypb.Empty) (*api.DownloadFinanceExportResponse, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DownloadFinanceExport", arg0, arg1)
-	ret0, _ := ret[0].(*api.DownloadFinanceExportResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// DownloadFinanceExport indicates an expected call of DownloadFinanceExport
-func (mr *MockManagementServerMockRecorder) DownloadFinanceExport(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadFinanceExport", reflect.TypeOf((*MockManagementServer)(nil).DownloadFinanceExport), arg0, arg1)
-}
-
-// ListServices mocks base method
-func (m *MockManagementServer) ListServices(arg0 context.Context, arg1 *api.ListServicesRequest) (*api.ListServicesResponse, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListServices", arg0, arg1)
-	ret0, _ := ret[0].(*api.ListServicesResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListServices indicates an expected call of ListServices
-func (mr *MockManagementServerMockRecorder) ListServices(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListServices", reflect.TypeOf((*MockManagementServer)(nil).ListServices), arg0, arg1)
-}
-
-// GetService mocks base method
-func (m *MockManagementServer) GetService(arg0 context.Context, arg1 *api.GetServiceRequest) (*api.GetServiceResponse, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetService", arg0, arg1)
-	ret0, _ := ret[0].(*api.GetServiceResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetService indicates an expected call of GetService
-func (mr *MockManagementServerMockRecorder) GetService(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetService", reflect.TypeOf((*MockManagementServer)(nil).GetService), arg0, arg1)
-}
-
-// CreateService mocks base method
-func (m *MockManagementServer) CreateService(arg0 context.Context, arg1 *api.CreateServiceRequest) (*api.CreateServiceResponse, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateService", arg0, arg1)
-	ret0, _ := ret[0].(*api.CreateServiceResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// CreateService indicates an expected call of CreateService
-func (mr *MockManagementServerMockRecorder) CreateService(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateService", reflect.TypeOf((*MockManagementServer)(nil).CreateService), arg0, arg1)
-}
-
-// UpdateService mocks base method
-func (m *MockManagementServer) UpdateService(arg0 context.Context, arg1 *api.UpdateServiceRequest) (*api.UpdateServiceResponse, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateService", arg0, arg1)
-	ret0, _ := ret[0].(*api.UpdateServiceResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// UpdateService indicates an expected call of UpdateService
-func (mr *MockManagementServerMockRecorder) UpdateService(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateService", reflect.TypeOf((*MockManagementServer)(nil).UpdateService), arg0, arg1)
-}
-
-// DeleteService mocks base method
-func (m *MockManagementServer) DeleteService(arg0 context.Context, arg1 *api.DeleteServiceRequest) (*emptypb.Empty, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteService", arg0, arg1)
-	ret0, _ := ret[0].(*emptypb.Empty)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// DeleteService indicates an expected call of DeleteService
-func (mr *MockManagementServerMockRecorder) DeleteService(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteService", reflect.TypeOf((*MockManagementServer)(nil).DeleteService), arg0, arg1)
-}
-
-// GetStatisticsOfServices mocks base method
-func (m *MockManagementServer) GetStatisticsOfServices(arg0 context.Context, arg1 *api.GetStatisticsOfServicesRequest) (*api.GetStatisticsOfServicesResponse, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetStatisticsOfServices", arg0, arg1)
-	ret0, _ := ret[0].(*api.GetStatisticsOfServicesResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetStatisticsOfServices indicates an expected call of GetStatisticsOfServices
-func (mr *MockManagementServerMockRecorder) GetStatisticsOfServices(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStatisticsOfServices", reflect.TypeOf((*MockManagementServer)(nil).GetStatisticsOfServices), arg0, arg1)
-}
-
-// ListInways mocks base method
-func (m *MockManagementServer) ListInways(arg0 context.Context, arg1 *api.ListInwaysRequest) (*api.ListInwaysResponse, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListInways", arg0, arg1)
-	ret0, _ := ret[0].(*api.ListInwaysResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListInways indicates an expected call of ListInways
-func (mr *MockManagementServerMockRecorder) ListInways(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListInways", reflect.TypeOf((*MockManagementServer)(nil).ListInways), arg0, arg1)
-}
-
-// GetInway mocks base method
-func (m *MockManagementServer) GetInway(arg0 context.Context, arg1 *api.GetInwayRequest) (*api.Inway, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetInway", arg0, arg1)
-	ret0, _ := ret[0].(*api.Inway)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetInway indicates an expected call of GetInway
-func (mr *MockManagementServerMockRecorder) GetInway(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInway", reflect.TypeOf((*MockManagementServer)(nil).GetInway), arg0, arg1)
-}
-
-// CreateInway mocks base method
-func (m *MockManagementServer) CreateInway(arg0 context.Context, arg1 *api.Inway) (*api.Inway, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateInway", arg0, arg1)
-	ret0, _ := ret[0].(*api.Inway)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// CreateInway indicates an expected call of CreateInway
-func (mr *MockManagementServerMockRecorder) CreateInway(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateInway", reflect.TypeOf((*MockManagementServer)(nil).CreateInway), arg0, arg1)
-}
-
-// UpdateInway mocks base method
-func (m *MockManagementServer) UpdateInway(arg0 context.Context, arg1 *api.UpdateInwayRequest) (*api.Inway, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateInway", arg0, arg1)
-	ret0, _ := ret[0].(*api.Inway)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// UpdateInway indicates an expected call of UpdateInway
-func (mr *MockManagementServerMockRecorder) UpdateInway(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateInway", reflect.TypeOf((*MockManagementServer)(nil).UpdateInway), arg0, arg1)
-}
-
-// DeleteInway mocks base method
-func (m *MockManagementServer) DeleteInway(arg0 context.Context, arg1 *api.DeleteInwayRequest) (*emptypb.Empty, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteInway", arg0, arg1)
-	ret0, _ := ret[0].(*emptypb.Empty)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// DeleteInway indicates an expected call of DeleteInway
-func (mr *MockManagementServerMockRecorder) DeleteInway(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteInway", reflect.TypeOf((*MockManagementServer)(nil).DeleteInway), arg0, arg1)
-}
-
-// PutInsightConfiguration mocks base method
-func (m *MockManagementServer) PutInsightConfiguration(arg0 context.Context, arg1 *api.InsightConfiguration) (*api.InsightConfiguration, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PutInsightConfiguration", arg0, arg1)
-	ret0, _ := ret[0].(*api.InsightConfiguration)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// PutInsightConfiguration indicates an expected call of PutInsightConfiguration
-func (mr *MockManagementServerMockRecorder) PutInsightConfiguration(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PutInsightConfiguration", reflect.TypeOf((*MockManagementServer)(nil).PutInsightConfiguration), arg0, arg1)
-}
-
-// GetInsightConfiguration mocks base method
-func (m *MockManagementServer) GetInsightConfiguration(arg0 context.Context, arg1 *emptypb.Empty) (*api.InsightConfiguration, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetInsightConfiguration", arg0, arg1)
-	ret0, _ := ret[0].(*api.InsightConfiguration)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetInsightConfiguration indicates an expected call of GetInsightConfiguration
-func (mr *MockManagementServerMockRecorder) GetInsightConfiguration(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInsightConfiguration", reflect.TypeOf((*MockManagementServer)(nil).GetInsightConfiguration), arg0, arg1)
-}
-
-// ListIncomingAccessRequest mocks base method
-func (m *MockManagementServer) ListIncomingAccessRequest(arg0 context.Context, arg1 *api.ListIncomingAccessRequestsRequests) (*api.ListIncomingAccessRequestsResponse, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListIncomingAccessRequest", arg0, arg1)
-	ret0, _ := ret[0].(*api.ListIncomingAccessRequestsResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListIncomingAccessRequest indicates an expected call of ListIncomingAccessRequest
-func (mr *MockManagementServerMockRecorder) ListIncomingAccessRequest(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListIncomingAccessRequest", reflect.TypeOf((*MockManagementServer)(nil).ListIncomingAccessRequest), arg0, arg1)
-}
-
-// ApproveIncomingAccessRequest mocks base method
+// ApproveIncomingAccessRequest mocks base method.
 func (m *MockManagementServer) ApproveIncomingAccessRequest(arg0 context.Context, arg1 *api.ApproveIncomingAccessRequestRequest) (*emptypb.Empty, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ApproveIncomingAccessRequest", arg0, arg1)
@@ -848,43 +609,13 @@ func (m *MockManagementServer) ApproveIncomingAccessRequest(arg0 context.Context
 	return ret0, ret1
 }
 
-// ApproveIncomingAccessRequest indicates an expected call of ApproveIncomingAccessRequest
+// ApproveIncomingAccessRequest indicates an expected call of ApproveIncomingAccessRequest.
 func (mr *MockManagementServerMockRecorder) ApproveIncomingAccessRequest(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ApproveIncomingAccessRequest", reflect.TypeOf((*MockManagementServer)(nil).ApproveIncomingAccessRequest), arg0, arg1)
 }
 
-// RejectIncomingAccessRequest mocks base method
-func (m *MockManagementServer) RejectIncomingAccessRequest(arg0 context.Context, arg1 *api.RejectIncomingAccessRequestRequest) (*emptypb.Empty, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RejectIncomingAccessRequest", arg0, arg1)
-	ret0, _ := ret[0].(*emptypb.Empty)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// RejectIncomingAccessRequest indicates an expected call of RejectIncomingAccessRequest
-func (mr *MockManagementServerMockRecorder) RejectIncomingAccessRequest(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RejectIncomingAccessRequest", reflect.TypeOf((*MockManagementServer)(nil).RejectIncomingAccessRequest), arg0, arg1)
-}
-
-// ListOutgoingAccessRequests mocks base method
-func (m *MockManagementServer) ListOutgoingAccessRequests(arg0 context.Context, arg1 *api.ListOutgoingAccessRequestsRequest) (*api.ListOutgoingAccessRequestsResponse, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListOutgoingAccessRequests", arg0, arg1)
-	ret0, _ := ret[0].(*api.ListOutgoingAccessRequestsResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListOutgoingAccessRequests indicates an expected call of ListOutgoingAccessRequests
-func (mr *MockManagementServerMockRecorder) ListOutgoingAccessRequests(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOutgoingAccessRequests", reflect.TypeOf((*MockManagementServer)(nil).ListOutgoingAccessRequests), arg0, arg1)
-}
-
-// CreateAccessRequest mocks base method
+// CreateAccessRequest mocks base method.
 func (m *MockManagementServer) CreateAccessRequest(arg0 context.Context, arg1 *api.CreateAccessRequestRequest) (*api.OutgoingAccessRequest, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateAccessRequest", arg0, arg1)
@@ -893,28 +624,133 @@ func (m *MockManagementServer) CreateAccessRequest(arg0 context.Context, arg1 *a
 	return ret0, ret1
 }
 
-// CreateAccessRequest indicates an expected call of CreateAccessRequest
+// CreateAccessRequest indicates an expected call of CreateAccessRequest.
 func (mr *MockManagementServerMockRecorder) CreateAccessRequest(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccessRequest", reflect.TypeOf((*MockManagementServer)(nil).CreateAccessRequest), arg0, arg1)
 }
 
-// SendAccessRequest mocks base method
-func (m *MockManagementServer) SendAccessRequest(arg0 context.Context, arg1 *api.SendAccessRequestRequest) (*api.OutgoingAccessRequest, error) {
+// CreateInway mocks base method.
+func (m *MockManagementServer) CreateInway(arg0 context.Context, arg1 *api.Inway) (*api.Inway, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SendAccessRequest", arg0, arg1)
-	ret0, _ := ret[0].(*api.OutgoingAccessRequest)
+	ret := m.ctrl.Call(m, "CreateInway", arg0, arg1)
+	ret0, _ := ret[0].(*api.Inway)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// SendAccessRequest indicates an expected call of SendAccessRequest
-func (mr *MockManagementServerMockRecorder) SendAccessRequest(arg0, arg1 interface{}) *gomock.Call {
+// CreateInway indicates an expected call of CreateInway.
+func (mr *MockManagementServerMockRecorder) CreateInway(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendAccessRequest", reflect.TypeOf((*MockManagementServer)(nil).SendAccessRequest), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateInway", reflect.TypeOf((*MockManagementServer)(nil).CreateInway), arg0, arg1)
 }
 
-// GetSettings mocks base method
+// CreateService mocks base method.
+func (m *MockManagementServer) CreateService(arg0 context.Context, arg1 *api.CreateServiceRequest) (*api.CreateServiceResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateService", arg0, arg1)
+	ret0, _ := ret[0].(*api.CreateServiceResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateService indicates an expected call of CreateService.
+func (mr *MockManagementServerMockRecorder) CreateService(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateService", reflect.TypeOf((*MockManagementServer)(nil).CreateService), arg0, arg1)
+}
+
+// DeleteInway mocks base method.
+func (m *MockManagementServer) DeleteInway(arg0 context.Context, arg1 *api.DeleteInwayRequest) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteInway", arg0, arg1)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteInway indicates an expected call of DeleteInway.
+func (mr *MockManagementServerMockRecorder) DeleteInway(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteInway", reflect.TypeOf((*MockManagementServer)(nil).DeleteInway), arg0, arg1)
+}
+
+// DeleteService mocks base method.
+func (m *MockManagementServer) DeleteService(arg0 context.Context, arg1 *api.DeleteServiceRequest) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteService", arg0, arg1)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteService indicates an expected call of DeleteService.
+func (mr *MockManagementServerMockRecorder) DeleteService(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteService", reflect.TypeOf((*MockManagementServer)(nil).DeleteService), arg0, arg1)
+}
+
+// DownloadFinanceExport mocks base method.
+func (m *MockManagementServer) DownloadFinanceExport(arg0 context.Context, arg1 *emptypb.Empty) (*api.DownloadFinanceExportResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DownloadFinanceExport", arg0, arg1)
+	ret0, _ := ret[0].(*api.DownloadFinanceExportResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DownloadFinanceExport indicates an expected call of DownloadFinanceExport.
+func (mr *MockManagementServerMockRecorder) DownloadFinanceExport(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadFinanceExport", reflect.TypeOf((*MockManagementServer)(nil).DownloadFinanceExport), arg0, arg1)
+}
+
+// GetInsightConfiguration mocks base method.
+func (m *MockManagementServer) GetInsightConfiguration(arg0 context.Context, arg1 *emptypb.Empty) (*api.InsightConfiguration, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetInsightConfiguration", arg0, arg1)
+	ret0, _ := ret[0].(*api.InsightConfiguration)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetInsightConfiguration indicates an expected call of GetInsightConfiguration.
+func (mr *MockManagementServerMockRecorder) GetInsightConfiguration(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInsightConfiguration", reflect.TypeOf((*MockManagementServer)(nil).GetInsightConfiguration), arg0, arg1)
+}
+
+// GetInway mocks base method.
+func (m *MockManagementServer) GetInway(arg0 context.Context, arg1 *api.GetInwayRequest) (*api.Inway, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetInway", arg0, arg1)
+	ret0, _ := ret[0].(*api.Inway)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetInway indicates an expected call of GetInway.
+func (mr *MockManagementServerMockRecorder) GetInway(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInway", reflect.TypeOf((*MockManagementServer)(nil).GetInway), arg0, arg1)
+}
+
+// GetService mocks base method.
+func (m *MockManagementServer) GetService(arg0 context.Context, arg1 *api.GetServiceRequest) (*api.GetServiceResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetService", arg0, arg1)
+	ret0, _ := ret[0].(*api.GetServiceResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetService indicates an expected call of GetService.
+func (mr *MockManagementServerMockRecorder) GetService(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetService", reflect.TypeOf((*MockManagementServer)(nil).GetService), arg0, arg1)
+}
+
+// GetSettings mocks base method.
 func (m *MockManagementServer) GetSettings(arg0 context.Context, arg1 *emptypb.Empty) (*api.Settings, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetSettings", arg0, arg1)
@@ -923,28 +759,43 @@ func (m *MockManagementServer) GetSettings(arg0 context.Context, arg1 *emptypb.E
 	return ret0, ret1
 }
 
-// GetSettings indicates an expected call of GetSettings
+// GetSettings indicates an expected call of GetSettings.
 func (mr *MockManagementServerMockRecorder) GetSettings(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSettings", reflect.TypeOf((*MockManagementServer)(nil).GetSettings), arg0, arg1)
 }
 
-// UpdateSettings mocks base method
-func (m *MockManagementServer) UpdateSettings(arg0 context.Context, arg1 *api.UpdateSettingsRequest) (*emptypb.Empty, error) {
+// GetStatisticsOfServices mocks base method.
+func (m *MockManagementServer) GetStatisticsOfServices(arg0 context.Context, arg1 *api.GetStatisticsOfServicesRequest) (*api.GetStatisticsOfServicesResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateSettings", arg0, arg1)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret := m.ctrl.Call(m, "GetStatisticsOfServices", arg0, arg1)
+	ret0, _ := ret[0].(*api.GetStatisticsOfServicesResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// UpdateSettings indicates an expected call of UpdateSettings
-func (mr *MockManagementServerMockRecorder) UpdateSettings(arg0, arg1 interface{}) *gomock.Call {
+// GetStatisticsOfServices indicates an expected call of GetStatisticsOfServices.
+func (mr *MockManagementServerMockRecorder) GetStatisticsOfServices(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateSettings", reflect.TypeOf((*MockManagementServer)(nil).UpdateSettings), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStatisticsOfServices", reflect.TypeOf((*MockManagementServer)(nil).GetStatisticsOfServices), arg0, arg1)
 }
 
-// ListAccessGrantsForService mocks base method
+// IsFinanceEnabled mocks base method.
+func (m *MockManagementServer) IsFinanceEnabled(arg0 context.Context, arg1 *emptypb.Empty) (*api.IsFinanceEnabledResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IsFinanceEnabled", arg0, arg1)
+	ret0, _ := ret[0].(*api.IsFinanceEnabledResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// IsFinanceEnabled indicates an expected call of IsFinanceEnabled.
+func (mr *MockManagementServerMockRecorder) IsFinanceEnabled(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsFinanceEnabled", reflect.TypeOf((*MockManagementServer)(nil).IsFinanceEnabled), arg0, arg1)
+}
+
+// ListAccessGrantsForService mocks base method.
 func (m *MockManagementServer) ListAccessGrantsForService(arg0 context.Context, arg1 *api.ListAccessGrantsForServiceRequest) (*api.ListAccessGrantsForServiceResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListAccessGrantsForService", arg0, arg1)
@@ -953,28 +804,13 @@ func (m *MockManagementServer) ListAccessGrantsForService(arg0 context.Context, 
 	return ret0, ret1
 }
 
-// ListAccessGrantsForService indicates an expected call of ListAccessGrantsForService
+// ListAccessGrantsForService indicates an expected call of ListAccessGrantsForService.
 func (mr *MockManagementServerMockRecorder) ListAccessGrantsForService(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAccessGrantsForService", reflect.TypeOf((*MockManagementServer)(nil).ListAccessGrantsForService), arg0, arg1)
 }
 
-// RevokeAccessGrant mocks base method
-func (m *MockManagementServer) RevokeAccessGrant(arg0 context.Context, arg1 *api.RevokeAccessGrantRequest) (*api.AccessGrant, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RevokeAccessGrant", arg0, arg1)
-	ret0, _ := ret[0].(*api.AccessGrant)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// RevokeAccessGrant indicates an expected call of RevokeAccessGrant
-func (mr *MockManagementServerMockRecorder) RevokeAccessGrant(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RevokeAccessGrant", reflect.TypeOf((*MockManagementServer)(nil).RevokeAccessGrant), arg0, arg1)
-}
-
-// ListAuditLogs mocks base method
+// ListAuditLogs mocks base method.
 func (m *MockManagementServer) ListAuditLogs(arg0 context.Context, arg1 *emptypb.Empty) (*api.ListAuditLogsResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListAuditLogs", arg0, arg1)
@@ -983,13 +819,103 @@ func (m *MockManagementServer) ListAuditLogs(arg0 context.Context, arg1 *emptypb
 	return ret0, ret1
 }
 
-// ListAuditLogs indicates an expected call of ListAuditLogs
+// ListAuditLogs indicates an expected call of ListAuditLogs.
 func (mr *MockManagementServerMockRecorder) ListAuditLogs(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAuditLogs", reflect.TypeOf((*MockManagementServer)(nil).ListAuditLogs), arg0, arg1)
 }
 
-// RetrieveClaimForOrder mocks base method
+// ListIncomingAccessRequest mocks base method.
+func (m *MockManagementServer) ListIncomingAccessRequest(arg0 context.Context, arg1 *api.ListIncomingAccessRequestsRequests) (*api.ListIncomingAccessRequestsResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListIncomingAccessRequest", arg0, arg1)
+	ret0, _ := ret[0].(*api.ListIncomingAccessRequestsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListIncomingAccessRequest indicates an expected call of ListIncomingAccessRequest.
+func (mr *MockManagementServerMockRecorder) ListIncomingAccessRequest(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListIncomingAccessRequest", reflect.TypeOf((*MockManagementServer)(nil).ListIncomingAccessRequest), arg0, arg1)
+}
+
+// ListInways mocks base method.
+func (m *MockManagementServer) ListInways(arg0 context.Context, arg1 *api.ListInwaysRequest) (*api.ListInwaysResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListInways", arg0, arg1)
+	ret0, _ := ret[0].(*api.ListInwaysResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListInways indicates an expected call of ListInways.
+func (mr *MockManagementServerMockRecorder) ListInways(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListInways", reflect.TypeOf((*MockManagementServer)(nil).ListInways), arg0, arg1)
+}
+
+// ListOutgoingAccessRequests mocks base method.
+func (m *MockManagementServer) ListOutgoingAccessRequests(arg0 context.Context, arg1 *api.ListOutgoingAccessRequestsRequest) (*api.ListOutgoingAccessRequestsResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListOutgoingAccessRequests", arg0, arg1)
+	ret0, _ := ret[0].(*api.ListOutgoingAccessRequestsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListOutgoingAccessRequests indicates an expected call of ListOutgoingAccessRequests.
+func (mr *MockManagementServerMockRecorder) ListOutgoingAccessRequests(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOutgoingAccessRequests", reflect.TypeOf((*MockManagementServer)(nil).ListOutgoingAccessRequests), arg0, arg1)
+}
+
+// ListServices mocks base method.
+func (m *MockManagementServer) ListServices(arg0 context.Context, arg1 *api.ListServicesRequest) (*api.ListServicesResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListServices", arg0, arg1)
+	ret0, _ := ret[0].(*api.ListServicesResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListServices indicates an expected call of ListServices.
+func (mr *MockManagementServerMockRecorder) ListServices(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListServices", reflect.TypeOf((*MockManagementServer)(nil).ListServices), arg0, arg1)
+}
+
+// PutInsightConfiguration mocks base method.
+func (m *MockManagementServer) PutInsightConfiguration(arg0 context.Context, arg1 *api.InsightConfiguration) (*api.InsightConfiguration, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PutInsightConfiguration", arg0, arg1)
+	ret0, _ := ret[0].(*api.InsightConfiguration)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// PutInsightConfiguration indicates an expected call of PutInsightConfiguration.
+func (mr *MockManagementServerMockRecorder) PutInsightConfiguration(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PutInsightConfiguration", reflect.TypeOf((*MockManagementServer)(nil).PutInsightConfiguration), arg0, arg1)
+}
+
+// RejectIncomingAccessRequest mocks base method.
+func (m *MockManagementServer) RejectIncomingAccessRequest(arg0 context.Context, arg1 *api.RejectIncomingAccessRequestRequest) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RejectIncomingAccessRequest", arg0, arg1)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RejectIncomingAccessRequest indicates an expected call of RejectIncomingAccessRequest.
+func (mr *MockManagementServerMockRecorder) RejectIncomingAccessRequest(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RejectIncomingAccessRequest", reflect.TypeOf((*MockManagementServer)(nil).RejectIncomingAccessRequest), arg0, arg1)
+}
+
+// RetrieveClaimForOrder mocks base method.
 func (m *MockManagementServer) RetrieveClaimForOrder(arg0 context.Context, arg1 *api.RetrieveClaimForOrderRequest) (*api.RetrieveClaimForOrderResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RetrieveClaimForOrder", arg0, arg1)
@@ -998,103 +924,158 @@ func (m *MockManagementServer) RetrieveClaimForOrder(arg0 context.Context, arg1 
 	return ret0, ret1
 }
 
-// RetrieveClaimForOrder indicates an expected call of RetrieveClaimForOrder
+// RetrieveClaimForOrder indicates an expected call of RetrieveClaimForOrder.
 func (mr *MockManagementServerMockRecorder) RetrieveClaimForOrder(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RetrieveClaimForOrder", reflect.TypeOf((*MockManagementServer)(nil).RetrieveClaimForOrder), arg0, arg1)
 }
 
-// mustEmbedUnimplementedManagementServer mocks base method
+// RevokeAccessGrant mocks base method.
+func (m *MockManagementServer) RevokeAccessGrant(arg0 context.Context, arg1 *api.RevokeAccessGrantRequest) (*api.AccessGrant, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RevokeAccessGrant", arg0, arg1)
+	ret0, _ := ret[0].(*api.AccessGrant)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RevokeAccessGrant indicates an expected call of RevokeAccessGrant.
+func (mr *MockManagementServerMockRecorder) RevokeAccessGrant(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RevokeAccessGrant", reflect.TypeOf((*MockManagementServer)(nil).RevokeAccessGrant), arg0, arg1)
+}
+
+// SendAccessRequest mocks base method.
+func (m *MockManagementServer) SendAccessRequest(arg0 context.Context, arg1 *api.SendAccessRequestRequest) (*api.OutgoingAccessRequest, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SendAccessRequest", arg0, arg1)
+	ret0, _ := ret[0].(*api.OutgoingAccessRequest)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SendAccessRequest indicates an expected call of SendAccessRequest.
+func (mr *MockManagementServerMockRecorder) SendAccessRequest(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendAccessRequest", reflect.TypeOf((*MockManagementServer)(nil).SendAccessRequest), arg0, arg1)
+}
+
+// UpdateInway mocks base method.
+func (m *MockManagementServer) UpdateInway(arg0 context.Context, arg1 *api.UpdateInwayRequest) (*api.Inway, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateInway", arg0, arg1)
+	ret0, _ := ret[0].(*api.Inway)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateInway indicates an expected call of UpdateInway.
+func (mr *MockManagementServerMockRecorder) UpdateInway(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateInway", reflect.TypeOf((*MockManagementServer)(nil).UpdateInway), arg0, arg1)
+}
+
+// UpdateService mocks base method.
+func (m *MockManagementServer) UpdateService(arg0 context.Context, arg1 *api.UpdateServiceRequest) (*api.UpdateServiceResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateService", arg0, arg1)
+	ret0, _ := ret[0].(*api.UpdateServiceResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateService indicates an expected call of UpdateService.
+func (mr *MockManagementServerMockRecorder) UpdateService(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateService", reflect.TypeOf((*MockManagementServer)(nil).UpdateService), arg0, arg1)
+}
+
+// UpdateSettings mocks base method.
+func (m *MockManagementServer) UpdateSettings(arg0 context.Context, arg1 *api.UpdateSettingsRequest) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateSettings", arg0, arg1)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateSettings indicates an expected call of UpdateSettings.
+func (mr *MockManagementServerMockRecorder) UpdateSettings(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateSettings", reflect.TypeOf((*MockManagementServer)(nil).UpdateSettings), arg0, arg1)
+}
+
+// mustEmbedUnimplementedManagementServer mocks base method.
 func (m *MockManagementServer) mustEmbedUnimplementedManagementServer() {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "mustEmbedUnimplementedManagementServer")
 }
 
-// mustEmbedUnimplementedManagementServer indicates an expected call of mustEmbedUnimplementedManagementServer
+// mustEmbedUnimplementedManagementServer indicates an expected call of mustEmbedUnimplementedManagementServer.
 func (mr *MockManagementServerMockRecorder) mustEmbedUnimplementedManagementServer() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "mustEmbedUnimplementedManagementServer", reflect.TypeOf((*MockManagementServer)(nil).mustEmbedUnimplementedManagementServer))
 }
 
-// MockUnsafeManagementServer is a mock of UnsafeManagementServer interface
+// MockUnsafeManagementServer is a mock of UnsafeManagementServer interface.
 type MockUnsafeManagementServer struct {
 	ctrl     *gomock.Controller
 	recorder *MockUnsafeManagementServerMockRecorder
 }
 
-// MockUnsafeManagementServerMockRecorder is the mock recorder for MockUnsafeManagementServer
+// MockUnsafeManagementServerMockRecorder is the mock recorder for MockUnsafeManagementServer.
 type MockUnsafeManagementServerMockRecorder struct {
 	mock *MockUnsafeManagementServer
 }
 
-// NewMockUnsafeManagementServer creates a new mock instance
+// NewMockUnsafeManagementServer creates a new mock instance.
 func NewMockUnsafeManagementServer(ctrl *gomock.Controller) *MockUnsafeManagementServer {
 	mock := &MockUnsafeManagementServer{ctrl: ctrl}
 	mock.recorder = &MockUnsafeManagementServerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockUnsafeManagementServer) EXPECT() *MockUnsafeManagementServerMockRecorder {
 	return m.recorder
 }
 
-// mustEmbedUnimplementedManagementServer mocks base method
+// mustEmbedUnimplementedManagementServer mocks base method.
 func (m *MockUnsafeManagementServer) mustEmbedUnimplementedManagementServer() {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "mustEmbedUnimplementedManagementServer")
 }
 
-// mustEmbedUnimplementedManagementServer indicates an expected call of mustEmbedUnimplementedManagementServer
+// mustEmbedUnimplementedManagementServer indicates an expected call of mustEmbedUnimplementedManagementServer.
 func (mr *MockUnsafeManagementServerMockRecorder) mustEmbedUnimplementedManagementServer() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "mustEmbedUnimplementedManagementServer", reflect.TypeOf((*MockUnsafeManagementServer)(nil).mustEmbedUnimplementedManagementServer))
 }
 
-// MockDirectoryClient is a mock of DirectoryClient interface
+// MockDirectoryClient is a mock of DirectoryClient interface.
 type MockDirectoryClient struct {
 	ctrl     *gomock.Controller
 	recorder *MockDirectoryClientMockRecorder
 }
 
-// MockDirectoryClientMockRecorder is the mock recorder for MockDirectoryClient
+// MockDirectoryClientMockRecorder is the mock recorder for MockDirectoryClient.
 type MockDirectoryClientMockRecorder struct {
 	mock *MockDirectoryClient
 }
 
-// NewMockDirectoryClient creates a new mock instance
+// NewMockDirectoryClient creates a new mock instance.
 func NewMockDirectoryClient(ctrl *gomock.Controller) *MockDirectoryClient {
 	mock := &MockDirectoryClient{ctrl: ctrl}
 	mock.recorder = &MockDirectoryClientMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockDirectoryClient) EXPECT() *MockDirectoryClientMockRecorder {
 	return m.recorder
 }
 
-// ListServices mocks base method
-func (m *MockDirectoryClient) ListServices(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.DirectoryListServicesResponse, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "ListServices", varargs...)
-	ret0, _ := ret[0].(*api.DirectoryListServicesResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListServices indicates an expected call of ListServices
-func (mr *MockDirectoryClientMockRecorder) ListServices(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListServices", reflect.TypeOf((*MockDirectoryClient)(nil).ListServices), varargs...)
-}
-
-// GetOrganizationService mocks base method
+// GetOrganizationService mocks base method.
 func (m *MockDirectoryClient) GetOrganizationService(ctx context.Context, in *api.GetOrganizationServiceRequest, opts ...grpc.CallOption) (*api.DirectoryService, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
@@ -1107,14 +1088,34 @@ func (m *MockDirectoryClient) GetOrganizationService(ctx context.Context, in *ap
 	return ret0, ret1
 }
 
-// GetOrganizationService indicates an expected call of GetOrganizationService
+// GetOrganizationService indicates an expected call of GetOrganizationService.
 func (mr *MockDirectoryClientMockRecorder) GetOrganizationService(ctx, in interface{}, opts ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, in}, opts...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationService", reflect.TypeOf((*MockDirectoryClient)(nil).GetOrganizationService), varargs...)
 }
 
-// RequestAccessToService mocks base method
+// ListServices mocks base method.
+func (m *MockDirectoryClient) ListServices(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.DirectoryListServicesResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListServices", varargs...)
+	ret0, _ := ret[0].(*api.DirectoryListServicesResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListServices indicates an expected call of ListServices.
+func (mr *MockDirectoryClientMockRecorder) ListServices(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListServices", reflect.TypeOf((*MockDirectoryClient)(nil).ListServices), varargs...)
+}
+
+// RequestAccessToService mocks base method.
 func (m *MockDirectoryClient) RequestAccessToService(ctx context.Context, in *api.RequestAccessToServiceRequest, opts ...grpc.CallOption) (*api.OutgoingAccessRequest, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
@@ -1127,52 +1128,37 @@ func (m *MockDirectoryClient) RequestAccessToService(ctx context.Context, in *ap
 	return ret0, ret1
 }
 
-// RequestAccessToService indicates an expected call of RequestAccessToService
+// RequestAccessToService indicates an expected call of RequestAccessToService.
 func (mr *MockDirectoryClientMockRecorder) RequestAccessToService(ctx, in interface{}, opts ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, in}, opts...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RequestAccessToService", reflect.TypeOf((*MockDirectoryClient)(nil).RequestAccessToService), varargs...)
 }
 
-// MockDirectoryServer is a mock of DirectoryServer interface
+// MockDirectoryServer is a mock of DirectoryServer interface.
 type MockDirectoryServer struct {
 	ctrl     *gomock.Controller
 	recorder *MockDirectoryServerMockRecorder
 }
 
-// MockDirectoryServerMockRecorder is the mock recorder for MockDirectoryServer
+// MockDirectoryServerMockRecorder is the mock recorder for MockDirectoryServer.
 type MockDirectoryServerMockRecorder struct {
 	mock *MockDirectoryServer
 }
 
-// NewMockDirectoryServer creates a new mock instance
+// NewMockDirectoryServer creates a new mock instance.
 func NewMockDirectoryServer(ctrl *gomock.Controller) *MockDirectoryServer {
 	mock := &MockDirectoryServer{ctrl: ctrl}
 	mock.recorder = &MockDirectoryServerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockDirectoryServer) EXPECT() *MockDirectoryServerMockRecorder {
 	return m.recorder
 }
 
-// ListServices mocks base method
-func (m *MockDirectoryServer) ListServices(arg0 context.Context, arg1 *emptypb.Empty) (*api.DirectoryListServicesResponse, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListServices", arg0, arg1)
-	ret0, _ := ret[0].(*api.DirectoryListServicesResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListServices indicates an expected call of ListServices
-func (mr *MockDirectoryServerMockRecorder) ListServices(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListServices", reflect.TypeOf((*MockDirectoryServer)(nil).ListServices), arg0, arg1)
-}
-
-// GetOrganizationService mocks base method
+// GetOrganizationService mocks base method.
 func (m *MockDirectoryServer) GetOrganizationService(arg0 context.Context, arg1 *api.GetOrganizationServiceRequest) (*api.DirectoryService, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetOrganizationService", arg0, arg1)
@@ -1181,13 +1167,28 @@ func (m *MockDirectoryServer) GetOrganizationService(arg0 context.Context, arg1 
 	return ret0, ret1
 }
 
-// GetOrganizationService indicates an expected call of GetOrganizationService
+// GetOrganizationService indicates an expected call of GetOrganizationService.
 func (mr *MockDirectoryServerMockRecorder) GetOrganizationService(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationService", reflect.TypeOf((*MockDirectoryServer)(nil).GetOrganizationService), arg0, arg1)
 }
 
-// RequestAccessToService mocks base method
+// ListServices mocks base method.
+func (m *MockDirectoryServer) ListServices(arg0 context.Context, arg1 *emptypb.Empty) (*api.DirectoryListServicesResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListServices", arg0, arg1)
+	ret0, _ := ret[0].(*api.DirectoryListServicesResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListServices indicates an expected call of ListServices.
+func (mr *MockDirectoryServerMockRecorder) ListServices(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListServices", reflect.TypeOf((*MockDirectoryServer)(nil).ListServices), arg0, arg1)
+}
+
+// RequestAccessToService mocks base method.
 func (m *MockDirectoryServer) RequestAccessToService(arg0 context.Context, arg1 *api.RequestAccessToServiceRequest) (*api.OutgoingAccessRequest, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RequestAccessToService", arg0, arg1)
@@ -1196,54 +1197,54 @@ func (m *MockDirectoryServer) RequestAccessToService(arg0 context.Context, arg1 
 	return ret0, ret1
 }
 
-// RequestAccessToService indicates an expected call of RequestAccessToService
+// RequestAccessToService indicates an expected call of RequestAccessToService.
 func (mr *MockDirectoryServerMockRecorder) RequestAccessToService(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RequestAccessToService", reflect.TypeOf((*MockDirectoryServer)(nil).RequestAccessToService), arg0, arg1)
 }
 
-// mustEmbedUnimplementedDirectoryServer mocks base method
+// mustEmbedUnimplementedDirectoryServer mocks base method.
 func (m *MockDirectoryServer) mustEmbedUnimplementedDirectoryServer() {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "mustEmbedUnimplementedDirectoryServer")
 }
 
-// mustEmbedUnimplementedDirectoryServer indicates an expected call of mustEmbedUnimplementedDirectoryServer
+// mustEmbedUnimplementedDirectoryServer indicates an expected call of mustEmbedUnimplementedDirectoryServer.
 func (mr *MockDirectoryServerMockRecorder) mustEmbedUnimplementedDirectoryServer() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "mustEmbedUnimplementedDirectoryServer", reflect.TypeOf((*MockDirectoryServer)(nil).mustEmbedUnimplementedDirectoryServer))
 }
 
-// MockUnsafeDirectoryServer is a mock of UnsafeDirectoryServer interface
+// MockUnsafeDirectoryServer is a mock of UnsafeDirectoryServer interface.
 type MockUnsafeDirectoryServer struct {
 	ctrl     *gomock.Controller
 	recorder *MockUnsafeDirectoryServerMockRecorder
 }
 
-// MockUnsafeDirectoryServerMockRecorder is the mock recorder for MockUnsafeDirectoryServer
+// MockUnsafeDirectoryServerMockRecorder is the mock recorder for MockUnsafeDirectoryServer.
 type MockUnsafeDirectoryServerMockRecorder struct {
 	mock *MockUnsafeDirectoryServer
 }
 
-// NewMockUnsafeDirectoryServer creates a new mock instance
+// NewMockUnsafeDirectoryServer creates a new mock instance.
 func NewMockUnsafeDirectoryServer(ctrl *gomock.Controller) *MockUnsafeDirectoryServer {
 	mock := &MockUnsafeDirectoryServer{ctrl: ctrl}
 	mock.recorder = &MockUnsafeDirectoryServerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockUnsafeDirectoryServer) EXPECT() *MockUnsafeDirectoryServerMockRecorder {
 	return m.recorder
 }
 
-// mustEmbedUnimplementedDirectoryServer mocks base method
+// mustEmbedUnimplementedDirectoryServer mocks base method.
 func (m *MockUnsafeDirectoryServer) mustEmbedUnimplementedDirectoryServer() {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "mustEmbedUnimplementedDirectoryServer")
 }
 
-// mustEmbedUnimplementedDirectoryServer indicates an expected call of mustEmbedUnimplementedDirectoryServer
+// mustEmbedUnimplementedDirectoryServer indicates an expected call of mustEmbedUnimplementedDirectoryServer.
 func (mr *MockUnsafeDirectoryServerMockRecorder) mustEmbedUnimplementedDirectoryServer() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "mustEmbedUnimplementedDirectoryServer", reflect.TypeOf((*MockUnsafeDirectoryServer)(nil).mustEmbedUnimplementedDirectoryServer))

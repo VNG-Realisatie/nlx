@@ -498,3 +498,8 @@ message RetrieveClaimForOrderRequest {
 message RetrieveClaimForOrderResponse {
   string claim = 1;
 }
+
+message VerifyClaimRequest {
+  string claim = 1;
+  string serviceName = 2;
+}

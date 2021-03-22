@@ -6,35 +6,36 @@ package mock_txlogdb
 
 import (
 	context "context"
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	txlogdb "go.nlx.io/nlx/management-api/pkg/txlogdb"
-	reflect "reflect"
 )
 
-// MockTxlogDatabase is a mock of TxlogDatabase interface
+// MockTxlogDatabase is a mock of TxlogDatabase interface.
 type MockTxlogDatabase struct {
 	ctrl     *gomock.Controller
 	recorder *MockTxlogDatabaseMockRecorder
 }
 
-// MockTxlogDatabaseMockRecorder is the mock recorder for MockTxlogDatabase
+// MockTxlogDatabaseMockRecorder is the mock recorder for MockTxlogDatabase.
 type MockTxlogDatabaseMockRecorder struct {
 	mock *MockTxlogDatabase
 }
 
-// NewMockTxlogDatabase creates a new mock instance
+// NewMockTxlogDatabase creates a new mock instance.
 func NewMockTxlogDatabase(ctrl *gomock.Controller) *MockTxlogDatabase {
 	mock := &MockTxlogDatabase{ctrl: ctrl}
 	mock.recorder = &MockTxlogDatabaseMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockTxlogDatabase) EXPECT() *MockTxlogDatabaseMockRecorder {
 	return m.recorder
 }
 
-// FilterRecords mocks base method
+// FilterRecords mocks base method.
 func (m *MockTxlogDatabase) FilterRecords(ctx context.Context, filters *txlogdb.Filters) ([]txlogdb.Record, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FilterRecords", ctx, filters)
@@ -43,7 +44,7 @@ func (m *MockTxlogDatabase) FilterRecords(ctx context.Context, filters *txlogdb.
 	return ret0, ret1
 }
 
-// FilterRecords indicates an expected call of FilterRecords
+// FilterRecords indicates an expected call of FilterRecords.
 func (mr *MockTxlogDatabaseMockRecorder) FilterRecords(ctx, filters interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FilterRecords", reflect.TypeOf((*MockTxlogDatabase)(nil).FilterRecords), ctx, filters)
