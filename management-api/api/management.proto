@@ -491,8 +491,8 @@ message ListAuditLogsResponse {
 }
 
 message RetrieveClaimForOrderRequest {
-  string order_reference = 1;
-  string order_organization_name = 2;
+  string orderReference = 1;
+  string orderOrganizationName = 2;
 }
 
 message RetrieveClaimForOrderResponse {
