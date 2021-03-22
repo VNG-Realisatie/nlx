@@ -22,7 +22,7 @@ require (
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/golang-migrate/migrate/v4 v4.14.1
 	github.com/golang/mock v1.5.0
-	github.com/golang/protobuf v1.4.3
+	github.com/golang/protobuf v1.5.1
 	github.com/google/uuid v1.2.0
 	github.com/gorilla/schema v1.2.0
 	github.com/gorilla/sessions v1.2.1
@@ -53,7 +53,7 @@ require (
 	golang.org/x/text v0.3.5
 	google.golang.org/genproto v0.0.0-20210315173758-2651cd453018
 	google.golang.org/grpc v1.36.0
-	google.golang.org/protobuf v1.25.1-0.20201208041424-160c7477e0e8
+	google.golang.org/protobuf v1.26.0
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/square/go-jose.v2 v2.4.1 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
