@@ -316,17 +316,17 @@ func TestHandleOnNLXExceptions(t *testing.T) {
 			false,
 			&transactionlog.DiscardTransactionLogger{},
 			"invalid",
-			http.StatusInternalServerError,
+			http.StatusBadRequest,
 			"nlx outway: invalid data subject header\n",
 		},
 	}
-
-	recorder := httptest.NewRecorder()
 
 	for name, tt := range tests {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
+			recorder := httptest.NewRecorder()
+
 			outway.plugins = []plugins.Plugin{
 				plugins.NewDelegationPlugin(nil),
 				plugins.NewLogRecordPlugin("TestOrg", tt.txLogger),
@@ -350,7 +350,7 @@ func TestHandleOnNLXExceptions(t *testing.T) {
 				Path:         "/",
 			}, recorder, req)
 
-			//assert.Equal(t, tt.expectedStatusCode, recorder.Code)
+			assert.Equal(t, tt.expectedStatusCode, recorder.Code)
 
 			bytes, err := ioutil.ReadAll(recorder.Body)
 			if err != nil {
