@@ -51,8 +51,7 @@ func NewClient(ctx context.Context, inwayAddress string, cert *common_tls.Certif
 	}
 
 	c := client{
-		conn:                       conn,
-		AccessRequestServiceClient: external.NewAccessRequestServiceClient(conn),
+		conn: conn,
 	}
 
 	return &c, nil

@@ -4,16 +4,34 @@
 package plugins
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/http"
+	"sync"
+
+	"github.com/form3tech-oss/jwt-go"
+	"go.uber.org/zap"
+
+	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
-type DelegationPlugin struct {
+type claimData struct {
+	server.JWTClaims
+	Raw string
 }
 
-func NewDelegationPlugin() *DelegationPlugin {
-	return &DelegationPlugin{}
+type DelegationPlugin struct {
+	claims           sync.Map
+	managementClient api.ManagementClient
+}
+
+func NewDelegationPlugin(managementClient api.ManagementClient) *DelegationPlugin {
+	return &DelegationPlugin{
+		claims:           sync.Map{},
+		managementClient: managementClient,
+	}
 }
 
 func isDelegatedRequest(r *http.Request) bool {
@@ -36,24 +54,82 @@ func parseRequestMetadata(r *http.Request) (name, orderReference string, err err
 	return
 }
 
+func (plugin *DelegationPlugin) requestClaim(name, orderReference string) (*server.JWTClaims, string, error) {
+	response, err := plugin.managementClient.RetrieveClaimForOrder(context.Background(), &api.RetrieveClaimForOrderRequest{
+		OrderOrganizationName: name,
+		OrderReference:        orderReference,
+	})
+	if err != nil {
+		return nil, "", err
+	}
+
+	parser := &jwt.Parser{}
+
+	token, _, err := parser.ParseUnverified(response.Claim, &server.JWTClaims{})
+	if err != nil {
+		return nil, "", err
+	}
+
+	if err := token.Claims.Valid(); err != nil {
+		return nil, "", err
+	}
+
+	return token.Claims.(*server.JWTClaims), token.Raw, nil
+}
+
+func (plugin *DelegationPlugin) getOrRequestClaim(name, orderReference string) (*claimData, error) {
+	claimKey := fmt.Sprintf("%s/%s", name, orderReference)
+
+	value, ok := plugin.claims.Load(claimKey)
+	if !ok || value.(*claimData).Valid() != nil {
+		claim, raw, err := plugin.requestClaim(name, orderReference)
+		if err != nil {
+			return nil, err
+		}
+
+		data := &claimData{
+			Raw:       raw,
+			JWTClaims: *claim,
+		}
+
+		plugin.claims.Store(claimKey, data)
+
+		return data, nil
+	}
+
+	return value.(*claimData), nil
+}
+
 func (plugin *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 	return func(context *Context) error {
 		if !isDelegatedRequest(context.Request) {
 			return next(context)
 		}
 
-		name, orderRef, err := parseRequestMetadata(context.Request)
+		name, orderReference, err := parseRequestMetadata(context.Request)
 		if err != nil {
-			msg := fmt.Sprintf("failed to parse delegation metadata: %s", err.Error())
+			msg := "failed to parse delegation metadata"
 
-			context.Logger.Error(msg)
+			context.Logger.Error(msg, zap.Error(err))
 			http.Error(context.Response, msg, http.StatusInternalServerError)
 
 			return nil
 		}
 
 		context.LogData["delegator"] = name
-		context.LogData["orderReference"] = orderRef
+		context.LogData["orderReference"] = orderReference
+
+		claim, err := plugin.getOrRequestClaim(name, orderReference)
+		if err != nil {
+			msg := fmt.Sprintf("failed to request claim from %s", name)
+
+			context.Logger.Error(msg, zap.Error(err))
+			http.Error(context.Response, msg, http.StatusInternalServerError)
+
+			return nil
+		}
+
+		context.Request.Header.Add("X-NLX-Request-Claim", claim.Raw)
 
 		return next(context)
 	}

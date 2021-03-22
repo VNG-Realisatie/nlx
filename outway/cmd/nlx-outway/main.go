@@ -4,6 +4,7 @@
 package main
 
 import (
+	"context"
 	"crypto/tls"
 	"log"
 	"time"
@@ -12,6 +13,8 @@ import (
 	"github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 
 	"go.nlx.io/nlx/common/cmd"
 	common_db "go.nlx.io/nlx/common/db"
@@ -19,6 +22,7 @@ import (
 	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
+	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/outway"
 	"go.nlx.io/nlx/txlog-db/dbversion"
 )
@@ -31,7 +35,8 @@ var options struct {
 
 	DirectoryInspectionAddress string `long:"directory-inspection-address" env:"DIRECTORY_INSPECTION_ADDRESS" description:"Address for the directory where this outway can fetch the service list" required:"true"`
 
-	UseAsHTTPProxy bool `long:"use-as-http-proxy" env:"USE_AS_HTTP_PROXY" description:"An experimental flag which when true makes the outway function as an HTTP proxy"`
+	UseAsHTTPProxy       bool   `long:"use-as-http-proxy" env:"USE_AS_HTTP_PROXY" description:"An experimental flag which when true makes the outway function as an HTTP proxy"`
+	ManagementAPIAddress string `long:"management-api-address" env:"MANAGEMENT_API_ADDRESS" description:"The address of the NLX Management API"`
 
 	DisableLogdb bool   `long:"disable-logdb" env:"DISABLE_LOGDB" description:"Disable logdb connections"`
 	PostgresDSN  string `long:"postgres-dsn" env:"POSTGRES_DSN" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
@@ -117,10 +122,20 @@ func main() {
 		serverCertificate = &cert
 	}
 
+	creds := credentials.NewTLS(orgCert.TLSConfig())
+
+	conn, err := grpc.DialContext(context.TODO(), options.ManagementAPIAddress, grpc.WithTransportCredentials(creds))
+	if err != nil {
+		logger.Fatal("failed to connect to Management API", zap.Error(err))
+	}
+
+	client := api.NewManagementClient(conn)
+
 	// Create new outway and provide it with a hardcoded service.
 	ow, err := outway.NewOutway(
 		logger,
 		logDB,
+		client,
 		mainProcess,
 		options.MonitoringAddress,
 		orgCert,

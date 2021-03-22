@@ -27,6 +27,7 @@ import (
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
+	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/outway/plugins"
 )
 
@@ -132,6 +133,7 @@ func (o *Outway) startDirectoryInspector(directoryInspectionAddress string) {
 func NewOutway(
 	logger *zap.Logger,
 	logdb *sqlx.DB,
+	managementClient api.ManagementClient,
 	mainProcess *process.Process,
 	monitoringAddress string,
 	orgCert *common_tls.CertificateBundle,
@@ -194,7 +196,7 @@ func NewOutway(
 	}
 
 	o.plugins = []plugins.Plugin{
-		plugins.NewDelegationPlugin(),
+		plugins.NewDelegationPlugin(managementClient),
 		plugins.NewLogRecordPlugin(o.organizationName, o.txlogger),
 		plugins.NewStripHeadersPlugin(o.organizationName),
 	}
