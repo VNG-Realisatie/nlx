@@ -1,9 +1,9 @@
 apiVersion: kubedb.com/v1alpha1
 kind: Postgres
 metadata:
-  name: {{ include "saas-party-x.fullname" . }}-postgresql
+  name: {{ include "saas-org-x.fullname" . }}-postgresql
   labels:
-    {{- include "saas-party-x.labels" . | nindent 4 }}
+    {{- include "saas-org-x.labels" . | nindent 4 }}
 spec:
   version: {{ (required "PostgreSQL version is required" .Values.postgresql.version) | toString }}
   storageType: {{ required "PostgreSQL storage type is required" .Values.postgresql.storageType }}

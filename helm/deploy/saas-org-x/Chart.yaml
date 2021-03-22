@@ -1,6 +1,6 @@
 apiVersion: v2
-name: saas-party-x
-description: Metachart for the Saas Party X demo organization
+name: saas-org-x
+description: Metachart for the Saas Org X demo organization
 type: application
 version: 0.96.0
 appVersion: 0.96.0

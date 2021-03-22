@@ -66,16 +66,16 @@ Deploy review:
         --values haarlem-values-review.yaml
       stop_section deploy_haarlem
     - |
-      start_section deploy_saas_party_x "Deploy Saas Party X chart"
-      sed -e "s|{{DOMAIN_SUFFIX}}|${DOMAIN_SUFFIX}|g" ./helm/deploy/saas-party-x/values-review.yaml.tpl > saas-party-x-values-review.yaml
-      helm dependency build ./helm/deploy/saas-party-x
-      helm upgrade saas-party-x ./helm/deploy/saas-party-x \
+      start_section deploy_saas_org_x "Deploy Saas Org X chart"
+      sed -e "s|{{DOMAIN_SUFFIX}}|${DOMAIN_SUFFIX}|g" ./helm/deploy/saas-org-x/values-review.yaml.tpl > saas-org-x-values-review.yaml
+      helm dependency build ./helm/deploy/saas-org-x
+      helm upgrade saas-org-x ./helm/deploy/saas-org-x \
         --install \
         --namespace ${K8S_NAMESPACE} \
         --set-string global.imageRegistry=${IMAGE_REGISTRY} \
         --set-string global.imageTag=${IMAGE_TAG} \
-        --values saas-party-x-values-review.yaml
-      stop_section deploy_saas_party_x
+        --values saas-org-x-values-review.yaml
+      stop_section deploy_saas_org_x
     - |
       start_section deploy_review_page "Deploy review page chart"
       helm upgrade review-page ./helm/charts/review-page \

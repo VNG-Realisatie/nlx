@@ -177,22 +177,22 @@ ca:
     organization:
       subject:
         organizations:
-          - Saas Party X
-      commonName: saas-party-x-nlx-inway
+          - Saas Org X
+      commonName: saas-org-x-nlx-inway
       dnsNames:
-        - saas-party-x-nlx-inway
+        - saas-org-x-nlx-inway
       issuerRef:
         name: shared
     management-api:
-      commonName: saas-party-x-nlx-management-api
+      commonName: saas-org-x-nlx-management-api
       dnsNames:
-        - saas-party-x-nlx-management-api
+        - saas-org-x-nlx-management-api
       issuerRef:
-        name: saas-party-x
+        name: saas-org-x
     nlxctl:
       commonName: nlxctl
       issuerRef:
-        name: saas-party-x
+        name: saas-org-x
 
 postgresql:
   version: "11.1"
@@ -205,21 +205,21 @@ transactionLog:
     repository: nlxio/txlog-db
     tag: ""
     pullPolicy: IfNotPresent
-  hostname: saas-party-x-postgresql
-  databaseName: saas-party-x-transaction-log
-  existingSecret: saas-party-x-postgresql-auth
+  hostname: saas-org-x-postgresql
+  databaseName: saas-org-x-transaction-log
+  existingSecret: saas-org-x-postgresql-auth
   resetDatabase: false
 
 managementAPI:
-  address: saas-party-x-nlx-management-api:443
+  address: saas-org-x-nlx-management-api:443
   image:
     registry: docker.io
     repository: nlxio/management-api
     tag: ""
     pullPolicy: IfNotPresent
   postgresql:
-    hostname: saas-party-x-postgresql
-    existingSecret: saas-party-x-postgresql-auth
+    hostname: saas-org-x-postgresql
+    existingSecret: saas-org-x-postgresql-auth
 
 ################
 ## Sub-charts ##
@@ -231,7 +231,7 @@ nlx-outway:
     enabled: false
   tls:
     organizationCertificate:
-      existingSecret: saas-party-x-organization-tls
+      existingSecret: saas-org-x-organization-tls
 
 nlx-management:
   config:
@@ -239,26 +239,26 @@ nlx-management:
     directoryRegistrationHostname: shared-nlx-directory-registration
     oidc:
       clientSecret: ZXhhbXBsZS1hcHAtc2VjcmV0
-      discoveryURL: http://dex.saas-party-x.nlx.minikube
-      redirectURL: http://nlx-management.saas-party-x.nlx.minikube/oidc/callback
+      discoveryURL: http://dex.saas-org-x.nlx.minikube
+      redirectURL: http://nlx-management.saas-org-x.nlx.minikube/oidc/callback
       sessionSignKey: 0Xn2DBfb4L4hwN3XosbwoKZalLBU68UU
   tls:
     organizationCertificate:
-      existingSecret: saas-party-x-organization-tls
+      existingSecret: saas-org-x-organization-tls
     certificate:
-      existingSecret: saas-party-x-management-api-tls
+      existingSecret: saas-org-x-management-api-tls
   ingress:
     enabled: true
     hosts:
-      - nlx-management.saas-party-x.nlx.minikube
+      - nlx-management.saas-org-x.nlx.minikube
   transactionLog:
     enabled: true
-    hostname: saas-party-x-postgresql
-    database: saas-party-x-transaction-log
-    existingSecret: saas-party-x-postgresql-auth
+    hostname: saas-org-x-postgresql
+    database: saas-org-x-transaction-log
+    existingSecret: saas-org-x-postgresql-auth
   postgresql:
-    hostname: saas-party-x-postgresql
-    existingSecret: saas-party-x-postgresql-auth
+    hostname: saas-org-x-postgresql
+    existingSecret: saas-org-x-postgresql-auth
 
 dex:
   config:
@@ -268,13 +268,13 @@ dex:
         file: ":memory:"
     logger:
       level: info
-    issuer: http://dex.saas-party-x.nlx.minikube
+    issuer: http://dex.saas-org-x.nlx.minikube
     staticClients:
       - id: nlx-management
         name: NLX Management
         secret: ZXhhbXBsZS1hcHAtc2VjcmV0
         redirectURIs:
-          - http://nlx-management.saas-party-x.nlx.minikube/oidc/callback
+          - http://nlx-management.saas-org-x.nlx.minikube/oidc/callback
     enablePasswordDB: true
     staticPasswords:
       - username: admin
@@ -287,7 +287,7 @@ dex:
   ingress:
     enabled: true
     hosts:
-      - dex.saas-party-x.nlx.minikube
+      - dex.saas-org-x.nlx.minikube
   ports:
     web:
       servicePort: 80

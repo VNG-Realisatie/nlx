@@ -44,34 +44,34 @@ nlx-management:
   config:
     oidc:
       clientSecret: N6Gr4v8wZKlLuKrMSV1I
-      discoveryURL: https://dex.acc.voorbeeld-saas-party-x.nl
-      redirectURL: https://management.acc.voorbeeld-saas-party-x.nl/oidc/callback
+      discoveryURL: https://dex.acc.voorbeeld-saas-org-x.nl
+      redirectURL: https://management.acc.voorbeeld-saas-org-x.nl/oidc/callback
       sessionSignKey: wXDSJYQjSLCsigtnRCbBMWjnvEhHFdu4
   ingress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - management.acc.voorbeeld-saas-party-x.nl
+      - management.acc.voorbeeld-saas-org-x.nl
     tls:
-      - secretName: saas-party-x-nlx-management-ingress-tls
+      - secretName: saas-org-x-nlx-management-ingress-tls
         hosts:
-          - management.acc.voorbeeld-saas-party-x.nl
+          - management.acc.voorbeeld-saas-org-x.nl
 
 dex:
   config:
-    issuer: https://dex.acc.voorbeeld-saas-party-x.nl
+    issuer: https://dex.acc.voorbeeld-saas-org-x.nl
     staticClients:
       - id: nlx-management
         name: NLX Management
         secret: N6Gr4v8wZKlLuKrMSV1I
         redirectURIs:
-          - https://management.acc.voorbeeld-saas-party-x.nl/oidc/callback
+          - https://management.acc.voorbeeld-saas-org-x.nl/oidc/callback
   ingress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - dex.acc.voorbeeld-saas-party-x.nl
+      - dex.acc.voorbeeld-saas-org-x.nl
     tls:
-      - secretName: saas-party-x-dex-ingress-tls
+      - secretName: saas-org-x-dex-ingress-tls
         hosts:
-          - dex.acc.voorbeeld-saas-party-x.nl
+          - dex.acc.voorbeeld-saas-org-x.nl

@@ -5,7 +5,7 @@ Deploy demo:
     name: demo
   variables:
     K8S_NAMESPACE: nlx-${CI_ENVIRONMENT_NAME}
-    HELM_CHARTS_TO_DEPLOY: "shared brp rdw haarlem saas-party-x"
+    HELM_CHARTS_TO_DEPLOY: "shared brp rdw haarlem saas-org-x"
   before_script:
     - source ./.gitlab/ci/functions.sh
   script:
