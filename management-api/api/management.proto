@@ -503,3 +503,8 @@ message VerifyClaimRequest {
   string claim = 1;
   string serviceName = 2;
 }
+
+message VerifyClaimResponse {
+  string orderOrganizationName = 1;
+  string orderReference = 2;
+}

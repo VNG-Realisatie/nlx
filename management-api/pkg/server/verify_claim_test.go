@@ -14,7 +14,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
@@ -77,7 +76,7 @@ func TestVerifyClaimWhenAccessGrantIsRevoked(t *testing.T) {
 	ctx := setProxyMetadata(context.Background())
 
 	mocks.db.EXPECT().
-		GetLatestAccessGrantForService(ctx, "organization-name", "service-name").
+		GetLatestAccessGrantForService(ctx, "delegator-organization-name", "service-name").
 		Return(&database.AccessGrant{
 			RevokedAt: sql.NullTime{
 				Time:  time.Now(),
@@ -102,7 +101,7 @@ func TestVerifyClaimFailedToRetrieveAccessGrant(t *testing.T) {
 	ctx := setProxyMetadata(context.Background())
 
 	mocks.db.EXPECT().
-		GetLatestAccessGrantForService(ctx, "organization-name", "service-name").
+		GetLatestAccessGrantForService(ctx, "delegator-organization-name", "service-name").
 		Return(nil, errors.New("arbitrary error"))
 
 	claim, err := getJWTAsSignedString(orgCert)
@@ -122,7 +121,7 @@ func TestVerifyClaimWithoutAccessGrant(t *testing.T) {
 	ctx := setProxyMetadata(context.Background())
 
 	mocks.db.EXPECT().
-		GetLatestAccessGrantForService(ctx, "organization-name", "service-name").
+		GetLatestAccessGrantForService(ctx, "delegator-organization-name", "service-name").
 		Return(nil, database.ErrNotFound)
 
 	claim, err := getJWTAsSignedString(orgCert)
@@ -145,7 +144,7 @@ func TestVerifyClaimHappyFlow(t *testing.T) {
 	assert.Nil(t, err)
 
 	mocks.db.EXPECT().
-		GetLatestAccessGrantForService(ctx, "organization-name", "service-name").
+		GetLatestAccessGrantForService(ctx, "delegator-organization-name", "service-name").
 		Return(&database.AccessGrant{
 			IncomingAccessRequest: &database.IncomingAccessRequest{
 				PublicKeyPEM:         publicKeyPEM,
@@ -162,16 +161,19 @@ func TestVerifyClaimHappyFlow(t *testing.T) {
 	})
 
 	assert.NoError(t, err)
-	assert.Equal(t, response, &emptypb.Empty{})
+	assert.Equal(t, &api.VerifyClaimResponse{
+		OrderOrganizationName: "delegator-organization-name",
+		OrderReference:        "order-reference",
+	}, response)
 }
 
 func getJWTAsSignedString(orgCert *common_tls.CertificateBundle) (string, error) {
 	claims := server.JWTClaims{
-		Organization:   "organization-name",
+		Organization:   "delegatee-organization-name",
 		OrderReference: "order-reference",
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour).Unix(),
-			Issuer:    "issuer",
+			Issuer:    "delegator-organization-name",
 		},
 	}
 

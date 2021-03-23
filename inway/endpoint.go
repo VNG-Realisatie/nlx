@@ -203,6 +203,8 @@ func (h *HTTPServiceEndpoint) handleRequest(reqMD *RequestMetadata, w http.Respo
 		ServiceName:      h.serviceName,
 		LogrecordID:      logrecordID,
 		Data:             recordData,
+		Delegator:        reqMD.delegatorOrganization,
+		OrderReference:   reqMD.orderReference,
 	})
 	if err != nil {
 		http.Error(w, "nlx-inway: server error", http.StatusInternalServerError)

@@ -61,6 +61,8 @@ type Inway struct {
 	managementClient api.ManagementClient
 	managementProxy  *grpcproxy.Proxy
 
+	delegationClient api.DelegationClient
+
 	directoryRegistrationClient registrationapi.DirectoryRegistrationClient
 }
 

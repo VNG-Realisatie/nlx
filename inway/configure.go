@@ -44,6 +44,7 @@ func (i *Inway) SetupManagementAPI(managementAPIAddress string, cert *common_tls
 	}
 
 	i.managementClient = api.NewManagementClient(conn)
+	i.delegationClient = api.NewDelegationClient(conn)
 
 	p, err := grpcproxy.New(context.TODO(), i.logger, managementAPIAddress, i.orgCertBundle, cert)
 	if err != nil {

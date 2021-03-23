@@ -4,13 +4,24 @@
 package inway
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
+	"github.com/form3tech-oss/jwt-go"
 	"go.uber.org/zap"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	common_tls "go.nlx.io/nlx/common/tls"
+	"go.nlx.io/nlx/management-api/api"
 )
+
+type JWTClaims struct {
+	jwt.StandardClaims
+	Organization   string `json:"organization"`
+	OrderReference string `json:"order_reference"`
+}
 
 // handleProxyRequest handles requests from an NLX Outway to the Inway.
 // It verifies authentication and selects the correct EnvpointService to
@@ -89,6 +100,32 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 		requesterOrganization:         requesterOrganization,
 		requesterPublicKeyFingerprint: publicKeyFingerprint,
 		requestPath:                   "/" + urlparts[1],
+	}
+
+	claim := r.Header.Get("X-NLX-Request-Claim")
+	if claim != "" {
+		verifyClaimResponse, err := i.delegationClient.VerifyClaim(r.Context(), &api.VerifyClaimRequest{
+			ServiceName: serviceName,
+			Claim:       claim,
+		})
+
+		if err != nil {
+			grpcStatus := status.Convert(err)
+			if grpcStatus.Code() == codes.Unauthenticated {
+				logger.Error("received request with an invalid claim", zap.Error(err))
+				http.Error(w, fmt.Sprintf("nlx-inway: claim is invalid. error: %s", grpcStatus.Message()), http.StatusUnauthorized)
+
+				return
+			}
+
+			logger.Error("failed to verify claim", zap.Error(err))
+			http.Error(w, "nlx-inway: failed to verify claim", http.StatusInternalServerError)
+
+			return
+		}
+
+		reqMD.delegatorOrganization = verifyClaimResponse.OrderOrganizationName
+		reqMD.orderReference = verifyClaimResponse.OrderReference
 	}
 
 	logger.Info("servicename: " + serviceName)

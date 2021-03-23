@@ -15,7 +15,6 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
@@ -24,7 +23,7 @@ import (
 var ErrNoAccessGrantAvailable = errors.New("no access grant available for service")
 var ErrNoAccessGrantRevoked = errors.New("access grant is revoked")
 
-func (s *ManagementService) VerifyClaim(ctx context.Context, req *api.VerifyClaimRequest) (*emptypb.Empty, error) {
+func (s *ManagementService) VerifyClaim(ctx context.Context, req *api.VerifyClaimRequest) (*api.VerifyClaimResponse, error) {
 	_, parsePmErr := s.parseProxyMetadata(ctx)
 	if parsePmErr != nil {
 		s.logger.Error("failed to parse proxy metadata", zap.Error(parsePmErr))
@@ -39,10 +38,9 @@ func (s *ManagementService) VerifyClaim(ctx context.Context, req *api.VerifyClai
 		return nil, status.Error(codes.InvalidArgument, "a service name must be provided")
 	}
 
-	_, err := jwt.ParseWithClaims(req.Claim, &JWTClaims{}, func(token *jwt.Token) (interface{}, error) {
-		claims := token.Claims.(*JWTClaims)
-
-		accessGrant, err := getAccessGrant(ctx, s.configDatabase, claims.Organization, req.ServiceName)
+	claims := &JWTClaims{}
+	_, err := jwt.ParseWithClaims(req.Claim, claims, func(token *jwt.Token) (interface{}, error) {
+		accessGrant, err := getAccessGrant(ctx, s.configDatabase, claims.Issuer, req.ServiceName)
 		if err != nil {
 			return nil, err
 		}
@@ -70,7 +68,10 @@ func (s *ManagementService) VerifyClaim(ctx context.Context, req *api.VerifyClai
 		return nil, status.Error(codes.Internal, "unable to verify claim")
 	}
 
-	return &emptypb.Empty{}, nil
+	return &api.VerifyClaimResponse{
+		OrderOrganizationName: claims.Issuer,
+		OrderReference:        claims.OrderReference,
+	}, nil
 }
 
 func getPublicKeyFromAccessGrant(grant *database.AccessGrant) (crypto.PublicKey, error) {
