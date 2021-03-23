@@ -24,6 +24,9 @@ config:
   authorizationService:
     enabled: false
     url: ""
+  managementAPI:
+    enabled: false
+    address: ""
 
 transactionLog:
   enabled: true
@@ -35,6 +38,11 @@ transactionLog:
 
 tls:
   organizationCertificate:
+    rootCertificatePEM: ""
+    certificatePEM: ""
+    keyPEM: ""
+    existingSecret: ""
+  certificate:
     rootCertificatePEM: ""
     certificatePEM: ""
     keyPEM: ""

@@ -63,6 +63,16 @@ spec:
             initialDelaySeconds: 3
             periodSeconds: 10
           env:
+          {{- if .Values.config.managementAPI.enabled }}
+            - name: MANAGEMENT_API_ADDRESS
+              value: {{ required "Management API address is required" .Values.config.managementAPI.address }}
+            - name: TLS_ROOT_CERT
+              value: /config/root.pem
+            - name: TLS_CERT
+              value: /certificate/tls.crt
+            - name: TLS_KEY
+              value: /certificate/tls.key
+          {{- end }}
           {{- if .Values.https.enabled }}
             - name: LISTEN_ADDRESS
               value: 0.0.0.0:8443
@@ -126,6 +136,10 @@ spec:
               mountPath: /certificate-server
               readOnly: true
           {{- end }}
+          {{- if .Values.config.managementAPI.enabled }}
+            - name: certificate
+              mountPath: /certificate
+          {{- end }}
             - name: config
               mountPath: /config
               readOnly: true
@@ -136,6 +150,12 @@ spec:
           secret:
             secretName: {{ default (printf "%s-organization-tls" (include  "nlx-outway.fullname" .)) .Values.tls.organizationCertificate.existingSecret }}
             defaultMode: 0640
+      {{- if .Values.config.managementAPI.enabled }}
+        - name: certificate
+          secret:
+            secretName: {{ default (printf "%s-tls" (include "nlx-outway.fullname" .)) .Values.tls.certificate.existingSecret }}
+            defaultMode: 0640
+      {{- end }}
         - name: config
           configMap:
             name: {{ template "nlx-outway.fullname" . }}

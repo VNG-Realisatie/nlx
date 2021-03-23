@@ -36,7 +36,7 @@ var options struct {
 	DirectoryInspectionAddress string `long:"directory-inspection-address" env:"DIRECTORY_INSPECTION_ADDRESS" description:"Address for the directory where this outway can fetch the service list" required:"true"`
 
 	UseAsHTTPProxy       bool   `long:"use-as-http-proxy" env:"USE_AS_HTTP_PROXY" description:"An experimental flag which when true makes the outway function as an HTTP proxy"`
-	ManagementAPIAddress string `long:"management-api-address" env:"MANAGEMENT_API_ADDRESS" description:"The address of the NLX Management API"`
+	ManagementAPIAddress string `long:"management-api-address" env:"MANAGEMENT_API_ADDRESS" description:"The address of the NLX Management API" required:"true"`
 
 	DisableLogdb bool   `long:"disable-logdb" env:"DISABLE_LOGDB" description:"Disable logdb connections"`
 	PostgresDSN  string `long:"postgres-dsn" env:"POSTGRES_DSN" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
@@ -49,6 +49,7 @@ var options struct {
 
 	logoptions.LogOptions
 	cmd.TLSOrgOptions
+	cmd.TLSOptions
 }
 
 // nolint:funlen,gocyclo // this is the main function
@@ -122,7 +123,16 @@ func main() {
 		serverCertificate = &cert
 	}
 
-	creds := credentials.NewTLS(orgCert.TLSConfig())
+	if errValidate := common_tls.VerifyPrivateKeyPermissions(options.KeyFile); errValidate != nil {
+		logger.Warn("invalid internal PKI key permissions", zap.Error(errValidate), zap.String("file-path", options.KeyFile))
+	}
+
+	cert, err := common_tls.NewBundleFromFiles(options.CertFile, options.KeyFile, options.RootCertFile)
+	if err != nil {
+		logger.Fatal("loading TLS files", zap.Error(err))
+	}
+
+	creds := credentials.NewTLS(cert.TLSConfig())
 
 	conn, err := grpc.DialContext(context.TODO(), options.ManagementAPIAddress, grpc.WithTransportCredentials(creds))
 	if err != nil {

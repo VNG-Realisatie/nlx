@@ -183,6 +183,12 @@ ca:
         - haarlem-auth-service
       issuerRef:
         name: shared
+    outway:
+      commonName: haarlem-nlx-outway
+      dnsNames:
+        - haarlem-nlx-outway
+      issuerRef:
+        name: haarlem
     management-api:
       commonName: haarlem-nlx-management-api
       dnsNames:
@@ -242,6 +248,9 @@ nlx-outway:
     authorizationService:
       enabled: true
       url: https://haarlem-auth-service
+    managementAPI:
+      enabled: true
+      address: haarlem-nlx-management-api:443
   transactionLog:
     hostname: haarlem-postgresql
     database: haarlem-transaction-log
@@ -249,6 +258,8 @@ nlx-outway:
   tls:
     organizationCertificate:
       existingSecret: haarlem-organization-tls
+    certificate:
+      existingSecret: haarlem-outway-tls
 
 nlx-management:
   config:

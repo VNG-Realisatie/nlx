@@ -180,6 +180,12 @@ ca:
         - saas-org-x-nlx-outway
       issuerRef:
         name: shared
+    outway:
+      commonName: saas-org-x-nlx-outway
+      dnsNames:
+        - saas-org-x-nlx-outway
+      issuerRef:
+        name: saas-org-x
     management-api:
       commonName: saas-org-x-nlx-management-api
       dnsNames:
@@ -224,11 +230,16 @@ managementAPI:
 nlx-outway:
   config:
     directoryInspectionHostname: shared-nlx-directory-inspection
+    managementAPI:
+      enabled: true
+      address: saas-org-x-nlx-management-api:443
   transactionLog:
     enabled: false
   tls:
     organizationCertificate:
       existingSecret: saas-org-x-organization-tls
+    certificate:
+      existingSecret: saas-org-x-outway-tls
 
 nlx-management:
   config:

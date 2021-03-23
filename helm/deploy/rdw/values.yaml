@@ -188,6 +188,12 @@ ca:
         - rdw-nlx-inway
       issuerRef:
         name: rdw
+    outway:
+      commonName: rdw-nlx-outway
+      dnsNames:
+        - rdw-nlx-outway
+      issuerRef:
+        name: rdw
     management-api:
       commonName: rdw-nlx-management-api
       dnsNames:
@@ -270,11 +276,16 @@ nlx-inway:
 nlx-outway:
   config:
     directoryInspectionHostname: shared-nlx-directory-inspection
+    managementAPI:
+      enabled: true
+      address: rdw-nlx-management-api:443
   transactionLog:
     enabled: false
   tls:
     organizationCertificate:
       existingSecret: rdw-organization-tls
+    certificate:
+      existingSecret: rdw-outway-tls
 
 nlx-management:
   config:
