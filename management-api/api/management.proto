@@ -248,6 +248,7 @@ message ListServicesResponse {
       message Authorization  {
         string organizationName = 1;
         string publicKeyHash = 2;
+        string publicKeyPem = 3;
       }
     }
   }

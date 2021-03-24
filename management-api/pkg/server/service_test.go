@@ -284,6 +284,7 @@ func TestListServices(t *testing.T) {
 							Name: "my-service",
 						},
 						PublicKeyFingerprint: "mock-publickey-fingerprint",
+						PublicKeyPEM:         "mock-publickey-pem",
 					},
 				}}, nil)
 				return db
@@ -299,6 +300,7 @@ func TestListServices(t *testing.T) {
 								{
 									OrganizationName: "mock-organization-name",
 									PublicKeyHash:    "mock-publickey-fingerprint",
+									PublicKeyPem:     "mock-publickey-pem",
 								},
 							},
 						},
