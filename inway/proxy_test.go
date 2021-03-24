@@ -4,7 +4,9 @@
 package inway
 
 import (
+	"errors"
 	"fmt"
+	"go.nlx.io/nlx/common/transactionlog"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -19,6 +21,7 @@ import (
 
 	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
+	mock_transactionlog "go.nlx.io/nlx/common/transactionlog/mock"
 	"go.nlx.io/nlx/inway/config"
 	"go.nlx.io/nlx/management-api/api"
 	mock_api "go.nlx.io/nlx/management-api/api/mock"
@@ -26,6 +29,7 @@ import (
 
 type inwayMocks struct {
 	dc *mock_api.MockDelegationClient
+	tl *mock_transactionlog.MockTransactionLogger
 }
 
 func newTestEnv(t *testing.T, cert *common_tls.CertificateBundle) (proxy, mock *httptest.Server, mocks *inwayMocks) {
@@ -45,6 +49,7 @@ func newTestEnv(t *testing.T, cert *common_tls.CertificateBundle) (proxy, mock *
 
 	mocks = &inwayMocks{
 		dc: mock_api.NewMockDelegationClient(ctrl),
+		tl: mock_transactionlog.NewMockTransactionLogger(ctrl),
 	}
 
 	serviceConfig := &config.ServiceConfig{}
@@ -81,6 +86,7 @@ func newTestEnv(t *testing.T, cert *common_tls.CertificateBundle) (proxy, mock *
 	iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", "localhost:1813", cert, "localhost:1815")
 	assert.Nil(t, err)
 
+	iw.txlogger = mocks.tl
 	iw.delegationClient = mocks.dc
 
 	endPoints := []ServiceEndpoint{}
@@ -111,11 +117,16 @@ func TestInwayProxyRequest(t *testing.T) {
 		filepath.Join(pkiDir, "ca-root.pem"),
 	)
 
-	proxyRequestMockServer, mockEndPoint, _ := newTestEnv(t, cert)
+	proxyRequestMockServer, mockEndPoint, mocks := newTestEnv(t, cert)
 	proxyRequestMockServer.StartTLS()
 
 	defer proxyRequestMockServer.Close()
 	defer mockEndPoint.Close()
+
+	mocks.tl.EXPECT().
+		AddRecord(gomock.Any()).
+		AnyTimes().
+		Return(nil)
 
 	client := setupClient(cert)
 	//nolint:dupl // this is a test
@@ -191,8 +202,12 @@ func TestInwayProxyDelegatedRequest(t *testing.T) {
 			http.StatusInternalServerError,
 			"nlx-inway: failed to verify claim\n",
 		},
-		"happy_flow": {
+		"error_failed_to_write_transaction_log": {
 			func(m *inwayMocks) {
+				m.tl.EXPECT().
+					AddRecord(gomock.Any()).
+					Return(errors.New("arbitrary error"))
+
 				m.dc.EXPECT().
 					VerifyClaim(gomock.Any(), &api.VerifyClaimRequest{
 						Claim:       "mock-claim",
@@ -201,6 +216,35 @@ func TestInwayProxyDelegatedRequest(t *testing.T) {
 					Return(&api.VerifyClaimResponse{
 						OrderOrganizationName: "test",
 						OrderReference:        "test",
+					}, nil)
+			},
+			http.StatusInternalServerError,
+			"nlx-inway: server error\n",
+		},
+		"happy_flow": {
+			func(m *inwayMocks) {
+				m.tl.EXPECT().
+					AddRecord(&transactionlog.Record{
+						SrcOrganization:  "nlx-test",
+						DestOrganization: "nlx-test",
+						ServiceName:      "mock-service-public",
+						LogrecordID:      "dummyID",
+						Data: map[string]interface{}{
+							"request-path": "/dummy",
+						},
+						Delegator:      "delegator-organization-name",
+						OrderReference: "order-reference",
+					}).
+					Return(nil)
+
+				m.dc.EXPECT().
+					VerifyClaim(gomock.Any(), &api.VerifyClaimRequest{
+						Claim:       "mock-claim",
+						ServiceName: "mock-service-public",
+					}).
+					Return(&api.VerifyClaimResponse{
+						OrderOrganizationName: "delegator-organization-name",
+						OrderReference:        "order-reference",
 					}, nil)
 			},
 			http.StatusOK,
