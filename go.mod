@@ -31,7 +31,7 @@ require (
 	github.com/hashicorp/go-retryablehttp v0.6.4 // indirect
 	github.com/huandu/xstrings v1.3.2
 	github.com/jasonlvhit/gocron v0.0.0-20200319232826-9b00bf4b9ebc // indirect
-	github.com/jessevdk/go-flags v1.4.0
+	github.com/jessevdk/go-flags v1.5.0
 	github.com/jmoiron/sqlx v1.3.1
 	github.com/jpillora/backoff v1.0.0
 	github.com/ktr0731/toml v0.3.0
