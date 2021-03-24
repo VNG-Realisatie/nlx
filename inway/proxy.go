@@ -4,17 +4,17 @@
 package inway
 
 import (
-	"fmt"
+	"crypto"
+	"crypto/x509"
+	"encoding/pem"
 	"net/http"
 	"strings"
 
 	"github.com/form3tech-oss/jwt-go"
+	"github.com/pkg/errors"
 	"go.uber.org/zap"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 
 	common_tls "go.nlx.io/nlx/common/tls"
-	"go.nlx.io/nlx/management-api/api"
 )
 
 type JWTClaims struct {
@@ -22,6 +22,9 @@ type JWTClaims struct {
 	Organization   string `json:"organization"`
 	OrderReference string `json:"order_reference"`
 }
+
+var ErrDelegatorDoesNotHaveAccess = errors.New("delegator does have access")
+var ErrCannotParsePublicKeyFromPEM = errors.New("failed to parse PEM block containing the public key")
 
 // handleProxyRequest handles requests from an NLX Outway to the Inway.
 // It verifies authentication and selects the correct EnvpointService to
@@ -102,32 +105,6 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 		requestPath:                   "/" + urlparts[1],
 	}
 
-	claim := r.Header.Get("X-NLX-Request-Claim")
-	if claim != "" {
-		verifyClaimResponse, err := i.delegationClient.VerifyClaim(r.Context(), &api.VerifyClaimRequest{
-			ServiceName: serviceName,
-			Claim:       claim,
-		})
-
-		if err != nil {
-			grpcStatus := status.Convert(err)
-			if grpcStatus.Code() == codes.Unauthenticated {
-				logger.Error("received request with an invalid claim", zap.Error(err))
-				http.Error(w, fmt.Sprintf("nlx-inway: claim is invalid. error: %s", grpcStatus.Message()), http.StatusUnauthorized)
-
-				return
-			}
-
-			logger.Error("failed to verify claim", zap.Error(err))
-			http.Error(w, "nlx-inway: failed to verify claim", http.StatusInternalServerError)
-
-			return
-		}
-
-		reqMD.delegatorOrganization = verifyClaimResponse.OrderOrganizationName
-		reqMD.orderReference = verifyClaimResponse.OrderReference
-	}
-
 	logger.Info("servicename: " + serviceName)
 	i.serviceEndpointsLock.RLock()
 	serviceEndpoint := i.serviceEndpoints[serviceName]
@@ -140,5 +117,55 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	claim := r.Header.Get("X-NLX-Request-Claim")
+	if claim != "" {
+		claims := &JWTClaims{}
+		_, err := jwt.ParseWithClaims(claim, claims, func(token *jwt.Token) (interface{}, error) {
+			for _, whitelistItem := range serviceEndpoint.ServiceDetails().AuthorizationWhitelist {
+				if whitelistItem.OrganizationName == claims.Issuer {
+					return parsePublicKeyFromPEM(whitelistItem.PublicKeyPEM)
+				}
+			}
+
+			return nil, ErrDelegatorDoesNotHaveAccess
+		})
+
+		if err != nil {
+			validationError, ok := err.(*jwt.ValidationError)
+			if !ok {
+				i.logger.Error("casting error to jwt validation error failed", zap.Error(err))
+				http.Error(w, "unable to verify claim", http.StatusInternalServerError)
+
+				return
+			}
+
+			if errors.Is(validationError.Inner, ErrDelegatorDoesNotHaveAccess) {
+				i.logger.Info("delegator does not have access to service", zap.String("delegator", claims.Issuer), zap.String("serviceName", serviceName))
+				http.Error(w, "nlx-inway: no access", http.StatusUnauthorized)
+
+				return
+			}
+
+			i.logger.Error("failed to parse jwt", zap.Error(err))
+			http.Error(w, "nlx-inway: unable to verify claim", http.StatusInternalServerError)
+
+			return
+		}
+
+		reqMD.requesterOrganization = claims.Issuer
+		reqMD.requesterPublicKeyFingerprint = claims.Issuer
+		reqMD.delegatorOrganization = claims.Issuer
+		reqMD.orderReference = claims.OrderReference
+	}
+
 	serviceEndpoint.handleRequest(reqMD, w, r)
+}
+
+func parsePublicKeyFromPEM(publicKeyPEM string) (crypto.PublicKey, error) {
+	block, _ := pem.Decode([]byte(publicKeyPEM))
+	if block == nil {
+		return nil, ErrCannotParsePublicKeyFromPEM
+	}
+
+	return x509.ParsePKCS1PublicKey(block.Bytes)
 }

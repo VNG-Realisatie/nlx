@@ -40,6 +40,7 @@ const (
 type AuthorizationWhitelistItem struct {
 	OrganizationName string `toml:"organization-name"`
 	PublicKeyHash    string `toml:"public-key-hash"`
+	PublicKeyPEM     string
 }
 
 // ServiceDetails holds the details for a single service definition.

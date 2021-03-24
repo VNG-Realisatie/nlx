@@ -201,6 +201,7 @@ func serviceConfigToServiceDetails(service *api.ListServicesResponse_Service) *c
 			serviceDetails.AuthorizationWhitelist = append(serviceDetails.AuthorizationWhitelist, config.AuthorizationWhitelistItem{
 				OrganizationName: authorization.OrganizationName,
 				PublicKeyHash:    authorization.PublicKeyHash,
+				PublicKeyPEM:     authorization.PublicKeyPem,
 			})
 		}
 	} else {

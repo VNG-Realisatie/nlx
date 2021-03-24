@@ -11,20 +11,20 @@ import (
 	"net/http/httptest"
 	"path/filepath"
 	"testing"
+	"time"
 
+	"github.com/form3tech-oss/jwt-go"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
 	mock_transactionlog "go.nlx.io/nlx/common/transactionlog/mock"
 	"go.nlx.io/nlx/inway/config"
-	"go.nlx.io/nlx/management-api/api"
 	mock_api "go.nlx.io/nlx/management-api/api/mock"
+	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
 type inwayMocks struct {
@@ -50,6 +50,9 @@ func newTestEnv(t *testing.T, cert *common_tls.CertificateBundle) (proxy, mock *
 		tl: mock_transactionlog.NewMockTransactionLogger(ctrl),
 	}
 
+	pem, err := cert.PublicKeyPEM()
+	assert.Nil(t, err)
+
 	serviceConfig := &config.ServiceConfig{}
 	serviceConfig.Services = make(map[string]config.ServiceDetails)
 	serviceConfig.Services["mock-service-whitelist"] = config.ServiceDetails{
@@ -57,7 +60,12 @@ func newTestEnv(t *testing.T, cert *common_tls.CertificateBundle) (proxy, mock *
 			EndpointURL:        mockEndPoint.URL,
 			AuthorizationModel: "whitelist",
 		},
-		AuthorizationWhitelist: []config.AuthorizationWhitelistItem{{OrganizationName: "nlx-test"}},
+		AuthorizationWhitelist: []config.AuthorizationWhitelistItem{
+			{
+				OrganizationName: "nlx-test",
+				PublicKeyPEM:     pem,
+			},
+		},
 	}
 	serviceConfig.Services["mock-service-whitelist-unauthorized"] = config.ServiceDetails{
 		ServiceDetailsBase: config.ServiceDetailsBase{
@@ -262,52 +270,38 @@ func TestDoelbinding(t *testing.T) {
 //nolint:funlen // this is a test
 func TestInwayProxyDelegatedRequest(t *testing.T) {
 	cert := createCertBundle()
+	validClaim, err := getJWTAsSignedString(cert)
+	assert.Nil(t, err)
 
 	tests := map[string]struct {
 		setup        func(*inwayMocks)
+		path         string
+		claim        string
 		statusCode   int
 		errorMessage string
 	}{
-		"error_verify_claim_response_unauthenticated": {
-			func(m *inwayMocks) {
-				m.dc.EXPECT().
-					VerifyClaim(gomock.Any(), &api.VerifyClaimRequest{
-						Claim:       "mock-claim",
-						ServiceName: "mock-service-public",
-					}).
-					Return(nil, status.Error(codes.Unauthenticated, "arbitrary error"))
-			},
-			http.StatusUnauthorized,
-			"nlx-inway: claim is invalid. error: arbitrary error\n",
-		},
-		"error_verify_claim_response_internal": {
-			func(m *inwayMocks) {
-				m.dc.EXPECT().
-					VerifyClaim(gomock.Any(), &api.VerifyClaimRequest{
-						Claim:       "mock-claim",
-						ServiceName: "mock-service-public",
-					}).
-					Return(nil, status.Error(codes.Internal, "arbitrary error"))
-			},
+		"invalid_claim_format": {
+			func(m *inwayMocks) {},
+			"mock-service-whitelist/dummy",
+			"foo-bar-baz",
 			http.StatusInternalServerError,
-			"nlx-inway: failed to verify claim\n",
+			"nlx-inway: unable to verify claim\n",
+		},
+		"delegator_does_not_have_access_to_service": {
+			func(m *inwayMocks) {},
+			"mock-service-whitelist-unauthorized/dummy",
+			validClaim,
+			http.StatusUnauthorized,
+			"nlx-inway: no access\n",
 		},
 		"error_failed_to_write_transaction_log": {
 			func(m *inwayMocks) {
 				m.tl.EXPECT().
 					AddRecord(gomock.Any()).
 					Return(errors.New("arbitrary error"))
-
-				m.dc.EXPECT().
-					VerifyClaim(gomock.Any(), &api.VerifyClaimRequest{
-						Claim:       "mock-claim",
-						ServiceName: "mock-service-public",
-					}).
-					Return(&api.VerifyClaimResponse{
-						OrderOrganizationName: "test",
-						OrderReference:        "test",
-					}, nil)
 			},
+			"mock-service-whitelist/dummy",
+			validClaim,
 			http.StatusInternalServerError,
 			"nlx-inway: server error\n",
 		},
@@ -317,26 +311,18 @@ func TestInwayProxyDelegatedRequest(t *testing.T) {
 					AddRecord(&transactionlog.Record{
 						SrcOrganization:  "nlx-test",
 						DestOrganization: "nlx-test",
-						ServiceName:      "mock-service-public",
+						ServiceName:      "mock-service-whitelist",
 						LogrecordID:      "dummyID",
 						Data: map[string]interface{}{
 							"request-path": "/dummy",
 						},
-						Delegator:      "delegator-organization-name",
+						Delegator:      "nlx-test",
 						OrderReference: "order-reference",
 					}).
 					Return(nil)
-
-				m.dc.EXPECT().
-					VerifyClaim(gomock.Any(), &api.VerifyClaimRequest{
-						Claim:       "mock-claim",
-						ServiceName: "mock-service-public",
-					}).
-					Return(&api.VerifyClaimResponse{
-						OrderOrganizationName: "delegator-organization-name",
-						OrderReference:        "order-reference",
-					}, nil)
 			},
+			"mock-service-whitelist/dummy",
+			validClaim,
 			http.StatusOK,
 			"",
 		},
@@ -356,10 +342,10 @@ func TestInwayProxyDelegatedRequest(t *testing.T) {
 
 			test.setup(mocks)
 
-			req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/mock-service-public/dummy", proxyRequestMockServer.URL), nil)
+			req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/%s", proxyRequestMockServer.URL, test.path), nil)
 			assert.Nil(t, err)
 			req.Header.Add("X-NLX-Logrecord-Id", "dummyID")
-			req.Header.Add("X-NLX-Request-Claim", "mock-claim")
+			req.Header.Add("X-NLX-Request-Claim", test.claim)
 
 			resp, err := client.Do(req)
 			assert.Nil(t, err)
@@ -437,4 +423,24 @@ func createCertBundle() *common_tls.CertificateBundle {
 	)
 
 	return cert
+}
+
+func getJWTAsSignedString(orgCert *common_tls.CertificateBundle) (string, error) {
+	claims := server.JWTClaims{
+		Organization:   "delegatee-organization-name",
+		OrderReference: "order-reference",
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(time.Hour).Unix(),
+			Issuer:    "nlx-test",
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodRS512, claims)
+
+	signedString, err := token.SignedString(orgCert.PrivateKey())
+	if err != nil {
+		return "", err
+	}
+
+	return signedString, nil
 }
