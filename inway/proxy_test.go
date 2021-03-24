@@ -6,7 +6,6 @@ package inway
 import (
 	"errors"
 	"fmt"
-	"go.nlx.io/nlx/common/transactionlog"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -21,6 +20,7 @@ import (
 
 	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
+	"go.nlx.io/nlx/common/transactionlog"
 	mock_transactionlog "go.nlx.io/nlx/common/transactionlog/mock"
 	"go.nlx.io/nlx/inway/config"
 	"go.nlx.io/nlx/management-api/api"
@@ -33,16 +33,14 @@ type inwayMocks struct {
 }
 
 func newTestEnv(t *testing.T, cert *common_tls.CertificateBundle) (proxy, mock *httptest.Server, mocks *inwayMocks) {
-	// Mock endpoint (service)
 	mockEndPoint := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusOK)
 		}))
-	// defer is missing do this in you test!!
-	// defer mockEndPoint.Close()
 
 	ctrl := gomock.NewController(t)
 	t.Cleanup(func() {
+		mockEndPoint.Close()
 		t.Helper()
 		ctrl.Finish()
 	})
@@ -111,44 +109,75 @@ func newTestEnv(t *testing.T, cert *common_tls.CertificateBundle) (proxy, mock *
 }
 
 func TestInwayProxyRequest(t *testing.T) {
-	cert, _ := common_tls.NewBundleFromFiles(
-		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-		filepath.Join(pkiDir, "ca-root.pem"),
-	)
-
-	proxyRequestMockServer, mockEndPoint, mocks := newTestEnv(t, cert)
-	proxyRequestMockServer.StartTLS()
-
-	defer proxyRequestMockServer.Close()
-	defer mockEndPoint.Close()
-
-	mocks.tl.EXPECT().
-		AddRecord(gomock.Any()).
-		AnyTimes().
-		Return(nil)
+	cert := createCertBundle()
 
 	client := setupClient(cert)
 	//nolint:dupl // this is a test
 	tests := []struct {
-		url          string
+		requestPath  string
 		logRecordID  string
 		statusCode   int
 		errorMessage string
 	}{
-		{fmt.Sprintf("%s/mock-service-public/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusOK, ""},
-		{fmt.Sprintf("%s/mock-service-whitelist/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusOK, ""},
-		{fmt.Sprintf("%s/mock-service-whitelist-unauthorized/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusForbidden, "nlx-inway: permission denied, organization \"nlx-test\" or public key \"60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=\" is not allowed access.\n"},
-		{fmt.Sprintf("%s/mock-service-unspecified-unauthorized/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusForbidden, "nlx-inway: permission denied, organization \"nlx-test\" or public key \"60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=\" is not allowed access.\n"},
-		{fmt.Sprintf("%s/mock-service", proxyRequestMockServer.URL), "dummy-ID", http.StatusBadRequest, "nlx-inway: invalid path in url\n"},
-		{fmt.Sprintf("%s/mock-service/fictive", proxyRequestMockServer.URL), "dummy-ID", http.StatusBadRequest, "nlx-inway: no endpoint for service\n"},
-		{fmt.Sprintf("%s/mock-service-public/dummy", proxyRequestMockServer.URL), "", http.StatusBadRequest, "nlx-inway: missing logrecord id\n"},
+		{
+			"/mock-service-public/dummy",
+			"dummy-ID",
+			http.StatusOK,
+			"",
+		},
+		{
+			"/mock-service-whitelist/dummy",
+			"dummy-ID",
+			http.StatusOK,
+			"",
+		},
+		{
+			"/mock-service-whitelist-unauthorized/dummy",
+			"dummy-ID",
+			http.StatusForbidden,
+			"nlx-inway: permission denied, organization \"nlx-test\" or public key \"60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=\" is not allowed access.\n",
+		},
+		{
+			"/mock-service-unspecified-unauthorized/dummy",
+			"dummy-ID",
+			http.StatusForbidden,
+			"nlx-inway: permission denied, organization \"nlx-test\" or public key \"60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=\" is not allowed access.\n",
+		},
+		{
+			"/mock-service",
+			"dummy-ID",
+			http.StatusBadRequest,
+			"nlx-inway: invalid path in url\n"},
+		{
+			"/mock-service/fictive",
+			"dummy-ID",
+			http.StatusBadRequest,
+			"nlx-inway: no endpoint for service\n",
+		},
+		{
+			"/mock-service-public/dummy",
+			"",
+			http.StatusBadRequest,
+			"nlx-inway: missing logrecord id\n",
+		},
 	}
 
 	for _, test := range tests {
 		test := test
-		t.Run(test.url, func(t *testing.T) {
-			req, err := http.NewRequest("GET", test.url, nil)
+
+		t.Run(test.requestPath, func(t *testing.T) {
+			proxyRequestMockServer, mockEndPoint, mocks := newTestEnv(t, cert)
+			proxyRequestMockServer.StartTLS()
+
+			defer proxyRequestMockServer.Close()
+			defer mockEndPoint.Close()
+
+			mocks.tl.EXPECT().
+				AddRecord(gomock.Any()).
+				AnyTimes().
+				Return(nil)
+
+			req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s%s", proxyRequestMockServer.URL, test.requestPath), nil)
 			assert.Nil(t, err)
 			req.Header.Add("X-NLX-Logrecord-Id", test.logRecordID)
 			resp, err := client.Do(req)
@@ -166,12 +195,73 @@ func TestInwayProxyRequest(t *testing.T) {
 	}
 }
 
+func TestDoelbinding(t *testing.T) {
+	cert := createCertBundle()
+
+	tests := map[string]struct {
+		setup        func(*inwayMocks)
+		statusCode   int
+		errorMessage string
+	}{
+		"happy_flow": {
+			func(m *inwayMocks) {
+				m.tl.EXPECT().
+					AddRecord(&transactionlog.Record{
+						SrcOrganization:  "nlx-test",
+						DestOrganization: "nlx-test",
+						ServiceName:      "mock-service-public",
+						LogrecordID:      "dummyID",
+						Data: map[string]interface{}{
+							"request-path":              "/dummy",
+							"doelbinding-process-id":    "123456",
+							"doelbinding-data-elements": "mock-element",
+						},
+					}).
+					Return(nil)
+			},
+			http.StatusOK,
+			"",
+		},
+	}
+
+	for name, test := range tests {
+		test := test
+
+		t.Run(name, func(t *testing.T) {
+			proxyRequestMockServer, mockEndPoint, mocks := newTestEnv(t, cert)
+			proxyRequestMockServer.StartTLS()
+
+			defer proxyRequestMockServer.Close()
+			defer mockEndPoint.Close()
+
+			client := setupClient(cert)
+
+			test.setup(mocks)
+
+			req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/mock-service-public/dummy", proxyRequestMockServer.URL), nil)
+			assert.Nil(t, err)
+			req.Header.Add("X-NLX-Logrecord-Id", "dummyID")
+			req.Header.Add("X-NLX-Request-Process-Id", "123456")
+			req.Header.Add("X-NLX-Request-Data-Elements", "mock-element")
+
+			resp, err := client.Do(req)
+			assert.Nil(t, err)
+			assert.NotNil(t, resp)
+			assert.Equal(t, test.statusCode, resp.StatusCode)
+
+			defer resp.Body.Close()
+			bytes, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				t.Fatal("error parsing result.body", err)
+			}
+			assert.Equal(t, test.errorMessage, string(bytes))
+		})
+	}
+}
+
+//nolint:funlen // this is a test
 func TestInwayProxyDelegatedRequest(t *testing.T) {
-	cert, _ := common_tls.NewBundleFromFiles(
-		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-		filepath.Join(pkiDir, "ca-root.pem"),
-	)
+	cert := createCertBundle()
 
 	tests := map[string]struct {
 		setup        func(*inwayMocks)
@@ -287,11 +377,7 @@ func TestInwayProxyDelegatedRequest(t *testing.T) {
 }
 
 func TestInwayNoOrgProxyRequest(t *testing.T) {
-	cert, _ := common_tls.NewBundleFromFiles(
-		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-		filepath.Join(pkiDir, "ca-root.pem"),
-	)
+	cert := createCertBundle()
 
 	certNoOrg, _ := common_tls.NewBundleFromFiles(
 		filepath.Join(pkiDir, "org-without-name-chain.pem"),
@@ -318,7 +404,7 @@ func TestInwayNoOrgProxyRequest(t *testing.T) {
 		{fmt.Sprintf("%s/mock-service-whitelist/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusBadRequest, ""},
 		{fmt.Sprintf("%s/mock-service-whitelist-unauthorized/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusForbidden, "nlx-outway: could not handle your request, organization \"nlx-test\" is not allowed access.\n"},
 		{fmt.Sprintf("%s/mock-service-unspecified-unauthorized/dummy", proxyRequestMockServer.URL), "dummy-ID", http.StatusForbidden, "nlx-outway: could not handle your request, organization \"nlx-test\" is not allowed access.\n"},
-		{fmt.Sprintf("%s/mock-service", proxyRequestMockServer.URL), "dummy-ID", http.StatusBadRequest, "nlx inway error: invalid path in url\n"},
+		{fmt.Sprintf("%s/mock-service", proxyRequestMockServer.URL), "dummy-ID", http.StatusBadRequest, "nlx inway error: invalid path in requestPath\n"},
 		{fmt.Sprintf("%s/mock-service/fictive", proxyRequestMockServer.URL), "dummy-ID", http.StatusBadRequest, "nlx inway error: no endpoint for service\n"},
 		{fmt.Sprintf("%s/mock-service-public/dummy", proxyRequestMockServer.URL), "", http.StatusBadRequest, "nlx-outway: missing logrecord id\n"},
 	}
@@ -337,8 +423,18 @@ func TestInwayNoOrgProxyRequest(t *testing.T) {
 
 		if resp.StatusCode != 400 {
 			t.Fatalf(
-				`result: "%d" for url "%s", expected http status code : "%d"`,
+				`result: "%d" for requestPath "%s", expected http status code : "%d"`,
 				resp.StatusCode, test.url, 400)
 		}
 	}
+}
+
+func createCertBundle() *common_tls.CertificateBundle {
+	cert, _ := common_tls.NewBundleFromFiles(
+		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
+		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
+		filepath.Join(pkiDir, "ca-root.pem"),
+	)
+
+	return cert
 }

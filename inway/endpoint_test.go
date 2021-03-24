@@ -352,31 +352,3 @@ func TestInwayLoggingBadService(t *testing.T) {
 		string(bytes),
 	)
 }
-
-func TestHTTPServiceEndpointCreateRecordData(t *testing.T) {
-	requestPath := "/demo/mock"
-	header := http.Header{}
-	processID := "123456"
-	dataElement := "mock-element"
-
-	header.Add("X-NLX-Request-Process-Id", processID)
-	header.Add("X-NLX-Request-Data-Elements", dataElement)
-	endpoint := HTTPServiceEndpoint{}
-
-	recordData := endpoint.createRecordData(requestPath, header)
-
-	tests := []struct {
-		doelBindingName  string
-		doelBindingValue string
-	}{
-		{doelBindingName: "doelbinding-process-id",
-			doelBindingValue: processID},
-		{doelBindingName: "doelbinding-data-elements",
-			doelBindingValue: dataElement},
-	}
-
-	for _, test := range tests {
-		assert.Contains(t, recordData, test.doelBindingName)
-		assert.Equal(t, recordData[test.doelBindingName], test.doelBindingValue)
-	}
-}
