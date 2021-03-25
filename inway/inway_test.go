@@ -18,7 +18,6 @@ import (
 var pkiDir = filepath.Join("..", "testing", "pki")
 
 func TestNewInwayException(t *testing.T) {
-	// Test exceptions NewInway
 	logger := zaptest.Logger(t)
 
 	cert, _ := common_tls.NewBundleFromFiles(

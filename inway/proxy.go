@@ -15,13 +15,8 @@ import (
 	"go.uber.org/zap"
 
 	common_tls "go.nlx.io/nlx/common/tls"
+	"go.nlx.io/nlx/management-api/pkg/server"
 )
-
-type JWTClaims struct {
-	jwt.StandardClaims
-	Organization   string `json:"organization"`
-	OrderReference string `json:"order_reference"`
-}
 
 var ErrDelegatorDoesNotHaveAccess = errors.New("delegator does have access")
 var ErrCannotParsePublicKeyFromPEM = errors.New("failed to parse PEM block containing the public key")
@@ -119,11 +114,16 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 
 	claim := r.Header.Get("X-NLX-Request-Claim")
 	if claim != "" {
-		claims := &JWTClaims{}
+		claims := &server.JWTClaims{}
 		_, err := jwt.ParseWithClaims(claim, claims, func(token *jwt.Token) (interface{}, error) {
 			for _, whitelistItem := range serviceEndpoint.ServiceDetails().AuthorizationWhitelist {
 				if whitelistItem.OrganizationName == claims.Issuer {
-					return parsePublicKeyFromPEM(whitelistItem.PublicKeyPEM)
+					publicKey, err := parsePublicKeyFromPEM(whitelistItem.PublicKeyPEM)
+					if err != nil {
+						return nil, err
+					}
+
+					return publicKey, nil
 				}
 			}
 

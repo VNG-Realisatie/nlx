@@ -3918,7 +3918,7 @@ type ListServicesResponse_Service_AuthorizationSettings_Authorization struct {
 
 	OrganizationName string `protobuf:"bytes,1,opt,name=organizationName,proto3" json:"organizationName,omitempty"`
 	PublicKeyHash    string `protobuf:"bytes,2,opt,name=publicKeyHash,proto3" json:"publicKeyHash,omitempty"`
-	PublicKeyPem     string `protobuf:"bytes,3,opt,name=publicKeyPem,proto3" json:"publicKeyPem,omitempty"`
+	PublicKeyPEM     string `protobuf:"bytes,3,opt,name=publicKeyPem,proto3" json:"publicKeyPem,omitempty"`
 }
 
 func (x *ListServicesResponse_Service_AuthorizationSettings_Authorization) Reset() {
@@ -3969,7 +3969,7 @@ func (x *ListServicesResponse_Service_AuthorizationSettings_Authorization) GetPu
 
 func (x *ListServicesResponse_Service_AuthorizationSettings_Authorization) GetPublicKeyPem() string {
 	if x != nil {
-		return x.PublicKeyPem
+		return x.PublicKeyPEM
 	}
 	return ""
 }

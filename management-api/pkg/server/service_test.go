@@ -300,7 +300,7 @@ func TestListServices(t *testing.T) {
 								{
 									OrganizationName: "mock-organization-name",
 									PublicKeyHash:    "mock-publickey-fingerprint",
-									PublicKeyPem:     "mock-publickey-pem",
+									PublicKeyPEM:     "mock-publickey-pem",
 								},
 							},
 						},

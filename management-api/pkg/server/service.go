@@ -254,7 +254,7 @@ func convertAccessGrantToAuthorizationSetting(accessGrant *database.AccessGrant)
 	return &api.ListServicesResponse_Service_AuthorizationSettings_Authorization{
 		OrganizationName: accessGrant.IncomingAccessRequest.OrganizationName,
 		PublicKeyHash:    accessGrant.IncomingAccessRequest.PublicKeyFingerprint,
-		PublicKeyPem:     accessGrant.IncomingAccessRequest.PublicKeyPEM,
+		PublicKeyPEM:     accessGrant.IncomingAccessRequest.PublicKeyPEM,
 	}
 }
 

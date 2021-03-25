@@ -44,7 +44,6 @@ func (i *Inway) SetupManagementAPI(managementAPIAddress string, cert *common_tls
 	}
 
 	i.managementClient = api.NewManagementClient(conn)
-	i.delegationClient = api.NewDelegationClient(conn)
 
 	p, err := grpcproxy.New(context.TODO(), i.logger, managementAPIAddress, i.orgCertBundle, cert)
 	if err != nil {
@@ -201,7 +200,7 @@ func serviceConfigToServiceDetails(service *api.ListServicesResponse_Service) *c
 			serviceDetails.AuthorizationWhitelist = append(serviceDetails.AuthorizationWhitelist, config.AuthorizationWhitelistItem{
 				OrganizationName: authorization.OrganizationName,
 				PublicKeyHash:    authorization.PublicKeyHash,
-				PublicKeyPEM:     authorization.PublicKeyPem,
+				PublicKeyPEM:     authorization.PublicKeyPEM,
 			})
 		}
 	} else {

@@ -14,6 +14,7 @@ import (
 	"github.com/huandu/xstrings"
 	"github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
+	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/cmd"
@@ -21,7 +22,7 @@ import (
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
-
+	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/inway"
 	"go.nlx.io/nlx/inway/config"
@@ -29,24 +30,16 @@ import (
 )
 
 var options struct {
-	ListenAddress           string `long:"listen-address" env:"LISTEN_ADDRESS" default:"127.0.0.1:8443" description:"Address for the inway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
-	ListenManagementAddress string `long:"listen-management-address" env:"LISTEN_MANAGEMENT_ADDRESS" description:"Address for the inway to listen on for management requests. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
-
-	MonitoringAddress string `long:"monitoring-address" env:"MONITORING_ADDRESS" default:"127.0.0.1:8081" description:"Address for the inway monitoring endpoints to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
-
+	ListenAddress                string `long:"listen-address" env:"LISTEN_ADDRESS" default:"127.0.0.1:8443" description:"Address for the inway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	ListenManagementAddress      string `long:"listen-management-address" env:"LISTEN_MANAGEMENT_ADDRESS" description:"Address for the inway to listen on for management requests. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	MonitoringAddress            string `long:"monitoring-address" env:"MONITORING_ADDRESS" default:"127.0.0.1:8081" description:"Address for the inway monitoring endpoints to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 	DirectoryRegistrationAddress string `long:"directory-registration-address" env:"DIRECTORY_REGISTRATION_ADDRESS" description:"Address for the directory where this inway can register it's services" required:"true"`
-
-	DisableLogdb bool `long:"disable-logdb" env:"DISABLE_LOGDB" description:"Disable logdb connections"`
-
-	ManagementAPIAddress string `long:"management-api-address" env:"MANAGEMENT_API_ADDRESS" description:"The address of the NLX Management API"`
-
-	SelfAddress string `long:"self-address" env:"SELF_ADDRESS" description:"The address that outways can use to reach me" required:"true"`
-
-	ServiceConfig string `long:"service-config" env:"SERVICE_CONFIG" default:"service-config.toml" description:"Location of the service config toml file"`
-
-	PostgresDSN string `long:"postgres-dsn" env:"POSTGRES_DSN" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
-
-	InwayName string `long:"name" env:"INWAY_NAME" description:"Name of the inway"`
+	DisableLogdb                 bool   `long:"disable-logdb" env:"DISABLE_LOGDB" description:"Disable logdb connections"`
+	ManagementAPIAddress         string `long:"management-api-address" env:"MANAGEMENT_API_ADDRESS" description:"The address of the NLX Management API"`
+	SelfAddress                  string `long:"self-address" env:"SELF_ADDRESS" description:"The address that outways can use to reach me" required:"true"`
+	ServiceConfig                string `long:"service-config" env:"SERVICE_CONFIG" default:"service-config.toml" description:"Location of the service config toml file"`
+	PostgresDSN                  string `long:"postgres-dsn" env:"POSTGRES_DSN" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
+	InwayName                    string `long:"name" env:"INWAY_NAME" description:"Name of the inway"`
 
 	logoptions.LogOptions
 	cmd.TLSOrgOptions
@@ -54,27 +47,12 @@ var options struct {
 }
 
 func main() {
-	// Parse options
-	args, err := flags.Parse(&options)
-	if err != nil {
-		if et, ok := err.(*flags.Error); ok {
-			if et.Type == flags.ErrHelp {
-				return
-			}
-		}
+	parseOptions()
 
-		log.Fatalf("error parsing flags: %v", err)
-	}
-
-	if len(args) > 0 {
-		log.Fatalf("unexpected arguments: %v", args)
-	}
-
-	// Setup new zap logger
 	logger := setupLogger()
 	mainProcess := process.NewProcess(logger)
 
-	logDB := setupDatabase(logger, mainProcess)
+	txlogger := setupTransactionLogger(logger, mainProcess, options.DisableLogdb)
 
 	if errValidate := common_tls.VerifyPrivateKeyPermissions(options.OrgKeyFile); errValidate != nil {
 		logger.Warn("invalid organization key permissions", zap.Error(errValidate), zap.String("file-path", options.OrgKeyFile))
@@ -85,7 +63,7 @@ func main() {
 		logger.Fatal("loading TLS files", zap.Error(err))
 	}
 
-	iw, err := inway.NewInway(logger, logDB, mainProcess, options.InwayName, options.SelfAddress, options.MonitoringAddress, orgCert, options.DirectoryRegistrationAddress)
+	iw, err := inway.NewInway(logger, txlogger, mainProcess, options.InwayName, options.SelfAddress, options.MonitoringAddress, orgCert, options.DirectoryRegistrationAddress)
 	if err != nil {
 		logger.Fatal("cannot setup inway", zap.Error(err))
 	}
@@ -139,6 +117,27 @@ func main() {
 	}
 }
 
+func setupTransactionLogger(logger *zap.Logger, mainProcess *process.Process, disabled bool) transactionlog.TransactionLogger {
+	if disabled {
+		logger.Info("logging to transaction-log disabled")
+		return transactionlog.NewDiscardTransactionLogger()
+	}
+
+	logDB, err := setupDatabase(logger, mainProcess)
+	if err != nil {
+		logger.Fatal("failed to setup database", zap.Error(err))
+	}
+
+	postgresTxLogger, err := transactionlog.NewPostgresTransactionLogger(logger, logDB, transactionlog.DirectionIn)
+	if err != nil {
+		logger.Fatal("failed to setup transactionlog", zap.Error(err))
+	}
+
+	logger.Info("transaction logger created")
+
+	return postgresTxLogger
+}
+
 func defaultManagementAddress(address string) (string, error) {
 	host, port, err := net.SplitHostPort(address)
 	if err != nil {
@@ -169,27 +168,29 @@ func setupLogger() *zap.Logger {
 	return logger
 }
 
-func setupDatabase(logger *zap.Logger, mainProcess *process.Process) *sqlx.DB {
+func setupDatabase(logger *zap.Logger, mainProcess *process.Process) (*sqlx.DB, error) {
 	var logDB *sqlx.DB
 
-	if !options.DisableLogdb {
-		var err error
-
-		logDB, err = sqlx.Open("postgres", options.PostgresDSN)
-		if err != nil {
-			logger.Fatal("could not open connection to postgres", zap.Error(err))
-		}
-
-		logDB.SetConnMaxLifetime(5 * time.Minute)
-		logDB.SetMaxOpenConns(100)
-		logDB.SetMaxIdleConns(100)
-		logDB.MapperFunc(xstrings.ToSnakeCase)
-
-		common_db.WaitForLatestDBVersion(logger, logDB.DB, dbversion.LatestTxlogDBVersion)
-		mainProcess.CloseGracefully(logDB.Close)
+	logDB, err := sqlx.Open("postgres", options.PostgresDSN)
+	if err != nil {
+		return nil, errors.Wrap(err, "could not open connection to postgres")
 	}
 
-	return logDB
+	var (
+		connMaxLifetime = 5 * time.Minute
+		maxOpenConns    = 100
+		maxIdleConns    = 100
+	)
+
+	logDB.SetConnMaxLifetime(connMaxLifetime)
+	logDB.SetMaxOpenConns(maxOpenConns)
+	logDB.SetMaxIdleConns(maxIdleConns)
+	logDB.MapperFunc(xstrings.ToSnakeCase)
+
+	common_db.WaitForLatestDBVersion(logger, logDB.DB, dbversion.LatestTxlogDBVersion)
+	mainProcess.CloseGracefully(logDB.Close)
+
+	return logDB, nil
 }
 
 func loadServices(logger *zap.Logger, serviceConfig *config.ServiceConfig, iw *inway.Inway) {
@@ -235,5 +236,22 @@ func loadServices(logger *zap.Logger, serviceConfig *config.ServiceConfig, iw *i
 	err := iw.SetServiceEndpoints(serviceEndpoints)
 	if err != nil {
 		logger.Fatal(fmt.Sprintf(`error setting service endpoints "%s"`, err))
+	}
+}
+
+func parseOptions() {
+	args, err := flags.Parse(&options)
+	if err != nil {
+		if et, ok := err.(*flags.Error); ok {
+			if et.Type == flags.ErrHelp {
+				return
+			}
+		}
+
+		log.Fatalf("error parsing flags: %v", err)
+	}
+
+	if len(args) > 0 {
+		log.Fatalf("unexpected arguments: %v", args)
 	}
 }

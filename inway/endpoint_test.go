@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -20,6 +21,7 @@ import (
 
 	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
+	mock_transactionlog "go.nlx.io/nlx/common/transactionlog/mock"
 	"go.nlx.io/nlx/inway/config"
 )
 
@@ -300,14 +302,23 @@ func TestInwayLoggingBadService(t *testing.T) {
 	testProcess := process.NewProcess(logger)
 
 	// Certificate organization = nlx-test
-
 	cert, _ := common_tls.NewBundleFromFiles(
 		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
 		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
 		filepath.Join(pkiDir, "ca-root.pem"),
 	)
 
-	iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", "localhost:1813", cert, "localhost:1815")
+	ctrl := gomock.NewController(t)
+	t.Cleanup(func() {
+		t.Helper()
+		ctrl.Finish()
+	})
+
+	txlogger := mock_transactionlog.NewMockTransactionLogger(ctrl)
+	txlogger.EXPECT().
+		AddRecord(gomock.Any())
+
+	iw, err := NewInway(logger, txlogger, testProcess, "", "localhost:1812", "localhost:1813", cert, "localhost:1815")
 	assert.Nil(t, err)
 
 	serviceDetails := &config.ServiceDetails{

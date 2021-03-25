@@ -16,7 +16,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/jmoiron/sqlx"
 	"github.com/jpillora/backoff"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -38,44 +37,36 @@ import (
 // Inway handles incoming requests and holds a list of registered ServiceEndpoints.
 // The Inway is responsible for selecting the correct ServiceEndpoint for an incoming request.
 type Inway struct {
-	logger           *zap.Logger
+	name             string
 	organizationName string
+	selfAddress      string
+	orgCertBundle    *common_tls.CertificateBundle
 
-	selfAddress   string
-	orgCertBundle *common_tls.CertificateBundle
-
-	name string
-
-	process *process.Process
-
-	serverTLS *http.Server
-
-	serviceEndpointsLock sync.RWMutex
-	serviceEndpoints     map[string]ServiceEndpoint
-	stopInwayChannel     chan struct{}
-
-	monitoringService *monitoring.Service
-
-	txlogger transactionlog.TransactionLogger
-
-	managementClient api.ManagementClient
-	managementProxy  *grpcproxy.Proxy
-
-	delegationClient api.DelegationClient
-
+	logger                      *zap.Logger
+	process                     *process.Process
+	serverTLS                   *http.Server
+	serviceEndpointsLock        sync.RWMutex
+	serviceEndpoints            map[string]ServiceEndpoint
+	stopInwayChannel            chan struct{}
+	monitoringService           *monitoring.Service
+	txlogger                    transactionlog.TransactionLogger
+	managementClient            api.ManagementClient
+	managementProxy             *grpcproxy.Proxy
+	delegationClient            api.DelegationClient
 	directoryRegistrationClient registrationapi.DirectoryRegistrationClient
 }
 
 // NewInway creates and prepares a new Inway.
 func NewInway(
 	logger *zap.Logger,
-	logDB *sqlx.DB,
+	txlogger transactionlog.TransactionLogger,
 	mainProcess *process.Process,
 	name,
 	selfAddress string,
 	monitoringAddress string,
 	orgCertBundle *common_tls.CertificateBundle,
-	directoryRegistrationAddress string) (*Inway, error) {
+	directoryRegistrationAddress string,
+) (*Inway, error) {
 	orgCert := orgCertBundle.Certificate()
 
 	if len(orgCert.Subject.Organization) != 1 {
@@ -97,6 +88,7 @@ func NewInway(
 	i := &Inway{
 		logger:           logger.With(zap.String("inway-organization-name", organizationName)),
 		organizationName: organizationName,
+		txlogger:         txlogger,
 
 		selfAddress:   selfAddress,
 		orgCertBundle: orgCertBundle,
@@ -111,19 +103,6 @@ func NewInway(
 	i.monitoringService, err = monitoring.NewMonitoringService(monitoringAddress, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to create monitoring service")
-	}
-
-	// setup transactionlog
-	if logDB == nil {
-		logger.Info("logging to transaction-log disabled")
-
-		i.txlogger = transactionlog.NewDiscardTransactionLogger()
-	} else {
-		i.txlogger, err = transactionlog.NewPostgresTransactionLogger(logger, logDB, transactionlog.DirectionIn)
-		if err != nil {
-			return nil, errors.Wrap(err, "failed to setup transactionlog")
-		}
-		logger.Info("transaction logger created")
 	}
 
 	if name != "" {
@@ -263,7 +242,6 @@ func (i *Inway) announceToDirectory(s ServiceEndpoint) {
 	}()
 }
 
-// hostname returns the hostname of this inway
 func (i *Inway) hostname() string {
 	h, err := os.Hostname()
 
