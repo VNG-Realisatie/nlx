@@ -197,15 +197,20 @@ func (h *HTTPServiceEndpoint) handleRequest(reqMD *RequestMetadata, w http.Respo
 	}
 
 	recordData := h.createRecordData(reqMD.requestPath, r.Header)
-	err := h.inway.txlogger.AddRecord(&transactionlog.Record{
+	record := &transactionlog.Record{
 		SrcOrganization:  reqMD.requesterOrganization,
 		DestOrganization: h.inway.organizationName,
 		ServiceName:      h.serviceName,
 		LogrecordID:      logrecordID,
 		Data:             recordData,
-		Delegator:        reqMD.delegatorOrganization,
-		OrderReference:   reqMD.orderReference,
-	})
+	}
+
+	if reqMD.delegatorOrganization != "" {
+		record.Delegator = reqMD.delegatorOrganization
+		record.OrderReference = reqMD.orderReference
+	}
+
+	err := h.inway.txlogger.AddRecord(record)
 	if err != nil {
 		http.Error(w, "nlx-inway: server error", http.StatusInternalServerError)
 		h.logger.Error("failed to store transactionlog record", zap.Error(err))

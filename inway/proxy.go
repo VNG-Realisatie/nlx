@@ -114,6 +114,8 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 
 	claim := r.Header.Get("X-NLX-Request-Claim")
 	if claim != "" {
+		var publicKeyFingerprint string
+
 		claims := &server.JWTClaims{}
 		_, err := jwt.ParseWithClaims(claim, claims, func(token *jwt.Token) (interface{}, error) {
 			for _, whitelistItem := range serviceEndpoint.ServiceDetails().AuthorizationWhitelist {
@@ -122,6 +124,8 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 					if err != nil {
 						return nil, err
 					}
+
+					publicKeyFingerprint = whitelistItem.PublicKeyHash
 
 					return publicKey, nil
 				}
@@ -153,8 +157,8 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 		}
 
 		reqMD.requesterOrganization = claims.Issuer
-		reqMD.requesterPublicKeyFingerprint = claims.Issuer
-		reqMD.delegatorOrganization = claims.Issuer
+		reqMD.requesterPublicKeyFingerprint = publicKeyFingerprint
+		reqMD.delegatorOrganization = requesterOrganization
 		reqMD.orderReference = claims.OrderReference
 	}
 
