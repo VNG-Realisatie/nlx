@@ -6,6 +6,7 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"time"
 
@@ -76,7 +77,7 @@ func main() {
 		logger.Fatal("failed to setup postgresql directory database:", zap.Error(err))
 	}
 
-	log.Printf("created the directory database: %v", directoryDatabase)
+	logger.Info(fmt.Sprintf("created the directory database: %v", directoryDatabase))
 
 	if errValidate := common_tls.VerifyPrivateKeyPermissions(options.DirectoryKeyFile); errValidate != nil {
 		logger.Warn("invalid directory key permissions", zap.Error(errValidate), zap.String("file-path", options.DirectoryKeyFile))
