@@ -16,7 +16,7 @@ services:
 
   dex:
     image: dexidp/dex:v2.28.0
-    command: serve /config.yaml
+    command: dex serve /config.yaml
     ports:
       - 127.0.0.1:5556:5556
     volumes:
