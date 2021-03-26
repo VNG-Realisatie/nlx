@@ -17,6 +17,22 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
+type delegationError struct {
+	source  error
+	message string
+}
+
+func (err *delegationError) Error() string {
+	return err.message
+}
+
+func newDelegationError(message string, source error) *delegationError {
+	return &delegationError{
+		source:  source,
+		message: message,
+	}
+}
+
 type claimData struct {
 	server.JWTClaims
 	Raw string
@@ -60,18 +76,18 @@ func (plugin *DelegationPlugin) requestClaim(name, orderReference string) (*serv
 		OrderReference:        orderReference,
 	})
 	if err != nil {
-		return nil, "", err
+		return nil, "", newDelegationError("failed to retrieve claim", err)
 	}
 
 	parser := &jwt.Parser{}
 
 	token, _, err := parser.ParseUnverified(response.Claim, &server.JWTClaims{})
 	if err != nil {
-		return nil, "", err
+		return nil, "", newDelegationError("failed to parse JWT", err)
 	}
 
 	if err := token.Claims.Valid(); err != nil {
-		return nil, "", err
+		return nil, "", newDelegationError("failed to validate JWT claims", err)
 	}
 
 	return token.Claims.(*server.JWTClaims), token.Raw, nil
@@ -122,6 +138,11 @@ func (plugin *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 		claim, err := plugin.getOrRequestClaim(name, orderReference)
 		if err != nil {
 			msg := fmt.Sprintf("failed to request claim from %s", name)
+
+			if delegationErr, ok := err.(*delegationError); ok {
+				msg = delegationErr.message
+				err = delegationErr.source
+			}
 
 			context.Logger.Error(msg, zap.Error(err))
 			http.Error(context.Response, msg, http.StatusInternalServerError)
