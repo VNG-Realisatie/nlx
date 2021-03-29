@@ -51,7 +51,9 @@ func NewClient(ctx context.Context, inwayAddress string, cert *common_tls.Certif
 	}
 
 	c := client{
-		conn: conn,
+		conn:                       conn,
+		AccessRequestServiceClient: external.NewAccessRequestServiceClient(conn),
+		DelegationServiceClient:    external.NewDelegationServiceClient(conn),
 	}
 
 	return &c, nil
