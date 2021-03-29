@@ -14,7 +14,7 @@ import (
 	"go.nlx.io/nlx/management-api/api/external"
 )
 
-func (s *ManagementService) RetrieveClaim(ctx context.Context, req *api.RetrieveClaimForOrderRequest) (*api.RetrieveClaimForOrderResponse, error) {
+func (s *ManagementService) RetrieveClaimForOrder(ctx context.Context, req *api.RetrieveClaimForOrderRequest) (*api.RetrieveClaimForOrderResponse, error) {
 	_, err := s.parseProxyMetadata(ctx)
 	if err != nil {
 		s.logger.Error("failed to parse proxy metadata", zap.Error(err))

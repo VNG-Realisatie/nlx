@@ -97,7 +97,7 @@ func TestRetrieveClaim(t *testing.T) {
 			service, _, mocks := newService(t)
 			ctx := tt.setup(service, mocks)
 
-			_, err := service.RetrieveClaim(ctx, tt.request)
+			_, err := service.RetrieveClaimForOrder(ctx, tt.request)
 			assert.Error(t, err)
 			assert.ErrorIs(t, err, tt.wantErr)
 		})
@@ -122,7 +122,7 @@ func TestRetrieveClaimHappyFlow(t *testing.T) {
 			Claim: "claim",
 		}, nil)
 
-	response, err := service.RetrieveClaim(ctx, &api.RetrieveClaimForOrderRequest{
+	response, err := service.RetrieveClaimForOrder(ctx, &api.RetrieveClaimForOrderRequest{
 		OrderReference:        "order-reference-a",
 		OrderOrganizationName: "organization-a",
 	})
