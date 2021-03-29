@@ -52,7 +52,6 @@ type Inway struct {
 	txlogger                    transactionlog.TransactionLogger
 	managementClient            api.ManagementClient
 	managementProxy             *grpcproxy.Proxy
-	delegationClient            api.DelegationClient
 	directoryRegistrationClient registrationapi.DirectoryRegistrationClient
 }
 

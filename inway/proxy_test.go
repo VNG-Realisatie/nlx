@@ -360,7 +360,7 @@ func getJWTAsSignedString(orgCert *common_tls.CertificateBundle) (string, error)
 }
 
 type inwayMocks struct {
-	dc *mock_api.MockDelegationClient
+	mc *mock_api.MockManagementClient
 	tl *mock_transactionlog.MockTransactionLogger
 }
 
@@ -379,7 +379,7 @@ func newTestEnv(t *testing.T, cert *common_tls.CertificateBundle) (proxy, mock *
 	})
 
 	mocks = &inwayMocks{
-		dc: mock_api.NewMockDelegationClient(ctrl),
+		mc: mock_api.NewMockManagementClient(ctrl),
 		tl: mock_transactionlog.NewMockTransactionLogger(ctrl),
 	}
 
@@ -434,7 +434,7 @@ func newTestEnv(t *testing.T, cert *common_tls.CertificateBundle) (proxy, mock *
 	)
 	assert.Nil(t, err)
 
-	iw.delegationClient = mocks.dc
+	iw.managementClient = mocks.mc
 
 	endPoints := []ServiceEndpoint{}
 
