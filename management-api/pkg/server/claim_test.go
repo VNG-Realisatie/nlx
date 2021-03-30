@@ -13,9 +13,9 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	"go.nlx.io/nlx/common/delegation"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api/external"
-	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
 func TestRequestClaim(t *testing.T) {
@@ -65,13 +65,13 @@ func TestRequestClaimHappyFlow(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, response)
 
-	token, err := jwt.ParseWithClaims(response.Claim, &server.JWTClaims{}, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(response.Claim, &delegation.JWTClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return bundle.PublicKey(), nil
 	})
 
 	assert.NoError(t, err)
 
-	claims := token.Claims.(*server.JWTClaims)
+	claims := token.Claims.(*delegation.JWTClaims)
 	assert.Equal(t, claims.Organization, "organization-a")
 	assert.Equal(t, claims.OrderReference, "arbitrary-order-reference")
 	assert.Equal(t, claims.Issuer, "nlx-test")

@@ -14,8 +14,8 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
+	"go.nlx.io/nlx/common/delegation"
 	common_tls "go.nlx.io/nlx/common/tls"
-	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
 var ErrDelegatorDoesNotHaveAccess = errors.New("delegator does have access")
@@ -116,7 +116,7 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 	if claim != "" {
 		var publicKeyFingerprint string
 
-		claims := &server.JWTClaims{}
+		claims := &delegation.JWTClaims{}
 		_, err := jwt.ParseWithClaims(claim, claims, func(token *jwt.Token) (interface{}, error) {
 			for _, whitelistItem := range serviceEndpoint.ServiceDetails().AuthorizationWhitelist {
 				if whitelistItem.OrganizationName == claims.Issuer {

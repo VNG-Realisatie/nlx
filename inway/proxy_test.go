@@ -18,13 +18,13 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 
+	"go.nlx.io/nlx/common/delegation"
 	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
 	mock_transactionlog "go.nlx.io/nlx/common/transactionlog/mock"
 	"go.nlx.io/nlx/inway/config"
 	mock_api "go.nlx.io/nlx/management-api/api/mock"
-	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
 func TestInwayProxyRequest(t *testing.T) {
@@ -340,7 +340,7 @@ func createCertBundle() *common_tls.CertificateBundle {
 }
 
 func getJWTAsSignedString(orgCert *common_tls.CertificateBundle) (string, error) {
-	claims := server.JWTClaims{
+	claims := delegation.JWTClaims{
 		Organization:   "delegatee-organization-name",
 		OrderReference: "order-reference",
 		StandardClaims: jwt.StandardClaims{

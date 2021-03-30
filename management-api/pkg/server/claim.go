@@ -12,14 +12,9 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	"go.nlx.io/nlx/common/delegation"
 	"go.nlx.io/nlx/management-api/api/external"
 )
-
-type JWTClaims struct {
-	jwt.StandardClaims
-	Organization   string `json:"organization"`
-	OrderReference string `json:"order_reference"`
-}
 
 func (s *ManagementService) RequestClaim(ctx context.Context, req *external.RequestClaimRequest) (*external.RequestClaimResponse, error) {
 	md, err := s.parseProxyMetadata(ctx)
@@ -32,7 +27,7 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 		return nil, status.Error(codes.InvalidArgument, "an order reference must be provided")
 	}
 
-	claims := JWTClaims{
+	claims := delegation.JWTClaims{
 		Organization:   md.OrganizationName,
 		OrderReference: req.OrderReference,
 		StandardClaims: jwt.StandardClaims{

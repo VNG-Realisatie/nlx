@@ -14,9 +14,9 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 
+	"go.nlx.io/nlx/common/delegation"
 	"go.nlx.io/nlx/management-api/api"
 	mock "go.nlx.io/nlx/management-api/api/mock"
-	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
 var testToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
@@ -116,7 +116,7 @@ func TestDelegationPlugin(t *testing.T) {
 
 				plugin.claims.Store("TestOrg/test-ref-123", &claimData{
 					Raw: testToken,
-					JWTClaims: server.JWTClaims{
+					JWTClaims: delegation.JWTClaims{
 						StandardClaims: jwt.StandardClaims{
 							ExpiresAt: 1,
 						},
@@ -135,7 +135,7 @@ func TestDelegationPlugin(t *testing.T) {
 			setup: func(client *mock.MockManagementClient, plugin *DelegationPlugin) {
 				plugin.claims.Store("TestOrg/test-ref-123", &claimData{
 					Raw: "claim",
-					JWTClaims: server.JWTClaims{
+					JWTClaims: delegation.JWTClaims{
 						StandardClaims: jwt.StandardClaims{},
 						Organization:   "TestOrg",
 						OrderReference: "test-ref-123",

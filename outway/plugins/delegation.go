@@ -13,8 +13,8 @@ import (
 	"github.com/form3tech-oss/jwt-go"
 	"go.uber.org/zap"
 
+	"go.nlx.io/nlx/common/delegation"
 	"go.nlx.io/nlx/management-api/api"
-	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
 type delegationError struct {
@@ -34,7 +34,7 @@ func newDelegationError(message string, source error) *delegationError {
 }
 
 type claimData struct {
-	server.JWTClaims
+	delegation.JWTClaims
 	Raw string
 }
 
@@ -70,7 +70,7 @@ func parseRequestMetadata(r *http.Request) (name, orderReference string, err err
 	return
 }
 
-func (plugin *DelegationPlugin) requestClaim(name, orderReference string) (*server.JWTClaims, string, error) {
+func (plugin *DelegationPlugin) requestClaim(name, orderReference string) (*delegation.JWTClaims, string, error) {
 	response, err := plugin.managementClient.RetrieveClaimForOrder(context.Background(), &api.RetrieveClaimForOrderRequest{
 		OrderOrganizationName: name,
 		OrderReference:        orderReference,
@@ -81,7 +81,7 @@ func (plugin *DelegationPlugin) requestClaim(name, orderReference string) (*serv
 
 	parser := &jwt.Parser{}
 
-	token, _, err := parser.ParseUnverified(response.Claim, &server.JWTClaims{})
+	token, _, err := parser.ParseUnverified(response.Claim, &delegation.JWTClaims{})
 	if err != nil {
 		return nil, "", newDelegationError("failed to parse JWT", err)
 	}
@@ -90,7 +90,7 @@ func (plugin *DelegationPlugin) requestClaim(name, orderReference string) (*serv
 		return nil, "", newDelegationError("failed to validate JWT claims", err)
 	}
 
-	return token.Claims.(*server.JWTClaims), token.Raw, nil
+	return token.Claims.(*delegation.JWTClaims), token.Raw, nil
 }
 
 func (plugin *DelegationPlugin) getOrRequestClaim(name, orderReference string) (*claimData, error) {
