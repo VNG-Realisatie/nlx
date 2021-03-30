@@ -46,7 +46,7 @@ RUN go build \
         -o dist/bin/nlx-management-ui ./cmd/nlx-management-ui
 
 # Release binary on latest alpine image.
-FROM alpine:3.13.2
+FROM alpine:3.13.3
 
 COPY --from=go-build /go/src/go.nlx.io/nlx/management-ui/dist/bin/nlx-management-ui /usr/local/bin/nlx-management-ui
 COPY --from=node-build /go/src/go.nlx.io/nlx/management-ui/build /app/public
