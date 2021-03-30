@@ -234,7 +234,10 @@ nlx-outway:
       enabled: true
       address: saas-org-x-nlx-management-api:443
   transactionLog:
-    enabled: false
+    enabled: true
+    hostname: saas-org-x-postgresql
+    database: saas-org-x-transaction-log
+    existingSecret: saas-org-x-postgresql-auth
   tls:
     organizationCertificate:
       existingSecret: saas-org-x-organization-tls
