@@ -15,12 +15,6 @@ import (
 )
 
 func (s *ManagementService) RetrieveClaimForOrder(ctx context.Context, req *api.RetrieveClaimForOrderRequest) (*api.RetrieveClaimForOrderResponse, error) {
-	_, err := s.parseProxyMetadata(ctx)
-	if err != nil {
-		s.logger.Error("failed to parse proxy metadata", zap.Error(err))
-		return nil, err
-	}
-
 	if len(req.OrderReference) < 1 {
 		return nil, status.Error(codes.InvalidArgument, "an order reference must be provided")
 	}

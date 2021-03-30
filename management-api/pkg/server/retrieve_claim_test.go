@@ -26,19 +26,12 @@ func TestRetrieveClaim(t *testing.T) {
 		want    func(*testing.T, *common_tls.CertificateBundle, *external.RequestClaimResponse)
 		wantErr error
 	}{
-		"when_the_proxy_metadata_is_missing": {
-			request: &api.RetrieveClaimForOrderRequest{},
-			setup: func(*server.ManagementService, serviceMocks) context.Context {
-				return context.Background()
-			},
-			wantErr: status.Error(codes.Internal, "missing metadata from the management proxy"),
-		},
 		"when_providing_an_empty_order_reference": {
 			request: &api.RetrieveClaimForOrderRequest{
 				OrderReference: "",
 			},
 			setup: func(*server.ManagementService, serviceMocks) context.Context {
-				return setProxyMetadata(context.Background())
+				return context.Background()
 			},
 			wantErr: status.Error(codes.InvalidArgument, "an order reference must be provided"),
 		},
@@ -48,7 +41,7 @@ func TestRetrieveClaim(t *testing.T) {
 				OrderOrganizationName: "",
 			},
 			setup: func(*server.ManagementService, serviceMocks) context.Context {
-				return setProxyMetadata(context.Background())
+				return context.Background()
 			},
 			wantErr: status.Error(codes.InvalidArgument, "an organization name of the order must be provided"),
 		},
@@ -84,7 +77,7 @@ func TestRetrieveClaim(t *testing.T) {
 					}).
 					Return(nil, errors.New("arbitrary error"))
 
-				return setProxyMetadata(context.Background())
+				return context.Background()
 			},
 			wantErr: status.Error(codes.Internal, "unable to retrieve claim"),
 		},
