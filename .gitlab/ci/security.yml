@@ -5,6 +5,7 @@ variables:
   SAST_DISABLE_BABEL: "true"
 
 include:
+  - template: Container-Scanning.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
   - template: Security/Dependency-Scanning.gitlab-ci.yml
   - template: Security/Secret-Detection.gitlab-ci.yml
@@ -58,7 +59,11 @@ container_scanning:
     - if: $CONTAINER_SCANNING_DISABLED
       when: never
     - if: $CI_COMMIT_BRANCH &&
-        $GITLAB_FEATURES =~ /\bcontainer_scanning\b/
+        $GITLAB_FEATURES =~ /\bcontainer_scanning\b/ &&
+        $CS_MAJOR_VERSION =~ /^[0-3]$/
+
+container_scanning_new:
+  stage: Security
 
 dependency_scanning:
   stage: Security
