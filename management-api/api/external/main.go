@@ -9,3 +9,8 @@ import "google.golang.org/grpc"
 func GetAccessRequestServiceDesc() *grpc.ServiceDesc {
 	return &AccessRequestService_ServiceDesc
 }
+
+// GetDelegationServiceDesc returns the service specification for the DelegationService service
+func GetDelegationServiceDesc() *grpc.ServiceDesc {
+	return &DelegationService_ServiceDesc
+}

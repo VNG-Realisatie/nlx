@@ -51,6 +51,7 @@ func (i *Inway) SetupManagementAPI(managementAPIAddress string, cert *common_tls
 	}
 
 	p.RegisterService(external_api.GetAccessRequestServiceDesc())
+	p.RegisterService(external_api.GetDelegationServiceDesc())
 
 	i.managementProxy = p
 

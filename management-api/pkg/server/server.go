@@ -26,6 +26,7 @@ type ManagementService struct {
 	api.UnimplementedDirectoryServer
 	api.UnimplementedManagementServer
 	external.UnimplementedAccessRequestServiceServer
+	external.UnimplementedDelegationServiceServer
 
 	logger                     *zap.Logger
 	mainProcess                *process.Process

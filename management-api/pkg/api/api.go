@@ -96,6 +96,7 @@ func NewAPI(db database.ConfigDatabase, txlogDB txlogdb.TxlogDatabase, logger *z
 
 	api.RegisterManagementServer(grpcServer, managementService)
 	external.RegisterAccessRequestServiceServer(grpcServer, managementService)
+	external.RegisterDelegationServiceServer(grpcServer, managementService)
 
 	e := &environment.Environment{
 		OrganizationName: orgCert.Certificate().Subject.Organization[0],
