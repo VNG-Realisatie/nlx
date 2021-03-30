@@ -28,7 +28,7 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 	}
 
 	claims := delegation.JWTClaims{
-		Organization:   md.OrganizationName,
+		Delegatee:      md.OrganizationName,
 		OrderReference: req.OrderReference,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour).Unix(),

@@ -7,6 +7,6 @@ import "github.com/form3tech-oss/jwt-go"
 
 type JWTClaims struct {
 	jwt.StandardClaims
-	Organization   string `json:"organization"`
+	Delegatee      string `json:"delegatee"`
 	OrderReference string `json:"order_reference"`
 }

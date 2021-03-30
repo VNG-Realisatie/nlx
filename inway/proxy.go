@@ -20,6 +20,7 @@ import (
 
 var ErrDelegatorDoesNotHaveAccess = errors.New("delegator does have access")
 var ErrCannotParsePublicKeyFromPEM = errors.New("failed to parse PEM block containing the public key")
+var ErrRequestingOrganizationIsNotDelegatee = errors.New("requesting organization is not the delegatee")
 
 // handleProxyRequest handles requests from an NLX Outway to the Inway.
 // It verifies authentication and selects the correct EnvpointService to
@@ -118,6 +119,10 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 
 		claims := &delegation.JWTClaims{}
 		_, err := jwt.ParseWithClaims(claim, claims, func(token *jwt.Token) (interface{}, error) {
+			if claims.Delegatee != requesterOrganization {
+				return nil, ErrRequestingOrganizationIsNotDelegatee
+			}
+
 			for _, whitelistItem := range serviceEndpoint.ServiceDetails().AuthorizationWhitelist {
 				if whitelistItem.OrganizationName == claims.Issuer {
 					publicKey, err := parsePublicKeyFromPEM(whitelistItem.PublicKeyPEM)
@@ -139,6 +144,13 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 			if !ok {
 				i.logger.Error("casting error to jwt validation error failed", zap.Error(err))
 				http.Error(w, "unable to verify claim", http.StatusInternalServerError)
+
+				return
+			}
+
+			if errors.Is(validationError.Inner, ErrRequestingOrganizationIsNotDelegatee) {
+				i.logger.Info("requesting organization is not the delegatee", zap.String("delegator", claims.Issuer), zap.String("serviceName", serviceName))
+				http.Error(w, "nlx-inway: no access", http.StatusUnauthorized)
 
 				return
 			}

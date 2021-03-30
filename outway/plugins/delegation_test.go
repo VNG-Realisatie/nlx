@@ -120,7 +120,7 @@ func TestDelegationPlugin(t *testing.T) {
 						StandardClaims: jwt.StandardClaims{
 							ExpiresAt: 1,
 						},
-						Organization:   "TestOrg",
+						Delegatee:      "TestOrg",
 						OrderReference: "test-ref-123",
 					},
 				})
@@ -137,7 +137,7 @@ func TestDelegationPlugin(t *testing.T) {
 					Raw: "claim",
 					JWTClaims: delegation.JWTClaims{
 						StandardClaims: jwt.StandardClaims{},
-						Organization:   "TestOrg",
+						Delegatee:      "TestOrg",
 						OrderReference: "test-ref-123",
 					},
 				})

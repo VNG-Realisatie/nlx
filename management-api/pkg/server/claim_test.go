@@ -72,7 +72,7 @@ func TestRequestClaimHappyFlow(t *testing.T) {
 	assert.NoError(t, err)
 
 	claims := token.Claims.(*delegation.JWTClaims)
-	assert.Equal(t, claims.Organization, "organization-a")
+	assert.Equal(t, claims.Delegatee, "organization-a")
 	assert.Equal(t, claims.OrderReference, "arbitrary-order-reference")
 	assert.Equal(t, claims.Issuer, "nlx-test")
 	assert.Equal(t, claims.ExpiresAt, time.Now().Add(time.Hour).Unix())

@@ -181,7 +181,11 @@ func TestDoelbinding(t *testing.T) {
 //nolint:funlen // this is a test
 func TestInwayProxyDelegatedRequest(t *testing.T) {
 	cert := createCertBundle()
-	validClaim, err := getJWTAsSignedString(cert)
+
+	validClaim, err := getJWTAsSignedString(cert, "nlx-test")
+	assert.Nil(t, err)
+
+	validClaimOtherDelegatee, err := getJWTAsSignedString(cert, "nlx-hackerman")
 	assert.Nil(t, err)
 
 	tests := map[string]struct {
@@ -202,6 +206,13 @@ func TestInwayProxyDelegatedRequest(t *testing.T) {
 			func(m *inwayMocks) {},
 			"mock-service-whitelist-unauthorized/dummy",
 			validClaim,
+			http.StatusUnauthorized,
+			"nlx-inway: no access\n",
+		},
+		"delegatee_is_not_requesting_organization": {
+			func(m *inwayMocks) {},
+			"mock-service-whitelist/dummy",
+			validClaimOtherDelegatee,
 			http.StatusUnauthorized,
 			"nlx-inway: no access\n",
 		},
@@ -339,9 +350,9 @@ func createCertBundle() *common_tls.CertificateBundle {
 	return cert
 }
 
-func getJWTAsSignedString(orgCert *common_tls.CertificateBundle) (string, error) {
+func getJWTAsSignedString(orgCert *common_tls.CertificateBundle, delegatee string) (string, error) {
 	claims := delegation.JWTClaims{
-		Organization:   "delegatee-organization-name",
+		Delegatee:      delegatee,
 		OrderReference: "order-reference",
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour).Unix(),
