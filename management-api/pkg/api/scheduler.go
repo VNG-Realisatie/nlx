@@ -202,9 +202,12 @@ func (scheduler *accessRequestScheduler) schedule(ctx context.Context, request *
 		referenceID, err = scheduler.sendRequest(ctx, request)
 		newState = database.OutgoingAccessRequestReceived
 	case database.OutgoingAccessRequestReceived:
-		newState, err = scheduler.getAccessRequestState(ctx, request)
-	default:
-		return fmt.Errorf("invalid access request state: %s", request.State)
+		state, getStateErr := scheduler.getAccessRequestState(ctx, request)
+		if getStateErr != nil {
+			return getStateErr
+		}
+
+		newState = state
 	}
 
 	if err == nil {

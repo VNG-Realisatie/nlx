@@ -122,7 +122,7 @@ func (db *PostgresConfigDatabase) GetIncomingAccessRequest(ctx context.Context, 
 }
 
 func (db *PostgresConfigDatabase) CreateIncomingAccessRequest(ctx context.Context, accessRequest *IncomingAccessRequest) (*IncomingAccessRequest, error) {
-	if err := db.DB.Debug().
+	if err := db.DB.
 		WithContext(ctx).
 		Omit(clause.Associations).
 		Create(accessRequest).Error; err != nil {
