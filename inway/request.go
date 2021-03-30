@@ -9,6 +9,6 @@ type RequestMetadata struct {
 	requestPath                   string
 	requesterPublicKeyFingerprint string
 	requesterOrganization         string
-	delegatorOrganization         string
+	delegateeOrganization         string
 	orderReference                string
 }

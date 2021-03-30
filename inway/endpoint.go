@@ -205,8 +205,9 @@ func (h *HTTPServiceEndpoint) handleRequest(reqMD *RequestMetadata, w http.Respo
 		Data:             recordData,
 	}
 
-	if reqMD.delegatorOrganization != "" {
-		record.Delegator = reqMD.delegatorOrganization
+	if reqMD.delegateeOrganization != "" {
+		record.Delegator = reqMD.requesterOrganization
+		record.SrcOrganization = reqMD.delegateeOrganization
 		record.OrderReference = reqMD.orderReference
 	}
 

@@ -158,7 +158,7 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 
 		reqMD.requesterOrganization = claims.Issuer
 		reqMD.requesterPublicKeyFingerprint = publicKeyFingerprint
-		reqMD.delegatorOrganization = requesterOrganization
+		reqMD.delegateeOrganization = requesterOrganization
 		reqMD.orderReference = claims.OrderReference
 	}
 
