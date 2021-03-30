@@ -32,6 +32,9 @@ const (
 	maxRetries     = 3
 	maxConcurrency = 4
 	pollInterval   = 1500
+
+	// jobs are unlocked after 5 minutes, let's wait at least one minute before retrying
+	jobTimeout = 4 * time.Minute
 )
 
 var ErrMaxRetries = errors.New("unable to retry more than 3 times")
@@ -129,13 +132,17 @@ func (scheduler *accessRequestScheduler) schedulePendingRequest(ctx context.Cont
 	}
 
 	if request != nil {
+		jobCtx, cancel := context.WithTimeout(ctx, jobTimeout)
+
+		defer cancel()
+
 		switch request.State {
 		case database.OutgoingAccessRequestCreated, database.OutgoingAccessRequestReceived:
-			if err := scheduler.schedule(ctx, request); err != nil {
+			if err := scheduler.schedule(jobCtx, request); err != nil {
 				return err
 			}
 		case database.OutgoingAccessRequestApproved:
-			if err := scheduler.syncAccessProof(ctx, request); err != nil {
+			if err := scheduler.syncAccessProof(jobCtx, request); err != nil {
 				return err
 			}
 		default:
