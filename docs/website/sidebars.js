@@ -16,20 +16,9 @@ module.exports = {
       "try-nlx/introduction",
       "try-nlx/setup-your-environment",
       "try-nlx/retrieve-a-demo-certificate",
-      {
-        "With NLX Management (new)": [
-          "try-nlx/management/introduction",
-          "try-nlx/management/getting-up-and-running",
-          "try-nlx/management/consume-an-api",
-          "try-nlx/management/provide-an-api",
-        ],
-      },
-      {
-        "With config file": [
-          "try-nlx/config-file/consume-an-api",
-          "try-nlx/config-file/provide-an-api",
-        ],
-      },
+      "try-nlx/getting-up-and-running",
+      "try-nlx/consume-an-api",
+      "try-nlx/provide-an-api",
     ],
     "Use NLX": [
       "use-nlx/request-a-production-cert",
@@ -39,13 +28,15 @@ module.exports = {
       "use-nlx/new-releases",
     ],
     "Reference information": [
-      "reference-information/service-configuration",
       "reference-information/transaction-log-headers",
       "reference-information/monitoring",
       "reference-information/outway-as-proxy",
     ],
-    Support: ["support/contact", "support/common-errors"],
-    Compliancy: [
+    "Support": [
+      "support/contact",
+      "support/common-errors"
+    ],
+    "Compliancy": [
       "compliancy/eif",
       "compliancy/eidas",
       "compliancy/accessibility",

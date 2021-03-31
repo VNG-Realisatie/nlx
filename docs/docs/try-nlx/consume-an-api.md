@@ -6,7 +6,7 @@ title: Consume an API
 ## Introduction
 
 To use an API that is provided via NLX, you need to route traffic through an **outway** onto the network.
-We will use the certificate which we've setup in [Retrieve a demo certificate ](../retrieve-a-demo-certificate.md), to make sure traffic is encrypted between your and other nodes.
+We will use the certificate which we've setup in [Retrieve a demo certificate](./retrieve-a-demo-certificate.md), to make sure traffic is encrypted between your and other nodes.
 
 
 ### Verification
@@ -102,7 +102,7 @@ APIs provided on the NLX network are published in the NLX directory.
 Take a look at the [directory](https://directory.nlx.io) to see which APIs are available.
 
 > You can also run the outway as a HTTP proxy. This allows applications to call services on NLX by using `http://service-name.organization-name.services.nlx.local`.
-For more information read [the reference information](../../reference-information/proxy.md).
+For more information read [the reference information](../reference-information/proxy.md).
 
 
 ## In sum

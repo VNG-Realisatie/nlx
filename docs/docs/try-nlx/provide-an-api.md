@@ -6,12 +6,12 @@ title: Provide an API
 ## Introduction
 
 To provide an API to the NLX network, you need to route traffic through the **inway**.
-To make sure traffic is encrypted between your and other nodes, we will use the certificate which we've setup in [Retrieve a demo certificate ](../retrieve-a-demo-certificate.md).
+To make sure traffic is encrypted between your and other nodes, we will use the certificate which we've setup in [Retrieve a demo certificate ](./retrieve-a-demo-certificate.md).
 
 Please note that:
 
 * You need a domain name to provide an inway (an IP address will not work).
-* The domain should be the same as the domain you used to generate the certificates (that was in [Retrieve a demo certificate](../retrieve-a-demo-certificate.md)).
+* The domain should be the same as the domain you used to generate the certificates (that was in [Retrieve a demo certificate](./retrieve-a-demo-certificate.md)).
 
 It is not recommended to follow this guide when you're working from your home network.
 
@@ -80,7 +80,7 @@ Now let's try to fetch some data from our inway using our outway using `curl`:
 curl http://localhost/my-organization/SwaggerPetStore/v2/pet/20002085
 ```
 
-The response of the `curl` command should look similar to the following output (where `ORGANIZATION_NAME`/`PUBLIC_KEY_FINGERPRINT` are derived from the certificate generated in [step 3](../retrieve-a-demo-certificate.md)).
+The response of the `curl` command should look similar to the following output (where `ORGANIZATION_NAME`/`PUBLIC_KEY_FINGERPRINT` are derived from the certificate generated in [step 3](./retrieve-a-demo-certificate.md)).
 
 ```
 nlx-inway: permission denied, organization "ORGANIZATION_NAME" or public key "PUBLIC_KEY_FINGERPRINT" is not allowed access.

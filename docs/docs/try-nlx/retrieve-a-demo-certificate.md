@@ -3,12 +3,11 @@ id: retrieve-a-demo-certificate
 title: Retrieve a demo certificate
 ---
 
-## Introduction
-
 To be able to send traffic through the NLX network, you'll need a certificate and private key.
 The certificate and key are used to encrypt traffic between you and other nodes.
 
 In this part we will generate & install all required certificates.
+Before you continue, make sure you have [set up your environment](./setup-your-environment.md).
 
 ## Demo CA root certificate
 
@@ -114,6 +113,4 @@ All required certificates are available now. So far, we have:
 - downloaded the CA root certificate.
 - generated our own certificate, so we are allowed to communicate with the API's on the NLX network.
 
-Now let's see if we can consume an API from the NLX network.
-
-You can continue this guide for [NLX Management (recommended)](./management/introduction.md) or [using a config.toml file](./config-file/provide-an-api.mdx)
+Now let's [get up and running](./getting-up-and-running.md) to make sure you have all software installed to get started.

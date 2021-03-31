@@ -5,7 +5,7 @@ title: Enable tranparant pricing (experimental)
 
 ## Before you start
 
-- Make sure you read our [try NLX](../try-nlx/management/introduction) guide
+- Make sure you read our [try NLX](../try-nlx/introduction) guide
 - Make sure that you have NLX management running
 - Make sure that you have an inway and you are offering a service
 
@@ -21,7 +21,7 @@ This feature is not intended as part of an automatic system where legally bindin
 
 Before you can use the finance page make sure to [enable transaction logs](./enable-transaction-logs).
 
-Currently we only support one database for all transaction logs.
+Currently, we only support one database for all transaction logs.
 
 ## Enable the transaction-log
 

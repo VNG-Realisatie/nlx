@@ -8,7 +8,7 @@ title: Getting up and running
 
 Now we have prepared all the requirements to run NLX, we can start all components using Docker Compose.
 
-> Next to the certificates you created in [retrieve a demo certificate](../retrieve-a-demo-certificate.md) you also need certificates from an internal PKI to encrypt traffic between NLX components (such as the Management API and the Inway). The demo already has a working PKI so you don't have to set this up yourself.
+> Next to the certificates you created in [retrieve a demo certificate](./retrieve-a-demo-certificate.md) you also need certificates from an internal PKI to encrypt traffic between NLX components (such as the Management API and the Inway). The demo already has a working PKI so you don't have to set this up yourself.
 
 First, let's clone the NLX project. It contains the Docker Compose file and its dependencies.
 
