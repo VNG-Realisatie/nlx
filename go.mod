@@ -51,7 +51,7 @@ require (
 	golang.org/x/oauth2 v0.0.0-20210323180902-22b0adad7558
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	golang.org/x/text v0.3.5
-	google.golang.org/genproto v0.0.0-20210330181207-2295ebbda0c6
+	google.golang.org/genproto v0.0.0-20210405174219-a39eb2f71cb9
 	google.golang.org/grpc v1.36.1
 	google.golang.org/protobuf v1.26.0
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
