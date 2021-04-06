@@ -353,7 +353,6 @@ describe('when showing inways', () => {
           onSubmitHandler={onSubmitHandlerSpy}
           initialValues={{
             ...initialValues,
-            inways: [],
             oneTimeCosts: 10.5,
             monthlyCosts: 5,
             requestCosts: 1.25,
@@ -437,10 +436,7 @@ describe('when showing inways', () => {
       <StoreProvider rootStore={rootStore}>
         <ServiceForm
           onSubmitHandler={onSubmitHandlerSpy}
-          initialValues={{
-            ...initialValues,
-            inways: [],
-          }}
+          initialValues={{ ...initialValues }}
           submitButtonText="Submit"
         />
       </StoreProvider>,
@@ -448,9 +444,16 @@ describe('when showing inways', () => {
 
     await fireEvent.click(getByLabelText('This is a paid service'))
 
-    userEvent.type(getByLabelText('One time costs (in Euro)'), '10.5')
-    userEvent.type(getByLabelText('Monthly costs (in Euro)'), '5')
-    userEvent.type(getByLabelText('Cost per request (in Euro)'), '1.25')
+    const oneTime = getByLabelText('One time costs (in Euro)')
+    const monthly = getByLabelText('Monthly costs (in Euro)')
+    const request = getByLabelText('Cost per request (in Euro)')
+
+    userEvent.clear(oneTime)
+    userEvent.type(oneTime, '10.5')
+    userEvent.clear(monthly)
+    userEvent.type(monthly, '5')
+    userEvent.clear(request)
+    userEvent.type(request, '1.25')
 
     await fireEvent.submit(getByTestId('form'))
 
