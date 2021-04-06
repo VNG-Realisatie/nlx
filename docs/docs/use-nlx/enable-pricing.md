@@ -1,6 +1,6 @@
 ---
 id: enable-pricing
-title: Enable tranparant pricing (experimental)
+title: Enable transparent pricing (experimental)
 ---
 
 ## Before you start
@@ -11,7 +11,7 @@ title: Enable tranparant pricing (experimental)
 
 ## Introduction
 
-This guide will explain how NLX can be used to implement a transparant pricing model for your services. You can create a subscription model, a pay per use model or a hybrid model. This feature is introduced, as a working example to aid the study, brainstorm, discussion and thinking process about cost of ownership of (public) data vs cost of use of (public) data. 
+This guide will explain how NLX can be used to implement a transparent pricing model for your services. You can create a subscription model, a pay per use model or a hybrid model. This feature is introduced, as a working example to aid the study, brainstorm, discussion and thinking process about cost of ownership of (public) data vs cost of use of (public) data. 
 
 ### Legally binding contract vs transparancy only
 
