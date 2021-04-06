@@ -4,7 +4,7 @@
   "<0>{{user}}</0> has created the service <3>{{service}}</3>": "<0>{{user}}</0> heeft de service <3>{{service}}</3> aangemaakt",
   "<0>{{user}}</0> has logged in": "<0>{{user}}</0> heeft ingelogd",
   "<0>{{user}}</0> has logged out": "<0>{{user}}</0> heeft uitgelogd",
-  "<0>{{user}}</0> has performed unknown action <3>'{{action}}'</3>": "<0>{{user}}</0> geeft een ongekende actie <3>'{{action}}' uitgevoerd</3>",
+  "<0>{{user}}</0> has performed unknown action <3>&apos;{{action}}&apos;</3>": "<0>{{user}}</0> geeft een ongekende actie <3>&apos;{{action}}&apos; uitgevoerd</3>",
   "<0>{{user}}</0> has rejected the access request from <3>{{organization}}</3> for <5>{{service}}</5>": "<0>{{user}}</0> heeft het toegangsverzoek van <3>{{organization}}</3> voor <5>{{service}}</5> afgekeurd",
   "<0>{{user}}</0> has removed the service <3>{{service}}</3>": "<0>{{user}}</0> heeft de service <3>{{service}}</3> verwijderd",
   "<0>{{user}}</0> has requested access to <3>{{service}}</3> from <6>{{organization}}</6>": "<0>{{user}}</0> heeft toegang verzocht tot <3>{{service}}</3> van <6>{{organization}}</6>",
