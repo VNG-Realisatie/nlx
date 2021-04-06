@@ -20,7 +20,8 @@ module.exports = {
       "try-nlx/consume-an-api",
       "try-nlx/provide-an-api",
     ],
-    "Use NLX": [
+    "Use NLX in production": [
+      "use-nlx/introduction",
       "use-nlx/request-a-production-cert",
       "use-nlx/enable-transaction-logs",
       "use-nlx/enable-pricing",
