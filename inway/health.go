@@ -14,8 +14,8 @@ import (
 )
 
 func (i *Inway) handleHealthRequest(w http.ResponseWriter, r *http.Request) {
-	i.serviceEndpointsLock.RLock()
-	defer i.serviceEndpointsLock.RUnlock()
+	i.servicesLock.RLock()
+	defer i.servicesLock.RUnlock()
 
 	serviceName := strings.TrimPrefix(r.URL.Path, "/.nlx/health/")
 
@@ -23,7 +23,7 @@ func (i *Inway) handleHealthRequest(w http.ResponseWriter, r *http.Request) {
 	// We currently only verify that the service still exists in this inway.
 	// There is no health check to the actual endpoint defined yet.
 	status := health.Status{}
-	_, status.Healthy = i.serviceEndpoints[serviceName]
+	_, status.Healthy = i.services[serviceName]
 	err := json.NewEncoder(w).Encode(status)
 	if err != nil {
 		i.logger.Error("failed to encode health status json", zap.Error(err))

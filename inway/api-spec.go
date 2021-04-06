@@ -13,23 +13,24 @@ import (
 
 func (i *Inway) handleAPISpecDocRequest(w http.ResponseWriter, r *http.Request) {
 	serviceName := strings.TrimPrefix(r.URL.Path, "/.nlx/api-spec-doc/")
-
-	serviceEndpoint, exists := i.serviceEndpoints[serviceName]
+	i.servicesLock.RLock()
+	defer i.servicesLock.RUnlock()
+	
+	service, exists := i.services[serviceName]
 	if !exists {
 		http.Error(w, "service not found", http.StatusNotFound)
 		return
 	}
 
-	serviceDetails := serviceEndpoint.ServiceDetails()
-
-	if serviceDetails.APISpecificationDocumentURL == "" {
+	if service.APISpecificationDocumentURL == "" {
 		http.Error(w, "api specification not found for service", http.StatusNotFound)
 		return
 	}
 
-	i.logger.Info("fetching api spec doc", zap.String("api-spec-doc-url", serviceDetails.APISpecificationDocumentURL))
-
-	resp, err := serviceEndpoint.GetAPISpec()
+	i.logger.Info("fetching api spec doc", zap.String("api-spec-doc-url", service.APISpecificationDocumentURL))
+	
+	httpClient := &http.Client{Transport: newRoundTripHTTPTransport(tlsConfig)},
+	resp, err := httpClient.Get(service.APISpecificationDocumentURL)
 	if err != nil {
 		http.Error(w, "server error", http.StatusInternalServerError)
 		i.logger.Error("failed to fetch api specification document", zap.Error(err))

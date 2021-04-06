@@ -19,8 +19,8 @@ import (
 
 func TestHealth(t *testing.T) {
 	inway := &Inway{}
-	inway.serviceEndpoints = make(map[string]ServiceEndpoint)
-	inway.serviceEndpoints["mockservice"] = &HTTPServiceEndpoint{}
+	inway.services = make(map[string]ServiceEndpoint)
+	inway.services["mockservice"] = &HTTPServiceEndpoint{}
 
 	// Test health check
 	tests := []struct {

@@ -6,64 +6,37 @@ package inway
 import (
 	"context"
 	"fmt"
+	"os"
 	"reflect"
-	"strings"
 	"time"
 
 	"github.com/jpillora/backoff"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
-	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/status"
 
-	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
-	"go.nlx.io/nlx/inway/config"
-	"go.nlx.io/nlx/inway/grpcproxy"
+	"go.nlx.io/nlx/inway/plugins"
 	"go.nlx.io/nlx/management-api/api"
-	external_api "go.nlx.io/nlx/management-api/api/external"
 )
 
 const configRetrievalInterval = 10 * time.Second
 
 var errManagementAPIUnavailable = fmt.Errorf("managementAPI unavailable")
 
-// SetupManagementAPI configures the inway to use the NLX Management API instead of the config toml
-func (i *Inway) SetupManagementAPI(managementAPIAddress string, cert *common_tls.CertificateBundle) error {
-	creds := credentials.NewTLS(cert.TLSConfig())
-
-	connCtx, connCtxCancel := context.WithTimeout(context.Background(), 1*time.Minute)
-	defer connCtxCancel()
-
-	i.logger.Info("creating management api connection", zap.String("management api address", managementAPIAddress))
-	conn, err := grpc.DialContext(connCtx, managementAPIAddress, grpc.WithTransportCredentials(creds))
-	if err != nil {
-		return err
-	}
-
-	i.managementClient = api.NewManagementClient(conn)
-
-	p, err := grpcproxy.New(context.TODO(), i.logger, managementAPIAddress, i.orgCertBundle, cert)
-	if err != nil {
-		return err
-	}
-
-	p.RegisterService(external_api.GetAccessRequestServiceDesc())
-	p.RegisterService(external_api.GetDelegationServiceDesc())
-
-	i.managementProxy = p
-
-	return nil
-}
-
 // StartConfigurationPolling will make the inway retrieve its configuration periodically
-func (i *Inway) StartConfigurationPolling() error {
-	_, err := i.managementClient.CreateInway(context.Background(), &api.Inway{
+func (i *Inway) startConfigurationPolling(ctx context.Context) error {
+	hostname, err := os.Hostname()
+
+	if err != nil {
+		i.logger.Warn("failed to get inway hostname", zap.Error(err))
+	}
+
+	_, err = i.managementClient.CreateInway(ctx, &api.Inway{
 		Name:        i.name,
 		Version:     version.BuildVersion,
-		Hostname:    i.hostname(),
+		Hostname:    hostname,
 		SelfAddress: i.selfAddress,
 	})
 	if err != nil {
@@ -90,7 +63,7 @@ func (i *Inway) StartConfigurationPolling() error {
 
 		for {
 			select {
-			case <-i.stopInwayChannel:
+			case <-ctx.Done():
 				i.logger.Info("stopping config polling")
 				return
 			case <-time.After(sleepDuration):
@@ -103,24 +76,22 @@ func (i *Inway) StartConfigurationPolling() error {
 }
 
 // SetServiceEndpoints configures the inway with the provided endpoints
-func (i *Inway) SetServiceEndpoints(endpoints []ServiceEndpoint) error {
+func (i *Inway) SetServiceEndpoints(endpoints []*plugins.Service) error {
 	i.logger.Info("setting service endpoints")
 
-	// stop the inway with current serviceEndpoints
-	i.stop()
+	i.servicesLock.Lock()
+	defer i.servicesLock.Unlock()
 
-	i.serviceEndpointsLock.Lock()
-	defer i.serviceEndpointsLock.Unlock()
+	i.monitoringService.SetNotReady()
+	i.services = make(map[string]*plugins.Service)
 
-	i.stopInwayChannel = make(chan struct{})
-	i.serviceEndpoints = make(map[string]ServiceEndpoint)
 	for _, endPoint := range endpoints {
-		if _, exists := i.serviceEndpoints[endPoint.ServiceName()]; exists {
+		if _, exists := i.services[endPoint.Name]; exists {
 			return errors.New("service endpoint for a service with the same name has already been registered")
 		}
+
 		i.logger.Info("adding service to inway", zap.String("servicename", endPoint.ServiceName()))
-		i.serviceEndpoints[endPoint.ServiceName()] = endPoint
-		i.announceToDirectory(endPoint)
+		i.services[endPoint.Name] = endPoint
 	}
 
 	i.monitoringService.SetReady()
@@ -157,21 +128,21 @@ func (i *Inway) updateConfig(expBackOff *backoff.Backoff, defaultInterval time.D
 	return defaultInterval
 }
 
-func (i *Inway) isServiceConfigDifferent(services []ServiceEndpoint) bool {
-	i.serviceEndpointsLock.Lock()
-	defer i.serviceEndpointsLock.Unlock()
+func (i *Inway) isServiceConfigDifferent(services []*plugins.Service) bool {
+	i.servicesLock.Lock()
+	defer i.servicesLock.Unlock()
 
 	serviceCount := len(services)
 
-	if serviceCount != len(i.serviceEndpoints) {
+	if serviceCount != len(i.services) {
 		return true
 	}
 
 	matches := 0
 
-	for _, inwayService := range i.serviceEndpoints {
+	for _, inwayService := range i.services {
 		for _, service := range services {
-			if reflect.DeepEqual(inwayService.ServiceDetails(), service.ServiceDetails()) && strings.Compare(service.ServiceName(), inwayService.ServiceName()) == 0 {
+			if reflect.DeepEqual(service, inwayService) == 0 {
 				matches++
 			}
 		}
@@ -180,60 +151,22 @@ func (i *Inway) isServiceConfigDifferent(services []ServiceEndpoint) bool {
 	return matches != serviceCount
 }
 
-func serviceConfigToServiceDetails(service *api.ListServicesResponse_Service) *config.ServiceDetails {
-	serviceDetails := &config.ServiceDetails{
-		ServiceDetailsBase: config.ServiceDetailsBase{
-			APISpecificationDocumentURL: service.ApiSpecificationURL,
-			DocumentationURL:            service.DocumentationURL,
-			EndpointURL:                 service.EndpointURL,
-			PublicSupportContact:        service.PublicSupportContact,
-			TechSupportContact:          service.TechSupportContact,
-			Internal:                    service.Internal,
-			OneTimeCosts:                service.OneTimeCosts,
-			MonthlyCosts:                service.MonthlyCosts,
-			RequestCosts:                service.RequestCosts,
-		},
+func serviceConfigToServiceDetails(service *api.ListServicesResponse_Service) *plugins.Service {
+	return &plugins.Service{
+		Name:                        service.Name,
+		APISpecificationDocumentURL: service.ApiSpecificationURL,
+		DocumentationURL:            service.DocumentationURL,
+		EndpointURL:                 service.EndpointURL,
+		PublicSupportContact:        service.PublicSupportContact,
+		TechSupportContact:          service.TechSupportContact,
+		Internal:                    service.Internal,
+		OneTimeCosts:                service.OneTimeCosts,
+		MonthlyCosts:                service.MonthlyCosts,
+		RequestCosts:                service.RequestCosts,
 	}
-
-	if service.AuthorizationSettings != nil {
-		serviceDetails.AuthorizationModel = config.AuthorizationModel(service.AuthorizationSettings.Mode)
-		for _, authorization := range service.AuthorizationSettings.Authorizations {
-			serviceDetails.AuthorizationWhitelist = append(serviceDetails.AuthorizationWhitelist, config.AuthorizationWhitelistItem{
-				OrganizationName: authorization.OrganizationName,
-				PublicKeyHash:    authorization.PublicKeyHash,
-				PublicKeyPEM:     authorization.PublicKeyPEM,
-			})
-		}
-	} else {
-		serviceDetails.AuthorizationModel = config.AuthorizationmodelWhitelist
-	}
-
-	return serviceDetails
 }
 
-func (i *Inway) createServiceEndpoints(response *api.ListServicesResponse) []ServiceEndpoint {
-	endPoints := make([]ServiceEndpoint, len(response.Services))
-	c := 0
-
-	for _, service := range response.Services {
-		endpoint, err := i.NewHTTPServiceEndpoint(
-			service.Name,
-			serviceConfigToServiceDetails(service),
-			common_tls.NewConfig(common_tls.WithTLS12()),
-		)
-		if err != nil {
-			i.logger.Error("cannot create HTTPServiceEndpoint from service configuration", zap.Error(err))
-			continue
-		}
-
-		endPoints[c] = endpoint
-		c++
-	}
-
-	return endPoints
-}
-
-func (i *Inway) getServicesFromManagementAPI() ([]ServiceEndpoint, error) {
+func (i *Inway) getServicesFromManagementAPI() ([]*plugins.Service, error) {
 	response, err := i.managementClient.ListServices(context.Background(), &api.ListServicesRequest{
 		InwayName: i.name,
 	})
@@ -246,5 +179,10 @@ func (i *Inway) getServicesFromManagementAPI() ([]ServiceEndpoint, error) {
 		return nil, err
 	}
 
-	return i.createServiceEndpoints(response), nil
+	services := make([]*plugins.Service, len(response.Services))
+	for i, service := range response.Services {
+		services[i] = serviceConfigToServiceDetails(service)
+	}
+
+	return services, nil
 }

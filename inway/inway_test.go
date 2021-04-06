@@ -4,6 +4,7 @@
 package inway_test
 
 import (
+	"context"
 	"path/filepath"
 	"testing"
 
@@ -26,9 +27,9 @@ func TestNewInwayException(t *testing.T) {
 		filepath.Join(pkiDir, "ca-root.pem"),
 	)
 
-	testProcess := process.NewProcess(logger)
+	ctx := context.Background()
 
-	_, err := inway.NewInway(logger, nil, testProcess, "", "", "localhost:8080", cert, "")
+	_, err := inway.NewInway(ctx, logger, nil, "", "", "localhost:8080", cert, "")
 	assert.NotNil(t, err)
 
 	cert, _ = common_tls.NewBundleFromFiles(
@@ -37,7 +38,7 @@ func TestNewInwayException(t *testing.T) {
 		filepath.Join(pkiDir, "ca-root.pem"),
 	)
 
-	testInway, err := inway.NewInway(logger, nil, testProcess, "", "inway.test", "localhost:8080", cert, "")
+	testInway, err := inway.NewInway(ctx, logger, nil, "", "inway.test", "localhost:8080", cert, "")
 	assert.Nil(t, err)
 
 	err = testInway.RunServer("invalidlistenaddress", "managementAddress")

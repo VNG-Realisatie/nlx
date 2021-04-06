@@ -47,7 +47,7 @@ func NewMonitoringService(address string, logger *zap.Logger) (*Service, error) 
 
 // Start is a blocking call which starts the internal http server
 func (m *Service) Start() error {
-	m.logger.Info(("starting monitoring service"))
+	m.logger.Info("starting monitoring service")
 	err := m.server.ListenAndServe()
 
 	if err == http.ErrServerClosed {

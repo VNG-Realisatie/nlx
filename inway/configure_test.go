@@ -317,7 +317,7 @@ func TestDeleteServiceEndpoints(t *testing.T) {
 	err = iw.StartConfigurationPolling()
 	assert.Nil(t, err)
 
-	assert.Len(t, iw.serviceEndpoints, 1)
+	assert.Len(t, iw.services, 1)
 }
 
 func TestNewInwayName(t *testing.T) {

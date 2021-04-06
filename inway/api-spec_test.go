@@ -4,6 +4,7 @@
 package inway
 
 import (
+	"context"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -14,7 +15,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 
-	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/inway/config"
 )
@@ -61,8 +61,9 @@ func TestInwayApiSpec(t *testing.T) {
 	}
 
 	logger := zap.NewNop()
-	testProcess := process.NewProcess(logger)
-	iw, err := NewInway(logger, nil, testProcess, "", "localhost:1812", "localhost:1813", cert, "localhost:1815")
+
+	ctx := context.Background()
+	iw, err := NewInway(ctx, logger, nil, "", "", "localhost:1812", "localhost:1813", "", cert, cert, "localhost:1815")
 	assert.Nil(t, err)
 
 	apiSpecMockServer := httptest.NewUnstartedServer(http.HandlerFunc(iw.handleAPISpecDocRequest))

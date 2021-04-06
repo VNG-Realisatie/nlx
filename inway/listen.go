@@ -13,8 +13,7 @@ import (
 	"go.uber.org/zap"
 )
 
-// RunServer is a blocking function that listens on provided tcp address to handle requests.
-func (i *Inway) RunServer(address, managementAddress string) error {
+func (i *Inway) Run(ctx context.Context, address string) error {
 	serveMux := http.NewServeMux()
 	serveMux.HandleFunc("/.nlx/api-spec-doc/", i.handleAPISpecDocRequest)
 	serveMux.HandleFunc("/.nlx/health/", i.handleHealthRequest)
@@ -22,6 +21,7 @@ func (i *Inway) RunServer(address, managementAddress string) error {
 	serveMux.HandleFunc("/", i.handleProxyRequest)
 
 	config := i.orgCertBundle.TLSConfig(i.orgCertBundle.WithTLSClientAuth())
+
 	i.serverTLS = &http.Server{
 		Addr:      address,
 		Handler:   serveMux,
@@ -44,36 +44,32 @@ func (i *Inway) RunServer(address, managementAddress string) error {
 		}
 	}()
 
-	if i.managementProxy != nil {
-		i.logger.Info("management proxy: starting")
-
-		go func() {
-			i.logger.Info("management proxy: listening on %v", zap.String("management-address", managementAddress))
-
-			l, err := net.Listen("tcp", managementAddress)
-			if err != nil {
-				errorChannel <- errors.Wrap(err, "listen on management-address")
-			}
-
-			if err := i.managementProxy.Serve(l); err != nil {
-				errorChannel <- errors.Wrap(err, "management proxy")
-			}
-		}()
+	err := i.startConfigurationPolling(ctx)
+	if err != nil {
+		return err
 	}
 
-	i.process.CloseGracefully(func() error {
-		i.shutDown()
-		return nil
-	})
+	go i.announceToDirectory(ctx)
 
-	err := <-errorChannel
+	i.logger.Info("management proxy: starting")
 
-	i.shutDown()
+	go func() {
+		i.logger.Info("management proxy: listening on %v", zap.String("management-address", i.listenManagementAddress))
 
-	return err
+		l, err := net.Listen("tcp", i.listenManagementAddress)
+		if err != nil {
+			errorChannel <- errors.Wrap(err, "listen on management-address")
+		}
+
+		if err := i.managementProxy.Serve(l); err != nil {
+			errorChannel <- errors.Wrap(err, "management proxy")
+		}
+	}()
+
+	return <-errorChannel
 }
 
-func (i *Inway) shutDown() {
+func (i *Inway) Shutdown() error {
 	i.monitoringService.SetNotReady()
 
 	localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
@@ -81,15 +77,14 @@ func (i *Inway) shutDown() {
 
 	err := i.serverTLS.Shutdown(localCtx)
 	if err != nil {
-		i.logger.Error("error shutting down server tls", zap.Error(err))
+		return err
 	}
 
-	if i.managementProxy != nil {
-		i.managementProxy.Stop()
+	i.managementProxy.Stop()
+
+	if err := i.monitoringService.Stop(); err != nil {
+		return err
 	}
 
-	err = i.monitoringService.Stop()
-	if err != nil {
-		i.logger.Error("error shutting down monitoring service", zap.Error(err))
-	}
+	return nil
 }

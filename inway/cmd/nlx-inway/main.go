@@ -4,11 +4,15 @@
 package main
 
 import (
+	"context"
 	"crypto/x509"
 	"fmt"
 	"log"
 	"net"
+	"os"
+	"os/signal"
 	"strconv"
+	"syscall"
 	"time"
 
 	"github.com/huandu/xstrings"
@@ -20,7 +24,6 @@ import (
 	"go.nlx.io/nlx/common/cmd"
 	common_db "go.nlx.io/nlx/common/db"
 	"go.nlx.io/nlx/common/logoptions"
-	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/common/version"
@@ -35,7 +38,7 @@ var options struct {
 	MonitoringAddress            string `long:"monitoring-address" env:"MONITORING_ADDRESS" default:"127.0.0.1:8081" description:"Address for the inway monitoring endpoints to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 	DirectoryRegistrationAddress string `long:"directory-registration-address" env:"DIRECTORY_REGISTRATION_ADDRESS" description:"Address for the directory where this inway can register it's services" required:"true"`
 	DisableLogdb                 bool   `long:"disable-logdb" env:"DISABLE_LOGDB" description:"Disable logdb connections"`
-	ManagementAPIAddress         string `long:"management-api-address" env:"MANAGEMENT_API_ADDRESS" description:"The address of the NLX Management API"`
+	ManagementAPIAddress         string `long:"management-api-address" env:"MANAGEMENT_API_ADDRESS" description:"The address of the NLX Management API" required:"true"`
 	SelfAddress                  string `long:"self-address" env:"SELF_ADDRESS" description:"The address that outways can use to reach me" required:"true"`
 	ServiceConfig                string `long:"service-config" env:"SERVICE_CONFIG" default:"service-config.toml" description:"Location of the service config toml file"`
 	PostgresDSN                  string `long:"postgres-dsn" env:"POSTGRES_DSN" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
@@ -49,10 +52,19 @@ var options struct {
 func main() {
 	parseOptions()
 
-	logger := setupLogger()
-	mainProcess := process.NewProcess(logger)
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
-	txlogger := setupTransactionLogger(logger, mainProcess, options.DisableLogdb)
+	termChan := make(chan os.Signal, 1)
+	signal.Notify(termChan, syscall.SIGTERM)
+
+	defer func() {
+		<-termChan
+		cancel()
+	}()
+
+	logger := setupLogger()
+	txlogger := setupTransactionLogger(ctx, logger, options.DisableLogdb)
 
 	if errValidate := common_tls.VerifyPrivateKeyPermissions(options.OrgKeyFile); errValidate != nil {
 		logger.Warn("invalid organization key permissions", zap.Error(errValidate), zap.String("file-path", options.OrgKeyFile))
@@ -63,70 +75,72 @@ func main() {
 		logger.Fatal("loading TLS files", zap.Error(err))
 	}
 
-	iw, err := inway.NewInway(logger, txlogger, mainProcess, options.InwayName, options.SelfAddress, options.MonitoringAddress, orgCert, options.DirectoryRegistrationAddress)
-	if err != nil {
-		logger.Fatal("cannot setup inway", zap.Error(err))
+	if errValidate := common_tls.VerifyPrivateKeyPermissions(options.KeyFile); errValidate != nil {
+		logger.Warn("invalid internal PKI key permissions", zap.Error(errValidate), zap.String("file-path", options.KeyFile))
 	}
 
-	if len(options.ManagementAPIAddress) > 0 {
-		logger.Info("management-api set")
-
-		if errValidate := common_tls.VerifyPrivateKeyPermissions(options.KeyFile); errValidate != nil {
-			logger.Warn("invalid internal PKI key permissions", zap.Error(errValidate), zap.String("file-path", options.KeyFile))
-		}
-
-		cert, mErr := common_tls.NewBundleFromFiles(options.CertFile, options.KeyFile, options.RootCertFile)
-		if mErr != nil {
-			logger.Fatal("loading TLS files", zap.Error(err))
-		}
-
-		err = iw.SetupManagementAPI(options.ManagementAPIAddress, cert)
-		if err != nil {
-			logger.Fatal("cannot configure management-api", zap.Error(err))
-		}
-
-		err = iw.StartConfigurationPolling()
-
-		if err != nil {
-			logger.Fatal("cannot retrieving inway configuration from the management-api", zap.Error(err))
-		}
-	} else {
-		serviceConfig, errConfig := config.LoadServiceConfig(options.ServiceConfig)
-		if errConfig != nil {
-			if serviceConfig == nil {
-				logger.Fatal("failed to load service config", zap.Error(errConfig))
-			} else {
-				logger.Warn("warning while loading service config", zap.Error(errConfig))
-			}
-		}
-		loadServices(logger, serviceConfig, iw)
+	cert, mErr := common_tls.NewBundleFromFiles(options.CertFile, options.KeyFile, options.RootCertFile)
+	if mErr != nil {
+		logger.Fatal("loading TLS files", zap.Error(err))
 	}
 
-	managementAddress := options.ListenManagementAddress
-	if managementAddress == "" {
-		managementAddress, err = defaultManagementAddress(options.ListenAddress)
+	listenManagementAddress := options.ListenManagementAddress
+	if listenManagementAddress == "" {
+		listenManagementAddress, err = defaultManagementAddress(options.ListenAddress)
+
 		if err != nil {
 			logger.Fatal("unable to create default management address", zap.Error(err))
 		}
 	}
 
+	iw, err := inway.NewInway(
+		ctx,
+		logger,
+		txlogger,
+		options.InwayName,
+		options.SelfAddress,
+		options.MonitoringAddress,
+		options.ManagementAPIAddress,
+		listenManagementAddress,
+		orgCert,
+		cert,
+		options.DirectoryRegistrationAddress,
+	)
+	if err != nil {
+		logger.Fatal("cannot setup inway", zap.Error(err))
+	}
+
+	defer func() {
+		<-ctx.Done()
+		err := iw.Shutdown()
+
+		if err != nil {
+			logger.Error("failed to shutdown", zap.Error(err))
+		}
+	}()
+
 	// Listen on the address provided in the options
-	err = iw.RunServer(options.ListenAddress, managementAddress)
+	err = iw.Run(ctx, options.ListenAddress)
 	if err != nil {
 		logger.Fatal("failed to run server", zap.Error(err))
 	}
 }
 
-func setupTransactionLogger(logger *zap.Logger, mainProcess *process.Process, disabled bool) transactionlog.TransactionLogger {
+func setupTransactionLogger(ctx context.Context, logger *zap.Logger, disabled bool) transactionlog.TransactionLogger {
 	if disabled {
 		logger.Info("logging to transaction-log disabled")
 		return transactionlog.NewDiscardTransactionLogger()
 	}
 
-	logDB, err := setupDatabase(logger, mainProcess)
+	logDB, err := setupDatabase(logger)
 	if err != nil {
 		logger.Fatal("failed to setup database", zap.Error(err))
 	}
+
+	go func() {
+		<-ctx.Done()
+		logDB.Close()
+	}()
 
 	postgresTxLogger, err := transactionlog.NewPostgresTransactionLogger(logger, logDB, transactionlog.DirectionIn)
 	if err != nil {
@@ -168,7 +182,7 @@ func setupLogger() *zap.Logger {
 	return logger
 }
 
-func setupDatabase(logger *zap.Logger, mainProcess *process.Process) (*sqlx.DB, error) {
+func setupDatabase(logger *zap.Logger) (*sqlx.DB, error) {
 	var logDB *sqlx.DB
 
 	logDB, err := sqlx.Open("postgres", options.PostgresDSN)
@@ -188,7 +202,6 @@ func setupDatabase(logger *zap.Logger, mainProcess *process.Process) (*sqlx.DB, 
 	logDB.MapperFunc(xstrings.ToSnakeCase)
 
 	common_db.WaitForLatestDBVersion(logger, logDB.DB, dbversion.LatestTxlogDBVersion)
-	mainProcess.CloseGracefully(logDB.Close)
 
 	return logDB, nil
 }

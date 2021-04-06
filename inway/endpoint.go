@@ -83,15 +83,6 @@ func (i *Inway) NewHTTPServiceEndpoint(serviceName string, serviceDetails *confi
 	h.proxy.Transport = newRoundTripHTTPTransport(tlsConfig)
 	h.proxy.ErrorHandler = i.LogAPIErrors
 
-	switch serviceDetails.AuthorizationModel {
-	case "whitelist", "":
-		h.SetAuthorizationWhitelist(serviceDetails.AuthorizationWhitelist)
-	case "none":
-		h.SetAuthorizationPublic()
-	default:
-		i.logger.Error(fmt.Sprintf(`invalid authorization model "%s" for service "%s"`, serviceDetails.AuthorizationModel, serviceName))
-	}
-
 	return h, nil
 }
 
