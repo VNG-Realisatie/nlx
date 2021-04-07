@@ -53,7 +53,7 @@ Go tests:
 
 Go linter:
   stage: Tests
-  image: ${CI_DEPENDENCY_PROXY_GROUP_URL}/golangci/golangci-lint:v1.33.0-alpine
+  image: ${CI_DEPENDENCY_PROXY_GROUP_URL}/golangci/golangci-lint:v1.39.0-alpine
   before_script:
    - export PATH=$PATH:/usr/local/go/bin
    - apk --no-cache add jq

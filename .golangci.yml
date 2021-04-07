@@ -5,8 +5,6 @@ linters-settings:
     min-confidence: 0
   gocyclo:
     min-complexity: 10
-  maligned:
-    suggest-new: true
   dupl:
     threshold: 100
   goconst:
@@ -35,6 +33,7 @@ linters:
     - dogsled
     - dupl
     - errcheck
+    - exportloopref
     - funlen
     - gochecknoinits
     - gocognit
@@ -51,13 +50,10 @@ linters:
     - gosimple
     - govet
     - ineffassign
-    - interfacer
-    - maligned
     - misspell
     - nakedret
     - prealloc
     - rowserrcheck
-    - scopelint
     - staticcheck
     - structcheck
     - stylecheck
