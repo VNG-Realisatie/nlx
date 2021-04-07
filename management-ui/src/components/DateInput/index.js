@@ -15,14 +15,14 @@ const isTypeDateSupported = (function () {
 })()
 
 // Placeholder is ignored when browser supports type="date"
-const DateInput = ({ name, label }) => {
+const DateInput = ({ name, label, ...props }) => {
   const { t } = useTranslation()
   const smallLabel = !isTypeDateSupported
     ? `${t('Date notation:')} ${t('yyyy-mm-dd')}`
     : ''
 
   return (
-    <TextInput type="date" name={name} placeholder={t('yyyy-mm-dd')}>
+    <TextInput type="date" name={name} placeholder={t('yyyy-mm-dd')} {...props}>
       <FieldLabel label={label} small={smallLabel} />
     </TextInput>
   )

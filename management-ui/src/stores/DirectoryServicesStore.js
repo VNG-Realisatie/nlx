@@ -107,6 +107,10 @@ class DirectoryServicesStore {
       latestAccessRequest,
     })
   }
+
+  get servicesWithAccess() {
+    return this.services.filter((service) => service.hasAccess)
+  }
 }
 
 export default DirectoryServicesStore

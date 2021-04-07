@@ -111,6 +111,15 @@ class DirectoryServiceModel {
 
     yield this.latestAccessRequest.retry()
   }).bind(this)
+
+  get hasAccess() {
+    return !!(
+      this.latestAccessRequest &&
+      this.latestAccessProof &&
+      !this.latestAccessProof.revokedAt &&
+      this.latestAccessProof.accessRequestId === this.latestAccessRequest.id
+    )
+  }
 }
 
 export default DirectoryServiceModel

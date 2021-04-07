@@ -25,6 +25,9 @@ jest.mock('../pages/AuditLogPage', () => () => (
 jest.mock('../pages/FinancePage', () => () => (
   <div data-testid="finances-page" />
 ))
+jest.mock('../pages/AddOrderPage', () => () => (
+  <div data-testid="add-order-page" />
+))
 
 test('when not authenticated it redirects to /login when navigating to /', async () => {
   const history = createMemoryHistory()
@@ -125,4 +128,16 @@ test('the /finances route renders the FinancePage', () => {
     </Router>,
   )
   expect(getByTestId('finances-page')).toBeInTheDocument()
+})
+
+test('the /orders/add route renders the AddOrderPage', () => {
+  const history = createMemoryHistory({ initialEntries: ['/orders/add'] })
+  const { getByTestId } = renderWithProviders(
+    <Router history={history}>
+      <UserContextProvider user={{ id: '42' }}>
+        <Routes />
+      </UserContextProvider>
+    </Router>,
+  )
+  expect(getByTestId('add-order-page')).toBeInTheDocument()
 })

@@ -119,3 +119,86 @@ describe('requesting access to a service', () => {
     )
   })
 })
+
+describe('access to this service', () => {
+  let directoryService
+  let outgoingAccessRequest
+  let accessProof
+
+  beforeEach(() => {
+    outgoingAccessRequest = new OutgoingAccessRequestModel({
+      outgoingAccessRequestStore: {},
+      accessRequestData: {
+        id: 'access-request-id',
+        state: ACCESS_REQUEST_STATES.RECEIVED,
+      },
+    })
+
+    accessProof = new AccessProofModel({
+      accessProofData: {
+        id: 'abc',
+        accessRequestId: 'access-request-id',
+      },
+    })
+
+    directoryService = new DirectoryServiceModel({
+      directoryServicesStore: {},
+      serviceData: {
+        organizationName: 'Organization',
+        serviceName: 'Service',
+        state: 'up',
+        apiSpecificationType: 'API',
+      },
+      latestAccessRequest: outgoingAccessRequest,
+      latestAccessProof: accessProof,
+    })
+  })
+
+  it('when there is an access request and valid proof', () => {
+    directoryService.update({
+      serviceData: {},
+      latestAccessRequest: outgoingAccessRequest,
+      latestAccessProof: accessProof,
+    })
+
+    expect(directoryService.hasAccess).toEqual(true)
+  })
+
+  it('when there is no proof for this service', () => {
+    accessProof.update({
+      accessRequestId: 'unrelated-access-request-id',
+    })
+
+    directoryService.update({
+      serviceData: {},
+      latestAccessRequest: outgoingAccessRequest,
+      latestAccessProof: accessProof,
+    })
+
+    expect(directoryService.hasAccess).toEqual(false)
+  })
+
+  it('when there is no outgoing access request', () => {
+    directoryService.update({
+      serviceData: {},
+      latestAccessRequest: undefined,
+      latestAccessProof: accessProof,
+    })
+
+    expect(directoryService.hasAccess).toEqual(false)
+  })
+
+  it('when the access proof has been revoked', () => {
+    accessProof.update({
+      revokedAt: new Date(),
+    })
+
+    directoryService.update({
+      serviceData: {},
+      latestAccessRequest: outgoingAccessRequest,
+      latestAccessProof: accessProof,
+    })
+
+    expect(directoryService.hasAccess).toEqual(false)
+  })
+})

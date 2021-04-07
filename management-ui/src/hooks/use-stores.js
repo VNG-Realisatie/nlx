@@ -44,4 +44,9 @@ export const useInwayStore = () => {
   return inwayStore
 }
 
+export const useOrderStore = () => {
+  const { orderStore } = useStores()
+  return orderStore
+}
+
 export default useStores

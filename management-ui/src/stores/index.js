@@ -14,6 +14,7 @@ import IncomingAccessRequestsStore from './IncomingAccessRequestsStore'
 import InwayStore from './InwayStore'
 import FinanceStore from './FinanceStore'
 import AuditLogStore from './AuditLogStore'
+import OrderStore from './OrderStore'
 
 if (process.env.NODE_ENV !== 'test') {
   // `setupTests` has 'never' set. But some tests include this file,
@@ -53,6 +54,9 @@ export class RootStore {
       managementApiClient,
     })
     this.financeStore = new FinanceStore({
+      managementApiClient,
+    })
+    this.orderStore = new OrderStore({
       managementApiClient,
     })
   }

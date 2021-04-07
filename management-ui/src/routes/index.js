@@ -9,10 +9,11 @@ import InwaysPage from '../pages/inways/InwaysPage'
 import AddServicePage from '../pages/services/AddServicePage'
 import DirectoryPage from '../pages/directory/DirectoryPage'
 import EditServicePage from '../pages/services/EditServicePage'
-import NotFoundPage from '../pages/NotFoundPage'
-import SettingsPage from '../pages/SettingsPage'
-import AuditLogPage from '../pages/AuditLogPage'
 import FinancePage from '../pages/FinancePage'
+import AuditLogPage from '../pages/AuditLogPage'
+import AddOrderPage from '../pages/AddOrderPage'
+import SettingsPage from '../pages/SettingsPage'
+import NotFoundPage from '../pages/NotFoundPage'
 import AuthenticatedRoute, { LoginRoutePath } from './authenticated-route'
 
 const Routes = () => {
@@ -37,6 +38,7 @@ const Routes = () => {
       />
       <AuthenticatedRoute path="/finances" component={FinancePage} />
       <AuthenticatedRoute path="/audit-log" component={AuditLogPage} />
+      <AuthenticatedRoute path="/orders/add" component={AddOrderPage} />
       <AuthenticatedRoute path="/settings" component={SettingsPage} />
 
       <Route path="*" component={NotFoundPage} />

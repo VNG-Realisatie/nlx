@@ -10,6 +10,7 @@ import {
   IconServices,
   IconBarChart,
   IconTimeLine,
+  IconUserCheck,
   IconSettings,
 } from '../../icons'
 import {
@@ -61,6 +62,10 @@ const PrimaryNavigation = () => {
       </section>
 
       <section>
+        <StyledLink to="/orders/add" aria-label={t('Add order page')}>
+          <StyledIcon as={IconUserCheck} size="x-large" />
+          {t('Add order')}
+        </StyledLink>
         <StyledLink to="/settings" aria-label={t('Settings page')}>
           <StyledIcon as={IconSettings} size="x-large" />
           {t('Settings')}
