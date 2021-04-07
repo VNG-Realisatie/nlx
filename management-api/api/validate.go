@@ -2,7 +2,7 @@ package api
 
 import (
 	"errors"
-	fmt "fmt"
+	"fmt"
 	"regexp"
 
 	validation "github.com/go-ozzo/ozzo-validation/v4"
