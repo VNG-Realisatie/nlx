@@ -1125,10 +1125,12 @@
           "type": "string"
         },
         "validFrom": {
-          "type": "string"
+          "type": "string",
+          "format": "date-time"
         },
         "validUntil": {
-          "type": "string"
+          "type": "string",
+          "format": "date-time"
         },
         "services": {
           "type": "array",

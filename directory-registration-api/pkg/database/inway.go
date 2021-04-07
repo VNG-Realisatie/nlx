@@ -13,7 +13,7 @@ import (
 )
 
 // nolint:gocritic // these are valid regex patterns
-var organizationNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-. _\s]{1,100}$`)
+var organizationNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-._\s]{1,100}$`)
 
 // nolint:gocritic // these are valid regex patterns
 var serviceNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`)
