@@ -665,6 +665,38 @@
         ]
       }
     },
+    "/api/v1/orders": {
+      "post": {
+        "operationId": "Management_CreateOrder",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/managementCreateOrderRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Management"
+        ]
+      }
+    },
     "/api/v1/retrieve-claim": {
       "get": {
         "operationId": "Management_RetrieveClaimForOrder",
@@ -1074,6 +1106,35 @@
         },
         "serviceName": {
           "type": "string"
+        }
+      }
+    },
+    "managementCreateOrderRequest": {
+      "type": "object",
+      "properties": {
+        "reference": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "publicKey": {
+          "type": "string"
+        },
+        "delegatee": {
+          "type": "string"
+        },
+        "validFrom": {
+          "type": "string"
+        },
+        "validUntil": {
+          "type": "string"
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },

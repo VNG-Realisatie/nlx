@@ -90,6 +90,9 @@ service Management {
   rpc RetrieveClaimForOrder (RetrieveClaimForOrderRequest) returns (RetrieveClaimForOrderResponse) {
     option (google.api.http) = {get: "/api/v1/retrieve-claim"};
   }
+  rpc CreateOrder (CreateOrderRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {post: "/api/v1/orders" body: "*"};
+  }
 }
 
 message IsFinanceEnabledResponse {
@@ -498,4 +501,14 @@ message RetrieveClaimForOrderRequest {
 
 message RetrieveClaimForOrderResponse {
   string claim = 1;
+}
+
+message CreateOrderRequest {
+  string reference = 1;
+  string description = 2;
+  string publicKey = 3;
+  string delegatee = 4;
+  string validFrom = 5;
+  string validUntil = 6;
+  repeated string services = 7;
 }

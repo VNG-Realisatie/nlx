@@ -97,6 +97,26 @@ func (mr *MockManagementClientMockRecorder) CreateInway(ctx, in interface{}, opt
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateInway", reflect.TypeOf((*MockManagementClient)(nil).CreateInway), varargs...)
 }
 
+// CreateOrder mocks base method.
+func (m *MockManagementClient) CreateOrder(ctx context.Context, in *api.CreateOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "CreateOrder", varargs...)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateOrder indicates an expected call of CreateOrder.
+func (mr *MockManagementClientMockRecorder) CreateOrder(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrder", reflect.TypeOf((*MockManagementClient)(nil).CreateOrder), varargs...)
+}
+
 // CreateService mocks base method.
 func (m *MockManagementClient) CreateService(ctx context.Context, in *api.CreateServiceRequest, opts ...grpc.CallOption) (*api.CreateServiceResponse, error) {
 	m.ctrl.T.Helper()
@@ -643,6 +663,21 @@ func (m *MockManagementServer) CreateInway(arg0 context.Context, arg1 *api.Inway
 func (mr *MockManagementServerMockRecorder) CreateInway(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateInway", reflect.TypeOf((*MockManagementServer)(nil).CreateInway), arg0, arg1)
+}
+
+// CreateOrder mocks base method.
+func (m *MockManagementServer) CreateOrder(arg0 context.Context, arg1 *api.CreateOrderRequest) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateOrder", arg0, arg1)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateOrder indicates an expected call of CreateOrder.
+func (mr *MockManagementServerMockRecorder) CreateOrder(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrder", reflect.TypeOf((*MockManagementServer)(nil).CreateOrder), arg0, arg1)
 }
 
 // CreateService mocks base method.
