@@ -111,6 +111,20 @@ func (mr *MockConfigDatabaseMockRecorder) CreateInway(ctx, inway interface{}) *g
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateInway", reflect.TypeOf((*MockConfigDatabase)(nil).CreateInway), ctx, inway)
 }
 
+// CreateOrder mocks base method.
+func (m *MockConfigDatabase) CreateOrder(ctx context.Context, order *database.Order) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateOrder", ctx, order)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateOrder indicates an expected call of CreateOrder.
+func (mr *MockConfigDatabaseMockRecorder) CreateOrder(ctx, order interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrder", reflect.TypeOf((*MockConfigDatabase)(nil).CreateOrder), ctx, order)
+}
+
 // CreateOutgoingAccessRequest mocks base method.
 func (m *MockConfigDatabase) CreateOutgoingAccessRequest(ctx context.Context, accessRequest *database.OutgoingAccessRequest) (*database.OutgoingAccessRequest, error) {
 	m.ctrl.T.Helper()

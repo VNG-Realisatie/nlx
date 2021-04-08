@@ -5,71 +5,80 @@ package server
 
 import (
 	"context"
+	"crypto/x509"
+	"encoding/pem"
 	"errors"
 	"fmt"
 	"regexp"
 
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
-// CreateOrder creates a new order
 func (s *ManagementService) CreateOrder(_ context.Context, request *api.CreateOrderRequest) (*emptypb.Empty, error) {
 	s.logger.Info("rpc request CreateOrder")
 
-	err := validateInput(request)
-	if err != nil {
+	order := convertOrder(request)
+
+	if err := validateOrder(order); err != nil {
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid order: %s", err))
 	}
 
 	return &emptypb.Empty{}, nil
 }
 
-func validateInput(request *api.CreateOrderRequest) error {
-	var (
-		maxLengthReference   = 100
-		minLengthReference   = 1
-		maxLengthDescription = 100
-		minLengthDescription = 1
+func convertOrder(request *api.CreateOrderRequest) *database.Order {
+	return &database.Order{
+		Reference:    request.Reference,
+		Description:  request.Description,
+		PublicKeyPEM: request.PublicKeyPEM,
+		Delegatee:    request.Delegatee,
+		ValidFrom:    request.ValidFrom.AsTime(),
+		ValidUntil:   request.ValidUntil.AsTime(),
+		Services:     request.Services,
+	}
+}
+
+func validateOrder(order *database.Order) error {
+	serviceNameRegex := regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`)
+	organizationNameRegex := regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`)
+
+	return validation.ValidateStruct(
+		order,
+		validation.Field(&order.Reference, validation.Required, validation.Length(1, 100)),
+		validation.Field(&order.Description, validation.Required, validation.Length(1, 100)),
+		validation.Field(&order.ValidUntil, validation.Min(order.ValidFrom).Error("order can not expire before the start date")),
+		validation.Field(&order.PublicKeyPEM, validation.By(validatePublicKey)),
+		validation.Field(&order.Services, validation.Required, validation.Each(validation.Match(serviceNameRegex).Error("service must be in a valid format"))),
+		validation.Field(&order.Delegatee, validation.Match(organizationNameRegex)),
 	)
+}
 
-	if len(request.Reference) < minLengthReference {
-		return errors.New("the reference must be provided")
+var (
+	ErrInvalidPublicKeyFormat = errors.New("invalid public key format")
+	ErrExpectPublicKeyAsPEM   = errors.New("expect public key as pem")
+	ErrInvalidPublicKey       = errors.New("invalid public key")
+)
+
+func validatePublicKey(value interface{}) error {
+	publicKey, ok := value.(string)
+	if !ok {
+		return ErrInvalidPublicKeyFormat
 	}
 
-	if len(request.Reference) > maxLengthReference {
-		return errors.New("the reference should not exceed 100 characters")
+	block, _ := pem.Decode([]byte(publicKey))
+	if block == nil {
+		return ErrExpectPublicKeyAsPEM
 	}
 
-	if len(request.Description) < minLengthDescription {
-		return errors.New("the description must be provided")
-	}
-
-	if len(request.Description) > maxLengthDescription {
-		return errors.New("the description should not exceed 100 characters")
-	}
-
-	// regex from https://gitlab.com/commonground/nlx/nlx/-/blob/4c7f0be8b2c9c980351b6202fbd2106bf4acdab0/directory-registration-api/pkg/database/inway.go#L16
-	if !regexp.MustCompile(`^[a-zA-Z0-9-._\s]{1,100}$`).MatchString(request.Delegatee) {
-		return errors.New("the delegatee should be a valid organization name (alphanumeric, max. 100 chars)")
-	}
-
-	if request.ValidUntil.AsTime().Before(request.ValidFrom.AsTime()) {
-		return errors.New("valid from should be a timestamp before the valid until timestamp")
-	}
-
-	if len(request.Services) < 1 {
-		return errors.New("at least one service should be specified")
-	}
-
-	// regex from https://gitlab.com/commonground/nlx/nlx/-/blob/4c7f0be8b2c9c980351b6202fbd2106bf4acdab0/directory-registration-api/pkg/database/inway.go#L19
-	for _, serviceName := range request.Services {
-		if !regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`).MatchString(serviceName) {
-			return fmt.Errorf("service '%s' is not a valid service name", serviceName)
-		}
+	_, err := x509.ParsePKCS1PublicKey(block.Bytes)
+	if err != nil {
+		return ErrInvalidPublicKey
 	}
 
 	return nil

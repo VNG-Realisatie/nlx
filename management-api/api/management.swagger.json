@@ -1118,7 +1118,7 @@
         "description": {
           "type": "string"
         },
-        "publicKey": {
+        "publicKeyPEM": {
           "type": "string"
         },
         "delegatee": {

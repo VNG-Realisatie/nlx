@@ -62,4 +62,6 @@ type ConfigDatabase interface {
 
 	CreateAuditLogRecord(ctx context.Context, auditLogRecord *AuditLogRecord) (*AuditLogRecord, error)
 	ListAuditLogRecords(ctx context.Context) ([]*AuditLogRecord, error)
+
+	CreateOrder(ctx context.Context, order *Order) error
 }
