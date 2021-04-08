@@ -5,9 +5,11 @@ package server_test
 
 import (
 	"context"
+	"errors"
 	"testing"
 	"time"
 
+	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -15,24 +17,30 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/pkg/database"
 )
-
-func validCreateOrderRequest() api.CreateOrderRequest {
-	return api.CreateOrderRequest{
-		Reference:    "a-reference",
-		Description:  "a-description",
-		Delegatee:    "a-delegatee",
-		PublicKeyPEM: testPublicKeyPEM,
-		Services: []string{
-			"a-service",
-		},
-	}
-}
 
 //nolint:funlen // this is a test method
 func TestCreateOrder(t *testing.T) {
+	validFrom := time.Now().UTC()
+	validUntil := time.Now().Add(1 * time.Hour).UTC()
+	validCreateOrderRequest := func() api.CreateOrderRequest {
+		return api.CreateOrderRequest{
+			Reference:    "a-reference",
+			Description:  "a-description",
+			Delegatee:    "a-delegatee",
+			PublicKeyPEM: testPublicKeyPEM,
+			ValidFrom:    timestamppb.New(validFrom),
+			ValidUntil:   timestamppb.New(validUntil),
+			Services: []string{
+				"a-service",
+			},
+		}
+	}
+
 	tests := map[string]struct {
 		request *api.CreateOrderRequest
+		setup   func(serviceMocks)
 		wantErr error
 	}{
 		"when_providing_an_empty_reference": {
@@ -101,7 +109,7 @@ func TestCreateOrder(t *testing.T) {
 				}
 				return &request
 			}(),
-			wantErr: status.Error(codes.InvalidArgument, "invalid order: Services: (0: service must be in a valid format.)."),
+			wantErr: status.Error(codes.InvalidArgument, "invalid order: Services: (0: (ServiceName: service must be in a valid format.).)."),
 		},
 		"when_providing_an_invalid_public_key": {
 			request: func() *api.CreateOrderRequest {
@@ -111,7 +119,50 @@ func TestCreateOrder(t *testing.T) {
 			}(),
 			wantErr: status.Error(codes.InvalidArgument, "invalid order: PublicKeyPEM: expect public key as pem."),
 		},
+		"when_creating_the_order_fails": {
+			wantErr: status.Error(codes.Internal, "failed to create order"),
+			setup: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					CreateOrder(gomock.Any(), &database.Order{
+						Reference:    "a-reference",
+						Description:  "a-description",
+						PublicKeyPEM: testPublicKeyPEM,
+						Delegatee:    "a-delegatee",
+						ValidFrom:    validFrom,
+						ValidUntil:   validUntil,
+						Services: []database.OrderService{
+							{
+								ServiceName: "a-service",
+							},
+						},
+					}).
+					Return(errors.New("arbitrary error"))
+			},
+			request: func() *api.CreateOrderRequest {
+				request := validCreateOrderRequest()
+				return &request
+			}(),
+		},
 		"happy_path": {
+			setup: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					CreateOrder(gomock.Any(), &database.Order{
+						Reference:    "a-reference",
+						Description:  "a-description",
+						PublicKeyPEM: testPublicKeyPEM,
+						Delegatee:    "a-delegatee",
+						ValidFrom:    validFrom,
+						ValidUntil:   validUntil,
+						Services: []database.OrderService{
+							{
+								ServiceName: "a-service",
+							},
+						},
+					}).
+					Return(nil)
+			},
 			request: func() *api.CreateOrderRequest {
 				request := validCreateOrderRequest()
 				return &request
@@ -123,12 +174,16 @@ func TestCreateOrder(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, _, _ := newService(t)
+			service, _, mocks := newService(t)
+
+			if tt.setup != nil {
+				tt.setup(mocks)
+			}
 
 			response, err := service.CreateOrder(context.Background(), tt.request)
 
 			if tt.wantErr == nil {
-				assert.Equal(t, &emptypb.Empty{}, response)
+				assert.IsType(t, &emptypb.Empty{}, response)
 			} else {
 				assert.Error(t, err)
 				assert.ErrorIs(t, err, tt.wantErr)

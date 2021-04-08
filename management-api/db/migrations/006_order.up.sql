@@ -7,16 +7,18 @@ BEGIN transaction;
 
 CREATE TABLE nlx_management.orders
 (
-    order_id       BIGSERIAL PRIMARY KEY,
-    description    VARCHAR(100)             NOT NULL,
-    public_key_pem VARCHAR(4096)            NOT NULL,
-    delegatee      VARCHAR(100)             NOT NULL,
-    valid_from     timestamp with time zone NOT NULL,
-    valid_until    timestamp with time zone NOT NULL,
-    created_at     timestamp with time zone NOT NULL
+    order_id        BIGSERIAL PRIMARY KEY,
+    description     VARCHAR(100)             NOT NULL,
+    public_key_pem  VARCHAR(4096)            NOT NULL,
+    delegatee       VARCHAR(100)             NOT NULL,
+    reference       VARCHAR(100)             NOT NULL,
+    valid_from      timestamp with time zone NOT NULL,
+    valid_until     timestamp with time zone NOT NULL,
+    created_at      timestamp with time zone NOT NULL
 );
 
 CREATE INDEX idx_delegatee ON nlx_management.orders (delegatee);
+CREATE UNIQUE INDEX idx_reference ON nlx_management.orders (reference);
 
 CREATE TABLE nlx_management.orders_services
 (

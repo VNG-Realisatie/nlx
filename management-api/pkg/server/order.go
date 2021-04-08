@@ -12,6 +12,7 @@ import (
 	"regexp"
 
 	validation "github.com/go-ozzo/ozzo-validation/v4"
+	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -20,7 +21,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
-func (s *ManagementService) CreateOrder(_ context.Context, request *api.CreateOrderRequest) (*emptypb.Empty, error) {
+func (s *ManagementService) CreateOrder(ctx context.Context, request *api.CreateOrderRequest) (*emptypb.Empty, error) {
 	s.logger.Info("rpc request CreateOrder")
 
 	order := convertOrder(request)
@@ -29,10 +30,24 @@ func (s *ManagementService) CreateOrder(_ context.Context, request *api.CreateOr
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid order: %s", err))
 	}
 
+	if err := s.configDatabase.CreateOrder(ctx, order); err != nil {
+		s.logger.Error("failed to create order", zap.Error(err))
+
+		return nil, status.Errorf(codes.Internal, "failed to create order")
+	}
+
 	return &emptypb.Empty{}, nil
 }
 
 func convertOrder(request *api.CreateOrderRequest) *database.Order {
+	services := make([]database.OrderService, len(request.Services))
+
+	for i, name := range request.Services {
+		services[i] = database.OrderService{
+			ServiceName: name,
+		}
+	}
+
 	return &database.Order{
 		Reference:    request.Reference,
 		Description:  request.Description,
@@ -40,7 +55,7 @@ func convertOrder(request *api.CreateOrderRequest) *database.Order {
 		Delegatee:    request.Delegatee,
 		ValidFrom:    request.ValidFrom.AsTime(),
 		ValidUntil:   request.ValidUntil.AsTime(),
-		Services:     request.Services,
+		Services:     services,
 	}
 }
 
@@ -54,7 +69,18 @@ func validateOrder(order *database.Order) error {
 		validation.Field(&order.Description, validation.Required, validation.Length(1, 100)),
 		validation.Field(&order.ValidUntil, validation.Min(order.ValidFrom).Error("order can not expire before the start date")),
 		validation.Field(&order.PublicKeyPEM, validation.By(validatePublicKey)),
-		validation.Field(&order.Services, validation.Required, validation.Each(validation.Match(serviceNameRegex).Error("service must be in a valid format"))),
+		validation.Field(&order.Services, validation.Required, validation.Each(validation.By(func(value interface{}) error {
+			orderService, ok := value.(database.OrderService)
+			if !ok {
+				return errors.New("expecting an order-service")
+			}
+
+			return validation.ValidateStruct(
+				&orderService,
+				validation.Field(&orderService.ServiceName, validation.Match(serviceNameRegex).
+					Error("service must be in a valid format")),
+			)
+		}))),
 		validation.Field(&order.Delegatee, validation.Match(organizationNameRegex)),
 	)
 }

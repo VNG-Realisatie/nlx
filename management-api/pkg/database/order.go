@@ -16,8 +16,13 @@ type Order struct {
 	Delegatee    string
 	ValidFrom    time.Time
 	ValidUntil   time.Time
-	Services     []string
+	Services     []OrderService `gorm:"foreignKey:order_id;"`
 	CreatedAt    time.Time
+}
+
+type OrderService struct {
+	OrderID     uint
+	ServiceName string
 }
 
 func (s *Order) TableName() string {
@@ -25,7 +30,11 @@ func (s *Order) TableName() string {
 }
 
 func (db *PostgresConfigDatabase) CreateOrder(ctx context.Context, order *Order) error {
-	return db.DB.
+	if err := db.DB.
 		WithContext(ctx).
-		Create(order).Error
+		Create(order).Error; err != nil {
+		return err
+	}
+
+	return nil
 }
