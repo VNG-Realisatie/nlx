@@ -59,13 +59,13 @@ func validateOrder(order *database.Order) error {
 	)
 }
 
-var (
-	ErrInvalidPublicKeyFormat = errors.New("invalid public key format")
-	ErrExpectPublicKeyAsPEM   = errors.New("expect public key as pem")
-	ErrInvalidPublicKey       = errors.New("invalid public key")
-)
-
 func validatePublicKey(value interface{}) error {
+	var (
+		ErrInvalidPublicKeyFormat = errors.New("invalid public key format")
+		ErrExpectPublicKeyAsPEM   = errors.New("expect public key as pem")
+		ErrInvalidPublicKey       = errors.New("invalid public key")
+	)
+
 	publicKey, ok := value.(string)
 	if !ok {
 		return ErrInvalidPublicKeyFormat
