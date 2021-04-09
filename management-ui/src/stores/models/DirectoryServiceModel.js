@@ -8,9 +8,7 @@ import AccessProofModel from './AccessProofModel'
 
 function throwErrorWhenNotInstanceOf(object, model) {
   if (object && !(object instanceof model)) {
-    throw new Error(
-      `Object should be an instance of OutgoingAccessRequestModel`,
-    )
+    throw new Error(`Object should be an instance of ${model}`)
   }
 }
 
