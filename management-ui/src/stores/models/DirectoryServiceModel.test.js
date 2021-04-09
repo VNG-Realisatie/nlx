@@ -98,26 +98,24 @@ test('(re-)fetching the model', async () => {
   )
 })
 
-describe('requesting access to a service', () => {
+test('requesting access to a service', async () => {
   configure({ safeDescriptors: false })
-  it('should request access via the directory service store', async () => {
-    const rootStore = new RootStore({})
+  const rootStore = new RootStore({})
 
-    const directoryService = new DirectoryServiceModel({
-      directoryServicesStore: rootStore.directoryServicesStore,
-      serviceData: {},
-    })
-
-    jest
-      .spyOn(rootStore.directoryServicesStore, 'requestAccess')
-      .mockResolvedValue(null)
-
-    await directoryService.requestAccess()
-
-    expect(rootStore.directoryServicesStore.requestAccess).toHaveBeenCalledWith(
-      directoryService,
-    )
+  const directoryService = new DirectoryServiceModel({
+    directoryServicesStore: rootStore.directoryServicesStore,
+    serviceData: {},
   })
+
+  jest
+    .spyOn(rootStore.directoryServicesStore, 'requestAccess')
+    .mockResolvedValue(null)
+
+  await directoryService.requestAccess()
+
+  expect(rootStore.directoryServicesStore.requestAccess).toHaveBeenCalledWith(
+    directoryService,
+  )
 })
 
 describe('access to this service', () => {
