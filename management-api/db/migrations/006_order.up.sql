@@ -32,7 +32,8 @@ CREATE TABLE nlx_management.orders_services
             ON DELETE RESTRICT
 );
 
-CREATE INDEX idx_service_name ON nlx_management.orders_services (service_name);
-CREATE UNIQUE INDEX idx_orders_services ON nlx_management.orders_services (order_id, service_name);
+CREATE INDEX idx_service_name ON nlx_management.orders_services (service);
+CREATE INDEX idx_organization_name ON nlx_management.orders_services (organization);
+CREATE UNIQUE INDEX idx_orders_services ON nlx_management.orders_services (order_id, service, organization);
 
 COMMIT;
