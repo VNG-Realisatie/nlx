@@ -16,9 +16,12 @@ import (
 	"go.nlx.io/nlx/common/delegation"
 )
 
-var ErrDelegatorDoesNotHaveAccess = errors.New("delegator does have access")
-var ErrCannotParsePublicKeyFromPEM = errors.New("failed to parse PEM block containing the public key")
-var ErrRequestingOrganizationIsNotDelegatee = errors.New("requesting organization is not the delegatee")
+var (
+	ErrServiceNotInClaims                   = errors.New("service is not in claims")
+	ErrDelegatorDoesNotHaveAccess           = errors.New("delegator does have access")
+	ErrRequestingOrganizationIsNotDelegatee = errors.New("requesting organization is not the delegatee")
+	ErrCannotParsePublicKeyFromPEM          = errors.New("failed to parse PEM block containing the public key")
+)
 
 type DelegationPlugin struct {
 }
@@ -41,6 +44,19 @@ func (d *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 		_, err := jwt.ParseWithClaims(claim, claims, func(token *jwt.Token) (interface{}, error) {
 			if claims.Delegatee != context.AuthInfo.OrganizationName {
 				return nil, ErrRequestingOrganizationIsNotDelegatee
+			}
+
+			serviceMatch := false
+
+			for _, serviceName := range claims.Services {
+				if serviceName == context.Destination.Service.Name {
+					serviceMatch = true
+					break
+				}
+			}
+
+			if !serviceMatch {
+				return nil, ErrServiceNotInClaims
 			}
 
 			for _, grant := range context.Destination.Service.Grants {
@@ -80,6 +96,13 @@ func (d *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 				http.Error(context.Response, "nlx-inway: no access", http.StatusUnauthorized)
 
 				return nil
+			}
+
+			if errors.Is(validationError.Inner, ErrServiceNotInClaims) {
+				i.logger.Info("delegator does have access but not to this service", zap.String("delegator", claims.Issuer), zap.String("serviceName", serviceName))
+				http.Error(w, "nlx-inway: no access", http.StatusUnauthorized)
+
+				return
 			}
 
 			context.Logger.Error("failed to parse jwt", zap.Error(err))

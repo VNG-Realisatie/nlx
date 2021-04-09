@@ -64,4 +64,5 @@ type ConfigDatabase interface {
 	ListAuditLogRecords(ctx context.Context) ([]*AuditLogRecord, error)
 
 	CreateOrder(ctx context.Context, order *Order) error
+	GetOrderByReference(ctx context.Context, reference string) (*Order, error)
 }

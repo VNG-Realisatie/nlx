@@ -1,7 +1,5 @@
-/*
- * Copyright © VNG Realisatie 2021
- * Licensed under the EUPL
- */
+// Copyright © VNG Realisatie 2020
+// Licensed under the EUPL
 
 // Code generated for package db by go-bindata DO NOT EDIT. (@generated)
 // sources:

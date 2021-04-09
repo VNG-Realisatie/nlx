@@ -331,6 +331,21 @@ func (mr *MockConfigDatabaseMockRecorder) GetLatestOutgoingAccessRequest(ctx, or
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLatestOutgoingAccessRequest", reflect.TypeOf((*MockConfigDatabase)(nil).GetLatestOutgoingAccessRequest), ctx, organizationName, serviceName)
 }
 
+// GetOrderByReference mocks base method.
+func (m *MockConfigDatabase) GetOrderByReference(ctx context.Context, reference string) (*database.Order, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOrderByReference", ctx, reference)
+	ret0, _ := ret[0].(*database.Order)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrderByReference indicates an expected call of GetOrderByReference.
+func (mr *MockConfigDatabaseMockRecorder) GetOrderByReference(ctx, reference interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrderByReference", reflect.TypeOf((*MockConfigDatabase)(nil).GetOrderByReference), ctx, reference)
+}
+
 // GetOutgoingAccessRequest mocks base method.
 func (m *MockConfigDatabase) GetOutgoingAccessRequest(ctx context.Context, id uint) (*database.OutgoingAccessRequest, error) {
 	m.ctrl.T.Helper()

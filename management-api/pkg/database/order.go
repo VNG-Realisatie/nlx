@@ -5,7 +5,10 @@ package database
 
 import (
 	"context"
+	"errors"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Order struct {
@@ -37,4 +40,22 @@ func (db *PostgresConfigDatabase) CreateOrder(ctx context.Context, order *Order)
 	}
 
 	return nil
+}
+
+func (db *PostgresConfigDatabase) GetOrderByReference(ctx context.Context, reference string) (*Order, error) {
+	order := &Order{}
+
+	if err := db.DB.
+		WithContext(ctx).
+		Preload("Services").
+		Where("reference = ?", reference).
+		First(order).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, ErrNotFound
+		}
+
+		return nil, err
+	}
+
+	return order, nil
 }
