@@ -9,14 +9,13 @@ import (
 )
 
 type Record struct {
-	ID           uint64
-	Username     string
-	ActionType   ActionType
-	UserAgent    string
-	Organization string
-	Delegatee    string
-	Services     []RecordService
-	CreatedAt    time.Time
+	ID         uint64
+	Username   string
+	ActionType ActionType
+	UserAgent  string
+	Delegatee  string
+	Services   []RecordService
+	CreatedAt  time.Time
 }
 
 type RecordService struct {

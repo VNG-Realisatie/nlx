@@ -21,6 +21,9 @@ import {
     ManagementCreateAccessRequestRequest,
     ManagementCreateAccessRequestRequestFromJSON,
     ManagementCreateAccessRequestRequestToJSON,
+    ManagementCreateOrderRequest,
+    ManagementCreateOrderRequestFromJSON,
+    ManagementCreateOrderRequestToJSON,
     ManagementCreateServiceRequest,
     ManagementCreateServiceRequestFromJSON,
     ManagementCreateServiceRequestToJSON,
@@ -66,6 +69,9 @@ import {
     ManagementOutgoingAccessRequest,
     ManagementOutgoingAccessRequestFromJSON,
     ManagementOutgoingAccessRequestToJSON,
+    ManagementRetrieveClaimForOrderResponse,
+    ManagementRetrieveClaimForOrderResponseFromJSON,
+    ManagementRetrieveClaimForOrderResponseToJSON,
     ManagementSettings,
     ManagementSettingsFromJSON,
     ManagementSettingsToJSON,
@@ -78,9 +84,9 @@ import {
     ManagementUpdateSettingsRequest,
     ManagementUpdateSettingsRequestFromJSON,
     ManagementUpdateSettingsRequestToJSON,
-    RuntimeError,
-    RuntimeErrorFromJSON,
-    RuntimeErrorToJSON,
+    RpcStatus,
+    RpcStatusFromJSON,
+    RpcStatusToJSON,
 } from '../models';
 
 export interface ManagementApproveIncomingAccessRequestRequest {
@@ -94,6 +100,10 @@ export interface ManagementCreateAccessRequestOperationRequest {
 
 export interface ManagementCreateInwayRequest {
     body: ManagementInway;
+}
+
+export interface ManagementCreateOrderOperationRequest {
+    body: ManagementCreateOrderRequest;
 }
 
 export interface ManagementCreateServiceOperationRequest {
@@ -140,6 +150,11 @@ export interface ManagementPutInsightConfigurationRequest {
 export interface ManagementRejectIncomingAccessRequestRequest {
     serviceName: string;
     accessRequestID: string;
+}
+
+export interface ManagementRetrieveClaimForOrderRequest {
+    orderReference?: string;
+    orderOrganizationName?: string;
 }
 
 export interface ManagementRevokeAccessGrantRequest {
@@ -264,6 +279,37 @@ export class ManagementApi extends runtime.BaseAPI {
      */
     async managementCreateInway(requestParameters: ManagementCreateInwayRequest): Promise<ManagementInway> {
         const response = await this.managementCreateInwayRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async managementCreateOrderRaw(requestParameters: ManagementCreateOrderOperationRequest): Promise<runtime.ApiResponse<object>> {
+        if (requestParameters.body === null || requestParameters.body === undefined) {
+            throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementCreateOrder.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/v1/orders`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: ManagementCreateOrderRequestToJSON(requestParameters.body),
+        });
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     */
+    async managementCreateOrder(requestParameters: ManagementCreateOrderOperationRequest): Promise<object> {
+        const response = await this.managementCreateOrderRaw(requestParameters);
         return await response.value();
     }
 
@@ -754,6 +800,38 @@ export class ManagementApi extends runtime.BaseAPI {
      */
     async managementRejectIncomingAccessRequest(requestParameters: ManagementRejectIncomingAccessRequestRequest): Promise<object> {
         const response = await this.managementRejectIncomingAccessRequestRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async managementRetrieveClaimForOrderRaw(requestParameters: ManagementRetrieveClaimForOrderRequest): Promise<runtime.ApiResponse<ManagementRetrieveClaimForOrderResponse>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.orderReference !== undefined) {
+            queryParameters['orderReference'] = requestParameters.orderReference;
+        }
+
+        if (requestParameters.orderOrganizationName !== undefined) {
+            queryParameters['orderOrganizationName'] = requestParameters.orderOrganizationName;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v1/retrieve-claim`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementRetrieveClaimForOrderResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async managementRetrieveClaimForOrder(requestParameters: ManagementRetrieveClaimForOrderRequest): Promise<ManagementRetrieveClaimForOrderResponse> {
+        const response = await this.managementRetrieveClaimForOrderRaw(requestParameters);
         return await response.value();
     }
 

@@ -16,39 +16,32 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface ProtobufAny
+ * @interface ManagementRetrieveClaimForOrderResponse
  */
-export interface ProtobufAny {
+export interface ManagementRetrieveClaimForOrderResponse {
     /**
      * 
      * @type {string}
-     * @memberof ProtobufAny
+     * @memberof ManagementRetrieveClaimForOrderResponse
      */
-    typeUrl?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProtobufAny
-     */
-    value?: string;
+    claim?: string;
 }
 
-export function ProtobufAnyFromJSON(json: any): ProtobufAny {
-    return ProtobufAnyFromJSONTyped(json, false);
+export function ManagementRetrieveClaimForOrderResponseFromJSON(json: any): ManagementRetrieveClaimForOrderResponse {
+    return ManagementRetrieveClaimForOrderResponseFromJSONTyped(json, false);
 }
 
-export function ProtobufAnyFromJSONTyped(json: any, ignoreDiscriminator: boolean): ProtobufAny {
+export function ManagementRetrieveClaimForOrderResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): ManagementRetrieveClaimForOrderResponse {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'typeUrl': !exists(json, 'typeUrl') ? undefined : json['typeUrl'],
-        'value': !exists(json, 'value') ? undefined : json['value'],
+        'claim': !exists(json, 'claim') ? undefined : json['claim'],
     };
 }
 
-export function ProtobufAnyToJSON(value?: ProtobufAny | null): any {
+export function ManagementRetrieveClaimForOrderResponseToJSON(value?: ManagementRetrieveClaimForOrderResponse | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -57,8 +50,7 @@ export function ProtobufAnyToJSON(value?: ProtobufAny | null): any {
     }
     return {
         
-        'typeUrl': value.typeUrl,
-        'value': value.value,
+        'claim': value.claim,
     };
 }
 

@@ -30,7 +30,8 @@ export enum AuditLogRecordActionType {
     SERVICEUPDATE = 'serviceUpdate',
     SERVICEDELETE = 'serviceDelete',
     ORGANIZATIONSETTINGSUPDATE = 'organizationSettingsUpdate',
-    ORGANIZATIONINSIGHTCONFIGURATIONUPDATE = 'organizationInsightConfigurationUpdate'
+    ORGANIZATIONINSIGHTCONFIGURATIONUPDATE = 'organizationInsightConfigurationUpdate',
+    ORDERCREATE = 'orderCreate'
 }
 
 export function AuditLogRecordActionTypeFromJSON(json: any): AuditLogRecordActionType {

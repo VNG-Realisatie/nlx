@@ -24,9 +24,9 @@ import {
     ManagementOutgoingAccessRequest,
     ManagementOutgoingAccessRequestFromJSON,
     ManagementOutgoingAccessRequestToJSON,
-    RuntimeError,
-    RuntimeErrorFromJSON,
-    RuntimeErrorToJSON,
+    RpcStatus,
+    RpcStatusFromJSON,
+    RpcStatusToJSON,
 } from '../models';
 
 export interface DirectoryGetOrganizationServiceRequest {

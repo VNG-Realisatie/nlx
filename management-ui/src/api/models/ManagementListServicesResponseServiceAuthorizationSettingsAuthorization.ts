@@ -31,6 +31,12 @@ export interface ManagementListServicesResponseServiceAuthorizationSettingsAutho
      * @memberof ManagementListServicesResponseServiceAuthorizationSettingsAuthorization
      */
     publicKeyHash?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ManagementListServicesResponseServiceAuthorizationSettingsAuthorization
+     */
+    publicKeyPEM?: string;
 }
 
 export function ManagementListServicesResponseServiceAuthorizationSettingsAuthorizationFromJSON(json: any): ManagementListServicesResponseServiceAuthorizationSettingsAuthorization {
@@ -45,6 +51,7 @@ export function ManagementListServicesResponseServiceAuthorizationSettingsAuthor
         
         'organizationName': !exists(json, 'organizationName') ? undefined : json['organizationName'],
         'publicKeyHash': !exists(json, 'publicKeyHash') ? undefined : json['publicKeyHash'],
+        'publicKeyPEM': !exists(json, 'publicKeyPEM') ? undefined : json['publicKeyPEM'],
     };
 }
 
@@ -59,6 +66,7 @@ export function ManagementListServicesResponseServiceAuthorizationSettingsAuthor
         
         'organizationName': value.organizationName,
         'publicKeyHash': value.publicKeyHash,
+        'publicKeyPEM': value.publicKeyPEM,
     };
 }
 

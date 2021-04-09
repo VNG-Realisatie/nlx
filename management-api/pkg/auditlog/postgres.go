@@ -102,9 +102,8 @@ func (a *PostgresLogger) LogoutSuccess(ctx context.Context, userName, userAgent 
 
 func (a *PostgresLogger) IncomingAccessRequestAccept(ctx context.Context, userName, userAgent, organization, service string) error {
 	record := &database.AuditLogRecord{
-		UserAgent:    userAgent,
-		UserName:     userName,
-		Organization: organization,
+		UserAgent: userAgent,
+		UserName:  userName,
 		Services: []database.AuditLogRecordService{
 			{
 				Organization: organization,
@@ -121,9 +120,8 @@ func (a *PostgresLogger) IncomingAccessRequestAccept(ctx context.Context, userNa
 
 func (a *PostgresLogger) IncomingAccessRequestReject(ctx context.Context, userName, userAgent, organization, service string) error {
 	record := &database.AuditLogRecord{
-		UserAgent:    userAgent,
-		UserName:     userName,
-		Organization: organization,
+		UserAgent: userAgent,
+		UserName:  userName,
 		Services: []database.AuditLogRecordService{
 			{
 				Organization: organization,
@@ -140,9 +138,8 @@ func (a *PostgresLogger) IncomingAccessRequestReject(ctx context.Context, userNa
 
 func (a *PostgresLogger) AccessGrantRevoke(ctx context.Context, userName, userAgent, organization, service string) error {
 	record := &database.AuditLogRecord{
-		UserAgent:    userAgent,
-		UserName:     userName,
-		Organization: organization,
+		UserAgent: userAgent,
+		UserName:  userName,
 		Services: []database.AuditLogRecordService{
 			{
 				Organization: organization,
@@ -159,9 +156,8 @@ func (a *PostgresLogger) AccessGrantRevoke(ctx context.Context, userName, userAg
 
 func (a *PostgresLogger) OutgoingAccessRequestCreate(ctx context.Context, userName, userAgent, organization, service string) error {
 	record := &database.AuditLogRecord{
-		UserAgent:    userAgent,
-		UserName:     userName,
-		Organization: organization,
+		UserAgent: userAgent,
+		UserName:  userName,
 		Services: []database.AuditLogRecordService{
 			{
 				Organization: organization,

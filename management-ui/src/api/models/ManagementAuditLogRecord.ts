@@ -18,6 +18,10 @@ import {
     AuditLogRecordActionTypeFromJSON,
     AuditLogRecordActionTypeFromJSONTyped,
     AuditLogRecordActionTypeToJSON,
+    ManagementAuditLogRecordService,
+    ManagementAuditLogRecordServiceFromJSON,
+    ManagementAuditLogRecordServiceFromJSONTyped,
+    ManagementAuditLogRecordServiceToJSON,
 } from './';
 
 /**
@@ -67,13 +71,13 @@ export interface ManagementAuditLogRecord {
      * @type {string}
      * @memberof ManagementAuditLogRecord
      */
-    organization?: string;
+    delegetee?: string;
     /**
      * 
-     * @type {string}
+     * @type {Array<ManagementAuditLogRecordService>}
      * @memberof ManagementAuditLogRecord
      */
-    service?: string;
+    services?: Array<ManagementAuditLogRecordService>;
     /**
      * 
      * @type {Date}
@@ -104,8 +108,8 @@ export function ManagementAuditLogRecordFromJSONTyped(json: any, ignoreDiscrimin
         'browser': !exists(json, 'browser') ? undefined : json['browser'],
         'client': !exists(json, 'client') ? undefined : json['client'],
         'user': !exists(json, 'user') ? undefined : json['user'],
-        'organization': !exists(json, 'organization') ? undefined : json['organization'],
-        'service': !exists(json, 'service') ? undefined : json['service'],
+        'delegetee': !exists(json, 'delegetee') ? undefined : json['delegetee'],
+        'services': !exists(json, 'services') ? undefined : ((json['services'] as Array<any>).map(ManagementAuditLogRecordServiceFromJSON)),
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
         'data': !exists(json, 'data') ? undefined : json['data'],
     };
@@ -126,8 +130,8 @@ export function ManagementAuditLogRecordToJSON(value?: ManagementAuditLogRecord 
         'browser': value.browser,
         'client': value.client,
         'user': value.user,
-        'organization': value.organization,
-        'service': value.service,
+        'delegetee': value.delegetee,
+        'services': value.services === undefined ? undefined : ((value.services as Array<any>).map(ManagementAuditLogRecordServiceToJSON)),
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'data': value.data,
     };

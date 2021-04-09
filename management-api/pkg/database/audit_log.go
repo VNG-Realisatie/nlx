@@ -29,14 +29,13 @@ const (
 )
 
 type AuditLogRecord struct {
-	ID           uint64 `gorm:"primarykey;column:audit_log_id;"`
-	UserName     string
-	ActionType   AuditLogActionType
-	UserAgent    string
-	Delegatee    string
-	Organization string
-	Services     []AuditLogRecordService
-	CreatedAt    time.Time
+	ID         uint64 `gorm:"primarykey;column:audit_log_id;"`
+	UserName   string
+	ActionType AuditLogActionType
+	UserAgent  string
+	Delegatee  string
+	Services   []AuditLogRecordService
+	CreatedAt  time.Time
 }
 
 type AuditLogRecordService struct {
