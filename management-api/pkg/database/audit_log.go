@@ -23,6 +23,7 @@ const (
 	ServiceCreate                          AuditLogActionType = "service_create"
 	ServiceUpdate                          AuditLogActionType = "service_update"
 	ServiceDelete                          AuditLogActionType = "service_delete"
+	OrderCreate                            AuditLogActionType = "order_create"
 	OrganizationSettingsUpdate             AuditLogActionType = "organization_settings_update"
 	OrganizationInsightConfigurationUpdate AuditLogActionType = "organization_insight_configuration_update"
 )
@@ -32,9 +33,16 @@ type AuditLogRecord struct {
 	UserName     string
 	ActionType   AuditLogActionType
 	UserAgent    string
+	Delegatee    string
 	Organization string
-	Service      string
+	Services     []AuditLogRecordService
 	CreatedAt    time.Time
+}
+
+type AuditLogRecordService struct {
+	AuditLogRecordID uint
+	Service          string
+	Organization     string
 }
 
 func (a *AuditLogRecord) TableName() string {

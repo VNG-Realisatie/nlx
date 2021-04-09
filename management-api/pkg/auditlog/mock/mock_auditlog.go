@@ -36,17 +36,17 @@ func (m *MockLogger) EXPECT() *MockLoggerMockRecorder {
 }
 
 // AccessGrantRevoke mocks base method.
-func (m *MockLogger) AccessGrantRevoke(ctx context.Context, userName, userAgent, organization, service string) error {
+func (m *MockLogger) AccessGrantRevoke(ctx context.Context, userName, userAgent, organization, serviceName string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AccessGrantRevoke", ctx, userName, userAgent, organization, service)
+	ret := m.ctrl.Call(m, "AccessGrantRevoke", ctx, userName, userAgent, organization, serviceName)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // AccessGrantRevoke indicates an expected call of AccessGrantRevoke.
-func (mr *MockLoggerMockRecorder) AccessGrantRevoke(ctx, userName, userAgent, organization, service interface{}) *gomock.Call {
+func (mr *MockLoggerMockRecorder) AccessGrantRevoke(ctx, userName, userAgent, organization, serviceName interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AccessGrantRevoke", reflect.TypeOf((*MockLogger)(nil).AccessGrantRevoke), ctx, userName, userAgent, organization, service)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AccessGrantRevoke", reflect.TypeOf((*MockLogger)(nil).AccessGrantRevoke), ctx, userName, userAgent, organization, serviceName)
 }
 
 // IncomingAccessRequestAccept mocks base method.
@@ -132,6 +132,20 @@ func (m *MockLogger) LogoutSuccess(ctx context.Context, userName, userAgent stri
 func (mr *MockLoggerMockRecorder) LogoutSuccess(ctx, userName, userAgent interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LogoutSuccess", reflect.TypeOf((*MockLogger)(nil).LogoutSuccess), ctx, userName, userAgent)
+}
+
+// OrderCreate mocks base method.
+func (m *MockLogger) OrderCreate(ctx context.Context, userName, userAgent, delegatee string, services []auditlog.RecordService) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "OrderCreate", ctx, userName, userAgent, delegatee, services)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// OrderCreate indicates an expected call of OrderCreate.
+func (mr *MockLoggerMockRecorder) OrderCreate(ctx, userName, userAgent, delegatee, services interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OrderCreate", reflect.TypeOf((*MockLogger)(nil).OrderCreate), ctx, userName, userAgent, delegatee, services)
 }
 
 // OrganizationInsightConfigurationUpdate mocks base method.

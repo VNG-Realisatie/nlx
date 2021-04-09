@@ -476,6 +476,12 @@ message AuditLogRecord {
     serviceDelete = 10;
     organizationSettingsUpdate = 11;
     organizationInsightConfigurationUpdate = 12;
+    orderCreate = 13;
+  }
+
+  message Service {
+    string organization = 1;
+    string service = 2;
   }
 
   uint64 id = 1;
@@ -484,8 +490,8 @@ message AuditLogRecord {
   string browser = 4;
   string client = 5;
   string user = 6;
-  string organization = 7;
-  string service = 8;
+  string delegetee = 7;
+  repeated Service services = 8;
   google.protobuf.Timestamp createdAt = 9;
   string data = 10;
 }
@@ -504,11 +510,16 @@ message RetrieveClaimForOrderResponse {
 }
 
 message CreateOrderRequest {
+  message Service {
+    string organization = 1;
+    string service = 2;
+  }
+
   string reference = 1;
   string description = 2;
   string publicKeyPEM = 3;
   string delegatee = 4;
   google.protobuf.Timestamp validFrom = 5;
   google.protobuf.Timestamp validUntil = 6;
-  repeated string services = 7;
+  repeated Service services = 7;
 }

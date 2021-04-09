@@ -978,7 +978,8 @@
         "serviceUpdate",
         "serviceDelete",
         "organizationSettingsUpdate",
-        "organizationInsightConfigurationUpdate"
+        "organizationInsightConfigurationUpdate",
+        "orderCreate"
       ],
       "default": "loginSuccess"
     },
@@ -1083,17 +1084,31 @@
         "user": {
           "type": "string"
         },
-        "organization": {
+        "delegetee": {
           "type": "string"
         },
-        "service": {
-          "type": "string"
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/managementAuditLogRecordService"
+          }
         },
         "createdAt": {
           "type": "string",
           "format": "date-time"
         },
         "data": {
+          "type": "string"
+        }
+      }
+    },
+    "managementAuditLogRecordService": {
+      "type": "object",
+      "properties": {
+        "organization": {
+          "type": "string"
+        },
+        "service": {
           "type": "string"
         }
       }
@@ -1135,8 +1150,19 @@
         "services": {
           "type": "array",
           "items": {
-            "type": "string"
+            "$ref": "#/definitions/managementCreateOrderRequestService"
           }
+        }
+      }
+    },
+    "managementCreateOrderRequestService": {
+      "type": "object",
+      "properties": {
+        "organization": {
+          "type": "string"
+        },
+        "service": {
+          "type": "string"
         }
       }
     },

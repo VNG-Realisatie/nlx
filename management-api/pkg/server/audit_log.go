@@ -34,21 +34,21 @@ func (s *ManagementService) ListAuditLogs(ctx context.Context, _ *emptypb.Empty)
 	}, nil
 }
 
-func convertAuditLogModelToResponseAuditLog(models []*auditlog.Record) ([]*api.AuditLogRecord, error) {
-	convertedRecords := make([]*api.AuditLogRecord, len(models))
+func convertAuditLogModelToResponseAuditLog(records []*auditlog.Record) ([]*api.AuditLogRecord, error) {
+	convertedRecords := make([]*api.AuditLogRecord, len(records))
 
-	for i, model := range models {
-		actionType, err := convertAuditLogActionTypeFromDatabaseToModel(model.ActionType)
+	for i, record := range records {
+		actionType, err := convertAuditLogActionTypeFromDatabaseToModel(record.ActionType)
 		if err != nil {
 			return nil, err
 		}
 
-		createdAt, err := ptypes.TimestampProto(model.CreatedAt)
+		createdAt, err := ptypes.TimestampProto(record.CreatedAt)
 		if err != nil {
 			return nil, err
 		}
 
-		parsedUserAgent := useragent.Parse(model.UserAgent)
+		parsedUserAgent := useragent.Parse(record.UserAgent)
 
 		operatingSystem := ""
 		browser := ""
@@ -63,7 +63,7 @@ func convertAuditLogModelToResponseAuditLog(models []*auditlog.Record) ([]*api.A
 			}
 		} else {
 			re := regexp.MustCompile(`.*\(([a-zA-Z ]*)\)$`)
-			match := re.FindStringSubmatch(model.UserAgent)
+			match := re.FindStringSubmatch(record.UserAgent)
 
 			if match != nil {
 				operatingSystem = match[1]
@@ -71,15 +71,21 @@ func convertAuditLogModelToResponseAuditLog(models []*auditlog.Record) ([]*api.A
 		}
 
 		convertedRecords[i] = &api.AuditLogRecord{
-			Id:              model.ID,
+			Id:              record.ID,
 			Action:          actionType,
-			User:            model.Username,
+			User:            record.Username,
 			OperatingSystem: operatingSystem,
 			Browser:         browser,
 			Client:          client,
-			Organization:    model.Organization,
-			Service:         model.Service,
 			CreatedAt:       createdAt,
+			Services:        make([]*api.AuditLogRecord_Service, len(record.Services)),
+		}
+
+		for j, service := range record.Services {
+			convertedRecords[i].Services[j] = &api.AuditLogRecord_Service{
+				Organization: service.Organization,
+				Service:      service.Service,
+			}
 		}
 	}
 
@@ -113,7 +119,8 @@ func convertAuditLogActionTypeFromDatabaseToModel(actionType auditlog.ActionType
 		return api.AuditLogRecord_organizationSettingsUpdate, nil
 	case auditlog.OrganizationInsightConfigurationUpdate:
 		return api.AuditLogRecord_organizationInsightConfigurationUpdate, nil
-
+	case auditlog.OrderCreate:
+		return api.AuditLogRecord_orderCreate, nil
 	default:
 		return 0, fmt.Errorf("unable to convert audit log action type '%s'", actionType)
 	}

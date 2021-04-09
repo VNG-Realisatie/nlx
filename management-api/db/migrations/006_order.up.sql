@@ -23,7 +23,8 @@ CREATE UNIQUE INDEX idx_reference ON nlx_management.orders (reference);
 CREATE TABLE nlx_management.orders_services
 (
     order_id     BIGSERIAL    NOT NULL,
-    service_name VARCHAR(100) NOT NULL,
+    service      VARCHAR(100) NOT NULL,
+    organization VARCHAR(100) NOT NULL,
 
     CONSTRAINT fk_order
         FOREIGN KEY (order_id)

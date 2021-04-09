@@ -41,7 +41,7 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 	}
 
 	claims := delegation.JWTClaims{
-		Services:       []string{},
+		Services:       make([]delegation.Service, len(order.Services)),
 		Delegatee:      md.OrganizationName,
 		OrderReference: req.OrderReference,
 		StandardClaims: jwt.StandardClaims{
@@ -50,8 +50,11 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 		},
 	}
 
-	for _, service := range order.Services {
-		claims.Services = append(claims.Services, service.ServiceName)
+	for i, service := range order.Services {
+		claims.Services[i] = delegation.Service{
+			Organization: service.Organization,
+			Service:      service.Service,
+		}
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodRS512, claims)

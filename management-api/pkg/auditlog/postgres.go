@@ -6,7 +6,6 @@ package auditlog
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"go.uber.org/zap"
 
@@ -41,59 +40,29 @@ func (a *PostgresLogger) ListAll(ctx context.Context) ([]*Record, error) {
 	return convertedAuditLogRecords, nil
 }
 
-func convertAuditLogRecordsFromDatabase(models []*database.AuditLogRecord) ([]*Record, error) {
-	convertedRecords := make([]*Record, len(models))
+func convertAuditLogRecordsFromDatabase(records []*database.AuditLogRecord) ([]*Record, error) {
+	convertedRecords := make([]*Record, len(records))
 
-	for i, databaseModel := range models {
-		actionType, err := convertDatabaseRecordActionTypeToModel(databaseModel.ActionType)
-		if err != nil {
-			return nil, err
+	for i, record := range records {
+		convertedRecords[i] = &Record{
+			ID:         record.ID,
+			ActionType: ActionType(record.ActionType),
+			Username:   record.UserName,
+			UserAgent:  record.UserAgent,
+			Delegatee:  record.Delegatee,
+			Services:   make([]RecordService, len(record.Services)),
+			CreatedAt:  record.CreatedAt,
 		}
 
-		convertedRecords[i] = &Record{
-			ID:           databaseModel.ID,
-			ActionType:   actionType,
-			Username:     databaseModel.UserName,
-			UserAgent:    databaseModel.UserAgent,
-			Organization: databaseModel.Organization,
-			Service:      databaseModel.Service,
-			CreatedAt:    databaseModel.CreatedAt,
+		for j, service := range record.Services {
+			convertedRecords[i].Services[j] = RecordService{
+				Organization: service.Organization,
+				Service:      service.Service,
+			}
 		}
 	}
 
 	return convertedRecords, nil
-}
-
-//nolint:gocyclo // we need this many auditlog types
-func convertDatabaseRecordActionTypeToModel(action database.AuditLogActionType) (ActionType, error) {
-	switch action {
-	case database.LoginSuccess:
-		return LoginSuccess, nil
-	case database.LogoutSuccess:
-		return LogoutSuccess, nil
-	case database.LoginFail:
-		return LoginFail, nil
-	case database.IncomingAccesRequestAccept:
-		return IncomingAccesRequestAccept, nil
-	case database.IncomingAccesRequestReject:
-		return IncomingAccesRequestReject, nil
-	case database.AccessGrantRevoke:
-		return AccessGrantRevoke, nil
-	case database.OutgoingAccessRequestCreate:
-		return OutgoingAccessRequestCreate, nil
-	case database.ServiceCreate:
-		return ServiceCreate, nil
-	case database.ServiceUpdate:
-		return ServiceUpdate, nil
-	case database.ServiceDelete:
-		return ServiceDelete, nil
-	case database.OrganizationSettingsUpdate:
-		return OrganizationSettingsUpdate, nil
-	case database.OrganizationInsightConfigurationUpdate:
-		return OrganizationInsightConfigurationUpdate, nil
-	default:
-		return "", fmt.Errorf("failed to convert action type, unknown action '%s'", action)
-	}
 }
 
 func (a *PostgresLogger) LoginSuccess(ctx context.Context, userName, userAgent string) error {
@@ -136,8 +105,13 @@ func (a *PostgresLogger) IncomingAccessRequestAccept(ctx context.Context, userNa
 		UserAgent:    userAgent,
 		UserName:     userName,
 		Organization: organization,
-		Service:      service,
-		ActionType:   database.IncomingAccesRequestAccept,
+		Services: []database.AuditLogRecordService{
+			{
+				Organization: organization,
+				Service:      service,
+			},
+		},
+		ActionType: database.IncomingAccesRequestAccept,
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
@@ -150,8 +124,13 @@ func (a *PostgresLogger) IncomingAccessRequestReject(ctx context.Context, userNa
 		UserAgent:    userAgent,
 		UserName:     userName,
 		Organization: organization,
-		Service:      service,
-		ActionType:   database.IncomingAccesRequestReject,
+		Services: []database.AuditLogRecordService{
+			{
+				Organization: organization,
+				Service:      service,
+			},
+		},
+		ActionType: database.IncomingAccesRequestReject,
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
@@ -164,8 +143,13 @@ func (a *PostgresLogger) AccessGrantRevoke(ctx context.Context, userName, userAg
 		UserAgent:    userAgent,
 		UserName:     userName,
 		Organization: organization,
-		Service:      service,
-		ActionType:   database.AccessGrantRevoke,
+		Services: []database.AuditLogRecordService{
+			{
+				Organization: organization,
+				Service:      service,
+			},
+		},
+		ActionType: database.AccessGrantRevoke,
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
@@ -178,8 +162,13 @@ func (a *PostgresLogger) OutgoingAccessRequestCreate(ctx context.Context, userNa
 		UserAgent:    userAgent,
 		UserName:     userName,
 		Organization: organization,
-		Service:      service,
-		ActionType:   database.OutgoingAccessRequestCreate,
+		Services: []database.AuditLogRecordService{
+			{
+				Organization: organization,
+				Service:      service,
+			},
+		},
+		ActionType: database.OutgoingAccessRequestCreate,
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
@@ -187,11 +176,15 @@ func (a *PostgresLogger) OutgoingAccessRequestCreate(ctx context.Context, userNa
 	return err
 }
 
-func (a *PostgresLogger) ServiceCreate(ctx context.Context, userName, userAgent, serviceName string) error {
+func (a *PostgresLogger) ServiceCreate(ctx context.Context, userName, userAgent, service string) error {
 	record := &database.AuditLogRecord{
-		UserAgent:  userAgent,
-		UserName:   userName,
-		Service:    serviceName,
+		UserAgent: userAgent,
+		UserName:  userName,
+		Services: []database.AuditLogRecordService{
+			{
+				Service: service,
+			},
+		},
 		ActionType: database.ServiceCreate,
 	}
 
@@ -200,11 +193,15 @@ func (a *PostgresLogger) ServiceCreate(ctx context.Context, userName, userAgent,
 	return err
 }
 
-func (a *PostgresLogger) ServiceUpdate(ctx context.Context, userName, userAgent, serviceName string) error {
+func (a *PostgresLogger) ServiceUpdate(ctx context.Context, userName, userAgent, service string) error {
 	record := &database.AuditLogRecord{
-		UserAgent:  userAgent,
-		UserName:   userName,
-		Service:    serviceName,
+		UserAgent: userAgent,
+		UserName:  userName,
+		Services: []database.AuditLogRecordService{
+			{
+				Service: service,
+			},
+		},
 		ActionType: database.ServiceUpdate,
 	}
 
@@ -213,12 +210,37 @@ func (a *PostgresLogger) ServiceUpdate(ctx context.Context, userName, userAgent,
 	return err
 }
 
-func (a *PostgresLogger) ServiceDelete(ctx context.Context, userName, userAgent, serviceName string) error {
+func (a *PostgresLogger) ServiceDelete(ctx context.Context, userName, userAgent, service string) error {
+	record := &database.AuditLogRecord{
+		UserAgent: userAgent,
+		UserName:  userName,
+		Services: []database.AuditLogRecordService{
+			{
+				Service: service,
+			},
+		},
+		ActionType: database.ServiceDelete,
+	}
+
+	_, err := a.database.CreateAuditLogRecord(ctx, record)
+
+	return err
+}
+
+func (a *PostgresLogger) OrderCreate(ctx context.Context, userName, userAgent, delegatee string, services []RecordService) error {
 	record := &database.AuditLogRecord{
 		UserAgent:  userAgent,
 		UserName:   userName,
-		Service:    serviceName,
-		ActionType: database.ServiceDelete,
+		Services:   make([]database.AuditLogRecordService, len(services)),
+		Delegatee:  delegatee,
+		ActionType: database.OrderCreate,
+	}
+
+	for i, service := range services {
+		record.Services[i] = database.AuditLogRecordService{
+			Organization: service.Organization,
+			Service:      service.Service,
+		}
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)

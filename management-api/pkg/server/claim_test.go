@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/form3tech-oss/jwt-go"
+	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -16,6 +17,7 @@ import (
 	"go.nlx.io/nlx/common/delegation"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api/external"
+	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
 func TestRequestClaim(t *testing.T) {
@@ -56,8 +58,13 @@ func TestRequestClaim(t *testing.T) {
 }
 
 func TestRequestClaimHappyFlow(t *testing.T) {
-	service, bundle, _ := newService(t)
+	service, bundle, serviceMocks := newService(t)
 	ctx := setProxyMetadata(context.Background())
+
+	serviceMocks.db.
+		EXPECT().
+		GetOrderByReference(gomock.Any(), "arbitrary-order-reference").
+		Return(&database.Order{}, nil)
 
 	response, err := service.RequestClaim(ctx, &external.RequestClaimRequest{
 		OrderReference: "arbitrary-order-reference",
@@ -75,5 +82,5 @@ func TestRequestClaimHappyFlow(t *testing.T) {
 	assert.Equal(t, claims.Delegatee, "organization-a")
 	assert.Equal(t, claims.OrderReference, "arbitrary-order-reference")
 	assert.Equal(t, claims.Issuer, "nlx-test")
-	assert.Equal(t, claims.ExpiresAt, time.Now().Add(time.Hour).Unix())
+	assert.Equal(t, claims.ExpiresAt, time.Now().Add(4*time.Hour).Unix())
 }

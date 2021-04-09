@@ -24,8 +24,9 @@ type Order struct {
 }
 
 type OrderService struct {
-	OrderID     uint
-	ServiceName string
+	OrderID      uint
+	Service      string
+	Organization string
 }
 
 func (s *Order) TableName() string {

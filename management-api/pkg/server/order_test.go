@@ -12,11 +12,13 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/pkg/auditlog"
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
@@ -32,8 +34,11 @@ func TestCreateOrder(t *testing.T) {
 			PublicKeyPEM: testPublicKeyPEM,
 			ValidFrom:    timestamppb.New(validFrom),
 			ValidUntil:   timestamppb.New(validUntil),
-			Services: []string{
-				"a-service",
+			Services: []*api.CreateOrderRequest_Service{
+				{
+					Organization: "a-organization",
+					Service:      "a-service",
+				},
 			},
 		}
 	}
@@ -47,7 +52,6 @@ func TestCreateOrder(t *testing.T) {
 			request: func() *api.CreateOrderRequest {
 				request := validCreateOrderRequest()
 				request.Reference = ""
-				request.Services = []string{"jo"}
 				return &request
 			}(),
 			wantErr: status.Error(codes.InvalidArgument, "invalid order: Reference: cannot be blank."),
@@ -96,7 +100,7 @@ func TestCreateOrder(t *testing.T) {
 		"when_providing_an_empty_list_of_services": {
 			request: func() *api.CreateOrderRequest {
 				request := validCreateOrderRequest()
-				request.Services = []string{}
+				request.Services = []*api.CreateOrderRequest_Service{}
 				return &request
 			}(),
 			wantErr: status.Error(codes.InvalidArgument, "invalid order: Services: cannot be blank."),
@@ -104,12 +108,14 @@ func TestCreateOrder(t *testing.T) {
 		"when_providing_an_invalid_service_name": {
 			request: func() *api.CreateOrderRequest {
 				request := validCreateOrderRequest()
-				request.Services = []string{
-					"invalid / service name",
+				request.Services = []*api.CreateOrderRequest_Service{
+					{
+						Service: "invalid / service name",
+					},
 				}
 				return &request
 			}(),
-			wantErr: status.Error(codes.InvalidArgument, "invalid order: Services: (0: (ServiceName: service must be in a valid format.).)."),
+			wantErr: status.Error(codes.InvalidArgument, "invalid order: Services: (0: (Service: service must be in a valid format.).)."),
 		},
 		"when_providing_an_invalid_public_key": {
 			request: func() *api.CreateOrderRequest {
@@ -122,6 +128,15 @@ func TestCreateOrder(t *testing.T) {
 		"when_creating_the_order_fails": {
 			wantErr: status.Error(codes.Internal, "failed to create order"),
 			setup: func(mocks serviceMocks) {
+				mocks.al.
+					EXPECT().
+					OrderCreate(gomock.Any(), "Jane Doe", "nlxctl", "a-delegatee", []auditlog.RecordService{
+						{
+							Organization: "a-organization",
+							Service:      "a-service",
+						},
+					})
+
 				mocks.db.
 					EXPECT().
 					CreateOrder(gomock.Any(), &database.Order{
@@ -133,8 +148,27 @@ func TestCreateOrder(t *testing.T) {
 						ValidUntil:   validUntil,
 						Services: []database.OrderService{
 							{
-								ServiceName: "a-service",
+								Organization: "a-organization",
+								Service:      "a-service",
 							},
+						},
+					}).
+					Return(errors.New("arbitrary error"))
+			},
+			request: func() *api.CreateOrderRequest {
+				request := validCreateOrderRequest()
+				return &request
+			}(),
+		},
+		"when_creating_audit_log_Fails": {
+			wantErr: status.Error(codes.Internal, "failed to write to auditlog"),
+			setup: func(mocks serviceMocks) {
+				mocks.al.
+					EXPECT().
+					OrderCreate(gomock.Any(), "Jane Doe", "nlxctl", "a-delegatee", []auditlog.RecordService{
+						{
+							Organization: "a-organization",
+							Service:      "a-service",
 						},
 					}).
 					Return(errors.New("arbitrary error"))
@@ -157,11 +191,21 @@ func TestCreateOrder(t *testing.T) {
 						ValidUntil:   validUntil,
 						Services: []database.OrderService{
 							{
-								ServiceName: "a-service",
+								Organization: "a-organization",
+								Service:      "a-service",
 							},
 						},
 					}).
 					Return(nil)
+
+				mocks.al.
+					EXPECT().
+					OrderCreate(gomock.Any(), "Jane Doe", "nlxctl", "a-delegatee", []auditlog.RecordService{
+						{
+							Organization: "a-organization",
+							Service:      "a-service",
+						},
+					})
 			},
 			request: func() *api.CreateOrderRequest {
 				request := validCreateOrderRequest()
@@ -180,7 +224,12 @@ func TestCreateOrder(t *testing.T) {
 				tt.setup(mocks)
 			}
 
-			response, err := service.CreateOrder(context.Background(), tt.request)
+			ctx := metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
+				"username":               "Jane Doe",
+				"grpcgateway-user-agent": "nlxctl",
+			}))
+
+			response, err := service.CreateOrder(ctx, tt.request)
 
 			if tt.wantErr == nil {
 				assert.IsType(t, &emptypb.Empty{}, response)

@@ -27,5 +27,4 @@ CHECK (
 	OR action_type = 'service_delete'
 	OR action_type = 'organization_settings_update'
 	OR action_type = 'organization_insight_configuration_update'
-
 );
