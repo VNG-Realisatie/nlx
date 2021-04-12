@@ -8,10 +8,10 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/golang/protobuf/ptypes"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"google.golang.org/protobuf/types/known/timestamppb"
 	"xojoc.pw/useragent"
 
 	"go.nlx.io/nlx/management-api/api"
@@ -43,11 +43,7 @@ func convertAuditLogModelToResponseAuditLog(records []*auditlog.Record) ([]*api.
 			return nil, err
 		}
 
-		createdAt, err := ptypes.TimestampProto(record.CreatedAt)
-		if err != nil {
-			return nil, err
-		}
-
+		createdAt := timestamppb.New(record.CreatedAt)
 		parsedUserAgent := useragent.Parse(record.UserAgent)
 
 		operatingSystem := ""

@@ -31,16 +31,10 @@ func (a *PostgresLogger) ListAll(ctx context.Context) ([]*Record, error) {
 		return nil, errors.New("database error")
 	}
 
-	convertedAuditLogRecords, err := convertAuditLogRecordsFromDatabase(auditLogRecords)
-	if err != nil {
-		a.logger.Error("error converting audit log records from database", zap.Error(err))
-		return nil, errors.New("error converting audit log records")
-	}
-
-	return convertedAuditLogRecords, nil
+	return convertAuditLogRecordsFromDatabase(auditLogRecords), nil
 }
 
-func convertAuditLogRecordsFromDatabase(records []*database.AuditLogRecord) ([]*Record, error) {
+func convertAuditLogRecordsFromDatabase(records []*database.AuditLogRecord) []*Record {
 	convertedRecords := make([]*Record, len(records))
 
 	for i, record := range records {
@@ -62,7 +56,7 @@ func convertAuditLogRecordsFromDatabase(records []*database.AuditLogRecord) ([]*
 		}
 	}
 
-	return convertedRecords, nil
+	return convertedRecords
 }
 
 func (a *PostgresLogger) LoginSuccess(ctx context.Context, userName, userAgent string) error {

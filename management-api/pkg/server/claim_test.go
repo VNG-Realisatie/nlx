@@ -58,10 +58,10 @@ func TestRequestClaim(t *testing.T) {
 }
 
 func TestRequestClaimHappyFlow(t *testing.T) {
-	service, bundle, serviceMocks := newService(t)
+	service, bundle, mocks := newService(t)
 	ctx := setProxyMetadata(context.Background())
 
-	serviceMocks.db.
+	mocks.db.
 		EXPECT().
 		GetOrderByReference(gomock.Any(), "arbitrary-order-reference").
 		Return(&database.Order{}, nil)
