@@ -74,6 +74,7 @@ func convertAuditLogModelToResponseAuditLog(records []*auditlog.Record) ([]*api.
 			Browser:         browser,
 			Client:          client,
 			CreatedAt:       createdAt,
+			Delegatee:       record.Delegatee,
 			Services:        make([]*api.AuditLogRecord_Service, len(record.Services)),
 		}
 

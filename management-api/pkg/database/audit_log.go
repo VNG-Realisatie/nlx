@@ -43,24 +43,52 @@ func (a *AuditLog) TableName() string {
 }
 
 type AuditLogService struct {
-	AuditLogID   uint
+	AuditLogID   uint64
 	Service      string
 	Organization string
+	CreatedAt    time.Time
 }
 
 func (a *AuditLogService) TableName() string {
 	return "nlx_management.audit_logs_services"
 }
 
-func (db *PostgresConfigDatabase) CreateAuditLogRecord(ctx context.Context, auditLogRecord *AuditLog) (*AuditLog, error) {
-	if err := db.DB.
+func (db *PostgresConfigDatabase) CreateAuditLogRecord(ctx context.Context, auditLog *AuditLog) (*AuditLog, error) {
+	tx := db.DB.Begin()
+	defer tx.Rollback()
+
+	dbWithTx := &PostgresConfigDatabase{DB: tx}
+
+	if err := dbWithTx.DB.
 		WithContext(ctx).
 		Omit(clause.Associations).
-		Create(auditLogRecord).Error; err != nil {
+		Create(auditLog).Error; err != nil {
 		return nil, err
 	}
 
-	return auditLogRecord, nil
+	auditLogServices := []AuditLogService{}
+
+	for _, service := range auditLog.Services {
+		auditLogServices = append(auditLogServices, AuditLogService{
+			AuditLogID:   auditLog.ID,
+			Organization: service.Organization,
+			Service:      service.Service,
+		})
+	}
+
+	if err := dbWithTx.DB.
+		WithContext(ctx).
+		Model(AuditLogService{}).
+		Create(auditLogServices).Error; err != nil {
+		return nil, err
+	}
+
+	result := tx.Commit()
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return auditLog, nil
 }
 
 func (db *PostgresConfigDatabase) ListAuditLogRecords(ctx context.Context) ([]*AuditLog, error) {

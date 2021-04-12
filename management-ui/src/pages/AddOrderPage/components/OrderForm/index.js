@@ -95,7 +95,7 @@ const OrderForm = ({ services, onSubmitHandler }) => {
         <TextInput name="publicKeyPEM" size="l" type="textarea">
           <FieldLabel
             label={t('Public key PEM')}
-            small={t('The public key for your organization certificate')}
+            small={t('The public key of the delegatee as PEM')}
           />
         </TextInput>
 

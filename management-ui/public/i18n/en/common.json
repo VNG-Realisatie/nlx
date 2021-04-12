@@ -179,7 +179,7 @@
   "State": "State",
   "Successfully updated the settings": "Successfully updated the settings",
   "Tech support email": "Tech support email",
-  "The public key for your organization certificate": "The public key for your organization certificate",
+  "The public key of the delegatee as PEM": "The public key of the delegatee as PEM",
   "The service has been added": "The service has been added",
   "The service has been removed": "The service has been removed",
   "The service has been updated": "The service has been updated",

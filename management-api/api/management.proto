@@ -490,7 +490,7 @@ message AuditLogRecord {
   string browser = 4;
   string client = 5;
   string user = 6;
-  string delegetee = 7;
+  string delegatee = 7;
   repeated Service services = 8;
   google.protobuf.Timestamp createdAt = 9;
   string data = 10;

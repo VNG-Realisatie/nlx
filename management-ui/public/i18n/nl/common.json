@@ -179,7 +179,7 @@
   "State": "Status",
   "Successfully updated the settings": "De instellingen zijn bijgewerkt",
   "Tech support email": "Technisch support e-mailadres",
-  "The public key for your organization certificate": "The public key for your organization certificate",
+  "The public key of the delegatee as PEM": "De public key (in PEM-formaat) van de verwerkende organisatie",
   "The service has been added": "De service is toegevoegd",
   "The service has been removed": "De service is verwijderd",
   "The service has been updated": "De service is bijgewerkt",

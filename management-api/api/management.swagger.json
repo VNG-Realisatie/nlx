@@ -1084,7 +1084,7 @@
         "user": {
           "type": "string"
         },
-        "delegetee": {
+        "delegatee": {
           "type": "string"
         },
         "services": {

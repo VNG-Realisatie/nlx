@@ -71,7 +71,7 @@ export interface ManagementAuditLogRecord {
      * @type {string}
      * @memberof ManagementAuditLogRecord
      */
-    delegetee?: string;
+    delegatee?: string;
     /**
      * 
      * @type {Array<ManagementAuditLogRecordService>}
@@ -108,7 +108,7 @@ export function ManagementAuditLogRecordFromJSONTyped(json: any, ignoreDiscrimin
         'browser': !exists(json, 'browser') ? undefined : json['browser'],
         'client': !exists(json, 'client') ? undefined : json['client'],
         'user': !exists(json, 'user') ? undefined : json['user'],
-        'delegetee': !exists(json, 'delegetee') ? undefined : json['delegetee'],
+        'delegatee': !exists(json, 'delegatee') ? undefined : json['delegatee'],
         'services': !exists(json, 'services') ? undefined : ((json['services'] as Array<any>).map(ManagementAuditLogRecordServiceFromJSON)),
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
         'data': !exists(json, 'data') ? undefined : json['data'],
@@ -130,7 +130,7 @@ export function ManagementAuditLogRecordToJSON(value?: ManagementAuditLogRecord 
         'browser': value.browser,
         'client': value.client,
         'user': value.user,
-        'delegetee': value.delegetee,
+        'delegatee': value.delegatee,
         'services': value.services === undefined ? undefined : ((value.services as Array<any>).map(ManagementAuditLogRecordServiceToJSON)),
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'data': value.data,
