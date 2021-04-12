@@ -5,6 +5,9 @@ package server
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/base64"
+	"encoding/pem"
 	"errors"
 	"time"
 
@@ -40,12 +43,40 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 		return nil, status.Error(codes.Internal, "failed to find order")
 	}
 
+	if order.Delegatee != md.OrganizationName {
+		return nil, status.Errorf(codes.NotFound, "order with reference %s and organization %s not found", req.OrderReference, md.OrganizationName)
+	}
+
+	block, _ := pem.Decode([]byte(order.PublicKeyPEM))
+	if block == nil {
+		s.logger.Error("invalid public key format", zap.Error(err))
+
+		return nil, status.Error(codes.Internal, "invalid public key format")
+	}
+
+	sum := sha256.Sum256(block.Bytes)
+	fingerprint := base64.StdEncoding.EncodeToString(sum[:])
+
+	if fingerprint != md.PublicKeyFingerprint {
+		return nil, status.Errorf(codes.Unauthenticated, "invalid public key for order")
+	}
+
+	if time.Now().After(order.ValidUntil) {
+		return nil, status.Errorf(codes.Unauthenticated, "order is no longer valid")
+	}
+
+	expiresAt := time.Now().Add(expiresInHours * time.Hour)
+
+	if expiresAt.After(order.ValidUntil) {
+		expiresAt = order.ValidUntil
+	}
+
 	claims := delegation.JWTClaims{
 		Services:       make([]delegation.Service, len(order.Services)),
 		Delegatee:      md.OrganizationName,
 		OrderReference: req.OrderReference,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(expiresInHours * time.Hour).Unix(),
+			ExpiresAt: expiresAt.Unix(),
 			Issuer:    s.orgCert.Certificate().Subject.Organization[0],
 		},
 	}

@@ -20,12 +20,16 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
+// nolint:funlen // this is a test
 func TestRequestClaim(t *testing.T) {
+	now := time.Now()
+
 	tests := map[string]struct {
-		request  *external.RequestClaimRequest
-		ctx      context.Context
-		want     func(*testing.T, *common_tls.CertificateBundle, *external.RequestClaimResponse)
-		wantCode codes.Code
+		request        *external.RequestClaimRequest
+		ctx            context.Context
+		setup          func(*common_tls.CertificateBundle, serviceMocks)
+		wantCode       codes.Code
+		wantValidUntil time.Time
 	}{
 		"when_the_proxy_metadata_is_missing": {
 			request:  &external.RequestClaimRequest{},
@@ -39,48 +43,114 @@ func TestRequestClaim(t *testing.T) {
 			ctx:      setProxyMetadata(context.Background()),
 			wantCode: codes.InvalidArgument,
 		},
+		"when_public_key_is_invalid": {
+			request: &external.RequestClaimRequest{
+				OrderReference: "arbitrary-order-reference",
+			},
+			ctx: setProxyMetadata(context.Background()),
+			setup: func(_ *common_tls.CertificateBundle, mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					GetOrderByReference(gomock.Any(), "arbitrary-order-reference").
+					Return(&database.Order{
+						Delegatee:    "organization-a",
+						PublicKeyPEM: "arbitrary-public-key-in-pem-format",
+					}, nil)
+			},
+			wantCode: codes.Internal,
+		},
+		"when_order_is_no_longer_valid": {
+			request: &external.RequestClaimRequest{
+				OrderReference: "arbitrary-order-reference",
+			},
+			ctx: setProxyMetadata(context.Background()),
+			setup: func(orgCerts *common_tls.CertificateBundle, mocks serviceMocks) {
+				publicKeyPEM, _ := orgCerts.PublicKeyPEM()
+
+				mocks.db.
+					EXPECT().
+					GetOrderByReference(gomock.Any(), "arbitrary-order-reference").
+					Return(&database.Order{
+						Delegatee:    "organization-a",
+						PublicKeyPEM: publicKeyPEM,
+						ValidUntil:   now.Add(-1 * time.Hour),
+					}, nil)
+			},
+			wantCode: codes.Unauthenticated,
+		},
+		"happy_path_with_short_valid_until": {
+			request: &external.RequestClaimRequest{
+				OrderReference: "arbitrary-order-reference",
+			},
+			ctx: setProxyMetadata(context.Background()),
+			setup: func(orgCerts *common_tls.CertificateBundle, mocks serviceMocks) {
+				publicKeyPEM, _ := orgCerts.PublicKeyPEM()
+
+				mocks.db.
+					EXPECT().
+					GetOrderByReference(gomock.Any(), "arbitrary-order-reference").
+					Return(&database.Order{
+						Delegatee:    "organization-a",
+						PublicKeyPEM: publicKeyPEM,
+						ValidUntil:   now.Add(2 * time.Hour),
+					}, nil)
+			},
+			wantValidUntil: now.Add(2 * time.Hour),
+		},
+		"happy_path": {
+			request: &external.RequestClaimRequest{
+				OrderReference: "arbitrary-order-reference",
+			},
+			ctx: setProxyMetadata(context.Background()),
+			setup: func(orgCerts *common_tls.CertificateBundle, mocks serviceMocks) {
+				publicKeyPEM, _ := orgCerts.PublicKeyPEM()
+
+				mocks.db.
+					EXPECT().
+					GetOrderByReference(gomock.Any(), "arbitrary-order-reference").
+					Return(&database.Order{
+						Delegatee:    "organization-a",
+						PublicKeyPEM: publicKeyPEM,
+						ValidUntil:   now.Add(4 * time.Hour),
+					}, nil)
+			},
+			wantValidUntil: now.Add(4 * time.Hour),
+		},
 	}
 
 	for name, tt := range tests {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, _, _ := newService(t)
+			service, bundle, mocks := newService(t)
 
-			_, err := service.RequestClaim(tt.ctx, tt.request)
-			assert.Error(t, err)
+			if tt.setup != nil {
+				tt.setup(bundle, mocks)
+			}
 
-			st, ok := status.FromError(err)
-			assert.True(t, ok)
-			assert.Equal(t, tt.wantCode, st.Code())
+			response, err := service.RequestClaim(tt.ctx, tt.request)
+
+			if tt.wantCode != codes.OK {
+				assert.Error(t, err)
+
+				st, ok := status.FromError(err)
+				assert.True(t, ok)
+				assert.Equal(t, tt.wantCode, st.Code())
+			} else {
+				assert.NoError(t, err)
+
+				token, err := jwt.ParseWithClaims(response.Claim, &delegation.JWTClaims{}, func(token *jwt.Token) (interface{}, error) {
+					return bundle.PublicKey(), nil
+				})
+
+				assert.NoError(t, err)
+
+				claims := token.Claims.(*delegation.JWTClaims)
+				assert.Equal(t, claims.Delegatee, "organization-a")
+				assert.Equal(t, claims.OrderReference, "arbitrary-order-reference")
+				assert.Equal(t, claims.Issuer, "nlx-test")
+				assert.Equal(t, claims.ExpiresAt, tt.wantValidUntil.Unix())
+			}
 		})
 	}
-}
-
-func TestRequestClaimHappyFlow(t *testing.T) {
-	service, bundle, mocks := newService(t)
-	ctx := setProxyMetadata(context.Background())
-
-	mocks.db.
-		EXPECT().
-		GetOrderByReference(gomock.Any(), "arbitrary-order-reference").
-		Return(&database.Order{}, nil)
-
-	response, err := service.RequestClaim(ctx, &external.RequestClaimRequest{
-		OrderReference: "arbitrary-order-reference",
-	})
-	assert.NoError(t, err)
-	assert.NotNil(t, response)
-
-	token, err := jwt.ParseWithClaims(response.Claim, &delegation.JWTClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return bundle.PublicKey(), nil
-	})
-
-	assert.NoError(t, err)
-
-	claims := token.Claims.(*delegation.JWTClaims)
-	assert.Equal(t, claims.Delegatee, "organization-a")
-	assert.Equal(t, claims.OrderReference, "arbitrary-order-reference")
-	assert.Equal(t, claims.Issuer, "nlx-test")
-	assert.Equal(t, claims.ExpiresAt, time.Now().Add(4*time.Hour).Unix())
 }
