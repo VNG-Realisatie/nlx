@@ -1,5 +1,6 @@
 {
   "<0>{{user}}</0> failed to request access to <3>{{service}}</3> from <6>{{organization}}</6>": "<0>{{user}}</0> kon geen toegang aanvragen voor <3>{{service}}</3> van <6>{{organization}}</6>",
+  "<0>{{user}}</0> gave {{delegatee}} the order to consume the services {{servicesList}}": "<0>{{user}}</0> heeft {{delegatee}} de opdracht gegeven om de services {{servicesList}} te bevragen",
   "<0>{{user}}</0> has approved the access request from <3>{{organization}}</3> for <5>{{service}}</5>": "<0>{{user}}</0> heeft het toegangsverzoek van <3>{{organization}}</3> voor <5>{{service}}</5> goedgekeurd",
   "<0>{{user}}</0> has created the service <3>{{service}}</3>": "<0>{{user}}</0> heeft de service <3>{{service}}</3> aangemaakt",
   "<0>{{user}}</0> has logged in": "<0>{{user}}</0> heeft ingelogd",
