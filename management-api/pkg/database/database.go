@@ -60,8 +60,8 @@ type ConfigDatabase interface {
 	PutOrganizationInway(ctx context.Context, inwayID *uint) (*Settings, error)
 	PutInsightConfiguration(ctx context.Context, irmaServerURL, insightAPIURL string) (*Settings, error)
 
-	CreateAuditLogRecord(ctx context.Context, auditLogRecord *AuditLogRecord) (*AuditLogRecord, error)
-	ListAuditLogRecords(ctx context.Context) ([]*AuditLogRecord, error)
+	CreateAuditLogRecord(ctx context.Context, auditLogRecord *AuditLog) (*AuditLog, error)
+	ListAuditLogRecords(ctx context.Context) ([]*AuditLog, error)
 
 	CreateOrder(ctx context.Context, order *Order) error
 	GetOrderByReference(ctx context.Context, reference string) (*Order, error)

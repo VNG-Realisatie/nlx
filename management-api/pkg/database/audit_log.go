@@ -28,27 +28,31 @@ const (
 	OrganizationInsightConfigurationUpdate AuditLogActionType = "organization_insight_configuration_update"
 )
 
-type AuditLogRecord struct {
+type AuditLog struct {
 	ID         uint64 `gorm:"primarykey;column:audit_log_id;"`
 	UserName   string
 	ActionType AuditLogActionType
 	UserAgent  string
 	Delegatee  string
-	Services   []AuditLogRecordService
+	Services   []AuditLogService
 	CreatedAt  time.Time
 }
 
-type AuditLogRecordService struct {
-	AuditLogRecordID uint
-	Service          string
-	Organization     string
-}
-
-func (a *AuditLogRecord) TableName() string {
+func (a *AuditLog) TableName() string {
 	return "nlx_management.audit_logs"
 }
 
-func (db *PostgresConfigDatabase) CreateAuditLogRecord(ctx context.Context, auditLogRecord *AuditLogRecord) (*AuditLogRecord, error) {
+type AuditLogService struct {
+	AuditLogID   uint
+	Service      string
+	Organization string
+}
+
+func (a *AuditLogService) TableName() string {
+	return "nlx_management.audit_logs_services"
+}
+
+func (db *PostgresConfigDatabase) CreateAuditLogRecord(ctx context.Context, auditLogRecord *AuditLog) (*AuditLog, error) {
 	if err := db.DB.
 		WithContext(ctx).
 		Omit(clause.Associations).
@@ -59,8 +63,8 @@ func (db *PostgresConfigDatabase) CreateAuditLogRecord(ctx context.Context, audi
 	return auditLogRecord, nil
 }
 
-func (db *PostgresConfigDatabase) ListAuditLogRecords(ctx context.Context) ([]*AuditLogRecord, error) {
-	auditLogs := []*AuditLogRecord{}
+func (db *PostgresConfigDatabase) ListAuditLogRecords(ctx context.Context) ([]*AuditLog, error) {
+	auditLogs := []*AuditLog{}
 
 	if err := db.DB.
 		WithContext(ctx).

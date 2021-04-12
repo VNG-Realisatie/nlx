@@ -34,7 +34,7 @@ func (a *PostgresLogger) ListAll(ctx context.Context) ([]*Record, error) {
 	return convertAuditLogRecordsFromDatabase(auditLogRecords), nil
 }
 
-func convertAuditLogRecordsFromDatabase(records []*database.AuditLogRecord) []*Record {
+func convertAuditLogRecordsFromDatabase(records []*database.AuditLog) []*Record {
 	convertedRecords := make([]*Record, len(records))
 
 	for i, record := range records {
@@ -60,7 +60,7 @@ func convertAuditLogRecordsFromDatabase(records []*database.AuditLogRecord) []*R
 }
 
 func (a *PostgresLogger) LoginSuccess(ctx context.Context, userName, userAgent string) error {
-	record := &database.AuditLogRecord{
+	record := &database.AuditLog{
 		UserAgent:  userAgent,
 		UserName:   userName,
 		ActionType: database.LoginSuccess,
@@ -72,7 +72,7 @@ func (a *PostgresLogger) LoginSuccess(ctx context.Context, userName, userAgent s
 }
 
 func (a *PostgresLogger) LoginFail(ctx context.Context, userAgent string) error {
-	record := &database.AuditLogRecord{
+	record := &database.AuditLog{
 		UserAgent:  userAgent,
 		ActionType: database.LoginFail,
 	}
@@ -83,7 +83,7 @@ func (a *PostgresLogger) LoginFail(ctx context.Context, userAgent string) error 
 }
 
 func (a *PostgresLogger) LogoutSuccess(ctx context.Context, userName, userAgent string) error {
-	record := &database.AuditLogRecord{
+	record := &database.AuditLog{
 		UserAgent:  userAgent,
 		UserName:   userName,
 		ActionType: database.LogoutSuccess,
@@ -95,10 +95,10 @@ func (a *PostgresLogger) LogoutSuccess(ctx context.Context, userName, userAgent 
 }
 
 func (a *PostgresLogger) IncomingAccessRequestAccept(ctx context.Context, userName, userAgent, organization, service string) error {
-	record := &database.AuditLogRecord{
+	record := &database.AuditLog{
 		UserAgent: userAgent,
 		UserName:  userName,
-		Services: []database.AuditLogRecordService{
+		Services: []database.AuditLogService{
 			{
 				Organization: organization,
 				Service:      service,
@@ -113,10 +113,10 @@ func (a *PostgresLogger) IncomingAccessRequestAccept(ctx context.Context, userNa
 }
 
 func (a *PostgresLogger) IncomingAccessRequestReject(ctx context.Context, userName, userAgent, organization, service string) error {
-	record := &database.AuditLogRecord{
+	record := &database.AuditLog{
 		UserAgent: userAgent,
 		UserName:  userName,
-		Services: []database.AuditLogRecordService{
+		Services: []database.AuditLogService{
 			{
 				Organization: organization,
 				Service:      service,
@@ -131,10 +131,10 @@ func (a *PostgresLogger) IncomingAccessRequestReject(ctx context.Context, userNa
 }
 
 func (a *PostgresLogger) AccessGrantRevoke(ctx context.Context, userName, userAgent, organization, service string) error {
-	record := &database.AuditLogRecord{
+	record := &database.AuditLog{
 		UserAgent: userAgent,
 		UserName:  userName,
-		Services: []database.AuditLogRecordService{
+		Services: []database.AuditLogService{
 			{
 				Organization: organization,
 				Service:      service,
@@ -149,10 +149,10 @@ func (a *PostgresLogger) AccessGrantRevoke(ctx context.Context, userName, userAg
 }
 
 func (a *PostgresLogger) OutgoingAccessRequestCreate(ctx context.Context, userName, userAgent, organization, service string) error {
-	record := &database.AuditLogRecord{
+	record := &database.AuditLog{
 		UserAgent: userAgent,
 		UserName:  userName,
-		Services: []database.AuditLogRecordService{
+		Services: []database.AuditLogService{
 			{
 				Organization: organization,
 				Service:      service,
@@ -167,10 +167,10 @@ func (a *PostgresLogger) OutgoingAccessRequestCreate(ctx context.Context, userNa
 }
 
 func (a *PostgresLogger) ServiceCreate(ctx context.Context, userName, userAgent, service string) error {
-	record := &database.AuditLogRecord{
+	record := &database.AuditLog{
 		UserAgent: userAgent,
 		UserName:  userName,
-		Services: []database.AuditLogRecordService{
+		Services: []database.AuditLogService{
 			{
 				Service: service,
 			},
@@ -184,10 +184,10 @@ func (a *PostgresLogger) ServiceCreate(ctx context.Context, userName, userAgent,
 }
 
 func (a *PostgresLogger) ServiceUpdate(ctx context.Context, userName, userAgent, service string) error {
-	record := &database.AuditLogRecord{
+	record := &database.AuditLog{
 		UserAgent: userAgent,
 		UserName:  userName,
-		Services: []database.AuditLogRecordService{
+		Services: []database.AuditLogService{
 			{
 				Service: service,
 			},
@@ -201,10 +201,10 @@ func (a *PostgresLogger) ServiceUpdate(ctx context.Context, userName, userAgent,
 }
 
 func (a *PostgresLogger) ServiceDelete(ctx context.Context, userName, userAgent, service string) error {
-	record := &database.AuditLogRecord{
+	record := &database.AuditLog{
 		UserAgent: userAgent,
 		UserName:  userName,
-		Services: []database.AuditLogRecordService{
+		Services: []database.AuditLogService{
 			{
 				Service: service,
 			},
@@ -218,16 +218,16 @@ func (a *PostgresLogger) ServiceDelete(ctx context.Context, userName, userAgent,
 }
 
 func (a *PostgresLogger) OrderCreate(ctx context.Context, userName, userAgent, delegatee string, services []RecordService) error {
-	record := &database.AuditLogRecord{
+	record := &database.AuditLog{
 		UserAgent:  userAgent,
 		UserName:   userName,
-		Services:   make([]database.AuditLogRecordService, len(services)),
+		Services:   make([]database.AuditLogService, len(services)),
 		Delegatee:  delegatee,
 		ActionType: database.OrderCreate,
 	}
 
 	for i, service := range services {
-		record.Services[i] = database.AuditLogRecordService{
+		record.Services[i] = database.AuditLogService{
 			Organization: service.Organization,
 			Service:      service.Service,
 		}
@@ -239,7 +239,7 @@ func (a *PostgresLogger) OrderCreate(ctx context.Context, userName, userAgent, d
 }
 
 func (a *PostgresLogger) OrganizationSettingsUpdate(ctx context.Context, userName, userAgent string) error {
-	record := &database.AuditLogRecord{
+	record := &database.AuditLog{
 		UserAgent: userAgent,
 
 		UserName:   userName,
@@ -252,7 +252,7 @@ func (a *PostgresLogger) OrganizationSettingsUpdate(ctx context.Context, userNam
 }
 
 func (a *PostgresLogger) OrganizationInsightConfigurationUpdate(ctx context.Context, userName, userAgent string) error {
-	record := &database.AuditLogRecord{
+	record := &database.AuditLog{
 		UserAgent:  userAgent,
 		UserName:   userName,
 		ActionType: database.OrganizationInsightConfigurationUpdate,
