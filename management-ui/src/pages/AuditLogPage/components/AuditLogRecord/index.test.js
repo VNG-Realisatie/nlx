@@ -12,6 +12,7 @@ import {
   ACTION_LOGIN_FAIL,
   ACTION_LOGIN_SUCCESS,
   ACTION_LOGOUT,
+  ACTION_ORDER_CREATE,
   ACTION_ORGANIZATION_SETTINGS_UPDATE,
   ACTION_OUTGOING_ACCESS_REQUEST_CREATE,
   ACTION_OUTGOING_ACCESS_REQUEST_FAIL,
@@ -28,8 +29,12 @@ test.concurrent.each([
   [
     {
       action: ACTION_INCOMING_ACCESS_REQUEST_ACCEPT,
-      organization: 'Gemeente Haarlem',
-      service: 'Kadaster',
+      services: [
+        {
+          service: 'Kadaster',
+          organization: 'Gemeente Haarlem',
+        },
+      ],
     },
     'check.svg',
     'John Doe has approved the access request from Gemeente Haarlem for Kadaster',
@@ -37,8 +42,12 @@ test.concurrent.each([
   [
     {
       action: ACTION_INCOMING_ACCESS_REQUEST_REJECT,
-      organization: 'Gemeente Haarlem',
-      service: 'Kadaster',
+      services: [
+        {
+          organization: 'Gemeente Haarlem',
+          service: 'Kadaster',
+        },
+      ],
     },
     'close.svg',
     'John Doe has rejected the access request from Gemeente Haarlem for Kadaster',
@@ -46,8 +55,12 @@ test.concurrent.each([
   [
     {
       action: ACTION_ACCESS_GRANT_REVOKE,
-      organization: 'Gemeente Haarlem',
-      service: 'Kadaster',
+      services: [
+        {
+          organization: 'Gemeente Haarlem',
+          service: 'Kadaster',
+        },
+      ],
     },
     'revoke.svg',
     'John Doe has revoked access for Kadaster from Gemeente Haarlem',
@@ -55,8 +68,12 @@ test.concurrent.each([
   [
     {
       action: ACTION_OUTGOING_ACCESS_REQUEST_CREATE,
-      organization: 'Gemeente Haarlem',
-      service: 'Kadaster',
+      services: [
+        {
+          organization: 'Gemeente Haarlem',
+          service: 'Kadaster',
+        },
+      ],
     },
     'key.svg',
     'John Doe has requested access to Kadaster from Gemeente Haarlem',
@@ -64,8 +81,12 @@ test.concurrent.each([
   [
     {
       action: ACTION_OUTGOING_ACCESS_REQUEST_FAIL,
-      organization: 'Gemeente Haarlem',
-      service: 'Kadaster',
+      services: [
+        {
+          organization: 'Gemeente Haarlem',
+          service: 'Kadaster',
+        },
+      ],
     },
     'key.svg',
     'John Doe failed to request access to Kadaster from Gemeente Haarlem',
@@ -73,7 +94,11 @@ test.concurrent.each([
   [
     {
       action: ACTION_SERVICE_CREATE,
-      service: 'Kadaster',
+      services: [
+        {
+          service: 'Kadaster',
+        },
+      ],
     },
     'services.svg',
     'John Doe has created the service Kadaster',
@@ -81,7 +106,11 @@ test.concurrent.each([
   [
     {
       action: ACTION_SERVICE_UPDATE,
-      service: 'Kadaster',
+      services: [
+        {
+          service: 'Kadaster',
+        },
+      ],
     },
     'services.svg',
     'John Doe has updated the service Kadaster',
@@ -89,7 +118,11 @@ test.concurrent.each([
   [
     {
       action: ACTION_SERVICE_DELETE,
-      service: 'Kadaster',
+      services: [
+        {
+          service: 'Kadaster',
+        },
+      ],
     },
     'services.svg',
     'John Doe has removed the service Kadaster',
@@ -107,6 +140,24 @@ test.concurrent.each([
     },
     'cog.svg',
     'John Doe updated the insight configuration settings',
+  ],
+  [
+    {
+      action: ACTION_ORDER_CREATE,
+      delegatee: 'Saas Organization X',
+      services: [
+        {
+          organization: 'RDW',
+          service: 'kentekenregister',
+        },
+        {
+          organization: 'Gemeente Amsterdam',
+          service: 'vakantieverhuur',
+        },
+      ],
+    },
+    'cog.svg',
+    'John Doe gave Saas Organization X the order to consume the services kentekenregister (RDW), vakantieverhuur (Gemeente Amsterdam)',
   ],
   [
     { action: 'unknown action' },

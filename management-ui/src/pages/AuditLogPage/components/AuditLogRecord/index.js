@@ -3,7 +3,7 @@
 //
 
 import React from 'react'
-import { arrayOf, instanceOf, node, string } from 'prop-types'
+import { arrayOf, instanceOf, node, shape, string } from 'prop-types'
 import { Trans, useTranslation } from 'react-i18next'
 import {
   ACTION_ACCESS_GRANT_REVOKE,
@@ -13,6 +13,7 @@ import {
   ACTION_LOGIN_FAIL,
   ACTION_LOGIN_SUCCESS,
   ACTION_LOGOUT,
+  ACTION_ORDER_CREATE,
   ACTION_ORGANIZATION_SETTINGS_UPDATE,
   ACTION_OUTGOING_ACCESS_REQUEST_CREATE,
   ACTION_OUTGOING_ACCESS_REQUEST_FAIL,
@@ -53,8 +54,8 @@ const AuditLogRecord = ({
   action,
   user,
   createdAt,
-  organization,
-  service,
+  services,
+  delegatee,
   operatingSystem,
   browser,
   client,
@@ -75,6 +76,18 @@ const AuditLogRecord = ({
 
   if (client) {
     meta.push(client)
+  }
+
+  let organization = ''
+  let service = ''
+  let servicesList = ''
+
+  if (services && typeof services[0] !== 'undefined') {
+    organization = services[0].organization
+    service = services[0].service
+    servicesList = services
+      .map((service) => `${service.service} (${service.organization})`)
+      .join(', ')
   }
 
   return (
@@ -145,6 +158,11 @@ const AuditLogRecord = ({
         <Trans values={{ user, action }}>
           <strong>{{ user }}</strong> updated the insight configuration settings
         </Trans>
+      ) : action === ACTION_ORDER_CREATE ? (
+        <Trans values={{ user, servicesList, delegatee, organization, action }}>
+          <strong>{{ user }}</strong> gave {{ delegatee }} the order to consume
+          the services {{ servicesList }}
+        </Trans>
       ) : (
         <Trans values={{ user, action }}>
           <strong>{{ user }}</strong> has performed unknown action{' '}
@@ -159,8 +177,13 @@ AuditLogRecord.propTypes = {
   action: string,
   user: string,
   createdAt: instanceOf(Date),
-  organization: string,
-  service: string,
+  delegatee: string,
+  services: arrayOf(
+    shape({
+      service: string,
+      organization: string,
+    }),
+  ),
   operatingSystem: string,
   browser: string,
   client: string,

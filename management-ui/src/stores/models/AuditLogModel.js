@@ -20,14 +20,15 @@ export const ACTION_SERVICE_DELETE = 'serviceDelete'
 export const ACTION_ORGANIZATION_SETTINGS_UPDATE = 'organizationSettingsUpdate'
 export const ACTION_INSIGHT_CONFIGURATION_UPDATE =
   'organizationInsightConfigurationUpdate'
+export const ACTION_ORDER_CREATE = 'orderCreate'
 
 class AuditLogModel {
   id = null
   action = null
   user = null
   createdAt = null
-  organization = null
-  service = null
+  delegatee = null
+  services = null
   operatingSystem = null
   browser = null
   client = null
@@ -54,16 +55,16 @@ class AuditLogModel {
       this.user = auditLogData.user
     }
 
+    if (auditLogData.delegatee) {
+      this.delegatee = auditLogData.delegatee
+    }
+
     if (auditLogData.createdAt) {
       this.createdAt = new Date(auditLogData.createdAt)
     }
 
-    if (auditLogData.organization) {
-      this.organization = auditLogData.organization
-    }
-
-    if (auditLogData.service) {
-      this.service = auditLogData.service
+    if (auditLogData.services) {
+      this.services = auditLogData.services
     }
 
     if (auditLogData.operatingSystem) {
