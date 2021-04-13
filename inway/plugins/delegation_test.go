@@ -34,11 +34,18 @@ func TestDelegationPlugin(t *testing.T) {
 	cert.PublicKey()
 
 	certPEM, _ := cert.PublicKeyPEM()
+	certFingerprint := cert.PublicKeyFingerprint()
 
-	validClaim, err := getJWTAsSignedString(cert, "delegatee-org")
+	validClaim, err := getJWTAsSignedString(cert, "delegatee-org", "mock-service")
 	assert.Nil(t, err)
 
-	validClaimOtherDelegatee, err := getJWTAsSignedString(cert, "nlx-hackerman")
+	validClaimOtherService, err := getJWTAsSignedString(cert, "delegatee-org", "mock-service-other")
+	assert.Nil(t, err)
+
+	validClaimOtherDelegatee, err := getJWTAsSignedString(cert, "nlx-hackerman", "mock-service")
+	assert.Nil(t, err)
+
+	validClaimOtherDelegateeAndService, err := getJWTAsSignedString(cert, "nlx-hackerman", "mock-service-without-valid-grant")
 	assert.Nil(t, err)
 
 	tests := map[string]struct {
@@ -63,11 +70,27 @@ func TestDelegationPlugin(t *testing.T) {
 			expectedMessage:    "nlx-inway: no access\n",
 			delegationSuccess:  false,
 		},
-		"delegator_does_not_have_access_to_service": {
-			claim: validClaimOtherDelegatee,
+		"delegatee_does_not_have_access_to_service": {
+			claim: validClaimOtherDelegateeAndService,
 			service: &plugins.Service{
 				Name:   "mock-service-without-valid-grant",
 				Grants: []*plugins.Grant{},
+			},
+			expectedStatusCode: http.StatusUnauthorized,
+			expectedMessage:    "nlx-inway: no access\n",
+			delegationSuccess:  false,
+		},
+		"delegatee_does_not_have_service_in_claims": {
+			claim: validClaimOtherService,
+			service: &plugins.Service{
+				Name: "mock-service",
+				Grants: []*plugins.Grant{
+					{
+						OrganizationName:     "issuer-org",
+						PublicKeyPEM:         certPEM,
+						PublicKeyFingerprint: certFingerprint,
+					},
+				},
 			},
 			expectedStatusCode: http.StatusUnauthorized,
 			expectedMessage:    "nlx-inway: no access\n",
@@ -81,7 +104,7 @@ func TestDelegationPlugin(t *testing.T) {
 					{
 						OrganizationName:     "issuer-org",
 						PublicKeyPEM:         certPEM,
-						PublicKeyFingerprint: "mock-public-key-fingerprint",
+						PublicKeyFingerprint: certFingerprint,
 					},
 				},
 			},
@@ -100,10 +123,11 @@ func TestDelegationPlugin(t *testing.T) {
 
 		t.Run(name, func(t *testing.T) {
 			context := fakeContext(&plugins.Destination{
-				Service: tt.service,
+				Service:      tt.service,
+				Organization: "nlx-test",
 			}, nil, &plugins.AuthInfo{
 				OrganizationName:     "delegatee-org",
-				PublicKeyFingerprint: "mock-public-key-fingerprint",
+				PublicKeyFingerprint: certFingerprint,
 			})
 
 			context.Request.Header.Add("X-NLX-Request-Claim", tt.claim)
@@ -125,16 +149,22 @@ func TestDelegationPlugin(t *testing.T) {
 				assert.Equal(t, "order-reference", context.LogData["orderReference"])
 
 				assert.Equal(t, "issuer-org", context.AuthInfo.OrganizationName)
-				assert.Equal(t, "mock-public-key-fingerprint", context.AuthInfo.PublicKeyFingerprint)
+				assert.Equal(t, certFingerprint, context.AuthInfo.PublicKeyFingerprint)
 			}
 		})
 	}
 }
 
-func getJWTAsSignedString(orgCert *common_tls.CertificateBundle, delegatee string) (string, error) {
+func getJWTAsSignedString(orgCert *common_tls.CertificateBundle, delegatee, service string) (string, error) {
 	claims := delegation.JWTClaims{
 		Delegatee:      delegatee,
 		OrderReference: "order-reference",
+		Services: []delegation.Service{
+			{
+				Service:      service,
+				Organization: "nlx-test",
+			},
+		},
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour).Unix(),
 			Issuer:    "issuer-org",

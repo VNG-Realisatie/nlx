@@ -87,13 +87,9 @@ func main() {
 		logger.Fatal("loading TLS files", zap.Error(err))
 	}
 
-	listenManagementAddress := options.ListenManagementAddress
-	if listenManagementAddress == "" {
-		listenManagementAddress, err = defaultManagementAddress(options.ListenAddress)
-
-		if err != nil {
-			logger.Fatal("unable to create default management address", zap.Error(err))
-		}
+	listenManagementAddress, err := defaultManagementAddress(options.ListenAddress)
+	if err != nil {
+		logger.Fatal("unable to create default management address", zap.Error(err))
 	}
 
 	creds := credentials.NewTLS(cert.TLSConfig())

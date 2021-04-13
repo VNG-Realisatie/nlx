@@ -30,6 +30,17 @@ func NewDelegationPlugin() *DelegationPlugin {
 	return &DelegationPlugin{}
 }
 
+func isServiceInClaims(claims *delegation.JWTClaims, serviceName, organizationName string) bool {
+	for _, service := range claims.Services {
+		if service.Service == serviceName &&
+			service.Organization == organizationName {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (d *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 	return func(context *Context) error {
 		claim := context.Request.Header.Get("X-NLX-Request-Claim")
@@ -46,16 +57,7 @@ func (d *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 				return nil, ErrRequestingOrganizationIsNotDelegatee
 			}
 
-			serviceMatch := false
-
-			for _, serviceName := range claims.Services {
-				if serviceName == context.Destination.Service.Name {
-					serviceMatch = true
-					break
-				}
-			}
-
-			if !serviceMatch {
+			if !isServiceInClaims(claims, context.Destination.Service.Name, context.Destination.Organization) {
 				return nil, ErrServiceNotInClaims
 			}
 
@@ -76,37 +78,7 @@ func (d *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 		})
 
 		if err != nil {
-			validationError, ok := err.(*jwt.ValidationError)
-			if !ok {
-				context.Logger.Error("casting error to jwt validation error failed", zap.Error(err))
-				http.Error(context.Response, "nlx-inway: unable to verify claim", http.StatusInternalServerError)
-
-				return nil
-			}
-
-			if errors.Is(validationError.Inner, ErrRequestingOrganizationIsNotDelegatee) {
-				context.Logger.Info("requesting organization is not the delegatee", zap.String("delegator", claims.Issuer), zap.String("serviceName", context.Destination.Service.Name))
-				http.Error(context.Response, "nlx-inway: no access", http.StatusUnauthorized)
-
-				return nil
-			}
-
-			if errors.Is(validationError.Inner, ErrDelegatorDoesNotHaveAccess) {
-				context.Logger.Info("delegator does not have access to service", zap.String("delegator", claims.Issuer), zap.String("serviceName", context.Destination.Service.Name))
-				http.Error(context.Response, "nlx-inway: no access", http.StatusUnauthorized)
-
-				return nil
-			}
-
-			if errors.Is(validationError.Inner, ErrServiceNotInClaims) {
-				i.logger.Info("delegator does have access but not to this service", zap.String("delegator", claims.Issuer), zap.String("serviceName", serviceName))
-				http.Error(w, "nlx-inway: no access", http.StatusUnauthorized)
-
-				return
-			}
-
-			context.Logger.Error("failed to parse jwt", zap.Error(err))
-			http.Error(context.Response, "nlx-inway: unable to verify claim", http.StatusInternalServerError)
+			handleJWTValidationError(context, claims, err)
 
 			return nil
 		}
@@ -119,6 +91,40 @@ func (d *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 
 		return next(context)
 	}
+}
+
+func handleJWTValidationError(context *Context, claims *delegation.JWTClaims, err error) {
+	validationError, ok := err.(*jwt.ValidationError)
+	if !ok {
+		context.Logger.Error("casting error to jwt validation error failed", zap.Error(err))
+		http.Error(context.Response, "nlx-inway: unable to verify claim", http.StatusInternalServerError)
+
+		return
+	}
+
+	if errors.Is(validationError.Inner, ErrRequestingOrganizationIsNotDelegatee) {
+		context.Logger.Info("requesting organization is not the delegatee", zap.String("delegator", claims.Issuer), zap.String("serviceName", context.Destination.Service.Name))
+		http.Error(context.Response, "nlx-inway: no access", http.StatusUnauthorized)
+
+		return
+	}
+
+	if errors.Is(validationError.Inner, ErrDelegatorDoesNotHaveAccess) {
+		context.Logger.Info("delegator does not have access to service", zap.String("delegator", claims.Issuer), zap.String("serviceName", context.Destination.Service.Name))
+		http.Error(context.Response, "nlx-inway: no access", http.StatusUnauthorized)
+
+		return
+	}
+
+	if errors.Is(validationError.Inner, ErrServiceNotInClaims) {
+		context.Logger.Info("delegator does have access but not to this service", zap.String("delegator", claims.Issuer), zap.String("serviceName", context.Destination.Service.Name))
+		http.Error(context.Response, "nlx-inway: no access", http.StatusUnauthorized)
+
+		return
+	}
+
+	context.Logger.Error("failed to parse jwt", zap.Error(err))
+	http.Error(context.Response, "nlx-inway: unable to verify claim", http.StatusInternalServerError)
 }
 
 func parsePublicKeyFromPEM(publicKeyPEM string) (crypto.PublicKey, error) {

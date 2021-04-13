@@ -25,7 +25,6 @@ const configRetrievalInterval = 10 * time.Second
 
 var errManagementAPIUnavailable = fmt.Errorf("managementAPI unavailable")
 
-// StartConfigurationPolling will make the inway retrieve its configuration periodically
 func (i *Inway) startConfigurationPolling(ctx context.Context) error {
 	hostname, err := os.Hostname()
 	if err != nil {
