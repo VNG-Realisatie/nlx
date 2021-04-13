@@ -66,21 +66,23 @@ func (db *PostgresConfigDatabase) CreateAuditLogRecord(ctx context.Context, audi
 		return nil, err
 	}
 
-	auditLogServices := []AuditLogService{}
+	if len(auditLog.Services) > 0 {
+		auditLogServices := []AuditLogService{}
 
-	for _, service := range auditLog.Services {
-		auditLogServices = append(auditLogServices, AuditLogService{
-			AuditLogID:   auditLog.ID,
-			Organization: service.Organization,
-			Service:      service.Service,
-		})
-	}
+		for _, service := range auditLog.Services {
+			auditLogServices = append(auditLogServices, AuditLogService{
+				AuditLogID:   auditLog.ID,
+				Organization: service.Organization,
+				Service:      service.Service,
+			})
+		}
 
-	if err := dbWithTx.DB.
-		WithContext(ctx).
-		Model(AuditLogService{}).
-		Create(auditLogServices).Error; err != nil {
-		return nil, err
+		if err := dbWithTx.DB.
+			WithContext(ctx).
+			Model(AuditLogService{}).
+			Create(auditLogServices).Error; err != nil {
+			return nil, err
+		}
 	}
 
 	result := tx.Commit()
