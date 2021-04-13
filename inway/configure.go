@@ -28,7 +28,6 @@ var errManagementAPIUnavailable = fmt.Errorf("managementAPI unavailable")
 // StartConfigurationPolling will make the inway retrieve its configuration periodically
 func (i *Inway) startConfigurationPolling(ctx context.Context) error {
 	hostname, err := os.Hostname()
-
 	if err != nil {
 		i.logger.Warn("failed to get inway hostname", zap.Error(err))
 	}
@@ -90,7 +89,7 @@ func (i *Inway) SetServiceEndpoints(endpoints []*plugins.Service) error {
 			return errors.New("service endpoint for a service with the same name has already been registered")
 		}
 
-		i.logger.Info("adding service to inway", zap.String("servicename", endPoint.ServiceName()))
+		i.logger.Info("adding service to inway", zap.String("servicename", endPoint.Name))
 		i.services[endPoint.Name] = endPoint
 	}
 
@@ -101,6 +100,7 @@ func (i *Inway) SetServiceEndpoints(endpoints []*plugins.Service) error {
 
 func (i *Inway) updateConfig(expBackOff *backoff.Backoff, defaultInterval time.Duration) time.Duration {
 	i.logger.Info("retrieving config from the management-api", zap.String("inwayname", i.name))
+
 	services, err := i.getServicesFromManagementAPI()
 	if err != nil {
 		if err == errManagementAPIUnavailable {
@@ -115,6 +115,7 @@ func (i *Inway) updateConfig(expBackOff *backoff.Backoff, defaultInterval time.D
 
 	if i.isServiceConfigDifferent(services) {
 		i.logger.Info("detected changes in inway service config. updating services")
+
 		err = i.SetServiceEndpoints(services)
 		if err != nil {
 			i.logger.Error("unable to configure the inway with the management-api response", zap.Error(err))
@@ -142,7 +143,7 @@ func (i *Inway) isServiceConfigDifferent(services []*plugins.Service) bool {
 
 	for _, inwayService := range i.services {
 		for _, service := range services {
-			if reflect.DeepEqual(service, inwayService) == 0 {
+			if reflect.DeepEqual(service, inwayService) {
 				matches++
 			}
 		}
@@ -151,8 +152,8 @@ func (i *Inway) isServiceConfigDifferent(services []*plugins.Service) bool {
 	return matches != serviceCount
 }
 
-func serviceConfigToServiceDetails(service *api.ListServicesResponse_Service) *plugins.Service {
-	return &plugins.Service{
+func serviceToPluginService(service *api.ListServicesResponse_Service) *plugins.Service {
+	pluginService := &plugins.Service{
 		Name:                        service.Name,
 		APISpecificationDocumentURL: service.ApiSpecificationURL,
 		DocumentationURL:            service.DocumentationURL,
@@ -163,7 +164,18 @@ func serviceConfigToServiceDetails(service *api.ListServicesResponse_Service) *p
 		OneTimeCosts:                service.OneTimeCosts,
 		MonthlyCosts:                service.MonthlyCosts,
 		RequestCosts:                service.RequestCosts,
+		Grants:                      []*plugins.Grant{},
 	}
+
+	for _, auth := range service.AuthorizationSettings.Authorizations {
+		pluginService.Grants = append(pluginService.Grants, &plugins.Grant{
+			OrganizationName:     auth.OrganizationName,
+			PublicKeyPEM:         auth.PublicKeyPEM,
+			PublicKeyFingerprint: auth.PublicKeyHash,
+		})
+	}
+
+	return pluginService
 }
 
 func (i *Inway) getServicesFromManagementAPI() ([]*plugins.Service, error) {
@@ -181,7 +193,7 @@ func (i *Inway) getServicesFromManagementAPI() ([]*plugins.Service, error) {
 
 	services := make([]*plugins.Service, len(response.Services))
 	for i, service := range response.Services {
-		services[i] = serviceConfigToServiceDetails(service)
+		services[i] = serviceToPluginService(service)
 	}
 
 	return services, nil

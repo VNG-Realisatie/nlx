@@ -5,7 +5,6 @@ package main
 
 import (
 	"context"
-	"crypto/x509"
 	"fmt"
 	"log"
 	"net"
@@ -20,6 +19,8 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 
 	"go.nlx.io/nlx/common/cmd"
 	common_db "go.nlx.io/nlx/common/db"
@@ -28,7 +29,9 @@ import (
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/inway"
-	"go.nlx.io/nlx/inway/config"
+	"go.nlx.io/nlx/inway/grpcproxy"
+	"go.nlx.io/nlx/management-api/api"
+	external_api "go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/txlog-db/dbversion"
 )
 
@@ -93,17 +96,37 @@ func main() {
 		}
 	}
 
+	creds := credentials.NewTLS(cert.TLSConfig())
+
+	connCtx, connCtxCancel := context.WithTimeout(context.Background(), 1*time.Minute)
+	defer connCtxCancel()
+
+	logger.Info("creating management api connection", zap.String("management api address", options.ManagementAPIAddress))
+
+	conn, err := grpc.DialContext(connCtx, options.ManagementAPIAddress, grpc.WithTransportCredentials(creds))
+	if err != nil {
+		logger.Fatal("failed to setup connection to management api", zap.Error(err))
+	}
+
+	managementProxy, err := grpcproxy.New(context.TODO(), logger, options.ManagementAPIAddress, orgCert, cert)
+	if err != nil {
+		logger.Fatal("failed to setup  management api proxy", zap.Error(err))
+	}
+
+	managementProxy.RegisterService(external_api.GetAccessRequestServiceDesc())
+	managementProxy.RegisterService(external_api.GetDelegationServiceDesc())
+
 	iw, err := inway.NewInway(
 		ctx,
 		logger,
 		txlogger,
+		api.NewManagementClient(conn),
+		managementProxy,
 		options.InwayName,
 		options.SelfAddress,
 		options.MonitoringAddress,
-		options.ManagementAPIAddress,
 		listenManagementAddress,
 		orgCert,
-		cert,
 		options.DirectoryRegistrationAddress,
 	)
 	if err != nil {
@@ -112,9 +135,9 @@ func main() {
 
 	defer func() {
 		<-ctx.Done()
-		err := iw.Shutdown()
 
-		if err != nil {
+		errShutdown := iw.Shutdown()
+		if errShutdown != nil {
 			logger.Error("failed to shutdown", zap.Error(err))
 		}
 	}()
@@ -204,52 +227,6 @@ func setupDatabase(logger *zap.Logger) (*sqlx.DB, error) {
 	common_db.WaitForLatestDBVersion(logger, logDB.DB, dbversion.LatestTxlogDBVersion)
 
 	return logDB, nil
-}
-
-func loadServices(logger *zap.Logger, serviceConfig *config.ServiceConfig, iw *inway.Inway) {
-	if len(serviceConfig.Services) == 0 {
-		logger.Warn("inway has 0 configured services")
-	}
-
-	serviceEndpoints := make([]inway.ServiceEndpoint, len(serviceConfig.Services))
-	i := 0
-
-	for serviceName := range serviceConfig.Services {
-		serviceDetails := serviceConfig.Services[serviceName]
-		logger.Info("loaded service from service-config.toml", zap.String("service-name", serviceName))
-		logger.Debug("service configuration details", zap.String("service-name", serviceName), zap.String("endpoint-url", serviceDetails.EndpointURL),
-			zap.String("root-ca-path", serviceDetails.CACertPath), zap.String("authorization-model", string(serviceDetails.AuthorizationModel)),
-			zap.String("irma-api-url", serviceDetails.IrmaAPIURL), zap.String("insight-api-url", serviceDetails.InsightAPIURL),
-			zap.String("api-spec-url", serviceDetails.APISpecificationDocumentURL), zap.Bool("internal", serviceDetails.Internal),
-			zap.String("public-support-contact", serviceDetails.PublicSupportContact), zap.String("tech-support-contact", serviceDetails.TechSupportContact))
-
-		var rootCAs *x509.CertPool
-
-		var err error
-
-		if len(serviceDetails.CACertPath) > 0 {
-			rootCAs, _, err = common_tls.NewCertPoolFromFile(serviceDetails.CACertPath)
-			if err != nil {
-				logger.Fatal("Unable to load ca certificate for inway", zap.Error(err))
-			}
-		}
-
-		tlsConfig := common_tls.NewConfig(common_tls.WithTLS12())
-		tlsConfig.RootCAs = rootCAs
-
-		endpoint, errr := iw.NewHTTPServiceEndpoint(serviceName, &serviceDetails, tlsConfig)
-		if errr != nil {
-			logger.Fatal("failed to create service", zap.Error(err))
-		}
-
-		serviceEndpoints[i] = endpoint
-		i++
-	}
-
-	err := iw.SetServiceEndpoints(serviceEndpoints)
-	if err != nil {
-		logger.Fatal(fmt.Sprintf(`error setting service endpoints "%s"`, err))
-	}
 }
 
 func parseOptions() {

@@ -8,333 +8,132 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
-	"time"
 
 	"github.com/golang/mock/gomock"
-	"github.com/jpillora/backoff"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 
-	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
-	"go.nlx.io/nlx/inway/config"
+	"go.nlx.io/nlx/inway/plugins"
 	"go.nlx.io/nlx/management-api/api"
-	api_mock "go.nlx.io/nlx/management-api/api/mock"
+	mock_api "go.nlx.io/nlx/management-api/api/mock"
 )
 
-func createInway() (*Inway, error) {
-	logger := zap.NewNop()
-	testProcess := process.NewProcess(logger)
-
-	cert, _ := common_tls.NewBundleFromFiles(
-		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-		filepath.Join(pkiDir, "ca-root.pem"),
-	)
-
-	return NewInway(logger, nil, testProcess, "mock.inway", "localhost:1812", "localhost:1813", cert, "localhost:1815")
-}
-
-func createMockService() *api.ListServicesResponse_Service {
-	return &api.ListServicesResponse_Service{
-		Name:                 "my-service",
-		ApiSpecificationURL:  "https://api.spec.com",
-		DocumentationURL:     "https://documentation.com",
-		EndpointURL:          "https://endpointurl.com",
-		PublicSupportContact: "publicsupport@email.com",
-		TechSupportContact:   "techsupport@email.com",
-		Internal:             true,
-		AuthorizationSettings: &api.ListServicesResponse_Service_AuthorizationSettings{
-			Mode: "whitelist",
-			Authorizations: []*api.ListServicesResponse_Service_AuthorizationSettings_Authorization{
-				{OrganizationName: "demo-org1"},
-				{OrganizationName: "demo-org2"},
-				{PublicKeyHash: "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
-			},
-		},
-	}
-}
-func TestServiceToServiceDetails(t *testing.T) {
-	service := createMockService()
-	serviceDetails := serviceConfigToServiceDetails(service)
-	assert.Equal(t, service.ApiSpecificationURL, serviceDetails.APISpecificationDocumentURL)
-	assert.Equal(t, service.DocumentationURL, serviceDetails.DocumentationURL)
-	assert.Equal(t, service.EndpointURL, serviceDetails.EndpointURL)
-	assert.Equal(t, service.PublicSupportContact, serviceDetails.PublicSupportContact)
-	assert.Equal(t, service.TechSupportContact, serviceDetails.TechSupportContact)
-	assert.Equal(t, service.Internal, serviceDetails.Internal)
-	assert.Equal(t, service.AuthorizationSettings.Mode, string(serviceDetails.AuthorizationModel))
-	assert.Equal(t, service.AuthorizationSettings.Authorizations[0].OrganizationName, serviceDetails.AuthorizationWhitelist[0].OrganizationName)
-	assert.Equal(t, service.AuthorizationSettings.Authorizations[1].OrganizationName, serviceDetails.AuthorizationWhitelist[1].OrganizationName)
-	assert.Equal(t, service.AuthorizationSettings.Authorizations[2].PublicKeyHash, serviceDetails.AuthorizationWhitelist[2].PublicKeyHash)
-}
-
-func TestManagementAPIResponseToEndpoints(t *testing.T) {
-	serviceConfig := createMockService()
-	response := &api.ListServicesResponse{
-		Services: []*api.ListServicesResponse_Service{
-			serviceConfig,
-		},
-	}
-
-	iw, err := createInway()
-	assert.Nil(t, err)
-	endpoints := iw.createServiceEndpoints(response)
-	assert.Len(t, endpoints, 1)
-	endpoint := endpoints[0]
-	assert.Equal(t, serviceConfig.Name, endpoint.ServiceName())
-	serviceDetails := endpoint.ServiceDetails()
-	assert.NotNil(t, serviceDetails)
-	assert.Equal(t, serviceConfig.ApiSpecificationURL, serviceDetails.APISpecificationDocumentURL)
-	assert.Equal(t, serviceConfig.DocumentationURL, serviceDetails.DocumentationURL)
-	assert.Equal(t, serviceConfig.EndpointURL, serviceDetails.EndpointURL)
-	assert.Equal(t, serviceConfig.Internal, serviceDetails.Internal)
-	assert.Equal(t, serviceConfig.PublicSupportContact, serviceDetails.PublicSupportContact)
-	assert.Equal(t, serviceConfig.TechSupportContact, serviceDetails.TechSupportContact)
-	assert.Equal(t, serviceConfig.AuthorizationSettings.Mode, string(serviceDetails.AuthorizationModel))
-	assert.Equal(t, serviceConfig.AuthorizationSettings.Authorizations[0].OrganizationName, serviceDetails.AuthorizationWhitelist[0].OrganizationName)
-	assert.Equal(t, serviceConfig.AuthorizationSettings.Authorizations[1].OrganizationName, serviceDetails.AuthorizationWhitelist[1].OrganizationName)
-	assert.Equal(t, serviceConfig.AuthorizationSettings.Authorizations[2].PublicKeyHash, serviceDetails.AuthorizationWhitelist[2].PublicKeyHash)
-
-	serviceConfig.AuthorizationSettings = nil
-	endpoints = iw.createServiceEndpoints(response)
-	assert.Len(t, endpoints, 1)
-	endpoint = endpoints[0]
-	serviceDetails = endpoint.ServiceDetails()
-
-	assert.NotNil(t, serviceDetails)
-
-	// check if the default value of authorization mode is "whitelist"
-	assert.Equal(t, config.AuthorizationmodelWhitelist, serviceDetails.AuthorizationModel)
-}
-
-func TestSetupManagementAPI(t *testing.T) {
-	iw, err := createInway()
-	assert.Nil(t, err)
-
-	cert, _ := common_tls.NewBundleFromFiles(
-		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-		filepath.Join(pkiDir, "ca-root.pem"),
-	)
-
-	err = iw.SetupManagementAPI("https://managementapi.mock", cert)
-	assert.Nil(t, err)
-	assert.NotNil(t, iw.managementClient)
-}
-
-func TestGetServicesFromManagementAPI(t *testing.T) {
-	iw, err := createInway()
-	assert.Nil(t, err)
-	service := createMockService()
-	mockResponse := &api.ListServicesResponse{
-		Services: []*api.ListServicesResponse_Service{
-			service,
-		},
-	}
-
-	expectedRequest := &api.ListServicesRequest{
-		InwayName: "mock.inway",
-	}
-	controller := gomock.NewController(t)
-
-	managementClient := api_mock.NewMockManagementClient(controller)
-	managementClient.EXPECT().ListServices(context.Background(), expectedRequest).Return(mockResponse, nil)
-
-	iw.managementClient = managementClient
-	services, err := iw.getServicesFromManagementAPI()
-	assert.Nil(t, err)
-	assert.NotNil(t, services)
-	assert.Len(t, services, 1)
-	assert.Equal(t, service.Name, services[0].ServiceName())
-
-	managementClient.EXPECT().ListServices(context.Background(), expectedRequest).Return(nil, fmt.Errorf("error"))
-
-	services, err = iw.getServicesFromManagementAPI()
-	assert.NotNil(t, err)
-	assert.Nil(t, services)
-	assert.Equal(t, err.Error(), "error")
-
-	managementClient.EXPECT().ListServices(context.Background(), expectedRequest).
-		Return(nil, status.New(codes.Unavailable, "unavailable").Err())
-
-	services, err = iw.getServicesFromManagementAPI()
-	assert.NotNil(t, err)
-	assert.Nil(t, services)
-	assert.Equal(t, err, errManagementAPIUnavailable)
-}
-
+//nolint:funlen // this is a test
 func TestStartConfigurationPolling(t *testing.T) {
-	iw, err := createInway()
-	assert.Nil(t, err)
-
 	hostname, err := os.Hostname()
 	assert.Nil(t, err)
 
-	controller := gomock.NewController(t)
-	managementClient := api_mock.NewMockManagementClient(controller)
-	managementClient.EXPECT().CreateInway(context.Background(), &api.Inway{
-		Name:        "mock.inway",
-		Version:     "unknown",
-		Hostname:    hostname,
-		SelfAddress: "localhost:1812",
-	}).Return(nil, fmt.Errorf("error create inway"))
-
-	managementClient.EXPECT().ListServices(context.Background(), &api.ListServicesRequest{
-		InwayName: iw.name,
-	}).Return(nil, fmt.Errorf("error list services"))
-
-	iw.managementClient = managementClient
-
-	err = iw.StartConfigurationPolling()
-	assert.NotNil(t, err)
-	assert.Equal(t, "error create inway", err.Error())
-
-	managementClient.EXPECT().CreateInway(context.Background(), &api.Inway{
-		Name:        "mock.inway",
-		Version:     "unknown",
-		Hostname:    hostname,
-		SelfAddress: "localhost:1812",
-	}).Return(&api.Inway{
-		Name:        "mock.inway",
-		Version:     "unknown",
-		Hostname:    hostname,
-		SelfAddress: "localhost:1812",
-	}, nil)
-
-	err = iw.StartConfigurationPolling()
-	assert.NotNil(t, err)
-	assert.Equal(t, "error list services", err.Error())
-}
-
-func TestUpdateConfig(t *testing.T) {
-	expBackOff := &backoff.Backoff{
-		Min:    100 * time.Millisecond,
-		Factor: 2,
-		Max:    20 * time.Second,
-	}
-
-	sleepDuration := 10 * time.Second
-	service := createMockService()
-	mockResponse := &api.ListServicesResponse{
-		Services: []*api.ListServicesResponse_Service{
-			service,
-		},
-	}
-
-	expectedRequest := &api.ListServicesRequest{
-		InwayName: "mock.inway",
-	}
-
-	controller := gomock.NewController(t)
-	managementClient := api_mock.NewMockManagementClient(controller)
-	managementClient.EXPECT().ListServices(context.Background(), expectedRequest).Return(mockResponse, nil)
-
-	iw, err := createInway()
-	assert.Nil(t, err)
-
-	iw.managementClient = managementClient
-
-	newSleepDuration := iw.updateConfig(expBackOff, sleepDuration)
-	assert.Equal(t, sleepDuration, newSleepDuration)
-
-	managementClient.EXPECT().ListServices(context.Background(), expectedRequest).
-		Return(nil, status.New(codes.Unavailable, "unavailable").Err())
-
-	newSleepDuration = iw.updateConfig(expBackOff, sleepDuration)
-	assert.Equal(t, expBackOff.Min, newSleepDuration)
-
-	managementClient.EXPECT().ListServices(context.Background(), expectedRequest).
-		Return(nil, fmt.Errorf("error"))
-
-	newSleepDuration = iw.updateConfig(expBackOff, sleepDuration)
-	assert.Equal(t, sleepDuration, newSleepDuration)
-}
-
-func TestCreateServiceEndpoints(t *testing.T) {
-	iw, err := createInway()
-	assert.Nil(t, err)
-	mockResponse := &api.ListServicesResponse{
-		Services: []*api.ListServicesResponse_Service{
-			createMockService(),
-		},
-	}
-	services := iw.createServiceEndpoints(mockResponse)
-	err = iw.SetServiceEndpoints(services)
-	assert.Nil(t, err)
-
-	isDifferent := iw.isServiceConfigDifferent(services)
-	assert.False(t, isDifferent)
-
-	mockResponse.Services[0].ApiSpecificationURL = "differenturl"
-
-	services = iw.createServiceEndpoints(mockResponse)
-	isDifferent = iw.isServiceConfigDifferent(services)
-	assert.True(t, isDifferent)
-}
-
-func TestDeleteServiceEndpoints(t *testing.T) {
-	iw, err := createInway()
-	assert.Nil(t, err)
-
-	endpointA, _ := iw.NewHTTPServiceEndpoint("service-a", &config.ServiceDetails{
-		ServiceDetailsBase: config.ServiceDetailsBase{
-			EndpointURL: "https://api-a.test",
-		},
-	}, common_tls.NewConfig())
-
-	endpointB, _ := iw.NewHTTPServiceEndpoint("service-b", &config.ServiceDetails{
-		ServiceDetailsBase: config.ServiceDetailsBase{
-			EndpointURL: "https://api-b.test",
-		},
-	}, common_tls.NewConfig())
-
-	initEndpoints := []ServiceEndpoint{endpointA, endpointB}
-
-	err = iw.SetServiceEndpoints(initEndpoints)
-	assert.Nil(t, err)
-
-	mockResponse := &api.ListServicesResponse{
-		Services: []*api.ListServicesResponse_Service{
-			{
-				Name:                "service-a",
-				ApiSpecificationURL: "https://api-a.test",
-			},
-		},
-	}
-
-	controller := gomock.NewController(t)
-	managementClient := api_mock.NewMockManagementClient(controller)
-	managementClient.EXPECT().CreateInway(gomock.Any(), gomock.Any()).Return(nil, nil)
-	managementClient.EXPECT().ListServices(gomock.Any(), gomock.Any()).Return(mockResponse, nil)
-
-	iw.managementClient = managementClient
-
-	assert.Len(t, initEndpoints, 2)
-
-	err = iw.StartConfigurationPolling()
-	assert.Nil(t, err)
-
-	assert.Len(t, iw.services, 1)
-}
-
-func TestNewInwayName(t *testing.T) {
-	logger := zap.NewNop()
 	cert, _ := common_tls.NewBundleFromFiles(
 		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
 		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
 		filepath.Join(pkiDir, "ca-root.pem"),
 	)
 
-	testProcess := process.NewProcess(logger)
-	iw, err := NewInway(logger, nil, testProcess, "", "inway.test", "localhost:1813", cert, "")
-	assert.Nil(t, err)
+	tests := map[string]struct {
+		managementClient     func(ctrl *gomock.Controller) *mock_api.MockManagementClient
+		expectError          bool
+		expectedErrorMessage string
+		expectedService      *plugins.Service
+	}{
+		"cannot_register_to_management_api": {
+			managementClient: func(ctrl *gomock.Controller) *mock_api.MockManagementClient {
+				managementClient := mock_api.NewMockManagementClient(ctrl)
+				managementClient.EXPECT().CreateInway(gomock.Any(), &api.Inway{
+					Name:        "mock.inway",
+					Version:     "unknown",
+					Hostname:    hostname,
+					SelfAddress: "localhost:1812",
+				}).Return(nil, fmt.Errorf("arbitrary error"))
 
-	assert.Equal(t, "XQpL-03EUOCXDNnc8FCsZXrOp41LkYIJ5U_Udz-1Chk=", iw.name)
+				return managementClient
+			},
+			expectError:          true,
+			expectedErrorMessage: "arbitrary error",
+		},
+		"happy_flow": {
+			managementClient: func(ctrl *gomock.Controller) *mock_api.MockManagementClient {
+				managementClient := mock_api.NewMockManagementClient(ctrl)
+				managementClient.EXPECT().CreateInway(gomock.Any(), &api.Inway{
+					Name:        "mock.inway",
+					Version:     "unknown",
+					Hostname:    hostname,
+					SelfAddress: "localhost:1812",
+				}).Return(nil, nil)
 
-	iw, err = NewInway(logger, nil, testProcess, "inway.test", "inway.test", "localhost:1813", cert, "")
-	assert.Nil(t, err)
-	assert.Equal(t, "inway.test", iw.name)
+				managementClient.EXPECT().ListServices(gomock.Any(), &api.ListServicesRequest{
+					InwayName: "mock.inway",
+				}).Return(&api.ListServicesResponse{
+					Services: []*api.ListServicesResponse_Service{
+						{
+							Name:                 "mock-service",
+							EndpointURL:          "http://endpoint.mock",
+							DocumentationURL:     "http://docs.mock",
+							ApiSpecificationURL:  "http://api-specs.mock",
+							Internal:             false,
+							TechSupportContact:   "tech@support.mock",
+							PublicSupportContact: "public@support.mock",
+							AuthorizationSettings: &api.ListServicesResponse_Service_AuthorizationSettings{
+								Authorizations: []*api.ListServicesResponse_Service_AuthorizationSettings_Authorization{
+									{
+										OrganizationName: "mock-org",
+										PublicKeyHash:    "mock-public-key-hash",
+										PublicKeyPEM:     "mock-public-key-pem",
+									},
+								},
+							},
+						},
+					},
+				}, nil)
+				return managementClient
+			},
+			expectError:          false,
+			expectedErrorMessage: "arbitrary error",
+			expectedService: &plugins.Service{
+				Name:                        "mock-service",
+				EndpointURL:                 "http://endpoint.mock",
+				DocumentationURL:            "http://docs.mock",
+				APISpecificationDocumentURL: "http://api-specs.mock",
+				Internal:                    false,
+				TechSupportContact:          "tech@support.mock",
+				PublicSupportContact:        "public@support.mock",
+				Grants: []*plugins.Grant{
+					{
+						OrganizationName:     "mock-org",
+						PublicKeyFingerprint: "mock-public-key-hash",
+						PublicKeyPEM:         "mock-public-key-pem",
+					},
+				},
+			},
+		},
+	}
+
+	for name, test := range tests {
+		tc := test
+
+		t.Run(name, func(t *testing.T) {
+			ctx, cancel := context.WithCancel(context.Background())
+			ctrl := gomock.NewController(t)
+
+			t.Cleanup(func() {
+				cancel()
+				ctrl.Finish()
+			})
+
+			iw, err := NewInway(ctx, zap.NewNop(), nil, tc.managementClient(ctrl), nil, "mock.inway", "localhost:1812", "localhost:1813", "", cert, "localhost:1815")
+			assert.Nil(t, err)
+
+			err = iw.startConfigurationPolling(ctx)
+			if tc.expectError {
+				assert.EqualError(t, err, tc.expectedErrorMessage)
+			}
+
+			if tc.expectedService != nil {
+				service := iw.services[tc.expectedService.Name]
+				assert.NotNil(t, service)
+
+				assert.Equal(t, tc.expectedService, service)
+			}
+		})
+	}
 }

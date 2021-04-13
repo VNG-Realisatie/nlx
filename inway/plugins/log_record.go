@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2021
+// Licensed under the EUPL
+
 package plugins
 
 import (
@@ -5,8 +8,9 @@ import (
 	"net/http"
 
 	"github.com/pkg/errors"
-	"go.nlx.io/nlx/common/transactionlog"
 	"go.uber.org/zap"
+
+	"go.nlx.io/nlx/common/transactionlog"
 )
 
 type LogRecordPlugin struct {
@@ -69,7 +73,8 @@ func createRecordData(h http.Header, p string) map[string]interface{} {
 
 func (plugin *LogRecordPlugin) createLogRecord(context *Context, logRecordID string) error {
 	recordData := createRecordData(context.Request.Header, context.Destination.Path)
-	organizationName, ok := context.logData["organizationName"]
+	organizationName, ok := context.LogData["organizationName"]
+
 	if !ok {
 		return fmt.Errorf("missing organization name in log data")
 	}
@@ -77,7 +82,7 @@ func (plugin *LogRecordPlugin) createLogRecord(context *Context, logRecordID str
 	record := &transactionlog.Record{
 		SrcOrganization:  organizationName,
 		DestOrganization: context.Destination.Organization,
-		ServiceName:      context.Destination.Service,
+		ServiceName:      context.Destination.Service.Name,
 		LogrecordID:      logRecordID,
 		Data:             recordData,
 	}

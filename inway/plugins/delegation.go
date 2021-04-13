@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2021
+// Licensed under the EUPL
+
 package plugins
 
 import (
@@ -34,8 +37,9 @@ func (d *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 		var publicKeyFingerprint string
 
 		claims := &delegation.JWTClaims{}
+
 		_, err := jwt.ParseWithClaims(claim, claims, func(token *jwt.Token) (interface{}, error) {
-			if claims.Delegatee != context.AuthInfo.Organization {
+			if claims.Delegatee != context.AuthInfo.OrganizationName {
 				return nil, ErrRequestingOrganizationIsNotDelegatee
 			}
 
@@ -65,14 +69,14 @@ func (d *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 			}
 
 			if errors.Is(validationError.Inner, ErrRequestingOrganizationIsNotDelegatee) {
-				context.Logger.Info("requesting organization is not the delegatee", zap.String("delegator", claims.Issuer), zap.String("serviceName", context.Destination.Service))
+				context.Logger.Info("requesting organization is not the delegatee", zap.String("delegator", claims.Issuer), zap.String("serviceName", context.Destination.Service.Name))
 				http.Error(context.Response, "nlx-inway: no access", http.StatusUnauthorized)
 
 				return nil
 			}
 
 			if errors.Is(validationError.Inner, ErrDelegatorDoesNotHaveAccess) {
-				context.Logger.Info("delegator does not have access to service", zap.String("delegator", claims.Issuer), zap.String("serviceName", context.Destination.Service))
+				context.Logger.Info("delegator does not have access to service", zap.String("delegator", claims.Issuer), zap.String("serviceName", context.Destination.Service.Name))
 				http.Error(context.Response, "nlx-inway: no access", http.StatusUnauthorized)
 
 				return nil

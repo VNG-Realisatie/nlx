@@ -24,6 +24,7 @@ func (i *Inway) handleHealthRequest(w http.ResponseWriter, r *http.Request) {
 	// There is no health check to the actual endpoint defined yet.
 	status := health.Status{}
 	_, status.Healthy = i.services[serviceName]
+
 	err := json.NewEncoder(w).Encode(status)
 	if err != nil {
 		i.logger.Error("failed to encode health status json", zap.Error(err))

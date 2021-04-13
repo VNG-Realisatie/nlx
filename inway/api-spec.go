@@ -5,17 +5,41 @@ package inway
 
 import (
 	"io"
+	"net"
 	"net/http"
 	"strings"
+	"time"
 
 	"go.uber.org/zap"
 )
 
+const timeout = 30 * time.Second
+const maxIdleConns = 100
+const idleConnTimeout = 90 * time.Second
+const tlsHandshakeTimeout = 10 * time.Second
+
+func newRoundTripHTTPTransport() *http.Transport {
+	return &http.Transport{
+		Proxy: http.ProxyFromEnvironment,
+		DialContext: (&net.Dialer{
+			Timeout:   timeout,
+			KeepAlive: timeout,
+			DualStack: true,
+		}).DialContext,
+		MaxIdleConns:          maxIdleConns,
+		MaxIdleConnsPerHost:   maxIdleConns,
+		IdleConnTimeout:       idleConnTimeout,
+		TLSHandshakeTimeout:   tlsHandshakeTimeout,
+		ExpectContinueTimeout: 1 * time.Second,
+	}
+}
+
 func (i *Inway) handleAPISpecDocRequest(w http.ResponseWriter, r *http.Request) {
 	serviceName := strings.TrimPrefix(r.URL.Path, "/.nlx/api-spec-doc/")
+
 	i.servicesLock.RLock()
 	defer i.servicesLock.RUnlock()
-	
+
 	service, exists := i.services[serviceName]
 	if !exists {
 		http.Error(w, "service not found", http.StatusNotFound)
@@ -28,8 +52,9 @@ func (i *Inway) handleAPISpecDocRequest(w http.ResponseWriter, r *http.Request) 
 	}
 
 	i.logger.Info("fetching api spec doc", zap.String("api-spec-doc-url", service.APISpecificationDocumentURL))
-	
-	httpClient := &http.Client{Transport: newRoundTripHTTPTransport(tlsConfig)},
+
+	httpClient := &http.Client{Transport: newRoundTripHTTPTransport()}
+
 	resp, err := httpClient.Get(service.APISpecificationDocumentURL)
 	if err != nil {
 		http.Error(w, "server error", http.StatusInternalServerError)

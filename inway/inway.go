@@ -25,14 +25,18 @@ import (
 
 	"go.nlx.io/nlx/common/monitoring"
 	"go.nlx.io/nlx/common/nlxversion"
-	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 	"go.nlx.io/nlx/inway/grpcproxy"
+	"go.nlx.io/nlx/inway/plugins"
 	"go.nlx.io/nlx/management-api/api"
-	external_api "go.nlx.io/nlx/management-api/api/external"
 )
+
+const retryFactor = 10
+const maxRetryDuration = 20 * time.Second
+const minRetryDuration = 100 * time.Millisecond
+const announceToDirectoryInterval = 10 * time.Second
 
 // Inway handles incoming requests and holds a list of registered ServiceEndpoints.
 // The Inway is responsible for selecting the correct ServiceEndpoint for an incoming request.
@@ -40,15 +44,11 @@ type Inway struct {
 	name                        string
 	organizationName            string
 	selfAddress                 string
-	managementAPIAddress        string
 	listenManagementAddress     string
 	orgCertBundle               *common_tls.CertificateBundle
-	certBundle                  *common_tls.CertificateBundle
 	logger                      *zap.Logger
-	process                     *process.Process
 	serverTLS                   *http.Server
 	monitoringService           *monitoring.Service
-	txlogger                    transactionlog.TransactionLogger
 	managementClient            api.ManagementClient
 	managementProxy             *grpcproxy.Proxy
 	directoryRegistrationClient registrationapi.DirectoryRegistrationClient
@@ -62,13 +62,13 @@ func NewInway(
 	ctx context.Context,
 	logger *zap.Logger,
 	txlogger transactionlog.TransactionLogger,
+	managementClient api.ManagementClient,
+	managementProxy *grpcproxy.Proxy,
 	name,
 	selfAddress string,
 	monitoringAddress string,
-	managementAPIAddress string,
 	listenManagementAddress string,
 	orgCertBundle *common_tls.CertificateBundle,
-	certBundle *common_tls.CertificateBundle,
 	directoryRegistrationAddress string,
 ) (*Inway, error) {
 	orgCert := orgCertBundle.Certificate()
@@ -90,18 +90,20 @@ func NewInway(
 	logger.Info("loaded certificates for inway", zap.String("inway-organization-name", organizationName))
 
 	i := &Inway{
-		logger:           logger.With(zap.String("inway-organization-name", organizationName)),
-		organizationName: organizationName,
-		txlogger:         txlogger,
-		selfAddress:      selfAddress,
-		orgCertBundle:    orgCertBundle,
-		services:         map[string]*plugins.Service{},
-		servicesLock:     sync.RWMutex{},
+		logger:                  logger.With(zap.String("inway-organization-name", organizationName)),
+		organizationName:        organizationName,
+		listenManagementAddress: listenManagementAddress,
+		selfAddress:             selfAddress,
+		orgCertBundle:           orgCertBundle,
+		managementClient:        managementClient,
+		managementProxy:         managementProxy,
+		services:                map[string]*plugins.Service{},
+		servicesLock:            sync.RWMutex{},
 		plugins: []plugins.Plugin{
-			plugins.NewAuthenticationPlugion(),
+			plugins.NewAuthenticationPlugin(),
 			plugins.NewDelegationPlugin(),
 			plugins.NewAuthorizationPlugin(),
-			plugins.NewLogRecordPlugin(),
+			plugins.NewLogRecordPlugin(organizationName, txlogger),
 		},
 	}
 
@@ -128,35 +130,12 @@ func NewInway(
 	defer directoryConnCtxCancel()
 
 	if err != nil {
-		logger.Fatal("failed to setup connection to directory service", zap.Error(err))
+		return nil, errors.Wrap(err, "failed to setup connection to directory service")
 	}
 
 	i.directoryRegistrationClient = registrationapi.NewDirectoryRegistrationClient(directoryConn)
 
 	logger.Info("directory registration client setup complete", zap.String("directory-address", directoryRegistrationAddress))
-
-	creds := credentials.NewTLS(certBundle.TLSConfig())
-
-	connCtx, connCtxCancel := context.WithTimeout(context.Background(), 1*time.Minute)
-	defer connCtxCancel()
-
-	i.logger.Info("creating management api connection", zap.String("management api address", managementAPIAddress))
-	conn, err := grpc.DialContext(connCtx, managementAPIAddress, grpc.WithTransportCredentials(creds))
-	if err != nil {
-		return nil, err
-	}
-
-	i.managementClient = api.NewManagementClient(conn)
-
-	p, err := grpcproxy.New(context.TODO(), i.logger, managementAPIAddress, i.orgCertBundle, certBundle)
-	if err != nil {
-		return nil, err
-	}
-
-	p.RegisterService(external_api.GetAccessRequestServiceDesc())
-	p.RegisterService(external_api.GetDelegationServiceDesc())
-
-	i.managementProxy = p
 
 	return i, nil
 }
@@ -167,7 +146,7 @@ func selfAddressIsInOrgCert(selfAddress string, orgCert *x509.Certificate) error
 	if strings.Contains(hostname, ":") {
 		host, _, err := net.SplitHostPort(selfAddress)
 		if err != nil {
-			return errors.Wrapf(err, "Failed to parse selfAddress hostname from '%s'", selfAddress)
+			return errors.Wrapf(err, "failed to parse selfAddress hostname from '%s'", selfAddress)
 		}
 
 		hostname = host
@@ -199,12 +178,12 @@ func getFingerPrint(rawCert []byte) string {
 
 func (i *Inway) announceToDirectory(ctx context.Context) {
 	expBackOff := &backoff.Backoff{
-		Min:    100 * time.Millisecond,
-		Factor: 2,
-		Max:    20 * time.Second,
+		Min:    minRetryDuration,
+		Factor: retryFactor,
+		Max:    maxRetryDuration,
 	}
 
-	sleepDuration := 10 * time.Second
+	sleepDuration := announceToDirectoryInterval
 
 	for {
 		select {
@@ -215,7 +194,7 @@ func (i *Inway) announceToDirectory(ctx context.Context) {
 			ctx := context.Background()
 			protoServiceDetails := []*registrationapi.RegisterInwayRequest_RegisterService{}
 
-			for _, service := range i.ServicesMap.GetServices() {
+			for _, service := range i.services {
 				protoServiceDetails = append(protoServiceDetails, &registrationapi.RegisterInwayRequest_RegisterService{
 					Name:                        service.Name,
 					Internal:                    service.Internal,
@@ -256,7 +235,7 @@ func (i *Inway) announceToDirectory(ctx context.Context) {
 
 			i.logger.Info("directory registration successful")
 
-			sleepDuration = 10 * time.Second
+			sleepDuration = announceToDirectoryInterval
 
 			expBackOff.Reset()
 		}

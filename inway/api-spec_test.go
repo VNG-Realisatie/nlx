@@ -16,7 +16,7 @@ import (
 	"go.uber.org/zap"
 
 	common_tls "go.nlx.io/nlx/common/tls"
-	"go.nlx.io/nlx/inway/config"
+	"go.nlx.io/nlx/inway/plugins"
 )
 
 var pkiDir = filepath.Join("..", "testing", "pki")
@@ -37,93 +37,73 @@ func TestInwayApiSpec(t *testing.T) {
 		}))
 	defer mockAPISpecEndpoint.Close()
 
-	serviceConfig := &config.ServiceConfig{}
-	serviceConfig.Services = make(map[string]config.ServiceDetails)
-	serviceConfig.Services["mock-service-public"] = config.ServiceDetails{
-		ServiceDetailsBase: config.ServiceDetailsBase{
-			EndpointURL:        mockAPISpecEndpoint.URL,
-			AuthorizationModel: config.AuthorizationmodelNone,
-		},
-	}
-	serviceConfig.Services["mock-service-public-apispec"] = config.ServiceDetails{
-		ServiceDetailsBase: config.ServiceDetailsBase{
-			EndpointURL:                 mockAPISpecEndpoint.URL,
-			AuthorizationModel:          config.AuthorizationmodelNone,
-			APISpecificationDocumentURL: mockAPISpecEndpoint.URL,
-		},
-	}
-	serviceConfig.Services["mock-service-public-invalid-apispec"] = config.ServiceDetails{
-		ServiceDetailsBase: config.ServiceDetailsBase{
-			EndpointURL:                 mockAPISpecEndpoint.URL,
-			AuthorizationModel:          config.AuthorizationmodelNone,
-			APISpecificationDocumentURL: "invalid",
-		},
-	}
-
 	logger := zap.NewNop()
 
 	ctx := context.Background()
-	iw, err := NewInway(ctx, logger, nil, "", "", "localhost:1812", "localhost:1813", "", cert, cert, "localhost:1815")
+	iw, err := NewInway(ctx, logger, nil, nil, nil, "my.inway", "localhost:1811", "localhost:1812", "localhost:1813", cert, "localhost:1815")
 	assert.Nil(t, err)
 
 	apiSpecMockServer := httptest.NewUnstartedServer(http.HandlerFunc(iw.handleAPISpecDocRequest))
-	apiSpecMockServer.TLS = iw.orgCertBundle.TLSConfig(iw.orgCertBundle.WithTLSClientAuth())
-
-	apiSpecMockServer.StartTLS()
 	defer apiSpecMockServer.Close()
 
-	endPoints := []ServiceEndpoint{}
+	apiSpecMockServer.Start()
 
-	for serviceName := range serviceConfig.Services {
-		serviceDetails := serviceConfig.Services[serviceName]
+	services := []*plugins.Service{{
+		Name:                        "mock-service",
+		APISpecificationDocumentURL: mockAPISpecEndpoint.URL,
+	}, {
+		Name: "mock-service-without-api-spec",
+	}, {
+		Name:                        "mock-service-invalid-api-spec",
+		APISpecificationDocumentURL: "invalid",
+	}}
 
-		endpoint, errEndpoint := iw.NewHTTPServiceEndpoint(serviceName, &serviceDetails, nil)
-		assert.Nil(t, errEndpoint)
+	err = iw.SetServiceEndpoints(services)
+	assert.Nil(t, err)
 
-		endPoints = append(endPoints, endpoint)
-	}
-
-	err = iw.SetServiceEndpoints(endPoints)
-	if err != nil {
-		t.Fatal("error adding endpoint", err)
-	}
-
-	tests := []struct {
+	tests := map[string]struct {
 		url          string
-		logRecordID  string
 		statusCode   int
 		errorMessage string
 	}{
-		{fmt.Sprintf("%s/.nlx/api-spec-doc/mock-service-public", apiSpecMockServer.URL),
-			"dummy-ID", http.StatusNotFound, "api specification not found for service\n"},
-		{fmt.Sprintf("%s/.nlx/api-spec-doc/nonexisting-service", apiSpecMockServer.URL),
-			"dummy-ID", http.StatusNotFound, "service not found\n"},
-		{fmt.Sprintf("%s/.nlx/api-spec-doc/mock-service-public-invalid-apispec", apiSpecMockServer.URL),
-			"dummy-ID", http.StatusInternalServerError, "server error\n"},
-		{fmt.Sprintf("%s/.nlx/api-spec-doc/mock-service-public-apispec", apiSpecMockServer.URL), "dummy-ID", http.StatusOK, ""},
+		"without_api_specification_url": {
+			url:          fmt.Sprintf("%s/.nlx/api-spec-doc/mock-service-without-api-spec", apiSpecMockServer.URL),
+			statusCode:   http.StatusNotFound,
+			errorMessage: "api specification not found for service\n",
+		},
+		"service_not_found": {
+			url:          fmt.Sprintf("%s/.nlx/api-spec-doc/nonexisting-service", apiSpecMockServer.URL),
+			statusCode:   http.StatusNotFound,
+			errorMessage: "service not found\n"},
+		"invalid_api_specification": {
+			url:          fmt.Sprintf("%s/.nlx/api-spec-doc/mock-service-invalid-api-spec", apiSpecMockServer.URL),
+			statusCode:   http.StatusInternalServerError,
+			errorMessage: "server error\n"},
+		"happy_flow": {
+			url:          fmt.Sprintf("%s/.nlx/api-spec-doc/mock-service", apiSpecMockServer.URL),
+			statusCode:   http.StatusOK,
+			errorMessage: ""},
 	}
 
-	client := setupClient(cert)
+	client := http.Client{}
 
-	for _, test := range tests {
-		req, err := http.NewRequest("GET", test.url, nil)
-		if err != nil {
-			t.Fatal(err)
-		}
+	for name, test := range tests {
+		tc := test
 
-		req.Header.Add("X-NLX-Logrecord-Id", test.logRecordID)
-		resp, err := client.Do(req)
-		if err != nil {
-			t.Fatal(`error doing http request`, err)
-		}
+		t.Run(name, func(t *testing.T) {
+			req, err := http.NewRequest("GET", tc.url, nil)
+			assert.Nil(t, err)
 
-		bytes, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			t.Fatal("error parsing result.body", err)
-		}
-		resp.Body.Close()
+			resp, err := client.Do(req)
+			assert.Nil(t, err)
 
-		assert.Equal(t, test.statusCode, resp.StatusCode)
-		assert.Equal(t, test.errorMessage, string(bytes))
+			bytes, err := ioutil.ReadAll(resp.Body)
+			assert.Nil(t, err)
+
+			resp.Body.Close()
+
+			assert.Equal(t, tc.statusCode, resp.StatusCode)
+			assert.Equal(t, tc.errorMessage, string(bytes))
+		})
 	}
 }
