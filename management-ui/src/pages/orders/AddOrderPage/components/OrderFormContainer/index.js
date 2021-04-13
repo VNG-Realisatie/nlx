@@ -6,7 +6,7 @@ import React, { useEffect } from 'react'
 import { observer } from 'mobx-react'
 import { func } from 'prop-types'
 import OrderForm from '../OrderForm'
-import useStores from '../../../../hooks/use-stores'
+import useStores from '../../../../../hooks/use-stores'
 
 const OrderFormContainer = ({ onSubmitHandler }) => {
   const { directoryServicesStore } = useStores()

@@ -6,7 +6,7 @@ import React from 'react'
 import userEvent from '@testing-library/user-event'
 import { waitFor, fireEvent } from '@testing-library/react'
 import selectEvent from 'react-select-event'
-import { renderWithProviders } from '../../../../test-utils'
+import { renderWithProviders } from '../../../../../test-utils'
 import OrderForm from './index'
 
 test('the form values of the onSubmitHandler', async () => {
@@ -27,7 +27,7 @@ test('the form values of the onSubmitHandler', async () => {
   userEvent.type(getByLabelText(/Order description/), 'my-description')
   userEvent.type(getByLabelText(/Reference/), 'my-reference')
   userEvent.type(getByLabelText(/Public key PEM/), 'my-public-key-pem')
-  userEvent.type(getByLabelText(/Delegatee/), 'my-delegatee')
+  userEvent.type(getByLabelText(/Delegated organization/), 'my-delegatee')
   fireEvent.change(getByLabelText(/Valid from/), {
     target: { value: '2021-01-01' },
   })

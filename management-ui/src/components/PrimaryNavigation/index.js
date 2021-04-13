@@ -3,7 +3,6 @@
 //
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-
 import {
   IconArrowLeftRight,
   IconDirectory,
@@ -62,9 +61,9 @@ const PrimaryNavigation = () => {
       </section>
 
       <section>
-        <StyledLink to="/orders/add" aria-label={t('Add order page')}>
+        <StyledLink to="/orders" aria-label={t('Orders page')}>
           <StyledIcon as={IconUserCheck} size="x-large" />
-          {t('Add order')}
+          {t('Orders')}
         </StyledLink>
         <StyledLink to="/settings" aria-label={t('Settings page')}>
           <StyledIcon as={IconSettings} size="x-large" />

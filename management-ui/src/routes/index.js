@@ -11,9 +11,10 @@ import DirectoryPage from '../pages/directory/DirectoryPage'
 import EditServicePage from '../pages/services/EditServicePage'
 import FinancePage from '../pages/FinancePage'
 import AuditLogPage from '../pages/AuditLogPage'
-import AddOrderPage from '../pages/AddOrderPage'
 import SettingsPage from '../pages/SettingsPage'
 import NotFoundPage from '../pages/NotFoundPage'
+import OrdersPage from '../pages/orders/OrdersPage'
+import AddOrderPage from '../pages/orders/AddOrderPage'
 import AuthenticatedRoute, { LoginRoutePath } from './authenticated-route'
 
 const Routes = () => {
@@ -38,7 +39,8 @@ const Routes = () => {
       />
       <AuthenticatedRoute path="/finances" component={FinancePage} />
       <AuthenticatedRoute path="/audit-log" component={AuditLogPage} />
-      <AuthenticatedRoute path="/orders/add" component={AddOrderPage} />
+      <AuthenticatedRoute path="/orders/add-order" component={AddOrderPage} />
+      <AuthenticatedRoute path="/orders" component={OrdersPage} />
       <AuthenticatedRoute path="/settings" component={SettingsPage} />
 
       <Route path="*" component={NotFoundPage} />

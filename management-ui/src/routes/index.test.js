@@ -25,7 +25,10 @@ jest.mock('../pages/AuditLogPage', () => () => (
 jest.mock('../pages/FinancePage', () => () => (
   <div data-testid="finances-page" />
 ))
-jest.mock('../pages/AddOrderPage', () => () => (
+jest.mock('../pages/orders/OrdersPage', () => () => (
+  <div data-testid="orders-page" />
+))
+jest.mock('../pages/orders/AddOrderPage', () => () => (
   <div data-testid="add-order-page" />
 ))
 
@@ -130,8 +133,20 @@ test('the /finances route renders the FinancePage', () => {
   expect(getByTestId('finances-page')).toBeInTheDocument()
 })
 
+test('the /orders route renders the OrdersPage', () => {
+  const history = createMemoryHistory({ initialEntries: ['/orders'] })
+  const { getByTestId } = renderWithProviders(
+    <Router history={history}>
+      <UserContextProvider user={{ id: '42' }}>
+        <Routes />
+      </UserContextProvider>
+    </Router>,
+  )
+  expect(getByTestId('orders-page')).toBeInTheDocument()
+})
+
 test('the /orders/add route renders the AddOrderPage', () => {
-  const history = createMemoryHistory({ initialEntries: ['/orders/add'] })
+  const history = createMemoryHistory({ initialEntries: ['/orders/add-order'] })
   const { getByTestId } = renderWithProviders(
     <Router history={history}>
       <UserContextProvider user={{ id: '42' }}>

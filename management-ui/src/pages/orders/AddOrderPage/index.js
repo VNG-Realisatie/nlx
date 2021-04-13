@@ -4,8 +4,8 @@
 import React, { useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, ToasterContext } from '@commonground/design-system'
-import PageTemplate from '../../components/PageTemplate'
-import { useOrderStore } from '../../hooks/use-stores'
+import PageTemplate from '../../../components/PageTemplate'
+import { useOrderStore } from '../../../hooks/use-stores'
 import OrderFormContainer from './components/OrderFormContainer'
 
 const AddOrderPage = () => {
@@ -29,7 +29,7 @@ const AddOrderPage = () => {
   return (
     <PageTemplate>
       <PageTemplate.HeaderWithBackNavigation
-        backButtonTo="/"
+        backButtonTo="/orders"
         title={t('New order')}
       />
 

@@ -2,22 +2,19 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { string, func, arrayOf, shape } from 'prop-types'
-import { Formik, Form } from 'formik'
+import { arrayOf, func, shape, string } from 'prop-types'
+import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { useTranslation } from 'react-i18next'
 import {
   Button,
   FieldLabel,
-  TextInput,
   Select,
+  TextInput,
+  Fieldset,
 } from '@commonground/design-system'
-import DateInput, { isoDateSchema } from '../../../../components/DateInput'
-import {
-  DateInputsWrapper,
-  DateInputWrapper,
-  ButtonWrapper,
-} from './index.styles'
+import DateInput, { isoDateSchema } from '../../../../../components/DateInput'
+import { StyledForm, DateInputsWrapper, DateInputWrapper } from './index.styles'
 
 const OrderForm = ({ services, onSubmitHandler }) => {
   const { t } = useTranslation()
@@ -77,57 +74,60 @@ const OrderForm = ({ services, onSubmitHandler }) => {
         handleSubmit(values)
       }}
     >
-      <Form>
-        <TextInput name="description" size="l">
-          <FieldLabel
-            label={t('Order description')}
-            small={t('For your own reference')}
-          />
-        </TextInput>
+      <StyledForm>
+        <Fieldset>
+          <TextInput name="description" size="l">
+            <FieldLabel
+              label={t('Order description')}
+              small={t('For your own reference')}
+            />
+          </TextInput>
 
-        <TextInput name="reference" size="l">
-          <FieldLabel
-            label={t('Reference')}
-            small={t('This identifier is sent with each request')}
-          />
-        </TextInput>
+          <TextInput name="reference" size="l">
+            <FieldLabel
+              label={t('Reference')}
+              small={t('This identifier is sent with each request')}
+            />
+          </TextInput>
 
-        <TextInput name="publicKeyPEM" size="l" type="textarea">
-          <FieldLabel
-            label={t('Public key PEM')}
-            small={t('The public key of the delegatee as PEM')}
-          />
-        </TextInput>
+          <TextInput name="delegatee" size="l">
+            <FieldLabel label={t('Delegated organization')} />
+          </TextInput>
 
-        <TextInput name="delegatee" size="l">
-          <FieldLabel
-            label={t('Delegatee')}
-            small={t('Beneficiary organization for this order')}
-          />
-        </TextInput>
+          <TextInput name="publicKeyPEM" size="l" type="textarea">
+            <FieldLabel
+              label={t('Public key PEM')}
+              small={t('The public key of the delegated organization as PEM')}
+            />
+          </TextInput>
 
-        <DateInputsWrapper>
-          <DateInputWrapper>
-            <DateInput name="validFrom" label={t('Valid from')} size="s" />
-          </DateInputWrapper>
-          <DateInputWrapper>
-            <DateInput name="validUntil" label={t('Valid until')} size="s" />
-          </DateInputWrapper>
-        </DateInputsWrapper>
+          <DateInputsWrapper>
+            <DateInputWrapper>
+              <DateInput name="validFrom" label={t('Valid from')} size="s" />
+            </DateInputWrapper>
+            <DateInputWrapper>
+              <DateInput name="validUntil" label={t('Valid until')} size="s" />
+            </DateInputWrapper>
+          </DateInputsWrapper>
 
-        <Select name="services" options={selectableServices} size="l" isMulti>
-          <FieldLabel
-            label={t('Services')}
-            small={t(
-              'Is the service not listed? Then please first request access to this service in the directory',
-            )}
-          />
-        </Select>
+          <Select
+            name="services"
+            options={selectableServices}
+            size="l"
+            isMulti
+            placeholder={t('Select a service…')}
+          >
+            <FieldLabel
+              label={t('Services')}
+              small={t(
+                'Is the service not listed? Then please first request access to this service in the directory',
+              )}
+            />
+          </Select>
+        </Fieldset>
 
-        <ButtonWrapper>
-          <Button type="submit">{t('Add order')}</Button>
-        </ButtonWrapper>
-      </Form>
+        <Button type="submit">{t('Add order')}</Button>
+      </StyledForm>
     </Formik>
   )
 }
