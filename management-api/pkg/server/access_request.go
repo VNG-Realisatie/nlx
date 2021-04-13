@@ -313,7 +313,7 @@ func (s *ManagementService) parseProxyMetadata(ctx context.Context) (*proxyMetad
 	}
 
 	publicKeyPEM := pem.EncodeToMemory(&pem.Block{
-		Type:  "RSA PUBLIC KEY",
+		Type:  "PUBLIC KEY",
 		Bytes: publicKeyDER,
 	})
 	if publicKeyPEM == nil {

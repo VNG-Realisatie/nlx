@@ -23,15 +23,19 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
-var testPublicKeyPEM = `-----BEGIN RSA PUBLIC KEY-----
-MIIBCgKCAQEArN5xGkM73tJsCpKny59e5lXNRY+eT0sbWyEGsR1qIPRKmLSiRHl3
-xMsovn5mo6jN3eeK/Q4wKd6Ae5XGzP63pTG6U5KVVB74eQxSFfV3UEOrDaJ78X5m
-BZO+Ku21V2QFr44tvMh5IZDX3RbMB/4Kad6sapmSF00HWrqTVMkrEsZ98DTb5nwG
-Lh3kISnct4tLyVSpsl9s1rtkSgGUcs1TIvWxS2D2mOsSL1HRdUNcFQmzchbfG87k
-XPvicoOISAZDJKDqWp3iuH0gJpQ+XMBfmcD90I7Z/cRQjWP3P93B3V06cJkd00cE
-IRcIQqF8N+lE01H88Fi+wePhZRy92NP54wIDAQAB
------END RSA PUBLIC KEY-----
+var (
+	testPublicKeyPEM = `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArN5xGkM73tJsCpKny59e
+5lXNRY+eT0sbWyEGsR1qIPRKmLSiRHl3xMsovn5mo6jN3eeK/Q4wKd6Ae5XGzP63
+pTG6U5KVVB74eQxSFfV3UEOrDaJ78X5mBZO+Ku21V2QFr44tvMh5IZDX3RbMB/4K
+ad6sapmSF00HWrqTVMkrEsZ98DTb5nwGLh3kISnct4tLyVSpsl9s1rtkSgGUcs1T
+IvWxS2D2mOsSL1HRdUNcFQmzchbfG87kXPvicoOISAZDJKDqWp3iuH0gJpQ+XMBf
+mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
+4wIDAQAB
+-----END PUBLIC KEY-----
 `
+	testPublicKeyFingerprint = "60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4="
+)
 
 func newCertificateBundle() (*common_tls.CertificateBundle, error) {
 	pkiDir := filepath.Join("..", "..", "..", "testing", "pki")
@@ -48,7 +52,7 @@ func setProxyMetadata(ctx context.Context) context.Context {
 	md := metadata.Pairs(
 		"nlx-organization", "organization-a",
 		"nlx-public-key-der", "ZHVtbXktcHVibGljLWtleQo=",
-		"nlx-public-key-fingerprint", "7jXDiZNqcp/URnhTZlilbT5xRF+fwqV6eCRiLiavzP0=",
+		"nlx-public-key-fingerprint", testPublicKeyFingerprint,
 	)
 
 	return metadata.NewIncomingContext(ctx, md)

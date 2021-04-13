@@ -4,7 +4,6 @@ package tls
 
 import (
 	"crypto"
-	"crypto/rsa"
 	"crypto/sha256"
 	"crypto/tls"
 	"crypto/x509"
@@ -56,15 +55,9 @@ func (c *CertificateBundle) PublicKey() crypto.PublicKey {
 }
 
 func (c *CertificateBundle) PublicKeyPEM() (string, error) {
-	publicKey, ok := c.Certificate().PublicKey.(*rsa.PublicKey)
-	if !ok {
-		return "", errors.New("invalid public key")
-	}
-
-	publicKeyDER := x509.MarshalPKCS1PublicKey(publicKey)
 	publicKeyPEM := pem.EncodeToMemory(&pem.Block{
-		Type:  "RSA PUBLIC KEY",
-		Bytes: publicKeyDER,
+		Type:  "PUBLIC KEY",
+		Bytes: c.Certificate().RawSubjectPublicKeyInfo,
 	})
 
 	if publicKeyPEM == nil {

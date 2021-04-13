@@ -127,5 +127,5 @@ func parsePublicKeyFromPEM(publicKeyPEM string) (crypto.PublicKey, error) {
 		return nil, ErrCannotParsePublicKeyFromPEM
 	}
 
-	return x509.ParsePKCS1PublicKey(block.Bytes)
+	return x509.ParsePKIXPublicKey(block.Bytes)
 }

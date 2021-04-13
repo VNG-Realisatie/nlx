@@ -123,8 +123,8 @@ func (p *Proxy) streamInterceptor(srv interface{}, serverStream grpc.ServerStrea
 		return status.Error(codes.Internal, "invalid format for public key")
 	}
 
-	publicKeyDER := x509.MarshalPKCS1PublicKey(publicKey)
-	if publicKeyDER == nil {
+	publicKeyDER, err := x509.MarshalPKIXPublicKey(publicKey)
+	if err != nil {
 		p.logger.Warn("invalid format for public key")
 		return status.Error(codes.Internal, "invalid format for public key")
 	}

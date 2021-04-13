@@ -128,7 +128,7 @@ func validatePublicKey(value interface{}) error {
 		return ErrExpectPublicKeyAsPEM
 	}
 
-	_, err := x509.ParsePKCS1PublicKey(block.Bytes)
+	_, err := x509.ParsePKIXPublicKey(block.Bytes)
 	if err != nil {
 		return ErrInvalidPublicKey
 	}
