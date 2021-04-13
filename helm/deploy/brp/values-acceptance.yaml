@@ -40,6 +40,42 @@ global:
 ################
 ## Sub-charts ##
 ################
+nlx-management:
+  config:
+    oidc:
+      clientSecret: gKV1nhAtGx2fJLMbx0ao
+      discoveryURL: https://dex.acc.voorbeeld-brp.nl
+      redirectURL: https://management.acc.voorbeeld-brp.nl/oidc/callback
+      sessionSignKey: wXDSJYQjSLCsigtnRCbBMWjnvEhHFdu4
+  ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - management.acc.voorbeeld-brp.nl
+    tls:
+      - secretName: brp-nlx-management-ingress-tls
+        hosts:
+          - management.acc.voorbeeld-brp.nl
+
+dex:
+  config:
+    issuer: https://dex.acc.voorbeeld-brp.nl
+    staticClients:
+      - id: nlx-management
+        name: NLX Management
+        secret: gKV1nhAtGx2fJLMbx0ao
+        redirectURIs:
+          - https://management.acc.voorbeeld-brp.nl/oidc/callback
+  ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - dex.acc.voorbeeld-brp.nl
+    tls:
+      - secretName: brp-dex-ingress-tls
+        hosts:
+          - dex.acc.voorbeeld-brp.nl
+
 nlx-inway:
   config:
     serviceConfig:

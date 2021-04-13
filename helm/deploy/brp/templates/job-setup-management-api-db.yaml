@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "brp.fullname" . }}-setup-management-api-db
+  labels:
+    {{- include "brp.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "1"
+    helm.sh/hook-delete-policy: "before-hook-creation,hook-succeeded"
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "brp.selectorLabels" . | nindent 8 }}
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: management-api-db
+          image: postgres:alpine
+          command: ["/bin/sh"]
+          args:
+            - "-exc"
+            - |
+              psql --echo-errors "${POSTGRES_DSN}" <<EOF
+                SELECT 'CREATE DATABASE nlx_management' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'nlx_management')\gexec
+              EOF
+          env:
+            - name: POSTGRES_HOST
+              value: {{ required "PostgreSQL hostname is required" .Values.managementAPI.postgresql.hostname }}
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.managementAPI.postgresql.existingSecret }}
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.managementAPI.postgresql.existingSecret }}
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DSN
+              value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):5432/postgres?sslmode=disable&connect_timeout=10'

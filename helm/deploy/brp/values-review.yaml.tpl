@@ -7,13 +7,34 @@ postgresql:
 ################
 ## Sub-charts ##
 ################
-nlx-inway:
+managementAPI:
+  insight:
+    insightAPIURL: https://insight-api-brp-{{DOMAIN_SUFFIX}}
+    irmaServerURL: https://irma-brp-{{DOMAIN_SUFFIX}}
+
+nlx-management:
   config:
-    serviceConfig:
-      services:
-        basisregistratie:
-          insight-api-url: https://insight-api-brp-{{DOMAIN_SUFFIX}}
-          irma-api-url: https://irma-brp-{{DOMAIN_SUFFIX}}
+    oidc:
+      clientSecret: 99DbIk7FqlUYqbyD3qSX4Wmf
+      discoveryURL: https://dex-brp-{{DOMAIN_SUFFIX}}
+      redirectURL: https://nlx-management-brp-{{DOMAIN_SUFFIX}}/oidc/callback
+      sessionSignKey: 0Xn2DBfb4L4hwN3XosbwoKZalLBU68UU
+  ingress:
+    hosts:
+      - nlx-management-brp-{{DOMAIN_SUFFIX}}
+
+dex:
+  config:
+    issuer: https://dex-brp-{{DOMAIN_SUFFIX}}
+    staticClients:
+      - id: nlx-management
+        name: NLX Management
+        secret: 99DbIk7FqlUYqbyD3qSX4Wmf
+        redirectURIs:
+          - https://nlx-management-brp-{{DOMAIN_SUFFIX}}/oidc/callback
+  ingress:
+    hosts:
+      - dex-brp-{{DOMAIN_SUFFIX}}
 
 insight-api:
   ingress:

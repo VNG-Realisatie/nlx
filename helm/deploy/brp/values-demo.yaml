@@ -52,6 +52,44 @@ ca:
 ################
 ## Sub-charts ##
 ################
+nlx-management:
+  config:
+    directoryInspectionHostname: directory-inspection-api.demo.nlx.io
+    directoryRegistrationHostname: directory-registration-api.demo.nlx.io
+    oidc:
+      clientSecret: gKV1nhAtGx2fJLMbx0ao
+      discoveryURL: https://dex.demo.voorbeeld-brp.nl
+      redirectURL: https://management.demo.voorbeeld-brp.nl/oidc/callback
+      sessionSignKey: wXDSJYQjSLCsigtnRCbBMWjnvEhHFdu4
+  ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - management.demo.voorbeeld-brp.nl
+    tls:
+      - secretName: brp-nlx-management-ingress-tls
+        hosts:
+          - management.demo.voorbeeld-brp.nl
+
+dex:
+  config:
+    issuer: https://dex.demo.voorbeeld-brp.nl
+    staticClients:
+      - id: nlx-management
+        name: NLX Management
+        secret: gKV1nhAtGx2fJLMbx0ao
+        redirectURIs:
+          - https://management.demo.voorbeeld-brp.nl/oidc/callback
+  ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - dex.demo.voorbeeld-brp.nl
+    tls:
+      - secretName: brp-dex-ingress-tls
+        hosts:
+          - dex.demo.voorbeeld-brp.nl
+
 nlx-inway:
   config:
     selfAddress: inway.demo.voorbeeld-brp.nl:443

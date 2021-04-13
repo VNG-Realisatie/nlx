@@ -1,0 +1,9 @@
+apiVersion: cert-manager.io/v1beta1
+kind: Issuer
+metadata:
+  name: {{ include "brp.fullname" . }}
+  labels:
+    {{- include "brp.labels" . | nindent 4 }}
+spec:
+  ca:
+    secretName: {{ include "brp.fullname" . }}-ca-issuer

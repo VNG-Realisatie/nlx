@@ -36,6 +36,7 @@ Deploy review:
     - |
       start_section deploy_brp "Deploy BRP chart"
       sed -e "s|{{DOMAIN_SUFFIX}}|${DOMAIN_SUFFIX}|g" ./helm/deploy/brp/values-review.yaml.tpl > brp-values-review.yaml
+      helm dependency build ./helm/deploy/brp
       helm upgrade brp ./helm/deploy/brp \
         --install \
         --namespace ${K8S_NAMESPACE} \

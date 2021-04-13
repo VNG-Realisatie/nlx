@@ -264,6 +264,7 @@ When Traefik and KubeDB are running, you can start all the NLX components by exe
 helm repo add stable https://charts.helm.sh/stable
 helm dependency build ./helm/deploy/haarlem
 helm dependency build ./helm/deploy/rdw
+helm dependency build ./helm/deploy/brp
 
 helm upgrade --install shared ./helm/deploy/shared
 helm upgrade --install brp ./helm/deploy/brp

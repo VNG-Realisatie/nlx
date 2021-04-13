@@ -40,6 +40,42 @@ global:
       W0Kbud2Kq3mOWOIeXqZ0008uk90KzXZ1zekXDO2/hIERtDhYgKg=
       -----END CERTIFICATE-----
 
+    # pki/organization-a/ca/root.pem
+    rootCertificatePEM: |
+      # Subject: C=NL, O=Organization-A, CN=Organization-A Root CA
+      # Issuer: C=NL, O=Organization-A, CN=Organization-A Root CA
+      -----BEGIN CERTIFICATE-----
+      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
+      -----END CERTIFICATE-----
+
 ###########
 ## Chart ##
 ###########
@@ -62,7 +98,130 @@ transactionLog:
   existingSecret: brp-postgresql-auth
   resetDatabase: false
 
+nlxctl:
+  image:
+    registry: docker.io
+    repository: nlxio/nlxctl
+    tag: ""
+    pullPolicy: IfNotPresent
+  tls:
+    existingSecret: brp-nlxctl-tls
+
+managementAPI:
+  address: brp-nlx-management-api:443
+  image:
+    registry: docker.io
+    repository: nlxio/management-api
+    tag: ""
+    pullPolicy: IfNotPresent
+  service:
+    name: basisregistratie
+    endpointURL: http://brp-mock-service
+    apiSpecificationURL: http://brp-mock-service/openapi.json
+    publicSupportContact: public-support@nlx.io
+    documentationUrl: https://nlx.io
+    authorizationSettings:
+      mode: none
+    inways:
+      - brp-nlx-inway
+  insight:
+    insightAPIURL: https://insight-api.brp.nlx.minikube
+    irmaServerURL: https://irma.brp.nlx.minikube
+  postgresql:
+    hostname: brp-postgresql
+    existingSecret: brp-postgresql-auth
+
 ca:
+  issuer:
+    # pki/organization-a/ca/intermediate.pem
+    certificatePEM: |
+      # Subject: C=NL, O=Organization-A, CN=Organization-A Intermediate CA
+      # Issuer: C=NL, O=Organization-A, CN=Organization-A Root CA
+      -----BEGIN CERTIFICATE-----
+      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
+      -----END CERTIFICATE-----
+    # pki/organization-a/ca/intermediate-key.pem
+    keyPEM: |
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIJKQIBAAKCAgEAzE5o7iI++jp++sCZ0TD0ts4JdwEs8UEXq97bLL4h+SrJZ8JA
+      QXnZmi+N0LberdSaH961gIEKpTxuufQmn8vMUucmKgRvcE2JpjgtdoY05QVIvWuE
+      VQTj9W8vEvHWgVPZvJ73mVvWcoIjfNjZkAT3MCXy73yiUDGk0jJYDETXUz8KNlEU
+      1jzwmJQzeXgCoT66XN9jxD9IN13vdZLQWmcQaJxC8LMWLwWAvAy5K38V5X7urnFS
+      FvXRlNlOUa1JhnT9eHntQyxnFSja3mdF0BTBQxqm986F5MwWtFLnKUnf8XqvKXPq
+      DiN4q7164oXj1q1q6v0078k35Oshds4thw8I/OhYWOJLzqp5O7aY3f/NT3FTd8wG
+      mix0WBhcqOBWsgZOBDLImgNSnkDxumKxhPby3g7m9nj8mI+QRuzmF/p/zlEqqCbE
+      +GPCTqUtkabRFUBfZhUMIj6rVGx4F6FqBu3Ns6eXNErZjAiu95xsOx3hxpbwu5gI
+      hZNerwK7JgOnK6EJEIp493/Qr9bO5IP/T8JsYFEr4zbLn3oN4D5RsCG+4QUxDTHu
+      Jcjlt4xu2gUEDWfBjVNtD/jFY8Y7gqYW4qMpuocuiHo4xEfpGLnYty2grN+8PqCr
+      BQ80DNAqqkgCOXBBA70V24mV2eBAyLrzx1hI7pJ9og7JH0u7s3KBLCcN2jMCAwEA
+      AQKCAgB8PEH6bMC3ENMeT/g5CPgGIYwH3aMioV5vmPjWYFfwWGBYw/qm1h3IcJpg
+      DJOkSN/f+WGNXurGR9VdJmZGTXtV/lFqw3+wXrYRaZ/brwiDK49r//FccbjdClsp
+      vf2ebwq8dD5D92CUCSbjSEokFaDqmmj70GIzObzsRMjdzQ7TBEaFeRCepjf30Ebs
+      2llfC/Hvf7f/Iiwb3vc6G6ivEHUd58ec7onS1hnOQD5pgMIj5+fkE+zDIX/sb6f8
+      as+G/6USmbH5YwrcBxfwngQJ4FUVJSPbFK6+zowP40nGBbIz+VKCdoYhStiaNoJ/
+      NMOzS4j0lDyYg1eF0KVsxTtSIYZojXDXro99b6yCg4oqh3Xi93y9L3I3xRItP/yh
+      0FnXJgB21ByfBEdG/xN03szfcXScPmU1WZdzaMLd47eBR2a8cjzYSB9T7NQTxKZG
+      bBCksos4Ad9MQ4YMWPDAaYE+uDHJrkzDb8gsKKfYI/6uJIG4/DvNUcSwFL7eGiEF
+      Ioe5FXQ8r8191QSec4QW8AK/iw2p+TY6+C67QDvSOfbyWoOvEr0RkZGKi7tek2N5
+      roVOMHyl3dcJd1LVBn7ennYujy9lssPYlk64ce1SrnF68rz98WTvqLYudYHx/z8V
+      VACgkHPaxyjTjQ9tjmhZEHpEVivirPr906CMarM3izHeOIpdYQKCAQEA1gRS419s
+      VsGWFm6+JxW1eNN/pnLJQ5II0YpfJgVtMcXSBUatpM7mQvib+tk70cz1hukPvPvk
+      nyddXOnj2U+6L+Y8pmiHLcdIopbK9DSvPYNkuRCvwCXOSlhGQ4p7yDoCDYSrMfT4
+      cfZqsTdN1vkmTlY7l6lmUxVmEXT9HTyeih1VuIuAkSrvDNK+6tc710csTcKCACp6
+      V0z7eIcmaS7io/ncIhLR+2f+9MiDdUn6Fle5C0Fr9lOjD6ub/bg9gNmj0oxkGJrz
+      0imL/14LoWUkeAGWqtyioOQt5KYLw2KsBF4KB9S1FUzZnbJQBYyWr5PIDx0WMPe4
+      DY+sQwA/NLsEzwKCAQEA9GJuX32jawKjB7YZDXds3fVxX/xzkGdESnvWlPWD1eV2
+      un/54QffhYzdo7qX79stF5EIbadAfWJRQEu5NiES3VjOPcmlXvBA33Nf00Z+tZhI
+      S+A48eCqSvJaxPoVycPiuvJG7c4EQZ5p2JXcUs5u6Sq9/lq99dq59/xyAWP5xaod
+      0qikhlxyzbhY9kpVC0GkGjpA+e1B678NsYKdjFQC3F8EXHw0Fji3CHAdWfQdtoft
+      wWTeOCu7QdsT31odvOhTiaK2KUwcqtk9qowVGgtF6q2sXoB06FxpxLy7ymYEfEcC
+      4zMnmTCZflzH2BiBrDn2e8lQFTocRPvItJG/Kw31XQKCAQBVw5/P3FKXJbbWwIRV
+      N17kz6TM+Bzthh0gk5nzq6MJmiPC14MIk50041nmmZ1eQwt1h/o1mqAQo37HmDcl
+      w8xyG4rciPD7CGx0M4ebe21qcjgv7Z7wmnXj1yI5OMrH/28JKcxNFcVmLgCtieMY
+      rfmK1QXGji0iSGYBwucYC03hPUY30TexdQodEmtNwvkJGU2Iz9S26k7io0f3Efnz
+      lsVePufXg8FARXmncJ81pnKg94CBITN5oCStR/EYKPgEpbL/0iDet2HUK7Adovt4
+      LwcBTGmriQVnAmndwijeoLEcgu70GmqC4awnhOiKgL92FvvKCrb04qCQVq4Kn5O0
+      tumDAoIBAQDT5OS+dzlSd57T+NgQDRSf/0imaUXqVx+nVWjhD1+X/rXLT1th+mmc
+      al9ir0898VRPsrkUGoiYLr80eHPGszagJXftqwFwJ/CXznmvvtfurHNDFs9JKft9
+      sFVzpUNvBiF45skJODAIlUpBOO8n/UW9dgn2mMdMfLHyizhubDkNYkspdH/y4AXK
+      yaSZKCpE8E1RUGE2UrltpuJAn3frTIyOdvRZHHgtLE/HSS6p6Dg7I/DKVqM3IPPk
+      TggVCRXvzaFhHWvEsvHIUURes8c4Jb4hlSR3a/nx3u72Xo6VF4+cEhY22Qvkj3cH
+      UXsVq2oD4t4MxqhhP1lzlryXlCelNR0hAoIBAQCzSveAioLwfezQn+MjZP4/ol7I
+      YssJ07jcBB1k4onbbx06+PiLntqAYJCW7e+RPcU+xbwhwcdIKXo1EFb5K5Yd7Ye2
+      9G5PsCeS9m021cBxWuEb49bBEV15nwQblWR9q/kfaYgB6wuEk7PRIP2nR8jtOkPO
+      O/aUu4n11BlvQYhCvMDA1U7Eqqu6ixANksc3MNFk9MNrL1PhbfRsATtM7Kl3iOVk
+      E0k1u9WbwSGibvfMzgpNByG8KjDV9+98Xh0p10C55aqRtpstI4FOdNjLsa1gT4D/
+      XN4BuoH9LTzX2q4yUImK1ubQ1eStBeso3/+ZM70DNzYLVPk3RSlWBSczIIw0
+      -----END RSA PRIVATE KEY-----
   certificates:
     organization:
       subject:
@@ -73,21 +232,99 @@ ca:
         - brp-nlx-inway
       issuerRef:
         name: shared
+    inway:
+      commonName: brp-nlx-inway
+      dnsNames:
+        - brp-nlx-inway
+      issuerRef:
+        name: brp
+    management-api:
+      commonName: brp-nlx-management-api
+      dnsNames:
+        - brp-nlx-management-api
+      issuerRef:
+        name: brp
+    nlxctl:
+      commonName: nlxctl
+      issuerRef:
+        name: brp
 
 ################
 ## Sub-charts ##
 ################
+nlx-management:
+  config:
+    directoryInspectionHostname: shared-nlx-directory-inspection
+    directoryRegistrationHostname: shared-nlx-directory-registration
+    oidc:
+      clientSecret: 99DbIk7FqlUYqbyD3qSX4Wmf
+      discoveryURL: http://dex.brp.nlx.minikube
+      redirectURL: http://nlx-management.brp.nlx.minikube/oidc/callback
+      sessionSignKey: 0Xn2DBfb4L4hwN3XosbwoKZalLBU68UU
+  tls:
+    organizationCertificate:
+      existingSecret: brp-organization-tls
+    certificate:
+      existingSecret: brp-management-api-tls
+  ingress:
+    enabled: true
+    hosts:
+      - nlx-management.brp.nlx.minikube
+  transactionLog:
+    enabled: true
+    hostname: brp-postgresql
+    database: brp-transaction-log
+    existingSecret: brp-postgresql-auth
+  postgresql:
+    hostname: brp-postgresql
+    existingSecret: brp-postgresql-auth
+
+dex:
+  config:
+    storage:
+      type: sqlite3
+      config:
+        file: ":memory:"
+    logger:
+      level: info
+    issuer: http://dex.brp.nlx.minikube
+    staticClients:
+      - id: nlx-management
+        name: NLX Management
+        secret: 99DbIk7FqlUYqbyD3qSX4Wmf
+        redirectURIs:
+          - http://nlx-management.brp.nlx.minikube/oidc/callback
+    enablePasswordDB: true
+    staticPasswords:
+      - username: admin
+        userID: 23b027bf-b1b1-4a08-b95b-921d4afc38bc
+        hash: $2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W  # password
+        name: Admin User
+        email: admin@example.com
+    oauth2:
+      skipApprovalScreen: false
+  ingress:
+    enabled: true
+    hosts:
+      - dex.brp.nlx.minikube
+  ports:
+    web:
+      servicePort: 80
+  grpc: false
+  certs:
+    web:
+      create: false
+    grpc:
+      create: false
+  rbac:
+    create: false
+    
 nlx-inway:
   config:
     directoryRegistrationHostname: shared-nlx-directory-registration
-    serviceConfig:
-      services:
-        basisregistratie:
-          endpoint-url: http://brp-mock-service
-          api-specification-document-url: http://brp-mock-service/openapi.json
-          authorization-model: none
-          insight-api-url: https://insight-api.brp.nlx.minikube
-          irma-api-url: https://irma.brp.nlx.minikube
+    managementAPI:
+      enabled: true
+      address: brp-nlx-management-api:443
   transactionLog:
     hostname: brp-postgresql
     database: brp-transaction-log
@@ -95,7 +332,9 @@ nlx-inway:
   tls:
     organizationCertificate:
       existingSecret: brp-organization-tls
-
+    certificate:
+      existingSecret: brp-inway-tls
+      
 insight-api:
   config:
     configurationFile: |
