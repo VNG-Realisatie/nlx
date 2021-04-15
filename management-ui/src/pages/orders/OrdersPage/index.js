@@ -1,16 +1,33 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button } from '@commonground/design-system'
-import { Link } from 'react-router-dom'
+import { Button, ToasterContext } from '@commonground/design-system'
+import { Link, useLocation, useHistory } from 'react-router-dom'
 import PageTemplate from '../../../components/PageTemplate'
 import { IconPlus } from '../../../icons'
-import { Centered, StyledActionsBar } from './index.styles'
+import { StyledActionsBar, Centered } from './index.styles'
 
 const OrdersPage = () => {
   const { t } = useTranslation()
+  const { showToast } = useContext(ToasterContext)
+  const location = useLocation()
+  const history = useHistory()
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search)
+    const lastAction = searchParams.get('lastAction')
+    if (!lastAction) return
+
+    showToast({
+      title: t('Order created successfully'),
+      variant: 'success',
+    })
+
+    history.replace('/orders')
+  }, [location.search, history, showToast, t])
+
   return (
     <PageTemplate>
       <PageTemplate.Header
