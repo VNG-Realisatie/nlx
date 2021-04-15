@@ -22,10 +22,10 @@ const OrderForm = ({ services, onSubmitHandler }) => {
   const initialValues = {
     description: '',
     reference: '',
+    delegatee: '',
     publicKeyPEM: '',
     validFrom: '',
     validUntil: '',
-    delegatee: '',
     services: [],
   }
 
@@ -34,11 +34,11 @@ const OrderForm = ({ services, onSubmitHandler }) => {
       .max(100, t('Maximum of n characters allowed', { n: 100 }))
       .required(t('This field is required')),
     reference: Yup.string().required(t('This field is required')),
-    publicKeyPEM: Yup.string().required(t('This field is required')),
     delegatee: Yup.string()
       .max(100, t('Maximum of n characters allowed', { n: 100 }))
       .matches(/^[a-zA-Z0-9-. _\s]{1,}$/, t('Please use a URL friendly name'))
       .required(t('This field is required')),
+    publicKeyPEM: Yup.string().required(t('This field is required')),
     validFrom: isoDateSchema(t('Invalid date')).required(
       t('This field is required'),
     ),
