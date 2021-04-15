@@ -39,11 +39,6 @@ global:
       vKZ0d7BYa5Tc7mjzUomFPYM8BQQQqClyABHXf0lMwRKn6Q==
       -----END CERTIFICATE-----
 
-###########
-## Chart ##
-###########
-managementAPI:
-
 
 ################
 ## Sub-charts ##
