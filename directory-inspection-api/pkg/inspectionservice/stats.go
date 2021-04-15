@@ -16,7 +16,7 @@ import (
 	"go.nlx.io/nlx/directory-inspection-api/pkg/database"
 )
 
-func (h *InspectionService) ListVersionStatistics(ctx context.Context, _ *emptypb.Empty) (*inspectionapi.ListInOutwayStatisticsResponse, error) {
+func (h *InspectionService) ListInOutwayStatistics(ctx context.Context, _ *emptypb.Empty) (*inspectionapi.ListInOutwayStatisticsResponse, error) {
 	h.logger.Info("rpc request ListOrganizations")
 
 	versionStatistics, err := h.db.ListVersionStatistics(ctx)

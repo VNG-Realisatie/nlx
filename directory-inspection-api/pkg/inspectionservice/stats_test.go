@@ -21,7 +21,7 @@ import (
 	"go.nlx.io/nlx/directory-inspection-api/pkg/inspectionservice"
 )
 
-func TestInspectionService_ListVersionStatistics(t *testing.T) {
+func TestInspectionService_ListInOutwayStatistics(t *testing.T) {
 	tests := []struct {
 		name             string
 		db               func(ctrl *gomock.Controller) database.DirectoryDatabase
@@ -109,7 +109,7 @@ func TestInspectionService_ListVersionStatistics(t *testing.T) {
 			defer ctrl.Finish()
 
 			h := inspectionservice.New(zap.NewNop(), tt.db(ctrl), testGetOrganizationNameFromRequest)
-			got, err := h.ListVersionStatistics(context.Background(), &emptypb.Empty{})
+			got, err := h.ListInOutwayStatistics(context.Background(), &emptypb.Empty{})
 
 			assert.Equal(t, tt.expectedResponse, got)
 			assert.Equal(t, tt.expectedError, err)
