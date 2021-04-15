@@ -86,6 +86,7 @@ import TabItem from '@theme/TabItem';
 - `TLS_ORG_KEY` This is the location of the organization private key.
 - `DISABLE_LOGDB` The value 1 will disable the transaction logs, the value 0 will enable them.
 - `LOG_LEVEL` Log level of the application. Options: debug, info, warn.
+- `MANAGEMENT_API_ADDRESS` The address of the NLX Management API.
 
 </TabItem>
 
