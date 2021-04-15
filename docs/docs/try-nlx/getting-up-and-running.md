@@ -39,10 +39,10 @@ This will start [Dex](https://github.com/dexidp/dex) (Identity Provider), Postgr
 The NLX components are configured using environment variables which in this guide are set in `docker-compose.yml`.
 
 To be able to access NLX Management you will need to create an user with an email matching one of the users in the OpenID Connect Provider.
-Since we already setup the `admin@example.com` user we can use this to create the admin user:
+Since we already setup the `admin@nlx.local` user we can use this to create the admin user:
 
 ```bash
-docker-compose exec api nlx-management-api create-user --email admin@example.com --role admin
+docker-compose exec api nlx-management-api create-user --email admin@nlx.local --role admin
 ```
 
 Below you is an overview of the environment variables per NLX component:
