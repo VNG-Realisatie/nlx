@@ -2,8 +2,8 @@ apiVersion: v2
 name: saas-org-x
 description: Metachart for the Saas Org X demo organization
 type: application
-version: 0.97.0
-appVersion: 0.97.0
+version: 0.97.1
+appVersion: 0.97.1
 
 dependencies:
   - name: dex

@@ -1,3 +1,10 @@
+## [0.97.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.97.0...v0.97.1) (2021-04-15)
+
+
+### Bug Fixes
+
+* **helm:** remove invalid override of managementAPI ([b1719a3](https://gitlab.com/commonground/nlx/nlx/commit/b1719a3d453cfc749fa167127312ed92548fad5d))
+
 # [0.97.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.96.0...v0.97.0) (2021-04-15)
 
 

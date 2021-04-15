@@ -2,8 +2,8 @@ apiVersion: v2
 name: brp
 description: Metachart for the BRP demo organization
 type: application
-version: 0.97.0
-appVersion: 0.97.0
+version: 0.97.1
+appVersion: 0.97.1
 
 dependencies:
   - name: dex
