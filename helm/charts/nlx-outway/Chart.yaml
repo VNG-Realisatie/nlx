@@ -2,5 +2,5 @@ apiVersion: v2
 name: nlx-outway
 description: NLX outway
 type: application
-version: 0.96.0
-appVersion: 0.96.0
+version: 0.97.0
+appVersion: 0.97.0
