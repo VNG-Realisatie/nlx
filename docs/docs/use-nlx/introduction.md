@@ -27,4 +27,4 @@ Below are the most common strategies to deploy NLX to a production like environm
    We have created [native packages for Debian and Red Hat distro's](https://gitlab.com/commonground/nlx/packaging).
 
 Obviously, we are willing to help you in every way we can when you want to start using NLX in production. 
-See the [contact page](../support/contact.md) to find out how to reach us.
+See the [contact page](https://nlx.io/contact) to find out how to reach us.

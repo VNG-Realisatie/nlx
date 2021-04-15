@@ -34,7 +34,6 @@ module.exports = {
       "reference-information/outway-as-proxy",
     ],
     "Support": [
-      "support/contact",
       "support/common-errors"
     ],
     "Compliancy": [
