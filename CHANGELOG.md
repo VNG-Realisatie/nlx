@@ -1,3 +1,16 @@
+# [0.98.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.97.1...v0.98.0) (2021-04-19)
+
+
+### Bug Fixes
+
+* **directory:** correctly retrieve stats from database ([524d5cb](https://gitlab.com/commonground/nlx/nlx/commit/524d5cbbb0cb84c4e26399c6bccc66b1ef5688be)), closes [#1213](https://gitlab.com/commonground/nlx/nlx/issues/1213)
+* **directory:** enable /stats endpoint ([2386fa7](https://gitlab.com/commonground/nlx/nlx/commit/2386fa77c0c75d2aceca2ce4dc83f11523d48450))
+
+
+### Features
+
+* move support/contact page to nlx.io ([5bff2ca](https://gitlab.com/commonground/nlx/nlx/commit/5bff2ca78e931cf3caa881fa11583c93af2c7df8))
+
 ## [0.97.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.97.0...v0.97.1) (2021-04-15)
 
 
