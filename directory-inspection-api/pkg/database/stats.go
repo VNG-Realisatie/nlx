@@ -20,11 +20,10 @@ const (
 	TypeOutway VersionStatisticsType = "outway"
 )
 
-// ListVersionStatistics returns the statistics for every outway version
-func (db PostgreSQLDirectoryDatabase) ListVersionStatistics(ctx context.Context) ([]*VersionStatistics, error) {
+func (db PostgreSQLDirectoryDatabase) ListVersionStatistics(_ context.Context) ([]*VersionStatistics, error) {
 	var result []*VersionStatistics
 
-	err := db.selectVersionStatisticsStatement.Select(result)
+	err := db.selectVersionStatisticsStatement.Select(&result)
 	if err != nil {
 		return nil, err
 	}
