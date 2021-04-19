@@ -76,7 +76,7 @@
     "eslint-plugin-security": "1.4.0",
     "eslint-plugin-standard": "4.1.0",
     "history": "4.10.1",
-    "http-proxy-middleware": "1.1.2",
+    "http-proxy-middleware": "1.2.0",
     "i18next-parser": "3.7.0",
     "jest-fetch-mock": "3.0.3",
     "prettier": "2.2.1",
