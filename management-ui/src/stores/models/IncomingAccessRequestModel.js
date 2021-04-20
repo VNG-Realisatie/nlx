@@ -80,7 +80,4 @@ class IncomingAccessRequestModel {
   }).bind(this)
 }
 
-export const createIncomingAccessRequest = (...args) =>
-  new IncomingAccessRequestModel(...args)
-
 export default IncomingAccessRequestModel
