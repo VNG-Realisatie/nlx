@@ -1,14 +1,42 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 //
-import { makeAutoObservable, flow } from 'mobx'
+import { makeAutoObservable, flow, observable } from 'mobx'
 
 class OrderStore {
+  _isLoading = false
+  _orders = observable.map()
+
   constructor({ managementApiClient }) {
     makeAutoObservable(this)
 
     this._managementApiClient = managementApiClient
   }
+
+  get isLoading() {
+    return this._isLoading
+  }
+
+  get orders() {
+    return [...this._orders.values()]
+  }
+
+  fetchAll = flow(function* fetchAll() {
+    this._isLoading = true
+
+    try {
+      const result = yield this._managementApiClient.managementListIssuedOrders()
+
+      result.orders.forEach((order) => {
+        this._orders.set(order.reference, order)
+      })
+    } catch (error) {
+      this._isLoading = false
+      throw new Error(error.message)
+    }
+
+    this._isLoading = false
+  }).bind(this)
 
   create = flow(function* create(formData) {
     try {

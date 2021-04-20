@@ -1,5 +1,7 @@
 export * from './AuditLogRecordActionType';
 export * from './DirectoryServiceState';
+export * from './ListIssuedOrdersResponseOrder';
+export * from './ListIssuedOrdersResponseOrderService';
 export * from './ManagementAccessGrant';
 export * from './ManagementAccessProof';
 export * from './ManagementAccessRequestState';
@@ -26,6 +28,7 @@ export * from './ManagementListAccessGrantsForServiceResponse';
 export * from './ManagementListAuditLogsResponse';
 export * from './ManagementListIncomingAccessRequestsResponse';
 export * from './ManagementListInwaysResponse';
+export * from './ManagementListIssuedOrdersResponse';
 export * from './ManagementListOutgoingAccessRequestsResponse';
 export * from './ManagementListServicesResponse';
 export * from './ManagementListServicesResponseService';

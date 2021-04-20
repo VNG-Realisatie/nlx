@@ -36,7 +36,7 @@ module.exports = {
        * Default shows localized date: https://day.js.org/docs/en/display/format#localized-formats
        */
       if (value instanceof Date) {
-        return dayjs(value).format(format || 'L')
+        return dayjs(value).format(format || 'LL')
       }
     },
   },

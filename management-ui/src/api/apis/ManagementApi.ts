@@ -60,6 +60,9 @@ import {
     ManagementListInwaysResponse,
     ManagementListInwaysResponseFromJSON,
     ManagementListInwaysResponseToJSON,
+    ManagementListIssuedOrdersResponse,
+    ManagementListIssuedOrdersResponseFromJSON,
+    ManagementListIssuedOrdersResponseToJSON,
     ManagementListOutgoingAccessRequestsResponse,
     ManagementListOutgoingAccessRequestsResponseFromJSON,
     ManagementListOutgoingAccessRequestsResponseToJSON,
@@ -677,6 +680,30 @@ export class ManagementApi extends runtime.BaseAPI {
      */
     async managementListInways(): Promise<ManagementListInwaysResponse> {
         const response = await this.managementListInwaysRaw();
+        return await response.value();
+    }
+
+    /**
+     */
+    async managementListIssuedOrdersRaw(): Promise<runtime.ApiResponse<ManagementListIssuedOrdersResponse>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v1/issued-orders`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementListIssuedOrdersResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async managementListIssuedOrders(): Promise<ManagementListIssuedOrdersResponse> {
+        const response = await this.managementListIssuedOrdersRaw();
         return await response.value();
     }
 

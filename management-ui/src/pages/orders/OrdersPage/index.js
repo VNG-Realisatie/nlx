@@ -1,19 +1,38 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { observer } from 'mobx-react'
 import { useTranslation } from 'react-i18next'
-import { Button, ToasterContext } from '@commonground/design-system'
+import { Alert, Button, ToasterContext } from '@commonground/design-system'
 import { Link, useLocation, useHistory } from 'react-router-dom'
+import { useOrderStore } from '../../../hooks/use-stores'
 import PageTemplate from '../../../components/PageTemplate'
+import LoadingMessage from '../../../components/LoadingMessage'
 import { IconPlus } from '../../../icons'
-import { StyledActionsBar, Centered } from './index.styles'
+import OrdersViewPage from './OrdersViewPage'
+import OrdersEmptyView from './OrdersEmptyView'
+import { StyledActionsBar } from './index.styles'
 
 const OrdersPage = () => {
   const { t } = useTranslation()
   const { showToast } = useContext(ToasterContext)
   const location = useLocation()
   const history = useHistory()
+  const orderStore = useOrderStore()
+  const [error, setError] = useState()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await orderStore.fetchAll()
+      } catch (err) {
+        setError(err.message)
+      }
+    }
+
+    fetchData()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search)
@@ -42,20 +61,23 @@ const OrdersPage = () => {
         </Button>
       </StyledActionsBar>
 
-      <Centered>
-        <h3>
-          <small>{t('Overview not yet available')}</small>
-        </h3>
-        <p>
-          <small>
-            {t(
-              'In the current version of NLX Management it is not yet possible to view the orders you created.',
-            )}
-          </small>
-        </p>
-      </Centered>
+      {orderStore.isLoading ? (
+        <LoadingMessage />
+      ) : error ? (
+        <Alert
+          variant="error"
+          data-testid="error-message"
+          title={t('Failed to load orders')}
+        >
+          {error}
+        </Alert>
+      ) : orderStore.orders.length ? (
+        <OrdersViewPage orders={orderStore.orders} />
+      ) : (
+        <OrdersEmptyView />
+      )}
     </PageTemplate>
   )
 }
 
-export default OrdersPage
+export default observer(OrdersPage)

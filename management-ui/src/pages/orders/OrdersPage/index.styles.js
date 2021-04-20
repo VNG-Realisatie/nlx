@@ -14,5 +14,5 @@ export const Centered = styled.section`
 
 export const StyledActionsBar = styled.div`
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
 `
