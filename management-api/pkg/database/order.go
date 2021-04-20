@@ -94,6 +94,7 @@ func (db *PostgresConfigDatabase) ListIssuedOrders(ctx context.Context) ([]*Orde
 
 	if err := db.DB.
 		WithContext(ctx).
+		Order("valid_until desc").
 		Preload("Services").
 		Find(&orders).Error; err != nil {
 		return nil, err
