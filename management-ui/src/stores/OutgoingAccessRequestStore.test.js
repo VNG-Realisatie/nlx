@@ -48,18 +48,15 @@ test('creating an outgoing access request', async () => {
     },
   })
 
-  expect(outgoingAccessRequest).toEqual(
-    new OutgoingAccessRequestModel({
-      accessRequestData: {
-        id: '42',
-        organizationName: 'organization-name',
-        serviceName: 'service-name',
-        state: ACCESS_REQUEST_STATES.CREATED,
-        createdAt: '2020-10-07T13:01:11.288349Z',
-        updatedAt: null,
-      },
-    }),
+  expect(outgoingAccessRequest).toBeInstanceOf(OutgoingAccessRequestModel)
+  expect(outgoingAccessRequest.id).toEqual('42')
+  expect(outgoingAccessRequest.organizationName).toEqual('organization-name')
+  expect(outgoingAccessRequest.serviceName).toEqual('service-name')
+  expect(outgoingAccessRequest.state).toEqual(ACCESS_REQUEST_STATES.CREATED)
+  expect(outgoingAccessRequest.createdAt).toEqual(
+    new Date('2020-10-07T13:01:11.288349Z'),
   )
+  expect(outgoingAccessRequest.updatedAt).toBeNull()
 })
 
 test('updating from server', async () => {

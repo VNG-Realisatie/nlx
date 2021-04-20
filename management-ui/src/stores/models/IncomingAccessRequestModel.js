@@ -65,7 +65,7 @@ class IncomingAccessRequestModel {
     try {
       yield this.incomingAccessRequestStore.approveAccessRequest(this)
     } catch (error) {
-      console.error('Failed to approve access request: ', error.message)
+      console.error('Failed to approve access request: ', error)
       throw error
     }
   }).bind(this)

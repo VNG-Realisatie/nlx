@@ -52,17 +52,16 @@ test('display service information', () => {
 })
 
 test('requesting access', async () => {
-  configure({ safeDescriptors: false })
-
   const service = buildServiceModel()
-  service.requestAccess = jest.fn()
+  const requestAccessSpy = jest.fn()
+  service.requestAccess = requestAccessSpy
 
   const { getByText } = renderComponent({ service })
 
   fireEvent.click(getByText('Request'))
   fireEvent.click(getByText('Send'))
 
-  await waitFor(() => expect(service.requestAccess).toHaveBeenCalled())
+  await waitFor(() => expect(requestAccessSpy).toHaveBeenCalled())
 })
 
 test('display changes to the service', () => {

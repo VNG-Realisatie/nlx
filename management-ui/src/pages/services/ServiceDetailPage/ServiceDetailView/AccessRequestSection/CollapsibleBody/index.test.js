@@ -3,7 +3,6 @@
 //
 import React from 'react'
 import { fireEvent, within, waitFor } from '@testing-library/react'
-import { configure } from 'mobx'
 import { renderWithProviders } from '../../../../../../test-utils'
 import IncomingAccessRequestModel, {
   STATES,
@@ -20,8 +19,6 @@ test('when no access requests are available', async () => {
 })
 
 test('approving an incoming access request', async () => {
-  configure({ safeDescriptors: false })
-
   const accessRequest = new IncomingAccessRequestModel({
     accessRequestData: {
       id: '1',
@@ -33,7 +30,8 @@ test('approving an incoming access request', async () => {
     },
   })
 
-  accessRequest.approve = jest.fn()
+  const approveSpy = jest.fn()
+  accessRequest.approve = approveSpy
 
   const onApproveOrRejectHandler = jest.fn()
   const { getByTitle, getByRole, findByText } = renderWithProviders(
@@ -49,7 +47,7 @@ test('approving an incoming access request', async () => {
   const okButton = within(confirmModal).getByText('Approve')
   fireEvent.click(okButton)
 
-  await waitFor(() => expect(accessRequest.approve).toHaveBeenCalled())
+  await waitFor(() => expect(approveSpy).toHaveBeenCalled())
   expect(onApproveOrRejectHandler).toHaveBeenCalledTimes(1)
 
   // toast
@@ -57,8 +55,6 @@ test('approving an incoming access request', async () => {
 })
 
 test('rejecting an incoming access request', async () => {
-  configure({ safeDescriptors: false })
-
   const accessRequest = new IncomingAccessRequestModel({
     accessRequestData: {
       id: '1',
@@ -70,7 +66,8 @@ test('rejecting an incoming access request', async () => {
     },
   })
 
-  accessRequest.reject = jest.fn()
+  const rejectSpy = jest.fn()
+  accessRequest.reject = rejectSpy
 
   const onApproveOrRejectHandler = jest.fn()
   const { getByTitle, getByRole, findByText } = renderWithProviders(
@@ -86,7 +83,7 @@ test('rejecting an incoming access request', async () => {
   const okButton = within(confirmModal).getByText('Reject')
   fireEvent.click(okButton)
 
-  await waitFor(() => expect(accessRequest.reject).toHaveBeenCalled())
+  await waitFor(() => expect(rejectSpy).toHaveBeenCalled())
   expect(onApproveOrRejectHandler).toHaveBeenCalledTimes(1)
 
   // toast
