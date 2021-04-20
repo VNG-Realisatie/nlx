@@ -88,3 +88,16 @@ func (db *PostgresConfigDatabase) GetOrderByReference(ctx context.Context, refer
 
 	return order, nil
 }
+
+func (db *PostgresConfigDatabase) ListIssuedOrders(ctx context.Context) ([]*Order, error) {
+	orders := []*Order{}
+
+	if err := db.DB.
+		WithContext(ctx).
+		Preload("Services").
+		Find(&orders).Error; err != nil {
+		return nil, err
+	}
+
+	return orders, nil
+}
