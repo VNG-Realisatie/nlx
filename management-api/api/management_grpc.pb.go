@@ -47,6 +47,7 @@ type ManagementClient interface {
 	ListAuditLogs(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListAuditLogsResponse, error)
 	RetrieveClaimForOrder(ctx context.Context, in *RetrieveClaimForOrderRequest, opts ...grpc.CallOption) (*RetrieveClaimForOrderResponse, error)
 	CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ListIssuedOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListIssuedOrdersResponse, error)
 }
 
 type managementClient struct {
@@ -309,6 +310,15 @@ func (c *managementClient) CreateOrder(ctx context.Context, in *CreateOrderReque
 	return out, nil
 }
 
+func (c *managementClient) ListIssuedOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListIssuedOrdersResponse, error) {
+	out := new(ListIssuedOrdersResponse)
+	err := c.cc.Invoke(ctx, "/nlx.management.Management/ListIssuedOrders", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ManagementServer is the server API for Management service.
 // All implementations must embed UnimplementedManagementServer
 // for forward compatibility
@@ -341,6 +351,7 @@ type ManagementServer interface {
 	ListAuditLogs(context.Context, *emptypb.Empty) (*ListAuditLogsResponse, error)
 	RetrieveClaimForOrder(context.Context, *RetrieveClaimForOrderRequest) (*RetrieveClaimForOrderResponse, error)
 	CreateOrder(context.Context, *CreateOrderRequest) (*emptypb.Empty, error)
+	ListIssuedOrders(context.Context, *emptypb.Empty) (*ListIssuedOrdersResponse, error)
 	mustEmbedUnimplementedManagementServer()
 }
 
@@ -431,6 +442,9 @@ func (UnimplementedManagementServer) RetrieveClaimForOrder(context.Context, *Ret
 }
 func (UnimplementedManagementServer) CreateOrder(context.Context, *CreateOrderRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateOrder not implemented")
+}
+func (UnimplementedManagementServer) ListIssuedOrders(context.Context, *emptypb.Empty) (*ListIssuedOrdersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListIssuedOrders not implemented")
 }
 func (UnimplementedManagementServer) mustEmbedUnimplementedManagementServer() {}
 
@@ -949,6 +963,24 @@ func _Management_CreateOrder_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Management_ListIssuedOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServer).ListIssuedOrders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/nlx.management.Management/ListIssuedOrders",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServer).ListIssuedOrders(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Management_ServiceDesc is the grpc.ServiceDesc for Management service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1067,6 +1099,10 @@ var Management_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateOrder",
 			Handler:    _Management_CreateOrder_Handler,
+		},
+		{
+			MethodName: "ListIssuedOrders",
+			Handler:    _Management_ListIssuedOrders_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

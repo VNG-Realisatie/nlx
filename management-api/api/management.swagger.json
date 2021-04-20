@@ -665,6 +665,28 @@
         ]
       }
     },
+    "/api/v1/issued-orders": {
+      "get": {
+        "operationId": "Management_ListIssuedOrders",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/managementListIssuedOrdersResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Management"
+        ]
+      }
+    },
     "/api/v1/orders": {
       "post": {
         "operationId": "Management_CreateOrder",
@@ -992,6 +1014,45 @@
         "degraded"
       ],
       "default": "unknown"
+    },
+    "ListIssuedOrdersResponseOrder": {
+      "type": "object",
+      "properties": {
+        "reference": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "delegatee": {
+          "type": "string"
+        },
+        "validFrom": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validUntil": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListIssuedOrdersResponseOrderService"
+          }
+        }
+      }
+    },
+    "ListIssuedOrdersResponseOrderService": {
+      "type": "object",
+      "properties": {
+        "organization": {
+          "type": "string"
+        },
+        "service": {
+          "type": "string"
+        }
+      }
     },
     "managementAccessGrant": {
       "type": "object",
@@ -1514,6 +1575,17 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/managementInway"
+          }
+        }
+      }
+    },
+    "managementListIssuedOrdersResponse": {
+      "type": "object",
+      "properties": {
+        "orders": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListIssuedOrdersResponseOrder"
           }
         }
       }

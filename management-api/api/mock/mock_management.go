@@ -397,6 +397,26 @@ func (mr *MockManagementClientMockRecorder) ListInways(ctx, in interface{}, opts
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListInways", reflect.TypeOf((*MockManagementClient)(nil).ListInways), varargs...)
 }
 
+// ListIssuedOrders mocks base method.
+func (m *MockManagementClient) ListIssuedOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.ListIssuedOrdersResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListIssuedOrders", varargs...)
+	ret0, _ := ret[0].(*api.ListIssuedOrdersResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListIssuedOrders indicates an expected call of ListIssuedOrders.
+func (mr *MockManagementClientMockRecorder) ListIssuedOrders(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListIssuedOrders", reflect.TypeOf((*MockManagementClient)(nil).ListIssuedOrders), varargs...)
+}
+
 // ListOutgoingAccessRequests mocks base method.
 func (m *MockManagementClient) ListOutgoingAccessRequests(ctx context.Context, in *api.ListOutgoingAccessRequestsRequest, opts ...grpc.CallOption) (*api.ListOutgoingAccessRequestsResponse, error) {
 	m.ctrl.T.Helper()
@@ -888,6 +908,21 @@ func (m *MockManagementServer) ListInways(arg0 context.Context, arg1 *api.ListIn
 func (mr *MockManagementServerMockRecorder) ListInways(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListInways", reflect.TypeOf((*MockManagementServer)(nil).ListInways), arg0, arg1)
+}
+
+// ListIssuedOrders mocks base method.
+func (m *MockManagementServer) ListIssuedOrders(arg0 context.Context, arg1 *emptypb.Empty) (*api.ListIssuedOrdersResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListIssuedOrders", arg0, arg1)
+	ret0, _ := ret[0].(*api.ListIssuedOrdersResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListIssuedOrders indicates an expected call of ListIssuedOrders.
+func (mr *MockManagementServerMockRecorder) ListIssuedOrders(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListIssuedOrders", reflect.TypeOf((*MockManagementServer)(nil).ListIssuedOrders), arg0, arg1)
 }
 
 // ListOutgoingAccessRequests mocks base method.
