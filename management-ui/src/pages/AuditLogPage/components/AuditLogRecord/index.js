@@ -82,7 +82,7 @@ const AuditLogRecord = ({
   let service = ''
   let servicesList = ''
 
-  if (services && typeof services[0] !== 'undefined') {
+  if (services && services.length) {
     organization = services[0].organization
     service = services[0].service
     servicesList = services
