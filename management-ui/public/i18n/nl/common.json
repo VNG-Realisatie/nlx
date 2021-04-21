@@ -53,7 +53,7 @@
   "Cost per request": "Kosten per request",
   "Cost per request (in Euro)": "Kosten per request (in Euro)",
   "Costs": "Kosten",
-  "date": "{{date, D MMMM YYYY}}",
+  "date": "{{date,}}",
   "Date notation:": "Datumnotatie:",
   "Degraded": "Gedeeltelijk beschikbaar",
   "Delegated organization": "Gedelegeerde organisatie",
