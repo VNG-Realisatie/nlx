@@ -1,6 +1,0 @@
-apiVersion: v2
-name: mock-service
-description: RDW mock service
-type: application
-version: 0.1.0
-appVersion: latest

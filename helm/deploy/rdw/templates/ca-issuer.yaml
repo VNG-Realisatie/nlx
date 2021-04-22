@@ -1,9 +1,0 @@
-apiVersion: cert-manager.io/v1beta1
-kind: Issuer
-metadata:
-  name: {{ include "rdw.fullname" . }}
-  labels:
-    {{- include "rdw.labels" . | nindent 4 }}
-spec:
-  ca:
-    secretName: {{ include "rdw.fullname" . }}-ca-issuer

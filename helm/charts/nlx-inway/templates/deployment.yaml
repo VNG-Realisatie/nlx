@@ -71,7 +71,6 @@ spec:
               value: {{ include "nlx-inway.selfAddress" . }}
             - name: DIRECTORY_REGISTRATION_ADDRESS
               value: "{{ .Values.config.directoryRegistrationHostname }}:443"
-          {{- if .Values.config.managementAPI.enabled }}
             - name: MANAGEMENT_API_ADDRESS
               value: {{ required "Management API address is required" .Values.config.managementAPI.address }}
             - name: TLS_ROOT_CERT
@@ -80,10 +79,6 @@ spec:
               value: /certificate/tls.crt
             - name: TLS_KEY
               value: /certificate/tls.key
-          {{- else }}
-            - name: SERVICE_CONFIG
-              value: /config/service-config.toml
-          {{- end }}
           {{- if .Values.transactionLog.enabled }}
             - name: POSTGRES_USER
               valueFrom:

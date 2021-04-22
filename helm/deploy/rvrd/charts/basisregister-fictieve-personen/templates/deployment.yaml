@@ -1,31 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "mock-service.fullname" . }}
+  name: {{ include "basisregister-fictieve-personen.fullname" . }}
   labels:
-    {{- include "mock-service.labels" . | nindent 4 }}
+    {{- include "basisregister-fictieve-personen.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "mock-service.selectorLabels" . | nindent 6 }}
+      {{- include "basisregister-fictieve-personen.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "mock-service.selectorLabels" . | nindent 8 }}
+        {{- include "basisregister-fictieve-personen.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.image.pullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "mock-service.serviceAccountName" . }}
+      serviceAccountName: {{ include "basisregister-fictieve-personen.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: uwsgi
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: {{ template "mock-service.image" . }}
+          image: {{ template "basisregister-fictieve-personen.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http

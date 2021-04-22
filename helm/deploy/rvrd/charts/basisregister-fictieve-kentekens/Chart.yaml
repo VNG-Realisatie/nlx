@@ -1,0 +1,6 @@
+apiVersion: v2
+name: basisregister-fictieve-kentekens
+description: Basisregister fictieve kentekens (BFK)
+type: application
+version: 0.1.0
+appVersion: latest

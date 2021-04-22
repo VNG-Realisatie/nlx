@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   registry: docker.io
-  repository: nlxio/rvrd-mock-service
+  repository: nlxio/basisregister-fictieve-kentekens
   tag: ""
   pullPolicy: IfNotPresent
   pullSecrets: []

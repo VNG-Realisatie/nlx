@@ -45,9 +45,9 @@ global:
 ca:
   certificates:
     organization:
-      commonName: inway.demo.voorbeeld-rvrd.nl
+      commonName: inway.demo.rvrd.nl
       dnsNames:
-        - inway.demo.voorbeeld-rvrd.nl
+        - inway.demo.rvrd.nl
 
 ################
 ## Sub-charts ##
@@ -58,47 +58,42 @@ nlx-management:
     directoryRegistrationHostname: directory-registration-api.demo.nlx.io
     oidc:
       clientSecret: gKV1nhAtGx2fJLMbx0ao
-      discoveryURL: https://dex.demo.voorbeeld-rvrd.nl
-      redirectURL: https://management.demo.voorbeeld-rvrd.nl/oidc/callback
+      discoveryURL: https://dex.demo.rvrd.nl
+      redirectURL: https://management.demo.rvrd.nl/oidc/callback
       sessionSignKey: wXDSJYQjSLCsigtnRCbBMWjnvEhHFdu4
   ingress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - management.demo.voorbeeld-rvrd.nl
+      - management.demo.rvrd.nl
     tls:
       - secretName: rvrd-nlx-management-ingress-tls
         hosts:
-          - management.demo.voorbeeld-rvrd.nl
+          - management.demo.rvrd.nl
 
 dex:
   config:
-    issuer: https://dex.demo.voorbeeld-rvrd.nl
+    issuer: https://dex.demo.rvrd.nl
     staticClients:
       - id: nlx-management
         name: NLX Management
         secret: gKV1nhAtGx2fJLMbx0ao
         redirectURIs:
-          - https://management.demo.voorbeeld-rvrd.nl/oidc/callback
+          - https://management.demo.rvrd.nl/oidc/callback
   ingress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - dex.demo.voorbeeld-rvrd.nl
+      - dex.demo.rvrd.nl
     tls:
       - secretName: rvrd-dex-ingress-tls
         hosts:
-          - dex.demo.voorbeeld-rvrd.nl
+          - dex.demo.rvrd.nl
 
 nlx-inway:
   config:
-    selfAddress: inway.demo.voorbeeld-rvrd.nl:443
+    selfAddress: inway.demo.rvrd.nl:443
     directoryRegistrationHostname: directory-registration-api.demo.nlx.io
-    serviceConfig:
-      services:
-        basisregistratie:
-          insight-api-url: https://insight-api.demo.voorbeeld-rvrd.nl
-          irma-api-url: https://irma-api.demo.voorbeeld-rvrd.nl
   service:
     type: LoadBalancer
 
@@ -107,19 +102,19 @@ insight-api:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - insight-api.demo.voorbeeld-rvrd.nl
+      - insight-api.demo.rvrd.nl
     tls:
       - secretName: rvrd-insight-api-ingress-tls
         hosts:
-          - insight-api.demo.voorbeeld-rvrd.nl
+          - insight-api.demo.rvrd.nl
 
 irma-server:
   ingress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
       ingress.kubernetes.io/custom-response-headers: "Access-Control-Allow-Origin: https://insight.demo.nlx.io"
-    host: irma-api.demo.voorbeeld-rvrd.nl
+    host: irma-api.demo.rvrd.nl
     tls:
       - secretName: rvrd-irma-server-ingress-tls
         hosts:
-          - irma-api.demo.voorbeeld-rvrd.nl
+          - irma-api.demo.rvrd.nl

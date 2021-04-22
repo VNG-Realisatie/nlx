@@ -24,21 +24,29 @@ spec:
             - "-exc"
             - |
                 nlxctl init --address "${MANAGEMENT_API_ADDRESS}" --cert /certificate/tls.crt --key /certificate/tls.key --ca /config/root.pem
-                echo "${SERVICE_JSON}" > /tmp/service.json
-                if ! nlxctl service list | grep -q $SERVICE_NAME; then
-                    nlxctl service create --config /tmp/service.json
+                echo "${SERVICE_KENTEKENS_JSON}" > /tmp/service-kentekens.json
+                if ! nlxctl service list | grep -q $SERVICE_NAME_KENTEKENS; then
+                    nlxctl service create --config /tmp/service-kentekens.json
+                fi
+                echo "${SERVICE_PERSONEN_JSON}" > /tmp/service-personen.json
+                if ! nlxctl service list | grep -q $SERVICE_NAME_PERSONEN; then
+                    nlxctl service create --config /tmp/service-personen.json
                 fi
                 nlxctl service list
               {{- if hasKey .Values.managementAPI "insight" }}
                 nlxctl insight put --insight-api-url "${INSIGHT_API_URL}" --irma-server-url "${IRMA_SERVER_URL}"
               {{- end}}
           env:
-            - name: SERVICE_NAME
-              value: {{ .Values.managementAPI.service.name | quote }}
+            - name: SERVICE_NAME_KENTEKENS
+              value: {{ .Values.managementAPI.serviceKentekens.name | quote }}
+            - name: SERVICE_NAME_PERSONEN
+              value: {{ .Values.managementAPI.servicePersonen.name | quote }}
+            - name: SERVICE_KENTEKENS_JSON
+              value: {{ .Values.managementAPI.serviceKentekens | toJson | quote }}
+            - name: SERVICE_PERSONEN_JSON
+              value: {{ .Values.managementAPI.servicePersonen | toJson | quote }}
             - name: MANAGEMENT_API_ADDRESS
               value: {{ .Values.managementAPI.address | quote }}
-            - name: SERVICE_JSON
-              value: {{ .Values.managementAPI.service | toJson | quote }}
           {{- if hasKey .Values.managementAPI "insight" }}
             - name: INSIGHT_API_URL
               value: {{ required "Insight API URL is required" .Values.managementAPI.insight.insightAPIURL | quote }}

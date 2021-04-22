@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   registry: docker.io
-  repository: nlxio/rdw-mock-service
+  repository: nlxio/basisregister-fictieve-personen
   tag: ""
   pullPolicy: IfNotPresent
   pullSecrets: []

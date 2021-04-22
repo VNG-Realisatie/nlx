@@ -114,14 +114,20 @@ managementAPI:
     repository: nlxio/management-api
     tag: ""
     pullPolicy: IfNotPresent
-  service:
-    name: basisregistratie
-    endpointURL: http://rvrd-mock-service
-    apiSpecificationURL: http://rvrd-mock-service/openapi.json
+  serviceKentekens:
+    name: basisregister-fictieve-kentekens
+    endpointURL: http://rvrd-basisregister-fictieve-kentekens
+    apiSpecificationURL: http://rvrd-basisregister-fictieve-kentekens/openapi.json
     publicSupportContact: public-support@nlx.io
     documentationUrl: https://nlx.io
-    authorizationSettings:
-      mode: none
+    inways:
+      - rvrd-nlx-inway
+  servicePersonen:
+    name: basisregister-fictieve-personen
+    endpointURL: http://rvrd-basisregister-fictieve-personen
+    apiSpecificationURL: http://rvrd-basisregister-fictieve-personen/openapi.json
+    publicSupportContact: public-support@nlx.io
+    documentationUrl: https://nlx.io
     inways:
       - rvrd-nlx-inway
   insight:

@@ -45,17 +45,6 @@ Deploy review:
         --values rvrd-values-review.yaml
       stop_section deploy_rvrd
     - |
-      start_section deploy_rdw "Deploy RDW chart"
-      sed -e "s|{{DOMAIN_SUFFIX}}|${DOMAIN_SUFFIX}|g" ./helm/deploy/rdw/values-review.yaml.tpl > rdw-values-review.yaml
-      helm dependency build ./helm/deploy/rdw
-      helm upgrade rdw ./helm/deploy/rdw \
-        --install \
-        --namespace ${K8S_NAMESPACE} \
-        --set-string global.imageRegistry=${IMAGE_REGISTRY} \
-        --set-string global.imageTag=${IMAGE_TAG} \
-        --values rdw-values-review.yaml
-      stop_section deploy_rdw
-    - |
       start_section deploy_haarlem "Deploy Haarlem chart"
       sed -e "s|{{DOMAIN_SUFFIX}}|${DOMAIN_SUFFIX}|g" ./helm/deploy/haarlem/values-review.yaml.tpl > haarlem-values-review.yaml
       helm dependency build ./helm/deploy/haarlem
