@@ -13,7 +13,7 @@ fullnameOverride: ""
 config:
   secretKey: 4Xt5OmfJMFwa
   bevolkingsregisterURL: ""
-  rdwURL: ""
+  kentekenregisterURL: ""
 
 serviceAccount:
   # Specifies whether a service account should be created

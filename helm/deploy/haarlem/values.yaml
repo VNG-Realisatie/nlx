@@ -469,7 +469,7 @@ auth-service:
 parkeervergunning-application:
   config:
     bevolkingsregisterURL: http://haarlem-nlx-outway/RvRD/basisregistratie/ingeschreven_natuurlijke_personen
-    rdwURL: http://haarlem-nlx-outway/RDW/kentekenregister/voertuigen
+    kentekenregisterURL: http://haarlem-nlx-outway/RDW/kentekenregister/voertuigen
   ingress:
     enabled: true
     hosts:

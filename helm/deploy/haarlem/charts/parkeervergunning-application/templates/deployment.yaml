@@ -42,8 +42,8 @@ spec:
               value: {{ .Values.config.secretKey | quote }}
             - name: BEVOLKINGSREGISTER_URL
               value: {{ (required "BEVOLKINGSREGISTER_URL is required" .Values.config.bevolkingsregisterURL) | quote }}
-            - name: RDW_URL
-              value: {{ (required "RDW URL is required" .Values.config.rdwURL) | quote }}
+            - name: KENTEKENREGISTER_URL
+              value: {{ (required "KENTEKENREGISTER_URL is required" .Values.config.kentekenregisterURL) | quote }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
     {{- with .Values.nodeSelector }}
