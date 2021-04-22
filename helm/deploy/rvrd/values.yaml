@@ -93,9 +93,9 @@ transactionLog:
     repository: nlxio/txlog-db
     tag: ""
     pullPolicy: IfNotPresent
-  hostname: brp-postgresql
-  databaseName: brp-transaction-log
-  existingSecret: brp-postgresql-auth
+  hostname: rvrd-postgresql
+  databaseName: rvrd-transaction-log
+  existingSecret: rvrd-postgresql-auth
   resetDatabase: false
 
 nlxctl:
@@ -105,10 +105,10 @@ nlxctl:
     tag: ""
     pullPolicy: IfNotPresent
   tls:
-    existingSecret: brp-nlxctl-tls
+    existingSecret: rvrd-nlxctl-tls
 
 managementAPI:
-  address: brp-nlx-management-api:443
+  address: rvrd-nlx-management-api:443
   image:
     registry: docker.io
     repository: nlxio/management-api
@@ -116,20 +116,20 @@ managementAPI:
     pullPolicy: IfNotPresent
   service:
     name: basisregistratie
-    endpointURL: http://brp-mock-service
-    apiSpecificationURL: http://brp-mock-service/openapi.json
+    endpointURL: http://rvrd-mock-service
+    apiSpecificationURL: http://rvrd-mock-service/openapi.json
     publicSupportContact: public-support@nlx.io
     documentationUrl: https://nlx.io
     authorizationSettings:
       mode: none
     inways:
-      - brp-nlx-inway
+      - rvrd-nlx-inway
   insight:
-    insightAPIURL: https://insight-api.brp.nlx.minikube
-    irmaServerURL: https://irma.brp.nlx.minikube
+    insightAPIURL: https://insight-api.rvrd.nlx.minikube
+    irmaServerURL: https://irma.rvrd.nlx.minikube
   postgresql:
-    hostname: brp-postgresql
-    existingSecret: brp-postgresql-auth
+    hostname: rvrd-postgresql
+    existingSecret: rvrd-postgresql-auth
 
 ca:
   issuer:
@@ -226,28 +226,28 @@ ca:
     organization:
       subject:
         organizations:
-          - BRP
-      commonName: brp-nlx-inway
+          - RvRD
+      commonName: rvrd-nlx-inway
       dnsNames:
-        - brp-nlx-inway
+        - rvrd-nlx-inway
       issuerRef:
         name: shared
     inway:
-      commonName: brp-nlx-inway
+      commonName: rvrd-nlx-inway
       dnsNames:
-        - brp-nlx-inway
+        - rvrd-nlx-inway
       issuerRef:
-        name: brp
+        name: rvrd
     management-api:
-      commonName: brp-nlx-management-api
+      commonName: rvrd-nlx-management-api
       dnsNames:
-        - brp-nlx-management-api
+        - rvrd-nlx-management-api
       issuerRef:
-        name: brp
+        name: rvrd
     nlxctl:
       commonName: nlxctl
       issuerRef:
-        name: brp
+        name: rvrd
 
 ################
 ## Sub-charts ##
@@ -258,26 +258,26 @@ nlx-management:
     directoryRegistrationHostname: shared-nlx-directory-registration
     oidc:
       clientSecret: 99DbIk7FqlUYqbyD3qSX4Wmf
-      discoveryURL: http://dex.brp.nlx.minikube
-      redirectURL: http://nlx-management.brp.nlx.minikube/oidc/callback
+      discoveryURL: http://dex.rvrd.nlx.minikube
+      redirectURL: http://nlx-management.rvrd.nlx.minikube/oidc/callback
       sessionSignKey: 0Xn2DBfb4L4hwN3XosbwoKZalLBU68UU
   tls:
     organizationCertificate:
-      existingSecret: brp-organization-tls
+      existingSecret: rvrd-organization-tls
     certificate:
-      existingSecret: brp-management-api-tls
+      existingSecret: rvrd-management-api-tls
   ingress:
     enabled: true
     hosts:
-      - nlx-management.brp.nlx.minikube
+      - nlx-management.rvrd.nlx.minikube
   transactionLog:
     enabled: true
-    hostname: brp-postgresql
-    database: brp-transaction-log
-    existingSecret: brp-postgresql-auth
+    hostname: rvrd-postgresql
+    database: rvrd-transaction-log
+    existingSecret: rvrd-postgresql-auth
   postgresql:
-    hostname: brp-postgresql
-    existingSecret: brp-postgresql-auth
+    hostname: rvrd-postgresql
+    existingSecret: rvrd-postgresql-auth
 
 dex:
   config:
@@ -287,13 +287,13 @@ dex:
         file: ":memory:"
     logger:
       level: info
-    issuer: http://dex.brp.nlx.minikube
+    issuer: http://dex.rvrd.nlx.minikube
     staticClients:
       - id: nlx-management
         name: NLX Management
         secret: 99DbIk7FqlUYqbyD3qSX4Wmf
         redirectURIs:
-          - http://nlx-management.brp.nlx.minikube/oidc/callback
+          - http://nlx-management.rvrd.nlx.minikube/oidc/callback
     enablePasswordDB: true
     staticPasswords:
       - username: admin
@@ -306,7 +306,7 @@ dex:
   ingress:
     enabled: true
     hosts:
-      - dex.brp.nlx.minikube
+      - dex.rvrd.nlx.minikube
   ports:
     web:
       servicePort: 80
@@ -324,16 +324,16 @@ nlx-inway:
     directoryRegistrationHostname: shared-nlx-directory-registration
     managementAPI:
       enabled: true
-      address: brp-nlx-management-api:443
+      address: rvrd-nlx-management-api:443
   transactionLog:
-    hostname: brp-postgresql
-    database: brp-transaction-log
-    existingSecret: brp-postgresql-auth
+    hostname: rvrd-postgresql
+    database: rvrd-transaction-log
+    existingSecret: rvrd-postgresql-auth
   tls:
     organizationCertificate:
-      existingSecret: brp-organization-tls
+      existingSecret: rvrd-organization-tls
     certificate:
-      existingSecret: brp-inway-tls
+      existingSecret: rvrd-inway-tls
       
 insight-api:
   config:
@@ -382,13 +382,13 @@ insight-api:
         pwIDAQAB
         -----END PUBLIC KEY-----
   transactionLog:
-    hostname: brp-postgresql
-    database: brp-transaction-log
-    existingSecret: brp-postgresql-auth
+    hostname: rvrd-postgresql
+    database: rvrd-transaction-log
+    existingSecret: rvrd-postgresql-auth
   ingress:
     enabled: true
     hosts:
-      - insight-api.brp.nlx.minikube
+      - insight-api.rvrd.nlx.minikube
 
 irma-server:
   config:
@@ -442,4 +442,4 @@ irma-server:
     enabled: true
     annotations:
       ingress.kubernetes.io/custom-response-headers: "Access-Control-Allow-Origin: https://insight.shared.nlx.minikube"
-    host: irma.brp.nlx.minikube
+    host: irma.rvrd.nlx.minikube

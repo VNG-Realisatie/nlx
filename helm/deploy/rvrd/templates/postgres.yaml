@@ -1,9 +1,9 @@
 apiVersion: kubedb.com/v1alpha1
 kind: Postgres
 metadata:
-  name: {{ include "brp.fullname" . }}-postgresql
+  name: {{ include "rvrd.fullname" . }}-postgresql
   labels:
-    {{- include "brp.labels" . | nindent 4 }}
+    {{- include "rvrd.labels" . | nindent 4 }}
 spec:
   version: {{ (required "PostgreSQL version is required" .Values.postgresql.version) | toString }}
   storageType: {{ required "PostgreSQL storage type is required" .Values.postgresql.storageType }}

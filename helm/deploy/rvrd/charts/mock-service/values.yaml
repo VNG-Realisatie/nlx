@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   registry: docker.io
-  repository: nlxio/brp-mock-service
+  repository: nlxio/rvrd-mock-service
   tag: ""
   pullPolicy: IfNotPresent
   pullSecrets: []

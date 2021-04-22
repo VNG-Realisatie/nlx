@@ -99,7 +99,7 @@ Let's make a request through our outway and check if the log records are being w
 execute
 
 ```bash
-curl http://localhost/BRP/basisregistratie/natuurlijke_personen/da02a3ac-4412-11e9-b210-d663bd873d93
+curl http://localhost/RvRD/basisregistratie/natuurlijke_personen/da02a3ac-4412-11e9-b210-d663bd873d93
 ```
 
 If successful the response should be
@@ -171,7 +171,7 @@ id                | 6
 direction         | out
 created           | 2020-10-05 14:00:17.415985+00
 src_organization  | nlx-test
-dest_organization | BRP
+dest_organization | RvRD
 service_name      | basisregistratie
 logrecord_id      | 3929112adcf36aa8eed3049adea3ba79
 data              | {"request-path": "natuurlijke_personen/da02a3ac-4412-11e9-b210-d663bd873d93"}

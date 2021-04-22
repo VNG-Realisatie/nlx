@@ -1,6 +1,6 @@
 apiVersion: v2
-name: brp
-description: Metachart for the BRP demo organization
+name: rvrd
+description: Metachart for the RvRD demo organization
 type: application
 version: 0.99.0
 appVersion: 0.99.0

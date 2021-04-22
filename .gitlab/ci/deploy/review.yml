@@ -34,16 +34,16 @@ Deploy review:
         --values shared-values-review.yaml
       stop_section deploy_shared
     - |
-      start_section deploy_brp "Deploy BRP chart"
-      sed -e "s|{{DOMAIN_SUFFIX}}|${DOMAIN_SUFFIX}|g" ./helm/deploy/brp/values-review.yaml.tpl > brp-values-review.yaml
-      helm dependency build ./helm/deploy/brp
-      helm upgrade brp ./helm/deploy/brp \
+      start_section deploy_rvrd "Deploy RvRD chart"
+      sed -e "s|{{DOMAIN_SUFFIX}}|${DOMAIN_SUFFIX}|g" ./helm/deploy/rvrd/values-review.yaml.tpl > rvrd-values-review.yaml
+      helm dependency build ./helm/deploy/rvrd
+      helm upgrade rvrd ./helm/deploy/rvrd \
         --install \
         --namespace ${K8S_NAMESPACE} \
         --set-string global.imageRegistry=${IMAGE_REGISTRY} \
         --set-string global.imageTag=${IMAGE_TAG} \
-        --values brp-values-review.yaml
-      stop_section deploy_brp
+        --values rvrd-values-review.yaml
+      stop_section deploy_rvrd
     - |
       start_section deploy_rdw "Deploy RDW chart"
       sed -e "s|{{DOMAIN_SUFFIX}}|${DOMAIN_SUFFIX}|g" ./helm/deploy/rdw/values-review.yaml.tpl > rdw-values-review.yaml

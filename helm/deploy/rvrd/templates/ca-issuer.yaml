@@ -1,0 +1,9 @@
+apiVersion: cert-manager.io/v1beta1
+kind: Issuer
+metadata:
+  name: {{ include "rvrd.fullname" . }}
+  labels:
+    {{- include "rvrd.labels" . | nindent 4 }}
+spec:
+  ca:
+    secretName: {{ include "rvrd.fullname" . }}-ca-issuer

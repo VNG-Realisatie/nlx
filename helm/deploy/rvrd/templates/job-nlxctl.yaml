@@ -1,9 +1,9 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "brp.fullname" . }}-nlxctl
+  name: {{ include "rvrd.fullname" . }}-nlxctl
   labels:
-    {{- include "brp.labels" . | nindent 4 }}
+    {{- include "rvrd.labels" . | nindent 4 }}
   annotations:
     helm.sh/hook: post-install,post-upgrade
     helm.sh/hook-weight: "2"
@@ -12,12 +12,12 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "brp.selectorLabels" . | nindent 8 }}
+        {{- include "rvrd.selectorLabels" . | nindent 8 }}
     spec:
       restartPolicy: OnFailure
       containers:
         - name: nlxctl
-          image: {{ template "brp.nlxctl.image" . }}
+          image: {{ template "rvrd.nlxctl.image" . }}
           imagePullPolicy: {{ .Values.nlxctl.image.pullPolicy }}
           command: ["/bin/sh"]
           args:
@@ -56,4 +56,4 @@ spec:
             secretName: {{ .Values.nlxctl.tls.existingSecret }}
         - name: config
           configMap:
-            name: {{ template "brp.fullname" . }}-nlxctl
+            name: {{ template "rvrd.fullname" . }}-nlxctl

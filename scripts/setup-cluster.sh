@@ -27,8 +27,8 @@ helm repo add stable https://charts.helm.sh/stable && \
 echo ">> installing shared helm chart"
 helm upgrade --install shared ./helm/deploy/shared
 
-echo ">> installing brp helm chart"
-helm upgrade --install brp ./helm/deploy/brp
+echo ">> installing rvrd helm chart"
+helm upgrade --install rvrd ./helm/deploy/rvrd
 
 echo ">> installing haarlem helm chart"
 helm upgrade --install haarlem ./helm/deploy/haarlem

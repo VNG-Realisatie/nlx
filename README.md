@@ -264,10 +264,10 @@ When Traefik and KubeDB are running, you can start all the NLX components by exe
 helm repo add stable https://charts.helm.sh/stable
 helm dependency build ./helm/deploy/haarlem
 helm dependency build ./helm/deploy/rdw
-helm dependency build ./helm/deploy/brp
+helm dependency build ./helm/deploy/rvrd
 
 helm upgrade --install shared ./helm/deploy/shared
-helm upgrade --install brp ./helm/deploy/brp
+helm upgrade --install rvrd ./helm/deploy/rvrd
 helm upgrade --install haarlem ./helm/deploy/haarlem
 helm upgrade --install rdw ./helm/deploy/rdw
 ```
@@ -283,7 +283,7 @@ You may now test the following sites:
 - http://nlx-management.haarlem.nlx.minikube/       NLX management UI of example demo organization Haarlem used to manage NLX
 - http://nlx-management.rdw.nlx.minikube/           NLX management UI of example organization RDW used to manage NLX
 
-To test a full request through outway>inway, use the BRP example service through the exampleorg outway: `curl http://outway.nlx-dev-haarlem.minikube/BRP/basisregistratie/natuurlijke_personen`
+To test a full request through outway>inway, use the RvRD example service through the exampleorg outway: `curl http://outway.nlx-dev-haarlem.minikube/RvRD/basisregistratie/natuurlijke_personen`
 
 If you want to connect over IP instead of using a hostname, the ingress controller cannot route the request properly. Therefore you must setup a port-forward directly to the application you want to expose. This is useful, for example, when testing IRMA using a phone on the same WiFi network as your host machine.
 

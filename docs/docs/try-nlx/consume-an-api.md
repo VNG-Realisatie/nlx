@@ -38,10 +38,10 @@ To do so, we have to use the following structure:
 curl http://localhost/{organization-name}/{service-name}/{api-specific-path}
 ```
 
-For example, to query the BRP demo API use:
+For example, to query the RvRD demo API use:
 
 ```bash
-curl http://localhost/BRP/basisregistratie/natuurlijke_personen/da02ca58-4412-11e9-b210-d663bd873d93
+curl http://localhost/RvRD/basisregistratie/natuurlijke_personen/da02ca58-4412-11e9-b210-d663bd873d93
 ```
 
 The response of the `curl` command should look similar to the following output.

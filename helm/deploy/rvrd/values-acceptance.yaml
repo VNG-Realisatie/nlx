@@ -44,64 +44,64 @@ nlx-management:
   config:
     oidc:
       clientSecret: gKV1nhAtGx2fJLMbx0ao
-      discoveryURL: https://dex.acc.voorbeeld-brp.nl
-      redirectURL: https://management.acc.voorbeeld-brp.nl/oidc/callback
+      discoveryURL: https://dex.acc.voorbeeld-rvrd.nl
+      redirectURL: https://management.acc.voorbeeld-rvrd.nl/oidc/callback
       sessionSignKey: wXDSJYQjSLCsigtnRCbBMWjnvEhHFdu4
   ingress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - management.acc.voorbeeld-brp.nl
+      - management.acc.voorbeeld-rvrd.nl
     tls:
-      - secretName: brp-nlx-management-ingress-tls
+      - secretName: rvrd-nlx-management-ingress-tls
         hosts:
-          - management.acc.voorbeeld-brp.nl
+          - management.acc.voorbeeld-rvrd.nl
 
 dex:
   config:
-    issuer: https://dex.acc.voorbeeld-brp.nl
+    issuer: https://dex.acc.voorbeeld-rvrd.nl
     staticClients:
       - id: nlx-management
         name: NLX Management
         secret: gKV1nhAtGx2fJLMbx0ao
         redirectURIs:
-          - https://management.acc.voorbeeld-brp.nl/oidc/callback
+          - https://management.acc.voorbeeld-rvrd.nl/oidc/callback
   ingress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - dex.acc.voorbeeld-brp.nl
+      - dex.acc.voorbeeld-rvrd.nl
     tls:
-      - secretName: brp-dex-ingress-tls
+      - secretName: rvrd-dex-ingress-tls
         hosts:
-          - dex.acc.voorbeeld-brp.nl
+          - dex.acc.voorbeeld-rvrd.nl
 
 nlx-inway:
   config:
     serviceConfig:
       services:
         basisregistratie:
-          insight-api-url: https://insight-api.acc.voorbeeld-brp.nl
-          irma-api-url: https://irma-api.acc.voorbeeld-brp.nl
+          insight-api-url: https://insight-api.acc.voorbeeld-rvrd.nl
+          irma-api-url: https://irma-api.acc.voorbeeld-rvrd.nl
 
 insight-api:
   ingress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - insight-api.acc.voorbeeld-brp.nl
+      - insight-api.acc.voorbeeld-rvrd.nl
     tls:
-      - secretName: brp-insight-api-ingress-tls
+      - secretName: rvrd-insight-api-ingress-tls
         hosts:
-          - insight-api.acc.voorbeeld-brp.nl
+          - insight-api.acc.voorbeeld-rvrd.nl
 
 irma-server:
   ingress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
       ingress.kubernetes.io/custom-response-headers: "Access-Control-Allow-Origin: https://insight.acc.nlx.io"
-    host: irma-api.acc.voorbeeld-brp.nl
+    host: irma-api.acc.voorbeeld-rvrd.nl
     tls:
-      - secretName: brp-irma-server-ingress-tls
+      - secretName: rvrd-irma-server-ingress-tls
         hosts:
-          - irma-api.acc.voorbeeld-brp.nl
+          - irma-api.acc.voorbeeld-rvrd.nl

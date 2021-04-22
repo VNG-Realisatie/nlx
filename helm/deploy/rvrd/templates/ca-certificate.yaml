@@ -1,5 +1,5 @@
-{{- $fullName := include "brp.fullname" . -}}
-{{- $labels := include "brp.labels" . -}}
+{{- $fullName := include "rvrd.fullname" . -}}
+{{- $labels := include "rvrd.labels" . -}}
 
 {{- range $name, $spec := .Values.ca.certificates }}
 {{- if $spec -}}
