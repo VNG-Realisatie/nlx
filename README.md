@@ -263,13 +263,11 @@ When Traefik and KubeDB are running, you can start all the NLX components by exe
 ```bash
 helm repo add stable https://charts.helm.sh/stable
 helm dependency build ./helm/deploy/haarlem
-helm dependency build ./helm/deploy/rdw
 helm dependency build ./helm/deploy/rvrd
 
 helm upgrade --install shared ./helm/deploy/shared
 helm upgrade --install rvrd ./helm/deploy/rvrd
 helm upgrade --install haarlem ./helm/deploy/haarlem
-helm upgrade --install rdw ./helm/deploy/rdw
 ```
 
 You may now test the following sites:
@@ -281,18 +279,18 @@ You may now test the following sites:
 - http://insight.shared.nlx.minikube/               Insight in logs concerning a specific person
 - http://parkeren.haarlem.nlx.minikube/             Demo application for requesting a parking permit
 - http://nlx-management.haarlem.nlx.minikube/       NLX management UI of example demo organization Haarlem used to manage NLX
-- http://nlx-management.rdw.nlx.minikube/           NLX management UI of example organization RDW used to manage NLX
+- http://nlx-management.rvrd.nlx.minikube/          NLX management UI of example organization RvRD used to manage NLX
 
 To test a full request through outway>inway, use the RvRD example service through the exampleorg outway: `curl http://outway.nlx-dev-haarlem.minikube/RvRD/basisregistratie/natuurlijke_personen`
 
 If you want to connect over IP instead of using a hostname, the ingress controller cannot route the request properly. Therefore you must setup a port-forward directly to the application you want to expose. This is useful, for example, when testing IRMA using a phone on the same WiFi network as your host machine.
 
 ```bash
-kubectl port-forward deployment/rdw-irma-server 2222:session
+kubectl port-forward deployment/rvrd-irma-server 2222:session
 socat tcp-listen:3333,fork tcp:127.0.0.1:2222
 ```
 
-You can now let your phone connect to the IRMA api server of RDW on `your.host.machine.ip:3333`
+You can now let your phone connect to the IRMA api server of RvRD on `your.host.machine.ip:3333`
 
 ## A note on frontend debugging IE11
 

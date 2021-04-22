@@ -22,7 +22,7 @@ helm repo add jetstack https://charts.jetstack.io && \
 echo ">> building helm charts"
 helm repo add stable https://charts.helm.sh/stable && \
     helm dependency build ./helm/deploy/haarlem && \
-    helm dependency build ./helm/deploy/rdw
+    helm dependency build ./helm/deploy/rvrd
 
 echo ">> installing shared helm chart"
 helm upgrade --install shared ./helm/deploy/shared
@@ -32,6 +32,3 @@ helm upgrade --install rvrd ./helm/deploy/rvrd
 
 echo ">> installing haarlem helm chart"
 helm upgrade --install haarlem ./helm/deploy/haarlem
-
-echo ">> installing rdw helm chart"
-helm upgrade --install rdw ./helm/deploy/rdw

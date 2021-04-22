@@ -33,7 +33,7 @@ func TestLoadConfig(t *testing.T) {
 	expectedDataSubjects["kenteken"] = DataSubject{
 		Label: "Kenteken",
 		IrmaAttributes: []IrmaAttribute{
-			"irma-demo.rdw.vrn.vrn",
+			"irma-demo.rvrd.vrn.vrn",
 		},
 	}
 	assert.Equal(t, expectedDataSubjects, config.DataSubjects)

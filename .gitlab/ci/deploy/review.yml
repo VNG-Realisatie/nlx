@@ -79,8 +79,8 @@ Deploy review:
         --set-string ingress.hosts[0]=${DOMAIN_SUFFIX}
       stop_section deploy_review_page
     - |
-      echo "export CYPRESS_INWAY_NAME=rdw-nlx-inway" >> e2e_environment.sh
-      echo "export CYPRESS_LOGIN_ORGANIZATION_NAME=RDW" >> e2e_environment.sh
+      echo "export CYPRESS_INWAY_NAME=rvrd-nlx-inway" >> e2e_environment.sh
+      echo "export CYPRESS_LOGIN_ORGANIZATION_NAME=RvRD" >> e2e_environment.sh
       echo "export CYPRESS_LOGIN_USERNAME=admin@example.com" >> e2e_environment.sh
       echo "export CYPRESS_LOGIN_PASSWORD=password" >> e2e_environment.sh
   environment:

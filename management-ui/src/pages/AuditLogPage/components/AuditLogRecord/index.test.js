@@ -147,8 +147,8 @@ test.concurrent.each([
       delegatee: 'Saas Organization X',
       services: [
         {
-          organization: 'RDW',
-          service: 'kentekenregister',
+          organization: 'RvRD',
+          service: 'fictieve-kentekens',
         },
         {
           organization: 'Gemeente Amsterdam',
@@ -157,7 +157,7 @@ test.concurrent.each([
       ],
     },
     'cog.svg',
-    'John Doe gave Saas Organization X the order to consume the services kentekenregister (RDW), vakantieverhuur (Gemeente Amsterdam)',
+    'John Doe gave Saas Organization X the order to consume the services fictieve-kentekens (RvRD), vakantieverhuur (Gemeente Amsterdam)',
   ],
   [
     { action: 'unknown action' },

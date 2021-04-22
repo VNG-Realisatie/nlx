@@ -6,5 +6,5 @@
 
     [datasubjects."kenteken"]
     label = "Kenteken"
-    irma-attributes = ["irma-demo.rdw.vrn.vrn"]
+    irma-attributes = ["irma-demo.rvrd.vrn.vrn"]
     unknown-attribute = "attribute unknown"

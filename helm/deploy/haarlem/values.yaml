@@ -359,7 +359,7 @@ insight-api:
           irma-attributes = ["irma-demo.nijmegen.bsn.bsn"]
         [datasubjects."kenteken"]
           label = "Kenteken"
-          irma-attributes = ["irma-demo.rdw.vrn.vrn"]
+          irma-attributes = ["irma-demo.rvrd.vrn.vrn"]
     jwt:
       signPrivateKeyPEM: |
         -----BEGIN RSA PRIVATE KEY-----
@@ -469,7 +469,7 @@ auth-service:
 parkeervergunning-application:
   config:
     bevolkingsregisterURL: http://haarlem-nlx-outway/RvRD/basisregistratie/ingeschreven_natuurlijke_personen
-    kentekenregisterURL: http://haarlem-nlx-outway/RDW/kentekenregister/voertuigen
+    kentekenregisterURL: http://haarlem-nlx-outway/RvRD/kentekenregister/voertuigen
   ingress:
     enabled: true
     hosts:
