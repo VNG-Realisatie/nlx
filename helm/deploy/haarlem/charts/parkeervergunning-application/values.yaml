@@ -12,7 +12,7 @@ fullnameOverride: ""
 
 config:
   secretKey: 4Xt5OmfJMFwa
-  brpURL: ""
+  bevolkingsregisterURL: ""
   rdwURL: ""
 
 serviceAccount:

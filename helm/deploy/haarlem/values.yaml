@@ -468,7 +468,7 @@ auth-service:
 
 parkeervergunning-application:
   config:
-    brpURL: http://haarlem-nlx-outway/RvRD/basisregistratie/ingeschreven_natuurlijke_personen
+    bevolkingsregisterURL: http://haarlem-nlx-outway/RvRD/basisregistratie/ingeschreven_natuurlijke_personen
     rdwURL: http://haarlem-nlx-outway/RDW/kentekenregister/voertuigen
   ingress:
     enabled: true
