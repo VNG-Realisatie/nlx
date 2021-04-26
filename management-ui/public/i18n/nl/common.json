@@ -187,6 +187,7 @@
   "State": "Status",
   "Successfully updated the settings": "De instellingen zijn bijgewerkt",
   "Tech support email": "Technisch support e-mailadres",
+  "The name must match the name of the organization in its certificate": "De naam moet overeenkomen met de naam uit het certificaat van de organisatie",
   "The public key of the delegated organization as PEM": "De public key (in PEM-formaat) van de gedelegeerde organisatie",
   "The service has been added": "De service is toegevoegd",
   "The service has been removed": "De service is verwijderd",

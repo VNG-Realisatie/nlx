@@ -91,7 +91,12 @@ const OrderForm = ({ services, onSubmitHandler }) => {
           </TextInput>
 
           <TextInput name="delegatee" size="l">
-            <FieldLabel label={t('Delegated organization')} />
+            <FieldLabel
+              label={t('Delegated organization')}
+              small={t(
+                'The name must match the name of the organization in its certificate',
+              )}
+            />
           </TextInput>
 
           <TextInput name="publicKeyPEM" size="l" type="textarea">

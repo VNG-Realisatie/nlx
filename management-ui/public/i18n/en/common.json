@@ -187,6 +187,7 @@
   "State": "State",
   "Successfully updated the settings": "Successfully updated the settings",
   "Tech support email": "Tech support email",
+  "The name must match the name of the organization in its certificate": "The name must match the name of the organization in its certificate",
   "The public key of the delegated organization as PEM": "The public key of the delegated organization as PEM",
   "The service has been added": "The service has been added",
   "The service has been removed": "The service has been removed",
