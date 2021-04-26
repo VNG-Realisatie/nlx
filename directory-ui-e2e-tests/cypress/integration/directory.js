@@ -10,10 +10,10 @@ describe('Directory', () => {
 
   it('should display the support email address in the detail pane', () => {
     cy.get('input[placeholder="Search for an organization or service…"]').type(
-      'kentekenregister',
+      'basisregister-fictieve-kentekens',
     )
 
-    cy.findByText(/kentekenregister/).click()
+    cy.findByText(/basisregister-fictieve-kentekens/).click()
 
     cy.get('[data-test="service-detail-pane"]')
       .findByText('public-support@nlx.io')
