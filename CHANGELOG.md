@@ -1,3 +1,20 @@
+# [0.99.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.98.0...v0.99.0) (2021-04-28)
+
+
+### Bug Fixes
+
+* **management:** audit log mobx warning ([2e8cee6](https://gitlab.com/commonground/nlx/nlx/commit/2e8cee6e8fa41c4e059b8dec802e90d3d48c37a0))
+* **management:** dayjs locale loading order ([bf18b6c](https://gitlab.com/commonground/nlx/nlx/commit/bf18b6c4afd178e97cf955c6c8eb9d7b465cfbf8))
+
+
+### Features
+
+* **management:** add description to the organization field when adding an order ([c6a9ddc](https://gitlab.com/commonground/nlx/nlx/commit/c6a9ddcd7b1325387f216a6de091742b735a2463))
+* **management:** add order overview page ([4f772da](https://gitlab.com/commonground/nlx/nlx/commit/4f772dacdcb1c9e806545c073ba857e5dfba40ba)), closes [#1182](https://gitlab.com/commonground/nlx/nlx/issues/1182)
+* **management:** implement ListIssuedOrders API endpoint ([09e943f](https://gitlab.com/commonground/nlx/nlx/commit/09e943fc3f537ba1829e7df0a70d3caeceb04c21)), closes [#1182](https://gitlab.com/commonground/nlx/nlx/issues/1182)
+* **management:** introduce ListIssuedOrders API endpoint ([ce67a9b](https://gitlab.com/commonground/nlx/nlx/commit/ce67a9ba728b69051d4f71ff5be52ba062b9d4a4)), closes [#1182](https://gitlab.com/commonground/nlx/nlx/issues/1182)
+* **management:** sort issued orders descending on valid until property ([2985564](https://gitlab.com/commonground/nlx/nlx/commit/29855641b2102bc844c8f9e44af305217fed78ff)), closes [#1182](https://gitlab.com/commonground/nlx/nlx/issues/1182)
+
 # [0.98.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.97.1...v0.98.0) (2021-04-19)
 
 
