@@ -3,7 +3,7 @@
     - source ./.gitlab/ci/functions.sh
 
 .node-base:
-  image: ${CI_DEPENDENCY_PROXY_GROUP_URL}/node:14.15.2-alpine
+  image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/node:14.15.2-alpine
   variables:
     NPM_CACHE_DIR: ${CI_PROJECT_DIR}/.npm-cache
   cache:

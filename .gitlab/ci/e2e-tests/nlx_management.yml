@@ -1,6 +1,6 @@
 NLX Management - E2E-tests:
   extends: .node-base
-  image: ${CI_DEPENDENCY_PROXY_GROUP_URL}/cypress/base:14.16.0
+  image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/cypress/base:14.16.0
   stage: E2E tests
   script:
     - source e2e_environment.sh
