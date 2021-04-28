@@ -1,9 +1,9 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "haarlem.fullname" . }}-create-admin
+  name: {{ include "gemeente-stijns.fullname" . }}-create-admin
   labels:
-    {{- include "haarlem.labels" . | nindent 4 }}
+    {{- include "gemeente-stijns.labels" . | nindent 4 }}
   annotations:
     helm.sh/hook: post-install,post-upgrade
     helm.sh/hook-weight: "2"
@@ -13,12 +13,12 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "haarlem.selectorLabels" . | nindent 8 }}
+        {{- include "gemeente-stijns.selectorLabels" . | nindent 8 }}
     spec:
       restartPolicy: OnFailure
       containers:
         - name: management-api-create-user
-          image: {{ template "haarlem.managementAPI.image" . }}
+          image: {{ template "gemeente-stijns.managementAPI.image" . }}
           imagePullPolicy: {{ .Values.managementAPI.image.pullPolicy }}
           command: ["/bin/sh"]
           args:

@@ -1,9 +1,9 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "haarlem.fullname" . }}-setup-management-api-db
+  name: {{ include "gemeente-stijns.fullname" . }}-setup-management-api-db
   labels:
-    {{- include "haarlem.labels" . | nindent 4 }}
+    {{- include "gemeente-stijns.labels" . | nindent 4 }}
   annotations:
     helm.sh/hook: post-install,post-upgrade
     helm.sh/hook-weight: "1"
@@ -12,7 +12,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "haarlem.selectorLabels" . | nindent 8 }}
+        {{- include "gemeente-stijns.selectorLabels" . | nindent 8 }}
     spec:
       restartPolicy: OnFailure
       containers:

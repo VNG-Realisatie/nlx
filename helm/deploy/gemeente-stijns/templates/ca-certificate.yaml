@@ -1,5 +1,5 @@
-{{- $fullName := include "haarlem.fullname" . -}}
-{{- $labels := include "haarlem.labels" . -}}
+{{- $fullName := include "gemeente-stijns.fullname" . -}}
+{{- $labels := include "gemeente-stijns.labels" . -}}
 
 {{- range $name, $spec := .Values.ca.certificates }}
 {{- if $spec -}}

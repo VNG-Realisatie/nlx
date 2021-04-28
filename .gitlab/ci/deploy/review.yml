@@ -45,16 +45,16 @@ Deploy review:
         --values rvrd-values-review.yaml
       stop_section deploy_rvrd
     - |
-      start_section deploy_haarlem "Deploy Haarlem chart"
-      sed -e "s|{{DOMAIN_SUFFIX}}|${DOMAIN_SUFFIX}|g" ./helm/deploy/haarlem/values-review.yaml.tpl > haarlem-values-review.yaml
-      helm dependency build ./helm/deploy/haarlem
-      helm upgrade haarlem ./helm/deploy/haarlem \
+      start_section deploy_gemeente-stijns "Deploy Gemeente Stijns chart"
+      sed -e "s|{{DOMAIN_SUFFIX}}|${DOMAIN_SUFFIX}|g" ./helm/deploy/gemeente-stijns/values-review.yaml.tpl > gemeente-stijns-values-review.yaml
+      helm dependency build ./helm/deploy/gemeente-stijns
+      helm upgrade gemeente-stijns ./helm/deploy/gemeente-stijns \
         --install \
         --namespace ${K8S_NAMESPACE} \
         --set-string global.imageRegistry=${IMAGE_REGISTRY} \
         --set-string global.imageTag=${IMAGE_TAG} \
-        --values haarlem-values-review.yaml
-      stop_section deploy_haarlem
+        --values gemeente-stijns-values-review.yaml
+      stop_section deploy_gemeente-stijns
     - |
       start_section deploy_saas_org_x "Deploy Saas Org X chart"
       sed -e "s|{{DOMAIN_SUFFIX}}|${DOMAIN_SUFFIX}|g" ./helm/deploy/saas-org-x/values-review.yaml.tpl > saas-org-x-values-review.yaml

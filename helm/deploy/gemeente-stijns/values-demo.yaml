@@ -44,14 +44,14 @@ global:
 ###########
 managementAPI:
   insight:
-    insightAPIURL: https://insight-api.demo.voorbeeld-haarlem.nl
-    irmaServerURL: https://irma-api.demo.voorbeeld-haarlem.nl
+    insightAPIURL: https://insight-api.demo.gemeentestijns.nl
+    irmaServerURL: https://irma-api.demo.gemeentestijns.nl
 ca:
   certificates:
     organization:
-      commonName: inway.demo.voorbeeld-haarlem.nl
+      commonName: inway.demo.gemeentestijns.nl
       dnsNames:
-        - inway.demo.voorbeeld-haarlem.nl
+        - inway.demo.gemeentestijns.nl
 
 ################
 ## Sub-charts ##
@@ -66,67 +66,67 @@ nlx-management:
     directoryRegistrationHostname: directory-registration-api.demo.nlx.io
     oidc:
       clientSecret: J7VLST6DqlhFnrzKcpjKnfqr
-      discoveryURL: https://dex.demo.voorbeeld-haarlem.nl
-      redirectURL: https://management.demo.voorbeeld-haarlem.nl/oidc/callback
+      discoveryURL: https://dex.demo.gemeentestijns.nl
+      redirectURL: https://management.demo.gemeentestijns.nl/oidc/callback
       sessionSignKey: wXDSJYQjSLCsigtnRCbBMWjnvEhHFdu4
   ingress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - management.demo.voorbeeld-haarlem.nl
+      - management.demo.gemeentestijns.nl
     tls:
-      - secretName: haarlem-nlx-management-ingress-tls
+      - secretName: gemeentestijns-nlx-management-ingress-tls
         hosts:
-          - management.demo.voorbeeld-haarlem.nl
+          - management.demo.gemeentestijns.nl
 
 dex:
   config:
-    issuer: https://dex.demo.voorbeeld-haarlem.nl
+    issuer: https://dex.demo.gemeentestijns.nl
     staticClients:
       - id: nlx-management
         name: NLX Management
         secret: J7VLST6DqlhFnrzKcpjKnfqr
         redirectURIs:
-          - https://management.demo.voorbeeld-haarlem.nl/oidc/callback
+          - https://management.demo.gemeentestijns.nl/oidc/callback
   ingress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - dex.demo.voorbeeld-haarlem.nl
+      - dex.demo.gemeentestijns.nl
     tls:
-      - secretName: haarlem-dex-ingress-tls
+      - secretName: gemeentestijns-dex-ingress-tls
         hosts:
-          - dex.demo.voorbeeld-haarlem.nl
+          - dex.demo.gemeentestijns.nl
 
 insight-api:
   ingress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - insight-api.demo.voorbeeld-haarlem.nl
+      - insight-api.demo.gemeentestijns.nl
     tls:
-      - secretName: haarlem-insight-api-ingress-tls
+      - secretName: gemeentestijns-insight-api-ingress-tls
         hosts:
-          - insight-api.demo.voorbeeld-haarlem.nl
+          - insight-api.demo.gemeentestijns.nl
 
 irma-server:
   ingress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
       ingress.kubernetes.io/custom-response-headers: "Access-Control-Allow-Origin: https://insight.demo.nlx.io"
-    host: irma-api.demo.voorbeeld-haarlem.nl
+    host: irma-api.demo.gemeentestijns.nl
     tls:
-      - secretName: haarlem-irma-server-ingress-tls
+      - secretName: gemeentestijns-irma-server-ingress-tls
         hosts:
-          - irma-api.demo.voorbeeld-haarlem.nl
+          - irma-api.demo.gemeentestijns.nl
 
 parkeervergunning-application:
   ingress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - application.demo.voorbeeld-haarlem.nl
+      - application.demo.gemeentestijns.nl
     tls:
-      - secretName: haarlem-parkeervergunning-application-ingress-tls
+      - secretName: gemeentestijns-parkeervergunning-application-ingress-tls
         hosts:
-          - application.demo.voorbeeld-haarlem.nl
+          - application.demo.gemeentestijns.nl

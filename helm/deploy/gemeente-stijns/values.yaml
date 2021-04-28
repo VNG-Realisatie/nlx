@@ -176,35 +176,35 @@ ca:
     organization:
       subject:
         organizations:
-          - Gemeente Haarlem
-      commonName: haarlem-nlx-inway
+          - Gemeente Stijns
+      commonName: gemeente-stijns-nlx-inway
       dnsNames:
-        - haarlem-nlx-inway
-        - haarlem-auth-service
+        - gemeente-stijns-nlx-inway
+        - gemeente-stijns-auth-service
       issuerRef:
         name: shared
     inway:
-      commonName: haarlem-nlx-inway
+      commonName: gemeente-stijns-nlx-inway
       dnsNames:
-        - haarlem-nlx-inway
+        - gemeente-stijns-nlx-inway
       issuerRef:
-        name: haarlem
+        name: gemeente-stijns
     outway:
-      commonName: haarlem-nlx-outway
+      commonName: gemeente-stijns-nlx-outway
       dnsNames:
-        - haarlem-nlx-outway
+        - gemeente-stijns-nlx-outway
       issuerRef:
-        name: haarlem
+        name: gemeente-stijns
     management-api:
-      commonName: haarlem-nlx-management-api
+      commonName: gemeente-stijns-nlx-management-api
       dnsNames:
-        - haarlem-nlx-management-api
+        - gemeente-stijns-nlx-management-api
       issuerRef:
-        name: haarlem
+        name: gemeente-stijns
     nlxctl:
       commonName: nlxctl
       issuerRef:
-        name: haarlem
+        name: gemeente-stijns
 
 postgresql:
   version: "11.1"
@@ -217,9 +217,9 @@ transactionLog:
     repository: nlxio/txlog-db
     tag: ""
     pullPolicy: IfNotPresent
-  hostname: haarlem-postgresql
-  databaseName: haarlem-transaction-log
-  existingSecret: haarlem-postgresql-auth
+  hostname: gemeente-stijns-postgresql
+  databaseName: gemeente-stijns-transaction-log
+  existingSecret: gemeente-stijns-postgresql-auth
   resetDatabase: false
 
 nlxctl:
@@ -229,21 +229,21 @@ nlxctl:
     tag: ""
     pullPolicy: IfNotPresent
   tls:
-    existingSecret: haarlem-nlxctl-tls
+    existingSecret: gemeente-stijns-nlxctl-tls
 
 managementAPI:
-  address: haarlem-nlx-management-api:443
+  address: gemeente-stijns-nlx-management-api:443
   image:
     registry: docker.io
     repository: nlxio/management-api
     tag: ""
     pullPolicy: IfNotPresent
   insight:
-    insightAPIURL: https://insight-api.haarlem.nlx.minikube
-    irmaServerURL: https://irma.haarlem.nlx.minikube
+    insightAPIURL: https://insight-api.gemeente-stijns.nlx.minikube
+    irmaServerURL: https://irma.gemeente-stijns.nlx.minikube
   postgresql:
-    hostname: haarlem-postgresql
-    existingSecret: haarlem-postgresql-auth
+    hostname: gemeente-stijns-postgresql
+    existingSecret: gemeente-stijns-postgresql-auth
 
 ################
 ## Sub-charts ##
@@ -253,35 +253,35 @@ nlx-outway:
     directoryInspectionHostname: shared-nlx-directory-inspection
     authorizationService:
       enabled: true
-      url: https://haarlem-auth-service
+      url: https://gemeente-stijns-auth-service
     managementAPI:
       enabled: true
-      address: haarlem-nlx-management-api:443
+      address: gemeente-stijns-nlx-management-api:443
   transactionLog:
-    hostname: haarlem-postgresql
-    database: haarlem-transaction-log
-    existingSecret: haarlem-postgresql-auth
+    hostname: gemeente-stijns-postgresql
+    database: gemeente-stijns-transaction-log
+    existingSecret: gemeente-stijns-postgresql-auth
   tls:
     organizationCertificate:
-      existingSecret: haarlem-organization-tls
+      existingSecret: gemeente-stijns-organization-tls
     certificate:
-      existingSecret: haarlem-outway-tls
+      existingSecret: gemeente-stijns-outway-tls
 
 nlx-inway:
   config:
     directoryRegistrationHostname: shared-nlx-directory-registration
     managementAPI:
       enabled: true
-      address: haarlem-nlx-management-api:443
+      address: gemeente-stijns-nlx-management-api:443
   transactionLog:
-    hostname: haarlem-postgresql
-    database: haarlem-transaction-log
-    existingSecret: haarlem-postgresql-auth
+    hostname: gemeente-stijns-postgresql
+    database: gemeente-stijns-transaction-log
+    existingSecret: gemeente-stijns-postgresql-auth
   tls:
     organizationCertificate:
-      existingSecret: haarlem-organization-tls
+      existingSecret: gemeente-stijns-organization-tls
     certificate:
-      existingSecret: haarlem-inway-tls
+      existingSecret: gemeente-stijns-inway-tls
 
 nlx-management:
   config:
@@ -289,26 +289,26 @@ nlx-management:
     directoryRegistrationHostname: shared-nlx-directory-registration
     oidc:
       clientSecret: grGSl5W5HcKRETBr3OhmU6Tm
-      discoveryURL: http://dex.haarlem.nlx.minikube
-      redirectURL: http://nlx-management.haarlem.nlx.minikube/oidc/callback
+      discoveryURL: http://dex.gemeente-stijns.nlx.minikube
+      redirectURL: http://nlx-management.gemeente-stijns.nlx.minikube/oidc/callback
       sessionSignKey: 0Xn2DBfb4L4hwN3XosbwoKZalLBU68UU
   tls:
     organizationCertificate:
-      existingSecret: haarlem-organization-tls
+      existingSecret: gemeente-stijns-organization-tls
     certificate:
-      existingSecret: haarlem-management-api-tls
+      existingSecret: gemeente-stijns-management-api-tls
   transactionLog:
     enabled: true
-    hostname: haarlem-postgresql
-    database: haarlem-transaction-log
-    existingSecret: haarlem-postgresql-auth
+    hostname: gemeente-stijns-postgresql
+    database: gemeente-stijns-transaction-log
+    existingSecret: gemeente-stijns-postgresql-auth
   ingress:
     enabled: true
     hosts:
-      - nlx-management.haarlem.nlx.minikube
+      - nlx-management.gemeente-stijns.nlx.minikube
   postgresql:
-    hostname: haarlem-postgresql
-    existingSecret: haarlem-postgresql-auth
+    hostname: gemeente-stijns-postgresql
+    existingSecret: gemeente-stijns-postgresql-auth
 
 dex:
   config:
@@ -318,13 +318,13 @@ dex:
         file: ":memory:"
     logger:
       level: info
-    issuer: http://dex.haarlem.nlx.minikube
+    issuer: http://dex.gemeente-stijns.nlx.minikube
     staticClients:
       - id: nlx-management
         name: NLX Management
         secret: grGSl5W5HcKRETBr3OhmU6Tm
         redirectURIs:
-          - http://nlx-management.haarlem.nlx.minikube/oidc/callback
+          - http://nlx-management.gemeente-stijns.nlx.minikube/oidc/callback
     enablePasswordDB: true
     staticPasswords:
       - username: admin
@@ -337,7 +337,7 @@ dex:
   ingress:
     enabled: true
     hosts:
-      - dex.haarlem.nlx.minikube
+      - dex.gemeente-stijns.nlx.minikube
   ports:
     web:
       servicePort: 80
@@ -400,13 +400,13 @@ insight-api:
         pwIDAQAB
         -----END PUBLIC KEY-----
   transactionLog:
-    hostname: haarlem-postgresql
-    database: haarlem-transaction-log
-    existingSecret: haarlem-postgresql-auth
+    hostname: gemeente-stijns-postgresql
+    database: gemeente-stijns-transaction-log
+    existingSecret: gemeente-stijns-postgresql-auth
   ingress:
     enabled: true
     hosts:
-      - insight-api.haarlem.nlx.minikube
+      - insight-api.gemeente-stijns.nlx.minikube
 
 irma-server:
   config:
@@ -460,17 +460,17 @@ irma-server:
     enabled: true
     annotations:
       ingress.kubernetes.io/custom-response-headers: "Access-Control-Allow-Origin: https://insight.shared.nlx.minikube"
-    host: irma.haarlem.nlx.minikube
+    host: irma.gemeente-stijns.nlx.minikube
 
 auth-service:
   tls:
-    existingSecret: haarlem-organization-tls
+    existingSecret: gemeente-stijns-organization-tls
 
 parkeervergunning-application:
   config:
-    bevolkingsregisterURL: http://haarlem-nlx-outway/RvRD/basisregistratie/ingeschreven_natuurlijke_personen
-    kentekenregisterURL: http://haarlem-nlx-outway/RvRD/kentekenregister/voertuigen
+    bevolkingsregisterURL: http://gemeente-stijns-nlx-outway/RvRD/basisregistratie/ingeschreven_natuurlijke_personen
+    kentekenregisterURL: http://gemeente-stijns-nlx-outway/RvRD/kentekenregister/voertuigen
   ingress:
     enabled: true
     hosts:
-      - parkeren.haarlem.nlx.minikube
+      - parkeren.gemeente-stijns.nlx.minikube

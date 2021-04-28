@@ -1,6 +1,6 @@
 apiVersion: v2
-name: haarlem
-description: Metachart for the Haarlem demo organization
+name: gemeente-stijns
+description: Metachart for the Gemeente Stijns demo organization
 type: application
 version: 0.99.0
 appVersion: 0.99.0

@@ -32,64 +32,64 @@ test.concurrent.each([
       services: [
         {
           service: 'Kadaster',
-          organization: 'Gemeente Haarlem',
+          organization: 'Gemeente Stijns',
         },
       ],
     },
     'check.svg',
-    'John Doe has approved the access request from Gemeente Haarlem for Kadaster',
+    'John Doe has approved the access request from Gemeente Stijns for Kadaster',
   ],
   [
     {
       action: ACTION_INCOMING_ACCESS_REQUEST_REJECT,
       services: [
         {
-          organization: 'Gemeente Haarlem',
+          organization: 'Gemeente Stijns',
           service: 'Kadaster',
         },
       ],
     },
     'close.svg',
-    'John Doe has rejected the access request from Gemeente Haarlem for Kadaster',
+    'John Doe has rejected the access request from Gemeente Stijns for Kadaster',
   ],
   [
     {
       action: ACTION_ACCESS_GRANT_REVOKE,
       services: [
         {
-          organization: 'Gemeente Haarlem',
+          organization: 'Gemeente Stijns',
           service: 'Kadaster',
         },
       ],
     },
     'revoke.svg',
-    'John Doe has revoked access for Kadaster from Gemeente Haarlem',
+    'John Doe has revoked access for Kadaster from Gemeente Stijns',
   ],
   [
     {
       action: ACTION_OUTGOING_ACCESS_REQUEST_CREATE,
       services: [
         {
-          organization: 'Gemeente Haarlem',
+          organization: 'Gemeente Stijns',
           service: 'Kadaster',
         },
       ],
     },
     'key.svg',
-    'John Doe has requested access to Kadaster from Gemeente Haarlem',
+    'John Doe has requested access to Kadaster from Gemeente Stijns',
   ],
   [
     {
       action: ACTION_OUTGOING_ACCESS_REQUEST_FAIL,
       services: [
         {
-          organization: 'Gemeente Haarlem',
+          organization: 'Gemeente Stijns',
           service: 'Kadaster',
         },
       ],
     },
     'key.svg',
-    'John Doe failed to request access to Kadaster from Gemeente Haarlem',
+    'John Doe failed to request access to Kadaster from Gemeente Stijns',
   ],
   [
     {

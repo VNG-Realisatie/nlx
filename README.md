@@ -262,12 +262,12 @@ When Traefik and KubeDB are running, you can start all the NLX components by exe
 
 ```bash
 helm repo add stable https://charts.helm.sh/stable
-helm dependency build ./helm/deploy/haarlem
+helm dependency build ./helm/deploy/gemeente-stijns
 helm dependency build ./helm/deploy/rvrd
 
 helm upgrade --install shared ./helm/deploy/shared
 helm upgrade --install rvrd ./helm/deploy/rvrd
-helm upgrade --install haarlem ./helm/deploy/haarlem
+helm upgrade --install gemeente-stijns ./helm/deploy/gemeente-stijns
 ```
 
 You may now test the following sites:
@@ -277,11 +277,11 @@ You may now test the following sites:
 - http://certportal.shared.nlx.minikube/            Portal to generate TLS certificates
 - http://directory.shared.nlx.minikube/             Overview of all services in the network
 - http://insight.shared.nlx.minikube/               Insight in logs concerning a specific person
-- http://parkeren.haarlem.nlx.minikube/             Demo application for requesting a parking permit
-- http://nlx-management.haarlem.nlx.minikube/       NLX management UI of example demo organization Haarlem used to manage NLX
+- http://parkeren.gemeente-stijns.nlx.minikube/             Demo application for requesting a parking permit
+- http://nlx-management.gemeente-stijns.nlx.minikube/       NLX management UI of example demo organization Gemeente Stijns used to manage NLX
 - http://nlx-management.rvrd.nlx.minikube/          NLX management UI of example organization RvRD used to manage NLX
 
-To test a full request through outway>inway, use the RvRD example service through the exampleorg outway: `curl http://outway.nlx-dev-haarlem.minikube/RvRD/basisregistratie/natuurlijke_personen`
+To test a full request through outway>inway, use the RvRD example service through the exampleorg outway: `curl http://outway.nlx-dev-gemeente-stijns.minikube/RvRD/basisregistratie/natuurlijke_personen`
 
 If you want to connect over IP instead of using a hostname, the ingress controller cannot route the request properly. Therefore you must setup a port-forward directly to the application you want to expose. This is useful, for example, when testing IRMA using a phone on the same WiFi network as your host machine.
 

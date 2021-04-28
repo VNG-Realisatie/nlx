@@ -1,9 +1,9 @@
 apiVersion: kubedb.com/v1alpha1
 kind: Postgres
 metadata:
-  name: {{ include "haarlem.fullname" . }}-postgresql
+  name: {{ include "gemeente-stijns.fullname" . }}-postgresql
   labels:
-    {{- include "haarlem.labels" . | nindent 4 }}
+    {{- include "gemeente-stijns.labels" . | nindent 4 }}
 spec:
   version: {{ (required "PostgreSQL version is required" .Values.postgresql.version) | toString }}
   storageType: {{ required "PostgreSQL storage type is required" .Values.postgresql.storageType }}

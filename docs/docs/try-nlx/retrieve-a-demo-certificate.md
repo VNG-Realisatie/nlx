@@ -103,7 +103,7 @@ openssl x509 -in org.crt -text | grep Subject:
 
 The output should contain the answers you've provided when you created the certificate.
 
-Example of the output: `Subject: C=nl, ST=noord-holland, L=haarlem, O=my-organization, OU=my-organization-unit, CN=an-awesome-organization.nl`
+Example of the output: `Subject: C=nl, ST=zuid-holland, L=gemeente-stijns, O=my-organization, OU=my-organization-unit, CN=an-awesome-organization.nl`
 
 
 ## In sum

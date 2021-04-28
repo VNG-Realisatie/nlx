@@ -1,9 +1,9 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "haarlem.fullname" . }}-nlxctl
+  name: {{ include "gemeente-stijns.fullname" . }}-nlxctl
   labels:
-    {{- include "haarlem.labels" . | nindent 4 }}
+    {{- include "gemeente-stijns.labels" . | nindent 4 }}
   annotations:
     helm.sh/hook: post-install,post-upgrade
     helm.sh/hook-weight: "2"
@@ -12,12 +12,12 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "haarlem.selectorLabels" . | nindent 8 }}
+        {{- include "gemeente-stijns.selectorLabels" . | nindent 8 }}
     spec:
       restartPolicy: OnFailure
       containers:
         - name: nlxctl
-          image: {{ template "haarlem.nlxctl.image" . }}
+          image: {{ template "gemeente-stijns.nlxctl.image" . }}
           imagePullPolicy: {{ .Values.nlxctl.image.pullPolicy }}
           command: ["/bin/sh"]
           args:
@@ -47,4 +47,4 @@ spec:
             secretName: {{ .Values.nlxctl.tls.existingSecret }}
         - name: config
           configMap:
-            name: {{ template "haarlem.fullname" . }}-nlxctl
+            name: {{ template "gemeente-stijns.fullname" . }}-nlxctl

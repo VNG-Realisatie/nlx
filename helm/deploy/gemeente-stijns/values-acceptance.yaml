@@ -42,8 +42,8 @@ global:
 ###########
 managementAPI:
   insight:
-    insightAPIURL: https://insight-api.acc.voorbeeld-haarlem.nl
-    irmaServerURL: https://irma-api.acc.voorbeeld-haarlem.nl
+    insightAPIURL: https://insight-api.acc.gemeentestijns.nl
+    irmaServerURL: https://irma-api.acc.gemeentestijns.nl
 
 ################
 ## Sub-charts ##
@@ -52,67 +52,67 @@ nlx-management:
   config:
     oidc:
       clientSecret: J7VLST6DqlhFnrzKcpjKnfqr
-      discoveryURL: https://dex.acc.voorbeeld-haarlem.nl
-      redirectURL: https://management.acc.voorbeeld-haarlem.nl/oidc/callback
+      discoveryURL: https://dex.acc.gemeentestijns.nl
+      redirectURL: https://management.acc.gemeentestijns.nl/oidc/callback
       sessionSignKey: wXDSJYQjSLCsigtnRCbBMWjnvEhHFdu4
   ingress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - management.acc.voorbeeld-haarlem.nl
+      - management.acc.gemeentestijns.nl
     tls:
-      - secretName: haarlem-nlx-management-ingress-tls
+      - secretName: gemeentestijns-nlx-management-ingress-tls
         hosts:
-          - management.acc.voorbeeld-haarlem.nl
+          - management.acc.gemeentestijns.nl
 
 dex:
   config:
-    issuer: https://dex.acc.voorbeeld-haarlem.nl
+    issuer: https://dex.acc.gemeentestijns.nl
     staticClients:
       - id: nlx-management
         name: NLX Management
         secret: J7VLST6DqlhFnrzKcpjKnfqr
         redirectURIs:
-          - https://management.acc.voorbeeld-haarlem.nl/oidc/callback
+          - https://management.acc.gemeentestijns.nl/oidc/callback
   ingress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - dex.acc.voorbeeld-haarlem.nl
+      - dex.acc.gemeentestijns.nl
     tls:
-      - secretName: haarlem-dex-ingress-tls
+      - secretName: gemeentestijns-dex-ingress-tls
         hosts:
-          - dex.acc.voorbeeld-haarlem.nl
+          - dex.acc.gemeentestijns.nl
 
 insight-api:
   ingress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - insight-api.acc.voorbeeld-haarlem.nl
+      - insight-api.acc.gemeentestijns.nl
     tls:
-      - secretName: haarlem-insight-api-ingress-tls
+      - secretName: gemeentestijns-insight-api-ingress-tls
         hosts:
-          - insight-api.acc.voorbeeld-haarlem.nl
+          - insight-api.acc.gemeentestijns.nl
 
 irma-server:
   ingress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
       ingress.kubernetes.io/custom-response-headers: "Access-Control-Allow-Origin: https://insight.acc.nlx.io"
-    host: irma-api.acc.voorbeeld-haarlem.nl
+    host: irma-api.acc.gemeentestijns.nl
     tls:
-      - secretName: haarlem-irma-server-ingress-tls
+      - secretName: gemeentestijns-irma-server-ingress-tls
         hosts:
-          - irma-api.acc.voorbeeld-haarlem.nl
+          - irma-api.acc.gemeentestijns.nl
 
 parkeervergunning-application:
   ingress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - application.acc.voorbeeld-haarlem.nl
+      - application.acc.gemeentestijns.nl
     tls:
-      - secretName: haarlem-parkeervergunning-application-ingress-tls
+      - secretName: gemeentestijns-parkeervergunning-application-ingress-tls
         hosts:
-          - application.acc.voorbeeld-haarlem.nl
+          - application.acc.gemeentestijns.nl

@@ -1,0 +1,9 @@
+apiVersion: cert-manager.io/v1beta1
+kind: Issuer
+metadata:
+  name: {{ include "gemeente-stijns.fullname" . }}
+  labels:
+    {{- include "gemeente-stijns.labels" . | nindent 4 }}
+spec:
+  ca:
+    secretName: {{ include "gemeente-stijns.fullname" . }}-ca-issuer
