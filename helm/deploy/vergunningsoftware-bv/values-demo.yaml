@@ -54,35 +54,34 @@ nlx-management:
     directoryRegistrationHostname: directory-registration-api.demo.nlx.io
     oidc:
       clientSecret: N6Gr4v8wZKlLuKrMSV1I
-      discoveryURL: https://dex.demo.voorbeeld-saas-org-x.nl
-      redirectURL: https://management.demo.voorbeeld-saas-org-x.nl/oidc/callback
+  discoveryURL: https://dex.demo.           
+      redirectURL: https://management.demo.vergunningsoftware.nl/oidc/callback
       sessionSignKey: wXDSJYQjSLCsigtnRCbBMWjnvEhHFdu4
   ingress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - management.demo.voorbeeld-saas-org-x.nl
+      - management.demo.vergunningsoftware.nl
     tls:
-      - secretName: saas-org-x-nlx-management-ingress-tls
+      - secretName: vergunningsoftware-bv-nlx-management-ingress-tls
         hosts:
-          - management.demo.voorbeeld-saas-org-x.nl
+          - management.demo.vergunningsoftware.nl
 
 dex:
   config:
-    issuer: https://dex.demo.voorbeeld-saas-org-x.nl
+    issuer: https://dex.demo.vergunningsoftware.nl
     staticClients:
       - id: nlx-management
         name: NLX Management
         secret: N6Gr4v8wZKlLuKrMSV1I
         redirectURIs:
-          - https://management.demo.voorbeeld-saas-org-x.nl/oidc/callback
+          - https://management.demo.vergunningsoftware.nl/oidc/callback
   ingress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - dex.demo.voorbeeld-saas-org-x.nl
+      - dex.demo.vergunningsoftware.nl
     tls:
-      - secretName: saas-org-x-dex-ingress-tls
+      - secretName: vergunningsoftware-bv-dex-ingress-tls
         hosts:
-          - dex.demo.voorbeeld-saas-org-x.nl
-
+          - dex.demo.vergunningsoftware.nl

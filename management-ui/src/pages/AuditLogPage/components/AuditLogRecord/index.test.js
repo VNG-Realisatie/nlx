@@ -144,7 +144,7 @@ test.concurrent.each([
   [
     {
       action: ACTION_ORDER_CREATE,
-      delegatee: 'Saas Organization X',
+      delegatee: 'Vergunningsoftware BV',
       services: [
         {
           organization: 'RvRD',
@@ -157,7 +157,7 @@ test.concurrent.each([
       ],
     },
     'cog.svg',
-    'John Doe gave Saas Organization X the order to consume the services fictieve-kentekens (RvRD), vakantieverhuur (Gemeente Amsterdam)',
+    'John Doe gave Vergunningsoftware BV the order to consume the services fictieve-kentekens (RvRD), vakantieverhuur (Gemeente Amsterdam)',
   ],
   [
     { action: 'unknown action' },

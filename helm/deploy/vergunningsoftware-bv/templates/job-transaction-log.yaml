@@ -1,9 +1,9 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "saas-org-x.fullname" . }}-transaction-log
+  name: {{ include "vergunningsoftware-bv.fullname" . }}-transaction-log
   labels:
-    {{- include "saas-org-x.labels" . | nindent 4 }}
+    {{- include "vergunningsoftware-bv.labels" . | nindent 4 }}
   annotations:
     helm.sh/hook: "post-install,post-upgrade"
     helm.sh/hook-weight: "1"
@@ -12,12 +12,12 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "saas-org-x.selectorLabels" . | nindent 8 }}
+        {{- include "vergunningsoftware-bv.selectorLabels" . | nindent 8 }}
     spec:
       restartPolicy: OnFailure
       containers:
         - name: txlog-db
-          image: {{ template "saas-org-x.transactionLog.image" . }}
+          image: {{ template "vergunningsoftware-bv.transactionLog.image" . }}
           imagePullPolicy: {{ .Values.transactionLog.image.pullPolicy }}
           command:
           {{- if .Values.transactionLog.resetDatabase }}

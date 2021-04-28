@@ -1,0 +1,9 @@
+apiVersion: cert-manager.io/v1beta1
+kind: Issuer
+metadata:
+  name: {{ include "vergunningsoftware-bv.fullname" . }}
+  labels:
+    {{- include "vergunningsoftware-bv.labels" . | nindent 4 }}
+spec:
+  ca:
+    secretName: {{ include "vergunningsoftware-bv.fullname" . }}-ca-issuer

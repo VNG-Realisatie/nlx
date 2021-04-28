@@ -10,7 +10,7 @@ test('creating AuditLog instance', () => {
       action: ACTION_LOGIN_SUCCESS,
       user: 'John Doe',
       createdAt: '2020-10-01T12:00:00Z',
-      delegatee: 'Saas Organization X',
+      delegatee: 'Vergunningsoftware BV',
       services: [
         {
           organization: 'Gemeente Amsterdam',
@@ -24,7 +24,7 @@ test('creating AuditLog instance', () => {
   expect(auditLog.action).toBe(ACTION_LOGIN_SUCCESS)
   expect(auditLog.user).toBe('John Doe')
   expect(auditLog.createdAt).toEqual(new Date('2020-10-01T12:00:00Z'))
-  expect(auditLog.delegatee).toBe('Saas Organization X')
+  expect(auditLog.delegatee).toBe('Vergunningsoftware BV')
   expect(auditLog.services).toStrictEqual([
     {
       organization: 'Gemeente Amsterdam',

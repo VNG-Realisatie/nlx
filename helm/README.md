@@ -10,15 +10,15 @@ The charts `version` and `appVersion` follows the version of this repository.
 
 ## Deploy charts
 
-| Chart           | Description                                                                             |
-| --------------- | --------------------------------------------------------------------------------------- |
-| rvrd            | Demo organization, provides an API                                                      |
-| directory       | Used for deployment to pre-production and production                                    |
-| gemeente-stijns | Demo municipality, consumes APIs from RvRD                                              |
-| saas-org-x      | Demo Saas organization, consumes a service in the name of municipality Gemeente Stijns  |
-| shared          | Shared components that the RvRD and Gemeente Stijns use                                 |
+| Chart                 | Description                                                                             |
+| --------------------- | --------------------------------------------------------------------------------------- |
+| rvrd                  | Demo organization: Rijksdienst voor Realistische Demo's, provides an API                |
+| directory             | Used for deployment to pre-production and production                                    |
+| gemeente-stijns       | Demo municipality, consumes APIs from RvRD                                              |
+| vergunningsoftware-bv | Demo Saas organization, consumes a service in the name of municipality Gemeente Stijns  |
+| shared                | Shared components that the RvRD and Gemeente Stijns use                                 |
 
-> *Note: The NLX demo simulation is based on fictional communications between Gemeente Stijns, RvRD and Saas Org X. This is just an example and the organizations themselves are not involved.*
+> *Note: The NLX demo simulation is based on fictional communications between Gemeente Stijns, RvRD and Vergunningsoftware BV. This is just an example with made up the organizations.*
 
 
 ## Environments

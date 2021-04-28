@@ -56,15 +56,15 @@ Deploy review:
         --values gemeente-stijns-values-review.yaml
       stop_section deploy_gemeente-stijns
     - |
-      start_section deploy_saas_org_x "Deploy Saas Org X chart"
-      sed -e "s|{{DOMAIN_SUFFIX}}|${DOMAIN_SUFFIX}|g" ./helm/deploy/saas-org-x/values-review.yaml.tpl > saas-org-x-values-review.yaml
-      helm dependency build ./helm/deploy/saas-org-x
-      helm upgrade saas-org-x ./helm/deploy/saas-org-x \
+      start_section deploy_saas_org_x "Deploy Vergunningsoftware BV chart"
+      sed -e "s|{{DOMAIN_SUFFIX}}|${DOMAIN_SUFFIX}|g" ./helm/deploy/vergunningsoftware-bv/values-review.yaml.tpl > vergunningsoftware-bv-values-review.yaml
+      helm dependency build ./helm/deploy/vergunningsoftware-bv
+      helm upgrade vergunningsoftware-bv ./helm/deploy/vergunningsoftware-bv \
         --install \
         --namespace ${K8S_NAMESPACE} \
         --set-string global.imageRegistry=${IMAGE_REGISTRY} \
         --set-string global.imageTag=${IMAGE_TAG} \
-        --values saas-org-x-values-review.yaml
+        --values vergunningsoftware-bv-values-review.yaml
       stop_section deploy_saas_org_x
     - |
       start_section deploy_review_page "Deploy review page chart"

@@ -1,5 +1,5 @@
-{{- $fullName := include "saas-org-x.fullname" . -}}
-{{- $labels := include "saas-org-x.labels" . -}}
+{{- $fullName := include "vergunningsoftware-bv.fullname" . -}}
+{{- $labels := include "vergunningsoftware-bv.labels" . -}}
 
 {{- range $name, $spec := .Values.ca.certificates }}
 {{- if $spec -}}
