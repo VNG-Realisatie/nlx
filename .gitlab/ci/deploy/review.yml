@@ -5,6 +5,7 @@ Deploy review:
     REVIEW_BASE_DOMAIN: nlx.reviews
     K8S_NAMESPACE: "nlx-${CI_ENVIRONMENT_SLUG}"
     HELM_CHARTS_TO_DEPLOY: "shared rvrd gemeente-stijns vergunningsoftware-bv"
+    HELM_CHARTS_TO_UNINSTALL: "haarlem rdw brp saas-org-x"
   before_script:
     - source ./.gitlab/ci/functions.sh
   script:
@@ -25,9 +26,20 @@ Deploy review:
       kubectl create namespace "${K8S_NAMESPACE}" || true
       stop_section namespace
     - |
+      for CHART in ${HELM_CHARTS_TO_UNINSTALL}; do
+        start_section uninstall_${CHART} "Uninstalling chart '${CHART}'"
+        CHART_DIRECTORY="./helm/deploy/${CHART}"
+
+        helm uninstall ${CHART} \
+          --namespace ${K8S_NAMESPACE} || true
+
+        stop_section uninstall_${CHART}
+      done
+    - |
       for CHART in ${HELM_CHARTS_TO_DEPLOY}; do
         start_section deploy_${CHART} "Deploying chart '${CHART}'"
         CHART_DIRECTORY="./helm/deploy/${CHART}"
+        sed -e "s|{{DOMAIN_SUFFIX}}|${DOMAIN_SUFFIX}|g" ./helm/deploy/${CHART}/values-review.yaml.tpl > ./helm/deploy/${CHART}/values-review.yaml
 
         if [ -f ${CHART_DIRECTORY}/Chart.lock ]; then
           start_section dependency_${CHART} "Installing Chart dependencies"
