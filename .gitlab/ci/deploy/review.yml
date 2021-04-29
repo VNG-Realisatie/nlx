@@ -56,7 +56,7 @@ Deploy review:
         --values gemeente-stijns-values-review.yaml
       stop_section deploy_gemeente-stijns
     - |
-      start_section deploy_saas_org_x "Deploy Vergunningsoftware BV chart"
+      start_section deploy_vergunningsoftware_bv "Deploy Vergunningsoftware BV chart"
       sed -e "s|{{DOMAIN_SUFFIX}}|${DOMAIN_SUFFIX}|g" ./helm/deploy/vergunningsoftware-bv/values-review.yaml.tpl > vergunningsoftware-bv-values-review.yaml
       helm dependency build ./helm/deploy/vergunningsoftware-bv
       helm upgrade vergunningsoftware-bv ./helm/deploy/vergunningsoftware-bv \
@@ -65,7 +65,7 @@ Deploy review:
         --set-string global.imageRegistry=${IMAGE_REGISTRY} \
         --set-string global.imageTag=${IMAGE_TAG} \
         --values vergunningsoftware-bv-values-review.yaml
-      stop_section deploy_saas_org_x
+      stop_section deploy_vergunningsoftware_bv
     - |
       start_section deploy_review_page "Deploy review page chart"
       helm upgrade review-page ./helm/charts/review-page \
