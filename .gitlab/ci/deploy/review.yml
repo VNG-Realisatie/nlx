@@ -4,6 +4,7 @@ Deploy review:
   variables:
     REVIEW_BASE_DOMAIN: nlx.reviews
     K8S_NAMESPACE: "nlx-${CI_ENVIRONMENT_SLUG}"
+    HELM_CHARTS_TO_DEPLOY: "shared rvrd gemeente-stijns vergunningsoftware-bv"
   before_script:
     - source ./.gitlab/ci/functions.sh
   script:
@@ -24,48 +25,24 @@ Deploy review:
       kubectl create namespace "${K8S_NAMESPACE}" || true
       stop_section namespace
     - |
-      start_section deploy_shared "Deploy shared chart"
-      sed -e "s|{{DOMAIN_SUFFIX}}|${DOMAIN_SUFFIX}|g" ./helm/deploy/shared/values-review.yaml.tpl > shared-values-review.yaml
-      helm upgrade shared ./helm/deploy/shared \
-        --install \
-        --namespace ${K8S_NAMESPACE} \
-        --set-string global.imageRegistry=${IMAGE_REGISTRY} \
-        --set-string global.imageTag=${IMAGE_TAG} \
-        --values shared-values-review.yaml
-      stop_section deploy_shared
-    - |
-      start_section deploy_rvrd "Deploy RvRD chart"
-      sed -e "s|{{DOMAIN_SUFFIX}}|${DOMAIN_SUFFIX}|g" ./helm/deploy/rvrd/values-review.yaml.tpl > rvrd-values-review.yaml
-      helm dependency build ./helm/deploy/rvrd
-      helm upgrade rvrd ./helm/deploy/rvrd \
-        --install \
-        --namespace ${K8S_NAMESPACE} \
-        --set-string global.imageRegistry=${IMAGE_REGISTRY} \
-        --set-string global.imageTag=${IMAGE_TAG} \
-        --values rvrd-values-review.yaml
-      stop_section deploy_rvrd
-    - |
-      start_section deploy_gemeente-stijns "Deploy Gemeente Stijns chart"
-      sed -e "s|{{DOMAIN_SUFFIX}}|${DOMAIN_SUFFIX}|g" ./helm/deploy/gemeente-stijns/values-review.yaml.tpl > gemeente-stijns-values-review.yaml
-      helm dependency build ./helm/deploy/gemeente-stijns
-      helm upgrade gemeente-stijns ./helm/deploy/gemeente-stijns \
-        --install \
-        --namespace ${K8S_NAMESPACE} \
-        --set-string global.imageRegistry=${IMAGE_REGISTRY} \
-        --set-string global.imageTag=${IMAGE_TAG} \
-        --values gemeente-stijns-values-review.yaml
-      stop_section deploy_gemeente-stijns
-    - |
-      start_section deploy_vergunningsoftware_bv "Deploy Vergunningsoftware BV chart"
-      sed -e "s|{{DOMAIN_SUFFIX}}|${DOMAIN_SUFFIX}|g" ./helm/deploy/vergunningsoftware-bv/values-review.yaml.tpl > vergunningsoftware-bv-values-review.yaml
-      helm dependency build ./helm/deploy/vergunningsoftware-bv
-      helm upgrade vergunningsoftware-bv ./helm/deploy/vergunningsoftware-bv \
-        --install \
-        --namespace ${K8S_NAMESPACE} \
-        --set-string global.imageRegistry=${IMAGE_REGISTRY} \
-        --set-string global.imageTag=${IMAGE_TAG} \
-        --values vergunningsoftware-bv-values-review.yaml
-      stop_section deploy_vergunningsoftware_bv
+      for CHART in ${HELM_CHARTS_TO_DEPLOY}; do
+        start_section deploy_${CHART} "Deploying chart '${CHART}'"
+        CHART_DIRECTORY="./helm/deploy/${CHART}"
+
+        if [ -f ${CHART_DIRECTORY}/Chart.lock ]; then
+          start_section dependency_${CHART} "Installing Chart dependencies"
+          helm dependency build ./helm/deploy/${CHART}
+          stop_section dependency_${CHART}
+        fi
+
+        helm upgrade ${CHART} ${CHART_DIRECTORY} \
+          --install \
+          --namespace ${K8S_NAMESPACE} \
+          --set-string global.imageRegistry=${IMAGE_REGISTRY} \
+          --set-string global.imageTag=${IMAGE_TAG} \
+          --values ${CHART_DIRECTORY}/values-review.yaml
+        stop_section deploy_${CHART}
+      done
     - |
       start_section deploy_review_page "Deploy review page chart"
       helm upgrade review-page ./helm/charts/review-page \
