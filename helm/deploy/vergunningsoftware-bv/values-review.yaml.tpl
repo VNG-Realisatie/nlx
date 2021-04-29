@@ -16,7 +16,7 @@ nlx-management:
       sessionSignKey: 0Xn2DBfb4L4hwN3XosbwoKZalLBU68UU
   ingress:
     hosts:
-      - xyz-{{DOMAIN_SUFFIX}}
+      - nlx-management-vergunningsoftware-bv-{{DOMAIN_SUFFIX}}
 
 dex:
   config:
