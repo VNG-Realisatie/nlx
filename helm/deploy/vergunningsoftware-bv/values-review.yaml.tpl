@@ -11,22 +11,22 @@ nlx-management:
   config:
     oidc:
       clientSecret: N6Gr4v8wZKlLuKrMSV1I
-      discoveryURL: https://dex-vergunningsoftware-bv-{{DOMAIN_SUFFIX}}
-      redirectURL: https://nlx-management-vergunningsoftware-bv-{{DOMAIN_SUFFIX}}/oidc/callback
+      discoveryURL: https://dex-wip-bv-{{DOMAIN_SUFFIX}}
+      redirectURL: https://nlx-management-wip-bv-{{DOMAIN_SUFFIX}}/oidc/callback
       sessionSignKey: 0Xn2DBfb4L4hwN3XosbwoKZalLBU68UU
   ingress:
     hosts:
-      - nlx-management-vergunningsoftware-bv-{{DOMAIN_SUFFIX}}
+      - nlx-management-wip-bv-{{DOMAIN_SUFFIX}}
 
 dex:
   config:
-    issuer: https://dex-vergunningsoftware-bv-{{DOMAIN_SUFFIX}}
+    issuer: https://dex-wip-bv-{{DOMAIN_SUFFIX}}
     staticClients:
       - id: nlx-management
         name: NLX Management
         secret: N6Gr4v8wZKlLuKrMSV1I
         redirectURIs:
-          - https://nlx-management-vergunningsoftware-bv-{{DOMAIN_SUFFIX}}/oidc/callback
+          - https://nlx-management-wip-bv-{{DOMAIN_SUFFIX}}/oidc/callback
   ingress:
     hosts:
-      - dex-vergunningsoftware-bv-{{DOMAIN_SUFFIX}}
+      - dex-wip-bv-{{DOMAIN_SUFFIX}}
