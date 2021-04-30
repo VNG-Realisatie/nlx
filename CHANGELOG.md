@@ -1,3 +1,16 @@
+# [0.100.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.99.0...v0.100.0) (2021-04-30)
+
+
+### Bug Fixes
+
+* **management:** update service name for directory E2E tests ([f74ea0c](https://gitlab.com/commonground/nlx/nlx/commit/f74ea0c9d37446b2d1008c43ea853e2a4ea8c7f0)), closes [#1215](https://gitlab.com/commonground/nlx/nlx/issues/1215)
+
+
+### Features
+
+* **management:** rename haarlem -> gemeente-stijns ([8a742af](https://gitlab.com/commonground/nlx/nlx/commit/8a742af1ef2430a646781d48201cfd35b4c47a23))
+* **management:** rename Saas org X -> Vergunningsoftware BV ([7924c63](https://gitlab.com/commonground/nlx/nlx/commit/7924c6343e7a9c1e0c4e24a944aaefb1e17593ed)), closes [#1215](https://gitlab.com/commonground/nlx/nlx/issues/1215)
+
 # [0.99.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.98.0...v0.99.0) (2021-04-28)
 
 
