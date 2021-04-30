@@ -6,7 +6,6 @@ Deploy acceptance:
   variables:
     K8S_NAMESPACE: nlx-acceptance
     HELM_CHARTS_TO_DEPLOY: "shared rvrd gemeente-stijns vergunningsoftware-bv"
-    HELM_CHARTS_TO_UNINSTALL: "haarlem rdw brp saas-org-x"
   before_script:
     - source ./.gitlab/ci/functions.sh
   script:
@@ -20,16 +19,6 @@ Deploy acceptance:
       helm repo add stable "https://charts.helm.sh/stable"
       helm repo update
       stop_section helm_repo
-    - |
-      for CHART in ${HELM_CHARTS_TO_UNINSTALL}; do
-        start_section uninstall_${CHART} "Uninstalling chart '${CHART}'"
-        CHART_DIRECTORY="./helm/deploy/${CHART}"
-
-        helm uninstall ${CHART} \
-          --namespace ${K8S_NAMESPACE} || true
-
-        stop_section uninstall_${CHART}
-      done
     - |
       for CHART in ${HELM_CHARTS_TO_DEPLOY}; do
         start_section deploy_${CHART} "Deploying chart '${CHART}'"
