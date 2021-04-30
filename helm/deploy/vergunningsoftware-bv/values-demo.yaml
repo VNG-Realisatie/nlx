@@ -54,7 +54,7 @@ nlx-management:
     directoryRegistrationHostname: directory-registration-api.demo.nlx.io
     oidc:
       clientSecret: N6Gr4v8wZKlLuKrMSV1I
-  discoveryURL: https://dex.demo.vergunningsoftware.nl
+      discoveryURL: https://dex.demo.vergunningsoftware.nl
       redirectURL: https://management.demo.vergunningsoftware.nl/oidc/callback
       sessionSignKey: wXDSJYQjSLCsigtnRCbBMWjnvEhHFdu4
   ingress:
