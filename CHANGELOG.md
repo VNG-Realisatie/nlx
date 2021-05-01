@@ -1,3 +1,5 @@
+## [0.100.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.100.0...v0.100.1) (2021-05-01)
+
 # [0.100.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.99.0...v0.100.0) (2021-04-30)
 
 
