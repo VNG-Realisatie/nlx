@@ -12,3 +12,9 @@ nlx-directory:
         - secretName: nlx-directory-ui-ingress-tls
           hosts:
             - directory.preprod.nlx.io
+
+  service:
+    inspection:
+      annotations:
+        loadbalancer.openstack.org/keep-floatingip: "true"
+      loadBalancerIP: 141.105.122.118

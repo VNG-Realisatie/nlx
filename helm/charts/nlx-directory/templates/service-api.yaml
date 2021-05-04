@@ -5,14 +5,18 @@ metadata:
   labels:
     {{- include "nlx-directory.labels" . | nindent 4 }}
     app.kubernetes.io/component: api
+  annotations: {{ .Values.service.inspection.annotations | toJson }}
 spec:
   type: {{ .Values.service.type }}
+  {{if .Values.service.inspection.loadBalancerIP}}
+  loadBalancerIP: {{ .Values.service.inspection.loadBalancerIP }}
+  {{end}}
   selector:
     {{- include "nlx-directory.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: api
   ports:
     - name: http
-      port: {{ .Values.service.inspectionPort }}
+      port: {{ .Values.service.inspection.port }}
       targetPort: inspection
       protocol: TCP
 
@@ -31,7 +35,7 @@ spec:
     app.kubernetes.io/component: api
   ports:
     - name: http
-      port: {{ .Values.service.inspectionPlainPort }}
+      port: {{ .Values.service.inspection.plainPort }}
       targetPort: inspectionplain
       protocol: TCP
 
@@ -43,6 +47,7 @@ metadata:
   labels:
     {{- include "nlx-directory.labels" . | nindent 4 }}
     app.kubernetes.io/component: api
+  annotations: {{ .Values.service.registration.annotations | toJson }}
 spec:
   type: {{ .Values.service.type }}
   selector:
@@ -50,6 +55,6 @@ spec:
     app.kubernetes.io/component: api
   ports:
     - name: http
-      port: {{ .Values.service.registrationPort }}
+      port: {{ .Values.service.registration.port }}
       targetPort: registration
       protocol: TCP

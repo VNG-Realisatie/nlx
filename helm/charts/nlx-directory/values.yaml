@@ -56,19 +56,25 @@ serviceAccount:
 
 service:
   type: ClusterIP
-  inspectionPort: 443
-  inspectionPlainPort: 80
-  registrationPort: 443
+  inspection:
+    port: 443
+    plainPort: 80
+    annotations: { }
+  registration:
+    port: 443
+    annotations: { }
 
 podSecurityContext:
   fsGroup: 1001
 
-securityContext: {}
+securityContext: { }
 
-resources: {}
+resources: { }
 
-nodeSelector: {}
+nodeSelector: { }
 
-affinity: {}
+affinity: { }
 
-tolerations: []
+tolerations: [ ]
+
+annotations: { }

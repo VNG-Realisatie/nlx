@@ -67,16 +67,18 @@ The following table lists the configurable parameters of the nlx-directory Chart
 | `ui.port` | Port exposed by the directory UI service | `80` |
 | `ui.ingress.enabled` | Enable Ingress | `false` |
 | `ui.ingress.class` | Ingress class | `""` |
-| `ui.ingress.annotations` | Ingress annotations | `{}` 
+| `ui.ingress.annotations` | Ingress annotations | `{}`
 | `ui.ingress.hosts` | Ingress accepted hostname | `chart-example.local` |
 | `ui.ingress.tls` | Ingress TLS configuration | `[]` |
 | `serviceAccount.create` | If `true`, create a new service account | `true` |
 | `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` |
 | `serviceAccount.annotations` | Annotations to add to the service account |
 | `service.type` | Service type (ClusterIP, NodePort or LoadBalancer) | `ClusterIP` |
-| `service.inspectionPort` | Port exposed by the service for the inspection API | `443` |
-| `service.inspectionPlainPort` | Port exposed by the plain service for inspection API | `80` |
-| `service.registrationPort` | Port exposed by the service for directory registration API | `443` |
+| `service.inspection.port` | Port exposed by the service for the inspection API | `443` |
+| `service.inspection.plainPort` | Port exposed by the plain service for inspection API | `80` |
+| `service.inspection.annotations` | Annotations for inspection API | `{}` |
+| `service.registration.port` | Port exposed by the service for directory registration API | `443` |
+| `service.registration.annotations` | Annotations for registration API | `{}` |
 | `podSecuritiyContext.fsGroup` | Group ID under which the pod should be started | `1001` |
 | `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` |
 | `resources` | Pod resource requests & limits | `{}` |
