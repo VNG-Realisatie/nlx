@@ -130,12 +130,9 @@ This section describes the Definition of Done expressed in the stages a story go
 - Developer merges the code to master
 - Developer moves story to done
 
-
-
 ### 2.5. Celebrate
 
 Your ideas, documentation and code have become an integral part of this project. You are the Open Source hero we need.
-
 
 ## 3. Development process
 
@@ -145,7 +142,6 @@ The part below is meant as documentation for the team developing and maintaining
 ### 3.1. Agile scrum
 
 The NLX Team uses the Agile Scrum framework for product development. It encourages us to learn through experiences, self-organise while working on a problem, and reflect on our wins and losses to continuously improve.
-
 
 #### 3.1.1. Sprints
 
