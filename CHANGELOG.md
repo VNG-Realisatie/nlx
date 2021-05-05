@@ -1,3 +1,10 @@
+# [0.101.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.100.2...v0.101.0) (2021-05-05)
+
+
+### Features
+
+* set static IP address for NLX Directory Inspection API in pre-prod/prod ([8a386de](https://gitlab.com/commonground/nlx/nlx/commit/8a386de4b0d2a18ffb794d6dbfa562158187aad7))
+
 ## [0.100.2](https://gitlab.com/commonground/nlx/nlx/compare/v0.100.1...v0.100.2) (2021-05-03)
 
 ## [0.100.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.100.0...v0.100.1) (2021-05-01)
