@@ -1,5 +1,5 @@
 apiVersion: v2
-name: review-page
+name: apps-link-page
 description: Displays an overview of the pages available for review
 type: application
 version: 0.101.0

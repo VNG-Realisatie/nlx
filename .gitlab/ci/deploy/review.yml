@@ -45,8 +45,8 @@ Deploy review:
         stop_section deploy_${CHART}
       done
     - |
-      start_section deploy_review_page "Deploy review page chart"
-      helm upgrade review-page ./helm/charts/review-page \
+      start_section deploy_links_page "Deploy links page chart"
+      helm upgrade apps-link-page ./helm/charts/apps-link-page \
         --install \
         --namespace ${K8S_NAMESPACE} \
         --set-string global.imageRegistry=${IMAGE_REGISTRY} \
@@ -55,7 +55,7 @@ Deploy review:
         --set ingress.enabled=true \
         --set-string ingress.class=traefik \
         --set-string ingress.hosts[0]=${DOMAIN_SUFFIX}
-      stop_section deploy_review_page
+      stop_section deploy_links_page
     - |
       echo "export CYPRESS_INWAY_NAME=rvrd-nlx-inway" >> e2e_environment.sh
       echo "export CYPRESS_LOGIN_ORGANIZATION_NAME=RvRD" >> e2e_environment.sh

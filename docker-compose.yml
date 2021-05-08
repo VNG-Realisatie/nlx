@@ -117,10 +117,10 @@ services:
       args:
         GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
         GIT_TAG_NAME: "${GIT_TAG_NAME}"
-  review-page:
-    image: "${IMAGE_PREFIX}nlxio/review-page:${IMAGE_TAG}"
+  apps-link-page:
+    image: "${IMAGE_PREFIX}nlxio/apps-link-page:${IMAGE_TAG}"
     build:
-      context: review-page
+      context: apps-link-page
   txlog-db:
     image: "${IMAGE_PREFIX}nlxio/txlog-db:${IMAGE_TAG}"
     build:

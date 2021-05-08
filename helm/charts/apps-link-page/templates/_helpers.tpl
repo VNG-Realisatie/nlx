@@ -2,7 +2,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "review-page.name" -}}
+{{- define "apps-link-page.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -11,7 +11,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "review-page.fullname" -}}
+{{- define "apps-link-page.fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -27,16 +27,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "review-page.chart" -}}
+{{- define "apps-link-page.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Common labels
 */}}
-{{- define "review-page.labels" -}}
-helm.sh/chart: {{ include "review-page.chart" . }}
-{{ include "review-page.selectorLabels" . }}
+{{- define "apps-link-page.labels" -}}
+helm.sh/chart: {{ include "apps-link-page.chart" . }}
+{{ include "apps-link-page.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -46,17 +46,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "review-page.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "review-page.name" . }}
+{{- define "apps-link-page.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "apps-link-page.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "review-page.serviceAccountName" -}}
+{{- define "apps-link-page.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create -}}
-    {{ default (include "review-page.fullname" .) .Values.serviceAccount.name }}
+    {{ default (include "apps-link-page.fullname" .) .Values.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
@@ -65,7 +65,7 @@ Create the name of the service account to use
 {{/*
 Return the image name for the NLX inway
 */}}
-{{- define "review-page.image" -}}
+{{- define "apps-link-page.image" -}}
 {{- $registryName := default .Values.image.registry .Values.global.imageRegistry -}}
 {{- $repositoryName := .Values.image.repository -}}
 {{- $tag := default (printf "v%s" .Chart.AppVersion) (default .Values.image.tag .Values.global.imageTag) -}}

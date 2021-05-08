@@ -1,31 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "review-page.fullname" . }}
+  name: {{ include "apps-link-page.fullname" . }}
   labels:
-    {{- include "review-page.labels" . | nindent 4 }}
+    {{- include "apps-link-page.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "review-page.selectorLabels" . | nindent 6 }}
+      {{- include "apps-link-page.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "review-page.selectorLabels" . | nindent 8 }}
+        {{- include "apps-link-page.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.image.pullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "review-page.serviceAccountName" . }}
+      serviceAccountName: {{ include "apps-link-page.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: review-page
+        - name: apps-link-page
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: {{ include "review-page.image" . }}
+          image: {{ include "apps-link-page.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http

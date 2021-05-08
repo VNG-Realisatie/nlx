@@ -1,6 +1,6 @@
-# review-page
+# apps-link-page
 
-This is the Chart for the review page.
+This is the Chart for the app-links page. It contains links to all apps within the environment.
 
 ## Prerequisites
 
@@ -8,14 +8,14 @@ This is the Chart for the review page.
 
 ## Installing the Chart
 
-To install the Chart with the release name `review-page`:
+To install the Chart with the release name `apps-link-page`:
 
 ```console
 ## Add the NLX Helm repository
 $ helm repo add nlx https://charts.nlx.io
 
 ## Install the nlx-docs Chart
-$ helm install review-page nlx/review-page
+$ helm install apps-link-page nlx/apps-link-page
 ```
 
 > **Tip**: List all releases using `helm list`
@@ -28,22 +28,22 @@ that are prefixed with 'Helm'.
 
 ## Uninstalling the Chart
 
-To uninstall or delete the `review-page` deployment:
+To uninstall or delete the `apps-link-page` deployment:
 
 ```console
-$ helm delete review-page
+$ helm delete apps-link-page
 ```
 
 ## Configuration
 
-The following table lists the configurable parameters of the review-page Chart and its default values.
+The following table lists the configurable parameters of the apps-link-page Chart and its default values.
 
 | Parameter | Description | Default |
 | --------- | ----------- | ------- |
 | `global.imageRegistry` | Image registry to be used by all NLX charts | `""` |
 | `global.imageTag` | Image tag to be used by all NLX charts | `true` |
 | `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` |
-| `image.repository` | Image repository | `nlxio/review-page` |
+| `image.repository` | Image repository | `nlxio/apps-link-page` |
 | `image.tag` | Image tag (ignored if `global.imageTag` is set). When set to null, the AppVersion from the Chart is used | `The appVersion from the chart` |
 | `image.pullPolicy` | Image pull policy | `IfNotPresent` |
 | `image.pullSecrets` | Secrets for the image repository | `[]` |
@@ -55,7 +55,7 @@ The following table lists the configurable parameters of the review-page Chart a
 | `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` |
 | `serviceAccount.annotations` | Annotations to add to the service account |
 | `service.type` | Service type (ClusterIP, NodePort or LoadBalancer) | `ClusterIP` |
-| `service.port` | Port exposed by the service for the review-page | `80` |
+| `service.port` | Port exposed by the service for the apps-link-page | `80` |
 | `podSecuritiyContext` | SecurityContext holds pod-level security attributes and common container settings. Optional: Defaults to empty. | `{}` |
 | `podSecuritiyContext.fsGroup` | Group ID under which the pod should be started | `` |
 | `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` |
@@ -74,6 +74,6 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. 
 
 ```console
-$ helm install review-page -f values.yaml .
+$ helm install apps-link-page -f values.yaml .
 ```
-> **Tip**: You can use the default [values.yaml](https://gitlab.com/commonground/nlx/nlx/blob/master/helm/charts/review-page/values.yaml)
+> **Tip**: You can use the default [values.yaml](https://gitlab.com/commonground/nlx/nlx/blob/master/helm/charts/apps-link-page/values.yaml)

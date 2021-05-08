@@ -9,9 +9,9 @@ helm
 .gitlab
 
 # These have their own docker context
-docs/
+apps-link-page/
 ca-cfssl-unsafe/
-insight-ui/
 directory-ui/
 directory-ui-e2e-tests/
-review-page/
+docs/
+insight-ui/

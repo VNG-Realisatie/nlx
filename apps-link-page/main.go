@@ -18,7 +18,7 @@ type data struct {
 func serveHTML(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Permissions-Policy", "accelerometer=(), ambient-light-sensor=(), autoplay=(), battery=(), camera=(), display-capture=(), document-domain=(), encrypted-media=(), execution-while-not-rendered=(), execution-while-out-of-viewport=(), fullscreen=(), geolocation=(), gyroscope=(), layout-animations=(), legacy-image-formats=(), magnetometer=(), microphone=(), midi=(), navigation-override=(), oversized-images=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), sync-xhr=(), usb=(), vr=(), wake-lock=(), screen-wake-lock=(), web-share=(), xr-spatial-tracking=()")
 
-	fp := path.Join("templates", "sites.html")
+	fp := path.Join("templates", "sites-review.html")
 
 	t, err := template.ParseFiles(fp)
 	if err != nil {
