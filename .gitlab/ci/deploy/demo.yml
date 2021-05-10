@@ -32,7 +32,7 @@ Deploy demo:
         stop_section deploy_${CHART}
       done
     - |
-      start_section deploy_links_page "Deploy links page chart"
+      start_section deploy_apps_overview "Deploy links page (apps overview)"
       helm upgrade apps-overview ./helm/charts/apps-overview \
         --install \
         --namespace ${K8S_NAMESPACE} \
@@ -41,8 +41,8 @@ Deploy demo:
         --set-string config.environmentSubdomain=demo \
         --set ingress.enabled=true \
         --set-string ingress.class=traefik \
-        --set-string ingress.hosts[0]=${DOMAIN_SUFFIX}
-      stop_section deploy_links_page
+        --set-string ingress.hosts[0]=links.demo.nlx.io
+      stop_section deploy_apps_overview
   dependencies:
    - Build production
   rules:
