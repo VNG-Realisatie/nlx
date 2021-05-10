@@ -17,7 +17,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 config:
-  environmentSlugWithDomain: ""
+  reviewSlugWithDomain: ""
 
 serviceAccount:
   # Specifies whether a service account should be created

@@ -12,7 +12,7 @@ import (
 )
 
 type data struct {
-	EnvironmentSlugWithDomain string
+	ReviewSlugWithDomain string
 }
 
 func serveHTML(w http.ResponseWriter, r *http.Request) {
@@ -26,7 +26,7 @@ func serveHTML(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = t.Execute(w, &data{
-		EnvironmentSlugWithDomain: os.Getenv("ENVIRONMENT_SLUG_WITH_DOMAIN"),
+		ReviewSlugWithDomain: os.Getenv("ENVIRONMENT_SLUG_WITH_DOMAIN"),
 	})
 	if err != nil {
 		log.Fatal(err)

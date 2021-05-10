@@ -39,7 +39,7 @@ spec:
               port: http
           env:
             - name: ENVIRONMENT_SLUG_WITH_DOMAIN
-              value: {{ required "EnvironmentSlugWithDomain is required" .Values.config.environmentSlugWithDomain }}
+              value: {{ .Values.config.reviewSlugWithDomain }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
     {{- with .Values.nodeSelector }}
