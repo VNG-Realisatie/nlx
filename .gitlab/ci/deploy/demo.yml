@@ -33,7 +33,7 @@ Deploy demo:
       done
     - |
       start_section deploy_links_page "Deploy links page chart"
-      helm upgrade apps-link-page ./helm/charts/apps-link-page \
+      helm upgrade apps-overview ./helm/charts/apps-overview \
         --install \
         --namespace ${K8S_NAMESPACE} \
         --set-string global.imageRegistry=${IMAGE_REGISTRY} \

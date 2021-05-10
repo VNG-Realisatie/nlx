@@ -7,7 +7,7 @@ replicaCount: 1
 
 image:
   registry: docker.io
-  repository: nlxio/apps-link-page
+  repository: nlxio/apps-overview
   # tag allows to override the tag. When set to null, the AppVersion from the Chart is used
   tag: ""
   pullPolicy: IfNotPresent

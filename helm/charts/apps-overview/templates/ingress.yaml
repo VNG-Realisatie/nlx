@@ -1,11 +1,11 @@
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := include "apps-link-page.fullname" . -}}
+{{- $fullName := include "apps-overview.fullname" . -}}
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
-    {{- include "apps-link-page.labels" . | nindent 4 }}
+    {{- include "apps-overview.labels" . | nindent 4 }}
 {{- if or .Values.ingress.class .Values.ingress.annotations }}
   annotations:
   {{- if .Values.ingress.class }}

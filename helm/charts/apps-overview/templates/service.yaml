@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "apps-link-page.fullname" . }}
+  name: {{ include "apps-overview.fullname" . }}
   labels:
-    {{- include "apps-link-page.labels" . | nindent 4 }}
+    {{- include "apps-overview.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   selector:
-    {{- include "apps-link-page.selectorLabels" . | nindent 4 }}
+    {{- include "apps-overview.selectorLabels" . | nindent 4 }}
   ports:
     - name: http
       port: {{ .Values.service.port }}

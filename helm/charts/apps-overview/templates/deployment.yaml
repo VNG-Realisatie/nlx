@@ -1,31 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "apps-link-page.fullname" . }}
+  name: {{ include "apps-overview.fullname" . }}
   labels:
-    {{- include "apps-link-page.labels" . | nindent 4 }}
+    {{- include "apps-overview.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "apps-link-page.selectorLabels" . | nindent 6 }}
+      {{- include "apps-overview.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "apps-link-page.selectorLabels" . | nindent 8 }}
+        {{- include "apps-overview.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.image.pullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "apps-link-page.serviceAccountName" . }}
+      serviceAccountName: {{ include "apps-overview.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: apps-link-page
+        - name: apps-overview
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: {{ include "apps-link-page.image" . }}
+          image: {{ include "apps-overview.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
