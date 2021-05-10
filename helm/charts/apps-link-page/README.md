@@ -50,6 +50,7 @@ The following table lists the configurable parameters of the apps-link-page Char
 | `replicaCount` | Number of directory replicas | `1` |
 | `nameOverride` | Override deployment name | `""` |
 | `fullnameOverride` | Override full deployment name | `""` |
+| `config.environmentSubdomain` | For acc and demo environment, this is used to create the URLs of the websites linked on the apps overview page | `""` |
 | `config.reviewSlugWithDomain` | In the review enviroment, the slug with domain is added as a suffix to the URLs of the websites linked on the review apps overview page | `""` |
 | `serviceAccount.create` | If `true`, create a new service account | `true` |
 | `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` |

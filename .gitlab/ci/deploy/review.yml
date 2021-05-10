@@ -51,6 +51,7 @@ Deploy review:
         --namespace ${K8S_NAMESPACE} \
         --set-string global.imageRegistry=${IMAGE_REGISTRY} \
         --set-string global.imageTag=${IMAGE_TAG} \
+        --set-string config.environmentSubdomain=review \
         --set-string config.reviewSlugWithDomain=${DOMAIN_SUFFIX} \
         --set ingress.enabled=true \
         --set-string ingress.class=traefik \

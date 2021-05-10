@@ -18,6 +18,7 @@ fullnameOverride: ""
 
 config:
   reviewSlugWithDomain: ""
+  environmentSubdomain: ""
 
 serviceAccount:
   # Specifies whether a service account should be created

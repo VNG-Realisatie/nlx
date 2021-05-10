@@ -38,6 +38,8 @@ spec:
             tcpSocket:
               port: http
           env:
+            - name: ENVIRONMENT_SUBDOMAIN
+              value: {{ required "environmentSubdomain is required" .Values.config.environmentSubdomain }}
             - name: ENVIRONMENT_SLUG_WITH_DOMAIN
               value: {{ .Values.config.reviewSlugWithDomain }}
           resources:
