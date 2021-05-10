@@ -58,7 +58,7 @@ require (
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/square/go-jose.v2 v2.4.1 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
-	gorm.io/driver/postgres v1.0.8
+	gorm.io/driver/postgres v1.1.0
 	gorm.io/gorm v1.21.9
 	xojoc.pw/useragent v0.0.0-20200116211053-1ec61d55e8fe
 )
