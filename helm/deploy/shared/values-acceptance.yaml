@@ -178,3 +178,16 @@ insight-ui:
       - secretName: shared-insight-ui-ingress-tls
         hosts:
           - insight.acc.nlx.io
+
+apps-overview:
+  config:
+    environmentSubdomain: "acc"
+  ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - "links.acc.nlx.io"
+    tls:
+      - secretName: shared-nlx-apps-overview-ingress-tls
+        hosts:
+          - links.acc.nlx.io

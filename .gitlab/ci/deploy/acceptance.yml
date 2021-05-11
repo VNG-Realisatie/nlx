@@ -39,18 +39,6 @@ Deploy acceptance:
         stop_section deploy_${CHART}
       done
     - |
-      start_section deploy_apps_overview "Deploy links page (apps overview)"
-      helm upgrade apps-overview ./helm/charts/apps-overview \
-        --install \
-        --namespace ${K8S_NAMESPACE} \
-        --set-string global.imageRegistry=${IMAGE_REGISTRY} \
-        --set-string global.imageTag=${IMAGE_TAG} \
-        --set-string config.environmentSubdomain=acc \
-        --set ingress.enabled=true \
-        --set-string ingress.class=traefik \
-        --set-string ingress.hosts[0]=links.acc.nlx.io
-      stop_section deploy_apps_overview
-    - |
       echo "export CYPRESS_INWAY_NAME=rvrd-nlx-inway" >> e2e_environment.sh
       echo "export CYPRESS_LOGIN_ORGANIZATION_NAME=RvRD" >> e2e_environment.sh
       echo "export CYPRESS_LOGIN_USERNAME=admin@example.com" >> e2e_environment.sh

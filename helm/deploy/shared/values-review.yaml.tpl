@@ -30,3 +30,11 @@ insight-ui:
   ingress:
     hosts:
       - "insight-{{DOMAIN_SUFFIX}}"
+
+apps-overview:
+  config:
+    environmentSubdomain: "review"
+    reviewSlugWithDomain: "{{DOMAIN_SUFFIX}}"
+  ingress:
+    hosts:
+      - "{{DOMAIN_SUFFIX}}"

@@ -197,3 +197,7 @@ insight-ui:
     enabled: true
     hosts:
       - "insight.shared.nlx.minikube"
+
+apps-overview:
+  ingress:
+    enabled: true

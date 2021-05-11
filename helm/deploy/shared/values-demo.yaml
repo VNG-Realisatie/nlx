@@ -200,3 +200,16 @@ insight-ui:
       - secretName: shared-insight-ui-ingress-tls
         hosts:
           - insight.demo.nlx.io
+
+apps-overview:
+  config:
+    environmentSubdomain: "demo"
+  ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - "links.demo.nlx.io"
+    tls:
+      - secretName: shared-nlx-apps-overview-ingress-tls
+        hosts:
+          - links.demo.nlx.io

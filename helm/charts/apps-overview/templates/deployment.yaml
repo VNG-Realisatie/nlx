@@ -22,7 +22,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: apps-overview
+        - name: "apps-overview"
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ include "apps-overview.image" . }}
