@@ -9,3 +9,9 @@ dependencies:
   - name: dex
     version: 2.13.0
     repository: "@stable"
+  - name: parkeerrechten-api
+    version: 0.101.0
+    condition: parkeerrechten-api.enabled
+  - name: parkeerrechten-viewer 
+    version: 0.101.0
+    condition: parkeerrechten-viewer.enabled 

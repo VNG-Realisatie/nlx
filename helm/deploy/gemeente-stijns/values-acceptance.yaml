@@ -41,6 +41,15 @@ global:
 ###########
 ## Chart ##
 ###########
+management-api: 
+  serviceParkeerrechten:
+    name: parkeerrechten
+    endpointURL: http://gemeente-stijns-parkeerrechten-api:8000
+    apiSpecificationURL: http://gemeente-stijns-parkeerrechten-api:8000/schema?format=openapi-json
+    publicSupportContact: support@nlx.io
+    documentationUrl: https://nlx.io
+    inways:
+      - gemeente-stijns-nlx-inway
 
 ################
 ## Sub-charts ##
@@ -80,3 +89,22 @@ dex:
       - secretName: gemeentestijns-dex-ingress-tls
         hosts:
           - dex.acc.gemeentestijns.nl
+
+parkeerrechten-api:
+  enabled: true
+
+parkeerrechten-viewer:
+  enabled: true
+  parkeerrechtenApiBaseUrl: http://gemeente-stijns-nlx-outway/Gemeente%20Stijns/parkeerrechten/
+  organizationName: "Gemeente Stijns"
+  organizationLogo: https://gitlab.com/commonground/nlx/demo/-/raw/c75d67e8e0b631efdb0edec4df74b227483744c0/assets/stijns.svg
+  organizationColor: "#ED7380"
+  ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - parkeerrechten.acc.gemeentestijns.nl
+    tls:
+      - secretName: gemeentestijns-parkeerrechten-viewer-ingress-tls
+        hosts:
+          - parkeerrechten.acc.gemeentestijns.nl

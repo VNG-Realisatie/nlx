@@ -23,9 +23,12 @@ func serveHTML(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Permissions-Policy", "accelerometer=(), ambient-light-sensor=(), autoplay=(), battery=(), camera=(), display-capture=(), document-domain=(), encrypted-media=(), execution-while-not-rendered=(), execution-while-out-of-viewport=(), fullscreen=(), geolocation=(), gyroscope=(), layout-animations=(), legacy-image-formats=(), magnetometer=(), microphone=(), midi=(), navigation-override=(), oversized-images=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), sync-xhr=(), usb=(), vr=(), wake-lock=(), screen-wake-lock=(), web-share=(), xr-spatial-tracking=()")
 
-	if environmentSubdomain == "review" {
+	switch environmentSubdomain {
+	case "review":
 		fp = path.Join("templates", "sites-review.html")
-	} else {
+	case "acc":
+		fp = path.Join("templates", "sites-acc.html")
+	default:
 		fp = path.Join("templates", "sites.html")
 	}
 

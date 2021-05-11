@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "parkeerrechten-api.fullname" . }}
+  labels:
+    {{- include "parkeerrechten-api.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "parkeerrechten-api.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "parkeerrechten-api.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "parkeerrechten-api.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: migrations
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ template "parkeerrechten-api.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: POSTGRES_HOST
+              value: {{ required "PostgreSQL hostname is required" .Values.postgres.hostname }}
+            - name: POSTGRES_DATABASE
+              value: {{ .Values.postgres.database }}  
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "PostgreSQL secret is required" .Values.postgres.existingSecret }}
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "PostgreSQL secret is required" .Values.postgres.existingSecret }}
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_SSLMODE
+              value: {{ required "PostgreSQL sslMode is required" .Values.postgres.sslMode }}
+          command: ["/usr/local/bin/python"]
+          args:
+            - manage.py
+            - migrate
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ template "parkeerrechten-api.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          env: 
+            - name: ALLOWED_HOSTS
+              value: {{ include "parkeerrechten-api.fullname" . }}
+            - name: POSTGRES_HOST
+              value: {{ required "PostgreSQL hostname is required" .Values.postgres.hostname }}
+            - name: POSTGRES_DATABASE
+              value: {{ .Values.postgres.database }}  
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "PostgreSQL secret is required" .Values.postgres.existingSecret }}
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "PostgreSQL secret is required" .Values.postgres.existingSecret }}
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_SSLMODE
+              value: {{ required "PostgreSQL sslMode is required" .Values.postgres.sslMode }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

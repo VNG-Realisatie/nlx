@@ -1,0 +1,43 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "parkeerrechten-api.fullname" . }}-load-data
+  labels:
+    {{- include "parkeerrechten-api.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: post-install
+    helm.sh/hook-weight: "2"
+    helm.sh/hook-delete-policy: "before-hook-creation,hook-succeeded"
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "parkeerrechten-api.selectorLabels" . | nindent 8 }}
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: load-data
+          image: {{ template "parkeerrechten-api.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/usr/local/bin/python"]
+          args:
+            - manage.py
+            - loaddata
+            - parkeerrechten/fixtures/data.json
+          env:
+            - name: POSTGRES_HOST
+              value: {{ required "PostgreSQL hostname is required" .Values.postgres.hostname }}
+            - name: POSTGRES_DATABASE
+              value: {{ .Values.postgres.database }}  
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "PostgreSQL secret is required" .Values.postgres.existingSecret }}
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "PostgreSQL secret is required" .Values.postgres.existingSecret }}
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_SSLMODE
+              value: {{ required "PostgreSQL sslMode is required" .Values.postgres.sslMode }}

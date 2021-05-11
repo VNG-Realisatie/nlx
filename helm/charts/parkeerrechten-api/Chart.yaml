@@ -1,0 +1,6 @@
+apiVersion: v2
+name: parkeerrechten-api
+description: A Helm chart for the parkeerrechten API
+type: application
+version: 0.101.0
+appVersion: 0.101.0

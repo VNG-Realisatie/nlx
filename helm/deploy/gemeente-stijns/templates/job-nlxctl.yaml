@@ -1,0 +1,52 @@
+{{- if index .Values "parkeerrechten-api" "enabled" }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "gemeente-stijns.fullname" . }}-nlxctl
+  labels:
+    {{- include "gemeente-stijns.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "2"
+    helm.sh/hook-delete-policy: "before-hook-creation,hook-succeeded"
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "gemeente-stijns.selectorLabels" . | nindent 8 }}
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: nlxctl
+          image: {{ template "gemeente-stijns.nlxctl.image" . }}
+          imagePullPolicy: {{ .Values.nlxctl.image.pullPolicy }}
+          command: ["/bin/sh"]
+          args:
+            - "-exc"
+            - |
+                nlxctl init --address "${MANAGEMENT_API_ADDRESS}" --cert /certificate/tls.crt --key /certificate/tls.key --ca /config/root.pem
+                echo "${SERVICE_PARKEERRECHTEN_JSON}" > /tmp/service-parkeerrechten.json
+                if ! nlxctl service list | grep -q $SERVICE_NAME_PARKEERRECHTEN; then
+                    nlxctl service create --config /tmp/service-parkeerrechten.json
+                fi
+                nlxctl service list
+          env:
+            - name: MANAGEMENT_API_ADDRESS
+              value: {{ .Values.managementAPI.address | quote }}
+            - name: SERVICE_NAME_PARKEERRECHTEN
+              value: {{ .Values.managementAPI.serviceParkeerrechten.name | quote }}
+            - name: SERVICE_PARKEERRECHTEN_JSON
+              value: {{ .Values.managementAPI.serviceParkeerrechten | toJson | quote }}
+          volumeMounts:
+            - name: certificate
+              mountPath: /certificate
+            - name: config
+              mountPath: /config
+      volumes:
+        - name: certificate
+          secret:
+            secretName: {{ .Values.nlxctl.tls.existingSecret }}
+        - name: config
+          configMap:
+            name: {{ template "gemeente-stijns.fullname" . }}-nlxctl
+{{- end }}

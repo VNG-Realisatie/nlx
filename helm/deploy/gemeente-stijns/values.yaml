@@ -334,7 +334,7 @@ dex:
     staticPasswords:
       - username: admin
         userID: 23b027bf-b1b1-4a08-b95b-921d4afc38bc
-        hash: $2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W  # password
+        hash: $2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W # password
         name: Admin User
         email: admin@example.com
     oauth2:
@@ -358,3 +358,9 @@ dex:
 auth-service:
   tls:
     existingSecret: gemeente-stijns-organization-tls
+
+parkeerrechten-api:
+  enabled: false
+
+parkeerrechten-viewer:
+  enabled: false
