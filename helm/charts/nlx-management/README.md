@@ -78,6 +78,10 @@ The following table lists the configurable parameters of the nlx-management Char
 | `transactionLog.username` | Username of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret | `""` |
 | `transactionLog.password` | Password of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret | `""` |
 | `transactionLog.existingSecret` | If you have an existing secret with PostgreSQL credentials you can use it instead of `transactionLog.username` and `transaction.password` | `""` |
+| `postgresql.hostname` | Hostname of the Management database | `""` |
+| `postgresql.username` | Username of the PostgreSQL user for the Management database. Will be stored in a Kubernetes secret | `""` |
+| `postgresql.password` | Password of the PostgreSQL user for the Management database. Will be stored in a Kubernetes secret | `""` |
+| `postgresql.existingSecret` | If you have an existing secret with PostgreSQL credentials you can use it instead of `postgres.username` and `postgres.password` | `""` |
 | `serviceAccount.create` | If `true`, create a new service account | `true` |
 | `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` |
 | `serviceAccount.annotations` | Annotations to add to the service account |  

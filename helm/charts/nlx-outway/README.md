@@ -41,11 +41,11 @@ The following table lists the configurable parameters of the nlx-outway Chart an
 | Parameter | Description | Default |
 | --------- | ----------- | ------- |
 | `global.imageRegistry` | Image registry to be used by all NLX charts | `""` |
-| `global.imageTag` | Image tag to be used by all NLX charts | `true` |
-| `global.tls.organizationRootCertificatePEM`| NLX root certificate to be used by all NLX charts. If not set the value of `tls.organizationCertificate.rootCertificatePEM` is used | `""` |
-| `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` |
+| `global.imageTag` | Image tag to be used by all NLX charts | `The appVersion from the chart` |
+| `global.tls.organizationRootCertificatePEM`| NLX root certificate to be used by all NLX charts. (required unless `tls.organizationCertificate.rootCertificatePEM` is set) | `""` |
+| `image.registry` | Image registry. Ignored if `global.imageRegistry` is set. | `docker.io` |
 | `image.repository` | Image repository | `nlxio/outway` |
-| `image.tag` | Image tag (ignored if `global.imageTag` is set). When set to null, the AppVersion from the Chart is used | `The appVersion from the chart` |
+| `image.tag` | Image tag. Ignored if `global.imageTag` is set. | `""` |
 | `image.pullPolicy` | Image pull policy | `IfNotPresent` |
 | `image.pullSecrets` | Secrets for the image repository | `[]` |
 | `replicaCount` | Number of outway replicas | `1` |
