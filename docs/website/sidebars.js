@@ -17,7 +17,6 @@ module.exports = {
       "try-nlx/setup-your-environment",
       "try-nlx/retrieve-a-demo-certificate",
       "try-nlx/getting-up-and-running",
-      "try-nlx/consume-an-api",
       "try-nlx/provide-an-api",
     ],
     "Use NLX in production": [

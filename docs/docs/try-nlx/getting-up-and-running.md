@@ -252,5 +252,3 @@ So far we have:
 - Started all components using Docker Compose
 - Granted access to the Management UI
 - Set a default organization inway
-
-Next up, let's [consume an API](./consume-an-api.md).
