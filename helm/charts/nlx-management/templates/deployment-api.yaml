@@ -56,6 +56,10 @@ spec:
               value: "0.0.0.0:8443"
             - name: POSTGRES_HOST
               value: {{ required "PostgreSQL hostname is required" .Values.postgresql.hostname }}
+            - name: POSTGRES_PORT
+              value: {{ required "PostgreSQL port number is required" .Values.postgresql.port }}
+            - name: POSTGRES_DATBASE
+              value: {{ required "PostgreSQL database name is required" .Values.postgresql.database }}
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
@@ -67,7 +71,7 @@ spec:
                   name: {{ template "nlx-management.postgresql.secret" . }}
                   key: POSTGRES_PASSWORD
             - name: POSTGRES_DSN
-              value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):5432/nlx_management?sslmode=disable&connect_timeout=10'
+              value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)?sslmode=disable&connect_timeout=10'
 
           {{- if .Values.transactionLog.enabled }}
             - name: TRANSACTION_LOG_HOST

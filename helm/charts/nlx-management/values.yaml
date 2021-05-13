@@ -70,7 +70,9 @@ service:
   uiPort: 8080
 
 postgresql:
-  hostname: postgresql
+  hostname: "postgresql"
+  port: "5432"
+  database: "nlx_management"
   username: ""
   password: ""
   existingSecret: ""
