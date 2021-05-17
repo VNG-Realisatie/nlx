@@ -44,7 +44,7 @@ The following table lists the configurable parameters of the nlx-directory Chart
 | --------- | ----------- | ------- | -------- |
 | `global.imageRegistry` | Global Docker Image registry | `nil` | x |
 | `global.imageTag` | Global Docker Image tag | `true` | x |
-| `global.tls.rootCertificatePEM` | Global root certificate of your internal PKI. If not set the value of `tls.internal.rootCertificatePEM` is used | `nil` | x |
+| `global.tls.organization.rootCertificatePEM`| Global NLX root certificate. If not set the value of `tls.organization.rootCertificatePEM` is used | `nil` | x |
 
 ### Common parameters
 

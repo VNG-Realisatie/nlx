@@ -5,74 +5,76 @@ global:
   imageRegistry: ""
   imageTag: ""
   tls:
-    # pki/shared/ca/root.pem
-    organizationRootCertificatePEM: |
-      # Subject: C=NL, O=NLX, CN=NLX Root CA
-      # Issuer: C=NL, O=NLX, CN=NLX Root CA
-      -----BEGIN CERTIFICATE-----
-      MIIFMjCCAxqgAwIBAgIUf3G4wZe35lBs2/wGBi9LirQVa64wDQYJKoZIhvcNAQEN
-      BQAwMTELMAkGA1UEBhMCTkwxDDAKBgNVBAoTA05MWDEUMBIGA1UEAxMLTkxYIFJv
-      b3QgQ0EwHhcNMjAwODAzMTU1NjAwWhcNMzUwNzMxMTU1NjAwWjAxMQswCQYDVQQG
-      EwJOTDEMMAoGA1UEChMDTkxYMRQwEgYDVQQDEwtOTFggUm9vdCBDQTCCAiIwDQYJ
-      KoZIhvcNAQEBBQADggIPADCCAgoCggIBAK+nsTl5Y5dlgt6gb8NANG6xTSPgJrzo
-      FnPH+El+9GW7oGQQqH1N4XARSfsDvUe8ESOB6wPce6BXUif44+XmakJQe/NiU5HL
-      JTV6LWnqzMjgO1SiT6qfa1P+vpKMKEGKEyUB61wPmpm64P7C/ErIRArsihVay/uj
-      lIN1rHzv8qzOFfRGzi+WTXD1klXPjKQlkjOeb3KcWX3+v81K/Ot5WWwEkB/nxb6f
-      UbKCM8TebuKwHsm1Sp1z8KRiC3Tqu7vnUkD6vWmmIRJUGWigheUyPlBuBUOQmbqv
-      tdykLptOEd0uIKtVJNRIv5EyBvueOzK6ZWZEDHsv9nsGoCH/3h9eh88TXojGTrDf
-      Ja2In2Th0ECQLtk+QGYyNrBgCPlbBiZF9hyMwAHWgAi5HdPAWYreDNlYxPgFr/gp
-      wB8gZ625d5y6o7J5NyjdI+XwsEieAmz58aH04qY43qVlZWn0MuRuMp33WVBAfRUQ
-      uvtNkKXcjzeDoTtEpA5FKOkLi2b1JSEdNS5Lnl5tNHWrQkPrKe14TlqME3XRuIZ6
-      tFGj7c7yVWDheBxKVkvBjHoG6ORq3zoNIc0SR+KkYfjUn1G3yO3dQ8MO4AxsFNbG
-      su7efIR2aRNDajlZPTrNTT82nRE9NN9X7jdMsplCqra+tPQMocsu2dIpklPSFoId
-      AKKA46GqxBwzAgMBAAGjQjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTAD
-      AQH/MB0GA1UdDgQWBBQ+Pern0OE84DTMWWBXUccN3KwQ6TANBgkqhkiG9w0BAQ0F
-      AAOCAgEApLumRZj0bu4zJkGO6fHYITa5EYzMPs0LPq/a7qLsM3BGK+4wukhjQVn8
-      ka1KFDJIzOLLr5/xIZCGus0LRedm0ZtndX+QmbnRbJVeSEBmrPOw/Ri5QKZWKXrB
-      BcTy/E6LtvBXCY2GPrXLQQrmbEkUFL9q08xdA8pdKsPKohssQaCdyA8Sy/qnVSZJ
-      USw3YiedRMpE1ccy7mZG4q9i3xXAl6kDf0AAj8HOdl4vqDP9jr1rZs/k4XSyzN3q
-      eCI0kTiEJvF9UXaujpZWQcP//gFxLHeTKY9S1ODICFMGhVGI+tuIuXpGHp+yKONF
-      iFNYEY+GUyfjBNbSt8yJ6ky0gYE1jbBoPinuaCy+yiBTEhi5wJ0ChsOXUBj7RcE7
-      ghIp9J22J/5dKrvElszvw5XF5cqeWCREXTSCjwNdfR9fgBVBe/h3os8G4nf/zHPb
-      niBAvS339i75evlWOM2p6gzrAiVCXsRQxBXZkT3Jd6VVCh5ZjqFKFIE+Hl4AXD+g
-      PPcuTXprffmXHrUHp6ufBeyppyUgxOmFX+E+c6rmyDWM+/Oy9HsFNhjIMkUStWsR
-      OG+OQsCbQbISHXb9Won4S27z3NklmSmje3Ls+teidfeCIRbxc9/2DFQS2SZRZeH8
-      W0Kbud2Kq3mOWOIeXqZ0008uk90KzXZ1zekXDO2/hIERtDhYgKg=
-      -----END CERTIFICATE-----
-    rootCertificatePEM: |
-      # Subject: C=NL, O=Organization-C, CN=Organization-C Root CA
-      # Issuer: C=NL, O=Organization-C, CN=Organization-C Root CA
-      -----BEGIN CERTIFICATE-----
-      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
-      -----END CERTIFICATE-----
+    organization:
+      # pki/shared/ca/root.pem
+      rootCertificatePEM: |
+        # Subject: C=NL, O=NLX, CN=NLX Root CA
+        # Issuer: C=NL, O=NLX, CN=NLX Root CA
+        -----BEGIN CERTIFICATE-----
+        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
+        -----END CERTIFICATE-----
+    internal:
+      rootCertificatePEM: |
+        # Subject: C=NL, O=Organization-C, CN=Organization-C Root CA
+        # Issuer: C=NL, O=Organization-C, CN=Organization-C Root CA
+        -----BEGIN CERTIFICATE-----
+        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
+        -----END CERTIFICATE-----
 
 ###########
 ## Chart ##
@@ -254,9 +256,9 @@ nlx-management:
       redirectURL: http://nlx-management.vergunningsoftware-bv.nlx.minikube/oidc/callback
       sessionSignKey: 0Xn2DBfb4L4hwN3XosbwoKZalLBU68UU
   tls:
-    organizationCertificate:
+    organization:
       existingSecret: vergunningsoftware-bv-organization-tls
-    certificate:
+    internal:
       existingSecret: vergunningsoftware-bv-management-api-tls
   ingress:
     enabled: true

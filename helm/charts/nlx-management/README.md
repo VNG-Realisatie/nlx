@@ -44,10 +44,6 @@ The following table lists the configurable parameters of the nlx-management Char
 | --------- | ----------- | ------- | -------- |
 | `global.imageRegistry` | Global Docker Image registry | `nil` | x |
 | `global.imageTag` | Global Docker Image tag | `true` | x |
-| `global.tls.organizationRootCertificatePEM`| Global NLX root certificate. If not set the value of `tls.organization.rootCertificatePEM` is used | `nil` | x |
-| `global.tls.rootCertificatePEM` | Global root certificate of your internal PKI. If not set the value of `tls.internal.rootCertificatePEM` is used | `nil` | x |
-
-# TODO: rename globals once the certificate values for all NLX charts have been renamed
 | `global.tls.organization.rootCertificatePEM`| Global NLX root certificate. If not set the value of `tls.organization.rootCertificatePEM` is used | `nil` | x |
 | `global.tls.internal.rootCertificatePEM` | Global root certificate of your internal PKI. If not set the value of `tls.internal.rootCertificatePEM` is used | `nil` | x |
 

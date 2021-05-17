@@ -5,76 +5,78 @@ global:
   imageRegistry: ""
   imageTag: ""
   tls:
-    # pki/shared/ca/root.pem
-    organizationRootCertificatePEM: |
-      # Subject: C=NL, O=NLX, CN=NLX Root CA
-      # Issuer: C=NL, O=NLX, CN=NLX Root CA
-      -----BEGIN CERTIFICATE-----
-      MIIFMjCCAxqgAwIBAgIUf3G4wZe35lBs2/wGBi9LirQVa64wDQYJKoZIhvcNAQEN
-      BQAwMTELMAkGA1UEBhMCTkwxDDAKBgNVBAoTA05MWDEUMBIGA1UEAxMLTkxYIFJv
-      b3QgQ0EwHhcNMjAwODAzMTU1NjAwWhcNMzUwNzMxMTU1NjAwWjAxMQswCQYDVQQG
-      EwJOTDEMMAoGA1UEChMDTkxYMRQwEgYDVQQDEwtOTFggUm9vdCBDQTCCAiIwDQYJ
-      KoZIhvcNAQEBBQADggIPADCCAgoCggIBAK+nsTl5Y5dlgt6gb8NANG6xTSPgJrzo
-      FnPH+El+9GW7oGQQqH1N4XARSfsDvUe8ESOB6wPce6BXUif44+XmakJQe/NiU5HL
-      JTV6LWnqzMjgO1SiT6qfa1P+vpKMKEGKEyUB61wPmpm64P7C/ErIRArsihVay/uj
-      lIN1rHzv8qzOFfRGzi+WTXD1klXPjKQlkjOeb3KcWX3+v81K/Ot5WWwEkB/nxb6f
-      UbKCM8TebuKwHsm1Sp1z8KRiC3Tqu7vnUkD6vWmmIRJUGWigheUyPlBuBUOQmbqv
-      tdykLptOEd0uIKtVJNRIv5EyBvueOzK6ZWZEDHsv9nsGoCH/3h9eh88TXojGTrDf
-      Ja2In2Th0ECQLtk+QGYyNrBgCPlbBiZF9hyMwAHWgAi5HdPAWYreDNlYxPgFr/gp
-      wB8gZ625d5y6o7J5NyjdI+XwsEieAmz58aH04qY43qVlZWn0MuRuMp33WVBAfRUQ
-      uvtNkKXcjzeDoTtEpA5FKOkLi2b1JSEdNS5Lnl5tNHWrQkPrKe14TlqME3XRuIZ6
-      tFGj7c7yVWDheBxKVkvBjHoG6ORq3zoNIc0SR+KkYfjUn1G3yO3dQ8MO4AxsFNbG
-      su7efIR2aRNDajlZPTrNTT82nRE9NN9X7jdMsplCqra+tPQMocsu2dIpklPSFoId
-      AKKA46GqxBwzAgMBAAGjQjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTAD
-      AQH/MB0GA1UdDgQWBBQ+Pern0OE84DTMWWBXUccN3KwQ6TANBgkqhkiG9w0BAQ0F
-      AAOCAgEApLumRZj0bu4zJkGO6fHYITa5EYzMPs0LPq/a7qLsM3BGK+4wukhjQVn8
-      ka1KFDJIzOLLr5/xIZCGus0LRedm0ZtndX+QmbnRbJVeSEBmrPOw/Ri5QKZWKXrB
-      BcTy/E6LtvBXCY2GPrXLQQrmbEkUFL9q08xdA8pdKsPKohssQaCdyA8Sy/qnVSZJ
-      USw3YiedRMpE1ccy7mZG4q9i3xXAl6kDf0AAj8HOdl4vqDP9jr1rZs/k4XSyzN3q
-      eCI0kTiEJvF9UXaujpZWQcP//gFxLHeTKY9S1ODICFMGhVGI+tuIuXpGHp+yKONF
-      iFNYEY+GUyfjBNbSt8yJ6ky0gYE1jbBoPinuaCy+yiBTEhi5wJ0ChsOXUBj7RcE7
-      ghIp9J22J/5dKrvElszvw5XF5cqeWCREXTSCjwNdfR9fgBVBe/h3os8G4nf/zHPb
-      niBAvS339i75evlWOM2p6gzrAiVCXsRQxBXZkT3Jd6VVCh5ZjqFKFIE+Hl4AXD+g
-      PPcuTXprffmXHrUHp6ufBeyppyUgxOmFX+E+c6rmyDWM+/Oy9HsFNhjIMkUStWsR
-      OG+OQsCbQbISHXb9Won4S27z3NklmSmje3Ls+teidfeCIRbxc9/2DFQS2SZRZeH8
-      W0Kbud2Kq3mOWOIeXqZ0008uk90KzXZ1zekXDO2/hIERtDhYgKg=
-      -----END CERTIFICATE-----
+    organization:
+      # pki/shared/ca/root.pem
+      rootCertificatePEM: |
+        # Subject: C=NL, O=NLX, CN=NLX Root CA
+        # Issuer: C=NL, O=NLX, CN=NLX Root CA
+        -----BEGIN CERTIFICATE-----
+        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
+        -----END CERTIFICATE-----
 
-    # pki/organization-a/ca/root.pem
-    rootCertificatePEM: |
-      # Subject: C=NL, O=Organization-A, CN=Organization-A Root CA
-      # Issuer: C=NL, O=Organization-A, CN=Organization-A Root CA
-      -----BEGIN CERTIFICATE-----
-      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
-      -----END CERTIFICATE-----
+    internal:
+      # pki/organization-a/ca/root.pem
+      rootCertificatePEM: |
+        # Subject: C=NL, O=Organization-A, CN=Organization-A Root CA
+        # Issuer: C=NL, O=Organization-A, CN=Organization-A Root CA
+        -----BEGIN CERTIFICATE-----
+        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
+        -----END CERTIFICATE-----
 
 ###########
 ## Chart ##
@@ -271,9 +273,9 @@ nlx-management:
       redirectURL: http://nlx-management.rvrd.nlx.minikube/oidc/callback
       sessionSignKey: 0Xn2DBfb4L4hwN3XosbwoKZalLBU68UU
   tls:
-    organizationCertificate:
+    organization:
       existingSecret: rvrd-organization-tls
-    certificate:
+    internal:
       existingSecret: rvrd-management-api-tls
   ingress:
     enabled: true
@@ -284,11 +286,11 @@ nlx-management:
     hostname: rvrd-postgresql
     database: rvrd-transaction-log
     existingSecret: rvrd-postgresql-auth
-    sslMode: optional
+    sslMode: "disabled"
   postgresql:
     hostname: rvrd-postgresql
     existingSecret: rvrd-postgresql-auth
-    sslMode: optional
+    sslMode: "disabled"
 
 dex:
   config:
@@ -342,9 +344,9 @@ nlx-inway:
     existingSecret: rvrd-postgresql-auth
     sslMode: "disabled"
   tls:
-    organizationCertificate:
+    organization:
       existingSecret: rvrd-organization-tls
-    certificate:
+    internal:
       existingSecret: rvrd-inway-tls
   service:
     type: ClusterIP

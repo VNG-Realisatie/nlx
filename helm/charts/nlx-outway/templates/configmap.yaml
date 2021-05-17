@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "nlx-outway.labels" . | nindent 4 }}
 data:
-  root-organization.pem: {{ (required "Root organization certificate as PEM is required" (default .Values.global.tls.organizationRootCertificatePEM .Values.tls.organizationCertificate.rootCertificatePEM)) | quote }}
+  root-organization.pem: {{ (required "Root organization certificate as PEM is required" (default .Values.global.tls.organization.rootCertificatePEM .Values.tls.organization.rootCertificatePEM)) | quote }}
 {{ if .Values.config.managementAPI.enabled }}
-  root.pem: {{ (required "Root certificate PEM is required" (default .Values.global.tls.rootCertificatePEM .Values.tls.certificate.rootCertificatePEM)) | quote }}
+  root.pem: {{ (required "Root certificate PEM is required" (default .Values.global.tls.internal.rootCertificatePEM .Values.tls.internal.rootCertificatePEM)) | quote }}
 {{ end }}

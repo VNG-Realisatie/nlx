@@ -5,5 +5,5 @@ metadata:
   labels:
     {{- include "nlx-inway.labels" . | nindent 4 }}
 data:
-  root-organization.pem: {{ (required "Organization root certificate PEM is required" (default .Values.global.tls.organizationRootCertificatePEM .Values.tls.organization.rootCertificatePEM)) | quote }}
-  root.pem: {{ (required "Root certificate PEM is required" (default .Values.global.tls.rootCertificatePEM .Values.tls.internal.rootCertificatePEM)) | quote }}
+  root-organization.pem: {{ (required "Organization root certificate PEM is required" (default .Values.global.tls.organization.rootCertificatePEM .Values.tls.organization.rootCertificatePEM)) | quote }}
+  root.pem: {{ (required "Root certificate PEM is required" (default .Values.global.tls.internal.rootCertificatePEM .Values.tls.internal.rootCertificatePEM)) | quote }}

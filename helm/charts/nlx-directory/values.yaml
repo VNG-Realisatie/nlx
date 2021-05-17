@@ -2,7 +2,8 @@ global:
   imageRegistry: ""
   imageTag: ""
   tls:
-    rootCertificatePEM: ""
+    organization:
+      rootCertificatePEM: ""
 
 image:
   registry: docker.io
