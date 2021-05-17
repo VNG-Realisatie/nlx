@@ -34,10 +34,11 @@ postgresql:
   existingSecret: ""
 
 tls:
-  rootCertificatePEM: ""
-  certificatePEM: ""
-  keyPEM: ""
-  existingSecret: ""
+  organization:
+    rootCertificatePEM: ""
+    certificatePEM: ""
+    keyPEM: ""
+    existingSecret: ""
 
 ui:
   enabled: true
