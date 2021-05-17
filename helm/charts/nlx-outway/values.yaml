@@ -31,17 +31,19 @@ transactionLog:
   enabled: true
   hostname: ""
   database: ""
+  port: "5432"
   username: ""
   password: ""
+  sslMode: "required"
   existingSecret: ""
 
 tls:
-  organizationCertificate:
+  organization:
     rootCertificatePEM: ""
     certificatePEM: ""
     keyPEM: ""
     existingSecret: ""
-  certificate:
+  internal:
     rootCertificatePEM: ""
     certificatePEM: ""
     keyPEM: ""

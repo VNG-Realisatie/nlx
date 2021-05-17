@@ -262,9 +262,9 @@ nlx-outway:
     database: gemeente-stijns-transaction-log
     existingSecret: gemeente-stijns-postgresql-auth
   tls:
-    organizationCertificate:
+    organization:
       existingSecret: gemeente-stijns-organization-tls
-    certificate:
+    internal:
       existingSecret: gemeente-stijns-outway-tls
 
 nlx-inway:

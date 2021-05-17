@@ -118,7 +118,7 @@ TLS certificates used by NLX components for internal communication.
 
 | Parameter | Description | Default | Required |
 | --------- | ----------- | ------- | -------- |
-| `transactionLog.enabled` | If `true` the outway will write log records into the transaction log | `false` | x |
+| `transactionLog.enabled` | If `true` the management will write log records into the transaction log | `false` | x |
 | `transactionLog.hostname` | PostgreSQL hostname | `""` | x |
 | `transactionLog.port` | PostgreSQL port | `5432` | ✓ |
 | `transactionLog.sslMode` | PostgreSQL SSL mode | `required` | ✓ |

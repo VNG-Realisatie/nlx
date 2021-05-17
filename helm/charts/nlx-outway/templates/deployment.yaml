@@ -115,10 +115,14 @@ spec:
                   key: POSTGRES_PASSWORD
             - name: POSTGRES_HOST
               value: {{ required "PostgreSQL hostname is required" .Values.transactionLog.hostname }}
-            - name: POSTGRES_DB
+            - name: POSTGRES_PORT
+              value: {{ required "PostgreSQL port is required" .Values.transactionLog.port }}
+            - name: POSTGRES_SSL_MODE
+              value: {{ required "PostgreSQL SSL mode is required" .Values.transactionLog.sslMode }}
+            - name: POSTGRES_DATABASE
               value: {{ required "PostgreSQL database name is required" .Values.transactionLog.database }}
             - name: POSTGRES_DSN
-              value: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST)/$(POSTGRES_DB)?sslmode=disable&connect_timeout=10
+              value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)?sslmode=$(POSTGRES_SSL_MODE)&connect_timeout=10'
           {{- else }}
             - name: DISABLE_LOGDB
               value: "1"
@@ -148,12 +152,12 @@ spec:
       volumes:
         - name: certificate-organization
           secret:
-            secretName: {{ default (printf "%s-organization-tls" (include  "nlx-outway.fullname" .)) .Values.tls.organizationCertificate.existingSecret }}
+            secretName: {{ default (printf "%s-organization-tls" (include  "nlx-outway.fullname" .)) .Values.tls.organization.existingSecret }}
             defaultMode: 0640
       {{- if .Values.config.managementAPI.enabled }}
         - name: certificate
           secret:
-            secretName: {{ default (printf "%s-tls" (include "nlx-outway.fullname" .)) .Values.tls.certificate.existingSecret }}
+            secretName: {{ default (printf "%s-tls" (include "nlx-outway.fullname" .)) .Values.tls.internal.existingSecret }}
             defaultMode: 0640
       {{- end }}
         - name: config

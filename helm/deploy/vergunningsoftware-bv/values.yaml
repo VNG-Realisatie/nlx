@@ -239,9 +239,9 @@ nlx-outway:
     database: vergunningsoftware-bv-transaction-log
     existingSecret: vergunningsoftware-bv-postgresql-auth
   tls:
-    organizationCertificate:
+    organization:
       existingSecret: vergunningsoftware-bv-organization-tls
-    certificate:
+    internal:
       existingSecret: vergunningsoftware-bv-outway-tls
 
 nlx-management:
