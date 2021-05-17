@@ -45,9 +45,6 @@ tls:
     keyPEM: ""
     existingSecret: ""
 
-transactionLog:
-  enabled: false
-
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
@@ -68,12 +65,23 @@ service:
   apiConfigPort: 443
   uiPort: 8080
 
+transactionLog:
+  enabled: false
+  hostname: ""
+  port: "5432"
+  database: ""
+  username: ""
+  password: ""
+  sslMode: "required"
+  existingSecret: ""
+
 postgresql:
   hostname: "postgresql"
   port: "5432"
   database: "nlx_management"
   username: ""
   password: ""
+  sslMode: "required"
   existingSecret: ""
 
 ingress:
@@ -81,7 +89,8 @@ ingress:
   class: ""
   annotations: {}
   hosts: []
-  tls: []
+  tls:
+    []
     # - secretName: chart-example-tls
     #   hosts:
     #     - chart-example.local

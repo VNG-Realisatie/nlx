@@ -119,8 +119,10 @@ TLS certificates used by NLX components for internal communication.
 | Parameter | Description | Default | Required |
 | --------- | ----------- | ------- | -------- |
 | `transactionLog.enabled` | If `true` the outway will write log records into the transaction log | `false` | x |
-| `transactionLog.hostname` | Hostname of the transaction log database | `""` | x |
-| `transactionLog.database` | Database name of the transaction log | `""` | x |
+| `transactionLog.hostname` | PostgreSQL hostname | `""` | x |
+| `transactionLog.port` | PostgreSQL port | `5432` | ✓ |
+| `transactionLog.sslMode` | PostgreSQL SSL mode | `required` | ✓ |
+| `transactionLog.database` | PostgreSQL database  | `""` | x |
 | `transactionLog.username` | Username of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret | `""` | x |
 | `transactionLog.password` | Password of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret | `""` | x |
 | `transactionLog.existingSecret` | Use existing secret for password details (`transactionLog.username` and `transactionLog.password` will be ignored and picked up from this secret)  | `""` | x |
@@ -131,6 +133,7 @@ TLS certificates used by NLX components for internal communication.
 | --------- | ----------- | ------- | -------- |
 | `postgresql.hostname` | PostgreSQL hostname | `"postgresql"` | ✓ |
 | `postgresql.port` | PostgreSQL port | `5432` | ✓ |
+| `postgresql.sslMode` | PostgreSQL SSL mode | `required` | ✓ |
 | `postgresql.database` | PostgreSQL database | `"nlx_management"` | ✓ |
 | `postgresql.username` | PostgreSQL username. Will be stored in a Kubernetes secret | `""` | ✓ (if not using `postgresql.existingSecret`) |
 | `postgresql.password` | PostgreSQL password. Will be stored in a Kubernetes secret | `""` | ✓ (if not using `postgresql.existingSecret`) |

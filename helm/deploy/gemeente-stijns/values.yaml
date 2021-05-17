@@ -302,6 +302,7 @@ nlx-management:
     hostname: gemeente-stijns-postgresql
     database: gemeente-stijns-transaction-log
     existingSecret: gemeente-stijns-postgresql-auth
+    sslMode: disabled
   ingress:
     enabled: true
     hosts:
@@ -309,6 +310,7 @@ nlx-management:
   postgresql:
     hostname: gemeente-stijns-postgresql
     existingSecret: gemeente-stijns-postgresql-auth
+    sslMode: disabled
 
 dex:
   config:

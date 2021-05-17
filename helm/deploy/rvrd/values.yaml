@@ -135,6 +135,9 @@ managementAPI:
     irmaServerURL: https://irma.rvrd.nlx.minikube
   postgresql:
     hostname: rvrd-postgresql
+    port: "5432"
+    database: "nlx_management"
+    sslMode: "disable"
     existingSecret: rvrd-postgresql-auth
 
 ca:
@@ -281,9 +284,11 @@ nlx-management:
     hostname: rvrd-postgresql
     database: rvrd-transaction-log
     existingSecret: rvrd-postgresql-auth
+    sslMode: optional
   postgresql:
     hostname: rvrd-postgresql
     existingSecret: rvrd-postgresql-auth
+    sslMode: optional
 
 dex:
   config:

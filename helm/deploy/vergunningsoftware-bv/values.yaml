@@ -267,9 +267,11 @@ nlx-management:
     hostname: vergunningsoftware-bv-postgresql
     database: vergunningsoftware-bv-transaction-log
     existingSecret: vergunningsoftware-bv-postgresql-auth
+    sslMode: disabled
   postgresql:
     hostname: vergunningsoftware-bv-postgresql
     existingSecret: vergunningsoftware-bv-postgresql-auth
+    sslMode: disabled
 
 dex:
   config:
