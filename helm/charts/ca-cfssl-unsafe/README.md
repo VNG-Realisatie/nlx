@@ -38,34 +38,56 @@ To uninstall or delete the `ca-cfssl-unsafe` deployment:
 $ helm delete ca-cfssl-unsafe
 ```
 
-## Configuration
+## Parameters
 
 The following table lists the configurable parameters of the ca-cfssl-unsafe Chart and its default values.
 
-| Parameter | Description | Default |
-| --------- | ----------- | ------- |
-| `global.imageRegistry` | Image registry to be used by all NLX charts | `""` |
-| `global.imageTag` | Image tag to be used by all NLX charts | `""` |
-| `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` |
-| `image.repository` | Image repository | `nlxio/ca-cfssl-unsafe` |
-| `image.tag` | Image tag (ignored if `global.imageTag` is set). When set to null, the AppVersion from the Chart is used | `The appVersion from the chart` |
-| `image.pullPolicy` | Image pull policy | `IfNotPresent` |
-| `image.pullSecrets` | Secrets for the image repository | `[]` |
-| `replicaCount` | Number of ca-cfssl-unsafe replicas  | `1` |
-| `config.existingSecret` | Secret containing the root certificate and key of the CA | `""` |
-| `nameOverride`  | Override deployment name | `""` |
-| `fullnameOverride` | Override full deployment name | `""` |
-| `serviceAccount.create` | If `true`, create a new service account | `true` |
-| `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` |
-| `serviceAccount.annotations` | Annotations to add to the service account |  
-| `podSecuritiyContext` | SecurityContext holds pod-level security attributes and common container settings. Optional: Defaults to empty. | `{}` |
-| `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` |
-| `service.type` | Service type (ClusterIP, NodePort or LoadBalancer) | `ClusterIP` |
-| `service.port` | Port exposed by service | `8888` |
-| `resources` | Pod resource requests & limits | `{}` |
-| `nodeSelector` | Node labels for pod assignment | `{}` |
-| `affinity` | Node affinity for pod assignment | `{}` |
-| `tolerations` | Node tolerations for pod assignment | `[]` |
+### Global parameters
+
+| Parameter | Description | Default | Required |
+| --------- | ----------- | ------- | -------- |
+| `global.imageRegistry` | Global Docker Image registry | `nil` | x |
+| `global.imageTag` | Global Docker Image tag | `true` | x |
+
+### Common parameters
+
+| Parameter | Description | Default | Required |
+| --------- | ----------- | ------- | -------- |
+| `nameOverride` | Override deployment name | `""` | x | 
+| `fullnameOverride` | Override full deployment name | `""` | x |
+
+### Deployment parameters
+
+| Parameter | Description | Default | Required |
+| --------- | ----------- | ------- | -------- |
+| `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` | x | 
+| `image.repository` | Image repository | `nlxio/ca-cfssl-unsafe` | x |
+| `image.tag` | Image tag (ignored if `global.imageTag` is set). When set to null, the AppVersion from the Chart is used | `The appVersion from the chart` | x |
+| `image.pullPolicy` | Image pull policy | `IfNotPresent` | x |
+| `image.pullSecrets` | Secrets for the image repository | `[]` | x |
+| `affinity` | Node affinity for pod assignment | `{}` | x |
+| `nodeSelector` | Node labels for pod assignment | `{}` | x |
+| `replicaCount` | Number of management replicas | `1` | x |
+| `resources` | Pod resource requests & limits | `{}` | x |
+| `tolerations` | Node tolerations for pod assignment | `[]` | x |
+| `serviceAccount.create` | If `true`, create a new service account | `true` | x |
+| `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` | x |
+| `serviceAccount.annotations` | Annotations to add to the service account | x |
+| `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` | x |
+| `podSecuritiyContext` | SecurityContext holds pod-level security attributes and common container settings. Optional: Defaults to empty. | `{}` | x |
+
+### CA cfssl unsafe parameters
+
+| Parameter | Description | Default | Required |
+| --------- | ----------- | ------- | -------- |
+| `config.existingSecret` | Secret containing the root certificate and key of the CA | `""` | ✓ |
+
+### Exposure parameters
+
+| Parameter | Description | Default | Required |
+| --------- | ----------- | ------- | -------- 
+| `service.type` | Service type (ClusterIP, NodePort or LoadBalancer) | `ClusterIP` | x |
+| `service.port` | Port exposed by service | `8888` | x |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 
