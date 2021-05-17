@@ -277,6 +277,7 @@ nlx-inway:
     hostname: gemeente-stijns-postgresql
     database: gemeente-stijns-transaction-log
     existingSecret: gemeente-stijns-postgresql-auth
+    sslMode: "disabled"
   tls:
     organizationCertificate:
       existingSecret: gemeente-stijns-organization-tls

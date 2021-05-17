@@ -34,57 +34,98 @@ To uninstall or delete the `inway` deployment:
 $ helm delete inway
 ```
 
-## Configuration
+## Parameters
 
 The following table lists the configurable parameters of the nlx-inway Chart and its default values.
 
-| Parameter | Description | Default |
-| --------- | ----------- | ------- |
-| `global.imageRegistry` | Image registry to be used by all NLX charts | `""` |
-| `global.imageTag` | Image tag to be used by all NLX charts | `true` |
-| `global.tls.organizationRootCertificatePEM`| NLX root certificate to be used by all NLX charts. If not set the value of `tls.organizationCertificate.rootCertificatePEM` is used | `""` |
-| `global.tls.rootCertificatePEM` | Root certificate of your internal PKI to be used by all NLX charts. If not set the value of `tls.certificate.rootCertificatePEM` is used | `""` |
-| `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` |
-| `image.repository` | Image repository | `nlxio/inway` |
-| `image.tag` | Image tag (ignored if `global.imageTag` is set). When set to null, the AppVersion from the Chart is used | `The appVersion from the chart` |
-| `image.pullPolicy` | Image pull policy | `IfNotPresent` |
-| `image.pullSecrets` | Secrets for the image repository | `[]` |
-| `replicaCount` | Number of inway replicas | `1` |
-| `nameOverride` | Override deployment name | `""` |
-| `fullnameOverride` | Override full deployment name | `""` |
-| `config.logType` | Possible values: **live**, **local**. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger. | live |
-| `config.logLevel` | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType` | `""` | 
-| `config.name` | Unique identifier of this inway. | `""` |
-| `config.selfAddress` | The address that can be used by the NLX network to reach this inway | `""` |
-| `config.directoryRegistrationHostname` | Address of the NLX directory where this inway can register its services | `""` |
-| `config.serviceConfig` |**deprecated** The services this inway will offer to the NLX network. For more info see: https://docs.nlx.io/reference-information/service-configuration | `{}` |
-| `config.managementAPI.enabled` | If `true` the inway will use a management API to retrieve the service it will offer to the NLX network instead of using `config.ServiceConfig` | true |
-| `config.managementAPI.address` | The config address of the management API. Normally this would be: `hostname:443` where `hostname` is the hostname of the Management API | `""` |
-| `transactionLog.enabled` | If `true` the inway will write log records into the transaction log | `true` |
-| `transactionLog.hostname` | Hostname of the transaction log database | `""` |
-| `transactionLog.database` | Database name of the transaction log | `""` |
-| `transactionLog.username` | Username of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret | `""` |
-| `transactionLog.password` | Password of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret | `""` |
-| `transactionLog.existingSecret` | If you have an existing secret with PostgreSQL credentials you can use it instead of `transactionLog.username` and `transaction.password` | `""` |
-| `tls.organizationCertificate.rootCertificatePEM` | The NLX root certificate | `""` |
-| `tls.organizationCertificate.certificatePEM` | Your NLX certificate | `""` |
-| `tls.organizationCertificate.keyPEM` | The private key of `tls.organizationCertificate.certificatePEM` | `""` |
-| `tls.organizationCertificate.existingSecret` | If you have an existing secret with your NLX keypair you can use it instead of `tls.organizationCertificate.certificatePEM` and `tls.organizationCertificate.keyPEM` | `""` |
-| `tls.certificate.rootCertificatePEM` | The root certificate of your internal PKI | `""` |
-| `tls.certificate.certificatePEM` | The certificate signed by your internal PKI | `""` |
-| `tls.certificate.keyPEM` | The private key of `tls.certificate.certificatePEM` | `""` |
-| `tls.certificate.existingSecret` | If you have an existing secret with your NLX keypair you can use it instead of `tls.organizationCertificate.certificatePEM` and `tls.organizationCertificate.keyPEM` | `""` |
-| `serviceAccount.create` | If `true`, create a new service account | `true` |
-| `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` |
-| `serviceAccount.annotations` | Annotations to add to the service account |  
-| `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` |
-| `podSecuritiyContext.fsGroup` | Group ID under which the pod should be started | `1001` |
-| `service.type` | Service type (ClusterIP, NodePort or LoadBalancer) | `ClusterIP` |
-| `service.port` | Port exposed by the inway service | `443` |
-| `resources` | Pod resource requests & limits | `{}` |
-| `nodeSelector` | Node labels for pod assignment | `{}` |
-| `affinity` | Node affinity for pod assignment | `{}` |
-| `tolerations` | Node tolerations for pod assignment | `[]` |
+### Global parameters
+
+| Parameter | Description | Default | Required |
+| --------- | ----------- | ------- | -------- |
+| `global.imageRegistry` | Global Docker Image registry | `nil` | x |
+| `global.imageTag` | Global Docker Image tag | `true` | x |
+| `global.tls.organizationRootCertificatePEM`| Global NLX root certificate. If not set the value of `tls.organization.rootCertificatePEM` is used | `nil` | x |
+| `global.tls.rootCertificatePEM` | Global root certificate of your internal PKI. If not set the value of `tls.internal.rootCertificatePEM` is used | `nil` | x |
+
+### Common parameters
+
+| Parameter | Description | Default | Required |
+| --------- | ----------- | ------- | -------- |
+| `nameOverride` | Override deployment name | `""` | x | 
+| `fullnameOverride` | Override full deployment name | `""` | x |
+
+### Deployment parameters
+
+| Parameter | Description | Default | Required |
+| --------- | ----------- | ------- | -------- |
+| `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` | x | 
+| `image.repository` | Image repository | `nlxio/inway` | x |
+| `image.tag` | Image tag (ignored if `global.imageTag` is set). When set to null, the AppVersion from the Chart is used | `The appVersion from the chart` | x |
+| `image.pullPolicy` | Image pull policy | `IfNotPresent` | x |
+| `image.pullSecrets` | Secrets for the image repository | `[]` | x |
+| `affinity` | Node affinity for pod assignment | `{}` | x |
+| `nodeSelector` | Node labels for pod assignment | `{}` | x |
+| `replicaCount` | Number of management replicas | `1` | x |
+| `resources` | Pod resource requests & limits | `{}` | x |
+| `tolerations` | Node tolerations for pod assignment | `[]` | x |
+| `serviceAccount.create` | If `true`, create a new service account | `true` | x |
+| `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` | x |
+| `serviceAccount.annotations` | Annotations to add to the service account | x |
+| `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` | x |
+| `podSecuritiyContext.fsGroup` | Group ID under which the pod should be started | `1001` | x |
+
+### NLX Inway parameters
+
+| Parameter | Description | Default | Required |
+| --------- | ----------- | ------- | -------- |
+| `config.name` | Unique identifier of this inway. | `""` | x |
+| `config.logType` | Possible values: **live**, **local**. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger. | `live` | x |
+| `config.logLevel` | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType` | `info` | x | 
+| `config.directoryRegistrationHostname` | Address of the NLX directory where this inway will register its services. | `""` | ✓ |
+| `config.sessionCookieSecure` | If `true`, the API will use 'secure' cookies. | `"false"` | x |
+| `config.selfAddress` | The address that can be used by the NLX network to reach this inway | `""` | x |
+| `config.managementAPI.enabled` | If `true` the inway will use a management API to retrieve the service it will offer to the NLX network instead of using `config.ServiceConfig` | `true` | x |
+| `config.managementAPI.address` | The config address of the management API. Normally this would be: `hostname:443` where `hostname` is the hostname of the Management API | `""` | x |
+
+### NLX Management TLS parameters
+
+TLS certificate of your organization (used to communicate on the NLX Network).
+
+| Parameter | Description | Default | Required |
+| --------- | ----------- | ------- | -------- |
+| `tls.organization.rootCertificatePEM` | The NLX root certificate | `""` | ✓ (if global value is not set) |
+| `tls.organization.certificatePEM` | Your NLX certificate | `""` | ✓ |
+| `tls.organization.keyPEM` | The private key of `tls.organization.certificatePEM` | `""` | ✓ |
+| `tls.organization.existingSecret` | Use existing secret with your NLX keypair (`tls.organization.certificatePEM` and `tls.organization.keyPEM` will be ignored and picked up from the secret) | `""` |  x |
+
+TLS certificates used by NLX components for internal communication.
+
+| Parameter | Description | Default | Required |
+| --------- | ----------- | ------- | -------- |
+| `tls.internal.rootCertificatePEM` | The root certificate of your internal PKI | `""` | ✓ (if global value is not set) |
+| `tls.internal.certificatePEM` | The certificate signed by your internal PKI | `""` | ✓ |
+| `tls.internal.keyPEM` | The private key of `tls.internal.certificatePEM` | `""` | ✓ |
+| `tls.internal.existingSecret` | Use existing secret with your NLX keypair (`tls.internal.certificatePEM` and `tls.internal.keyPEM` will be ignored and picked up from this secret) | `""` | x |
+
+### NLX Inway Transaction Log parameters
+
+| Parameter | Description | Default | Required |
+| --------- | ----------- | ------- | -------- |
+| `transactionLog.enabled` | If `true` the outway will write log records into the transaction log | `false` | x |
+| `transactionLog.hostname` | PostgreSQL hostname | `""` | x |
+| `transactionLog.port` | PostgreSQL port | `5432` | ✓ |
+| `transactionLog.sslMode` | PostgreSQL SSL mode | `required` | ✓ |
+| `transactionLog.database` | PostgreSQL database  | `""` | x |
+| `transactionLog.username` | Username of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret | `""` | x |
+| `transactionLog.password` | Password of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret | `""` | x |
+| `transactionLog.existingSecret` | Use existing secret for password details (`transactionLog.username` and `transactionLog.password` will be ignored and picked up from this secret)  | `""` | x |
+
+### Exposure parameters
+
+| Parameter | Description | Default | Required |
+| --------- | ----------- | ------- | -------- |
+| `service.type` | Service type (ClusterIP, NodePort or LoadBalancer) | `ClusterIP` | x |
+| `service.port` | Port exposed by the service | `443` | x |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 

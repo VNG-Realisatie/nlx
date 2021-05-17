@@ -340,6 +340,7 @@ nlx-inway:
     hostname: rvrd-postgresql
     database: rvrd-transaction-log
     existingSecret: rvrd-postgresql-auth
+    sslMode: "disabled"
   tls:
     organizationCertificate:
       existingSecret: rvrd-organization-tls

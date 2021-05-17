@@ -1,4 +1,3 @@
-# Global settings
 global:
   imageRegistry: ""
   imageTag: ""
@@ -35,18 +34,20 @@ config:
 transactionLog:
   enabled: true
   hostname: ""
+  port: "5432"
   database: ""
   username: ""
   password: ""
+  sslMode: "required"
   existingSecret: ""
 
 tls:
-  organizationCertificate:
+  organization:
     rootCertificatePEM: ""
     certificatePEM: ""
     keyPEM: ""
     existingSecret: ""
-  certificate:
+  internal:
     rootCertificatePEM: ""
     certificatePEM: ""
     keyPEM: ""
