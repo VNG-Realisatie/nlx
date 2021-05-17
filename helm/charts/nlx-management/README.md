@@ -58,7 +58,6 @@ The following table lists the configurable parameters of the nlx-management Char
 | `config.directoryInspectionHostname` | Used to retrieve information about services from the directory. | `""` |
 | `config.directoryRegistrationHostname` | Address of the NLX directory where this inway can register its services. | `""` |
 | `config.sessionCookieSecure` | If `true`, the API will use 'secure' cookies. | `"false"` |
-| `config.secretKey` | Secret key that is used for signing sessions | `""` |
 | `config.oidc.clientID` | The OIDC client ID | `"nlx-management"` |
 | `config.oidc.clientSecret` | The OIDC client secret | `""` |
 | `config.oidc.discoveryURL` | The OIDC discovery URL | `""` |

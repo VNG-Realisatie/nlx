@@ -25,7 +25,6 @@ config:
   directoryInspectionHostname: ""
   directoryRegistrationHostname: ""
   sessionCookieSecure: false
-  secretKey: ""
 
   oidc:
     clientID: nlx-management
