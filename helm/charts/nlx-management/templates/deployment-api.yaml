@@ -159,7 +159,7 @@ spec:
               value: {{ required "PostgreSQL hostname is required" .Values.postgresql.hostname }}
             - name: POSTGRES_PORT
               value: {{ required "PostgreSQL port number is required" .Values.postgresql.port }}
-             - name: POSTGRES_DATABASE
+            - name: POSTGRES_DATABASE
               value: {{ required "PostgreSQL database name is required" .Values.postgresql.database }}
             - name: POSTGRES_SSL_MODE
               value: {{ required "PostgreSQL database SSL mode is required" .Values.postgresql.sslMode }}
