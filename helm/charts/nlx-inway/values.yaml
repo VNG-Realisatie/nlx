@@ -68,7 +68,7 @@ podSecurityContext:
   fsGroup: 1001
 
 service:
-  type: ClusterIP
+  type: LoadBalancer
   port: 443
 
 resources: {}

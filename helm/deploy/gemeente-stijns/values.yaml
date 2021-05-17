@@ -283,6 +283,8 @@ nlx-inway:
       existingSecret: gemeente-stijns-organization-tls
     certificate:
       existingSecret: gemeente-stijns-inway-tls
+  service:
+    type: ClusterIP
 
 nlx-management:
   config:

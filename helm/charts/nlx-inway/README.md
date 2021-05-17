@@ -124,7 +124,7 @@ TLS certificates used by NLX components for internal communication.
 
 | Parameter | Description | Default | Required |
 | --------- | ----------- | ------- | -------- |
-| `service.type` | Service type (ClusterIP, NodePort or LoadBalancer) | `ClusterIP` | x |
+| `service.type` | Service type (ClusterIP, NodePort or LoadBalancer) | `LoadBalancer` | x |
 | `service.port` | Port exposed by the service | `443` | x |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.

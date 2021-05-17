@@ -346,6 +346,8 @@ nlx-inway:
       existingSecret: rvrd-organization-tls
     certificate:
       existingSecret: rvrd-inway-tls
+  service:
+    type: ClusterIP
       
 insight-api:
   config:
