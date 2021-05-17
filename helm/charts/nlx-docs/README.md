@@ -34,39 +34,57 @@ To uninstall or delete the `nlx-docs` deployment:
 $ helm delete nlx-docs
 ```
 
-## Configuration
+## Parameters
 
 The following table lists the configurable parameters of the nlx-docs Chart and its default values.
 
-| Parameter | Description | Default |
-| --------- | ----------- | ------- |
-| `global.imageRegistry` | Image registry to be used by all NLX charts | `""` |
-| `global.imageTag` | Image tag to be used by all NLX charts | `true` |
-| `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` |
-| `image.repository` | Image repository | `nlxio/docs` |
-| `image.tag` | Image tag (ignored if `global.imageTag` is set). When set to null, the AppVersion from the Chart is used | `The appVersion from the chart` |
-| `image.pullPolicy` | Image pull policy | `IfNotPresent` |
-| `image.pullSecrets` | Secrets for the image repository | `[]` |
-| `replicaCount` | Number of directory replicas | `1` |
-| `nameOverride` | Override deployment name | `""` |
-| `fullnameOverride` | Override full deployment name | `""` | 
-| `serviceAccount.create` | If `true`, create a new service account | `true` |
-| `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` |
-| `serviceAccount.annotations` | Annotations to add to the service account |
-| `service.type` | Service type (ClusterIP, NodePort or LoadBalancer) | `ClusterIP` |
-| `service.port` | Port exposed by the service for the docs | `8080` |
-| `podSecuritiyContext` | SecurityContext holds pod-level security attributes and common container settings. Optional: Defaults to empty. | `{}` |
-| `podSecuritiyContext.fsGroup` | Group ID under which the pod should be started | `` |
-| `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` |
-| `ingress.enabled` | Enable Ingress | `false` |
-| `ingress.class` | Ingress class | `""` |
-| `ingress.annotations` | Ingress annotations | `{}` 
-| `ingress.hosts` | Ingress accepted hostname | `chart-example.local` |
-| `ingress.tls` | Ingress TLS configuration | `[]` |
-| `resources` | Pod resource requests & limits | `{}` |
-| `nodeSelector` | Node labels for pod assignment | `{}` |
-| `affinity` | Node affinity for pod assignment | `{}` |
-| `tolerations` | Node tolerations for pod assignment | `[]` |
+### Global parameters
+
+| Parameter | Description | Default | Required |
+| --------- | ----------- | ------- | -------- |
+| `global.imageRegistry` | Global Docker Image registry | `nil` | x |
+| `global.imageTag` | Global Docker Image tag | `true` | x |
+
+### Common parameters
+
+| Parameter | Description | Default | Required |
+| --------- | ----------- | ------- | -------- |
+| `nameOverride` | Override deployment name | `""` | x | 
+| `fullnameOverride` | Override full deployment name | `""` | x |
+
+### Deployment parameters
+
+| Parameter | Description | Default | Required |
+| --------- | ----------- | ------- | -------- |
+| `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` | x | 
+| `image.repository` | Image repository | `nlxio/docs` | x |
+| `image.tag` | Image tag (ignored if `global.imageTag` is set). When set to null, the AppVersion from the Chart is used | `The appVersion from the chart` | x |
+| `image.pullPolicy` | Image pull policy | `IfNotPresent` | x |
+| `image.pullSecrets` | Secrets for the image repository | `[]` | x |
+| `affinity` | Node affinity for pod assignment | `{}` | x |
+| `nodeSelector` | Node labels for pod assignment | `{}` | x |
+| `replicaCount` | Number of management replicas | `1` | x |
+| `resources` | Pod resource requests & limits | `{}` | x |
+| `tolerations` | Node tolerations for pod assignment | `[]` | x |
+| `serviceAccount.create` | If `true`, create a new service account | `true` | x |
+| `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` | x |
+| `serviceAccount.annotations` | Annotations to add to the service account | x |
+| `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` | x |
+| `podSecuritiyContext.fsGroup` | Group ID under which the pod should be started | `1001` | x |
+
+### Exposure parameters
+
+| Parameter | Description | Default | Required |
+| --------- | ----------- | ------- | -------- |
+| `service.type` | Service type (ClusterIP, NodePort or LoadBalancer) | `ClusterIP` | x |
+| `service.port` | Port exposed by the service | `8080` | x |
+| `service.apiConfigPort` | Port exposed by the management API service for the config endpoints | `443` | x |
+| `service.uiPort` | Port exposed by the management UI service | `8080` | x |
+| `ingress.enabled` | Enable Ingress | `false` | x |
+| `ingress.annotations` | Ingress annotations | `{}` | x |
+| `ingress.hosts.host` | Ingress accepted hostname | `chart-example.local` | x |
+| `ingress.hosts.paths` | Ingress accepted paths | `[]` | x |
+| `ingress.tls` | Ingress TLS configuration | `[]` | x |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 
