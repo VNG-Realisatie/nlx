@@ -34,12 +34,12 @@ config:
     sessionSignKey: ""
 
 tls:
-  organizationCertificate:
+  organization:
     rootCertificatePEM: ""
     certificatePEM: ""
     keyPEM: ""
     existingSecret: ""
-  certificate:
+  internal:
     rootCertificatePEM: ""
     certificatePEM: ""
     keyPEM: ""

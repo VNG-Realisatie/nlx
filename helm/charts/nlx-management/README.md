@@ -42,10 +42,14 @@ The following table lists the configurable parameters of the nlx-management Char
 
 | Parameter | Description | Default | Required |
 | --------- | ----------- | ------- | -------- |
-| `global.imageRegistry` | Image registry to be used by all NLX charts | `nil` | x |
-| `global.imageTag` | Image tag to be used by all NLX charts | `true` | x |
-| `global.tls.organizationRootCertificatePEM`| NLX root certificate to be used by all NLX charts. If not set the value of `tls.organizationCertificate.rootCertificatePEM` is used | `nil` | x |
-| `global.tls.rootCertificatePEM` | Root certificate of your internal PKI to be used by all NLX charts. If not set the value of `tls.certificate.rootCertificatePEM` is used | `nil` | x |
+| `global.imageRegistry` | Global Docker Image registry | `nil` | x |
+| `global.imageTag` | Global Docker Image tag | `true` | x |
+| `global.tls.organizationRootCertificatePEM`| Global NLX root certificate. If not set the value of `tls.organization.rootCertificatePEM` is used | `nil` | x |
+| `global.tls.rootCertificatePEM` | Global root certificate of your internal PKI. If not set the value of `tls.internal.rootCertificatePEM` is used | `nil` | x |
+
+# TODO: rename globals once the certificate values for all NLX charts have been renamed
+| `global.tls.organization.rootCertificatePEM`| Global NLX root certificate. If not set the value of `tls.organization.rootCertificatePEM` is used | `nil` | x |
+| `global.tls.internal.rootCertificatePEM` | Global root certificate of your internal PKI. If not set the value of `tls.internal.rootCertificatePEM` is used | `nil` | x |
 
 ### Common parameters
 
@@ -92,16 +96,23 @@ The following table lists the configurable parameters of the nlx-management Char
 
 ### NLX Management TLS parameters
 
+TLS certificate of your organization (used to communicate on the NLX Network).
+
 | Parameter | Description | Default | Required |
 | --------- | ----------- | ------- | -------- |
-| `tls.organizationCertificate.rootCertificatePEM` | The NLX root certificate | `""` | ✓ (if global value is not set) |
-| `tls.organizationCertificate.certificatePEM` | Your NLX certificate | `""` | ✓ |
-| `tls.organizationCertificate.keyPEM` | The private key of `tls.organizationCertificate.certificatePEM` | `""` | ✓ |
-| `tls.organizationCertificate.existingSecret` | Use existing secret with your NLX keypair (`tls.organizationCertificate.certificatePEM` and `tls.organizationCertificate.keyPEM` will be ignored and picked up from the secret) | `""` |  x |
-| `tls.certificate.rootCertificatePEM` | The root certificate of your internal PKI | `""` | ✓ (if global value is not set) |
-| `tls.certificate.certificatePEM` | The certificate signed by your internal PKI | `""` | ✓ |
-| `tls.certificate.keyPEM` | The private key of `tls.certificate.certificatePEM` | `""` | ✓ |
-| `tls.certificate.existingSecret` | Use existing secret with your NLX keypair (`tls.certificate.certificatePEM` and `tls.certificate.keyPEM` will be ignored and picked up from this secret) | `""` | x |
+| `tls.organization.rootCertificatePEM` | The NLX root certificate | `""` | ✓ (if global value is not set) |
+| `tls.organization.certificatePEM` | Your NLX certificate | `""` | ✓ |
+| `tls.organization.keyPEM` | The private key of `tls.organization.certificatePEM` | `""` | ✓ |
+| `tls.organization.existingSecret` | Use existing secret with your NLX keypair (`tls.organization.certificatePEM` and `tls.organization.keyPEM` will be ignored and picked up from the secret) | `""` |  x |
+
+TLS certificates used by NLX components for internal communication.
+
+| Parameter | Description | Default | Required |
+| --------- | ----------- | ------- | -------- |
+| `tls.internal.rootCertificatePEM` | The root certificate of your internal PKI | `""` | ✓ (if global value is not set) |
+| `tls.internal.certificatePEM` | The certificate signed by your internal PKI | `""` | ✓ |
+| `tls.internal.keyPEM` | The private key of `tls.internal.certificatePEM` | `""` | ✓ |
+| `tls.internal.existingSecret` | Use existing secret with your NLX keypair (`tls.internal.certificatePEM` and `tls.internal.keyPEM` will be ignored and picked up from this secret) | `""` | x |
 
 ### NLX Management Transaction Log parameters
 

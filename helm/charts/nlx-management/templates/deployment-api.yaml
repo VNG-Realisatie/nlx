@@ -169,11 +169,11 @@ spec:
       volumes:
         - name: certificate-organization
           secret:
-            secretName: {{ default (printf "%s-organization-tls" (include  "nlx-management.fullname" .)) .Values.tls.organizationCertificate.existingSecret }}
+            secretName: {{ default (printf "%s-organization-tls" (include  "nlx-management.fullname" .)) .Values.tls.organization.existingSecret }}
             defaultMode: 0640
         - name: certificate
           secret:
-            secretName: {{ default (printf "%s-tls" (include  "nlx-management.fullname" .)) .Values.tls.certificate.existingSecret }}
+            secretName: {{ default (printf "%s-tls" (include  "nlx-management.fullname" .)) .Values.tls.internal.existingSecret }}
             defaultMode: 0640
         - name: config
           configMap:
