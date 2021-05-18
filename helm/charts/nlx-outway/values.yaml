@@ -37,7 +37,7 @@ transactionLog:
   port: 5432
   username: ""
   password: ""
-  sslMode: "required"
+  sslMode: "require"
   existingSecret: ""
 
 tls:

@@ -222,6 +222,7 @@ transactionLog:
   hostname: gemeente-stijns-postgresql
   databaseName: gemeente-stijns-transaction-log
   existingSecret: gemeente-stijns-postgresql-auth
+  sslMode: "disable"
   resetDatabase: false
 
 nlxctl:
@@ -246,6 +247,7 @@ managementAPI:
   postgresql:
     hostname: gemeente-stijns-postgresql
     existingSecret: gemeente-stijns-postgresql-auth
+    sslMode: "disable"
 
 ################
 ## Sub-charts ##
@@ -263,6 +265,7 @@ nlx-outway:
     hostname: gemeente-stijns-postgresql
     database: gemeente-stijns-transaction-log
     existingSecret: gemeente-stijns-postgresql-auth
+    sslMode: "disable"
   tls:
     organization:
       existingSecret: gemeente-stijns-organization-tls

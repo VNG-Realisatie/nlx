@@ -40,7 +40,7 @@ transactionLog:
   database: ""
   username: ""
   password: ""
-  sslMode: "required"
+  sslMode: "require"
   existingSecret: ""
 
 tls:

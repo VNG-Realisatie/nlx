@@ -73,7 +73,7 @@ transactionLog:
   database: ""
   username: ""
   password: ""
-  sslMode: "required"
+  sslMode: "require"
   existingSecret: ""
 
 postgresql:
@@ -82,7 +82,7 @@ postgresql:
   database: "nlx_management"
   username: ""
   password: ""
-  sslMode: "required"
+  sslMode: "require"
   existingSecret: ""
 
 ingress:
