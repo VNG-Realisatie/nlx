@@ -213,7 +213,7 @@ transactionLog:
   hostname: vergunningsoftware-bv-postgresql
   databaseName: vergunningsoftware-bv-transaction-log
   existingSecret: vergunningsoftware-bv-postgresql-auth
-  sslMode: "disable"
+  sslMode: disable
   resetDatabase: false
 
 managementAPI:
@@ -226,7 +226,7 @@ managementAPI:
   postgresql:
     hostname: vergunningsoftware-bv-postgresql
     existingSecret: vergunningsoftware-bv-postgresql-auth
-    sslMode: "disable"
+    sslMode: disable
 
 ################
 ## Sub-charts ##
@@ -242,7 +242,7 @@ nlx-outway:
     hostname: vergunningsoftware-bv-postgresql
     database: vergunningsoftware-bv-transaction-log
     existingSecret: vergunningsoftware-bv-postgresql-auth
-    sslMode: "disable"
+    sslMode: disable
   tls:
     organization:
       existingSecret: vergunningsoftware-bv-organization-tls
@@ -272,11 +272,11 @@ nlx-management:
     hostname: vergunningsoftware-bv-postgresql
     database: vergunningsoftware-bv-transaction-log
     existingSecret: vergunningsoftware-bv-postgresql-auth
-    sslMode: disabled
+    sslMode: disable
   postgresql:
     hostname: vergunningsoftware-bv-postgresql
     existingSecret: vergunningsoftware-bv-postgresql-auth
-    sslMode: disabled
+    sslMode: disable
 
 dex:
   config:
