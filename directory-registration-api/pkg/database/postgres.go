@@ -22,8 +22,7 @@ type PostgreSQLDirectoryDatabase struct {
 	logger *zap.Logger
 	db     *sqlx.DB
 
-	setInsightConfigurationStatement *sqlx.Stmt
-	insertAvailabilityStatement      *sqlx.Stmt
+	insertAvailabilityStatement *sqlx.Stmt
 
 	selectInwayByAddressStatement   *sqlx.NamedStmt
 	setOrganizationInwayStatement   *sqlx.NamedStmt
@@ -50,11 +49,6 @@ func NewPostgreSQLDirectoryDatabase(dsn string, p *process.Process, logger *zap.
 
 	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
 
-	setInsightConfigurationStatement, err := prepareSetInsightConfigurationStatement(db)
-	if err != nil {
-		return nil, fmt.Errorf("failed to prepare set insight configuration statement: %s", err)
-	}
-
 	insertAvailabilityStatement, err := prepareInsertAvailabilityStatement(db)
 	if err != nil {
 		return nil, fmt.Errorf("failed to prepare insert availability statement: %s", err)
@@ -76,48 +70,28 @@ func NewPostgreSQLDirectoryDatabase(dsn string, p *process.Process, logger *zap.
 	}
 
 	return &PostgreSQLDirectoryDatabase{
-		logger:                           logger,
-		db:                               db,
-		setInsightConfigurationStatement: setInsightConfigurationStatement,
-		insertAvailabilityStatement:      insertAvailabilityStatement,
-		selectInwayByAddressStatement:    selectInwayByAddressStatement,
-		setOrganizationInwayStatement:    setOrganizationInwayStatement,
-		clearOrganizationInwayStatement:  clearOrganizationInwayStatement,
+		logger:                          logger,
+		db:                              db,
+		insertAvailabilityStatement:     insertAvailabilityStatement,
+		selectInwayByAddressStatement:   selectInwayByAddressStatement,
+		setOrganizationInwayStatement:   setOrganizationInwayStatement,
+		clearOrganizationInwayStatement: clearOrganizationInwayStatement,
 	}, nil
-}
-
-func prepareSetInsightConfigurationStatement(db *sqlx.DB) (*sqlx.Stmt, error) {
-	// NOTE: We do not have an endpoint yet to create services separately, therefore insert on demand.
-	prepareSetInsightConfigurationStatement, err := db.Preparex(`
-		INSERT INTO directory.organizations (name, insight_log_endpoint, insight_irma_endpoint)
-			VALUES ($1, $2, $3)
-			ON CONFLICT ON CONSTRAINT organizations_uq_name
-				DO UPDATE SET
-					insight_log_endpoint = NULLIF(EXCLUDED.insight_log_endpoint, ''),
-					insight_irma_endpoint = NULLIF(EXCLUDED.insight_irma_endpoint, '')
-			RETURNING id
-	`)
-	if err != nil {
-		return nil, err
-	}
-
-	return prepareSetInsightConfigurationStatement, nil
 }
 
 func prepareInsertAvailabilityStatement(db *sqlx.DB) (*sqlx.Stmt, error) {
 	// NOTE: We do not have an endpoint yet to create services separately, therefore insert on demand.
 	prepareInsertAvailabilityStatement, err := db.Preparex(`
 		WITH org AS (
-			INSERT INTO directory.organizations (name, insight_log_endpoint, insight_irma_endpoint)
-				VALUES ($1, $7, $8)
+			INSERT INTO directory.organizations (name)
+				VALUES ($1)
 				ON CONFLICT ON CONSTRAINT organizations_uq_name
 					DO UPDATE SET
-						insight_log_endpoint = NULLIF(EXCLUDED.insight_log_endpoint, ''),
-						insight_irma_endpoint = NULLIF(EXCLUDED.insight_irma_endpoint, '')
+						name = EXCLUDED.name -- no-op update to return id
 				RETURNING id
 		), service AS (
 			INSERT INTO directory.services (organization_id, name, internal, documentation_url, api_specification_type, public_support_contact, tech_support_contact, request_costs, monthly_costs, one_time_costs)
-				SELECT org.id, $2, $3, NULLIF($4, ''), NULLIF($5, ''), NULLIF($9, ''), NULLIF($10, ''), $12, $13, $14
+				SELECT org.id, $2, $3, NULLIF($4, ''), NULLIF($5, ''), NULLIF($7, ''), NULLIF($8, ''), $10, $11, $12
 					FROM org
 				ON CONFLICT ON CONSTRAINT services_uq_name
 					DO UPDATE SET
@@ -132,7 +106,7 @@ func prepareInsertAvailabilityStatement(db *sqlx.DB) (*sqlx.Stmt, error) {
 					RETURNING id
 		), inway AS (
 			INSERT INTO directory.inways (organization_id, address, version)
-				SELECT org.id, $6, NULLIF($11, '')
+				SELECT org.id, $6, NULLIF($9, '')
 					FROM org
 				ON CONFLICT ON CONSTRAINT inways_uq_address
 					DO UPDATE SET address = EXCLUDED.address -- no-op update to return id

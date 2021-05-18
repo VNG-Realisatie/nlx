@@ -4,11 +4,6 @@
 postgresql:
   storageType: Ephemeral
 
-managementAPI:
-  insight:
-    insightAPIURL: https://insight-api-gemeente-stijns-{{DOMAIN_SUFFIX}}
-    irmaServerURL: https://irma-gemeente-stijns-{{DOMAIN_SUFFIX}}
-
 ################
 ## Sub-charts ##
 ################
@@ -35,19 +30,3 @@ dex:
   ingress:
     hosts:
       - dex-gemeente-stijns-{{DOMAIN_SUFFIX}}
-
-insight-api:
-  ingress:
-    hosts:
-      - insight-api-gemeente-stijns-{{DOMAIN_SUFFIX}}
-
-irma-server:
-  ingress:
-    annotations:
-      ingress.kubernetes.io/custom-response-headers: "Access-Control-Allow-Origin: https://insight-{{DOMAIN_SUFFIX}}"
-    host: irma-gemeente-stijns-{{DOMAIN_SUFFIX}}
-
-parkeervergunning-application:
-  ingress:
-    hosts:
-      - parkeren-gemeente-stijns-{{DOMAIN_SUFFIX}}

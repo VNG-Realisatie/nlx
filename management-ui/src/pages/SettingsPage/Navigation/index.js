@@ -14,10 +14,6 @@ const Navigation = () => {
       <StyledLink to={`${path}/general`} aria-label={t('General settings')}>
         {t('General')}
       </StyledLink>
-
-      <StyledLink to={`${path}/insight`} aria-label={t('Insight settings')}>
-        {t('Insight')}
-      </StyledLink>
     </StyledNav>
   )
 }

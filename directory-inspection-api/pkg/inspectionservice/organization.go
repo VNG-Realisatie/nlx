@@ -62,9 +62,7 @@ func (h *InspectionService) GetOrganizationInway(ctx context.Context, req *inspe
 
 func convertFromDatabaseOrganization(model *database.Organization) *inspectionapi.ListOrganizationsResponse_Organization {
 	organization := &inspectionapi.ListOrganizationsResponse_Organization{
-		Name:                model.Name,
-		InsightIrmaEndpoint: model.InsightIrmaEndpoint,
-		InsightLogEndpoint:  model.InsightLogEndpoint,
+		Name: model.Name,
 	}
 
 	return organization

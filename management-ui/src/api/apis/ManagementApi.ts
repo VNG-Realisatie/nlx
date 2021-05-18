@@ -39,9 +39,6 @@ import {
     ManagementGetStatisticsOfServicesResponse,
     ManagementGetStatisticsOfServicesResponseFromJSON,
     ManagementGetStatisticsOfServicesResponseToJSON,
-    ManagementInsightConfiguration,
-    ManagementInsightConfigurationFromJSON,
-    ManagementInsightConfigurationToJSON,
     ManagementInway,
     ManagementInwayFromJSON,
     ManagementInwayToJSON,
@@ -144,10 +141,6 @@ export interface ManagementListOutgoingAccessRequestsRequest {
 
 export interface ManagementListServicesRequest {
     inwayName?: string;
-}
-
-export interface ManagementPutInsightConfigurationRequest {
-    body: ManagementInsightConfiguration;
 }
 
 export interface ManagementRejectIncomingAccessRequestRequest {
@@ -424,30 +417,6 @@ export class ManagementApi extends runtime.BaseAPI {
      */
     async managementDownloadFinanceExport(): Promise<ManagementDownloadFinanceExportResponse> {
         const response = await this.managementDownloadFinanceExportRaw();
-        return await response.value();
-    }
-
-    /**
-     */
-    async managementGetInsightConfigurationRaw(): Promise<runtime.ApiResponse<ManagementInsightConfiguration>> {
-        const queryParameters: runtime.HTTPQuery = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/api/v1/insight-configuration`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        });
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementInsightConfigurationFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async managementGetInsightConfiguration(): Promise<ManagementInsightConfiguration> {
-        const response = await this.managementGetInsightConfigurationRaw();
         return await response.value();
     }
 
@@ -764,37 +733,6 @@ export class ManagementApi extends runtime.BaseAPI {
      */
     async managementListServices(requestParameters: ManagementListServicesRequest): Promise<ManagementListServicesResponse> {
         const response = await this.managementListServicesRaw(requestParameters);
-        return await response.value();
-    }
-
-    /**
-     */
-    async managementPutInsightConfigurationRaw(requestParameters: ManagementPutInsightConfigurationRequest): Promise<runtime.ApiResponse<ManagementInsightConfiguration>> {
-        if (requestParameters.body === null || requestParameters.body === undefined) {
-            throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementPutInsightConfiguration.');
-        }
-
-        const queryParameters: runtime.HTTPQuery = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        const response = await this.request({
-            path: `/api/v1/insight-configuration`,
-            method: 'PUT',
-            headers: headerParameters,
-            query: queryParameters,
-            body: ManagementInsightConfigurationToJSON(requestParameters.body),
-        });
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementInsightConfigurationFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async managementPutInsightConfiguration(requestParameters: ManagementPutInsightConfigurationRequest): Promise<ManagementInsightConfiguration> {
-        const response = await this.managementPutInsightConfigurationRaw(requestParameters);
         return await response.value();
     }
 

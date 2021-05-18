@@ -4,10 +4,8 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Redirect, Switch, Route, useRouteMatch } from 'react-router-dom'
-
 import PageTemplate from '../../components/PageTemplate'
 import GeneralSettings from './GeneralSettings'
-import InsightSettings from './InsightSettings'
 import Navigation from './Navigation'
 import { Wrapper, SettingsNav, Content } from './index.styles'
 
@@ -28,7 +26,6 @@ const SettingsPage = () => {
             <Redirect exact path={path} to={`${path}/general`} />
 
             <Route path={`${path}/general`} component={GeneralSettings} />
-            <Route path={`${path}/insight`} component={InsightSettings} />
           </Switch>
         </Content>
       </Wrapper>

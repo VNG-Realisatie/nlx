@@ -33,9 +33,6 @@ spec:
                     nlxctl service create --config /tmp/service-personen.json
                 fi
                 nlxctl service list
-              {{- if hasKey .Values.managementAPI "insight" }}
-                nlxctl insight put --insight-api-url "${INSIGHT_API_URL}" --irma-server-url "${IRMA_SERVER_URL}"
-              {{- end}}
           env:
             - name: SERVICE_NAME_KENTEKENS
               value: {{ .Values.managementAPI.serviceKentekens.name | quote }}
@@ -47,12 +44,6 @@ spec:
               value: {{ .Values.managementAPI.servicePersonen | toJson | quote }}
             - name: MANAGEMENT_API_ADDRESS
               value: {{ .Values.managementAPI.address | quote }}
-          {{- if hasKey .Values.managementAPI "insight" }}
-            - name: INSIGHT_API_URL
-              value: {{ required "Insight API URL is required" .Values.managementAPI.insight.insightAPIURL | quote }}
-            - name: IRMA_SERVER_URL
-              value: {{ required "IRMA server URL is required" .Values.managementAPI.insight.irmaServerURL | quote }}
-          {{- end }}
           volumeMounts:
             - name: certificate
               mountPath: /certificate

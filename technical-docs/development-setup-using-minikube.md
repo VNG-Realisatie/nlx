@@ -93,8 +93,6 @@ You may now test the following sites:
 - http://docs.shared.nlx.minikube/                  Documentation
 - http://certportal.shared.nlx.minikube/            Portal to generate TLS certificates
 - http://directory.shared.nlx.minikube/             Overview of all services in the network
-- http://insight.shared.nlx.minikube/               Insight in logs concerning a specific person
-- http://parkeren.gemeente-stijns.nlx.minikube/             Demo application for requesting a parking permit
 - http://nlx-management.gemeente-stijns.nlx.minikube/       NLX management UI of example demo organization Gemeente Stijns used to manage NLX
 - http://nlx-management.rvrd.nlx.minikube/          NLX management UI of example organization RvRD used to manage NLX
 

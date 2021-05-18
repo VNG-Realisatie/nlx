@@ -17,7 +17,4 @@ test('Settings Navigation', () => {
 
   const linkHome = getByLabelText('General settings')
   expect(linkHome.getAttribute('href')).toBe('/settings/general')
-
-  const linkInsightSettings = getByLabelText('Insight settings')
-  expect(linkInsightSettings.getAttribute('href')).toBe('/settings/insight')
 })

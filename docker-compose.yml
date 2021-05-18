@@ -62,21 +62,6 @@ services:
       args:
         GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
         GIT_TAG_NAME: "${GIT_TAG_NAME}"
-  insight-api:
-    image: "${IMAGE_PREFIX}nlxio/insight-api:${IMAGE_TAG}"
-    build:
-      context: .
-      dockerfile: insight-api/Dockerfile
-      args:
-        GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
-        GIT_TAG_NAME: "${GIT_TAG_NAME}"
-  insight-ui:
-    image: "${IMAGE_PREFIX}nlxio/insight-ui:${IMAGE_TAG}"
-    build:
-      context: insight-ui
-      args:
-        GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
-        GIT_TAG_NAME: "${GIT_TAG_NAME}"
   inway:
     image: "${IMAGE_PREFIX}nlxio/inway:${IMAGE_TAG}"
     build:

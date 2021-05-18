@@ -27,7 +27,6 @@ rules:
       - directory
       - docs
       - helm
-      - insight
       - inway
       - management
       - outway

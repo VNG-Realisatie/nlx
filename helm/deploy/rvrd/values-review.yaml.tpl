@@ -7,11 +7,6 @@ postgresql:
 ################
 ## Sub-charts ##
 ################
-managementAPI:
-  insight:
-    insightAPIURL: https://insight-api-rvrd-{{DOMAIN_SUFFIX}}
-    irmaServerURL: https://irma-rvrd-{{DOMAIN_SUFFIX}}
-
 nlx-management:
   config:
     oidc:
@@ -35,14 +30,3 @@ dex:
   ingress:
     hosts:
       - dex-rvrd-{{DOMAIN_SUFFIX}}
-
-insight-api:
-  ingress:
-    hosts:
-      - insight-api-rvrd-{{DOMAIN_SUFFIX}}
-
-irma-server:
-  ingress:
-    annotations:
-      ingress.kubernetes.io/custom-response-headers: "Access-Control-Allow-Origin: https://insight-{{DOMAIN_SUFFIX}}"
-    host: irma-rvrd-{{DOMAIN_SUFFIX}}

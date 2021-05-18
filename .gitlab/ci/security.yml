@@ -23,8 +23,6 @@ container_scanning:
       directory-registration-api
       directory-ui
       docs
-      insight-api
-      insight-ui
       inway
       management-api
       management-ui

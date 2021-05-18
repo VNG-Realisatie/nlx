@@ -6,7 +6,6 @@ package registrationservice
 import (
 	"context"
 	"errors"
-	"fmt"
 	"regexp"
 
 	"go.uber.org/zap"
@@ -23,30 +22,6 @@ var organizationNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-. _\s]{1,100}$`)
 
 func IsValidOrganizationName(name string) bool {
 	return organizationNameRegex.MatchString(name)
-}
-
-func (h *DirectoryRegistrationService) SetInsightConfiguration(ctx context.Context, req *registrationapi.SetInsightConfigurationRequest) (*emptypb.Empty, error) {
-	logger := h.logger.With(zap.String("handler", "set-insight-configuration"))
-
-	logger.Info("rpc request SetInsightConfiguration", zap.String("insight api url", req.InsightAPIURL), zap.String("irma server url", req.IrmaServerURL))
-
-	organizationName, err := h.getOrganisationNameFromRequest(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get organization name from request: %v", err)
-	}
-
-	if !IsValidOrganizationName(organizationName) {
-		logger.Error("invalid organization name", zap.String("organization name", organizationName))
-		return nil, status.New(codes.InvalidArgument, "Invalid organization name").Err()
-	}
-
-	err = h.db.SetInsightConfiguration(ctx, organizationName, req.InsightAPIURL, req.IrmaServerURL)
-	if err != nil {
-		logger.Error("failed to execute SetInsightConfiguration", zap.Error(err))
-		return nil, status.New(codes.Internal, "database error").Err()
-	}
-
-	return &emptypb.Empty{}, nil
 }
 
 func (h *DirectoryRegistrationService) SetOrganizationInway(ctx context.Context, req *registrationapi.SetOrganizationInwayRequest) (*emptypb.Empty, error) {

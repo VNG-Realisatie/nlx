@@ -467,58 +467,6 @@
         ]
       }
     },
-    "/api/v1/insight-configuration": {
-      "get": {
-        "operationId": "Management_GetInsightConfiguration",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementInsightConfiguration"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "Management"
-        ]
-      },
-      "put": {
-        "operationId": "Management_PutInsightConfiguration",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementInsightConfiguration"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/managementInsightConfiguration"
-            }
-          }
-        ],
-        "tags": [
-          "Management"
-        ]
-      }
-    },
     "/api/v1/inways": {
       "get": {
         "operationId": "Management_ListInways",
@@ -1479,17 +1427,6 @@
         "updatedAt": {
           "type": "string",
           "format": "date-time"
-        }
-      }
-    },
-    "managementInsightConfiguration": {
-      "type": "object",
-      "properties": {
-        "irmaServerURL": {
-          "type": "string"
-        },
-        "insightAPIURL": {
-          "type": "string"
         }
       }
     },

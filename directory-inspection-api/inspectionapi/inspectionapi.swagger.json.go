@@ -125,12 +125,6 @@ const (
       "properties": {
         "name": {
           "type": "string"
-        },
-        "insight_irma_endpoint": {
-          "type": "string"
-        },
-        "insight_log_endpoint": {
-          "type": "string"
         }
       }
     },

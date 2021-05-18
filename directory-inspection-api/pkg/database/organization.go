@@ -13,9 +13,7 @@ import (
 )
 
 type Organization struct {
-	Name                string
-	InsightIrmaEndpoint string
-	InsightLogEndpoint  string
+	Name string
 }
 
 // ErrNoOrganization is returned when no organization is found
@@ -34,8 +32,6 @@ func (db PostgreSQLDirectoryDatabase) ListOrganizations(ctx context.Context) ([]
 		var organization = &Organization{}
 		err = rows.Scan(
 			&organization.Name,
-			&organization.InsightIrmaEndpoint,
-			&organization.InsightLogEndpoint,
 		)
 
 		if err != nil {

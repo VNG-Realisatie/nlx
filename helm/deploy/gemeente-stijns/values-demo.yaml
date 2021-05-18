@@ -43,10 +43,6 @@ global:
 ###########
 ## Chart ##
 ###########
-managementAPI:
-  insight:
-    insightAPIURL: https://insight-api.demo.gemeentestijns.nl
-    irmaServerURL: https://irma-api.demo.gemeentestijns.nl
 ca:
   certificates:
     organization:
@@ -105,36 +101,3 @@ nlx-inway:
     directoryRegistrationHostname: directory-registration-api.demo.nlx.io
   service:
     type: LoadBalancer
-
-insight-api:
-  ingress:
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
-    hosts:
-      - insight-api.demo.gemeentestijns.nl
-    tls:
-      - secretName: gemeentestijns-insight-api-ingress-tls
-        hosts:
-          - insight-api.demo.gemeentestijns.nl
-
-irma-server:
-  ingress:
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
-      ingress.kubernetes.io/custom-response-headers: "Access-Control-Allow-Origin: https://insight.demo.nlx.io"
-    host: irma-api.demo.gemeentestijns.nl
-    tls:
-      - secretName: gemeentestijns-irma-server-ingress-tls
-        hosts:
-          - irma-api.demo.gemeentestijns.nl
-
-parkeervergunning-application:
-  ingress:
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
-    hosts:
-      - application.demo.gemeentestijns.nl
-    tls:
-      - secretName: gemeentestijns-parkeervergunning-application-ingress-tls
-        hosts:
-          - application.demo.gemeentestijns.nl

@@ -19,10 +19,6 @@ jest.mock('./GeneralSettings', () => () => (
   <div data-testid="general-settings" />
 ))
 
-jest.mock('./InsightSettings', () => () => (
-  <div data-testid="insight-settings" />
-))
-
 test('redirects to /settings/general when navigating to /settings', async () => {
   const history = createMemoryHistory({ initialEntries: ['/settings'] })
 
@@ -48,17 +44,4 @@ test('the /settings/general route renders the General settings', () => {
     </Router>,
   )
   expect(getByTestId('general-settings')).toBeInTheDocument()
-})
-
-test('the /settings/insight route renders the Insight settings', () => {
-  const history = createMemoryHistory({ initialEntries: ['/settings/insight'] })
-
-  const { getByTestId } = renderWithProviders(
-    <Router history={history}>
-      <UserContextProvider user={{ id: '42' }}>
-        <SettingsPage />
-      </UserContextProvider>
-    </Router>,
-  )
-  expect(getByTestId('insight-settings')).toBeInTheDocument()
 })

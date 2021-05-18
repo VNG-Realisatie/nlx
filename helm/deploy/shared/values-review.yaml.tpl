@@ -23,14 +23,6 @@ ca-certportal:
     hosts:
       - "certportal-{{DOMAIN_SUFFIX}}"
 
-insight-ui:
-  config:
-    navbarDocsPageURL:  "https://docs-{{DOMAIN_SUFFIX}}"
-    navbarDirectoryURL: "https://directory-{{DOMAIN_SUFFIX}}"
-  ingress:
-    hosts:
-      - "insight-{{DOMAIN_SUFFIX}}"
-
 apps-overview:
   config:
     environmentSubdomain: "review"

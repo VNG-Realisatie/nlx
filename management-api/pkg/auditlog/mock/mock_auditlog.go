@@ -148,20 +148,6 @@ func (mr *MockLoggerMockRecorder) OrderCreate(ctx, userName, userAgent, delegate
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OrderCreate", reflect.TypeOf((*MockLogger)(nil).OrderCreate), ctx, userName, userAgent, delegatee, services)
 }
 
-// OrganizationInsightConfigurationUpdate mocks base method.
-func (m *MockLogger) OrganizationInsightConfigurationUpdate(ctx context.Context, userName, userAgent string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "OrganizationInsightConfigurationUpdate", ctx, userName, userAgent)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// OrganizationInsightConfigurationUpdate indicates an expected call of OrganizationInsightConfigurationUpdate.
-func (mr *MockLoggerMockRecorder) OrganizationInsightConfigurationUpdate(ctx, userName, userAgent interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OrganizationInsightConfigurationUpdate", reflect.TypeOf((*MockLogger)(nil).OrganizationInsightConfigurationUpdate), ctx, userName, userAgent)
-}
-
 // OrganizationSettingsUpdate mocks base method.
 func (m *MockLogger) OrganizationSettingsUpdate(ctx context.Context, userName, userAgent string) error {
 	m.ctrl.T.Helper()

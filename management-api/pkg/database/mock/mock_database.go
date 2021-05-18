@@ -541,21 +541,6 @@ func (mr *MockConfigDatabaseMockRecorder) ListServices(ctx interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListServices", reflect.TypeOf((*MockConfigDatabase)(nil).ListServices), ctx)
 }
 
-// PutInsightConfiguration mocks base method.
-func (m *MockConfigDatabase) PutInsightConfiguration(ctx context.Context, irmaServerURL, insightAPIURL string) (*database.Settings, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PutInsightConfiguration", ctx, irmaServerURL, insightAPIURL)
-	ret0, _ := ret[0].(*database.Settings)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// PutInsightConfiguration indicates an expected call of PutInsightConfiguration.
-func (mr *MockConfigDatabaseMockRecorder) PutInsightConfiguration(ctx, irmaServerURL, insightAPIURL interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PutInsightConfiguration", reflect.TypeOf((*MockConfigDatabase)(nil).PutInsightConfiguration), ctx, irmaServerURL, insightAPIURL)
-}
-
 // PutOrganizationInway mocks base method.
 func (m *MockConfigDatabase) PutOrganizationInway(ctx context.Context, inwayID *uint) (*database.Settings, error) {
 	m.ctrl.T.Helper()

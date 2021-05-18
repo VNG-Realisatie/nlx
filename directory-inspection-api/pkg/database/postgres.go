@@ -135,9 +135,7 @@ func prepareRegisterOutwayStatement(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 func prepareSelectOrganizationsStatement(db *sqlx.DB) (*sqlx.Stmt, error) {
 	listOrganizationsStatement, err := db.Preparex(`
 		SELECT
-			name,
-			COALESCE(insight_irma_endpoint, '') AS insight_irma_endpoint,
-			COALESCE(insight_log_endpoint, '') AS insight_log_endpoint
+			name
 		FROM directory.organizations
 		ORDER BY name
 	`)

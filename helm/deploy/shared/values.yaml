@@ -187,18 +187,6 @@ ca-certportal:
     hosts:
       - "certportal.shared.nlx.minikube"
 
-insight-ui:
-  config:
-    directoryInspectionAPIURL: "http://shared-nlx-directory-inspection-plain"
-    navbarHomePageURL: "https://www.nlx.io"
-    navbarAboutPageURL: "https://nlx.io/about/"
-    navbarDocsPageURL:  "https://docs.shared.nlx.minikube"
-    navbarDirectoryURL: "https://directory.shared.nlx.minikube"
-  ingress:
-    enabled: true
-    hosts:
-      - "insight.shared.nlx.minikube"
-
 apps-overview:
   ingress:
     enabled: true

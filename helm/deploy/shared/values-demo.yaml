@@ -188,20 +188,6 @@ ca-certportal:
           - certportal.demo.nlx.io
           - certportal.nlx.io
 
-insight-ui:
-  config:
-    navbarDocsPageURL: "https://docs.demo.nlx.io"
-    navbarDirectoryURL: "https://directory.demo.nlx.io"
-  ingress:
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
-    hosts:
-      - insight.demo.nlx.io
-    tls:
-      - secretName: shared-insight-ui-ingress-tls
-        hosts:
-          - insight.demo.nlx.io
-
 apps-overview:
   config:
     environmentSubdomain: "demo"

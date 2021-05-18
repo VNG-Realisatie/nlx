@@ -166,20 +166,6 @@ ca-certportal:
         hosts:
             - certportal.acc.nlx.io
 
-insight-ui:
-  config:
-    navbarDocsPageURL: "https://docs.acc.nlx.io"
-    navbarDirectoryURL: "https://directory.acc.nlx.io"
-  ingress:
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
-    hosts:
-      - "insight.acc.nlx.io"
-    tls:
-      - secretName: shared-insight-ui-ingress-tls
-        hosts:
-          - insight.acc.nlx.io
-
 apps-overview:
   config:
     environmentSubdomain: "acc"

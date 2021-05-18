@@ -56,5 +56,4 @@ type Logger interface {
 	ServiceUpdate(ctx context.Context, userName, userAgent, serviceName string) error
 	ServiceDelete(ctx context.Context, userName, userAgent, serviceName string) error
 	OrganizationSettingsUpdate(ctx context.Context, userName, userAgent string) error
-	OrganizationInsightConfigurationUpdate(ctx context.Context, userName, userAgent string) error
 }

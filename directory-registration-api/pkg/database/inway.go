@@ -25,8 +25,6 @@ type InsertAvailabilityParams struct {
 	ServiceDocumentationURL     string
 	InwayAPISpecificationType   string
 	RequestInwayAddress         string
-	ServiceInsightAPIURL        string
-	ServiceIrmaAPIURL           string
 	ServicePublicSupportContact string
 	ServiceTechSupportContact   string
 	NlxVersion                  string
@@ -46,8 +44,6 @@ func (params *InsertAvailabilityParams) Validate() error {
 			validation.When(strings.Contains(params.RequestInwayAddress, ":"), is.DialString),
 			validation.When(!strings.Contains(params.RequestInwayAddress, ":"), is.DNSName),
 		),
-		validation.Field(&params.ServiceInsightAPIURL, is.URL),
-		validation.Field(&params.ServiceIrmaAPIURL, is.URL),
 		validation.Field(&params.NlxVersion, validation.When(params.NlxVersion != "unknown", is.Semver)),
 	)
 }
@@ -62,8 +58,6 @@ func (db PostgreSQLDirectoryDatabase) InsertAvailability(params *InsertAvailabil
 		params.ServiceDocumentationURL,
 		params.InwayAPISpecificationType,
 		params.RequestInwayAddress,
-		params.ServiceInsightAPIURL,
-		params.ServiceIrmaAPIURL,
 		params.ServicePublicSupportContact,
 		params.ServiceTechSupportContact,
 		params.NlxVersion,

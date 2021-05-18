@@ -50,7 +50,6 @@ Install the npm dependencies by running:
 (cd directory-ui && npm install)
 (cd management-ui && npm install)
 (cd docs/website && npm install)
-(cd insight-ui && npm install)
 ```
 
 Start a PostgreSQL container through Docker Compose with:
@@ -124,7 +123,6 @@ And the following frontend applications:
 
 - [directory-ui](http://localhost:3001) (HTTP: 3001)
 - [docs](http://localhost:3002) (HTTP: 3002)
-- [insight-ui](http://docs.shared.nlx.local:3003) (HTTP: 3003)
 - [management-ui (A)](http://management.organization-a.nlx.local:3011) (HTTP: 3011)
 - [management-ui (B)](http://management.organization-b.nlx.local:3021) (HTTP: 3021)
 
@@ -191,11 +189,11 @@ You might want to regenerate the mocks after recompiling the protobuf files.
 You can do so as follows for these directories:
 
 ```shell
-(cd directory-inspection-api && sh regenerate-gomock-files.sh)
+(cd directory-inspection-api && make -B)
 ```
 
 ```shell
-(cd directory-registration-api && sh regenerate-gomock-files.sh)
+(cd directory-registration-api && make -B)
 ```
 
 ```shell

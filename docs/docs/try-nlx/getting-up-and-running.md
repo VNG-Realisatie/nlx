@@ -229,7 +229,7 @@ On the left you will find the main navigation which separates the UI in several 
 - **Inways**: Lists all available inways.
 - **Services**: Shows a list of your services. You can also register new services here.
 - **Directory**: Lists all available services in the [demo directory](https://directory.demo.nlx.io/). This is also the place where you can request access to another service.
-- **Settings**: Shows all global settings. Currently only the insight and organization inway settings.
+- **Settings**: Shows all global settings.
 
 ![Overview](/img/nlx-management-overview.png "Overview")
 

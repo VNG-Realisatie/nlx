@@ -57,8 +57,6 @@ message ListServicesResponse {
 message ListOrganizationsResponse {
 	message Organization {
 		string name = 1;
-		string insight_irma_endpoint = 2;
-		string insight_log_endpoint = 3;
 	}
 
 	repeated Organization organizations = 2;

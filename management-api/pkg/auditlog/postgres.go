@@ -250,15 +250,3 @@ func (a *PostgresLogger) OrganizationSettingsUpdate(ctx context.Context, userNam
 
 	return err
 }
-
-func (a *PostgresLogger) OrganizationInsightConfigurationUpdate(ctx context.Context, userName, userAgent string) error {
-	record := &database.AuditLog{
-		UserAgent:  userAgent,
-		UserName:   userName,
-		ActionType: database.OrganizationInsightConfigurationUpdate,
-	}
-
-	_, err := a.database.CreateAuditLogRecord(ctx, record)
-
-	return err
-}

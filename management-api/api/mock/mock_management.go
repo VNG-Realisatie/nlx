@@ -197,26 +197,6 @@ func (mr *MockManagementClientMockRecorder) DownloadFinanceExport(ctx, in interf
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadFinanceExport", reflect.TypeOf((*MockManagementClient)(nil).DownloadFinanceExport), varargs...)
 }
 
-// GetInsightConfiguration mocks base method.
-func (m *MockManagementClient) GetInsightConfiguration(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.InsightConfiguration, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "GetInsightConfiguration", varargs...)
-	ret0, _ := ret[0].(*api.InsightConfiguration)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetInsightConfiguration indicates an expected call of GetInsightConfiguration.
-func (mr *MockManagementClientMockRecorder) GetInsightConfiguration(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInsightConfiguration", reflect.TypeOf((*MockManagementClient)(nil).GetInsightConfiguration), varargs...)
-}
-
 // GetInway mocks base method.
 func (m *MockManagementClient) GetInway(ctx context.Context, in *api.GetInwayRequest, opts ...grpc.CallOption) (*api.Inway, error) {
 	m.ctrl.T.Helper()
@@ -455,26 +435,6 @@ func (mr *MockManagementClientMockRecorder) ListServices(ctx, in interface{}, op
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, in}, opts...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListServices", reflect.TypeOf((*MockManagementClient)(nil).ListServices), varargs...)
-}
-
-// PutInsightConfiguration mocks base method.
-func (m *MockManagementClient) PutInsightConfiguration(ctx context.Context, in *api.InsightConfiguration, opts ...grpc.CallOption) (*api.InsightConfiguration, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "PutInsightConfiguration", varargs...)
-	ret0, _ := ret[0].(*api.InsightConfiguration)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// PutInsightConfiguration indicates an expected call of PutInsightConfiguration.
-func (mr *MockManagementClientMockRecorder) PutInsightConfiguration(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PutInsightConfiguration", reflect.TypeOf((*MockManagementClient)(nil).PutInsightConfiguration), varargs...)
 }
 
 // RejectIncomingAccessRequest mocks base method.
@@ -760,21 +720,6 @@ func (mr *MockManagementServerMockRecorder) DownloadFinanceExport(arg0, arg1 int
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadFinanceExport", reflect.TypeOf((*MockManagementServer)(nil).DownloadFinanceExport), arg0, arg1)
 }
 
-// GetInsightConfiguration mocks base method.
-func (m *MockManagementServer) GetInsightConfiguration(arg0 context.Context, arg1 *emptypb.Empty) (*api.InsightConfiguration, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetInsightConfiguration", arg0, arg1)
-	ret0, _ := ret[0].(*api.InsightConfiguration)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetInsightConfiguration indicates an expected call of GetInsightConfiguration.
-func (mr *MockManagementServerMockRecorder) GetInsightConfiguration(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInsightConfiguration", reflect.TypeOf((*MockManagementServer)(nil).GetInsightConfiguration), arg0, arg1)
-}
-
 // GetInway mocks base method.
 func (m *MockManagementServer) GetInway(arg0 context.Context, arg1 *api.GetInwayRequest) (*api.Inway, error) {
 	m.ctrl.T.Helper()
@@ -953,21 +898,6 @@ func (m *MockManagementServer) ListServices(arg0 context.Context, arg1 *api.List
 func (mr *MockManagementServerMockRecorder) ListServices(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListServices", reflect.TypeOf((*MockManagementServer)(nil).ListServices), arg0, arg1)
-}
-
-// PutInsightConfiguration mocks base method.
-func (m *MockManagementServer) PutInsightConfiguration(arg0 context.Context, arg1 *api.InsightConfiguration) (*api.InsightConfiguration, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PutInsightConfiguration", arg0, arg1)
-	ret0, _ := ret[0].(*api.InsightConfiguration)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// PutInsightConfiguration indicates an expected call of PutInsightConfiguration.
-func (mr *MockManagementServerMockRecorder) PutInsightConfiguration(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PutInsightConfiguration", reflect.TypeOf((*MockManagementServer)(nil).PutInsightConfiguration), arg0, arg1)
 }
 
 // RejectIncomingAccessRequest mocks base method.

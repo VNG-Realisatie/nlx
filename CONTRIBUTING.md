@@ -53,7 +53,6 @@ The available scopes are:
 - directory
 - docs
 - helm
-- insight
 - inway
 - management
 - outway

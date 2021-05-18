@@ -97,25 +97,3 @@ nlx-inway:
     directoryRegistrationHostname: directory-registration-api.demo.nlx.io
   service:
     type: LoadBalancer
-
-insight-api:
-  ingress:
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
-    hosts:
-      - insight-api.demo.rvrd.nl
-    tls:
-      - secretName: rvrd-insight-api-ingress-tls
-        hosts:
-          - insight-api.demo.rvrd.nl
-
-irma-server:
-  ingress:
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
-      ingress.kubernetes.io/custom-response-headers: "Access-Control-Allow-Origin: https://insight.demo.nlx.io"
-    host: irma-api.demo.rvrd.nl
-    tls:
-      - secretName: rvrd-irma-server-ingress-tls
-        hosts:
-          - irma-api.demo.rvrd.nl

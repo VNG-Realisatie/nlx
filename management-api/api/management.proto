@@ -48,12 +48,6 @@ service Management {
   rpc DeleteInway (DeleteInwayRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {delete: "/api/v1/inways/{name}"};
   }
-  rpc PutInsightConfiguration(InsightConfiguration) returns (InsightConfiguration) {
-    option (google.api.http) = {put: "/api/v1/insight-configuration" body: "*"};
-  }
-  rpc GetInsightConfiguration (google.protobuf.Empty) returns (InsightConfiguration) {
-    option (google.api.http) = {get: "/api/v1/insight-configuration"};
-  }
   rpc ListIncomingAccessRequest (ListIncomingAccessRequestsRequests) returns (ListIncomingAccessRequestsResponse) {
     option (google.api.http) = {get: "/api/v1/access-requests/incoming/services/{serviceName}"};
   }
@@ -285,11 +279,6 @@ message UpdateInwayRequest {
 
 message DeleteInwayRequest {
   string name = 1;
-}
-
-message InsightConfiguration {
-  string irmaServerURL = 1;
-  string insightAPIURL = 2;
 }
 
 enum AccessRequestState {

@@ -32,8 +32,6 @@ type ManagementClient interface {
 	CreateInway(ctx context.Context, in *Inway, opts ...grpc.CallOption) (*Inway, error)
 	UpdateInway(ctx context.Context, in *UpdateInwayRequest, opts ...grpc.CallOption) (*Inway, error)
 	DeleteInway(ctx context.Context, in *DeleteInwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	PutInsightConfiguration(ctx context.Context, in *InsightConfiguration, opts ...grpc.CallOption) (*InsightConfiguration, error)
-	GetInsightConfiguration(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*InsightConfiguration, error)
 	ListIncomingAccessRequest(ctx context.Context, in *ListIncomingAccessRequestsRequests, opts ...grpc.CallOption) (*ListIncomingAccessRequestsResponse, error)
 	ApproveIncomingAccessRequest(ctx context.Context, in *ApproveIncomingAccessRequestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	RejectIncomingAccessRequest(ctx context.Context, in *RejectIncomingAccessRequestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -169,24 +167,6 @@ func (c *managementClient) UpdateInway(ctx context.Context, in *UpdateInwayReque
 func (c *managementClient) DeleteInway(ctx context.Context, in *DeleteInwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/DeleteInway", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *managementClient) PutInsightConfiguration(ctx context.Context, in *InsightConfiguration, opts ...grpc.CallOption) (*InsightConfiguration, error) {
-	out := new(InsightConfiguration)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/PutInsightConfiguration", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *managementClient) GetInsightConfiguration(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*InsightConfiguration, error) {
-	out := new(InsightConfiguration)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/GetInsightConfiguration", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -336,8 +316,6 @@ type ManagementServer interface {
 	CreateInway(context.Context, *Inway) (*Inway, error)
 	UpdateInway(context.Context, *UpdateInwayRequest) (*Inway, error)
 	DeleteInway(context.Context, *DeleteInwayRequest) (*emptypb.Empty, error)
-	PutInsightConfiguration(context.Context, *InsightConfiguration) (*InsightConfiguration, error)
-	GetInsightConfiguration(context.Context, *emptypb.Empty) (*InsightConfiguration, error)
 	ListIncomingAccessRequest(context.Context, *ListIncomingAccessRequestsRequests) (*ListIncomingAccessRequestsResponse, error)
 	ApproveIncomingAccessRequest(context.Context, *ApproveIncomingAccessRequestRequest) (*emptypb.Empty, error)
 	RejectIncomingAccessRequest(context.Context, *RejectIncomingAccessRequestRequest) (*emptypb.Empty, error)
@@ -397,12 +375,6 @@ func (UnimplementedManagementServer) UpdateInway(context.Context, *UpdateInwayRe
 }
 func (UnimplementedManagementServer) DeleteInway(context.Context, *DeleteInwayRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteInway not implemented")
-}
-func (UnimplementedManagementServer) PutInsightConfiguration(context.Context, *InsightConfiguration) (*InsightConfiguration, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PutInsightConfiguration not implemented")
-}
-func (UnimplementedManagementServer) GetInsightConfiguration(context.Context, *emptypb.Empty) (*InsightConfiguration, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetInsightConfiguration not implemented")
 }
 func (UnimplementedManagementServer) ListIncomingAccessRequest(context.Context, *ListIncomingAccessRequestsRequests) (*ListIncomingAccessRequestsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListIncomingAccessRequest not implemented")
@@ -689,42 +661,6 @@ func _Management_DeleteInway_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ManagementServer).DeleteInway(ctx, req.(*DeleteInwayRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Management_PutInsightConfiguration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(InsightConfiguration)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ManagementServer).PutInsightConfiguration(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/nlx.management.Management/PutInsightConfiguration",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).PutInsightConfiguration(ctx, req.(*InsightConfiguration))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Management_GetInsightConfiguration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ManagementServer).GetInsightConfiguration(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/nlx.management.Management/GetInsightConfiguration",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).GetInsightConfiguration(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1039,14 +975,6 @@ var Management_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteInway",
 			Handler:    _Management_DeleteInway_Handler,
-		},
-		{
-			MethodName: "PutInsightConfiguration",
-			Handler:    _Management_PutInsightConfiguration_Handler,
-		},
-		{
-			MethodName: "GetInsightConfiguration",
-			Handler:    _Management_GetInsightConfiguration_Handler,
 		},
 		{
 			MethodName: "ListIncomingAccessRequest",

@@ -7,7 +7,6 @@ DIRS="
 directory-ui
 directory-ui-e2e-tests
 docs/website
-insight-ui
 management-ui
 management-ui-e2e-tests"
 

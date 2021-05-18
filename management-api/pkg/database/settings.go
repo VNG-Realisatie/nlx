@@ -13,13 +13,11 @@ import (
 )
 
 type Settings struct {
-	ID            uint `gorm:"primarykey;column:settings_id"`
-	IrmaServerURL string
-	InsightAPIURL string
-	InwayID       *uint
-	Inway         *Inway `gorm:"foreignkey:InwayID;references:ID"`
-	CreatedAt     time.Time
-	UpdatedAt     time.Time
+	ID        uint `gorm:"primarykey;column:settings_id"`
+	InwayID   *uint
+	Inway     *Inway `gorm:"foreignkey:InwayID;references:ID"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 func (s *Settings) TableName() string {
@@ -50,23 +48,6 @@ func (db *PostgresConfigDatabase) PutOrganizationInway(ctx context.Context, inwa
 		Omit(clause.Associations).
 		Where("settings_id IS NOT NULL").
 		Assign(map[string]interface{}{"inway_id": inwayID}).
-		FirstOrCreate(settingsInDB).Error; err != nil {
-		return nil, err
-	}
-
-	return settingsInDB, nil
-}
-
-func (db *PostgresConfigDatabase) PutInsightConfiguration(ctx context.Context, irmaServerURL, insightAPIURL string) (*Settings, error) {
-	settingsInDB := &Settings{}
-	if err := db.DB.
-		WithContext(ctx).
-		Omit(clause.Associations).
-		Where("settings_id IS NOT NULL").
-		Assign(map[string]interface{}{
-			"irma_server_url": irmaServerURL,
-			"insight_api_url": insightAPIURL,
-		}).
 		FirstOrCreate(settingsInDB).Error; err != nil {
 		return nil, err
 	}

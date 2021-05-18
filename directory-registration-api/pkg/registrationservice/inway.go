@@ -62,8 +62,6 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 			ServiceDocumentationURL:     service.DocumentationUrl,
 			InwayAPISpecificationType:   inwayAPISpecificationType,
 			RequestInwayAddress:         req.InwayAddress,
-			ServiceInsightAPIURL:        service.InsightApiUrl,
-			ServiceIrmaAPIURL:           service.IrmaApiUrl,
 			ServicePublicSupportContact: service.PublicSupportContact,
 			ServiceTechSupportContact:   service.TechSupportContact,
 			NlxVersion:                  nlxversion.NewFromGRPCContext(ctx).Version,

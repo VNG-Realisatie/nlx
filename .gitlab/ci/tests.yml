@@ -98,29 +98,6 @@ Directory-ui linter and tests:
     - docker
     - linux
 
-Insight-ui tests:
-  extends: .node-base
-  stage: Tests
-  script:
-    - cd insight-ui/
-    - install_npm_dependencies
-    - start_section lint "Running linter"
-    - npm run lint
-    - stop_section lint
-    - start_section test "Running tests"
-    - npm test -- --coverage
-    - stop_section test
-  coverage: /All\sfiles.*?\s+(\d+.\d+)/
-  artifacts:
-    expire_in: 1 month
-    paths:
-      - insight-ui/coverage
-  rules:
-    - if: '$CI_COMMIT_BRANCH && $CI_PROJECT_PATH == "commonground/nlx/nlx"' # do not run for tags
-  tags:
-    - docker
-    - linux
-
 Management-ui linter and tests:
   extends: .node-base
   stage: Tests
