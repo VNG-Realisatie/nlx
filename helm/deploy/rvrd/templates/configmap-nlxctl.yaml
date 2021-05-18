@@ -5,4 +5,4 @@ metadata:
   labels:
     {{- include "rvrd.labels" . | nindent 4 }}
 data:
-  root.pem: {{ (required "Organization root certificate PEM is required" .Values.global.tls.organization.rootCertificatePEM) | quote }}
+  root.pem: {{ (required "Internal root certificate PEM is required" .Values.global.tls.internal.rootCertificatePEM) | quote }}

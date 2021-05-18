@@ -5,4 +5,4 @@ metadata:
   labels:
     {{- include "gemeente-stijns.labels" . | nindent 4 }}
 data:
-  root.pem: {{ (required "Root certificate PEM is required" .Values.global.tls.rootCertificatePEM) | quote }}
+  root.pem: {{ (required "Internal root certificate PEM is required" .Values.global.tls.internal.rootCertificatePEM) | quote }}
