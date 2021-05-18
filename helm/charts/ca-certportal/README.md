@@ -69,13 +69,13 @@ The following table lists the configurable parameters of the ca-certportal Chart
 | `tolerations` | Node tolerations for pod assignment | `[]` | x |
 | `serviceAccount.create` | If `true`, create a new service account | `true` | x |
 | `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` | x |
-| `serviceAccount.annotations` | Annotations to add to the service account | x |
+| `serviceAccount.annotations` | Annotations to add to the service account | `{}` | x | 
 | `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` | x |
 
 ### CA Cert Portal parameters
 | Parameter | Description | Default | Required |
 | --------- | ----------- | ------- | -------- |
-| `config.logType` | Possible values: **live**, **local**. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger. | live | x |
+| `config.logType` | Possible values: **live**, **local**. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger. | `live` | x |
 | `config.logLevel` | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType` | `""` | x |
 | `config.caHost` | The host of the Certificate Authority. | `""` | x |
 

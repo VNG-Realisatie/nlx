@@ -72,7 +72,7 @@ The following table lists the configurable parameters of the ca-cfssl-unsafe Cha
 | `tolerations` | Node tolerations for pod assignment | `[]` | x |
 | `serviceAccount.create` | If `true`, create a new service account | `true` | x |
 | `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` | x |
-| `serviceAccount.annotations` | Annotations to add to the service account | x |
+| `serviceAccount.annotations` | Annotations to add to the service account | `{}` | x | 
 | `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` | x |
 | `podSecuritiyContext` | SecurityContext holds pod-level security attributes and common container settings. Optional: Defaults to empty. | `{}` | x |
 

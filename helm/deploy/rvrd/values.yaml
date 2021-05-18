@@ -336,7 +336,6 @@ nlx-inway:
   config:
     directoryRegistrationHostname: shared-nlx-directory-registration
     managementAPI:
-      enabled: true
       address: rvrd-nlx-management-api:443
   transactionLog:
     hostname: rvrd-postgresql

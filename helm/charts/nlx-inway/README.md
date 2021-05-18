@@ -70,7 +70,7 @@ The following table lists the configurable parameters of the nlx-inway Chart and
 | `tolerations` | Node tolerations for pod assignment | `[]` | x |
 | `serviceAccount.create` | If `true`, create a new service account | `true` | x |
 | `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` | x |
-| `serviceAccount.annotations` | Annotations to add to the service account | x |
+| `serviceAccount.annotations` | Annotations to add to the service account | `{}` | x | 
 | `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` | x |
 | `podSecuritiyContext.fsGroup` | Group ID under which the pod should be started | `1001` | x |
 
@@ -82,12 +82,11 @@ The following table lists the configurable parameters of the nlx-inway Chart and
 | `config.logType` | Possible values: **live**, **local**. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger. | `live` | x |
 | `config.logLevel` | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType` | `info` | x | 
 | `config.directoryRegistrationHostname` | Address of the NLX directory where this inway will register its services. | `""` | ✓ |
-| `config.sessionCookieSecure` | If `true`, the API will use 'secure' cookies. | `"false"` | x |
+| `config.sessionCookieSecure` | If `true`, the API will use 'secure' cookies. | `false` | x |
 | `config.selfAddress` | The address that can be used by the NLX network to reach this inway | `""` | x |
-| `config.managementAPI.enabled` | If `true` the inway will use a management API to retrieve the service it will offer to the NLX network instead of using `config.ServiceConfig` | `true` | x |
 | `config.managementAPI.address` | The config address of the management API. Normally this would be: `hostname:443` where `hostname` is the hostname of the Management API | `""` | x |
 
-### NLX Management TLS parameters
+### TLS parameters
 
 TLS certificate of your organization (used to communicate on the NLX Network).
 
@@ -107,14 +106,14 @@ TLS certificates used by NLX components for internal communication.
 | `tls.internal.keyPEM` | The private key of `tls.internal.certificatePEM` | `""` | ✓ |
 | `tls.internal.existingSecret` | Use existing secret with your NLX keypair (`tls.internal.certificatePEM` and `tls.internal.keyPEM` will be ignored and picked up from this secret) | `""` | x |
 
-### NLX Inway Transaction Log parameters
+### Transaction Log parameters
 
 | Parameter | Description | Default | Required |
 | --------- | ----------- | ------- | -------- |
 | `transactionLog.enabled` | If `true` the outway will write log records into the transaction log | `false` | x |
 | `transactionLog.hostname` | PostgreSQL hostname | `""` | x |
 | `transactionLog.port` | PostgreSQL port | `5432` | ✓ |
-| `transactionLog.sslMode` | PostgreSQL SSL mode | `required` | ✓ |
+| `transactionLog.sslMode` | PostgreSQL SSL mode | `require` | ✓ |
 | `transactionLog.database` | PostgreSQL database  | `""` | x |
 | `transactionLog.username` | Username of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret | `""` | x |
 | `transactionLog.password` | Password of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret | `""` | x |
@@ -124,7 +123,7 @@ TLS certificates used by NLX components for internal communication.
 
 | Parameter | Description | Default | Required |
 | --------- | ----------- | ------- | -------- |
-| `service.type` | Service type (ClusterIP, NodePort or LoadBalancer) | `LoadBalancer` | x |
+| `service.type` | Service type (ClusterIP, NodePort or LoadBalancer). Please note that there should be no service performing TLS offloading as it uses mutual TLS | `LoadBalancer` | x |
 | `service.port` | Port exposed by the service | `443` | x |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.

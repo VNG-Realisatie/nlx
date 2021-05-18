@@ -117,10 +117,8 @@ spec:
           volumeMounts:
             - name: certificate-organization
               mountPath: /certificate-organization
-          {{- if .Values.config.managementAPI.enabled }}
             - name: certificate
               mountPath: /certificate
-          {{- end }}
             - name: config
               mountPath: /config
           resources:
@@ -130,12 +128,10 @@ spec:
           secret:
             secretName: {{ default (printf "%s-organization-tls" (include  "nlx-inway.fullname" .)) .Values.tls.organization.existingSecret }}
             defaultMode: 0640
-      {{- if .Values.config.managementAPI.enabled }}
         - name: certificate
           secret:
             secretName: {{ default (printf "%s-tls" (include "nlx-inway.fullname" .)) .Values.tls.internal.existingSecret }}
             defaultMode: 0640
-      {{- end }}
         - name: config
           configMap:
             name: {{ template "nlx-inway.fullname" . }}

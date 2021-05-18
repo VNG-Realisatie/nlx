@@ -27,7 +27,6 @@ config:
     enabled: false
     url: ""
   managementAPI:
-    enabled: false
     address: ""
 
 transactionLog:

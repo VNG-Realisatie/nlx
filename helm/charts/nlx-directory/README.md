@@ -73,7 +73,7 @@ The following table lists the configurable parameters of the nlx-directory Chart
 | `tolerations` | Node tolerations for pod assignment | `[]` | x |
 | `serviceAccount.create` | If `true`, create a new service account | `true` | x |
 | `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` | x |
-| `serviceAccount.annotations` | Annotations to add to the service account | x |
+| `serviceAccount.annotations` | Annotations to add to the service account | `{}` | x | 
 | `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` | x |
 | `podSecuritiyContext.fsGroup` | Group ID under which the pod should be started | `1001` | x |
 
@@ -85,7 +85,7 @@ The following table lists the configurable parameters of the nlx-directory Chart
 | `config.logLevel` | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType` | `info` | x |
 | `config.directoryInspectionHostname` | Used to retrieve information about services from the directory. | `""` | ✓ | 
 | `config.directoryRegistrationHostname` | Address of the NLX directory where this inway will register its services. | `""` | ✓ |
-| `config.sessionCookieSecure` | If `true`, the API will use 'secure' cookies. | `"false"` | x |
+| `config.sessionCookieSecure` | If `true`, the API will use 'secure' cookies. | `false` | x |
 | `config.oidc.clientID` | The OIDC client ID | `"nlx-management"` | x |
 | `config.oidc.clientSecret` | The OIDC client secret | `""` | ✓ |
 | `config.oidc.discoveryURL` | The OIDC discovery URL | `""` | ✓ |
@@ -94,7 +94,7 @@ The following table lists the configurable parameters of the nlx-directory Chart
 | `config.monitorOfflineServiceTTL` | Time, in seconds, a service can be offline before being removed from the directory | `86400` | x |
 | `config.resetDatabase` | If `true` the database will be cleared after installing or upgrading | `false` | x |
 
-### NLX Directory TLS parameters
+### NLX TLS parameters
 
 | Parameter | Description | Default | Required |
 | --------- | ----------- | ------- | -------- |

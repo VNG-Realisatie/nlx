@@ -235,7 +235,6 @@ nlx-outway:
   config:
     directoryInspectionHostname: shared-nlx-directory-inspection
     managementAPI:
-      enabled: true
       address: vergunningsoftware-bv-nlx-management-api:443
   transactionLog:
     enabled: true
