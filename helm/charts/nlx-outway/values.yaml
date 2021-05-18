@@ -34,7 +34,7 @@ transactionLog:
   enabled: true
   hostname: ""
   database: ""
-  port: "5432"
+  port: 5432
   username: ""
   password: ""
   sslMode: "required"

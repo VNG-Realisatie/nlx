@@ -116,7 +116,7 @@ spec:
             - name: POSTGRES_HOST
               value: {{ required "PostgreSQL hostname is required" .Values.transactionLog.hostname }}
             - name: POSTGRES_PORT
-              value: {{ required "PostgreSQL port is required" .Values.transactionLog.port }}
+              value: {{ required "PostgreSQL port is required" .Values.transactionLog.port | quote }}
             - name: POSTGRES_SSL_MODE
               value: {{ required "PostgreSQL SSL mode is required" .Values.transactionLog.sslMode }}
             - name: POSTGRES_DATABASE

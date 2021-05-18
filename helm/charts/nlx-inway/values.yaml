@@ -36,7 +36,7 @@ config:
 transactionLog:
   enabled: true
   hostname: ""
-  port: "5432"
+  port: 5432
   database: ""
   username: ""
   password: ""

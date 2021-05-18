@@ -69,7 +69,7 @@ service:
 transactionLog:
   enabled: false
   hostname: ""
-  port: "5432"
+  port: 5432
   database: ""
   username: ""
   password: ""
@@ -78,7 +78,7 @@ transactionLog:
 
 postgresql:
   hostname: "postgresql"
-  port: "5432"
+  port: 5432
   database: "nlx_management"
   username: ""
   password: ""

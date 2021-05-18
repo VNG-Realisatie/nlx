@@ -36,7 +36,7 @@ spec:
             - name: POSTGRES_HOST
               value: {{ required "PostgreSQL hostname is required" .Values.managementAPI.postgresql.hostname }}
             - name: POSTGRES_PORT
-              value: {{ required "PostgreSQL port number is required" .Values.managementAPI.postgresql.port }}
+              value: {{ required "PostgreSQL port number is required" .Values.managementAPI.postgresql.port | quote }}
             - name: POSTGRES_DATABASE
               value: {{ required "PostgreSQL database name is required" .Values.managementAPI.postgresql.database }}
             - name: POSTGRES_SSL_MODE

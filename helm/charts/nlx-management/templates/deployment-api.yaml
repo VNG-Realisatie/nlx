@@ -57,7 +57,7 @@ spec:
             - name: POSTGRES_HOST
               value: {{ required "PostgreSQL hostname is required" .Values.postgresql.hostname }}
             - name: POSTGRES_PORT
-              value: {{ required "PostgreSQL port number is required" .Values.postgresql.port }}
+              value: {{ required "PostgreSQL port number is required" .Values.postgresql.port | quote }}
             - name: POSTGRES_DATABASE
               value: {{ required "PostgreSQL database name is required" .Values.postgresql.database }}
             - name: POSTGRES_SSL_MODE
@@ -80,7 +80,7 @@ spec:
             - name: TRANSACTION_LOG_DATABASE
               value: {{ required "PostgreSQL database name is required" .Values.transactionLog.database }}
             - name: TRANSACTION_LOG_PORT
-              value: {{ required "PostgreSQL port is required" .Values.transactionLog.port }}
+              value: {{ required "PostgreSQL port is required" .Values.transactionLog.port | quote }}
             - name: TRANSACTION_LOG_SSL_MODE
               value: {{ required "PostgreSQL SSL mode is required" .Values.transactionLog.sslMode }}
             - name: TRANSACTION_LOG_USER
@@ -158,7 +158,7 @@ spec:
             - name: POSTGRES_HOST
               value: {{ required "PostgreSQL hostname is required" .Values.postgresql.hostname }}
             - name: POSTGRES_PORT
-              value: {{ required "PostgreSQL port number is required" .Values.postgresql.port }}
+              value: {{ required "PostgreSQL port number is required" .Values.postgresql.port | quote }}
             - name: POSTGRES_DATABASE
               value: {{ required "PostgreSQL database name is required" .Values.postgresql.database }}
             - name: POSTGRES_SSL_MODE
