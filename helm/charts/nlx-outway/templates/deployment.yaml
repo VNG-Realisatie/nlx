@@ -66,7 +66,7 @@ spec:
             - name: MANAGEMENT_API_ADDRESS
               value: {{ required "Management API address is required" .Values.config.managementAPI.address }}
             - name: TLS_ROOT_CERT
-              value: /config/root.pem
+              value: /config/root-internal.pem
             - name: TLS_CERT
               value: /certificate/tls.crt
             - name: TLS_KEY

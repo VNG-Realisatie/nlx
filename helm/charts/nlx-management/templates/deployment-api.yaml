@@ -123,7 +123,7 @@ spec:
             - name: TLS_ORG_KEY
               value: /certificate-organization/tls.key
             - name: TLS_ROOT_CERT
-              value: /config/root.pem
+              value: /config/root-internal.pem
             - name: TLS_CERT
               value: /certificate/tls.crt
             - name: TLS_KEY
