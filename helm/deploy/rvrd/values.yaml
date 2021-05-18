@@ -286,11 +286,11 @@ nlx-management:
     hostname: rvrd-postgresql
     database: rvrd-transaction-log
     existingSecret: rvrd-postgresql-auth
-    sslMode: "disabled"
+    sslMode: "disable"
   postgresql:
     hostname: rvrd-postgresql
     existingSecret: rvrd-postgresql-auth
-    sslMode: "disabled"
+    sslMode: "disable"
 
 dex:
   config:
@@ -342,7 +342,7 @@ nlx-inway:
     hostname: rvrd-postgresql
     database: rvrd-transaction-log
     existingSecret: rvrd-postgresql-auth
-    sslMode: "disabled"
+    sslMode: "disable"
   tls:
     organization:
       existingSecret: rvrd-organization-tls
