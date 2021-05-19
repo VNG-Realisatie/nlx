@@ -19,13 +19,8 @@ import { StyledActionsBar } from './index.styles'
 
 const ServicesPage = () => {
   const { t } = useTranslation()
-  const {
-    isInitiallyFetched,
-    services,
-    error,
-    getService,
-    fetchStats,
-  } = useServiceStore()
+  const { isInitiallyFetched, services, error, getService, fetchStats } =
+    useServiceStore()
   const { name } = useParams()
 
   usePolling(fetchStats)

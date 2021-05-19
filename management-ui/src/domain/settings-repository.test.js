@@ -182,8 +182,7 @@ describe('the insight settings', () => {
         '/api/v1/insight-configuration',
         expect.objectContaining({
           method: 'PUT',
-          body:
-            '{"irmaServerURL":"irma-server-url","insightAPIURL":"insight-api-url"}',
+          body: '{"irmaServerURL":"irma-server-url","insightAPIURL":"insight-api-url"}',
         }),
       )
 
@@ -209,8 +208,7 @@ describe('the insight settings', () => {
         expect(global.fetch).toHaveBeenCalledWith(
           '/api/v1/insight-configuration',
           expect.objectContaining({
-            body:
-              '{"irmaServerURL":"irma-server-url","insightAPIURL":"insight-api-url"}',
+            body: '{"irmaServerURL":"irma-server-url","insightAPIURL":"insight-api-url"}',
           }),
         )
       })

@@ -40,14 +40,13 @@ class OutgoingAccessRequestStore {
   }
 
   create = flow(function* create({ organizationName, serviceName }) {
-    const response = yield this._managementApiClient.managementCreateAccessRequest(
-      {
+    const response =
+      yield this._managementApiClient.managementCreateAccessRequest({
         body: {
           organizationName,
           serviceName,
         },
-      },
-    )
+      })
 
     return new OutgoingAccessRequestModel({
       accessRequestData: response,
@@ -55,13 +54,12 @@ class OutgoingAccessRequestStore {
   }).bind(this)
 
   retry = flow(function* retry(outgoingAccessRequestModel) {
-    const response = yield this._managementApiClient.managementSendAccessRequest(
-      {
+    const response =
+      yield this._managementApiClient.managementSendAccessRequest({
         organizationName: outgoingAccessRequestModel.organizationName,
         serviceName: outgoingAccessRequestModel.serviceName,
         accessRequestID: outgoingAccessRequestModel.id,
-      },
-    )
+      })
     yield this.updateFromServer(response)
   }).bind(this)
 }

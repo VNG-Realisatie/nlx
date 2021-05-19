@@ -20,12 +20,11 @@ class DirectoryServicesStore {
   }
 
   fetch = flow(function* fetch({ organizationName, serviceName }) {
-    const serviceData = yield this._directoryApiClient.directoryGetOrganizationService(
-      {
+    const serviceData =
+      yield this._directoryApiClient.directoryGetOrganizationService({
         organizationName,
         serviceName,
-      },
-    )
+      })
 
     let directoryService = this.getService({
       organizationName,
@@ -50,7 +49,8 @@ class DirectoryServicesStore {
     this.error = ''
 
     try {
-      const servicesData = yield this._directoryApiClient.directoryListServices()
+      const servicesData =
+        yield this._directoryApiClient.directoryListServices()
 
       this.services = servicesData.services.map((serviceData) =>
         this._updateFromServer(serviceData),
@@ -80,9 +80,10 @@ class DirectoryServicesStore {
   }
 
   _updateFromServer(serviceData) {
-    const latestAccessRequest = this._rootStore.outgoingAccessRequestStore.updateFromServer(
-      serviceData.latestAccessRequest,
-    )
+    const latestAccessRequest =
+      this._rootStore.outgoingAccessRequestStore.updateFromServer(
+        serviceData.latestAccessRequest,
+      )
     const latestAccessProof = this._rootStore.accessProofStore.updateFromServer(
       serviceData.latestAccessProof,
     )

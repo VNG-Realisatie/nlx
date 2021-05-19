@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 //
-import { makeAutoObservable, flow, observable } from 'mobx'
+import { flow, makeAutoObservable, observable } from 'mobx'
 
 class OrderStore {
   _isLoading = false
@@ -25,7 +25,8 @@ class OrderStore {
     this._isLoading = true
 
     try {
-      const result = yield this._managementApiClient.managementListIssuedOrders()
+      const result =
+        yield this._managementApiClient.managementListIssuedOrders()
 
       result.orders.forEach((order) => {
         this._orders.set(order.reference, order)

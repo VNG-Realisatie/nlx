@@ -58,16 +58,14 @@ test('fetching, getting and updating from server', async () => {
   ).toHaveBeenCalledWith({ serviceName: 'Service' })
   expect(incomingAccessRequestStore.incomingAccessRequests.size).toEqual(1)
 
-  const accessRequestsForService = incomingAccessRequestStore.getForService(
-    service,
-  )
+  const accessRequestsForService =
+    incomingAccessRequestStore.getForService(service)
   expect(accessRequestsForService).toHaveLength(1)
   expect(accessRequestsForService[0]).toBeInstanceOf(IncomingAccessRequestModel)
 
   await incomingAccessRequestStore.fetchForService(service)
-  const updatedAccessRequests = incomingAccessRequestStore.getForService(
-    service,
-  )
+  const updatedAccessRequests =
+    incomingAccessRequestStore.getForService(service)
 
   expect(incomingAccessRequestStore.incomingAccessRequests.size).toEqual(1)
   expect(updatedAccessRequests[0]).toBeInstanceOf(IncomingAccessRequestModel)

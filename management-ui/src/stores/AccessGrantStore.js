@@ -51,11 +51,10 @@ class AccessGrantStore {
   }).bind(this)
 
   returnForService = async ({ name }) => {
-    const result = await this._managementApiClient.managementListAccessGrantsForService(
-      {
+    const result =
+      await this._managementApiClient.managementListAccessGrantsForService({
         serviceName: name,
-      },
-    )
+      })
 
     return result.accessGrants
   }

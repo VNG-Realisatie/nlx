@@ -11,8 +11,9 @@ import { RootStore, StoreProvider } from '../../../stores'
 import { ManagementApi } from '../../../api'
 import ServicesPage from './index'
 
-jest.mock('../../../components/PageTemplate/OrganizationInwayCheck', () => () =>
-  null,
+jest.mock(
+  '../../../components/PageTemplate/OrganizationInwayCheck',
+  () => () => null,
 )
 jest.mock('./ServicesPageView', () => () => (
   <p data-testid="services-list">mock-services</p>

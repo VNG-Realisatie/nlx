@@ -22,9 +22,8 @@ const AccessRequestSectionContainer = ({ service }) => {
   })
 
   const [pausePollingOpen, startPollingOpen] = usePolling(async () => {
-    const haveAccessRequestsChanged = await rootStore.incomingAccessRequestsStore.haveChangedForService(
-      service,
-    )
+    const haveAccessRequestsChanged =
+      await rootStore.incomingAccessRequestsStore.haveChangedForService(service)
 
     setShowUpdateUiButton(haveAccessRequestsChanged)
 

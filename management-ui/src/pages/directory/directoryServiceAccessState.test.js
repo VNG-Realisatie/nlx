@@ -6,24 +6,18 @@ import OutgoingAccessRequestModel, {
 } from '../../stores/models/OutgoingAccessRequestModel'
 import AccessProofModel from '../../stores/models/AccessProofModel'
 import getDirectoryServiceAccessState, {
-  SHOW_REQUEST_ACCESS,
+  SHOW_ACCESS_REVOKED,
   SHOW_HAS_ACCESS,
+  SHOW_REQUEST_ACCESS,
+  SHOW_REQUEST_CANCELLED,
   SHOW_REQUEST_CREATED,
   SHOW_REQUEST_FAILED,
   SHOW_REQUEST_RECEIVED,
-  SHOW_REQUEST_CANCELLED,
   SHOW_REQUEST_REJECTED,
-  SHOW_ACCESS_REVOKED,
 } from './directoryServiceAccessState'
 
-const {
-  CREATED,
-  FAILED,
-  RECEIVED,
-  CANCELLED,
-  REJECTED,
-  APPROVED,
-} = ACCESS_REQUEST_STATES
+const { CREATED, FAILED, RECEIVED, CANCELLED, REJECTED, APPROVED } =
+  ACCESS_REQUEST_STATES
 
 const createOutgoingAccessRequestInstance = (accessRequestData) => {
   return new OutgoingAccessRequestModel({

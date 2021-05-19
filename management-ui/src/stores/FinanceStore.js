@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 //
-import { makeAutoObservable, flow } from 'mobx'
+import { flow, makeAutoObservable } from 'mobx'
 
 class FinanceStore {
   _isLoading = false
@@ -20,7 +20,8 @@ class FinanceStore {
   fetch = flow(function* fetch() {
     try {
       this._isLoading = true
-      const result = yield this._managementApiClient.managementIsFinanceEnabled()
+      const result =
+        yield this._managementApiClient.managementIsFinanceEnabled()
 
       this.enabled = result.enabled
       this._isLoading = false
@@ -35,7 +36,8 @@ class FinanceStore {
 
   async downloadExport() {
     try {
-      const result = await this._managementApiClient.managementDownloadFinanceExport()
+      const result =
+        await this._managementApiClient.managementDownloadFinanceExport()
 
       return result
     } catch (err) {

@@ -94,9 +94,8 @@ class DirectoryServiceModel {
 
   requestAccess = flow(function* requestAccess() {
     try {
-      this.latestAccessRequest = yield this.directoryServicesStore.requestAccess(
-        this,
-      )
+      this.latestAccessRequest =
+        yield this.directoryServicesStore.requestAccess(this)
     } catch (error) {
       this.latestAccessRequest = null
     }

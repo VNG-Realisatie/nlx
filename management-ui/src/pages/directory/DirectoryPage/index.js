@@ -15,12 +15,8 @@ import DirectoryPageView from './components/DirectoryPageView'
 
 const DirectoryPage = () => {
   const { t } = useTranslation()
-  const {
-    services,
-    getService,
-    isInitiallyFetched,
-    error,
-  } = useDirectoryServiceStore()
+  const { services, getService, isInitiallyFetched, error } =
+    useDirectoryServiceStore()
   const { name } = useParams()
 
   return (

@@ -3,14 +3,8 @@
 //
 import { ACCESS_REQUEST_STATES } from '../../stores/models/OutgoingAccessRequestModel'
 
-const {
-  CREATED,
-  FAILED,
-  RECEIVED,
-  CANCELLED,
-  REJECTED,
-  APPROVED,
-} = ACCESS_REQUEST_STATES
+const { CREATED, FAILED, RECEIVED, CANCELLED, REJECTED, APPROVED } =
+  ACCESS_REQUEST_STATES
 
 export const SHOW_REQUEST_ACCESS = 0
 export const SHOW_HAS_ACCESS = 1

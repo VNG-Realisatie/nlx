@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { makeAutoObservable, observable, flow } from 'mobx'
+import { flow, makeAutoObservable, observable } from 'mobx'
 import IncomingAccessRequestModel, {
   STATES,
 } from './models/IncomingAccessRequestModel'
@@ -58,11 +58,10 @@ class IncomingAccessRequestsStore {
   }).bind(this)
 
   returnForService = async ({ name }) => {
-    const result = await this._managementApiClient.managementListIncomingAccessRequest(
-      {
+    const result =
+      await this._managementApiClient.managementListIncomingAccessRequest({
         serviceName: name,
-      },
-    )
+      })
     return result.accessRequests
   }
 

@@ -33,18 +33,18 @@ class ServiceModel {
   }
 
   get incomingAccessRequests() {
-    const allIncomingAccessRequests = this.servicesStore.rootStore.incomingAccessRequestsStore.getForService(
-      this,
-    )
+    const allIncomingAccessRequests =
+      this.servicesStore.rootStore.incomingAccessRequestsStore.getForService(
+        this,
+      )
     return allIncomingAccessRequests.filter(
       (accessRequest) => !accessRequest.isResolved,
     )
   }
 
   get accessGrants() {
-    const allAccessGrants = this.servicesStore.rootStore.accessGrantStore.getForService(
-      this,
-    )
+    const allAccessGrants =
+      this.servicesStore.rootStore.accessGrantStore.getForService(this)
     return allAccessGrants.filter(
       (accessGrant) => accessGrant.revokedAt === null,
     )

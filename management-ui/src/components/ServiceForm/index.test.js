@@ -258,19 +258,16 @@ describe('when showing inways', () => {
     })
 
     const onSubmitHandlerSpy = jest.fn()
-    const {
-      findByLabelText,
-      getByLabelText,
-      getByTestId,
-    } = renderWithProviders(
-      <StoreProvider rootStore={rootStore}>
-        <ServiceForm
-          onSubmitHandler={onSubmitHandlerSpy}
-          initialValues={{ ...initialValues, inways: [] }}
-          submitButtonText="Submit"
-        />
-      </StoreProvider>,
-    )
+    const { findByLabelText, getByLabelText, getByTestId } =
+      renderWithProviders(
+        <StoreProvider rootStore={rootStore}>
+          <ServiceForm
+            onSubmitHandler={onSubmitHandlerSpy}
+            initialValues={{ ...initialValues, inways: [] }}
+            submitButtonText="Submit"
+          />
+        </StoreProvider>,
+      )
 
     await findByLabelText('inway-one')
 
@@ -299,20 +296,16 @@ describe('when showing inways', () => {
 
     const onSubmitHandlerSpy = jest.fn()
 
-    const {
-      findByLabelText,
-      findByTestId,
-      getByLabelText,
-      getByTestId,
-    } = renderWithProviders(
-      <StoreProvider rootStore={rootStore}>
-        <ServiceForm
-          onSubmitHandler={onSubmitHandlerSpy}
-          initialValues={{ ...initialValues, inways: ['inway-one'] }}
-          submitButtonText="Submit"
-        />
-      </StoreProvider>,
-    )
+    const { findByLabelText, findByTestId, getByLabelText, getByTestId } =
+      renderWithProviders(
+        <StoreProvider rootStore={rootStore}>
+          <ServiceForm
+            onSubmitHandler={onSubmitHandlerSpy}
+            initialValues={{ ...initialValues, inways: ['inway-one'] }}
+            submitButtonText="Submit"
+          />
+        </StoreProvider>,
+      )
 
     await findByLabelText('inway-one')
 
@@ -343,24 +336,21 @@ describe('when showing inways', () => {
     })
 
     const onSubmitHandlerSpy = jest.fn()
-    const {
-      findByLabelText,
-      getByLabelText,
-      getByTestId,
-    } = renderWithProviders(
-      <StoreProvider rootStore={rootStore}>
-        <ServiceForm
-          onSubmitHandler={onSubmitHandlerSpy}
-          initialValues={{
-            ...initialValues,
-            oneTimeCosts: 10.5,
-            monthlyCosts: 5,
-            requestCosts: 1.25,
-          }}
-          submitButtonText="Submit"
-        />
-      </StoreProvider>,
-    )
+    const { findByLabelText, getByLabelText, getByTestId } =
+      renderWithProviders(
+        <StoreProvider rootStore={rootStore}>
+          <ServiceForm
+            onSubmitHandler={onSubmitHandlerSpy}
+            initialValues={{
+              ...initialValues,
+              oneTimeCosts: 10.5,
+              monthlyCosts: 5,
+              requestCosts: 1.25,
+            }}
+            submitButtonText="Submit"
+          />
+        </StoreProvider>,
+      )
 
     await findByLabelText('This is a paid service')
 

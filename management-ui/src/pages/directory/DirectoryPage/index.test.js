@@ -63,13 +63,8 @@ test('listing all services', async () => {
   })
   const fetchAllSpy = jest.spyOn(rootStore.directoryServicesStore, 'fetchAll')
 
-  const {
-    getByRole,
-    getByTestId,
-    findByTestId,
-    queryByTestId,
-    queryByRole,
-  } = renderDirectory(rootStore)
+  const { getByRole, getByTestId, findByTestId, queryByTestId, queryByRole } =
+    renderDirectory(rootStore)
 
   expect(fetchAllSpy).toHaveBeenCalled()
   expect(getByRole('progressbar')).toBeInTheDocument()

@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { makeAutoObservable, flow } from 'mobx'
+import { flow, makeAutoObservable } from 'mobx'
 import ServiceModel from '../stores/models/ServiceModel'
 
 class ServiceStore {
@@ -55,9 +55,8 @@ class ServiceStore {
     this.error = ''
 
     try {
-      const servicesData = yield this._managementApiClient.managementListServices(
-        {},
-      )
+      const servicesData =
+        yield this._managementApiClient.managementListServices({})
 
       this.services = servicesData.services.map(
         (serviceData) =>
@@ -75,7 +74,8 @@ class ServiceStore {
   }).bind(this)
 
   fetchStats = flow(function* fetchStats() {
-    const result = yield this._managementApiClient.managementGetStatisticsOfServices()
+    const result =
+      yield this._managementApiClient.managementGetStatisticsOfServices()
     const stats = result.services
     if (stats.length < 1) return
 

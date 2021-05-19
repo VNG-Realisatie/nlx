@@ -22,9 +22,8 @@ const AccessGrantSection = ({ service }) => {
   })
 
   const [pausePollingOpen, startPollingOpen] = usePolling(async () => {
-    const haveAccessGrantsChanged = await rootStore.accessGrantStore.haveChangedForService(
-      service,
-    )
+    const haveAccessGrantsChanged =
+      await rootStore.accessGrantStore.haveChangedForService(service)
 
     setShowUpdateUiButton(haveAccessGrantsChanged)
 

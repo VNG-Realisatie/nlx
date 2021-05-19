@@ -10,8 +10,9 @@ import { RootStore, StoreProvider } from '../../../stores'
 import { ManagementApi } from '../../../api'
 import AddServicePage from './index'
 
-jest.mock('../../../components/PageTemplate/OrganizationInwayCheck', () => () =>
-  null,
+jest.mock(
+  '../../../components/PageTemplate/OrganizationInwayCheck',
+  () => () => null,
 )
 
 // eslint-disable-next-line react/prop-types
