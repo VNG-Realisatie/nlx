@@ -180,6 +180,11 @@ There are multiple live environments for NLX
 - `acceptance`: follows the master branch automatically
 - `demo`, `pre-production` and `production`: updated after manually triggering a release
 
+Overview of available links per environment:
+
+- [links.demo.nlx.io](https://links.demo.nlx.io)
+- [links.acc.nlx.io](https://links.acc.nlx.io)
+
 ## Compiling gRPC proto files
 
 You will need to install [Earthly](https://earthly.dev/get-earthly) to (re)compile the protobuf files for all services.
