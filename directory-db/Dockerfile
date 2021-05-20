@@ -1,6 +1,6 @@
 FROM alpine:3 AS build
-ARG MIGRATE_VERSION="4.7.0"
-ARG MIGATE_CHECKSUM="976e351a7f5afb5f13d2020123c450cb56bb66e6a0542efe563a89dbabc3fbdc"
+ARG MIGRATE_VERSION="4.14.1"
+ARG MIGATE_CHECKSUM="faaf3c4c96b6a5fb55a1b29888deb473aacbb47a858dafa7e586e1587c968265"
 
 RUN wget -O /tmp/migrate.linux-amd64.tar.gz https://github.com/golang-migrate/migrate/releases/download/v${MIGRATE_VERSION}/migrate.linux-amd64.tar.gz && \
     tar zxf /tmp/migrate.linux-amd64.tar.gz && \
