@@ -2,5 +2,8 @@ dependencies:
 - name: dex
   repository: https://charts.helm.sh/stable
   version: 2.13.0
-digest: sha256:4e8289f9cf2245294595b0f796ffb1725338e015940062a427483fdc28d7d26b
-generated: "2021-03-15T11:10:48.271011+01:00"
+- name: parkeerrechten-admin
+  repository: ""
+  version: 0.101.0
+digest: sha256:40e3830e9cc5b2ef6e38621a63ff4d8d6ae103da9126d1ee7ab9d19c66923ee9
+generated: "2021-05-25T11:05:32.606792+02:00"

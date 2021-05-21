@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "parkeerrechten-admin.fullname" . }}
+  labels:
+    {{- include "parkeerrechten-admin.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "parkeerrechten-admin.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "parkeerrechten-admin.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "parkeerrechten-admin.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ template "parkeerrechten-admin.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: ORGANIZATION_NAME
+              value: {{ .Values.organizationName }}
+            - name: ORGANIZATION_LOGO
+              value: {{ .Values.organizationLogo }}
+            - name: ORGANIZATION_COLOR
+              value: {{ .Values.organizationColor }}
+            - name: SERVICES_LIST
+              value: {{ .Values.servicesList | toJson | quote }}
+            - name: KENTEKEN_API_BASE_URL
+              value: {{ .Values.kentekenApiBaseUrl }}
+            - name: PERSONEN_API_BASE_URL
+              value: {{ .Values.personenApiBaseUrl }}
+          ports:
+            - name: http
+              containerPort: 3011
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

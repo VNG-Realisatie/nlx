@@ -3,9 +3,8 @@ replicaCount: 1
 image:
   registry: docker.io
   repository: nlxio/basisregister-fictieve-personen
-  tag: ""
+  tag: 29ebbf91
   pullPolicy: IfNotPresent
-  pullSecrets: []
 
 nameOverride: ""
 fullnameOverride: ""

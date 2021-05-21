@@ -316,3 +316,9 @@ dex:
       create: false
   rbac:
     create: false
+
+parkeerrechten-admin:
+  enabled: false
+  ingress:
+    enabled: false
+    hosts: []
