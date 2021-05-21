@@ -16,7 +16,7 @@ describe('Directory', () => {
     cy.findByText(/basisregister-fictieve-kentekens/).click()
 
     cy.get('[data-test="service-detail-pane"]')
-      .findByText('public-support@nlx.io')
+      .findByText('support@nlx.io')
       .should('be.visible')
   })
 })
