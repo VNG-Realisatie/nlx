@@ -1,0 +1,11 @@
+{{- if .Values.enableDemoRedirect -}}
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "shared.fullname" . }}-demo-parkeervergunningen-redirect
+spec:
+  redirectRegex:
+    regex: ^https?://demo.nlx.io/(.*)
+    replacement: https://directory.demo.nlx.io/
+    permanent: false
+{{- end -}}

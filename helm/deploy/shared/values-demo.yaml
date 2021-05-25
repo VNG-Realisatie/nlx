@@ -43,6 +43,8 @@ global:
 ###########
 ## Chart ##
 ###########
+enableDemoRedirect: true
+
 ca:
   issuer:
     certificatePEM: |
