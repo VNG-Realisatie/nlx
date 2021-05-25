@@ -5,7 +5,25 @@ metadata:
   name: {{ include "shared.fullname" . }}-demo-parkeervergunningen-redirect
 spec:
   redirectRegex:
-    regex: ^https?://demo.nlx.io/(.*)
+    regex: .*
     replacement: https://directory.demo.nlx.io/
     permanent: false
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "shared.fullname" . }}-demo-parkeervergunningen-route
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`demo.nlx.io`)
+      priority: 1000
+      services:
+        - name: noop@internal
+          kind: TraefikService
+      middlewares:
+        - name: {{ include "shared.fullname" . }}-demo-parkeervergunningen-redirect
 {{- end -}}
