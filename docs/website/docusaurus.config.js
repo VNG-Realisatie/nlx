@@ -19,7 +19,8 @@ module.exports = {
       title: 'Documentation',
       logo: {
         alt: 'NLX logo',
-        src: 'img/logo.svg',
+        src: 'img/logo-light.svg',
+        srcDark: 'img/logo.svg',
       },
       items: [
         {to: 'understanding-the-basics/introduction', label: 'Docs'},
