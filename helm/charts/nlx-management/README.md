@@ -96,7 +96,7 @@ TLS certificate of your organization (used to communicate on the NLX Network).
 
 | Parameter | Description | Default | Required (yes/no) |
 | --------- | ----------- | ------- | -------- |
-| `tls.organization.rootCertificatePEM` | The NLX root certificate | `""` | ✓ (if global value is not set) |
+| `tls.organization.rootCertificatePEM` | The NLX root certificate | `""` | yes (if global value is not set) |
 | `tls.organization.certificatePEM` | Your NLX certificate | `""` | yes |
 | `tls.organization.keyPEM` | The private key of `tls.organization.certificatePEM` | `""` | yes |
 | `tls.organization.existingSecret` | Use existing secret with your NLX keypair (`tls.organization.certificatePEM` and `tls.organization.keyPEM` will be ignored and picked up from the secret) | `""` |  x |
@@ -105,7 +105,7 @@ TLS certificates used by NLX components for internal communication.
 
 | Parameter | Description | Default | Required (yes/no) |
 | --------- | ----------- | ------- | -------- |
-| `tls.internal.rootCertificatePEM` | The root certificate of your internal PKI | `""` | ✓ (if global value is not set) |
+| `tls.internal.rootCertificatePEM` | The root certificate of your internal PKI | `""` | yes (if global value is not set) |
 | `tls.internal.certificatePEM` | The certificate signed by your internal PKI | `""` | yes |
 | `tls.internal.keyPEM` | The private key of `tls.internal.certificatePEM` | `""` | yes |
 | `tls.internal.existingSecret` | Use existing secret with your NLX keypair (`tls.internal.certificatePEM` and `tls.internal.keyPEM` will be ignored and picked up from this secret) | `""` | no |

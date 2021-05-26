@@ -98,9 +98,9 @@ The following table lists the configurable parameters of the nlx-directory Chart
 
 | Parameter | Description | Default | Required (yes/no) |
 | --------- | ----------- | ------- | -------- |
-| `tls.organization.rootCertificatePEM` | The NLX root certificate | `""` | ✓ (if global value is not set) |
-| `tls.organization.certificatePEM` | The organization certificate | `""` | ✓ (if global value is not set) |
-| `tls.organization.keyPEM` | Private key of `tls.organization.certificatePEM` | `""` | ✓ (if global value is not set) |
+| `tls.organization.rootCertificatePEM` | The NLX root certificate | `""` | yes (if global value is not set) |
+| `tls.organization.certificatePEM` | The organization certificate | `""` | yes (if global value is not set) |
+| `tls.organization.keyPEM` | Private key of `tls.organization.certificatePEM` | `""` | yes (if global value is not set) |
 | `tls.organization.existingSecret` | Use existing secret with your NLX keypair (`tls.organization.certificatePEM` and `tls.organization.keyPEM` will be ignored and picked up from the secret) | `""` |  x |
 
 ### Exposure parameters
