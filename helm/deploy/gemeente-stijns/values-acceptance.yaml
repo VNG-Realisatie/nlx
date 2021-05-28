@@ -41,7 +41,7 @@ global:
 ###########
 ## Chart ##
 ###########
-management-api: 
+managementAPI:
   serviceParkeerrechten:
     name: parkeerrechten
     endpointURL: http://gemeente-stijns-parkeerrechten-api:8000
