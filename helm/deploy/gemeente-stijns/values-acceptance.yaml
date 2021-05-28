@@ -92,6 +92,11 @@ dex:
 
 parkeerrechten-api:
   enabled: true
+  postgres:
+    hostname: gemeente-stijns-postgresql
+    database: parkeerrechten
+    sslMode: disable
+    existingSecret: gemeente-stijns-postgresql-auth
 
 parkeerrechten-viewer:
   enabled: true
