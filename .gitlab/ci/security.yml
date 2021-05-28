@@ -32,10 +32,16 @@ container_scanning:
       apps-overview
     REPORTS_DIRECTORY: /reports
     GIT_STRATEGY: clone
+    CLAIR_DB_IMAGE_TAG: "latest"
+    CLAIR_DB_IMAGE: "$SECURE_ANALYZERS_PREFIX/clair-vulnerabilities-db:$CLAIR_DB_IMAGE_TAG"
+    CS_PROJECT: 'klar'
   before_script:
     - yum install -y jq
     - export IMAGE_REGISTRY=$CI_REGISTRY_IMAGE
     - export CI_APPLICATION_TAG=$(git describe --tags)
+  services:
+    - name: $CLAIR_DB_IMAGE
+      alias: clair-vulnerabilities-db
   script:
     - mkdir ${REPORTS_DIRECTORY}
     - |
@@ -59,9 +65,6 @@ container_scanning:
     - if: $CI_COMMIT_BRANCH &&
         $GITLAB_FEATURES =~ /\bcontainer_scanning\b/ &&
         $CS_MAJOR_VERSION =~ /^[0-3]$/
-
-container_scanning_new:
-  stage: Security
 
 dependency_scanning:
   stage: Security
