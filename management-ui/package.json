@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@commonground/design-system": "18.7.8",
-    "@fontsource/source-sans-pro": "4.3.0",
+    "@fontsource/source-sans-pro": "4.4.2",
     "dayjs": "1.10.5",
     "formik": "2.2.8",
     "i18next": "20.3.1",
