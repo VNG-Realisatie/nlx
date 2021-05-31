@@ -20,7 +20,8 @@ rules:
   scope-enum:
     - 2
     - always
-    - - auth-service
+    - - apps-overview
+      - auth-service
       - ca-certportal
       - ca-cfssl-unsafe
       - common
