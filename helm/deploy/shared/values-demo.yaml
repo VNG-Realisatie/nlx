@@ -43,7 +43,7 @@ global:
 ###########
 ## Chart ##
 ###########
-enableDemoRedirect: false
+enableDemoRedirect: true
 
 ca:
   issuer:

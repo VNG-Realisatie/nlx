@@ -1,9 +1,9 @@
 ###########
 ## Chart ##
 ###########
+enableDemoRedirect: false
 postgresql:
   storageType: Ephemeral
-enableDemoRedirect: true
 
 ################
 ## Sub-charts ##

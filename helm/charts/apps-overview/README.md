@@ -77,7 +77,7 @@ The following table lists the configurable parameters of the apps-overview Chart
 
 | Parameter | Description | Default | Required (yes/no) |
 | --------- | ----------- | ------- | -------- |
-| `config.environmentSubdomain` | For acc and demo environment, this is used to create the URLs of the websites linked on the apps overview page | `""` | yes |
+| `config.environmentSubdomain` | For the demo and acceptance environments. This is used to create the URLs of the websites linked on the apps overview page | `"localhost"` | yes |
 | `config.reviewSlugWithDomain` | In the review environment, the slug with domain is added as a suffix to the URLs of the websites linked on the review apps overview page | `""` | no |
 
 ### Exposure parameters
