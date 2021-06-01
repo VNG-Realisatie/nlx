@@ -51,7 +51,7 @@ eval $(minikube docker-env)
 Once minikube is running, install Traefik as ingress controller for web and rest-api requests.
 
 ```bash
-helm repo add traefik https://containous.github.io/traefik-helm-chart
+helm repo add traefik https://helm.traefik.io/traefik
 helm repo update
 
 kubectl create namespace traefik
