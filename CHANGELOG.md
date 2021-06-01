@@ -1,3 +1,20 @@
+# [0.102.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.101.1...v0.102.0) (2021-06-01)
+
+
+### Bug Fixes
+
+* fix linting issues after updating prettier to 2.3.0 ([4db6dfc](https://gitlab.com/commonground/nlx/nlx/commit/4db6dfc141daca8aa858cd713d8b16c4504c1f10))
+
+
+### Features
+
+* **docs:** upgrade Docusaurus v2 alpha to beta + remove custom template ([9e9bc9b](https://gitlab.com/commonground/nlx/nlx/commit/9e9bc9bb7af6a34388dabf1aecea886b7040f2ce)), closes [#1171](https://gitlab.com/commonground/nlx/nlx/issues/1171)
+
+
+### Reverts
+
+* remove demo application 'Parkeervergunningen' ([1f5a9e1](https://gitlab.com/commonground/nlx/nlx/commit/1f5a9e1ff0a45f2129dc5812eb52484d6217780f)), closes [#1240](https://gitlab.com/commonground/nlx/nlx/issues/1240)
+
 ## [0.101.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.101.0...v0.101.1) (2021-05-11)
 
 # [0.101.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.100.2...v0.101.0) (2021-05-05)
