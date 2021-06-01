@@ -10,6 +10,7 @@ global: {}
 ###########
 nameOverride: ""
 fullnameOverride: ""
+enableDemoRedirect: false
 
 postgresql:
   version: "11.1"

@@ -1,4 +1,10 @@
 ################
+##   Chart    ##
+################
+enableDemoRedirect: true
+
+
+################
 ## Sub-charts ##
 ################
 nlx-directory:

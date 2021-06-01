@@ -2,7 +2,7 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: {{ include "shared.fullname" . }}-demo-parkeervergunningen-redirect
+  name: {{ include "directory.fullname" . }}-demo-parkeervergunningen-redirect
 spec:
   redirectRegex:
     regex: .*
@@ -12,7 +12,7 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: {{ include "shared.fullname" . }}-demo-parkeervergunningen-route
+  name: {{ include "directory.fullname" . }}-demo-parkeervergunningen-route
 spec:
   entryPoints:
     - web
@@ -25,5 +25,5 @@ spec:
         - name: noop@internal
           kind: TraefikService
       middlewares:
-        - name: {{ include "shared.fullname" . }}-demo-parkeervergunningen-redirect
+        - name: {{ include "directory.fullname" . }}-demo-parkeervergunningen-redirect
 {{- end -}}
