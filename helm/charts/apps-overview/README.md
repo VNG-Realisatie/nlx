@@ -1,6 +1,6 @@
 # apps-overview
 
-This is the Chart for the app-links page. It contains links to all apps within the environment.
+This is the Chart for the app-overview page. It contains links to all apps within the environment.
 
 ## Prerequisites
 

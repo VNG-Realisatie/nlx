@@ -63,7 +63,7 @@ Create the name of the service account to use
 {{- end -}}
 
 {{/*
-Return the image name for the NLX inway
+Return the image name for the apps-overview
 */}}
 {{- define "apps-overview.image" -}}
 {{- $registryName := default .Values.image.registry .Values.global.imageRegistry -}}
