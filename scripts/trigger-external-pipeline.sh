@@ -2,7 +2,8 @@
 
 PROJECT_ID="${1}"
 VERSION="${2}"
-TOKEN="${3}"
+VERSION_VAR_NAME="${3}"
+TOKEN="${4}"
 
 URL="https://gitlab.com/api/v4/projects/${PROJECT_ID}/trigger/pipeline"
 OUTPUT_FILE=$(mktemp -t curl.XXXXX)
@@ -16,7 +17,7 @@ STATUS=$(curl \
   --write-out "%{http_code}" \
   --request POST \
   --form "ref=master" \
-  --form "variables[VERSION]=${VERSION}" \
+  --form "variables[${VERSION_VAR_NAME}]=${VERSION}" \
   --form "token=${TOKEN}" \
   "${URL}"
 )
