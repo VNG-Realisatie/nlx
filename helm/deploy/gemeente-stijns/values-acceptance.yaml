@@ -105,6 +105,7 @@ parkeerrechten-viewer:
   organizationLogo: https://gitlab.com/commonground/nlx/demo/-/raw/c75d67e8e0b631efdb0edec4df74b227483744c0/assets/stijns.svg
   organizationColor: "#ED7380"
   ingress:
+    enabled: true
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
