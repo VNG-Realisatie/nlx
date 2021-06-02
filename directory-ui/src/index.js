@@ -2,9 +2,6 @@
 // Licensed under the EUPL
 //
 
-import 'react-app-polyfill/ie11'
-import 'core-js/web/url-search-params'
-
 import React from 'react'
 import ReactDOM from 'react-dom'
 
