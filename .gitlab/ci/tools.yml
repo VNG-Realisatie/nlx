@@ -2,7 +2,8 @@ Run semantic release:
   extends: .node-base
   stage: Tools
   script:
-    - apk --no-cache add git helm
+    - apk --no-cache add git
+    - apk --no-cache add helm --repository=https://dl-cdn.alpinelinux.org/alpine/edge/testing
     - install_npm_dependencies
     - start_section release "Running semanic release"
     - npx semantic-release
