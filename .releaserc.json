@@ -27,7 +27,7 @@
     "@semantic-release/gitlab",
     ["@semantic-release/git", {
       "message": "release: ${nextRelease.version}\n\n${nextRelease.notes}",
-      "assets": ["helm/{charts,deploy}/*/Chart.yaml", "CHANGELOG.md"]
+      "assets": ["helm/{charts,deploy}/*/Chart.yaml", "helm/deploy/gemeente-stijns/Chart.lock", "CHANGELOG.md"]
     }]
   ]
 }
