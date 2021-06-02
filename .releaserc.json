@@ -18,6 +18,10 @@
     ["./scripts/semantic-release-helm", {
       "charts": "helm/{charts,deploy}/*"
     }],
+    ["@semantic-release/exec", {
+      "verifyConditionsCmd": "true",
+      "publishCmd": "helm dependency update helm/deploy/gemeente-stijns"
+    }],
     "@semantic-release/release-notes-generator",
     "@semantic-release/changelog",
     "@semantic-release/gitlab",

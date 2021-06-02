@@ -3,10 +3,10 @@ dependencies:
   repository: https://charts.helm.sh/stable
   version: 2.13.0
 - name: parkeerrechten-api
-  repository: ""
-  version: 0.101.0
+  repository: file://../../charts/parkeerrechten-api
+  version: 0.102.0
 - name: parkeerrechten-viewer
-  repository: ""
-  version: 0.101.0
-digest: sha256:e4527b71daff93cce457a6e070c78cf1d85477f58cb52db694e61ca7860d5362
-generated: "2021-05-19T13:49:30.588306+02:00"
+  repository: file://../../charts/parkeerrechten-viewer
+  version: 0.102.0
+digest: sha256:3727cf8a9d08a40dd73fa5fe861fdd8d67dbf95365ad8117f360c41338db2659
+generated: "2021-06-02T10:03:57.185356+02:00"

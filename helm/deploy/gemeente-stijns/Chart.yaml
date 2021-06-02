@@ -10,8 +10,10 @@ dependencies:
     version: 2.13.0
     repository: "@stable"
   - name: parkeerrechten-api
-    version: 0.101.0
+    repository: "file://../../charts/parkeerrechten-api"
+    version: ">=0"
     condition: parkeerrechten-api.enabled
-  - name: parkeerrechten-viewer 
-    version: 0.101.0
+  - name: parkeerrechten-viewer
+    repository: "file://../../charts/parkeerrechten-viewer"
+    version: ">=0" 
     condition: parkeerrechten-viewer.enabled 
