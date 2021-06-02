@@ -20,7 +20,7 @@
     }],
     ["@semantic-release/exec", {
       "verifyConditionsCmd": "true",
-      "publishCmd": "helm dependency update helm/deploy/gemeente-stijns"
+      "publishCmd": "./scripts/update-conditional-helm-deps.sh"
     }],
     "@semantic-release/release-notes-generator",
     "@semantic-release/changelog",
