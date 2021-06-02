@@ -1,3 +1,10 @@
+## [0.102.2](https://gitlab.com/commonground/nlx/nlx/compare/v0.102.1...v0.102.2) (2021-06-02)
+
+
+### Bug Fixes
+
+* add stable repo before updating stijns helm dependency ([1cc79cc](https://gitlab.com/commonground/nlx/nlx/commit/1cc79cc5404bedfe9ca8ea9f60f76707b57529e1))
+
 ## [0.102.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.102.0...v0.102.1) (2021-06-02)
 
 

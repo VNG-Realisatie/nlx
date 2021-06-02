@@ -2,8 +2,8 @@ apiVersion: v2
 name: rvrd
 description: Metachart for the RvRD demo organization
 type: application
-version: 0.102.1
-appVersion: 0.102.1
+version: 0.102.2
+appVersion: 0.102.2
 
 dependencies:
   - name: dex
