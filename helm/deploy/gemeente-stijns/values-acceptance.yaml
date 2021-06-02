@@ -109,8 +109,8 @@ parkeerrechten-viewer:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - parkeerrechten.acc.gemeentestijns.nl
+      - parkeerrechten-viewer.acc.gemeentestijns.nl
     tls:
       - secretName: gemeentestijns-parkeerrechten-viewer-ingress-tls
         hosts:
-          - parkeerrechten.acc.gemeentestijns.nl
+          - parkeerrechten-viewer.acc.gemeentestijns.nl
