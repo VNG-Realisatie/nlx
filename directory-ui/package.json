@@ -16,7 +16,7 @@
   "scripts": {
     "start": "EXTEND_ESLINT=true BROWSER=none PORT=3001 react-scripts start",
     "build": "EXTEND_ESLINT=true react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "react-scripts test",
     "lint": "eslint src/",
     "eject": "react-scripts eject"
   },
@@ -24,9 +24,6 @@
     "@commonground/eslint-config-cra-standard-prettier": "6.0.0",
     "@testing-library/react": "11.2.7",
     "@testing-library/user-event": "13.1.9",
-    "@wojtekmaj/enzyme-adapter-react-17": "0.6.1",
-    "enzyme": "3.11.0",
-    "eslint-config-jest-enzyme": "7.1.2",
     "eslint-config-prettier": "8.3.0",
     "eslint-config-react": "1.1.7",
     "eslint-config-standard": "16.0.3",
