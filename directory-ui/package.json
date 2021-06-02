@@ -19,7 +19,7 @@
     "start": "EXTEND_ESLINT=true BROWSER=none PORT=3001 react-scripts start",
     "build": "EXTEND_ESLINT=true react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "lint": "eslint --ext js,jsx src/**",
+    "lint": "eslint src/",
     "eject": "react-scripts eject"
   },
   "devDependencies": {
