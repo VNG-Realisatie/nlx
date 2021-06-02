@@ -2,8 +2,8 @@ apiVersion: v2
 name: vergunningsoftware-bv
 description: Metachart for the demo organization Vergunningsoftware BV
 type: application
-version: 0.102.2
-appVersion: 0.102.2
+version: 0.102.3
+appVersion: 0.102.3
 
 dependencies:
   - name: dex
