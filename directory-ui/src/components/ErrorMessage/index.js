@@ -3,7 +3,7 @@
 //
 
 import React from 'react'
-import { StyledErrorMessage } from './ErrorMessage.styles'
+import { StyledErrorMessage } from './index.styles'
 
 const ErrorMessage = () => (
   <StyledErrorMessage>

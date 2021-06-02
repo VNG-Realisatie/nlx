@@ -5,16 +5,11 @@
 import React, { Component } from 'react'
 import debounce from 'debounce'
 import { object } from 'prop-types'
-
 import Spinner from '../../components/Spinner'
-
-import ErrorMessage from '../../components/ErrorMessage/ErrorMessage'
+import ErrorMessage from '../../components/ErrorMessage'
 import Container from '../../components/Container/Container'
 import ServiceDetailPane from '../../components/ServiceDetailPane'
-import {
-  StyledFilters,
-  StyledServicesTableContainer,
-} from './ServicesOverviewPage.styles'
+import { StyledFilters, StyledServicesTableContainer } from './index.styles'
 import { mapListServicesAPIResponse } from './map-list-services-api-response'
 
 const ESCAPE_KEY_CODE = 27

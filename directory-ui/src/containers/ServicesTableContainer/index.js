@@ -4,7 +4,7 @@
 
 import React, { PureComponent } from 'react'
 import { bool, string, array, func, oneOf } from 'prop-types'
-import ServicesTable from '../../components/ServicesTable/ServicesTable'
+import ServicesTable from '../../components/ServicesTable'
 import { ASCENDING, DESCENDING } from '../../components/Table/SortableHeadCell'
 
 const SORT_KEY_ORGANIZATION = 'organization'

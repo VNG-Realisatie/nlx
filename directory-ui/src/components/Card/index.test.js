@@ -1,11 +1,11 @@
-// Copyright © VNG Realisatie 2018
+// Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import Spinner from './index'
+import Card from './index'
 
 test('renders without crashing', () => {
-  expect(() => render(<Spinner />)).not.toThrow()
+  expect(() => render(<Card />)).not.toThrow()
 })

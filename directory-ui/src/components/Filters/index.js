@@ -9,7 +9,7 @@ import {
   StyledInput,
   StyledSearchIcon,
   StyledSwitch,
-} from './Filters.styles'
+} from './index.styles'
 
 const Filters = ({
   onQueryChanged,
@@ -20,12 +20,12 @@ const Filters = ({
   <StyledFilters {...props}>
     <StyledSearchIcon />
     <StyledInput
-      dataTest="query"
       value={queryValue}
       placeholder="Search for an organization or service…"
       onChange={(event) => onQueryChanged(event.target.value)}
     />
     <StyledSwitch
+      id="include-offline-switch"
       label="Include offline"
       onChange={(event) => onStatusFilterChanged(event.target.checked)}
     />

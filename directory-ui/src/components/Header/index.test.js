@@ -3,18 +3,16 @@
 //
 
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { render } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import Header from './Header'
+import Header from './index'
 
 test('renders without crashing', () => {
-  expect(() => {
-    const div = document.createElement('div')
-    ReactDOM.render(
+  expect(() =>
+    render(
       <MemoryRouter>
         <Header />
       </MemoryRouter>,
-      div,
-    )
-  }).not.toThrow()
+    ),
+  ).not.toThrow()
 })

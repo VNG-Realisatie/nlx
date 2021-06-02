@@ -4,8 +4,12 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import CloseIcon from './index'
+import Documentation from './index'
 
 test('renders without crashing', () => {
-  expect(() => render(<CloseIcon />)).not.toThrow()
+  expect(() =>
+    render(
+      <Documentation serviceName="service" organizationName="organization" />,
+    ),
+  ).not.toThrow()
 })

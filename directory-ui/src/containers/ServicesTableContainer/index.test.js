@@ -4,8 +4,8 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import Spinner from './index'
+import ServicesTableContainer from './index'
 
 test('renders without crashing', () => {
-  expect(() => render(<Spinner />)).not.toThrow()
+  expect(() => render(<ServicesTableContainer />)).not.toThrow()
 })

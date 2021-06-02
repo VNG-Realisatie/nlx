@@ -4,14 +4,11 @@
 
 import React from 'react'
 import { Link } from 'react-router-dom'
-
 import Container from '../Container/Container'
-import IconButton from '../IconButton/IconButton'
-
+import IconButton from '../IconButton'
 import logo from './assets/logo.svg'
 import gitlab from './assets/gitlab.svg'
-
-import StyledHeader, { StyledNavigation } from './Header.styles'
+import StyledHeader, { StyledNavigation } from './index.styles'
 
 const Header = () => (
   <StyledHeader>

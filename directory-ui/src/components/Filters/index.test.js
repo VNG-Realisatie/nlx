@@ -3,18 +3,26 @@
 //
 
 import React from 'react'
-import { mount } from 'enzyme'
-import Filters from './Filters'
+import { render } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import Filters from './index'
 
 describe('Filters', () => {
   describe('changing the text input value', () => {
     it('should call the onQueryChanged handler with the query', () => {
       const onQueryChangedSpy = jest.fn()
-      const wrapper = mount(<Filters onQueryChanged={onQueryChangedSpy} />)
 
-      wrapper
-        .find('[dataTest="query"] input')
-        .simulate('change', { target: { value: 'abc' } })
+      const { getByPlaceholderText } = render(
+        <Filters onQueryChanged={onQueryChangedSpy} />,
+      )
+
+      const input = getByPlaceholderText(
+        'Search for an organization or service…',
+      )
+
+      userEvent.clear(input)
+      userEvent.type(input, 'abc')
+
       expect(onQueryChangedSpy).toHaveBeenCalledWith('abc')
     })
   })
@@ -22,10 +30,15 @@ describe('Filters', () => {
   describe('toggling the offline filter', () => {
     it('should call the onStatusFilterChanged handler with the checked state', () => {
       const onStatusFilterChangedSpy = jest.fn()
-      const wrapper = mount(
+
+      const { getByLabelText } = render(
         <Filters onStatusFilterChanged={onStatusFilterChangedSpy} />,
       )
-      wrapper.find('Switch').simulate('change', { target: { checked: false } })
+
+      const input = getByLabelText('Include offline')
+
+      userEvent.click(input)
+
       expect(onStatusFilterChangedSpy).toHaveBeenCalledWith(false)
     })
   })

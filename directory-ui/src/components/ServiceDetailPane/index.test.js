@@ -1,14 +1,11 @@
-// Copyright © VNG Realisatie 2020
+// Copyright © VNG Realisatie 2018
 // Licensed under the EUPL
 //
 
 import React from 'react'
-import { shallow } from 'enzyme'
+import { render } from '@testing-library/react'
 import ServiceDetailPane from './index'
 
-describe('ServiceDetailPane component', () => {
-  it('should render without errors', () => {
-    const wrapper = shallow(<ServiceDetailPane />)
-    expect(wrapper).toBeTruthy()
-  })
+test('renders without crashing', () => {
+  expect(() => render(<ServiceDetailPane />)).not.toThrow()
 })

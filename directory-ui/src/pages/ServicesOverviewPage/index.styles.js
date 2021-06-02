@@ -3,8 +3,8 @@
 //
 
 import styled from 'styled-components'
-import Filters from '../../components/Filters/Filters'
-import ServicesTableContainer from '../../containers/ServicesTableContainer/ServicesTableContainer'
+import Filters from '../../components/Filters'
+import ServicesTableContainer from '../../containers/ServicesTableContainer'
 
 export const StyledFilters = styled(Filters)`
   width: 100%;

@@ -4,8 +4,7 @@
 
 import React from 'react'
 import { object } from 'prop-types'
-
-import Documentation from '../../components/Documentation/Documentation'
+import Documentation from '../../components/Documentation'
 
 const DocumentationPage = ({ match }) => {
   const { organizationName, serviceName } = match.params

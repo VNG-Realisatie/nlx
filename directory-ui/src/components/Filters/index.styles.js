@@ -3,8 +3,8 @@
 //
 
 import styled from 'styled-components'
-import Card from '../Card/Card'
-import Switch from '../Switch/Switch'
+import Card from '../Card'
+import Switch from '../Switch'
 import SearchIcon from './SearchIcon'
 
 export const StyledFilters = styled(Card)`

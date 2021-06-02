@@ -7,14 +7,6 @@ import { string } from 'prop-types'
 import { RedocStandalone } from 'redoc'
 
 const Documentation = ({ organizationName, serviceName }) => {
-  if (!organizationName || organizationName.length < 1) {
-    throw new Error('no organization name specified')
-  }
-
-  if (!serviceName || serviceName.length < 1) {
-    throw new Error('no service name specified')
-  }
-
   const urlSafeOrganization = encodeURIComponent(organizationName)
   const urlSafeName = encodeURIComponent(serviceName)
   const specUrl = `/api/organizations/${urlSafeOrganization}/services/${urlSafeName}/api-spec`
