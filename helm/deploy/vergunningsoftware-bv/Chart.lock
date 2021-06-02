@@ -4,6 +4,6 @@ dependencies:
   version: 2.13.0
 - name: parkeerrechten-admin
   repository: ""
-  version: 0.101.0
+  version: 0.102.2
 digest: sha256:40e3830e9cc5b2ef6e38621a63ff4d8d6ae103da9126d1ee7ab9d19c66923ee9
 generated: "2021-05-25T11:05:32.606792+02:00"

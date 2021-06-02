@@ -10,5 +10,6 @@ dependencies:
     version: 2.13.0
     repository: "@stable"
   - name: parkeerrechten-admin 
-    version: 0.101.0
+    version: ">=0"
+    repository: "file://../../charts/parkeerrechten-admin"
     condition: parkeerrechten-admin.enabled 
