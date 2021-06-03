@@ -1,39 +1,52 @@
 // Copyright © VNG Realisatie 2018
 // Licensed under the EUPL
 
-$(document).ready(function() {
-    $("#form").submit(function(e) {
-        e.preventDefault();
+window.CP = window.CP || {};
 
-        var $error = $("#error");
-        var $request = $("#request");
-        var $result = $("#result");
-        var $crt = $("#crt");
+CP.App = function (el) {
+    const formEl = el.querySelector('#form')
+    const requestEl = el.querySelector('#request')
+    const resultEl = el.querySelector('#result')
+    const crtEl = el.querySelector('#crt')
+    const csrEl = el.querySelector('#csr')
+    const errorEl = el.querySelector('#error')
+    const downloadEl = el.querySelector('#download')
 
-        $.ajax({
-            type: "POST",
-            url: "/api/request_certificate",
-            data: JSON.stringify({
-                csr: $("#csr").val()
+    crtEl.addEventListener('click', (event) => {
+        event.currentTarget.select()
+    })
+
+    formEl.addEventListener('submit', (event) => {
+        event.preventDefault()
+
+        fetchCertificateForCSR(csrEl.value)
+          .then(certificate => {
+              errorEl.classList.add('d-none')
+              requestEl.classList.toggle('d-none')
+              resultEl.classList.toggle('d-none')
+
+              crtEl.value = certificate
+
+              downloadEl.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(certificate)}`)
+              downloadEl.setAttribute('download', 'certificate.crt')
+          })
+          .catch(() => {
+              errorEl.classList.remove('d-none')
+          })
+
+    })
+
+    function fetchCertificateForCSR(csr) {
+        return fetch("/api/request_certificate", {
+            method: 'POST',
+            body: JSON.stringify({
+                csr: csr.value
             }),
-            contentType: "application/json",
-            dataType: "json",
-            success: function(data) {
-                $error.addClass("d-none");
-                $request.toggleClass("d-none");
-                $result.toggleClass("d-none");
-                $crt.val(data.certificate);
-
-                $("#download").attr("href", "data:text/plain;charset=utf-8," + encodeURIComponent(data.certificate));
-                $("#download").attr("download", "certificate.crt");
-            },
-            error: function(error) {
-                $error.removeClass("d-none");
+            headers: {
+                'Content-Type': 'application/json'
             }
-        });
-    });
-
-    $("#crt").click(function(e) {
-        $(this).select();
-    });
-});
+        })
+          .then(response => response.json())
+          .then(json => json.certificate)
+    }
+}
