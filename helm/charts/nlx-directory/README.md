@@ -11,8 +11,8 @@ This is the Chart for the NLX Directory.
 To install the Chart with the release name `nlx-directory`:
 
 ```console
-## Add the NLX Helm repository
-$ helm repo add nlx https://charts.nlx.io
+## add the Common Ground Helm repository
+$ helm repo add commonground https://charts.commonground.nl
 
 ## Install the nlx-nlx-directory helm Chart
 $ helm install nlx-directory nlx/nlx-nlx-directory

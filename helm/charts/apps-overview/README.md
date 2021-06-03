@@ -11,8 +11,8 @@ This is the Chart for the app-links page. It contains links to all apps within t
 To install the Chart with the release name `apps-overview`:
 
 ```console
-## Add the NLX Helm repository
-$ helm repo add nlx https://charts.nlx.io
+## add the Common Ground Helm repository
+$ helm repo add commonground https://charts.commonground.nl
 
 ## Install the nlx-docs Chart
 $ helm install apps-overview nlx/apps-overview

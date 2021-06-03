@@ -12,8 +12,8 @@ to authorize all requests for a service, before routing the request to the targe
 To install the Chart with the release name `auth-service`:
 
 ```console
-## Add the NLX Helm repository
-$ helm repo add nlx https://charts.nlx.io
+## add the Common Ground Helm repository
+$ helm repo add commonground https://charts.commonground.nl
 
 ## Install the nlx-auth-service helm Chart
 $ helm install auth-service nlx/nlx-auth-service

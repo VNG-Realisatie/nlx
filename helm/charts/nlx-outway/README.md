@@ -11,8 +11,8 @@ This is the Chart for the NLX outway. An outway is needed to consume an API on t
 To install the Chart with the release name `outway`:
 
 ```console
-## Add the NLX Helm repository
-$ helm repo add nlx https://charts.nlx.io
+## add the Common Ground Helm repository
+$ helm repo add commonground https://charts.commonground.nl
 
 ## Install the nlx-outway helm Chart
 $ helm install outway nlx/nlx-outway

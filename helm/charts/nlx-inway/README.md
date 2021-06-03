@@ -11,8 +11,8 @@ This is the Chart for the NLX inway. An inway is needed to offer an API on the N
 To install the Chart with the release name `inway`:
 
 ```console
-## Add the NLX Helm repository
-$ helm repo add nlx https://charts.nlx.io
+## add the Common Ground Helm repository
+$ helm repo add commonground https://charts.commonground.nl
 
 ## Install the nlx-inway helm Chart
 $ helm install inway nlx/nlx-inway

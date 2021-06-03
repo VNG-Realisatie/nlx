@@ -11,8 +11,8 @@ This is the Chart for the NLX Management. NLX Management can be used to configur
 To install the Chart with the release name `management`:
 
 ```console
-## Add the NLX Helm repository
-$ helm repo add nlx https://charts.nlx.io
+## add the Common Ground Helm repository
+$ helm repo add commonground https://charts.commonground.nl
 
 ## Install the nlx-management helm Chart
 $ helm install management nlx/nlx-management

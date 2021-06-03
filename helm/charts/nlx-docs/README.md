@@ -11,8 +11,8 @@ This is the Chart for the NLX documentation page.
 To install the Chart with the release name `nlx-docs`:
 
 ```console
-## Add the NLX Helm repository
-$ helm repo add nlx https://charts.nlx.io
+## add the Common Ground Helm repository
+$ helm repo add commonground https://charts.commonground.nl
 
 ## Install the nlx-docs Chart
 $ helm install nlx-docs nlx/nlx-docs
