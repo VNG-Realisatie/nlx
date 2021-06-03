@@ -92,7 +92,7 @@ Make sure the TLS key files have the correct permissions to run the NLX componen
 ./pki/fix-permissions.sh
 ```
 
-Finally run the project with:
+Finally, run the project with:
 
 ```bash
 modd
@@ -166,8 +166,6 @@ To log in locally, see credentials in `dex.dev.yaml`
 
 ## Deploying and releasing
 
-**NOTE:** Automated releases are currently not available.
-
 The [CI system of GitLab](https://gitlab.com/commonground/nlx/nlx/pipelines) builds every push to the master branch and creates a release to Docker, tagging it with the short git commit hash.
 When a release is successful, it also gets deployed to the test environment.
 
@@ -175,7 +173,7 @@ When a git tag is pushed, GitLab builds and deploys it to the test and staging e
 
 ## Live environments
 
-There are multiple live environments for NLX
+There are multiple environments for NLX
 
 - `acceptance`: follows the master branch automatically
 - `demo`, `pre-production` and `production`: updated after manually triggering a release
@@ -195,16 +193,9 @@ You can do so as follows for these directories:
 
 ```shell
 (cd directory-inspection-api && make -B)
-```
-
-```shell
 (cd directory-registration-api && make -B)
-```
-
-```shell
 (cd management-api && make -B)
 ```
-
 
 ## Further documentation
 
