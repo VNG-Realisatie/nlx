@@ -87,12 +87,12 @@ parkeerrechten-admin:
       baseUrl: "http://gemeente-stijns-nlx-outway/Gemeente%20Stijns/parkeerrechten"
   kentekenApiBaseUrl: http://rvrd-basisregister-fictieve-kentekens
   personenApiBaseUrl: http://rvrd-basisregister-fictieve-personen
-  
   ingress:
+    enabled: true
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - parkeeradmin.acc.vergunningsoftware.nl
+      - parkeerrechten-admin.acc.vergunningsoftware.nl
     tls:
       - secretName: vergunningsoftware-parkeerrechten-admin-ingress-tls
         hosts:
