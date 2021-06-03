@@ -19,8 +19,7 @@
       "charts": "helm/{charts,deploy}/*"
     }],
     ["@semantic-release/exec", {
-      "verifyConditionsCmd": "true",
-      "publishCmd": "./scripts/update-conditional-helm-deps.sh"
+      "prepareCmd": "./scripts/update-conditional-helm-deps.sh"
     }],
     "@semantic-release/release-notes-generator",
     "@semantic-release/changelog",
