@@ -9,7 +9,7 @@ proto:
     BUILD +inway-test
 
 deps:
-    ENV PROTOBUF_VERSION=3.15.5
+    ENV PROTOBUF_VERSION=3.17.2
 
     COPY go.mod go.sum /src/
 

@@ -173,26 +173,6 @@ func (mr *MockClientMockRecorder) RegisterInway(arg0, arg1 interface{}, arg2 ...
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterInway", reflect.TypeOf((*MockClient)(nil).RegisterInway), varargs...)
 }
 
-// SetInsightConfiguration mocks base method.
-func (m *MockClient) SetInsightConfiguration(arg0 context.Context, arg1 *registrationapi.SetInsightConfigurationRequest, arg2 ...grpc.CallOption) (*emptypb.Empty, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{arg0, arg1}
-	for _, a := range arg2 {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "SetInsightConfiguration", varargs...)
-	ret0, _ := ret[0].(*emptypb.Empty)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// SetInsightConfiguration indicates an expected call of SetInsightConfiguration.
-func (mr *MockClientMockRecorder) SetInsightConfiguration(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{arg0, arg1}, arg2...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetInsightConfiguration", reflect.TypeOf((*MockClient)(nil).SetInsightConfiguration), varargs...)
-}
-
 // SetOrganizationInway mocks base method.
 func (m *MockClient) SetOrganizationInway(arg0 context.Context, arg1 *registrationapi.SetOrganizationInwayRequest, arg2 ...grpc.CallOption) (*emptypb.Empty, error) {
 	m.ctrl.T.Helper()

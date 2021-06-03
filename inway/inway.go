@@ -200,8 +200,6 @@ func (i *Inway) announceToDirectory(ctx context.Context) {
 					Internal:                    service.Internal,
 					DocumentationUrl:            service.DocumentationURL,
 					ApiSpecificationDocumentUrl: service.APISpecificationDocumentURL,
-					InsightApiUrl:               service.InsightAPIURL,
-					IrmaApiUrl:                  service.IrmaAPIURL,
 					PublicSupportContact:        service.PublicSupportContact,
 					TechSupportContact:          service.TechSupportContact,
 					OneTimeCosts:                service.OneTimeCosts,

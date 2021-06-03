@@ -36,12 +36,6 @@ const (
         "apiSpecificationDocumentUrl": {
           "type": "string"
         },
-        "insightApiUrl": {
-          "type": "string"
-        },
-        "irmaApiUrl": {
-          "type": "string"
-        },
         "internal": {
           "type": "boolean"
         },

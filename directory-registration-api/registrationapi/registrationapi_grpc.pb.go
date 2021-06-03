@@ -21,7 +21,6 @@ const _ = grpc.SupportPackageIsVersion7
 type DirectoryRegistrationClient interface {
 	// RegisterInway registers an inway for a given service
 	RegisterInway(ctx context.Context, in *RegisterInwayRequest, opts ...grpc.CallOption) (*RegisterInwayResponse, error)
-	SetInsightConfiguration(ctx context.Context, in *SetInsightConfigurationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetOrganizationInway(ctx context.Context, in *SetOrganizationInwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ClearOrganizationInway(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
@@ -37,15 +36,6 @@ func NewDirectoryRegistrationClient(cc grpc.ClientConnInterface) DirectoryRegist
 func (c *directoryRegistrationClient) RegisterInway(ctx context.Context, in *RegisterInwayRequest, opts ...grpc.CallOption) (*RegisterInwayResponse, error) {
 	out := new(RegisterInwayResponse)
 	err := c.cc.Invoke(ctx, "/registrationapi.DirectoryRegistration/RegisterInway", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *directoryRegistrationClient) SetInsightConfiguration(ctx context.Context, in *SetInsightConfigurationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/registrationapi.DirectoryRegistration/SetInsightConfiguration", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +66,6 @@ func (c *directoryRegistrationClient) ClearOrganizationInway(ctx context.Context
 type DirectoryRegistrationServer interface {
 	// RegisterInway registers an inway for a given service
 	RegisterInway(context.Context, *RegisterInwayRequest) (*RegisterInwayResponse, error)
-	SetInsightConfiguration(context.Context, *SetInsightConfigurationRequest) (*emptypb.Empty, error)
 	SetOrganizationInway(context.Context, *SetOrganizationInwayRequest) (*emptypb.Empty, error)
 	ClearOrganizationInway(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	mustEmbedUnimplementedDirectoryRegistrationServer()
@@ -88,9 +77,6 @@ type UnimplementedDirectoryRegistrationServer struct {
 
 func (UnimplementedDirectoryRegistrationServer) RegisterInway(context.Context, *RegisterInwayRequest) (*RegisterInwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterInway not implemented")
-}
-func (UnimplementedDirectoryRegistrationServer) SetInsightConfiguration(context.Context, *SetInsightConfigurationRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetInsightConfiguration not implemented")
 }
 func (UnimplementedDirectoryRegistrationServer) SetOrganizationInway(context.Context, *SetOrganizationInwayRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetOrganizationInway not implemented")
@@ -125,24 +111,6 @@ func _DirectoryRegistration_RegisterInway_Handler(srv interface{}, ctx context.C
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DirectoryRegistrationServer).RegisterInway(ctx, req.(*RegisterInwayRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DirectoryRegistration_SetInsightConfiguration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SetInsightConfigurationRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DirectoryRegistrationServer).SetInsightConfiguration(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/registrationapi.DirectoryRegistration/SetInsightConfiguration",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DirectoryRegistrationServer).SetInsightConfiguration(ctx, req.(*SetInsightConfigurationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -193,10 +161,6 @@ var DirectoryRegistration_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RegisterInway",
 			Handler:    _DirectoryRegistration_RegisterInway_Handler,
-		},
-		{
-			MethodName: "SetInsightConfiguration",
-			Handler:    _DirectoryRegistration_SetInsightConfiguration_Handler,
 		},
 		{
 			MethodName: "SetOrganizationInway",
