@@ -13,7 +13,7 @@ import (
 )
 
 type Order struct {
-	ID           uint `gorm:"primarykey;column:order_id;"`
+	ID           uint
 	Reference    string
 	Description  string
 	PublicKeyPEM string

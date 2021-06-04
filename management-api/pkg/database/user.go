@@ -22,7 +22,7 @@ func (err *RoleNotFoundError) Error() string {
 const AdminRole = "admin"
 
 type User struct {
-	ID        uint `gorm:"primarykey;column:user_id;"`
+	ID        uint
 	Email     string
 	Roles     []Role `gorm:"many2many:nlx_management.users_roles;"`
 	CreatedAt time.Time

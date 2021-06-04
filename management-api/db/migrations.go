@@ -16,6 +16,8 @@
 // db/migrations/007_audit_log_services_delegator.up.sql
 // db/migrations/008_remove_parkeervergunningen_demo.down.sql
 // db/migrations/008_remove_parkeervergunningen_demo.up.sql
+// db/migrations/009_fix_issues_with_access_request_state.down.sql
+// db/migrations/009_fix_issues_with_access_request_state.up.sql
 package db
 
 import (
@@ -227,7 +229,7 @@ func _004_financeDownSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "004_finance.down.sql", size: 219, mode: os.FileMode(420), modTime: time.Unix(1621434270, 0)}
+	info := bindataFileInfo{name: "004_finance.down.sql", size: 219, mode: os.FileMode(420), modTime: time.Unix(1621495420, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -387,7 +389,7 @@ func _008_remove_parkeervergunningen_demoDownSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "008_remove_parkeervergunningen_demo.down.sql", size: 223, mode: os.FileMode(420), modTime: time.Unix(1621434305, 0)}
+	info := bindataFileInfo{name: "008_remove_parkeervergunningen_demo.down.sql", size: 223, mode: os.FileMode(420), modTime: time.Unix(1621519412, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -407,7 +409,47 @@ func _008_remove_parkeervergunningen_demoUpSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "008_remove_parkeervergunningen_demo.up.sql", size: 159, mode: os.FileMode(420), modTime: time.Unix(1621434292, 0)}
+	info := bindataFileInfo{name: "008_remove_parkeervergunningen_demo.up.sql", size: 159, mode: os.FileMode(420), modTime: time.Unix(1621519412, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var __009_fix_issues_with_access_request_stateDownSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x94\x91\x4d\x6a\xc3\x30\x10\x85\xf7\x3e\x85\x4e\xd0\x0b\x78\xe5\x04\x51\x02\xfe\x81\xe0\xae\x85\x90\xa7\x62\xc0\x9e\x49\x35\x72\x7f\x6e\x5f\x62\xe2\xb6\x0b\xdb\x52\xd7\xdf\x7b\xdf\xc0\x9b\x93\x7e\xbe\xb4\x2a\x06\x4b\x62\x5d\x44\xa6\xb2\x28\xaa\xba\xd7\x57\xd5\x57\xa7\x5a\x2b\x1a\x3f\xcd\x64\xc9\x7a\x98\x80\xe2\x93\x75\x0e\x44\x8c\x0f\x96\xa2\xa8\xab\x6e\xab\x46\xab\x73\x57\xbf\x34\xad\xc2\x41\xf5\x9d\xfa\x9b\x30\x38\x94\x19\xb6\x5b\x60\x7e\x3d\xb4\x2d\x89\x4c\x5b\x80\xb7\x19\x24\x8a\x41\x72\x3c\x21\xf9\x23\xf1\x23\xfc\x93\xfd\xef\x0d\x9e\xa3\xe7\xcc\x1b\x6b\x36\x79\x63\x1e\x30\x9a\x91\xfd\xce\x24\x2b\xce\xf7\x18\x81\xf0\x8e\x0e\x52\xc2\x47\x2c\x25\x46\xfa\xb0\x5f\xdb\xae\x05\xa5\xfa\x1c\x06\x08\xdb\xfd\x05\xa5\xfa\x37\x08\x13\x8a\x20\xd3\xb6\xe4\x97\xa7\x4c\x81\xc7\x9d\x51\xee\x24\xd5\x3e\x5c\x35\x73\x4b\x81\x18\x91\x76\x5e\xbd\xc2\x94\x64\x96\xbd\x3d\xef\x64\x69\x17\xe7\xae\x69\x2e\x7d\x59\x7c\x07\x00\x00\xff\xff\x58\x65\x8c\x12\xf1\x03\x00\x00")
+
+func _009_fix_issues_with_access_request_stateDownSqlBytes() ([]byte, error) {
+	return bindataRead(
+		__009_fix_issues_with_access_request_stateDownSql,
+		"009_fix_issues_with_access_request_state.down.sql",
+	)
+}
+
+func _009_fix_issues_with_access_request_stateDownSql() (*asset, error) {
+	bytes, err := _009_fix_issues_with_access_request_stateDownSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "009_fix_issues_with_access_request_state.down.sql", size: 1009, mode: os.FileMode(420), modTime: time.Unix(1622808636, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var __009_fix_issues_with_access_request_stateUpSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x9c\x91\x4b\x6a\xc3\x30\x10\x86\xf7\x3e\x85\x4e\xd0\x0b\x78\xe5\x04\x51\x02\x7e\x40\x70\xd7\x42\xc8\x53\x31\x60\xcf\xa4\x1a\xb9\x8f\xdb\x97\x98\xb8\x0d\x76\x4d\xe5\x6c\xff\xc7\x37\xf0\xcf\x41\x3f\x9f\x6a\x15\x83\x25\xb1\x2e\x22\x53\x9e\x65\x45\xd9\xea\xb3\x6a\x8b\x43\xa9\x15\xf5\x9f\x66\xb0\x64\x3d\x0c\x40\xf1\xc9\x3a\x07\x22\xc6\x07\x4b\x51\xd4\x59\xd7\x45\xa5\xd5\xb1\x29\x5f\xaa\x5a\xdd\x7b\x06\x3b\xd5\x36\x0a\xbb\x3c\x81\x76\x09\xcc\xaf\x1b\xb4\xc9\xdb\x45\x0b\xf0\x36\x82\x44\x31\x48\x8e\x07\x24\xff\x37\xf8\x16\xfb\x49\x3d\x76\x83\xc7\xe8\xf9\xdf\x1b\x73\x2a\xf1\xc6\xd8\x61\x34\x3d\xfb\xd5\x24\xb3\xb1\x97\x63\x04\xc2\x3b\x3a\xd8\x06\xde\x02\x69\x60\xa4\x0f\xfb\xb5\x64\x4d\x62\x5a\x9f\x43\x07\x61\xd9\x9f\xc4\xb4\xfe\x05\xc2\x80\x22\xc8\xb4\x84\xfc\x3a\x69\xa4\xc0\xfd\x6a\x94\xab\x96\xd6\xde\x58\x75\xd7\x96\x02\x31\x22\xad\x5e\x3d\xcb\x69\x90\x51\xd6\x7b\x5e\xb5\xbb\x76\x76\x6c\xaa\xea\xd4\xe6\xd9\x77\x00\x00\x00\xff\xff\x77\xe6\x64\x1d\xf1\x03\x00\x00")
+
+func _009_fix_issues_with_access_request_stateUpSqlBytes() ([]byte, error) {
+	return bindataRead(
+		__009_fix_issues_with_access_request_stateUpSql,
+		"009_fix_issues_with_access_request_state.up.sql",
+	)
+}
+
+func _009_fix_issues_with_access_request_stateUpSql() (*asset, error) {
+	bytes, err := _009_fix_issues_with_access_request_stateUpSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "009_fix_issues_with_access_request_state.up.sql", size: 1009, mode: os.FileMode(420), modTime: time.Unix(1622801259, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -464,22 +506,24 @@ func AssetNames() []string {
 
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() (*asset, error){
-	"001_initial_schema.down.sql":                  _001_initial_schemaDownSql,
-	"001_initial_schema.up.sql":                    _001_initial_schemaUpSql,
-	"002_authorization.down.sql":                   _002_authorizationDownSql,
-	"002_authorization.up.sql":                     _002_authorizationUpSql,
-	"003_audit_log.down.sql":                       _003_audit_logDownSql,
-	"003_audit_log.up.sql":                         _003_audit_logUpSql,
-	"004_finance.down.sql":                         _004_financeDownSql,
-	"004_finance.up.sql":                           _004_financeUpSql,
-	"005_public_key.down.sql":                      _005_public_keyDownSql,
-	"005_public_key.up.sql":                        _005_public_keyUpSql,
-	"006_order.down.sql":                           _006_orderDownSql,
-	"006_order.up.sql":                             _006_orderUpSql,
-	"007_audit_log_services_delegator.down.sql":    _007_audit_log_services_delegatorDownSql,
-	"007_audit_log_services_delegator.up.sql":      _007_audit_log_services_delegatorUpSql,
-	"008_remove_parkeervergunningen_demo.down.sql": _008_remove_parkeervergunningen_demoDownSql,
-	"008_remove_parkeervergunningen_demo.up.sql":   _008_remove_parkeervergunningen_demoUpSql,
+	"001_initial_schema.down.sql":                       _001_initial_schemaDownSql,
+	"001_initial_schema.up.sql":                         _001_initial_schemaUpSql,
+	"002_authorization.down.sql":                        _002_authorizationDownSql,
+	"002_authorization.up.sql":                          _002_authorizationUpSql,
+	"003_audit_log.down.sql":                            _003_audit_logDownSql,
+	"003_audit_log.up.sql":                              _003_audit_logUpSql,
+	"004_finance.down.sql":                              _004_financeDownSql,
+	"004_finance.up.sql":                                _004_financeUpSql,
+	"005_public_key.down.sql":                           _005_public_keyDownSql,
+	"005_public_key.up.sql":                             _005_public_keyUpSql,
+	"006_order.down.sql":                                _006_orderDownSql,
+	"006_order.up.sql":                                  _006_orderUpSql,
+	"007_audit_log_services_delegator.down.sql":         _007_audit_log_services_delegatorDownSql,
+	"007_audit_log_services_delegator.up.sql":           _007_audit_log_services_delegatorUpSql,
+	"008_remove_parkeervergunningen_demo.down.sql":      _008_remove_parkeervergunningen_demoDownSql,
+	"008_remove_parkeervergunningen_demo.up.sql":        _008_remove_parkeervergunningen_demoUpSql,
+	"009_fix_issues_with_access_request_state.down.sql": _009_fix_issues_with_access_request_stateDownSql,
+	"009_fix_issues_with_access_request_state.up.sql":   _009_fix_issues_with_access_request_stateUpSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -523,22 +567,24 @@ type bintree struct {
 }
 
 var _bintree = &bintree{nil, map[string]*bintree{
-	"001_initial_schema.down.sql":                  &bintree{_001_initial_schemaDownSql, map[string]*bintree{}},
-	"001_initial_schema.up.sql":                    &bintree{_001_initial_schemaUpSql, map[string]*bintree{}},
-	"002_authorization.down.sql":                   &bintree{_002_authorizationDownSql, map[string]*bintree{}},
-	"002_authorization.up.sql":                     &bintree{_002_authorizationUpSql, map[string]*bintree{}},
-	"003_audit_log.down.sql":                       &bintree{_003_audit_logDownSql, map[string]*bintree{}},
-	"003_audit_log.up.sql":                         &bintree{_003_audit_logUpSql, map[string]*bintree{}},
-	"004_finance.down.sql":                         &bintree{_004_financeDownSql, map[string]*bintree{}},
-	"004_finance.up.sql":                           &bintree{_004_financeUpSql, map[string]*bintree{}},
-	"005_public_key.down.sql":                      &bintree{_005_public_keyDownSql, map[string]*bintree{}},
-	"005_public_key.up.sql":                        &bintree{_005_public_keyUpSql, map[string]*bintree{}},
-	"006_order.down.sql":                           &bintree{_006_orderDownSql, map[string]*bintree{}},
-	"006_order.up.sql":                             &bintree{_006_orderUpSql, map[string]*bintree{}},
-	"007_audit_log_services_delegator.down.sql":    &bintree{_007_audit_log_services_delegatorDownSql, map[string]*bintree{}},
-	"007_audit_log_services_delegator.up.sql":      &bintree{_007_audit_log_services_delegatorUpSql, map[string]*bintree{}},
-	"008_remove_parkeervergunningen_demo.down.sql": &bintree{_008_remove_parkeervergunningen_demoDownSql, map[string]*bintree{}},
-	"008_remove_parkeervergunningen_demo.up.sql":   &bintree{_008_remove_parkeervergunningen_demoUpSql, map[string]*bintree{}},
+	"001_initial_schema.down.sql":                       &bintree{_001_initial_schemaDownSql, map[string]*bintree{}},
+	"001_initial_schema.up.sql":                         &bintree{_001_initial_schemaUpSql, map[string]*bintree{}},
+	"002_authorization.down.sql":                        &bintree{_002_authorizationDownSql, map[string]*bintree{}},
+	"002_authorization.up.sql":                          &bintree{_002_authorizationUpSql, map[string]*bintree{}},
+	"003_audit_log.down.sql":                            &bintree{_003_audit_logDownSql, map[string]*bintree{}},
+	"003_audit_log.up.sql":                              &bintree{_003_audit_logUpSql, map[string]*bintree{}},
+	"004_finance.down.sql":                              &bintree{_004_financeDownSql, map[string]*bintree{}},
+	"004_finance.up.sql":                                &bintree{_004_financeUpSql, map[string]*bintree{}},
+	"005_public_key.down.sql":                           &bintree{_005_public_keyDownSql, map[string]*bintree{}},
+	"005_public_key.up.sql":                             &bintree{_005_public_keyUpSql, map[string]*bintree{}},
+	"006_order.down.sql":                                &bintree{_006_orderDownSql, map[string]*bintree{}},
+	"006_order.up.sql":                                  &bintree{_006_orderUpSql, map[string]*bintree{}},
+	"007_audit_log_services_delegator.down.sql":         &bintree{_007_audit_log_services_delegatorDownSql, map[string]*bintree{}},
+	"007_audit_log_services_delegator.up.sql":           &bintree{_007_audit_log_services_delegatorUpSql, map[string]*bintree{}},
+	"008_remove_parkeervergunningen_demo.down.sql":      &bintree{_008_remove_parkeervergunningen_demoDownSql, map[string]*bintree{}},
+	"008_remove_parkeervergunningen_demo.up.sql":        &bintree{_008_remove_parkeervergunningen_demoUpSql, map[string]*bintree{}},
+	"009_fix_issues_with_access_request_state.down.sql": &bintree{_009_fix_issues_with_access_request_stateDownSql, map[string]*bintree{}},
+	"009_fix_issues_with_access_request_state.up.sql":   &bintree{_009_fix_issues_with_access_request_stateUpSql, map[string]*bintree{}},
 }}
 
 // RestoreAsset restores an asset under the given directory

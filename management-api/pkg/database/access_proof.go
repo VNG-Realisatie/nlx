@@ -14,7 +14,7 @@ import (
 )
 
 type AccessProof struct {
-	ID                      uint `gorm:"primarykey;column:access_proof_id"`
+	ID                      uint
 	AccessRequestOutgoingID uint
 	OutgoingAccessRequest   *OutgoingAccessRequest `gorm:"foreignKey:access_request_outgoing_id"`
 	CreatedAt               time.Time

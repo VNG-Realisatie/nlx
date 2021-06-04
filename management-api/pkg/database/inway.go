@@ -13,7 +13,7 @@ import (
 )
 
 type Inway struct {
-	ID          uint `gorm:"primarykey;column:inway_id;"`
+	ID          uint
 	Name        string
 	Version     string
 	Hostname    string

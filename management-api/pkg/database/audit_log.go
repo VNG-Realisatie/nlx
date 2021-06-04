@@ -29,7 +29,7 @@ const (
 )
 
 type AuditLog struct {
-	ID         uint64 `gorm:"primarykey;column:audit_log_id;"`
+	ID         uint64
 	UserName   string
 	ActionType AuditLogActionType
 	UserAgent  string

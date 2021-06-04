@@ -32,7 +32,7 @@ const (
 )
 
 type OutgoingAccessRequest struct {
-	ID                   uint `gorm:"primaryKey;column:access_request_outgoing_id"`
+	ID                   uint
 	OrganizationName     string
 	ServiceName          string
 	ReferenceID          uint
@@ -211,7 +211,7 @@ func (db *PostgresConfigDatabase) TakePendingOutgoingAccessRequest(ctx context.C
 		WithContext(ctx).
 		Table("nlx_management.access_requests_outgoing").
 		Where(
-			"access_request_outgoing_id = (SELECT access_request_outgoing_id FROM nlx_management.access_requests_outgoing WHERE state IN ? AND (lock_expires_at IS NULL OR NOW() > lock_expires_at) ORDER BY created_at DESC LIMIT 1)",
+			"id = (SELECT id FROM nlx_management.access_requests_outgoing WHERE state IN ? AND (lock_expires_at IS NULL OR NOW() > lock_expires_at) ORDER BY created_at DESC LIMIT 1)",
 			[]string{
 				string(OutgoingAccessRequestCreated),
 				string(OutgoingAccessRequestApproved),

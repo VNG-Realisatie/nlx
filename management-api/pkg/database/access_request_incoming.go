@@ -22,7 +22,7 @@ const (
 )
 
 type IncomingAccessRequest struct {
-	ID                   uint `gorm:"primarykey;column:access_request_incoming_id"`
+	ID                   uint
 	ServiceID            uint
 	OrganizationName     string
 	State                IncomingAccessRequestState
@@ -71,7 +71,7 @@ func (db *PostgresConfigDatabase) GetLatestIncomingAccessRequest(ctx context.Con
 	if err := db.DB.Debug().
 		WithContext(ctx).
 		Preload("Service").
-		Joins("JOIN nlx_management.services s ON s.service_id = access_requests_incoming.service_id AND organization_name = ? AND s.name = ?", organizationName, serviceName).
+		Joins("JOIN nlx_management.services s ON s.id = access_requests_incoming.service_id AND access_requests_incoming.organization_name = ? AND s.name = ?", organizationName, serviceName).
 		Order("created_at DESC").
 		First(&accessRequest).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -90,9 +90,9 @@ func (db *PostgresConfigDatabase) GetIncomingAccessRequestCountByService(ctx con
 	if err := db.DB.Debug().
 		WithContext(ctx).
 		Model(&Service{}).
-		Select("services.name, COUNT(a.access_request_incoming_id)").
-		Joins("LEFT JOIN nlx_management.access_requests_incoming a ON a.service_id = services.service_id AND a.state = 'received'").
-		Group("services.service_id").
+		Select("services.name, COUNT(a.id)").
+		Joins("LEFT JOIN nlx_management.access_requests_incoming a ON a.service_id = services.id AND a.state = 'received'").
+		Group("services.id").
 		Find(&result).Error; err != nil {
 		return nil, err
 	}

@@ -13,7 +13,7 @@ import (
 )
 
 type Service struct {
-	ID                     uint `gorm:"primarykey;column:service_id;"`
+	ID                     uint
 	Name                   string
 	EndpointURL            string
 	DocumentationURL       string

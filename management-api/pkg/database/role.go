@@ -3,7 +3,7 @@ package database
 import "time"
 
 type Role struct {
-	ID          uint `gorm:"primarykey;column:role_id;"`
+	ID          uint
 	Name        string
 	Code        string
 	Permissions []Permission `gorm:"-"`

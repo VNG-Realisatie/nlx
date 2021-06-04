@@ -13,7 +13,7 @@ import (
 )
 
 type Settings struct {
-	ID        uint `gorm:"primarykey;column:settings_id"`
+	ID        uint
 	InwayID   *uint
 	Inway     *Inway `gorm:"foreignkey:InwayID;references:ID"`
 	CreatedAt time.Time
@@ -46,7 +46,7 @@ func (db *PostgresConfigDatabase) PutOrganizationInway(ctx context.Context, inwa
 	if err := db.DB.
 		WithContext(ctx).
 		Omit(clause.Associations).
-		Where("settings_id IS NOT NULL").
+		Where("id IS NOT NULL").
 		Assign(map[string]interface{}{"inway_id": inwayID}).
 		FirstOrCreate(settingsInDB).Error; err != nil {
 		return nil, err
