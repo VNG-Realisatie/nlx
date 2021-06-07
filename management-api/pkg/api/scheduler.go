@@ -6,7 +6,6 @@ package api
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"fmt"
 	"sync"
 	"time"
@@ -36,8 +35,6 @@ const (
 	// jobs are unlocked after 5 minutes, let's wait at least one minute before retrying
 	jobTimeout = 4 * time.Minute
 )
-
-var ErrMaxRetries = errors.New("unable to retry more than 3 times")
 
 type accessRequestScheduler struct {
 	clock                      clock.Clock
