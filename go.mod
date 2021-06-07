@@ -11,7 +11,7 @@ replace gopkg.in/yaml.v2 => gopkg.in/yaml.v2 v2.4.0
 
 require (
 	github.com/blang/semver v3.5.1+incompatible // indirect
-	github.com/cloudflare/cfssl v1.5.0
+	github.com/cloudflare/cfssl v1.6.0
 	github.com/coreos/go-oidc v2.2.1+incompatible
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fgrosse/zaptest v1.1.0
@@ -50,7 +50,6 @@ require (
 	google.golang.org/genproto v0.0.0-20210607140030-00d4fb20b1ae
 	google.golang.org/grpc v1.38.0
 	google.golang.org/protobuf v1.26.0
-	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/ini.v1 v1.61.0 // indirect
 	gopkg.in/square/go-jose.v2 v2.4.1 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
