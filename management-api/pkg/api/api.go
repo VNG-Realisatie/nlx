@@ -126,7 +126,7 @@ func NewAPI(db database.ConfigDatabase, txlogDB txlogdb.TxlogDatabase, logger *z
 	)
 
 	a := &API{
-		logger:          logger.With(zap.String("api-organization-name", e.OrganizationName)),
+		logger:          logger,
 		environment:     e,
 		cert:            cert,
 		orgCert:         orgCert,
