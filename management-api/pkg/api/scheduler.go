@@ -81,7 +81,7 @@ schedulingLoop:
 				defer sem.Release(1)
 				defer wg.Done()
 				if err := scheduler.schedulePendingRequest(context.TODO()); err != nil {
-					scheduler.logger.Error("failed to scheduler pending request", zap.Error(err))
+					scheduler.logger.Error("failed to schedule pending request", zap.Error(err))
 				}
 			}()
 		}
