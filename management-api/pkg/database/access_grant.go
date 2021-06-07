@@ -32,7 +32,7 @@ func (db *PostgresConfigDatabase) CreateAccessGrant(ctx context.Context, accessR
 		IncomingAccessRequestID: accessRequest.ID,
 	}
 
-	if err := db.DB.Debug().
+	if err := db.DB.
 		WithContext(ctx).
 		Omit(clause.Associations).
 		Create(accessGrant).Error; err != nil {

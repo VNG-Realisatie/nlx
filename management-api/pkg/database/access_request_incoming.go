@@ -68,7 +68,7 @@ func (db *PostgresConfigDatabase) ListIncomingAccessRequests(ctx context.Context
 func (db *PostgresConfigDatabase) GetLatestIncomingAccessRequest(ctx context.Context, organizationName, serviceName string) (*IncomingAccessRequest, error) {
 	accessRequest := &IncomingAccessRequest{}
 
-	if err := db.DB.Debug().
+	if err := db.DB.
 		WithContext(ctx).
 		Preload("Service").
 		Joins("JOIN nlx_management.services s ON s.id = access_requests_incoming.service_id AND access_requests_incoming.organization_name = ? AND s.name = ?", organizationName, serviceName).
@@ -87,7 +87,7 @@ func (db *PostgresConfigDatabase) GetLatestIncomingAccessRequest(ctx context.Con
 func (db *PostgresConfigDatabase) GetIncomingAccessRequestCountByService(ctx context.Context) (map[string]int, error) {
 	result := []map[string]interface{}{}
 
-	if err := db.DB.Debug().
+	if err := db.DB.
 		WithContext(ctx).
 		Model(&Service{}).
 		Select("services.name, COUNT(a.id)").
