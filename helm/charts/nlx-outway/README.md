@@ -129,14 +129,8 @@ TLS certificates used by NLX components for internal communication.
 | `https.keyPEM` | Private key of `https.certificatePEM` as PEM. Required if `https.enabled` is `true` | `""` | no |
 | `https.certificatePEM` | TLS certificate as PEM. Required if `https.enabled` is `true` | `""` | no |
 | `service.type` | Service type (ClusterIP, NodePort or LoadBalancer) | `ClusterIP` | no |
-| `service.apiPort` | Port exposed by the management API service | `80` | no |
-| `service.apiConfigPort` | Port exposed by the management API service for the config endpoints | `443` | no |
-| `service.uiPort` | Port exposed by the management UI service | `8080` | no |
-| `ingress.enabled` | Enable Ingress | `false` | no |
-| `ingress.annotations` | Ingress annotations | `{}` | no |
-| `ingress.hosts.host` | Ingress accepted hostname | `chart-example.local` | no |
-| `ingress.hosts.paths` | Ingress accepted paths | `[]` | no |
-| `ingress.tls` | Ingress TLS configuration | `[]` | no |
+| `service.httpPort` | Port exposed by the outway service | `80` | no |
+| `service.httpsPort` | Port exposed by the outway service if `https.enabled` is `true` | `443` | no |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 
