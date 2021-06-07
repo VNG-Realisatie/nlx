@@ -8,31 +8,7 @@ This is the Chart for the NLX documentation page.
 
 ## Installing the Chart
 
-To install the Chart with the release name `nlx-docs`:
-
-```console
-## add the Common Ground Helm repository
-$ helm repo add commonground https://charts.commonground.nl
-
-## Install the nlx-docs Chart
-$ helm install nlx-docs nlx/nlx-docs
-```
-
-> **Tip**: List all releases using `helm list`
-
-## Upgrading the Chart
-
-Currently, our Helm charts use the same release version as the NLX release version. 
-To know what has changed for the Helm charts, look at the changes in our [CHANGELOG](https://gitlab.com/commonground/nlx/nlx/-/blob/master/CHANGELOG.md) 
-that are prefixed with 'Helm'.
-
-## Uninstalling the Chart
-
-To uninstall or delete the `nlx-docs` deployment:
-
-```console
-$ helm delete nlx-docs
-```
+This chart is created for internal use only.
 
 ## Parameters
 

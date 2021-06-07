@@ -15,7 +15,7 @@ To install the Chart with the release name `outway`:
 $ helm repo add commonground https://charts.commonground.nl
 
 ## Install the nlx-outway helm Chart
-$ helm install outway nlx/nlx-outway
+$ helm install outway commonground/nlx-outway
 ```
 
 > **Tip**: List all releases using `helm list`

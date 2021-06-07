@@ -9,31 +9,7 @@ to authorize all requests for a service, before routing the request to the targe
 
 ## Installing the Chart
 
-To install the Chart with the release name `auth-service`:
-
-```console
-## add the Common Ground Helm repository
-$ helm repo add commonground https://charts.commonground.nl
-
-## Install the nlx-auth-service helm Chart
-$ helm install auth-service nlx/nlx-auth-service
-```
-
-> **Tip**: List all releases using `helm list`
-
-## Upgrading the Chart
-
-Currently, our Helm charts use the same release version as the NLX release version. 
-To know what has changed for the Helm charts, look at the changes in our [CHANGELOG](https://gitlab.com/commonground/nlx/nlx/-/blob/master/CHANGELOG.md) 
-that are prefixed with 'Helm'.
-
-## Uninstalling the Chart
-
-To uninstall or delete the `auth-service` deployment:
-
-```console
-$ helm delete auth-service
-```
+This chart is created for internal use only.
 
 ## Parameters
 

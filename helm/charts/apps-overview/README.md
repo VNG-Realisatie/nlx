@@ -8,31 +8,7 @@ This is the Chart for the app-overview page. It contains links to all apps withi
 
 ## Installing the Chart
 
-To install the Chart with the release name `apps-overview`:
-
-```console
-## add the Common Ground Helm repository
-$ helm repo add commonground https://charts.commonground.nl
-
-## Install the nlx-docs Chart
-$ helm install apps-overview nlx/apps-overview
-```
-
-> **Tip**: List all releases using `helm list`
-
-## Upgrading the Chart
-
-Currently, our Helm charts use the same release version as the NLX release version. 
-To know what has changed for the Helm charts, look at the changes in our [CHANGELOG](https://gitlab.com/commonground/nlx/nlx/-/blob/master/CHANGELOG.md) 
-that are prefixed with 'Helm'.
-
-## Uninstalling the Chart
-
-To uninstall or delete the `apps-overview` deployment:
-
-```console
-$ helm delete apps-overview
-```
+This chart is created for internal use only.
 
 ## Parameters 
 

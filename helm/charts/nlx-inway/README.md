@@ -15,7 +15,7 @@ To install the Chart with the release name `inway`:
 $ helm repo add commonground https://charts.commonground.nl
 
 ## Install the nlx-inway helm Chart
-$ helm install inway nlx/nlx-inway
+$ helm install inway commonground/nlx-inway
 ```
 
 > **Tip**: List all releases using `helm list`

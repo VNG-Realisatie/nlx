@@ -12,31 +12,7 @@ Unsafe-ca is based on [cfssl](https://github.com/cloudflare/cfssl).
 
 ## Installing the Chart
 
-To install the Chart with the release name `ca-cfssl-unsafe`:
-
-```console
-## add the Common Ground Helm repository
-$ helm repo add commonground https://charts.commonground.nl
-
-## Install the nlx-ca-cfssl-unsafe helm Chart
-$ helm install ca-cfssl-unsafe nlx/nlx-ca-cfssl-unsafe
-```
-
-> **Tip**: List all releases using `helm list`
-
-## Upgrading the Chart
-
-Currently, our Helm charts use the same release version as the NLX release version. 
-To know what has changed for the Helm charts, look at the changes in our [CHANGELOG](https://gitlab.com/commonground/nlx/nlx/-/blob/master/CHANGELOG.md) 
-that are prefixed with 'Helm'.
-
-## Uninstalling the Chart
-
-To uninstall or delete the `ca-cfssl-unsafe` deployment:
-
-```console
-$ helm delete ca-cfssl-unsafe
-```
+This chart is created for internal use only.
 
 ## Parameters
 

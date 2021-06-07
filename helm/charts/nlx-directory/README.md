@@ -15,7 +15,7 @@ To install the Chart with the release name `nlx-directory`:
 $ helm repo add commonground https://charts.commonground.nl
 
 ## Install the nlx-nlx-directory helm Chart
-$ helm install nlx-directory nlx/nlx-nlx-directory
+$ helm install nlx-directory commonground/nlx-nlx-directory
 ```
 
 > **Tip**: List all releases using `helm list`

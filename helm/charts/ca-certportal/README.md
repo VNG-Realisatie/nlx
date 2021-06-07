@@ -9,31 +9,7 @@ web interface that allows requesting a testing certificate easily.
 
 ## Installing the Chart
 
-To install the Chart with the release name `ca-certportal`:
-
-```console
-## add the Common Ground Helm repository
-$ helm repo add commonground https://charts.commonground.nl
-
-## Install the nlx-ca-certportal helm Chart
-$ helm install ca-certportal nlx/nlx-ca-certportal
-```
-
-> **Tip**: List all releases using `helm list`
-
-## Upgrading the Chart
-
-Currently, our Helm charts use the same release version as the NLX release version. 
-To know what has changed for the Helm charts, look at the changes in our [CHANGELOG](https://gitlab.com/commonground/nlx/nlx/-/blob/master/CHANGELOG.md) 
-that are prefixed with 'Helm'.
-
-## Uninstalling the Chart
-
-To uninstall or delete the `ca-certportal` deployment:
-
-```console
-$ helm delete ca-certportal
-```
+This chart is created for internal use only.
 
 ## Parameters
 

@@ -15,7 +15,7 @@ To install the Chart with the release name `management`:
 $ helm repo add commonground https://charts.commonground.nl
 
 ## Install the nlx-management helm Chart
-$ helm install management nlx/nlx-management
+$ helm install management commonground/nlx-management
 ```
 
 > **Tip**: List all releases using `helm list`
