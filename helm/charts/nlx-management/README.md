@@ -131,8 +131,8 @@ TLS certificates used by NLX components for internal communication.
 | `postgresql.port` | PostgreSQL port | `5432` | yes |
 | `postgresql.sslMode` | PostgreSQL SSL mode | `required` | yes |
 | `postgresql.database` | PostgreSQL database | `"nlx_management"` | yes |
-| `postgresql.username` | PostgreSQL username. Will be stored in a Kubernetes secret | `""` | ✓ (if not using `postgresql.existingSecret`) |
-| `postgresql.password` | PostgreSQL password. Will be stored in a Kubernetes secret | `""` | ✓ (if not using `postgresql.existingSecret`) |
+| `postgresql.username` | PostgreSQL username. Will be stored in a Kubernetes secret | `""` | yes (if not using `postgresql.existingSecret`) |
+| `postgresql.password` | PostgreSQL password. Will be stored in a Kubernetes secret | `""` | yes (if not using `postgresql.existingSecret`) |
 | `postgresql.existingSecret` | Use existing secret for password details (`postgresql.username` and `postgresql.password` will be ignored and picked up from this secret)  | `""` | no |
 
 ### Exposure parameters
