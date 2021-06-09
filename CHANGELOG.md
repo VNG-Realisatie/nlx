@@ -1,3 +1,16 @@
+# [0.103.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.102.4...v0.103.0) (2021-06-09)
+
+
+### Bug Fixes
+
+* **management:** prefer scheduling outgoing access requests updated least recently ([63ae989](https://gitlab.com/commonground/nlx/nlx/commit/63ae9895b7f9ba0617abbf54fbc3c0b271f30f11)), closes [#1249](https://gitlab.com/commonground/nlx/nlx/issues/1249)
+* update helm chart repository in chart readme ([45fa1be](https://gitlab.com/commonground/nlx/nlx/commit/45fa1be8820e1fdb3de7f14fd7d9052c57526340))
+
+
+### Features
+
+* **ca-certportal:** replace font 'Muli' with system font ([8a80c9d](https://gitlab.com/commonground/nlx/nlx/commit/8a80c9dade88e3153c72af113755c6bbe0c87cf2))
+
 ## [0.102.4](https://gitlab.com/commonground/nlx/nlx/compare/v0.102.3...v0.102.4) (2021-06-03)
 
 ## [0.102.3](https://gitlab.com/commonground/nlx/nlx/compare/v0.102.2...v0.102.3) (2021-06-02)
