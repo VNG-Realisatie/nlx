@@ -82,7 +82,6 @@ The following table lists the configurable parameters of the nlx-inway Chart and
 | `config.logType` | Possible values: **live**, **local**. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger. | `live` | no |
 | `config.logLevel` | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType` | `info` | no | 
 | `config.directoryRegistrationHostname` | Address of the NLX directory where this inway will register its services. | `""` | yes |
-| `config.sessionCookieSecure` | If `true`, the API will use 'secure' cookies. | `false` | no |
 | `config.selfAddress` | The address that can be used by the NLX network to reach this inway | `""` | no |
 | `config.managementAPI.address` | The config address of the management API. Normally this would be: `hostname:443` where `hostname` is the hostname of the Management API | `""` | no |
 
