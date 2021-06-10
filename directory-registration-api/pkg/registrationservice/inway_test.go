@@ -24,15 +24,13 @@ const testServiceName = "Test Service Name"
 
 //nolint:funlen // adding the tests was the first step to make the functionality testable. making it less complex is out of scope for now.
 func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
-	tests := []struct {
-		name             string
+	tests := map[string]struct {
 		setup            func(serviceMocks)
 		req              *registrationapi.RegisterInwayRequest
 		expectedResponse *registrationapi.RegisterInwayResponse
 		expectedError    error
 	}{
-		{
-			name: "failed to communicate with the database",
+		"failed to communicate with the database": {
 			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
@@ -50,8 +48,7 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 			expectedResponse: nil,
 			expectedError:    status.New(codes.Internal, "database error").Err(),
 		},
-		{
-			name: "invalid params",
+		"invalid params": {
 			req: &registrationapi.RegisterInwayRequest{
 				InwayAddress: "localhost",
 				Services: []*registrationapi.RegisterInwayRequest_RegisterService{
@@ -63,8 +60,7 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 			expectedResponse: nil,
 			expectedError:    status.New(codes.InvalidArgument, "validation failed: ServiceName: must be in a valid format.").Err(),
 		},
-		{
-			name: "happy flow",
+		"happy flow": {
 			setup: func(mocks serviceMocks) {
 				mocks.db.EXPECT().InsertAvailability(gomock.Eq(&database.InsertAvailabilityParams{
 					OrganizationName:    testOrganizationName,
@@ -93,10 +89,10 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
+	for name, tt := range tests {
 		tt := tt
 
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			service, mocks := newService(t)
 
 			if tt.setup != nil {
