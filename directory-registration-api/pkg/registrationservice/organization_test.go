@@ -105,56 +105,47 @@ func TestDirectoryRegistrationService_SetOrganizationInway(t *testing.T) {
 }
 
 func TestDirectoryRegistrationService_ClearOrganizationInway(t *testing.T) {
-	tests := []struct {
-		name             string
+	tests := map[string]struct {
 		setup            func(serviceMocks)
-		db               func(ctrl *gomock.Controller) database.DirectoryDatabase
-		address          string
 		expectedResponse *emptypb.Empty
 		expectedError    error
 	}{
-		{
-			name: "no_organization",
+		"no_organization": {
 			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
 					ClearOrganizationInway(gomock.Any(), "Test Organization Name").
 					Return(database.ErrOrganizationNotFound)
 			},
-			address:          "inway.nlx.local",
 			expectedResponse: nil,
 			expectedError:    status.New(codes.NotFound, "organization not found").Err(),
 		},
-		{
-			name: "database_error",
+		"database_error": {
 			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
 					ClearOrganizationInway(gomock.Any(), "Test Organization Name").
 					Return(errors.New("arbitrary error"))
 			},
-			address:          "inway.nlx.local",
 			expectedResponse: nil,
 			expectedError:    status.New(codes.Internal, "database error").Err(),
 		},
-		{
-			name: "happy_flow",
+		"happy_flow": {
 			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
 					ClearOrganizationInway(gomock.Any(), "Test Organization Name").
 					Return(nil)
 			},
-			address:          "inway.nlx.local",
 			expectedResponse: &emptypb.Empty{},
 			expectedError:    nil,
 		},
 	}
 
-	for _, tt := range tests {
+	for name, tt := range tests {
 		tt := tt
 
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			service, mocks := newService(t)
 
 			if tt.setup != nil {
