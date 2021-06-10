@@ -64,7 +64,7 @@ func (h *DirectoryRegistrationService) ClearOrganizationInway(ctx context.Contex
 			return &emptypb.Empty{}, nil
 		}
 
-		logger.Error("failed to clear inway for organiation", zap.Error(err))
+		logger.Error("failed to clear the organization inway", zap.Error(err))
 
 		return nil, status.New(codes.Internal, "database error").Err()
 	}
