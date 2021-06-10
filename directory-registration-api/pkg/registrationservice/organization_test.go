@@ -110,16 +110,6 @@ func TestDirectoryRegistrationService_ClearOrganizationInway(t *testing.T) {
 		expectedResponse *emptypb.Empty
 		expectedError    error
 	}{
-		"no_organization": {
-			setup: func(mocks serviceMocks) {
-				mocks.db.
-					EXPECT().
-					ClearOrganizationInway(gomock.Any(), "Test Organization Name").
-					Return(database.ErrOrganizationNotFound)
-			},
-			expectedResponse: nil,
-			expectedError:    status.New(codes.NotFound, "organization not found").Err(),
-		},
 		"database_error": {
 			setup: func(mocks serviceMocks) {
 				mocks.db.
@@ -129,6 +119,16 @@ func TestDirectoryRegistrationService_ClearOrganizationInway(t *testing.T) {
 			},
 			expectedResponse: nil,
 			expectedError:    status.New(codes.Internal, "database error").Err(),
+		},
+		"when_the_organization_is_not_present": {
+			setup: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					ClearOrganizationInway(gomock.Any(), "Test Organization Name").
+					Return(database.ErrOrganizationNotFound)
+			},
+			expectedResponse: &emptypb.Empty{},
+			expectedError:    nil,
 		},
 		"happy_flow": {
 			setup: func(mocks serviceMocks) {

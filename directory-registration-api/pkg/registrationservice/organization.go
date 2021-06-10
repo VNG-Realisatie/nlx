@@ -61,7 +61,7 @@ func (h *DirectoryRegistrationService) ClearOrganizationInway(ctx context.Contex
 	err = h.db.ClearOrganizationInway(ctx, organizationName)
 	if err != nil {
 		if errors.Is(err, database.ErrOrganizationNotFound) {
-			return nil, status.New(codes.NotFound, "organization not found").Err()
+			return &emptypb.Empty{}, nil
 		}
 
 		logger.Error("failed to clear inway for organiation", zap.Error(err))
