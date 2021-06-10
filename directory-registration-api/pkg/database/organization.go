@@ -16,10 +16,8 @@ type Organization struct {
 }
 
 var (
-	// ErrNoInwayWithAddress is returned when no inway is found for the provided address
-	ErrNoInwayWithAddress = errors.New("no inway found for address")
-	// ErrNoOrganization is returned when no organization is found
-	ErrNoOrganization = errors.New("no organization found")
+	ErrNoInwayWithAddress   = errors.New("no inway found for address")
+	ErrOrganizationNotFound = errors.New("no organization found")
 )
 
 func (db PostgreSQLDirectoryDatabase) SetOrganizationInway(ctx context.Context, organizationName, inwayAddress string) error {
@@ -62,7 +60,7 @@ func (db PostgreSQLDirectoryDatabase) ClearOrganizationInway(ctx context.Context
 	}
 
 	if n != 1 {
-		return ErrNoOrganization
+		return ErrOrganizationNotFound
 	}
 
 	return nil

@@ -118,7 +118,7 @@ func TestDirectoryRegistrationService_ClearOrganizationInway(t *testing.T) {
 				db := mock.NewMockDirectoryDatabase(ctrl)
 				db.EXPECT().
 					ClearOrganizationInway(gomock.Any(), "Test Organization Name").
-					Return(database.ErrNoOrganization)
+					Return(database.ErrOrganizationNotFound)
 
 				return db
 			},
