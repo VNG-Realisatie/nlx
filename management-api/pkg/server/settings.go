@@ -61,7 +61,7 @@ func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateS
 
 		_, err = s.directoryClient.SetOrganizationInway(ctx, setOrganizationInwayRequest)
 		if err != nil {
-			logger.Error("could not update the settings in the directory", zap.Error(err))
+			logger.Error("could not update the organization inway in the directory", zap.Error(err))
 			return nil, status.Error(codes.Internal, "database error")
 		}
 
@@ -69,7 +69,7 @@ func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateS
 	} else {
 		_, err := s.directoryClient.ClearOrganizationInway(ctx, &emptypb.Empty{})
 		if err != nil {
-			logger.Error("could not clear organization inway in the directory", zap.Error(err))
+			logger.Error("could not clear the organization inway in the directory", zap.Error(err))
 			return nil, status.Error(codes.Internal, "database error")
 		}
 	}

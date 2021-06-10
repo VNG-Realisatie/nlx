@@ -26,18 +26,18 @@ const testServiceName = "Test Service Name"
 func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 	tests := []struct {
 		name             string
-		db               func(ctrl *gomock.Controller) database.DirectoryDatabase
+		setup            func(serviceMocks)
 		req              *registrationapi.RegisterInwayRequest
 		expectedResponse *registrationapi.RegisterInwayResponse
 		expectedError    error
 	}{
 		{
 			name: "failed to communicate with the database",
-			db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
-				db := mock.NewMockDirectoryDatabase(ctrl)
-				db.EXPECT().InsertAvailability(gomock.Any()).Return(errors.New("arbitrary error"))
-
-				return db
+			setup: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					InsertAvailability(gomock.Any()).
+					Return(errors.New("arbitrary error"))
 			},
 			req: &registrationapi.RegisterInwayRequest{
 				InwayAddress: "localhost",
@@ -52,11 +52,6 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 		},
 		{
 			name: "invalid params",
-			db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
-				db := mock.NewMockDirectoryDatabase(ctrl)
-
-				return db
-			},
 			req: &registrationapi.RegisterInwayRequest{
 				InwayAddress: "localhost",
 				Services: []*registrationapi.RegisterInwayRequest_RegisterService{
@@ -70,9 +65,8 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 		},
 		{
 			name: "happy flow",
-			db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
-				db := mock.NewMockDirectoryDatabase(ctrl)
-				db.EXPECT().InsertAvailability(gomock.Eq(&database.InsertAvailabilityParams{
+			setup: func(mocks serviceMocks) {
+				mocks.db.EXPECT().InsertAvailability(gomock.Eq(&database.InsertAvailabilityParams{
 					OrganizationName:    testOrganizationName,
 					ServiceName:         testServiceName,
 					ServiceInternal:     false,
@@ -82,8 +76,6 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 					RequestCosts:        100,
 					OneTimeCosts:        50,
 				})).Return(nil)
-
-				return db
 			},
 			req: &registrationapi.RegisterInwayRequest{
 				InwayAddress: "localhost",
@@ -105,14 +97,42 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 		tt := tt
 
 		t.Run(tt.name, func(t *testing.T) {
-			ctrl := gomock.NewController(t)
-			defer ctrl.Finish()
+			service, mocks := newService(t)
 
-			h := registrationservice.New(zap.NewNop(), tt.db(ctrl), nil, testGetOrganizationNameFromRequest)
-			got, err := h.RegisterInway(context.Background(), tt.req)
+			if tt.setup != nil {
+				tt.setup(mocks)
+			}
+
+			got, err := service.RegisterInway(context.Background(), tt.req)
 
 			assert.Equal(t, tt.expectedResponse, got)
 			assert.Equal(t, tt.expectedError, err)
 		})
 	}
+}
+
+type serviceMocks struct {
+	db *mock.MockDirectoryDatabase
+}
+
+func newService(t *testing.T) (*registrationservice.DirectoryRegistrationService, serviceMocks) {
+	ctrl := gomock.NewController(t)
+
+	t.Cleanup(func() {
+		t.Helper()
+		ctrl.Finish()
+	})
+
+	mocks := serviceMocks{
+		db: mock.NewMockDirectoryDatabase(ctrl),
+	}
+
+	service := registrationservice.New(
+		zap.NewNop(),
+		mocks.db,
+		nil,
+		testGetOrganizationNameFromRequest,
+	)
+
+	return service, mocks
 }
