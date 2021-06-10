@@ -72,8 +72,8 @@ func parseVersion(data []byte) (*openAPIVersion, error) {
 	return nil, errors.New("unable to parse version")
 }
 
-func getInwayAPISpecsType(httpClient *http.Client, inwayAddress, serviceName string) (string, error) {
-	data, err := getInwayAPISpecs(httpClient, inwayAddress, serviceName)
+func getAPISpecsTypeViaInway(httpClient *http.Client, inwayAddress, serviceName string) (string, error) {
+	data, err := getAPISpecsViaInway(httpClient, inwayAddress, serviceName)
 	if err != nil {
 		return "", err
 	}
@@ -81,7 +81,7 @@ func getInwayAPISpecsType(httpClient *http.Client, inwayAddress, serviceName str
 	return ParseAPISpectType(data)
 }
 
-func getInwayAPISpecs(h *http.Client, inwayAddress, serviceName string) ([]byte, error) {
+func getAPISpecsViaInway(h *http.Client, inwayAddress, serviceName string) ([]byte, error) {
 	inwayURL := url.URL{
 		Scheme: "https",
 		Host:   inwayAddress,

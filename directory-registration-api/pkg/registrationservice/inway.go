@@ -41,18 +41,18 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 		// NOTE: we get the documentation spec doc via the inway, not directly. This field could probably be dropped form the communication to the directory.
 		logger.Info("service documentation url", zap.String("documentation url", service.ApiSpecificationDocumentUrl))
 
-		var inwayAPISpecificationType string
+		var serviceSpecificationType string
 
 		if len(service.ApiSpecificationDocumentUrl) > 0 {
-			inwayAPISpecificationType, err = getInwayAPISpecsType(h.httpClient, req.InwayAddress, service.Name)
+			serviceSpecificationType, err = getAPISpecsTypeViaInway(h.httpClient, req.InwayAddress, service.Name)
 			if err != nil {
 				logger.Info("invalid documentation specification document provided by inway", zap.String("documentation url", service.ApiSpecificationDocumentUrl), zap.Error(err))
 				// DO NOT STOP WHEN  documentation fails.
 				// return nil, status.New(codes.InvalidArgument, "Invalid documentation specification document provided").Err()
-				inwayAPISpecificationType = ""
+				serviceSpecificationType = ""
 			}
 
-			logger.Info("detected api spec", zap.String("apispectype", inwayAPISpecificationType))
+			logger.Info("detected api spec", zap.String("apispectype", serviceSpecificationType))
 		}
 
 		params := &database.InsertAvailabilityParams{
@@ -60,7 +60,7 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 			ServiceName:                 service.Name,
 			ServiceInternal:             service.Internal,
 			ServiceDocumentationURL:     service.DocumentationUrl,
-			InwayAPISpecificationType:   inwayAPISpecificationType,
+			InwayAPISpecificationType:   serviceSpecificationType,
 			RequestInwayAddress:         req.InwayAddress,
 			ServicePublicSupportContact: service.PublicSupportContact,
 			ServiceTechSupportContact:   service.TechSupportContact,
