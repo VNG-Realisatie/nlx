@@ -25,10 +25,10 @@ const testServiceName = "Test Service Name"
 //nolint:funlen // adding the tests was the first step to make the functionality testable. making it less complex is out of scope for now.
 func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 	tests := map[string]struct {
-		setup            func(serviceMocks)
-		req              *registrationapi.RegisterInwayRequest
-		expectedResponse *registrationapi.RegisterInwayResponse
-		expectedError    error
+		setup        func(serviceMocks)
+		request      *registrationapi.RegisterInwayRequest
+		wantResponse *registrationapi.RegisterInwayResponse
+		wantErr      error
 	}{
 		"failed to communicate with the database": {
 			setup: func(mocks serviceMocks) {
@@ -37,7 +37,7 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 					InsertAvailability(gomock.Any()).
 					Return(errors.New("arbitrary error"))
 			},
-			req: &registrationapi.RegisterInwayRequest{
+			request: &registrationapi.RegisterInwayRequest{
 				InwayAddress: "localhost",
 				Services: []*registrationapi.RegisterInwayRequest_RegisterService{
 					{
@@ -45,11 +45,11 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 					},
 				},
 			},
-			expectedResponse: nil,
-			expectedError:    status.New(codes.Internal, "database error").Err(),
+			wantResponse: nil,
+			wantErr:      status.New(codes.Internal, "database error").Err(),
 		},
 		"invalid params": {
-			req: &registrationapi.RegisterInwayRequest{
+			request: &registrationapi.RegisterInwayRequest{
 				InwayAddress: "localhost",
 				Services: []*registrationapi.RegisterInwayRequest_RegisterService{
 					{
@@ -57,8 +57,8 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 					},
 				},
 			},
-			expectedResponse: nil,
-			expectedError:    status.New(codes.InvalidArgument, "validation failed: ServiceName: must be in a valid format.").Err(),
+			wantResponse: nil,
+			wantErr:      status.New(codes.InvalidArgument, "validation failed: ServiceName: must be in a valid format.").Err(),
 		},
 		"happy flow": {
 			setup: func(mocks serviceMocks) {
@@ -73,7 +73,7 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 					OneTimeCosts:        50,
 				})).Return(nil)
 			},
-			req: &registrationapi.RegisterInwayRequest{
+			request: &registrationapi.RegisterInwayRequest{
 				InwayAddress: "localhost",
 				Services: []*registrationapi.RegisterInwayRequest_RegisterService{
 					{
@@ -84,8 +84,8 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 					},
 				},
 			},
-			expectedResponse: &registrationapi.RegisterInwayResponse{},
-			expectedError:    nil,
+			wantResponse: &registrationapi.RegisterInwayResponse{},
+			wantErr:      nil,
 		},
 	}
 
@@ -99,10 +99,10 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 				tt.setup(mocks)
 			}
 
-			got, err := service.RegisterInway(context.Background(), tt.req)
+			got, err := service.RegisterInway(context.Background(), tt.request)
 
-			assert.Equal(t, tt.expectedResponse, got)
-			assert.Equal(t, tt.expectedError, err)
+			assert.Equal(t, tt.wantResponse, got)
+			assert.Equal(t, tt.wantErr, err)
 		})
 	}
 }
