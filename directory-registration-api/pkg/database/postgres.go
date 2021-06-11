@@ -22,8 +22,8 @@ type PostgreSQLDirectoryDatabase struct {
 	logger *zap.Logger
 	db     *sqlx.DB
 
-	insertAvailabilityStatement *sqlx.Stmt
-
+	upsertInwayStmt                 *sqlx.NamedStmt
+	upsertServiceStmt               *sqlx.NamedStmt
 	selectInwayByAddressStatement   *sqlx.NamedStmt
 	setOrganizationInwayStatement   *sqlx.NamedStmt
 	clearOrganizationInwayStatement *sqlx.Stmt
@@ -49,9 +49,14 @@ func NewPostgreSQLDirectoryDatabase(dsn string, p *process.Process, logger *zap.
 
 	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
 
-	insertAvailabilityStatement, err := prepareInsertAvailabilityStatement(db)
+	upsertInwayStmt, err := prepareUpsertInwayStmt(db)
 	if err != nil {
-		return nil, fmt.Errorf("failed to prepare insert availability statement: %s", err)
+		return nil, fmt.Errorf("failed to prepare upsert inway statement: %s", err)
+	}
+
+	upsertServiceStmt, err := prepareUpsertServiceStmt(db)
+	if err != nil {
+		return nil, fmt.Errorf("failed to prepare upsert service statement: %s", err)
 	}
 
 	selectInwayByAddressStatement, err := prepareSelectInwayByAddressStatement(db)
@@ -72,55 +77,10 @@ func NewPostgreSQLDirectoryDatabase(dsn string, p *process.Process, logger *zap.
 	return &PostgreSQLDirectoryDatabase{
 		logger:                          logger,
 		db:                              db,
-		insertAvailabilityStatement:     insertAvailabilityStatement,
+		upsertInwayStmt:                 upsertInwayStmt,
+		upsertServiceStmt:               upsertServiceStmt,
 		selectInwayByAddressStatement:   selectInwayByAddressStatement,
 		setOrganizationInwayStatement:   setOrganizationInwayStatement,
 		clearOrganizationInwayStatement: clearOrganizationInwayStatement,
 	}, nil
-}
-
-func prepareInsertAvailabilityStatement(db *sqlx.DB) (*sqlx.Stmt, error) {
-	// NOTE: We do not have an endpoint yet to create services separately, therefore insert on demand.
-	prepareInsertAvailabilityStatement, err := db.Preparex(`
-		WITH org AS (
-			INSERT INTO directory.organizations (name)
-				VALUES ($1)
-				ON CONFLICT ON CONSTRAINT organizations_uq_name
-					DO UPDATE SET
-						name = EXCLUDED.name -- no-op update to return id
-				RETURNING id
-		), service AS (
-			INSERT INTO directory.services (organization_id, name, internal, documentation_url, api_specification_type, public_support_contact, tech_support_contact, request_costs, monthly_costs, one_time_costs)
-				SELECT org.id, $2, $3, NULLIF($4, ''), NULLIF($5, ''), NULLIF($7, ''), NULLIF($8, ''), $10, $11, $12
-					FROM org
-				ON CONFLICT ON CONSTRAINT services_uq_name
-					DO UPDATE SET
-						internal = EXCLUDED.internal,
-						documentation_url = EXCLUDED.documentation_url,-- (possibly) no-op update to return id
-						api_specification_type = EXCLUDED.api_specification_type,
-						public_support_contact = EXCLUDED.public_support_contact,
-						tech_support_contact = EXCLUDED.tech_support_contact,
-						request_costs = EXCLUDED.request_costs,
-						monthly_costs = EXCLUDED.monthly_costs,
-						one_time_costs = EXCLUDED.one_time_costs
-					RETURNING id
-		), inway AS (
-			INSERT INTO directory.inways (organization_id, address, version)
-				SELECT org.id, $6, NULLIF($9, '')
-					FROM org
-				ON CONFLICT ON CONSTRAINT inways_uq_address
-					DO UPDATE SET address = EXCLUDED.address -- no-op update to return id
-				RETURNING id
-		)
-		INSERT INTO directory.availabilities (inway_id, service_id, last_announced)
-			SELECT inway.id, service.id, NOW()
-				FROM inway, service
-			ON CONFLICT ON CONSTRAINT availabilities_uq_inway_service DO UPDATE
-				SET last_announced = NOW(), active = true
-	`)
-	if err != nil {
-		return nil, err
-	}
-
-	return prepareInsertAvailabilityStatement, nil
 }

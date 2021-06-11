@@ -4,40 +4,28 @@
 package database
 
 import (
-	"fmt"
 	"regexp"
 	"strings"
 
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
+	"github.com/jmoiron/sqlx"
+	"github.com/pkg/errors"
 )
 
 // nolint:gocritic // these are valid regex patterns
 var organizationNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-._\s]{1,100}$`)
 
-// nolint:gocritic // these are valid regex patterns
-var serviceNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`)
-
-type InsertAvailabilityParams struct {
-	OrganizationName            string
-	ServiceName                 string
-	ServiceInternal             bool
-	ServiceDocumentationURL     string
-	InwayAPISpecificationType   string
-	RequestInwayAddress         string
-	ServicePublicSupportContact string
-	ServiceTechSupportContact   string
-	NlxVersion                  string
-	OneTimeCosts                int32
-	MonthlyCosts                int32
-	RequestCosts                int32
+type RegisterInwayParams struct {
+	OrganizationName    string
+	RequestInwayAddress string
+	NlxVersion          string
 }
 
-func (params *InsertAvailabilityParams) Validate() error {
+func (params *RegisterInwayParams) Validate() error {
 	return validation.ValidateStruct(
 		params,
 		validation.Field(&params.OrganizationName, validation.Required, validation.Match(organizationNameRegex)),
-		validation.Field(&params.ServiceName, validation.Required, validation.Match(serviceNameRegex)),
 		validation.Field(
 			&params.RequestInwayAddress,
 			validation.Required,
@@ -48,26 +36,47 @@ func (params *InsertAvailabilityParams) Validate() error {
 	)
 }
 
-// InsertAvailability updates the availability
-// NOTE: what does this method actually do? Is InsertAvailability the correct name?
-func (db PostgreSQLDirectoryDatabase) InsertAvailability(params *InsertAvailabilityParams) error {
-	_, err := db.insertAvailabilityStatement.Exec(
-		params.OrganizationName,
-		params.ServiceName,
-		params.ServiceInternal,
-		params.ServiceDocumentationURL,
-		params.InwayAPISpecificationType,
-		params.RequestInwayAddress,
-		params.ServicePublicSupportContact,
-		params.ServiceTechSupportContact,
-		params.NlxVersion,
-		params.RequestCosts,
-		params.MonthlyCosts,
-		params.OneTimeCosts,
-	)
+func (db PostgreSQLDirectoryDatabase) RegisterInway(params *RegisterInwayParams) error {
+	type upsertInwayParams struct {
+		OrganizationName string `db:"organization_name"`
+		InwayAddress     string `db:"inway_address"`
+		InwayVersion     string `db:"inway_version"`
+	}
+
+	_, err := db.upsertInwayStmt.Exec(&upsertInwayParams{
+		OrganizationName: params.OrganizationName,
+		InwayAddress:     params.RequestInwayAddress,
+		InwayVersion:     params.NlxVersion,
+	})
 	if err != nil {
-		return fmt.Errorf("failed to execute the insert availability statement: %v", err)
+		return errors.Wrap(err, "failed upsert inway and its organization")
 	}
 
 	return nil
+}
+
+func prepareUpsertInwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
+	query := `
+		with organization as (
+			insert into directory.organizations 
+			            (name)
+			     values (:organization_name)
+			on conflict 
+			    		on constraint organizations_uq_name
+			  			do update 
+			      			set name = excluded.name -- no-op update to return id
+						returning id
+		) 
+		insert into directory.inways 
+		    		(organization_id, address, version)
+			 select organization.id, :inway_address, nullif(:inway_version, '')
+			   from organization
+	   	on conflict 
+	   	    		on constraint inways_uq_address
+	      			do update set 
+	      			              address = excluded.address, 
+								  version = excluded.version;
+	`
+
+	return db.PrepareNamed(query)
 }

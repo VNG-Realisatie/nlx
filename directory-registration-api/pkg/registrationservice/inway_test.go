@@ -30,25 +30,26 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 		wantResponse *registrationapi.RegisterInwayResponse
 		wantErr      error
 	}{
-		"failed to communicate with the database": {
+		"when_an_unexpected_database_error_occurs": {
 			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
-					InsertAvailability(gomock.Any()).
+					RegisterInway(gomock.Any()).
 					Return(errors.New("arbitrary error"))
 			},
 			request: &registrationapi.RegisterInwayRequest{
 				InwayAddress: "localhost",
-				Services: []*registrationapi.RegisterInwayRequest_RegisterService{
-					{
-						Name: testServiceName,
-					},
-				},
 			},
 			wantResponse: nil,
-			wantErr:      status.New(codes.Internal, "database error").Err(),
+			wantErr:      status.New(codes.Internal, "failed to register inway").Err(),
 		},
-		"invalid params": {
+		"when_specifying_an_invalid_service_name": {
+			setup: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					RegisterInway(gomock.Any()).
+					AnyTimes()
+			},
 			request: &registrationapi.RegisterInwayRequest{
 				InwayAddress: "localhost",
 				Services: []*registrationapi.RegisterInwayRequest_RegisterService{
@@ -58,20 +59,41 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 				},
 			},
 			wantResponse: nil,
-			wantErr:      status.New(codes.InvalidArgument, "validation failed: ServiceName: must be in a valid format.").Err(),
+			wantErr:      status.New(codes.InvalidArgument, "validation for service named '../../test' failed: Name: must be in a valid format.").Err(),
 		},
-		"happy flow": {
+		"when_registering_an_inway_without_services": {
 			setup: func(mocks serviceMocks) {
-				mocks.db.EXPECT().InsertAvailability(gomock.Eq(&database.InsertAvailabilityParams{
-					OrganizationName:    testOrganizationName,
-					ServiceName:         testServiceName,
-					ServiceInternal:     false,
-					RequestInwayAddress: "localhost",
-					NlxVersion:          "unknown",
-					MonthlyCosts:        500,
-					RequestCosts:        100,
-					OneTimeCosts:        50,
-				})).Return(nil)
+				mocks.db.
+					EXPECT().
+					RegisterInway(gomock.Any()).
+					AnyTimes()
+			},
+			request: &registrationapi.RegisterInwayRequest{
+				InwayAddress: "localhost",
+			},
+			wantResponse: &registrationapi.RegisterInwayResponse{},
+			wantErr:      nil,
+		},
+		"happy_flow": {
+			setup: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					RegisterInway(gomock.Eq(&database.RegisterInwayParams{
+						OrganizationName:    testOrganizationName,
+						RequestInwayAddress: "localhost",
+						NlxVersion:          "unknown",
+					})).Return(nil)
+
+				mocks.db.
+					EXPECT().
+					RegisterService(gomock.Eq(&database.RegisterServiceParams{
+						OrganizationName: testOrganizationName,
+						Name:             testServiceName,
+						Internal:         false,
+						MonthlyCosts:     500,
+						RequestCosts:     100,
+						OneTimeCosts:     50,
+					})).Return(nil)
 			},
 			request: &registrationapi.RegisterInwayRequest{
 				InwayAddress: "localhost",

@@ -6,8 +6,8 @@ package registrationservice
 import (
 	"context"
 	"fmt"
+	"net/http"
 
-	"github.com/lib/pq"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -22,8 +22,6 @@ const maxServiceCount = 250
 func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *registrationapi.RegisterInwayRequest) (*registrationapi.RegisterInwayResponse, error) {
 	logger := h.logger.With(zap.String("handler", "register-inway"))
 
-	logger.Info("rpc request RegisterInway", zap.String("inway address", req.InwayAddress))
-
 	resp := &registrationapi.RegisterInwayResponse{}
 
 	organizationName, err := h.getOrganisationNameFromRequest(ctx)
@@ -32,63 +30,82 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 	}
 
 	if len(req.Services) > maxServiceCount {
-		return nil, status.New(codes.ResourceExhausted, "inway registers more services than allowed").Err()
+		return nil, status.New(codes.ResourceExhausted, fmt.Sprintf("inway registers more services than allowed (max. %d)", maxServiceCount)).Err()
+	}
+
+	inwayParams := &database.RegisterInwayParams{
+		OrganizationName:    organizationName,
+		RequestInwayAddress: req.InwayAddress,
+		NlxVersion:          nlxversion.NewFromGRPCContext(ctx).Version,
+	}
+
+	err = inwayParams.Validate()
+	if err != nil {
+		msg := fmt.Sprintf("validation failed: %s", err.Error())
+		return nil, status.New(codes.InvalidArgument, msg).Err()
+	}
+
+	err = h.db.RegisterInway(inwayParams)
+	if err != nil {
+		h.logger.Error("database error while registering inway", zap.Error(err))
+		return nil, status.New(codes.Internal, "failed to register inway").Err()
 	}
 
 	for _, service := range req.Services {
 		service := service
 
-		// NOTE: we get the documentation spec doc via the inway, not directly. This field could probably be dropped form the communication to the directory.
-		logger.Info("service documentation url", zap.String("documentation url", service.ApiSpecificationDocumentUrl))
+		serviceSpecificationType := getAPISpecificationTypeForService(
+			h.httpClient,
+			h.logger,
+			service.ApiSpecificationDocumentUrl,
+			req.InwayAddress,
+			service.Name,
+		)
 
-		var serviceSpecificationType string
-
-		if len(service.ApiSpecificationDocumentUrl) > 0 {
-			serviceSpecificationType, err = getAPISpecsTypeViaInway(h.httpClient, req.InwayAddress, service.Name)
-			if err != nil {
-				logger.Info("invalid documentation specification document provided by inway", zap.String("documentation url", service.ApiSpecificationDocumentUrl), zap.Error(err))
-				// DO NOT STOP WHEN  documentation fails.
-				// return nil, status.New(codes.InvalidArgument, "Invalid documentation specification document provided").Err()
-				serviceSpecificationType = ""
-			}
-
-			logger.Info("detected api spec", zap.String("apispectype", serviceSpecificationType))
+		serviceParams := &database.RegisterServiceParams{
+			OrganizationName:     organizationName,
+			Name:                 service.Name,
+			Internal:             service.Internal,
+			DocumentationURL:     service.DocumentationUrl,
+			APISpecificationType: serviceSpecificationType,
+			PublicSupportContact: service.PublicSupportContact,
+			TechSupportContact:   service.TechSupportContact,
+			OneTimeCosts:         service.OneTimeCosts,
+			MonthlyCosts:         service.MonthlyCosts,
+			RequestCosts:         service.RequestCosts,
 		}
 
-		params := &database.InsertAvailabilityParams{
-			OrganizationName:            organizationName,
-			ServiceName:                 service.Name,
-			ServiceInternal:             service.Internal,
-			ServiceDocumentationURL:     service.DocumentationUrl,
-			InwayAPISpecificationType:   serviceSpecificationType,
-			RequestInwayAddress:         req.InwayAddress,
-			ServicePublicSupportContact: service.PublicSupportContact,
-			ServiceTechSupportContact:   service.TechSupportContact,
-			NlxVersion:                  nlxversion.NewFromGRPCContext(ctx).Version,
-			OneTimeCosts:                service.OneTimeCosts,
-			MonthlyCosts:                service.MonthlyCosts,
-			RequestCosts:                service.RequestCosts,
-		}
-
-		if err := params.Validate(); err != nil {
-			return nil, status.New(codes.InvalidArgument, fmt.Sprintf("validation failed: %s", err.Error())).Err()
-		}
-
-		err := h.db.InsertAvailability(params)
+		err = serviceParams.Validate()
 		if err != nil {
-			logger.Error("failed to execute stmtInsertAvailability", zap.Error(err))
+			msg := fmt.Sprintf("validation for service named '%s' failed: %s", serviceParams.Name, err.Error())
+			return nil, status.New(codes.InvalidArgument, msg).Err()
+		}
 
-			pqErr, ok := err.(*pq.Error)
-			if ok {
-				if pqErr.Constraint == "services_check_typespec" {
-					invalidSpecificationTypeErrorMessage := fmt.Sprintf("invalid api-specification-type '%s' configured for service '%s'", service.ApiSpecificationType, service.Name)
-					return nil, status.New(codes.InvalidArgument, invalidSpecificationTypeErrorMessage).Err()
-				}
-			}
-
+		err := h.db.RegisterService(serviceParams)
+		if err != nil {
+			logger.Error("failed to register service", zap.Error(err))
 			return nil, status.New(codes.Internal, "database error").Err()
 		}
 	}
 
 	return resp, nil
+}
+
+func getAPISpecificationTypeForService(httpClient *http.Client, logger *zap.Logger, specificationDocumentURL, inwayAddress, serviceName string) string {
+	var result string
+
+	if len(specificationDocumentURL) > 0 {
+		specificationType, err := getAPISpecsTypeViaInway(httpClient, inwayAddress, serviceName)
+		if err != nil {
+			logger.Info(
+				"invalid documentation specification document provided by inway",
+				zap.String("documentation url", specificationType),
+				zap.Error(err),
+			)
+		}
+
+		result = specificationType
+	}
+
+	return result
 }
