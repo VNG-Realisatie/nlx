@@ -1,6 +1,7 @@
 # management 
 
-This is the Chart for the NLX Management. NLX Management can be used to configure your NLX setup.
+NLX is an open source peer-to-peer system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API ecosystem with many organizations.
+The Management API is at the heart of NLX Management. It is used by the Management UI to manage your NLX setup and your Inways use the Management API to retrieve their configuration. It's also used to setup and manage connections between API providers and consumers.
 
 ## Prerequisites
 

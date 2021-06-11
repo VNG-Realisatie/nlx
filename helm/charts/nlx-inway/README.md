@@ -1,6 +1,6 @@
 # inway 
-
-This is the Chart for the NLX inway. An inway is needed to offer an API on the NLX network.
+NLX is an open source peer-to-peer system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API ecosystem with many organizations.
+Through an Inway an organization can provide services to the NLX ecosystem. The inway is usually deployed centrally within the organization although it is possible for one organization to deploy multiple instances on different locations.
 
 ## Prerequisites
 

@@ -1,6 +1,6 @@
 # nlx-directory 
 
-This is the Chart for the NLX Directory.
+NLX is an open source peer-to-peer system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API ecosystem with many organizations. the NLX directory provides a centralized overview of every participant in the NLX ecosystem. It is used by the NLX management API to identify which API's are available and at which address. It is only used for this insight. Once a connection (or even a access request to the API) is established, the directory has no role for that connection anymore.
 
 ## Prerequisites
 

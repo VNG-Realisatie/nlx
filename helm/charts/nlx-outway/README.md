@@ -1,6 +1,7 @@
 # outway 
 
-This is the Chart for the NLX outway. An outway is needed to consume an API on the NLX network.
+NLX is an open source peer-to-peer system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API ecosystem with many organizations.
+Through an Outway an organization can query services on the NLX ecosystem. It's usually deployed centrally within the organization although it is possible for one organization to deploy multiple instances on different locations.
 
 ## Prerequisites
 
