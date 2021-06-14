@@ -29,10 +29,6 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 		return nil, fmt.Errorf("failed to get organization name from request: %v", err)
 	}
 
-	if len(req.Services) > maxServiceCount {
-		return nil, status.New(codes.ResourceExhausted, fmt.Sprintf("inway registers more services than allowed (max. %d)", maxServiceCount)).Err()
-	}
-
 	inwayParams := &database.RegisterInwayParams{
 		OrganizationName:    organizationName,
 		RequestInwayAddress: req.InwayAddress,
@@ -49,6 +45,10 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 	if err != nil {
 		h.logger.Error("database error while registering inway", zap.Error(err))
 		return nil, status.New(codes.Internal, "failed to register inway").Err()
+	}
+
+	if len(req.Services) > maxServiceCount {
+		return nil, status.New(codes.InvalidArgument, fmt.Sprintf("inway registers more services than allowed (max. %d)", maxServiceCount)).Err()
 	}
 
 	for _, service := range req.Services {

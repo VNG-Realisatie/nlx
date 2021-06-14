@@ -6,6 +6,7 @@ package registrationservice_test
 import (
 	"context"
 	"errors"
+	"fmt"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -60,6 +61,24 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 			},
 			wantResponse: nil,
 			wantErr:      status.New(codes.InvalidArgument, "validation for service named '../../test' failed: Name: must be in a valid format.").Err(),
+		},
+		"when_registering_an_inway_with_amount_of_services_which_exceed_the_maximum": {
+			setup: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					RegisterInway(gomock.Eq(&database.RegisterInwayParams{
+						OrganizationName:    testOrganizationName,
+						RequestInwayAddress: "localhost",
+						NlxVersion:          "unknown",
+					})).
+					Return(nil)
+			},
+			request: &registrationapi.RegisterInwayRequest{
+				InwayAddress: "localhost",
+				Services:     generateListOfServices(251),
+			},
+			wantResponse: nil,
+			wantErr:      status.New(codes.InvalidArgument, "inway registers more services than allowed (max. 250)").Err(),
 		},
 		"when_registering_an_inway_without_services": {
 			setup: func(mocks serviceMocks) {
@@ -153,4 +172,16 @@ func newService(t *testing.T) (*registrationservice.DirectoryRegistrationService
 	)
 
 	return service, mocks
+}
+
+func generateListOfServices(amount int) []*registrationapi.RegisterInwayRequest_RegisterService {
+	var result = make([]*registrationapi.RegisterInwayRequest_RegisterService, amount)
+
+	for i := 0; i < amount; i++ {
+		result[i] = &registrationapi.RegisterInwayRequest_RegisterService{
+			Name: fmt.Sprintf("Service number %d", i+1),
+		}
+	}
+
+	return result
 }
