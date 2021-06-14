@@ -30,9 +30,9 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 	}
 
 	inwayParams := &database.RegisterInwayParams{
-		OrganizationName:    organizationName,
-		RequestInwayAddress: req.InwayAddress,
-		NlxVersion:          nlxversion.NewFromGRPCContext(ctx).Version,
+		OrganizationName: organizationName,
+		Address:          req.InwayAddress,
+		NlxVersion:       nlxversion.NewFromGRPCContext(ctx).Version,
 	}
 
 	err = inwayParams.Validate()
@@ -92,20 +92,20 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 }
 
 func getAPISpecificationTypeForService(httpClient *http.Client, logger *zap.Logger, specificationDocumentURL, inwayAddress, serviceName string) string {
-	var result string
-
-	if len(specificationDocumentURL) > 0 {
-		specificationType, err := getAPISpecsTypeViaInway(httpClient, inwayAddress, serviceName)
-		if err != nil {
-			logger.Info(
-				"invalid documentation specification document provided by inway",
-				zap.String("documentation url", specificationType),
-				zap.Error(err),
-			)
-		}
-
-		result = specificationType
+	if len(specificationDocumentURL) < 1 {
+		return ""
 	}
 
-	return result
+	specificationType, err := getAPISpecsTypeViaInway(httpClient, inwayAddress, serviceName)
+	if err != nil {
+		logger.Error(
+			"invalid documentation specification document provided by inway",
+			zap.String("documentation url", specificationType),
+			zap.Error(err),
+		)
+
+		return ""
+	}
+
+	return specificationType
 }

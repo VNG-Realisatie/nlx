@@ -67,9 +67,9 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 				mocks.db.
 					EXPECT().
 					RegisterInway(gomock.Eq(&database.RegisterInwayParams{
-						OrganizationName:    testOrganizationName,
-						RequestInwayAddress: "localhost",
-						NlxVersion:          "unknown",
+						OrganizationName: testOrganizationName,
+						Address:          "localhost",
+						NlxVersion:       "unknown",
 					})).
 					Return(nil)
 			},
@@ -98,9 +98,9 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 				mocks.db.
 					EXPECT().
 					RegisterInway(gomock.Eq(&database.RegisterInwayParams{
-						OrganizationName:    testOrganizationName,
-						RequestInwayAddress: "localhost",
-						NlxVersion:          "unknown",
+						OrganizationName: testOrganizationName,
+						Address:          "localhost",
+						NlxVersion:       "unknown",
 					})).Return(nil)
 
 				mocks.db.

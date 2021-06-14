@@ -17,9 +17,9 @@ import (
 var organizationNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-._\s]{1,100}$`)
 
 type RegisterInwayParams struct {
-	OrganizationName    string
-	RequestInwayAddress string
-	NlxVersion          string
+	OrganizationName string
+	Address          string
+	NlxVersion       string
 }
 
 func (params *RegisterInwayParams) Validate() error {
@@ -27,10 +27,10 @@ func (params *RegisterInwayParams) Validate() error {
 		params,
 		validation.Field(&params.OrganizationName, validation.Required, validation.Match(organizationNameRegex)),
 		validation.Field(
-			&params.RequestInwayAddress,
+			&params.Address,
 			validation.Required,
-			validation.When(strings.Contains(params.RequestInwayAddress, ":"), is.DialString),
-			validation.When(!strings.Contains(params.RequestInwayAddress, ":"), is.DNSName),
+			validation.When(strings.Contains(params.Address, ":"), is.DialString),
+			validation.When(!strings.Contains(params.Address, ":"), is.DNSName),
 		),
 		validation.Field(&params.NlxVersion, validation.When(params.NlxVersion != "unknown", is.Semver)),
 	)
@@ -45,7 +45,7 @@ func (db PostgreSQLDirectoryDatabase) RegisterInway(params *RegisterInwayParams)
 
 	_, err := db.upsertInwayStmt.Exec(&upsertInwayParams{
 		OrganizationName: params.OrganizationName,
-		InwayAddress:     params.RequestInwayAddress,
+		InwayAddress:     params.Address,
 		InwayVersion:     params.NlxVersion,
 	})
 	if err != nil {
