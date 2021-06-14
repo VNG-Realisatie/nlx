@@ -12,7 +12,6 @@ import (
 	"go.uber.org/zap"
 )
 
-// CertPortal struct
 type CertPortal struct {
 	logger *zap.Logger
 	router chi.Router
@@ -33,7 +32,6 @@ func SetSecurityHeadersHandler(next http.Handler) http.Handler {
 	})
 }
 
-// NewCertPortal creates a new CertPortal and sets it up to handle requests.
 func NewCertPortal(l *zap.Logger, createSigner createSignerFunc) *CertPortal {
 	i := &CertPortal{
 		logger: l,
@@ -52,14 +50,13 @@ func NewCertPortal(l *zap.Logger, createSigner createSignerFunc) *CertPortal {
 	}
 
 	filesDir := filepath.Join(workDir, "public")
-	r.Get("/*", http.HandlerFunc(http.FileServer(http.Dir(filesDir)).ServeHTTP))
+	r.Get("/*", http.FileServer(http.Dir(filesDir)).ServeHTTP)
 
 	i.router = r
 
 	return i
 }
 
-// GetRouter returns the router of the CertPortal
 func (c *CertPortal) GetRouter() chi.Router {
 	return c.router
 }
