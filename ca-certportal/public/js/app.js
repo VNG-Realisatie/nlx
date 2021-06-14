@@ -40,7 +40,7 @@ CP.App = function (el) {
         return fetch("/api/request_certificate", {
             method: 'POST',
             body: JSON.stringify({
-                csr: csr.value
+                csr: csr
             }),
             headers: {
                 'Content-Type': 'application/json'
