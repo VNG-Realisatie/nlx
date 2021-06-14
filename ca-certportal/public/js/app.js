@@ -50,3 +50,7 @@ CP.App = function (el) {
           .then(json => json.certificate)
     }
 }
+
+window.addEventListener('DOMContentLoaded', () => {
+  CP.App(document.querySelector('body'))
+});
