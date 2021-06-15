@@ -39,12 +39,8 @@ rPmL0grTgE4AW8cEJqzRNeDs52RR6MnYTdCfUMkNNc54OWsCH8ZgT8PpWpc6dyqH
 `
 
 func TestRouteRequestCertificate(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-	mockSigner := mock.NewMockSigner(ctrl)
-	certPortal := certportal.NewCertPortal(zap.NewNop(), func() (signer.Signer, error) {
-		return mockSigner, nil
-	})
+	certPortal, mocks := newService(t)
+	mockSigner := mocks.s
 	assert.NotNil(t, certPortal)
 
 	srv := httptest.NewServer(certPortal.GetRouter())
@@ -124,12 +120,8 @@ func TestRouteRequestCertificate(t *testing.T) {
 }
 
 func TestRouteRoot(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-	mockSigner := mock.NewMockSigner(ctrl)
-	certPortal := certportal.NewCertPortal(zap.NewNop(), func() (signer.Signer, error) {
-		return mockSigner, nil
-	})
+	certPortal, mocks := newService(t)
+	mockSigner := mocks.s
 	assert.NotNil(t, certPortal)
 
 	srv := httptest.NewServer(certPortal.GetRouter())
@@ -172,6 +164,29 @@ func TestRouteRoot(t *testing.T) {
 
 		resp.Body.Close()
 	}
+}
+
+type serviceMocks struct {
+	s *mock.MockSigner
+}
+
+func newService(t *testing.T) (*certportal.CertPortal, serviceMocks) {
+	ctrl := gomock.NewController(t)
+
+	t.Cleanup(func() {
+		t.Helper()
+		ctrl.Finish()
+	})
+
+	mocks := serviceMocks{
+		s: mock.NewMockSigner(ctrl),
+	}
+
+	service := certportal.NewCertPortal(zap.NewNop(), func() (signer.Signer, error) {
+		return mocks.s, nil
+	})
+
+	return service, mocks
 }
 
 func TestRoutesInvalidSigner(t *testing.T) {
