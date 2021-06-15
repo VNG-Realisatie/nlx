@@ -2,5 +2,5 @@ apiVersion: v2
 name: ca-cfssl-unsafe
 description: Unsafe CA based on cfssl
 type: application
-version: 0.103.1
-appVersion: 0.103.1
+version: 0.104.0
+appVersion: 0.104.0

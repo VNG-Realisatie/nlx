@@ -1,3 +1,19 @@
+# [0.104.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.103.1...v0.104.0) (2021-06-15)
+
+
+### Bug Fixes
+
+* **ca-certportal:** prevent CSP errors for inline JS ([6596b92](https://gitlab.com/commonground/nlx/nlx/commit/6596b925d365661a6e7dee33ee581004f12e18af)), closes [#1279](https://gitlab.com/commonground/nlx/nlx/issues/1279)
+* **ca-certportal:** submit Certificate Signing Request correctly ([1c8eac4](https://gitlab.com/commonground/nlx/nlx/commit/1c8eac4cc8b1627e502f4bff065aec0f57180fd2)), closes [#1249](https://gitlab.com/commonground/nlx/nlx/issues/1249)
+
+
+### Features
+
+* **directory:** enable clearing the organization inway for an organization that is not yet present ([bcf3f53](https://gitlab.com/commonground/nlx/nlx/commit/bcf3f53332afff6dec89e1d346b641154e748638)), closes [#1200](https://gitlab.com/commonground/nlx/nlx/issues/1200)
+* **directory:** enable registering inway even when the amount of services exceeds the limit of 250 ([c314a20](https://gitlab.com/commonground/nlx/nlx/commit/c314a20d071a4343fbeb547248094853a276d3d6)), closes [#1200](https://gitlab.com/commonground/nlx/nlx/issues/1200)
+* **directory:** enable registering inways which do not have a service ([5984e44](https://gitlab.com/commonground/nlx/nlx/commit/5984e4479a100c71000d4bb49e1702605e3442b0)), closes [#1200](https://gitlab.com/commonground/nlx/nlx/issues/1200)
+* **helm:** configure the nodeport when the inway service is of type nodeport ([630cae5](https://gitlab.com/commonground/nlx/nlx/commit/630cae5ec4d4375f09482164745c5d6c3ce030e3))
+
 ## [0.103.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.103.0...v0.103.1) (2021-06-11)
 
 # [0.103.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.102.4...v0.103.0) (2021-06-09)
