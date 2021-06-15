@@ -124,6 +124,7 @@ TLS certificates used by NLX components for internal communication.
 | --------- | ----------- | ------- | -------- |
 | `service.type` | Service type (ClusterIP, NodePort or LoadBalancer). Please note that there should be no service performing TLS offloading as it uses mutual TLS | `LoadBalancer` | no |
 | `service.port` | Port exposed by the service | `443` | no |
+| `service.nodePort` | Port exposed if `service.type` is `NodePort`. Please note that `service.nodePort` + 1 will also be exposed to accept traffic for the management API)| `""` | no |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 

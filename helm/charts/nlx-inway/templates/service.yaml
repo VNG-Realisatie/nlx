@@ -13,7 +13,13 @@ spec:
       protocol: TCP
       port: {{ .Values.service.port }}
       targetPort: https
+      {{- if and (eq .Values.service.type "NodePort") .Values.service.nodePort }}
+      nodePort: {{ .Values.service.nodePort }}
+      {{- end }}
     - name: management
       protocol: TCP
       port: {{ add1 .Values.service.port }}
       targetPort: management
+      {{- if and  (eq .Values.service.type "NodePort") .Values.service.nodePort }}
+      nodePort: {{ add1 .Values.service.nodePort }}
+      {{- end }}
