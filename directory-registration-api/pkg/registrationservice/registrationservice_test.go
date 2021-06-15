@@ -13,7 +13,6 @@ import (
 )
 
 const testOrganizationName = "Test Organization Name"
-const testInvalidOrganizationName = ""
 
 func testGetOrganizationNameFromRequest(ctx context.Context) (string, error) {
 	return testOrganizationName, nil
