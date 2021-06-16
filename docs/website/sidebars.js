@@ -7,39 +7,38 @@
 
 module.exports = {
   docs: {
-    "Understanding the basics": [
-      "understanding-the-basics/introduction",
-      "understanding-the-basics/security",
-      "understanding-the-basics/product-vision",
+    'Understanding the basics': [
+      'understanding-the-basics/introduction',
+      'understanding-the-basics/security',
+      'understanding-the-basics/product-vision',
     ],
-    "Try NLX": [
-      "try-nlx/introduction",
-      "try-nlx/setup-your-environment",
-      "try-nlx/retrieve-a-demo-certificate",
-      "try-nlx/getting-up-and-running",
-      "try-nlx/provide-an-api",
+    'Try NLX': [
+      'try-nlx/introduction',
+      'try-nlx/setup-your-environment',
+      'try-nlx/retrieve-a-demo-certificate',
+      'try-nlx/getting-up-and-running',
+      'try-nlx/provide-an-api',
     ],
-    "Use NLX in production": [
-      "use-nlx/introduction",
-      "use-nlx/request-a-production-cert",
-      "use-nlx/enable-transaction-logs",
-      "use-nlx/enable-pricing",
-      "use-nlx/setup-authorization",
-      "use-nlx/new-releases",
+    'Use NLX in production': [
+      'use-nlx/introduction',
+      'use-nlx/request-a-production-cert',
+      'use-nlx/enable-transaction-logs',
+      'use-nlx/enable-pricing',
+      'use-nlx/setup-authorization',
+      'use-nlx/new-releases',
     ],
-    "Reference information": [
-      "reference-information/transaction-log-headers",
-      "reference-information/monitoring",
-      "reference-information/outway-as-proxy",
+    'Reference information': [
+      'reference-information/transaction-log-headers',
+      'reference-information/monitoring',
+      'reference-information/outway-as-proxy',
+      'reference-information/environment-variables',
     ],
-    "Support": [
-      "support/common-errors"
-    ],
-    "Compliancy": [
-      "compliancy/eif",
-      "compliancy/eidas",
-      "compliancy/accessibility",
-      "compliancy/gdpr",
+    Support: ['support/common-errors'],
+    Compliancy: [
+      'compliancy/eif',
+      'compliancy/eidas',
+      'compliancy/accessibility',
+      'compliancy/gdpr',
     ],
   },
-};
+}

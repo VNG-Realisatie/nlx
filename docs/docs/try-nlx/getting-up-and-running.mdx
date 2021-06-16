@@ -36,7 +36,7 @@ docker-compose up -d
 
 This will start [Dex](https://github.com/dexidp/dex) (Identity Provider), PostgreSQL and the required NLX components.
 
-The NLX components are configured using environment variables which in this guide are set in `docker-compose.yml`.
+The NLX components are configured using [environment variables](../reference-information/environment-variables) which in this guide are set in `docker-compose.yml`.
 
 To be able to access NLX Management you will need to create an user with an email matching one of the users in the OpenID Connect Provider.
 Since we already setup the `admin@nlx.local` user we can use this to create the admin user:
@@ -44,85 +44,6 @@ Since we already setup the `admin@nlx.local` user we can use this to create the 
 ```bash
 docker-compose exec api nlx-management-api create-user --email admin@nlx.local --role admin
 ```
-
-Below you is an overview of the environment variables per NLX component:
-
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-<Tabs
-  defaultValue="inway"
-  values={[
-    { label: 'Inway', value: 'inway', },
-    { label: 'Outway', value: 'outway', },
-    { label: 'Management API', value: 'management-api', },
-    { label: 'Management UI', value: 'management-ui', },
-  ]}
->
-<TabItem value="inway">
-
-#### Environment variables
-
-- `DIRECTORY_REGISTRATION_ADDRESS` This address is used by the inway to anounce itself to the directory.
-- `INWAY_NAME` Alias the Inway by a name instead of it's unique identifier.
-- `SELF_ADDRESS` The address of the inway so it can be reached by the NLX network.
-- `MANAGEMENT_API_ADDRESS` The address of the Management API.
-- `TLS_NLX_ROOT_CERT` This is the location of the root certificate.
-- `TLS_ORG_CERT` This is the location of the organization certificate.
-- `TLS_ORG_KEY` This is the location of the organization private key.
-- `POSTGRES_DSN` Connection-string to the PostgreSQL database.
-- `DISABLE_LOGDB` The value 1 will disable the transaction logs, the value 0 will enable them.
-- `LOG_LEVEL` Log level of the application. Options: debug, info, warn.
-
-</TabItem>
-
-<TabItem value="outway">
-
-#### Environment variables
-
-- `DIRECTORY_INSPECTION_ADDRESS` This address is used by the outway to retrieve information about services from the directory.
-- `TLS_NLX_ROOT_CERT` This is the location of the root certificate.
-- `TLS_ORG_CERT` This is the location of the organization certificate.
-- `TLS_ORG_KEY` This is the location of the organization private key.
-- `DISABLE_LOGDB` The value 1 will disable the transaction logs, the value 0 will enable them.
-- `LOG_LEVEL` Log level of the application. Options: debug, info, warn.
-- `MANAGEMENT_API_ADDRESS` The address of the NLX Management API.
-
-</TabItem>
-
-<TabItem value="management-api">
-
-#### Environment variables
-
-- `DIRECTORY_INSPECTION_ADDRESS` This address is used by the outway to retrieve information about services from the directory.
-- `DIRECTORY_REGISTRATION_ADDRESS` This address is used by the inway to anounce itself to the directory.
-- `TLS_NLX_ROOT_CERT` This is the location of the root certificate.
-- `TLS_ORG_CERT` This is the location of the organization certificate.
-- `TLS_ORG_KEY` This is the location of the organization private key.
-- `TLS_ROOT_CERT` This is the location of the root certificate from the internal PKI.
-- `TLS_CERT` This is the location of the API certificate from the internal PKI.
-- `TLS_KEY` This is the location of the private key from the internal PKI.
-- `DISABLE_LOGDB` The value 1 will disable the transaction logs, the value 0 will enable them.
-- `SECRET_KEY` Secret key that is used for signing sessions.
-- `OIDC_CLIENT_ID` The OIDC client ID.
-- `OIDC_CLIENT_SECRET` The OIDC client secret.
-- `OIDC_DISCOVERY_URL` The OIDC discovery URL.
-- `OIDC_REDIRECT_URL` The OIDC redirect URL.
-- `SESSION_COOKIE_SECURE` Use 'secure' cookies.
-- `POSTGRES_DSN` Connection string for the PostgreSQL database.
-- `TRANSACTION_LOG_DSN` Connection string to the transaction log database. Only needed if you want add pricing to your services.
-- `LOG_LEVEL` Log level of the application. Options: debug, info, warn.
-
-</TabItem>
-
-<TabItem value="management-ui">
-
-#### Environment variables
-
-- `MANAGEMENT_API_URL` URL of the Management API.
-
-</TabItem>
-</Tabs>
 
 At last, let's verify if all the components are up and running:
 
