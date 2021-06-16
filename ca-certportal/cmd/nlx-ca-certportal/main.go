@@ -4,7 +4,6 @@
 package main
 
 import (
-	"go.nlx.io/nlx/ca-certportal/server"
 	"log"
 	"net/http"
 
@@ -14,6 +13,7 @@ import (
 	"github.com/jessevdk/go-flags"
 	"go.uber.org/zap"
 
+	"go.nlx.io/nlx/ca-certportal/server"
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/process"
 )

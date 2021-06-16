@@ -4,20 +4,17 @@
 package server
 
 import (
-	"crypto/x509"
-	"encoding/asn1"
-	"encoding/pem"
-	"errors"
-	"github.com/cloudflare/cfssl/info"
-	"github.com/cloudflare/cfssl/signer"
-	"github.com/go-chi/render"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
 
+	"github.com/cloudflare/cfssl/info"
 	"github.com/go-chi/chi"
+	"github.com/go-chi/render"
 	"go.uber.org/zap"
+
+	certportal "go.nlx.io/nlx/ca-certportal"
 )
 
 type CertPortal struct {
@@ -40,7 +37,7 @@ func SetSecurityHeadersHandler(next http.Handler) http.Handler {
 	})
 }
 
-func NewCertPortal(l *zap.Logger, createSigner createSignerFunc) *CertPortal {
+func NewCertPortal(l *zap.Logger, createSigner certportal.CreateSignerFunc) *CertPortal {
 	i := &CertPortal{
 		logger: l,
 	}
@@ -69,12 +66,7 @@ func (c *CertPortal) GetRouter() chi.Router {
 	return c.router
 }
 
-var sanOID = asn1.ObjectIdentifier{2, 5, 29, 17} // subjectAltName
-
-// function type to enable mocking of the signer
-type createSignerFunc func() (signer.Signer, error)
-
-func requestCertificateHandler(logger *zap.Logger, createSigner createSignerFunc) func(http.ResponseWriter, *http.Request) {
+func requestCertificateHandler(logger *zap.Logger, createSigner certportal.CreateSignerFunc) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		data := &CertificateRequest{}
 		if err := render.DecodeJSON(r.Body, data); err != nil {
@@ -84,72 +76,45 @@ func requestCertificateHandler(logger *zap.Logger, createSigner createSignerFunc
 			return
 		}
 
-		csr, err := parseCertificateRequest(data)
+		certificate, err := certportal.RequestCertificate(data.Csr, createSigner)
 		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			logger.Error("parse certificate request", zap.Error(err))
+			switch err {
+			case certportal.ErrFailedToSignCSR:
+				w.WriteHeader(http.StatusInternalServerError)
+				logger.Error("failed to sign csr", zap.Error(err))
 
-			return
-		}
+				return
 
-		signReq := signer.SignRequest{
-			Request: data.Csr,
-		}
+			case certportal.ErrFailedToParseCSR:
+				w.WriteHeader(http.StatusBadRequest)
+				logger.Error("failed to parse csr", zap.Error(err))
 
-		if !hasSAN(csr) {
-			signReq.Hosts = []string{csr.Subject.CommonName}
-		}
+				return
 
-		s, err := createSigner()
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			logger.Error("error creating certificate signer", zap.Error(err))
+			case certportal.ErrFailedToCreateSigner:
+				w.WriteHeader(http.StatusBadRequest)
+				logger.Error("failed to create signer", zap.Error(err))
 
-			return
-		}
+				return
 
-		cert, err := s.Sign(signReq)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			logger.Error("error signing request", zap.Error(err))
+			default:
+				w.WriteHeader(http.StatusInternalServerError)
+				logger.Error("failed to request certificate", zap.Error(err))
 
-			return
+				return
+			}
 		}
 
 		render.Status(r, http.StatusCreated)
 		render.SetContentType(render.ContentTypeJSON)
 
 		err = render.Render(w, r, &certificateResponse{
-			Certificate: string(cert),
+			Certificate: string(certificate),
 		})
 		if err != nil {
 			logger.Error("error rendering response", zap.Error(err))
 		}
 	}
-}
-
-func parseCertificateRequest(request *CertificateRequest) (*x509.CertificateRequest, error) {
-	block, _ := pem.Decode([]byte(request.Csr))
-
-	if block == nil {
-		return nil, errors.New("decoding certificate request as PEM")
-	}
-
-	return x509.ParseCertificateRequest(block.Bytes)
-}
-
-func hasSAN(csr *x509.CertificateRequest) bool {
-	if len(csr.DNSNames) > 0 {
-		return true
-	}
-
-	for _, extension := range csr.Extensions {
-		if extension.Id.Equal(sanOID) {
-			return true
-		}
-	}
-
-	return false
 }
 
 // CertificateRequest contains the csr
@@ -165,7 +130,7 @@ func (rd *certificateResponse) Render(w http.ResponseWriter, r *http.Request) er
 	return nil
 }
 
-func rootCertHandler(logger *zap.Logger, createSigner createSignerFunc) func(http.ResponseWriter, *http.Request) {
+func rootCertHandler(logger *zap.Logger, createSigner certportal.CreateSignerFunc) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/plain")
 

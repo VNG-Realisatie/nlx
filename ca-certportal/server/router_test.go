@@ -40,8 +40,9 @@ rPmL0grTgE4AW8cEJqzRNeDs52RR6MnYTdCfUMkNNc54OWsCH8ZgT8PpWpc6dyqH
 
 func TestRouteRequestCertificate(t *testing.T) {
 	certPortal, mocks := newService(t)
-	mockSigner := mocks.s
 	assert.NotNil(t, certPortal)
+
+	mockSigner := mocks.s
 
 	srv := httptest.NewServer(certPortal.GetRouter())
 	defer srv.Close()
@@ -61,13 +62,13 @@ func TestRouteRequestCertificate(t *testing.T) {
 	})
 	assert.NoError(t, err)
 
-	tests := []struct {
+	tests := map[string]struct {
 		requestBody        []byte
 		setupMock          func()
 		expectedStatusCode int
 		expectedBody       string
 	}{
-		{
+		"happy_path": {
 			certificateRequest,
 			func() {
 				mockSigner.EXPECT().Sign(signer.SignRequest{
@@ -77,7 +78,7 @@ func TestRouteRequestCertificate(t *testing.T) {
 			http.StatusCreated,
 			`{"certificate":"test_cert"}` + "\n",
 		},
-		{
+		"without_san": {
 			certificateRequestWithoutSAN,
 			func() {
 				mockSigner.EXPECT().Sign(signer.SignRequest{
@@ -88,14 +89,13 @@ func TestRouteRequestCertificate(t *testing.T) {
 			http.StatusCreated,
 			`{"certificate":"test_cert"}` + "\n",
 		},
-		{
+		"invalid_csr": {
 			[]byte("invalid"),
-			func() {
-			},
+			func() {},
 			http.StatusBadRequest,
 			"",
 		},
-		{
+		"failed_to_sign": {
 			certificateRequest,
 			func() {
 				mockSigner.EXPECT().Sign(signer.SignRequest{
@@ -107,22 +107,30 @@ func TestRouteRequestCertificate(t *testing.T) {
 		},
 	}
 
-	for _, test := range tests {
-		test.setupMock()
-		resp, err := http.Post(fmt.Sprintf("%s/api/request_certificate", srv.URL), "application/json", bytes.NewReader(test.requestBody))
-		assert.NoError(t, err)
-		assert.Equal(t, test.expectedStatusCode, resp.StatusCode)
-		responseBody, err := ioutil.ReadAll(resp.Body)
-		assert.NoError(t, err)
-		assert.Equal(t, test.expectedBody, string(responseBody))
-		resp.Body.Close()
+	for name, tt := range tests {
+		tt := tt
+
+		t.Run(name, func(t *testing.T) {
+			tt.setupMock()
+
+			resp, err := http.Post(fmt.Sprintf("%s/api/request_certificate", srv.URL), "application/json", bytes.NewReader(tt.requestBody))
+			assert.NoError(t, err)
+			assert.Equal(t, tt.expectedStatusCode, resp.StatusCode)
+
+			responseBody, err := ioutil.ReadAll(resp.Body)
+			assert.NoError(t, err)
+			assert.Equal(t, tt.expectedBody, string(responseBody))
+
+			resp.Body.Close()
+		})
 	}
 }
 
 func TestRouteRoot(t *testing.T) {
 	certPortal, mocks := newService(t)
-	mockSigner := mocks.s
 	assert.NotNil(t, certPortal)
+
+	mockSigner := mocks.s
 
 	srv := httptest.NewServer(certPortal.GetRouter())
 	defer srv.Close()
