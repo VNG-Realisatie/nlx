@@ -53,7 +53,7 @@ func parseCertificateSigningRequest(certificateSigningRequest string) (*x509.Cer
 	block, _ := pem.Decode([]byte(certificateSigningRequest))
 
 	if block == nil {
-		return nil, errors.New("decoding certificate request as PEM")
+		return nil, errors.New("failed to decode certificate request as PEM")
 	}
 
 	return x509.ParseCertificateRequest(block.Bytes)
