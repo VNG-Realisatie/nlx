@@ -1,21 +1,73 @@
-// Copyright © VNG Realisatie 2018
+// Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 
-package certportal
+package server
 
 import (
 	"crypto/x509"
 	"encoding/asn1"
 	"encoding/pem"
 	"errors"
-	"io"
-	"net/http"
-
 	"github.com/cloudflare/cfssl/info"
 	"github.com/cloudflare/cfssl/signer"
 	"github.com/go-chi/render"
+	"io"
+	"net/http"
+	"os"
+	"path/filepath"
+
+	"github.com/go-chi/chi"
 	"go.uber.org/zap"
 )
+
+type CertPortal struct {
+	logger *zap.Logger
+	router chi.Router
+}
+
+func SetSecurityHeadersHandler(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "max-age=0, no-cache, no-store, must-revalidate")
+		w.Header().Set("Content-Security-Policy", "default-src 'self'; frame-ancestors 'none'")
+		w.Header().Set("Permissions-Policy", "accelerometer=(), ambient-light-sensor=(), autoplay=(), battery=(), camera=(), display-capture=(), document-domain=(), encrypted-media=(), execution-while-not-rendered=(), execution-while-out-of-viewport=(), fullscreen=(), geolocation=(), gyroscope=(), layout-animations=(), legacy-image-formats=(), magnetometer=(), microphone=(), midi=(), navigation-override=(), oversized-images=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), sync-xhr=(), usb=(), vr=(), wake-lock=(), screen-wake-lock=(), web-share=(), xr-spatial-tracking=()")
+		w.Header().Set("Pragma", "no-cache")
+		w.Header().Set("Referrer-Policy", "same-origin")
+		w.Header().Set("X-Content-Type-Options", "nosniff")
+		w.Header().Set("X-Frame-Options", "DENY")
+		w.Header().Set("X-XSS-Protection", "1; mode=block")
+
+		next.ServeHTTP(w, r)
+	})
+}
+
+func NewCertPortal(l *zap.Logger, createSigner createSignerFunc) *CertPortal {
+	i := &CertPortal{
+		logger: l,
+	}
+	r := chi.NewRouter()
+	r.Use(SetSecurityHeadersHandler)
+	r.Route("/api", func(r chi.Router) {
+		r.Post("/request_certificate", requestCertificateHandler(i.logger, createSigner))
+	})
+
+	r.Get("/root.crt", rootCertHandler(i.logger, createSigner))
+
+	workDir, err := os.Getwd()
+	if err != nil {
+		l.Fatal("failed to get working directory")
+	}
+
+	filesDir := filepath.Join(workDir, "public")
+	r.Get("/*", http.FileServer(http.Dir(filesDir)).ServeHTTP)
+
+	i.router = r
+
+	return i
+}
+
+func (c *CertPortal) GetRouter() chi.Router {
+	return c.router
+}
 
 var sanOID = asn1.ObjectIdentifier{2, 5, 29, 17} // subjectAltName
 

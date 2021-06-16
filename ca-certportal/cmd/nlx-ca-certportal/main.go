@@ -4,17 +4,16 @@
 package main
 
 import (
+	"go.nlx.io/nlx/ca-certportal/server"
 	"log"
 	"net/http"
 
 	"github.com/cloudflare/cfssl/cli"
 	"github.com/cloudflare/cfssl/cli/sign"
 	"github.com/cloudflare/cfssl/signer"
-
-	flags "github.com/jessevdk/go-flags"
+	"github.com/jessevdk/go-flags"
 	"go.uber.org/zap"
 
-	certportal "go.nlx.io/nlx/ca-certportal"
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/process"
 )
@@ -57,7 +56,7 @@ func main() {
 	process.NewProcess(logger)
 
 	// Create new certportal and provide it with a hardcoded service.
-	cp := certportal.NewCertPortal(logger, func() (signer.Signer, error) {
+	cp := server.NewCertPortal(logger, func() (signer.Signer, error) {
 		signer, signErr := sign.SignerFromConfig(cli.Config{
 			Remote: options.CAHost,
 		})

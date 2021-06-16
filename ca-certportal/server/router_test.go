@@ -1,7 +1,7 @@
-// Copyright © VNG Realisatie 2020
+// Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 
-package certportal_test
+package server_test
 
 import (
 	"bytes"
@@ -19,11 +19,11 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 
-	certportal "go.nlx.io/nlx/ca-certportal"
 	mock "go.nlx.io/nlx/ca-certportal/mock"
+	"go.nlx.io/nlx/ca-certportal/server"
 )
 
-var pkiDir = filepath.Join("..", "testing", "pki")
+var pkiDir = filepath.Join("..", "..", "testing", "pki")
 
 const csrWithoutSAN = `
 -----BEGIN CERTIFICATE REQUEST-----
@@ -51,12 +51,12 @@ func TestRouteRequestCertificate(t *testing.T) {
 
 	csr := string(csrData)
 
-	certificateRequest, err := json.Marshal(&certportal.CertificateRequest{
+	certificateRequest, err := json.Marshal(&server.CertificateRequest{
 		Csr: csr,
 	})
 	assert.NoError(t, err)
 
-	certificateRequestWithoutSAN, err := json.Marshal(&certportal.CertificateRequest{
+	certificateRequestWithoutSAN, err := json.Marshal(&server.CertificateRequest{
 		Csr: csrWithoutSAN,
 	})
 	assert.NoError(t, err)
@@ -170,7 +170,7 @@ type serviceMocks struct {
 	s *mock.MockSigner
 }
 
-func newService(t *testing.T) (*certportal.CertPortal, serviceMocks) {
+func newService(t *testing.T) (*server.CertPortal, serviceMocks) {
 	ctrl := gomock.NewController(t)
 
 	t.Cleanup(func() {
@@ -182,7 +182,7 @@ func newService(t *testing.T) (*certportal.CertPortal, serviceMocks) {
 		s: mock.NewMockSigner(ctrl),
 	}
 
-	service := certportal.NewCertPortal(zap.NewNop(), func() (signer.Signer, error) {
+	service := server.NewCertPortal(zap.NewNop(), func() (signer.Signer, error) {
 		return mocks.s, nil
 	})
 
@@ -190,7 +190,7 @@ func newService(t *testing.T) (*certportal.CertPortal, serviceMocks) {
 }
 
 func TestRoutesInvalidSigner(t *testing.T) {
-	certPortal := certportal.NewCertPortal(zap.NewNop(), func() (signer.Signer, error) {
+	certPortal := server.NewCertPortal(zap.NewNop(), func() (signer.Signer, error) {
 		return nil, fmt.Errorf("unable to create certificate signer")
 	})
 	assert.NotNil(t, certPortal)
@@ -198,7 +198,7 @@ func TestRoutesInvalidSigner(t *testing.T) {
 	srv := httptest.NewServer(certPortal.GetRouter())
 	defer srv.Close()
 
-	jsonBytesCertificateRequest, err := json.Marshal(&certportal.CertificateRequest{
+	jsonBytesCertificateRequest, err := json.Marshal(&server.CertificateRequest{
 		Csr: "csr",
 	})
 	assert.NoError(t, err)
