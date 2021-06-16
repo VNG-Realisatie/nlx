@@ -61,6 +61,7 @@ func main() {
 			Remote: options.CAHost,
 		})
 		if signErr != nil {
+			logger.Error("failed to sign from config", zap.Error(signErr))
 			return nil, signErr
 		}
 
