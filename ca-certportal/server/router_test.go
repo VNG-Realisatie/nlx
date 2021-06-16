@@ -127,16 +127,6 @@ func TestRouteRequestCertificate(t *testing.T) {
 		expectedStatusCode int
 		expectedBody       string
 	}{
-		"happy_path": {
-			certificateRequest,
-			func() {
-				mockSigner.EXPECT().Sign(signer.SignRequest{
-					Request: csr,
-				}).Return([]byte("test_cert"), nil)
-			},
-			http.StatusCreated,
-			`{"certificate":"test_cert"}` + "\n",
-		},
 		"without_san": {
 			certificateRequestWithoutSAN,
 			func() {
@@ -169,6 +159,16 @@ func TestRouteRequestCertificate(t *testing.T) {
 			},
 			http.StatusInternalServerError,
 			"Internal Server Error\n",
+		},
+		"happy_path": {
+			certificateRequest,
+			func() {
+				mockSigner.EXPECT().Sign(signer.SignRequest{
+					Request: csr,
+				}).Return([]byte("test_cert"), nil)
+			},
+			http.StatusCreated,
+			`{"certificate":"test_cert"}` + "\n",
 		},
 	}
 
