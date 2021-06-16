@@ -3,14 +3,26 @@ id: setup-your-environment
 title: Setup your environment
 ---
 
+import Tabs from '@theme/Tabs'
+import TabItem from '@theme/TabItem';
 
-## Mac and Linux users
+<Tabs
+    groupId="operating-systems"
+    defaultValue="mac-linux"
+    values={[
+      { label: 'Mac & Linux', value: 'mac-linux' },
+      { label: 'Windows', value: 'windows' },
+    ]}
+  >
+  <TabItem value="mac-linux">
 
 ### Docker
 
 You can download Docker for Linux and Mac OS [here](https://hub.docker.com?overlay=onboarding). Please note that you will have to create a free DockerHub account before you can download Docker.
 
-## Windows users
+  </TabItem>
+
+  <TabItem value="windows">
 
 We currently support Windows 10 64-bit: Pro, Enterprise, or Education (Build 15063 or later).
 
@@ -26,6 +38,9 @@ You can download Docker for Windows [here](https://hub.docker.com?overlay=onboar
 Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
 ```
 
+  </TabItem>
+</Tabs>
+
 ## Docker Compose
 
 For setting up the testing environment locally we'll use Docker Compose.
@@ -33,6 +48,21 @@ You can install it by following the [installation steps of the official Docker w
 
 ### OpenSSL
 
+<Tabs
+    groupId="operating-systems"
+    defaultValue="mac-linux"
+    values={[
+      { label: 'Mac & Linux', value: 'mac-linux' },
+      { label: 'Windows', value: 'windows' },
+    ]}
+  >
+  <TabItem value="mac-linux">
+
+If OpenSSL is not installed by default, please install it with the package manager of your distro.
+
+  </TabItem>
+
+  <TabItem value="windows">
 You will need `OpenSSL` to create the TLS certificates you will need to run NLX. We advise you to install [Chocolatey](https://chocolatey.org/install), a package manager for Windows which will install `OpenSSL` for you. 
 
 Once you installed Chocolatey you can install OpenSSL by running.
@@ -49,6 +79,8 @@ openssl version
 
 if the installation was successful, OpenSSL will print its version number.
 
+  </TabItem>
+</Tabs>
 
 ## Working directory
 
@@ -64,8 +96,6 @@ Now, let's create the `nlx-setup` directory.
 
 ```bash
 mkdir nlx-setup
-```
-```bash
 cd nlx-setup
 ```
 
@@ -80,7 +110,6 @@ The output should be:
 * For Linux: `/home/<your-username>/nlx-setup`
 
 All commands later in this guide assume you are located in this directory.
-
 
 ## In sum
 
