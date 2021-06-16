@@ -22,7 +22,7 @@ type CertPortal struct {
 	router chi.Router
 }
 
-func SetSecurityHeadersHandler(next http.Handler) http.Handler {
+func setSecurityHeadersHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "max-age=0, no-cache, no-store, must-revalidate")
 		w.Header().Set("Content-Security-Policy", "default-src 'self'; frame-ancestors 'none'")
@@ -42,7 +42,7 @@ func NewCertPortal(l *zap.Logger, createSigner certportal.CreateSignerFunc) *Cer
 		logger: l,
 	}
 	r := chi.NewRouter()
-	r.Use(SetSecurityHeadersHandler)
+	r.Use(setSecurityHeadersHandler)
 	r.Route("/api", func(r chi.Router) {
 		r.Post("/request_certificate", requestCertificateHandler(i.logger, createSigner))
 	})
