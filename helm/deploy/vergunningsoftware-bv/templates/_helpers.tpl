@@ -88,5 +88,5 @@ Return the image name for transaction log database job
 Return the secret name of the transaction log database
 */}}
 {{- define "vergunningsoftware-bv.transactionLog.secret" -}}
-{{- default (printf "%s-postgresql" (include "vergunningsoftware-bv.fullname" .)) .Values.postgresql.existingSecret -}}
+{{- default (printf "%s-postgresql" (include "vergunningsoftware-bv.fullname" .)) .Values.postgresql.existingSecret.name -}}
 {{- end -}}

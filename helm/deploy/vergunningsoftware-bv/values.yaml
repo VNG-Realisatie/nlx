@@ -200,8 +200,7 @@ ca:
         name: vergunningsoftware-bv
 
 postgresql:
-  version: "11.1"
-  storageType: Durable
+  version: "11"
   storageSize: 8Gi
 
 transactionLog:
@@ -212,8 +211,10 @@ transactionLog:
     pullPolicy: IfNotPresent
   hostname: vergunningsoftware-bv-postgresql
   databaseName: vergunningsoftware-bv-transaction-log
-  existingSecret: vergunningsoftware-bv-postgresql-auth
-  sslMode: disable
+  existingSecret:
+    name: postgres.vergunningsoftware-bv-postgresql.credentials.postgresql.acid.zalan.do
+    usernameKey: username
+    passwordKey: password
   resetDatabase: false
 
 managementAPI:
@@ -225,9 +226,14 @@ managementAPI:
     pullPolicy: IfNotPresent
   postgresql:
     hostname: vergunningsoftware-bv-postgresql
-    existingSecret: vergunningsoftware-bv-postgresql-auth
-    sslMode: disable
-
+    database: "nlx_management"
+    port: 5432
+    sslMode: require
+    connectTimeout: 10
+    existingSecret:
+      name: postgres.vergunningsoftware-bv-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
 ################
 ## Sub-charts ##
 ################
@@ -240,8 +246,10 @@ nlx-outway:
     enabled: true
     hostname: vergunningsoftware-bv-postgresql
     database: vergunningsoftware-bv-transaction-log
-    existingSecret: vergunningsoftware-bv-postgresql-auth
-    sslMode: disable
+    existingSecret:
+      name: postgres.vergunningsoftware-bv-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
   tls:
     organization:
       existingSecret: vergunningsoftware-bv-organization-tls
@@ -270,13 +278,17 @@ nlx-management:
     enabled: true
     hostname: vergunningsoftware-bv-postgresql
     database: vergunningsoftware-bv-transaction-log
-    existingSecret: vergunningsoftware-bv-postgresql-auth
-    sslMode: disable
+    existingSecret:
+      name: postgres.vergunningsoftware-bv-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
   postgresql:
     hostname: vergunningsoftware-bv-postgresql
-    existingSecret: vergunningsoftware-bv-postgresql-auth
-    sslMode: disable
-
+    existingSecret:
+      name: postgres.vergunningsoftware-bv-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
+    sslMode: require
 dex:
   config:
     storage:

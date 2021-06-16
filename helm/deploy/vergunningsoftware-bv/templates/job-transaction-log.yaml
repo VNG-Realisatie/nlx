@@ -33,10 +33,10 @@ spec:
             - name: PGUSER
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.transactionLog.existingSecret }}
-                  key: POSTGRES_USER
+                  name: {{ .Values.transactionLog.existingSecret.name }}
+                  key: {{ .Values.transactionLog.existingSecret.usernameKey }}
             - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.transactionLog.existingSecret }}
-                  key: POSTGRES_PASSWORD
+                  name: {{ .Values.transactionLog.existingSecret.name }}
+                  key: {{ .Values.transactionLog.existingSecret.passwordKey }}

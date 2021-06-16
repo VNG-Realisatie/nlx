@@ -45,8 +45,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 postgresql:
-  version: "11.1"
-  storageType: Durable
+  version: 12
   storageSize: 8Gi
 
 ca:
@@ -160,7 +159,10 @@ nlx-directory:
   postgresql:
     hostname: shared-postgresql
     database: postgres
-    existingSecret: shared-postgresql-auth
+    existingSecret:
+      name: postgres.shared-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
   tls:
     existingSecret: shared-directory-api-tls
   ui:

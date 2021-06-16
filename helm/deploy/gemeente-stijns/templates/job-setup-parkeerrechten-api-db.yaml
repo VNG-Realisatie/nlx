@@ -32,13 +32,15 @@ spec:
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.managementAPI.postgresql.existingSecret }}
-                  key: POSTGRES_USER
+                  name: {{ .Values.managementAPI.postgresql.existingSecret.name }}
+                  key: {{ .Values.managementAPI.postgresql.existingSecret.usernameKey }}
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.managementAPI.postgresql.existingSecret }}
-                  key: POSTGRES_PASSWORD
+                  name: {{ .Values.managementAPI.postgresql.existingSecret.name }}
+                  key: {{ .Values.managementAPI.postgresql.existingSecret.passwordKey }}
+            - name: PGCONNECT_TIMEOUT
+              value: {{ .Values.managementAPI.postgresql.connectTimeout | quote }}
             - name: POSTGRES_DSN
-              value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):5432/postgres?sslmode=disable&connect_timeout=10'
+              value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):5432/postgres'
 {{- end }}

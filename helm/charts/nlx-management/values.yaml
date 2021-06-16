@@ -74,7 +74,11 @@ transactionLog:
   username: ""
   password: ""
   sslMode: "require"
-  existingSecret: ""
+  connectTimeout: "10"
+  existingSecret:
+    name: ""
+    usernameKey: "username"
+    passwordKey: "password"
 
 postgresql:
   hostname: "postgresql"
@@ -83,7 +87,11 @@ postgresql:
   username: ""
   password: ""
   sslMode: "require"
-  existingSecret: ""
+  connectTimeout: "10"
+  existingSecret:
+    name: ""
+    usernameKey: "username"
+    passwordKey: "password"
 
 ingress:
   enabled: false

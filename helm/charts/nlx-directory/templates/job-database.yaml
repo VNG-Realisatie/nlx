@@ -45,12 +45,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ template "nlx-directory.postgresql.secret" . }}
-                  key: POSTGRES_USER
+                  key: {{ .Values.postgresql.existingSecret.usernameKey }}
             - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ template "nlx-directory.postgresql.secret" . }}
-                  key: POSTGRES_PASSWORD
+                  key: {{ .Values.postgresql.existingSecret.passwordKey }}
     {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

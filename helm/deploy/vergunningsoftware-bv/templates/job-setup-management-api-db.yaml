@@ -21,22 +21,27 @@ spec:
           command: ["/bin/sh"]
           args:
             - "-exc"
-            - |
-              psql --echo-errors "${POSTGRES_DSN}" <<EOF
-                SELECT 'CREATE DATABASE nlx_management' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'nlx_management')\gexec
-              EOF
+            - echo "SELECT 'CREATE DATABASE "${POSTGRES_DATABASE}"' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '"${POSTGRES_DATABASE}"')\gexec" | psql --echo-errors "${POSTGRES_DSN}"
           env:
             - name: POSTGRES_HOST
               value: {{ required "PostgreSQL hostname is required" .Values.managementAPI.postgresql.hostname }}
+            - name: POSTGRES_PORT
+              value: {{ required "PostgreSQL port number is required" .Values.managementAPI.postgresql.port | quote }}
+            - name: POSTGRES_DATABASE
+              value: {{ required "PostgreSQL database name is required" .Values.managementAPI.postgresql.database }}
+            - name: PGSSLMODE
+              value: {{ required "PostgreSQL SSL mode is required" .Values.managementAPI.postgresql.sslMode }}
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.managementAPI.postgresql.existingSecret }}
-                  key: POSTGRES_USER
+                  name: {{ required "PostgreSQL existing secret name is required" .Values.managementAPI.postgresql.existingSecret.name }}
+                  key: {{ required "PostgreSQL existing secret username key is required" .Values.managementAPI.postgresql.existingSecret.usernameKey }}
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.managementAPI.postgresql.existingSecret }}
-                  key: POSTGRES_PASSWORD
+                  name: {{ required "PostgreSQL existing secret name is required" .Values.managementAPI.postgresql.existingSecret.name }}
+                  key: {{ required "PostgreSQL existing password key is required" .Values.managementAPI.postgresql.existingSecret.passwordKey }}
+            - name: PGCONNECT_TIMEOUT
+              value: {{ required "PostgreSQL time-out is required" .Values.managementAPI.postgresql.connectTimeout | quote }}
             - name: POSTGRES_DSN
-              value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):5432/postgres?sslmode=disable&connect_timeout=10'
+              value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/postgres'

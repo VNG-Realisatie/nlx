@@ -28,16 +28,16 @@ spec:
             - name: POSTGRES_HOST
               value: {{ required "PostgreSQL hostname is required" .Values.postgres.hostname }}
             - name: POSTGRES_DATABASE
-              value: {{ .Values.postgres.database }}  
+              value: {{ .Values.postgres.database }}
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ required "PostgreSQL secret is required" .Values.postgres.existingSecret }}
-                  key: POSTGRES_USER
+                  name: {{ required "PostgreSQL secret name is required" .Values.postgres.existingSecret.name }}
+                  key: {{ required "PostgreSQL secret usernameKey is required" .Values.postgres.existingSecret.usernameKey }}
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ required "PostgreSQL secret is required" .Values.postgres.existingSecret }}
-                  key: POSTGRES_PASSWORD
+                  name: {{ required "PostgreSQL secret name is required" .Values.postgres.existingSecret.name }}
+                  key: {{ required "PostgreSQL secret passwordKey is required" .Values.postgres.existingSecret.passwordKey }}
             - name: POSTGRES_SSLMODE
               value: {{ required "PostgreSQL sslMode is required" .Values.postgres.sslMode }}

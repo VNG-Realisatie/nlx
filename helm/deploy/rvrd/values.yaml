@@ -85,8 +85,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 postgresql:
-  version: "11.1"
-  storageType: Durable
+  version: "11"
   storageSize: 8Gi
 
 transactionLog:
@@ -97,7 +96,10 @@ transactionLog:
     pullPolicy: IfNotPresent
   hostname: rvrd-postgresql
   databaseName: rvrd-transaction-log
-  existingSecret: rvrd-postgresql-auth
+  existingSecret:
+    name: postgres.rvrd-postgresql.credentials.postgresql.acid.zalan.do
+    usernameKey: username
+    passwordKey: password
   resetDatabase: false
 
 nlxctl:
@@ -136,8 +138,12 @@ managementAPI:
     hostname: rvrd-postgresql
     port: 5432
     database: "nlx_management"
-    sslMode: "disable"
-    existingSecret: rvrd-postgresql-auth
+    sslMode: require
+    connectTimeout: 10
+    existingSecret:
+      name: postgres.rvrd-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
 
 ca:
   issuer:
@@ -282,13 +288,17 @@ nlx-management:
     enabled: true
     hostname: rvrd-postgresql
     database: rvrd-transaction-log
-    existingSecret: rvrd-postgresql-auth
-    sslMode: "disable"
+    existingSecret:
+      name: postgres.rvrd-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
   postgresql:
     hostname: rvrd-postgresql
-    existingSecret: rvrd-postgresql-auth
-    sslMode: "disable"
-
+    connectTimeout: 10
+    existingSecret:
+      name: postgres.rvrd-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
 dex:
   config:
     storage:
@@ -328,7 +338,7 @@ dex:
       create: false
   rbac:
     create: false
-    
+
 nlx-inway:
   config:
     directoryRegistrationHostname: shared-nlx-directory-registration
@@ -337,8 +347,10 @@ nlx-inway:
   transactionLog:
     hostname: rvrd-postgresql
     database: rvrd-transaction-log
-    existingSecret: rvrd-postgresql-auth
-    sslMode: "disable"
+    existingSecret:
+      name: postgres.rvrd-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
   tls:
     organization:
       existingSecret: rvrd-organization-tls

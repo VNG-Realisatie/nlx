@@ -16,9 +16,12 @@ fullnameOverride: ""
 
 postgres:
   hostname: ""
-  database: ""  
-  sslMode: ""
-  existingSecret: ""
+  database: ""
+  sslMode: "require"
+  existingSecret:
+    name: ""
+    usernameKey: "username"
+    passwordKey: "password"
 
 serviceAccount:
   # Specifies whether a service account should be created

@@ -32,7 +32,11 @@ postgresql:
   database: nlx-directory
   username: ""
   password: ""
-  existingSecret: ""
+  connectTimeout: "10"
+  existingSecret:
+    name: ""
+    usernameKey: "username"
+    passwordKey: "password"
 
 tls:
   organization:

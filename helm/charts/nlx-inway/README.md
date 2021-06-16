@@ -1,4 +1,4 @@
-# inway 
+# inway
 NLX is an open source peer-to-peer system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API ecosystem with many organizations.
 Through an Inway an organization can provide services to the NLX ecosystem. The inway is usually deployed centrally within the organization although it is possible for one organization to deploy multiple instances on different locations.
 
@@ -22,8 +22,8 @@ $ helm install inway commonground/nlx-inway
 
 ## Upgrading the Chart
 
-Currently, our Helm charts use the same release version as the NLX release version. 
-To know what has changed for the Helm charts, look at the changes in our [CHANGELOG](https://gitlab.com/commonground/nlx/nlx/-/blob/master/CHANGELOG.md) 
+Currently, our Helm charts use the same release version as the NLX release version.
+To know what has changed for the Helm charts, look at the changes in our [CHANGELOG](https://gitlab.com/commonground/nlx/nlx/-/blob/master/CHANGELOG.md)
 that are prefixed with 'Helm'.
 
 ## Uninstalling the Chart
@@ -51,14 +51,14 @@ The following table lists the configurable parameters of the nlx-inway Chart and
 
 | Parameter | Description | Default | Required (yes/no) |
 | --------- | ----------- | ------- | -------- |
-| `nameOverride` | Override deployment name | `""` | no | 
+| `nameOverride` | Override deployment name | `""` | no |
 | `fullnameOverride` | Override full deployment name | `""` | no |
 
 ### Deployment parameters
 
 | Parameter | Description | Default | Required (yes/no) |
 | --------- | ----------- | ------- | -------- |
-| `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` | no | 
+| `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` | no |
 | `image.repository` | Image repository | `nlxio/inway` | no |
 | `image.tag` | Image tag (ignored if `global.imageTag` is set). When set to null, the AppVersion from the Chart is used | `The appVersion from the chart` | no |
 | `image.pullPolicy` | Image pull policy | `IfNotPresent` | no |
@@ -70,7 +70,7 @@ The following table lists the configurable parameters of the nlx-inway Chart and
 | `tolerations` | Node tolerations for pod assignment | `[]` | no |
 | `serviceAccount.create` | If `true`, create a new service account | `true` | no |
 | `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` | no |
-| `serviceAccount.annotations` | Annotations to add to the service account | `{}` | no | 
+| `serviceAccount.annotations` | Annotations to add to the service account | `{}` | no |
 | `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` | no |
 | `podSecuritiyContext.fsGroup` | Group ID under which the pod should be started | `1001` | no |
 
@@ -80,7 +80,7 @@ The following table lists the configurable parameters of the nlx-inway Chart and
 | --------- | ----------- | ------- | -------- |
 | `config.name` | Unique identifier of this inway. | `""` | no |
 | `config.logType` | Possible values: **live**, **local**. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger. | `live` | no |
-| `config.logLevel` | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType` | `info` | no | 
+| `config.logLevel` | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType` | `info` | no |
 | `config.directoryRegistrationHostname` | Address of the NLX directory where this inway will register its services. | `""` | yes |
 | `config.selfAddress` | The address that can be used by the NLX network to reach this inway | `""` | no |
 | `config.managementAPI.address` | The config address of the management API. Normally this would be: `hostname:443` where `hostname` is the hostname of the Management API | `""` | no |
@@ -113,10 +113,12 @@ TLS certificates used by NLX components for internal communication.
 | `transactionLog.hostname` | PostgreSQL hostname | `""` | no |
 | `transactionLog.port` | PostgreSQL port | `5432` | yes |
 | `transactionLog.sslMode` | PostgreSQL SSL mode | `require` | yes |
-| `transactionLog.database` | PostgreSQL database  | `""` | no |
+| `transactionLog.database` | PostgreSQL database  | `` | no |
 | `transactionLog.username` | Username of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret | `""` | no |
 | `transactionLog.password` | Password of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret | `""` | no |
-| `transactionLog.existingSecret` | Use existing secret for password details (`transactionLog.username` and `transactionLog.password` will be ignored and picked up from this secret)  | `""` | no |
+| `transactionLog.existingSecret.name` | Use existing secret for password details (`transactionLog.username` and `transactionLog.password` will be ignored and picked up from this secret)  | `""` | no |
+| `transactionLog.existingSecret.usernameKey` | Key for username value in aforementioned existingSecret | `POSTGRES_USER` | no |
+| `transactionLog.existingSecret.passwordKey` | Key for password value in aforementioned existingSecret | `POSTGRES_PASSWORD` | no |
 
 ### Exposure parameters
 
@@ -128,7 +130,7 @@ TLS certificates used by NLX components for internal communication.
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 
-Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. 
+Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart.
 
 ```console
 $ helm install inway -f values.yaml .

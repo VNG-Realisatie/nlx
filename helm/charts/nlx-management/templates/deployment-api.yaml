@@ -60,20 +60,22 @@ spec:
               value: {{ required "PostgreSQL port number is required" .Values.postgresql.port | quote }}
             - name: POSTGRES_DATABASE
               value: {{ required "PostgreSQL database name is required" .Values.postgresql.database }}
-            - name: POSTGRES_SSL_MODE
-              value: {{ required "PostgreSQL database SSL mode is required" .Values.postgresql.sslMode }}
+            - name: PGSSLMODE
+              value: {{ .Values.postgresql.sslMode }}
+            - name: PGCONNECT_TIMEOUT
+              value: {{ .Values.postgresql.connectTimeout | quote }}
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
                   name: {{ template "nlx-management.postgresql.secret" . }}
-                  key: POSTGRES_USER
+                  key: {{ .Values.postgresql.existingSecret.usernameKey }}
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ template "nlx-management.postgresql.secret" . }}
-                  key: POSTGRES_PASSWORD
+                  key: {{ .Values.postgresql.existingSecret.passwordKey }}
             - name: POSTGRES_DSN
-              value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)?sslmode=$(POSTGRES_SSL_MODE)&connect_timeout=10'
+              value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)'
           {{- if .Values.transactionLog.enabled }}
             - name: TRANSACTION_LOG_HOST
               value: {{ required "PostgreSQL hostname is required" .Values.transactionLog.hostname }}
@@ -81,20 +83,18 @@ spec:
               value: {{ required "PostgreSQL database name is required" .Values.transactionLog.database }}
             - name: TRANSACTION_LOG_PORT
               value: {{ required "PostgreSQL port is required" .Values.transactionLog.port | quote }}
-            - name: TRANSACTION_LOG_SSL_MODE
-              value: {{ required "PostgreSQL SSL mode is required" .Values.transactionLog.sslMode }}
             - name: TRANSACTION_LOG_USER
               valueFrom:
                 secretKeyRef:
                   name: {{ template "nlx-management.transactionLog.secret" . }}
-                  key: POSTGRES_USER
+                  key: {{ .Values.transactionLog.existingSecret.usernameKey }}
             - name: TRANSACTION_LOG_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ template "nlx-management.transactionLog.secret" . }}
-                  key: POSTGRES_PASSWORD
+                  key: {{ .Values.transactionLog.existingSecret.passwordKey }}
             - name: TRANSACTION_LOG_DSN
-              value: 'postgres://$(TRANSACTION_LOG_USER):$(TRANSACTION_LOG_PASSWORD)@$(TRANSACTION_LOG_HOST):$(TRANSACTION_LOG_PORT)/$(TRANSACTION_LOG_DATABASE)?sslmode=$(TRANSACTION_LOG_SSL_MODE)&connect_timeout=10'
+              value: 'postgres://$(TRANSACTION_LOG_USER):$(TRANSACTION_LOG_PASSWORD)@$(TRANSACTION_LOG_HOST):$(TRANSACTION_LOG_PORT)/$(TRANSACTION_LOG_DATABASE)'
           {{- end}}
 
             - name: DIRECTORY_INSPECTION_ADDRESS
@@ -161,20 +161,20 @@ spec:
               value: {{ required "PostgreSQL port number is required" .Values.postgresql.port | quote }}
             - name: POSTGRES_DATABASE
               value: {{ required "PostgreSQL database name is required" .Values.postgresql.database }}
-            - name: POSTGRES_SSL_MODE
-              value: {{ required "PostgreSQL database SSL mode is required" .Values.postgresql.sslMode }}
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
                   name: {{ template "nlx-management.postgresql.secret" . }}
-                  key: POSTGRES_USER
+                  key: {{ .Values.postgresql.existingSecret.usernameKey }}
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ template "nlx-management.postgresql.secret" . }}
-                  key: POSTGRES_PASSWORD
+                  key: {{ .Values.postgresql.existingSecret.passwordKey }}
+            - name: PGCONNECT_TIMEOUT
+              value: {{ .Values.postgresql.connectTimeout | quote }}
             - name: POSTGRES_DSN
-              value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)?sslmode=$(POSTGRES_SSL_MODE)&connect_timeout=10'
+              value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)'
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:

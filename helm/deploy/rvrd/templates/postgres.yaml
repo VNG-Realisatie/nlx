@@ -1,18 +1,17 @@
-apiVersion: kubedb.com/v1alpha1
-kind: Postgres
+apiVersion: acid.zalan.do/v1
+kind: postgresql
 metadata:
   name: {{ include "rvrd.fullname" . }}-postgresql
   labels:
     {{- include "rvrd.labels" . | nindent 4 }}
 spec:
-  version: {{ (required "PostgreSQL version is required" .Values.postgresql.version) | toString }}
-  storageType: {{ required "PostgreSQL storage type is required" .Values.postgresql.storageType }}
-{{- if not (eq .Values.postgresql.storageType "Ephemeral") }}
-  storage:
-    accessModes:
-      - ReadWriteOnce
-    resources:
-      requests:
-        storage: {{ required "PostgreSQL storage size is required" .Values.postgresql.storageSize }}
-{{- end }}
-  terminationPolicy: WipeOut
+  teamId: {{ include "rvrd.fullname" . }}
+  numberOfInstances: 1
+  users:
+    admin:
+      - superuser
+      - createdb
+  volume:
+    size: {{ required "PostgreSQL storage size is required" .Values.postgresql.storageSize }}
+  postgresql:
+    version: {{ (required "PostgreSQL version is required" .Values.postgresql.version) | toString | toRawJson }}

@@ -36,8 +36,12 @@ transactionLog:
   port: 5432
   username: ""
   password: ""
-  sslMode: "require"
-  existingSecret: ""
+  connectTimeout: "10"
+  sslMode: require
+  existingSecret:
+    name: ""
+    usernameKey: "username"
+    passwordKey: "password"
 
 tls:
   organization:

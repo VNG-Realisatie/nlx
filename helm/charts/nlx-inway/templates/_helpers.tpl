@@ -77,7 +77,7 @@ Return the image name for the NLX inway
 Return the secret name of the PostgreSQL username/password
 */}}
 {{- define "nlx-inway.transactionLog.secret" -}}
-{{- default (printf "%s-postgresql" (include "nlx-inway.fullname" .)) .Values.transactionLog.existingSecret -}}
+{{- default (printf "%s-postgresql" (include "nlx-inway.fullname" .)) .Values.transactionLog.existingSecret.name -}}
 {{- end -}}
 
 {{/*

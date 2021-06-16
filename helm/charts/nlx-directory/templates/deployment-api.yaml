@@ -58,14 +58,18 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ template "nlx-directory.postgresql.secret" . }}
-                  key: POSTGRES_USER
+                  key: {{ .Values.postgresql.existingSecret.usernameKey }}
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ template "nlx-directory.postgresql.secret" . }}
-                  key: POSTGRES_PASSWORD
+                  key: {{ .Values.postgresql.existingSecret.passwordKey }}
+            - name: PGSSLMODE
+              value: {{ .Values.postgresql.sslMode }}
+            - name: PGCONNECT_TIMEOUT
+              value: {{ .Values.postgresql.connectTimeout | quote }}
             - name: POSTGRES_DSN
-              value: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@{{ .Values.postgresql.hostname }}/{{ .Values.postgresql.database }}?sslmode=disable&connect_timeout=10
+              value: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@{{ .Values.postgresql.hostname }}/{{ .Values.postgresql.database }}
             - name: TLS_NLX_ROOT_CERT
               value: /config/root.pem
             - name: TLS_DIRECTORY_CERT
@@ -109,14 +113,16 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ template "nlx-directory.postgresql.secret" . }}
-                  key: POSTGRES_USER
+                  key: {{ .Values.postgresql.existingSecret.usernameKey }}
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ template "nlx-directory.postgresql.secret" . }}
-                  key: POSTGRES_PASSWORD
+                  key: {{ .Values.postgresql.existingSecret.passwordKey }}
+            - name: PGCONNECT_TIMEOUT
+              value: {{ .Values.postgresql.connectTimeout | quote }}
             - name: POSTGRES_DSN
-              value: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@{{ .Values.postgresql.hostname }}/{{ .Values.postgresql.database }}?sslmode=disable&connect_timeout=10
+              value: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@{{ .Values.postgresql.hostname }}/{{ .Values.postgresql.database }}
             - name: TLS_NLX_ROOT_CERT
               value: /config/root.pem
             - name: TLS_DIRECTORY_CERT

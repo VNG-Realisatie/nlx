@@ -1,4 +1,4 @@
-# management 
+# management
 
 NLX is an open source peer-to-peer system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API ecosystem with many organizations.
 The Management API is at the heart of NLX Management. It is used by the Management UI to manage your NLX setup and your Inways use the Management API to retrieve their configuration. It's also used to setup and manage connections between API providers and consumers.
@@ -23,8 +23,8 @@ $ helm install management commonground/nlx-management
 
 ## Upgrading the Chart
 
-Currently, our Helm charts use the same release version as the NLX release version. 
-To know what has changed for the Helm charts, look at the changes in our [CHANGELOG](https://gitlab.com/commonground/nlx/nlx/-/blob/master/CHANGELOG.md) 
+Currently, our Helm charts use the same release version as the NLX release version.
+To know what has changed for the Helm charts, look at the changes in our [CHANGELOG](https://gitlab.com/commonground/nlx/nlx/-/blob/master/CHANGELOG.md)
 that are prefixed with 'Helm'.
 
 ## Uninstalling the Chart
@@ -52,14 +52,14 @@ The following table lists the configurable parameters of the nlx-management Char
 
 | Parameter | Description | Default | Required (yes/no) |
 | --------- | ----------- | ------- | -------- |
-| `nameOverride` | Override deployment name | `""` | no | 
+| `nameOverride` | Override deployment name | `""` | no |
 | `fullnameOverride` | Override full deployment name | `""` | no |
 
 ### Deployment parameters
 
 | Parameter | Description | Default | Required (yes/no) |
 | --------- | ----------- | ------- | -------- |
-| `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` | no | 
+| `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` | no |
 | `image.apiRepository` | Image repository for the management API | `nlxio/management-api` | no |
 | `image.uiRepository` | Image repository for the management UI | `nlxio/management-ui` | no |
 | `image.tag` | Image tag (ignored if `global.imageTag` is set). When set to null, the AppVersion from the Chart is used | `The appVersion from the chart` | no |
@@ -72,7 +72,7 @@ The following table lists the configurable parameters of the nlx-management Char
 | `tolerations` | Node tolerations for pod assignment | `[]` | no |
 | `serviceAccount.create` | If `true`, create a new service account | `true` | no |
 | `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` | no |
-| `serviceAccount.annotations` | Annotations to add to the service account | `{}` | no | 
+| `serviceAccount.annotations` | Annotations to add to the service account | `{}` | no |
 | `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` | no |
 | `podSecuritiyContext.fsGroup` | Group ID under which the pod should be started | `1001` | no |
 
@@ -82,7 +82,7 @@ The following table lists the configurable parameters of the nlx-management Char
 | --------- | ----------- | ------- | -------- |
 | `config.logType` | Possible values: **live**, **local**. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger. | `live` | no |
 | `config.logLevel` | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType` | `info` | no |
-| `config.directoryInspectionHostname` | Used to retrieve information about services from the directory. | `""` | yes | 
+| `config.directoryInspectionHostname` | Used to retrieve information about services from the directory. | `""` | yes |
 | `config.directoryRegistrationHostname` | Address of the NLX directory where this inway will register its services. | `""` | yes |
 | `config.sessionCookieSecure` | If `true`, the API will use 'secure' cookies. | `false` | no |
 | `config.oidc.clientID` | The OIDC client ID | `"nlx-management"` | no |
@@ -122,7 +122,9 @@ TLS certificates used by NLX components for internal communication.
 | `transactionLog.database` | PostgreSQL database  | `""` | no |
 | `transactionLog.username` | Username of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret | `""` | no |
 | `transactionLog.password` | Password of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret | `""` | no |
-| `transactionLog.existingSecret` | Use existing secret for password details (`transactionLog.username` and `transactionLog.password` will be ignored and picked up from this secret)  | `""` | no |
+| `transactionLog.existingSecret.name` | Use existing secret for password details (`transactionLog.username` and `transactionLog.password` will be ignored and picked up from this secret)  | `""` | no |
+| `transactionLog.existingSecret.usernameKey` | Key for username value in aforementioned existingSecret | `POSTGRES_USER` | no |
+| `transactionLog.existingSecret.passwordKey` | Key for password value in aforementioned existingSecret | `POSTGRES_PASSWORD` | no |
 
 ### NLX Management PostgreSQL parameters
 
@@ -134,7 +136,9 @@ TLS certificates used by NLX components for internal communication.
 | `postgresql.database` | PostgreSQL database | `"nlx_management"` | yes |
 | `postgresql.username` | PostgreSQL username. Will be stored in a Kubernetes secret | `""` | yes (if not using `postgresql.existingSecret`) |
 | `postgresql.password` | PostgreSQL password. Will be stored in a Kubernetes secret | `""` | yes (if not using `postgresql.existingSecret`) |
-| `postgresql.existingSecret` | Use existing secret for password details (`postgresql.username` and `postgresql.password` will be ignored and picked up from this secret)  | `""` | no |
+| `postgresql.existingSecret.name` | Use existing secret for password details (`postgresql.username` and `postgresql.password` will be ignored and picked up from this secret)  | `""` | no |
+| `postgresql.existingSecret.usernameKey` | Key for username value in aforementioned existingSecret | `POSTGRES_USER` | no |
+| `postgresql.existingSecret.passwordKey` | Key for password value in aforementioned existingSecret | `POSTGRES_PASSWORD` | no |
 
 ### Exposure parameters
 
@@ -152,7 +156,7 @@ TLS certificates used by NLX components for internal communication.
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 
-Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. 
+Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart.
 
 ```console
 $ helm install management -f values.yaml .

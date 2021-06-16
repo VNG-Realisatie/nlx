@@ -99,5 +99,5 @@ Return the image name for transaction log database job
 Return the secret name of the transaction log database
 */}}
 {{- define "gemeente-stijns.transactionLog.secret" -}}
-{{- default (printf "%s-postgresql" (include "gemeente-stijns.fullname" .)) .Values.postgresql.existingSecret -}}
+{{- default (printf "%s-postgresql" (include "gemeente-stijns.fullname" .)) .Values.postgresql.existingSecret.name -}}
 {{- end -}}

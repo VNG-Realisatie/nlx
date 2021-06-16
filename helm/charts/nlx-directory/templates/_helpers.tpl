@@ -121,5 +121,5 @@ Return the image name of the directory registration image
 Return the secret name of the PostgreSQL username/password
 */}}
 {{- define "nlx-directory.postgresql.secret" -}}
-{{- default (printf "%s-postgresql" (include "nlx-directory.fullname" .)) .Values.postgresql.existingSecret -}}
+{{- default (printf "%s-postgresql" (include "nlx-directory.fullname" .)) .Values.postgresql.existingSecret.name -}}
 {{- end -}}

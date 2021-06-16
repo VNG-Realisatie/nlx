@@ -209,8 +209,7 @@ ca:
         name: gemeente-stijns
 
 postgresql:
-  version: "11.1"
-  storageType: Durable
+  version: "11"
   storageSize: 8Gi
 
 transactionLog:
@@ -221,8 +220,10 @@ transactionLog:
     pullPolicy: IfNotPresent
   hostname: gemeente-stijns-postgresql
   databaseName: gemeente-stijns-transaction-log
-  existingSecret: gemeente-stijns-postgresql-auth
-  sslMode: "disable"
+  existingSecret:
+    name: postgres.gemeente-stijns-postgresql.credentials.postgresql.acid.zalan.do
+    usernameKey: username
+    passwordKey: password
   resetDatabase: false
 
 nlxctl:
@@ -243,9 +244,13 @@ managementAPI:
     pullPolicy: IfNotPresent
   postgresql:
     hostname: gemeente-stijns-postgresql
-    existingSecret: gemeente-stijns-postgresql-auth
-    sslMode: "disable"
-
+    port: 5432
+    sslMode: require
+    connectTimeout: "10"
+    existingSecret:
+      name: postgres.gemeente-stijns-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
 ################
 ## Sub-charts ##
 ################
@@ -259,9 +264,11 @@ nlx-outway:
       address: gemeente-stijns-nlx-management-api:443
   transactionLog:
     hostname: gemeente-stijns-postgresql
-    database: gemeente-stijns-transaction-log
-    existingSecret: gemeente-stijns-postgresql-auth
-    sslMode: "disable"
+    database: "gemeente-stijns-transaction-log"
+    existingSecret:
+      name: postgres.gemeente-stijns-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
   tls:
     organization:
       existingSecret: gemeente-stijns-organization-tls
@@ -275,9 +282,11 @@ nlx-inway:
       address: gemeente-stijns-nlx-management-api:443
   transactionLog:
     hostname: gemeente-stijns-postgresql
-    database: gemeente-stijns-transaction-log
-    existingSecret: gemeente-stijns-postgresql-auth
-    sslMode: "disable"
+    database: "gemeente-stijns-transaction-log"
+    existingSecret:
+      name: postgres.gemeente-stijns-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
   tls:
     organization:
       existingSecret: gemeente-stijns-organization-tls
@@ -303,17 +312,21 @@ nlx-management:
   transactionLog:
     enabled: true
     hostname: gemeente-stijns-postgresql
-    database: gemeente-stijns-transaction-log
-    existingSecret: gemeente-stijns-postgresql-auth
-    sslMode: "disable"
+    database: "gemeente-stijns-transaction-log"
+    existingSecret:
+      name: postgres.gemeente-stijns-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
   ingress:
     enabled: true
     hosts:
       - nlx-management.gemeente-stijns.nlx.minikube
   postgresql:
     hostname: gemeente-stijns-postgresql
-    existingSecret: gemeente-stijns-postgresql-auth
-    sslMode: "disable"
+    existingSecret:
+      name: postgres.gemeente-stijns-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
 
 dex:
   config:
