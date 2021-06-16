@@ -92,6 +92,7 @@ yUKwRTMXCWUqCOliDVEu2UcEtf02uX7xU2+BX/TYe+DCEfXfLoUaRwxb95I2pYKY
 nc680wj8nW/CkOxeEoWZzsQy3SxTlg==
 -----END PRIVATE KEY-----`
 
+//nolint:funlen // this is a test
 func TestRouteRequestCertificate(t *testing.T) {
 	certPortal, mocks := newService(t)
 	assert.NotNil(t, certPortal)
@@ -106,21 +107,6 @@ func TestRouteRequestCertificate(t *testing.T) {
 
 	csr := string(csrData)
 
-	certificateRequest, err := json.Marshal(&server.CertificateRequest{
-		Csr: csr,
-	})
-	assert.NoError(t, err)
-
-	certificateRequestWithoutSAN, err := json.Marshal(&server.CertificateRequest{
-		Csr: csrWithoutSAN,
-	})
-	assert.NoError(t, err)
-
-	certificateRequestWithKey, err := json.Marshal(&server.CertificateRequest{
-		Csr: key,
-	})
-	assert.NoError(t, err)
-
 	tests := map[string]struct {
 		requestBody        []byte
 		setupMock          func()
@@ -128,7 +114,13 @@ func TestRouteRequestCertificate(t *testing.T) {
 		expectedBody       string
 	}{
 		"without_san": {
-			certificateRequestWithoutSAN,
+			func() []byte {
+				certificateRequestWithoutSan, err := json.Marshal(&server.CertificateRequest{
+					Csr: csrWithoutSAN,
+				})
+				assert.NoError(t, err)
+				return certificateRequestWithoutSan
+			}(),
 			func() {
 				mockSigner.EXPECT().Sign(signer.SignRequest{
 					Request: csrWithoutSAN,
@@ -145,13 +137,25 @@ func TestRouteRequestCertificate(t *testing.T) {
 			"could not decode request body\n",
 		},
 		"with_key_instead_of_csr": {
-			certificateRequestWithKey,
+			func() []byte {
+				certificateRequestWithKey, err := json.Marshal(&server.CertificateRequest{
+					Csr: key,
+				})
+				assert.NoError(t, err)
+				return certificateRequestWithKey
+			}(),
 			func() {},
 			http.StatusBadRequest,
 			"failed to parse csr\n",
 		},
 		"failed_to_sign": {
-			certificateRequest,
+			func() []byte {
+				certificateRequest, err := json.Marshal(&server.CertificateRequest{
+					Csr: csr,
+				})
+				assert.NoError(t, err)
+				return certificateRequest
+			}(),
 			func() {
 				mockSigner.EXPECT().Sign(signer.SignRequest{
 					Request: csr,
@@ -161,7 +165,13 @@ func TestRouteRequestCertificate(t *testing.T) {
 			"Internal Server Error\n",
 		},
 		"happy_path": {
-			certificateRequest,
+			func() []byte {
+				certificateRequest, err := json.Marshal(&server.CertificateRequest{
+					Csr: csr,
+				})
+				assert.NoError(t, err)
+				return certificateRequest
+			}(),
 			func() {
 				mockSigner.EXPECT().Sign(signer.SignRequest{
 					Request: csr,
