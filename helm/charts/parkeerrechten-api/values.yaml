@@ -18,6 +18,7 @@ postgres:
   hostname: ""
   database: ""
   sslMode: "require"
+  connectTimeout: "10"
   existingSecret:
     name: ""
     usernameKey: "username"

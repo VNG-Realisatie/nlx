@@ -96,7 +96,7 @@ parkeerrechten-api:
     hostname: gemeente-stijns-postgresql
     database: parkeerrechten
     existingSecret:
-      name: gemeente-stijns-postgresql-auth
+      name: postgres.gemeente-stijns-postgresql.credentials.postgresql.acid.zalan.do
 
 parkeerrechten-viewer:
   enabled: true
