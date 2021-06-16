@@ -152,13 +152,13 @@ func TestRouteRequestCertificate(t *testing.T) {
 			[]byte("invalid"),
 			func() {},
 			http.StatusBadRequest,
-			"",
+			"could not decode request body\n",
 		},
 		"with_key_instead_of_csr": {
 			certificateRequestWithKey,
 			func() {},
 			http.StatusBadRequest,
-			"",
+			"failed to parse csr\n",
 		},
 		"failed_to_sign": {
 			certificateRequest,
@@ -168,7 +168,7 @@ func TestRouteRequestCertificate(t *testing.T) {
 				}).Return(nil, fmt.Errorf("error signing request"))
 			},
 			http.StatusInternalServerError,
-			"",
+			"Internal Server Error\n",
 		},
 	}
 

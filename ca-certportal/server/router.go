@@ -70,9 +70,7 @@ func requestCertificateHandler(logger *zap.Logger, createSigner certportal.Creat
 	return func(w http.ResponseWriter, r *http.Request) {
 		data := &CertificateRequest{}
 		if err := render.DecodeJSON(r.Body, data); err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			logger.Error("error reading request body", zap.Error(err))
-
+			http.Error(w, "could not decode request body", http.StatusBadRequest)
 			return
 		}
 
@@ -80,25 +78,25 @@ func requestCertificateHandler(logger *zap.Logger, createSigner certportal.Creat
 		if err != nil {
 			switch err {
 			case certportal.ErrFailedToSignCSR:
-				w.WriteHeader(http.StatusInternalServerError)
+				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 				logger.Error("failed to sign csr", zap.Error(err))
 
 				return
 
 			case certportal.ErrFailedToParseCSR:
 				w.WriteHeader(http.StatusBadRequest)
-				logger.Error("failed to parse csr", zap.Error(err))
+				http.Error(w, "failed to parse csr", http.StatusBadRequest)
 
 				return
 
 			case certportal.ErrFailedToCreateSigner:
-				w.WriteHeader(http.StatusBadRequest)
+				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 				logger.Error("failed to create signer", zap.Error(err))
 
 				return
 
 			default:
-				w.WriteHeader(http.StatusInternalServerError)
+				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 				logger.Error("failed to request certificate", zap.Error(err))
 
 				return
