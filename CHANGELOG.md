@@ -1,3 +1,15 @@
+# [0.105.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.104.0...v0.105.0) (2021-06-16)
+
+
+### Bug Fixes
+
+* **helm:** update outdated kubedb secret for parkeerrechten api ([03c9cec](https://gitlab.com/commonground/nlx/nlx/commit/03c9cec321e2db794311b051395e72cc79ffe504))
+
+
+### Features
+
+* replace kubedb with zalando operator ([60244be](https://gitlab.com/commonground/nlx/nlx/commit/60244bec03b55885bd39a8b45325fa9aaa50aec9))
+
 # [0.104.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.103.1...v0.104.0) (2021-06-15)
 
 
