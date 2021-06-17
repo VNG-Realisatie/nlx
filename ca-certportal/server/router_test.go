@@ -28,7 +28,7 @@ type requestBody struct {
 }
 
 //nolint:funlen // this is a test
-func TestRouteRequestCertificate(t *testing.T) {
+func TestRoute_RequestCertificate(t *testing.T) {
 	csrData, err := ioutil.ReadFile(filepath.Join(pkiDir, "org-nlx-test.csr"))
 	assert.NoError(t, err)
 
@@ -131,7 +131,7 @@ func TestRouteRequestCertificate(t *testing.T) {
 	}
 }
 
-func TestRouteRoot(t *testing.T) {
+func TestRoute_Root(t *testing.T) {
 	certPortal, mocks := newService(t)
 	assert.NotNil(t, certPortal)
 
@@ -179,30 +179,7 @@ func TestRouteRoot(t *testing.T) {
 	}
 }
 
-type serviceMocks struct {
-	s *mock.MockSigner
-}
-
-func newService(t *testing.T) (*server.CertPortal, serviceMocks) {
-	ctrl := gomock.NewController(t)
-
-	t.Cleanup(func() {
-		t.Helper()
-		ctrl.Finish()
-	})
-
-	mocks := serviceMocks{
-		s: mock.NewMockSigner(ctrl),
-	}
-
-	service := server.NewCertPortal(zap.NewNop(), func() (signer.Signer, error) {
-		return mocks.s, nil
-	})
-
-	return service, mocks
-}
-
-func TestRoutesInvalidSigner(t *testing.T) {
+func TestRoutes_WithInvalidSigner(t *testing.T) {
 	certPortal := server.NewCertPortal(zap.NewNop(), func() (signer.Signer, error) {
 		return nil, fmt.Errorf("unable to create certificate signer")
 	})
@@ -224,6 +201,29 @@ func TestRoutesInvalidSigner(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusInternalServerError, resp.StatusCode)
 	resp.Body.Close()
+}
+
+type serviceMocks struct {
+	s *mock.MockSigner
+}
+
+func newService(t *testing.T) (*server.CertPortal, serviceMocks) {
+	ctrl := gomock.NewController(t)
+
+	t.Cleanup(func() {
+		t.Helper()
+		ctrl.Finish()
+	})
+
+	mocks := serviceMocks{
+		s: mock.NewMockSigner(ctrl),
+	}
+
+	service := server.NewCertPortal(zap.NewNop(), func() (signer.Signer, error) {
+		return mocks.s, nil
+	})
+
+	return service, mocks
 }
 
 var pkiDir = filepath.Join("..", "..", "testing", "pki")
