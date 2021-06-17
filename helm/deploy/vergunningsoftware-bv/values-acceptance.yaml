@@ -84,9 +84,9 @@ parkeerrechten-admin:
   organizationColor: #FEBC2D
   servicesList:
     - organization: "Stijns"
-      baseUrl: "http://gemeente-stijns-nlx-outway/Gemeente%20Stijns/parkeerrechten"
-  kentekenApiBaseUrl: http://rvrd-basisregister-fictieve-kentekens
-  personenApiBaseUrl: http://rvrd-basisregister-fictieve-personen
+      baseUrl: "http://vergunningsoftware-bv-nlx-outway/Gemeente%20Stijns/parkeerrechten"
+  kentekenApiBaseUrl: http://vergunningsoftware-bv-nlx-outway/RvRD/basisregister-fictieve-kentekens
+  personenApiBaseUrl: http://vergunningsoftware-bv-nlx-outway/RvRD/basisregister-fictieve-personen
   ingress:
     enabled: true
     annotations:
