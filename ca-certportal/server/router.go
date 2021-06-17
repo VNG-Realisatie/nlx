@@ -68,7 +68,7 @@ func (c *CertPortal) GetRouter() chi.Router {
 
 func requestCertificateHandler(logger *zap.Logger, createSigner certportal.CreateSignerFunc) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		data := &CertificateRequest{}
+		data := &certificateRequest{}
 		if err := render.DecodeJSON(r.Body, data); err != nil {
 			http.Error(w, "could not decode request body", http.StatusBadRequest)
 			return
@@ -115,8 +115,7 @@ func requestCertificateHandler(logger *zap.Logger, createSigner certportal.Creat
 	}
 }
 
-// CertificateRequest contains the csr
-type CertificateRequest struct {
+type certificateRequest struct {
 	Csr string `json:"csr"`
 }
 

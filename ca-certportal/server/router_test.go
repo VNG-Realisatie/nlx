@@ -23,6 +23,10 @@ import (
 	"go.nlx.io/nlx/ca-certportal/server"
 )
 
+type requestBody struct {
+	Csr string `json:"csr"`
+}
+
 //nolint:funlen // this is a test
 func TestRouteRequestCertificate(t *testing.T) {
 	csrData, err := ioutil.ReadFile(filepath.Join(pkiDir, "org-nlx-test.csr"))
@@ -36,10 +40,11 @@ func TestRouteRequestCertificate(t *testing.T) {
 	}{
 		"without_san": {
 			func() []byte {
-				certificateRequestWithoutSan, err := json.Marshal(&server.CertificateRequest{
+				certificateRequestWithoutSan, err := json.Marshal(&requestBody{
 					Csr: csrWithoutSAN,
 				})
 				assert.NoError(t, err)
+
 				return certificateRequestWithoutSan
 			}(),
 			func(mocks serviceMocks) {
@@ -59,7 +64,7 @@ func TestRouteRequestCertificate(t *testing.T) {
 		},
 		"with_key_instead_of_csr": {
 			func() []byte {
-				certificateRequestWithKey, err := json.Marshal(&server.CertificateRequest{
+				certificateRequestWithKey, err := json.Marshal(&requestBody{
 					Csr: key,
 				})
 				assert.NoError(t, err)
@@ -71,7 +76,7 @@ func TestRouteRequestCertificate(t *testing.T) {
 		},
 		"failed_to_sign": {
 			func() []byte {
-				certificateRequest, err := json.Marshal(&server.CertificateRequest{
+				certificateRequest, err := json.Marshal(&requestBody{
 					Csr: string(csrData),
 				})
 				assert.NoError(t, err)
@@ -87,7 +92,7 @@ func TestRouteRequestCertificate(t *testing.T) {
 		},
 		"happy_path": {
 			func() []byte {
-				certificateRequest, err := json.Marshal(&server.CertificateRequest{
+				certificateRequest, err := json.Marshal(&requestBody{
 					Csr: string(csrData),
 				})
 				assert.NoError(t, err)
@@ -206,7 +211,7 @@ func TestRoutesInvalidSigner(t *testing.T) {
 	srv := httptest.NewServer(certPortal.GetRouter())
 	defer srv.Close()
 
-	jsonBytesCertificateRequest, err := json.Marshal(&server.CertificateRequest{
+	jsonBytesCertificateRequest, err := json.Marshal(&requestBody{
 		Csr: "csr",
 	})
 	assert.NoError(t, err)
