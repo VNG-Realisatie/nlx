@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"regexp"
 	"strings"
 	"sync"
 	"time"
@@ -37,6 +38,8 @@ const retryFactor = 10
 const maxRetryDuration = 20 * time.Second
 const minRetryDuration = 100 * time.Millisecond
 const announceToDirectoryInterval = 10 * time.Second
+
+var nameRegex = regexp.MustCompile(`^[a-zA-Z0-9-]{1,100}$`)
 
 type Inway struct {
 	name                        string
@@ -74,6 +77,10 @@ func NewInway(params *Params) (*Inway, error) {
 
 	if logger == nil {
 		logger = zap.NewNop()
+	}
+
+	if !nameRegex.MatchString(params.Name) {
+		return nil, errors.New("a valid name is required (alphanumeric & dashes, max. 100 characters)")
 	}
 
 	orgCert := params.OrgCertBundle.Certificate()

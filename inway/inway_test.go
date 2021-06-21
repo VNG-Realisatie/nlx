@@ -16,17 +16,7 @@ import (
 var pkiDir = filepath.Join("..", "testing", "pki")
 
 func Test_NewInway(t *testing.T) {
-	certOrg, _ := common_tls.NewBundleFromFiles(
-		filepath.Join(pkiDir, "org-without-name-chain.pem"),
-		filepath.Join(pkiDir, "org-without-name-key.pem"),
-		filepath.Join(pkiDir, "ca-root.pem"),
-	)
-
-	cert, _ := common_tls.NewBundleFromFiles(
-		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-		filepath.Join(pkiDir, "ca-root.pem"),
-	)
+	certOrg, cert := getCertBundles()
 
 	tests := map[string]struct {
 		params               *inway.Params
@@ -38,6 +28,7 @@ func Test_NewInway(t *testing.T) {
 				SelfAddress:       "inway.test",
 				OrgCertBundle:     cert,
 				MonitoringAddress: "localhost:8080",
+				Name:              "my-inway",
 			},
 			expectedErrorMessage: "context is nil. needed to close gracefully",
 		},
@@ -47,6 +38,7 @@ func Test_NewInway(t *testing.T) {
 				SelfAddress:       "inway.test",
 				OrgCertBundle:     certOrg,
 				MonitoringAddress: "localhost:8080",
+				Name:              "my-inway",
 			},
 			expectedErrorMessage: "cannot obtain organization name from self cert",
 		},
@@ -56,6 +48,7 @@ func Test_NewInway(t *testing.T) {
 				SelfAddress:       "inway.test",
 				OrgCertBundle:     cert,
 				MonitoringAddress: "",
+				Name:              "my-inway",
 			},
 			expectedErrorMessage: "unable to create monitoring service: address required",
 		},
@@ -65,6 +58,7 @@ func Test_NewInway(t *testing.T) {
 				SelfAddress:       "test.com",
 				OrgCertBundle:     cert,
 				MonitoringAddress: "localhost:8080",
+				Name:              "my-inway",
 			},
 			expectedErrorMessage: "'test.com' is not in the list of DNS names of the certificate, [localhost inway.test]",
 		},
@@ -74,8 +68,29 @@ func Test_NewInway(t *testing.T) {
 				SelfAddress:       "localhost:1:2",
 				OrgCertBundle:     cert,
 				MonitoringAddress: "localhost:8080",
+				Name:              "my-inway",
 			},
 			expectedErrorMessage: "failed to parse selfAddress hostname from 'localhost:1:2': address localhost:1:2: too many colons in address",
+		},
+		"missing_name": {
+			params: &inway.Params{
+				Context:           context.Background(),
+				SelfAddress:       "inway.test",
+				OrgCertBundle:     cert,
+				MonitoringAddress: "localhost:8080",
+				Name:              "",
+			},
+			expectedErrorMessage: "a valid name is required (alphanumeric & dashes, max. 100 characters)",
+		},
+		"invalid_name": {
+			params: &inway.Params{
+				Context:           context.Background(),
+				SelfAddress:       "inway.test",
+				OrgCertBundle:     cert,
+				MonitoringAddress: "localhost:8080",
+				Name:              "#",
+			},
+			expectedErrorMessage: "a valid name is required (alphanumeric & dashes, max. 100 characters)",
 		},
 	}
 
@@ -87,4 +102,20 @@ func Test_NewInway(t *testing.T) {
 			assert.EqualError(t, err, tt.expectedErrorMessage)
 		})
 	}
+}
+
+func getCertBundles() (certOrg, cert *common_tls.CertificateBundle) {
+	certOrg, _ = common_tls.NewBundleFromFiles(
+		filepath.Join(pkiDir, "org-without-name-chain.pem"),
+		filepath.Join(pkiDir, "org-without-name-key.pem"),
+		filepath.Join(pkiDir, "ca-root.pem"),
+	)
+
+	cert, _ = common_tls.NewBundleFromFiles(
+		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
+		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
+		filepath.Join(pkiDir, "ca-root.pem"),
+	)
+
+	return certOrg, cert
 }

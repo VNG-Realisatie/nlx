@@ -45,7 +45,7 @@ var options struct {
 	SelfAddress                  string `long:"self-address" env:"SELF_ADDRESS" description:"The address that outways can use to reach me" required:"true"`
 	ServiceConfig                string `long:"service-config" env:"SERVICE_CONFIG" default:"service-config.toml" description:"Location of the service config toml file"`
 	PostgresDSN                  string `long:"postgres-dsn" env:"POSTGRES_DSN" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
-	Name                         string `long:"name" env:"INWAY_NAME" description:"Name of the inway"`
+	Name                         string `long:"name" env:"INWAY_NAME" description:"Name of the inway" required:"true"`
 
 	logoptions.LogOptions
 	cmd.TLSOrgOptions

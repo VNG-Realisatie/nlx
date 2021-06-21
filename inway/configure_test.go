@@ -40,7 +40,7 @@ func TestStartConfigurationPolling(t *testing.T) {
 			managementClient: func(ctrl *gomock.Controller) *mock_api.MockManagementClient {
 				managementClient := mock_api.NewMockManagementClient(ctrl)
 				managementClient.EXPECT().CreateInway(gomock.Any(), &api.Inway{
-					Name:        "mock.inway",
+					Name:        "mock-inway",
 					Version:     "unknown",
 					Hostname:    hostname,
 					SelfAddress: "localhost:1812",
@@ -55,14 +55,14 @@ func TestStartConfigurationPolling(t *testing.T) {
 			managementClient: func(ctrl *gomock.Controller) *mock_api.MockManagementClient {
 				managementClient := mock_api.NewMockManagementClient(ctrl)
 				managementClient.EXPECT().CreateInway(gomock.Any(), &api.Inway{
-					Name:        "mock.inway",
+					Name:        "mock-inway",
 					Version:     "unknown",
 					Hostname:    hostname,
 					SelfAddress: "localhost:1812",
 				}).Return(nil, nil)
 
 				managementClient.EXPECT().ListServices(gomock.Any(), &api.ListServicesRequest{
-					InwayName: "mock.inway",
+					InwayName: "mock-inway",
 				}).Return(&api.ListServicesResponse{
 					Services: []*api.ListServicesResponse_Service{
 						{
@@ -126,7 +126,7 @@ func TestStartConfigurationPolling(t *testing.T) {
 				Txlogger:                     nil,
 				ManagementClient:             tc.managementClient(ctrl),
 				ManagementProxy:              nil,
-				Name:                         "mock.inway",
+				Name:                         "mock-inway",
 				SelfAddress:                  "localhost:1812",
 				MonitoringAddress:            "localhost:1813",
 				ListenManagementAddress:      "",
