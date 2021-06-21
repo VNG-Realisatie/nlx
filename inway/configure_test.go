@@ -127,7 +127,7 @@ func TestStartConfigurationPolling(t *testing.T) {
 				ManagementClient:             tc.managementClient(ctrl),
 				ManagementProxy:              nil,
 				Name:                         "mock-inway",
-				SelfAddress:                  "localhost:1812",
+				Address:                      "localhost:1812",
 				MonitoringAddress:            "localhost:1813",
 				ListenManagementAddress:      "",
 				OrgCertBundle:                cert,

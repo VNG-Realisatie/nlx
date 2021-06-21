@@ -48,7 +48,7 @@ func TestInwayApiSpec(t *testing.T) {
 		ManagementClient:             nil,
 		ManagementProxy:              nil,
 		Name:                         "my-inway",
-		SelfAddress:                  "localhost:1811",
+		Address:                      "localhost:1811",
 		MonitoringAddress:            "localhost:1812",
 		ListenManagementAddress:      "localhost:1813",
 		OrgCertBundle:                cert,

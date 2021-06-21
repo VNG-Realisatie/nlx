@@ -44,7 +44,7 @@ var nameRegex = regexp.MustCompile(`^[a-zA-Z0-9-]{1,100}$`)
 type Inway struct {
 	name                        string
 	organizationName            string
-	selfAddress                 string
+	address                     string
 	listenManagementAddress     string
 	orgCertBundle               *common_tls.CertificateBundle
 	logger                      *zap.Logger
@@ -65,7 +65,7 @@ type Params struct {
 	ManagementClient             api.ManagementClient
 	ManagementProxy              *grpcproxy.Proxy
 	Name                         string
-	SelfAddress                  string
+	Address                      string
 	MonitoringAddress            string
 	ListenManagementAddress      string
 	OrgCertBundle                *common_tls.CertificateBundle
@@ -89,7 +89,7 @@ func NewInway(params *Params) (*Inway, error) {
 		return nil, errors.New("cannot obtain organization name from self cert")
 	}
 
-	err := selfAddressIsInOrgCert(params.SelfAddress, orgCert)
+	err := addressIsInOrgCert(params.Address, orgCert)
 	if err != nil {
 		return nil, err
 	}
@@ -105,7 +105,7 @@ func NewInway(params *Params) (*Inway, error) {
 		logger:                  logger.With(zap.String("inway-organization-name", organizationName)),
 		organizationName:        organizationName,
 		listenManagementAddress: params.ListenManagementAddress,
-		selfAddress:             params.SelfAddress,
+		address:                 params.Address,
 		orgCertBundle:           params.OrgCertBundle,
 		managementClient:        params.ManagementClient,
 		managementProxy:         params.ManagementProxy,
@@ -152,13 +152,13 @@ func NewInway(params *Params) (*Inway, error) {
 	return i, nil
 }
 
-func selfAddressIsInOrgCert(selfAddress string, orgCert *x509.Certificate) error {
-	hostname := selfAddress
+func addressIsInOrgCert(address string, orgCert *x509.Certificate) error {
+	hostname := address
 
 	if strings.Contains(hostname, ":") {
-		host, _, err := net.SplitHostPort(selfAddress)
+		host, _, err := net.SplitHostPort(address)
 		if err != nil {
-			return errors.Wrapf(err, "failed to parse selfAddress hostname from '%s'", selfAddress)
+			return errors.Wrapf(err, "failed to parse address hostname from '%s'", address)
 		}
 
 		hostname = host
@@ -174,7 +174,7 @@ func selfAddressIsInOrgCert(selfAddress string, orgCert *x509.Certificate) error
 		}
 	}
 
-	return errors.Errorf("'%s' is not in the list of DNS names of the certificate, %v", selfAddress, orgCert.DNSNames)
+	return errors.Errorf("'%s' is not in the list of DNS names of the certificate, %v", address, orgCert.DNSNames)
 }
 
 func getFingerPrint(rawCert []byte) string {
@@ -223,7 +223,7 @@ func (i *Inway) announceToDirectory(ctx context.Context) {
 			resp, err := i.directoryRegistrationClient.RegisterInway(
 				nlxversion.NewGRPCContext(ctx, "inway"),
 				&registrationapi.RegisterInwayRequest{
-					InwayAddress: i.selfAddress,
+					InwayAddress: i.address,
 					Services:     protoServiceDetails,
 				},
 			)

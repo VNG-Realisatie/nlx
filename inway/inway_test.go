@@ -25,7 +25,7 @@ func Test_NewInway(t *testing.T) {
 		"missing_context": {
 			params: &inway.Params{
 				Context:           nil,
-				SelfAddress:       "inway.test",
+				Address:           "inway.test",
 				OrgCertBundle:     cert,
 				MonitoringAddress: "localhost:8080",
 				Name:              "my-inway",
@@ -35,7 +35,7 @@ func Test_NewInway(t *testing.T) {
 		"certificates_without_an_organization_name": {
 			params: &inway.Params{
 				Context:           context.Background(),
-				SelfAddress:       "inway.test",
+				Address:           "inway.test",
 				OrgCertBundle:     certOrg,
 				MonitoringAddress: "localhost:8080",
 				Name:              "my-inway",
@@ -45,7 +45,7 @@ func Test_NewInway(t *testing.T) {
 		"missing_monitoring_address": {
 			params: &inway.Params{
 				Context:           context.Background(),
-				SelfAddress:       "inway.test",
+				Address:           "inway.test",
 				OrgCertBundle:     cert,
 				MonitoringAddress: "",
 				Name:              "my-inway",
@@ -55,7 +55,7 @@ func Test_NewInway(t *testing.T) {
 		"self_address_not_in_certicate": {
 			params: &inway.Params{
 				Context:           context.Background(),
-				SelfAddress:       "test.com",
+				Address:           "test.com",
 				OrgCertBundle:     cert,
 				MonitoringAddress: "localhost:8080",
 				Name:              "my-inway",
@@ -65,17 +65,17 @@ func Test_NewInway(t *testing.T) {
 		"self_address_must_be_valid_host_or_host:port": {
 			params: &inway.Params{
 				Context:           context.Background(),
-				SelfAddress:       "localhost:1:2",
+				Address:           "localhost:1:2",
 				OrgCertBundle:     cert,
 				MonitoringAddress: "localhost:8080",
 				Name:              "my-inway",
 			},
-			expectedErrorMessage: "failed to parse selfAddress hostname from 'localhost:1:2': address localhost:1:2: too many colons in address",
+			expectedErrorMessage: "failed to parse address hostname from 'localhost:1:2': address localhost:1:2: too many colons in address",
 		},
 		"missing_name": {
 			params: &inway.Params{
 				Context:           context.Background(),
-				SelfAddress:       "inway.test",
+				Address:           "inway.test",
 				OrgCertBundle:     cert,
 				MonitoringAddress: "localhost:8080",
 				Name:              "",
@@ -85,7 +85,7 @@ func Test_NewInway(t *testing.T) {
 		"invalid_name": {
 			params: &inway.Params{
 				Context:           context.Background(),
-				SelfAddress:       "inway.test",
+				Address:           "inway.test",
 				OrgCertBundle:     cert,
 				MonitoringAddress: "localhost:8080",
 				Name:              "#",

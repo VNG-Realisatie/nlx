@@ -42,7 +42,7 @@ var options struct {
 	DirectoryRegistrationAddress string `long:"directory-registration-address" env:"DIRECTORY_REGISTRATION_ADDRESS" description:"Address for the directory where this inway can register it's services" required:"true"`
 	DisableLogdb                 bool   `long:"disable-logdb" env:"DISABLE_LOGDB" description:"Disable logdb connections"`
 	ManagementAPIAddress         string `long:"management-api-address" env:"MANAGEMENT_API_ADDRESS" description:"The address of the NLX Management API" required:"true"`
-	SelfAddress                  string `long:"self-address" env:"SELF_ADDRESS" description:"The address that outways can use to reach me" required:"true"`
+	Address                      string `long:"self-address" env:"SELF_ADDRESS" description:"The address that outways can use to reach me" required:"true"`
 	ServiceConfig                string `long:"service-config" env:"SERVICE_CONFIG" default:"service-config.toml" description:"Location of the service config toml file"`
 	PostgresDSN                  string `long:"postgres-dsn" env:"POSTGRES_DSN" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
 	Name                         string `long:"name" env:"INWAY_NAME" description:"Name of the inway" required:"true"`
@@ -119,7 +119,7 @@ func main() {
 		ManagementClient:             api.NewManagementClient(conn),
 		ManagementProxy:              managementProxy,
 		Name:                         options.Name,
-		SelfAddress:                  options.SelfAddress,
+		Address:                      options.Address,
 		MonitoringAddress:            options.MonitoringAddress,
 		ListenManagementAddress:      listenManagementAddress,
 		OrgCertBundle:                orgCert,

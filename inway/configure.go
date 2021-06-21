@@ -35,7 +35,7 @@ func (i *Inway) startConfigurationPolling(ctx context.Context) error {
 		Name:        i.name,
 		Version:     version.BuildVersion,
 		Hostname:    hostname,
-		SelfAddress: i.selfAddress,
+		SelfAddress: i.address,
 	})
 	if err != nil {
 		return err
