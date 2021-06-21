@@ -40,7 +40,22 @@ func TestInwayApiSpec(t *testing.T) {
 	logger := zap.NewNop()
 
 	ctx := context.Background()
-	iw, err := NewInway(ctx, logger, nil, nil, nil, "my.inway", "localhost:1811", "localhost:1812", "localhost:1813", cert, "localhost:1815")
+
+	params := &Params{
+		Context:                      ctx,
+		Logger:                       logger,
+		Txlogger:                     nil,
+		ManagementClient:             nil,
+		ManagementProxy:              nil,
+		Name:                         "my.inway",
+		SelfAddress:                  "localhost:1811",
+		MonitoringAddress:            "localhost:1812",
+		ListenManagementAddress:      "localhost:1813",
+		OrgCertBundle:                cert,
+		DirectoryRegistrationAddress: "localhost:1815",
+	}
+
+	iw, err := NewInway(params)
 	assert.Nil(t, err)
 
 	apiSpecMockServer := httptest.NewUnstartedServer(http.HandlerFunc(iw.handleAPISpecDocRequest))

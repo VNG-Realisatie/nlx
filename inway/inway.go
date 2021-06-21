@@ -55,74 +55,76 @@ type Inway struct {
 	servicesLock                sync.RWMutex
 }
 
-func NewInway(
-	ctx context.Context,
-	logger *zap.Logger,
-	txlogger transactionlog.TransactionLogger,
-	managementClient api.ManagementClient,
-	managementProxy *grpcproxy.Proxy,
-	name,
-	selfAddress string,
-	monitoringAddress string,
-	listenManagementAddress string,
-	orgCertBundle *common_tls.CertificateBundle,
-	directoryRegistrationAddress string,
-) (*Inway, error) {
-	orgCert := orgCertBundle.Certificate()
+type Params struct {
+	Context                      context.Context
+	Logger                       *zap.Logger
+	Txlogger                     transactionlog.TransactionLogger
+	ManagementClient             api.ManagementClient
+	ManagementProxy              *grpcproxy.Proxy
+	Name                         string
+	SelfAddress                  string
+	MonitoringAddress            string
+	ListenManagementAddress      string
+	OrgCertBundle                *common_tls.CertificateBundle
+	DirectoryRegistrationAddress string
+}
+
+func NewInway(params *Params) (*Inway, error) {
+	orgCert := params.OrgCertBundle.Certificate()
 
 	if len(orgCert.Subject.Organization) != 1 {
 		return nil, errors.New("cannot obtain organization name from self cert")
 	}
 
-	err := selfAddressIsInOrgCert(selfAddress, orgCert)
+	err := selfAddressIsInOrgCert(params.SelfAddress, orgCert)
 	if err != nil {
 		return nil, err
 	}
 
-	if ctx == nil {
+	if params.Context == nil {
 		return nil, errors.New("context is nil. needed to close gracefully")
 	}
 
 	organizationName := orgCert.Subject.Organization[0]
-	logger.Info("loaded certificates for inway", zap.String("inway-organization-name", organizationName))
+	params.Logger.Info("loaded certificates for inway", zap.String("inway-organization-name", organizationName))
 
 	i := &Inway{
-		logger:                  logger.With(zap.String("inway-organization-name", organizationName)),
+		logger:                  params.Logger.With(zap.String("inway-organization-name", organizationName)),
 		organizationName:        organizationName,
-		listenManagementAddress: listenManagementAddress,
-		selfAddress:             selfAddress,
-		orgCertBundle:           orgCertBundle,
-		managementClient:        managementClient,
-		managementProxy:         managementProxy,
+		listenManagementAddress: params.ListenManagementAddress,
+		selfAddress:             params.SelfAddress,
+		orgCertBundle:           params.OrgCertBundle,
+		managementClient:        params.ManagementClient,
+		managementProxy:         params.ManagementProxy,
 		services:                map[string]*plugins.Service{},
 		servicesLock:            sync.RWMutex{},
 		plugins: []plugins.Plugin{
 			plugins.NewAuthenticationPlugin(),
 			plugins.NewDelegationPlugin(),
 			plugins.NewAuthorizationPlugin(),
-			plugins.NewLogRecordPlugin(organizationName, txlogger),
+			plugins.NewLogRecordPlugin(organizationName, params.Txlogger),
 		},
 	}
 
 	// setup monitoring service
-	i.monitoringService, err = monitoring.NewMonitoringService(monitoringAddress, logger)
+	i.monitoringService, err = monitoring.NewMonitoringService(params.MonitoringAddress, params.Logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to create monitoring service")
 	}
 
-	if name != "" {
-		i.name = name
+	if params.Name != "" {
+		i.name = params.Name
 	} else {
 		i.name = getFingerPrint(orgCert.Raw)
 	}
 
-	directoryDialCredentials := credentials.NewTLS(orgCertBundle.TLSConfig())
+	directoryDialCredentials := credentials.NewTLS(params.OrgCertBundle.TLSConfig())
 	directoryDialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(directoryDialCredentials),
 	}
 
-	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(nlxversion.NewGRPCContext(ctx, "inway"), 1*time.Minute)
-	directoryConn, err := grpc.DialContext(directoryConnCtx, directoryRegistrationAddress, directoryDialOptions...)
+	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(nlxversion.NewGRPCContext(params.Context, "inway"), 1*time.Minute)
+	directoryConn, err := grpc.DialContext(directoryConnCtx, params.DirectoryRegistrationAddress, directoryDialOptions...)
 
 	defer directoryConnCtxCancel()
 
@@ -132,7 +134,7 @@ func NewInway(
 
 	i.directoryRegistrationClient = registrationapi.NewDirectoryRegistrationClient(directoryConn)
 
-	logger.Info("directory registration client setup complete", zap.String("directory-address", directoryRegistrationAddress))
+	params.Logger.Info("directory registration client setup complete", zap.String("directory-address", params.DirectoryRegistrationAddress))
 
 	return i, nil
 }

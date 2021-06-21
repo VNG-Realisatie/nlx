@@ -112,19 +112,21 @@ func main() {
 	managementProxy.RegisterService(external_api.GetAccessRequestServiceDesc())
 	managementProxy.RegisterService(external_api.GetDelegationServiceDesc())
 
-	iw, err := inway.NewInway(
-		ctx,
-		logger,
-		txlogger,
-		api.NewManagementClient(conn),
-		managementProxy,
-		options.Name,
-		options.SelfAddress,
-		options.MonitoringAddress,
-		listenManagementAddress,
-		orgCert,
-		options.DirectoryRegistrationAddress,
-	)
+	params := &inway.Params{
+		Context:                      ctx,
+		Logger:                       logger,
+		Txlogger:                     txlogger,
+		ManagementClient:             api.NewManagementClient(conn),
+		ManagementProxy:              managementProxy,
+		Name:                         options.Name,
+		SelfAddress:                  options.SelfAddress,
+		MonitoringAddress:            options.MonitoringAddress,
+		ListenManagementAddress:      listenManagementAddress,
+		OrgCertBundle:                orgCert,
+		DirectoryRegistrationAddress: options.DirectoryRegistrationAddress,
+	}
+
+	iw, err := inway.NewInway(params)
 	if err != nil {
 		logger.Fatal("cannot setup inway", zap.Error(err))
 	}

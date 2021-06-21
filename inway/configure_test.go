@@ -120,7 +120,21 @@ func TestStartConfigurationPolling(t *testing.T) {
 				ctrl.Finish()
 			})
 
-			iw, err := NewInway(ctx, zap.NewNop(), nil, tc.managementClient(ctrl), nil, "mock.inway", "localhost:1812", "localhost:1813", "", cert, "localhost:1815")
+			params := &Params{
+				Context:                      ctx,
+				Logger:                       zap.NewNop(),
+				Txlogger:                     nil,
+				ManagementClient:             tc.managementClient(ctrl),
+				ManagementProxy:              nil,
+				Name:                         "mock.inway",
+				SelfAddress:                  "localhost:1812",
+				MonitoringAddress:            "localhost:1813",
+				ListenManagementAddress:      "",
+				OrgCertBundle:                cert,
+				DirectoryRegistrationAddress: "localhost:1815",
+			}
+
+			iw, err := NewInway(params)
 			assert.Nil(t, err)
 
 			err = iw.startConfigurationPolling(ctx)

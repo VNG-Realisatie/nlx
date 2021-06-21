@@ -78,7 +78,20 @@ func TestNewInway(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			_, err := inway.NewInway(tt.context, zap.NewNop(), nil, nil, nil, "", tt.selfAddress, tt.monitoringAddress, "", tt.cert, "")
+			params := &inway.Params{
+				Context:                      tt.context,
+				Logger:                       zap.NewNop(),
+				Txlogger:                     nil,
+				ManagementClient:             nil,
+				ManagementProxy:              nil,
+				Name:                         "",
+				SelfAddress:                  tt.selfAddress,
+				MonitoringAddress:            tt.monitoringAddress,
+				ListenManagementAddress:      "",
+				OrgCertBundle:                tt.cert,
+				DirectoryRegistrationAddress: "",
+			}
+			_, err := inway.NewInway(params)
 			assert.EqualError(t, err, tt.expectedErrorMessage)
 		})
 	}
