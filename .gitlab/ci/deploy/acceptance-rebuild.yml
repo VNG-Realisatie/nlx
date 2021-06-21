@@ -1,0 +1,22 @@
+Rebuild acceptance:
+  extends: Deploy acceptance
+  variables:
+    HELM_CHARTS_TO_DELETE: "rvrd gemeente-stijns vergunningsoftware-bv"
+  before_script:
+    - source ./.gitlab/ci/functions.sh
+    - |
+      for CHART in ${HELM_CHARTS_TO_DELETE}; do
+        start_section uninstall_${CHART} "Uninstalling chart '${CHART}'"
+        CHART_DIRECTORY="./helm/deploy/${CHART}"
+
+        helm uninstall ${CHART} \
+          --namespace ${K8S_NAMESPACE} || true
+
+        stop_section uninstall_${CHART}
+      done
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "master" && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
+      when: manual
+      allow_failure: false
