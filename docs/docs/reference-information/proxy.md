@@ -20,7 +20,7 @@ To use the outway as a proxy you need to:
 
 You can start the outway as a proxy by setting the environment variable `USE_AS_HTTP_PROXY` to `1` when starting the outway docker image.
 
-In this example the command to start the outway used in the [try nlx section](../try-nlx/introduction.md) has been modified to start the outway as a proxy:
+In this example the command to start the outway used in the [try nlx section](../try-nlx/introduction) has been modified to start the outway as a proxy:
 
 ```bash
 docker run --rm \

@@ -7,7 +7,7 @@ To be able to send traffic through the NLX network, you'll need a certificate an
 The certificate and key are used to encrypt traffic between you and other nodes.
 
 In this part we will generate & install all required certificates.
-Before you continue, make sure you have [set up your environment](./setup-your-environment.md).
+Before you continue, make sure you have [set up your environment](./setup-your-environment).
 
 ## Demo CA root certificate
 
@@ -15,7 +15,7 @@ The very first certificate we need is the CA root certificate.
 This one is used to validate certificates of other organizations.
 
 Download [the root certificate](https://certportal.demo.nlx.io/root.crt) file and save it as `root.crt` in `~/nlx-setup/`.
-That is the working directory as described in [part 1](./setup-your-environment.md).
+That is the working directory as described in [part 1](./setup-your-environment).
 
 >  If you are using Windows make sure that you select `All files` as file-type when saving the root certificate. If you do not do this Windows will add the extension `txt` to the file.
 
@@ -113,4 +113,4 @@ All required certificates are available now. So far, we have:
 - downloaded the CA root certificate.
 - generated our own certificate, so we are allowed to communicate with the API's on the NLX network.
 
-Now let's [get up and running](./getting-up-and-running.md) to make sure you have all software installed to get started.
+Now let's [get up and running](./getting-up-and-running) to make sure you have all software installed to get started.

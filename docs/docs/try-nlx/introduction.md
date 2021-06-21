@@ -65,4 +65,4 @@ like [Dex](https://github.com/dexidp/dex) to set it up.
 ## In sum
 
 You've learned about all the components used by NLX. 
-Next up, let's [setup our local environment](./setup-your-environment.md).
+Next up, let's [setup our local environment](./setup-your-environment).
