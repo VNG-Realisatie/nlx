@@ -70,8 +70,15 @@ const ServiceForm = ({
     .required(t('Please enter valid costs'))
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required(t('This field is required')),
-    endpointURL: Yup.string().required(t('Invalid endpoint URL')),
+    name: Yup.string()
+      .matches(
+        /^[a-zA-Z0-9-.]{1,100}$/,
+        t('Only alphanumeric characters, dashes and dots are allowed'),
+      )
+      .required(t('This field is required')),
+    endpointURL: Yup.string()
+      .url(t('Invalid endpoint URL'))
+      .required(t('Invalid endpoint URL')),
     documentationURL: Yup.string(),
     apiSpecificationURL: Yup.string(),
     publishedInDirectory: Yup.boolean(),

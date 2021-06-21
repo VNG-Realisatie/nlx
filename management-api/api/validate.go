@@ -1,8 +1,6 @@
 package api
 
 import (
-	"errors"
-	"fmt"
 	"regexp"
 
 	validation "github.com/go-ozzo/ozzo-validation/v4"
@@ -10,7 +8,7 @@ import (
 )
 
 // nolint:gocritic // this is a valid regex pattern
-var nameRegex = regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`)
+var nameRegex = regexp.MustCompile(`^[a-zA-Z0-9-.]{1,100}$`)
 
 // Validate the inway, check if all fields are valid
 func (inway *Inway) Validate() error {
@@ -36,22 +34,24 @@ func (service *Service) Validate() error {
 
 // Validate the service when creating a new one, check if all fields are valid
 func (s *CreateServiceRequest) Validate() error {
-	if s.Name == "" {
-		return errors.New("invalid service name")
+	service := &Service{
+		Name:                s.Name,
+		EndpointURL:         s.EndpointURL,
+		DocumentationURL:    s.DocumentationURL,
+		ApiSpecificationURL: s.ApiSpecificationURL,
 	}
 
-	if s.EndpointURL == "" {
-		return fmt.Errorf("invalid endpoint URL for service %s", s.Name)
-	}
-
-	return nil
+	return service.Validate()
 }
 
 // Validate the service when updating it, check if all fields are valid
 func (s *UpdateServiceRequest) Validate() error {
-	if s.EndpointURL == "" {
-		return fmt.Errorf("invalid endpoint URL for service %s", s.Name)
+	service := &Service{
+		Name:                s.Name,
+		EndpointURL:         s.EndpointURL,
+		DocumentationURL:    s.DocumentationURL,
+		ApiSpecificationURL: s.ApiSpecificationURL,
 	}
 
-	return nil
+	return service.Validate()
 }

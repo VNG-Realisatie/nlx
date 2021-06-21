@@ -38,9 +38,9 @@ describe('with initial values', () => {
         <ServiceForm
           initialValues={{
             name: 'my-service',
-            endpointURL: 'my-service.test:8000',
-            documentationURL: 'my-service.test:8000/docs',
-            apiSpecificationURL: 'my-service.test:8000/openapi.json',
+            endpointURL: 'http://my-service.test:8000',
+            documentationURL: 'http://my-service.test:8000/docs',
+            apiSpecificationURL: 'http://my-service.test:8000/openapi.json',
             internal: false,
             techSupportContact: 'tech@organization.test',
             publicSupportContact: 'public@organization.test',
@@ -57,13 +57,13 @@ describe('with initial values', () => {
 
     expect(getByLabelText('Service name').value).toBe('my-service')
     expect(getByLabelText('API endpoint URL').value).toBe(
-      'my-service.test:8000',
+      'http://my-service.test:8000',
     )
     expect(getByLabelText('API documentation URL').value).toBe(
-      'my-service.test:8000/docs',
+      'http://my-service.test:8000/docs',
     )
     expect(getByLabelText('API specification URL').value).toBe(
-      'my-service.test:8000/openapi.json',
+      'http://my-service.test:8000/openapi.json',
     )
 
     expect(getByLabelText('Publish to central directory').value).toBe('true')
@@ -117,9 +117,9 @@ test('the form values of the onSubmitHandler', async () => {
         onSubmitHandler={onSubmitHandlerSpy}
         initialValues={{
           name: '',
-          endpointURL: 'my-service.test:8000',
-          documentationURL: 'my-service.test:8000/docs',
-          apiSpecificationURL: 'my-service.test:8000/openapi.json',
+          endpointURL: 'http://my-service.test:8000',
+          documentationURL: 'http://my-service.test:8000/docs',
+          apiSpecificationURL: 'http://my-service.test:8000/openapi.json',
           internal: false,
           techSupportContact: 'tech@organization.test',
           publicSupportContact: 'public@organization.test',
@@ -146,9 +146,9 @@ test('the form values of the onSubmitHandler', async () => {
   await waitFor(() =>
     expect(onSubmitHandlerSpy).toHaveBeenCalledWith({
       name: 'my-service',
-      endpointURL: 'my-service.test:8000',
-      documentationURL: 'my-service.test:8000/docs',
-      apiSpecificationURL: 'my-service.test:8000/openapi.json',
+      endpointURL: 'http://my-service.test:8000',
+      documentationURL: 'http://my-service.test:8000/docs',
+      apiSpecificationURL: 'http://my-service.test:8000/openapi.json',
       internal: false,
       inways: [],
       techSupportContact: 'tech@organization.test',
@@ -164,9 +164,9 @@ test('the form values of the onSubmitHandler', async () => {
 describe('when showing inways', () => {
   const initialValues = {
     name: 'my-service',
-    endpointURL: 'my-service.test:8000',
-    documentationURL: 'my-service.test:8000/docs',
-    apiSpecificationURL: 'my-service.test:8000/openapi.json',
+    endpointURL: 'http://my-service.test:8000',
+    documentationURL: 'http://my-service.test:8000/docs',
+    apiSpecificationURL: 'http://my-service.test:8000/openapi.json',
     internal: false,
     techSupportContact: 'tech@organization.test',
     publicSupportContact: 'public@organization.test',
