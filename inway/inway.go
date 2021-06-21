@@ -38,8 +38,6 @@ const maxRetryDuration = 20 * time.Second
 const minRetryDuration = 100 * time.Millisecond
 const announceToDirectoryInterval = 10 * time.Second
 
-// Inway handles incoming requests and holds a list of registered ServiceEndpoints.
-// The Inway is responsible for selecting the correct ServiceEndpoint for an incoming request.
 type Inway struct {
 	name                        string
 	organizationName            string
@@ -57,7 +55,6 @@ type Inway struct {
 	servicesLock                sync.RWMutex
 }
 
-// NewInway creates and prepares a new Inway.
 func NewInway(
 	ctx context.Context,
 	logger *zap.Logger,
