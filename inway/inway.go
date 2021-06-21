@@ -70,6 +70,12 @@ type Params struct {
 }
 
 func NewInway(params *Params) (*Inway, error) {
+	logger := params.Logger
+
+	if logger == nil {
+		logger = zap.NewNop()
+	}
+
 	orgCert := params.OrgCertBundle.Certificate()
 
 	if len(orgCert.Subject.Organization) != 1 {
@@ -86,10 +92,10 @@ func NewInway(params *Params) (*Inway, error) {
 	}
 
 	organizationName := orgCert.Subject.Organization[0]
-	params.Logger.Info("loaded certificates for inway", zap.String("inway-organization-name", organizationName))
+	logger.Info("loaded certificates for inway", zap.String("inway-organization-name", organizationName))
 
 	i := &Inway{
-		logger:                  params.Logger.With(zap.String("inway-organization-name", organizationName)),
+		logger:                  logger.With(zap.String("inway-organization-name", organizationName)),
 		organizationName:        organizationName,
 		listenManagementAddress: params.ListenManagementAddress,
 		selfAddress:             params.SelfAddress,
@@ -107,7 +113,7 @@ func NewInway(params *Params) (*Inway, error) {
 	}
 
 	// setup monitoring service
-	i.monitoringService, err = monitoring.NewMonitoringService(params.MonitoringAddress, params.Logger)
+	i.monitoringService, err = monitoring.NewMonitoringService(params.MonitoringAddress, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to create monitoring service")
 	}
@@ -134,7 +140,7 @@ func NewInway(params *Params) (*Inway, error) {
 
 	i.directoryRegistrationClient = registrationapi.NewDirectoryRegistrationClient(directoryConn)
 
-	params.Logger.Info("directory registration client setup complete", zap.String("directory-address", params.DirectoryRegistrationAddress))
+	logger.Info("directory registration client setup complete", zap.String("directory-address", params.DirectoryRegistrationAddress))
 
 	return i, nil
 }

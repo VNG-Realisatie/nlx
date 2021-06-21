@@ -9,15 +9,13 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"go.uber.org/zap"
-
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/inway"
 )
 
 var pkiDir = filepath.Join("..", "testing", "pki")
 
-func TestNewInway(t *testing.T) {
+func Test_NewInway(t *testing.T) {
 	certOrg, _ := common_tls.NewBundleFromFiles(
 		filepath.Join(pkiDir, "org-without-name-chain.pem"),
 		filepath.Join(pkiDir, "org-without-name-key.pem"),
@@ -31,46 +29,53 @@ func TestNewInway(t *testing.T) {
 	)
 
 	tests := map[string]struct {
-		context              context.Context
-		selfAddress          string
-		cert                 *common_tls.CertificateBundle
-		monitoringAddress    string
+		params               *inway.Params
 		expectedErrorMessage string
 	}{
 		"missing_context": {
-			nil,
-			"inway.test",
-			cert,
-			"localhost:8080",
-			"context is nil. needed to close gracefully",
+			params: &inway.Params{
+				Context:           nil,
+				SelfAddress:       "inway.test",
+				OrgCertBundle:     cert,
+				MonitoringAddress: "localhost:8080",
+			},
+			expectedErrorMessage: "context is nil. needed to close gracefully",
 		},
 		"certificates_without_an_organization_name": {
-			context.Background(),
-			"inway.test",
-			certOrg,
-			"localhost:8080",
-			"cannot obtain organization name from self cert",
+			params: &inway.Params{
+				Context:           context.Background(),
+				SelfAddress:       "inway.test",
+				OrgCertBundle:     certOrg,
+				MonitoringAddress: "localhost:8080",
+			},
+			expectedErrorMessage: "cannot obtain organization name from self cert",
 		},
 		"missing_monitoring_address": {
-			context.Background(),
-			"inway.test",
-			cert,
-			"",
-			"unable to create monitoring service: address required",
+			params: &inway.Params{
+				Context:           context.Background(),
+				SelfAddress:       "inway.test",
+				OrgCertBundle:     cert,
+				MonitoringAddress: "",
+			},
+			expectedErrorMessage: "unable to create monitoring service: address required",
 		},
 		"self_address_not_in_certicate": {
-			context.Background(),
-			"test.com",
-			cert,
-			"localhost:8080",
-			"'test.com' is not in the list of DNS names of the certificate, [localhost inway.test]",
+			params: &inway.Params{
+				Context:           context.Background(),
+				SelfAddress:       "test.com",
+				OrgCertBundle:     cert,
+				MonitoringAddress: "localhost:8080",
+			},
+			expectedErrorMessage: "'test.com' is not in the list of DNS names of the certificate, [localhost inway.test]",
 		},
 		"self_address_must_be_valid_host_or_host:port": {
-			context.Background(),
-			"localhost:1:2",
-			cert,
-			"localhost:8080",
-			"failed to parse selfAddress hostname from 'localhost:1:2': address localhost:1:2: too many colons in address",
+			params: &inway.Params{
+				Context:           context.Background(),
+				SelfAddress:       "localhost:1:2",
+				OrgCertBundle:     cert,
+				MonitoringAddress: "localhost:8080",
+			},
+			expectedErrorMessage: "failed to parse selfAddress hostname from 'localhost:1:2': address localhost:1:2: too many colons in address",
 		},
 	}
 
@@ -78,20 +83,7 @@ func TestNewInway(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			params := &inway.Params{
-				Context:                      tt.context,
-				Logger:                       zap.NewNop(),
-				Txlogger:                     nil,
-				ManagementClient:             nil,
-				ManagementProxy:              nil,
-				Name:                         "",
-				SelfAddress:                  tt.selfAddress,
-				MonitoringAddress:            tt.monitoringAddress,
-				ListenManagementAddress:      "",
-				OrgCertBundle:                tt.cert,
-				DirectoryRegistrationAddress: "",
-			}
-			_, err := inway.NewInway(params)
+			_, err := inway.NewInway(tt.params)
 			assert.EqualError(t, err, tt.expectedErrorMessage)
 		})
 	}
