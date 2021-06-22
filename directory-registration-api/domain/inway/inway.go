@@ -4,12 +4,11 @@
 package inway
 
 import (
-	"errors"
 	"regexp"
-)
+	"strings"
 
-var (
-	ErrInvalidName = errors.New("invalid name")
+	validation "github.com/go-ozzo/ozzo-validation/v4"
+	"github.com/go-ozzo/ozzo-validation/v4/is"
 )
 
 type Inway struct {
@@ -19,9 +18,32 @@ type Inway struct {
 	nlxVersion       string
 }
 
+const NlxVersionUnknown = "unknown"
+
 func NewInway(name, organizationName, address, nlxVersion string) (*Inway, error) {
-	if !isNameValid(name) {
-		return nil, ErrInvalidName
+	err := validation.Validate(name, validation.When(len(name) > 0, validation.Match(regexp.MustCompile(`^[a-zA-Z0-9-]{1,100}$`))))
+	if err != nil {
+		return nil, err
+	}
+
+	err = validation.Validate(organizationName, validation.Required, validation.Match(regexp.MustCompile(`^[a-zA-Z0-9-._\s]{1,100}$`)))
+	if err != nil {
+		return nil, err
+	}
+
+	err = validation.Validate(
+		address,
+		validation.Required,
+		validation.When(strings.Contains(address, ":"), is.DialString),
+		validation.When(!strings.Contains(address, ":"), is.DNSName),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	err = validation.Validate(nlxVersion, validation.When(nlxVersion != NlxVersionUnknown, is.Semver))
+	if err != nil {
+		return nil, err
 	}
 
 	return &Inway{
@@ -46,14 +68,4 @@ func (i Inway) Address() string {
 
 func (i Inway) NlxVersion() string {
 	return i.nlxVersion
-}
-
-func isNameValid(name string) bool {
-	if len(name) < 1 {
-		return true
-	}
-
-	var nameRegex = regexp.MustCompile(`^[a-zA-Z0-9-]{1,100}$`)
-
-	return nameRegex.MatchString(name)
 }
