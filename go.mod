@@ -41,7 +41,7 @@ require (
 	github.com/stretchr/testify v1.7.0
 	go.uber.org/zap v1.17.0
 	golang.org/x/net v0.0.0-20210614182718-04defd469f4e
-	golang.org/x/oauth2 v0.0.0-20210615190721-d04028783cf1
+	golang.org/x/oauth2 v0.0.0-20210622215436-a8dc77f794b6
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	golang.org/x/text v0.3.6
 	google.golang.org/genproto v0.0.0-20210614182748-5b3b54cad159
