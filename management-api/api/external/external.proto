@@ -2,9 +2,11 @@ syntax = "proto3";
 
 package nlx.management.external;
 
-import "management.proto";
-
 option go_package = "go.nlx.io/nlx/management-api/api/external";
+
+import "management.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
 
 service AccessRequestService {
   rpc RequestAccess (RequestAccessRequest) returns (RequestAccessResponse);
@@ -14,6 +16,7 @@ service AccessRequestService {
 
 service DelegationService {
   rpc RequestClaim (RequestClaimRequest) returns (RequestClaimResponse);
+  rpc ListOrders (google.protobuf.Empty) returns (ListOrdersResponse);
 }
 
 message RequestAccessRequest {
@@ -29,11 +32,11 @@ message GetAccessRequestStateResponse {
 }
 
 message GetAccessProofRequest {
-    string service_name = 1;
+  string service_name = 1;
 }
 
 message RequestAccessResponse {
-    uint64 reference_id = 1;
+  uint64 reference_id = 1;
 }
 
 message RequestClaimRequest {
@@ -42,4 +45,11 @@ message RequestClaimRequest {
 
 message RequestClaimResponse {
   string claim = 1;
+}
+
+message ListOrdersRequest {
+}
+
+message ListOrdersResponse {
+  repeated nlx.management.Order orders = 1;
 }

@@ -65,4 +65,5 @@ type ConfigDatabase interface {
 	CreateOrder(ctx context.Context, order *Order) error
 	GetOrderByReference(ctx context.Context, reference string) (*Order, error)
 	ListIssuedOrders(ctx context.Context) ([]*Order, error)
+	ListOrdersByOrganization(ctx context.Context, organizationName string) ([]*Order, error)
 }

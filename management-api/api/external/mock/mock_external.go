@@ -12,6 +12,7 @@ import (
 	api "go.nlx.io/nlx/management-api/api"
 	external "go.nlx.io/nlx/management-api/api/external"
 	grpc "google.golang.org/grpc"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // MockAccessRequestServiceClient is a mock of AccessRequestServiceClient interface.
@@ -235,6 +236,26 @@ func (m *MockDelegationServiceClient) EXPECT() *MockDelegationServiceClientMockR
 	return m.recorder
 }
 
+// ListOrders mocks base method.
+func (m *MockDelegationServiceClient) ListOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*external.ListOrdersResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListOrders", varargs...)
+	ret0, _ := ret[0].(*external.ListOrdersResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListOrders indicates an expected call of ListOrders.
+func (mr *MockDelegationServiceClientMockRecorder) ListOrders(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOrders", reflect.TypeOf((*MockDelegationServiceClient)(nil).ListOrders), varargs...)
+}
+
 // RequestClaim mocks base method.
 func (m *MockDelegationServiceClient) RequestClaim(ctx context.Context, in *external.RequestClaimRequest, opts ...grpc.CallOption) (*external.RequestClaimResponse, error) {
 	m.ctrl.T.Helper()
@@ -276,6 +297,21 @@ func NewMockDelegationServiceServer(ctrl *gomock.Controller) *MockDelegationServ
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockDelegationServiceServer) EXPECT() *MockDelegationServiceServerMockRecorder {
 	return m.recorder
+}
+
+// ListOrders mocks base method.
+func (m *MockDelegationServiceServer) ListOrders(arg0 context.Context, arg1 *emptypb.Empty) (*external.ListOrdersResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListOrders", arg0, arg1)
+	ret0, _ := ret[0].(*external.ListOrdersResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListOrders indicates an expected call of ListOrders.
+func (mr *MockDelegationServiceServerMockRecorder) ListOrders(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOrders", reflect.TypeOf((*MockDelegationServiceServer)(nil).ListOrders), arg0, arg1)
 }
 
 // RequestClaim mocks base method.

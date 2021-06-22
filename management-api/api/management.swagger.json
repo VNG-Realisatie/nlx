@@ -963,45 +963,6 @@
       ],
       "default": "unknown"
     },
-    "ListIssuedOrdersResponseOrder": {
-      "type": "object",
-      "properties": {
-        "reference": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "delegatee": {
-          "type": "string"
-        },
-        "validFrom": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "validUntil": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "services": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ListIssuedOrdersResponseOrderService"
-          }
-        }
-      }
-    },
-    "ListIssuedOrdersResponseOrderService": {
-      "type": "object",
-      "properties": {
-        "organization": {
-          "type": "string"
-        },
-        "service": {
-          "type": "string"
-        }
-      }
-    },
     "managementAccessGrant": {
       "type": "object",
       "properties": {
@@ -1522,7 +1483,7 @@
         "orders": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ListIssuedOrdersResponseOrder"
+            "$ref": "#/definitions/managementOrder"
           }
         }
       }
@@ -1624,6 +1585,45 @@
           "type": "string"
         },
         "publicKeyPEM": {
+          "type": "string"
+        }
+      }
+    },
+    "managementOrder": {
+      "type": "object",
+      "properties": {
+        "reference": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "delegatee": {
+          "type": "string"
+        },
+        "validFrom": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validUntil": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/managementOrderService"
+          }
+        }
+      }
+    },
+    "managementOrderService": {
+      "type": "object",
+      "properties": {
+        "organization": {
+          "type": "string"
+        },
+        "service": {
           "type": "string"
         }
       }

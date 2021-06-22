@@ -516,20 +516,20 @@ message CreateOrderRequest {
   repeated Service services = 7;
 }
 
-message ListIssuedOrdersResponse {
-  message Order {
-    message Service {
-      string organization = 1;
-      string service = 2;
-    }
-
-    string reference = 1;
-    string description = 2;
-    string delegatee = 4;
-    google.protobuf.Timestamp validFrom = 5;
-    google.protobuf.Timestamp validUntil = 6;
-    repeated Service services = 7;
+message Order {
+  message Service {
+    string organization = 1;
+    string service = 2;
   }
 
+  string reference = 1;
+  string description = 2;
+  string delegatee = 4;
+  google.protobuf.Timestamp validFrom = 5;
+  google.protobuf.Timestamp validUntil = 6;
+  repeated Service services = 7;
+}
+
+message ListIssuedOrdersResponse {
   repeated Order orders = 1;
 }

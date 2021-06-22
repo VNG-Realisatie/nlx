@@ -102,3 +102,18 @@ func (db *PostgresConfigDatabase) ListIssuedOrders(ctx context.Context) ([]*Orde
 
 	return orders, nil
 }
+
+func (db *PostgresConfigDatabase) ListOrdersByOrganization(ctx context.Context, organizationName string) ([]*Order, error) {
+	orders := []*Order{}
+
+	if err := db.DB.
+		WithContext(ctx).
+		Where("delegatee = ?", organizationName).
+		Order("valid_until desc").
+		Preload("Services").
+		Find(&orders).Error; err != nil {
+		return nil, err
+	}
+
+	return orders, nil
+}

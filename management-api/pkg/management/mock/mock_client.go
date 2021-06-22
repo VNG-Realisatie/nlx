@@ -12,6 +12,7 @@ import (
 	api "go.nlx.io/nlx/management-api/api"
 	external "go.nlx.io/nlx/management-api/api/external"
 	grpc "google.golang.org/grpc"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // MockClient is a mock of Client interface.
@@ -89,6 +90,26 @@ func (mr *MockClientMockRecorder) GetAccessRequestState(arg0, arg1 interface{}, 
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccessRequestState", reflect.TypeOf((*MockClient)(nil).GetAccessRequestState), varargs...)
+}
+
+// ListOrders mocks base method.
+func (m *MockClient) ListOrders(arg0 context.Context, arg1 *emptypb.Empty, arg2 ...grpc.CallOption) (*external.ListOrdersResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListOrders", varargs...)
+	ret0, _ := ret[0].(*external.ListOrdersResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListOrders indicates an expected call of ListOrders.
+func (mr *MockClientMockRecorder) ListOrders(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOrders", reflect.TypeOf((*MockClient)(nil).ListOrders), varargs...)
 }
 
 // RequestAccess mocks base method.
