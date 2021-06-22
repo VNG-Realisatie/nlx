@@ -1,16 +1,15 @@
 Rebuild acceptance:
+  # Use `Deploy acceptance` as base, overwriting `before_script` and `rules`, but merging `variables`
   extends: Deploy acceptance
-  variables:
-    HELM_CHARTS_TO_DELETE: "rvrd gemeente-stijns vergunningsoftware-bv"
   before_script:
     - source ./.gitlab/ci/functions.sh
     - |
-      for CHART in ${HELM_CHARTS_TO_DELETE}; do
+      for CHART in ${HELM_CHARTS_TO_DEPLOY}; do
         start_section uninstall_${CHART} "Uninstalling chart '${CHART}'"
         CHART_DIRECTORY="./helm/deploy/${CHART}"
 
         helm uninstall ${CHART} \
-          --namespace ${K8S_NAMESPACE} || true
+          --namespace ${K8S_NAMESPACE}
 
         stop_section uninstall_${CHART}
       done
