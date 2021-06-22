@@ -4,6 +4,7 @@
 package inway
 
 import (
+	"fmt"
 	"regexp"
 	"strings"
 
@@ -23,12 +24,12 @@ const NlxVersionUnknown = "unknown"
 func NewInway(name, organizationName, address, nlxVersion string) (*Inway, error) {
 	err := validation.Validate(name, validation.When(len(name) > 0, validation.Match(regexp.MustCompile(`^[a-zA-Z0-9-]{1,100}$`))))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("name: %s", err)
 	}
 
 	err = validation.Validate(organizationName, validation.Required, validation.Match(regexp.MustCompile(`^[a-zA-Z0-9-._\s]{1,100}$`)))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("organization name: %s", err)
 	}
 
 	err = validation.Validate(
@@ -38,12 +39,12 @@ func NewInway(name, organizationName, address, nlxVersion string) (*Inway, error
 		validation.When(!strings.Contains(address, ":"), is.DNSName),
 	)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("address: %s", err)
 	}
 
 	err = validation.Validate(nlxVersion, validation.When(nlxVersion != NlxVersionUnknown, is.Semver))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("nlx version: %s", err)
 	}
 
 	return &Inway{
