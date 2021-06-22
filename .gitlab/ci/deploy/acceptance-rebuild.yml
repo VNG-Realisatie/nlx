@@ -18,4 +18,3 @@ Rebuild acceptance:
       when: never
     - if: '$CI_COMMIT_BRANCH == "master" && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
       when: manual
-      allow_failure: false
