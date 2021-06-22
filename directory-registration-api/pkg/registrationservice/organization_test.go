@@ -94,7 +94,7 @@ func TestDirectoryRegistrationService_SetOrganizationInway(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			s := registrationservice.New(zap.NewNop(), tt.db(ctrl), nil, testGetOrganizationNameFromRequest)
+			s := registrationservice.New(zap.NewNop(), tt.db(ctrl), nil, nil, testGetOrganizationNameFromRequest)
 
 			got, err := s.SetOrganizationInway(context.Background(), &registrationapi.SetOrganizationInwayRequest{Address: tt.address})
 

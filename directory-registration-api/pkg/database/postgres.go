@@ -29,7 +29,6 @@ type PostgreSQLDirectoryDatabase struct {
 	clearOrganizationInwayStatement *sqlx.Stmt
 }
 
-// NewPostgreSQLDirectoryDatabase constructs a new PostgreSQLDirectoryDatabase
 func NewPostgreSQLDirectoryDatabase(dsn string, p *process.Process, logger *zap.Logger) (DirectoryDatabase, error) {
 	db, err := sqlx.Open("postgres", dsn)
 	if err != nil {

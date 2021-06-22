@@ -168,6 +168,7 @@ func newService(t *testing.T) (*registrationservice.DirectoryRegistrationService
 		zap.NewNop(),
 		mocks.db,
 		nil,
+		nil,
 		testGetOrganizationNameFromRequest,
 	)
 

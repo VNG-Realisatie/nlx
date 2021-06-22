@@ -6,15 +6,13 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"net"
 	"net/http"
-	"time"
 
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
-	"github.com/huandu/xstrings"
-	flags "github.com/jessevdk/go-flags"
-	"github.com/jmoiron/sqlx"
+	"github.com/jessevdk/go-flags"
 	_ "github.com/lib/pq"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -28,6 +26,7 @@ import (
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/directory-db/dbversion"
+	"go.nlx.io/nlx/directory-registration-api/adapters"
 	"go.nlx.io/nlx/directory-registration-api/pkg/database"
 	"go.nlx.io/nlx/directory-registration-api/pkg/registrationservice"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
@@ -64,24 +63,6 @@ func parseArgs() error {
 	return nil
 }
 
-const (
-	dbConnectionMaxLifetime = 5 * time.Minute
-	dbMaxIdleConnections    = 2
-)
-
-func setupDB(logger *zap.Logger) *sqlx.DB {
-	db, err := sqlx.Open("postgres", options.PostgresDSN)
-	if err != nil {
-		logger.Fatal("could not open connection to postgres", zap.Error(err))
-	}
-
-	db.SetConnMaxLifetime(dbConnectionMaxLifetime)
-	db.SetMaxIdleConns(dbMaxIdleConnections)
-	db.MapperFunc(xstrings.ToSnakeCase)
-
-	return db
-}
-
 func newZapLogger() *zap.Logger {
 	config := options.LogOptions.ZapConfig()
 
@@ -103,12 +84,7 @@ func main() {
 	}
 
 	logger := newZapLogger()
-
 	mainProcess := process.NewProcess(logger)
-	db := setupDB(logger)
-	mainProcess.CloseGracefully(db.Close)
-
-	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
 
 	if errValidate := common_tls.VerifyPrivateKeyPermissions(options.DirectoryKeyFile); errValidate != nil {
 		logger.Warn("invalid directory key permissions", zap.Error(errValidate), zap.String("file-path", options.DirectoryKeyFile))
@@ -119,13 +95,33 @@ func main() {
 		logger.Fatal("loading certificate", zap.Error(err))
 	}
 
+	db, err := adapters.NewPostgreSQLConnection(options.PostgresDSN)
+	if err != nil {
+		panic(fmt.Sprintf("can not create db connection: %v", err))
+	}
+
+	mainProcess.CloseGracefully(db.Close)
+
+	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
+
+	inwayRepository, err := adapters.NewInwayPostgreSQLRepository(db)
+	if err != nil {
+		logger.Fatal("failed to setup postgresql directory database:", zap.Error(err))
+	}
+
 	directoryDatabase, err := database.NewPostgreSQLDirectoryDatabase(options.PostgresDSN, mainProcess, logger)
 	if err != nil {
 		logger.Fatal("failed to setup postgresql directory database:", zap.Error(err))
 	}
 
 	httpClient := nlxhttp.NewHTTPClient(certificate)
-	registrationService := registrationservice.New(logger, directoryDatabase, httpClient, getOrganisationNameFromRequest)
+	registrationService := registrationservice.New(
+		logger,
+		directoryDatabase,
+		inwayRepository,
+		httpClient,
+		getOrganisationNameFromRequest,
+	)
 
 	// setup zap connection for global grpc logging
 	grpc_zap.ReplaceGrpcLogger(logger)
