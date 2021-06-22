@@ -21,10 +21,12 @@ describe('Services', () => {
 
     cy.visit('/services/add-service')
     cy.findByLabelText('Servicenaam').type(serviceName)
-    cy.findByLabelText('API endpoint URL').type('my-service.test:8000')
-    cy.findByLabelText('API documentatie URL').type('my-service.test:8000/docs')
+    cy.findByLabelText('API endpoint URL').type('http://my-service.test:8000')
+    cy.findByLabelText('API documentatie URL').type(
+      'http://my-service.test:8000/docs',
+    )
     cy.findByLabelText('API specificatie URL').type(
-      'my-service.test:8000/openapi.json',
+      'http://my-service.test:8000/openapi.json',
     )
     cy.findByLabelText('Technisch support e-mailadres').type(
       'tech@organization.test',

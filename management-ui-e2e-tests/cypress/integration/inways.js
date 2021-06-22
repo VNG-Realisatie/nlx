@@ -38,7 +38,7 @@ describe('Inways', () => {
     // Create service with inway
     cy.visit('/services/add-service')
     cy.findByLabelText('Servicenaam').type(serviceName)
-    cy.findByLabelText('API endpoint URL').type('my-service.test:8000')
+    cy.findByLabelText('API endpoint URL').type('http://my-service.test:8000')
     cy.findByLabelText(Cypress.env('INWAY_NAME')).check()
     cy.findByText('Service toevoegen').click()
     cy.dismissToaster('De service is toegevoegd')
