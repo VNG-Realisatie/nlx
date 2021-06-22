@@ -92,43 +92,10 @@ Make sure the TLS key files have the correct permissions to run the NLX componen
 ./pki/fix-permissions.sh
 ```
 
-Finally, run the project with:
+Update the `/etc/hosts` file on your system:
 
-```bash
-modd
-
-# To run transaction logs enabled for organization A
-TXLOG_A=1 modd
-
-# To run transaction logs enabled for organization B
-TXLOG_B=1 modd
-
-# Or both
-TXLOG_A=1 TXLOG_B=1 modd
-```
-
-This will start the following services:
-
-- [S] directory-inspection-api (gRPC: 7901, HTTP: 7902)
-- [S] directory-registration-api (gRPC: 7903)
-- [S] directory-monitor
-- [A] management-api (gRPC: 7911, HTTP: 7912)
-- [A] inway (gRPC: 7913)
-- [A] outway (HTTP: 7915)
-- [B] management-api (gRPC: 7921, HTTP: 7922)
-- [B] inway (gRPC: 7923)
-
-
-And the following frontend applications:
-
-- [directory-ui](http://localhost:3001) (HTTP: 3001)
-- [docs](http://localhost:3002) (HTTP: 3002)
-- [management-ui (A)](http://management.organization-a.nlx.local:3011) (HTTP: 3011)
-- [management-ui (B)](http://management.organization-b.nlx.local:3021) (HTTP: 3021)
-
-Services will reload automatically when the code changes.
-
-Update the `/etc/hosts` file:
+<details>
+  <summary>Show hosts</summary>
 
 ```
 # NLX
@@ -160,9 +127,54 @@ Update the `/etc/hosts` file:
 ::1           inway.organization-b.nlx.local
 ::1           management.organization-b.nlx.local
 ```
+</details>
+</br>
+
+Run the services with:
+
+```bash
+modd
+
+# To run transaction logs enabled for organization A
+TXLOG_A=1 modd
+
+# To run transaction logs enabled for organization B
+TXLOG_B=1 modd
+
+# Or both
+TXLOG_A=1 TXLOG_B=1 modd
+```
+
+This will start the following services:
+
+- [S] directory-inspection-api (gRPC: 7901, HTTP: 7902)
+- [S] directory-registration-api (gRPC: 7903)
+- [S] directory-monitor
+- [A] management-api (gRPC: 7911, HTTP: 7912)
+- [A] inway (gRPC: 7913)
+- [A] outway (HTTP: 7915)
+- [B] management-api (gRPC: 7921, HTTP: 7922)
+- [B] inway (gRPC: 7923)
+
+And the following frontend applications:
+
+- [directory-ui](http://localhost:3001) (HTTP: 3001)
+- [docs](http://localhost:3002) (HTTP: 3002)
+
+Services will reload automatically when the code changes and is saved.
+
+Finally, run the Management UI using:
+```bash
+(cd management-ui && npm start)
+(cd management-ui && npm run start:b)
+```
+
+This will start the management dashboard locally:
+
+- [management-ui (A)](http://management.organization-a.nlx.local:3011) (HTTP: 3011)
+- [management-ui (B)](http://management.organization-b.nlx.local:3021) (HTTP: 3021)
 
 To log in locally, see credentials in `dex.dev.yaml`
-
 
 ## Deploying and releasing
 
