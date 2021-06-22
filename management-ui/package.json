@@ -55,7 +55,7 @@
   },
   "devDependencies": {
     "@commonground/eslint-config-cra-standard-prettier": "6.0.0",
-    "@openapitools/openapi-generator-cli": "2.3.4",
+    "@openapitools/openapi-generator-cli": "2.3.5",
     "@testing-library/jest-dom": "5.14.1",
     "@testing-library/react": "11.2.7",
     "@testing-library/react-hooks": "7.0.0",
