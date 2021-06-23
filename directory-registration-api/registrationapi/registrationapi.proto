@@ -6,9 +6,7 @@ package registrationapi;
 
 option go_package = ".;registrationapi";
 
-// The Registration service definition.
 service DirectoryRegistration {
-	// RegisterInway registers an inway for a given service
 	rpc RegisterInway (RegisterInwayRequest) returns (RegisterInwayResponse);
 	rpc SetOrganizationInway (SetOrganizationInwayRequest) returns (google.protobuf.Empty);
 	rpc ClearOrganizationInway (google.protobuf.Empty) returns (google.protobuf.Empty);
