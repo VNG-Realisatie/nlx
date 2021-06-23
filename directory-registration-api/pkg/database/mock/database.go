@@ -49,20 +49,6 @@ func (mr *MockDirectoryDatabaseMockRecorder) ClearOrganizationInway(ctx, organiz
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClearOrganizationInway", reflect.TypeOf((*MockDirectoryDatabase)(nil).ClearOrganizationInway), ctx, organizationName)
 }
 
-// RegisterInway mocks base method.
-func (m *MockDirectoryDatabase) RegisterInway(params *database.RegisterInwayParams) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RegisterInway", params)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// RegisterInway indicates an expected call of RegisterInway.
-func (mr *MockDirectoryDatabaseMockRecorder) RegisterInway(params interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterInway", reflect.TypeOf((*MockDirectoryDatabase)(nil).RegisterInway), params)
-}
-
 // RegisterService mocks base method.
 func (m *MockDirectoryDatabase) RegisterService(params *database.RegisterServiceParams) error {
 	m.ctrl.T.Helper()
