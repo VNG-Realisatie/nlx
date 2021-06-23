@@ -13,6 +13,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/nlxversion"
+	"go.nlx.io/nlx/directory-registration-api/domain/inway"
 	"go.nlx.io/nlx/directory-registration-api/pkg/database"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
@@ -29,19 +30,20 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 		return nil, fmt.Errorf("failed to get organization name from request: %v", err)
 	}
 
-	inwayParams := &database.RegisterInwayParams{
-		OrganizationName: organizationName,
-		Address:          req.InwayAddress,
-		NlxVersion:       nlxversion.NewFromGRPCContext(ctx).Version,
-	}
+	nlxVersion := nlxversion.NewFromGRPCContext(ctx).Version
 
-	err = inwayParams.Validate()
+	model, err := inway.NewInway(
+		"",
+		organizationName,
+		req.InwayAddress,
+		nlxVersion,
+	)
 	if err != nil {
 		msg := fmt.Sprintf("validation failed: %s", err.Error())
 		return nil, status.New(codes.InvalidArgument, msg).Err()
 	}
 
-	err = h.db.RegisterInway(inwayParams)
+	err = h.inwayRepository.Register(model)
 	if err != nil {
 		h.logger.Error("database error while registering inway", zap.Error(err))
 		return nil, status.New(codes.Internal, "failed to register inway").Err()

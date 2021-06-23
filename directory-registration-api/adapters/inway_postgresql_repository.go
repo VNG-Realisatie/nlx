@@ -34,7 +34,7 @@ func NewInwayPostgreSQLRepository(db *sqlx.DB) (*InwayPostgreSQLRepository, erro
 	}, nil
 }
 
-func (r *InwayPostgreSQLRepository) Register(model inway.Inway) error {
+func (r *InwayPostgreSQLRepository) Register(model *inway.Inway) error {
 	type upsertInwayParams struct {
 		OrganizationName string `db:"organization_name"`
 		InwayAddress     string `db:"inway_address"`

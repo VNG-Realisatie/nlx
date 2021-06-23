@@ -15,6 +15,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	inway_mock "go.nlx.io/nlx/directory-registration-api/domain/inway/mock"
 	"go.nlx.io/nlx/directory-registration-api/pkg/database"
 	"go.nlx.io/nlx/directory-registration-api/pkg/database/mock"
 	"go.nlx.io/nlx/directory-registration-api/pkg/registrationservice"
@@ -31,11 +32,11 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 		wantResponse *registrationapi.RegisterInwayResponse
 		wantErr      error
 	}{
-		"when_an_unexpected_database_error_occurs": {
+		"when_an_unexpected_repository_error_occurs": {
 			setup: func(mocks serviceMocks) {
-				mocks.db.
+				mocks.ir.
 					EXPECT().
-					RegisterInway(gomock.Any()).
+					Register(gomock.Any()).
 					Return(errors.New("arbitrary error"))
 			},
 			request: &registrationapi.RegisterInwayRequest{
@@ -46,9 +47,9 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 		},
 		"when_specifying_an_invalid_service_name": {
 			setup: func(mocks serviceMocks) {
-				mocks.db.
+				mocks.ir.
 					EXPECT().
-					RegisterInway(gomock.Any()).
+					Register(gomock.Any()).
 					AnyTimes()
 			},
 			request: &registrationapi.RegisterInwayRequest{
@@ -64,14 +65,11 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 		},
 		"when_registering_an_inway_with_amount_of_services_which_exceed_the_maximum": {
 			setup: func(mocks serviceMocks) {
-				mocks.db.
+				mocks.ir.
 					EXPECT().
-					RegisterInway(gomock.Eq(&database.RegisterInwayParams{
-						OrganizationName: testOrganizationName,
-						Address:          "localhost",
-						NlxVersion:       "unknown",
-					})).
-					Return(nil)
+					Register(gomock.Any()).
+					Return(nil).
+					AnyTimes()
 			},
 			request: &registrationapi.RegisterInwayRequest{
 				InwayAddress: "localhost",
@@ -82,9 +80,9 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 		},
 		"when_registering_an_inway_without_services": {
 			setup: func(mocks serviceMocks) {
-				mocks.db.
+				mocks.ir.
 					EXPECT().
-					RegisterInway(gomock.Any()).
+					Register(gomock.Any()).
 					AnyTimes()
 			},
 			request: &registrationapi.RegisterInwayRequest{
@@ -95,13 +93,11 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 		},
 		"happy_flow": {
 			setup: func(mocks serviceMocks) {
-				mocks.db.
+				mocks.ir.
 					EXPECT().
-					RegisterInway(gomock.Eq(&database.RegisterInwayParams{
-						OrganizationName: testOrganizationName,
-						Address:          "localhost",
-						NlxVersion:       "unknown",
-					})).Return(nil)
+					Register(gomock.Any()).
+					Return(nil).
+					AnyTimes()
 
 				mocks.db.
 					EXPECT().
@@ -150,6 +146,7 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 
 type serviceMocks struct {
 	db *mock.MockDirectoryDatabase
+	ir *inway_mock.MockRepository
 }
 
 func newService(t *testing.T) (*registrationservice.DirectoryRegistrationService, serviceMocks) {
@@ -162,12 +159,13 @@ func newService(t *testing.T) (*registrationservice.DirectoryRegistrationService
 
 	mocks := serviceMocks{
 		db: mock.NewMockDirectoryDatabase(ctrl),
+		ir: inway_mock.NewMockRepository(ctrl),
 	}
 
 	service := registrationservice.New(
 		zap.NewNop(),
 		mocks.db,
-		nil,
+		mocks.ir,
 		nil,
 		testGetOrganizationNameFromRequest,
 	)

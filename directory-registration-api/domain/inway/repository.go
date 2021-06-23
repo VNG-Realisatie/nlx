@@ -4,5 +4,5 @@
 package inway
 
 type Repository interface {
-	Register(i Inway) error
+	Register(i *Inway) error
 }
