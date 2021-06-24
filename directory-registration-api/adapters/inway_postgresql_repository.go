@@ -4,11 +4,15 @@
 package adapters
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres" // postgres driver
 	"github.com/huandu/xstrings"
 	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq" // postgres driver
 
 	"go.nlx.io/nlx/directory-registration-api/domain/inway"
 )
@@ -44,12 +48,14 @@ func NewInwayPostgreSQLRepository(db *sqlx.DB) (*InwayPostgreSQLRepository, erro
 func (r *InwayPostgreSQLRepository) Register(model *inway.Inway) error {
 	type upsertInwayParams struct {
 		OrganizationName string `db:"organization_name"`
+		InwayName        string `db:"inway_name"`
 		InwayAddress     string `db:"inway_address"`
 		InwayVersion     string `db:"inway_version"`
 	}
 
 	_, err := r.upsertInwayStmt.Exec(&upsertInwayParams{
 		OrganizationName: model.OrganizationName(),
+		InwayName:        model.Name(),
 		InwayAddress:     model.Address(),
 		InwayVersion:     model.NlxVersion(),
 	})
@@ -75,7 +81,7 @@ func (r *InwayPostgreSQLRepository) GetInway(name, organizationName string) (*in
 
 	result := dbInway{}
 
-	err := r.getInwayStmt.Get(result, &params{
+	err := r.getInwayStmt.Get(&result, &params{
 		Name:             name,
 		OrganizationName: organizationName,
 	})
@@ -104,12 +110,11 @@ func prepareUpsertInwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 						returning id
 		) 
 		insert into directory.inways 
-		    		(organization_id, address, version)
-			 select organization.id, :inway_address, nullif(:inway_version, '')
+		    		(name, organization_id, address, version)
+			 select :inway_name, organization.id, :inway_address, nullif(:inway_version, '')
 			   from organization
-	   	on conflict 
-	   	    		on constraint inways_uq_address
-	      			do update set 
+	   	on conflict (name, organization_id) do update set 
+	      			              name = 	excluded.name,
 	      			              address = excluded.address, 
 								  version = excluded.version;
 	`
@@ -124,8 +129,8 @@ func prepareGetInwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 		join directory.organizations 
 		    on directory.inways.organization_id = directory.organizations.id
 		where 
-		      directory.organizations.name = 'Logius'
-		  and directory.inways.name = '';
+		      directory.organizations.name = :organization_name
+		  and directory.inways.name = :name;
 	`
 
 	return db.PrepareNamed(query)
@@ -147,4 +152,18 @@ func NewPostgreSQLConnection(dsn string) (*sqlx.DB, error) {
 	db.MapperFunc(xstrings.ToSnakeCase)
 
 	return db, nil
+}
+
+func PostgreSQLPerformMigrations(dsn string) error {
+	migrator, err := migrate.New("file://../../directory-db/migrations", dsn)
+	if err != nil {
+		return fmt.Errorf("setup migrator: %v", err)
+	}
+
+	err = migrator.Up()
+	if err != nil && !errors.Is(err, migrate.ErrNoChange) {
+		return fmt.Errorf("running migrations: %v", err)
+	}
+
+	return nil
 }

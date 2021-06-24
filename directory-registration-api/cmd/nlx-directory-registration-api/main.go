@@ -44,7 +44,6 @@ var options struct {
 }
 
 func parseArgs() error {
-	// Parse options
 	args, err := flags.Parse(&options)
 	if err != nil {
 		if et, ok := err.(*flags.Error); ok {
