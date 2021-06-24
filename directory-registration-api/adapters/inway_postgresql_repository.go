@@ -28,39 +28,39 @@ func NewInwayPostgreSQLRepository(db *sqlx.DB) (*InwayPostgreSQLRepository, erro
 		panic("missing db")
 	}
 
-	upsertInwayStmt, err := prepareUpsertInwayStmt(db)
+	registerStmt, err := prepareRegisterStmt(db)
 	if err != nil {
 		return nil, fmt.Errorf("failed to prepare upsert inway statement: %s", err)
 	}
 
-	getInwayStmt, err := prepareGetInwayStmt(db)
+	getStmt, err := prepareGetStmt(db)
 	if err != nil {
 		return nil, fmt.Errorf("failed to prepare get inway statement: %s", err)
 	}
 
 	return &InwayPostgreSQLRepository{
 		db:              db,
-		upsertInwayStmt: upsertInwayStmt,
-		getInwayStmt:    getInwayStmt,
+		upsertInwayStmt: registerStmt,
+		getInwayStmt:    getStmt,
 	}, nil
 }
 
 func (r *InwayPostgreSQLRepository) Register(model *inway.Inway) error {
-	type upsertInwayParams struct {
+	type registerParams struct {
 		OrganizationName string `db:"organization_name"`
-		InwayName        string `db:"inway_name"`
-		InwayAddress     string `db:"inway_address"`
-		InwayVersion     string `db:"inway_version"`
+		Name             string `db:"inway_name"`
+		Address          string `db:"inway_address"`
+		NlxVersion       string `db:"inway_version"`
 	}
 
-	_, err := r.upsertInwayStmt.Exec(&upsertInwayParams{
+	_, err := r.upsertInwayStmt.Exec(&registerParams{
 		OrganizationName: model.OrganizationName(),
-		InwayName:        model.Name(),
-		InwayAddress:     model.Address(),
-		InwayVersion:     model.NlxVersion(),
+		Name:             model.Name(),
+		Address:          model.Address(),
+		NlxVersion:       model.NlxVersion(),
 	})
 	if err != nil {
-		return fmt.Errorf("failed upsert inway and its organization: %s", err)
+		return fmt.Errorf("failed to register inway: %s", err)
 	}
 
 	return nil
@@ -97,7 +97,7 @@ func (r *InwayPostgreSQLRepository) GetInway(name, organizationName string) (*in
 	return model, nil
 }
 
-func prepareUpsertInwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
+func prepareRegisterStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 	query := `
 		with organization as (
 			insert into directory.organizations 
@@ -122,7 +122,7 @@ func prepareUpsertInwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 	return db.PrepareNamed(query)
 }
 
-func prepareGetInwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
+func prepareGetStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 	query := `
 		select directory.inways.name as name, address, version as nlx_version, directory.organizations.name as organization_name 
 		from directory.inways
