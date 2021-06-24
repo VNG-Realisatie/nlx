@@ -16,6 +16,7 @@ import (
 type InwayPostgreSQLRepository struct {
 	db              *sqlx.DB
 	upsertInwayStmt *sqlx.NamedStmt
+	getInwayStmt    *sqlx.NamedStmt
 }
 
 func NewInwayPostgreSQLRepository(db *sqlx.DB) (*InwayPostgreSQLRepository, error) {
@@ -28,9 +29,15 @@ func NewInwayPostgreSQLRepository(db *sqlx.DB) (*InwayPostgreSQLRepository, erro
 		return nil, fmt.Errorf("failed to prepare upsert inway statement: %s", err)
 	}
 
+	getInwayStmt, err := prepareGetInwayStmt(db)
+	if err != nil {
+		return nil, fmt.Errorf("failed to prepare get inway statement: %s", err)
+	}
+
 	return &InwayPostgreSQLRepository{
 		db:              db,
 		upsertInwayStmt: upsertInwayStmt,
+		getInwayStmt:    getInwayStmt,
 	}, nil
 }
 
@@ -51,6 +58,37 @@ func (r *InwayPostgreSQLRepository) Register(model *inway.Inway) error {
 	}
 
 	return nil
+}
+
+func (r *InwayPostgreSQLRepository) GetInway(name, organizationName string) (*inway.Inway, error) {
+	type dbInway struct {
+		Name             string `db:"name"`
+		Address          string `db:"address"`
+		NlxVersion       string `db:"nlx_version"`
+		OrganizationName string `db:"organization_name"`
+	}
+
+	type params struct {
+		Name             string `db:"name"`
+		OrganizationName string `db:"organization_name"`
+	}
+
+	result := dbInway{}
+
+	err := r.getInwayStmt.Get(result, &params{
+		Name:             name,
+		OrganizationName: organizationName,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to get inway (name: %s, organization: %s): %s", name, organizationName, err)
+	}
+
+	model, err := inway.NewInway(result.Name, result.OrganizationName, result.Address, result.NlxVersion)
+	if err != nil {
+		return nil, fmt.Errorf("invalid inway model in database: %v", err)
+	}
+
+	return model, nil
 }
 
 func prepareUpsertInwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
@@ -74,6 +112,20 @@ func prepareUpsertInwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 	      			do update set 
 	      			              address = excluded.address, 
 								  version = excluded.version;
+	`
+
+	return db.PrepareNamed(query)
+}
+
+func prepareGetInwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
+	query := `
+		select directory.inways.name as name, address, version as nlx_version, directory.organizations.name as organization_name 
+		from directory.inways
+		join directory.organizations 
+		    on directory.inways.organization_id = directory.organizations.id
+		where 
+		      directory.organizations.name = 'Logius'
+		  and directory.inways.name = '';
 	`
 
 	return db.PrepareNamed(query)

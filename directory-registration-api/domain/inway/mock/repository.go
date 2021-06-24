@@ -34,6 +34,21 @@ func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder {
 	return m.recorder
 }
 
+// GetInway mocks base method.
+func (m *MockRepository) GetInway(name, organization string) (*inway.Inway, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetInway", name, organization)
+	ret0, _ := ret[0].(*inway.Inway)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetInway indicates an expected call of GetInway.
+func (mr *MockRepositoryMockRecorder) GetInway(name, organization interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInway", reflect.TypeOf((*MockRepository)(nil).GetInway), name, organization)
+}
+
 // Register mocks base method.
 func (m *MockRepository) Register(i *inway.Inway) error {
 	m.ctrl.T.Helper()

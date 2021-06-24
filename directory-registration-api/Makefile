@@ -2,7 +2,7 @@ ifeq ($(GOPATH),)
 	GOPATH := $(shell go env GOPATH)
 endif
 
-PKG_FILES=pkg/database/mock/database.go domain/inway/repository.go
+PKG_FILES=pkg/database/mock/database.go domain/inway/mock/repository.go
 
 .PHONY: all
 all: generate
