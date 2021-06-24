@@ -27,15 +27,26 @@ Go go.mod tidy test:
     - docker
     - linux
 
-Go tests:
+services:
+  - postgres:12.2-alpine
+
+variables:
+  POSTGRES_DB: nlx
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: ""
+  POSTGRES_HOST_AUTH_METHOD: trust
+
+Go tests (unit & integration):
   stage: Tests
   image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/golang:1.16.4
+  variables:
+    POSTGRES_DSN: "postgres://postgres@postgres:5432/nlx?sslmode=disable"
   before_script:
     - mkdir -p tmp-coverage-reports/
   script:
     - ./pki/fix-permissions.sh
     - /usr/local/go/bin/go mod download
-    - /usr/local/go/bin/go test ./... -coverprofile tmp-coverage-reports/coverage.out.tmp
+    - /usr/local/go/bin/go test ./... --tags=integration -coverprofile tmp-coverage-reports/coverage.out.tmp
     - cat tmp-coverage-reports/coverage.out.tmp | grep -v '.pb.go\|.pb.gw.go' > tmp-coverage-reports/coverage.out
     - rm tmp-coverage-reports/coverage.out.tmp
     - /usr/local/go/bin/go tool cover -html=tmp-coverage-reports/coverage.out -o tmp-coverage-reports/coverage.html

@@ -1,6 +1,8 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 
+// +build integration
+
 package adapters_test
 
 import (
@@ -93,7 +95,7 @@ func assertInwayInRepository(t *testing.T, repo inway.Repository, iw *inway.Inwa
 }
 
 func newPostgreSQLRepository(t *testing.T) *adapters.InwayPostgreSQLRepository {
-	dsn := os.Getenv("TEST_POSTGRES_DSN")
+	dsn := os.Getenv("POSTGRES_DSN")
 
 	db, err := adapters.NewPostgreSQLConnection(dsn)
 	require.NoError(t, err)
