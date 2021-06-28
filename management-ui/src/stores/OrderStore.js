@@ -5,11 +5,11 @@ import { flow, makeAutoObservable, observable } from 'mobx'
 
 class OrderStore {
   _isLoading = false
-  _orders = observable.map()
+  _outgoingOrders = observable.map()
+  _incomingOrders = observable.map()
 
   constructor({ managementApiClient }) {
     makeAutoObservable(this)
-
     this._managementApiClient = managementApiClient
   }
 
@@ -17,27 +17,13 @@ class OrderStore {
     return this._isLoading
   }
 
-  get orders() {
-    return [...this._orders.values()]
+  get outgoingOrders() {
+    return [...this._outgoingOrders.values()]
   }
 
-  fetchAll = flow(function* fetchAll() {
-    this._isLoading = true
-
-    try {
-      const result =
-        yield this._managementApiClient.managementListOutgoingOrders()
-
-      result.orders.forEach((order) => {
-        this._orders.set(order.reference, order)
-      })
-    } catch (error) {
-      this._isLoading = false
-      throw new Error(error.message)
-    }
-
-    this._isLoading = false
-  }).bind(this)
+  get incomingOrders() {
+    return [...this._incomingOrders.values()]
+  }
 
   create = flow(function* create(formData) {
     try {
@@ -50,6 +36,60 @@ class OrderStore {
     } catch (err) {
       throw new Error(err.message)
     }
+  }).bind(this)
+
+  fetchOutgoing = flow(function* fetchOutgoing() {
+    this._isLoading = true
+
+    try {
+      const result =
+        yield this._managementApiClient.managementListOutgoingOrders()
+
+      result.orders.forEach((order) => {
+        this._outgoingOrders.set(order.reference, order)
+      })
+    } catch (error) {
+      this._isLoading = false
+      throw new Error(error.message)
+    }
+
+    this._isLoading = false
+  }).bind(this)
+
+  fetchIncoming = flow(function* fetchIncoming() {
+    this._isLoading = true
+
+    try {
+      const result =
+        yield this._managementApiClient.managementListIncomingOrders()
+
+      result.orders.forEach((order) => {
+        this._incomingOrders.set(order.reference, order)
+      })
+    } catch (error) {
+      this._isLoading = false
+      throw new Error(error.message)
+    }
+
+    this._isLoading = false
+  }).bind(this)
+
+  updateIncoming = flow(function* updateIncoming() {
+    this._isLoading = true
+
+    try {
+      const result =
+        yield this._managementApiClient.managementSynchronizeOrders()
+
+      result.orders.forEach((order) => {
+        this._incomingOrders.set(order.reference, order)
+      })
+    } catch (error) {
+      this._isLoading = false
+      throw new Error(error.message)
+    }
+
+    this._isLoading = false
   }).bind(this)
 }
 

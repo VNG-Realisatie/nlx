@@ -13,12 +13,16 @@ import OrdersPage from './index'
 
 jest.mock('../../../components/LoadingMessage', () => () => <p>loading</p>)
 jest.mock('./OrdersViewPage', () => () => <p>orders view</p>)
-jest.mock('./OrdersEmptyView', () => () => <p>orders empty view</p>)
+jest.mock('./OrdersOutgoingEmptyView', () => () => <p>orders empty view</p>)
 
 test('no orders present', async () => {
   const managementApiClient = new ManagementApi()
 
   managementApiClient.managementListOutgoingOrders = jest
+    .fn()
+    .mockResolvedValue({ orders: [] })
+
+  managementApiClient.managementListIncomingOrders = jest
     .fn()
     .mockResolvedValue({ orders: [] })
 
@@ -60,6 +64,10 @@ test('rendering the orders page', async () => {
         },
       ],
     })
+
+  managementApiClient.managementListIncomingOrders = jest
+    .fn()
+    .mockResolvedValue({ orders: [] })
 
   const history = createMemoryHistory({ initialEntries: ['/orders'] })
   const store = new RootStore({

@@ -5,7 +5,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Centered } from './index.styles'
 
-const OrdersEmptyView = (props) => {
+const OrdersOutgoingEmptyView = (props) => {
   const { t } = useTranslation()
   return (
     <Centered>
@@ -23,4 +23,4 @@ const OrdersEmptyView = (props) => {
   )
 }
 
-export default OrdersEmptyView
+export default OrdersOutgoingEmptyView

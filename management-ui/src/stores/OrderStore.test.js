@@ -11,12 +11,12 @@ test('initializing the store', () => {
   })
 
   expect(auditLogStore.isLoading).toEqual(false)
-  expect(auditLogStore.orders).toEqual([])
+  expect(auditLogStore.outgoingOrders).toEqual([])
 })
 
-test('fetch all orders', async () => {
+test('fetch outgoing orders', async () => {
   const managementApiClient = new ManagementApi()
-
+  //
   managementApiClient.managementListOutgoingOrders = jest
     .fn()
     .mockRejectedValueOnce(new Error('arbitrary error'))
@@ -33,14 +33,14 @@ test('fetch all orders', async () => {
     managementApiClient,
   })
 
-  await expect(store.fetchAll()).rejects.toThrowError('arbitrary error')
+  await expect(store.fetchOutgoing()).rejects.toThrowError('arbitrary error')
   expect(store.isLoading).toBe(false)
 
-  store.fetchAll()
+  store.fetchOutgoing()
   expect(store.isLoading).toBe(true)
 
   await waitFor(() => expect(store.isLoading).toBe(false))
-  expect(store.orders).toEqual([{ reference: 'reference' }])
+  expect(store.outgoingOrders).toEqual([{ reference: 'reference' }])
 })
 
 test('create an order', async () => {

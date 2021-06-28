@@ -25,6 +25,7 @@ import { ReactComponent as SvgOrganization } from './organization.svg'
 import { ReactComponent as SvgPencil } from './pencil.svg'
 import { ReactComponent as SvgPlus } from './plus.svg'
 import { ReactComponent as SvgRevoke } from './revoke.svg'
+import { ReactComponent as SvgRefresh } from './refresh.svg'
 import { ReactComponent as SvgServices } from './services.svg'
 import { ReactComponent as SvgSettings } from './cog.svg'
 import { ReactComponent as SvgShutdown } from './shut-down.svg'
@@ -74,6 +75,7 @@ export const IconOrganization = (props) => (
 export const IconPencil = (props) => <Icon as={SvgPencil} {...props} />
 export const IconPlus = (props) => <Icon as={SvgPlus} {...props} />
 export const IconRevoke = (props) => <Icon as={SvgRevoke} {...props} />
+export const IconRefresh = (props) => <Icon as={SvgRefresh} {...props} />
 export const IconServices = (props) => <Icon as={SvgServices} {...props} />
 export const IconSettings = (props) => <Icon as={SvgSettings} {...props} />
 export const IconShutdown = (props) => <Icon as={SvgShutdown} {...props} />

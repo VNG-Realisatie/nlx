@@ -2,6 +2,7 @@
 // Licensed under the EUPL
 //
 import styled from 'styled-components'
+import { Button } from '@commonground/design-system'
 
 export const Centered = styled.section`
   display: flex;
@@ -12,7 +13,30 @@ export const Centered = styled.section`
   text-align: center;
 `
 
-export const StyledActionsBar = styled.div`
+export const ActionsBar = styled.div`
   display: flex;
-  justify-content: flex-end;
+
+  > *:nth-child(3) {
+    margin-left: auto;
+  }
+  > *:last-child {
+    margin-left: 16px;
+  }
+`
+
+export const StyledButton = styled(Button)`
+  ${({ isActive, theme }) =>
+    isActive &&
+    `
+    background-color: ${theme.colorBackgroundButtonSecondarySelected};
+    color: ${theme.colorTextButtonSecondarySelected};
+
+    :after {
+      top: -2px;
+    }
+    :hover, :focus {
+      background-color: ${theme.colorBackgroundButtonSecondarySelectedHover};
+      color: ${theme.colorTextButtonSecondarySelected};
+    }
+  `}
 `
