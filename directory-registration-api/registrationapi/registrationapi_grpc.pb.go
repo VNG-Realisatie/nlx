@@ -19,7 +19,6 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DirectoryRegistrationClient interface {
-	// RegisterInway registers an inway for a given service
 	RegisterInway(ctx context.Context, in *RegisterInwayRequest, opts ...grpc.CallOption) (*RegisterInwayResponse, error)
 	SetOrganizationInway(ctx context.Context, in *SetOrganizationInwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ClearOrganizationInway(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -64,7 +63,6 @@ func (c *directoryRegistrationClient) ClearOrganizationInway(ctx context.Context
 // All implementations must embed UnimplementedDirectoryRegistrationServer
 // for forward compatibility
 type DirectoryRegistrationServer interface {
-	// RegisterInway registers an inway for a given service
 	RegisterInway(context.Context, *RegisterInwayRequest) (*RegisterInwayResponse, error)
 	SetOrganizationInway(context.Context, *SetOrganizationInwayRequest) (*emptypb.Empty, error)
 	ClearOrganizationInway(context.Context, *emptypb.Empty) (*emptypb.Empty, error)

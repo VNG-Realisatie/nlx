@@ -223,6 +223,7 @@ func (i *Inway) announceToDirectory(ctx context.Context) {
 			resp, err := i.directoryRegistrationClient.RegisterInway(
 				nlxversion.NewGRPCContext(ctx, "inway"),
 				&registrationapi.RegisterInwayRequest{
+					InwayName:    i.name,
 					InwayAddress: i.address,
 					Services:     protoServiceDetails,
 				},

@@ -33,7 +33,7 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 	nlxVersion := nlxversion.NewFromGRPCContext(ctx).Version
 
 	model, err := inway.NewInway(
-		"",
+		req.InwayName,
 		organizationName,
 		req.InwayAddress,
 		nlxVersion,
