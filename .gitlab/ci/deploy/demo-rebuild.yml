@@ -1,6 +1,6 @@
-Rebuild acceptance:
-  # Use `Deploy acceptance` as base, overwriting `before_script` and `rules`, but merging `variables`
-  extends: Deploy acceptance
+Rebuild demo:
+  # Use `Deploy demo` as base, overwriting `before_script` and `rules`, but merging `variables`
+  extends: Deploy demo
   before_script:
     - source ./.gitlab/ci/functions.sh
     - |
