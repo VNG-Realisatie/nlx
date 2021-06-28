@@ -78,7 +78,7 @@ The following table lists the configurable parameters of the nlx-inway Chart and
 
 | Parameter | Description | Default | Required (yes/no) |
 | --------- | ----------- | ------- | -------- |
-| `config.name` | Unique identifier of this inway. | `""` | no |
+| `config.name` | Name of the inway. Should be unique within the organization. | `""` | yes |
 | `config.logType` | Possible values: **live**, **local**. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger. | `live` | no |
 | `config.logLevel` | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType` | `info` | no |
 | `config.directoryRegistrationHostname` | Address of the NLX directory where this inway will register its services. | `""` | yes |
