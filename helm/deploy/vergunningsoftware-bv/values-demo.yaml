@@ -86,3 +86,24 @@ dex:
       - secretName: vergunningsoftware-bv-dex-ingress-tls
         hosts:
           - dex.demo.vergunningsoftware.nl
+
+parkeerrechten-admin:
+  enabled: true
+  organizationName: "Vergunningsoftware BV"
+  organizationLogo: https://gitlab.com/commonground/nlx/demo/-/raw/c75d67e8e0b631efdb0edec4df74b227483744c0/assets/stijns.svg
+  organizationColor: #FEBC2D
+  servicesList:
+    - organization: "Stijns"
+      baseUrl: "http://vergunningsoftware-bv-nlx-outway/Gemeente%20Stijns/parkeerrechten"
+  kentekenApiBaseUrl: http://vergunningsoftware-bv-nlx-outway/RvRD/basisregister-fictieve-kentekens
+  personenApiBaseUrl: http://vergunningsoftware-bv-nlx-outway/RvRD/basisregister-fictieve-personen
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - parkeerrechten-admin.demo.vergunningsoftware.nl
+    tls:
+      - secretName: vergunningsoftware-parkeerrechten-admin-ingress-tls
+        hosts:
+          - parkeerrechten-admin.demo.vergunningsoftware.nl
