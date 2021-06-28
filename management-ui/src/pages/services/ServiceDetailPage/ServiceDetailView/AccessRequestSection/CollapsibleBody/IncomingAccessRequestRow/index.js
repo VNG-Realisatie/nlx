@@ -63,21 +63,11 @@ const IncomingAccessRequestRow = ({
     <Table.Tr data-testid={`service-incoming-accessrequest-${id}`}>
       <Table.Td>{organizationName}</Table.Td>
       <TdActions>
-        <StyledButton
-          size="small"
-          variant="link"
-          onClick={approve}
-          title={t('Approve')}
-        >
-          <IconCheck />
+        <StyledButton size="small" variant="link" onClick={approve}>
+          <IconCheck title={t('Approve')} />
         </StyledButton>
-        <StyledButton
-          size="small"
-          variant="link"
-          onClick={reject}
-          title={t('Reject')}
-        >
-          <IconClose />
+        <StyledButton size="small" variant="link" onClick={reject}>
+          <IconClose title={t('Reject')} />
         </StyledButton>
 
         <ConfirmApproveModal />
