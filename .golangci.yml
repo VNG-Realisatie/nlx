@@ -1,8 +1,6 @@
 linters-settings:
   govet:
     check-shadowing: true
-  golint:
-    min-confidence: 0
   gocyclo:
     min-complexity: 10
   dupl:
@@ -43,7 +41,6 @@ linters:
     - godox
     - gofmt
     - goimports
-    - golint
     - gomnd
     - goprintffuncname
     - gosec
@@ -53,6 +50,7 @@ linters:
     - misspell
     - nakedret
     - prealloc
+    - revive
     - rowserrcheck
     - staticcheck
     - structcheck
