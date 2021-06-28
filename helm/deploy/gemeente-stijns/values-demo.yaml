@@ -49,6 +49,15 @@ ca:
       commonName: inway.demo.gemeentestijns.nl
       dnsNames:
         - inway.demo.gemeentestijns.nl
+managementAPI:
+  serviceParkeerrechten:
+    name: parkeerrechten
+    endpointURL: http://gemeente-stijns-parkeerrechten-api:8000
+    apiSpecificationURL: http://gemeente-stijns-parkeerrechten-api:8000/schema?format=openapi-json
+    publicSupportContact: support@nlx.io
+    documentationUrl: https://nlx.io
+    inways:
+      - gemeente-stijns-nlx-inway
 
 ################
 ## Sub-charts ##
@@ -101,3 +110,28 @@ nlx-inway:
     directoryRegistrationHostname: directory-registration-api.demo.nlx.io
   service:
     type: LoadBalancer
+
+parkeerrechten-api:
+  enabled: true
+  postgres:
+    hostname: gemeente-stijns-postgresql
+    database: parkeerrechten
+    existingSecret:
+      name: postgres.gemeente-stijns-postgresql.credentials.postgresql.acid.zalan.do
+
+parkeerrechten-viewer:
+  enabled: true
+  parkeerrechtenApiBaseUrl: http://gemeente-stijns-nlx-outway/Gemeente%20Stijns/parkeerrechten/
+  organizationName: "Gemeente Stijns"
+  organizationLogo: https://gitlab.com/commonground/nlx/demo/-/raw/c75d67e8e0b631efdb0edec4df74b227483744c0/assets/stijns.svg
+  organizationColor: "#ED7380"
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - parkeerrechten-viewer.demo.gemeentestijns.nl
+    tls:
+      - secretName: gemeentestijns-parkeerrechten-viewer-ingress-tls
+        hosts:
+          - parkeerrechten-viewer.demo.gemeentestijns.nl
