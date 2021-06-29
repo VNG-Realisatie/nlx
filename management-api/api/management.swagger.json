@@ -687,6 +687,28 @@
         ]
       }
     },
+    "/api/v1/orders/synchronize": {
+      "post": {
+        "operationId": "Management_SynchronizeOrders",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/managementSynchronizeOrdersResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Management"
+        ]
+      }
+    },
     "/api/v1/retrieve-claim": {
       "get": {
         "operationId": "Management_RetrieveClaimForOrder",
@@ -1730,6 +1752,17 @@
       "properties": {
         "organizationInway": {
           "type": "string"
+        }
+      }
+    },
+    "managementSynchronizeOrdersResponse": {
+      "type": "object",
+      "properties": {
+        "orders": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/managementIncomingOrder"
+          }
         }
       }
     },

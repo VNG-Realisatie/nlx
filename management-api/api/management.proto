@@ -9,6 +9,9 @@ import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 
 service Management {
+  rpc SynchronizeOrders(google.protobuf.Empty) returns (SynchronizeOrdersResponse) {
+    option (google.api.http) = {post: "/api/v1/orders/synchronize"};
+  }
   rpc IsFinanceEnabled (google.protobuf.Empty) returns (IsFinanceEnabledResponse) {
     option (google.api.http) = {get: "/api/v1/finance/enabled"};
   }
@@ -93,6 +96,10 @@ service Management {
   rpc ListIncomingOrders (google.protobuf.Empty) returns (ListIncomingOrdersResponse) {
     option (google.api.http) = {get: "/api/v1/orders/incoming"};
   }
+}
+
+message SynchronizeOrdersResponse {
+  repeated IncomingOrder orders = 1;
 }
 
 message IsFinanceEnabledResponse {

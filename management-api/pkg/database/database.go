@@ -69,4 +69,5 @@ type ConfigDatabase interface {
 
 	GetIncomingOrderByReference(ctx context.Context, reference string) (*IncomingOrder, error)
 	ListIncomingOrders(ctx context.Context) ([]*IncomingOrder, error)
+	SynchronizeOrders(ctx context.Context, orders []*IncomingOrder) error
 }

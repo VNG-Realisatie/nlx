@@ -6,9 +6,11 @@ package database
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type IncomingOrderService struct {
@@ -67,4 +69,56 @@ func (db *PostgresConfigDatabase) ListIncomingOrders(ctx context.Context) ([]*In
 	}
 
 	return orders, nil
+}
+
+func (db *PostgresConfigDatabase) SynchronizeOrders(ctx context.Context, orders []*IncomingOrder) error {
+	tx := db.DB.Begin()
+	defer tx.Rollback()
+
+	dbWithTx := &PostgresConfigDatabase{DB: tx}
+
+	for _, order := range orders {
+		existingOrder, err := db.GetIncomingOrderByReference(ctx, order.Reference)
+		if errors.Is(err, ErrNotFound) {
+			if createOrderErr := dbWithTx.DB.
+				WithContext(ctx).
+				Omit(clause.Associations).
+				Create(order).
+				Error; createOrderErr != nil {
+				return createOrderErr
+			}
+
+			orderServices := []IncomingOrderService{}
+
+			for _, service := range order.Services {
+				orderServices = append(orderServices, IncomingOrderService{
+					IncomingOrderID: order.ID,
+					Organization:    service.Organization,
+					Service:         service.Service,
+				})
+			}
+
+			if createServicesErr := dbWithTx.DB.
+				WithContext(ctx).
+				Model(IncomingOrderService{}).
+				Create(orderServices).Error; createServicesErr != nil {
+				return createServicesErr
+			}
+		} else if err != nil {
+			return fmt.Errorf("failed to get order by reference: %w", err)
+		}
+
+		existingOrder.ValidUntil = order.ValidUntil
+		existingOrder.Description = order.Description
+
+		if err := dbWithTx.DB.
+			WithContext(ctx).
+			Omit(clause.Associations).
+			Save(existingOrder).
+			Error; err != nil {
+			return err
+		}
+	}
+
+	return tx.Commit().Error
 }

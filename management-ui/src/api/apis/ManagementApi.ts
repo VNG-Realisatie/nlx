@@ -78,6 +78,9 @@ import {
     ManagementSettings,
     ManagementSettingsFromJSON,
     ManagementSettingsToJSON,
+    ManagementSynchronizeOrdersResponse,
+    ManagementSynchronizeOrdersResponseFromJSON,
+    ManagementSynchronizeOrdersResponseToJSON,
     ManagementUpdateServiceRequest,
     ManagementUpdateServiceRequestFromJSON,
     ManagementUpdateServiceRequestToJSON,
@@ -896,6 +899,30 @@ export class ManagementApi extends runtime.BaseAPI {
      */
     async managementSendAccessRequest(requestParameters: ManagementSendAccessRequestRequest): Promise<ManagementOutgoingAccessRequest> {
         const response = await this.managementSendAccessRequestRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async managementSynchronizeOrdersRaw(): Promise<runtime.ApiResponse<ManagementSynchronizeOrdersResponse>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v1/orders/synchronize`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementSynchronizeOrdersResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async managementSynchronizeOrders(): Promise<ManagementSynchronizeOrdersResponse> {
+        const response = await this.managementSynchronizeOrdersRaw();
         return await response.value();
     }
 

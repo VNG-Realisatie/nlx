@@ -537,6 +537,26 @@ func (mr *MockManagementClientMockRecorder) SendAccessRequest(ctx, in interface{
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendAccessRequest", reflect.TypeOf((*MockManagementClient)(nil).SendAccessRequest), varargs...)
 }
 
+// SynchronizeOrders mocks base method.
+func (m *MockManagementClient) SynchronizeOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.SynchronizeOrdersResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "SynchronizeOrders", varargs...)
+	ret0, _ := ret[0].(*api.SynchronizeOrdersResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SynchronizeOrders indicates an expected call of SynchronizeOrders.
+func (mr *MockManagementClientMockRecorder) SynchronizeOrders(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SynchronizeOrders", reflect.TypeOf((*MockManagementClient)(nil).SynchronizeOrders), varargs...)
+}
+
 // UpdateInway mocks base method.
 func (m *MockManagementClient) UpdateInway(ctx context.Context, in *api.UpdateInwayRequest, opts ...grpc.CallOption) (*api.Inway, error) {
 	m.ctrl.T.Helper()
@@ -993,6 +1013,21 @@ func (m *MockManagementServer) SendAccessRequest(arg0 context.Context, arg1 *api
 func (mr *MockManagementServerMockRecorder) SendAccessRequest(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendAccessRequest", reflect.TypeOf((*MockManagementServer)(nil).SendAccessRequest), arg0, arg1)
+}
+
+// SynchronizeOrders mocks base method.
+func (m *MockManagementServer) SynchronizeOrders(arg0 context.Context, arg1 *emptypb.Empty) (*api.SynchronizeOrdersResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SynchronizeOrders", arg0, arg1)
+	ret0, _ := ret[0].(*api.SynchronizeOrdersResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SynchronizeOrders indicates an expected call of SynchronizeOrders.
+func (mr *MockManagementServerMockRecorder) SynchronizeOrders(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SynchronizeOrders", reflect.TypeOf((*MockManagementServer)(nil).SynchronizeOrders), arg0, arg1)
 }
 
 // UpdateInway mocks base method.

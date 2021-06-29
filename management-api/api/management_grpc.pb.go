@@ -19,6 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ManagementClient interface {
+	SynchronizeOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*SynchronizeOrdersResponse, error)
 	IsFinanceEnabled(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*IsFinanceEnabledResponse, error)
 	DownloadFinanceExport(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DownloadFinanceExportResponse, error)
 	ListServices(ctx context.Context, in *ListServicesRequest, opts ...grpc.CallOption) (*ListServicesResponse, error)
@@ -55,6 +56,15 @@ type managementClient struct {
 
 func NewManagementClient(cc grpc.ClientConnInterface) ManagementClient {
 	return &managementClient{cc}
+}
+
+func (c *managementClient) SynchronizeOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*SynchronizeOrdersResponse, error) {
+	out := new(SynchronizeOrdersResponse)
+	err := c.cc.Invoke(ctx, "/nlx.management.Management/SynchronizeOrders", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *managementClient) IsFinanceEnabled(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*IsFinanceEnabledResponse, error) {
@@ -313,6 +323,7 @@ func (c *managementClient) ListIncomingOrders(ctx context.Context, in *emptypb.E
 // All implementations must embed UnimplementedManagementServer
 // for forward compatibility
 type ManagementServer interface {
+	SynchronizeOrders(context.Context, *emptypb.Empty) (*SynchronizeOrdersResponse, error)
 	IsFinanceEnabled(context.Context, *emptypb.Empty) (*IsFinanceEnabledResponse, error)
 	DownloadFinanceExport(context.Context, *emptypb.Empty) (*DownloadFinanceExportResponse, error)
 	ListServices(context.Context, *ListServicesRequest) (*ListServicesResponse, error)
@@ -348,6 +359,9 @@ type ManagementServer interface {
 type UnimplementedManagementServer struct {
 }
 
+func (UnimplementedManagementServer) SynchronizeOrders(context.Context, *emptypb.Empty) (*SynchronizeOrdersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SynchronizeOrders not implemented")
+}
 func (UnimplementedManagementServer) IsFinanceEnabled(context.Context, *emptypb.Empty) (*IsFinanceEnabledResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IsFinanceEnabled not implemented")
 }
@@ -443,6 +457,24 @@ type UnsafeManagementServer interface {
 
 func RegisterManagementServer(s grpc.ServiceRegistrar, srv ManagementServer) {
 	s.RegisterService(&Management_ServiceDesc, srv)
+}
+
+func _Management_SynchronizeOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServer).SynchronizeOrders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/nlx.management.Management/SynchronizeOrders",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServer).SynchronizeOrders(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Management_IsFinanceEnabled_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -956,6 +988,10 @@ var Management_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "nlx.management.Management",
 	HandlerType: (*ManagementServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "SynchronizeOrders",
+			Handler:    _Management_SynchronizeOrders_Handler,
+		},
 		{
 			MethodName: "IsFinanceEnabled",
 			Handler:    _Management_IsFinanceEnabled_Handler,

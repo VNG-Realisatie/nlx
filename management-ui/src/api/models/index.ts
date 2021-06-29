@@ -38,6 +38,7 @@ export * from './ManagementOutgoingOrder';
 export * from './ManagementRetrieveClaimForOrderResponse';
 export * from './ManagementServiceStatistics';
 export * from './ManagementSettings';
+export * from './ManagementSynchronizeOrdersResponse';
 export * from './ManagementUpdateServiceRequest';
 export * from './ManagementUpdateServiceResponse';
 export * from './ManagementUpdateSettingsRequest';
