@@ -166,6 +166,14 @@ on port `8444`. Make sure that port is publicly accessible.
 
 ![Settings screen](/img/nlx-management-settings-screen.png "Settings screen")
 
+## Transaction log
+
+The transaction log is also included with this setup. For every request made through your outway or inway, a record is created in the transaction log.
+To view the content of the transaction log run the following command:
+
+```bash
+docker-compose exec postgres psql -U postgres -d nlx_txlog -c "select * from transactionlog.records;"
+```
 
 ## In sum
 
