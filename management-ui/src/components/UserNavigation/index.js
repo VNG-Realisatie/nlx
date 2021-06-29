@@ -60,6 +60,7 @@ const UserNavigation = ({ ...props }) => {
           data-testid="avatar"
           alt={t('User avatar')}
           url={user.pictureUrl}
+          menuIsOpen={menuIsOpen}
         />
         <StyledUsername data-testid="full-name" title={user.fullName}>
           {user.fullName}

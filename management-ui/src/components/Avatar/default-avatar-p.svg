@@ -1,0 +1,18 @@
+<svg width="72" height="72" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g>
+        <circle id="c" cx="36" cy="36" r="36" style="fill:rgb(224,224,224);"/>
+        <circle cx="36" cy="28" r="14" style="fill:rgb(158,158,158);"/>
+        <circle cx="36" cy="75" r="28" style="fill:rgb(158,158,158);"/>
+        <g id="pirate">
+            <g transform="matrix(1.34873,0,0,1.34873,-15.1125,-8.91799)">
+                <circle cx="41.875" cy="25.928" r="2.892"/>
+            </g>
+            <g transform="matrix(0.360087,-0.591388,1.16546,0.709632,-3.58387,23.0459)">
+                <path d="M30.673,17.046L29.043,16.78L28.939,36.558L30.691,36.277L30.673,17.046Z"/>
+            </g>
+            <g transform="matrix(1.49576,0,0,1.49576,-13.236,-12.3248)">
+                <circle cx="29.319" cy="25.634" r="1.325"/>
+            </g>
+        </g>
+    </g>
+</svg>

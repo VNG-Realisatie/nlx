@@ -16,6 +16,6 @@ describe('Avatar', () => {
   it('should render the default avatar if no image is provided', () => {
     const { container } = renderWithProviders(<Avatar />)
     const image = container.querySelector('img')
-    expect(image.getAttribute('src')).toBe('default-avatar.svg')
+    expect(image.getAttribute('src')).toMatch(/default-avatar.+svg/)
   })
 })
