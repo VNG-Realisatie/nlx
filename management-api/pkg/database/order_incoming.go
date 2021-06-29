@@ -108,6 +108,14 @@ func (db *PostgresConfigDatabase) SynchronizeOrders(ctx context.Context, orders 
 			return fmt.Errorf("failed to get order by reference: %w", err)
 		}
 
+		order.ID = existingOrder.ID
+
+		// if nothing changed skip it
+		if order.ValidUntil.Equal(existingOrder.ValidUntil) &&
+			existingOrder.Description == order.Description {
+			continue
+		}
+
 		existingOrder.ValidUntil = order.ValidUntil
 		existingOrder.Description = order.Description
 
