@@ -6,24 +6,34 @@ import { useTranslation } from 'react-i18next'
 import {
   IconArrowLeftRight,
   IconDirectory,
-  IconServices,
   IconBarChart,
   IconTimeLine,
   IconUserCheck,
   IconSettings,
 } from '../../icons'
+import { ReactComponent as IconServices } from '../../icons/services2.svg'
 import {
   Nav,
   StyledHomeLink,
   StyledLink,
   StyledIcon,
+  InwaysIcon,
+  ServicesIcon,
+  DirectoryIcon,
+  BarChartIcon,
+  TimeIcon,
+  OrdersLink,
+  SettingsIcon,
   StyledNLXManagementLogo,
 } from './index.styles'
 
 const PrimaryNavigation = () => {
   const { t } = useTranslation()
   return (
-    <Nav aria-labelledby="nlx-home">
+    <Nav
+      aria-labelledby="nlx-home"
+      data-easter={process.env.NODE_ENV !== 'production'}
+    >
       <section>
         <StyledHomeLink
           to="/"
@@ -35,38 +45,46 @@ const PrimaryNavigation = () => {
         </StyledHomeLink>
 
         <StyledLink to="/inways" aria-label={t('Inways page')}>
-          <StyledIcon as={IconArrowLeftRight} size="x-large" />
+          <InwaysIcon as={IconArrowLeftRight} size="x-large" />
           {t('Inways')}
         </StyledLink>
 
         <StyledLink to="/services" aria-label={t('Services page')}>
-          <StyledIcon as={IconServices} size="x-large" />
+          <ServicesIcon as={IconServices} size="x-large" />
           {t('Services')}
         </StyledLink>
 
         <StyledLink to="/directory" aria-label={t('Directory page')}>
-          <StyledIcon as={IconDirectory} size="x-large" />
+          <DirectoryIcon as={IconDirectory} size="x-large" />
           {t('Directory')}
         </StyledLink>
 
         <StyledLink to="/finances" aria-label={t('Finances page')}>
-          <StyledIcon as={IconBarChart} size="x-large" />
+          {process.env.NODE_ENV !== 'production' ? (
+            <BarChartIcon>
+              <div />
+              <div />
+              <div />
+            </BarChartIcon>
+          ) : (
+            <StyledIcon as={IconBarChart} size="x-large" />
+          )}
           {t('Finances')}
         </StyledLink>
 
         <StyledLink to="/audit-log" aria-label={t('Audit log page')}>
-          <StyledIcon as={IconTimeLine} size="x-large" />
+          <TimeIcon as={IconTimeLine} size="x-large" />
           {t('Logs')}
         </StyledLink>
       </section>
 
       <section>
-        <StyledLink to="/orders" aria-label={t('Orders page')}>
+        <OrdersLink to="/orders" aria-label={t('Orders page')}>
           <StyledIcon as={IconUserCheck} size="x-large" />
           {t('Orders')}
-        </StyledLink>
+        </OrdersLink>
         <StyledLink to="/settings" aria-label={t('Settings page')}>
-          <StyledIcon as={IconSettings} size="x-large" />
+          <SettingsIcon as={IconSettings} size="x-large" />
           {t('Settings')}
         </StyledLink>
       </section>
