@@ -104,6 +104,8 @@ func (db *PostgresConfigDatabase) SynchronizeOrders(ctx context.Context, orders 
 				Create(orderServices).Error; createServicesErr != nil {
 				return createServicesErr
 			}
+
+			continue
 		} else if err != nil {
 			return fmt.Errorf("failed to get order by reference: %w", err)
 		}
