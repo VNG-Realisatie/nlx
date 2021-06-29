@@ -32,7 +32,7 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 
 	nlxVersion := nlxversion.NewFromGRPCContext(ctx).Version
 
-	model, err := inway.NewInway(
+	inwayModel, err := inway.NewInway(
 		req.InwayName,
 		organizationName,
 		req.InwayAddress,
@@ -43,7 +43,7 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 		return nil, status.New(codes.InvalidArgument, msg).Err()
 	}
 
-	err = h.inwayRepository.Register(model)
+	err = h.inwayRepository.Register(inwayModel)
 	if err != nil {
 		h.logger.Error("database error while registering inway", zap.Error(err))
 		return nil, status.New(codes.Internal, "failed to register inway").Err()
