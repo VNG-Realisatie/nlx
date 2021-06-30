@@ -60,7 +60,7 @@ func (r *InwayPostgreSQLRepository) Register(model *inway.Inway) error {
 		NlxVersion:       model.NlxVersion(),
 	})
 	if err != nil {
-		return fmt.Errorf("failed to register inway: %s", err)
+		return err
 	}
 
 	return nil
