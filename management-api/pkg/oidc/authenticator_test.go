@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/fgrosse/zaptest"
+	"github.com/go-chi/chi"
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/sessions"
 	"github.com/stretchr/testify/assert"
@@ -210,7 +211,10 @@ func TestAuthenticateEndpoint(t *testing.T) {
 		db:           mockDB,
 	}
 
-	srv := httptest.NewServer(authenticator.Routes())
+	router := chi.NewRouter()
+	authenticator.MountRoutes(router)
+
+	srv := httptest.NewServer(router)
 	defer srv.Close()
 
 	mockStore.
@@ -226,7 +230,7 @@ func TestAuthenticateEndpoint(t *testing.T) {
 		AuthCodeURL("").
 		Return("https://example.com/some-redirect-url")
 
-	resp, err := client.Get(fmt.Sprintf("%s/authenticate", srv.URL))
+	resp, err := client.Get(fmt.Sprintf("%s/oidc/authenticate", srv.URL))
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusFound, resp.StatusCode)
 	assert.Equal(t, resp.Header.Get("Location"), "https://example.com/some-redirect-url")
@@ -246,12 +250,15 @@ func TestMeEndpoint(t *testing.T) {
 		store:        mockStore,
 	}
 
-	srv := httptest.NewServer(authenticator.Routes())
+	router := chi.NewRouter()
+	authenticator.MountRoutes(router)
+
+	srv := httptest.NewServer(router)
 	defer srv.Close()
 
 	mockStore.EXPECT().Get(gomock.Any(), "nlx_management_session").Return(&sessions.Session{}, nil)
 
-	resp, err := client.Get(fmt.Sprintf("%s/me", srv.URL))
+	resp, err := client.Get(fmt.Sprintf("%s/oidc/me", srv.URL))
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusUnauthorized, resp.StatusCode)
 	resp.Body.Close()
@@ -274,17 +281,20 @@ func TestCallbackEndpoint(t *testing.T) {
 		store:        mockStore,
 	}
 
-	srv := httptest.NewServer(authenticator.Routes())
+	router := chi.NewRouter()
+	authenticator.MountRoutes(router)
+
+	srv := httptest.NewServer(router)
 	defer srv.Close()
 
 	mockStore.EXPECT().Get(gomock.Any(), "nlx_management_session").Return(&sessions.Session{}, nil).AnyTimes()
 	mockOAuth2Config.EXPECT().Exchange(gomock.Any(), "1337").Return(&oauth2.Token{}, nil)
 
 	// this tests the non-happy trail
-	resp, err := client.Get(fmt.Sprintf("%s/callback?code=1337", srv.URL))
+	resp, err := client.Get(fmt.Sprintf("%s/oidc/callback?code=1337", srv.URL))
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusFound, resp.StatusCode)
-	assert.Equal(t, resp.Header.Get("Location"), "/login#auth-fail")
+	assert.Equal(t, "/login#auth-fail", resp.Header.Get("Location"))
 	resp.Body.Close()
 }
 
@@ -305,7 +315,10 @@ func TestLogoutEndpoint(t *testing.T) {
 		store:        mockStore,
 	}
 
-	srv := httptest.NewServer(authenticator.Routes())
+	router := chi.NewRouter()
+	authenticator.MountRoutes(router)
+
+	srv := httptest.NewServer(router)
 	defer srv.Close()
 
 	mockSession := sessions.NewSession(mockStore, "nlx_management_session")
@@ -317,7 +330,7 @@ func TestLogoutEndpoint(t *testing.T) {
 	mockStore.EXPECT().Get(gomock.Any(), "nlx_management_session").Return(mockSession, nil).AnyTimes()
 	mockStore.EXPECT().Save(gomock.Any(), gomock.Any(), mockSession).Return(nil).AnyTimes()
 
-	resp, err := client.Post(fmt.Sprintf("%s/logout", srv.URL), "application/x-www-form-urlencoded", nil)
+	resp, err := client.Post(fmt.Sprintf("%s/oidc/logout", srv.URL), "application/x-www-form-urlencoded", nil)
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusFound, resp.StatusCode)
 	assert.Equal(t, resp.Header.Get("Location"), "/")

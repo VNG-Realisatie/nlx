@@ -34,16 +34,17 @@ Then, start all components by running:
 docker-compose up -d
 ```
 
-This will start [Dex](https://github.com/dexidp/dex) (Identity Provider), PostgreSQL and the required NLX components.
+This will start PostgreSQL and the required NLX components.
 
 The NLX components are configured using [environment variables](../reference-information/environment-variables) which in this guide are set in `docker-compose.yml`.
 
-To be able to access NLX Management you will need to create a user with an email matching one of the users in the OpenID Connect Provider.
-Since we already setup the `admin@nlx.local` user we can use this to create the admin user:
+Let's create a user, so we can access NLX Management:
 
 ```bash
-docker-compose exec api nlx-management-api create-user --email admin@nlx.local --role admin
+docker-compose exec api nlx-management-api create-user --email admin@nlx.local --password=development --role admin
 ```
+
+The username is `admin@nlx.local` and the password is `development`. Feel free to use the credentials you prefer.
 
 At last, let's verify if all the components are up and running:
 
@@ -52,96 +53,20 @@ docker-compose ps
 ```
 
 It might take a while for all components to become healthy.
-If after a while one or more components aren't running you can inspect the logs for any errors.
+If after a while one or more components are not running, you can inspect the logs for any errors.
 
-
-## Dex <small>(Identity Provider)</small>
-
-The Management UI supports the OpenID Connect protocol for authentication and authorization.
-In the demo we provide Dex, which is a configurable Identity Provider.
-
-On Linux based operating systems this works out-of-the-box.
-If you're using MacOS or Windows you will need to add the hostname for Dex to the known hosts.
-
-<Tabs
-  defaultValue="mac_os"
-  values={[
-    { label: 'MacOS', value: 'mac_os', },
-    { label: 'Windows', value: 'windows', },
-  ]}
->
-
-<TabItem value="mac_os">
-
-```bash
-sudo sh -c "echo '127.0.0.1 dex.nlx.localhost' >> /etc/hosts"
-```
-
-</TabItem>
-
-<TabItem value="windows">
-
-```powershell
-Add-Content -Path C:\Windows\System32\drivers\etc\hosts -Value "127.0.0.1`tdex.nlx.localhost" -Force
-```
-
-</TabItem>
-</Tabs>
-
-Now let's verify that the local hostname for Dex points to the host:
-
-<Tabs
-  defaultValue="mac_os"
-  values={[
-    { label: 'MacOS', value: 'mac_os', },
-    { label: 'Linx/Windows', value: 'linux_windows', },
-  ]}
->
-<TabItem value="linux_windows">
-
-```bash
-ping dex.nlx.localhost -4 -c 1
-```
-
-</TabItem>
-
-<TabItem value="mac_os">
-
-```bash
-ping dex.nlx.localhost -c 1
-```
-
-</TabItem>
-</Tabs>
-
-The output should be:
-```
-PING dex.nlx.localhost (127.0.0.1) 56(84) bytes of data.
-64 bytes from localhost (127.0.0.1): icmp_seq=1 ttl=64 time=0.026 ms
-
---- dex.nlx.localhost ping statistics ---
-1 packets transmitted, 1 received, 0% packet loss, time 0ms
-rtt min/avg/max/mdev = 0.026/0.026/0.026/0.000 ms
-```
 
 ## Access the Management UI
 
 You can access the Management UI by opening `http://localhost:8080` in your browser.
 When you do you should see the login screen:
 
-![Login screen](/img/nlx-management-login-screen.png "Login screen")
-
-Clicking on the login button leads you to Dex which acts as an OpenID Connect Identity Provider.
-For demo purposes we configured Dex to accept a static username/password but in production you would use your own Identity Provider.
+![Login screen](/img/nlx-management-web-interface-screenshot-basic-auth.png "Login screen for Basic Authentication")
 
 You can login with the demo credentials:
 
 - **Username**: admin@nlx.local
 - **Password**: development
-
-After logging in you will be asked to grant access.
-Click on "Grant Access" to get access to the Management UI.
-
 
 ## Management UI overview
 
@@ -151,13 +76,15 @@ On the left you will find the main navigation which separates the UI in several 
 - **Services**: Shows a list of your services. You can also register new services here.
 - **Directory**: Lists all available services in the [demo directory](https://directory.demo.nlx.io/). This is also the place where you can request access to another service.
 - **Settings**: Shows all global settings.
+- **Finance**: Download financial information about the usage of your services.
+- **Logs**: Lists the audit logs for your NLX installation.
 
 ![Overview](/img/nlx-management-overview.png "Overview")
 
 
 ## Set the organization inway
 
-In order to receive access requests you have to set a default inway for your organization.
+In order to receive Access Requests and send/receive Orders, you have to set a default inway for your organization.
 You can do that by going to the settings page, selecting the "Inway-01" and clicking on "Save settings".
 
 > In the Docker Compose file we have started, access requests can be accepted by the inway
@@ -179,5 +106,5 @@ docker-compose exec postgres psql -U postgres -d nlx_txlog -c "select * from tra
 
 So far we have:
 - Started all components using Docker Compose
-- Granted access to the Management UI
+- Logged in to the Management UI
 - Set a default organization inway

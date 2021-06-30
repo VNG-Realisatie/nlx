@@ -12,15 +12,7 @@ You will learn how to set up a test environment, provide and consume APIs on the
 
 The target audience is **system operators**.
 
-![Screenshot of the NLX Management web interface](/img/nlx-management-web-interface-screenshot.png)
-
-The following features are available:
-
-* Manage your inways
-* Provide services on the NLX network
-* Manage access to your services
-* Request access to services available on the NLX network
-
+![Screenshot of the NLX Management web interface using Basic Authentication](/img/nlx-management-web-interface-screenshot-basic-auth.png)
 
 ## Components
 
@@ -52,15 +44,27 @@ The configuration of your Inways, the services you provide and access requests t
 are stored in an PostgreSQL database. PostgreSQL is used as a database because it is safe and reliable.
 
 
-### OIDC provider
+### Authentication
+
+#### Your own Identity and Access Management (IAM)
 
 Users need to login before they can use NLX management. NLX management does **not** come with its 
 own identity and access management tool but supports OIDC. If you are using OIDC in your organization 
 you can easily configure NLX Management to use your OIDC provider.
 
+#### IAM for development
+
 If your organization does not support OIDC you can use an identity service 
 like [Dex](https://github.com/dexidp/dex) to set it up.
 
+#### Basic Authentication 
+It is also possible to use Basic Authentication instead of OIDC. 
+Switching between OIDC and Basic Authentication might work but is not officially supported.
+If you need to switch, it is recommended to start with a clean installation.
+
+To avoid having to setup Dex, we will use Basic Authentication for this NLX Try Me guide.
+
+**We strongly discourage to use this in production environments.**
 
 ## In sum
 

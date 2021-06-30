@@ -11,12 +11,12 @@ import i18n from '../test-utils/i18nTestConfig'
 import App from './index'
 
 test('initializing the App when user is authenticated', async () => {
-  const getSettings = jest
-    .fn()
-    .mockResolvedValue({ organizationInway: 'inway' })
-
   const rootStore = new RootStore()
   const applicationStore = rootStore.applicationStore
+
+  applicationStore.getGeneralSettings = jest
+    .fn()
+    .mockResolvedValue({ organizationInway: 'inway' })
 
   expect(applicationStore.isOrganizationInwaySet).toBeNull()
 
@@ -24,7 +24,7 @@ test('initializing the App when user is authenticated', async () => {
     <I18nextProvider i18n={i18n}>
       <StoreProvider rootStore={rootStore}>
         <UserContextProvider user={{}}>
-          <App getSettings={getSettings}>My App</App>
+          <App>My App</App>
           <div id="root" />
         </UserContextProvider>
       </StoreProvider>
@@ -33,7 +33,5 @@ test('initializing the App when user is authenticated', async () => {
 
   const welcomeMessage = await findByText('My App')
   expect(welcomeMessage).toBeInTheDocument()
-
-  expect(getSettings).toHaveBeenCalled()
   expect(applicationStore.isOrganizationInwaySet).toBe(true)
 })

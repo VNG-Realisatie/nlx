@@ -1,4 +1,4 @@
-// Copyright © VNG Realisatie 2020
+// Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 //
 import React, { useContext } from 'react'
@@ -40,7 +40,7 @@ function useLoginErrorMessage() {
   }
 }
 
-const LoginPage = () => {
+const LoginOIDCPage = () => {
   const { t } = useTranslation()
   const { user } = useContext(UserContext)
   const loginError = useLoginErrorMessage()
@@ -86,4 +86,4 @@ const LoginPage = () => {
   )
 }
 
-export default LoginPage
+export default LoginOIDCPage

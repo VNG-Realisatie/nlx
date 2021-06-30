@@ -6,8 +6,10 @@ package api
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"runtime/debug"
 
+	"github.com/go-chi/chi"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
@@ -30,7 +32,6 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/directory"
 	"go.nlx.io/nlx/management-api/pkg/environment"
 	"go.nlx.io/nlx/management-api/pkg/management"
-	"go.nlx.io/nlx/management-api/pkg/oidc"
 	"go.nlx.io/nlx/management-api/pkg/server"
 	"go.nlx.io/nlx/management-api/pkg/txlogdb"
 )
@@ -44,14 +45,19 @@ type API struct {
 	process         *process.Process
 	mux             *runtime.ServeMux
 	grpcServer      *grpc.Server
-	authenticator   *oidc.Authenticator
+	authenticator   Authenticator
 	directoryClient directory.Client
 	configDatabase  database.ConfigDatabase
 }
 
+type Authenticator interface {
+	MountRoutes(router chi.Router)
+	OnlyAuthenticated(h http.Handler) http.Handler
+}
+
 // NewAPI creates and prepares a new API
 //nolint:gocyclo // parameter validation
-func NewAPI(db database.ConfigDatabase, txlogDB txlogdb.TxlogDatabase, logger *zap.Logger, mainProcess *process.Process, cert, orgCert *common_tls.CertificateBundle, directoryInspectionAddress, directoryRegistrationAddress string, authenticator *oidc.Authenticator, auditLogger auditlog.Logger) (*API, error) {
+func NewAPI(db database.ConfigDatabase, txlogDB txlogdb.TxlogDatabase, logger *zap.Logger, mainProcess *process.Process, cert, orgCert *common_tls.CertificateBundle, directoryInspectionAddress, directoryRegistrationAddress string, authenticator Authenticator, auditLogger auditlog.Logger) (*API, error) {
 	if db == nil {
 		return nil, errors.New("database is not configured")
 	}
@@ -175,8 +181,6 @@ func newGRPCServer(logger *zap.Logger, cert *common_tls.CertificateBundle) *grpc
 func UserDataMatcher(key string) (string, bool) {
 	switch key {
 	case "Username":
-		return key, true
-	case "Useremail":
 		return key, true
 	default:
 		return runtime.DefaultHeaderMatcher(key)

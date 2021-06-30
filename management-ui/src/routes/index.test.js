@@ -9,7 +9,9 @@ import { renderWithProviders } from '../test-utils'
 import { UserContextProvider } from '../user-context'
 import Routes from '.'
 
-jest.mock('../pages/LoginPage', () => () => <div data-testid="login-page" />)
+jest.mock('../pages/LoginOIDCPage', () => () => (
+  <div data-testid="login-page" />
+))
 jest.mock('../pages/services/ServicesPage', () => () => (
   <div data-testid="services-page" />
 ))
@@ -59,7 +61,7 @@ test('redirects to /inways when navigating to /', async () => {
   expect(history.location.pathname).toEqual('/inways')
 })
 
-test('the /login route renders the LoginPage', () => {
+test('the /login route renders the LoginOIDCPage', () => {
   const history = createMemoryHistory({ initialEntries: ['/login'] })
   const { getByTestId } = renderWithProviders(
     <Router history={history}>

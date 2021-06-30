@@ -23,7 +23,9 @@ func (s *ManagementService) GetSettings(ctx context.Context, _ *emptypb.Empty) (
 	settings, err := s.configDatabase.GetSettings(ctx)
 	if err != nil {
 		if errIsNotFound(err) {
-			return nil, status.Error(codes.NotFound, "settings not found")
+			return &api.Settings{
+				OrganizationInway: "",
+			}, nil
 		}
 
 		logger.Error("could not get the settings from the database", zap.Error(err))

@@ -5,23 +5,26 @@ import React from 'react'
 import { MemoryRouter as Router } from 'react-router-dom'
 import { renderWithProviders, waitFor } from '../../test-utils'
 import { UserContextProvider } from '../../user-context'
+import { RootStore, StoreProvider } from '../../stores'
 import UserNavigation from './index'
 
 describe('the UserNavigation', () => {
   describe('when not authenticated', () => {
     it('should not render', () => {
+      const rootStore = new RootStore({})
+
       const authenticationHandler = () => {
         throw new Error('not authenticated')
       }
       const { getByTestId } = renderWithProviders(
-        <Router>
+        <StoreProvider rootStore={rootStore}>
           <UserContextProvider
             user={null}
             fetchAuthenticatedUser={authenticationHandler}
           >
             <UserNavigation />
           </UserContextProvider>
-        </Router>,
+        </StoreProvider>,
       )
 
       expect(() => getByTestId('user-navigation')).toThrow()
@@ -32,17 +35,21 @@ describe('the UserNavigation', () => {
     let result
 
     beforeEach(() => {
+      const rootStore = new RootStore()
+
       result = renderWithProviders(
         <Router>
-          <UserContextProvider
-            user={{
-              fullName: 'John Doe',
-              pictureUrl: 'https://my-pictures.com/nlx.jpg',
-            }}
-          >
-            <UserNavigation />
-            <div data-testid="outside-user-menu" />
-          </UserContextProvider>
+          <StoreProvider rootStore={rootStore}>
+            <UserContextProvider
+              user={{
+                fullName: 'John Doe',
+                pictureUrl: 'https://my-pictures.com/nlx.jpg',
+              }}
+            >
+              <UserNavigation />
+              <div data-testid="outside-user-menu" />
+            </UserContextProvider>
+          </StoreProvider>
         </Router>,
       )
     })

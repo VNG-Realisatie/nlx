@@ -1,40 +1,34 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React from 'react'
-import { Route, Redirect } from 'react-router-dom'
-import PropTypes from 'prop-types'
-
+import React, { useContext } from 'react'
+import { Redirect, Route } from 'react-router-dom'
+import { string, node } from 'prop-types'
 import UserContext from '../user-context'
 
 const LoginRoutePath = '/login'
 
-class AuthenticatedRoute extends React.Component {
-  static propTypes = {
-    unauthenticatedPath: PropTypes.string.isRequired,
-    children: PropTypes.node,
+const AuthenticatedRoute = ({ unauthenticatedPath, children, ...props }) => {
+  const { isReady, user } = useContext(UserContext)
+
+  if (!isReady) {
+    return null
   }
 
-  static defaultProps = {
-    unauthenticatedPath: LoginRoutePath,
+  if (user) {
+    return <Route {...props}>{children}</Route>
   }
 
-  static contextType = UserContext
+  return <Redirect to={unauthenticatedPath} />
+}
 
-  render() {
-    const { unauthenticatedPath, children, ...rest } = this.props
-    const { isReady, user } = this.context
+AuthenticatedRoute.propTypes = {
+  unauthenticatedPath: string.isRequired,
+  children: node,
+}
 
-    if (!isReady) {
-      return null
-    }
-
-    if (user) {
-      return <Route {...rest}>{children}</Route>
-    }
-
-    return <Redirect to={unauthenticatedPath} />
-  }
+AuthenticatedRoute.defaultProps = {
+  unauthenticatedPath: LoginRoutePath,
 }
 
 export default AuthenticatedRoute

@@ -63,6 +63,7 @@
   "Down": "Down",
   "Edit": "Edit",
   "Edit service": "Edit service",
+  "Email address": "Email address",
   "Error": "Error",
   "Export report": "Export report",
   "Failed adding service": "Failed adding service",
@@ -96,7 +97,9 @@
   "Homepage": "Homepage",
   "Hostname": "Hostname",
   "Insight in how often and for what cost other organizations request your services": "Insight in how often and for what cost other organizations request your services",
+  "Invalid credentials.": "Invalid credentials.",
   "Invalid date": "Invalid date",
+  "Invalid email": "Invalid email",
   "Invalid endpoint URL": "Invalid endpoint URL",
   "Inways": "Inways",
   "Inways page": "Inways page",
@@ -107,6 +110,7 @@
   "Issued to": "Issued to",
   "List of all available services": "List of all available services",
   "Loading…": "Loading…",
+  "Log in": "Log in",
   "Log in to continue": "Log in to continue",
   "Log in with organization account": "Log in with organization account",
   "Log out": "Log out",
@@ -144,6 +148,7 @@
   "Organizations with access": "Organizations with access",
   "Overview updated": "Overview updated",
   "Page not found": "Page not found",
+  "Password": "Password",
   "per request": "per request",
   "Please enter valid costs": "Please enter valid costs (at least 1 cent)",
   "Please select an organization inway. At the moment access requests can not be received and outgoing orders can not be retrieved by other organizations.": "Please select an organization inway. At the moment access requests can not be received and outgoing orders can not be retrieved by other organizations.",
@@ -231,6 +236,5 @@
   "You have no access": "You have no access",
   "You haven't received any orders yet": "You haven't received any orders yet",
   "Your access was revoked": "Your access was revoked",
-  "yyyy-mm-dd": "yyyy-mm-dd",
-  "received": "received"
+  "yyyy-mm-dd": "yyyy-mm-dd"
 }

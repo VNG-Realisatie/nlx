@@ -26,7 +26,10 @@ export const storesContext = createContext(null)
 
 export class RootStore {
   constructor({ directoryApiClient, managementApiClient } = {}) {
-    this.applicationStore = new ApplicationStore()
+    this.applicationStore = new ApplicationStore({
+      rootStore: this,
+      managementApiClient,
+    })
     this.directoryServicesStore = new DirectoryServicesStore({
       rootStore: this,
       directoryApiClient,

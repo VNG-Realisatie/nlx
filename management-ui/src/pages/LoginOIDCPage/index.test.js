@@ -6,14 +6,14 @@ import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import { renderWithProviders } from '../../test-utils'
 import { UserContextProvider } from '../../user-context'
-import LoginPage from './index'
+import LoginOIDCPage from './index'
 
 test('renders a welcome message', async () => {
   const history = createMemoryHistory()
   const { findByText } = renderWithProviders(
     <Router history={history}>
       <UserContextProvider>
-        <LoginPage />
+        <LoginOIDCPage />
       </UserContextProvider>
     </Router>,
   )
@@ -28,7 +28,7 @@ test('when authentication fails', async () => {
   const { findByTestId } = renderWithProviders(
     <Router history={history}>
       <UserContextProvider>
-        <LoginPage />
+        <LoginOIDCPage />
       </UserContextProvider>
     </Router>,
   )
@@ -45,7 +45,7 @@ test('when the authenticating user is missing', async () => {
   const { findByTestId } = renderWithProviders(
     <Router history={history}>
       <UserContextProvider>
-        <LoginPage />
+        <LoginOIDCPage />
       </UserContextProvider>
     </Router>,
   )

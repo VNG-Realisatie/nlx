@@ -19,7 +19,7 @@ test('providing services but no organization inway', async () => {
 
   rootStore.servicesStore.fetch({ name: 'service ' })
 
-  rootStore.applicationStore.update({
+  rootStore.applicationStore.updateOrganizationInway({
     isOrganizationInwaySet: false,
   })
 
@@ -48,7 +48,7 @@ test('having outgoing orders but no organization inway', async () => {
 
   rootStore.orderStore.fetchOutgoing()
 
-  rootStore.applicationStore.update({
+  rootStore.applicationStore.updateOrganizationInway({
     isOrganizationInwaySet: false,
   })
 
@@ -80,7 +80,7 @@ test('organization inway is set with services and outgoing orders present', () =
   rootStore.orderStore.fetchOutgoing()
   rootStore.servicesStore.fetch({ name: 'service ' })
 
-  rootStore.applicationStore.update({
+  rootStore.applicationStore.updateOrganizationInway({
     isOrganizationInwaySet: false,
   })
 

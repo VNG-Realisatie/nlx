@@ -69,12 +69,13 @@ func (a *API) ListenAndServe(address, configAddress string) error {
 	}
 
 	r := chi.NewRouter()
+
 	r.Use(middleware.Logger)
 
 	r.Get("/health", health)
-	r.Mount("/oidc", a.authenticator.Routes())
 	r.Mount("/api", a.authenticator.OnlyAuthenticated(a.mux))
 	r.Mount("/api/v1/environment", environmentRoutes(a))
+	a.authenticator.MountRoutes(r)
 
 	server := &http.Server{
 		Addr:    address,

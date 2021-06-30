@@ -16,6 +16,7 @@ const invalidArgumentCode = 128
 
 var createUserOpts struct {
 	Email       string
+	Password    string
 	Roles       []string
 	PostgresDSN string
 }
@@ -25,6 +26,7 @@ func init() {
 	rootCmd.AddCommand(createUserCommand)
 
 	createUserCommand.Flags().StringVarP(&createUserOpts.Email, "email", "e", "", "User email")
+	createUserCommand.Flags().StringVarP(&createUserOpts.Password, "password", "", "", "User password")
 	createUserCommand.Flags().StringArrayVarP(&createUserOpts.Roles, "role", "r", []string{}, "User roles")
 	createUserCommand.Flags().StringVarP(&createUserOpts.PostgresDSN, "postgres-dsn", "p", "", "Postgres Connection URL")
 
@@ -53,6 +55,7 @@ var createUserCommand = &cobra.Command{
 		user, err := db.CreateUser(
 			context.Background(),
 			createUserOpts.Email,
+			createUserOpts.Password,
 			createUserOpts.Roles,
 		)
 		if err != nil {

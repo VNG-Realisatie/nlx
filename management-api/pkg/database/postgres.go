@@ -5,19 +5,22 @@ package database
 
 import (
 	"errors"
+	"fmt"
 
+	"github.com/golang-migrate/migrate/v4"
+	bindata "github.com/golang-migrate/migrate/v4/source/go_bindata"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	"go.nlx.io/nlx/management-api/db"
 )
 
 var ErrNotFound = errors.New("database: value not found")
 
-// PostgresConfigDatabase is the postgres implementation of ConfigDatabase
 type PostgresConfigDatabase struct {
 	*gorm.DB
 }
 
-// NewPostgresConfigDatabase constructs a new PostgresDatabase
 func NewPostgresConfigDatabase(connectionString string) (ConfigDatabase, error) {
 	db, err := gorm.Open(postgres.Open(connectionString), &gorm.Config{})
 	if err != nil {
@@ -27,4 +30,45 @@ func NewPostgresConfigDatabase(connectionString string) (ConfigDatabase, error) 
 	return &PostgresConfigDatabase{
 		DB: db,
 	}, nil
+}
+
+func setupMigrator(dsn string) (*migrate.Migrate, error) {
+	resource := bindata.Resource(
+		db.AssetNames(),
+		db.Asset,
+	)
+
+	source, err := bindata.WithInstance(resource)
+	if err != nil {
+		return nil, err
+	}
+
+	return migrate.NewWithSourceInstance("go-bindata", source, dsn)
+}
+
+func PostgresPerformMigrations(dsn string) error {
+	migrator, err := setupMigrator(dsn)
+	if err != nil {
+		return err
+	}
+
+	if err := migrator.Up(); err != nil {
+		if errors.Is(err, migrate.ErrNoChange) {
+			fmt.Println("migrations are up-to-date")
+			return nil
+		}
+
+		return err
+	}
+
+	return nil
+}
+
+func PostgresMigrationStatus(dsn string) (version uint, dirty bool, err error) {
+	migrator, err := setupMigrator(dsn)
+	if err != nil {
+		return 0, false, err
+	}
+
+	return migrator.Version()
 }

@@ -6,6 +6,7 @@ title: Directory
 ## Version Statistics
 
 To keep track of what versions are in use within the NLX landscape the version of inways and outways are recorded.
+
 ### Inways
 
 Every time the inway registers itself, its version is sent using the `NLX-Version` header and recorded in the `inways` table in the directory. 

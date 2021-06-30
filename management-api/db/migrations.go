@@ -22,6 +22,8 @@
 // db/migrations/010_rename_orders_to_outgoing_orders.up.sql
 // db/migrations/011_add_incoming_orders.down.sql
 // db/migrations/011_add_incoming_orders.up.sql
+// db/migrations/012_add_password_for_basic_auth.down.sql
+// db/migrations/012_add_password_for_basic_auth.up.sql
 package db
 
 import (
@@ -538,6 +540,46 @@ func _011_add_incoming_ordersUpSql() (*asset, error) {
 	return a, nil
 }
 
+var __012_add_password_for_basic_authDownSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x14\xca\xb1\x0a\xc2\x30\x10\x06\xe0\xfd\x9e\xe2\x9f\x3b\x58\xed\xda\x51\xc4\xa5\x88\x08\xba\xca\x35\x39\xda\x40\x72\x29\xc9\x15\xf5\x91\x7c\x0d\x9f\x4c\xba\x7f\x6d\x43\x68\x70\xcc\xcb\xa7\x84\x69\x36\xfc\xbe\x78\x5c\xce\xb8\x09\xc7\x50\xd9\x82\xa0\xdb\x77\x87\xcd\x0c\xc1\x89\x56\xf1\x58\xd5\x4b\x81\xcd\x82\xd3\xfd\x3a\x10\x9a\x96\x68\x94\x29\x28\xac\xb0\x56\x76\x16\xb2\xf6\x44\x1c\x6d\x73\x3c\x46\x81\xc6\xf7\x33\xb1\xf2\x24\x49\xd4\x76\x6b\x95\x52\xe1\x4b\x5e\xe0\x72\x5c\x93\x62\xe1\x5a\x5f\xb9\xf8\x9e\xc8\xe5\x94\x82\xf5\xf4\x0f\x00\x00\xff\xff\xfa\x8b\xa7\x92\x9b\x00\x00\x00")
+
+func _012_add_password_for_basic_authDownSqlBytes() ([]byte, error) {
+	return bindataRead(
+		__012_add_password_for_basic_authDownSql,
+		"012_add_password_for_basic_auth.down.sql",
+	)
+}
+
+func _012_add_password_for_basic_authDownSql() (*asset, error) {
+	bytes, err := _012_add_password_for_basic_authDownSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "012_add_password_for_basic_auth.down.sql", size: 155, mode: os.FileMode(438), modTime: time.Unix(1587038400, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var __012_add_password_for_basic_authUpSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x1c\xca\x3d\x4e\xc4\x30\x10\x06\xd0\x7e\x4e\xf1\x95\x90\x82\x5d\x52\xd0\xa4\x44\x88\x26\x42\x08\x09\x5a\x34\xb1\x87\xc4\xd2\x78\x1c\xd9\x63\x7e\x8e\xc4\x35\x38\x19\xca\x96\x4f\x7a\xa7\x81\x30\xe0\xbe\xec\x3f\x35\xad\x9b\xe3\xef\x17\x6f\x4f\x8f\x78\x11\xd6\xd4\xd8\x93\x60\x3c\x8f\xb7\xc7\x99\x53\x10\x6b\x12\xd1\x2d\x4a\x85\x6f\x82\x87\xd7\xe7\x99\x30\x9c\x88\x16\x59\x93\xc1\x2b\x5b\xe3\xe0\xa9\xd8\x44\xc4\xea\xc7\xe3\x45\x05\xa6\xdf\xef\x99\x8d\x57\xc9\x62\x7e\xd3\x9b\xd4\x06\x8e\x11\xa1\x68\xcf\x86\x9d\x5b\xfb\x2a\x35\xe2\x93\x6b\xd8\xb8\x5e\xdd\x9d\xaf\x61\x5d\x15\x51\x3e\xb8\xab\x5f\x30\x11\x85\x92\x73\xf2\x89\xfe\x03\x00\x00\xff\xff\x89\xef\x67\xf6\xb8\x00\x00\x00")
+
+func _012_add_password_for_basic_authUpSqlBytes() ([]byte, error) {
+	return bindataRead(
+		__012_add_password_for_basic_authUpSql,
+		"012_add_password_for_basic_auth.up.sql",
+	)
+}
+
+func _012_add_password_for_basic_authUpSql() (*asset, error) {
+	bytes, err := _012_add_password_for_basic_authUpSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "012_add_password_for_basic_auth.up.sql", size: 184, mode: os.FileMode(438), modTime: time.Unix(1587038400, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -612,6 +654,8 @@ var _bindata = map[string]func() (*asset, error){
 	"010_rename_orders_to_outgoing_orders.up.sql":       _010_rename_orders_to_outgoing_ordersUpSql,
 	"011_add_incoming_orders.down.sql":                  _011_add_incoming_ordersDownSql,
 	"011_add_incoming_orders.up.sql":                    _011_add_incoming_ordersUpSql,
+	"012_add_password_for_basic_auth.down.sql":          _012_add_password_for_basic_authDownSql,
+	"012_add_password_for_basic_auth.up.sql":            _012_add_password_for_basic_authUpSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -677,6 +721,8 @@ var _bintree = &bintree{nil, map[string]*bintree{
 	"010_rename_orders_to_outgoing_orders.up.sql":       &bintree{_010_rename_orders_to_outgoing_ordersUpSql, map[string]*bintree{}},
 	"011_add_incoming_orders.down.sql":                  &bintree{_011_add_incoming_ordersDownSql, map[string]*bintree{}},
 	"011_add_incoming_orders.up.sql":                    &bintree{_011_add_incoming_ordersUpSql, map[string]*bintree{}},
+	"012_add_password_for_basic_auth.down.sql":          &bintree{_012_add_password_for_basic_authDownSql, map[string]*bintree{}},
+	"012_add_password_for_basic_auth.up.sql":            &bintree{_012_add_password_for_basic_authUpSql, map[string]*bintree{}},
 }}
 
 // RestoreAsset restores an asset under the given directory

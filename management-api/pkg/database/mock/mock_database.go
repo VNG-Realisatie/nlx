@@ -169,18 +169,18 @@ func (mr *MockConfigDatabaseMockRecorder) CreateServiceWithInways(ctx, service, 
 }
 
 // CreateUser mocks base method.
-func (m *MockConfigDatabase) CreateUser(ctx context.Context, email string, roleNames []string) (*database.User, error) {
+func (m *MockConfigDatabase) CreateUser(ctx context.Context, email, password string, roleNames []string) (*database.User, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateUser", ctx, email, roleNames)
+	ret := m.ctrl.Call(m, "CreateUser", ctx, email, password, roleNames)
 	ret0, _ := ret[0].(*database.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // CreateUser indicates an expected call of CreateUser.
-func (mr *MockConfigDatabaseMockRecorder) CreateUser(ctx, email, roleNames interface{}) *gomock.Call {
+func (mr *MockConfigDatabaseMockRecorder) CreateUser(ctx, email, password, roleNames interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockConfigDatabase)(nil).CreateUser), ctx, email, roleNames)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockConfigDatabase)(nil).CreateUser), ctx, email, password, roleNames)
 }
 
 // DeleteInway mocks base method.
@@ -742,4 +742,19 @@ func (m *MockConfigDatabase) UpdateServiceWithInways(ctx context.Context, servic
 func (mr *MockConfigDatabaseMockRecorder) UpdateServiceWithInways(ctx, service, inwayNames interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateServiceWithInways", reflect.TypeOf((*MockConfigDatabase)(nil).UpdateServiceWithInways), ctx, service, inwayNames)
+}
+
+// VerifyUserCredentials mocks base method.
+func (m *MockConfigDatabase) VerifyUserCredentials(ctx context.Context, email, password string) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "VerifyUserCredentials", ctx, email, password)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// VerifyUserCredentials indicates an expected call of VerifyUserCredentials.
+func (mr *MockConfigDatabaseMockRecorder) VerifyUserCredentials(ctx, email, password interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VerifyUserCredentials", reflect.TypeOf((*MockConfigDatabase)(nil).VerifyUserCredentials), ctx, email, password)
 }

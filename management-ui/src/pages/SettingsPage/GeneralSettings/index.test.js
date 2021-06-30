@@ -3,44 +3,28 @@
 //
 import React from 'react'
 import { fireEvent, act } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
-
-import UserContext from '../../../user-context'
-import { useApplicationStore } from '../../../hooks/use-stores'
 import { renderWithProviders } from '../../../test-utils'
+import { RootStore, StoreProvider } from '../../../stores'
+import { ManagementApi } from '../../../api'
 import GeneralSettings from './index'
-
-jest.mock('../../../hooks/use-stores', () => ({
-  useApplicationStore: jest.fn(),
-}))
-
-// eslint-disable-next-line react/prop-types
-jest.mock('./Form', () => ({ onSubmitHandler }) => (
-  <form
-    onSubmit={() => onSubmitHandler({ organizationInway: 'inway' })}
-    data-testid="form"
-  >
-    <button type="submit" />
-  </form>
-))
 
 describe('the General settings section', () => {
   afterEach(() => {
-    jest.resetModules()
+    jest.clearAllMocks()
   })
 
   it('on initialization', async () => {
-    const getSettingsHandler = jest.fn().mockResolvedValue({})
-    const userContext = { user: { id: '42' } }
+    const managementApiClient = new ManagementApi()
+    managementApiClient.managementGetSettings = jest.fn().mockResolvedValue({
+      inway: { name: 'inway1' },
+    })
+
+    const store = new RootStore({ managementApiClient })
+
     const { findByTestId, queryByTestId } = renderWithProviders(
-      <MemoryRouter>
-        <UserContext.Provider value={userContext}>
-          <GeneralSettings
-            getSettings={getSettingsHandler}
-            updateHandler={() => {}}
-          />
-        </UserContext.Provider>
-      </MemoryRouter>,
+      <StoreProvider rootStore={store}>
+        <GeneralSettings />
+      </StoreProvider>,
     )
 
     const formElement = await findByTestId('form')
@@ -49,24 +33,25 @@ describe('the General settings section', () => {
     expect(queryByTestId('error-message')).toBeNull()
   })
 
-  it('successfully submitting the form', async () => {
-    const storeUpdateMock = jest.fn()
-    useApplicationStore.mockImplementation(() => ({
-      update: storeUpdateMock,
-    }))
+  it('successfully submits the form', async () => {
+    const managementApiClient = new ManagementApi()
+    managementApiClient.managementGetSettings = jest.fn().mockResolvedValue({
+      organizationInway: 'inway1',
+    })
+    managementApiClient.managementUpdateSettings = jest.fn().mockResolvedValue()
 
-    const updateHandler = jest.fn().mockResolvedValue(null)
-    const getSettingsHandler = jest.fn().mockResolvedValue({})
-    const userContext = { user: { id: '42' } }
+    const store = new RootStore({ managementApiClient })
+
+    jest
+      .spyOn(store.applicationStore, 'updateOrganizationInway')
+      .mockResolvedValue({
+        isOrganizationInwaySet: true,
+      })
+
     const { findByTestId, getByRole } = renderWithProviders(
-      <MemoryRouter>
-        <UserContext.Provider value={userContext}>
-          <GeneralSettings
-            updateHandler={updateHandler}
-            getSettings={getSettingsHandler}
-          />
-        </UserContext.Provider>
-      </MemoryRouter>,
+      <StoreProvider rootStore={store}>
+        <GeneralSettings />
+      </StoreProvider>,
     )
 
     const settingsForm = await findByTestId('form')
@@ -74,82 +59,55 @@ describe('the General settings section', () => {
       fireEvent.submit(settingsForm)
     })
 
-    expect(updateHandler).toHaveBeenCalledWith({
-      organizationInway: 'inway',
-    })
-    expect(storeUpdateMock).toHaveBeenCalledWith({
-      isOrganizationInwaySet: true,
-    })
+    expect(store.applicationStore.updateOrganizationInway).toHaveBeenCalledWith(
+      {
+        isOrganizationInwaySet: true,
+      },
+    )
 
-    expect(getByRole('alert')).toBeTruthy()
     expect(getByRole('alert').textContent).toBe(
       'Successfully updated the settings',
     )
   })
 
-  it('re-submitting the form when the previous submission went wrong', async () => {
-    const updateHandler = jest
+  it('should re-submit the form when the previous submission went wrong', async () => {
+    const managementApiClient = new ManagementApi()
+    managementApiClient.managementGetSettings = jest
       .fn()
-      .mockResolvedValue(null)
+      .mockResolvedValue({ organizationInway: 'inway1' })
+
+    managementApiClient.managementUpdateSettings = jest
+      .fn()
       .mockRejectedValueOnce(new Error('arbitrary error'))
+      .mockResolvedValueOnce([])
 
-    const getSettingsHandler = jest.fn().mockResolvedValue({})
-    const userContext = { user: { id: '42' } }
+    const store = new RootStore({ managementApiClient })
 
-    const { findByTestId, getByRole } = renderWithProviders(
-      <MemoryRouter>
-        <UserContext.Provider value={userContext}>
-          <GeneralSettings
-            updateHandler={updateHandler}
-            getSettings={getSettingsHandler}
-          />
-        </UserContext.Provider>
-      </MemoryRouter>,
+    const { findByTestId, getAllByRole } = renderWithProviders(
+      <StoreProvider rootStore={store}>
+        <GeneralSettings />
+      </StoreProvider>,
     )
 
     const settingsForm = await findByTestId('form')
-
     await act(async () => {
-      await fireEvent.submit(settingsForm)
+      fireEvent.submit(settingsForm)
     })
 
-    expect(updateHandler).toHaveBeenCalledTimes(1)
-    expect(getByRole('alert')).toBeTruthy()
-    expect(getByRole('alert').textContent).toBe('Failed to update the settings')
-
-    await act(async () => {
-      await fireEvent.submit(settingsForm)
-    })
-
-    expect(updateHandler).toHaveBeenCalledTimes(2)
-  })
-
-  it('submitting when the HTTP response is not ok', async () => {
-    const getSettingsHandler = jest.fn().mockResolvedValue({})
-    const updateHandler = jest
-      .fn()
-      .mockRejectedValue(new Error('arbitrary error'))
-
-    const userContext = { user: { id: '42' } }
-
-    const { findByTestId, getByRole } = renderWithProviders(
-      <MemoryRouter>
-        <UserContext.Provider value={userContext}>
-          <GeneralSettings
-            updateHandler={updateHandler}
-            getSettings={getSettingsHandler}
-          />
-        </UserContext.Provider>
-      </MemoryRouter>,
+    expect(getAllByRole('alert')[0]).toBeTruthy()
+    expect(getAllByRole('alert')[0].textContent).toBe(
+      'Failed to update the settings',
     )
 
-    const settingsForm = await findByTestId('form')
-
     await act(async () => {
-      await fireEvent.submit(settingsForm)
+      fireEvent.submit(settingsForm)
     })
 
-    expect(getByRole('alert')).toBeTruthy()
-    expect(getByRole('alert').textContent).toBe('Failed to update the settings')
+    expect(managementApiClient.managementUpdateSettings).toHaveBeenCalledTimes(
+      2,
+    )
+    expect(getAllByRole('alert')[1].textContent).toBe(
+      'Successfully updated the settings',
+    )
   })
 })

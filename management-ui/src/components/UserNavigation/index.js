@@ -3,11 +3,9 @@
 //
 
 import React, { useContext, useRef, useState } from 'react'
-import Cookies from 'js-cookie'
 import { CSSTransition } from 'react-transition-group'
 import { useTranslation } from 'react-i18next'
 import { Icon } from '@commonground/design-system'
-
 import UserContext from '../../user-context'
 import useClickOutside from '../../hooks/use-click-outside'
 import { IconShutdown } from '../../icons'
@@ -25,8 +23,8 @@ const ANIMATION_DURATION = 150
 
 const UserNavigation = ({ ...props }) => {
   const { t } = useTranslation()
+  const { user, logout } = useContext(UserContext)
   const [menuIsOpen, setMenuIsOpen] = useState(false)
-  const { user } = useContext(UserContext)
 
   const onClickHandler = ({ currentTarget }) => {
     setMenuIsOpen(!menuIsOpen)
@@ -82,17 +80,10 @@ const UserNavigation = ({ ...props }) => {
           data-testid="user-menu-options"
         >
           <StyledUserMenuItem>
-            <form method="POST" action="/oidc/logout">
-              <input
-                type="hidden"
-                name="csrfmiddlewaretoken"
-                value={Cookies.get('csrftoken')}
-              />
-              <button type="submit">
-                <Icon as={IconShutdown} inline />
-                {t('Log out')}
-              </button>
-            </form>
+            <button type="button" onClick={logout}>
+              <Icon as={IconShutdown} inline />
+              {t('Log out')}
+            </button>
           </StyledUserMenuItem>
         </StyledUserMenu>
       </CSSTransition>

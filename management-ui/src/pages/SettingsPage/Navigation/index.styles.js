@@ -30,8 +30,8 @@ export const StyledLink = styled(NavLink)`
     &:before {
       content: '';
       position: absolute;
-      top: -1px;
-      bottom: -1px;
+      top: 0;
+      bottom: 0;
       left: -1px;
       width: 4px;
       background: ${(p) => p.theme.tokens.colorBrand1};

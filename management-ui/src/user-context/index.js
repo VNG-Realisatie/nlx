@@ -1,16 +1,16 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-
 import React, { useState, useEffect, createContext } from 'react'
 import { string, func, node, shape } from 'prop-types'
-import UserRepository from '../domain/user-repository'
+import UserRepositoryOIDC from '../domain/user-repository-oidc'
 
 const UserContext = createContext()
 
 const UserContextProvider = ({
   children,
   fetchAuthenticatedUser,
+  logout,
   user: defaultUser,
 }) => {
   const [user, setUser] = useState(defaultUser || null)
@@ -61,6 +61,7 @@ const UserContextProvider = ({
       value={{
         user: user,
         isReady: isReady,
+        logout: logout,
         cancelFetch: cancelFetchHandler,
         onLoginHandler: onLoginHandler,
         onLogoutHandler: onLogoutHandler,
@@ -73,6 +74,7 @@ const UserContextProvider = ({
 
 UserContextProvider.propTypes = {
   fetchAuthenticatedUser: func,
+  logout: func,
   children: node,
   user: shape({
     id: string,
@@ -83,7 +85,8 @@ UserContextProvider.propTypes = {
 }
 
 UserContextProvider.defaultProps = {
-  fetchAuthenticatedUser: UserRepository.getAuthenticatedUser,
+  fetchAuthenticatedUser: UserRepositoryOIDC.getAuthenticatedUser,
+  logout: UserRepositoryOIDC.logout,
 }
 
 export default UserContext

@@ -17,8 +17,8 @@ Important business benefits of NLX are:
 
 To reduce integration costs and simplify building component based software systems, everyone should be (technically) able to use API's in other organizations as easy as in their own, while core data objects should only be manipulated by the one administratively responsible and used by all others. An additional advantage is that public data can easily be made available to everyone. NLX makes it possible to easily and securely connect to any API in the ecosystem.
 
-**NOTE**: We are currently running NLX software in production and looking for organizations to participate.
-[participating organizations](https://directory.nlx.io/) contact: support@nlx.io
+**NOTE**: We are currently running NLX software in production and looking for organizations to participate. Contact us via: support@nlx.io.
+[Overview of participating organizations](https://directory.nlx.io/).
 
 ## High level business overview
 

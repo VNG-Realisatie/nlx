@@ -1,22 +1,39 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React, { Suspense } from 'react'
-import { func, node } from 'prop-types'
+import React, { Suspense, useContext, useEffect } from 'react'
+import { node } from 'prop-types'
 import { ThemeProvider } from 'styled-components'
 import {
   GlobalStyles as DSGlobalStyles,
   ToasterProvider,
 } from '@commonground/design-system'
+import UserContext from '../user-context'
 import '@fontsource/source-sans-pro/latin.css'
 import GlobalStyles from '../components/GlobalStyles'
 import theme from '../theme'
-import SettingsRepository from '../domain/settings-repository'
+import { useApplicationStore } from '../hooks/use-stores'
 import { StyledContainer } from './index.styles'
-import useInitializeApplicationStoreFromSettings from './use-initialize-application-store-from-settings'
 
-const App = ({ getSettings, children, ...props }) => {
-  useInitializeApplicationStoreFromSettings(getSettings)
+const App = ({ children, ...props }) => {
+  const { user, isReady } = useContext(UserContext)
+  const applicationStore = useApplicationStore()
+
+  useEffect(() => {
+    const fetch = async () => {
+      if (!isReady) return
+      if (user === null) return
+      if (applicationStore.isOrganizationInwaySet !== null) return
+
+      const settings = await applicationStore.getGeneralSettings()
+
+      applicationStore.updateOrganizationInway({
+        isOrganizationInwaySet: !!settings.organizationInway,
+      })
+    }
+
+    fetch()
+  }, [user, isReady]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <StyledContainer {...props}>
@@ -34,12 +51,7 @@ const App = ({ getSettings, children, ...props }) => {
 }
 
 App.propTypes = {
-  getSettings: func,
   children: node,
-}
-
-App.defaultProps = {
-  getSettings: SettingsRepository.getGeneralSettings,
 }
 
 export default App

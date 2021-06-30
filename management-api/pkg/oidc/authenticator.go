@@ -91,22 +91,22 @@ func NewAuthenticator(db database.ConfigDatabase, auditLogger auditlog.Logger, l
 	}
 }
 
-func (a *Authenticator) Routes() chi.Router {
-	r := chi.NewRouter()
-	r.Get("/authenticate", a.authenticate)
-	r.Get("/callback", a.callback)
-	r.Post("/logout", a.logout)
-	r.Get("/me", a.
+func (a *Authenticator) MountRoutes(r chi.Router) {
+	routes := chi.NewRouter()
+	routes.Get("/authenticate", a.authenticate)
+	routes.Get("/callback", a.callback)
+	routes.Post("/logout", a.logout)
+	routes.Get("/me", a.
 		OnlyAuthenticated(http.HandlerFunc(a.me)).
 		ServeHTTP,
 	)
 
-	return r
+	r.Mount("/oidc", routes)
 }
 
 func (a *Authenticator) OnlyAuthenticated(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		claims, err := a.ParseClaims(r)
+		claims, err := a.parseClaims(r)
 		if err != nil {
 			a.logger.Warn("authorization failed", zap.Error(err))
 
@@ -116,13 +116,12 @@ func (a *Authenticator) OnlyAuthenticated(h http.Handler) http.Handler {
 		}
 
 		r.Header.Add("username", claims.User().FullName)
-		r.Header.Add("userEmail", claims.User().Email)
 
 		h.ServeHTTP(w, r)
 	})
 }
 
-func (a *Authenticator) ParseClaims(r *http.Request) (*Claims, error) {
+func (a *Authenticator) parseClaims(r *http.Request) (*Claims, error) {
 	session, _ := a.store.Get(r, cookieName)
 
 	claims, ok := session.Values["claims"].(*Claims)
@@ -139,7 +138,7 @@ func (a *Authenticator) ParseClaims(r *http.Request) (*Claims, error) {
 
 func (a *Authenticator) authenticate(w http.ResponseWriter, r *http.Request) {
 	// Don't login again if the current user is still valid
-	if _, err := a.ParseClaims(r); err == nil {
+	if _, err := a.parseClaims(r); err == nil {
 		http.Redirect(w, r, "/", http.StatusFound)
 
 		return
@@ -162,7 +161,7 @@ func (a *Authenticator) authenticate(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *Authenticator) me(w http.ResponseWriter, r *http.Request) {
-	claims, err := a.ParseClaims(r)
+	claims, err := a.parseClaims(r)
 	if err != nil {
 		http.Error(w, "unauthorized request", http.StatusUnauthorized)
 

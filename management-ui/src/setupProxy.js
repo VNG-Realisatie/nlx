@@ -16,4 +16,8 @@ module.exports = function (app) {
     '/oidc',
     createProxyMiddleware({ target: getProxyUrl(process.env.PROXY) }),
   )
+  app.use(
+    '/basic-auth',
+    createProxyMiddleware({ target: getProxyUrl(process.env.PROXY) }),
+  )
 }

@@ -1,9 +1,9 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-
 import React from 'react'
 import { MemoryRouter as Router } from 'react-router-dom'
+import { RootStore, StoreProvider } from '../../stores'
 
 import { renderWithProviders } from '../../test-utils'
 import { UserContextProvider } from '../../user-context'
@@ -13,30 +13,38 @@ jest.mock('../OrganizationName', () => () => <span>test</span>)
 jest.mock('./OrganizationInwayCheck', () => () => null)
 
 test('PageTemplate', () => {
+  const rootStore = new RootStore({})
+
   const { getByText } = renderWithProviders(
-    <Router>
-      <PageTemplate>
-        <p>Page content</p>
-      </PageTemplate>
-    </Router>,
+    <StoreProvider rootStore={rootStore}>
+      <Router>
+        <PageTemplate>
+          <p>Page content</p>
+        </PageTemplate>
+      </Router>
+    </StoreProvider>,
   )
 
   expect(getByText(/^Page content$/)).toBeInTheDocument()
 })
 
 test('PageTemplate with Header', () => {
+  const rootStore = new RootStore({})
+
   const { getByText, getByTestId } = renderWithProviders(
-    <Router>
-      <UserContextProvider user={{}}>
-        <PageTemplate>
-          <PageTemplate.Header
-            title="Page title"
-            description="Page description"
-          />
-          <p>Page content</p>
-        </PageTemplate>
-      </UserContextProvider>
-    </Router>,
+    <StoreProvider rootStore={rootStore}>
+      <Router>
+        <UserContextProvider user={{}}>
+          <PageTemplate>
+            <PageTemplate.Header
+              title="Page title"
+              description="Page description"
+            />
+            <p>Page content</p>
+          </PageTemplate>
+        </UserContextProvider>
+      </Router>
+    </StoreProvider>,
   )
 
   expect(getByText(/^Page title$/)).toBeInTheDocument()

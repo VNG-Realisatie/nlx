@@ -63,6 +63,7 @@
   "Down": "Niet beschikbaar",
   "Edit": "Aanpassen",
   "Edit service": "Service aanpassen",
+  "Email address": "E-mailadres",
   "Error": "Fout",
   "Export report": "Exporteer rapport",
   "Failed adding service": "Toevoegen mislukt",
@@ -96,7 +97,9 @@
   "Homepage": "Homepage",
   "Hostname": "Hostname",
   "Insight in how often and for what cost other organizations request your services": "Inzicht in hoe vaak- en tegen welke kosten, andere organisaties jouw services bevragen",
+  "Invalid credentials.": "Ongeldig logingegevens.",
   "Invalid date": "Invalid date",
+  "Invalid email": "Ongeldig e-mailadres",
   "Invalid endpoint URL": "Ongeldige endpoint URL",
   "Inways": "Inways",
   "Inways page": "Inways pagina",
@@ -107,6 +110,7 @@
   "Issued to": "Uitgegeven aan",
   "List of all available services": "Lijst met alle beschikbare services",
   "Loading…": "Laden…",
+  "Log in": "Inloggen",
   "Log in to continue": "Log in om verder te gaan",
   "Log in with organization account": "Inloggen met organisatieaccount",
   "Log out": "Uitloggen",
@@ -144,6 +148,7 @@
   "Organizations with access": "Organisaties met toegang",
   "Overview updated": "Overzicht bijgewerkt",
   "Page not found": "Pagina niet gevonden",
+  "Password": "Wachtwoord",
   "per request": "per request",
   "Please enter valid costs": "Vul geldige kosten in (minimaal 1 cent)",
   "Please select an organization inway. At the moment access requests can not be received and outgoing orders can not be retrieved by other organizations.": "Kies een organisatie-inway. Momenteel kunnen geen toegangsverzoeken worden ontvangen of uitgegeven opdrachten ontvangen worden door andere organisaties.",
@@ -231,6 +236,5 @@
   "You have no access": "Je hebt geen toegang",
   "You haven't received any orders yet": "Je hebt nog geen ontvangen opdrachten",
   "Your access was revoked": "Je toegang is ingetrokken",
-  "yyyy-mm-dd": "jjjj-mm-dd",
-  "received": "ontvangen"
+  "yyyy-mm-dd": "jjjj-mm-dd"
 }

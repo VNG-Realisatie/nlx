@@ -1,7 +1,6 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 //
-
 import React from 'react'
 import userEvent from '@testing-library/user-event'
 import { waitFor, fireEvent } from '@testing-library/react'
@@ -10,7 +9,7 @@ import { renderWithProviders } from '../../../../../test-utils'
 import OrderForm from './index'
 
 test('the form values of the onSubmitHandler', async () => {
-  const onSubmitHandlerSpy = jest.fn()
+  const onSubmitHandlerMock = jest.fn()
 
   const { getByLabelText, getByText } = renderWithProviders(
     <OrderForm
@@ -20,7 +19,7 @@ test('the form values of the onSubmitHandler', async () => {
           service: 'service-a',
         },
       ]}
-      onSubmitHandler={onSubmitHandlerSpy}
+      onSubmitHandler={onSubmitHandlerMock}
     />,
   )
 
@@ -39,7 +38,7 @@ test('the form values of the onSubmitHandler', async () => {
   userEvent.click(getByText('Add order'))
 
   await waitFor(() =>
-    expect(onSubmitHandlerSpy).toHaveBeenCalledWith({
+    expect(onSubmitHandlerMock).toHaveBeenCalledWith({
       description: 'my-description',
       reference: 'my-reference',
       delegatee: 'my-delegatee',

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"log"
 
 	"github.com/spf13/cobra"
@@ -15,6 +16,7 @@ import (
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/management-api/pkg/api"
 	"go.nlx.io/nlx/management-api/pkg/auditlog"
+	"go.nlx.io/nlx/management-api/pkg/basicauth"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/oidc"
 	"go.nlx.io/nlx/management-api/pkg/txlogdb"
@@ -29,6 +31,7 @@ var serveOpts struct {
 	DirectoryInspectionAddress   string
 	DirectoryRegistrationAddress string
 	TransactionLogDSN            string
+	EnableBasicAuth              bool
 
 	logoptions.LogOptions
 	cmd.TLSOrgOptions
@@ -44,6 +47,7 @@ func init() {
 	serveCommand.Flags().StringVarP(&serveOpts.PostgresDSN, "postgres-dsn", "", "", "Postgres Connection URL")
 	serveCommand.Flags().StringVarP(&serveOpts.DirectoryInspectionAddress, "directory-inspection-address", "", "", "Address of the directory inspection API")
 	serveCommand.Flags().StringVarP(&serveOpts.DirectoryRegistrationAddress, "directory-registration-address", "", "", "Address of the directory registration API")
+	serveCommand.Flags().BoolVarP(&serveOpts.EnableBasicAuth, "enable-basic-auth", "", false, "Enable HTTP basic authentication and disable OIDC")
 	serveCommand.Flags().StringVarP(&serveOpts.LogOptions.LogType, "log-type", "", "live", "Set the logging config. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger.")
 	serveCommand.Flags().StringVarP(&serveOpts.LogOptions.LogLevel, "log-level", "", "", "Override the default loglevel as set by --log-type.")
 	serveCommand.Flags().StringVarP(&serveOpts.TLSOptions.RootCertFile, "tls-root-cert", "", "", "Absolute or relative path to the CA root cert .pem")
@@ -87,29 +91,12 @@ func init() {
 	if err := serveCommand.MarkFlagRequired("secret-key"); err != nil {
 		log.Fatal(err)
 	}
-
-	if err := serveCommand.MarkFlagRequired("oidc-client-id"); err != nil {
-		log.Fatal(err)
-	}
-
-	if err := serveCommand.MarkFlagRequired("oidc-client-secret"); err != nil {
-		log.Fatal(err)
-	}
-
-	if err := serveCommand.MarkFlagRequired("oidc-discovery-url"); err != nil {
-		log.Fatal(err)
-	}
-
-	if err := serveCommand.MarkFlagRequired("oidc-redirect-url"); err != nil {
-		log.Fatal(err)
-	}
 }
 
 var serveCommand = &cobra.Command{
 	Use:   "serve",
 	Short: "Start the gRPC server and HTTP API Gateway",
 	Run: func(cmd *cobra.Command, args []string) {
-		// Setup new zap logger
 		zapConfig := serveOpts.LogOptions.ZapConfig()
 		logger, err := zapConfig.Build()
 		if err != nil {
@@ -118,6 +105,26 @@ var serveCommand = &cobra.Command{
 
 		logger.Info("version info", zap.String("version", version.BuildVersion), zap.String("source-hash", version.BuildSourceHash))
 		logger = logger.With(zap.String("version", version.BuildVersion))
+
+		if serveOpts.EnableBasicAuth {
+			logger.Info("basic auth enabled, note that OIDC doesn't work")
+		} else {
+			if serveOpts.oidcOptions.ClientID == "" {
+				log.Fatal(errors.New("oidc-client-id is required"))
+			}
+
+			if serveOpts.oidcOptions.ClientSecret == "" {
+				log.Fatal(errors.New("oidc-client-secret is required"))
+			}
+
+			if serveOpts.oidcOptions.DiscoveryURL == "" {
+				log.Fatal(errors.New("oidc-discovery-url is required"))
+			}
+
+			if serveOpts.oidcOptions.RedirectURL == "" {
+				log.Fatal(errors.New("oidc-redirect-url is required"))
+			}
+		}
 
 		logger.Info("starting management api", zap.String("listen-address", serveOpts.ListenAddress))
 
@@ -140,7 +147,14 @@ var serveCommand = &cobra.Command{
 		}
 
 		auditLogger := auditlog.NewPostgresLogger(db, logger)
-		authenticator := oidc.NewAuthenticator(db, auditLogger, logger, &serveOpts.oidcOptions)
+
+		var authenticator api.Authenticator
+
+		if serveOpts.EnableBasicAuth {
+			authenticator = basicauth.NewAuthenticator(db, logger)
+		} else {
+			authenticator = oidc.NewAuthenticator(db, auditLogger, logger, &serveOpts.oidcOptions)
+		}
 
 		if errValidate := common_tls.VerifyPrivateKeyPermissions(serveOpts.OrgKeyFile); errValidate != nil {
 			logger.Warn("invalid organization key permissions", zap.Error(errValidate), zap.String("file-path", serveOpts.OrgKeyFile))

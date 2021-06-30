@@ -76,7 +76,7 @@ export const useConfirmationModal = (props) => {
   const [showModal, setShowModal] = useState(false)
   const choicePromise = useRef(null)
 
-  const show = () => {
+  const show = async () => {
     choicePromise.current = deferredPromise()
     setShowModal(true)
     return choicePromise.current
