@@ -55,18 +55,25 @@ func NewInway(name, organizationName, address, nlxVersion string) (*Inway, error
 	}, nil
 }
 
-func (i Inway) Name() string {
+func (i *Inway) Name() string {
 	return i.name
 }
 
-func (i Inway) OrganizationName() string {
+func (i *Inway) OrganizationName() string {
 	return i.organizationName
 }
 
-func (i Inway) Address() string {
+func (i *Inway) Address() string {
 	return i.address
 }
 
-func (i Inway) NlxVersion() string {
+func (i *Inway) NlxVersion() string {
 	return i.nlxVersion
+}
+
+func (i *Inway) ToString() string {
+	return fmt.Sprintf(
+		"name: %s, organization: %s, address: %s, nlx version: %s",
+		i.Name(), i.OrganizationName(), i.Address(), i.NlxVersion(),
+	)
 }

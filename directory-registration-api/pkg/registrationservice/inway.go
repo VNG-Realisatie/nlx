@@ -45,7 +45,7 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 
 	err = h.inwayRepository.Register(inwayModel)
 	if err != nil {
-		h.logger.Error("register inway", zap.Any("inway", inwayModel), zap.Error(err))
+		h.logger.Error("register inway", zap.String("inway", inwayModel.ToString()), zap.Error(err))
 		return nil, status.New(codes.Internal, "failed to register inway").Err()
 	}
 
