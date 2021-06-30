@@ -34,7 +34,7 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 		return nil, status.Error(codes.InvalidArgument, "an order reference must be provided")
 	}
 
-	order, err := s.configDatabase.GetOrderByReference(ctx, req.OrderReference)
+	order, err := s.configDatabase.GetOutgoingOrderByReference(ctx, req.OrderReference)
 	if err != nil {
 		if errors.Is(err, database.ErrNotFound) {
 			return nil, status.Errorf(codes.NotFound, "order with reference %s not found", req.OrderReference)

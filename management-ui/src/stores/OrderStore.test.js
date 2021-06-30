@@ -17,7 +17,7 @@ test('initializing the store', () => {
 test('fetch all orders', async () => {
   const managementApiClient = new ManagementApi()
 
-  managementApiClient.managementListIssuedOrders = jest
+  managementApiClient.managementListOutgoingOrders = jest
     .fn()
     .mockRejectedValueOnce(new Error('arbitrary error'))
     .mockResolvedValue({
@@ -46,9 +46,11 @@ test('fetch all orders', async () => {
 test('create an order', async () => {
   const managementApiClient = new ManagementApi()
 
-  managementApiClient.managementCreateOrder = jest.fn().mockResolvedValue({
-    id: 'orderid',
-  })
+  managementApiClient.managementCreateOutgoingOrder = jest
+    .fn()
+    .mockResolvedValue({
+      id: 'orderid',
+    })
 
   const store = new OrderStore({
     rootStore: {},

@@ -1,6 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 
+//nolint:dupl // code is not actually duplicated, the linter has lost it's mind
 package server_test
 
 import (
@@ -21,34 +22,34 @@ import (
 )
 
 //nolint:funlen // this is a test method
-func TestListIssuedOrders(t *testing.T) {
+func TestListOutgoingOrders(t *testing.T) {
 	validFrom := time.Now()
 	validUntil := time.Now().Add(time.Hour)
 
 	tests := map[string]struct {
 		setup        func(serviceMocks)
-		wantResponse *api.ListIssuedOrdersResponse
+		wantResponse *api.ListOutgoingOrdersResponse
 		wantErr      error
 	}{
 		"when_retrieval_of_orders_from_database_fails": {
 			setup: func(mocks serviceMocks) {
-				mocks.db.EXPECT().ListIssuedOrders(gomock.Any()).Return(nil, errors.New("arbitrary error"))
+				mocks.db.EXPECT().ListOutgoingOrders(gomock.Any()).Return(nil, errors.New("arbitrary error"))
 			},
-			wantErr: status.Error(codes.Internal, "failed to retrieve issued orders"),
+			wantErr: status.Error(codes.Internal, "failed to retrieve outgoing orders"),
 		},
 		"happy_path": {
 			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
-					ListIssuedOrders(gomock.Any()).
-					Return([]*database.Order{
+					ListOutgoingOrders(gomock.Any()).
+					Return([]*database.OutgoingOrder{
 						{
 							Reference:   "reference",
 							Description: "description",
 							Delegatee:   "saas-organization-x",
 							ValidFrom:   validFrom,
 							ValidUntil:  validUntil,
-							Services: []database.OrderService{
+							Services: []database.OutgoingOrderService{
 								{
 									Service:      "service-a",
 									Organization: "organization-a",
@@ -57,15 +58,15 @@ func TestListIssuedOrders(t *testing.T) {
 						},
 					}, nil)
 			},
-			wantResponse: &api.ListIssuedOrdersResponse{
-				Orders: []*api.Order{
+			wantResponse: &api.ListOutgoingOrdersResponse{
+				Orders: []*api.OutgoingOrder{
 					{
 						Reference:   "reference",
 						Description: "description",
 						Delegatee:   "saas-organization-x",
 						ValidFrom:   timestampProto(validFrom),
 						ValidUntil:  timestampProto(validUntil),
-						Services: []*api.Order_Service{
+						Services: []*api.OrderService{
 							{
 								Service:      "service-a",
 								Organization: "organization-a",
@@ -87,7 +88,87 @@ func TestListIssuedOrders(t *testing.T) {
 				tt.setup(mocks)
 			}
 
-			response, err := service.ListIssuedOrders(context.Background(), &emptypb.Empty{})
+			response, err := service.ListOutgoingOrders(context.Background(), &emptypb.Empty{})
+
+			if tt.wantErr == nil {
+				assert.Equal(t, tt.wantResponse, response)
+			} else {
+				assert.Error(t, err)
+				assert.ErrorIs(t, err, tt.wantErr)
+				assert.Nil(t, response)
+			}
+		})
+	}
+}
+
+//nolint:funlen // this is a test method
+func TestListIncomingOrders(t *testing.T) {
+	validFrom := time.Now()
+	validUntil := time.Now().Add(time.Hour)
+
+	tests := map[string]struct {
+		setup        func(serviceMocks)
+		wantResponse *api.ListIncomingOrdersResponse
+		wantErr      error
+	}{
+		"when_retrieval_of_orders_from_database_fails": {
+			setup: func(mocks serviceMocks) {
+				mocks.db.EXPECT().ListIncomingOrders(gomock.Any()).Return(nil, errors.New("arbitrary error"))
+			},
+			wantErr: status.Error(codes.Internal, "failed to retrieve issued orders"),
+		},
+		"happy_path": {
+			setup: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					ListIncomingOrders(gomock.Any()).
+					Return([]*database.IncomingOrder{
+						{
+							Reference:   "reference",
+							Description: "description",
+							Delegator:   "nlx-test",
+							ValidFrom:   validFrom,
+							ValidUntil:  validUntil,
+							Services: []database.IncomingOrderService{
+								{
+									Service:      "service-a",
+									Organization: "organization-a",
+								},
+							},
+						},
+					}, nil)
+			},
+			wantResponse: &api.ListIncomingOrdersResponse{
+				Orders: []*api.IncomingOrder{
+					{
+						Reference:   "reference",
+						Description: "description",
+						Delegator:   "nlx-test",
+						ValidFrom:   timestampProto(validFrom),
+						ValidUntil:  timestampProto(validUntil),
+						Services: []*api.OrderService{
+							{
+								Service:      "service-a",
+								Organization: "organization-a",
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	for name, tt := range tests {
+		tt := tt
+
+		t.Run(name, func(t *testing.T) {
+			service, _, mocks := newService(t)
+
+			if tt.setup != nil {
+				tt.setup(mocks)
+			}
+
+			response, err := service.ListIncomingOrders(context.Background(), &emptypb.Empty{})
 
 			if tt.wantErr == nil {
 				assert.Equal(t, tt.wantResponse, response)
@@ -113,24 +194,24 @@ func TestListOrders(t *testing.T) {
 		"when_retrieval_of_orders_from_database_fails": {
 			setup: func(mocks serviceMocks) {
 				mocks.db.EXPECT().
-					ListOrdersByOrganization(gomock.Any(), "organization-a").
+					ListOutgoingOrdersByOrganization(gomock.Any(), "organization-a").
 					Return(nil, errors.New("arbitrary error"))
 			},
-			wantErr: status.Error(codes.Internal, "failed to retrieve issued orders"),
+			wantErr: status.Error(codes.Internal, "failed to retrieve external orders"),
 		},
 		"happy_path": {
 			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
-					ListOrdersByOrganization(gomock.Any(), "organization-a").
-					Return([]*database.Order{
+					ListOutgoingOrdersByOrganization(gomock.Any(), "organization-a").
+					Return([]*database.OutgoingOrder{
 						{
 							Reference:   "reference",
 							Description: "description",
 							Delegatee:   "saas-organization-x",
 							ValidFrom:   validFrom,
 							ValidUntil:  validUntil,
-							Services: []database.OrderService{
+							Services: []database.OutgoingOrderService{
 								{
 									Service:      "service-a",
 									Organization: "organization-a",
@@ -140,14 +221,14 @@ func TestListOrders(t *testing.T) {
 					}, nil)
 			},
 			wantResponse: &external.ListOrdersResponse{
-				Orders: []*api.Order{
+				Orders: []*api.IncomingOrder{
 					{
 						Reference:   "reference",
 						Description: "description",
-						Delegatee:   "saas-organization-x",
+						Delegator:   "nlx-test",
 						ValidFrom:   timestampProto(validFrom),
 						ValidUntil:  timestampProto(validUntil),
-						Services: []*api.Order_Service{
+						Services: []*api.OrderService{
 							{
 								Service:      "service-a",
 								Organization: "organization-a",

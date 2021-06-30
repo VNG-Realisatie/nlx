@@ -14,61 +14,61 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    ListIssuedOrdersResponseOrderService,
-    ListIssuedOrdersResponseOrderServiceFromJSON,
-    ListIssuedOrdersResponseOrderServiceFromJSONTyped,
-    ListIssuedOrdersResponseOrderServiceToJSON,
+    ManagementOrderService,
+    ManagementOrderServiceFromJSON,
+    ManagementOrderServiceFromJSONTyped,
+    ManagementOrderServiceToJSON,
 } from './';
 
 /**
  * 
  * @export
- * @interface ListIssuedOrdersResponseOrder
+ * @interface ManagementOrder
  */
-export interface ListIssuedOrdersResponseOrder {
+export interface ManagementOrder {
     /**
      * 
      * @type {string}
-     * @memberof ListIssuedOrdersResponseOrder
+     * @memberof ManagementOrder
      */
     reference?: string;
     /**
      * 
      * @type {string}
-     * @memberof ListIssuedOrdersResponseOrder
+     * @memberof ManagementOrder
      */
     description?: string;
     /**
      * 
      * @type {string}
-     * @memberof ListIssuedOrdersResponseOrder
+     * @memberof ManagementOrder
      */
     delegatee?: string;
     /**
      * 
      * @type {Date}
-     * @memberof ListIssuedOrdersResponseOrder
+     * @memberof ManagementOrder
      */
     validFrom?: Date;
     /**
      * 
      * @type {Date}
-     * @memberof ListIssuedOrdersResponseOrder
+     * @memberof ManagementOrder
      */
     validUntil?: Date;
     /**
      * 
-     * @type {Array<ListIssuedOrdersResponseOrderService>}
-     * @memberof ListIssuedOrdersResponseOrder
+     * @type {Array<ManagementOrderService>}
+     * @memberof ManagementOrder
      */
-    services?: Array<ListIssuedOrdersResponseOrderService>;
+    services?: Array<ManagementOrderService>;
 }
 
-export function ListIssuedOrdersResponseOrderFromJSON(json: any): ListIssuedOrdersResponseOrder {
-    return ListIssuedOrdersResponseOrderFromJSONTyped(json, false);
+export function ManagementOrderFromJSON(json: any): ManagementOrder {
+    return ManagementOrderFromJSONTyped(json, false);
 }
 
-export function ListIssuedOrdersResponseOrderFromJSONTyped(json: any, ignoreDiscriminator: boolean): ListIssuedOrdersResponseOrder {
+export function ManagementOrderFromJSONTyped(json: any, ignoreDiscriminator: boolean): ManagementOrder {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -79,11 +79,11 @@ export function ListIssuedOrdersResponseOrderFromJSONTyped(json: any, ignoreDisc
         'delegatee': !exists(json, 'delegatee') ? undefined : json['delegatee'],
         'validFrom': !exists(json, 'validFrom') ? undefined : (new Date(json['validFrom'])),
         'validUntil': !exists(json, 'validUntil') ? undefined : (new Date(json['validUntil'])),
-        'services': !exists(json, 'services') ? undefined : ((json['services'] as Array<any>).map(ListIssuedOrdersResponseOrderServiceFromJSON)),
+        'services': !exists(json, 'services') ? undefined : ((json['services'] as Array<any>).map(ManagementOrderServiceFromJSON)),
     };
 }
 
-export function ListIssuedOrdersResponseOrderToJSON(value?: ListIssuedOrdersResponseOrder | null): any {
+export function ManagementOrderToJSON(value?: ManagementOrder | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -97,7 +97,7 @@ export function ListIssuedOrdersResponseOrderToJSON(value?: ListIssuedOrdersResp
         'delegatee': value.delegatee,
         'validFrom': value.validFrom === undefined ? undefined : (value.validFrom.toISOString()),
         'validUntil': value.validUntil === undefined ? undefined : (value.validUntil.toISOString()),
-        'services': value.services === undefined ? undefined : ((value.services as Array<any>).map(ListIssuedOrdersResponseOrderServiceToJSON)),
+        'services': value.services === undefined ? undefined : ((value.services as Array<any>).map(ManagementOrderServiceToJSON)),
     };
 }
 

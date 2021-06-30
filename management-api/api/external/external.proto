@@ -6,7 +6,6 @@ option go_package = "go.nlx.io/nlx/management-api/api/external";
 
 import "management.proto";
 import "google/protobuf/empty.proto";
-import "google/protobuf/timestamp.proto";
 
 service AccessRequestService {
   rpc RequestAccess (RequestAccessRequest) returns (RequestAccessResponse);
@@ -51,5 +50,5 @@ message ListOrdersRequest {
 }
 
 message ListOrdersResponse {
-  repeated nlx.management.Order orders = 1;
+  repeated nlx.management.IncomingOrder orders = 1;
 }

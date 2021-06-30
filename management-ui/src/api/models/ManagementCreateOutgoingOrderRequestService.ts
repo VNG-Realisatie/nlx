@@ -16,28 +16,28 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface ManagementCreateOrderRequestService
+ * @interface ManagementCreateOutgoingOrderRequestService
  */
-export interface ManagementCreateOrderRequestService {
+export interface ManagementCreateOutgoingOrderRequestService {
     /**
      * 
      * @type {string}
-     * @memberof ManagementCreateOrderRequestService
+     * @memberof ManagementCreateOutgoingOrderRequestService
      */
     organization?: string;
     /**
      * 
      * @type {string}
-     * @memberof ManagementCreateOrderRequestService
+     * @memberof ManagementCreateOutgoingOrderRequestService
      */
     service?: string;
 }
 
-export function ManagementCreateOrderRequestServiceFromJSON(json: any): ManagementCreateOrderRequestService {
-    return ManagementCreateOrderRequestServiceFromJSONTyped(json, false);
+export function ManagementCreateOutgoingOrderRequestServiceFromJSON(json: any): ManagementCreateOutgoingOrderRequestService {
+    return ManagementCreateOutgoingOrderRequestServiceFromJSONTyped(json, false);
 }
 
-export function ManagementCreateOrderRequestServiceFromJSONTyped(json: any, ignoreDiscriminator: boolean): ManagementCreateOrderRequestService {
+export function ManagementCreateOutgoingOrderRequestServiceFromJSONTyped(json: any, ignoreDiscriminator: boolean): ManagementCreateOutgoingOrderRequestService {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -48,7 +48,7 @@ export function ManagementCreateOrderRequestServiceFromJSONTyped(json: any, igno
     };
 }
 
-export function ManagementCreateOrderRequestServiceToJSON(value?: ManagementCreateOrderRequestService | null): any {
+export function ManagementCreateOutgoingOrderRequestServiceToJSON(value?: ManagementCreateOutgoingOrderRequestService | null): any {
     if (value === undefined) {
         return undefined;
     }

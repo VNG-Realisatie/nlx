@@ -613,14 +613,14 @@
         ]
       }
     },
-    "/api/v1/issued-orders": {
+    "/api/v1/orders/incoming": {
       "get": {
-        "operationId": "Management_ListIssuedOrders",
+        "operationId": "Management_ListIncomingOrders",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/managementListIssuedOrdersResponse"
+              "$ref": "#/definitions/managementListIncomingOrdersResponse"
             }
           },
           "default": {
@@ -635,9 +635,29 @@
         ]
       }
     },
-    "/api/v1/orders": {
+    "/api/v1/orders/outgoing": {
+      "get": {
+        "operationId": "Management_ListOutgoingOrders",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/managementListOutgoingOrdersResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Management"
+        ]
+      },
       "post": {
-        "operationId": "Management_CreateOrder",
+        "operationId": "Management_CreateOutgoingOrder",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -658,7 +678,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/managementCreateOrderRequest"
+              "$ref": "#/definitions/managementCreateOutgoingOrderRequest"
             }
           }
         ],
@@ -1094,7 +1114,7 @@
         }
       }
     },
-    "managementCreateOrderRequest": {
+    "managementCreateOutgoingOrderRequest": {
       "type": "object",
       "properties": {
         "reference": {
@@ -1120,19 +1140,8 @@
         "services": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/managementCreateOrderRequestService"
+            "$ref": "#/definitions/managementOrderService"
           }
-        }
-      }
-    },
-    "managementCreateOrderRequestService": {
-      "type": "object",
-      "properties": {
-        "organization": {
-          "type": "string"
-        },
-        "service": {
-          "type": "string"
         }
       }
     },
@@ -1391,6 +1400,34 @@
         }
       }
     },
+    "managementIncomingOrder": {
+      "type": "object",
+      "properties": {
+        "reference": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "delegator": {
+          "type": "string"
+        },
+        "validFrom": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validUntil": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/managementOrderService"
+          }
+        }
+      }
+    },
     "managementInway": {
       "type": "object",
       "properties": {
@@ -1466,6 +1503,17 @@
         }
       }
     },
+    "managementListIncomingOrdersResponse": {
+      "type": "object",
+      "properties": {
+        "orders": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/managementIncomingOrder"
+          }
+        }
+      }
+    },
     "managementListInwaysResponse": {
       "type": "object",
       "properties": {
@@ -1477,17 +1525,6 @@
         }
       }
     },
-    "managementListIssuedOrdersResponse": {
-      "type": "object",
-      "properties": {
-        "orders": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementOrder"
-          }
-        }
-      }
-    },
     "managementListOutgoingAccessRequestsResponse": {
       "type": "object",
       "properties": {
@@ -1495,6 +1532,17 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/managementOutgoingAccessRequest"
+          }
+        }
+      }
+    },
+    "managementListOutgoingOrdersResponse": {
+      "type": "object",
+      "properties": {
+        "orders": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/managementOutgoingOrder"
           }
         }
       }
@@ -1589,34 +1637,6 @@
         }
       }
     },
-    "managementOrder": {
-      "type": "object",
-      "properties": {
-        "reference": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "delegatee": {
-          "type": "string"
-        },
-        "validFrom": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "validUntil": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "services": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementOrderService"
-          }
-        }
-      }
-    },
     "managementOrderService": {
       "type": "object",
       "properties": {
@@ -1654,6 +1674,34 @@
         },
         "errorDetails": {
           "$ref": "#/definitions/managementErrorDetails"
+        }
+      }
+    },
+    "managementOutgoingOrder": {
+      "type": "object",
+      "properties": {
+        "reference": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "delegatee": {
+          "type": "string"
+        },
+        "validFrom": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validUntil": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/managementOrderService"
+          }
         }
       }
     },

@@ -12,33 +12,33 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-type Order struct {
+type OutgoingOrderService struct {
+	OutgoingOrderID uint
+	Service         string
+	Organization    string
+}
+
+func (s *OutgoingOrderService) TableName() string {
+	return "nlx_management.outgoing_orders_services"
+}
+
+type OutgoingOrder struct {
 	ID           uint
 	Reference    string
 	Description  string
 	PublicKeyPEM string
 	Delegatee    string
+	CreatedAt    time.Time
 	ValidFrom    time.Time
 	ValidUntil   time.Time
-	Services     []OrderService `gorm:"foreignKey:order_id;"`
-	CreatedAt    time.Time
+	Services     []OutgoingOrderService `gorm:"foreignKey:outgoing_order_id;"`
 }
 
-type OrderService struct {
-	OrderID      uint
-	Service      string
-	Organization string
+func (o *OutgoingOrder) TableName() string {
+	return "nlx_management.outgoing_orders"
 }
 
-func (s *OrderService) TableName() string {
-	return "nlx_management.orders_services"
-}
-
-func (s *Order) TableName() string {
-	return "nlx_management.orders"
-}
-
-func (db *PostgresConfigDatabase) CreateOrder(ctx context.Context, order *Order) error {
+func (db *PostgresConfigDatabase) CreateOutgoingOrder(ctx context.Context, order *OutgoingOrder) error {
 	tx := db.DB.Begin()
 	defer tx.Rollback()
 
@@ -51,19 +51,19 @@ func (db *PostgresConfigDatabase) CreateOrder(ctx context.Context, order *Order)
 		return err
 	}
 
-	orderServices := []OrderService{}
+	orderServices := []OutgoingOrderService{}
 
 	for _, service := range order.Services {
-		orderServices = append(orderServices, OrderService{
-			OrderID:      order.ID,
-			Organization: service.Organization,
-			Service:      service.Service,
+		orderServices = append(orderServices, OutgoingOrderService{
+			OutgoingOrderID: order.ID,
+			Organization:    service.Organization,
+			Service:         service.Service,
 		})
 	}
 
 	if err := dbWithTx.DB.
 		WithContext(ctx).
-		Model(OrderService{}).
+		Model(OutgoingOrderService{}).
 		Create(orderServices).Error; err != nil {
 		return err
 	}
@@ -71,8 +71,8 @@ func (db *PostgresConfigDatabase) CreateOrder(ctx context.Context, order *Order)
 	return tx.Commit().Error
 }
 
-func (db *PostgresConfigDatabase) GetOrderByReference(ctx context.Context, reference string) (*Order, error) {
-	order := &Order{}
+func (db *PostgresConfigDatabase) GetOutgoingOrderByReference(ctx context.Context, reference string) (*OutgoingOrder, error) {
+	order := &OutgoingOrder{}
 
 	if err := db.DB.
 		WithContext(ctx).
@@ -89,8 +89,8 @@ func (db *PostgresConfigDatabase) GetOrderByReference(ctx context.Context, refer
 	return order, nil
 }
 
-func (db *PostgresConfigDatabase) ListIssuedOrders(ctx context.Context) ([]*Order, error) {
-	orders := []*Order{}
+func (db *PostgresConfigDatabase) ListOutgoingOrders(ctx context.Context) ([]*OutgoingOrder, error) {
+	orders := []*OutgoingOrder{}
 
 	if err := db.DB.
 		WithContext(ctx).
@@ -103,8 +103,8 @@ func (db *PostgresConfigDatabase) ListIssuedOrders(ctx context.Context) ([]*Orde
 	return orders, nil
 }
 
-func (db *PostgresConfigDatabase) ListOrdersByOrganization(ctx context.Context, organizationName string) ([]*Order, error) {
-	orders := []*Order{}
+func (db *PostgresConfigDatabase) ListOutgoingOrdersByOrganization(ctx context.Context, organizationName string) ([]*OutgoingOrder, error) {
+	orders := []*OutgoingOrder{}
 
 	if err := db.DB.
 		WithContext(ctx).

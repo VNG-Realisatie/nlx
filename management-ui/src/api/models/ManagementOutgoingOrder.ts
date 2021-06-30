@@ -14,67 +14,61 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    ManagementCreateOrderRequestService,
-    ManagementCreateOrderRequestServiceFromJSON,
-    ManagementCreateOrderRequestServiceFromJSONTyped,
-    ManagementCreateOrderRequestServiceToJSON,
+    ManagementOrderService,
+    ManagementOrderServiceFromJSON,
+    ManagementOrderServiceFromJSONTyped,
+    ManagementOrderServiceToJSON,
 } from './';
 
 /**
  * 
  * @export
- * @interface ManagementCreateOrderRequest
+ * @interface ManagementOutgoingOrder
  */
-export interface ManagementCreateOrderRequest {
+export interface ManagementOutgoingOrder {
     /**
      * 
      * @type {string}
-     * @memberof ManagementCreateOrderRequest
+     * @memberof ManagementOutgoingOrder
      */
     reference?: string;
     /**
      * 
      * @type {string}
-     * @memberof ManagementCreateOrderRequest
+     * @memberof ManagementOutgoingOrder
      */
     description?: string;
     /**
      * 
      * @type {string}
-     * @memberof ManagementCreateOrderRequest
-     */
-    publicKeyPEM?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ManagementCreateOrderRequest
+     * @memberof ManagementOutgoingOrder
      */
     delegatee?: string;
     /**
      * 
      * @type {Date}
-     * @memberof ManagementCreateOrderRequest
+     * @memberof ManagementOutgoingOrder
      */
     validFrom?: Date;
     /**
      * 
      * @type {Date}
-     * @memberof ManagementCreateOrderRequest
+     * @memberof ManagementOutgoingOrder
      */
     validUntil?: Date;
     /**
      * 
-     * @type {Array<ManagementCreateOrderRequestService>}
-     * @memberof ManagementCreateOrderRequest
+     * @type {Array<ManagementOrderService>}
+     * @memberof ManagementOutgoingOrder
      */
-    services?: Array<ManagementCreateOrderRequestService>;
+    services?: Array<ManagementOrderService>;
 }
 
-export function ManagementCreateOrderRequestFromJSON(json: any): ManagementCreateOrderRequest {
-    return ManagementCreateOrderRequestFromJSONTyped(json, false);
+export function ManagementOutgoingOrderFromJSON(json: any): ManagementOutgoingOrder {
+    return ManagementOutgoingOrderFromJSONTyped(json, false);
 }
 
-export function ManagementCreateOrderRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): ManagementCreateOrderRequest {
+export function ManagementOutgoingOrderFromJSONTyped(json: any, ignoreDiscriminator: boolean): ManagementOutgoingOrder {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -82,15 +76,14 @@ export function ManagementCreateOrderRequestFromJSONTyped(json: any, ignoreDiscr
         
         'reference': !exists(json, 'reference') ? undefined : json['reference'],
         'description': !exists(json, 'description') ? undefined : json['description'],
-        'publicKeyPEM': !exists(json, 'publicKeyPEM') ? undefined : json['publicKeyPEM'],
         'delegatee': !exists(json, 'delegatee') ? undefined : json['delegatee'],
         'validFrom': !exists(json, 'validFrom') ? undefined : (new Date(json['validFrom'])),
         'validUntil': !exists(json, 'validUntil') ? undefined : (new Date(json['validUntil'])),
-        'services': !exists(json, 'services') ? undefined : ((json['services'] as Array<any>).map(ManagementCreateOrderRequestServiceFromJSON)),
+        'services': !exists(json, 'services') ? undefined : ((json['services'] as Array<any>).map(ManagementOrderServiceFromJSON)),
     };
 }
 
-export function ManagementCreateOrderRequestToJSON(value?: ManagementCreateOrderRequest | null): any {
+export function ManagementOutgoingOrderToJSON(value?: ManagementOutgoingOrder | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -101,11 +94,10 @@ export function ManagementCreateOrderRequestToJSON(value?: ManagementCreateOrder
         
         'reference': value.reference,
         'description': value.description,
-        'publicKeyPEM': value.publicKeyPEM,
         'delegatee': value.delegatee,
         'validFrom': value.validFrom === undefined ? undefined : (value.validFrom.toISOString()),
         'validUntil': value.validUntil === undefined ? undefined : (value.validUntil.toISOString()),
-        'services': value.services === undefined ? undefined : ((value.services as Array<any>).map(ManagementCreateOrderRequestServiceToJSON)),
+        'services': value.services === undefined ? undefined : ((value.services as Array<any>).map(ManagementOrderServiceToJSON)),
     };
 }
 

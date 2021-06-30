@@ -23,18 +23,18 @@ import (
 )
 
 //nolint:funlen // this is a test method
-func TestCreateOrder(t *testing.T) {
+func TestCreateOutgoingOrder(t *testing.T) {
 	validFrom := time.Now().UTC()
 	validUntil := time.Now().Add(1 * time.Hour).UTC()
-	validCreateOrderRequest := func() api.CreateOrderRequest {
-		return api.CreateOrderRequest{
+	validCreateOutgoingOrderRequest := func() api.CreateOutgoingOrderRequest {
+		return api.CreateOutgoingOrderRequest{
 			Reference:    "a-reference",
 			Description:  "a-description",
 			Delegatee:    "a-delegatee",
 			PublicKeyPEM: testPublicKeyPEM,
 			ValidFrom:    timestamppb.New(validFrom),
 			ValidUntil:   timestamppb.New(validUntil),
-			Services: []*api.CreateOrderRequest_Service{
+			Services: []*api.OrderService{
 				{
 					Organization: "a-organization",
 					Service:      "a-service",
@@ -44,89 +44,89 @@ func TestCreateOrder(t *testing.T) {
 	}
 
 	tests := map[string]struct {
-		request *api.CreateOrderRequest
+		request *api.CreateOutgoingOrderRequest
 		setup   func(serviceMocks)
 		wantErr error
 	}{
 		"when_providing_an_empty_reference": {
-			request: func() *api.CreateOrderRequest {
-				request := validCreateOrderRequest()
+			request: func() *api.CreateOutgoingOrderRequest {
+				request := validCreateOutgoingOrderRequest()
 				request.Reference = ""
 				return &request
 			}(),
-			wantErr: status.Error(codes.InvalidArgument, "invalid order: Reference: cannot be blank."),
+			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Reference: cannot be blank."),
 		},
 		"when_providing_a_reference_which_is_too_long": {
-			request: func() *api.CreateOrderRequest {
-				request := validCreateOrderRequest()
+			request: func() *api.CreateOutgoingOrderRequest {
+				request := validCreateOutgoingOrderRequest()
 				request.Reference = "reference-with-length-of-101-chars-abcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdea"
 				return &request
 			}(),
-			wantErr: status.Error(codes.InvalidArgument, "invalid order: Reference: the length must be between 1 and 100."),
+			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Reference: the length must be between 1 and 100."),
 		},
 		"when_providing_an_empty_description": {
-			request: func() *api.CreateOrderRequest {
-				request := validCreateOrderRequest()
+			request: func() *api.CreateOutgoingOrderRequest {
+				request := validCreateOutgoingOrderRequest()
 				request.Description = ""
 				return &request
 			}(),
-			wantErr: status.Error(codes.InvalidArgument, "invalid order: Description: cannot be blank."),
+			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Description: cannot be blank."),
 		},
 		"when_providing_a_description_which_is_too_long": {
-			request: func() *api.CreateOrderRequest {
-				request := validCreateOrderRequest()
+			request: func() *api.CreateOutgoingOrderRequest {
+				request := validCreateOutgoingOrderRequest()
 				request.Description = "description-with-length-of-101-chars-abcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcd"
 				return &request
 			}(),
-			wantErr: status.Error(codes.InvalidArgument, "invalid order: Description: the length must be between 1 and 100."),
+			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Description: the length must be between 1 and 100."),
 		},
 		"when_providing_an_invalid_delegatee": {
-			request: func() *api.CreateOrderRequest {
-				request := validCreateOrderRequest()
+			request: func() *api.CreateOutgoingOrderRequest {
+				request := validCreateOutgoingOrderRequest()
 				request.Delegatee = "invalid / delegatee"
 				return &request
 			}(),
-			wantErr: status.Error(codes.InvalidArgument, "invalid order: Delegatee: must be in a valid format."),
+			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Delegatee: must be in a valid format."),
 		},
 		"when_providing_an_end_date_which_is_before_the_start_date": {
-			request: func() *api.CreateOrderRequest {
-				request := validCreateOrderRequest()
+			request: func() *api.CreateOutgoingOrderRequest {
+				request := validCreateOutgoingOrderRequest()
 				request.ValidFrom = timestamppb.New(time.Now().Add(time.Millisecond))
 				request.ValidUntil = timestamppb.New(time.Now())
 				return &request
 			}(),
-			wantErr: status.Error(codes.InvalidArgument, "invalid order: ValidUntil: order can not expire before the start date."),
+			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: ValidUntil: order can not expire before the start date."),
 		},
 		"when_providing_an_empty_list_of_services": {
-			request: func() *api.CreateOrderRequest {
-				request := validCreateOrderRequest()
-				request.Services = []*api.CreateOrderRequest_Service{}
+			request: func() *api.CreateOutgoingOrderRequest {
+				request := validCreateOutgoingOrderRequest()
+				request.Services = []*api.OrderService{}
 				return &request
 			}(),
-			wantErr: status.Error(codes.InvalidArgument, "invalid order: Services: cannot be blank."),
+			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Services: cannot be blank."),
 		},
 		"when_providing_an_invalid_service_name": {
-			request: func() *api.CreateOrderRequest {
-				request := validCreateOrderRequest()
-				request.Services = []*api.CreateOrderRequest_Service{
+			request: func() *api.CreateOutgoingOrderRequest {
+				request := validCreateOutgoingOrderRequest()
+				request.Services = []*api.OrderService{
 					{
 						Service: "invalid / service name",
 					},
 				}
 				return &request
 			}(),
-			wantErr: status.Error(codes.InvalidArgument, "invalid order: Services: (0: (Service: service must be in a valid format.).)."),
+			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Services: (0: (Service: service must be in a valid format.).)."),
 		},
 		"when_providing_an_invalid_public_key": {
-			request: func() *api.CreateOrderRequest {
-				request := validCreateOrderRequest()
+			request: func() *api.CreateOutgoingOrderRequest {
+				request := validCreateOutgoingOrderRequest()
 				request.PublicKeyPEM = "invalid"
 				return &request
 			}(),
-			wantErr: status.Error(codes.InvalidArgument, "invalid order: PublicKeyPEM: expect public key as pem."),
+			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: PublicKeyPEM: expect public key as pem."),
 		},
 		"when_creating_the_order_fails": {
-			wantErr: status.Error(codes.Internal, "failed to create order"),
+			wantErr: status.Error(codes.Internal, "failed to create outgoing order"),
 			setup: func(mocks serviceMocks) {
 				mocks.al.
 					EXPECT().
@@ -139,14 +139,14 @@ func TestCreateOrder(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					CreateOrder(gomock.Any(), &database.Order{
+					CreateOutgoingOrder(gomock.Any(), &database.OutgoingOrder{
 						Reference:    "a-reference",
 						Description:  "a-description",
 						PublicKeyPEM: testPublicKeyPEM,
 						Delegatee:    "a-delegatee",
 						ValidFrom:    validFrom,
 						ValidUntil:   validUntil,
-						Services: []database.OrderService{
+						Services: []database.OutgoingOrderService{
 							{
 								Organization: "a-organization",
 								Service:      "a-service",
@@ -155,8 +155,8 @@ func TestCreateOrder(t *testing.T) {
 					}).
 					Return(errors.New("arbitrary error"))
 			},
-			request: func() *api.CreateOrderRequest {
-				request := validCreateOrderRequest()
+			request: func() *api.CreateOutgoingOrderRequest {
+				request := validCreateOutgoingOrderRequest()
 				return &request
 			}(),
 		},
@@ -173,8 +173,8 @@ func TestCreateOrder(t *testing.T) {
 					}).
 					Return(errors.New("arbitrary error"))
 			},
-			request: func() *api.CreateOrderRequest {
-				request := validCreateOrderRequest()
+			request: func() *api.CreateOutgoingOrderRequest {
+				request := validCreateOutgoingOrderRequest()
 				return &request
 			}(),
 		},
@@ -182,14 +182,14 @@ func TestCreateOrder(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
-					CreateOrder(gomock.Any(), &database.Order{
+					CreateOutgoingOrder(gomock.Any(), &database.OutgoingOrder{
 						Reference:    "a-reference",
 						Description:  "a-description",
 						PublicKeyPEM: testPublicKeyPEM,
 						Delegatee:    "a-delegatee",
 						ValidFrom:    validFrom,
 						ValidUntil:   validUntil,
-						Services: []database.OrderService{
+						Services: []database.OutgoingOrderService{
 							{
 								Organization: "a-organization",
 								Service:      "a-service",
@@ -207,8 +207,8 @@ func TestCreateOrder(t *testing.T) {
 						},
 					})
 			},
-			request: func() *api.CreateOrderRequest {
-				request := validCreateOrderRequest()
+			request: func() *api.CreateOutgoingOrderRequest {
+				request := validCreateOutgoingOrderRequest()
 				return &request
 			}(),
 		},
@@ -229,7 +229,7 @@ func TestCreateOrder(t *testing.T) {
 				"grpcgateway-user-agent": "nlxctl",
 			}))
 
-			response, err := service.CreateOrder(ctx, tt.request)
+			response, err := service.CreateOutgoingOrder(ctx, tt.request)
 
 			if tt.wantErr == nil {
 				assert.IsType(t, &emptypb.Empty{}, response)

@@ -44,8 +44,9 @@ type ManagementClient interface {
 	RevokeAccessGrant(ctx context.Context, in *RevokeAccessGrantRequest, opts ...grpc.CallOption) (*AccessGrant, error)
 	ListAuditLogs(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListAuditLogsResponse, error)
 	RetrieveClaimForOrder(ctx context.Context, in *RetrieveClaimForOrderRequest, opts ...grpc.CallOption) (*RetrieveClaimForOrderResponse, error)
-	CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListIssuedOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListIssuedOrdersResponse, error)
+	CreateOutgoingOrder(ctx context.Context, in *CreateOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ListOutgoingOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListOutgoingOrdersResponse, error)
+	ListIncomingOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListIncomingOrdersResponse, error)
 }
 
 type managementClient struct {
@@ -281,18 +282,27 @@ func (c *managementClient) RetrieveClaimForOrder(ctx context.Context, in *Retrie
 	return out, nil
 }
 
-func (c *managementClient) CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *managementClient) CreateOutgoingOrder(ctx context.Context, in *CreateOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/CreateOrder", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.Management/CreateOutgoingOrder", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) ListIssuedOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListIssuedOrdersResponse, error) {
-	out := new(ListIssuedOrdersResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/ListIssuedOrders", in, out, opts...)
+func (c *managementClient) ListOutgoingOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListOutgoingOrdersResponse, error) {
+	out := new(ListOutgoingOrdersResponse)
+	err := c.cc.Invoke(ctx, "/nlx.management.Management/ListOutgoingOrders", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementClient) ListIncomingOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListIncomingOrdersResponse, error) {
+	out := new(ListIncomingOrdersResponse)
+	err := c.cc.Invoke(ctx, "/nlx.management.Management/ListIncomingOrders", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -328,8 +338,9 @@ type ManagementServer interface {
 	RevokeAccessGrant(context.Context, *RevokeAccessGrantRequest) (*AccessGrant, error)
 	ListAuditLogs(context.Context, *emptypb.Empty) (*ListAuditLogsResponse, error)
 	RetrieveClaimForOrder(context.Context, *RetrieveClaimForOrderRequest) (*RetrieveClaimForOrderResponse, error)
-	CreateOrder(context.Context, *CreateOrderRequest) (*emptypb.Empty, error)
-	ListIssuedOrders(context.Context, *emptypb.Empty) (*ListIssuedOrdersResponse, error)
+	CreateOutgoingOrder(context.Context, *CreateOutgoingOrderRequest) (*emptypb.Empty, error)
+	ListOutgoingOrders(context.Context, *emptypb.Empty) (*ListOutgoingOrdersResponse, error)
+	ListIncomingOrders(context.Context, *emptypb.Empty) (*ListIncomingOrdersResponse, error)
 	mustEmbedUnimplementedManagementServer()
 }
 
@@ -412,11 +423,14 @@ func (UnimplementedManagementServer) ListAuditLogs(context.Context, *emptypb.Emp
 func (UnimplementedManagementServer) RetrieveClaimForOrder(context.Context, *RetrieveClaimForOrderRequest) (*RetrieveClaimForOrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RetrieveClaimForOrder not implemented")
 }
-func (UnimplementedManagementServer) CreateOrder(context.Context, *CreateOrderRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateOrder not implemented")
+func (UnimplementedManagementServer) CreateOutgoingOrder(context.Context, *CreateOutgoingOrderRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateOutgoingOrder not implemented")
 }
-func (UnimplementedManagementServer) ListIssuedOrders(context.Context, *emptypb.Empty) (*ListIssuedOrdersResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListIssuedOrders not implemented")
+func (UnimplementedManagementServer) ListOutgoingOrders(context.Context, *emptypb.Empty) (*ListOutgoingOrdersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListOutgoingOrders not implemented")
+}
+func (UnimplementedManagementServer) ListIncomingOrders(context.Context, *emptypb.Empty) (*ListIncomingOrdersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListIncomingOrders not implemented")
 }
 func (UnimplementedManagementServer) mustEmbedUnimplementedManagementServer() {}
 
@@ -881,38 +895,56 @@ func _Management_RetrieveClaimForOrder_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_CreateOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateOrderRequest)
+func _Management_CreateOutgoingOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateOutgoingOrderRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).CreateOrder(ctx, in)
+		return srv.(ManagementServer).CreateOutgoingOrder(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/CreateOrder",
+		FullMethod: "/nlx.management.Management/CreateOutgoingOrder",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).CreateOrder(ctx, req.(*CreateOrderRequest))
+		return srv.(ManagementServer).CreateOutgoingOrder(ctx, req.(*CreateOutgoingOrderRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_ListIssuedOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Management_ListOutgoingOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).ListIssuedOrders(ctx, in)
+		return srv.(ManagementServer).ListOutgoingOrders(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/ListIssuedOrders",
+		FullMethod: "/nlx.management.Management/ListOutgoingOrders",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).ListIssuedOrders(ctx, req.(*emptypb.Empty))
+		return srv.(ManagementServer).ListOutgoingOrders(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Management_ListIncomingOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServer).ListIncomingOrders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/nlx.management.Management/ListIncomingOrders",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServer).ListIncomingOrders(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1025,12 +1057,16 @@ var Management_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Management_RetrieveClaimForOrder_Handler,
 		},
 		{
-			MethodName: "CreateOrder",
-			Handler:    _Management_CreateOrder_Handler,
+			MethodName: "CreateOutgoingOrder",
+			Handler:    _Management_CreateOutgoingOrder_Handler,
 		},
 		{
-			MethodName: "ListIssuedOrders",
-			Handler:    _Management_ListIssuedOrders_Handler,
+			MethodName: "ListOutgoingOrders",
+			Handler:    _Management_ListOutgoingOrders_Handler,
+		},
+		{
+			MethodName: "ListIncomingOrders",
+			Handler:    _Management_ListIncomingOrders_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

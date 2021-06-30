@@ -62,8 +62,11 @@ type ConfigDatabase interface {
 	CreateAuditLogRecord(ctx context.Context, auditLogRecord *AuditLog) (*AuditLog, error)
 	ListAuditLogRecords(ctx context.Context) ([]*AuditLog, error)
 
-	CreateOrder(ctx context.Context, order *Order) error
-	GetOrderByReference(ctx context.Context, reference string) (*Order, error)
-	ListIssuedOrders(ctx context.Context) ([]*Order, error)
-	ListOrdersByOrganization(ctx context.Context, organizationName string) ([]*Order, error)
+	CreateOutgoingOrder(ctx context.Context, order *OutgoingOrder) error
+	GetOutgoingOrderByReference(ctx context.Context, reference string) (*OutgoingOrder, error)
+	ListOutgoingOrders(ctx context.Context) ([]*OutgoingOrder, error)
+	ListOutgoingOrdersByOrganization(ctx context.Context, organizationName string) ([]*OutgoingOrder, error)
+
+	GetIncomingOrderByReference(ctx context.Context, reference string) (*IncomingOrder, error)
+	ListIncomingOrders(ctx context.Context) ([]*IncomingOrder, error)
 }

@@ -34,7 +34,7 @@
         "orders": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/managementOrder"
+            "$ref": "#/definitions/managementIncomingOrder"
           }
         }
       }
@@ -95,7 +95,7 @@
       ],
       "default": "UNSPECIFIED"
     },
-    "managementOrder": {
+    "managementIncomingOrder": {
       "type": "object",
       "properties": {
         "reference": {
@@ -104,7 +104,7 @@
         "description": {
           "type": "string"
         },
-        "delegatee": {
+        "delegator": {
           "type": "string"
         },
         "validFrom": {

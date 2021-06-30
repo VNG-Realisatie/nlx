@@ -51,8 +51,8 @@ func TestRequestClaim(t *testing.T) {
 			setup: func(_ *common_tls.CertificateBundle, mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
-					GetOrderByReference(gomock.Any(), "arbitrary-order-reference").
-					Return(&database.Order{
+					GetOutgoingOrderByReference(gomock.Any(), "arbitrary-order-reference").
+					Return(&database.OutgoingOrder{
 						Delegatee:    "organization-a",
 						PublicKeyPEM: "arbitrary-public-key-in-pem-format",
 					}, nil)
@@ -69,8 +69,8 @@ func TestRequestClaim(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					GetOrderByReference(gomock.Any(), "arbitrary-order-reference").
-					Return(&database.Order{
+					GetOutgoingOrderByReference(gomock.Any(), "arbitrary-order-reference").
+					Return(&database.OutgoingOrder{
 						Delegatee:    "organization-a",
 						PublicKeyPEM: publicKeyPEM,
 						ValidUntil:   now.Add(-1 * time.Hour),
@@ -88,8 +88,8 @@ func TestRequestClaim(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					GetOrderByReference(gomock.Any(), "arbitrary-order-reference").
-					Return(&database.Order{
+					GetOutgoingOrderByReference(gomock.Any(), "arbitrary-order-reference").
+					Return(&database.OutgoingOrder{
 						Delegatee:    "organization-a",
 						PublicKeyPEM: publicKeyPEM,
 						ValidUntil:   now.Add(2 * time.Hour),
@@ -107,8 +107,8 @@ func TestRequestClaim(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					GetOrderByReference(gomock.Any(), "arbitrary-order-reference").
-					Return(&database.Order{
+					GetOutgoingOrderByReference(gomock.Any(), "arbitrary-order-reference").
+					Return(&database.OutgoingOrder{
 						Delegatee:    "organization-a",
 						PublicKeyPEM: publicKeyPEM,
 						ValidUntil:   now.Add(4 * time.Hour),

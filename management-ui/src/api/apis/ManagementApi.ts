@@ -21,9 +21,9 @@ import {
     ManagementCreateAccessRequestRequest,
     ManagementCreateAccessRequestRequestFromJSON,
     ManagementCreateAccessRequestRequestToJSON,
-    ManagementCreateOrderRequest,
-    ManagementCreateOrderRequestFromJSON,
-    ManagementCreateOrderRequestToJSON,
+    ManagementCreateOutgoingOrderRequest,
+    ManagementCreateOutgoingOrderRequestFromJSON,
+    ManagementCreateOutgoingOrderRequestToJSON,
     ManagementCreateServiceRequest,
     ManagementCreateServiceRequestFromJSON,
     ManagementCreateServiceRequestToJSON,
@@ -54,15 +54,18 @@ import {
     ManagementListIncomingAccessRequestsResponse,
     ManagementListIncomingAccessRequestsResponseFromJSON,
     ManagementListIncomingAccessRequestsResponseToJSON,
+    ManagementListIncomingOrdersResponse,
+    ManagementListIncomingOrdersResponseFromJSON,
+    ManagementListIncomingOrdersResponseToJSON,
     ManagementListInwaysResponse,
     ManagementListInwaysResponseFromJSON,
     ManagementListInwaysResponseToJSON,
-    ManagementListIssuedOrdersResponse,
-    ManagementListIssuedOrdersResponseFromJSON,
-    ManagementListIssuedOrdersResponseToJSON,
     ManagementListOutgoingAccessRequestsResponse,
     ManagementListOutgoingAccessRequestsResponseFromJSON,
     ManagementListOutgoingAccessRequestsResponseToJSON,
+    ManagementListOutgoingOrdersResponse,
+    ManagementListOutgoingOrdersResponseFromJSON,
+    ManagementListOutgoingOrdersResponseToJSON,
     ManagementListServicesResponse,
     ManagementListServicesResponseFromJSON,
     ManagementListServicesResponseToJSON,
@@ -102,8 +105,8 @@ export interface ManagementCreateInwayRequest {
     body: ManagementInway;
 }
 
-export interface ManagementCreateOrderOperationRequest {
-    body: ManagementCreateOrderRequest;
+export interface ManagementCreateOutgoingOrderOperationRequest {
+    body: ManagementCreateOutgoingOrderRequest;
 }
 
 export interface ManagementCreateServiceOperationRequest {
@@ -280,9 +283,9 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementCreateOrderRaw(requestParameters: ManagementCreateOrderOperationRequest): Promise<runtime.ApiResponse<object>> {
+    async managementCreateOutgoingOrderRaw(requestParameters: ManagementCreateOutgoingOrderOperationRequest): Promise<runtime.ApiResponse<object>> {
         if (requestParameters.body === null || requestParameters.body === undefined) {
-            throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementCreateOrder.');
+            throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementCreateOutgoingOrder.');
         }
 
         const queryParameters: runtime.HTTPQuery = {};
@@ -292,11 +295,11 @@ export class ManagementApi extends runtime.BaseAPI {
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
-            path: `/api/v1/orders`,
+            path: `/api/v1/orders/outgoing`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: ManagementCreateOrderRequestToJSON(requestParameters.body),
+            body: ManagementCreateOutgoingOrderRequestToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse<any>(response);
@@ -304,8 +307,8 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementCreateOrder(requestParameters: ManagementCreateOrderOperationRequest): Promise<object> {
-        const response = await this.managementCreateOrderRaw(requestParameters);
+    async managementCreateOutgoingOrder(requestParameters: ManagementCreateOutgoingOrderOperationRequest): Promise<object> {
+        const response = await this.managementCreateOutgoingOrderRaw(requestParameters);
         return await response.value();
     }
 
@@ -630,6 +633,30 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
+    async managementListIncomingOrdersRaw(): Promise<runtime.ApiResponse<ManagementListIncomingOrdersResponse>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v1/orders/incoming`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementListIncomingOrdersResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async managementListIncomingOrders(): Promise<ManagementListIncomingOrdersResponse> {
+        const response = await this.managementListIncomingOrdersRaw();
+        return await response.value();
+    }
+
+    /**
+     */
     async managementListInwaysRaw(): Promise<runtime.ApiResponse<ManagementListInwaysResponse>> {
         const queryParameters: runtime.HTTPQuery = {};
 
@@ -649,30 +676,6 @@ export class ManagementApi extends runtime.BaseAPI {
      */
     async managementListInways(): Promise<ManagementListInwaysResponse> {
         const response = await this.managementListInwaysRaw();
-        return await response.value();
-    }
-
-    /**
-     */
-    async managementListIssuedOrdersRaw(): Promise<runtime.ApiResponse<ManagementListIssuedOrdersResponse>> {
-        const queryParameters: runtime.HTTPQuery = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/api/v1/issued-orders`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        });
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementListIssuedOrdersResponseFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async managementListIssuedOrders(): Promise<ManagementListIssuedOrdersResponse> {
-        const response = await this.managementListIssuedOrdersRaw();
         return await response.value();
     }
 
@@ -705,6 +708,30 @@ export class ManagementApi extends runtime.BaseAPI {
      */
     async managementListOutgoingAccessRequests(requestParameters: ManagementListOutgoingAccessRequestsRequest): Promise<ManagementListOutgoingAccessRequestsResponse> {
         const response = await this.managementListOutgoingAccessRequestsRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async managementListOutgoingOrdersRaw(): Promise<runtime.ApiResponse<ManagementListOutgoingOrdersResponse>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v1/orders/outgoing`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementListOutgoingOrdersResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async managementListOutgoingOrders(): Promise<ManagementListOutgoingOrdersResponse> {
+        const response = await this.managementListOutgoingOrdersRaw();
         return await response.value();
     }
 

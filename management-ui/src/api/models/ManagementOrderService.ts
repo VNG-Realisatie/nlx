@@ -16,28 +16,28 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface ListIssuedOrdersResponseOrderService
+ * @interface ManagementOrderService
  */
-export interface ListIssuedOrdersResponseOrderService {
+export interface ManagementOrderService {
     /**
      * 
      * @type {string}
-     * @memberof ListIssuedOrdersResponseOrderService
+     * @memberof ManagementOrderService
      */
     organization?: string;
     /**
      * 
      * @type {string}
-     * @memberof ListIssuedOrdersResponseOrderService
+     * @memberof ManagementOrderService
      */
     service?: string;
 }
 
-export function ListIssuedOrdersResponseOrderServiceFromJSON(json: any): ListIssuedOrdersResponseOrderService {
-    return ListIssuedOrdersResponseOrderServiceFromJSONTyped(json, false);
+export function ManagementOrderServiceFromJSON(json: any): ManagementOrderService {
+    return ManagementOrderServiceFromJSONTyped(json, false);
 }
 
-export function ListIssuedOrdersResponseOrderServiceFromJSONTyped(json: any, ignoreDiscriminator: boolean): ListIssuedOrdersResponseOrderService {
+export function ManagementOrderServiceFromJSONTyped(json: any, ignoreDiscriminator: boolean): ManagementOrderService {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -48,7 +48,7 @@ export function ListIssuedOrdersResponseOrderServiceFromJSONTyped(json: any, ign
     };
 }
 
-export function ListIssuedOrdersResponseOrderServiceToJSON(value?: ListIssuedOrdersResponseOrderService | null): any {
+export function ManagementOrderServiceToJSON(value?: ManagementOrderService | null): any {
     if (value === undefined) {
         return undefined;
     }

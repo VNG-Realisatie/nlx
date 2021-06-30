@@ -18,7 +18,7 @@ jest.mock('./OrdersEmptyView', () => () => <p>orders empty view</p>)
 test('no orders present', async () => {
   const managementApiClient = new ManagementApi()
 
-  managementApiClient.managementListIssuedOrders = jest
+  managementApiClient.managementListOutgoingOrders = jest
     .fn()
     .mockResolvedValue({ orders: [] })
 
@@ -46,18 +46,20 @@ test('no orders present', async () => {
 test('rendering the orders page', async () => {
   const managementApiClient = new ManagementApi()
 
-  managementApiClient.managementListIssuedOrders = jest.fn().mockResolvedValue({
-    orders: [
-      {
-        reference: 'ref1',
-        description: 'my own description',
-        delegatee: 'delegatee',
-        services: [{ organization: 'organization X', service: 'service Y' }],
-        validFrom: '2021-05-04',
-        validUntil: '2021-05-10',
-      },
-    ],
-  })
+  managementApiClient.managementListOutgoingOrders = jest
+    .fn()
+    .mockResolvedValue({
+      orders: [
+        {
+          reference: 'ref1',
+          description: 'my own description',
+          delegatee: 'delegatee',
+          services: [{ organization: 'organization X', service: 'service Y' }],
+          validFrom: '2021-05-04',
+          validUntil: '2021-05-10',
+        },
+      ],
+    })
 
   const history = createMemoryHistory({ initialEntries: ['/orders'] })
   const store = new RootStore({
@@ -86,7 +88,7 @@ test('rendering the orders page', async () => {
 test('failed to load orders', async () => {
   const managementApiClient = new ManagementApi()
 
-  managementApiClient.managementListIssuedOrders = jest
+  managementApiClient.managementListOutgoingOrders = jest
     .fn()
     .mockRejectedValue(new Error('arbitrary error'))
 

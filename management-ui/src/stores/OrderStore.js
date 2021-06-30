@@ -26,7 +26,7 @@ class OrderStore {
 
     try {
       const result =
-        yield this._managementApiClient.managementListIssuedOrders()
+        yield this._managementApiClient.managementListOutgoingOrders()
 
       result.orders.forEach((order) => {
         this._orders.set(order.reference, order)
@@ -41,9 +41,10 @@ class OrderStore {
 
   create = flow(function* create(formData) {
     try {
-      const orderData = yield this._managementApiClient.managementCreateOrder({
-        body: formData,
-      })
+      const orderData =
+        yield this._managementApiClient.managementCreateOutgoingOrder({
+          body: formData,
+        })
 
       return orderData.id
     } catch (err) {

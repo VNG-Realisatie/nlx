@@ -22,13 +22,13 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
-func (s *ManagementService) CreateOrder(ctx context.Context, request *api.CreateOrderRequest) (*emptypb.Empty, error) {
-	s.logger.Info("rpc request CreateOrder")
+func (s *ManagementService) CreateOutgoingOrder(ctx context.Context, request *api.CreateOutgoingOrderRequest) (*emptypb.Empty, error) {
+	s.logger.Info("rpc request CreateOutgoingOrder")
 
 	order := convertOrder(request)
 
 	if err := validateOrder(order); err != nil {
-		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid order: %s", err))
+		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid outgoing order: %s", err))
 	}
 
 	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
@@ -53,26 +53,26 @@ func (s *ManagementService) CreateOrder(ctx context.Context, request *api.Create
 		return nil, status.Error(codes.Internal, "failed to write to auditlog")
 	}
 
-	if err := s.configDatabase.CreateOrder(ctx, order); err != nil {
-		s.logger.Error("failed to create order", zap.Error(err))
+	if err := s.configDatabase.CreateOutgoingOrder(ctx, order); err != nil {
+		s.logger.Error("failed to create outgoing order", zap.Error(err))
 
-		return nil, status.Errorf(codes.Internal, "failed to create order")
+		return nil, status.Errorf(codes.Internal, "failed to create outgoing order")
 	}
 
 	return &emptypb.Empty{}, nil
 }
 
-func convertOrder(request *api.CreateOrderRequest) *database.Order {
-	services := make([]database.OrderService, len(request.Services))
+func convertOrder(request *api.CreateOutgoingOrderRequest) *database.OutgoingOrder {
+	services := make([]database.OutgoingOrderService, len(request.Services))
 
 	for i, service := range request.Services {
-		services[i] = database.OrderService{
+		services[i] = database.OutgoingOrderService{
 			Organization: service.Organization,
 			Service:      service.Service,
 		}
 	}
 
-	return &database.Order{
+	return &database.OutgoingOrder{
 		Reference:    request.Reference,
 		Description:  request.Description,
 		PublicKeyPEM: request.PublicKeyPEM,
@@ -83,7 +83,7 @@ func convertOrder(request *api.CreateOrderRequest) *database.Order {
 	}
 }
 
-func validateOrder(order *database.Order) error {
+func validateOrder(order *database.OutgoingOrder) error {
 	serviceNameRegex := regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`)
 	organizationNameRegex := regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`)
 
@@ -94,9 +94,9 @@ func validateOrder(order *database.Order) error {
 		validation.Field(&order.ValidUntil, validation.Min(order.ValidFrom).Error("order can not expire before the start date")),
 		validation.Field(&order.PublicKeyPEM, validation.By(validatePublicKey)),
 		validation.Field(&order.Services, validation.Required, validation.Each(validation.By(func(value interface{}) error {
-			orderService, ok := value.(database.OrderService)
+			orderService, ok := value.(database.OutgoingOrderService)
 			if !ok {
-				return errors.New("expecting an order-service")
+				return errors.New("expecting an outgoing order-service")
 			}
 
 			return validation.ValidateStruct(

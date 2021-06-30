@@ -111,20 +111,6 @@ func (mr *MockConfigDatabaseMockRecorder) CreateInway(ctx, inway interface{}) *g
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateInway", reflect.TypeOf((*MockConfigDatabase)(nil).CreateInway), ctx, inway)
 }
 
-// CreateOrder mocks base method.
-func (m *MockConfigDatabase) CreateOrder(ctx context.Context, order *database.Order) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateOrder", ctx, order)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// CreateOrder indicates an expected call of CreateOrder.
-func (mr *MockConfigDatabaseMockRecorder) CreateOrder(ctx, order interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrder", reflect.TypeOf((*MockConfigDatabase)(nil).CreateOrder), ctx, order)
-}
-
 // CreateOutgoingAccessRequest mocks base method.
 func (m *MockConfigDatabase) CreateOutgoingAccessRequest(ctx context.Context, accessRequest *database.OutgoingAccessRequest) (*database.OutgoingAccessRequest, error) {
 	m.ctrl.T.Helper()
@@ -138,6 +124,20 @@ func (m *MockConfigDatabase) CreateOutgoingAccessRequest(ctx context.Context, ac
 func (mr *MockConfigDatabaseMockRecorder) CreateOutgoingAccessRequest(ctx, accessRequest interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOutgoingAccessRequest", reflect.TypeOf((*MockConfigDatabase)(nil).CreateOutgoingAccessRequest), ctx, accessRequest)
+}
+
+// CreateOutgoingOrder mocks base method.
+func (m *MockConfigDatabase) CreateOutgoingOrder(ctx context.Context, order *database.OutgoingOrder) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateOutgoingOrder", ctx, order)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateOutgoingOrder indicates an expected call of CreateOutgoingOrder.
+func (mr *MockConfigDatabaseMockRecorder) CreateOutgoingOrder(ctx, order interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOutgoingOrder", reflect.TypeOf((*MockConfigDatabase)(nil).CreateOutgoingOrder), ctx, order)
 }
 
 // CreateService mocks base method.
@@ -256,6 +256,21 @@ func (mr *MockConfigDatabaseMockRecorder) GetIncomingAccessRequestCountByService
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetIncomingAccessRequestCountByService", reflect.TypeOf((*MockConfigDatabase)(nil).GetIncomingAccessRequestCountByService), ctx)
 }
 
+// GetIncomingOrderByReference mocks base method.
+func (m *MockConfigDatabase) GetIncomingOrderByReference(ctx context.Context, reference string) (*database.IncomingOrder, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetIncomingOrderByReference", ctx, reference)
+	ret0, _ := ret[0].(*database.IncomingOrder)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetIncomingOrderByReference indicates an expected call of GetIncomingOrderByReference.
+func (mr *MockConfigDatabaseMockRecorder) GetIncomingOrderByReference(ctx, reference interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetIncomingOrderByReference", reflect.TypeOf((*MockConfigDatabase)(nil).GetIncomingOrderByReference), ctx, reference)
+}
+
 // GetInway mocks base method.
 func (m *MockConfigDatabase) GetInway(ctx context.Context, name string) (*database.Inway, error) {
 	m.ctrl.T.Helper()
@@ -331,21 +346,6 @@ func (mr *MockConfigDatabaseMockRecorder) GetLatestOutgoingAccessRequest(ctx, or
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLatestOutgoingAccessRequest", reflect.TypeOf((*MockConfigDatabase)(nil).GetLatestOutgoingAccessRequest), ctx, organizationName, serviceName)
 }
 
-// GetOrderByReference mocks base method.
-func (m *MockConfigDatabase) GetOrderByReference(ctx context.Context, reference string) (*database.Order, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetOrderByReference", ctx, reference)
-	ret0, _ := ret[0].(*database.Order)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetOrderByReference indicates an expected call of GetOrderByReference.
-func (mr *MockConfigDatabaseMockRecorder) GetOrderByReference(ctx, reference interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrderByReference", reflect.TypeOf((*MockConfigDatabase)(nil).GetOrderByReference), ctx, reference)
-}
-
 // GetOutgoingAccessRequest mocks base method.
 func (m *MockConfigDatabase) GetOutgoingAccessRequest(ctx context.Context, id uint) (*database.OutgoingAccessRequest, error) {
 	m.ctrl.T.Helper()
@@ -359,6 +359,21 @@ func (m *MockConfigDatabase) GetOutgoingAccessRequest(ctx context.Context, id ui
 func (mr *MockConfigDatabaseMockRecorder) GetOutgoingAccessRequest(ctx, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOutgoingAccessRequest", reflect.TypeOf((*MockConfigDatabase)(nil).GetOutgoingAccessRequest), ctx, id)
+}
+
+// GetOutgoingOrderByReference mocks base method.
+func (m *MockConfigDatabase) GetOutgoingOrderByReference(ctx context.Context, reference string) (*database.OutgoingOrder, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOutgoingOrderByReference", ctx, reference)
+	ret0, _ := ret[0].(*database.OutgoingOrder)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOutgoingOrderByReference indicates an expected call of GetOutgoingOrderByReference.
+func (mr *MockConfigDatabaseMockRecorder) GetOutgoingOrderByReference(ctx, reference interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOutgoingOrderByReference", reflect.TypeOf((*MockConfigDatabase)(nil).GetOutgoingOrderByReference), ctx, reference)
 }
 
 // GetService mocks base method.
@@ -481,6 +496,21 @@ func (mr *MockConfigDatabaseMockRecorder) ListIncomingAccessRequests(ctx, organi
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListIncomingAccessRequests", reflect.TypeOf((*MockConfigDatabase)(nil).ListIncomingAccessRequests), ctx, organizationName, serviceName)
 }
 
+// ListIncomingOrders mocks base method.
+func (m *MockConfigDatabase) ListIncomingOrders(ctx context.Context) ([]*database.IncomingOrder, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListIncomingOrders", ctx)
+	ret0, _ := ret[0].([]*database.IncomingOrder)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListIncomingOrders indicates an expected call of ListIncomingOrders.
+func (mr *MockConfigDatabaseMockRecorder) ListIncomingOrders(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListIncomingOrders", reflect.TypeOf((*MockConfigDatabase)(nil).ListIncomingOrders), ctx)
+}
+
 // ListInways mocks base method.
 func (m *MockConfigDatabase) ListInways(ctx context.Context) ([]*database.Inway, error) {
 	m.ctrl.T.Helper()
@@ -496,36 +526,6 @@ func (mr *MockConfigDatabaseMockRecorder) ListInways(ctx interface{}) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListInways", reflect.TypeOf((*MockConfigDatabase)(nil).ListInways), ctx)
 }
 
-// ListIssuedOrders mocks base method.
-func (m *MockConfigDatabase) ListIssuedOrders(ctx context.Context) ([]*database.Order, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListIssuedOrders", ctx)
-	ret0, _ := ret[0].([]*database.Order)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListIssuedOrders indicates an expected call of ListIssuedOrders.
-func (mr *MockConfigDatabaseMockRecorder) ListIssuedOrders(ctx interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListIssuedOrders", reflect.TypeOf((*MockConfigDatabase)(nil).ListIssuedOrders), ctx)
-}
-
-// ListOrdersByOrganization mocks base method.
-func (m *MockConfigDatabase) ListOrdersByOrganization(ctx context.Context, organizationName string) ([]*database.Order, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListOrdersByOrganization", ctx, organizationName)
-	ret0, _ := ret[0].([]*database.Order)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListOrdersByOrganization indicates an expected call of ListOrdersByOrganization.
-func (mr *MockConfigDatabaseMockRecorder) ListOrdersByOrganization(ctx, organizationName interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOrdersByOrganization", reflect.TypeOf((*MockConfigDatabase)(nil).ListOrdersByOrganization), ctx, organizationName)
-}
-
 // ListOutgoingAccessRequests mocks base method.
 func (m *MockConfigDatabase) ListOutgoingAccessRequests(ctx context.Context, organizationName, serviceName string) ([]*database.OutgoingAccessRequest, error) {
 	m.ctrl.T.Helper()
@@ -539,6 +539,36 @@ func (m *MockConfigDatabase) ListOutgoingAccessRequests(ctx context.Context, org
 func (mr *MockConfigDatabaseMockRecorder) ListOutgoingAccessRequests(ctx, organizationName, serviceName interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOutgoingAccessRequests", reflect.TypeOf((*MockConfigDatabase)(nil).ListOutgoingAccessRequests), ctx, organizationName, serviceName)
+}
+
+// ListOutgoingOrders mocks base method.
+func (m *MockConfigDatabase) ListOutgoingOrders(ctx context.Context) ([]*database.OutgoingOrder, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListOutgoingOrders", ctx)
+	ret0, _ := ret[0].([]*database.OutgoingOrder)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListOutgoingOrders indicates an expected call of ListOutgoingOrders.
+func (mr *MockConfigDatabaseMockRecorder) ListOutgoingOrders(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOutgoingOrders", reflect.TypeOf((*MockConfigDatabase)(nil).ListOutgoingOrders), ctx)
+}
+
+// ListOutgoingOrdersByOrganization mocks base method.
+func (m *MockConfigDatabase) ListOutgoingOrdersByOrganization(ctx context.Context, organizationName string) ([]*database.OutgoingOrder, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListOutgoingOrdersByOrganization", ctx, organizationName)
+	ret0, _ := ret[0].([]*database.OutgoingOrder)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListOutgoingOrdersByOrganization indicates an expected call of ListOutgoingOrdersByOrganization.
+func (mr *MockConfigDatabaseMockRecorder) ListOutgoingOrdersByOrganization(ctx, organizationName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOutgoingOrdersByOrganization", reflect.TypeOf((*MockConfigDatabase)(nil).ListOutgoingOrdersByOrganization), ctx, organizationName)
 }
 
 // ListServices mocks base method.
