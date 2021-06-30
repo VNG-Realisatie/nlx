@@ -49,7 +49,7 @@ func (s *ManagementService) ListIncomingOrders(ctx context.Context, _ *emptypb.E
 	orders, err := s.configDatabase.ListIncomingOrders(ctx)
 	if err != nil {
 		s.logger.Error("error getting incoming orders from database", zap.Error(err))
-		return nil, status.Errorf(codes.Internal, "failed to retrieve issued orders")
+		return nil, status.Errorf(codes.Internal, "failed to retrieve received orders")
 	}
 
 	incomingOrders := make([]*api.IncomingOrder, len(orders))

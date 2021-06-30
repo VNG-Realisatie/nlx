@@ -115,7 +115,7 @@ func TestListIncomingOrders(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.db.EXPECT().ListIncomingOrders(gomock.Any()).Return(nil, errors.New("arbitrary error"))
 			},
-			wantErr: status.Error(codes.Internal, "failed to retrieve issued orders"),
+			wantErr: status.Error(codes.Internal, "failed to retrieve received orders"),
 		},
 		"happy_path": {
 			setup: func(mocks serviceMocks) {
