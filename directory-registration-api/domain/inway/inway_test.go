@@ -76,7 +76,7 @@ func Test_NewInway(t *testing.T) {
 				address:          "address",
 				nlxVersion:       "0.0.0",
 			},
-			expectedErr: "",
+			expectedErr: "name: cannot be blank",
 		},
 		"happy_flow": {
 			inway: inwayParams{

@@ -40,6 +40,7 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 					Return(errors.New("arbitrary error"))
 			},
 			request: &registrationapi.RegisterInwayRequest{
+				InwayName:    "my-inway",
 				InwayAddress: "localhost",
 			},
 			wantResponse: nil,
@@ -53,6 +54,7 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 					AnyTimes()
 			},
 			request: &registrationapi.RegisterInwayRequest{
+				InwayName:    "my-inway",
 				InwayAddress: "localhost",
 				Services: []*registrationapi.RegisterInwayRequest_RegisterService{
 					{
@@ -72,6 +74,7 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 					AnyTimes()
 			},
 			request: &registrationapi.RegisterInwayRequest{
+				InwayName:    "my-inway",
 				InwayAddress: "localhost",
 				Services:     generateListOfServices(251),
 			},
@@ -86,6 +89,7 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 					AnyTimes()
 			},
 			request: &registrationapi.RegisterInwayRequest{
+				InwayName:    "my-inway",
 				InwayAddress: "localhost",
 			},
 			wantResponse: &registrationapi.RegisterInwayResponse{},
@@ -111,6 +115,7 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 					})).Return(nil)
 			},
 			request: &registrationapi.RegisterInwayRequest{
+				InwayName:    "my-inway",
 				InwayAddress: "localhost",
 				Services: []*registrationapi.RegisterInwayRequest_RegisterService{
 					{
