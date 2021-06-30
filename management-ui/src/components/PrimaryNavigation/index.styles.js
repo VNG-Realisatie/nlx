@@ -97,7 +97,7 @@ export const OrdersLink = styled(StyledLink)`
     }
   }
 
-  [data-easter='true'] &.active::after {
+  &.active::after {
     animation: 6s infinite smile;
   }
 `
@@ -112,7 +112,7 @@ export const InwaysIcon = styled(StyledIcon)`
     }
   }
 
-  [data-easter='true'] .active & {
+  .active & {
     animation: 0.25s ease-in-out forwards turn;
   }
 `
@@ -179,10 +179,10 @@ export const ServicesIcon = styled(StyledIcon)`
     }
   }
 
-  [data-easter='true'] .active & > path {
+  .active & > path {
     animation: 5s infinite elec-off;
   }
-  [data-easter='true'] .active & > #elec {
+  .active & > #elec {
     animation: 5s infinite elec-on;
   }
 `
@@ -200,7 +200,7 @@ export const DirectoryIcon = styled(StyledIcon)`
     }
   }
 
-  [data-easter='true'] .active & {
+  .active & {
     animation: 1.2s ease-out 3s appear;
   }
 `
@@ -258,15 +258,15 @@ export const BarChartIcon = styled.div`
   .active & > div {
     background-color: ${(p) => p.theme.tokens.colorBrand1};
   }
-  [data-easter='true'] .active:hover & > :nth-child(1) {
+  .active:hover & > :nth-child(1) {
     height: 10px;
     animation: 1.4s linear infinite juke;
   }
-  [data-easter='true'] .active:hover & > :nth-child(2) {
+  .active:hover & > :nth-child(2) {
     height: 10px;
     animation: 1.5s linear -2.5s infinite juke;
   }
-  [data-easter='true'] .active:hover & > :nth-child(3) {
+  .active:hover & > :nth-child(3) {
     height: 10px;
     animation: 1s linear -1.3s infinite juke;
   }
@@ -282,7 +282,7 @@ export const TimeIcon = styled(StyledIcon)`
     }
   }
 
-  [data-easter='true'] .active & {
+  .active & {
     animation: 60s steps(60) infinite clock;
   }
 `
@@ -300,7 +300,7 @@ export const SettingsIcon = styled(StyledIcon)`
     }
   }
 
-  [data-easter='true'] .active & {
+  .active & {
     animation: 5s ease-in-out infinite spin;
   }
 `

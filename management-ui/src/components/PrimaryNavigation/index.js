@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next'
 import {
   IconArrowLeftRight,
   IconDirectory,
-  IconBarChart,
   IconTimeLine,
   IconUserCheck,
   IconSettings,
@@ -30,10 +29,7 @@ import {
 const PrimaryNavigation = () => {
   const { t } = useTranslation()
   return (
-    <Nav
-      aria-labelledby="nlx-home"
-      data-easter={process.env.NODE_ENV !== 'production'}
-    >
+    <Nav aria-labelledby="nlx-home">
       <section>
         <StyledHomeLink
           to="/"
@@ -60,15 +56,11 @@ const PrimaryNavigation = () => {
         </StyledLink>
 
         <StyledLink to="/finances" aria-label={t('Finances page')}>
-          {process.env.NODE_ENV !== 'production' ? (
-            <BarChartIcon>
-              <div />
-              <div />
-              <div />
-            </BarChartIcon>
-          ) : (
-            <StyledIcon as={IconBarChart} size="x-large" />
-          )}
+          <BarChartIcon>
+            <div />
+            <div />
+            <div />
+          </BarChartIcon>
           {t('Finances')}
         </StyledLink>
 

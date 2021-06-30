@@ -9,11 +9,9 @@ import DefaultAvatar from './default-avatar.svg'
 import DefaultAvatar2 from './default-avatar-p.svg'
 import { Figure } from './index.styles'
 
-const notProd = process.env.NODE_ENV !== 'production'
-
 const Avatar = ({ url, alt, menuIsOpen, ...props }) => {
   const { t } = useTranslation()
-  const TheAvatar = notProd && menuIsOpen ? DefaultAvatar2 : DefaultAvatar
+  const TheAvatar = menuIsOpen ? DefaultAvatar2 : DefaultAvatar
   return (
     <Figure {...props}>
       <img
