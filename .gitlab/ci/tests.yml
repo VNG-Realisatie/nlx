@@ -28,7 +28,7 @@ Go go.mod tidy test:
     - linux
 
 services:
-  - postgres:12.2-alpine
+  - postgres:12.7-alpine
 
 variables:
   POSTGRES_DB: nlx
