@@ -59,3 +59,61 @@ test('create an order', async () => {
 
   expect(await store.create()).toEqual('orderid')
 })
+
+test('fetch incoming orders', async () => {
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementListIncomingOrders = jest
+    .fn()
+    .mockRejectedValueOnce(new Error('arbitrary error'))
+    .mockResolvedValue({
+      orders: [
+        {
+          reference: 'reference',
+        },
+      ],
+    })
+
+  const store = new OrderStore({
+    rootStore: {},
+    managementApiClient,
+  })
+
+  await expect(store.fetchIncoming()).rejects.toThrowError('arbitrary error')
+  expect(store.isLoading).toBe(false)
+
+  store.fetchIncoming()
+  expect(store.isLoading).toBe(true)
+
+  await waitFor(() => expect(store.isLoading).toBe(false))
+  expect(store.incomingOrders).toEqual([{ reference: 'reference' }])
+})
+
+test('update incoming orders', async () => {
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementSynchronizeOrders = jest
+    .fn()
+    .mockRejectedValueOnce(new Error('arbitrary error'))
+    .mockResolvedValue({
+      orders: [
+        {
+          reference: 'reference',
+        },
+      ],
+    })
+
+  const store = new OrderStore({
+    rootStore: {},
+    managementApiClient,
+  })
+
+  await expect(store.updateIncoming()).rejects.toThrowError('arbitrary error')
+  expect(store.isLoading).toBe(false)
+
+  store.updateIncoming()
+  expect(store.isLoading).toBe(true)
+
+  await waitFor(() => expect(store.isLoading).toBe(false))
+  expect(store.incomingOrders).toEqual([{ reference: 'reference' }])
+})
