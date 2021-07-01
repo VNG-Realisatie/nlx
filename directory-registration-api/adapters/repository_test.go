@@ -102,7 +102,7 @@ func testRegisterInway(t *testing.T, repo directory.Repository) {
 
 			var lastErr error
 			for _, inwayToRegister := range inways {
-				err := repo.Register(inwayToRegister)
+				err := repo.RegisterInway(inwayToRegister)
 				lastErr = err
 			}
 

@@ -36,7 +36,7 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.r.
 					EXPECT().
-					Register(gomock.Any()).
+					RegisterInway(gomock.Any()).
 					Return(errors.New("arbitrary error"))
 			},
 			request: &registrationapi.RegisterInwayRequest{
@@ -50,7 +50,7 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.r.
 					EXPECT().
-					Register(gomock.Any()).
+					RegisterInway(gomock.Any()).
 					AnyTimes()
 			},
 			request: &registrationapi.RegisterInwayRequest{
@@ -69,7 +69,7 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.r.
 					EXPECT().
-					Register(gomock.Any()).
+					RegisterInway(gomock.Any()).
 					Return(nil).
 					AnyTimes()
 			},
@@ -85,7 +85,7 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.r.
 					EXPECT().
-					Register(gomock.Any()).
+					RegisterInway(gomock.Any()).
 					AnyTimes()
 			},
 			request: &registrationapi.RegisterInwayRequest{
@@ -99,7 +99,7 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.r.
 					EXPECT().
-					Register(gomock.Any()).
+					RegisterInway(gomock.Any()).
 					Return(nil).
 					AnyTimes()
 
