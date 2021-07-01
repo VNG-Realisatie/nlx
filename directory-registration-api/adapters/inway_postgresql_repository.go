@@ -13,9 +13,10 @@ import (
 	"github.com/huandu/xstrings"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // postgres driver
-
 	"go.nlx.io/nlx/directory-registration-api/domain/inway"
 )
+
+var ErrDuplicateAddress = errors.New("another inway is already registered with this address")
 
 type InwayPostgreSQLRepository struct {
 	db              *sqlx.DB
@@ -59,11 +60,12 @@ func (r *InwayPostgreSQLRepository) Register(model *inway.Inway) error {
 		Address:          model.Address(),
 		NlxVersion:       model.NlxVersion(),
 	})
-	if err != nil {
-		return err
+
+	if err != nil && err.Error() == "pq: duplicate key value violates unique constraint \"inways_uq_address\"" {
+		return ErrDuplicateAddress
 	}
 
-	return nil
+	return err
 }
 
 func (r *InwayPostgreSQLRepository) GetInway(name, organizationName string) (*inway.Inway, error) {

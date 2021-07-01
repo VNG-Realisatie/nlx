@@ -29,6 +29,7 @@ func testRegisterInway(t *testing.T, repo inway.Repository) {
 
 	tests := map[string]struct {
 		createRegistrations func(*testing.T) []*inway.Inway
+		expectedErr         error
 	}{
 		"new_inway": {
 			createRegistrations: func(t *testing.T) []*inway.Inway {
@@ -42,6 +43,7 @@ func testRegisterInway(t *testing.T, repo inway.Repository) {
 
 				return []*inway.Inway{iw}
 			},
+			expectedErr: nil,
 		},
 		"existing_inway_for_same_organization": {
 			createRegistrations: func(t *testing.T) []*inway.Inway {
@@ -63,6 +65,29 @@ func testRegisterInway(t *testing.T, repo inway.Repository) {
 
 				return []*inway.Inway{first, second}
 			},
+			expectedErr: nil,
+		},
+		"inways_with_different_name_but_same_address": {
+			createRegistrations: func(t *testing.T) []*inway.Inway {
+				first, err := inway.NewInway(
+					"my-first-inway",
+					"organization-c",
+					"localhost",
+					inway.NlxVersionUnknown,
+				)
+				require.NoError(t, err)
+
+				second, err := inway.NewInway(
+					"my-second-inway",
+					"organization-c",
+					"localhost",
+					inway.NlxVersionUnknown,
+				)
+				require.NoError(t, err)
+
+				return []*inway.Inway{first, second}
+			},
+			expectedErr: adapters.ErrDuplicateAddress,
 		},
 	}
 
@@ -74,13 +99,18 @@ func testRegisterInway(t *testing.T, repo inway.Repository) {
 
 			inways := tt.createRegistrations(t)
 
+			var lastErr error
 			for _, inwayToRegister := range inways {
 				err := repo.Register(inwayToRegister)
-				require.NoError(t, err)
+				lastErr = err
 			}
 
-			lastRegistration := inways[len(inways)-1]
-			assertInwayInRepository(t, repo, lastRegistration)
+			require.Equal(t, tt.expectedErr, lastErr)
+
+			if tt.expectedErr == nil {
+				lastRegistration := inways[len(inways)-1]
+				assertInwayInRepository(t, repo, lastRegistration)
+			}
 		})
 	}
 }
