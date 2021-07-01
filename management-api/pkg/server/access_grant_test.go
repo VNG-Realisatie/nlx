@@ -84,29 +84,6 @@ func TestListAccessGrantsForService(t *testing.T) {
 			status.Error(codes.NotFound, "service not found"),
 		},
 		{
-			"convert_access_grant_error",
-			&api.ListAccessGrantsForServiceRequest{
-				ServiceName: "test-service",
-			},
-			func(ctx context.Context, mocks serviceMocks) {
-				mocks.db.
-					EXPECT().
-					GetService(ctx, "test-service").
-					Return(&database.Service{
-						Name: "test-service",
-					}, nil)
-
-				mocks.db.
-					EXPECT().
-					ListAccessGrantsForService(ctx, "test-service").
-					Return([]*database.AccessGrant{
-						createDummyAccessGrant(time.Date(0, time.January, 0, 0, 0, 0, 0, time.UTC)),
-					}, nil)
-			},
-			nil,
-			status.Error(codes.Internal, "error converting access grant"),
-		},
-		{
 			"list_grants_database_error",
 			&api.ListAccessGrantsForServiceRequest{
 				ServiceName: "test-service",

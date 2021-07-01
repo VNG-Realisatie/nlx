@@ -6,7 +6,7 @@ package server
 import (
 	"context"
 	"errors"
-	"github.com/golang/protobuf/ptypes"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
@@ -36,19 +36,8 @@ func (s *ManagementService) GetAccessProof(ctx context.Context, req *external.Ge
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	createdAt, err := ptypes.TimestampProto(grant.CreatedAt)
-	if err != nil {
-		s.logger.Error("failed to parse created at time", zap.Error(err))
-
-		return nil, status.Error(codes.Internal, "data error")
-	}
-
-	revokedAt, err := ptypes.TimestampProto(grant.RevokedAt.Time)
-	if err != nil {
-		s.logger.Error("failed to parse revoked at time", zap.Error(err))
-
-		return nil, status.Error(codes.Internal, "data error")
-	}
+	createdAt := timestamppb.New(grant.CreatedAt)
+	revokedAt := timestamppb.New(grant.RevokedAt.Time)
 
 	return &api.AccessProof{
 		Id:               uint64(grant.ID),

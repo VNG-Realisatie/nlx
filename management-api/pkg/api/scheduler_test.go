@@ -5,14 +5,13 @@ package api
 
 import (
 	"context"
-	"github.com/golang/protobuf/ptypes"
-	"google.golang.org/protobuf/types/known/timestamppb"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
@@ -363,7 +362,7 @@ func TestSyncAccessProof(t *testing.T) {
 						ServiceName: "service",
 					}).
 					Return(&api.AccessProof{
-						CreatedAt: ptypes.TimestampNow(),
+						CreatedAt: timestamppb.Now(),
 						RevokedAt: nil,
 					}, nil)
 
@@ -430,8 +429,8 @@ func TestSyncAccessProof(t *testing.T) {
 				ServiceName:      "service",
 			},
 			setupMocks: func(mocks schedulerMocks) {
-				ts := ptypes.TimestampNow()
-				t, _ := ptypes.Timestamp(ts)
+				ts := timestamppb.Now()
+				t := timestamppb.New(ts.AsTime())
 
 				mocks.directory.
 					EXPECT().
@@ -460,7 +459,7 @@ func TestSyncAccessProof(t *testing.T) {
 							OrganizationName: "organization-b",
 							ServiceName:      "service",
 						},
-						CreatedAt: t,
+						CreatedAt: t.AsTime(),
 					}, nil)
 
 				mocks.db.
@@ -468,7 +467,7 @@ func TestSyncAccessProof(t *testing.T) {
 					RevokeAccessProof(
 						ctx,
 						uint(2),
-						t,
+						t.AsTime(),
 					).
 					Return(nil, errors.New("random error"))
 
@@ -485,8 +484,8 @@ func TestSyncAccessProof(t *testing.T) {
 				ServiceName:      "service",
 			},
 			setupMocks: func(mocks schedulerMocks) {
-				ts := ptypes.TimestampNow()
-				t, _ := ptypes.Timestamp(ts)
+				ts := timestamppb.Now()
+				t := timestamppb.New(ts.AsTime())
 
 				mocks.directory.
 					EXPECT().
@@ -515,7 +514,7 @@ func TestSyncAccessProof(t *testing.T) {
 							OrganizationName: "organization-b",
 							ServiceName:      "service",
 						},
-						CreatedAt: t,
+						CreatedAt: t.AsTime(),
 					}, nil)
 
 				mocks.db.
@@ -523,7 +522,7 @@ func TestSyncAccessProof(t *testing.T) {
 					RevokeAccessProof(
 						ctx,
 						uint(2),
-						t,
+						t.AsTime(),
 					).
 					Return(nil, nil)
 

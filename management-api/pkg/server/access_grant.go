@@ -8,11 +8,11 @@ import (
 	"errors"
 	"time"
 
-	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
@@ -41,18 +41,7 @@ func (s *ManagementService) ListAccessGrantsForService(ctx context.Context, req 
 	}
 
 	for i, accessGrant := range accessRequests {
-		responseAccessGrant, err := convertAccessGrant(accessGrant)
-		if err != nil {
-			s.logger.Error(
-				"converting access grant",
-				zap.Uint("id", accessGrant.ID),
-				zap.String("service", accessGrant.IncomingAccessRequest.Service.Name),
-				zap.Error(err),
-			)
-
-			return nil, status.Error(codes.Internal, "error converting access grant")
-		}
-
+		responseAccessGrant := convertAccessGrant(accessGrant)
 		response.AccessGrants[i] = responseAccessGrant
 	}
 
@@ -88,34 +77,18 @@ func (s *ManagementService) RevokeAccessGrant(ctx context.Context, req *api.Revo
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	apiAccessGrant, err := convertAccessGrant(accessGrant)
-	if err != nil {
-		s.logger.Error(
-			"converting access grant",
-			zap.Uint("id", accessGrant.ID),
-			zap.String("service", accessGrant.IncomingAccessRequest.Service.Name),
-			zap.Error(err),
-		)
-
-		return nil, status.Error(codes.Internal, "error converting access grant")
-	}
+	apiAccessGrant := convertAccessGrant(accessGrant)
 
 	return apiAccessGrant, nil
 }
 
-func convertAccessGrant(accessGrant *database.AccessGrant) (*api.AccessGrant, error) {
-	createdAt, err := ptypes.TimestampProto(accessGrant.CreatedAt)
-	if err != nil {
-		return nil, err
-	}
+func convertAccessGrant(accessGrant *database.AccessGrant) *api.AccessGrant {
+	createdAt := timestamppb.New(accessGrant.CreatedAt)
 
 	var revokedAt *timestamp.Timestamp
 
 	if accessGrant.RevokedAt.Valid {
-		revokedAt, err = ptypes.TimestampProto(accessGrant.RevokedAt.Time)
-		if err != nil {
-			return nil, err
-		}
+		revokedAt = timestamppb.New(accessGrant.RevokedAt.Time)
 	}
 
 	return &api.AccessGrant{
@@ -125,5 +98,5 @@ func convertAccessGrant(accessGrant *database.AccessGrant) (*api.AccessGrant, er
 		PublicKeyFingerprint: accessGrant.IncomingAccessRequest.PublicKeyFingerprint,
 		CreatedAt:            createdAt,
 		RevokedAt:            revokedAt,
-	}, nil
+	}
 }

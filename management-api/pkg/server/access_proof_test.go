@@ -66,39 +66,6 @@ func TestGetAccessProof(t *testing.T) {
 			},
 		},
 
-		"returns_error_when_grant_created_at_is_invalid": {
-			wantCode: codes.Internal,
-			setup: func(db *mock_database.MockConfigDatabase) context.Context {
-				ctx := setProxyMetadata(context.Background())
-
-				db.
-					EXPECT().
-					GetLatestAccessGrantForService(ctx, "organization-a", "service").
-					Return(&database.AccessGrant{
-						CreatedAt: time.Date(0, 0, 0, 0, 0, 0, 0, time.UTC),
-					}, nil)
-
-				return ctx
-			},
-		},
-
-		"returns_error_when_grant_revoked_at_is_invalid": {
-			wantCode: codes.Internal,
-			setup: func(db *mock_database.MockConfigDatabase) context.Context {
-				ctx := setProxyMetadata(context.Background())
-
-				db.
-					EXPECT().
-					GetLatestAccessGrantForService(ctx, "organization-a", "service").
-					Return(&database.AccessGrant{
-						CreatedAt: time.Now(),
-						RevokedAt: sql.NullTime{Time: time.Date(0, 0, 0, 0, 0, 0, 0, time.UTC)},
-					}, nil)
-
-				return ctx
-			},
-		},
-
 		"returns_access_proof_for_successful_request": {
 			wantCode: codes.OK,
 			want: &api.AccessProof{

@@ -44,17 +44,26 @@ type RoundRobinLoadBalancedHTTPService struct {
 }
 
 func newRoundTripHTTPTransport(logger *zap.Logger, tlsConfig *tls.Config) *http.Transport {
+	const (
+		Timeout               = 6 * time.Second
+		KeepAlive             = 6 * time.Second
+		MaxIdleConns          = 100
+		IdleConnTimeout       = 10 * time.Second
+		TLSHandshakeTimeout   = 10 * time.Second
+		ExpectContinueTimeout = 1 * time.Second
+	)
+
 	transport := &http.Transport{
 		Proxy: http.ProxyFromEnvironment,
 		DialContext: (&net.Dialer{
-			Timeout:   6 * time.Second,
-			KeepAlive: 6 * time.Second,
+			Timeout:   Timeout,
+			KeepAlive: KeepAlive,
 			DualStack: true,
 		}).DialContext,
-		MaxIdleConns:          100,
-		IdleConnTimeout:       10 * time.Second,
-		TLSHandshakeTimeout:   10 * time.Second,
-		ExpectContinueTimeout: 1 * time.Second,
+		MaxIdleConns:          MaxIdleConns,
+		IdleConnTimeout:       IdleConnTimeout,
+		TLSHandshakeTimeout:   TLSHandshakeTimeout,
+		ExpectContinueTimeout: ExpectContinueTimeout,
 		TLSClientConfig:       tlsConfig,
 	}
 	if err := http2.ConfigureTransport(transport); err != nil {

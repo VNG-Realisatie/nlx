@@ -6,7 +6,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/golang/protobuf/ptypes"
 	"github.com/spf13/cobra"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
@@ -50,16 +49,8 @@ type accessRequestDetails struct {
 }
 
 func printAccessRequest(details accessRequestDetails) {
-	createdAt, err := ptypes.Timestamp(details.CreatedAt)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	updatedAt, err := ptypes.Timestamp(details.UpdatedAt)
-	if err != nil {
-		log.Fatal(err)
-	}
-
+	createdAt := timestamppb.New(details.CreatedAt.AsTime())
+	updatedAt := timestamppb.New(details.UpdatedAt.AsTime())
 	state := "UNKNOWN"
 
 	if name, ok := api.AccessRequestState_name[int32(details.State)]; ok {
@@ -72,8 +63,8 @@ func printAccessRequest(details accessRequestDetails) {
 		state,
 		details.OrganizationName,
 		details.ServiceName,
-		createdAt.Format(time.RFC3339),
-		updatedAt.Format(time.RFC3339),
+		createdAt.AsTime().Format(time.RFC3339),
+		updatedAt.AsTime().Format(time.RFC3339),
 	)
 }
 
