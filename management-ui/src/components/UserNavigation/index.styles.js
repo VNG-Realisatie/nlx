@@ -80,9 +80,9 @@ export const StyledUserMenuItem = styled.li`
     color: ${(p) => p.theme.tokens.colorText};
     font-size: ${(p) => p.theme.tokens.fontSizeMedium};
     padding: ${(p) => `
-      ${p.theme.tokens.spacing04} 
-      ${p.theme.tokens.spacing06} 
-      ${p.theme.tokens.spacing04} 
+      ${p.theme.tokens.spacing04}
+      ${p.theme.tokens.spacing06}
+      ${p.theme.tokens.spacing04}
       ${p.theme.tokens.spacing05}
     `};
     border: 2px solid transparent;
@@ -98,11 +98,6 @@ export const StyledUserMenuItem = styled.li`
   button:active {
     background-color: ${(p) => p.theme.colorBackgroundDropdownActive};
   }
-
-  a:focus,
-  button:focus {
-    border-color: ${(p) => p.theme.colorBorderDropdownFocus};
-  }
 `
 
 export const StyledToggleButton = styled.button`
@@ -113,6 +108,7 @@ export const StyledToggleButton = styled.button`
   cursor: pointer;
   display: flex;
   align-items: center;
+  border: none;
 `
 
 export const StyledAvatar = styled(Avatar)`

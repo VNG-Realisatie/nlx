@@ -34,12 +34,8 @@ export const Td = styled.td`
 export const TrAsLink = styled(StyledTr)`
   cursor: pointer;
 
-  &:hover {
+  :hover {
     background-color: ${(p) => p.theme.colorBackgroundTableHover};
-  }
-
-  &:focus {
-    outline: 2px solid ${(p) => p.theme.colorBorderTableFocus};
   }
 `
 

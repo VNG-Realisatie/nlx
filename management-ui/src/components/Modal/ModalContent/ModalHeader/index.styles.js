@@ -45,10 +45,6 @@ export const CloseButton = styled.button`
   cursor: pointer;
   user-select: none;
   background-color: transparent;
-
-  &:focus {
-    outline: 2px solid ${(p) => p.theme.tokens.colorFocus};
-  }
 `
 
 export const StyledIconClose = styled(IconClose)`

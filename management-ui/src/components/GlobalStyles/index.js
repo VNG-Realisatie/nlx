@@ -9,19 +9,15 @@ export default createGlobalStyle`
   #root {
     height: 100vh;
   }
-  
+
   #root {
     display: flex;
     flex-direction: column;
   }
-  
-  button,
-  a {
-    border: 2px solid transparent;
-    
-    &:focus {
-      outline: none;
-      border-color: ${(p) => p.theme.colorBorderDropdownFocus};
+
+  *[tabindex], a, button {
+    :focus {
+      outline: 2px solid ${(p) => p.theme.colorFocus};
     }
-  }  
+  }
 `

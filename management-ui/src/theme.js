@@ -12,11 +12,13 @@ const theme = {
 
   tokens,
 
+  // Shared
+  colorFocus: '#1EA1D5',
+
   // Dropdown
   colorBackgroundDropdown: tokens.colorPaletteGray900,
   colorBackgroundDropdownHover: '#515151',
   colorBackgroundDropdownActive: tokens.colorPaletteGray600,
-  colorBorderDropdownFocus: '#1EA1D5',
 
   // Table
   colorBorderTable: tokens.colorPaletteGray800,

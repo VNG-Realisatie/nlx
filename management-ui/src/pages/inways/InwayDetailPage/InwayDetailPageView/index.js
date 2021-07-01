@@ -46,6 +46,10 @@ const InwayDetails = ({ inway }) => {
             </DetailHeading>
           }
           ariaLabel={t('Connected services')}
+          buttonLabels={{
+            open: t('Open'),
+            close: t('Close'),
+          }}
         >
           <StyledCollapsibleBody>
             {services.length ? (

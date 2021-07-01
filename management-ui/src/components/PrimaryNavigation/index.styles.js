@@ -23,6 +23,9 @@ export const Nav = styled.nav`
   list-style-type: none;
   color: ${(p) => p.theme.tokens.colorPaletteGray500};
   background: #313131;
+  position: sticky;
+  top: 0;
+  height: 100vh;
 `
 
 export const StyledHomeLink = styled(Link)`
