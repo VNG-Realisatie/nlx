@@ -29,5 +29,5 @@ Cypress.Commands.add('clickModalButton', (text) => {
 })
 
 Cypress.Commands.add('closeTopDrawer', () => {
-  cy.get('[data-drawer]').last().findByTitle('Sluiten').first().click()
+  cy.get('[data-drawer]').last().findByTitle('Sluit').first().click()
 })
