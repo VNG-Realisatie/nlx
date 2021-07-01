@@ -18,13 +18,13 @@ import (
 
 var ErrDuplicateAddress = errors.New("another inway is already registered with this address")
 
-type InwayPostgreSQLRepository struct {
+type PostgreSQLRepository struct {
 	db              *sqlx.DB
 	upsertInwayStmt *sqlx.NamedStmt
 	getInwayStmt    *sqlx.NamedStmt
 }
 
-func NewInwayPostgreSQLRepository(db *sqlx.DB) (*InwayPostgreSQLRepository, error) {
+func NewPostgreSQLRepository(db *sqlx.DB) (*PostgreSQLRepository, error) {
 	if db == nil {
 		panic("missing db")
 	}
@@ -39,14 +39,14 @@ func NewInwayPostgreSQLRepository(db *sqlx.DB) (*InwayPostgreSQLRepository, erro
 		return nil, fmt.Errorf("failed to prepare get inway statement: %s", err)
 	}
 
-	return &InwayPostgreSQLRepository{
+	return &PostgreSQLRepository{
 		db:              db,
 		upsertInwayStmt: registerStmt,
 		getInwayStmt:    getStmt,
 	}, nil
 }
 
-func (r *InwayPostgreSQLRepository) Register(model *inway.Inway) error {
+func (r *PostgreSQLRepository) Register(model *inway.Inway) error {
 	type registerParams struct {
 		OrganizationName string `db:"organization_name"`
 		Name             string `db:"inway_name"`
@@ -68,7 +68,7 @@ func (r *InwayPostgreSQLRepository) Register(model *inway.Inway) error {
 	return err
 }
 
-func (r *InwayPostgreSQLRepository) GetInway(name, organizationName string) (*inway.Inway, error) {
+func (r *PostgreSQLRepository) GetInway(name, organizationName string) (*inway.Inway, error) {
 	type dbInway struct {
 		Name             string `db:"name"`
 		Address          string `db:"address"`

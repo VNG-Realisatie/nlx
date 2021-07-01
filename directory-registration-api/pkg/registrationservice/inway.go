@@ -43,7 +43,7 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 		return nil, status.New(codes.InvalidArgument, msg).Err()
 	}
 
-	err = h.inwayRepository.Register(inwayModel)
+	err = h.repository.Register(inwayModel)
 	if err != nil {
 		h.logger.Error("register inway", zap.String("inway", inwayModel.ToString()), zap.Error(err))
 		return nil, status.New(codes.Internal, "failed to register inway").Err()

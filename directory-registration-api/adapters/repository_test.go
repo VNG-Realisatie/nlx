@@ -14,6 +14,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.nlx.io/nlx/directory-registration-api/adapters"
+	"go.nlx.io/nlx/directory-registration-api/domain/directory"
 	"go.nlx.io/nlx/directory-registration-api/domain/inway"
 )
 
@@ -24,7 +25,7 @@ func TestRepository(t *testing.T) {
 	})
 }
 
-func testRegisterInway(t *testing.T, repo inway.Repository) {
+func testRegisterInway(t *testing.T, repo directory.Repository) {
 	t.Helper()
 
 	tests := map[string]struct {
@@ -115,7 +116,7 @@ func testRegisterInway(t *testing.T, repo inway.Repository) {
 	}
 }
 
-func assertInwayInRepository(t *testing.T, repo inway.Repository, iw *inway.Inway) {
+func assertInwayInRepository(t *testing.T, repo directory.Repository, iw *inway.Inway) {
 	require.NotNil(t, iw)
 
 	inwayFromRepo, err := repo.GetInway(iw.Name(), iw.OrganizationName())
@@ -124,7 +125,7 @@ func assertInwayInRepository(t *testing.T, repo inway.Repository, iw *inway.Inwa
 	assert.Equal(t, iw, inwayFromRepo)
 }
 
-func newPostgreSQLRepository(t *testing.T) *adapters.InwayPostgreSQLRepository {
+func newPostgreSQLRepository(t *testing.T) *adapters.PostgreSQLRepository {
 	dsn := os.Getenv("POSTGRES_DSN")
 
 	db, err := adapters.NewPostgreSQLConnection(dsn)
@@ -133,7 +134,7 @@ func newPostgreSQLRepository(t *testing.T) *adapters.InwayPostgreSQLRepository {
 	err = adapters.PostgreSQLPerformMigrations(dsn)
 	require.NoError(t, err)
 
-	repo, err := adapters.NewInwayPostgreSQLRepository(db)
+	repo, err := adapters.NewPostgreSQLRepository(db)
 	require.NoError(t, err)
 
 	return repo
