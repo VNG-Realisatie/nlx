@@ -2,5 +2,5 @@ apiVersion: v2
 name: parkeerrechten-api
 description: A Helm chart for the parkeerrechten API
 type: application
-version: 0.105.0
-appVersion: 0.105.0
+version: 0.106.0
+appVersion: 0.106.0

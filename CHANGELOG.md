@@ -1,3 +1,40 @@
+# [0.106.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.105.0...v0.106.0) (2021-07-02)
+
+
+### Bug Fixes
+
+* **management:** rename invalid issued order message ([b43f514](https://gitlab.com/commonground/nlx/nlx/commit/b43f514f707793dce5fd78b18eefd9d7a04110f6))
+* **management:** translate missing translations English -> Dutch ([e19944c](https://gitlab.com/commonground/nlx/nlx/commit/e19944c3088ba36be9cac3c54ad34d90433cb19d)), closes [#1281](https://gitlab.com/commonground/nlx/nlx/issues/1281)
+* actually show goodbye present ([75ef4bb](https://gitlab.com/commonground/nlx/nlx/commit/75ef4bbdb30c541ad1e2af60aece3cf876f51aad))
+* add license statement to order-synchronize ([373cda9](https://gitlab.com/commonground/nlx/nlx/commit/373cda91e68e51d318bf99fc158deff81869f23e))
+* make sure upsert only updates or inserts and not accidentally both ([91e2529](https://gitlab.com/commonground/nlx/nlx/commit/91e252924d42a57a15661bf980931068db605665))
+* rename incoming order fields ([3c7806b](https://gitlab.com/commonground/nlx/nlx/commit/3c7806b2e46a1fce68361a29a6c0416df929957c))
+* rename Order to OutgoingOrder ([b7bed73](https://gitlab.com/commonground/nlx/nlx/commit/b7bed738d474c22c086dc82e64717c8ecfaafa48))
+* skip order in synchronization if it hasn't been changed ([db97ecc](https://gitlab.com/commonground/nlx/nlx/commit/db97ecc0fdf484a7276bc3d49c61bdc6ca87b14a))
+* title for button with only icon ([9e804b1](https://gitlab.com/commonground/nlx/nlx/commit/9e804b10b092d3b04c9553b6c175a83e7d409ecb)), closes [#1166](https://gitlab.com/commonground/nlx/nlx/issues/1166)
+* **docs:** links ([0775c76](https://gitlab.com/commonground/nlx/nlx/commit/0775c76c740189e3368197404aa73bcf770d114e))
+* **docs:** minor text changes ([7528d0e](https://gitlab.com/commonground/nlx/nlx/commit/7528d0ef8f57f46fc4771ff007feb36aeaa5e4a7))
+* **management:** service validation ([4f8fa2e](https://gitlab.com/commonground/nlx/nlx/commit/4f8fa2e5a38646c888949d8b85c5bfa301d185dc))
+
+
+### Features
+
+* **ca-certportal:** improve logging when failed to decode CSR ([abd231a](https://gitlab.com/commonground/nlx/nlx/commit/abd231ac65298d38c39e04ed594026601c677a26)), closes [#1249](https://gitlab.com/commonground/nlx/nlx/issues/1249)
+* **ca-certportal:** log signing errors ([4b24df1](https://gitlab.com/commonground/nlx/nlx/commit/4b24df1aef747cdaca43227428e391869f8f67ca)), closes [#1249](https://gitlab.com/commonground/nlx/nlx/issues/1249)
+* **ca-certportal:** return proper feedback message when failing to parse CSR ([f499c42](https://gitlab.com/commonground/nlx/nlx/commit/f499c4299aab7e5f2a95ee16094417ba95df0a87)), closes [#1249](https://gitlab.com/commonground/nlx/nlx/issues/1249)
+* **directory:** extend error log for registering inway ([0561134](https://gitlab.com/commonground/nlx/nlx/commit/056113444e6447e0c930f763107aeafe7a6a02dd)), closes [#1285](https://gitlab.com/commonground/nlx/nlx/issues/1285)
+* **directory:** extend error log for registering inway ([471a8ad](https://gitlab.com/commonground/nlx/nlx/commit/471a8ad63fc3e31a7dfa13b2f35923f968085944)), closes [#1285](https://gitlab.com/commonground/nlx/nlx/issues/1285)
+* **directory:** remove existing inways & availabilities ([f3a5994](https://gitlab.com/commonground/nlx/nlx/commit/f3a59944d5126632ef75d8d55cac2d1b78612609)), closes [#1285](https://gitlab.com/commonground/nlx/nlx/issues/1285)
+* **directory:** require name to be provided when registering an inway ([8bf740d](https://gitlab.com/commonground/nlx/nlx/commit/8bf740d4f42735c255247a6a1fbcac27ba1fb404)), closes [#1285](https://gitlab.com/commonground/nlx/nlx/issues/1285)
+* **directory:** show clear error when attempting to register inway with a duplicate address ([67c4a4d](https://gitlab.com/commonground/nlx/nlx/commit/67c4a4df0f546f26b0e3f389d28eb2fb2c36a93f)), closes [#1285](https://gitlab.com/commonground/nlx/nlx/issues/1285)
+* **directory:** update inway name when registering an inway ([8ac236a](https://gitlab.com/commonground/nlx/nlx/commit/8ac236ac3d02c906de1128dcff3d27c59c596d4d)), closes [#1285](https://gitlab.com/commonground/nlx/nlx/issues/1285)
+* **management:** received order overview ([b622dc5](https://gitlab.com/commonground/nlx/nlx/commit/b622dc55306fd1522db6408f17cc10a0ae4d7c3a))
+* nav humorability ([95a81de](https://gitlab.com/commonground/nlx/nlx/commit/95a81de59ed44b31515ffcedc04c8260eaecc730))
+* synchronize orders ([c60dee3](https://gitlab.com/commonground/nlx/nlx/commit/c60dee3a6f719968a82960433a04b38b73945ee7))
+* **inway:** provide inway name when announcing inway to the directory ([abf1404](https://gitlab.com/commonground/nlx/nlx/commit/abf140484af9db67a25453c48445a41c6d2dad0f)), closes [#1285](https://gitlab.com/commonground/nlx/nlx/issues/1285)
+* **inway:** require a valid name on startup ([0defe5d](https://gitlab.com/commonground/nlx/nlx/commit/0defe5d682784414f4531268a4c4cd941eeaab6a)), closes [#1285](https://gitlab.com/commonground/nlx/nlx/issues/1285)
+* **management:** add endpoint to list orders for my organization ([163394f](https://gitlab.com/commonground/nlx/nlx/commit/163394f003bd69b7b211a57a9c384846bf42e398))
+
 # [0.105.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.104.0...v0.105.0) (2021-06-16)
 
 
