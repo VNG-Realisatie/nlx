@@ -22,7 +22,6 @@ type PostgreSQLDirectoryDatabase struct {
 	logger *zap.Logger
 	db     *sqlx.DB
 
-	upsertServiceStmt               *sqlx.NamedStmt
 	selectInwayByAddressStatement   *sqlx.NamedStmt
 	setOrganizationInwayStatement   *sqlx.NamedStmt
 	clearOrganizationInwayStatement *sqlx.Stmt
@@ -47,11 +46,6 @@ func NewPostgreSQLDirectoryDatabase(dsn string, p *process.Process, logger *zap.
 
 	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
 
-	upsertServiceStmt, err := prepareUpsertServiceStmt(db)
-	if err != nil {
-		return nil, fmt.Errorf("failed to prepare upsert service statement: %s", err)
-	}
-
 	selectInwayByAddressStatement, err := prepareSelectInwayByAddressStatement(db)
 	if err != nil {
 		return nil, fmt.Errorf("failed to prepare select inway statement: %s", err)
@@ -70,7 +64,6 @@ func NewPostgreSQLDirectoryDatabase(dsn string, p *process.Process, logger *zap.
 	return &PostgreSQLDirectoryDatabase{
 		logger:                          logger,
 		db:                              db,
-		upsertServiceStmt:               upsertServiceStmt,
 		selectInwayByAddressStatement:   selectInwayByAddressStatement,
 		setOrganizationInwayStatement:   setOrganizationInwayStatement,
 		clearOrganizationInwayStatement: clearOrganizationInwayStatement,

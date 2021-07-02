@@ -9,7 +9,6 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	database "go.nlx.io/nlx/directory-registration-api/pkg/database"
 )
 
 // MockDirectoryDatabase is a mock of DirectoryDatabase interface.
@@ -47,20 +46,6 @@ func (m *MockDirectoryDatabase) ClearOrganizationInway(ctx context.Context, orga
 func (mr *MockDirectoryDatabaseMockRecorder) ClearOrganizationInway(ctx, organizationName interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClearOrganizationInway", reflect.TypeOf((*MockDirectoryDatabase)(nil).ClearOrganizationInway), ctx, organizationName)
-}
-
-// RegisterService mocks base method.
-func (m *MockDirectoryDatabase) RegisterService(params *database.RegisterServiceParams) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RegisterService", params)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// RegisterService indicates an expected call of RegisterService.
-func (mr *MockDirectoryDatabaseMockRecorder) RegisterService(params interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterService", reflect.TypeOf((*MockDirectoryDatabase)(nil).RegisterService), params)
 }
 
 // SetOrganizationInway mocks base method.
