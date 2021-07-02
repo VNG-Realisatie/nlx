@@ -14,7 +14,7 @@ import (
 
 	"go.nlx.io/nlx/common/nlxversion"
 	"go.nlx.io/nlx/directory-registration-api/domain/inway"
-	"go.nlx.io/nlx/directory-registration-api/pkg/database"
+	"go.nlx.io/nlx/directory-registration-api/domain/service"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
 
@@ -53,37 +53,35 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 		return nil, status.New(codes.InvalidArgument, fmt.Sprintf("inway registers more services than allowed (max. %d)", maxServiceCount)).Err()
 	}
 
-	for _, service := range req.Services {
-		service := service
+	for _, s := range req.Services {
+		s := s
 
 		serviceSpecificationType := getAPISpecificationTypeForService(
 			h.httpClient,
 			h.logger,
-			service.ApiSpecificationDocumentUrl,
+			s.ApiSpecificationDocumentUrl,
 			req.InwayAddress,
-			service.Name,
+			s.Name,
 		)
 
-		serviceParams := &database.RegisterServiceParams{
-			OrganizationName:     organizationName,
-			Name:                 service.Name,
-			Internal:             service.Internal,
-			DocumentationURL:     service.DocumentationUrl,
-			APISpecificationType: serviceSpecificationType,
-			PublicSupportContact: service.PublicSupportContact,
-			TechSupportContact:   service.TechSupportContact,
-			OneTimeCosts:         service.OneTimeCosts,
-			MonthlyCosts:         service.MonthlyCosts,
-			RequestCosts:         service.RequestCosts,
-		}
-
-		err = serviceParams.Validate()
+		serviceModel, err := service.NewService(
+			s.Name,
+			organizationName,
+			s.DocumentationUrl,
+			serviceSpecificationType,
+			s.PublicSupportContact,
+			s.TechSupportContact,
+			uint(s.OneTimeCosts),
+			uint(s.MonthlyCosts),
+			uint(s.RequestCosts),
+			s.Internal,
+		)
 		if err != nil {
-			msg := fmt.Sprintf("validation for service named '%s' failed: %s", serviceParams.Name, err.Error())
+			msg := fmt.Sprintf("validation for service named '%s' failed: %s", s.Name, err.Error())
 			return nil, status.New(codes.InvalidArgument, msg).Err()
 		}
 
-		err := h.db.RegisterService(serviceParams)
+		err = h.repository.RegisterService(serviceModel)
 		if err != nil {
 			logger.Error("failed to register service", zap.Error(err))
 			return nil, status.New(codes.Internal, "database error").Err()
@@ -93,7 +91,7 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 	return resp, nil
 }
 
-func getAPISpecificationTypeForService(httpClient *http.Client, logger *zap.Logger, specificationDocumentURL, inwayAddress, serviceName string) string {
+func getAPISpecificationTypeForService(httpClient *http.Client, logger *zap.Logger, specificationDocumentURL, inwayAddress, serviceName string) service.SpecificationType {
 	if len(specificationDocumentURL) < 1 {
 		return ""
 	}
@@ -109,5 +107,5 @@ func getAPISpecificationTypeForService(httpClient *http.Client, logger *zap.Logg
 		return ""
 	}
 
-	return specificationType
+	return service.SpecificationType(specificationType)
 }

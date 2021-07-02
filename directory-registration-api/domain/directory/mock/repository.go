@@ -9,6 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	inway "go.nlx.io/nlx/directory-registration-api/domain/inway"
+	service "go.nlx.io/nlx/directory-registration-api/domain/service"
 )
 
 // MockRepository is a mock of Repository interface.
@@ -49,16 +50,45 @@ func (mr *MockRepositoryMockRecorder) GetInway(name, organization interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInway", reflect.TypeOf((*MockRepository)(nil).GetInway), name, organization)
 }
 
-// RegisterInway mocks base method.
-func (m *MockRepository) RegisterInway(i *inway.Inway) error {
+// GetService mocks base method.
+func (m *MockRepository) GetService(id uint) (*service.Service, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RegisterInway", i)
+	ret := m.ctrl.Call(m, "GetService", id)
+	ret0, _ := ret[0].(*service.Service)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetService indicates an expected call of GetService.
+func (mr *MockRepositoryMockRecorder) GetService(id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetService", reflect.TypeOf((*MockRepository)(nil).GetService), id)
+}
+
+// RegisterInway mocks base method.
+func (m *MockRepository) RegisterInway(arg0 *inway.Inway) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RegisterInway", arg0)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // RegisterInway indicates an expected call of RegisterInway.
-func (mr *MockRepositoryMockRecorder) RegisterInway(i interface{}) *gomock.Call {
+func (mr *MockRepositoryMockRecorder) RegisterInway(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterInway", reflect.TypeOf((*MockRepository)(nil).RegisterInway), i)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterInway", reflect.TypeOf((*MockRepository)(nil).RegisterInway), arg0)
+}
+
+// RegisterService mocks base method.
+func (m *MockRepository) RegisterService(arg0 *service.Service) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RegisterService", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// RegisterService indicates an expected call of RegisterService.
+func (mr *MockRepositoryMockRecorder) RegisterService(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterService", reflect.TypeOf((*MockRepository)(nil).RegisterService), arg0)
 }

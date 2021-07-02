@@ -6,6 +6,7 @@
 package adapters_test
 
 import (
+	"go.nlx.io/nlx/directory-registration-api/domain/service"
 	"os"
 	"testing"
 
@@ -19,9 +20,16 @@ import (
 )
 
 func TestRepository(t *testing.T) {
+	repo := newPostgreSQLRepository(t)
+
 	t.Run("register_inway", func(t *testing.T) {
-		repo := newPostgreSQLRepository(t)
+		t.Parallel()
 		testRegisterInway(t, repo)
+	})
+
+	t.Run("register_service", func(t *testing.T) {
+		t.Parallel()
+		testRegisterService(t, repo)
 	})
 }
 
@@ -116,6 +124,70 @@ func testRegisterInway(t *testing.T, repo directory.Repository) {
 	}
 }
 
+func testRegisterService(t *testing.T, repo directory.Repository) {
+	t.Helper()
+
+	tests := map[string]struct {
+		createRegistrations func(*testing.T) []*service.Service
+		expectedErr         error
+	}{
+		"new_service": {
+			createRegistrations: func(t *testing.T) []*service.Service {
+				s, err := service.NewService(
+					"my-service",
+					"organization-d",
+					"documentation-url",
+					service.OpenAPI3,
+					"public-support-contact",
+					"tech-support-contact",
+					1,
+					2,
+					3,
+					true,
+				)
+				require.NoError(t, err)
+
+				return []*service.Service{s}
+			},
+			expectedErr: nil,
+		},
+	}
+
+	for name, tt := range tests {
+		tt := tt
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			models := tt.createRegistrations(t)
+
+			inwayModel, err := inway.NewInway(
+				"inway-for-service",
+				"organization-d",
+				"my-org.com",
+				inway.NlxVersionUnknown,
+			)
+			require.NoError(t, err)
+
+			err = repo.RegisterInway(inwayModel)
+			require.NoError(t, err)
+
+			var lastErr error
+			for _, model := range models {
+				err := repo.RegisterService(model)
+				lastErr = err
+			}
+
+			require.Equal(t, tt.expectedErr, lastErr)
+
+			if tt.expectedErr == nil {
+				lastRegistration := models[len(models)-1]
+				assertServiceInRepository(t, repo, lastRegistration)
+			}
+		})
+	}
+}
+
 func assertInwayInRepository(t *testing.T, repo directory.Repository, iw *inway.Inway) {
 	require.NotNil(t, iw)
 
@@ -123,6 +195,16 @@ func assertInwayInRepository(t *testing.T, repo directory.Repository, iw *inway.
 	require.NoError(t, err)
 
 	assert.Equal(t, iw, inwayFromRepo)
+}
+
+func assertServiceInRepository(t *testing.T, repo directory.Repository, s *service.Service) {
+	require.NotNil(t, s)
+
+	model, err := repo.GetService(s.ID())
+	require.NoError(t, err)
+
+	assert.EqualValues(t, s, model)
+
 }
 
 func newPostgreSQLRepository(t *testing.T) *adapters.PostgreSQLRepository {

@@ -13,15 +13,19 @@ import (
 	"github.com/huandu/xstrings"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // postgres driver
+
 	"go.nlx.io/nlx/directory-registration-api/domain/inway"
+	"go.nlx.io/nlx/directory-registration-api/domain/service"
 )
 
 var ErrDuplicateAddress = errors.New("another inway is already registered with this address")
 
 type PostgreSQLRepository struct {
-	db              *sqlx.DB
-	upsertInwayStmt *sqlx.NamedStmt
-	getInwayStmt    *sqlx.NamedStmt
+	db                  *sqlx.DB
+	registerInwayStmt   *sqlx.NamedStmt
+	getInwayStmt        *sqlx.NamedStmt
+	registerServiceStmt *sqlx.NamedStmt
+	getServiceStmt      *sqlx.NamedStmt
 }
 
 func NewPostgreSQLRepository(db *sqlx.DB) (*PostgreSQLRepository, error) {
@@ -29,20 +33,32 @@ func NewPostgreSQLRepository(db *sqlx.DB) (*PostgreSQLRepository, error) {
 		panic("missing db")
 	}
 
-	registerStmt, err := prepareRegisterStmt(db)
+	registerInwayStmt, err := prepareRegisterInwayStmt(db)
 	if err != nil {
-		return nil, fmt.Errorf("failed to prepare upsert inway statement: %s", err)
+		return nil, fmt.Errorf("failed to prepare register inway statement: %s", err)
 	}
 
-	getStmt, err := prepareGetStmt(db)
+	getInwayStmt, err := prepareGetInwayStmt(db)
 	if err != nil {
 		return nil, fmt.Errorf("failed to prepare get inway statement: %s", err)
 	}
 
+	registerServiceStmt, err := prepareRegisterServiceStmt(db)
+	if err != nil {
+		return nil, fmt.Errorf("failed to prepare register service statement: %s", err)
+	}
+
+	getServiceStmt, err := prepareGetServiceStmt(db)
+	if err != nil {
+		return nil, fmt.Errorf("failed to prepare get service statement: %s", err)
+	}
+
 	return &PostgreSQLRepository{
-		db:              db,
-		upsertInwayStmt: registerStmt,
-		getInwayStmt:    getStmt,
+		db:                  db,
+		registerInwayStmt:   registerInwayStmt,
+		getInwayStmt:        getInwayStmt,
+		registerServiceStmt: registerServiceStmt,
+		getServiceStmt:      getServiceStmt,
 	}, nil
 }
 
@@ -54,7 +70,7 @@ func (r *PostgreSQLRepository) RegisterInway(model *inway.Inway) error {
 		NlxVersion       string `db:"inway_version"`
 	}
 
-	_, err := r.upsertInwayStmt.Exec(&registerParams{
+	_, err := r.registerInwayStmt.Exec(&registerParams{
 		OrganizationName: model.OrganizationName(),
 		Name:             model.Name(),
 		Address:          model.Address(),
@@ -69,15 +85,15 @@ func (r *PostgreSQLRepository) RegisterInway(model *inway.Inway) error {
 }
 
 func (r *PostgreSQLRepository) GetInway(name, organizationName string) (*inway.Inway, error) {
+	type params struct {
+		Name             string `db:"name"`
+		OrganizationName string `db:"organization_name"`
+	}
+
 	type dbInway struct {
 		Name             string `db:"name"`
 		Address          string `db:"address"`
 		NlxVersion       string `db:"nlx_version"`
-		OrganizationName string `db:"organization_name"`
-	}
-
-	type params struct {
-		Name             string `db:"name"`
 		OrganizationName string `db:"organization_name"`
 	}
 
@@ -99,7 +115,98 @@ func (r *PostgreSQLRepository) GetInway(name, organizationName string) (*inway.I
 	return model, nil
 }
 
-func prepareRegisterStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
+func (r *PostgreSQLRepository) RegisterService(model *service.Service) error {
+	type registerParams struct {
+		Name                 string `db:"name"`
+		OrganizationName     string `db:"organization_name"`
+		DocumentationURL     string `db:"documentation_url"`
+		APISpecificationType string `db:"api_specification_type"`
+		PublicSupportContact string `db:"public_support_contact"`
+		TechSupportContact   string `db:"tech_support_contact"`
+		OneTimeCosts         int32  `db:"one_time_costs"`
+		MonthlyCosts         int32  `db:"monthly_costs"`
+		RequestCosts         int32  `db:"request_costs"`
+		Internal             bool   `db:"internal"`
+	}
+
+	type dbResult struct {
+		ID uint `db:"id"`
+	}
+
+	result := dbResult{}
+
+	err := r.registerServiceStmt.Get(
+		&result,
+		&registerParams{
+			Name:                 model.Name(),
+			OrganizationName:     model.OrganizationName(),
+			Internal:             model.Internal(),
+			DocumentationURL:     model.DocumentationURL(),
+			APISpecificationType: string(model.APISpecificationType()),
+			PublicSupportContact: model.PublicSupportContact(),
+			TechSupportContact:   model.TechSupportContact(),
+			OneTimeCosts:         int32(model.OneTimeCosts()),
+			MonthlyCosts:         int32(model.MonthlyCosts()),
+			RequestCosts:         int32(model.RequestCosts()),
+		})
+
+	if err != nil {
+		return fmt.Errorf("failed to register service: %v", err)
+	}
+
+	model.SetID(result.ID)
+
+	return err
+}
+
+func (r *PostgreSQLRepository) GetService(id uint) (*service.Service, error) {
+	type params struct {
+		ID uint `db:"id"`
+	}
+
+	type dbService struct {
+		ID                   uint   `db:"id"`
+		Name                 string `db:"name"`
+		OrganizationName     string `db:"organization_name"`
+		DocumentationURL     string `db:"documentation_url"`
+		APISpecificationType string `db:"api_specification_type"`
+		PublicSupportContact string `db:"public_support_contact"`
+		TechSupportContact   string `db:"tech_support_contact"`
+		OneTimeCosts         int32  `db:"one_time_costs"`
+		MonthlyCosts         int32  `db:"monthly_costs"`
+		RequestCosts         int32  `db:"request_costs"`
+		Internal             bool   `db:"internal"`
+	}
+
+	result := dbService{}
+
+	err := r.getServiceStmt.Get(&result, &params{ID: id})
+	if err != nil {
+		return nil, fmt.Errorf("failed to get service with id %v: %s", id, err)
+	}
+
+	model, err := service.NewService(
+		result.Name,
+		result.OrganizationName,
+		result.DocumentationURL,
+		service.SpecificationType(result.APISpecificationType),
+		result.PublicSupportContact,
+		result.TechSupportContact,
+		uint(result.OneTimeCosts),
+		uint(result.MonthlyCosts),
+		uint(result.RequestCosts),
+		result.Internal,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("invalid inway model in database: %v", err)
+	}
+
+	model.SetID(result.ID)
+
+	return model, nil
+}
+
+func prepareRegisterInwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 	query := `
 		with organization as (
 			insert into directory.organizations 
@@ -124,7 +231,7 @@ func prepareRegisterStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 	return db.PrepareNamed(query)
 }
 
-func prepareGetStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
+func prepareGetInwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 	query := `
 		select directory.inways.name as name, address, version as nlx_version, directory.organizations.name as organization_name 
 		from directory.inways
@@ -133,6 +240,58 @@ func prepareGetStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 		where 
 		      directory.organizations.name = :organization_name
 		  and directory.inways.name = :name;
+	`
+
+	return db.PrepareNamed(query)
+}
+
+func prepareRegisterServiceStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
+	query := `
+		with organization as (
+		    select id from directory.organizations where directory.organizations.name = :organization_name
+		),
+	    inway as (
+		    select directory.inways.id from directory.inways, organization where organization_id = organization.id
+		),
+		service as (
+			insert into directory.services 
+			    		(organization_id, name, internal, documentation_url, api_specification_type, public_support_contact, tech_support_contact, request_costs, monthly_costs, one_time_costs)
+				 select organization.id, :name, :internal, nullif(:documentation_url, ''), nullif(:api_specification_type, ''), nullif(:public_support_contact, ''), nullif(:tech_support_contact, ''), :request_costs, :monthly_costs, :one_time_costs
+				   from organization
+			on conflict on constraint services_uq_name 
+		  do update set internal = excluded.internal,
+		  				documentation_url = excluded.documentation_url,
+	 					api_specification_type = excluded.api_specification_type,
+	 					public_support_contact = excluded.public_support_contact,
+	   					tech_support_contact = excluded.tech_support_contact,
+						request_costs = excluded.request_costs,
+	          			monthly_costs = excluded.monthly_costs,
+	         			one_time_costs = excluded.one_time_costs
+		      returning id
+		),
+		availabilities as (
+					insert into directory.availabilities 
+								(inway_id, service_id, last_announced)
+						 select inway.id, service.id, now()
+						   from inway, service
+					on conflict on constraint availabilities_uq_inway_service
+				  do update set last_announced = now(),
+								active = true		    
+		) select id from service;
+		
+	`
+
+	return db.PrepareNamed(query)
+}
+
+func prepareGetServiceStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
+	query := `
+		select directory.services.id as id, directory.services.name as name, documentation_url, api_specification_type, internal, tech_support_contact, public_support_contact, directory.organizations.name as organization_name, one_time_costs, monthly_costs, request_costs
+		from directory.services
+		join directory.organizations 
+		    on directory.services.organization_id = directory.organizations.id
+		where 
+		      directory.services.id = :id;
 	`
 
 	return db.PrepareNamed(query)

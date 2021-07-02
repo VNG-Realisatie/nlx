@@ -16,7 +16,6 @@ import (
 	"google.golang.org/grpc/status"
 
 	directory_mock "go.nlx.io/nlx/directory-registration-api/domain/directory/mock"
-	"go.nlx.io/nlx/directory-registration-api/pkg/database"
 	"go.nlx.io/nlx/directory-registration-api/pkg/database/mock"
 	"go.nlx.io/nlx/directory-registration-api/pkg/registrationservice"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
@@ -63,7 +62,7 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 				},
 			},
 			wantResponse: nil,
-			wantErr:      status.New(codes.InvalidArgument, "validation for service named '../../test' failed: Name: must be in a valid format.").Err(),
+			wantErr:      status.New(codes.InvalidArgument, "validation for service named '../../test' failed: name: must be in a valid format").Err(),
 		},
 		"when_registering_an_inway_with_amount_of_services_which_exceed_the_maximum": {
 			setup: func(mocks serviceMocks) {
@@ -103,16 +102,9 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 					Return(nil).
 					AnyTimes()
 
-				mocks.db.
+				mocks.r.
 					EXPECT().
-					RegisterService(gomock.Eq(&database.RegisterServiceParams{
-						OrganizationName: testOrganizationName,
-						Name:             testServiceName,
-						Internal:         false,
-						MonthlyCosts:     500,
-						RequestCosts:     100,
-						OneTimeCosts:     50,
-					})).Return(nil)
+					RegisterService(gomock.Any()).Return(nil)
 			},
 			request: &registrationapi.RegisterInwayRequest{
 				InwayName:    "my-inway",
