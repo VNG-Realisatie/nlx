@@ -2,6 +2,7 @@ stages:
   - Tests
   - Build
   - Deploy
+  - Redeploy
   - Security
   - E2E tests
   - Tools
@@ -16,10 +17,11 @@ include:
 
   - '/.gitlab/ci/deploy/acceptance.yml'
   - '/.gitlab/ci/deploy/demo.yml'
-  - '/.gitlab/ci/deploy/demo-rebuild.yml'
   - '/.gitlab/ci/deploy/pre-production.yml'
   - '/.gitlab/ci/deploy/production.yml'
   - '/.gitlab/ci/deploy/review.yml'
+
+  - '/.gitlab/ci/redeploy/demo.yml'
 
   - '/.gitlab/ci/e2e-tests/directory_ui.yml'
   - '/.gitlab/ci/e2e-tests/nlx_management.yml'
