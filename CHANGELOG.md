@@ -1,3 +1,18 @@
+# [0.107.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.106.0...v0.107.0) (2021-07-05)
+
+
+### Bug Fixes
+
+* revert easter eggs ([ee8cc68](https://gitlab.com/commonground/nlx/nlx/commit/ee8cc68d6f929c637a5f976ad6352b0522023217))
+
+
+### Features
+
+* **directory:** enable inways to register without a name ([f6fa28a](https://gitlab.com/commonground/nlx/nlx/commit/f6fa28a3fbad50fb17691625a6edd52e78e27c56))
+* move rebuild script from acc to demo ([8e76fa6](https://gitlab.com/commonground/nlx/nlx/commit/8e76fa6c3dfe9dc35187fc9383112608cfffcfb9)), closes [#1270](https://gitlab.com/commonground/nlx/nlx/issues/1270)
+* move stijns api & viewer from acc to demo ([782a3b9](https://gitlab.com/commonground/nlx/nlx/commit/782a3b9ef99a617fa1f1c8047b00b070a72adc36)), closes [#1270](https://gitlab.com/commonground/nlx/nlx/issues/1270)
+* move vergunningsoftware from acc to demo ([48737db](https://gitlab.com/commonground/nlx/nlx/commit/48737dbc831c37e900366777989e06763070588f)), closes [#1270](https://gitlab.com/commonground/nlx/nlx/issues/1270)
+
 # [0.106.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.105.0...v0.106.0) (2021-07-02)
 
 
