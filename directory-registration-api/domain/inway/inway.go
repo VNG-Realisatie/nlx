@@ -22,7 +22,7 @@ type Inway struct {
 const NlxVersionUnknown = "unknown"
 
 func NewInway(name, organizationName, address, nlxVersion string) (*Inway, error) {
-	err := validation.Validate(name, validation.Required, validation.Match(regexp.MustCompile(`^[a-zA-Z0-9-]{1,100}$`)))
+	err := validation.Validate(name, validation.When(len(name) > 0, validation.Match(regexp.MustCompile(`^[a-zA-Z0-9-]{1,100}$`))))
 	if err != nil {
 		return nil, fmt.Errorf("name: %s", err)
 	}
