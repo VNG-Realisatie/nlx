@@ -3,7 +3,7 @@
 
 package delegation
 
-import "github.com/form3tech-oss/jwt-go"
+import "github.com/golang-jwt/jwt"
 
 type Service struct {
 	Service      string `json:"service"`

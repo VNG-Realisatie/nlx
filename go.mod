@@ -13,13 +13,12 @@ require (
 	github.com/blang/semver v3.5.1+incompatible // indirect
 	github.com/cloudflare/cfssl v1.6.0
 	github.com/coreos/go-oidc v2.2.1+incompatible
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fgrosse/zaptest v1.1.0
-	github.com/form3tech-oss/jwt-go v3.2.3+incompatible
 	github.com/go-chi/chi v4.1.2+incompatible
 	github.com/go-chi/render v1.0.1
 	github.com/go-errors/errors v1.4.0
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
+	github.com/golang-jwt/jwt v3.2.1+incompatible
 	github.com/golang-migrate/migrate/v4 v4.14.1
 	github.com/golang/mock v1.6.0
 	github.com/golang/protobuf v1.5.2

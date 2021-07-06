@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/form3tech-oss/jwt-go"
+	"github.com/golang-jwt/jwt"
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/delegation"
