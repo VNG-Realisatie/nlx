@@ -104,6 +104,7 @@
   "IP-address": "IP-address",
   "Is the service not listed? Then please first request access to this service in the directory": "Is the service not listed? Then please first request access to this service in the directory",
   "Issued": "Issued",
+  "Issued by": "Issued by",
   "Issued to": "Issued to",
   "List of all available services": "List of all available services",
   "Loading…": "Loading…",
@@ -153,7 +154,6 @@
   "Public support email": "Public support email",
   "Publish to central directory": "Publish to central directory",
   "Published in central directory": "Published in central directory",
-  "received": "received",
   "Received": "Received",
   "Reference": "Reference",
   "Reject": "Reject",
@@ -231,5 +231,6 @@
   "You have no access": "You have no access",
   "You haven't received any orders yet": "You haven't received any orders yet",
   "Your access was revoked": "Your access was revoked",
-  "yyyy-mm-dd": "yyyy-mm-dd"
+  "yyyy-mm-dd": "yyyy-mm-dd",
+  "received": "received"
 }

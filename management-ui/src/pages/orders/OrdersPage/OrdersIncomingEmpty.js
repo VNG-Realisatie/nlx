@@ -5,17 +5,17 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Centered } from './index.styles'
 
-const OrdersOutgoingEmptyView = (props) => {
+const OrdersIncomingEmpty = (props) => {
   const { t } = useTranslation()
   return (
     <Centered>
       <h3>
-        <small>{t("You don't have any issued orders yet")}</small>
+        <small>{t("You haven't received any orders yet")}</small>
       </h3>
       <p>
         <small>
           {t(
-            'Use this to allow other organizations to request certain services on your behalve',
+            'Use this to review and accept requests made on behalve of your services',
           )}
         </small>
       </p>
@@ -23,4 +23,4 @@ const OrdersOutgoingEmptyView = (props) => {
   )
 }
 
-export default OrdersOutgoingEmptyView
+export default OrdersIncomingEmpty

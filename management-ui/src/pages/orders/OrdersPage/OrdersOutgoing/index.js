@@ -9,7 +9,7 @@ import Table from '../../../../components/Table'
 import OrderRow from './OrderRow'
 import { Wrapper, CellServices, Centered } from './index.styles'
 
-const OrdersViewPage = ({ orders }) => {
+const OrdersOutgoing = ({ orders }) => {
   const { t } = useTranslation()
 
   return orders.length ? (
@@ -41,12 +41,12 @@ const OrdersViewPage = ({ orders }) => {
   )
 }
 
-OrdersViewPage.propTypes = {
+OrdersOutgoing.propTypes = {
   orders: array,
 }
 
-OrdersViewPage.defaultProps = {
+OrdersOutgoing.defaultProps = {
   orders: [],
 }
 
-export default observer(OrdersViewPage)
+export default observer(OrdersOutgoing)

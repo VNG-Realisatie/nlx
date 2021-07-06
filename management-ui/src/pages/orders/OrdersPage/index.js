@@ -15,9 +15,10 @@ import { useOrderStore } from '../../../hooks/use-stores'
 import PageTemplate from '../../../components/PageTemplate'
 import LoadingMessage from '../../../components/LoadingMessage'
 import { IconPlus, IconRefresh } from '../../../icons'
-import OrdersViewPage from './OrdersViewPage'
-import OrdersIncomingEmptyView from './OrdersIncomingEmptyView'
-import OrdersOutgoingEmptyView from './OrdersOutgoingEmptyView'
+import OrdersOutgoing from './OrdersOutgoing'
+import OrdersIncoming from './OrdersIncoming'
+import OrdersIncomingEmpty from './OrdersIncomingEmpty'
+import OrdersOutgoingEmpty from './OrdersOutgoingEmpty'
 import { ActionsBar, StyledButton } from './index.styles'
 
 const viewTypes = {
@@ -69,7 +70,7 @@ const OrdersPage = () => {
     await orderStore.updateIncoming()
 
     const newIncomingOrders =
-      totalIncomingOrders - orderStore.incomingOrders?.length
+      orderStore.incomingOrders?.length - totalIncomingOrders
 
     setTimeout(() => {
       setRefreshLoading(false)
@@ -108,7 +109,7 @@ const OrdersPage = () => {
           variant="secondary"
           onClick={() => setOrderView(viewTypes.incomingOrders)}
         >
-          {t('received')} ({orderStore.incomingOrders.length})
+          {t('Received')} ({orderStore.incomingOrders.length})
         </StyledButton>
 
         <Button
@@ -137,11 +138,15 @@ const OrdersPage = () => {
           {error}
         </Alert>
       ) : orders.length ? (
-        <OrdersViewPage orders={orders} />
+        orderView === viewTypes.outgoingOrders ? (
+          <OrdersOutgoing orders={orders} />
+        ) : (
+          <OrdersIncoming orders={orders} />
+        )
       ) : orderView === viewTypes.outgoingOrders ? (
-        <OrdersOutgoingEmptyView />
+        <OrdersOutgoingEmpty />
       ) : (
-        <OrdersIncomingEmptyView />
+        <OrdersIncomingEmpty />
       )}
     </PageTemplate>
   )

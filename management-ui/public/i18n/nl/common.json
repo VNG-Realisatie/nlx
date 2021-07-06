@@ -104,6 +104,7 @@
   "IP-address": "IP-adres",
   "Is the service not listed? Then please first request access to this service in the directory": "Staat de service er niet bij? Vraag dan eerst toegang aan tot deze service in de directory",
   "Issued": "Uitgegeven",
+  "Issued by": "Uitgegeven door",
   "Issued to": "Uitgegeven aan",
   "List of all available services": "Lijst met alle beschikbare services",
   "Loading…": "Laden…",
@@ -153,7 +154,6 @@
   "Public support email": "Publiek support e-mailadres",
   "Publish to central directory": "Publiceren in de centrale directory",
   "Published in central directory": "Gepubliceerd in centrale directory",
-  "received": "ontvangen",
   "Received": "Ontvangen",
   "Reference": "Referentie",
   "Reject": "Afwijzen",
@@ -231,5 +231,6 @@
   "You have no access": "Je hebt geen toegang",
   "You haven't received any orders yet": "Je hebt nog geen ontvangen opdrachten",
   "Your access was revoked": "Je toegang is ingetrokken",
-  "yyyy-mm-dd": "jjjj-mm-dd"
+  "yyyy-mm-dd": "jjjj-mm-dd",
+  "received": "ontvangen"
 }
