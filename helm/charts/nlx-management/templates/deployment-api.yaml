@@ -171,6 +171,8 @@ spec:
                 secretKeyRef:
                   name: {{ template "nlx-management.postgresql.secret" . }}
                   key: {{ .Values.postgresql.existingSecret.passwordKey }}
+            - name: PGSSLMODE
+              value: {{ .Values.postgresql.sslMode }}
             - name: PGCONNECT_TIMEOUT
               value: {{ .Values.postgresql.connectTimeout | quote }}
             - name: POSTGRES_DSN
