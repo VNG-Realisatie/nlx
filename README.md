@@ -206,7 +206,7 @@ You can do so as follows for these directories:
 ```shell
 (cd directory-inspection-api && make -B)
 (cd directory-registration-api && make -B)
-(cd management-api && make -B)
+earthly +mocks
 ```
 
 ## Further documentation

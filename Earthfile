@@ -8,6 +8,9 @@ proto:
     BUILD +management-api
     BUILD +inway-test
 
+mocks:
+    BUILD +management-api-mocks
+
 deps:
     ENV PROTOBUF_VERSION=3.17.2
 
@@ -30,6 +33,17 @@ deps:
         go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@v2.3.0 && \
         go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.25.0 && \
         go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.1.0
+
+    SAVE IMAGE --cache-hint
+
+deps-mocks:
+    COPY go.mod go.sum /src/
+
+    RUN apk add --no-cache curl git unzip
+
+    RUN go mod download
+
+    RUN go install github.com/golang/mock/mockgen@v1.6.0
 
     SAVE IMAGE --cache-hint
 
@@ -129,3 +143,35 @@ inway-test:
             ./test.proto
 
     SAVE ARTIFACT /dist/* AS LOCAL ./inway/grpcproxy/test/
+
+management-api-mocks:
+    FROM +deps-mocks
+
+    COPY ./management-api /src/management-api
+    COPY ./common /src/common
+    COPY ./directory-inspection-api /src/directory-inspection-api
+    COPY ./directory-registration-api /src/directory-registration-api
+
+    RUN mkdir -p /dist || true
+    WORKDIR /src/management-api
+
+    RUN mockgen -source api/management_grpc.pb.go -destination /dist/management-api/api/mock/mock_management.go
+    SAVE ARTIFACT /dist/management-api/api/mock/*.go AS LOCAL ./management-api/api/mock/
+
+    RUN mockgen -source api/external/external_grpc.pb.go -destination /dist/management-api/api/external/mock/mock_external.go
+    SAVE ARTIFACT /dist/management-api/api/external/mock/*.go AS LOCAL ./management-api/api/external/mock/
+
+    RUN mockgen -source pkg/database/database.go -destination /dist/management-api/pkg/database/mock/mock_database.go
+    SAVE ARTIFACT /dist/management-api/pkg/database/mock/*.go AS LOCAL ./management-api/pkg/database/mock/
+
+    RUN mockgen -destination /dist/management-api/pkg/directory/mock/mock_client.go go.nlx.io/nlx/management-api/pkg/directory Client
+    SAVE ARTIFACT /dist/management-api/pkg/directory/mock/*.go AS LOCAL ./management-api/pkg/directory/mock/
+
+    RUN mockgen -destination /dist/management-api/pkg/management/mock/mock_client.go go.nlx.io/nlx/management-api/pkg/management Client
+    SAVE ARTIFACT /dist/management-api/pkg/management/mock/*.go AS LOCAL ./management-api/pkg/management/mock/
+
+    RUN mockgen -source pkg/auditlog/logger.go -destination /dist/management-api/pkg/auditlog/mock/mock_auditlog.go
+    SAVE ARTIFACT /dist/management-api/pkg/auditlog/mock/*.go AS LOCAL ./management-api/pkg/auditlog/mock/
+
+    RUN mockgen -source pkg/txlogdb/database.go -destination /dist/management-api/pkg/txlogdb/mock/mock_database.go
+    SAVE ARTIFACT /dist/management-api/pkg/txlogdb/mock/*.go AS LOCAL ./management-api/pkg/txlogdb/mock/
