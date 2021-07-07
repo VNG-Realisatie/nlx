@@ -2,16 +2,20 @@ FROM golang:1.16.4-alpine
 
 WORKDIR /src
 
+all:
+    BUILD +proto
+    BUILD +mocks
+
 proto:
-    BUILD +directory-inspection-api
-    BUILD +directory-registration-api
-    BUILD +management-api
-    BUILD +inway-test
+    BUILD +proto-directory-inspection-api
+    BUILD +proto-directory-registration-api
+    BUILD +proto-management-api
+    BUILD +proto-inway-test
 
 mocks:
-    BUILD +management-api-mocks
+    BUILD +mocks-management-api
 
-deps:
+proto-deps:
     ENV PROTOBUF_VERSION=3.17.2
 
     COPY go.mod go.sum /src/
@@ -36,7 +40,7 @@ deps:
 
     SAVE IMAGE --cache-hint
 
-deps-mocks:
+mocks-deps:
     COPY go.mod go.sum /src/
 
     RUN apk add --no-cache curl git unzip
@@ -47,8 +51,8 @@ deps-mocks:
 
     SAVE IMAGE --cache-hint
 
-directory-inspection-api:
-    FROM +deps
+proto-directory-inspection-api:
+    FROM +proto-deps
 
     COPY ./directory-inspection-api/inspectionapi/*.proto /src
 
@@ -72,8 +76,8 @@ directory-inspection-api:
 
     SAVE ARTIFACT /dist/* AS LOCAL ./directory-inspection-api/inspectionapi/
 
-directory-registration-api:
-    FROM +deps
+proto-directory-registration-api:
+    FROM +proto-deps
 
     COPY ./directory-registration-api/registrationapi/*.proto /src
 
@@ -97,8 +101,8 @@ directory-registration-api:
 
     SAVE ARTIFACT /dist/* AS LOCAL ./directory-registration-api/registrationapi/
 
-management-api:
-    FROM +deps
+proto-management-api:
+    FROM +proto-deps
 
     COPY ./management-api/api/*.proto /src/
     COPY ./management-api/api/external/*.proto /src/external/
@@ -128,8 +132,8 @@ management-api:
     SAVE ARTIFACT /dist/*.* AS LOCAL ./management-api/api/
     SAVE ARTIFACT /dist/external/*.* AS LOCAL ./management-api/api/external/
 
-inway-test:
-    FROM +deps
+proto-inway-test:
+    FROM +proto-deps
 
     COPY ./inway/grpcproxy/test/*.proto /src
 
@@ -144,8 +148,8 @@ inway-test:
 
     SAVE ARTIFACT /dist/* AS LOCAL ./inway/grpcproxy/test/
 
-management-api-mocks:
-    FROM +deps-mocks
+mocks-management-api:
+    FROM +mocks-deps
 
     COPY ./management-api /src/management-api
     COPY ./common /src/common
