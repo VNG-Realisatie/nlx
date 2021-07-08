@@ -5,6 +5,7 @@ WORKDIR /src
 all:
     BUILD +proto
     BUILD +mocks
+    BUILD +migrations
 
 proto:
     BUILD +proto-directory-inspection-api
@@ -14,6 +15,12 @@ proto:
 
 mocks:
     BUILD +mocks-management-api
+    BUILD +mocks-common
+    BUILD +mocks-directory-inspection-api
+    BUILD +mocks-directory-registration-api
+
+migrations:
+    BUILD +migrations-management-api
 
 proto-deps:
     ENV PROTOBUF_VERSION=3.17.2
@@ -48,6 +55,15 @@ mocks-deps:
     RUN go mod download
 
     RUN go install github.com/golang/mock/mockgen@v1.6.0
+
+    SAVE IMAGE --cache-hint
+
+migrations-deps:
+    COPY go.mod go.sum /src/
+
+    RUN apk add --no-cache curl git unzip
+
+    RUN go get -u github.com/go-bindata/go-bindata/...
 
     SAVE IMAGE --cache-hint
 
@@ -179,3 +195,55 @@ mocks-management-api:
 
     RUN mockgen -source pkg/txlogdb/database.go -destination /dist/management-api/pkg/txlogdb/mock/mock_database.go
     SAVE ARTIFACT /dist/management-api/pkg/txlogdb/mock/*.go AS LOCAL ./management-api/pkg/txlogdb/mock/
+
+mocks-common:
+    FROM +mocks-deps
+
+    COPY ./common /src/common
+
+    RUN mkdir -p /dist || true
+    WORKDIR /src/common
+
+    RUN mockgen -source ./transactionlog/logger.go -destination /dist/mock_logger.go
+    SAVE ARTIFACT /dist/mock_logger.go AS LOCAL ./common/transactionlog/mock/mock_logger.go
+
+mocks-directory-inspection-api:
+    FROM +mocks-deps
+
+    COPY ./directory-inspection-api /src/directory-inspection-api
+
+    RUN mkdir -p /dist || true
+    WORKDIR /src/directory-inspection-api
+
+    RUN mockgen -source inspectionapi/inspectionapi_grpc.pb.go -package=mock -destination /dist/inspectionapi/mock/mock_directory_inspection_api.go
+    SAVE ARTIFACT /dist/inspectionapi/mock/mock_directory_inspection_api.go AS LOCAL ./directory-inspection-api/inspectionapi/mock/mock_directory_inspection_api.go
+
+    RUN mockgen -source pkg/database/database.go -package=mock -destination /dist/pkg/database/mock/mock_database.go
+    SAVE ARTIFACT /dist/pkg/database/mock/mock_database.go AS LOCAL ./directory-inspection-api/pkg/database/mock/mock_database.go
+
+mocks-directory-registration-api:
+    FROM +mocks-deps
+
+    COPY ./directory-registration-api /src/directory-registration-api
+
+    RUN mkdir -p /dist || true
+    WORKDIR /src/directory-registration-api
+
+    RUN mockgen -source domain/directory/repository.go -package=directory_mock -destination /dist/domain/directory/mock/repository.go
+    SAVE ARTIFACT /dist/domain/directory/mock/repository.go AS LOCAL ./directory-registration-api/domain/directory/mock/repository.go
+
+    RUN mockgen -source pkg/database/database.go -package=mock -destination /dist/pkg/database/mock/database.go
+    SAVE ARTIFACT /dist/pkg/database/mock/database.go AS LOCAL ./directory-registration-api/pkg/database/mock/database.go
+
+migrations-management-api:
+    FROM +migrations-deps
+
+    COPY ./management-api /src/management-api
+
+    RUN mkdir -p /dist || true
+
+    WORKDIR /src/management-api
+
+    RUN /go/bin/go-bindata -prefix db/migrations -pkg db -o /dist/migrations.go db/migrations/...
+
+    SAVE ARTIFACT /dist/migrations.go AS LOCAL ./management-api/db/migrations.go

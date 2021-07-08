@@ -41,7 +41,6 @@ Make sure you have installed the following tools:
 - [Docker Desktop / Docker engine](https://docs.docker.com/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 - [go](https://golang.org/doc/install)
-- [golang-migrate](https://github.com/golang-migrate/migrate)
 - [modd](https://github.com/cortesi/modd)
 
 Install the npm dependencies by running:
@@ -195,18 +194,40 @@ Overview of available links per environment:
 - [links.demo.nlx.io](https://links.demo.nlx.io)
 - [links.acc.nlx.io](https://links.acc.nlx.io)
 
-## Compiling gRPC proto files
+## Regenerating protobuf and mock files
 
-You will need to install [Earthly](https://earthly.dev/get-earthly) to (re)compile the protobuf files for all services.
-After installing Earthly you can run `earthly +proto` to compile everything.
-
-You might want to regenerate the mocks after recompiling the protobuf files.
-You can do so as follows for these directories:
+Te execute the commands in the following sections, you will need to install [Earthly](https://earthly.dev/get-earthly).
+If you want to regenerate all files (protobuf, mocks and migrations), use the command:
 
 ```shell
-(cd directory-inspection-api && make -B)
-(cd directory-registration-api && make -B)
+earthly +all
+```
+
+### Compiling gRPC proto files
+
+Protobuf files can be regenerated using:
+
+```shell
+earthly +proto
+```
+
+You might want to regenerate the mocks after recompiling the protobuf files.
+
+### Mocks
+
+Mocks can be regenerated using:
+
+```shell
 earthly +mocks
+```
+
+### Migrations
+
+We include migration files (SQL) into our binaries using `go-binddata`.
+These files can be regenerated using:
+
+```shell
+earthly +migrations
 ```
 
 ## Further documentation
