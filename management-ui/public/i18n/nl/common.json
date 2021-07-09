@@ -207,7 +207,7 @@
   "There are no services yet": "Er zijn nog geen services beschikbaar",
   "This field is required": "Dit veld is verplicht",
   "This identifier is sent with each request": "Dit kenmerk wordt meegestuurd met elk request",
-  "This inway is used to be able to retrieve & confirm access requests from other organizations.": "Deze inway wordt gebruikt om toegangsverzoeken af te handelen.",
+  "This inway is used to be able to retrieve & confirm access requests from other organizations and synchronize orders with other organizations.": "Deze inway wordt gebruikt om toegangsverzoeken af te handelen en opdrachten te synchroniseren met andere organisaties.",
   "This is a paid service": "Dit is een betaalde service",
   "This report is only available as CSV file": "Dit rapport is alleen als CSV beschikbaar",
   "To NLX Docs": "Naar NLX Docs",

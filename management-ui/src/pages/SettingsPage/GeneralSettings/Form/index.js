@@ -93,7 +93,7 @@ const Form = ({ initialValues, onSubmitHandler, ...props }) => {
                   <FieldLabel
                     label={t('Organization inway')}
                     small={t(
-                      'This inway is used to be able to retrieve & confirm access requests from other organizations.',
+                      'This inway is used to be able to retrieve & confirm access requests from other organizations and synchronize orders with other organizations.',
                     )}
                   />
                 </Select>
