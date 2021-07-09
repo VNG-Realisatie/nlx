@@ -4,7 +4,7 @@
 import { useContext } from 'react'
 import { storesContext } from '../stores'
 
-const useStores = () => useContext(storesContext)
+export const useStores = () => useContext(storesContext)
 
 export const useApplicationStore = () => {
   const { applicationStore } = useStores()

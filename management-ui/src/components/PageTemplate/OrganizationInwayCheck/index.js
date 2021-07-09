@@ -4,18 +4,17 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 import { useTranslation } from 'react-i18next'
-import { useApplicationStore, useServiceStore } from '../../../hooks/use-stores'
+import { useStores } from '../../../hooks/use-stores'
 import GlobalAlert from '../../GlobalAlert'
 import { StyledLink } from './index.styles'
 
 const OrganizationInwayCheck = () => {
-  // Destructuring `applicationStore` breaks mobx reactivity
-  const applicationStore = useApplicationStore()
-  const { services } = useServiceStore()
   const { t } = useTranslation()
+  const { applicationStore, servicesStore } = useStores()
 
   const displayMessage =
-    applicationStore.isOrganizationInwaySet === false && services.length
+    applicationStore.isOrganizationInwaySet === false &&
+    servicesStore.services.length
 
   return displayMessage ? (
     <GlobalAlert>
