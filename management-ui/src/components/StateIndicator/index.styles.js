@@ -11,9 +11,7 @@ export const StyledWrapper = styled.span`
 `
 
 export const StyledIconStateDegraded = styled(IconStateDegraded)`
-  .mainPath {
-    fill: ${(p) => p.theme.tokens.colorAlertWarning};
-  }
+  fill: ${(p) => p.theme.tokens.colorWarning};
 `
 
 export const StateText = styled.span`
