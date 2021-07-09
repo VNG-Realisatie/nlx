@@ -16,7 +16,7 @@ test('initializing the store', () => {
 
 test('fetch outgoing orders', async () => {
   const managementApiClient = new ManagementApi()
-  //
+
   managementApiClient.managementListOutgoingOrders = jest
     .fn()
     .mockRejectedValueOnce(new Error('arbitrary error'))
