@@ -18,9 +18,7 @@ describe('Settings', () => {
     cy.clickModalButton('Opslaan')
     cy.dismissToaster('De instellingen zijn bijgewerkt')
 
-    cy.findByText(
-      'Er kunnen geen toegangsverzoeken ontvangen worden. Stel in welke inway toegangsverzoeken moet afhandelen.',
-    ).should('exist')
+    cy.findByText('Organisatie inway').should('exist')
 
     cy.get('#organizationInway').click()
     cy.get('.ReactSelect__menu-list')

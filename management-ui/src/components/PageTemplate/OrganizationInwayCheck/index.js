@@ -10,16 +10,16 @@ import { StyledLink } from './index.styles'
 
 const OrganizationInwayCheck = () => {
   const { t } = useTranslation()
-  const { applicationStore, servicesStore } = useStores()
+  const { applicationStore, servicesStore, orderStore } = useStores()
 
   const displayMessage =
     applicationStore.isOrganizationInwaySet === false &&
-    servicesStore.services.length
+    (servicesStore.services.length || orderStore.outgoingOrders.length)
 
   return displayMessage ? (
     <GlobalAlert>
       {t(
-        'Access requests can not be received. Please specify which inway should handle access requests.',
+        'Please select an organization inway. At the moment access requests can not be received and outgoing orders can not be retrieved by other organizations.',
       )}
       <StyledLink to="/settings/general">{t('Go to settings')}</StyledLink>
     </GlobalAlert>
