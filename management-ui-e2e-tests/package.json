@@ -8,7 +8,7 @@
   "dependencies": {
     "@commonground/eslint-config": "5.0.0",
     "@testing-library/cypress": "7.0.6",
-    "axe-core": "4.2.3",
+    "axe-core": "4.3.1",
     "cypress": "7.7.0",
     "cypress-axe": "0.12.2",
     "eslint": "7.30.0",
