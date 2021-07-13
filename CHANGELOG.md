@@ -1,3 +1,17 @@
+# [0.108.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.107.2...v0.108.0) (2021-07-13)
+
+
+### Bug Fixes
+
+* **management:** added missing distiction between incoming and outgoing orders ([38c65eb](https://gitlab.com/commonground/nlx/nlx/commit/38c65eba6640673858dd42317ce4f0abaeb382fa))
+* **management:** update color of the degraded service icon ([2d33704](https://gitlab.com/commonground/nlx/nlx/commit/2d337049b236aa4d82aa066b8943f63a4653fc7f))
+
+
+### Features
+
+* **management:** display warning if outgoing orders are present but no organization inway is set ([f88e3be](https://gitlab.com/commonground/nlx/nlx/commit/f88e3be2bf100e90973f3723fc1f90e993cd3bd9)), closes [#1304](https://gitlab.com/commonground/nlx/nlx/issues/1304)
+* **management:** update description of the organization inway to include syncing orders ([070fea2](https://gitlab.com/commonground/nlx/nlx/commit/070fea2d98a73ad1c9291cd42aaccf98b928098b)), closes [#1304](https://gitlab.com/commonground/nlx/nlx/issues/1304)
+
 ## [0.107.2](https://gitlab.com/commonground/nlx/nlx/compare/v0.107.1...v0.107.2) (2021-07-08)
 
 # [0.107.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.106.0...v0.107.0) (2021-07-05)
