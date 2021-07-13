@@ -127,7 +127,7 @@ func NewBundleFromFiles(certFile, keyFile, rootCertFile string) (*CertificateBun
 func NewBundle(certPEM, keyPEM, rootCertPEM []byte) (*CertificateBundle, error) {
 	keyPair, err := tls.X509KeyPair(certPEM, keyPEM)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to parse certificate/key pair")
+		return nil, fmt.Errorf("failed to parse certificate/key pair: %v", err)
 	}
 
 	// Ignore error, certificate is already parsed by X509KeyPair. We wouldn't have come this far.
