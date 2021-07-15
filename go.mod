@@ -43,7 +43,7 @@ require (
 	golang.org/x/oauth2 v0.0.0-20210628180205-a41e5a781914
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	golang.org/x/text v0.3.6
-	google.golang.org/genproto v0.0.0-20210714021259-044028024a4f
+	google.golang.org/genproto v0.0.0-20210715145939-324b959e9c22
 	google.golang.org/grpc v1.39.0
 	google.golang.org/protobuf v1.27.1
 	gopkg.in/square/go-jose.v2 v2.4.1 // indirect
