@@ -127,6 +127,8 @@ TLS certificates used by NLX components for internal communication.
 | `service.type` | Service type (ClusterIP, NodePort or LoadBalancer). Please note that there should be no service performing TLS offloading as it uses mutual TLS | `LoadBalancer` | no |
 | `service.port` | Port exposed by the service | `443` | no |
 | `service.nodePort` | Port exposed if `service.type` is `NodePort`. Please note that `service.nodePort` + 1 will also be exposed to accept traffic for the management API)| `""` | no |
+| `service.annotations` | You can use Kubernetes annotations to attach arbitrary non-identifying metadata to objects. Clients such as tools and libraries can retrieve this metadata.| `{}` | no |
+| `service.loadBalancerIP` | Only applies to Service Type: LoadBalancer LoadBalancer will get created with the IP specified in this field. This feature depends on whether the underlying cloud-provider supports specifying the loadBalancerIP when a load balancer is created. This field will be ignored if the cloud-provider does not support the feature.| `""` | no |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 

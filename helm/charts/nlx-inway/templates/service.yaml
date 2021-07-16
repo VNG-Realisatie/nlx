@@ -4,10 +4,14 @@ metadata:
   name: {{ include "nlx-inway.fullname" . }}
   labels:
     {{- include "nlx-inway.labels" . | nindent 4 }}
+  annotations: {{ .Values.service.annotations | toJson }}
 spec:
+  type: {{ .Values.service.type }}
+  {{if .Values.service.loadBalancerIP}}
+  loadBalancerIP: {{ .Values.service.loadBalancerIP }}
+  {{end}}
   selector:
     {{- include "nlx-inway.selectorLabels" . | nindent 4 }}
-  type: {{ .Values.service.type }}
   ports:
     - name: https
       protocol: TCP

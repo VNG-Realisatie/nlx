@@ -75,6 +75,8 @@ podSecurityContext:
 service:
   type: LoadBalancer
   port: 443
+  annotations: {}
+  loadBalancerIP: ""
 
 resources: {}
 
