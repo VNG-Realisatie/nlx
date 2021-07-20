@@ -76,9 +76,7 @@ const ServiceForm = ({
         t('Only alphanumeric characters, dashes and dots are allowed'),
       )
       .required(t('This field is required')),
-    endpointURL: Yup.string()
-      .url(t('Invalid endpoint URL'))
-      .required(t('Invalid endpoint URL')),
+    endpointURL: Yup.string().required(t('Invalid endpoint URL')),
     documentationURL: Yup.string(),
     apiSpecificationURL: Yup.string(),
     publishedInDirectory: Yup.boolean(),

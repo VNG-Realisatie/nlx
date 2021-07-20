@@ -117,9 +117,11 @@ test('the form values of the onSubmitHandler', async () => {
         onSubmitHandler={onSubmitHandlerSpy}
         initialValues={{
           name: '',
-          endpointURL: 'http://my-service.test:8000',
-          documentationURL: 'http://my-service.test:8000/docs',
-          apiSpecificationURL: 'http://my-service.test:8000/openapi.json',
+          endpointURL: 'http://gemeente-stijns-parkeerrechten-api:8000',
+          documentationURL:
+            'http://gemeente-stijns-parkeerrechten-api:8000/docs',
+          apiSpecificationURL:
+            'http://gemeente-stijns-parkeerrechten-api:8000/openapi.json',
           internal: false,
           techSupportContact: 'tech@organization.test',
           publicSupportContact: 'public@organization.test',
@@ -146,9 +148,10 @@ test('the form values of the onSubmitHandler', async () => {
   await waitFor(() =>
     expect(onSubmitHandlerSpy).toHaveBeenCalledWith({
       name: 'my-service',
-      endpointURL: 'http://my-service.test:8000',
-      documentationURL: 'http://my-service.test:8000/docs',
-      apiSpecificationURL: 'http://my-service.test:8000/openapi.json',
+      endpointURL: 'http://gemeente-stijns-parkeerrechten-api:8000',
+      documentationURL: 'http://gemeente-stijns-parkeerrechten-api:8000/docs',
+      apiSpecificationURL:
+        'http://gemeente-stijns-parkeerrechten-api:8000/openapi.json',
       internal: false,
       inways: [],
       techSupportContact: 'tech@organization.test',
@@ -271,10 +274,10 @@ describe('when showing inways', () => {
 
     await findByLabelText('inway-one')
 
-    await fireEvent.click(getByLabelText('inway-one'))
+    fireEvent.click(getByLabelText('inway-one'))
     expect(getByLabelText('inway-one').checked).toEqual(true)
 
-    await fireEvent.submit(getByTestId('form'))
+    fireEvent.submit(getByTestId('form'))
 
     await waitFor(() => {
       expect(onSubmitHandlerSpy).toHaveBeenCalledTimes(1)
@@ -309,11 +312,11 @@ describe('when showing inways', () => {
 
     await findByLabelText('inway-one')
 
-    await fireEvent.click(getByLabelText('inway-one'))
+    fireEvent.click(getByLabelText('inway-one'))
     expect(getByLabelText('inway-one').checked).toEqual(false)
     expect(await findByTestId('publishedInDirectory-warning')).toBeTruthy()
 
-    await fireEvent.submit(getByTestId('form'))
+    fireEvent.submit(getByTestId('form'))
 
     await waitFor(() => {
       expect(onSubmitHandlerSpy).toHaveBeenCalledTimes(1)
@@ -354,9 +357,9 @@ describe('when showing inways', () => {
 
     await findByLabelText('This is a paid service')
 
-    await fireEvent.click(getByLabelText('This is a paid service'))
+    fireEvent.click(getByLabelText('This is a paid service'))
 
-    await fireEvent.submit(getByTestId('form'))
+    fireEvent.submit(getByTestId('form'))
 
     await waitFor(() => {
       expect(onSubmitHandlerSpy).toHaveBeenCalledTimes(1)
@@ -432,7 +435,7 @@ describe('when showing inways', () => {
       </StoreProvider>,
     )
 
-    await fireEvent.click(getByLabelText('This is a paid service'))
+    fireEvent.click(getByLabelText('This is a paid service'))
 
     const oneTime = getByLabelText('One time costs (in Euro)')
     const monthly = getByLabelText('Monthly costs (in Euro)')
@@ -445,7 +448,7 @@ describe('when showing inways', () => {
     userEvent.clear(request)
     userEvent.type(request, '1.25')
 
-    await fireEvent.submit(getByTestId('form'))
+    fireEvent.submit(getByTestId('form'))
 
     await waitFor(() => {
       expect(onSubmitHandlerSpy).toHaveBeenCalledTimes(1)
