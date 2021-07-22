@@ -8,7 +8,7 @@
     "dayjs": "1.10.6",
     "formik": "2.2.9",
     "i18next": "20.3.4",
-    "i18next-http-backend": "1.2.6",
+    "i18next-http-backend": "1.2.7",
     "js-cookie": "2.2.1",
     "mobx": "6.3.2",
     "mobx-react": "7.2.0",
