@@ -19,10 +19,6 @@ New versions are announced on [the releases page](https://gitlab.com/commongroun
 
 ## Deprecation policy
 
-We try to minimize the effort for administrators to keep up with new NLX versions. Therefore we follow a deprecation policy for external interfaces of the NLX system. When we are not able to make the change in a backwards-compatible manner, we release a new version of the config structure or API and we keep supporting the old version for at least:
+We try to minimize the effort for administrators to keep up with new NLX versions. When we are not able to make the change in a backward-compatible manner, there is no other option than to upgrade to the new version. During the sprint reviews, stakeholders will be informed about upcoming changes and are encouraged to collaborate with the scrum team to maximize value addition.
 
-- Stable: 6 months or 4 minor releases (whichever is longer)
-- Beta: 3 months or 2 minor release (whichever is longer)
-- Alpha: 0 releases
-
-In this way administrators are able to gracefuly adopt new config structures and API's. To be informed about deprecated API's, please subscribe to our mailinglist by sending a message to [support@nlx.io](mailto:support@nlx.io).
+If you want to attend the sprint reviews, please send a message to [support@nlx.io](mailto:support@nlx.io).
