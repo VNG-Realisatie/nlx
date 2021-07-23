@@ -1,6 +1,10 @@
 {{- if and .Values.ui.enabled .Values.ui.ingress.enabled -}}
 {{- $fullName := include "nlx-directory.fullname" . -}}
+{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1
+{{- else -}}
+apiVersion: networking.k8s.io/v1beta1
+{{- end }}
 kind: Ingress
 metadata:
   name: {{ $fullName }}
@@ -31,6 +35,7 @@ spec:
     - host: {{ . | quote }}
       http:
         paths:
+        {{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
           - path: /
             pathType: ImplementationSpecific
             backend:
@@ -45,5 +50,15 @@ spec:
                 name: {{ $fullName }}-inspection-plain
                 port:
                   name: http
+        {{- else -}}
+          - path: /
+            backend:
+              serviceName: {{ $fullName }}-ui
+              servicePort: http
+          - path: /api
+            backend:
+              serviceName: {{ $fullName }}-inspection-plain
+              servicePort: http
+        {{- end }}
   {{- end }}
 {{- end -}}
