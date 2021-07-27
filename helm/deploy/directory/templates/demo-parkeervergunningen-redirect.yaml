@@ -26,4 +26,4 @@ spec:
           kind: TraefikService
       middlewares:
         - name: {{ include "directory.fullname" . }}-demo-parkeervergunningen-redirect
-{{- end -}}
+{{- end }}

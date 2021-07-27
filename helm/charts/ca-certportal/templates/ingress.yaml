@@ -1,8 +1,8 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "ca-certportal.fullname" . -}}
-{{- if $.Capabilities.APIVersions.Has "networking.k8s.io/v1" }}
+{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.Version -}}
 apiVersion: networking.k8s.io/v1
-{{- else -}}
+{{- else }}
 apiVersion: networking.k8s.io/v1beta1
 {{- end }}
 kind: Ingress
@@ -36,14 +36,14 @@ spec:
       http:
         paths:
           - path: /
-          {{- if $.Capabilities.APIVersions.Has "networking.k8s.io/v1" }}
+          {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.Version }}
             pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ $fullName }}
                 port:
                   name: http
-          {{- else -}}
+          {{- else }}
             backend:
               serviceName: {{ $fullName }}
               servicePort: http

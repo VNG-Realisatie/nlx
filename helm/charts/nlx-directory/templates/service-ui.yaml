@@ -16,4 +16,4 @@ spec:
       port: {{ .Values.ui.port }}
       targetPort: http
       protocol: TCP
-{{- end -}}
+{{- end }}
