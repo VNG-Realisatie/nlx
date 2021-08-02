@@ -1,49 +1,80 @@
-// Copyright © VNG Realisatie 2018
+// Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 //
-
 import React from 'react'
-import { Link } from 'react-router-dom'
-import Container from '../Container/Container'
-import IconButton from '../IconButton'
-import logo from './assets/logo.svg'
-import gitlab from './assets/gitlab.svg'
-import StyledHeader, { StyledNavigation } from './index.styles'
+import { bool } from 'prop-types'
+import { PrimaryNavigation } from '@commonground/design-system'
+import { useLocation } from 'react-router-dom'
+import { IconHome, IconBox, IconInfo, IconMail } from '../../icons'
+import { Container } from '../grid'
+import NavLink from '../nav-link'
+import {
+  StyledIcon,
+  LogoWrapper,
+  StyledNLXLogo,
+  NavigationWrapper,
+} from './index.styles'
 
-const Header = () => (
-  <StyledHeader>
-    <Container>
-      <StyledNavigation>
-        <a className="navbar-logo" href="https://nlx.io">
-          <img src={logo} alt="NLX logo" />
-        </a>
+const Header = ({ homepage }) => {
+  const { pathname } = useLocation()
 
-        <ul className="navbar-nav">
-          <li className="nav-item active">
-            <Link className="nav-link" to="/">
-              Directory
-            </Link>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link" href="https://docs.nlx.io">
-              Docs
-            </a>
-          </li>
-        </ul>
+  const HomeIcon = () => <StyledIcon as={IconHome} />
+  const FeaturesIcon = () => <StyledIcon as={IconBox} />
+  const AboutIcon = () => <StyledIcon as={IconInfo} />
+  const ContactIcon = () => <StyledIcon as={IconMail} />
 
-        <IconButton
-          as="a"
-          className="navbar-gitlab"
-          href="https://gitlab.com/commonground/nlx"
-          target="_blank"
-          aria-label="GitLab"
-          rel="noopener noreferrer"
-        >
-          <img src={gitlab} alt="Gitlab logo" />
-        </IconButton>
-      </StyledNavigation>
-    </Container>
-  </StyledHeader>
-)
+  return (
+    <>
+      <LogoWrapper homepage={homepage}>
+        <Container>
+          <StyledNLXLogo />
+        </Container>
+      </LogoWrapper>
+
+      <NavigationWrapper>
+        <PrimaryNavigation
+          LinkComponent={NavLink}
+          pathname={pathname}
+          mobileMoreText="Meer"
+          items={[
+            {
+              name: 'Home',
+              to: '/',
+              Icon: HomeIcon,
+            },
+            {
+              name: 'Features',
+              to: '/features',
+              Icon: FeaturesIcon,
+            },
+            {
+              name: 'Over NLX',
+              to: '/about',
+              Icon: AboutIcon,
+            },
+            {
+              name: 'Contact',
+              to: '/contact',
+              Icon: ContactIcon,
+            },
+            {
+              name: 'Docs',
+              to: 'https://docs.nlx.io/',
+              target: '_blank',
+            },
+          ]}
+        />
+      </NavigationWrapper>
+    </>
+  )
+}
+
+Header.propTypes = {
+  homepage: bool,
+}
+
+Header.defaultProps = {
+  homepage: false,
+}
 
 export default Header

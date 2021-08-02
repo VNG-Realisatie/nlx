@@ -4,18 +4,27 @@
 
 import React from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { ThemeProvider } from 'styled-components'
+import { DomainNavigation } from '@commonground/design-system'
 import VersionLogger from './components/VersionLogger'
-import { StyledApp } from './App.styles'
 import GlobalStyles from './components/GlobalStyles/GlobalStyles'
 import Header from './components/Header'
 import ServiceOverviewPage from './pages/ServicesOverviewPage'
 import DocumentationPage from './pages/DocumentationPage'
+import theme from './styling/theme'
 
 const App = () => (
-  <StyledApp>
+  <main>
     <GlobalStyles />
     <Router>
-      <>
+      <ThemeProvider theme={theme}>
+        {/* {pageProps.statusCode !== 404 && ( */}
+        <DomainNavigation
+          activeDomain="NLX"
+          gitLabLink="https://gitlab.com/commonground/nlx/nlx"
+        />
+        {/* )} */}
+
         <Header />
 
         <Route exact path="/" component={ServiceOverviewPage} />
@@ -23,10 +32,10 @@ const App = () => (
           path="/documentation/:organizationName/:serviceName"
           component={DocumentationPage}
         />
-      </>
+      </ThemeProvider>
     </Router>
     <VersionLogger />
-  </StyledApp>
+  </main>
 )
 
 export default App
