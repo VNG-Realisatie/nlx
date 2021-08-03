@@ -1,7 +1,6 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-
 import React from 'react'
 import { func, string } from 'prop-types'
 import CloseIcon from '../CloseIcon'

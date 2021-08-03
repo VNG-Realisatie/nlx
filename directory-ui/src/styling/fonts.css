@@ -5,7 +5,7 @@
   font-weight: 400;
   src:
     local('Source Sans Pro Light'),
-    local('SourceSansPro-Light'), url('/generic/source-sans-pro-latin-400-normal.woff2') format('woff2'), url('/generic/source-sans-pro-latin-400-normal.woff') format('woff');
+    local('SourceSansPro-Light'), url('/source-sans-pro-latin-400-normal.woff2') format('woff2'), url('/source-sans-pro-latin-400-normal.woff') format('woff');
 }
 
 @font-face {
@@ -15,7 +15,7 @@
   font-weight: 600;
   src:
     local('Source Sans Pro Light'),
-    local('SourceSansPro-Light'), url('/generic/source-sans-pro-latin-600-normal.woff2') format('woff2'), url('/generic/source-sans-pro-latin-600-normal.woff') format('woff');
+    local('SourceSansPro-Light'), url('/source-sans-pro-latin-600-normal.woff2') format('woff2'), url('/source-sans-pro-latin-600-normal.woff') format('woff');
 }
 
 @font-face {
@@ -25,5 +25,5 @@
   font-weight: 700;
   src:
     local('Source Sans Pro Light'),
-    local('SourceSansPro-Light'), url('/generic/source-sans-pro-latin-700-normal.woff2') format('woff2'), url('/generic/source-sans-pro-latin-700-normal.woff') format('woff');
+    local('SourceSansPro-Light'), url('/source-sans-pro-latin-700-normal.woff2') format('woff2'), url('/source-sans-pro-latin-700-normal.woff') format('woff');
 }

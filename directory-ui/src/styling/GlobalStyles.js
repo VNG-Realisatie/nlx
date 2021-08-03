@@ -41,7 +41,6 @@ export default createGlobalStyle`
   }
 
   body {
-    background-color: #F7F9FC;
     margin: 0;
     word-wrap: break-word;
     word-break: break-word;

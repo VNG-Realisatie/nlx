@@ -17,6 +17,7 @@ const Table = styled.table`
   border-spacing: 0;
   display: table;
   margin: 0 auto;
+  width: 100%;
 `
 
 Table.propTypes = {

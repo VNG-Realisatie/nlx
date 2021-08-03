@@ -8,12 +8,11 @@ export const StyledServiceDetailPane = styled.div`
   position: fixed;
   right: 0;
   top: 56px;
-  width: 300px;
   background: #ffffff;
   box-shadow: 0 0 0 1px rgba(45, 50, 64, 0.05), 0 1px 8px rgba(45, 50, 64, 0.05);
-  z-index: 1;
   min-height: calc(100% - 56px);
   padding: 20px 24px;
+  z-index: 1;
 `
 
 export const StyledHeader = styled.div`

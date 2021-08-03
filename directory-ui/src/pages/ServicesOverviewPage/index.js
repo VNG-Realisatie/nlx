@@ -9,6 +9,11 @@ import Spinner from '../../components/Spinner'
 import ErrorMessage from '../../components/ErrorMessage'
 import Container from '../../components/Container/Container'
 import ServiceDetailPane from '../../components/ServiceDetailPane'
+import Introduction from '../../components/Introduction'
+import Section from '../../components/Section'
+import { Col, Row } from '../../components/Grid'
+import News from '../../components/NewsSection'
+import Footer from '../../components/Footer'
 import { StyledFilters, StyledServicesTableContainer } from './index.styles'
 import { mapListServicesAPIResponse } from './map-list-services-api-response'
 
@@ -109,32 +114,48 @@ const ServicesOverviewPage = ({ location, history }) => {
   }
 
   return (
-    <Container>
-      <StyledFilters
-        onQueryChanged={handleSearchOnChange}
-        onStatusFilterChanged={handleSwitchOnChange}
-        queryValue={query}
-      />
+    <>
+      <Introduction />
 
-      <StyledServicesTableContainer
-        services={services}
-        sortBy="organization"
-        sortOrder="asc"
-        filterQuery={debouncedQuery}
-        filterByOnlineServices={!displayOfflineServices}
-        onServiceClickedHandler={handleOnServiceClicked}
-      />
+      <Section>
+        <Container>
+          <Row>
+            <Col>
+              <Container>
+                <StyledFilters
+                  onQueryChanged={handleSearchOnChange}
+                  onStatusFilterChanged={handleSwitchOnChange}
+                  queryValue={query}
+                />
 
-      {selectedService && (
-        <ServiceDetailPane
-          organizationName={selectedService.organization}
-          contactEmailAddress={selectedService.contactEmailAddress}
-          name={selectedService.name}
-          documentationUrl={selectedService.documentationUrl}
-          closeHandler={detailPaneCloseHandler}
-        />
-      )}
-    </Container>
+                <StyledServicesTableContainer
+                  services={services}
+                  sortBy="organization"
+                  sortOrder="asc"
+                  filterQuery={debouncedQuery}
+                  filterByOnlineServices={!displayOfflineServices}
+                  onServiceClickedHandler={handleOnServiceClicked}
+                />
+
+                {selectedService && (
+                  <ServiceDetailPane
+                    organizationName={selectedService.organization}
+                    contactEmailAddress={selectedService.contactEmailAddress}
+                    name={selectedService.name}
+                    documentationUrl={selectedService.documentationUrl}
+                    closeHandler={detailPaneCloseHandler}
+                  />
+                )}
+              </Container>
+            </Col>
+          </Row>
+        </Container>
+      </Section>
+
+      <News />
+
+      <Footer />
+    </>
   )
 }
 

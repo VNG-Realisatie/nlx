@@ -1,13 +1,12 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-
 import React from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 import { DomainNavigation } from '@commonground/design-system'
 import VersionLogger from './components/VersionLogger'
-import GlobalStyles from './components/GlobalStyles/GlobalStyles'
+import GlobalStyles from './styling/GlobalStyles'
 import Header from './components/Header'
 import ServiceOverviewPage from './pages/ServicesOverviewPage'
 import DocumentationPage from './pages/DocumentationPage'
@@ -18,12 +17,10 @@ const App = () => (
     <GlobalStyles />
     <Router>
       <ThemeProvider theme={theme}>
-        {/* {pageProps.statusCode !== 404 && ( */}
         <DomainNavigation
           activeDomain="NLX"
           gitLabLink="https://gitlab.com/commonground/nlx/nlx"
         />
-        {/* )} */}
 
         <Header />
 
