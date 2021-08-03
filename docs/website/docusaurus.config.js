@@ -14,7 +14,6 @@ module.exports = {
   organizationName: 'common-ground',
   projectName: 'nlx-docs',
   themeConfig: {
-    sidebarCollapsible: false,
     navbar: {
       title: 'Documentation',
       logo: {
@@ -47,6 +46,7 @@ module.exports = {
       '@docusaurus/preset-classic',
       {
         docs: {
+          sidebarCollapsible: false,
           path: '../docs',
           routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
