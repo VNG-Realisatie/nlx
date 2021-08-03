@@ -79,11 +79,11 @@ go run ./management-api create-user --email admin@nlx.local --password developme
 Optionally you can setup the database for the transaction logs:
 
 ```bash
-docker-compose -f docker-compose.dev.yml exec -u postgres postgres createdb nlx-txlog-a
-migrate -database "postgres://postgres:postgres@127.0.0.1:5432/nlx-txlog-a?sslmode=disable" -path txlog-db/migrations up
+docker-compose -f docker-compose.dev.yml exec -u postgres postgres createdb nlx_txlog_a
+migrate -database "postgres://postgres:postgres@127.0.0.1:5432/nlx_txlog_a?sslmode=disable" -path txlog-db/migrations up
 
-docker-compose -f docker-compose.dev.yml exec -u postgres postgres createdb nlx-txlog-b
-migrate -database "postgres://postgres:postgres@127.0.0.1:5432/nlx-txlog-b?sslmode=disable" -path txlog-db/migrations up
+docker-compose -f docker-compose.dev.yml exec -u postgres postgres createdb nlx_txlog_b
+migrate -database "postgres://postgres:postgres@127.0.0.1:5432/nlx_txlog_b?sslmode=disable" -path txlog-db/migrations up
 ```
 
 Make sure the TLS key files have the correct permissions to run the NLX components
