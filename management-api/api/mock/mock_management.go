@@ -517,6 +517,46 @@ func (mr *MockManagementClientMockRecorder) RevokeAccessGrant(ctx, in interface{
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RevokeAccessGrant", reflect.TypeOf((*MockManagementClient)(nil).RevokeAccessGrant), varargs...)
 }
 
+// RevokeIncomingOrder mocks base method.
+func (m *MockManagementClient) RevokeIncomingOrder(ctx context.Context, in *api.RevokeIncomingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "RevokeIncomingOrder", varargs...)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RevokeIncomingOrder indicates an expected call of RevokeIncomingOrder.
+func (mr *MockManagementClientMockRecorder) RevokeIncomingOrder(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RevokeIncomingOrder", reflect.TypeOf((*MockManagementClient)(nil).RevokeIncomingOrder), varargs...)
+}
+
+// RevokeOutgoingOrder mocks base method.
+func (m *MockManagementClient) RevokeOutgoingOrder(ctx context.Context, in *api.RevokeOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "RevokeOutgoingOrder", varargs...)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RevokeOutgoingOrder indicates an expected call of RevokeOutgoingOrder.
+func (mr *MockManagementClientMockRecorder) RevokeOutgoingOrder(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RevokeOutgoingOrder", reflect.TypeOf((*MockManagementClient)(nil).RevokeOutgoingOrder), varargs...)
+}
+
 // SendAccessRequest mocks base method.
 func (m *MockManagementClient) SendAccessRequest(ctx context.Context, in *api.SendAccessRequestRequest, opts ...grpc.CallOption) (*api.OutgoingAccessRequest, error) {
 	m.ctrl.T.Helper()
@@ -998,6 +1038,36 @@ func (m *MockManagementServer) RevokeAccessGrant(arg0 context.Context, arg1 *api
 func (mr *MockManagementServerMockRecorder) RevokeAccessGrant(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RevokeAccessGrant", reflect.TypeOf((*MockManagementServer)(nil).RevokeAccessGrant), arg0, arg1)
+}
+
+// RevokeIncomingOrder mocks base method.
+func (m *MockManagementServer) RevokeIncomingOrder(arg0 context.Context, arg1 *api.RevokeIncomingOrderRequest) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RevokeIncomingOrder", arg0, arg1)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RevokeIncomingOrder indicates an expected call of RevokeIncomingOrder.
+func (mr *MockManagementServerMockRecorder) RevokeIncomingOrder(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RevokeIncomingOrder", reflect.TypeOf((*MockManagementServer)(nil).RevokeIncomingOrder), arg0, arg1)
+}
+
+// RevokeOutgoingOrder mocks base method.
+func (m *MockManagementServer) RevokeOutgoingOrder(arg0 context.Context, arg1 *api.RevokeOutgoingOrderRequest) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RevokeOutgoingOrder", arg0, arg1)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RevokeOutgoingOrder indicates an expected call of RevokeOutgoingOrder.
+func (mr *MockManagementServerMockRecorder) RevokeOutgoingOrder(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RevokeOutgoingOrder", reflect.TypeOf((*MockManagementServer)(nil).RevokeOutgoingOrder), arg0, arg1)
 }
 
 // SendAccessRequest mocks base method.

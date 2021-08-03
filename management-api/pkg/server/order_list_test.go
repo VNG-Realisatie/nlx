@@ -6,6 +6,7 @@ package server_test
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"testing"
 	"time"
@@ -37,7 +38,7 @@ func TestListOutgoingOrders(t *testing.T) {
 			},
 			wantErr: status.Error(codes.Internal, "failed to retrieve outgoing orders"),
 		},
-		"happy_path": {
+		"happy_flow": {
 			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
@@ -49,6 +50,7 @@ func TestListOutgoingOrders(t *testing.T) {
 							Delegatee:   "saas-organization-x",
 							ValidFrom:   validFrom,
 							ValidUntil:  validUntil,
+							RevokedAt:   sql.NullTime{},
 							Services: []database.OutgoingOrderService{
 								{
 									Service:      "service-a",
@@ -105,6 +107,7 @@ func TestListOutgoingOrders(t *testing.T) {
 func TestListIncomingOrders(t *testing.T) {
 	validFrom := time.Now()
 	validUntil := time.Now().Add(time.Hour)
+	revokedAt := time.Now()
 
 	tests := map[string]struct {
 		setup        func(serviceMocks)
@@ -117,7 +120,7 @@ func TestListIncomingOrders(t *testing.T) {
 			},
 			wantErr: status.Error(codes.Internal, "failed to retrieve received orders"),
 		},
-		"happy_path": {
+		"happy_flow": {
 			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
@@ -129,6 +132,7 @@ func TestListIncomingOrders(t *testing.T) {
 							Delegator:   "nlx-test",
 							ValidFrom:   validFrom,
 							ValidUntil:  validUntil,
+							RevokedAt:   sql.NullTime{},
 							Services: []database.IncomingOrderService{
 								{
 									Service:      "service-a",
@@ -146,6 +150,51 @@ func TestListIncomingOrders(t *testing.T) {
 						Delegator:   "nlx-test",
 						ValidFrom:   timestampProto(validFrom),
 						ValidUntil:  timestampProto(validUntil),
+						Services: []*api.OrderService{
+							{
+								Service:      "service-a",
+								Organization: "organization-a",
+							},
+						},
+					},
+				},
+			},
+		},
+
+		"happy_flow_revoked": {
+			setup: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					ListIncomingOrders(gomock.Any()).
+					Return([]*database.IncomingOrder{
+						{
+							Reference:   "reference",
+							Description: "description",
+							Delegator:   "nlx-test",
+							ValidFrom:   validFrom,
+							ValidUntil:  validUntil,
+							RevokedAt: sql.NullTime{
+								Valid: true,
+								Time:  revokedAt,
+							},
+							Services: []database.IncomingOrderService{
+								{
+									Service:      "service-a",
+									Organization: "organization-a",
+								},
+							},
+						},
+					}, nil)
+			},
+			wantResponse: &api.ListIncomingOrdersResponse{
+				Orders: []*api.IncomingOrder{
+					{
+						Reference:   "reference",
+						Description: "description",
+						Delegator:   "nlx-test",
+						ValidFrom:   timestampProto(validFrom),
+						ValidUntil:  timestampProto(validUntil),
+						RevokedAt:   timestampProto(revokedAt),
 						Services: []*api.OrderService{
 							{
 								Service:      "service-a",
@@ -185,6 +234,7 @@ func TestListIncomingOrders(t *testing.T) {
 func TestListOrders(t *testing.T) {
 	validFrom := time.Now()
 	validUntil := time.Now().Add(time.Hour)
+	revokedAt := time.Now()
 
 	tests := map[string]struct {
 		setup        func(serviceMocks)
@@ -199,7 +249,7 @@ func TestListOrders(t *testing.T) {
 			},
 			wantErr: status.Error(codes.Internal, "failed to retrieve external orders"),
 		},
-		"happy_path": {
+		"happy_flow": {
 			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
@@ -211,6 +261,7 @@ func TestListOrders(t *testing.T) {
 							Delegatee:   "saas-organization-x",
 							ValidFrom:   validFrom,
 							ValidUntil:  validUntil,
+							RevokedAt:   sql.NullTime{},
 							Services: []database.OutgoingOrderService{
 								{
 									Service:      "service-a",
@@ -228,6 +279,50 @@ func TestListOrders(t *testing.T) {
 						Delegator:   "nlx-test",
 						ValidFrom:   timestampProto(validFrom),
 						ValidUntil:  timestampProto(validUntil),
+						Services: []*api.OrderService{
+							{
+								Service:      "service-a",
+								Organization: "organization-a",
+							},
+						},
+					},
+				},
+			},
+		},
+		"happy_flow_revoked": {
+			setup: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					ListOutgoingOrdersByOrganization(gomock.Any(), "organization-a").
+					Return([]*database.OutgoingOrder{
+						{
+							Reference:   "reference",
+							Description: "description",
+							Delegatee:   "saas-organization-x",
+							ValidFrom:   validFrom,
+							ValidUntil:  validUntil,
+							RevokedAt: sql.NullTime{
+								Valid: true,
+								Time:  revokedAt,
+							},
+							Services: []database.OutgoingOrderService{
+								{
+									Service:      "service-a",
+									Organization: "organization-a",
+								},
+							},
+						},
+					}, nil)
+			},
+			wantResponse: &external.ListOrdersResponse{
+				Orders: []*api.IncomingOrder{
+					{
+						Reference:   "reference",
+						Description: "description",
+						Delegator:   "nlx-test",
+						ValidFrom:   timestampProto(validFrom),
+						ValidUntil:  timestampProto(validUntil),
+						RevokedAt:   timestampProto(revokedAt),
 						Services: []*api.OrderService{
 							{
 								Service:      "service-a",

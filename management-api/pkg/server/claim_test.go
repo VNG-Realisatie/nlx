@@ -5,6 +5,7 @@ package server_test
 
 import (
 	"context"
+	"database/sql"
 	"testing"
 	"time"
 
@@ -29,19 +30,22 @@ func TestRequestClaim(t *testing.T) {
 		ctx            context.Context
 		setup          func(*common_tls.CertificateBundle, serviceMocks)
 		wantCode       codes.Code
+		wantErrMessage string
 		wantValidUntil time.Time
 	}{
 		"when_the_proxy_metadata_is_missing": {
-			request:  &external.RequestClaimRequest{},
-			ctx:      context.Background(),
-			wantCode: codes.Internal,
+			request:        &external.RequestClaimRequest{},
+			ctx:            context.Background(),
+			wantCode:       codes.Internal,
+			wantErrMessage: "missing metadata from the management proxy",
 		},
 		"when_providing_an_empty_order_reference": {
 			request: &external.RequestClaimRequest{
 				OrderReference: "",
 			},
-			ctx:      setProxyMetadata(context.Background()),
-			wantCode: codes.InvalidArgument,
+			ctx:            setProxyMetadata(context.Background()),
+			wantCode:       codes.InvalidArgument,
+			wantErrMessage: "an order reference must be provided",
 		},
 		"when_public_key_is_invalid": {
 			request: &external.RequestClaimRequest{
@@ -57,7 +61,31 @@ func TestRequestClaim(t *testing.T) {
 						PublicKeyPEM: "arbitrary-public-key-in-pem-format",
 					}, nil)
 			},
-			wantCode: codes.Internal,
+			wantCode:       codes.Internal,
+			wantErrMessage: "invalid public key format",
+		},
+		"when_order_is revoked": {
+			request: &external.RequestClaimRequest{
+				OrderReference: "arbitrary-order-reference",
+			},
+			ctx: setProxyMetadata(context.Background()),
+			setup: func(orgCerts *common_tls.CertificateBundle, mocks serviceMocks) {
+				publicKeyPEM, _ := orgCerts.PublicKeyPEM()
+
+				mocks.db.
+					EXPECT().
+					GetOutgoingOrderByReference(gomock.Any(), "arbitrary-order-reference").
+					Return(&database.OutgoingOrder{
+						Delegatee:    "organization-a",
+						PublicKeyPEM: publicKeyPEM,
+						RevokedAt: sql.NullTime{
+							Time:  now.Add(-1 * time.Hour),
+							Valid: true,
+						},
+					}, nil)
+			},
+			wantCode:       codes.Unauthenticated,
+			wantErrMessage: "order is revoked",
 		},
 		"when_order_is_no_longer_valid": {
 			request: &external.RequestClaimRequest{
@@ -76,9 +104,10 @@ func TestRequestClaim(t *testing.T) {
 						ValidUntil:   now.Add(-1 * time.Hour),
 					}, nil)
 			},
-			wantCode: codes.Unauthenticated,
+			wantCode:       codes.Unauthenticated,
+			wantErrMessage: "order is no longer valid",
 		},
-		"happy_path_with_short_valid_until": {
+		"happy_flow_with_short_valid_until": {
 			request: &external.RequestClaimRequest{
 				OrderReference: "arbitrary-order-reference",
 			},
@@ -97,7 +126,7 @@ func TestRequestClaim(t *testing.T) {
 			},
 			wantValidUntil: now.Add(2 * time.Hour),
 		},
-		"happy_path": {
+		"happy_flow": {
 			request: &external.RequestClaimRequest{
 				OrderReference: "arbitrary-order-reference",
 			},
@@ -136,6 +165,7 @@ func TestRequestClaim(t *testing.T) {
 				st, ok := status.FromError(err)
 				assert.True(t, ok)
 				assert.Equal(t, tt.wantCode, st.Code())
+				assert.Equal(t, tt.wantErrMessage, st.Message())
 			} else {
 				assert.NoError(t, err)
 

@@ -43,6 +43,14 @@ func (s *ManagementService) RetrieveClaimForOrder(ctx context.Context, req *api.
 
 	if err != nil {
 		s.logger.Error("could not request claim", zap.Error(err))
+
+		st, ok := status.FromError(err)
+		if ok {
+			if st.Message() == errMessageOrderRevoked {
+				return nil, status.Errorf(codes.Unauthenticated, errMessageOrderRevoked)
+			}
+		}
+
 		return nil, status.Error(codes.Internal, "unable to retrieve claim")
 	}
 

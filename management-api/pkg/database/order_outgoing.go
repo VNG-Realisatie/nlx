@@ -5,6 +5,7 @@ package database
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"time"
 
@@ -28,6 +29,7 @@ type OutgoingOrder struct {
 	Description  string
 	PublicKeyPEM string
 	Delegatee    string
+	RevokedAt    sql.NullTime
 	CreatedAt    time.Time
 	ValidFrom    time.Time
 	ValidUntil   time.Time
@@ -116,4 +118,36 @@ func (db *PostgresConfigDatabase) ListOutgoingOrdersByOrganization(ctx context.C
 	}
 
 	return orders, nil
+}
+
+// nolint dupl: function is not duplicated, difference between incoming and outgoing orders
+func (db *PostgresConfigDatabase) RevokeOutgoingOrderByReference(ctx context.Context, delegatee, reference string, revokedAt time.Time) error {
+	outgoingOrder := &OutgoingOrder{}
+
+	if err := db.DB.
+		WithContext(ctx).
+		Where("delegatee = ? AND reference = ?", delegatee, reference).
+		First(outgoingOrder).
+		Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return ErrNotFound
+		}
+
+		return err
+	}
+
+	if outgoingOrder.RevokedAt.Valid {
+		return nil
+	}
+
+	outgoingOrder.RevokedAt = sql.NullTime{
+		Time:  revokedAt,
+		Valid: true,
+	}
+
+	return db.DB.
+		WithContext(ctx).
+		Omit(clause.Associations).
+		Select("revoked_at").
+		Save(outgoingOrder).Error
 }

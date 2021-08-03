@@ -16,6 +16,7 @@ import (
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
+	"go.nlx.io/nlx/management-api/pkg/util/convert"
 )
 
 func (s *ManagementService) SynchronizeOrders(ctx context.Context, _ *emptypb.Empty) (*api.SynchronizeOrdersResponse, error) {
@@ -72,6 +73,7 @@ func (s *ManagementService) SynchronizeOrders(ctx context.Context, _ *emptypb.Em
 			Reference:   order.Reference,
 			Description: order.Description,
 			Delegator:   order.Delegator,
+			RevokedAt:   convert.ProtoToSQLTimestamp(order.RevokedAt),
 			ValidFrom:   order.ValidFrom.AsTime(),
 			ValidUntil:  order.ValidUntil.AsTime(),
 			Services:    services,
@@ -94,6 +96,7 @@ func (s *ManagementService) SynchronizeOrders(ctx context.Context, _ *emptypb.Em
 			Reference:   order.Reference,
 			Description: order.Description,
 			Delegator:   order.Delegator,
+			RevokedAt:   convert.SQLToProtoTimestamp(order.RevokedAt),
 			ValidFrom:   timestamppb.New(order.ValidFrom),
 			ValidUntil:  timestamppb.New(order.ValidUntil),
 			Services:    convertIncomingOrderServices(order.Services),

@@ -178,7 +178,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 				return &request
 			}(),
 		},
-		"happy_path": {
+		"happy_flow": {
 			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().

@@ -635,6 +635,42 @@
         ]
       }
     },
+    "/api/v1/orders/incoming/{delegator}/{reference}/revoke": {
+      "put": {
+        "operationId": "Management_RevokeIncomingOrder",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "delegator",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "reference",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Management"
+        ]
+      }
+    },
     "/api/v1/orders/outgoing": {
       "get": {
         "operationId": "Management_ListOutgoingOrders",
@@ -680,6 +716,42 @@
             "schema": {
               "$ref": "#/definitions/managementCreateOutgoingOrderRequest"
             }
+          }
+        ],
+        "tags": [
+          "Management"
+        ]
+      }
+    },
+    "/api/v1/orders/outgoing/{delegatee}/{reference}/revoke": {
+      "put": {
+        "operationId": "Management_RevokeOutgoingOrder",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "delegatee",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "reference",
+            "in": "path",
+            "required": true,
+            "type": "string"
           }
         ],
         "tags": [
@@ -991,7 +1063,9 @@
         "serviceDelete",
         "organizationSettingsUpdate",
         "organizationInsightConfigurationUpdate",
-        "orderCreate"
+        "orderCreate",
+        "orderOutgoingRevoke",
+        "orderIncomingRevoke"
       ],
       "default": "loginSuccess"
     },
@@ -1110,6 +1184,20 @@
           "format": "date-time"
         },
         "data": {
+          "$ref": "#/definitions/managementAuditLogRecordMetadata"
+        }
+      }
+    },
+    "managementAuditLogRecordMetadata": {
+      "type": "object",
+      "properties": {
+        "delegatee": {
+          "type": "string"
+        },
+        "delegator": {
+          "type": "string"
+        },
+        "reference": {
           "type": "string"
         }
       }
@@ -1447,6 +1535,10 @@
           "items": {
             "$ref": "#/definitions/managementOrderService"
           }
+        },
+        "revokedAt": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     },
@@ -1724,6 +1816,10 @@
           "items": {
             "$ref": "#/definitions/managementOrderService"
           }
+        },
+        "revokedAt": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     },

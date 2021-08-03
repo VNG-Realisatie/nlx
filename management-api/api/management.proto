@@ -7,6 +7,7 @@ option go_package = "go.nlx.io/nlx/management-api/api";
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
 
 service Management {
   rpc SynchronizeOrders(google.protobuf.Empty) returns (SynchronizeOrdersResponse) {
@@ -89,6 +90,12 @@ service Management {
   }
   rpc CreateOutgoingOrder (CreateOutgoingOrderRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {post: "/api/v1/orders/outgoing" body: "*"};
+  }
+  rpc RevokeOutgoingOrder (RevokeOutgoingOrderRequest) returns (google.protobuf.Empty){
+    option (google.api.http) = {put: "/api/v1/orders/outgoing/{delegatee}/{reference}/revoke"}; 
+  }
+  rpc RevokeIncomingOrder (RevokeIncomingOrderRequest) returns (google.protobuf.Empty){
+    option (google.api.http) = {put: "/api/v1/orders/incoming/{delegator}/{reference}/revoke"}; 
   }
   rpc ListOutgoingOrders (google.protobuf.Empty) returns (ListOutgoingOrdersResponse) {
     option (google.api.http) = {get: "/api/v1/orders/outgoing"};
@@ -479,6 +486,8 @@ message AuditLogRecord {
     organizationSettingsUpdate = 11;
     organizationInsightConfigurationUpdate = 12;
     orderCreate = 13;
+    orderOutgoingRevoke = 14;
+    orderIncomingRevoke = 15;
   }
 
   message Service {
@@ -495,7 +504,13 @@ message AuditLogRecord {
   string delegatee = 7;
   repeated Service services = 8;
   google.protobuf.Timestamp createdAt = 9;
-  string data = 10;
+  AuditLogRecordMetadata data = 10;
+}
+
+message AuditLogRecordMetadata {
+  string delegatee = 1;
+  string delegator = 2;
+  string reference = 3;
 }
 
 message ListAuditLogsResponse {
@@ -521,6 +536,16 @@ message CreateOutgoingOrderRequest {
   repeated OrderService services = 7;
 }
 
+message RevokeOutgoingOrderRequest{
+  string delegatee = 1;
+  string reference = 2; 
+}
+
+message RevokeIncomingOrderRequest{
+  string delegator = 1;
+  string reference = 2; 
+}
+
 message OrderService {
   string organization = 1;
   string service = 2;
@@ -533,6 +558,7 @@ message OutgoingOrder {
   google.protobuf.Timestamp validFrom = 5;
   google.protobuf.Timestamp validUntil = 6;
   repeated OrderService services = 7;
+  google.protobuf.Timestamp revokedAt = 8;
 }
 
 message ListOutgoingOrdersResponse {
@@ -546,6 +572,7 @@ message IncomingOrder {
   google.protobuf.Timestamp validFrom = 4;
   google.protobuf.Timestamp validUntil = 5;
   repeated OrderService services = 6;
+  google.protobuf.Timestamp revokedAt = 7;
 }
 
 message ListIncomingOrdersResponse {

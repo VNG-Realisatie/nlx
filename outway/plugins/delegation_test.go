@@ -13,6 +13,8 @@ import (
 	"github.com/golang-jwt/jwt"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/delegation"
 	"go.nlx.io/nlx/management-api/api"
@@ -25,30 +27,34 @@ var testToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
 
 func TestDelegationPlugin(t *testing.T) {
 	tests := map[string]struct {
-		wantErr     bool
-		wantMessage string
-		setup       func(*mock.MockManagementClient, *DelegationPlugin)
-		setHeaders  func(*http.Request)
+		wantErr            bool
+		wantMessage        string
+		wantHTTPStatusCode int
+		setup              func(*mock.MockManagementClient, *DelegationPlugin)
+		setHeaders         func(*http.Request)
 	}{
 		"missing_order_reference_returns_an_errors": {
-			wantErr:     true,
-			wantMessage: "failed to parse delegation metadata\n",
+			wantErr:            true,
+			wantHTTPStatusCode: http.StatusInternalServerError,
+			wantMessage:        "failed to parse delegation metadata\n",
 			setHeaders: func(r *http.Request) {
 				r.Header.Add("X-NLX-Request-Delegator", "TestOrg")
 			},
 		},
 
 		"missing_delegator_returns_an_errors": {
-			wantErr:     true,
-			wantMessage: "failed to parse delegation metadata\n",
+			wantErr:            true,
+			wantHTTPStatusCode: http.StatusInternalServerError,
+			wantMessage:        "failed to parse delegation metadata\n",
 			setHeaders: func(r *http.Request) {
 				r.Header.Add("X-NLX-Request-OrderReference", "test-ref-123")
 			},
 		},
 
 		"error_while_retrieving_claim_returns_an_error": {
-			wantErr:     true,
-			wantMessage: "failed to retrieve claim\n",
+			wantErr:            true,
+			wantHTTPStatusCode: http.StatusInternalServerError,
+			wantMessage:        "failed to retrieve claim\n",
 			setHeaders: func(r *http.Request) {
 				r.Header.Add("X-NLX-Request-Delegator", "TestOrg")
 				r.Header.Add("X-NLX-Request-OrderReference", "test-ref-123")
@@ -64,8 +70,9 @@ func TestDelegationPlugin(t *testing.T) {
 		},
 
 		"error_when_retrieving_invalid_jwt": {
-			wantErr:     true,
-			wantMessage: "failed to parse JWT\n",
+			wantErr:            true,
+			wantHTTPStatusCode: http.StatusInternalServerError,
+			wantMessage:        "failed to parse JWT\n",
 			setHeaders: func(r *http.Request) {
 				r.Header.Add("X-NLX-Request-Delegator", "TestOrg")
 				r.Header.Add("X-NLX-Request-OrderReference", "test-ref-123")
@@ -83,6 +90,7 @@ func TestDelegationPlugin(t *testing.T) {
 		},
 
 		"missing_claim_results_in_requesting_a_claim": {
+			wantHTTPStatusCode: http.StatusOK,
 			setHeaders: func(r *http.Request) {
 				r.Header.Add("X-NLX-Request-Delegator", "TestOrg")
 				r.Header.Add("X-NLX-Request-OrderReference", "test-ref-123")
@@ -99,7 +107,26 @@ func TestDelegationPlugin(t *testing.T) {
 			},
 		},
 
+		"order_has_been_revoked": {
+			wantErr:            true,
+			wantHTTPStatusCode: http.StatusUnauthorized,
+			wantMessage:        "order is revoked\n",
+			setHeaders: func(r *http.Request) {
+				r.Header.Add("X-NLX-Request-Delegator", "TestOrg")
+				r.Header.Add("X-NLX-Request-OrderReference", "test-ref-123")
+			},
+			setup: func(client *mock.MockManagementClient, plugin *DelegationPlugin) {
+				client.EXPECT().
+					RetrieveClaimForOrder(gomock.Any(), &api.RetrieveClaimForOrderRequest{
+						OrderOrganizationName: "TestOrg",
+						OrderReference:        "test-ref-123",
+					}).
+					Return(nil, status.Error(codes.Unauthenticated, "order is revoked"))
+			},
+		},
+
 		"invalid_claim_results_in_requesting_a_new_claim": {
+			wantHTTPStatusCode: http.StatusOK,
 			setHeaders: func(r *http.Request) {
 				r.Header.Add("X-NLX-Request-Delegator", "TestOrg")
 				r.Header.Add("X-NLX-Request-OrderReference", "test-ref-123")
@@ -128,6 +155,7 @@ func TestDelegationPlugin(t *testing.T) {
 		},
 
 		"required_headers_with_valid_claims_succeeds": {
+			wantHTTPStatusCode: http.StatusOK,
 			setHeaders: func(r *http.Request) {
 				r.Header.Add("X-NLX-Request-Delegator", "TestOrg")
 				r.Header.Add("X-NLX-Request-OrderReference", "test-ref-123")
@@ -174,13 +202,13 @@ func TestDelegationPlugin(t *testing.T) {
 			assert.NoError(t, err)
 
 			if tt.wantErr {
-				assert.Equal(t, http.StatusInternalServerError, response.StatusCode)
 				assert.Equal(t, tt.wantMessage, string(contents))
 			} else {
-				assert.Equal(t, http.StatusOK, response.StatusCode)
 				assert.Equal(t, "TestOrg", context.LogData["delegator"])
 				assert.Equal(t, "test-ref-123", context.LogData["orderReference"])
 			}
+
+			assert.Equal(t, tt.wantHTTPStatusCode, response.StatusCode)
 		})
 	}
 }

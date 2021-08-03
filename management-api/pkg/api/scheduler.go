@@ -30,7 +30,7 @@ import (
 const (
 	maxRetries     = 3
 	maxConcurrency = 4
-	pollInterval   = 1500
+	pollInterval   = 1500 * time.Millisecond
 
 	// jobs are unlocked after 5 minutes, let's wait at least one minute before retrying
 	jobTimeout = 4 * time.Minute
@@ -61,7 +61,7 @@ func newAccessRequestScheduler(logger *zap.Logger, directoryClient directory.Cli
 func (scheduler *accessRequestScheduler) Run(ctx context.Context) {
 	wg := &sync.WaitGroup{}
 	sem := semaphore.NewWeighted(int64(maxConcurrency))
-	ticker := time.NewTicker(pollInterval * time.Millisecond)
+	ticker := time.NewTicker(pollInterval)
 
 	defer ticker.Stop()
 

@@ -12,10 +12,13 @@ import (
 
 	"github.com/golang-jwt/jwt"
 	"go.uber.org/zap"
+	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/delegation"
 	"go.nlx.io/nlx/management-api/api"
 )
+
+const errMessageOrderRevoked = "order is revoked"
 
 type delegationError struct {
 	source  error
@@ -76,6 +79,13 @@ func (plugin *DelegationPlugin) requestClaim(name, orderReference string) (*dele
 		OrderReference:        orderReference,
 	})
 	if err != nil {
+		st, ok := status.FromError(err)
+		if ok {
+			if st.Message() == errMessageOrderRevoked {
+				return nil, "", newDelegationError("order is revoked", err)
+			}
+		}
+
 		return nil, "", newDelegationError("failed to retrieve claim", err)
 	}
 
@@ -139,13 +149,17 @@ func (plugin *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 		if err != nil {
 			msg := fmt.Sprintf("failed to request claim from %s", name)
 
+			httpStatus := http.StatusInternalServerError
 			if delegationErr, ok := err.(*delegationError); ok {
 				msg = delegationErr.message
 				err = delegationErr.source
+
+				if msg == errMessageOrderRevoked {
+					httpStatus = http.StatusUnauthorized
+				}
 			}
 
-			context.Logger.Error(msg, zap.Error(err))
-			http.Error(context.Response, msg, http.StatusInternalServerError)
+			http.Error(context.Response, msg, httpStatus)
 
 			return nil
 		}

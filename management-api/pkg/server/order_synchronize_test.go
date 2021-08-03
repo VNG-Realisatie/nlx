@@ -2,6 +2,7 @@ package server_test
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"testing"
 	"time"
@@ -21,6 +22,7 @@ import (
 func TestSynchronizeOrders(t *testing.T) {
 	validFrom := time.Now().UTC()
 	validUntil := time.Now().Add(time.Hour).UTC()
+	revokedAt := time.Now().UTC()
 
 	tests := map[string]struct {
 		setup   func(mocks serviceMocks)
@@ -105,6 +107,7 @@ func TestSynchronizeOrders(t *testing.T) {
 								Reference:   "ref-order-1",
 								Description: "Order number 1",
 								Delegator:   "nlx-test",
+								RevokedAt:   nil,
 								ValidFrom:   timestamppb.New(validFrom),
 								ValidUntil:  timestamppb.New(validUntil),
 								Services: []*api.OrderService{
@@ -123,6 +126,7 @@ func TestSynchronizeOrders(t *testing.T) {
 							Reference:   "ref-order-1",
 							Description: "Order number 1",
 							Delegator:   "nlx-test",
+							RevokedAt:   sql.NullTime{},
 							ValidFrom:   validFrom,
 							ValidUntil:  validUntil,
 							Services: []database.IncomingOrderService{
@@ -139,13 +143,14 @@ func TestSynchronizeOrders(t *testing.T) {
 			},
 		},
 
-		"synchronization_succeeds_on_happy_path": {
+		"synchronization_succeeds_on_happy_flow": {
 			want: &api.SynchronizeOrdersResponse{
 				Orders: []*api.IncomingOrder{
 					{
 						Reference:   "ref-order-1",
 						Description: "Order number 1",
 						Delegator:   "nlx-test",
+						RevokedAt:   nil,
 						ValidFrom:   timestamppb.New(validFrom),
 						ValidUntil:  timestamppb.New(validUntil),
 						Services: []*api.OrderService{
@@ -180,6 +185,7 @@ func TestSynchronizeOrders(t *testing.T) {
 								Reference:   "ref-order-1",
 								Description: "Order number 1",
 								Delegator:   "nlx-test",
+								RevokedAt:   nil,
 								ValidFrom:   timestamppb.New(validFrom),
 								ValidUntil:  timestamppb.New(validUntil),
 								Services: []*api.OrderService{
@@ -198,8 +204,90 @@ func TestSynchronizeOrders(t *testing.T) {
 							Reference:   "ref-order-1",
 							Description: "Order number 1",
 							Delegator:   "nlx-test",
+							RevokedAt:   sql.NullTime{},
 							ValidFrom:   validFrom,
 							ValidUntil:  validUntil,
+							Services: []database.IncomingOrderService{
+								{
+									Organization: "org-a",
+									Service:      "service-1",
+								},
+							},
+						},
+					}).
+					Return(nil)
+
+				mocks.mc.EXPECT().Close().Return(nil)
+			},
+		},
+
+		"synchronization_succeeds_on_happy_flow_revoked_orders": {
+			want: &api.SynchronizeOrdersResponse{
+				Orders: []*api.IncomingOrder{
+					{
+						Reference:   "ref-order-1",
+						Description: "Order number 1",
+						Delegator:   "nlx-test",
+						RevokedAt:   timestamppb.New(revokedAt),
+						ValidFrom:   timestamppb.New(validFrom),
+						ValidUntil:  timestamppb.New(validUntil),
+						Services: []*api.OrderService{
+							{
+								Organization: "org-a",
+								Service:      "service-1",
+							},
+						},
+					},
+				},
+			},
+			setup: func(mocks serviceMocks) {
+				mocks.dc.EXPECT().
+					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
+					Return(&inspectionapi.ListOrganizationsResponse{
+						Organizations: []*inspectionapi.ListOrganizationsResponse_Organization{
+							{
+								Name: "nlx-test",
+							},
+						},
+					}, nil)
+
+				mocks.dc.EXPECT().
+					GetOrganizationInwayProxyAddress(gomock.Any(), "nlx-test").
+					Return("localhost:1234", nil)
+
+				mocks.mc.EXPECT().
+					ListOrders(gomock.Any(), &emptypb.Empty{}).
+					Return(&external.ListOrdersResponse{
+						Orders: []*api.IncomingOrder{
+							{
+								Reference:   "ref-order-1",
+								Description: "Order number 1",
+								Delegator:   "nlx-test",
+								RevokedAt:   timestamppb.New(revokedAt),
+								ValidFrom:   timestamppb.New(validFrom),
+								ValidUntil:  timestamppb.New(validUntil),
+								Services: []*api.OrderService{
+									{
+										Organization: "org-a",
+										Service:      "service-1",
+									},
+								},
+							},
+						},
+					}, nil)
+
+				mocks.db.EXPECT().
+					SynchronizeOrders(gomock.Any(), []*database.IncomingOrder{
+						{
+							Reference:   "ref-order-1",
+							Description: "Order number 1",
+							Delegator:   "nlx-test",
+							RevokedAt: sql.NullTime{
+								Valid: true,
+								Time:  revokedAt,
+							},
+							ValidFrom:  validFrom,
+							ValidUntil: validUntil,
 							Services: []database.IncomingOrderService{
 								{
 									Organization: "org-a",

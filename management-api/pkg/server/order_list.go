@@ -16,6 +16,7 @@ import (
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
+	"go.nlx.io/nlx/management-api/pkg/util/convert"
 )
 
 func (s *ManagementService) ListOutgoingOrders(ctx context.Context, _ *emptypb.Empty) (*api.ListOutgoingOrdersResponse, error) {
@@ -34,6 +35,7 @@ func (s *ManagementService) ListOutgoingOrders(ctx context.Context, _ *emptypb.E
 			Reference:   order.Reference,
 			Description: order.Description,
 			Delegatee:   order.Delegatee,
+			RevokedAt:   convert.SQLToProtoTimestamp(order.RevokedAt),
 			ValidFrom:   timestamppb.New(order.ValidFrom),
 			ValidUntil:  timestamppb.New(order.ValidUntil),
 			Services:    convertOutgoingOrderServices(order.Services),
@@ -59,6 +61,7 @@ func (s *ManagementService) ListIncomingOrders(ctx context.Context, _ *emptypb.E
 			Reference:   order.Reference,
 			Description: order.Description,
 			Delegator:   order.Delegator,
+			RevokedAt:   convert.SQLToProtoTimestamp(order.RevokedAt),
 			ValidFrom:   timestamppb.New(order.ValidFrom),
 			ValidUntil:  timestamppb.New(order.ValidUntil),
 			Services:    convertIncomingOrderServices(order.Services),
@@ -87,6 +90,7 @@ func (s *ManagementService) ListOrders(ctx context.Context, _ *emptypb.Empty) (*
 			Reference:   order.Reference,
 			Description: order.Description,
 			Delegator:   s.orgCert.Certificate().Subject.Organization[0],
+			RevokedAt:   convert.SQLToProtoTimestamp(order.RevokedAt),
 			ValidFrom:   timestamppb.New(order.ValidFrom),
 			ValidUntil:  timestamppb.New(order.ValidUntil),
 			Services:    convertOutgoingOrderServices(order.Services),

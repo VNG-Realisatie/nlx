@@ -120,6 +120,10 @@
           "items": {
             "$ref": "#/definitions/managementOrderService"
           }
+        },
+        "revokedAt": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     },

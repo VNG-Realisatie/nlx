@@ -23,6 +23,8 @@ import (
 
 const expiresInHours = 4
 
+var errMessageOrderRevoked = "order is revoked"
+
 func (s *ManagementService) RequestClaim(ctx context.Context, req *external.RequestClaimRequest) (*external.RequestClaimResponse, error) {
 	md, err := s.parseProxyMetadata(ctx)
 	if err != nil {
@@ -59,6 +61,10 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 
 	if fingerprint != md.PublicKeyFingerprint {
 		return nil, status.Errorf(codes.Unauthenticated, "invalid public key for order")
+	}
+
+	if order.RevokedAt.Valid {
+		return nil, status.Errorf(codes.Unauthenticated, errMessageOrderRevoked)
 	}
 
 	if time.Now().After(order.ValidUntil) {

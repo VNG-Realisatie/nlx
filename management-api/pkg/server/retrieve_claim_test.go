@@ -19,6 +19,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
+// nolint funlen: this is a test function
 func TestRetrieveClaim(t *testing.T) {
 	tests := map[string]struct {
 		request *api.RetrieveClaimForOrderRequest
@@ -59,6 +60,7 @@ func TestRetrieveClaim(t *testing.T) {
 			},
 			wantErr: status.Error(codes.Internal, "unable to retrieve claim"),
 		},
+		// nolint dupl: linter is unable to detect difference in error message
 		"when_creating_the_management_client_fails": {
 			request: &api.RetrieveClaimForOrderRequest{
 				OrderReference:        "order-reference-a",
@@ -80,6 +82,29 @@ func TestRetrieveClaim(t *testing.T) {
 				return context.Background()
 			},
 			wantErr: status.Error(codes.Internal, "unable to retrieve claim"),
+		},
+		// nolint dupl: linter is unable to detect difference in error message
+		"when_order_is_revoked": {
+			request: &api.RetrieveClaimForOrderRequest{
+				OrderReference:        "order-reference-a",
+				OrderOrganizationName: "organization-a",
+			},
+			setup: func(service *server.ManagementService, mocks serviceMocks) context.Context {
+				mocks.dc.EXPECT().
+					GetOrganizationInwayProxyAddress(gomock.Any(), gomock.Any()).
+					Return("inway-address", nil)
+
+				mocks.mc.EXPECT().Close()
+
+				mocks.mc.EXPECT().
+					RequestClaim(gomock.Any(), &external.RequestClaimRequest{
+						OrderReference: "order-reference-a",
+					}).
+					Return(nil, status.Errorf(codes.Unauthenticated, "order is revoked"))
+
+				return context.Background()
+			},
+			wantErr: status.Error(codes.Unauthenticated, "order is revoked"),
 		},
 	}
 

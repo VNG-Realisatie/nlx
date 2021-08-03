@@ -5,9 +5,11 @@ package auditlog
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 
 	"go.uber.org/zap"
+	"gopkg.in/square/go-jose.v2/json"
 
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
@@ -15,6 +17,12 @@ import (
 type PostgresLogger struct {
 	database database.ConfigDatabase
 	logger   *zap.Logger
+}
+
+type recordMetadata struct {
+	Delegatee *string `json:"delegatee,omitempty"`
+	Delegator *string `json:"delegator,omitempty"`
+	Reference *string `json:"reference,omitempty"`
 }
 
 func NewPostgresLogger(configDatabase database.ConfigDatabase, logger *zap.Logger) Logger {
@@ -31,14 +39,14 @@ func (a *PostgresLogger) ListAll(ctx context.Context) ([]*Record, error) {
 		return nil, errors.New("database error")
 	}
 
-	return convertAuditLogRecordsFromDatabase(auditLogRecords), nil
+	return convertAuditLogRecordsFromDatabase(auditLogRecords)
 }
 
-func convertAuditLogRecordsFromDatabase(records []*database.AuditLog) []*Record {
+func convertAuditLogRecordsFromDatabase(records []*database.AuditLog) ([]*Record, error) {
 	convertedRecords := make([]*Record, len(records))
 
 	for i, record := range records {
-		convertedRecords[i] = &Record{
+		convertedRecord := &Record{
 			ID:         record.ID,
 			ActionType: ActionType(record.ActionType),
 			Username:   record.UserName,
@@ -48,6 +56,22 @@ func convertAuditLogRecordsFromDatabase(records []*database.AuditLog) []*Record 
 			CreatedAt:  record.CreatedAt,
 		}
 
+		if record.Data.Valid {
+			data := &recordMetadata{}
+
+			if err := json.Unmarshal([]byte(record.Data.String), data); err != nil {
+				return nil, err
+			}
+
+			convertedRecord.Data = &RecordData{
+				Delegatee: data.Delegatee,
+				Delegator: data.Delegator,
+				Reference: data.Reference,
+			}
+		}
+
+		convertedRecords[i] = convertedRecord
+
 		for j, service := range record.Services {
 			convertedRecords[i].Services[j] = RecordService{
 				Organization: service.Organization,
@@ -56,7 +80,7 @@ func convertAuditLogRecordsFromDatabase(records []*database.AuditLog) []*Record 
 		}
 	}
 
-	return convertedRecords
+	return convertedRecords, nil
 }
 
 func (a *PostgresLogger) LoginSuccess(ctx context.Context, userName, userAgent string) error {
@@ -234,6 +258,62 @@ func (a *PostgresLogger) OrderCreate(ctx context.Context, userName, userAgent, d
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
+
+	return err
+}
+
+func (a *PostgresLogger) OrderOutgoingRevoke(ctx context.Context, userName, userAgent, delegatee, reference string) error {
+	revokeLog := &recordMetadata{
+		Delegatee: &delegatee,
+		Reference: &reference,
+	}
+
+	data, err := json.Marshal(revokeLog)
+	if err != nil {
+		return err
+	}
+
+	record := &database.AuditLog{
+		UserAgent: userAgent,
+
+		UserName:   userName,
+		ActionType: database.OrderOutgoingRevoke,
+
+		Data: sql.NullString{
+			Valid:  true,
+			String: string(data),
+		},
+	}
+
+	_, err = a.database.CreateAuditLogRecord(ctx, record)
+
+	return err
+}
+
+func (a *PostgresLogger) OrderIncomingRevoke(ctx context.Context, userName, userAgent, delegator, reference string) error {
+	revokeLog := &recordMetadata{
+		Delegator: &delegator,
+		Reference: &reference,
+	}
+
+	data, err := json.Marshal(revokeLog)
+	if err != nil {
+		return err
+	}
+
+	record := &database.AuditLog{
+		UserAgent: userAgent,
+
+		UserName:   userName,
+		ActionType: database.OrderIncomingRevoke,
+
+		Data: sql.NullString{
+			Valid:  true,
+			String: string(data),
+		},
+	}
+
+	_, err = a.database.CreateAuditLogRecord(ctx, record)
 
 	return err
 }

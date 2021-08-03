@@ -90,7 +90,7 @@ func TestRoute_RequestCertificate(t *testing.T) {
 			http.StatusInternalServerError,
 			"Internal Server Error\n",
 		},
-		"happy_path": {
+		"happy_flow": {
 			func() []byte {
 				certificateRequest, err := json.Marshal(&requestBody{
 					Csr: string(csrData),

@@ -5,6 +5,7 @@ package database
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 	"time"
@@ -29,6 +30,7 @@ type IncomingOrder struct {
 	Description  string
 	PublicKeyPEM string
 	Delegator    string
+	RevokedAt    sql.NullTime
 	CreatedAt    time.Time
 	ValidFrom    time.Time
 	ValidUntil   time.Time
@@ -113,13 +115,13 @@ func (db *PostgresConfigDatabase) SynchronizeOrders(ctx context.Context, orders 
 		order.ID = existingOrder.ID
 
 		// if nothing changed skip it
-		if order.ValidUntil.Equal(existingOrder.ValidUntil) &&
-			existingOrder.Description == order.Description {
+		if isOrderEqual(existingOrder, order) {
 			continue
 		}
 
 		existingOrder.ValidUntil = order.ValidUntil
 		existingOrder.Description = order.Description
+		existingOrder.RevokedAt = order.RevokedAt
 
 		if err := dbWithTx.DB.
 			WithContext(ctx).
@@ -131,4 +133,42 @@ func (db *PostgresConfigDatabase) SynchronizeOrders(ctx context.Context, orders 
 	}
 
 	return tx.Commit().Error
+}
+
+// nolint dupl: function is not duplicated, difference between incoming and outgoing orders
+func (db *PostgresConfigDatabase) RevokeIncomingOrderByReference(ctx context.Context, delegator, reference string, revokedAt time.Time) error {
+	incomingOrder := &IncomingOrder{}
+
+	if err := db.DB.
+		WithContext(ctx).
+		Where("delegator = ? AND reference = ?", delegator, reference).
+		First(incomingOrder).
+		Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return ErrNotFound
+		}
+
+		return err
+	}
+
+	if incomingOrder.RevokedAt.Valid {
+		return nil
+	}
+
+	incomingOrder.RevokedAt = sql.NullTime{
+		Time:  revokedAt,
+		Valid: true,
+	}
+
+	return db.DB.
+		WithContext(ctx).
+		Omit(clause.Associations).
+		Select("revoked_at").
+		Save(incomingOrder).Error
+}
+
+func isOrderEqual(a, b *IncomingOrder) bool {
+	return a.ValidUntil.Equal(b.ValidUntil) &&
+		a.Description == b.Description &&
+		a.RevokedAt == b.RevokedAt
 }

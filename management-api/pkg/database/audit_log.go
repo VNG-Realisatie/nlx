@@ -5,6 +5,7 @@ package database
 
 import (
 	"context"
+	"database/sql"
 	"time"
 
 	"gorm.io/gorm/clause"
@@ -24,6 +25,8 @@ const (
 	ServiceUpdate                          AuditLogActionType = "service_update"
 	ServiceDelete                          AuditLogActionType = "service_delete"
 	OrderCreate                            AuditLogActionType = "order_create"
+	OrderOutgoingRevoke                    AuditLogActionType = "order_outgoing_revoke"
+	OrderIncomingRevoke                    AuditLogActionType = "order_incoming_revoke"
 	OrganizationSettingsUpdate             AuditLogActionType = "organization_settings_update"
 	OrganizationInsightConfigurationUpdate AuditLogActionType = "organization_insight_configuration_update"
 )
@@ -34,6 +37,7 @@ type AuditLog struct {
 	ActionType AuditLogActionType
 	UserAgent  string
 	Delegatee  string
+	Data       sql.NullString
 	Services   []AuditLogService
 	CreatedAt  time.Time
 }
