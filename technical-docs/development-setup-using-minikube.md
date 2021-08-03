@@ -58,7 +58,21 @@ kubectl create namespace traefik
 helm install traefik traefik/traefik --namespace traefik --values helm/traefik-values-minikube.yaml
 ```
 
-Also install KubeDB, an operator that manages postgres instances. Follow the [kubedb.com instructions for installing using helm](https://kubedb.com/docs/0.12.0/setup/install/#using-helm) and click the 'Helm' tab.
+Install the [Zalando postgres operator](https://github.com/zalando/postgres-operator), this operator will manage the postgres instances.
+
+```bash
+helm repo add zalando-postgres-operator https://raw.githubusercontent.com/zalando/postgres-operator/master/charts/postgres-operator # At this moment Zalando doesn't have a dedicated helm repository, this is currently the provided solution
+helm repo update
+
+kubectl create namespace zalando
+helm install postgres-operator zalando-postgres-operator/postgres-operator --namespace zalando
+```
+
+Check if postgres operator is running.
+
+```bash
+kubectl --namespace=zalando get pods -l "app.kubernetes.io/name=postgres-operator"
+```
 
 Install cert-manager to issue certificates automatically.
 
@@ -75,7 +89,7 @@ helm install cert-manager jetstack/cert-manager --namespace cert-manager --versi
 > Also see: https://cert-manager.io/docs/installation/kubernetes/#installing-with-helm
 
 
-When Traefik and KubeDB are running, you can start all the NLX components by executing:
+When Traefik and the postgres operator are running, you can start all the NLX components by executing:
 
 ```bash
 helm repo add stable https://charts.helm.sh/stable
