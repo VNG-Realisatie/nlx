@@ -1,3 +1,20 @@
+# [0.109.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.108.0...v0.109.0) (2021-08-03)
+
+
+### Bug Fixes
+
+* **docs:** resolve breaking change for docusaurus ([fe14644](https://gitlab.com/commonground/nlx/nlx/commit/fe14644cbe74a8bc5c06ca07c2fe33aacf32ae99))
+* **management:** remove restricting url validation ([a6dc056](https://gitlab.com/commonground/nlx/nlx/commit/a6dc0568d78511fd0f2e47d4292c2ca20dd3c0fc))
+
+
+### Features
+
+* **helm:** add support for both the networking.k8s.io/v1beta1 and networking.k8s.io/v1 API ([e8900dd](https://gitlab.com/commonground/nlx/nlx/commit/e8900dd9e5b4ea182bc06a022d63faceabab3469))
+* **helm:** reinstate semverCompare ([150ce96](https://gitlab.com/commonground/nlx/nlx/commit/150ce9613a459f33bfa9791899a1504295056937))
+* **helm:** update deprecated version ([f902e7e](https://gitlab.com/commonground/nlx/nlx/commit/f902e7e9b83b0c8efa317ab2ac8d11d160a5cd89))
+* **inway:** add annotations and loadbalancerip ([a32767b](https://gitlab.com/commonground/nlx/nlx/commit/a32767be3a6b6d806411f49174ee0b3c419771f8))
+* **management:** implement support for basic authentication ([19c59ab](https://gitlab.com/commonground/nlx/nlx/commit/19c59ab079d7249478c0ba4982af0159f992d3c1))
+
 # [0.108.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.107.2...v0.108.0) (2021-07-13)
 
 
