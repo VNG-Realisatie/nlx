@@ -1,3 +1,10 @@
+## [0.109.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.109.0...v0.109.1) (2021-08-04)
+
+
+### Bug Fixes
+
+* **helm:** removed trailing dashes from if statements in ingresses ([8676b80](https://gitlab.com/commonground/nlx/nlx/commit/8676b807e2ee8cab02d521d20a7237ab463d219f))
+
 # [0.109.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.108.0...v0.109.0) (2021-08-03)
 
 
