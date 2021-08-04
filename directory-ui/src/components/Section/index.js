@@ -19,9 +19,13 @@ const arrow = css`
     height: 0;
     border-left: 32px solid transparent;
     border-right: 32px solid transparent;
-    border-top: 28px solid ${(p) => getColor(p, true)};
+    border-top: 28px solid #dfe5ea;
     margin-left: -32px;
     content: '';
+
+    ${mediaQueries.mdUp`
+      border-top-color: #dadfe7;
+    `}
   }
 
   &::after {

@@ -19,7 +19,7 @@ export const Wrapper = styled.footer`
 
 export const FooterContent = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   text-align: left;
 

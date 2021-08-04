@@ -10,7 +10,6 @@ const Footer = () => (
   <Wrapper>
     <Container>
       <FooterContent>
-        <p />
         <StyledLogoVng />
       </FooterContent>
     </Container>

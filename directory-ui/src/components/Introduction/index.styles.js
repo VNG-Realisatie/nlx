@@ -7,8 +7,8 @@ import BaseSection, { SectionIntro } from '../../components/Section'
 
 export const Section = styled(BaseSection)`
   padding: ${(p) => p.theme.tokens.spacing09} 0;
-  background-color: #dfe5ea;
-  background-image: url('/intro-bg-small.svg');
+  background: url(contact/intro-bg-small.svg) center bottom no-repeat
+    rgb(223, 229, 234);
 
   ${mediaQueries.mdUp`
     padding: ${(p) => p.theme.tokens.spacing10} 0;
@@ -16,9 +16,7 @@ export const Section = styled(BaseSection)`
   `}
 `
 
-export const StyledSectionIntro = styled(SectionIntro)`
-  /* color: ${(p) => p.theme.tokens.colorBackground}; */
-`
+export const StyledSectionIntro = styled(SectionIntro)``
 
 export const Content = styled.div`
   h2 {

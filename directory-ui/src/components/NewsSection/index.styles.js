@@ -4,7 +4,7 @@
 import styled from 'styled-components'
 import { mediaQueries } from '@commonground/design-system'
 import BaseSection from '../../components/Section'
-import { Col } from '../../components/Grid'
+import { Col } from '../Grid'
 
 export const Section = styled(BaseSection)`
   position: relative;
