@@ -4,7 +4,7 @@
 
 import React from 'react'
 import { func, string, arrayOf, shape } from 'prop-types'
-import Table from '../Table'
+import Table from '../DirectoryTable/Table'
 import ServicesTableRow from './ServicesTableRow'
 
 const ServicesTable = ({

@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { Switch, BrowserRouter as Router, Route } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 import { GlobalStyles, DomainNavigation } from '@commonground/design-system'
 import VersionLogger from './components/VersionLogger'
@@ -26,11 +26,13 @@ const App = () => (
 
         <Header />
 
-        <Route exact path="/" component={ServiceOverviewPage} />
-        <Route
-          path="/documentation/:organizationName/:serviceName"
-          component={DocumentationPage}
-        />
+        <Switch>
+          <Route
+            path="/documentation/:organizationName/:serviceName"
+            component={DocumentationPage}
+          />
+          <Route path="/" component={ServiceOverviewPage} />
+        </Switch>
       </ThemeProvider>
     </Router>
     <VersionLogger />

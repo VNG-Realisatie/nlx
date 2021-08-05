@@ -1,7 +1,6 @@
 // Copyright © VNG Realisatie 2018
 // Licensed under the EUPL
 //
-
 import styled from 'styled-components'
 import Filters from '../../components/Filters'
 import ServicesTableContainer from '../../containers/ServicesTableContainer'

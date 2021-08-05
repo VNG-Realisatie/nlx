@@ -3,7 +3,7 @@
 //
 
 import styled from 'styled-components'
-import Table from '../Table'
+import Table from '../TableOld'
 
 export const StyledServiceTableRow = styled(Table.Row)`
   cursor: pointer;

@@ -5,6 +5,11 @@
 import { createGlobalStyle } from 'styled-components'
 
 export default createGlobalStyle`
+  /* TODO: Apply in design system */
+  *[data-drawer=directoryDetail] {
+    z-index: 10;
+  }
+
   @font-face {
     font-family: 'Source Sans Pro';
     font-style: normal;

@@ -5,7 +5,10 @@
 import React, { PureComponent } from 'react'
 import { bool, string, array, func, oneOf } from 'prop-types'
 import ServicesTable from '../../components/ServicesTable'
-import { ASCENDING, DESCENDING } from '../../components/Table/SortableHeadCell'
+import {
+  ASCENDING,
+  DESCENDING,
+} from '../../components/TableOld/SortableHeadCell'
 
 const SORT_KEY_ORGANIZATION = 'organization'
 const SORT_KEY_NAME = 'name'

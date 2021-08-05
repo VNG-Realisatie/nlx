@@ -5,22 +5,25 @@
 import React, { useEffect, useState } from 'react'
 import debounce from 'debounce'
 import { object } from 'prop-types'
+import { Route, useParams } from 'react-router-dom'
 import Spinner from '../../components/Spinner'
 import ErrorMessage from '../../components/ErrorMessage'
 import Container from '../../components/Container/Container'
-import ServiceDetailPane from '../../components/ServiceDetailPane'
 import Introduction from '../../components/Introduction'
 import Section from '../../components/Section'
 import { Col, Row } from '../../components/Grid'
 import News from '../../components/NewsSection'
 import Footer from '../../components/Footer'
+import DirectoryTable from '../../components/DirectoryTable'
 import { StyledFilters, StyledServicesTableContainer } from './index.styles'
 import { mapListServicesAPIResponse } from './map-list-services-api-response'
+import DirectoryDetailPage from './DirectoryDetailPage'
 
 const ESCAPE_KEY_CODE = 27
 
 const ServicesOverviewPage = ({ location, history }) => {
   const urlParams = new URLSearchParams(location.search)
+  const { name } = useParams()
 
   const [state, setState] = useState({
     loading: true,
@@ -39,13 +42,12 @@ const ServicesOverviewPage = ({ location, history }) => {
 
   const searchOnChangeDebounced = debounce(searchOnChangeDebouncable, 400)
 
-  const detailPaneCloseHandler = () => {
-    setState({
-      ...state,
-      selectedService: null,
-    })
-  }
-
+  // const detailPaneCloseHandler = () => {
+  //   setState({
+  //     ...state,
+  //     selectedService: null,
+  //   })
+  // }
   const fetchServices = async () => {
     const response = await fetch(`/api/directory/list-services`, {
       headers: {
@@ -61,21 +63,21 @@ const ServicesOverviewPage = ({ location, history }) => {
     }
   }
 
-  const handleOnServiceClicked = (service) => {
-    setState({
-      ...state,
-      selectedService: service,
-    })
-  }
+  // const handleOnServiceClicked = (service) => {
+  //   setState({
+  //     ...state,
+  //     selectedService: service,
+  //   })
+  // }
 
-  const handleSearchOnChange = (query) => {
-    setState({ ...state, query })
-    searchOnChangeDebounced(query)
-  }
+  // const handleSearchOnChange = (query) => {
+  //   setState({ ...state, query })
+  //   searchOnChangeDebounced(query)
+  // }
 
-  const handleSwitchOnChange = (checked) => {
-    setState({ ...state, displayOfflineServices: checked })
-  }
+  // const handleSwitchOnChange = (checked) => {
+  //   setState({ ...state, displayOfflineServices: checked })
+  // }
 
   useEffect(() => {
     document.addEventListener('keydown', escFunction, false)
@@ -102,7 +104,6 @@ const ServicesOverviewPage = ({ location, history }) => {
     loading,
     error,
     services,
-    selectedService,
   } = state
 
   if (loading) {
@@ -122,30 +123,29 @@ const ServicesOverviewPage = ({ location, history }) => {
           <Row>
             <Col>
               <Container>
-                <StyledFilters
+                {/* TODO: Implement proper search */}
+                {/* <StyledFilters
                   onQueryChanged={handleSearchOnChange}
                   onStatusFilterChanged={handleSwitchOnChange}
                   queryValue={query}
-                />
+                /> */}
 
-                <StyledServicesTableContainer
+                <DirectoryTable
                   services={services}
-                  sortBy="organization"
-                  sortOrder="asc"
-                  filterQuery={debouncedQuery}
-                  filterByOnlineServices={!displayOfflineServices}
-                  onServiceClickedHandler={handleOnServiceClicked}
+                  selectedServiceName="setvicename"
                 />
 
-                {selectedService && (
-                  <ServiceDetailPane
-                    organizationName={selectedService.organization}
-                    contactEmailAddress={selectedService.contactEmailAddress}
-                    name={selectedService.name}
-                    documentationUrl={selectedService.documentationUrl}
-                    closeHandler={detailPaneCloseHandler}
-                  />
-                )}
+                {/* TODO check if routing is configured properly */}
+                <Route
+                  path="/directory/:organizationName/:serviceName"
+                  render={({ match }) => {
+                    return (
+                      services.length && (
+                        <DirectoryDetailPage service={services[0]} />
+                      )
+                    )
+                  }}
+                />
               </Container>
             </Col>
           </Row>
