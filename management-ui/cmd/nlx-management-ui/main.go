@@ -59,6 +59,7 @@ func main() {
 	))
 	r.Handle("/api/*", proxy)
 	r.Handle("/oidc/*", proxy)
+	r.Handle("/basic-auth/*", proxy)
 
 	log.Fatal(http.ListenAndServe(options.ListenAddress, r))
 }
