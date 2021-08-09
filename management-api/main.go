@@ -1,4 +1,4 @@
-// Copyright © VNG Realisatie 2018
+// Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 
 package main
@@ -9,12 +9,9 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-)
 
-var rootCmd = &cobra.Command{
-	Use:   "nlx-management-api",
-	Short: "NLX Management API",
-}
+	"go.nlx.io/nlx/management-api/cmd"
+)
 
 func setupCmdFlagForEnvironment(key, value string, cmd *cobra.Command) {
 	flag := cmd.Flags().Lookup(key)
@@ -38,7 +35,7 @@ func setupCmdFlagForEnvironment(key, value string, cmd *cobra.Command) {
 // All flags can also be set using environment variables.
 // Environment variable names are all caps and '-' is replaced by '_'.
 // Example: 'listen-address' becomes 'LISTEN_ADDRESS'
-func setupFlagsForEnvironment() {
+func setupFlagsForEnvironment(rootCmd *cobra.Command) {
 	// pass environment variables to the arguments
 	for _, keyval := range os.Environ() {
 		components := strings.SplitN(keyval, "=", 2)
@@ -56,9 +53,9 @@ func setupFlagsForEnvironment() {
 }
 
 func main() {
-	setupFlagsForEnvironment()
+	setupFlagsForEnvironment(cmd.RootCmd)
 
-	if err := rootCmd.Execute(); err != nil {
+	if err := cmd.Execute(); err != nil {
 		log.Fatal(err)
 	}
 }

@@ -1,4 +1,7 @@
-package main
+// Copyright © VNG Realisatie 2021
+// Licensed under the EUPL
+
+package cmd
 
 import (
 	"errors"
@@ -41,7 +44,6 @@ var serveOpts struct {
 
 //nolint:gochecknoinits,funlen,gocyclo // this is the recommended way to use cobra, also a lot of flags..
 func init() {
-	rootCmd.AddCommand(serveCommand)
 	serveCommand.Flags().StringVarP(&serveOpts.ListenAddress, "listen-address", "", "127.0.0.1:8080", "Address for the api to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs.")
 	serveCommand.Flags().StringVarP(&serveOpts.ConfigListenAddress, "config-listen-address", "", "127.0.0.1:8443", "Address for the configapi to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs.")
 	serveCommand.Flags().StringVarP(&serveOpts.PostgresDSN, "postgres-dsn", "", "", "Postgres Connection URL")

@@ -1,4 +1,7 @@
-package main
+// Copyright © VNG Realisatie 2021
+// Licensed under the EUPL
+
+package cmd
 
 import (
 	"context"
@@ -23,8 +26,6 @@ var createUserOpts struct {
 
 //nolint:gochecknoinits // this is the recommended way to use cobra
 func init() {
-	rootCmd.AddCommand(createUserCommand)
-
 	createUserCommand.Flags().StringVarP(&createUserOpts.Email, "email", "e", "", "User email")
 	createUserCommand.Flags().StringVarP(&createUserOpts.Password, "password", "", "", "User password")
 	createUserCommand.Flags().StringArrayVarP(&createUserOpts.Roles, "role", "r", []string{}, "User roles")

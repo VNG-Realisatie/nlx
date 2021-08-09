@@ -1,4 +1,7 @@
-package main
+// Copyright © VNG Realisatie 2021
+// Licensed under the EUPL
+
+package cmd
 
 import (
 	"fmt"
@@ -18,7 +21,6 @@ var migrateOpts struct {
 
 //nolint:gochecknoinits // this is the recommended way to use cobra
 func init() {
-	rootCmd.AddCommand(migrateCommand)
 	migrateUpCommand.Flags().StringVarP(&migrateOpts.PostgresDSN, "postgres-dsn", "", "", "Postgres Connection URL")
 	migrateStatusCommand.Flags().StringVarP(&migrateOpts.PostgresDSN, "postgres-dsn", "", "", "Postgres Connection URL")
 
@@ -37,8 +39,7 @@ func init() {
 var migrateCommand = &cobra.Command{
 	Use:   "migrate",
 	Short: "Run the migration tool",
-	Run: func(cmd *cobra.Command, args []string) {
-	},
+	Run:   func(cmd *cobra.Command, args []string) {},
 }
 
 var migrateUpCommand = &cobra.Command{

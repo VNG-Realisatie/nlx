@@ -66,14 +66,14 @@ migrate -database "postgres://postgres:postgres@127.0.0.1:5432/nlx?sslmode=disab
 Run the management API migrations with:
 
 ```bash
-go run ./management-api/cmd/nlx-management-api/ migrate up --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_a?sslmode=disable"
-go run ./management-api/cmd/nlx-management-api/ migrate up --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_b?sslmode=disable"
+go run ./management-api migrate up --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_a?sslmode=disable"
+go run ./management-api migrate up --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_b?sslmode=disable"
 ```
 
 Create admin users for the Management API
 ```
-go run ./management-api/cmd/nlx-management-api/ create-user --email admin@nlx.local --role admin --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_a?sslmode=disable"
-go run ./management-api/cmd/nlx-management-api/ create-user --email admin@nlx.local --password development --role admin --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_b?sslmode=disable"
+go run ./management-api create-user --email admin@nlx.local --role admin --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_a?sslmode=disable"
+go run ./management-api create-user --email admin@nlx.local --password development --role admin --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_b?sslmode=disable"
 ```
 
 Optionally you can setup the database for the transaction logs:
