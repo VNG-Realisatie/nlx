@@ -87,10 +87,6 @@ func init() {
 	if err := serveCommand.MarkFlagRequired("tls-org-key"); err != nil {
 		log.Fatal(err)
 	}
-
-	if err := serveCommand.MarkFlagRequired("secret-key"); err != nil {
-		log.Fatal(err)
-	}
 }
 
 var serveCommand = &cobra.Command{
@@ -109,6 +105,10 @@ var serveCommand = &cobra.Command{
 		if serveOpts.EnableBasicAuth {
 			logger.Info("basic auth enabled, note that OIDC doesn't work")
 		} else {
+			if serveOpts.oidcOptions.SecretKey == "" {
+				log.Fatal(errors.New("secret-key is required"))
+			}
+
 			if serveOpts.oidcOptions.ClientID == "" {
 				log.Fatal(errors.New("oidc-client-id is required"))
 			}
