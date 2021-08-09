@@ -15,7 +15,7 @@ Lint commit messages:
 
 Go go.mod tidy test:
   stage: Tests
-  image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/golang:1.16.4
+  image: golang:1.16.4
   script:
     - cp go.mod go.mod.orig
     - /usr/local/go/bin/go mod download
@@ -38,7 +38,7 @@ variables:
 
 Go tests (unit & integration):
   stage: Tests
-  image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/golang:1.16.4
+  image: golang:1.16.4
   variables:
     POSTGRES_DSN: "postgres://postgres@postgres:5432/nlx?sslmode=disable"
   before_script:
@@ -64,7 +64,7 @@ Go tests (unit & integration):
 
 Go linter:
   stage: Tests
-  image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/golangci/golangci-lint:v1.41.1-alpine
+  image: golangci/golangci-lint:v1.41.1-alpine
   before_script:
    - export PATH=$PATH:/usr/local/go/bin
    - apk --no-cache add jq

@@ -1,6 +1,8 @@
 Build review:
   stage: Build
   before_script:
+    - export DOCKER_CONFIG=/tmp/docker-config-$CI_JOB_ID
+    - mkdir -p $DOCKER_CONFIG && echo $DOCKER_AUTH_CONFIG > $DOCKER_CONFIG/config.json
     - docker login -u $REVIEW_REGISTRY_USERNAME -p $REVIEW_REGISTRY_PASSWORD $REVIEW_REGISTRY_HOST
     - export GIT_TAG_NAME=$(git describe --tags --abbrev=0)-review
     - export IMAGE_REGISTRY="${REVIEW_REGISTRY_HOST}/${CI_PROJECT_PATH}"
