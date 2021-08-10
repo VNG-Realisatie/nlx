@@ -64,14 +64,14 @@ const OrderForm = ({ services, onSubmitHandler }) => {
 
   return (
     <Formik
-      initialValues={{
-        ...initialValues,
-      }}
+      initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={(values) => {
-        values.validFrom = new Date(values.validFrom)
-        values.validUntil = new Date(values.validUntil)
-        handleSubmit(values)
+        handleSubmit({
+          ...values,
+          validFrom: new Date(values.validFrom),
+          validUntil: new Date(values.validUntil),
+        })
       }}
     >
       <StyledForm>

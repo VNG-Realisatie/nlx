@@ -33,7 +33,8 @@ class OrderStore {
         })
 
       return orderData.id
-    } catch (err) {
+    } catch (response) {
+      const err = yield response.json()
       throw new Error(err.message)
     }
   }).bind(this)
