@@ -85,11 +85,12 @@ The following table lists the configurable parameters of the nlx-management Char
 | `config.directoryInspectionHostname` | Used to retrieve information about services from the directory. | `""` | yes |
 | `config.directoryRegistrationHostname` | Address of the NLX directory where this inway will register its services. | `""` | yes |
 | `config.sessionCookieSecure` | If `true`, the API will use 'secure' cookies. | `false` | no |
+| `config.enableBasicAuth` | Enable HTTP basic authentication and disable OIDC | `false` | no |
 | `config.oidc.clientID` | The OIDC client ID | `"nlx-management"` | no |
-| `config.oidc.clientSecret` | The OIDC client secret | `""` | yes |
-| `config.oidc.discoveryURL` | The OIDC discovery URL | `""` | yes |
-| `config.oidc.redirectURL` | The OIDC redirect URL | `""` | yes |
-| `config.oidc.sessionSignKey` | The OIDC session sign key | `""` | yes |
+| `config.oidc.clientSecret` | The OIDC client secret | `""` | yes (if using OIDC) |
+| `config.oidc.discoveryURL` | The OIDC discovery URL | `""` | yes (if using OIDC) |
+| `config.oidc.redirectURL` | The OIDC redirect URL | `""` | yes (if using OIDC) |
+| `config.oidc.sessionSignKey` | The OIDC session sign key | `""` | yes (if using OIDC) |
 
 ### TLS parameters
 

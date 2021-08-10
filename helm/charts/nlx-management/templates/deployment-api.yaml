@@ -101,6 +101,10 @@ spec:
               value: {{ required "Directory inspection hostname is required" .Values.config.directoryInspectionHostname }}:443
             - name: DIRECTORY_REGISTRATION_ADDRESS
               value: {{ required "Directory registration hostname is required" .Values.config.directoryRegistrationHostname }}:443
+          {{- if .Values.config.enableBasicAuth }}
+            - name: ENABLE_BASIC_AUTH
+              value: "true"
+          {{- else }}
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
@@ -116,6 +120,7 @@ spec:
               value: {{ required "OIDC redirect URL is required" .Values.config.oidc.redirectURL }}
             - name: SESSION_COOKIE_SECURE
               value: {{ if .Values.config.sessionCookieSecure }}"1"{{ else }}"0"{{ end }}
+          {{- end}}
             - name: TLS_NLX_ROOT_CERT
               value: /config/root-organization.pem
             - name: TLS_ORG_CERT
