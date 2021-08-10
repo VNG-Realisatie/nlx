@@ -117,8 +117,8 @@ TLS certificates used by NLX components for internal communication.
 | `transactionLog.username` | Username of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret | `""` | no |
 | `transactionLog.password` | Password of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret | `""` | no |
 | `transactionLog.existingSecret.name` | Use existing secret for password details (`transactionLog.username` and `transactionLog.password` will be ignored and picked up from this secret)  | `""` | no |
-| `transactionLog.existingSecret.usernameKey` | Key for username value in aforementioned existingSecret | `POSTGRES_USER` | no |
-| `transactionLog.existingSecret.passwordKey` | Key for password value in aforementioned existingSecret | `POSTGRES_PASSWORD` | no |
+| `transactionLog.existingSecret.usernameKey` | Key for username value in aforementioned existingSecret | `username` | no |
+| `transactionLog.existingSecret.passwordKey` | Key for password value in aforementioned existingSecret | `password` | no |
 
 ### Exposure parameters
 

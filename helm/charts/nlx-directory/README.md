@@ -93,6 +93,21 @@ The following table lists the configurable parameters of the nlx-directory Chart
 | `config.monitorOfflineServiceTTL` | Time, in seconds, a service can be offline before being removed from the directory | `86400` | no |
 | `config.resetDatabase` | If `true` the database will be cleared after installing or upgrading | `false` | no |
 
+## Postgres parameters
+
+| Parameter | Description | Default | Required (yes/no) |
+| --------- | ----------- | ------- | -------- |
+| `postgresql.hostname` | PostgreSQL hostname | `postgresql` | no |
+| `postgresql.port` | PostgreSQL port | `5432` | yes |
+| `postgresql.sslMode` | PostgreSQL SSL mode | `require` | yes |
+| `postgresql.database` | PostgreSQL database  | `nlx-directory` | no |
+| `postgresql.username` | PostgreSQL username. Will be stored in a kubernetes secret | `""` | no |
+| `postgresql.password` | PostgreSQL password. Will be stored in a kubernetes secret | `""` | no |
+| `postgresql.existingSecret.name` | Use existing secret for password details (`postgresql.username` and `postgresql.password` will be ignored and picked up from this secret)  | `""` | no |
+| `postgresql.existingSecret.usernameKey` | Key for username value in aforementioned existingSecret | `username` | no |
+| `postgresql.existingSecret.passwordKey` | Key for password value in aforementioned existingSecret | `password` | no |
+
+
 ### NLX TLS parameters
 
 | Parameter | Description | Default | Required (yes/no) |
