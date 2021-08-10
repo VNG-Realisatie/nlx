@@ -2,8 +2,8 @@ apiVersion: v2
 name: gemeente-stijns
 description: Metachart for the Gemeente Stijns demo organization
 type: application
-version: 0.109.1
-appVersion: 0.109.1
+version: 0.109.2
+appVersion: 0.109.2
 
 dependencies:
   - name: dex

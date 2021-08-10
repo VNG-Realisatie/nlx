@@ -1,3 +1,11 @@
+## [0.109.2](https://gitlab.com/commonground/nlx/nlx/compare/v0.109.1...v0.109.2) (2021-08-10)
+
+
+### Bug Fixes
+
+* **management:** do not require secret key to be set when using basic auth ([90138d5](https://gitlab.com/commonground/nlx/nlx/commit/90138d5f8ca43d06162e8a6294f154df3f268d2a)), closes [#1330](https://gitlab.com/commonground/nlx/nlx/issues/1330)
+* **management:** re-enable detection for basic auth ([80398ef](https://gitlab.com/commonground/nlx/nlx/commit/80398ef7a3fb9ab28616e1db43cc3f18d6050da1)), closes [#1330](https://gitlab.com/commonground/nlx/nlx/issues/1330)
+
 ## [0.109.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.109.0...v0.109.1) (2021-08-04)
 
 

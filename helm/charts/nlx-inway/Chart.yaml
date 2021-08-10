@@ -2,6 +2,6 @@ apiVersion: v2
 name: nlx-inway
 description: NLX inway
 type: application
-version: 0.109.1
-appVersion: 0.109.1
+version: 0.109.2
+appVersion: 0.109.2
 icon: https://docs.nlx.io/img/logo-light.svg
