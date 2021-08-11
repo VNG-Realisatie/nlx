@@ -124,6 +124,7 @@
   "new orders found": "nieuwe opdrachten gevonden",
   "NLX Dashboard homepage": "NLX Dashboard homepage",
   "No": "Geen",
+  "No accessible services available": "Geen toegankelijke services beschikbaar",
   "No contact details available": "Geen contactgegevens beschikbaar",
   "No inways have been added": "Nog geen inways toegevoegd",
   "No services have been connected": "Er zijn nog geen services gekoppeld",
@@ -236,5 +237,7 @@
   "You have no access": "Je hebt geen toegang",
   "You haven't received any orders yet": "Je hebt nog geen ontvangen opdrachten",
   "Your access was revoked": "Je toegang is ingetrokken",
-  "yyyy-mm-dd": "jjjj-mm-dd"
+  "yyyy-mm-dd": "jjjj-mm-dd",
+  "Check if there are accessible services": "Check if there are accessible services",
+  "No services were found": "No services were found"
 }

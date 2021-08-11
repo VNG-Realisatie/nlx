@@ -124,6 +124,7 @@
   "new orders found": "new orders found",
   "NLX Dashboard homepage": "NLX Dashboard homepage",
   "No": "No",
+  "No accessible services available": "No accessible services available",
   "No contact details available": "No contact details available",
   "No inways have been added": "No inways have been added",
   "No services have been connected": "No services have been connected",
@@ -236,5 +237,7 @@
   "You have no access": "You have no access",
   "You haven't received any orders yet": "You haven't received any orders yet",
   "Your access was revoked": "Your access was revoked",
-  "yyyy-mm-dd": "yyyy-mm-dd"
+  "yyyy-mm-dd": "yyyy-mm-dd",
+  "Check if there are accessible services": "Check if there are accessible services",
+  "No services were found": "No services were found"
 }
