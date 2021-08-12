@@ -50,6 +50,6 @@ require (
 	gopkg.in/square/go-jose.v2 v2.4.1
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 	gorm.io/driver/postgres v1.1.0
-	gorm.io/gorm v1.21.12
+	gorm.io/gorm v1.21.13
 	xojoc.pw/useragent v0.0.0-20200116211053-1ec61d55e8fe
 )
