@@ -25,7 +25,7 @@ func (s *ManagementService) CreateService(ctx context.Context, request *api.Crea
 	err := request.Validate()
 	if err != nil {
 		logger.Error("invalid request", zap.Error(err))
-		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid request: %s", err))
+		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
 	service := &database.Service{

@@ -110,30 +110,34 @@ class ServiceStore {
     monthlyCosts,
     requestCosts,
   }) {
-    const serviceData = yield this._managementApiClient.managementCreateService(
-      {
-        body: {
-          name,
-          endpointURL,
-          documentationURL,
-          apiSpecificationURL,
-          internal,
-          techSupportContact,
-          publicSupportContact,
-          inways,
-          oneTimeCosts: oneTimeCosts * 100,
-          monthlyCosts: monthlyCosts * 100,
-          requestCosts: requestCosts * 100,
-        },
-      },
-    )
-    const service = new ServiceModel({
-      servicesStore: this,
-      serviceData,
-    })
+    try {
+      const serviceData =
+        yield this._managementApiClient.managementCreateService({
+          body: {
+            name,
+            endpointURL,
+            documentationURL,
+            apiSpecificationURL,
+            internal,
+            techSupportContact,
+            publicSupportContact,
+            inways,
+            oneTimeCosts: oneTimeCosts * 100,
+            monthlyCosts: monthlyCosts * 100,
+            requestCosts: requestCosts * 100,
+          },
+        })
+      const service = new ServiceModel({
+        servicesStore: this,
+        serviceData,
+      })
 
-    this.services.push(service)
-    return service
+      this.services.push(service)
+      return service
+    } catch (response) {
+      const err = yield response.json()
+      throw new Error(err.message)
+    }
   }).bind(this)
 
   update = flow(function* update({
@@ -149,36 +153,40 @@ class ServiceStore {
     monthlyCosts,
     requestCosts,
   }) {
-    if (!name) {
-      throw new Error('Name required to update service')
-    }
+    try {
+      if (!name) {
+        throw new Error('Name required to update service')
+      }
 
-    const service = this.getService(name)
+      const service = this.getService(name)
 
-    if (!service) {
-      throw new Error('Can not edit a service that does not exist')
-    }
+      if (!service) {
+        throw new Error('Can not edit a service that does not exist')
+      }
 
-    const serviceData = yield this._managementApiClient.managementUpdateService(
-      {
-        name,
-        body: {
+      const serviceData =
+        yield this._managementApiClient.managementUpdateService({
           name,
-          endpointURL,
-          documentationURL,
-          apiSpecificationURL,
-          internal,
-          techSupportContact,
-          publicSupportContact,
-          inways,
-          oneTimeCosts: oneTimeCosts * 100,
-          monthlyCosts: monthlyCosts * 100,
-          requestCosts: requestCosts * 100,
-        },
-      },
-    )
+          body: {
+            name,
+            endpointURL,
+            documentationURL,
+            apiSpecificationURL,
+            internal,
+            techSupportContact,
+            publicSupportContact,
+            inways,
+            oneTimeCosts: oneTimeCosts * 100,
+            monthlyCosts: monthlyCosts * 100,
+            requestCosts: requestCosts * 100,
+          },
+        })
 
-    service.update(serviceData)
+      service.update(serviceData)
+    } catch (response) {
+      const err = yield response.json()
+      throw new Error(err.message)
+    }
   }).bind(this)
 
   removeService = flow(function* removeService(name) {

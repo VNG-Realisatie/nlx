@@ -9,36 +9,78 @@ import (
 )
 
 func TestServiceValidate(t *testing.T) {
-	testService := api.Service{
-		Name: "my-service",
+	tests := map[string]struct {
+		service *api.Service
+		err     string
+	}{
+		"without_name_and_endpoint": {
+			service: &api.Service{
+				Name:        "",
+				EndpointURL: "",
+			},
+			err: "endpointURL: cannot be blank; name: cannot be blank.",
+		},
+		"using_invalid_endpoint": {
+			service: &api.Service{
+				Name:        "my-service",
+				EndpointURL: "invalid-endpoint",
+			},
+			err: "endpointURL: must be a valid URL.",
+		},
+		"happy_flow": {
+			service: &api.Service{
+				Name:        "my-service",
+				EndpointURL: "https://my-service.test",
+			},
+			err: "",
+		},
 	}
 
-	err := testService.Validate()
-	assert.Equal(
-		t,
-		"endpointURL: cannot be blank.",
-		err.Error(),
-	)
+	for name, tt := range tests {
+		tt := tt
 
-	testService = api.Service{
-		Name:        "my-service",
-		EndpointURL: "https://my-service.test",
+		t.Run(name, func(t *testing.T) {
+			err := tt.service.Validate()
+			if err != nil {
+				assert.EqualError(t, err, tt.err)
+				return
+			}
+
+			assert.Equal(t, nil, err)
+		})
 	}
-
-	err = testService.Validate()
-	assert.Equal(t, nil, err)
 }
 
 func TestInwayValidate(t *testing.T) {
-	testInway := api.Inway{}
-
-	err := testInway.Validate()
-	assert.Equal(t, "name: cannot be blank.", err.Error())
-
-	testInway = api.Inway{
-		Name: "inway42.test",
+	tests := map[string]struct {
+		inway *api.Inway
+		err   string
+	}{
+		"without_name": {
+			inway: &api.Inway{
+				Name: "",
+			},
+			err: "name: cannot be blank.",
+		},
+		"happy_flow": {
+			inway: &api.Inway{
+				Name: "inway42.test",
+			},
+			err: "",
+		},
 	}
 
-	err = testInway.Validate()
-	assert.Equal(t, nil, err)
+	for name, tt := range tests {
+		tt := tt
+
+		t.Run(name, func(t *testing.T) {
+			err := tt.inway.Validate()
+			if err != nil {
+				assert.EqualError(t, err, tt.err)
+				return
+			}
+
+			assert.Equal(t, nil, err)
+		})
+	}
 }

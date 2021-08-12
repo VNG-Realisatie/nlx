@@ -24,6 +24,7 @@ const AddServicePage = () => {
         `/services/${addedService.name}?lastAction=${serviceActions.ADDED}`,
       )
     } catch (err) {
+      window.scrollTo(0, 0)
       setError(err.message)
     }
   }

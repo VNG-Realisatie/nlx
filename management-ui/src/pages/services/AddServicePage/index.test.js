@@ -23,6 +23,9 @@ jest.mock('../../../components/ServiceForm', () => ({ onSubmitHandler }) => (
 ))
 
 describe('the AddServicePage', () => {
+  beforeAll(() => {
+    global.scrollTo = jest.fn()
+  })
   afterEach(() => {
     jest.resetModules()
   })
@@ -78,7 +81,11 @@ describe('the AddServicePage', () => {
     managementApiClient.managementCreateService = jest
       .fn()
       .mockResolvedValue({ name: 'my-service' })
-      .mockRejectedValueOnce(new Error('arbitrary error'))
+      .mockRejectedValueOnce({
+        json: () => {
+          return { message: 'arbitrary error' }
+        },
+      })
 
     const rootStore = new RootStore({
       managementApiClient,
@@ -96,20 +103,19 @@ describe('the AddServicePage', () => {
     const addComponentForm = await findByTestId('form')
 
     await act(async () => {
-      await fireEvent.submit(addComponentForm)
+      fireEvent.submit(addComponentForm)
     })
 
     expect(managementApiClient.managementCreateService).toHaveBeenCalledTimes(1)
-    expect(queryByRole('alert')).toBeTruthy()
     expect(queryByRole('alert').textContent).toBe(
       'Failed adding servicearbitrary error',
     )
 
     await act(async () => {
-      await fireEvent.submit(addComponentForm)
+      fireEvent.submit(addComponentForm)
     })
 
-    expect(await queryByRole('alert')).toBeTruthy()
+    expect(queryByRole('alert')).toBeTruthy()
 
     expect(managementApiClient.managementCreateService).toHaveBeenCalledTimes(2)
     expect(history.location.pathname).toEqual('/services/my-service')
@@ -120,7 +126,11 @@ describe('the AddServicePage', () => {
     const managementApiClient = new ManagementApi()
     managementApiClient.managementCreateService = jest
       .fn()
-      .mockRejectedValue(new Error('arbitrary error'))
+      .mockRejectedValueOnce({
+        json: () => {
+          return { message: 'arbitrary error' }
+        },
+      })
 
     const rootStore = new RootStore({
       managementApiClient,
@@ -138,10 +148,9 @@ describe('the AddServicePage', () => {
     const addComponentForm = await findByTestId('form')
 
     await act(async () => {
-      await fireEvent.submit(addComponentForm)
+      fireEvent.submit(addComponentForm)
     })
 
-    expect(queryByRole('alert')).toBeTruthy()
     expect(queryByRole('alert').textContent).toBe(
       'Failed adding servicearbitrary error',
     )

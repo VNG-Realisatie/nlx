@@ -37,6 +37,7 @@ const EditServicePage = () => {
         `/services/${service.name}?lastAction=${serviceActions.EDITED}`,
       )
     } catch (err) {
+      window.scrollTo(0, 0)
       setUpdatedError(err.message)
     }
   }

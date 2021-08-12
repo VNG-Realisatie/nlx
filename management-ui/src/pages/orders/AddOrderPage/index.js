@@ -50,7 +50,7 @@ const AddOrderPage = () => {
 
       {noAccessibleServices && (
         <Alert
-          title={t('No accessible services available')}
+          title={t('No services available')}
           variant="warning"
           data-testid="warning-message"
         />

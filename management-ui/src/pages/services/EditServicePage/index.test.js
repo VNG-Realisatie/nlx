@@ -27,6 +27,9 @@ jest.mock('../../../components/ServiceForm', () => ({ onSubmitHandler }) => (
 ))
 
 describe('the EditServicePage', () => {
+  beforeAll(() => {
+    global.scrollTo = jest.fn()
+  })
   afterEach(() => {
     jest.resetModules()
   })
@@ -193,7 +196,7 @@ describe('the EditServicePage', () => {
     )
 
     await act(async () => {
-      await fireEvent.submit(editServiceForm)
+      fireEvent.submit(editServiceForm)
     })
 
     expect(managementApiClient.managementUpdateService).toHaveBeenCalledTimes(2)
@@ -235,7 +238,7 @@ describe('the EditServicePage', () => {
     const editServiceForm = await findByTestId('form')
 
     await act(async () => {
-      await fireEvent.submit(editServiceForm)
+      fireEvent.submit(editServiceForm)
     })
 
     expect(queryByRole('alert')).toBeTruthy()
