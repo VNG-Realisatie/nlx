@@ -57,6 +57,10 @@ class OrderStore {
     this._isLoading = false
   }).bind(this)
 
+  getOutgoing = (delegatee, reference) => {
+    return this._outgoingOrders.get(`${delegatee}_${reference}`)
+  }
+
   fetchIncoming = flow(function* fetchIncoming() {
     this._isLoading = true
 

@@ -55,6 +55,11 @@ test('fetch outgoing orders', async () => {
       reference: 'reference',
     },
   ])
+
+  expect(store.getOutgoing('delegatee 1', 'reference')).toEqual({
+    delegatee: 'delegatee 1',
+    reference: 'reference',
+  })
 })
 
 test('create an order', async () => {
