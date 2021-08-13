@@ -7,26 +7,18 @@ import { useTranslation } from 'react-i18next'
 import { IconStateUp, IconStateDown } from '../../../../icons'
 import { StyledWrapper } from './index.styles'
 
-const getStatusIcon = (active, t) => {
-  if (active) {
-    return (
-      <>
-        <IconStateUp title={t('Active')} />
-      </>
-    )
-  } else {
-    return (
-      <>
-        <IconStateDown title={t('Inactive')} />
-      </>
-    )
-  }
-}
-
 const StatusIcon = ({ active, ...props }) => {
   const { t } = useTranslation()
 
-  return <StyledWrapper {...props}>{getStatusIcon(active, t)}</StyledWrapper>
+  return (
+    <StyledWrapper {...props}>
+      {active ? (
+        <IconStateUp title={t('Active')} />
+      ) : (
+        <IconStateDown title={t('Inactive')} />
+      )}
+    </StyledWrapper>
+  )
 }
 
 StatusIcon.propTypes = {
