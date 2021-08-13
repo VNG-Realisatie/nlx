@@ -12,7 +12,11 @@ import { Cell, List, Item, OrganizationName, Separator } from './index.styles'
 const OrderRow = ({ order }) => {
   const { t } = useTranslation()
   return (
-    <Table.Tr>
+    <Table.Tr
+      to={`/orders/outgoing/${encodeURIComponent(
+        order.delegatee,
+      )}/${encodeURIComponent(order.reference)}`}
+    >
       <Cell>
         <StatusIcon active={!order.revokedAt} />
       </Cell>

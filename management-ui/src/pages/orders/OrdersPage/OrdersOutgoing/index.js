@@ -14,7 +14,7 @@ const OrdersOutgoing = ({ orders }) => {
 
   return orders.length ? (
     <Wrapper>
-      <Table>
+      <Table withLinks>
         <thead>
           <Table.TrHead>
             <Table.Th>{t('Status')}</Table.Th>

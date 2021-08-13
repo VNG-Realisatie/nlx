@@ -2,7 +2,9 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { within } from '@testing-library/react'
+import { fireEvent, within } from '@testing-library/react'
+import { Router } from 'react-router-dom'
+import { createMemoryHistory } from 'history'
 import { renderWithProviders } from '../../../../test-utils'
 import OrdersView from '../OrdersOutgoing'
 
@@ -56,19 +58,31 @@ test('content should render expected data', () => {
     },
   ]
 
-  const { container } = renderWithProviders(<OrdersView orders={orders} />)
+  const history = createMemoryHistory({
+    initialEntries: ['/orders'],
+  })
 
-  const firstOrder = container.querySelectorAll('tbody tr')[0]
-  expect(within(firstOrder).getByTitle('Active')).toBeInTheDocument()
-  expect(within(firstOrder).getByText('my own description')).toBeInTheDocument()
-  expect(within(firstOrder).getByText('delegatee')).toBeInTheDocument()
+  const { container } = renderWithProviders(
+    <Router history={history}>
+      <OrdersView orders={orders} />
+    </Router>,
+  )
+
+  const firstOrderEl = container.querySelectorAll('tbody tr')[0]
+  const firstOrder = within(firstOrderEl)
+  expect(firstOrder.getByTitle('Active')).toBeInTheDocument()
+  expect(firstOrder.getByText('my own description')).toBeInTheDocument()
+  expect(firstOrder.getByText('delegatee')).toBeInTheDocument()
   expect(
-    within(firstOrder).getByTitle('organization X - service Y'),
+    firstOrder.getByTitle('organization X - service Y'),
   ).toBeInTheDocument()
-  expect(
-    within(firstOrder).getByTitle('organization Y - service Z'),
-  ).toHaveTextContent('organization Y - service Z')
+  expect(firstOrder.getByTitle('organization Y - service Z')).toHaveTextContent(
+    'organization Y - service Z',
+  )
 
   const secondOrder = container.querySelectorAll('tbody tr')[1]
   expect(within(secondOrder).getByTitle('Inactive')).toBeInTheDocument()
+
+  fireEvent.click(firstOrderEl)
+  expect(history.location.pathname).toEqual('/orders/outgoing/delegatee/ref1')
 })
