@@ -55,7 +55,7 @@ const getAuthStrategy = async () => {
   const isBasicAuth = authStrategy === AUTH_BASIC_AUTH
 
   if (isBasicAuth) {
-    rootStore.applicationStore.setBasicAuthStrategy(authStrategy)
+    rootStore.applicationStore.setBasicAuthStrategy()
 
     const credentials = UserRepositoryBasicAuth.getCredentials()
     if (credentials) {
