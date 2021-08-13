@@ -5,7 +5,9 @@ import React from 'react'
 import { fireEvent, within } from '@testing-library/react'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
+import { RootStore, StoreProvider } from '../../../../stores'
 import { renderWithProviders } from '../../../../test-utils'
+import { ManagementApi } from '../../../../api'
 import OrdersView from '../OrdersOutgoing'
 
 test('displays an order row for each order', () => {
@@ -26,13 +28,33 @@ test('displays an order row for each order', () => {
     },
   ]
 
-  const { getAllByText } = renderWithProviders(<OrdersView orders={orders} />)
+  const history = createMemoryHistory({
+    initialEntries: ['/orders'],
+  })
+
+  const managementApiClient = new ManagementApi()
+  const rootStore = new RootStore({ managementApiClient })
+
+  const { getAllByText } = renderWithProviders(
+    <Router history={history}>
+      <StoreProvider rootStore={rootStore}>
+        <OrdersView orders={orders} />
+      </StoreProvider>
+    </Router>,
+  )
   expect(getAllByText('my own description')).toHaveLength(2)
 })
 
 test('displays text to indicate there are no orders', () => {
-  const { getByText } = renderWithProviders(<OrdersView ordersMap={[]} />)
-  expect(getByText("You haven't received any orders yet")).toBeInTheDocument()
+  const managementApiClient = new ManagementApi()
+  const rootStore = new RootStore({ managementApiClient })
+
+  const { getByText } = renderWithProviders(
+    <StoreProvider rootStore={rootStore}>
+      <OrdersView orders={[]} />
+    </StoreProvider>,
+  )
+  expect(getByText("You don't have any issued orders yet")).toBeInTheDocument()
 })
 
 test('content should render expected data', () => {
@@ -62,9 +84,14 @@ test('content should render expected data', () => {
     initialEntries: ['/orders'],
   })
 
+  const managementApiClient = new ManagementApi()
+  const rootStore = new RootStore({ managementApiClient })
+
   const { container } = renderWithProviders(
     <Router history={history}>
-      <OrdersView orders={orders} />
+      <StoreProvider rootStore={rootStore}>
+        <OrdersView orders={orders} />
+      </StoreProvider>
     </Router>,
   )
 

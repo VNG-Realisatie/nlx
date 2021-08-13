@@ -41,6 +41,10 @@ const Routes = ({ authorizationPage }) => (
     <AuthenticatedRoute path="/audit-log" component={AuditLogPage} />
     <AuthenticatedRoute path="/orders/add-order" component={AddOrderPage} />
     <AuthenticatedRoute path="/orders" component={OrdersPage} />
+    <AuthenticatedRoute
+      path="/orders/outgoing/:delegatee/:reference"
+      component={OrdersPage}
+    />
     <AuthenticatedRoute path="/settings" component={SettingsPage} />
 
     <AuthenticatedRoute path="*" component={NotFoundPage} />
