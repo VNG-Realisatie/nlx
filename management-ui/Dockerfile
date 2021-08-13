@@ -1,4 +1,4 @@
-FROM node:14.17.4-alpine AS node-build
+FROM node:14.17.5-alpine AS node-build
 
 RUN apk add --no-cache --update git jq
 RUN apk add --no-cache python3 make g++

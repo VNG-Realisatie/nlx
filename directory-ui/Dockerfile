@@ -1,4 +1,4 @@
-FROM node:14.17.4-alpine AS build
+FROM node:14.17.5-alpine AS build
 
 ENV CI=true
 # Don't inlne scripts, troublesome with CSP headers
