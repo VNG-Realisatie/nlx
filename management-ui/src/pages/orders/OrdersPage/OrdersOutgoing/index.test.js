@@ -59,7 +59,7 @@ test('content should render expected data', () => {
   const { container } = renderWithProviders(<OrdersView orders={orders} />)
 
   const firstOrder = container.querySelectorAll('tbody tr')[0]
-  expect(within(firstOrder).getByText('state-up.svg')).toBeInTheDocument()
+  expect(within(firstOrder).getByTitle('Active')).toBeInTheDocument()
   expect(within(firstOrder).getByText('my own description')).toBeInTheDocument()
   expect(within(firstOrder).getByText('delegatee')).toBeInTheDocument()
   expect(
@@ -70,5 +70,5 @@ test('content should render expected data', () => {
   ).toHaveTextContent('organization Y - service Z')
 
   const secondOrder = container.querySelectorAll('tbody tr')[1]
-  expect(within(secondOrder).getByText('state-down.svg')).toBeInTheDocument()
+  expect(within(secondOrder).getByTitle('Inactive')).toBeInTheDocument()
 })
