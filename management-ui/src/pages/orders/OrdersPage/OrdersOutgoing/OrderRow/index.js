@@ -6,12 +6,16 @@ import { object } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import Table from '../../../../../components/Table'
 import { CellServices } from '../index.styles'
+import StatusIcon from '../../StatusIcon'
 import { Cell, List, Item, OrganizationName, Separator } from './index.styles'
 
 const OrderRow = ({ order }) => {
   const { t } = useTranslation()
   return (
     <Table.Tr>
+      <Cell>
+        <StatusIcon active={!order.revokedAt} />
+      </Cell>
       <Cell>{order.description}</Cell>
       <Cell>{order.delegatee}</Cell>
       <CellServices>

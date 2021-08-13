@@ -2,8 +2,9 @@
 // Licensed under the EUPL
 //
 import React from 'react'
+import { within } from '@testing-library/react'
 import { renderWithProviders } from '../../../../test-utils'
-import OrdersView from '../OrdersIncoming/index'
+import OrdersView from '../OrdersOutgoing'
 
 test('displays an order row for each order', () => {
   const orders = [
@@ -37,23 +38,37 @@ test('content should render expected data', () => {
     {
       reference: 'ref1',
       description: 'my own description',
-      delegator: 'delegator',
+      delegatee: 'delegatee',
       services: [
         { organization: 'organization X', service: 'service Y' },
         { organization: 'organization Y', service: 'service Z' },
       ],
       validUntil: '2021-05-10',
+      revokedAt: null,
+    },
+    {
+      reference: 'ref2',
+      description: 'my own description',
+      delegatee: 'delegatee',
+      services: [{ organization: 'organization X', service: 'service Y' }],
+      validUntil: '2021-05-10',
+      revokedAt: '2021-04-10',
     },
   ]
 
-  const { getByText, getByTitle } = renderWithProviders(
-    <OrdersView orders={orders} />,
-  ) //
+  const { container } = renderWithProviders(<OrdersView orders={orders} />)
 
-  expect(getByText('my own description')).toBeInTheDocument()
-  expect(getByText('delegator')).toBeInTheDocument()
-  expect(getByTitle('organization X - service Y')).toBeInTheDocument()
-  expect(getByTitle('organization Y - service Z')).toHaveTextContent(
-    'organization Y - service Z',
-  )
+  const firstOrder = container.querySelectorAll('tbody tr')[0]
+  expect(within(firstOrder).getByText('state-up.svg')).toBeInTheDocument()
+  expect(within(firstOrder).getByText('my own description')).toBeInTheDocument()
+  expect(within(firstOrder).getByText('delegatee')).toBeInTheDocument()
+  expect(
+    within(firstOrder).getByTitle('organization X - service Y'),
+  ).toBeInTheDocument()
+  expect(
+    within(firstOrder).getByTitle('organization Y - service Z'),
+  ).toHaveTextContent('organization Y - service Z')
+
+  const secondOrder = container.querySelectorAll('tbody tr')[1]
+  expect(within(secondOrder).getByText('state-down.svg')).toBeInTheDocument()
 })

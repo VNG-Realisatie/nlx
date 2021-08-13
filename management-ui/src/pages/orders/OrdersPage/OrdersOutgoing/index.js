@@ -17,6 +17,7 @@ const OrdersOutgoing = ({ orders }) => {
       <Table>
         <thead>
           <Table.TrHead>
+            <Table.Th>{t('Status')}</Table.Th>
             <Table.Th>{t('Order')}</Table.Th>
             <Table.Th>{t('Issued to')}</Table.Th>
             <CellServices as={Table.Th}>
