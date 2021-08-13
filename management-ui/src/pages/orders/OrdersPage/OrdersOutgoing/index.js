@@ -35,8 +35,15 @@ const OrdersOutgoing = ({ orders }) => {
   ) : (
     <Centered>
       <h3>
-        <small>{t('There are no active orders')}</small>
+        <small>{t("You don't have any issued orders yet")}</small>
       </h3>
+      <p>
+        <small>
+          {t(
+            'Use this to allow other organizations to request certain services on your behalve',
+          )}
+        </small>
+      </p>
     </Centered>
   )
 }

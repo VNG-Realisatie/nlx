@@ -29,7 +29,7 @@ test('displays an order row for each order', () => {
 
 test('displays text to indicate there are no orders', () => {
   const { getByText } = renderWithProviders(<OrdersView ordersMap={[]} />)
-  expect(getByText('There are no active orders')).toBeInTheDocument()
+  expect(getByText("You haven't received any orders yet")).toBeInTheDocument()
 })
 
 test('content should render expected data', () => {

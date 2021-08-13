@@ -17,8 +17,6 @@ import LoadingMessage from '../../../components/LoadingMessage'
 import { IconPlus, IconRefresh } from '../../../icons'
 import OrdersOutgoing from './OrdersOutgoing'
 import OrdersIncoming from './OrdersIncoming'
-import OrdersIncomingEmpty from './OrdersIncomingEmpty'
-import OrdersOutgoingEmpty from './OrdersOutgoingEmpty'
 import { ActionsBar, StyledButton } from './index.styles'
 
 const viewTypes = {
@@ -137,16 +135,10 @@ const OrdersPage = () => {
         >
           {error}
         </Alert>
-      ) : orders.length ? (
-        orderView === viewTypes.outgoingOrders ? (
-          <OrdersOutgoing orders={orders} />
-        ) : (
-          <OrdersIncoming orders={orders} />
-        )
       ) : orderView === viewTypes.outgoingOrders ? (
-        <OrdersOutgoingEmpty />
+        <OrdersOutgoing orders={orders} />
       ) : (
-        <OrdersIncomingEmpty />
+        <OrdersIncoming orders={orders} />
       )}
     </PageTemplate>
   )

@@ -35,8 +35,15 @@ const OrdersIncomingView = ({ orders }) => {
   ) : (
     <Centered>
       <h3>
-        <small>{t('There are no active orders')}</small>
+        <small>{t("You haven't received any orders yet")}</small>
       </h3>
+      <p>
+        <small>
+          {t(
+            'Use this to review and accept requests made on behalve of your services',
+          )}
+        </small>
+      </p>
     </Centered>
   )
 }

@@ -12,13 +12,6 @@ import { ManagementApi } from '../../../api'
 import OrdersPage from './index'
 
 jest.mock('../../../components/LoadingMessage', () => () => <p>loading</p>)
-jest.mock('./OrdersOutgoing', () => () => <p>outgoing orders view</p>)
-jest.mock('./OrdersOutgoingEmpty', () => () => (
-  <p>outgoing orders empty view</p>
-))
-jest.mock('./OrdersIncomingEmpty', () => () => (
-  <p>incoming orders empty view</p>
-))
 
 let managementApiClient
 beforeAll(() => {
@@ -32,7 +25,7 @@ test('rendering the orders page', async () => {
       orders: [
         {
           reference: 'ref1',
-          description: 'my own description',
+          description: 'description of the first outgoing order',
           delegatee: 'delegatee',
           services: [{ organization: 'organization X', service: 'service Y' }],
           validFrom: '2021-05-04',
@@ -62,7 +55,9 @@ test('rendering the orders page', async () => {
 
   expect(getByText('loading')).toBeInTheDocument()
 
-  const ordersOverview = await findByText('outgoing orders view')
+  const ordersOverview = await findByText(
+    'description of the first outgoing order',
+  )
   expect(ordersOverview).toBeInTheDocument()
 
   const linkAddOrder = getByLabelText(/Add order/)
@@ -95,7 +90,7 @@ test('no outgoing orders present', async () => {
 
   expect(getByText('loading')).toBeInTheDocument()
 
-  const emptyView = await findByText('outgoing orders empty view')
+  const emptyView = await findByText("You don't have any issued orders yet")
   expect(emptyView).toBeInTheDocument()
 })
 
@@ -109,7 +104,7 @@ test('failed to load outgoing orders', async () => {
     managementApiClient,
   })
 
-  const { getByText, findByText, queryByText } = renderWithProviders(
+  const { findByText, queryByText } = renderWithProviders(
     <Router history={history}>
       <UserContextProvider user={{}}>
         <StoreProvider rootStore={store}>
@@ -122,8 +117,6 @@ test('failed to load outgoing orders', async () => {
   await waitFor(() => {
     expect(queryByText('loading')).not.toBeInTheDocument()
   })
-
-  expect(() => getByText('outgoing orders view')).toThrow()
 
   expect(await findByText(/^Failed to load orders$/)).toBeInTheDocument()
   expect(await findByText(/^arbitrary error$/)).toBeInTheDocument()
@@ -159,7 +152,7 @@ test('no incoming orders present', async () => {
 
   fireEvent.click(incomingOrdersButton)
 
-  const emptyView = await findByText('incoming orders empty view')
+  const emptyView = await findByText("You haven't received any orders yet")
   expect(emptyView).toBeInTheDocument()
 })
 
@@ -173,7 +166,7 @@ test('failed to load incoming orders', async () => {
     managementApiClient,
   })
 
-  const { getByText, findByText, queryByText } = renderWithProviders(
+  const { findByText, queryByText } = renderWithProviders(
     <Router history={history}>
       <UserContextProvider user={{}}>
         <StoreProvider rootStore={store}>
@@ -186,8 +179,6 @@ test('failed to load incoming orders', async () => {
   await waitFor(() => {
     expect(queryByText('loading')).not.toBeInTheDocument()
   })
-
-  expect(() => getByText('outgoing orders view')).toThrow()
 
   expect(await findByText(/^Failed to load orders$/)).toBeInTheDocument()
   expect(await findByText(/^arbitrary error$/)).toBeInTheDocument()
