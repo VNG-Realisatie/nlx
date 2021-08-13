@@ -23,6 +23,11 @@ test('fetch outgoing orders', async () => {
     .mockResolvedValue({
       orders: [
         {
+          delegatee: 'delegatee 1',
+          reference: 'reference',
+        },
+        {
+          delegatee: 'delegatee 2',
           reference: 'reference',
         },
       ],
@@ -40,7 +45,16 @@ test('fetch outgoing orders', async () => {
   expect(store.isLoading).toBe(true)
 
   await waitFor(() => expect(store.isLoading).toBe(false))
-  expect(store.outgoingOrders).toEqual([{ reference: 'reference' }])
+  expect(store.outgoingOrders).toEqual([
+    {
+      delegatee: 'delegatee 1',
+      reference: 'reference',
+    },
+    {
+      delegatee: 'delegatee 2',
+      reference: 'reference',
+    },
+  ])
 })
 
 test('create an order', async () => {

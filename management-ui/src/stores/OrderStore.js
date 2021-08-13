@@ -47,7 +47,7 @@ class OrderStore {
         yield this._managementApiClient.managementListOutgoingOrders()
 
       result.orders.forEach((order) => {
-        this._outgoingOrders.set(order.reference, order)
+        this._outgoingOrders.set(`${order.delegatee}_${order.reference}`, order)
       })
     } catch (error) {
       this._isLoading = false
