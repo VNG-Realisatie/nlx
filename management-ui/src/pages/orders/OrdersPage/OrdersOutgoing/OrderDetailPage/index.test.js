@@ -8,7 +8,7 @@ import { RootStore, StoreProvider } from '../../../../../stores'
 import { ManagementApi } from '../../../../../api'
 import OrderDetailPage from './index'
 
-test('display service details', () => {
+test('display order details', () => {
   const managementApiClient = new ManagementApi()
   const rootStore = new RootStore({ managementApiClient })
   const { getByText } = renderWithProviders(
@@ -27,6 +27,7 @@ test('display service details', () => {
     </StaticRouter>,
   )
 
+  expect(getByText('Issued to delegatee')).toBeInTheDocument()
   expect(getByText('description')).toBeInTheDocument()
 })
 

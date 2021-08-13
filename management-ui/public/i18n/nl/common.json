@@ -111,6 +111,7 @@
   "Issued": "Uitgegeven",
   "Issued by": "Uitgegeven door",
   "Issued to": "Uitgegeven aan",
+  "Issued to delegatee": "Uitgegeven aan {{delegatee}}",
   "List of all available services": "Lijst met alle beschikbare services",
   "Loading…": "Laden…",
   "Log in": "Inloggen",

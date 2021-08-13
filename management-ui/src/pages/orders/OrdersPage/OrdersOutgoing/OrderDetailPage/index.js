@@ -6,6 +6,7 @@ import { string, shape } from 'prop-types'
 import { useParams, useHistory } from 'react-router-dom'
 import { Alert, Drawer } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
+import { SubTitle } from './index.styles'
 // import OrderDetailView from './OrderDetailView'
 
 const OrderDetailPage = ({ parentUrl, order }) => {
@@ -23,11 +24,14 @@ const OrderDetailPage = ({ parentUrl, order }) => {
         closeButtonLabel={t('Close')}
         data-testid="order-name"
       />
+      {order ? (
+        <SubTitle>
+          {t('Issued to delegatee', { delegatee: order.delegatee })}
+        </SubTitle>
+      ) : null}
 
       <Drawer.Content>
-        {order ? (
-          <></>
-        ) : (
+        {order ? null : (
           <Alert variant="error" data-testid="error-message">
             {t('Failed to load the order', { reference, delegatee })}
           </Alert>

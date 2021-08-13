@@ -111,6 +111,7 @@
   "Issued": "Issued",
   "Issued by": "Issued by",
   "Issued to": "Issued to",
+  "Issued to delegatee": "Issued to {{delegatee}}",
   "List of all available services": "List of all available services",
   "Loading…": "Loading…",
   "Log in": "Log in",
