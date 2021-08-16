@@ -18,7 +18,7 @@ test('display order details', () => {
           <OrderDetailPage
             order={{
               delegatee: 'delegatee',
-              reference: 'reference',
+              reference: 'my-reference',
               description: 'description',
             }}
           />
