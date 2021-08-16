@@ -58,6 +58,8 @@ test('displays text to indicate there are no orders', () => {
 })
 
 test('content should render expected data', () => {
+  const day = 86400000
+
   const orders = [
     {
       reference: 'ref1',
@@ -67,7 +69,8 @@ test('content should render expected data', () => {
         { organization: 'organization X', service: 'service Y' },
         { organization: 'organization Y', service: 'service Z' },
       ],
-      validUntil: '2021-05-10',
+      validFrom: new Date(new Date().getTime() - day),
+      validUntil: new Date(new Date().getTime() + day),
       revokedAt: null,
     },
     {
@@ -75,8 +78,27 @@ test('content should render expected data', () => {
       description: 'my own description',
       delegatee: 'delegatee',
       services: [{ organization: 'organization X', service: 'service Y' }],
-      validUntil: '2021-05-10',
-      revokedAt: '2021-04-10',
+      validFrom: new Date(new Date().getTime() - day),
+      validUntil: new Date(new Date().getTime() - day),
+      revokedAt: null,
+    },
+    {
+      reference: 'ref3',
+      description: 'my own description',
+      delegatee: 'delegatee',
+      services: [{ organization: 'organization X', service: 'service Y' }],
+      validFrom: new Date(new Date().getTime() + day),
+      validUntil: new Date(new Date().getTime() + 2 * day),
+      revokedAt: null,
+    },
+    {
+      reference: 'ref4',
+      description: 'my own description',
+      delegatee: 'delegatee',
+      services: [{ organization: 'organization X', service: 'service Y' }],
+      validFrom: new Date(new Date().getTime() - day),
+      validUntil: new Date(new Date().getTime() + day),
+      revokedAt: new Date(),
     },
   ]
 
@@ -109,6 +131,12 @@ test('content should render expected data', () => {
 
   const secondOrder = container.querySelectorAll('tbody tr')[1]
   expect(within(secondOrder).getByTitle('Inactive')).toBeInTheDocument()
+
+  const thirdOrder = container.querySelectorAll('tbody tr')[2]
+  expect(within(thirdOrder).getByTitle('Inactive')).toBeInTheDocument()
+
+  const fourthOrder = container.querySelectorAll('tbody tr')[3]
+  expect(within(fourthOrder).getByTitle('Inactive')).toBeInTheDocument()
 
   fireEvent.click(firstOrderEl)
   expect(history.location.pathname).toEqual('/orders/outgoing/delegatee/ref1')

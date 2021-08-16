@@ -58,10 +58,7 @@ test('creating an outgoing order', async () => {
 
   managementApiClient.managementCreateOutgoingOrder = jest
     .fn()
-    .mockResolvedValue({
-      delegatee: 'delegatee',
-      reference: 'my-reference',
-    })
+    .mockResolvedValue()
 
   const rootStore = new RootStore({
     managementApiClient,

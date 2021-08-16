@@ -18,7 +18,15 @@ const OrderRow = ({ order }) => {
       )}/${encodeURIComponent(order.reference)}`}
     >
       <Cell>
-        <StatusIcon active={!order.revokedAt} />
+        <StatusIcon
+          active={
+            !(
+              order.revokedAt ||
+              order.validFrom > new Date() ||
+              order.validUntil < new Date()
+            )
+          }
+        />
       </Cell>
       <Cell>{order.description}</Cell>
       <Cell>{order.delegatee}</Cell>

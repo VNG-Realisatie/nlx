@@ -28,18 +28,19 @@ class OrderStore {
 
   create = flow(function* create(formData) {
     try {
-      const orderData =
-        yield this._managementApiClient.managementCreateOutgoingOrder({
-          body: formData,
-        })
+      yield this._managementApiClient.managementCreateOutgoingOrder({
+        body: formData,
+      })
 
       const order = new OutgoingOrderModel({
         orderStore: this,
-        orderData,
+        orderData: formData,
       })
 
-      // TODO: extract getting key into function
-      this._outgoingOrders.set(`${order.delegatee}_${order.reference}`, order)
+      this._outgoingOrders.set(
+        getOutgoingKey(order.delegatee, order.reference),
+        order,
+      )
 
       return order
     } catch (response) {
@@ -62,7 +63,7 @@ class OrderStore {
         })
 
         this._outgoingOrders.set(
-          `${order.delegatee}_${order.reference}`,
+          getOutgoingKey(order.delegatee, order.reference),
           orderModel,
         )
       })
@@ -75,7 +76,7 @@ class OrderStore {
   }).bind(this)
 
   getOutgoing = (delegatee, reference) => {
-    return this._outgoingOrders.get(`${delegatee}_${reference}`)
+    return this._outgoingOrders.get(getOutgoingKey(delegatee, reference))
   }
 
   fetchIncoming = flow(function* fetchIncoming() {
@@ -113,6 +114,10 @@ class OrderStore {
 
     this._isLoading = false
   }).bind(this)
+}
+
+const getOutgoingKey = (delegatee, reference) => {
+  return `${delegatee}_${reference}`
 }
 
 export default OrderStore
