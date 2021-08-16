@@ -42,12 +42,12 @@ const ServicesOverviewPage = ({ location, history }) => {
 
   const searchOnChangeDebounced = debounce(searchOnChangeDebouncable, 400)
 
-  // const detailPaneCloseHandler = () => {
-  //   setState({
-  //     ...state,
-  //     selectedService: null,
-  //   })
-  // }
+  const detailPaneCloseHandler = () => {
+    setState({
+      ...state,
+      selectedService: null,
+    })
+  }
   const fetchServices = async () => {
     const response = await fetch(`/api/directory/list-services`, {
       headers: {
@@ -63,21 +63,21 @@ const ServicesOverviewPage = ({ location, history }) => {
     }
   }
 
-  // const handleOnServiceClicked = (service) => {
-  //   setState({
-  //     ...state,
-  //     selectedService: service,
-  //   })
-  // }
+  const handleOnServiceClicked = (service) => {
+    setState({
+      ...state,
+      selectedService: service,
+    })
+  }
 
-  // const handleSearchOnChange = (query) => {
-  //   setState({ ...state, query })
-  //   searchOnChangeDebounced(query)
-  // }
+  const handleSearchOnChange = (query) => {
+    setState({ ...state, query })
+    searchOnChangeDebounced(query)
+  }
 
-  // const handleSwitchOnChange = (checked) => {
-  //   setState({ ...state, displayOfflineServices: checked })
-  // }
+  const handleSwitchOnChange = (checked) => {
+    setState({ ...state, displayOfflineServices: checked })
+  }
 
   useEffect(() => {
     document.addEventListener('keydown', escFunction, false)
@@ -124,11 +124,11 @@ const ServicesOverviewPage = ({ location, history }) => {
             <Col>
               <Container>
                 {/* TODO: Implement proper search */}
-                {/* <StyledFilters
+                <StyledFilters
                   onQueryChanged={handleSearchOnChange}
                   onStatusFilterChanged={handleSwitchOnChange}
                   queryValue={query}
-                /> */}
+                />
 
                 <DirectoryTable
                   services={services}
