@@ -22,80 +22,62 @@ describe('checkStep yup test', () => {
   })
 })
 
-describe('with initial values', () => {
-  it('should pre-fill the form fields with the initial values', async () => {
-    const managementApiClient = new ManagementApi()
-    managementApiClient.managementListInways = jest.fn().mockResolvedValue({
-      inways: [{ name: 'inway1' }, { name: 'inway2' }],
-    })
-
-    const rootStore = new RootStore({
-      managementApiClient,
-    })
-
-    const { getByLabelText, findByLabelText } = renderWithProviders(
-      <StoreProvider rootStore={rootStore}>
-        <ServiceForm
-          initialValues={{
-            name: 'my-service',
-            endpointURL: 'http://my-service.test:8000',
-            documentationURL: 'http://my-service.test:8000/docs',
-            apiSpecificationURL: 'http://my-service.test:8000/openapi.json',
-            internal: false,
-            techSupportContact: 'tech@organization.test',
-            publicSupportContact: 'public@organization.test',
-            inways: ['inway1'],
-            oneTimeCosts: 0,
-            monthlyCosts: 0,
-            requestCosts: 0,
-            isPaidService: false,
-          }}
-          submitButtonText="Submit"
-        />
-      </StoreProvider>,
-    )
-
-    expect(getByLabelText('Service name').value).toBe('my-service')
-    expect(getByLabelText('API endpoint URL').value).toBe(
-      'http://my-service.test:8000',
-    )
-    expect(getByLabelText('API documentation URL').value).toBe(
-      'http://my-service.test:8000/docs',
-    )
-    expect(getByLabelText('API specification URL').value).toBe(
-      'http://my-service.test:8000/openapi.json',
-    )
-
-    expect(getByLabelText('Publish to central directory').value).toBe('true')
-
-    expect(getByLabelText('Tech support email').value).toBe(
-      'tech@organization.test',
-    )
-    expect(getByLabelText('Public support email').value).toBe(
-      'public@organization.test',
-    )
-
-    expect(await findByLabelText('inway1')).toHaveAttribute('checked')
-    expect(await findByLabelText('inway2')).not.toHaveAttribute('checked')
+test('with initial values', async () => {
+  const managementApiClient = new ManagementApi()
+  managementApiClient.managementListInways = jest.fn().mockResolvedValue({
+    inways: [{ name: 'inway1' }, { name: 'inway2' }],
   })
 
-  it('should allow configuring the submit button text', async () => {
-    const managementApiClient = new ManagementApi()
-    managementApiClient.managementListInways = jest
-      .fn()
-      .mockResolvedValue({ inways: [] })
-
-    const rootStore = new RootStore({
-      managementApiClient,
-    })
-
-    const { findByRole } = renderWithProviders(
-      <StoreProvider rootStore={rootStore}>
-        <ServiceForm submitButtonText="Opslaan" />
-      </StoreProvider>,
-    )
-    expect(await findByRole('button')).toHaveTextContent('Opslaan')
+  const rootStore = new RootStore({
+    managementApiClient,
   })
+
+  const { getByLabelText, findByLabelText, findByRole } = renderWithProviders(
+    <StoreProvider rootStore={rootStore}>
+      <ServiceForm
+        initialValues={{
+          name: 'my-service',
+          endpointURL: 'http://my-service.test:8000',
+          documentationURL: 'http://my-service.test:8000/docs',
+          apiSpecificationURL: 'http://my-service.test:8000/openapi.json',
+          internal: false,
+          techSupportContact: 'tech@organization.test',
+          publicSupportContact: 'public@organization.test',
+          inways: ['inway1'],
+          oneTimeCosts: 0,
+          monthlyCosts: 0,
+          requestCosts: 0,
+          isPaidService: false,
+        }}
+        submitButtonText="Opslaan"
+      />
+    </StoreProvider>,
+  )
+
+  expect(getByLabelText('Service name').value).toBe('my-service')
+  expect(getByLabelText('API endpoint URL').value).toBe(
+    'http://my-service.test:8000',
+  )
+  expect(getByLabelText('API documentation URL').value).toBe(
+    'http://my-service.test:8000/docs',
+  )
+  expect(getByLabelText('API specification URL').value).toBe(
+    'http://my-service.test:8000/openapi.json',
+  )
+
+  expect(getByLabelText('Publish to central directory').value).toBe('true')
+
+  expect(getByLabelText('Tech support email').value).toBe(
+    'tech@organization.test',
+  )
+  expect(getByLabelText('Public support email').value).toBe(
+    'public@organization.test',
+  )
+
+  expect(await findByLabelText('inway1')).toHaveAttribute('checked')
+  expect(await findByLabelText('inway2')).not.toHaveAttribute('checked')
+
+  expect(await findByRole('button')).toHaveTextContent('Opslaan')
 })
 
 test('the form values of the onSubmitHandler', async () => {
