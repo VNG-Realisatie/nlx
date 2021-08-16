@@ -131,7 +131,7 @@ Management-ui linter and tests:
     - npm run lint
     - stop_section lint
     - start_section test "Running tests"
-    - npm test -- --coverage
+    - npm test -- --coverage --watchAll=false --runInBand
     - stop_section test
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
   artifacts:
