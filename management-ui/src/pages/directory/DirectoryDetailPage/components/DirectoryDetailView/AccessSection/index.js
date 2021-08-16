@@ -100,7 +100,7 @@ const AccessSection = ({
               <StateDetail>
                 <span>{t('You have access')}</span>
                 <small>
-                  {t('Since date', {
+                  {t('Since datetime', {
                     date: latestAccessProof.createdAt,
                   })}
                 </small>
