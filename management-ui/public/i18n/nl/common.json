@@ -233,6 +233,7 @@
   "User doesn't exist in NLX Management.": "Deze gebruiker bestaat niet in NLX Management.",
   "Valid from": "Geldig vanaf",
   "Valid until": "Geldig tot",
+  "Valid until date": "Geldig tot {{date, DD-MM-YYYY}}",
   "Version": "Versie",
   "Visibility": "Zichtbaarheid",
   "Welcome": "Welkom",

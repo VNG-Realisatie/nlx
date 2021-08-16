@@ -233,6 +233,7 @@
   "User doesn't exist in NLX Management.": "User doesn't exist in NLX Management.",
   "Valid from": "Valid from",
   "Valid until": "Valid until",
+  "Valid until date": "Valid until {{date, DD-MM-YYYY}}",
   "Version": "Version",
   "Visibility": "Visibility",
   "Welcome": "Welcome",

@@ -2,6 +2,7 @@
 // Licensed under the EUPL
 //
 import { flow, makeAutoObservable, observable } from 'mobx'
+import OutgoingOrderModel from './models/OutgoingOrderModel'
 
 class OrderStore {
   _isLoading = false
@@ -32,7 +33,15 @@ class OrderStore {
           body: formData,
         })
 
-      return orderData.id
+      const order = new OutgoingOrderModel({
+        orderStore: this,
+        orderData,
+      })
+
+      // TODO: extract getting key into function
+      this._outgoingOrders.set(`${order.delegatee}_${order.reference}`, order)
+
+      return order
     } catch (response) {
       const err = yield response.json()
       throw new Error(err.message)
@@ -47,7 +56,15 @@ class OrderStore {
         yield this._managementApiClient.managementListOutgoingOrders()
 
       result.orders.forEach((order) => {
-        this._outgoingOrders.set(`${order.delegatee}_${order.reference}`, order)
+        const orderModel = new OutgoingOrderModel({
+          orderStore: this,
+          orderData: order,
+        })
+
+        this._outgoingOrders.set(
+          `${order.delegatee}_${order.reference}`,
+          orderModel,
+        )
       })
     } catch (error) {
       this._isLoading = false

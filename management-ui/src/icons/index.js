@@ -35,6 +35,7 @@ import { ReactComponent as SvgStateDown } from './state-down.svg'
 import { ReactComponent as SvgStateUnknown } from './state-unknown.svg'
 import { ReactComponent as SvgStateUp } from './state-up.svg'
 import { ReactComponent as SvgTimeLine } from './time-line.svg'
+import { ReactComponent as SvgTimer } from './timer.svg'
 import { ReactComponent as SvgUserCheck } from './user-follow.svg'
 import { ReactComponent as SvgVisible } from './visible.svg'
 import { ReactComponent as SvgWarning } from './warning.svg'
@@ -90,6 +91,7 @@ export const IconStateUnknown = (props) => (
 )
 export const IconStateUp = (props) => <Icon as={SvgStateUp} {...props} />
 export const IconTimeLine = (props) => <Icon as={SvgTimeLine} {...props} />
+export const IconTimer = (props) => <Icon as={SvgTimer} {...props} />
 export const IconUserCheck = (props) => <Icon as={SvgUserCheck} {...props} />
 export const IconVisible = (props) => <Icon as={SvgVisible} {...props} />
 export const IconWarning = (props) => <Icon as={SvgWarning} {...props} />

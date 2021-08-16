@@ -4,6 +4,8 @@
 import { waitFor } from '@testing-library/react'
 import { ManagementApi } from '../api'
 import OrderStore from './OrderStore'
+import OutgoingOrderModel from './models/OutgoingOrderModel'
+import { RootStore } from './index'
 
 test('initializing the store', () => {
   const auditLogStore = new OrderStore({
@@ -45,38 +47,34 @@ test('fetch outgoing orders', async () => {
   expect(store.isLoading).toBe(true)
 
   await waitFor(() => expect(store.isLoading).toBe(false))
-  expect(store.outgoingOrders).toEqual([
-    {
-      delegatee: 'delegatee 1',
-      reference: 'reference',
-    },
-    {
-      delegatee: 'delegatee 2',
-      reference: 'reference',
-    },
-  ])
+  expect(store.outgoingOrders).toHaveLength(2)
 
-  expect(store.getOutgoing('delegatee 1', 'reference')).toEqual({
-    delegatee: 'delegatee 1',
-    reference: 'reference',
-  })
+  const firstOrder = store.getOutgoing('delegatee 1', 'reference')
+  expect(firstOrder).toBeInstanceOf(OutgoingOrderModel)
 })
 
-test('create an order', async () => {
+test('creating an outgoing order', async () => {
   const managementApiClient = new ManagementApi()
 
   managementApiClient.managementCreateOutgoingOrder = jest
     .fn()
     .mockResolvedValue({
-      id: 'orderid',
+      delegatee: 'delegatee',
+      reference: 'my-reference',
     })
 
-  const store = new OrderStore({
-    rootStore: {},
+  const rootStore = new RootStore({
     managementApiClient,
   })
+  const orderStore = rootStore.orderStore
 
-  expect(await store.create()).toEqual('orderid')
+  const order = await orderStore.create({
+    delegatee: 'delegatee',
+    reference: 'my-reference',
+  })
+
+  expect(order).toBeInstanceOf(OutgoingOrderModel)
+  expect(orderStore.getOutgoing('delegatee', 'my-reference')).toBe(order)
 })
 
 test('fetch incoming orders', async () => {

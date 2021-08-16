@@ -8,6 +8,8 @@ import OrderDetailView from './index'
 const order = {
   reference: 'my-reference',
   delegatee: 'delegatee',
+  validFrom: new Date(),
+  validUntil: new Date(),
 }
 
 test('display order details', () => {
