@@ -4,6 +4,7 @@ export * from './ManagementAccessGrant';
 export * from './ManagementAccessProof';
 export * from './ManagementAccessRequestState';
 export * from './ManagementAuditLogRecord';
+export * from './ManagementAuditLogRecordMetadata';
 export * from './ManagementAuditLogRecordService';
 export * from './ManagementCreateAccessRequestRequest';
 export * from './ManagementCreateOutgoingOrderRequest';

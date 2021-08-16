@@ -79,6 +79,19 @@ class OrderStore {
     return this._outgoingOrders.get(getOutgoingKey(delegatee, reference))
   }
 
+  revokeOutgoing = flow(function* revokeOutgoing(order) {
+    try {
+      yield this._managementApiClient.managementRevokeOutgoingOrder({
+        delegatee: order.delegatee,
+        reference: order.reference,
+      })
+
+      order.update({ revokedAt: new Date() })
+    } catch (error) {
+      throw new Error(error.message)
+    }
+  }).bind(this)
+
   fetchIncoming = flow(function* fetchIncoming() {
     this._isLoading = true
 

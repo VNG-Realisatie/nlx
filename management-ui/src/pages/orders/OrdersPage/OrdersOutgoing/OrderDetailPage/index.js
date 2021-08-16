@@ -1,20 +1,32 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React from 'react'
+import React, { useContext } from 'react'
 import { string, shape } from 'prop-types'
 import { useParams, useHistory } from 'react-router-dom'
-import { Alert, Drawer } from '@commonground/design-system'
+import { Alert, Drawer, ToasterContext } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import { SubTitle } from './index.styles'
 import OrderDetailView from './OrderDetailView'
 
 const OrderDetailPage = ({ parentUrl, order }) => {
   const { delegatee, reference } = useParams()
+  const { showToast } = useContext(ToasterContext)
   const { t } = useTranslation()
   const history = useHistory()
 
   const close = () => history.push(parentUrl)
+  const handleRevoke = async (order) => {
+    try {
+      await order.revoke()
+    } catch (err) {
+      showToast({
+        title: t('Failed to revoke the order'),
+        body: err.message,
+        variant: 'error',
+      })
+    }
+  }
 
   return (
     <Drawer noMask closeHandler={close}>
@@ -36,7 +48,12 @@ const OrderDetailPage = ({ parentUrl, order }) => {
             {t('Failed to load the order', { reference, delegatee })}
           </Alert>
         ) : (
-          <OrderDetailView order={order} />
+          <OrderDetailView
+            order={order}
+            revokeHandler={(order) => {
+              handleRevoke(order)
+            }}
+          />
         )}
       </Drawer.Content>
     </Drawer>

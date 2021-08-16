@@ -13,7 +13,9 @@ const order = {
 }
 
 test('display order details', () => {
-  const { queryByText } = renderWithProviders(<OrderDetailView order={order} />)
+  const { queryByText } = renderWithProviders(
+    <OrderDetailView order={order} revokeHandler={() => {}} />,
+  )
 
   expect(queryByText('my-reference')).toBeInTheDocument()
 

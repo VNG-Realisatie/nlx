@@ -18,6 +18,10 @@ import {
     AuditLogRecordActionTypeFromJSON,
     AuditLogRecordActionTypeFromJSONTyped,
     AuditLogRecordActionTypeToJSON,
+    ManagementAuditLogRecordMetadata,
+    ManagementAuditLogRecordMetadataFromJSON,
+    ManagementAuditLogRecordMetadataFromJSONTyped,
+    ManagementAuditLogRecordMetadataToJSON,
     ManagementAuditLogRecordService,
     ManagementAuditLogRecordServiceFromJSON,
     ManagementAuditLogRecordServiceFromJSONTyped,
@@ -86,10 +90,10 @@ export interface ManagementAuditLogRecord {
     createdAt?: Date;
     /**
      * 
-     * @type {string}
+     * @type {ManagementAuditLogRecordMetadata}
      * @memberof ManagementAuditLogRecord
      */
-    data?: string;
+    data?: ManagementAuditLogRecordMetadata;
 }
 
 export function ManagementAuditLogRecordFromJSON(json: any): ManagementAuditLogRecord {
@@ -111,7 +115,7 @@ export function ManagementAuditLogRecordFromJSONTyped(json: any, ignoreDiscrimin
         'delegatee': !exists(json, 'delegatee') ? undefined : json['delegatee'],
         'services': !exists(json, 'services') ? undefined : ((json['services'] as Array<any>).map(ManagementAuditLogRecordServiceFromJSON)),
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
-        'data': !exists(json, 'data') ? undefined : json['data'],
+        'data': !exists(json, 'data') ? undefined : ManagementAuditLogRecordMetadataFromJSON(json['data']),
     };
 }
 
@@ -133,7 +137,7 @@ export function ManagementAuditLogRecordToJSON(value?: ManagementAuditLogRecord 
         'delegatee': value.delegatee,
         'services': value.services === undefined ? undefined : ((value.services as Array<any>).map(ManagementAuditLogRecordServiceToJSON)),
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
-        'data': value.data,
+        'data': ManagementAuditLogRecordMetadataToJSON(value.data),
     };
 }
 

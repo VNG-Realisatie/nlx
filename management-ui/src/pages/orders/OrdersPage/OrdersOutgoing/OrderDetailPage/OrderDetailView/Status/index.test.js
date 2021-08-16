@@ -13,10 +13,11 @@ test('display status', () => {
       order={{
         reference: 'my-reference',
         delegatee: 'delegatee',
-        validFrom: new Date().getTime() - day,
-        validUntil: new Date().getTime() + day,
+        validFrom: new Date(new Date().getTime() - day),
+        validUntil: new Date(new Date().getTime() + day),
         revokedAt: null,
       }}
+      revokeHandler={() => {}}
     />,
   )
 
@@ -31,6 +32,7 @@ test('display status', () => {
         validUntil: new Date(new Date().getTime() - day),
         revokedAt: null,
       }}
+      revokeHandler={() => {}}
     />,
   )
 
@@ -45,6 +47,7 @@ test('display status', () => {
         validUntil: new Date(new Date().getTime() + 2 * day),
         revokedAt: null,
       }}
+      revokeHandler={() => {}}
     />,
   )
 
@@ -59,6 +62,7 @@ test('display status', () => {
         validUntil: new Date(new Date().getTime() + day),
         revokedAt: new Date(),
       }}
+      revokeHandler={() => {}}
     />,
   )
 

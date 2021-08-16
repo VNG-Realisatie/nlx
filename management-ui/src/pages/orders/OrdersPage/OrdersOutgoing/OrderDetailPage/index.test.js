@@ -3,32 +3,71 @@
 //
 import React from 'react'
 import { Route, StaticRouter } from 'react-router-dom'
-import { renderWithProviders } from '../../../../../test-utils'
+import { fireEvent, waitFor, within } from '@testing-library/react'
+import { configure } from 'mobx'
+import { renderWithProviders, screen } from '../../../../../test-utils'
 import { RootStore, StoreProvider } from '../../../../../stores'
 import { ManagementApi } from '../../../../../api'
 import OrderDetailPage from './index'
 
-test('display order details', () => {
+jest.mock('../../../../../components/Modal')
+
+beforeEach(() => {
+  jest.useFakeTimers()
+})
+
+afterEach(() => {
+  jest.useRealTimers()
+})
+
+test('display order details', async () => {
+  configure({ safeDescriptors: false })
+
   const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementListOutgoingOrders = jest
+    .fn()
+    .mockResolvedValue({
+      orders: [
+        {
+          delegatee: 'delegatee',
+          reference: 'my-reference',
+          description: 'description',
+          validFrom: '2020-01-01',
+          validUntil: '3000-01-01',
+          revokedAt: null,
+        },
+      ],
+    })
   const rootStore = new RootStore({ managementApiClient })
-  const { getByText } = renderWithProviders(
+  const orderStore = rootStore.orderStore
+
+  await orderStore.fetchOutgoing()
+
+  renderWithProviders(
     <StaticRouter location="/orders/delegatee/reference">
       <Route path="/orders/:delegatee/:reference">
         <StoreProvider rootStore={rootStore}>
-          <OrderDetailPage
-            order={{
-              delegatee: 'delegatee',
-              reference: 'my-reference',
-              description: 'description',
-            }}
-          />
+          <OrderDetailPage order={orderStore.outgoingOrders[0]} />
         </StoreProvider>
       </Route>
     </StaticRouter>,
   )
 
-  expect(getByText('Issued to delegatee')).toBeInTheDocument()
-  expect(getByText('description')).toBeInTheDocument()
+  expect(screen.getByText('Issued to delegatee')).toBeInTheDocument()
+  expect(screen.getByText('description')).toBeInTheDocument()
+
+  const orderModel = orderStore.outgoingOrders[0]
+  jest.spyOn(orderModel, 'revoke')
+
+  const revokeButton = await screen.findByText('Revoke')
+  fireEvent.click(revokeButton)
+
+  const confirmModal = screen.getByRole('dialog')
+  const okButton = within(confirmModal).getByText('Revoke')
+
+  fireEvent.click(okButton)
+  await waitFor(() => expect(orderModel.revoke).toHaveBeenCalledTimes(1))
 })
 
 test('display error for a non-existing order', async () => {
@@ -39,7 +78,7 @@ test('display error for a non-existing order', async () => {
     <StaticRouter location="/orders/delegatee/reference">
       <Route path="/orders/:delegatee/:reference">
         <StoreProvider rootStore={rootStore}>
-          <OrderDetailPage />
+          <OrderDetailPage revokeHandler={() => {}} />
         </StoreProvider>
       </Route>
     </StaticRouter>,

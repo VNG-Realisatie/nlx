@@ -62,6 +62,12 @@ export interface ManagementIncomingOrder {
      * @memberof ManagementIncomingOrder
      */
     services?: Array<ManagementOrderService>;
+    /**
+     * 
+     * @type {Date}
+     * @memberof ManagementIncomingOrder
+     */
+    revokedAt?: Date;
 }
 
 export function ManagementIncomingOrderFromJSON(json: any): ManagementIncomingOrder {
@@ -80,6 +86,7 @@ export function ManagementIncomingOrderFromJSONTyped(json: any, ignoreDiscrimina
         'validFrom': !exists(json, 'validFrom') ? undefined : (new Date(json['validFrom'])),
         'validUntil': !exists(json, 'validUntil') ? undefined : (new Date(json['validUntil'])),
         'services': !exists(json, 'services') ? undefined : ((json['services'] as Array<any>).map(ManagementOrderServiceFromJSON)),
+        'revokedAt': !exists(json, 'revokedAt') ? undefined : (new Date(json['revokedAt'])),
     };
 }
 
@@ -98,6 +105,7 @@ export function ManagementIncomingOrderToJSON(value?: ManagementIncomingOrder | 
         'validFrom': value.validFrom === undefined ? undefined : (value.validFrom.toISOString()),
         'validUntil': value.validUntil === undefined ? undefined : (value.validUntil.toISOString()),
         'services': value.services === undefined ? undefined : ((value.services as Array<any>).map(ManagementOrderServiceToJSON)),
+        'revokedAt': value.revokedAt === undefined ? undefined : (value.revokedAt.toISOString()),
     };
 }
 
