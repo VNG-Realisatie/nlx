@@ -120,12 +120,6 @@ Management-ui linter and tests:
       fi
     - cd management-ui/
     - install_npm_dependencies
-    - start_section lint "Running linter"
-    - npm run lint
-    - stop_section lint
-    - start_section test "Running tests"
-    - npm test -- --coverage
-    - stop_section test
     - start_section i18n "Checking translations"
     - cp public/i18n/en/common.json public/i18n/en/common.json.orig
     - cp public/i18n/nl/common.json public/i18n/nl/common.json.orig
@@ -133,6 +127,12 @@ Management-ui linter and tests:
     - diff -u public/i18n/en/common.json.orig public/i18n/en/common.json
     - diff -u public/i18n/nl/common.json.orig public/i18n/nl/common.json
     - stop_section i18n
+    - start_section lint "Running linter"
+    - npm run lint
+    - stop_section lint
+    - start_section test "Running tests"
+    - npm test -- --coverage
+    - stop_section test
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
   artifacts:
     expire_in: 1 month
