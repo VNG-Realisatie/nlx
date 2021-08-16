@@ -7,7 +7,7 @@ import { useParams, useHistory } from 'react-router-dom'
 import { Alert, Drawer } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import { SubTitle } from './index.styles'
-// import OrderDetailView from './OrderDetailView'
+import OrderDetailView from './OrderDetailView'
 
 const OrderDetailPage = ({ parentUrl, order }) => {
   const { delegatee, reference } = useParams()
@@ -31,10 +31,12 @@ const OrderDetailPage = ({ parentUrl, order }) => {
       ) : null}
 
       <Drawer.Content>
-        {order ? null : (
+        {!order ? (
           <Alert variant="error" data-testid="error-message">
             {t('Failed to load the order', { reference, delegatee })}
           </Alert>
+        ) : (
+          <OrderDetailView order={order} />
         )}
       </Drawer.Content>
     </Drawer>

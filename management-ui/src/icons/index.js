@@ -7,6 +7,7 @@ import { Icon } from '@commonground/design-system'
 import { ReactComponent as SvgArrowLeftRight } from './arrow-left-right.svg'
 import { ReactComponent as SvgArrowDownLine } from './arrow-down-line.svg'
 import { ReactComponent as SvgBarChart } from './bar-chart.svg'
+import { ReactComponent as SvgBarcode } from './barcode.svg'
 import { ReactComponent as SvgBin } from './bin.svg'
 import { ReactComponent as SvgClose } from './close.svg'
 import { ReactComponent as SvgCheck } from './check.svg'
@@ -47,6 +48,7 @@ export const IconArrowDownLine = (props) => (
   <Icon as={SvgArrowDownLine} {...props} />
 )
 export const IconBarChart = (props) => <Icon as={SvgBarChart} {...props} />
+export const IconBarcode = (props) => <Icon as={SvgBarcode} {...props} />
 export const IconBin = (props) => <Icon as={SvgBin} {...props} />
 export const IconClose = (props) => <Icon as={SvgClose} {...props} />
 export const IconCheck = (props) => <Icon as={SvgCheck} {...props} />
