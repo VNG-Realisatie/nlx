@@ -24,7 +24,7 @@ spec:
           args:
             - "-xc"
             - |
-                nlx-management-api create-user --email admin@example.com --role admin; \
+                nlx-management-api create-user --email admin@example.com --password password --role admin; \
                   return_code=$?
 
                 if [ $return_code -eq 128 ]; then
