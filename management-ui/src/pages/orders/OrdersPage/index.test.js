@@ -11,8 +11,6 @@ import { RootStore, StoreProvider } from '../../../stores'
 import { ManagementApi } from '../../../api'
 import OrdersPage from './index'
 
-jest.mock('../../../components/LoadingMessage', () => () => <p>loading</p>)
-
 let managementApiClient
 beforeAll(() => {
   managementApiClient = new ManagementApi()
@@ -43,7 +41,7 @@ test('rendering the orders page', async () => {
     managementApiClient,
   })
 
-  const { getByText, getByLabelText, findByText } = renderWithProviders(
+  const { getByRole, getByLabelText, findByText } = renderWithProviders(
     <Router history={history}>
       <UserContextProvider user={{}}>
         <StoreProvider rootStore={store}>
@@ -53,7 +51,7 @@ test('rendering the orders page', async () => {
     </Router>,
   )
 
-  expect(getByText('loading')).toBeInTheDocument()
+  expect(getByRole('progressbar')).toBeInTheDocument()
 
   const ordersOverview = await findByText(
     'description of the first outgoing order',
@@ -78,7 +76,7 @@ test('no outgoing orders present', async () => {
     managementApiClient,
   })
 
-  const { getByText, findByText } = renderWithProviders(
+  const { getByRole, findByText } = renderWithProviders(
     <Router history={history}>
       <UserContextProvider user={{}}>
         <StoreProvider rootStore={store}>
@@ -88,7 +86,7 @@ test('no outgoing orders present', async () => {
     </Router>,
   )
 
-  expect(getByText('loading')).toBeInTheDocument()
+  expect(getByRole('progressbar')).toBeInTheDocument()
 
   const emptyView = await findByText("You don't have any issued orders yet")
   expect(emptyView).toBeInTheDocument()
@@ -104,7 +102,7 @@ test('failed to load outgoing orders', async () => {
     managementApiClient,
   })
 
-  const { findByText, queryByText } = renderWithProviders(
+  const { findByText, queryByRole } = renderWithProviders(
     <Router history={history}>
       <UserContextProvider user={{}}>
         <StoreProvider rootStore={store}>
@@ -115,7 +113,7 @@ test('failed to load outgoing orders', async () => {
   )
 
   await waitFor(() => {
-    expect(queryByText('loading')).not.toBeInTheDocument()
+    expect(queryByRole('progressbar')).not.toBeInTheDocument()
   })
 
   expect(await findByText(/^Failed to load orders$/)).toBeInTheDocument()
@@ -136,7 +134,7 @@ test('no incoming orders present', async () => {
     managementApiClient,
   })
 
-  const { getByText, findByText } = renderWithProviders(
+  const { getByRole, findByText } = renderWithProviders(
     <Router history={history}>
       <UserContextProvider user={{}}>
         <StoreProvider rootStore={store}>
@@ -146,7 +144,7 @@ test('no incoming orders present', async () => {
     </Router>,
   )
 
-  expect(getByText('loading')).toBeInTheDocument()
+  expect(getByRole('progressbar')).toBeInTheDocument()
 
   const incomingOrdersButton = await findByText(/Received/)
 
@@ -166,7 +164,7 @@ test('failed to load incoming orders', async () => {
     managementApiClient,
   })
 
-  const { findByText, queryByText } = renderWithProviders(
+  const { findByText, queryByRole } = renderWithProviders(
     <Router history={history}>
       <UserContextProvider user={{}}>
         <StoreProvider rootStore={store}>
@@ -177,7 +175,7 @@ test('failed to load incoming orders', async () => {
   )
 
   await waitFor(() => {
-    expect(queryByText('loading')).not.toBeInTheDocument()
+    expect(queryByRole('progressbar')).not.toBeInTheDocument()
   })
 
   expect(await findByText(/^Failed to load orders$/)).toBeInTheDocument()
