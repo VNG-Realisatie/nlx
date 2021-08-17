@@ -75,6 +75,7 @@ test('display order details', async () => {
   await waitFor(() => expect(orderModel.revoke).toHaveBeenCalledTimes(1))
 
   expect(screen.getByText('Order is revoked')).toBeInTheDocument()
+  expect(screen.getByText('Revoked on date')).toBeInTheDocument()
 })
 
 test('display error for a non-existing order', async () => {

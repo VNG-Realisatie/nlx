@@ -187,6 +187,7 @@
   "requestWithCount_plural": "{{count}} requests",
   "Retry": "Retry",
   "Revoke": "Revoke",
+  "Revoked on date": "Revoked on {{date, YYYY-MM-DD}}",
   "Save": "Save",
   "Save settings": "Save settings",
   "Select a service…": "Select a service…",

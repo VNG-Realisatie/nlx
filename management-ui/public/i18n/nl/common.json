@@ -187,6 +187,7 @@
   "requestWithCount_plural": "{{count}} verzoeken",
   "Retry": "Probeer opnieuw",
   "Revoke": "Intrekken",
+  "Revoked on date": "Ingetrokken op {{date, DD-MM-YYYY}}",
   "Save": "Opslaan",
   "Save settings": "Instellingen opslaan",
   "Select a service…": "Kies een service…",

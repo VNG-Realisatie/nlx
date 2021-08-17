@@ -8,13 +8,19 @@ import { useTranslation } from 'react-i18next'
 import { IconTimer } from '../../../../../../../icons'
 import { StyledContainer, StyledLabel } from './index.styles'
 
-const StartEndDate = ({ validFrom, validUntil }) => {
+const StartEndDate = ({ validFrom, validUntil, revokedAt }) => {
   const { t } = useTranslation()
   return (
     <StyledContainer>
       <IconTimer />
-      {t('Valid until date', { date: validUntil })}
-      <StyledLabel>{t('Since date', { date: validFrom })}</StyledLabel>
+      {revokedAt ? (
+        t('Revoked on date', { date: revokedAt })
+      ) : (
+        <>
+          {t('Valid until date', { date: validUntil })}
+          <StyledLabel>{t('Since date', { date: validFrom })}</StyledLabel>
+        </>
+      )}
     </StyledContainer>
   )
 }
@@ -22,6 +28,7 @@ const StartEndDate = ({ validFrom, validUntil }) => {
 StartEndDate.propTypes = {
   validFrom: instanceOf(Date).isRequired,
   validUntil: instanceOf(Date).isRequired,
+  revokedAt: instanceOf(Date),
 }
 
 export default StartEndDate

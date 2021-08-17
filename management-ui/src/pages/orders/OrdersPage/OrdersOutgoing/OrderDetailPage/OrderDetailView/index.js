@@ -33,6 +33,7 @@ const OrderDetailView = ({ order, revokeHandler }) => {
         <StartEndDate
           validFrom={order.validFrom}
           validUntil={order.validUntil}
+          revokedAt={order.revokedAt}
         />
         <Reference value={order.reference} />
         <Services services={order.services} />
