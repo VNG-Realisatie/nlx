@@ -16,7 +16,7 @@ const createOrdersPage = (managementApiClient) => {
     managementApiClient,
   })
 
-  const history = createMemoryHistory({ initialEntries: ['/orders'] })
+  const history = createMemoryHistory({ initialEntries: ['/orders/outgoing'] })
 
   renderWithProviders(
     <Router history={history}>

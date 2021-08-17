@@ -135,8 +135,32 @@ test('the /finances route renders the FinancePage', () => {
   expect(getByTestId('finances-page')).toBeInTheDocument()
 })
 
-test('the /orders route renders the OrdersPage', () => {
+test('the /orders route redirects to /orders/outgoing', () => {
   const history = createMemoryHistory({ initialEntries: ['/orders'] })
+  const { getByTestId } = renderWithProviders(
+    <Router history={history}>
+      <UserContextProvider user={{ id: '42' }}>
+        <Routes />
+      </UserContextProvider>
+    </Router>,
+  )
+  expect(getByTestId('orders-page')).toBeInTheDocument()
+})
+
+test('the /orders/outgoing route renders the OrdersPage', () => {
+  const history = createMemoryHistory({ initialEntries: ['/orders/outgoing'] })
+  const { getByTestId } = renderWithProviders(
+    <Router history={history}>
+      <UserContextProvider user={{ id: '42' }}>
+        <Routes />
+      </UserContextProvider>
+    </Router>,
+  )
+  expect(getByTestId('orders-page')).toBeInTheDocument()
+})
+
+test('the /orders/incoming route renders the OrdersPage', () => {
+  const history = createMemoryHistory({ initialEntries: ['/orders/incoming'] })
   const { getByTestId } = renderWithProviders(
     <Router history={history}>
       <UserContextProvider user={{ id: '42' }}>
