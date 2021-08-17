@@ -157,7 +157,7 @@ func TestListAuditLogs(t *testing.T) {
 				{
 					ID:         1,
 					Username:   "Jane Doe",
-					ActionType: auditlog.LoginSuccess,
+					ActionType: auditlog.OrderOutgoingRevoke,
 					UserAgent:  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15",
 					CreatedAt:  time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
 					Data: &auditlog.RecordData{
@@ -173,7 +173,7 @@ func TestListAuditLogs(t *testing.T) {
 					{
 						Id:              1,
 						User:            "Jane Doe",
-						Action:          api.AuditLogRecord_loginSuccess,
+						Action:          api.AuditLogRecord_orderOutgoingRevoke,
 						OperatingSystem: "Mac OS X",
 						Browser:         "Safari",
 						Client:          "NLX Management",

@@ -113,7 +113,7 @@ func convertAuditLogModelToResponseAuditLog(records []*auditlog.Record) ([]*api.
 }
 
 func convertAuditLogActionTypeFromDatabaseToModel(actionType auditlog.ActionType) (api.AuditLogRecord_ActionType, error) {
-	value, ok := actionTypes[auditlog.LoginSuccess]
+	value, ok := actionTypes[actionType]
 	if !ok {
 		return 0, fmt.Errorf("unable to convert audit log action type '%s'", actionType)
 	}
