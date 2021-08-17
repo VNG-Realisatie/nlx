@@ -4,12 +4,30 @@
 import React from 'react'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
-import { waitFor, fireEvent } from '@testing-library/react'
+import { waitFor, fireEvent, screen } from '@testing-library/react'
 import { renderWithProviders } from '../../../test-utils'
 import { UserContextProvider } from '../../../user-context'
 import { RootStore, StoreProvider } from '../../../stores'
 import { ManagementApi } from '../../../api'
 import OrdersPage from './index'
+
+const createOrdersPage = (managementApiClient) => {
+  const store = new RootStore({
+    managementApiClient,
+  })
+
+  const history = createMemoryHistory({ initialEntries: ['/orders'] })
+
+  renderWithProviders(
+    <Router history={history}>
+      <UserContextProvider user={{}}>
+        <StoreProvider rootStore={store}>
+          <OrdersPage />
+        </StoreProvider>
+      </UserContextProvider>
+    </Router>,
+  )
+}
 
 test('rendering the orders page', async () => {
   const managementApiClient = new ManagementApi()
@@ -32,29 +50,16 @@ test('rendering the orders page', async () => {
     .fn()
     .mockResolvedValue({ orders: [] })
 
-  const history = createMemoryHistory({ initialEntries: ['/orders'] })
-  const store = new RootStore({
-    managementApiClient,
-  })
+  createOrdersPage(managementApiClient)
 
-  const { getByRole, getByLabelText, findByText } = renderWithProviders(
-    <Router history={history}>
-      <UserContextProvider user={{}}>
-        <StoreProvider rootStore={store}>
-          <OrdersPage />
-        </StoreProvider>
-      </UserContextProvider>
-    </Router>,
-  )
+  expect(screen.getByRole('progressbar')).toBeInTheDocument()
 
-  expect(getByRole('progressbar')).toBeInTheDocument()
-
-  const ordersOverview = await findByText(
+  const ordersOverview = await screen.findByText(
     'description of the first outgoing order',
   )
   expect(ordersOverview).toBeInTheDocument()
 
-  const linkAddOrder = getByLabelText(/Add order/)
+  const linkAddOrder = screen.getByLabelText(/Add order/)
   expect(linkAddOrder.getAttribute('href')).toBe('/orders/add-order')
 })
 
@@ -68,24 +73,13 @@ test('no outgoing orders present', async () => {
     .fn()
     .mockResolvedValue({ orders: [] })
 
-  const history = createMemoryHistory({ initialEntries: ['/orders'] })
-  const store = new RootStore({
-    managementApiClient,
-  })
+  createOrdersPage(managementApiClient)
 
-  const { getByRole, findByText } = renderWithProviders(
-    <Router history={history}>
-      <UserContextProvider user={{}}>
-        <StoreProvider rootStore={store}>
-          <OrdersPage />
-        </StoreProvider>
-      </UserContextProvider>
-    </Router>,
+  expect(screen.getByRole('progressbar')).toBeInTheDocument()
+
+  const emptyView = await screen.findByText(
+    "You don't have any issued orders yet",
   )
-
-  expect(getByRole('progressbar')).toBeInTheDocument()
-
-  const emptyView = await findByText("You don't have any issued orders yet")
   expect(emptyView).toBeInTheDocument()
 })
 
@@ -95,27 +89,14 @@ test('failed to load outgoing orders', async () => {
     .fn()
     .mockRejectedValue(new Error('arbitrary error'))
 
-  const history = createMemoryHistory({ initialEntries: ['/orders'] })
-  const store = new RootStore({
-    managementApiClient,
-  })
-
-  const { findByText, queryByRole } = renderWithProviders(
-    <Router history={history}>
-      <UserContextProvider user={{}}>
-        <StoreProvider rootStore={store}>
-          <OrdersPage />
-        </StoreProvider>
-      </UserContextProvider>
-    </Router>,
-  )
+  createOrdersPage(managementApiClient)
 
   await waitFor(() => {
-    expect(queryByRole('progressbar')).not.toBeInTheDocument()
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
   })
 
-  expect(await findByText(/^Failed to load orders$/)).toBeInTheDocument()
-  expect(await findByText(/^arbitrary error$/)).toBeInTheDocument()
+  expect(await screen.findByText(/^Failed to load orders$/)).toBeInTheDocument()
+  expect(await screen.findByText(/^arbitrary error$/)).toBeInTheDocument()
 })
 
 test('no incoming orders present', async () => {
@@ -128,28 +109,17 @@ test('no incoming orders present', async () => {
     .fn()
     .mockResolvedValue({ orders: [] })
 
-  const history = createMemoryHistory({ initialEntries: ['/orders'] })
-  const store = new RootStore({
-    managementApiClient,
-  })
+  createOrdersPage(managementApiClient)
 
-  const { getByRole, findByText } = renderWithProviders(
-    <Router history={history}>
-      <UserContextProvider user={{}}>
-        <StoreProvider rootStore={store}>
-          <OrdersPage />
-        </StoreProvider>
-      </UserContextProvider>
-    </Router>,
-  )
+  expect(screen.getByRole('progressbar')).toBeInTheDocument()
 
-  expect(getByRole('progressbar')).toBeInTheDocument()
-
-  const incomingOrdersButton = await findByText(/Received/)
+  const incomingOrdersButton = await screen.findByText(/Received/)
 
   fireEvent.click(incomingOrdersButton)
 
-  const emptyView = await findByText("You haven't received any orders yet")
+  const emptyView = await screen.findByText(
+    "You haven't received any orders yet",
+  )
   expect(emptyView).toBeInTheDocument()
 })
 
@@ -159,25 +129,12 @@ test('failed to load incoming orders', async () => {
     .fn()
     .mockRejectedValue(new Error('arbitrary error'))
 
-  const history = createMemoryHistory({ initialEntries: ['/orders'] })
-  const store = new RootStore({
-    managementApiClient,
-  })
-
-  const { findByText, queryByRole } = renderWithProviders(
-    <Router history={history}>
-      <UserContextProvider user={{}}>
-        <StoreProvider rootStore={store}>
-          <OrdersPage />
-        </StoreProvider>
-      </UserContextProvider>
-    </Router>,
-  )
+  createOrdersPage(managementApiClient)
 
   await waitFor(() => {
-    expect(queryByRole('progressbar')).not.toBeInTheDocument()
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
   })
 
-  expect(await findByText(/^Failed to load orders$/)).toBeInTheDocument()
-  expect(await findByText(/^arbitrary error$/)).toBeInTheDocument()
+  expect(await screen.findByText(/^Failed to load orders$/)).toBeInTheDocument()
+  expect(await screen.findByText(/^arbitrary error$/)).toBeInTheDocument()
 })
