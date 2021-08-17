@@ -11,12 +11,8 @@ import { RootStore, StoreProvider } from '../../../stores'
 import { ManagementApi } from '../../../api'
 import OrdersPage from './index'
 
-let managementApiClient
-beforeAll(() => {
-  managementApiClient = new ManagementApi()
-})
-
 test('rendering the orders page', async () => {
+  const managementApiClient = new ManagementApi()
   managementApiClient.managementListOutgoingOrders = jest
     .fn()
     .mockResolvedValue({
@@ -63,6 +59,7 @@ test('rendering the orders page', async () => {
 })
 
 test('no outgoing orders present', async () => {
+  const managementApiClient = new ManagementApi()
   managementApiClient.managementListOutgoingOrders = jest
     .fn()
     .mockResolvedValue({ orders: [] })
@@ -93,6 +90,7 @@ test('no outgoing orders present', async () => {
 })
 
 test('failed to load outgoing orders', async () => {
+  const managementApiClient = new ManagementApi()
   managementApiClient.managementListOutgoingOrders = jest
     .fn()
     .mockRejectedValue(new Error('arbitrary error'))
@@ -121,6 +119,7 @@ test('failed to load outgoing orders', async () => {
 })
 
 test('no incoming orders present', async () => {
+  const managementApiClient = new ManagementApi()
   managementApiClient.managementListOutgoingOrders = jest
     .fn()
     .mockResolvedValue({ orders: [] })
@@ -155,6 +154,7 @@ test('no incoming orders present', async () => {
 })
 
 test('failed to load incoming orders', async () => {
+  const managementApiClient = new ManagementApi()
   managementApiClient.managementListIncomingOrders = jest
     .fn()
     .mockRejectedValue(new Error('arbitrary error'))
