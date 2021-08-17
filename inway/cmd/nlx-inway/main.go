@@ -43,7 +43,6 @@ var options struct {
 	DisableLogdb                 bool   `long:"disable-logdb" env:"DISABLE_LOGDB" description:"Disable logdb connections"`
 	ManagementAPIAddress         string `long:"management-api-address" env:"MANAGEMENT_API_ADDRESS" description:"The address of the NLX Management API" required:"true"`
 	Address                      string `long:"self-address" env:"SELF_ADDRESS" description:"The address that outways can use to reach me" required:"true"`
-	ServiceConfig                string `long:"service-config" env:"SERVICE_CONFIG" default:"service-config.toml" description:"Location of the service config toml file"`
 	PostgresDSN                  string `long:"postgres-dsn" env:"POSTGRES_DSN" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
 	Name                         string `long:"name" env:"INWAY_NAME" description:"Name of the inway. Every inway should have a unique name within the organization." required:"true"`
 

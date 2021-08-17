@@ -27,7 +27,6 @@ config:
   name: ""
   selfAddress: ""
   directoryRegistrationHostname: ""
-  serviceConfig: {}
 
   managementAPI:
     address: ""

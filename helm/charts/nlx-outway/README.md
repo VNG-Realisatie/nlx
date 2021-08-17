@@ -86,7 +86,6 @@ The following table lists the configurable parameters of the nlx-outway Chart an
 | `config.name` | Unique identifier of this outway. | `""` | no |
 | `config.authorizationService.enabled` | If `true`, the outway will use the authorization service | `false` | no |
 | `config.authorizationService.url` | URL of the authorization service to use | `""` | no |
-| `config.managementAPI.enabled` | If `true` the outway will use a management API to retrieve the service it will offer to the NLX network instead of using `config.ServiceConfig` | true | no |
 | `config.managementAPI.address` | The config address of the management API. Normally this would be: `hostname:443` where `hostname` is the hostname of the Management API | `""` | no |
 
 ### TLS parameters
