@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import styled from 'styled-components'
-import { Button } from '@commonground/design-system'
+import { NavLink } from 'react-router-dom'
 
 export const Centered = styled.section`
   display: flex;
@@ -24,19 +24,9 @@ export const ActionsBar = styled.div`
   }
 `
 
-export const StyledButton = styled(Button)`
-  ${({ isActive, theme }) =>
-    isActive &&
-    `
-    background-color: ${theme.colorBackgroundButtonSecondarySelected};
-    color: ${theme.colorTextButtonSecondarySelected};
-
-    :after {
-      top: -2px;
-    }
-    :hover, :focus {
-      background-color: ${theme.colorBackgroundButtonSecondarySelectedHover};
-      color: ${theme.colorTextButtonSecondarySelected};
-    }
-  `}
+export const StyledButton = styled(NavLink)`
+  &.active {
+    background-color: ${(p) => p.theme.colorBackgroundButtonSecondarySelected};
+    color: ${(p) => p.theme.colorTextButtonSecondarySelected};
+  }
 `

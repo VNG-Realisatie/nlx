@@ -10,7 +10,7 @@ import {
   ToasterContext,
   Spinner,
 } from '@commonground/design-system'
-import { Link, useLocation, useHistory } from 'react-router-dom'
+import { Link, useLocation, useHistory, useParams } from 'react-router-dom'
 import { useOrderStore } from '../../../hooks/use-stores'
 import PageTemplate from '../../../components/PageTemplate'
 import LoadingMessage from '../../../components/LoadingMessage'
@@ -19,19 +19,14 @@ import OrdersOutgoing from './OrdersOutgoing'
 import OrdersIncoming from './OrdersIncoming'
 import { ActionsBar, StyledButton } from './index.styles'
 
-const viewTypes = {
-  outgoingOrders: 'outgoingOrders',
-  incomingOrders: 'incomingOrders',
-}
-
 const OrdersPage = () => {
   const { t } = useTranslation()
   const { showToast } = useContext(ToasterContext)
   const location = useLocation()
+  const params = useParams()
   const history = useHistory()
   const orderStore = useOrderStore()
   const [error, setError] = useState()
-  const [orderView, setOrderView] = useState(viewTypes.outgoingOrders)
   const [isRefreshLoading, setRefreshLoading] = useState(false)
 
   useEffect(() => {
@@ -80,11 +75,6 @@ const OrdersPage = () => {
     }, 400)
   }
 
-  const orders =
-    orderView === viewTypes.outgoingOrders
-      ? orderStore.outgoingOrders
-      : orderStore.incomingOrders
-
   return (
     <PageTemplate>
       <PageTemplate.Header
@@ -93,22 +83,22 @@ const OrdersPage = () => {
       />
 
       <ActionsBar>
-        <StyledButton
+        <Button
+          as={StyledButton}
           aria-label={t('Issued')}
-          isActive={orderView === viewTypes.outgoingOrders}
-          onClick={() => setOrderView(viewTypes.outgoingOrders)}
+          to="/orders/outgoing"
           variant="secondary"
         >
           {t('Issued')} ({orderStore.outgoingOrders.length})
-        </StyledButton>
-        <StyledButton
+        </Button>
+        <Button
+          as={StyledButton}
           aria-label={t('Received')}
-          isActive={orderView === viewTypes.incomingOrders}
           variant="secondary"
-          onClick={() => setOrderView(viewTypes.incomingOrders)}
+          to="/orders/incoming"
         >
           {t('Received')} ({orderStore.incomingOrders.length})
-        </StyledButton>
+        </Button>
 
         <Button
           aria-label={t('Update overview')}
@@ -135,11 +125,11 @@ const OrdersPage = () => {
         >
           {error}
         </Alert>
-      ) : orderView === viewTypes.outgoingOrders ? (
-        <OrdersOutgoing orders={orders} />
-      ) : (
-        <OrdersIncoming orders={orders} />
-      )}
+      ) : params.type === 'outgoing' ? (
+        <OrdersOutgoing orders={orderStore.outgoingOrders} />
+      ) : params.type === 'incoming' ? (
+        <OrdersIncoming orders={orderStore.incomingOrders} />
+      ) : null}
     </PageTemplate>
   )
 }

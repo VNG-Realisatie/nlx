@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { Router } from 'react-router-dom'
+import { Route, Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import { waitFor, fireEvent, screen } from '@testing-library/react'
 import { renderWithProviders } from '../../../test-utils'
@@ -22,11 +22,15 @@ const createOrdersPage = (managementApiClient) => {
     <Router history={history}>
       <UserContextProvider user={{}}>
         <StoreProvider rootStore={store}>
-          <OrdersPage />
+          <Route path="/orders/:type(outgoing|incoming)">
+            <OrdersPage />
+          </Route>
         </StoreProvider>
       </UserContextProvider>
     </Router>,
   )
+
+  return { history }
 }
 
 test('rendering the orders page', async () => {
@@ -109,7 +113,7 @@ test('no incoming orders present', async () => {
     .fn()
     .mockResolvedValue({ orders: [] })
 
-  createOrdersPage(managementApiClient)
+  const { history } = createOrdersPage(managementApiClient)
 
   expect(screen.getByRole('progressbar')).toBeInTheDocument()
 
@@ -120,6 +124,9 @@ test('no incoming orders present', async () => {
   const emptyView = await screen.findByText(
     "You haven't received any orders yet",
   )
+
+  expect(history.location.pathname).toEqual('/orders/incoming')
+
   expect(emptyView).toBeInTheDocument()
 })
 
