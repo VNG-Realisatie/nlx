@@ -34,10 +34,13 @@ const Services = ({ services }) => {
     >
       <StyledCollapsibleBody>
         {services.length ? (
-          <Table role="grid">
+          <Table role="grid" withLinks>
             <tbody>
               {services.map(({ service, organization }) => (
-                <Table.Tr key={`${organization}_${service}`}>
+                <Table.Tr
+                  to={`/directory/${organization}/${service}`}
+                  key={`${organization}_${service}`}
+                >
                   <Table.Td>
                     <OrganizationName>{organization}</OrganizationName>
                     <Separator> - </Separator>
