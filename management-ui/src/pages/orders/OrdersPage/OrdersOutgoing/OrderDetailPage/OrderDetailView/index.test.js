@@ -10,6 +10,7 @@ const order = {
   delegatee: 'delegatee',
   validFrom: new Date(),
   validUntil: new Date(),
+  services: [],
 }
 
 test('display order details', () => {

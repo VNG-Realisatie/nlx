@@ -10,6 +10,7 @@ import { useConfirmationModal } from '../../../../../../components/ConfirmationM
 import Status from './Status'
 import Reference from './Reference'
 import StartEndDate from './StartEndDate'
+import Services from './Services'
 
 const OrderDetailView = ({ order, revokeHandler }) => {
   const { t } = useTranslation()
@@ -34,6 +35,7 @@ const OrderDetailView = ({ order, revokeHandler }) => {
           validUntil={order.validUntil}
         />
         <Reference value={order.reference} />
+        <Services services={order.services} />
       </SectionGroup>
 
       <ConfirmRevokeModal />

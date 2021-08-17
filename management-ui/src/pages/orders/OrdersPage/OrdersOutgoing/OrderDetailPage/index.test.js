@@ -36,6 +36,7 @@ test('display order details', async () => {
           validFrom: '2020-01-01',
           validUntil: '3000-01-01',
           revokedAt: null,
+          services: [],
         },
       ],
     })
