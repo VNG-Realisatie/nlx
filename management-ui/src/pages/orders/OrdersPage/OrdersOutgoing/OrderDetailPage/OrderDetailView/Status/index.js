@@ -3,6 +3,7 @@
 //
 
 import React from 'react'
+import { observer } from 'mobx-react'
 import { object, func } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@commonground/design-system'
@@ -58,4 +59,4 @@ Status.propTypes = {
   revokeHandler: func.isRequired,
 }
 
-export default Status
+export default observer(Status)

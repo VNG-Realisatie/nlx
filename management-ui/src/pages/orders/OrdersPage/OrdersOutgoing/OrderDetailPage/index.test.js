@@ -66,8 +66,14 @@ test('display order details', async () => {
   const confirmModal = screen.getByRole('dialog')
   const okButton = within(confirmModal).getByText('Revoke')
 
+  managementApiClient.managementRevokeOutgoingOrder = jest
+    .fn()
+    .mockResolvedValue()
+
   fireEvent.click(okButton)
   await waitFor(() => expect(orderModel.revoke).toHaveBeenCalledTimes(1))
+
+  expect(screen.getByText('Order is revoked')).toBeInTheDocument()
 })
 
 test('display error for a non-existing order', async () => {

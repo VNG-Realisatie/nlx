@@ -2,6 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
+import { observer } from 'mobx-react'
 import { object } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import Table from '../../../../../components/Table'
@@ -53,4 +54,4 @@ OrderRow.propTypes = {
   order: object,
 }
 
-export default OrderRow
+export default observer(OrderRow)
