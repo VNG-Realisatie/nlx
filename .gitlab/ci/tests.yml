@@ -15,7 +15,7 @@ Lint commit messages:
 
 Go go.mod tidy test:
   stage: Tests
-  image: golang:1.16.7
+  image: golang:1.17.0
   script:
     - cp go.mod go.mod.orig
     - /usr/local/go/bin/go mod download
@@ -38,7 +38,7 @@ variables:
 
 Go tests (unit & integration):
   stage: Tests
-  image: golang:1.16.7
+  image: golang:1.17.0
   variables:
     POSTGRES_DSN: "postgres://postgres@postgres:5432/nlx?sslmode=disable"
   before_script:
