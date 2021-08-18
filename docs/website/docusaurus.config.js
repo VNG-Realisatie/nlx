@@ -24,7 +24,8 @@ module.exports = {
       items: [
         {to: 'understanding-the-basics/introduction', label: 'Docs'},
         {href: 'https://directory.demo.nlx.io/', label: 'Directory'},
-        {to: 'https://nlx.io/contact', label: 'Contact'},
+        {href: 'https://nlx.io', label: 'NLX'},
+        {href: 'https://nlx.io/contact', label: 'Contact'},
       ],
     },
     footer: {

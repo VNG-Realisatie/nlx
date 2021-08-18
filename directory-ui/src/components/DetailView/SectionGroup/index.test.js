@@ -31,7 +31,7 @@ test('nulls are filtered out', () => {
   const { getByTestId, queryByTestId, container } = renderWithProviders(
     <SectionGroup>
       <span data-testid="one" />
-      {showOptionalComponent ? <span data-testid="two" /> : null}
+      {showOptionalComponent && <span data-testid="two" />}
       <span data-testid="three" />
     </SectionGroup>,
   )

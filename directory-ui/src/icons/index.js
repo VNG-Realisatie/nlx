@@ -9,7 +9,7 @@ import { ReactComponent as IconBuilding } from './building.svg'
 import { ReactComponent as IconCheck } from './check.svg'
 import { ReactComponent as IconChevronRight } from './chevron-right.svg'
 import { ReactComponent as IconExternalLink } from './external-link.svg'
-import { ReactComponent as IconFileCopy } from './file-copy-2.svg'
+import { ReactComponent as IconFileCopy } from './file.svg'
 import { ReactComponent as IconGitlab } from './gitlab.svg'
 import { ReactComponent as IconGroup } from './group-2.svg'
 import { ReactComponent as IconHammer } from './hammer.svg'
@@ -20,6 +20,7 @@ import { ReactComponent as IconMail } from './mail.svg'
 import { ReactComponent as IconOpenArm } from './open-arm.svg'
 import { ReactComponent as IconPlug } from './plug.svg'
 import { ReactComponent as IconRecycle } from './recycle.svg'
+import { ReactComponent as IconSearch } from './search.svg'
 import { ReactComponent as IconShieldCheck } from './shield-check.svg'
 import { ReactComponent as IconSpy } from './spy.svg'
 import { ReactComponent as IconStateDegraded } from './state-degraded.svg'
@@ -28,32 +29,6 @@ import { ReactComponent as IconStateUnknown } from './state-unknown.svg'
 import { ReactComponent as IconStateUp } from './state-up.svg'
 import { ReactComponent as IconTools } from './tools.svg'
 import { ReactComponent as MoneyEuroCircleLine } from './money-euro-circle-line.svg'
-
-const icons = {
-  box: IconBox,
-  building: IconBuilding,
-  check: IconCheck,
-  chevronRight: IconChevronRight,
-  externalLInk: IconExternalLink,
-  stateDegraded: IconStateDegraded,
-  stateDown: IconStateDown,
-  stateUnknown: IconStateUnknown,
-  stateUp: IconStateUp,
-  fileCopy: IconFileCopy,
-  gitlab: IconGitlab,
-  group: IconGroup,
-  hammer: IconHammer,
-  home: IconHome,
-  info: IconInfo,
-  lightning: IconLightning,
-  mail: IconMail,
-  openArm: IconOpenArm,
-  plug: IconPlug,
-  recycle: IconRecycle,
-  shieldCheck: IconShieldCheck,
-  spy: IconSpy,
-  tools: IconTools,
-}
 
 export {
   IconBox,
@@ -72,6 +47,7 @@ export {
   IconOpenArm,
   IconPlug,
   IconRecycle,
+  IconSearch,
   IconShieldCheck,
   IconSpy,
   IconStateDegraded,
@@ -81,22 +57,6 @@ export {
   IconTools,
 }
 
-// TODO: Check where this function would be used
-export const getIcon = (icon) => {
-  if (Object.keys(icons).includes(icon)) {
-    // Above check makes it input-safe, so ignore eslint
-    // eslint-disable-next-line security/detect-object-injection
-    return icons[icon]
-  }
-
-  if (!process.env.NEXT_PUBLIC_PRODUCTION) {
-    console.warn(`Icon "${icon}" not found`)
-  }
-
-  return icons.tools
-}
-
-// TODO: Possibly export all icons in similar fashion
 export const IconMoneyEuroCircleLine = (props) => (
   <Icon as={MoneyEuroCircleLine} {...props} />
 )

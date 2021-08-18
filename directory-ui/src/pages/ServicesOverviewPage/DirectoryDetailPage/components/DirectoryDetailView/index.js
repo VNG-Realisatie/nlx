@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { shape, string } from 'prop-types'
+import { shape, string, number } from 'prop-types'
 import { observer } from 'mobx-react'
 import { withDrawerStack } from '@commonground/design-system'
 import { SectionGroup } from '../../../../../components/DetailView'
@@ -16,8 +16,6 @@ const DirectoryDetailView = ({ service }) => {
       <ExternalLinkSection service={service} />
 
       <SectionGroup>
-        {/* TODO: Contact section is missing tech support mail address */}
-        {/* NOTE: This might be an issue for NLX management as well */}
         <ContactSection service={service} />
         <CostsSection
           oneTimeCosts={service.oneTimeCosts}
@@ -31,17 +29,15 @@ const DirectoryDetailView = ({ service }) => {
 
 DirectoryDetailView.propTypes = {
   service: shape({
-    // TODO: fetch costs from API
-    // oneTimeCosts: number,
-    // monthlyCosts: number,
-    // requestCosts: number,
-
     apiType: string,
     contactEmailAddress: string,
     documentationUrl: string,
     name: string.isRequired,
     organization: string.isRequired,
     status: string.isRequired,
+    oneTimeCosts: number,
+    monthlyCosts: number,
+    requestCosts: number,
   }),
 }
 

@@ -2,10 +2,10 @@
 // Licensed under the EUPL
 //
 import styled from 'styled-components'
-import { Icon as BaseIcon } from '@commonground/design-system'
+import { Icon } from '@commonground/design-system'
 import { IconExternalLink as ExternalLink } from '../../icons'
 
-export const StyledIcon = styled(BaseIcon)`
+export const StyledIcon = styled(Icon)`
   margin-left: ${(p) => p.theme.tokens.spacing03};
   margin-right: 0;
 `

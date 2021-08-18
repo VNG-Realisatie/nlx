@@ -51,7 +51,7 @@ export const Item = styled.li`
   `}
 
   a {
-    color: #fff;
+    color: ${(p) => p.theme.tokens.colorBackground};
   }
 `
 

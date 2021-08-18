@@ -3,37 +3,34 @@
 //
 
 import styled from 'styled-components'
-import Card from '../Card'
-import Switch from '../Switch'
-import SearchIcon from './SearchIcon'
+import { mediaQueries } from '@commonground/design-system'
+import Input from '@commonground/design-system/dist/components/Form/TextInput/Input'
 
-export const StyledFilters = styled(Card)`
+export const StyledInput = styled(Input)`
+  width: 100%;
+`
+
+export const StyledFilters = styled.div`
   display: flex;
-  align-items: center;
-  padding: 0 24px 1px 20px;
-`
+  flex-direction: column;
+  margin: 0 auto;
 
-export const StyledSearchIcon = styled(SearchIcon)`
-  flex-shrink: 0;
-  width: 12px;
-  height: 12px;
-  margin-top: 1px;
-  margin-right: 12px;
-`
-
-export const StyledInput = styled.input`
-  flex-grow: 1;
-  border: none;
-  padding: 0;
-  font-size: 1rem;
-  font-family: 'Source Sans Pro', sans-serif;
-  height: 48px;
-
-  &::placeholder {
-    color: #cad0e0;
+  > * + * {
+    margin-top: ${(p) => p.theme.tokens.spacing06};
   }
-`
 
-export const StyledSwitch = styled(Switch)`
-  flex-shrink: 0;
+  ${mediaQueries.smDown`
+    > * {
+        width: 100%;
+    }
+  `}
+  ${mediaQueries.mdUp`
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    > * + * {
+      margin: 0 0 0 ${(p) => p.theme.tokens.spacing05};
+    }
+  `}
 `

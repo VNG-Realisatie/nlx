@@ -32,7 +32,7 @@ const News = () => (
         <ImageCol width={[1, 1, 0.3333, 0.3333]}>
           <Image
             src={newsIcon}
-            alt="A person giving a presentation on flipboard"
+            alt="Iemand deelt iets met behulp van een flipover"
           />
         </ImageCol>
       </Row>

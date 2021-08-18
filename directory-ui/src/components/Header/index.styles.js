@@ -13,7 +13,7 @@ export const LogoWrapper = styled.header`
 
   ${(p) =>
     p.homepage &&
-    mediaQueries.smDown`background: ${p.theme.homeGradientMobile};`}
+    mediaQueries.smDown`background: linear-gradient(90deg, #d6eef9 0%, #b3d0e1 100%);`}
 `
 
 export const StyledNLXLogo = styled(NLXLogo)`

@@ -3,43 +3,47 @@
 //
 
 import React from 'react'
-import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { renderWithProviders } from '../../test-utils'
 import Filters from './index'
 
-describe('Filters', () => {
-  describe('changing the text input value', () => {
-    it('should call the onQueryChanged handler with the query', () => {
-      const onQueryChangedSpy = jest.fn()
+test('should call the onQueryChanged handler with the query', () => {
+  const onQueryChangedSpy = jest.fn()
 
-      const { getByPlaceholderText } = render(
-        <Filters onQueryChanged={onQueryChangedSpy} />,
-      )
+  const { getByPlaceholderText } = renderWithProviders(
+    <Filters onQueryChanged={onQueryChangedSpy} />,
+  )
 
-      const input = getByPlaceholderText(
-        'Search for an organization or service…',
-      )
+  const input = getByPlaceholderText('Zoeken…')
 
-      userEvent.clear(input)
-      userEvent.type(input, 'abc')
+  userEvent.clear(input)
+  userEvent.type(input, 'abc')
 
-      expect(onQueryChangedSpy).toHaveBeenCalledWith('abc')
-    })
-  })
+  expect(onQueryChangedSpy).toHaveBeenCalledWith('abc')
+})
 
-  describe('toggling the offline filter', () => {
-    it('should call the onStatusFilterChanged handler with the checked state', () => {
-      const onStatusFilterChangedSpy = jest.fn()
+test('should call the onStatusFilterChanged handler with the checked state', () => {
+  const onStatusFilterChangedSpy = jest.fn()
 
-      const { getByLabelText } = render(
-        <Filters onStatusFilterChanged={onStatusFilterChangedSpy} />,
-      )
+  const { getByLabelText } = renderWithProviders(
+    <Filters onStatusFilterChanged={onStatusFilterChangedSpy} />,
+  )
 
-      const input = getByLabelText('Include offline')
+  const input = getByLabelText('Toon offline services')
 
-      userEvent.click(input)
+  userEvent.click(input)
 
-      expect(onStatusFilterChangedSpy).toHaveBeenCalledWith(false)
-    })
-  })
+  expect(onStatusFilterChangedSpy).toHaveBeenCalledWith(false)
+})
+
+test('should show the correct default value when rendering the dropdown', () => {
+  const { location } = window
+  delete window.location
+  window.location = { hostname: 'directory.demo.nlx' }
+
+  const { container } = renderWithProviders(<Filters />)
+
+  expect(container).toHaveTextContent(/Demo/)
+
+  window.location = location
 })

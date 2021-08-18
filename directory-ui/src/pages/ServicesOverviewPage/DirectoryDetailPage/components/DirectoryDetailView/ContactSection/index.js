@@ -3,7 +3,7 @@
 //
 import React from 'react'
 import { shape, text } from 'prop-types'
-
+import { Icon } from '@commonground/design-system'
 import {
   DetailHeading,
   DetailBody,
@@ -15,24 +15,26 @@ const ContactSection = ({ service }) => {
   const email = service && service.contactEmailAddress
 
   return (
-    <section>
-      <DetailHeading>
-        <IconMail />
-        Support
-      </DetailHeading>
+    <>
+      <section>
+        <DetailHeading>
+          <Icon as={IconMail} />
+          Support
+        </DetailHeading>
 
-      {email ? (
-        <DetailBody>
-          <small>Public support</small>
-          <br />
-          <ContactLink href={`mailto:${email}`}>{email}</ContactLink>
-        </DetailBody>
-      ) : (
-        <DetailBody>
-          <small>Geen contactgegevens beschikbaar</small>
-        </DetailBody>
-      )}
-    </section>
+        {email ? (
+          <DetailBody>
+            <small>Publieke support</small>
+            <br />
+            <ContactLink href={`mailto:${email}`}>{email}</ContactLink>
+          </DetailBody>
+        ) : (
+          <DetailBody>
+            <small>Geen contactgegevens beschikbaar</small>
+          </DetailBody>
+        )}
+      </section>
+    </>
   )
 }
 

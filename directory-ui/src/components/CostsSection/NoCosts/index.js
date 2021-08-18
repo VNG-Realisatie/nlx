@@ -3,13 +3,14 @@
 //
 
 import React from 'react'
+import { Icon } from '@commonground/design-system'
 import { IconMoneyEuroCircleLine } from '../../../icons'
 import { StyledContainer, StyledLabel } from './index.styles'
 
 const NoCosts = () => {
   return (
     <StyledContainer>
-      <IconMoneyEuroCircleLine />
+      <Icon as={IconMoneyEuroCircleLine} />
       Kosten
       <StyledLabel>Geen</StyledLabel>
     </StyledContainer>

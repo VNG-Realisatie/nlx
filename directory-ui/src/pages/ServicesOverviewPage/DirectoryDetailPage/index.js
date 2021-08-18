@@ -1,37 +1,28 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React, { useEffect } from 'react'
-import { shape, string } from 'prop-types'
+import React from 'react'
+import { shape, string, number } from 'prop-types'
 import { useParams, useHistory } from 'react-router-dom'
-import {
-  Alert,
-  Drawer,
-  withDrawerStack,
-  useDrawerStack,
-} from '@commonground/design-system'
+import { Alert, Drawer } from '@commonground/design-system'
 import DirectoryDetailView from './components/DirectoryDetailView'
 import DrawerHeader from './components/DrawerHeader'
-import { StyledStackedDrawer } from './index.styles'
+import { StyledDrawer } from './index.styles'
 
 const DirectoryDetailPage = ({ service, parentUrl }) => {
   const history = useHistory()
-  const { organizationName, serviceName } = useParams()
-  const { showDrawer } = useDrawerStack()
+  const { serviceName } = useParams()
 
   const navigateToParentUrl = () => {
     history.push(parentUrl)
   }
 
-  useEffect(() => {
-    showDrawer('directoryDetail')
-  }, [service]) // eslint-disable-line react-hooks/exhaustive-deps
-
   return (
-    <StyledStackedDrawer
+    <StyledDrawer
       id="directoryDetail"
       noMask
       afterHide={navigateToParentUrl}
+      closeHandler={navigateToParentUrl}
     >
       {service ? (
         <DrawerHeader service={service} />
@@ -48,11 +39,11 @@ const DirectoryDetailPage = ({ service, parentUrl }) => {
           <DirectoryDetailView service={service} />
         ) : (
           <Alert variant="error" data-testid="error-message">
-            {`Failed to load the service ${organizationName}/${serviceName}`}
+            {`Kan de service '${serviceName}' niet vinden.`}
           </Alert>
         )}
       </Drawer.Content>
-    </StyledStackedDrawer>
+    </StyledDrawer>
   )
 }
 
@@ -64,6 +55,9 @@ DirectoryDetailPage.propTypes = {
     name: string.isRequired,
     organization: string.isRequired,
     status: string.isRequired,
+    oneTimeCosts: number,
+    monthlyCosts: number,
+    requestCosts: number,
   }),
   parentUrl: string,
 }
@@ -72,4 +66,4 @@ DirectoryDetailPage.defaultProps = {
   parentUrl: '/directory',
 }
 
-export default withDrawerStack(DirectoryDetailPage)
+export default DirectoryDetailPage

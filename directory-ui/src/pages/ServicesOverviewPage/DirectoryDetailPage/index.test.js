@@ -16,14 +16,11 @@ let service
 beforeEach(() => {
   service = observable({
     id: 'Test Organization/Test Service',
-    organizationName: 'Test Organization',
-    serviceName: 'Test Service',
-    state: 'degraded',
-    apiSpecificationType: 'API',
-    latestAccessRequest: null,
+    organization: 'Test Organization',
+    name: 'Test Service',
+    status: 'degraded',
+    apiType: 'API',
     fetch: jest.fn(),
-    requestAccess: jest.fn(),
-    retryRequestAccess: jest.fn(),
   })
 })
 
@@ -55,7 +52,7 @@ test('service does not exist', () => {
 
   const message = getByTestId('error-message')
   expect(message).toBeInTheDocument()
-  expect(message.textContent).toBe('Failed to load the service')
+  expect(message.textContent).toBe("Kan de service 'service' niet vinden.")
 
   expect(getByText('service')).toBeInTheDocument()
   expect(queryByText('organization')).toBeNull()

@@ -8,6 +8,7 @@ import { useLocation } from 'react-router-dom'
 import { IconHome } from '../../icons'
 import { Container } from '../Grid'
 import NavLink from '../nav-link'
+
 import {
   StyledIcon,
   LogoWrapper,
@@ -42,6 +43,11 @@ const Header = ({ homepage }) => {
             {
               name: 'Docs',
               to: 'https://docs.nlx.io/',
+              target: '_blank',
+            },
+            {
+              name: 'NLX.io',
+              to: 'https://nlx.io',
               target: '_blank',
             },
           ]}

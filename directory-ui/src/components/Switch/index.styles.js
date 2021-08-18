@@ -1,7 +1,6 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-
 import styled from 'styled-components'
 
 export const Wrapper = styled.div`
@@ -27,49 +26,44 @@ export const Input = styled.input`
 
     &:checked + label {
       &:before {
-        background-color: #517fff;
+        background-color: ${({ theme }) => theme.colorDarkBlue};
       }
       &:after {
-        border-color: #517fff;
-        transform: translateX(12px);
+        border-color: ${({ theme }) => theme.colorDarkBlue};
+        transform: translateX(14px);
       }
     }
   }
 `
 
 export const Label = styled.label`
-  color: #2d3240;
-  padding: 0 0 0 38px;
-
-  font-size: 14px;
+  padding: 0 0 0 ${(p) => p.theme.tokens.spacing09};
   line-height: 22px;
-
   user-select: none;
   pointer-events: none;
 
   &:before {
     content: '';
     position: absolute;
-    top: 4px;
     left: 0;
-    width: 28px;
-    height: 16px;
+    width: ${(p) => p.theme.tokens.spacing08};
+    height: ${(p) => p.theme.tokens.spacing06};
     border: 0;
-    border-radius: 8px;
-    background-color: #cad0e0;
+    border-radius: 12px;
+    background-color: ${({ theme }) => theme.tokens.colorPaletteGray300};
     transition: background-color 0.25s ease;
   }
 
   &:after {
     content: '';
     position: absolute;
-    width: 18px;
-    height: 18px;
-    top: 3px;
-    left: -1px;
+    width: 20px;
+    height: 20px;
+    top: 2px;
+    left: 4px;
     border-radius: 50%;
     background-color: white;
-    border: 2px solid #cad0e0;
+    box-shadow: -2px 1px 1px 0px rgba(0, 0, 0, 0.15);
     transform: translateX(-1px);
     transition: transform 0.25s ease;
   }

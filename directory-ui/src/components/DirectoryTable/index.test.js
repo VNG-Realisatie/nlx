@@ -2,43 +2,47 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { renderWithProviders } from '../../../../../test-utils'
+import { BrowserRouter as Router } from 'react-router-dom'
+import { renderWithProviders } from '../../test-utils'
+import { SERVICE_STATE_UP } from '../../components/StateIndicator'
 import DirectoryServices from './index'
-
-// eslint-disable-next-line react/prop-types
-jest.mock('../DirectoryServiceRow', () => ({ organizationName }) => (
-  <tr data-testid="testrow">
-    <td>{organizationName}</td>
-  </tr>
-))
 
 test('renders without crashing', () => {
   expect(() =>
-    renderWithProviders(<DirectoryServices services={[]} />),
+    renderWithProviders(
+      <Router>
+        <DirectoryServices services={[]} />
+      </Router>,
+    ),
   ).not.toThrow()
 })
 
 test('show a empty services message', () => {
   const { getByTestId } = renderWithProviders(
-    <DirectoryServices services={[]} />,
+    <Router>
+      <DirectoryServices services={[]} />
+    </Router>,
   )
   expect(getByTestId('directory-no-services')).toHaveTextContent(
-    'There are no services yet',
+    'Geen services gevonden',
   )
 })
 
 test('show a table with rows for every service', () => {
   const { getByTestId, getByRole } = renderWithProviders(
-    <DirectoryServices
-      services={[
-        {
-          organizationName: 'Test Organization',
-          serviceName: 'Test Service',
-        },
-      ]}
-    />,
+    <Router>
+      <DirectoryServices
+        services={[
+          {
+            organization: 'Test Organization',
+            name: 'Test Service',
+            status: SERVICE_STATE_UP,
+          },
+        ]}
+      />
+    </Router>,
   )
 
   expect(getByRole('grid')).toBeTruthy()
-  expect(getByTestId('testrow')).toBeInTheDocument()
+  expect(getByTestId('directory-service-row')).toBeInTheDocument()
 })

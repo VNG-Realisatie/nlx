@@ -22,24 +22,24 @@ const GetStateIndicatorForState = (state, showText) => {
     case SERVICE_STATE_DEGRADED:
       return (
         <>
-          <StyledIconStateDegraded title="Degraded" />
-          {showText && <StateText>Degraded</StateText>}
+          <StyledIconStateDegraded title="Gedeeltelijk beschikbaar" />
+          {showText && <StateText>Gedeeltelijk beschikbaar</StateText>}
         </>
       )
 
     case SERVICE_STATE_DOWN:
       return (
         <>
-          <IconStateDown title="Down" />
-          {showText && <StateText>Down</StateText>}
+          <IconStateDown title="Niet beschikbaar" />
+          {showText && <StateText>Niet beschikbaar</StateText>}
         </>
       )
 
     case SERVICE_STATE_UP:
       return (
         <>
-          <IconStateUp title="Up" />
-          {showText && <StateText>Up</StateText>}
+          <IconStateUp title="Beschikbaar" />
+          {showText && <StateText>Beschikbaar</StateText>}
         </>
       )
 
@@ -47,8 +47,8 @@ const GetStateIndicatorForState = (state, showText) => {
     default:
       return (
         <>
-          <IconStateUnknown title="Unknown" />
-          {showText && <StateText>Unknown</StateText>}
+          <IconStateUnknown title="Onbekend" />
+          {showText && <StateText>Onbekend</StateText>}
         </>
       )
   }
@@ -68,7 +68,7 @@ StateIndicator.propTypes = {
     SERVICE_STATE_DEGRADED,
     SERVICE_STATE_UNKNOWN,
     SERVICE_STATE_UP,
-  ]),
+  ]).isRequired,
   showText: bool,
 }
 

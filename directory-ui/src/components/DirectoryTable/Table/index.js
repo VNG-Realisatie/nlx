@@ -1,31 +1,32 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-
 import React, { createContext, useContext } from 'react'
 import { bool, node, string } from 'prop-types'
+import { Icon } from '@commonground/design-system'
 import { useHistory } from 'react-router-dom'
+import { IconChevronRight } from '../../../icons'
 import {
-  StyledChevron,
   StyledTable,
   Td,
+  MobileTd,
+  MobileTdContent,
   Th,
   StyledTr,
   TrAsLink,
   TrAsLinkLink,
   TrAsLinkTd,
+  Thead,
 } from './index.styles'
 
 const TableContext = createContext(false)
 
-// TODO: Selecting table with space key scrolls page
-// NOTE: This might be an issue for Management-UI as well
 const Tr = ({ children, to, name, ...props }) => {
   const history = useHistory()
   const withLinks = useContext(TableContext)
 
   if (withLinks) {
-    const handlePress = () => (to ? history.push(to) : null)
+    const handlePress = () => to && history.push(to)
 
     return (
       <TrAsLink
@@ -36,11 +37,11 @@ const Tr = ({ children, to, name, ...props }) => {
       >
         {children}
         <TrAsLinkTd>
-          {to ? (
+          {to && (
             <TrAsLinkLink to={to} aria-label={name} tabIndex="-1">
-              <StyledChevron />
+              <Icon as={IconChevronRight} />
             </TrAsLinkLink>
-          ) : null}
+          )}
         </TrAsLinkTd>
       </TrAsLink>
     )
@@ -72,6 +73,7 @@ const TrHead = ({ children, ...props }) => {
   }
   return <tr {...props}>{children}</tr>
 }
+
 TrHead.propTypes = {
   children: node,
 }
@@ -83,6 +85,7 @@ const Table = ({ withLinks, children, ...props }) => {
     </TableContext.Provider>
   )
 }
+
 Table.propTypes = {
   children: node,
   withLinks: bool,
@@ -93,7 +96,10 @@ Table.defaultProps = {
 
 Table.Th = Th
 Table.Td = Td
+Table.MobileTd = MobileTd
+Table.MobileTdContent = MobileTdContent
 Table.Tr = Tr
+Table.Thead = Thead
 Table.TrHead = TrHead
 
 export default Table

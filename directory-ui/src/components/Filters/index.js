@@ -1,18 +1,12 @@
 // Copyright © VNG Realisatie 2018
 // Licensed under the EUPL
 //
-
 import React from 'react'
-import { Form, Formik, Field } from 'formik'
-import { Select } from '@commonground/design-system'
+import { SelectComponent } from '@commonground/design-system'
 import { func, string } from 'prop-types'
-import { useHistory } from 'react-router-dom'
-import {
-  StyledFilters,
-  StyledInput,
-  StyledSearchIcon,
-  StyledSwitch,
-} from './index.styles'
+import { ReactComponent as SearchIcon } from '../../icons/search.svg'
+import Switch from '../Switch'
+import { StyledFilters, StyledInput } from './index.styles'
 
 const Filters = ({
   onQueryChanged,
@@ -20,20 +14,13 @@ const Filters = ({
   queryValue,
   ...props
 }) => {
-  // TODO: Base default value of current environment
-  // "development"
-
   const options = [
-    {
-      label: 'Acceptatie',
-      value: 'https://directory.acc.nlx.io/',
-    },
     {
       label: 'Demo',
       value: 'https://directory.demo.nlx.io/',
     },
     {
-      label: 'Preproductie',
+      label: 'Pre-productie',
       value: 'https://directory.preprod.nlx.io/',
     },
     {
@@ -42,8 +29,18 @@ const Filters = ({
     },
   ]
 
-  const initialValue = {
-    option: options[0].value,
+  const currentEnvironmentOption = () => {
+    const environment = window.location.hostname
+
+    // eslint-disable-next-line default-case
+    switch (true) {
+      case /demo/.test(environment):
+        return options[0]
+      case /preprod/.test(environment):
+        return options[1]
+      case /prod/.test(environment):
+        return options[2]
+    }
   }
 
   const handleSelect = (e) => {
@@ -51,29 +48,29 @@ const Filters = ({
   }
 
   return (
-    // <StyledFilters {...props}>
-    <Formik initialValues={initialValue} onSubmit={() => {}}>
-      <Select
+    <StyledFilters {...props}>
+      <SelectComponent
         options={options}
+        defaultValue={currentEnvironmentOption()}
         name="option"
         placeholder="Selecteer omgeving"
         onQueryChanged={handleSelect}
         onChange={handleSelect}
       />
-    </Formik>
-
-    //   {/* <StyledSearchIcon />
-    // <StyledInput
-    //   value={queryValue}
-    //   placeholder="Search for an organization or service…"
-    //   onChange={(event) => onQueryChanged(event.target.value)}
-    // />
-    // <StyledSwitch
-    //   id="include-offline-switch"
-    //   label="Include offline"
-    //   onChange={(event) => onStatusFilterChanged(event.target.checked)}
-    // /> */}
-    // </StyledFilters>
+      <StyledInput
+        type="text"
+        name="search"
+        placeholder="Zoeken…"
+        icon={SearchIcon}
+        onChange={(event) => onQueryChanged(event.target.value)}
+        defaultValue={queryValue}
+      />
+      <Switch
+        id="include-offline-switch"
+        label="Toon offline services"
+        onChange={(event) => onStatusFilterChanged(event.target.checked)}
+      />
+    </StyledFilters>
   )
 }
 

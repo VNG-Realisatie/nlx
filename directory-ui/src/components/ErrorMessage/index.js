@@ -3,17 +3,17 @@
 //
 
 import React from 'react'
-import { StyledErrorMessage } from './index.styles'
+import { Container } from './index.styles'
 
 const ErrorMessage = () => (
-  <StyledErrorMessage>
-    <h1>Failed to load information</h1>
+  <Container>
+    <h1>Kon geen informatie ophalen</h1>
     <p>
-      Requested information is not available.
+      Probeer het later nog eens.
       <br />
-      We apologize for any inconvenience.
+      Excuus voor het ongemak.
     </p>
-  </StyledErrorMessage>
+  </Container>
 )
 
 export default ErrorMessage

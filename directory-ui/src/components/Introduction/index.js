@@ -3,20 +3,21 @@
 //
 import React from 'react'
 import { Container } from '../Grid'
-import { Section, StyledSectionIntro, Content } from './index.styles'
+import { SectionIntro } from '../../components/Section'
+import { Section, Content } from './index.styles'
 
-const Introduction = (props) => (
+const Introduction = () => (
   <Section omitArrow>
     <Container>
-      <StyledSectionIntro>
+      <SectionIntro>
         <Content>
           <h1>Directory</h1>
           <p>
-            In deze directory vindt u een overzicht welke organisaties, welke
-            gegevensbron via NLX ontsluiten via welke API.
+            In deze NLX directory vindt u een overzicht van alle beschikbare
+            API’s per NLX omgeving (demo, pre-productie en productie).
           </p>
         </Content>
-      </StyledSectionIntro>
+      </SectionIntro>
     </Container>
   </Section>
 )

@@ -10,11 +10,6 @@ import CollapsibleHeader from './CollapsibleHeader'
 import { TdPrice } from './index.styles'
 import NoCosts from './NoCosts'
 
-const isServiceFreeToUse = (oneTimeCosts, monthlyCosts, requestCosts) =>
-  (oneTimeCosts === 0 || oneTimeCosts === undefined) &&
-  (monthlyCosts === 0 || monthlyCosts === undefined) &&
-  (requestCosts === 0 || requestCosts === undefined)
-
 const costFormatter = new Intl.NumberFormat('nl-NL', {
   style: 'currency',
   currency: 'EUR',
@@ -24,15 +19,15 @@ const CostsSection = ({ oneTimeCosts, monthlyCosts, requestCosts }) => {
   const costSummaryParts = []
 
   if (oneTimeCosts > 0) {
-    costSummaryParts.push('one time')
+    costSummaryParts.push('eenmalige')
   }
 
   if (monthlyCosts > 0) {
-    costSummaryParts.push('monthly')
+    costSummaryParts.push('maandelijkse')
   }
 
   if (requestCosts > 0) {
-    costSummaryParts.push('per request')
+    costSummaryParts.push('per aanvraag')
   }
 
   const costSummary =
@@ -44,9 +39,7 @@ const CostsSection = ({ oneTimeCosts, monthlyCosts, requestCosts }) => {
           costSummaryParts[costSummaryParts.length - 1]
         }`
 
-  return isServiceFreeToUse(oneTimeCosts, monthlyCosts, requestCosts) ? (
-    <NoCosts />
-  ) : (
+  return oneTimeCosts || monthlyCosts || requestCosts ? (
     <Collapsible
       title={<CollapsibleHeader label={costSummary} />}
       ariaLabel="kosten"
@@ -54,30 +47,32 @@ const CostsSection = ({ oneTimeCosts, monthlyCosts, requestCosts }) => {
       <StyledCollapsibleBody>
         <Table>
           <tbody>
-            {oneTimeCosts > 0 ? (
+            {oneTimeCosts > 0 && (
               <Table.Tr>
                 <Table.Td>Eenmalige kosten</Table.Td>
                 <TdPrice>{costFormatter.format(oneTimeCosts)}</TdPrice>
               </Table.Tr>
-            ) : null}
+            )}
 
-            {monthlyCosts > 0 ? (
+            {monthlyCosts > 0 && (
               <Table.Tr>
                 <Table.Td>Maandelijkse kosten</Table.Td>
                 <TdPrice>{costFormatter.format(monthlyCosts)}</TdPrice>
               </Table.Tr>
-            ) : null}
+            )}
 
-            {requestCosts > 0 ? (
+            {requestCosts > 0 && (
               <Table.Tr>
                 <Table.Td>Kosten per aanvraag</Table.Td>
                 <TdPrice>{costFormatter.format(requestCosts)}</TdPrice>
               </Table.Tr>
-            ) : null}
+            )}
           </tbody>
         </Table>
       </StyledCollapsibleBody>
     </Collapsible>
+  ) : (
+    <NoCosts />
   )
 }
 

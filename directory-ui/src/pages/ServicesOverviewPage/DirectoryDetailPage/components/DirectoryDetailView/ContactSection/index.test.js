@@ -8,14 +8,14 @@ import ContactSection from './index'
 
 test('renders without crashing', () => {
   const service = {
-    publicSupportContact: 'mail@service.io',
+    contactEmailAddress: 'mail@service.io',
   }
 
   const { getByText, rerender } = renderWithProviders(
     <ContactSection service={{}} />,
   )
 
-  expect(getByText('No contact details available')).toBeInTheDocument()
+  expect(getByText('Geen contactgegevens beschikbaar')).toBeInTheDocument()
 
   rerender(<ContactSection service={service} />)
 

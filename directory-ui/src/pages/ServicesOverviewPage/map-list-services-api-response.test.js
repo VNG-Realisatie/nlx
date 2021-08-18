@@ -91,12 +91,15 @@ describe('mapping the API response', () => {
 
     expect(mapListServicesAPIResponse(apiResponse)).toEqual([
       {
-        organization: 'foo',
-        name: 'bar',
-        status: 'down',
         apiType: 'openapi',
         contactEmailAddress: 'foo@bar.baz',
         documentationUrl: 'https://www.duck.com',
+        monthlyCosts: 0,
+        name: 'bar',
+        oneTimeCosts: 0,
+        organization: 'foo',
+        requestCosts: 0,
+        status: 'down',
       },
     ])
   })

@@ -8,7 +8,7 @@ import { Button } from '@commonground/design-system'
 import { Section, StyledIconExternalLink } from './index.styles'
 
 const ExternalLinkSection = ({ service }) => {
-  const { documentationUrl } = service
+  const { documentationUrl, organization, name, apiType } = service
 
   return (
     <Section>
@@ -28,11 +28,11 @@ const ExternalLinkSection = ({ service }) => {
       <Button
         variant="secondary"
         as="a"
-        href=""
-        target="_blank"
+        href={`/documentation/${organization}/${name}`}
         role="button"
-        aria-disabled="true"
-        disabled
+        rel="noreferrer"
+        aria-disabled={!apiType}
+        disabled={!apiType}
       >
         Specificatie
         <StyledIconExternalLink $disabled />
@@ -44,6 +44,9 @@ const ExternalLinkSection = ({ service }) => {
 ExternalLinkSection.propTypes = {
   service: shape({
     documentationUrl: string,
+    organization: string,
+    name: string,
+    apiType: string,
   }),
 }
 

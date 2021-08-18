@@ -10,15 +10,14 @@ import Header from './components/Header'
 import ServiceOverviewPage from './pages/ServicesOverviewPage'
 import DocumentationPage from './pages/DocumentationPage'
 import theme from './styling/theme'
-import GlobalFonts from './styling/GlobalFonts'
+import '@fontsource/source-sans-pro/latin.css'
+import './styling/styles.css'
 
 const App = () => (
-  <main>
-    <Router>
-      <ThemeProvider theme={theme}>
-        <GlobalStyles />
-        <GlobalFonts />
-
+  <>
+    <ThemeProvider theme={theme}>
+      <GlobalStyles />
+      <Router>
         <DomainNavigation
           activeDomain="NLX"
           gitLabLink="https://gitlab.com/commonground/nlx/nlx"
@@ -31,12 +30,16 @@ const App = () => (
             path="/documentation/:organizationName/:serviceName"
             component={DocumentationPage}
           />
-          <Route path="/" component={ServiceOverviewPage} />
+          <Route
+            exact
+            path="/:organizationName?/:serviceName?"
+            component={ServiceOverviewPage}
+          />
         </Switch>
-      </ThemeProvider>
-    </Router>
-    <VersionLogger />
-  </main>
+      </Router>
+      <VersionLogger />
+    </ThemeProvider>
+  </>
 )
 
 export default App

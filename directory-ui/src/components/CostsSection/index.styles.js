@@ -8,10 +8,3 @@ import Table from '../DirectoryTable/Table'
 export const TdPrice = styled(Table.Td)`
   text-align: right;
 `
-
-export const StyledLabel = styled.small`
-  flex: 1;
-  padding-right: ${(p) => p.theme.tokens.spacing05};
-  text-align: right;
-  font-weight: normal;
-`

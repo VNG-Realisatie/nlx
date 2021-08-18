@@ -7,22 +7,24 @@ import Table from '../Table'
 import StateIndicator from '../StateIndicator'
 
 const DirectoryServiceRow = ({ service, ...props }) => {
-  const {
-    apiType,
-    // contactEmailAddress,
-    // documentationUrl,
-    name,
-    organization,
-    status,
-  } = service
+  const { apiType, name, organization, status } = service
 
   return (
     <Table.Tr
-      to={`/directory/${organization}/${name}`}
+      to={`/${organization}/${name}`}
       name={`${organization} - ${name}`}
       data-testid="directory-service-row"
       {...props}
     >
+      <Table.MobileTd>
+        <StateIndicator state={status} />
+        <Table.MobileTdContent>
+          <p>{organization}</p>
+          <p>{name}</p>
+          {apiType && <p>{apiType}</p>}
+        </Table.MobileTdContent>
+      </Table.MobileTd>
+
       <Table.Td>{organization}</Table.Td>
       <Table.Td>{name}</Table.Td>
       <Table.Td>
@@ -36,8 +38,6 @@ const DirectoryServiceRow = ({ service, ...props }) => {
 DirectoryServiceRow.propTypes = {
   service: shape({
     apiType: string,
-    contactEmailAddress: string.isRequired,
-    documentationUrl: string,
     name: string.isRequired,
     organization: string.isRequired,
     status: string.isRequired,

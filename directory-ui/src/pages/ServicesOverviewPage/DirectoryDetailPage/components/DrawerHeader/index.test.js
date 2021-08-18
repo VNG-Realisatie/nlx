@@ -4,13 +4,13 @@
 import React from 'react'
 import { Drawer } from '@commonground/design-system'
 import { renderWithProviders } from '../../../../../test-utils'
+import { SERVICE_STATE_UP } from '../../../../../components/StateIndicator'
 import DrawerHeader from './index'
 
 const service = {
-  serviceName: 'service',
-  organizationName: 'organisation',
-  state: 'up',
-  apiSpecificationType: 'OpenAPI',
+  name: 'service',
+  organization: 'organisation',
+  status: SERVICE_STATE_UP,
 }
 
 const closeHandler = jest.fn()

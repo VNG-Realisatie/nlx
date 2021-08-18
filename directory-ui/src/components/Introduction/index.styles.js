@@ -3,7 +3,7 @@
 //
 import styled from 'styled-components'
 import { mediaQueries } from '@commonground/design-system'
-import BaseSection, { SectionIntro } from '../../components/Section'
+import BaseSection from '../../components/Section'
 
 export const Section = styled(BaseSection)`
   padding: ${(p) => p.theme.tokens.spacing09} 0;
@@ -15,8 +15,6 @@ export const Section = styled(BaseSection)`
     background: url(contact/intro-bg-large.svg) center bottom no-repeat, linear-gradient(to right, rgb(230, 233, 237), rgb(205, 214, 227));
   `}
 `
-
-export const StyledSectionIntro = styled(SectionIntro)``
 
 export const Content = styled.div`
   h2 {

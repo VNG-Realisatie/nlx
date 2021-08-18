@@ -8,6 +8,6 @@ export const StyledEmptyContentMessage = styled.p`
   font-size: ${(p) => p.theme.tokens.fontSizeSmall};
   margin-bottom: 0;
   text-align: center;
-  height: calc(100vh - 20rem);
-  line-height: calc(100vh - 20rem);
+  height: 10rem;
+  line-height: 10rem;
 `

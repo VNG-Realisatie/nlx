@@ -28,15 +28,16 @@ export const reduceInwayStatesToStatus = (inways = []) => {
 }
 
 export const mapListServicesAPIResponse = (response) =>
-  response && response.services
+  response?.services
     ? response.services.map((service) => ({
-        /* eslint-disable camelcase */
         organization: service.organization_name,
         name: service.service_name,
         status: reduceInwayStatesToStatus(service.inways),
         apiType: service.api_specification_type,
         contactEmailAddress: service.public_support_contact,
         documentationUrl: service.documentation_url,
-        /* eslint-enable camelcase */
+        oneTimeCosts: (service.one_time_costs || 0) / 100,
+        monthlyCosts: (service.monthly_costs || 0) / 100,
+        requestCosts: (service.request_costs || 0) / 100,
       }))
     : []

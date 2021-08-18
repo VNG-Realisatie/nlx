@@ -8,22 +8,19 @@ import { object } from 'prop-types'
 import { Route, useParams } from 'react-router-dom'
 import Spinner from '../../components/Spinner'
 import ErrorMessage from '../../components/ErrorMessage'
-import Container from '../../components/Container/Container'
+import { Container } from '../../components/Grid'
 import Introduction from '../../components/Introduction'
 import Section from '../../components/Section'
-import { Col, Row } from '../../components/Grid'
 import News from '../../components/NewsSection'
 import Footer from '../../components/Footer'
 import DirectoryTable from '../../components/DirectoryTable'
-import { StyledFilters, StyledServicesTableContainer } from './index.styles'
+import Filters from '../../components/Filters'
 import { mapListServicesAPIResponse } from './map-list-services-api-response'
 import DirectoryDetailPage from './DirectoryDetailPage'
 
-const ESCAPE_KEY_CODE = 27
-
 const ServicesOverviewPage = ({ location, history }) => {
   const urlParams = new URLSearchParams(location.search)
-  const { name } = useParams()
+  const serviceName = useParams()?.serviceName
 
   const [state, setState] = useState({
     loading: true,
@@ -37,38 +34,10 @@ const ServicesOverviewPage = ({ location, history }) => {
 
   const searchOnChangeDebouncable = (query) => {
     setState({ ...state, debouncedQuery: query })
-    history.push(`?q=${encodeURIComponent(query)}`)
+    history.push(query ? `?q=${encodeURIComponent(query)}` : '')
   }
 
-  const searchOnChangeDebounced = debounce(searchOnChangeDebouncable, 400)
-
-  const detailPaneCloseHandler = () => {
-    setState({
-      ...state,
-      selectedService: null,
-    })
-  }
-  const fetchServices = async () => {
-    const response = await fetch(`/api/directory/list-services`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    return await response.json()
-  }
-
-  const escFunction = (event) => {
-    if (event.keyCode === ESCAPE_KEY_CODE) {
-      setState({ ...state, query: '' })
-    }
-  }
-
-  const handleOnServiceClicked = (service) => {
-    setState({
-      ...state,
-      selectedService: service,
-    })
-  }
+  const searchOnChangeDebounced = debounce(searchOnChangeDebouncable, 100)
 
   const handleSearchOnChange = (query) => {
     setState({ ...state, query })
@@ -80,20 +49,26 @@ const ServicesOverviewPage = ({ location, history }) => {
   }
 
   useEffect(() => {
-    document.addEventListener('keydown', escFunction, false)
-
-    fetchServices()
-      .then((response) => mapListServicesAPIResponse(response))
-      .then((services) => {
-        setState({ ...state, loading: false, error: false, services })
-      })
-      .catch(() => {
+    const getServices = async () => {
+      try {
+        const response = await fetch(`/api/directory/list-services`, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        const services = await response.json()
+        const renamedServices = mapListServicesAPIResponse(services)
+        setState({
+          ...state,
+          loading: false,
+          error: false,
+          services: renamedServices,
+        })
+      } catch (e) {
         setState({ ...state, loading: false, error: true })
-      })
-
-    return () => {
-      document.removeEventListener('keydown', escFunction, false)
+      }
     }
+    getServices()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -120,35 +95,35 @@ const ServicesOverviewPage = ({ location, history }) => {
 
       <Section>
         <Container>
-          <Row>
-            <Col>
-              <Container>
-                {/* TODO: Implement proper search */}
-                <StyledFilters
-                  onQueryChanged={handleSearchOnChange}
-                  onStatusFilterChanged={handleSwitchOnChange}
-                  queryValue={query}
-                />
+          <Filters
+            onQueryChanged={handleSearchOnChange}
+            onStatusFilterChanged={handleSwitchOnChange}
+            queryValue={query}
+          />
 
-                <DirectoryTable
-                  services={services}
-                  selectedServiceName="setvicename"
-                />
+          <DirectoryTable
+            services={services}
+            selectedServiceName={serviceName}
+            filterQuery={debouncedQuery}
+            filterByOnlineServices={!displayOfflineServices}
+          />
 
-                {/* TODO check if routing is configured properly */}
-                <Route
-                  path="/directory/:organizationName/:serviceName"
-                  render={({ match }) => {
-                    return (
-                      services.length && (
-                        <DirectoryDetailPage service={services[0]} />
-                      )
-                    )
-                  }}
+          <Route
+            path="/:organizationName/:serviceName"
+            render={() => {
+              const selectedService = services.find(
+                (service) => service.name === serviceName,
+              )
+              return (
+                <DirectoryDetailPage
+                  service={selectedService}
+                  parentUrl={
+                    state.debouncedQuery && `/?q=${state?.debouncedQuery}`
+                  }
                 />
-              </Container>
-            </Col>
-          </Row>
+              )
+            }}
+          />
         </Container>
       </Section>
 

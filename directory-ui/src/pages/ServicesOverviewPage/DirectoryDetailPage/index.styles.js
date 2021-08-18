@@ -2,8 +2,8 @@
 // Licensed under the EUPL
 //
 import styled from 'styled-components'
-import { StackedDrawer } from '@commonground/design-system'
+import { Drawer } from '@commonground/design-system'
 
-export const StyledStackedDrawer = styled(StackedDrawer)`
+export const StyledDrawer = styled(Drawer)`
   z-index: 100;
 `

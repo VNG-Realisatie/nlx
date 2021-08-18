@@ -47,13 +47,13 @@ const arrow = css`
 
 const Section = styled.section`
   position: relative;
-  padding: ${(p) => p.theme.tokens.spacing07} 0;
+  padding: ${(p) => p.theme.tokens.spacing09} 0;
   background-color: ${(p) => getColor(p)};
   background-position: center bottom;
   background-repeat: no-repeat;
 
   ${mediaQueries.mdUp`
-    padding: ${(p) => p.theme.tokens.spacing08} 0;
+    padding: ${(p) => p.theme.tokens.spacing10} 0;
   `}
 
   ${(p) => !p.omitArrow && arrow}

@@ -1,66 +1,20 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 //
-import { render } from '@testing-library/react'
-import { ThemeProvider } from 'styled-components'
-import theme from '../../styling/theme'
+import React from 'react'
+import { BrowserRouter as Router } from 'react-router-dom'
+import { renderWithProviders } from '../../test-utils'
 import NavLink from './index'
 
-// https://github.com/vercel/next.js/issues/7479#issuecomment-587145429
-const useRouter = jest.spyOn(require('next/router'), 'useRouter')
-
-afterEach(() => {
-  jest.clearAllMocks()
-})
-
 test('receives active classname', () => {
-  useRouter.mockImplementation(() => ({
-    pathname: '/page',
-  }))
+  window.history.pushState({}, 'Test page', '/page')
 
-  const { getByText, rerender } = render(
-    <ThemeProvider theme={theme}>
-      <NavLink to="/">home</NavLink>
-    </ThemeProvider>,
+  const { getByText, rerender } = renderWithProviders(
+    <NavLink to="/other-page">home</NavLink>,
+    { wrapper: Router },
   )
   expect(getByText('home')).not.toHaveClass('active')
 
-  rerender(
-    <ThemeProvider theme={theme}>
-      <NavLink to="/page">page</NavLink>
-    </ThemeProvider>,
-  )
+  rerender(<NavLink to="/page">page</NavLink>)
   expect(getByText('page')).toHaveClass('active')
-})
-
-test('prepends basepath', () => {
-  useRouter.mockImplementation(() => ({
-    basePath: '/site',
-  }))
-
-  const { getByText } = render(
-    <ThemeProvider theme={theme}>
-      <NavLink to="/page">page</NavLink>
-    </ThemeProvider>,
-  )
-  expect(getByText('page')).toHaveAttribute(
-    'href',
-    expect.stringContaining('/site/page'),
-  )
-})
-
-test('leaves external links untouched', () => {
-  const { getByText, rerender } = render(
-    <ThemeProvider theme={theme}>
-      <NavLink to="http://commonground.nl">page</NavLink>
-    </ThemeProvider>,
-  )
-  expect(getByText('page')).toHaveAttribute('href', 'http://commonground.nl')
-
-  rerender(
-    <ThemeProvider theme={theme}>
-      <NavLink to="https://commonground.nl">page</NavLink>
-    </ThemeProvider>,
-  )
-  expect(getByText('page')).toHaveAttribute('href', 'https://commonground.nl')
 })
