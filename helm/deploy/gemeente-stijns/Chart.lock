@@ -4,9 +4,9 @@ dependencies:
   version: 2.13.0
 - name: parkeerrechten-api
   repository: file://../../charts/parkeerrechten-api
-  version: 0.109.2
+  version: 0.110.0
 - name: parkeerrechten-viewer
   repository: file://../../charts/parkeerrechten-viewer
-  version: 0.109.2
-digest: sha256:eef7d289ec65285b921b4b417da6b8ddaf45ce44a02cb8812c6aec80efa9fb9b
-generated: "2021-08-10T14:03:21.056387425Z"
+  version: 0.110.0
+digest: sha256:64d087caf1316801b7ec820bccf28e4ab1500dabb57ecc7ecef95139dff7a225
+generated: "2021-08-18T09:24:34.331748404Z"

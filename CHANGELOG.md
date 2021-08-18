@@ -1,3 +1,20 @@
+# [0.110.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.109.2...v0.110.0) (2021-08-18)
+
+
+### Bug Fixes
+
+* **management:** display service error on form submit ([beb5f15](https://gitlab.com/commonground/nlx/nlx/commit/beb5f154bba10b4a3f0f43d11bd7a6aff7414c12))
+* **management:** resolve order form input issues ([1695318](https://gitlab.com/commonground/nlx/nlx/commit/16953185f3d746591998ba003bda6fa1cebb9fcd))
+* remove leftovers of service-config.toml ([b60eef8](https://gitlab.com/commonground/nlx/nlx/commit/b60eef82c79008ac8abdfdfe84ab4a2d1a027aa4))
+* **helm:** fix postgres secret key names ([3f06a4c](https://gitlab.com/commonground/nlx/nlx/commit/3f06a4cab56bc3eb87d074022339bce0acf8cf20))
+
+
+### Features
+
+* **helm:** enable configuring basic auth for NLX Management ([4d5c8f0](https://gitlab.com/commonground/nlx/nlx/commit/4d5c8f03e6352930ee81ae742318bd76a375c057)), closes [#1332](https://gitlab.com/commonground/nlx/nlx/issues/1332)
+* **management:** implement revoke order in the management-api ([837cae1](https://gitlab.com/commonground/nlx/nlx/commit/837cae152ec2b702e2bab93bac2ec03da47d3584))
+* **management:** warn when adding order without accessible services ([7ae6076](https://gitlab.com/commonground/nlx/nlx/commit/7ae6076626b34f07670a5977798dd4eb5c08b2cb))
+
 ## [0.109.2](https://gitlab.com/commonground/nlx/nlx/compare/v0.109.1...v0.109.2) (2021-08-10)
 
 
