@@ -14,6 +14,7 @@ import {
   ACTION_LOGIN_SUCCESS,
   ACTION_LOGOUT,
   ACTION_ORDER_CREATE,
+  ACTION_ORDER_OUTGOING_REVOKE,
   ACTION_ORGANIZATION_SETTINGS_UPDATE,
   ACTION_OUTGOING_ACCESS_REQUEST_CREATE,
   ACTION_OUTGOING_ACCESS_REQUEST_FAIL,
@@ -59,6 +60,7 @@ const AuditLogRecord = ({
   operatingSystem,
   browser,
   client,
+  data,
   ...props
 }) => {
   const { t } = useTranslation()
@@ -89,6 +91,9 @@ const AuditLogRecord = ({
       .map((service) => `${service.service} (${service.organization})`)
       .join(', ')
   }
+
+  const dataDelegatee = data.delegatee
+  const dataReference = data.reference
 
   return (
     <Template action={action} dateTime={dateTimeString} meta={meta} {...props}>
@@ -163,6 +168,11 @@ const AuditLogRecord = ({
           <strong>{{ user }}</strong> gave {{ delegatee }} the order to consume
           the services {{ servicesList }}
         </Trans>
+      ) : action === ACTION_ORDER_OUTGOING_REVOKE ? (
+        <Trans values={{ user, dataDelegatee, dataReference }}>
+          <strong>{{ user }}</strong> has revoked the outgoing order for{' '}
+          {{ dataDelegatee }} with reference {{ dataReference }}
+        </Trans>
       ) : (
         <Trans values={{ user, action }}>
           <strong>{{ user }}</strong> has performed unknown action{' '}
@@ -187,6 +197,15 @@ AuditLogRecord.propTypes = {
   operatingSystem: string,
   browser: string,
   client: string,
+  data: shape({
+    delegatee: string,
+    delegator: string,
+    reference: string,
+  }),
+}
+
+AuditLogRecord.defaultProps = {
+  data: {},
 }
 
 export default AuditLogRecord

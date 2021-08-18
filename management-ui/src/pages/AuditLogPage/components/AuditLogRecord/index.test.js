@@ -19,6 +19,7 @@ import {
   ACTION_SERVICE_CREATE,
   ACTION_SERVICE_DELETE,
   ACTION_SERVICE_UPDATE,
+  ACTION_ORDER_OUTGOING_REVOKE,
 } from '../../../../stores/models/AuditLogModel'
 import AuditLogRecord from './index'
 
@@ -158,6 +159,17 @@ test.concurrent.each([
     },
     'cog.svg',
     'John Doe gave Vergunningsoftware BV the order to consume the services fictieve-kentekens (RvRD), vakantieverhuur (Gemeente Amsterdam)',
+  ],
+  [
+    {
+      action: ACTION_ORDER_OUTGOING_REVOKE,
+      data: {
+        delegatee: 'Kadaster',
+        reference: '0123456AB',
+      },
+    },
+    'revoke.svg',
+    'John Doe has revoked the outgoing order for Kadaster with reference 0123456AB',
   ],
   [
     { action: 'unknown action' },

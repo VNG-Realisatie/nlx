@@ -21,6 +21,7 @@ export const ACTION_ORGANIZATION_SETTINGS_UPDATE = 'organizationSettingsUpdate'
 export const ACTION_INSIGHT_CONFIGURATION_UPDATE =
   'organizationInsightConfigurationUpdate'
 export const ACTION_ORDER_CREATE = 'orderCreate'
+export const ACTION_ORDER_OUTGOING_REVOKE = 'orderOutgoingRevoke'
 
 class AuditLogModel {
   id = null
@@ -32,6 +33,7 @@ class AuditLogModel {
   operatingSystem = null
   browser = null
   client = null
+  data = {}
 
   constructor({ auditLogData }) {
     makeAutoObservable(this)
@@ -77,6 +79,10 @@ class AuditLogModel {
 
     if (auditLogData.client) {
       this.client = auditLogData.client
+    }
+
+    if (auditLogData.data) {
+      this.data = auditLogData.data
     }
   }
 }

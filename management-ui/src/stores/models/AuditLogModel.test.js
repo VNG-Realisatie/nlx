@@ -17,6 +17,10 @@ test('creating AuditLog instance', () => {
           service: 'vakantieverhuur',
         },
       ],
+      data: {
+        delegatee: 'Kadaster',
+        reference: '030394AB',
+      },
     },
   })
 
@@ -31,4 +35,8 @@ test('creating AuditLog instance', () => {
       service: 'vakantieverhuur',
     },
   ])
+  expect(auditLog.data).toStrictEqual({
+    delegatee: 'Kadaster',
+    reference: '030394AB',
+  })
 })
