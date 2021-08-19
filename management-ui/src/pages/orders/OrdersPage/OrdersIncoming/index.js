@@ -40,7 +40,7 @@ const OrdersIncomingView = ({ orders }) => {
       <p>
         <small>
           {t(
-            'Use this to review and accept requests made on behalve of your services',
+            'Use this to review and accept requests made on behalf of your services',
           )}
         </small>
       </p>
