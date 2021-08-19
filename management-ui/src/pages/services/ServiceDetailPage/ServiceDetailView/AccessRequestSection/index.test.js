@@ -3,7 +3,11 @@
 //
 import React from 'react'
 import { act, waitForElementToBeRemoved } from '@testing-library/react'
-import { fireEvent, renderWithProviders } from '../../../../../test-utils'
+import {
+  fireEvent,
+  renderWithProviders,
+  renderWithAllProviders,
+} from '../../../../../test-utils'
 import { RootStore, StoreProvider } from '../../../../../stores'
 import { STATES } from '../../../../../stores/models/IncomingAccessRequestModel'
 import { ManagementApi } from '../../../../../api'
@@ -102,7 +106,7 @@ test('polling with access request section expanded', async () => {
   })
   const service = rootStore.servicesStore.getService('service-a')
 
-  const { getByText, queryByText, findByText } = renderWithProviders(
+  const { getByText, queryByText, findByText } = renderWithAllProviders(
     <StoreProvider rootStore={rootStore}>
       <AccessRequestsSection
         service={service}

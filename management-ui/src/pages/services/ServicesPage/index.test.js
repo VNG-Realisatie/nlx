@@ -4,7 +4,7 @@
 import React from 'react'
 import { MemoryRouter, Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
-import { renderWithProviders, waitFor } from '../../../test-utils'
+import { renderWithAllProviders, waitFor } from '../../../test-utils'
 import { INTERVAL } from '../../../hooks/use-polling'
 import { UserContextProvider } from '../../../user-context'
 import { RootStore, StoreProvider } from '../../../stores'
@@ -32,7 +32,7 @@ test('fetching all services', async () => {
     managementApiClient,
   })
 
-  const { getByRole, getByTestId, getByLabelText } = renderWithProviders(
+  const { getByRole, getByTestId, getByLabelText } = renderWithAllProviders(
     <Router history={history}>
       <UserContextProvider user={{}}>
         <StoreProvider rootStore={store}>
@@ -65,7 +65,7 @@ test('failed to load services', async () => {
     managementApiClient,
   })
 
-  const { findByText, getByTestId } = renderWithProviders(
+  const { findByText, getByTestId } = renderWithAllProviders(
     <MemoryRouter>
       <UserContextProvider user={{}}>
         <StoreProvider rootStore={store}>
@@ -99,7 +99,7 @@ test('service statistics should be polled', () => {
     managementApiClient,
   })
 
-  renderWithProviders(
+  renderWithAllProviders(
     <Router history={history}>
       <UserContextProvider user={{}}>
         <StoreProvider rootStore={rootStore}>

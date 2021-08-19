@@ -3,7 +3,7 @@
 //
 import React from 'react'
 import { fireEvent, within, waitFor } from '@testing-library/react'
-import { renderWithProviders } from '../../../../../../test-utils'
+import { renderWithAllProviders } from '../../../../../../test-utils'
 import IncomingAccessRequestModel, {
   STATES,
 } from '../../../../../../stores/models/IncomingAccessRequestModel'
@@ -12,7 +12,7 @@ import CollapsibleBody from './index'
 jest.mock('../../../../../../components/Modal')
 
 test('when no access requests are available', async () => {
-  const { getByText } = renderWithProviders(
+  const { getByText } = renderWithAllProviders(
     <CollapsibleBody accessRequests={[]} />,
   )
   expect(getByText('There are no access requests')).toBeInTheDocument()
@@ -34,7 +34,7 @@ test('approving an incoming access request', async () => {
   accessRequest.approve = approveSpy
 
   const onApproveOrRejectHandler = jest.fn()
-  const { getByTitle, getByRole, findByText } = renderWithProviders(
+  const { getByTitle, getByRole, findByText } = renderWithAllProviders(
     <CollapsibleBody
       accessRequests={[accessRequest]}
       onApproveOrRejectCallbackHandler={onApproveOrRejectHandler}
@@ -70,7 +70,7 @@ test('rejecting an incoming access request', async () => {
   accessRequest.reject = rejectSpy
 
   const onApproveOrRejectHandler = jest.fn()
-  const { getByTitle, getByRole, findByText } = renderWithProviders(
+  const { getByTitle, getByRole, findByText } = renderWithAllProviders(
     <CollapsibleBody
       accessRequests={[accessRequest]}
       onApproveOrRejectCallbackHandler={onApproveOrRejectHandler}

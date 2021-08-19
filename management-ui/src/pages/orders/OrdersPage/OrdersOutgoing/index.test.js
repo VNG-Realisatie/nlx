@@ -6,7 +6,10 @@ import { fireEvent, within } from '@testing-library/react'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import { RootStore, StoreProvider } from '../../../../stores'
-import { renderWithProviders } from '../../../../test-utils'
+import {
+  renderWithProviders,
+  renderWithAllProviders,
+} from '../../../../test-utils'
 import { ManagementApi } from '../../../../api'
 import OrdersView from '../OrdersOutgoing'
 
@@ -109,7 +112,7 @@ test('content should render expected data', () => {
   const managementApiClient = new ManagementApi()
   const rootStore = new RootStore({ managementApiClient })
 
-  const { container } = renderWithProviders(
+  const { container } = renderWithAllProviders(
     <Router history={history}>
       <StoreProvider rootStore={rootStore}>
         <OrdersView orders={orders} />

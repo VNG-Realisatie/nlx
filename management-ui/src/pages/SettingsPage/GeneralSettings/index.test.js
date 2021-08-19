@@ -3,7 +3,7 @@
 //
 import React from 'react'
 import { fireEvent, act } from '@testing-library/react'
-import { renderWithProviders } from '../../../test-utils'
+import { renderWithAllProviders } from '../../../test-utils'
 import { RootStore, StoreProvider } from '../../../stores'
 import { ManagementApi } from '../../../api'
 import GeneralSettings from './index'
@@ -21,7 +21,7 @@ describe('the General settings section', () => {
 
     const store = new RootStore({ managementApiClient })
 
-    const { findByTestId, queryByTestId } = renderWithProviders(
+    const { findByTestId, queryByTestId } = renderWithAllProviders(
       <StoreProvider rootStore={store}>
         <GeneralSettings />
       </StoreProvider>,
@@ -48,7 +48,7 @@ describe('the General settings section', () => {
         isOrganizationInwaySet: true,
       })
 
-    const { findByTestId, getByRole } = renderWithProviders(
+    const { findByTestId, getByRole } = renderWithAllProviders(
       <StoreProvider rootStore={store}>
         <GeneralSettings />
       </StoreProvider>,
@@ -83,7 +83,7 @@ describe('the General settings section', () => {
 
     const store = new RootStore({ managementApiClient })
 
-    const { findByTestId, getAllByRole } = renderWithProviders(
+    const { findByTestId, getAllByRole } = renderWithAllProviders(
       <StoreProvider rootStore={store}>
         <GeneralSettings />
       </StoreProvider>,

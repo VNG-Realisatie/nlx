@@ -4,14 +4,14 @@
 import React from 'react'
 import { waitFor, fireEvent, within } from '@testing-library/react'
 import { configure } from 'mobx'
-import { renderWithProviders } from '../../../../../../test-utils'
+import { renderWithAllProviders } from '../../../../../../test-utils'
 import AccessGrantModel from '../../../../../../stores/models/AccessGrantModel'
 import CollapsibleBody from './index'
 
 jest.mock('../../../../../../components/Modal')
 
 test('when no access grants are available', async () => {
-  const { getByText } = renderWithProviders(
+  const { getByText } = renderWithAllProviders(
     <CollapsibleBody accessGrants={[]} />,
   )
   expect(
@@ -32,7 +32,7 @@ test('revoke access grant', async () => {
     },
   })
 
-  const { getByText, findByText, getByRole } = renderWithProviders(
+  const { getByText, findByText, getByRole } = renderWithAllProviders(
     <CollapsibleBody accessGrants={[accessGrant]} />,
   )
 

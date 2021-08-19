@@ -6,7 +6,7 @@ import { Route, Router, StaticRouter } from 'react-router-dom'
 import { act, fireEvent } from '@testing-library/react'
 import { createMemoryHistory } from 'history'
 import { configure } from 'mobx'
-import { renderWithProviders } from '../../../test-utils'
+import { renderWithAllProviders } from '../../../test-utils'
 import { RootStore, StoreProvider } from '../../../stores'
 import { ManagementApi } from '../../../api'
 import ServiceDetailPage from './index'
@@ -31,7 +31,7 @@ beforeEach(() => {
 test('display service details', () => {
   const managementApiClient = new ManagementApi()
   const rootStore = new RootStore({ managementApiClient })
-  const { getByTestId, getByText } = renderWithProviders(
+  const { getByTestId, getByText } = renderWithAllProviders(
     <StaticRouter location="/services/forty-two">
       <Route path="/services/:name">
         <StoreProvider rootStore={rootStore}>
@@ -55,7 +55,7 @@ test('fetching a non-existing component', async () => {
   const managementApiClient = new ManagementApi()
   const rootStore = new RootStore({ managementApiClient })
 
-  const { findByTestId, getByText } = renderWithProviders(
+  const { findByTestId, getByText } = renderWithAllProviders(
     <StaticRouter location="/services/forty-two">
       <Route path="/services/:name">
         <StoreProvider rootStore={rootStore}>
@@ -88,7 +88,7 @@ test('removing the service', async () => {
     initialEntries: ['/services/dummy-service'],
   })
 
-  const { findByText } = renderWithProviders(
+  const { findByText } = renderWithAllProviders(
     <Router history={history}>
       <Route path="/services/:name">
         <StoreProvider rootStore={rootStore}>

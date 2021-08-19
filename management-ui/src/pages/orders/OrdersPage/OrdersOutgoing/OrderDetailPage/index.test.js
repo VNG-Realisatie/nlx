@@ -5,7 +5,7 @@ import React from 'react'
 import { Route, StaticRouter } from 'react-router-dom'
 import { fireEvent, waitFor, within } from '@testing-library/react'
 import { configure } from 'mobx'
-import { renderWithProviders, screen } from '../../../../../test-utils'
+import { renderWithAllProviders, screen } from '../../../../../test-utils'
 import { RootStore, StoreProvider } from '../../../../../stores'
 import { ManagementApi } from '../../../../../api'
 import OrderDetailPage from './index'
@@ -45,7 +45,7 @@ test('display order details', async () => {
 
   await orderStore.fetchOutgoing()
 
-  renderWithProviders(
+  renderWithAllProviders(
     <StaticRouter location="/orders/delegatee/reference">
       <Route path="/orders/:delegatee/:reference">
         <StoreProvider rootStore={rootStore}>
@@ -82,7 +82,7 @@ test('display error for a non-existing order', async () => {
   const managementApiClient = new ManagementApi()
   const rootStore = new RootStore({ managementApiClient })
 
-  const { findByTestId, getByText } = renderWithProviders(
+  const { findByTestId, getByText } = renderWithAllProviders(
     <StaticRouter location="/orders/delegatee/reference">
       <Route path="/orders/:delegatee/:reference">
         <StoreProvider rootStore={rootStore}>

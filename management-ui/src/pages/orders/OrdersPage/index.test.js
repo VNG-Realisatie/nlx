@@ -5,7 +5,7 @@ import React from 'react'
 import { Route, Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import { waitFor, fireEvent, screen } from '@testing-library/react'
-import { renderWithProviders } from '../../../test-utils'
+import { renderWithAllProviders } from '../../../test-utils'
 import { UserContextProvider } from '../../../user-context'
 import { RootStore, StoreProvider } from '../../../stores'
 import { ManagementApi } from '../../../api'
@@ -18,7 +18,7 @@ const createOrdersPage = (managementApiClient) => {
 
   const history = createMemoryHistory({ initialEntries: ['/orders/outgoing'] })
 
-  renderWithProviders(
+  renderWithAllProviders(
     <Router history={history}>
       <UserContextProvider user={{}}>
         <StoreProvider rootStore={store}>
