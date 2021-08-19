@@ -36,11 +36,12 @@ const OrderDetailPage = ({ parentUrl, order }) => {
         closeButtonLabel={t('Close')}
         data-testid="order-name"
       />
-      {order ? (
+
+      {order && (
         <SubTitle>
           {t('Issued to delegatee', { delegatee: order.delegatee })}
         </SubTitle>
-      ) : null}
+      )}
 
       <Drawer.Content>
         {!order ? (
