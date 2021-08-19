@@ -252,6 +252,5 @@
   "You have no access": "You have no access",
   "You haven't received any orders yet": "You haven't received any orders yet",
   "Your access was revoked": "Your access was revoked",
-  "yyyy-mm-dd": "yyyy-mm-dd",
-  "<0>{{user}}</0> has revoked the outgoing order for{{dataDelegatee}} with reference {{dataReference}}": "<0>{{user}}</0> has revoked the outgoing order for{{dataDelegatee}} with reference {{dataReference}}"
+  "yyyy-mm-dd": "yyyy-mm-dd"
 }
