@@ -11,7 +11,7 @@ import {
   renderWithAllProviders,
 } from '../../../../test-utils'
 import { ManagementApi } from '../../../../api'
-import OrdersView from '../OrdersOutgoing'
+import OrdersOutgoing from './index'
 
 test('displays an order row for each order', () => {
   const orders = [
@@ -41,7 +41,7 @@ test('displays an order row for each order', () => {
   const { getAllByText } = renderWithProviders(
     <Router history={history}>
       <StoreProvider rootStore={rootStore}>
-        <OrdersView orders={orders} />
+        <OrdersOutgoing orders={orders} />
       </StoreProvider>
     </Router>,
   )
@@ -54,7 +54,7 @@ test('displays text to indicate there are no orders', () => {
 
   const { getByText } = renderWithProviders(
     <StoreProvider rootStore={rootStore}>
-      <OrdersView orders={[]} />
+      <OrdersOutgoing orders={[]} />
     </StoreProvider>,
   )
   expect(getByText("You don't have any issued orders yet")).toBeInTheDocument()
@@ -115,7 +115,7 @@ test('content should render expected data', () => {
   const { container } = renderWithAllProviders(
     <Router history={history}>
       <StoreProvider rootStore={rootStore}>
-        <OrdersView orders={orders} />
+        <OrdersOutgoing orders={orders} />
       </StoreProvider>
     </Router>,
   )
