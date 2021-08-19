@@ -3,7 +3,7 @@
 //
 
 import React from 'react'
-import { arrayOf, object } from 'prop-types'
+import { arrayOf, shape, string } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { Collapsible } from '@commonground/design-system'
 import { IconServices } from '../../../../../../../icons'
@@ -59,7 +59,12 @@ const Services = ({ services }) => {
 }
 
 Services.propTypes = {
-  services: arrayOf(object).isRequired,
+  services: arrayOf(
+    shape({
+      service: string.isRequired,
+      organization: string.isRequired,
+    }),
+  ).isRequired,
 }
 
 export default Services

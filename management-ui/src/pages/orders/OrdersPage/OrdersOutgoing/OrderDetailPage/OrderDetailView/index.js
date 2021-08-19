@@ -29,8 +29,13 @@ const OrderDetailView = ({ order, revokeHandler }) => {
   return (
     <>
       <SectionGroup>
-        <Status order={order} revokeHandler={handleRevoke} />
+        <Status
+          data-testid="status"
+          order={order}
+          revokeHandler={handleRevoke}
+        />
         <StartEndDate
+          data-testid="start-end-date"
           validFrom={order.validFrom}
           validUntil={order.validUntil}
           revokedAt={order.revokedAt}

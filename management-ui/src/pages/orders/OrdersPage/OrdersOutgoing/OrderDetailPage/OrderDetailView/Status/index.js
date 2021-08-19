@@ -10,11 +10,11 @@ import { Button } from '@commonground/design-system'
 import StatusIcon from '../../../../StatusIcon'
 import { StyledContainer, StateDetail } from './index.styles'
 
-const Status = ({ order, revokeHandler }) => {
+const Status = ({ order, revokeHandler, ...props }) => {
   const { t } = useTranslation()
 
   return (
-    <StyledContainer>
+    <StyledContainer {...props}>
       {order.revokedAt ? (
         <>
           <StatusIcon active={false} />

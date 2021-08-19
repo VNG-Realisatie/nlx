@@ -2,38 +2,33 @@
 // Licensed under the EUPL
 //
 import React from 'react'
+import { screen } from '@testing-library/react'
 import { renderWithProviders } from '../../../../../../test-utils'
 import OrderDetailView from './index'
 
-const order = {
-  reference: 'my-reference',
-  delegatee: 'delegatee',
-  validFrom: new Date(),
-  validUntil: new Date(),
-  services: [],
-}
-
 test('display order details', () => {
-  const { queryByText } = renderWithProviders(
-    <OrderDetailView order={order} revokeHandler={() => {}} />,
+  renderWithProviders(
+    <OrderDetailView
+      order={{
+        reference: 'my-reference',
+        delegatee: 'delegatee',
+        validFrom: new Date('2021-01-01T00:00:00.000Z'),
+        validUntil: new Date('3000-01-01T00:00:00.000Z'),
+        services: [],
+        revokedAt: null,
+      }}
+      revokeHandler={() => {}}
+    />,
   )
 
-  expect(queryByText('my-reference')).toBeInTheDocument()
-
-  // it('should call the removeHandler on remove', async () => {
-  //   const handleRemove = jest.fn()
-  //   const { getByTitle, getByRole } = renderWithProviders(
-  //     <Router>
-  //       <OrderDetailView service={order} removeHandler={handleRemove} />
-  //     </Router>,
-  //   )
-  //
-  //   fireEvent.click(getByTitle('Remove service'))
-  //
-  //   const confirmModal = getByRole('dialog')
-  //   const okButton = within(confirmModal).getByText('Remove')
-  //
-  //   fireEvent.click(okButton)
-  //   await waitFor(() => expect(handleRemove).toHaveBeenCalled())
-  // })
+  expect(screen.getByTestId('status')).toHaveTextContent(
+    // eslint-disable-next-line no-useless-concat
+    'up.svg' + 'Order is active' + 'Revoke',
+  )
+  expect(screen.getByTestId('start-end-date')).toHaveTextContent(
+    // eslint-disable-next-line no-useless-concat
+    'timer.svg' + 'Valid until date' + 'Since date',
+  )
+  expect(screen.getByText('my-reference')).toBeInTheDocument()
+  expect(screen.getByText('Requestable services')).toBeInTheDocument()
 })

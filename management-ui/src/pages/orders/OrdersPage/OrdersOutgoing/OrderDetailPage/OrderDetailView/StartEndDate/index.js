@@ -8,10 +8,10 @@ import { useTranslation } from 'react-i18next'
 import { IconTimer } from '../../../../../../../icons'
 import { StyledContainer, StyledLabel } from './index.styles'
 
-const StartEndDate = ({ validFrom, validUntil, revokedAt }) => {
+const StartEndDate = ({ validFrom, validUntil, revokedAt, ...props }) => {
   const { t } = useTranslation()
   return (
-    <StyledContainer>
+    <StyledContainer {...props}>
       <IconTimer />
       {revokedAt ? (
         t('Revoked on date', { date: revokedAt })
