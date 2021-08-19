@@ -12,7 +12,7 @@ import OrderRow from './OrderRow'
 import { Wrapper, CellServices, Centered } from './index.styles'
 import OrderDetailPage from './OrderDetailPage'
 
-const OrdersOutgoing = ({ orders }) => {
+const Outgoing = ({ orders }) => {
   const { t } = useTranslation()
 
   const { getOutgoing } = useOrderStore()
@@ -67,12 +67,12 @@ const OrdersOutgoing = ({ orders }) => {
   )
 }
 
-OrdersOutgoing.propTypes = {
+Outgoing.propTypes = {
   orders: array,
 }
 
-OrdersOutgoing.defaultProps = {
+Outgoing.defaultProps = {
   orders: [],
 }
 
-export default observer(OrdersOutgoing)
+export default observer(Outgoing)

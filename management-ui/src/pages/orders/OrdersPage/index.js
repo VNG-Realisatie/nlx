@@ -15,8 +15,8 @@ import { useOrderStore } from '../../../hooks/use-stores'
 import PageTemplate from '../../../components/PageTemplate'
 import LoadingMessage from '../../../components/LoadingMessage'
 import { IconPlus, IconRefresh } from '../../../icons'
-import OrdersOutgoing from './OrdersOutgoing'
-import OrdersIncoming from './OrdersIncoming'
+import Outgoing from './Outgoing'
+import Incoming from './Incoming'
 import { ActionsBar, StyledButton } from './index.styles'
 
 const OrdersPage = () => {
@@ -126,9 +126,9 @@ const OrdersPage = () => {
           {error}
         </Alert>
       ) : params.type === 'outgoing' ? (
-        <OrdersOutgoing orders={orderStore.outgoingOrders} />
+        <Outgoing orders={orderStore.outgoingOrders} />
       ) : params.type === 'incoming' ? (
-        <OrdersIncoming orders={orderStore.incomingOrders} />
+        <Incoming orders={orderStore.incomingOrders} />
       ) : null}
     </PageTemplate>
   )

@@ -3,7 +3,7 @@
 //
 import React from 'react'
 import { renderWithProviders } from '../../../../test-utils'
-import OrdersIncoming from './index'
+import Incoming from './index'
 
 test('displays an order row for each order', () => {
   const orders = [
@@ -23,14 +23,12 @@ test('displays an order row for each order', () => {
     },
   ]
 
-  const { getAllByText } = renderWithProviders(
-    <OrdersIncoming orders={orders} />,
-  )
+  const { getAllByText } = renderWithProviders(<Incoming orders={orders} />)
   expect(getAllByText('my own description')).toHaveLength(2)
 })
 
 test('displays text to indicate there are no orders', () => {
-  const { getByText } = renderWithProviders(<OrdersIncoming ordersMap={[]} />)
+  const { getByText } = renderWithProviders(<Incoming ordersMap={[]} />)
   expect(getByText("You haven't received any orders yet")).toBeInTheDocument()
 })
 
@@ -49,7 +47,7 @@ test('content should render expected data', () => {
   ]
 
   const { getByText, getByTitle } = renderWithProviders(
-    <OrdersIncoming orders={orders} />,
+    <Incoming orders={orders} />,
   )
 
   expect(getByText('my own description')).toBeInTheDocument()
