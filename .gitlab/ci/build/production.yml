@@ -7,12 +7,17 @@ Build production:
     - export GIT_COMMIT_HASH=$(git rev-parse HEAD)
     - export GIT_TAG_NAME=$(git describe --tags)
     - export IMAGE_PREFIX=""
+    - export DOCKER_CACHE_BRANCH_TAG="${CI_COMMIT_REF_SLUG}"
+    - export DOCKER_CACHE_LATEST_TAG="acc-latest"
   script:
     - docker-compose version
     - export IMAGE_TAG="${GIT_TAG_NAME}"
     - time docker-compose build --parallel
     - time docker-compose push
     - export IMAGE_TAG="latest"
+    - time docker-compose build --parallel
+    - time docker-compose push
+    - export IMAGE_TAG="${DOCKER_CACHE_BRANCH_TAG}"
     - time docker-compose build --parallel
     - time docker-compose push
   rules:

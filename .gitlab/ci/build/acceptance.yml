@@ -8,6 +8,8 @@ Build acceptance:
     - export GIT_TAG_NAME=$(git describe --tags)
     - export IMAGE_PREFIX="${CI_REGISTRY_IMAGE}/"
     - export IMAGE_TAG="${GIT_TAG_NAME}"
+    - export DOCKER_CACHE_BRANCH_TAG="${CI_COMMIT_REF_SLUG}"
+    - export DOCKER_CACHE_LATEST_TAG="review-latest"
   script:
     - echo -n "${CI_REGISTRY_IMAGE}" > ci_build_image_registry.txt
     - echo -n "${IMAGE_TAG}" > ci_build_image_tag.txt
@@ -15,7 +17,10 @@ Build acceptance:
     - docker-compose version
     - time docker-compose build --parallel
     - time docker-compose push
-    - export IMAGE_TAG="latest"
+    - export IMAGE_TAG="acc-latest"
+    - time docker-compose build --parallel
+    - time docker-compose push
+    - export IMAGE_TAG="${DOCKER_CACHE_BRANCH_TAG}"
     - time docker-compose build --parallel
     - time docker-compose push
   artifacts:

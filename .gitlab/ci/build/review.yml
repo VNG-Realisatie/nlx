@@ -8,11 +8,19 @@ Build review:
     - export IMAGE_REGISTRY="${REVIEW_REGISTRY_HOST}/${CI_PROJECT_PATH}"
     - export IMAGE_PREFIX="${IMAGE_REGISTRY}/"
     - export IMAGE_TAG="${CI_COMMIT_SHORT_SHA}"
+    - export DOCKER_CACHE_BRANCH_TAG="${CI_COMMIT_REF_SLUG}"
+    - export DOCKER_CACHE_LATEST_TAG="review-latest"
   script:
     - echo -n "${IMAGE_REGISTRY}" > ci_build_image_registry.txt
     - echo -n "${IMAGE_TAG}" > ci_build_image_tag.txt
     - echo -n "${GIT_TAG_NAME}" > ci_build_image_version.txt
     - docker-compose version
+    - time docker-compose build --parallel
+    - time docker-compose push
+    - export IMAGE_TAG="review-latest"
+    - time docker-compose build --parallel
+    - time docker-compose push
+    - export IMAGE_TAG="${DOCKER_CACHE_BRANCH_TAG}"
     - time docker-compose build --parallel
     - time docker-compose push
   artifacts:

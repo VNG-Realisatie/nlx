@@ -5,6 +5,10 @@ services:
     build:
       context: .
       dockerfile: auth-service/Dockerfile
+      cache_from:
+        - ${IMAGE_PREFIX}nlxio/auth-service:${DOCKER_CACHE_LATEST_TAG}
+        - ${IMAGE_PREFIX}nlxio/auth-service:${DOCKER_CACHE_BRANCH_TAG}
+        - ${IMAGE_PREFIX}nlxio/auth-service:acc-latest
   ca-certportal:
     image: "${IMAGE_PREFIX}nlxio/ca-certportal:${IMAGE_TAG}"
     build:
@@ -13,11 +17,19 @@ services:
       args:
         GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
         GIT_TAG_NAME: "${GIT_TAG_NAME}"
+      cache_from:
+        - ${IMAGE_PREFIX}nlxio/ca-certportal:${DOCKER_CACHE_LATEST_TAG}
+        - ${IMAGE_PREFIX}nlxio/ca-certportal:${DOCKER_CACHE_BRANCH_TAG}
+        - ${IMAGE_PREFIX}nlxio/ca-certportal:acc-latest
   ca-cfssl-unsafe:
     image: "${IMAGE_PREFIX}nlxio/ca-cfssl-unsafe:${IMAGE_TAG}"
     build:
       context: ca-cfssl-unsafe
       dockerfile: Dockerfile
+      cache_from:
+        - ${IMAGE_PREFIX}nlxio/ca-cfssl-unsafe:${DOCKER_CACHE_LATEST_TAG}
+        - ${IMAGE_PREFIX}nlxio/ca-cfssl-unsafe:${DOCKER_CACHE_BRANCH_TAG}
+        - ${IMAGE_PREFIX}nlxio/ca-cfssl-unsafe:acc-latest
   docs:
     image: "${IMAGE_PREFIX}nlxio/docs:${IMAGE_TAG}"
     build:
@@ -26,11 +38,19 @@ services:
       args:
         GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
         GIT_TAG_NAME: "${GIT_TAG_NAME}"
+      cache_from:
+        - ${IMAGE_PREFIX}nlxio/docs:${DOCKER_CACHE_LATEST_TAG}
+        - ${IMAGE_PREFIX}nlxio/docs:${DOCKER_CACHE_BRANCH_TAG}
+        - ${IMAGE_PREFIX}nlxio/docs:acc-latest
   directory-db:
     image: "${IMAGE_PREFIX}nlxio/directory-db:${IMAGE_TAG}"
     build:
       context: .
       dockerfile: directory-db/Dockerfile
+      cache_from:
+        - ${IMAGE_PREFIX}nlxio/directory-db:${DOCKER_CACHE_LATEST_TAG}
+        - ${IMAGE_PREFIX}nlxio/directory-db:${DOCKER_CACHE_BRANCH_TAG}
+        - ${IMAGE_PREFIX}nlxio/directory-db:acc-latest
   directory-inspection-api:
     image: "${IMAGE_PREFIX}nlxio/directory-inspection-api:${IMAGE_TAG}"
     build:
@@ -39,6 +59,10 @@ services:
       args:
         GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
         GIT_TAG_NAME: "${GIT_TAG_NAME}"
+      cache_from:
+        - ${IMAGE_PREFIX}nlxio/directory-inspection-api:${DOCKER_CACHE_LATEST_TAG}
+        - ${IMAGE_PREFIX}nlxio/directory-inspection-api:${DOCKER_CACHE_BRANCH_TAG}
+        - ${IMAGE_PREFIX}nlxio/directory-inspection-api:acc-latest
   directory-registration-api:
     image: "${IMAGE_PREFIX}nlxio/directory-registration-api:${IMAGE_TAG}"
     build:
@@ -47,6 +71,10 @@ services:
       args:
         GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
         GIT_TAG_NAME: "${GIT_TAG_NAME}"
+      cache_from:
+        - ${IMAGE_PREFIX}nlxio/directory-registration-api:${DOCKER_CACHE_LATEST_TAG}
+        - ${IMAGE_PREFIX}nlxio/directory-registration-api:${DOCKER_CACHE_BRANCH_TAG}
+        - ${IMAGE_PREFIX}nlxio/directory-registration-api:acc-latest
   directory-monitor:
     image: "${IMAGE_PREFIX}nlxio/directory-monitor:${IMAGE_TAG}"
     build:
@@ -55,6 +83,10 @@ services:
       args:
         GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
         GIT_TAG_NAME: "${GIT_TAG_NAME}"
+      cache_from:
+        - ${IMAGE_PREFIX}nlxio/directory-monitor:${DOCKER_CACHE_LATEST_TAG}
+        - ${IMAGE_PREFIX}nlxio/directory-monitor:${DOCKER_CACHE_BRANCH_TAG}
+        - ${IMAGE_PREFIX}nlxio/directory-monitor:acc-latest
   directory-ui:
     image: "${IMAGE_PREFIX}nlxio/directory-ui:${IMAGE_TAG}"
     build:
@@ -62,6 +94,10 @@ services:
       args:
         GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
         GIT_TAG_NAME: "${GIT_TAG_NAME}"
+      cache_from:
+        - ${IMAGE_PREFIX}nlxio/directory-ui:${DOCKER_CACHE_LATEST_TAG}
+        - ${IMAGE_PREFIX}nlxio/directory-ui:${DOCKER_CACHE_BRANCH_TAG}
+        - ${IMAGE_PREFIX}nlxio/directory-ui:acc-latest
   inway:
     image: "${IMAGE_PREFIX}nlxio/inway:${IMAGE_TAG}"
     build:
@@ -70,6 +106,10 @@ services:
       args:
         GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
         GIT_TAG_NAME: "${GIT_TAG_NAME}"
+      cache_from:
+        - ${IMAGE_PREFIX}nlxio/inway:${DOCKER_CACHE_LATEST_TAG}
+        - ${IMAGE_PREFIX}nlxio/inway:${DOCKER_CACHE_BRANCH_TAG}
+        - ${IMAGE_PREFIX}nlxio/inway:acc-latest
   management-api:
     image: "${IMAGE_PREFIX}nlxio/management-api:${IMAGE_TAG}"
     build:
@@ -78,6 +118,10 @@ services:
       args:
         GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
         GIT_TAG_NAME: "${GIT_TAG_NAME}"
+      cache_from:
+        - ${IMAGE_PREFIX}nlxio/management-api:${DOCKER_CACHE_LATEST_TAG}
+        - ${IMAGE_PREFIX}nlxio/management-api:${DOCKER_CACHE_BRANCH_TAG}
+        - ${IMAGE_PREFIX}nlxio/management-api:acc-latest
   management-ui:
     image: "${IMAGE_PREFIX}nlxio/management-ui:${IMAGE_TAG}"
     build:
@@ -86,6 +130,10 @@ services:
       args:
         GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
         GIT_TAG_NAME: "${GIT_TAG_NAME}"
+      cache_from:
+        - ${IMAGE_PREFIX}nlxio/management-ui:${DOCKER_CACHE_LATEST_TAG}
+        - ${IMAGE_PREFIX}nlxio/management-ui:${DOCKER_CACHE_BRANCH_TAG}
+        - ${IMAGE_PREFIX}nlxio/management-ui:acc-latest
   nlxctl:
     image: "${IMAGE_PREFIX}nlxio/nlxctl:${IMAGE_TAG}"
     build:
@@ -94,6 +142,10 @@ services:
       args:
         GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
         GIT_TAG_NAME: "${GIT_TAG_NAME}"
+      cache_from:
+        - ${IMAGE_PREFIX}nlxio/nlxctl:${DOCKER_CACHE_LATEST_TAG}
+        - ${IMAGE_PREFIX}nlxio/nlxctl:${DOCKER_CACHE_BRANCH_TAG}
+        - ${IMAGE_PREFIX}nlxio/nlxctl:acc-latest
   outway:
     image: "${IMAGE_PREFIX}nlxio/outway:${IMAGE_TAG}"
     build:
@@ -102,12 +154,24 @@ services:
       args:
         GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
         GIT_TAG_NAME: "${GIT_TAG_NAME}"
+      cache_from:
+        - ${IMAGE_PREFIX}nlxio/outway:${DOCKER_CACHE_LATEST_TAG}
+        - ${IMAGE_PREFIX}nlxio/outway:${DOCKER_CACHE_BRANCH_TAG}
+        - ${IMAGE_PREFIX}nlxio/outway:acc-latest
   apps-overview:
     image: "${IMAGE_PREFIX}nlxio/apps-overview:${IMAGE_TAG}"
     build:
       context: apps-overview
+      cache_from:
+        - ${IMAGE_PREFIX}nlxio/apps-overview:${DOCKER_CACHE_LATEST_TAG}
+        - ${IMAGE_PREFIX}nlxio/apps-overview:${DOCKER_CACHE_BRANCH_TAG}
+        - ${IMAGE_PREFIX}nlxio/apps-overview:acc-latest
   txlog-db:
     image: "${IMAGE_PREFIX}nlxio/txlog-db:${IMAGE_TAG}"
     build:
       context: .
       dockerfile: txlog-db/Dockerfile
+      cache_from:
+        - ${IMAGE_PREFIX}nlxio/txlog-db:${DOCKER_CACHE_LATEST_TAG}
+        - ${IMAGE_PREFIX}nlxio/txlog-db:${DOCKER_CACHE_BRANCH_TAG}
+        - ${IMAGE_PREFIX}nlxio/txlog-db:acc-latest
