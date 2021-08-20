@@ -46,8 +46,8 @@ test('display order details', async () => {
   await orderStore.fetchOutgoing()
 
   renderWithAllProviders(
-    <StaticRouter location="/orders/delegatee/reference">
-      <Route path="/orders/:delegatee/:reference">
+    <StaticRouter location="/delegatee/reference">
+      <Route path="/:delegatee/:reference">
         <StoreProvider rootStore={rootStore}>
           <OrderDetailPage order={orderStore.outgoingOrders[0]} />
         </StoreProvider>
@@ -83,8 +83,8 @@ test('display error for a non-existing order', async () => {
   const rootStore = new RootStore({ managementApiClient })
 
   const { findByTestId, getByText } = renderWithAllProviders(
-    <StaticRouter location="/orders/delegatee/reference">
-      <Route path="/orders/:delegatee/:reference">
+    <StaticRouter location="/delegatee/reference">
+      <Route path="/:delegatee/:reference">
         <StoreProvider rootStore={rootStore}>
           <OrderDetailPage revokeHandler={() => {}} />
         </StoreProvider>
@@ -93,7 +93,7 @@ test('display error for a non-existing order', async () => {
   )
   const message = await findByTestId('error-message')
   expect(message).toBeTruthy()
-  expect(message.textContent).toBe('Failed to load the order')
+  expect(message.textContent).toBe('Failed to load the order for delegatee')
 
   expect(getByText('Order not found')).toBeInTheDocument()
 

@@ -46,7 +46,10 @@ const OrderDetailPage = ({ parentUrl, order }) => {
       <Drawer.Content>
         {!order ? (
           <Alert variant="error" data-testid="error-message">
-            {t('Failed to load the order', { reference, delegatee })}
+            {t('Failed to load the order for delegatee', {
+              reference,
+              delegatee,
+            })}
           </Alert>
         ) : (
           <OrderDetailView

@@ -11,7 +11,7 @@ test('display order details', () => {
     <OrderDetailView
       order={{
         reference: 'my-reference',
-        delegatee: 'delegatee',
+        delegator: 'delegator',
         validFrom: new Date('2021-01-01T00:00:00.000Z'),
         validUntil: new Date('3000-01-01T00:00:00.000Z'),
         services: [],

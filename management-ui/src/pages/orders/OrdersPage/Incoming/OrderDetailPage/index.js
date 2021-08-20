@@ -2,15 +2,16 @@
 // Licensed under the EUPL
 //
 import React, { useContext } from 'react'
-import { string, shape } from 'prop-types'
+import { string, instanceOf } from 'prop-types'
 import { useParams, useHistory } from 'react-router-dom'
 import { Alert, Drawer, ToasterContext } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
+import IncomingOrderModel from '../../../../../stores/models/IncomingOrderModel'
 import { SubTitle } from './index.styles'
 import OrderDetailView from './OrderDetailView'
 
 const OrderDetailPage = ({ parentUrl, order }) => {
-  const { delegatee, reference } = useParams()
+  const { delegator, reference } = useParams()
   const { showToast } = useContext(ToasterContext)
   const { t } = useTranslation()
   const history = useHistory()
@@ -39,14 +40,17 @@ const OrderDetailPage = ({ parentUrl, order }) => {
 
       {order && (
         <SubTitle>
-          {t('Issued to delegatee', { delegatee: order.delegatee })}
+          {t('Issued by delegator', { delegator: order.delegator })}
         </SubTitle>
       )}
 
       <Drawer.Content>
         {!order ? (
           <Alert variant="error" data-testid="error-message">
-            {t('Failed to load the order', { reference, delegatee })}
+            {t('Failed to load the order issued by delegator', {
+              reference,
+              delegator,
+            })}
           </Alert>
         ) : (
           <OrderDetailView
@@ -63,10 +67,7 @@ const OrderDetailPage = ({ parentUrl, order }) => {
 
 OrderDetailPage.propTypes = {
   parentUrl: string,
-  order: shape({
-    delegatee: string.isRequired,
-    reference: string.isRequired,
-  }),
+  order: instanceOf(IncomingOrderModel),
 }
 
 OrderDetailPage.defaultProps = {

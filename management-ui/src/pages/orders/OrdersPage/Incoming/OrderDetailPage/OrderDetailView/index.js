@@ -3,10 +3,11 @@
 //
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { shape, string, instanceOf, func } from 'prop-types'
+import { instanceOf, func } from 'prop-types'
 import { observer } from 'mobx-react'
 import { SectionGroup } from '../../../../../../components/DetailView'
 import { useConfirmationModal } from '../../../../../../components/ConfirmationModal'
+import IncomingOrderModel from '../../../../../../stores/models/IncomingOrderModel'
 import Status from './Status'
 import Reference from './Reference'
 import StartEndDate from './StartEndDate'
@@ -50,12 +51,7 @@ const OrderDetailView = ({ order, revokeHandler }) => {
 }
 
 OrderDetailView.propTypes = {
-  order: shape({
-    delegatee: string.isRequired,
-    reference: string.isRequired,
-    validFrom: instanceOf(Date).isRequired,
-    validUntil: instanceOf(Date).isRequired,
-  }).isRequired,
+  order: instanceOf(IncomingOrderModel).isRequired,
   revokeHandler: func.isRequired,
 }
 

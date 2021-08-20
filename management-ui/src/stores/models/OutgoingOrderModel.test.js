@@ -1,6 +1,10 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
+
+import { configure } from 'mobx'
+import OrderStore from '../OrderStore'
+import { ManagementApi } from '../../api'
 import OutgoingOrderModel from './OutgoingOrderModel'
 
 test('creating instance', () => {
@@ -23,4 +27,25 @@ test('creating instance', () => {
   expect(order.revokedAt).toEqual(new Date('2020-10-03T12:00:00Z'))
   expect(order.validFrom).toEqual(new Date('2020-10-01T12:00:00Z'))
   expect(order.validUntil).toEqual(new Date('2020-10-02T12:00:00Z'))
+})
+
+test('revoke order', async () => {
+  configure({ safeDescriptors: false })
+  const managementApiClient = new ManagementApi()
+
+  const store = new OrderStore({
+    rootStore: {},
+    managementApiClient,
+  })
+
+  const order = new OutgoingOrderModel({
+    orderStore: store,
+    orderData: {},
+  })
+
+  jest.spyOn(store, 'revokeOutgoing').mockResolvedValue()
+
+  await order.revoke()
+
+  expect(store.revokeOutgoing).toBeCalledWith(order)
 })

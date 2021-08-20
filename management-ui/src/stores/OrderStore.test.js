@@ -1,6 +1,7 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 //
+import { configure } from 'mobx'
 import { waitFor } from '@testing-library/react'
 import { ManagementApi } from '../api'
 import OrderStore from './OrderStore'
@@ -52,6 +53,46 @@ test('fetch outgoing orders', async () => {
 
   const firstOrder = store.getOutgoing('delegatee 1', 'reference')
   expect(firstOrder).toBeInstanceOf(OutgoingOrderModel)
+})
+
+test('revoke outgoing order', async () => {
+  configure({ safeDescriptors: false })
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementListOutgoingOrders = jest
+    .fn()
+    .mockResolvedValue({
+      orders: [
+        {
+          delegatee: 'delegatee 1',
+          reference: 'reference',
+        },
+      ],
+    })
+
+  managementApiClient.managementRevokeOutgoingOrder = jest
+    .fn()
+    .mockResolvedValue()
+
+  const store = new OrderStore({
+    rootStore: {},
+    managementApiClient,
+  })
+
+  await store.fetchOutgoing()
+
+  const firstOrder = store.getOutgoing('delegatee 1', 'reference')
+
+  jest.spyOn(store, 'revokeOutgoing')
+
+  await store.revokeOutgoing(firstOrder)
+
+  expect(managementApiClient.managementRevokeOutgoingOrder).toBeCalledWith({
+    delegatee: 'delegatee 1',
+    reference: 'reference',
+  })
+
+  expect(firstOrder.revokedAt).not.toBeNull()
 })
 
 test('creating an outgoing order', async () => {
@@ -112,33 +153,42 @@ test('fetch incoming orders', async () => {
   expect(firstOrder).toBeInstanceOf(IncomingOrderModel)
 })
 
-test('update incoming orders', async () => {
+test('revoke incoming order', async () => {
+  configure({ safeDescriptors: false })
   const managementApiClient = new ManagementApi()
 
-  managementApiClient.managementSynchronizeOrders = jest
+  managementApiClient.managementListIncomingOrders = jest
     .fn()
-    .mockRejectedValueOnce(new Error('arbitrary error'))
     .mockResolvedValue({
       orders: [
         {
-          delegator: 'delegator',
+          delegator: 'delegator 1',
           reference: 'reference',
         },
       ],
     })
+
+  managementApiClient.managementRevokeIncomingOrder = jest
+    .fn()
+    .mockResolvedValue()
 
   const store = new OrderStore({
     rootStore: {},
     managementApiClient,
   })
 
-  await expect(store.updateIncoming()).rejects.toThrowError('arbitrary error')
-  expect(store.isLoading).toBe(false)
+  await store.fetchIncoming()
 
-  store.updateIncoming()
-  expect(store.isLoading).toBe(true)
+  const firstOrder = store.getIncoming('delegator 1', 'reference')
 
-  await waitFor(() => expect(store.isLoading).toBe(false))
-  const firstOrder = store.getIncoming('delegator', 'reference')
-  expect(firstOrder).toBeInstanceOf(IncomingOrderModel)
+  jest.spyOn(store, 'revokeIncoming')
+
+  await store.revokeIncoming(firstOrder)
+
+  expect(managementApiClient.managementRevokeIncomingOrder).toBeCalledWith({
+    delegator: 'delegator 1',
+    reference: 'reference',
+  })
+
+  expect(firstOrder.revokedAt).not.toBeNull()
 })

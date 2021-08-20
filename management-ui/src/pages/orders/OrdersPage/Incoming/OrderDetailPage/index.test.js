@@ -25,12 +25,12 @@ test('display order details', async () => {
 
   const managementApiClient = new ManagementApi()
 
-  managementApiClient.managementListOutgoingOrders = jest
+  managementApiClient.managementListIncomingOrders = jest
     .fn()
     .mockResolvedValue({
       orders: [
         {
-          delegatee: 'delegatee',
+          delegator: 'delegator',
           reference: 'my-reference',
           description: 'description',
           validFrom: '2020-01-01',
@@ -43,22 +43,22 @@ test('display order details', async () => {
   const rootStore = new RootStore({ managementApiClient })
   const orderStore = rootStore.orderStore
 
-  await orderStore.fetchOutgoing()
+  await orderStore.fetchIncoming()
 
   renderWithAllProviders(
-    <StaticRouter location="/orders/delegatee/reference">
-      <Route path="/orders/:delegatee/:reference">
+    <StaticRouter location="/delegator/reference">
+      <Route path="/:delegator/:reference">
         <StoreProvider rootStore={rootStore}>
-          <OrderDetailPage order={orderStore.outgoingOrders[0]} />
+          <OrderDetailPage order={orderStore.incomingOrders[0]} />
         </StoreProvider>
       </Route>
     </StaticRouter>,
   )
 
-  expect(screen.getByText('Issued to delegatee')).toBeInTheDocument()
+  expect(screen.getByText('Issued by delegator')).toBeInTheDocument()
   expect(screen.getByText('description')).toBeInTheDocument()
 
-  const orderModel = orderStore.outgoingOrders[0]
+  const orderModel = orderStore.incomingOrders[0]
   jest.spyOn(orderModel, 'revoke')
 
   const revokeButton = await screen.findByText('Revoke')
@@ -67,7 +67,7 @@ test('display order details', async () => {
   const confirmModal = screen.getByRole('dialog')
   const okButton = within(confirmModal).getByText('Revoke')
 
-  managementApiClient.managementRevokeOutgoingOrder = jest
+  managementApiClient.managementRevokeIncomingOrder = jest
     .fn()
     .mockResolvedValue()
 
@@ -83,8 +83,8 @@ test('display error for a non-existing order', async () => {
   const rootStore = new RootStore({ managementApiClient })
 
   const { findByTestId, getByText } = renderWithAllProviders(
-    <StaticRouter location="/orders/delegatee/reference">
-      <Route path="/orders/:delegatee/:reference">
+    <StaticRouter location="/delegator/reference">
+      <Route path="/:delegator/:reference">
         <StoreProvider rootStore={rootStore}>
           <OrderDetailPage revokeHandler={() => {}} />
         </StoreProvider>
@@ -93,7 +93,9 @@ test('display error for a non-existing order', async () => {
   )
   const message = await findByTestId('error-message')
   expect(message).toBeTruthy()
-  expect(message.textContent).toBe('Failed to load the order')
+  expect(message.textContent).toBe(
+    'Failed to load the order issued by delegator',
+  )
 
   expect(getByText('Order not found')).toBeInTheDocument()
 
