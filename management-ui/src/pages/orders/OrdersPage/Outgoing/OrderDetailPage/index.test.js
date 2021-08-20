@@ -2,9 +2,10 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { Route, StaticRouter } from 'react-router-dom'
+import { Route, Router, StaticRouter } from 'react-router-dom'
 import { fireEvent, waitFor, within } from '@testing-library/react'
 import { configure } from 'mobx'
+import { createMemoryHistory } from 'history'
 import { renderWithAllProviders, screen } from '../../../../../test-utils'
 import { RootStore, StoreProvider } from '../../../../../stores'
 import { ManagementApi } from '../../../../../api'
@@ -45,14 +46,18 @@ test('display order details', async () => {
 
   await orderStore.fetchOutgoing()
 
+  const history = createMemoryHistory({
+    initialEntries: ['/delegatee/reference'],
+  })
+
   renderWithAllProviders(
-    <StaticRouter location="/delegatee/reference">
+    <Router history={history}>
       <Route path="/:delegatee/:reference">
         <StoreProvider rootStore={rootStore}>
           <OrderDetailPage order={orderStore.outgoingOrders[0]} />
         </StoreProvider>
       </Route>
-    </StaticRouter>,
+    </Router>,
   )
 
   expect(screen.getByText('Issued to delegatee')).toBeInTheDocument()
@@ -76,6 +81,12 @@ test('display order details', async () => {
 
   expect(screen.getByText('Order is revoked')).toBeInTheDocument()
   expect(screen.getByText('Revoked on date')).toBeInTheDocument()
+
+  fireEvent.click(screen.getByTestId('close-button'))
+
+  await waitFor(() =>
+    expect(history.location.pathname).toEqual('/orders/outgoing'),
+  )
 })
 
 test('display error for a non-existing order', async () => {

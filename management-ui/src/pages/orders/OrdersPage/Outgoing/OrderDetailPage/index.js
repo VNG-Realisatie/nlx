@@ -73,7 +73,7 @@ OrderDetailPage.propTypes = {
 }
 
 OrderDetailPage.defaultProps = {
-  parentUrl: '/orders',
+  parentUrl: '/orders/outgoing',
 }
 
 export default OrderDetailPage

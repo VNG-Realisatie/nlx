@@ -47,7 +47,7 @@ const Incoming = ({ orders }) => {
             match.params.reference,
           )
 
-          return <OrderDetailPage parentUrl="/orders" order={order} />
+          return <OrderDetailPage order={order} />
         }}
       />
     </>
