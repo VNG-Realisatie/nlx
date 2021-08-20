@@ -4,21 +4,29 @@
 import React from 'react'
 import { screen } from '@testing-library/react'
 import { renderWithProviders } from '../../../../../../test-utils'
+import IncomingOrderModel from '../../../../../../stores/models/IncomingOrderModel'
+import { ManagementApi } from '../../../../../../api'
+import { RootStore } from '../../../../../../stores'
 import OrderDetailView from './index'
 
 test('display order details', () => {
+  const managementApiClient = new ManagementApi()
+  const rootStore = new RootStore({ managementApiClient })
+
+  const order = new IncomingOrderModel({
+    orderStore: rootStore.orderStore,
+    orderData: {
+      reference: 'my-reference',
+      delegator: 'delegator',
+      validFrom: '2021-01-01T00:00:00.000Z',
+      validUntil: '3000-01-01T00:00:00.000Z',
+      services: [],
+      revokedAt: null,
+    },
+  })
+
   renderWithProviders(
-    <OrderDetailView
-      order={{
-        reference: 'my-reference',
-        delegator: 'delegator',
-        validFrom: new Date('2021-01-01T00:00:00.000Z'),
-        validUntil: new Date('3000-01-01T00:00:00.000Z'),
-        services: [],
-        revokedAt: null,
-      }}
-      revokeHandler={() => {}}
-    />,
+    <OrderDetailView order={order} revokeHandler={() => {}} />,
   )
 
   expect(screen.getByTestId('status')).toHaveTextContent(

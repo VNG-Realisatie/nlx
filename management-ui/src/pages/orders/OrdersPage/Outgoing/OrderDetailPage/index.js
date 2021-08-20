@@ -2,10 +2,11 @@
 // Licensed under the EUPL
 //
 import React, { useContext } from 'react'
-import { string, shape } from 'prop-types'
+import { string, instanceOf } from 'prop-types'
 import { useParams, useHistory } from 'react-router-dom'
 import { Alert, Drawer, ToasterContext } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
+import OutgoingOrderModel from '../../../../../stores/models/OutgoingOrderModel'
 import { SubTitle } from './index.styles'
 import OrderDetailView from './OrderDetailView'
 
@@ -66,10 +67,7 @@ const OrderDetailPage = ({ parentUrl, order }) => {
 
 OrderDetailPage.propTypes = {
   parentUrl: string,
-  order: shape({
-    delegatee: string.isRequired,
-    reference: string.isRequired,
-  }),
+  order: instanceOf(OutgoingOrderModel),
 }
 
 OrderDetailPage.defaultProps = {
