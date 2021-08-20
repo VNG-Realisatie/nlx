@@ -40,6 +40,8 @@ func (o *OutgoingOrder) TableName() string {
 	return "nlx_management.outgoing_orders"
 }
 
+var ErrDuplicateOutgoingOrder = errors.New("duplicate outgoing order")
+
 func (db *PostgresConfigDatabase) CreateOutgoingOrder(ctx context.Context, order *OutgoingOrder) error {
 	tx := db.DB.Begin()
 	defer tx.Rollback()
@@ -50,6 +52,10 @@ func (db *PostgresConfigDatabase) CreateOutgoingOrder(ctx context.Context, order
 		WithContext(ctx).
 		Omit(clause.Associations).
 		Create(order).Error; err != nil {
+		if err.Error() == "ERROR: duplicate key value violates unique constraint \"idx_outgoing_orders_reference\" (SQLSTATE 23505)" {
+			return ErrDuplicateOutgoingOrder
+		}
+
 		return err
 	}
 

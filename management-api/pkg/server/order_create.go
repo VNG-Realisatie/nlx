@@ -56,6 +56,10 @@ func (s *ManagementService) CreateOutgoingOrder(ctx context.Context, request *ap
 	if err := s.configDatabase.CreateOutgoingOrder(ctx, order); err != nil {
 		s.logger.Error("failed to create outgoing order", zap.Error(err))
 
+		if err == database.ErrDuplicateOutgoingOrder {
+			return nil, status.Errorf(codes.InvalidArgument, fmt.Sprintf("an order with reference %s for %s already exist", order.Reference, order.Delegatee))
+		}
+
 		return nil, status.Errorf(codes.Internal, "failed to create outgoing order")
 	}
 

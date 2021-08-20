@@ -125,6 +125,41 @@ func TestCreateOutgoingOrder(t *testing.T) {
 			}(),
 			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: PublicKeyPEM: expect public key as pem."),
 		},
+		"when_a_record_with_the_same_reference_for_the_same_organization_already_exists": {
+			setup: func(mocks serviceMocks) {
+				mocks.al.
+					EXPECT().
+					OrderCreate(gomock.Any(), "Jane Doe", "nlxctl", "a-delegatee", []auditlog.RecordService{
+						{
+							Organization: "a-organization",
+							Service:      "a-service",
+						},
+					})
+
+				mocks.db.
+					EXPECT().
+					CreateOutgoingOrder(gomock.Any(), &database.OutgoingOrder{
+						Reference:    "a-reference",
+						Description:  "a-description",
+						PublicKeyPEM: testPublicKeyPEM,
+						Delegatee:    "a-delegatee",
+						ValidFrom:    validFrom,
+						ValidUntil:   validUntil,
+						Services: []database.OutgoingOrderService{
+							{
+								Organization: "a-organization",
+								Service:      "a-service",
+							},
+						},
+					}).
+					Return(database.ErrDuplicateOutgoingOrder)
+			},
+			request: func() *api.CreateOutgoingOrderRequest {
+				request := validCreateOutgoingOrderRequest()
+				return &request
+			}(),
+			wantErr: status.Error(codes.InvalidArgument, "an order with reference a-reference for a-delegatee already exist"),
+		},
 		"when_creating_the_order_fails": {
 			wantErr: status.Error(codes.Internal, "failed to create outgoing order"),
 			setup: func(mocks serviceMocks) {
