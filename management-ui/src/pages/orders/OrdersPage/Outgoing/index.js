@@ -2,12 +2,13 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { array } from 'prop-types'
+import { arrayOf, instanceOf } from 'prop-types'
 import { observer } from 'mobx-react'
 import { useTranslation } from 'react-i18next'
 import { Route } from 'react-router-dom'
 import Table from '../../../../components/Table'
 import { useOrderStore } from '../../../../hooks/use-stores'
+import OutgoingOrderModel from '../../../../stores/models/OutgoingOrderModel'
 import OrderRow from './OrderRow'
 import { Wrapper, CellServices, Centered } from './index.styles'
 import OrderDetailPage from './OrderDetailPage'
@@ -68,7 +69,7 @@ const Outgoing = ({ orders }) => {
 }
 
 Outgoing.propTypes = {
-  orders: array,
+  orders: arrayOf(instanceOf(OutgoingOrderModel)),
 }
 
 Outgoing.defaultProps = {

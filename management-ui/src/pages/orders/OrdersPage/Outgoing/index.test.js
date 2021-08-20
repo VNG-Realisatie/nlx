@@ -11,32 +11,37 @@ import {
   renderWithAllProviders,
 } from '../../../../test-utils'
 import { ManagementApi } from '../../../../api'
+import OutgoingOrderModel from '../../../../stores/models/OutgoingOrderModel'
 import Outgoing from './index'
 
 test('displays an order row for each order', () => {
-  const orders = [
-    {
-      reference: 'ref1',
-      description: 'my own description',
-      delegator: 'delegator',
-      services: [{ organization: 'organization X', service: 'service Y' }],
-      validUntil: '2021-05-10',
-    },
-    {
-      reference: 'ref2',
-      description: 'my own description',
-      delegator: 'goatadelee',
-      services: [{ organization: 'organization Z', service: 'service S' }],
-      validUntil: '2021-05-05',
-    },
-  ]
-
-  const history = createMemoryHistory({
-    initialEntries: ['/orders'],
-  })
-
   const managementApiClient = new ManagementApi()
   const rootStore = new RootStore({ managementApiClient })
+
+  const orders = [
+    new OutgoingOrderModel({
+      orderStore: rootStore.orderStore,
+      orderData: {
+        reference: 'ref1',
+        description: 'my own description',
+        delegator: 'delegator',
+        services: [{ organization: 'organization X', service: 'service Y' }],
+        validUntil: '2021-05-10',
+      },
+    }),
+    new OutgoingOrderModel({
+      orderStore: rootStore.orderStore,
+      orderData: {
+        reference: 'ref2',
+        description: 'my own description',
+        delegator: 'goatadelee',
+        services: [{ organization: 'organization Z', service: 'service S' }],
+        validUntil: '2021-05-05',
+      },
+    }),
+  ]
+
+  const history = createMemoryHistory()
 
   const { getAllByText } = renderWithProviders(
     <Router history={history}>
@@ -63,54 +68,64 @@ test('displays text to indicate there are no orders', () => {
 test('content should render expected data', () => {
   const day = 86400000
 
-  const orders = [
-    {
-      reference: 'ref1',
-      description: 'my own description',
-      delegatee: 'delegatee',
-      services: [
-        { organization: 'organization X', service: 'service Y' },
-        { organization: 'organization Y', service: 'service Z' },
-      ],
-      validFrom: new Date(new Date().getTime() - day),
-      validUntil: new Date(new Date().getTime() + day),
-      revokedAt: null,
-    },
-    {
-      reference: 'ref2',
-      description: 'my own description',
-      delegatee: 'delegatee',
-      services: [{ organization: 'organization X', service: 'service Y' }],
-      validFrom: new Date(new Date().getTime() - day),
-      validUntil: new Date(new Date().getTime() - day),
-      revokedAt: null,
-    },
-    {
-      reference: 'ref3',
-      description: 'my own description',
-      delegatee: 'delegatee',
-      services: [{ organization: 'organization X', service: 'service Y' }],
-      validFrom: new Date(new Date().getTime() + day),
-      validUntil: new Date(new Date().getTime() + 2 * day),
-      revokedAt: null,
-    },
-    {
-      reference: 'ref4',
-      description: 'my own description',
-      delegatee: 'delegatee',
-      services: [{ organization: 'organization X', service: 'service Y' }],
-      validFrom: new Date(new Date().getTime() - day),
-      validUntil: new Date(new Date().getTime() + day),
-      revokedAt: new Date(),
-    },
-  ]
-
-  const history = createMemoryHistory({
-    initialEntries: ['/orders'],
-  })
-
   const managementApiClient = new ManagementApi()
   const rootStore = new RootStore({ managementApiClient })
+
+  const orders = [
+    new OutgoingOrderModel({
+      orderStore: rootStore.orderStore,
+      orderData: {
+        reference: 'ref1',
+        description: 'my own description',
+        delegatee: 'delegatee',
+        services: [
+          { organization: 'organization X', service: 'service Y' },
+          { organization: 'organization Y', service: 'service Z' },
+        ],
+        validFrom: new Date(new Date().getTime() - day).toISOString(),
+        validUntil: new Date(new Date().getTime() + day).toISOString(),
+        revokedAt: null,
+      },
+    }),
+    new OutgoingOrderModel({
+      orderStore: rootStore.orderStore,
+      orderData: {
+        reference: 'ref2',
+        description: 'my own description',
+        delegatee: 'delegatee',
+        services: [{ organization: 'organization X', service: 'service Y' }],
+        validFrom: new Date(new Date().getTime() - day).toISOString(),
+        validUntil: new Date(new Date().getTime() - day).toISOString(),
+        revokedAt: null,
+      },
+    }),
+    new OutgoingOrderModel({
+      orderStore: rootStore.orderStore,
+      orderData: {
+        reference: 'ref3',
+        description: 'my own description',
+        delegatee: 'delegatee',
+        services: [{ organization: 'organization X', service: 'service Y' }],
+        validFrom: new Date(new Date().getTime() + day).toISOString(),
+        validUntil: new Date(new Date().getTime() + 2 * day).toISOString(),
+        revokedAt: null,
+      },
+    }),
+    new OutgoingOrderModel({
+      orderStore: rootStore.orderStore,
+      orderData: {
+        reference: 'ref4',
+        description: 'my own description',
+        delegatee: 'delegatee',
+        services: [{ organization: 'organization X', service: 'service Y' }],
+        validFrom: new Date(new Date().getTime() - day).toISOString(),
+        validUntil: new Date(new Date().getTime() + day).toISOString(),
+        revokedAt: new Date(),
+      },
+    }),
+  ]
+
+  const history = createMemoryHistory()
 
   const { container } = renderWithAllProviders(
     <Router history={history}>

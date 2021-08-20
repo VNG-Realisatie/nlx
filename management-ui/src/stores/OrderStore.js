@@ -3,6 +3,7 @@
 //
 import { flow, makeAutoObservable, observable } from 'mobx'
 import OutgoingOrderModel from './models/OutgoingOrderModel'
+import IncomingOrderModel from './models/IncomingOrderModel'
 
 class OrderStore {
   _isLoading = false
@@ -100,7 +101,15 @@ class OrderStore {
         yield this._managementApiClient.managementListIncomingOrders()
 
       result.orders.forEach((order) => {
-        this._incomingOrders.set(order.reference, order)
+        const orderModel = new IncomingOrderModel({
+          orderStore: this,
+          orderData: order,
+        })
+
+        this._incomingOrders.set(
+          getIncomingKey(order.delegator, order.reference),
+          orderModel,
+        )
       })
     } catch (error) {
       this._isLoading = false
@@ -110,6 +119,10 @@ class OrderStore {
     this._isLoading = false
   }).bind(this)
 
+  getIncoming = (delegator, reference) => {
+    return this._incomingOrders.get(getIncomingKey(delegator, reference))
+  }
+
   updateIncoming = flow(function* updateIncoming() {
     this._isLoading = true
 
@@ -118,7 +131,15 @@ class OrderStore {
         yield this._managementApiClient.managementSynchronizeOrders()
 
       result.orders.forEach((order) => {
-        this._incomingOrders.set(order.reference, order)
+        const orderModel = new IncomingOrderModel({
+          orderStore: this,
+          orderData: order,
+        })
+
+        this._incomingOrders.set(
+          getIncomingKey(order.delegator, order.reference),
+          orderModel,
+        )
       })
     } catch (error) {
       this._isLoading = false
@@ -131,6 +152,10 @@ class OrderStore {
 
 const getOutgoingKey = (delegatee, reference) => {
   return `${delegatee}_${reference}`
+}
+
+const getIncomingKey = (delegator, reference) => {
+  return `${delegator}_${reference}`
 }
 
 export default OrderStore

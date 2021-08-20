@@ -5,6 +5,7 @@ import { waitFor } from '@testing-library/react'
 import { ManagementApi } from '../api'
 import OrderStore from './OrderStore'
 import OutgoingOrderModel from './models/OutgoingOrderModel'
+import IncomingOrderModel from './models/IncomingOrderModel'
 import { RootStore } from './index'
 
 test('initializing the store', () => {
@@ -83,6 +84,11 @@ test('fetch incoming orders', async () => {
     .mockResolvedValue({
       orders: [
         {
+          delegator: 'delegator 1',
+          reference: 'reference',
+        },
+        {
+          delegator: 'delegator 2',
           reference: 'reference',
         },
       ],
@@ -100,7 +106,10 @@ test('fetch incoming orders', async () => {
   expect(store.isLoading).toBe(true)
 
   await waitFor(() => expect(store.isLoading).toBe(false))
-  expect(store.incomingOrders).toEqual([{ reference: 'reference' }])
+  expect(store.incomingOrders).toHaveLength(2)
+
+  const firstOrder = store.getIncoming('delegator 1', 'reference')
+  expect(firstOrder).toBeInstanceOf(IncomingOrderModel)
 })
 
 test('update incoming orders', async () => {
@@ -112,6 +121,7 @@ test('update incoming orders', async () => {
     .mockResolvedValue({
       orders: [
         {
+          delegator: 'delegator',
           reference: 'reference',
         },
       ],
@@ -129,5 +139,6 @@ test('update incoming orders', async () => {
   expect(store.isLoading).toBe(true)
 
   await waitFor(() => expect(store.isLoading).toBe(false))
-  expect(store.incomingOrders).toEqual([{ reference: 'reference' }])
+  const firstOrder = store.getIncoming('delegator', 'reference')
+  expect(firstOrder).toBeInstanceOf(IncomingOrderModel)
 })
