@@ -10,6 +10,8 @@ Build acceptance:
     - export IMAGE_TAG="${GIT_TAG_NAME}"
     - export DOCKER_CACHE_BRANCH_TAG="${CI_COMMIT_REF_SLUG}"
     - export DOCKER_CACHE_LATEST_TAG="review-latest"
+    - export COMPOSE_DOCKER_CLI_BUILD=1
+    - export DOCKER_BUILDKIT=1
   script:
     - echo -n "${CI_REGISTRY_IMAGE}" > ci_build_image_registry.txt
     - echo -n "${IMAGE_TAG}" > ci_build_image_tag.txt
