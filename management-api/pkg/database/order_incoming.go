@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"time"
 
+	"go.nlx.io/nlx/management-api/domain"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -59,9 +60,8 @@ func (db *PostgresConfigDatabase) GetIncomingOrderByReference(ctx context.Contex
 	return order, nil
 }
 
-func (db *PostgresConfigDatabase) ListIncomingOrders(ctx context.Context) ([]*IncomingOrder, error) {
+func (db *PostgresConfigDatabase) ListIncomingOrders(ctx context.Context) ([]*domain.IncomingOrder, error) {
 	orders := []*IncomingOrder{}
-
 	if err := db.DB.
 		WithContext(ctx).
 		Order("valid_until desc").
@@ -70,7 +70,18 @@ func (db *PostgresConfigDatabase) ListIncomingOrders(ctx context.Context) ([]*In
 		return nil, err
 	}
 
-	return orders, nil
+	incomingOrders := make([]*domain.IncomingOrder, len(orders))
+
+	for i, order := range orders {
+		incomingOrder, err := domain.NewIncomingOrder(order.Reference)
+		if err != nil {
+			return nil, fmt.Errorf("error converting incoming order: %w", err)
+		}
+
+		incomingOrders[i] = incomingOrder
+	}
+
+	return incomingOrders, nil
 }
 
 func (db *PostgresConfigDatabase) SynchronizeOrders(ctx context.Context, orders []*IncomingOrder) error {

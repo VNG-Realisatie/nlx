@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"go.nlx.io/nlx/common/diagnostics"
+	"go.nlx.io/nlx/management-api/domain"
 )
 
 type ConfigDatabase interface {
@@ -70,6 +71,6 @@ type ConfigDatabase interface {
 	RevokeIncomingOrderByReference(ctx context.Context, delegator, reference string, revokedAt time.Time) error
 
 	GetIncomingOrderByReference(ctx context.Context, reference string) (*IncomingOrder, error)
-	ListIncomingOrders(ctx context.Context) ([]*IncomingOrder, error)
+	ListIncomingOrders(ctx context.Context) ([]*domain.IncomingOrder, error)
 	SynchronizeOrders(ctx context.Context, orders []*IncomingOrder) error
 }
