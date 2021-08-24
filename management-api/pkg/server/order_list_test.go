@@ -19,6 +19,7 @@ import (
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
+	"go.nlx.io/nlx/management-api/domain"
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
@@ -122,24 +123,24 @@ func TestListIncomingOrders(t *testing.T) {
 		},
 		"happy_flow": {
 			setup: func(mocks serviceMocks) {
+				services := []domain.IncomingOrderService{
+					domain.NewIncomingOrderService("service-a", "organization-a"),
+				}
+				model, _ := domain.NewIncomingOrder(
+					"reference",
+					"description",
+					"nlx-test",
+					nil,
+					validFrom,
+					validUntil,
+					services,
+				)
+
 				mocks.db.
 					EXPECT().
 					ListIncomingOrders(gomock.Any()).
-					Return([]*database.IncomingOrder{
-						{
-							Reference:   "reference",
-							Description: "description",
-							Delegator:   "nlx-test",
-							ValidFrom:   validFrom,
-							ValidUntil:  validUntil,
-							RevokedAt:   sql.NullTime{},
-							Services: []database.IncomingOrderService{
-								{
-									Service:      "service-a",
-									Organization: "organization-a",
-								},
-							},
-						},
+					Return([]*domain.IncomingOrder{
+						model,
 					}, nil)
 			},
 			wantResponse: &api.ListIncomingOrdersResponse{
@@ -163,27 +164,24 @@ func TestListIncomingOrders(t *testing.T) {
 
 		"happy_flow_revoked": {
 			setup: func(mocks serviceMocks) {
+				services := []domain.IncomingOrderService{
+					domain.NewIncomingOrderService("service-a", "organization-a"),
+				}
+				model, _ := domain.NewIncomingOrder(
+					"reference",
+					"description",
+					"nlx-test",
+					&revokedAt,
+					validFrom,
+					validUntil,
+					services,
+				)
+
 				mocks.db.
 					EXPECT().
 					ListIncomingOrders(gomock.Any()).
-					Return([]*database.IncomingOrder{
-						{
-							Reference:   "reference",
-							Description: "description",
-							Delegator:   "nlx-test",
-							ValidFrom:   validFrom,
-							ValidUntil:  validUntil,
-							RevokedAt: sql.NullTime{
-								Valid: true,
-								Time:  revokedAt,
-							},
-							Services: []database.IncomingOrderService{
-								{
-									Service:      "service-a",
-									Organization: "organization-a",
-								},
-							},
-						},
+					Return([]*domain.IncomingOrder{
+						model,
 					}, nil)
 			},
 			wantResponse: &api.ListIncomingOrdersResponse{

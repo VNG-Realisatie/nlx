@@ -11,6 +11,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	diagnostics "go.nlx.io/nlx/common/diagnostics"
+	domain "go.nlx.io/nlx/management-api/domain"
 	database "go.nlx.io/nlx/management-api/pkg/database"
 )
 
@@ -497,10 +498,10 @@ func (mr *MockConfigDatabaseMockRecorder) ListIncomingAccessRequests(ctx, organi
 }
 
 // ListIncomingOrders mocks base method.
-func (m *MockConfigDatabase) ListIncomingOrders(ctx context.Context) ([]*database.IncomingOrder, error) {
+func (m *MockConfigDatabase) ListIncomingOrders(ctx context.Context) ([]*domain.IncomingOrder, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListIncomingOrders", ctx)
-	ret0, _ := ret[0].([]*database.IncomingOrder)
+	ret0, _ := ret[0].([]*domain.IncomingOrder)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

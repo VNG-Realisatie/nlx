@@ -10,9 +10,10 @@ import (
 	"fmt"
 	"time"
 
-	"go.nlx.io/nlx/management-api/domain"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+
+	"go.nlx.io/nlx/management-api/domain"
 )
 
 type IncomingOrderService struct {
@@ -73,7 +74,18 @@ func (db *PostgresConfigDatabase) ListIncomingOrders(ctx context.Context) ([]*do
 	incomingOrders := make([]*domain.IncomingOrder, len(orders))
 
 	for i, order := range orders {
-		incomingOrder, err := domain.NewIncomingOrder(order.Reference)
+		services := make([]domain.IncomingOrderService, len(order.Services))
+
+		for i, service := range order.Services {
+			services[i] = domain.NewIncomingOrderService(service.Service, service.Organization)
+		}
+
+		var revokedAt *time.Time
+		if order.RevokedAt.Valid {
+			revokedAt = &order.RevokedAt.Time
+		}
+
+		incomingOrder, err := domain.NewIncomingOrder(order.Reference, order.Description, order.Delegator, revokedAt, order.ValidFrom, order.ValidUntil, services)
 		if err != nil {
 			return nil, fmt.Errorf("error converting incoming order: %w", err)
 		}

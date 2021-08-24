@@ -15,6 +15,7 @@ import (
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
+	"go.nlx.io/nlx/management-api/domain"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/util/convert"
 )
@@ -57,14 +58,20 @@ func (s *ManagementService) ListIncomingOrders(ctx context.Context, _ *emptypb.E
 	incomingOrders := make([]*api.IncomingOrder, len(orders))
 
 	for i, order := range orders {
+		var revokedAt *timestamppb.Timestamp
+
+		if order.RevokedAt() != nil {
+			revokedAt = timestamppb.New(*order.RevokedAt())
+		}
+
 		incomingOrders[i] = &api.IncomingOrder{
-			Reference:   order.Reference,
-			Description: order.Description,
-			Delegator:   order.Delegator,
-			RevokedAt:   convert.SQLToProtoTimestamp(order.RevokedAt),
-			ValidFrom:   timestamppb.New(order.ValidFrom),
-			ValidUntil:  timestamppb.New(order.ValidUntil),
-			Services:    convertIncomingOrderServices(order.Services),
+			Reference:   order.Reference(),
+			Description: order.Description(),
+			Delegator:   order.Delegator(),
+			RevokedAt:   revokedAt,
+			ValidFrom:   timestamppb.New(order.ValidFrom()),
+			ValidUntil:  timestamppb.New(order.ValidUntil()),
+			Services:    convertDomainIncomingOrderServices(order.Services()),
 		}
 	}
 
@@ -120,6 +127,19 @@ func convertIncomingOrderServices(services []database.IncomingOrderService) []*a
 		protoServices[i] = &api.OrderService{
 			Organization: service.Organization,
 			Service:      service.Service,
+		}
+	}
+
+	return protoServices
+}
+
+func convertDomainIncomingOrderServices(services []domain.IncomingOrderService) []*api.OrderService {
+	protoServices := make([]*api.OrderService, len(services))
+
+	for i, service := range services {
+		protoServices[i] = &api.OrderService{
+			Organization: service.Organization(),
+			Service:      service.Service(),
 		}
 	}
 
