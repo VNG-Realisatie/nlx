@@ -15,13 +15,13 @@ func Test_NewIncomingOrder(t *testing.T) {
 	t.Parallel()
 
 	type orderParams struct {
-		reference string 
+		reference   string
 		description string
-		delegator string
-		revokedAt *time.Time
-		validFrom time.Time
-		validUntil time.Time
-		services []domain.IncomingOrderService
+		delegator   string
+		revokedAt   *time.Time
+		validFrom   time.Time
+		validUntil  time.Time
+		services    []domain.IncomingOrderService
 	}
 
 	validFrom := time.Now().Add(-24 * time.Hour)
@@ -33,12 +33,12 @@ func Test_NewIncomingOrder(t *testing.T) {
 	}{
 		"empty_reference": {
 			order: orderParams{
-				reference: "",
+				reference:   "",
 				description: "my-description",
-				delegator: "my-delegator",
-				revokedAt: nil,
-				validFrom: validFrom,
-				validUntil: validUntil,
+				delegator:   "my-delegator",
+				revokedAt:   nil,
+				validFrom:   validFrom,
+				validUntil:  validUntil,
 				services: []domain.IncomingOrderService{
 					domain.NewIncomingOrderService("my-service", "my-organization"),
 				},
@@ -47,12 +47,12 @@ func Test_NewIncomingOrder(t *testing.T) {
 		},
 		"empty_description": {
 			order: orderParams{
-				reference: "my-reference",
+				reference:   "my-reference",
 				description: "",
-				delegator: "my-delegator",
-				revokedAt: nil,
-				validFrom: validFrom,
-				validUntil: validUntil,
+				delegator:   "my-delegator",
+				revokedAt:   nil,
+				validFrom:   validFrom,
+				validUntil:  validUntil,
 				services: []domain.IncomingOrderService{
 					domain.NewIncomingOrderService("my-service", "my-organization"),
 				},
@@ -61,26 +61,40 @@ func Test_NewIncomingOrder(t *testing.T) {
 		},
 		"empty_delegator": {
 			order: orderParams{
-				reference: "my-reference",
+				reference:   "my-reference",
 				description: "my-description",
-				delegator: "",
-				revokedAt: nil,
-				validFrom: validFrom,
-				validUntil: validUntil,
+				delegator:   "",
+				revokedAt:   nil,
+				validFrom:   validFrom,
+				validUntil:  validUntil,
 				services: []domain.IncomingOrderService{
 					domain.NewIncomingOrderService("my-service", "my-organization"),
 				},
 			},
 			expectedErr: errors.New("delegator: cannot be blank"),
 		},
+		"valid_from_is_after_valid_until": {
+			order: orderParams{
+				reference:   "my-reference",
+				description: "my-description",
+				delegator:   "my-delegator",
+				revokedAt:   nil,
+				validFrom:   time.Now(),
+				validUntil:  time.Now().Add(-1 * time.Hour),
+				services: []domain.IncomingOrderService{
+					domain.NewIncomingOrderService("my-service", "my-organization"),
+				},
+			},
+			expectedErr: errors.New("valid from: order can not expire before the start date"),
+		},
 		"happy_flow": {
 			order: orderParams{
-				reference: "my-reference",
+				reference:   "my-reference",
 				description: "my-description",
-				delegator: "my-delegator",
-				revokedAt: nil,
-				validFrom: validFrom,
-				validUntil: validUntil,
+				delegator:   "my-delegator",
+				revokedAt:   nil,
+				validFrom:   validFrom,
+				validUntil:  validUntil,
 				services: []domain.IncomingOrderService{
 					domain.NewIncomingOrderService("my-service", "my-organization"),
 				},

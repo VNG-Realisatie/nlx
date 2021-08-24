@@ -1,7 +1,6 @@
 package domain
 
 import (
-	"errors"
 	"fmt"
 	"regexp"
 	"time"
@@ -23,8 +22,6 @@ type IncomingOrder struct {
 	validUntil  time.Time
 	services    []IncomingOrderService
 }
-
-var ErrInvalidReference = errors.New("invalid reference")
 
 const (
 	descriptionMinLength = 1
@@ -50,14 +47,19 @@ func NewIncomingOrder(reference, description, delegator string, revokedAt *time.
 		return nil, fmt.Errorf("delegator: %s", err)
 	}
 
+	err = validation.Validate(validUntil, validation.Required, validation.Min(validFrom).Error("order can not expire before the start date"))
+	if err != nil {
+		return nil, fmt.Errorf("valid from: %s", err)
+	}
+
 	return &IncomingOrder{
 		reference:   reference,
 		description: description,
 		delegator:   delegator,
-		revokedAt: revokedAt,
-		validFrom: validFrom,
-		validUntil: validUntil,
-		services: services,
+		revokedAt:   revokedAt,
+		validFrom:   validFrom,
+		validUntil:  validUntil,
+		services:    services,
 	}, nil
 }
 
@@ -91,7 +93,7 @@ func (i *IncomingOrder) Services() []IncomingOrderService {
 
 func NewIncomingOrderService(service, organization string) IncomingOrderService {
 	return IncomingOrderService{
-		service: service,
+		service:      service,
 		organization: organization,
 	}
 }
