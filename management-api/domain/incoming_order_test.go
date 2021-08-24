@@ -73,6 +73,18 @@ func Test_NewIncomingOrder(t *testing.T) {
 			},
 			expectedErr: errors.New("delegator: cannot be blank"),
 		},
+		"empty_services": {
+			order: orderParams{
+				reference:   "my-reference",
+				description: "my-description",
+				delegator:   "my-delegator",
+				revokedAt:   nil,
+				validFrom:   validFrom,
+				validUntil:  validUntil,
+				services:    []domain.IncomingOrderService{},
+			},
+			expectedErr: errors.New("services: at least one is required"),
+		},
 		"valid_from_is_after_valid_until": {
 			order: orderParams{
 				reference:   "my-reference",

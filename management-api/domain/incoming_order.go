@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"errors"
 	"fmt"
 	"regexp"
 	"time"
@@ -11,6 +12,21 @@ import (
 type IncomingOrderService struct {
 	service      string
 	organization string
+}
+
+func NewIncomingOrderService(service, organization string) IncomingOrderService {
+	return IncomingOrderService{
+		service:      service,
+		organization: organization,
+	}
+}
+
+func (s *IncomingOrderService) Service() string {
+	return s.service
+}
+
+func (s *IncomingOrderService) Organization() string {
+	return s.organization
 }
 
 type IncomingOrder struct {
@@ -30,6 +46,7 @@ const (
 
 // nolint:gocritic // these are valid regex patterns
 var organizationNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-. _\s]{1,100}$`)
+var serviceNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`)
 
 func NewIncomingOrder(reference, description, delegator string, revokedAt *time.Time, validFrom, validUntil time.Time, services []IncomingOrderService) (*IncomingOrder, error) {
 	err := validation.Validate(reference, validation.Required)
@@ -50,6 +67,28 @@ func NewIncomingOrder(reference, description, delegator string, revokedAt *time.
 	err = validation.Validate(validUntil, validation.Required, validation.Min(validFrom).Error("order can not expire before the start date"))
 	if err != nil {
 		return nil, fmt.Errorf("valid from: %s", err)
+	}
+
+	err = validation.Validate(services, validation.Required.Error("at least one is required"), validation.Each(validation.By(func(value interface{}) error {
+		orderService, ok := value.(IncomingOrderService)
+		if !ok {
+			return errors.New("expecting an order-service")
+		}
+
+		err = validation.Validate(orderService.organization, validation.Match(organizationNameRegex).Error("organization must be in a valid format"))
+		if err != nil {
+			return fmt.Errorf("organization: %s", err)
+		}
+
+		err = validation.Validate(orderService.service, validation.Match(serviceNameRegex).Error("service must be in a valid format"))
+		if err != nil {
+			return fmt.Errorf("name: %s", err)
+		}
+
+		return nil
+	})))
+	if err != nil {
+		return nil, fmt.Errorf("services: %s", err)
 	}
 
 	return &IncomingOrder{
@@ -89,19 +128,4 @@ func (i *IncomingOrder) ValidUntil() time.Time {
 
 func (i *IncomingOrder) Services() []IncomingOrderService {
 	return i.services
-}
-
-func NewIncomingOrderService(service, organization string) IncomingOrderService {
-	return IncomingOrderService{
-		service:      service,
-		organization: organization,
-	}
-}
-
-func (s *IncomingOrderService) Service() string {
-	return s.service
-}
-
-func (s *IncomingOrderService) Organization() string {
-	return s.organization
 }
