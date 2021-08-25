@@ -165,11 +165,6 @@ export interface ManagementRevokeAccessGrantRequest {
     accessGrantID: string;
 }
 
-export interface ManagementRevokeIncomingOrderRequest {
-    delegator: string;
-    reference: string;
-}
-
 export interface ManagementRevokeOutgoingOrderRequest {
     delegatee: string;
     reference: string;
@@ -873,38 +868,6 @@ export class ManagementApi extends runtime.BaseAPI {
      */
     async managementRevokeAccessGrant(requestParameters: ManagementRevokeAccessGrantRequest): Promise<ManagementAccessGrant> {
         const response = await this.managementRevokeAccessGrantRaw(requestParameters);
-        return await response.value();
-    }
-
-    /**
-     */
-    async managementRevokeIncomingOrderRaw(requestParameters: ManagementRevokeIncomingOrderRequest): Promise<runtime.ApiResponse<object>> {
-        if (requestParameters.delegator === null || requestParameters.delegator === undefined) {
-            throw new runtime.RequiredError('delegator','Required parameter requestParameters.delegator was null or undefined when calling managementRevokeIncomingOrder.');
-        }
-
-        if (requestParameters.reference === null || requestParameters.reference === undefined) {
-            throw new runtime.RequiredError('reference','Required parameter requestParameters.reference was null or undefined when calling managementRevokeIncomingOrder.');
-        }
-
-        const queryParameters: runtime.HTTPQuery = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/api/v1/orders/incoming/{delegator}/{reference}/revoke`.replace(`{${"delegator"}}`, encodeURIComponent(String(requestParameters.delegator))).replace(`{${"reference"}}`, encodeURIComponent(String(requestParameters.reference))),
-            method: 'PUT',
-            headers: headerParameters,
-            query: queryParameters,
-        });
-
-        return new runtime.JSONApiResponse<any>(response);
-    }
-
-    /**
-     */
-    async managementRevokeIncomingOrder(requestParameters: ManagementRevokeIncomingOrderRequest): Promise<object> {
-        const response = await this.managementRevokeIncomingOrderRaw(requestParameters);
         return await response.value();
     }
 

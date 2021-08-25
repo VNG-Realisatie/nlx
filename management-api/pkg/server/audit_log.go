@@ -34,7 +34,6 @@ var actionTypes = map[auditlog.ActionType]api.AuditLogRecord_ActionType{
 	auditlog.OrganizationInsightConfigurationUpdate: api.AuditLogRecord_organizationInsightConfigurationUpdate,
 	auditlog.OrderCreate:                            api.AuditLogRecord_orderCreate,
 	auditlog.OrderOutgoingRevoke:                    api.AuditLogRecord_orderOutgoingRevoke,
-	auditlog.OrderIncomingRevoke:                    api.AuditLogRecord_orderIncomingRevoke,
 }
 
 func (s *ManagementService) ListAuditLogs(ctx context.Context, _ *emptypb.Empty) (*api.ListAuditLogsResponse, error) {

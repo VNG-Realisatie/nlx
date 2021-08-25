@@ -25,13 +25,11 @@ test('display order details', () => {
     },
   })
 
-  renderWithProviders(
-    <OrderDetailView order={order} revokeHandler={() => {}} />,
-  )
+  renderWithProviders(<OrderDetailView order={order} />)
 
   expect(screen.getByTestId('status')).toHaveTextContent(
     // eslint-disable-next-line no-useless-concat
-    'up.svg' + 'Order is active' + 'Revoke',
+    'up.svg' + 'Order is active',
   )
   expect(screen.getByTestId('start-end-date')).toHaveTextContent(
     // eslint-disable-next-line no-useless-concat

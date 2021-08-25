@@ -148,20 +148,6 @@ func (mr *MockLoggerMockRecorder) OrderCreate(ctx, userName, userAgent, delegate
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OrderCreate", reflect.TypeOf((*MockLogger)(nil).OrderCreate), ctx, userName, userAgent, delegatee, services)
 }
 
-// OrderIncomingRevoke mocks base method.
-func (m *MockLogger) OrderIncomingRevoke(ctx context.Context, userName, userAgent, delegator, reference string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "OrderIncomingRevoke", ctx, userName, userAgent, delegator, reference)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// OrderIncomingRevoke indicates an expected call of OrderIncomingRevoke.
-func (mr *MockLoggerMockRecorder) OrderIncomingRevoke(ctx, userName, userAgent, delegator, reference interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OrderIncomingRevoke", reflect.TypeOf((*MockLogger)(nil).OrderIncomingRevoke), ctx, userName, userAgent, delegator, reference)
-}
-
 // OrderOutgoingRevoke mocks base method.
 func (m *MockLogger) OrderOutgoingRevoke(ctx context.Context, userName, userAgent, delegatee, reference string) error {
 	m.ctrl.T.Helper()

@@ -15,7 +15,6 @@ import {
   ACTION_LOGOUT,
   ACTION_ORDER_CREATE,
   ACTION_ORDER_OUTGOING_REVOKE,
-  ACTION_ORDER_INCOMING_REVOKE,
   ACTION_ORGANIZATION_SETTINGS_UPDATE,
   ACTION_OUTGOING_ACCESS_REQUEST_CREATE,
   ACTION_OUTGOING_ACCESS_REQUEST_FAIL,
@@ -94,7 +93,6 @@ const AuditLogRecord = ({
   }
 
   const dataDelegatee = data.delegatee
-  const dataDelegator = data.delegator
   const dataReference = data.reference
 
   return (
@@ -174,11 +172,6 @@ const AuditLogRecord = ({
         <Trans values={{ user, dataDelegatee, dataReference }}>
           <strong>{{ user }}</strong> has revoked the outgoing order for{' '}
           {{ dataDelegatee }} with reference {{ dataReference }}
-        </Trans>
-      ) : action === ACTION_ORDER_INCOMING_REVOKE ? (
-        <Trans values={{ user, dataDelegator, dataReference }}>
-          <strong>{{ user }}</strong> has revoked the incoming order issued by{' '}
-          {{ dataDelegator }} with reference {{ dataReference }}
         </Trans>
       ) : (
         <Trans values={{ user, action }}>

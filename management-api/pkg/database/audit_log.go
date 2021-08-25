@@ -26,7 +26,6 @@ const (
 	ServiceDelete                          AuditLogActionType = "service_delete"
 	OrderCreate                            AuditLogActionType = "order_create"
 	OrderOutgoingRevoke                    AuditLogActionType = "order_outgoing_revoke"
-	OrderIncomingRevoke                    AuditLogActionType = "order_incoming_revoke"
 	OrganizationSettingsUpdate             AuditLogActionType = "organization_settings_update"
 	OrganizationInsightConfigurationUpdate AuditLogActionType = "organization_insight_configuration_update"
 )

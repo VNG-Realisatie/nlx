@@ -10,7 +10,6 @@
   "<0>{{user}}</0> has removed the service <3>{{service}}</3>": "<0>{{user}}</0> heeft de service <3>{{service}}</3> verwijderd",
   "<0>{{user}}</0> has requested access to <3>{{service}}</3> from <6>{{organization}}</6>": "<0>{{user}}</0> heeft toegang verzocht tot <3>{{service}}</3> van <6>{{organization}}</6>",
   "<0>{{user}}</0> has revoked access for <3>{{service}}</3> from <6>{{organization}}</6>": "<0>{{user}}</0> heeft toegang ingetrokken voor <3>{{service}}</3> van <6>{{organization}}</6>",
-  "<0>{{user}}</0> has revoked the incoming order issued by {{dataDelegator}} with reference {{dataReference}}": "<0>{{user}}</0> heeft de inkomende opdracht uitgegeven door {{dataDelegator}} met als referentie {{dataReference}} ingetrokken",
   "<0>{{user}}</0> has revoked the outgoing order for {{dataDelegatee}} with reference {{dataReference}}": "<0>{{user}}</0> heeft de uitgaande opdracht voor {{dataDelegatee}} met als referentie {{dataReference}} ingetrokken",
   "<0>{{user}}</0> has updated the service <3>{{service}}</3>": "<0>{{user}}</0> heeft de service <3>{{service}}</3> bijgewerkt",
   "<0>{{user}}</0> updated the insight configuration settings": "<0>{{user}}</0> heeft de insight-instellingen aangepast",

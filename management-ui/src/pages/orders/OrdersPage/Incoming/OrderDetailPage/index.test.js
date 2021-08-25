@@ -3,7 +3,6 @@
 //
 import React from 'react'
 import { Route, Router, StaticRouter } from 'react-router-dom'
-import { fireEvent, waitFor, within } from '@testing-library/react'
 import { configure } from 'mobx'
 import { createMemoryHistory } from 'history'
 import { renderWithAllProviders, screen } from '../../../../../test-utils'
@@ -62,31 +61,6 @@ test('display order details', async () => {
 
   expect(screen.getByText('Issued by delegator')).toBeInTheDocument()
   expect(screen.getByText('description')).toBeInTheDocument()
-
-  const orderModel = orderStore.incomingOrders[0]
-  jest.spyOn(orderModel, 'revoke')
-
-  const revokeButton = await screen.findByText('Revoke')
-  fireEvent.click(revokeButton)
-
-  const confirmModal = screen.getByRole('dialog')
-  const okButton = within(confirmModal).getByText('Revoke')
-
-  managementApiClient.managementRevokeIncomingOrder = jest
-    .fn()
-    .mockResolvedValue()
-
-  fireEvent.click(okButton)
-  await waitFor(() => expect(orderModel.revoke).toHaveBeenCalledTimes(1))
-
-  expect(screen.getByText('Order is revoked')).toBeInTheDocument()
-  expect(screen.getByText('Revoked on date')).toBeInTheDocument()
-
-  fireEvent.click(screen.getByTestId('close-button'))
-
-  await waitFor(() =>
-    expect(history.location.pathname).toEqual('/orders/incoming'),
-  )
 })
 
 test('display error for a non-existing order', async () => {

@@ -635,42 +635,6 @@
         ]
       }
     },
-    "/api/v1/orders/incoming/{delegator}/{reference}/revoke": {
-      "put": {
-        "operationId": "Management_RevokeIncomingOrder",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "properties": {}
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "delegator",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "reference",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "Management"
-        ]
-      }
-    },
     "/api/v1/orders/outgoing": {
       "get": {
         "operationId": "Management_ListOutgoingOrders",

@@ -10,7 +10,6 @@
   "<0>{{user}}</0> has removed the service <3>{{service}}</3>": "<0>{{user}}</0> has removed the service <3>{{service}}</3>",
   "<0>{{user}}</0> has requested access to <3>{{service}}</3> from <6>{{organization}}</6>": "<0>{{user}}</0> has requested access to <3>{{service}}</3> from <6>{{organization}}</6>",
   "<0>{{user}}</0> has revoked access for <3>{{service}}</3> from <6>{{organization}}</6>": "<0>{{user}}</0> has revoked access for <3>{{service}}</3> from <6>{{organization}}</6>",
-  "<0>{{user}}</0> has revoked the incoming order issued by {{dataDelegator}} with reference {{dataReference}}": "<0>{{user}}</0> has revoked the incoming order issued by {{dataDelegator}} with reference {{dataReference}}",
   "<0>{{user}}</0> has revoked the outgoing order for {{dataDelegatee}} with reference {{dataReference}}": "<0>{{user}}</0> has revoked the outgoing order for {{dataDelegatee}} with reference {{dataReference}}",
   "<0>{{user}}</0> has updated the service <3>{{service}}</3>": "<0>{{user}}</0> has updated the service <3>{{service}}</3>",
   "<0>{{user}}</0> updated the insight configuration settings": "<0>{{user}}</0> updated the insight configuration settings",

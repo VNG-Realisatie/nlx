@@ -22,7 +22,6 @@ export const ACTION_INSIGHT_CONFIGURATION_UPDATE =
   'organizationInsightConfigurationUpdate'
 export const ACTION_ORDER_CREATE = 'orderCreate'
 export const ACTION_ORDER_OUTGOING_REVOKE = 'orderOutgoingRevoke'
-export const ACTION_ORDER_INCOMING_REVOKE = 'orderIncomingRevoke'
 
 class AuditLogModel {
   id = null

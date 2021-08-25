@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { flow, makeAutoObservable } from 'mobx'
+import { makeAutoObservable } from 'mobx'
 
 class IncomingOrderModel {
   _description = null
@@ -46,10 +46,6 @@ class IncomingOrderModel {
   get services() {
     return this._services
   }
-
-  revoke = flow(function* revoke() {
-    yield this.orderStore.revokeIncoming(this)
-  }).bind(this)
 
   update = (orderData) => {
     if (!orderData) {

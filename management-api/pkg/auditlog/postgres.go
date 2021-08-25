@@ -21,7 +21,6 @@ type PostgresLogger struct {
 
 type recordMetadata struct {
 	Delegatee *string `json:"delegatee,omitempty"`
-	Delegator *string `json:"delegator,omitempty"`
 	Reference *string `json:"reference,omitempty"`
 }
 
@@ -65,7 +64,6 @@ func convertAuditLogRecordsFromDatabase(records []*database.AuditLog) ([]*Record
 
 			convertedRecord.Data = &RecordData{
 				Delegatee: data.Delegatee,
-				Delegator: data.Delegator,
 				Reference: data.Reference,
 			}
 		}
@@ -278,34 +276,6 @@ func (a *PostgresLogger) OrderOutgoingRevoke(ctx context.Context, userName, user
 
 		UserName:   userName,
 		ActionType: database.OrderOutgoingRevoke,
-
-		Data: sql.NullString{
-			Valid:  true,
-			String: string(data),
-		},
-	}
-
-	_, err = a.database.CreateAuditLogRecord(ctx, record)
-
-	return err
-}
-
-func (a *PostgresLogger) OrderIncomingRevoke(ctx context.Context, userName, userAgent, delegator, reference string) error {
-	revokeLog := &recordMetadata{
-		Delegator: &delegator,
-		Reference: &reference,
-	}
-
-	data, err := json.Marshal(revokeLog)
-	if err != nil {
-		return err
-	}
-
-	record := &database.AuditLog{
-		UserAgent: userAgent,
-
-		UserName:   userName,
-		ActionType: database.OrderIncomingRevoke,
 
 		Data: sql.NullString{
 			Valid:  true,

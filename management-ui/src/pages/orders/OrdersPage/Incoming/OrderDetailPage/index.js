@@ -1,10 +1,10 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React, { useContext } from 'react'
-import { string, instanceOf } from 'prop-types'
-import { useParams, useHistory } from 'react-router-dom'
-import { Alert, Drawer, ToasterContext } from '@commonground/design-system'
+import React from 'react'
+import { instanceOf, string } from 'prop-types'
+import { useHistory, useParams } from 'react-router-dom'
+import { Alert, Drawer } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import IncomingOrderModel from '../../../../../stores/models/IncomingOrderModel'
 import { SubTitle } from './index.styles'
@@ -12,22 +12,10 @@ import OrderDetailView from './OrderDetailView'
 
 const OrderDetailPage = ({ parentUrl, order }) => {
   const { delegator, reference } = useParams()
-  const { showToast } = useContext(ToasterContext)
   const { t } = useTranslation()
   const history = useHistory()
 
   const close = () => history.push(parentUrl)
-  const handleRevoke = async (order) => {
-    try {
-      await order.revoke()
-    } catch (err) {
-      showToast({
-        title: t('Failed to revoke the order'),
-        body: err.message,
-        variant: 'error',
-      })
-    }
-  }
 
   return (
     <Drawer noMask closeHandler={close}>
@@ -53,12 +41,7 @@ const OrderDetailPage = ({ parentUrl, order }) => {
             })}
           </Alert>
         ) : (
-          <OrderDetailView
-            order={order}
-            revokeHandler={(order) => {
-              handleRevoke(order)
-            }}
-          />
+          <OrderDetailView order={order} />
         )}
       </Drawer.Content>
     </Drawer>

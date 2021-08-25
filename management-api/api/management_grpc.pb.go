@@ -47,7 +47,6 @@ type ManagementClient interface {
 	RetrieveClaimForOrder(ctx context.Context, in *RetrieveClaimForOrderRequest, opts ...grpc.CallOption) (*RetrieveClaimForOrderResponse, error)
 	CreateOutgoingOrder(ctx context.Context, in *CreateOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	RevokeOutgoingOrder(ctx context.Context, in *RevokeOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	RevokeIncomingOrder(ctx context.Context, in *RevokeIncomingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListOutgoingOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListOutgoingOrdersResponse, error)
 	ListIncomingOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListIncomingOrdersResponse, error)
 }
@@ -312,15 +311,6 @@ func (c *managementClient) RevokeOutgoingOrder(ctx context.Context, in *RevokeOu
 	return out, nil
 }
 
-func (c *managementClient) RevokeIncomingOrder(ctx context.Context, in *RevokeIncomingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/RevokeIncomingOrder", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *managementClient) ListOutgoingOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListOutgoingOrdersResponse, error) {
 	out := new(ListOutgoingOrdersResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/ListOutgoingOrders", in, out, opts...)
@@ -371,7 +361,6 @@ type ManagementServer interface {
 	RetrieveClaimForOrder(context.Context, *RetrieveClaimForOrderRequest) (*RetrieveClaimForOrderResponse, error)
 	CreateOutgoingOrder(context.Context, *CreateOutgoingOrderRequest) (*emptypb.Empty, error)
 	RevokeOutgoingOrder(context.Context, *RevokeOutgoingOrderRequest) (*emptypb.Empty, error)
-	RevokeIncomingOrder(context.Context, *RevokeIncomingOrderRequest) (*emptypb.Empty, error)
 	ListOutgoingOrders(context.Context, *emptypb.Empty) (*ListOutgoingOrdersResponse, error)
 	ListIncomingOrders(context.Context, *emptypb.Empty) (*ListIncomingOrdersResponse, error)
 	mustEmbedUnimplementedManagementServer()
@@ -464,9 +453,6 @@ func (UnimplementedManagementServer) CreateOutgoingOrder(context.Context, *Creat
 }
 func (UnimplementedManagementServer) RevokeOutgoingOrder(context.Context, *RevokeOutgoingOrderRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RevokeOutgoingOrder not implemented")
-}
-func (UnimplementedManagementServer) RevokeIncomingOrder(context.Context, *RevokeIncomingOrderRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RevokeIncomingOrder not implemented")
 }
 func (UnimplementedManagementServer) ListOutgoingOrders(context.Context, *emptypb.Empty) (*ListOutgoingOrdersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListOutgoingOrders not implemented")
@@ -991,24 +977,6 @@ func _Management_RevokeOutgoingOrder_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_RevokeIncomingOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RevokeIncomingOrderRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ManagementServer).RevokeIncomingOrder(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/nlx.management.Management/RevokeIncomingOrder",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).RevokeIncomingOrder(ctx, req.(*RevokeIncomingOrderRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Management_ListOutgoingOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
@@ -1163,10 +1131,6 @@ var Management_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RevokeOutgoingOrder",
 			Handler:    _Management_RevokeOutgoingOrder_Handler,
-		},
-		{
-			MethodName: "RevokeIncomingOrder",
-			Handler:    _Management_RevokeIncomingOrder_Handler,
 		},
 		{
 			MethodName: "ListOutgoingOrders",
