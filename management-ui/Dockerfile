@@ -45,7 +45,6 @@ RUN go build \
         -ldflags="-X 'go.nlx.io/nlx/common/version.BuildSourceHash=$GIT_COMMIT_HASH' -X 'go.nlx.io/nlx/common/version.BuildVersion=$GIT_TAG_NAME'" \
         -o dist/bin/nlx-management-ui ./cmd/nlx-management-ui
 
-# Release binary on latest alpine image.
 FROM alpine:3.14.1
 
 COPY --from=go-build /go/src/go.nlx.io/nlx/management-ui/dist/bin/nlx-management-ui /usr/local/bin/nlx-management-ui

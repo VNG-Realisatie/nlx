@@ -13,8 +13,7 @@ WORKDIR /go/src/go.nlx.io/nlx/apps-overview
 RUN go build \
     -o dist/bin/apps-overview
 
-# Release binary on latest alpine image.
-FROM alpine:latest
+FROM alpine:3.14.1
 
 COPY --from=build /go/src/go.nlx.io/nlx/apps-overview/dist/bin/apps-overview /usr/local/bin/apps-overview
 COPY --from=build /go/src/go.nlx.io/nlx/apps-overview/templates /templates

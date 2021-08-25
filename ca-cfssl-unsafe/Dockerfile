@@ -8,8 +8,7 @@ ENV GO111MODULE=off
 RUN apk add --update git g++
 RUN go get -u github.com/cloudflare/cfssl/cmd/...
 
-# Release image based on latest alpine.
-FROM alpine:latest
+FROM alpine:3.14.1
 
 # Add csfssl tools.
 COPY --from=build-cfssl /go/bin/* /usr/local/bin/

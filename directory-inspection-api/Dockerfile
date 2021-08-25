@@ -24,8 +24,7 @@ RUN go build \
         -ldflags="-X 'go.nlx.io/nlx/common/version.BuildSourceHash=$GIT_COMMIT_HASH' -X 'go.nlx.io/nlx/common/version.BuildVersion=$GIT_TAG_NAME'" \
         -o dist/bin/nlx-directory-inspection-api ./cmd/nlx-directory-inspection-api
 
-# Release binary on latest alpine image.
-FROM alpine:latest
+FROM alpine:3.14.1
 
 # Make sure /etc/hosts is resolved before DNS
 RUN echo "hosts: files dns" > /etc/nsswitch.conf
