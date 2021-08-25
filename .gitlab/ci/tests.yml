@@ -8,7 +8,7 @@ Lint commit messages:
     - npx commitlint --from $(git rev-parse origin/master)
     - stop_section lint
   rules:
-    - if: '$CI_COMMIT_BRANCH && $CI_PROJECT_PATH == "commonground/nlx/nlx"' # do not run for tags
+    - if: '$CI_COMMIT_BRANCH' # do not run for tags
   tags:
     - docker
     - linux
@@ -22,7 +22,7 @@ Go go.mod tidy test:
     - /usr/local/go/bin/go mod tidy
     - diff go.mod.orig go.mod
   rules:
-    - if: '$CI_COMMIT_BRANCH && $CI_PROJECT_PATH == "commonground/nlx/nlx"' # do not run for tags
+    - if: '$CI_COMMIT_BRANCH' # do not run for tags
   tags:
     - docker
     - linux
@@ -57,7 +57,7 @@ Go tests (unit & integration):
     paths:
       - tmp-coverage-reports/coverage.html
   rules:
-    - if: '$CI_COMMIT_BRANCH && $CI_PROJECT_PATH == "commonground/nlx/nlx"' # do not run for tags
+    - if: '$CI_COMMIT_BRANCH' # do not run for tags
   tags:
     - docker
     - linux
@@ -81,7 +81,7 @@ Go linter:
     paths:
       - gl-code-quality-report.json
   rules:
-    - if: '$CI_COMMIT_BRANCH && $CI_PROJECT_PATH == "commonground/nlx/nlx"' # do not run for tags
+    - if: '$CI_COMMIT_BRANCH' # do not run for tags
   tags:
     - docker
     - linux
@@ -104,7 +104,7 @@ Directory-ui linter and tests:
     paths:
       - directory-ui/coverage
   rules:
-    - if: '$CI_COMMIT_BRANCH && $CI_PROJECT_PATH == "commonground/nlx/nlx"' # do not run for tags
+    - if: '$CI_COMMIT_BRANCH' # do not run for tags
   tags:
     - docker
     - linux
@@ -139,7 +139,7 @@ Management-ui linter and tests:
     paths:
       - management-ui/coverage
   rules:
-    - if: '$CI_COMMIT_BRANCH && $CI_PROJECT_PATH == "commonground/nlx/nlx"' # do not run for tags
+    - if: '$CI_COMMIT_BRANCH' # do not run for tags
   tags:
     - docker
     - linux
@@ -157,7 +157,7 @@ Helm lint:
         stop_section lint
       done
   rules:
-    - if: '$CI_COMMIT_BRANCH && $CI_PROJECT_PATH == "commonground/nlx/nlx"' # do not run for tags
+    - if: '$CI_COMMIT_BRANCH' # do not run for tags
   tags:
     - docker
     - linux
