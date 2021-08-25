@@ -481,7 +481,6 @@ message AuditLogRecord {
     serviceUpdate = 9;
     serviceDelete = 10;
     organizationSettingsUpdate = 11;
-    organizationInsightConfigurationUpdate = 12;
     orderCreate = 13;
     orderOutgoingRevoke = 14;
     orderIncomingRevoke = 15;

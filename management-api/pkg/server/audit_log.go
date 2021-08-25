@@ -20,20 +20,19 @@ import (
 )
 
 var actionTypes = map[auditlog.ActionType]api.AuditLogRecord_ActionType{
-	auditlog.LoginSuccess:                           api.AuditLogRecord_loginSuccess,
-	auditlog.LoginFail:                              api.AuditLogRecord_loginFail,
-	auditlog.LogoutSuccess:                          api.AuditLogRecord_logout,
-	auditlog.IncomingAccesRequestAccept:             api.AuditLogRecord_incomingAccessRequestAccept,
-	auditlog.IncomingAccesRequestReject:             api.AuditLogRecord_incomingAccessRequestReject,
-	auditlog.AccessGrantRevoke:                      api.AuditLogRecord_accessGrantRevoke,
-	auditlog.OutgoingAccessRequestCreate:            api.AuditLogRecord_outgoingAccessRequestCreate,
-	auditlog.ServiceCreate:                          api.AuditLogRecord_serviceCreate,
-	auditlog.ServiceUpdate:                          api.AuditLogRecord_serviceUpdate,
-	auditlog.ServiceDelete:                          api.AuditLogRecord_serviceDelete,
-	auditlog.OrganizationSettingsUpdate:             api.AuditLogRecord_organizationSettingsUpdate,
-	auditlog.OrganizationInsightConfigurationUpdate: api.AuditLogRecord_organizationInsightConfigurationUpdate,
-	auditlog.OrderCreate:                            api.AuditLogRecord_orderCreate,
-	auditlog.OrderOutgoingRevoke:                    api.AuditLogRecord_orderOutgoingRevoke,
+	auditlog.LoginSuccess:                api.AuditLogRecord_loginSuccess,
+	auditlog.LoginFail:                   api.AuditLogRecord_loginFail,
+	auditlog.LogoutSuccess:               api.AuditLogRecord_logout,
+	auditlog.IncomingAccesRequestAccept:  api.AuditLogRecord_incomingAccessRequestAccept,
+	auditlog.IncomingAccesRequestReject:  api.AuditLogRecord_incomingAccessRequestReject,
+	auditlog.AccessGrantRevoke:           api.AuditLogRecord_accessGrantRevoke,
+	auditlog.OutgoingAccessRequestCreate: api.AuditLogRecord_outgoingAccessRequestCreate,
+	auditlog.ServiceCreate:               api.AuditLogRecord_serviceCreate,
+	auditlog.ServiceUpdate:               api.AuditLogRecord_serviceUpdate,
+	auditlog.ServiceDelete:               api.AuditLogRecord_serviceDelete,
+	auditlog.OrganizationSettingsUpdate:  api.AuditLogRecord_organizationSettingsUpdate,
+	auditlog.OrderCreate:                 api.AuditLogRecord_orderCreate,
+	auditlog.OrderOutgoingRevoke:         api.AuditLogRecord_orderOutgoingRevoke,
 }
 
 func (s *ManagementService) ListAuditLogs(ctx context.Context, _ *emptypb.Empty) (*api.ListAuditLogsResponse, error) {

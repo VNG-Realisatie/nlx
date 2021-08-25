@@ -9,7 +9,6 @@ import {
   ACTION_ACCESS_GRANT_REVOKE,
   ACTION_INCOMING_ACCESS_REQUEST_ACCEPT,
   ACTION_INCOMING_ACCESS_REQUEST_REJECT,
-  ACTION_INSIGHT_CONFIGURATION_UPDATE,
   ACTION_LOGIN_FAIL,
   ACTION_LOGIN_SUCCESS,
   ACTION_LOGOUT,
@@ -158,10 +157,6 @@ const AuditLogRecord = ({
       ) : action === ACTION_ORGANIZATION_SETTINGS_UPDATE ? (
         <Trans values={{ user, action }}>
           <strong>{{ user }}</strong> updated the organization settings
-        </Trans>
-      ) : action === ACTION_INSIGHT_CONFIGURATION_UPDATE ? (
-        <Trans values={{ user, action }}>
-          <strong>{{ user }}</strong> updated the insight configuration settings
         </Trans>
       ) : action === ACTION_ORDER_CREATE ? (
         <Trans values={{ user, servicesList, delegatee, organization, action }}>

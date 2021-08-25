@@ -33,20 +33,19 @@ type RecordService struct {
 type ActionType string
 
 const (
-	LoginSuccess                           ActionType = "login_success"
-	LoginFail                              ActionType = "login_fail"
-	LogoutSuccess                          ActionType = "logout_success"
-	IncomingAccesRequestAccept             ActionType = "incoming_access_request_accept"
-	IncomingAccesRequestReject             ActionType = "incoming_access_request_reject"
-	AccessGrantRevoke                      ActionType = "access_grant_revoke"
-	OutgoingAccessRequestCreate            ActionType = "outgoing_access_request_create"
-	ServiceCreate                          ActionType = "service_create"
-	ServiceUpdate                          ActionType = "service_update"
-	ServiceDelete                          ActionType = "service_delete"
-	OrderCreate                            ActionType = "order_create"
-	OrderOutgoingRevoke                    ActionType = "order_outgoing_revoke"
-	OrganizationSettingsUpdate             ActionType = "organization_settings_update"
-	OrganizationInsightConfigurationUpdate ActionType = "organization_insight_configuration_update"
+	LoginSuccess                ActionType = "login_success"
+	LoginFail                   ActionType = "login_fail"
+	LogoutSuccess               ActionType = "logout_success"
+	IncomingAccesRequestAccept  ActionType = "incoming_access_request_accept"
+	IncomingAccesRequestReject  ActionType = "incoming_access_request_reject"
+	AccessGrantRevoke           ActionType = "access_grant_revoke"
+	OutgoingAccessRequestCreate ActionType = "outgoing_access_request_create"
+	ServiceCreate               ActionType = "service_create"
+	ServiceUpdate               ActionType = "service_update"
+	ServiceDelete               ActionType = "service_delete"
+	OrderCreate                 ActionType = "order_create"
+	OrderOutgoingRevoke         ActionType = "order_outgoing_revoke"
+	OrganizationSettingsUpdate  ActionType = "organization_settings_update"
 )
 
 type Logger interface {

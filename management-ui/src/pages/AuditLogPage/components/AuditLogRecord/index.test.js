@@ -8,7 +8,6 @@ import {
   ACTION_ACCESS_GRANT_REVOKE,
   ACTION_INCOMING_ACCESS_REQUEST_ACCEPT,
   ACTION_INCOMING_ACCESS_REQUEST_REJECT,
-  ACTION_INSIGHT_CONFIGURATION_UPDATE,
   ACTION_LOGIN_FAIL,
   ACTION_LOGIN_SUCCESS,
   ACTION_LOGOUT,
@@ -134,13 +133,6 @@ test.concurrent.each([
     },
     'cog.svg',
     'John Doe updated the organization settings',
-  ],
-  [
-    {
-      action: ACTION_INSIGHT_CONFIGURATION_UPDATE,
-    },
-    'cog.svg',
-    'John Doe updated the insight configuration settings',
   ],
   [
     {

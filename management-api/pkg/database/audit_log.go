@@ -14,20 +14,19 @@ import (
 type AuditLogActionType string
 
 const (
-	LoginSuccess                           AuditLogActionType = "login_success"
-	LoginFail                              AuditLogActionType = "login_fail"
-	LogoutSuccess                          AuditLogActionType = "logout_success"
-	IncomingAccesRequestAccept             AuditLogActionType = "incoming_access_request_accept"
-	IncomingAccesRequestReject             AuditLogActionType = "incoming_access_request_reject"
-	AccessGrantRevoke                      AuditLogActionType = "access_grant_revoke"
-	OutgoingAccessRequestCreate            AuditLogActionType = "outgoing_access_request_create"
-	ServiceCreate                          AuditLogActionType = "service_create"
-	ServiceUpdate                          AuditLogActionType = "service_update"
-	ServiceDelete                          AuditLogActionType = "service_delete"
-	OrderCreate                            AuditLogActionType = "order_create"
-	OrderOutgoingRevoke                    AuditLogActionType = "order_outgoing_revoke"
-	OrganizationSettingsUpdate             AuditLogActionType = "organization_settings_update"
-	OrganizationInsightConfigurationUpdate AuditLogActionType = "organization_insight_configuration_update"
+	LoginSuccess                AuditLogActionType = "login_success"
+	LoginFail                   AuditLogActionType = "login_fail"
+	LogoutSuccess               AuditLogActionType = "logout_success"
+	IncomingAccesRequestAccept  AuditLogActionType = "incoming_access_request_accept"
+	IncomingAccesRequestReject  AuditLogActionType = "incoming_access_request_reject"
+	AccessGrantRevoke           AuditLogActionType = "access_grant_revoke"
+	OutgoingAccessRequestCreate AuditLogActionType = "outgoing_access_request_create"
+	ServiceCreate               AuditLogActionType = "service_create"
+	ServiceUpdate               AuditLogActionType = "service_update"
+	ServiceDelete               AuditLogActionType = "service_delete"
+	OrderCreate                 AuditLogActionType = "order_create"
+	OrderOutgoingRevoke         AuditLogActionType = "order_outgoing_revoke"
+	OrganizationSettingsUpdate  AuditLogActionType = "organization_settings_update"
 )
 
 type AuditLog struct {
