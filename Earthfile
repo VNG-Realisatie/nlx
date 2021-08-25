@@ -19,9 +19,6 @@ mocks:
     BUILD +mocks-directory-inspection-api
     BUILD +mocks-directory-registration-api
 
-migrations:
-    BUILD +migrations-management-api
-
 proto-deps:
     ENV PROTOBUF_VERSION=3.17.2
 
@@ -55,15 +52,6 @@ mocks-deps:
     RUN go mod download
 
     RUN go install github.com/golang/mock/mockgen@v1.6.0
-
-    SAVE IMAGE --cache-hint
-
-migrations-deps:
-    COPY go.mod go.sum /src/
-
-    RUN apk add --no-cache curl git unzip
-
-    RUN go get -u github.com/go-bindata/go-bindata/...
 
     SAVE IMAGE --cache-hint
 
@@ -234,16 +222,3 @@ mocks-directory-registration-api:
 
     RUN mockgen -source pkg/database/database.go -package=mock -destination /dist/pkg/database/mock/database.go
     SAVE ARTIFACT /dist/pkg/database/mock/database.go AS LOCAL ./directory-registration-api/pkg/database/mock/database.go
-
-migrations-management-api:
-    FROM +migrations-deps
-
-    COPY ./management-api /src/management-api
-
-    RUN mkdir -p /dist || true
-
-    WORKDIR /src/management-api
-
-    RUN /go/bin/go-bindata -prefix db/migrations -pkg db -o /dist/migrations.go db/migrations/...
-
-    SAVE ARTIFACT /dist/migrations.go AS LOCAL ./management-api/db/migrations.go

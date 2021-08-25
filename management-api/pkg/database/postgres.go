@@ -8,11 +8,11 @@ import (
 	"fmt"
 
 	"github.com/golang-migrate/migrate/v4"
-	bindata "github.com/golang-migrate/migrate/v4/source/go_bindata"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
-	"go.nlx.io/nlx/management-api/db"
+	"go.nlx.io/nlx/management-api/migrations"
 )
 
 var ErrNotFound = errors.New("database: value not found")
@@ -33,17 +33,11 @@ func NewPostgresConfigDatabase(connectionString string) (ConfigDatabase, error) 
 }
 
 func setupMigrator(dsn string) (*migrate.Migrate, error) {
-	resource := bindata.Resource(
-		db.AssetNames(),
-		db.Asset,
-	)
+	const driverName = "embed"
 
-	source, err := bindata.WithInstance(resource)
-	if err != nil {
-		return nil, err
-	}
+	migrations.RegisterDriver(driverName)
 
-	return migrate.NewWithSourceInstance("go-bindata", source, dsn)
+	return migrate.New(fmt.Sprintf("%s://", driverName), dsn)
 }
 
 func PostgresPerformMigrations(dsn string) error {

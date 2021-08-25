@@ -197,7 +197,7 @@ Overview of available links per environment:
 ## Regenerating protobuf and mock files
 
 Te execute the commands in the following sections, you will need to install [Earthly](https://earthly.dev/get-earthly).
-If you want to regenerate all files (protobuf, mocks and migrations), use the command:
+If you want to regenerate all files (protobuf and mocks), use the command:
 
 ```shell
 earthly +all
@@ -219,15 +219,6 @@ Mocks can be regenerated using:
 
 ```shell
 earthly +mocks
-```
-
-### Migrations
-
-We include migration files (SQL) into our binaries using `go-binddata`.
-These files can be regenerated using:
-
-```shell
-earthly +migrations
 ```
 
 ## Further documentation

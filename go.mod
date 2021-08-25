@@ -1,6 +1,6 @@
 module go.nlx.io/nlx
 
-go 1.15
+go 1.16
 
 // Override the golang.org/x/text dependency, in version v0.3.3 a vulnerability is fixed.
 // See: https://nvd.nist.gov/vuln/detail/CVE-2020-14040.
