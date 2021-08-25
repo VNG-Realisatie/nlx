@@ -12,7 +12,7 @@ CREATE UNIQUE INDEX idx_outgoing_orders_reference ON nlx_management.outgoing_ord
 ALTER TABLE nlx_management.audit_logs DROP CONSTRAINT audit_log_ck_action_type;
 ALTER TABLE nlx_management.audit_logs ADD CONSTRAINT audit_log_ck_action_type
 CHECK (
-	 action_type IN (
+         action_type IN (
      'login_success',
      'login_fail',
      'logout_success',

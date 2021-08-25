@@ -6,10 +6,6 @@ ALTER TABLE nlx_management.incoming_orders ADD COLUMN revoked_at timestamp with 
 DROP INDEX nlx_management.idx_incoming_orders_reference;
 CREATE UNIQUE INDEX idx_incoming_orders_delegator_reference ON nlx_management.incoming_orders (delegator, reference);
 
-DROP INDEX nlx_management.idx_outgoing_orders_reference;
-CREATE UNIQUE INDEX idx_outgoing_orders_delegator_reference ON nlx_management.outgoing_orders (delegator, reference);
-
-
 ALTER TABLE nlx_management.audit_logs DROP CONSTRAINT audit_log_ck_action_type;
 ALTER TABLE nlx_management.audit_logs ADD CONSTRAINT audit_log_ck_action_type
 CHECK (action_type IN (
