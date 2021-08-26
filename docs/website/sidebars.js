@@ -31,7 +31,8 @@ module.exports = {
       'reference-information/transaction-log-headers',
       'reference-information/monitoring',
       'reference-information/outway-as-proxy',
-      'reference-information/environment-variables'
+      'reference-information/environment-variables',
+      'reference-information/ip-addresses'
     ],
     Support: ['support/common-errors'],
     Compliancy: [
