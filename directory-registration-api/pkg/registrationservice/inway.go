@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"time"
 
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
@@ -32,11 +33,16 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 
 	nlxVersion := nlxversion.NewFromGRPCContext(ctx).Version
 
+	// Created at and Updated at time are the same times when registering new inway
+	now := time.Now()
+
 	inwayModel, err := inway.NewInway(
 		req.InwayName,
 		organizationName,
 		req.InwayAddress,
 		nlxVersion,
+		now,
+		now,
 	)
 	if err != nil {
 		msg := fmt.Sprintf("validation failed: %s", err.Error())

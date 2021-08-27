@@ -18,6 +18,8 @@ import (
 	"go.nlx.io/nlx/directory-registration-api/domain/service"
 )
 
+const timeLayout = time.RFC3339
+
 var ErrDuplicateAddress = errors.New("another inway is already registered with this address")
 
 type PostgreSQLRepository struct {
@@ -64,10 +66,12 @@ func NewPostgreSQLRepository(db *sqlx.DB) (*PostgreSQLRepository, error) {
 
 func (r *PostgreSQLRepository) RegisterInway(model *inway.Inway) error {
 	type registerParams struct {
-		OrganizationName string `db:"organization_name"`
-		Name             string `db:"inway_name"`
-		Address          string `db:"inway_address"`
-		NlxVersion       string `db:"inway_version"`
+		OrganizationName string    `db:"organization_name"`
+		Name             string    `db:"inway_name"`
+		Address          string    `db:"inway_address"`
+		NlxVersion       string    `db:"inway_version"`
+		CreatedAt        time.Time `db:"inway_created_at"`
+		UpdatedAt        time.Time `db:"inway_updated_at"`
 	}
 
 	_, err := r.registerInwayStmt.Exec(&registerParams{
@@ -75,6 +79,8 @@ func (r *PostgreSQLRepository) RegisterInway(model *inway.Inway) error {
 		Name:             model.Name(),
 		Address:          model.Address(),
 		NlxVersion:       model.NlxVersion(),
+		CreatedAt:        model.CreatedAt(),
+		UpdatedAt:        model.UpdatedAt(),
 	})
 
 	if err != nil && err.Error() == "pq: duplicate key value violates unique constraint \"inways_uq_address\"" {
@@ -95,6 +101,8 @@ func (r *PostgreSQLRepository) GetInway(name, organizationName string) (*inway.I
 		Address          string `db:"address"`
 		NlxVersion       string `db:"nlx_version"`
 		OrganizationName string `db:"organization_name"`
+		CreatedAt        string `db:"created_at"`
+		UpdatedAt        string `db:"updated_at"`
 	}
 
 	result := dbInway{}
@@ -107,7 +115,17 @@ func (r *PostgreSQLRepository) GetInway(name, organizationName string) (*inway.I
 		return nil, fmt.Errorf("failed to get inway (name: %s, organization: %s): %s", name, organizationName, err)
 	}
 
-	model, err := inway.NewInway(result.Name, result.OrganizationName, result.Address, result.NlxVersion)
+	createdAt, err := time.Parse(timeLayout, result.CreatedAt)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse created at timestamp (created at: %s): %s", result.CreatedAt, err)
+	}
+
+	updatedAt, err := time.Parse(timeLayout, result.UpdatedAt)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse updated at timestamp (updated at: %s): %s", result.UpdatedAt, err)
+	}
+
+	model, err := inway.NewInway(result.Name, result.OrganizationName, result.Address, result.NlxVersion, createdAt, updatedAt)
 	if err != nil {
 		return nil, fmt.Errorf("invalid inway model in database: %v", err)
 	}
@@ -219,13 +237,15 @@ func prepareRegisterInwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 						returning id
 		) 
 		insert into directory.inways 
-		    		(name, organization_id, address, version)
-			 select :inway_name, organization.id, :inway_address, nullif(:inway_version, '')
+		    		(name, organization_id, address, version, created_at, updated_at)
+			 select :inway_name, organization.id, :inway_address, nullif(:inway_version, ''), :inway_created_at, :inway_updated_at
 			   from organization
 	   	on conflict (name, organization_id) do update set 
 	      			              name = 	excluded.name,
 	      			              address = excluded.address, 
-								  version = excluded.version;
+								  version = excluded.version,
+								  created_at = excluded.created_at,
+								  updated_at = excluded.updated_at;
 	`
 
 	return db.PrepareNamed(query)

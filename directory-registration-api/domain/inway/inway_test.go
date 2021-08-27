@@ -5,6 +5,7 @@ package inway_test
 
 import (
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 
@@ -18,6 +19,8 @@ func Test_NewInway(t *testing.T) {
 		organizationName string
 		address          string
 		nlxVersion       string
+		createdAt        time.Time
+		updatedAt        time.Time
 	}
 
 	tests := map[string]struct {
@@ -30,6 +33,8 @@ func Test_NewInway(t *testing.T) {
 				organizationName: "organization-name",
 				address:          "address",
 				nlxVersion:       "0.0.0",
+				createdAt:        time.Now(),
+				updatedAt:        time.Now(),
 			},
 			expectedErr: "name: must be in a valid format",
 		},
@@ -39,6 +44,8 @@ func Test_NewInway(t *testing.T) {
 				organizationName: "organization-name",
 				address:          "",
 				nlxVersion:       "0.0.0",
+				createdAt:        time.Now(),
+				updatedAt:        time.Now(),
 			},
 			expectedErr: "address: cannot be blank",
 		},
@@ -48,6 +55,8 @@ func Test_NewInway(t *testing.T) {
 				organizationName: "organization-name",
 				address:          "foo::bar",
 				nlxVersion:       "0.0.0",
+				createdAt:        time.Now(),
+				updatedAt:        time.Now(),
 			},
 			expectedErr: "address: must be a valid dial string",
 		},
@@ -57,6 +66,8 @@ func Test_NewInway(t *testing.T) {
 				organizationName: "organization-name",
 				address:          "address",
 				nlxVersion:       "invalid",
+				createdAt:        time.Now(),
+				updatedAt:        time.Now(),
 			},
 			expectedErr: "nlx version: must be a valid semantic version",
 		},
@@ -66,6 +77,8 @@ func Test_NewInway(t *testing.T) {
 				organizationName: "",
 				address:          "address",
 				nlxVersion:       "0.0.0",
+				createdAt:        time.Now(),
+				updatedAt:        time.Now(),
 			},
 			expectedErr: "organization name: cannot be blank",
 		},
@@ -75,8 +88,32 @@ func Test_NewInway(t *testing.T) {
 				organizationName: "organization-name",
 				address:          "address",
 				nlxVersion:       "0.0.0",
+				createdAt:        time.Now(),
+				updatedAt:        time.Now(),
 			},
 			expectedErr: "",
+		},
+		"created_at_in_future": {
+			inway: inwayParams{
+				name:             "name",
+				organizationName: "organization-name",
+				address:          "address",
+				nlxVersion:       "0.0.0",
+				createdAt:        time.Now().Add(1 * time.Hour),
+				updatedAt:        time.Now(),
+			},
+			expectedErr: "created at: must not be in the future",
+		},
+		"updated_at_in_future": {
+			inway: inwayParams{
+				name:             "name",
+				organizationName: "organization-name",
+				address:          "address",
+				nlxVersion:       "0.0.0",
+				createdAt:        time.Now(),
+				updatedAt:        time.Now().Add(1 * time.Hour),
+			},
+			expectedErr: "updated at: must not be in the future",
 		},
 		"happy_flow": {
 			inway: inwayParams{
@@ -84,6 +121,8 @@ func Test_NewInway(t *testing.T) {
 				organizationName: "organization-name",
 				address:          "address",
 				nlxVersion:       "0.0.0",
+				createdAt:        time.Now(),
+				updatedAt:        time.Now(),
 			},
 			expectedErr: "",
 		},
@@ -98,6 +137,8 @@ func Test_NewInway(t *testing.T) {
 				tt.inway.organizationName,
 				tt.inway.address,
 				tt.inway.nlxVersion,
+				tt.inway.createdAt,
+				tt.inway.updatedAt,
 			)
 
 			if tt.expectedErr != "" {

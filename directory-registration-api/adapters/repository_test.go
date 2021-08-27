@@ -6,9 +6,11 @@
 package adapters_test
 
 import (
-	"go.nlx.io/nlx/directory-registration-api/domain/service"
 	"os"
 	"testing"
+	"time"
+
+	"go.nlx.io/nlx/directory-registration-api/domain/service"
 
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/stretchr/testify/assert"
@@ -36,6 +38,8 @@ func TestRepository(t *testing.T) {
 func testRegisterInway(t *testing.T, repo directory.Repository) {
 	t.Helper()
 
+	now := time.Now()
+
 	tests := map[string]struct {
 		createRegistrations func(*testing.T) []*inway.Inway
 		expectedErr         error
@@ -47,6 +51,8 @@ func testRegisterInway(t *testing.T, repo directory.Repository) {
 					"organization-a",
 					"localhost",
 					inway.NlxVersionUnknown,
+					now,
+					now,
 				)
 				require.NoError(t, err)
 
@@ -61,6 +67,8 @@ func testRegisterInway(t *testing.T, repo directory.Repository) {
 					"organization-b",
 					"localhost",
 					inway.NlxVersionUnknown,
+					now,
+					now,
 				)
 				require.NoError(t, err)
 
@@ -75,6 +83,8 @@ func testRegisterInway(t *testing.T, repo directory.Repository) {
 					"organization-c",
 					"localhost",
 					inway.NlxVersionUnknown,
+					now,
+					now,
 				)
 				require.NoError(t, err)
 
@@ -83,6 +93,8 @@ func testRegisterInway(t *testing.T, repo directory.Repository) {
 					"organization-c",
 					"nlx-inway.io",
 					"0.0.1",
+					now,
+					now,
 				)
 				require.NoError(t, err)
 
@@ -97,6 +109,8 @@ func testRegisterInway(t *testing.T, repo directory.Repository) {
 					"organization-d",
 					"localhost",
 					inway.NlxVersionUnknown,
+					now,
+					now,
 				)
 				require.NoError(t, err)
 
@@ -105,6 +119,8 @@ func testRegisterInway(t *testing.T, repo directory.Repository) {
 					"organization-d",
 					"localhost",
 					inway.NlxVersionUnknown,
+					now,
+					now,
 				)
 				require.NoError(t, err)
 
@@ -170,6 +186,8 @@ func testRegisterService(t *testing.T, repo directory.Repository) {
 	for name, tt := range tests {
 		tt := tt
 
+		now := time.Now()
+
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
@@ -180,6 +198,8 @@ func testRegisterService(t *testing.T, repo directory.Repository) {
 				"organization-d",
 				"my-org.com",
 				inway.NlxVersionUnknown,
+				now,
+				now,
 			)
 			require.NoError(t, err)
 
