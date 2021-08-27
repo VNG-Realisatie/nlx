@@ -1,4 +1,4 @@
-FROM alpine:3.14.1 AS build
+FROM alpine:3.14.2 AS build
 ARG MIGRATE_VERSION="4.14.1"
 ARG MIGATE_CHECKSUM="faaf3c4c96b6a5fb55a1b29888deb473aacbb47a858dafa7e586e1587c968265"
 
@@ -10,7 +10,7 @@ RUN wget -O /tmp/migrate.linux-amd64.tar.gz https://github.com/golang-migrate/mi
     /usr/local/bin/migrate -version
 
 
-FROM alpine:3.14.1
+FROM alpine:3.14.2
 COPY --from=build /usr/local/bin/migrate /usr/local/bin/migrate
 
 RUN apk --no-cache add bash postgresql-client

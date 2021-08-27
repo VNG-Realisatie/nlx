@@ -26,7 +26,7 @@ RUN go build \
         -ldflags="-X 'go.nlx.io/nlx/common/version.BuildSourceHash=$GIT_COMMIT_HASH' -X 'go.nlx.io/nlx/common/version.BuildVersion=$GIT_TAG_NAME' " \
         -o dist/bin/nlxctl ./
 
-FROM alpine:3.14.1
+FROM alpine:3.14.2
 
 RUN apk add --no-cache ca-certificates bash
 

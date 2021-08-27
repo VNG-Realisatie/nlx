@@ -27,7 +27,7 @@ RUN go build \
         -ldflags="-X 'go.nlx.io/nlx/common/version.BuildSourceHash=$GIT_COMMIT_HASH' -X 'go.nlx.io/nlx/common/version.BuildVersion=$GIT_TAG_NAME' " \
         -o  dist/bin/nlx-outway ./cmd/nlx-outway
 
-FROM alpine:3.14.1
+FROM alpine:3.14.2
 COPY --from=build /go/src/go.nlx.io/nlx/outway/dist/bin/nlx-outway /usr/local/bin/nlx-outway
 
 # Make sure /etc/hosts is resolved before DNS

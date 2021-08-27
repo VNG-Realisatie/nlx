@@ -16,7 +16,7 @@ WORKDIR /go/src/go.nlx.io/nlx/auth-service
 RUN go build -o dist/bin/auth-service ./cmd/auth-service
 
 
-FROM alpine:3.14.1
+FROM alpine:3.14.2
 COPY --from=build /go/src/go.nlx.io/nlx/auth-service/dist/bin/auth-service /usr/local/bin/auth-service
 COPY --from=build /go/src/go.nlx.io/nlx/auth-service/users.csv /users.csv
 
