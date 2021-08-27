@@ -5,7 +5,6 @@ WORKDIR /src
 all:
     BUILD +proto
     BUILD +mocks
-    BUILD +migrations
 
 proto:
     BUILD +proto-directory-inspection-api
