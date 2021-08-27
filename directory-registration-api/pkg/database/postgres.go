@@ -13,7 +13,6 @@ import (
 	"go.uber.org/zap"
 
 	common_db "go.nlx.io/nlx/common/db"
-	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/directory-db/dbversion"
 )
 
@@ -27,7 +26,7 @@ type PostgreSQLDirectoryDatabase struct {
 	clearOrganizationInwayStatement *sqlx.Stmt
 }
 
-func NewPostgreSQLDirectoryDatabase(dsn string, p *process.Process, logger *zap.Logger) (DirectoryDatabase, error) {
+func NewPostgreSQLDirectoryDatabase(dsn string, logger *zap.Logger) (DirectoryDatabase, error) {
 	db, err := sqlx.Open("postgres", dsn)
 	if err != nil {
 		return nil, errors.Errorf("could not open connection to postgres: %s", err)
@@ -41,8 +40,6 @@ func NewPostgreSQLDirectoryDatabase(dsn string, p *process.Process, logger *zap.
 	db.SetConnMaxLifetime(FiveMinutes)
 	db.SetMaxIdleConns(MaxIdleConnections)
 	db.MapperFunc(xstrings.ToSnakeCase)
-
-	p.CloseGracefully(db.Close)
 
 	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
 
@@ -68,4 +65,8 @@ func NewPostgreSQLDirectoryDatabase(dsn string, p *process.Process, logger *zap.
 		setOrganizationInwayStatement:   setOrganizationInwayStatement,
 		clearOrganizationInwayStatement: clearOrganizationInwayStatement,
 	}, nil
+}
+
+func (p *PostgreSQLDirectoryDatabase) Shutdown() {
+	p.db.Close()
 }

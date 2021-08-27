@@ -6,10 +6,12 @@ package main
 import (
 	"context"
 	"errors"
-	"fmt"
 	"log"
 	"net"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	"github.com/jessevdk/go-flags"
@@ -22,7 +24,6 @@ import (
 	common_db "go.nlx.io/nlx/common/db"
 	nlxhttp "go.nlx.io/nlx/common/http"
 	"go.nlx.io/nlx/common/logoptions"
-	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/directory-db/dbversion"
@@ -76,14 +77,39 @@ func newZapLogger() *zap.Logger {
 	return logger
 }
 
+func newGRPCServer(certificate *common_tls.CertificateBundle, logger *zap.Logger) *grpc.Server {
+	// setup zap connection for global grpc logging
+	grpc_zap.ReplaceGrpcLogger(logger)
+	// prepare grpc server options
+	serverTLSConfig := certificate.TLSConfig(certificate.WithTLSClientAuth())
+	serverTLSConfig.NextProtos = []string{"h2"}
+
+	opts := []grpc.ServerOption{
+		grpc.Creds(credentials.NewTLS(serverTLSConfig)),
+	}
+
+	// start grpc server and attach directory service
+	return grpc.NewServer(opts...)
+}
+
 func main() {
 	err := parseArgs()
 	if err != nil {
 		return
 	}
 
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	termChan := make(chan os.Signal, 1)
+	signal.Notify(termChan, syscall.SIGTERM)
+
+	defer func() {
+		<-termChan
+		cancel()
+	}()
+
 	logger := newZapLogger()
-	mainProcess := process.NewProcess(logger)
 
 	if errValidate := common_tls.VerifyPrivateKeyPermissions(options.DirectoryKeyFile); errValidate != nil {
 		logger.Warn("invalid directory key permissions", zap.Error(errValidate), zap.String("file-path", options.DirectoryKeyFile))
@@ -96,10 +122,8 @@ func main() {
 
 	db, err := adapters.NewPostgreSQLConnection(options.PostgresDSN)
 	if err != nil {
-		panic(fmt.Sprintf("can not create db connection: %v", err))
+		logger.Fatal("can not create db connection:", zap.Error(err))
 	}
-
-	mainProcess.CloseGracefully(db.Close)
 
 	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
 
@@ -108,7 +132,7 @@ func main() {
 		logger.Fatal("failed to setup postgresql directory database:", zap.Error(err))
 	}
 
-	directoryDatabase, err := database.NewPostgreSQLDirectoryDatabase(options.PostgresDSN, mainProcess, logger)
+	directoryDatabase, err := database.NewPostgreSQLDirectoryDatabase(options.PostgresDSN, logger)
 	if err != nil {
 		logger.Fatal("failed to setup postgresql directory database:", zap.Error(err))
 	}
@@ -122,35 +146,29 @@ func main() {
 		getOrganisationNameFromRequest,
 	)
 
-	// setup zap connection for global grpc logging
-	grpc_zap.ReplaceGrpcLogger(logger)
-	// prepare grpc server options
-	serverTLSConfig := certificate.TLSConfig(certificate.WithTLSClientAuth())
-	serverTLSConfig.NextProtos = []string{"h2"}
-
-	opts := []grpc.ServerOption{
-		grpc.Creds(credentials.NewTLS(serverTLSConfig)),
-	}
-
-	// start grpc server and attach directory service
-	grpcServer := grpc.NewServer(opts...)
+	grpcServer := newGRPCServer(certificate, logger)
 	registrationapi.RegisterDirectoryRegistrationServer(grpcServer, registrationService)
 
 	listen, err := net.Listen("tcp", options.ListenAddress)
 	if err != nil {
-		log.Fatal("failed to create listener", zap.Error(err))
+		logger.Fatal("failed to create listener", zap.Error(err))
 	}
 
-	mainProcess.CloseGracefully(func() error {
+	defer func() {
+		<-ctx.Done()
+
 		grpcServer.GracefulStop()
-		return nil
-	})
+		directoryDatabase.Shutdown()
+		db.Close()
+	}()
 
-	if err := grpcServer.Serve(listen); err != nil {
-		if err != http.ErrServerClosed {
-			log.Fatal("error serving", zap.Error(err))
+	go func() {
+		if err := grpcServer.Serve(listen); err != nil {
+			if err != http.ErrServerClosed {
+				log.Fatal("error serving", zap.Error(err))
+			}
 		}
-	}
+	}()
 }
 
 func getOrganisationNameFromRequest(ctx context.Context) (string, error) {

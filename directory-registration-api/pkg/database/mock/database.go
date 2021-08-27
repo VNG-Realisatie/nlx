@@ -61,3 +61,15 @@ func (mr *MockDirectoryDatabaseMockRecorder) SetOrganizationInway(ctx, organizat
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetOrganizationInway", reflect.TypeOf((*MockDirectoryDatabase)(nil).SetOrganizationInway), ctx, organizationName, inwayAddress)
 }
+
+// Shutdown mocks base method.
+func (m *MockDirectoryDatabase) Shutdown() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Shutdown")
+}
+
+// Shutdown indicates an expected call of Shutdown.
+func (mr *MockDirectoryDatabaseMockRecorder) Shutdown() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Shutdown", reflect.TypeOf((*MockDirectoryDatabase)(nil).Shutdown))
+}
