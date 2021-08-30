@@ -1,4 +1,4 @@
-BEGIN transaction; 
+BEGIN transaction;
 
 CREATE SCHEMA nlx_management;
 
@@ -25,7 +25,7 @@ CREATE TABLE nlx_management.access_requests_incoming (
   updated_at timestamp with time zone NOT NULL,
   CONSTRAINT fk_access_requests_incoming_service
     FOREIGN KEY (service_id)
-    REFERENCES nlx_management.services (service_id) 
+    REFERENCES nlx_management.services (service_id)
     ON DELETE RESTRICT
 );
 
@@ -57,7 +57,7 @@ CREATE TABLE nlx_management.access_requests_outgoing (
   error_cause            VARCHAR(500),
   error_stack_trace      BYTEA,
   lock_id                uuid UNIQUE,
-  lock_expires_at        timestamp with time zone,  
+  lock_expires_at        timestamp with time zone,
   created_at timestamp with time zone NOT NULL,
   updated_at timestamp with time zone NOT NULL
   );
@@ -79,7 +79,7 @@ CREATE TABLE nlx_management.access_proofs (
 CREATE INDEX fk_access_proofs_outgoing_access_request ON nlx_management.access_proofs (access_request_outgoing_id);
 
 
-CREATE TABLE nlx_management.inways ( 
+CREATE TABLE nlx_management.inways (
   inway_id SERIAL PRIMARY KEY,
   name VARCHAR(250) NOT NULL UNIQUE,
   self_address VARCHAR(100) NOT NULL,
