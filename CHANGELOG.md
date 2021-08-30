@@ -1,3 +1,45 @@
+# [0.111.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.110.0...v0.111.0) (2021-08-30)
+
+
+### Bug Fixes
+
+* **directory:** rework E2E test so it works with the new responsive layout ([b12b978](https://gitlab.com/commonground/nlx/nlx/commit/b12b978233ce683b702800fb05abce1a30e770ff))
+* **management:** grammar ([ebbacf9](https://gitlab.com/commonground/nlx/nlx/commit/ebbacf91194638d8b40e98bb67bd4cd966661dd3)), closes [#1181](https://gitlab.com/commonground/nlx/nlx/issues/1181)
+* **management:** prevent redirecting to /orders when closing an order detail view ([ba54688](https://gitlab.com/commonground/nlx/nlx/commit/ba5468884305d7e85d7b4aa595fa7fd5cf19431c)), closes [#1181](https://gitlab.com/commonground/nlx/nlx/issues/1181)
+* **management:** restore content of migration files ([5d3f4b6](https://gitlab.com/commonground/nlx/nlx/commit/5d3f4b672440429983b57d8a6fd015aec015553e)), closes [#1181](https://gitlab.com/commonground/nlx/nlx/issues/1181)
+* **management:** return correct auditlog actiontypes ([8f82265](https://gitlab.com/commonground/nlx/nlx/commit/8f822656a689a60db3d38f7407d772df3dc3e180))
+
+
+### Features
+
+* **directory:** implement environment select component ([75c6dbc](https://gitlab.com/commonground/nlx/nlx/commit/75c6dbc5182c6c986e6e7cb082a8b7ae53f06376))
+* **management:** add detail view for incoming orders ([5ee5fdb](https://gitlab.com/commonground/nlx/nlx/commit/5ee5fdb6eacf8e2e8fd62dcc31c72cca75568245)), closes [#1181](https://gitlab.com/commonground/nlx/nlx/issues/1181)
+* **management:** add order detail drawer for outgoing orders ([5fa382e](https://gitlab.com/commonground/nlx/nlx/commit/5fa382ebbbf75e943d46dbf373f734b9cf60497d))
+* **management:** add status to order drawer ([1bf13d4](https://gitlab.com/commonground/nlx/nlx/commit/1bf13d46542ebf13905c55d6845f2e497bc7c638))
+* **management:** add subtitle to outgoing order drawer ([f3725db](https://gitlab.com/commonground/nlx/nlx/commit/f3725dbe851d3d43e6338396bd1241d6df9ddde7))
+* **management:** convert order services to links ([d101d9c](https://gitlab.com/commonground/nlx/nlx/commit/d101d9cd71c8f85b3bd4bfe5f7168c3466457c0c)), closes [#1181](https://gitlab.com/commonground/nlx/nlx/issues/1181)
+* **management:** display proper error when creating an order with duplicate reference & delegator ([6290c12](https://gitlab.com/commonground/nlx/nlx/commit/6290c129fed71f33473edd83a21efbb23bfa9748)), closes [#1181](https://gitlab.com/commonground/nlx/nlx/issues/1181)
+* **management:** display status icon for outgoing orders ([220b29b](https://gitlab.com/commonground/nlx/nlx/commit/220b29b26058d33b6ce49189bb9af8b557ede9d3)), closes [#1181](https://gitlab.com/commonground/nlx/nlx/issues/1181)
+* **management:** display valid until and from dates for outgoing orders ([6e3a058](https://gitlab.com/commonground/nlx/nlx/commit/6e3a0584e0eb43ed24f55bee6ec2fb4890e17eb0)), closes [#1181](https://gitlab.com/commonground/nlx/nlx/issues/1181)
+* **management:** enable getting an specific outgoing order ([b910e4b](https://gitlab.com/commonground/nlx/nlx/commit/b910e4b2118ce5a739cab02916c3cc02e52c5cdb))
+* **management:** enable revoking outgoing order ([3c0fed7](https://gitlab.com/commonground/nlx/nlx/commit/3c0fed76eac027315903ff15587cb3f5dbfd1cce)), closes [#1181](https://gitlab.com/commonground/nlx/nlx/issues/1181)
+* **management:** enable storing outgoing orders with same reference but different delegatee ([2155b5a](https://gitlab.com/commonground/nlx/nlx/commit/2155b5ad748bfb042682c2a6da7be4cef1564079))
+* **management:** enforce outgoing orders have a unique combination of delegatee and reference ([0175939](https://gitlab.com/commonground/nlx/nlx/commit/0175939e6d42b7fd5358c1e01726221d4cba1b4b)), closes [#1181](https://gitlab.com/commonground/nlx/nlx/issues/1181)
+* **management:** implement incoming order auditlog ([bebe102](https://gitlab.com/commonground/nlx/nlx/commit/bebe1021130d2af077ff1f32ea5514039d03efe2))
+* **management:** implement Order status icon ([45de81d](https://gitlab.com/commonground/nlx/nlx/commit/45de81d1c3dade82f5b27306a03d13993060dd00)), closes [#1181](https://gitlab.com/commonground/nlx/nlx/issues/1181)
+* **management:** make orders in the outgoing orders list clickable ([b9f72aa](https://gitlab.com/commonground/nlx/nlx/commit/b9f72aa11bf3766f8ac7f539a285b88b415ba4b8)), closes [#1181](https://gitlab.com/commonground/nlx/nlx/issues/1181)
+* **management:** remove audit log for updating insight settings ([c5d87a3](https://gitlab.com/commonground/nlx/nlx/commit/c5d87a36dfbb9be2eb0addb3e16ef866d6b26272))
+* **management:** show correct text for order revoke in auditlog ([40c2d26](https://gitlab.com/commonground/nlx/nlx/commit/40c2d268b0faaf45ad9e5109aaf1ce5aa125d05e))
+* **management:** show reference enddate in order drawer ([b8f8aed](https://gitlab.com/commonground/nlx/nlx/commit/b8f8aed8f3c64945dcc55c3656e79f124fae3668))
+* **management:** show reference number for outgoing orders ([bf1e37f](https://gitlab.com/commonground/nlx/nlx/commit/bf1e37f282ca5bdde94f59393fd5faaa27a0209b)), closes [#1181](https://gitlab.com/commonground/nlx/nlx/issues/1181)
+* **management:** show services for outgoing order ([5749cc3](https://gitlab.com/commonground/nlx/nlx/commit/5749cc36b7fb87aadbd400e4df4b547d4b0256aa)), closes [#1181](https://gitlab.com/commonground/nlx/nlx/issues/1181)
+* **management:** update order status when order gets revoked ([7f556aa](https://gitlab.com/commonground/nlx/nlx/commit/7f556aafe3d2dc7b1fac7000389fcc0d9e2f9a92))
+
+
+### Reverts
+
+* **management:** remove functionality to revoke incoming orders ([05b9771](https://gitlab.com/commonground/nlx/nlx/commit/05b9771a8f399a2088771d8dd68b3f229770d3ca)), closes [#1181](https://gitlab.com/commonground/nlx/nlx/issues/1181)
+
 # [0.110.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.109.2...v0.110.0) (2021-08-18)
 
 

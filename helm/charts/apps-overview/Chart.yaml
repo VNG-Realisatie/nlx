@@ -2,5 +2,5 @@ apiVersion: v2
 name: apps-overview
 description: Displays an overview of the pages available within the environment.
 type: application
-version: 0.110.0
-appVersion: 0.110.0
+version: 0.111.0
+appVersion: 0.111.0
