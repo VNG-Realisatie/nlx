@@ -138,11 +138,30 @@ func (db *PostgresConfigDatabase) DeleteService(ctx context.Context, name string
 		return err
 	}
 
+	// TODO: add tests
+	err = dbWithTx.Where(&OutgoingOrderService{
+		Service: name,
+		Organization: db.organizationName,
+	}).Delete(&OutgoingOrderService{}).Error
+	if err != nil {
+		return err
+	}
+
+	err = dbWithTx.Where(&OutgoingAccessRequest{
+		ServiceName: name,
+		OrganizationName: db.organizationName,
+	}).Delete(&OutgoingAccessRequest{}).Error
+	if err != nil {
+		dbWithTx.Rollback()
+		return err
+	}
+
 	err = dbWithTx.DB.
 		WithContext(ctx).
 		Select(clause.Associations).
 		Delete(service).Error
 	if err != nil {
+		dbWithTx.Rollback()
 		return err
 	}
 

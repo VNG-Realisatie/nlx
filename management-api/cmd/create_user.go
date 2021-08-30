@@ -48,7 +48,7 @@ var createUserCommand = &cobra.Command{
 	Use:   "create-user",
 	Short: "Create a single user with one or multiple roles",
 	Run: func(cmd *cobra.Command, args []string) {
-		db, err := database.NewPostgresConfigDatabase(createUserOpts.PostgresDSN)
+		db, err := database.NewPostgresConfigDatabase(createUserOpts.PostgresDSN, "")
 		if err != nil {
 			log.Fatal(err)
 		}

@@ -132,11 +132,6 @@ var serveCommand = &cobra.Command{
 
 		mainProcess := process.NewProcess(logger)
 
-		db, err := database.NewPostgresConfigDatabase(serveOpts.PostgresDSN)
-		if err != nil {
-			log.Fatalf("failed to connect to the database: %v", err)
-		}
-
 		var txlogDB txlogdb.TxlogDatabase
 
 		if len(serveOpts.TransactionLogDSN) > 0 {
@@ -146,16 +141,6 @@ var serveCommand = &cobra.Command{
 			}
 
 			txlogDB = &txlogdb.TxlogPostgresDatabase{DB: db}
-		}
-
-		auditLogger := auditlog.NewPostgresLogger(db, logger)
-
-		var authenticator api.Authenticator
-
-		if serveOpts.EnableBasicAuth {
-			authenticator = basicauth.NewAuthenticator(db, logger)
-		} else {
-			authenticator = oidc.NewAuthenticator(db, auditLogger, logger, &serveOpts.oidcOptions)
 		}
 
 		if errValidate := common_tls.VerifyPrivateKeyPermissions(serveOpts.OrgKeyFile); errValidate != nil {
@@ -174,6 +159,21 @@ var serveCommand = &cobra.Command{
 		orgCert, err := common_tls.NewBundleFromFiles(serveOpts.OrgCertFile, serveOpts.OrgKeyFile, serveOpts.NLXRootCert)
 		if err != nil {
 			logger.Fatal("loading organization cert", zap.Error(err))
+		}
+
+		db, err := database.NewPostgresConfigDatabase(serveOpts.PostgresDSN, orgCert.Certificate().Subject.Organization[0])
+		if err != nil {
+			log.Fatalf("failed to connect to the database: %v", err)
+		}
+
+		auditLogger := auditlog.NewPostgresLogger(db, logger)
+
+		var authenticator api.Authenticator
+
+		if serveOpts.EnableBasicAuth {
+			authenticator = basicauth.NewAuthenticator(db, logger)
+		} else {
+			authenticator = oidc.NewAuthenticator(db, auditLogger, logger, &serveOpts.oidcOptions)
 		}
 
 		a, err := api.NewAPI(
