@@ -101,9 +101,9 @@ func main() {
 	defer cancel()
 
 	termChan := make(chan os.Signal, 1)
-	signal.Notify(termChan, syscall.SIGTERM)
+	signal.Notify(termChan, syscall.SIGTERM, syscall.SIGINT)
 
-	defer func() {
+	go func() {
 		<-termChan
 		cancel()
 	}()
@@ -147,13 +147,6 @@ func main() {
 		logger.Fatal("failed to create listener", zap.Error(err))
 	}
 
-	defer func() {
-		<-ctx.Done()
-
-		grpcServer.GracefulStop()
-		db.Close()
-	}()
-
 	go func() {
 		if err := grpcServer.Serve(listen); err != nil {
 			if err != http.ErrServerClosed {
@@ -161,6 +154,11 @@ func main() {
 			}
 		}
 	}()
+
+	<-ctx.Done()
+
+	grpcServer.GracefulStop()
+	db.Close()
 }
 
 func getOrganisationNameFromRequest(ctx context.Context) (string, error) {
