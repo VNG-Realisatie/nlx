@@ -8,6 +8,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/golang-migrate/migrate/v4"
@@ -19,8 +20,6 @@ import (
 	"go.nlx.io/nlx/directory-registration-api/domain/inway"
 	"go.nlx.io/nlx/directory-registration-api/domain/service"
 )
-
-const timeLayout = time.RFC3339
 
 var (
 	ErrDuplicateAddress     = errors.New("another inway is already registered with this address")
@@ -110,6 +109,8 @@ func (r *PostgreSQLRepository) RegisterInway(model *inway.Inway) error {
 		UpdatedAt:        model.UpdatedAt(),
 	})
 
+	log.Println(model.CreatedAt())
+
 	if err != nil && err.Error() == "pq: duplicate key value violates unique constraint \"inways_uq_address\"" {
 		return ErrDuplicateAddress
 	}
@@ -124,12 +125,12 @@ func (r *PostgreSQLRepository) GetInway(name, organizationName string) (*inway.I
 	}
 
 	type dbInway struct {
-		Name             string `db:"name"`
-		Address          string `db:"address"`
-		NlxVersion       string `db:"nlx_version"`
-		OrganizationName string `db:"organization_name"`
-		CreatedAt        string `db:"created_at"`
-		UpdatedAt        string `db:"updated_at"`
+		Name             string    `db:"name"`
+		Address          string    `db:"address"`
+		NlxVersion       string    `db:"nlx_version"`
+		OrganizationName string    `db:"organization_name"`
+		CreatedAt        time.Time `db:"created_at"`
+		UpdatedAt        time.Time `db:"updated_at"`
 	}
 
 	result := dbInway{}
@@ -142,17 +143,7 @@ func (r *PostgreSQLRepository) GetInway(name, organizationName string) (*inway.I
 		return nil, fmt.Errorf("failed to get inway (name: %s, organization: %s): %s", name, organizationName, err)
 	}
 
-	createdAt, err := time.Parse(timeLayout, result.CreatedAt)
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse created at timestamp (created at: %s): %s", result.CreatedAt, err)
-	}
-
-	updatedAt, err := time.Parse(timeLayout, result.UpdatedAt)
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse updated at timestamp (updated at: %s): %s", result.UpdatedAt, err)
-	}
-
-	model, err := inway.NewInway(result.Name, result.OrganizationName, result.Address, result.NlxVersion, createdAt, updatedAt)
+	model, err := inway.NewInway(result.Name, result.OrganizationName, result.Address, result.NlxVersion, result.CreatedAt, result.UpdatedAt)
 	if err != nil {
 		return nil, fmt.Errorf("invalid inway model in database: %v", err)
 	}
@@ -321,7 +312,6 @@ func prepareRegisterInwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 	      			              name = 	excluded.name,
 	      			              address = excluded.address, 
 								  version = excluded.version,
-								  created_at = excluded.created_at,
 								  updated_at = excluded.updated_at;
 	`
 
@@ -330,7 +320,7 @@ func prepareRegisterInwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 
 func prepareGetInwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 	query := `
-		select directory.inways.name as name, address, version as nlx_version, directory.organizations.name as organization_name 
+		select directory.inways.name as name, address, version as nlx_version, created_at, updated_at, directory.organizations.name as organization_name 
 		from directory.inways
 		join directory.organizations 
 		    on directory.inways.organization_id = directory.organizations.id

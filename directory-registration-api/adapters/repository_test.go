@@ -38,7 +38,10 @@ func TestRepository(t *testing.T) {
 func testRegisterInway(t *testing.T, repo directory.Repository) {
 	t.Helper()
 
-	now := time.Now()
+	now, err := time.Parse(time.RFC3339, time.Now().UTC().Format(time.RFC3339))
+	if err != nil {
+		t.Error(err)
+	}
 
 	tests := map[string]struct {
 		createRegistrations func(*testing.T) []*inway.Inway
@@ -186,7 +189,10 @@ func testRegisterService(t *testing.T, repo directory.Repository) {
 	for name, tt := range tests {
 		tt := tt
 
-		now := time.Now()
+		now, err := time.Parse(time.RFC3339, time.Now().UTC().Format(time.RFC3339))
+		if err != nil {
+			t.Error(err)
+		}
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
