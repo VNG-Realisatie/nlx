@@ -5,7 +5,7 @@ import React from 'react'
 import { observable } from 'mobx'
 import { Route, StaticRouter as Router } from 'react-router-dom'
 import { renderWithProviders } from '../../../test-utils'
-import DirectoryDetailPage from './index'
+import ServiceDetailPage from './index'
 
 jest.mock('./components/DirectoryDetailView', () => () => (
   <div data-testid="directory-service-details" />
@@ -30,7 +30,7 @@ test('display directory service details', () => {
     // Note not they, but the service data is tested
     <Router location="/directory/organization/service">
       <Route path="/directory/:organizationName/:serviceName">
-        <DirectoryDetailPage service={service} />
+        <ServiceDetailPage service={service} />
       </Route>
     </Router>,
   )
@@ -45,7 +45,7 @@ test('service does not exist', () => {
   const { getByTestId, getByText, queryByText } = renderWithProviders(
     <Router location="/directory/organization/service">
       <Route path="/directory/:organizationName/:serviceName">
-        <DirectoryDetailPage service={undefined} />
+        <ServiceDetailPage service={undefined} />
       </Route>
     </Router>,
   )

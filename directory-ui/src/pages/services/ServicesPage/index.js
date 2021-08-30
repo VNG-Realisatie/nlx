@@ -15,10 +15,10 @@ import News from '../../../components/NewsSection'
 import Footer from '../../../components/Footer'
 import DirectoryTable from '../../../components/DirectoryTable'
 import Filters from '../../../components/Filters'
-import DirectoryDetailPage from '../DirectoryDetailPage'
+import DirectoryDetailPage from '../ServiceDetailPage'
 import { mapListServicesAPIResponse } from './map-list-services-api-response'
 
-const ServicesOverviewPage = ({ location, history }) => {
+const ServicesPage = ({ location, history }) => {
   const urlParams = new URLSearchParams(location.search)
   const serviceName = useParams()?.serviceName
 
@@ -134,14 +134,14 @@ const ServicesOverviewPage = ({ location, history }) => {
   )
 }
 
-ServicesOverviewPage.propTypes = {
+ServicesPage.propTypes = {
   location: object,
   history: object,
 }
 
-ServicesOverviewPage.defaultProps = {
+ServicesPage.defaultProps = {
   location: window.location,
   history: window.history,
 }
 
-export default ServicesOverviewPage
+export default ServicesPage

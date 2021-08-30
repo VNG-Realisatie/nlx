@@ -9,7 +9,7 @@ import DirectoryDetailView from './components/DirectoryDetailView'
 import DrawerHeader from './components/DrawerHeader'
 import { StyledDrawer } from './index.styles'
 
-const DirectoryDetailPage = ({ service, parentUrl }) => {
+const ServiceDetailPage = ({ service, parentUrl }) => {
   const history = useHistory()
   const { serviceName } = useParams()
 
@@ -47,7 +47,7 @@ const DirectoryDetailPage = ({ service, parentUrl }) => {
   )
 }
 
-DirectoryDetailPage.propTypes = {
+ServiceDetailPage.propTypes = {
   service: shape({
     apiType: string,
     contactEmailAddress: string,
@@ -62,8 +62,8 @@ DirectoryDetailPage.propTypes = {
   parentUrl: string,
 }
 
-DirectoryDetailPage.defaultProps = {
+ServiceDetailPage.defaultProps = {
   parentUrl: '/directory',
 }
 
-export default DirectoryDetailPage
+export default ServiceDetailPage
