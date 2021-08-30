@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import { arrayOf, number } from 'prop-types'
-import { Flex, Box } from 'reflexbox/styled-components'
+import { Box } from 'reflexbox/styled-components'
 import styled from 'styled-components'
 import { mediaQueries } from '@commonground/design-system'
 
@@ -13,7 +13,7 @@ export const Container = styled.div`
   margin: 0 auto;
 `
 
-export const Row = styled(Flex)`
+export const Row = styled.div`
   flex-wrap: wrap;
   margin: 0 -${(p) => p.theme.tokens.spacing05};
 `
