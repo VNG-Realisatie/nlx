@@ -2,7 +2,6 @@
 // Licensed under the EUPL
 //
 import { arrayOf, number } from 'prop-types'
-import { Box } from 'reflexbox/styled-components'
 import styled from 'styled-components'
 import { mediaQueries } from '@commonground/design-system'
 
@@ -14,11 +13,12 @@ export const Container = styled.div`
 `
 
 export const Row = styled.div`
+  display: flex;
   flex-wrap: wrap;
   margin: 0 -${(p) => p.theme.tokens.spacing05};
 `
 
-export const Col = styled(Box)`
+export const Col = styled.div`
   flex: 0 1 auto;
   padding: 0 ${(p) => p.theme.tokens.spacing05};
 
@@ -26,6 +26,10 @@ export const Col = styled(Box)`
     &:not(:last-child) {
       margin-bottom: ${p.width[0] === 1 ? p.theme.tokens.spacing05 : 0};
     }
+  `}
+
+  ${() => mediaQueries.mdUp`
+    width: 66.6%;
   `}
 `
 

@@ -4,7 +4,6 @@
 import styled from 'styled-components'
 import { mediaQueries } from '@commonground/design-system'
 import BaseSection from '../../components/Section'
-import { Col } from '../Grid'
 
 export const Section = styled(BaseSection)`
   position: relative;
@@ -27,10 +26,14 @@ export const Section = styled(BaseSection)`
   `}
 `
 
-export const ImageCol = styled(Col)`
+export const ImageCol = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  ${mediaQueries.mdUp`
+    width: 33,33%;
+  `}
 `
 
 export const Image = styled.img`

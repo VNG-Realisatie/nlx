@@ -3,8 +3,6 @@
 //
 import { defaultTheme } from '@commonground/design-system'
 
-const breakpoints = defaultTheme.breakpoints
-
 const tokens = {
   ...defaultTheme.tokens,
 
@@ -18,6 +16,7 @@ const tokens = {
 
 const theme = {
   ...defaultTheme,
+
   tokens,
   gradientBlue: 'linear-gradient(135deg, #295372, #163145)',
   colorDarkBlue: '#30709d',
@@ -26,10 +25,6 @@ const theme = {
   listIconSize: '2.5rem',
 
   colorCollapsibleBorder: tokens.colors.colorPaletteGray300,
-
-  breakpoints: Object.values(breakpoints)
-    .splice(1)
-    .map((bp) => `${bp}px`),
 
   // Shared
   colorFocus: '#1EA1D5',
