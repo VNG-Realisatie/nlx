@@ -20,7 +20,7 @@ mocks:
     BUILD +mocks-directory-registration-api
 
 proto-deps:
-    ENV PROTOBUF_VERSION=3.17.2
+    ENV PROTOBUF_VERSION=3.17.3
 
     COPY go.mod go.sum /src/
 
