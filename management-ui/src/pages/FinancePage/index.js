@@ -14,7 +14,7 @@ const FinancePage = () => {
   const financeStore = useFinanceStore()
   const { t } = useTranslation()
 
-  async function download(e) {
+  const download = async (e) => {
     e.preventDefault()
 
     const result = await financeStore.downloadExport()
