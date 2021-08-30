@@ -36,15 +36,3 @@ Col.propTypes = {
 Col.defaultProps = {
   width: [1],
 }
-
-export const CenterCol = styled.div`
-  max-width: 720px;
-  margin: 0 auto;
-  text-align: center;
-
-  ${mediaQueries.smDown`
-    h2 {
-      text-align: center;
-    }
-  `}
-`
