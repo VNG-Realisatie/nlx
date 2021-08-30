@@ -3,7 +3,7 @@
 //
 
 import React, { useEffect, useState } from 'react'
-import debounce from 'debounce'
+import debounce from '@commonground/design-system/dist/utils/debounce'
 import { object } from 'prop-types'
 import { Route, useParams } from 'react-router-dom'
 import Spinner from '../../../components/Spinner'

@@ -6,7 +6,6 @@
     "@commonground/design-system": "18.12.3",
     "@fontsource/source-sans-pro": "4.5.0",
     "copy-text-to-clipboard": "3.0.1",
-    "debounce": "1.2.1",
     "formik": "2.2.9",
     "mobx": "6.3.2",
     "react": "17.0.2",
