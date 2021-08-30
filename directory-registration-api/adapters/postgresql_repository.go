@@ -28,14 +28,15 @@ var (
 )
 
 type PostgreSQLRepository struct {
-	db                         *sqlx.DB
-	registerInwayStmt          *sqlx.NamedStmt
-	getInwayStmt               *sqlx.NamedStmt
-	registerServiceStmt        *sqlx.NamedStmt
-	getServiceStmt             *sqlx.NamedStmt
-	selectInwayByAddressStmt   *sqlx.NamedStmt
-	setOrganizationInwayStmt   *sqlx.NamedStmt
-	clearOrganizationInwayStmt *sqlx.NamedStmt
+	db                                 *sqlx.DB
+	registerInwayStmt                  *sqlx.NamedStmt
+	getInwayStmt                       *sqlx.NamedStmt
+	registerServiceStmt                *sqlx.NamedStmt
+	getServiceStmt                     *sqlx.NamedStmt
+	selectInwayByAddressStmt           *sqlx.NamedStmt
+	setOrganizationInwayStmt           *sqlx.NamedStmt
+	clearOrganizationInwayStmt         *sqlx.NamedStmt
+	selectOrganizationInwayAddressStmt *sqlx.NamedStmt
 }
 
 func NewPostgreSQLRepository(db *sqlx.DB) (*PostgreSQLRepository, error) {
@@ -78,15 +79,21 @@ func NewPostgreSQLRepository(db *sqlx.DB) (*PostgreSQLRepository, error) {
 		return nil, fmt.Errorf("failed to prepare clear organization inway statement: %s", err)
 	}
 
+	selectOrganizationInwayAddressStmt, err := prepareSelectOrganizationInwayAddressStatement(db)
+	if err != nil {
+		return nil, fmt.Errorf("failed to prepare select organization inway address statement: %s", err)
+	}
+
 	return &PostgreSQLRepository{
-		db:                         db,
-		registerInwayStmt:          registerInwayStmt,
-		getInwayStmt:               getInwayStmt,
-		registerServiceStmt:        registerServiceStmt,
-		getServiceStmt:             getServiceStmt,
-		selectInwayByAddressStmt:   selectInwayByAddressStmt,
-		setOrganizationInwayStmt:   setOrganizationInwayStmt,
-		clearOrganizationInwayStmt: clearOrganizationInwayStmt,
+		db:                                 db,
+		registerInwayStmt:                  registerInwayStmt,
+		getInwayStmt:                       getInwayStmt,
+		registerServiceStmt:                registerServiceStmt,
+		getServiceStmt:                     getServiceStmt,
+		selectInwayByAddressStmt:           selectInwayByAddressStmt,
+		setOrganizationInwayStmt:           setOrganizationInwayStmt,
+		clearOrganizationInwayStmt:         clearOrganizationInwayStmt,
+		selectOrganizationInwayAddressStmt: selectOrganizationInwayAddressStmt,
 	}, nil
 }
 
@@ -292,6 +299,25 @@ func (r *PostgreSQLRepository) ClearOrganizationInway(ctx context.Context, organ
 	return nil
 }
 
+func (r *PostgreSQLRepository) GetOrganizationInwayAddress(ctx context.Context, organizationName string) (string, error) {
+	var address sql.NullString
+
+	arg := map[string]interface{}{
+		"organization_name": organizationName,
+	}
+
+	err := r.selectOrganizationInwayAddressStmt.GetContext(ctx, &address, arg)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return "", ErrOrganizationNotFound
+		}
+
+		return "", err
+	}
+
+	return address.String, nil
+}
+
 func prepareRegisterInwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 	query := `
 		with organization as (
@@ -411,6 +437,17 @@ func prepareClearOrganizationInwayStatement(db *sqlx.DB) (*sqlx.NamedStmt, error
 		UPDATE directory.organizations
 		SET inway_id = null
 		WHERE name = :name
+	`
+
+	return db.PrepareNamed(query)
+}
+
+func prepareSelectOrganizationInwayAddressStatement(db *sqlx.DB) (*sqlx.NamedStmt, error) {
+	query := `
+		SELECT i.address
+		FROM directory.organizations o
+		LEFT JOIN directory.inways i ON o.inway_id = i.id
+		WHERE o.name = :organization_name
 	`
 
 	return db.PrepareNamed(query)

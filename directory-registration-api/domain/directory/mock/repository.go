@@ -65,6 +65,21 @@ func (mr *MockRepositoryMockRecorder) GetInway(name, organization interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInway", reflect.TypeOf((*MockRepository)(nil).GetInway), name, organization)
 }
 
+// GetOrganizationInwayAddress mocks base method.
+func (m *MockRepository) GetOrganizationInwayAddress(ctx context.Context, organizationName string) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOrganizationInwayAddress", ctx, organizationName)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrganizationInwayAddress indicates an expected call of GetOrganizationInwayAddress.
+func (mr *MockRepositoryMockRecorder) GetOrganizationInwayAddress(ctx, organizationName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationInwayAddress", reflect.TypeOf((*MockRepository)(nil).GetOrganizationInwayAddress), ctx, organizationName)
+}
+
 // GetService mocks base method.
 func (m *MockRepository) GetService(id uint) (*service.Service, error) {
 	m.ctrl.T.Helper()

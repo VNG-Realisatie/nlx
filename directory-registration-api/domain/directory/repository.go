@@ -19,4 +19,5 @@ type Repository interface {
 
 	SetOrganizationInway(ctx context.Context, organizationName, inwayAddress string) error
 	ClearOrganizationInway(ctx context.Context, organizationName string) error
+	GetOrganizationInwayAddress(ctx context.Context, organizationName string) (string, error)
 }
