@@ -5,7 +5,7 @@
 import React from 'react'
 import { string } from 'prop-types'
 import { RedocStandalone } from 'redoc'
-import theme from '../../styling/theme'
+import theme from '../../theme'
 
 const Documentation = ({ organizationName, serviceName }) => {
   const urlSafeOrganization = encodeURIComponent(organizationName)

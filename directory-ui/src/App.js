@@ -9,7 +9,7 @@ import VersionLogger from './components/VersionLogger'
 import Header from './components/Header'
 import ServiceOverviewPage from './pages/ServicesOverviewPage'
 import DocumentationPage from './pages/DocumentationPage'
-import theme from './styling/theme'
+import theme from './theme'
 import '@fontsource/source-sans-pro/latin.css'
 import './styling/styles.css'
 

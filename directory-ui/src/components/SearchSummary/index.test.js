@@ -4,7 +4,7 @@
 import React from 'react'
 import { ThemeProvider } from 'styled-components'
 import { renderWithProviders } from '../../test-utils'
-import theme from '../../styling/theme'
+import theme from '../../theme'
 import SearchSummary from './index'
 
 test('shows correct copy for number of services', () => {

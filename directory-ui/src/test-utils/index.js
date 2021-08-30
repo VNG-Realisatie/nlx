@@ -5,7 +5,7 @@ import React from 'react'
 import { node } from 'prop-types'
 import { render } from '@testing-library/react'
 import { ThemeProvider } from 'styled-components'
-import theme from '../styling/theme'
+import theme from '../theme'
 
 // based on https://testing-library.com/docs/react-testing-library/setup#custom-render
 const AllTheProviders = ({ children }) => (
