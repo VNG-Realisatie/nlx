@@ -9,6 +9,7 @@ import { Col } from '../Grid'
 export const Section = styled(BaseSection)`
   position: relative;
   background-image: url('news-bg-small.svg');
+  z-index: -1;
 
   ${mediaQueries.xs`
     padding-top: 7rem;

@@ -11,7 +11,6 @@ import ServiceOverviewPage from './pages/ServicesOverviewPage'
 import DocumentationPage from './pages/DocumentationPage'
 import theme from './theme'
 import '@fontsource/source-sans-pro/latin.css'
-import './styling/styles.css'
 
 const App = () => (
   <>

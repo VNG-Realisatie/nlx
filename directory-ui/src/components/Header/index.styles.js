@@ -23,6 +23,5 @@ export const StyledNLXLogo = styled(NLXLogo)`
 
 export const NavigationWrapper = styled.div`
   position: relative;
-  z-index: 10;
   background-color: ${(p) => p.theme.tokens.colorBrand1};
 `
