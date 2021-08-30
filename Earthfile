@@ -218,6 +218,3 @@ mocks-directory-registration-api:
 
     RUN mockgen -source domain/directory/repository.go -package=directory_mock -destination /dist/domain/directory/mock/repository.go
     SAVE ARTIFACT /dist/domain/directory/mock/repository.go AS LOCAL ./directory-registration-api/domain/directory/mock/repository.go
-
-    RUN mockgen -source pkg/database/database.go -package=mock -destination /dist/pkg/database/mock/database.go
-    SAVE ARTIFACT /dist/pkg/database/mock/database.go AS LOCAL ./directory-registration-api/pkg/database/mock/database.go

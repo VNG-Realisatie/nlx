@@ -5,6 +5,7 @@
 package directory_mock
 
 import (
+	context "context"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -33,6 +34,20 @@ func NewMockRepository(ctrl *gomock.Controller) *MockRepository {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder {
 	return m.recorder
+}
+
+// ClearOrganizationInway mocks base method.
+func (m *MockRepository) ClearOrganizationInway(ctx context.Context, organizationName string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ClearOrganizationInway", ctx, organizationName)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ClearOrganizationInway indicates an expected call of ClearOrganizationInway.
+func (mr *MockRepositoryMockRecorder) ClearOrganizationInway(ctx, organizationName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClearOrganizationInway", reflect.TypeOf((*MockRepository)(nil).ClearOrganizationInway), ctx, organizationName)
 }
 
 // GetInway mocks base method.
@@ -91,4 +106,18 @@ func (m *MockRepository) RegisterService(arg0 *service.Service) error {
 func (mr *MockRepositoryMockRecorder) RegisterService(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterService", reflect.TypeOf((*MockRepository)(nil).RegisterService), arg0)
+}
+
+// SetOrganizationInway mocks base method.
+func (m *MockRepository) SetOrganizationInway(ctx context.Context, organizationName, inwayAddress string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetOrganizationInway", ctx, organizationName, inwayAddress)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SetOrganizationInway indicates an expected call of SetOrganizationInway.
+func (mr *MockRepositoryMockRecorder) SetOrganizationInway(ctx, organizationName, inwayAddress interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetOrganizationInway", reflect.TypeOf((*MockRepository)(nil).SetOrganizationInway), ctx, organizationName, inwayAddress)
 }

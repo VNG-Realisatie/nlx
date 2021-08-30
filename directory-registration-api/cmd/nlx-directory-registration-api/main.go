@@ -28,7 +28,6 @@ import (
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/directory-db/dbversion"
 	"go.nlx.io/nlx/directory-registration-api/adapters"
-	"go.nlx.io/nlx/directory-registration-api/pkg/database"
 	"go.nlx.io/nlx/directory-registration-api/pkg/registrationservice"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
@@ -132,15 +131,9 @@ func main() {
 		logger.Fatal("failed to setup postgresql directory database:", zap.Error(err))
 	}
 
-	directoryDatabase, err := database.NewPostgreSQLDirectoryDatabase(options.PostgresDSN, logger)
-	if err != nil {
-		logger.Fatal("failed to setup postgresql directory database:", zap.Error(err))
-	}
-
 	httpClient := nlxhttp.NewHTTPClient(certificate)
 	registrationService := registrationservice.New(
 		logger,
-		directoryDatabase,
 		inwayRepository,
 		httpClient,
 		getOrganisationNameFromRequest,
@@ -158,7 +151,6 @@ func main() {
 		<-ctx.Done()
 
 		grpcServer.GracefulStop()
-		directoryDatabase.Shutdown()
 		db.Close()
 	}()
 

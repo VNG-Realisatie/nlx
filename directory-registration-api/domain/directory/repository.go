@@ -4,6 +4,8 @@
 package directory
 
 import (
+	"context"
+
 	"go.nlx.io/nlx/directory-registration-api/domain/inway"
 	"go.nlx.io/nlx/directory-registration-api/domain/service"
 )
@@ -14,4 +16,7 @@ type Repository interface {
 
 	RegisterService(*service.Service) error
 	GetService(id uint) (*service.Service, error)
+
+	SetOrganizationInway(ctx context.Context, organizationName, inwayAddress string) error
+	ClearOrganizationInway(ctx context.Context, organizationName string) error
 }

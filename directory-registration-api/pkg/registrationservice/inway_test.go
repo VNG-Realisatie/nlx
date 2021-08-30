@@ -16,7 +16,6 @@ import (
 	"google.golang.org/grpc/status"
 
 	directory_mock "go.nlx.io/nlx/directory-registration-api/domain/directory/mock"
-	"go.nlx.io/nlx/directory-registration-api/pkg/database/mock"
 	"go.nlx.io/nlx/directory-registration-api/pkg/registrationservice"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
@@ -137,8 +136,7 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 }
 
 type serviceMocks struct {
-	db *mock.MockDirectoryDatabase
-	r  *directory_mock.MockRepository
+	r *directory_mock.MockRepository
 }
 
 func newService(t *testing.T) (*registrationservice.DirectoryRegistrationService, serviceMocks) {
@@ -150,13 +148,11 @@ func newService(t *testing.T) (*registrationservice.DirectoryRegistrationService
 	})
 
 	mocks := serviceMocks{
-		db: mock.NewMockDirectoryDatabase(ctrl),
-		r:  directory_mock.NewMockRepository(ctrl),
+		r: directory_mock.NewMockRepository(ctrl),
 	}
 
 	service := registrationservice.New(
 		zap.NewNop(),
-		mocks.db,
 		mocks.r,
 		nil,
 		testGetOrganizationNameFromRequest,

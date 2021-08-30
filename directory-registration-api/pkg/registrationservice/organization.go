@@ -13,7 +13,7 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	"go.nlx.io/nlx/directory-registration-api/pkg/database"
+	"go.nlx.io/nlx/directory-registration-api/adapters"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
 
@@ -36,9 +36,9 @@ func (h *DirectoryRegistrationService) SetOrganizationInway(ctx context.Context,
 		return nil, status.New(codes.InvalidArgument, "address is empty").Err()
 	}
 
-	err = h.db.SetOrganizationInway(ctx, organizationName, req.Address)
+	err = h.repository.SetOrganizationInway(ctx, organizationName, req.Address)
 	if err != nil {
-		if errors.Is(err, database.ErrNoInwayWithAddress) {
+		if errors.Is(err, adapters.ErrNoInwayWithAddress) {
 			return nil, status.New(codes.NotFound, "inway with address not found").Err()
 		}
 
@@ -58,9 +58,9 @@ func (h *DirectoryRegistrationService) ClearOrganizationInway(ctx context.Contex
 		return nil, status.Error(codes.Unknown, "determine organization name")
 	}
 
-	err = h.db.ClearOrganizationInway(ctx, organizationName)
+	err = h.repository.ClearOrganizationInway(ctx, organizationName)
 	if err != nil {
-		if errors.Is(err, database.ErrOrganizationNotFound) {
+		if errors.Is(err, adapters.ErrOrganizationNotFound) {
 			return &emptypb.Empty{}, nil
 		}
 

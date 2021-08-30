@@ -4,6 +4,8 @@
 package adapters
 
 import (
+	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 	"time"
@@ -20,14 +22,21 @@ import (
 
 const timeLayout = time.RFC3339
 
-var ErrDuplicateAddress = errors.New("another inway is already registered with this address")
+var (
+	ErrDuplicateAddress     = errors.New("another inway is already registered with this address")
+	ErrNoInwayWithAddress   = errors.New("no inway found for address")
+	ErrOrganizationNotFound = errors.New("no organization found")
+)
 
 type PostgreSQLRepository struct {
-	db                  *sqlx.DB
-	registerInwayStmt   *sqlx.NamedStmt
-	getInwayStmt        *sqlx.NamedStmt
-	registerServiceStmt *sqlx.NamedStmt
-	getServiceStmt      *sqlx.NamedStmt
+	db                         *sqlx.DB
+	registerInwayStmt          *sqlx.NamedStmt
+	getInwayStmt               *sqlx.NamedStmt
+	registerServiceStmt        *sqlx.NamedStmt
+	getServiceStmt             *sqlx.NamedStmt
+	selectInwayByAddressStmt   *sqlx.NamedStmt
+	setOrganizationInwayStmt   *sqlx.NamedStmt
+	clearOrganizationInwayStmt *sqlx.NamedStmt
 }
 
 func NewPostgreSQLRepository(db *sqlx.DB) (*PostgreSQLRepository, error) {
@@ -55,12 +64,30 @@ func NewPostgreSQLRepository(db *sqlx.DB) (*PostgreSQLRepository, error) {
 		return nil, fmt.Errorf("failed to prepare get service statement: %s", err)
 	}
 
+	selectInwayByAddressStmt, err := prepareSelectInwayByAddressStatement(db)
+	if err != nil {
+		return nil, fmt.Errorf("failed to prepare select inway by address statement: %s", err)
+	}
+
+	setOrganizationInwayStmt, err := prepareSetOrganizationInwayStatement(db)
+	if err != nil {
+		return nil, fmt.Errorf("failed to prepare set organization inway statement: %s", err)
+	}
+
+	clearOrganizationInwayStmt, err := prepareClearOrganizationInwayStatement(db)
+	if err != nil {
+		return nil, fmt.Errorf("failed to prepare clear organization inway statement: %s", err)
+	}
+
 	return &PostgreSQLRepository{
-		db:                  db,
-		registerInwayStmt:   registerInwayStmt,
-		getInwayStmt:        getInwayStmt,
-		registerServiceStmt: registerServiceStmt,
-		getServiceStmt:      getServiceStmt,
+		db:                         db,
+		registerInwayStmt:          registerInwayStmt,
+		getInwayStmt:               getInwayStmt,
+		registerServiceStmt:        registerServiceStmt,
+		getServiceStmt:             getServiceStmt,
+		selectInwayByAddressStmt:   selectInwayByAddressStmt,
+		setOrganizationInwayStmt:   setOrganizationInwayStmt,
+		clearOrganizationInwayStmt: clearOrganizationInwayStmt,
 	}, nil
 }
 
@@ -224,6 +251,56 @@ func (r *PostgreSQLRepository) GetService(id uint) (*service.Service, error) {
 	return model, nil
 }
 
+func (r *PostgreSQLRepository) SetOrganizationInway(ctx context.Context, organizationName, inwayAddress string) error {
+	arg := map[string]interface{}{
+		"inway_address":     inwayAddress,
+		"organization_name": organizationName,
+	}
+
+	var ioID struct {
+		InwayID        int
+		OrganizationID int
+	}
+
+	err := r.selectInwayByAddressStmt.GetContext(ctx, &ioID, arg)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return ErrNoInwayWithAddress
+		}
+
+		return err
+	}
+
+	_, err = r.setOrganizationInwayStmt.ExecContext(ctx, ioID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *PostgreSQLRepository) ClearOrganizationInway(ctx context.Context, organizationName string) error {
+	arg := map[string]interface{}{
+		"name": organizationName,
+	}
+
+	row, err := r.clearOrganizationInwayStmt.ExecContext(ctx, arg)
+	if err != nil {
+		return err
+	}
+
+	n, err := row.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if n != 1 {
+		return ErrOrganizationNotFound
+	}
+
+	return nil
+}
+
 func prepareRegisterInwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 	query := `
 		with organization as (
@@ -312,6 +389,38 @@ func prepareGetServiceStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 		    on directory.services.organization_id = directory.organizations.id
 		where 
 		      directory.services.id = :id;
+	`
+
+	return db.PrepareNamed(query)
+}
+
+func prepareSelectInwayByAddressStatement(db *sqlx.DB) (*sqlx.NamedStmt, error) {
+	query := `
+		SELECT i.id AS inway_id, i.organization_id
+		FROM directory.inways i
+		INNER JOIN directory.organizations o ON o.id = i.organization_id
+		WHERE i.address = :inway_address
+		AND o.name = :organization_name
+	`
+
+	return db.PrepareNamed(query)
+}
+
+func prepareSetOrganizationInwayStatement(db *sqlx.DB) (*sqlx.NamedStmt, error) {
+	query := `
+		UPDATE directory.organizations
+		SET inway_id = :inway_id
+		WHERE id = :organization_id
+	`
+
+	return db.PrepareNamed(query)
+}
+
+func prepareClearOrganizationInwayStatement(db *sqlx.DB) (*sqlx.NamedStmt, error) {
+	query := `
+		UPDATE directory.organizations
+		SET inway_id = null
+		WHERE name = :name
 	`
 
 	return db.PrepareNamed(query)
