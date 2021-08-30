@@ -7,7 +7,7 @@ import { PrimaryNavigation } from '@commonground/design-system'
 import { useLocation } from 'react-router-dom'
 import { IconHome } from '../../icons'
 import { Container } from '../Grid'
-import NavLink from '../nav-link'
+import NavLink from '../NavLink'
 
 import {
   StyledIcon,
