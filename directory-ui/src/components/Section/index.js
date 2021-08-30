@@ -5,9 +5,9 @@ import { bool } from 'prop-types'
 import styled, { css } from 'styled-components'
 import { mediaQueries } from '@commonground/design-system'
 
-export const getColor = (p, invert = false) => {
-  const colors = [p.theme.tokens.colorBackground, p.theme.colorAlternateSection]
-  return colors[(p.alternate + invert) % 2]
+const getColor = (p) => {
+  const colors = [p.theme.tokens.colorBackground, '#f1f1f1']
+  return colors[p.alternate % 2]
 }
 
 const arrow = css`

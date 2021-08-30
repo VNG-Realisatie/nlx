@@ -26,10 +26,10 @@ export const Input = styled.input`
 
     &:checked + label {
       &:before {
-        background-color: ${({ theme }) => theme.colorDarkBlue};
+        background-color: #30709d;
       }
       &:after {
-        border-color: ${({ theme }) => theme.colorDarkBlue};
+        border-color: #30709d;
         transform: translateX(14px);
       }
     }
