@@ -62,6 +62,7 @@ func testRegisterInway(t *testing.T, repo directory.Repository) {
 	tests := map[string]struct {
 		createRegistrations func(*testing.T) []*inway.Inway
 		expectedErr         error
+		expectedInway       *inway.Inway
 	}{
 		"new_inway": {
 			createRegistrations: func(t *testing.T) []*inway.Inway {
@@ -77,6 +78,19 @@ func testRegisterInway(t *testing.T, repo directory.Repository) {
 
 				return []*inway.Inway{iw}
 			},
+			expectedInway: func() *inway.Inway {
+				iw, err := inway.NewInway(
+					"my-new-inway",
+					"organization-a",
+					"localhost",
+					inway.NlxVersionUnknown,
+					now,
+					now,
+				)
+				require.NoError(t, err)
+
+				return iw
+			}(),
 			expectedErr: nil,
 		},
 		"inway_without_name": {
@@ -93,6 +107,19 @@ func testRegisterInway(t *testing.T, repo directory.Repository) {
 
 				return []*inway.Inway{iw}
 			},
+			expectedInway: func() *inway.Inway {
+				iw, err := inway.NewInway(
+					"",
+					"organization-b",
+					"localhost",
+					inway.NlxVersionUnknown,
+					now,
+					now,
+				)
+				require.NoError(t, err)
+
+				return iw
+			}(),
 			expectedErr: nil,
 		},
 		"existing_inway_for_same_organization": {
@@ -119,6 +146,19 @@ func testRegisterInway(t *testing.T, repo directory.Repository) {
 
 				return []*inway.Inway{first, second}
 			},
+			expectedInway: func() *inway.Inway {
+				iw, err := inway.NewInway(
+					"my-inway",
+					"organization-c",
+					"nlx-inway.io",
+					"0.0.1",
+					now,
+					now,
+				)
+				require.NoError(t, err)
+
+				return iw
+			}(),
 			expectedErr: nil,
 		},
 		"inways_with_different_name_but_same_address": {
@@ -145,7 +185,8 @@ func testRegisterInway(t *testing.T, repo directory.Repository) {
 
 				return []*inway.Inway{first, second}
 			},
-			expectedErr: adapters.ErrDuplicateAddress,
+			expectedInway: nil,
+			expectedErr:   adapters.ErrDuplicateAddress,
 		},
 	}
 
@@ -166,8 +207,7 @@ func testRegisterInway(t *testing.T, repo directory.Repository) {
 			require.Equal(t, tt.expectedErr, lastErr)
 
 			if tt.expectedErr == nil {
-				lastRegistration := inways[len(inways)-1]
-				assertInwayInRepository(t, repo, lastRegistration)
+				assertInwayInRepository(t, repo, tt.expectedInway)
 			}
 		})
 	}
