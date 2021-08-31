@@ -277,7 +277,7 @@ func testSetOrganizationInway(t *testing.T, repo directory.Repository) {
 			},
 			input: inputParams{
 				organizationName: "organization-e",
-				inwayAddress:     "doesn-exist.com",
+				inwayAddress:     "does-not-exist.com",
 			},
 			expectedErr: adapters.ErrNoInwayWithAddress,
 		},
