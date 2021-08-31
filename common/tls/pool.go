@@ -20,7 +20,7 @@ func NewCertPoolFromFile(file string) (*x509.CertPool, *x509.Certificate, error)
 }
 
 func NewCertPool(pem []byte) (*x509.CertPool, *x509.Certificate, error) {
-	c, err := parseCertificate(pem)
+	c, err := ParseCertificate(pem)
 	if err != nil {
 		return nil, nil, err
 	}

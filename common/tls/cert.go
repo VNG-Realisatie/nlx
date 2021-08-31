@@ -157,17 +157,31 @@ func NewBundle(certPEM, keyPEM, rootCertPEM []byte) (*CertificateBundle, error) 
 	bundle := &CertificateBundle{
 		rootCAs:              rootCAs,
 		keyPair:              &keyPair,
-		publicKeyFingerprint: PublicKeyFingerprint(keyPair.Leaf),
+		publicKeyFingerprint: X509PublicKeyFingerprint(keyPair.Leaf),
 	}
 
 	return bundle, nil
 }
 
-// PublicKeyFingerprint generates the base64 encoded fingerprint of the Subject Public Key Information (SPKI)
-func PublicKeyFingerprint(certificate *x509.Certificate) string {
-	sum := sha256.Sum256(certificate.RawSubjectPublicKeyInfo)
-
+// createFingerprint creates a base64-ed sha256 fingerprint for a []byte
+func createFingerprint(bytes []byte) string {
+	sum := sha256.Sum256(bytes)
 	return base64.StdEncoding.EncodeToString(sum[:])
+}
+
+// X509PublicKeyFingerprint generates the base64 encoded fingerprint of the Subject PemPublicKeyFingerprint Key Information (SPKI)
+func X509PublicKeyFingerprint(certificate *x509.Certificate) string {
+	return createFingerprint(certificate.RawSubjectPublicKeyInfo)
+}
+
+// PemPublicKeyFingerprint generates the base64 encoded fingerprint of the Subject PemPublicKeyFingerprint Key Information (SPKI)
+func PemPublicKeyFingerprint(pemBytes []byte) (string, error) {
+	block, _ := pem.Decode(pemBytes)
+	if block == nil {
+		return "", fmt.Errorf("unable to decode pem for certificate")
+	}
+
+	return createFingerprint(block.Bytes), nil
 }
 
 // NewConfig returns a new tls.Config with sane defaults
@@ -184,7 +198,7 @@ func NewConfig(options ...ConfigOption) *tls.Config {
 	return config
 }
 
-func parseCertificate(certPEM []byte) (*x509.Certificate, error) {
+func ParseCertificate(certPEM []byte) (*x509.Certificate, error) {
 	block, _ := pem.Decode(certPEM)
 	if block == nil {
 		return nil, fmt.Errorf("unable to decode pem for certificate")

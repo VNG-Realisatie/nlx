@@ -134,7 +134,7 @@ func (p *Proxy) streamInterceptor(srv interface{}, serverStream grpc.ServerStrea
 		peerAddr:             pr.Addr.String(),
 		organizationName:     peerCert.Subject.Organization[0],
 		publicKeyDER:         base64.StdEncoding.EncodeToString(publicKeyDER),
-		publicKeyFingerprint: tls.PublicKeyFingerprint(peerCert),
+		publicKeyFingerprint: tls.X509PublicKeyFingerprint(peerCert),
 	}
 
 	w := &wrappedServerStream{serverStream, setStreamInfo(ctx, streamInfo)}

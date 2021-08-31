@@ -5,9 +5,6 @@ package server
 
 import (
 	"context"
-	"crypto/sha256"
-	"encoding/base64"
-	"encoding/pem"
 	"errors"
 	"time"
 
@@ -17,6 +14,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/delegation"
+	"go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
@@ -49,15 +47,11 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 		return nil, status.Errorf(codes.NotFound, "order with reference %s and organization %s not found", req.OrderReference, md.OrganizationName)
 	}
 
-	block, _ := pem.Decode([]byte(order.PublicKeyPEM))
-	if block == nil {
+	fingerprint, err := tls.PemPublicKeyFingerprint([]byte(order.PublicKeyPEM))
+	if err != nil {
 		s.logger.Error("invalid public key format", zap.Error(err))
-
 		return nil, status.Error(codes.Internal, "invalid public key format")
 	}
-
-	sum := sha256.Sum256(block.Bytes)
-	fingerprint := base64.StdEncoding.EncodeToString(sum[:])
 
 	if fingerprint != md.PublicKeyFingerprint {
 		return nil, status.Errorf(codes.Unauthenticated, "invalid public key for order")

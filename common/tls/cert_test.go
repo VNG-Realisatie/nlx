@@ -175,3 +175,22 @@ func TestVerifyPrivateKeyPermissions(t *testing.T) {
 		})
 	}
 }
+
+func TestPemPublicKeyFingerprint(t *testing.T) {
+	// copied from `/management-api/pkg/server/claim_test.go`
+	testPublicKeyPEM := `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArN5xGkM73tJsCpKny59e
+5lXNRY+eT0sbWyEGsR1qIPRKmLSiRHl3xMsovn5mo6jN3eeK/Q4wKd6Ae5XGzP63
+pTG6U5KVVB74eQxSFfV3UEOrDaJ78X5mBZO+Ku21V2QFr44tvMh5IZDX3RbMB/4K
+ad6sapmSF00HWrqTVMkrEsZ98DTb5nwGLh3kISnct4tLyVSpsl9s1rtkSgGUcs1T
+IvWxS2D2mOsSL1HRdUNcFQmzchbfG87kXPvicoOISAZDJKDqWp3iuH0gJpQ+XMBf
+mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
+4wIDAQAB
+-----END PUBLIC KEY-----
+`
+	expectedPublicKeyFingerprint := "60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4="
+
+	fingerprint, err := common_tls.PemPublicKeyFingerprint([]byte(testPublicKeyPEM))
+	assert.NoError(t, err)
+	assert.Equal(t, expectedPublicKeyFingerprint, fingerprint)
+}

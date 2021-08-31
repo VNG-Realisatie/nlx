@@ -13,6 +13,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/delegation"
@@ -63,6 +64,30 @@ func TestRequestClaim(t *testing.T) {
 			},
 			wantCode:       codes.Internal,
 			wantErrMessage: "invalid public key format",
+		},
+		"when_public_key_fingerprint_does_not_equal_metadata_fingerprint": {
+			request: &external.RequestClaimRequest{
+				OrderReference: "arbitrary-order-reference",
+			},
+			ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs( // data from setProxyMetadata()
+				"nlx-organization", "organization-a",
+				"nlx-public-key-der", "ZHVtbXktcHVibGljLWtleQo=",
+				"nlx-public-key-fingerprint", "invalid=",
+			)),
+			setup: func(orgCerts *common_tls.CertificateBundle, mocks serviceMocks) {
+				publicKeyPEM, _ := orgCerts.PublicKeyPEM()
+
+				mocks.db.
+					EXPECT().
+					GetOutgoingOrderByReference(gomock.Any(), "arbitrary-order-reference").
+					Return(&database.OutgoingOrder{
+						Delegatee:    "organization-a",
+						PublicKeyPEM: publicKeyPEM,
+						ValidUntil:   now.Add(4 * time.Hour),
+					}, nil)
+			},
+			wantCode:       codes.Unauthenticated,
+			wantErrMessage: "invalid public key for order",
 		},
 		"when_order_is revoked": {
 			request: &external.RequestClaimRequest{
