@@ -8,6 +8,7 @@ package adapters_test
 import (
 	"context"
 	"os"
+	"regexp"
 	"testing"
 	"time"
 
@@ -51,6 +52,22 @@ func TestRepository(t *testing.T) {
 	})
 }
 
+var alphanumericRegex = regexp.MustCompile("[^a-zA-Z0-9]+")
+
+func alphanum(input string, maxLen int) string {
+	result := alphanumericRegex.ReplaceAllString(input, "")
+
+	if len(result) > maxLen {
+		return result[0:maxLen]
+	} else {
+		return result
+	}
+}
+
+func uniqueOrganizationName(t *testing.T) string {
+	return alphanum(t.Name(), 100)
+}
+
 func testRegisterInway(t *testing.T, repo directory.Repository) {
 	t.Helper()
 
@@ -62,13 +79,13 @@ func testRegisterInway(t *testing.T, repo directory.Repository) {
 	tests := map[string]struct {
 		createRegistrations func(*testing.T) []*inway.Inway
 		expectedErr         error
-		expectedInway       *inway.Inway
+		expectedInway       func(*testing.T) *inway.Inway
 	}{
 		"new_inway": {
 			createRegistrations: func(t *testing.T) []*inway.Inway {
 				iw, err := inway.NewInway(
-					"my-new-inway",
-					"organization-a",
+					"my-inway-name",
+					uniqueOrganizationName(t),
 					"localhost",
 					inway.NlxVersionUnknown,
 					now,
@@ -78,10 +95,10 @@ func testRegisterInway(t *testing.T, repo directory.Repository) {
 
 				return []*inway.Inway{iw}
 			},
-			expectedInway: func() *inway.Inway {
+			expectedInway: func(t *testing.T) *inway.Inway {
 				iw, err := inway.NewInway(
-					"my-new-inway",
-					"organization-a",
+					"my-inway-name",
+					uniqueOrganizationName(t),
 					"localhost",
 					inway.NlxVersionUnknown,
 					now,
@@ -90,14 +107,14 @@ func testRegisterInway(t *testing.T, repo directory.Repository) {
 				require.NoError(t, err)
 
 				return iw
-			}(),
+			},
 			expectedErr: nil,
 		},
 		"inway_without_name": {
 			createRegistrations: func(t *testing.T) []*inway.Inway {
 				iw, err := inway.NewInway(
 					"",
-					"organization-b",
+					uniqueOrganizationName(t),
 					"localhost",
 					inway.NlxVersionUnknown,
 					now,
@@ -107,10 +124,10 @@ func testRegisterInway(t *testing.T, repo directory.Repository) {
 
 				return []*inway.Inway{iw}
 			},
-			expectedInway: func() *inway.Inway {
+			expectedInway: func(t *testing.T) *inway.Inway {
 				iw, err := inway.NewInway(
 					"",
-					"organization-b",
+					uniqueOrganizationName(t),
 					"localhost",
 					inway.NlxVersionUnknown,
 					now,
@@ -119,14 +136,14 @@ func testRegisterInway(t *testing.T, repo directory.Repository) {
 				require.NoError(t, err)
 
 				return iw
-			}(),
+			},
 			expectedErr: nil,
 		},
 		"existing_inway_for_same_organization": {
 			createRegistrations: func(t *testing.T) []*inway.Inway {
 				first, err := inway.NewInway(
 					"my-inway",
-					"organization-c",
+					uniqueOrganizationName(t),
 					"localhost",
 					inway.NlxVersionUnknown,
 					now,
@@ -136,7 +153,7 @@ func testRegisterInway(t *testing.T, repo directory.Repository) {
 
 				second, err := inway.NewInway(
 					"my-inway",
-					"organization-c",
+					uniqueOrganizationName(t),
 					"nlx-inway.io",
 					"0.0.1",
 					now,
@@ -146,10 +163,10 @@ func testRegisterInway(t *testing.T, repo directory.Repository) {
 
 				return []*inway.Inway{first, second}
 			},
-			expectedInway: func() *inway.Inway {
+			expectedInway: func(t *testing.T) *inway.Inway {
 				iw, err := inway.NewInway(
 					"my-inway",
-					"organization-c",
+					uniqueOrganizationName(t),
 					"nlx-inway.io",
 					"0.0.1",
 					now,
@@ -158,14 +175,14 @@ func testRegisterInway(t *testing.T, repo directory.Repository) {
 				require.NoError(t, err)
 
 				return iw
-			}(),
+			},
 			expectedErr: nil,
 		},
 		"inways_with_different_name_but_same_address": {
 			createRegistrations: func(t *testing.T) []*inway.Inway {
 				first, err := inway.NewInway(
 					"my-first-inway",
-					"organization-d",
+					uniqueOrganizationName(t),
 					"localhost",
 					inway.NlxVersionUnknown,
 					now,
@@ -175,7 +192,7 @@ func testRegisterInway(t *testing.T, repo directory.Repository) {
 
 				second, err := inway.NewInway(
 					"my-second-inway",
-					"organization-d",
+					uniqueOrganizationName(t),
 					"localhost",
 					inway.NlxVersionUnknown,
 					now,
@@ -187,6 +204,45 @@ func testRegisterInway(t *testing.T, repo directory.Repository) {
 			},
 			expectedInway: nil,
 			expectedErr:   adapters.ErrDuplicateAddress,
+		},
+		"created_at_should_not_update_when_registering_an_existing_inway": {
+			createRegistrations: func(t *testing.T) []*inway.Inway {
+				first, err := inway.NewInway(
+					"my-inway",
+					uniqueOrganizationName(t),
+					"localhost",
+					inway.NlxVersionUnknown,
+					now.Add(-1*time.Hour),
+					now.Add(-1*time.Hour),
+				)
+				require.NoError(t, err)
+
+				second, err := inway.NewInway(
+					"my-inway",
+					uniqueOrganizationName(t),
+					"localhost",
+					inway.NlxVersionUnknown,
+					now,
+					now,
+				)
+				require.NoError(t, err)
+
+				return []*inway.Inway{first, second}
+			},
+			expectedInway: func(t *testing.T) *inway.Inway {
+				iw, err := inway.NewInway(
+					"my-inway",
+					uniqueOrganizationName(t),
+					"localhost",
+					inway.NlxVersionUnknown,
+					now.Add(-1*time.Hour),
+					now,
+				)
+				require.NoError(t, err)
+
+				return iw
+			},
+			expectedErr: nil,
 		},
 	}
 
@@ -207,7 +263,8 @@ func testRegisterInway(t *testing.T, repo directory.Repository) {
 			require.Equal(t, tt.expectedErr, lastErr)
 
 			if tt.expectedErr == nil {
-				assertInwayInRepository(t, repo, tt.expectedInway)
+				expectedInway := tt.expectedInway(t)
+				assertInwayInRepository(t, repo, expectedInway)
 			}
 		})
 	}
