@@ -77,13 +77,10 @@ go run ./management-api create-user --email admin@nlx.local --role admin --postg
 go run ./management-api create-user --email admin@nlx.local --password development --role admin --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_b?sslmode=disable"
 ```
 
-Optionally you can setup the database for the transaction logs:
+Optionally you can setup the databases for the transaction logs:
 
 ```bash
-docker-compose -f docker-compose.dev.yml exec -u postgres postgres createdb nlx_txlog_a
 migrate -database "postgres://postgres:postgres@127.0.0.1:5432/nlx_txlog_a?sslmode=disable" -path txlog-db/migrations up
-
-docker-compose -f docker-compose.dev.yml exec -u postgres postgres createdb nlx_txlog_b
 migrate -database "postgres://postgres:postgres@127.0.0.1:5432/nlx_txlog_b?sslmode=disable" -path txlog-db/migrations up
 ```
 
@@ -103,12 +100,10 @@ Update the `/etc/hosts` file on your system:
 127.0.0.1     directory-inspection-api.shared.nlx.local
 127.0.0.1     directory-registration-api.shared.nlx.local
 
-127.0.0.1     etcd.organization-a.nlx.local
 127.0.0.1     management-api.organization-a.nlx.local
 127.0.0.1     inway.organization-a.nlx.local
 127.0.0.1     management.organization-a.nlx.local
 
-127.0.0.1     etcd.organization-b.nlx.local
 127.0.0.1     management-api.organization-b.nlx.local
 127.0.0.1     inway.organization-b.nlx.local
 127.0.0.1     management.organization-b.nlx.local
@@ -117,12 +112,10 @@ Update the `/etc/hosts` file on your system:
 ::1           directory-inspection-api.shared.nlx.local
 ::1           directory-registration-api.shared.nlx.local
 
-::1           etcd.organization-a.nlx.local
 ::1           management-api.organization-a.nlx.local
 ::1           inway.organization-a.nlx.local
 ::1           management.organization-a.nlx.local
 
-::1           etcd.organization-b.nlx.local
 ::1           management-api.organization-b.nlx.local
 ::1           inway.organization-b.nlx.local
 ::1           management.organization-b.nlx.local
@@ -133,16 +126,10 @@ Update the `/etc/hosts` file on your system:
 Run the services with:
 
 ```bash
-modd
-
-# To run transaction logs enabled for organization A
-TXLOG_A=1 modd
-
-# To run transaction logs enabled for organization B
-TXLOG_B=1 modd
-
-# Or both
-TXLOG_A=1 TXLOG_B=1 modd
+modd # To run without transaction logs
+TXLOG_A=1 modd # To run transaction logs enabled for organization A
+TXLOG_B=1 modd # To run transaction logs enabled for organization B
+TXLOG_A=1 TXLOG_B=1 modd # To run translaction logs for both organizations
 ```
 
 This will start the following services:
