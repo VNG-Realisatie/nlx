@@ -6,12 +6,13 @@
 package adapters_test
 
 import (
+	"testing"
+	"time"
+
 	"github.com/stretchr/testify/require"
 	"go.nlx.io/nlx/directory-registration-api/domain/directory"
 	"go.nlx.io/nlx/directory-registration-api/domain/inway"
 	"go.nlx.io/nlx/directory-registration-api/domain/service"
-	"testing"
-	"time"
 )
 
 func testRegisterService(t *testing.T, repo directory.Repository) {
@@ -56,14 +57,14 @@ func testRegisterService(t *testing.T, repo directory.Repository) {
 
 			models := tt.createRegistrations(t)
 
-			inwayModel, err := inway.NewInway(
-				"inway-for-service",
-				"organization-d",
-				"my-org.com",
-				inway.NlxVersionUnknown,
-				now,
-				now,
-			)
+			inwayModel, err := inway.NewInway(&inway.NewInwayArgs{
+				Name:             "inway-for-service",
+				OrganizationName: "organization-d",
+				Address:          "my-org.com",
+				NlxVersion:       inway.NlxVersionUnknown,
+				CreatedAt:        now,
+				UpdatedAt:        now,
+			})
 			require.NoError(t, err)
 
 			err = repo.RegisterInway(inwayModel)

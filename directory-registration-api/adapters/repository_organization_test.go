@@ -7,6 +7,7 @@ package adapters_test
 
 import (
 	"context"
+	"log"
 	"testing"
 	"time"
 
@@ -31,44 +32,40 @@ func testSetOrganizationInway(t *testing.T, repo directory.Repository) {
 	}
 
 	tests := map[string]struct {
-		setup       func(*testing.T) *inway.Inway
+		setup       func(*testing.T) *inway.NewInwayArgs
 		input       inputParams
 		expectedErr error
 	}{
 		"inway_address_not_found": {
-			setup: func(t *testing.T) *inway.Inway {
-				inwayModel, err := inway.NewInway(
-					"inway-for-service",
-					"organization-e",
-					"my-org-e.com",
-					inway.NlxVersionUnknown,
-					now,
-					now,
-				)
-				require.NoError(t, err)
-				return inwayModel
+			setup: func(t *testing.T) *inway.NewInwayArgs {
+				return &inway.NewInwayArgs{
+					Name:             "inway-for-service",
+					OrganizationName: "TestSetOrganizationInwayinwayaddressnotfound",
+					Address:          "my-org-e.com",
+					NlxVersion:       inway.NlxVersionUnknown,
+					CreatedAt:        now,
+					UpdatedAt:        now,
+				}
 			},
 			input: inputParams{
-				organizationName: "organization-e",
+				organizationName: "TestSetOrganizationInwayinwayaddressnotfound",
 				inwayAddress:     "does-not-exist.com",
 			},
 			expectedErr: adapters.ErrNoInwayWithAddress,
 		},
 		"happy_flow": {
-			setup: func(t *testing.T) *inway.Inway {
-				inwayModel, err := inway.NewInway(
-					"inway-for-service",
-					"organization-e",
-					"my-org-e.com",
-					inway.NlxVersionUnknown,
-					now,
-					now,
-				)
-				require.NoError(t, err)
-				return inwayModel
+			setup: func(t *testing.T) *inway.NewInwayArgs {
+				return &inway.NewInwayArgs{
+					Name:             "inway-for-service",
+					OrganizationName: "TestSetOrganizationInwayhappyflow",
+					Address:          "my-org-e.com",
+					NlxVersion:       inway.NlxVersionUnknown,
+					CreatedAt:        now,
+					UpdatedAt:        now,
+				}
 			},
 			input: inputParams{
-				organizationName: "organization-e",
+				organizationName: "TestSetOrganizationInwayhappyflow",
 				inwayAddress:     "my-org-e.com",
 			},
 			expectedErr: nil,
@@ -81,12 +78,15 @@ func testSetOrganizationInway(t *testing.T, repo directory.Repository) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			inwayModel := tt.setup(t)
+			inwayArgs := tt.setup(t)
+
+			inwayModel, err := inway.NewInway(inwayArgs)
+			require.NoError(t, err)
 
 			err = repo.RegisterInway(inwayModel)
 			require.NoError(t, err)
 
-			err := repo.SetOrganizationInway(context.Background(), tt.input.organizationName, tt.input.inwayAddress)
+			err = repo.SetOrganizationInway(context.Background(), tt.input.organizationName, tt.input.inwayAddress)
 			require.Equal(t, tt.expectedErr, err)
 
 			if tt.expectedErr == nil {
@@ -109,22 +109,20 @@ func testClearOrganizationInway(t *testing.T, repo directory.Repository) {
 	}
 
 	tests := map[string]struct {
-		setup       func(*testing.T) *inway.Inway
+		setup       func(*testing.T) *inway.NewInwayArgs
 		input       inputParams
 		expectedErr error
 	}{
 		"organization_not_found": {
-			setup: func(t *testing.T) *inway.Inway {
-				inwayModel, err := inway.NewInway(
-					"inway-for-service",
-					"organization-g",
-					"my-org-g.com",
-					inway.NlxVersionUnknown,
-					now,
-					now,
-				)
-				require.NoError(t, err)
-				return inwayModel
+			setup: func(t *testing.T) *inway.NewInwayArgs {
+				return &inway.NewInwayArgs{
+					Name:             "inway-for-service",
+					OrganizationName: uniqueOrganizationName(t),
+					Address:          "my-org-g.com",
+					NlxVersion:       inway.NlxVersionUnknown,
+					CreatedAt:        now,
+					UpdatedAt:        now,
+				}
 			},
 			input: inputParams{
 				organizationName: "organization-does-not-exist",
@@ -132,20 +130,18 @@ func testClearOrganizationInway(t *testing.T, repo directory.Repository) {
 			expectedErr: adapters.ErrOrganizationNotFound,
 		},
 		"happy_flow": {
-			setup: func(t *testing.T) *inway.Inway {
-				inwayModel, err := inway.NewInway(
-					"inway-for-service",
-					"organization-h",
-					"my-org-h.com",
-					inway.NlxVersionUnknown,
-					now,
-					now,
-				)
-				require.NoError(t, err)
-				return inwayModel
+			setup: func(t *testing.T) *inway.NewInwayArgs {
+				return &inway.NewInwayArgs{
+					Name:             "inway-for-service",
+					OrganizationName: "TestRepositoryclearorganizationinwayhappyflow",
+					Address:          "my-org-h.com",
+					NlxVersion:       inway.NlxVersionUnknown,
+					CreatedAt:        now,
+					UpdatedAt:        now,
+				}
 			},
 			input: inputParams{
-				organizationName: "organization-h",
+				organizationName: "TestRepositoryclearorganizationinwayhappyflow",
 			},
 			expectedErr: nil,
 		},
@@ -157,13 +153,18 @@ func testClearOrganizationInway(t *testing.T, repo directory.Repository) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			inwayModel := tt.setup(t)
+			inwayArgs := tt.setup(t)
+
+			inwayModel, err := inway.NewInway(inwayArgs)
+			require.NoError(t, err)
 
 			err = repo.RegisterInway(inwayModel)
 			require.NoError(t, err)
 
-			err := repo.SetOrganizationInway(context.Background(), inwayModel.OrganizationName(), inwayModel.Address())
+			err = repo.SetOrganizationInway(context.Background(), inwayModel.OrganizationName(), inwayModel.Address())
 			require.Equal(t, nil, err)
+
+			log.Println(tt.input.organizationName)
 
 			err = repo.ClearOrganizationInway(context.Background(), tt.input.organizationName)
 			require.Equal(t, tt.expectedErr, err)
@@ -188,23 +189,21 @@ func testGetOrganizationInwayAddress(t *testing.T, repo directory.Repository) {
 	}
 
 	tests := map[string]struct {
-		setup           func(*testing.T) *inway.Inway
+		setup           func(*testing.T) *inway.NewInwayArgs
 		input           inputParams
 		expectedAddress string
 		expectedErr     error
 	}{
 		"organization_not_found": {
-			setup: func(t *testing.T) *inway.Inway {
-				inwayModel, err := inway.NewInway(
-					"inway-for-service",
-					"organization-i",
-					"my-org-i.com",
-					inway.NlxVersionUnknown,
-					now,
-					now,
-				)
-				require.NoError(t, err)
-				return inwayModel
+			setup: func(t *testing.T) *inway.NewInwayArgs {
+				return &inway.NewInwayArgs{
+					Name:             "inway-for-service",
+					OrganizationName: uniqueOrganizationName(t),
+					Address:          "my-org-i.com",
+					NlxVersion:       inway.NlxVersionUnknown,
+					CreatedAt:        now,
+					UpdatedAt:        now,
+				}
 			},
 			input: inputParams{
 				organizationName: "organization-does-not-exist",
@@ -213,20 +212,18 @@ func testGetOrganizationInwayAddress(t *testing.T, repo directory.Repository) {
 			expectedErr:     adapters.ErrOrganizationNotFound,
 		},
 		"happy_flow": {
-			setup: func(t *testing.T) *inway.Inway {
-				inwayModel, err := inway.NewInway(
-					"inway-for-service",
-					"organization-i",
-					"my-org-i.com",
-					inway.NlxVersionUnknown,
-					now,
-					now,
-				)
-				require.NoError(t, err)
-				return inwayModel
+			setup: func(t *testing.T) *inway.NewInwayArgs {
+				return &inway.NewInwayArgs{
+					Name:             "inway-for-service",
+					OrganizationName: "TestGetOrganizationInwayAddresshappyflow",
+					Address:          "my-org-i.com",
+					NlxVersion:       inway.NlxVersionUnknown,
+					CreatedAt:        now,
+					UpdatedAt:        now,
+				}
 			},
 			input: inputParams{
-				organizationName: "organization-i",
+				organizationName: "TestGetOrganizationInwayAddresshappyflow",
 			},
 			expectedAddress: "my-org-i.com",
 			expectedErr:     nil,
@@ -239,12 +236,15 @@ func testGetOrganizationInwayAddress(t *testing.T, repo directory.Repository) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			inwayModel := tt.setup(t)
+			inwayArgs := tt.setup(t)
+
+			inwayModel, err := inway.NewInway(inwayArgs)
+			require.NoError(t, err)
 
 			err = repo.RegisterInway(inwayModel)
 			require.NoError(t, err)
 
-			err := repo.SetOrganizationInway(context.Background(), inwayModel.OrganizationName(), inwayModel.Address())
+			err = repo.SetOrganizationInway(context.Background(), inwayModel.OrganizationName(), inwayModel.Address())
 			require.Equal(t, nil, err)
 
 			address, err := repo.GetOrganizationInwayAddress(context.Background(), tt.input.organizationName)

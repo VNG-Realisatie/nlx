@@ -23,54 +23,63 @@ type Inway struct {
 	updatedAt        time.Time
 }
 
+type NewInwayArgs struct {
+	Name             string
+	OrganizationName string
+	Address          string
+	NlxVersion       string
+	CreatedAt        time.Time
+	UpdatedAt        time.Time
+}
+
 const NlxVersionUnknown = "unknown"
 
 var nameRegex = regexp.MustCompile(`^[a-zA-Z0-9-]{1,100}$`)
 var organizationNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-._\s]{1,100}$`)
 
-func NewInway(name, organizationName, address, nlxVersion string, createdAt, updatedAt time.Time) (*Inway, error) {
-	err := validation.Validate(name, validation.When(len(name) > 0, validation.Match(nameRegex)))
+func NewInway(args *NewInwayArgs) (*Inway, error) {
+	err := validation.Validate(args.Name, validation.When(len(args.Name) > 0, validation.Match(nameRegex)))
 	if err != nil {
 		return nil, fmt.Errorf("name: %s", err)
 	}
 
-	err = validation.Validate(organizationName, validation.Required, validation.Match(organizationNameRegex))
+	err = validation.Validate(args.OrganizationName, validation.Required, validation.Match(organizationNameRegex))
 	if err != nil {
 		return nil, fmt.Errorf("organization name: %s", err)
 	}
 
 	err = validation.Validate(
-		address,
+		args.Address,
 		validation.Required,
-		validation.When(strings.Contains(address, ":"), is.DialString),
-		validation.When(!strings.Contains(address, ":"), is.DNSName),
+		validation.When(strings.Contains(args.Address, ":"), is.DialString),
+		validation.When(!strings.Contains(args.Address, ":"), is.DNSName),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("address: %s", err)
 	}
 
-	err = validation.Validate(nlxVersion, validation.When(nlxVersion != NlxVersionUnknown, is.Semver))
+	err = validation.Validate(args.NlxVersion, validation.When(args.NlxVersion != NlxVersionUnknown, is.Semver))
 	if err != nil {
 		return nil, fmt.Errorf("nlx version: %s", err)
 	}
 
-	err = validation.Validate(createdAt, validation.Max(time.Now()))
+	err = validation.Validate(args.CreatedAt, validation.Max(time.Now()))
 	if err != nil {
 		return nil, errors.New("created at: must not be in the future")
 	}
 
-	err = validation.Validate(updatedAt, validation.Max(time.Now()))
+	err = validation.Validate(args.UpdatedAt, validation.Max(time.Now()))
 	if err != nil {
 		return nil, errors.New("updated at: must not be in the future")
 	}
 
 	return &Inway{
-		name:             name,
-		organizationName: organizationName,
-		address:          address,
-		nlxVersion:       nlxVersion,
-		createdAt:        createdAt,
-		updatedAt:        updatedAt,
+		name:             args.Name,
+		organizationName: args.OrganizationName,
+		address:          args.Address,
+		nlxVersion:       args.NlxVersion,
+		createdAt:        args.CreatedAt,
+		updatedAt:        args.UpdatedAt,
 	}, nil
 }
 

@@ -36,13 +36,14 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 	// Created at and Updated at time are the same times when registering new inway
 	now := time.Now()
 
-	inwayModel, err := inway.NewInway(
-		req.InwayName,
-		organizationName,
-		req.InwayAddress,
-		nlxVersion,
-		now,
-		now,
+	inwayModel, err := inway.NewInway(&inway.NewInwayArgs{
+		Name:             req.InwayName,
+		OrganizationName: organizationName,
+		Address:          req.InwayAddress,
+		NlxVersion:       nlxVersion,
+		CreatedAt:        now,
+		UpdatedAt:        now,
+	},
 	)
 	if err != nil {
 		msg := fmt.Sprintf("validation failed: %s", err.Error())

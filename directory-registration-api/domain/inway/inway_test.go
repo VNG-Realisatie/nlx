@@ -16,115 +16,106 @@ import (
 func Test_NewInway(t *testing.T) {
 	now := time.Now()
 
-	type inwayParams struct {
-		name             string
-		organizationName string
-		address          string
-		nlxVersion       string
-		createdAt        time.Time
-		updatedAt        time.Time
-	}
-
 	tests := map[string]struct {
-		inway       inwayParams
+		inwayArgs   *inway.NewInwayArgs
 		expectedErr string
 	}{
 		"invalid_name": {
-			inway: inwayParams{
-				name:             "#*%",
-				organizationName: "organization-name",
-				address:          "address",
-				nlxVersion:       "0.0.0",
-				createdAt:        now,
-				updatedAt:        now,
+			inwayArgs: &inway.NewInwayArgs{
+				Name:             "#*%",
+				OrganizationName: "organization-name",
+				Address:          "address",
+				NlxVersion:       "0.0.0",
+				CreatedAt:        now,
+				UpdatedAt:        now,
 			},
 			expectedErr: "name: must be in a valid format",
 		},
 		"without_address": {
-			inway: inwayParams{
-				name:             "name",
-				organizationName: "organization-name",
-				address:          "",
-				nlxVersion:       "0.0.0",
-				createdAt:        now,
-				updatedAt:        now,
+			inwayArgs: &inway.NewInwayArgs{
+				Name:             "name",
+				OrganizationName: "organization-name",
+				Address:          "",
+				NlxVersion:       "0.0.0",
+				CreatedAt:        now,
+				UpdatedAt:        now,
 			},
 			expectedErr: "address: cannot be blank",
 		},
 		"invalid_address": {
-			inway: inwayParams{
-				name:             "name",
-				organizationName: "organization-name",
-				address:          "foo::bar",
-				nlxVersion:       "0.0.0",
-				createdAt:        now,
-				updatedAt:        now,
+			inwayArgs: &inway.NewInwayArgs{
+				Name:             "name",
+				OrganizationName: "organization-name",
+				Address:          "foo::bar",
+				NlxVersion:       "0.0.0",
+				CreatedAt:        now,
+				UpdatedAt:        now,
 			},
 			expectedErr: "address: must be a valid dial string",
 		},
 		"invalid_version": {
-			inway: inwayParams{
-				name:             "name",
-				organizationName: "organization-name",
-				address:          "address",
-				nlxVersion:       "invalid",
-				createdAt:        now,
-				updatedAt:        now,
+			inwayArgs: &inway.NewInwayArgs{
+				Name:             "name",
+				OrganizationName: "organization-name",
+				Address:          "address",
+				NlxVersion:       "invalid",
+				CreatedAt:        now,
+				UpdatedAt:        now,
 			},
 			expectedErr: "nlx version: must be a valid semantic version",
 		},
 		"without_organization_name": {
-			inway: inwayParams{
-				name:             "name",
-				organizationName: "",
-				address:          "address",
-				nlxVersion:       "0.0.0",
-				createdAt:        now,
-				updatedAt:        now,
+			inwayArgs: &inway.NewInwayArgs{
+				Name:             "name",
+				OrganizationName: "",
+				Address:          "address",
+				NlxVersion:       "0.0.0",
+				CreatedAt:        now,
+				UpdatedAt:        now,
 			},
 			expectedErr: "organization name: cannot be blank",
 		},
 		"empty_name": {
-			inway: inwayParams{
-				name:             "",
-				organizationName: "organization-name",
-				address:          "address",
-				nlxVersion:       "0.0.0",
-				createdAt:        now,
-				updatedAt:        now,
+			inwayArgs: &inway.NewInwayArgs{
+				Name:             "",
+				OrganizationName: "organization-name",
+				Address:          "address",
+				NlxVersion:       "0.0.0",
+				CreatedAt:        now,
+				UpdatedAt:        now,
 			},
 			expectedErr: "",
 		},
 		"created_at_in_future": {
-			inway: inwayParams{
-				name:             "name",
-				organizationName: "organization-name",
-				address:          "address",
-				nlxVersion:       "0.0.0",
-				createdAt:        now.Add(1 * time.Hour),
-				updatedAt:        now,
+			inwayArgs: &inway.NewInwayArgs{
+				Name:             "name",
+				OrganizationName: "organization-name",
+				Address:          "address",
+				NlxVersion:       "0.0.0",
+				CreatedAt:        now.Add(1 * time.Hour),
+				UpdatedAt:        now,
 			},
 			expectedErr: "created at: must not be in the future",
 		},
 		"updated_at_in_future": {
-			inway: inwayParams{
-				name:             "name",
-				organizationName: "organization-name",
-				address:          "address",
-				nlxVersion:       "0.0.0",
-				createdAt:        now,
-				updatedAt:        now.Add(1 * time.Hour),
+			inwayArgs: &inway.NewInwayArgs{
+				Name:             "name",
+				OrganizationName: "organization-name",
+				Address:          "address",
+				NlxVersion:       "0.0.0",
+				CreatedAt:        now,
+				UpdatedAt:        now.Add(1 * time.Hour),
 			},
 			expectedErr: "updated at: must not be in the future",
 		},
 		"happy_flow": {
-			inway: inwayParams{
-				name:             "name",
-				organizationName: "organization-name",
-				address:          "address",
-				nlxVersion:       "0.0.0",
-				createdAt:        now,
-				updatedAt:        now,
+			inwayArgs: &inway.NewInwayArgs{
+				Name:             "name",
+				OrganizationName: "organization-name",
+				Address:          "address",
+				NlxVersion:       "0.0.0",
+				CreatedAt:        now,
+				UpdatedAt:        now,
 			},
 			expectedErr: "",
 		},
@@ -134,14 +125,7 @@ func Test_NewInway(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			result, err := inway.NewInway(
-				tt.inway.name,
-				tt.inway.organizationName,
-				tt.inway.address,
-				tt.inway.nlxVersion,
-				tt.inway.createdAt,
-				tt.inway.updatedAt,
-			)
+			result, err := inway.NewInway(tt.inwayArgs)
 
 			if tt.expectedErr != "" {
 				assert.Nil(t, result)
@@ -150,10 +134,10 @@ func Test_NewInway(t *testing.T) {
 				assert.NotNil(t, result)
 				assert.Nil(t, err)
 
-				assert.Equal(t, tt.inway.name, result.Name())
-				assert.Equal(t, tt.inway.organizationName, result.OrganizationName())
-				assert.Equal(t, tt.inway.address, result.Address())
-				assert.Equal(t, tt.inway.nlxVersion, result.NlxVersion())
+				assert.Equal(t, tt.inwayArgs.Name, result.Name())
+				assert.Equal(t, tt.inwayArgs.OrganizationName, result.OrganizationName())
+				assert.Equal(t, tt.inwayArgs.Address, result.Address())
+				assert.Equal(t, tt.inwayArgs.NlxVersion, result.NlxVersion())
 			}
 		})
 	}

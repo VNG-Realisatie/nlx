@@ -147,7 +147,14 @@ func (r *PostgreSQLRepository) GetInway(name, organizationName string) (*inway.I
 		return nil, fmt.Errorf("failed to get inway (name: %s, organization: %s): %s", name, organizationName, err)
 	}
 
-	model, err := inway.NewInway(result.Name, result.OrganizationName, result.Address, result.NlxVersion, result.CreatedAt, result.UpdatedAt)
+	model, err := inway.NewInway(&inway.NewInwayArgs{
+		Name:             result.Name,
+		OrganizationName: result.OrganizationName,
+		Address:          result.Address,
+		NlxVersion:       result.NlxVersion,
+		CreatedAt:        result.CreatedAt,
+		UpdatedAt:        result.UpdatedAt,
+	})
 	if err != nil {
 		return nil, fmt.Errorf("invalid inway model in database: %v", err)
 	}
