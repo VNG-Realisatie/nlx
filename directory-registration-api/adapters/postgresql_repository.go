@@ -8,7 +8,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/golang-migrate/migrate/v4"
@@ -115,8 +114,6 @@ func (r *PostgreSQLRepository) RegisterInway(model *inway.Inway) error {
 		CreatedAt:        model.CreatedAt(),
 		UpdatedAt:        model.UpdatedAt(),
 	})
-
-	log.Println(model.CreatedAt())
 
 	if err != nil && err.Error() == "pq: duplicate key value violates unique constraint \"inways_uq_address\"" {
 		return ErrDuplicateAddress
