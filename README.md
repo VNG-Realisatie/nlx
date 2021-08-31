@@ -42,6 +42,7 @@ Make sure you have installed the following tools:
 - [Docker Compose](https://docs.docker.com/compose/install/)
 - [go](https://golang.org/doc/install)
 - [modd](https://github.com/cortesi/modd)
+- [golang-migrate](https://github.com/golang-migrate/migrate/tree/master/cmd/migrate) for PostgreSQL (`go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest`)
 
 Install the npm dependencies by running:
 
