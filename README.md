@@ -34,15 +34,15 @@ git clone https://gitlab.com/commonground/nlx/nlx
 cd nlx
 ```
 
-### Running the complete stack using modd
+### Development setup
 
 Make sure you have installed the following tools:
 
 - [Docker Desktop / Docker engine](https://docs.docker.com/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
-- [go](https://golang.org/doc/install)
+- [Golang](https://golang.org/doc/install)
+- [NodeJS LTS](https://nodejs.org/en/download/)
 - [modd](https://github.com/cortesi/modd)
-- [golang-migrate](https://github.com/golang-migrate/migrate/tree/master/cmd/migrate) for PostgreSQL (`go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest`)
 
 Install the npm dependencies by running:
 
@@ -50,38 +50,6 @@ Install the npm dependencies by running:
 (cd directory-ui && npm install)
 (cd management-ui && npm install)
 (cd docs/website && npm install)
-```
-
-Start a PostgreSQL container through Docker Compose with:
-
-```bash
-docker-compose -f docker-compose.dev.yml up -d
-```
-
-Run the directory migrations with:
-
-```bash
-migrate -database "postgres://postgres:postgres@127.0.0.1:5432/nlx?sslmode=disable" -path directory-db/migrations up
-```
-
-Run the management API migrations with:
-
-```bash
-go run ./management-api migrate up --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_a?sslmode=disable"
-go run ./management-api migrate up --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_b?sslmode=disable"
-```
-
-Create admin users for the Management API
-```
-go run ./management-api create-user --email admin@nlx.local --role admin --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_a?sslmode=disable"
-go run ./management-api create-user --email admin@nlx.local --password development --role admin --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_b?sslmode=disable"
-```
-
-Optionally you can setup the databases for the transaction logs:
-
-```bash
-migrate -database "postgres://postgres:postgres@127.0.0.1:5432/nlx_txlog_a?sslmode=disable" -path txlog-db/migrations up
-migrate -database "postgres://postgres:postgres@127.0.0.1:5432/nlx_txlog_b?sslmode=disable" -path txlog-db/migrations up
 ```
 
 Make sure the TLS key files have the correct permissions to run the NLX components
@@ -123,30 +91,23 @@ Update the `/etc/hosts` file on your system:
 </details>
 </br>
 
-Run the services with:
-
-```bash
-modd # To run without transaction logs
-TXLOG_A=1 modd # To run transaction logs enabled for organization A
-TXLOG_B=1 modd # To run transaction logs enabled for organization B
-TXLOG_A=1 TXLOG_B=1 modd # To run translaction logs for both organizations
-```
+To start the services in development daemons, run: `./scripts/start-development.sh`.
 
 This will start the following services:
 
-- [S] directory-inspection-api (gRPC: 7901, HTTP: 7902)
-- [S] directory-registration-api (gRPC: 7903)
-- [S] directory-monitor
-- [A] management-api (gRPC: 7911, HTTP: 7912)
-- [A] inway (gRPC: 7913)
-- [A] outway (HTTP: 7915)
-- [B] management-api (gRPC: 7921, HTTP: 7922)
-- [B] inway (gRPC: 7923)
+Service                         | gRPC | HTTP
+------------------------------- | ---- | ----
+[S] directory-inspection-api    | 7901 | 7902
+[S] directory-registration-api  | 7903 |
+[S] directory-monitor           |
+[A] management-api              | 7911 | 7912
+[A] inway                       | 7913
+[A] outway                      |      | 7917
+[B] management-api              | 7921 | 7922
+[B] inway                       | 7923 |
 
-And the following frontend applications:
-
-- [directory-ui](http://localhost:3001) (HTTP: 3001)
-- [docs](http://localhost:3002) (HTTP: 3002)
+During the starting routines of the services, you might see a few services erroring that are dependent on a service that has not yet been started.
+This is expected behavior and will resolve itself within 5 seconds.
 
 Services will reload automatically when the code changes and is saved.
 
@@ -161,7 +122,14 @@ This will start the management dashboard locally:
 - [management-ui (A)](http://management.organization-a.nlx.local:3011) (HTTP: 3011)
 - [management-ui (B)](http://management.organization-b.nlx.local:3021) (HTTP: 3021)
 
-To log in locally, see credentials in `dex.dev.yaml`
+To log in locally, see credentials in `dex.dev.yaml`.
+
+To test if the applications are running correctly, create a service called "Test" for "Organization A" and cURL the outway with `curl localhost:7917/Organization-A/Test` on the command line.
+
+To start the directory UI or documentation website locally:
+
+- `(cd directory-ui && npm start)` to run the [directory-ui](http://localhost:3001) (HTTP: 3001)
+- `(cd docs/website && npm start)` to run the [docs](http://localhost:3002) (HTTP: 3002)
 
 ## Deploying and releasing
 
@@ -169,6 +137,8 @@ The [CI system of GitLab](https://gitlab.com/commonground/nlx/nlx/pipelines) bui
 When a release is successful, it also gets deployed to the test environment.
 
 When a git tag is pushed, GitLab builds and deploys it to the test and staging environments.
+
+For branches prefixed with `review/` (f.e. `review/feature-name`), a review environment will automatically be created for a shared testing environment.
 
 ## Live environments
 
