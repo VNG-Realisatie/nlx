@@ -14,8 +14,10 @@ type Organization struct {
 	name string
 }
 
+var organizationNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-._\s]{1,100}$`)
+
 func NewOrganization(name string) (*Organization, error) {
-	err := validation.Validate(name, validation.Required, validation.Match(regexp.MustCompile(`^[a-zA-Z0-9-._\s]{1,100}$`)))
+	err := validation.Validate(name, validation.Required, validation.Match(organizationNameRegex))
 	if err != nil {
 		return nil, fmt.Errorf("organization name: %s", err)
 	}

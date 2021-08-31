@@ -25,13 +25,16 @@ type Inway struct {
 
 const NlxVersionUnknown = "unknown"
 
+var nameRegex = regexp.MustCompile(`^[a-zA-Z0-9-]{1,100}$`)
+var organizationNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-._\s]{1,100}$`)
+
 func NewInway(name, organizationName, address, nlxVersion string, createdAt, updatedAt time.Time) (*Inway, error) {
-	err := validation.Validate(name, validation.When(len(name) > 0, validation.Match(regexp.MustCompile(`^[a-zA-Z0-9-]{1,100}$`))))
+	err := validation.Validate(name, validation.When(len(name) > 0, validation.Match(nameRegex)))
 	if err != nil {
 		return nil, fmt.Errorf("name: %s", err)
 	}
 
-	err = validation.Validate(organizationName, validation.Required, validation.Match(regexp.MustCompile(`^[a-zA-Z0-9-._\s]{1,100}$`)))
+	err = validation.Validate(organizationName, validation.Required, validation.Match(organizationNameRegex))
 	if err != nil {
 		return nil, fmt.Errorf("organization name: %s", err)
 	}
