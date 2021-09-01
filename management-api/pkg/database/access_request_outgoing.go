@@ -201,6 +201,14 @@ func (db *PostgresConfigDatabase) ListOutgoingAccessRequests(ctx context.Context
 	return requests, nil
 }
 
+func (db *PostgresConfigDatabase) DeleteOutgoingAccessRequests(ctx context.Context, organizationName, serviceName string) error {
+	return db.DB.
+		WithContext(ctx).
+		Where("organization_name = ? AND service_name = ?", organizationName, serviceName).
+		Delete(&OutgoingAccessRequest{}).
+		Error
+}
+
 func (db *PostgresConfigDatabase) TakePendingOutgoingAccessRequest(ctx context.Context) (*OutgoingAccessRequest, error) {
 	lockID, err := uuid.NewRandom()
 	if err != nil {

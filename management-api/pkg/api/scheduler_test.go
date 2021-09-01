@@ -11,6 +11,8 @@ import (
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	common_tls "go.nlx.io/nlx/common/tls"
@@ -569,6 +571,37 @@ func TestSyncAccessProof(t *testing.T) {
 						ServiceName:      "service",
 					}).
 					Return(nil, nil)
+
+				mocks.management.
+					EXPECT().
+					Close()
+			},
+		},
+
+		"successfully_delete_an_access_proof_when_the_corresponding_service_no_longer_exists": {
+			wantErr: false,
+			request: &database.OutgoingAccessRequest{
+				ID:               1,
+				OrganizationName: "organization-b",
+				ServiceName:      "service",
+			},
+			setupMocks: func(mocks schedulerMocks) {
+				mocks.directory.
+					EXPECT().
+					GetOrganizationInwayProxyAddress(ctx, "organization-b").
+					Return("localhost:8000", nil)
+
+				mocks.management.
+					EXPECT().
+					GetAccessProof(ctx, &external.GetAccessProofRequest{
+						ServiceName: "service",
+					}).
+					Return(nil, status.Error(codes.NotFound, "service no longer exists"))
+
+				mocks.db.
+					EXPECT().
+					DeleteOutgoingAccessRequests(ctx, "organization-b", "service").
+					Return(nil)
 
 				mocks.management.
 					EXPECT().

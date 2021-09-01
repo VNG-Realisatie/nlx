@@ -198,18 +198,32 @@ func (mr *MockConfigDatabaseMockRecorder) DeleteInway(ctx, name interface{}) *go
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteInway", reflect.TypeOf((*MockConfigDatabase)(nil).DeleteInway), ctx, name)
 }
 
-// DeleteService mocks base method.
-func (m *MockConfigDatabase) DeleteService(ctx context.Context, name string) error {
+// DeleteOutgoingAccessRequests mocks base method.
+func (m *MockConfigDatabase) DeleteOutgoingAccessRequests(ctx context.Context, organizationName, serviceName string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteService", ctx, name)
+	ret := m.ctrl.Call(m, "DeleteOutgoingAccessRequests", ctx, organizationName, serviceName)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteOutgoingAccessRequests indicates an expected call of DeleteOutgoingAccessRequests.
+func (mr *MockConfigDatabaseMockRecorder) DeleteOutgoingAccessRequests(ctx, organizationName, serviceName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteOutgoingAccessRequests", reflect.TypeOf((*MockConfigDatabase)(nil).DeleteOutgoingAccessRequests), ctx, organizationName, serviceName)
+}
+
+// DeleteService mocks base method.
+func (m *MockConfigDatabase) DeleteService(ctx context.Context, serviceName string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteService", ctx, serviceName)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DeleteService indicates an expected call of DeleteService.
-func (mr *MockConfigDatabaseMockRecorder) DeleteService(ctx, name interface{}) *gomock.Call {
+func (mr *MockConfigDatabaseMockRecorder) DeleteService(ctx, serviceName interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteService", reflect.TypeOf((*MockConfigDatabase)(nil).DeleteService), ctx, name)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteService", reflect.TypeOf((*MockConfigDatabase)(nil).DeleteService), ctx, serviceName)
 }
 
 // GetAccessProofForOutgoingAccessRequest mocks base method.

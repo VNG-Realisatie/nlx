@@ -36,6 +36,7 @@ type ConfigDatabase interface {
 	GetLatestOutgoingAccessRequest(ctx context.Context, organizationName, serviceName string) (*OutgoingAccessRequest, error)
 	CreateOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) (*OutgoingAccessRequest, error)
 	UpdateOutgoingAccessRequestState(ctx context.Context, id uint, state OutgoingAccessRequestState, referenceID uint, err *diagnostics.ErrorDetails) error
+	DeleteOutgoingAccessRequests(ctx context.Context, organizationName, serviceName string) error
 	TakePendingOutgoingAccessRequest(ctx context.Context) (*OutgoingAccessRequest, error)
 	UnlockOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) error
 

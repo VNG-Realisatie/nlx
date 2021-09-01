@@ -307,7 +307,6 @@ func TestDeleteService(t *testing.T) {
 			_, err := service.DeleteService(tt.ctx, tt.deleteServiceRequest)
 			assert.Equal(t, tt.expectedError, err)
 		})
-
 	}
 }
 

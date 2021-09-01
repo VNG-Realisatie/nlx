@@ -26,6 +26,17 @@ func (s *ManagementService) GetAccessProof(ctx context.Context, req *external.Ge
 		return nil, err
 	}
 
+	_, err = s.configDatabase.GetService(ctx, req.ServiceName)
+	if err != nil {
+		s.logger.Error("failed to get service for access proof", zap.Error(err))
+
+		if err == database.ErrNotFound {
+			return nil, status.Error(codes.NotFound, "service no longer exists")
+		}
+
+		return nil, status.Error(codes.Internal, "database error")
+	}
+
 	grant, err := s.configDatabase.GetLatestAccessGrantForService(ctx, md.OrganizationName, req.ServiceName)
 	if err != nil {
 		if errors.Is(err, database.ErrNotFound) {

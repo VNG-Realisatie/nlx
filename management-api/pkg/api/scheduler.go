@@ -34,6 +34,8 @@ const (
 
 	// jobs are unlocked after 5 minutes, let's wait at least one minute before retrying
 	jobTimeout = 4 * time.Minute
+
+	errMessageServiceNoLongerExists = "service no longer exists"
 )
 
 type accessRequestScheduler struct {
@@ -272,6 +274,15 @@ func (scheduler *accessRequestScheduler) parseAccessProof(accessProof *api.Acces
 func (scheduler *accessRequestScheduler) syncAccessProof(ctx context.Context, outgoingAccessRequest *database.OutgoingAccessRequest) error {
 	remoteProof, err := scheduler.retrieveAccessProof(ctx, outgoingAccessRequest.OrganizationName, outgoingAccessRequest.ServiceName)
 	if err != nil {
+		grpcErr, ok := status.FromError(err)
+		if !ok {
+			return err
+		}
+
+		if grpcErr.Message() == errMessageServiceNoLongerExists {
+			return scheduler.configDatabase.DeleteOutgoingAccessRequests(ctx, outgoingAccessRequest.OrganizationName, outgoingAccessRequest.ServiceName)
+		}
+
 		return err
 	}
 

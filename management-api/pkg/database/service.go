@@ -138,9 +138,8 @@ func (db *PostgresConfigDatabase) DeleteService(ctx context.Context, name string
 		return err
 	}
 
-	// TODO: add tests
 	err = dbWithTx.Where(&OutgoingOrderService{
-		Service: name,
+		Service:      name,
 		Organization: db.organizationName,
 	}).Delete(&OutgoingOrderService{}).Error
 	if err != nil {
@@ -148,7 +147,7 @@ func (db *PostgresConfigDatabase) DeleteService(ctx context.Context, name string
 	}
 
 	err = dbWithTx.Where(&OutgoingAccessRequest{
-		ServiceName: name,
+		ServiceName:      name,
 		OrganizationName: db.organizationName,
 	}).Delete(&OutgoingAccessRequest{}).Error
 	if err != nil {
