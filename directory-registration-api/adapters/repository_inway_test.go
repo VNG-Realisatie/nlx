@@ -24,180 +24,201 @@ func testRegisterInway(t *testing.T, repo directory.Repository) {
 		t.Error(err)
 	}
 
-	tests := map[string]struct {
-		getRegistrations func(*testing.T) []*inway.NewInwayArgs
-		expectedErr      error
-		expectedInway    func(*testing.T) *inway.NewInwayArgs
-	}{
-		"new_inway": {
-			getRegistrations: func(t *testing.T) []*inway.NewInwayArgs {
-				return []*inway.NewInwayArgs{
+	type registration struct {
+		inwayArgs   *inway.NewInwayArgs
+		expectedErr error
+	}
+
+	type testArgs struct {
+		registrations []registration
+		expectedInway *inway.NewInwayArgs
+	}
+
+	tests := map[string]func(*testing.T) testArgs{
+		"new_inway": func(t *testing.T) testArgs {
+			return testArgs{
+				registrations: []registration{
 					{
-						Name:             "my-inway-name",
-						OrganizationName: uniqueOrganizationName(t),
-						Address:          "localhost",
-						NlxVersion:       inway.NlxVersionUnknown,
-						CreatedAt:        now,
-						UpdatedAt:        now,
+						inwayArgs: &inway.NewInwayArgs{
+							Name:             "my-inway-name",
+							OrganizationName: uniqueOrganizationName(t),
+							Address:          "localhost",
+							NlxVersion:       inway.NlxVersionUnknown,
+							CreatedAt:        now,
+							UpdatedAt:        now,
+						},
+						expectedErr: nil,
 					},
-				}
-			},
-			expectedInway: func(t *testing.T) *inway.NewInwayArgs {
-				return &inway.NewInwayArgs{
+				},
+				expectedInway: &inway.NewInwayArgs{
 					Name:             "my-inway-name",
 					OrganizationName: uniqueOrganizationName(t),
 					Address:          "localhost",
 					NlxVersion:       inway.NlxVersionUnknown,
 					CreatedAt:        now,
 					UpdatedAt:        now,
-				}
-			},
-			expectedErr: nil,
+				},
+			}
 		},
-		"inway_without_name": {
-			getRegistrations: func(t *testing.T) []*inway.NewInwayArgs {
-				return []*inway.NewInwayArgs{
+		"inway_without_name": func(t *testing.T) testArgs {
+			return testArgs{
+				registrations: []registration{
 					{
-						Name:             "",
-						OrganizationName: uniqueOrganizationName(t),
-						Address:          "localhost",
-						NlxVersion:       inway.NlxVersionUnknown,
-						CreatedAt:        now,
-						UpdatedAt:        now,
+						inwayArgs: &inway.NewInwayArgs{
+							Name:             "",
+							OrganizationName: uniqueOrganizationName(t),
+							Address:          "localhost",
+							NlxVersion:       inway.NlxVersionUnknown,
+							CreatedAt:        now,
+							UpdatedAt:        now,
+						},
+						expectedErr: nil,
 					},
-				}
-			},
-			expectedInway: func(t *testing.T) *inway.NewInwayArgs {
-				return &inway.NewInwayArgs{
+				},
+				expectedInway: &inway.NewInwayArgs{
 					Name:             "",
 					OrganizationName: uniqueOrganizationName(t),
 					Address:          "localhost",
 					NlxVersion:       inway.NlxVersionUnknown,
 					CreatedAt:        now,
 					UpdatedAt:        now,
-				}
-			},
-			expectedErr: nil,
+				},
+			}
 		},
-		"existing_inway_for_same_organization": {
-			getRegistrations: func(t *testing.T) []*inway.NewInwayArgs {
-				return []*inway.NewInwayArgs{
+		"existing_inway_for_same_organization": func(t *testing.T) testArgs {
+			return testArgs{
+				registrations: []registration{
 					{
-						Name:             "my-inway",
-						OrganizationName: uniqueOrganizationName(t),
-						Address:          "localhost",
-						NlxVersion:       inway.NlxVersionUnknown,
-						CreatedAt:        now,
-						UpdatedAt:        now,
+						inwayArgs: &inway.NewInwayArgs{
+							Name:             "my-inway",
+							OrganizationName: uniqueOrganizationName(t),
+							Address:          "localhost",
+							NlxVersion:       inway.NlxVersionUnknown,
+							CreatedAt:        now,
+							UpdatedAt:        now,
+						},
+						expectedErr: nil,
 					},
 					{
-						Name:             "my-inway",
-						OrganizationName: uniqueOrganizationName(t),
-						Address:          "nlx-inway.io",
-						NlxVersion:       "0.0.1",
-						CreatedAt:        now,
-						UpdatedAt:        now,
+						inwayArgs: &inway.NewInwayArgs{
+							Name:             "my-inway",
+							OrganizationName: uniqueOrganizationName(t),
+							Address:          "nlx-inway.io",
+							NlxVersion:       "0.0.1",
+							CreatedAt:        now,
+							UpdatedAt:        now,
+						},
+						expectedErr: nil,
 					},
-				}
-			},
-			expectedInway: func(t *testing.T) *inway.NewInwayArgs {
-				return &inway.NewInwayArgs{
+				},
+				expectedInway: &inway.NewInwayArgs{
 					Name:             "my-inway",
 					OrganizationName: uniqueOrganizationName(t),
 					Address:          "nlx-inway.io",
 					NlxVersion:       "0.0.1",
 					CreatedAt:        now,
 					UpdatedAt:        now,
-				}
-			},
-			expectedErr: nil,
+				},
+			}
 		},
-		"inways_with_different_name_but_same_address": {
-			getRegistrations: func(t *testing.T) []*inway.NewInwayArgs {
-				return []*inway.NewInwayArgs{
+		"inways_with_different_name_but_same_address": func(t *testing.T) testArgs {
+			return testArgs{
+				registrations: []registration{
 					{
-						Name:             "my-first-inway",
-						OrganizationName: uniqueOrganizationName(t),
-						Address:          "localhost",
-						NlxVersion:       inway.NlxVersionUnknown,
-						CreatedAt:        now,
-						UpdatedAt:        now,
+						inwayArgs: &inway.NewInwayArgs{
+							Name:             "my-first-inway",
+							OrganizationName: uniqueOrganizationName(t),
+							Address:          "localhost",
+							NlxVersion:       inway.NlxVersionUnknown,
+							CreatedAt:        now,
+							UpdatedAt:        now,
+						},
+						expectedErr: nil,
 					},
 					{
-						Name:             "my-second-inway",
-						OrganizationName: uniqueOrganizationName(t),
-						Address:          "localhost",
-						NlxVersion:       inway.NlxVersionUnknown,
-						CreatedAt:        now,
-						UpdatedAt:        now,
+						inwayArgs: &inway.NewInwayArgs{
+							Name:             "my-second-inway",
+							OrganizationName: uniqueOrganizationName(t),
+							Address:          "localhost",
+							NlxVersion:       inway.NlxVersionUnknown,
+							CreatedAt:        now,
+							UpdatedAt:        now,
+						},
+						expectedErr: adapters.ErrDuplicateAddress,
 					},
-				}
-			},
-			expectedInway: nil,
-			expectedErr:   adapters.ErrDuplicateAddress,
+				},
+				expectedInway: &inway.NewInwayArgs{
+					Name:             "my-first-inway",
+					OrganizationName: uniqueOrganizationName(t),
+					Address:          "localhost",
+					NlxVersion:       inway.NlxVersionUnknown,
+					CreatedAt:        now,
+					UpdatedAt:        now,
+				},
+			}
 		},
-		"created_at_should_not_update_when_registering_an_existing_inway": {
-			getRegistrations: func(t *testing.T) []*inway.NewInwayArgs {
-				return []*inway.NewInwayArgs{
+		"created_at_should_not_update_when_registering_an_existing_inway": func(t *testing.T) testArgs {
+			return testArgs{
+				registrations: []registration{
 					{
-						Name:             "my-inway",
-						OrganizationName: uniqueOrganizationName(t),
-						Address:          "localhost",
-						NlxVersion:       inway.NlxVersionUnknown,
-						CreatedAt:        now.Add(-1 * time.Hour),
-						UpdatedAt:        now.Add(-1 * time.Hour),
+						inwayArgs: &inway.NewInwayArgs{
+							Name:             "my-inway",
+							OrganizationName: uniqueOrganizationName(t),
+							Address:          "localhost",
+							NlxVersion:       inway.NlxVersionUnknown,
+							CreatedAt:        now.Add(-1 * time.Hour),
+							UpdatedAt:        now.Add(-1 * time.Hour),
+						},
+						expectedErr: nil,
 					},
 					{
-						Name:             "my-inway",
-						OrganizationName: uniqueOrganizationName(t),
-						Address:          "localhost",
-						NlxVersion:       inway.NlxVersionUnknown,
-						CreatedAt:        now,
-						UpdatedAt:        now,
+						inwayArgs: &inway.NewInwayArgs{
+							Name:             "my-inway",
+							OrganizationName: uniqueOrganizationName(t),
+							Address:          "localhost",
+							NlxVersion:       inway.NlxVersionUnknown,
+							CreatedAt:        now,
+							UpdatedAt:        now,
+						},
+						expectedErr: nil,
 					},
-				}
-			},
-			expectedInway: func(t *testing.T) *inway.NewInwayArgs {
-				return &inway.NewInwayArgs{
+				},
+				expectedInway: &inway.NewInwayArgs{
 					Name:             "my-inway",
 					OrganizationName: uniqueOrganizationName(t),
 					Address:          "localhost",
 					NlxVersion:       inway.NlxVersionUnknown,
 					CreatedAt:        now.Add(-1 * time.Hour),
 					UpdatedAt:        now,
-				}
-			},
-			expectedErr: nil,
+				},
+			}
 		},
 	}
 
-	for name, tt := range tests {
-		tt := tt
+	for name, createTestInput := range tests {
+		createTestInput := createTestInput
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			inways := tt.getRegistrations(t)
+			tt := createTestInput(t)
+			registrations := tt.registrations
 
-			var lastErr error
-			for _, inwayArgs := range inways {
-				iw, err := inway.NewInway(inwayArgs)
-				require.NoError(t, err)
-
+			for _, registration := range registrations {
+				iw := createNewInway(t, registration.inwayArgs)
 				err = repo.RegisterInway(iw)
-				lastErr = err
+				require.Equal(t, registration.expectedErr, err)
 			}
 
-			require.Equal(t, tt.expectedErr, lastErr)
-
-			if tt.expectedErr == nil {
-				inwayArgs := tt.expectedInway(t)
-
-				expectedInway, err := inway.NewInway(inwayArgs)
-				require.NoError(t, err)
-
-				assertInwayInRepository(t, repo, expectedInway)
-			}
+			expectedInway := createNewInway(t, tt.expectedInway)
+			assertInwayInRepository(t, repo, expectedInway)
 		})
 	}
+}
+
+func createNewInway(t *testing.T, inwayArgs *inway.NewInwayArgs) *inway.Inway {
+	iw, err := inway.NewInway(inwayArgs)
+	require.NoError(t, err)
+
+	return iw
 }
