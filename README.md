@@ -92,7 +92,7 @@ Update the `/etc/hosts` file on your system:
 </details>
 </br>
 
-To start the services in development daemons, run: `./scripts/start-development.sh`.
+To start the services in development daemons with up-to-date databases, run: `./scripts/start-development.sh`. Make sure Docker is running.
 
 This will start the following services:
 
