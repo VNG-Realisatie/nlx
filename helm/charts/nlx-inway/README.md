@@ -109,6 +109,7 @@ TLS certificates used by NLX components for internal communication.
 
 | Parameter | Description | Default | Required (yes/no) |
 | --------- | ----------- | ------- | -------- |
+| `transactionLog.connectTimeout` | The connection timeout for PostgreSQL | `"10"` | no |
 | `transactionLog.enabled` | If `true` the outway will write log records into the transaction log | `false` | no |
 | `transactionLog.hostname` | PostgreSQL hostname | `""` | no |
 | `transactionLog.port` | PostgreSQL port | `5432` | yes |
@@ -116,7 +117,7 @@ TLS certificates used by NLX components for internal communication.
 | `transactionLog.database` | PostgreSQL database  | `` | no |
 | `transactionLog.username` | Username of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret | `""` | no |
 | `transactionLog.password` | Password of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret | `""` | no |
-| `transactionLog.existingSecret.name` | Use existing secret for password details (`transactionLog.username` and `transactionLog.password` will be ignored and picked up from this secret)  | `""` | no |
+| `transactionLog.existingSecret.name` | Use existing secret for password details (`transactionLog.username` and `transactionLog.password` will be ignored and picked up from this secret) | `""` | no |
 | `transactionLog.existingSecret.usernameKey` | Key for username value in aforementioned existingSecret | `username` | no |
 | `transactionLog.existingSecret.passwordKey` | Key for password value in aforementioned existingSecret | `password` | no |
 
@@ -126,9 +127,9 @@ TLS certificates used by NLX components for internal communication.
 | --------- | ----------- | ------- | -------- |
 | `service.type` | Service type (ClusterIP, NodePort or LoadBalancer). Please note that there should be no service performing TLS offloading as it uses mutual TLS | `LoadBalancer` | no |
 | `service.port` | Port exposed by the service | `443` | no |
-| `service.nodePort` | Port exposed if `service.type` is `NodePort`. Please note that `service.nodePort` + 1 will also be exposed to accept traffic for the management API)| `""` | no |
-| `service.annotations` | You can use Kubernetes annotations to attach arbitrary non-identifying metadata to objects. Clients such as tools and libraries can retrieve this metadata.| `{}` | no |
-| `service.loadBalancerIP` | Only applies to Service Type: LoadBalancer LoadBalancer will get created with the IP specified in this field. This feature depends on whether the underlying cloud-provider supports specifying the loadBalancerIP when a load balancer is created. This field will be ignored if the cloud-provider does not support the feature.| `""` | no |
+| `service.nodePort` | Port exposed if `service.type` is `NodePort`. Please note that `service.nodePort` + 1 will also be exposed to accept traffic for the management API) | `""` | no |
+| `service.annotations` | You can use Kubernetes annotations to attach arbitrary non-identifying metadata to objects. Clients such as tools and libraries can retrieve this metadata. | `{}` | no |
+| `service.loadBalancerIP` | Only applies to Service Type: LoadBalancer LoadBalancer will get created with the IP specified in this field. This feature depends on whether the underlying cloud-provider supports specifying the loadBalancerIP when a load balancer is created. This field will be ignored if the cloud-provider does not support the feature. | `""` | no |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 

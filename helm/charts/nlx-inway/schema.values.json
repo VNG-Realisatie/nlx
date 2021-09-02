@@ -1,0 +1,305 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+    "affinity": {
+      "type": "object",
+      "description": "Node affinity for pod assignment"
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "directoryRegistrationHostname": {
+          "type": "string",
+          "description": "Address of the NLX directory where this inway will register its services."
+        },
+        "logLevel": {
+          "type": "string",
+          "description": "Possible values: debug, warn, info. Override the default loglevel set by config.logType"
+        },
+        "logType": {
+          "type": "string",
+          "description": "Possible values: live, local. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger."
+        },
+        "managementAPI": {
+          "type": "object",
+          "properties": {
+            "address": {
+              "type": "string",
+              "description": "The config address of the management API. Normally this would be: hostname:443 where hostname is the hostname of the Management API"
+            }
+          }
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the inway. Should be unique within the organization. "
+        },
+        "selfAddress": {
+          "type": "string",
+          "description": "The address that can be used by the NLX network to reach this inway"
+        },
+        "serviceConfig": {
+          "type": "object",
+          "description": ""
+        }
+      },
+      "required": [
+        "name",
+        "directoryRegistrationHostname"
+      ]
+    },
+    "fullnameOverride": {
+      "type": "string",
+      "description": "Override full deployment name"
+    },
+    "global": {
+      "type": "object",
+      "properties": {
+        "imageRegistry": {
+          "type": "string",
+          "name": "Global Docker Image registry"
+        },
+        "imageTag": {
+          "type": "string",
+          "description": "Global Docker Image tag"
+        },
+        "tls": {
+          "type": "object",
+          "properties": {
+            "internal": {
+              "type": "object",
+              "properties": {
+                "rootCertificatePEM": {
+                  "type": "string",
+                  "description": "Global root certificate of your internal PKI. If not set the value of tls.internal.rootCertificatePEM is used"
+                }
+              }
+            },
+            "organization": {
+              "type": "object",
+              "properties": {
+                "rootCertificatePEM": {
+                  "type": "string",
+                  "description": "Global NLX root certificate. If not set the value of tls.organization.rootCertificatePEM is used"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "image": {
+      "type": "object",
+      "properties": {
+        "pullPolicy": {
+          "type": "string",
+          "description": "Image pull policy"
+        },
+        "pullSecrets": {
+          "type": "array",
+          "description": "Secrets for the image repository"
+        },
+        "registry": {
+          "type": "string",
+          "description": "Image registry (ignored if global.imageRegistry is set)"
+        },
+        "repository": {
+          "type": "string",
+          "description": "Image repository"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Image tag (ignored if global.imageTag is set). When set to null, the AppVersion from the Chart is used"
+        }
+      }
+    },
+    "nameOverride": {
+      "type": "string",
+      "description": "Override deployment name"
+    },
+    "nodeSelector": {
+      "type": "object",
+      "description": "Node labels for pod assignment"
+    },
+    "podSecurityContext": {
+      "type": "object",
+      "properties": {
+        "fsGroup": {
+          "type": "integer",
+          "description": "Group ID under which the pod should be started"
+        }
+      }
+    },
+    "replicaCount": {
+      "type": "integer",
+      "description": "Number of management replicas"
+    },
+    "resources": {
+      "type": "object",
+      "description": "Pod resource requests & limits"
+    },
+    "securityContext": {
+      "type": "object",
+      "description": "Optional security context. The YAML block should adhere to the SecurityContext spec"
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "annotations": {
+          "type": "object",
+          "description": "You can use Kubernetes annotations to attach arbitrary non-identifying metadata to objects. Clients such as tools and libraries can retrieve this metadata."
+        },
+        "loadBalancerIP": {
+          "type": "string",
+          "description": "Only applies to Service Type: LoadBalancer LoadBalancer will get created with the IP specified in this field. This feature depends on whether the underlying cloud-provider supports specifying the loadBalancerIP when a load balancer is created. This field will be ignored if the cloud-provider does not support the feature."
+        },
+        "port": {
+          "type": "integer",
+          "description": "Port exposed by the service"
+        },
+        "nodePort": {
+          "type": "integer",
+          "description": "Port exposed if `service.type` is `NodePort`. Please note that `service.nodePort` + 1 will also be exposed to accept traffic for the management API)"
+        },
+        "type": {
+          "type": "string",
+          "description": "Service type (ClusterIP, NodePort or LoadBalancer). Please note that there should be no service performing TLS offloading as it uses mutual TLS"
+        }
+      }
+    },
+    "serviceAccount": {
+      "type": "object",
+      "properties": {
+        "annotations": {
+          "type": "object",
+          "description": "Annotations to add to the service account"
+        },
+        "create": {
+          "type": "boolean",
+          "description": "If true, create a new service account"
+        },
+        "name": {
+          "type": "string",
+          "description": "Service account to be used. If not set and serviceAccount.create is true, a name is generated using the fullname template"
+        }
+      }
+    },
+    "tls": {
+      "type": "object",
+      "properties": {
+        "internal": {
+          "type": "object",
+          "properties": {
+            "certificatePEM": {
+              "type": "string",
+              "description": "The certificate signed by your internal PKI"
+            },
+            "existingSecret": {
+              "type": "string",
+              "description": "The private key of tls.internal.certificatePEM"
+            },
+            "keyPEM": {
+              "type": "string",
+              "description": "Use existing secret with your NLX keypair (tls.internal.certificatePEM and tls.internal.keyPEM will be ignored and picked up from this secret)"
+            },
+            "rootCertificatePEM": {
+              "type": "string",
+              "description": "The root certificate of your internal PKI"
+            }
+          },
+          "required": [
+            "certificatePEM",
+            "keyPEM"
+          ]
+        },
+        "organization": {
+          "type": "object",
+          "properties": {
+            "certificatePEM": {
+              "type": "string",
+              "description": "Your NLX certificate"
+            },
+            "existingSecret": {
+              "type": "string",
+              "description": "Use existing secret with your NLX keypair (tls.organization.certificatePEM and tls.organization.keyPEM will be ignored and picked up from the secret)"
+            },
+            "keyPEM": {
+              "type": "string",
+              "description": "The private key of tls.organization.certificatePEM"
+            },
+            "rootCertificatePEM": {
+              "type": "string",
+              "description": "The NLX root certificate"
+            }
+          },
+          "required": [
+            "certificatePEM",
+            "keyPEM"
+          ]
+        }
+      }
+    },
+    "tolerations": {
+      "type": "array",
+      "description": "Node tolerations for pod assignment"
+    },
+    "transactionLog": {
+      "type": "object",
+      "properties": {
+        "connectTimeout": {
+          "type": "string",
+          "description": "The connection timeout for PostgreSQL"
+        },
+        "database": {
+          "type": "string",
+          "description": "PostgreSQL database"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "If true the outway will write log records into the transaction log"
+        },
+        "existingSecret": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Use existing secret for password details (`transactionLog.username` and `transactionLog.password` will be ignored and picked up from this secret)"
+            },
+            "passwordKey": {
+              "type": "string",
+              "description": "Key for password value in aforementioned existingSecret"
+            },
+            "usernameKey": {
+              "type": "string",
+              "description": "Key for username value in aforementioned existingSecret"
+            }
+          }
+        },
+        "hostname": {
+          "type": "string",
+          "description": "PostgreSQL hostname"
+        },
+        "password": {
+          "type": "string",
+          "description": "Password of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret"
+        },
+        "port": {
+          "type": "integer",
+          "description": "PostgreSQL port"
+        },
+        "sslMode": {
+          "type": "string",
+          "description": "PostgreSQL SSL mode"
+        },
+        "username": {
+          "type": "string",
+          "description": "Username of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret"
+        }
+      },
+      "required": [
+        "port",
+        "sslMode"
+      ]
+    }
+  }
+}
