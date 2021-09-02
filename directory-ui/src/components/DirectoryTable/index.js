@@ -58,7 +58,7 @@ const DirectoryTable = ({
         <tbody>
           {filteredServices.map((service) => (
             <DirectoryServiceRow
-              key={`${service.organizationName}-${service.name}`}
+              key={`${service.organization}-${service.name}`}
               service={service}
               selected={service.name === selectedServiceName}
             />
