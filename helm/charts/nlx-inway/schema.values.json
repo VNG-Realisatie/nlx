@@ -11,32 +11,34 @@
       "properties": {
         "directoryRegistrationHostname": {
           "type": "string",
-          "description": "Address of the NLX directory where this inway will register its services."
+          "description": "Address of the NLX Directory where the Inway will register its services."
         },
         "logLevel": {
           "type": "string",
-          "description": "Possible values: debug, warn, info. Override the default loglevel set by config.logType"
+          "description": "Override the default loglevel set by config.logType",
+          "enum": ["debug", "warn", "info"]
         },
         "logType": {
           "type": "string",
-          "description": "Possible values: live, local. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger."
+          "description": "Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger.",
+          "enum": ["live", "local"]
         },
         "managementAPI": {
           "type": "object",
           "properties": {
             "address": {
               "type": "string",
-              "description": "The config address of the management API. Normally this would be: hostname:443 where hostname is the hostname of the Management API"
+              "description": "The config address of the Management API. Normally this would be: hostname:443 where hostname is the hostname of the Management API"
             }
           }
         },
         "name": {
           "type": "string",
-          "description": "Name of the inway. Should be unique within the organization. "
+          "description": "Name of the Inway. Should be unique within the organization. "
         },
         "selfAddress": {
           "type": "string",
-          "description": "The address that can be used by the NLX network to reach this inway"
+          "description": "The address that can be used by the NLX network to reach this Inway"
         },
         "serviceConfig": {
           "type": "object",
@@ -71,7 +73,7 @@
               "properties": {
                 "rootCertificatePEM": {
                   "type": "string",
-                  "description": "Global root certificate of your internal PKI. If not set the value of tls.internal.rootCertificatePEM is used"
+                  "description": "Global root certificate of your internal PKI. If this field is not set, the value of tls.internal.rootCertificatePEM will be used"
                 }
               }
             },
@@ -80,7 +82,7 @@
               "properties": {
                 "rootCertificatePEM": {
                   "type": "string",
-                  "description": "Global NLX root certificate. If not set the value of tls.organization.rootCertificatePEM is used"
+                  "description": "Global NLX root certificate. If field is not set, the value of tls.organization.rootCertificatePEM will be used"
                 }
               }
             }
@@ -132,7 +134,7 @@
     },
     "replicaCount": {
       "type": "integer",
-      "description": "Number of management replicas"
+      "description": "Number of NLX Management replicas"
     },
     "resources": {
       "type": "object",
@@ -151,7 +153,7 @@
         },
         "loadBalancerIP": {
           "type": "string",
-          "description": "Only applies to Service Type: LoadBalancer LoadBalancer will get created with the IP specified in this field. This feature depends on whether the underlying cloud-provider supports specifying the loadBalancerIP when a load balancer is created. This field will be ignored if the cloud-provider does not support the feature."
+          "description": "Only applies when using service.type: 'LoadBalancer'. LoadBalancer will get created with the IP specified in this field. This feature depends on whether the underlying cloud-provider supports specifying the loadBalancerIP when a load balancer is created. This field will be ignored if the cloud-provider does not support the feature."
         },
         "port": {
           "type": "integer",
@@ -159,11 +161,12 @@
         },
         "nodePort": {
           "type": "integer",
-          "description": "Port exposed if `service.type` is `NodePort`. Please note that `service.nodePort` + 1 will also be exposed to accept traffic for the management API)"
+          "description": "Port exposed if service.type is NodePort. Please note that `service.nodePort` + 1 will also be exposed to accept traffic for the management API)"
         },
         "type": {
           "type": "string",
-          "description": "Service type (ClusterIP, NodePort or LoadBalancer). Please note that there should be no service performing TLS offloading as it uses mutual TLS"
+          "description": "Service Type. Please note that there should be no service performing TLS offloading as it uses mutual TLS",
+          "enum": ["ClusterIP", "NodePort", "LoadBalancer"]
         }
       }
     },
@@ -180,7 +183,7 @@
         },
         "name": {
           "type": "string",
-          "description": "Service account to be used. If not set and serviceAccount.create is true, a name is generated using the fullname template"
+          "description": "Service account to be used. If this field is not set and serviceAccount.create is set to true, a name will be generated using the fullname template"
         }
       }
     },
@@ -256,14 +259,14 @@
         },
         "enabled": {
           "type": "boolean",
-          "description": "If true the outway will write log records into the transaction log"
+          "description": "If true, the Outway will write log records into the transaction log"
         },
         "existingSecret": {
           "type": "object",
           "properties": {
             "name": {
               "type": "string",
-              "description": "Use existing secret for password details (`transactionLog.username` and `transactionLog.password` will be ignored and picked up from this secret)"
+              "description": "Use an existing secret for password details (`transactionLog.username` and `transactionLog.password` will be ignored and picked up from this secret)"
             },
             "passwordKey": {
               "type": "string",

@@ -1,6 +1,6 @@
 # inway
 NLX is an open source peer-to-peer system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API ecosystem with many organizations.
-Through an Inway an organization can provide services to the NLX ecosystem. The inway is usually deployed centrally within the organization although it is possible for one organization to deploy multiple instances on different locations.
+An organization can provide services to the NLX ecosystem through an Inway. The Inway is usually deployed centrally within the organization, although it is possible for one organization to deploy multiple instances on different locations.
 
 ## Prerequisites
 
@@ -44,8 +44,8 @@ The following table lists the configurable parameters of the nlx-inway Chart and
 | --------- | ----------- | ------- | -------- |
 | `global.imageRegistry` | Global Docker Image registry | `nil` | no |
 | `global.imageTag` | Global Docker Image tag | `true` | no |
-| `global.tls.organization.rootCertificatePEM`| Global NLX root certificate. If not set the value of `tls.organization.rootCertificatePEM` is used | `nil` | no |
-| `global.tls.internal.rootCertificatePEM` | Global root certificate of your internal PKI. If not set the value of `tls.internal.rootCertificatePEM` is used | `nil` | no |
+| `global.tls.organization.rootCertificatePEM`| Global NLX root certificate. If field is not set, the value of `tls.organization.rootCertificatePEM` will be used | `nil` | no |
+| `global.tls.internal.rootCertificatePEM` | Global root certificate of your internal PKI. If this field is not set, the value of `tls.internal.rootCertificatePEM` will be used | `nil` | no |
 
 ### Common parameters
 
@@ -65,11 +65,11 @@ The following table lists the configurable parameters of the nlx-inway Chart and
 | `image.pullSecrets` | Secrets for the image repository | `[]` | no |
 | `affinity` | Node affinity for pod assignment | `{}` | no |
 | `nodeSelector` | Node labels for pod assignment | `{}` | no |
-| `replicaCount` | Number of management replicas | `1` | no |
+| `replicaCount` | Number of NLX Management replicas | `1` | no |
 | `resources` | Pod resource requests & limits | `{}` | no |
 | `tolerations` | Node tolerations for pod assignment | `[]` | no |
 | `serviceAccount.create` | If `true`, create a new service account | `true` | no |
-| `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` | no |
+| `serviceAccount.name` | Service account to be used. If this field is not set and `serviceAccount.create` is set to `true`, a name will be generated using the fullname template | `""` | no |
 | `serviceAccount.annotations` | Annotations to add to the service account | `{}` | no |
 | `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` | no |
 | `podSecuritiyContext.fsGroup` | Group ID under which the pod should be started | `1001` | no |
@@ -78,11 +78,11 @@ The following table lists the configurable parameters of the nlx-inway Chart and
 
 | Parameter | Description | Default | Required (yes/no) |
 | --------- | ----------- | ------- | -------- |
-| `config.name` | Name of the inway. Should be unique within the organization. | `""` | yes |
+| `config.name` | Name of the Inway. Should be unique within the organization. | `""` | yes |
 | `config.logType` | Possible values: **live**, **local**. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger. | `live` | no |
 | `config.logLevel` | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType` | `info` | no |
-| `config.directoryRegistrationHostname` | Address of the NLX directory where this inway will register its services. | `""` | yes |
-| `config.selfAddress` | The address that can be used by the NLX network to reach this inway | `""` | no |
+| `config.directoryRegistrationHostname` | Address of the NLX Directory where the Inway will register its services. | `""` | yes |
+| `config.selfAddress` | The address that can be used by the NLX network to reach this Inway | `""` | no |
 | `config.managementAPI.address` | The config address of the management API. Normally this would be: `hostname:443` where `hostname` is the hostname of the Management API | `""` | no |
 
 ### TLS parameters
@@ -110,14 +110,14 @@ TLS certificates used by NLX components for internal communication.
 | Parameter | Description | Default | Required (yes/no) |
 | --------- | ----------- | ------- | -------- |
 | `transactionLog.connectTimeout` | The connection timeout for PostgreSQL | `"10"` | no |
-| `transactionLog.enabled` | If `true` the outway will write log records into the transaction log | `false` | no |
+| `transactionLog.enabled` | If `true`, the Outway will write log records into the transaction log | `false` | no |
 | `transactionLog.hostname` | PostgreSQL hostname | `""` | no |
 | `transactionLog.port` | PostgreSQL port | `5432` | yes |
 | `transactionLog.sslMode` | PostgreSQL SSL mode | `require` | yes |
 | `transactionLog.database` | PostgreSQL database  | `` | no |
 | `transactionLog.username` | Username of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret | `""` | no |
 | `transactionLog.password` | Password of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret | `""` | no |
-| `transactionLog.existingSecret.name` | Use existing secret for password details (`transactionLog.username` and `transactionLog.password` will be ignored and picked up from this secret) | `""` | no |
+| `transactionLog.existingSecret.name` | Use an existing secret for password details (`transactionLog.username` and `transactionLog.password` will be ignored and picked up from this secret) | `""` | no |
 | `transactionLog.existingSecret.usernameKey` | Key for username value in aforementioned existingSecret | `username` | no |
 | `transactionLog.existingSecret.passwordKey` | Key for password value in aforementioned existingSecret | `password` | no |
 
@@ -129,7 +129,7 @@ TLS certificates used by NLX components for internal communication.
 | `service.port` | Port exposed by the service | `443` | no |
 | `service.nodePort` | Port exposed if `service.type` is `NodePort`. Please note that `service.nodePort` + 1 will also be exposed to accept traffic for the management API) | `""` | no |
 | `service.annotations` | You can use Kubernetes annotations to attach arbitrary non-identifying metadata to objects. Clients such as tools and libraries can retrieve this metadata. | `{}` | no |
-| `service.loadBalancerIP` | Only applies to Service Type: LoadBalancer LoadBalancer will get created with the IP specified in this field. This feature depends on whether the underlying cloud-provider supports specifying the loadBalancerIP when a load balancer is created. This field will be ignored if the cloud-provider does not support the feature. | `""` | no |
+| `service.loadBalancerIP` | Only applies when using `service.type`: 'LoadBalancer'. LoadBalancer will get created with the IP specified in this field. This feature depends on whether the underlying cloud-provider supports specifying the loadBalancerIP when a load balancer is created. This field will be ignored if the cloud-provider does not support the feature. | `""` | no |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 
