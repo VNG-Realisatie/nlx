@@ -4,7 +4,6 @@
 package inway
 
 import (
-	"errors"
 	"fmt"
 	"regexp"
 	"strings"
@@ -38,39 +37,21 @@ var nameRegex = regexp.MustCompile(`^[a-zA-Z0-9-]{1,100}$`)
 var organizationNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-._\s]{1,100}$`)
 
 func NewInway(args *NewInwayArgs) (*Inway, error) {
-	err := validation.Validate(args.Name, validation.When(len(args.Name) > 0, validation.Match(nameRegex)))
-	if err != nil {
-		return nil, fmt.Errorf("name: %s", err)
-	}
-
-	err = validation.Validate(args.OrganizationName, validation.Required, validation.Match(organizationNameRegex))
-	if err != nil {
-		return nil, fmt.Errorf("organization name: %s", err)
-	}
-
-	err = validation.Validate(
-		args.Address,
-		validation.Required,
-		validation.When(strings.Contains(args.Address, ":"), is.DialString),
-		validation.When(!strings.Contains(args.Address, ":"), is.DNSName),
+	err := validation.ValidateStruct(
+		args,
+		validation.Field(&args.Name, validation.When(len(args.Name) > 0, validation.Match(nameRegex))),
+		validation.Field(&args.OrganizationName, validation.Required, validation.Match(organizationNameRegex)),
+		validation.Field(&args.Address, validation.Required,
+			validation.When(strings.Contains(args.Address, ":"), is.DialString),
+			validation.When(!strings.Contains(args.Address, ":"), is.DNSName),
+		),
+		validation.Field(&args.NlxVersion, validation.When(args.NlxVersion != NlxVersionUnknown, is.Semver)),
+		validation.Field(&args.CreatedAt, validation.Max(time.Now()).Error("must not be in the future")),
+		validation.Field(&args.UpdatedAt, validation.Max(time.Now()).Error("must not be in the future")),
 	)
-	if err != nil {
-		return nil, fmt.Errorf("address: %s", err)
-	}
 
-	err = validation.Validate(args.NlxVersion, validation.When(args.NlxVersion != NlxVersionUnknown, is.Semver))
 	if err != nil {
-		return nil, fmt.Errorf("nlx version: %s", err)
-	}
-
-	err = validation.Validate(args.CreatedAt, validation.Max(time.Now()))
-	if err != nil {
-		return nil, errors.New("created at: must not be in the future")
-	}
-
-	err = validation.Validate(args.UpdatedAt, validation.Max(time.Now()))
-	if err != nil {
-		return nil, errors.New("updated at: must not be in the future")
+		return nil, err
 	}
 
 	return &Inway{

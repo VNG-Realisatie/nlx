@@ -29,7 +29,7 @@ func Test_NewInway(t *testing.T) {
 				CreatedAt:        now,
 				UpdatedAt:        now,
 			},
-			expectedErr: "name: must be in a valid format",
+			expectedErr: "Name: must be in a valid format.",
 		},
 		"without_address": {
 			inwayArgs: &inway.NewInwayArgs{
@@ -40,7 +40,7 @@ func Test_NewInway(t *testing.T) {
 				CreatedAt:        now,
 				UpdatedAt:        now,
 			},
-			expectedErr: "address: cannot be blank",
+			expectedErr: "Address: cannot be blank.",
 		},
 		"invalid_address": {
 			inwayArgs: &inway.NewInwayArgs{
@@ -51,7 +51,7 @@ func Test_NewInway(t *testing.T) {
 				CreatedAt:        now,
 				UpdatedAt:        now,
 			},
-			expectedErr: "address: must be a valid dial string",
+			expectedErr: "Address: must be a valid dial string.",
 		},
 		"invalid_version": {
 			inwayArgs: &inway.NewInwayArgs{
@@ -62,7 +62,7 @@ func Test_NewInway(t *testing.T) {
 				CreatedAt:        now,
 				UpdatedAt:        now,
 			},
-			expectedErr: "nlx version: must be a valid semantic version",
+			expectedErr: "NlxVersion: must be a valid semantic version.",
 		},
 		"without_organization_name": {
 			inwayArgs: &inway.NewInwayArgs{
@@ -73,7 +73,7 @@ func Test_NewInway(t *testing.T) {
 				CreatedAt:        now,
 				UpdatedAt:        now,
 			},
-			expectedErr: "organization name: cannot be blank",
+			expectedErr: "OrganizationName: cannot be blank.",
 		},
 		"empty_name": {
 			inwayArgs: &inway.NewInwayArgs{
@@ -95,7 +95,7 @@ func Test_NewInway(t *testing.T) {
 				CreatedAt:        now.Add(1 * time.Hour),
 				UpdatedAt:        now,
 			},
-			expectedErr: "created at: must not be in the future",
+			expectedErr: "CreatedAt: must not be in the future.",
 		},
 		"updated_at_in_future": {
 			inwayArgs: &inway.NewInwayArgs{
@@ -106,7 +106,7 @@ func Test_NewInway(t *testing.T) {
 				CreatedAt:        now,
 				UpdatedAt:        now.Add(1 * time.Hour),
 			},
-			expectedErr: "updated at: must not be in the future",
+			expectedErr: "UpdatedAt: must not be in the future.",
 		},
 		"happy_flow": {
 			inwayArgs: &inway.NewInwayArgs{
