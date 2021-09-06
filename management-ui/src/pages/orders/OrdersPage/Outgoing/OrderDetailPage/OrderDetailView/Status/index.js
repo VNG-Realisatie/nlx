@@ -45,7 +45,11 @@ const Status = ({ order, revokeHandler, ...props }) => {
           <StateDetail>
             <span>{t('Order is active')}</span>
           </StateDetail>
-          <Button onClick={revokeHandler} aria-label={t('Revoke')}>
+          <Button
+            onClick={revokeHandler}
+            aria-label={t('Revoke')}
+            variant="danger"
+          >
             {t('Revoke')}
           </Button>
         </>
