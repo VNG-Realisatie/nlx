@@ -1,3 +1,17 @@
+# [0.112.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.111.0...v0.112.0) (2021-09-06)
+
+
+### Bug Fixes
+
+* **directory:** fix wrong key name ([a0b97f8](https://gitlab.com/commonground/nlx/nlx/commit/a0b97f8fb67551670b7446272f414c6b0d1de109))
+* start development script adds user with password for organisation b ([5966356](https://gitlab.com/commonground/nlx/nlx/commit/59663562a2eb688aee5afaba3bfe6da02f9a64db))
+
+
+### Features
+
+* **directory:** add activity timestamps to inway ([f30b907](https://gitlab.com/commonground/nlx/nlx/commit/f30b9074a481c092560d733cf2af2d1ca3bdd58e))
+* **directory:** add migrations for inway activity timestamps ([69087ce](https://gitlab.com/commonground/nlx/nlx/commit/69087ce848003608230ccc9b7cb945ff3b0cb2c3))
+
 # [0.111.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.110.0...v0.111.0) (2021-08-30)
 
 
