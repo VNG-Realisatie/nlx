@@ -1,0 +1,402 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+    "affinity": {
+      "type": "object",
+      "description": "Node affinity for pod assignment"
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "directoryInspectionHostname": {
+          "type": "string",
+          "description": "Used to retrieve information about services from the NLX Directory."
+        },
+        "directoryRegistrationHostname": {
+          "type": "string",
+          "description": "Address of the NLX Directory where this Inway will register its services."
+        },
+        "logLevel": {
+          "type": "string",
+          "description": "Override the default loglevel set by config.logType",
+          "enum": ["debug", "warn", "info"]
+        },
+        "logType": {
+          "type": "string",
+          "description": "Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger.",
+          "enum": ["live", "local"]
+        },
+        "oidc": {
+          "type": "object",
+          "properties": {
+            "clientID": {
+              "type": "string",
+              "description": "The OIDC client ID"
+            },
+            "clientSecret": {
+              "type": "string",
+              "description": "The OIDC client secret"
+            },
+            "discoveryURL": {
+              "type": "string",
+              "description": "The OIDC discovery URL"
+            },
+            "redirectURL": {
+              "type": "string",
+              "description": "The OIDC redirect URL"
+            },
+            "sessionSignKey": {
+              "type": "string",
+              "description": "The OIDC session sign key"
+            }
+          },
+          "required": [
+            "clientSecret",
+            "discoveryURL",
+            "redirectURL",
+            "sessionSignKey"
+          ]
+        },
+        "sessionCookieSecure": {
+          "type": "boolean",
+          "description": "If true, the API will use 'secure' cookies."
+        }
+      },
+      "required": [
+        "directoryInspectionHostname",
+        "directoryRegistrationHostname"
+      ]
+    },
+    "fullnameOverride": {
+      "type": "string",
+      "description": "Override full deployment name"
+    },
+    "global": {
+      "type": "object",
+      "properties": {
+        "imageRegistry": {
+          "type": "string",
+          "name": "Global Docker Image registry"
+        },
+        "imageTag": {
+          "type": "string",
+          "description": "Global Docker Image tag"
+        },
+        "tls": {
+          "type": "object",
+          "properties": {
+            "internal": {
+              "type": "object",
+              "properties": {
+                "rootCertificatePEM": {
+                  "type": "string",
+                  "description": "Global root certificate of your internal PKI. If not set the value of tls.internal.rootCertificatePEM is used"
+                }
+              }
+            },
+            "organization": {
+              "type": "object",
+              "properties": {
+                "rootCertificatePEM": {
+                  "type": "string",
+                  "description": "Global NLX root certificate. If not set the value of tls.organization.rootCertificatePEM is used"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "image": {
+      "type": "object",
+      "properties": {
+        "apiRepository": {
+          "type": "string",
+          "description": "Image repository for the management API"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "description": "Image pull policy",
+          "enum": ["IfNotPresent", "Never", "Always"]
+        },
+        "pullSecrets": {
+          "type": "array",
+          "description": "Secrets for the image repository"
+        },
+        "registry": {
+          "type": "string",
+          "description": "Image registry (ignored if global.imageRegistry is set)"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Image tag (ignored if global.imageTag is set). When set to null, the AppVersion from the Chart is used"
+        },
+        "uiRepository": {
+          "type": "string",
+          "description": "Image repository for the management UI"
+        }
+      }
+    },
+    "ingress": {
+      "type": "object",
+      "properties": {
+        "annotations": {
+          "type": "object",
+          "description": "Ingress annotations"
+        },
+        "class": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable Ingress"
+        },
+        "hosts": {
+          "type": "array",
+          "description": "Ingress accepted hostname"
+        },
+        "tls": {
+          "type": "array",
+          "description": "Ingress TLS configuration"
+        }
+      }
+    },
+    "nameOverride": {
+      "type": "string",
+      "description": "Override deployment name"
+    },
+    "nodeSelector": {
+      "type": "object",
+      "description": "Node labels for pod assignment"
+    },
+    "podSecurityContext": {
+      "type": "object",
+      "properties": {
+        "fsGroup": {
+          "type": "integer",
+          "description": "Group ID under which the pod should be started"
+        }
+      }
+    },
+    "postgresql": {
+      "type": "object",
+      "properties": {
+        "connectTimeout": {
+          "type": "string",
+          "description": "The connection timeout for the PostgreSQL database"
+        },
+        "database": {
+          "type": "string",
+          "description": "PostgreSQL database"
+        },
+        "existingSecret": {
+          "type": "object",
+          "description": "Use existing secret for password details (postgresql.username and postgresql.password will be ignored and picked up from this secret)",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "passwordKey": {
+              "type": "string"
+            },
+            "usernameKey": {
+              "type": "string"
+            }
+          }
+        },
+        "hostname": {
+          "type": "string",
+          "description": "PostgreSQL hostname"
+        },
+        "password": {
+          "type": "string",
+          "description": "PostgreSQL password. Will be stored in a Kubernetes secret"
+        },
+        "port": {
+          "type": "integer",
+          "description": "PostgreSQL port"
+        },
+        "sslMode": {
+          "type": "string",
+          "description": "PostgreSQL SSL mode"
+        },
+        "username": {
+          "type": "string",
+          "description": "PostgreSQL username. Will be stored in a Kubernetes secret"
+        }
+      },
+      "required": [
+        "hostname",
+        "port",
+        "sslMode"
+      ]
+    },
+    "replicaCount": {
+      "type": "integer",
+      "description": "Number of management replicas"
+    },
+    "resources": {
+      "type": "object",
+      "description": "Pod resource requests & limits"
+    },
+    "securityContext": {
+      "type": "object",
+      "description": "Annotations to add to the service account"
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "apiConfigPort": {
+          "type": "integer",
+          "description": "Port exposed by the Management API for the config endpoints"
+        },
+        "apiPort": {
+          "type": "integer",
+          "description": "Port exposed by the Management API"
+        },
+        "type": {
+          "type": "string",
+          "description": "Service type",
+          "enum": ["ClusterIP", "NodePort", "LoadBalancer"]
+        },
+        "uiPort": {
+          "type": "integer",
+          "description": "Port exposed by the Management UI"
+        }
+      }
+    },
+    "serviceAccount": {
+      "type": "object",
+      "properties": {
+        "annotations": {
+          "type": "object",
+          "description": "Annotations to add to the service account"
+        },
+        "create": {
+          "type": "boolean",
+          "description": "If true, create a new service account"
+        },
+        "name": {
+          "type": "string",
+          "description": "Service account to be used. If not set and serviceAccount.create is true, a name is generated using the fullname template"
+        }
+      }
+    },
+    "tls": {
+      "type": "object",
+      "properties": {
+        "internal": {
+          "type": "object",
+          "properties": {
+            "certificatePEM": {
+              "type": "string",
+              "description": "The certificate signed by your internal PKI"
+            },
+            "existingSecret": {
+              "type": "string",
+              "description": "The private key of tls.internal.certificatePEM"
+            },
+            "keyPEM": {
+              "type": "string",
+              "description": "Use existing secret with your NLX keypair (tls.internal.certificatePEM and tls.internal.keyPEM will be ignored and picked up from this secret)"
+            },
+            "rootCertificatePEM": {
+              "type": "string",
+              "description": "The root certificate of your internal PKI"
+            }
+          },
+          "required": [
+            "certificatePEM",
+            "keyPEM"
+          ]
+        },
+        "organization": {
+          "type": "object",
+          "properties": {
+            "certificatePEM": {
+              "type": "string",
+              "description": "Your NLX certificate"
+            },
+            "existingSecret": {
+              "type": "string",
+              "description": "Use existing secret with your NLX keypair (tls.organization.certificatePEM and tls.organization.keyPEM will be ignored and picked up from the secret)"
+            },
+            "keyPEM": {
+              "type": "string",
+              "description": "The private key of tls.organization.certificatePEM"
+            },
+            "rootCertificatePEM": {
+              "type": "string",
+              "description": "The NLX root certificate"
+            }
+          },
+          "required": [
+            "certificatePEM",
+            "keyPEM"
+          ]
+        }
+      }
+    },
+    "tolerations": {
+      "type": "array",
+      "descriptions": "Node tolerations for pod assignment"
+    },
+    "transactionLog": {
+      "type": "object",
+      "properties": {
+        "connectTimeout": {
+          "type": "string",
+          "description": "The connection timeout for the PostgreSQL database"
+        },
+        "database": {
+          "type": "string",
+          "description": "PostgreSQL database"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "If true the Outway will write log records into the transaction log"
+        },
+        "existingSecret": {
+          "type": "object",
+          "description": "Use existing secret for password details (transactionLog.username and transactionLog.password will be ignored and picked up from this secret)",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "passwordKey": {
+              "type": "string"
+            },
+            "usernameKey": {
+              "type": "string"
+            }
+          }
+        },
+        "hostname": {
+          "type": "string",
+          "description": "PostgreSQL hostname"
+        },
+        "password": {
+          "type": "string",
+          "description": "Password of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret"
+        },
+        "port": {
+          "type": "integer",
+          "description": "PostgreSQL port"
+        },
+        "sslMode": {
+          "type": "string",
+          "description": "PostgreSQL SSL mode"
+        },
+        "username": {
+          "type": "string",
+          "description": "Username of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret"
+        }
+      },
+      "required": [
+        "port",
+        "sslMode"
+      ]
+    }
+  }
+}
