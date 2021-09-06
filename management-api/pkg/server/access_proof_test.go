@@ -27,22 +27,26 @@ func TestGetAccessProof(t *testing.T) {
 	ts, _ := ptypes.TimestampProto(now)
 
 	tests := map[string]struct {
-		want     *api.AccessProof
-		wantCode codes.Code
-		setup    func(*mock_database.MockConfigDatabase) context.Context
+		want    *api.AccessProof
+		wantErr error
+		setup   func(*mock_database.MockConfigDatabase) context.Context
 	}{
 		"errors_when_peer_context_is_missing": {
-			wantCode: codes.Internal,
+			wantErr: status.Error(codes.Internal, "missing metadata from the management proxy"),
 			setup: func(db *mock_database.MockConfigDatabase) context.Context {
 				return context.Background()
 			},
 		},
 
 		"returns_error_when_get_latest_access_grant_for_service_errors": {
-			wantCode: codes.Internal,
+			wantErr: status.Error(codes.Internal, "database error"),
 			setup: func(db *mock_database.MockConfigDatabase) context.Context {
 				ctx := setProxyMetadata(context.Background())
 
+				db.
+					EXPECT().
+					GetService(ctx, "service").
+					Return(&database.Service{Name: "service"}, nil)
 				db.
 					EXPECT().
 					GetLatestAccessGrantForService(ctx, "organization-a", "service").
@@ -53,9 +57,14 @@ func TestGetAccessProof(t *testing.T) {
 		},
 
 		"returns_not_found_when_access_grant_could_not_be_found": {
-			wantCode: codes.NotFound,
+			wantErr: status.Error(codes.NotFound, "access proof not found"),
 			setup: func(db *mock_database.MockConfigDatabase) context.Context {
 				ctx := setProxyMetadata(context.Background())
+
+				db.
+					EXPECT().
+					GetService(ctx, "service").
+					Return(&database.Service{Name: "service"}, nil)
 
 				db.
 					EXPECT().
@@ -66,8 +75,21 @@ func TestGetAccessProof(t *testing.T) {
 			},
 		},
 
+		"returns_not_found_when_service_no_long_exists": {
+			wantErr: status.Error(codes.NotFound, "service no longer exists"),
+			setup: func(db *mock_database.MockConfigDatabase) context.Context {
+				ctx := setProxyMetadata(context.Background())
+
+				db.
+					EXPECT().
+					GetService(ctx, "service").
+					Return(nil, database.ErrNotFound)
+
+				return ctx
+			},
+		},
+
 		"returns_access_proof_for_successful_request": {
-			wantCode: codes.OK,
 			want: &api.AccessProof{
 				Id:               1,
 				CreatedAt:        ts,
@@ -78,6 +100,11 @@ func TestGetAccessProof(t *testing.T) {
 			},
 			setup: func(db *mock_database.MockConfigDatabase) context.Context {
 				ctx := setProxyMetadata(context.Background())
+
+				db.
+					EXPECT().
+					GetService(ctx, "service").
+					Return(&database.Service{Name: "service"}, nil)
 
 				db.
 					EXPECT().
@@ -113,19 +140,8 @@ func TestGetAccessProof(t *testing.T) {
 				ServiceName: "service",
 			})
 
-			if tt.wantCode > 0 {
-				assert.Error(t, err)
-
-				st, ok := status.FromError(err)
-
-				assert.True(t, ok)
-				assert.Equal(t, tt.wantCode, st.Code())
-			} else {
-				assert.NoError(t, err)
-				if assert.NotNil(t, response) {
-					assert.Equal(t, tt.want, response)
-				}
-			}
+			assert.Equal(t, tt.wantErr, err)
+			assert.Equal(t, tt.want, response)
 		})
 	}
 }
