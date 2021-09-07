@@ -1,3 +1,16 @@
+# [0.113.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.112.0...v0.113.0) (2021-09-07)
+
+
+### Bug Fixes
+
+* **helm:** convert PostgreSQL connectTimeout value from string to integer ([6022a69](https://gitlab.com/commonground/nlx/nlx/commit/6022a696621bf7636c34d8bb9962721f79b2125e)), closes [#1272](https://gitlab.com/commonground/nlx/nlx/issues/1272)
+* **helm:** rename schema.values.json -> values.schema.json ([a1a2c50](https://gitlab.com/commonground/nlx/nlx/commit/a1a2c506a6dcdf3658dfddb13d28492118cb4387)), closes [#1272](https://gitlab.com/commonground/nlx/nlx/issues/1272)
+
+
+### Features
+
+* **management:** update revoke button color to red ([545c4dc](https://gitlab.com/commonground/nlx/nlx/commit/545c4dc99525a547be69b54abe9624530da4f842)), closes [#1346](https://gitlab.com/commonground/nlx/nlx/issues/1346)
+
 # [0.112.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.111.0...v0.112.0) (2021-09-06)
 
 
