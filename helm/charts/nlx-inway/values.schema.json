@@ -95,7 +95,8 @@
       "properties": {
         "pullPolicy": {
           "type": "string",
-          "description": "Image pull policy"
+          "description": "Image pull policy",
+          "enum": ["IfNotPresent", "Never", "Always"]
         },
         "pullSecrets": {
           "type": "array",
