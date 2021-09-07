@@ -20,6 +20,8 @@ type Settings struct {
 	UpdatedAt time.Time
 }
 
+var ErrInwayNotFound = errors.New("inway not found")
+
 func (s *Settings) TableName() string {
 	return "nlx_management.settings"
 }
@@ -43,12 +45,18 @@ func (db *PostgresConfigDatabase) GetSettings(ctx context.Context) (*Settings, e
 
 func (db *PostgresConfigDatabase) PutOrganizationInway(ctx context.Context, inwayID *uint) (*Settings, error) {
 	settingsInDB := &Settings{}
-	if err := db.DB.
+	err := db.DB.
 		WithContext(ctx).
 		Omit(clause.Associations).
 		Where("id IS NOT NULL").
 		Assign(map[string]interface{}{"inway_id": inwayID}).
-		FirstOrCreate(settingsInDB).Error; err != nil {
+		FirstOrCreate(settingsInDB).Error
+
+	if err != nil {
+		if err.Error() == `pq: insert or update on table "settings" violates foreign key constraint "fk_organization_settings_inway"` {
+			return nil, ErrInwayNotFound
+		}
+
 		return nil, err
 	}
 

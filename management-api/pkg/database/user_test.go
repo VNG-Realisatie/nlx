@@ -22,26 +22,29 @@ func TestVerifyCredentials(t *testing.T) {
 
 	setup(t)
 
+	type args struct {
+		email    string
+		password string
+	}
+
 	testCases := map[string]struct {
-		prepare       func(configDb database.ConfigDatabase) error
-		email         string
-		password      string
+		args          args
 		expected      bool
 		expectedError error
 	}{
 		"with_invalid_username_password": {
-			email:         "invalid@credentials.com",
-			password:      "bar",
+			args: args{
+				email:    "invalid@credentials.com",
+				password: "bar",
+			},
 			expected:      false,
 			expectedError: gorm.ErrRecordNotFound,
 		},
 		"happy_flow": {
-			prepare: func(configDb database.ConfigDatabase) error {
-				_, err := configDb.CreateUser(context.Background(), "test-verify-credentials@happy-flow.com", "password", []string{})
-				return err
+			args: args{
+				email:    "fixture@example.com",
+				password: "password",
 			},
-			email:         "test-verify-credentials@happy-flow.com",
-			password:      "password",
 			expected:      true,
 			expectedError: nil,
 		},
@@ -56,12 +59,7 @@ func TestVerifyCredentials(t *testing.T) {
 			configDb, close := newConfigDatabase(t, t.Name())
 			defer close()
 
-			if tt.prepare != nil {
-				err := tt.prepare(configDb)
-				require.Nil(t, err)
-			}
-
-			actual, err := configDb.VerifyUserCredentials(context.Background(), tt.email, tt.password)
+			actual, err := configDb.VerifyUserCredentials(context.Background(), tt.args.email, tt.args.password)
 			if tt.expectedError != nil {
 				require.ErrorIs(t, err, tt.expectedError)
 			} else {
@@ -77,40 +75,61 @@ func TestCreateUser(t *testing.T) {
 
 	setup(t)
 
+	type args struct {
+		email     string
+		password  string
+		roleNames []string
+	}
+
 	tests := map[string]struct {
-		prepare       func(configDb database.ConfigDatabase) error
-		email         string
-		password      string
-		roleNames     []string
-		expected      *database.User
-		expectedError string
+		args        args
+		expected    *database.User
+		expectedErr error
 	}{
 		"with_existing_email_address": {
-			prepare: func(configDb database.ConfigDatabase) error {
-				_, err := configDb.CreateUser(
-					context.Background(),
-					"already@present.com",
-					"password",
-					[]string{},
-				)
-				return err
+			args: args{
+				email:    "fixture@example.com",
+				password: "foobar",
+				roleNames: []string{
+					"admin",
+				},
 			},
-			email:         "already@present.com",
-			password:      "foobar",
-			expectedError: database.ErrUserAlreadyExists.Error(),
+			expectedErr: database.ErrUserAlreadyExists,
 		},
-		"without_a_password": {
-			email: "john.doe@example.com",
+		"happy_flow_without_a_password": {
+			args: args{
+				email: "john.doe@example.com",
+				roleNames: []string{
+					"admin",
+				},
+			},
 			expected: &database.User{
 				Email: "john.doe@example.com",
+				Roles: []database.Role{
+					{
+						Code: "admin",
+					},
+				},
 			},
+			expectedErr: nil,
 		},
 		"happy_flow": {
-			email:    "jane.doe@example.com",
-			password: "foobar",
+			args: args{
+				email:    "jane.doe@example.com",
+				password: "foobar",
+				roleNames: []string{
+					"admin",
+				},
+			},
 			expected: &database.User{
 				Email: "jane.doe@example.com",
+				Roles: []database.Role{
+					{
+						Code: "admin",
+					},
+				},
 			},
+			expectedErr: nil,
 		},
 	}
 
@@ -123,22 +142,14 @@ func TestCreateUser(t *testing.T) {
 			configDb, close := newConfigDatabase(t, t.Name())
 			defer close()
 
-			if tt.prepare != nil {
-				err := tt.prepare(configDb)
-				require.Nil(t, err)
-			}
+			actual, err := configDb.CreateUser(context.Background(), tt.args.email, tt.args.password, tt.args.roleNames)
+			require.ErrorIs(t, err, tt.expectedErr)
 
-			actual, err := configDb.CreateUser(context.Background(), tt.email, tt.password, tt.roleNames)
-			if len(tt.expectedError) > 1 {
-				require.EqualError(t, err, tt.expectedError)
-			} else {
-				require.NoError(t, err)
-				require.NotNil(t, actual)
+			if err == nil {
 				require.Equal(t, tt.expected.Email, actual.Email)
-				require.Equal(t, tt.expected.Roles, actual.Roles)
 
-				if len(tt.expected.Password) > 0 {
-					require.Equal(t, tt.expected.Password, actual.Password)
+				for i, role := range tt.expected.Roles {
+					require.Equal(t, role.Code, actual.Roles[i].Code)
 				}
 			}
 		})

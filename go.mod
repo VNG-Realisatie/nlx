@@ -19,6 +19,7 @@ require (
 	github.com/go-chi/render v1.0.1
 	github.com/go-errors/errors v1.4.0
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
+	github.com/go-testfixtures/testfixtures/v3 v3.6.1
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/golang-migrate/migrate/v4 v4.14.1
 	github.com/golang/mock v1.6.0
