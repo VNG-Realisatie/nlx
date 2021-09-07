@@ -7,8 +7,6 @@ package database_test
 
 import (
 	"context"
-	"net/url"
-	"os"
 	"testing"
 
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
@@ -19,22 +17,10 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
-func Test_User(t *testing.T) {
-	configDb := newPostgresConfigDatabase(t)
+func TestVerifyCredentials(t *testing.T) {
+	t.Parallel()
 
-	t.Run("verify_credentials", func(t *testing.T) {
-		t.Parallel()
-		testVerifyCredentials(t, configDb)
-	})
-
-	t.Run("create_user", func(t *testing.T) {
-		t.Parallel()
-		testCreateUser(t, configDb)
-	})
-}
-
-func testVerifyCredentials(t *testing.T, configDb database.ConfigDatabase) {
-	t.Helper()
+	setup(t)
 
 	testCases := map[string]struct {
 		prepare       func(configDb database.ConfigDatabase) error
@@ -67,6 +53,9 @@ func testVerifyCredentials(t *testing.T, configDb database.ConfigDatabase) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
+			configDb, close := newConfigDatabase(t, t.Name())
+			defer close()
+
 			if tt.prepare != nil {
 				err := tt.prepare(configDb)
 				require.Nil(t, err)
@@ -83,10 +72,12 @@ func testVerifyCredentials(t *testing.T, configDb database.ConfigDatabase) {
 	}
 }
 
-func testCreateUser(t *testing.T, configDb database.ConfigDatabase) {
-	t.Helper()
+func TestCreateUser(t *testing.T) {
+	t.Parallel()
 
-	testCases := map[string]struct {
+	setup(t)
+
+	tests := map[string]struct {
 		prepare       func(configDb database.ConfigDatabase) error
 		email         string
 		password      string
@@ -123,11 +114,14 @@ func testCreateUser(t *testing.T, configDb database.ConfigDatabase) {
 		},
 	}
 
-	for name, tt := range testCases {
+	for name, tt := range tests {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
+
+			configDb, close := newConfigDatabase(t, t.Name())
+			defer close()
 
 			if tt.prepare != nil {
 				err := tt.prepare(configDb)
@@ -149,25 +143,4 @@ func testCreateUser(t *testing.T, configDb database.ConfigDatabase) {
 			}
 		})
 	}
-}
-
-func newPostgresConfigDatabase(t *testing.T) database.ConfigDatabase {
-	dsn := os.Getenv("POSTGRES_DSN")
-	configDb, err := database.NewPostgresConfigDatabase(dsn)
-	require.NoError(t, err)
-
-	dsnForMigrations := addQueryParamToAddress(dsn, "x-migrations-table", "management_migrations")
-
-	err = database.PostgresPerformMigrations(dsnForMigrations)
-	require.NoError(t, err)
-
-	return configDb
-}
-
-func addQueryParamToAddress(address, key, value string) string {
-	u, _ := url.Parse(address)
-	q, _ := url.ParseQuery(u.RawQuery)
-	q.Add(key, value)
-	u.RawQuery = q.Encode()
-	return u.String()
 }
