@@ -5,6 +5,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -146,7 +147,7 @@ func TestSchedule(t *testing.T) {
 					RequestAccess(ctx, &external.RequestAccessRequest{
 						ServiceName: "service",
 					}, gomock.Any()).
-					Return(nil, server.ErrServiceDoesNotExist)
+					Return(nil, fmt.Errorf("mock grpc wrapper: %w", server.ErrServiceDoesNotExist))
 
 				mocks.db.
 					EXPECT().
@@ -185,6 +186,38 @@ func TestSchedule(t *testing.T) {
 				mocks.db.
 					EXPECT().
 					UpdateOutgoingAccessRequestState(ctx, uint(1), database.OutgoingAccessRequestReceived, uint(2), nil).
+					Return(nil)
+
+				mocks.management.
+					EXPECT().
+					Close().
+					Return(nil)
+			},
+		},
+
+		"scheduling_a_pending_access_request_returns_service_not_found": {
+			request: &database.OutgoingAccessRequest{
+				ID:               1,
+				OrganizationName: "organization-a",
+				ServiceName:      "service",
+				State:            database.OutgoingAccessRequestReceived,
+			},
+			setupMock: func(mocks schedulerMocks) {
+				mocks.directory.
+					EXPECT().
+					GetOrganizationInwayProxyAddress(ctx, "organization-a").
+					Return("hostname:7200", nil)
+
+				mocks.management.
+					EXPECT().
+					GetAccessRequestState(ctx, &external.GetAccessRequestStateRequest{
+						ServiceName: "service",
+					}, gomock.Any()).
+					Return(nil, fmt.Errorf("mock grpc wrapper: %w", server.ErrServiceDoesNotExist))
+
+				mocks.db.
+					EXPECT().
+					DeleteOutgoingAccessRequests(ctx, "organization-a", "service").
 					Return(nil)
 
 				mocks.management.
@@ -627,7 +660,7 @@ func TestSyncAccessProof(t *testing.T) {
 					GetAccessProof(ctx, &external.GetAccessProofRequest{
 						ServiceName: "service",
 					}).
-					Return(nil, server.ErrServiceDoesNotExist)
+					Return(nil, fmt.Errorf("mock grpc wrapper: %w", server.ErrServiceDoesNotExist))
 
 				mocks.db.
 					EXPECT().

@@ -6,6 +6,7 @@ package api
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"sync"
 	"time"
@@ -202,7 +203,7 @@ func (scheduler *accessRequestScheduler) schedule(ctx context.Context, request *
 	case database.OutgoingAccessRequestReceived:
 		state, getStateErr := scheduler.getAccessRequestState(ctx, request)
 		if getStateErr != nil {
-			if getStateErr == server.ErrServiceDoesNotExist {
+			if errors.Is(getStateErr, server.ErrServiceDoesNotExist) {
 				return scheduler.configDatabase.DeleteOutgoingAccessRequests(ctx, request.OrganizationName, request.ServiceName)
 			}
 
@@ -221,7 +222,7 @@ func (scheduler *accessRequestScheduler) schedule(ctx context.Context, request *
 			nil,
 		)
 	} else {
-		if err == server.ErrServiceDoesNotExist {
+		if errors.Is(err, server.ErrServiceDoesNotExist) {
 			return scheduler.configDatabase.DeleteOutgoingAccessRequests(ctx, request.OrganizationName, request.ServiceName)
 		}
 
@@ -281,7 +282,7 @@ func (scheduler *accessRequestScheduler) parseAccessProof(accessProof *api.Acces
 func (scheduler *accessRequestScheduler) syncAccessProof(ctx context.Context, outgoingAccessRequest *database.OutgoingAccessRequest) error {
 	remoteProof, err := scheduler.retrieveAccessProof(ctx, outgoingAccessRequest.OrganizationName, outgoingAccessRequest.ServiceName)
 	if err != nil {
-		if err == server.ErrServiceDoesNotExist {
+		if errors.Is(err, server.ErrServiceDoesNotExist) {
 			return scheduler.configDatabase.DeleteOutgoingAccessRequests(ctx, outgoingAccessRequest.OrganizationName, outgoingAccessRequest.ServiceName)
 		}
 
