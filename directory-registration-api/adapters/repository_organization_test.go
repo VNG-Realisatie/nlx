@@ -14,12 +14,13 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.nlx.io/nlx/directory-registration-api/adapters"
-	"go.nlx.io/nlx/directory-registration-api/domain/directory"
 	"go.nlx.io/nlx/directory-registration-api/domain/inway"
 )
 
-func testSetOrganizationInway(t *testing.T, repo directory.Repository) {
-	t.Helper()
+func TestSetOrganizationInway(t *testing.T) {
+	t.Parallel()
+
+	setup(t)
 
 	now, err := time.Parse(time.RFC3339, time.Now().UTC().Format(time.RFC3339))
 	if err != nil {
@@ -78,6 +79,9 @@ func testSetOrganizationInway(t *testing.T, repo directory.Repository) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
+			repo, close := newRepo(t, t.Name())
+			defer close()
+
 			inwayArgs := tt.setup(t)
 
 			inwayModel, err := inway.NewInway(inwayArgs)
@@ -96,8 +100,10 @@ func testSetOrganizationInway(t *testing.T, repo directory.Repository) {
 	}
 }
 
-func testClearOrganizationInway(t *testing.T, repo directory.Repository) {
-	t.Helper()
+func TestClearOrganizationInway(t *testing.T) {
+	t.Parallel()
+
+	setup(t)
 
 	now, err := time.Parse(time.RFC3339, time.Now().UTC().Format(time.RFC3339))
 	if err != nil {
@@ -117,7 +123,7 @@ func testClearOrganizationInway(t *testing.T, repo directory.Repository) {
 			setup: func(t *testing.T) *inway.NewInwayArgs {
 				return &inway.NewInwayArgs{
 					Name:             "inway-for-service",
-					OrganizationName: uniqueOrganizationName(t),
+					OrganizationName: "my-organization",
 					Address:          "my-org-g.com",
 					NlxVersion:       inway.NlxVersionUnknown,
 					CreatedAt:        now,
@@ -133,7 +139,7 @@ func testClearOrganizationInway(t *testing.T, repo directory.Repository) {
 			setup: func(t *testing.T) *inway.NewInwayArgs {
 				return &inway.NewInwayArgs{
 					Name:             "inway-for-service",
-					OrganizationName: "TestRepositoryclearorganizationinwayhappyflow",
+					OrganizationName: "my-organization",
 					Address:          "my-org-h.com",
 					NlxVersion:       inway.NlxVersionUnknown,
 					CreatedAt:        now,
@@ -141,7 +147,7 @@ func testClearOrganizationInway(t *testing.T, repo directory.Repository) {
 				}
 			},
 			input: inputParams{
-				organizationName: "TestRepositoryclearorganizationinwayhappyflow",
+				organizationName: "my-organization",
 			},
 			expectedErr: nil,
 		},
@@ -152,6 +158,9 @@ func testClearOrganizationInway(t *testing.T, repo directory.Repository) {
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
+
+			repo, close := newRepo(t, t.Name())
+			defer close()
 
 			inwayArgs := tt.setup(t)
 
@@ -176,8 +185,10 @@ func testClearOrganizationInway(t *testing.T, repo directory.Repository) {
 	}
 }
 
-func testGetOrganizationInwayAddress(t *testing.T, repo directory.Repository) {
-	t.Helper()
+func TestGetOrganizationInwayAddress(t *testing.T) {
+	t.Parallel()
+
+	setup(t)
 
 	now, err := time.Parse(time.RFC3339, time.Now().UTC().Format(time.RFC3339))
 	if err != nil {
@@ -198,7 +209,7 @@ func testGetOrganizationInwayAddress(t *testing.T, repo directory.Repository) {
 			setup: func(t *testing.T) *inway.NewInwayArgs {
 				return &inway.NewInwayArgs{
 					Name:             "inway-for-service",
-					OrganizationName: uniqueOrganizationName(t),
+					OrganizationName: "my-organization",
 					Address:          "my-org-i.com",
 					NlxVersion:       inway.NlxVersionUnknown,
 					CreatedAt:        now,
@@ -215,7 +226,7 @@ func testGetOrganizationInwayAddress(t *testing.T, repo directory.Repository) {
 			setup: func(t *testing.T) *inway.NewInwayArgs {
 				return &inway.NewInwayArgs{
 					Name:             "inway-for-service",
-					OrganizationName: "TestGetOrganizationInwayAddresshappyflow",
+					OrganizationName: "my-organization",
 					Address:          "my-org-i.com",
 					NlxVersion:       inway.NlxVersionUnknown,
 					CreatedAt:        now,
@@ -223,7 +234,7 @@ func testGetOrganizationInwayAddress(t *testing.T, repo directory.Repository) {
 				}
 			},
 			input: inputParams{
-				organizationName: "TestGetOrganizationInwayAddresshappyflow",
+				organizationName: "my-organization",
 			},
 			expectedAddress: "my-org-i.com",
 			expectedErr:     nil,
@@ -235,6 +246,9 @@ func testGetOrganizationInwayAddress(t *testing.T, repo directory.Repository) {
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
+
+			repo, close := newRepo(t, t.Name())
+			defer close()
 
 			inwayArgs := tt.setup(t)
 

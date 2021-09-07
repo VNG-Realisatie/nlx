@@ -10,13 +10,14 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
-	"go.nlx.io/nlx/directory-registration-api/domain/directory"
 	"go.nlx.io/nlx/directory-registration-api/domain/inway"
 	"go.nlx.io/nlx/directory-registration-api/domain/service"
 )
 
-func testRegisterService(t *testing.T, repo directory.Repository) {
-	t.Helper()
+func TestRegisterService(t *testing.T) {
+	t.Parallel()
+
+	setup(t)
 
 	tests := map[string]struct {
 		createRegistrations func(*testing.T) []*service.Service
@@ -54,6 +55,9 @@ func testRegisterService(t *testing.T, repo directory.Repository) {
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
+
+			repo, close := newRepo(t, t.Name())
+			defer close()
 
 			models := tt.createRegistrations(t)
 

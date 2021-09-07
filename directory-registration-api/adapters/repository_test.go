@@ -7,63 +7,57 @@ package adapters_test
 
 import (
 	"context"
-	"go.nlx.io/nlx/directory-registration-api/domain/service"
 	"os"
-	"regexp"
+	"sync"
 	"testing"
 
+	"github.com/DATA-DOG/go-txdb"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+	"github.com/huandu/xstrings"
+	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	"go.nlx.io/nlx/directory-registration-api/adapters"
 	"go.nlx.io/nlx/directory-registration-api/domain/directory"
 	"go.nlx.io/nlx/directory-registration-api/domain/inway"
+	"go.nlx.io/nlx/directory-registration-api/domain/service"
 )
 
-func TestRepository(t *testing.T) {
-	repo := newPostgreSQLRepository(t)
+var setupOnce sync.Once
 
-	t.Run("register_inway", func(t *testing.T) {
-		t.Parallel()
-		testRegisterInway(t, repo)
-	})
-
-	t.Run("register_service", func(t *testing.T) {
-		t.Parallel()
-		testRegisterService(t, repo)
-	})
-
-	t.Run("set_organization_inway", func(t *testing.T) {
-		t.Parallel()
-		testSetOrganizationInway(t, repo)
-	})
-
-	t.Run("clear_organization_inway", func(t *testing.T) {
-		t.Parallel()
-		testClearOrganizationInway(t, repo)
-	})
-
-	t.Run("get_organization_inway_address", func(t *testing.T) {
-		t.Parallel()
-		testGetOrganizationInwayAddress(t, repo)
+func setup(t *testing.T) {
+	setupOnce.Do(func() {
+		setupPostgreSQLRepository(t)
 	})
 }
 
-var alphanumericRegex = regexp.MustCompile("[^a-zA-Z0-9]+")
+func setupPostgreSQLRepository(t *testing.T) {
+	dsn := os.Getenv("POSTGRES_DSN")
 
-func alphanum(input string, maxLen int) string {
-	result := alphanumericRegex.ReplaceAllString(input, "")
+	err := adapters.PostgreSQLPerformMigrations(dsn)
+	require.NoError(t, err)
 
-	if len(result) > maxLen {
-		return result[0:maxLen]
-	} else {
-		return result
-	}
+	txdb.Register("txdb", "postgres", dsn)
+
+	// This is necessary because the default BindVars for txdb isn't correct
+	sqlx.BindDriver("txdb", sqlx.DOLLAR)
 }
 
-func uniqueOrganizationName(t *testing.T) string {
-	return alphanum(t.Name(), 100)
+func newPostgreSQLRepository(t *testing.T, id string) (*adapters.PostgreSQLRepository, func() error) {
+	db, err := sqlx.Open("txdb", id)
+	require.NoError(t, err)
+
+	db.MapperFunc(xstrings.ToSnakeCase)
+
+	repo, err := adapters.NewPostgreSQLRepository(db)
+	require.NoError(t, err)
+
+	return repo, db.Close
+}
+
+func newRepo(t *testing.T, id string) (directory.Repository, func() error) {
+	return newPostgreSQLRepository(t, id)
 }
 
 func assertOrganizationInwayAddress(t *testing.T, repo directory.Repository, organizationName, inwayAddress string) {
@@ -90,19 +84,4 @@ func assertServiceInRepository(t *testing.T, repo directory.Repository, s *servi
 
 	assert.EqualValues(t, s, model)
 
-}
-
-func newPostgreSQLRepository(t *testing.T) *adapters.PostgreSQLRepository {
-	dsn := os.Getenv("POSTGRES_DSN")
-
-	db, err := adapters.NewPostgreSQLConnection(dsn)
-	require.NoError(t, err)
-
-	err = adapters.PostgreSQLPerformMigrations(dsn)
-	require.NoError(t, err)
-
-	repo, err := adapters.NewPostgreSQLRepository(db)
-	require.NoError(t, err)
-
-	return repo
 }

@@ -10,6 +10,7 @@ replace golang.org/x/text => golang.org/x/text v0.3.7
 replace gopkg.in/yaml.v2 => gopkg.in/yaml.v2 v2.4.0
 
 require (
+	github.com/DATA-DOG/go-txdb v0.1.4
 	github.com/blang/semver v3.5.1+incompatible // indirect
 	github.com/cloudflare/cfssl v1.6.0
 	github.com/coreos/go-oidc v2.2.1+incompatible
