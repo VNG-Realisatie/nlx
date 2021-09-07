@@ -109,8 +109,8 @@ TLS certificates used by NLX components for internal communication.
 
 | Parameter | Description | Default | Required (yes/no) |
 | --------- | ----------- | ------- | -------- |
-| `transactionLog.connectTimeout` | The connection timeout for PostgreSQL | `"10"` | no |
 | `transactionLog.enabled` | If `true`, the Outway will write log records into the transaction log | `false` | no |
+| `transactionLog.connectTimeout` | The connection timeout for PostgreSQL | `10` | no |
 | `transactionLog.hostname` | PostgreSQL hostname | `""` | no |
 | `transactionLog.port` | PostgreSQL port | `5432` | yes |
 | `transactionLog.sslMode` | PostgreSQL SSL mode | `require` | yes |

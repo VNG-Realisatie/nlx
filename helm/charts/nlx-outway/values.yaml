@@ -36,7 +36,7 @@ transactionLog:
   port: 5432
   username: ""
   password: ""
-  connectTimeout: "10"
+  connectTimeout: 10
   sslMode: require
   existingSecret:
     name: ""

@@ -183,7 +183,7 @@
       "type": "object",
       "properties": {
         "connectTimeout": {
-          "type": "string",
+          "type": "integer",
           "description": "The connection timeout for the PostgreSQL database"
         },
         "database": {
@@ -346,7 +346,7 @@
       "type": "object",
       "properties": {
         "connectTimeout": {
-          "type": "string",
+          "type": "integer",
           "description": "The connection timeout for the PostgreSQL database"
         },
         "database": {

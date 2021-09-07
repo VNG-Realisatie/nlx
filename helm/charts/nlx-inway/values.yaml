@@ -38,7 +38,7 @@ transactionLog:
   database: ""
   username: ""
   password: ""
-  connectTimeout: "10"
+  connectTimeout: 10
   sslMode: require
   existingSecret:
     name: ""

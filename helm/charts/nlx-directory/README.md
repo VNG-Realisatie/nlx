@@ -98,6 +98,7 @@ The following table lists the configurable parameters of the nlx-directory Chart
 | Parameter | Description | Default | Required (yes/no) |
 | --------- | ----------- | ------- | -------- |
 | `postgresql.hostname` | PostgreSQL hostname | `postgresql` | no |
+| `postgresql.connectTimeout` | The connection timeout for PostgreSQL | `10` | no |
 | `postgresql.port` | PostgreSQL port | `5432` | yes |
 | `postgresql.sslMode` | PostgreSQL SSL mode | `require` | yes |
 | `postgresql.database` | PostgreSQL database  | `nlx-directory` | no |

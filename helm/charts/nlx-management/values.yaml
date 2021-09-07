@@ -75,7 +75,7 @@ transactionLog:
   username: ""
   password: ""
   sslMode: "require"
-  connectTimeout: "10"
+  connectTimeout: 10
   existingSecret:
     name: ""
     usernameKey: "username"
@@ -88,7 +88,7 @@ postgresql:
   username: ""
   password: ""
   sslMode: "require"
-  connectTimeout: "10"
+  connectTimeout: 10
   existingSecret:
     name: ""
     usernameKey: "username"

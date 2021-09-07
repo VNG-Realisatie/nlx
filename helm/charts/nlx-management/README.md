@@ -117,6 +117,7 @@ TLS certificates used by NLX components for internal communication.
 | Parameter | Description | Default | Required (yes/no) |
 | --------- | ----------- | ------- | -------- |
 | `transactionLog.enabled` | If `true` the management will write log records into the transaction log | `false` | no |
+| `transactionLog.connectTimeout` | The connection timeout for PostgreSQL | `10` | no |
 | `transactionLog.hostname` | PostgreSQL hostname | `""` | no |
 | `transactionLog.port` | PostgreSQL port | `5432` | yes |
 | `transactionLog.sslMode` | PostgreSQL SSL mode | `require` | yes |
@@ -132,6 +133,7 @@ TLS certificates used by NLX components for internal communication.
 | Parameter | Description | Default | Required (yes/no) |
 | --------- | ----------- | ------- | -------- |
 | `postgresql.hostname` | PostgreSQL hostname | `"postgresql"` | yes |
+| `postgresql.connectTimeout` | The connection timeout for PostgreSQL | `10` | no |
 | `postgresql.port` | PostgreSQL port | `5432` | yes |
 | `postgresql.sslMode` | PostgreSQL SSL mode | `required` | yes |
 | `postgresql.database` | PostgreSQL database | `"nlx_management"` | yes |
