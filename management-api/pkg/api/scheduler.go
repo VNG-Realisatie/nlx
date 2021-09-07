@@ -24,6 +24,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/directory"
 	"go.nlx.io/nlx/management-api/pkg/management"
+	"go.nlx.io/nlx/management-api/pkg/server"
 	"go.nlx.io/nlx/management-api/pkg/util/clock"
 )
 
@@ -34,8 +35,6 @@ const (
 
 	// jobs are unlocked after 5 minutes, let's wait at least one minute before retrying
 	jobTimeout = 4 * time.Minute
-
-	errMessageServiceNoLongerExists = "service no longer exists"
 )
 
 type accessRequestScheduler struct {
@@ -203,6 +202,10 @@ func (scheduler *accessRequestScheduler) schedule(ctx context.Context, request *
 	case database.OutgoingAccessRequestReceived:
 		state, getStateErr := scheduler.getAccessRequestState(ctx, request)
 		if getStateErr != nil {
+			if getStateErr == server.ErrServiceDoesNotExist {
+				return scheduler.configDatabase.DeleteOutgoingAccessRequests(ctx, request.OrganizationName, request.ServiceName)
+			}
+
 			return getStateErr
 		}
 
@@ -218,6 +221,10 @@ func (scheduler *accessRequestScheduler) schedule(ctx context.Context, request *
 			nil,
 		)
 	} else {
+		if err == server.ErrServiceDoesNotExist {
+			return scheduler.configDatabase.DeleteOutgoingAccessRequests(ctx, request.OrganizationName, request.ServiceName)
+		}
+
 		errorDetails := diagnostics.ParseError(err)
 
 		st, ok := status.FromError(err)
@@ -274,12 +281,7 @@ func (scheduler *accessRequestScheduler) parseAccessProof(accessProof *api.Acces
 func (scheduler *accessRequestScheduler) syncAccessProof(ctx context.Context, outgoingAccessRequest *database.OutgoingAccessRequest) error {
 	remoteProof, err := scheduler.retrieveAccessProof(ctx, outgoingAccessRequest.OrganizationName, outgoingAccessRequest.ServiceName)
 	if err != nil {
-		grpcErr, ok := status.FromError(err)
-		if !ok {
-			return err
-		}
-
-		if grpcErr.Message() == errMessageServiceNoLongerExists {
+		if err == server.ErrServiceDoesNotExist {
 			return scheduler.configDatabase.DeleteOutgoingAccessRequests(ctx, outgoingAccessRequest.OrganizationName, outgoingAccessRequest.ServiceName)
 		}
 

@@ -337,7 +337,7 @@ func (s *ManagementService) RequestAccess(ctx context.Context, req *external.Req
 	if err != nil {
 		if errIsNotFound(err) {
 			s.logger.Error("getting service by name failed. service does not exist", zap.String("name", req.ServiceName), zap.Error(err))
-			return nil, status.Error(codes.NotFound, "service not found")
+			return nil, ErrServiceDoesNotExist
 		}
 
 		s.logger.Error("getting service by name failed", zap.String("name", req.ServiceName), zap.Error(err))
@@ -373,6 +373,17 @@ func (s *ManagementService) GetAccessRequestState(ctx context.Context, req *exte
 	md, err := s.parseProxyMetadata(ctx)
 	if err != nil {
 		return nil, err
+	}
+
+	_, err = s.configDatabase.GetService(ctx, req.ServiceName)
+	if err != nil {
+		s.logger.Error("failed to get service for access request state", zap.Error(err))
+
+		if errIsNotFound(err) {
+			return nil, ErrServiceDoesNotExist
+		}
+
+		return nil, status.Error(codes.Internal, "database error")
 	}
 
 	request, err := s.configDatabase.GetLatestIncomingAccessRequest(ctx, md.OrganizationName, req.ServiceName)

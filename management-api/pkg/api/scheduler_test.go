@@ -11,8 +11,6 @@ import (
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	common_tls "go.nlx.io/nlx/common/tls"
@@ -23,6 +21,7 @@ import (
 	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
 	"go.nlx.io/nlx/management-api/pkg/management"
 	mock_management "go.nlx.io/nlx/management-api/pkg/management/mock"
+	"go.nlx.io/nlx/management-api/pkg/server"
 	"go.nlx.io/nlx/management-api/pkg/util/clock"
 )
 
@@ -121,6 +120,38 @@ func TestSchedule(t *testing.T) {
 					EXPECT().
 					UpdateOutgoingAccessRequestState(ctx, uint(1), database.OutgoingAccessRequestApproved, uint(0), nil).
 					Return(errors.New("error"))
+
+				mocks.management.
+					EXPECT().
+					Close().
+					Return(nil)
+			},
+		},
+
+		"delete_outgoing_access_request_when_service_has_been_deleted": {
+			request: &database.OutgoingAccessRequest{
+				ID:               1,
+				OrganizationName: "organization-a",
+				ServiceName:      "service",
+				State:            database.OutgoingAccessRequestCreated,
+			},
+			setupMock: func(mocks schedulerMocks) {
+				mocks.directory.
+					EXPECT().
+					GetOrganizationInwayProxyAddress(ctx, "organization-a").
+					Return("hostname:7200", nil)
+
+				mocks.management.
+					EXPECT().
+					RequestAccess(ctx, &external.RequestAccessRequest{
+						ServiceName: "service",
+					}, gomock.Any()).
+					Return(nil, server.ErrServiceDoesNotExist)
+
+				mocks.db.
+					EXPECT().
+					DeleteOutgoingAccessRequests(ctx, "organization-a", "service").
+					Return(nil)
 
 				mocks.management.
 					EXPECT().
@@ -596,7 +627,7 @@ func TestSyncAccessProof(t *testing.T) {
 					GetAccessProof(ctx, &external.GetAccessProofRequest{
 						ServiceName: "service",
 					}).
-					Return(nil, status.Error(codes.NotFound, "service no longer exists"))
+					Return(nil, server.ErrServiceDoesNotExist)
 
 				mocks.db.
 					EXPECT().

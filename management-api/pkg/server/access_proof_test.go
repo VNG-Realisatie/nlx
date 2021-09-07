@@ -19,6 +19,7 @@ import (
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
+	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
 //nolint:funlen // its a unittest
@@ -76,7 +77,7 @@ func TestGetAccessProof(t *testing.T) {
 		},
 
 		"returns_not_found_when_service_no_long_exists": {
-			wantErr: status.Error(codes.NotFound, "service no longer exists"),
+			wantErr: server.ErrServiceDoesNotExist,
 			setup: func(db *mock_database.MockConfigDatabase) context.Context {
 				ctx := setProxyMetadata(context.Background())
 

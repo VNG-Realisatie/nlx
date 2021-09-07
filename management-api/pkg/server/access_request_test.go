@@ -23,6 +23,7 @@ import (
 	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
+	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
 func createTimestamp(ti time.Time) *timestamppb.Timestamp {
@@ -520,17 +521,17 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 
 func TestExternalRequestAccess(t *testing.T) {
 	tests := map[string]struct {
-		wantCode codes.Code
-		setup    func(*mock_database.MockConfigDatabase) context.Context
+		wantErr error
+		setup   func(*mock_database.MockConfigDatabase) context.Context
 	}{
 		"errors_when_peer_context_is_missing": {
-			wantCode: codes.Internal,
+			wantErr: status.Error(codes.Internal, "missing metadata from the management proxy"),
 			setup: func(db *mock_database.MockConfigDatabase) context.Context {
 				return context.Background()
 			},
 		},
 		"service does not exist": {
-			wantCode: codes.NotFound,
+			wantErr: status.Error(codes.NotFound, "service does not exist"),
 			setup: func(db *mock_database.MockConfigDatabase) context.Context {
 				ctx := setProxyMetadata(context.Background())
 
@@ -541,7 +542,7 @@ func TestExternalRequestAccess(t *testing.T) {
 		},
 
 		"returns_error_when_creating_access_request_errors": {
-			wantCode: codes.Internal,
+			wantErr: status.Error(codes.Internal, "failed to create access request"),
 			setup: func(db *mock_database.MockConfigDatabase) context.Context {
 				ctx := setProxyMetadata(context.Background())
 				db.EXPECT().GetService(ctx, "service").Return(&database.Service{
@@ -553,6 +554,24 @@ func TestExternalRequestAccess(t *testing.T) {
 					EXPECT().
 					CreateIncomingAccessRequest(ctx, gomock.Any()).
 					Return(nil, errors.New("error"))
+
+				return ctx
+			},
+		},
+
+		"returns_error_when_a_active_access_request_already_exists": {
+			wantErr: status.Error(codes.AlreadyExists, "an active access request already exists"),
+			setup: func(db *mock_database.MockConfigDatabase) context.Context {
+				ctx := setProxyMetadata(context.Background())
+				db.EXPECT().GetService(ctx, "service").Return(&database.Service{
+					ID:   1,
+					Name: "Service",
+				}, nil)
+
+				db.
+					EXPECT().
+					CreateIncomingAccessRequest(ctx, gomock.Any()).
+					Return(nil, database.ErrActiveAccessRequest)
 
 				return ctx
 			},
@@ -588,37 +607,47 @@ func TestExternalRequestAccess(t *testing.T) {
 				ServiceName: "service",
 			})
 
-			if tt.wantCode > 0 {
-				assert.Error(t, err)
-
-				st, ok := status.FromError(err)
-
-				assert.True(t, ok)
-				assert.Equal(t, tt.wantCode, st.Code())
-			} else {
-				assert.NoError(t, err)
-			}
+			assert.Equal(t, tt.wantErr, err)
 		})
 	}
 }
 
+//nolint funlen: this is a test
 func TestExternalGetAccessRequestState(t *testing.T) {
 	tests := map[string]struct {
-		want     api.AccessRequestState
-		wantCode codes.Code
-		setup    func(*mock_database.MockConfigDatabase) context.Context
+		want    api.AccessRequestState
+		wantErr error
+		setup   func(*mock_database.MockConfigDatabase) context.Context
 	}{
 		"errors_when_peer_context_is_missing": {
-			wantCode: codes.Internal,
 			setup: func(db *mock_database.MockConfigDatabase) context.Context {
 				return context.Background()
 			},
+			wantErr: status.Error(codes.Internal, "missing metadata from the management proxy"),
+		},
+
+		"errors_when_retrieving_the_service_fails": {
+			setup: func(db *mock_database.MockConfigDatabase) context.Context {
+				ctx := setProxyMetadata(context.Background())
+
+				db.
+					EXPECT().
+					GetService(ctx, "service").
+					Return(nil, errors.New("error"))
+
+				return ctx
+			},
+			wantErr: status.Error(codes.Internal, "database error"),
 		},
 
 		"returns_error_when_retrieving_state_errors": {
-			wantCode: codes.Internal,
 			setup: func(db *mock_database.MockConfigDatabase) context.Context {
 				ctx := setProxyMetadata(context.Background())
+
+				db.
+					EXPECT().
+					GetService(ctx, "service").
+					Return(&database.Service{Name: "organization-a"}, nil)
 
 				db.
 					EXPECT().
@@ -627,12 +656,32 @@ func TestExternalGetAccessRequestState(t *testing.T) {
 
 				return ctx
 			},
+			wantErr: status.Error(codes.Internal, "failed to retrieve access request"),
+		},
+
+		"returns_error_when_service_does_not_exists": {
+			setup: func(db *mock_database.MockConfigDatabase) context.Context {
+				ctx := setProxyMetadata(context.Background())
+
+				db.
+					EXPECT().
+					GetService(ctx, "service").
+					Return(nil, database.ErrNotFound)
+
+				return ctx
+			},
+			wantErr: server.ErrServiceDoesNotExist,
 		},
 
 		"returns_the_right_state_when_the_request_exists": {
 			want: api.AccessRequestState_RECEIVED,
 			setup: func(db *mock_database.MockConfigDatabase) context.Context {
 				ctx := setProxyMetadata(context.Background())
+
+				db.
+					EXPECT().
+					GetService(ctx, "service").
+					Return(&database.Service{Name: "organization-a"}, nil)
 
 				db.
 					EXPECT().
@@ -657,16 +706,9 @@ func TestExternalGetAccessRequestState(t *testing.T) {
 				ServiceName: "service",
 			})
 
-			if tt.wantCode > 0 {
-				assert.Error(t, err)
+			assert.Equal(t, tt.wantErr, err)
 
-				st, ok := status.FromError(err)
-
-				assert.True(t, ok)
-				assert.Equal(t, tt.wantCode, st.Code())
-			} else {
-				assert.NoError(t, err)
-
+			if tt.wantErr == nil {
 				if assert.NotNil(t, response) {
 					assert.Equal(t, tt.want, response.State)
 				}

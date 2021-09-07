@@ -30,8 +30,8 @@ func (s *ManagementService) GetAccessProof(ctx context.Context, req *external.Ge
 	if err != nil {
 		s.logger.Error("failed to get service for access proof", zap.Error(err))
 
-		if err == database.ErrNotFound {
-			return nil, status.Error(codes.NotFound, "service no longer exists")
+		if errIsNotFound(err) {
+			return nil, ErrServiceDoesNotExist
 		}
 
 		return nil, status.Error(codes.Internal, "database error")
