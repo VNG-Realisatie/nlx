@@ -24,13 +24,14 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
-// nolint:funlen,dupl // this is a test
-func TestSynchronizeOutgoingAccessRequest(t *testing.T) {
-	tests := map[string]struct {
-		setupMocks    func(schedulerMocks)
-		accessRequest *database.OutgoingAccessRequest
-		wantErr       error
-	}{
+type testCase struct {
+	setupMocks    func(schedulerMocks)
+	accessRequest *database.OutgoingAccessRequest
+	wantErr       error
+}
+
+func getCreatedAccessRequests() map[string]testCase {
+	return map[string]testCase{
 		"returns_an_error_when_getting_organization_management_client_fails": {
 			accessRequest: &database.OutgoingAccessRequest{
 				ID:               1,
@@ -48,40 +49,6 @@ func TestSynchronizeOutgoingAccessRequest(t *testing.T) {
 				mocks.db.
 					EXPECT().
 					UpdateOutgoingAccessRequestState(gomock.Any(), uint(1), database.OutgoingAccessRequestFailed, uint(0), gomock.Any()).
-					Return(nil)
-			},
-		},
-		"returns_an_error_when_update_access_request_state_returns_an_error": {
-			accessRequest: &database.OutgoingAccessRequest{
-				ID:               1,
-				OrganizationName: "organization-a",
-				ServiceName:      "service",
-				State:            database.OutgoingAccessRequestReceived,
-			},
-			wantErr: errors.New("arbitrary error"),
-			setupMocks: func(mocks schedulerMocks) {
-				mocks.directory.
-					EXPECT().
-					GetOrganizationInwayProxyAddress(gomock.Any(), "organization-a").
-					Return("hostname:7200", nil)
-
-				mocks.management.
-					EXPECT().
-					GetAccessRequestState(gomock.Any(), &external.GetAccessRequestStateRequest{
-						ServiceName: "service",
-					}, gomock.Any()).
-					Return(&external.GetAccessRequestStateResponse{
-						State: api.AccessRequestState_APPROVED,
-					}, nil)
-
-				mocks.db.
-					EXPECT().
-					UpdateOutgoingAccessRequestState(gomock.Any(), uint(1), database.OutgoingAccessRequestApproved, uint(0), nil).
-					Return(errors.New("arbitrary error"))
-
-				mocks.management.
-					EXPECT().
-					Close().
 					Return(nil)
 			},
 		},
@@ -142,6 +109,45 @@ func TestSynchronizeOutgoingAccessRequest(t *testing.T) {
 					EXPECT().
 					UpdateOutgoingAccessRequestState(gomock.Any(), uint(1), database.OutgoingAccessRequestReceived, uint(2), nil).
 					Return(nil)
+
+				mocks.management.
+					EXPECT().
+					Close().
+					Return(nil)
+			},
+		},
+	}
+}
+
+func getReceivedAccessRequests() map[string]testCase {
+	return map[string]testCase{
+		"returns_an_error_when_update_access_request_state_returns_an_error": {
+			accessRequest: &database.OutgoingAccessRequest{
+				ID:               1,
+				OrganizationName: "organization-a",
+				ServiceName:      "service",
+				State:            database.OutgoingAccessRequestReceived,
+			},
+			wantErr: errors.New("arbitrary error"),
+			setupMocks: func(mocks schedulerMocks) {
+				mocks.directory.
+					EXPECT().
+					GetOrganizationInwayProxyAddress(gomock.Any(), "organization-a").
+					Return("hostname:7200", nil)
+
+				mocks.management.
+					EXPECT().
+					GetAccessRequestState(gomock.Any(), &external.GetAccessRequestStateRequest{
+						ServiceName: "service",
+					}, gomock.Any()).
+					Return(&external.GetAccessRequestStateResponse{
+						State: api.AccessRequestState_APPROVED,
+					}, nil)
+
+				mocks.db.
+					EXPECT().
+					UpdateOutgoingAccessRequestState(gomock.Any(), uint(1), database.OutgoingAccessRequestApproved, uint(0), nil).
+					Return(errors.New("arbitrary error"))
 
 				mocks.management.
 					EXPECT().
@@ -214,27 +220,38 @@ func TestSynchronizeOutgoingAccessRequest(t *testing.T) {
 			},
 		},
 	}
+}
 
-	for name, tt := range tests {
-		tt := tt
+// nolint:funlen,dupl // this is a test
+func TestSynchronizeOutgoingAccessRequest(t *testing.T) {
+	testGroups := []map[string]testCase{
+		getCreatedAccessRequests(),
+		getReceivedAccessRequests(),
+	}
 
-		t.Run(name, func(t *testing.T) {
-			mocks := newMocks(t)
+	for _, tests := range testGroups {
+		for name, tt := range tests {
+			tt := tt
 
-			tt.setupMocks(mocks)
+			t.Run(name, func(t *testing.T) {
+				mocks := newMocks(t)
 
-			job := scheduler.NewSynchronizeOutgoingAccessRequestJob(
-				context.Background(),
-				mocks.directory,
-				mocks.db,
-				nil,
-				func(context.Context, string, *common_tls.CertificateBundle) (management.Client, error) {
-					return mocks.management, nil
-				},
-			)
-			err := job.Run(context.Background(), tt.accessRequest)
-			require.Equal(t, tt.wantErr, err)
-		})
+				tt.setupMocks(mocks)
+
+				job := scheduler.NewSynchronizeOutgoingAccessRequestJob(
+					context.Background(),
+					mocks.directory,
+					mocks.db,
+					nil,
+					func(context.Context, string, *common_tls.CertificateBundle) (management.Client, error) {
+						return mocks.management, nil
+					},
+				)
+				err := job.Run(context.Background(), tt.accessRequest)
+				require.Equal(t, tt.wantErr, err)
+			})
+		}
+
 	}
 }
 
