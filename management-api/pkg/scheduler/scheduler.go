@@ -1,6 +1,7 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 
+//nolint:dupl // code is temporarily duplicated and cleaned up. need to remove original later on.
 package scheduler
 
 import (

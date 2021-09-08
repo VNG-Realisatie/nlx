@@ -5,14 +5,13 @@ package scheduler
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	common_tls "go.nlx.io/nlx/common/tls"
@@ -23,6 +22,7 @@ import (
 	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
 	"go.nlx.io/nlx/management-api/pkg/management"
 	mock_management "go.nlx.io/nlx/management-api/pkg/management/mock"
+	"go.nlx.io/nlx/management-api/pkg/server"
 	"go.nlx.io/nlx/management-api/pkg/util/clock"
 )
 
@@ -61,159 +61,6 @@ func newTestScheduler(t *testing.T) (schedulerMocks, *scheduler) {
 	}
 
 	return mocks, scheduler
-}
-
-//nolint:funlen,dupl // unittest
-func TestSchedule(t *testing.T) {
-	ctx := context.Background()
-
-	tests := map[string]struct {
-		setupMock func(schedulerMocks)
-		request   *database.OutgoingAccessRequest
-		wantErr   bool
-		wantState database.OutgoingAccessRequestState
-	}{
-		"returns_an_error_when_getting_organization_management_client_fails": {
-			request: &database.OutgoingAccessRequest{
-				ID:               1,
-				OrganizationName: "organization-a",
-				ServiceName:      "service",
-				State:            database.OutgoingAccessRequestCreated,
-				ReferenceID:      2,
-			},
-			setupMock: func(mocks schedulerMocks) {
-				mocks.directory.
-					EXPECT().
-					GetOrganizationInwayProxyAddress(ctx, "organization-a").
-					Return("", errors.New("arbitrary error"))
-
-				mocks.db.
-					EXPECT().
-					UpdateOutgoingAccessRequestState(ctx, uint(1), database.OutgoingAccessRequestFailed, uint(0), gomock.Any()).
-					Return(nil)
-			},
-		},
-
-		"returns_an_error_when_update_access_request_state_returns_an_error": {
-			request: &database.OutgoingAccessRequest{
-				ID:               1,
-				OrganizationName: "organization-a",
-				ServiceName:      "service",
-				State:            database.OutgoingAccessRequestReceived,
-			},
-			wantErr: true,
-			setupMock: func(mocks schedulerMocks) {
-				mocks.directory.
-					EXPECT().
-					GetOrganizationInwayProxyAddress(ctx, "organization-a").
-					Return("hostname:7200", nil)
-
-				mocks.management.
-					EXPECT().
-					GetAccessRequestState(ctx, &external.GetAccessRequestStateRequest{
-						ServiceName: "service",
-					}, gomock.Any()).
-					Return(&external.GetAccessRequestStateResponse{
-						State: api.AccessRequestState_APPROVED,
-					}, nil)
-
-				mocks.db.
-					EXPECT().
-					UpdateOutgoingAccessRequestState(ctx, uint(1), database.OutgoingAccessRequestApproved, uint(0), nil).
-					Return(errors.New("error"))
-
-				mocks.management.
-					EXPECT().
-					Close().
-					Return(nil)
-			},
-		},
-
-		"scheduling_a_created_access_request_succeeds": {
-			request: &database.OutgoingAccessRequest{
-				ID:               1,
-				OrganizationName: "organization-a",
-				ServiceName:      "service",
-				State:            database.OutgoingAccessRequestCreated,
-			},
-			setupMock: func(mocks schedulerMocks) {
-				mocks.directory.
-					EXPECT().
-					GetOrganizationInwayProxyAddress(ctx, "organization-a").
-					Return("hostname:7200", nil)
-
-				mocks.management.
-					EXPECT().
-					RequestAccess(ctx, &external.RequestAccessRequest{
-						ServiceName: "service",
-					}, gomock.Any()).
-					Return(&external.RequestAccessResponse{
-						ReferenceId: 2,
-					}, nil)
-
-				mocks.db.
-					EXPECT().
-					UpdateOutgoingAccessRequestState(ctx, uint(1), database.OutgoingAccessRequestReceived, uint(2), nil).
-					Return(nil)
-
-				mocks.management.
-					EXPECT().
-					Close().
-					Return(nil)
-			},
-		},
-
-		"scheduling_a_pending_access_request_succeeds": {
-			request: &database.OutgoingAccessRequest{
-				ID:               1,
-				OrganizationName: "organization-a",
-				ServiceName:      "service",
-				State:            database.OutgoingAccessRequestReceived,
-			},
-			setupMock: func(mocks schedulerMocks) {
-				mocks.directory.
-					EXPECT().
-					GetOrganizationInwayProxyAddress(ctx, "organization-a").
-					Return("hostname:7200", nil)
-
-				mocks.management.
-					EXPECT().
-					GetAccessRequestState(ctx, &external.GetAccessRequestStateRequest{
-						ServiceName: "service",
-					}, gomock.Any()).
-					Return(&external.GetAccessRequestStateResponse{
-						State: api.AccessRequestState_APPROVED,
-					}, nil)
-
-				mocks.db.
-					EXPECT().
-					UpdateOutgoingAccessRequestState(ctx, uint(1), database.OutgoingAccessRequestApproved, uint(0), nil).
-					Return(nil)
-
-				mocks.management.
-					EXPECT().
-					Close().
-					Return(nil)
-			},
-		},
-	}
-
-	for name, tt := range tests {
-		tt := tt
-
-		t.Run(name, func(t *testing.T) {
-			mocks, scheduler := newTestScheduler(t)
-
-			tt.setupMock(mocks)
-
-			err := scheduler.schedule(ctx, tt.request)
-			if tt.wantErr {
-				assert.Error(t, err, "schedule should error")
-			} else {
-				assert.NoError(t, err, "schedule should not error")
-			}
-		})
-	}
 }
 
 func TestSchedulePendingRequests(t *testing.T) {
@@ -596,7 +443,7 @@ func TestSyncAccessProof(t *testing.T) {
 					GetAccessProof(ctx, &external.GetAccessProofRequest{
 						ServiceName: "service",
 					}).
-					Return(nil, status.Error(codes.NotFound, "service no longer exists"))
+					Return(nil, fmt.Errorf("mock grpc wrapper: %w", server.ErrServiceDoesNotExist))
 
 				mocks.db.
 					EXPECT().
