@@ -531,7 +531,7 @@ func TestExternalRequestAccess(t *testing.T) {
 			},
 		},
 		"service does not exist": {
-			wantErr: status.Error(codes.NotFound, "service does not exist"),
+			wantErr: server.ErrServiceDoesNotExist,
 			setup: func(db *mock_database.MockConfigDatabase) context.Context {
 				ctx := setProxyMetadata(context.Background())
 
