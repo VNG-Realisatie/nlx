@@ -1,7 +1,6 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 
-//nolint:dupl // code is temporarily duplicated and cleaned up. need to remove original later on.
 package scheduler
 
 import (
@@ -45,11 +44,29 @@ func NewSynchronizeOutgoingAccessRequestJob(ctx context.Context, directoryClient
 	}
 }
 
-func (job *SynchronizeOutgoingAccessRequestJob) Run(ctx context.Context, request *database.OutgoingAccessRequest) error {
-	// TODO: context with timeout should be passed by scheduler
+func (job *SynchronizeOutgoingAccessRequestJob) Run(ctx context.Context) error {
+	request, err := job.configDatabase.TakePendingOutgoingAccessRequest(ctx)
+	if err != nil {
+		return err
+	}
+
+	if request == nil {
+		return nil
+	}
+
 	jobCtx, cancel := context.WithTimeout(ctx, jobTimeout)
+
 	defer cancel()
 
+	err = job.synchronize(jobCtx, request)
+	if err != nil {
+		return err
+	}
+
+	return job.configDatabase.UnlockOutgoingAccessRequest(ctx, request)
+}
+
+func (job *SynchronizeOutgoingAccessRequestJob) synchronize(ctx context.Context, request *database.OutgoingAccessRequest) error {
 	var (
 		err         error
 		referenceID uint
@@ -58,13 +75,16 @@ func (job *SynchronizeOutgoingAccessRequestJob) Run(ctx context.Context, request
 
 	switch request.State {
 	case database.OutgoingAccessRequestCreated:
-		newState, referenceID, err = job.sendAccessRequest(jobCtx, request)
+		newState, referenceID, err = job.sendAccessRequest(ctx, request)
 
 	case database.OutgoingAccessRequestReceived:
-		newState, err = job.getAccessRequestState(jobCtx, request)
+		newState, err = job.getAccessRequestState(ctx, request)
 
 	case database.OutgoingAccessRequestApproved:
-		err = job.syncAccessProof(jobCtx, request)
+		err = job.syncAccessProof(ctx, request)
+		if err == nil {
+			return nil
+		}
 
 	default:
 		return fmt.Errorf("invalid status %s for pending access request", request.State)
