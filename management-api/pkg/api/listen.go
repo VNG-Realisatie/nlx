@@ -20,22 +20,21 @@ import (
 	"google.golang.org/grpc/credentials"
 
 	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/pkg/scheduler"
 )
 
-// ListenAndServe is a blocking function that listens on provided tcp address to handle requests.
 func (a *API) ListenAndServe(address, configAddress string) error {
-	// start the scheduler
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	scheduler := newAccessRequestScheduler(
+	s := scheduler.NewOutgoingAccessRequestScheduler(
 		a.logger,
 		a.directoryClient,
 		a.configDatabase,
 		a.orgCert,
 	)
 
-	go scheduler.Run(ctx)
+	go s.Run(ctx)
 
 	g, ctx := errgroup.WithContext(context.Background())
 

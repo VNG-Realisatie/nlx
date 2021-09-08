@@ -1,7 +1,7 @@
-// Copyright © VNG Realisatie 2020
+// Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 
-package api
+package scheduler
 
 import (
 	"context"
@@ -40,7 +40,7 @@ const (
 	errMessageServiceNoLongerExists = "service no longer exists"
 )
 
-type accessRequestScheduler struct {
+type scheduler struct {
 	clock                      clock.Clock
 	logger                     *zap.Logger
 	directoryClient            directory.Client
@@ -50,8 +50,8 @@ type accessRequestScheduler struct {
 	createManagementClientFunc func(context.Context, string, *common_tls.CertificateBundle) (management.Client, error)
 }
 
-func newAccessRequestScheduler(logger *zap.Logger, directoryClient directory.Client, configDatabase database.ConfigDatabase, orgCert *common_tls.CertificateBundle) *accessRequestScheduler {
-	return &accessRequestScheduler{
+func NewOutgoingAccessRequestScheduler(logger *zap.Logger, directoryClient directory.Client, configDatabase database.ConfigDatabase, orgCert *common_tls.CertificateBundle) *scheduler {
+	return &scheduler{
 		clock:                      clock.RealClock{},
 		logger:                     logger,
 		orgCert:                    orgCert,
@@ -62,7 +62,7 @@ func newAccessRequestScheduler(logger *zap.Logger, directoryClient directory.Cli
 	}
 }
 
-func (scheduler *accessRequestScheduler) Run(ctx context.Context) {
+func (s *scheduler) Run(ctx context.Context) {
 	wg := &sync.WaitGroup{}
 	sem := semaphore.NewWeighted(int64(maxConcurrency))
 	ticker := time.NewTicker(pollInterval)
@@ -84,8 +84,8 @@ schedulingLoop:
 
 				defer sem.Release(1)
 				defer wg.Done()
-				if err := scheduler.schedulePendingRequest(context.TODO()); err != nil {
-					scheduler.logger.Error("failed to schedule pending request", zap.Error(err))
+				if err := s.schedulePendingRequest(context.TODO()); err != nil {
+					s.logger.Error("failed to schedule pending request", zap.Error(err))
 				}
 			}()
 		}
@@ -94,13 +94,13 @@ schedulingLoop:
 	wg.Wait()
 }
 
-func (scheduler *accessRequestScheduler) getOrganizationManagementClient(ctx context.Context, organizationName string) (management.Client, error) {
-	address, err := scheduler.directoryClient.GetOrganizationInwayProxyAddress(ctx, organizationName)
+func (s *scheduler) getOrganizationManagementClient(ctx context.Context, organizationName string) (management.Client, error) {
+	address, err := s.directoryClient.GetOrganizationInwayProxyAddress(ctx, organizationName)
 	if err != nil {
 		return nil, err
 	}
 
-	client, err := scheduler.createManagementClientFunc(ctx, address, scheduler.orgCert)
+	client, err := s.createManagementClientFunc(ctx, address, s.orgCert)
 	if err != nil {
 		return nil, err
 	}
@@ -108,8 +108,8 @@ func (scheduler *accessRequestScheduler) getOrganizationManagementClient(ctx con
 	return client, nil
 }
 
-func (scheduler *accessRequestScheduler) sendRequest(ctx context.Context, request *database.OutgoingAccessRequest) (uint, error) {
-	client, err := scheduler.getOrganizationManagementClient(ctx, request.OrganizationName)
+func (s *scheduler) sendRequest(ctx context.Context, request *database.OutgoingAccessRequest) (uint, error) {
+	client, err := s.getOrganizationManagementClient(ctx, request.OrganizationName)
 	if err != nil {
 		return 0, err
 	}
@@ -126,8 +126,8 @@ func (scheduler *accessRequestScheduler) sendRequest(ctx context.Context, reques
 	return uint(response.ReferenceId), nil
 }
 
-func (scheduler *accessRequestScheduler) schedulePendingRequest(ctx context.Context) error {
-	request, err := scheduler.configDatabase.TakePendingOutgoingAccessRequest(ctx)
+func (s *scheduler) schedulePendingRequest(ctx context.Context) error {
+	request, err := s.configDatabase.TakePendingOutgoingAccessRequest(ctx)
 	if err != nil {
 		return err
 	}
@@ -139,25 +139,25 @@ func (scheduler *accessRequestScheduler) schedulePendingRequest(ctx context.Cont
 
 		switch request.State {
 		case database.OutgoingAccessRequestCreated, database.OutgoingAccessRequestReceived:
-			if err := scheduler.schedule(jobCtx, request); err != nil {
+			if err := s.schedule(jobCtx, request); err != nil {
 				return err
 			}
 		case database.OutgoingAccessRequestApproved:
-			if err := scheduler.syncAccessProof(jobCtx, request); err != nil {
+			if err := s.syncAccessProof(jobCtx, request); err != nil {
 				return err
 			}
 		default:
 			return fmt.Errorf("invalid status %s for pending access request", request.State)
 		}
 
-		return scheduler.configDatabase.UnlockOutgoingAccessRequest(ctx, request)
+		return s.configDatabase.UnlockOutgoingAccessRequest(ctx, request)
 	}
 
 	return nil
 }
 
-func (scheduler *accessRequestScheduler) getAccessRequestState(ctx context.Context, request *database.OutgoingAccessRequest) (database.OutgoingAccessRequestState, error) {
-	client, err := scheduler.getOrganizationManagementClient(ctx, request.OrganizationName)
+func (s *scheduler) getAccessRequestState(ctx context.Context, request *database.OutgoingAccessRequest) (database.OutgoingAccessRequestState, error) {
+	client, err := s.getOrganizationManagementClient(ctx, request.OrganizationName)
 	if err != nil {
 		return "", err
 	}
@@ -191,7 +191,7 @@ func (scheduler *accessRequestScheduler) getAccessRequestState(ctx context.Conte
 	return state, nil
 }
 
-func (scheduler *accessRequestScheduler) schedule(ctx context.Context, request *database.OutgoingAccessRequest) error {
+func (s *scheduler) schedule(ctx context.Context, request *database.OutgoingAccessRequest) error {
 	var (
 		referenceID uint
 		err         error
@@ -200,13 +200,13 @@ func (scheduler *accessRequestScheduler) schedule(ctx context.Context, request *
 
 	switch request.State {
 	case database.OutgoingAccessRequestCreated:
-		referenceID, err = scheduler.sendRequest(ctx, request)
+		referenceID, err = s.sendRequest(ctx, request)
 		newState = database.OutgoingAccessRequestReceived
 	case database.OutgoingAccessRequestReceived:
-		state, getStateErr := scheduler.getAccessRequestState(ctx, request)
+		state, getStateErr := s.getAccessRequestState(ctx, request)
 		if getStateErr != nil {
 			if errors.Is(getStateErr, server.ErrServiceDoesNotExist) {
-				return scheduler.configDatabase.DeleteOutgoingAccessRequests(ctx, request.OrganizationName, request.ServiceName)
+				return s.configDatabase.DeleteOutgoingAccessRequests(ctx, request.OrganizationName, request.ServiceName)
 			}
 
 			return getStateErr
@@ -216,7 +216,7 @@ func (scheduler *accessRequestScheduler) schedule(ctx context.Context, request *
 	}
 
 	if err == nil {
-		err = scheduler.configDatabase.UpdateOutgoingAccessRequestState(
+		err = s.configDatabase.UpdateOutgoingAccessRequestState(
 			ctx,
 			request.ID,
 			newState,
@@ -225,7 +225,7 @@ func (scheduler *accessRequestScheduler) schedule(ctx context.Context, request *
 		)
 	} else {
 		if errors.Is(err, server.ErrServiceDoesNotExist) {
-			return scheduler.configDatabase.DeleteOutgoingAccessRequests(ctx, request.OrganizationName, request.ServiceName)
+			return s.configDatabase.DeleteOutgoingAccessRequests(ctx, request.OrganizationName, request.ServiceName)
 		}
 
 		errorDetails := diagnostics.ParseError(err)
@@ -237,7 +237,7 @@ func (scheduler *accessRequestScheduler) schedule(ctx context.Context, request *
 			}
 		}
 
-		err = scheduler.configDatabase.UpdateOutgoingAccessRequestState(
+		err = s.configDatabase.UpdateOutgoingAccessRequestState(
 			ctx,
 			request.ID,
 			database.OutgoingAccessRequestFailed,
@@ -249,7 +249,7 @@ func (scheduler *accessRequestScheduler) schedule(ctx context.Context, request *
 	return err
 }
 
-func (scheduler *accessRequestScheduler) parseAccessProof(accessProof *api.AccessProof) (*database.AccessProof, error) {
+func (s *scheduler) parseAccessProof(accessProof *api.AccessProof) (*database.AccessProof, error) {
 	var createdAt time.Time
 
 	if accessProof.CreatedAt != nil {
@@ -281,11 +281,11 @@ func (scheduler *accessRequestScheduler) parseAccessProof(accessProof *api.Acces
 	}, nil
 }
 
-func (scheduler *accessRequestScheduler) syncAccessProof(ctx context.Context, outgoingAccessRequest *database.OutgoingAccessRequest) error {
-	remoteProof, err := scheduler.retrieveAccessProof(ctx, outgoingAccessRequest.OrganizationName, outgoingAccessRequest.ServiceName)
+func (s *scheduler) syncAccessProof(ctx context.Context, outgoingAccessRequest *database.OutgoingAccessRequest) error {
+	remoteProof, err := s.retrieveAccessProof(ctx, outgoingAccessRequest.OrganizationName, outgoingAccessRequest.ServiceName)
 	if err != nil {
 		if errors.Is(err, server.ErrServiceDoesNotExist) {
-			return scheduler.configDatabase.DeleteOutgoingAccessRequests(ctx, outgoingAccessRequest.OrganizationName, outgoingAccessRequest.ServiceName)
+			return s.configDatabase.DeleteOutgoingAccessRequests(ctx, outgoingAccessRequest.OrganizationName, outgoingAccessRequest.ServiceName)
 		}
 
 		return err
@@ -296,7 +296,7 @@ func (scheduler *accessRequestScheduler) syncAccessProof(ctx context.Context, ou
 		return nil
 	}
 
-	localProof, err := scheduler.configDatabase.GetAccessProofForOutgoingAccessRequest(
+	localProof, err := s.configDatabase.GetAccessProofForOutgoingAccessRequest(
 		ctx,
 		outgoingAccessRequest.ID,
 	)
@@ -304,7 +304,7 @@ func (scheduler *accessRequestScheduler) syncAccessProof(ctx context.Context, ou
 	switch err {
 	case nil:
 	case database.ErrNotFound:
-		_, err = scheduler.configDatabase.CreateAccessProof(ctx, outgoingAccessRequest)
+		_, err = s.configDatabase.CreateAccessProof(ctx, outgoingAccessRequest)
 
 		return err
 	default:
@@ -313,7 +313,7 @@ func (scheduler *accessRequestScheduler) syncAccessProof(ctx context.Context, ou
 
 	if remoteProof.RevokedAt.Valid &&
 		!localProof.RevokedAt.Valid {
-		if _, err := scheduler.configDatabase.RevokeAccessProof(
+		if _, err := s.configDatabase.RevokeAccessProof(
 			ctx,
 			localProof.ID,
 			remoteProof.RevokedAt.Time,
@@ -325,8 +325,8 @@ func (scheduler *accessRequestScheduler) syncAccessProof(ctx context.Context, ou
 	return nil
 }
 
-func (scheduler *accessRequestScheduler) retrieveAccessProof(ctx context.Context, organizationName, serviceName string) (*database.AccessProof, error) {
-	client, err := scheduler.getOrganizationManagementClient(ctx, organizationName)
+func (s *scheduler) retrieveAccessProof(ctx context.Context, organizationName, serviceName string) (*database.AccessProof, error) {
+	client, err := s.getOrganizationManagementClient(ctx, organizationName)
 	if err != nil {
 		return nil, err
 	}
@@ -340,5 +340,5 @@ func (scheduler *accessRequestScheduler) retrieveAccessProof(ctx context.Context
 		return nil, err
 	}
 
-	return scheduler.parseAccessProof(response)
+	return s.parseAccessProof(response)
 }

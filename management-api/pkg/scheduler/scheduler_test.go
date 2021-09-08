@@ -1,7 +1,7 @@
-// Copyright © VNG Realisatie 2020
+// Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 
-package api
+package scheduler
 
 import (
 	"context"
@@ -33,7 +33,7 @@ type schedulerMocks struct {
 	ctrl       *gomock.Controller
 }
 
-func newTestScheduler(t *testing.T) (schedulerMocks, *accessRequestScheduler) {
+func newTestScheduler(t *testing.T) (schedulerMocks, *scheduler) {
 	ctrl := gomock.NewController(t)
 
 	t.Cleanup(func() {
@@ -48,7 +48,7 @@ func newTestScheduler(t *testing.T) (schedulerMocks, *accessRequestScheduler) {
 		directory:  mock_directory.NewMockClient(ctrl),
 		management: mock_management.NewMockClient(ctrl),
 	}
-	scheduler := &accessRequestScheduler{
+	scheduler := &scheduler{
 		clock:           &clock.FakeClock{},
 		logger:          zap.NewNop(),
 		directoryClient: mocks.directory,
