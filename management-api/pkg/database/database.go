@@ -22,7 +22,7 @@ type ConfigDatabase interface {
 	CreateServiceWithInways(ctx context.Context, service *Service, inwayNames []string) error
 	UpdateServiceWithInways(ctx context.Context, service *Service, inwayNames []string) error
 	UpdateService(ctx context.Context, service *Service) error
-	DeleteService(ctx context.Context, serviceName string) error
+	DeleteService(ctx context.Context, serviceName, organizationName string) error
 
 	ListInways(ctx context.Context) ([]*Inway, error)
 	GetInway(ctx context.Context, name string) (*Inway, error)

@@ -161,7 +161,7 @@ var serveCommand = &cobra.Command{
 			logger.Fatal("loading organization cert", zap.Error(err))
 		}
 
-		db, err := database.NewPostgresConfigDatabase(serveOpts.PostgresDSN, orgCert.Certificate().Subject.Organization[0])
+		db, err := database.NewPostgresConfigDatabase(serveOpts.PostgresDSN)
 		if err != nil {
 			log.Fatalf("failed to connect to the database: %v", err)
 		}

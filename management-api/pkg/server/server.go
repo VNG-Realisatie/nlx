@@ -21,7 +21,6 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/txlogdb"
 )
 
-// ManagementService handles all requests for the config api
 type ManagementService struct {
 	api.UnimplementedDirectoryServer
 	api.UnimplementedManagementServer
@@ -38,7 +37,6 @@ type ManagementService struct {
 	createManagementClientFunc func(context.Context, string, *tls.CertificateBundle) (management.Client, error)
 }
 
-// New creates new ManagementService
 func NewManagementService(logger *zap.Logger, mainProcess *process.Process, directoryClient directory.Client, orgCert *tls.CertificateBundle, configDatabase database.ConfigDatabase, txlogDatabase txlogdb.TxlogDatabase, auditLogger auditlog.Logger, createManagementClientFunc func(context.Context, string, *tls.CertificateBundle) (management.Client, error)) *ManagementService {
 	return &ManagementService{
 		logger:                     logger,

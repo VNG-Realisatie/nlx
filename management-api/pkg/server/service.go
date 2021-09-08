@@ -143,7 +143,6 @@ func (s *ManagementService) UpdateService(ctx context.Context, req *api.UpdateSe
 	return convertToUpdateServiceResponseFromUpdateServiceRequest(req), nil
 }
 
-// DeleteService deletes a specific service
 func (s *ManagementService) DeleteService(ctx context.Context, req *api.DeleteServiceRequest) (*emptypb.Empty, error) {
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request DeleteService")
@@ -159,7 +158,8 @@ func (s *ManagementService) DeleteService(ctx context.Context, req *api.DeleteSe
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}
 
-	err = s.configDatabase.DeleteService(ctx, req.Name)
+	organizationName := s.orgCert.Certificate().Subject.Organization[0]
+	err = s.configDatabase.DeleteService(ctx, req.Name, organizationName)
 	if err != nil {
 		logger.Error("error deleting service in DB", zap.Error(err))
 		return &emptypb.Empty{}, status.Error(codes.Internal, "database error")

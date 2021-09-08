@@ -18,8 +18,8 @@ import (
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/process"
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
-	"go.nlx.io/nlx/management-api/pkg/auditlog"
 	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
@@ -190,27 +190,15 @@ func TestUpdateService(t *testing.T) {
 
 //nolint:funlen // this is a test function
 func TestDeleteService(t *testing.T) {
-	logger := zap.NewNop()
-	testProcess := process.NewProcess(logger)
-
 	tests := map[string]struct {
-		ctx                  context.Context
-		db                   func(ctrl *gomock.Controller) database.ConfigDatabase
-		auditLogger          func(ctr *gomock.Controller) auditlog.Logger
-		deleteServiceRequest *api.DeleteServiceRequest
-		expectedError        error
+		request       *api.DeleteServiceRequest
+		ctx           context.Context
+		setup         func(*common_tls.CertificateBundle, serviceMocks)
+		expectedError error
 	}{
 		"failed_to_retrieve_user_info_from_context": {
 			ctx: context.Background(),
-			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
-				mockDatabase := mock_database.NewMockConfigDatabase(ctrl)
-				return mockDatabase
-			},
-			auditLogger: func(ctrl *gomock.Controller) auditlog.Logger {
-				auditLogger := mock_auditlog.NewMockLogger(ctrl)
-				return auditLogger
-			},
-			deleteServiceRequest: &api.DeleteServiceRequest{
+			request: &api.DeleteServiceRequest{
 				Name: "my-service",
 			},
 			expectedError: status.Error(codes.Internal, "could not retrieve user info to create audit log"),
@@ -220,19 +208,12 @@ func TestDeleteService(t *testing.T) {
 				"username":               "Jane Doe",
 				"grpcgateway-user-agent": "nlxctl",
 			})),
-			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
-				mockDatabase := mock_database.NewMockConfigDatabase(ctrl)
-				return mockDatabase
-			},
-			auditLogger: func(ctrl *gomock.Controller) auditlog.Logger {
-				auditLogger := mock_auditlog.NewMockLogger(ctrl)
-				auditLogger.EXPECT().
+			setup: func(_ *common_tls.CertificateBundle, mocks serviceMocks) {
+				mocks.al.EXPECT().
 					ServiceDelete(gomock.Any(), "Jane Doe", "nlxctl", "my-service").
 					Return(fmt.Errorf("error"))
-
-				return auditLogger
 			},
-			deleteServiceRequest: &api.DeleteServiceRequest{
+			request: &api.DeleteServiceRequest{
 				Name: "my-service",
 			},
 			expectedError: status.Error(codes.Internal, "could not create audit log"),
@@ -242,22 +223,15 @@ func TestDeleteService(t *testing.T) {
 				"username":               "Jane Doe",
 				"grpcgateway-user-agent": "nlxctl",
 			})),
-			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
-				mockDatabase := mock_database.NewMockConfigDatabase(ctrl)
-				mockDatabase.EXPECT().
-					DeleteService(gomock.Any(), "my-service").
+			setup: func(_ *common_tls.CertificateBundle, mocks serviceMocks) {
+				mocks.db.EXPECT().
+					DeleteService(gomock.Any(), "my-service", "nlx-test").
 					Return(fmt.Errorf("error"))
 
-				return mockDatabase
-			},
-			auditLogger: func(ctrl *gomock.Controller) auditlog.Logger {
-				auditLogger := mock_auditlog.NewMockLogger(ctrl)
-				auditLogger.EXPECT().
+				mocks.al.EXPECT().
 					ServiceDelete(gomock.Any(), "Jane Doe", "nlxctl", "my-service")
-
-				return auditLogger
 			},
-			deleteServiceRequest: &api.DeleteServiceRequest{
+			request: &api.DeleteServiceRequest{
 				Name: "my-service",
 			},
 			expectedError: status.Error(codes.Internal, "database error"),
@@ -267,19 +241,16 @@ func TestDeleteService(t *testing.T) {
 				"username":               "Jane Doe",
 				"grpcgateway-user-agent": "nlxctl",
 			})),
-			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
-				mockDatabase := mock_database.NewMockConfigDatabase(ctrl)
-				mockDatabase.EXPECT().DeleteService(gomock.Any(), "my-service")
+			setup: func(_ *common_tls.CertificateBundle, mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					DeleteService(gomock.Any(), "my-service", "nlx-test")
 
-				return mockDatabase
+				mocks.al.
+					EXPECT().
+					ServiceDelete(gomock.Any(), "Jane Doe", "nlxctl", "my-service")
 			},
-			auditLogger: func(ctrl *gomock.Controller) auditlog.Logger {
-				auditLogger := mock_auditlog.NewMockLogger(ctrl)
-				auditLogger.EXPECT().ServiceDelete(gomock.Any(), "Jane Doe", "nlxctl", "my-service")
-
-				return auditLogger
-			},
-			deleteServiceRequest: &api.DeleteServiceRequest{
+			request: &api.DeleteServiceRequest{
 				Name: "my-service",
 			},
 		},
@@ -289,22 +260,13 @@ func TestDeleteService(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			mockCtrl := gomock.NewController(t)
-			defer mockCtrl.Finish()
+			service, bundle, mocks := newService(t)
 
-			mockDatabase := tt.db(mockCtrl)
-			service := server.NewManagementService(
-				logger,
-				testProcess,
-				mock_directory.NewMockClient(mockCtrl),
-				nil,
-				mockDatabase,
-				nil,
-				tt.auditLogger(mockCtrl),
-				management.NewClient,
-			)
+			if tt.setup != nil {
+				tt.setup(bundle, mocks)
+			}
 
-			_, err := service.DeleteService(tt.ctx, tt.deleteServiceRequest)
+			_, err := service.DeleteService(tt.ctx, tt.request)
 			assert.Equal(t, tt.expectedError, err)
 		})
 	}

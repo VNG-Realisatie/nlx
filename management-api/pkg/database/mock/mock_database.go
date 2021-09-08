@@ -213,17 +213,17 @@ func (mr *MockConfigDatabaseMockRecorder) DeleteOutgoingAccessRequests(ctx, orga
 }
 
 // DeleteService mocks base method.
-func (m *MockConfigDatabase) DeleteService(ctx context.Context, serviceName string) error {
+func (m *MockConfigDatabase) DeleteService(ctx context.Context, serviceName, organizationName string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteService", ctx, serviceName)
+	ret := m.ctrl.Call(m, "DeleteService", ctx, serviceName, organizationName)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DeleteService indicates an expected call of DeleteService.
-func (mr *MockConfigDatabaseMockRecorder) DeleteService(ctx, serviceName interface{}) *gomock.Call {
+func (mr *MockConfigDatabaseMockRecorder) DeleteService(ctx, serviceName, organizationName interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteService", reflect.TypeOf((*MockConfigDatabase)(nil).DeleteService), ctx, serviceName)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteService", reflect.TypeOf((*MockConfigDatabase)(nil).DeleteService), ctx, serviceName, organizationName)
 }
 
 // GetAccessProofForOutgoingAccessRequest mocks base method.

@@ -19,10 +19,9 @@ var ErrNotFound = errors.New("database: value not found")
 
 type PostgresConfigDatabase struct {
 	*gorm.DB
-	organizationName string
 }
 
-func NewPostgresConfigDatabase(connectionString, organizationName string) (ConfigDatabase, error) {
+func NewPostgresConfigDatabase(connectionString string) (ConfigDatabase, error) {
 	db, err := gorm.Open(postgres.Open(connectionString), &gorm.Config{})
 	if err != nil {
 		return nil, err
@@ -30,7 +29,6 @@ func NewPostgresConfigDatabase(connectionString, organizationName string) (Confi
 
 	return &PostgresConfigDatabase{
 		DB: db,
-		organizationName: organizationName,
 	}, nil
 }
 
