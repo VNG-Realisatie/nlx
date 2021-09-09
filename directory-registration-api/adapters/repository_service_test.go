@@ -1,6 +1,7 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 
+//go:build integration
 // +build integration
 
 package adapters_test
@@ -26,16 +27,18 @@ func TestRegisterService(t *testing.T) {
 		"new_service": {
 			createRegistrations: func(t *testing.T) []*service.Service {
 				s, err := service.NewService(
-					"my-service",
-					"organization-d",
-					"documentation-url",
-					service.OpenAPI3,
-					"public-support-contact",
-					"tech-support-contact",
-					1,
-					2,
-					3,
-					true,
+					&service.NewServiceArgs{
+						Name:                 "my-service",
+						OrganizationName:     "organization-d",
+						Internal:             true,
+						DocumentationURL:     "documentation-url",
+						APISpecificationType: service.OpenAPI3,
+						PublicSupportContact: "public-support-contact",
+						TechSupportContact:   "tech-support-contact",
+						OneTimeCosts:         1,
+						MonthlyCosts:         2,
+						RequestCosts:         3,
+					},
 				)
 				require.NoError(t, err)
 

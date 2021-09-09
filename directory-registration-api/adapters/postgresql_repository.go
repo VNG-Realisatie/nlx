@@ -233,16 +233,18 @@ func (r *PostgreSQLRepository) GetService(id uint) (*service.Service, error) {
 	}
 
 	model, err := service.NewService(
-		result.Name,
-		result.OrganizationName,
-		result.DocumentationURL,
-		service.SpecificationType(result.APISpecificationType),
-		result.PublicSupportContact,
-		result.TechSupportContact,
-		uint(result.OneTimeCosts),
-		uint(result.MonthlyCosts),
-		uint(result.RequestCosts),
-		result.Internal,
+		&service.NewServiceArgs{
+			Name:                 result.Name,
+			OrganizationName:     result.OrganizationName,
+			Internal:             result.Internal,
+			DocumentationURL:     result.DocumentationURL,
+			APISpecificationType: service.SpecificationType(result.APISpecificationType),
+			PublicSupportContact: result.PublicSupportContact,
+			TechSupportContact:   result.TechSupportContact,
+			OneTimeCosts:         uint(result.OneTimeCosts),
+			MonthlyCosts:         uint(result.MonthlyCosts),
+			RequestCosts:         uint(result.RequestCosts),
+		},
 	)
 	if err != nil {
 		return nil, fmt.Errorf("invalid inway model in database: %v", err)

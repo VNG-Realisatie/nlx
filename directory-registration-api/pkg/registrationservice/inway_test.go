@@ -59,7 +59,7 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 				},
 			},
 			wantResponse: nil,
-			wantErr:      status.New(codes.InvalidArgument, "validation for service named '../../test' failed: name: must be in a valid format").Err(),
+			wantErr:      status.New(codes.InvalidArgument, "validation for service named '../../test' failed: Name: must be in a valid format.").Err(),
 		},
 		"when_registering_an_inway_with_amount_of_services_which_exceed_the_maximum": {
 			setup: func(mocks serviceMocks) {

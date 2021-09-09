@@ -4,7 +4,6 @@
 package service
 
 import (
-	"fmt"
 	"regexp"
 
 	validation "github.com/go-ozzo/ozzo-validation/v4"
@@ -24,6 +23,19 @@ type Service struct {
 	requestCosts         uint
 }
 
+type NewServiceArgs struct {
+	Name                 string
+	OrganizationName     string
+	Internal             bool
+	DocumentationURL     string
+	APISpecificationType SpecificationType
+	PublicSupportContact string
+	TechSupportContact   string
+	OneTimeCosts         uint
+	MonthlyCosts         uint
+	RequestCosts         uint
+}
+
 type SpecificationType string
 
 const (
@@ -31,34 +43,26 @@ const (
 	OpenAPI3 SpecificationType = "OpenAPI3"
 )
 
-func NewService(
-	name,
-	organizationName,
-	documentationURL string,
-	apiSpecificationType SpecificationType,
-	publicSupportContact,
-	techSupportContact string,
-	oneTimeCosts,
-	monthlyCosts,
-	requestCosts uint,
-	internal bool,
-) (*Service, error) {
-	err := validation.Validate(name, validation.Required, validation.Match(regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`)))
+func NewService(args *NewServiceArgs) (*Service, error) {
+	err := validation.ValidateStruct(
+		args,
+		validation.Field(&args.Name, validation.Required, validation.Match(regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`))),
+	)
 	if err != nil {
-		return nil, fmt.Errorf("name: %s", err)
+		return nil, err
 	}
 
 	return &Service{
-		name:                 name,
-		organizationName:     organizationName,
-		documentationURL:     documentationURL,
-		apiSpecificationType: apiSpecificationType,
-		publicSupportContact: publicSupportContact,
-		techSupportContact:   techSupportContact,
-		oneTimeCosts:         oneTimeCosts,
-		monthlyCosts:         monthlyCosts,
-		requestCosts:         requestCosts,
-		internal:             internal,
+		name:                 args.Name,
+		organizationName:     args.OrganizationName,
+		documentationURL:     args.DocumentationURL,
+		apiSpecificationType: args.APISpecificationType,
+		publicSupportContact: args.PublicSupportContact,
+		techSupportContact:   args.TechSupportContact,
+		oneTimeCosts:         args.OneTimeCosts,
+		monthlyCosts:         args.MonthlyCosts,
+		requestCosts:         args.RequestCosts,
+		internal:             args.Internal,
 	}, nil
 }
 

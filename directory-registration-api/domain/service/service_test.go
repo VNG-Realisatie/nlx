@@ -12,26 +12,21 @@ import (
 )
 
 func Test_NewService(t *testing.T) {
-	type serviceParams struct {
-		name                 string
-		apiSpecificationType service.SpecificationType
-	}
-
 	tests := map[string]struct {
-		service     serviceParams
+		args        *service.NewServiceArgs
 		expectedErr string
 	}{
 		"invalid_name": {
-			service: serviceParams{
-				name:                 "#*%",
-				apiSpecificationType: service.OpenAPI2,
+			args: &service.NewServiceArgs{
+				Name:                 "#*%",
+				APISpecificationType: service.OpenAPI2,
 			},
-			expectedErr: "name: must be in a valid format",
+			expectedErr: "Name: must be in a valid format.",
 		},
 		"happy_flow": {
-			service: serviceParams{
-				name:                 "name",
-				apiSpecificationType: service.OpenAPI2,
+			args: &service.NewServiceArgs{
+				Name:                 "name",
+				APISpecificationType: service.OpenAPI2,
 			},
 			expectedErr: "",
 		},
@@ -41,18 +36,7 @@ func Test_NewService(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			result, err := service.NewService(
-				tt.service.name,
-				"",
-				"",
-				tt.service.apiSpecificationType,
-				"",
-				"",
-				0,
-				0,
-				0,
-				false,
-			)
+			result, err := service.NewService(tt.args)
 
 			if tt.expectedErr != "" {
 				assert.Nil(t, result)
@@ -61,8 +45,8 @@ func Test_NewService(t *testing.T) {
 				assert.NotNil(t, result)
 				assert.Nil(t, err)
 
-				assert.Equal(t, tt.service.name, result.Name())
-				assert.Equal(t, tt.service.apiSpecificationType, result.APISpecificationType())
+				assert.Equal(t, tt.args.Name, result.Name())
+				assert.Equal(t, tt.args.APISpecificationType, result.APISpecificationType())
 			}
 		})
 	}

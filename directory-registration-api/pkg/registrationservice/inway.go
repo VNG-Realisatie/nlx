@@ -72,16 +72,18 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 		)
 
 		serviceModel, err := service.NewService(
-			s.Name,
-			organizationName,
-			s.DocumentationUrl,
-			serviceSpecificationType,
-			s.PublicSupportContact,
-			s.TechSupportContact,
-			uint(s.OneTimeCosts),
-			uint(s.MonthlyCosts),
-			uint(s.RequestCosts),
-			s.Internal,
+			&service.NewServiceArgs{
+				Name:                 s.Name,
+				OrganizationName:     organizationName,
+				Internal:             s.Internal,
+				DocumentationURL:     s.DocumentationUrl,
+				APISpecificationType: serviceSpecificationType,
+				PublicSupportContact: s.PublicSupportContact,
+				TechSupportContact:   s.TechSupportContact,
+				OneTimeCosts:         uint(s.OneTimeCosts),
+				MonthlyCosts:         uint(s.MonthlyCosts),
+				RequestCosts:         uint(s.RequestCosts),
+			},
 		)
 		if err != nil {
 			msg := fmt.Sprintf("validation for service named '%s' failed: %s", s.Name, err.Error())
