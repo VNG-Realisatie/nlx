@@ -24,8 +24,6 @@ const (
 
 	// jobs are unlocked after 5 minutes, let's wait at least one minute before retrying
 	jobTimeout = 4 * time.Minute
-
-	errMessageServiceNoLongerExists = "service no longer exists"
 )
 
 type scheduler struct {
