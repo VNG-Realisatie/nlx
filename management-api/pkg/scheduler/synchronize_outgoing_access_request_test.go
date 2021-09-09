@@ -31,6 +31,28 @@ type testCase struct {
 	wantErr    error
 }
 
+func getGenericTests() map[string]testCase {
+	return map[string]testCase{
+		"when_taking_a_pending_access_request_errors": {
+			setupMocks: func(mocks schedulerMocks) {
+				mocks.db.
+					EXPECT().
+					TakePendingOutgoingAccessRequest(gomock.Any()).
+					Return(nil, errors.New("arbitrary error"))
+			},
+			wantErr: errors.New("arbitrary error"),
+		},
+		"when_there_is_no_pending_access_request_available": {
+			setupMocks: func(mocks schedulerMocks) {
+				mocks.db.
+					EXPECT().
+					TakePendingOutgoingAccessRequest(gomock.Any()).
+					Return(nil, nil)
+			},
+		},
+	}
+}
+
 func getCreatedAccessRequests() map[string]testCase {
 	return map[string]testCase{
 		"returns_an_error_when_getting_organization_management_client_fails": {
@@ -760,17 +782,7 @@ func getApprovedAccessRequests() map[string]testCase {
 // nolint:funlen,dupl // this is a test
 func TestSynchronizeOutgoingAccessRequest(t *testing.T) {
 	testGroups := []map[string]testCase{
-		{
-			"returns_an_error_when_list_outgoing_access_requests_errors": {
-				setupMocks: func(mocks schedulerMocks) {
-					mocks.db.
-						EXPECT().
-						TakePendingOutgoingAccessRequest(gomock.Any()).
-						Return(nil, errors.New("arbitrary error"))
-				},
-				wantErr: errors.New("arbitrary error"),
-			},
-		},
+		getGenericTests(),
 		getCreatedAccessRequests(),
 		getReceivedAccessRequests(),
 		getApprovedAccessRequests(),
