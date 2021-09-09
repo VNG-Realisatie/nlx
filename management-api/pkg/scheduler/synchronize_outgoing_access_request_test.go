@@ -66,7 +66,7 @@ func getGenericTests() map[string]testCase {
 
 func getCreatedAccessRequests() map[string]testCase {
 	return map[string]testCase{
-		"returns_an_error_when_getting_organization_management_client_fails": {
+		"when_getting_the_organization_management_client_fails": {
 			setupMocks: func(mocks schedulerMocks) {
 				accessRequest := &database.OutgoingAccessRequest{
 					ID:               1,
@@ -96,7 +96,7 @@ func getCreatedAccessRequests() map[string]testCase {
 					UnlockOutgoingAccessRequest(gomock.Any(), accessRequest)
 			},
 		},
-		"delete_outgoing_access_request_when_service_has_been_deleted": {
+		"when_service_has_been_deleted": {
 			setupMocks: func(mocks schedulerMocks) {
 				accessRequest := &database.OutgoingAccessRequest{
 					ID:               1,
