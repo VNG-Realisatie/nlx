@@ -5,17 +5,15 @@ package directory
 
 import (
 	"context"
-
-	"go.nlx.io/nlx/directory-registration-api/domain/inway"
-	"go.nlx.io/nlx/directory-registration-api/domain/service"
+	"go.nlx.io/nlx/directory-registration-api/domain"
 )
 
 type Repository interface {
-	RegisterInway(*inway.Inway) error
-	GetInway(name, organization string) (*inway.Inway, error)
+	RegisterInway(*domain.Inway) error
+	GetInway(name, organization string) (*domain.Inway, error)
 
-	RegisterService(*service.Service) error
-	GetService(id uint) (*service.Service, error)
+	RegisterService(*domain.Service) error
+	GetService(id uint) (*domain.Service, error)
 
 	SetOrganizationInway(ctx context.Context, organizationName, inwayAddress string) error
 	ClearOrganizationInway(ctx context.Context, organizationName string) error

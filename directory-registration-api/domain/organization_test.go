@@ -1,14 +1,14 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 
-package organization_test
+package domain_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 
-	"go.nlx.io/nlx/directory-registration-api/domain/organization"
+	"go.nlx.io/nlx/directory-registration-api/domain"
 )
 
 //nolint:funlen // this is a test
@@ -45,7 +45,7 @@ func Test_NewOrganization(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			result, err := organization.NewOrganization(
+			result, err := domain.NewOrganization(
 				tt.organization.name,
 			)
 

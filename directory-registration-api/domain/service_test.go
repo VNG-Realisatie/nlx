@@ -1,32 +1,32 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 
-package service_test
+package domain_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 
-	"go.nlx.io/nlx/directory-registration-api/domain/service"
+	"go.nlx.io/nlx/directory-registration-api/domain"
 )
 
 func Test_NewService(t *testing.T) {
 	tests := map[string]struct {
-		args        *service.NewServiceArgs
+		args        *domain.NewServiceArgs
 		expectedErr string
 	}{
 		"invalid_name": {
-			args: &service.NewServiceArgs{
+			args: &domain.NewServiceArgs{
 				Name:                 "#*%",
-				APISpecificationType: service.OpenAPI2,
+				APISpecificationType: domain.OpenAPI2,
 			},
 			expectedErr: "Name: must be in a valid format.",
 		},
 		"happy_flow": {
-			args: &service.NewServiceArgs{
+			args: &domain.NewServiceArgs{
 				Name:                 "name",
-				APISpecificationType: service.OpenAPI2,
+				APISpecificationType: domain.OpenAPI2,
 			},
 			expectedErr: "",
 		},
@@ -36,7 +36,7 @@ func Test_NewService(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			result, err := service.NewService(tt.args)
+			result, err := domain.NewService(tt.args)
 
 			if tt.expectedErr != "" {
 				assert.Nil(t, result)

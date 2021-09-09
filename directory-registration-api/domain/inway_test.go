@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 
-package inway_test
+package domain_test
 
 import (
 	"testing"
@@ -9,7 +9,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"go.nlx.io/nlx/directory-registration-api/domain/inway"
+	"go.nlx.io/nlx/directory-registration-api/domain"
 )
 
 //nolint:funlen // this is a test
@@ -17,11 +17,11 @@ func Test_NewInway(t *testing.T) {
 	now := time.Now()
 
 	tests := map[string]struct {
-		inwayArgs   *inway.NewInwayArgs
+		inwayArgs   *domain.NewInwayArgs
 		expectedErr string
 	}{
 		"invalid_name": {
-			inwayArgs: &inway.NewInwayArgs{
+			inwayArgs: &domain.NewInwayArgs{
 				Name:             "#*%",
 				OrganizationName: "organization-name",
 				Address:          "address",
@@ -32,7 +32,7 @@ func Test_NewInway(t *testing.T) {
 			expectedErr: "Name: must be in a valid format.",
 		},
 		"without_address": {
-			inwayArgs: &inway.NewInwayArgs{
+			inwayArgs: &domain.NewInwayArgs{
 				Name:             "name",
 				OrganizationName: "organization-name",
 				Address:          "",
@@ -43,7 +43,7 @@ func Test_NewInway(t *testing.T) {
 			expectedErr: "Address: cannot be blank.",
 		},
 		"invalid_address": {
-			inwayArgs: &inway.NewInwayArgs{
+			inwayArgs: &domain.NewInwayArgs{
 				Name:             "name",
 				OrganizationName: "organization-name",
 				Address:          "foo::bar",
@@ -54,7 +54,7 @@ func Test_NewInway(t *testing.T) {
 			expectedErr: "Address: must be a valid dial string.",
 		},
 		"invalid_version": {
-			inwayArgs: &inway.NewInwayArgs{
+			inwayArgs: &domain.NewInwayArgs{
 				Name:             "name",
 				OrganizationName: "organization-name",
 				Address:          "address",
@@ -65,7 +65,7 @@ func Test_NewInway(t *testing.T) {
 			expectedErr: "NlxVersion: must be a valid semantic version.",
 		},
 		"without_organization_name": {
-			inwayArgs: &inway.NewInwayArgs{
+			inwayArgs: &domain.NewInwayArgs{
 				Name:             "name",
 				OrganizationName: "",
 				Address:          "address",
@@ -76,7 +76,7 @@ func Test_NewInway(t *testing.T) {
 			expectedErr: "OrganizationName: cannot be blank.",
 		},
 		"empty_name": {
-			inwayArgs: &inway.NewInwayArgs{
+			inwayArgs: &domain.NewInwayArgs{
 				Name:             "",
 				OrganizationName: "organization-name",
 				Address:          "address",
@@ -87,7 +87,7 @@ func Test_NewInway(t *testing.T) {
 			expectedErr: "",
 		},
 		"created_at_in_future": {
-			inwayArgs: &inway.NewInwayArgs{
+			inwayArgs: &domain.NewInwayArgs{
 				Name:             "name",
 				OrganizationName: "organization-name",
 				Address:          "address",
@@ -98,7 +98,7 @@ func Test_NewInway(t *testing.T) {
 			expectedErr: "CreatedAt: must not be in the future.",
 		},
 		"updated_at_in_future": {
-			inwayArgs: &inway.NewInwayArgs{
+			inwayArgs: &domain.NewInwayArgs{
 				Name:             "name",
 				OrganizationName: "organization-name",
 				Address:          "address",
@@ -109,7 +109,7 @@ func Test_NewInway(t *testing.T) {
 			expectedErr: "UpdatedAt: must not be in the future.",
 		},
 		"happy_flow": {
-			inwayArgs: &inway.NewInwayArgs{
+			inwayArgs: &domain.NewInwayArgs{
 				Name:             "name",
 				OrganizationName: "organization-name",
 				Address:          "address",
@@ -125,7 +125,7 @@ func Test_NewInway(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			result, err := inway.NewInway(tt.inwayArgs)
+			result, err := domain.NewInway(tt.inwayArgs)
 
 			if tt.expectedErr != "" {
 				assert.Nil(t, result)

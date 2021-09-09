@@ -16,8 +16,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // postgres driver
 
-	"go.nlx.io/nlx/directory-registration-api/domain/inway"
-	"go.nlx.io/nlx/directory-registration-api/domain/service"
+	"go.nlx.io/nlx/directory-registration-api/domain"
 )
 
 var (
@@ -96,7 +95,7 @@ func NewPostgreSQLRepository(db *sqlx.DB) (*PostgreSQLRepository, error) {
 	}, nil
 }
 
-func (r *PostgreSQLRepository) RegisterInway(model *inway.Inway) error {
+func (r *PostgreSQLRepository) RegisterInway(model *domain.Inway) error {
 	type registerParams struct {
 		OrganizationName string    `db:"organization_name"`
 		Name             string    `db:"inway_name"`
@@ -122,7 +121,7 @@ func (r *PostgreSQLRepository) RegisterInway(model *inway.Inway) error {
 	return err
 }
 
-func (r *PostgreSQLRepository) GetInway(name, organizationName string) (*inway.Inway, error) {
+func (r *PostgreSQLRepository) GetInway(name, organizationName string) (*domain.Inway, error) {
 	type params struct {
 		Name             string `db:"name"`
 		OrganizationName string `db:"organization_name"`
@@ -147,7 +146,7 @@ func (r *PostgreSQLRepository) GetInway(name, organizationName string) (*inway.I
 		return nil, fmt.Errorf("failed to get inway (name: %s, organization: %s): %s", name, organizationName, err)
 	}
 
-	model, err := inway.NewInway(&inway.NewInwayArgs{
+	model, err := domain.NewInway(&domain.NewInwayArgs{
 		Name:             result.Name,
 		OrganizationName: result.OrganizationName,
 		Address:          result.Address,
@@ -162,7 +161,7 @@ func (r *PostgreSQLRepository) GetInway(name, organizationName string) (*inway.I
 	return model, nil
 }
 
-func (r *PostgreSQLRepository) RegisterService(model *service.Service) error {
+func (r *PostgreSQLRepository) RegisterService(model *domain.Service) error {
 	type registerParams struct {
 		Name                 string `db:"name"`
 		OrganizationName     string `db:"organization_name"`
@@ -206,7 +205,7 @@ func (r *PostgreSQLRepository) RegisterService(model *service.Service) error {
 	return err
 }
 
-func (r *PostgreSQLRepository) GetService(id uint) (*service.Service, error) {
+func (r *PostgreSQLRepository) GetService(id uint) (*domain.Service, error) {
 	type params struct {
 		ID uint `db:"id"`
 	}
@@ -232,13 +231,13 @@ func (r *PostgreSQLRepository) GetService(id uint) (*service.Service, error) {
 		return nil, fmt.Errorf("failed to get service with id %v: %s", id, err)
 	}
 
-	model, err := service.NewService(
-		&service.NewServiceArgs{
+	model, err := domain.NewService(
+		&domain.NewServiceArgs{
 			Name:                 result.Name,
 			OrganizationName:     result.OrganizationName,
 			Internal:             result.Internal,
 			DocumentationURL:     result.DocumentationURL,
-			APISpecificationType: service.SpecificationType(result.APISpecificationType),
+			APISpecificationType: domain.SpecificationType(result.APISpecificationType),
 			PublicSupportContact: result.PublicSupportContact,
 			TechSupportContact:   result.TechSupportContact,
 			OneTimeCosts:         uint(result.OneTimeCosts),

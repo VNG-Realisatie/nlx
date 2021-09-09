@@ -1,12 +1,14 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 
+//go:build integration
 // +build integration
 
 package adapters_test
 
 import (
 	"context"
+	"go.nlx.io/nlx/directory-registration-api/domain"
 	"log"
 	"testing"
 	"time"
@@ -14,7 +16,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.nlx.io/nlx/directory-registration-api/adapters"
-	"go.nlx.io/nlx/directory-registration-api/domain/inway"
 )
 
 func TestSetOrganizationInway(t *testing.T) {
@@ -33,17 +34,17 @@ func TestSetOrganizationInway(t *testing.T) {
 	}
 
 	tests := map[string]struct {
-		setup       func(*testing.T) *inway.NewInwayArgs
+		setup       func(*testing.T) *domain.NewInwayArgs
 		input       inputParams
 		expectedErr error
 	}{
 		"inway_address_not_found": {
-			setup: func(t *testing.T) *inway.NewInwayArgs {
-				return &inway.NewInwayArgs{
+			setup: func(t *testing.T) *domain.NewInwayArgs {
+				return &domain.NewInwayArgs{
 					Name:             "inway-for-service",
 					OrganizationName: "TestSetOrganizationInwayinwayaddressnotfound",
 					Address:          "my-org-e.com",
-					NlxVersion:       inway.NlxVersionUnknown,
+					NlxVersion:       domain.NlxVersionUnknown,
 					CreatedAt:        now,
 					UpdatedAt:        now,
 				}
@@ -55,12 +56,12 @@ func TestSetOrganizationInway(t *testing.T) {
 			expectedErr: adapters.ErrNoInwayWithAddress,
 		},
 		"happy_flow": {
-			setup: func(t *testing.T) *inway.NewInwayArgs {
-				return &inway.NewInwayArgs{
+			setup: func(t *testing.T) *domain.NewInwayArgs {
+				return &domain.NewInwayArgs{
 					Name:             "inway-for-service",
 					OrganizationName: "TestSetOrganizationInwayhappyflow",
 					Address:          "my-org-e.com",
-					NlxVersion:       inway.NlxVersionUnknown,
+					NlxVersion:       domain.NlxVersionUnknown,
 					CreatedAt:        now,
 					UpdatedAt:        now,
 				}
@@ -84,7 +85,7 @@ func TestSetOrganizationInway(t *testing.T) {
 
 			inwayArgs := tt.setup(t)
 
-			inwayModel, err := inway.NewInway(inwayArgs)
+			inwayModel, err := domain.NewInway(inwayArgs)
 			require.NoError(t, err)
 
 			err = repo.RegisterInway(inwayModel)
@@ -115,17 +116,17 @@ func TestClearOrganizationInway(t *testing.T) {
 	}
 
 	tests := map[string]struct {
-		setup       func(*testing.T) *inway.NewInwayArgs
+		setup       func(*testing.T) *domain.NewInwayArgs
 		input       inputParams
 		expectedErr error
 	}{
 		"organization_not_found": {
-			setup: func(t *testing.T) *inway.NewInwayArgs {
-				return &inway.NewInwayArgs{
+			setup: func(t *testing.T) *domain.NewInwayArgs {
+				return &domain.NewInwayArgs{
 					Name:             "inway-for-service",
 					OrganizationName: "my-organization",
 					Address:          "my-org-g.com",
-					NlxVersion:       inway.NlxVersionUnknown,
+					NlxVersion:       domain.NlxVersionUnknown,
 					CreatedAt:        now,
 					UpdatedAt:        now,
 				}
@@ -136,12 +137,12 @@ func TestClearOrganizationInway(t *testing.T) {
 			expectedErr: adapters.ErrOrganizationNotFound,
 		},
 		"happy_flow": {
-			setup: func(t *testing.T) *inway.NewInwayArgs {
-				return &inway.NewInwayArgs{
+			setup: func(t *testing.T) *domain.NewInwayArgs {
+				return &domain.NewInwayArgs{
 					Name:             "inway-for-service",
 					OrganizationName: "my-organization",
 					Address:          "my-org-h.com",
-					NlxVersion:       inway.NlxVersionUnknown,
+					NlxVersion:       domain.NlxVersionUnknown,
 					CreatedAt:        now,
 					UpdatedAt:        now,
 				}
@@ -164,7 +165,7 @@ func TestClearOrganizationInway(t *testing.T) {
 
 			inwayArgs := tt.setup(t)
 
-			inwayModel, err := inway.NewInway(inwayArgs)
+			inwayModel, err := domain.NewInway(inwayArgs)
 			require.NoError(t, err)
 
 			err = repo.RegisterInway(inwayModel)
@@ -200,18 +201,18 @@ func TestGetOrganizationInwayAddress(t *testing.T) {
 	}
 
 	tests := map[string]struct {
-		setup           func(*testing.T) *inway.NewInwayArgs
+		setup           func(*testing.T) *domain.NewInwayArgs
 		input           inputParams
 		expectedAddress string
 		expectedErr     error
 	}{
 		"organization_not_found": {
-			setup: func(t *testing.T) *inway.NewInwayArgs {
-				return &inway.NewInwayArgs{
+			setup: func(t *testing.T) *domain.NewInwayArgs {
+				return &domain.NewInwayArgs{
 					Name:             "inway-for-service",
 					OrganizationName: "my-organization",
 					Address:          "my-org-i.com",
-					NlxVersion:       inway.NlxVersionUnknown,
+					NlxVersion:       domain.NlxVersionUnknown,
 					CreatedAt:        now,
 					UpdatedAt:        now,
 				}
@@ -223,12 +224,12 @@ func TestGetOrganizationInwayAddress(t *testing.T) {
 			expectedErr:     adapters.ErrOrganizationNotFound,
 		},
 		"happy_flow": {
-			setup: func(t *testing.T) *inway.NewInwayArgs {
-				return &inway.NewInwayArgs{
+			setup: func(t *testing.T) *domain.NewInwayArgs {
+				return &domain.NewInwayArgs{
 					Name:             "inway-for-service",
 					OrganizationName: "my-organization",
 					Address:          "my-org-i.com",
-					NlxVersion:       inway.NlxVersionUnknown,
+					NlxVersion:       domain.NlxVersionUnknown,
 					CreatedAt:        now,
 					UpdatedAt:        now,
 				}
@@ -252,7 +253,7 @@ func TestGetOrganizationInwayAddress(t *testing.T) {
 
 			inwayArgs := tt.setup(t)
 
-			inwayModel, err := inway.NewInway(inwayArgs)
+			inwayModel, err := domain.NewInway(inwayArgs)
 			require.NoError(t, err)
 
 			err = repo.RegisterInway(inwayModel)

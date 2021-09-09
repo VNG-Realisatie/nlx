@@ -6,11 +6,10 @@ package directory_mock
 
 import (
 	context "context"
+	service "go.nlx.io/nlx/directory-registration-api/domain"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	inway "go.nlx.io/nlx/directory-registration-api/domain/inway"
-	service "go.nlx.io/nlx/directory-registration-api/domain/service"
 )
 
 // MockRepository is a mock of Repository interface.
@@ -51,10 +50,10 @@ func (mr *MockRepositoryMockRecorder) ClearOrganizationInway(ctx, organizationNa
 }
 
 // GetInway mocks base method.
-func (m *MockRepository) GetInway(name, organization string) (*inway.Inway, error) {
+func (m *MockRepository) GetInway(name, organization string) (*service.Inway, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetInway", name, organization)
-	ret0, _ := ret[0].(*inway.Inway)
+	ret0, _ := ret[0].(*service.Inway)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -96,7 +95,7 @@ func (mr *MockRepositoryMockRecorder) GetService(id interface{}) *gomock.Call {
 }
 
 // RegisterInway mocks base method.
-func (m *MockRepository) RegisterInway(arg0 *inway.Inway) error {
+func (m *MockRepository) RegisterInway(arg0 *service.Inway) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RegisterInway", arg0)
 	ret0, _ := ret[0].(error)

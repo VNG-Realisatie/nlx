@@ -1,12 +1,14 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 
+//go:build integration
 // +build integration
 
 package adapters_test
 
 import (
 	"context"
+	"go.nlx.io/nlx/directory-registration-api/domain"
 	"os"
 	"sync"
 	"testing"
@@ -20,8 +22,6 @@ import (
 
 	"go.nlx.io/nlx/directory-registration-api/adapters"
 	"go.nlx.io/nlx/directory-registration-api/domain/directory"
-	"go.nlx.io/nlx/directory-registration-api/domain/inway"
-	"go.nlx.io/nlx/directory-registration-api/domain/service"
 )
 
 var setupOnce sync.Once
@@ -67,7 +67,7 @@ func assertOrganizationInwayAddress(t *testing.T, repo directory.Repository, org
 	assert.Equal(t, inwayAddress, result)
 }
 
-func assertInwayInRepository(t *testing.T, repo directory.Repository, iw *inway.Inway) {
+func assertInwayInRepository(t *testing.T, repo directory.Repository, iw *domain.Inway) {
 	require.NotNil(t, iw)
 
 	inwayFromRepo, err := repo.GetInway(iw.Name(), iw.OrganizationName())
@@ -76,7 +76,7 @@ func assertInwayInRepository(t *testing.T, repo directory.Repository, iw *inway.
 	assert.Equal(t, iw, inwayFromRepo)
 }
 
-func assertServiceInRepository(t *testing.T, repo directory.Repository, s *service.Service) {
+func assertServiceInRepository(t *testing.T, repo directory.Repository, s *domain.Service) {
 	require.NotNil(t, s)
 
 	model, err := repo.GetService(s.ID())

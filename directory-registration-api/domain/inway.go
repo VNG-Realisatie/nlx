@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 
-package inway
+package domain
 
 import (
 	"fmt"
@@ -34,7 +34,6 @@ type NewInwayArgs struct {
 const NlxVersionUnknown = "unknown"
 
 var nameRegex = regexp.MustCompile(`^[a-zA-Z0-9-]{1,100}$`)
-var organizationNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-._\s]{1,100}$`)
 
 func NewInway(args *NewInwayArgs) (*Inway, error) {
 	err := validation.ValidateStruct(

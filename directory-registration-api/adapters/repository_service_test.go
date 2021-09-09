@@ -7,12 +7,11 @@
 package adapters_test
 
 import (
+	"go.nlx.io/nlx/directory-registration-api/domain"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/require"
-	"go.nlx.io/nlx/directory-registration-api/domain/inway"
-	"go.nlx.io/nlx/directory-registration-api/domain/service"
 )
 
 func TestRegisterService(t *testing.T) {
@@ -21,18 +20,18 @@ func TestRegisterService(t *testing.T) {
 	setup(t)
 
 	tests := map[string]struct {
-		createRegistrations func(*testing.T) []*service.Service
+		createRegistrations func(*testing.T) []*domain.Service
 		expectedErr         error
 	}{
 		"new_service": {
-			createRegistrations: func(t *testing.T) []*service.Service {
-				s, err := service.NewService(
-					&service.NewServiceArgs{
+			createRegistrations: func(t *testing.T) []*domain.Service {
+				s, err := domain.NewService(
+					&domain.NewServiceArgs{
 						Name:                 "my-service",
 						OrganizationName:     "organization-d",
 						Internal:             true,
 						DocumentationURL:     "documentation-url",
-						APISpecificationType: service.OpenAPI3,
+						APISpecificationType: domain.OpenAPI3,
 						PublicSupportContact: "public-support-contact",
 						TechSupportContact:   "tech-support-contact",
 						OneTimeCosts:         1,
@@ -42,7 +41,7 @@ func TestRegisterService(t *testing.T) {
 				)
 				require.NoError(t, err)
 
-				return []*service.Service{s}
+				return []*domain.Service{s}
 			},
 			expectedErr: nil,
 		},
@@ -64,11 +63,11 @@ func TestRegisterService(t *testing.T) {
 
 			models := tt.createRegistrations(t)
 
-			inwayModel, err := inway.NewInway(&inway.NewInwayArgs{
+			inwayModel, err := domain.NewInway(&domain.NewInwayArgs{
 				Name:             "inway-for-service",
 				OrganizationName: "organization-d",
 				Address:          "my-org.com",
-				NlxVersion:       inway.NlxVersionUnknown,
+				NlxVersion:       domain.NlxVersionUnknown,
 				CreatedAt:        now,
 				UpdatedAt:        now,
 			})

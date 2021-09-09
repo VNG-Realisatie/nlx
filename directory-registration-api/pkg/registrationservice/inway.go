@@ -14,8 +14,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/nlxversion"
-	"go.nlx.io/nlx/directory-registration-api/domain/inway"
-	"go.nlx.io/nlx/directory-registration-api/domain/service"
+	"go.nlx.io/nlx/directory-registration-api/domain"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
 
@@ -36,7 +35,7 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 	// Created at and Updated at time are the same times when registering new inway
 	now := time.Now()
 
-	inwayModel, err := inway.NewInway(&inway.NewInwayArgs{
+	inwayModel, err := domain.NewInway(&domain.NewInwayArgs{
 		Name:             req.InwayName,
 		OrganizationName: organizationName,
 		Address:          req.InwayAddress,
@@ -71,8 +70,8 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 			s.Name,
 		)
 
-		serviceModel, err := service.NewService(
-			&service.NewServiceArgs{
+		serviceModel, err := domain.NewService(
+			&domain.NewServiceArgs{
 				Name:                 s.Name,
 				OrganizationName:     organizationName,
 				Internal:             s.Internal,
@@ -100,7 +99,7 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 	return resp, nil
 }
 
-func getAPISpecificationTypeForService(httpClient *http.Client, logger *zap.Logger, specificationDocumentURL, inwayAddress, serviceName string) service.SpecificationType {
+func getAPISpecificationTypeForService(httpClient *http.Client, logger *zap.Logger, specificationDocumentURL, inwayAddress, serviceName string) domain.SpecificationType {
 	if len(specificationDocumentURL) < 1 {
 		return ""
 	}
@@ -116,5 +115,5 @@ func getAPISpecificationTypeForService(httpClient *http.Client, logger *zap.Logg
 		return ""
 	}
 
-	return service.SpecificationType(specificationType)
+	return domain.SpecificationType(specificationType)
 }
