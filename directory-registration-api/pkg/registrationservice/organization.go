@@ -6,7 +6,6 @@ package registrationservice
 import (
 	"context"
 	"errors"
-	"regexp"
 
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
@@ -16,13 +15,6 @@ import (
 	"go.nlx.io/nlx/directory-registration-api/adapters"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
-
-// nolint:gocritic // these are valid regex patterns
-var organizationNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-. _\s]{1,100}$`)
-
-func IsValidOrganizationName(name string) bool {
-	return organizationNameRegex.MatchString(name)
-}
 
 func (h *DirectoryRegistrationService) SetOrganizationInway(ctx context.Context, req *registrationapi.SetOrganizationInwayRequest) (*emptypb.Empty, error) {
 	logger := h.logger.With(zap.String("handler", "SetOrganizationInway"))

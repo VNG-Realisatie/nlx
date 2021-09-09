@@ -139,6 +139,12 @@ type serviceMocks struct {
 	r *directory_mock.MockRepository
 }
 
+const testOrganizationName = "Test Organization Name"
+
+func testGetOrganizationNameFromRequest(context.Context) (string, error) {
+	return testOrganizationName, nil
+}
+
 func newService(t *testing.T) (*registrationservice.DirectoryRegistrationService, serviceMocks) {
 	ctrl := gomock.NewController(t)
 
