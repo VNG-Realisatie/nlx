@@ -87,7 +87,7 @@ func (job *SynchronizeOutgoingAccessRequestJob) synchronize(ctx context.Context,
 		}
 
 	default:
-		return fmt.Errorf("invalid status %s for pending access request", request.State)
+		return fmt.Errorf("invalid state '%s' for pending access request", request.State)
 	}
 
 	if err != nil {

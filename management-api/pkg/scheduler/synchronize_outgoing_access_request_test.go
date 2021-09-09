@@ -50,6 +50,17 @@ func getGenericTests() map[string]testCase {
 					Return(nil, nil)
 			},
 		},
+		"when_the_status_of_the_access_request_is_unknown": {
+			setupMocks: func(mocks schedulerMocks) {
+				mocks.db.
+					EXPECT().
+					TakePendingOutgoingAccessRequest(gomock.Any()).
+					Return(&database.OutgoingAccessRequest{
+						State: "unknown state",
+					}, nil)
+			},
+			wantErr: errors.New("invalid state 'unknown state' for pending access request"),
+		},
 	}
 }
 
