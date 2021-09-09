@@ -19,13 +19,23 @@ func Test_NewService(t *testing.T) {
 		"invalid_name": {
 			args: &domain.NewServiceArgs{
 				Name:                 "#*%",
+				OrganizationName:     "organization",
 				APISpecificationType: domain.OpenAPI2,
 			},
 			expectedErr: "Name: must be in a valid format.",
 		},
+		"invalid_organization_name": {
+			args: &domain.NewServiceArgs{
+				Name:                 "name",
+				OrganizationName:     "#*%",
+				APISpecificationType: domain.OpenAPI2,
+			},
+			expectedErr: "OrganizationName: must be in a valid format.",
+		},
 		"happy_flow": {
 			args: &domain.NewServiceArgs{
 				Name:                 "name",
+				OrganizationName:     "organization",
 				APISpecificationType: domain.OpenAPI2,
 			},
 			expectedErr: "",
